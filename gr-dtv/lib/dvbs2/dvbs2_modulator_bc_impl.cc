@@ -92,6 +92,10 @@ dvbs2_modulator_bc_impl::dvbs2_modulator_bc_impl(dvb_framesize_t framesize,
             r2 = 0;
             break;
         }
+        r0 = sqrt(8.0 / (2.0 * (r1 * r1) + 4.0 * (r2 * r2) + 2.0 * (r3 * r3)));
+        r1 *= r0;
+        r2 *= r0;
+        r3 *= r0;
         m_8psk[0] = gr_complex((r1 * cos(GR_M_PI)), (r1 * sin(GR_M_PI)));
         m_8psk[1] = gr_complex((r2 * cos(GR_M_PI * 1.352)), (r2 * sin(GR_M_PI * 1.352)));
         m_8psk[2] =
@@ -262,6 +266,9 @@ dvbs2_modulator_bc_impl::dvbs2_modulator_bc_impl(dvb_framesize_t framesize,
                 r1 = 0;
                 break;
             }
+            r0 = sqrt(16.0 / (8.0 * (r1 * r1) + 8.0 * (r2 * r2)));
+            r1 *= r0;
+            r2 *= r0;
             m_16apsk[0] =
                 gr_complex((r1 * cos(GR_M_PI / 8.0)), (r1 * sin(GR_M_PI / 8.0)));
             m_16apsk[1] =
@@ -409,6 +416,10 @@ dvbs2_modulator_bc_impl::dvbs2_modulator_bc_impl(dvb_framesize_t framesize,
                 break;
             }
         }
+        r0 = sqrt(32.0 / (4.0 * (r1 * r1) + 12.0 * (r2 * r2) + 16.0 * (r3 * r3)));
+        r1 *= r0;
+        r2 *= r0;
+        r3 *= r0;
         m_32apsk[0] =
             gr_complex((r3 * cos(11 * GR_M_PI / 16.0)), (r3 * sin(11 * GR_M_PI / 16.0)));
         m_32apsk[1] =
@@ -494,6 +505,12 @@ dvbs2_modulator_bc_impl::dvbs2_modulator_bc_impl(dvb_framesize_t framesize,
             r3 = 0;
             break;
         }
+        r0 = sqrt(32.0 / (4.0 * (r1 * r1) + 8.0 * (r2 * r2) + 4.0 * (r3 * r3) +
+                          16.0 * (r4 * r4)));
+        r1 *= r0;
+        r2 *= r0;
+        r3 *= r0;
+        r4 *= r0;
         m_32apsk[0] = gr_complex((r1 * cos(GR_M_PI / 4.0)), (r1 * sin(GR_M_PI / 4.0)));
         m_32apsk[1] =
             gr_complex((r4 * cos(7 * GR_M_PI / 16.0)), (r4 * sin(7 * GR_M_PI / 16.0)));
@@ -569,6 +586,12 @@ dvbs2_modulator_bc_impl::dvbs2_modulator_bc_impl(dvb_framesize_t framesize,
             r3 = 0;
             break;
         }
+        r0 = sqrt(64.0 / (16.0 * (r1 * r1) + 16.0 * (r2 * r2) + 16.0 * (r3 * r3) +
+                          16.0 * (r4 * r4)));
+        r1 *= r0;
+        r2 *= r0;
+        r3 *= r0;
+        r4 *= r0;
         m_64apsk[0] = gr_complex((r1 * cos(GR_M_PI / 16.0)), (r1 * sin(GR_M_PI / 16.0)));
         m_64apsk[1] =
             gr_complex((r1 * cos(3 * GR_M_PI / 16.0)), (r1 * sin(3 * GR_M_PI / 16.0)));
@@ -714,6 +737,12 @@ dvbs2_modulator_bc_impl::dvbs2_modulator_bc_impl(dvb_framesize_t framesize,
             r3 = 0;
             break;
         }
+        r0 = sqrt(64.0 / (8.0 * (r1 * r1) + 16.0 * (r2 * r2) + 20.0 * (r3 * r3) +
+                          20.0 * (r4 * r4)));
+        r1 *= r0;
+        r2 *= r0;
+        r3 *= r0;
+        r4 *= r0;
         m_64apsk[0] =
             gr_complex((r2 * cos(25 * GR_M_PI / 16.0)), (r2 * sin(25 * GR_M_PI / 16.0)));
         m_64apsk[1] =
@@ -851,6 +880,12 @@ dvbs2_modulator_bc_impl::dvbs2_modulator_bc_impl(dvb_framesize_t framesize,
             r3 = 0;
             break;
         }
+        r0 = sqrt(64.0 / (4.0 * (r1 * r1) + 12.0 * (r2 * r2) + 20.0 * (r3 * r3) +
+                          28.0 * (r4 * r4)));
+        r1 *= r0;
+        r2 *= r0;
+        r3 *= r0;
+        r4 *= r0;
         m_64apsk[0] = gr_complex((r4 * cos(GR_M_PI / 4.0)), (r4 * sin(GR_M_PI / 4.0)));
         m_64apsk[1] =
             gr_complex((r4 * cos(7 * GR_M_PI / 4.0)), (r4 * sin(7 * GR_M_PI / 4.0)));
@@ -998,6 +1033,14 @@ dvbs2_modulator_bc_impl::dvbs2_modulator_bc_impl(dvb_framesize_t framesize,
             r5 = 0;
             break;
         }
+        r0 = sqrt(32.0 / (4.0 * (r1 * r1) + 4.0 * (r2 * r2) + 4.0 * (r3 * r3) +
+                          4.0 * (r4 * r4) + 4.0 * (r5 * r5) + 12.0 * (r6 * r6)));
+        r1 *= r0;
+        r2 *= r0;
+        r3 *= r0;
+        r4 *= r0;
+        r5 *= r0;
+        r6 *= r0;
         m_128apsk[0] = gr_complex((r1 * cos(83 * GR_M_PI / 1260.0)),
                                   (r1 * sin(83 * GR_M_PI / 1260.0)));
         m_128apsk[1] = gr_complex((r6 * cos(11 * GR_M_PI / 105.0)),
@@ -1811,6 +1854,16 @@ dvbs2_modulator_bc_impl::dvbs2_modulator_bc_impl(dvb_framesize_t framesize,
                 r7 = 0;
                 break;
             }
+            r0 = sqrt(8.0 / ((r1 * r1) + (r2 * r2) + (r3 * r3) + (r4 * r4) + (r5 * r5) +
+                             (r6 * r6) + (r7 * r7) + (r8 * r8)));
+            r1 *= r0;
+            r2 *= r0;
+            r3 *= r0;
+            r4 *= r0;
+            r5 *= r0;
+            r6 *= r0;
+            r7 *= r0;
+            r8 *= r0;
             m_256apsk[0] =
                 gr_complex((r1 * cos(GR_M_PI / 32.0)), (r1 * sin(GR_M_PI / 32.0)));
             m_256apsk[1] = gr_complex((r1 * cos(3 * GR_M_PI / 32.0)),
