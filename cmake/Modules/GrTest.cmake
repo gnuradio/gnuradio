@@ -98,13 +98,11 @@ function(GR_ADD_TEST test_name)
         endif(CMAKE_CROSSCOMPILING)
         set(sh_file ${CMAKE_CURRENT_BINARY_DIR}/${test_name}_test.sh)
         file(WRITE ${sh_file} "#!${SHELL}\n")
-        if (NOT CMAKE_CROSSCOMPILING)
-		#each line sets an environment variable
-        	foreach(environ ${environs})
-	            file(APPEND ${sh_file} "export ${environ}\n")
-	        endforeach(environ)
-	        #load the command to run with its arguments
-        endif(CMAKE_CROSSCOMPILING)
+        #each line sets an environment variable
+        foreach(environ ${environs})
+            file(APPEND ${sh_file} "export ${environ}\n")
+        endforeach(environ)
+        #load the command to run with its arguments
         foreach(arg ${ARGN})
             file(APPEND ${sh_file} "${arg} ")
         endforeach(arg)
@@ -113,7 +111,7 @@ function(GR_ADD_TEST test_name)
         #make the shell file executable
         execute_process(COMMAND chmod +x ${sh_file})
 
-        add_test(${test_name} ${SHELL} ${test_name}_test.sh)
+        add_test(${test_name} ${SHELL} ${sh_file})
     endif(UNIX)
 
     if(WIN32)
@@ -163,7 +161,5 @@ function(GR_ADD_CPP_TEST test_name test_source)
     set_target_properties(${test_name}
         PROPERTIES COMPILE_DEFINITIONS "BOOST_TEST_DYN_LINK;BOOST_TEST_MAIN"
     )
-    IF (NOT CMAKE_CROSSCOMPILING)
-        GR_ADD_TEST(${test_name} ${test_name})
-    ENDIF(CMAKE_CROSSCOMPILING)
+    GR_ADD_TEST(${test_name} ${test_name})
 endfunction(GR_ADD_CPP_TEST)
