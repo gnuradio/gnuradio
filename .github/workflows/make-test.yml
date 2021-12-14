@@ -59,6 +59,7 @@ jobs:
           - distro: 'Ubuntu 18.04'
             containerid: 'gnuradio/ci:ubuntu-18.04-3.9'
             cxxflags: -Werror -Wno-error=deprecated-declarations -Wno-error=invalid-pch
+            ctest_args: '-E "qa_cpp_py_binding|qa_cpp_py_binding_set|qa_ctrlport_probes|qa_qtgui"'
             ldpath:
           - distro: 'Fedora 34'
             containerid: 'gnuradio/ci:fedora-34-3.9'
