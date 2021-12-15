@@ -40,6 +40,7 @@ from .canvas.connection import Connection
 from .. import base
 from ...core.FlowGraph import FlowGraph as CoreFlowgraph
 from .. import Utils
+from .undoable_actions import MoveCommand
 
 # Logging
 log = logging.getLogger(__name__)
@@ -60,6 +61,10 @@ class Flowgraph(QtWidgets.QGraphicsScene, base.Component, CoreFlowgraph):
         
         self.newConnection = None
         self.startPort = None
+
+        self.undoStack = QtWidgets.QUndoStack()
+        self.undoAction = self.undoStack.createUndoAction(self, "Undo")
+        self.redoAction = self.undoStack.createRedoAction(self, "Redo")
 
     def update(self):
         """
@@ -204,6 +209,11 @@ class Flowgraph(QtWidgets.QGraphicsScene, base.Component, CoreFlowgraph):
             selected_block.setPos(x + ctr_x, y + ctr_y)
         return True
 
+    def registerMoveCommand(self, block):
+        log.debug('move_cmd')
+        moveCommand = MoveCommand(self, block)
+        self.undoStack.push(moveCommand)
+        self.app.MainWindow.updateActions()
 
     def mousePressEvent(self,  event):
         item = self.itemAt(event.scenePos(), QtGui.QTransform())
@@ -321,9 +331,6 @@ class FlowgraphView(QtWidgets.QGraphicsView, base.Component): # added base.Compo
         self.isPanning    = False
         self.mousePressed = False
 
-        self.undoStack = QtWidgets.QUndoStack()
-        self.undoAction = self.undoStack.createUndoAction(self, "Undo")
-        self.redoAction = self.undoStack.createRedoAction(self, "Redo")
 
         '''
         QGraphicsView.__init__(self, flow_graph, parent)
