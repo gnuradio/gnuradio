@@ -209,9 +209,17 @@ class Flowgraph(QtWidgets.QGraphicsScene, base.Component, CoreFlowgraph):
             selected_block.setPos(x + ctr_x, y + ctr_y)
         return True
 
+    def registerBlockMovement(self, clicked_block):
+        # We need to pass the clicked block here because
+        # it hasn't been registered as selected yet
+        for block in self.selected_blocks() + [clicked_block]:
+            block.registerMoveStarting()
+
     def registerMoveCommand(self, block):
         log.debug('move_cmd')
-        moveCommand = MoveCommand(self, block)
+        for block in self.selected_blocks():
+            block.registerMoveEnding()
+        moveCommand = MoveCommand(self, self.selected_blocks())
         self.undoStack.push(moveCommand)
         self.app.MainWindow.updateActions()
 

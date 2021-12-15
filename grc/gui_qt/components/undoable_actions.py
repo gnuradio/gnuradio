@@ -5,22 +5,24 @@ import logging
 log = logging.getLogger(__name__)
 
 class MoveCommand(QUndoCommand):
-    def __init__(self, flowgraph, block):
+    def __init__(self, flowgraph, blocks):
         QUndoCommand.__init__(self)
         log.debug("init Move")
         self.flowgraph = flowgraph
-        self.block = block
-        self.oldPos = block.movingFrom
-        self.newPos = block.movingTo
+        self.blocks = blocks
+        self.oldPos = [block.movingFrom for block in blocks]
+        self.newPos = [block.movingTo for block in blocks]
 
     def redo(self):
         log.debug("redo Move")
-        self.block.setPos(self.newPos)
+        for i in range(len(self.blocks)):
+            self.blocks[i].setPos(self.newPos[i])
         self.flowgraph.update()
 
     def undo(self):
         log.debug("undo Move")
-        self.block.setPos(self.oldPos)
+        for i in range(len(self.blocks)):
+            self.blocks[i].setPos(self.oldPos[i])
         self.flowgraph.update()
 
 class RotateCommand(QUndoCommand):
