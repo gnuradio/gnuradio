@@ -328,6 +328,10 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
 
         self.create_shapes_and_labels()
 
+        self.moving = False
+        self.movingFrom = None
+        self.movingTo = None
+
         self.setFlag(QtWidgets.QGraphicsItem.ItemIsMovable)
         self.setFlag(QtWidgets.QGraphicsItem.ItemIsSelectable)
 
@@ -425,9 +429,15 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
         return QtCore.QRectF(-2.5, -2.5, self.width+5, self.height+5) # margin to avoid artifacts
 
     def mouseReleaseEvent(self, e):
+        self.moving = False
+        self.movingTo = self.pos()
+        if not self.movingFrom == self.movingTo:
+            self.parent.registerMoveCommand(self)
         super(self.__class__, self).mouseReleaseEvent(e)
 
     def mousePressEvent(self, e):
+        self.moving = True
+        self.movingFrom = self.pos()
         try:
             self.parent.app.DocumentationTab.setText(self.documentation[self.key])
         except KeyError:

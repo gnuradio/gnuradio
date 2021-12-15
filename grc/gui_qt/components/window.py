@@ -309,7 +309,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
             return False
 
         selected_elements = self.currentFlowgraph.selectedItems()
-        undoStack = self.currentView.undoStack
+        undoStack = self.currentFlowgraph.undoStack
         canUndo = undoStack.canUndo()
         canRedo = undoStack.canRedo()
 
@@ -572,12 +572,12 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
     def undo_triggered(self):
         log.debug('undo')
-        self.currentView.undoStack.undo()
+        self.currentFlowgraph.undoStack.undo()
         self.updateActions()
 
     def redo_triggered(self):
         log.debug('redo')
-        self.currentView.undoStack.redo()
+        self.currentFlowgraph.undoStack.redo()
         self.updateActions()
 
     def cut_triggered(self):
@@ -596,13 +596,13 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
     def rotate_ccw_triggered(self):
         log.debug('rotate_ccw')
         rotateCommand = RotateCommand(self.currentFlowgraph, -90)
-        self.currentView.undoStack.push(rotateCommand)
+        self.currentFlowgraph.undoStack.push(rotateCommand)
         self.updateActions()
 
     def rotate_cw_triggered(self):
         log.debug('rotate_cw')
         rotateCommand = RotateCommand(self.currentFlowgraph, 90)
-        self.currentView.undoStack.push(rotateCommand)
+        self.currentFlowgraph.undoStack.push(rotateCommand)
         self.updateActions()
 
     def errors_triggered(self):
