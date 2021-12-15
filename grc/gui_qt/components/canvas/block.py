@@ -428,16 +428,24 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
         self.states['coordinate'] = (x,y)
         return QtCore.QRectF(-2.5, -2.5, self.width+5, self.height+5) # margin to avoid artifacts
 
-    def mouseReleaseEvent(self, e):
+    def registerMoveStarting(self):
+        print(f"{self} moving")
+        self.moving = True
+        self.movingFrom = self.pos()
+
+    def registerMoveEnding(self):
+        print(f"{self} moved")
         self.moving = False
         self.movingTo = self.pos()
-        if not self.movingFrom == self.movingTo:
+
+    def mouseReleaseEvent(self, e):
+        if not self.movingFrom == self.pos():
             self.parent.registerMoveCommand(self)
         super(self.__class__, self).mouseReleaseEvent(e)
 
     def mousePressEvent(self, e):
-        self.moving = True
-        self.movingFrom = self.pos()
+        print(f"{self} clicked")
+        self.parent.registerBlockMovement(self)
         try:
             self.parent.app.DocumentationTab.setText(self.documentation[self.key])
         except KeyError:
