@@ -243,6 +243,8 @@ void FreqControlPanel::setFFTAverage(float val)
 void FreqControlPanel::toggleFFTSize(int val)
 {
     int index = static_cast<int>(round(logf(static_cast<float>(val)) / logf(2.0f))) - 5;
+    index = std::max(index, 0);
+    index = std::min(index, d_fft_size_combo->count() - 1);
     d_fft_size_combo->setCurrentIndex(index);
 }
 
