@@ -113,7 +113,6 @@ private slots:
     void onPlotPointSelected(const QPointF p) override;
 
 private:
-    uint64_t d_num_real_data_points;
     QIntValidator* d_int_validator;
 
     double d_samp_rate, d_center_freq;

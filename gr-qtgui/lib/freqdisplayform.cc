@@ -31,7 +31,6 @@ FreqDisplayForm::FreqDisplayForm(int nplots, QWidget* parent)
 
     d_controlpanel = NULL;
 
-    d_num_real_data_points = 1024;
     d_fftsize = 1024;
     d_fftavg = 1.0;
     d_clicked = false;
