@@ -7,6 +7,52 @@ starting with version 3.7.12.0.
 
 Older Logs can be found in `docs/RELEASE-NOTES-*`.
 
+## [3.8.5.0] - 2022-01-XX
+
+This is an API compatible update to GNU Radio 3.8. Code written for 3.8.X versions should compile and link without modification. The ABI is not guaranteed to be compatible, so a rebuild of OOT modules may be necessary.
+
+#### GRC
+- GRC now runs on Fedora 35 ... Gtk initialization checks were too strict
+- Fix: dependent variables sometimes fail to evaluate
+- Change type aliasing to allow interleaved short/byte to be connected to vectors of short/byte. Stricter type checking was added previously and caused some blocks to be unconnectable when using these types.
+- Account for scale factor when computing drawing area size
+- Tooltips fixed for categories and modules
+- 
+#### gr-digital
+- Fix yml file for Header/Payload Demux
+
+#### gr-dtv
+- Add energy normalization for DVB-S2X constellations.
+
+#### gr-filter
+- Remove pyqwt and qt4 from filter_design
+
+#### gr-qtgui
+- Enable use of Qwt 6.2
+- Remove unusable int type in Number Sink yml
+- RangeWidget - implement Eng & EngSlider
+
+At LEAST the following authors contributed to this release.
+
+- Bill Muzika <bill.muzika@outlook.com>
+- Chris <christopher.donohue@gmail.com>
+- Chris Vine <vine35792468@gmail.com>
+- Clayton Smith <argilo@gmail.com>
+- Doron Behar <doron.behar@gmail.com>
+- Jeff Long <willcode4@gmail.com>
+- John Sallay <jasallay@gmail.com>
+- Josh Morman <jmorman@gnuradio.org>
+- Marcus Müller <mmueller@gnuradio.org>
+- Mark Pentler <tehhustler@hotmail.com>
+- Martin Braun <martin@gnuradio.org>
+- masw <masw@masw.tech>
+- Matt Mills <mmills@2bn.net>
+- Nick Østergaard <oe.nick@gmail.com>
+- Ron Economos <w6rz@comcast.net>
+- Ryan Volz <ryan.volz@gmail.com>
+- Sec <sec@42.org>
+- Volker Schroer
+
 ## [3.8.4.0] - 2021-09-30
 
 API is compatible with C++ code written against previous v3.8 releases.
