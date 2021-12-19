@@ -7,6 +7,48 @@ Versioning](http://semver.org/spec/v2.0.0.html), starting with version 3.7.12.0.
 
 Older Logs can be found in `docs/RELEASE-NOTES-*`.
 
+## [3.9.5.0] - 2022-01-XX
+
+This is an API compatible update to GNU Radio 3.9. Code written for 3.9.X versions should compile and link without modification. The ABI is not guaranteed to be compatible, so a rebuild of OOT modules may be necessary.
+
+### Changes
+
+#### GRC
+- Fix: dependent variables sometimes fail to evaluate
+- Modify and cleanup bokeh server loop
+
+#### gr-analog
+- Update python bindings for power squelch
+
+#### gr-dtv
+- Add energy normalization for DVB-S2X constellations.
+
+#### gr-filter
+- Remove pyqwt and qt4 from filter_design
+
+#### gr-network
+- Fix: segfaults when TCP & UDP blocks are restarted
+- Add throttle flag to the tcp source and sink blocks
+
+#### gr-qtgui
+- Enable use of Qwt 6.2
+
+#### gr-uhd
+- Add Python bindings for rfnoc_{block, ddc, duc, rx/tx_radio}
+
+#### modtool
+- Improvements in generated QA code
+
+#### Build System
+- Better support for cross-compiling (OpenEmbedded)
+- Find log4cpp on Ubuntu systems
+- Handle optional components in `find_package`
+- Add version check for pygccxml
+
+#### CI/QA
+- Update tests to work with OpenEmbedded
+
+
 ## [3.9.4.0] - 2021-10-25
 
 This is an API compatible update to GNU Radio 3.9. Code written for 3.9.X versions should compile and link without modification. The ABI is not guaranteed to be compatible, so a rebuild of OOT modules may be necessary.
