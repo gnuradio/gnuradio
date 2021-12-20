@@ -16,6 +16,7 @@
 #include <QtGui/QtGui>
 #include <stdexcept>
 #include <vector>
+#include <math.h>
 
 #if QT_VERSION >= 0x050000
 #include <QtWidgets/QtWidgets>
@@ -606,7 +607,7 @@ public:
             d_act[t]->setActionGroup(d_grp);
         }
 
-        QIntValidator* valid = new QIntValidator(32, 4096, this);
+        QIntValidator* valid = new QIntValidator(32, 16384, this);
         ((OtherAction*)d_act[d_act.size() - 1])->setValidator(valid);
 
         connect(d_act[0], SIGNAL(triggered()), this, SLOT(get05()));
@@ -651,12 +652,10 @@ public:
         float ipt;
         float which = std::log(static_cast<float>(size)) / std::log(2.0f) - 5;
         // If we're a predefined value
-        if (std::modf(which, &ipt) == 0) {
-            if (which < static_cast<unsigned int>(d_act.size()) - 1)
-                return d_act[static_cast<int>(which)];
-            else
-                throw std::runtime_error(
-                    "FFTSizeMenu::getActionFromString: which out of range.");
+        auto f = std::modf(which, &ipt);
+        if ((f < 0.00001 || f > 0.99999) &&
+            which < static_cast<unsigned int>(d_act.size()) - 1) {
+            return d_act[static_cast<int>(round(which))];
         }
         // Or a non-predefined value, return Other
         else {

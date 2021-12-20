@@ -77,7 +77,9 @@ FreqControlPanel::FreqControlPanel(FreqDisplayForm* form) : QVBoxLayout(), d_par
     d_fft_size_combo->addItem("1024");
     d_fft_size_combo->addItem("2048");
     d_fft_size_combo->addItem("4096");
-    d_fft_size_combo->addItem("8192");
+    // d_fft_size_combo->addItem("8192");
+    // d_fft_size_combo->addItem("16384");
+    // d_fft_size_combo->addItem("32768");
 
     d_fft_win_combo = new QComboBox();
     d_fft_win_combo->addItem("None");
