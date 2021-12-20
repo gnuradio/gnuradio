@@ -22,7 +22,7 @@
 ##################################################
 
 % if generate_options == 'qt_gui':
-from distutils.version import StrictVersion
+from packaging.version import Version as StrictVersion
 
 if __name__ == '__main__':
     import ctypes

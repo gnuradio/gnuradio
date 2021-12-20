@@ -11,7 +11,7 @@ import subprocess
 import threading
 import time
 from pathlib import Path
-from distutils.spawn import find_executable
+from shutil import which as find_executable
 
 from gi.repository import GLib
 

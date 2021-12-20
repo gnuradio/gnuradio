@@ -10,7 +10,7 @@ SPDX-License-Identifier: GPL-2.0-or-later
 import ast
 import functools
 import random
-from distutils.spawn import find_executable
+from shutil import which as find_executable
 from itertools import count
 
 from gi.repository import GLib, Gtk
