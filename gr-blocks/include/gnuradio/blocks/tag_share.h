@@ -35,7 +35,7 @@ namespace blocks {
 class BLOCKS_API tag_share : virtual public gr::sync_block
 {
 public:
-    typedef std::shared_ptr<tag_share> sptr;
+    using sptr = std::shared_ptr<tag_share>;
 
     /*!
      * \param sizeof_io_item The size of the Input 0/Output 0 stream type. Input 0

@@ -14,7 +14,7 @@
 namespace gr {
 namespace trellis {
 
-typedef enum { TRELLIS_MIN_SUM = 200, TRELLIS_SUM_PRODUCT } siso_type_t;
+enum siso_type_t { TRELLIS_MIN_SUM = 200, TRELLIS_SUM_PRODUCT };
 
 } /* namespace trellis */
 } /* namespace gr */

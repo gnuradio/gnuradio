@@ -23,7 +23,7 @@ namespace dtv {
 class DTV_API atsc_pad : virtual public gr::sync_decimator
 {
 public:
-    typedef std::shared_ptr<atsc_pad> sptr;
+    using sptr = std::shared_ptr<atsc_pad>;
 
     /*!
      * \brief Return a shared_ptr to a new instance of dtv::atsc_pad.

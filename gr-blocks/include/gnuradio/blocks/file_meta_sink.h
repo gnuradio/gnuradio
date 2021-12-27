@@ -59,7 +59,7 @@ class BLOCKS_API file_meta_sink : virtual public sync_block
 {
 public:
     // gr::blocks::file_meta_sink::sptr
-    typedef std::shared_ptr<file_meta_sink> sptr;
+    using sptr = std::shared_ptr<file_meta_sink>;
 
     /*!
      * \brief Create a meta-data file sink.

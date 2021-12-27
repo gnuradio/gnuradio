@@ -28,18 +28,18 @@ class BLOCKS_API probe_signal : virtual public sync_block
 {
 public:
     // gr::blocks::probe_signal::sptr
-    typedef std::shared_ptr<probe_signal<T>> sptr;
+    using sptr = std::shared_ptr<probe_signal<T>>;
 
     static sptr make();
 
     virtual T level() const = 0;
 };
 
-typedef probe_signal<std::uint8_t> probe_signal_b;
-typedef probe_signal<std::int16_t> probe_signal_s;
-typedef probe_signal<std::int32_t> probe_signal_i;
-typedef probe_signal<float> probe_signal_f;
-typedef probe_signal<gr_complex> probe_signal_c;
+using probe_signal_b = probe_signal<std::uint8_t>;
+using probe_signal_s = probe_signal<std::int16_t>;
+using probe_signal_i = probe_signal<std::int32_t>;
+using probe_signal_f = probe_signal<float>;
+using probe_signal_c = probe_signal<gr_complex>;
 } /* namespace blocks */
 } /* namespace gr */
 

@@ -29,14 +29,14 @@ class BLOCKS_API or_blk : virtual public sync_block
 {
 public:
     // gr::blocks::or_blk::sptr
-    typedef std::shared_ptr<or_blk<T>> sptr;
+    using sptr = std::shared_ptr<or_blk<T>>;
 
     static sptr make(size_t vlen = 1);
 };
 
-typedef or_blk<std::uint8_t> or_bb;
-typedef or_blk<std::int16_t> or_ss;
-typedef or_blk<std::int32_t> or_ii;
+using or_bb = or_blk<std::uint8_t>;
+using or_ss = or_blk<std::int16_t>;
+using or_ii = or_blk<std::int32_t>;
 } /* namespace blocks */
 } /* namespace gr */
 

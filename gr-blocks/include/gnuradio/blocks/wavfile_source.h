@@ -29,7 +29,7 @@ class BLOCKS_API wavfile_source : virtual public sync_block
 {
 public:
     // gr::blocks::wavfile_source::sptr
-    typedef std::shared_ptr<wavfile_source> sptr;
+    using sptr = std::shared_ptr<wavfile_source>;
 
     static sptr make(const char* filename, bool repeat = false);
 

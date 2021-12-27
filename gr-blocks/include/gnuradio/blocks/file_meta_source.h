@@ -40,7 +40,7 @@ class BLOCKS_API file_meta_source : virtual public sync_block
 {
 public:
     // gr::blocks::file_meta_source::sptr
-    typedef std::shared_ptr<file_meta_source> sptr;
+    using sptr = std::shared_ptr<file_meta_source>;
 
     /*!
      * \brief Create a meta-data file source.

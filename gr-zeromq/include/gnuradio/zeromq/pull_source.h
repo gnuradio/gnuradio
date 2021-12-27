@@ -28,7 +28,7 @@ namespace zeromq {
 class ZEROMQ_API pull_source : virtual public gr::sync_block
 {
 public:
-    typedef std::shared_ptr<pull_source> sptr;
+    using sptr = std::shared_ptr<pull_source>;
 
     /*!
      * \brief Return a shared_ptr to a new instance of gr::zeromq::pull_source.

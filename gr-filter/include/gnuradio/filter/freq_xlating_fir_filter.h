@@ -46,7 +46,7 @@ template <class IN_T, class OUT_T, class TAP_T>
 class FILTER_API freq_xlating_fir_filter : virtual public sync_decimator
 {
 public:
-    typedef std::shared_ptr<freq_xlating_fir_filter<IN_T, OUT_T, TAP_T>> sptr;
+    using sptr = std::shared_ptr<freq_xlating_fir_filter<IN_T, OUT_T, TAP_T>>;
 
     /*!
      * \brief FIR filter with IN_T input, OUT_T output, and
@@ -74,17 +74,17 @@ public:
     virtual void set_taps(const std::vector<TAP_T>& taps) = 0;
     virtual std::vector<TAP_T> taps() const = 0;
 };
-typedef freq_xlating_fir_filter<gr_complex, gr_complex, gr_complex>
-    freq_xlating_fir_filter_ccc;
-typedef freq_xlating_fir_filter<gr_complex, gr_complex, float>
-    freq_xlating_fir_filter_ccf;
-typedef freq_xlating_fir_filter<float, gr_complex, gr_complex>
-    freq_xlating_fir_filter_fcc;
-typedef freq_xlating_fir_filter<float, gr_complex, float> freq_xlating_fir_filter_fcf;
-typedef freq_xlating_fir_filter<std::int16_t, gr_complex, float>
-    freq_xlating_fir_filter_scf;
-typedef freq_xlating_fir_filter<std::int16_t, gr_complex, gr_complex>
-    freq_xlating_fir_filter_scc;
+using freq_xlating_fir_filter_ccc =
+    freq_xlating_fir_filter<gr_complex, gr_complex, gr_complex>;
+using freq_xlating_fir_filter_ccf =
+    freq_xlating_fir_filter<gr_complex, gr_complex, float>;
+using freq_xlating_fir_filter_fcc =
+    freq_xlating_fir_filter<float, gr_complex, gr_complex>;
+using freq_xlating_fir_filter_fcf = freq_xlating_fir_filter<float, gr_complex, float>;
+using freq_xlating_fir_filter_scf =
+    freq_xlating_fir_filter<std::int16_t, gr_complex, float>;
+using freq_xlating_fir_filter_scc =
+    freq_xlating_fir_filter<std::int16_t, gr_complex, gr_complex>;
 
 
 } /* namespace filter */

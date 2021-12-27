@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(permutation.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(8bb112727e312d310a6a6b08ec0fbd78)                     */
+/* BINDTOOL_HEADER_FILE_HASH(1276f43f32abd11a0b2c075169451cc6)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>

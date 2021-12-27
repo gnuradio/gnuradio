@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(plateau_detector_fb.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(8602ec9c626ae1fcba3aa2481f31dfd1)                     */
+/* BINDTOOL_HEADER_FILE_HASH(03b7e39e057771aa1f15e2dd6d93bbe1)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>

@@ -108,7 +108,7 @@ private:
 
 
     const std::string d_type;
-    typedef std::vector<rpcmanager_base::rpcserver_booter_base_sptr> rpcServerMap_t;
+    using rpcServerMap_t = std::vector<rpcmanager_base::rpcserver_booter_base_sptr>;
     std::vector<std::string> d_registeredServers;
     rpcServerMap_t d_serverlist;
 };

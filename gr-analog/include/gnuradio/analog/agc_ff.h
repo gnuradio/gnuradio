@@ -29,7 +29,7 @@ class ANALOG_API agc_ff : virtual public sync_block
 {
 public:
     // gr::analog::agc_ff::sptr
-    typedef std::shared_ptr<agc_ff> sptr;
+    using sptr = std::shared_ptr<agc_ff>;
 
     /*!
      * Build a floating point AGC loop block.

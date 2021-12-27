@@ -112,10 +112,10 @@ enum dvb_guardinterval_t {
 } // namespace dtv
 } // namespace gr
 
-typedef gr::dtv::dvb_standard_t dvb_standard_t;
-typedef gr::dtv::dvb_code_rate_t dvb_code_rate_t;
-typedef gr::dtv::dvb_framesize_t dvb_framesize_t;
-typedef gr::dtv::dvb_constellation_t dvb_constellation_t;
-typedef gr::dtv::dvb_guardinterval_t dvb_guardinterval_t;
+using dvb_standard_t = gr::dtv::dvb_standard_t;
+using dvb_code_rate_t = gr::dtv::dvb_code_rate_t;
+using dvb_framesize_t = gr::dtv::dvb_framesize_t;
+using dvb_constellation_t = gr::dtv::dvb_constellation_t;
+using dvb_guardinterval_t = gr::dtv::dvb_guardinterval_t;
 
 #endif /* INCLUDED_DTV_DVB_CONFIG_H */

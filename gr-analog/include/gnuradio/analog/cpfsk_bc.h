@@ -25,7 +25,7 @@ class ANALOG_API cpfsk_bc : virtual public sync_interpolator
 {
 public:
     // gr::analog::cpfsk_bc::sptr
-    typedef std::shared_ptr<cpfsk_bc> sptr;
+    using sptr = std::shared_ptr<cpfsk_bc>;
 
     /*!
      * \brief Make a CPFSK block.

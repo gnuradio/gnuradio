@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(socket_pdu.h)                                              */
-/* BINDTOOL_HEADER_FILE_HASH(4c11b80b4561122125568a9ab76cea3a)                     */
+/* BINDTOOL_HEADER_FILE_HASH(1d9f8693df11d891007c8fc8f9b80530)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>

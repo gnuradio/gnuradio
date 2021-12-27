@@ -35,7 +35,7 @@ jack_source_fcn(int sampling_rate, const std::string& device_name, bool ok_to_bl
     return source::sptr(new jack_source(sampling_rate, device_name, ok_to_block));
 }
 
-typedef jack_default_audio_sample_t sample_t;
+using sample_t = jack_default_audio_sample_t;
 
 // Number of jack buffers in the ringbuffer
 // TODO: make it to match at least the quantity of items passed to work()

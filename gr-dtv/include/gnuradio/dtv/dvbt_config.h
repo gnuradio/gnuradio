@@ -26,7 +26,7 @@ enum dvbt_transmission_mode_t {
 } // namespace dtv
 } // namespace gr
 
-typedef gr::dtv::dvbt_hierarchy_t dvbt_hierarchy_t;
-typedef gr::dtv::dvbt_transmission_mode_t dvbt_transmission_mode_t;
+using dvbt_hierarchy_t = gr::dtv::dvbt_hierarchy_t;
+using dvbt_transmission_mode_t = gr::dtv::dvbt_transmission_mode_t;
 
 #endif /* INCLUDED_DTV_DVBT_CONFIG_H */

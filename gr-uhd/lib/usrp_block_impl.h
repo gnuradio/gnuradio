@@ -31,8 +31,8 @@ static const std::string ALL_LOS;
 class usrp_block_impl : virtual public usrp_block
 {
 public:
-    typedef std::function<::uhd::sensor_value_t(const std::string&)> get_sensor_fn_t;
-    typedef std::function<void(const pmt::pmt_t&, int, const pmt::pmt_t&)> cmd_handler_t;
+    using get_sensor_fn_t = std::function<::uhd::sensor_value_t(const std::string&)>;
+    using cmd_handler_t = std::function<void(const pmt::pmt_t&, int, const pmt::pmt_t&)>;
 
     /**********************************************************************
      * Public API calls (see usrp_block.h for docs)

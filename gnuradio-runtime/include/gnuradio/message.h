@@ -27,7 +27,7 @@ namespace gr {
 class GR_RUNTIME_API message
 {
 public:
-    typedef std::shared_ptr<message> sptr;
+    using sptr = std::shared_ptr<message>;
 
 private:
     sptr d_next;   // link field for msg queue

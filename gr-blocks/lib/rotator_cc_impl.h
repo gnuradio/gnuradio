@@ -28,10 +28,9 @@ bool cmp_phase_inc_update_offset(phase_inc_update_t lhs, phase_inc_update_t rhs)
     return lhs.offset > rhs.offset;
 };
 
-typedef std::priority_queue<phase_inc_update_t,
-                            std::vector<phase_inc_update_t>,
-                            decltype(&cmp_phase_inc_update_offset)>
-    phase_inc_queue_t;
+using phase_inc_queue_t = std::priority_queue<phase_inc_update_t,
+                                              std::vector<phase_inc_update_t>,
+                                              decltype(&cmp_phase_inc_update_offset)>;
 
 /*!
  * \brief Complex rotator

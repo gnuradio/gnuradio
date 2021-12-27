@@ -32,7 +32,7 @@ namespace dtv {
 class DTV_API dvbt_demap : virtual public block
 {
 public:
-    typedef std::shared_ptr<dvbt_demap> sptr;
+    using sptr = std::shared_ptr<dvbt_demap>;
 
     /*!
      * \brief Create a DVB-T demapper.

@@ -17,7 +17,7 @@
 #if QWT_VERSION >= 0x060000
 #include <qwt_interval.h>
 
-typedef QwtInterval QwtDoubleInterval;
+using QwtDoubleInterval = QwtInterval;
 #endif
 
 class WaterfallData : public QwtRasterData

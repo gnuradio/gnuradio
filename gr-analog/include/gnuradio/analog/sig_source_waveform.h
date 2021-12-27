@@ -18,14 +18,14 @@ namespace analog {
  * \brief Types of signal generator waveforms.
  * \ingroup waveform_generators_blk
  */
-typedef enum {
+enum gr_waveform_t {
     GR_CONST_WAVE = 100,
     GR_SIN_WAVE,
     GR_COS_WAVE,
     GR_SQR_WAVE,
     GR_TRI_WAVE,
     GR_SAW_WAVE
-} gr_waveform_t;
+};
 
 } /* namespace analog */
 } /* namespace gr */

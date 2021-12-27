@@ -81,7 +81,7 @@ public:
 /*!
  * \brief typedef for shared pointer (transparent reference counting).
  */
-typedef std::shared_ptr<pmt_base> pmt_t;
+using pmt_t = std::shared_ptr<pmt_base>;
 
 class PMT_API exception : public std::logic_error
 {

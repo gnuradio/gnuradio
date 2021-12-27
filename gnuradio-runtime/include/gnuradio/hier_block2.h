@@ -61,7 +61,7 @@ public:
      * This type is only guaranteed to be passable to connect and
      * disconnect. No other assumptions should be made about it.
      */
-    typedef basic_block_sptr opaque_self;
+    using opaque_self = basic_block_sptr;
 
     /*!
      * \brief Return an object, representing the current block, which

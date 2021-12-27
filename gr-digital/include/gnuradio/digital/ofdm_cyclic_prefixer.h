@@ -50,7 +50,7 @@ namespace digital {
 class DIGITAL_API ofdm_cyclic_prefixer : virtual public tagged_stream_block
 {
 public:
-    typedef std::shared_ptr<ofdm_cyclic_prefixer> sptr;
+    using sptr = std::shared_ptr<ofdm_cyclic_prefixer>;
 
     /*!
      * \param input_size IFFT length (i.e. length of the OFDM symbols).

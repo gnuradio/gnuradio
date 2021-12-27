@@ -56,7 +56,7 @@ class BLOCKS_API vector_source : virtual public sync_block
 {
 public:
     // gr::blocks::vector_source::sptr
-    typedef std::shared_ptr<vector_source<T>> sptr;
+    using sptr = std::shared_ptr<vector_source<T>>;
 
     static sptr make(const std::vector<T>& data,
                      bool repeat = false,
@@ -69,11 +69,11 @@ public:
     virtual void set_repeat(bool repeat) = 0;
 };
 
-typedef vector_source<std::uint8_t> vector_source_b;
-typedef vector_source<std::int16_t> vector_source_s;
-typedef vector_source<std::int32_t> vector_source_i;
-typedef vector_source<float> vector_source_f;
-typedef vector_source<gr_complex> vector_source_c;
+using vector_source_b = vector_source<std::uint8_t>;
+using vector_source_s = vector_source<std::int16_t>;
+using vector_source_i = vector_source<std::int32_t>;
+using vector_source_f = vector_source<float>;
+using vector_source_c = vector_source<gr_complex>;
 } /* namespace blocks */
 } /* namespace gr */
 

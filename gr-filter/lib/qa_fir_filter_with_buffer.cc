@@ -55,10 +55,10 @@ static void random_complex(gr_complex* buf, unsigned n)
 
 namespace fff {
 
-typedef float i_type;
-typedef float o_type;
-typedef float tap_type;
-typedef float acc_type;
+using i_type = float;
+using o_type = float;
+using tap_type = float;
+using acc_type = float;
 
 static o_type ref_dotprod(const i_type input[], const tap_type taps[], int ntaps)
 {
@@ -144,10 +144,10 @@ BOOST_AUTO_TEST_CASE(t3_fff) { test_decimate(5); }
 
 namespace ccc {
 
-typedef gr_complex i_type;
-typedef gr_complex o_type;
-typedef gr_complex tap_type;
-typedef gr_complex acc_type;
+using i_type = gr_complex;
+using o_type = gr_complex;
+using tap_type = gr_complex;
+using acc_type = gr_complex;
 
 
 static o_type ref_dotprod(const i_type input[], const tap_type taps[], int ntaps)
@@ -233,10 +233,10 @@ BOOST_AUTO_TEST_CASE(t3_ccc) { test_decimate(5); }
 
 namespace ccf {
 
-typedef gr_complex i_type;
-typedef gr_complex o_type;
-typedef float tap_type;
-typedef gr_complex acc_type;
+using i_type = gr_complex;
+using o_type = gr_complex;
+using tap_type = float;
+using acc_type = gr_complex;
 
 static o_type ref_dotprod(const i_type input[], const tap_type taps[], int ntaps)
 {

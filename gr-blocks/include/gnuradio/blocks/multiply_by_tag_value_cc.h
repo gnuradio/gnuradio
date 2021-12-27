@@ -33,7 +33,7 @@ class BLOCKS_API multiply_by_tag_value_cc : virtual public sync_block
 {
 public:
     // gr::blocks::multiply_by_tag_value_cc::sptr
-    typedef std::shared_ptr<multiply_by_tag_value_cc> sptr;
+    using sptr = std::shared_ptr<multiply_by_tag_value_cc>;
 
     /*!
      * \brief Create an instance of multiply_by_tag_value_cc

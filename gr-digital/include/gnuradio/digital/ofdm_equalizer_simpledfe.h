@@ -55,7 +55,7 @@ namespace digital {
 class DIGITAL_API ofdm_equalizer_simpledfe : public ofdm_equalizer_1d_pilots
 {
 public:
-    typedef std::shared_ptr<ofdm_equalizer_simpledfe> sptr;
+    using sptr = std::shared_ptr<ofdm_equalizer_simpledfe>;
 
     ofdm_equalizer_simpledfe(int fft_len,
                              const gr::digital::constellation_sptr& constellation,

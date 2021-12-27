@@ -26,7 +26,7 @@ class PDU_API pdu_set : virtual public block
 {
 public:
     // gr::pdu::pdu_set::sptr
-    typedef std::shared_ptr<pdu_set> sptr;
+    using sptr = std::shared_ptr<pdu_set>;
 
     /*!
      * \brief Construct a PDU meta set block

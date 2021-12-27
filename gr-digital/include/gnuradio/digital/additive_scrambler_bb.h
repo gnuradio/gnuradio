@@ -42,7 +42,7 @@ class DIGITAL_API additive_scrambler_bb : virtual public sync_block
 {
 public:
     // gr::digital::additive_scrambler_bb::sptr
-    typedef std::shared_ptr<additive_scrambler_bb> sptr;
+    using sptr = std::shared_ptr<additive_scrambler_bb>;
 
     /*!
      * \brief Create additive scrambler.

@@ -30,7 +30,7 @@ class PMT_API pmt_pool
         struct item* d_next;
     };
 
-    typedef boost::unique_lock<boost::mutex> scoped_lock;
+    using scoped_lock = boost::unique_lock<boost::mutex>;
     mutable boost::mutex d_mutex;
     boost::condition_variable d_cond;
 

@@ -29,7 +29,7 @@ namespace pdu {
 class PDU_API time_delta : virtual public gr::block
 {
 public:
-    typedef std::shared_ptr<time_delta> sptr;
+    using sptr = std::shared_ptr<time_delta>;
 
     /*!
      * \brief Return a shared_ptr to a new instance of pdu::time_delta.

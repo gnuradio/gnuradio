@@ -31,7 +31,7 @@ class ANALOG_API fmdet_cf : virtual public sync_block
 {
 public:
     // gr::analog::fmdet_cf::sptr
-    typedef std::shared_ptr<fmdet_cf> sptr;
+    using sptr = std::shared_ptr<fmdet_cf>;
 
     /*!
      * \brief Make FM detector block.

@@ -33,7 +33,7 @@ class BLOCKS_API unpack_k_bits_bb : virtual public sync_interpolator
 {
 public:
     // gr::blocks::unpack_k_bits_bb::sptr
-    typedef std::shared_ptr<unpack_k_bits_bb> sptr;
+    using sptr = std::shared_ptr<unpack_k_bits_bb>;
 
     /*!
      * \brief Make an unpack_k_bits block.

@@ -25,7 +25,7 @@ class BLOCKS_API complex_to_arg : virtual public sync_block
 {
 public:
     // gr::blocks::complex_to_arg_ff::sptr
-    typedef std::shared_ptr<complex_to_arg> sptr;
+    using sptr = std::shared_ptr<complex_to_arg>;
 
     /*!
      * Build a complex to arg block.

@@ -54,7 +54,7 @@ class QTGUI_API eye_sink_f : virtual public gr::sync_block
 {
 public:
     // gr::qtgui::eye_sink_f::sptr
-    typedef std::shared_ptr<eye_sink_f> sptr;
+    using sptr = std::shared_ptr<eye_sink_f>;
 
     /*!
      * \brief Build floating point eye sink

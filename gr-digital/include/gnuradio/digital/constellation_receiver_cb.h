@@ -48,7 +48,7 @@ class DIGITAL_API constellation_receiver_cb : virtual public block,
 {
 public:
     // gr::digital::constellation_receiver_cb::sptr
-    typedef std::shared_ptr<constellation_receiver_cb> sptr;
+    using sptr = std::shared_ptr<constellation_receiver_cb>;
 
     /*!
      * \brief Constructs a constellation receiver that (phase/fine

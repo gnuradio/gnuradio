@@ -39,14 +39,14 @@ class BLOCKS_API max_blk : virtual public sync_block
 {
 public:
     // gr::blocks::max_blk::sptr
-    typedef std::shared_ptr<max_blk<T>> sptr;
+    using sptr = std::shared_ptr<max_blk<T>>;
 
     static sptr make(size_t vlen, size_t vlen_out = 1);
 };
 
-typedef max_blk<std::int16_t> max_ss;
-typedef max_blk<std::int32_t> max_ii;
-typedef max_blk<float> max_ff;
+using max_ss = max_blk<std::int16_t>;
+using max_ii = max_blk<std::int32_t>;
+using max_ff = max_blk<float>;
 } /* namespace blocks */
 } /* namespace gr */
 

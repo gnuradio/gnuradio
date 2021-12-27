@@ -25,7 +25,7 @@ class FFT_API goertzel_fc : virtual public sync_decimator
 {
 public:
     // gr::fft::goertzel_fc::sptr
-    typedef std::shared_ptr<goertzel_fc> sptr;
+    using sptr = std::shared_ptr<goertzel_fc>;
 
     static sptr make(int rate, int len, float freq);
 

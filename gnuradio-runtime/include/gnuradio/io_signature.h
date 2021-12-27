@@ -37,7 +37,7 @@ class GR_RUNTIME_API io_signature
                  gr_vector_buffer_type buftypes);
 
 public:
-    typedef std::shared_ptr<io_signature> sptr;
+    using sptr = std::shared_ptr<io_signature>;
 
     static constexpr int IO_INFINITE = -1;
 

@@ -27,7 +27,7 @@ class QTGUI_API ber_sink_b : virtual public block
 {
 public:
     // gr::fec::ber_sink_b::sptr
-    typedef std::shared_ptr<ber_sink_b> sptr;
+    using sptr = std::shared_ptr<ber_sink_b>;
 
     static sptr make(std::vector<float> esnos,
                      int curves = 1,

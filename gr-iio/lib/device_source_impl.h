@@ -31,7 +31,7 @@ struct ctxInfo {
 static std::mutex ctx_mutex;
 static std::vector<ctxInfo> contexts;
 
-typedef std::vector<ctxInfo>::iterator ctx_it;
+using ctx_it = std::vector<ctxInfo>::iterator;
 
 class device_source_impl : public device_source
 {

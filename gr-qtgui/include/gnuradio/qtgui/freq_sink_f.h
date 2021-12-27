@@ -78,7 +78,7 @@ class QTGUI_API freq_sink_f : virtual public sync_block
 {
 public:
     // gr::qtgui::freq_sink_f::sptr
-    typedef std::shared_ptr<freq_sink_f> sptr;
+    using sptr = std::shared_ptr<freq_sink_f>;
 
     /*!
      * \brief Build a floating point PSD sink.

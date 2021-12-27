@@ -36,15 +36,15 @@ class BLOCKS_API add_blk : virtual public sync_block
 {
 public:
     // gr::blocks::add_blk::sptr
-    typedef std::shared_ptr<add_blk<T>> sptr;
+    using sptr = std::shared_ptr<add_blk<T>>;
 
     static sptr make(size_t vlen = 1);
 };
 
-typedef add_blk<std::int16_t> add_ss;
-typedef add_blk<std::int32_t> add_ii;
-typedef add_blk<gr_complex> add_cc;
-typedef add_blk<float> add_ff;
+using add_ss = add_blk<std::int16_t>;
+using add_ii = add_blk<std::int32_t>;
+using add_cc = add_blk<gr_complex>;
+using add_ff = add_blk<float>;
 } /* namespace blocks */
 } /* namespace gr */
 

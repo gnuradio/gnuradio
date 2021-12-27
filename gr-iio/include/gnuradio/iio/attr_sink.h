@@ -32,7 +32,7 @@ namespace iio {
 class IIO_API attr_sink : virtual public gr::block
 {
 public:
-    typedef std::shared_ptr<attr_sink> sptr;
+    using sptr = std::shared_ptr<attr_sink>;
 
     /*!
      * \brief Return a shared_ptr to a new instance of iio::attr_sink.

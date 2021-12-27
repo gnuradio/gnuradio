@@ -33,7 +33,7 @@ class BLOCKS_API delay : virtual public block
 {
 public:
     // gr::blocks::delay::sptr
-    typedef std::shared_ptr<delay> sptr;
+    using sptr = std::shared_ptr<delay>;
 
     /*!
      * \brief Make a delay block.

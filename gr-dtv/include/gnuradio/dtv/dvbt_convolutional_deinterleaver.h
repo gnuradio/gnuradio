@@ -27,7 +27,7 @@ namespace dtv {
 class DTV_API dvbt_convolutional_deinterleaver : virtual public block
 {
 public:
-    typedef std::shared_ptr<dvbt_convolutional_deinterleaver> sptr;
+    using sptr = std::shared_ptr<dvbt_convolutional_deinterleaver>;
 
     /*!
      * \brief Create a DVB-T convolutional deinterleaver.

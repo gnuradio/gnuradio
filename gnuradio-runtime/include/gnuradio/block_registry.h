@@ -43,8 +43,8 @@ public:
 
 private:
     // typedef std::map< long, basic_block_sptr >   blocksubmap_t;
-    typedef std::map<long, basic_block*> blocksubmap_t;
-    typedef std::map<std::string, blocksubmap_t> blockmap_t;
+    using blocksubmap_t = std::map<long, basic_block*>;
+    using blockmap_t = std::map<std::string, blocksubmap_t>;
 
     blockmap_t d_map;
     pmt::pmt_t d_ref_map;

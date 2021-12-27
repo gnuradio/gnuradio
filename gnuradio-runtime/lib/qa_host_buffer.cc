@@ -26,7 +26,7 @@
 class nop : public gr::block
 {
 public:
-    typedef std::shared_ptr<nop> sptr;
+    using sptr = std::shared_ptr<nop>;
     static sptr make(size_t sizeof_stream_item)
     {
         return gnuradio::make_block_sptr<nop>(sizeof_stream_item);

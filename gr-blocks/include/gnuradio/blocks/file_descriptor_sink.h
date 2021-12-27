@@ -25,7 +25,7 @@ class BLOCKS_API file_descriptor_sink : virtual public sync_block
 {
 public:
     // gr::blocks::file_descriptor_sink::sptr
-    typedef std::shared_ptr<file_descriptor_sink> sptr;
+    using sptr = std::shared_ptr<file_descriptor_sink>;
 
     /*!
      * Build a file descriptor sink block. The provided file descriptor will

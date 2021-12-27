@@ -30,7 +30,7 @@ template <class T>
 class BLOCKS_API peak_detector : virtual public sync_block
 {
 public:
-    typedef std::shared_ptr<peak_detector<T>> sptr;
+    using sptr = std::shared_ptr<peak_detector<T>>;
 
     /*!
      * Make a peak detector block.
@@ -99,9 +99,9 @@ public:
     virtual float alpha() = 0;
 };
 
-typedef peak_detector<float> peak_detector_fb;
-typedef peak_detector<std::int32_t> peak_detector_ib;
-typedef peak_detector<std::int16_t> peak_detector_sb;
+using peak_detector_fb = peak_detector<float>;
+using peak_detector_ib = peak_detector<std::int32_t>;
+using peak_detector_sb = peak_detector<std::int16_t>;
 
 } /* namespace blocks */
 } /* namespace gr */

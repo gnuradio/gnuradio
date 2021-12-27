@@ -31,7 +31,7 @@ class DIGITAL_API diff_decoder_bb : virtual public sync_block
 {
 public:
     // gr::digital::diff_decoder_bb::sptr
-    typedef std::shared_ptr<diff_decoder_bb> sptr;
+    using sptr = std::shared_ptr<diff_decoder_bb>;
 
     /*!
      * Make a differential decoder block.

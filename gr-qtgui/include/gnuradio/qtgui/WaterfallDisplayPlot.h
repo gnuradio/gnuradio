@@ -24,7 +24,7 @@
 #else
 #include <qwt_interval.h>
 
-typedef QwtInterval QwtDoubleInterval;
+using QwtDoubleInterval = QwtInterval;
 #endif
 
 /*!

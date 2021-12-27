@@ -42,16 +42,16 @@ namespace gr {
 class GR_RUNTIME_API basic_block : public msg_accepter,
                                    public std::enable_shared_from_this<basic_block>
 {
-    typedef std::function<void(pmt::pmt_t)> msg_handler_t;
+    using msg_handler_t = std::function<void(pmt::pmt_t)>;
 
 private:
-    typedef std::map<pmt::pmt_t, msg_handler_t, pmt::comparator> d_msg_handlers_t;
+    using d_msg_handlers_t = std::map<pmt::pmt_t, msg_handler_t, pmt::comparator>;
     d_msg_handlers_t d_msg_handlers;
 
-    typedef std::deque<pmt::pmt_t> msg_queue_t;
-    typedef std::map<pmt::pmt_t, msg_queue_t, pmt::comparator> msg_queue_map_t;
-    typedef std::map<pmt::pmt_t, msg_queue_t, pmt::comparator>::iterator
-        msg_queue_map_itr;
+    using msg_queue_t = std::deque<pmt::pmt_t>;
+    using msg_queue_map_t = std::map<pmt::pmt_t, msg_queue_t, pmt::comparator>;
+    using msg_queue_map_itr =
+        std::map<pmt::pmt_t, msg_queue_t, pmt::comparator>::iterator;
 
     gr::thread::mutex mutex; //< protects all vars
 
@@ -409,8 +409,8 @@ inline bool operator<(basic_block_sptr lhs, basic_block_sptr rhs)
     return lhs->unique_id() < rhs->unique_id();
 }
 
-typedef std::vector<basic_block_sptr> basic_block_vector_t;
-typedef std::vector<basic_block_sptr>::iterator basic_block_viter_t;
+using basic_block_vector_t = std::vector<basic_block_sptr>;
+using basic_block_viter_t = std::vector<basic_block_sptr>::iterator;
 
 GR_RUNTIME_API long basic_block_ncurrently_allocated();
 

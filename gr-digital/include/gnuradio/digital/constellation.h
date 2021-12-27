@@ -28,7 +28,7 @@ namespace digital {
 /************************************************************/
 
 class constellation;
-typedef std::shared_ptr<constellation> constellation_sptr;
+using constellation_sptr = std::shared_ptr<constellation>;
 
 /*!
  * \brief An abstracted constellation object
@@ -229,7 +229,7 @@ protected:
 class DIGITAL_API constellation_calcdist : public constellation
 {
 public:
-    typedef std::shared_ptr<constellation_calcdist> sptr;
+    using sptr = std::shared_ptr<constellation_calcdist>;
 
     /*!
      * Make a general constellation object that calculates the Euclidean distance for hard
@@ -336,7 +336,7 @@ private:
 class DIGITAL_API constellation_rect : public constellation_sector
 {
 public:
-    typedef std::shared_ptr<constellation_rect> sptr;
+    using sptr = std::shared_ptr<constellation_rect>;
 
     /*!
      * Make a rectangular constellation object.
@@ -410,7 +410,7 @@ private:
 class DIGITAL_API constellation_expl_rect : public constellation_rect
 {
 public:
-    typedef std::shared_ptr<constellation_expl_rect> sptr;
+    using sptr = std::shared_ptr<constellation_expl_rect>;
 
     static sptr make(std::vector<gr_complex> constellation,
                      std::vector<int> pre_diff_code,
@@ -460,7 +460,7 @@ private:
 class DIGITAL_API constellation_psk : public constellation_sector
 {
 public:
-    typedef std::shared_ptr<constellation_psk> sptr;
+    using sptr = std::shared_ptr<constellation_psk>;
 
     // public constructor
     static sptr make(std::vector<gr_complex> constell,
@@ -499,7 +499,7 @@ protected:
 class DIGITAL_API constellation_bpsk : public constellation
 {
 public:
-    typedef std::shared_ptr<constellation_bpsk> sptr;
+    using sptr = std::shared_ptr<constellation_bpsk>;
 
     // public constructor
     static sptr make();
@@ -535,7 +535,7 @@ protected:
 class DIGITAL_API constellation_qpsk : public constellation
 {
 public:
-    typedef std::shared_ptr<constellation_qpsk> sptr;
+    using sptr = std::shared_ptr<constellation_qpsk>;
 
     // public constructor
     static sptr make();
@@ -570,7 +570,7 @@ protected:
 class DIGITAL_API constellation_dqpsk : public constellation
 {
 public:
-    typedef std::shared_ptr<constellation_dqpsk> sptr;
+    using sptr = std::shared_ptr<constellation_dqpsk>;
 
     // public constructor
     static sptr make();
@@ -607,7 +607,7 @@ protected:
 class DIGITAL_API constellation_8psk : public constellation
 {
 public:
-    typedef std::shared_ptr<constellation_8psk> sptr;
+    using sptr = std::shared_ptr<constellation_8psk>;
 
     // public constructor
     static sptr make();
@@ -643,7 +643,7 @@ protected:
 class DIGITAL_API constellation_8psk_natural : public constellation
 {
 public:
-    typedef std::shared_ptr<constellation_8psk_natural> sptr;
+    using sptr = std::shared_ptr<constellation_8psk_natural>;
 
     // public constructor
     static sptr make();
@@ -681,7 +681,7 @@ protected:
 class DIGITAL_API constellation_16qam : public constellation
 {
 public:
-    typedef std::shared_ptr<constellation_16qam> sptr;
+    using sptr = std::shared_ptr<constellation_16qam>;
 
     // public constructor
     static sptr make();

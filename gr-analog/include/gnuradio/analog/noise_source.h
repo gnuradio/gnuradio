@@ -32,7 +32,7 @@ class ANALOG_API noise_source : virtual public sync_block
 {
 public:
     // gr::analog::noise_source::sptr
-    typedef std::shared_ptr<noise_source<T>> sptr;
+    using sptr = std::shared_ptr<noise_source<T>>;
 
     /*! Build a noise source
      * \param type the random distribution to use (see
@@ -64,10 +64,10 @@ public:
     virtual float amplitude() const = 0;
 };
 
-typedef noise_source<std::int16_t> noise_source_s;
-typedef noise_source<std::int32_t> noise_source_i;
-typedef noise_source<float> noise_source_f;
-typedef noise_source<gr_complex> noise_source_c;
+using noise_source_s = noise_source<std::int16_t>;
+using noise_source_i = noise_source<std::int32_t>;
+using noise_source_f = noise_source<float>;
+using noise_source_c = noise_source<gr_complex>;
 
 } /* namespace analog */
 } /* namespace gr */

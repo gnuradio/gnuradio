@@ -29,7 +29,7 @@ template <class T>
 class PDU_API tags_to_pdu : virtual public gr::sync_block
 {
 public:
-    typedef std::shared_ptr<tags_to_pdu<T>> sptr;
+    using sptr = std::shared_ptr<tags_to_pdu<T>>;
 
     /*!
      * \brief Return a shared_ptr to a new instance of pdu_utils::tags_to_pdu.
@@ -68,11 +68,11 @@ public:
     virtual void enable_time_debug(bool) = 0;
 };
 
-typedef tags_to_pdu<unsigned char> tags_to_pdu_b;
-typedef tags_to_pdu<short> tags_to_pdu_s;
-typedef tags_to_pdu<int> tags_to_pdu_i;
-typedef tags_to_pdu<float> tags_to_pdu_f;
-typedef tags_to_pdu<gr_complex> tags_to_pdu_c;
+using tags_to_pdu_b = tags_to_pdu<unsigned char>;
+using tags_to_pdu_s = tags_to_pdu<short>;
+using tags_to_pdu_i = tags_to_pdu<int>;
+using tags_to_pdu_f = tags_to_pdu<float>;
+using tags_to_pdu_c = tags_to_pdu<gr_complex>;
 } // namespace pdu
 } // namespace gr
 

@@ -59,7 +59,7 @@ class DIGITAL_API clock_recovery_mm_ff : virtual public block
 {
 public:
     // gr::digital::clock_recovery_mm_ff::sptr
-    typedef std::shared_ptr<clock_recovery_mm_ff> sptr;
+    using sptr = std::shared_ptr<clock_recovery_mm_ff>;
 
     /*!
      * Make a M&M clock recovery block.

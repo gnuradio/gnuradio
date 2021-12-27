@@ -46,7 +46,7 @@ namespace network {
 class NETWORK_API udp_source : virtual public gr::sync_block
 {
 public:
-    typedef std::shared_ptr<udp_source> sptr;
+    using sptr = std::shared_ptr<udp_source>;
 
     /*!
      * Build a udp_source block.

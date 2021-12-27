@@ -12,8 +12,8 @@
 #define INCLUDED_GR_COMPLEX_H
 
 #include <complex>
-typedef std::complex<float> gr_complex;
-typedef std::complex<double> gr_complexd;
+using gr_complex = std::complex<float>;
+using gr_complexd = std::complex<double>;
 
 inline bool is_complex(gr_complex x)
 {

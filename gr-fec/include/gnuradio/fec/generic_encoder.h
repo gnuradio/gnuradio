@@ -34,7 +34,7 @@ public:
     std::string alias();
 
 public:
-    typedef std::shared_ptr<generic_encoder> sptr;
+    using sptr = std::shared_ptr<generic_encoder>;
 
     /*!
      * Returns the rate of the code. For every 1 input bit, there

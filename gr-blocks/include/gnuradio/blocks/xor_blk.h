@@ -30,14 +30,14 @@ class BLOCKS_API xor_blk : virtual public sync_block
 {
 public:
     // gr::blocks::xor::sptr
-    typedef std::shared_ptr<xor_blk<T>> sptr;
+    using sptr = std::shared_ptr<xor_blk<T>>;
 
     static sptr make(size_t vlen = 1);
 };
 
-typedef xor_blk<std::uint8_t> xor_bb;
-typedef xor_blk<std::int16_t> xor_ss;
-typedef xor_blk<std::int32_t> xor_ii;
+using xor_bb = xor_blk<std::uint8_t>;
+using xor_ss = xor_blk<std::int16_t>;
+using xor_ii = xor_blk<std::int32_t>;
 } /* namespace blocks */
 } /* namespace gr */
 

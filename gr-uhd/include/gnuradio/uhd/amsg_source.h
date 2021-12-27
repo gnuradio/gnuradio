@@ -24,7 +24,7 @@ class GR_UHD_API amsg_source
 {
 public:
     // gr::uhd::amsg_source::sptr
-    typedef std::shared_ptr<amsg_source> sptr;
+    using sptr = std::shared_ptr<amsg_source>;
 
     /*!
      * \brief Destructor

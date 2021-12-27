@@ -44,7 +44,7 @@ class FILTER_API fft_filter_ccc : virtual public sync_decimator
 {
 public:
     // gr::filter::fft_filter_ccc::sptr
-    typedef std::shared_ptr<fft_filter_ccc> sptr;
+    using sptr = std::shared_ptr<fft_filter_ccc>;
 
     /*!
      * Build an FFT filter blocks.

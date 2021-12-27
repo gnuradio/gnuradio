@@ -28,7 +28,7 @@ class BLOCKS_API vector_insert : virtual public block
 {
 public:
     // gr::blocks::vector_insert::sptr
-    typedef std::shared_ptr<vector_insert<T>> sptr;
+    using sptr = std::shared_ptr<vector_insert<T>>;
 
     /*!
      * Make vector insert block.
@@ -43,11 +43,11 @@ public:
     virtual void set_data(const std::vector<T>& data) = 0;
 };
 
-typedef vector_insert<std::uint8_t> vector_insert_b;
-typedef vector_insert<std::int16_t> vector_insert_s;
-typedef vector_insert<std::int32_t> vector_insert_i;
-typedef vector_insert<float> vector_insert_f;
-typedef vector_insert<gr_complex> vector_insert_c;
+using vector_insert_b = vector_insert<std::uint8_t>;
+using vector_insert_s = vector_insert<std::int16_t>;
+using vector_insert_i = vector_insert<std::int32_t>;
+using vector_insert_f = vector_insert<float>;
+using vector_insert_c = vector_insert<gr_complex>;
 } /* namespace blocks */
 } /* namespace gr */
 

@@ -30,7 +30,7 @@ class FEC_API conv_bit_corr_bb : virtual public block
 {
 public:
     // gr::fec::conv_bit_corr_bb::sptr
-    typedef std::shared_ptr<conv_bit_corr_bb> sptr;
+    using sptr = std::shared_ptr<conv_bit_corr_bb>;
 
     static sptr make(std::vector<unsigned long long> correlator,
                      int corr_sym,

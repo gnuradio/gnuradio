@@ -55,7 +55,7 @@ class DIGITAL_API costas_loop_cc : virtual public sync_block,
 {
 public:
     // gr::digital::costas_loop_cc::sptr
-    typedef std::shared_ptr<costas_loop_cc> sptr;
+    using sptr = std::shared_ptr<costas_loop_cc>;
 
     /*!
      * Make a Costas loop carrier recovery block.

@@ -35,7 +35,7 @@ namespace digital {
 class DIGITAL_API msk_timing_recovery_cc : virtual public gr::block
 {
 public:
-    typedef std::shared_ptr<msk_timing_recovery_cc> sptr;
+    using sptr = std::shared_ptr<msk_timing_recovery_cc>;
 
     /*!
      * \brief Make an MSK timing recovery block.

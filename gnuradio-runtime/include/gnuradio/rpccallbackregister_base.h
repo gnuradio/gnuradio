@@ -14,7 +14,7 @@
 #include <gnuradio/messages/msg_accepter.h>
 #include <gnuradio/messages/msg_producer.h>
 
-typedef uint32_t DisplayType;
+using DisplayType = uint32_t;
 
 //! DisplayType Plotting types
 constexpr uint32_t DISPNULL = 0x0000;
@@ -105,12 +105,12 @@ struct callbackregister_base {
         Tsptr callback;
     };
 
-    typedef callback_t<gr::messages::msg_accepter, gr::messages::msg_accepter_sptr>
-        configureCallback_t;
-    typedef callback_t<gr::messages::msg_producer, gr::messages::msg_producer_sptr>
-        queryCallback_t;
-    typedef callback_t<gr::messages::msg_accepter, gr::messages::msg_accepter_sptr>
-        handlerCallback_t;
+    using configureCallback_t =
+        callback_t<gr::messages::msg_accepter, gr::messages::msg_accepter_sptr>;
+    using queryCallback_t =
+        callback_t<gr::messages::msg_producer, gr::messages::msg_producer_sptr>;
+    using handlerCallback_t =
+        callback_t<gr::messages::msg_accepter, gr::messages::msg_accepter_sptr>;
 
     callbackregister_base() { ; }
     virtual ~callbackregister_base() { ; }

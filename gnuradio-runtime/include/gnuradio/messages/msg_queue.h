@@ -20,7 +20,7 @@ namespace gr {
 namespace messages {
 
 class msg_queue;
-typedef std::shared_ptr<msg_queue> msg_queue_sptr;
+using msg_queue_sptr = std::shared_ptr<msg_queue>;
 
 msg_queue_sptr make_msg_queue(unsigned int limit = 0);
 

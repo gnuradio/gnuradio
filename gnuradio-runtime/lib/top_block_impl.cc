@@ -29,9 +29,7 @@ namespace gr {
 
 #define GR_TOP_BLOCK_IMPL_DEBUG 0
 
-typedef scheduler_sptr (*scheduler_maker)(flat_flowgraph_sptr ffg,
-                                          int max_noutput_items,
-                                          bool catch_exceptions);
+using scheduler_maker = scheduler_sptr (*)(flat_flowgraph_sptr, int, bool);
 
 static struct scheduler_table {
     const char* name;

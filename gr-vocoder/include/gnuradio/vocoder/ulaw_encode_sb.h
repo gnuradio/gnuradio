@@ -25,7 +25,7 @@ class VOCODER_API ulaw_encode_sb : virtual public sync_block
 {
 public:
     // gr::vocoder::ulaw_encode_sb::sptr
-    typedef std::shared_ptr<ulaw_encode_sb> sptr;
+    using sptr = std::shared_ptr<ulaw_encode_sb>;
 
     /*!
      * \brief Make ulaw encoder block.

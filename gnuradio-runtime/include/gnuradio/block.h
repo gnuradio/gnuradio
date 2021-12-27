@@ -1009,8 +1009,8 @@ public:
     std::string identifier() const;
 };
 
-typedef std::vector<block_sptr> block_vector_t;
-typedef std::vector<block_sptr>::iterator block_viter_t;
+using block_vector_t = std::vector<block_sptr>;
+using block_viter_t = std::vector<block_sptr>::iterator;
 
 inline block_sptr cast_to_block_sptr(basic_block_sptr p)
 {

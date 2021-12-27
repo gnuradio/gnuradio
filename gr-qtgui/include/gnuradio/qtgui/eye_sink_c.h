@@ -54,7 +54,7 @@ class QTGUI_API eye_sink_c : virtual public gr::sync_block
 {
 public:
     // gr::qtgui::eye_sink_c::sptr
-    typedef std::shared_ptr<eye_sink_c> sptr;
+    using sptr = std::shared_ptr<eye_sink_c>;
 
     /*!
      * \brief Build complex eye sink

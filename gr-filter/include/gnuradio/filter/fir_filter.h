@@ -56,12 +56,12 @@ protected:
     int d_align;
     int d_naligned;
 };
-typedef fir_filter<float, float, float> fir_filter_fff;
-typedef fir_filter<gr_complex, gr_complex, float> fir_filter_ccf;
-typedef fir_filter<float, gr_complex, gr_complex> fir_filter_fcc;
-typedef fir_filter<gr_complex, gr_complex, gr_complex> fir_filter_ccc;
-typedef fir_filter<std::int16_t, gr_complex, gr_complex> fir_filter_scc;
-typedef fir_filter<float, std::int16_t, float> fir_filter_fsf;
+using fir_filter_fff = fir_filter<float, float, float>;
+using fir_filter_ccf = fir_filter<gr_complex, gr_complex, float>;
+using fir_filter_fcc = fir_filter<float, gr_complex, gr_complex>;
+using fir_filter_ccc = fir_filter<gr_complex, gr_complex, gr_complex>;
+using fir_filter_scc = fir_filter<std::int16_t, gr_complex, gr_complex>;
+using fir_filter_fsf = fir_filter<float, std::int16_t, float>;
 } /* namespace kernel */
 } /* namespace filter */
 } /* namespace gr */

@@ -48,7 +48,7 @@ template <class T, bool forward>
 class FFT_API fft_v : virtual public sync_block
 {
 public:
-    typedef std::shared_ptr<fft_v<T, forward>> sptr;
+    using sptr = std::shared_ptr<fft_v<T, forward>>;
     /*! \brief
      * \param[in] fft_size N.
      * \param[in] window Window function to be used.

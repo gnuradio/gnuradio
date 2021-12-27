@@ -28,7 +28,7 @@ class BLOCKS_API moving_average : virtual public sync_block
 {
 public:
     // gr::blocks::moving_average::sptr
-    typedef std::shared_ptr<moving_average<T>> sptr;
+    using sptr = std::shared_ptr<moving_average<T>>;
 
     /*!
      * Create a moving average block.
@@ -67,10 +67,10 @@ public:
     virtual void set_scale(T scale) = 0;
 };
 
-typedef moving_average<std::int16_t> moving_average_ss;
-typedef moving_average<std::int32_t> moving_average_ii;
-typedef moving_average<float> moving_average_ff;
-typedef moving_average<gr_complex> moving_average_cc;
+using moving_average_ss = moving_average<std::int16_t>;
+using moving_average_ii = moving_average<std::int32_t>;
+using moving_average_ff = moving_average<float>;
+using moving_average_cc = moving_average<gr_complex>;
 } /* namespace blocks */
 } /* namespace gr */
 

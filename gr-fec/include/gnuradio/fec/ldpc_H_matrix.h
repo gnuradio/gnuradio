@@ -38,7 +38,7 @@ class FEC_API ldpc_H_matrix : virtual public fec_mtrx,
                               public std::enable_shared_from_this<ldpc_H_matrix>
 {
 public:
-    typedef std::shared_ptr<ldpc_H_matrix> sptr;
+    using sptr = std::shared_ptr<ldpc_H_matrix>;
 
     /*!
      * \brief Constructor given alist file and gap

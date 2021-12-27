@@ -50,14 +50,14 @@ class BLOCKS_API unpacked_to_packed : virtual public block
 {
 public:
     // gr::blocks::unpacked_to_packed::sptr
-    typedef std::shared_ptr<unpacked_to_packed<T>> sptr;
+    using sptr = std::shared_ptr<unpacked_to_packed<T>>;
 
     static sptr make(unsigned int bits_per_chunk, endianness_t endianness);
 };
 
-typedef unpacked_to_packed<std::uint8_t> unpacked_to_packed_bb;
-typedef unpacked_to_packed<std::int16_t> unpacked_to_packed_ss;
-typedef unpacked_to_packed<std::int32_t> unpacked_to_packed_ii;
+using unpacked_to_packed_bb = unpacked_to_packed<std::uint8_t>;
+using unpacked_to_packed_ss = unpacked_to_packed<std::int16_t>;
+using unpacked_to_packed_ii = unpacked_to_packed<std::int32_t>;
 } /* namespace blocks */
 } /* namespace gr */
 

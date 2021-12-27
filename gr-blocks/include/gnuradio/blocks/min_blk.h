@@ -38,14 +38,14 @@ template <class T>
 class BLOCKS_API min_blk : virtual public sync_block
 {
 public:
-    typedef std::shared_ptr<min_blk<T>> sptr;
+    using sptr = std::shared_ptr<min_blk<T>>;
 
     static sptr make(size_t vlen, size_t vlen_out = 1);
 };
 
-typedef min_blk<std::int16_t> min_ss;
-typedef min_blk<std::int32_t> min_ii;
-typedef min_blk<float> min_ff;
+using min_ss = min_blk<std::int16_t>;
+using min_ii = min_blk<std::int32_t>;
+using min_ff = min_blk<float>;
 } /* namespace blocks */
 } /* namespace gr */
 

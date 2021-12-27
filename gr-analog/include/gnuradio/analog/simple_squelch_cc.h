@@ -25,7 +25,7 @@ class ANALOG_API simple_squelch_cc : virtual public sync_block
 {
 public:
     // gr::analog::simple_squelch_cc::sptr
-    typedef std::shared_ptr<simple_squelch_cc> sptr;
+    using sptr = std::shared_ptr<simple_squelch_cc>;
 
     /*!
      * \brief Make a simple squelch block.

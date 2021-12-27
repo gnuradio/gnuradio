@@ -34,7 +34,7 @@ namespace blocks {
 class BLOCKS_API exponentiate_const_cci : virtual public gr::sync_block
 {
 public:
-    typedef std::shared_ptr<exponentiate_const_cci> sptr;
+    using sptr = std::shared_ptr<exponentiate_const_cci>;
 
     /*
      * \param exponent Exponent the input stream is raised to, which must be an integer.

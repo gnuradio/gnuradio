@@ -35,7 +35,7 @@ class BLOCKS_API copy : virtual public block
 {
 public:
     // gr::blocks::copy::sptr
-    typedef std::shared_ptr<copy> sptr;
+    using sptr = std::shared_ptr<copy>;
 
     static sptr make(size_t itemsize);
 

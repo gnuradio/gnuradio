@@ -33,21 +33,19 @@
 namespace gr {
 namespace thread {
 
-typedef boost::thread thread;
-typedef boost::mutex mutex;
-typedef boost::unique_lock<boost::mutex> scoped_lock;
-typedef boost::condition_variable condition_variable;
-typedef boost::barrier barrier;
-typedef std::shared_ptr<barrier> barrier_sptr;
+using thread = boost::thread;
+using mutex = boost::mutex;
+using scoped_lock = boost::unique_lock<boost::mutex>;
+using condition_variable = boost::condition_variable;
+using barrier = boost::barrier;
+using barrier_sptr = std::shared_ptr<barrier>;
 
 /*! \brief a system-dependent typedef for the underlying thread type.
  */
 #if defined(_WIN32) || defined(__WIN32__) || defined(WIN32)
-typedef HANDLE gr_thread_t;
-#elif defined(macintosh) || defined(__APPLE__) || defined(__APPLE_CC__)
-typedef pthread_t gr_thread_t;
+using gr_thread_t = HANDLE;
 #else
-typedef pthread_t gr_thread_t;
+using gr_thread_t = pthread_t;
 #endif
 
 /*! \brief Get the current thread's ID as a gr_thread_t

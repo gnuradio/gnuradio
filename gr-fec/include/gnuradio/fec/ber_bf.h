@@ -52,7 +52,7 @@ class FEC_API ber_bf : virtual public block
 {
 public:
     // gr::fec::ber_bf::sptr
-    typedef std::shared_ptr<ber_bf> sptr;
+    using sptr = std::shared_ptr<ber_bf>;
 
     /*!
      * Get total number of errors counter value.

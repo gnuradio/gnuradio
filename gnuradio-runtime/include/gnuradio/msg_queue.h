@@ -32,7 +32,7 @@ class GR_RUNTIME_API msg_queue : public msg_handler
     unsigned int d_limit; // max # of messages in queue.  0 -> unbounded
 
 public:
-    typedef std::shared_ptr<msg_queue> sptr;
+    using sptr = std::shared_ptr<msg_queue>;
 
     static sptr make(unsigned int limit = 0);
 

@@ -34,7 +34,7 @@ class BLOCKS_API transcendental : virtual public sync_block
 {
 public:
     // gr::blocks::transcendental::sptr
-    typedef std::shared_ptr<transcendental> sptr;
+    using sptr = std::shared_ptr<transcendental>;
 
     static sptr make(const std::string& name, const std::string& type = "float");
 };

@@ -30,7 +30,7 @@ class DIGITAL_API constellation_encoder_bc : virtual public sync_interpolator
 {
 public:
     // gr::digital::constellation_encoder_bc::sptr
-    typedef std::shared_ptr<constellation_encoder_bc> sptr;
+    using sptr = std::shared_ptr<constellation_encoder_bc>;
 
     /*!
      * \brief Make constellation decoder block.

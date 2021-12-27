@@ -22,7 +22,7 @@
 #include "qwt_double_interval.h"
 #endif
 
-typedef QVector<QRgb> QwtColorTable;
+using QwtColorTable = QVector<QRgb>;
 
 class PlotTimeRasterImage : public QImage
 {

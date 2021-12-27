@@ -31,7 +31,7 @@ namespace zeromq {
 class ZEROMQ_API pub_msg_sink : virtual public gr::block
 {
 public:
-    typedef std::shared_ptr<pub_msg_sink> sptr;
+    using sptr = std::shared_ptr<pub_msg_sink>;
 
     /*!
      * \brief Return a shared_ptr to a new instance of zeromq::pub_msg_sink.

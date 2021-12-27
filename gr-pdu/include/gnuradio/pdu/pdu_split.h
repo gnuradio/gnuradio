@@ -30,7 +30,7 @@ namespace pdu {
 class PDU_API pdu_split : virtual public gr::block
 {
 public:
-    typedef std::shared_ptr<pdu_split> sptr;
+    using sptr = std::shared_ptr<pdu_split>;
 
     /*!
      * \brief Return a shared_ptr to a new instance of pdu::pdu_split.

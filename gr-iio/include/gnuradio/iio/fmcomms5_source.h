@@ -32,7 +32,7 @@ namespace iio {
 class IIO_API fmcomms5_source : virtual public gr::sync_block
 {
 public:
-    typedef std::shared_ptr<fmcomms5_source> sptr;
+    using sptr = std::shared_ptr<fmcomms5_source>;
 
     /*!
      * \brief Return a shared_ptr to a new instance of iio::device.
@@ -200,7 +200,7 @@ public:
 class IIO_API fmcomms5_source_f32c : virtual public gr::hier_block2
 {
 public:
-    typedef std::shared_ptr<fmcomms5_source_f32c> sptr;
+    using sptr = std::shared_ptr<fmcomms5_source_f32c>;
 
     /*!
      * \brief Return a shared_ptr to a new instance of iio::device.

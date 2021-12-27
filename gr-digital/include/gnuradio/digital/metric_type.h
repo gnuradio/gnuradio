@@ -14,11 +14,11 @@
 namespace gr {
 namespace digital {
 
-typedef enum {
+enum trellis_metric_type_t {
     TRELLIS_EUCLIDEAN = 200,
     TRELLIS_HARD_SYMBOL,
     TRELLIS_HARD_BIT
-} trellis_metric_type_t;
+};
 
 } /* namespace digital */
 } /* namespace gr */

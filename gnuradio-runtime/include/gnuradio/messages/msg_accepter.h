@@ -37,7 +37,7 @@ public:
     virtual void post(pmt::pmt_t which_port, pmt::pmt_t msg) = 0;
 };
 
-typedef std::shared_ptr<msg_accepter> msg_accepter_sptr;
+using msg_accepter_sptr = std::shared_ptr<msg_accepter>;
 
 } /* namespace messages */
 } /* namespace gr */

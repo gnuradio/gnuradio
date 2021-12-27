@@ -20,11 +20,11 @@ namespace blocks {
 /*
  * strobing models
  */
-typedef enum {
+enum message_strobe_random_distribution_t {
     STROBE_POISSON = 1,
     STROBE_GAUSSIAN = 2,
     STROBE_UNIFORM = 3
-} message_strobe_random_distribution_t;
+};
 
 /*!
  * \brief Send message at defined interval
@@ -41,7 +41,7 @@ class BLOCKS_API message_strobe_random : virtual public block
 {
 public:
     // gr::blocks::message_strobe_random::sptr
-    typedef std::shared_ptr<message_strobe_random> sptr;
+    using sptr = std::shared_ptr<message_strobe_random>;
 
     /*!
      * Make a message stobe block to sends message \p msg at random

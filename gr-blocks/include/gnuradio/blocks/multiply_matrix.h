@@ -58,7 +58,7 @@ template <class T>
 class BLOCKS_API multiply_matrix : virtual public gr::sync_block
 {
 public:
-    typedef std::shared_ptr<multiply_matrix<T>> sptr;
+    using sptr = std::shared_ptr<multiply_matrix<T>>;
 
     /*!
      * \param A The matrix
@@ -82,8 +82,8 @@ public:
     std::string MSG_PORT_NAME_SET_A;
 };
 
-typedef multiply_matrix<float> multiply_matrix_ff;
-typedef multiply_matrix<gr_complex> multiply_matrix_cc;
+using multiply_matrix_ff = multiply_matrix<float>;
+using multiply_matrix_cc = multiply_matrix<gr_complex>;
 } // namespace blocks
 } // namespace gr
 

@@ -24,7 +24,7 @@ namespace digital {
 class DIGITAL_API packet_header_ofdm : public packet_header_default
 {
 public:
-    typedef std::shared_ptr<packet_header_ofdm> sptr;
+    using sptr = std::shared_ptr<packet_header_ofdm>;
 
     packet_header_ofdm(const std::vector<std::vector<int>>& occupied_carriers,
                        int n_syms,

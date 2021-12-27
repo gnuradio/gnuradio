@@ -26,7 +26,7 @@ class PDU_API pdu_to_tagged_stream : virtual public tagged_stream_block
 {
 public:
     // gr::pdu::pdu_to_tagged_stream::sptr
-    typedef std::shared_ptr<pdu_to_tagged_stream> sptr;
+    using sptr = std::shared_ptr<pdu_to_tagged_stream>;
 
     /*!
      * \brief Construct a pdu_to_tagged_stream block

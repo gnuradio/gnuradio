@@ -27,7 +27,7 @@ class BLOCKS_API add_const_v : virtual public sync_block
 {
 
 public:
-    typedef std::shared_ptr<add_const_v<T>> sptr;
+    using sptr = std::shared_ptr<add_const_v<T>>;
 
     /*!
      * \brief Create an instance of add_const_v
@@ -46,11 +46,11 @@ public:
     virtual void set_k(std::vector<T> k) = 0;
 };
 
-typedef add_const_v<std::uint8_t> add_const_vbb;
-typedef add_const_v<std::int16_t> add_const_vss;
-typedef add_const_v<std::int32_t> add_const_vii;
-typedef add_const_v<float> add_const_vff;
-typedef add_const_v<gr_complex> add_const_vcc;
+using add_const_vbb = add_const_v<std::uint8_t>;
+using add_const_vss = add_const_v<std::int16_t>;
+using add_const_vii = add_const_v<std::int32_t>;
+using add_const_vff = add_const_v<float>;
+using add_const_vcc = add_const_v<gr_complex>;
 
 } /* namespace blocks */
 } /* namespace gr */

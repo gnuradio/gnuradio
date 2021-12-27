@@ -49,7 +49,7 @@ class QTGUI_API time_sink_f : virtual public sync_block
 {
 public:
     // gr::qtgui::time_sink_f::sptr
-    typedef std::shared_ptr<time_sink_f> sptr;
+    using sptr = std::shared_ptr<time_sink_f>;
 
     /*!
      * \brief Build floating point time sink

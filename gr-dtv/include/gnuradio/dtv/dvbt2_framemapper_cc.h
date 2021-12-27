@@ -27,7 +27,7 @@ namespace dtv {
 class DTV_API dvbt2_framemapper_cc : virtual public gr::block
 {
 public:
-    typedef std::shared_ptr<dvbt2_framemapper_cc> sptr;
+    using sptr = std::shared_ptr<dvbt2_framemapper_cc>;
 
     /*!
      * \brief Create a DVB-T2 frame mapper.

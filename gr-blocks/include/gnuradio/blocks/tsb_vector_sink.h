@@ -30,7 +30,7 @@ template <class T>
 class BLOCKS_API tsb_vector_sink : virtual public gr::tagged_stream_block
 {
 public:
-    typedef std::shared_ptr<tsb_vector_sink<T>> sptr;
+    using sptr = std::shared_ptr<tsb_vector_sink<T>>;
 
     virtual void reset() = 0;
     virtual std::vector<std::vector<T>> data() const = 0;
@@ -44,11 +44,11 @@ public:
      */
     static sptr make(unsigned int vlen = 1, const std::string& tsb_key = "ts_last");
 };
-typedef tsb_vector_sink<std::uint8_t> tsb_vector_sink_b;
-typedef tsb_vector_sink<std::uint32_t> tsb_vector_sink_i;
-typedef tsb_vector_sink<std::uint16_t> tsb_vector_sink_s;
-typedef tsb_vector_sink<float> tsb_vector_sink_f;
-typedef tsb_vector_sink<gr_complex> tsb_vector_sink_c;
+using tsb_vector_sink_b = tsb_vector_sink<std::uint8_t>;
+using tsb_vector_sink_i = tsb_vector_sink<std::uint32_t>;
+using tsb_vector_sink_s = tsb_vector_sink<std::uint16_t>;
+using tsb_vector_sink_f = tsb_vector_sink<float>;
+using tsb_vector_sink_c = tsb_vector_sink<gr_complex>;
 
 } // namespace blocks
 } // namespace gr

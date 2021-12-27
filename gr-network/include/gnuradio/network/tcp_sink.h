@@ -38,7 +38,7 @@ namespace network {
 class NETWORK_API tcp_sink : virtual public gr::sync_block
 {
 public:
-    typedef std::shared_ptr<tcp_sink> sptr;
+    using sptr = std::shared_ptr<tcp_sink>;
 
     /*!
      * Build a tcp_sink block.

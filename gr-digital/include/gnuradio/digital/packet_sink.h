@@ -45,7 +45,7 @@ class DIGITAL_API packet_sink : virtual public sync_block
 {
 public:
     // gr::digital::packet_sink::sptr
-    typedef std::shared_ptr<packet_sink> sptr;
+    using sptr = std::shared_ptr<packet_sink>;
 
     /*!
      * Make a packet_sink block.

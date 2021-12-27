@@ -19,6 +19,6 @@ enum catv_constellation_t {
 } // namespace dtv
 } // namespace gr
 
-typedef gr::dtv::catv_constellation_t catv_constellation_t;
+using catv_constellation_t = gr::dtv::catv_constellation_t;
 
 #endif /* INCLUDED_DTV_CATV_CONFIG_H */

@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(depuncture_bb.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(a1711f618d99f02ec85fdf11f19e512c)                     */
+/* BINDTOOL_HEADER_FILE_HASH(0c9925bdb17521da42775fd11d36d2a5)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>

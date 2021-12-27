@@ -32,7 +32,7 @@ class BLOCKS_API and_const : virtual public sync_block
 
 public:
     // gr::blocks::and_const::sptr
-    typedef std::shared_ptr<and_const<T>> sptr;
+    using sptr = std::shared_ptr<and_const<T>>;
 
     /*!
      * \brief Create an instance of and_const
@@ -51,9 +51,9 @@ public:
     virtual void set_k(T k) = 0;
 };
 
-typedef and_const<std::uint8_t> and_const_bb;
-typedef and_const<std::int16_t> and_const_ss;
-typedef and_const<std::int32_t> and_const_ii;
+using and_const_bb = and_const<std::uint8_t>;
+using and_const_ss = and_const<std::int16_t>;
+using and_const_ii = and_const<std::int32_t>;
 } /* namespace blocks */
 } /* namespace gr */
 

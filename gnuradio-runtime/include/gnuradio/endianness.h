@@ -13,7 +13,7 @@
 
 namespace gr {
 
-typedef enum { GR_MSB_FIRST, GR_LSB_FIRST } endianness_t;
+enum endianness_t { GR_MSB_FIRST, GR_LSB_FIRST };
 
 } /* namespace gr */
 

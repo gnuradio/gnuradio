@@ -25,7 +25,7 @@ class BLOCKS_API endian_swap : virtual public sync_block
 {
 public:
     // gr::blocks::endian_swap::sptr
-    typedef std::shared_ptr<endian_swap> sptr;
+    using sptr = std::shared_ptr<endian_swap>;
 
     /*!
      * Make an endian swap block.

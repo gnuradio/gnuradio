@@ -62,7 +62,7 @@ enum wavfile_subformat_t {
 } /* namespace blocks */
 } /* namespace gr */
 
-typedef gr::blocks::wavfile_format_t wavfile_format_t;
-typedef gr::blocks::wavfile_subformat_t wavfile_subformat_t;
+using wavfile_format_t = gr::blocks::wavfile_format_t;
+using wavfile_subformat_t = gr::blocks::wavfile_subformat_t;
 
 #endif /* _GR_WAVFILE_H_ */

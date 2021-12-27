@@ -31,7 +31,7 @@ class BLOCKS_API char_to_float : virtual public sync_block
 {
 public:
     // gr::blocks::char_to_float_ff::sptr
-    typedef std::shared_ptr<char_to_float> sptr;
+    using sptr = std::shared_ptr<char_to_float>;
 
     /*!
      * Build a chars to float stream converter block.

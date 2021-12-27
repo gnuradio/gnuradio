@@ -20,11 +20,11 @@
 
 #include <cstdint>
 
-typedef std::vector<int> gr_vector_int;
-typedef std::vector<unsigned int> gr_vector_uint;
-typedef std::vector<float> gr_vector_float;
-typedef std::vector<double> gr_vector_double;
-typedef std::vector<void*> gr_vector_void_star;
-typedef std::vector<const void*> gr_vector_const_void_star;
+using gr_vector_int = std::vector<int>;
+using gr_vector_uint = std::vector<unsigned int>;
+using gr_vector_float = std::vector<float>;
+using gr_vector_double = std::vector<double>;
+using gr_vector_void_star = std::vector<void*>;
+using gr_vector_const_void_star = std::vector<const void*>;
 
 #endif /* INCLUDED_GR_TYPES_H */

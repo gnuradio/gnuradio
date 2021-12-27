@@ -33,7 +33,7 @@ template <typename T>
 class IIO_API fmcomms2_source : virtual public gr::sync_block
 {
 public:
-    typedef std::shared_ptr<fmcomms2_source> sptr;
+    using sptr = std::shared_ptr<fmcomms2_source>;
 
     static sptr make(const std::string& uri,
                      const std::vector<bool>& ch_en,
@@ -57,9 +57,9 @@ public:
                                    float fstop = 0.0) = 0;
 };
 
-typedef fmcomms2_source<int16_t> fmcomms2_source_s;
-typedef fmcomms2_source<std::complex<int16_t>> fmcomms2_source_sc16;
-typedef fmcomms2_source<gr_complex> fmcomms2_source_fc32;
+using fmcomms2_source_s = fmcomms2_source<int16_t>;
+using fmcomms2_source_sc16 = fmcomms2_source<std::complex<int16_t>>;
+using fmcomms2_source_fc32 = fmcomms2_source<gr_complex>;
 
 } // namespace iio
 } // namespace gr

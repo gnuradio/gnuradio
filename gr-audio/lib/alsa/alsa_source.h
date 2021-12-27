@@ -26,7 +26,7 @@ namespace gr {
 namespace audio {
 
 class alsa_source;
-typedef std::shared_ptr<alsa_source> alsa_source_sptr;
+using alsa_source_sptr = std::shared_ptr<alsa_source>;
 
 /*!
  * \brief audio source using ALSA

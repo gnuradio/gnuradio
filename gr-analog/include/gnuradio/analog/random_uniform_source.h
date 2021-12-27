@@ -27,7 +27,7 @@ class ANALOG_API random_uniform_source : virtual public sync_block
 {
 public:
     // gr::analog::random_uniform_source::sptr
-    typedef std::shared_ptr<random_uniform_source<T>> sptr;
+    using sptr = std::shared_ptr<random_uniform_source<T>>;
 
     /*!
      * \brief Return a shared_ptr to a new instance of analog::random_uniform_source_X.
@@ -43,9 +43,9 @@ public:
     static sptr make(int minimum, int maximum, int seed);
 };
 
-typedef random_uniform_source<std::uint8_t> random_uniform_source_b;
-typedef random_uniform_source<std::int16_t> random_uniform_source_s;
-typedef random_uniform_source<std::int32_t> random_uniform_source_i;
+using random_uniform_source_b = random_uniform_source<std::uint8_t>;
+using random_uniform_source_s = random_uniform_source<std::int16_t>;
+using random_uniform_source_i = random_uniform_source<std::int32_t>;
 } /* namespace analog */
 } /* namespace gr */
 

@@ -31,14 +31,14 @@ class BLOCKS_API and_blk : virtual public sync_block
 {
 public:
     // gr::blocks::and_blk::sptr
-    typedef std::shared_ptr<and_blk<T>> sptr;
+    using sptr = std::shared_ptr<and_blk<T>>;
 
     static sptr make(size_t vlen = 1);
 };
 
-typedef and_blk<std::uint8_t> and_bb;
-typedef and_blk<std::int16_t> and_ss;
-typedef and_blk<std::int32_t> and_ii;
+using and_bb = and_blk<std::uint8_t>;
+using and_ss = and_blk<std::int16_t>;
+using and_ii = and_blk<std::int32_t>;
 } /* namespace blocks */
 } /* namespace gr */
 

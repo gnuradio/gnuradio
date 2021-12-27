@@ -27,7 +27,7 @@ namespace uhd {
 class GR_UHD_API rfnoc_tx_radio : virtual public rfnoc_block
 {
 public:
-    typedef std::shared_ptr<rfnoc_tx_radio> sptr;
+    using sptr = std::shared_ptr<rfnoc_tx_radio>;
 
     /*!
      * \param graph Reference to the underlying rfnoc_graph object

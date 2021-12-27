@@ -29,14 +29,14 @@ template <class T>
 class BLOCKS_API not_blk : virtual public sync_block
 {
 public:
-    typedef std::shared_ptr<not_blk<T>> sptr;
+    using sptr = std::shared_ptr<not_blk<T>>;
 
     static sptr make(size_t vlen = 1);
 };
 
-typedef not_blk<std::uint8_t> not_bb;
-typedef not_blk<std::int16_t> not_ss;
-typedef not_blk<std::int32_t> not_ii;
+using not_bb = not_blk<std::uint8_t>;
+using not_ss = not_blk<std::int16_t>;
+using not_ii = not_blk<std::int32_t>;
 } /* namespace blocks */
 } /* namespace gr */
 

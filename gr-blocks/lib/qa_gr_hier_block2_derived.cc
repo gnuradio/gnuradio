@@ -23,7 +23,7 @@
 // Declare a test C++ hierarchical block
 
 class gr_derived_block;
-typedef std::shared_ptr<gr_derived_block> gr_derived_block_sptr;
+using gr_derived_block_sptr = std::shared_ptr<gr_derived_block>;
 gr_derived_block_sptr gr_make_derived_block();
 
 class gr_derived_block : public gr::hier_block2

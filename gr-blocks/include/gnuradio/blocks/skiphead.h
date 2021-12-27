@@ -30,7 +30,7 @@ class BLOCKS_API skiphead : virtual public block
 {
 public:
     // gr::blocks::skiphead::sptr
-    typedef std::shared_ptr<skiphead> sptr;
+    using sptr = std::shared_ptr<skiphead>;
 
     static sptr make(size_t itemsize, uint64_t nitems_to_skip);
 };

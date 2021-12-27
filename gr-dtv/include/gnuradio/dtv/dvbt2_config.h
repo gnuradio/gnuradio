@@ -125,22 +125,22 @@ enum dvbt2_bandwidth_t {
 } // namespace dtv
 } // namespace gr
 
-typedef gr::dtv::dvbt2_rotation_t dvbt2_rotation_t;
-typedef gr::dtv::dvbt2_streamtype_t dvbt2_streamtype_t;
-typedef gr::dtv::dvbt2_inputmode_t dvbt2_inputmode_t;
-typedef gr::dtv::dvbt2_extended_carrier_t dvbt2_extended_carrier_t;
-typedef gr::dtv::dvbt2_preamble_t dvbt2_preamble_t;
-typedef gr::dtv::dvbt2_fftsize_t dvbt2_fftsize_t;
-typedef gr::dtv::dvbt2_papr_t dvbt2_papr_t;
-typedef gr::dtv::dvbt2_l1constellation_t dvbt2_l1constellation_t;
-typedef gr::dtv::dvbt2_pilotpattern_t dvbt2_pilotpattern_t;
-typedef gr::dtv::dvbt2_version_t dvbt2_version_t;
-typedef gr::dtv::dvbt2_reservedbiasbits_t dvbt2_reservedbiasbits_t;
-typedef gr::dtv::dvbt2_l1scrambled_t dvbt2_l1scrambled_t;
-typedef gr::dtv::dvbt2_misogroup_t dvbt2_misogroup_t;
-typedef gr::dtv::dvbt2_showlevels_t dvbt2_showlevels_t;
-typedef gr::dtv::dvbt2_inband_t dvbt2_inband_t;
-typedef gr::dtv::dvbt2_equalization_t dvbt2_equalization_t;
-typedef gr::dtv::dvbt2_bandwidth_t dvbt2_bandwidth_t;
+using dvbt2_rotation_t = gr::dtv::dvbt2_rotation_t;
+using dvbt2_streamtype_t = gr::dtv::dvbt2_streamtype_t;
+using dvbt2_inputmode_t = gr::dtv::dvbt2_inputmode_t;
+using dvbt2_extended_carrier_t = gr::dtv::dvbt2_extended_carrier_t;
+using dvbt2_preamble_t = gr::dtv::dvbt2_preamble_t;
+using dvbt2_fftsize_t = gr::dtv::dvbt2_fftsize_t;
+using dvbt2_papr_t = gr::dtv::dvbt2_papr_t;
+using dvbt2_l1constellation_t = gr::dtv::dvbt2_l1constellation_t;
+using dvbt2_pilotpattern_t = gr::dtv::dvbt2_pilotpattern_t;
+using dvbt2_version_t = gr::dtv::dvbt2_version_t;
+using dvbt2_reservedbiasbits_t = gr::dtv::dvbt2_reservedbiasbits_t;
+using dvbt2_l1scrambled_t = gr::dtv::dvbt2_l1scrambled_t;
+using dvbt2_misogroup_t = gr::dtv::dvbt2_misogroup_t;
+using dvbt2_showlevels_t = gr::dtv::dvbt2_showlevels_t;
+using dvbt2_inband_t = gr::dtv::dvbt2_inband_t;
+using dvbt2_equalization_t = gr::dtv::dvbt2_equalization_t;
+using dvbt2_bandwidth_t = gr::dtv::dvbt2_bandwidth_t;
 
 #endif /* INCLUDED_DTV_DVBT2_CONFIG_H */

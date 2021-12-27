@@ -70,15 +70,15 @@ namespace digital {
  * _on_Signal_Processing_, Volume 47, No. 9, September 1999
  *
  */
-typedef enum {
+enum tm_type {
     THRESHOLD_DYNAMIC,
     THRESHOLD_ABSOLUTE,
-} tm_type;
+};
 
 class DIGITAL_API corr_est_cc : virtual public sync_block
 {
 public:
-    typedef std::shared_ptr<corr_est_cc> sptr;
+    using sptr = std::shared_ptr<corr_est_cc>;
 
     /*!
      * Make a block that correlates against the \p symbols vector

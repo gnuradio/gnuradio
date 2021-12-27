@@ -26,7 +26,7 @@ class DTV_API atsc_fs_checker : virtual public gr::block
 {
 public:
     // gr::dtv::atsc_fs_checker::sptr
-    typedef std::shared_ptr<atsc_fs_checker> sptr;
+    using sptr = std::shared_ptr<atsc_fs_checker>;
 
     /*!
      * \brief Make a new instance of gr::dtv::atsc_fs_checker.

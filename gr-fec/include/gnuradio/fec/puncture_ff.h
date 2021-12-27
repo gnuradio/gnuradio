@@ -77,7 +77,7 @@ class FEC_API puncture_ff : virtual public block
 {
 public:
     // gr::fec::puncture_ff::sptr
-    typedef std::shared_ptr<puncture_ff> sptr;
+    using sptr = std::shared_ptr<puncture_ff>;
 
     /*!
      * \brief Constructs a puncture block for floats.

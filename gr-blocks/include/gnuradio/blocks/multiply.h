@@ -31,15 +31,15 @@ class BLOCKS_API multiply : virtual public sync_block
 {
 public:
     // gr::blocks::multiply::sptr
-    typedef std::shared_ptr<multiply<T>> sptr;
+    using sptr = std::shared_ptr<multiply<T>>;
 
     static sptr make(size_t vlen = 1);
 };
 
-typedef multiply<std::int16_t> multiply_ss;
-typedef multiply<std::int32_t> multiply_ii;
-typedef multiply<float> multiply_ff;
-typedef multiply<gr_complex> multiply_cc;
+using multiply_ss = multiply<std::int16_t>;
+using multiply_ii = multiply<std::int32_t>;
+using multiply_ff = multiply<float>;
+using multiply_cc = multiply<gr_complex>;
 } /* namespace blocks */
 } /* namespace gr */
 

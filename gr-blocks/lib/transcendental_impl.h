@@ -16,7 +16,7 @@
 namespace gr {
 namespace blocks {
 
-typedef int (*work_fcn_type)(int, gr_vector_const_void_star&, gr_vector_void_star&);
+using work_fcn_type = int (*)(int, gr_vector_const_void_star&, gr_vector_void_star&);
 
 class transcendental_impl : public transcendental
 {

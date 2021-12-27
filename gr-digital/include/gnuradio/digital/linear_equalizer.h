@@ -31,7 +31,7 @@ class DIGITAL_API linear_equalizer : virtual public gr::sync_decimator
 {
 
 public:
-    typedef std::shared_ptr<linear_equalizer> sptr;
+    using sptr = std::shared_ptr<linear_equalizer>;
 
     /*!
      * \brief Return a shared_ptr to a new instance of

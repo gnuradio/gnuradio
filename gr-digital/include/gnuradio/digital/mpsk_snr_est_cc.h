@@ -43,7 +43,7 @@ class DIGITAL_API mpsk_snr_est_cc : virtual public sync_block
 {
 public:
     // gr::digital::mpsk_snr_est_cc::sptr
-    typedef std::shared_ptr<mpsk_snr_est_cc> sptr;
+    using sptr = std::shared_ptr<mpsk_snr_est_cc>;
 
     /*! Factory function returning shared pointer of this class
      *

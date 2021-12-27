@@ -27,7 +27,7 @@ namespace pdu {
 class PDU_API add_system_time : virtual public gr::block
 {
 public:
-    typedef std::shared_ptr<add_system_time> sptr;
+    using sptr = std::shared_ptr<add_system_time>;
 
     /*!
      * \brief Return a shared_ptr to a new instance of pdu::add_system_time.

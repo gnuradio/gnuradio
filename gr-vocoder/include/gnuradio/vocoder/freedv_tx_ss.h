@@ -30,7 +30,7 @@ namespace vocoder {
 class VOCODER_API freedv_tx_ss : virtual public gr::block
 {
 public:
-    typedef std::shared_ptr<freedv_tx_ss> sptr;
+    using sptr = std::shared_ptr<freedv_tx_ss>;
 
     /*!
      * \brief Make FreeDV Modem modulator block.

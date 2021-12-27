@@ -48,10 +48,10 @@ public:
 private:
     T* d_param = nullptr;
 };
-typedef param_wrap<snd_pcm_hw_params_t, snd_pcm_hw_params_malloc, snd_pcm_hw_params_free>
-    hwparam_wrap;
-typedef param_wrap<snd_pcm_sw_params_t, snd_pcm_sw_params_malloc, snd_pcm_sw_params_free>
-    swparam_wrap;
+using hwparam_wrap =
+    param_wrap<snd_pcm_hw_params_t, snd_pcm_hw_params_malloc, snd_pcm_hw_params_free>;
+using swparam_wrap =
+    param_wrap<snd_pcm_sw_params_t, snd_pcm_sw_params_malloc, snd_pcm_sw_params_free>;
 
 class sndpcm_wrap
 {

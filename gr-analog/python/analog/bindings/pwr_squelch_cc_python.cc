@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(pwr_squelch_cc.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(953ce0d8b4db6dee968c0a7281abd4e1)                     */
+/* BINDTOOL_HEADER_FILE_HASH(7f494195c9e8e9b347944ca3f14b24d2)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>

@@ -22,7 +22,7 @@
 #define KSIG_POST 350
 #define NBCH_PARITY 168
 
-typedef struct {
+struct L1Pre {
     int type;
     int bwt_ext;
     int s1;
@@ -51,9 +51,9 @@ typedef struct {
     int t2_base_lite;
     int reserved;
     int crc_32;
-} L1Pre;
+};
 
-typedef struct {
+struct L1Post {
     int sub_slices_per_frame;
     int num_plp;
     int num_aux;
@@ -94,24 +94,24 @@ typedef struct {
     int plp_num_blocks;
     int reserved_4;
     int reserved_5;
-} L1Post;
+};
 
-typedef struct {
+struct L1Signalling {
     L1Pre l1pre_data;
     L1Post l1post_data;
-} L1Signalling;
+};
 
-typedef struct {
+struct l1pre_ldpc_encode_table {
     int table_length;
     int d[LDPC_ENCODE_TABLE_LENGTH];
     int p[LDPC_ENCODE_TABLE_LENGTH];
-} l1pre_ldpc_encode_table;
+};
 
-typedef struct {
+struct l1post_ldpc_encode_table {
     int table_length;
     int d[LDPC_ENCODE_TABLE_LENGTH];
     int p[LDPC_ENCODE_TABLE_LENGTH];
-} l1post_ldpc_encode_table;
+};
 
 namespace gr {
 namespace dtv {

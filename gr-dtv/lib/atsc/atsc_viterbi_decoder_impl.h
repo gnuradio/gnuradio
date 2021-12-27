@@ -29,15 +29,15 @@ namespace gr {
 namespace dtv {
 
 #if USE_SIMPLE_SLICER
-typedef atsc_fake_single_viterbi single_viterbi_t;
+using single_viterbi_t = atsc_fake_single_viterbi;
 #else
-typedef atsc_single_viterbi single_viterbi_t;
+using single_viterbi_t = atsc_single_viterbi;
 #endif
 
 class atsc_viterbi_decoder_impl : public atsc_viterbi_decoder
 {
 private:
-    typedef interleaver_fifo<unsigned char> fifo_t;
+    using fifo_t = interleaver_fifo<unsigned char>;
 
     static constexpr int SEGMENT_SIZE = ATSC_MPEG_RS_ENCODED_LENGTH; // 207
     static constexpr int OUTPUT_SIZE = (SEGMENT_SIZE * 12);

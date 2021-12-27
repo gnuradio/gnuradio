@@ -42,7 +42,7 @@ class BLOCKS_API rotator_cc : virtual public sync_block
 {
 public:
     // gr::blocks::rotator_cc::sptr
-    typedef std::shared_ptr<rotator_cc> sptr;
+    using sptr = std::shared_ptr<rotator_cc>;
 
     /*!
      * \brief Make a complex rotator block

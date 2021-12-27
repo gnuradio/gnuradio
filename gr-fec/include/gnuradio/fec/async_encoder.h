@@ -61,7 +61,7 @@ namespace fec {
 class FEC_API async_encoder : virtual public block
 {
 public:
-    typedef std::shared_ptr<async_encoder> sptr;
+    using sptr = std::shared_ptr<async_encoder>;
 
     /*!
      * Build the PDU-based FEC encoder block from an FECAPI encoder object.

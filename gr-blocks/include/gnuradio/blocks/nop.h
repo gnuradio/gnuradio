@@ -26,7 +26,7 @@ class BLOCKS_API nop : virtual public block
 {
 public:
     // gr::blocks::nop::sptr
-    typedef std::shared_ptr<nop> sptr;
+    using sptr = std::shared_ptr<nop>;
 
     /*!
      * Build a nop block.

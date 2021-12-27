@@ -28,7 +28,7 @@ namespace blocks {
 class BLOCKS_API tagged_stream_multiply_length : virtual public block
 {
 public:
-    typedef std::shared_ptr<tagged_stream_multiply_length> sptr;
+    using sptr = std::shared_ptr<tagged_stream_multiply_length>;
     virtual void set_scalar(double scalar) = 0;
 
     /*!

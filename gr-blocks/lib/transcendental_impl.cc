@@ -25,7 +25,7 @@ struct map_val_type {
     work_fcn_type work_fcn;
     size_t io_size;
 };
-typedef std::map<std::string, map_val_type> map_type;
+using map_type = std::map<std::string, map_val_type>;
 
 // construct map on first use idiom
 static map_type& get_map(void)

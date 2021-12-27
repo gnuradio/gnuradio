@@ -28,7 +28,7 @@ namespace zeromq {
 class ZEROMQ_API sub_msg_source : virtual public gr::block
 {
 public:
-    typedef std::shared_ptr<sub_msg_source> sptr;
+    using sptr = std::shared_ptr<sub_msg_source>;
 
     /*!
      * \brief Return a shared_ptr to a new instance of gr::zeromq::sub_msg_source.

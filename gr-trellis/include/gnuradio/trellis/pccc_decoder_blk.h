@@ -31,7 +31,7 @@ class TRELLIS_API pccc_decoder_blk : virtual public block
 {
 public:
     // gr::trellis::pccc_decoder_blk::sptr
-    typedef std::shared_ptr<pccc_decoder_blk<T>> sptr;
+    using sptr = std::shared_ptr<pccc_decoder_blk<T>>;
 
     static sptr make(const fsm& FSM1,
                      int ST10,
@@ -56,9 +56,9 @@ public:
     virtual siso_type_t SISO_TYPE() const = 0;
 };
 
-typedef pccc_decoder_blk<std::uint8_t> pccc_decoder_b;
-typedef pccc_decoder_blk<std::int16_t> pccc_decoder_s;
-typedef pccc_decoder_blk<std::int32_t> pccc_decoder_i;
+using pccc_decoder_b = pccc_decoder_blk<std::uint8_t>;
+using pccc_decoder_s = pccc_decoder_blk<std::int16_t>;
+using pccc_decoder_i = pccc_decoder_blk<std::int32_t>;
 } /* namespace trellis */
 } /* namespace gr */
 

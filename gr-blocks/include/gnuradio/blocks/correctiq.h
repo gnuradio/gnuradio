@@ -25,7 +25,7 @@ namespace blocks {
 class BLOCKS_API correctiq : virtual public gr::sync_block
 {
 public:
-    typedef std::shared_ptr<correctiq> sptr;
+    using sptr = std::shared_ptr<correctiq>;
 
     /*!
      * \brief Return a shared_ptr to a new instance of correctiq::correctiq.

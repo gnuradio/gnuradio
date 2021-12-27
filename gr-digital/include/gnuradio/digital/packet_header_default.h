@@ -37,7 +37,7 @@ class DIGITAL_API packet_header_default
     : public std::enable_shared_from_this<gr::digital::packet_header_default>
 {
 public:
-    typedef std::shared_ptr<packet_header_default> sptr;
+    using sptr = std::shared_ptr<packet_header_default>;
 
     packet_header_default(long header_len,
                           const std::string& len_tag_key = "packet_len",

@@ -48,7 +48,7 @@ class FILTER_API interp_fir_filter : virtual public sync_interpolator
 {
 public:
     // gr::filter::interp_fir_filter::sptr
-    typedef std::shared_ptr<interp_fir_filter> sptr;
+    using sptr = std::shared_ptr<interp_fir_filter>;
 
     /*!
      * \brief Interpolating FIR filter with IN_T input, OUT_T output, and TAP_T taps
@@ -61,12 +61,12 @@ public:
     virtual void set_taps(const std::vector<TAP_T>& taps) = 0;
     virtual std::vector<TAP_T> taps() const = 0;
 };
-typedef interp_fir_filter<gr_complex, gr_complex, gr_complex> interp_fir_filter_ccc;
-typedef interp_fir_filter<gr_complex, gr_complex, float> interp_fir_filter_ccf;
-typedef interp_fir_filter<float, gr_complex, gr_complex> interp_fir_filter_fcc;
-typedef interp_fir_filter<float, float, float> interp_fir_filter_fff;
-typedef interp_fir_filter<float, std::int16_t, float> interp_fir_filter_fsf;
-typedef interp_fir_filter<std::int16_t, gr_complex, gr_complex> interp_fir_filter_scc;
+using interp_fir_filter_ccc = interp_fir_filter<gr_complex, gr_complex, gr_complex>;
+using interp_fir_filter_ccf = interp_fir_filter<gr_complex, gr_complex, float>;
+using interp_fir_filter_fcc = interp_fir_filter<float, gr_complex, gr_complex>;
+using interp_fir_filter_fff = interp_fir_filter<float, float, float>;
+using interp_fir_filter_fsf = interp_fir_filter<float, std::int16_t, float>;
+using interp_fir_filter_scc = interp_fir_filter<std::int16_t, gr_complex, gr_complex>;
 
 } /* namespace filter */
 } /* namespace gr */

@@ -36,7 +36,7 @@
 namespace gr {
 
 //! Typedef for the timer tick count
-typedef signed long long high_res_timer_type;
+using high_res_timer_type = signed long long;
 
 //! Get the current time in ticks
 high_res_timer_type high_res_timer_now(void);

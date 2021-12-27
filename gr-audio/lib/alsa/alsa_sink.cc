@@ -295,7 +295,7 @@ int alsa_sink::work_s16(int noutput_items,
                         gr_vector_const_void_star& input_items,
                         gr_vector_void_star& output_items)
 {
-    typedef int16_t sample_t; // the type of samples we're creating
+    using sample_t = int16_t; // the type of samples we're creating
     static const float scale_factor = std::pow(2.0f, 16 - 1) - 1;
 
     unsigned int nchan = input_items.size();
@@ -334,7 +334,7 @@ int alsa_sink::work_s32(int noutput_items,
                         gr_vector_const_void_star& input_items,
                         gr_vector_void_star& output_items)
 {
-    typedef int32_t sample_t; // the type of samples we're creating
+    using sample_t = int32_t; // the type of samples we're creating
     static const float scale_factor = std::pow(2.0f, 32 - 1) - 1;
 
     unsigned int nchan = input_items.size();
@@ -374,7 +374,7 @@ int alsa_sink::work_s16_1x2(int noutput_items,
                             gr_vector_const_void_star& input_items,
                             gr_vector_void_star& output_items)
 {
-    typedef int16_t sample_t; // the type of samples we're creating
+    using sample_t = int16_t; // the type of samples we're creating
     static const float scale_factor = std::pow(2.0f, 16 - 1) - 1;
 
     assert(input_items.size() == 1);
@@ -414,7 +414,7 @@ int alsa_sink::work_s32_1x2(int noutput_items,
                             gr_vector_const_void_star& input_items,
                             gr_vector_void_star& output_items)
 {
-    typedef int32_t sample_t; // the type of samples we're creating
+    using sample_t = int32_t; // the type of samples we're creating
     static const float scale_factor = std::pow(2.0f, 32 - 1) - 1;
 
     assert(input_items.size() == 1);

@@ -41,7 +41,7 @@ class DIGITAL_API correlate_access_code_bb_ts : virtual public block
 {
 public:
     // gr::digital::correlate_access_code_bb_ts::sptr
-    typedef std::shared_ptr<correlate_access_code_bb_ts> sptr;
+    using sptr = std::shared_ptr<correlate_access_code_bb_ts>;
 
     /*!
      * \param access_code is represented with 1 byte per bit,

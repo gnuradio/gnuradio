@@ -24,7 +24,7 @@
 #include <boost/program_options.hpp>
 namespace fs = std::filesystem;
 namespace po = boost::program_options;
-typedef std::ifstream::char_type char_t;
+using char_t = std::ifstream::char_type;
 
 namespace gr {
 

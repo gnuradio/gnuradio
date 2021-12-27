@@ -33,7 +33,7 @@ class CHANNELS_API cfo_model : virtual public sync_block
 {
 public:
     // gr::channels::cfo_model::sptr
-    typedef std::shared_ptr<cfo_model> sptr;
+    using sptr = std::shared_ptr<cfo_model>;
 
     /*! \brief Build the carrier frequency offset model
      *

@@ -31,15 +31,15 @@ class BLOCKS_API divide : virtual public sync_block
 {
 public:
     // gr::blocks::divide::sptr
-    typedef std::shared_ptr<divide<T>> sptr;
+    using sptr = std::shared_ptr<divide<T>>;
 
     static sptr make(size_t vlen = 1);
 };
 
-typedef divide<std::int16_t> divide_ss;
-typedef divide<std::int32_t> divide_ii;
-typedef divide<float> divide_ff;
-typedef divide<gr_complex> divide_cc;
+using divide_ss = divide<std::int16_t>;
+using divide_ii = divide<std::int32_t>;
+using divide_ff = divide<float>;
+using divide_cc = divide<gr_complex>;
 } /* namespace blocks */
 } /* namespace gr */
 

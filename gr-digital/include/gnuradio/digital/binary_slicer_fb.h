@@ -29,7 +29,7 @@ class DIGITAL_API binary_slicer_fb : virtual public sync_block
 {
 public:
     // gr::digital::binary_slicer_fb::sptr
-    typedef std::shared_ptr<binary_slicer_fb> sptr;
+    using sptr = std::shared_ptr<binary_slicer_fb>;
 
     /*!
      * \brief Make binary symbol slicer block.

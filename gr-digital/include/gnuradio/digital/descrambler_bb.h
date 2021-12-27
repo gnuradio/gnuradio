@@ -30,7 +30,7 @@ class DIGITAL_API descrambler_bb : virtual public sync_block
 {
 public:
     // gr::digital::descrambler_bb::sptr
-    typedef std::shared_ptr<descrambler_bb> sptr;
+    using sptr = std::shared_ptr<descrambler_bb>;
 
     /*!
      * \brief Make a descrambler block.

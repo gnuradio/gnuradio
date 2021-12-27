@@ -25,7 +25,7 @@ namespace dtv {
 class DTV_API catv_transport_framing_enc_bb : virtual public gr::sync_block
 {
 public:
-    typedef std::shared_ptr<catv_transport_framing_enc_bb> sptr;
+    using sptr = std::shared_ptr<catv_transport_framing_enc_bb>;
 
     /*!
      * \brief Create an ITU-T J.83B Transport Framing Encoder.

@@ -27,7 +27,7 @@ namespace dtv {
 class DTV_API dvb_bbscrambler_bb : virtual public gr::sync_block
 {
 public:
-    typedef std::shared_ptr<dvb_bbscrambler_bb> sptr;
+    using sptr = std::shared_ptr<dvb_bbscrambler_bb>;
 
     /*!
      * \brief Create a baseband frame scrambler.

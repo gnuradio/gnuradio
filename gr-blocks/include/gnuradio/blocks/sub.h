@@ -31,15 +31,15 @@ class BLOCKS_API sub : virtual public sync_block
 {
 public:
     // gr::blocks::sub::sptr
-    typedef std::shared_ptr<sub<T>> sptr;
+    using sptr = std::shared_ptr<sub<T>>;
 
     static sptr make(size_t vlen = 1);
 };
 
-typedef sub<std::int16_t> sub_ss;
-typedef sub<std::int32_t> sub_ii;
-typedef sub<gr_complex> sub_cc;
-typedef sub<float> sub_ff;
+using sub_ss = sub<std::int16_t>;
+using sub_ii = sub<std::int32_t>;
+using sub_cc = sub<gr_complex>;
+using sub_ff = sub<float>;
 } /* namespace blocks */
 } /* namespace gr */
 

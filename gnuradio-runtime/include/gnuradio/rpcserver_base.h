@@ -33,7 +33,7 @@ public:
 
     virtual void setCurPrivLevel(const priv_lvl_t priv) { cur_priv = priv; }
 
-    typedef std::shared_ptr<rpcserver_base> rpcserver_base_sptr;
+    using rpcserver_base_sptr = std::shared_ptr<rpcserver_base>;
 
 protected:
     priv_lvl_t cur_priv;

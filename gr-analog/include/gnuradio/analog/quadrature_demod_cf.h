@@ -61,7 +61,7 @@ class ANALOG_API quadrature_demod_cf : virtual public sync_block
 {
 public:
     // gr::analog::quadrature_demod_cf::sptr
-    typedef std::shared_ptr<quadrature_demod_cf> sptr;
+    using sptr = std::shared_ptr<quadrature_demod_cf>;
 
     /* \brief Make a quadrature demodulator block.
      *

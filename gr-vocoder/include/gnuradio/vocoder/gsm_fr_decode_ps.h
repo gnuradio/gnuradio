@@ -28,7 +28,7 @@ class VOCODER_API gsm_fr_decode_ps : virtual public sync_interpolator
 {
 public:
     // gr::vocoder::gsm_fr_decode_ps::sptr
-    typedef std::shared_ptr<gsm_fr_decode_ps> sptr;
+    using sptr = std::shared_ptr<gsm_fr_decode_ps>;
 
     /*!
      * \brief Make GSM decoder block.

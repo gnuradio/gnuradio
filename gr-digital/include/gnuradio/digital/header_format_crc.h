@@ -46,7 +46,7 @@ namespace digital {
 class DIGITAL_API header_format_crc : public header_format_base
 {
 public:
-    typedef std::shared_ptr<header_format_crc> sptr;
+    using sptr = std::shared_ptr<header_format_crc>;
     header_format_crc(const std::string& len_key_name = "packet_len",
                       const std::string& num_key_name = "packet_num");
     ~header_format_crc() override;

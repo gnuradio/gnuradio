@@ -39,14 +39,14 @@ template <class T>
 class BLOCKS_API argmax : virtual public sync_block
 {
 public:
-    typedef std::shared_ptr<argmax<T>> sptr;
+    using sptr = std::shared_ptr<argmax<T>>;
 
     static sptr make(size_t vlen);
 };
 
-typedef argmax<float> argmax_fs;
-typedef argmax<std::int32_t> argmax_is;
-typedef argmax<std::int16_t> argmax_ss;
+using argmax_fs = argmax<float>;
+using argmax_is = argmax<std::int32_t>;
+using argmax_ss = argmax<std::int16_t>;
 } /* namespace blocks */
 } /* namespace gr */
 

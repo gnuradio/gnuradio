@@ -30,7 +30,7 @@ namespace iio {
 class IIO_API dds_control : virtual public gr::block
 {
 public:
-    typedef std::shared_ptr<dds_control> sptr;
+    using sptr = std::shared_ptr<dds_control>;
 
     /*!
      * \brief Return a shared_ptr to a new instance of iio::dds_control.

@@ -28,15 +28,15 @@ class BLOCKS_API integrate : virtual public sync_decimator
 {
 public:
     // gr::blocks::integrate::sptr
-    typedef std::shared_ptr<integrate<T>> sptr;
+    using sptr = std::shared_ptr<integrate<T>>;
 
     static sptr make(int decim, unsigned int vlen = 1);
 };
 
-typedef integrate<std::int16_t> integrate_ss;
-typedef integrate<std::int32_t> integrate_ii;
-typedef integrate<float> integrate_ff;
-typedef integrate<gr_complex> integrate_cc;
+using integrate_ss = integrate<std::int16_t>;
+using integrate_ii = integrate<std::int32_t>;
+using integrate_ff = integrate<float>;
+using integrate_cc = integrate<gr_complex>;
 } /* namespace blocks */
 } /* namespace gr */
 

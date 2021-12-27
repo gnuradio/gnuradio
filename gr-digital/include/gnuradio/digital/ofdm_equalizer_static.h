@@ -34,7 +34,7 @@ namespace digital {
 class DIGITAL_API ofdm_equalizer_static : public ofdm_equalizer_1d_pilots
 {
 public:
-    typedef std::shared_ptr<ofdm_equalizer_static> sptr;
+    using sptr = std::shared_ptr<ofdm_equalizer_static>;
 
     ofdm_equalizer_static(int fft_len,
                           const std::vector<std::vector<int>>& occupied_carriers =

@@ -37,7 +37,7 @@ private:
     void handle_read(const boost::system::error_code& error, size_t bytes_transferred);
 
 public:
-    typedef std::shared_ptr<tcp_connection> sptr;
+    using sptr = std::shared_ptr<tcp_connection>;
 
     static sptr
     make(boost::asio::io_service& io_service, int MTU = 10000, bool no_delay = false);

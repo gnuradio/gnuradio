@@ -31,7 +31,7 @@ namespace fft {
 class FFT_API ctrlport_probe_psd : virtual public gr::sync_block
 {
 public:
-    typedef std::shared_ptr<ctrlport_probe_psd> sptr;
+    using sptr = std::shared_ptr<ctrlport_probe_psd>;
 
     /*!
      * \brief Make a ControlPort probe block.

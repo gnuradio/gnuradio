@@ -62,7 +62,7 @@ class QTGUI_API sink_f : virtual public block
 {
 public:
     // gr::qtgui::sink_f::sptr
-    typedef std::shared_ptr<sink_f> sptr;
+    using sptr = std::shared_ptr<sink_f>;
 
     /*!
      * \brief Build a floating point qtgui sink.

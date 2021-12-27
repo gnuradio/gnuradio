@@ -12,7 +12,7 @@
 #include "dvb_defines.h"
 #include <gnuradio/dtv/dvb_bbheader_bb.h>
 
-typedef struct {
+struct BBHeader {
     int ts_gs;
     int sis_mis;
     int ccm_acm;
@@ -24,11 +24,11 @@ typedef struct {
     int dfl;
     int sync;
     int syncd;
-} BBHeader;
+};
 
-typedef struct {
+struct FrameFormat {
     BBHeader bb_header;
-} FrameFormat;
+};
 
 namespace gr {
 namespace dtv {

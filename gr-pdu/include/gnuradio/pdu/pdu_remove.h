@@ -26,7 +26,7 @@ class PDU_API pdu_remove : virtual public block
 {
 public:
     // gr::pdu::pdu_remove::sptr
-    typedef std::shared_ptr<pdu_remove> sptr;
+    using sptr = std::shared_ptr<pdu_remove>;
 
     /*!
      * \brief Construct a PDU meta remove block

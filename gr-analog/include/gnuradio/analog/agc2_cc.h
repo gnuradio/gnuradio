@@ -30,7 +30,7 @@ class ANALOG_API agc2_cc : virtual public sync_block
 {
 public:
     // gr::analog::agc2_cc::sptr
-    typedef std::shared_ptr<agc2_cc> sptr;
+    using sptr = std::shared_ptr<agc2_cc>;
 
     /*!
      * Build a complex value AGC loop block with attack and decay rates.

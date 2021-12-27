@@ -26,7 +26,7 @@ namespace digital {
 class DIGITAL_API decision_feedback_equalizer : virtual public gr::sync_decimator
 {
 public:
-    typedef std::shared_ptr<decision_feedback_equalizer> sptr;
+    using sptr = std::shared_ptr<decision_feedback_equalizer>;
 
     /*!
      * \brief Return a shared_ptr to a new instance of

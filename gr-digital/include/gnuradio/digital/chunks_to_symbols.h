@@ -43,7 +43,7 @@ template <class IN_T, class OUT_T>
 class DIGITAL_API chunks_to_symbols : virtual public sync_interpolator
 {
 public:
-    typedef std::shared_ptr<chunks_to_symbols<IN_T, OUT_T>> sptr;
+    using sptr = std::shared_ptr<chunks_to_symbols<IN_T, OUT_T>>;
 
     /*!
      * Make a chunks-to-symbols block.
@@ -58,12 +58,12 @@ public:
     virtual void set_symbol_table(const std::vector<OUT_T>& symbol_table) = 0;
 };
 
-typedef chunks_to_symbols<std::uint8_t, float> chunks_to_symbols_bf;
-typedef chunks_to_symbols<std::uint8_t, gr_complex> chunks_to_symbols_bc;
-typedef chunks_to_symbols<std::int16_t, float> chunks_to_symbols_sf;
-typedef chunks_to_symbols<std::int16_t, gr_complex> chunks_to_symbols_sc;
-typedef chunks_to_symbols<std::int32_t, float> chunks_to_symbols_if;
-typedef chunks_to_symbols<std::int32_t, gr_complex> chunks_to_symbols_ic;
+using chunks_to_symbols_bf = chunks_to_symbols<std::uint8_t, float>;
+using chunks_to_symbols_bc = chunks_to_symbols<std::uint8_t, gr_complex>;
+using chunks_to_symbols_sf = chunks_to_symbols<std::int16_t, float>;
+using chunks_to_symbols_sc = chunks_to_symbols<std::int16_t, gr_complex>;
+using chunks_to_symbols_if = chunks_to_symbols<std::int32_t, float>;
+using chunks_to_symbols_ic = chunks_to_symbols<std::int32_t, gr_complex>;
 } /* namespace digital */
 } /* namespace gr */
 

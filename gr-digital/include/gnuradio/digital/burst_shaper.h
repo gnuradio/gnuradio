@@ -52,7 +52,7 @@ template <class T>
 class DIGITAL_API burst_shaper : virtual public block
 {
 public:
-    typedef std::shared_ptr<burst_shaper<T>> sptr;
+    using sptr = std::shared_ptr<burst_shaper<T>>;
 
     /*!
      * Make a burst shaper block.
@@ -104,8 +104,8 @@ public:
     virtual int suffix_length() const = 0;
 };
 
-typedef burst_shaper<float> burst_shaper_ff;
-typedef burst_shaper<gr_complex> burst_shaper_cc;
+using burst_shaper_ff = burst_shaper<float>;
+using burst_shaper_cc = burst_shaper<gr_complex>;
 } // namespace digital
 } // namespace gr
 

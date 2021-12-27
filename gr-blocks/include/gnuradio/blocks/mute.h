@@ -27,7 +27,7 @@ template <class T>
 class BLOCKS_API mute_blk : virtual public sync_block
 {
 public:
-    typedef std::shared_ptr<mute_blk<T>> sptr;
+    using sptr = std::shared_ptr<mute_blk<T>>;
 
     static sptr make(bool mute = false);
 
@@ -35,10 +35,10 @@ public:
     virtual void set_mute(bool mute = false) = 0;
 };
 
-typedef mute_blk<std::int16_t> mute_ss;
-typedef mute_blk<std::int32_t> mute_ii;
-typedef mute_blk<float> mute_ff;
-typedef mute_blk<gr_complex> mute_cc;
+using mute_ss = mute_blk<std::int16_t>;
+using mute_ii = mute_blk<std::int32_t>;
+using mute_ff = mute_blk<float>;
+using mute_cc = mute_blk<gr_complex>;
 } /* namespace blocks */
 } /* namespace gr */
 

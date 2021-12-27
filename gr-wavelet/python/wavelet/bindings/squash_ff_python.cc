@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(squash_ff.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(ae6436fd366614924bbc336d562d99c3)                     */
+/* BINDTOOL_HEADER_FILE_HASH(08b3b41bcdc28e4420d63241c601eb11)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>

@@ -40,7 +40,7 @@ class DIGITAL_API framer_sink_1 : virtual public sync_block
 {
 public:
     // gr::digital::framer_sink_1::sptr
-    typedef std::shared_ptr<framer_sink_1> sptr;
+    using sptr = std::shared_ptr<framer_sink_1>;
 
     /*!
      * Make a framer_sink_1 block.

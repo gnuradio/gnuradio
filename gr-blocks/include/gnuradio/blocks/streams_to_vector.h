@@ -25,7 +25,7 @@ class BLOCKS_API streams_to_vector : virtual public sync_block
 {
 public:
     // gr::blocks::streams_to_vector::sptr
-    typedef std::shared_ptr<streams_to_vector> sptr;
+    using sptr = std::shared_ptr<streams_to_vector>;
 
     /*!
      * Make a stream-to-vector block.

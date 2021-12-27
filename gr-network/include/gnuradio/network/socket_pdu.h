@@ -25,7 +25,7 @@ class NETWORK_API socket_pdu : virtual public block
 {
 public:
     // gr::network::socket_pdu::sptr
-    typedef std::shared_ptr<socket_pdu> sptr;
+    using sptr = std::shared_ptr<socket_pdu>;
 
     /*!
      * \brief Construct a SOCKET PDU interface

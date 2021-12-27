@@ -23,7 +23,7 @@ namespace digital {
 enum class adaptive_algorithm_t { LMS, NLMS, CMA };
 
 class adaptive_algorithm;
-typedef std::shared_ptr<adaptive_algorithm> adaptive_algorithm_sptr;
+using adaptive_algorithm_sptr = std::shared_ptr<adaptive_algorithm>;
 
 class DIGITAL_API adaptive_algorithm
     : public std::enable_shared_from_this<adaptive_algorithm>

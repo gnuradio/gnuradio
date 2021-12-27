@@ -19,7 +19,7 @@
 namespace gr {
 
 class scheduler;
-typedef std::shared_ptr<scheduler> scheduler_sptr;
+using scheduler_sptr = std::shared_ptr<scheduler>;
 
 /*!
  * \brief Abstract scheduler that takes a flattened flow graph and

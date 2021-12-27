@@ -36,7 +36,7 @@ namespace dtv {
 class DTV_API dvbt_viterbi_decoder : virtual public block
 {
 public:
-    typedef std::shared_ptr<dvbt_viterbi_decoder> sptr;
+    using sptr = std::shared_ptr<dvbt_viterbi_decoder>;
 
     /*!
      * \brief Create a DVB-T Viterbi decoder.

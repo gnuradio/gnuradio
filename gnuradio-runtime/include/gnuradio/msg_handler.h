@@ -17,7 +17,7 @@
 namespace gr {
 
 class msg_handler;
-typedef std::shared_ptr<msg_handler> msg_handler_sptr;
+using msg_handler_sptr = std::shared_ptr<msg_handler>;
 
 /*!
  * \brief abstract class of message handlers

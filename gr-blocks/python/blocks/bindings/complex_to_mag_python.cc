@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(complex_to_mag.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(e223ad51580e7947d6e4bbcdc2df9cb5)                     */
+/* BINDTOOL_HEADER_FILE_HASH(37bc018683fa19912719887b6d5f489a)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>

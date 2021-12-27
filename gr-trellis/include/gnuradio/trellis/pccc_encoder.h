@@ -29,7 +29,7 @@ template <class IN_T, class OUT_T>
 class TRELLIS_API pccc_encoder : virtual public sync_block
 {
 public:
-    typedef std::shared_ptr<pccc_encoder<IN_T, OUT_T>> sptr;
+    using sptr = std::shared_ptr<pccc_encoder<IN_T, OUT_T>>;
 
     static sptr make(const fsm& FSM1,
                      int ST1,
@@ -45,12 +45,12 @@ public:
     virtual interleaver INTERLEAVER() const = 0;
     virtual int blocklength() const = 0;
 };
-typedef pccc_encoder<std::uint8_t, std::uint8_t> pccc_encoder_bb;
-typedef pccc_encoder<std::uint8_t, std::int16_t> pccc_encoder_bs;
-typedef pccc_encoder<std::uint8_t, std::int32_t> pccc_encoder_bi;
-typedef pccc_encoder<std::int16_t, std::int16_t> pccc_encoder_ss;
-typedef pccc_encoder<std::int16_t, std::int32_t> pccc_encoder_si;
-typedef pccc_encoder<std::int32_t, std::int32_t> pccc_encoder_ii;
+using pccc_encoder_bb = pccc_encoder<std::uint8_t, std::uint8_t>;
+using pccc_encoder_bs = pccc_encoder<std::uint8_t, std::int16_t>;
+using pccc_encoder_bi = pccc_encoder<std::uint8_t, std::int32_t>;
+using pccc_encoder_ss = pccc_encoder<std::int16_t, std::int16_t>;
+using pccc_encoder_si = pccc_encoder<std::int16_t, std::int32_t>;
+using pccc_encoder_ii = pccc_encoder<std::int32_t, std::int32_t>;
 
 
 } /* namespace trellis */

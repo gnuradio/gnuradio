@@ -58,7 +58,7 @@ template <class IN_T, class OUT_T, class TAP_T>
 class FILTER_API rational_resampler : virtual public block
 {
 public:
-    typedef std::shared_ptr<rational_resampler<IN_T, OUT_T, TAP_T>> sptr;
+    using sptr = std::shared_ptr<rational_resampler<IN_T, OUT_T, TAP_T>>;
 
     /*!
      * Make a rational resampling FIR filter.
@@ -79,12 +79,12 @@ public:
     virtual void set_taps(const std::vector<TAP_T>& taps) = 0;
     virtual std::vector<TAP_T> taps() const = 0;
 };
-typedef rational_resampler<gr_complex, gr_complex, gr_complex> rational_resampler_ccc;
-typedef rational_resampler<gr_complex, gr_complex, float> rational_resampler_ccf;
-typedef rational_resampler<float, gr_complex, gr_complex> rational_resampler_fcc;
-typedef rational_resampler<float, float, float> rational_resampler_fff;
-typedef rational_resampler<float, std::int16_t, float> rational_resampler_fsf;
-typedef rational_resampler<std::int16_t, gr_complex, gr_complex> rational_resampler_scc;
+using rational_resampler_ccc = rational_resampler<gr_complex, gr_complex, gr_complex>;
+using rational_resampler_ccf = rational_resampler<gr_complex, gr_complex, float>;
+using rational_resampler_fcc = rational_resampler<float, gr_complex, gr_complex>;
+using rational_resampler_fff = rational_resampler<float, float, float>;
+using rational_resampler_fsf = rational_resampler<float, std::int16_t, float>;
+using rational_resampler_scc = rational_resampler<std::int16_t, gr_complex, gr_complex>;
 
 } /* namespace filter */
 } /* namespace gr */

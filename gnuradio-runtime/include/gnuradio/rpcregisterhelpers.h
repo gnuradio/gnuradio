@@ -19,7 +19,7 @@
 
 // Fixes circular dependency issue before including block_registry.h
 class rpcbasic_base;
-typedef std::shared_ptr<rpcbasic_base> rpcbasic_sptr;
+using rpcbasic_sptr = std::shared_ptr<rpcbasic_base>;
 
 #include <gnuradio/block_registry.h>
 

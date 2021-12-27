@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(viterbi.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(3dddfa88ff00d9ca651bb0b942244465)                     */
+/* BINDTOOL_HEADER_FILE_HASH(187fd18aa834d80e244e567bb113966b)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>

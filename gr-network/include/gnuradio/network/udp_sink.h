@@ -49,7 +49,7 @@ namespace network {
 class NETWORK_API udp_sink : virtual public gr::sync_block
 {
 public:
-    typedef std::shared_ptr<udp_sink> sptr;
+    using sptr = std::shared_ptr<udp_sink>;
 
     /*!
      * Build a udp_sink block.

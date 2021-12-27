@@ -47,7 +47,7 @@ namespace filter {
 class FILTER_API filter_delay_fc : virtual public sync_block
 {
 public:
-    typedef std::shared_ptr<filter_delay_fc> sptr;
+    using sptr = std::shared_ptr<filter_delay_fc>;
 
     /*!
      * Build a filter with delay block.

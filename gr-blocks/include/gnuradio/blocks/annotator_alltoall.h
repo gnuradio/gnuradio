@@ -38,7 +38,7 @@ class BLOCKS_API annotator_alltoall : virtual public sync_block
 {
 public:
     // gr::blocks::annotator_alltoall::sptr
-    typedef std::shared_ptr<annotator_alltoall> sptr;
+    using sptr = std::shared_ptr<annotator_alltoall>;
 
     static sptr make(int when, size_t sizeof_stream_item);
 

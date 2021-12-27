@@ -79,7 +79,7 @@ class VOCODER_API cvsd_decode_bs : virtual public sync_interpolator
 {
 public:
     // gr::vocoder::cvsd_decode_bs::sptr
-    typedef std::shared_ptr<cvsd_decode_bs> sptr;
+    using sptr = std::shared_ptr<cvsd_decode_bs>;
 
     /*!
      * \brief Constructor parameters to initialize the CVSD decoder.

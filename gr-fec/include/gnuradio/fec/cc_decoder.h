@@ -21,13 +21,13 @@ namespace gr {
 namespace fec {
 namespace code {
 
-typedef void (*conv_kernel)(unsigned char* Y,
-                            unsigned char* X,
-                            unsigned char* syms,
-                            unsigned char* dec,
-                            unsigned int framebits,
-                            unsigned int excess,
-                            unsigned char* Branchtab);
+using conv_kernel = void (*)(unsigned char*,
+                             unsigned char*,
+                             unsigned char*,
+                             unsigned char*,
+                             unsigned int,
+                             unsigned int,
+                             unsigned char*);
 
 /*!
  * \brief Convolutional Code Decoding class.

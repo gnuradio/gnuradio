@@ -29,7 +29,7 @@ class BLOCKS_API vco_c : virtual public sync_block
 {
 public:
     // gr::blocks::vco_c::sptr
-    typedef std::shared_ptr<vco_c> sptr;
+    using sptr = std::shared_ptr<vco_c>;
 
     /*!
      * \brief VCO - Voltage controlled oscillator

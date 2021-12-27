@@ -31,7 +31,7 @@ namespace fft {
 class FFT_API planner
 {
 public:
-    typedef boost::mutex::scoped_lock scoped_lock;
+    using scoped_lock = boost::mutex::scoped_lock;
     /*!
      * Return reference to planner mutex
      */
@@ -47,23 +47,23 @@ public:
 
 template <class T, bool forward>
 struct fft_inbuf {
-    typedef T type;
+    using type = T;
 };
 
 template <>
 struct fft_inbuf<float, false> {
-    typedef gr_complex type;
+    using type = gr_complex;
 };
 
 
 template <class T, bool forward>
 struct fft_outbuf {
-    typedef T type;
+    using type = T;
 };
 
 template <>
 struct fft_outbuf<float, true> {
-    typedef gr_complex type;
+    using type = gr_complex;
 };
 
 template <class T, bool forward>

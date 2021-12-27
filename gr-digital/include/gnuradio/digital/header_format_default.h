@@ -68,7 +68,7 @@ namespace digital {
 class DIGITAL_API header_format_default : public header_format_base
 {
 public:
-    typedef std::shared_ptr<header_format_default> sptr;
+    using sptr = std::shared_ptr<header_format_default>;
     header_format_default(const std::string& access_code, int threshold, int bps);
     ~header_format_default() override;
 

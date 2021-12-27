@@ -26,7 +26,7 @@ class PDU_API random_pdu : virtual public block
 {
 public:
     // gr::pdu::random_pdu::sptr
-    typedef std::shared_ptr<random_pdu> sptr;
+    using sptr = std::shared_ptr<random_pdu>;
 
     /*!
      * \brief Construct a random PDU generator

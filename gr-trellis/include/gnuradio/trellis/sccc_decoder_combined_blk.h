@@ -30,7 +30,7 @@ template <class IN_T, class OUT_T>
 class TRELLIS_API sccc_decoder_combined_blk : virtual public block
 {
 public:
-    typedef std::shared_ptr<sccc_decoder_combined_blk<IN_T, OUT_T>> sptr;
+    using sptr = std::shared_ptr<sccc_decoder_combined_blk<IN_T, OUT_T>>;
 
     static sptr make(const fsm& FSMo,
                      int STo0,
@@ -65,12 +65,12 @@ public:
     virtual void set_scaling(float scaling) = 0;
 };
 
-typedef sccc_decoder_combined_blk<float, std::uint8_t> sccc_decoder_combined_fb;
-typedef sccc_decoder_combined_blk<float, std::int16_t> sccc_decoder_combined_fs;
-typedef sccc_decoder_combined_blk<float, std::int32_t> sccc_decoder_combined_fi;
-typedef sccc_decoder_combined_blk<gr_complex, std::uint8_t> sccc_decoder_combined_cb;
-typedef sccc_decoder_combined_blk<gr_complex, std::int16_t> sccc_decoder_combined_cs;
-typedef sccc_decoder_combined_blk<gr_complex, std::int32_t> sccc_decoder_combined_ci;
+using sccc_decoder_combined_fb = sccc_decoder_combined_blk<float, std::uint8_t>;
+using sccc_decoder_combined_fs = sccc_decoder_combined_blk<float, std::int16_t>;
+using sccc_decoder_combined_fi = sccc_decoder_combined_blk<float, std::int32_t>;
+using sccc_decoder_combined_cb = sccc_decoder_combined_blk<gr_complex, std::uint8_t>;
+using sccc_decoder_combined_cs = sccc_decoder_combined_blk<gr_complex, std::int16_t>;
+using sccc_decoder_combined_ci = sccc_decoder_combined_blk<gr_complex, std::int32_t>;
 
 } /* namespace trellis */
 } /* namespace gr */

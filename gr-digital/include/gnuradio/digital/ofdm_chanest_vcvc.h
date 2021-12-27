@@ -44,7 +44,7 @@ namespace digital {
 class DIGITAL_API ofdm_chanest_vcvc : virtual public block
 {
 public:
-    typedef std::shared_ptr<ofdm_chanest_vcvc> sptr;
+    using sptr = std::shared_ptr<ofdm_chanest_vcvc>;
 
     /*!
      * \param sync_symbol1 First synchronisation symbol in the frequency domain.

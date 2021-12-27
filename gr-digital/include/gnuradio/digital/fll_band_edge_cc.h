@@ -73,7 +73,7 @@ class DIGITAL_API fll_band_edge_cc : virtual public sync_block,
 {
 public:
     // gr::digital::fll_band_edge_cc::sptr
-    typedef std::shared_ptr<fll_band_edge_cc> sptr;
+    using sptr = std::shared_ptr<fll_band_edge_cc>;
 
     /*!
      * Make an FLL block.

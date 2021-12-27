@@ -37,7 +37,7 @@ class DIGITAL_API correlate_access_code_bb : virtual public sync_block
 {
 public:
     // gr::digital::correlate_access_code_bb::sptr
-    typedef std::shared_ptr<correlate_access_code_bb> sptr;
+    using sptr = std::shared_ptr<correlate_access_code_bb>;
 
     /*!
      * Make a correlate_access_code block.

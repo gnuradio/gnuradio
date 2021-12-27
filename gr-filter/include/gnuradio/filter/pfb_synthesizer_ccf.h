@@ -78,7 +78,7 @@ class FILTER_API pfb_synthesizer_ccf : virtual public sync_interpolator
 {
 public:
     // gr::filter::pfb_synthesizer_ccf::sptr
-    typedef std::shared_ptr<pfb_synthesizer_ccf> sptr;
+    using sptr = std::shared_ptr<pfb_synthesizer_ccf>;
 
     /*!
      * Build the polyphase synthesis filterbank.

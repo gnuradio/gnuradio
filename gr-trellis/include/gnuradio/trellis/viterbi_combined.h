@@ -28,7 +28,7 @@ template <class IN_T, class OUT_T>
 class TRELLIS_API viterbi_combined : virtual public block
 {
 public:
-    typedef std::shared_ptr<viterbi_combined<IN_T, OUT_T>> sptr;
+    using sptr = std::shared_ptr<viterbi_combined<IN_T, OUT_T>>;
 
     static sptr make(const fsm& FSM,
                      int K,
@@ -55,18 +55,18 @@ public:
     virtual void set_TYPE(digital::trellis_metric_type_t type) = 0;
 };
 
-typedef viterbi_combined<std::int16_t, std::uint8_t> viterbi_combined_sb;
-typedef viterbi_combined<std::int16_t, std::int16_t> viterbi_combined_ss;
-typedef viterbi_combined<std::int16_t, std::int32_t> viterbi_combined_si;
-typedef viterbi_combined<std::int32_t, std::uint8_t> viterbi_combined_ib;
-typedef viterbi_combined<std::int32_t, std::int16_t> viterbi_combined_is;
-typedef viterbi_combined<std::int32_t, std::int32_t> viterbi_combined_ii;
-typedef viterbi_combined<float, std::uint8_t> viterbi_combined_fb;
-typedef viterbi_combined<float, std::int16_t> viterbi_combined_fs;
-typedef viterbi_combined<float, std::int32_t> viterbi_combined_fi;
-typedef viterbi_combined<gr_complex, std::uint8_t> viterbi_combined_cb;
-typedef viterbi_combined<gr_complex, std::int16_t> viterbi_combined_cs;
-typedef viterbi_combined<gr_complex, std::int32_t> viterbi_combined_ci;
+using viterbi_combined_sb = viterbi_combined<std::int16_t, std::uint8_t>;
+using viterbi_combined_ss = viterbi_combined<std::int16_t, std::int16_t>;
+using viterbi_combined_si = viterbi_combined<std::int16_t, std::int32_t>;
+using viterbi_combined_ib = viterbi_combined<std::int32_t, std::uint8_t>;
+using viterbi_combined_is = viterbi_combined<std::int32_t, std::int16_t>;
+using viterbi_combined_ii = viterbi_combined<std::int32_t, std::int32_t>;
+using viterbi_combined_fb = viterbi_combined<float, std::uint8_t>;
+using viterbi_combined_fs = viterbi_combined<float, std::int16_t>;
+using viterbi_combined_fi = viterbi_combined<float, std::int32_t>;
+using viterbi_combined_cb = viterbi_combined<gr_complex, std::uint8_t>;
+using viterbi_combined_cs = viterbi_combined<gr_complex, std::int16_t>;
+using viterbi_combined_ci = viterbi_combined<gr_complex, std::int32_t>;
 
 } /* namespace trellis */
 } /* namespace gr */

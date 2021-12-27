@@ -35,7 +35,7 @@ namespace fec {
 class FEC_API tagged_encoder : virtual public tagged_stream_block
 {
 public:
-    typedef std::shared_ptr<tagged_encoder> sptr;
+    using sptr = std::shared_ptr<tagged_encoder>;
 
     /*!
      * Build the FEC encoder block from an FECAPI encoder object.

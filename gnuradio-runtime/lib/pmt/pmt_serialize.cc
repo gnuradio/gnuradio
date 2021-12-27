@@ -48,10 +48,10 @@ static bool serialize_untagged_u32(uint32_t i, std::streambuf& sb)
 
 static bool serialize_untagged_f64(double i, std::streambuf& sb)
 {
-    typedef union {
+    using iu_t = union {
         double id;
         uint64_t ii;
-    } iu_t;
+    };
     iu_t iu;
     iu.id = i;
     boost::endian::native_to_big_inplace(iu.ii);
@@ -159,10 +159,10 @@ static bool deserialize_untagged_f64(double* ip, std::streambuf& sb)
 {
     std::streambuf::traits_type::int_type t;
 
-    typedef union {
+    using iu_t = union {
         double id;
         uint64_t ii;
-    } iu_t;
+    };
 
     iu_t iu;
     t = sb.sgetn((char*)&iu, sizeof(uint64_t));

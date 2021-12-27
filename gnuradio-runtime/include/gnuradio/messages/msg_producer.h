@@ -33,7 +33,7 @@ public:
     virtual pmt::pmt_t retrieve() = 0;
 };
 
-typedef std::shared_ptr<msg_producer> msg_producer_sptr;
+using msg_producer_sptr = std::shared_ptr<msg_producer>;
 
 } /* namespace messages */
 } /* namespace gr */

@@ -51,7 +51,7 @@ class BLOCKS_API stream_demux : virtual public gr::block
 {
 public:
     // gr::blocks::stream_demux::sptr
-    typedef std::shared_ptr<stream_demux> sptr;
+    using sptr = std::shared_ptr<stream_demux>;
 
     /*!
      * \brief Stream demuxing block to demultiplex one stream into N output streams

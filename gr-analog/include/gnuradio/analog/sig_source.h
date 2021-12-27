@@ -28,7 +28,7 @@ class ANALOG_API sig_source : virtual public sync_block
 {
 public:
     // gr::analog::sig_source::sptr
-    typedef std::shared_ptr<sig_source<T>> sptr;
+    using sptr = std::shared_ptr<sig_source<T>>;
 
     /*!
      * Build a signal source block.
@@ -91,11 +91,11 @@ public:
     virtual void set_phase(float phase) = 0;
 };
 
-typedef sig_source<std::int8_t> sig_source_b;
-typedef sig_source<std::int16_t> sig_source_s;
-typedef sig_source<std::int32_t> sig_source_i;
-typedef sig_source<float> sig_source_f;
-typedef sig_source<gr_complex> sig_source_c;
+using sig_source_b = sig_source<std::int8_t>;
+using sig_source_s = sig_source<std::int16_t>;
+using sig_source_i = sig_source<std::int32_t>;
+using sig_source_f = sig_source<float>;
+using sig_source_c = sig_source<gr_complex>;
 } /* namespace analog */
 } /* namespace gr */
 

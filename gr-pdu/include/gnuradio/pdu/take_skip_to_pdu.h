@@ -32,7 +32,7 @@ template <class T>
 class PDU_API take_skip_to_pdu : virtual public gr::sync_block
 {
 public:
-    typedef std::shared_ptr<take_skip_to_pdu<T>> sptr;
+    using sptr = std::shared_ptr<take_skip_to_pdu<T>>;
 
     /*!
      * \brief Return a shared_ptr to a new instance of pdu::take_skip_to_pdu.
@@ -46,11 +46,11 @@ public:
     virtual void set_skip(uint32_t skip) = 0;
 };
 
-typedef take_skip_to_pdu<unsigned char> take_skip_to_pdu_b;
-typedef take_skip_to_pdu<short> take_skip_to_pdu_s;
-typedef take_skip_to_pdu<int> take_skip_to_pdu_i;
-typedef take_skip_to_pdu<float> take_skip_to_pdu_f;
-typedef take_skip_to_pdu<gr_complex> take_skip_to_pdu_c;
+using take_skip_to_pdu_b = take_skip_to_pdu<unsigned char>;
+using take_skip_to_pdu_s = take_skip_to_pdu<short>;
+using take_skip_to_pdu_i = take_skip_to_pdu<int>;
+using take_skip_to_pdu_f = take_skip_to_pdu<float>;
+using take_skip_to_pdu_c = take_skip_to_pdu<gr_complex>;
 } // namespace pdu
 } // namespace gr
 

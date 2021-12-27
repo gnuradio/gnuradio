@@ -25,7 +25,7 @@ class BLOCKS_API float_to_complex : virtual public sync_block
 {
 public:
     // gr::blocks::float_to_complex_ff::sptr
-    typedef std::shared_ptr<float_to_complex> sptr;
+    using sptr = std::shared_ptr<float_to_complex>;
 
     /*!
      * Build a float to complex block.

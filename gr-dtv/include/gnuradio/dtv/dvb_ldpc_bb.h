@@ -26,7 +26,7 @@ namespace dtv {
 class DTV_API dvb_ldpc_bb : virtual public gr::block
 {
 public:
-    typedef std::shared_ptr<dvb_ldpc_bb> sptr;
+    using sptr = std::shared_ptr<dvb_ldpc_bb>;
 
     /*!
      * \brief Create a baseband frame LDPC encoder.

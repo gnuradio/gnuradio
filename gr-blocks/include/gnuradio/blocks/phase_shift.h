@@ -30,7 +30,7 @@ namespace blocks {
 class BLOCKS_API phase_shift : virtual public gr::sync_block
 {
 public:
-    typedef std::shared_ptr<phase_shift> sptr;
+    using sptr = std::shared_ptr<phase_shift>;
 
     /*!
      * \brief Create an instance of phase_shift

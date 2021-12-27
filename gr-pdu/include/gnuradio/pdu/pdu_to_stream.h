@@ -41,7 +41,7 @@ template <class T>
 class PDU_API pdu_to_stream : virtual public gr::sync_block
 {
 public:
-    typedef std::shared_ptr<pdu_to_stream<T>> sptr;
+    using sptr = std::shared_ptr<pdu_to_stream<T>>;
 
     /*!
      * \brief Return a shared_ptr to a new instance of pdu_utils::pdu_to_stream_x.
@@ -61,11 +61,11 @@ public:
     virtual void set_max_queue_size(uint32_t size) = 0;
 };
 
-typedef pdu_to_stream<unsigned char> pdu_to_stream_b;
-typedef pdu_to_stream<short> pdu_to_stream_s;
-typedef pdu_to_stream<short> pdu_to_stream_i;
-typedef pdu_to_stream<float> pdu_to_stream_f;
-typedef pdu_to_stream<gr_complex> pdu_to_stream_c;
+using pdu_to_stream_b = pdu_to_stream<unsigned char>;
+using pdu_to_stream_s = pdu_to_stream<short>;
+using pdu_to_stream_i = pdu_to_stream<short>;
+using pdu_to_stream_f = pdu_to_stream<float>;
+using pdu_to_stream_c = pdu_to_stream<gr_complex>;
 } // namespace pdu
 } // namespace gr
 

@@ -11,8 +11,8 @@
 #ifndef INCLUDED_TPC_DECODER_H
 #define INCLUDED_TPC_DECODER_H
 
-typedef float INPUT_DATATYPE;
-typedef unsigned char OUTPUT_DATATYPE;
+using INPUT_DATATYPE = float;
+using OUTPUT_DATATYPE = unsigned char;
 
 #include <gnuradio/fec/decoder.h>
 #include <map>

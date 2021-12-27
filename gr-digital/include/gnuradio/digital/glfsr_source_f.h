@@ -25,7 +25,7 @@ class DIGITAL_API glfsr_source_f : virtual public sync_block
 {
 public:
     // gr::digital::glfsr_source_f::sptr
-    typedef std::shared_ptr<glfsr_source_f> sptr;
+    using sptr = std::shared_ptr<glfsr_source_f>;
 
     /*!
      * Make a Galois LFSR pseudo-random source block.

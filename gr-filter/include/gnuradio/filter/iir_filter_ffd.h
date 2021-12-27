@@ -55,7 +55,7 @@ class FILTER_API iir_filter_ffd : virtual public sync_block
 {
 public:
     // gr::filter::iir_filter_ffd::sptr
-    typedef std::shared_ptr<iir_filter_ffd> sptr;
+    using sptr = std::shared_ptr<iir_filter_ffd>;
 
     static sptr make(const std::vector<double>& fftaps,
                      const std::vector<double>& fbtaps,

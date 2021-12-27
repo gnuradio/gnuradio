@@ -290,7 +290,7 @@ namespace gr {
     class ${modname.upper()}_API ${blockname} : virtual public gr::${grblocktype}
     {
      public:
-      typedef std::shared_ptr<${blockname}> sptr;
+      using sptr = std::shared_ptr<${blockname}>;
 
       /*!
        * \brief Return a shared_ptr to a new instance of ${modname}::${blockname}.
@@ -736,7 +736,7 @@ class ${modname.upper()}_API ${blockname}
 
 class ${modname}_${blockname};
 
-typedef std::shared_ptr<${modname}_${blockname}> ${modname}_${blockname}_sptr;
+using ${modname}_${blockname}_sptr = std::shared_ptr<${modname}_${blockname}>;
 
 ${modname.upper()}_API ${modname}_${blockname}_sptr ${modname}_make_${blockname} (${arglist});
 

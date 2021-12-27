@@ -29,7 +29,7 @@ class TRELLIS_API metrics : virtual public block
 {
 public:
     // gr::trellis::metrics::sptr
-    typedef std::shared_ptr<metrics<T>> sptr;
+    using sptr = std::shared_ptr<metrics<T>>;
 
     static sptr
     make(int O, int D, const std::vector<T>& TABLE, digital::trellis_metric_type_t TYPE);
@@ -46,10 +46,10 @@ public:
 };
 
 
-typedef metrics<std::int16_t> metrics_s;
-typedef metrics<std::int32_t> metrics_i;
-typedef metrics<float> metrics_f;
-typedef metrics<gr_complex> metrics_c;
+using metrics_s = metrics<std::int16_t>;
+using metrics_i = metrics<std::int32_t>;
+using metrics_f = metrics<float>;
+using metrics_c = metrics<gr_complex>;
 } /* namespace trellis */
 } /* namespace gr */
 

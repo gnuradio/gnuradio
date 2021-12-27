@@ -49,7 +49,7 @@ public:
 
 protected:
     // Message handlers back into python using pybind API
-    typedef std::map<pmt::pmt_t, std::string, pmt::comparator> msg_handlers_pybind_t;
+    using msg_handlers_pybind_t = std::map<pmt::pmt_t, std::string, pmt::comparator>;
     msg_handlers_pybind_t d_msg_handlers_pybind;
 
     bool has_msg_handler(pmt::pmt_t which_port) override

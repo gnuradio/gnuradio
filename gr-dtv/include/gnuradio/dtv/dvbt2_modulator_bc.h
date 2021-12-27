@@ -27,7 +27,7 @@ namespace dtv {
 class DTV_API dvbt2_modulator_bc : virtual public gr::block
 {
 public:
-    typedef std::shared_ptr<dvbt2_modulator_bc> sptr;
+    using sptr = std::shared_ptr<dvbt2_modulator_bc>;
 
     /*!
      * \brief Create a DVB-T2 constellation modulator.

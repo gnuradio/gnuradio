@@ -736,7 +736,7 @@ void usrp_sink_impl::setup_rpc()
 
 void usrp_sink_impl::async_event_loop()
 {
-    typedef ::uhd::async_metadata_t md_t;
+    using md_t = ::uhd::async_metadata_t;
     md_t metadata;
 
     using clock = std::chrono::steady_clock;

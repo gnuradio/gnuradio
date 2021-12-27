@@ -30,7 +30,7 @@ protected:
 
 public:
     // gr::analog::ctcss_squelch_ff::sptr
-    typedef std::shared_ptr<ctcss_squelch_ff> sptr;
+    using sptr = std::shared_ptr<ctcss_squelch_ff>;
 
     /*!
      * \brief Make CTCSS tone squelch block.

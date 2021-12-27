@@ -41,7 +41,7 @@ namespace digital {
 class DIGITAL_API ofdm_frame_equalizer_vcvc : virtual public tagged_stream_block
 {
 public:
-    typedef std::shared_ptr<ofdm_frame_equalizer_vcvc> sptr;
+    using sptr = std::shared_ptr<ofdm_frame_equalizer_vcvc>;
 
     /*!
      * \param equalizer The equalizer object that will do the actual work

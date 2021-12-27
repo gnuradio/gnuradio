@@ -25,7 +25,7 @@ class BLOCKS_API uchar_to_float : virtual public sync_block
 {
 public:
     // gr::blocks::uchar_to_float_ff::sptr
-    typedef std::shared_ptr<uchar_to_float> sptr;
+    using sptr = std::shared_ptr<uchar_to_float>;
 
     /*!
      * Build a uchar to float block.

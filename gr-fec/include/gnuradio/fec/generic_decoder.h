@@ -60,7 +60,7 @@ public:
     std::string alias() { return (boost::format("%s%d") % d_name % unique_id()).str(); }
 
 public:
-    typedef std::shared_ptr<generic_decoder> sptr;
+    using sptr = std::shared_ptr<generic_decoder>;
 
     generic_decoder(void){};
     generic_decoder(std::string name);

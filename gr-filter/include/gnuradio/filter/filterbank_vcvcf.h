@@ -31,7 +31,7 @@ namespace filter {
 class FILTER_API filterbank_vcvcf : virtual public block
 {
 public:
-    typedef std::shared_ptr<filterbank_vcvcf> sptr;
+    using sptr = std::shared_ptr<filterbank_vcvcf>;
 
     /*!
      * Build the filterbank.

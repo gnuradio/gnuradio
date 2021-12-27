@@ -28,7 +28,7 @@ class BLOCKS_API multiply_const_v : virtual public sync_block
 
 public:
     // gr::blocks::multiply_const_v::sptr
-    typedef std::shared_ptr<multiply_const_v<T>> sptr;
+    using sptr = std::shared_ptr<multiply_const_v<T>>;
 
     /*!
      * \brief Create an instance of multiply_const_v
@@ -47,10 +47,10 @@ public:
     virtual void set_k(std::vector<T> k) = 0;
 };
 
-typedef multiply_const_v<std::int16_t> multiply_const_vss;
-typedef multiply_const_v<std::int32_t> multiply_const_vii;
-typedef multiply_const_v<float> multiply_const_vff;
-typedef multiply_const_v<gr_complex> multiply_const_vcc;
+using multiply_const_vss = multiply_const_v<std::int16_t>;
+using multiply_const_vii = multiply_const_v<std::int32_t>;
+using multiply_const_vff = multiply_const_v<float>;
+using multiply_const_vcc = multiply_const_v<gr_complex>;
 } /* namespace blocks */
 } /* namespace gr */
 

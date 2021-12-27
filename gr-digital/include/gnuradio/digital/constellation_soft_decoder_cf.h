@@ -31,7 +31,7 @@ class DIGITAL_API constellation_soft_decoder_cf : virtual public sync_interpolat
 {
 public:
     // gr::digital::constellation_soft_decoder_cf::sptr
-    typedef std::shared_ptr<constellation_soft_decoder_cf> sptr;
+    using sptr = std::shared_ptr<constellation_soft_decoder_cf>;
 
     /*!
      * \brief Make constellation decoder block.

@@ -29,7 +29,7 @@ protected:
     int d_fft_len;
 
 public:
-    typedef std::shared_ptr<ofdm_equalizer_base> sptr;
+    using sptr = std::shared_ptr<ofdm_equalizer_base>;
 
     ofdm_equalizer_base(int fft_len);
     virtual ~ofdm_equalizer_base();
@@ -75,7 +75,7 @@ protected:
     std::vector<gr_complex> d_channel_state;
 
 public:
-    typedef std::shared_ptr<ofdm_equalizer_1d_pilots> sptr;
+    using sptr = std::shared_ptr<ofdm_equalizer_1d_pilots>;
 
     ofdm_equalizer_1d_pilots(int fft_len,
                              const std::vector<std::vector<int>>& occupied_carriers,

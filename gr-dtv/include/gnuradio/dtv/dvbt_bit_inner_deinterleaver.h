@@ -35,7 +35,7 @@ namespace dtv {
 class DTV_API dvbt_bit_inner_deinterleaver : virtual public block
 {
 public:
-    typedef std::shared_ptr<dvbt_bit_inner_deinterleaver> sptr;
+    using sptr = std::shared_ptr<dvbt_bit_inner_deinterleaver>;
 
     /*!
      * \brief Create a Bit Inner deinterleaver

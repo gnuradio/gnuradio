@@ -35,7 +35,7 @@ class BLOCKS_API short_to_char : virtual public sync_block
 {
 public:
     // gr::blocks::short_to_char_ff::sptr
-    typedef std::shared_ptr<short_to_char> sptr;
+    using sptr = std::shared_ptr<short_to_char>;
 
     /*!
      * Build a short to char block.

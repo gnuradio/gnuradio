@@ -83,13 +83,13 @@ private:
 
     boost::mutex d_callback_map_lock;
 
-    typedef std::map<std::string, configureCallback_t> ConfigureCallbackMap_t;
+    using ConfigureCallbackMap_t = std::map<std::string, configureCallback_t>;
     ConfigureCallbackMap_t d_setcallbackmap;
 
-    typedef std::map<std::string, queryCallback_t> QueryCallbackMap_t;
+    using QueryCallbackMap_t = std::map<std::string, queryCallback_t>;
     QueryCallbackMap_t d_getcallbackmap;
 
-    typedef std::map<std::string, handlerCallback_t> HandlerCallbackMap_t;
+    using HandlerCallbackMap_t = std::map<std::string, handlerCallback_t>;
     HandlerCallbackMap_t d_handlercallbackmap;
 
     /*!

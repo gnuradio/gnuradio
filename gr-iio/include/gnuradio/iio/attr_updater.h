@@ -30,7 +30,7 @@ namespace iio {
 class IIO_API attr_updater : virtual public gr::block
 {
 public:
-    typedef std::shared_ptr<attr_updater> sptr;
+    using sptr = std::shared_ptr<attr_updater>;
 
     /*!
      * \brief Return a shared_ptr to a new instance of iio::attr_updater.

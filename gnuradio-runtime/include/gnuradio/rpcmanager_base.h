@@ -19,7 +19,7 @@ class rpcserver_booter_base;
 class rpcmanager_base
 {
 public:
-    typedef std::shared_ptr<rpcserver_booter_base> rpcserver_booter_base_sptr;
+    using rpcserver_booter_base_sptr = std::shared_ptr<rpcserver_booter_base>;
 
     rpcmanager_base() { ; }
     ~rpcmanager_base() { ; }

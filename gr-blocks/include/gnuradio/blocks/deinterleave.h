@@ -48,7 +48,7 @@ class BLOCKS_API deinterleave : virtual public block
 {
 public:
     // gr::blocks::deinterleave::sptr
-    typedef std::shared_ptr<deinterleave> sptr;
+    using sptr = std::shared_ptr<deinterleave>;
 
     /*!
      * Make a deinterleave block.

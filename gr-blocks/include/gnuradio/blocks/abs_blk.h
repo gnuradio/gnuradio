@@ -32,7 +32,7 @@ class BLOCKS_API abs_blk : virtual public sync_block
 
 public:
     // gr::blocks::abs_blk::sptr
-    typedef std::shared_ptr<abs_blk<T>> sptr;
+    using sptr = std::shared_ptr<abs_blk<T>>;
 
     /*!
      * \brief Create an instance of abs_blk
@@ -40,9 +40,9 @@ public:
     static sptr make(size_t vlen = 1);
 };
 
-typedef abs_blk<std::int16_t> abs_ss;
-typedef abs_blk<std::int32_t> abs_ii;
-typedef abs_blk<float> abs_ff;
+using abs_ss = abs_blk<std::int16_t>;
+using abs_ii = abs_blk<std::int32_t>;
+using abs_ff = abs_blk<float>;
 } /* namespace blocks */
 } /* namespace gr */
 

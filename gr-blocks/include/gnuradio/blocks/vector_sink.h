@@ -28,7 +28,7 @@ class BLOCKS_API vector_sink : virtual public sync_block
 {
 public:
     // gr::blocks::vector_sink::sptr
-    typedef std::shared_ptr<vector_sink<T>> sptr;
+    using sptr = std::shared_ptr<vector_sink<T>>;
 
     /*!
      * \brief Make a new instance of the vector source, and return a shared pointer to it.
@@ -47,11 +47,11 @@ public:
     virtual std::vector<tag_t> tags() const = 0;
 };
 
-typedef vector_sink<std::uint8_t> vector_sink_b;
-typedef vector_sink<std::int16_t> vector_sink_s;
-typedef vector_sink<std::int32_t> vector_sink_i;
-typedef vector_sink<float> vector_sink_f;
-typedef vector_sink<gr_complex> vector_sink_c;
+using vector_sink_b = vector_sink<std::uint8_t>;
+using vector_sink_s = vector_sink<std::int16_t>;
+using vector_sink_i = vector_sink<std::int32_t>;
+using vector_sink_f = vector_sink<float>;
+using vector_sink_c = vector_sink<gr_complex>;
 } /* namespace blocks */
 } /* namespace gr */
 

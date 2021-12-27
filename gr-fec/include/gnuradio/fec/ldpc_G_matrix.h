@@ -43,7 +43,7 @@ class FEC_API ldpc_G_matrix : virtual public fec_mtrx,
                               public std::enable_shared_from_this<ldpc_G_matrix>
 {
 public:
-    typedef std::shared_ptr<ldpc_G_matrix> sptr;
+    using sptr = std::shared_ptr<ldpc_G_matrix>;
 
     /*!
      * \brief Constructor given alist file

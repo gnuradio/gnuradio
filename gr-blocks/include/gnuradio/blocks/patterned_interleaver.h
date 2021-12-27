@@ -24,7 +24,7 @@ namespace blocks {
 class BLOCKS_API patterned_interleaver : virtual public block
 {
 public:
-    typedef std::shared_ptr<patterned_interleaver> sptr;
+    using sptr = std::shared_ptr<patterned_interleaver>;
 
     /*!
      * Make a patterned interleaver block.

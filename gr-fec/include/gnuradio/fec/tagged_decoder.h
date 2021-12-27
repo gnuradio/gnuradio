@@ -53,8 +53,8 @@ namespace fec {
 class FEC_API tagged_decoder : virtual public tagged_stream_block
 {
 public:
-    typedef std::shared_ptr<tagged_decoder> sptr;
-    typedef boost::shared_array<unsigned char> buf_sptr;
+    using sptr = std::shared_ptr<tagged_decoder>;
+    using buf_sptr = boost::shared_array<unsigned char>;
 
     /*!
      * Create the FEC decoder block by taking in the FECAPI decoder

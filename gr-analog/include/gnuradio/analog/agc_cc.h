@@ -29,7 +29,7 @@ class ANALOG_API agc_cc : virtual public sync_block
 {
 public:
     // gr::analog::agc_cc::sptr
-    typedef std::shared_ptr<agc_cc> sptr;
+    using sptr = std::shared_ptr<agc_cc>;
 
     /*!
      * Build a complex value AGC loop block.

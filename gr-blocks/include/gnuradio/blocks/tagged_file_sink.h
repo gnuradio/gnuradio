@@ -37,7 +37,7 @@ class BLOCKS_API tagged_file_sink : virtual public sync_block
 {
 public:
     // gr::blocks::tagged_file_sink::sptr
-    typedef std::shared_ptr<tagged_file_sink> sptr;
+    using sptr = std::shared_ptr<tagged_file_sink>;
 
     /*!
      * \brief Build a tagged_file_sink block.

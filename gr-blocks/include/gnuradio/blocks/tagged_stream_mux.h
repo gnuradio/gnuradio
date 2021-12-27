@@ -38,7 +38,7 @@ namespace blocks {
 class BLOCKS_API tagged_stream_mux : virtual public tagged_stream_block
 {
 public:
-    typedef std::shared_ptr<tagged_stream_mux> sptr;
+    using sptr = std::shared_ptr<tagged_stream_mux>;
 
     /*!
      * Make a tagged stream mux block.

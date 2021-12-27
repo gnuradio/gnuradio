@@ -29,8 +29,8 @@ enum class attr_type_t {
     DIRECT_REGISTER_ACCESS = 4
 };
 
-typedef std::variant<long long unsigned int, long unsigned int, int, double, std::string>
-    iio_param_value_t;
+using iio_param_value_t =
+    std::variant<unsigned long long, unsigned long, int, double, std::string>;
 
 #define tokenizer(inp, sep) \
     boost::tokenizer<boost::char_separator<char>>(inp, boost::char_separator<char>(sep))
@@ -45,7 +45,7 @@ public:
     static std::string to_string(iio_param_value_t value);
 };
 
-typedef std::vector<iio_param_t> iio_param_vec_t;
+using iio_param_vec_t = std::vector<iio_param_t>;
 
 } // namespace iio
 } // namespace gr

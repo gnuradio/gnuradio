@@ -26,7 +26,7 @@ namespace dtv {
 class DTV_API dvbt2_cellinterleaver_cc : virtual public gr::sync_block
 {
 public:
-    typedef std::shared_ptr<dvbt2_cellinterleaver_cc> sptr;
+    using sptr = std::shared_ptr<dvbt2_cellinterleaver_cc>;
 
     /*!
      * \brief Create a DVB-T2 cell and time interleaver.

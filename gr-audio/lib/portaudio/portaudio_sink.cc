@@ -44,7 +44,7 @@ portaudio_sink_fcn(int sampling_rate, const std::string& device_name, bool ok_to
 
 #define SAMPLE_FORMAT paFloat32
 
-typedef float sample_t;
+using sample_t = float;
 
 // Number of portaudio buffers in the ringbuffer
 static const unsigned int N_BUFFERS = 4;

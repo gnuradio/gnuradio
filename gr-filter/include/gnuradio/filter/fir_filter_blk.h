@@ -46,7 +46,7 @@ template <class IN_T, class OUT_T, class TAP_T>
 class FILTER_API fir_filter_blk : virtual public sync_decimator
 {
 public:
-    typedef std::shared_ptr<fir_filter_blk<IN_T, OUT_T, TAP_T>> sptr;
+    using sptr = std::shared_ptr<fir_filter_blk<IN_T, OUT_T, TAP_T>>;
 
     /*!
      * \brief FIR filter with IN_T input, OUT_T output, and TAP_T taps
@@ -60,12 +60,12 @@ public:
     virtual std::vector<TAP_T> taps() const = 0;
 };
 
-typedef fir_filter_blk<gr_complex, gr_complex, gr_complex> fir_filter_ccc;
-typedef fir_filter_blk<gr_complex, gr_complex, float> fir_filter_ccf;
-typedef fir_filter_blk<float, gr_complex, gr_complex> fir_filter_fcc;
-typedef fir_filter_blk<float, float, float> fir_filter_fff;
-typedef fir_filter_blk<float, std::int16_t, float> fir_filter_fsf;
-typedef fir_filter_blk<std::int16_t, gr_complex, gr_complex> fir_filter_scc;
+using fir_filter_ccc = fir_filter_blk<gr_complex, gr_complex, gr_complex>;
+using fir_filter_ccf = fir_filter_blk<gr_complex, gr_complex, float>;
+using fir_filter_fcc = fir_filter_blk<float, gr_complex, gr_complex>;
+using fir_filter_fff = fir_filter_blk<float, float, float>;
+using fir_filter_fsf = fir_filter_blk<float, std::int16_t, float>;
+using fir_filter_scc = fir_filter_blk<std::int16_t, gr_complex, gr_complex>;
 
 } /* namespace filter */
 } /* namespace gr */

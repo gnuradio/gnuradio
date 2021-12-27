@@ -26,12 +26,7 @@ namespace gr {
  *
  * The gateway provides access to all the gr::block routines.
  */
-typedef enum {
-    GW_BLOCK_GENERAL = 0,
-    GW_BLOCK_SYNC,
-    GW_BLOCK_DECIM,
-    GW_BLOCK_INTERP
-} gw_block_t;
+enum gw_block_t { GW_BLOCK_GENERAL = 0, GW_BLOCK_SYNC, GW_BLOCK_DECIM, GW_BLOCK_INTERP };
 
 class GR_RUNTIME_API block_gateway : virtual public gr::block
 {
@@ -40,7 +35,7 @@ private:
 
 public:
     // gr::block_gateway::sptr
-    typedef std::shared_ptr<block_gateway> sptr;
+    using sptr = std::shared_ptr<block_gateway>;
 
     /*!
      * Make a new gateway block.

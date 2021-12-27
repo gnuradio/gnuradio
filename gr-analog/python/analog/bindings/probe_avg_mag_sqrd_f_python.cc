@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(probe_avg_mag_sqrd_f.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(52cbd8c7cf42b73b7d0cc4172f2209be)                     */
+/* BINDTOOL_HEADER_FILE_HASH(95ed5fead647105d787a3cae04619d6f)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>

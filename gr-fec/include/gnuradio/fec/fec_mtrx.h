@@ -18,26 +18,26 @@ namespace gr {
 namespace fec {
 namespace code {
 
-typedef struct {
+struct block_data {
     size_t size;
     double* data;
-} block_data;
+};
 
-typedef struct {
+struct matrix {
     size_t size1;
     size_t size2;
     size_t tda;
     double* data;
     block_data* block;
     int owner;
-} matrix;
+};
 
 FEC_API void matrix_free(matrix* x);
 
-typedef std::shared_ptr<matrix> matrix_sptr;
+using matrix_sptr = std::shared_ptr<matrix>;
 
 class fec_mtrx;
-typedef std::shared_ptr<fec_mtrx> fec_mtrx_sptr;
+using fec_mtrx_sptr = std::shared_ptr<fec_mtrx>;
 
 /*!
  * \brief Read in an alist file and produce the matrix object.

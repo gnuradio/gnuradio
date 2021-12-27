@@ -25,7 +25,7 @@ class BLOCKS_API keep_m_in_n : virtual public block
 {
 public:
     // gr::blocks::keep_m_in_n::sptr
-    typedef std::shared_ptr<keep_m_in_n> sptr;
+    using sptr = std::shared_ptr<keep_m_in_n>;
 
     /*!
      * Make a keep m in n block.

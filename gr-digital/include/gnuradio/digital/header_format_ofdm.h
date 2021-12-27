@@ -45,7 +45,7 @@ namespace digital {
 class DIGITAL_API header_format_ofdm : public header_format_crc
 {
 public:
-    typedef std::shared_ptr<header_format_ofdm> sptr;
+    using sptr = std::shared_ptr<header_format_ofdm>;
     header_format_ofdm(const std::vector<std::vector<int>>& occupied_carriers,
                        int n_syms,
                        const std::string& len_key_name = "packet_len",

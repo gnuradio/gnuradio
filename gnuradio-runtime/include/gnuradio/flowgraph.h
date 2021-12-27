@@ -82,8 +82,8 @@ inline bool msg_endpoint::operator==(const msg_endpoint& other) const
 }
 
 // Hold vectors of gr::endpoint objects
-typedef std::vector<endpoint> endpoint_vector_t;
-typedef std::vector<endpoint>::iterator endpoint_viter_t;
+using endpoint_vector_t = std::vector<endpoint>;
+using endpoint_viter_t = std::vector<endpoint>::iterator;
 
 /*!
  *\brief Class representing a connection between to graph endpoints
@@ -108,8 +108,8 @@ private:
 };
 
 // Hold vectors of gr::edge objects
-typedef std::vector<edge> edge_vector_t;
-typedef std::vector<edge>::iterator edge_viter_t;
+using edge_vector_t = std::vector<edge>;
+using edge_viter_t = std::vector<edge>::iterator;
 
 
 /*!
@@ -135,8 +135,8 @@ private:
 };
 
 // Hold vectors of gr::msg_edge objects
-typedef std::vector<msg_edge> msg_edge_vector_t;
-typedef std::vector<msg_edge>::iterator msg_edge_viter_t;
+using msg_edge_vector_t = std::vector<msg_edge>;
+using msg_edge_viter_t = std::vector<msg_edge>::iterator;
 
 // Create a shared pointer to a heap allocated flowgraph
 // (types defined in runtime_types.h)

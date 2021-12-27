@@ -23,7 +23,7 @@ namespace dtv {
 class DTV_API atsc_trellis_encoder : virtual public gr::sync_block
 {
 public:
-    typedef std::shared_ptr<atsc_trellis_encoder> sptr;
+    using sptr = std::shared_ptr<atsc_trellis_encoder>;
 
     /*!
      * \brief Return a shared_ptr to a new instance of dtv::atsc_trellis_encoder.

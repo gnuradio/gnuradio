@@ -13,24 +13,20 @@
 
 #include <volk/volk_alloc.hh>
 
-typedef enum _cc_mode_t {
-    CC_STREAMING = 0,
-    CC_TERMINATED,
-    CC_TRUNCATED,
-    CC_TAILBITING
-} cc_mode_t;
+enum cc_mode_t { CC_STREAMING = 0, CC_TERMINATED, CC_TRUNCATED, CC_TAILBITING };
+using _cc_mode_t = cc_mode_t;
 
-typedef union {
+union decision_t {
     // decision_t is a BIT vector
     unsigned char* t;
     unsigned int* w;
     unsigned short* s;
     unsigned char* c;
-} decision_t;
+};
 
-typedef union {
+union metric_t {
     unsigned char* t;
-} metric_t;
+};
 
 struct v {
     volk::vector<unsigned char> metrics;

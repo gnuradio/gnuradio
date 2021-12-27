@@ -84,8 +84,8 @@ protected:
     buffer_type_base(const std::string name) : d_name(name) {}
 };
 
-typedef const buffer_type_base& buffer_type;
-typedef std::vector<std::reference_wrapper<const buffer_type_base>> gr_vector_buffer_type;
+using buffer_type = const buffer_type_base&;
+using gr_vector_buffer_type = std::vector<std::reference_wrapper<const buffer_type_base>>;
 
 /*!
  * \brief Template used to create buffer types. Note that the factory_class parameter

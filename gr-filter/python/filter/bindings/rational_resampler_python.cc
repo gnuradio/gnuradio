@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(rational_resampler.h) */
-/* BINDTOOL_HEADER_FILE_HASH(e487c5ab24c4d25e4a5089773a4581d1)                     */
+/* BINDTOOL_HEADER_FILE_HASH(81baf4fcc89b338f8ca5e0055ee4db97)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>

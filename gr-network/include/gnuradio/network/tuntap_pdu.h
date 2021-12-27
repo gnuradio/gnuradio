@@ -25,7 +25,7 @@ class NETWORK_API tuntap_pdu : virtual public block
 {
 public:
     // gr::network::tuntap_pdu::sptr
-    typedef std::shared_ptr<tuntap_pdu> sptr;
+    using sptr = std::shared_ptr<tuntap_pdu>;
 
     /*!
      * \brief Construct a TUNTAP PDU interface

@@ -96,7 +96,7 @@ class QTGUI_API edit_box_msg : virtual public block
 {
 public:
     // gr::qtgui::edit_box_msg::sptr
-    typedef std::shared_ptr<edit_box_msg> sptr;
+    using sptr = std::shared_ptr<edit_box_msg>;
 
     /*!
      * \brief Constructs the Edit box block.

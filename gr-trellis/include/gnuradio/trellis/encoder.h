@@ -27,7 +27,7 @@ template <class IN_T, class OUT_T>
 class TRELLIS_API encoder : virtual public sync_block
 {
 public:
-    typedef std::shared_ptr<encoder<IN_T, OUT_T>> sptr;
+    using sptr = std::shared_ptr<encoder<IN_T, OUT_T>>;
 
     static sptr make(const fsm& FSM, int ST, int K = 0);
 
@@ -38,12 +38,12 @@ public:
     virtual void set_ST(int ST) = 0;
     virtual void set_K(int K) = 0;
 };
-typedef encoder<std::uint8_t, std::uint8_t> encoder_bb;
-typedef encoder<std::uint8_t, std::int16_t> encoder_bs;
-typedef encoder<std::uint8_t, std::int32_t> encoder_bi;
-typedef encoder<std::int16_t, std::int16_t> encoder_ss;
-typedef encoder<std::int16_t, std::int32_t> encoder_si;
-typedef encoder<std::int32_t, std::int32_t> encoder_ii;
+using encoder_bb = encoder<std::uint8_t, std::uint8_t>;
+using encoder_bs = encoder<std::uint8_t, std::int16_t>;
+using encoder_bi = encoder<std::uint8_t, std::int32_t>;
+using encoder_ss = encoder<std::int16_t, std::int16_t>;
+using encoder_si = encoder<std::int16_t, std::int32_t>;
+using encoder_ii = encoder<std::int32_t, std::int32_t>;
 
 } /* namespace trellis */
 } /* namespace gr */

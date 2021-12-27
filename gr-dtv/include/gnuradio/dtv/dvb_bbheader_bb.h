@@ -31,7 +31,7 @@ namespace dtv {
 class DTV_API dvb_bbheader_bb : virtual public gr::block
 {
 public:
-    typedef std::shared_ptr<dvb_bbheader_bb> sptr;
+    using sptr = std::shared_ptr<dvb_bbheader_bb>;
 
     /*!
      * \brief Create a baseband header formatter.

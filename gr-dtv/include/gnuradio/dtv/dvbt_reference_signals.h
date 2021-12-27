@@ -30,7 +30,7 @@ namespace dtv {
 class DTV_API dvbt_reference_signals : virtual public block
 {
 public:
-    typedef std::shared_ptr<dvbt_reference_signals> sptr;
+    using sptr = std::shared_ptr<dvbt_reference_signals>;
 
     /*!
      * \brief Create Reference signals generator.

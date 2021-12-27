@@ -28,7 +28,7 @@ enum class evm_measurement_t { EVM_PERCENT = 0, EVM_DB = 1 };
 class DIGITAL_API meas_evm_cc : virtual public gr::sync_block
 {
 public:
-    typedef std::shared_ptr<meas_evm_cc> sptr;
+    using sptr = std::shared_ptr<meas_evm_cc>;
 
     /*!
      * \brief Return a shared_ptr to a new instance of gr::digital::meas_evm_cc.

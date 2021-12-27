@@ -22,7 +22,7 @@
 namespace gnuradio {
 
 static gr::thread::mutex s_mutex;
-typedef std::map<gr::basic_block*, gr::basic_block_sptr> sptr_map;
+using sptr_map = std::map<gr::basic_block*, gr::basic_block_sptr>;
 static sptr_map s_map;
 
 struct disarmable_deleter {
