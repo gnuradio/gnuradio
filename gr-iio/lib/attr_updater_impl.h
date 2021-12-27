@@ -26,7 +26,6 @@ private:
     const pmt::pmt_t d_port;
     unsigned int d_interval_ms;
     bool d_finished;
-    bool d_updated;
     pmt::pmt_t d_msg;
     std::mutex d_mtx;
     std::shared_ptr<gr::thread::thread> d_thread;

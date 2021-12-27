@@ -42,8 +42,7 @@ attr_sink_impl::attr_sink_impl(const std::string& uri,
       device(device),
       channel(channel),
       uri(uri),
-      type(type),
-      output(output)
+      type(type)
 {
 
     ctx = device_source_impl::get_context(uri);
