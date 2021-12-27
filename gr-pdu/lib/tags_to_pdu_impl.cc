@@ -192,8 +192,8 @@ int tags_to_pdu_impl<T>::work(int noutput_items,
 
     // find first SOB/EOB tag and process an time/offset tags encountered
     d_tag_type = NONE;
-    for (size_t ii = 0; ii < d_tags.size(); ii++) {
-        d_tag = d_tags[ii];
+    for (auto& tag : d_tags) {
+        d_tag = tag;
         if (pmt::eqv(d_tag.key, d_sob_tag_key)) {
             d_tag_type = SOB;
             consumed = d_tag.offset - a_start + 1;

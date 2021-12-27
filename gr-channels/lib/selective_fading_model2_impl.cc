@@ -108,8 +108,8 @@ int selective_fading_model2_impl::work(int noutput_items,
         }
 
         // clear the current values in each tap
-        for (size_t j = 0; j < d_taps.size(); j++) {
-            d_taps[j] = gr_complex(0, 0);
+        for (auto& d_tap : d_taps) {
+            d_tap = gr_complex(0, 0);
         }
 
         // add each flat fading component to the taps

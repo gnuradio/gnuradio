@@ -601,9 +601,9 @@ public:
         d_act.push_back(new OtherAction(this));
 
         d_grp = new QActionGroup(this);
-        for (int t = 0; t < d_act.size(); t++) {
-            d_act[t]->setCheckable(true);
-            d_act[t]->setActionGroup(d_grp);
+        for (auto& t : d_act) {
+            t->setCheckable(true);
+            t->setActionGroup(d_grp);
         }
 
         QIntValidator* valid = new QIntValidator(32, 4096, this);
@@ -715,9 +715,9 @@ public:
         d_act.push_back(new OtherAction(this));
 
         d_grp = new QActionGroup(this);
-        for (int t = 0; t < d_act.size(); t++) {
-            d_act[t]->setCheckable(true);
-            d_act[t]->setActionGroup(d_grp);
+        for (auto& t : d_act) {
+            t->setCheckable(true);
+            t->setActionGroup(d_grp);
         }
         d_act[0]->setChecked(true);
 
@@ -831,9 +831,9 @@ public:
         d_act.push_back(new QAction("Flat-top", this));
 
         d_grp = new QActionGroup(this);
-        for (int t = 0; t < d_act.size(); t++) {
-            d_act[t]->setCheckable(true);
-            d_act[t]->setActionGroup(d_grp);
+        for (auto& t : d_act) {
+            t->setCheckable(true);
+            t->setActionGroup(d_grp);
         }
 
         connect(d_act[0], SIGNAL(triggered()), this, SLOT(getNone()));

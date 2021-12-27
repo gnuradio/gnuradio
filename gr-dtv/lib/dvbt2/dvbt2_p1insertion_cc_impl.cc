@@ -157,8 +157,8 @@ dvbt2_p1insertion_cc_impl::dvbt2_p1insertion_cc_impl(dvbt2_extended_carrier_t ca
     memcpy(&dst[0], &in[p1_fft_size / 2], sizeof(gr_complex) * p1_fft_size / 2);
     p1_fft.execute();
     memcpy(out, p1_fft.get_outbuf(), sizeof(gr_complex) * p1_fft_size);
-    for (int i = 0; i < 1024; i++) {
-        p1_time[i] /= std::sqrt(384.0);
+    for (auto& i : p1_time) {
+        i /= std::sqrt(384.0);
     }
     for (int i = 0; i < 1023; i++) {
         p1_freqshft[i + 1] = p1_freq[i];
@@ -171,8 +171,8 @@ dvbt2_p1insertion_cc_impl::dvbt2_p1insertion_cc_impl(dvbt2_extended_carrier_t ca
     memcpy(&dst[0], &in[p1_fft_size / 2], sizeof(gr_complex) * p1_fft_size / 2);
     p1_fft.execute();
     memcpy(out, p1_fft.get_outbuf(), sizeof(gr_complex) * p1_fft_size);
-    for (int i = 0; i < 1024; i++) {
-        p1_timeshft[i] /= std::sqrt(384.0);
+    for (auto& i : p1_timeshft) {
+        i /= std::sqrt(384.0);
     }
     frame_items =
         ((numdatasyms + N_P2) * symbol_size) + ((numdatasyms + N_P2) * guard_interval);
@@ -183,12 +183,12 @@ dvbt2_p1insertion_cc_impl::dvbt2_p1insertion_cc_impl(dvbt2_extended_carrier_t ca
 void dvbt2_p1insertion_cc_impl::init_p1_randomizer(void)
 {
     int sr = 0x4e46;
-    for (int i = 0; i < 384; i++) {
+    for (int& i : p1_randomize) {
         int b = ((sr) ^ (sr >> 1)) & 1;
         if (b == 0) {
-            p1_randomize[i] = 1;
+            i = 1;
         } else {
-            p1_randomize[i] = -1;
+            i = -1;
         }
         sr >>= 1;
         if (b)
@@ -221,8 +221,8 @@ int dvbt2_p1insertion_cc_impl::general_work(int noutput_items,
         for (int j = 0; j < 542; j++) {
             *out++ = p1_timeshft[j];
         }
-        for (int j = 0; j < 1024; j++) {
-            *out++ = p1_time[j];
+        for (auto& j : p1_time) {
+            *out++ = j;
         }
         for (int j = 542; j < 1024; j++) {
             *out++ = p1_timeshft[j];

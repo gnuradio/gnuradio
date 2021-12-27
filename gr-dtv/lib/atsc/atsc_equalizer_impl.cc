@@ -38,17 +38,17 @@ static void init_field_sync_common(float* p, int mask)
     p[i++] = bin_map(0);
     p[i++] = bin_map(1);
 
-    for (int j = 0; j < 511; j++) // PN511
-        p[i++] = bin_map(atsc_pn511[j]);
+    for (unsigned char j : atsc_pn511) // PN511
+        p[i++] = bin_map(j);
 
-    for (int j = 0; j < 63; j++) // PN63
-        p[i++] = bin_map(atsc_pn63[j]);
+    for (unsigned char j : atsc_pn63) // PN63
+        p[i++] = bin_map(j);
 
-    for (int j = 0; j < 63; j++) // PN63, toggled on field 2
-        p[i++] = bin_map(atsc_pn63[j] ^ mask);
+    for (unsigned char j : atsc_pn63) // PN63, toggled on field 2
+        p[i++] = bin_map(j ^ mask);
 
-    for (int j = 0; j < 63; j++) // PN63
-        p[i++] = bin_map(atsc_pn63[j]);
+    for (unsigned char j : atsc_pn63) // PN63
+        p[i++] = bin_map(j);
 }
 
 atsc_equalizer_impl::atsc_equalizer_impl()

@@ -40,8 +40,8 @@ check_lfsr_32k_s_impl::check_lfsr_32k_s_impl()
 {
     lfsr_32k lfsr;
 
-    for (int i = 0; i < BUFSIZE; i++)
-        d_buffer[i] = lfsr.next_short();
+    for (unsigned short& i : d_buffer)
+        i = lfsr.next_short();
 
     enter_SEARCHING();
 }

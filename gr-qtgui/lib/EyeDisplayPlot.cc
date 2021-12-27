@@ -252,9 +252,9 @@ void EyeDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
             }
 
             // Detach and delete any tags that were plotted last time
-            for (size_t i = 0; i < d_tag_markers[0].size(); i++) {
-                d_tag_markers[0][i]->detach();
-                delete d_tag_markers[0][i];
+            for (auto& i : d_tag_markers[0]) {
+                i->detach();
+                delete i;
             }
             d_tag_markers[0].clear();
 
@@ -385,11 +385,11 @@ void EyeDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
 void EyeDisplayPlot::legendEntryChecked(QwtPlotItem* plotItem, bool on)
 {
     // When line is turned on/off, immediately show/hide tag markers
-    for (size_t i = 0; i < d_tag_markers[0].size(); i++) {
+    for (auto& i : d_tag_markers[0]) {
         if (!(!on && d_tag_markers_en[0]))
-            d_tag_markers[0][i]->hide();
+            i->hide();
         else
-            d_tag_markers[0][i]->show();
+            i->show();
     }
     DisplayPlot::legendEntryChecked(plotItem, on);
 }
@@ -539,22 +539,22 @@ void EyeDisplayPlot::setLineLabel(unsigned int which, QString label)
 // Overriding of method DisplayPlot::setLineColor
 void EyeDisplayPlot::setLineColor(unsigned int which, QColor color)
 {
-    for (unsigned int i = 0; i < d_plot_curve.size(); ++i) {
+    for (auto& i : d_plot_curve) {
         // Set the color of the pen
-        QPen pen(d_plot_curve[i]->pen());
+        QPen pen(i->pen());
         pen.setColor(color);
-        d_plot_curve[i]->setPen(pen);
+        i->setPen(pen);
         // And set the color of the markers
 #if QWT_VERSION < 0x060000
         d_plot_curve[i]->setPen(pen);
         QwtSymbol sym = (QwtSymbol)d_plot_curve[i]->symbol();
         setLineMarker(i, sym.style());
 #else
-        QwtSymbol* sym = (QwtSymbol*)d_plot_curve[i]->symbol();
+        QwtSymbol* sym = (QwtSymbol*)i->symbol();
         if (sym) {
             sym->setColor(color);
             sym->setPen(pen);
-            d_plot_curve[i]->setSymbol(sym);
+            i->setSymbol(sym);
         }
 #endif
     }
@@ -587,7 +587,7 @@ void EyeDisplayPlot::setLineWidth(unsigned int which, int width)
 // Overriding of method DisplayPlot::setLineMarker
 void EyeDisplayPlot::setLineMarker(unsigned int which, QwtSymbol::Style marker)
 {
-    for (unsigned int i = 0; i < d_plot_curve.size(); ++i) {
+    for (auto& i : d_plot_curve) {
 #if QWT_VERSION < 0x060000
         QwtSymbol sym = (QwtSymbol)d_plot_curve[i]->symbol();
         QPen pen(d_plot_curve[i]->pen());
@@ -597,10 +597,10 @@ void EyeDisplayPlot::setLineMarker(unsigned int which, QwtSymbol::Style marker)
         sym.setBrush(brush);
         d_plot_curve[i]->setSymbol(sym);
 #else
-        QwtSymbol* sym = (QwtSymbol*)d_plot_curve[i]->symbol();
+        QwtSymbol* sym = (QwtSymbol*)i->symbol();
         if (sym) {
             sym->setStyle(marker);
-            d_plot_curve[i]->setSymbol(sym);
+            i->setSymbol(sym);
         }
 #endif
     }
@@ -609,36 +609,36 @@ void EyeDisplayPlot::setLineMarker(unsigned int which, QwtSymbol::Style marker)
 // Overriding of method DisplayPlot::setLineStyle
 void EyeDisplayPlot::setLineStyle(unsigned int which, Qt::PenStyle style)
 {
-    for (unsigned int i = 0; i < d_plot_curve.size(); ++i) {
-        QPen pen(d_plot_curve[i]->pen());
+    for (auto& i : d_plot_curve) {
+        QPen pen(i->pen());
         pen.setStyle(style);
-        d_plot_curve[i]->setPen(pen);
+        i->setPen(pen);
     }
 }
 
 // Overriding of method DisplayPlot::setMarkerAlpha
 void EyeDisplayPlot::setMarkerAlpha(unsigned int which, int alpha)
 {
-    for (unsigned int i = 0; i < d_plot_curve.size(); ++i) {
+    for (auto& i : d_plot_curve) {
         // Get the pen color
-        QPen pen(d_plot_curve[i]->pen());
+        QPen pen(i->pen());
         QColor color = pen.color();
 
         // Set new alpha and update pen
         color.setAlpha(alpha);
         pen.setColor(color);
-        d_plot_curve[i]->setPen(pen);
+        i->setPen(pen);
 
         // And set the new color for the markers
 #if QWT_VERSION < 0x060000
         QwtSymbol sym = (QwtSymbol)d_plot_curve[i]->symbol();
         setLineMarker(i, sym.style());
 #else
-        QwtSymbol* sym = (QwtSymbol*)d_plot_curve[i]->symbol();
+        QwtSymbol* sym = (QwtSymbol*)i->symbol();
         if (sym) {
             sym->setColor(color);
             sym->setPen(pen);
-            d_plot_curve[i]->setSymbol(sym);
+            i->setSymbol(sym);
         }
 #endif
     }

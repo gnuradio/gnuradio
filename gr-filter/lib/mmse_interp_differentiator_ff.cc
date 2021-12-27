@@ -24,8 +24,8 @@ std::vector<kernel::fir_filter_fff> build_filters()
 {
     std::vector<kernel::fir_filter_fff> filters;
     filters.reserve(DNSTEPS + 1);
-    for (int i = 0; i < DNSTEPS + 1; i++) {
-        std::vector<float> t(&Dtaps[i][0], &Dtaps[i][DNTAPS]);
+    for (const auto& Dtap : Dtaps) {
+        std::vector<float> t(&Dtap[0], &Dtap[DNTAPS]);
         filters.emplace_back(std::move(t));
     }
     return filters;

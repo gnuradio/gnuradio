@@ -417,8 +417,8 @@ bool buffer_single_mapped::output_blocked_callback_logic(int output_multiple,
         // Adjust write index and each reader index
         d_write_index -= min_read_idx;
 
-        for (size_t idx = 0; idx < d_readers.size(); ++idx) {
-            d_readers[idx]->d_read_index -= min_read_idx;
+        for (auto& d_reader : d_readers) {
+            d_reader->d_read_index -= min_read_idx;
         }
 
         return true;

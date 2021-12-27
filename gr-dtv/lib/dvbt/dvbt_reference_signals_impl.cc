@@ -209,8 +209,8 @@ void dvbt_pilot_gen::generate_bch_code()
     memcpy(&data_in[60], &d_tps_data[1], 53);
 
     // X^14+X^9+X^8+X^6+X^5+X^4+X^2+X+1
-    for (int i = 0; i < 113; i++) {
-        int feedback = 0x1 & (data_in[i] ^ reg_bch);
+    for (unsigned char i : data_in) {
+        int feedback = 0x1 & (i ^ reg_bch);
         reg_bch = reg_bch >> 1;
         reg_bch |= feedback << 13;
         reg_bch = reg_bch ^ (feedback << 12) ^ (feedback << 11) ^ (feedback << 9) ^
@@ -243,8 +243,8 @@ int dvbt_pilot_gen::verify_bch_code(std::deque<char> data)
     }
 
     // X^14+X^9+X^8+X^6+X^5+X^4+X^2+X+1
-    for (int i = 0; i < 113; i++) {
-        int feedback = 0x1 & (data_in[i] ^ reg_bch);
+    for (unsigned char i : data_in) {
+        int feedback = 0x1 & (i ^ reg_bch);
         reg_bch = reg_bch >> 1;
         reg_bch |= feedback << 13;
         reg_bch = reg_bch ^ (feedback << 12) ^ (feedback << 11) ^ (feedback << 9) ^

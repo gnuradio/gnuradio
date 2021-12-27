@@ -53,8 +53,8 @@ std::vector<uint8_t> cldpc::get_systematic_bits(std::vector<uint8_t> in)
 
 void cldpc::print_permute()
 {
-    for (size_t i = 0; i < permute.size(); i++) {
-        std::cout << permute[i] << ", ";
+    for (int i : permute) {
+        std::cout << i << ", ";
     }
     std::cout << "\n";
 }

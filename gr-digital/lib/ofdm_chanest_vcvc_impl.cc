@@ -252,15 +252,15 @@ int ofdm_chanest_vcvc_impl::general_work(int noutput_items,
     // Propagate tags
     std::vector<gr::tag_t> tags;
     get_tags_in_range(tags, 0, nitems_read(0), nitems_read(0) + framesize);
-    for (unsigned t = 0; t < tags.size(); t++) {
-        int offset = tags[t].offset - nitems_read(0);
+    for (auto& tag : tags) {
+        int offset = tag.offset - nitems_read(0);
         if (offset < d_n_sync_syms) {
             offset = 0;
         } else {
             offset -= d_n_sync_syms;
         }
-        tags[t].offset = offset + nitems_written(0);
-        add_item_tag(0, tags[t]);
+        tag.offset = offset + nitems_written(0);
+        add_item_tag(0, tag);
     }
 
     produce(0, d_n_data_syms);

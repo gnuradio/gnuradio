@@ -74,8 +74,8 @@ additive_scrambler_bb_impl::_get_next_reset_index(int64_t noutput_items,
         std::vector<gr::tag_t> tags;
         get_tags_in_range(
             tags, 0, nitems_read(0), nitems_read(0) + noutput_items, d_reset_tag_key);
-        for (unsigned i = 0; i < tags.size(); i++) {
-            int64_t reset_pos = tags[i].offset - nitems_read(0);
+        for (auto& tag : tags) {
+            int64_t reset_pos = tag.offset - nitems_read(0);
             if (reset_pos < reset_index && reset_pos > last_reset_index) {
                 reset_index = reset_pos;
             }

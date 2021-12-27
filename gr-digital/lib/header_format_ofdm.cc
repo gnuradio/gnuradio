@@ -60,8 +60,8 @@ header_format_ofdm::header_format_ofdm(
     }
 
     d_syms_per_set = 0;
-    for (unsigned i = 0; i < d_occupied_carriers.size(); i++) {
-        d_syms_per_set += d_occupied_carriers[i].size();
+    for (const auto& d_occupied_carrier : d_occupied_carriers) {
+        d_syms_per_set += d_occupied_carrier.size();
     }
 
     // Init scrambler mask

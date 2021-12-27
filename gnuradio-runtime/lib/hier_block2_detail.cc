@@ -224,10 +224,10 @@ void hier_block2_detail::msg_disconnect(basic_block_sptr src,
     if (src_block && src.get() != d_owner) {
         // if the source is hier, we need to resolve the endpoint before calling unsub
         msg_edge_vector_t edges = src_block->d_detail->d_fg->msg_edges();
-        for (msg_edge_viter_t it = edges.begin(); it != edges.end(); ++it) {
-            if ((*it).dst().block() == src) {
-                src = (*it).src().block();
-                srcport = (*it).src().port();
+        for (auto& edge : edges) {
+            if (edge.dst().block() == src) {
+                src = edge.src().block();
+                srcport = edge.src().port();
             }
         }
     }
@@ -236,10 +236,10 @@ void hier_block2_detail::msg_disconnect(basic_block_sptr src,
         // if the destination is hier, we need to resolve the endpoint before calling
         // unsub
         msg_edge_vector_t edges = dst_block->d_detail->d_fg->msg_edges();
-        for (msg_edge_viter_t it = edges.begin(); it != edges.end(); ++it) {
-            if ((*it).src().block() == dst) {
-                dst = (*it).dst().block();
-                dstport = (*it).dst().port();
+        for (auto& edge : edges) {
+            if (edge.src().block() == dst) {
+                dst = edge.dst().block();
+                dstport = edge.dst().port();
             }
         }
     }
@@ -769,8 +769,8 @@ void hier_block2_detail::flatten_aux(flat_flowgraph_sptr sfg) const
             throw std::runtime_error(msg.str());
         }
 
-        for (unsigned int j = 0; j < d_inputs[i].size(); j++)
-            tmp.push_back(d_inputs[i][j].block());
+        for (const auto& j : d_inputs[i])
+            tmp.push_back(j.block());
     }
 
     for (unsigned int i = 0; i < d_outputs.size(); i++) {
@@ -835,8 +835,8 @@ void hier_block2_detail::flatten_aux(flat_flowgraph_sptr sfg) const
     unique_copy(tmp.begin(), tmp.end(), inserter);
 
     // Recurse hierarchical children
-    for (basic_block_viter_t p = blocks.begin(); p != blocks.end(); p++) {
-        hier_block2_sptr hier_block2(cast_to_hier_block2_sptr(*p));
+    for (auto& block : blocks) {
+        hier_block2_sptr hier_block2(cast_to_hier_block2_sptr(block));
         if (hier_block2 && (hier_block2.get() != d_owner)) {
             GR_LOG_DEBUG(
                 d_debug_logger,
@@ -893,16 +893,16 @@ void hier_block2_detail::unlock()
 void hier_block2_detail::set_processor_affinity(const std::vector<int>& mask)
 {
     basic_block_vector_t tmp = d_fg->calc_used_blocks();
-    for (basic_block_viter_t p = tmp.begin(); p != tmp.end(); p++) {
-        (*p)->set_processor_affinity(mask);
+    for (auto& p : tmp) {
+        p->set_processor_affinity(mask);
     }
 }
 
 void hier_block2_detail::unset_processor_affinity()
 {
     basic_block_vector_t tmp = d_fg->calc_used_blocks();
-    for (basic_block_viter_t p = tmp.begin(); p != tmp.end(); p++) {
-        (*p)->unset_processor_affinity();
+    for (auto& p : tmp) {
+        p->unset_processor_affinity();
     }
 }
 
@@ -915,8 +915,8 @@ std::vector<int> hier_block2_detail::processor_affinity()
 void hier_block2_detail::set_log_level(const std::string& level)
 {
     basic_block_vector_t tmp = d_fg->calc_used_blocks();
-    for (basic_block_viter_t p = tmp.begin(); p != tmp.end(); p++) {
-        (*p)->set_log_level(level);
+    for (auto& p : tmp) {
+        p->set_log_level(level);
     }
 }
 

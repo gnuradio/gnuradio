@@ -78,8 +78,8 @@ unsigned int hdlc_framer_pb_impl::crc_ccitt(std::vector<unsigned char>& data)
 {
     unsigned int POLY = 0x8408; // reflected 0x1021
     unsigned short crc = 0xFFFF;
-    for (size_t i = 0; i < data.size(); i++) {
-        crc ^= data[i];
+    for (unsigned char i : data) {
+        crc ^= i;
         for (size_t j = 0; j < 8; j++) {
             if (crc & 0x01)
                 crc = (crc >> 1) ^ POLY;

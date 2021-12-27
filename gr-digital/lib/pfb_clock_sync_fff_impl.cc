@@ -242,9 +242,9 @@ void pfb_clock_sync_fff_impl::create_diff_taps(const std::vector<float>& newtaps
     difftaps.push_back(0);
 
     // Normalize the taps
-    for (unsigned int i = 0; i < difftaps.size(); i++) {
-        difftaps[i] *= d_nfilters / pwr;
-        if (difftaps[i] != difftaps[i]) {
+    for (float& difftap : difftaps) {
+        difftap *= d_nfilters / pwr;
+        if (difftap != difftap) {
             throw std::runtime_error(
                 "pfb_clock_sync_fff::create_diff_taps produced NaN.");
         }

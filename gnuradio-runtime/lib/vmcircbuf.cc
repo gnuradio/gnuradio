@@ -54,9 +54,9 @@ vmcircbuf_factory* vmcircbuf_sysconfig::get_default_factory()
 
     char name[1024];
     if (gr::vmcircbuf_prefs::get(FACTORY_PREF_KEY, name, sizeof(name)) >= 0) {
-        for (unsigned int i = 0; i < all.size(); i++) {
-            if (strncmp(name, all[i]->name(), strlen(all[i]->name())) == 0) {
-                s_default_factory = all[i];
+        for (auto& i : all) {
+            if (strncmp(name, i->name(), strlen(i->name())) == 0) {
+                s_default_factory = i;
                 GR_LOG_INFO(debug_logger,
                             boost::format("Using %s") % s_default_factory->name());
                 return s_default_factory;
@@ -69,9 +69,9 @@ vmcircbuf_factory* vmcircbuf_sysconfig::get_default_factory()
 
     GR_LOG_INFO(debug_logger, "finding a working factory...");
 
-    for (unsigned int i = 0; i < all.size(); i++) {
-        if (test_factory(all[i], verbose)) {
-            set_default_factory(all[i]);
+    for (auto& i : all) {
+        if (test_factory(i, verbose)) {
+            set_default_factory(i);
             return s_default_factory;
         }
     }
@@ -257,8 +257,8 @@ bool vmcircbuf_sysconfig::test_all_factories(int verbose)
 
     std::vector<vmcircbuf_factory*> all = all_factories();
 
-    for (unsigned int i = 0; i < all.size(); i++)
-        ok |= test_factory(all[i], verbose);
+    for (auto& i : all)
+        ok |= test_factory(i, verbose);
 
     return ok;
 }

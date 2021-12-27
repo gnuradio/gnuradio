@@ -57,8 +57,8 @@ corr_est_cc_impl::corr_est_cc_impl(const std::vector<gr_complex>& symbols,
     set_max_noutput_items(s_nitems);
 
     // Create time-reversed conjugate of symbols
-    for (size_t i = 0; i < d_symbols.size(); i++) {
-        d_symbols[i] = conj(d_symbols[i]);
+    for (auto& d_symbol : d_symbols) {
+        d_symbol = conj(d_symbol);
     }
     std::reverse(d_symbols.begin(), d_symbols.end());
 
@@ -170,8 +170,8 @@ void corr_est_cc_impl::_set_threshold(float threshold)
         // Compute the value of the discrete autocorrelation of the matched
         // filter with offset 0 (aka the autocorrelation peak).
         float corr = 0;
-        for (size_t i = 0; i < d_symbols.size(); i++)
-            corr += abs(d_symbols[i] * conj(d_symbols[i]));
+        for (auto& d_symbol : d_symbols)
+            corr += abs(d_symbol * conj(d_symbol));
         d_thresh = threshold * corr * corr;
         break;
     }

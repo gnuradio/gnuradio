@@ -62,8 +62,8 @@ scheduler_tpb::scheduler_tpb(flat_flowgraph_sptr ffg,
 
     // Ensure that the done flag is clear on all blocks
 
-    for (size_t i = 0; i < blocks.size(); i++) {
-        blocks[i]->detail()->set_done(false);
+    for (auto& block : blocks) {
+        block->detail()->set_done(false);
     }
 
     thread::barrier_sptr start_sync =

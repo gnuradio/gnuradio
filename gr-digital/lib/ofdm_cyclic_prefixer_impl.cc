@@ -177,11 +177,11 @@ int ofdm_cyclic_prefixer_impl::work(int noutput_items,
         std::vector<tag_t> tags;
         get_tags_in_range(
             tags, 0, nitems_read(0) + sym_idx, nitems_read(0) + sym_idx + 1);
-        for (unsigned i = 0; i < tags.size(); i++) {
-            tags[i].offset = ((tags[i].offset - nitems_read(0)) *
-                              (d_fft_len + d_cp_lengths[last_state])) +
-                             nitems_written(0);
-            add_item_tag(0, tags[i].offset, tags[i].key, tags[i].value);
+        for (auto& tag : tags) {
+            tag.offset =
+                ((tag.offset - nitems_read(0)) * (d_fft_len + d_cp_lengths[last_state])) +
+                nitems_written(0);
+            add_item_tag(0, tag.offset, tag.key, tag.value);
         }
         // Finally switch to next state.
         ++d_state;

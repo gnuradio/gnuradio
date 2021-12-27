@@ -150,11 +150,9 @@ void TimeRasterDisplayForm::newData(const QEvent* updateEvent)
     const std::vector<double*> dataPoints = event->getPoints();
     const uint64_t numDataPoints = event->getNumDataPoints();
 
-    for (size_t i = 0; i < dataPoints.size(); i++) {
-        double* min_val =
-            std::min_element(&dataPoints[i][0], &dataPoints[i][numDataPoints - 1]);
-        double* max_val =
-            std::max_element(&dataPoints[i][0], &dataPoints[i][numDataPoints - 1]);
+    for (auto dataPoint : dataPoints) {
+        double* min_val = std::min_element(&dataPoint[0], &dataPoint[numDataPoints - 1]);
+        double* max_val = std::max_element(&dataPoint[0], &dataPoint[numDataPoints - 1]);
         if (*min_val < d_min_val)
             d_min_val = *min_val;
         if (*max_val > d_max_val)

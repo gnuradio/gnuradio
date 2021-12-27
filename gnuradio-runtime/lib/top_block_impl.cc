@@ -50,10 +50,9 @@ make_scheduler(flat_flowgraph_sptr ffg, int max_noutput_items, bool catch_except
         if (!v)
             factory = scheduler_table[0].f; // use default
         else {
-            for (size_t i = 0; i < sizeof(scheduler_table) / sizeof(scheduler_table[0]);
-                 i++) {
-                if (strcmp(v, scheduler_table[i].name) == 0) {
-                    factory = scheduler_table[i].f;
+            for (auto& i : scheduler_table) {
+                if (strcmp(v, i.name) == 0) {
+                    factory = i.f;
                     break;
                 }
             }

@@ -246,9 +246,9 @@ dvb_bbscrambler_bb_impl::~dvb_bbscrambler_bb_impl() {}
 void dvb_bbscrambler_bb_impl::init_bb_randomiser(void)
 {
     int sr = 0x4A80;
-    for (int i = 0; i < FRAME_SIZE_NORMAL; i++) {
+    for (unsigned char& i : bb_randomise) {
         int b = ((sr) ^ (sr >> 1)) & 1;
-        bb_randomise[i] = b;
+        i = b;
         sr >>= 1;
         if (b) {
             sr |= 0x4000;

@@ -32,8 +32,8 @@ lfsr_32k_source_s_impl::lfsr_32k_source_s_impl()
 {
     lfsr_32k lfsr;
 
-    for (int i = 0; i < BUFSIZE; i++)
-        d_buffer[i] = lfsr.next_short();
+    for (short& i : d_buffer)
+        i = lfsr.next_short();
 }
 
 lfsr_32k_source_s_impl::~lfsr_32k_source_s_impl() {}

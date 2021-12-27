@@ -126,11 +126,9 @@ void WaterfallDisplayForm::newData(const QEvent* updateEvent)
     const uint64_t numDataPoints = event->getNumDataPoints();
     const gr::high_res_timer_type dataTimestamp = event->getDataTimestamp();
 
-    for (size_t i = 0; i < dataPoints.size(); i++) {
-        double* min_val =
-            std::min_element(&dataPoints[i][0], &dataPoints[i][numDataPoints - 1]);
-        double* max_val =
-            std::max_element(&dataPoints[i][0], &dataPoints[i][numDataPoints - 1]);
+    for (auto dataPoint : dataPoints) {
+        double* min_val = std::min_element(&dataPoint[0], &dataPoint[numDataPoints - 1]);
+        double* max_val = std::max_element(&dataPoint[0], &dataPoint[numDataPoints - 1]);
         if (*min_val < d_min_val)
             d_min_val = *min_val;
         if (*max_val > d_max_val)

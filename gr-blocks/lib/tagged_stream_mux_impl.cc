@@ -45,8 +45,8 @@ int tagged_stream_mux_impl::calculate_output_stream_length(
     const gr_vector_int& ninput_items)
 {
     int nout = 0;
-    for (unsigned i = 0; i < ninput_items.size(); i++) {
-        nout += ninput_items[i];
+    for (int ninput_item : ninput_items) {
+        nout += ninput_item;
     }
     return nout;
 }
@@ -66,13 +66,13 @@ int tagged_stream_mux_impl::work(int noutput_items,
 
         std::vector<tag_t> tags;
         get_tags_in_range(tags, i, nitems_read(i), nitems_read(i) + ninput_items[i]);
-        for (unsigned int j = 0; j < tags.size(); j++) {
+        for (auto& tag : tags) {
             uint64_t offset =
-                tags[j].offset - nitems_read(i) + nitems_written(0) + n_produced;
-            if (i == d_tag_preserve_head_pos && tags[j].offset == nitems_read(i)) {
+                tag.offset - nitems_read(i) + nitems_written(0) + n_produced;
+            if (i == d_tag_preserve_head_pos && tag.offset == nitems_read(i)) {
                 offset -= n_produced;
             }
-            add_item_tag(0, offset, tags[j].key, tags[j].value);
+            add_item_tag(0, offset, tag.key, tag.value);
         }
         memcpy((void*)out, (const void*)in, ninput_items[i] * d_itemsize);
         out += ninput_items[i] * d_itemsize;

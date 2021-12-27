@@ -67,8 +67,8 @@ int packet_headerparser_b_impl::work(int noutput_items,
         message_port_pub(d_port, pmt::PMT_F);
     } else {
         pmt::pmt_t dict(pmt::make_dict());
-        for (unsigned i = 0; i < tags.size(); i++) {
-            dict = pmt::dict_add(dict, tags[i].key, tags[i].value);
+        for (auto& tag : tags) {
+            dict = pmt::dict_add(dict, tag.key, tag.value);
         }
         message_port_pub(d_port, dict);
     }

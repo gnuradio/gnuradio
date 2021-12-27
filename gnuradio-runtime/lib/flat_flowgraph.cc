@@ -49,15 +49,15 @@ void flat_flowgraph::setup_connections()
     basic_block_vector_t blocks = calc_used_blocks();
 
     // Assign block details to blocks
-    for (basic_block_viter_t p = blocks.begin(); p != blocks.end(); p++) {
-        allocate_block_detail(*p);
+    for (auto& block : blocks) {
+        allocate_block_detail(block);
     }
 
     // Connect inputs to outputs for each block
-    for (basic_block_viter_t p = blocks.begin(); p != blocks.end(); p++) {
-        connect_block_inputs(*p);
+    for (auto& p : blocks) {
+        connect_block_inputs(p);
 
-        block_sptr block = cast_to_block_sptr(*p);
+        block_sptr block = cast_to_block_sptr(p);
         block->set_unaligned(0);
         block->set_is_unaligned(false);
     }
@@ -100,10 +100,8 @@ void flat_flowgraph::allocate_block_detail(basic_block_sptr block)
         uint64_t lcm_nitems = 1;
         uint32_t max_out_multiple = 1;
         basic_block_vector_t downstream_blocks = calc_downstream_blocks(grblock, i);
-        for (basic_block_viter_t blk = downstream_blocks.begin();
-             blk != downstream_blocks.end();
-             blk++) {
-            block_sptr dgrblock = cast_to_block_sptr(*blk);
+        for (auto& downstream_block : downstream_blocks) {
+            block_sptr dgrblock = cast_to_block_sptr(downstream_block);
             if (!dgrblock)
                 throw std::runtime_error("allocate_buffer found non-gr::block");
 
@@ -191,12 +189,12 @@ void flat_flowgraph::connect_block_inputs(basic_block_sptr block)
     edge_vector_t in_edges = calc_upstream_edges(block);
 
     // For each edge that feeds into it
-    for (edge_viter_t e = in_edges.begin(); e != in_edges.end(); e++) {
+    for (auto& in_edge : in_edges) {
         // Set the buffer reader on the destination port to the output
         // buffer on the source port
-        int dst_port = e->dst().port();
-        int src_port = e->src().port();
-        basic_block_sptr src_block = e->src().block();
+        int dst_port = in_edge.dst().port();
+        int src_port = in_edge.src().port();
+        basic_block_sptr src_block = in_edge.src().block();
         block_sptr src_grblock = cast_to_block_sptr(src_block);
         if (!src_grblock)
             throw std::runtime_error("connect_block_inputs found non-gr::block");
@@ -259,7 +257,7 @@ void flat_flowgraph::connect_block_inputs(basic_block_sptr block)
         src_buffer->set_transfer_type(buf_xfer_type);
 
         std::ostringstream msg;
-        msg << "Setting input " << dst_port << " from edge " << (*e).identifier()
+        msg << "Setting input " << dst_port << " from edge " << in_edge.identifier()
             << " transfer type: " << buf_xfer_type;
         GR_LOG_DEBUG(d_debug_logger, msg.str());
 
@@ -276,8 +274,8 @@ void flat_flowgraph::merge_connections(flat_flowgraph_sptr old_ffg)
     // Allocate block details if needed.  Only new blocks that aren't pruned out
     // by flattening will need one; existing blocks still in the new flowgraph will
     // already have one.
-    for (basic_block_viter_t p = d_blocks.begin(); p != d_blocks.end(); p++) {
-        block_sptr block = cast_to_block_sptr(*p);
+    for (auto& d_block : d_blocks) {
+        block_sptr block = cast_to_block_sptr(d_block);
 
         if (!block->detail()) {
             GR_LOG_DEBUG(d_debug_logger,
@@ -315,12 +313,12 @@ void flat_flowgraph::merge_connections(flat_flowgraph_sptr old_ffg)
     }
 
     // Now connect inputs to outputs, reusing old buffer readers if they exist
-    for (basic_block_viter_t p = d_blocks.begin(); p != d_blocks.end(); p++) {
-        block_sptr block = cast_to_block_sptr(*p);
+    for (auto& d_block : d_blocks) {
+        block_sptr block = cast_to_block_sptr(d_block);
 
         GR_LOG_DEBUG(d_debug_logger, "merge: merging " + block->identifier() + "...");
 
-        if (old_ffg->has_block_p(*p)) {
+        if (old_ffg->has_block_p(d_block)) {
             // Block exists in old flow graph
             GR_LOG_DEBUG(d_debug_logger, "used in old flow graph")
             block_detail_sptr detail = block->detail();
@@ -331,7 +329,7 @@ void flat_flowgraph::merge_connections(flat_flowgraph_sptr old_ffg)
                 GR_LOG_DEBUG(d_debug_logger,
                              "Checking input " + block->identifier() + ":" +
                                  std::to_string(i) + "...");
-                edge edge = calc_upstream_edge(*p, i);
+                edge edge = calc_upstream_edge(d_block, i);
 
                 // Fish out old buffer reader and see if it matches correct buffer from
                 // edge list
@@ -413,27 +411,27 @@ void flat_flowgraph::setup_buffer_alignment(block_sptr block)
 std::string flat_flowgraph::edge_list()
 {
     std::stringstream s;
-    for (edge_viter_t e = d_edges.begin(); e != d_edges.end(); e++)
-        s << (*e) << std::endl;
+    for (auto& d_edge : d_edges)
+        s << d_edge << std::endl;
     return s.str();
 }
 
 std::string flat_flowgraph::msg_edge_list()
 {
     std::stringstream s;
-    for (msg_edge_viter_t e = d_msg_edges.begin(); e != d_msg_edges.end(); e++)
-        s << (*e) << std::endl;
+    for (auto& d_msg_edge : d_msg_edges)
+        s << d_msg_edge << std::endl;
     return s.str();
 }
 
 void flat_flowgraph::dump()
 {
-    for (edge_viter_t e = d_edges.begin(); e != d_edges.end(); e++)
-        GR_LOG_INFO(d_logger, boost::format(" edge: %s") % *e);
+    for (auto& d_edge : d_edges)
+        GR_LOG_INFO(d_logger, boost::format(" edge: %s") % d_edge);
 
-    for (basic_block_viter_t p = d_blocks.begin(); p != d_blocks.end(); p++) {
-        GR_LOG_INFO(d_logger, boost::format(" block: %s") % *p);
-        block_detail_sptr detail = cast_to_block_sptr(*p)->detail();
+    for (auto& d_block : d_blocks) {
+        GR_LOG_INFO(d_logger, boost::format(" block: %s") % d_block);
+        block_detail_sptr detail = cast_to_block_sptr(d_block)->detail();
         GR_LOG_INFO(d_logger, boost::format(" detail @%s:") % detail);
 
         int ni = detail->ninputs();
@@ -455,8 +453,8 @@ void flat_flowgraph::dump()
 block_vector_t flat_flowgraph::make_block_vector(basic_block_vector_t& blocks)
 {
     block_vector_t result;
-    for (basic_block_viter_t p = blocks.begin(); p != blocks.end(); p++) {
-        result.push_back(cast_to_block_sptr(*p));
+    for (auto& block : blocks) {
+        result.push_back(cast_to_block_sptr(block));
     }
 
     return result;

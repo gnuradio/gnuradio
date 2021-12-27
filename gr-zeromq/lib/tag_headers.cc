@@ -42,11 +42,11 @@ std::string gen_tag_header(uint64_t offset, std::vector<gr::tag_t>& tags)
     ss.write((const char*)&offset, sizeof(uint64_t));
     ss.write((const char*)&ntags, sizeof(uint64_t));
 
-    for (size_t i = 0; i < tags.size(); i++) {
-        ss.write((const char*)&tags[i].offset, sizeof(uint64_t));
-        pmt::serialize(tags[i].key, sb);
-        pmt::serialize(tags[i].value, sb);
-        pmt::serialize(tags[i].srcid, sb);
+    for (auto& tag : tags) {
+        ss.write((const char*)&tag.offset, sizeof(uint64_t));
+        pmt::serialize(tag.key, sb);
+        pmt::serialize(tag.value, sb);
+        pmt::serialize(tag.srcid, sb);
     }
 
     return sb.str();

@@ -140,8 +140,8 @@ header_payload_demux_impl::header_payload_demux_impl(
     message_port_register_in(msg_port_id());
     set_msg_handler(msg_port_id(),
                     [this](pmt::pmt_t msg) { this->parse_header_data_msg(msg); });
-    for (size_t i = 0; i < special_tags.size(); i++) {
-        d_special_tags.push_back(pmt::string_to_symbol(special_tags[i]));
+    for (const auto& special_tag : special_tags) {
+        d_special_tags.push_back(pmt::string_to_symbol(special_tag));
         d_special_tags_last_value.push_back(pmt::PMT_NIL);
     }
 }
@@ -170,8 +170,8 @@ void header_payload_demux_impl::forecast(int noutput_items,
         }
     }
 
-    for (unsigned i = 0; i < ninput_items_required.size(); i++) {
-        ninput_items_required[i] = n_items_reqd;
+    for (int& i : ninput_items_required) {
+        i = n_items_reqd;
     }
 }
 
@@ -489,12 +489,12 @@ void header_payload_demux_impl::copy_n_symbols(const unsigned char* in,
                       n_items_read_base,
                       n_items_read_base + n_symbols * (d_items_per_symbol + d_gi) +
                           n_padding_items);
-    for (size_t t = 0; t < tags.size(); t++) {
+    for (auto& tag : tags) {
         // The trigger tag is *not* propagated
-        if (tags[t].key == d_trigger_tag_key) {
+        if (tag.key == d_trigger_tag_key) {
             continue;
         }
-        int new_offset = tags[t].offset - n_items_read_base;
+        int new_offset = tag.offset - n_items_read_base;
         if (d_output_symbols) {
             new_offset /= (d_items_per_symbol + d_gi);
         } else if (d_gi) {
@@ -504,7 +504,7 @@ void header_payload_demux_impl::copy_n_symbols(const unsigned char* in,
             }
             new_offset = (new_offset / (d_items_per_symbol + d_gi)) + pos_on_symbol;
         }
-        add_item_tag(port, nitems_written(port) + new_offset, tags[t].key, tags[t].value);
+        add_item_tag(port, nitems_written(port) + new_offset, tag.key, tag.value);
     }
     // Advance write pointers
     // Items to produce might actually be symbols
@@ -536,8 +536,8 @@ void header_payload_demux_impl::update_special_tags(uint64_t range_start,
                           d_special_tags[i]);
         // TODO / FIXME this loop seems lacking reason (just use the last value)
         // However, not fixing this on the fly without understanding it.
-        for (size_t t = 0; t < tags.size(); t++) {
-            d_special_tags_last_value[i] = tags[t].value;
+        for (auto& tag : tags) {
+            d_special_tags_last_value[i] = tag.value;
         }
     }
 } /* update_special_tags() */

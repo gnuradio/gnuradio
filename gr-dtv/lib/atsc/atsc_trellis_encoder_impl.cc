@@ -54,8 +54,8 @@ atsc_trellis_encoder_impl::~atsc_trellis_encoder_impl() {}
 
 void atsc_trellis_encoder_impl::reset()
 {
-    for (int i = 0; i < NCODERS; i++) {
-        enc[i].reset();
+    for (auto& i : enc) {
+        i.reset();
     }
 }
 
