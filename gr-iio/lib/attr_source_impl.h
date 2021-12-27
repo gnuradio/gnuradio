@@ -29,7 +29,6 @@ private:
     int samples_per_update;
     attr_type_t attr_type;
     data_type_t data_type;
-    bool output;
     int ret;
     uint32_t address;
 

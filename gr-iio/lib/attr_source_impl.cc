@@ -98,7 +98,6 @@ attr_source_impl::attr_source_impl(const std::string& uri,
       samples_per_update(samples_per_update),
       attr_type(attr_type),
       data_type(data_type),
-      output(output),
       address(address)
 {
     ctx = device_source_impl::get_context(uri);

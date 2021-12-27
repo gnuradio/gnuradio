@@ -27,7 +27,6 @@ private:
     std::string channel;
     std::string uri;
     attr_type_t type;
-    bool output;
 
 protected:
     iio_context* ctx;
