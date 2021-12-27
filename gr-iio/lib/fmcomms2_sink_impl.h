@@ -46,7 +46,7 @@ private:
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 
 public:
     fmcomms2_sink_impl(iio_context* ctx,
@@ -54,19 +54,19 @@ public:
                        unsigned long buffer_size,
                        bool cyclic);
 
-    ~fmcomms2_sink_impl();
+    ~fmcomms2_sink_impl() override;
 
     void update_dependent_params();
-    virtual void set_len_tag_key(const std::string& len_tag_key);
-    virtual void set_bandwidth(unsigned long bandwidth);
-    virtual void set_rf_port_select(const std::string& rf_port_select);
-    virtual void set_frequency(double frequency);
-    virtual void set_samplerate(unsigned long samplerate);
-    virtual void set_attenuation(size_t chan, double gain);
-    virtual void set_filter_params(const std::string& filter_source,
-                                   const std::string& filter_filename = "",
-                                   float fpass = 0.0,
-                                   float fstop = 0.0);
+    void set_len_tag_key(const std::string& len_tag_key) override;
+    void set_bandwidth(unsigned long bandwidth) override;
+    void set_rf_port_select(const std::string& rf_port_select) override;
+    void set_frequency(double frequency) override;
+    void set_samplerate(unsigned long samplerate) override;
+    void set_attenuation(size_t chan, double gain) override;
+    void set_filter_params(const std::string& filter_source,
+                           const std::string& filter_filename = "",
+                           float fpass = 0.0,
+                           float fstop = 0.0) override;
 
 protected:
     unsigned long long d_frequency = 2400000000;

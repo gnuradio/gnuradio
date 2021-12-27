@@ -40,11 +40,11 @@ public:
                      std::vector<long> frequencies,
                      std::vector<float> phases,
                      std::vector<float> scales);
-    ~dds_control_impl();
+    ~dds_control_impl() override;
 
     void set_dds_confg(std::vector<long> frequencies,
                        std::vector<float> phases,
-                       std::vector<float> scales);
+                       std::vector<float> scales) override;
 
     // void write_attribute(pmt::pmt_t pdu);
 };

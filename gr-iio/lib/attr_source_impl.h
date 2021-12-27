@@ -48,12 +48,12 @@ public:
                      attr_type_t attr_type,
                      bool output,
                      uint32_t address);
-    ~attr_source_impl();
+    ~attr_source_impl() override;
 
     // Where all the action really happens
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 
     size_t type_sizeof(data_type_t data_type, attr_type_t attr_type);
     void get_attribute_data(const std::string& attribute, double* value);

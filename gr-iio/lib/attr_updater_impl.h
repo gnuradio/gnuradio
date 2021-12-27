@@ -36,11 +36,11 @@ public:
     attr_updater_impl(const std::string attribute,
                       const std::string value,
                       unsigned int interval_ms);
-    ~attr_updater_impl();
+    ~attr_updater_impl() override;
 
-    void set_value(std::string value);
-    bool start();
-    bool stop();
+    void set_value(std::string value) override;
+    bool start() override;
+    bool stop() override;
 };
 
 } // namespace iio

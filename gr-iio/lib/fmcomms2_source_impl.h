@@ -40,7 +40,7 @@ private:
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 
 
 public:
@@ -48,20 +48,20 @@ public:
                          const std::vector<bool>& ch_en,
                          unsigned long buffer_size);
 
-    ~fmcomms2_source_impl();
+    ~fmcomms2_source_impl() override;
 
-    virtual void set_len_tag_key(const std::string& len_tag_key);
-    virtual void set_frequency(double frequency);
-    virtual void set_samplerate(unsigned long samplerate);
-    virtual void set_gain_mode(size_t chan, const std::string& mode);
-    virtual void set_gain(size_t chan, double gain_value);
-    virtual void set_quadrature(bool quadrature);
-    virtual void set_rfdc(bool rfdc);
-    virtual void set_bbdc(bool bbdc);
-    virtual void set_filter_params(const std::string& filter_source,
-                                   const std::string& filter_filename,
-                                   float fpass,
-                                   float fstop);
+    void set_len_tag_key(const std::string& len_tag_key) override;
+    void set_frequency(double frequency) override;
+    void set_samplerate(unsigned long samplerate) override;
+    void set_gain_mode(size_t chan, const std::string& mode) override;
+    void set_gain(size_t chan, double gain_value) override;
+    void set_quadrature(bool quadrature) override;
+    void set_rfdc(bool rfdc) override;
+    void set_bbdc(bool bbdc) override;
+    void set_filter_params(const std::string& filter_source,
+                           const std::string& filter_filename,
+                           float fpass,
+                           float fstop) override;
 
 protected:
     void update_dependent_params();

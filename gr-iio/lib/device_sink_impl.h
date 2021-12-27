@@ -46,7 +46,7 @@ public:
                      unsigned int interpolation = 0,
                      bool cyclic = false);
 
-    ~device_sink_impl();
+    ~device_sink_impl() override;
 
     void set_params(const iio_param_vec_t& params);
 
@@ -55,9 +55,9 @@ public:
     // Where all the action really happens
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 
-    void forecast(int noutput_items, gr_vector_int& ninput_items_required);
+    void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
 };
 
 } // namespace iio

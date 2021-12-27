@@ -103,7 +103,7 @@ public:
                     const char* filter_source,
                     const char* filter_filename,
                     float Fpass,
-                    float Fstop);
+                    float Fstop) override;
 };
 
 } // namespace iio

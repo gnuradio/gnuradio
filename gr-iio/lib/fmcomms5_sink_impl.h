@@ -76,7 +76,7 @@ public:
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items);
+             gr_vector_void_star& output_items) override;
 
     void set_params(unsigned long long frequency1,
                     unsigned long long frequency2,
@@ -90,7 +90,7 @@ public:
                     const char* filter_source,
                     const char* filter_filename,
                     float Fpass,
-                    float Fstop);
+                    float Fstop) override;
 };
 
 } // namespace iio
