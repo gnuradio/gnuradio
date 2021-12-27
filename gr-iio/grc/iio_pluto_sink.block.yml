@@ -68,14 +68,14 @@ parameters:
     category: Filter
     label: Fpass (Hz)
     dtype: float
-    default: samp_rate/4
+    default: 0
     hide: ${ ('none' if filter_source == "'Design'" else 'all') }
 
 -   id: fstop
     category: Filter
     label: Fstop (Hz)
     dtype: float
-    default: samp_rate/3
+    default: 0
     hide: ${ ('none' if filter_source == "'Design'" else 'all') }
 
 -   id: bandwidth
