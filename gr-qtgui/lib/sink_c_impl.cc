@@ -142,8 +142,12 @@ QWidget* sink_c_impl::qwidget() { return d_main_gui.qwidget(); }
 
 void sink_c_impl::set_fft_size(const int fftsize)
 {
-    d_fftsize = fftsize;
-    d_main_gui.setFFTSize(fftsize);
+    if (fftsize <= 32768) {
+        d_fftsize = fftsize;
+        d_main_gui.setFFTSize(fftsize);
+    } else {
+        throw std::runtime_error("qtgui_sink: FFT size must be <= 32768.");
+    }
 }
 
 int sink_c_impl::fft_size() const { return d_fftsize; }
