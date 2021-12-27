@@ -660,7 +660,7 @@ class Application(Gtk.Application):
             file_path = FileDialogs.SaveFlowGraph(main, page.file_path).run()
 
             if file_path is not None:
-                if flow_graph.options_block.params['id'].get_value() == 'default':
+                if flow_graph.options_block.params['id'].get_value() == Constants.DEFAULT_FLOW_GRAPH_ID:
                     file_name = os.path.basename(file_path).replace(".grc", "")
                     flow_graph.options_block.params['id'].set_value(file_name)
                     flow_graph_update(flow_graph)
