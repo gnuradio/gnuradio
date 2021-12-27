@@ -245,20 +245,20 @@ void fmcomms2_sink_impl<T>::update_dependent_params()
 {
     iio_param_vec_t params;
     // Set rate configuration
-    if (d_filter_source.compare("Off") == 0) {
+    if (d_filter_source == "Off") {
         params.emplace_back("out_voltage_sampling_frequency", d_samplerate);
         params.emplace_back("out_voltage_rf_bandwidth", d_bandwidth);
-    } else if (d_filter_source.compare("Auto") == 0) {
+    } else if (d_filter_source == "Auto") {
         int ret = ad9361_set_bb_rate(phy, d_samplerate);
         if (ret) {
             throw std::runtime_error("Unable to set BB rate");
             params.emplace_back("out_voltage_rf_bandwidth", d_bandwidth);
         }
-    } else if (d_filter_source.compare("File") == 0) {
+    } else if (d_filter_source == "File") {
         std::string filt(d_filter_filename);
         if (!device_source_impl::load_fir_filter(filt, phy))
             throw std::runtime_error("Unable to load filter file");
-    } else if (d_filter_source.compare("Design") == 0) {
+    } else if (d_filter_source == "Design") {
         int ret = ad9361_set_bb_rate_custom_filter_manual(
             phy, d_samplerate, d_fpass, d_fstop, d_bandwidth, d_bandwidth);
         if (ret) {
@@ -269,7 +269,7 @@ void fmcomms2_sink_impl<T>::update_dependent_params()
 
     device_source_impl::set_params(this->phy, params);
     // Filters can only be disabled after the sample rate has been set
-    if (d_filter_source.compare("Off") == 0) {
+    if (d_filter_source == "Off") {
         int ret = ad9361_set_trx_fir_enable(phy, false);
         if (ret) {
             throw std::runtime_error("Unable to disable filters");

@@ -43,9 +43,9 @@ void top_block::start(int max_noutput_items)
 #ifdef GNURADIO_HRT_USE_CLOCK_GETTIME
     std::string initial_clock =
         prefs::singleton()->get_string("PerfCounters", "clock", "thread");
-    if (initial_clock.compare("thread") == 0) {
+    if (initial_clock == "thread") {
         gr::high_res_timer_source = CLOCK_THREAD_CPUTIME_ID;
-    } else if (initial_clock.compare("monotonic") == 0) {
+    } else if (initial_clock == "monotonic") {
         gr::high_res_timer_source = CLOCK_MONOTONIC;
     } else {
         throw std::runtime_error("bad argument for PerfCounters.clock!");

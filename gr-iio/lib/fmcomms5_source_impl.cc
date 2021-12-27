@@ -308,28 +308,28 @@ void fmcomms5_source_impl::set_params(iio_device* phy_device,
     params.emplace_back("in_voltage_rf_dc_offset_tracking_en", rfdc);
     params.emplace_back("in_voltage_bb_dc_offset_tracking_en", bbdc);
     params.emplace_back("in_voltage0_gain_control_mode", gain1);
-    if (gain1_str.compare("manual") == 0)
+    if (gain1_str == "manual")
         params.emplace_back("in_voltage0_hardwaregain", gain1_value);
     params.emplace_back("in_voltage1_gain_control_mode", gain2);
-    if (gain2_str.compare("manual") == 0)
+    if (gain2_str == "manual")
         params.emplace_back("in_voltage1_hardwaregain", gain2_value);
     params.emplace_back("in_voltage0_rf_port_select", port_select);
 
     // Set rate configuration
     std::string filt_config(filter_source);
-    if (filt_config.compare("Off") == 0) {
+    if (filt_config == "Off") {
         params.emplace_back("in_voltage_sampling_frequency", samplerate);
         params.emplace_back("in_voltage_rf_bandwidth", bandwidth);
-    } else if (filt_config.compare("Auto") == 0) {
+    } else if (filt_config == "Auto") {
         params.emplace_back("in_voltage_rf_bandwidth", bandwidth);
         ret = ad9361_set_bb_rate(phy_device, samplerate);
         if (ret)
             throw std::runtime_error("Unable to set BB rate");
-    } else if (filt_config.compare("File") == 0) {
+    } else if (filt_config == "File") {
         std::string filt(filter_filename);
         if (!filt.empty() && !load_fir_filter(filt, phy_device))
             throw std::runtime_error("Unable to load filter file");
-    } else if (filt_config.compare("Design") == 0) {
+    } else if (filt_config == "Design") {
         ret = ad9361_set_bb_rate_custom_filter_manual(
             phy_device, samplerate, Fpass, Fstop, bandwidth, bandwidth);
         if (ret)
@@ -340,7 +340,7 @@ void fmcomms5_source_impl::set_params(iio_device* phy_device,
     device_source_impl::set_params(phy_device, params);
 
     // Filters can only be disabled after the sample rate has been set
-    if (filt_config.compare("Off") == 0) {
+    if (filt_config == "Off") {
         ret = ad9361_set_trx_fir_enable(phy_device, false);
         if (ret) {
             throw std::runtime_error("Unable to disable fitlers");

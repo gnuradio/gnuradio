@@ -58,7 +58,7 @@ attr_updater_impl::~attr_updater_impl() {}
 void attr_updater_impl::set_value(std::string value)
 {
     // Check if message is different
-    if (d_value.compare(value) == 0)
+    if (d_value == value)
         return;
     else
         d_value = value;

@@ -126,7 +126,7 @@ iio_context* device_source_impl::get_context(const std::string& uri)
     // Check if we have a context with the same URI open
     if (!contexts.empty()) {
         for (ctx_it it = contexts.begin(); it != contexts.end(); ++it) {
-            if (it->uri.compare(uri) == 0) {
+            if (it->uri == uri) {
                 it->count++;
                 return it->ctx;
             }
