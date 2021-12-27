@@ -23,7 +23,7 @@ struct phase_inc_update_t {
     double phase_inc;
 };
 
-bool cmp_phase_inc_update_offset(phase_inc_update_t lhs, phase_inc_update_t rhs)
+inline bool cmp_phase_inc_update_offset(phase_inc_update_t lhs, phase_inc_update_t rhs)
 {
     return lhs.offset > rhs.offset;
 };
