@@ -110,8 +110,8 @@ fmcomms2_source_impl<T>::fmcomms2_source_impl(iio_context* ctx,
 
     // Device Buffers are always presented as short from device_sink
     d_device_bufs.resize(get_channels_vector(ch_en).size());
-    for (size_t i = 0; i < d_device_bufs.size(); i++) {
-        d_device_bufs[i].resize(s_initial_device_buf_size);
+    for (auto& d_device_buf : d_device_bufs) {
+        d_device_buf.resize(s_initial_device_buf_size);
     }
     d_float_ivec.resize(s_initial_device_buf_size);
     d_float_rvec.resize(s_initial_device_buf_size);

@@ -120,10 +120,8 @@ device_sink_impl::device_sink_impl(iio_context* ctx,
             channel_list.push_back(chn);
         }
     } else {
-        for (std::vector<std::string>::const_iterator it = channels.begin();
-             it != channels.end();
-             ++it) {
-            iio_channel* chn = iio_device_find_channel(dev, it->c_str(), true);
+        for (const auto& channel : channels) {
+            iio_channel* chn = iio_device_find_channel(dev, channel.c_str(), true);
             if (!chn) {
                 if (destroy_ctx)
                     iio_context_destroy(ctx);
@@ -228,8 +226,8 @@ int device_sink_impl::work(int noutput_items,
 
 void device_sink_impl::forecast(int noutput_items, gr_vector_int& ninput_items_required)
 {
-    for (unsigned int i = 0; i < ninput_items_required.size(); i++)
-        ninput_items_required[i] = noutput_items;
+    for (int& i : ninput_items_required)
+        i = noutput_items;
 }
 
 } /* namespace iio */

@@ -121,8 +121,8 @@ fmcomms2_sink_impl<T>::fmcomms2_sink_impl(iio_context* ctx,
     auto nchans = get_channels_vector(ch_en).size();
     d_device_bufs.resize(nchans);
     d_device_item_ptrs.resize(nchans);
-    for (size_t i = 0; i < d_device_bufs.size(); i++) {
-        d_device_bufs[i].resize(s_initial_device_buf_size);
+    for (auto& d_device_buf : d_device_bufs) {
+        d_device_buf.resize(s_initial_device_buf_size);
     }
     d_float_r.resize(s_initial_device_buf_size);
     d_float_i.resize(s_initial_device_buf_size);

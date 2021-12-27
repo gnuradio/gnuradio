@@ -125,10 +125,10 @@ iio_context* device_source_impl::get_context(const std::string& uri)
 
     // Check if we have a context with the same URI open
     if (!contexts.empty()) {
-        for (ctx_it it = contexts.begin(); it != contexts.end(); ++it) {
-            if (it->uri == uri) {
-                it->count++;
-                return it->ctx;
+        for (auto& context : contexts) {
+            if (context.uri == uri) {
+                context.count++;
+                return context.ctx;
             }
         }
     }
@@ -201,10 +201,8 @@ device_source_impl::device_source_impl(iio_context* ctx,
             channel_list.push_back(chn);
         }
     } else {
-        for (std::vector<std::string>::const_iterator it = channels.begin();
-             it != channels.end();
-             ++it) {
-            iio_channel* chn = iio_device_find_channel(dev, it->c_str(), false);
+        for (const auto& channel : channels) {
+            iio_channel* chn = iio_device_find_channel(dev, channel.c_str(), false);
             if (!chn) {
                 if (destroy_ctx)
                     iio_context_destroy(ctx);
