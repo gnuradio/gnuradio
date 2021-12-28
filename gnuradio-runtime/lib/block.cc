@@ -388,9 +388,9 @@ void block::set_blkd_input_timer_value(unsigned int value)
 
 unsigned int block::blkd_input_timer_value() { return d_blkd_input_timer_value; }
 
-void block::allocate_detail(int ninputs,
-                            int noutputs,
-                            const std::vector<int>& downstream_max_nitems_vec,
+void block::allocate_detail(unsigned int ninputs,
+                            unsigned int noutputs,
+                            const std::vector<unsigned int>& downstream_max_nitems_vec,
                             const std::vector<uint64_t>& downstream_lcm_nitems_vec,
                             const std::vector<uint32_t>& downstream_max_out_mult_vec)
 {
@@ -398,7 +398,7 @@ void block::allocate_detail(int ninputs,
 
     GR_LOG_DEBUG(d_debug_logger, "Creating block detail for " + identifier());
 
-    for (int i = 0; i < noutputs; i++) {
+    for (unsigned int i = 0; i < noutputs; i++) {
         expand_minmax_buffer(i);
 
         buffer_sptr buffer = allocate_buffer(i,

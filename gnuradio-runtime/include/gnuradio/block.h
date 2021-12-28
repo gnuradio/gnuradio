@@ -545,9 +545,9 @@ public:
      * \brief Allocate the block_detail and necessary output buffers for this
      * block.
      */
-    void allocate_detail(int ninputs,
-                         int noutputs,
-                         const std::vector<int>& downstream_max_nitems_vec,
+    void allocate_detail(unsigned int ninputs,
+                         unsigned int noutputs,
+                         const std::vector<unsigned int>& downstream_max_nitems_vec,
                          const std::vector<uint64_t>& downstream_lcm_nitems_vec,
                          const std::vector<uint32_t>& downstream_max_out_mult_vec);
 

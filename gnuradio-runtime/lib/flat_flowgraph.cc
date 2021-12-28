@@ -76,7 +76,7 @@ void flat_flowgraph::setup_connections()
 void flat_flowgraph::allocate_block_detail(basic_block_sptr block)
 {
     int ninputs = calc_used_ports(block, true).size();
-    int noutputs = calc_used_ports(block, false).size();
+    unsigned int noutputs = calc_used_ports(block, false).size();
 
     block_sptr grblock = cast_to_block_sptr(block);
     if (!grblock)
@@ -86,7 +86,7 @@ void flat_flowgraph::allocate_block_detail(basic_block_sptr block)
                 .str());
 
     // Determine the downstream max per output port
-    std::vector<int> downstream_max_nitems(noutputs, 0);
+    std::vector<unsigned int> downstream_max_nitems(noutputs, 0);
     std::vector<uint64_t> downstream_lcm_nitems(noutputs, 1);
     std::vector<uint32_t> downstream_max_out_mult(noutputs, 1);
 
@@ -95,8 +95,8 @@ void flat_flowgraph::allocate_block_detail(basic_block_sptr block)
     msg << "BLOCK: " << block->identifier();
     GR_LOG_DEBUG(d_logger, msg.str()); // could also be d_debug_logger
 #endif
-    for (int i = 0; i < noutputs; i++) {
-        int nitems = 0;
+    for (unsigned int i = 0; i < noutputs; i++) {
+        unsigned nitems = 0;
         uint64_t lcm_nitems = 1;
         uint32_t max_out_multiple = 1;
         basic_block_vector_t downstream_blocks = calc_downstream_blocks(grblock, i);
@@ -118,7 +118,7 @@ void flat_flowgraph::allocate_block_detail(basic_block_sptr block)
             int multiple = dgrblock->output_multiple();
             int history = dgrblock->history();
             nitems = std::max(
-                nitems, static_cast<int>(2 * (decimation * multiple + (history - 1))));
+                nitems, static_cast<unsigned int>(2 * (decimation * multiple + (history - 1))));
 
             // Calculate the LCM of downstream reader nitems
 #ifdef BUFFER_DEBUG
