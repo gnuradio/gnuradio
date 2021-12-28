@@ -37,7 +37,7 @@ private:
 
     static constexpr int BUFSIZE = 2048 - 1; // ensure pattern isn't packet aligned
     int d_index;
-    unsigned short d_buffer[BUFSIZE];
+    std::array<unsigned short, BUFSIZE> d_buffer;
 
     void enter_SEARCHING();
     void enter_MATCH0();
@@ -45,21 +45,11 @@ private:
     void enter_MATCH2();
     void enter_LOCKED();
 
-    void right()
-    {
-        d_history = (d_history << 1) | 0x1;
-        d_nright++;
-        d_runlength++;
-    }
+    void right();
+    void wrong();
 
-    void wrong()
-    {
-        d_history = (d_history << 1) | 0x0;
-        d_runlength = 0;
-    }
-
-    bool right_three_times() { return (d_history & 0x7) == 0x7; }
-    bool wrong_three_times() { return (d_history & 0x7) == 0x0; }
+    bool right_three_times();
+    bool wrong_three_times();
 
     void log_error(unsigned short expected, unsigned short actual);
 

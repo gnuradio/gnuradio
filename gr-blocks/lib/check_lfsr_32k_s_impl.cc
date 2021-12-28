@@ -14,8 +14,6 @@
 
 #include "check_lfsr_32k_s_impl.h"
 #include <gnuradio/io_signature.h>
-#include <cstdio>
-#include <cstdlib>
 
 static constexpr bool CHECK_LFSR_DEBUG = false;
 
@@ -40,8 +38,8 @@ check_lfsr_32k_s_impl::check_lfsr_32k_s_impl()
 {
     lfsr_32k lfsr;
 
-    for (unsigned short& i : d_buffer)
-        i = lfsr.next_short();
+    for (unsigned short& buffer_entry : d_buffer)
+        buffer_entry = lfsr.next_short();
 
     enter_SEARCHING();
 }
@@ -154,6 +152,20 @@ void check_lfsr_32k_s_impl::log_error(unsigned short expected, unsigned short ac
                           "offset %8ld (0x%08lx)") %
                 expected % expected % actual % actual % d_ntotal % d_ntotal);
 }
+
+void check_lfsr_32k_s_impl::wrong()
+{
+    d_history = (d_history << 1) | 0x0;
+    d_runlength = 0;
+}
+void check_lfsr_32k_s_impl::right()
+{
+    d_history = (d_history << 1) | 0x1;
+    d_nright++;
+    d_runlength++;
+}
+bool check_lfsr_32k_s_impl::right_three_times() { return (d_history & 0x7) == 0x7; }
+bool check_lfsr_32k_s_impl::wrong_three_times() { return (d_history & 0x7) == 0x0; }
 
 } /* namespace blocks */
 } /* namespace gr */
