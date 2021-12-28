@@ -8,6 +8,7 @@
  *
  */
 
+#include <utility>
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
@@ -74,6 +75,16 @@ void block_detail::set_output(unsigned int which, buffer_sptr buffer)
         throw std::invalid_argument("block_detail::set_output");
 
     d_output[which] = buffer;
+}
+
+
+const std::vector<buffer_reader_sptr>& block_detail::inputs()
+{
+    return std::as_const(d_input);
+}
+const std::vector<buffer_sptr>& block_detail::outputs()
+{
+    return std::as_const(d_output);
 }
 
 block_detail_sptr make_block_detail(unsigned int ninputs, unsigned int noutputs)

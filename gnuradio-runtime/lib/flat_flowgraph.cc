@@ -49,27 +49,29 @@ void flat_flowgraph::setup_connections()
     basic_block_vector_t blocks = calc_used_blocks();
 
     // Assign block details to blocks
-    for (auto& block : blocks) {
+    for (const auto& block : blocks) {
         allocate_block_detail(block);
     }
 
     // Connect inputs to outputs for each block
-    for (auto& p : blocks) {
-        connect_block_inputs(p);
+    for (auto& basic_block_sptr : blocks) {
+        connect_block_inputs(basic_block_sptr);
 
-        block_sptr block = cast_to_block_sptr(p);
+        block_sptr block = cast_to_block_sptr(basic_block_sptr);
         block->set_unaligned(0);
         block->set_is_unaligned(false);
     }
 
     // Connect message ports connections
-    for (msg_edge_viter_t i = d_msg_edges.begin(); i != d_msg_edges.end(); i++) {
+    for (auto& msg_edge : d_msg_edges) {
         GR_LOG_DEBUG(
             d_debug_logger,
             boost::format("flat_fg connecting msg primitives: (%s, %s)->(%s, %s)\n") %
-                i->src().block() % i->src().port() % i->dst().block() % i->dst().port());
-        i->src().block()->message_port_sub(
-            i->src().port(), pmt::cons(i->dst().block()->alias_pmt(), i->dst().port()));
+                msg_edge.src().block() % msg_edge.src().port() % msg_edge.dst().block() %
+                msg_edge.dst().port());
+        msg_edge.src().block()->message_port_sub(
+            msg_edge.src().port(),
+            pmt::cons(msg_edge.dst().block()->alias_pmt(), msg_edge.dst().port()));
     }
 }
 
@@ -100,8 +102,8 @@ void flat_flowgraph::allocate_block_detail(basic_block_sptr block)
         uint64_t lcm_nitems = 1;
         uint32_t max_out_multiple = 1;
         basic_block_vector_t downstream_blocks = calc_downstream_blocks(grblock, i);
-        for (auto& downstream_block : downstream_blocks) {
-            block_sptr dgrblock = cast_to_block_sptr(downstream_block);
+        for (const auto& downstream_block : downstream_blocks) {
+            const block_sptr dgrblock = cast_to_block_sptr(downstream_block);
             if (!dgrblock)
                 throw std::runtime_error("allocate_buffer found non-gr::block");
 
@@ -118,7 +120,8 @@ void flat_flowgraph::allocate_block_detail(basic_block_sptr block)
             int multiple = dgrblock->output_multiple();
             int history = dgrblock->history();
             nitems = std::max(
-                nitems, static_cast<unsigned int>(2 * (decimation * multiple + (history - 1))));
+                nitems,
+                static_cast<unsigned int>(2 * (decimation * multiple + (history - 1))));
 
             // Calculate the LCM of downstream reader nitems
 #ifdef BUFFER_DEBUG
@@ -189,13 +192,12 @@ void flat_flowgraph::connect_block_inputs(basic_block_sptr block)
     edge_vector_t in_edges = calc_upstream_edges(block);
 
     // For each edge that feeds into it
-    for (auto& in_edge : in_edges) {
+    for (const auto& in_edge : in_edges) {
         // Set the buffer reader on the destination port to the output
         // buffer on the source port
         int dst_port = in_edge.dst().port();
         int src_port = in_edge.src().port();
-        basic_block_sptr src_block = in_edge.src().block();
-        block_sptr src_grblock = cast_to_block_sptr(src_block);
+        const block_sptr src_grblock = cast_to_block_sptr(in_edge.src().block());
         if (!src_grblock)
             throw std::runtime_error("connect_block_inputs found non-gr::block");
 
@@ -274,8 +276,8 @@ void flat_flowgraph::merge_connections(flat_flowgraph_sptr old_ffg)
     // Allocate block details if needed.  Only new blocks that aren't pruned out
     // by flattening will need one; existing blocks still in the new flowgraph will
     // already have one.
-    for (auto& d_block : d_blocks) {
-        block_sptr block = cast_to_block_sptr(d_block);
+    for (const auto& basic_block : d_blocks) {
+        const block_sptr block = cast_to_block_sptr(basic_block);
 
         if (!block->detail()) {
             GR_LOG_DEBUG(d_debug_logger,
@@ -290,22 +292,17 @@ void flat_flowgraph::merge_connections(flat_flowgraph_sptr old_ffg)
 
     // Calculate the old edges that will be going away, and clear the
     // buffer readers on the RHS.
-    for (edge_viter_t old_edge = old_ffg->d_edges.begin();
-         old_edge != old_ffg->d_edges.end();
-         old_edge++) {
+    for (const auto& old_edge : d_edges) {
         GR_LOG_DEBUG(d_debug_logger,
-                     "merge: testing old edge " + old_edge->identifier() + "...");
+                     "merge: testing old edge " + old_edge.identifier() + "...");
 
-        edge_viter_t new_edge;
-        for (new_edge = d_edges.begin(); new_edge != d_edges.end(); new_edge++)
-            if (new_edge->src() == old_edge->src() && new_edge->dst() == old_edge->dst())
-                break;
+        const auto& new_edge = std::find(d_edges.cbegin(), d_edges.cend(), old_edge);
 
         if (new_edge == d_edges.end()) { // not found in new edge list
             GR_LOG_DEBUG(d_debug_logger, "not in new edge list");
             // zero the buffer reader on RHS of old edge
-            block_sptr block(cast_to_block_sptr(old_edge->dst().block()));
-            int port = old_edge->dst().port();
+            block_sptr block(cast_to_block_sptr(old_edge.dst().block()));
+            int port = old_edge.dst().port();
             block->detail()->set_input(port, buffer_reader_sptr());
         } else {
             GR_LOG_DEBUG(d_debug_logger, "found in new edge list");
@@ -361,15 +358,15 @@ void flat_flowgraph::merge_connections(flat_flowgraph_sptr old_ffg)
         }
 
         // Connect message ports connetions
-        for (msg_edge_viter_t i = d_msg_edges.begin(); i != d_msg_edges.end(); i++) {
+        for (auto& msg_edge : d_msg_edges) {
             GR_LOG_DEBUG(
                 d_debug_logger,
                 boost::format("flat_fg connecting msg primitives: (%s, %s)->(%s, %s)\n") %
-                    i->src().block() % i->src().port() % i->dst().block() %
-                    i->dst().port());
-            i->src().block()->message_port_sub(
-                i->src().port(),
-                pmt::cons(i->dst().block()->alias_pmt(), i->dst().port()));
+                    msg_edge.src().block() % msg_edge.src().port() %
+                    msg_edge.dst().block() % msg_edge.dst().port());
+            msg_edge.src().block()->message_port_sub(
+                msg_edge.src().port(),
+                pmt::cons(msg_edge.dst().block()->alias_pmt(), msg_edge.dst().port()));
         }
 
         // Now deal with the fact that the block details might have
@@ -383,25 +380,25 @@ void flat_flowgraph::merge_connections(flat_flowgraph_sptr old_ffg)
 void flat_flowgraph::setup_buffer_alignment(block_sptr block)
 {
     const int alignment = volk_get_alignment();
-    for (int i = 0; i < block->detail()->ninputs(); i++) {
-        void* r = (void*)block->detail()->input(i)->read_pointer();
+    for (const auto& input : block->detail()->inputs()) {
+        void* r = (void*)input->read_pointer();
         uintptr_t ri = (uintptr_t)r % alignment;
         // std::cerr << "reader: " << r << "  alignment: " << ri << std::endl;
         if (ri != 0) {
-            size_t itemsize = block->detail()->input(i)->get_sizeof_item();
-            block->detail()->input(i)->update_read_pointer((alignment - ri) / itemsize);
+            size_t itemsize = input->get_sizeof_item();
+            input->update_read_pointer((alignment - ri) / itemsize);
         }
         block->set_unaligned(0);
         block->set_is_unaligned(false);
     }
 
-    for (int i = 0; i < block->detail()->noutputs(); i++) {
-        void* w = (void*)block->detail()->output(i)->write_pointer();
+    for (const auto& output : block->detail()->outputs()) {
+        void* w = (void*)output->write_pointer();
         uintptr_t wi = (uintptr_t)w % alignment;
         // std::cerr << "writer: " << w << "  alignment: " << wi << std::endl;
         if (wi != 0) {
-            size_t itemsize = block->detail()->output(i)->get_sizeof_item();
-            block->detail()->output(i)->update_write_pointer((alignment - wi) / itemsize);
+            size_t itemsize = output->get_sizeof_item();
+            output->update_write_pointer((alignment - wi) / itemsize);
         }
         block->set_unaligned(0);
         block->set_is_unaligned(false);
@@ -529,9 +526,8 @@ void flat_flowgraph::enable_pc_rpc()
 {
 #ifdef GR_PERFORMANCE_COUNTERS
     if (prefs::singleton()->get_bool("PerfCounters", "on", false)) {
-        basic_block_viter_t p;
-        for (p = d_blocks.begin(); p != d_blocks.end(); p++) {
-            block_sptr block = cast_to_block_sptr(*p);
+        for (auto& basic_block : d_blocks) {
+            block_sptr block = cast_to_block_sptr(basic_block);
             if (!block->is_pc_rpc_set())
                 block->setup_pc_rpc();
         }

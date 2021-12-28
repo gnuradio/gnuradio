@@ -20,6 +20,7 @@
 #include <gnuradio/tags.h>
 #include <gnuradio/tpb_detail.h>
 #include <stdexcept>
+#include <utility>
 
 namespace gr {
 
@@ -46,10 +47,15 @@ public:
     bool done() const { return d_done; }
 
     void set_input(unsigned int which, buffer_reader_sptr reader);
-    inline buffer_reader_sptr input(unsigned int which) const { return d_input.at(which); }
+    inline buffer_reader_sptr input(unsigned int which) const
+    {
+        return d_input.at(which);
+    }
+    const std::vector<buffer_reader_sptr>& inputs();
 
     void set_output(unsigned int which, buffer_sptr buffer);
     inline buffer_sptr output(unsigned int which) const { return d_output.at(which); }
+    const std::vector<buffer_sptr>& outputs();
 
     /*!
      * \brief Tell the scheduler \p how_many_items of input stream \p

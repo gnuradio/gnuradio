@@ -14,6 +14,7 @@
 #include <gnuradio/api.h>
 #include <gnuradio/basic_block.h>
 #include <gnuradio/io_signature.h>
+#include <tuple>
 
 namespace gr {
 
@@ -97,9 +98,13 @@ public:
 
     const endpoint& src() const { return d_src; }
     const endpoint& dst() const { return d_dst; }
-    std::string identifier() const
+    inline std::string identifier() const
     {
         return d_src.identifier() + "->" + d_dst.identifier();
+    }
+    inline bool operator==(const edge& right) const
+    {
+        return std::tie(d_src, d_dst) == std::tie(right.d_src, right.d_dst);
     }
 
 private:
