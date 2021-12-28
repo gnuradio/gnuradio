@@ -25,7 +25,6 @@ private:
     bool d_repeat;
     unsigned int d_offset;
     const unsigned int d_vlen;
-    bool d_settags;
     std::vector<tag_t> d_tags;
 
 public:

@@ -44,10 +44,7 @@ vector_source_impl<T>::vector_source_impl(const std::vector<T>& data,
       d_vlen(vlen),
       d_tags(tags)
 {
-    if (tags.empty()) {
-        d_settags = 0;
-    } else {
-        d_settags = 1;
+    if (!tags.empty()) {
         this->set_output_multiple(data.size() / vlen);
     }
     if ((data.size() % vlen) != 0)
@@ -66,11 +63,6 @@ void vector_source_impl<T>::set_data(const std::vector<T>& data,
     d_data = data;
     d_tags = tags;
     rewind();
-    if (tags.empty()) {
-        d_settags = false;
-    } else {
-        d_settags = true;
-    }
 }
 
 template <class T>
@@ -86,8 +78,8 @@ int vector_source_impl<T>::work(int noutput_items,
         if (size == 0)
             return -1;
 
-        if (d_settags) {
-            int n_outputitems_per_vector = d_data.size() / d_vlen;
+        if (!d_tags.empty()) {
+            unsigned int n_outputitems_per_vector = d_data.size() / d_vlen;
             for (int i = 0; i < noutput_items; i += n_outputitems_per_vector) {
                 // FIXME do proper vector copy
                 memcpy((void*)optr, (const void*)&d_data[0], size * sizeof(T));
