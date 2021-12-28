@@ -50,7 +50,7 @@ pfb_synthesizer_ccf_impl::pfb_synthesizer_ccf_impl(unsigned int numchans,
 
     // Create an FIR filter for each channel and zero out the taps
     // and set the default channel map
-    std::vector<float> vtaps(0, d_twox * d_numchans);
+    const std::vector<float> vtaps(0, d_twox * d_numchans);
     for (unsigned int i = 0; i < d_twox * d_numchans; i++) {
         d_filters.emplace_back(vtaps);
         d_channel_map[i] = i;
