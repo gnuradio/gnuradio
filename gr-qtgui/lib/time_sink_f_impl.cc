@@ -355,10 +355,10 @@ void time_sink_f_impl::_reset()
             // Also move the offsets of any tags that occur in the tail
             // section so they would be plotted again, too.
             std::vector<gr::tag_t> tmp_tags;
-            for (auto& t : d_tags[n]) {
-                if (t.offset > (uint64_t)(d_size - d_trigger_delay)) {
-                    t.offset = t.offset - (d_size - d_trigger_delay);
-                    tmp_tags.push_back(t);
+            for (auto& tag : d_tags[n]) {
+                if (tag.offset > (uint64_t)(d_size - d_trigger_delay)) {
+                    tag.offset = tag.offset - (d_size - d_trigger_delay);
+                    tmp_tags.push_back(tag);
                 }
             }
             d_tags[n] = tmp_tags;
@@ -394,8 +394,8 @@ void time_sink_f_impl::_npoints_resize()
 
 void time_sink_f_impl::_adjust_tags(int adj)
 {
-    for (auto& d_tag : d_tags) {
-        for (auto& t : d_tag) {
+    for (auto& tag : d_tags) {
+        for (auto& t : tag) {
             t.offset += adj;
         }
     }

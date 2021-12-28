@@ -55,10 +55,10 @@ int patterned_interleaver_impl::general_work(int noutput_items,
     char* oo = (char*)output_items[0];
 
     for (size_t i = 0; i < nblks; i++) {
-        for (int j : d_pattern) {
-            memcpy(oo, ii[j], d_itemsize);
+        for (int sequence_point : d_pattern) {
+            memcpy(oo, ii[sequence_point], d_itemsize);
             oo += d_itemsize;
-            ii[j] += d_itemsize;
+            ii[sequence_point] += d_itemsize;
         }
     }
 

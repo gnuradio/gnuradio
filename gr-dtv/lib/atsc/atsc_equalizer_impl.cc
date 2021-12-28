@@ -1,6 +1,7 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2014 Free Software Foundation, Inc.
+ * Copyright 2021, 2022 Marcus Müller
  *
  * This file is part of GNU Radio
  *
@@ -17,7 +18,7 @@
 #include "atsc_types.h"
 #include <gnuradio/io_signature.h>
 #include <volk/volk.h>
-#include <fstream>
+#include <array>
 
 namespace gr {
 namespace dtv {
@@ -29,14 +30,17 @@ atsc_equalizer::sptr atsc_equalizer::make()
 
 static float bin_map(int bit) { return bit ? +5 : -5; }
 
-static void init_field_sync_common(float* p, int mask)
+template <size_t N>
+static void init_field_sync_common(std::array<float, N>& result, bool invert)
 {
-    int i = 0;
+    static_assert(N == 4 + sizeof(atsc_pn511) + 3 * sizeof(atsc_pn63),
+                  "init field not same length as PNs + sync pulse");
+    unsigned i = 0;
 
-    p[i++] = bin_map(1); // data segment sync pulse
-    p[i++] = bin_map(0);
-    p[i++] = bin_map(0);
-    p[i++] = bin_map(1);
+    result[i++] = bin_map(1); // data segment sync pulse
+    result[i++] = bin_map(0);
+    result[i++] = bin_map(0);
+    result[i++] = bin_map(1);
 
     for (unsigned char j : atsc_pn511) // PN511
         p[i++] = bin_map(j);
@@ -44,11 +48,8 @@ static void init_field_sync_common(float* p, int mask)
     for (unsigned char j : atsc_pn63) // PN63
         p[i++] = bin_map(j);
 
-    for (unsigned char j : atsc_pn63) // PN63, toggled on field 2
-        p[i++] = bin_map(j ^ mask);
-
-    for (unsigned char j : atsc_pn63) // PN63
-        p[i++] = bin_map(j);
+    for (unsigned char binary_value : atsc_pn63) // PN63
+        result[i++] = bin_map(binary_value);
 }
 
 atsc_equalizer_impl::atsc_equalizer_impl()
@@ -56,13 +57,11 @@ atsc_equalizer_impl::atsc_equalizer_impl()
                 io_signature::make2(
                     2, 2, ATSC_DATA_SEGMENT_LENGTH * sizeof(float), sizeof(plinfo)),
                 io_signature::make2(
-                    2, 2, ATSC_DATA_SEGMENT_LENGTH * sizeof(float), sizeof(plinfo)))
+                    2, 2, ATSC_DATA_SEGMENT_LENGTH * sizeof(float), sizeof(plinfo))),
+      d_taps(NTAPS, 0.0f)
 {
-    init_field_sync_common(training_sequence1, 0);
-    init_field_sync_common(training_sequence2, 1);
-
-    d_taps.resize(NTAPS, 0.0f);
-
+    init_field_sync_common<KNOWN_FIELD_SYNC_LENGTH>(training_sequence1, false);
+    init_field_sync_common<KNOWN_FIELD_SYNC_LENGTH>(training_sequence2, true);
     const int alignment_multiple = volk_get_alignment() / sizeof(float);
     set_alignment(std::max(1, alignment_multiple));
 }

@@ -207,9 +207,9 @@ void TimeDomainDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
 
             // Detach and delete any tags that were plotted last time
             for (unsigned int n = 0; n < d_nplots; ++n) {
-                for (auto& i : d_tag_markers[n]) {
-                    i->detach();
-                    delete i;
+                for (auto& tag_marker : d_tag_markers[n]) {
+                    tag_marker->detach();
+                    delete tag_marker;
                 }
                 d_tag_markers[n].clear();
             }

@@ -92,8 +92,8 @@ dvbt2_modulator_bc_impl::dvbt2_modulator_bc_impl(dvb_framesize_t framesize,
             cyclic_delay = TRUE;
             rotation_angle = (2.0 * GR_M_PI * 29.0) / 360.0;
             temp = std::exp(gr_complexd(0.0, rotation_angle));
-            for (auto& i : m_qpsk) {
-                i *= temp;
+            for (auto& point : m_qpsk) {
+                point *= temp;
             }
         }
         break;

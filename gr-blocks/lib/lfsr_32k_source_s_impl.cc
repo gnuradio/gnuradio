@@ -32,8 +32,8 @@ lfsr_32k_source_s_impl::lfsr_32k_source_s_impl()
 {
     lfsr_32k lfsr;
 
-    for (short& i : d_buffer)
-        i = lfsr.next_short();
+    for (short& buffer_entry : d_buffer)
+        buffer_entry = lfsr.next_short();
 }
 
 lfsr_32k_source_s_impl::~lfsr_32k_source_s_impl() {}
@@ -46,8 +46,8 @@ int lfsr_32k_source_s_impl::work(int noutput_items,
     short* buf = d_buffer;
     int index = d_index;
 
-    for (int i = 0; i < noutput_items; i++) {
-        out[i] = buf[index];
+    for (int out_index = 0; out_index < noutput_items; out_index++) {
+        out[out_index] = buf[index];
         // index = (index + 1) & (BUFSIZE - 1);
         index = index + 1;
         if (index >= BUFSIZE)

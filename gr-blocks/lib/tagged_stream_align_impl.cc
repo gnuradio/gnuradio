@@ -47,10 +47,10 @@ int tagged_stream_align_impl::general_work(int noutput_items,
     if (d_have_sync) {
         int ncp = std::min(noutput_items, ninput_items[0]);
         get_tags_in_range(tags, 0, nitems_read(0), nitems_read(0) + noutput_items);
-        for (auto t : tags) {
+        for (auto tag : tags) {
             int offset = (nitems_read(0) - nitems_written(0));
-            t.offset -= offset;
-            add_item_tag(0, t);
+            tag.offset -= offset;
+            add_item_tag(0, tag);
         }
         memcpy(output_items[0], input_items[0], ncp * d_itemsize);
         consume_each(ncp);

@@ -8,6 +8,7 @@
  *
  */
 
+#include <map>
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
@@ -33,37 +34,30 @@ typedef scheduler_sptr (*scheduler_maker)(flat_flowgraph_sptr ffg,
                                           int max_noutput_items,
                                           bool catch_exceptions);
 
-static struct scheduler_table {
-    const char* name;
-    scheduler_maker f;
-} scheduler_table[] = {
-    { "TPB", scheduler_tpb::make } // first entry is default
+static std::map<std::string, scheduler_maker> scheduler_table{
+    { "TPB", scheduler_tpb::make },
 };
+
+constexpr auto default_scheduler = "TPB";
 
 static scheduler_sptr
 make_scheduler(flat_flowgraph_sptr ffg, int max_noutput_items, bool catch_exceptions)
 {
-    static scheduler_maker factory = 0;
+    auto factory = scheduler_table.at(default_scheduler); // use default
 
     if (factory == 0) {
-        char* v = getenv("GR_SCHEDULER");
-        if (!v)
-            factory = scheduler_table[0].f; // use default
-        else {
-            for (auto& i : scheduler_table) {
-                if (strcmp(v, i.name) == 0) {
-                    factory = i.f;
-                    break;
-                }
-            }
-            if (factory == 0) {
+        char* scheduler_env = getenv("GR_SCHEDULER");
+        if (scheduler_env) {
+            try {
+                factory = scheduler_table.at(scheduler_env);
+            } catch (const std::out_of_range& exception) {
                 gr::logger_ptr logger, debug_logger;
                 gr::configure_default_loggers(logger, debug_logger, "top_block_impl");
                 std::ostringstream msg;
-                msg << "Invalid GR_SCHEDULER environment variable value \"" << v
-                    << "\".  Using \"" << scheduler_table[0].name << "\"";
+                msg << "Invalid GR_SCHEDULER environment variable value \""
+                    << scheduler_env << "\".  Using \"" << default_scheduler << "\"";
                 GR_LOG_WARN(logger, msg.str());
-                factory = scheduler_table[0].f;
+                factory = scheduler_table.at(default_scheduler);
             }
         }
     }

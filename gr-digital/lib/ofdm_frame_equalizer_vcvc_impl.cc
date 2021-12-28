@@ -73,9 +73,9 @@ void ofdm_frame_equalizer_vcvc_impl::parse_length_tags(
     if (d_fixed_frame_len) {
         n_input_items_reqd[0] = d_fixed_frame_len;
     } else {
-        for (const auto& k : tags[0]) {
-            if (k.key == pmt::string_to_symbol(d_length_tag_key_str)) {
-                n_input_items_reqd[0] = pmt::to_long(k.value);
+        for (const auto& tag : tags[0]) {
+            if (tag.key == pmt::string_to_symbol(d_length_tag_key_str)) {
+                n_input_items_reqd[0] = pmt::to_long(tag.value);
             }
         }
     }
@@ -99,7 +99,7 @@ int ofdm_frame_equalizer_vcvc_impl::work(int noutput_items,
 
     std::vector<tag_t> tags;
     get_tags_in_window(tags, 0, 0, 1);
-    for (auto& tag : tags) {
+    for (const auto& tag : tags) {
         if (pmt::symbol_to_string(tag.key) == "ofdm_sync_chan_taps") {
             d_channel_state = pmt::c32vector_elements(tag.value);
         }

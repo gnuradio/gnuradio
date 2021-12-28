@@ -8,6 +8,7 @@
  *
  */
 
+#include <iterator>
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
@@ -224,7 +225,7 @@ void hier_block2_detail::msg_disconnect(basic_block_sptr src,
     if (src_block && src.get() != d_owner) {
         // if the source is hier, we need to resolve the endpoint before calling unsub
         msg_edge_vector_t edges = src_block->d_detail->d_fg->msg_edges();
-        for (auto& edge : edges) {
+        for (const auto& edge : edges) {
             if (edge.dst().block() == src) {
                 src = edge.src().block();
                 srcport = edge.src().port();
@@ -268,13 +269,12 @@ void hier_block2_detail::disconnect(basic_block_sptr block)
 
     // Otherwise find all edges containing block
     edge_vector_t edges, tmp = d_fg->edges();
-    edge_vector_t::iterator p;
-    for (p = tmp.begin(); p != tmp.end(); p++) {
-        if ((*p).src().block() == block || (*p).dst().block() == block) {
-            edges.push_back(*p);
+    for (const auto& tmp_edge : tmp) {
+        if (tmp_edge.src().block() == block || tmp_edge.dst().block() == block) {
+            edges.push_back(tmp_edge);
 
             GR_LOG_DEBUG(d_debug_logger,
-                         boost::format("disconnect: block found in edge %s") % *p);
+                         boost::format("disconnect: block found in edge %s") % tmp_edge);
         }
     }
 
@@ -284,9 +284,9 @@ void hier_block2_detail::disconnect(basic_block_sptr block)
         throw std::invalid_argument(msg.str());
     }
 
-    for (p = edges.begin(); p != edges.end(); p++) {
+    for (const auto& edge : edges) {
         disconnect(
-            (*p).src().block(), (*p).src().port(), (*p).dst().block(), (*p).dst().port());
+            edge.src().block(), edge.src().port(), edge.dst().block(), edge.dst().port());
     }
 }
 
@@ -465,9 +465,8 @@ endpoint_vector_t hier_block2_detail::resolve_port(int port, bool is_input)
         }
 
         endpoint_vector_t& endps = d_inputs[port];
-        endpoint_viter_t p;
-        for (p = endps.begin(); p != endps.end(); p++) {
-            endpoint_vector_t tmp = resolve_endpoint(*p, true);
+        for (const auto& endpoint : endps) {
+            endpoint_vector_t tmp = resolve_endpoint(endpoint, true);
             std::copy(tmp.begin(), tmp.end(), back_inserter(result));
         }
     } else {
@@ -546,8 +545,6 @@ void hier_block2_detail::flatten_aux(flat_flowgraph_sptr sfg) const
     // Add my edges to the flow graph, resolving references to actual endpoints
     edge_vector_t edges = d_fg->edges();
     msg_edge_vector_t msg_edges = d_fg->msg_edges();
-    edge_viter_t p;
-    msg_edge_viter_t q;
 
     // Only run setup_rpc if ControlPort config param is enabled.
     bool ctrlport_on = prefs::singleton()->get_bool("ControlPort", "on", false);
@@ -571,9 +568,8 @@ void hier_block2_detail::flatten_aux(flat_flowgraph_sptr sfg) const
 
     // For every block (gr::block and gr::hier_block2), set up the RPC
     // interface.
-    for (p = edges.begin(); p != edges.end(); p++) {
-        basic_block_sptr b;
-        b = p->src().block();
+    for (const auto& edge : edges) {
+        basic_block_sptr b = edge.src().block();
 
         if (set_all_min_buff) {
             // sets the min buff for every block within hier_block2
@@ -624,7 +620,7 @@ void hier_block2_detail::flatten_aux(flat_flowgraph_sptr sfg) const
             }
         }
 
-        b = p->dst().block();
+        b = edge.dst().block();
         if (set_all_min_buff) {
             // sets the min buff for every block within hier_block2
             if (min_buff != 0) {
@@ -680,17 +676,17 @@ void hier_block2_detail::flatten_aux(flat_flowgraph_sptr sfg) const
 
     GR_LOG_DEBUG(d_debug_logger, "Flattening stream connections: ");
 
-    for (p = edges.begin(); p != edges.end(); p++) {
-        GR_LOG_DEBUG(d_debug_logger, boost::format("Flattening edge %s") % *p);
+    for (const auto& edge : edges) {
+        GR_LOG_DEBUG(d_debug_logger, boost::format("Flattening edge %s") % edge);
 
-        endpoint_vector_t src_endps = resolve_endpoint(p->src(), false);
-        endpoint_vector_t dst_endps = resolve_endpoint(p->dst(), true);
+        endpoint_vector_t src_endps = resolve_endpoint(edge.src(), false);
+        endpoint_vector_t dst_endps = resolve_endpoint(edge.dst(), true);
 
-        endpoint_viter_t s, d;
-        for (s = src_endps.begin(); s != src_endps.end(); s++) {
-            for (d = dst_endps.begin(); d != dst_endps.end(); d++) {
-                GR_LOG_DEBUG(d_debug_logger, boost::format(" %s -> %s") % *s % *d);
-                sfg->connect(*s, *d);
+        for (const auto& src_endpoint : src_endps) {
+            for (const auto& dst_endpoint : dst_endps) {
+                GR_LOG_DEBUG(d_debug_logger,
+                             boost::format(" %s -> %s") % src_endpoint % dst_endpoint);
+                sfg->connect(src_endpoint, dst_endpoint);
             }
         }
     }
@@ -699,42 +695,39 @@ void hier_block2_detail::flatten_aux(flat_flowgraph_sptr sfg) const
     GR_LOG_DEBUG(d_debug_logger, "Flattening msg connections: ");
 
     std::vector<std::pair<msg_endpoint, bool>> resolved_endpoints;
-    for (q = msg_edges.begin(); q != msg_edges.end(); q++) {
+    for (const auto& msg_edge : msg_edges) {
         GR_LOG_DEBUG(d_debug_logger,
                      boost::format(" flattening edge ( %s, %s, %d) -> ( %s, %s, %d)") %
-                         q->src().block() % q->src().port() % q->src().is_hier() %
-                         q->dst().block() % q->dst().port() % q->dst().is_hier());
+                         msg_edge.src().block() % msg_edge.src().port() %
+                         msg_edge.src().is_hier() % msg_edge.dst().block() %
+                         msg_edge.dst().port() % msg_edge.dst().is_hier());
 
 
-        if (q->src().is_hier() && q->src().block().get() == d_owner) {
+        if (msg_edge.src().is_hier() && msg_edge.src().block().get() == d_owner) {
             // connection into this block ..
             GR_LOG_DEBUG(d_debug_logger,
-                         boost::format("hier incoming port: %s") % q->src());
-            sfg->replace_endpoint(q->src(), q->dst(), false);
-            resolved_endpoints.push_back(std::pair<msg_endpoint, bool>(q->src(), false));
-        } else if (q->dst().is_hier() && q->dst().block().get() == d_owner) {
+                         boost::format("hier incoming port: %s") % msg_edge.src());
+            sfg->replace_endpoint(msg_edge.src(), msg_edge.dst(), false);
+            resolved_endpoints.push_back({ msg_edge.src(), false });
+        } else if (msg_edge.dst().is_hier() && msg_edge.dst().block().get() == d_owner) {
             // connection out of this block
             GR_LOG_DEBUG(d_debug_logger,
-                         boost::format("hier outgoing port: %s") % q->dst());
-            sfg->replace_endpoint(q->dst(), q->src(), true);
-            resolved_endpoints.push_back(std::pair<msg_endpoint, bool>(q->dst(), true));
+                         boost::format("hier outgoing port: %s") % msg_edge.dst());
+            sfg->replace_endpoint(msg_edge.dst(), msg_edge.src(), true);
+            resolved_endpoints.push_back({ msg_edge.dst(), true });
         } else {
             // internal connection only
             GR_LOG_DEBUG(d_debug_logger,
-                         boost::format("internal msg connection: %s --> %s") % q->src() %
-                             q->dst());
-            sfg->connect(q->src(), q->dst());
+                         boost::format("internal msg connection: %s --> %s") %
+                             msg_edge.src() % msg_edge.dst());
+            sfg->connect(msg_edge.src(), msg_edge.dst());
         }
     }
 
-    for (std::vector<std::pair<msg_endpoint, bool>>::iterator it =
-             resolved_endpoints.begin();
-         it != resolved_endpoints.end();
-         it++) {
+    for (const auto& [endpoint, is_src] : resolved_endpoints) {
         GR_LOG_DEBUG(d_debug_logger,
-                     boost::format("sfg->clear_endpoint(%s, %s)") % it->first %
-                         it->second);
-        sfg->clear_endpoint((*it).first, (*it).second);
+                     boost::format("sfg->clear_endpoint(%s, %s)") % endpoint % is_src);
+        sfg->clear_endpoint(endpoint, is_src);
     }
 
     /*
@@ -755,10 +748,7 @@ void hier_block2_detail::flatten_aux(flat_flowgraph_sptr sfg) const
     basic_block_vector_t tmp = d_fg->calc_used_blocks();
 
     // First add the list of singleton blocks
-    std::vector<basic_block_sptr>::const_iterator b; // Because flatten_aux is const
-    for (b = d_blocks.begin(); b != d_blocks.end(); b++) {
-        tmp.push_back(*b);
-    }
+    std::copy(d_blocks.begin(), d_blocks.end(), std::back_inserter(tmp));
 
     // Now add the list of connected input blocks
     std::stringstream msg;
@@ -835,7 +825,7 @@ void hier_block2_detail::flatten_aux(flat_flowgraph_sptr sfg) const
     unique_copy(tmp.begin(), tmp.end(), inserter);
 
     // Recurse hierarchical children
-    for (auto& block : blocks) {
+    for (const auto& block : blocks) {
         hier_block2_sptr hier_block2(cast_to_hier_block2_sptr(block));
         if (hier_block2 && (hier_block2.get() != d_owner)) {
             GR_LOG_DEBUG(
@@ -861,10 +851,10 @@ void hier_block2_detail::flatten_aux(flat_flowgraph_sptr sfg) const
 
     // if ctrlport is enabled, call setup RPC for all blocks in the flowgraph
     if (ctrlport_on) {
-        for (b = blocks.begin(); b != blocks.end(); b++) {
-            if (!(*b)->is_rpc_set()) {
-                (*b)->setup_rpc();
-                (*b)->rpc_set();
+        for (const auto& block : blocks) {
+            if (!block->is_rpc_set()) {
+                block->setup_rpc();
+                block->rpc_set();
             }
         }
     }

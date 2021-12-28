@@ -8,6 +8,8 @@
  *
  */
 
+#include <algorithm>
+#include <limits>
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
@@ -353,21 +355,16 @@ std::vector<float> constellation::soft_decision_maker(gr_complex sample)
 
 void constellation::max_min_axes()
 {
-    // Find min/max of constellation for both real and imag axes.
-    d_re_min = 1e20;
-    d_im_min = 1e20;
-    d_re_max = -1e20;
-    d_im_max = -1e20;
-    for (auto& i : d_constellation) {
-        if (i.real() > d_re_max)
-            d_re_max = i.real();
-        if (i.imag() > d_im_max)
-            d_im_max = i.imag();
-
-        if (i.real() < d_re_min)
-            d_re_min = i.real();
-        if (i.imag() < d_im_min)
-            d_im_min = i.imag();
+    // Find min/max of constellation for both real and imag, axes.
+    d_re_min = std::numeric_limits<decltype(d_re_min)>::max();
+    d_im_min = std::numeric_limits<decltype(d_re_min)>::max();
+    d_re_max = -d_re_min;
+    d_im_max = -d_im_min;
+    for (const auto& point : d_constellation) {
+        d_re_max = std::max(d_re_max, point.real());
+        d_im_max = std::max(d_im_max, point.imag());
+        d_re_min = std::min(d_re_min, point.real());
+        d_im_min = std::min(d_im_min, point.imag());
     }
     if (d_im_min == 0)
         d_im_min = d_re_min;

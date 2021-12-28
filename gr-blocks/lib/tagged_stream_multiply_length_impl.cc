@@ -58,7 +58,7 @@ int tagged_stream_multiply_length_impl::general_work(
     // move and update tags
     std::vector<tag_t> tags;
     get_tags_in_range(tags, 0, nitems_read(0), nitems_read(0) + noutput_items);
-    for (auto& tag : tags) {
+    for (const auto& tag : tags) {
         if (pmt::eqv(tag.key, d_lengthtag)) {
             // propagate with value update (scaled)
             add_item_tag(0,

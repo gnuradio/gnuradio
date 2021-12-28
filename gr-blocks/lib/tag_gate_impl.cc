@@ -82,7 +82,7 @@ int tag_gate_impl::work(int noutput_items,
 
     if (d_single_key_set && (!d_propagate_tags)) {
         get_tags_in_range(tags, 0, nitems_read(0), nitems_read(0) + noutput_items);
-        for (auto& tag : tags) {
+        for (const auto& tag : tags) {
             if (!pmt::equal(tag.key, d_single_key))
                 add_item_tag(0, tag.offset, tag.key, tag.value, tag.srcid);
         }

@@ -252,9 +252,9 @@ void EyeDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
             }
 
             // Detach and delete any tags that were plotted last time
-            for (auto& i : d_tag_markers[0]) {
-                i->detach();
-                delete i;
+            for (auto& tag_marker : d_tag_markers[0]) {
+                tag_marker->detach();
+                delete tag_marker;
             }
             d_tag_markers[0].clear();
 
@@ -385,11 +385,11 @@ void EyeDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
 void EyeDisplayPlot::legendEntryChecked(QwtPlotItem* plotItem, bool on)
 {
     // When line is turned on/off, immediately show/hide tag markers
-    for (auto& i : d_tag_markers[0]) {
+    for (auto& tag_marker : d_tag_markers[0]) {
         if (!(!on && d_tag_markers_en[0]))
-            i->hide();
+            tag_marker->hide();
         else
-            i->show();
+            tag_marker->show();
     }
     DisplayPlot::legendEntryChecked(plotItem, on);
 }
@@ -539,22 +539,22 @@ void EyeDisplayPlot::setLineLabel(unsigned int which, QString label)
 // Overriding of method DisplayPlot::setLineColor
 void EyeDisplayPlot::setLineColor(unsigned int which, QColor color)
 {
-    for (auto& i : d_plot_curve) {
+    for (auto& curve_point : d_plot_curve) {
         // Set the color of the pen
-        QPen pen(i->pen());
+        QPen pen(curve_point->pen());
         pen.setColor(color);
-        i->setPen(pen);
+        curve_point->setPen(pen);
         // And set the color of the markers
 #if QWT_VERSION < 0x060000
         d_plot_curve[i]->setPen(pen);
         QwtSymbol sym = (QwtSymbol)d_plot_curve[i]->symbol();
         setLineMarker(i, sym.style());
 #else
-        QwtSymbol* sym = (QwtSymbol*)i->symbol();
+        QwtSymbol* sym = (QwtSymbol*)curve_point->symbol();
         if (sym) {
             sym->setColor(color);
             sym->setPen(pen);
-            i->setSymbol(sym);
+            curve_point->setSymbol(sym);
         }
 #endif
     }
@@ -587,7 +587,7 @@ void EyeDisplayPlot::setLineWidth(unsigned int which, int width)
 // Overriding of method DisplayPlot::setLineMarker
 void EyeDisplayPlot::setLineMarker(unsigned int which, QwtSymbol::Style marker)
 {
-    for (auto& i : d_plot_curve) {
+    for (auto& curve_point : d_plot_curve) {
 #if QWT_VERSION < 0x060000
         QwtSymbol sym = (QwtSymbol)d_plot_curve[i]->symbol();
         QPen pen(d_plot_curve[i]->pen());
@@ -597,10 +597,10 @@ void EyeDisplayPlot::setLineMarker(unsigned int which, QwtSymbol::Style marker)
         sym.setBrush(brush);
         d_plot_curve[i]->setSymbol(sym);
 #else
-        QwtSymbol* sym = (QwtSymbol*)i->symbol();
+        QwtSymbol* sym = (QwtSymbol*)curve_point->symbol();
         if (sym) {
             sym->setStyle(marker);
-            i->setSymbol(sym);
+            curve_point->setSymbol(sym);
         }
 #endif
     }
@@ -609,36 +609,36 @@ void EyeDisplayPlot::setLineMarker(unsigned int which, QwtSymbol::Style marker)
 // Overriding of method DisplayPlot::setLineStyle
 void EyeDisplayPlot::setLineStyle(unsigned int which, Qt::PenStyle style)
 {
-    for (auto& i : d_plot_curve) {
-        QPen pen(i->pen());
+    for (auto& curve_point : d_plot_curve) {
+        QPen pen(curve_point->pen());
         pen.setStyle(style);
-        i->setPen(pen);
+        curve_point->setPen(pen);
     }
 }
 
 // Overriding of method DisplayPlot::setMarkerAlpha
 void EyeDisplayPlot::setMarkerAlpha(unsigned int which, int alpha)
 {
-    for (auto& i : d_plot_curve) {
+    for (auto& curve_point : d_plot_curve) {
         // Get the pen color
-        QPen pen(i->pen());
+        QPen pen(curve_point->pen());
         QColor color = pen.color();
 
         // Set new alpha and update pen
         color.setAlpha(alpha);
         pen.setColor(color);
-        i->setPen(pen);
+        curve_point->setPen(pen);
 
         // And set the new color for the markers
 #if QWT_VERSION < 0x060000
         QwtSymbol sym = (QwtSymbol)d_plot_curve[i]->symbol();
         setLineMarker(i, sym.style());
 #else
-        QwtSymbol* sym = (QwtSymbol*)i->symbol();
+        QwtSymbol* sym = (QwtSymbol*)curve_point->symbol();
         if (sym) {
             sym->setColor(color);
             sym->setPen(pen);
-            i->setSymbol(sym);
+            curve_point->setSymbol(sym);
         }
 #endif
     }

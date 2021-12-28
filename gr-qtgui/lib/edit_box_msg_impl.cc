@@ -261,9 +261,8 @@ void edit_box_msg_impl::set_value(pmt::pmt_t val)
     case INT_VEC:
         if (pmt::is_s32vector(val)) {
             QStringList text_list;
-            const std::vector<int32_t> xv = pmt::s32vector_elements(val);
-            for (int i : xv) {
-                text_list.append(QString::number(i));
+            for (int vector_elem : pmt::s32vector_elements(val)) {
+                text_list.append(QString::number(vector_elem));
             }
             d_val->setText(text_list.join(", "));
         } else {
@@ -283,9 +282,8 @@ void edit_box_msg_impl::set_value(pmt::pmt_t val)
     case FLOAT_VEC:
         if (pmt::is_f32vector(val)) {
             QStringList text_list;
-            const std::vector<float> xv = pmt::f32vector_elements(val);
-            for (float i : xv) {
-                text_list.append(QString::number(i));
+            for (float vector_elem : pmt::f32vector_elements(val)) {
+                text_list.append(QString::number(vector_elem));
             }
             d_val->setText(text_list.join(", "));
         } else {
@@ -305,9 +303,8 @@ void edit_box_msg_impl::set_value(pmt::pmt_t val)
     case DOUBLE_VEC:
         if (pmt::is_f64vector(val)) {
             QStringList text_list;
-            const std::vector<double> xv = pmt::f64vector_elements(val);
-            for (double i : xv) {
-                text_list.append(QString::number(i));
+            for (double vector_elem : pmt::f64vector_elements(val)) {
+                text_list.append(QString::number(vector_elem));
             }
             d_val->setText(text_list.join(", "));
         } else {
@@ -327,9 +324,9 @@ void edit_box_msg_impl::set_value(pmt::pmt_t val)
     case COMPLEX_VEC:
         if (pmt::is_c32vector(val)) {
             QStringList text_list;
-            const std::vector<gr_complex> xv = pmt::c32vector_elements(val);
-            for (auto i : xv) {
-                text_list.append(QString("(%1,%2)").arg(i.real()).arg(i.imag()));
+            for (auto vector_elem : pmt::c32vector_elements(val)) {
+                text_list.append(
+                    QString("(%1,%2)").arg(vector_elem.real()).arg(vector_elem.imag()));
             }
             d_val->setText(text_list.join(", "));
         } else {

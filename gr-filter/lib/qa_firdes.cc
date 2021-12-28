@@ -18,14 +18,14 @@ namespace filter {
 
 using std::vector;
 
-void print_taps(std::ostream& s, vector<float>& v)
+void print_taps(std::ostream& stream, const vector<float>& taps)
 {
-    std::streamsize tmp = s.precision(9);
-    for (float i : v) {
-        s << i << ", ";
+    std::streamsize tmp = stream.precision(9);
+    for (float tap : taps) {
+        stream << tap << ", ";
     }
-    s << std::endl;
-    s.precision(tmp);
+    stream << std::endl;
+    stream.precision(tmp);
 }
 
 static void check_symmetry(vector<float>& v)

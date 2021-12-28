@@ -33,7 +33,7 @@ void multiply_matrix_impl<gr_complex>::propagate_tags_by_A(int noutput_items,
             if (d_A[out_idx][in_idx] == std::complex<float>(0, 0)) {
                 continue;
             }
-            for (auto& tag : tags) {
+            for (const auto& tag : tags) {
                 this->add_item_tag(out_idx, tag);
             }
         }
@@ -121,7 +121,7 @@ void multiply_matrix_impl<float>::propagate_tags_by_A(int noutput_items,
             if (d_A[out_idx][in_idx] == 0) {
                 continue;
             }
-            for (auto& tag : tags) {
+            for (const auto& tag : tags) {
                 add_item_tag(out_idx, tag);
             }
         }

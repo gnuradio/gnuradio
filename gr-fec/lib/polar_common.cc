@@ -82,9 +82,9 @@ void polar_common::initialize_info_bit_position_vector()
 
 void polar_common::setup_info_bit_positions_reversed()
 {
-    for (int d_info_bit_position : d_info_bit_positions) {
+    for (int info_bit_position : d_info_bit_positions) {
         d_info_bit_positions_reversed.push_back(
-            (int)bit_reverse((long)d_info_bit_position, block_power()));
+            (int)bit_reverse((long)info_bit_position, block_power()));
     }
 
     if ((int)d_info_bit_positions_reversed.size() != num_info_bits()) {

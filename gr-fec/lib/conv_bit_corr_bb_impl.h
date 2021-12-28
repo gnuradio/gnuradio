@@ -55,8 +55,8 @@ private:
         if (d_correlator.empty()) {
             return bits;
         }
-        for (unsigned char i : d_correlator[0]) {
-            bits.push_back(i);
+        for (unsigned char bit : d_correlator[0]) {
+            bits.push_back(bit);
         }
         return bits;
     }

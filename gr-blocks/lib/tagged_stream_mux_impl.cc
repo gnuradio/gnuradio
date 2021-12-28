@@ -66,7 +66,7 @@ int tagged_stream_mux_impl::work(int noutput_items,
 
         std::vector<tag_t> tags;
         get_tags_in_range(tags, i, nitems_read(i), nitems_read(i) + ninput_items[i]);
-        for (auto& tag : tags) {
+        for (const auto& tag : tags) {
             uint64_t offset =
                 tag.offset - nitems_read(i) + nitems_written(0) + n_produced;
             if (i == d_tag_preserve_head_pos && tag.offset == nitems_read(i)) {

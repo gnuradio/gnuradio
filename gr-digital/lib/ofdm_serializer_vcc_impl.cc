@@ -74,27 +74,27 @@ ofdm_serializer_vcc_impl::ofdm_serializer_vcc_impl(
       d_curr_set(symbols_skipped % occupied_carriers.size()),
       d_symbols_per_set(0)
 {
-    for (auto& d_occupied_carrier : d_occupied_carriers) {
-        for (int& k : d_occupied_carrier) {
+    for (auto& occupied_carriers_timeslot : d_occupied_carriers) {
+        for (int& occupied_carrier : occupied_carriers_timeslot) {
             if (input_is_shifted) {
-                k += fft_len / 2;
-                if (k > fft_len) {
-                    k -= fft_len;
+                occupied_carrier += fft_len / 2;
+                if (occupied_carrier > fft_len) {
+                    occupied_carrier -= fft_len;
                 }
             } else {
-                if (k < 0) {
-                    k += fft_len;
+                if (occupied_carrier < 0) {
+                    occupied_carrier += fft_len;
                 }
             }
-            if (k >= fft_len || k < 0) {
+            if (occupied_carrier >= fft_len || occupied_carrier < 0) {
                 throw std::invalid_argument("ofdm_serializer_vcc: trying to occupy a "
                                             "carrier outside the fft length.");
             }
         }
     }
 
-    for (auto& d_occupied_carrier : d_occupied_carriers) {
-        d_symbols_per_set += d_occupied_carrier.size();
+    for (const auto& occupied_carriers_timeslot : d_occupied_carriers) {
+        d_symbols_per_set += occupied_carriers_timeslot.size();
     }
     set_relative_rate((uint64_t)d_symbols_per_set, (uint64_t)d_occupied_carriers.size());
     set_tag_propagation_policy(TPP_DONT);
@@ -132,7 +132,7 @@ int ofdm_serializer_vcc_impl::work(int noutput_items,
     // Packet mode
     if (!d_length_tag_key_str.empty()) {
         get_tags_in_range(tags, 0, nitems_read(0), nitems_read(0) + 1);
-        for (auto& tag : tags) {
+        for (const auto& tag : tags) {
             if (tag.key == d_carr_offset_key) {
                 carr_offset = pmt::to_long(tag.value);
             }
@@ -160,14 +160,14 @@ int ofdm_serializer_vcc_impl::work(int noutput_items,
         // Copy all tags associated with this input OFDM symbol onto the first output
         // symbol
         get_tags_in_range(tags, 0, nitems_read(0) + i, nitems_read(0) + i + 1);
-        for (auto& tag : tags) {
+        for (const auto& tag : tags) {
             // The packet length tag is not propagated
             if (tag.key != d_packet_len_tag_key) {
                 add_item_tag(0, nitems_written(0) + n_out_symbols, tag.key, tag.value);
             }
         }
-        for (int k : d_occupied_carriers[d_curr_set]) {
-            out[n_out_symbols++] = in[i * d_fft_len + k + carr_offset];
+        for (int carrier : d_occupied_carriers[d_curr_set]) {
+            out[n_out_symbols++] = in[i * d_fft_len + carrier + carr_offset];
         }
         if (packet_length && n_out_symbols > packet_length) {
             n_out_symbols = packet_length;

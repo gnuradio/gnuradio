@@ -32,8 +32,8 @@ std::vector<int> get_out_sizeofs(size_t item_size,
                                  std::vector<std::vector<std::vector<size_t>>> mapping)
 {
     std::vector<int> out_sizeofs;
-    for (auto& i : mapping) {
-        out_sizeofs.push_back(i.size() * item_size);
+    for (const auto& output_mapping : mapping) {
+        out_sizeofs.push_back(output_mapping.size() * item_size);
     }
     return out_sizeofs;
 }
@@ -65,9 +65,9 @@ vector_map_impl::~vector_map_impl() {}
 void vector_map_impl::set_mapping(std::vector<std::vector<std::vector<size_t>>> mapping)
 {
     // Make sure the contents of the mapping vectors are possible.
-    for (auto& i : mapping) {
-        for (auto& j : i) {
-            if (j.size() != 2) {
+    for (auto& output_mapping : mapping) {
+        for (auto& element_mapping : output_mapping) {
+            if (element_mapping.size() != 2) {
                 throw std::runtime_error(
                     "Mapping must be of the form (out_mapping_stream1, "
                     "out_mapping_stream2, ...), where out_mapping_stream1 is of the form "
@@ -75,8 +75,8 @@ void vector_map_impl::set_mapping(std::vector<std::vector<std::vector<size_t>>> 
                     "is of the form (input_stream, input_element).  This error is raised "
                     "because a mapping_element vector does not contain exactly 2 items.");
             }
-            unsigned int s = j[0];
-            unsigned int index = j[1];
+            unsigned int s = element_mapping[0];
+            unsigned int index = element_mapping[1];
             if (s >= d_in_vlens.size()) {
                 throw std::runtime_error("Stream numbers in mapping must be less than "
                                          "the number of input streams.");

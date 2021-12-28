@@ -170,8 +170,8 @@ void header_payload_demux_impl::forecast(int noutput_items,
         }
     }
 
-    for (int& i : ninput_items_required) {
-        i = n_items_reqd;
+    for (int& required_input : ninput_items_required) {
+        required_input = n_items_reqd;
     }
 }
 

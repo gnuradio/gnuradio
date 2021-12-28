@@ -38,15 +38,15 @@ BOOST_AUTO_TEST_CASE(t0)
         input[i] = sin(double(i));
     }
 
-    for (float i : input) {
+    for (float ref_angle : input) {
         float ref_cos = ref_vco.cos();
         float new_cos = new_vco.cos();
         BOOST_CHECK(std::abs(ref_cos - new_cos) <= SIN_COS_TOLERANCE);
 
         max_error = max_d(max_error, ref_cos - new_cos);
 
-        ref_vco.adjust_phase(i);
-        new_vco.adjust_phase(i);
+        ref_vco.adjust_phase(ref_angle);
+        new_vco.adjust_phase(ref_angle);
 
         BOOST_CHECK(std::abs(ref_vco.get_phase() - new_vco.get_phase()) <=
                     SIN_COS_TOLERANCE);

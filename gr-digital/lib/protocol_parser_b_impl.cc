@@ -47,11 +47,10 @@ int protocol_parser_b_impl::work(int noutput_items,
 
     int count = 0;
     std::vector<pmt::pmt_t> info;
-    bool ret = d_format->parse(noutput_items, in, info, count);
 
-    if (ret) {
-        for (auto& i : info) {
-            message_port_pub(d_out_port, i);
+    if (d_format->parse(noutput_items, in, info, count)) {
+        for (const auto& message : info) {
+            message_port_pub(d_out_port, message);
         }
     } else {
         message_port_pub(d_out_port, pmt::PMT_F);

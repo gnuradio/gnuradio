@@ -73,9 +73,10 @@ void flowgraph::validate()
 {
     d_blocks = calc_used_blocks();
 
+    // check_topology is sadly not const, so we can't be const in this loop
     for (auto& d_block : d_blocks) {
         std::vector<int> used_ports;
-        int ninputs, noutputs;
+        unsigned int ninputs, noutputs;
 
         GR_LOG_DEBUG(d_debug_logger, boost::format("Validating block: %s") % d_block);
 
@@ -142,11 +143,10 @@ void flowgraph::check_valid_port(const msg_endpoint& e)
 void flowgraph::check_dst_not_used(const endpoint& dst)
 {
     // A destination is in use if it is already on the edge list
-    for (auto& d_edge : d_edges)
-        if (d_edge.dst() == dst) {
-            std::stringstream msg;
-            msg << "destination already in use by edge " << d_edge;
-            throw std::invalid_argument(msg.str());
+    for (const auto& edge : d_edges)
+        if (edge.dst() == dst) {
+            throw std::invalid_argument("destination already in use by edge " +
+                                        edge.identifier());
         }
 }
 
@@ -168,17 +168,17 @@ basic_block_vector_t flowgraph::calc_used_blocks()
     basic_block_vector_t tmp;
 
     // make sure free standing message blocks are included
-    for (auto& d_msg_edge : d_msg_edges) {
+    for (const auto& msg_edge : d_msg_edges) {
         // all msg blocks need a thread context - otherwise start() will never be called!
         // even if it is a sender that never does anything
-        tmp.push_back(d_msg_edge.src().block());
-        tmp.push_back(d_msg_edge.dst().block());
+        tmp.push_back(msg_edge.src().block());
+        tmp.push_back(msg_edge.dst().block());
     }
 
     // Collect all blocks in the edge list
-    for (auto& d_edge : d_edges) {
-        tmp.push_back(d_edge.src().block());
-        tmp.push_back(d_edge.dst().block());
+    for (const auto& edge : d_edges) {
+        tmp.push_back(edge.src().block());
+        tmp.push_back(edge.dst().block());
     }
 
     return unique_vector<basic_block_sptr>(tmp);
@@ -190,11 +190,12 @@ std::vector<int> flowgraph::calc_used_ports(basic_block_sptr block, bool check_i
 
     // Collect all seen ports
     edge_vector_t edges = calc_connections(block, check_inputs);
-    for (auto& edge : edges) {
-        if (check_inputs == true)
+    for (const auto& edge : edges) {
+        if (check_inputs) {
             tmp.push_back(edge.dst().port());
-        else
+        } else {
             tmp.push_back(edge.src().port());
+        }
     }
 
     return unique_vector<int>(tmp);
@@ -204,13 +205,13 @@ edge_vector_t flowgraph::calc_connections(basic_block_sptr block, bool check_inp
 {
     edge_vector_t result;
 
-    for (auto& d_edge : d_edges) {
+    for (const auto& edge : d_edges) {
         if (check_inputs) {
-            if (d_edge.dst().block() == block)
-                result.push_back(d_edge);
+            if (edge.dst().block() == block)
+                result.push_back(edge);
         } else {
-            if (d_edge.src().block() == block)
-                result.push_back(d_edge);
+            if (edge.src().block() == block)
+                result.push_back(edge);
         }
     }
 
@@ -262,9 +263,9 @@ basic_block_vector_t flowgraph::calc_downstream_blocks(basic_block_sptr block, i
 {
     basic_block_vector_t tmp;
 
-    for (auto& d_edge : d_edges)
-        if (d_edge.src() == endpoint(block, port))
-            tmp.push_back(d_edge.dst().block());
+    for (const auto& edge : d_edges)
+        if (edge.src() == endpoint(block, port))
+            tmp.push_back(edge.dst().block());
 
     return unique_vector<basic_block_sptr>(tmp);
 }
@@ -273,9 +274,9 @@ basic_block_vector_t flowgraph::calc_downstream_blocks(basic_block_sptr block)
 {
     basic_block_vector_t tmp;
 
-    for (auto& d_edge : d_edges)
-        if (d_edge.src().block() == block)
-            tmp.push_back(d_edge.dst().block());
+    for (const auto& edge : d_edges)
+        if (edge.src().block() == block)
+            tmp.push_back(edge.dst().block());
 
     return unique_vector<basic_block_sptr>(tmp);
 }
@@ -284,9 +285,9 @@ edge_vector_t flowgraph::calc_upstream_edges(basic_block_sptr block)
 {
     edge_vector_t result;
 
-    for (auto& d_edge : d_edges)
-        if (d_edge.dst().block() == block)
-            result.push_back(d_edge);
+    for (const auto& edge : d_edges)
+        if (edge.dst().block() == block)
+            result.push_back(edge);
 
     return result; // Assume no duplicates
 }
@@ -300,16 +301,13 @@ bool flowgraph::has_block_p(basic_block_sptr block)
 
 edge flowgraph::calc_upstream_edge(basic_block_sptr block, int port)
 {
-    edge result;
-
-    for (auto& d_edge : d_edges) {
-        if (d_edge.dst() == endpoint(block, port)) {
-            result = d_edge;
-            break;
+    for (const auto& edge : d_edges) {
+        if (edge.dst() == endpoint(block, port)) {
+            return edge;
         }
     }
 
-    return result;
+    return {};
 }
 
 std::vector<basic_block_vector_t> flowgraph::partition()
@@ -323,8 +321,8 @@ std::vector<basic_block_vector_t> flowgraph::partition()
         assert(graph.size());
         result.push_back(topological_sort(graph));
 
-        for (auto& p : graph)
-            blocks.erase(find(blocks.begin(), blocks.end(), p));
+        for (auto& node : graph)
+            blocks.erase(find(blocks.begin(), blocks.end(), node));
     }
 
     return result;
@@ -336,16 +334,18 @@ basic_block_vector_t flowgraph::calc_reachable_blocks(basic_block_sptr block,
     basic_block_vector_t result;
 
     // Mark all blocks as unvisited
-    for (auto& block : blocks)
+    for (const auto& block : blocks) {
         block->set_color(basic_block::WHITE);
+    }
 
     // Recursively mark all reachable blocks
     reachable_dfs_visit(block, blocks);
 
     // Collect all the blocks that have been visited
-    for (auto& block : blocks)
+    for (const auto& block : blocks) {
         if (block->color() == basic_block::BLACK)
             result.push_back(block);
+    }
 
     return result;
 }
@@ -359,9 +359,9 @@ void flowgraph::reachable_dfs_visit(basic_block_sptr block, basic_block_vector_t
     // Recurse into adjacent vertices
     basic_block_vector_t adjacent = calc_adjacent_blocks(block, blocks);
 
-    for (auto& p : adjacent)
-        if (p->color() == basic_block::WHITE)
-            reachable_dfs_visit(p, blocks);
+    for (const auto& neighbor : adjacent)
+        if (neighbor->color() == basic_block::WHITE)
+            reachable_dfs_visit(neighbor, blocks);
 }
 
 // Return a list of block adjacent to a given block along any edge
@@ -371,11 +371,11 @@ basic_block_vector_t flowgraph::calc_adjacent_blocks(basic_block_sptr block,
     basic_block_vector_t tmp;
 
     // Find any blocks that are inputs or outputs
-    for (auto& d_edge : d_edges) {
-        if (d_edge.src().block() == block)
-            tmp.push_back(d_edge.dst().block());
-        if (d_edge.dst().block() == block)
-            tmp.push_back(d_edge.src().block());
+    for (const auto& edge : d_edges) {
+        if (edge.src().block() == block)
+            tmp.push_back(edge.dst().block());
+        if (edge.dst().block() == block)
+            tmp.push_back(edge.src().block());
     }
 
     return unique_vector<basic_block_sptr>(tmp);
@@ -388,12 +388,13 @@ basic_block_vector_t flowgraph::topological_sort(basic_block_vector_t& blocks)
     tmp = sort_sources_first(blocks);
 
     // Start 'em all white
-    for (auto& p : tmp)
-        p->set_color(basic_block::WHITE);
+    for (auto& block : tmp) {
+        block->set_color(basic_block::WHITE);
+    }
 
-    for (auto& p : tmp) {
-        if (p->color() == basic_block::WHITE)
-            topological_dfs_visit(p, result);
+    for (const auto& block : tmp) {
+        if (block->color() == basic_block::WHITE)
+            topological_dfs_visit(block, result);
     }
 
     reverse(result.begin(), result.end());
@@ -411,11 +412,13 @@ basic_block_vector_t flowgraph::sort_sources_first(basic_block_vector_t& blocks)
             nonsources.push_back(block);
     }
 
-    for (auto& source : sources)
+    for (const auto& source : sources) {
         result.push_back(source);
+    }
 
-    for (auto& nonsource : nonsources)
+    for (const auto& nonsource : nonsources) {
         result.push_back(nonsource);
+    }
 
     return result;
 }
@@ -456,8 +459,8 @@ void flowgraph::connect(const msg_endpoint& src, const msg_endpoint& dst)
 {
     check_valid_port(src);
     check_valid_port(dst);
-    for (auto& d_msg_edge : d_msg_edges) {
-        if (d_msg_edge.src() == src && d_msg_edge.dst() == dst) {
+    for (auto& msg_edge : d_msg_edges) {
+        if (msg_edge.src() == src && msg_edge.dst() == dst) {
             throw std::runtime_error("connect called on already connected edge!");
         }
     }
@@ -468,7 +471,7 @@ void flowgraph::disconnect(const msg_endpoint& src, const msg_endpoint& dst)
 {
     check_valid_port(src);
     check_valid_port(dst);
-    for (msg_edge_viter_t p = d_msg_edges.begin(); p != d_msg_edges.end(); p++) {
+    for (auto p = d_msg_edges.begin(); p != d_msg_edges.end(); p++) {
         if (p->src() == src && p->dst() == dst) {
             d_msg_edges.erase(p);
             return;
@@ -488,18 +491,18 @@ std::string dot_graph_fg(flowgraph_sptr fg)
     out << "digraph flowgraph {" << std::endl;
 
     // Define nodes and set labels
-    for (auto& block : blocks) {
+    for (const auto& block : blocks) {
         out << block->unique_id() << " [ label=\"" << block->alias() << "\" ]"
             << std::endl;
     }
 
     // Define edges
-    for (auto& edge : edges) {
+    for (const auto& edge : edges) {
         out << edge.src().block()->unique_id() << " -> "
             << edge.dst().block()->unique_id() << std::endl;
     }
 
-    for (auto& msg_edge : msg_edges) {
+    for (const auto& msg_edge : msg_edges) {
         out << msg_edge.src().block()->unique_id() << " -> "
             << msg_edge.dst().block()->unique_id() << " [color=blue]" << std::endl;
     }

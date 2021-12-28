@@ -766,7 +766,7 @@ void dvbs2_physical_cc_impl::build_symbol_scrambler_table(void)
         }
     }
 
-    for (int& i : m_cscram) {
+    for (int& scrambler_coeff : m_cscram) {
         xa = parity_chk(x, 0x8050);
         xb = parity_chk(x, 0x0081);
         xc = x & 1;
@@ -788,7 +788,7 @@ void dvbs2_physical_cc_impl::build_symbol_scrambler_table(void)
         zna = xc ^ yc;
         znb = xa ^ yb;
         rn = (znb << 1) + zna;
-        i = rn;
+        scrambler_coeff = rn;
     }
 }
 

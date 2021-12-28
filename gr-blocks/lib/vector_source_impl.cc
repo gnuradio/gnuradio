@@ -92,12 +92,12 @@ int vector_source_impl<T>::work(int noutput_items,
                 // FIXME do proper vector copy
                 memcpy((void*)optr, (const void*)&d_data[0], size * sizeof(T));
                 optr += size;
-                for (auto& d_tag : d_tags) {
+                for (const auto& tag : d_tags) {
                     this->add_item_tag(0,
-                                       this->nitems_written(0) + i + d_tag.offset,
-                                       d_tag.key,
-                                       d_tag.value,
-                                       d_tag.srcid);
+                                       this->nitems_written(0) + i + tag.offset,
+                                       tag.key,
+                                       tag.value,
+                                       tag.srcid);
                 }
             }
         } else {
@@ -120,9 +120,9 @@ int vector_source_impl<T>::work(int noutput_items,
         for (unsigned i = 0; i < n; i++) {
             optr[i] = d_data[d_offset + i];
         }
-        for (auto& d_tag : d_tags) {
-            if ((d_tag.offset >= d_offset) && (d_tag.offset < d_offset + n))
-                this->add_item_tag(0, d_tag.offset, d_tag.key, d_tag.value, d_tag.srcid);
+        for (const auto& tag : d_tags) {
+            if ((tag.offset >= d_offset) && (tag.offset < d_offset + n))
+                this->add_item_tag(0, tag.offset, tag.key, tag.value, tag.srcid);
         }
         d_offset += n;
         return n / d_vlen;

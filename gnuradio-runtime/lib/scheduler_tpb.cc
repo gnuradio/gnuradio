@@ -62,7 +62,7 @@ scheduler_tpb::scheduler_tpb(flat_flowgraph_sptr ffg,
 
     // Ensure that the done flag is clear on all blocks
 
-    for (auto& block : blocks) {
+    for (const auto& block : blocks) {
         block->detail()->set_done(false);
     }
 
