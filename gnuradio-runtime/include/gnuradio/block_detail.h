@@ -46,20 +46,10 @@ public:
     bool done() const { return d_done; }
 
     void set_input(unsigned int which, buffer_reader_sptr reader);
-    buffer_reader_sptr input(unsigned int which)
-    {
-        if (which >= d_ninputs)
-            throw std::invalid_argument("block_detail::input");
-        return d_input[which];
-    }
+    inline buffer_reader_sptr input(unsigned int which) const { return d_input.at(which); }
 
     void set_output(unsigned int which, buffer_sptr buffer);
-    buffer_sptr output(unsigned int which)
-    {
-        if (which >= d_noutputs)
-            throw std::invalid_argument("block_detail::output");
-        return d_output[which];
-    }
+    inline buffer_sptr output(unsigned int which) const { return d_output.at(which); }
 
     /*!
      * \brief Tell the scheduler \p how_many_items of input stream \p
