@@ -8,6 +8,8 @@
  *
  */
 
+#include <exception>
+#include <ios>
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
@@ -52,16 +54,19 @@ vmcircbuf_factory* vmcircbuf_sysconfig::get_default_factory()
     logger_ptr logger, debug_logger;
     gr::configure_default_loggers(logger, debug_logger, "vmcircbuf_sysconfig");
 
-    char name[1024];
-    if (gr::vmcircbuf_prefs::get(FACTORY_PREF_KEY, name, sizeof(name)) >= 0) {
-        for (auto& i : all) {
-            if (strncmp(name, i->name(), strlen(i->name())) == 0) {
-                s_default_factory = i;
-                GR_LOG_INFO(debug_logger,
-                            boost::format("Using %s") % s_default_factory->name());
-                return s_default_factory;
-            }
+    try {
+        std::string name = vmcircbuf_prefs::get(FACTORY_PREF_KEY);
+        const auto& result =
+            std::find_if(all.cbegin(), all.cend(), [name](const auto& factory) {
+                return factory->name() == name;
+            });
+        if (result != all.cend()) {
+            s_default_factory = *result;
+            debug_logger->info("Using {}", s_default_factory->name());
+            return s_default_factory;
         }
+    } catch (std::ios_base::failure& exception) {
+        logger->warn("failed while trying to read {} from file", FACTORY_PREF_KEY);
     }
 
     // either we don't have a default, or the default named is not in our
@@ -69,15 +74,15 @@ vmcircbuf_factory* vmcircbuf_sysconfig::get_default_factory()
 
     GR_LOG_INFO(debug_logger, "finding a working factory...");
 
-    for (auto& i : all) {
-        if (test_factory(i, verbose)) {
-            set_default_factory(i);
+    for (const auto& candidate : all) {
+        if (test_factory(candidate, verbose)) {
+            set_default_factory(candidate);
             return s_default_factory;
         }
     }
 
     // We're screwed!
-    GR_LOG_ERROR(logger, "unable to find a working factory!");
+    logger->fatal("unable to find a working factory!");
     throw std::runtime_error("gr::vmcircbuf_sysconfig");
 }
 

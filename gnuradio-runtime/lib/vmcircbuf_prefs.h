@@ -18,7 +18,7 @@ namespace gr {
 class GR_RUNTIME_API vmcircbuf_prefs
 {
 public:
-    static int get(const char* key, char* value, int value_size);
+    static std::string get(const std::string& key);
     static void set(const char* key, const char* value);
 };
 

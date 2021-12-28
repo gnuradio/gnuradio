@@ -8,6 +8,8 @@
  *
  */
 
+#include <fstream>
+#include <ios>
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
@@ -32,7 +34,7 @@ namespace gr {
  *  the key is the filename; the value is the file contents.
  */
 
-static std::string pathname(const char* key)
+static std::string pathname(const std::string& key)
 {
     static fs::path path;
     path = fs::path(gr::appdata_path()) / ".gnuradio" / "prefs" / key;
@@ -50,34 +52,25 @@ static void ensure_dir_path()
         fs::create_directory(path);
 }
 
-int vmcircbuf_prefs::get(const char* key, char* value, int value_size)
+std::string vmcircbuf_prefs::get(const std::string& key)
 {
-    gr::thread::scoped_lock guard(s_vm_mutex);
-
-    FILE* fp = fopen(pathname(key).c_str(), "r");
-
     gr::logger_ptr logger, debug_logger;
     gr::configure_default_loggers(logger, debug_logger, "vmcircbuf_prefs::get");
 
-    if (fp == 0) {
-        GR_LOG_ERROR(logger,
-                     boost::format("%s: %s") % pathname(key).c_str() % strerror(errno));
-        return 0;
-    }
+    gr::thread::scoped_lock guard(s_vm_mutex);
 
-    const size_t ret = fread(value, 1, value_size - 1, fp);
-    value[ret] = '\0';
-    if (ret == 0 && !feof(fp)) {
-        if (ferror(fp) != 0) {
-            GR_LOG_ERROR(logger,
-                         boost::format("%s: %s") % pathname(key).c_str() %
-                             strerror(errno));
-            fclose(fp);
-            return -1;
-        }
+    std::ifstream file;
+    file.exceptions(file.exceptions() | std::ios::failbit);
+
+    try {
+        file.open(pathname(key));
+        std::string value;
+        file >> value;
+        return value;
+    } catch (std::ios_base::failure& exception) {
+        logger->error("{} : {}", pathname(key), exception.what());
+        throw exception;
     }
-    fclose(fp);
-    return ret;
 }
 
 void vmcircbuf_prefs::set(const char* key, const char* value)
