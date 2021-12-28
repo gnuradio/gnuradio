@@ -33,7 +33,7 @@ private:
     void encode_helper(unsigned char output[OUTPUT_SIZE],
                        const unsigned char input[INPUT_SIZE]);
 
-    atsc_basic_trellis_encoder enc[NCODERS];
+    atsc_basic_trellis_encoder encoders[NCODERS];
 
 public:
     atsc_trellis_encoder_impl();

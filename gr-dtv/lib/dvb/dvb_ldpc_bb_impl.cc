@@ -40,55 +40,56 @@ dvb_ldpc_bb_impl::dvb_ldpc_bb_impl(dvb_standard_t standard,
       Xp(0)
 {
     frame_size_type = framesize;
-    if (framesize == FECFRAME_NORMAL) {
+    using fs_t = dvb_framesize_t;
+    if (framesize == fs_t::FECFRAME_NORMAL) {
         frame_size = FRAME_SIZE_NORMAL;
         frame_size_real = FRAME_SIZE_NORMAL;
         switch (rate) {
-        case C1_4:
+        case dvb_code_rate_t::C1_4:
             nbch = 16200;
             q_val = 135;
             break;
-        case C1_3:
+        case dvb_code_rate_t::C1_3:
             nbch = 21600;
             q_val = 120;
             break;
-        case C2_5:
+        case dvb_code_rate_t::C2_5:
             nbch = 25920;
             q_val = 108;
             break;
-        case C1_2:
+        case dvb_code_rate_t::C1_2:
             nbch = 32400;
             q_val = 90;
             break;
-        case C3_5:
+        case dvb_code_rate_t::C3_5:
             nbch = 38880;
             q_val = 72;
             break;
-        case C2_3:
+        case dvb_code_rate_t::C2_3:
             nbch = 43200;
             q_val = 60;
             break;
-        case C3_4:
+        case dvb_code_rate_t::C3_4:
             nbch = 48600;
             q_val = 45;
             break;
-        case C4_5:
+        case dvb_code_rate_t::C4_5:
             nbch = 51840;
             q_val = 36;
             break;
-        case C5_6:
+        case dvb_code_rate_t::C5_6:
             nbch = 54000;
             q_val = 30;
             break;
-        case C8_9:
+        case dvb_code_rate_t::C8_9:
             nbch = 57600;
             q_val = 20;
             break;
-        case C9_10:
+        case dvb_code_rate_t::C9_10:
             nbch = 58320;
             q_val = 18;
             break;
-        case C2_9_VLSNR:
+        case dvb_code_rate_t::C2_9_VLSNR:
             nbch = 14400;
             q_val = 140;
             frame_size -= NORMAL_PUNCTURING;
@@ -96,95 +97,95 @@ dvb_ldpc_bb_impl::dvb_ldpc_bb_impl(dvb_standard_t standard,
             P = 15;
             Xp = NORMAL_PUNCTURING;
             break;
-        case C13_45:
+        case dvb_code_rate_t::C13_45:
             nbch = 18720;
             q_val = 128;
             break;
-        case C9_20:
+        case dvb_code_rate_t::C9_20:
             nbch = 29160;
             q_val = 99;
             break;
-        case C90_180:
+        case dvb_code_rate_t::C90_180:
             nbch = 32400;
             q_val = 90;
             break;
-        case C96_180:
+        case dvb_code_rate_t::C96_180:
             nbch = 34560;
             q_val = 84;
             break;
-        case C11_20:
+        case dvb_code_rate_t::C11_20:
             nbch = 35640;
             q_val = 81;
             break;
-        case C100_180:
+        case dvb_code_rate_t::C100_180:
             nbch = 36000;
             q_val = 80;
             break;
-        case C104_180:
+        case dvb_code_rate_t::C104_180:
             nbch = 37440;
             q_val = 76;
             break;
-        case C26_45:
+        case dvb_code_rate_t::C26_45:
             nbch = 37440;
             q_val = 76;
             break;
-        case C18_30:
+        case dvb_code_rate_t::C18_30:
             nbch = 38880;
             q_val = 72;
             break;
-        case C28_45:
+        case dvb_code_rate_t::C28_45:
             nbch = 40320;
             q_val = 68;
             break;
-        case C23_36:
+        case dvb_code_rate_t::C23_36:
             nbch = 41400;
             q_val = 65;
             break;
-        case C116_180:
+        case dvb_code_rate_t::C116_180:
             nbch = 41760;
             q_val = 64;
             break;
-        case C20_30:
+        case dvb_code_rate_t::C20_30:
             nbch = 43200;
             q_val = 60;
             break;
-        case C124_180:
+        case dvb_code_rate_t::C124_180:
             nbch = 44640;
             q_val = 56;
             break;
-        case C25_36:
+        case dvb_code_rate_t::C25_36:
             nbch = 45000;
             q_val = 55;
             break;
-        case C128_180:
+        case dvb_code_rate_t::C128_180:
             nbch = 46080;
             q_val = 52;
             break;
-        case C13_18:
+        case dvb_code_rate_t::C13_18:
             nbch = 46800;
             q_val = 50;
             break;
-        case C132_180:
+        case dvb_code_rate_t::C132_180:
             nbch = 47520;
             q_val = 48;
             break;
-        case C22_30:
+        case dvb_code_rate_t::C22_30:
             nbch = 47520;
             q_val = 48;
             break;
-        case C135_180:
+        case dvb_code_rate_t::C135_180:
             nbch = 48600;
             q_val = 45;
             break;
-        case C140_180:
+        case dvb_code_rate_t::C140_180:
             nbch = 50400;
             q_val = 40;
             break;
-        case C7_9:
+        case dvb_code_rate_t::C7_9:
             nbch = 50400;
             q_val = 40;
             break;
-        case C154_180:
+        case dvb_code_rate_t::C154_180:
             nbch = 55440;
             q_val = 26;
             break;
@@ -193,79 +194,79 @@ dvb_ldpc_bb_impl::dvb_ldpc_bb_impl(dvb_standard_t standard,
             q_val = 0;
             break;
         }
-    } else if (framesize == FECFRAME_SHORT) {
+    } else if (framesize == fs_t::FECFRAME_SHORT) {
         frame_size = FRAME_SIZE_SHORT;
         frame_size_real = FRAME_SIZE_SHORT;
         switch (rate) {
-        case C1_4:
+        case dvb_code_rate_t::C1_4:
             nbch = 3240;
             q_val = 36;
             break;
-        case C1_3:
+        case dvb_code_rate_t::C1_3:
             nbch = 5400;
             q_val = 30;
             break;
-        case C2_5:
+        case dvb_code_rate_t::C2_5:
             nbch = 6480;
             q_val = 27;
             break;
-        case C1_2:
+        case dvb_code_rate_t::C1_2:
             nbch = 7200;
             q_val = 25;
             break;
-        case C3_5:
+        case dvb_code_rate_t::C3_5:
             nbch = 9720;
             q_val = 18;
             break;
-        case C2_3:
+        case dvb_code_rate_t::C2_3:
             nbch = 10800;
             q_val = 15;
             break;
-        case C3_4:
+        case dvb_code_rate_t::C3_4:
             nbch = 11880;
             q_val = 12;
             break;
-        case C4_5:
+        case dvb_code_rate_t::C4_5:
             nbch = 12600;
             q_val = 10;
             break;
-        case C5_6:
+        case dvb_code_rate_t::C5_6:
             nbch = 13320;
             q_val = 8;
             break;
-        case C8_9:
+        case dvb_code_rate_t::C8_9:
             nbch = 14400;
             q_val = 5;
             break;
-        case C11_45:
+        case dvb_code_rate_t::C11_45:
             nbch = 3960;
             q_val = 34;
             break;
-        case C4_15:
+        case dvb_code_rate_t::C4_15:
             nbch = 4320;
             q_val = 33;
             break;
-        case C14_45:
+        case dvb_code_rate_t::C14_45:
             nbch = 5040;
             q_val = 31;
             break;
-        case C7_15:
+        case dvb_code_rate_t::C7_15:
             nbch = 7560;
             q_val = 24;
             break;
-        case C8_15:
+        case dvb_code_rate_t::C8_15:
             nbch = 8640;
             q_val = 21;
             break;
-        case C26_45:
+        case dvb_code_rate_t::C26_45:
             nbch = 9360;
             q_val = 19;
             break;
-        case C32_45:
+        case dvb_code_rate_t::C32_45:
             nbch = 11520;
             q_val = 13;
             break;
-        case C1_5_VLSNR_SF2:
+        case dvb_code_rate_t::C1_5_VLSNR_SF2:
             nbch = 2680;
             q_val = 36;
             frame_size -= SHORT_PUNCTURING_SET1;
@@ -274,7 +275,7 @@ dvb_ldpc_bb_impl::dvb_ldpc_bb_impl(dvb_standard_t standard,
             P = 30;
             Xp = 250;
             break;
-        case C11_45_VLSNR_SF2:
+        case dvb_code_rate_t::C11_45_VLSNR_SF2:
             nbch = 3960;
             q_val = 34;
             frame_size -= SHORT_PUNCTURING_SET1;
@@ -282,7 +283,7 @@ dvb_ldpc_bb_impl::dvb_ldpc_bb_impl(dvb_standard_t standard,
             P = 15;
             Xp = SHORT_PUNCTURING_SET1;
             break;
-        case C1_5_VLSNR:
+        case dvb_code_rate_t::C1_5_VLSNR:
             nbch = 3240;
             q_val = 36;
             frame_size -= SHORT_PUNCTURING_SET2;
@@ -290,7 +291,7 @@ dvb_ldpc_bb_impl::dvb_ldpc_bb_impl(dvb_standard_t standard,
             P = 10;
             Xp = SHORT_PUNCTURING_SET2;
             break;
-        case C4_15_VLSNR:
+        case dvb_code_rate_t::C4_15_VLSNR:
             nbch = 4320;
             q_val = 33;
             frame_size -= SHORT_PUNCTURING_SET2;
@@ -298,7 +299,7 @@ dvb_ldpc_bb_impl::dvb_ldpc_bb_impl(dvb_standard_t standard,
             P = 8;
             Xp = SHORT_PUNCTURING_SET2;
             break;
-        case C1_3_VLSNR:
+        case dvb_code_rate_t::C1_3_VLSNR:
             nbch = 5400;
             q_val = 30;
             frame_size -= SHORT_PUNCTURING_SET2;
@@ -315,20 +316,20 @@ dvb_ldpc_bb_impl::dvb_ldpc_bb_impl(dvb_standard_t standard,
         frame_size = FRAME_SIZE_MEDIUM - MEDIUM_PUNCTURING;
         frame_size_real = FRAME_SIZE_MEDIUM - MEDIUM_PUNCTURING;
         switch (rate) {
-        case C1_5_MEDIUM:
+        case dvb_code_rate_t::C1_5_MEDIUM:
             nbch = 5840;
             q_val = 72;
             Xs = 640;
             P = 25;
             Xp = 980;
             break;
-        case C11_45_MEDIUM:
+        case dvb_code_rate_t::C11_45_MEDIUM:
             nbch = 7920;
             q_val = 68;
             P = 15;
             Xp = MEDIUM_PUNCTURING;
             break;
-        case C1_3_MEDIUM:
+        case dvb_code_rate_t::C1_3_MEDIUM:
             nbch = 10800;
             q_val = 60;
             P = 13;
@@ -368,195 +369,196 @@ void dvb_ldpc_bb_impl::forecast(int noutput_items, gr_vector_int& ninput_items_r
  */
 void dvb_ldpc_bb_impl::ldpc_lookup_generate(void)
 {
-    if (frame_size_type == FECFRAME_NORMAL) {
-        if (code_rate == C1_4) {
+    using fs_t = dvb_framesize_t;
+    if (frame_size_type == fs_t::FECFRAME_NORMAL) {
+        if (code_rate == dvb_code_rate_t::C1_4) {
             ldpc_bf(ldpc_tab_1_4N);
         }
-        if (code_rate == C1_3) {
+        if (code_rate == dvb_code_rate_t::C1_3) {
             ldpc_bf(ldpc_tab_1_3N);
         }
-        if (code_rate == C2_5) {
+        if (code_rate == dvb_code_rate_t::C2_5) {
             ldpc_bf(ldpc_tab_2_5N);
         }
-        if (code_rate == C1_2) {
+        if (code_rate == dvb_code_rate_t::C1_2) {
             ldpc_bf(ldpc_tab_1_2N);
         }
-        if (code_rate == C3_5) {
+        if (code_rate == dvb_code_rate_t::C3_5) {
             ldpc_bf(ldpc_tab_3_5N);
         }
-        if (code_rate == C2_3) {
+        if (code_rate == dvb_code_rate_t::C2_3) {
             if (dvb_standard == STANDARD_DVBT2) {
                 ldpc_bf(ldpc_tab_2_3N_DVBT2);
             } else {
                 ldpc_bf(ldpc_tab_2_3N_DVBS2);
             }
         }
-        if (code_rate == C3_4) {
+        if (code_rate == dvb_code_rate_t::C3_4) {
             ldpc_bf(ldpc_tab_3_4N);
         }
-        if (code_rate == C4_5) {
+        if (code_rate == dvb_code_rate_t::C4_5) {
             ldpc_bf(ldpc_tab_4_5N);
         }
-        if (code_rate == C5_6) {
+        if (code_rate == dvb_code_rate_t::C5_6) {
             ldpc_bf(ldpc_tab_5_6N);
         }
-        if (code_rate == C8_9) {
+        if (code_rate == dvb_code_rate_t::C8_9) {
             ldpc_bf(ldpc_tab_8_9N);
         }
-        if (code_rate == C9_10) {
+        if (code_rate == dvb_code_rate_t::C9_10) {
             ldpc_bf(ldpc_tab_9_10N);
         }
-        if (code_rate == C2_9_VLSNR) {
+        if (code_rate == dvb_code_rate_t::C2_9_VLSNR) {
             ldpc_bf(ldpc_tab_2_9N);
         }
-        if (code_rate == C13_45) {
+        if (code_rate == dvb_code_rate_t::C13_45) {
             ldpc_bf(ldpc_tab_13_45N);
         }
-        if (code_rate == C9_20) {
+        if (code_rate == dvb_code_rate_t::C9_20) {
             ldpc_bf(ldpc_tab_9_20N);
         }
-        if (code_rate == C90_180) {
+        if (code_rate == dvb_code_rate_t::C90_180) {
             ldpc_bf(ldpc_tab_90_180N);
         }
-        if (code_rate == C96_180) {
+        if (code_rate == dvb_code_rate_t::C96_180) {
             ldpc_bf(ldpc_tab_96_180N);
         }
-        if (code_rate == C11_20) {
+        if (code_rate == dvb_code_rate_t::C11_20) {
             ldpc_bf(ldpc_tab_11_20N);
         }
-        if (code_rate == C100_180) {
+        if (code_rate == dvb_code_rate_t::C100_180) {
             ldpc_bf(ldpc_tab_100_180N);
         }
-        if (code_rate == C104_180) {
+        if (code_rate == dvb_code_rate_t::C104_180) {
             ldpc_bf(ldpc_tab_104_180N);
         }
-        if (code_rate == C26_45) {
+        if (code_rate == dvb_code_rate_t::C26_45) {
             ldpc_bf(ldpc_tab_26_45N);
         }
-        if (code_rate == C18_30) {
+        if (code_rate == dvb_code_rate_t::C18_30) {
             ldpc_bf(ldpc_tab_18_30N);
         }
-        if (code_rate == C28_45) {
+        if (code_rate == dvb_code_rate_t::C28_45) {
             ldpc_bf(ldpc_tab_28_45N);
         }
-        if (code_rate == C23_36) {
+        if (code_rate == dvb_code_rate_t::C23_36) {
             ldpc_bf(ldpc_tab_23_36N);
         }
-        if (code_rate == C116_180) {
+        if (code_rate == dvb_code_rate_t::C116_180) {
             ldpc_bf(ldpc_tab_116_180N);
         }
-        if (code_rate == C20_30) {
+        if (code_rate == dvb_code_rate_t::C20_30) {
             ldpc_bf(ldpc_tab_20_30N);
         }
-        if (code_rate == C124_180) {
+        if (code_rate == dvb_code_rate_t::C124_180) {
             ldpc_bf(ldpc_tab_124_180N);
         }
-        if (code_rate == C25_36) {
+        if (code_rate == dvb_code_rate_t::C25_36) {
             ldpc_bf(ldpc_tab_25_36N);
         }
-        if (code_rate == C128_180) {
+        if (code_rate == dvb_code_rate_t::C128_180) {
             ldpc_bf(ldpc_tab_128_180N);
         }
-        if (code_rate == C13_18) {
+        if (code_rate == dvb_code_rate_t::C13_18) {
             ldpc_bf(ldpc_tab_13_18N);
         }
-        if (code_rate == C132_180) {
+        if (code_rate == dvb_code_rate_t::C132_180) {
             ldpc_bf(ldpc_tab_132_180N);
         }
-        if (code_rate == C22_30) {
+        if (code_rate == dvb_code_rate_t::C22_30) {
             ldpc_bf(ldpc_tab_22_30N);
         }
-        if (code_rate == C135_180) {
+        if (code_rate == dvb_code_rate_t::C135_180) {
             ldpc_bf(ldpc_tab_135_180N);
         }
-        if (code_rate == C140_180) {
+        if (code_rate == dvb_code_rate_t::C140_180) {
             ldpc_bf(ldpc_tab_140_180N);
         }
-        if (code_rate == C7_9) {
+        if (code_rate == dvb_code_rate_t::C7_9) {
             ldpc_bf(ldpc_tab_7_9N);
         }
-        if (code_rate == C154_180) {
+        if (code_rate == dvb_code_rate_t::C154_180) {
             ldpc_bf(ldpc_tab_154_180N);
         }
-    } else if (frame_size_type == FECFRAME_SHORT) {
-        if (code_rate == C1_4) {
+    } else if (frame_size_type == fs_t::FECFRAME_SHORT) {
+        if (code_rate == dvb_code_rate_t::C1_4) {
             ldpc_bf(ldpc_tab_1_4S);
         }
-        if (code_rate == C1_3) {
+        if (code_rate == dvb_code_rate_t::C1_3) {
             ldpc_bf(ldpc_tab_1_3S);
         }
-        if (code_rate == C2_5) {
+        if (code_rate == dvb_code_rate_t::C2_5) {
             ldpc_bf(ldpc_tab_2_5S);
         }
-        if (code_rate == C1_2) {
+        if (code_rate == dvb_code_rate_t::C1_2) {
             ldpc_bf(ldpc_tab_1_2S);
         }
-        if (code_rate == C3_5) {
+        if (code_rate == dvb_code_rate_t::C3_5) {
             if (dvb_standard == STANDARD_DVBT2) {
                 ldpc_bf(ldpc_tab_3_5S_DVBT2);
             } else {
                 ldpc_bf(ldpc_tab_3_5S_DVBS2);
             }
         }
-        if (code_rate == C2_3) {
+        if (code_rate == dvb_code_rate_t::C2_3) {
             ldpc_bf(ldpc_tab_2_3S);
         }
-        if (code_rate == C3_4) {
+        if (code_rate == dvb_code_rate_t::C3_4) {
             ldpc_bf(ldpc_tab_3_4S);
         }
-        if (code_rate == C4_5) {
+        if (code_rate == dvb_code_rate_t::C4_5) {
             ldpc_bf(ldpc_tab_4_5S);
         }
-        if (code_rate == C5_6) {
+        if (code_rate == dvb_code_rate_t::C5_6) {
             ldpc_bf(ldpc_tab_5_6S);
         }
-        if (code_rate == C8_9) {
+        if (code_rate == dvb_code_rate_t::C8_9) {
             ldpc_bf(ldpc_tab_8_9S);
         }
-        if (code_rate == C11_45) {
+        if (code_rate == dvb_code_rate_t::C11_45) {
             ldpc_bf(ldpc_tab_11_45S);
         }
-        if (code_rate == C4_15) {
+        if (code_rate == dvb_code_rate_t::C4_15) {
             ldpc_bf(ldpc_tab_4_15S);
         }
-        if (code_rate == C14_45) {
+        if (code_rate == dvb_code_rate_t::C14_45) {
             ldpc_bf(ldpc_tab_14_45S);
         }
-        if (code_rate == C7_15) {
+        if (code_rate == dvb_code_rate_t::C7_15) {
             ldpc_bf(ldpc_tab_7_15S);
         }
-        if (code_rate == C8_15) {
+        if (code_rate == dvb_code_rate_t::C8_15) {
             ldpc_bf(ldpc_tab_8_15S);
         }
-        if (code_rate == C26_45) {
+        if (code_rate == dvb_code_rate_t::C26_45) {
             ldpc_bf(ldpc_tab_26_45S);
         }
-        if (code_rate == C32_45) {
+        if (code_rate == dvb_code_rate_t::C32_45) {
             ldpc_bf(ldpc_tab_32_45S);
         }
-        if (code_rate == C1_5_VLSNR_SF2) {
+        if (code_rate == dvb_code_rate_t::C1_5_VLSNR_SF2) {
             ldpc_bf(ldpc_tab_1_4S);
         }
-        if (code_rate == C11_45_VLSNR_SF2) {
+        if (code_rate == dvb_code_rate_t::C11_45_VLSNR_SF2) {
             ldpc_bf(ldpc_tab_11_45S);
         }
-        if (code_rate == C1_5_VLSNR) {
+        if (code_rate == dvb_code_rate_t::C1_5_VLSNR) {
             ldpc_bf(ldpc_tab_1_4S);
         }
-        if (code_rate == C4_15_VLSNR) {
+        if (code_rate == dvb_code_rate_t::C4_15_VLSNR) {
             ldpc_bf(ldpc_tab_4_15S);
         }
-        if (code_rate == C1_3_VLSNR) {
+        if (code_rate == dvb_code_rate_t::C1_3_VLSNR) {
             ldpc_bf(ldpc_tab_1_3S);
         }
     } else {
-        if (code_rate == C1_5_MEDIUM) {
+        if (code_rate == dvb_code_rate_t::C1_5_MEDIUM) {
             ldpc_bf(ldpc_tab_1_5M);
         }
-        if (code_rate == C11_45_MEDIUM) {
+        if (code_rate == dvb_code_rate_t::C11_45_MEDIUM) {
             ldpc_bf(ldpc_tab_11_45M);
         }
-        if (code_rate == C1_3_MEDIUM) {
+        if (code_rate == dvb_code_rate_t::C1_3_MEDIUM) {
             ldpc_bf(ldpc_tab_1_3M);
         }
     }

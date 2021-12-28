@@ -46,7 +46,7 @@ dvbt2_cellinterleaver_cc_impl::dvbt2_cellinterleaver_cc_impl(
     int logic14[6] = { 0, 1, 4, 5, 9, 11 };
     int logic15[4] = { 0, 1, 2, 12 };
     int* logic;
-    if (framesize == FECFRAME_NORMAL) {
+    if (framesize == dvb_framesize_t::FECFRAME_NORMAL) {
         switch (constellation) {
         case MOD_QPSK:
             cell_size = 32400;

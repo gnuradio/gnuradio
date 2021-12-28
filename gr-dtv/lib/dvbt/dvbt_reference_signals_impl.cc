@@ -644,19 +644,19 @@ void dvbt_pilot_gen::format_tps_data()
     set_tps_bits(29, 27, config.d_hierarchy);
     // Clause 4.6.2.7
     switch (config.d_code_rate_HP) {
-    case C1_2:
+    case dvb_code_rate_t::C1_2:
         set_tps_bits(32, 30, 0);
         break;
-    case C2_3:
+    case dvb_code_rate_t::C2_3:
         set_tps_bits(32, 30, 1);
         break;
-    case C3_4:
+    case dvb_code_rate_t::C3_4:
         set_tps_bits(32, 30, 2);
         break;
-    case C5_6:
+    case dvb_code_rate_t::C5_6:
         set_tps_bits(32, 30, 3);
         break;
-    case C7_8:
+    case dvb_code_rate_t::C7_8:
         set_tps_bits(32, 30, 4);
         break;
     default:
@@ -664,19 +664,19 @@ void dvbt_pilot_gen::format_tps_data()
         break;
     }
     switch (config.d_code_rate_LP) {
-    case C1_2:
+    case dvb_code_rate_t::C1_2:
         set_tps_bits(35, 33, 0);
         break;
-    case C2_3:
+    case dvb_code_rate_t::C2_3:
         set_tps_bits(35, 33, 1);
         break;
-    case C3_4:
+    case dvb_code_rate_t::C3_4:
         set_tps_bits(35, 33, 2);
         break;
-    case C5_6:
+    case dvb_code_rate_t::C5_6:
         set_tps_bits(35, 33, 3);
         break;
-    case C7_8:
+    case dvb_code_rate_t::C7_8:
         set_tps_bits(35, 33, 4);
         break;
     default:

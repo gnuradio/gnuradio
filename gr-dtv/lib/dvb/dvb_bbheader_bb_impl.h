@@ -41,7 +41,7 @@ private:
     unsigned char crc;
     unsigned int input_mode;
     unsigned int extra;
-    unsigned int frame_size;
+    dvb_framesize_t frame_size;
     unsigned char bsave;
     int inband_type_b;
     int fec_blocks;

@@ -96,7 +96,7 @@ dvbt2_framemapper_cc_impl::dvbt2_framemapper_cc_impl(
     double m_64qam_lookup[8] = { 7.0, 5.0, 1.0, 3.0, -7.0, -5.0, -1.0, -3.0 };
     int real_index, imag_index;
     int N_punc_temp, N_post_temp;
-    if (framesize == FECFRAME_NORMAL) {
+    if (framesize == dvb_framesize_t::FECFRAME_NORMAL) {
         switch (constellation) {
         case MOD_QPSK:
             cell_size = 32400;
@@ -183,28 +183,28 @@ dvbt2_framemapper_cc_impl::dvbt2_framemapper_cc_impl(
     l1postinit->first_frame_idx = 0;
     l1postinit->plp_group_id = 1;
     switch (rate) {
-    case C1_3:
+    case dvb_code_rate_t::C1_3:
         l1postinit->plp_cod = 6;
         break;
-    case C2_5:
+    case dvb_code_rate_t::C2_5:
         l1postinit->plp_cod = 7;
         break;
-    case C1_2:
+    case dvb_code_rate_t::C1_2:
         l1postinit->plp_cod = 0;
         break;
-    case C3_5:
+    case dvb_code_rate_t::C3_5:
         l1postinit->plp_cod = 1;
         break;
-    case C2_3:
+    case dvb_code_rate_t::C2_3:
         l1postinit->plp_cod = 2;
         break;
-    case C3_4:
+    case dvb_code_rate_t::C3_4:
         l1postinit->plp_cod = 3;
         break;
-    case C4_5:
+    case dvb_code_rate_t::C4_5:
         l1postinit->plp_cod = 4;
         break;
-    case C5_6:
+    case dvb_code_rate_t::C5_6:
         l1postinit->plp_cod = 5;
         break;
     default:
@@ -213,7 +213,7 @@ dvbt2_framemapper_cc_impl::dvbt2_framemapper_cc_impl(
     }
     l1postinit->plp_mod = constellation;
     l1postinit->plp_rotation = rotation;
-    l1postinit->plp_fec_type = framesize;
+    l1postinit->plp_fec_type = static_cast<int>(framesize);
     l1postinit->plp_num_blocks_max = fecblocks;
     l1postinit->frame_interval = 1;
     l1postinit->time_il_length = tiblocks;

@@ -526,19 +526,19 @@ dvbt_viterbi_decoder_impl::dvbt_viterbi_decoder_impl(dvb_constellation_t constel
       d_nbits(2 * d_k * d_bsize),
       d_inbits(d_nbits)
 {
-    if (config.d_code_rate_HP == C1_2) {
+    if (config.d_code_rate_HP == dvb_code_rate_t::C1_2) {
         d_puncture = d_puncture_1_2;
         d_ntraceback = 5;
-    } else if (config.d_code_rate_HP == C2_3) {
+    } else if (config.d_code_rate_HP == dvb_code_rate_t::C2_3) {
         d_puncture = d_puncture_2_3;
         d_ntraceback = 9;
-    } else if (config.d_code_rate_HP == C3_4) {
+    } else if (config.d_code_rate_HP == dvb_code_rate_t::C3_4) {
         d_puncture = d_puncture_3_4;
         d_ntraceback = 10;
-    } else if (config.d_code_rate_HP == C5_6) {
+    } else if (config.d_code_rate_HP == dvb_code_rate_t::C5_6) {
         d_puncture = d_puncture_5_6;
         d_ntraceback = 15;
-    } else if (config.d_code_rate_HP == C7_8) {
+    } else if (config.d_code_rate_HP == dvb_code_rate_t::C7_8) {
         d_puncture = d_puncture_7_8;
         d_ntraceback = 24;
     } else {

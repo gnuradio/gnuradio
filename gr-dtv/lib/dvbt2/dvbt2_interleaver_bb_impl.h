@@ -21,7 +21,7 @@ class dvbt2_interleaver_bb_impl : public dvbt2_interleaver_bb
 private:
     int frame_size;
     int signal_constellation;
-    int code_rate;
+    dvb_code_rate_t code_rate;
     int nbch;
     int q_val;
     int mod;

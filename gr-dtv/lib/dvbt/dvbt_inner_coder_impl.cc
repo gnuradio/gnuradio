@@ -44,13 +44,13 @@ inline void dvbt_inner_coder_impl::generate_punctured_code(dvb_code_rate_t coder
 
     switch (coderate) {
     // X1Y1
-    case C1_2:
+    case dvb_code_rate_t::C1_2:
         generate_codeword(in[0], x, y);
         out[0] = x;
         out[1] = y;
         break;
     // X1Y1Y2
-    case C2_3:
+    case dvb_code_rate_t::C2_3:
         generate_codeword(in[0], x, y);
         out[0] = x;
         out[1] = y;
@@ -58,7 +58,7 @@ inline void dvbt_inner_coder_impl::generate_punctured_code(dvb_code_rate_t coder
         out[2] = y;
         break;
     // X1Y1Y2X3
-    case C3_4:
+    case dvb_code_rate_t::C3_4:
         generate_codeword(in[0], x, y);
         out[0] = x;
         out[1] = y;
@@ -68,7 +68,7 @@ inline void dvbt_inner_coder_impl::generate_punctured_code(dvb_code_rate_t coder
         out[3] = x;
         break;
     // X1Y1Y2X3Y4X5
-    case C5_6:
+    case dvb_code_rate_t::C5_6:
         generate_codeword(in[0], x, y);
         out[0] = x;
         out[1] = y;
@@ -82,7 +82,7 @@ inline void dvbt_inner_coder_impl::generate_punctured_code(dvb_code_rate_t coder
         out[5] = x;
         break;
     // X1Y1Y2X3Y4X5Y6X7
-    case C7_8:
+    case dvb_code_rate_t::C7_8:
         generate_codeword(in[0], x, y);
         out[0] = x;
         out[1] = y;

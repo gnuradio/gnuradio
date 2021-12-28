@@ -117,27 +117,27 @@ dvbt_configure::dvbt_configure(dvb_constellation_t constellation,
     }
 
     switch (d_code_rate_HP) {
-    case C1_2:
+    case dvb_code_rate_t::C1_2:
         d_cr_k = 1;
         d_cr_n = 2;
         d_cr_p = 1;
         break;
-    case C2_3:
+    case dvb_code_rate_t::C2_3:
         d_cr_k = 2;
         d_cr_n = 3;
         d_cr_p = 2;
         break;
-    case C3_4:
+    case dvb_code_rate_t::C3_4:
         d_cr_k = 3;
         d_cr_n = 4;
         d_cr_p = 3;
         break;
-    case C5_6:
+    case dvb_code_rate_t::C5_6:
         d_cr_k = 5;
         d_cr_n = 6;
         d_cr_p = 5;
         break;
-    case C7_8:
+    case dvb_code_rate_t::C7_8:
         d_cr_k = 7;
         d_cr_n = 8;
         d_cr_p = 7;
@@ -150,23 +150,23 @@ dvbt_configure::dvbt_configure(dvb_constellation_t constellation,
     }
 
     switch (d_code_rate_LP) {
-    case C1_2:
+    case dvb_code_rate_t::C1_2:
         d_cr_k = 1;
         d_cr_n = 2;
         break;
-    case C2_3:
+    case dvb_code_rate_t::C2_3:
         d_cr_k = 2;
         d_cr_n = 3;
         break;
-    case C3_4:
+    case dvb_code_rate_t::C3_4:
         d_cr_k = 3;
         d_cr_n = 4;
         break;
-    case C5_6:
+    case dvb_code_rate_t::C5_6:
         d_cr_k = 5;
         d_cr_n = 6;
         break;
-    case C7_8:
+    case dvb_code_rate_t::C7_8:
         d_cr_k = 7;
         d_cr_n = 8;
         break;

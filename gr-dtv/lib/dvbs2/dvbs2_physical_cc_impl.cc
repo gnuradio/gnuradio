@@ -44,25 +44,27 @@ dvbs2_physical_cc_impl::dvbs2_physical_cc_impl(dvb_framesize_t framesize,
 
     signal_constellation = constellation;
     modcod = 0;
-    if (framesize == FECFRAME_NORMAL) {
+    if (framesize == dvb_framesize_t::FECFRAME_NORMAL) {
         frame_size = FRAME_SIZE_NORMAL;
         type = 0;
-        if (rate == C2_9_VLSNR) {
+        if (rate == dvb_code_rate_t::C2_9_VLSNR) {
             frame_size =
                 (FRAME_SIZE_NORMAL - NORMAL_PUNCTURING) + (EXTRA_PILOT_SYMBOLS_SET1 * 2);
             pilots = PILOTS_ON; /* force pilots on for VL-SNR */
         }
     }
 
-    else if (framesize == FECFRAME_SHORT) {
+    else if (framesize == dvb_framesize_t::FECFRAME_SHORT) {
         frame_size = FRAME_SIZE_SHORT;
         type = 2;
-        if (rate == C1_5_VLSNR_SF2 || rate == C11_45_VLSNR_SF2) {
+        if (rate == dvb_code_rate_t::C1_5_VLSNR_SF2 ||
+            rate == dvb_code_rate_t::C11_45_VLSNR_SF2) {
             frame_size = ((FRAME_SIZE_SHORT - SHORT_PUNCTURING_SET1) * 2) +
                          EXTRA_PILOT_SYMBOLS_SET1;
             pilots = PILOTS_ON; /* force pilots on for VL-SNR */
         }
-        if (rate == C1_5_VLSNR || rate == C4_15_VLSNR || rate == C1_3_VLSNR) {
+        if (rate == dvb_code_rate_t::C1_5_VLSNR || rate == dvb_code_rate_t::C4_15_VLSNR ||
+            rate == dvb_code_rate_t::C1_3_VLSNR) {
             frame_size =
                 (FRAME_SIZE_SHORT - SHORT_PUNCTURING_SET2) + EXTRA_PILOT_SYMBOLS_SET2;
             pilots = PILOTS_ON; /* force pilots on for VL-SNR */
@@ -86,39 +88,39 @@ dvbs2_physical_cc_impl::dvbs2_physical_cc_impl(dvb_framesize_t framesize,
 
     vlsnr_set = VLSNR_OFF;
     switch (rate) {
-    case C2_9_VLSNR:
+    case dvb_code_rate_t::C2_9_VLSNR:
         vlsnr_header = 0;
         vlsnr_set = VLSNR_SET1;
         break;
-    case C1_5_MEDIUM:
+    case dvb_code_rate_t::C1_5_MEDIUM:
         vlsnr_header = 1;
         vlsnr_set = VLSNR_SET1;
         break;
-    case C11_45_MEDIUM:
+    case dvb_code_rate_t::C11_45_MEDIUM:
         vlsnr_header = 2;
         vlsnr_set = VLSNR_SET1;
         break;
-    case C1_3_MEDIUM:
+    case dvb_code_rate_t::C1_3_MEDIUM:
         vlsnr_header = 3;
         vlsnr_set = VLSNR_SET1;
         break;
-    case C1_5_VLSNR_SF2:
+    case dvb_code_rate_t::C1_5_VLSNR_SF2:
         vlsnr_header = 4;
         vlsnr_set = VLSNR_SET1;
         break;
-    case C11_45_VLSNR_SF2:
+    case dvb_code_rate_t::C11_45_VLSNR_SF2:
         vlsnr_header = 5;
         vlsnr_set = VLSNR_SET1;
         break;
-    case C1_5_VLSNR:
+    case dvb_code_rate_t::C1_5_VLSNR:
         vlsnr_header = 9;
         vlsnr_set = VLSNR_SET2;
         break;
-    case C4_15_VLSNR:
+    case dvb_code_rate_t::C4_15_VLSNR:
         vlsnr_header = 10;
         vlsnr_set = VLSNR_SET2;
         break;
-    case C1_3_VLSNR:
+    case dvb_code_rate_t::C1_3_VLSNR:
         vlsnr_header = 11;
         vlsnr_set = VLSNR_SET2;
         break;
@@ -148,14 +150,14 @@ dvbs2_physical_cc_impl::dvbs2_physical_cc_impl(dvb_framesize_t framesize,
             pilot_symbols -= 36;
         }
         switch (rate) {
-        case C1_5_MEDIUM:
-        case C11_45_MEDIUM:
-        case C1_3_MEDIUM:
+        case dvb_code_rate_t::C1_5_MEDIUM:
+        case dvb_code_rate_t::C11_45_MEDIUM:
+        case dvb_code_rate_t::C1_3_MEDIUM:
             modcod = 128;
             break;
-        case C1_5_VLSNR:
-        case C4_15_VLSNR:
-        case C1_3_VLSNR:
+        case dvb_code_rate_t::C1_5_VLSNR:
+        case dvb_code_rate_t::C4_15_VLSNR:
+        case dvb_code_rate_t::C1_3_VLSNR:
             modcod = 130;
             break;
         default:
@@ -171,8 +173,8 @@ dvbs2_physical_cc_impl::dvbs2_physical_cc_impl(dvb_framesize_t framesize,
             pilot_symbols -= 36;
         }
         switch (rate) {
-        case C1_5_VLSNR_SF2:
-        case C11_45_VLSNR_SF2:
+        case dvb_code_rate_t::C1_5_VLSNR_SF2:
+        case dvb_code_rate_t::C11_45_VLSNR_SF2:
             modcod = 128;
             break;
         default:
@@ -188,67 +190,67 @@ dvbs2_physical_cc_impl::dvbs2_physical_cc_impl(dvb_framesize_t framesize,
             pilot_symbols -= 36;
         }
         switch (rate) {
-        case C2_9_VLSNR:
+        case dvb_code_rate_t::C2_9_VLSNR:
             modcod = 128;
             break;
-        case C1_4:
+        case dvb_code_rate_t::C1_4:
             modcod = 1;
             break;
-        case C1_3:
+        case dvb_code_rate_t::C1_3:
             modcod = 2;
             break;
-        case C2_5:
+        case dvb_code_rate_t::C2_5:
             modcod = 3;
             break;
-        case C1_2:
+        case dvb_code_rate_t::C1_2:
             modcod = 4;
             break;
-        case C3_5:
+        case dvb_code_rate_t::C3_5:
             modcod = 5;
             break;
-        case C2_3:
+        case dvb_code_rate_t::C2_3:
             modcod = 6;
             break;
-        case C3_4:
+        case dvb_code_rate_t::C3_4:
             modcod = 7;
             break;
-        case C4_5:
+        case dvb_code_rate_t::C4_5:
             modcod = 8;
             break;
-        case C5_6:
+        case dvb_code_rate_t::C5_6:
             modcod = 9;
             break;
-        case C8_9:
+        case dvb_code_rate_t::C8_9:
             modcod = 10;
             break;
-        case C9_10:
+        case dvb_code_rate_t::C9_10:
             modcod = 11;
             break;
-        case C13_45:
+        case dvb_code_rate_t::C13_45:
             modcod = 132;
             break;
-        case C9_20:
+        case dvb_code_rate_t::C9_20:
             modcod = 134;
             break;
-        case C11_20:
+        case dvb_code_rate_t::C11_20:
             modcod = 136;
             break;
-        case C11_45:
+        case dvb_code_rate_t::C11_45:
             modcod = 216;
             break;
-        case C4_15:
+        case dvb_code_rate_t::C4_15:
             modcod = 218;
             break;
-        case C14_45:
+        case dvb_code_rate_t::C14_45:
             modcod = 220;
             break;
-        case C7_15:
+        case dvb_code_rate_t::C7_15:
             modcod = 222;
             break;
-        case C8_15:
+        case dvb_code_rate_t::C8_15:
             modcod = 224;
             break;
-        case C32_45:
+        case dvb_code_rate_t::C32_45:
             modcod = 226;
             break;
         default:
@@ -264,43 +266,43 @@ dvbs2_physical_cc_impl::dvbs2_physical_cc_impl(dvb_framesize_t framesize,
             pilot_symbols -= 36;
         }
         switch (rate) {
-        case C3_5:
+        case dvb_code_rate_t::C3_5:
             modcod = 12;
             break;
-        case C2_3:
+        case dvb_code_rate_t::C2_3:
             modcod = 13;
             break;
-        case C3_4:
+        case dvb_code_rate_t::C3_4:
             modcod = 14;
             break;
-        case C5_6:
+        case dvb_code_rate_t::C5_6:
             modcod = 15;
             break;
-        case C8_9:
+        case dvb_code_rate_t::C8_9:
             modcod = 16;
             break;
-        case C9_10:
+        case dvb_code_rate_t::C9_10:
             modcod = 17;
             break;
-        case C23_36:
+        case dvb_code_rate_t::C23_36:
             modcod = 142;
             break;
-        case C25_36:
+        case dvb_code_rate_t::C25_36:
             modcod = 144;
             break;
-        case C13_18:
+        case dvb_code_rate_t::C13_18:
             modcod = 146;
             break;
-        case C7_15:
+        case dvb_code_rate_t::C7_15:
             modcod = 228;
             break;
-        case C8_15:
+        case dvb_code_rate_t::C8_15:
             modcod = 230;
             break;
-        case C26_45:
+        case dvb_code_rate_t::C26_45:
             modcod = 232;
             break;
-        case C32_45:
+        case dvb_code_rate_t::C32_45:
             modcod = 234;
             break;
         default:
@@ -316,10 +318,10 @@ dvbs2_physical_cc_impl::dvbs2_physical_cc_impl(dvb_framesize_t framesize,
             pilot_symbols -= 36;
         }
         switch (rate) {
-        case C100_180:
+        case dvb_code_rate_t::C100_180:
             modcod = 138;
             break;
-        case C104_180:
+        case dvb_code_rate_t::C104_180:
             modcod = 140;
             break;
         default:
@@ -335,63 +337,63 @@ dvbs2_physical_cc_impl::dvbs2_physical_cc_impl(dvb_framesize_t framesize,
             pilot_symbols -= 36;
         }
         switch (rate) {
-        case C2_3:
+        case dvb_code_rate_t::C2_3:
             modcod = 18;
             break;
-        case C3_4:
+        case dvb_code_rate_t::C3_4:
             modcod = 19;
             break;
-        case C4_5:
+        case dvb_code_rate_t::C4_5:
             modcod = 20;
             break;
-        case C5_6:
+        case dvb_code_rate_t::C5_6:
             modcod = 21;
             break;
-        case C8_9:
+        case dvb_code_rate_t::C8_9:
             modcod = 22;
             break;
-        case C9_10:
+        case dvb_code_rate_t::C9_10:
             modcod = 23;
             break;
-        case C26_45:
+        case dvb_code_rate_t::C26_45:
             if (frame_size == FRAME_SIZE_NORMAL) {
                 modcod = 154;
             } else {
                 modcod = 240;
             }
             break;
-        case C3_5:
+        case dvb_code_rate_t::C3_5:
             if (frame_size == FRAME_SIZE_NORMAL) {
                 modcod = 156;
             } else {
                 modcod = 242;
             }
             break;
-        case C28_45:
+        case dvb_code_rate_t::C28_45:
             modcod = 160;
             break;
-        case C23_36:
+        case dvb_code_rate_t::C23_36:
             modcod = 162;
             break;
-        case C25_36:
+        case dvb_code_rate_t::C25_36:
             modcod = 166;
             break;
-        case C13_18:
+        case dvb_code_rate_t::C13_18:
             modcod = 168;
             break;
-        case C140_180:
+        case dvb_code_rate_t::C140_180:
             modcod = 170;
             break;
-        case C154_180:
+        case dvb_code_rate_t::C154_180:
             modcod = 172;
             break;
-        case C7_15:
+        case dvb_code_rate_t::C7_15:
             modcod = 236;
             break;
-        case C8_15:
+        case dvb_code_rate_t::C8_15:
             modcod = 238;
             break;
-        case C32_45:
+        case dvb_code_rate_t::C32_45:
             modcod = 244;
             break;
         default:
@@ -407,19 +409,19 @@ dvbs2_physical_cc_impl::dvbs2_physical_cc_impl(dvb_framesize_t framesize,
             pilot_symbols -= 36;
         }
         switch (rate) {
-        case C90_180:
+        case dvb_code_rate_t::C90_180:
             modcod = 148;
             break;
-        case C96_180:
+        case dvb_code_rate_t::C96_180:
             modcod = 150;
             break;
-        case C100_180:
+        case dvb_code_rate_t::C100_180:
             modcod = 152;
             break;
-        case C18_30:
+        case dvb_code_rate_t::C18_30:
             modcod = 158;
             break;
-        case C20_30:
+        case dvb_code_rate_t::C20_30:
             modcod = 164;
             break;
         default:
@@ -435,19 +437,19 @@ dvbs2_physical_cc_impl::dvbs2_physical_cc_impl(dvb_framesize_t framesize,
             pilot_symbols -= 36;
         }
         switch (rate) {
-        case C3_4:
+        case dvb_code_rate_t::C3_4:
             modcod = 24;
             break;
-        case C4_5:
+        case dvb_code_rate_t::C4_5:
             modcod = 25;
             break;
-        case C5_6:
+        case dvb_code_rate_t::C5_6:
             modcod = 26;
             break;
-        case C8_9:
+        case dvb_code_rate_t::C8_9:
             modcod = 27;
             break;
-        case C9_10:
+        case dvb_code_rate_t::C9_10:
             modcod = 28;
             break;
         default:
@@ -463,14 +465,14 @@ dvbs2_physical_cc_impl::dvbs2_physical_cc_impl(dvb_framesize_t framesize,
             pilot_symbols -= 36;
         }
         switch (rate) {
-        case C2_3:
+        case dvb_code_rate_t::C2_3:
             if (frame_size == FRAME_SIZE_NORMAL) {
                 modcod = 174;
             } else {
                 modcod = 246;
             }
             break;
-        case C32_45:
+        case dvb_code_rate_t::C32_45:
             modcod = 248;
             break;
         default:
@@ -486,13 +488,13 @@ dvbs2_physical_cc_impl::dvbs2_physical_cc_impl(dvb_framesize_t framesize,
             pilot_symbols -= 36;
         }
         switch (rate) {
-        case C128_180:
+        case dvb_code_rate_t::C128_180:
             modcod = 178;
             break;
-        case C132_180:
+        case dvb_code_rate_t::C132_180:
             modcod = 180;
             break;
-        case C140_180:
+        case dvb_code_rate_t::C140_180:
             modcod = 182;
             break;
         default:
@@ -508,7 +510,7 @@ dvbs2_physical_cc_impl::dvbs2_physical_cc_impl(dvb_framesize_t framesize,
             pilot_symbols -= 36;
         }
         switch (rate) {
-        case C128_180:
+        case dvb_code_rate_t::C128_180:
             modcod = 184;
             break;
         default:
@@ -524,13 +526,13 @@ dvbs2_physical_cc_impl::dvbs2_physical_cc_impl(dvb_framesize_t framesize,
             pilot_symbols -= 36;
         }
         switch (rate) {
-        case C7_9:
+        case dvb_code_rate_t::C7_9:
             modcod = 190;
             break;
-        case C4_5:
+        case dvb_code_rate_t::C4_5:
             modcod = 194;
             break;
-        case C5_6:
+        case dvb_code_rate_t::C5_6:
             modcod = 198;
             break;
         default:
@@ -546,7 +548,7 @@ dvbs2_physical_cc_impl::dvbs2_physical_cc_impl(dvb_framesize_t framesize,
             pilot_symbols -= 36;
         }
         switch (rate) {
-        case C132_180:
+        case dvb_code_rate_t::C132_180:
             modcod = 186;
             break;
         default:
@@ -562,10 +564,10 @@ dvbs2_physical_cc_impl::dvbs2_physical_cc_impl(dvb_framesize_t framesize,
             pilot_symbols -= 36;
         }
         switch (rate) {
-        case C135_180:
+        case dvb_code_rate_t::C135_180:
             modcod = 200;
             break;
-        case C140_180:
+        case dvb_code_rate_t::C140_180:
             modcod = 202;
             break;
         default:
@@ -581,22 +583,22 @@ dvbs2_physical_cc_impl::dvbs2_physical_cc_impl(dvb_framesize_t framesize,
             pilot_symbols -= 36;
         }
         switch (rate) {
-        case C116_180:
+        case dvb_code_rate_t::C116_180:
             modcod = 204;
             break;
-        case C20_30:
+        case dvb_code_rate_t::C20_30:
             modcod = 206;
             break;
-        case C124_180:
+        case dvb_code_rate_t::C124_180:
             modcod = 208;
             break;
-        case C128_180:
+        case dvb_code_rate_t::C128_180:
             modcod = 210;
             break;
-        case C22_30:
+        case dvb_code_rate_t::C22_30:
             modcod = 212;
             break;
-        case C135_180:
+        case dvb_code_rate_t::C135_180:
             modcod = 214;
             break;
         default:

@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(1)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(dvb_config.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(a51e9bda5f13b96d3d09d0347395379e)                     */
+/* BINDTOOL_HEADER_FILE_HASH(0614e18b7a12cfcf78fbf2e022569404)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -36,62 +36,62 @@ void bind_dvb_config(py::module& m)
         .value("STANDARD_DVBT2", ::gr::dtv::STANDARD_DVBT2) // 1
         .export_values();
     py::enum_<::gr::dtv::dvb_code_rate_t>(m, "dvb_code_rate_t")
-        .value("C1_4", ::gr::dtv::C1_4)                         // 0
-        .value("C1_3", ::gr::dtv::C1_3)                         // 1
-        .value("C2_5", ::gr::dtv::C2_5)                         // 2
-        .value("C1_2", ::gr::dtv::C1_2)                         // 3
-        .value("C3_5", ::gr::dtv::C3_5)                         // 4
-        .value("C2_3", ::gr::dtv::C2_3)                         // 5
-        .value("C3_4", ::gr::dtv::C3_4)                         // 6
-        .value("C4_5", ::gr::dtv::C4_5)                         // 7
-        .value("C5_6", ::gr::dtv::C5_6)                         // 8
-        .value("C7_8", ::gr::dtv::C7_8)                         // 9
-        .value("C8_9", ::gr::dtv::C8_9)                         // 10
-        .value("C9_10", ::gr::dtv::C9_10)                       // 11
-        .value("C13_45", ::gr::dtv::C13_45)                     // 12
-        .value("C9_20", ::gr::dtv::C9_20)                       // 13
-        .value("C90_180", ::gr::dtv::C90_180)                   // 14
-        .value("C96_180", ::gr::dtv::C96_180)                   // 15
-        .value("C11_20", ::gr::dtv::C11_20)                     // 16
-        .value("C100_180", ::gr::dtv::C100_180)                 // 17
-        .value("C104_180", ::gr::dtv::C104_180)                 // 18
-        .value("C26_45", ::gr::dtv::C26_45)                     // 19
-        .value("C18_30", ::gr::dtv::C18_30)                     // 20
-        .value("C28_45", ::gr::dtv::C28_45)                     // 21
-        .value("C23_36", ::gr::dtv::C23_36)                     // 22
-        .value("C116_180", ::gr::dtv::C116_180)                 // 23
-        .value("C20_30", ::gr::dtv::C20_30)                     // 24
-        .value("C124_180", ::gr::dtv::C124_180)                 // 25
-        .value("C25_36", ::gr::dtv::C25_36)                     // 26
-        .value("C128_180", ::gr::dtv::C128_180)                 // 27
-        .value("C13_18", ::gr::dtv::C13_18)                     // 28
-        .value("C132_180", ::gr::dtv::C132_180)                 // 29
-        .value("C22_30", ::gr::dtv::C22_30)                     // 30
-        .value("C135_180", ::gr::dtv::C135_180)                 // 31
-        .value("C140_180", ::gr::dtv::C140_180)                 // 32
-        .value("C7_9", ::gr::dtv::C7_9)                         // 33
-        .value("C154_180", ::gr::dtv::C154_180)                 // 34
-        .value("C11_45", ::gr::dtv::C11_45)                     // 35
-        .value("C4_15", ::gr::dtv::C4_15)                       // 36
-        .value("C14_45", ::gr::dtv::C14_45)                     // 37
-        .value("C7_15", ::gr::dtv::C7_15)                       // 38
-        .value("C8_15", ::gr::dtv::C8_15)                       // 39
-        .value("C32_45", ::gr::dtv::C32_45)                     // 40
-        .value("C2_9_VLSNR", ::gr::dtv::C2_9_VLSNR)             // 41
-        .value("C1_5_MEDIUM", ::gr::dtv::C1_5_MEDIUM)           // 42
-        .value("C11_45_MEDIUM", ::gr::dtv::C11_45_MEDIUM)       // 43
-        .value("C1_3_MEDIUM", ::gr::dtv::C1_3_MEDIUM)           // 44
-        .value("C1_5_VLSNR_SF2", ::gr::dtv::C1_5_VLSNR_SF2)     // 45
-        .value("C11_45_VLSNR_SF2", ::gr::dtv::C11_45_VLSNR_SF2) // 46
-        .value("C1_5_VLSNR", ::gr::dtv::C1_5_VLSNR)             // 47
-        .value("C4_15_VLSNR", ::gr::dtv::C4_15_VLSNR)           // 48
-        .value("C1_3_VLSNR", ::gr::dtv::C1_3_VLSNR)             // 49
-        .value("C_OTHER", ::gr::dtv::C_OTHER)                   // 50
+        .value("C1_4", ::gr::dtv::dvb_code_rate_t::C1_4)                         // 0
+        .value("C1_3", ::gr::dtv::dvb_code_rate_t::C1_3)                         // 1
+        .value("C2_5", ::gr::dtv::dvb_code_rate_t::C2_5)                         // 2
+        .value("C1_2", ::gr::dtv::dvb_code_rate_t::C1_2)                         // 3
+        .value("C3_5", ::gr::dtv::dvb_code_rate_t::C3_5)                         // 4
+        .value("C2_3", ::gr::dtv::dvb_code_rate_t::C2_3)                         // 5
+        .value("C3_4", ::gr::dtv::dvb_code_rate_t::C3_4)                         // 6
+        .value("C4_5", ::gr::dtv::dvb_code_rate_t::C4_5)                         // 7
+        .value("C5_6", ::gr::dtv::dvb_code_rate_t::C5_6)                         // 8
+        .value("C7_8", ::gr::dtv::dvb_code_rate_t::C7_8)                         // 9
+        .value("C8_9", ::gr::dtv::dvb_code_rate_t::C8_9)                         // 10
+        .value("C9_10", ::gr::dtv::dvb_code_rate_t::C9_10)                       // 11
+        .value("C13_45", ::gr::dtv::dvb_code_rate_t::C13_45)                     // 12
+        .value("C9_20", ::gr::dtv::dvb_code_rate_t::C9_20)                       // 13
+        .value("C90_180", ::gr::dtv::dvb_code_rate_t::C90_180)                   // 14
+        .value("C96_180", ::gr::dtv::dvb_code_rate_t::C96_180)                   // 15
+        .value("C11_20", ::gr::dtv::dvb_code_rate_t::C11_20)                     // 16
+        .value("C100_180", ::gr::dtv::dvb_code_rate_t::C100_180)                 // 17
+        .value("C104_180", ::gr::dtv::dvb_code_rate_t::C104_180)                 // 18
+        .value("C26_45", ::gr::dtv::dvb_code_rate_t::C26_45)                     // 19
+        .value("C18_30", ::gr::dtv::dvb_code_rate_t::C18_30)                     // 20
+        .value("C28_45", ::gr::dtv::dvb_code_rate_t::C28_45)                     // 21
+        .value("C23_36", ::gr::dtv::dvb_code_rate_t::C23_36)                     // 22
+        .value("C116_180", ::gr::dtv::dvb_code_rate_t::C116_180)                 // 23
+        .value("C20_30", ::gr::dtv::dvb_code_rate_t::C20_30)                     // 24
+        .value("C124_180", ::gr::dtv::dvb_code_rate_t::C124_180)                 // 25
+        .value("C25_36", ::gr::dtv::dvb_code_rate_t::C25_36)                     // 26
+        .value("C128_180", ::gr::dtv::dvb_code_rate_t::C128_180)                 // 27
+        .value("C13_18", ::gr::dtv::dvb_code_rate_t::C13_18)                     // 28
+        .value("C132_180", ::gr::dtv::dvb_code_rate_t::C132_180)                 // 29
+        .value("C22_30", ::gr::dtv::dvb_code_rate_t::C22_30)                     // 30
+        .value("C135_180", ::gr::dtv::dvb_code_rate_t::C135_180)                 // 31
+        .value("C140_180", ::gr::dtv::dvb_code_rate_t::C140_180)                 // 32
+        .value("C7_9", ::gr::dtv::dvb_code_rate_t::C7_9)                         // 33
+        .value("C154_180", ::gr::dtv::dvb_code_rate_t::C154_180)                 // 34
+        .value("C11_45", ::gr::dtv::dvb_code_rate_t::C11_45)                     // 35
+        .value("C4_15", ::gr::dtv::dvb_code_rate_t::C4_15)                       // 36
+        .value("C14_45", ::gr::dtv::dvb_code_rate_t::C14_45)                     // 37
+        .value("C7_15", ::gr::dtv::dvb_code_rate_t::C7_15)                       // 38
+        .value("C8_15", ::gr::dtv::dvb_code_rate_t::C8_15)                       // 39
+        .value("C32_45", ::gr::dtv::dvb_code_rate_t::C32_45)                     // 40
+        .value("C2_9_VLSNR", ::gr::dtv::dvb_code_rate_t::C2_9_VLSNR)             // 41
+        .value("C1_5_MEDIUM", ::gr::dtv::dvb_code_rate_t::C1_5_MEDIUM)           // 42
+        .value("C11_45_MEDIUM", ::gr::dtv::dvb_code_rate_t::C11_45_MEDIUM)       // 43
+        .value("C1_3_MEDIUM", ::gr::dtv::dvb_code_rate_t::C1_3_MEDIUM)           // 44
+        .value("C1_5_VLSNR_SF2", ::gr::dtv::dvb_code_rate_t::C1_5_VLSNR_SF2)     // 45
+        .value("C11_45_VLSNR_SF2", ::gr::dtv::dvb_code_rate_t::C11_45_VLSNR_SF2) // 46
+        .value("C1_5_VLSNR", ::gr::dtv::dvb_code_rate_t::C1_5_VLSNR)             // 47
+        .value("C4_15_VLSNR", ::gr::dtv::dvb_code_rate_t::C4_15_VLSNR)           // 48
+        .value("C1_3_VLSNR", ::gr::dtv::dvb_code_rate_t::C1_3_VLSNR)             // 49
+        .value("C_OTHER", ::gr::dtv::dvb_code_rate_t::C_OTHER)                   // 50
         .export_values();
     py::enum_<::gr::dtv::dvb_framesize_t>(m, "dvb_framesize_t")
-        .value("FECFRAME_SHORT", ::gr::dtv::FECFRAME_SHORT)   // 0
-        .value("FECFRAME_NORMAL", ::gr::dtv::FECFRAME_NORMAL) // 1
-        .value("FECFRAME_MEDIUM", ::gr::dtv::FECFRAME_MEDIUM) // 2
+        .value("FECFRAME_SHORT", ::gr::dtv::dvb_framesize_t::FECFRAME_SHORT)   // 0
+        .value("FECFRAME_NORMAL", ::gr::dtv::dvb_framesize_t::FECFRAME_NORMAL) // 1
+        .value("FECFRAME_MEDIUM", ::gr::dtv::dvb_framesize_t::FECFRAME_MEDIUM) // 2
         .export_values();
     py::enum_<::gr::dtv::dvb_constellation_t>(m, "dvb_constellation_t")
         .value("MOD_QPSK", ::gr::dtv::MOD_QPSK)                     // 0

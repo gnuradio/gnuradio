@@ -51,183 +51,183 @@ dvb_bbheader_bb_impl::dvb_bbheader_bb_impl(dvb_standard_t standard,
     nibble = TRUE;
     frame_size = framesize;
     BBHeader* f = &m_format[0].bb_header;
-    if (framesize == FECFRAME_NORMAL) {
+    if (framesize == dvb_framesize_t::FECFRAME_NORMAL) {
         switch (rate) {
-        case C1_4:
+        case dvb_code_rate_t::C1_4:
             kbch = 16008;
             break;
-        case C1_3:
+        case dvb_code_rate_t::C1_3:
             kbch = 21408;
             break;
-        case C2_5:
+        case dvb_code_rate_t::C2_5:
             kbch = 25728;
             break;
-        case C1_2:
+        case dvb_code_rate_t::C1_2:
             kbch = 32208;
             break;
-        case C3_5:
+        case dvb_code_rate_t::C3_5:
             kbch = 38688;
             break;
-        case C2_3:
+        case dvb_code_rate_t::C2_3:
             kbch = 43040;
             break;
-        case C3_4:
+        case dvb_code_rate_t::C3_4:
             kbch = 48408;
             break;
-        case C4_5:
+        case dvb_code_rate_t::C4_5:
             kbch = 51648;
             break;
-        case C5_6:
+        case dvb_code_rate_t::C5_6:
             kbch = 53840;
             break;
-        case C8_9:
+        case dvb_code_rate_t::C8_9:
             kbch = 57472;
             break;
-        case C9_10:
+        case dvb_code_rate_t::C9_10:
             kbch = 58192;
             break;
-        case C2_9_VLSNR:
+        case dvb_code_rate_t::C2_9_VLSNR:
             kbch = 14208;
             break;
-        case C13_45:
+        case dvb_code_rate_t::C13_45:
             kbch = 18528;
             break;
-        case C9_20:
+        case dvb_code_rate_t::C9_20:
             kbch = 28968;
             break;
-        case C90_180:
+        case dvb_code_rate_t::C90_180:
             kbch = 32208;
             break;
-        case C96_180:
+        case dvb_code_rate_t::C96_180:
             kbch = 34368;
             break;
-        case C11_20:
+        case dvb_code_rate_t::C11_20:
             kbch = 35448;
             break;
-        case C100_180:
+        case dvb_code_rate_t::C100_180:
             kbch = 35808;
             break;
-        case C104_180:
+        case dvb_code_rate_t::C104_180:
             kbch = 37248;
             break;
-        case C26_45:
+        case dvb_code_rate_t::C26_45:
             kbch = 37248;
             break;
-        case C18_30:
+        case dvb_code_rate_t::C18_30:
             kbch = 38688;
             break;
-        case C28_45:
+        case dvb_code_rate_t::C28_45:
             kbch = 40128;
             break;
-        case C23_36:
+        case dvb_code_rate_t::C23_36:
             kbch = 41208;
             break;
-        case C116_180:
+        case dvb_code_rate_t::C116_180:
             kbch = 41568;
             break;
-        case C20_30:
+        case dvb_code_rate_t::C20_30:
             kbch = 43008;
             break;
-        case C124_180:
+        case dvb_code_rate_t::C124_180:
             kbch = 44448;
             break;
-        case C25_36:
+        case dvb_code_rate_t::C25_36:
             kbch = 44808;
             break;
-        case C128_180:
+        case dvb_code_rate_t::C128_180:
             kbch = 45888;
             break;
-        case C13_18:
+        case dvb_code_rate_t::C13_18:
             kbch = 46608;
             break;
-        case C132_180:
+        case dvb_code_rate_t::C132_180:
             kbch = 47328;
             break;
-        case C22_30:
+        case dvb_code_rate_t::C22_30:
             kbch = 47328;
             break;
-        case C135_180:
+        case dvb_code_rate_t::C135_180:
             kbch = 48408;
             break;
-        case C140_180:
+        case dvb_code_rate_t::C140_180:
             kbch = 50208;
             break;
-        case C7_9:
+        case dvb_code_rate_t::C7_9:
             kbch = 50208;
             break;
-        case C154_180:
+        case dvb_code_rate_t::C154_180:
             kbch = 55248;
             break;
         default:
             kbch = 0;
             break;
         }
-    } else if (framesize == FECFRAME_SHORT) {
+    } else if (framesize == dvb_framesize_t::FECFRAME_SHORT) {
         switch (rate) {
-        case C1_4:
+        case dvb_code_rate_t::C1_4:
             kbch = 3072;
             break;
-        case C1_3:
+        case dvb_code_rate_t::C1_3:
             kbch = 5232;
             break;
-        case C2_5:
+        case dvb_code_rate_t::C2_5:
             kbch = 6312;
             break;
-        case C1_2:
+        case dvb_code_rate_t::C1_2:
             kbch = 7032;
             break;
-        case C3_5:
+        case dvb_code_rate_t::C3_5:
             kbch = 9552;
             break;
-        case C2_3:
+        case dvb_code_rate_t::C2_3:
             kbch = 10632;
             break;
-        case C3_4:
+        case dvb_code_rate_t::C3_4:
             kbch = 11712;
             break;
-        case C4_5:
+        case dvb_code_rate_t::C4_5:
             kbch = 12432;
             break;
-        case C5_6:
+        case dvb_code_rate_t::C5_6:
             kbch = 13152;
             break;
-        case C8_9:
+        case dvb_code_rate_t::C8_9:
             kbch = 14232;
             break;
-        case C11_45:
+        case dvb_code_rate_t::C11_45:
             kbch = 3792;
             break;
-        case C4_15:
+        case dvb_code_rate_t::C4_15:
             kbch = 4152;
             break;
-        case C14_45:
+        case dvb_code_rate_t::C14_45:
             kbch = 4872;
             break;
-        case C7_15:
+        case dvb_code_rate_t::C7_15:
             kbch = 7392;
             break;
-        case C8_15:
+        case dvb_code_rate_t::C8_15:
             kbch = 8472;
             break;
-        case C26_45:
+        case dvb_code_rate_t::C26_45:
             kbch = 9192;
             break;
-        case C32_45:
+        case dvb_code_rate_t::C32_45:
             kbch = 11352;
             break;
-        case C1_5_VLSNR_SF2:
+        case dvb_code_rate_t::C1_5_VLSNR_SF2:
             kbch = 2512;
             break;
-        case C11_45_VLSNR_SF2:
+        case dvb_code_rate_t::C11_45_VLSNR_SF2:
             kbch = 3792;
             break;
-        case C1_5_VLSNR:
+        case dvb_code_rate_t::C1_5_VLSNR:
             kbch = 3072;
             break;
-        case C4_15_VLSNR:
+        case dvb_code_rate_t::C4_15_VLSNR:
             kbch = 4152;
             break;
-        case C1_3_VLSNR:
+        case dvb_code_rate_t::C1_3_VLSNR:
             kbch = 5232;
             break;
         default:
@@ -236,13 +236,13 @@ dvb_bbheader_bb_impl::dvb_bbheader_bb_impl(dvb_standard_t standard,
         }
     } else {
         switch (rate) {
-        case C1_5_MEDIUM:
+        case dvb_code_rate_t::C1_5_MEDIUM:
             kbch = 5660;
             break;
-        case C11_45_MEDIUM:
+        case dvb_code_rate_t::C11_45_MEDIUM:
             kbch = 7740;
             break;
-        case C1_3_MEDIUM:
+        case dvb_code_rate_t::C1_3_MEDIUM:
             kbch = 10620;
             break;
         default:
@@ -285,7 +285,7 @@ dvb_bbheader_bb_impl::dvb_bbheader_bb_impl(dvb_standard_t standard,
     fec_block = 0;
     ts_rate = tsrate;
     extra = (((kbch - 80) / 8) / 187) + 1;
-    if (framesize != FECFRAME_MEDIUM) {
+    if (framesize != dvb_framesize_t::FECFRAME_MEDIUM) {
         set_output_multiple(kbch);
     } else {
         set_output_multiple(kbch * 2);
@@ -301,7 +301,7 @@ void dvb_bbheader_bb_impl::forecast(int noutput_items,
                                     gr_vector_int& ninput_items_required)
 {
     if (input_mode == INPUTMODE_NORMAL) {
-        if (frame_size != FECFRAME_MEDIUM) {
+        if (frame_size != dvb_framesize_t::FECFRAME_MEDIUM) {
             ninput_items_required[0] = ((noutput_items - 80) / 8);
         } else {
             ninput_items_required[0] = ((noutput_items - 160) / 8);
@@ -474,7 +474,7 @@ int dvb_bbheader_bb_impl::general_work(int noutput_items,
     unsigned char b;
 
     for (int i = 0; i < noutput_items; i += kbch) {
-        if (frame_size != FECFRAME_MEDIUM) {
+        if (frame_size != dvb_framesize_t::FECFRAME_MEDIUM) {
             if (fec_block == 0 && inband_type_b == TRUE) {
                 padding = 104;
             } else {

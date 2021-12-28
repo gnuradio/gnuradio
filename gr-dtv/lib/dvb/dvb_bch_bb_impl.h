@@ -24,7 +24,7 @@ private:
     unsigned int kbch;
     unsigned int nbch;
     unsigned int bch_code;
-    unsigned int frame_size;
+    dvb_framesize_t frame_size;
 
     std::bitset<MAX_BCH_PARITY_BITS> crc_table[256];
     std::bitset<MAX_BCH_PARITY_BITS> crc_medium_table[16];

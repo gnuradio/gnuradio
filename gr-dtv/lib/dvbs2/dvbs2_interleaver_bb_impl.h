@@ -21,7 +21,7 @@ class dvbs2_interleaver_bb_impl : public dvbs2_interleaver_bb
 private:
     int frame_size;
     int signal_constellation;
-    int code_rate;
+    dvb_code_rate_t code_rate;
     int mod;
     int packed_items;
     int rowaddr0;

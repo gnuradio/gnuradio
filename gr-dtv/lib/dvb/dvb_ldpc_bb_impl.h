@@ -21,10 +21,10 @@ class dvb_ldpc_bb_impl : public dvb_ldpc_bb
 private:
     unsigned int frame_size;
     unsigned int frame_size_real;
-    unsigned int frame_size_type;
+    dvb_framesize_t frame_size_type;
     unsigned int signal_constellation;
     unsigned int nbch;
-    unsigned int code_rate;
+    dvb_code_rate_t code_rate;
     unsigned int q_val;
     unsigned int dvb_standard;
     int Xs;

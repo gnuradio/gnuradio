@@ -79,11 +79,11 @@ dvbs2_modulator_bc_impl::dvbs2_modulator_bc_impl(dvb_framesize_t framesize,
     case MOD_8APSK:
         r3 = m;
         switch (rate) {
-        case C100_180:
+        case dvb_code_rate_t::C100_180:
             r1 = r3 / 6.8;
             r2 = r1 * 5.32;
             break;
-        case C104_180:
+        case dvb_code_rate_t::C104_180:
             r1 = r3 / 8.0;
             r2 = r1 * 6.39;
             break;
@@ -109,44 +109,44 @@ dvbs2_modulator_bc_impl::dvbs2_modulator_bc_impl(dvb_framesize_t framesize,
         break;
     case MOD_16APSK:
         r2 = m;
-        if (framesize == FECFRAME_NORMAL) {
+        if (framesize == dvb_framesize_t::FECFRAME_NORMAL) {
             switch (rate) {
-            case C2_3:
+            case dvb_code_rate_t::C2_3:
                 r1 = r2 / 3.15;
                 break;
-            case C3_4:
+            case dvb_code_rate_t::C3_4:
                 r1 = r2 / 2.85;
                 break;
-            case C4_5:
+            case dvb_code_rate_t::C4_5:
                 r1 = r2 / 2.75;
                 break;
-            case C5_6:
+            case dvb_code_rate_t::C5_6:
                 r1 = r2 / 2.70;
                 break;
-            case C8_9:
+            case dvb_code_rate_t::C8_9:
                 r1 = r2 / 2.60;
                 break;
-            case C9_10:
+            case dvb_code_rate_t::C9_10:
                 r1 = r2 / 2.57;
                 break;
-            case C26_45:
-            case C3_5:
+            case dvb_code_rate_t::C26_45:
+            case dvb_code_rate_t::C3_5:
                 r1 = r2 / 3.70;
                 break;
-            case C28_45:
+            case dvb_code_rate_t::C28_45:
                 r1 = r2 / 3.50;
                 break;
-            case C23_36:
-            case C25_36:
+            case dvb_code_rate_t::C23_36:
+            case dvb_code_rate_t::C25_36:
                 r1 = r2 / 3.10;
                 break;
-            case C13_18:
+            case dvb_code_rate_t::C13_18:
                 r1 = r2 / 2.85;
                 break;
-            case C140_180:
+            case dvb_code_rate_t::C140_180:
                 r1 = r2 / 3.60;
                 break;
-            case C154_180:
+            case dvb_code_rate_t::C154_180:
                 r1 = r2 / 3.20;
                 break;
             default:
@@ -155,32 +155,32 @@ dvbs2_modulator_bc_impl::dvbs2_modulator_bc_impl(dvb_framesize_t framesize,
             }
         } else {
             switch (rate) {
-            case C2_3:
+            case dvb_code_rate_t::C2_3:
                 r1 = r2 / 3.15;
                 break;
-            case C3_4:
+            case dvb_code_rate_t::C3_4:
                 r1 = r2 / 2.85;
                 break;
-            case C4_5:
+            case dvb_code_rate_t::C4_5:
                 r1 = r2 / 2.75;
                 break;
-            case C5_6:
+            case dvb_code_rate_t::C5_6:
                 r1 = r2 / 2.70;
                 break;
-            case C8_9:
+            case dvb_code_rate_t::C8_9:
                 r1 = r2 / 2.60;
                 break;
-            case C7_15:
+            case dvb_code_rate_t::C7_15:
                 r1 = r2 / 3.32;
                 break;
-            case C8_15:
+            case dvb_code_rate_t::C8_15:
                 r1 = r2 / 3.50;
                 break;
-            case C26_45:
-            case C3_5:
+            case dvb_code_rate_t::C26_45:
+            case dvb_code_rate_t::C3_5:
                 r1 = r2 / 3.70;
                 break;
-            case C32_45:
+            case dvb_code_rate_t::C32_45:
                 r1 = r2 / 2.85;
                 break;
             default:
@@ -220,7 +220,7 @@ dvbs2_modulator_bc_impl::dvbs2_modulator_bc_impl(dvb_framesize_t framesize,
             gr_complex((r1 * cos(-3 * GR_M_PI / 4.0)), (r1 * sin(-3 * GR_M_PI / 4.0)));
         break;
     case MOD_8_8APSK:
-        if (rate == C18_30) {
+        if (rate == dvb_code_rate_t::C18_30) {
             m_16apsk[0] = gr_complex(0.4718, 0.2606);
             m_16apsk[1] = gr_complex(0.2606, 0.4718);
             m_16apsk[2] = gr_complex(-0.4718, 0.2606);
@@ -237,7 +237,7 @@ dvbs2_modulator_bc_impl::dvbs2_modulator_bc_impl(dvb_framesize_t framesize,
             m_16apsk[13] = gr_complex(0.4984, -1.2088);
             m_16apsk[14] = gr_complex(-1.2088, -0.4984);
             m_16apsk[15] = gr_complex(-0.4984, -1.2088);
-        } else if (rate == C20_30) {
+        } else if (rate == dvb_code_rate_t::C20_30) {
             m_16apsk[0] = gr_complex(0.5061, 0.2474);
             m_16apsk[1] = gr_complex(0.2474, 0.5061);
             m_16apsk[2] = gr_complex(-0.5061, 0.2474);
@@ -257,9 +257,9 @@ dvbs2_modulator_bc_impl::dvbs2_modulator_bc_impl(dvb_framesize_t framesize,
         } else {
             r2 = m;
             switch (rate) {
-            case C90_180:
-            case C96_180:
-            case C100_180:
+            case dvb_code_rate_t::C90_180:
+            case dvb_code_rate_t::C96_180:
+            case dvb_code_rate_t::C100_180:
                 r1 = r2 / 2.19;
                 break;
             default:
@@ -306,23 +306,23 @@ dvbs2_modulator_bc_impl::dvbs2_modulator_bc_impl(dvb_framesize_t framesize,
     case MOD_32APSK:
         r3 = m;
         switch (rate) {
-        case C3_4:
+        case dvb_code_rate_t::C3_4:
             r1 = r3 / 5.27;
             r2 = r1 * 2.84;
             break;
-        case C4_5:
+        case dvb_code_rate_t::C4_5:
             r1 = r3 / 4.87;
             r2 = r1 * 2.72;
             break;
-        case C5_6:
+        case dvb_code_rate_t::C5_6:
             r1 = r3 / 4.64;
             r2 = r1 * 2.64;
             break;
-        case C8_9:
+        case dvb_code_rate_t::C8_9:
             r1 = r3 / 4.33;
             r2 = r1 * 2.54;
             break;
-        case C9_10:
+        case dvb_code_rate_t::C9_10:
             r1 = r3 / 4.30;
             r2 = r1 * 2.53;
             break;
@@ -389,9 +389,9 @@ dvbs2_modulator_bc_impl::dvbs2_modulator_bc_impl(dvb_framesize_t framesize,
         break;
     case MOD_4_12_16APSK:
         r3 = m;
-        if (framesize == FECFRAME_NORMAL) {
+        if (framesize == dvb_framesize_t::FECFRAME_NORMAL) {
             switch (rate) {
-            case C2_3:
+            case dvb_code_rate_t::C2_3:
                 r1 = r3 / 5.55;
                 r2 = r1 * 2.85;
                 break;
@@ -402,11 +402,11 @@ dvbs2_modulator_bc_impl::dvbs2_modulator_bc_impl(dvb_framesize_t framesize,
             }
         } else {
             switch (rate) {
-            case C2_3:
+            case dvb_code_rate_t::C2_3:
                 r1 = r3 / 5.54;
                 r2 = r1 * 2.84;
                 break;
-            case C32_45:
+            case dvb_code_rate_t::C32_45:
                 r1 = r3 / 5.26;
                 r2 = r1 * 2.84;
                 break;
@@ -484,17 +484,17 @@ dvbs2_modulator_bc_impl::dvbs2_modulator_bc_impl(dvb_framesize_t framesize,
     case MOD_4_8_4_16APSK:
         r4 = m;
         switch (rate) {
-        case C128_180:
+        case dvb_code_rate_t::C128_180:
             r1 = r4 / 5.6;
             r3 = r1 * 2.99;
             r2 = r1 * 2.6;
             break;
-        case C132_180:
+        case dvb_code_rate_t::C132_180:
             r1 = r4 / 5.6;
             r3 = r1 * 2.86;
             r2 = r1 * 2.6;
             break;
-        case C140_180:
+        case dvb_code_rate_t::C140_180:
             r1 = r4 / 5.6;
             r3 = r1 * 3.08;
             r2 = r1 * 2.6;
@@ -575,7 +575,7 @@ dvbs2_modulator_bc_impl::dvbs2_modulator_bc_impl(dvb_framesize_t framesize,
     case MOD_64APSK:
         r4 = m;
         switch (rate) {
-        case C128_180:
+        case dvb_code_rate_t::C128_180:
             r1 = r4 / 3.95;
             r3 = r1 * 2.72;
             r2 = r1 * 1.88;
@@ -720,13 +720,13 @@ dvbs2_modulator_bc_impl::dvbs2_modulator_bc_impl(dvb_framesize_t framesize,
     case MOD_8_16_20_20APSK:
         r4 = m;
         switch (rate) {
-        case C7_9:
-        case C4_5:
+        case dvb_code_rate_t::C7_9:
+        case dvb_code_rate_t::C4_5:
             r1 = r4 / 5.2;
             r3 = r1 * 3.6;
             r2 = r1 * 2.2;
             break;
-        case C5_6:
+        case dvb_code_rate_t::C5_6:
             r1 = r4 / 5.0;
             r3 = r1 * 3.5;
             r2 = r1 * 2.2;
@@ -869,7 +869,7 @@ dvbs2_modulator_bc_impl::dvbs2_modulator_bc_impl(dvb_framesize_t framesize,
     case MOD_4_12_20_28APSK:
         r4 = m;
         switch (rate) {
-        case C132_180:
+        case dvb_code_rate_t::C132_180:
             r1 = r4 / 7.0;
             r3 = r1 * 4.3;
             r2 = r1 * 2.4;
@@ -1011,14 +1011,14 @@ dvbs2_modulator_bc_impl::dvbs2_modulator_bc_impl(dvb_framesize_t framesize,
     case MOD_128APSK:
         r6 = m;
         switch (rate) {
-        case C135_180:
+        case dvb_code_rate_t::C135_180:
             r1 = r6 / 3.819;
             r5 = r1 * 2.75;
             r4 = r1 * 2.681;
             r3 = r1 * 2.118;
             r2 = r1 * 1.715;
             break;
-        case C140_180:
+        case dvb_code_rate_t::C140_180:
             r1 = r6 / 3.733;
             r5 = r1 * 2.75;
             r4 = r1 * 2.681;
@@ -1299,7 +1299,7 @@ dvbs2_modulator_bc_impl::dvbs2_modulator_bc_impl(dvb_framesize_t framesize,
                                     (r4 * sin(1121 * GR_M_PI / 840.0)));
         break;
     case MOD_256APSK:
-        if (rate == C20_30) {
+        if (rate == dvb_code_rate_t::C20_30) {
             m_256apsk[0] = gr_complex(1.6350, 0.1593);
             m_256apsk[1] = gr_complex(1.5776, 0.4735);
             m_256apsk[2] = gr_complex(0.9430, 0.1100);
@@ -1556,7 +1556,7 @@ dvbs2_modulator_bc_impl::dvbs2_modulator_bc_impl(dvb_framesize_t framesize,
             m_256apsk[253] = gr_complex(-0.1909, -0.3627);
             m_256apsk[254] = gr_complex(-0.3224, -0.5236);
             m_256apsk[255] = gr_complex(-0.3016, -0.5347);
-        } else if (rate == C22_30) {
+        } else if (rate == dvb_code_rate_t::C22_30) {
             m_256apsk[0] = gr_complex(1.5977, 0.1526);
             m_256apsk[1] = gr_complex(1.3187, 0.1269);
             m_256apsk[2] = gr_complex(-1.5977, 0.1526);
@@ -1816,8 +1816,8 @@ dvbs2_modulator_bc_impl::dvbs2_modulator_bc_impl(dvb_framesize_t framesize,
         } else {
             r8 = m;
             switch (rate) {
-            case C116_180:
-            case C124_180:
+            case dvb_code_rate_t::C116_180:
+            case dvb_code_rate_t::C124_180:
                 r1 = r8 / 6.536;
                 r7 = r1 * 5.078;
                 r6 = r1 * 4.235;
@@ -1826,7 +1826,7 @@ dvbs2_modulator_bc_impl::dvbs2_modulator_bc_impl(dvb_framesize_t framesize,
                 r3 = r1 * 2.405;
                 r2 = r1 * 1.791;
                 break;
-            case C128_180:
+            case dvb_code_rate_t::C128_180:
                 r1 = r8 / 5.4;
                 r7 = r1 * 4.6;
                 r6 = r1 * 4.045;
@@ -1835,7 +1835,7 @@ dvbs2_modulator_bc_impl::dvbs2_modulator_bc_impl(dvb_framesize_t framesize,
                 r3 = r1 * 2.409;
                 r2 = r1 * 1.794;
                 break;
-            case C135_180:
+            case dvb_code_rate_t::C135_180:
                 r1 = r8 / 5.2;
                 r7 = r1 * 4.5;
                 r6 = r1 * 4.045;

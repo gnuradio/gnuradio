@@ -16,7 +16,7 @@ enum dvb_standard_t {
     STANDARD_DVBT2,
 };
 
-enum dvb_code_rate_t {
+enum class dvb_code_rate_t {
     C1_4 = 0,
     C1_3,
     C2_5,
@@ -70,7 +70,7 @@ enum dvb_code_rate_t {
     C_OTHER,
 };
 
-enum dvb_framesize_t {
+enum class dvb_framesize_t {
     FECFRAME_SHORT = 0,
     FECFRAME_NORMAL,
     FECFRAME_MEDIUM,

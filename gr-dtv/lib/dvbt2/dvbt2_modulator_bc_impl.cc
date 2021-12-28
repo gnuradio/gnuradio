@@ -44,7 +44,7 @@ dvbt2_modulator_bc_impl::dvbt2_modulator_bc_impl(dvb_framesize_t framesize,
     int real_index, imag_index;
     gr_complex temp;
     cyclic_delay = FALSE;
-    if (framesize == FECFRAME_NORMAL) {
+    if (framesize == dvb_framesize_t::FECFRAME_NORMAL) {
         switch (constellation) {
         case MOD_QPSK:
             cell_size = 32400;

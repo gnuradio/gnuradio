@@ -37,17 +37,19 @@ dvbs2_interleaver_bb_impl::dvbs2_interleaver_bb_impl(dvb_framesize_t framesize,
     int rows;
     signal_constellation = constellation;
     code_rate = rate;
-    if (framesize == FECFRAME_NORMAL) {
+    if (framesize == dvb_framesize_t::FECFRAME_NORMAL) {
         frame_size = FRAME_SIZE_NORMAL;
-        if (rate == C2_9_VLSNR) {
+        if (rate == dvb_code_rate_t::C2_9_VLSNR) {
             frame_size = FRAME_SIZE_NORMAL - NORMAL_PUNCTURING;
         }
-    } else if (framesize == FECFRAME_SHORT) {
+    } else if (framesize == dvb_framesize_t::FECFRAME_SHORT) {
         frame_size = FRAME_SIZE_SHORT;
-        if (rate == C1_5_VLSNR_SF2 || rate == C11_45_VLSNR_SF2) {
+        if (rate == dvb_code_rate_t::C1_5_VLSNR_SF2 ||
+            rate == dvb_code_rate_t::C11_45_VLSNR_SF2) {
             frame_size = FRAME_SIZE_SHORT - SHORT_PUNCTURING_SET1;
         }
-        if (rate == C1_5_VLSNR || rate == C4_15_VLSNR || rate == C1_3_VLSNR) {
+        if (rate == dvb_code_rate_t::C1_5_VLSNR || rate == dvb_code_rate_t::C4_15_VLSNR ||
+            rate == dvb_code_rate_t::C1_3_VLSNR) {
             frame_size = FRAME_SIZE_SHORT - SHORT_PUNCTURING_SET2;
         }
     } else {
@@ -76,14 +78,15 @@ dvbs2_interleaver_bb_impl::dvbs2_interleaver_bb_impl(dvb_framesize_t framesize,
         mod = 3;
         rows = frame_size / mod;
         /* 210 */
-        if (rate == C3_5) {
+        if (rate == dvb_code_rate_t::C3_5) {
             rowaddr0 = rows * 2;
             rowaddr1 = rows;
             rowaddr2 = 0;
         }
         /* 102 */
-        else if (rate == C25_36 || rate == C13_18 || rate == C7_15 || rate == C8_15 ||
-                 rate == C26_45) {
+        else if (rate == dvb_code_rate_t::C25_36 || rate == dvb_code_rate_t::C13_18 ||
+                 rate == dvb_code_rate_t::C7_15 || rate == dvb_code_rate_t::C8_15 ||
+                 rate == dvb_code_rate_t::C26_45) {
             rowaddr0 = rows;
             rowaddr1 = 0;
             rowaddr2 = rows * 2;
@@ -110,7 +113,7 @@ dvbs2_interleaver_bb_impl::dvbs2_interleaver_bb_impl(dvb_framesize_t framesize,
     case MOD_16APSK:
         mod = 4;
         rows = frame_size / mod;
-        if (rate == C26_45) {
+        if (rate == dvb_code_rate_t::C26_45) {
             /* 3201 */
             if (frame_size == FRAME_SIZE_NORMAL) {
                 rowaddr0 = rows * 3;
@@ -125,7 +128,7 @@ dvbs2_interleaver_bb_impl::dvbs2_interleaver_bb_impl(dvb_framesize_t framesize,
                 rowaddr2 = rows * 3;
                 rowaddr3 = 0;
             }
-        } else if (rate == C3_5) {
+        } else if (rate == dvb_code_rate_t::C3_5) {
             /* 3210 */
             if (frame_size == FRAME_SIZE_NORMAL) {
                 rowaddr0 = rows * 3;
@@ -142,42 +145,42 @@ dvbs2_interleaver_bb_impl::dvbs2_interleaver_bb_impl(dvb_framesize_t framesize,
             }
         }
         /* 3012 */
-        else if (rate == C28_45) {
+        else if (rate == dvb_code_rate_t::C28_45) {
             rowaddr0 = rows * 3;
             rowaddr1 = 0;
             rowaddr2 = rows;
             rowaddr3 = rows * 2;
         }
         /* 3021 */
-        else if (rate == C23_36 || rate == C13_18) {
+        else if (rate == dvb_code_rate_t::C23_36 || rate == dvb_code_rate_t::C13_18) {
             rowaddr0 = rows * 3;
             rowaddr1 = 0;
             rowaddr2 = rows * 2;
             rowaddr3 = rows;
         }
         /* 2310 */
-        else if (rate == C25_36) {
+        else if (rate == dvb_code_rate_t::C25_36) {
             rowaddr0 = rows * 2;
             rowaddr1 = rows * 3;
             rowaddr2 = rows;
             rowaddr3 = 0;
         }
         /* 2103 */
-        else if (rate == C7_15 || rate == C8_15) {
+        else if (rate == dvb_code_rate_t::C7_15 || rate == dvb_code_rate_t::C8_15) {
             rowaddr0 = rows * 2;
             rowaddr1 = rows;
             rowaddr2 = 0;
             rowaddr3 = rows * 3;
         }
         /* 3210 */
-        else if (rate == C140_180) {
+        else if (rate == dvb_code_rate_t::C140_180) {
             rowaddr0 = rows * 3;
             rowaddr1 = rows * 2;
             rowaddr2 = rows;
             rowaddr3 = 0;
         }
         /* 0321 */
-        else if (rate == C154_180) {
+        else if (rate == dvb_code_rate_t::C154_180) {
             rowaddr0 = 0;
             rowaddr1 = rows * 3;
             rowaddr2 = rows * 2;
@@ -197,21 +200,21 @@ dvbs2_interleaver_bb_impl::dvbs2_interleaver_bb_impl(dvb_framesize_t framesize,
         mod = 4;
         rows = frame_size / mod;
         /* 3210 */
-        if (rate == C90_180) {
+        if (rate == dvb_code_rate_t::C90_180) {
             rowaddr0 = rows * 3;
             rowaddr1 = rows * 2;
             rowaddr2 = rows;
             rowaddr3 = 0;
         }
         /* 2310 */
-        else if (rate == C96_180) {
+        else if (rate == dvb_code_rate_t::C96_180) {
             rowaddr0 = rows * 2;
             rowaddr1 = rows * 3;
             rowaddr2 = rows;
             rowaddr3 = 0;
         }
         /* 2301 */
-        else if (rate == C100_180) {
+        else if (rate == dvb_code_rate_t::C100_180) {
             rowaddr0 = rows * 2;
             rowaddr1 = rows * 3;
             rowaddr2 = 0;
@@ -251,7 +254,7 @@ dvbs2_interleaver_bb_impl::dvbs2_interleaver_bb_impl(dvb_framesize_t framesize,
             rowaddr4 = 0;
         } else {
             /* 41230 */
-            if (rate == C2_3) {
+            if (rate == dvb_code_rate_t::C2_3) {
                 rowaddr0 = rows * 4;
                 rowaddr1 = rows;
                 rowaddr2 = rows * 2;
@@ -259,7 +262,7 @@ dvbs2_interleaver_bb_impl::dvbs2_interleaver_bb_impl(dvb_framesize_t framesize,
                 rowaddr4 = 0;
             }
             /* 10423 */
-            else if (rate == C32_45) {
+            else if (rate == dvb_code_rate_t::C32_45) {
                 rowaddr0 = rows;
                 rowaddr1 = 0;
                 rowaddr2 = rows * 4;
@@ -274,7 +277,7 @@ dvbs2_interleaver_bb_impl::dvbs2_interleaver_bb_impl(dvb_framesize_t framesize,
         mod = 5;
         rows = frame_size / mod;
         /* 40213 */
-        if (rate == C140_180) {
+        if (rate == dvb_code_rate_t::C140_180) {
             rowaddr0 = rows * 4;
             rowaddr1 = 0;
             rowaddr2 = rows * 2;
@@ -309,7 +312,7 @@ dvbs2_interleaver_bb_impl::dvbs2_interleaver_bb_impl(dvb_framesize_t framesize,
         mod = 6;
         rows = frame_size / mod;
         /* 201543 */
-        if (rate == C7_9) {
+        if (rate == dvb_code_rate_t::C7_9) {
             rowaddr0 = rows * 2;
             rowaddr1 = 0;
             rowaddr2 = rows;
@@ -318,7 +321,7 @@ dvbs2_interleaver_bb_impl::dvbs2_interleaver_bb_impl(dvb_framesize_t framesize,
             rowaddr5 = rows * 3;
         }
         /* 124053 */
-        else if (rate == C4_5) {
+        else if (rate == dvb_code_rate_t::C4_5) {
             rowaddr0 = rows;
             rowaddr1 = rows * 2;
             rowaddr2 = rows * 4;
@@ -327,7 +330,7 @@ dvbs2_interleaver_bb_impl::dvbs2_interleaver_bb_impl(dvb_framesize_t framesize,
             rowaddr5 = rows * 3;
         }
         /* 421053 */
-        else if (rate == C5_6) {
+        else if (rate == dvb_code_rate_t::C5_6) {
             rowaddr0 = rows * 4;
             rowaddr1 = rows * 2;
             rowaddr2 = rows;
@@ -355,7 +358,7 @@ dvbs2_interleaver_bb_impl::dvbs2_interleaver_bb_impl(dvb_framesize_t framesize,
         mod = 7;
         rows = (frame_size + 6) / mod;
         /* 4250316 */
-        if (rate == C135_180) {
+        if (rate == dvb_code_rate_t::C135_180) {
             rowaddr0 = rows * 4;
             rowaddr1 = rows * 2;
             rowaddr2 = rows * 5;
@@ -365,7 +368,7 @@ dvbs2_interleaver_bb_impl::dvbs2_interleaver_bb_impl(dvb_framesize_t framesize,
             rowaddr6 = rows * 6;
         }
         /* 4130256 */
-        else if (rate == C140_180) {
+        else if (rate == dvb_code_rate_t::C140_180) {
             rowaddr0 = rows * 4;
             rowaddr1 = rows;
             rowaddr2 = rows * 3;
@@ -381,7 +384,7 @@ dvbs2_interleaver_bb_impl::dvbs2_interleaver_bb_impl(dvb_framesize_t framesize,
         mod = 8;
         rows = frame_size / mod;
         /* 40372156 */
-        if (rate == C116_180) {
+        if (rate == dvb_code_rate_t::C116_180) {
             rowaddr0 = rows * 4;
             rowaddr1 = 0;
             rowaddr2 = rows * 3;
@@ -392,7 +395,7 @@ dvbs2_interleaver_bb_impl::dvbs2_interleaver_bb_impl(dvb_framesize_t framesize,
             rowaddr7 = rows * 6;
         }
         /* 46320571 */
-        else if (rate == C124_180) {
+        else if (rate == dvb_code_rate_t::C124_180) {
             rowaddr0 = rows * 4;
             rowaddr1 = rows * 6;
             rowaddr2 = rows * 3;
@@ -403,7 +406,7 @@ dvbs2_interleaver_bb_impl::dvbs2_interleaver_bb_impl(dvb_framesize_t framesize,
             rowaddr7 = rows;
         }
         /* 75642301 */
-        else if (rate == C128_180) {
+        else if (rate == dvb_code_rate_t::C128_180) {
             rowaddr0 = rows * 7;
             rowaddr1 = rows * 5;
             rowaddr2 = rows * 6;
@@ -414,7 +417,7 @@ dvbs2_interleaver_bb_impl::dvbs2_interleaver_bb_impl(dvb_framesize_t framesize,
             rowaddr7 = rows;
         }
         /* 50743612 */
-        else if (rate == C135_180) {
+        else if (rate == dvb_code_rate_t::C135_180) {
             rowaddr0 = rows * 5;
             rowaddr1 = 0;
             rowaddr2 = rows * 7;

@@ -32,179 +32,179 @@ dvb_bch_bb_impl::dvb_bch_bb_impl(dvb_standard_t standard,
                 gr::io_signature::make(1, 1, sizeof(unsigned char)),
                 gr::io_signature::make(1, 1, sizeof(unsigned char)))
 {
-    if (framesize == FECFRAME_NORMAL) {
+    if (framesize == dvb_framesize_t::FECFRAME_NORMAL) {
         switch (rate) {
-        case C1_4:
+        case dvb_code_rate_t::C1_4:
             kbch = 16008;
             nbch = 16200;
             bch_code = BCH_CODE_N12;
             break;
-        case C1_3:
+        case dvb_code_rate_t::C1_3:
             kbch = 21408;
             nbch = 21600;
             bch_code = BCH_CODE_N12;
             break;
-        case C2_5:
+        case dvb_code_rate_t::C2_5:
             kbch = 25728;
             nbch = 25920;
             bch_code = BCH_CODE_N12;
             break;
-        case C1_2:
+        case dvb_code_rate_t::C1_2:
             kbch = 32208;
             nbch = 32400;
             bch_code = BCH_CODE_N12;
             break;
-        case C3_5:
+        case dvb_code_rate_t::C3_5:
             kbch = 38688;
             nbch = 38880;
             bch_code = BCH_CODE_N12;
             break;
-        case C2_3:
+        case dvb_code_rate_t::C2_3:
             kbch = 43040;
             nbch = 43200;
             bch_code = BCH_CODE_N10;
             break;
-        case C3_4:
+        case dvb_code_rate_t::C3_4:
             kbch = 48408;
             nbch = 48600;
             bch_code = BCH_CODE_N12;
             break;
-        case C4_5:
+        case dvb_code_rate_t::C4_5:
             kbch = 51648;
             nbch = 51840;
             bch_code = BCH_CODE_N12;
             break;
-        case C5_6:
+        case dvb_code_rate_t::C5_6:
             kbch = 53840;
             nbch = 54000;
             bch_code = BCH_CODE_N10;
             break;
-        case C8_9:
+        case dvb_code_rate_t::C8_9:
             kbch = 57472;
             nbch = 57600;
             bch_code = BCH_CODE_N8;
             break;
-        case C9_10:
+        case dvb_code_rate_t::C9_10:
             kbch = 58192;
             nbch = 58320;
             bch_code = BCH_CODE_N8;
             break;
-        case C2_9_VLSNR:
+        case dvb_code_rate_t::C2_9_VLSNR:
             kbch = 14208;
             nbch = 14400;
             bch_code = BCH_CODE_N12;
             break;
-        case C13_45:
+        case dvb_code_rate_t::C13_45:
             kbch = 18528;
             nbch = 18720;
             bch_code = BCH_CODE_N12;
             break;
-        case C9_20:
+        case dvb_code_rate_t::C9_20:
             kbch = 28968;
             nbch = 29160;
             bch_code = BCH_CODE_N12;
             break;
-        case C90_180:
+        case dvb_code_rate_t::C90_180:
             kbch = 32208;
             nbch = 32400;
             bch_code = BCH_CODE_N12;
             break;
-        case C96_180:
+        case dvb_code_rate_t::C96_180:
             kbch = 34368;
             nbch = 34560;
             bch_code = BCH_CODE_N12;
             break;
-        case C11_20:
+        case dvb_code_rate_t::C11_20:
             kbch = 35448;
             nbch = 35640;
             bch_code = BCH_CODE_N12;
             break;
-        case C100_180:
+        case dvb_code_rate_t::C100_180:
             kbch = 35808;
             nbch = 36000;
             bch_code = BCH_CODE_N12;
             break;
-        case C104_180:
+        case dvb_code_rate_t::C104_180:
             kbch = 37248;
             nbch = 37440;
             bch_code = BCH_CODE_N12;
             break;
-        case C26_45:
+        case dvb_code_rate_t::C26_45:
             kbch = 37248;
             nbch = 37440;
             bch_code = BCH_CODE_N12;
             break;
-        case C18_30:
+        case dvb_code_rate_t::C18_30:
             kbch = 38688;
             nbch = 38880;
             bch_code = BCH_CODE_N12;
             break;
-        case C28_45:
+        case dvb_code_rate_t::C28_45:
             kbch = 40128;
             nbch = 40320;
             bch_code = BCH_CODE_N12;
             break;
-        case C23_36:
+        case dvb_code_rate_t::C23_36:
             kbch = 41208;
             nbch = 41400;
             bch_code = BCH_CODE_N12;
             break;
-        case C116_180:
+        case dvb_code_rate_t::C116_180:
             kbch = 41568;
             nbch = 41760;
             bch_code = BCH_CODE_N12;
             break;
-        case C20_30:
+        case dvb_code_rate_t::C20_30:
             kbch = 43008;
             nbch = 43200;
             bch_code = BCH_CODE_N12;
             break;
-        case C124_180:
+        case dvb_code_rate_t::C124_180:
             kbch = 44448;
             nbch = 44640;
             bch_code = BCH_CODE_N12;
             break;
-        case C25_36:
+        case dvb_code_rate_t::C25_36:
             kbch = 44808;
             nbch = 45000;
             bch_code = BCH_CODE_N12;
             break;
-        case C128_180:
+        case dvb_code_rate_t::C128_180:
             kbch = 45888;
             nbch = 46080;
             bch_code = BCH_CODE_N12;
             break;
-        case C13_18:
+        case dvb_code_rate_t::C13_18:
             kbch = 46608;
             nbch = 46800;
             bch_code = BCH_CODE_N12;
             break;
-        case C132_180:
+        case dvb_code_rate_t::C132_180:
             kbch = 47328;
             nbch = 47520;
             bch_code = BCH_CODE_N12;
             break;
-        case C22_30:
+        case dvb_code_rate_t::C22_30:
             kbch = 47328;
             nbch = 47520;
             bch_code = BCH_CODE_N12;
             break;
-        case C135_180:
+        case dvb_code_rate_t::C135_180:
             kbch = 48408;
             nbch = 48600;
             bch_code = BCH_CODE_N12;
             break;
-        case C140_180:
+        case dvb_code_rate_t::C140_180:
             kbch = 50208;
             nbch = 50400;
             bch_code = BCH_CODE_N12;
             break;
-        case C7_9:
+        case dvb_code_rate_t::C7_9:
             kbch = 50208;
             nbch = 50400;
             bch_code = BCH_CODE_N12;
             break;
-        case C154_180:
+        case dvb_code_rate_t::C154_180:
             kbch = 55248;
             nbch = 55440;
             bch_code = BCH_CODE_N12;
@@ -215,114 +215,114 @@ dvb_bch_bb_impl::dvb_bch_bb_impl(dvb_standard_t standard,
             bch_code = 0;
             break;
         }
-    } else if (framesize == FECFRAME_SHORT) {
+    } else if (framesize == dvb_framesize_t::FECFRAME_SHORT) {
         switch (rate) {
-        case C1_4:
+        case dvb_code_rate_t::C1_4:
             kbch = 3072;
             nbch = 3240;
             bch_code = BCH_CODE_S12;
             break;
-        case C1_3:
+        case dvb_code_rate_t::C1_3:
             kbch = 5232;
             nbch = 5400;
             bch_code = BCH_CODE_S12;
             break;
-        case C2_5:
+        case dvb_code_rate_t::C2_5:
             kbch = 6312;
             nbch = 6480;
             bch_code = BCH_CODE_S12;
             break;
-        case C1_2:
+        case dvb_code_rate_t::C1_2:
             kbch = 7032;
             nbch = 7200;
             bch_code = BCH_CODE_S12;
             break;
-        case C3_5:
+        case dvb_code_rate_t::C3_5:
             kbch = 9552;
             nbch = 9720;
             bch_code = BCH_CODE_S12;
             break;
-        case C2_3:
+        case dvb_code_rate_t::C2_3:
             kbch = 10632;
             nbch = 10800;
             bch_code = BCH_CODE_S12;
             break;
-        case C3_4:
+        case dvb_code_rate_t::C3_4:
             kbch = 11712;
             nbch = 11880;
             bch_code = BCH_CODE_S12;
             break;
-        case C4_5:
+        case dvb_code_rate_t::C4_5:
             kbch = 12432;
             nbch = 12600;
             bch_code = BCH_CODE_S12;
             break;
-        case C5_6:
+        case dvb_code_rate_t::C5_6:
             kbch = 13152;
             nbch = 13320;
             bch_code = BCH_CODE_S12;
             break;
-        case C8_9:
+        case dvb_code_rate_t::C8_9:
             kbch = 14232;
             nbch = 14400;
             bch_code = BCH_CODE_S12;
             break;
-        case C11_45:
+        case dvb_code_rate_t::C11_45:
             kbch = 3792;
             nbch = 3960;
             bch_code = BCH_CODE_S12;
             break;
-        case C4_15:
+        case dvb_code_rate_t::C4_15:
             kbch = 4152;
             nbch = 4320;
             bch_code = BCH_CODE_S12;
             break;
-        case C14_45:
+        case dvb_code_rate_t::C14_45:
             kbch = 4872;
             nbch = 5040;
             bch_code = BCH_CODE_S12;
             break;
-        case C7_15:
+        case dvb_code_rate_t::C7_15:
             kbch = 7392;
             nbch = 7560;
             bch_code = BCH_CODE_S12;
             break;
-        case C8_15:
+        case dvb_code_rate_t::C8_15:
             kbch = 8472;
             nbch = 8640;
             bch_code = BCH_CODE_S12;
             break;
-        case C26_45:
+        case dvb_code_rate_t::C26_45:
             kbch = 9192;
             nbch = 9360;
             bch_code = BCH_CODE_S12;
             break;
-        case C32_45:
+        case dvb_code_rate_t::C32_45:
             kbch = 11352;
             nbch = 11520;
             bch_code = BCH_CODE_S12;
             break;
-        case C1_5_VLSNR_SF2:
+        case dvb_code_rate_t::C1_5_VLSNR_SF2:
             kbch = 2512;
             nbch = 2680;
             bch_code = BCH_CODE_S12;
             break;
-        case C11_45_VLSNR_SF2:
+        case dvb_code_rate_t::C11_45_VLSNR_SF2:
             kbch = 3792;
             nbch = 3960;
             bch_code = BCH_CODE_S12;
             break;
-        case C1_5_VLSNR:
+        case dvb_code_rate_t::C1_5_VLSNR:
             kbch = 3072;
             nbch = 3240;
             bch_code = BCH_CODE_S12;
             break;
-        case C4_15_VLSNR:
+        case dvb_code_rate_t::C4_15_VLSNR:
             kbch = 4152;
             nbch = 4320;
             bch_code = BCH_CODE_S12;
             break;
-        case C1_3_VLSNR:
+        case dvb_code_rate_t::C1_3_VLSNR:
             kbch = 5232;
             nbch = 5400;
             bch_code = BCH_CODE_S12;
@@ -335,17 +335,17 @@ dvb_bch_bb_impl::dvb_bch_bb_impl(dvb_standard_t standard,
         }
     } else {
         switch (rate) {
-        case C1_5_MEDIUM:
+        case dvb_code_rate_t::C1_5_MEDIUM:
             kbch = 5660;
             nbch = 5840;
             bch_code = BCH_CODE_M12;
             break;
-        case C11_45_MEDIUM:
+        case dvb_code_rate_t::C11_45_MEDIUM:
             kbch = 7740;
             nbch = 7920;
             bch_code = BCH_CODE_M12;
             break;
-        case C1_3_MEDIUM:
+        case dvb_code_rate_t::C1_3_MEDIUM:
             kbch = 10620;
             nbch = 10800;
             bch_code = BCH_CODE_M12;
@@ -589,7 +589,7 @@ int dvb_bch_bb_impl::general_work(int noutput_items,
     std::bitset<MAX_BCH_PARITY_BITS> parity_bits;
     int consumed = 0;
 
-    if (frame_size != FECFRAME_MEDIUM) {
+    if (frame_size != dvb_framesize_t::FECFRAME_MEDIUM) {
         for (int i = 0; i < noutput_items; i += nbch) {
             memcpy(out, in, sizeof(unsigned char) * kbch);
             out += kbch;

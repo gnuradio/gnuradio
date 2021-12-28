@@ -36,30 +36,30 @@ dvbt2_interleaver_bb_impl::dvbt2_interleaver_bb_impl(dvb_framesize_t framesize,
 {
     signal_constellation = constellation;
     code_rate = rate;
-    if (framesize == FECFRAME_NORMAL) {
+    if (framesize == dvb_framesize_t::FECFRAME_NORMAL) {
         frame_size = FRAME_SIZE_NORMAL;
         switch (rate) {
-        case C1_2:
+        case dvb_code_rate_t::C1_2:
             nbch = 32400;
             q_val = 90;
             break;
-        case C3_5:
+        case dvb_code_rate_t::C3_5:
             nbch = 38880;
             q_val = 72;
             break;
-        case C2_3:
+        case dvb_code_rate_t::C2_3:
             nbch = 43200;
             q_val = 60;
             break;
-        case C3_4:
+        case dvb_code_rate_t::C3_4:
             nbch = 48600;
             q_val = 45;
             break;
-        case C4_5:
+        case dvb_code_rate_t::C4_5:
             nbch = 51840;
             q_val = 36;
             break;
-        case C5_6:
+        case dvb_code_rate_t::C5_6:
             nbch = 54000;
             q_val = 30;
             break;
@@ -71,35 +71,35 @@ dvbt2_interleaver_bb_impl::dvbt2_interleaver_bb_impl(dvb_framesize_t framesize,
     } else {
         frame_size = FRAME_SIZE_SHORT;
         switch (rate) {
-        case C1_3:
+        case dvb_code_rate_t::C1_3:
             nbch = 5400;
             q_val = 30;
             break;
-        case C2_5:
+        case dvb_code_rate_t::C2_5:
             nbch = 6480;
             q_val = 27;
             break;
-        case C1_2:
+        case dvb_code_rate_t::C1_2:
             nbch = 7200;
             q_val = 25;
             break;
-        case C3_5:
+        case dvb_code_rate_t::C3_5:
             nbch = 9720;
             q_val = 18;
             break;
-        case C2_3:
+        case dvb_code_rate_t::C2_3:
             nbch = 10800;
             q_val = 15;
             break;
-        case C3_4:
+        case dvb_code_rate_t::C3_4:
             nbch = 11880;
             q_val = 12;
             break;
-        case C4_5:
+        case dvb_code_rate_t::C4_5:
             nbch = 12600;
             q_val = 10;
             break;
-        case C5_6:
+        case dvb_code_rate_t::C5_6:
             nbch = 13320;
             q_val = 8;
             break;
@@ -367,7 +367,8 @@ int dvbt2_interleaver_bb_impl::general_work(int noutput_items,
     case MOD_QPSK:
         for (int i = 0; i < noutput_items; i += packed_items) {
             rows = frame_size / 2;
-            if (code_rate == C1_3 || code_rate == C2_5) {
+            if (code_rate == dvb_code_rate_t::C1_3 ||
+                code_rate == dvb_code_rate_t::C2_5) {
                 for (int k = 0; k < nbch; k++) {
                     tempu[k] = *in++;
                 }
@@ -393,11 +394,11 @@ int dvbt2_interleaver_bb_impl::general_work(int noutput_items,
         break;
 
     case MOD_16QAM:
-        if (code_rate == C3_5 && frame_size == FRAME_SIZE_NORMAL) {
+        if (code_rate == dvb_code_rate_t::C3_5 && frame_size == FRAME_SIZE_NORMAL) {
             mux = &mux16_35[0];
-        } else if (code_rate == C1_3 && frame_size == FRAME_SIZE_SHORT) {
+        } else if (code_rate == dvb_code_rate_t::C1_3 && frame_size == FRAME_SIZE_SHORT) {
             mux = &mux16_13[0];
-        } else if (code_rate == C2_5 && frame_size == FRAME_SIZE_SHORT) {
+        } else if (code_rate == dvb_code_rate_t::C2_5 && frame_size == FRAME_SIZE_SHORT) {
             mux = &mux16_25[0];
         } else {
             mux = &mux16[0];
@@ -420,11 +421,11 @@ int dvbt2_interleaver_bb_impl::general_work(int noutput_items,
         break;
 
     case MOD_64QAM:
-        if (code_rate == C3_5 && frame_size == FRAME_SIZE_NORMAL) {
+        if (code_rate == dvb_code_rate_t::C3_5 && frame_size == FRAME_SIZE_NORMAL) {
             mux = &mux64_35[0];
-        } else if (code_rate == C1_3 && frame_size == FRAME_SIZE_SHORT) {
+        } else if (code_rate == dvb_code_rate_t::C1_3 && frame_size == FRAME_SIZE_SHORT) {
             mux = &mux64_13[0];
-        } else if (code_rate == C2_5 && frame_size == FRAME_SIZE_SHORT) {
+        } else if (code_rate == dvb_code_rate_t::C2_5 && frame_size == FRAME_SIZE_SHORT) {
             mux = &mux64_25[0];
         } else {
             mux = &mux64[0];
@@ -448,9 +449,9 @@ int dvbt2_interleaver_bb_impl::general_work(int noutput_items,
 
     case MOD_256QAM:
         if (frame_size == FRAME_SIZE_NORMAL) {
-            if (code_rate == C3_5) {
+            if (code_rate == dvb_code_rate_t::C3_5) {
                 mux = &mux256_35[0];
-            } else if (code_rate == C2_3) {
+            } else if (code_rate == dvb_code_rate_t::C2_3) {
                 mux = &mux256_23[0];
             } else {
                 mux = &mux256[0];
@@ -473,9 +474,9 @@ int dvbt2_interleaver_bb_impl::general_work(int noutput_items,
         }
 
         else { // frame_size = FRAME_SIZE_SHORT
-            if (code_rate == C1_3) {
+            if (code_rate == dvb_code_rate_t::C1_3) {
                 mux = &mux256s_13[0];
-            } else if (code_rate == C2_5) {
+            } else if (code_rate == dvb_code_rate_t::C2_5) {
                 mux = &mux256s_25[0];
             } else {
                 mux = &mux256s[0];

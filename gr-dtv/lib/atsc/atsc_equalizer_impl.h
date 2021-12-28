@@ -14,6 +14,7 @@
 #include "atsc_syminfo_impl.h"
 #include <gnuradio/dtv/atsc_consts.h>
 #include <gnuradio/dtv/atsc_equalizer.h>
+#include <array>
 
 namespace gr {
 namespace dtv {
@@ -28,8 +29,8 @@ private:
     // the length of the field sync pattern that we know unequivocally
     static constexpr int KNOWN_FIELD_SYNC_LENGTH = 4 + 511 + 3 * 63;
 
-    float training_sequence1[KNOWN_FIELD_SYNC_LENGTH];
-    float training_sequence2[KNOWN_FIELD_SYNC_LENGTH];
+    std::array<float, KNOWN_FIELD_SYNC_LENGTH> training_sequence1;
+    std::array<float, KNOWN_FIELD_SYNC_LENGTH> training_sequence2;
 
     void filterN(const float* input_samples, float* output_samples, int nsamples);
     void adaptN(const float* input_samples,

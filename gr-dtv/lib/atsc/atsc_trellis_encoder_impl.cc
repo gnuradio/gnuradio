@@ -54,8 +54,8 @@ atsc_trellis_encoder_impl::~atsc_trellis_encoder_impl() {}
 
 void atsc_trellis_encoder_impl::reset()
 {
-    for (auto& i : enc) {
-        i.reset();
+    for (auto& encoder : encoders) {
+        encoder.reset();
     }
 }
 
@@ -190,7 +190,7 @@ void atsc_trellis_encoder_impl::encode_helper(unsigned char output[OUTPUT_SIZE],
                            dibit);
                 }
 
-                symbol = enc[encoder].encode(dibit);
+                symbol = encoders[encoder].encode(dibit);
                 *out++ = symbol;
                 encoder++;
                 if (encoder >= NCODERS) {

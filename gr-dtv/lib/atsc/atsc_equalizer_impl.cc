@@ -9,6 +9,7 @@
  *
  */
 
+#include <array>
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
@@ -28,7 +29,7 @@ atsc_equalizer::sptr atsc_equalizer::make()
     return gnuradio::make_block_sptr<atsc_equalizer_impl>();
 }
 
-static float bin_map(int bit) { return bit ? +5 : -5; }
+constexpr float bin_map(unsigned char bit) { return bit ? +5 : -5; }
 
 template <size_t N>
 static void init_field_sync_common(std::array<float, N>& result, bool invert)
@@ -42,11 +43,11 @@ static void init_field_sync_common(std::array<float, N>& result, bool invert)
     result[i++] = bin_map(0);
     result[i++] = bin_map(1);
 
-    for (unsigned char j : atsc_pn511) // PN511
-        p[i++] = bin_map(j);
+    for (unsigned char binary_value : atsc_pn63) // PN63
+        result[i++] = bin_map(binary_value);
 
-    for (unsigned char j : atsc_pn63) // PN63
-        p[i++] = bin_map(j);
+    for (unsigned char binary_value : atsc_pn63) // PN63, toggled on field 2
+        result[i++] = bin_map(binary_value ^ static_cast<unsigned char>(invert));
 
     for (unsigned char binary_value : atsc_pn63) // PN63
         result[i++] = bin_map(binary_value);
@@ -146,9 +147,15 @@ int atsc_equalizer_impl::general_work(int noutput_items,
 
         if (d_segno == -1) {
             if (d_flags & 0x0010) {
-                adaptN(data_mem, training_sequence2, data_mem2, KNOWN_FIELD_SYNC_LENGTH);
+                adaptN(data_mem,
+                       training_sequence2.data(),
+                       data_mem2,
+                       KNOWN_FIELD_SYNC_LENGTH);
             } else if (!(d_flags & 0x0010)) {
-                adaptN(data_mem, training_sequence1, data_mem2, KNOWN_FIELD_SYNC_LENGTH);
+                adaptN(data_mem,
+                       training_sequence1.data(),
+                       data_mem2,
+                       KNOWN_FIELD_SYNC_LENGTH);
             }
         } else {
             filterN(data_mem, data_mem2, ATSC_DATA_SEGMENT_LENGTH);
