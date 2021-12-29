@@ -10,8 +10,12 @@ if(DEFINED __INCLUDED_GR_COMPONENT_CMAKE)
 endif()
 set(__INCLUDED_GR_COMPONENT_CMAKE TRUE)
 
-set(_gr_enabled_components "" CACHE INTERNAL "" FORCE)
-set(_gr_disabled_components "" CACHE INTERNAL "" FORCE)
+set(_gr_enabled_components
+    ""
+    CACHE INTERNAL "" FORCE)
+set(_gr_disabled_components
+    ""
+    CACHE INTERNAL "" FORCE)
 
 if(NOT DEFINED ENABLE_DEFAULT)
     set(ENABLE_DEFAULT ON)
@@ -46,7 +50,7 @@ function(GR_REGISTER_COMPONENT name var)
     foreach(dep ${ARGN})
         list(FIND _gr_enabled_components ${dep} dep_enb_index)
         list(FIND _gr_disabled_components ${dep} dep_dis_index)
-        if (${dep_enb_index} EQUAL -1 AND ${dep_dis_index} EQUAL -1)
+        if(${dep_enb_index} EQUAL -1 AND ${dep_dis_index} EQUAL -1)
             list(APPEND comp_deps ${dep})
         else()
             list(APPEND comp_deps ${dep}_cached) #is a component, use cached version
@@ -54,9 +58,14 @@ function(GR_REGISTER_COMPONENT name var)
     endforeach(dep)
 
     #setup the dependent option for this component
-    CMAKE_DEPENDENT_OPTION(${var} "enable ${name} support" ${ENABLE_DEFAULT} "${comp_deps}" OFF)
-    set(${var} "${${var}}" PARENT_SCOPE)
-    set(${var}_cached "${${var}}" CACHE INTERNAL "" FORCE)
+    cmake_dependent_option(${var} "enable ${name} support" ${ENABLE_DEFAULT}
+                           "${comp_deps}" OFF)
+    set(${var}
+        "${${var}}"
+        PARENT_SCOPE)
+    set(${var}_cached
+        "${${var}}"
+        CACHE INTERNAL "" FORCE)
 
     #force was specified, but the dependencies were not met
     if(NOT ${var} AND var_force)
@@ -74,14 +83,19 @@ function(GR_REGISTER_COMPONENT name var)
     message(STATUS "  Override with -D${var}=ON/OFF")
 
     #make components lists into global variables
-    set(_gr_enabled_components ${_gr_enabled_components} CACHE INTERNAL "" FORCE)
-    set(_gr_disabled_components ${_gr_disabled_components} CACHE INTERNAL "" FORCE)
+    set(_gr_enabled_components
+        ${_gr_enabled_components}
+        CACHE INTERNAL "" FORCE)
+    set(_gr_disabled_components
+        ${_gr_disabled_components}
+        CACHE INTERNAL "" FORCE)
 endfunction(GR_REGISTER_COMPONENT)
 
-
 function(GR_APPEND_SUBCOMPONENT name)
-  list(APPEND _gr_enabled_components "* ${name}")
-  set(_gr_enabled_components ${_gr_enabled_components} CACHE INTERNAL "" FORCE)
+    list(APPEND _gr_enabled_components "* ${name}")
+    set(_gr_enabled_components
+        ${_gr_enabled_components}
+        CACHE INTERNAL "" FORCE)
 endfunction(GR_APPEND_SUBCOMPONENT name)
 
 ########################################################################

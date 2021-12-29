@@ -2,7 +2,9 @@
 # Python Bindings
 ########################################################################
 
-list(APPEND vocoder_python_files
+list(
+    APPEND
+    vocoder_python_files
     alaw_decode_bs_python.cc
     alaw_encode_sb_python.cc
     cvsd_decode_bs_python.cc
@@ -17,34 +19,23 @@ list(APPEND vocoder_python_files
     ulaw_encode_sb_python.cc)
 
 if(LIBCODEC2_FOUND)
-    list(APPEND vocoder_python_files
-    codec2_python.cc
-    codec2_decode_ps_python.cc
-    codec2_encode_sp_python.cc
-    )
+    list(APPEND vocoder_python_files codec2_python.cc codec2_decode_ps_python.cc
+         codec2_encode_sp_python.cc)
 endif(LIBCODEC2_FOUND)
 
 if(LIBCODEC2_HAS_FREEDV_API)
-    list(APPEND vocoder_python_files
-    freedv_api_python.cc
-    freedv_rx_ss_python.cc
-    freedv_tx_ss_python.cc
-    )
+    list(APPEND vocoder_python_files freedv_api_python.cc freedv_rx_ss_python.cc
+         freedv_tx_ss_python.cc)
 endif(LIBCODEC2_HAS_FREEDV_API)
 
 if(LIBGSM_FOUND)
-    list(APPEND vocoder_python_files
-    gsm_fr_decode_ps_python.cc
-    gsm_fr_encode_sp_python.cc
-    )
+    list(APPEND vocoder_python_files gsm_fr_decode_ps_python.cc
+         gsm_fr_encode_sp_python.cc)
 endif(LIBGSM_FOUND)
 
 list(APPEND vocoder_python_files python_bindings.cc)
 
-GR_PYBIND_MAKE_CHECK_HASH(vocoder
-   ../../..
-   gr::vocoder
-   "${vocoder_python_files}")
+gr_pybind_make_check_hash(vocoder ../../.. gr::vocoder "${vocoder_python_files}")
 
 if(LIBCODEC2_FOUND)
     target_compile_definitions(vocoder_python PRIVATE LIBCODEC2_FOUND)
@@ -58,4 +49,7 @@ if(LIBGSM_FOUND)
     target_compile_definitions(vocoder_python PRIVATE LIBGSM_FOUND)
 endif(LIBGSM_FOUND)
 
-install(TARGETS vocoder_python DESTINATION ${GR_PYTHON_DIR}/gnuradio/vocoder COMPONENT pythonapi)
+install(
+    TARGETS vocoder_python
+    DESTINATION ${GR_PYTHON_DIR}/gnuradio/vocoder
+    COMPONENT pythonapi)

@@ -5,10 +5,4 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
 
-install(
-    FILES
-    cvsd_sweep.grc
-    dial_tone.grc
-    DESTINATION ${GR_PKG_AUDIO_EXAMPLES_DIR}
-)
-
+install(FILES cvsd_sweep.grc dial_tone.grc DESTINATION ${GR_PKG_AUDIO_EXAMPLES_DIR})

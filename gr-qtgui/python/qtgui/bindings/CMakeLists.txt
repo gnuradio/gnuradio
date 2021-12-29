@@ -4,7 +4,9 @@ include(GrPybind)
 # Python Bindings
 ########################################################################
 
-list(APPEND qtgui_python_files
+list(
+    APPEND
+    qtgui_python_files
     # ConstellationDisplayPlot_python.cc
     # DisplayPlot_python.cc
     # FrequencyDisplayPlot_python.cc
@@ -56,9 +58,9 @@ list(APPEND qtgui_python_files
     waterfalldisplayform_python.cc
     python_bindings.cc)
 
-GR_PYBIND_MAKE(qtgui 
-   ../../.. 
-   gr::qtgui
-   "${qtgui_python_files}")
+gr_pybind_make(qtgui ../../.. gr::qtgui "${qtgui_python_files}")
 
-install(TARGETS qtgui_python DESTINATION ${GR_PYTHON_DIR}/gnuradio/qtgui COMPONENT pythonapi)
+install(
+    TARGETS qtgui_python
+    DESTINATION ${GR_PYTHON_DIR}/gnuradio/qtgui
+    COMPONENT pythonapi)

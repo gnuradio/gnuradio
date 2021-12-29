@@ -17,7 +17,7 @@ endif()
 
 #eventually, replace version.sh and fill in the variables below
 set(MAJOR_VERSION "${VERSION_MAJOR}")
-set(API_COMPAT    "${VERSION_API}")
+set(API_COMPAT "${VERSION_API}")
 set(MINOR_VERSION "${VERSION_ABI}")
 set(MAINT_VERSION "${VERSION_PATCH}")
 
@@ -26,7 +26,7 @@ set(MAINT_VERSION "${VERSION_PATCH}")
 ########################################################################
 find_package(Git)
 
-MACRO(create_manual_git_describe)
+macro(create_manual_git_describe)
     if(NOT GR_GIT_COUNT)
         set(GR_GIT_COUNT "compat-xxx")
     endif()
@@ -34,15 +34,15 @@ MACRO(create_manual_git_describe)
         set(GR_GIT_HASH "xunknown")
     endif()
     set(GIT_DESCRIBE "v${MAJOR_VERSION}.${API_COMPAT}-${GR_GIT_COUNT}-${GR_GIT_HASH}")
-ENDMACRO()
+endmacro()
 
 if(GIT_FOUND AND EXISTS ${CMAKE_SOURCE_DIR}/.git)
     message(STATUS "Extracting version information from git describe...")
     execute_process(
         COMMAND ${GIT_EXECUTABLE} describe --always --abbrev=8 --long
-        OUTPUT_VARIABLE GIT_DESCRIBE OUTPUT_STRIP_TRAILING_WHITESPACE
-        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-    )
+        OUTPUT_VARIABLE GIT_DESCRIBE
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
     if(GIT_DESCRIBE STREQUAL "")
         create_manual_git_describe()
     endif()
@@ -58,8 +58,8 @@ if("${MINOR_VERSION}" STREQUAL "git")
     # DOCVER:  3.3git
     # LIBVER:  3.3git
     set(VERSION "${GIT_DESCRIBE}")
-    set(DOCVER  "${MAJOR_VERSION}.${API_COMPAT}${MINOR_VERSION}")
-    set(LIBVER  "${MAJOR_VERSION}.${API_COMPAT}${MINOR_VERSION}")
+    set(DOCVER "${MAJOR_VERSION}.${API_COMPAT}${MINOR_VERSION}")
+    set(LIBVER "${MAJOR_VERSION}.${API_COMPAT}${MINOR_VERSION}")
     set(RC_MINOR_VERSION "0")
     set(RC_MAINT_VERSION "0")
 elseif("${MAINT_VERSION}" STREQUAL "git")
@@ -67,8 +67,8 @@ elseif("${MAINT_VERSION}" STREQUAL "git")
     # DOCVER:  3.3.1git
     # LIBVER:  3.3.1git
     set(VERSION "${GIT_DESCRIBE}")
-    set(DOCVER  "${MAJOR_VERSION}.${API_COMPAT}.${MINOR_VERSION}${MAINT_VERSION}")
-    set(LIBVER  "${MAJOR_VERSION}.${API_COMPAT}.${MINOR_VERSION}${MAINT_VERSION}")
+    set(DOCVER "${MAJOR_VERSION}.${API_COMPAT}.${MINOR_VERSION}${MAINT_VERSION}")
+    set(LIBVER "${MAJOR_VERSION}.${API_COMPAT}.${MINOR_VERSION}${MAINT_VERSION}")
     math(EXPR RC_MINOR_VERSION "${MINOR_VERSION} - 1")
     set(RC_MAINT_VERSION "0")
 else()

@@ -16,15 +16,20 @@ enable_testing()
 # Install to PyBOMBS target prefix if defined
 if(DEFINED ENV{PYBOMBS_PREFIX})
     set(CMAKE_INSTALL_PREFIX $ENV{PYBOMBS_PREFIX})
-    message(STATUS "PyBOMBS installed GNU Radio. Setting CMAKE_INSTALL_PREFIX to $ENV{PYBOMBS_PREFIX}")
+    message(
+        STATUS
+            "PyBOMBS installed GNU Radio. Setting CMAKE_INSTALL_PREFIX to $ENV{PYBOMBS_PREFIX}"
+    )
 endif()
 
 # Select the release build type by default to get optimization flags
 if(NOT CMAKE_BUILD_TYPE)
-   set(CMAKE_BUILD_TYPE "Release")
-   message(STATUS "Build type not specified: defaulting to release.")
+    set(CMAKE_BUILD_TYPE "Release")
+    message(STATUS "Build type not specified: defaulting to release.")
 endif(NOT CMAKE_BUILD_TYPE)
-set(CMAKE_BUILD_TYPE ${CMAKE_BUILD_TYPE} CACHE STRING "")
+set(CMAKE_BUILD_TYPE
+    ${CMAKE_BUILD_TYPE}
+    CACHE STRING "")
 
 # Make sure our local CMake Modules path comes first
 list(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_SOURCE_DIR}/cmake/Modules)
@@ -33,8 +38,8 @@ find_package(Gnuradio "3.10" REQUIRED)
 
 # Set the version information here
 set(VERSION_MAJOR 1)
-set(VERSION_API   0)
-set(VERSION_ABI   0)
+set(VERSION_API 0)
+set(VERSION_ABI 0)
 set(VERSION_PATCH 0)
 
 cmake_policy(SET CMP0011 NEW)
@@ -62,15 +67,15 @@ include(GrVersion)
 include(GrPlatform) #define LIB_SUFFIX
 
 if(NOT CMAKE_MODULES_DIR)
-  set(CMAKE_MODULES_DIR lib${LIB_SUFFIX}/cmake)
+    set(CMAKE_MODULES_DIR lib${LIB_SUFFIX}/cmake)
 endif(NOT CMAKE_MODULES_DIR)
 
-set(GR_INCLUDE_DIR      include/gnuradio/howto)
-set(GR_CMAKE_DIR        ${CMAKE_MODULES_DIR}/gnuradio-howto)
-set(GR_PKG_DATA_DIR     ${GR_DATA_DIR}/${CMAKE_PROJECT_NAME})
-set(GR_PKG_DOC_DIR      ${GR_DOC_DIR}/${CMAKE_PROJECT_NAME})
-set(GR_PKG_CONF_DIR     ${GR_CONF_DIR}/${CMAKE_PROJECT_NAME}/conf.d)
-set(GR_PKG_LIBEXEC_DIR  ${GR_LIBEXEC_DIR}/${CMAKE_PROJECT_NAME})
+set(GR_INCLUDE_DIR include/gnuradio/howto)
+set(GR_CMAKE_DIR ${CMAKE_MODULES_DIR}/gnuradio-howto)
+set(GR_PKG_DATA_DIR ${GR_DATA_DIR}/${CMAKE_PROJECT_NAME})
+set(GR_PKG_DOC_DIR ${GR_DOC_DIR}/${CMAKE_PROJECT_NAME})
+set(GR_PKG_CONF_DIR ${GR_CONF_DIR}/${CMAKE_PROJECT_NAME}/conf.d)
+set(GR_PKG_LIBEXEC_DIR ${GR_LIBEXEC_DIR}/${CMAKE_PROJECT_NAME})
 
 ########################################################################
 # On Apple only, set install name and use rpath correctly, if not already set
@@ -78,17 +83,18 @@ set(GR_PKG_LIBEXEC_DIR  ${GR_LIBEXEC_DIR}/${CMAKE_PROJECT_NAME})
 if(APPLE)
     if(NOT CMAKE_INSTALL_NAME_DIR)
         set(CMAKE_INSTALL_NAME_DIR
-            ${CMAKE_INSTALL_PREFIX}/${GR_LIBRARY_DIR} CACHE
-            PATH "Library Install Name Destination Directory" FORCE)
+            ${CMAKE_INSTALL_PREFIX}/${GR_LIBRARY_DIR}
+            CACHE PATH "Library Install Name Destination Directory" FORCE)
     endif(NOT CMAKE_INSTALL_NAME_DIR)
     if(NOT CMAKE_INSTALL_RPATH)
         set(CMAKE_INSTALL_RPATH
-            ${CMAKE_INSTALL_PREFIX}/${GR_LIBRARY_DIR} CACHE
-            PATH "Library Install RPath" FORCE)
+            ${CMAKE_INSTALL_PREFIX}/${GR_LIBRARY_DIR}
+            CACHE PATH "Library Install RPath" FORCE)
     endif(NOT CMAKE_INSTALL_RPATH)
     if(NOT CMAKE_BUILD_WITH_INSTALL_RPATH)
-        set(CMAKE_BUILD_WITH_INSTALL_RPATH ON CACHE
-            BOOL "Do Build Using Library Install RPath" FORCE)
+        set(CMAKE_BUILD_WITH_INSTALL_RPATH
+            ON
+            CACHE BOOL "Do Build Using Library Install RPath" FORCE)
     endif(NOT CMAKE_BUILD_WITH_INSTALL_RPATH)
 endif(APPLE)
 
@@ -109,14 +115,11 @@ endif(DOXYGEN_FOUND)
 ########################################################################
 # Create uninstall target
 ########################################################################
-configure_file(
-    ${CMAKE_SOURCE_DIR}/cmake/cmake_uninstall.cmake.in
-    ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake
-@ONLY)
+configure_file(${CMAKE_SOURCE_DIR}/cmake/cmake_uninstall.cmake.in
+               ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake @ONLY)
 
-add_custom_target(uninstall
-    ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake
-    )
+add_custom_target(uninstall ${CMAKE_COMMAND} -P
+                            ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake)
 
 ########################################################################
 # Add subdirectories
@@ -127,25 +130,21 @@ add_subdirectory(apps)
 add_subdirectory(docs)
 # NOTE: manually update below to use GRC to generate C++ flowgraphs w/o python
 if(ENABLE_PYTHON)
-  message(STATUS "PYTHON and GRC components are enabled")
-  add_subdirectory(python/howto)
-  add_subdirectory(grc)
+    message(STATUS "PYTHON and GRC components are enabled")
+    add_subdirectory(python/howto)
+    add_subdirectory(grc)
 else(ENABLE_PYTHON)
-  message(STATUS "PYTHON and GRC components are disabled")
+    message(STATUS "PYTHON and GRC components are disabled")
 endif(ENABLE_PYTHON)
 
 ########################################################################
 # Install cmake search helper for this library
 ########################################################################
 
-install(FILES cmake/Modules/gnuradio-howtoConfig.cmake
-    DESTINATION ${GR_CMAKE_DIR}
-)
+install(FILES cmake/Modules/gnuradio-howtoConfig.cmake DESTINATION ${GR_CMAKE_DIR})
 
 include(CMakePackageConfigHelpers)
 configure_package_config_file(
     ${PROJECT_SOURCE_DIR}/cmake/Modules/targetConfig.cmake.in
     ${CMAKE_CURRENT_BINARY_DIR}/cmake/Modules/${target}Config.cmake
-    INSTALL_DESTINATION ${GR_CMAKE_DIR}
-)
-
+    INSTALL_DESTINATION ${GR_CMAKE_DIR})

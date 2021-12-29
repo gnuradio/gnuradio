@@ -10,7 +10,4 @@
 ########################################################################
 add_executable(gnuradio-config-info gnuradio-config-info.cc)
 target_link_libraries(gnuradio-config-info gnuradio-runtime)
-install(
-    TARGETS gnuradio-config-info
-    DESTINATION ${GR_RUNTIME_DIR}
-)
+install(TARGETS gnuradio-config-info DESTINATION ${GR_RUNTIME_DIR})

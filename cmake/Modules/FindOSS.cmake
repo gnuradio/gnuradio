@@ -6,54 +6,42 @@
 
 # OSS is not for APPLE or WINDOWS
 
-IF(APPLE OR WIN32)
-  RETURN()
-ENDIF()
+if(APPLE OR WIN32)
+    return()
+endif()
 
-FIND_PATH(LINUX_OSS_INCLUDE_DIR "linux/soundcard.h"
-  "/usr/include" "/usr/local/include"
-)
+find_path(LINUX_OSS_INCLUDE_DIR "linux/soundcard.h" "/usr/include" "/usr/local/include")
 
-FIND_PATH(SYS_OSS_INCLUDE_DIR "sys/soundcard.h"
-  "/usr/include" "/usr/local/include"
-)
+find_path(SYS_OSS_INCLUDE_DIR "sys/soundcard.h" "/usr/include" "/usr/local/include")
 
-FIND_PATH(MACHINE_OSS_INCLUDE_DIR "machine/soundcard.h"
-  "/usr/include" "/usr/local/include"
-)
+find_path(MACHINE_OSS_INCLUDE_DIR "machine/soundcard.h" "/usr/include"
+          "/usr/local/include")
 
-SET(OSS_FOUND FALSE)
+set(OSS_FOUND FALSE)
 
-IF(LINUX_OSS_INCLUDE_DIR)
-	SET(OSS_FOUND TRUE)
-	SET(OSS_INCLUDE_DIR ${LINUX_OSS_INCLUDE_DIR})
-	SET(HAVE_LINUX_SOUNDCARD_H 1)
-ENDIF()
+if(LINUX_OSS_INCLUDE_DIR)
+    set(OSS_FOUND TRUE)
+    set(OSS_INCLUDE_DIR ${LINUX_OSS_INCLUDE_DIR})
+    set(HAVE_LINUX_SOUNDCARD_H 1)
+endif()
 
-IF(SYS_OSS_INCLUDE_DIR)
-	SET(OSS_FOUND TRUE)
-	SET(OSS_INCLUDE_DIR ${SYS_OSS_INCLUDE_DIR})
-	SET(HAVE_SYS_SOUNDCARD_H 1)
-ENDIF()
+if(SYS_OSS_INCLUDE_DIR)
+    set(OSS_FOUND TRUE)
+    set(OSS_INCLUDE_DIR ${SYS_OSS_INCLUDE_DIR})
+    set(HAVE_SYS_SOUNDCARD_H 1)
+endif()
 
-IF(MACHINE_OSS_INCLUDE_DIR)
-	SET(OSS_FOUND TRUE)
-	SET(OSS_INCLUDE_DIR ${MACHINE_OSS_INCLUDE_DIR})
-	SET(HAVE_MACHINE_SOUNDCARD_H 1)
-ENDIF()
+if(MACHINE_OSS_INCLUDE_DIR)
+    set(OSS_FOUND TRUE)
+    set(OSS_INCLUDE_DIR ${MACHINE_OSS_INCLUDE_DIR})
+    set(HAVE_MACHINE_SOUNDCARD_H 1)
+endif()
 
-MARK_AS_ADVANCED (
-	OSS_FOUND
-	OSS_INCLUDE_DIR
-	LINUX_OSS_INCLUDE_DIR
-	SYS_OSS_INCLUDE_DIR
-	MACHINE_OSS_INCLUDE_DIR
-  )
+mark_as_advanced(OSS_FOUND OSS_INCLUDE_DIR LINUX_OSS_INCLUDE_DIR SYS_OSS_INCLUDE_DIR
+                 MACHINE_OSS_INCLUDE_DIR)
 
-
-if (OSS_FOUND AND NOT TARGET OSS::OSS)
-  add_library(OSS::OSS INTERFACE IMPORTED)
-  set_target_properties(OSS::OSS PROPERTIES
-    INTERFACE_INCLUDE_DIRECTORIES "${OSS_INCLUDE_DIRS}"
-  )
+if(OSS_FOUND AND NOT TARGET OSS::OSS)
+    add_library(OSS::OSS INTERFACE IMPORTED)
+    set_target_properties(OSS::OSS PROPERTIES INTERFACE_INCLUDE_DIRECTORIES
+                                              "${OSS_INCLUDE_DIRS}")
 endif()

@@ -10,8 +10,4 @@
 ########################################################################
 include(GrPython)
 
-GR_PYTHON_INSTALL(
-    PROGRAMS
-    gr_read_file_metadata
-    DESTINATION ${GR_RUNTIME_DIR}
-)
+gr_python_install(PROGRAMS gr_read_file_metadata DESTINATION ${GR_RUNTIME_DIR})

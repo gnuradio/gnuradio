@@ -12,22 +12,20 @@ include(GrPython)
 ########################################################################
 if(ENABLE_TESTING)
 
-  set(GR_TEST_TARGET_DEPS "")
-  set(GR_TEST_LIBRARY_DIRS "")
-  set(GR_TEST_PYTHON_DIRS
-    ${CMAKE_CURRENT_SOURCE_DIR}/../..
-    ${CMAKE_BINARY_DIR}/gnuradio-runtime/python
-    )
+    set(GR_TEST_TARGET_DEPS "")
+    set(GR_TEST_LIBRARY_DIRS "")
+    set(GR_TEST_PYTHON_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/../..
+                            ${CMAKE_BINARY_DIR}/gnuradio-runtime/python)
 
-  include(GrTest)
-  file(GLOB py_qa_test_files "test_*.py")
+    include(GrTest)
+    file(GLOB py_qa_test_files "test_*.py")
 
-  foreach(py_qa_test_file ${py_qa_test_files})
-    get_filename_component(py_qa_test_name ${py_qa_test_file} NAME_WE)
-    if (CMAKE_CROSSCOMPILING)
-        get_filename_component(py_qa_test_file ${py_qa_test_file} NAME)
-    endif(CMAKE_CROSSCOMPILING)
-    GR_ADD_TEST(${py_qa_test_name} ${QA_PYTHON_EXECUTABLE} -B ${py_qa_test_file})
-  endforeach(py_qa_test_file)
+    foreach(py_qa_test_file ${py_qa_test_files})
+        get_filename_component(py_qa_test_name ${py_qa_test_file} NAME_WE)
+        if(CMAKE_CROSSCOMPILING)
+            get_filename_component(py_qa_test_file ${py_qa_test_file} NAME)
+        endif(CMAKE_CROSSCOMPILING)
+        gr_add_test(${py_qa_test_name} ${QA_PYTHON_EXECUTABLE} -B ${py_qa_test_file})
+    endforeach(py_qa_test_file)
 
 endif(ENABLE_TESTING)

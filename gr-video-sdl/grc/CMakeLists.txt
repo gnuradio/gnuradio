@@ -5,9 +5,5 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
 
-install(FILES
-    video_sdl_sink.block.yml
-    video.tree.yml
-
-    DESTINATION share/gnuradio/grc/blocks
-)
+install(FILES video_sdl_sink.block.yml video.tree.yml
+        DESTINATION share/gnuradio/grc/blocks)

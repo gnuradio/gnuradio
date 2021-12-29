@@ -7,14 +7,13 @@
 
 include(GrPython)
 
-GR_PYTHON_INSTALL(FILES
-    __init__.py
-    base.py
-    comments.py
-    parseheader.py
-    parseheader_generic.py
-    iosignature.py
-    outputschema.py
-    Constants.py
-    DESTINATION ${GR_PYTHON_DIR}/gnuradio/blocktool/core
-)
+gr_python_install(
+    FILES __init__.py
+          base.py
+          comments.py
+          parseheader.py
+          parseheader_generic.py
+          iosignature.py
+          outputschema.py
+          Constants.py
+    DESTINATION ${GR_PYTHON_DIR}/gnuradio/blocktool/core)

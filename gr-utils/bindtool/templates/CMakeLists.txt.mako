@@ -7,7 +7,7 @@ ${'########################################################################'}
 import os
 file_list = module_name + '_python_files'
 %>
-list(APPEND ${file_list}
+list(append ${file_list}
 ## File Includes
 % for f in files:  
 <%
@@ -22,4 +22,4 @@ GR_PYBIND_MAKE_CHECK_HASH(${module_name}
    gr::${module_name}
    "${'${'+file_list+'}'}")
 
-install(TARGETS ${module_name}_python DESTINATION ${'${GR_PYTHON_DIR}'}/gnuradio/${module_name} COMPONENT pythonapi)
+install(targets ${module_name}_python destination ${'${GR_PYTHON_DIR}'}/gnuradio/${module_name} component pythonapi)

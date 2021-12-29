@@ -8,20 +8,16 @@
 ########################################################################
 # Install header files
 ########################################################################
-install(FILES
-    api.h
-    fft.h
-    fft_shift.h
-    fft_v.h
-    goertzel.h
-    goertzel_fc.h
-    window.h
-    DESTINATION ${GR_INCLUDE_DIR}/gnuradio/fft
-)
+install(
+    FILES api.h
+          fft.h
+          fft_shift.h
+          fft_v.h
+          goertzel.h
+          goertzel_fc.h
+          window.h
+    DESTINATION ${GR_INCLUDE_DIR}/gnuradio/fft)
 
 if(ENABLE_GR_CTRLPORT)
-install(FILES
-  ctrlport_probe_psd.h
-  DESTINATION ${GR_INCLUDE_DIR}/gnuradio/fft
-)
+    install(FILES ctrlport_probe_psd.h DESTINATION ${GR_INCLUDE_DIR}/gnuradio/fft)
 endif(ENABLE_GR_CTRLPORT)

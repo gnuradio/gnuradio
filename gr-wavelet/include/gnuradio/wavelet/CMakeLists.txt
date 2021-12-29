@@ -8,11 +8,5 @@
 ########################################################################
 # Install header files
 ########################################################################
-install(FILES
-    api.h
-    squash_ff.h
-    wavelet_ff.h
-    wvps_ff.h
-    DESTINATION ${GR_INCLUDE_DIR}/gnuradio/wavelet
-)
-
+install(FILES api.h squash_ff.h wavelet_ff.h wvps_ff.h
+        DESTINATION ${GR_INCLUDE_DIR}/gnuradio/wavelet)

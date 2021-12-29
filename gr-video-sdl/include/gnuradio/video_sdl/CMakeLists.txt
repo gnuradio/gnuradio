@@ -8,10 +8,4 @@
 ########################################################################
 # Install header files
 ########################################################################
-install(FILES
-    api.h
-    sink_s.h
-    sink_uc.h
-    DESTINATION ${GR_INCLUDE_DIR}/gnuradio/video_sdl
-)
-
+install(FILES api.h sink_s.h sink_uc.h DESTINATION ${GR_INCLUDE_DIR}/gnuradio/video_sdl)

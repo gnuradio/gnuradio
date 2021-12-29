@@ -11,34 +11,34 @@
 ########################################################################
 include(GrPlatform) #define LIB_SUFFIX
 
-list(APPEND howto_sources
-)
+list(APPEND howto_sources)
 
-set(howto_sources "${howto_sources}" PARENT_SCOPE)
+set(howto_sources
+    "${howto_sources}"
+    PARENT_SCOPE)
 if(NOT howto_sources)
-    MESSAGE(STATUS "No C++ sources... skipping lib/")
+    message(STATUS "No C++ sources... skipping lib/")
     return()
 endif(NOT howto_sources)
 
 add_library(gnuradio-howto SHARED ${howto_sources})
 target_link_libraries(gnuradio-howto gnuradio::gnuradio-runtime)
-target_include_directories(gnuradio-howto
+target_include_directories(
+    gnuradio-howto
     PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>
-    PUBLIC $<INSTALL_INTERFACE:include>
-  )
+    PUBLIC $<INSTALL_INTERFACE:include>)
 set_target_properties(gnuradio-howto PROPERTIES DEFINE_SYMBOL "gnuradio_howto_EXPORTS")
 
 if(APPLE)
-    set_target_properties(gnuradio-howto PROPERTIES
-        INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib"
-    )
+    set_target_properties(gnuradio-howto PROPERTIES INSTALL_NAME_DIR
+                                                    "${CMAKE_INSTALL_PREFIX}/lib")
 endif(APPLE)
 
 ########################################################################
 # Install built library files
 ########################################################################
 include(GrMiscUtils)
-GR_LIBRARY_FOO(gnuradio-howto)
+gr_library_foo(gnuradio-howto)
 
 ########################################################################
 # Print summary
@@ -54,18 +54,15 @@ include(GrTest)
 # If your unit tests require special include paths, add them here
 #include_directories()
 # List all files that contain Boost.UTF unit tests here
-list(APPEND test_howto_sources
-)
+list(APPEND test_howto_sources)
 # Anything we need to link to for the unit tests go here
 list(APPEND GR_TEST_TARGET_DEPS gnuradio-howto)
 
 if(NOT test_howto_sources)
-    MESSAGE(STATUS "No C++ unit tests... skipping")
+    message(STATUS "No C++ unit tests... skipping")
     return()
 endif(NOT test_howto_sources)
 
 foreach(qa_file ${test_howto_sources})
-    GR_ADD_CPP_TEST("howto_${qa_file}"
-        ${CMAKE_CURRENT_SOURCE_DIR}/${qa_file}
-    )
+    gr_add_cpp_test("howto_${qa_file}" ${CMAKE_CURRENT_SOURCE_DIR}/${qa_file})
 endforeach(qa_file)

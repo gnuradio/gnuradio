@@ -4,7 +4,9 @@ include(GrPybind)
 # Python Bindings
 ########################################################################
 
-list(APPEND zeromq_python_files
+list(
+    APPEND
+    zeromq_python_files
     pub_msg_sink_python.cc
     pub_sink_python.cc
     pull_msg_source_python.cc
@@ -19,9 +21,9 @@ list(APPEND zeromq_python_files
     sub_source_python.cc
     python_bindings.cc)
 
-GR_PYBIND_MAKE_CHECK_HASH(zeromq 
-   ../../.. 
-   gr::zeromq
-   "${zeromq_python_files}")
+gr_pybind_make_check_hash(zeromq ../../.. gr::zeromq "${zeromq_python_files}")
 
-install(TARGETS zeromq_python DESTINATION ${GR_PYTHON_DIR}/gnuradio/zeromq COMPONENT pythonapi)
+install(
+    TARGETS zeromq_python
+    DESTINATION ${GR_PYTHON_DIR}/gnuradio/zeromq
+    COMPONENT pythonapi)

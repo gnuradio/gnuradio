@@ -17,42 +17,34 @@ find_package(FFTW3f)
 ########################################################################
 include(GrComponent)
 
-GR_REGISTER_COMPONENT("gr-fft" ENABLE_GR_FFT
-    Boost_FOUND
-    ENABLE_GNURADIO_RUNTIME
-    ENABLE_GR_BLOCKS
-    FFTW3f_FOUND
-)
+gr_register_component("gr-fft" ENABLE_GR_FFT Boost_FOUND ENABLE_GNURADIO_RUNTIME
+                      ENABLE_GR_BLOCKS FFTW3f_FOUND)
 
 ########################################################################
 # Begin conditional configuration
 ########################################################################
 if(ENABLE_GR_FFT)
 
-########################################################################
-# Add subdirectories
-########################################################################
-add_subdirectory(include/gnuradio/fft)
-add_subdirectory(lib)
-if(ENABLE_PYTHON)
-    add_subdirectory(python/fft)
-endif(ENABLE_PYTHON)
-if(ENABLE_GRC)
-    add_subdirectory(grc)
-endif(ENABLE_GRC)
-add_subdirectory(docs)
+    ########################################################################
+    # Add subdirectories
+    ########################################################################
+    add_subdirectory(include/gnuradio/fft)
+    add_subdirectory(lib)
+    if(ENABLE_PYTHON)
+        add_subdirectory(python/fft)
+    endif(ENABLE_PYTHON)
+    if(ENABLE_GRC)
+        add_subdirectory(grc)
+    endif(ENABLE_GRC)
+    add_subdirectory(docs)
 
-########################################################################
-# Create Pkg Config File
-########################################################################
-configure_file(
-    ${CMAKE_CURRENT_SOURCE_DIR}/gnuradio-fft.pc.in
-    ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-fft.pc
-@ONLY)
+    ########################################################################
+    # Create Pkg Config File
+    ########################################################################
+    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/gnuradio-fft.pc.in
+                   ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-fft.pc @ONLY)
 
-install(
-    FILES ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-fft.pc
-    DESTINATION ${GR_LIBRARY_DIR}/pkgconfig
-)
+    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-fft.pc
+            DESTINATION ${GR_LIBRARY_DIR}/pkgconfig)
 
 endif(ENABLE_GR_FFT)
