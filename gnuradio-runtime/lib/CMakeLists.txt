@@ -338,6 +338,7 @@ if(ENABLE_TESTING)
     qa_host_buffer.cc
     qa_vmcircbuf.cc
     qa_stream_iterators.cc
+    qa_typed_sync_block.cc
   )
   list(APPEND GR_TEST_TARGET_DEPS gnuradio-runtime gnuradio-pmt)
 
