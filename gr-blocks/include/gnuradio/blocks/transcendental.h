@@ -28,6 +28,25 @@ namespace blocks {
  *
  * Possible type strings: float, double, complex_float, complex_double
  *
+ * Available functions for real and complex input:
+ *
+ * - cos
+ * - sin
+ * - tan
+ * - cosh
+ * - sinh
+ * - tanh
+ * - exp
+ * - log
+ * - log10
+ * - sqrt
+ *
+ * Available functions for real input only:
+ *
+ * - acos
+ * - asin
+ * - atan
+ *
  * output[i] = trans_fcn(input[i])
  */
 class BLOCKS_API transcendental : virtual public sync_block
