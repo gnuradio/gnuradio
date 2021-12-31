@@ -1,5 +1,6 @@
 id: blocks_multiply_const_xx
 label: Fast Multiply Const
+category: '[Core]/Deprecated'
 flags: [ python, cpp ]
 
 parameters:
