@@ -117,8 +117,8 @@ blocks:
     coordinate: [120, 75]
     rotation: 0
     state: enabled
-- name: blocks_multiply_const_xx_0
-  id: blocks_multiply_const_xx
+- name: blocks_multiply_const_vxx_0
+  id: blocks_multiply_const_vxx
   parameters:
     affinity: ''
     alias: ''
@@ -792,8 +792,8 @@ blocks:
 
 connections:
 - [blocks_file_source_0, '0', dtv_dvb_bbheader_bb_0, '0']
-- [blocks_multiply_const_xx_0, '0', soapy_custom_sink_0, '0']
-- [blocks_multiply_const_xx_0, '0', uhd_usrp_sink_0, '0']
+- [blocks_multiply_const_vxx_0, '0', soapy_custom_sink_0, '0']
+- [blocks_multiply_const_vxx_0, '0', uhd_usrp_sink_0, '0']
 - [digital_ofdm_cyclic_prefixer_0, '0', dtv_dvbt2_p1insertion_cc_0, '0']
 - [dtv_dvb_bbheader_bb_0, '0', dtv_dvb_bbscrambler_bb_0, '0']
 - [dtv_dvb_bbscrambler_bb_0, '0', dtv_dvb_bch_bb_0, '0']
@@ -805,7 +805,7 @@ connections:
 - [dtv_dvbt2_interleaver_bb_0, '0', dtv_dvbt2_modulator_bc_0, '0']
 - [dtv_dvbt2_modulator_bc_0, '0', dtv_dvbt2_cellinterleaver_cc_0, '0']
 - [dtv_dvbt2_p1insertion_cc_0, '0', blocks_file_sink_0, '0']
-- [dtv_dvbt2_p1insertion_cc_0, '0', blocks_multiply_const_xx_0, '0']
+- [dtv_dvbt2_p1insertion_cc_0, '0', blocks_multiply_const_vxx_0, '0']
 - [dtv_dvbt2_pilotgenerator_cc_0, '0', digital_ofdm_cyclic_prefixer_0, '0']
 - [virtual_source_0, '0', dtv_dvbt2_interleaver_bb_0, '0']
 - [virtual_source_1, '0', dtv_dvbt2_pilotgenerator_cc_0, '0']
