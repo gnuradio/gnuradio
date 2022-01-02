@@ -14,6 +14,7 @@
 #include <QtGui/QDoubleValidator>
 #include <QtGui/QIntValidator>
 #include <QtGui/QtGui>
+#include <QComboBox>
 #include <stdexcept>
 #include <vector>
 
@@ -463,236 +464,6 @@ private:
 /********************************************************************/
 
 
-class OtherAction : public QAction
-{
-    Q_OBJECT
-
-public:
-    OtherAction(QWidget* parent) : QAction("Other", parent)
-    {
-        d_diag = new QDialog(parent);
-        d_diag->setWindowTitle("Other");
-        d_diag->setModal(true);
-
-        d_text = new QLineEdit();
-
-        QGridLayout* layout = new QGridLayout(d_diag);
-        QPushButton* btn_ok = new QPushButton(tr("OK"));
-        QPushButton* btn_cancel = new QPushButton(tr("Cancel"));
-
-        layout->addWidget(d_text, 0, 0, 1, 2);
-        layout->addWidget(btn_ok, 1, 0);
-        layout->addWidget(btn_cancel, 1, 1);
-
-        connect(btn_ok, SIGNAL(clicked()), this, SLOT(getText()));
-        connect(btn_cancel, SIGNAL(clicked()), d_diag, SLOT(close()));
-
-        connect(this, SIGNAL(triggered()), this, SLOT(getTextDiag()));
-    }
-
-    ~OtherAction() override {}
-
-    void setValidator(QValidator* v) { d_text->setValidator(v); }
-
-    void setDiagText(QString text) { d_text->setText(text); }
-
-signals:
-    void whichTrigger(const QString& text);
-
-public slots:
-    void getTextDiag() { d_diag->exec(); }
-
-private slots:
-    void getText()
-    {
-        emit whichTrigger(d_text->text());
-        d_diag->accept();
-    }
-
-private:
-    QDialog* d_diag;
-    QLineEdit* d_text;
-};
-
-/********************************************************************/
-
-
-class OtherDualAction : public QAction
-{
-    Q_OBJECT
-
-public:
-    OtherDualAction(QString label0, QString label1, QWidget* parent)
-        : QAction("Other", parent)
-    {
-        d_diag = new QDialog(parent);
-        d_diag->setWindowTitle("Other");
-        d_diag->setModal(true);
-
-        d_text0 = new QLineEdit();
-        d_text1 = new QLineEdit();
-
-        QLabel* _label0 = new QLabel(label0);
-        QLabel* _label1 = new QLabel(label1);
-
-        QGridLayout* layout = new QGridLayout(d_diag);
-        QPushButton* btn_ok = new QPushButton(tr("OK"));
-        QPushButton* btn_cancel = new QPushButton(tr("Cancel"));
-
-        layout->addWidget(_label0, 0, 0, 1, 2);
-        layout->addWidget(_label1, 1, 0, 1, 2);
-
-        layout->addWidget(d_text0, 0, 1, 1, 2);
-        layout->addWidget(d_text1, 1, 1, 1, 2);
-        layout->addWidget(btn_ok, 2, 0);
-        layout->addWidget(btn_cancel, 2, 1);
-
-        connect(btn_ok, SIGNAL(clicked()), this, SLOT(getText()));
-        connect(btn_cancel, SIGNAL(clicked()), d_diag, SLOT(close()));
-
-        connect(this, SIGNAL(triggered()), this, SLOT(getTextDiag()));
-    }
-
-    ~OtherDualAction() override {}
-
-signals:
-    void whichTrigger(const QString& text0, const QString& text1);
-
-public slots:
-    void getTextDiag() { d_diag->exec(); }
-
-private slots:
-    void getText()
-    {
-        emit whichTrigger(d_text0->text(), d_text1->text());
-        d_diag->accept();
-    }
-
-private:
-    QDialog* d_diag;
-    QLineEdit* d_text0;
-    QLineEdit* d_text1;
-};
-
-
-/********************************************************************/
-
-
-class FFTSizeMenu : public QMenu
-{
-    Q_OBJECT
-
-public:
-    FFTSizeMenu(QWidget* parent) : QMenu("FFT Size", parent)
-    {
-        d_grp = new QActionGroup(this);
-
-        d_act.push_back(new QAction("32", this));
-        d_act.push_back(new QAction("64", this));
-        d_act.push_back(new QAction("128", this));
-        d_act.push_back(new QAction("256", this));
-        d_act.push_back(new QAction("512", this));
-        d_act.push_back(new QAction("1024", this));
-        d_act.push_back(new QAction("2048", this));
-        d_act.push_back(new QAction("4096", this));
-        // d_act.push_back(new QAction("8192", this));
-        // d_act.push_back(new QAction("16384", this));
-        // d_act.push_back(new QAction("32768", this));
-        d_act.push_back(new OtherAction(this));
-
-        d_grp = new QActionGroup(this);
-        for (int t = 0; t < d_act.size(); t++) {
-            d_act[t]->setCheckable(true);
-            d_act[t]->setActionGroup(d_grp);
-        }
-
-        QIntValidator* valid = new QIntValidator(32, 4096, this);
-        ((OtherAction*)d_act[d_act.size() - 1])->setValidator(valid);
-
-        connect(d_act[0], SIGNAL(triggered()), this, SLOT(get05()));
-        connect(d_act[1], SIGNAL(triggered()), this, SLOT(get06()));
-        connect(d_act[2], SIGNAL(triggered()), this, SLOT(get07()));
-        connect(d_act[3], SIGNAL(triggered()), this, SLOT(get08()));
-        connect(d_act[4], SIGNAL(triggered()), this, SLOT(get09()));
-        connect(d_act[5], SIGNAL(triggered()), this, SLOT(get10()));
-        connect(d_act[6], SIGNAL(triggered()), this, SLOT(get11()));
-        connect(d_act[7], SIGNAL(triggered()), this, SLOT(get12()));
-        // connect(d_act[8], SIGNAL(triggered()), this, SLOT(get13()));
-        // connect(d_act[9], SIGNAL(triggered()), this, SLOT(get14()));
-        // connect(d_act[10], SIGNAL(triggered()), this, SLOT(get15()));
-        connect(d_act[8],
-                SIGNAL(whichTrigger(const QString&)),
-                this,
-                SLOT(getOther(const QString&)));
-
-        QListIterator<QAction*> i(d_act);
-        while (i.hasNext()) {
-            QAction* a = i.next();
-            a->setCheckable(true);
-            a->setActionGroup(d_grp);
-            addAction(a);
-        }
-    }
-
-    ~FFTSizeMenu() override {}
-
-    int getNumActions() const { return d_act.size(); }
-
-    QAction* getAction(unsigned int which)
-    {
-        if (which < static_cast<unsigned int>(d_act.size()))
-            return d_act[which];
-        else
-            throw std::runtime_error("FFTSizeMenu::getAction: which out of range.");
-    }
-
-    QAction* getActionFromSize(int size)
-    {
-        float ipt;
-        float which = std::log(static_cast<float>(size)) / std::log(2.0f) - 5;
-        // If we're a predefined value
-        if (std::modf(which, &ipt) == 0) {
-            if (which < static_cast<unsigned int>(d_act.size()) - 1)
-                return d_act[static_cast<int>(which)];
-            else
-                throw std::runtime_error(
-                    "FFTSizeMenu::getActionFromString: which out of range.");
-        }
-        // Or a non-predefined value, return Other
-        else {
-            ((OtherAction*)d_act[d_act.size() - 1])->setDiagText(QString().setNum(size));
-            return d_act[d_act.size() - 1];
-        }
-    }
-
-signals:
-    void whichTrigger(int size);
-
-public slots:
-    void get05() { emit whichTrigger(32); }
-    void get06() { emit whichTrigger(64); }
-    void get07() { emit whichTrigger(128); }
-    void get08() { emit whichTrigger(256); }
-    void get09() { emit whichTrigger(512); }
-    void get10() { emit whichTrigger(1024); }
-    void get11() { emit whichTrigger(2048); }
-    void get12() { emit whichTrigger(4096); }
-    // void get13() { emit whichTrigger(8192); }
-    // void get14() { emit whichTrigger(16384); }
-    // void get15() { emit whichTrigger(32768); }
-    void getOther(const QString& str)
-    {
-        int value = str.toInt();
-        emit whichTrigger(value);
-    }
-
-private:
-    QList<QAction*> d_act;
-    QActionGroup* d_grp;
-};
-
-/********************************************************************/
-
 class AverageMenu : public QMenu
 {
     Q_OBJECT
@@ -712,7 +483,6 @@ public:
         d_act.push_back(new QAction("High", this));
         d_act.push_back(new QAction("Medium", this));
         d_act.push_back(new QAction("Low", this));
-        d_act.push_back(new OtherAction(this));
 
         d_grp = new QActionGroup(this);
         for (int t = 0; t < d_act.size(); t++) {
@@ -721,17 +491,10 @@ public:
         }
         d_act[0]->setChecked(true);
 
-        QDoubleValidator* valid = new QDoubleValidator(0.0, 1.0, 3, this);
-        ((OtherAction*)d_act[d_act.size() - 1])->setValidator(valid);
-
         connect(d_act[0], SIGNAL(triggered()), this, SLOT(getOff()));
         connect(d_act[1], SIGNAL(triggered()), this, SLOT(getHigh()));
         connect(d_act[2], SIGNAL(triggered()), this, SLOT(getMedium()));
         connect(d_act[3], SIGNAL(triggered()), this, SLOT(getLow()));
-        connect(d_act[4],
-                SIGNAL(whichTrigger(const QString&)),
-                this,
-                SLOT(getOther(const QString&)));
 
         QListIterator<QAction*> i(d_act);
         while (i.hasNext()) {
@@ -751,7 +514,7 @@ public:
         if (which < static_cast<unsigned int>(d_act.size()))
             return d_act[which];
         else
-            throw std::runtime_error("FFTSizeMenu::getAction: which out of range.");
+            throw std::runtime_error("AverageMenu::getAction: which out of range.");
     }
 
     QAction* getActionFromAvg(float avg)
@@ -765,10 +528,6 @@ public:
             which = 2;
         else if (avg == d_low)
             which = 3;
-        else {
-            ((OtherAction*)d_act[d_act.size() - 1])->setDiagText(QString().setNum(avg));
-            which = 4;
-        }
         return d_act[static_cast<int>(which)];
     }
 

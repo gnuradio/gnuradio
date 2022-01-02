@@ -97,7 +97,6 @@ private:
     double d_min_val, d_cur_min_val;
     double d_max_val, d_cur_max_val;
 
-    FFTSizeMenu* d_sizemenu;
     FFTAverageMenu* d_avgmenu;
     FFTWindowMenu* d_winmenu;
 };

@@ -129,7 +129,7 @@ void freq_sink_c_impl::initialize()
     if (!d_name.empty())
         set_title(d_name);
 
-    set_output_multiple(d_fftsize);
+    set_output_multiple(32768);
 
     // initialize update time to 10 times a second
     set_update_time(0.1);
@@ -141,10 +141,10 @@ QWidget* freq_sink_c_impl::qwidget() { return d_main_gui; }
 
 void freq_sink_c_impl::set_fft_size(const int fftsize)
 {
-    if ((fftsize > 16) && (fftsize < 16384))
+    if ((fftsize > 16) && (fftsize <= 32768))
         d_main_gui->setFFTSize(fftsize);
     else
-        throw std::runtime_error("freq_sink: FFT size must be > 16 and < 16384.");
+        throw std::runtime_error("freq_sink: FFT size must be > 16 and <= 32768.");
 }
 
 int freq_sink_c_impl::fft_size() const { return d_fftsize; }

@@ -124,7 +124,6 @@ private:
     bool d_clicked;
     double d_clicked_freq;
 
-    FFTSizeMenu* d_sizemenu;
     FFTAverageMenu* d_avgmenu;
     FFTWindowMenu* d_winmenu;
     QAction *d_minhold_act, *d_maxhold_act;

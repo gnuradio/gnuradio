@@ -78,6 +78,8 @@ FreqControlPanel::FreqControlPanel(FreqDisplayForm* form) : QVBoxLayout(), d_par
     d_fft_size_combo->addItem("2048");
     d_fft_size_combo->addItem("4096");
     d_fft_size_combo->addItem("8192");
+    d_fft_size_combo->addItem("16384");
+    d_fft_size_combo->addItem("32768");
 
     d_fft_win_combo = new QComboBox();
     d_fft_win_combo->addItem("None");
@@ -169,7 +171,7 @@ FreqControlPanel::FreqControlPanel(FreqDisplayForm* form) : QVBoxLayout(), d_par
         d_autoscale_button, SIGNAL(pressed(void)), d_parent, SLOT(autoScaleShot(void)));
 
     connect(d_fft_size_combo,
-            SIGNAL(currentIndexChanged(const QString&)),
+            SIGNAL(currentTextChanged(const QString&)),
             d_parent,
             SLOT(notifyFFTSize(const QString&)));
     connect(d_fft_win_combo,
@@ -243,10 +245,7 @@ void FreqControlPanel::setFFTAverage(float val)
 
 void FreqControlPanel::toggleFFTSize(int val)
 {
-    int index = static_cast<int>(round(logf(static_cast<float>(val)) / logf(2.0f))) - 5;
-    index = std::max(index, 0);
-    index = std::min(index, d_fft_size_combo->count() - 1);
-    d_fft_size_combo->setCurrentIndex(index);
+    d_fft_size_combo->setCurrentText(QString::number(val));
 }
 
 void FreqControlPanel::toggleFFTWindow(const gr::fft::window::win_type win)
