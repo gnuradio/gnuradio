@@ -221,8 +221,6 @@ int udp_source_impl::work(int noutput_items,
                           gr_vector_const_void_star& input_items,
                           gr_vector_void_star& output_items)
 {
-    gr::thread::scoped_lock guard(d_setlock);
-
     static bool first_time = true;
     static int underrun_counter = 0;
 

@@ -167,8 +167,6 @@ udp_sink_impl::~udp_sink_impl() { stop(); }
 bool udp_sink_impl::stop()
 {
     if (d_udpsocket) {
-        gr::thread::scoped_lock guard(d_setlock);
-
         if (b_send_eof) {
             // Send a few zero-length packets to signal receiver we are done
             boost::array<char, 0> send_buf;
@@ -220,8 +218,6 @@ int udp_sink_impl::work(int noutput_items,
                         gr_vector_const_void_star& input_items,
                         gr_vector_void_star& output_items)
 {
-    gr::thread::scoped_lock guard(d_setlock);
-
     long num_bytes_to_transmit = noutput_items * d_block_size;
     const char* in = (const char*)input_items[0];
 
