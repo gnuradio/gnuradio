@@ -28,6 +28,7 @@ find_package(spdlog CONFIG)
 # Register component
 ########################################################################
 include(GrComponent)
+if (ENABLE_PYTHON)
 GR_REGISTER_COMPONENT("gnuradio-runtime" ENABLE_GNURADIO_RUNTIME
     Boost_FOUND
     PYTHONINTERP_FOUND
@@ -35,6 +36,14 @@ GR_REGISTER_COMPONENT("gnuradio-runtime" ENABLE_GNURADIO_RUNTIME
     spdlog_FOUND
     pybind11_FOUND
 )
+else()
+GR_REGISTER_COMPONENT("gnuradio-runtime" ENABLE_GNURADIO_RUNTIME
+    Boost_FOUND
+    PYTHONINTERP_FOUND
+    MPLIB_FOUND
+    spdlog_FOUND
+)
+endif()
 
 get_filename_component(GNURADIO_RUNTIME_PYTHONPATH
     ${CMAKE_SOURCE_DIR}/python ABSOLUTE

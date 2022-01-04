@@ -109,3 +109,28 @@ jobs:
        su -c ldconfig
     - name: Test Python3
       run: python3 -c "import gnuradio.blocks; print(gnuradio.blocks.complex_to_float())"
+  no-python:
+  # All of these shall depend on the formatting check (needs: check-formatting)
+    needs: [check-formatting, check-python-formatting]
+    runs-on: ubuntu-latest
+    # The GH default is 360 minutes (it's also the max as of Feb-2021). However
+    # we should fail sooner. The only reason to exceed this time is if a test
+    # hangs.
+    timeout-minutes: 120
+    name: C++ Only Build (Ubuntu 20.04)
+    container:
+      image: 'gnuradio/ci:ubuntu-20.04-3.9'
+      volumes:
+        - build_data:/build
+      options: --cpus 2
+    steps:
+    - uses: actions/checkout@v2
+      name: Checkout Project
+    - name: CMake
+      env:
+        CXXFLAGS: -Werror -Wno-error=invalid-pch
+      run: 'cd /build && cmake ${GITHUB_WORKSPACE} -DENABLE_DOXYGEN=OFF -DENABLE_PYTHON=OFF'
+    - name: Make
+      run: 'cd /build && make -j2 -k'
+    - name: Make Test
+      run: 'cd /build && ctest --output-on-failure'
