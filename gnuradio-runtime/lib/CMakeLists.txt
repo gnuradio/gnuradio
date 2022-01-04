@@ -52,7 +52,6 @@ add_library(gnuradio-runtime
   block.cc
   block_detail.cc
   block_executor.cc
-  block_gateway_impl.cc
   block_registry.cc
   buffer.cc
   flat_flowgraph.cc
@@ -93,6 +92,12 @@ add_library(gnuradio-runtime
   vmcircbuf_sysv_shm.cc
   )
 
+if (ENABLE_PYTHON)
+  target_sources(gnuradio-runtime PRIVATE
+    block_gateway_impl.cc
+  )
+endif()
+
 # Messages
 target_sources(gnuradio-runtime PRIVATE
   ${CMAKE_CURRENT_SOURCE_DIR}/messages/msg_accepter.cc
@@ -130,13 +135,19 @@ target_link_libraries(gnuradio-runtime PUBLIC
   # INTERFACE/PRIVATE split so users of the library can choose how to link to Python
   # (importantly, extension modules can avoid linking against Python and resolve
   #  their own Python symbols at runtime through the Python interpreter's linking)
+  PRIVATE
+    libunwind::libunwind 
+  )
+
+if (ENABLE_PYTHON)
+target_link_libraries(gnuradio-runtime
   INTERFACE
     Python::Module
   PRIVATE
     Python::Python
-    libunwind::libunwind
     pybind11::pybind11
-  )
+)
+endif()
 
 target_include_directories(gnuradio-runtime
   PUBLIC
