@@ -27,6 +27,8 @@ class QTGUI_API freq_sink_f_impl : public freq_sink_f
 private:
     void initialize();
 
+    static const int s_min_fft_size = 32;
+    static const int s_max_fft_size = 32768;
     int d_fftsize;
     fft::fft_shift<float> d_fft_shift;
     float d_fftavg;
