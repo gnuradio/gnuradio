@@ -13,13 +13,6 @@ import os
 import unittest
 import warnings
 
-# ugly hack to make pygccxml work with Python >= 3.8
-import time
-try:
-    time.clock
-except:
-    time.clock = time.perf_counter
-
 try:
     import pygccxml
     SKIP_BLOCK_TEST = False
