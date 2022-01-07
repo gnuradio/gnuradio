@@ -13,18 +13,12 @@ from ..core import Constants
 from ..core.comments import read_comments, add_comments, exist_comments
 from ..core.iosignature import io_signature, message_port
 from ..core.base import BlockToolException, BlockTool
-import time
 import os
 import re
 import codecs
 import logging
 
 PYGCCXML_AVAILABLE = False
-# ugly hack to make pygccxml work with Python >= 3.8
-try:
-    time.clock
-except:
-    time.clock = time.perf_counter
 try:
     from pygccxml import parser, declarations, utils
     PYGCCXML_AVAILABLE = True
