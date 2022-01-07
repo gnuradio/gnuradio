@@ -52,6 +52,10 @@ public:
     // checks if there was a double-click event; reset if there was
     bool checkClicked();
 
+    const int MIN_FFT_SIZE = 32;
+    const int MAX_FFT_SIZE = 32768;
+    const int FFT_DEFAULT_SIZE = 1024;
+
 public slots:
     void customEvent(QEvent* e) override;
 

@@ -69,17 +69,10 @@ FreqControlPanel::FreqControlPanel(FreqDisplayForm* form) : QVBoxLayout(), d_par
     d_fft_box = new QGroupBox("FFT");
     d_fft_layout = new QVBoxLayout;
     d_fft_size_combo = new QComboBox();
-    d_fft_size_combo->addItem("32");
-    d_fft_size_combo->addItem("64");
-    d_fft_size_combo->addItem("128");
-    d_fft_size_combo->addItem("256");
-    d_fft_size_combo->addItem("512");
-    d_fft_size_combo->addItem("1024");
-    d_fft_size_combo->addItem("2048");
-    d_fft_size_combo->addItem("4096");
-    d_fft_size_combo->addItem("8192");
-    d_fft_size_combo->addItem("16384");
-    d_fft_size_combo->addItem("32768");
+    for (int fftsize = d_parent->MIN_FFT_SIZE; fftsize <= d_parent->MAX_FFT_SIZE;
+         fftsize *= 2) {
+        d_fft_size_combo->addItem(QString("%1").arg(fftsize));
+    }
 
     d_fft_win_combo = new QComboBox();
     d_fft_win_combo->addItem("None");
