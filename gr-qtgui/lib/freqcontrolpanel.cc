@@ -238,7 +238,19 @@ void FreqControlPanel::setFFTAverage(float val)
 
 void FreqControlPanel::toggleFFTSize(int val)
 {
-    d_fft_size_combo->setCurrentText(QString::number(val));
+    // Check if val is contained in combobox
+    if (d_fft_size_combo->findText(QString::number(val)) > 0)
+        d_fft_size_combo->setCurrentText(QString::number(val));
+    else {
+        // Find greatest entry in combobox < val
+        int count = 1;
+        int test = val >> 1;
+        while (test > 0) {
+            count *= 2;
+            test = test >> 1;
+        }
+        d_fft_size_combo->setCurrentText(QString::number(count));
+    }
 }
 
 void FreqControlPanel::toggleFFTWindow(const gr::fft::window::win_type win)
