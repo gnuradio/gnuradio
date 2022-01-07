@@ -20,7 +20,7 @@ parameters:
     hide: ${ ('none' if len(name) > 0 else 'part') }
 -   id: fftsize
     label: FFT Size
-    dtype: enum
+    dtype: int
     default: '1024'
     options: ['32','64','128','256','512','1024','2048','4096','8192','16384','32768']
     hide: ${ ('all' if type.startswith('msg') else 'none') }
