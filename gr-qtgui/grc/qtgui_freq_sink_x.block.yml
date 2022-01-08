@@ -22,6 +22,7 @@ parameters:
     label: FFT Size
     dtype: int
     default: '1024'
+    options: ['32','64','128','256','512','1024','2048','4096','8192','16384','32768']
     hide: ${ ('all' if (type == 'msg_complex' or type == 'msg_float') else 'none') }
 -   id: freqhalf
     label: Spectrum Width
@@ -395,6 +396,9 @@ outputs:
     id: freq
     optional: true
     hide: ${ not showports }
+
+asserts:
+- ${fftsize >= 32 and fftsize <= 32768}
 
 templates:
     imports: |-
