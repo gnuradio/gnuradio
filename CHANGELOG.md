@@ -51,11 +51,15 @@ Older Logs can be found in `docs/RELEASE-NOTES-*`.
   - GCC 9.3.0
   - Clang 11.0.0 / Apple Clang 1100
   - MSVC 1916 (Microsoft VS 2017 15.9)
+- Replace deprecated distutils in CMake macros
+- Build targets with python dependencies conditionally on `ENABLE_PYTHON`
+
 
 #### gr-blocks
 
 - Remove deprecated networking blocks: `udp_source`, `udp_sink`, `tcp_server_sink`; replaced
   in 3.9 with more capable blocks in `gr-network`
+- Document the supported operations in transcendental
 
 #### gr-analog
 
@@ -67,6 +71,8 @@ Older Logs can be found in `docs/RELEASE-NOTES-*`.
 ### gr-filter
 
 - Remove deprecated `mmse_interpolator` block; Replaced previously by `mmse_resampler`
+- Speed up filter building with moves
+- Add const to temporary tap vectors
 
 ### gr-digital
 
@@ -80,6 +86,7 @@ Older Logs can be found in `docs/RELEASE-NOTES-*`.
 #### gr-dtv
 
 - Refactor ATSC blocks to have separate metadata stream rather than passing structs
+- Add energy normalization for DVB-S2X constellations
 
 #### gr-network
 
@@ -90,6 +97,7 @@ Older Logs can be found in `docs/RELEASE-NOTES-*`.
 - Remove spurious volk includes
 - Fix segfaulting overflow in time_sink and waterfall
 - Support for Qwt 6.2
+- Frequency Sinks expand range to 32k and enums in GRC
 
 #### gr-uhd
 
@@ -120,6 +128,7 @@ Older Logs can be found in `docs/RELEASE-NOTES-*`.
 
 - grcc --output switch for hierarchical blocks
 - Clean up Bokeh server loop
+- Don't blacklist `default` as a flowgraph ID to prevent always starting in an error state
 
 #### Testing
 
