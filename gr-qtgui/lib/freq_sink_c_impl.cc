@@ -146,7 +146,7 @@ void freq_sink_c_impl::set_fft_size(const int fftsize)
     else {
         GR_LOG_INFO(
             d_logger,
-            fmt::format("FFT size must be>= {} and <= {}. \n So falling back to {}.",
+            fmt::format("FFT size must be >= {} and <= {}. \nFalling back to {}.",
                         d_main_gui->MIN_FFT_SIZE,
                         d_main_gui->MAX_FFT_SIZE,
                         d_main_gui->FFT_DEFAULT_SIZE));
