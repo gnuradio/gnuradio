@@ -69,15 +69,10 @@ FreqControlPanel::FreqControlPanel(FreqDisplayForm* form) : QVBoxLayout(), d_par
     d_fft_box = new QGroupBox("FFT");
     d_fft_layout = new QVBoxLayout;
     d_fft_size_combo = new QComboBox();
-    d_fft_size_combo->addItem("32");
-    d_fft_size_combo->addItem("64");
-    d_fft_size_combo->addItem("128");
-    d_fft_size_combo->addItem("256");
-    d_fft_size_combo->addItem("512");
-    d_fft_size_combo->addItem("1024");
-    d_fft_size_combo->addItem("2048");
-    d_fft_size_combo->addItem("4096");
-    d_fft_size_combo->addItem("8192");
+    for (int fftsize = d_parent->MIN_FFT_SIZE; fftsize <= d_parent->MAX_FFT_SIZE;
+         fftsize *= 2) {
+        d_fft_size_combo->addItem(QString("%1").arg(fftsize));
+    }
 
     d_fft_win_combo = new QComboBox();
     d_fft_win_combo->addItem("None");
@@ -169,7 +164,7 @@ FreqControlPanel::FreqControlPanel(FreqDisplayForm* form) : QVBoxLayout(), d_par
         d_autoscale_button, SIGNAL(pressed(void)), d_parent, SLOT(autoScaleShot(void)));
 
     connect(d_fft_size_combo,
-            SIGNAL(currentIndexChanged(const QString&)),
+            SIGNAL(currentTextChanged(const QString&)),
             d_parent,
             SLOT(notifyFFTSize(const QString&)));
     connect(d_fft_win_combo,
@@ -243,10 +238,19 @@ void FreqControlPanel::setFFTAverage(float val)
 
 void FreqControlPanel::toggleFFTSize(int val)
 {
-    int index = static_cast<int>(round(logf(static_cast<float>(val)) / logf(2.0f))) - 5;
-    index = std::max(index, 0);
-    index = std::min(index, d_fft_size_combo->count() - 1);
-    d_fft_size_combo->setCurrentIndex(index);
+    // Check if val is contained in combobox
+    if (d_fft_size_combo->findText(QString::number(val)) > 0)
+        d_fft_size_combo->setCurrentText(QString::number(val));
+    else {
+        // Find greatest entry in combobox < val
+        int count = 1;
+        int test = val >> 1;
+        while (test > 0) {
+            count *= 2;
+            test = test >> 1;
+        }
+        d_fft_size_combo->setCurrentText(QString::number(count));
+    }
 }
 
 void FreqControlPanel::toggleFFTWindow(const gr::fft::window::win_type win)

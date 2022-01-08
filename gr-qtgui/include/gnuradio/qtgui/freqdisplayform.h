@@ -52,6 +52,10 @@ public:
     // checks if there was a double-click event; reset if there was
     bool checkClicked();
 
+    const int MIN_FFT_SIZE = 32;
+    const int MAX_FFT_SIZE = 32768;
+    const int FFT_DEFAULT_SIZE = 1024;
+
 public slots:
     void customEvent(QEvent* e) override;
 
@@ -124,7 +128,6 @@ private:
     bool d_clicked;
     double d_clicked_freq;
 
-    FFTSizeMenu* d_sizemenu;
     FFTAverageMenu* d_avgmenu;
     FFTWindowMenu* d_winmenu;
     QAction *d_minhold_act, *d_maxhold_act;

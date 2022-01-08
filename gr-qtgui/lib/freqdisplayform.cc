@@ -41,13 +41,10 @@ FreqDisplayForm::FreqDisplayForm(int nplots, QWidget* parent)
     d_trig_channel = 0;
     d_trig_tag_key = "";
 
-    d_sizemenu = new FFTSizeMenu(this);
     d_avgmenu = new FFTAverageMenu(this);
     d_winmenu = new FFTWindowMenu(this);
-    d_menu->addMenu(d_sizemenu);
     d_menu->addMenu(d_avgmenu);
     d_menu->addMenu(d_winmenu);
-    connect(d_sizemenu, SIGNAL(whichTrigger(int)), this, SLOT(setFFTSize(const int)));
     connect(
         d_avgmenu, SIGNAL(whichTrigger(float)), this, SLOT(setFFTAverage(const float)));
     connect(d_winmenu,
@@ -136,7 +133,7 @@ FreqDisplayForm::FreqDisplayForm(int nplots, QWidget* parent)
             this,
             SLOT(onPlotPointSelected(const QPointF)));
 
-    connect(this, SIGNAL(signalReplot()), getPlot(), SLOT(replot()));
+    connect(this, SIGNAL(signalReplot()), d_display_plot, SLOT(replot()));
 }
 
 FreqDisplayForm::~FreqDisplayForm()
@@ -173,8 +170,6 @@ void FreqDisplayForm::setupControlPanel()
             SIGNAL(triggered(bool)),
             d_controlpanel,
             SLOT(toggleAxisLabels(bool)));
-    connect(
-        d_sizemenu, SIGNAL(whichTrigger(int)), d_controlpanel, SLOT(toggleFFTSize(int)));
     connect(d_winmenu,
             SIGNAL(whichTrigger(gr::fft::window::win_type)),
             d_controlpanel,
@@ -271,10 +266,9 @@ void FreqDisplayForm::setSampleRate(const QString& samprate)
 void FreqDisplayForm::setFFTSize(const int newsize)
 {
     d_fftsize = newsize;
-    d_sizemenu->getActionFromSize(newsize)->setChecked(true);
 
-    emit signalReplot();
     emit signalFFTSize(newsize);
+    emit signalReplot();
 }
 
 void FreqDisplayForm::setFFTAverage(const float newavg)

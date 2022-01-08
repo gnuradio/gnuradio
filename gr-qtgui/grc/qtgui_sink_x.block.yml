@@ -19,6 +19,7 @@ parameters:
     label: FFT Size
     dtype: int
     default: '1024'
+    options: ['32','64','128','256','512','1024','2048','4096','8192','16384','32768']
 -   id: wintype
     label: Window Type
     dtype: enum
