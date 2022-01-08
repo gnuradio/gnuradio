@@ -73,13 +73,10 @@ WaterfallDisplayForm::WaterfallDisplayForm(int nplots, QWidget* parent)
     d_autoscale_act->setText(tr("Auto Scale"));
     d_autoscale_act->setCheckable(false);
 
-    d_sizemenu = new FFTSizeMenu(this);
     d_avgmenu = new FFTAverageMenu(this);
     d_winmenu = new FFTWindowMenu(this);
-    d_menu->addMenu(d_sizemenu);
     d_menu->addMenu(d_avgmenu);
     d_menu->addMenu(d_winmenu);
-    connect(d_sizemenu, SIGNAL(whichTrigger(int)), this, SLOT(setFFTSize(const int)));
     connect(
         d_avgmenu, SIGNAL(whichTrigger(float)), this, SLOT(setFFTAverage(const float)));
     connect(d_winmenu,
@@ -187,7 +184,6 @@ void WaterfallDisplayForm::setSampleRate(const QString& samprate)
 void WaterfallDisplayForm::setFFTSize(const int newsize)
 {
     d_fftsize = newsize;
-    d_sizemenu->getActionFromSize(newsize)->setChecked(true);
     getPlot()->replot();
 }
 
