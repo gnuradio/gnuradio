@@ -94,6 +94,7 @@ public:
 
     static const long MAX_FFT_SIZE;
     static const long MIN_FFT_SIZE;
+    static const long DEFAULT_FFT_SIZE;
 
     QWidget* qwidget();
 
