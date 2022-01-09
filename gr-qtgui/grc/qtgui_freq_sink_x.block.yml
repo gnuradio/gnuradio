@@ -399,6 +399,7 @@ outputs:
 
 asserts:
 - ${fftsize >= 32 and fftsize <= 32768}
+- ${not (fftsize & (fftsize -1))}
 
 templates:
     imports: |-
