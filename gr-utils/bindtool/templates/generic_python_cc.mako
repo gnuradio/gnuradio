@@ -146,7 +146,8 @@ if 'bases' in cls:
     if (base_str.endswith('gr::sync_block') or 
           base_str.endswith('gr::sync_interpolator') or 
           base_str.endswith('gr::sync_decimator') or 
-          base_str.endswith('gr::tagged_stream_block')):
+          base_str.endswith('gr::tagged_stream_block') or
+          base_str.endswith('gr::uhd::rfnoc_block')):
         base_str += ", gr::block"
     if base_str.endswith('gr::block'):
         base_str += ", gr::basic_block"
