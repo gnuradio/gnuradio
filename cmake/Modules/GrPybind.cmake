@@ -101,7 +101,6 @@ foreach(file ${files})
                     ${CMAKE_SOURCE_DIR}/gr-utils/bindtool/scripts/bind_intree_file.py
                     "--output_dir" ${CMAKE_CURRENT_SOURCE_DIR}/..
                     "--prefix" ${CMAKE_INSTALL_PREFIX}
-                    "--src" ${CMAKE_SOURCE_DIR}
                     "--module" ${name} 
                     "--filename" ${header_full_path}
                     "--status" ${CMAKE_CURRENT_BINARY_DIR}/${file}.regen_status 
@@ -238,7 +237,6 @@ foreach(file ${files})
                     ${CMAKE_CURRENT_SOURCE_DIR}/bind_oot_file.py
                     "--output_dir" ${CMAKE_CURRENT_SOURCE_DIR}/..
                     "--prefix" ${CMAKE_INSTALL_PREFIX}
-                    "--src" ${CMAKE_SOURCE_DIR}
                     "--module" ${name} 
                     "--filename" ${header_full_path}
                     "--status" ${CMAKE_CURRENT_BINARY_DIR}/${file}.regen_status 
