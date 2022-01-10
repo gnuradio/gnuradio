@@ -72,7 +72,7 @@ private:
 
     bool d_semilogx = false;
     bool d_semilogy = false;
-    bool d_autoscalex_state = true;
+    bool d_autoscalex_state = false;
 };
 
 #endif /* HISTOGRAM_DISPLAY_PLOT_H */
