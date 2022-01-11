@@ -97,7 +97,8 @@ Older Logs can be found in `docs/RELEASE-NOTES-*`.
 - Remove spurious volk includes
 - Fix segfaulting overflow in time_sink and waterfall
 - Support for Qwt 6.2
-- Frequency Sinks expand range to 32k and enums in GRC
+- Frequency/Waterfall Sinks expand range to 32k and enums in GRC
+- Frequency/Waterfall Sinks force power of 2 for fft size
 
 #### gr-uhd
 
