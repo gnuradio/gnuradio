@@ -103,6 +103,10 @@ outputs:
     optional: true
     hide: ${ not showports }
 
+asserts:
+- ${fftsize >= 32 and fftsize <= 32768}
+- ${not (fftsize & (fftsize -1))}
+
 templates:
     imports: |-
         from PyQt5 import Qt
