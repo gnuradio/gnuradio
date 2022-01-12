@@ -11,6 +11,7 @@ parameters:
 -   id: priority
     label: Priority
     dtype: int
+    default: "0"
     hide: ${'part' if priority <= 0 else 'none'}
 -   id: code
     label: Code Snippet
