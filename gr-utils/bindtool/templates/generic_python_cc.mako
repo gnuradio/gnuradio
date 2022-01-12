@@ -209,7 +209,7 @@ values = en['values']
 %>\
     py::enum_<${namespace['name']}::${en['name']}>(${modvar},"${en["name"]}")
 % for val in values:
-        .value("${val[0]}", ${namespace['name']}::${val[0]}) // ${val[1]}
+        .value("${val[0]}", ${namespace['name']}::${en['name']}::${val[0]}) // ${val[1]}
 % endfor 
         .export_values()
     ;
