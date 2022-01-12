@@ -51,7 +51,7 @@ class GRCYAMLGenerator(object):
                         ('label', blockname.replace('_', ' ')),
                         (f'category', f'[{modname.capitalize()}]')
                         )
-        self._templates = (('imports', f'import {modname}'),
+        self._templates = (('imports', f'from gnuradio import {modname}'),
                            ('make', f'{modname}.{blockname}({str_})')
                            )
         self.params = params
