@@ -244,7 +244,7 @@ protected:
      * The gain will be distributed automatically across available
      * elements according to Soapy API.
      * @param val the new amplification value in dB
-     * @param channel an avalaible channel on the device
+     * @param channel an available channel on the device
      */
     void cmd_handler_gain(pmt::pmt_t val, size_t channel);
 
