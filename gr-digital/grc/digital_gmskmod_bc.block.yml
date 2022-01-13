@@ -8,7 +8,7 @@ parameters:
     dtype: int
     default: '2'
 -   id: bt
-    label: 3 dB Time-Bandwith Product
+    label: 3 dB Time-Bandwidth Product
     dtype: real
     default: '0.3'
 -   id: L
