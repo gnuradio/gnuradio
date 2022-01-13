@@ -206,7 +206,7 @@ documentation: |-
 
     DDS units and ranges:
      - Frequency: [0 samp_rate/2] Hz
-     - Phase: [0 360] Degress
+     - Phase: [0 360] Degrees
      - Scale: [0 1] Fullscale=1
 
 file_format: 1

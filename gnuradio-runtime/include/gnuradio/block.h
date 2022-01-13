@@ -920,7 +920,7 @@ protected:
      *
      * \details
      *
-     * This opperates much like get_tags_in_range but allows us to
+     * This operates much like get_tags_in_range but allows us to
      * work within the current window of items. Item range is
      * therefore within the possible range of 0 to
      * ninput_items[whic_input].

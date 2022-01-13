@@ -23,7 +23,7 @@ namespace pdu {
  *
  * This block computes the difference between the current system time and a defined PDU
  * key previously added (e.g.: by by the add_system_time block). This is useful for
- * benchmarking PDU operations. The block also maintians running estimates of mean and
+ * benchmarking PDU operations. The block also maintains running estimates of mean and
  * variance, accessible by getters and printed when the flowgraph is stopped.
  */
 class PDU_API time_delta : virtual public gr::block

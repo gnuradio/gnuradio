@@ -74,7 +74,7 @@ void take_skip_to_pdu_impl<T>::publish_message()
     d_meta_dict = pmt::dict_add(
         d_meta_dict, metadata_keys::pdu_num(), pmt::from_uint64(d_burst_counter));
 
-    // publish mesage
+    // publish message
     this->message_port_pub(msgport_names::pdus(),
                            pmt::cons(d_meta_dict, this->init_data(d_vector)));
 

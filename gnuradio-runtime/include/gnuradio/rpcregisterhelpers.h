@@ -1405,7 +1405,7 @@ public:
     }
 
     /*! Empty constructor which should never be called but needs to
-     * exist for ues in varous STL data structures
+     *  exist for us in various STL data structures
      */
     rpcbasic_register_variable()
         : d_rpc_reg("FAIL",
@@ -1440,7 +1440,7 @@ public:
      * \param max          Expected maximum value the parameter can hold
      * \param def          Expected default value the parameter can hold
      * \param units_       A string to describe what units to represent the variable with
-     * \param desc_        A string to describing the variable.
+     * \param desc_        A string to describe the variable.
      * \param minpriv_     The required minimum privilege level
      * \param display_     The display mask
      */
@@ -1515,7 +1515,7 @@ private:
 
 public:
     /*! Empty constructor which should never be called but needs to
-     *  exist for ues in varous STL data structures.
+     *  exist for us in various STL data structures.
      */
     rpcbasic_register_variable_rw()
         : d_rpc_regset("FAIL",

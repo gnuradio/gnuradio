@@ -56,7 +56,7 @@ class qa_message_strobe(gr_unittest.TestCase):
         self.tb.wait()
 
         # check data
-        # first received message matchs initial test message
+        # first received message matches initial test message
         self.assertAlmostEqual(pmt.to_python(msg_debug.get_message(
             0)), test_str, "mismatch initial test string")
 

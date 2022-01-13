@@ -428,7 +428,7 @@ documentation: |-
     Gain:
     Depending the device driver specified in the Device field various
     gains parameters can be configured. If a driver is not explicitly
-    supported from the block an Overal Gain parameter can be configured.
+    supported from the block an Overall Gain parameter can be configured.
 
       E.g 1:
         Gain Value: 10

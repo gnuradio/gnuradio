@@ -1,6 +1,6 @@
 .TH GR_READ_FILE_METADATA "1" "@BUILD_DATE_SHORT@" "gr_read_file_metadata @VERSION@" "User Commands"
 .SH NAME
-gr_read_file_metatdata \- a Gnu Radio Utility
+gr_read_file_metadata \- a Gnu Radio Utility
 .SH DESCRIPTION
 Read in a GNU Radio file with meta data, extracts the header and prints it.
 .PP

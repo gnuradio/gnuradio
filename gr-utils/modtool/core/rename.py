@@ -172,7 +172,7 @@ class ModToolRename(ModTool):
 
     def _run_cmakelists(self, path, first, second, suffix):
         filename = os.path.join(path, 'CMakeLists.txt')
-        # space character and suffix ensures similiarly named blocks are not mixed up
+        # space character and suffix ensures similarly named blocks are not mixed up
         nsubs = self._run_file_replace(
             filename, ' ' + first + suffix, ' ' + second + suffix)
         if nsubs < 1:

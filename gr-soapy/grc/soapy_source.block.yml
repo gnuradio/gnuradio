@@ -626,7 +626,7 @@ templates:
           set_antenna(1,${ant1})
           % endif
 
-        # Bandwith filter
+        # Bandwidth filter
         - set_bandwidth(0,${bw0})
         - |
           % if context.get('nchan')() > 1:
@@ -815,7 +815,7 @@ documentation: |-
     Gain:
     Depending the device driver specified in the Device field various gain
     parameters can be configured. If a driver is not explicitly supported from
-    the block an Overal Gain parameter can be configured.
+    the block an Overall Gain parameter can be configured.
       E.g 1:
         Gain Value: 10
       E.g 2:
