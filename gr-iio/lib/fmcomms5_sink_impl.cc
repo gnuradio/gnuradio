@@ -295,7 +295,7 @@ void fmcomms5_sink_impl::set_params(iio_device* phy_device,
     if (filt_config.compare("Off") == 0) {
         ret = ad9361_set_trx_fir_enable(phy_device, false);
         if (ret) {
-            throw std::runtime_error("Unable to disable fitlers");
+            throw std::runtime_error("Unable to disable filters");
         }
     }
 }
