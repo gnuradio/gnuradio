@@ -253,8 +253,8 @@ outputs:
     hide: ${ not showports }
 
 asserts:
-- ${fftsize >= 32 and fftsize <= 32768}
-- ${not (fftsize & (fftsize -1))}
+- ${fftsize >= 32 and fftsize <= 32768#The FFT Size is out of range 32 - 32768}
+- ${not (fftsize & (fftsize -1))#The FFT Size should be a power of 2}
 
 templates:
     imports: |-
