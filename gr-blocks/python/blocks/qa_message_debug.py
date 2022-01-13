@@ -16,7 +16,7 @@ import time
 # this test tests message strobe and message debug blocks against each other
 # similar tests contained in message_strobe class
 
-# this tests only the store port and the message retrival methods of the debug block
+# this tests only the store port and the message retrieval methods of the debug block
 # print() and print_pdu() were omitted as they print to stdout
 
 
@@ -56,7 +56,7 @@ class qa_message_debug(gr_unittest.TestCase):
         self.tb.stop()
         self.tb.wait()
         # check data
-        # first received message matchs initial test message
+        # first received message matches initial test message
         self.assertAlmostEqual(pmt.to_python(msg_debug.get_message(
             0)), test_str, "mismatch initial test string")
 
