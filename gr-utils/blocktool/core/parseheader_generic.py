@@ -322,7 +322,8 @@ class GenericHeaderParser(BlockTool):
                 define_symbols=self.define_symbols,
                 cflags='-std=c++17 -fPIC')
             decls = parser.parse(
-                [self.target_file], xml_generator_config)
+                [self.target_file], xml_generator_config,
+                compilation_mode=parser.COMPILATION_MODE.ALL_AT_ONCE)
 
             global_namespace = declarations.get_global_namespace(decls)
 
