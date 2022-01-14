@@ -79,7 +79,7 @@ sink_s_impl::sink_s_impl(
     if (d_screen == NULL) {
         d_logger->error("Unable to set SDL video mode: {:s}; SDL_SetVideoMode() Failed",
                         SDL_GetError());
-        exit(1);
+        throw std::runtime_error("video_sdl::sink_s");
     }
     if (d_image) {
         SDL_FreeYUVOverlay(d_image);
