@@ -301,13 +301,13 @@ void fec_mtrx_impl::add_matrices_mod2(gsl_matrix* result,
 
     if (matrix1_rows != matrix2_rows) {
         std::cout << "Error in add_matrices_mod2. Matrices do"
-                  << " not have the same number of rows.\n";
-        exit(1);
+		  << " not have the same number of rows.\n";
+	throw std::runtime_error("fec_mtrx::add_matrices_mod2");
     }
     if (matrix1_cols != matrix2_cols) {
         std::cout << "Error in add_matrices_mod2. Matrices do"
-                  << " not have the same number of columns.\n";
-        exit(1);
+		  << " not have the same number of columns.\n";
+	throw std::runtime_error("fec_mtrx::add_matrices_mod2");
     }
 
     // Copy matrix1 into result
@@ -338,11 +338,11 @@ void fec_mtrx_impl::mult_matrices_mod2(gsl_matrix* result,
     unsigned int d = (*matrix2).size2; // # of columns
     if (b != c) {
         std::cout << "Error in "
-                  << "fec_mtrx_impl::mult_matrices_mod2."
-                  << " Matrix dimensions do not allow for matrix "
-                  << "multiplication operation:\nmatrix1 is " << a << " x " << b
-                  << ", and matrix2 is " << c << " x " << d << ".\n";
-        exit(1);
+		  << "fec_mtrx_impl::mult_matrices_mod2."
+		  << " Matrix dimensions do not allow for matrix "
+		  << "multiplication operation:\nmatrix1 is " << a << " x " << b
+		  << ", and matrix2 is " << c << " x " << d << ".\n";
+	throw std::runtime_error("fec_mtrx::mult_matrices_mod2");
     }
 
     // Perform matrix multiplication. This is not mod 2.

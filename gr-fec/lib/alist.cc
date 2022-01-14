@@ -119,8 +119,8 @@ void alist::read(const char* fname)
 void alist::write(const char* fname) const
 {
     if (!data_ok) {
-        std::cout << "Data not ok, exiting" << std::endl;
-        exit(1);
+        std::cout << "Data not ok, alist::write returning" << std::endl;
+        return;
     }
     // Else
     std::ofstream file(fname, std::ofstream::out);
