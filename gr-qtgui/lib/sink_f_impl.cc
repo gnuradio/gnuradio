@@ -16,9 +16,11 @@
 
 #include <gnuradio/fft/window.h>
 #include <gnuradio/io_signature.h>
+#include <gnuradio/logger.h>
 #include <gnuradio/prefs.h>
 
 #include <volk/volk.h>
+#include <boost/format.hpp>
 
 #include <cstring>
 
@@ -157,17 +159,16 @@ QWidget* sink_f_impl::qwidget() { return d_main_gui->qwidget(); }
 
 void sink_f_impl::set_fft_size(const int fftsize)
 {
-    if ((fftsize >= d_main_gui.MIN_FFT_SIZE) && (fftsize <= d_main_gui.MAX_FFT_SIZE)) {
+    if ((fftsize >= d_main_gui->MIN_FFT_SIZE) && (fftsize <= d_main_gui->MAX_FFT_SIZE)) {
         d_fftsize = fftsize;
-        d_main_gui.setFFTSize(fftsize);
+        d_main_gui->setFFTSize(fftsize);
     } else {
-        GR_LOG_INFO(
-            d_logger,
-            fmt::format("FFT size must be >= {} and <= {}.\nSo falling back to {}.",
-                        d_main_gui.MIN_FFT_SIZE,
-                        d_main_gui.MAX_FFT_SIZE,
-                        d_main_gui.DEFAULT_FFT_SIZE));
-        d_main_gui.setFFTSize(d_main_gui.DEFAULT_FFT_SIZE);
+        GR_LOG_INFO(d_logger,
+                    boost::format(
+                        "FFT size must be >= %1% and <= %2%.\nSo falling back to %3%.") %
+                        d_main_gui->MIN_FFT_SIZE % d_main_gui->MAX_FFT_SIZE %
+                        d_main_gui->DEFAULT_FFT_SIZE);
+        d_main_gui->setFFTSize(d_main_gui->DEFAULT_FFT_SIZE);
     }
 }
 
