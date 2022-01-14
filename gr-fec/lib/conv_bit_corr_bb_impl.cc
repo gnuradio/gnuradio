@@ -244,7 +244,7 @@ float conv_bit_corr_bb_impl::data_garble_rate(int taps, float target)
 
     if ((errno == EDOM) || (errno == ERANGE)) {
         d_logger->error("Out of range errors while computing garble rate.");
-        exit(-1);
+        throw std::runtime_error("conv_bit_corr_bb_impl::data_garble_rate");
     }
     return answer;
 }
