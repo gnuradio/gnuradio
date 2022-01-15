@@ -41,6 +41,7 @@ usrp_source_impl::usrp_source_impl(const ::uhd::device_addr_t& device_addr,
       _tag_now(false),
       _issue_stream_cmd_on_start(issue_stream_cmd_on_start),
       _last_log(std::chrono::steady_clock::now()),
+      _overflow_count(0),
       _overflow_log_interval(
           gr::prefs::singleton()->get_long("uhd", "logging_interval_ms", 750))
 {
