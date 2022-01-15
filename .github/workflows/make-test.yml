@@ -2,10 +2,10 @@ name: 'Make Test'
 on:
   push:
     branches:
-      - master
+      - maint-3.10
   pull_request:
     branches:
-      - master
+      - maint-3.10
 jobs:
   # We start with checking C++ formatting. No one gets free CPU cycles if they
   # can't use clang-format.
