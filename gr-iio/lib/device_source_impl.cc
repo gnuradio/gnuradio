@@ -291,7 +291,13 @@ int device_source_impl::work(int noutput_items,
 
         // Tag start of new packet
         if (d_len_tag_key != pmt::PMT_NIL) {
-            for (size_t i = 0; i < output_items.size(); i += 2) {
+            size_t toutputs;
+            if (override_tagged_output_channels > 0)
+                toutputs = override_tagged_output_channels;
+            else
+                toutputs = output_items.size();
+
+            for (size_t i = 0; i < toutputs; i += 1) {
                 this->add_item_tag(i,
                                    this->nitems_written(0),
                                    this->d_len_tag_key,
