@@ -47,4 +47,4 @@ skip_render:
   - LICENSE
 # enable uploads to Anaconda Cloud from specified branches only
 # ***** UPDATE THIS FOR MAINTENANCE BRANCHES ********************************
-upload_on_branch: master
+upload_on_branch: main
