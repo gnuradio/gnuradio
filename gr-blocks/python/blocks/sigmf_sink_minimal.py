@@ -9,10 +9,11 @@
 #
 
 from gnuradio import gr
+from . import blocks_python as blocks
 import numpy as np
 import json
 
-class sigmf_sink_minimal(gr.sync_block):
+class sigmf_sink_minimal(gr.hier_block2):
     """
     A partial implementation of the SigMF standard to allow saving SigMF files from GNU Radio.
     It is expected that this block will be replaced with gr-sigmf in the near future, and thus
@@ -32,19 +33,20 @@ class sigmf_sink_minimal(gr.sync_block):
     
         # Input type, which is included in .sigmf-meta file
         if item_size == 8:
-            dtype = np.complex64
             datatype_str = 'cf32_le'
         elif item_size == 4:
-            dtype = np.float32
             datatype_str = 'rf32_le'
         else:
             raise ValueError
 
-        gr.sync_block.__init__(self,
-                               name = "sigmf_sink_minimal",
-                               in_sig = [dtype], # input sig
-                               out_sig = None) # no outputs
+        gr.hier_block2.__init__(self, "sigmf_sink_minimal",
+                                gr.io_signature(1, 1, item_size),
+                                gr.io_signature(0, 0, 0))
 
+        file_sink = blocks.file_sink(item_size, filename + '.sigmf-data', False) # use regular File Sink, no append
+        self.connect(self, file_sink)
+        
+        # JSON/Meta Stuff
         sigmf_version = "1.0.0" # update me if the time comes
         
         # Create .sigmf-meta file
@@ -68,14 +70,4 @@ class sigmf_sink_minimal(gr.sync_block):
         with open(filename + '.sigmf-meta', 'w') as f_meta:
             json.dump(meta_dict, f_meta, indent=2)
 
-        # Open .sigmf-data file
-        self.f_data = open(filename + '.sigmf-data', "w") # overwrite file
-
-        
-    def work(self, input_items, output_items):
-        input_items[0].tofile(self.f_data)
-        return len(input_items[0])
-    
-    def stop(self):
-        self.f_data.close()
 

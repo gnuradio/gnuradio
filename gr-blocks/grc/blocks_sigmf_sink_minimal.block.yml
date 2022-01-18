@@ -5,7 +5,7 @@ flags: [ python, deprecated ]
 parameters:
 -   id: filename
     label: File Name
-    dtype: string
+    dtype: file_save
 -   id: sample_rate
     label: Sample Rate
     dtype: float
