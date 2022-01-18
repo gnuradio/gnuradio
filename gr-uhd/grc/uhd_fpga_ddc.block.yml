@@ -11,7 +11,7 @@ parameters:
 -   id: desc
     label: Block Descriptor
     dtype: string
-    default: 'ddc_2x64.yml'
+    default: 'ddc.yml'
     hide: all
 -   id: nports
     label: Number of Ports
