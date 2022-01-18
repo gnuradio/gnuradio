@@ -14,7 +14,7 @@ assignees: ''
 <!--- (leave blank) -->
 <!--- `details of what/why/how an issue was addressed` -->
 <!--- Keep subject lines to 50 characters (but 72 is a hard limit!) -->
-<!--- characters. Refer to the [Revision Control Guidelines](https://github.com/gnuradio/greps/blob/master/grep-0001-coding-guidelines.md#revision-control-guidelines) section of the coding guidelines -->
+<!--- characters. Refer to the [Revision Control Guidelines](https://github.com/gnuradio/greps/blob/main/grep-0001-coding-guidelines.md#revision-control-guidelines) section of the coding guidelines -->
 
 ## Description
 <!--- Provide a general summary of your changes in the title above -->
@@ -41,9 +41,9 @@ assignees: ''
 <!--- boxes that apply. Note that some of these may not be valid -->
 <!--- for all PRs. -->
 
-- [ ] I have read the [CONTRIBUTING document](https://github.com/gnuradio/gnuradio/blob/master/CONTRIBUTING.md).
+- [ ] I have read the [CONTRIBUTING document](https://github.com/gnuradio/gnuradio/blob/main/CONTRIBUTING.md).
 - [ ] I have squashed my commits to have one significant change per commit. 
-- [ ] I [have signed my commits before making this PR](https://github.com/gnuradio/gnuradio/blob/master/CONTRIBUTING.md#dco-signed)
-- [ ] My code follows the code style of this project. See [GREP1.md](https://github.com/gnuradio/greps/blob/master/grep-0001-coding-guidelines.md).
+- [ ] I [have signed my commits before making this PR](https://github.com/gnuradio/gnuradio/blob/main/CONTRIBUTING.md#dco-signed)
+- [ ] My code follows the code style of this project. See [GREP1.md](https://github.com/gnuradio/greps/blob/main/grep-0001-coding-guidelines.md).
 - [ ] I have updated [the documentation](https://wiki.gnuradio.org/index.php/Main_Page#Documentation) where necessary.
 - [ ] I have added tests to cover my changes, and all previous tests pass.
