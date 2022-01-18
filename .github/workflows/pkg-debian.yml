@@ -5,7 +5,7 @@ on:
       build_branch:
         description: 'Branch to build from'
         required: true
-        default: 'master'
+        default: 'main'
       rev:
         description: 'Package revision'
         required: true
@@ -68,7 +68,7 @@ jobs:
         export DEBEMAIL="${{secrets.EMAIL}}" 
         export UBUEMAIL="${{secrets.EMAIL}}" 
         export DISTRIBUTION="${{ github.event.inputs.distribution }}"
-        export GITBRANCH="master"
+        export GITBRANCH="main"
         export REV="${{ github.event.inputs.rev }}"
         cd /build && sh $GITHUB_WORKSPACE/.packaging/scripts/pkg-debian.sh
     - name: Push to Launchpad
