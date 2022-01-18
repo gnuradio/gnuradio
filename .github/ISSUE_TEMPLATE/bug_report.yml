@@ -38,10 +38,11 @@ body:
       label: GNU Radio Version
       description: What version of GNU Radio are you running?
       options:
-        - 3.10-git (master)
-        - 3.9 (maint-3.9)
-        - 3.8 (maint-3.8)
-        - 3.7 (maint-3.7)
+        - 3.11-git (main)
+        - 3.10 (maint-3.10)
+        - 3.9  (maint-3.9)
+        - 3.8  (maint-3.8)
+        - 3.7  (maint-3.7)
     validations:
       required: true
   - type: input
