@@ -1,3 +1,18 @@
+# MASTER BRANCH IS INACTIVE
+This branch is left here for compatibility and historical reasons only.  All new development should target
+the `main` branch, which is the default branch for https://github.com/gnuradio/gnuradio.git
+
+## To Update Your Local Repository
+
+If you currently have the `master` branch locally and would like to work against `main`
+
+```
+$ git branch -m master main
+$ git fetch origin
+$ git branch -u origin/main main
+$ git remote set-head origin -a
+```
+
 <p align="center">
 <img src="https://github.com/gnuradio/gnuradio/blob/main/docs/gnuradio.png" width="75%" />
 </p>
