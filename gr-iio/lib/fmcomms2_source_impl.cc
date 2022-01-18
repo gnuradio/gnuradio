@@ -334,7 +334,7 @@ template <typename T>
 void fmcomms2_source_impl<T>::set_gain_mode(size_t chan, const std::string& mode)
 {
     bool is_fmcomms4 = !iio_device_find_channel(phy, "voltage1", false);
-    if ((!is_fmcomms4 && chan > 0) || chan > 1) {
+    if ((is_fmcomms4 && chan > 0) || chan > 1) {
         throw std::runtime_error("Channel out of range for this device");
     }
     iio_param_vec_t params;
@@ -350,7 +350,7 @@ template <typename T>
 void fmcomms2_source_impl<T>::set_gain(size_t chan, double gain_value)
 {
     bool is_fmcomms4 = !iio_device_find_channel(phy, "voltage1", false);
-    if ((!is_fmcomms4 && chan > 0) || chan > 1) {
+    if ((is_fmcomms4 && chan > 0) || chan > 1) {
         throw std::runtime_error("Channel out of range for this device");
     }
     iio_param_vec_t params;
