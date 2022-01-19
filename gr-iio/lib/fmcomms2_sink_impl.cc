@@ -229,7 +229,7 @@ template <typename T>
 void fmcomms2_sink_impl<T>::set_attenuation(size_t chan, double attenuation)
 {
     bool is_fmcomms4 = !iio_device_find_channel(phy, "voltage1", false);
-    if ((!is_fmcomms4 && chan > 0) || chan > 1) {
+    if ((is_fmcomms4 && chan > 0) || chan > 1) {
         throw std::runtime_error("Channel out of range for this device");
     }
     iio_param_vec_t params;
