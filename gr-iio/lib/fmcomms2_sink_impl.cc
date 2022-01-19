@@ -126,6 +126,9 @@ fmcomms2_sink_impl<T>::fmcomms2_sink_impl(iio_context* ctx,
     }
     d_float_r.resize(s_initial_device_buf_size);
     d_float_i.resize(s_initial_device_buf_size);
+
+    // Tell tagger in device_sink_impl::work that we are using a less inputs
+    override_tagged_input_channels = d_device_bufs.size() / 2;
 }
 
 template <typename T>
@@ -338,7 +341,7 @@ int fmcomms2_sink_impl<gr_complex>::work(int noutput_items,
 
     for (size_t i = 0; i < input_items.size(); i++) {
         auto in = static_cast<const gr_complex*>(input_items[i]);
-        if (noutput_items > (int)d_device_bufs[i].size()) {
+        if (noutput_items > (int)d_device_bufs[2 * i].size()) {
             d_device_bufs[2 * i].resize(noutput_items);
             d_device_bufs[2 * i + 1].resize(noutput_items);
             d_float_r.resize(noutput_items);

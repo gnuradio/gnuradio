@@ -34,6 +34,7 @@ protected:
     unsigned int buffer_size;
     bool destroy_ctx;
     pmt::pmt_t d_len_tag_key;
+    uint16_t override_tagged_input_channels = 0;
 
 public:
     device_sink_impl(iio_context* ctx,
