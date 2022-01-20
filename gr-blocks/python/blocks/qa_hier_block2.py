@@ -476,6 +476,46 @@ class test_hier_block2(gr_unittest.TestCase):
         hblock.wait()
         self.assertEqual(40, self.test_34b_val)
 
+    def test_035_lock_after_disconnect(self):
+        tb = gr.top_block()
+        src = blocks.vector_source_f([1.0, ])
+        hb = gr.hier_block2("hb",
+                            gr.io_signature(1, 1, gr.sizeof_float),
+                            gr.io_signature(1, 1, gr.sizeof_float))
+        m1 = multiply_const_ff(1.0)
+        hb.connect(hb, m1)
+        hb.connect(m1, hb)
+        dst1 = blocks.vector_sink_f()
+        dst2 = blocks.vector_sink_f()
+        tb.connect(src, hb, dst1)
+        tb.connect(hb, dst2)
+        tb.run()
+        tb.disconnect(hb, dst2)
+        hb.lock()
+        hb.unlock()
+        tb.run()
+
+    def test_036_unconnected_lock(self):
+        hb = gr.hier_block2("hb",
+                            gr.io_signature(1, 1, gr.sizeof_float),
+                            gr.io_signature(1, 1, gr.sizeof_float))
+        hb.lock()
+        hb.unlock()
+
+    def test_037_crossparent(self):
+        hb = gr.hier_block2("hb",
+                            gr.io_signature(1, 1, gr.sizeof_float),
+                            gr.io_signature(1, 1, gr.sizeof_float))
+        parent0 = gr.hier_block2("parent0",
+                                 gr.io_signature(1, 1, gr.sizeof_float),
+                                 gr.io_signature(1, 1, gr.sizeof_float))
+        parent1 = gr.hier_block2("parent1",
+                                 gr.io_signature(1, 1, gr.sizeof_float),
+                                 gr.io_signature(1, 1, gr.sizeof_float))
+        parent0.connect(parent0, hb)
+        self.assertRaises(RuntimeError,
+                          lambda: parent1.connect(hb, parent1))
+
 
 if __name__ == "__main__":
     gr_unittest.run(test_hier_block2)
