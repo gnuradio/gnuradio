@@ -12,6 +12,7 @@ parameters:
 -   id: center_freq
     label: Center Frequency
     dtype: float
+    default: 0
 -   id: author
     label: Author
     dtype: string
@@ -27,10 +28,17 @@ parameters:
 -   id: type
     label: Stream Type
     dtype: enum
-    options: [complex, float]
+    options: [complex, float, short]
     option_attributes:
-        size: [gr.sizeof_gr_complex, gr.sizeof_float]
+        size: [gr.sizeof_gr_complex, gr.sizeof_float, gr.sizeof_short]
     hide: part
+-   id: ishort
+    label: Type of Shorts
+    dtype: bool
+    default: 'True'
+    options: ['False', 'True']
+    option_labels: ['Real Only', 'Interleaved IQ']
+    hide: ${ 'all' if type != 'short' else 'none' }
 
 inputs:
 -   domain: stream
@@ -49,6 +57,7 @@ templates:
             center_freq=${center_freq},
             author=${author},
             description=${description},
-            hw_info=${hw_info})
+            hw_info=${hw_info},
+            ishort=${ishort})
 
 file_format: 1

@@ -29,15 +29,23 @@ class sigmf_sink_minimal(gr.hier_block2):
         hw_info: optional string used to record hardware used in making of recording, e.g. SDR type and antenna, or whether it's simulated data
     """
 
-    def __init__(self, item_size, filename, sample_rate, center_freq, author, description, hw_info):
+    def __init__(self, item_size, filename, sample_rate, center_freq, author, description, hw_info, ishort):
     
         # Input type, which is included in .sigmf-meta file
         if item_size == 8:
             datatype_str = 'cf32_le'
         elif item_size == 4:
             datatype_str = 'rf32_le'
+        elif item_size == 2 and ishort:
+            datatype_str = 'ci16'
+        elif item_size == 2 and not ishort:
+            datatype_str = 'ri16'
         else:
             raise ValueError
+        
+        if '.sigmf' in filename:
+            gr.log.warn('SigMF file extension was found in provided filename, stripping it off')
+            filename = filename.split('.')[0]
 
         gr.hier_block2.__init__(self, "sigmf_sink_minimal",
                                 gr.io_signature(1, 1, item_size),
@@ -62,11 +70,12 @@ class sigmf_sink_minimal(gr.hier_block2):
             "captures": [
                 {
                     "core:sample_start": 0,
-                    "core:frequency": float(center_freq)
                 }
             ],
             "annotations": []
         }
+        if center_freq:
+            meta_dict["captures"][0]["core:frequency"] = float(center_freq)
         with open(filename + '.sigmf-meta', 'w') as f_meta:
             json.dump(meta_dict, f_meta, indent=2)
 
