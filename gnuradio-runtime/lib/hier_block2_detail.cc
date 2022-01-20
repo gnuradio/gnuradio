@@ -15,6 +15,7 @@
 #include "hier_block2_detail.h"
 #include <gnuradio/io_signature.h>
 #include <gnuradio/prefs.h>
+#include <gnuradio/top_block.h>
 #include <boost/format.hpp>
 #include <sstream>
 #include <stdexcept>
@@ -25,7 +26,7 @@
 namespace gr {
 
 hier_block2_detail::hier_block2_detail(hier_block2* owner)
-    : d_owner(owner), d_parent_detail(0), d_fg(make_flowgraph())
+    : d_owner(owner), d_parent(), d_parent_refcnt(0), d_fg(make_flowgraph())
 {
     int min_inputs = owner->input_signature()->min_streams();
     int max_inputs = owner->input_signature()->max_streams();
@@ -78,7 +79,7 @@ void hier_block2_detail::connect(basic_block_sptr block)
         GR_LOG_DEBUG(
             d_debug_logger,
             boost::format("connect: block is hierarchical, setting parent to %s") % this);
-        hblock->d_detail->d_parent_detail = this;
+        hblock->d_detail->set_parent(this->d_owner);
     }
 
     d_blocks.push_back(block);
@@ -106,14 +107,14 @@ void hier_block2_detail::connect(basic_block_sptr src,
         GR_LOG_DEBUG(d_debug_logger,
                      boost::format("connect: src is hierarchical, setting parent to %s") %
                          this);
-        src_block->d_detail->d_parent_detail = this;
+        src_block->d_detail->set_parent(this->d_owner);
     }
 
     if (dst_block && dst.get() != d_owner) {
         GR_LOG_DEBUG(d_debug_logger,
                      boost::format("connect: dst is hierarchical, setting parent to %s") %
                          this);
-        dst_block->d_detail->d_parent_detail = this;
+        dst_block->d_detail->set_parent(this->d_owner);
     }
 
     // Connections to block inputs or outputs
@@ -177,7 +178,7 @@ void hier_block2_detail::msg_connect(basic_block_sptr src,
             d_debug_logger,
             boost::format("msg_connect: src is hierarchical, setting parent to %s") %
                 this);
-        src_block->d_detail->d_parent_detail = this;
+        src_block->d_detail->set_parent(this->d_owner);
     }
 
     if (dst_block && dst.get() != d_owner) {
@@ -185,7 +186,7 @@ void hier_block2_detail::msg_connect(basic_block_sptr src,
             d_debug_logger,
             boost::format("msg_connect: dst is hierarchical, setting parent to %s") %
                 this);
-        dst_block->d_detail->d_parent_detail = this;
+        dst_block->d_detail->set_parent(this->d_owner);
     }
 
     // add edge for this message connection
@@ -230,6 +231,7 @@ void hier_block2_detail::msg_disconnect(basic_block_sptr src,
                 srcport = (*it).src().port();
             }
         }
+        src_block->d_detail->reset_parent();
     }
 
     if (dst_block && dst.get() != d_owner) {
@@ -242,6 +244,7 @@ void hier_block2_detail::msg_disconnect(basic_block_sptr src,
                 dstport = (*it).dst().port();
             }
         }
+        dst_block->d_detail->reset_parent();
     }
 
     // unregister the subscription - if already subscribed
@@ -256,10 +259,10 @@ void hier_block2_detail::disconnect(basic_block_sptr block)
             d_blocks.erase(p);
 
             hier_block2_sptr hblock(cast_to_hier_block2_sptr(block));
-            if (block && block.get() != d_owner) {
+            if (hblock && hblock.get() != d_owner) {
                 GR_LOG_DEBUG(d_debug_logger,
                              "disconnect: block is hierarchical, clearing parent");
-                hblock->d_detail->d_parent_detail = 0;
+                hblock->d_detail->reset_parent();
             }
 
             return;
@@ -308,12 +311,12 @@ void hier_block2_detail::disconnect(basic_block_sptr src,
 
     if (src_block && src.get() != d_owner) {
         GR_LOG_DEBUG(d_debug_logger, "disconnect: src is hierarchical, clearing parent");
-        src_block->d_detail->d_parent_detail = 0;
+        src_block->d_detail->reset_parent();
     }
 
     if (dst_block && dst.get() != d_owner) {
         GR_LOG_DEBUG(d_debug_logger, "disconnect: dst is hierarchical, clearing parent");
-        dst_block->d_detail->d_parent_detail = 0;
+        dst_block->d_detail->reset_parent();
     }
 
     if (src.get() == d_owner)
@@ -498,6 +501,8 @@ endpoint_vector_t hier_block2_detail::resolve_port(int port, bool is_input)
 
 void hier_block2_detail::disconnect_all()
 {
+    GR_LOG_DEBUG(d_debug_logger, "Disconnect all...");
+    reset_hier_blocks_parent();
     d_fg->clear();
     d_blocks.clear();
 
@@ -537,11 +542,11 @@ endpoint_vector_t hier_block2_detail::resolve_endpoint(const endpoint& endp,
 
 void hier_block2_detail::flatten_aux(flat_flowgraph_sptr sfg) const
 {
+    hier_block2_sptr parent = d_parent.lock();
     GR_LOG_DEBUG(d_debug_logger,
                  boost::format(" ** Flattening %s parent: %s") % d_owner->name() %
-                     d_parent_detail);
-    ;
-    bool is_top_block = (d_parent_detail == NULL);
+                     (parent ? parent->name() : "NULL"));
+    bool is_top_block = (dynamic_cast<top_block*>(d_owner) != NULL);
 
     // Add my edges to the flow graph, resolving references to actual endpoints
     edge_vector_t edges = d_fg->edges();
@@ -874,20 +879,28 @@ void hier_block2_detail::lock()
 {
     GR_LOG_DEBUG(d_debug_logger, boost::format("lock: entered in %s") % this);
 
-    if (d_parent_detail)
-        d_parent_detail->lock();
-    else
-        d_owner->lock();
+    auto parent = d_parent.lock();
+    if (parent)
+        parent->d_detail->lock();
+    else {
+        auto owner = dynamic_cast<top_block*>(d_owner);
+        if (owner)
+            owner->lock();
+    }
 }
 
 void hier_block2_detail::unlock()
 {
     GR_LOG_DEBUG(d_debug_logger, boost::format("unlock: entered in %s") % this);
 
-    if (d_parent_detail)
-        d_parent_detail->unlock();
-    else
-        d_owner->unlock();
+    auto parent = d_parent.lock();
+    if (parent)
+        parent->d_detail->unlock();
+    else {
+        auto owner = dynamic_cast<top_block*>(d_owner);
+        if (owner)
+            owner->unlock();
+    }
 }
 
 void hier_block2_detail::set_processor_affinity(const std::vector<int>& mask)
@@ -925,6 +938,78 @@ std::string hier_block2_detail::log_level()
     // Assume that log_level was set for all hier_block2 blocks
     basic_block_vector_t tmp = d_fg->calc_used_blocks();
     return tmp[0]->log_level();
+}
+
+void hier_block2_detail::set_parent(hier_block2* parent)
+{
+    auto old_parent = d_parent.lock();
+    if (!old_parent) {
+        d_parent = parent->to_hier_block2();
+        d_parent_refcnt++;
+        return;
+    }
+    if (old_parent.get() == parent) {
+        d_parent_refcnt++;
+        return;
+    }
+    std::stringstream msg;
+    msg << "A hierarchical block cannot have multiple parents. Block \""
+        << d_owner->name() << "\" must be completely removed from parent \""
+        << old_parent->name() << "\" before being added to parent \"" << parent->name()
+        << "\".";
+    throw std::runtime_error(msg.str());
+}
+
+void hier_block2_detail::reset_parent(bool force)
+{
+    if (force) {
+        d_parent_refcnt = 0;
+        d_parent.reset();
+    } else {
+        if (d_parent_refcnt > 0)
+            d_parent_refcnt--;
+        if (d_parent_refcnt == 0)
+            d_parent.reset();
+    }
+}
+
+void hier_block2_detail::reset_hier_blocks_parent()
+{
+    basic_block_vector_t tmp = d_fg->calc_used_blocks();
+    hier_block2_sptr hb;
+    std::vector<basic_block_sptr>::const_iterator b;
+
+    for (b = tmp.begin(); b != tmp.end(); b++) {
+        hb = cast_to_hier_block2_sptr(*b);
+        if (hb)
+            hb->d_detail->reset_parent(true);
+    }
+
+    for (b = d_blocks.begin(); b != d_blocks.end(); b++) {
+        hb = cast_to_hier_block2_sptr(*b);
+        if (hb)
+            hb->d_detail->reset_parent(true);
+    }
+
+    for (unsigned int i = 0; i < d_inputs.size(); i++) {
+        if (d_inputs[i].empty())
+            continue;
+
+        for (unsigned int j = 0; j < d_inputs[i].size(); j++) {
+            hb = cast_to_hier_block2_sptr(d_inputs[i][j].block());
+            if (hb)
+                hb->d_detail->reset_parent(true);
+        }
+    }
+
+    for (unsigned int i = 0; i < d_outputs.size(); i++) {
+        basic_block_sptr blk = d_outputs[i].block();
+        if (blk) {
+            hb = cast_to_hier_block2_sptr(blk);
+            if (hb)
+                hb->d_detail->reset_parent(true);
+        }
+    }
 }
 
 
