@@ -18,12 +18,13 @@ class sigmf_sink_minimal(gr.hier_block2):
     A partial implementation of the SigMF standard to allow saving SigMF files from GNU Radio.
     It is expected that this block will be replaced with gr-sigmf in the near future, and thus
     it is immediately being depreciated.
+    For more information on SigMF see https://github.com/gnuradio/SigMF
     
     Args:
-        item_size: Complex or Float stream is all that is currently supported
-        filename: Filename, NOT including the extension, SigMF uses .sigmf-meta and .sigmf-data which will be automatically added to your filename
-        sample_rate: Sample Rate in Hz
-        center_freq: Center Frequency in Hz
+        item_size: complex, float, or short is all that is supported at the moment
+        filename: filename, NOT including the extension, SigMF uses .sigmf-meta and .sigmf-data which will be automatically added to your filename
+        sample_rate: sample rate in Hz
+        center_freq: optional center Frequency in Hz
         author: optional string used to record author of recording
         description: optional string used to store whatever other info you want about the recording
         hw_info: optional string used to record hardware used in making of recording, e.g. SDR type and antenna, or whether it's simulated data
