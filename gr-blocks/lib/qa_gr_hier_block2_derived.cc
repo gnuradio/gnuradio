@@ -72,3 +72,53 @@ BOOST_AUTO_TEST_CASE(test_1)
 
     tb->run();
 }
+
+BOOST_AUTO_TEST_CASE(test_2)
+{
+    gr_derived_block_sptr blk(gr_make_derived_block());
+    blk->lock();
+    blk->unlock();
+}
+
+BOOST_AUTO_TEST_CASE(test_3)
+{
+    gr::top_block_sptr tb(gr::make_top_block("test"));
+
+    gr::block_sptr src(gr::blocks::null_source::make(sizeof(int)));
+    gr::block_sptr head(gr::blocks::head::make(sizeof(int), 1000));
+    gr_derived_block_sptr blk(gr_make_derived_block());
+    gr::block_sptr dst0(gr::blocks::null_sink::make(sizeof(int)));
+    gr::block_sptr dst1(gr::blocks::null_sink::make(sizeof(int)));
+
+    tb->connect(src, 0, head, 0);
+    tb->connect(head, 0, blk, 0);
+    tb->connect(blk, 0, dst0, 0);
+    tb->connect(blk, 0, dst1, 0);
+
+    tb->run();
+
+    tb->disconnect(blk, 0, dst1, 0);
+    blk->lock();
+    blk->unlock();
+    tb->run();
+}
+
+BOOST_AUTO_TEST_CASE(test_4)
+{
+    gr_derived_block_sptr blk(gr_make_derived_block());
+    gr::hier_block2_sptr parent0(
+        gr::make_hier_block2("parent0",
+                             gr::io_signature::make(1, 1, sizeof(int)),
+                             gr::io_signature::make(1, 1, sizeof(int))));
+    gr::hier_block2_sptr parent1(
+        gr::make_hier_block2("parent1",
+                             gr::io_signature::make(1, 1, sizeof(int)),
+                             gr::io_signature::make(1, 1, sizeof(int))));
+    try {
+        parent0->connect(parent0->self(), 0, blk, 0);
+        parent1->connect(blk, 0, parent1->self(), 0);
+        BOOST_TEST(false);
+    } catch (std::runtime_error& e) {
+        BOOST_TEST(true);
+    }
+}
