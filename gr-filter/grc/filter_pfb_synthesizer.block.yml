@@ -28,7 +28,7 @@ parameters:
     label: Channel Map
     dtype: int_vector
     default: '[]'
--   id: bus_conns
+-   id: bus_structure_sink
     label: Bus Connections
     dtype: raw
     default: '[[0,],]'
