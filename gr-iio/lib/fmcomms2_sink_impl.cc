@@ -126,6 +126,9 @@ fmcomms2_sink_impl<T>::fmcomms2_sink_impl(iio_context* ctx,
     }
     d_float_r.resize(s_initial_device_buf_size);
     d_float_i.resize(s_initial_device_buf_size);
+
+    // Tell tagger in device_sink_impl::work that we are using a less inputs
+    override_tagged_input_channels = d_device_bufs.size() / 2;
 }
 
 template <typename T>
@@ -229,7 +232,7 @@ template <typename T>
 void fmcomms2_sink_impl<T>::set_attenuation(size_t chan, double attenuation)
 {
     bool is_fmcomms4 = !iio_device_find_channel(phy, "voltage1", false);
-    if ((!is_fmcomms4 && chan > 0) || chan > 1) {
+    if ((is_fmcomms4 && chan > 0) || chan > 1) {
         throw std::runtime_error("Channel out of range for this device");
     }
     iio_param_vec_t params;
@@ -338,7 +341,7 @@ int fmcomms2_sink_impl<gr_complex>::work(int noutput_items,
 
     for (size_t i = 0; i < input_items.size(); i++) {
         auto in = static_cast<const gr_complex*>(input_items[i]);
-        if (noutput_items > (int)d_device_bufs[i].size()) {
+        if (noutput_items > (int)d_device_bufs[2 * i].size()) {
             d_device_bufs[2 * i].resize(noutput_items);
             d_device_bufs[2 * i + 1].resize(noutput_items);
             d_float_r.resize(noutput_items);
