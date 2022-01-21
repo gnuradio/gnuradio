@@ -77,6 +77,11 @@ parameters:
     default: 10.0
     hide: ${ ('part' if tx2_en else 'all') }
 
+-   id: len_tag_key
+    label: Packet Length Tag
+    dtype: string
+    hide: part
+
 -   id: filter_source
     category: Filter
     label: Filter Configuration
@@ -132,17 +137,21 @@ asserts:
 templates:
     imports: from gnuradio import iio
     make: |
-        iio.fmcomms2_sink_${type.type}(${uri}, [tx1_en, tx2_en], ${buffer_size}, ${cyclic})
+        iio.fmcomms2_sink_${type.type}(${uri}, [${tx1_en}, ${tx1_en}, ${tx2_en}, ${tx2_en}], ${buffer_size}, ${cyclic})
         self.${id}.set_len_tag_key(${len_tag_key})
         self.${id}.set_bandwidth(${bandwidth})
         self.${id}.set_frequency(${frequency})
         self.${id}.set_samplerate(${samplerate})
-        self.${id}.set_attenuation(0, ${attenuation1})
+        if ${tx1_en}:
+            self.${id}.set_attenuation(0, ${attenuation1})
+        if ${tx2_en}:
+            self.${id}.set_attenuation(1, ${attenuation2})
         self.${id}.set_filter_params(${filter_source}, ${filter}, ${fpass}, ${fstop})
     callbacks:
         - set_bandwidth(${bandwidth})
         - set_frequency(${frequency})
         - set_samplerate(${samplerate})
-        - set_attenuation(${attenuation1})
+        - set_attenuation(0, ${attenuation1})
+        - set_attenuation(1, ${attenuation2})
         - set_filter_params(${filter_source}, ${filter}, ${fpass}, ${fstop})
 file_format: 1

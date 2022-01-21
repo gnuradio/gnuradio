@@ -115,6 +115,9 @@ fmcomms2_source_impl<T>::fmcomms2_source_impl(iio_context* ctx,
     }
     d_float_ivec.resize(s_initial_device_buf_size);
     d_float_rvec.resize(s_initial_device_buf_size);
+
+    // Tell tagger in device_source_impl::work that we are using a less outputs
+    override_tagged_output_channels = d_device_bufs.size() / 2;
 }
 
 template <typename T>
@@ -334,7 +337,7 @@ template <typename T>
 void fmcomms2_source_impl<T>::set_gain_mode(size_t chan, const std::string& mode)
 {
     bool is_fmcomms4 = !iio_device_find_channel(phy, "voltage1", false);
-    if ((!is_fmcomms4 && chan > 0) || chan > 1) {
+    if ((is_fmcomms4 && chan > 0) || chan > 1) {
         throw std::runtime_error("Channel out of range for this device");
     }
     iio_param_vec_t params;
@@ -350,7 +353,7 @@ template <typename T>
 void fmcomms2_source_impl<T>::set_gain(size_t chan, double gain_value)
 {
     bool is_fmcomms4 = !iio_device_find_channel(phy, "voltage1", false);
-    if ((!is_fmcomms4 && chan > 0) || chan > 1) {
+    if ((is_fmcomms4 && chan > 0) || chan > 1) {
         throw std::runtime_error("Channel out of range for this device");
     }
     iio_param_vec_t params;

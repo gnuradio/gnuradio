@@ -62,6 +62,7 @@ protected:
     unsigned int decimation;
     bool destroy_ctx;
     volatile bool thread_stopped;
+    uint16_t override_tagged_output_channels = 0;
 
 
 public:

@@ -102,6 +102,12 @@ parameters:
     options: ["'A_BALANCED'", "'B_BALANCED'", "'C_BALANCED'", "'A_N'", "'A_P'", "'B_N'", "'B_P'", "'C_N'", "'C_P'", "'TX_MONITOR1'", "'TX_MONITOR2'", "'TX_MONITOR1_2'"]
     option_labels: ['A_BALANCED', 'B_BALANCED', 'C_BALANCED', 'A_N', 'A_P', 'B_N', 'B_P', 'C_N', 'C_P', 'TX_MONITOR1', 'TX_MONITOR2', 'TX_MONITOR1_2']
 
+-   id: len_tag_key
+    label: Packet Length Tag
+    dtype: string
+    default: packet_len
+    hide: part
+
 -   id: filter_source
     category: Filter
     label: Filter Configuration
@@ -157,14 +163,16 @@ asserts:
 templates:
     imports: from gnuradio import iio
     make: |
-        iio.fmcomms2_source_${type.type}(${uri}, [rx1_en, rx2_en], ${buffer_size})
+        iio.fmcomms2_source_${type.type}(${uri}, [${rx1_en}, ${rx1_en}, ${rx2_en}, ${rx2_en}], ${buffer_size})
         self.${id}.set_len_tag_key(${len_tag_key})
         self.${id}.set_frequency(${frequency})
         self.${id}.set_samplerate(${samplerate})
-        self.${id}.set_gain_mode(0, ${gain1})
-        self.${id}.set_gain(0, ${manual_gain1})
-        self.${id}.set_gain_mode(1, ${gain2})
-        self.${id}.set_gain(1, ${manual_gain2})
+        if ${rx1_en}:
+            self.${id}.set_gain_mode(0, ${gain1})
+            self.${id}.set_gain(0, ${manual_gain1})
+        if ${rx2_en}:
+            self.${id}.set_gain_mode(1, ${gain2})
+            self.${id}.set_gain(1, ${manual_gain2})
         self.${id}.set_quadrature(${quadrature})
         self.${id}.set_rfdc(${rfdc})
         self.${id}.set_bbdc(${bbdc})
