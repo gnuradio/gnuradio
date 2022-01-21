@@ -1,6 +1,6 @@
 id: blocks_sigmf_source_minimal
 label: SigMF Source (Minimal)
-flags: [ python, cpp, deprecated ]
+flags: [ python, deprecated ]
 
 parameters:
 -   id: file
@@ -43,16 +43,6 @@ templates:
     callbacks:
     - open(${file}, ${repeat})
     - self.${id}.set_begin_tag(${begin_tag})
-
-cpp_templates:
-    includes: ['#include <gnuradio/blocks/file_source.h>']
-    declarations: 'blocks::file_source::sptr ${id};'
-    make: 'this->${id} =blocks::file_source::make(${type.size}, ${file}, ${repeat}, 0, ${length});'
-    callbacks:
-    - open(${file}, ${repeat})
-    translations:
-        'True': 'true'
-        'False': 'false'
 
 documentation: |-
 
