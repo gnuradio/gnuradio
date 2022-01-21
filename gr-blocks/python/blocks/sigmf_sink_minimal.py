@@ -45,8 +45,8 @@ class sigmf_sink_minimal(gr.hier_block2):
             raise ValueError
         
         if '.sigmf' in filename:
-            gr.log.warn('SigMF file extension was found in provided filename, stripping it off')
-            filename = filename.split('.')[0]
+            filename = filename.rsplit('.', 1)[0]
+        gr.log.info('Generating '+filename+'.sigmf-meta, writing SigMF data to '+filename+'.sigmf-data')
 
         gr.hier_block2.__init__(self, "sigmf_sink_minimal",
                                 gr.io_signature(1, 1, item_size),
