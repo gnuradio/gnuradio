@@ -182,7 +182,14 @@ int device_sink_impl::work(int noutput_items,
     int ret;
 
     if (d_len_tag_key != pmt::PMT_NIL) {
-        for (size_t i = 0; i < input_items.size(); i++) {
+
+        size_t ninputs;
+        if (override_tagged_input_channels > 0)
+            ninputs = override_tagged_input_channels;
+        else
+            ninputs = input_items.size();
+
+        for (size_t i = 0; i < ninputs; i++) {
             auto items_read = nitems_read(i);
             get_tags_in_range(d_tags, i, items_read, items_read + 1, d_len_tag_key);
 
