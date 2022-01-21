@@ -21,7 +21,8 @@ parameters:
 -   id: center_freq
     label: Center Frequency
     dtype: float
-    default: 0
+    options: [np.nan]
+    option_labels: ['None']
 -   id: author
     label: Author
     dtype: string
@@ -43,7 +44,9 @@ asserts:
 - ${ len(filename) > 0 }
 
 templates:
-    imports: from gnuradio import blocks
+    imports: |-
+        from gnuradio import blocks
+        import numpy as np
     make: |-
         blocks.sigmf_sink_minimal(
             item_size=${type.size},

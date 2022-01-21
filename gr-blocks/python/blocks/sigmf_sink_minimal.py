@@ -63,9 +63,6 @@ class sigmf_sink_minimal(gr.hier_block2):
             "global": {
                 "core:datatype": datatype_str,
                 "core:sample_rate": float(sample_rate),
-                "core:hw": str(hw_info),
-                "core:author": str(author),
-                "core:description": str(description),
                 "core:version": sigmf_version
             },
             "captures": [
@@ -75,8 +72,15 @@ class sigmf_sink_minimal(gr.hier_block2):
             ],
             "annotations": []
         }
-        if center_freq:
+        if center_freq is not np.nan:
             meta_dict["captures"][0]["core:frequency"] = float(center_freq)
+        if hw_info:
+            meta_dict["global"]["core:hw"] = str(hw_info)
+        if author:
+            meta_dict["global"]["core:author"] = str(author)
+        if description:
+            meta_dict["global"]["core:description"] = str(description)
+
         with open(filename + '.sigmf-meta', 'w') as f_meta:
             json.dump(meta_dict, f_meta, indent=2)
 
