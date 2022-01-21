@@ -30,17 +30,17 @@ class sigmf_sink_minimal(gr.hier_block2):
         hw_info: optional string used to record hardware used in making of recording, e.g. SDR type and antenna, or whether it's simulated data
     """
 
-    def __init__(self, item_size, filename, sample_rate, center_freq, author, description, hw_info, ishort):
+    def __init__(self, item_size, filename, sample_rate, center_freq, author, description, hw_info, is_complex):
     
         # Input type, which is included in .sigmf-meta file
         if item_size == 8:
             datatype_str = 'cf32_le'
         elif item_size == 4:
             datatype_str = 'rf32_le'
-        elif item_size == 2 and ishort:
-            datatype_str = 'ci16'
-        elif item_size == 2 and not ishort:
-            datatype_str = 'ri16'
+        elif item_size == 2 and is_complex:
+            datatype_str = 'ci16_le'
+        elif item_size == 2 and not is_complex:
+            datatype_str = 'ri16_le'
         else:
             raise ValueError
         

@@ -6,6 +6,15 @@ parameters:
 -   id: filename
     label: File Name
     dtype: file_save
+-   id: type
+    label: Stream Type
+    dtype: enum
+    options: [complex float (fc32_le), real float (rc32_le), complex short (sc16_le), real short (rc16_le)]
+    option_attributes:
+        type: [complex, float, short, short]
+        size: [gr.sizeof_gr_complex, gr.sizeof_float, gr.sizeof_short, gr.sizeof_short]
+        complex: [True, False, True, False]
+    hide: part
 -   id: sample_rate
     label: Sample Rate
     dtype: float
@@ -25,24 +34,10 @@ parameters:
     label: Hardware Info
     dtype: string
     default: ''
--   id: type
-    label: Stream Type
-    dtype: enum
-    options: [complex, float, short]
-    option_attributes:
-        size: [gr.sizeof_gr_complex, gr.sizeof_float, gr.sizeof_short]
-    hide: part
--   id: ishort
-    label: Type of Shorts
-    dtype: bool
-    default: 'True'
-    options: ['False', 'True']
-    option_labels: ['Real Only', 'Interleaved IQ']
-    hide: ${ 'all' if type != 'short' else 'none' }
 
 inputs:
 -   domain: stream
-    dtype: ${ type }
+    dtype: ${ type.type }
 
 asserts:
 - ${ len(filename) > 0 }
@@ -58,6 +53,6 @@ templates:
             author=${author},
             description=${description},
             hw_info=${hw_info},
-            ishort=${ishort})
+            is_complex=${type.complex})
 
 file_format: 1
