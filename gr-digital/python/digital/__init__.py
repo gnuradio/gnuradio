@@ -37,6 +37,7 @@ from .soft_dec_lut_gen import *
 from .psk_constellations import *
 from .qam_constellations import *
 from .constellation_map_generator import *
+from . import packet_utils
 
 
 class gmskmod_bc(cpmmod_bc):
