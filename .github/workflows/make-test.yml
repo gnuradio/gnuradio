@@ -136,4 +136,4 @@ jobs:
       run: 'cd /build && ctest --output-on-failure'
   call-conda-build:
     needs: [check-formatting, check-python-formatting]
-    uses: gnuradio/gnuradio/.github/workflows/conda-build.yml@main
+    uses: gnuradio/gnuradio/.github/workflows/conda-build.yml@78f1070ed
