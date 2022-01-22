@@ -13,13 +13,14 @@ from . import blocks_python as blocks
 import numpy as np
 import json
 
+
 class sigmf_sink_minimal(gr.hier_block2):
     """
     A partial implementation of the SigMF standard to allow saving SigMF files from GNU Radio.
     It is expected that this block will be replaced with gr-sigmf in the near future, and thus
     it is immediately being depreciated.
     For more information on SigMF see https://github.com/gnuradio/SigMF
-    
+
     Args:
         item_size: complex, float, or short is all that is supported at the moment
         filename: filename, NOT including the extension, SigMF uses .sigmf-meta and .sigmf-data which will be automatically added to your filename
@@ -31,7 +32,7 @@ class sigmf_sink_minimal(gr.hier_block2):
     """
 
     def __init__(self, item_size, filename, sample_rate, center_freq, author, description, hw_info, is_complex):
-    
+
         # Input type, which is included in .sigmf-meta file
         if item_size == 8:
             datatype_str = 'cf32_le'
@@ -43,21 +44,24 @@ class sigmf_sink_minimal(gr.hier_block2):
             datatype_str = 'ri16_le'
         else:
             raise ValueError
-        
+
         if '.sigmf' in filename:
             filename = filename.rsplit('.', 1)[0]
-        gr.log.info('Generating '+filename+'.sigmf-meta, writing SigMF data to '+filename+'.sigmf-data')
+        gr.log.info('Generating '+filename +
+                    '.sigmf-meta, writing SigMF data to '+filename+'.sigmf-data')
 
         gr.hier_block2.__init__(self, "sigmf_sink_minimal",
                                 gr.io_signature(1, 1, item_size),
                                 gr.io_signature(0, 0, 0))
 
-        file_sink = blocks.file_sink(item_size, filename + '.sigmf-data', False) # use regular File Sink, no append
+        # use regular File Sink, no append
+        file_sink = blocks.file_sink(
+            item_size, filename + '.sigmf-data', False)
         self.connect(self, file_sink)
-        
+
         # JSON/Meta Stuff
-        sigmf_version = "1.0.0" # update me if the time comes
-        
+        sigmf_version = "1.0.0"  # update me if the time comes
+
         # Create .sigmf-meta file
         meta_dict = {
             "global": {
@@ -83,5 +87,3 @@ class sigmf_sink_minimal(gr.hier_block2):
 
         with open(filename + '.sigmf-meta', 'w') as f_meta:
             json.dump(meta_dict, f_meta, indent=2)
-
-
