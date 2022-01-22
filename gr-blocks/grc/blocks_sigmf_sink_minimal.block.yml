@@ -18,6 +18,7 @@ parameters:
 -   id: sample_rate
     label: Sample Rate
     dtype: float
+    default: samp_rate
 -   id: center_freq
     label: Center Frequency
     dtype: float
