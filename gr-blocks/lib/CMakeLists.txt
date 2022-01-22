@@ -253,9 +253,11 @@ if(ENABLE_TESTING)
     GR_ADD_CPP_TEST("blocks_${qa_file}"
       ${CMAKE_CURRENT_SOURCE_DIR}/${qa_file}
     )
-    set_tests_properties("blocks_${qa_file}"
-        PROPERTIES TIMEOUT 30
-    )
+    IF (NOT CMAKE_CROSSCOMPILING)
+        set_tests_properties("blocks_${qa_file}"
+            PROPERTIES TIMEOUT 30
+        )
+    ENDIF (NOT CMAKE_CROSSCOMPILING)
   endforeach(qa_file)
 
 endif(ENABLE_TESTING)
