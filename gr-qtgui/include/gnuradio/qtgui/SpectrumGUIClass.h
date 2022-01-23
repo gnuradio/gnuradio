@@ -131,7 +131,7 @@ private:
     unsigned int _pendingGUIUpdateEventsCount;
     int _droppedEntriesCount;
     bool _fftBuffersCreatedFlag;
-    double _updateTime;
+    double _updateTime = 0.5;
 
     SpectrumDisplayForm* _spectrumDisplayForm;
 
