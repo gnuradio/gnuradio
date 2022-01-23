@@ -126,7 +126,7 @@ private:
     gr::high_res_timer_type _lastGUIUpdateTime = 0;
     unsigned int _pendingGUIUpdateEventsCount = 0;
     int _droppedEntriesCount = 0;
-    double _updateTime;
+    double _updateTime = 0.5;
 
     SpectrumDisplayForm* _spectrumDisplayForm = nullptr; // Deleted by QT.
 
