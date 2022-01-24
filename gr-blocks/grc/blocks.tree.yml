@@ -38,6 +38,8 @@
   - blocks_file_meta_source
   - blocks_file_meta_sink
   - blocks_tagged_file_sink
+  - blocks_sigmf_source_minimal
+  - blocks_sigmf_sink_minimal
 - IQ Correction:
   - blocks_correctiq_auto
   - blocks_correctiq_man
