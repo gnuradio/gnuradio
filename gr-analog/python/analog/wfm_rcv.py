@@ -17,7 +17,7 @@ from .fm_emph import fm_deemph
 
 
 class wfm_rcv(gr.hier_block2):
-    def __init__(self, quad_rate, audio_decimation):
+    def __init__(self, quad_rate, audio_decimation, deemph_tau=75e-6):
         """
         Hierarchical block for demodulating a broadcast FM signal.
 
@@ -27,6 +27,7 @@ class wfm_rcv(gr.hier_block2):
         Args:
             quad_rate: input sample rate of complex baseband input. (float)
             audio_decimation: how much to decimate quad_rate to get to audio. (integer)
+            deemph_tau: deemphasis ime constant in seconds (75us in US and South Korea, 50us everywhere else). (float)
         """
         gr.hier_block2.__init__(self, "wfm_rcv",
                                 # Input signature
@@ -49,7 +50,8 @@ class wfm_rcv(gr.hier_block2):
         self.fm_demod = analog.quadrature_demod_cf(fm_demod_gain)
 
         # input: float; output: float
-        self.deemph = fm_deemph(audio_rate)
+        self.deemph_tau = deemph_tau
+        self.deemph = fm_deemph(audio_rate, tau=deemph_tau)
 
         # compute FIR filter taps for audio filter
         width_of_transition_band = audio_rate / 32
