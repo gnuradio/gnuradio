@@ -570,8 +570,8 @@ class Block(Element):
             return False
 
         try:
-            return any("deprecated".casefold() in cat.casefold()
-                       for cat in self.category)
+            return self.flags.deprecated or any("deprecated".casefold() in cat.casefold()
+                                                for cat in self.category)
         except Exception as exception:
             print(exception.message)
         return False
