@@ -19,7 +19,7 @@ class fm_deemph(gr.hier_block2):
 
     Args:
         fs: sampling frequency in Hz (float)
-        tau: Time constant in seconds (75us in US, 50us in EUR) (float)
+        tau: Time constant in seconds (75us in US and South Korea, 50us everywhere else) (float)
 
   An analog deemphasis filter:
 
