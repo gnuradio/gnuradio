@@ -21,6 +21,7 @@ except ImportError:
     __path__.append(os.path.join(dirname, "bindings"))
     from .blocks_python import *
 
+from .sigmf_sink_minimal import sigmf_sink_minimal
 from .stream_to_vector_decimator import *
 from .msg_meta_to_pair import meta_to_pair
 from .msg_pair_to_var import msg_pair_to_var
