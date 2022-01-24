@@ -1,0 +1,62 @@
+id: blocks_sigmf_sink_minimal
+label: SigMF Sink (Minimal)
+flags: [ python, deprecated ]
+
+parameters:
+-   id: filename
+    label: File Name
+    dtype: file_save
+-   id: type
+    label: Stream Type
+    dtype: enum
+    options: [complex float (fc32_le), real float (rc32_le), complex short (sc16_le), real short (rc16_le)]
+    option_attributes:
+        type: [complex, float, short, short]
+        size: [gr.sizeof_gr_complex, gr.sizeof_float, gr.sizeof_short, gr.sizeof_short]
+        complex: [True, False, True, False]
+    hide: part
+-   id: sample_rate
+    label: Sample Rate
+    dtype: float
+    default: samp_rate
+-   id: center_freq
+    label: Center Frequency
+    dtype: float
+    options: [np.nan]
+    option_labels: ['None']
+-   id: author
+    label: Author
+    dtype: string
+    default: ''
+-   id: description
+    label: Description
+    dtype: string
+    default: ''
+-   id: hw_info
+    label: Hardware Info
+    dtype: string
+    default: ''
+
+inputs:
+-   domain: stream
+    dtype: ${ type.type }
+
+asserts:
+- ${ len(filename) > 0 }
+
+templates:
+    imports: |-
+        from gnuradio import blocks
+        import numpy as np
+    make: |-
+        blocks.sigmf_sink_minimal(
+            item_size=${type.size},
+            filename=${filename},
+            sample_rate=${sample_rate},
+            center_freq=${center_freq},
+            author=${author},
+            description=${description},
+            hw_info=${hw_info},
+            is_complex=${type.complex})
+
+file_format: 1

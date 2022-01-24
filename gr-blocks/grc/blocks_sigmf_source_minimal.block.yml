@@ -1,0 +1,68 @@
+id: blocks_sigmf_source_minimal
+label: SigMF Source (Minimal)
+flags: [ python, deprecated ]
+
+parameters:
+-   id: file
+    label: File
+    dtype: file_open
+-   id: type
+    label: Output Type
+    dtype: enum
+    options: [complex float (fc32_le), real float (rc32_le), complex short (sc16_le), real short (rc16_le)]
+    option_attributes:
+        type: [complex, float, short, short]
+        size: [gr.sizeof_gr_complex, gr.sizeof_float, gr.sizeof_short, gr.sizeof_short]
+    hide: part
+-   id: repeat
+    label: Repeat
+    dtype: enum
+    default: 'True'
+    options: ['True', 'False']
+    option_labels: ['Yes', 'No']
+-   id: begin_tag
+    label: Add begin tag
+    dtype: raw
+    default: pmt.PMT_NIL
+-   id: length
+    label: Length
+    dtype: int
+    default: '0'
+
+outputs:
+-   domain: stream
+    dtype: ${ type.type }
+
+templates:
+    imports: |-
+        from gnuradio import blocks
+        import pmt
+    make: |-
+        blocks.file_source(${type.size}, ${file}, ${repeat}, 0, ${length})
+        self.${id}.set_begin_tag(${begin_tag})
+    callbacks:
+    - open(${file}, ${repeat})
+    - self.${id}.set_begin_tag(${begin_tag})
+
+documentation: |-
+
+    This block is essentially just a File Source with some SigMF specific documentation.
+    In order to read in a SigMF file using this block, you must open the .sigmf-meta file
+    associated with the recording in a text editor, and note the value next to core:datatype.  
+    Based on this value, set the "Output Type" parameter to the following-
+    
+    cf32_le  ->  complex
+    rf32_le  ->  float
+    ri16_le  ->  short
+    ci16_le  ->  short, and add an iShort to Complex block right after this block
+    
+    For the "File" parameter, enter in the .sigmf-data file name (and optionally path).
+    You can leave the rest of the block parameters default.
+    
+    For more information on SigMF see https://github.com/gnuradio/SigMF
+    
+    The rest of this documentation comes from File Source
+    -----------------------------------------------------
+
+
+file_format: 1

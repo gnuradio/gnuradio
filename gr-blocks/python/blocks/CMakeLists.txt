@@ -13,6 +13,7 @@ GR_PYTHON_INSTALL(
     __init__.py
     matrix_interleaver.py
     parse_file_metadata.py
+    sigmf_sink_minimal.py
     stream_to_vector_decimator.py
     msg_pair_to_var.py
     msg_meta_to_pair.py
