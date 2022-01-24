@@ -47,8 +47,7 @@ class sigmf_sink_minimal(gr.hier_block2):
 
         if '.sigmf' in filename:
             filename = filename.rsplit('.', 1)[0]
-        gr.log.info('Generating '+filename +
-                    '.sigmf-meta, writing SigMF data to '+filename+'.sigmf-data')
+        gr.log.info(f'Generating {filename}.sigmf-meta, writing SigMF data to {filename}.sigmf-data')
 
         gr.hier_block2.__init__(self, "sigmf_sink_minimal",
                                 gr.io_signature(1, 1, item_size),
