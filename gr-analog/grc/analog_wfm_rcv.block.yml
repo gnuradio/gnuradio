@@ -9,6 +9,10 @@ parameters:
 -   id: audio_decimation
     label: Audio Decimation
     dtype: int
+-   id: deemph_tau
+    label: Deemphasis Tau
+    dtype: real
+    default: 75e-6
 
 inputs:
 -   domain: stream
@@ -20,7 +24,7 @@ outputs:
 
 templates:
     imports: from gnuradio import analog
-    make: "analog.wfm_rcv(\n\tquad_rate=${quad_rate},\n\taudio_decimation=${audio_decimation},\n\
+    make: "analog.wfm_rcv(\n\tquad_rate=${quad_rate},\n\taudio_decimation=${audio_decimation},\n\tdeemph_tau=${deemph_tau},\n\
         )"
 
 file_format: 1
