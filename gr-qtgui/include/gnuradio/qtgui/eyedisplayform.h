@@ -60,9 +60,7 @@ public slots:
     void updateTrigger(gr::qtgui::trigger_mode mode);
     void setTriggerMode(gr::qtgui::trigger_mode mode);
     void setTriggerSlope(gr::qtgui::trigger_slope slope);
-    void setTriggerLevel(QString s);
     void setTriggerLevel(float level);
-    void setTriggerDelay(QString s);
     void setTriggerDelay(float delay);
     void setTriggerChannel(int chan);
     void setTriggerTagKey(QString s);
@@ -94,8 +92,6 @@ signals:
     void signalNPoints(const int npts);
 
 private:
-    QIntValidator* d_int_validator;
-
     double d_start_frequency;
     double d_stop_frequency;
     double d_current_units;
@@ -110,8 +106,6 @@ private:
     QMenu* d_triggermenu;
     TriggerModeMenu* d_tr_mode_menu;
     TriggerSlopeMenu* d_tr_slope_menu;
-    PopupMenu* d_tr_level_act;
-    PopupMenu* d_tr_delay_act;
     TriggerChannelMenu* d_tr_channel_menu;
     PopupMenu* d_tr_tag_key_act;
 
