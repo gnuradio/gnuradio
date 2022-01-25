@@ -29,9 +29,6 @@ EyeDisplayForm::EyeDisplayForm(int nplots, bool cmplx, QWidget* parent)
     d_trig_channel = 0;
     d_trig_tag_key = "";
 
-    d_int_validator = new QIntValidator(this);
-    d_int_validator->setBottom(0);
-
     d_layout = new QGridLayout(this);
     d_controlpanel = NULL;
 
@@ -84,14 +81,10 @@ EyeDisplayForm::EyeDisplayForm(int nplots, bool cmplx, QWidget* parent)
     d_triggermenu = new QMenu("Trigger", this);
     d_tr_mode_menu = new TriggerModeMenu(this);
     d_tr_slope_menu = new TriggerSlopeMenu(this);
-    d_tr_level_act = new PopupMenu("Level", this);
-    d_tr_delay_act = new PopupMenu("Delay", this);
     d_tr_channel_menu = new TriggerChannelMenu(nplots, this);
     d_tr_tag_key_act = new PopupMenu("Tag Key", this);
     d_triggermenu->addMenu(d_tr_mode_menu);
     d_triggermenu->addMenu(d_tr_slope_menu);
-    d_triggermenu->addAction(d_tr_level_act);
-    d_triggermenu->addAction(d_tr_delay_act);
     d_triggermenu->addMenu(d_tr_channel_menu);
     d_triggermenu->addAction(d_tr_tag_key_act);
     d_menu->addMenu(d_triggermenu);
@@ -121,17 +114,9 @@ EyeDisplayForm::EyeDisplayForm(int nplots, bool cmplx, QWidget* parent)
             SLOT(setTriggerSlope(gr::qtgui::trigger_slope)));
 
     setTriggerLevel(0);
-    connect(d_tr_level_act,
-            SIGNAL(whichTrigger(QString)),
-            this,
-            SLOT(setTriggerLevel(QString)));
     connect(this, SIGNAL(signalTriggerLevel(float)), this, SLOT(setTriggerLevel(float)));
 
     setTriggerDelay(0);
-    connect(d_tr_delay_act,
-            SIGNAL(whichTrigger(QString)),
-            this,
-            SLOT(setTriggerDelay(QString)));
     connect(this, SIGNAL(signalTriggerDelay(float)), this, SLOT(setTriggerDelay(float)));
 
     setTriggerChannel(0);
@@ -162,7 +147,6 @@ EyeDisplayForm::~EyeDisplayForm()
 
     // Don't worry about deleting Display Plots - they are deleted when parents are
     // deleted
-    delete d_int_validator;
 
     teardownControlPanel();
 }
@@ -365,7 +349,6 @@ void EyeDisplayForm::updateTrigger(gr::qtgui::trigger_mode mode)
     // If auto or normal mode, popup trigger level box to set
     if ((d_trig_mode == gr::qtgui::TRIG_MODE_AUTO) ||
         (d_trig_mode == gr::qtgui::TRIG_MODE_NORM)) {
-        d_tr_level_act->activate(QAction::Trigger);
         getSinglePlot(d_trig_channel)->attachTriggerLines(true);
     } else {
         getSinglePlot(d_trig_channel)->attachTriggerLines(false);
@@ -392,23 +375,9 @@ void EyeDisplayForm::setTriggerSlope(gr::qtgui::trigger_slope slope)
 
 gr::qtgui::trigger_slope EyeDisplayForm::getTriggerSlope() const { return d_trig_slope; }
 
-void EyeDisplayForm::setTriggerLevel(QString s)
-{
-    d_trig_level = s.toFloat();
-
-    if ((d_trig_mode == gr::qtgui::TRIG_MODE_AUTO) ||
-        (d_trig_mode == gr::qtgui::TRIG_MODE_NORM)) {
-        getSinglePlot(d_trig_channel)
-            ->setTriggerLines(d_trig_delay * d_current_units, d_trig_level);
-    }
-
-    emit signalReplot();
-}
-
 void EyeDisplayForm::setTriggerLevel(float level)
 {
     d_trig_level = level;
-    d_tr_level_act->setText(QString().setNum(d_trig_level));
 
     if ((d_trig_mode == gr::qtgui::TRIG_MODE_AUTO) ||
         (d_trig_mode == gr::qtgui::TRIG_MODE_NORM)) {
@@ -421,23 +390,9 @@ void EyeDisplayForm::setTriggerLevel(float level)
 
 float EyeDisplayForm::getTriggerLevel() const { return d_trig_level; }
 
-void EyeDisplayForm::setTriggerDelay(QString s)
-{
-    d_trig_delay = s.toFloat();
-
-    if ((d_trig_mode == gr::qtgui::TRIG_MODE_AUTO) ||
-        (d_trig_mode == gr::qtgui::TRIG_MODE_NORM)) {
-        getSinglePlot(d_trig_channel)
-            ->setTriggerLines(d_trig_delay * d_current_units, d_trig_level);
-    }
-
-    emit signalReplot();
-}
-
 void EyeDisplayForm::setTriggerDelay(float delay)
 {
     d_trig_delay = delay;
-    d_tr_delay_act->setText(QString().setNum(d_trig_delay));
 
     if ((d_trig_mode == gr::qtgui::TRIG_MODE_AUTO) ||
         (d_trig_mode == gr::qtgui::TRIG_MODE_NORM)) {
