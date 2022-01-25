@@ -44,8 +44,8 @@ include(GrComponent)
 # Set the version information here
 SET(VERSION_MAJOR 3)
 SET(VERSION_API   10)
-SET(VERSION_ABI   0)
-SET(VERSION_PATCH 0)
+SET(VERSION_ABI   1)
+SET(VERSION_PATCH 0-rc1)
 include(GrVersion) #setup version info
 
 #Set minimum version requirements

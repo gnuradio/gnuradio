@@ -7,6 +7,42 @@ Versioning](http://semver.org/spec/v2.0.0.html), starting with version 3.7.12.0.
 
 Older Logs can be found in `docs/RELEASE-NOTES-*`.
 
+## [3.10.1.0] - 2022-01-25
+
+This is mostly a bug fix release. It is API compatible with 3.10.X.Y releases. Code built against GNU Radio libraries (including OOTs) will likely need to be recompiled, as ABI compatibility is not guaranteed.
+
+### Changed
+
+#### Runtime
+
+- Add ownership and locking to hier_block2 to avoid crash/freeze after disconnect.
+
+#### gr-analog
+
+- Fix C++ code generation for random_uniform_source
+
+#### gr-blocks
+
+- Minimal implementation of a SigMF Sink, allowing users to easily try out generation SigMF output. SigMF uses a raw data file and a separate JSON metadata file. A SigMF Source is also provided. At this time, it is a wrapper around a File Source (the data files are compatible), but metadata is not processed.
+
+#### gr-filter
+
+- Bug fix: buses should now work with PFB channelizer and synthesizer.
+
+#### gr-iio
+
+- Various fixes for fmcomms2/3/4.
+
+#### gr-uhd
+
+- Bug fix: overflow count was uninitialized.
+- Correct descriptor names in uhd_fpga_ddc/duc.
+
+#### GRC
+
+- Bug fix: initialize value for "priority" parameter in Python Snippets.
+- Show blocks with "deprecated" flags as deprecated.
+
 ## [3.10.0.0] - 2022-01-14
 
 It is with much excitement that we release the next step forward for GNU Radio - 3.10.0.0!
