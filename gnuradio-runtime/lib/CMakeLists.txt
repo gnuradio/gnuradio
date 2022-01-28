@@ -166,6 +166,8 @@ target_include_directories(gnuradio-runtime
     ${CMAKE_CURRENT_SOURCE_DIR}
     )
 
+target_compile_features(gnuradio-runtime PUBLIC cxx_std_17)
+
 target_compile_definitions(gnuradio-runtime PUBLIC ${MPLIB_DEFINITIONS})
 
 # constants.cc includes boost::dll headers, force them to use std::filesystem
