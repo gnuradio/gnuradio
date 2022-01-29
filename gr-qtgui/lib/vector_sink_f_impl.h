@@ -118,6 +118,7 @@ public:
 
     void enable_menu(bool en) override;
     void enable_grid(bool en) override;
+    void disable_legend() override;
     void enable_autoscale(bool en) override;
     void clear_max_hold() override;
     void clear_min_hold() override;
