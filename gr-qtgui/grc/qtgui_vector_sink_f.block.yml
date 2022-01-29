@@ -97,6 +97,14 @@ parameters:
     dtype: bool
     default: 'False'
     hide: part
+-   id: legend
+    label: Legend
+    category: Config
+    dtype: enum
+    default: 'True'
+    options: ['True', 'False']
+    option_labels: ['Yes', 'No']
+    hide: part
 -   id: label1
     label: Line 1 Label
     category: Config
@@ -322,6 +330,10 @@ templates:
         self.${id}.set_x_axis_units(${x_units})
         self.${id}.set_y_axis_units(${y_units})
         self.${id}.set_ref_level(${ref_level})
+
+        % if legend == "False":
+        self.${id}.disable_legend()
+        % endif
 
         labels = [${label1}, ${label2}, ${label3}, ${label4}, ${label5},
             ${label6}, ${label7}, ${label8}, ${label9}, ${label10}]
