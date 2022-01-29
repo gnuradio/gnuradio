@@ -253,6 +253,8 @@ void vector_sink_f_impl::enable_menu(bool en) { d_main_gui->enableMenu(en); }
 
 void vector_sink_f_impl::enable_grid(bool en) { d_main_gui->setGrid(en); }
 
+void vector_sink_f_impl::disable_legend() { d_main_gui->disableLegend(); }
+
 void vector_sink_f_impl::enable_autoscale(bool en) { d_main_gui->autoScale(en); }
 
 void vector_sink_f_impl::clear_max_hold() { d_main_gui->clearMaxHold(); }

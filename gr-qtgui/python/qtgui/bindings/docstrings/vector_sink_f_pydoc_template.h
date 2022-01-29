@@ -114,6 +114,9 @@ static const char* __doc_gr_qtgui_vector_sink_f_set_size = R"doc()doc";
 static const char* __doc_gr_qtgui_vector_sink_f_enable_menu = R"doc()doc";
 
 
+static const char* __doc_gr_qtgui_vector_sink_f_disable_legend = R"doc()doc";
+
+
 static const char* __doc_gr_qtgui_vector_sink_f_enable_grid = R"doc()doc";
 
 
