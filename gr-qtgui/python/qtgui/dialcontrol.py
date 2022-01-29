@@ -86,9 +86,9 @@ class DialControl(Qt.QDial):
         self.minsize = minsize
         self.changedCallback = changedCallback
         self.lablelCallback = lablelCallback
-        super().setMinimum(minimum)
-        super().setMaximum(maximum)
-        super().setValue(defaultvalue)
+        super().setMinimum(int(minimum))
+        super().setMaximum(int(maximum))
+        super().setValue(int(defaultvalue))
         super().valueChanged.connect(self.sliderMoved)
 
     def minimumSizeHint(self):
