@@ -7,7 +7,7 @@ Versioning](http://semver.org/spec/v2.0.0.html), starting with version 3.7.12.0.
 
 Older Logs can be found in `docs/RELEASE-NOTES-*`.
 
-## [3.10.1.0] - 2022-01-25
+## [3.10.1.0] - 2022-01-29
 
 This is mostly a bug fix release. It is API compatible with 3.10.X.Y releases. Code built against GNU Radio libraries (including OOTs) will likely need to be recompiled, as ABI compatibility is not guaranteed.
 
