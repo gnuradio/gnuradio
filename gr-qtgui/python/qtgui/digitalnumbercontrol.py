@@ -298,7 +298,7 @@ class DigitalNumberControl(QFrame):
         rect = QtCore.QRect(2, 2, size.width() - 4, size.height() - 4)
         painter.fillRect(rect, brush)
 
-        self.numberFont.setPixelSize(0.9 * size.height())
+        self.numberFont.setPixelSize(int(0.9 * size.height()))
         painter.setFont(self.numberFont)
         painter.setPen(self.fontColor)
         rect = event.rect()
