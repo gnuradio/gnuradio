@@ -76,8 +76,8 @@ class LabeledToggleSwitch(QFrame):
         metrics = QFontMetricsF(textfont)
 
         maxWidth = max((maxSize + 4), (maxSize * 2 + metrics.width(lbl)))
-        maxHeight = max((maxSize / 2 + 4),
-                        (maxSize / 2 + metrics.height() + 2))
+        maxHeight = max((maxSize // 2 + 4),
+                        (maxSize // 2 + metrics.height() + 2))
 
         self.setMinimumSize(int(maxWidth), int(maxHeight))
 
@@ -97,8 +97,8 @@ class ToggleSwitch(QFrame):
         self.onColor = QColor(onColor)
         self.offColor = QColor(offColor)
         self.callback = callback
-        self.setMinimumSize(maxSize, maxSize / 2)
-        self.setMaximumSize(maxSize, maxSize / 2)
+        self.setMinimumSize(maxSize, maxSize // 2)
+        self.setMaximumSize(maxSize, maxSize // 2)
 
     def setState(self, on_off):
         self.curState = on_off
@@ -116,7 +116,7 @@ class ToggleSwitch(QFrame):
         size = self.size()
         brush = QBrush()
 
-        center_x = size.width() / 2
+        center_x = size.width() // 2
 
         if self.curState:
             brush.setColor(self.onColor)
@@ -129,11 +129,11 @@ class ToggleSwitch(QFrame):
         painter.setBrush(brush)
 
         # Draw the switch background
-        centerRect = QRect(size.width() / 4, 0,
-                           size.width() / 2 - 4, size.height())
+        centerRect = QRect(size.width() // 4, 0,
+                           size.width() // 2 - 4, size.height())
         painter.drawRect(centerRect)
         painter.drawEllipse(0, 0, size.height(), size.height())
-        painter.drawEllipse(size.width() / 2, 0, size.height(), size.height())
+        painter.drawEllipse(size.width() // 2, 0, size.height(), size.height())
 
         # Draw the switch itself
         brush.setColor(QColor('white'))

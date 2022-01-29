@@ -151,7 +151,7 @@ class DialGauge(QFrame):
             else:
                 printText = str(int(self.value))
 
-            painter.drawText(size.width() / 2 - self.metrics.width(printText) / 2, size.height() / 2,
+            painter.drawText(int(size.width() / 2 - self.metrics.width(printText) / 2), size.height() // 2,
                              printText)
 
         painter.save()
@@ -160,7 +160,7 @@ class DialGauge(QFrame):
 
         # First draw complete circle
         painter.setPen(QPen(QColor(self.backgroundColor), self.penWidth))
-        painter.drawArc(rect, startAngle, self.endAngle * self.degScaler)
+        painter.drawArc(rect, startAngle, int(self.endAngle * self.degScaler))
         # First draw complete circle
         painter.setPen(QPen(QColor(self.barColor), self.penWidth))
         painter.drawArc(rect, startAngle, -endAngle)
