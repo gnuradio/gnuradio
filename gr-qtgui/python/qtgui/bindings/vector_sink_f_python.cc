@@ -236,6 +236,11 @@ void bind_vector_sink_f(py::module& m)
              D(vector_sink_f, enable_grid))
 
 
+        .def("disable_legend",
+             &vector_sink_f::disable_legend,
+             D(vector_sink_f, disable_legend))
+
+
         .def("enable_autoscale",
              &vector_sink_f::enable_autoscale,
              py::arg("en") = true,
