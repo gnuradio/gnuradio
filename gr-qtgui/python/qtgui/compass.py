@@ -130,7 +130,7 @@ class Compass(QWidget):
             painter.setBrush(brush)
             painter.setPen(QPen(QColor(self.scaleColor), 2))
             painter.setRenderHint(QPainter.Antialiasing)
-            painter.drawEllipse(center_x - diameter / 2 + 1,
+            painter.drawEllipse(int(center_x - diameter / 2 + 1),
                                 1, diameter - 4, diameter - 4)
 
         self.drawMarkings(painter)
@@ -157,8 +157,8 @@ class Compass(QWidget):
 
             if i % 45 == 0:
                 painter.drawLine(0, -40, 0, -50)
-                painter.drawText(-metrics.width(
-                    self._pointText[i]) / 2.0, -52, self._pointText[i])
+                painter.drawText(int(-metrics.width(
+                    self._pointText[i]) / 2.0), -52, self._pointText[i])
             else:
                 painter.drawLine(0, -45, 0, -50)
 

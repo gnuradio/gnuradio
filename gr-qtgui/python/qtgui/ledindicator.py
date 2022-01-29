@@ -74,8 +74,8 @@ class LabeledLEDIndicator(QFrame):
             textfont = self.lblcontrol.font()
             metrics = QFontMetricsF(textfont)
 
-            maxWidth = max((maxSize + 30), (maxSize + metrics.width(lbl) + 4))
-            maxHeight = max((maxSize + 35), (maxSize + metrics.height() + 2))
+            maxWidth = int(max((maxSize + 30), (maxSize + metrics.width(lbl) + 4)))
+            maxHeight = int(max((maxSize + 35), (maxSize + metrics.height() + 2)))
             self.setMinimumSize(maxWidth, maxHeight)
         else:
             self.setMinimumSize(maxSize + 2, maxSize + 2)
@@ -118,8 +118,8 @@ class LEDIndicator(QFrame):
         smallest_dim = smallest_dim / 2
         smallest_dim -= 2
 
-        center_x = size.width() / 2
-        center_y = size.height() / 2
+        center_x = int(size.width() / 2)
+        center_y = int(size.height() / 2)
         centerpoint = QPoint(center_x, center_y)
 
         radius = smallest_dim
