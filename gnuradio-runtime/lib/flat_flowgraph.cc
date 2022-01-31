@@ -119,8 +119,8 @@ void flat_flowgraph::allocate_block_detail(basic_block_sptr block)
             double decimation = (1.0 / dgrblock->relative_rate());
             int multiple = dgrblock->output_multiple();
             int history = dgrblock->history();
-            nitems = std::max(
-                nitems, static_cast<int>(2 * (decimation * multiple + (history - 1))));
+            nitems =
+                std::max(nitems, static_cast<int>(2 * (decimation * multiple + history)));
 
             // Calculate the LCM of downstream reader nitems
 #ifdef BUFFER_DEBUG
