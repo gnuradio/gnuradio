@@ -10,6 +10,11 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
     message(FATAL_ERROR "Prevented in-tree build. This is bad practice.")
 endif(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
 
+# Select the release build type by default to get optimization flags.
+# This has to come before project() which otherwise initializes it.
+# Build type can still be overridden by setting -DCMAKE_BUILD_TYPE=
+set(CMAKE_BUILD_TYPE "Release" CACHE STRING "")
+
 ########################################################################
 # Project setup
 ########################################################################
@@ -23,15 +28,9 @@ option(BUILD_SHARED_LIBS "Build shared libraries" ON)
 # Make sure our local CMake Modules path comes first
 list(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_SOURCE_DIR}/cmake/Modules)
 
+# Add more build types and check that requested build type is valid
 include(GrBuildTypes)
-
-# Select the release build type by default to get optimization flags
-if(NOT CMAKE_BUILD_TYPE)
-   SET(CMAKE_BUILD_TYPE "Release")
-   message(STATUS "Build type not specified: defaulting to release.")
-endif(NOT CMAKE_BUILD_TYPE)
 GR_CHECK_BUILD_TYPE(${CMAKE_BUILD_TYPE})
-SET(CMAKE_BUILD_TYPE ${CMAKE_BUILD_TYPE} CACHE STRING "")
 message(STATUS "Build type set to ${CMAKE_BUILD_TYPE}.")
 
 # Set the build date
