@@ -54,8 +54,7 @@ outputs:
 asserts:
 - ${ vlen > 0 }
 
-documentation: 'Jared Dulmage
-
+documentation: '|-
     Block interleaver reads inputs into rows and writes outputs by cols
 
     python/matrix_interleaver.py'
