@@ -18,6 +18,7 @@ FLOW_GRAPH_SCHEME = expand(
 
     metadata=Spec(types=dict, required=True, item_scheme=expand(
         file_format=Spec(types=int, required=True, item_scheme=None),
+        grc_version=Spec(types=str, required=False, item_scheme=None),
     ))
 
 )

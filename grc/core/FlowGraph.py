@@ -395,7 +395,10 @@ class FlowGraph(Element):
         data['blocks'] = [b.export_data() for b in sorted(self.blocks, key=block_order)
                           if b is not self.options_block]
         data['connections'] = sorted(c.export_data() for c in self.connections)
-        data['metadata'] = {'file_format': FLOW_GRAPH_FILE_FORMAT_VERSION}
+        data['metadata'] = {
+            'file_format': FLOW_GRAPH_FILE_FORMAT_VERSION,
+            'grc_version': self.parent_platform.config.version
+        }
         return data
 
     def _build_depending_hier_block(self, block_id):
