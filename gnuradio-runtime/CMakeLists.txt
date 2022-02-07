@@ -36,7 +36,7 @@ GR_REGISTER_COMPONENT("gnuradio-runtime" ENABLE_GNURADIO_RUNTIME
     Boost_FOUND
     PYTHONINTERP_FOUND
     MPLIB_FOUND
-    spdlog_FOUND
+    LOG4CPP_FOUND
 )
 endif()
 
