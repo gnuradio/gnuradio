@@ -7,6 +7,7 @@
   - variable_adaptive_algorithm
   - digital_linear_equalizer
   - digital_decision_feedback_equalizer
+  - digital_meas_evm_cc
 - Measurement Tools:
   - digital_mpsk_snr_est_cc
   - digital_probe_density_b
