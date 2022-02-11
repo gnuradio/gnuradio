@@ -47,7 +47,7 @@ class ModToolInfo(ModTool):
             self.info['version'] = '37'
         if not os.path.isfile(os.path.join('cmake', 'Modules', 'FindCppUnit.cmake')):
             self.info['version'] = '38'
-            if os.path.isdir(os.path.join('include', 'gnuradio', self.info['modname'])):
+            if os.path.isdir(os.path.join('include', 'gnuradio', mod_info['modname'])):
                 self.info['version'] = '310'
         mod_info['version'] = self.info['version']
         if 'is_component' in list(self.info.keys()) and self.info['is_component']:
