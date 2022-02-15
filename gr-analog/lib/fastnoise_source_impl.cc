@@ -13,8 +13,6 @@
 #include <config.h>
 #endif
 
-#include <boost/format.hpp>
-
 #include "fastnoise_source_impl.h"
 #include <gnuradio/io_signature.h>
 #include <gnuradio/xoroshiro128p.h>
@@ -43,10 +41,9 @@ void fastnoise_source_impl<gr_complex>::generate()
 {
     size_t noutput_items = d_samples.size();
     if (noutput_items >= 1 << 23) {
-        GR_LOG_INFO(
-            d_logger,
-            boost::format("Generating %d complex values. This might take a while.") %
-                noutput_items);
+        GR_LOG_INFO(d_logger,
+                    "Generating " + std::to_string(noutput_items) +
+                        " complex values. This might take a while.");
     }
 
     switch (d_type) {
@@ -80,9 +77,8 @@ fastnoise_source_impl<T>::fastnoise_source_impl(noise_type_t type,
 {
     if (!d_bitmask) {
         GR_LOG_INFO(this->d_logger,
-                    boost::format("Using non-power-of-2 sample pool size %d. This has "
-                                  "negative effect on performance.") %
-                        samples);
+                    "Using non-power-of-2 sample pool size " + std::to_string(samples) +
+                        ". This has negative effect on performance.");
     }
     d_samples.resize(samples);
     xoroshiro128p_seed(d_state, seed);
@@ -105,9 +101,8 @@ fastnoise_source_impl<gr_complex>::fastnoise_source_impl(noise_type_t type,
 {
     if (!d_bitmask) {
         GR_LOG_INFO(d_logger,
-                    boost::format("Using non-power-of-2 sample pool size %d. This has "
-                                  "negative effect on performance.") %
-                        samples);
+                    "Using non-power-of-2 sample pool size " + std::to_string(samples) +
+                        ". This has negative effect on performance.");
     }
     d_samples.resize(samples);
     xoroshiro128p_seed(d_state, (uint64_t)seed);
@@ -150,8 +145,8 @@ void fastnoise_source_impl<T>::generate()
     size_t noutput_items = d_samples.size();
     if (noutput_items >= 1 << 23) {
         GR_LOG_INFO(this->d_logger,
-                    boost::format("Generating %d values. This might take a while.") %
-                        noutput_items);
+                    "Generating " + std::to_string(noutput_items) +
+                        " values. This might take a while.");
     }
     switch (d_type) {
     case GR_UNIFORM:

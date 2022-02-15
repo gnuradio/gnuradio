@@ -8,14 +8,12 @@
 ########################################################################
 # Setup dependencies
 ########################################################################
-include(GrBoost)
 
 ########################################################################
 # Register component
 ########################################################################
 include(GrComponent)
 GR_REGISTER_COMPONENT("gr-analog" ENABLE_GR_ANALOG
-    Boost_FOUND
     ENABLE_GNURADIO_RUNTIME
     ENABLE_GR_BLOCKS
     ENABLE_GR_FFT
