@@ -122,7 +122,7 @@ rational_resampler_impl<IN_T, OUT_T, TAP_T>::rational_resampler_impl(
 
     if (taps.size() && (d > 1)) {
         GR_LOG_INFO(
-            d_logger,
+            this->d_logger,
             boost::format(
                 "Rational resampler has user-provided taps but interpolation (%1%) and "
                 "decimation (%2%) have a GCD of %3%, which increases the complexity of "
