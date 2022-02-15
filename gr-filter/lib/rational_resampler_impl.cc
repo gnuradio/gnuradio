@@ -120,7 +120,7 @@ rational_resampler_impl<IN_T, OUT_T, TAP_T>::rational_resampler_impl(
     auto d = GR_GCD(interpolation, decimation);
 
     if (!taps.empty() && (d > 1)) {
-        d_logger->info(
+        this->d_logger->info(
             "Rational resampler has user-provided taps but interpolation ({:d}) and "
             "decimation ({:d}) have a GCD of {:d}, which increases the complexity of "
             "the filterbank. Consider reducing these values by the GCD.",
