@@ -250,6 +250,29 @@ class test_rational_resampler (gr_unittest.TestCase):
         self.assertFloatTuplesAlmostEqual(
             expected_result[offset:offset + N], result_data[0:N], 5)
 
+    def test_007_interp_decim_common_factor(self):
+        taps = random_floats(31)
+        src_data = random_floats(10000)
+        interp = 6
+        decimation = 2
+
+        expected_result = reference_interp_dec_filter(
+            src_data, interp, decimation, taps)
+
+        tb = gr.top_block()
+        src = blocks.vector_source_f(src_data)
+        op = filter.rational_resampler_fff(interp, decimation, taps)
+        dst = blocks.vector_sink_f()
+        tb.connect(src, op)
+        tb.connect(op, dst)
+        tb.run()
+        result_data = dst.data()
+
+        N = 1000
+        offset = len(taps) // 2
+        self.assertFloatTuplesAlmostEqual(
+            expected_result[offset:offset + N], result_data[0:N], 5)
+
 
 if __name__ == '__main__':
     # FIXME: Disabled, see ticket:210

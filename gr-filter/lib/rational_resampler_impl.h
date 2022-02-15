@@ -30,8 +30,6 @@ private:
 
     void install_taps(const std::vector<TAP_T>& taps);
 
-    gr::logger_ptr d_logger;
-
 public:
     rational_resampler_impl(unsigned interpolation,
                             unsigned decimation,
