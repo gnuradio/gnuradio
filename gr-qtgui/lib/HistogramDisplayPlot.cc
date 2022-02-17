@@ -17,7 +17,6 @@
 #include <gnuradio/math.h>
 #include <qwt_legend.h>
 #include <qwt_scale_draw.h>
-#include <boost/math/special_functions/round.hpp>
 #include <QColor>
 #include <cmath>
 
@@ -171,8 +170,8 @@ void HistogramDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
             unsigned int index;
             for (unsigned int n = 0; n < d_nplots; ++n) {
                 for (uint64_t point = 0; point < numDataPoints; point++) {
-                    index = boost::math::iround(1e-20 + (dataPoints[n][point] - d_left) /
-                                                            d_width);
+                    index =
+                        std::lround(1e-20 + (dataPoints[n][point] - d_left) / d_width);
                     if (index < d_bins)
                         d_ydata[n][static_cast<unsigned int>(index)] += 1;
                 }
