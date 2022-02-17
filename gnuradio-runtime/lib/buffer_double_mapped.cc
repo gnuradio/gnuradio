@@ -15,11 +15,11 @@
 #include <gnuradio/block.h>
 #include <gnuradio/buffer_double_mapped.h>
 #include <gnuradio/buffer_reader.h>
-#include <gnuradio/integer_math.h>
 #include <gnuradio/math.h>
 #include <assert.h>
 #include <algorithm>
 #include <iostream>
+#include <numeric>
 #include <stdexcept>
 
 namespace gr {
@@ -33,7 +33,7 @@ namespace gr {
  */
 static inline long minimum_buffer_items(size_t type_size, size_t page_size)
 {
-    return page_size / GR_GCD(type_size, page_size);
+    return page_size / std::gcd(type_size, page_size);
 }
 
 buffer_type

@@ -18,7 +18,6 @@
 #include <gnuradio/buffer_reader.h>
 #include <gnuradio/buffer_single_mapped.h>
 #include <gnuradio/buffer_type.h>
-#include <gnuradio/integer_math.h>
 #include <gnuradio/math.h>
 #include <algorithm>
 #include <cassert>

@@ -15,7 +15,6 @@
 #include <gnuradio/buffer.h>
 #include <gnuradio/buffer_reader.h>
 #include <gnuradio/buffer_reader_sm.h>
-#include <gnuradio/integer_math.h>
 #include <gnuradio/math.h>
 #include <assert.h>
 #include <algorithm>

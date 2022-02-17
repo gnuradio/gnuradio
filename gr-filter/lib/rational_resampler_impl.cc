@@ -15,8 +15,8 @@
 #include "rational_resampler_impl.h"
 #include <gnuradio/fft/window.h>
 #include <gnuradio/filter/firdes.h>
-#include <gnuradio/integer_math.h>
 #include <gnuradio/io_signature.h>
+#include <numeric>
 #include <stdexcept>
 
 namespace gr {
@@ -117,7 +117,7 @@ rational_resampler_impl<IN_T, OUT_T, TAP_T>::rational_resampler_impl(
         fractional_bw = 0.4;
     }
 
-    auto d = GR_GCD(interpolation, decimation);
+    auto d = std::gcd(interpolation, decimation);
 
     if (!taps.empty() && (d > 1)) {
         this->d_logger->info(

@@ -14,7 +14,6 @@
 #include <gnuradio/block.h>
 #include <gnuradio/buffer_reader.h>
 #include <gnuradio/buffer_single_mapped.h>
-#include <gnuradio/integer_math.h>
 #include <gnuradio/math.h>
 #include <gnuradio/thread/thread.h>
 #include <assert.h>
@@ -22,6 +21,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <iostream>
+#include <numeric>
 #include <stdexcept>
 
 namespace gr {
@@ -92,7 +92,7 @@ bool buffer_single_mapped::allocate_buffer(int nitems)
     // granularity.
     if (link()->output_multiple_set()) {
         write_granularity =
-            GR_LCM(write_granularity, (uint64_t)link()->output_multiple());
+            std::lcm(write_granularity, (uint64_t)link()->output_multiple());
     }
 
 #ifdef BUFFER_DEBUG
@@ -103,7 +103,7 @@ bool buffer_single_mapped::allocate_buffer(int nitems)
 
     // Adjust size so output buffer size is a multiple of the write granularity
     if (write_granularity != 1 || d_downstream_lcm_nitems != 1) {
-        uint64_t size_align_adjust = GR_LCM(write_granularity, d_downstream_lcm_nitems);
+        uint64_t size_align_adjust = std::lcm(write_granularity, d_downstream_lcm_nitems);
         uint64_t remainder = nitems % size_align_adjust;
         nitems += (remainder > 0) ? (size_align_adjust - remainder) : 0;
 
