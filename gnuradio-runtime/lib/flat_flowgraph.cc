@@ -18,13 +18,13 @@
 #include <gnuradio/buffer_double_mapped.h>
 #include <gnuradio/buffer_reader.h>
 #include <gnuradio/buffer_type.h>
-#include <gnuradio/integer_math.h>
 #include <gnuradio/logger.h>
 #include <gnuradio/prefs.h>
 #include <volk/volk.h>
 #include <boost/format.hpp>
 #include <iostream>
 #include <map>
+#include <numeric>
 
 namespace gr {
 
@@ -130,14 +130,15 @@ void flat_flowgraph::allocate_block_detail(basic_block_sptr block)
 #endif
 
             if (dgrblock->fixed_rate()) {
-                lcm_nitems = GR_LCM(lcm_nitems,
-                                    (uint64_t)(dgrblock->fixed_rate_noutput_to_ninput(1) -
-                                               (dgrblock->history() - 1)));
+                lcm_nitems =
+                    std::lcm(lcm_nitems,
+                             (uint64_t)(dgrblock->fixed_rate_noutput_to_ninput(1) -
+                                        (dgrblock->history() - 1)));
             }
 
             if (dgrblock->relative_rate() != 1.0) {
                 // Relative rate
-                lcm_nitems = GR_LCM(lcm_nitems, dgrblock->relative_rate_d());
+                lcm_nitems = std::lcm(lcm_nitems, dgrblock->relative_rate_d());
             }
 
             // Sanity check, make sure lcm_nitems is at least 1
