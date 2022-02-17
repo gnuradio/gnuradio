@@ -176,7 +176,7 @@ void file_source_impl::open(const char* filename,
     // If length is not specified, use the remainder of the file. Check alignment at end.
     if (length_items == 0) {
         length_items = items_available;
-        if (file_size % d_itemsize) {
+        if (d_seekable && (file_size % d_itemsize)) {
             d_logger->warn("file size is not a multiple of item size ({:d} ≠ N·{:d})",
                            file_size,
                            d_itemsize);
