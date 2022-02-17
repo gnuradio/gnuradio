@@ -19,7 +19,6 @@
 #include <gnuradio/math.h>
 #include <volk/volk.h>
 #include <boost/format.hpp>
-#include <boost/math/special_functions/round.hpp>
 
 namespace gr {
 namespace digital {

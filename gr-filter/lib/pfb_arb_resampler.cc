@@ -15,7 +15,7 @@
 #include <gnuradio/filter/pfb_arb_resampler.h>
 #include <gnuradio/logger.h>
 #include <gnuradio/math.h>
-#include <boost/math/special_functions/round.hpp>
+#include <cmath>
 #include <cstdio>
 #include <stdexcept>
 
@@ -58,7 +58,7 @@ pfb_arb_resampler_ccf::pfb_arb_resampler_ccf(float rate,
     // Delay is based on number of taps per filter arm. Round to
     // the nearest integer.
     float delay = rate * (taps_per_filter() - 1.0) / 2.0;
-    d_delay = static_cast<int>(boost::math::iround(delay));
+    d_delay = static_cast<int>(std::lround(delay));
 
     // This calculation finds the phase offset induced by the
     // arbitrary resampling. It's based on which filter arm we are
@@ -69,8 +69,8 @@ pfb_arb_resampler_ccf::pfb_arb_resampler_ccf(float rate,
     int accum_int = static_cast<int>(accum);
     float accum_frac = accum - accum_int;
     int end_filter = static_cast<int>(
-        boost::math::iround(fmodf(d_last_filter + d_delay * d_dec_rate + accum_int,
-                                  static_cast<float>(d_int_rate))));
+        std::lround(fmodf(d_last_filter + d_delay * d_dec_rate + accum_int,
+                          static_cast<float>(d_int_rate))));
 
     d_est_phase_change = d_last_filter - (end_filter + accum_frac);
 }
@@ -248,7 +248,7 @@ pfb_arb_resampler_ccc::pfb_arb_resampler_ccc(float rate,
     // Delay is based on number of taps per filter arm. Round to
     // the nearest integer.
     float delay = rate * (taps_per_filter() - 1.0) / 2.0;
-    d_delay = static_cast<int>(boost::math::iround(delay));
+    d_delay = static_cast<int>(std::lround(delay));
 
     // This calculation finds the phase offset induced by the
     // arbitrary resampling. It's based on which filter arm we are
@@ -259,8 +259,8 @@ pfb_arb_resampler_ccc::pfb_arb_resampler_ccc(float rate,
     int accum_int = static_cast<int>(accum);
     float accum_frac = accum - accum_int;
     int end_filter = static_cast<int>(
-        boost::math::iround(fmodf(d_last_filter + d_delay * d_dec_rate + accum_int,
-                                  static_cast<float>(d_int_rate))));
+        std::lround(fmodf(d_last_filter + d_delay * d_dec_rate + accum_int,
+                          static_cast<float>(d_int_rate))));
 
     d_est_phase_change = d_last_filter - (end_filter + accum_frac);
 }
@@ -441,7 +441,7 @@ pfb_arb_resampler_fff::pfb_arb_resampler_fff(float rate,
     // Delay is based on number of taps per filter arm. Round to
     // the nearest integer.
     float delay = rate * (taps_per_filter() - 1.0) / 2.0;
-    d_delay = static_cast<int>(boost::math::iround(delay));
+    d_delay = static_cast<int>(std::lround(delay));
 
     // This calculation finds the phase offset induced by the
     // arbitrary resampling. It's based on which filter arm we are
@@ -452,8 +452,8 @@ pfb_arb_resampler_fff::pfb_arb_resampler_fff(float rate,
     int accum_int = static_cast<int>(accum);
     float accum_frac = accum - accum_int;
     int end_filter = static_cast<int>(
-        boost::math::iround(fmodf(d_last_filter + d_delay * d_dec_rate + accum_int,
-                                  static_cast<float>(d_int_rate))));
+        std::lround(fmodf(d_last_filter + d_delay * d_dec_rate + accum_int,
+                          static_cast<float>(d_int_rate))));
 
     d_est_phase_change = d_last_filter - (end_filter + accum_frac);
 }
