@@ -41,20 +41,20 @@ class test_message(gr_unittest.TestCase):
 
     def test_100(self):
         msg = gr.message(0, 1.5, 2.3)
-        self.assertEquals(0, msg.type())
+        self.assertEqual(0, msg.type())
         self.assertAlmostEqual(1.5, msg.arg1())
         self.assertAlmostEqual(2.3, msg.arg2())
-        self.assertEquals(0, msg.length())
+        self.assertEqual(0, msg.length())
 
     def test_101(self):
         s = b'This is a test'
         msg = gr.message_from_string(s.decode('utf8'))
-        self.assertEquals(s, msg.to_string())
+        self.assertEqual(s, msg.to_string())
 
     def test_102_unicodechars(self):
         s = u"(╯°□°)╯︵ ┻━┻"
         msg = gr.message_from_string(s)
-        self.assertEquals(s.encode('utf8'), msg.to_string())
+        self.assertEqual(s.encode('utf8'), msg.to_string())
 
     # msg_queue was removed from API in 3.8
     # def test_200(self):
@@ -62,23 +62,23 @@ class test_message(gr_unittest.TestCase):
 
     # def body_200(self):
     #     self.msgq.insert_tail(gr.message(0))
-    #     self.assertEquals(1, self.msgq.count())
+    #     self.assertEqual(1, self.msgq.count())
     #     self.msgq.insert_tail(gr.message(1))
-    #     self.assertEquals(2, self.msgq.count())
+    #     self.assertEqual(2, self.msgq.count())
     #     msg0 = self.msgq.delete_head()
-    #     self.assertEquals(0, msg0.type())
+    #     self.assertEqual(0, msg0.type())
     #     msg1 = self.msgq.delete_head()
-    #     self.assertEquals(1, msg1.type())
-    #     self.assertEquals(0, self.msgq.count())
+    #     self.assertEqual(1, msg1.type())
+    #     self.assertEqual(0, self.msgq.count())
 
     # def test_201(self):
     #     self.leak_check(self.body_201)
 
     # def body_201(self):
     #     self.msgq.insert_tail(gr.message(0))
-    #     self.assertEquals(1, self.msgq.count())
+    #     self.assertEqual(1, self.msgq.count())
     #     self.msgq.insert_tail(gr.message(1))
-    #     self.assertEquals(2, self.msgq.count())
+    #     self.assertEqual(2, self.msgq.count())
 
     # def test_202(self):
     #     self.leak_check(self.body_202)
@@ -94,7 +94,7 @@ class test_message(gr_unittest.TestCase):
         tb = gr.top_block()
         tb.connect(src, dst)
         tb.run()
-        self.assertEquals(input_data, dst.data())
+        self.assertEqual(input_data, dst.data())
 
     def test_debug_401(self):
         msg = pmt.intern("TESTING")
