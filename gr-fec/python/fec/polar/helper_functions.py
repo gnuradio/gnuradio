@@ -43,10 +43,10 @@ def is_power_of_two(num):
 
 def bit_reverse(value, n):
     # is this really missing in NumPy???
-    seq = np.int(value)
-    rev = np.int(0)
-    rmask = np.int(1)
-    lmask = np.int(2 ** (n - 1))
+    seq = np.int_(value)
+    rev = np.int_(0)
+    rmask = np.int_(1)
+    lmask = np.int_(2 ** (n - 1))
     for i in range(n // 2):
         shiftval = n - 1 - (i * 2)
         rshift = np.left_shift(np.bitwise_and(seq, rmask), shiftval)
@@ -79,7 +79,7 @@ def get_Fn(n):
     if n == 1:
         return np.array([1, ])
     nump = power_of_2_int(n) - 1  # number of Kronecker products to calculate
-    F2 = np.array([[1, 0], [1, 1]], np.int)
+    F2 = np.array([[1, 0], [1, 1]], np.int_)
     Fn = F2
     for i in range(nump):
         Fn = np.kron(Fn, F2)

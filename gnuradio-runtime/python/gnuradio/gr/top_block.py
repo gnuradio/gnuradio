@@ -45,7 +45,7 @@ class _top_block_waiter(threading.Thread):
 
     def __init__(self, tb):
         threading.Thread.__init__(self)
-        self.setDaemon(1)
+        self.daemon = True
         self.tb = tb
         self.event = threading.Event()
         self.start()
