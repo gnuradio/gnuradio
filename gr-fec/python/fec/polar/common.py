@@ -20,14 +20,14 @@ class PolarCommon(object):
         if not is_power_of_two(n):
             raise ValueError("n={0} is not a power of 2!".format(n))
         if frozenbits is None:
-            frozenbits = np.zeros(n - k, dtype=np.int)
+            frozenbits = np.zeros(n - k, dtype=np.int_)
         if not len(frozenbits) == n - k:
             raise ValueError(
                 "len(frozenbits)={0} is not equal to n-k={1}!".format(
                     len(frozenbits), n - k
                 )
             )
-        if not frozenbits.dtype == np.int:
+        if not frozenbits.dtype == np.int_:
             frozenbits = frozenbits.astype(dtype=int)
         if not len(frozen_bit_position) == (n - k):
             raise ValueError(
@@ -35,7 +35,7 @@ class PolarCommon(object):
                     len(frozen_bit_position), n - k
                 )
             )
-        if not frozen_bit_position.dtype == np.int:
+        if not frozen_bit_position.dtype == np.int_:
             frozen_bit_position = frozen_bit_position.astype(dtype=int)
 
         self.bit_reverse_positions = self._vector_bit_reversed(
