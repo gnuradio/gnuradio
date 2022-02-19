@@ -43,7 +43,7 @@ dvbt_reed_solomon_dec_impl::dvbt_reed_solomon_dec_impl(
 {
     d_rs = init_rs_char(rs_init_symsize, gfpoly, rs_init_fcr, rs_init_prim, (n - k));
     if (d_rs == NULL) {
-        GR_LOG_FATAL(d_logger, "Reed-Solomon Decoder, cannot allocate memory for d_rs.");
+        this->d_logger->fatal("Reed-Solomon Decoder, cannot allocate memory for d_rs.");
         throw std::bad_alloc();
     }
     d_nerrors_corrected_count = 0;
