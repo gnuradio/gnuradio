@@ -12,7 +12,6 @@
 
 #include "sink_impl.h"
 #include <SoapySDR/Errors.hpp>
-#include <boost/format.hpp>
 #include <iostream>
 
 namespace gr {
@@ -126,8 +125,7 @@ int sink_impl::general_work(__GR_ATTR_UNUSED int noutput_items,
     } else if (result == SOAPY_SDR_UNDERFLOW) {
         std::cerr << "sU" << std::flush;
     } else {
-        GR_LOG_WARN(d_logger,
-                    boost::format("Soapy sink error: %s") % SoapySDR::errToStr(result));
+        d_logger->warn("Soapy sink error: {:s}", SoapySDR::errToStr(result));
     }
 
     consume_each(nconsumed);
