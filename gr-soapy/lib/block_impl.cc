@@ -15,7 +15,6 @@
 #include <gnuradio/io_signature.h>
 #include <SoapySDR/Formats.h>
 #include <SoapySDR/Version.hpp>
-#include <boost/format.hpp>
 #include <algorithm>
 #include <cmath>
 #include <mutex>
@@ -98,14 +97,12 @@ static void check_abi(void)
     const std::string runtime_abi = SoapySDR::getABIVersion();
 
     if (buildtime_abi != runtime_abi) {
-        throw std::runtime_error(str(
-            boost::format(
-                "\nGR-Soapy detected ABI compatibility mismatch with SoapySDR library.\n"
-                "GR-Soapy was built against ABI: %s,\n"
-                "but the SoapySDR library reports ABI: %s\n"
-                "Suggestion: install an ABI compatible version of SoapySDR,\n"
-                "or rebuild GR-Soapy component against this ABI version.\n") %
-            buildtime_abi % runtime_abi));
+        throw std::runtime_error(
+            "\nGR-Soapy detected ABI compatibility mismatch with SoapySDR library.\n"
+            "GR-Soapy was built against ABI: " +
+            buildtime_abi + ",\nbut the SoapySDR library reports ABI: " + runtime_abi +
+            "\nSuggestion: install an ABI compatible version of SoapySDR,\n"
+            "or rebuild GR-Soapy component against this ABI version.\n");
     }
 }
 
@@ -606,9 +603,8 @@ void block_impl::set_gain(size_t channel, double gain)
     range_t rGain = d_device->getGainRange(d_direction, channel);
 
     if (!value_in_range(rGain, gain)) {
-        GR_LOG_ERROR(d_logger,
-                     boost::format("Gain out of range: %d <= gain <= %d") %
-                         rGain.minimum() % rGain.maximum());
+        d_logger->error(
+            "Gain out of range: {:g} <= gain <= {:g}", rGain.minimum(), rGain.maximum());
         return;
     }
 
@@ -629,9 +625,10 @@ void block_impl::set_gain(size_t channel, const std::string& name, double gain)
     /* Validate gain value */
     range_t rGain = d_device->getGainRange(d_direction, channel, name);
     if (!value_in_range(rGain, gain)) {
-        GR_LOG_ERROR(d_logger,
-                     boost::format("Gain %s out of range: %d <= gain <= %d") % name %
-                         rGain.minimum() % rGain.maximum());
+        d_logger->error("Gain {:s} out of range: {:g} <= gain <= {:g}",
+                        name,
+                        rGain.minimum(),
+                        rGain.maximum());
     }
 
     d_device->setGain(d_direction, channel, name, gain);
@@ -1249,7 +1246,7 @@ std::string block_impl::read_uart(const std::string& which, long timeout_us) con
 void block_impl::cmd_handler_frequency(pmt::pmt_t val, size_t channel)
 {
     if (!(val->is_number() && !val->is_complex())) {
-        GR_LOG_ERROR(d_logger, "soapy: freq must be float/int");
+        d_logger->error("soapy: freq must be float/int");
         return;
     }
     set_frequency(channel, pmt::to_double(val));
@@ -1261,13 +1258,13 @@ void block_impl::cmd_handler_gain(pmt::pmt_t val, size_t channel)
     // overall gain or a dict with a gain element and element-specific
     // value.
     if (!(val->is_number() && !val->is_complex()) && !val->is_dict()) {
-        GR_LOG_ERROR(d_logger, "soapy: gain must be float/int or a dict");
+        d_logger->error("soapy: gain must be float/int or a dict");
         return;
     }
 
     if (val->is_dict()) {
         if (!pmt::dict_has_key(val, CMD_GAIN_KEY)) {
-            GR_LOG_ERROR(d_logger, "soapy: gain dict must contain key \"gain\"");
+            d_logger->error("soapy: gain dict must contain key \"gain\"");
             return;
         }
 
@@ -1285,7 +1282,7 @@ void block_impl::cmd_handler_gain(pmt::pmt_t val, size_t channel)
 void block_impl::cmd_handler_samp_rate(pmt::pmt_t val, size_t channel)
 {
     if (!(val->is_number() && !val->is_complex())) {
-        GR_LOG_ERROR(d_logger, "soapy: rate must be float/int");
+        d_logger->error("soapy: rate must be float/int");
         return;
     }
     set_sample_rate(channel, pmt::to_double(val));
@@ -1294,7 +1291,7 @@ void block_impl::cmd_handler_samp_rate(pmt::pmt_t val, size_t channel)
 void block_impl::cmd_handler_bw(pmt::pmt_t val, size_t channel)
 {
     if (!(val->is_number() && !val->is_complex())) {
-        GR_LOG_ERROR(d_logger, "soapy: bw must be float/int");
+        d_logger->error("soapy: bw must be float/int");
         return;
     }
     set_bandwidth(channel, pmt::to_double(val));
@@ -1303,7 +1300,7 @@ void block_impl::cmd_handler_bw(pmt::pmt_t val, size_t channel)
 void block_impl::cmd_handler_antenna(pmt::pmt_t val, size_t channel)
 {
     if (!val->is_symbol()) {
-        GR_LOG_ERROR(d_logger, "soapy: ant must be string");
+        d_logger->error("soapy: ant must be string");
         return;
     }
     set_antenna(channel, pmt::symbol_to_string(val));
@@ -1312,7 +1309,7 @@ void block_impl::cmd_handler_antenna(pmt::pmt_t val, size_t channel)
 void block_impl::cmd_handler_gain_mode(pmt::pmt_t val, size_t channel)
 {
     if (!val->is_bool()) {
-        GR_LOG_ERROR(d_logger, "soapy: gain mode must be bool");
+        d_logger->error("soapy: gain mode must be bool");
         return;
     }
     set_gain_mode(channel, pmt::to_bool(val));
@@ -1321,7 +1318,7 @@ void block_impl::cmd_handler_gain_mode(pmt::pmt_t val, size_t channel)
 void block_impl::cmd_handler_frequency_correction(pmt::pmt_t val, size_t channel)
 {
     if (!(val->is_number() && !val->is_complex())) {
-        GR_LOG_ERROR(d_logger, "soapy: frequency correction must be float/int");
+        d_logger->error("soapy: frequency correction must be float/int");
         return;
     }
     set_frequency_correction(channel, pmt::to_double(val));
@@ -1330,7 +1327,7 @@ void block_impl::cmd_handler_frequency_correction(pmt::pmt_t val, size_t channel
 void block_impl::cmd_handler_dc_offset_mode(pmt::pmt_t val, size_t channel)
 {
     if (!val->is_bool()) {
-        GR_LOG_ERROR(d_logger, "soapy: DC offset mode must be bool");
+        d_logger->error("soapy: DC offset mode must be bool");
         return;
     }
     set_dc_offset_mode(channel, pmt::to_bool(val));
@@ -1339,7 +1336,7 @@ void block_impl::cmd_handler_dc_offset_mode(pmt::pmt_t val, size_t channel)
 void block_impl::cmd_handler_dc_offset(pmt::pmt_t val, size_t channel)
 {
     if (!val->is_number()) {
-        GR_LOG_ERROR(d_logger, "soapy: DC offset must be numeric");
+        d_logger->error("soapy: DC offset must be numeric");
         return;
     }
     set_dc_offset(channel, pmt::to_complex(val));
@@ -1348,7 +1345,7 @@ void block_impl::cmd_handler_dc_offset(pmt::pmt_t val, size_t channel)
 void block_impl::cmd_handler_iq_balance(pmt::pmt_t val, size_t channel)
 {
     if (!val->is_number()) {
-        GR_LOG_ERROR(d_logger, "soapy: IQ balance must be numeric");
+        d_logger->error("soapy: IQ balance must be numeric");
         return;
     }
     set_iq_balance(channel, pmt::to_complex(val));
@@ -1357,7 +1354,7 @@ void block_impl::cmd_handler_iq_balance(pmt::pmt_t val, size_t channel)
 void block_impl::cmd_handler_iq_balance_mode(pmt::pmt_t val, size_t channel)
 {
     if (!val->is_bool()) {
-        GR_LOG_ERROR(d_logger, "soapy: IQ balance mode must be bool");
+        d_logger->error("soapy: IQ balance mode must be bool");
         return;
     }
     set_iq_balance_mode(channel, pmt::to_bool(val));
@@ -1366,7 +1363,7 @@ void block_impl::cmd_handler_iq_balance_mode(pmt::pmt_t val, size_t channel)
 void block_impl::cmd_handler_master_clock_rate(pmt::pmt_t val, size_t)
 {
     if (!(val->is_number() && !val->is_complex())) {
-        GR_LOG_ERROR(d_logger, "soapy: master clock rate must be float/int");
+        d_logger->error("soapy: master clock rate must be float/int");
         return;
     }
     set_master_clock_rate(pmt::to_double(val));
@@ -1375,7 +1372,7 @@ void block_impl::cmd_handler_master_clock_rate(pmt::pmt_t val, size_t)
 void block_impl::cmd_handler_reference_clock_rate(pmt::pmt_t val, size_t)
 {
     if (!(val->is_number() && !val->is_complex())) {
-        GR_LOG_ERROR(d_logger, "soapy: reference clock rate must be float/int");
+        d_logger->error("soapy: reference clock rate must be float/int");
         return;
     }
     set_reference_clock_rate(pmt::to_double(val));
@@ -1384,7 +1381,7 @@ void block_impl::cmd_handler_reference_clock_rate(pmt::pmt_t val, size_t)
 void block_impl::cmd_handler_clock_source(pmt::pmt_t val, size_t)
 {
     if (!val->is_symbol()) {
-        GR_LOG_ERROR(d_logger, "soapy: clock source must be string");
+        d_logger->error("soapy: clock source must be string");
         return;
     }
     set_clock_source(pmt::symbol_to_string(val));
@@ -1393,7 +1390,7 @@ void block_impl::cmd_handler_clock_source(pmt::pmt_t val, size_t)
 void block_impl::cmd_handler_time_source(pmt::pmt_t val, size_t)
 {
     if (!val->is_symbol()) {
-        GR_LOG_ERROR(d_logger, "soapy: time source must be string");
+        d_logger->error("soapy: time source must be string");
         return;
     }
     set_time_source(pmt::symbol_to_string(val));
@@ -1402,12 +1399,12 @@ void block_impl::cmd_handler_time_source(pmt::pmt_t val, size_t)
 void block_impl::cmd_handler_hardware_time(pmt::pmt_t val, size_t)
 {
     if (!val->is_dict()) {
-        GR_LOG_ERROR(d_logger, "soapy: hardware time must be a dict");
+        d_logger->error("soapy: hardware time must be a dict");
         return;
     }
 
     if (!pmt::dict_has_key(val, CMD_TIME_KEY)) {
-        GR_LOG_ERROR(d_logger, "soapy: hardware time dict must contain key \"time\"");
+        d_logger->error("soapy: hardware time dict must contain key \"time\"");
         return;
     }
 
@@ -1422,14 +1419,13 @@ void block_impl::cmd_handler_hardware_time(pmt::pmt_t val, size_t)
 void block_impl::cmd_handler_register(pmt::pmt_t val, size_t)
 {
     if (!val->is_dict()) {
-        GR_LOG_ERROR(d_logger, "soapy: register write param must be a dict");
+        d_logger->error("soapy: register write param must be a dict");
         return;
     }
 
     if (!pmt::dict_has_key(val, CMD_NAME_KEY) || !pmt::dict_has_key(val, CMD_ADDR_KEY) ||
         !pmt::dict_has_key(val, CMD_VALUE_KEY)) {
-        GR_LOG_ERROR(
-            d_logger,
+        d_logger->error(
             "soapy: register write dict must contain keys \"name\", \"addr\", \"value\"");
         return;
     }
@@ -1445,15 +1441,14 @@ void block_impl::cmd_handler_register(pmt::pmt_t val, size_t)
 void block_impl::cmd_handler_registers(pmt::pmt_t val, size_t)
 {
     if (!val->is_dict()) {
-        GR_LOG_ERROR(d_logger, "soapy: multi-register write param must be a dict");
+        d_logger->error("soapy: multi-register write param must be a dict");
         return;
     }
 
     if (!pmt::dict_has_key(val, CMD_NAME_KEY) || !pmt::dict_has_key(val, CMD_ADDR_KEY) ||
         !pmt::dict_has_key(val, CMD_VALUE_KEY)) {
-        GR_LOG_ERROR(d_logger,
-                     "soapy: multi-register write dict must contain keys \"name\", "
-                     "\"addr\", \"value\"");
+        d_logger->error("soapy: multi-register write dict must contain keys \"name\", "
+                        "\"addr\", \"value\"");
         return;
     }
 
@@ -1470,12 +1465,12 @@ void block_impl::cmd_handler_registers(pmt::pmt_t val, size_t)
 void block_impl::cmd_handler_setting(pmt::pmt_t val, size_t channel)
 {
     if (!val->is_dict()) {
-        GR_LOG_ERROR(d_logger, "soapy: GPIO must be a dict");
+        d_logger->error("soapy: GPIO must be a dict");
         return;
     }
 
     if (!pmt::dict_has_key(val, CMD_KEY_KEY) || !pmt::dict_has_key(val, CMD_VALUE_KEY)) {
-        GR_LOG_ERROR(d_logger, "soapy: GPIO must contain keys \"key\", \"value\"");
+        d_logger->error("soapy: GPIO must contain keys \"key\", \"value\"");
         return;
     }
 
@@ -1495,12 +1490,12 @@ void block_impl::cmd_handler_setting(pmt::pmt_t val, size_t channel)
 void block_impl::cmd_handler_gpio(pmt::pmt_t val, size_t)
 {
     if (!val->is_dict()) {
-        GR_LOG_ERROR(d_logger, "soapy: setting must be a dict");
+        d_logger->error("soapy: setting must be a dict");
         return;
     }
 
     if (!pmt::dict_has_key(val, CMD_BANK_KEY) || !pmt::dict_has_key(val, CMD_VALUE_KEY)) {
-        GR_LOG_ERROR(d_logger, "soapy: GPIO must contain keys \"bank\", \"value\"");
+        d_logger->error("soapy: GPIO must contain keys \"bank\", \"value\"");
         return;
     }
 
@@ -1522,12 +1517,12 @@ void block_impl::cmd_handler_gpio_dir(pmt::pmt_t val, size_t)
     static const pmt::pmt_t CMD_DIR_KEY = pmt::mp("dir");
 
     if (!val->is_dict()) {
-        GR_LOG_ERROR(d_logger, "soapy: GPIO dir must be a dict");
+        d_logger->error("soapy: GPIO dir must be a dict");
         return;
     }
 
     if (!pmt::dict_has_key(val, CMD_BANK_KEY) || !pmt::dict_has_key(val, CMD_DIR_KEY)) {
-        GR_LOG_ERROR(d_logger, "soapy: GPIO dir must contain keys \"bank\", \"dir\"");
+        d_logger->error("soapy: GPIO dir must contain keys \"bank\", \"dir\"");
         return;
     }
 
@@ -1547,12 +1542,12 @@ void block_impl::cmd_handler_gpio_dir(pmt::pmt_t val, size_t)
 void block_impl::cmd_handler_i2c(pmt::pmt_t val, size_t)
 {
     if (!val->is_dict()) {
-        GR_LOG_ERROR(d_logger, "soapy: I2C must be a dict");
+        d_logger->error("soapy: I2C must be a dict");
         return;
     }
 
     if (!pmt::dict_has_key(val, CMD_ADDR_KEY) || !pmt::dict_has_key(val, CMD_DATA_KEY)) {
-        GR_LOG_ERROR(d_logger, "soapy: I2C must contain keys \"addr\", \"data\"");
+        d_logger->error("soapy: I2C must contain keys \"addr\", \"data\"");
         return;
     }
 
@@ -1566,12 +1561,12 @@ void block_impl::cmd_handler_i2c(pmt::pmt_t val, size_t)
 void block_impl::cmd_handler_uart(pmt::pmt_t val, size_t)
 {
     if (!val->is_dict()) {
-        GR_LOG_ERROR(d_logger, "soapy: UART must be a dict");
+        d_logger->error("soapy: UART must be a dict");
         return;
     }
 
     if (!pmt::dict_has_key(val, CMD_NAME_KEY) || !pmt::dict_has_key(val, CMD_DATA_KEY)) {
-        GR_LOG_ERROR(d_logger, "soapy: UART must contain keys \"name\", \"data\"");
+        d_logger->error("soapy: UART must contain keys \"name\", \"data\"");
         return;
     }
 
@@ -1588,7 +1583,7 @@ void block_impl::msg_handler_cmd(pmt::pmt_t msg)
     const long CHANNEL_ALL = 0x12345678; // arbitrary
 
     if (!pmt::is_dict(msg)) {
-        GR_LOG_ERROR(d_logger, "soapy: commands must be pmt::dict");
+        d_logger->error("soapy: commands must be pmt::dict");
         return;
     }
 
@@ -1597,9 +1592,7 @@ void block_impl::msg_handler_cmd(pmt::pmt_t msg)
     size_t channel = pmt::to_long(pmt::dict_ref(msg, CMD_CHAN_KEY, channel_all_pmt));
 
     if (channel != CHANNEL_ALL && channel >= d_nchan) {
-        GR_LOG_ERROR(d_logger,
-                     boost::format("soapy: ignoring command for invalid channel %d") %
-                         channel);
+        d_logger->error("soapy: ignoring command for invalid channel {:d}", channel);
         return;
     }
 
@@ -1614,9 +1607,8 @@ void block_impl::msg_handler_cmd(pmt::pmt_t msg)
         // Find command handler
         auto it = d_cmd_handlers.find(key);
         if (it == d_cmd_handlers.end()) {
-            GR_LOG_ERROR(d_logger,
-                         boost::format("soapy: ignoring unknown command key '%s'") %
-                             pmt::symbol_to_string(key));
+            d_logger->error("soapy: ignoring unknown command key '{:s}'",
+                            pmt::symbol_to_string(key));
             continue;
         }
         cmd_handler_t handler = it->second;

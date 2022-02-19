@@ -8,7 +8,6 @@
 ########################################################################
 # Setup dependencies
 ########################################################################
-include(GrBoost)
 
 ########################################################################
 # External dependencies
@@ -20,7 +19,6 @@ find_package(SoapySDR 0.7.2)
 ########################################################################
 include(GrComponent)
 GR_REGISTER_COMPONENT("gr-soapy" ENABLE_GR_SOAPY
-    Boost_FOUND
     SoapySDR_FOUND
     ENABLE_GNURADIO_RUNTIME
 )
