@@ -98,7 +98,7 @@ int dvbt_energy_dispersal_impl::general_work(int noutput_items,
 
             for (int j = 0; j < d_npacks; j++) {
                 if (in[index + count] != d_SYNC) {
-                    GR_LOG_WARN(d_logger, "Malformed MPEG-TS!");
+                    this->d_logger->warn("Malformed MPEG-TS!");
                 }
 
                 out[count++] = sync;
