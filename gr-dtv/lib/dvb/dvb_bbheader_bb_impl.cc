@@ -487,7 +487,7 @@ int dvb_bbheader_bb_impl::general_work(int noutput_items,
                 for (int j = 0; j < (int)((kbch - 80 - padding) / 8); j++) {
                     if (count == 0) {
                         if (*in != 0x47) {
-                            GR_LOG_WARN(d_logger, "Transport Stream sync error!");
+                            this->d_logger->warn("Transport Stream sync error!");
                         }
                         j--;
                         in++;
@@ -508,7 +508,7 @@ int dvb_bbheader_bb_impl::general_work(int noutput_items,
                 for (int j = 0; j < (int)((kbch - 80 - padding) / 8); j++) {
                     if (count == 0) {
                         if (*in != 0x47) {
-                            GR_LOG_WARN(d_logger, "Transport Stream sync error!");
+                            this->d_logger->warn("Transport Stream sync error!");
                         }
                         in++;
                         b = crc;
@@ -539,7 +539,7 @@ int dvb_bbheader_bb_impl::general_work(int noutput_items,
                 if (nibble == TRUE) {
                     if (count == 0) {
                         if (*in != 0x47) {
-                            GR_LOG_WARN(d_logger, "Transport Stream sync error!");
+                            this->d_logger->warn("Transport Stream sync error!");
                         }
                         in++;
                         b = crc;
