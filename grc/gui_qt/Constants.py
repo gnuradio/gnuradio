@@ -8,7 +8,6 @@ SPDX-License-Identifier: GPL-2.0-or-later
 """
 
 
-from gi.repository import Gtk, Gdk
 
 from ..core.Constants import *
 
@@ -38,8 +37,10 @@ PARAM_FONT = "Sans 7.5"
 # size of the state saving cache in the flow graph (undo/redo functionality)
 STATE_CACHE_SIZE = 42
 
+'''
 # Shared targets for drag and drop of blocks
 DND_TARGETS = [('STRING', Gtk.TargetFlags.SAME_APP, 0)]
+'''
 
 # label constraint dimensions
 LABEL_SEPARATION = 3
@@ -93,6 +94,7 @@ and kindly ask to update their GRC Block Descriptions or Block Tree to include a
 # DPI_SCALING = _SCREEN_RESOLUTION / 96.0 if _SCREEN_RESOLUTION > 0 else 1.0
 DPI_SCALING = 1.0  # todo: figure out the GTK3 way (maybe cairo does this for us
 
+'''
 # Gtk-themes classified as dark
 GTK_DARK_THEMES = [
     'Adwaita-dark',
@@ -103,7 +105,7 @@ GTK_SETTINGS_INI_PATH = '~/.config/gtk-3.0/settings.ini'
 
 GTK_INI_PREFER_DARK_KEY = 'gtk-application-prefer-dark-theme'
 GTK_INI_THEME_NAME_KEY = 'gtk-theme-name'
-
+'''
 
 def update_font_size(font_size):
     global PORT_SEPARATION, BLOCK_FONT, PORT_FONT, PARAM_FONT, FONT_SIZE
