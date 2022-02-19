@@ -16,8 +16,6 @@
 #include "gnuradio/dtv/atsc_consts.h"
 #include <gnuradio/io_signature.h>
 
-#include <boost/format.hpp>
-
 namespace gr {
 namespace dtv {
 
@@ -116,9 +114,10 @@ int atsc_rs_decoder_impl::work(int noutput_items,
         d_total_packets++;
 #if 0
         if (d_total_packets > 1000) {
-          GR_LOG_INFO(d_logger, boost::format("Error rate: %1%\tPacket error rate: %2%") \
-                       % ((float)d_nerrors_corrected_count/(ATSC_MPEG_PKT_LENGTH*d_total_packets))
-                       % ((float)d_bad_packet_count/d_total_packets));
+            this->d_logger->info("Error rate: {:g}\tPacket error rate: {:g}",
+                                 (float)d_nerrors_corrected_count /
+                                     (ATSC_MPEG_PKT_LENGTH * d_total_packets),
+                                 (float)d_bad_packet_count / d_total_packets);
         }
 #endif
     }
