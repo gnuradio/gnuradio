@@ -881,28 +881,28 @@ dvbt2_framemapper_cc_impl::dvbt2_framemapper_cc_impl(
         set_output_multiple((N_P2 * C_P2) + (numdatasyms * C_DATA));
         mapped_items = (N_P2 * C_P2) + (numdatasyms * C_DATA);
         if (mapped_items < (stream_items + 1840 + (N_post / eta_mod) + (N_FC - C_FC))) {
-            GR_LOG_WARN(d_logger, "Frame Mapper, too many FEC blocks in T2 frame.");
+            this->d_logger->warn("Frame Mapper, too many FEC blocks in T2 frame.");
             mapped_items = stream_items + 1840 + (N_post / eta_mod) +
                            (N_FC - C_FC); /* avoid segfault */
         }
         zigzag_interleave = (gr_complex*)malloc(sizeof(gr_complex) * mapped_items);
         if (zigzag_interleave == NULL) {
-            GR_LOG_FATAL(d_logger,
-                         "Frame Mapper, cannot allocate memory for zigzag_interleave.");
+            this->d_logger->fatal(
+                "Frame Mapper, cannot allocate memory for zigzag_interleave.");
             throw std::bad_alloc();
         }
     } else {
         set_output_multiple((N_P2 * C_P2) + ((numdatasyms - 1) * C_DATA) + N_FC);
         mapped_items = (N_P2 * C_P2) + ((numdatasyms - 1) * C_DATA) + N_FC;
         if (mapped_items < (stream_items + 1840 + (N_post / eta_mod) + (N_FC - C_FC))) {
-            GR_LOG_WARN(d_logger, "Frame Mapper, too many FEC blocks in T2 frame.");
+            this->d_logger->warn("Frame Mapper, too many FEC blocks in T2 frame.");
             mapped_items = stream_items + 1840 + (N_post / eta_mod) +
                            (N_FC - C_FC); /* avoid segfault */
         }
         zigzag_interleave = (gr_complex*)malloc(sizeof(gr_complex) * mapped_items);
         if (zigzag_interleave == NULL) {
-            GR_LOG_FATAL(d_logger,
-                         "Frame Mapper, cannot allocate memory for zigzag_interleave.");
+            this->d_logger->fatal(
+                "Frame Mapper, cannot allocate memory for zigzag_interleave.");
             throw std::bad_alloc();
         }
     }
@@ -911,8 +911,8 @@ dvbt2_framemapper_cc_impl::dvbt2_framemapper_cc_impl(
                             (N_post / eta_mod) - (N_FC - C_FC));
     if (dummy_randomize == NULL) {
         free(zigzag_interleave);
-        GR_LOG_FATAL(d_logger,
-                     "Frame Mapper, cannot allocate memory for dummy_randomize.");
+        this->d_logger->fatal(
+            "Frame Mapper, cannot allocate memory for dummy_randomize.");
         throw std::bad_alloc();
     }
     init_dummy_randomizer();

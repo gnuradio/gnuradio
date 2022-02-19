@@ -73,8 +73,7 @@ int atsc_fs_checker_impl::general_work(int noutput_items,
             errors +=
                 (in[i * ATSC_DATA_SEGMENT_LENGTH + j + OFFSET_511] >= 0) ^ atsc_pn511[j];
 
-        GR_LOG_DEBUG(d_debug_logger,
-                     std::string("second PN63 error count = ") + std::to_string(errors));
+        this->d_debug_logger->debug("second PN63 error count = {:d}", errors);
 
         if (errors < PN511_ERROR_LIMIT) { // 511 pattern is good.
             // determine if this is field 1 or field 2
@@ -85,17 +84,16 @@ int atsc_fs_checker_impl::general_work(int noutput_items,
 
             // we should have either field 1 (== PN63) or field 2 (== ~PN63)
             if (errors <= PN63_ERROR_LIMIT) {
-                GR_LOG_DEBUG(d_debug_logger, "Found FIELD_SYNC_1")
+                this->d_debug_logger->debug("Found FIELD_SYNC_1");
                 d_field_num = 1;    // We are in field number 1 now
                 d_segment_num = -1; // This is the first segment
             } else if (errors >= (LENGTH_2ND_63 - PN63_ERROR_LIMIT)) {
-                GR_LOG_DEBUG(d_debug_logger, "Found FIELD_SYNC_2")
+                this->d_debug_logger->debug("Found FIELD_SYNC_2");
                 d_field_num = 2;    // We are in field number 2 now
                 d_segment_num = -1; // This is the first segment
             } else {
                 // should be extremely rare.
-                GR_LOG_WARN(d_logger,
-                            std::string("PN63 error count = ") + std::to_string(errors));
+                this->d_logger->warn("PN63 error count = {:d}", errors);
             }
         }
 

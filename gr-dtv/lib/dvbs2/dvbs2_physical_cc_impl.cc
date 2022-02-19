@@ -78,8 +78,8 @@ dvbs2_physical_cc_impl::dvbs2_physical_cc_impl(dvb_framesize_t framesize,
         type |= 1;
     }
     if (goldcode < 0 || goldcode > 262141) {
-        GR_LOG_WARN(d_logger, "Gold Code must be between 0 and 262141 inclusive.");
-        GR_LOG_WARN(d_logger, "Gold Code set to 0.");
+        this->d_logger->warn("Gold Code must be between 0 and 262141 inclusive.");
+        this->d_logger->warn("Gold Code set to 0.");
         goldcode = 0;
     }
     gold_code = goldcode;
