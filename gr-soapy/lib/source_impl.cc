@@ -12,7 +12,6 @@
 
 #include "source_impl.h"
 #include <SoapySDR/Errors.hpp>
-#include <boost/format.hpp>
 #include <iostream>
 
 namespace gr {
@@ -87,9 +86,7 @@ int source_impl::general_work(int noutput_items,
 
         // Report and yield back to scheduler on other errors.
         default:
-            GR_LOG_WARN(d_logger,
-                        boost::format("Soapy source error: %s") %
-                            SoapySDR::errToStr(result));
+            d_logger->warn("Soapy source error: {:s}", SoapySDR::errToStr(result));
             break;
         }
 
