@@ -7,6 +7,8 @@
  */
 
 #include <gnuradio/iio/iio_types.h>
+#include <sstream>
+#include <string>
 
 namespace gr {
 namespace iio {
@@ -19,8 +21,10 @@ iio_param_t::iio_param_t(const std::string& key, iio_param_value_t value)
 }
 iio_param_t::iio_param_t(const std::string& kvpair)
 {
+    std::istringstream ss(kvpair);
+    std::string tok;
     std::vector<std::string> toks;
-    for (const std::string& tok : tokenizer(kvpair, "=")) {
+    while (getline(ss, tok, '=')) {
         toks.push_back(tok);
     }
     if (toks.size() == 2 && !toks[0].empty()) { // only valid combination

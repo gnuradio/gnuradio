@@ -15,8 +15,6 @@
 #include "device_source_impl.h"
 #include <gnuradio/io_signature.h>
 
-#include <boost/format.hpp>
-
 #include <string>
 #include <vector>
 
@@ -225,7 +223,7 @@ int device_sink_impl::work(int noutput_items,
         iio_strerror(-ret, buf, sizeof(buf));
         std::string error(buf);
 
-        GR_LOG_WARN(d_logger, boost::format("Unable to push buffer: %d") % error);
+        d_logger->warn("Unable to push buffer: {:s}", error);
         return WORK_DONE; /* EOF */
     }
 

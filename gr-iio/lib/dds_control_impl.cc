@@ -14,8 +14,6 @@
 #include "dds_control_impl.h"
 #include <gnuradio/io_signature.h>
 
-#include <boost/format.hpp>
-
 #include <string>
 #include <vector>
 
@@ -122,28 +120,23 @@ void dds_control_impl::set_dds_confg(std::vector<long> frequencies,
             ret = iio_channel_attr_write_longlong(
                 chan, "frequency", d_frequencies[dds_indx]);
             if (ret < 0)
-                GR_LOG_WARN(d_logger,
-                            boost::format("Unable to set DDS frequency: %ld") %
-                                d_frequencies[dds_indx]);
+                d_logger->warn("Unable to set DDS frequency: {:d}",
+                               d_frequencies[dds_indx]);
 
             ret = iio_channel_attr_write_longlong(chan, "phase", d_phases[dds_indx]);
             if (ret < 0)
-                GR_LOG_WARN(d_logger,
-                            boost::format("Unable to set DDS phase: %f") %
-                                d_phases[dds_indx]);
+                d_logger->warn("Unable to set DDS phase: {:g}", d_phases[dds_indx]);
 
             if (d_enabled[enable_indx])
                 ret = iio_channel_attr_write_double(chan, "scale", d_scales[dds_indx]);
             else
                 ret = iio_channel_attr_write_double(chan, "scale", 0);
             if (ret < 0)
-                GR_LOG_WARN(d_logger,
-                            boost::format("Unable to set DDS scale: %f") %
-                                d_scales[dds_indx]);
+                d_logger->warn("Unable to set DDS scale: {:g}", d_scales[dds_indx]);
 
             ret = iio_channel_attr_write_longlong(chan, "raw", enable);
             if (ret < 0)
-                GR_LOG_WARN(d_logger, boost::format("Unable to set DDS: %d") % ret);
+                d_logger->warn("Unable to set DDS: {:d}", ret);
 
             dds_indx++;
             if ((dds_indx % 4) == 0)

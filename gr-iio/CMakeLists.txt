@@ -8,13 +8,10 @@
 ########################################################################
 # Setup dependencies
 ########################################################################
-include(GrBoost)
-
 find_package(libiio)
 find_package(libad9361)
 
 set(GR_IIO_DEPENDENCIES
-  Boost_FOUND
   ENABLE_GNURADIO_RUNTIME
   ENABLE_GR_BLOCKS
   libiio_FOUND)
