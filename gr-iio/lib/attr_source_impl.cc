@@ -13,8 +13,6 @@
 
 #include "attr_source_impl.h"
 #include <gnuradio/io_signature.h>
-#include <boost/format.hpp>
-#include <boost/lexical_cast.hpp>
 
 #include <chrono>
 #include <string>
@@ -129,7 +127,7 @@ attr_source_impl::~attr_source_impl() {}
 void attr_source_impl::check(int ret)
 {
     if (ret < 0)
-        GR_LOG_WARN(d_logger, boost::format("Reading parameter failed: %d") % ret);
+        d_logger->warn("Reading parameter failed: {:d}", ret);
 }
 
 void attr_source_impl::get_register_data(uint32_t address, int* value)
@@ -137,7 +135,7 @@ void attr_source_impl::get_register_data(uint32_t address, int* value)
     uint32_t u32value;
     ret = iio_device_reg_read(dev, address, &u32value);
     attr_source_impl::check(ret);
-    *value = boost::lexical_cast<int>(u32value);
+    *value = static_cast<int>(u32value);
 }
 
 void attr_source_impl::get_attribute_data(const std::string& attribute, double* value)
@@ -171,7 +169,7 @@ void attr_source_impl::get_attribute_data(const std::string& attribute, float* v
         break;
     }
     attr_source_impl::check(ret);
-    *value = boost::lexical_cast<float>(dvalue);
+    *value = static_cast<float>(dvalue);
 }
 
 void attr_source_impl::get_attribute_data(const std::string& attribute, long long* value)
@@ -205,7 +203,7 @@ void attr_source_impl::get_attribute_data(const std::string& attribute, int* val
         break;
     }
     attr_source_impl::check(ret);
-    *value = boost::lexical_cast<int>(llvalue);
+    *value = static_cast<int>(llvalue);
 }
 
 void attr_source_impl::get_attribute_data(const std::string& attribute, uint8_t* value)
@@ -223,7 +221,7 @@ void attr_source_impl::get_attribute_data(const std::string& attribute, uint8_t*
         break;
     }
     attr_source_impl::check(ret);
-    *value = boost::lexical_cast<uint8_t>(bvalue);
+    *value = static_cast<uint8_t>(bvalue);
 }
 
 int attr_source_impl::work(int noutput_items,

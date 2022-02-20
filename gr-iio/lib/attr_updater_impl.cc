@@ -87,7 +87,7 @@ bool attr_updater_impl::start()
         d_finished = false;
         d_mtx.unlock();
         d_thread = std::shared_ptr<gr::thread::thread>(
-            new gr::thread::thread(boost::bind(&attr_updater_impl::run, this)));
+            new gr::thread::thread([this] { run(); }));
     }
     return block::start();
 }
