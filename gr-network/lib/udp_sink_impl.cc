@@ -15,7 +15,6 @@
 #include "udp_sink_impl.h"
 #include <gnuradio/io_signature.h>
 #include <boost/array.hpp>
-#include <boost/format.hpp>
 
 namespace gr {
 namespace network {
@@ -78,15 +77,14 @@ udp_sink_impl::udp_sink_impl(size_t itemsize,
         break;
 
     default:
-        GR_LOG_ERROR(d_logger, "Unknown header type.");
+        d_logger->error("Unknown header type.");
         throw std::invalid_argument("Unknown UDP header type.");
         break;
     }
 
     if (d_payloadsize < 8) {
-        GR_LOG_ERROR(d_logger,
-                     "Payload size is too small.  Must be at "
-                     "least 8 bytes once header/trailer adjustments are made.");
+        d_logger->error("Payload size is too small.  Must be at "
+                        "least 8 bytes once header/trailer adjustments are made.");
         throw std::invalid_argument(
             "Payload size is too small.  Must be at "
             "least 8 bytes once header/trailer adjustments are made.");
@@ -125,7 +123,7 @@ bool udp_sink_impl::start()
 
     d_udpsocket = new boost::asio::ip::udp::socket(d_io_service);
 
-    std::string str_port = (boost::format("%d") % d_port).str();
+    std::string str_port = std::to_string(d_port);
     std::string str_host = d_host.empty() ? std::string("localhost") : d_host;
     boost::asio::ip::udp::resolver resolver(d_io_service);
     boost::asio::ip::udp::resolver::query query(
