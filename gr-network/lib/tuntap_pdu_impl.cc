@@ -16,7 +16,6 @@
 #include "tuntap_pdu_impl.h"
 #include <gnuradio/io_signature.h>
 #include <gnuradio/pdu.h>
-#include <boost/format.hpp>
 
 #include <fcntl.h>
 #include <sys/stat.h>
@@ -67,21 +66,21 @@ tuntap_pdu_impl::tuntap_pdu_impl(std::string dev, int MTU, bool istunflag)
 
     int err = set_mtu(dev_cstr, MTU);
     if (err < 0) {
-        std::ostringstream msg;
-        msg << boost::format("failed to set MTU to %d. You should use ifconfig to set "
-                             "the MTU. E.g., `$ sudo ifconfig %s mtu %d`") %
-                   MTU % dev % MTU;
-        GR_LOG_ERROR(d_logger, msg.str());
+        d_logger->error("failed to set MTU to {:d}. You should use ifconfig to set "
+                        "the MTU. E.g., `$ sudo ifconfig {:s} mtu {:d}`",
+                        MTU,
+                        dev,
+                        MTU);
     }
 
 
-    GR_LOG_WARN(d_logger,
-                (boost::format("Allocated virtual ethernet interface: %s\n"
-                               "You must now use ifconfig to set its IP address. E.g.,\n"
-                               "  $ sudo ifconfig %s 192.168.200.1\n"
-                               "Be sure to use a different address in the same subnet "
-                               "for each machine.\n") %
-                 dev % dev));
+    d_logger->warn("Allocated virtual ethernet interface: {:s}\n"
+                   "You must now use ifconfig to set its IP address. E.g.,\n"
+                   "  $ sudo ifconfig {:s} 192.168.200.1\n"
+                   "Be sure to use a different address in the same subnet "
+                   "for each machine.\n",
+                   dev,
+                   dev);
 
     // set up output message port
     message_port_register_out(msgport_names::pdus());
