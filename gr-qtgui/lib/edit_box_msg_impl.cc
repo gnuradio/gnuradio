@@ -134,7 +134,7 @@ edit_box_msg_impl::edit_box_msg_impl(data_type_t type,
     d_vlayout->addItem(d_hlayout);
     d_group->setLayout(d_vlayout);
 
-    QObject::connect(d_val, SIGNAL(editingFinished()), this, SLOT(edit_finished()));
+    QObject::connect(d_val, SIGNAL(returnPressed()), this, SLOT(edit_finished()));
 
     d_msg = pmt::PMT_NIL;
 
@@ -146,14 +146,8 @@ edit_box_msg_impl::edit_box_msg_impl(data_type_t type,
 
 edit_box_msg_impl::~edit_box_msg_impl()
 {
-    delete d_group;
-    delete d_hlayout;
-    delete d_vlayout;
-    delete d_val;
     if (d_is_pair)
         delete d_key;
-    if (d_label)
-        delete d_label;
 }
 
 bool edit_box_msg_impl::start()
