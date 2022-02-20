@@ -85,15 +85,14 @@ udp_source_impl::udp_source_impl(size_t itemsize,
         break;
 
     default:
-        GR_LOG_ERROR(d_logger, "Unknown UDP header type.");
+        d_logger->error("Unknown UDP header type.");
         throw std::invalid_argument("Unknown UDP header type.");
         break;
     }
 
     if (d_payloadsize < 8) {
-        GR_LOG_ERROR(d_logger,
-                     "Payload size is too small.  Must be at "
-                     "least 8 bytes once header/trailer adjustments are made.");
+        d_logger->error("Payload size is too small.  Must be at "
+                        "least 8 bytes once header/trailer adjustments are made.");
 
         throw std::invalid_argument(
             "Payload size is too small.  Must be at "
@@ -140,10 +139,7 @@ bool udp_source_impl::start()
                                  ex.what());
     }
 
-
-    std::stringstream msg_stream;
-    msg_stream << "Listening for data on UDP port " << d_port << ".";
-    GR_LOG_INFO(d_logger, msg_stream.str());
+    d_logger->info("Listening for data on UDP port {:d}.", d_port);
 
     return true;
 }
@@ -286,11 +282,9 @@ int udp_source_impl::work(int noutput_items,
         d_partial_frame_counter++;
 
         if (d_partial_frame_counter >= 100) {
-            std::stringstream msg_stream;
-            msg_stream << "Insufficient block data.  Check your sending "
-                          "app is using "
-                       << d_payloadsize << " send blocks.";
-            GR_LOG_WARN(d_logger, msg_stream.str());
+            d_logger->warn("Insufficient block data.  Check your sending "
+                           "app is using {:d} send blocks.",
+                           d_payloadsize);
 
             // This is just a safety to clear in the case there's a hanging partial
             // packet. If we've lingered through a number of calls and we still don't
@@ -369,10 +363,8 @@ int udp_source_impl::work(int noutput_items,
     }
 
     if (skipped_packets > 0 && d_notify_missed) {
-        std::stringstream msg_stream;
-        msg_stream << "[UDP source:" << d_port
-                   << "] missed  packets: " << skipped_packets;
-        GR_LOG_WARN(d_logger, msg_stream.str());
+        d_logger->warn(
+            "[UDP source:{:d}] missed  packets: {:d}", d_port, skipped_packets);
     }
 
     // If we had less data than requested, it'll be reflected in the return value.

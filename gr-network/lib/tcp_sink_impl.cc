@@ -15,7 +15,6 @@
 #include "tcp_sink_impl.h"
 #include <gnuradio/io_signature.h>
 
-#include <boost/format.hpp>
 #include <chrono>
 #include <sstream>
 #include <thread>
@@ -57,15 +56,12 @@ bool tcp_sink_impl::start()
     if (d_sinkmode == TCPSINKMODE_CLIENT) {
         // In this mode, we're connecting to a remote TCP service listener
         // as a client.
-        std::stringstream msg;
-
-        msg << "[TCP Sink] connecting to " << d_host << " on port " << d_port;
-        GR_LOG_INFO(d_logger, msg.str());
+        d_logger->info("[TCP Sink] connecting to {:s} on port {:d}", d_host, d_port);
 
         boost::system::error_code err;
         d_tcpsocket = new boost::asio::ip::tcp::socket(d_io_service);
 
-        std::string s_port = (boost::format("%d") % d_port).str();
+        std::string s_port = std::to_string(d_port);
         boost::asio::ip::tcp::resolver resolver(d_io_service);
         boost::asio::ip::tcp::resolver::query query(
             d_host, s_port, boost::asio::ip::resolver_query_base::passive);
@@ -129,7 +125,7 @@ void tcp_sink_impl::accept_handler(boost::asio::ip::tcp::socket* new_connection,
                                    const boost::system::error_code& error)
 {
     if (!error) {
-        GR_LOG_INFO(d_logger, "Client connection received.");
+        d_logger->info("Client connection received.");
 
         // Accept succeeded.
         d_tcpsocket = new_connection;
@@ -139,9 +135,7 @@ void tcp_sink_impl::accept_handler(boost::asio::ip::tcp::socket* new_connection,
         d_connected = true;
 
     } else {
-        std::stringstream msg;
-        msg << "Error code " << error << " accepting TCP session.";
-        GR_LOG_ERROR(d_logger, msg.str());
+        d_logger->error("Error code {:s} accepting TCP session.", error.message());
 
         // Boost made a copy so we have to clean up
         delete new_connection;
@@ -154,9 +148,7 @@ void tcp_sink_impl::accept_handler(boost::asio::ip::tcp::socket* new_connection,
 
 void tcp_sink_impl::connect(bool initial_connection)
 {
-    std::stringstream msg;
-    msg << "Waiting for connection on port " << d_port;
-    GR_LOG_INFO(d_logger, msg.str());
+    d_logger->info("Waiting for connection on port {:d}", d_port);
 
     if (initial_connection) {
         if (d_is_ipv6)
@@ -256,12 +248,11 @@ int tcp_sink_impl::work(int noutput_items,
             bytes_remaining = 0;
 
             if (d_sinkmode == TCPSINKMODE_CLIENT) {
-                GR_LOG_WARN(d_logger,
-                            "Server closed the connection.  Stopping processing.");
+                d_logger->warn("Server closed the connection. Stopping processing.");
 
                 return WORK_DONE;
             } else {
-                GR_LOG_INFO(d_logger, "Client disconnected. Waiting for new connection.");
+                d_logger->info("Client disconnected. Waiting for new connection.");
 
                 // start waiting for another connection
                 d_start_new_listener = true;

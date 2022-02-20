@@ -24,7 +24,6 @@
 #include <gnuradio/basic_block.h>
 #include <gnuradio/logger.h>
 #include <gnuradio/pdu.h>
-#include <boost/format.hpp>
 
 static const long timeout_us = 100 * 1000; // 100ms
 
@@ -100,9 +99,11 @@ void stream_pdu_base::send(pmt::pmt_t msg)
 
     const int rv = write(d_fd, pmt::uniform_vector_elements(vector, offset), len);
     if (rv != len) {
-        static auto msg = boost::format(
-            "stream_pdu_base::send(pdu) write failed! (d_fd=%d, len=%d, rv=%d)");
-        GR_LOG_WARN(d_pdu_logger, msg % d_fd % len % rv);
+        d_pdu_logger->warn(
+            "stream_pdu_base::send(pdu) write failed! (d_fd={:d}, len={:d}, rv={:d})",
+            d_fd,
+            len,
+            rv);
     }
 }
 
