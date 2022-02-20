@@ -41,10 +41,10 @@ std::string get_pluto_uri()
         logger.info("More than one Pluto found:");
 
         for (unsigned int i = 0; i < (size_t)ret; i++) {
-            logger.info((boost::format("\t%d: %s [%s]") % i %
-                         iio_context_info_get_description(info[i]) %
-                         iio_context_info_get_uri(info[i]))
-                            .str());
+            logger.info("\t{:d}: {:s} [{:s}]",
+                        i,
+                        iio_context_info_get_description(info[i]),
+                        iio_context_info_get_uri(info[i]));
         }
 
         logger.info("We will use the first one.");

@@ -13,8 +13,8 @@
 
 #include "attr_sink_impl.h"
 #include <gnuradio/io_signature.h>
-#include <boost/lexical_cast.hpp>
 
+#include <sstream>
 #include <string>
 
 namespace gr {
@@ -105,13 +105,22 @@ void attr_sink_impl::write_attribute(pmt::pmt_t pdu)
             ret = iio_device_debug_attr_write(dev, attribute.c_str(), value.c_str());
             break;
         default: // case 4:
-            try {
-                uint32_t address = boost::lexical_cast<uint32_t>(attribute);
-                uint32_t value32 = boost::lexical_cast<uint32_t>(value);
+            uint32_t address, value32;
+
+            std::istringstream attribute_is(attribute);
+            attribute_is >> address;
+
+            std::istringstream value_is(value);
+            value_is >> value32;
+
+            if (attribute_is.fail()) {
+                d_logger->warn("Failed to convert {:s} to uint32_t", attribute);
+            } else if (value_is.fail()) {
+                d_logger->warn("Failed to convert {:s} to uint32_t", value);
+            } else {
                 ret = iio_device_reg_write(dev, address, value32);
-            } catch (const boost::bad_lexical_cast& e) {
-                GR_LOG_WARN(d_logger, e.what());
             }
+
             break;
         }
 
