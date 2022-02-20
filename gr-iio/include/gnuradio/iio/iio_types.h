@@ -10,7 +10,6 @@
 #define _INCLUDED_IIO_TYPES_H
 
 #include <gnuradio/iio/api.h>
-#include <boost/tokenizer.hpp>
 #include <charconv>
 #include <string>
 #include <variant>
@@ -31,9 +30,6 @@ enum class attr_type_t {
 
 typedef std::variant<long long unsigned int, long unsigned int, int, double, std::string>
     iio_param_value_t;
-
-#define tokenizer(inp, sep) \
-    boost::tokenizer<boost::char_separator<char>>(inp, boost::char_separator<char>(sep))
 
 class IIO_API iio_param_t : public std::pair<std::string, std::string>
 {
