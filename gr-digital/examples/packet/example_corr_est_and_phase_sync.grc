@@ -1,6 +1,7 @@
 options:
   parameters:
     author: ''
+    catch_exceptions: 'True'
     category: Custom
     cmake_opt: ''
     comment: ''
@@ -24,6 +25,9 @@ options:
     title: ''
     window_size: ''
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [8, 11]
     rotation: 0
     state: enabled
@@ -35,6 +39,9 @@ blocks:
     comment: ''
     value: 'list(map(lambda x: int(x), list(digital.packet_utils.default_access_code)))'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [280, 11]
     rotation: 0
     state: enabled
@@ -44,6 +51,9 @@ blocks:
     comment: ''
     value: '[0xac, 0xdd, 0xa4, 0xe2, 0xf2, 0x8c, 0x20, 0xfc]'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [504, 595]
     rotation: 0
     state: enabled
@@ -53,6 +63,9 @@ blocks:
     comment: ''
     value: '0.22'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [584, 531]
     rotation: 0
     state: enabled
@@ -62,6 +75,9 @@ blocks:
     comment: ''
     value: 1+(len(rrc_taps)-1)//2
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [768, 531]
     rotation: 0
     state: enabled
@@ -72,7 +88,7 @@ blocks:
     gui_hint: 1,0,1,1
     label: Freq. Off.
     min_len: '200'
-    orient: Qt.Horizontal
+    orient: QtCore.Qt.Horizontal
     rangeType: float
     start: '-0.25'
     step: '0.0001'
@@ -80,6 +96,9 @@ blocks:
     value: '0'
     widget: counter_slider
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [48, 563]
     rotation: 0
     state: enabled
@@ -89,12 +108,16 @@ blocks:
     comment: ''
     const_points: digital.psk_2()[0]
     dims: '1'
+    normalization: digital.constellation.AMPLITUDE_NORMALIZATION
     precision: '8'
     rot_sym: '2'
     soft_dec_lut: '''auto'''
     sym_map: digital.psk_2()[1]
     type: calcdist
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [960, 523]
     rotation: 0
     state: enabled
@@ -104,6 +127,9 @@ blocks:
     comment: ''
     value: mark_delays[sps]
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [672, 531]
     rotation: 0
     state: enabled
@@ -113,6 +139,9 @@ blocks:
     comment: "Tag Marking Delay for \nCorr Est block, indexed\nby sps.\n\nFound empirically."
     value: '[0, 0, 34, 56, 87, 119]'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [504, 675]
     rotation: 0
     state: enabled
@@ -124,6 +153,9 @@ blocks:
     mod: rxmod
     taps: '[1]'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [960, 651]
     rotation: 0
     state: enabled
@@ -133,6 +165,9 @@ blocks:
     comment: ''
     value: '32'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1104, 451]
     rotation: 0
     state: enabled
@@ -143,7 +178,7 @@ blocks:
     gui_hint: 0,1,1,1
     label: Noise Power
     min_len: '200'
-    orient: Qt.Horizontal
+    orient: QtCore.Qt.Horizontal
     rangeType: float
     start: '-50'
     step: '1'
@@ -151,6 +186,9 @@ blocks:
     value: '-50'
     widget: counter_slider
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [176, 435]
     rotation: 0
     state: enabled
@@ -161,7 +199,7 @@ blocks:
     gui_hint: 0,0,1,1
     label: Path Loss (dB)
     min_len: '200'
-    orient: Qt.Horizontal
+    orient: QtCore.Qt.Horizontal
     rangeType: float
     start: '0'
     step: '5'
@@ -169,6 +207,9 @@ blocks:
     value: '10'
     widget: counter_slider
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [48, 435]
     rotation: 0
     state: enabled
@@ -182,6 +223,9 @@ blocks:
     samp_rate: sps
     sym_rate: '1.0'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1120, 523]
     rotation: 0
     state: enabled
@@ -195,6 +239,9 @@ blocks:
     samp_rate: sps*nfilts
     sym_rate: '1.0'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [960, 387]
     rotation: 0
     state: enabled
@@ -204,6 +251,9 @@ blocks:
     comment: ''
     value: digital.generic_mod(hdr_const, False, sps, True, eb, False, False)
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [672, 595]
     rotation: 0
     state: enabled
@@ -213,6 +263,9 @@ blocks:
     comment: ''
     value: 10e3
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [184, 11]
     rotation: 0
     state: enabled
@@ -222,6 +275,9 @@ blocks:
     comment: ''
     value: '2'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [512, 531]
     rotation: 0
     state: enabled
@@ -232,7 +288,7 @@ blocks:
     gui_hint: 1,1,1,1
     label: Time Off.
     min_len: '200'
-    orient: Qt.Horizontal
+    orient: QtCore.Qt.Horizontal
     rangeType: float
     start: '0.9999'
     step: '0.00001'
@@ -240,6 +296,9 @@ blocks:
     value: '1.0'
     widget: counter_slider
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [176, 563]
     rotation: 0
     state: enabled
@@ -255,6 +314,9 @@ blocks:
     type: complex
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [368, 107]
     rotation: 0
     state: enabled
@@ -268,6 +330,9 @@ blocks:
     minoutbuf: '0'
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [528, 457]
     rotation: 0
     state: enabled
@@ -283,6 +348,9 @@ blocks:
     type: complex
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [216, 107]
     rotation: 0
     state: enabled
@@ -299,6 +367,9 @@ blocks:
     type: complex
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [664, 99]
     rotation: 0
     state: enabled
@@ -315,6 +386,9 @@ blocks:
     type: complex
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [504, 107]
     rotation: 0
     state: enabled
@@ -332,6 +406,9 @@ blocks:
     vector: '[1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0] + ac'
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [16, 91]
     rotation: 0
     state: enabled
@@ -350,6 +427,9 @@ blocks:
     seed: '0'
     taps: 10.0**(-path_loss/20.0)
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [48, 203]
     rotation: 0
     state: enabled
@@ -365,8 +445,11 @@ blocks:
     sps: sps
     symbols: modulated_sync_word
     threshold: '0.999'
-    threshold_method: digital.THRESHOLD_ABSOLUTE
+    threshold_method: digital.THRESHOLD_DYNAMIC
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [264, 211]
     rotation: 0
     state: enabled
@@ -382,6 +465,9 @@ blocks:
     use_snr: 'False'
     w: 6.28/100.0
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [760, 209]
     rotation: 0
     state: enabled
@@ -402,6 +488,9 @@ blocks:
     taps: rx_psf_taps
     type: ccf
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [520, 203]
     rotation: 0
     state: enabled
@@ -418,6 +507,9 @@ blocks:
     taps: rrc_taps
     type: ccc
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [896, 99]
     rotation: 0
     state: enabled
@@ -507,6 +599,9 @@ blocks:
     ymax: '2'
     ymin: '-2'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1000, 291]
     rotation: 0
     state: enabled
@@ -596,6 +691,9 @@ blocks:
     ymax: '2'
     ymin: '-2'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [760, 291]
     rotation: 0
     state: enabled
@@ -616,16 +714,16 @@ blocks:
     alpha9: '1.0'
     autoscale: 'False'
     axislabels: 'True'
-    color1: '"blue"'
-    color10: '"blue"'
-    color2: '"red"'
-    color3: '"green"'
-    color4: '"black"'
-    color5: '"cyan"'
-    color6: '"magenta"'
-    color7: '"yellow"'
-    color8: '"dark red"'
-    color9: '"dark green"'
+    color1: blue
+    color10: dark blue
+    color2: red
+    color3: green
+    color4: black
+    color5: cyan
+    color6: magenta
+    color7: yellow
+    color8: dark red
+    color9: dark green
     comment: ''
     ctrlpanel: 'False'
     entags: 'True'
@@ -690,6 +788,9 @@ blocks:
     ymin: '-1.5'
     yunit: '""'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1000, 211]
     rotation: 0
     state: enabled
@@ -710,16 +811,16 @@ blocks:
     alpha9: '1.0'
     autoscale: 'False'
     axislabels: 'True'
-    color1: '"blue"'
-    color10: '"blue"'
-    color2: '"red"'
-    color3: '"green"'
-    color4: '"black"'
-    color5: '"cyan"'
-    color6: '"magenta"'
-    color7: '"yellow"'
-    color8: '"dark red"'
-    color9: '"dark green"'
+    color1: blue
+    color10: dark blue
+    color2: red
+    color3: green
+    color4: black
+    color5: cyan
+    color6: magenta
+    color7: yellow
+    color8: dark red
+    color9: dark green
     comment: ''
     ctrlpanel: 'False'
     entags: 'True'
@@ -784,6 +885,9 @@ blocks:
     ymin: '-100'
     yunit: '""'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [528, 363]
     rotation: 0
     state: enabled
@@ -804,16 +908,16 @@ blocks:
     alpha9: '1.0'
     autoscale: 'False'
     axislabels: 'True'
-    color1: '"blue"'
-    color10: '"blue"'
-    color2: '"red"'
-    color3: '"green"'
-    color4: '"black"'
-    color5: '"cyan"'
-    color6: '"magenta"'
-    color7: '"yellow"'
-    color8: '"dark red"'
-    color9: '"dark green"'
+    color1: blue
+    color10: dark blue
+    color2: red
+    color3: green
+    color4: black
+    color5: cyan
+    color6: magenta
+    color7: yellow
+    color8: dark red
+    color9: dark green
     comment: ''
     ctrlpanel: 'False'
     entags: 'True'
@@ -878,6 +982,9 @@ blocks:
     ymin: '-100'
     yunit: '""'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [720, 435]
     rotation: 0
     state: enabled
@@ -909,6 +1016,9 @@ blocks:
     label9: Tab 9
     num_tabs: '2'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [296, 435]
     rotation: 0
     state: enabled
@@ -940,6 +1050,9 @@ blocks:
     label9: Tab 9
     num_tabs: '2'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [296, 515]
     rotation: 0
     state: enabled
@@ -963,3 +1076,4 @@ connections:
 
 metadata:
   file_format: 1
+  grc_version: v3.11.0.0git-34-g95ee7221
