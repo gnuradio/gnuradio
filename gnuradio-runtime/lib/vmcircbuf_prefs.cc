@@ -18,7 +18,6 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
-#include <boost/format.hpp>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -60,8 +59,7 @@ int vmcircbuf_prefs::get(const char* key, char* value, int value_size)
     gr::configure_default_loggers(logger, debug_logger, "vmcircbuf_prefs::get");
 
     if (fp == 0) {
-        GR_LOG_ERROR(logger,
-                     boost::format("%s: %s") % pathname(key).c_str() % strerror(errno));
+        logger->error("{:s}: {:s}", pathname(key), strerror(errno));
         return 0;
     }
 
@@ -69,9 +67,7 @@ int vmcircbuf_prefs::get(const char* key, char* value, int value_size)
     value[ret] = '\0';
     if (ret == 0 && !feof(fp)) {
         if (ferror(fp) != 0) {
-            GR_LOG_ERROR(logger,
-                         boost::format("%s: %s") % pathname(key).c_str() %
-                             strerror(errno));
+            logger->error("{:s}: {:s}", pathname(key), strerror(errno));
             fclose(fp);
             return -1;
         }
@@ -90,17 +86,14 @@ void vmcircbuf_prefs::set(const char* key, const char* value)
 
     FILE* fp = fopen(pathname(key).c_str(), "w");
     if (fp == 0) {
-        GR_LOG_ERROR(logger,
-                     boost::format("%s: %s") % pathname(key).c_str() % strerror(errno));
+        logger->error("{:s}: {:s}", pathname(key), strerror(errno));
         return;
     }
 
     size_t ret = fwrite(value, 1, strlen(value), fp);
     if (ret == 0) {
         if (ferror(fp) != 0) {
-            GR_LOG_ERROR(logger,
-                         boost::format("%s: %s") % pathname(key).c_str() %
-                             strerror(errno));
+            logger->error("{:s}: {:s}", pathname(key), strerror(errno));
             fclose(fp);
             return;
         }

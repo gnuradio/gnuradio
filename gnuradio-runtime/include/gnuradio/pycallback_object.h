@@ -10,7 +10,6 @@
 
 #include <gnuradio/rpcregisterhelpers.h>
 #include <pythread.h>
-#include <boost/format.hpp>
 
 #include <iostream>
 
@@ -107,7 +106,7 @@ public:
 #ifdef GR_CTRLPORT
         add_rpc_variable(
             rpcbasic_sptr(new rpcbasic_register_get<pycallback_object, myType>(
-                (boost::format("%s%d") % d_name % d_id).str(),
+                d_name + std::to_string(d_id),
                 d_functionbase.c_str(),
                 this,
                 &pycallback_object::get,

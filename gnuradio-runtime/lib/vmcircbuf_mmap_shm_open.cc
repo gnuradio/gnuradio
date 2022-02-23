@@ -24,7 +24,6 @@
 #endif
 #include "pagesize.h"
 #include <gnuradio/sys_paths.h>
-#include <boost/format.hpp>
 #include <cerrno>
 #include <cstdio>
 
@@ -33,9 +32,7 @@ namespace gr {
 vmcircbuf_mmap_shm_open::vmcircbuf_mmap_shm_open(size_t size) : gr::vmcircbuf(size)
 {
 #if !defined(HAVE_MMAP) || !defined(HAVE_SHM_OPEN)
-    std::stringstream error_msg;
-    error_msg << "mmap or shm_open is not available";
-    GR_LOG_ERROR(d_logger, error_msg.str());
+    d_logger->error("mmap or shm_open is not available");
     throw std::runtime_error("gr::vmcircbuf_mmap_shm_open");
 #else
     gr::thread::scoped_lock guard(s_vm_mutex);
@@ -43,7 +40,7 @@ vmcircbuf_mmap_shm_open::vmcircbuf_mmap_shm_open(size_t size) : gr::vmcircbuf(si
     static int s_seg_counter = 0;
 
     if (size <= 0 || (size % gr::pagesize()) != 0) {
-        GR_LOG_ERROR(d_logger, "invalid size =" + std::to_string(size));
+        d_logger->error("invalid size = {:d}", size);
         throw std::runtime_error("gr::vmcircbuf_mmap_shm_open");
     }
 
@@ -57,14 +54,15 @@ vmcircbuf_mmap_shm_open::vmcircbuf_mmap_shm_open(size_t size) : gr::vmcircbuf(si
 
             // This is the POSIX recommended "portable format".
             // Of course the "portable format" doesn't work on some systems...
-            seg_name = str(boost::format("/gnuradio-%d-%d") % getpid() % s_seg_counter);
+            seg_name = "/gnuradio-" + std::to_string(getpid()) + "-" +
+                       std::to_string(s_seg_counter);
         } else {
 
             // Where the "portable format" doesn't work, we try building
             // a full filesystem pathname pointing into a suitable temporary directory.
 
-            seg_name = str(boost::format("%s/gnuradio-%d-%d") % gr::tmp_path() %
-                           getpid() % s_seg_counter);
+            seg_name = std::string(gr::tmp_path()) + "/gnuradio-" +
+                       std::to_string(getpid()) + "-" + std::to_string(s_seg_counter);
         }
 
         shm_fd = shm_open(seg_name.c_str(), O_RDWR | O_CREAT | O_EXCL, 0600);
@@ -80,9 +78,7 @@ vmcircbuf_mmap_shm_open::vmcircbuf_mmap_shm_open(size_t size) : gr::vmcircbuf(si
                 EEXIST) // Named segment already exists (shouldn't happen).  Try again
                 continue;
 
-            static std::string msg =
-                str(boost::format("shm_open [%s] failed") % seg_name);
-            GR_LOG_ERROR(d_logger, msg.c_str());
+            d_logger->error("shm_open [{:s}] failed", seg_name);
             throw std::runtime_error("gr::vmcircbuf_mmap_shm_open");
         }
         break;
@@ -92,7 +88,7 @@ vmcircbuf_mmap_shm_open::vmcircbuf_mmap_shm_open(size_t size) : gr::vmcircbuf(si
     // Now set it's length to 2x what we really want and mmap it in.
     if (ftruncate(shm_fd, (off_t)2 * size) == -1) {
         close(shm_fd); // cleanup
-        GR_LOG_ERROR(d_logger, "ftruncate failed");
+        d_logger->error("ftruncate failed");
         throw std::runtime_error("gr::vmcircbuf_mmap_shm_open");
     }
 
@@ -101,14 +97,14 @@ vmcircbuf_mmap_shm_open::vmcircbuf_mmap_shm_open(size_t size) : gr::vmcircbuf(si
 
     if (first_copy == MAP_FAILED) {
         close(shm_fd); // cleanup
-        GR_LOG_ERROR(d_logger, "mmap (1) failed");
+        d_logger->error("mmap (1) failed");
         throw std::runtime_error("gr::vmcircbuf_mmap_shm_open");
     }
 
     // unmap the 2nd half
     if (munmap((char*)first_copy + size, size) == -1) {
         close(shm_fd); // cleanup
-        GR_LOG_ERROR(d_logger, "munmap (1) failed");
+        d_logger->error("munmap (1) failed");
         throw std::runtime_error("gr::vmcircbuf_mmap_shm_open");
     }
 
@@ -123,7 +119,7 @@ vmcircbuf_mmap_shm_open::vmcircbuf_mmap_shm_open(size_t size) : gr::vmcircbuf(si
 
     if (second_copy == MAP_FAILED) {
         close(shm_fd); // cleanup
-        GR_LOG_ERROR(d_logger, "mmap (2) failed");
+        d_logger->error("mmap (2) failed");
         throw std::runtime_error("gr::vmcircbuf_mmap_shm_open");
     }
 
@@ -140,7 +136,7 @@ vmcircbuf_mmap_shm_open::vmcircbuf_mmap_shm_open(size_t size) : gr::vmcircbuf(si
     close(shm_fd); // fd no longer needed.  The mapping is retained.
 
     if (shm_unlink(seg_name.c_str()) == -1) { // unlink the seg_name.
-        GR_LOG_ERROR(d_logger, "shm_unlink failed");
+        d_logger->error("shm_unlink failed");
         throw std::runtime_error("gr::vmcircbuf_mmap_shm_open");
     }
 
@@ -156,7 +152,7 @@ vmcircbuf_mmap_shm_open::~vmcircbuf_mmap_shm_open()
     gr::thread::scoped_lock guard(s_vm_mutex);
 
     if (munmap(d_base, 2 * d_size) == -1) {
-        GR_LOG_ERROR(d_logger, "munmap (2) failed");
+        d_logger->error("munmap (2) failed");
     }
 #endif
 }

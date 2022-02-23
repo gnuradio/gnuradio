@@ -10,7 +10,6 @@
 
 #include <gnuradio/messages/msg_passing.h>
 #include <pmt/api.h> //reason: suppress warnings
-#include <boost/format.hpp>
 #include <boost/test/unit_test.hpp>
 #include <cstring>
 #include <sstream>
@@ -39,7 +38,7 @@ BOOST_AUTO_TEST_CASE(test_symbols)
 
     // generate a bunch of symbols
     for (int i = 0; i < N; i++) {
-        std::string buf = str(boost::format("test-%d") % i);
+        std::string buf = "test-" + std::to_string(i);
         v1[i] = pmt::mp(buf.c_str());
     }
 
@@ -50,7 +49,7 @@ BOOST_AUTO_TEST_CASE(test_symbols)
 
     // generate the same symbols again
     for (int i = 0; i < N; i++) {
-        std::string buf = str(boost::format("test-%d") % i);
+        std::string buf = "test-" + std::to_string(i);
         v2[i] = pmt::mp(buf.c_str());
     }
 
