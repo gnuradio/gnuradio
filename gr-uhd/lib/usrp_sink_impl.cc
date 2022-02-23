@@ -12,7 +12,6 @@
 #include "usrp_sink_impl.h"
 #include <gnuradio/io_signature.h>
 #include <gnuradio/prefs.h>
-#include <boost/format.hpp>
 #include <boost/thread/thread.hpp>
 #include <chrono>
 #include <climits>
@@ -186,8 +185,7 @@ bool usrp_sink_impl::has_power_reference(size_t chan)
     const size_t dev_chan = _stream_args.channels[chan];
     return _dev->has_tx_power_reference(dev_chan);
 #else
-    GR_LOG_WARN(d_logger,
-                "UHD version 4.0 or greater required for power reference API. ");
+    d_logger->warn("UHD version 4.0 or greater required for power reference API.");
     return false;
 #endif
 }
@@ -201,8 +199,7 @@ void usrp_sink_impl::set_power_reference(double power_dbm, size_t chan)
     const size_t dev_chan = _stream_args.channels[chan];
     _dev->set_tx_power_reference(power_dbm, dev_chan);
 #else
-    GR_LOG_ERROR(d_logger,
-                 "UHD version 4.0 or greater required for power reference API.");
+    d_logger->error("UHD version 4.0 or greater required for power reference API.");
     throw std::runtime_error("not implemented in this version");
 #endif
 }
@@ -216,8 +213,7 @@ double usrp_sink_impl::get_power_reference(size_t chan)
     const size_t dev_chan = _stream_args.channels[chan];
     return _dev->get_tx_power_reference(dev_chan);
 #else
-    GR_LOG_ERROR(d_logger,
-                 "UHD version 4.0 or greater required for power reference API.");
+    d_logger->error("UHD version 4.0 or greater required for power reference API.");
     throw std::runtime_error("not implemented in this version");
 #endif
 }
@@ -231,8 +227,7 @@ double usrp_sink_impl::get_power_reference(size_t chan)
     const size_t dev_chan = _stream_args.channels[chan];
     return _dev->get_tx_power_range(dev_chan);
 #else
-    GR_LOG_ERROR(d_logger,
-                 "UHD version 4.0 or greater required for power reference API.");
+    d_logger->error("UHD version 4.0 or greater required for power reference API.");
     throw std::runtime_error("not implemented in this version");
 #endif
 }
@@ -476,10 +471,10 @@ int usrp_sink_impl::work(int noutput_items,
             // There is a tag gap since no length_tag was found immediately following
             // the last sample of the previous burst. Drop samples until the next
             // length_tag is found. Notify the user of the tag gap.
-            static auto formatted_log_entry =
-                boost::format("Tag gap (nitems_read = %d): no more items to send in "
-                              "current burst, but got %d more items; dropping them.");
-            GR_LOG_ERROR(d_logger, formatted_log_entry % samp0_count % ninput_items);
+            d_logger->error("Tag gap (nitems_read = {:d}): no more items to send in "
+                            "current burst, but got {:d} more items; dropping them.",
+                            samp0_count,
+                            ninput_items);
             _metadata.time_spec += ::uhd::time_spec_t(0, ninput_items, _sample_rate);
             return ninput_items;
         }
@@ -500,8 +495,7 @@ int usrp_sink_impl::work(int noutput_items,
 
     // Some post-processing tasks if we actually transmitted the entire burst
     if (not _pending_cmds.empty() && num_sent == size_t(ninput_items)) {
-        static auto debug_msg = boost::format("Executing %d pending commands.");
-        GR_LOG_DEBUG(d_debug_logger, debug_msg % _pending_cmds.size());
+        d_debug_logger->debug("Executing {:d} pending commands.", _pending_cmds.size());
         for (const auto& cmd_pmt : _pending_cmds) {
             msg_handler_command(cmd_pmt);
         }
@@ -593,7 +587,7 @@ void usrp_sink_impl::tag_work(int& ninput_items)
             // preempted. Set the items remaining counter to the new burst length. Notify
             // the user of the tag preemption.
             else if (_nitems_to_send > 0) {
-                GR_LOG_ERROR(d_logger, "tP");
+                d_logger->error("tP");
             }
             _nitems_to_send = pmt::to_long(value);
             _metadata.start_of_burst = true;
@@ -610,13 +604,13 @@ void usrp_sink_impl::tag_work(int& ninput_items)
          */
         else if (pmt::equal(key, FREQ_KEY) && my_tag_count == samp0_count) {
             // If it's on the first sample, immediately do the tune:
-            GR_LOG_DEBUG(d_debug_logger, "Received tx_freq on start of burst.");
+            d_debug_logger->debug("Received tx_freq on start of burst.");
             pmt::pmt_t freq_cmd = pmt::make_dict();
             freq_cmd = pmt::dict_add(freq_cmd, cmd_freq_key(), value);
             msg_handler_command(freq_cmd);
         } else if (pmt::equal(key, FREQ_KEY)) {
             // If it's not on the first sample, queue this command and only tx until here:
-            GR_LOG_DEBUG(d_debug_logger, "Received tx_freq mid-burst.");
+            d_debug_logger->debug("Received tx_freq mid-burst.");
             pmt::pmt_t freq_cmd = pmt::make_dict();
             freq_cmd = pmt::dict_add(freq_cmd, cmd_freq_key(), value);
             commands_in_burst.push_back(freq_cmd);
@@ -752,9 +746,6 @@ void usrp_sink_impl::async_event_loop()
     auto log_interval = std::chrono::milliseconds(
         gr::prefs::singleton()->get_long("uhd", "logging_interval_ms", 750));
 
-    auto uflow_msg = boost::format("In the last %d ms, %d underflows occurred.");
-    auto time_msg = boost::format("In the last %d ms, %d cmd time errors occurred.");
-
     while (_async_event_loop_running) {
         // The Tx Streamer does not exist until start() was called. After that,
         // we poll it with a 100ms timeout for async messages.
@@ -807,7 +798,9 @@ void usrp_sink_impl::async_event_loop()
             auto delta = now - last_underflow_log;
             if (delta > log_interval) {
                 auto ms = millisecond_cast(delta).count();
-                GR_LOG_ERROR(d_logger, uflow_msg % ms % underflow_counter);
+                d_logger->error("In the last {:d} ms, {:d} underflows occurred.",
+                                ms,
+                                underflow_counter);
                 last_underflow_log = now;
                 underflow_counter = 0;
             }
@@ -817,7 +810,9 @@ void usrp_sink_impl::async_event_loop()
             auto delta = now - last_time_err_log;
             if (delta > log_interval) {
                 auto ms = millisecond_cast(delta).count();
-                GR_LOG_ERROR(d_logger, time_msg % ms % time_error_counter);
+                d_logger->error("In the last {:d} ms, {:d} cmd time errors occurred.",
+                                ms,
+                                time_error_counter);
                 last_time_err_log = now;
                 time_error_counter = 0;
             }
@@ -827,7 +822,9 @@ void usrp_sink_impl::async_event_loop()
             auto delta = now - last_sequence_err_log;
             if (delta > log_interval) {
                 auto ms = millisecond_cast(delta).count();
-                GR_LOG_ERROR(d_logger, time_msg % ms % sequence_error_counter);
+                d_logger->error("In the last {:d} ms, {:d} cmd time errors occurred.",
+                                ms,
+                                sequence_error_counter);
                 last_sequence_err_log = now;
                 time_error_counter = 0;
             }
