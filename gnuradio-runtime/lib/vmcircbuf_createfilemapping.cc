@@ -23,7 +23,6 @@
 #endif
 #include "pagesize.h"
 #include "vmcircbuf_createfilemapping.h"
-#include <boost/format.hpp>
 
 namespace gr {
 
@@ -43,7 +42,7 @@ static void werror(char* where, DWORD last_error)
                   buf,
                   sizeof(buf) / sizeof(TCHAR), // buffer size
                   NULL);
-    GR_LOG_ERROR(logger, boost::format("%s: Error %d: %s") % where % last_error % buf);
+    logger->error("{:s}: Error {:d}: {:s}", where, last_error, buf);
     return;
 }
 #endif
@@ -55,9 +54,7 @@ vmcircbuf_createfilemapping::vmcircbuf_createfilemapping(size_t size)
     gr::configure_default_loggers(
         d_logger, d_debug_logger, "vmcircbuf_createfilemapping");
 #if !defined(HAVE_CREATEFILEMAPPING)
-    std::stringstream error_msg;
-    error_msg << __FUNCTION__ << ": createfilemapping is not available";
-    GR_LOG_ERROR(d_logger, error_msg.str());
+    d_logger->error("{:s}: createfilemapping is not available", __FUNCTION__);
     throw std::runtime_error("gr::vmcircbuf_createfilemapping");
 #else
     gr::thread::scoped_lock guard(s_vm_mutex);
@@ -65,14 +62,12 @@ vmcircbuf_createfilemapping::vmcircbuf_createfilemapping(size_t size)
     static int s_seg_counter = 0;
 
     if (size <= 0 || (size % gr::pagesize()) != 0) {
-        std::stringstream error_msg;
-        error_msg << "invalid size = " << size;
-        GR_LOG_ERROR(d_logger, error_msg.str());
+        d_logger->error("invalid size = {:d}", size);
         throw std::runtime_error("gr::vmcircbuf_createfilemapping");
     }
 
     std::string seg_name =
-        str(boost::format("/gnuradio-%d-%d") % getpid() % s_seg_counter);
+        "/gnuradio-" + std::to_string(getpid()) + "-" + std::to_string(s_seg_counter);
 
     d_handle = CreateFileMapping(INVALID_HANDLE_VALUE, // use paging file
                                  NULL,                 // default security
@@ -84,9 +79,7 @@ vmcircbuf_createfilemapping::vmcircbuf_createfilemapping(size_t size)
     s_seg_counter++;
     if (d_handle == NULL || d_handle == INVALID_HANDLE_VALUE) {
         std::string msg =
-            str(boost::format(
-                    "gr::vmcircbuf_mmap_createfilemapping: CreateFileMapping [%s]") %
-                seg_name);
+            "gr::vmcircbuf_mmap_createfilemapping: CreateFileMapping [" + seg_name + "]";
         werror((char*)msg.c_str(), GetLastError());
         throw std::runtime_error("gr::vmcircbuf_mmap_createfilemapping");
     }
@@ -136,11 +129,11 @@ vmcircbuf_createfilemapping::vmcircbuf_createfilemapping(size_t size)
     }
 
 #ifdef DEBUG
-    std::stringstream info_msg;
-    info_msg << "contiguous? mmap " << (char*)d_first_copy;
-    info_msg << (char*)d_second_copy << size;
-    info_msg << (char*)d_first_copy + size;
-    GR_LOG_INFO(d_debug_logger, info_msg.str());
+    d_debug_logger->info("contiguous? mmap {:s} {:s} {:d} {:s}",
+                         (char*)d_first_copy,
+                         (char*)d_second_copy,
+                         size,
+                         (char*)d_first_copy + size);
 #endif
 
     // Now remember the important stuff

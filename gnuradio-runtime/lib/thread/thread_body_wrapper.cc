@@ -14,7 +14,6 @@
 
 #include <gnuradio/logger.h>
 #include <gnuradio/thread/thread_body_wrapper.h>
-#include <boost/format.hpp>
 
 #ifdef HAVE_SIGNAL_H
 #include <csignal>
@@ -69,7 +68,7 @@ void mask_signals()
         gr::logger_ptr logger, debug_logger;
         gr::configure_default_loggers(
             logger, debug_logger, "thread_body_wrapper::mask_signals");
-        GR_LOG_ERROR(logger, boost::format("pthread_sigmask: %s") % strerror(errno));
+        logger->error("pthread_sigmask: {:s}", strerror(errno));
     }
 }
 

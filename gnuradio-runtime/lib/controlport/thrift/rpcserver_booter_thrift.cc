@@ -10,7 +10,6 @@
 
 #include <gnuradio/rpcserver_booter_thrift.h>
 #include <gnuradio/rpcserver_thrift.h>
-#include <boost/format.hpp>
 
 #include <boost/asio/ip/host_name.hpp>
 
@@ -121,11 +120,11 @@ bool thrift_application_base<rpcserver_base,
         const std::string boost_hostname(boost::asio::ip::host_name());
 
         std::string endpoint =
-            boost::str(boost::format("-h %1% -p %2%") % boost_hostname % used_port);
+            "-h " + boost_hostname + " -p " + std::to_string(used_port);
 
         set_endpoint(endpoint);
 
-        GR_LOG_INFO(d_logger, "Apache Thrift: " + endpoint);
+        d_logger->info("Apache Thrift: {:s}", endpoint);
         d_thirft_is_running = true;
         result = true;
     }

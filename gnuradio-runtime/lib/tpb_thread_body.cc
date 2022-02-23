@@ -15,7 +15,6 @@
 #include "tpb_thread_body.h"
 #include <gnuradio/prefs.h>
 #include <pmt/pmt.h>
-#include <boost/format.hpp>
 #include <boost/thread.hpp>
 #include <iostream>
 
@@ -30,13 +29,11 @@ tpb_thread_body::tpb_thread_body(block_sptr block,
 
 #if defined(_MSC_VER) || defined(__MINGW32__)
 #include <windows.h>
-    thread::set_thread_name(
-        GetCurrentThread(),
-        boost::str(boost::format("%s%d") % block->name() % block->unique_id()));
+    thread::set_thread_name(GetCurrentThread(),
+                            block->name() + std::to_string(block->unique_id()));
 #else
-    thread::set_thread_name(
-        pthread_self(),
-        boost::str(boost::format("%s%d") % block->name() % block->unique_id()));
+    thread::set_thread_name(pthread_self(),
+                            block->name() + std::to_string(block->unique_id()));
 #endif
 
     block_detail* d = block->detail().get();
