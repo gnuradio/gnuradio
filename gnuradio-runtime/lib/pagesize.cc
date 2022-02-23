@@ -14,7 +14,6 @@
 
 #include <gnuradio/logger.h>
 #include <gnuradio/prefs.h>
-#include <boost/format.hpp>
 
 #include "pagesize.h"
 #include <unistd.h>
@@ -37,11 +36,11 @@ int pagesize()
 #elif defined(HAVE_SYSCONF)
         s_pagesize = sysconf(_SC_PAGESIZE);
         if (s_pagesize == -1) {
-            GR_LOG_ERROR(logger, boost::format("_SC_PAGESIZE: %s") % strerror(errno));
+            logger->error("_SC_PAGESIZE: {:s}", strerror(errno));
             s_pagesize = 4096;
         }
 #else
-        GR_LOG_ERROR(logger, "no info; setting pagesize = 4096");
+        logger->error("no info; setting pagesize = 4096");
         s_pagesize = 4096;
 #endif
     }
