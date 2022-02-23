@@ -20,7 +20,6 @@
 #include <sched.h>
 #endif
 
-#include <boost/format.hpp>
 #include <algorithm>
 #include <cerrno>
 #include <cmath>
@@ -111,11 +110,8 @@ rt_status_t enable_realtime_scheduling(rt_sched_param p)
         else {
             gr::logger_ptr logger, debug_logger;
             gr::configure_default_loggers(logger, debug_logger, "realtime_impl");
-            GR_LOG_ERROR(
-                logger,
-                boost::format(
-                    "pthread_setschedparam: failed to set real time priority: %s") %
-                    strerror(result));
+            logger->error("pthread_setschedparam: failed to set real time priority: {:s}",
+                          strerror(result));
             return RT_OTHER_ERROR;
         }
     }
@@ -152,9 +148,7 @@ rt_status_t enable_realtime_scheduling(rt_sched_param p)
         else {
             gr::logger_ptr logger, debug_logger;
             gr::configure_default_loggers(logger, debug_logger, "realtime_impl");
-            GR_LOG_ERROR(
-                logger,
-                boost::format("sched_setscheduler: failed to set real time priority."));
+            logger->error("sched_setscheduler: failed to set real time priority.");
             return RT_OTHER_ERROR;
         }
     }

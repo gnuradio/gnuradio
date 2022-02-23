@@ -18,7 +18,6 @@
 #include <gnuradio/buffer.h>
 #include <gnuradio/logger.h>
 #include <gnuradio/prefs.h>
-#include <boost/format.hpp>
 #include <iostream>
 #include <stdexcept>
 
@@ -365,9 +364,8 @@ long block::min_output_buffer(size_t i)
 
 void block::set_min_output_buffer(long min_output_buffer)
 {
-    GR_LOG_INFO(d_logger,
-                boost::format("set_min_output_buffer on block %s to %d") % unique_id() %
-                    min_output_buffer);
+    d_logger->info(
+        "set_min_output_buffer on block {:s} to {:d}", unique_id(), min_output_buffer);
     for (int i = 0; i < output_signature()->max_streams(); i++) {
         set_min_output_buffer(i, min_output_buffer);
     }
@@ -396,7 +394,7 @@ void block::allocate_detail(int ninputs,
 {
     block_detail_sptr detail = make_block_detail(ninputs, noutputs);
 
-    GR_LOG_DEBUG(d_debug_logger, "Creating block detail for " + identifier());
+    d_debug_logger->debug("Creating block detail for {:s}", identifier());
 
     for (int i = 0; i < noutputs; i++) {
         expand_minmax_buffer(i);
@@ -405,17 +403,16 @@ void block::allocate_detail(int ninputs,
                                              downstream_max_nitems_vec[i],
                                              downstream_lcm_nitems_vec[i],
                                              downstream_max_out_mult_vec[i]);
-        GR_LOG_DEBUG(d_debug_logger,
-                     "Allocated buffer for output " + identifier() + " " +
-                         std::to_string(i));
+        d_debug_logger->debug("Allocated buffer for output {:s} {:d}", identifier(), i);
         detail->set_output(i, buffer);
 
         // Update the block's max_output_buffer based on what was actually allocated.
         if ((max_output_buffer(i) != buffer->bufsize()) && (max_output_buffer(i) != -1))
-            GR_LOG_WARN(d_logger,
-                        boost::format("Block (%1%) max output buffer set to %2%"
-                                      " instead of requested %3%") %
-                            alias() % buffer->bufsize() % max_output_buffer(i));
+            d_logger->warn("Block ({:s}) max output buffer set to {:d}"
+                           " instead of requested {:d}",
+                           alias(),
+                           buffer->bufsize(),
+                           max_output_buffer(i));
         set_max_output_buffer(i, buffer->bufsize());
     }
 
@@ -489,8 +486,7 @@ buffer_sptr block::allocate_buffer(size_t port,
     buffer_sptr buf;
 
 #ifdef BUFFER_DEBUG
-    GR_LOG_DEBUG(d_logger,
-                 "Block: " + name() + " allocated buffer for output " + identifier());
+    d_logger->debug("Block: {:s} allocated buffer for output {:s}", name(), identifier());
 #endif
 
     // Grab the buffer type associated with the output port and use it to
@@ -514,7 +510,7 @@ buffer_sptr block::allocate_buffer(size_t port,
             msg << " (" << num_inputs << " -> "
                 << fixed_rate_ninput_to_noutput(num_inputs + (history() - 1)) << ")";
         }
-        GR_LOG_DEBUG(d_logger, msg.str());
+        d_logger->debug(msg.str());
 #endif
         buf = buftype.make_buffer(nitems,
                                   item_size,
@@ -758,13 +754,13 @@ void block::reset_perf_counters()
 
 void block::system_handler(pmt::pmt_t msg)
 {
-    // GR_LOG_INFO(d_logger, boost::format("system handler %s") % msg);
+    // d_logger->info("system handler {:s}", msg);
     pmt::pmt_t op = pmt::car(msg);
     if (pmt::eqv(op, d_pmt_done)) {
         d_finished = pmt::to_long(pmt::cdr(msg));
         global_block_registry.notify_blk(d_symbol_name);
     } else {
-        GR_LOG_WARN(d_logger, "bad message op on system port!");
+        d_logger->warn("bad message op on system port!");
         pmt::print(msg);
     }
 }

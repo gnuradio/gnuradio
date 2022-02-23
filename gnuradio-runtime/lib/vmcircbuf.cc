@@ -15,7 +15,6 @@
 #include "local_sighandler.h"
 #include "vmcircbuf.h"
 #include "vmcircbuf_prefs.h"
-#include <boost/format.hpp>
 #include <cstring>
 #include <stdexcept>
 #include <vector>
@@ -57,8 +56,7 @@ vmcircbuf_factory* vmcircbuf_sysconfig::get_default_factory()
         for (unsigned int i = 0; i < all.size(); i++) {
             if (strncmp(name, all[i]->name(), strlen(all[i]->name())) == 0) {
                 s_default_factory = all[i];
-                GR_LOG_INFO(debug_logger,
-                            boost::format("Using %s") % s_default_factory->name());
+                debug_logger->info("Using {:s}", s_default_factory->name());
                 return s_default_factory;
             }
         }
@@ -67,7 +65,7 @@ vmcircbuf_factory* vmcircbuf_sysconfig::get_default_factory()
     // either we don't have a default, or the default named is not in our
     // list of factories.  Find the first factory that works.
 
-    GR_LOG_INFO(debug_logger, "finding a working factory...");
+    debug_logger->info("finding a working factory...");
 
     for (unsigned int i = 0; i < all.size(); i++) {
         if (test_factory(all[i], verbose)) {
@@ -77,7 +75,7 @@ vmcircbuf_factory* vmcircbuf_sysconfig::get_default_factory()
     }
 
     // We're screwed!
-    GR_LOG_ERROR(logger, "unable to find a working factory!");
+    logger->error("unable to find a working factory!");
     throw std::runtime_error("gr::vmcircbuf_sysconfig");
 }
 
@@ -118,7 +116,7 @@ static bool check_mapping(
 {
     bool ok = true;
 
-    GR_LOG_INFO(debug_logger, msg);
+    debug_logger->info(msg);
 
     unsigned int* p1 = (unsigned int*)c.pointer_to_first_copy();
     unsigned int* p2 = (unsigned int*)c.pointer_to_second_copy();
@@ -126,21 +124,17 @@ static bool check_mapping(
     for (unsigned int i = 0; i < size / sizeof(int); i++) {
         if (p1[i] != counter + i) {
             ok = false;
-            GR_LOG_INFO(debug_logger,
-                        boost::format("p1[%d] == %u, expected %u") % i % p1[i] %
-                            (counter + i));
+            debug_logger->error("p1[{:d}] == {:d}, expected {:d}", i, p1[i], counter + i);
             break;
         }
         if (p2[i] != counter + i) {
-            GR_LOG_ERROR(debug_logger,
-                         boost::format("p1[%d] == %u, expected %u") % i % p2[i] %
-                             (counter + i));
+            debug_logger->error("p2[{:d}] == {:d}, expected {:d}", i, p2[i], counter + i);
             ok = false;
             break;
         }
     }
     if (ok) {
-        GR_LOG_INFO(debug_logger, "mapping OK");
+        debug_logger->info("mapping OK");
     }
     return ok;
 }
@@ -149,11 +143,11 @@ static const char* memsize(int size)
 {
     static std::string buf;
     if (size >= (1 << 20)) {
-        buf = str(boost::format("%dMB") % (size / (1 << 20)));
+        buf = std::to_string(size / (1 << 20)) + "MB";
     } else if (size >= (1 << 10)) {
-        buf = str(boost::format("%dKB") % (size / (1 << 10)));
+        buf = std::to_string(size / (1 << 10)) + "kB";
     } else {
-        buf = str(boost::format("%d") % size);
+        buf = std::to_string(size);
     }
     return buf.c_str();
 }
@@ -173,10 +167,11 @@ test_a_bunch(vmcircbuf_factory* factory, int n, int size, int* start_ptr, bool v
         counter[i] = *start_ptr;
         *start_ptr += size;
         if ((c[i] = std::unique_ptr<vmcircbuf>(factory->make(size))) == 0) {
-            GR_LOG_INFO(debug_logger,
-                        boost::format("Failed to allocate gr::vmcircbuf "
-                                      "number %d of size %d (cum = %s)") %
-                            (i + 1) % size % memsize(cum_size))
+            debug_logger->info("Failed to allocate gr::vmcircbuf "
+                               "number {:d} of size {:d} (cum = {:s})",
+                               i + 1,
+                               size,
+                               memsize(cum_size));
             return false;
         }
         init_buffer(*c[i], counter[i], size);
@@ -184,8 +179,8 @@ test_a_bunch(vmcircbuf_factory* factory, int n, int size, int* start_ptr, bool v
     }
 
     for (int i = 0; i < n; i++) {
-        std::string msg =
-            str(boost::format("test_a_bunch_%dx%s[%d]") % n % memsize(size) % i);
+        std::string msg = "test_a_bunch_" + std::to_string(n) + "x" + memsize(size) +
+                          "[" + std::to_string(i) + "]";
         ok = check_mapping(*c[i], counter[i], size, msg.c_str(), debug_logger) && ok;
     }
     return ok;
@@ -196,7 +191,7 @@ static bool standard_tests(vmcircbuf_factory* f, int verbose)
     logger_ptr logger, debug_logger;
     gr::configure_default_loggers(logger, debug_logger, "standard_tests");
 
-    GR_LOG_INFO(debug_logger, boost::format("Testing %s...") % f->name());
+    debug_logger->info("Testing {:s}...", f->name());
 
     bool v = verbose >= 2;
     int granularity = f->granularity();
@@ -212,8 +207,7 @@ static bool standard_tests(vmcircbuf_factory* f, int verbose)
         //  = 64MB
     }
 
-    GR_LOG_INFO(debug_logger,
-                boost::format("%s: %s") % f->name() % (ok ? "OK" : "Doesn't work"))
+    debug_logger->info("{:s}: {:s}", f->name(), ok ? "OK" : "Doesn't work");
     return ok;
 }
 
@@ -237,15 +231,13 @@ bool vmcircbuf_sysconfig::test_factory(vmcircbuf_factory* f, int verbose)
     try {
         return standard_tests(f, verbose);
     } catch (gr::signal& sig) {
-        GR_LOG_INFO(debug_logger,
-                    boost::format("vmcircbuf_factory::test_factory (%s): caught %s") %
-                        f->name() % sig.name().c_str())
+        debug_logger->info(
+            "vmcircbuf_factory::test_factory ({:s}): caught {:s}", f->name(), sig.name());
         return false;
     } catch (...) {
-        GR_LOG_WARN(debug_logger,
-                    boost::format("vmcircbuf_factory::test_factory (%s) some "
-                                  "kind of uncaught exception.") %
-                        f->name())
+        debug_logger->warn("vmcircbuf_factory::test_factory ({:s}) some "
+                           "kind of uncaught exception.",
+                           f->name());
         return false;
     }
     return false; // never gets here.  shut compiler up.

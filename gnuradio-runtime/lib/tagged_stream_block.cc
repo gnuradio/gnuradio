@@ -13,7 +13,6 @@
 #endif
 
 #include <gnuradio/tagged_stream_block.h>
-#include <boost/format.hpp>
 
 namespace gr {
 
@@ -100,10 +99,9 @@ int tagged_stream_block::general_work(int noutput_items,
     }
     for (unsigned i = 0; i < input_items.size(); i++) {
         if (d_n_input_items_reqd[i] == -1) {
-            GR_LOG_FATAL(
-                d_logger,
-                boost::format("Missing a required length tag on port %1% at item #%2%") %
-                    i % nitems_read(i));
+            d_logger->fatal("Missing a required length tag on port {:d} at item #{:d}",
+                            i,
+                            nitems_read(i));
             throw std::runtime_error("Missing length tag.");
         }
         if (d_n_input_items_reqd[i] > ninput_items[i]) {
