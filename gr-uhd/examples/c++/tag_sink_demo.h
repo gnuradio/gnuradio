@@ -10,7 +10,6 @@
 #include <gnuradio/io_signature.h>
 #include <gnuradio/logger.h>
 #include <gnuradio/sync_block.h>
-#include <boost/format.hpp>
 #include <complex>
 
 class tag_sink_demo : public gr::sync_block
@@ -41,15 +40,14 @@ public:
                           pmt::string_to_symbol("rx_time"));
 
         // print all tags
-        auto format_string =
-            boost::format("Full seconds %u, Frac seconds %f, abs sample offset %u");
         for (const auto& rx_time_tag : rx_time_tags) {
             const uint64_t offset = rx_time_tag.offset;
             const pmt::pmt_t& value = rx_time_tag.value;
 
-            GR_LOG_INFO(d_logger,
-                        format_string % pmt::to_uint64(pmt::tuple_ref(value, 0)) %
-                            pmt::to_double(pmt::tuple_ref(value, 1)) % offset);
+            d_logger->info("Full seconds {:d}, Frac seconds {:g}, abs sample offset {:d}",
+                           pmt::to_uint64(pmt::tuple_ref(value, 0)),
+                           pmt::to_double(pmt::tuple_ref(value, 1)),
+                           offset);
         }
 
         return ninput_items;
