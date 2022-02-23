@@ -60,7 +60,7 @@ buffer_double_mapped::buffer_double_mapped(int nitems,
         std::ostringstream msg;
         msg << "[" << this << "] "
             << "buffer_double_mapped constructor -- history: " << link->history();
-        GR_LOG_DEBUG(d_logger, msg.str());
+        d_logger->debug(msg.str());
     }
 #endif
 }
@@ -100,24 +100,23 @@ bool buffer_double_mapped::allocate_buffer(int nitems)
     // If we rounded-up a whole bunch, give the user a heads up.
     // This only happens if sizeof_item is not a power of two.
     if (nitems > 2 * orig_nitems && nitems * (int)d_sizeof_item > granularity) {
-        auto msg =
-            str(boost::format(
-                    "allocate_buffer: tried to allocate"
-                    "   %d items of size %d. Due to alignment requirements"
-                    "   %d were allocated.  If this isn't OK, consider padding"
-                    "   your structure to a power-of-two bytes."
-                    "   On this platform, our allocation granularity is %d bytes.") %
-                orig_nitems % d_sizeof_item % nitems % granularity);
-        GR_LOG_WARN(d_logger, msg.c_str());
+        d_logger->warn("allocate_buffer: tried to allocate"
+                       "   {:d} items of size {:d}. Due to alignment requirements"
+                       "   {:d} were allocated.  If this isn't OK, consider padding"
+                       "   your structure to a power-of-two bytes."
+                       "   On this platform, our allocation granularity is {:d} bytes.",
+                       orig_nitems,
+                       d_sizeof_item,
+                       nitems,
+                       granularity);
     }
 
     d_bufsize = nitems;
     d_vmcircbuf.reset(gr::vmcircbuf_sysconfig::make(d_bufsize * d_sizeof_item));
     if (d_vmcircbuf == 0) {
-        std::ostringstream msg;
-        msg << "gr::buffer::allocate_buffer: failed to allocate buffer of size "
-            << d_bufsize * d_sizeof_item / 1024 << " KB";
-        GR_LOG_ERROR(d_logger, msg.str());
+        d_logger->error(
+            "gr::buffer::allocate_buffer: failed to allocate buffer of size {:d} KB",
+            d_bufsize * d_sizeof_item / 1024);
         return false;
     }
 
@@ -150,7 +149,7 @@ int buffer_double_mapped::space_available()
         msg << "[" << this << "] "
             << "space_available() called  d_write_index: " << d_write_index
             << " -- space_available: " << (d_bufsize - most_data - 1);
-        GR_LOG_DEBUG(d_logger, msg.str());
+        d_logger->debug(msg.str());
 #endif
 
         // The -1 ensures that the case d_write_index == d_read_index is
