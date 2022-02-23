@@ -35,6 +35,7 @@ using logger_ptr = std::shared_ptr<void>;
 #include <gnuradio/api.h>
 #include <spdlog/common.h>
 #include <spdlog/fmt/fmt.h>
+#include <spdlog/fmt/ostr.h>
 #include <memory>
 
 #include <spdlog/spdlog.h>

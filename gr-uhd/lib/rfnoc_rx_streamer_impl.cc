@@ -15,7 +15,6 @@
 #include <gnuradio/io_signature.h>
 #include <uhd/convert.hpp>
 #include <uhd/rfnoc/node.hpp>
-#include <boost/format.hpp>
 
 const pmt::pmt_t EOB_KEY = pmt::string_to_symbol("rx_eob");
 const pmt::pmt_t CMD_TIME_KEY = pmt::mp("time");
@@ -71,7 +70,7 @@ rfnoc_rx_streamer_impl::~rfnoc_rx_streamer_impl() {}
  *****************************************************************************/
 bool rfnoc_rx_streamer_impl::check_topology(int, int)
 {
-    GR_LOG_DEBUG(d_logger, "Committing graph...");
+    d_logger->debug("Committing graph...");
     d_graph->commit();
     return true;
 }
@@ -89,10 +88,10 @@ bool rfnoc_rx_streamer_impl::start()
             stream_cmd.stream_now = true;
         }
 
-        GR_LOG_DEBUG(d_logger, "Sending start stream command...");
+        d_logger->debug("Sending start stream command...");
         d_streamer->issue_stream_cmd(stream_cmd);
     } else {
-        GR_LOG_DEBUG(d_logger, "Starting RX streamer without stream command...");
+        d_logger->debug("Starting RX streamer without stream command...");
     }
     return true;
 }
@@ -122,7 +121,7 @@ int rfnoc_rx_streamer_impl::work(int noutput_items,
         // vector will be received, but it won't be available in the output_items.
         // We need to store the partial vector, and prepend it to the next
         // run.
-        GR_LOG_WARN(d_logger, "Received fractional vector! Expect signal fragmentation.");
+        d_logger->warn("Received fractional vector! Expect signal fragmentation.");
     }
 
     using ::uhd::rx_metadata_t;
@@ -132,7 +131,7 @@ int rfnoc_rx_streamer_impl::work(int noutput_items,
 
     case rx_metadata_t::ERROR_CODE_TIMEOUT:
         // its ok to timeout, perhaps the user is doing finite streaming
-        GR_LOG_DEBUG(d_logger, "UHD recv() call timed out.");
+        d_logger->debug("UHD recv() call timed out.");
         break;
 
     case rx_metadata_t::ERROR_CODE_OVERFLOW:
@@ -141,10 +140,9 @@ int rfnoc_rx_streamer_impl::work(int noutput_items,
         break;
 
     default:
-        GR_LOG_WARN(
-            d_logger,
-            str(boost::format("RFNoC Streamer block received error %s (Code: 0x%x)") %
-                d_metadata.strerror() % d_metadata.error_code));
+        d_logger->warn("RFNoC Streamer block received error {:s} (Code: {:#x})",
+                       d_metadata.strerror(),
+                       d_metadata.error_code);
     }
 
     if (d_metadata.end_of_burst) {

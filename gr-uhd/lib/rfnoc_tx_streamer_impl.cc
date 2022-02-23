@@ -60,7 +60,7 @@ rfnoc_tx_streamer_impl::~rfnoc_tx_streamer_impl() {}
  *****************************************************************************/
 bool rfnoc_tx_streamer_impl::check_topology(int, int)
 {
-    GR_LOG_DEBUG(d_logger, "Committing graph...");
+    d_logger->debug("Committing graph...");
     d_graph->commit();
     return true;
 }
@@ -82,7 +82,7 @@ int rfnoc_tx_streamer_impl::work(int noutput_items,
         // vector will be sent, but it won't be consumed from the input_items.
         // We need to store the offset (what fraction of the vector was sent)
         // and tx that first.
-        GR_LOG_WARN(d_logger, "Sent fractional vector! Expect signal fragmentation.");
+        d_logger->warn("Sent fractional vector! Expect signal fragmentation.");
     }
 
     return num_vecs_sent;

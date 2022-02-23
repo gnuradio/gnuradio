@@ -11,7 +11,6 @@
 #include "gr_uhd_common.h"
 #include "usrp_source_impl.h"
 #include <gnuradio/prefs.h>
-#include <boost/format.hpp>
 #include <boost/make_shared.hpp>
 #include <boost/thread/thread.hpp>
 #include <chrono>
@@ -84,10 +83,9 @@ void usrp_source_impl::set_samp_rate(double rate)
     _tag_now = true;
     auto is_should_ratio = _samp_rate / rate;
     if (is_should_ratio < 0.99 || is_should_ratio > 1.01) {
-        GR_LOG_WARN(
-            d_logger,
-            boost::format("Requested sample rate %g Hz not set; instead, %g Hz used.") %
-                rate % _samp_rate);
+        d_logger->warn("Requested sample rate {:g} Hz not set; instead, {:g} Hz used.",
+                       rate,
+                       _samp_rate);
     }
 }
 
@@ -206,7 +204,7 @@ bool usrp_source_impl::has_power_reference(size_t chan)
     const size_t dev_chan = _stream_args.channels[chan];
     return _dev->has_rx_power_reference(dev_chan);
 #else
-    GR_LOG_WARN(d_logger, "UHD version 4.0 or greater required for power reference API.");
+    d_logger->warn("UHD version 4.0 or greater required for power reference API.");
     return false;
 #endif
 }
@@ -220,8 +218,7 @@ void usrp_source_impl::set_power_reference(double power_dbm, size_t chan)
     const size_t dev_chan = _stream_args.channels[chan];
     _dev->set_rx_power_reference(power_dbm, dev_chan);
 #else
-    GR_LOG_ERROR(d_logger,
-                 "UHD version 4.0 or greater required for power reference API.");
+    d_logger->error("UHD version 4.0 or greater required for power reference API.");
     throw std::runtime_error("not implemented in this version");
 #endif
 }
@@ -235,8 +232,7 @@ double usrp_source_impl::get_power_reference(size_t chan)
     const size_t dev_chan = _stream_args.channels[chan];
     return _dev->get_rx_power_reference(dev_chan);
 #else
-    GR_LOG_ERROR(d_logger,
-                 "UHD version 4.0 or greater required for power reference API.");
+    d_logger->error("UHD version 4.0 or greater required for power reference API.");
     throw std::runtime_error("not implemented in this version");
 #endif
 }
@@ -250,8 +246,7 @@ double usrp_source_impl::get_power_reference(size_t chan)
     const size_t dev_chan = _stream_args.channels[chan];
     return _dev->get_rx_power_range(dev_chan);
 #else
-    GR_LOG_ERROR(d_logger,
-                 "UHD version 4.0 or greater required for power reference API.");
+    d_logger->error("UHD version 4.0 or greater required for power reference API.");
     throw std::runtime_error("not implemented in this version");
 #endif
 }
@@ -643,8 +638,6 @@ int usrp_source_impl::work(int noutput_items,
         return 0;
 
     case ::uhd::rx_metadata_t::ERROR_CODE_OVERFLOW: {
-        static auto oflow_msg =
-            boost::format("In the last %d ms, %d overflows occurred.");
         _tag_now = true;
         ++_overflow_count;
         auto now = std::chrono::steady_clock::now();
@@ -653,7 +646,8 @@ int usrp_source_impl::work(int noutput_items,
             _last_log = now;
             auto ms =
                 std::chrono::duration_cast<std::chrono::milliseconds>(delta).count();
-            GR_LOG_ERROR(d_logger, oflow_msg % ms % _overflow_count);
+            d_logger->error(
+                "In the last {:d} ms, {:d} overflows occurred.", ms, _overflow_count);
             _overflow_count = 0;
         }
         // ignore overflows and try work again
@@ -661,8 +655,7 @@ int usrp_source_impl::work(int noutput_items,
     }
 
     default:
-        GR_LOG_WARN(d_logger,
-                    "USRP Source Block caught rx error: " + _metadata.strerror());
+        d_logger->warn("USRP Source Block caught rx error: {:s}", _metadata.strerror());
         return num_samps;
     }
 
