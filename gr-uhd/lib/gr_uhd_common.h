@@ -13,7 +13,6 @@
 
 #include <uhd/stream.hpp>
 #include <uhd/version.hpp>
-#include <boost/format.hpp>
 #include <stdexcept>
 
 namespace gr {
@@ -25,13 +24,13 @@ static inline void check_abi(void)
     if (std::string(UHD_VERSION_ABI_STRING) == ::uhd::get_abi_string())
         return;
 
-    throw std::runtime_error(str(
-        boost::format("\nGR-UHD detected ABI compatibility mismatch with UHD library.\n"
-                      "GR-UHD was build against ABI: %s,\n"
-                      "but UHD library reports ABI: %s\n"
-                      "Suggestion: install an ABI compatible version of UHD,\n"
-                      "or rebuild GR-UHD component against this ABI version.\n") %
-        UHD_VERSION_ABI_STRING % ::uhd::get_abi_string()));
+    throw std::runtime_error(
+        "\nGR-UHD detected ABI compatibility mismatch with UHD library.\n"
+        "GR-UHD was built against ABI: " +
+        std::string(UHD_VERSION_ABI_STRING) +
+        ",\nbut UHD library reports ABI: " + ::uhd::get_abi_string() +
+        "\nSuggestion: install an ABI compatible version of UHD,\n"
+        "or rebuild GR-UHD component against this ABI version.\n");
 #endif
 }
 
