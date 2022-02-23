@@ -13,7 +13,6 @@
 #endif
 
 #include "local_sighandler.h"
-#include <boost/format.hpp>
 #include <cstring>
 #include <stdexcept>
 
@@ -32,8 +31,7 @@ local_sighandler::local_sighandler(int signum, void (*new_handler)(int))
 
     gr::configure_default_loggers(d_logger, d_debug_logger, "local_sighandler");
     if (sigaction(d_signum, &new_action, &d_old_action) < 0) {
-        GR_LOG_ERROR(d_logger,
-                     boost::format("sigaction (install new): %s") % strerror(errno))
+        d_logger->error("sigaction (install new): {:s}", strerror(errno));
         throw std::runtime_error("sigaction");
     }
 #endif
@@ -43,8 +41,7 @@ local_sighandler::~local_sighandler() noexcept(false)
 {
 #ifdef HAVE_SIGACTION
     if (sigaction(d_signum, &d_old_action, 0) < 0) {
-        GR_LOG_ERROR(d_logger,
-                     boost::format("sigaction (restore old): %s") % strerror(errno))
+        d_logger->error("sigaction (restore old): {:s}", strerror(errno));
         throw std::runtime_error("sigaction");
     }
 #endif
@@ -61,8 +58,6 @@ void local_sighandler::throw_signal(int signum) { throw signal(signum); }
 
 std::string signal::name() const
 {
-    std::string tmp;
-
     switch (signum()) {
 #ifdef SIGHUP
         SIGNAME(SIGHUP);
@@ -160,12 +155,10 @@ std::string signal::name() const
     default:
 #if defined(SIGRTMIN) && defined(SIGRTMAX)
         if (signum() >= SIGRTMIN && signum() <= SIGRTMAX) {
-            tmp = str(boost::format("SIGRTMIN + %d") % signum());
-            return tmp;
+            return "SIGRTMIN + " + std::to_string(signum());
         }
 #endif
-        tmp = str(boost::format("SIGNAL %d") % signum());
-        return tmp;
+        return "SIGNAL " + std::to_string(signum());
     }
 }
 
