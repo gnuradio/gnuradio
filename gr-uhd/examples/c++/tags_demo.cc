@@ -13,7 +13,6 @@
 #include <gnuradio/uhd/usrp_sink.h>
 #include <gnuradio/uhd/usrp_source.h>
 #include <uhd/utils/safe_main.hpp>
-#include <boost/format.hpp>
 #include <boost/program_options.hpp>
 #include <chrono>
 #include <csignal>
@@ -64,7 +63,7 @@ int UHD_SAFE_MAIN(int argc, char* argv[])
 
     // print the help message
     if (vm.count("help")) {
-        std::cout << boost::format("UHD Tags Demo %s") % desc << std::endl
+        std::cout << "UHD Tags Demo " << desc << std::endl
                   << "The tags sink demo block will print USRP source time stamps."
                   << std::endl
                   << "The tags source demo block will send bursts to the USRP sink."
