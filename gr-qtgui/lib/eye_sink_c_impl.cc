@@ -276,8 +276,8 @@ void eye_sink_c_impl::set_nsamps(const int newsize)
         if (d_trigger_delay > 2 * d_sps) {
             d_logger->warn("Trigger delay ({:g}) outside of display range "
                            "(0:{:g}). Moving to 50% point.",
-                           2 * d_sps / d_samp_rate,
-                           (d_sps) / d_samp_rate);
+                           d_trigger_delay / d_samp_rate,
+                           (2 * d_sps) / d_samp_rate);
             d_trigger_delay = d_sps;
             d_main_gui->setTriggerDelay(d_trigger_delay / d_samp_rate);
         }
