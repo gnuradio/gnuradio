@@ -146,12 +146,10 @@ void sink_c_impl::set_fft_size(const int fftsize)
         d_fftsize = fftsize;
         d_main_gui.setFFTSize(fftsize);
     } else {
-        GR_LOG_INFO(
-            d_logger,
-            fmt::format("FFT size must be >= {} and <= {}.\nSo falling back to {}.",
-                        d_main_gui.MIN_FFT_SIZE,
-                        d_main_gui.MAX_FFT_SIZE,
-                        d_main_gui.DEFAULT_FFT_SIZE));
+        d_logger->info("FFT size must be >= {} and <= {}.\nSo falling back to {}.",
+                       d_main_gui.MIN_FFT_SIZE,
+                       d_main_gui.MAX_FFT_SIZE,
+                       d_main_gui.DEFAULT_FFT_SIZE);
         d_main_gui.setFFTSize(d_main_gui.DEFAULT_FFT_SIZE);
     }
 }

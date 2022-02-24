@@ -122,9 +122,8 @@ unsigned int vector_sink_f_impl::vlen() const { return d_vlen; }
 void vector_sink_f_impl::set_vec_average(const float avg)
 {
     if (avg < 0 || avg > 1.0) {
-        GR_LOG_ALERT(d_logger,
-                     "Invalid average value received in set_vec_average(), must be "
-                     "within [0, 1].");
+        d_logger->alert("Invalid average value received in set_vec_average(), must be "
+                        "within [0, 1].");
         return;
     }
     d_main_gui->setVecAverage(avg);

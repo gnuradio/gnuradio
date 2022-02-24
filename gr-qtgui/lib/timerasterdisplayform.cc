@@ -24,8 +24,7 @@ TimeRasterDisplayForm::TimeRasterDisplayForm(
     gr::logger_ptr logger, debug_logger;
     gr::configure_default_loggers(logger, debug_logger, "timerasterdisplayform");
 
-    GR_LOG_WARN(
-        logger,
+    logger->warn(
         "Warning: QWT5 has been found which has serious performance issues with raster "
         "plots. Consider updating to QWT version 6 to use the time raster GUIs.");
 #endif

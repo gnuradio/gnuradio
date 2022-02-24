@@ -14,7 +14,6 @@
 #include <gnuradio/io_signature.h>
 #include <gnuradio/math.h>
 #include <volk/volk.h>
-#include <boost/format.hpp>
 #include <cmath>
 
 #ifdef HAVE_CONFIG_H
@@ -304,12 +303,13 @@ int ber_sink_b_impl::general_work(int noutput_items,
             consume(i + 1, items);
 
             if (d_total_errors[i >> 1] >= d_ber_min_errors) {
-                GR_LOG_INFO(d_logger,
-                            boost::format("    %1% over %2%  -->  %3%") %
-                                d_total_errors[i >> 1] % (d_total[i >> 1] * 8) % ber);
+                d_logger->info("    {:d} over {:d}  -->  {:g}",
+                               d_total_errors[i >> 1],
+                               d_total[i >> 1] * 8,
+                               ber);
             } else if (std::log10(((double)d_ber_min_errors) / (d_total[i >> 1] * 8.0)) <
                        d_ber_limit) {
-                GR_LOG_INFO(d_logger, "BER Limit Reached");
+                d_logger->info("BER Limit Reached");
                 d_ber_buffers[i / (d_nconnections * 2)][(i % (d_nconnections * 2)) >> 1] =
                     d_ber_limit;
                 d_total_errors[i >> 1] = d_ber_min_errors + 1;
