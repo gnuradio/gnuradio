@@ -276,7 +276,7 @@ void time_sink_f_impl::set_nsamps(const int newsize)
                            "(0:{:g}). Moving to 50% point.",
                            d_trigger_delay / d_samp_rate,
                            (d_size - 1) / d_samp_rate);
-            d_trigger_delay = d_size - 1;
+            d_trigger_delay = d_size / 2;
             d_main_gui->setTriggerDelay(d_trigger_delay / d_samp_rate);
         }
 
