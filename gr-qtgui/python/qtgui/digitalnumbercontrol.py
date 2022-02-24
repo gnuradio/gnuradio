@@ -369,7 +369,7 @@ class MsgDigitalNumberControl(gr.sync_block, LabeledDigitalNumberControl):
         self.setFrequency(new_val)
 
         self.message_port_pub(pmt.intern("valueout"), pmt.cons(pmt.intern(
-            self.outputmsgname), pmt.from_double(float(self.getFrequency()))))
+            self.outputmsgname), pmt.from_double(float(new_val))))
 
     def getValue(self):
         self.getFrequency()
