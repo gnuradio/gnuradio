@@ -1,0 +1,37 @@
+id: json_config
+label: Json Config
+flags: [ show_id, python ]
+
+parameters:
+-   id: config_file
+    label: Config File
+    dtype: file_open
+    default: default
+-   id: schema_file
+    label: Config Schema
+    dtype: file_open
+    default: ""
+# Not my favorite thing because it doesn't explicitly close the file, but
+# it should be okay.  The garbage collector will take care of it.
+value: "${ json.load(open(config_file)) }"
+
+asserts:
+#- ${ schema_file == "" or validate(value, json.load(open(schema_file))) is None }
+- ${ schema_file == "" or validate(json.load(open(config_file)), json.load(open(schema_file))) is None }
+
+templates:
+    imports: |-
+        import json
+        from jsonschema import validate
+    var_make: "with open(${config_file}) as fid:\n\
+              \    self.${id} = ${id} = json.load(fid)\n\
+              self.${id}_schema = ${id}_schema = ${schema_file}\n\
+              if ${id}_schema:\n\
+              \    with open(${id}_schema) as fid:\n\
+              \        validate(${id}, json.load(fid))"
+
+documentation: |-
+    This block represents a json config file, that is read in as a dictionary.
+
+
+file_format: 1
