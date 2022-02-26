@@ -6,7 +6,7 @@ parameters:
 -   id: config_file
     label: Config File
     dtype: file_open
-    default: default
+    default: ""
 -   id: schema_file
     label: Config Schema
     dtype: file_open
@@ -31,6 +31,11 @@ templates:
 
 documentation: |-
     This block represents a json config file that is read in as a dictionary.
+
+    The values can be used directly when instantiating blocks.  For example,
+    Sample Rate: yaml_config["samp_rate"]
+
+    Optionally, a json schema can be specified to validate the configuration.
 
 
 file_format: 1
