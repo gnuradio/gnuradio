@@ -1,36 +1,44 @@
-id: json_config
-label: JSON Config
+id: yaml_config
+label: Yaml Config
 flags: [ show_id, python ]
 
 parameters:
 -   id: config_file
     label: Config File
     dtype: file_open
-    default: default
+    default: ""
 -   id: schema_file
     label: Config Schema
     dtype: file_open
     default: ""
 # Not my favorite thing because it doesn't explicitly close the file, but
 # it should be okay.  The garbage collector will take care of it.
-value: "${ json.load(open(config_file)) }"
+value: "${ toml.load(open(config_file)) }"
 
 asserts:
-- ${ schema_file == "" or validate(json.load(open(config_file)), json.load(open(schema_file))) is None }
+- ${ schema_file == "" or validate(yaml.load(open(config_file)), json.load(open(schema_file))) is None }
 
 templates:
     imports: |-
         import json
+        import yaml
         from jsonschema import validate
     var_make: "with open(${config_file}) as fid:\n\
-              \    self.${id} = ${id} = json.load(fid)\n\
+              \    self.${id} = ${id} = yaml.safe_load(fid)\n\
               self.${id}_schema = ${id}_schema = ${schema_file}\n\
               if ${id}_schema:\n\
               \    with open(${id}_schema) as fid:\n\
               \        validate(${id}, json.load(fid))"
 
 documentation: |-
-    This block represents a json config file that is read in as a dictionary.
+    This block represents a yaml config file that is read in as a dictionary.
+
+    The values can be used directly when instantiating blocks.  For example,
+    Sample Rate: yaml_config["samp_rate"]
+
+    Optionally, a json schema can be specified to validate the configuration.
+    It may sound odd to use a json schema for a yaml file, but it works and 
+    jsonschema is a rich specification.
 
 
 file_format: 1

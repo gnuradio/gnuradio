@@ -20,4 +20,5 @@
   - variable_config
   - variable_function_probe
   - json_config
+  - yaml_config
   - parameter
