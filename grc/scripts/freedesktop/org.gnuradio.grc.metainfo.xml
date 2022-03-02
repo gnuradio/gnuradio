@@ -9,6 +9,7 @@
 -->
 <component type="desktop-application">
 <id>org.gnuradio.grc</id>
+<launchable type="desktop-id">gnuradio-grc.desktop</launchable>
 <metadata_license>CC0-1.0</metadata_license>
 <project_license>GPL-3.0+</project_license>
 <name>GNU Radio Companion</name>
@@ -39,7 +40,6 @@
   <category>HamRadio</category>
   <category>DataVisualization</category>
 </categories>
-<launchable type="desktop-id">gnuradio-grc</launchable>
 <screenshots>
   <screenshot type="default">
     <caption>GNU Radio Companion</caption>
