@@ -50,7 +50,6 @@
 <url type="homepage">https://www.gnuradio.org</url>
 <url type="help">https://wiki.gnuradio.org/</url>
 <url type="bugtracker">https://github.com/gnuradio/gnuradio/issues</url>
-<url type="contact">mailto:discuss-gnuradio@gnu.org</url>
 <url type="contact">https://lists.gnu.org/mailman/listinfo/discuss-gnuradio</url>
 <url type="contact">https://chat.gnuradio.org</url>
 <provides>
