@@ -11,7 +11,6 @@
 #endif
 
 #include "ldpc_gen_mtrx_encoder_impl.h"
-#include <boost/format.hpp>
 
 namespace gr {
 namespace fec {
@@ -46,11 +45,11 @@ bool ldpc_gen_mtrx_encoder_impl::set_frame_size(unsigned int frame_size)
     bool ret = true;
 
     if (frame_size % d_G->k() != 0) {
-        GR_LOG_ERROR(d_logger,
-                     boost::format("Frame size (%1% bits) must be a "
-                                   "multiple of the information word "
-                                   "size of the LDPC matrix (%2%).") %
-                         frame_size % (d_G->k()));
+        d_logger->error("Frame size ({:d} bits) must be a "
+                        "multiple of the information word "
+                        "size of the LDPC matrix ({:d}).",
+                        frame_size,
+                        d_G->k());
         throw std::runtime_error("ldpc_gen_mtrx_encoder: cannot use frame size.");
     }
 
