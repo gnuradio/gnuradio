@@ -15,7 +15,6 @@
 #include "ber_bf_impl.h"
 #include <gnuradio/io_signature.h>
 #include <volk/volk.h>
-#include <boost/format.hpp>
 #include <cmath>
 
 namespace gr {
@@ -79,14 +78,15 @@ int ber_bf_impl::general_work(int noutput_items,
 
             if (d_total_errors >= d_berminerrors) {
                 outbuffer[0] = calculate_log_ber();
-                GR_LOG_INFO(d_logger,
-                            boost::format("    %1% over %2% --> %3%") % d_total_errors %
-                                (d_total * 8) % outbuffer[0]);
+                d_logger->info("    {:d} over {:d} --> {:g}",
+                               d_total_errors,
+                               d_total * 8,
+                               outbuffer[0]);
                 return 1;
             }
             // check for total_errors to prevent early shutdown at high SNR simulations
             else if (calculate_log_ber() < d_ber_limit && d_total_errors > 0) {
-                GR_LOG_INFO(d_logger, "    Min. BER limit reached");
+                d_logger->info("    Min. BER limit reached");
                 outbuffer[0] = d_ber_limit;
                 d_total_errors = d_berminerrors + 1;
                 return 1;
