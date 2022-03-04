@@ -71,11 +71,10 @@ ldpc_G_matrix_impl::ldpc_G_matrix_impl(const std::string filename) : fec_mtrx_im
 
     // if(!test_if_equal) {
     if (test_if_not_equal > 0) {
-        GR_LOG_ERROR(d_logger,
-                     "Error in ldpc_G_matrix_impl constructor. It appears "
-                     "that the given alist file did not contain either a "
-                     "valid parity check matrix of the form H = [P' I] or "
-                     "a generator matrix of the form G = [I P].\n");
+        d_logger->error("Error in ldpc_G_matrix_impl constructor. It appears "
+                        "that the given alist file did not contain either a "
+                        "valid parity check matrix of the form H = [P' I] or "
+                        "a generator matrix of the form G = [I P].\n");
         throw std::runtime_error("ldpc_G_matrix: Bad matrix definition");
     }
 
