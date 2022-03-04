@@ -14,7 +14,6 @@
 
 #include "dummy_decoder_impl.h"
 #include <volk/volk.h>
-#include <boost/format.hpp>
 #include <cmath>
 #include <cstdio>
 #include <sstream>
@@ -55,9 +54,9 @@ bool dummy_decoder_impl::set_frame_size(unsigned int frame_size)
 {
     bool ret = true;
     if (frame_size > d_max_frame_size) {
-        GR_LOG_INFO(d_logger,
-                    boost::format("tried to set frame to %1%; max possible is %2%") %
-                        frame_size % d_max_frame_size);
+        d_logger->info("tried to set frame to {:d}; max possible is {:d}",
+                       frame_size,
+                       d_max_frame_size);
         frame_size = d_max_frame_size;
         ret = false;
     }

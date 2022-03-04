@@ -12,7 +12,6 @@
 
 #include "ldpc_bit_flip_decoder_impl.h"
 #include <volk/volk.h>
-#include <boost/format.hpp>
 #include <cmath>
 #include <cstdio>
 #include <sstream>
@@ -53,11 +52,11 @@ int ldpc_bit_flip_decoder_impl::get_input_size() { return d_input_size; }
 bool ldpc_bit_flip_decoder_impl::set_frame_size(unsigned int frame_size)
 {
     if (frame_size % d_mtrx->k() != 0) {
-        GR_LOG_ERROR(d_logger,
-                     boost::format("Frame size (%1% bits) must be a "
-                                   "multiple of the information word "
-                                   "size of the LDPC matrix, %2%") %
-                         frame_size % (d_mtrx->k()));
+        d_logger->error("Frame size ({:d} bits) must be a "
+                        "multiple of the information word "
+                        "size of the LDPC matrix, {:d}",
+                        frame_size,
+                        d_mtrx->k());
         throw std::runtime_error("ldpc_bit_flip_decoder: cannot use frame size.");
     }
 
