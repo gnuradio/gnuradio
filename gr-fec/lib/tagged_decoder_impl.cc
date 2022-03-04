@@ -14,7 +14,6 @@
 
 #include "tagged_decoder_impl.h"
 #include <gnuradio/io_signature.h>
-#include <boost/format.hpp>
 #include <cstdio>
 
 namespace gr {
@@ -66,9 +65,8 @@ int tagged_decoder_impl::work(int noutput_items,
     const unsigned char* in = (unsigned char*)input_items[0];
     unsigned char* out = (unsigned char*)output_items[0];
 
-    GR_LOG_DEBUG(d_debug_logger,
-                 boost::format("%1%, %2%, %3%") % noutput_items % ninput_items[0] %
-                     d_decoder->get_output_size());
+    d_debug_logger->debug(
+        "{:d}, {:d}, {:d}", noutput_items, ninput_items[0], d_decoder->get_output_size());
 
     d_decoder->generic_work((void*)in, (void*)out);
 

@@ -14,7 +14,6 @@
 
 #include "tagged_encoder_impl.h"
 #include <gnuradio/io_signature.h>
-#include <boost/format.hpp>
 #include <cstdio>
 
 namespace gr {
@@ -66,9 +65,10 @@ int tagged_encoder_impl::work(int noutput_items,
     char* inbuffer = (char*)input_items[0];
     char* outbuffer = (char*)output_items[0];
 
-    GR_LOG_DEBUG(d_debug_logger,
-                 boost::format("nout: %1%   nin: %2%   ret: %3%") % noutput_items %
-                     ninput_items[0] % d_encoder->get_output_size());
+    d_debug_logger->debug("nout: {:d}   nin: {:d}   ret: {:d}",
+                          noutput_items,
+                          ninput_items[0],
+                          d_encoder->get_output_size());
 
     d_encoder->generic_work((void*)(inbuffer), (void*)(outbuffer));
 

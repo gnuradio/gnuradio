@@ -10,7 +10,6 @@
 
 #include "ldpc_par_mtrx_encoder_impl.h"
 #include <volk/volk.h>
-#include <boost/format.hpp>
 #include <algorithm> // for std::reverse
 #include <cmath>
 #include <cstdio>
@@ -66,11 +65,11 @@ bool ldpc_par_mtrx_encoder_impl::set_frame_size(unsigned int frame_size)
     bool ret = true;
 
     if (frame_size % d_H->k() != 0) {
-        GR_LOG_ERROR(d_logger,
-                     boost::format("Frame size (%1% bits) must be a "
-                                   "multiple of the information word "
-                                   "size of the LDPC matrix (%2%).") %
-                         frame_size % (d_H->k()));
+        d_logger->error("Frame size ({:d} bits) must be a "
+                        "multiple of the information word "
+                        "size of the LDPC matrix ({:d}).",
+                        frame_size,
+                        d_H->k());
         throw std::runtime_error("ldpc_par_mtrx_encoder: cannot use frame size.");
     }
 

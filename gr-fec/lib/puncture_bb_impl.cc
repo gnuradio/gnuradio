@@ -16,7 +16,6 @@
 #include <gnuradio/io_signature.h>
 #include <pmt/pmt.h>
 #include <volk/volk.h>
-#include <boost/format.hpp>
 #include <cstdio>
 #include <string>
 
@@ -109,21 +108,18 @@ int puncture_bb_impl::general_work(int noutput_items,
     }
 
     /*
-    GR_LOG_DEBUG(d_debug_logger, ">>>>>> start");
-    for(int i = 0, k=0; i < noutput_items; ++i) {
-      if((d_puncpat >> (d_puncsize - 1 - (i % d_puncsize))) & 1) {
-        GR_LOG_DEBUG(d_debug_logger, boost::format("%1%...%2%") \
-                     % out[k++] % in[i]);
-      }
-      else {
-        GR_LOG_DEBUG(d_debug_logger, boost::format("snit %1%") % in[i]);
-      }
+    d_debug_logger->debug(">>>>>> start");
+    for (int i = 0, k = 0; i < noutput_items; ++i) {
+        if ((d_puncpat >> (d_puncsize - 1 - (i % d_puncsize))) & 1) {
+            d_debug_logger->debug("{:d}...{:d}", out[k++], in[i]);
+        } else {
+            d_debug_logger->debug("snit {:d}", in[i]);
+        }
     }
 
-    GR_LOG_DEBUG(d_debug_logger, boost::format("comp: %1%, %2%\n") \
-                 % noutput_items % ninput_items[0]);
-    GR_LOG_DEBUG(d_debug_logger, boost::format("consuming %1%") \
-                 % ((int)(((1.0/relative_rate()) * noutput_items) + .5)));
+    d_debug_logger->debug("comp: {:d}, {:d}\n", noutput_items, ninput_items[0]);
+    d_debug_logger->debug("consuming {:d}",
+                          std::lround((1.0 / relative_rate()) * noutput_items));
     */
 
     consume_each(std::lround((1.0 / relative_rate()) * noutput_items));

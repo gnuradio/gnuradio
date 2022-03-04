@@ -12,7 +12,6 @@
 #include <gnuradio/fec/ldpc_decoder.h>
 #include <gnuradio/fec/maxstar.h>
 #include <volk/volk.h>
-#include <boost/format.hpp>
 #include <algorithm> // for std::reverse
 #include <cmath>
 #include <cstdio>
@@ -58,11 +57,11 @@ double ldpc_decoder::rate() { return d_rate; }
 bool ldpc_decoder::set_frame_size(unsigned int frame_size)
 {
     if (frame_size % d_code.dimension() != 0) {
-        GR_LOG_ERROR(d_logger,
-                     boost::format("Frame size (%1% bits) must be a "
-                                   "multiple of the information word "
-                                   "size of the LDPC matrix, %2%") %
-                         frame_size % (d_code.dimension()));
+        d_logger->error("Frame size ({:d} bits) must be a "
+                        "multiple of the information word "
+                        "size of the LDPC matrix, {:d}",
+                        frame_size,
+                        d_code.dimension());
         throw std::runtime_error("ldpc_decoder: cannot use frame size.");
     }
 
