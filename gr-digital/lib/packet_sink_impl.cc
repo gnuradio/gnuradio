@@ -15,7 +15,6 @@
 #include "packet_sink_impl.h"
 #include <gnuradio/blocks/count_bits.h>
 #include <gnuradio/io_signature.h>
-#include <boost/format.hpp>
 #include <cstring>
 
 namespace gr {
@@ -29,7 +28,7 @@ static const int DEFAULT_THRESHOLD = 12;
 inline void packet_sink_impl::enter_search()
 {
     if (VERBOSE) {
-        GR_LOG_INFO(d_debug_logger, "enter_search");
+        d_debug_logger->info("enter_search");
     }
 
     d_state = STATE_SYNC_SEARCH;
@@ -39,7 +38,7 @@ inline void packet_sink_impl::enter_search()
 inline void packet_sink_impl::enter_have_sync()
 {
     if (VERBOSE) {
-        GR_LOG_INFO(d_debug_logger, "enter_have_sync");
+        d_debug_logger->info("enter_have_sync");
     }
     d_state = STATE_HAVE_SYNC;
     d_header = 0;
@@ -49,8 +48,7 @@ inline void packet_sink_impl::enter_have_sync()
 inline void packet_sink_impl::enter_have_header(int payload_len)
 {
     if (VERBOSE) {
-        GR_LOG_INFO(d_debug_logger,
-                    boost::format("enter_have_header (payload_len = %d)") % payload_len);
+        d_debug_logger->info("enter_have_header (payload_len = {:d})", payload_len);
     }
     d_state = STATE_HAVE_HEADER;
     d_packetlen = payload_len;
@@ -95,7 +93,7 @@ int packet_sink_impl::work(int noutput_items,
     int count = 0;
 
     if (VERBOSE) {
-        GR_LOG_INFO(d_debug_logger, "enter state machine");
+        d_debug_logger->info("enter state machine");
     }
 
     while (count < noutput_items) {
@@ -103,7 +101,7 @@ int packet_sink_impl::work(int noutput_items,
 
         case STATE_SYNC_SEARCH: // Look for sync vector
             if (VERBOSE)
-                GR_LOG_INFO(d_debug_logger, "SYNC Search, noutput=%d");
+                d_debug_logger->info("SYNC Search, noutput={:d}", noutput_items);
 
             while (count < noutput_items) {
                 if (slice(inbuf[count++]))
@@ -123,9 +121,9 @@ int packet_sink_impl::work(int noutput_items,
 
         case STATE_HAVE_SYNC:
             if (VERBOSE)
-                GR_LOG_INFO(d_debug_logger,
-                            boost::format("Header Search bitcnt=%d, header=0x%08x") %
-                                d_headerbitlen_cnt % d_header);
+                d_debug_logger->info("Header Search bitcnt={:d}, header={:#08x}",
+                                     d_headerbitlen_cnt,
+                                     d_header);
 
             while (count < noutput_items) { // Shift bits one at a time into header
                 if (slice(inbuf[count++]))
@@ -135,8 +133,7 @@ int packet_sink_impl::work(int noutput_items,
 
                 if (++d_headerbitlen_cnt == HEADERBITLEN) {
                     if (VERBOSE)
-                        GR_LOG_INFO(d_debug_logger,
-                                    boost::format("got header: 0x%08x") % d_header);
+                        d_debug_logger->info("got header: {:#08x}", d_header);
 
                     // we have a full header, check to see if it has been received
                     // properly
@@ -155,7 +152,7 @@ int packet_sink_impl::work(int noutput_items,
 
         case STATE_HAVE_HEADER:
             if (VERBOSE) {
-                GR_LOG_INFO(d_debug_logger, "Packet Build");
+                d_debug_logger->info("Packet Build");
             }
 
             while (count <

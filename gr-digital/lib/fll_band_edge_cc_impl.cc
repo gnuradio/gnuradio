@@ -16,6 +16,7 @@
 #include <gnuradio/expj.h>
 #include <gnuradio/io_signature.h>
 #include <cstdio>
+#include <iomanip>
 #include <memory>
 #include <sstream>
 
@@ -173,17 +174,18 @@ void fll_band_edge_cc_impl::design_filter(float samps_per_sym,
 void fll_band_edge_cc_impl::print_taps()
 {
     std::stringstream ss;
+    ss << std::setprecision(4) << std::scientific;
     ss << "Upper Band-edge: [";
     for (const auto& tap : d_taps_upper)
-        ss << boost::format(" %.4e + %.4ej,") % tap.real() % tap.imag();
+        ss << " " << tap.real() << " + " << tap.imag() << "j,";
     ss << "]\n\n";
 
     ss << "Lower Band-edge: [";
     for (const auto& tap : d_taps_lower)
-        ss << boost::format(" %.4e + %.4ej,") % tap.real() % tap.imag();
+        ss << " " << tap.real() << " + " << tap.imag() << "j,";
     ss << "]\n";
 
-    GR_LOG_INFO(d_logger, ss.str());
+    d_logger->info(ss.str());
 }
 
 int fll_band_edge_cc_impl::work(int noutput_items,

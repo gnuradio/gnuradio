@@ -13,7 +13,6 @@
 
 #include "packet_headergenerator_bb_impl.h"
 #include <gnuradio/io_signature.h>
-#include <boost/format.hpp>
 
 namespace gr {
 namespace digital {
@@ -71,10 +70,9 @@ int packet_headergenerator_bb_impl::work(int noutput_items,
     std::vector<tag_t> tags;
     get_tags_in_range(tags, 0, nitems_read(0), nitems_read(0) + ninput_items[0]);
     if (!d_formatter->header_formatter(ninput_items[0], out, tags)) {
-        GR_LOG_FATAL(d_logger,
-                     boost::format("header_formatter() returned false (this shouldn't "
-                                   "happen). Offending header started at %1%") %
-                         nitems_read(0));
+        d_logger->fatal("header_formatter() returned false (this shouldn't "
+                        "happen). Offending header started at {:d}",
+                        nitems_read(0));
         throw std::runtime_error("header formatter returned false.");
     }
 

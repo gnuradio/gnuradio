@@ -15,7 +15,6 @@
 #include "protocol_formatter_bb_impl.h"
 #include <gnuradio/io_signature.h>
 #include <volk/volk.h>
-#include <boost/format.hpp>
 #include <cstdio>
 
 namespace gr {
@@ -68,11 +67,10 @@ int protocol_formatter_bb_impl::work(int noutput_items,
     pmt::pmt_t pmt_out;
     pmt::pmt_t info = pmt::PMT_NIL;
     if (!d_format->format(ninput_items[0], in, pmt_out, info)) {
-        GR_LOG_FATAL(d_logger,
-                     boost::format("header format returned false "
-                                   "(this shouldn't happen). Offending "
-                                   "header started at %1%") %
-                         nitems_read(0));
+        d_logger->fatal("header format returned false "
+                        "(this shouldn't happen). Offending "
+                        "header started at {:d}",
+                        nitems_read(0));
         throw std::runtime_error("header format returned false.");
     }
 

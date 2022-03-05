@@ -19,8 +19,6 @@
 #include <gnuradio/io_signature.h>
 #include <gnuradio/math.h>
 
-#include <boost/format.hpp>
-
 #include <stdexcept>
 
 namespace gr {
@@ -71,12 +69,16 @@ void constellation_receiver_cb_impl::phase_error_tracking(float phase_error)
     frequency_limit();
 
 #if VERBOSE_COSTAS
-    GR_LOG_DEBUG(d_debug_logger,
-                 boost::format("cl: phase_error: %f  phase: %f  freq: %f  sample: %f+j%f "
-                               " constellation: %f+j%f") %
-                     phase_error % d_phase % d_freq % sample.real() % sample.imag() %
-                     d_constellation->points()[d_current_const_point].real() %
-                     d_constellation->points()[d_current_const_point].imag());
+    d_debug_logger->debug(
+        "cl: phase_error: {:f}  phase: {:f}  freq: {:f}  sample: {:f}+j{:f} "
+        " constellation: {:f}+j{:f}",
+        phase_error,
+        d_phase,
+        d_freq,
+        sample.real(),
+        sample.imag(),
+        d_constellation->points()[d_current_const_point].real(),
+        d_constellation->points()[d_current_const_point].imag());
 #endif
 }
 
@@ -95,7 +97,7 @@ void constellation_receiver_cb_impl::handle_set_constellation(
             boost::any_cast<constellation_sptr>(constellation_any);
         set_constellation(constellation);
     } else {
-        GR_LOG_ERROR(d_logger, "Received constellation that is not a PMT any; skipping.");
+        d_logger->error("Received constellation that is not a PMT any; skipping.");
     }
 }
 
@@ -105,7 +107,7 @@ void constellation_receiver_cb_impl::handle_rotate_phase(pmt::pmt_t rotation)
         const double phase = pmt::to_double(rotation);
         d_phase += phase;
     } else {
-        GR_LOG_ERROR(d_logger, "Received rotation value that is not real; skipping.");
+        d_logger->error("Received rotation value that is not real; skipping.");
     }
 }
 

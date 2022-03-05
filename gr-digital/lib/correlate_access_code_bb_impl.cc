@@ -40,7 +40,7 @@ correlate_access_code_bb_impl::correlate_access_code_bb_impl(
       d_threshold(threshold)
 {
     if (!set_access_code(access_code)) {
-        GR_LOG_ERROR(d_logger, "access_code is > 64 bits");
+        d_logger->error("access_code is > 64 bits");
         throw std::out_of_range("access_code is > 64 bits");
     }
 }
