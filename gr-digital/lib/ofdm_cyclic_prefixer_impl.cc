@@ -88,8 +88,7 @@ ofdm_cyclic_prefixer_impl::ofdm_cyclic_prefixer_impl(int fft_len,
     // Flank of length 1 would just be rectangular.
     if (d_rolloff_len == 1) {
         d_rolloff_len = 0;
-        GR_LOG_WARN(d_logger,
-                    "Set rolloff to 0, because 1 would result in a boxcar function.");
+        d_logger->warn("Set rolloff to 0, because 1 would result in a boxcar function.");
     }
     if (d_rolloff_len) {
         d_delay_line.resize(d_rolloff_len - 1, 0);

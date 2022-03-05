@@ -15,7 +15,6 @@
 #include "burst_shaper_impl.h"
 #include <gnuradio/io_signature.h>
 #include <volk/volk.h>
-#include <boost/format.hpp>
 #include <algorithm>
 
 namespace gr {
@@ -147,8 +146,7 @@ int burst_shaper_impl<T>::general_work(int noutput_items,
                 nskip = ninput_items[0] - nread;
             }
             if (nskip > 0) {
-                GR_LOG_WARN(this->d_logger,
-                            boost::format("Dropping %1% samples") % nskip);
+                this->d_logger->warn("Dropping {:d} samples", nskip);
                 nread += nskip;
                 in += nskip;
             }

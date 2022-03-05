@@ -13,7 +13,6 @@
 
 #include "header_payload_demux_impl.h"
 #include <gnuradio/io_signature.h>
-#include <boost/format.hpp>
 #include <climits>
 
 namespace gr {
@@ -414,7 +413,7 @@ void header_payload_demux_impl::parse_header_data_msg(pmt::pmt_t header_data)
             if (pmt::equal(pmt::car(this_item), d_payload_offset_key)) {
                 d_curr_payload_offset = pmt::to_long(pmt::cdr(this_item));
                 if (std::abs(d_curr_payload_offset) > d_header_padding_total_items) {
-                    GR_LOG_CRIT(d_logger, "Payload offset exceeds padding");
+                    d_logger->crit("Payload offset exceeds padding");
                     d_state = STATE_HEADER_RX_FAIL;
                     return;
                 }
@@ -422,35 +421,26 @@ void header_payload_demux_impl::parse_header_data_msg(pmt::pmt_t header_data)
             dict_items = pmt::cdr(dict_items);
         }
         if (d_state == STATE_HEADER_RX_FAIL) {
-            GR_LOG_CRIT(d_logger, "no payload length passed from header data");
+            d_logger->crit("no payload length passed from header data");
         }
     } else if (header_data == pmt::PMT_F || pmt::is_null(header_data)) {
-        GR_LOG_INFO(d_logger,
-                    boost::format("Parser returned %1%") %
-                        pmt::write_string(header_data));
+        d_logger->info("Parser returned {:s}", pmt::write_string(header_data));
     } else {
-        GR_LOG_ALERT(d_logger,
-                     boost::format("Received illegal header data (%1%)") %
-                         pmt::write_string(header_data));
+        d_logger->alert("Received illegal header data ({:s})",
+                        pmt::write_string(header_data));
     }
     if (d_state == STATE_HEADER_RX_SUCCESS) {
         if (d_curr_payload_len < 0) {
-            GR_LOG_WARN(
-                d_logger,
-                boost::format(
-                    "Detected a packet larger than max frame size (%1% symbols)") %
-                    d_curr_payload_len);
+            d_logger->warn("Detected a packet larger than max frame size ({:d} symbols)",
+                           d_curr_payload_len);
             d_curr_payload_len = 0;
             d_state = STATE_HEADER_RX_FAIL;
         }
         if ((d_curr_payload_len * (d_output_symbols ? 1 : d_items_per_symbol)) >
             max_output_buffer(1) / 2) {
             d_state = STATE_HEADER_RX_FAIL;
-            GR_LOG_INFO(
-                d_logger,
-                boost::format(
-                    "Detected a packet larger than max frame size (%1% symbols)") %
-                    d_curr_payload_len);
+            d_logger->info("Detected a packet larger than max frame size ({:d} symbols)",
+                           d_curr_payload_len);
         } else {
             set_min_noutput_items(d_curr_payload_len *
                                   (d_output_symbols ? 1 : d_items_per_symbol));
