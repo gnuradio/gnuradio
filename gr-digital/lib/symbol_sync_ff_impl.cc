@@ -15,7 +15,6 @@
 #include "symbol_sync_ff_impl.h"
 #include <gnuradio/io_signature.h>
 #include <gnuradio/math.h>
-#include <boost/format.hpp>
 #include <numeric>
 #include <stdexcept>
 
@@ -113,12 +112,12 @@ symbol_sync_ff_impl::symbol_sync_ff_impl(enum ted_type detector_type,
     d_inst_interp_period = d_inst_clock_period / d_interps_per_symbol;
 
     if (d_interps_per_symbol > sps)
-        GR_LOG_WARN(d_logger,
-                    boost::format("block performing more interpolations per "
-                                  "symbol (%3f) than input samples per symbol "
-                                  "(%3f). Consider reducing osps or "
-                                  "increasing sps") %
-                        d_interps_per_symbol % sps);
+        d_logger->warn("block performing more interpolations per "
+                       "symbol ({:g}) than input samples per symbol "
+                       "({:g}). Consider reducing osps or "
+                       "increasing sps",
+                       d_interps_per_symbol,
+                       sps);
 
     // Timing Error Detector
     d_ted->sync_reset();
@@ -246,11 +245,10 @@ bool symbol_sync_ff_impl::find_sync_tag(uint64_t nitems_rd,
 
         if (!(timing_offset >= -1.0f && timing_offset <= 1.0f)) {
             // the time_est/clock_est tag's payload is invalid
-            GR_LOG_WARN(d_logger,
-                        boost::format("ignoring time_est/clock_est tag with"
-                                      " value %.2f, outside of allowed "
-                                      "range [-1.0, 1.0]") %
-                            timing_offset);
+            d_logger->warn("ignoring time_est/clock_est tag with"
+                           " value {:.2f}, outside of allowed "
+                           "range [-1.0, 1.0]",
+                           timing_offset);
             found = false;
             continue;
         }

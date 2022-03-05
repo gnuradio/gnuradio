@@ -164,10 +164,7 @@ int clock_recovery_mm_cc_impl::general_work(int noutput_items,
             d_mu -= floor(d_mu);
 
             if (d_verbose) {
-                std::stringstream tmp;
-                tmp << std::setprecision(8) << std::fixed << d_omega << "\t" << d_mu
-                    << std::endl;
-                GR_LOG_INFO(d_logger, tmp.str());
+                d_logger->info("{:.8f}\t{:.8f}", d_omega, d_mu);
             }
 
             if (ii < 0) // clamp it.  This should only happen with bogus input

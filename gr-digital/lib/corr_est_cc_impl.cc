@@ -18,7 +18,6 @@
 #include <gnuradio/io_signature.h>
 #include <gnuradio/math.h>
 #include <volk/volk.h>
-#include <boost/format.hpp>
 
 namespace gr {
 namespace digital {
@@ -136,11 +135,11 @@ void corr_est_cc_impl::_set_mark_delay(unsigned int mark_delay)
 
     if (mark_delay >= d_symbols.size()) {
         d_mark_delay = d_symbols.size() - 1;
-        GR_LOG_WARN(d_logger,
-                    boost::format("set_mark_delay: asked for %1% but due "
-                                  "to the symbol size constraints, "
-                                  "mark delay set to %2%.") %
-                        mark_delay % d_mark_delay);
+        d_logger->warn("set_mark_delay: asked for {:d} but due "
+                       "to the symbol size constraints, "
+                       "mark delay set to {:d}.",
+                       mark_delay,
+                       d_mark_delay);
     } else {
         d_mark_delay = mark_delay;
     }
