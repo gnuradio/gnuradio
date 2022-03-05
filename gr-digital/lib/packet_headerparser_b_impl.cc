@@ -13,7 +13,6 @@
 
 #include "packet_headerparser_b_impl.h"
 #include <gnuradio/io_signature.h>
-#include <boost/format.hpp>
 
 namespace gr {
 namespace digital {
@@ -61,9 +60,7 @@ int packet_headerparser_b_impl::work(int noutput_items,
         tags, 0, nitems_read(0), nitems_read(0) + d_header_formatter->header_len());
 
     if (!d_header_formatter->header_parser(in, tags)) {
-        GR_LOG_INFO(d_logger,
-                    boost::format("Detected an invalid packet at item %1%") %
-                        nitems_read(0));
+        d_logger->info("Detected an invalid packet at item {:d}", nitems_read(0));
         message_port_pub(d_port, pmt::PMT_F);
     } else {
         pmt::pmt_t dict(pmt::make_dict());

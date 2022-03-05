@@ -16,7 +16,6 @@
 #include <gnuradio/filter/firdes.h>
 #include <gnuradio/io_signature.h>
 #include <gnuradio/math.h>
-#include <boost/format.hpp>
 
 namespace gr {
 namespace digital {
@@ -129,10 +128,9 @@ int msk_timing_recovery_cc_impl::general_work(int noutput_items,
                     goto out;
                 }
                 if (std::abs(center) >= 1.0f) {
-                    GR_LOG_WARN(d_logger,
-                                boost::format("work: ignoring time_est tag "
-                                              "(%.2f) outside of (-1, 1)") %
-                                    center);
+                    d_logger->warn("work: ignoring time_est tag "
+                                   "({:.2f}) outside of (-1, 1)",
+                                   center);
                     tags.erase(tags.begin());
                     goto out;
                 }
