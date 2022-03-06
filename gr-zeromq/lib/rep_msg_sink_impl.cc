@@ -94,7 +94,7 @@ void rep_msg_sink_impl::readloop()
 #endif
                 if (!ok) {
                     // Should not happen, we've checked POLLIN.
-                    GR_LOG_ERROR(d_logger, "Failed to receive message.");
+                    d_logger->error("Failed to receive message.");
                     break; // Fall back to re-check d_finished
                 }
 
