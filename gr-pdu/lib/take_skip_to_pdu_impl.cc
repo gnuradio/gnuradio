@@ -41,7 +41,7 @@ take_skip_to_pdu_impl<T>::take_skip_to_pdu_impl(uint32_t take, uint32_t skip)
       d_prev_byte(0)
 {
     if (d_take == 0) {
-        GR_LOG_FATAL(this->d_logger, "TAKE value too small, must be > 0");
+        this->d_logger->fatal("TAKE value too small, must be > 0");
         throw std::invalid_argument("TAKE value out of bounds");
     }
 
@@ -49,7 +49,7 @@ take_skip_to_pdu_impl<T>::take_skip_to_pdu_impl(uint32_t take, uint32_t skip)
     d_meta_dict = pmt::make_dict();
     this->message_port_register_out(msgport_names::pdus());
 
-    GR_LOG_INFO(this->d_logger, "Starting Take Skip PDU Generator!");
+    this->d_logger->info("Starting Take Skip PDU Generator!");
 }
 
 
@@ -64,7 +64,7 @@ take_skip_to_pdu_impl<T>::~take_skip_to_pdu_impl()
 template <class T>
 bool take_skip_to_pdu_impl<T>::stop()
 {
-    GR_LOG_NOTICE(this->d_logger, boost::format("Generated %d PDUs") % d_burst_counter);
+    this->d_logger->notice("Generated {:d} PDUs", d_burst_counter);
     return true;
 }
 
