@@ -49,13 +49,10 @@ public:
                 d_f();
             } catch (boost::thread_interrupted const&) {
             } catch (std::exception const& e) {
-                std::ostringstream msg;
-                msg << "ERROR thread[" << d_name << "]: " << e.what();
-                GR_LOG_ERROR(d_logger, msg.str());
+                d_logger->error("ERROR thread[{:s}]: {:s}", d_name, e.what());
             } catch (...) {
-                std::ostringstream msg;
-                msg << "ERROR thread[" << d_name << "]: caught unrecognized exception";
-                GR_LOG_ERROR(d_logger, msg.str());
+                d_logger->error("ERROR thread[{:s}]: caught unrecognized exception",
+                                d_name);
             }
 
         } else {
