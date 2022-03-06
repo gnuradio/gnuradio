@@ -17,7 +17,6 @@
 #include "alsa_sink.h"
 #include <gnuradio/io_signature.h>
 #include <gnuradio/prefs.h>
-#include <boost/format.hpp>
 #include <cstdio>
 #include <future>
 #include <stdexcept>
@@ -88,9 +87,7 @@ alsa_sink::alsa_sink(int sampling_rate, const std::string device_name, bool ok_t
     if (ok_to_block == false)
         snd_pcm_nonblock(d_pcm_handle.get(), 1);
     if (error < 0) {
-        GR_LOG_ERROR(d_logger,
-                     boost::format("[%1%]: %2%") % (d_device_name) %
-                         (snd_strerror(error)));
+        d_logger->error("[{:s}]: {:s}", d_device_name, snd_strerror(error));
         throw std::runtime_error("audio_alsa_sink");
     }
 
@@ -150,11 +147,11 @@ alsa_sink::alsa_sink(int sampling_rate, const std::string device_name, bool ok_t
         bail("failed to set rate near", error);
 
     if (orig_sampling_rate != d_sampling_rate) {
-        GR_LOG_INFO(d_logger,
-                    boost::format("[%1%]: unable to support sampling rate %2%\n\tCard "
-                                  "requested %3% instead.") %
-                        snd_pcm_name(d_pcm_handle.get()) % orig_sampling_rate %
-                        d_sampling_rate);
+        d_logger->info("[{:s}]: unable to support sampling rate {:d}\n\tCard "
+                       "requested {:d} instead.",
+                       snd_pcm_name(d_pcm_handle.get()),
+                       orig_sampling_rate,
+                       d_sampling_rate);
     }
 
     /*
@@ -249,10 +246,9 @@ bool alsa_sink::check_topology(int ninputs, int noutputs)
     d_buffer.resize(d_period_size * nchan * snd_pcm_format_size(d_format, 1));
 
     if (CHATTY_DEBUG) {
-        GR_LOG_DEBUG(d_debug_logger,
-                     boost::format("[%1%]: sample resolution = %2% bits") %
-                         snd_pcm_name(d_pcm_handle.get()) %
-                         snd_pcm_hw_params_get_sbits(d_hw_params.get()));
+        d_debug_logger->debug("[{:s}]: sample resolution = {:d} bits",
+                              snd_pcm_name(d_pcm_handle.get()),
+                              snd_pcm_hw_params_get_sbits(d_hw_params.get()));
     }
 
     switch (d_format) {
@@ -493,9 +489,8 @@ bool alsa_sink::write_buffer(const void* vbuffer, unsigned nframes, unsigned siz
 
 void alsa_sink::output_error_msg(const char* msg, int err)
 {
-    GR_LOG_ERROR(d_logger,
-                 boost::format("[%1%]: %2%: %3%") % snd_pcm_name(d_pcm_handle.get()) %
-                     msg % snd_strerror(err));
+    d_logger->error(
+        "[{:s}]: {:s}: {:s}", snd_pcm_name(d_pcm_handle.get()), msg, snd_strerror(err));
 }
 
 void alsa_sink::bail(const char* msg, int err)
