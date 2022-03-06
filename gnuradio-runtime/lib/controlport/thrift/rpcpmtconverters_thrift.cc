@@ -112,9 +112,7 @@ GNURadio::Knob rpcpmtconverter::from_pmt(const pmt::pmt_t& knob)
         // FIXME: Don't get loggers every time we need to log something.
         gr::logger_ptr logger, debug_logger;
         gr::configure_default_loggers(logger, debug_logger, "rpcpmtconverter");
-        std::ostringstream msg;
-        msg << "ERROR Don't know how to handle Knob Type (from): " << knob;
-        GR_LOG_ERROR(logger, msg.str());
+        logger->error("ERROR Don't know how to handle Knob Type (from): {}", knob);
         assert(0);
     }
     return GNURadio::Knob();
@@ -257,9 +255,7 @@ pmt::pmt_t rpcpmtconverter::to_pmt_f::operator()(const GNURadio::Knob& knob)
     // FIXME: Don't get loggers every time we need to log something.
     gr::logger_ptr logger, debug_logger;
     gr::configure_default_loggers(logger, debug_logger, "rpcpmtconverter");
-    std::ostringstream msg;
-    msg << "ERROR Don't know how to handle Knob Type (from): " << knob.type;
-    GR_LOG_ERROR(debug_logger, msg.str());
+    debug_logger->error("ERROR Don't know how to handle Knob Type (from): {}", knob.type);
     assert(0);
     return pmt::pmt_t();
 }
