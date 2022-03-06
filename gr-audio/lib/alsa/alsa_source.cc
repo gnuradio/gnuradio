@@ -17,7 +17,6 @@
 #include "alsa_source.h"
 #include <gnuradio/io_signature.h>
 #include <gnuradio/prefs.h>
-#include <boost/format.hpp>
 #include <cstdio>
 #include <stdexcept>
 
@@ -80,9 +79,7 @@ alsa_source::alsa_source(int sampling_rate,
     error = snd_pcm_open(&t, d_device_name.c_str(), SND_PCM_STREAM_CAPTURE, 0);
     d_pcm_handle.set(t);
     if (error < 0) {
-        GR_LOG_ERROR(d_logger,
-                     boost::format("[%1%]: %2%") % (d_device_name) %
-                         (snd_strerror(error)));
+        d_logger->error("[{:s}]: {:s}", d_device_name, snd_strerror(error));
         throw std::runtime_error("audio_alsa_source");
     }
 
@@ -144,11 +141,11 @@ alsa_source::alsa_source(int sampling_rate,
         bail("failed to set rate near", error);
 
     if (orig_sampling_rate != d_sampling_rate) {
-        GR_LOG_INFO(d_logger,
-                    boost::format("[%1%]: unable to support sampling rate %2%\n\tCard "
-                                  "requested %3% instead.") %
-                        snd_pcm_name(d_pcm_handle.get()) % orig_sampling_rate %
-                        d_sampling_rate);
+        d_logger->info("[{:s}]: unable to support sampling rate {:d}\n\tCard "
+                       "requested {:d} instead.",
+                       snd_pcm_name(d_pcm_handle.get()),
+                       orig_sampling_rate,
+                       d_sampling_rate);
     }
 
     /*
@@ -228,10 +225,9 @@ bool alsa_source::check_topology(int ninputs, int noutputs)
     d_buffer.resize(d_period_size * d_hw_nchan * snd_pcm_format_size(d_format, 1));
 
     if (CHATTY_DEBUG) {
-        GR_LOG_DEBUG(d_logger,
-                     boost::format("[%1%]: sample resolution = %2% bits") %
-                         snd_pcm_name(d_pcm_handle.get()) %
-                         snd_pcm_hw_params_get_sbits(d_hw_params.get()));
+        d_logger->debug("[{:s}]: sample resolution = {:d} bits",
+                        snd_pcm_name(d_pcm_handle.get()),
+                        snd_pcm_hw_params_get_sbits(d_hw_params.get()));
     }
 
     switch (d_format) {
@@ -457,9 +453,8 @@ bool alsa_source::read_buffer(void* vbuffer, unsigned nframes, unsigned sizeof_f
 
 void alsa_source::output_error_msg(const char* msg, int err)
 {
-    GR_LOG_ERROR(d_logger,
-                 boost::format("[%1%]: %2%: %3%") % snd_pcm_name(d_pcm_handle.get()) %
-                     msg % snd_strerror(err));
+    d_logger->error(
+        "[{:s}]: {:s}: {:s}", snd_pcm_name(d_pcm_handle.get()), msg, snd_strerror(err));
 }
 
 void alsa_source::bail(const char* msg, int err)
