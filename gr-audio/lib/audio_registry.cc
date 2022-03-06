@@ -10,7 +10,6 @@
 #include "audio_registry.h"
 #include <gnuradio/logger.h>
 #include <gnuradio/prefs.h>
-#include <boost/format.hpp>
 #include <stdexcept>
 #include <vector>
 
@@ -135,10 +134,9 @@ static void do_arch_warning(const std::string& arch)
 
     gr::logger_ptr logger, debug_logger;
     gr::configure_default_loggers(logger, debug_logger, "audio_registry");
-    std::ostringstream msg;
-    msg << "Could not find audio architecture \"" << arch << "\" in registry.";
-    msg << " Defaulting to the first available architecture.";
-    GR_LOG_ERROR(logger, msg.str());
+    logger->error("Could not find audio architecture \"{:s}\" in registry."
+                  " Defaulting to the first available architecture.",
+                  arch);
 }
 
 source::sptr
@@ -162,7 +160,7 @@ source::make(int sampling_rate, const std::string device_name, bool ok_to_block)
         return e.source(sampling_rate, device_name, ok_to_block);
     }
 
-    GR_LOG_INFO(debug_logger, boost::format("Audio source arch: %1%") % (entry.arch));
+    debug_logger->info("Audio source arch: {:s}", entry.arch);
     return entry.source(sampling_rate, device_name, ok_to_block);
 }
 
@@ -187,7 +185,7 @@ sink::sptr sink::make(int sampling_rate, const std::string device_name, bool ok_
     }
 
     do_arch_warning(arch);
-    GR_LOG_INFO(debug_logger, boost::format("Audio sink arch: %1%") % (entry.arch));
+    debug_logger->info("Audio sink arch: {:s}", entry.arch);
     return entry.sink(sampling_rate, device_name, ok_to_block);
 }
 

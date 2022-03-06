@@ -22,7 +22,6 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
-#include <boost/format.hpp>
 #include <cctype>
 #include <sstream>
 #include <stdexcept>
@@ -90,15 +89,14 @@ windows_sink::windows_sink(int sampling_freq,
 
     d_wave_write_event = CreateEvent(NULL, FALSE, FALSE, NULL);
     if (!d_wave_write_event) {
-        GR_LOG_ERROR(d_logger, "CreateEvent() failed");
+        d_logger->error("CreateEvent() failed");
         throw std::runtime_error("CreateEvent() failed");
     }
     if (open_waveout_device() < 0) {
-        GR_LOG_ERROR(d_logger,
-                     boost::format("open_waveout_device() failed: %s") % strerror(errno));
+        d_logger->error("open_waveout_device() failed: {:s}", strerror(errno));
         throw std::runtime_error("audio_windows_sink:open_waveout_device() failed");
     } else {
-        GR_LOG_INFO(d_debug_logger, "Opened windows waveout device");
+        d_debug_logger->info("Opened windows waveout device");
     }
     d_buffers = new LPWAVEHDR[nPeriods];
     for (int i = 0; i < nPeriods; i++) {
@@ -108,11 +106,11 @@ windows_sink::windows_sink(int sampling_freq,
         d_buffers[i]->dwBufferLength = d_buffer_size;
         d_buffers[i]->lpData = new CHAR[d_buffer_size];
     }
-    GR_LOG_INFO(
-        d_debug_logger,
-        boost::format(
-            "Initialized %1% %2% ms audio buffers, total memory used: %3$0.2f kB") %
-            (nPeriods) % (CHUNK_TIME * 1000) % ((d_buffer_size * nPeriods) / 1024.0));
+    d_debug_logger->info(
+        "Initialized {:d} {:g} ms audio buffers, total memory used: {:0.2f} kB",
+        nPeriods,
+        CHUNK_TIME * 1000,
+        (d_buffer_size * nPeriods) / 1024.0);
 }
 
 windows_sink::~windows_sink()
@@ -183,13 +181,9 @@ int windows_sink::work(int noutput_items,
                 // let's just fail and give some debugging information about the status of
                 // the buffers.
                 for (int i = 0; i < nPeriods; i++) {
-                    GR_LOG_ERROR(d_logger,
-                                 boost::format("audio buffer %d: %d") % i %
-                                     d_buffers[i]->dwFlags);
+                    d_logger->error("audio buffer {:d}: {:d}", i, d_buffers[i]->dwFlags);
                 }
-                GR_LOG_ERROR(d_logger,
-                             boost::format("no audio buffers available: %s") %
-                                 strerror(errno));
+                d_logger->error("no audio buffers available: {:s}", strerror(errno));
                 return -1;
             }
         }
@@ -218,7 +212,7 @@ int windows_sink::work(int noutput_items,
             break;
         }
         if (write_waveout(chosen_header) < 0) {
-            GR_LOG_ERROR(d_logger, boost::format("write failed: %s") % strerror(errno));
+            d_logger->error("write failed: {:s}", strerror(errno));
         }
         samples_sent += samples_tosend;
     }
@@ -262,10 +256,9 @@ UINT windows_sink::find_device(std::string szDeviceName)
             if (num < num_devices) {
                 result = num;
             } else {
-                GR_LOG_WARN(d_logger,
-                            boost::format("waveOut deviceID %d was not found. "
-                                          "defaulting to WAVE_MAPPER") %
-                                num);
+                d_logger->warn("waveOut deviceID {:d} was not found. "
+                               "defaulting to WAVE_MAPPER",
+                               num);
                 result = WAVE_MAPPER;
             }
 
@@ -274,32 +267,28 @@ UINT windows_sink::find_device(std::string szDeviceName)
             for (UINT i = 0; i < num_devices; i++) {
                 WAVEOUTCAPS woc;
                 if (waveOutGetDevCaps(i, &woc, sizeof(woc)) != MMSYSERR_NOERROR) {
-                    GR_LOG_ERROR(d_logger,
-                                 boost::format("Could not retrieve wave out device "
-                                               "capabilities for %s device") %
-                                     strerror(errno));
+                    d_logger->error("Could not retrieve wave out device "
+                                    "capabilities for {:s} device",
+                                    strerror(errno));
                     return -1;
                 }
                 if (woc.szPname == szDeviceName) {
                     result = i;
                 }
                 if (verbose) {
-                    GR_LOG_INFO(d_debug_logger,
-                                boost::format("WaveOut Device %d: %s") % i % woc.szPname);
+                    d_debug_logger->info("WaveOut Device {:d}: {:s}", i, woc.szPname);
                 }
             }
             if (result == -1) {
-                GR_LOG_WARN(d_logger,
-                            boost::format("waveOut device '%s' was not found, "
-                                          "defaulting to WAVE_MAPPER") %
-                                szDeviceName);
+                d_logger->warn("waveOut device '{:s}' was not found, "
+                               "defaulting to WAVE_MAPPER",
+                               szDeviceName);
                 result = WAVE_MAPPER;
             }
         }
     } else {
-        GR_LOG_ERROR(d_logger,
-                     boost::format("No WaveOut devices present or accessible: %s") %
-                         strerror(errno));
+        d_logger->error("No WaveOut devices present or accessible: {:s}",
+                        strerror(errno));
     }
     return result;
 }
@@ -325,19 +314,16 @@ int windows_sink::open_waveout_device(void)
         // and stick with WAVE_MAPPER
         u_device_id = find_device(d_device_name);
     if (verbose)
-        GR_LOG_INFO(d_debug_logger,
-                    boost::format("waveOut Device ID: %1%") % (u_device_id));
+        d_debug_logger->info("waveOut Device ID: {:d}", u_device_id);
 
     // Check if the sampling rate/bits/channels are good to go with the device.
     MMRESULT supported = is_format_supported(&wave_format, u_device_id);
     if (supported != MMSYSERR_NOERROR) {
         char err_msg[50];
         waveOutGetErrorText(supported, err_msg, 50);
-        GR_LOG_INFO(d_debug_logger, boost::format("format error: %s") % err_msg);
-        GR_LOG_ERROR(
-            d_logger,
-            boost::format("Requested audio format is not supported by device %s driver") %
-                strerror(errno));
+        d_debug_logger->info("format error: {:s}", err_msg);
+        d_logger->error("Requested audio format is not supported by device {:s} driver",
+                        strerror(errno));
         return -1;
     }
 
@@ -350,9 +336,7 @@ int windows_sink::open_waveout_device(void)
                          CALLBACK_EVENT | WAVE_ALLOWSYNC);
 
     if (result) {
-        GR_LOG_ERROR(d_logger,
-                     boost::format("Failed to open waveform output device. %s") %
-                         strerror(errno));
+        d_logger->error("Failed to open waveform output device. {:s}", strerror(errno));
         return -1;
     }
 
@@ -370,34 +354,29 @@ int windows_sink::write_waveout(LPWAVEHDR lp_wave_hdr)
 
     w_result = waveOutPrepareHeader(d_h_waveout, lp_wave_hdr, sizeof(WAVEHDR));
     if (w_result != 0) {
-        GR_LOG_ERROR(d_logger,
-                     boost::format("Failed to waveOutPrepareHeader %s") %
-                         strerror(errno));
+        d_logger->error("Failed to waveOutPrepareHeader {:s}", strerror(errno));
         return -1;
     }
 
     w_result = waveOutWrite(d_h_waveout, lp_wave_hdr, sizeof(WAVEHDR));
     if (w_result != 0) {
-        GR_LOG_ERROR(d_logger,
-                     boost::format("Failed to write block to device %s") %
-                         strerror(errno));
+        d_logger->error("Failed to write block to device {:s}", strerror(errno));
         switch (w_result) {
         case MMSYSERR_INVALHANDLE:
-            GR_LOG_ERROR(d_logger, "Specified device handle is invalid");
+            d_logger->error("Specified device handle is invalid");
             break;
         case MMSYSERR_NODRIVER:
-            GR_LOG_ERROR(d_logger, "No device driver is present");
+            d_logger->error("No device driver is present");
             break;
         case MMSYSERR_NOMEM:
-            GR_LOG_ERROR(d_logger, "Unable to allocate or lock memory");
+            d_logger->error("Unable to allocate or lock memory");
             break;
         case WAVERR_UNPREPARED:
-            GR_LOG_ERROR(d_logger,
-                         "The data block pointed to by the pwh parameter hasn't "
-                         "been prepared.");
+            d_logger->error("The data block pointed to by the pwh parameter hasn't "
+                            "been prepared.");
             break;
         default:
-            GR_LOG_ERROR(d_logger, boost::format("Unknown error %i") % w_result);
+            d_logger->error("Unknown error {:d}", w_result);
         }
         waveOutUnprepareHeader(d_h_waveout, lp_wave_hdr, sizeof(WAVEHDR));
         return -1;
