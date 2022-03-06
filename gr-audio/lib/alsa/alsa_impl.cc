@@ -17,7 +17,6 @@
 
 #include "alsa_impl.h"
 
-#include <boost/format.hpp>
 #include <algorithm>
 
 static snd_pcm_access_t access_types[] = { SND_PCM_ACCESS_MMAP_INTERLEAVED,
@@ -152,22 +151,22 @@ bool gri_alsa_pick_acceptable_format(snd_pcm_t* pcm,
         if (snd_pcm_hw_params_test_format(pcm, hwparams, acceptable_formats[i]) == 0) {
             err = snd_pcm_hw_params_set_format(pcm, hwparams, acceptable_formats[i]);
             if (err < 0) {
-                GR_LOG_ERROR(logger,
-                             boost::format("%s[%s]: failed to set format: %s") %
-                                 error_msg_tag % snd_pcm_name(pcm) % snd_strerror(err));
+                logger->error("{:s}[{:s}]: failed to set format: {:s}",
+                              error_msg_tag,
+                              snd_pcm_name(pcm),
+                              snd_strerror(err));
                 return false;
             }
-            GR_LOG_INFO(debug_logger,
-                        boost::format("%s[%s]: using %s") % error_msg_tag %
-                            snd_pcm_name(pcm) %
-                            snd_pcm_format_name(acceptable_formats[i]));
+            debug_logger->info("{:s}[{:s}]: using {:s}",
+                               error_msg_tag,
+                               snd_pcm_name(pcm),
+                               snd_pcm_format_name(acceptable_formats[i]));
             *selected_format = acceptable_formats[i];
             return true;
         }
     }
 
-    GR_LOG_ERROR(logger,
-                 boost::format("%s[%s]: failed to find acceptable format") %
-                     error_msg_tag % snd_pcm_name(pcm));
+    logger->error(
+        "{:s}[{:s}]: failed to find acceptable format", error_msg_tag, snd_pcm_name(pcm));
     return false;
 }
