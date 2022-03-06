@@ -155,9 +155,7 @@ void find_audio_devices(const std::string& device_name,
         gr::logger_ptr logger, debug_logger;
         gr::configure_default_loggers(
             logger, debug_logger, "osx_impl::find_audio_devices");
-        std::ostringstream msg;
-        msg << "Unable to retrieve number of audio objects: " << err;
-        GR_LOG_ERROR(logger, msg.str());
+        logger->error("Unable to retrieve number of audio objects: {}", err);
 #endif
         return;
     }
@@ -177,9 +175,7 @@ void find_audio_devices(const std::string& device_name,
                                           &prop_size,
                                           all_dev_ids.get())) != noErr) {
 #if _OSX_AU_DEBUG_
-        std::ostringstream msg;
-        msg << "Unable to retrieve audio object ids: " << err;
-        GR_LOG_ERROR(logger, msg.str());
+        logger->error("Unable to retrieve audio object ids: {}", err);
 #endif
         return;
     }
@@ -233,9 +229,7 @@ void find_audio_devices(const std::string& device_name,
         if ((err = AudioObjectGetPropertyData(
                  t_id, &ao_address, 0, NULL, &prop_size, (void*)c_name_buf)) != noErr) {
 #if _OSX_AU_DEBUG_
-            std::ostringstream msg;
-            msg << "Unable to retrieve audio device name #" << (nn + 1) << ": " << err;
-            GR_LOG_ERROR(logger, msg.str());
+            logger->error("Unable to retrieve audio device name #{:d}: {}", nn + 1, err);
 #endif
             continue;
         }
