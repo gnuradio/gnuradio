@@ -18,7 +18,6 @@
 #include <gnuradio/io_signature.h>
 #include <gnuradio/prefs.h>
 #include <type_traits>
-#include <boost/format.hpp>
 #include <cstdio>
 #include <stdexcept>
 
@@ -108,8 +107,7 @@ jack_source::jack_source(int sampling_rate,
     const char* server_name = NULL;
     if ((d_jack_client = jack_client_open(
              d_device_name.c_str(), options, &status, server_name)) == NULL) {
-        GR_LOG_ERROR(d_logger,
-                     boost::format("[%1%]: jack server not running?") % d_device_name);
+        d_logger->error("[{:s}]: jack server not running?", d_device_name);
         throw std::runtime_error("audio_jack_source");
     }
 
@@ -133,10 +131,11 @@ jack_source::jack_source(int sampling_rate,
     jack_nframes_t sample_rate = jack_get_sample_rate(d_jack_client);
 
     if ((jack_nframes_t)sampling_rate != sample_rate) {
-        GR_LOG_INFO(d_logger,
-                    boost::format("[%1%]: unable to support sampling rate %2%\n\tCard "
-                                  "requested %3% instead.") %
-                        d_device_name % sampling_rate % d_sampling_rate);
+        d_logger->info("[{:s}]: unable to support sampling rate {:d}\n\tCard "
+                       "requested {:d} instead.",
+                       d_device_name,
+                       sampling_rate,
+                       d_sampling_rate);
     }
 }
 
@@ -234,7 +233,7 @@ int jack_source::work(int noutput_items,
 
 void jack_source::output_error_msg(const char* msg, int err)
 {
-    GR_LOG_ERROR(d_logger, boost::format("[%1%]: %2%: %3%") % d_device_name % msg % err);
+    d_logger->error("[{:s}]: {:s}: {:d}", d_device_name, msg, err);
 }
 
 void jack_source::bail(const char* msg, int err)
