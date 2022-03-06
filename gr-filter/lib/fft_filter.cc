@@ -77,10 +77,10 @@ void fft_filter_fff::compute_sizes(int ntaps)
     d_nsamples = d_fftsize - d_ntaps + 1;
 
     if (VERBOSE) {
-        std::ostringstream msg;
-        msg << "fft_filter_fff: ntaps = " << d_ntaps << " fftsize = " << d_fftsize
-            << " nsamples = " << d_nsamples;
-        GR_LOG_ALERT(d_logger, msg.str());
+        d_logger->alert("fft_filter_fff: ntaps = {:d} fftsize = {:d} nsamples = {:d}",
+                        d_ntaps,
+                        d_fftsize,
+                        d_nsamples);
     }
 
     // compute new plans
@@ -208,10 +208,10 @@ void fft_filter_ccc::compute_sizes(int ntaps)
     d_nsamples = d_fftsize - d_ntaps + 1;
 
     if (VERBOSE) {
-        std::ostringstream msg;
-        msg << "fft_filter_ccc: ntaps = " << d_ntaps << " fftsize = " << d_fftsize
-            << " nsamples = " << d_nsamples;
-        GR_LOG_ALERT(d_logger, msg.str());
+        d_logger->alert("fft_filter_ccc: ntaps = {:d} fftsize = {:d} nsamples = {:d}",
+                        d_ntaps,
+                        d_fftsize,
+                        d_nsamples);
     }
 
     // compute new plans
@@ -340,10 +340,10 @@ void fft_filter_ccf::compute_sizes(int ntaps)
     d_nsamples = d_fftsize - d_ntaps + 1;
 
     if (VERBOSE) {
-        std::ostringstream msg;
-        msg << "fft_filter_ccf: ntaps = " << d_ntaps << " fftsize = " << d_fftsize
-            << " nsamples = " << d_nsamples;
-        GR_LOG_ALERT(d_logger, msg.str());
+        d_logger->alert("fft_filter_ccf: ntaps = {:d} fftsize = {:d} nsamples = {:d}",
+                        d_ntaps,
+                        d_fftsize,
+                        d_nsamples);
     }
 
     // compute new plans

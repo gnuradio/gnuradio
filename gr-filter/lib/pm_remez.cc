@@ -765,7 +765,7 @@ static int remez(double h[],
 
 static void punt(gr::logger_ptr logger, const std::string msg)
 {
-    GR_LOG_ERROR(logger, msg);
+    logger->error(msg);
     throw std::runtime_error(msg);
 }
 

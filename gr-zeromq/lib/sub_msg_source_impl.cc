@@ -90,7 +90,7 @@ void sub_msg_source_impl::readloop()
 #endif
             if (!ok) {
                 // Should not happen, we've checked POLLIN.
-                GR_LOG_ERROR(d_logger, "Failed to receive message.");
+                d_logger->error("Failed to receive message.");
                 std::this_thread::sleep_for(100us);
                 continue;
             }
@@ -101,7 +101,7 @@ void sub_msg_source_impl::readloop()
                 pmt::pmt_t m = pmt::deserialize(sb);
                 message_port_pub(d_port, m);
             } catch (pmt::exception& e) {
-                GR_LOG_ERROR(d_logger, std::string("Invalid PMT message: ") + e.what());
+                d_logger->error("Invalid PMT message: {:s}", e.what());
             }
         } else {
             std::this_thread::sleep_for(100us);

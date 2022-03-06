@@ -63,10 +63,8 @@ sink_uc_impl::sink_uc_impl(
 
     atexit(SDL_Quit); // check if this is the way to do this
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-        std::ostringstream msg;
-        msg << "Couldn't initialize SDL:" << SDL_GetError()
-            << "; SDL_Init(SDL_INIT_VIDEO) failed";
-        GR_LOG_ERROR(d_logger, msg.str());
+        d_logger->error("Couldn't initialize SDL: {:s}; SDL_Init(SDL_INIT_VIDEO) failed",
+                        SDL_GetError());
         throw std::runtime_error("video_sdl::sink_uc");
     }
 
@@ -79,10 +77,8 @@ sink_uc_impl::sink_uc_impl(
             SDL_ANYFORMAT); // SDL_DOUBLEBUF |SDL_SWSURFACE| SDL_HWSURFACE||SDL_FULLSCREEN
 
     if (d_screen == NULL) {
-        std::ostringstream msg;
-        msg << "Unable to set SDL video mode: " << SDL_GetError()
-            << "; SDL_SetVideoMode() Failed";
-        GR_LOG_ERROR(d_logger, msg.str());
+        d_logger->error("Unable to set SDL video mode: {:s}; SDL_SetVideoMode() Failed",
+                        SDL_GetError());
         exit(1);
     }
 
@@ -93,9 +89,7 @@ sink_uc_impl::sink_uc_impl(
     /* Initialize and create the YUV Overlay used for video out */
     if (!(d_image =
               SDL_CreateYUVOverlay(d_width, d_height, SDL_IYUV_OVERLAY, d_screen))) {
-        std::ostringstream msg;
-        msg << "SDL: Couldn't create a YUV overlay: " << SDL_GetError();
-        GR_LOG_ERROR(d_logger, msg.str());
+        d_logger->error("Couldn't create a YUV overlay: {:s}", SDL_GetError());
         throw std::runtime_error("video_sdl::sink_uc");
     }
 
@@ -116,9 +110,7 @@ sink_uc_impl::sink_uc_impl(
     // clear the surface to grey
 
     if (SDL_LockYUVOverlay(d_image)) {
-        std::ostringstream msg;
-        msg << "SDL: Couldn't lock a YUV overlay: " << SDL_GetError();
-        GR_LOG_ERROR(d_logger, msg.str());
+        d_logger->error("Couldn't lock a YUV overlay: {:s}", SDL_GetError());
         throw std::runtime_error("video_sdl::sink_uc");
     }
 
@@ -285,11 +277,10 @@ int sink_uc_impl::work(int noutput_items,
         }
         break;
     default: // 0 or more then 3 channels
-        std::ostringstream msg;
-        msg << "Wrong number of channels: 1, 2 or 3 channels are supported. Requested "
-               "number of channels is "
-            << input_items.size();
-        GR_LOG_ERROR(d_logger, msg.str());
+        d_logger->error(
+            "Wrong number of channels: 1, 2 or 3 channels are supported. Requested "
+            "number of channels is {:d}",
+            input_items.size());
         throw std::runtime_error("video_sdl::sink_uc");
     }
 

@@ -83,9 +83,7 @@ std::vector<gr_complex> ctrlport_probe_psd_impl::get()
 void ctrlport_probe_psd_impl::set_length(int len)
 {
     if (len > 8191) {
-        std::ostringstream msg;
-        msg << "length " << len << " exceeds maximum buffer size of 8191";
-        GR_LOG_ERROR(d_logger, msg.str());
+        d_logger->error("length {:d} exceeds maximum buffer size of 8191", len);
         len = 8191;
     }
 

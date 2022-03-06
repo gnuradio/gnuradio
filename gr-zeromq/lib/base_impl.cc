@@ -217,7 +217,7 @@ bool base_source_impl::load_message(bool wait)
     if (!ok) {
         // This shouldn't happen since we polled POLLIN, but ZMQ wants us to check
         // the return value.
-        GR_LOG_WARN(d_logger, "Failed to recv() message.");
+        d_logger->warn("Failed to recv() message.");
         return false;
     }
 
@@ -235,7 +235,7 @@ bool base_source_impl::load_message(bool wait)
             const bool multi_ok = d_socket.recv(&d_msg);
 #endif
             if (!multi_ok) {
-                GR_LOG_ERROR(d_logger, "Failure to receive multi-part message.");
+                d_logger->error("Failure to receive multi-part message.");
             }
         } else {
             return false;

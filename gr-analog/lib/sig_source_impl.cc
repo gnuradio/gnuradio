@@ -78,7 +78,7 @@ void sig_source_impl<T>::set_cmd_msg(pmt::pmt_t msg)
     } else if (pmt::is_pair(msg)) {
         list_of_items = pmt::list1(msg);
     } else {
-        GR_LOG_WARN(this->d_logger, "malformed message: is not dict nor pair");
+        this->d_logger->warn("malformed message: is not dict nor pair");
         return;
     }
 
@@ -92,29 +92,28 @@ void sig_source_impl<T>::set_cmd_msg(pmt::pmt_t msg)
             if (pmt::is_number(val)) {
                 set_frequency(pmt::to_double(val));
             } else {
-                GR_LOG_WARN(this->d_logger, "frequency value needs to be a number")
+                this->d_logger->warn("frequency value needs to be a number");
             }
         } else if (key == ampl_key) {
             if (pmt::is_number(val)) {
                 set_amplitude(pmt::to_double(val));
             } else {
-                GR_LOG_WARN(this->d_logger, "amplitude value needs to be a number")
+                this->d_logger->warn("amplitude value needs to be a number");
             }
         } else if (key == phase_key) {
             if (pmt::is_number(val)) {
                 set_phase(pmt::to_double(val));
             } else {
-                GR_LOG_WARN(this->d_logger, "phase value needs to be a number")
+                this->d_logger->warn("phase value needs to be a number");
             }
         } else if (key == offset_key) {
             if (pmt::is_number(val)) {
                 set_offset(pmt::to_double(val));
             } else {
-                GR_LOG_WARN(this->d_logger, "offset value needs to be a number")
+                this->d_logger->warn("offset value needs to be a number");
             }
         } else {
-            GR_LOG_WARN(this->d_logger,
-                        "unsupported message key " + pmt::write_string(key));
+            this->d_logger->warn("unsupported message key {}", key);
         }
 
         // advance to next item, if any
