@@ -14,7 +14,6 @@
 #include "time_delta_impl.h"
 #include <gnuradio/io_signature.h>
 #include <gnuradio/pdu.h>
-#include <boost/format.hpp>
 
 namespace gr {
 namespace pdu {
@@ -47,9 +46,10 @@ time_delta_impl::~time_delta_impl() {}
 
 bool time_delta_impl::stop()
 {
-    GR_LOG_NOTICE(d_logger,
-                  boost::format("Statistics for %s: Mean = %0.6f ms, Var = %0.6f ms") %
-                      d_name % d_mean % get_variance());
+    d_logger->notice("Statistics for {:s}: Mean = {:.6f} ms, Var = {:.6f} ms",
+                     d_name,
+                     d_mean,
+                     get_variance());
     return true;
 }
 
@@ -78,7 +78,7 @@ void time_delta_impl::handle_pdu(const pmt::pmt_t& pdu)
 {
     // make sure the message is a PDU
     if (!(pmt::is_pdu(pdu))) {
-        GR_LOG_WARN(d_logger, "Message received is not a PDU, dropping");
+        d_logger->warn("Message received is not a PDU, dropping");
         return;
     }
 
@@ -89,16 +89,16 @@ void time_delta_impl::handle_pdu(const pmt::pmt_t& pdu)
     pmt::pmt_t meta = pmt::car(pdu);
     pmt::pmt_t sys_time_pmt = pmt::dict_ref(meta, d_time_key, pmt::PMT_NIL);
     if (!pmt::is_real(sys_time_pmt)) {
-        GR_LOG_INFO(d_logger,
-                    boost::format("PDU received with no system time at %f") % t_now);
+        d_logger->info("PDU received with no system time at {:f}", t_now);
         return;
     }
 
     double pdu_time = pmt::to_double(sys_time_pmt);
     double time_delta_ms = (t_now - pdu_time) * 1000.0;
-    GR_LOG_DEBUG(d_logger,
-                 boost::format("%s PDU received at %f with time delta %f milliseconds") %
-                     d_name % t_now % time_delta_ms);
+    d_logger->debug("{:s} PDU received at {:f} with time delta {:f} milliseconds",
+                    d_name,
+                    t_now,
+                    time_delta_ms);
     update_stats(time_delta_ms);
 
     meta = pmt::dict_add(meta, d_delta_key, pmt::from_double(time_delta_ms));

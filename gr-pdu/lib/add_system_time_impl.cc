@@ -52,7 +52,7 @@ void add_system_time_impl::handle_pdu(const pmt::pmt_t& pdu)
 {
     // make sure the message is a PDU
     if (!(pmt::is_pdu(pdu))) {
-        GR_LOG_WARN(d_logger, "Message received is not a PDU, dropping");
+        d_logger->warn("Message received is not a PDU, dropping");
         return;
     }
 
