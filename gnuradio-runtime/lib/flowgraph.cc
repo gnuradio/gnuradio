@@ -77,7 +77,7 @@ void flowgraph::validate()
         std::vector<int> used_ports;
         int ninputs, noutputs;
 
-        GR_LOG_DEBUG(d_debug_logger, boost::format("Validating block: %s") % *p);
+        d_debug_logger->debug("Validating block: {}", *p);
 
         used_ports = calc_used_ports(*p, true); // inputs
         ninputs = used_ports.size();
@@ -125,16 +125,15 @@ void flowgraph::check_valid_port(gr::io_signature::sptr sig, int port)
 
 void flowgraph::check_valid_port(const msg_endpoint& e)
 {
-    GR_LOG_DEBUG(d_debug_logger,
-                 boost::format("check_valid_port(%s, %s)") % e.block() % e.port());
+    d_debug_logger->debug("check_valid_port({}, {})", e.block(), e.port());
 
     if (!e.block()->has_msg_port(e.port())) {
         const gr::basic_block::msg_queue_map_t& msg_map = e.block()->get_msg_map();
-        GR_LOG_WARN(d_logger, boost::format("Could not find port %s in:") % e.port());
+        d_logger->warn("Could not find port {} in:", e.port());
         for (gr::basic_block::msg_queue_map_t::const_iterator it = msg_map.begin();
              it != msg_map.end();
              ++it)
-            GR_LOG_WARN(d_logger, boost::format("  %s") % it->first);
+            d_logger->warn("  {}", it->first);
         throw std::invalid_argument("invalid msg port in connect() or disconnect()");
     }
 }

@@ -60,10 +60,10 @@ make_scheduler(flat_flowgraph_sptr ffg, int max_noutput_items, bool catch_except
             if (factory == 0) {
                 gr::logger_ptr logger, debug_logger;
                 gr::configure_default_loggers(logger, debug_logger, "top_block_impl");
-                std::ostringstream msg;
-                msg << "Invalid GR_SCHEDULER environment variable value \"" << v
-                    << "\".  Using \"" << scheduler_table[0].name << "\"";
-                GR_LOG_WARN(logger, msg.str());
+                logger->warn("Invalid GR_SCHEDULER environment variable value \"{:s}\".  "
+                             "Using \"{:s}\"",
+                             v,
+                             scheduler_table[0].name);
                 factory = scheduler_table[0].f;
             }
         }
@@ -86,7 +86,7 @@ top_block_impl::top_block_impl(top_block* owner, bool catch_exceptions = true)
 top_block_impl::~top_block_impl()
 {
     if (d_lock_count) {
-        GR_LOG_ERROR(d_logger, "destroying locked block.");
+        d_logger->error("destroying locked block.");
     }
     // NOTE: Investigate the sensibility of setting a raw pointer to zero at the end of
     // destructor

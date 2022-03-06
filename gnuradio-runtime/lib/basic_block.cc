@@ -179,9 +179,8 @@ void basic_block::insert_tail(pmt::pmt_t which_port, pmt::pmt_t msg)
     gr::thread::scoped_lock guard(mutex);
     const auto& queue = msg_queue.find(which_port);
     if (queue == msg_queue.end()) {
-        GR_LOG_ERROR(d_logger,
-                     std::string("attempted insertion on invalid queue ") +
-                         pmt::symbol_to_string(which_port));
+        d_logger->error("attempted insertion on invalid queue {:s}",
+                        pmt::symbol_to_string(which_port));
         throw std::runtime_error("attempted to insert_tail on invalid queue!");
     }
 

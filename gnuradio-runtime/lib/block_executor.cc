@@ -273,7 +273,7 @@ block_executor::state block_executor::run_one_iteration()
     max_noutput_items = round_down(d_max_noutput_items, m->output_multiple());
 
     if (d->done()) {
-        GR_LOG_ERROR(d_logger, "unexpected done() in run_one_iteration");
+        d_logger->error("unexpected done() in run_one_iteration");
         return DONE;
     }
 
@@ -710,7 +710,7 @@ block_executor::state block_executor::run_one_iteration()
         // Have the caller try again...
         return READY_NO_OUTPUT;
     }
-    GR_LOG_ERROR(d_logger, "invalid state while going through iteration state machine");
+    d_logger->error("invalid state while going through iteration state machine");
 
 were_done:
     LOG(std::ostringstream msg; msg << m << " -- we're done";
