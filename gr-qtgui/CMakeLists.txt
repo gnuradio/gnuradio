@@ -8,8 +8,6 @@
 ########################################################################
 # Setup dependencies
 ########################################################################
-include(GrBoost)
-
 include(GrPython)
 
 # Note: gr-qtgui requires Qt5.
@@ -32,7 +30,6 @@ if(NOT CMAKE_CROSSCOMPILING)
 endif(NOT CMAKE_CROSSCOMPILING)
 
 GR_REGISTER_COMPONENT("gr-qtgui" ENABLE_GR_QTGUI
-    Boost_FOUND
     QT_FOUND
     QWT_FOUND
     ENABLE_GNURADIO_RUNTIME
