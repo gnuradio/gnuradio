@@ -29,9 +29,6 @@
 #include <qwt_legend_label.h>
 #endif /* QWT_VERSION < 0x060100 */
 
-#include <boost/date_time/posix_time/posix_time.hpp>
-namespace pt = boost::posix_time;
-
 #include <QDebug>
 
 /***********************************************************************
