@@ -16,6 +16,7 @@
 #include "tag_headers.h"
 #include <gnuradio/io_signature.h>
 #include <memory>
+#include <thread>
 
 namespace gr {
 namespace zeromq {
@@ -58,7 +59,7 @@ rep_msg_sink_impl::~rep_msg_sink_impl() {}
 bool rep_msg_sink_impl::start()
 {
     d_finished = false;
-    d_thread = std::make_unique<boost::thread>([this] { readloop(); });
+    d_thread = std::make_unique<std::thread>([this] { readloop(); });
     return true;
 }
 

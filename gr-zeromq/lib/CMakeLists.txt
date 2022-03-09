@@ -27,8 +27,6 @@ add_library(gnuradio-zeromq
 
 target_link_libraries(gnuradio-zeromq PUBLIC
   gnuradio-runtime
-  Boost::boost
-  Boost::thread
   ZeroMQ::ZeroMQ
 )
 
