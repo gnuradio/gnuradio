@@ -13,6 +13,7 @@
 
 #include "zmq_common_impl.h"
 #include <gnuradio/zeromq/sub_msg_source.h>
+#include <thread>
 
 namespace gr {
 namespace zeromq {
@@ -23,7 +24,7 @@ private:
     int d_timeout; // microseconds, -1 is blocking
     zmq::context_t d_context;
     zmq::socket_t d_socket;
-    std::unique_ptr<boost::thread> d_thread;
+    std::unique_ptr<std::thread> d_thread;
     const pmt::pmt_t d_port;
 
     void readloop();
