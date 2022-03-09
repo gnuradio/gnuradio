@@ -9,7 +9,6 @@
 ########################################################################
 # Setup dependencies
 ########################################################################
-include(GrBoost)
 find_package(ZeroMQ)
 
 ########################################################################
@@ -18,7 +17,6 @@ find_package(ZeroMQ)
 include(GrComponent)
 
 GR_REGISTER_COMPONENT("gr-zeromq" ENABLE_GR_ZEROMQ
-    Boost_FOUND
     ENABLE_GNURADIO_RUNTIME
     ZEROMQ_FOUND
 )

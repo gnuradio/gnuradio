@@ -15,7 +15,6 @@
 #include "pull_msg_source_impl.h"
 #include "tag_headers.h"
 #include <gnuradio/io_signature.h>
-#include <boost/thread/thread.hpp>
 #include <chrono>
 #include <memory>
 #include <thread>
@@ -61,7 +60,7 @@ pull_msg_source_impl::~pull_msg_source_impl() {}
 bool pull_msg_source_impl::start()
 {
     d_finished = false;
-    d_thread = std::make_unique<boost::thread>([this] { readloop(); });
+    d_thread = std::make_unique<std::thread>([this] { readloop(); });
     return true;
 }
 
