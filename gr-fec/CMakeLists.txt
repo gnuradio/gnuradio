@@ -8,7 +8,6 @@
 ########################################################################
 # Setup dependencies
 ########################################################################
-include(GrBoost)
 
 ########################################################################
 # Register component
@@ -18,7 +17,6 @@ include(GrComponent)
 find_package(GSL)
 
 GR_REGISTER_COMPONENT("gr-fec" ENABLE_GR_FEC
-    Boost_FOUND
     ENABLE_GNURADIO_RUNTIME
     ENABLE_GR_BLOCKS
 )

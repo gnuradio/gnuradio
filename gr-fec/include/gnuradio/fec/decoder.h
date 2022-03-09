@@ -14,7 +14,6 @@
 #include <gnuradio/block.h>
 #include <gnuradio/fec/api.h>
 #include <gnuradio/fec/generic_decoder.h>
-#include <boost/shared_array.hpp>
 #include <memory>
 
 namespace gr {
@@ -54,7 +53,6 @@ class FEC_API decoder : virtual public block
 {
 public:
     typedef std::shared_ptr<decoder> sptr;
-    typedef boost::shared_array<unsigned char> buf_sptr;
 
     /*!
      * Create the FEC decoder block by taking in the FECAPI decoder
