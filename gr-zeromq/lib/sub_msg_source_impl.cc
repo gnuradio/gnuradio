@@ -59,7 +59,7 @@ sub_msg_source_impl::~sub_msg_source_impl() {}
 bool sub_msg_source_impl::start()
 {
     d_finished = false;
-    d_thread = std::make_unique<boost::thread>([this] { readloop(); });
+    d_thread = std::make_unique<std::thread>([this] { readloop(); });
     return true;
 }
 
