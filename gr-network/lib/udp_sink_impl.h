@@ -53,8 +53,6 @@ protected:
     boost::asio::ip::udp::endpoint d_endpoint;
     boost::asio::ip::udp::socket* d_udpsocket;
 
-    boost::mutex d_mutex;
-
     virtual void
     build_header(); // returns header size.  Header is stored in tmpHeaderBuff
 
