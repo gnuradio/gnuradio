@@ -12,7 +12,6 @@
 #define INCLUDED_TCP_CONNECTION_H
 
 #include <pmt/pmt.h>
-#include <boost/array.hpp>
 #include <boost/asio.hpp>
 #include <memory>
 

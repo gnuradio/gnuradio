@@ -98,7 +98,7 @@ bool tcp_sink_impl::start()
         // In this mode, we're starting a local port listener and waiting
         // for inbound connections.
         d_start_new_listener = true;
-        d_listener_thread = new boost::thread([this] { run_listener(); });
+        d_listener_thread = new std::thread([this] { run_listener(); });
     }
 
     return true;
@@ -172,10 +172,9 @@ void tcp_sink_impl::connect(bool initial_connection)
     boost::asio::ip::tcp::socket* tmpSocket =
         new boost::asio::ip::tcp::socket(d_io_service);
     d_acceptor->async_accept(*tmpSocket,
-                             boost::bind(&tcp_sink_impl::accept_handler,
-                                         this,
-                                         tmpSocket,
-                                         boost::asio::placeholders::error));
+                             [this, tmpSocket](const boost::system::error_code& error) {
+                                 accept_handler(tmpSocket, error);
+                             });
 
     d_io_service.run();
 }

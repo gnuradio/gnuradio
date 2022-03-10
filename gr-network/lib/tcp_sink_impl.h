@@ -14,7 +14,7 @@
 #include <gnuradio/network/tcp_sink.h>
 #include <boost/asio.hpp>
 #include <boost/asio/ip/tcp.hpp>
-#include <boost/thread/thread.hpp>
+#include <thread>
 
 namespace gr {
 namespace network {
@@ -30,7 +30,7 @@ protected:
 
     bool d_thread_running;
     bool d_stop_thread;
-    boost::thread* d_listener_thread;
+    std::thread* d_listener_thread;
     bool d_start_new_listener;
     bool d_initial_connection;
 
