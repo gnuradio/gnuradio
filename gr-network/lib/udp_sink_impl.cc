@@ -14,7 +14,7 @@
 
 #include "udp_sink_impl.h"
 #include <gnuradio/io_signature.h>
-#include <boost/array.hpp>
+#include <array>
 
 namespace gr {
 namespace network {
@@ -169,7 +169,7 @@ bool udp_sink_impl::stop()
 
         if (b_send_eof) {
             // Send a few zero-length packets to signal receiver we are done
-            boost::array<char, 0> send_buf;
+            std::array<char, 0> send_buf;
             for (int i = 0; i < 3; i++)
                 d_udpsocket->send_to(boost::asio::buffer(send_buf), d_endpoint);
         }
