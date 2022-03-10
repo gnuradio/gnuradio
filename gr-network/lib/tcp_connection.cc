@@ -67,11 +67,11 @@ void tcp_connection::start(gr::basic_block* block)
 {
     d_block = block;
     d_socket.set_option(boost::asio::ip::tcp::no_delay(d_no_delay));
-    d_socket.async_read_some(boost::asio::buffer(d_buf),
-                             boost::bind(&tcp_connection::handle_read,
-                                         this,
-                                         boost::asio::placeholders::error,
-                                         boost::asio::placeholders::bytes_transferred));
+    d_socket.async_read_some(
+        boost::asio::buffer(d_buf),
+        [this](const boost::system::error_code& error, size_t bytes_transferred) {
+            handle_read(error, bytes_transferred);
+        });
 }
 
 void tcp_connection::handle_read(const boost::system::error_code& error,
@@ -88,10 +88,9 @@ void tcp_connection::handle_read(const boost::system::error_code& error,
 
         d_socket.async_read_some(
             boost::asio::buffer(d_buf),
-            boost::bind(&tcp_connection::handle_read,
-                        this,
-                        boost::asio::placeholders::error,
-                        boost::asio::placeholders::bytes_transferred));
+            [this](const boost::system::error_code& error, size_t bytes_transferred) {
+                handle_read(error, bytes_transferred);
+            });
     } else {
         d_socket.shutdown(boost::asio::ip::tcp::socket::shutdown_both);
         d_socket.close();

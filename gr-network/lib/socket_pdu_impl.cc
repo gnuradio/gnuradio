@@ -104,20 +104,18 @@ socket_pdu_impl::socket_pdu_impl(std::string type,
 
         d_tcp_socket->async_read_some(
             boost::asio::buffer(d_rxbuf),
-            boost::bind(&socket_pdu_impl::handle_tcp_read,
-                        this,
-                        boost::asio::placeholders::error,
-                        boost::asio::placeholders::bytes_transferred));
+            [this](const boost::system::error_code& error, size_t bytes_transferred) {
+                handle_tcp_read(error, bytes_transferred);
+            });
     } else if (type == "UDP_SERVER") {
         d_udp_socket =
             std::make_shared<boost::asio::ip::udp::socket>(d_io_service, d_udp_endpoint);
         d_udp_socket->async_receive_from(
             boost::asio::buffer(d_rxbuf),
             d_udp_endpoint_other,
-            boost::bind(&socket_pdu_impl::handle_udp_read,
-                        this,
-                        boost::asio::placeholders::error,
-                        boost::asio::placeholders::bytes_transferred));
+            [this](const boost::system::error_code& error, size_t bytes_transferred) {
+                handle_udp_read(error, bytes_transferred);
+            });
 
         set_msg_handler(msgport_names::pdus(),
                         [this](pmt::pmt_t msg) { this->udp_send(msg); });
@@ -127,10 +125,9 @@ socket_pdu_impl::socket_pdu_impl(std::string type,
         d_udp_socket->async_receive_from(
             boost::asio::buffer(d_rxbuf),
             d_udp_endpoint_other,
-            boost::bind(&socket_pdu_impl::handle_udp_read,
-                        this,
-                        boost::asio::placeholders::error,
-                        boost::asio::placeholders::bytes_transferred));
+            [this](const boost::system::error_code& error, size_t bytes_transferred) {
+                handle_udp_read(error, bytes_transferred);
+            });
 
         set_msg_handler(msgport_names::pdus(),
                         [this](pmt::pmt_t msg) { this->udp_send(msg); });
@@ -165,10 +162,9 @@ void socket_pdu_impl::handle_tcp_read(const boost::system::error_code& error,
 
         d_tcp_socket->async_read_some(
             boost::asio::buffer(d_rxbuf),
-            boost::bind(&socket_pdu_impl::handle_tcp_read,
-                        this,
-                        boost::asio::placeholders::error,
-                        boost::asio::placeholders::bytes_transferred));
+            [this](const boost::system::error_code& error, size_t bytes_transferred) {
+                handle_tcp_read(error, bytes_transferred);
+            });
     } else
         throw boost::system::system_error(error);
 }
@@ -183,11 +179,11 @@ void socket_pdu_impl::start_tcp_accept()
         d_acceptor_tcp->get_io_service(), d_rxbuf.size(), d_tcp_no_delay);
 #endif
 
-    d_acceptor_tcp->async_accept(new_connection->socket(),
-                                 boost::bind(&socket_pdu_impl::handle_tcp_accept,
-                                             this,
-                                             new_connection,
-                                             boost::asio::placeholders::error));
+    d_acceptor_tcp->async_accept(
+        new_connection->socket(),
+        [this, new_connection](const boost::system::error_code& error) {
+            handle_tcp_accept(new_connection, error);
+        });
 }
 
 void socket_pdu_impl::tcp_server_send(pmt::pmt_t msg)
@@ -262,10 +258,9 @@ void socket_pdu_impl::handle_udp_read(const boost::system::error_code& error,
         d_udp_socket->async_receive_from(
             boost::asio::buffer(d_rxbuf),
             d_udp_endpoint_other,
-            boost::bind(&socket_pdu_impl::handle_udp_read,
-                        this,
-                        boost::asio::placeholders::error,
-                        boost::asio::placeholders::bytes_transferred));
+            [this](const boost::system::error_code& error, size_t bytes_transferred) {
+                handle_udp_read(error, bytes_transferred);
+            });
     }
 }
 
