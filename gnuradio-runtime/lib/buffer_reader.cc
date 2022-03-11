@@ -58,7 +58,7 @@ buffer_add_reader(buffer_sptr buf, int nzero_preload, block_sptr link, int delay
     msg << " [" << buf.get() << ";" << r.get() << "] buffer_add_reader() nzero_preload "
         << nzero_preload << " -- delay: " << delay << " -- history: " << link->history()
         << " -- RD_idx: " << r->d_read_index;
-    GR_LOG_DEBUG(debug_logger, msg.str());
+    GR_LOG_DEBUG(logger, msg.str());
 #endif
 
     return r;
