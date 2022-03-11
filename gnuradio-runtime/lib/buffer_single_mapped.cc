@@ -142,7 +142,7 @@ bool buffer_single_mapped::output_blkd_cb_ready(int output_multiple)
         gr::thread::scoped_lock(*this->mutex());
         space_avail = space_available();
     }
-    return ((space_avail > 0) &&
+    return (((space_avail > 0) || (space_avail == 0 && d_has_history)) &&
             ((space_avail / output_multiple) * output_multiple == 0));
 }
 
@@ -174,6 +174,13 @@ int buffer_single_mapped::space_available()
 #endif
         int space = d_bufsize - d_write_index;
 
+        // Ensure space is left to handle block history
+        if (static_cast<unsigned>(space) < min_idx_reader->link()->history()) {
+            space = 0;
+        } else {
+            space -= (min_idx_reader->link()->history() - 1);
+        }
+
         if (min_read_index == d_write_index) {
 #ifdef BUFFER_DEBUG
             thecase = 1;
@@ -195,6 +202,14 @@ int buffer_single_mapped::space_available()
             thecase = 3;
 #endif
             space = min_read_index - d_write_index;
+
+            // Ensure space is left to handle block history
+            if (static_cast<unsigned>(space) < min_idx_reader->link()->history()) {
+                space = 0;
+            } else {
+                space -= (min_idx_reader->link()->history() - 1);
+            }
+
             // Leave extra space in case the reader gets stuck and needs realignment
             if (d_max_reader_output_multiple > 1) {
                 if (static_cast<uint32_t>(space) > d_max_reader_output_multiple) {
@@ -371,7 +386,8 @@ bool buffer_single_mapped::output_blocked_callback_logic(int output_multiple,
     GR_LOG_DEBUG(d_logger, msg.str());
 #endif
 
-    if (((space_avail > 0) && ((space_avail / output_multiple) * output_multiple == 0)) ||
+    if ((((space_avail > 0) || (space_avail == 0 && d_has_history)) &&
+         ((space_avail / output_multiple) * output_multiple == 0)) ||
         force) {
         // Find reader with the smallest read index
         uint32_t min_read_idx = d_readers[0]->d_read_index;
