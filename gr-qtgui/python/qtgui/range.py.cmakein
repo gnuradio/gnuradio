@@ -51,7 +51,7 @@ class Range(object):
             val = self.max
         if val < 0:
             val = 0
-        return (val*self.step+self.min)
+        return (val * self.step + self.min)
 
 class QEngValidator(Qt.QValidator):
     def __init__(self, minimum, maximum, parent):
@@ -65,18 +65,21 @@ class QEngValidator(Qt.QValidator):
         try:
             val=eng_notation.str_to_num(s)
         except (IndexError, ValueError) as e:
-            if re.match(self.re,s):
-                self.parent.setStyleSheet("background-color: yellow;")
+            if re.match(self.re, s):
+                self.parent.setStyleSheet("background-color: yellow;"
+                                          "color: black")
                 return (Qt.QValidator.Intermediate, s, pos)
             else:
                 return (Qt.QValidator.Invalid, s, pos)
 
         if self.max is not None and val > self.max:
-            self.parent.setStyleSheet("background-color: yellow;")
+            self.parent.setStyleSheet("background-color: yellow;"
+                                      "color: black")
         elif self.min is not None and val < self.min:
-            self.parent.setStyleSheet("background-color: yellow;")
+            self.parent.setStyleSheet("background-color: yellow;"
+                                      "color: black")
         else:
-            self.parent.setStyleSheet("background-color: white;")
+            self.parent.setStyleSheet("")
 
         return (Qt.QValidator.Acceptable, s, pos)
 
