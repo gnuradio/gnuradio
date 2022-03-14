@@ -23,7 +23,11 @@ gr::io_signature::sptr io_signature::makev(int min_streams,
                                            const std::vector<int>& sizeof_stream_items)
 {
     gr_vector_buffer_type buftypes(sizeof_stream_items.size(),
+#ifdef FORCE_SINGLE_MAPPED
+                                   host_buffer::type);
+#else
                                    buffer_double_mapped::type);
+#endif
     return gr::io_signature::sptr(
         new io_signature(min_streams, max_streams, sizeof_stream_items, buftypes));
 }

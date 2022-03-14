@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(io_signature.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(2d21df486462de11f4eb25681101c0c6)                     */
+/* BINDTOOL_HEADER_FILE_HASH(fe931f4f10b5b363b55e9ae43c178b7a)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -40,7 +40,11 @@ void bind_io_signature(py::module& m)
              py::arg("min_streams"),
              py::arg("max_streams"),
              py::arg("sizeof_stream_item"),
+#ifdef FORCE_SINGLE_MAPPED
+             py::arg("buftype") = gr::host_buffer::type,
+#else
              py::arg("buftype") = gr::buffer_double_mapped::type,
+#endif
              D(io_signature, make))
 
 
@@ -50,8 +54,13 @@ void bind_io_signature(py::module& m)
                     py::arg("max_streams"),
                     py::arg("sizeof_stream_item1"),
                     py::arg("sizeof_stream_item2"),
+#ifdef FORCE_SINGLE_MAPPED
+                    py::arg("buftype1") = gr::host_buffer::type,
+                    py::arg("buftype2") = gr::host_buffer::type,
+#else
                     py::arg("buftype1") = gr::buffer_double_mapped::type,
                     py::arg("buftype2") = gr::buffer_double_mapped::type,
+#endif
                     D(io_signature, make2))
 
 
@@ -62,9 +71,15 @@ void bind_io_signature(py::module& m)
                     py::arg("sizeof_stream_item1"),
                     py::arg("sizeof_stream_item2"),
                     py::arg("sizeof_stream_item3"),
+#ifdef FORCE_SINGLE_MAPPED
+                    py::arg("buftype1") = gr::host_buffer::type,
+                    py::arg("buftype2") = gr::host_buffer::type,
+                    py::arg("buftype3") = gr::host_buffer::type,
+#else
                     py::arg("buftype1") = gr::buffer_double_mapped::type,
                     py::arg("buftype2") = gr::buffer_double_mapped::type,
                     py::arg("buftype3") = gr::buffer_double_mapped::type,
+#endif
                     D(io_signature, make3))
 
         .def_static(
