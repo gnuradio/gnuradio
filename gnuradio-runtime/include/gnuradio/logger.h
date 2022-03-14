@@ -42,8 +42,6 @@ using logger_ptr = std::shared_ptr<void>;
 
 #include <spdlog/sinks/dist_sink.h>
 
-#include <boost/format.hpp>
-
 namespace gr {
 using log_level = spdlog::level::level_enum;
 
@@ -272,18 +270,6 @@ configure_default_loggers(gr::logger_ptr& l, gr::logger_ptr& d, const std::strin
     {                                 \
         log->d_logger->critical(msg); \
     }
-
-// Helper class to allow passing of boost::format to fmt
-template <>
-struct fmt::formatter<boost::format> : formatter<string_view> {
-    // parse is inherited from formatter<string_view>.
-    template <typename FormatContext>
-    auto format(const boost::format& bfmt, FormatContext& ctx)
-        -> decltype(formatter<string_view>::format(bfmt.str(), ctx))
-    {
-        return formatter<string_view>::format(bfmt.str(), ctx);
-    }
-};
 
 #endif
 
