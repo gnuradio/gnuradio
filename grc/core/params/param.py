@@ -216,7 +216,8 @@ class Param(Element):
                         if scale_factor in self.scale:
                             expr = str(float(expr[:-1]) *
                                        self.scale[scale_factor])
-                    value = self.parent_flowgraph.evaluate(expr)
+                    value = self.parent_flowgraph.evaluate(expr, self.parent.namespace, self.parent_flowgraph.namespace)
+                    self.parent.namespace[self.key] = value
                 except Exception as e:
                     raise Exception(
                         'Value "{}" cannot be evaluated:\n{}'.format(expr, e))

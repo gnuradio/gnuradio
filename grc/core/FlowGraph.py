@@ -235,6 +235,7 @@ class FlowGraph(Element):
         # to get rid of entries of blocks that
         # are no longer valid ( deleted, disabled, ...)
         self.namespace.clear()
+        self._eval_cache.clear()
         # Load imports
         for expr in self.imports():
             try:
@@ -292,8 +293,6 @@ class FlowGraph(Element):
                 log.exception('Failed to evaluate variable block {0}'.format(
                     variable_block.name), exc_info=True)
                 pass
-
-        self._eval_cache.clear()
 
     def evaluate(self, expr, namespace=None, local_namespace=None):
         """
