@@ -11,10 +11,17 @@
 #ifndef INCLUDED_IO_SIGNATURE_H
 #define INCLUDED_IO_SIGNATURE_H
 
+// For testing purposes, force single mapped buffers to make all QA use them
+//#define FORCE_SINGLE_MAPPED
+
 #include <functional>
 
 #include <gnuradio/api.h>
+#ifdef FORCE_SINGLE_MAPPED
+#include <gnuradio/host_buffer.h>
+#else
 #include <gnuradio/buffer_double_mapped.h>
+#endif
 #include <gnuradio/buffer_type.h>
 #include <gnuradio/runtime_types.h>
 
@@ -56,7 +63,11 @@ public:
     static sptr make(int min_streams,
                      int max_streams,
                      int sizeof_stream_item,
+#ifdef FORCE_SINGLE_MAPPED
+                     buffer_type buftype = host_buffer::type);
+#else
                      buffer_type buftype = buffer_double_mapped::type);
+#endif
 
     /*!
      * \brief Create an i/o signature
@@ -75,8 +86,13 @@ public:
                       int max_streams,
                       int sizeof_stream_item1,
                       int sizeof_stream_item2,
+#ifdef FORCE_SINGLE_MAPPED
+                      buffer_type buftype1 = host_buffer::type,
+                      buffer_type buftype2 = host_buffer::type);
+#else
                       buffer_type buftype1 = buffer_double_mapped::type,
                       buffer_type buftype2 = buffer_double_mapped::type);
+#endif
 
     /*!
      * \brief Create an i/o signature
@@ -99,9 +115,15 @@ public:
                       int sizeof_stream_item1,
                       int sizeof_stream_item2,
                       int sizeof_stream_item3,
+#ifdef FORCE_SINGLE_MAPPED
+                      buffer_type buftype1 = host_buffer::type,
+                      buffer_type buftype2 = host_buffer::type,
+                      buffer_type buftype3 = host_buffer::type);
+#else
                       buffer_type buftype1 = buffer_double_mapped::type,
                       buffer_type buftype2 = buffer_double_mapped::type,
                       buffer_type buftype3 = buffer_double_mapped::type);
+#endif
 
     /*!
      * \brief Create an i/o signature
