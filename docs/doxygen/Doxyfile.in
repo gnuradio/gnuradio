@@ -721,6 +721,7 @@ EXCLUDE                = @abs_top_builddir@/cmake/msvc \
                          @abs_top_builddir@/docs/doxygen/html \
                          @abs_top_builddir@/docs/doxygen/xml \
                          @abs_top_builddir@/docs/doxygen/other/doxypy.py \
+                         @abs_top_srcdir@/docs/sphinx \
                          @abs_top_srcdir@/docs/doxygen/other/shared_ptr_docstub.h \
                          @abs_top_builddir@/dtools \
                          @abs_top_builddir@/gnuradio-runtime/lib/runtime/gr_error_handler.cc \

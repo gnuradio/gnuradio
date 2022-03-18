@@ -1,0 +1,7 @@
+name: UHD
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - cmake
+  - compilers
