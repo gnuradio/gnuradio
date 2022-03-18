@@ -11,7 +11,7 @@
 include(GrBoost)
 include(GrPython)
 
-find_package(MPLIB REQUIRED)
+find_package(MPLIB)
 
 ########################################################################
 # Setup compatibility checks and defines
