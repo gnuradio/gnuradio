@@ -35,6 +35,7 @@ GR_REGISTER_COMPONENT("gnuradio-runtime" ENABLE_GNURADIO_RUNTIME
     MPLIB_FOUND
     spdlog_FOUND
     pybind11_FOUND
+    Volk_FOUND
 )
 else()
 GR_REGISTER_COMPONENT("gnuradio-runtime" ENABLE_GNURADIO_RUNTIME
@@ -42,6 +43,7 @@ GR_REGISTER_COMPONENT("gnuradio-runtime" ENABLE_GNURADIO_RUNTIME
     PYTHONINTERP_FOUND
     MPLIB_FOUND
     spdlog_FOUND
+    Volk_FOUND
 )
 endif()
 
