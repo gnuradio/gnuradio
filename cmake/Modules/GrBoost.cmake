@@ -68,8 +68,23 @@ set(Boost_ADDITIONAL_VERSIONS
     "1.71.0" "1.71"
 )
 
-find_package(Boost ${GR_BOOST_MIN_VERSION} REQUIRED ${BOOST_REQUIRED_COMPONENTS}
-                                           OPTIONAL_COMPONENTS unit_test_framework)
+# check whether to set REQUIRED or not
+# if not set, default is to require Boost
+if(NOT DEFINED GR_BOOST_REQUIRED)
+    # GR_BOOST_REQUIRED is not set; use the default
+    set(GR_BOOST_REQUIRED "REQUIRED")
+elseif(GR_BOOST_REQUIRED)
+    # GR_BOOST_REQUIRED is set to TRUE/ON/1
+    set(GR_BOOST_REQUIRED "REQUIRED")
+else()
+    # GR_BOOST_REQUIRED is not set to TRUE/ON/1
+    set(GR_BOOST_REQUIRED "")
+endif()
+
+find_package(
+    Boost ${GR_BOOST_MIN_VERSION} ${GR_BOOST_REQUIRED}
+    COMPONENTS ${BOOST_REQUIRED_COMPONENTS}
+    OPTIONAL_COMPONENTS unit_test_framework)
 
 # Boost 1.52 disabled, see https://svn.boost.org/trac/boost/ticket/7669
 # Similar problems with Boost 1.46 and 1.47.
