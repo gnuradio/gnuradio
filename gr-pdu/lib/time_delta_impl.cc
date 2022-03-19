@@ -14,6 +14,7 @@
 #include "time_delta_impl.h"
 #include <gnuradio/io_signature.h>
 #include <gnuradio/pdu.h>
+#include <chrono>
 
 namespace gr {
 namespace pdu {
@@ -28,14 +29,11 @@ time_delta_impl::time_delta_impl(const pmt::pmt_t delta_key, const pmt::pmt_t ti
       d_name(pmt::symbol_to_string(delta_key)),
       d_delta_key(delta_key),
       d_time_key(time_key),
-      d_epoch(boost::gregorian::date(1970, 1, 1)),
       d_mean(0.0),
       d_var_acc(0.0),
       d_var(0.0),
       d_n(0)
 {
-    // boost::posix_time::ptime epoch(boost::gregorian::date(1970, 1, 1));
-    // d_epoch = epoch;
     message_port_register_in(msgport_names::pdu());
     set_msg_handler(msgport_names::pdu(),
                     [this](const pmt::pmt_t& msg) { this->handle_pdu(msg); });
@@ -84,7 +82,9 @@ void time_delta_impl::handle_pdu(const pmt::pmt_t& pdu)
 
     gr::thread::scoped_lock l(d_mutex);
 
-    double t_now((boost::get_system_time() - d_epoch).total_microseconds() / 1000000.0);
+    double t_now(
+        std::chrono::duration<double>(std::chrono::system_clock::now().time_since_epoch())
+            .count());
 
     pmt::pmt_t meta = pmt::car(pdu);
     pmt::pmt_t sys_time_pmt = pmt::dict_ref(meta, d_time_key, pmt::PMT_NIL);
