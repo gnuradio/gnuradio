@@ -21,7 +21,7 @@ namespace pdu {
  * \ingroup debug_tools_blk
  * \ingroup pdu_blk
  *
- * Adds a user specified key to PDU dict containing the boost system time in seconds
+ * Adds a user specified key to PDU dict containing the system time in seconds
  * since unix epoch.
  */
 class PDU_API add_system_time : virtual public gr::block

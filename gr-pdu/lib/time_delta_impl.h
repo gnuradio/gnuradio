@@ -21,7 +21,6 @@ private:
     std::string d_name;
     const pmt::pmt_t d_delta_key;
     const pmt::pmt_t d_time_key;
-    const boost::posix_time::ptime d_epoch;
 
     gr::thread::mutex d_mutex;
 
