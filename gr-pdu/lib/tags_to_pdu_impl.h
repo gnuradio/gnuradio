@@ -37,7 +37,6 @@ private:
     std::vector<T> d_vector;
     std::vector<tag_t> d_tags;
     tag_t d_tag;
-    boost::posix_time::ptime d_epoch;
     uint64_t d_known_time_int_sec; // known integer seconds of a particular item
     double d_known_time_frac_sec;  // known fractional seconds of a particular item
     uint64_t d_known_time_offset;  // known item offset of a particular item

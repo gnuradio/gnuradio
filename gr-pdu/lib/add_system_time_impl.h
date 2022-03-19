@@ -19,7 +19,6 @@ class add_system_time_impl : public add_system_time
 {
 private:
     std::string d_name;
-    const boost::posix_time::ptime d_epoch;
     pmt::pmt_t d_key;
 
     void handle_pdu(const pmt::pmt_t& pdu);

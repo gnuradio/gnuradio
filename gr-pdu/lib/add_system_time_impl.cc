@@ -14,6 +14,7 @@
 #include "add_system_time_impl.h"
 #include <gnuradio/io_signature.h>
 #include <gnuradio/pdu.h>
+#include <chrono>
 
 namespace gr {
 namespace pdu {
@@ -31,12 +32,8 @@ add_system_time_impl::add_system_time_impl(const pmt::pmt_t key)
                 gr::io_signature::make(0, 0, 0),
                 gr::io_signature::make(0, 0, 0)),
       d_name(pmt::symbol_to_string(key)),
-      d_epoch(boost::gregorian::date(1970, 1, 1)),
       d_key(key)
 {
-    // boost::posix_time::ptime epoch(boost::gregorian::date(1970, 1, 1));
-    // d_epoch = epoch;
-
     message_port_register_in(msgport_names::pdu());
     set_msg_handler(msgport_names::pdu(),
                     [this](const pmt::pmt_t& msg) { this->handle_pdu(msg); });
@@ -59,7 +56,9 @@ void add_system_time_impl::handle_pdu(const pmt::pmt_t& pdu)
     pmt::pmt_t meta = pmt::car(pdu);
 
     // append time and publish
-    double t_now((boost::get_system_time() - d_epoch).total_microseconds() / 1000000.0);
+    double t_now(
+        std::chrono::duration<double>(std::chrono::system_clock::now().time_since_epoch())
+            .count());
     meta = pmt::dict_add(meta, d_key, pmt::from_double(t_now));
     message_port_pub(msgport_names::pdu(), pmt::cons(meta, pmt::cdr(pdu)));
 }

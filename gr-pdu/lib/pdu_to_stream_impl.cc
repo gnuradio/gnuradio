@@ -16,8 +16,8 @@
 #include <gnuradio/io_signature.h>
 #include <gnuradio/pdu.h>
 
-#include <boost/date_time/posix_time/posix_time.hpp>
-#include <boost/thread/thread.hpp>
+#include <chrono>
+#include <thread>
 
 namespace gr {
 namespace pdu {
@@ -243,14 +243,14 @@ int pdu_to_stream_impl<T>::work(int noutput_items,
         if (d_pdu_queue.empty()) {
             // if we have nothing to do, sleep for a short duration to prevent rapid
             // successive calls and then return zero items
-            boost::this_thread::sleep(boost::posix_time::microseconds(25));
+            std::this_thread::sleep_for(std::chrono::microseconds(25));
             return 0;
         }
 
         // fetch another PDU of data and update the size of the data
         data_remaining = queue_data();
         if (data_remaining == 0) {
-            boost::this_thread::sleep(boost::posix_time::microseconds(25));
+            std::this_thread::sleep_for(std::chrono::microseconds(25));
             return 0;
         }
     } /* end if data_remaining == 0 */
