@@ -15,6 +15,7 @@
 #include "tags_to_pdu_impl.h"
 #include <gnuradio/io_signature.h>
 #include <gnuradio/pdu.h>
+#include <chrono>
 
 namespace gr {
 namespace pdu {
@@ -156,8 +157,9 @@ void tags_to_pdu_impl<T>::publish_message()
     d_meta_dict = pmt::dict_add(
         d_meta_dict, metadata_keys::pdu_num(), pmt::from_uint64(d_burst_counter));
     if (d_wall_clock_time) {
-        double t_now((boost::get_system_time() - d_epoch).total_microseconds() /
-                     1000000.0);
+        double t_now(std::chrono::duration<double>(
+                         std::chrono::system_clock::now().time_since_epoch())
+                         .count());
         d_meta_dict = pmt::dict_add(
             d_meta_dict, metadata_keys::sys_time(), pmt::from_double(t_now));
     }
@@ -395,8 +397,6 @@ template <class T>
 void tags_to_pdu_impl<T>::enable_time_debug(bool enable)
 {
     if (enable) {
-        boost::posix_time::ptime epoch(boost::gregorian::date(1970, 1, 1));
-        d_epoch = epoch;
         d_wall_clock_time = true;
     } else {
         d_wall_clock_time = false;
