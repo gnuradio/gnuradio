@@ -112,10 +112,10 @@ usrp_source_impl::_set_center_freq_from_internals(size_t chan, pmt::pmt_t direct
 {
     if (pmt::eqv(direction, direction_tx())) {
         // TODO: what happens if the TX device is not instantiated? Catch error?
-        _tx_chans_to_tune.reset(chan);
+        _tx_chans_to_tune[chan] = false;
         return _dev->set_tx_freq(_curr_tx_tune_req[chan], _stream_args.channels[chan]);
     } else {
-        _rx_chans_to_tune.reset(chan);
+        _rx_chans_to_tune[chan] = false;
         return _dev->set_rx_freq(_curr_rx_tune_req[chan], _stream_args.channels[chan]);
     }
 }
