@@ -78,14 +78,16 @@ parameters:
     options: ['True', 'False']
     option_labels: ['On', 'Off']
     hide: part
--   id: gui_hint
-    label: GUI Hint
-    dtype: gui_hint
-    hide: part
 -   id: showports
     label: Show Msg Ports
     dtype: bool
     default: 'False'
+    options: ['True', 'False']
+    option_labels: ['Yes', 'No']
+    hide: part
+-   id: gui_hint
+    label: GUI Hint
+    dtype: gui_hint
     hide: part
 
 inputs:
