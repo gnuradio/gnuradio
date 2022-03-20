@@ -286,19 +286,18 @@ bool usrp_block_impl::_check_mboard_sensors_locked()
 
 void usrp_block_impl::_set_center_freq_from_internals_allchans()
 {
-    unsigned int chan;
-    while (_rx_chans_to_tune.any()) {
-        // This resets() bits, so this loop should not run indefinitely
-        chan = _rx_chans_to_tune.find_first();
-        _set_center_freq_from_internals(chan, direction_rx());
-        _rx_chans_to_tune.reset(chan);
+    for (size_t chan = 0; chan < _rx_chans_to_tune.size(); chan++) {
+        if (_rx_chans_to_tune[chan]) {
+            _set_center_freq_from_internals(chan, direction_rx());
+            _rx_chans_to_tune[chan] = false;
+        }
     }
 
-    while (_tx_chans_to_tune.any()) {
-        // This resets() bits, so this loop should not run indefinitely
-        chan = _tx_chans_to_tune.find_first();
-        _set_center_freq_from_internals(chan, direction_tx());
-        _tx_chans_to_tune.reset(chan);
+    for (size_t chan = 0; chan < _tx_chans_to_tune.size(); chan++) {
+        if (_tx_chans_to_tune[chan]) {
+            _set_center_freq_from_internals(chan, direction_tx());
+            _tx_chans_to_tune[chan] = false;
+        }
     }
 }
 
@@ -582,7 +581,7 @@ void usrp_block_impl::_update_curr_tune_req(::uhd::tune_request_t& tune_req,
             tune_req.dsp_freq_policy != _curr_rx_tune_req[chan].dsp_freq_policy ||
             _force_tune) {
             _curr_rx_tune_req[chan] = tune_req;
-            _rx_chans_to_tune.set(chan);
+            _rx_chans_to_tune[chan] = true;
         }
     } else {
         if (tune_req.target_freq != _curr_tx_tune_req[chan].target_freq ||
@@ -592,7 +591,7 @@ void usrp_block_impl::_update_curr_tune_req(::uhd::tune_request_t& tune_req,
             tune_req.dsp_freq_policy != _curr_tx_tune_req[chan].dsp_freq_policy ||
             _force_tune) {
             _curr_tx_tune_req[chan] = tune_req;
-            _tx_chans_to_tune.set(chan);
+            _tx_chans_to_tune[chan] = true;
         }
     }
 }
