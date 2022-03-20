@@ -13,6 +13,7 @@
 
 #include <gnuradio/blocks/wavfile.h>
 #include <gnuradio/blocks/wavfile_sink.h>
+#include <gnuradio/thread/thread.h>
 #include <sndfile.h> // for SNDFILE
 
 namespace gr {
@@ -30,7 +31,7 @@ private:
     SNDFILE* d_fp;
     SNDFILE* d_new_fp;
     bool d_updated;
-    boost::mutex d_mutex;
+    gr::thread::mutex d_mutex;
 
     static constexpr int s_items_size = 8192;
     static constexpr int s_max_channels = 24;

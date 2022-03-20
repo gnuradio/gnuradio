@@ -12,6 +12,7 @@
 #define INCLUDED_GR_PROBE_RATE_IMPL_H
 
 #include <gnuradio/blocks/probe_rate.h>
+#include <chrono>
 
 namespace gr {
 namespace blocks {
@@ -21,7 +22,7 @@ class probe_rate_impl : public probe_rate
 private:
     double d_alpha, d_beta, d_avg;
     const double d_min_update_time;
-    boost::posix_time::ptime d_last_update;
+    std::chrono::time_point<std::chrono::steady_clock> d_last_update;
     uint64_t d_lastthru;
     void setup_rpc() override;
 
