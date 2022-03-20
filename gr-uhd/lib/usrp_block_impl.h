@@ -14,7 +14,6 @@
 #include <gnuradio/uhd/usrp_block.h>
 #include <pmt/pmt.h>
 #include <uhd/usrp/multi_usrp.hpp>
-#include <boost/dynamic_bitset.hpp>
 #include <functional>
 
 
@@ -165,16 +164,16 @@ protected:
     // - If chan is -1, it depends on minus_one_updates_all:
     //   - Either set vector_to_update[0] or
     //   - Set *all* entries in vector_to_update
-    // - Returns a dynamic_bitset, all indexes that where changed in
-    //   vector_to_update are set to 1
+    // - Returns a bool vector, all indexes that where changed in
+    //   vector_to_update are set to true
     template <typename T>
-    static boost::dynamic_bitset<>
+    static std::vector<bool>
     _update_vector_from_cmd_val(std::vector<T>& vector_to_update,
                                 int chan,
                                 const T cmd_val,
                                 bool minus_one_updates_all = false)
     {
-        boost::dynamic_bitset<> vals_updated(vector_to_update.size());
+        std::vector<bool> vals_updated(vector_to_update.size(), false);
         if (chan == -1) {
             if (minus_one_updates_all) {
                 for (size_t i = 0; i < vector_to_update.size(); i++) {
@@ -222,8 +221,8 @@ protected:
     // (this is not necessarily the true value the USRP is currently tuned to!).
     std::vector<::uhd::tune_request_t> _curr_tx_tune_req;
     std::vector<::uhd::tune_request_t> _curr_rx_tune_req;
-    boost::dynamic_bitset<> _tx_chans_to_tune;
-    boost::dynamic_bitset<> _rx_chans_to_tune;
+    std::vector<bool> _tx_chans_to_tune;
+    std::vector<bool> _rx_chans_to_tune;
 
     //! Stores the individual command handlers
     ::uhd::dict<pmt::pmt_t, cmd_handler_t> _msg_cmd_handlers;

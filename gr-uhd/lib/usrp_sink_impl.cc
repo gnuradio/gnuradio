@@ -100,10 +100,10 @@ usrp_sink_impl::set_center_freq(const ::uhd::tune_request_t tune_request, size_t
 {
     if (pmt::eqv(direction, direction_rx())) {
         // TODO: what happens if the RX device is not instantiated? Catch error?
-        _rx_chans_to_tune.reset(chan);
+        _rx_chans_to_tune[chan] = false;
         return _dev->set_rx_freq(_curr_rx_tune_req[chan], _stream_args.channels[chan]);
     } else {
-        _tx_chans_to_tune.reset(chan);
+        _tx_chans_to_tune[chan] = false;
         return _dev->set_tx_freq(_curr_tx_tune_req[chan], _stream_args.channels[chan]);
     }
 }
