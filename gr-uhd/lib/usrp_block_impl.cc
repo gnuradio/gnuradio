@@ -223,36 +223,6 @@ bool usrp_block_impl::_wait_for_locked_sensor(std::vector<std::string> sensor_na
     return get_sensor_fn(sensor_name).to_bool();
 }
 
-bool usrp_block_impl::_unpack_chan_command(std::string& command,
-                                           pmt::pmt_t& cmd_val,
-                                           int& chan,
-                                           const pmt::pmt_t& cmd_pmt)
-{
-    try {
-        chan = -1; // Default value
-        if (pmt::is_tuple(cmd_pmt) and
-            (pmt::length(cmd_pmt) == 2 or pmt::length(cmd_pmt) == 3)) {
-            command = pmt::symbol_to_string(pmt::tuple_ref(cmd_pmt, 0));
-            cmd_val = pmt::tuple_ref(cmd_pmt, 1);
-            if (pmt::length(cmd_pmt) == 3) {
-                chan = pmt::to_long(pmt::tuple_ref(cmd_pmt, 2));
-            }
-        } else if (pmt::is_pair(cmd_pmt)) {
-            command = pmt::symbol_to_string(pmt::car(cmd_pmt));
-            cmd_val = pmt::cdr(cmd_pmt);
-            if (pmt::is_pair(cmd_val)) {
-                chan = pmt::to_long(pmt::car(cmd_val));
-                cmd_val = pmt::cdr(cmd_val);
-            }
-        } else {
-            return false;
-        }
-    } catch (pmt::wrong_type& w) {
-        return false;
-    }
-    return true;
-}
-
 bool usrp_block_impl::_check_mboard_sensors_locked()
 {
     bool clocks_locked = true;
