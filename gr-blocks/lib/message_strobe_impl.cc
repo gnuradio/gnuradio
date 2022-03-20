@@ -14,6 +14,8 @@
 
 #include "message_strobe_impl.h"
 #include <gnuradio/io_signature.h>
+#include <chrono>
+#include <thread>
 
 namespace gr {
 namespace blocks {
@@ -59,8 +61,8 @@ bool message_strobe_impl::stop()
 void message_strobe_impl::run()
 {
     while (!d_finished) {
-        boost::this_thread::sleep(
-            boost::posix_time::milliseconds(static_cast<long>(d_period_ms)));
+        std::this_thread::sleep_for(
+            std::chrono::milliseconds(static_cast<long>(d_period_ms)));
         if (d_finished) {
             return;
         }

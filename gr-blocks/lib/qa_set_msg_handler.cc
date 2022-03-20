@@ -19,7 +19,8 @@
 #include <gnuradio/messages/msg_passing.h>
 #include <gnuradio/top_block.h>
 #include <boost/test/unit_test.hpp>
-#include <boost/thread/thread.hpp>
+#include <chrono>
+#include <thread>
 
 /*
  * The gr::block::nop block has been instrumented so that it counts
@@ -48,7 +49,7 @@ BOOST_AUTO_TEST_CASE(t0)
     }
 
     // Give the messages a chance to be processed
-    boost::this_thread::sleep(boost::posix_time::milliseconds(100));
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
     tb->stop();
     tb->wait();

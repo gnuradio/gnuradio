@@ -13,7 +13,7 @@
 
 #include <gnuradio/blocks/ctrlport_probe_c.h>
 #include <gnuradio/rpcregisterhelpers.h>
-#include <boost/thread/shared_mutex.hpp>
+#include <gnuradio/thread/thread.h>
 
 namespace gr {
 namespace blocks {
@@ -21,7 +21,7 @@ namespace blocks {
 class ctrlport_probe_c_impl : public ctrlport_probe_c
 {
 private:
-    boost::shared_mutex ptrlock;
+    gr::thread::mutex ptrlock;
 
     const std::string d_id;
     const std::string d_desc;

@@ -46,9 +46,9 @@ int probe_rate_impl::work(int noutput_items,
                           gr_vector_void_star& output_items)
 {
     d_lastthru += noutput_items;
-    boost::posix_time::ptime now(boost::posix_time::microsec_clock::local_time());
-    boost::posix_time::time_duration diff = now - d_last_update;
-    double diff_ms = diff.total_milliseconds();
+    auto now = std::chrono::steady_clock::now();
+    std::chrono::duration<double, std::milli> diff = now - d_last_update;
+    double diff_ms = diff.count();
     if (diff_ms >= d_min_update_time) {
         double rate_this_update = d_lastthru * 1e3 / diff_ms;
         d_lastthru = 0;
@@ -100,16 +100,16 @@ double probe_rate_impl::rate() { return d_avg; }
 
 double probe_rate_impl::timesincelast()
 {
-    boost::posix_time::ptime now(boost::posix_time::microsec_clock::local_time());
-    boost::posix_time::time_duration diff = now - d_last_update;
-    return diff.total_milliseconds();
+    auto now = std::chrono::steady_clock::now();
+    std::chrono::duration<double, std::milli> diff = now - d_last_update;
+    return diff.count();
 }
 
 bool probe_rate_impl::start()
 {
     d_avg = 0;
     d_lastthru = 0;
-    d_last_update = boost::posix_time::microsec_clock::local_time();
+    d_last_update = std::chrono::steady_clock::now();
     return true;
 }
 

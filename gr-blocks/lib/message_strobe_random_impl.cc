@@ -14,6 +14,8 @@
 
 #include "message_strobe_random_impl.h"
 #include <gnuradio/io_signature.h>
+#include <chrono>
+#include <thread>
 
 namespace gr {
 namespace blocks {
@@ -103,8 +105,8 @@ message_strobe_random_impl::~message_strobe_random_impl()
 void message_strobe_random_impl::run()
 {
     while (!d_finished) {
-        boost::this_thread::sleep(
-            boost::posix_time::milliseconds(std::max(0L, next_delay())));
+        std::this_thread::sleep_for(
+            std::chrono::milliseconds(std::max(0L, next_delay())));
         if (d_finished) {
             return;
         }
