@@ -11,7 +11,6 @@
 #include "gr_uhd_common.h"
 #include "usrp_source_impl.h"
 #include <gnuradio/prefs.h>
-#include <boost/make_shared.hpp>
 #include <boost/thread/thread.hpp>
 #include <chrono>
 #include <mutex>
