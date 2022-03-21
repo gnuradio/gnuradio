@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(throttle.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(c3a597508d581cabdc653faaa323232c)                     */
+/* BINDTOOL_HEADER_FILE_HASH(9259d01362558f938bdbfec179b6e164)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -43,6 +43,7 @@ void bind_throttle(py::module& m)
              py::arg("itemsize"),
              py::arg("samples_per_sec"),
              py::arg("ignore_tags") = true,
+             py::arg("maximum_items_per_chunk") = 0,
              D(throttle, make))
 
 
