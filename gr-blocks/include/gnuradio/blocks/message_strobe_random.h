@@ -23,7 +23,8 @@ namespace blocks {
 typedef enum {
     STROBE_POISSON = 1,
     STROBE_GAUSSIAN = 2,
-    STROBE_UNIFORM = 3
+    STROBE_UNIFORM = 3,
+    STROBE_EXPONENTIAL = 4
 } message_strobe_random_distribution_t;
 
 /*!
@@ -32,8 +33,8 @@ typedef enum {
  *
  * \details
 
- * Takes a PMT message and sends it out every at random
- * intervals. The interval is basedon a random distribution, \p
+ * Takes a PMT message and sends it out at random
+ * intervals. The interval is based on a random distribution, \p
  * dist, with specified mean (\p mean_ms) and variance (\p
  * std_ms). Useful for testing/debugging the message system.
  */
@@ -49,9 +50,13 @@ public:
      * mean_ms and standard deviation \p std_ms.
      *
      * \param msg The message to send as a PMT.
-     * \param dist The random distribution from which to draw events.
-     * \param mean_ms The mean of the distribution.
-     * \param std_ms The standard deviation of the distribution.
+     * \param dist The random distribution from which to draw the time between
+     *             events.
+     * \param mean_ms The mean of the distribution, in milliseconds.
+     * \param std_ms The standard deviation of the Gaussian distribution,
+     *               or the maximum absolute deviation of the Uniform
+     *               distribution, in milliseconds. This argument is ignored
+     *               for other distributions.
      */
     static sptr make(pmt::pmt_t msg,
                      message_strobe_random_distribution_t dist,

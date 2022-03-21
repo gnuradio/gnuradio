@@ -29,6 +29,7 @@ private:
     std::poisson_distribution<> pd;      //(d_mean_ms);
     std::normal_distribution<> nd;       //(d_mean_ms, d_std_ms);
     std::uniform_real_distribution<> ud; //(d_mean_ms - d_std_ms, d_mean_ms + d_std_ms);
+    std::exponential_distribution<> ed;  //(1.0f / d_mean_ms);
     gr::thread::thread d_thread;
     std::atomic<bool> d_finished;
     pmt::pmt_t d_msg;

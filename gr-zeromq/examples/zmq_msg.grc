@@ -45,7 +45,7 @@ blocks:
     affinity: ''
     alias: ''
     comment: ''
-    dist: blocks.STROBE_POISSON
+    dist: blocks.STROBE_EXPONENTIAL
     maxoutbuf: '0'
     mean: '100'
     minoutbuf: '0'
