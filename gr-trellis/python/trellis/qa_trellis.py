@@ -77,8 +77,9 @@ class test_trellis (gr_unittest.TestCase):
         fsm = trellis.fsm()
         ftypes = ["ss", "si", "ib", "is", "ii", "fb", "fs", "fi", "cb", "cs", "ci"]
         for ftype in ftypes:
-            tb = trellis_comb_tb(ftype,fsm)
+            tb = trellis_comb_tb(ftype, fsm)
             tb.run()
+
 
 class trellis_comb_tb(gr.top_block):
     """
@@ -100,7 +101,7 @@ class trellis_comb_tb(gr.top_block):
         elif ftype[1] == "c":
             dsttype = gr.sizeof_gr_complex
         src_func = eval("blocks.vector_source_" + ftype[0])
-        data = [1*200]
+        data = [1 * 200]
         src = src_func(data)
         self.dst = blocks.null_sink(dsttype * 1)
         constellation = [1, 1, 1, 1, 1, -1, 1, -1, 1, 1, -1, -1, -1, 1, 1, -1, 1, -1, -1, -1, 1, -1, -1, -1]
