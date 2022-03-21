@@ -1,7 +1,7 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2005-2011,2013 Free Software Foundation, Inc.
- * Copyright 2021 Marcus Müller
+ * Copyright 2021,2022 Marcus Müller
  *
  * This file is part of GNU Radio
  *
@@ -44,13 +44,38 @@ class BLOCKS_API throttle : virtual public sync_block
 public:
     typedef std::shared_ptr<throttle> sptr;
 
-    static sptr make(size_t itemsize, double samples_per_sec, bool ignore_tags = true);
+    /*!
+     * Make a sptr to a Throttle block
+     *
+     * \param itemsize Size of each item, e.g. 8 for gr_complex
+     *
+     * \param samples_per_sec Number of items to be passed per second. Waiting time is
+     * calculated based on this.
+     *
+     * \param ignore_tags Whether or not to react to "rx_rate" tags with a double value
+     * specifying a new rate.
+     *
+     * \param maximum_items_per_chunk Limit the amount of items that are produced/consumed
+     * between waiting. Set to 0 (or leave at default) to always wait for the full
+     * duration dictated by the current size of workload items, divided by the
+     * samples_per_sec.
+     */
+    static sptr make(size_t itemsize,
+                     double samples_per_sec,
+                     bool ignore_tags = true,
+                     unsigned int maximum_items_per_chunk = 0);
 
     //! Sets the sample rate in samples per second.
     virtual void set_sample_rate(double rate) = 0;
 
     //! Get the sample rate in samples per second.
     virtual double sample_rate() const = 0;
+
+    //! Set the maximum items that will be produced per waiting period
+    virtual void set_maximum_items_per_chunk(unsigned int maximum_items_per_chunk) = 0;
+
+    //! Get the maximum items that will be produced per waiting period
+    virtual unsigned int maximum_items_per_chunk() const = 0;
 };
 
 } /* namespace blocks */
