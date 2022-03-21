@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(message_strobe_random.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(a759e6e0483f67da0e1a9bdf8344f16e)                     */
+/* BINDTOOL_HEADER_FILE_HASH(baaacfe399a27ddc18d1012195ac4d34)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -86,9 +86,10 @@ void bind_message_strobe_random(py::module& m)
 
     py::enum_<::gr::blocks::message_strobe_random_distribution_t>(
         m, "message_strobe_random_distribution_t")
-        .value("STROBE_POISSON", ::gr::blocks::STROBE_POISSON)   // 1
-        .value("STROBE_GAUSSIAN", ::gr::blocks::STROBE_GAUSSIAN) // 2
-        .value("STROBE_UNIFORM", ::gr::blocks::STROBE_UNIFORM)   // 3
+        .value("STROBE_POISSON", ::gr::blocks::STROBE_POISSON)         // 1
+        .value("STROBE_GAUSSIAN", ::gr::blocks::STROBE_GAUSSIAN)       // 2
+        .value("STROBE_UNIFORM", ::gr::blocks::STROBE_UNIFORM)         // 3
+        .value("STROBE_EXPONENTIAL", ::gr::blocks::STROBE_EXPONENTIAL) // 4
         .export_values();
 
     py::implicitly_convertible<int, ::gr::blocks::message_strobe_random_distribution_t>();
