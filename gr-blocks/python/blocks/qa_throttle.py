@@ -8,14 +8,12 @@
 #
 #
 
-
 import time
 import pmt
 from gnuradio import gr, gr_unittest, blocks
 
 
 class test_throttle(gr_unittest.TestCase):
-
     def setUp(self):
         self.tb = gr.top_block()
 
@@ -62,6 +60,30 @@ class test_throttle(gr_unittest.TestCase):
 
         dst_data = dst.data()
         self.assertEqual(src_data, dst_data)
+
+    def test_limited_chunk_throttling(self):
+        src_data = [1, 2, 3]
+        rate = 50
+        chunksize = 10
+        src = blocks.vector_source_c(src_data, repeat=True)
+
+        thr = blocks.throttle(gr.sizeof_gr_complex,
+                              rate,
+                              ignore_tags=True,
+                              maximum_items_per_chunk=chunksize)
+
+        dst = blocks.vector_sink_c()
+        self.tb.connect(src, thr, dst)
+
+        total_time = 0.5  # seconds
+        self.tb.start()
+        time.sleep(total_time)
+        self.tb.stop()
+
+        dst_data = dst.data()
+        num = len(dst_data)
+        # be at most one chunksize
+        self.assertLess(abs(total_time * rate - num) + 1, chunksize)
 
 
 if __name__ == '__main__':
