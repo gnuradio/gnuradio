@@ -1,0 +1,88 @@
+{% set oot_name = "howto" %}
+{% set name = "gnuradio-" + oot_name %}
+{% set version = (environ.get("GIT_DESCRIBE_TAG_PEP440", "0.0.0." + datetime.datetime.now().strftime("%Y%m%d%H%M") + ".dev+" + environ.get("GIT_DESCRIBE_HASH", "local"))|string) %}
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+source:
+  # use local path or git repository depending on if the build is local or done on CI
+  path: "../.."  # [not os.environ.get("CI")]
+  git_url: {{ environ.get('FEEDSTOCK_ROOT', "../..") }}  # [os.environ.get("CI")]
+
+build:
+  number: 0
+
+requirements:
+  build:
+    - {{ compiler("c") }}
+    - {{ compiler("cxx") }}
+    - cmake
+    - git
+    - ninja
+    - pkg-config
+    # cross-compilation requirements
+    - python                              # [build_platform != target_platform]
+    - cross-python_{{ target_platform }}  # [build_platform != target_platform]
+    - numpy                               # [build_platform != target_platform]
+    - pybind11                            # [build_platform != target_platform]
+    # Add extra build tool dependencies here
+
+  host:
+    - gmp  # [linux]
+    # the following two entries are for generating builds against specific GR versions
+    - gnuradio-core  # [not gnuradio_extra_pin]
+    - gnuradio-core {{ gnuradio_extra_pin }}.*  # [gnuradio_extra_pin]
+    - pip  # [win]
+    - pybind11
+    - python
+    - numpy
+    - volk
+    # Add/remove library dependencies here
+
+  run:
+    - numpy
+    - python
+    # Add/remove runtime dependencies here
+
+test:
+  commands:
+    # Add a list of commands to run to check that the package works. Examples below.
+
+    ## verify that commands run
+    #- COMMAND --help
+
+    # verify that (some) headers get installed
+    - test -f $PREFIX/include/gnuradio/{{ oot_name }}/api.h  # [not win]
+    - if not exist %PREFIX%\\Library\\include\\gnuradio\\{{ oot_name }}\\api.h exit 1  # [win]
+
+    ## verify that libraries get installed
+    #- test -f $PREFIX/lib/lib{{ name }}${SHLIB_EXT}  # [not win]
+    #- if not exist %PREFIX%\\Library\\bin\\{{ name }}.dll exit 1  # [win]
+    #- if not exist %PREFIX%\\Library\\lib\\{{ name }}.lib exit 1  # [win]
+
+    ## verify that (some) GRC blocks get installed
+    #{% set blocks = ["LIST", "OF", "GRC", "BLOCK", "NAMES"] %}
+    #{% for block in blocks %}
+    #- test -f $PREFIX/share/gnuradio/grc/blocks/{{ block }}.block.yml  # [not win]
+    #- if not exist %PREFIX%\\Library\\share\\gnuradio\\grc\\blocks\\{{ block }}.block.yml exit 1  # [win]
+    #{% endfor %}
+
+  imports:
+    # verify that the python module imports
+    - gnuradio.{{ oot_name }}
+
+about:
+  # For licenses, use the SPDX identifier, e.g: "GPL-2.0-only" instead of
+  # "GNU General Public License version 2.0". See https://spdx.org/licenses/.
+  # Include the license text by using the license_file entry set to the path
+  # of the license text file within the source directory, e.g. "LICENSE".
+  # See https://docs.conda.io/projects/conda-build/en/latest/resources/define-metadata.html#license-file
+
+  #home: https://github.com/<username>/gr-howto
+  #license: GPL-3.0-or-later
+  #license_file: LICENSE
+  #summary: GNU Radio howto module
+  #description: >
+  #  Short description of the gr-howto module.

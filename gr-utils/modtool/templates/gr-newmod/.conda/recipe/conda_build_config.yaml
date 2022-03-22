@@ -1,0 +1,14 @@
+# this is the channel and label where packages will be uploaded to if enabled
+# (see ../README.md)
+channel_targets:
+  - gnuradio main
+# override the conda-forge pin for gnuradio-core by uncommenting
+# and specifying a different version here
+#gnuradio_core:
+  #- "3.10.1"
+gnuradio_extra_pin:
+  # always leave one entry with the empty string
+  - ""
+  # add version strings here like to get builds for versions other than
+  # the conda-forge-wide default or version specified above for gnuradio_core
+  #- "3.9.5"
