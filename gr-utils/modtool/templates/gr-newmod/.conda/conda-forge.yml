@@ -1,0 +1,30 @@
+# See https://conda-forge.org/docs/maintainer/conda_forge_yml.html for
+# documentation on possible keys and values.
+
+# uncomment to enable cross-compiled osx-arm64 builds
+#build_platform:
+#  osx_arm64: osx_64
+clone_depth: 0
+github_actions:
+  store_build_artifacts: true
+os_version:
+  linux_64: cos7
+provider:
+  linux: github_actions
+  osx: github_actions
+  win: github_actions
+  # uncomment to enable additional linux platforms
+  #linux_aarch64: github_actions
+  #linux_ppc64le: github_actions
+recipe_dir: .conda/recipe
+# skip unnecessary files since this is not a full-fledged conda-forge feedstock
+skip_render:
+  - README.md
+  - LICENSE.txt
+  - .gitattributes
+  - .gitignore
+  - build-locally.py
+  - LICENSE
+test: native_and_emulated
+# enable uploads to Anaconda Cloud from specified branches only
+upload_on_branch: main
