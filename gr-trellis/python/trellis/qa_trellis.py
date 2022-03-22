@@ -77,7 +77,7 @@ class test_trellis (gr_unittest.TestCase):
         fsm = trellis.fsm()
         ftypes = ["ss", "si", "ib", "is", "ii", "fb", "fs", "fi", "cb", "cs", "ci"]
         for ftype in ftypes:
-            tb = trellis_comb_tb(ftype, fsm)
+            tb = trellis_comb_tb(ftype)
             tb.run()
 
 
@@ -86,7 +86,7 @@ class trellis_comb_tb(gr.top_block):
     A simple top block for use testing gr-trellis.
     """
 
-    def __init__(self, ftype, fsm):
+    def __init__(self, ftype):
         super(trellis_comb_tb, self).__init__()
         func = eval("trellis.viterbi_combined_" + ftype)
         dsttype = gr.sizeof_int
@@ -113,6 +113,7 @@ class trellis_comb_tb(gr.top_block):
 
         self.connect((src, 0), (vbc, 0))
         self.connect((vbc, 0), (self.dst, 0))
+
 
 class trellis_tb(gr.top_block):
     """

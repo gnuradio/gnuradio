@@ -31,31 +31,34 @@ template<typename IN_T, typename OUT_T>
 void bind_viterbi_combined_template(py::module &m, const char *classname) {
     using viterbi_combined = gr::trellis::viterbi_combined<IN_T, OUT_T>;
 
-    py::class_ < viterbi_combined, gr::block, gr::basic_block, std::shared_ptr < viterbi_combined >> (m,
-            classname)
-            .def(py::init(&gr::trellis::viterbi_combined<IN_T, OUT_T>::make),
-                 py::arg("FSM"),
-                 py::arg("K"),
-                 py::arg("S0"),
-                 py::arg("SK"),
-                 py::arg("D"),
-                 py::arg("TABLE"),
-                 py::arg("TYPE"))
-            .def("FSM", &viterbi_combined::FSM)
-            .def("K", &viterbi_combined::K)
-            .def("S0", &viterbi_combined::S0)
-            .def("SK", &viterbi_combined::SK)
-            .def("D", &viterbi_combined::D)
-            .def("set_FSM", &viterbi_combined::set_FSM)
-            .def("set_K", &viterbi_combined::set_K)
-            .def("set_S0", &viterbi_combined::set_S0)
-            .def("set_SK", &viterbi_combined::set_SK)
-            .def("set_D", &viterbi_combined::set_D)
-            .def("set_TABLE", &viterbi_combined::set_TABLE)
-            .def("set_TYPE", &viterbi_combined::set_TYPE);
+    py::class_<viterbi_combined,
+               gr::block,
+               gr::basic_block,
+               std::shared_ptr <viterbi_combined>> (m, classname)
+        .def(py::init(&gr::trellis::viterbi_combined<IN_T, OUT_T>::make),
+             py::arg("FSM"),
+             py::arg("K"),
+             py::arg("S0"),
+             py::arg("SK"),
+             py::arg("D"),
+             py::arg("TABLE"),
+             py::arg("TYPE"))
+        .def("FSM", &viterbi_combined::FSM)
+        .def("K", &viterbi_combined::K)
+        .def("S0", &viterbi_combined::S0)
+        .def("SK", &viterbi_combined::SK)
+        .def("D", &viterbi_combined::D)
+        .def("set_FSM", &viterbi_combined::set_FSM)
+        .def("set_K", &viterbi_combined::set_K)
+        .def("set_S0", &viterbi_combined::set_S0)
+        .def("set_SK", &viterbi_combined::set_SK)
+        .def("set_D", &viterbi_combined::set_D)
+        .def("set_TABLE", &viterbi_combined::set_TABLE)
+        .def("set_TYPE", &viterbi_combined::set_TYPE);
 }
 
-void bind_viterbi_combined(py::module &m) {
+void bind_viterbi_combined(py::module &m)
+{
     bind_viterbi_combined_template<std::int16_t, std::uint8_t>(m, "viterbi_combined_sb");
     bind_viterbi_combined_template<std::int16_t, std::int16_t>(m, "viterbi_combined_ss");
     bind_viterbi_combined_template<std::int16_t, std::int32_t>(m, "viterbi_combined_si");
