@@ -28,7 +28,7 @@ namespace py = pybind11;
 #include <viterbi_combined_pydoc.h>
 
 template <typename IN_T, typename OUT_T>
-void bind_viterbi_combined_template(py::module &m, const char *classname)
+void bind_viterbi_combined_template(py::module& m, const char* classname)
 {
     using viterbi_combined = gr::trellis::viterbi_combined<IN_T, OUT_T>;
 
