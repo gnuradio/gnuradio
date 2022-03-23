@@ -74,7 +74,6 @@ class test_trellis (gr_unittest.TestCase):
             self.assertEqual(tb.dst.ntotal(), tb.dst.nright())
 
     def test_001_viterbi_combined(self):
-        fsm = trellis.fsm()
         ftypes = ["ss", "si", "ib", "is", "ii", "fb", "fs", "fi", "cb", "cs", "ci"]
         for ftype in ftypes:
             tb = trellis_comb_tb(ftype)
