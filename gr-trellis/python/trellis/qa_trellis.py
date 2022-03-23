@@ -87,13 +87,21 @@ class test_trellis (gr_unittest.TestCase):
 
 
 class trellis_comb_tb(gr.top_block):
+    def test_001_sccc_encoder(self):
+        ftypes = ["bb", "bs", "bi", "ss", "si", "ii"]
+        for ftype in ftypes:
+            tb = trellis_sccc_encoder_tb(ftype)
+            tb.run()
+
+
+class trellis_sccc_encoder_tb(gr.top_block):
     """
     A simple top block for use testing gr-trellis.
     """
 
     def __init__(self, ftype):
-        super(trellis_comb_tb, self).__init__()
-        func = eval("trellis.viterbi_combined_" + ftype)
+        super(trellis_sccc_encoder_tb, self).__init__()
+        func = eval("trellis.sccc_encoder_" + ftype)
         dsttype = gr.sizeof_int
         if ftype[1] == "b":
             dsttype = gr.sizeof_char
@@ -101,10 +109,6 @@ class trellis_comb_tb(gr.top_block):
             dsttype = gr.sizeof_int
         elif ftype[1] == "s":
             dsttype = gr.sizeof_short
-        elif ftype[1] == "f":
-            dsttype = gr.sizeof_float
-        elif ftype[1] == "c":
-            dsttype = gr.sizeof_gr_complex
         src_func = eval("blocks.vector_source_" + ftype[0])
         data = [1 * 200]
         src = src_func(data)
@@ -145,6 +149,7 @@ class trellis_pccc_encoder_tb(gr.top_block):
         # Connections
         ##################################################
 
+        vbc = func(trellis.fsm(), 0, trellis.fsm(), 0, trellis.interleaver(), 2)
         self.connect((src, 0), (vbc, 0))
         self.connect((vbc, 0), (self.dst, 0))
 
