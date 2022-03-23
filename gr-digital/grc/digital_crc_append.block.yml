@@ -1,0 +1,71 @@
+id: digital_crc_append
+label: CRC Append
+flags: [ python, cpp ]
+
+parameters:
+-   id: num_bits
+    label: CRC size (bits)
+    dtype: int
+    default: 32
+    hide: part
+-   id: poly
+    label: CRC polynomial
+    dtype: hex
+    default: '0x4C11DB7'
+-   id: initial_value
+    label: Initial regsiter value
+    dtype: hex
+    default: '0xFFFFFFFF'
+    hide: part
+-   id: final_xor
+    label: Final XOR value
+    dtype: hex
+    default: '0xFFFFFFFF'
+    hide: part
+-   id: input_reflected
+    label: LSB-first input
+    dtype: bool
+    default: True
+    hide: part
+-   id: result_reflected
+    label: LSB-first result
+    dtype: bool
+    default: True
+    hide: part
+-   id: swap_endianness
+    label: LSB CRC in PDU
+    dtype: bool
+    default: False
+    hide: part
+-   id: skip_header_bytes
+    label: Header bytes to skip
+    dtype: int
+    default: 0
+    hide: part
+
+inputs:
+-   domain: message
+    id: in
+
+outputs:
+-   domain: message
+    id: out
+
+templates:
+    imports: from gnuradio import digital
+    make: digital.crc_append(${num_bits}, ${poly}, ${initial_value}, ${final_xor}, ${input_reflected}, ${result_reflected}, ${swap_endianness}, ${skip_header_bytes})
+
+cpp_templates:
+    includes: ['#include <gnuradio/digital/crc_append.h>']
+    declarations: 'digital::crc_append::sptr ${id};'
+    make: |-
+        this->${id} = digital::crc_append::make(
+            ${num_bits}, ${poly}, ${initial_value}, ${final_xor},
+            ${input_reflected}, ${result_reflected}, ${swap_endianness},
+            ${skip_header_bytes});
+    link: ['gnuradio-digital']
+    translations:
+        'True': 'true'
+        'False': 'false'
+
+file_format: 1

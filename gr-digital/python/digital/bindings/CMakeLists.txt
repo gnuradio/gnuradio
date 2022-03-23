@@ -30,9 +30,12 @@ list(APPEND digital_python_files
     costas_loop_cc_python.cc
     cpmmod_bc_python.cc
     crc32_python.cc
+    crc_append_python.cc
+    crc_check_python.cc
     crc16_async_bb_python.cc
     crc32_async_bb_python.cc
     crc32_bb_python.cc
+    crc_python.cc
     decision_feedback_equalizer_python.cc
     descrambler_bb_python.cc
     diff_coding_type_python.cc
