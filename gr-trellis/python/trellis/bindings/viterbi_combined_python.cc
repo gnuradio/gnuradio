@@ -27,14 +27,15 @@ namespace py = pybind11;
 // pydoc.h is automatically generated in the build directory
 #include <viterbi_combined_pydoc.h>
 
-template<typename IN_T, typename OUT_T>
-void bind_viterbi_combined_template(py::module &m, const char *classname) {
+template <typename IN_T, typename OUT_T>
+void bind_viterbi_combined_template(py::module &m, const char *classname)
+{
     using viterbi_combined = gr::trellis::viterbi_combined<IN_T, OUT_T>;
 
     py::class_<viterbi_combined,
                gr::block,
                gr::basic_block,
-               std::shared_ptr <viterbi_combined>> (m, classname)
+               std::shared_ptr<viterbi_combined>>(m, classname)
         .def(py::init(&gr::trellis::viterbi_combined<IN_T, OUT_T>::make),
              py::arg("FSM"),
              py::arg("K"),
@@ -57,7 +58,7 @@ void bind_viterbi_combined_template(py::module &m, const char *classname) {
         .def("set_TYPE", &viterbi_combined::set_TYPE);
 }
 
-void bind_viterbi_combined(py::module &m)
+void bind_viterbi_combined(py::module& m)
 {
     bind_viterbi_combined_template<std::int16_t, std::uint8_t>(m, "viterbi_combined_sb");
     bind_viterbi_combined_template<std::int16_t, std::int16_t>(m, "viterbi_combined_ss");
