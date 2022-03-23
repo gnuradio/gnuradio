@@ -30,9 +30,12 @@ add_library(gnuradio-digital
     correlate_access_code_ff_ts_impl.cc
     costas_loop_cc_impl.cc
     cpmmod_bc_impl.cc
+    crc.cc
     crc16_async_bb_impl.cc
     crc32_bb_impl.cc
     crc32_async_bb_impl.cc
+    crc_append_impl.cc
+    crc_check_impl.cc
     decision_feedback_equalizer_impl.cc
     descrambler_bb_impl.cc
     diff_decoder_bb_impl.cc
