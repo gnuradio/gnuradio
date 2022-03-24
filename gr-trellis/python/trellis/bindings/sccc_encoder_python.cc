@@ -61,5 +61,3 @@ void bind_sccc_encoder(py::module& m)
     bind_sccc_encoder_template<std::int16_t, std::int32_t>(m, "sccc_encoder_si");
     bind_sccc_encoder_template<std::int32_t, std::int32_t>(m, "sccc_encoder_ii");
 }
-
-
