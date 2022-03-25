@@ -30,9 +30,9 @@ namespace py = pybind11;
 template <class IN_T, class OUT_T>
 void bind_pccc_encoder_template(py::module& m, const char* classname)
 {
-   using pccc_encoder = gr::trellis::pccc_encoder<IN_T, OUT_T>;
+    using pccc_encoder = gr::trellis::pccc_encoder<IN_T, OUT_T>;
 
-   py::class_<pccc_encoder,
+    py::class_<pccc_encoder,
               gr::block,
               gr::basic_block,
               std::shared_ptr<pccc_encoder>>(m, classname)
@@ -53,10 +53,10 @@ void bind_pccc_encoder_template(py::module& m, const char* classname)
 
 void bind_pccc_encoder(py::module& m)
 {
-   bind_pccc_encoder_template<std::uint8_t, std::uint8_t>(m, "pccc_encoder_bb");
-   bind_pccc_encoder_template<std::uint8_t, std::int16_t>(m, "pccc_encoder_bs");
-   bind_pccc_encoder_template<std::uint8_t, std::int32_t>(m, "pccc_encoder_bi");
-   bind_pccc_encoder_template<std::int16_t, std::int16_t>(m, "pccc_encoder_ss");
-   bind_pccc_encoder_template<std::int16_t, std::int32_t>(m, "pccc_encoder_si");
-   bind_pccc_encoder_template<std::int32_t, std::int32_t>(m, "pccc_encoder_ii");
+    bind_pccc_encoder_template<std::uint8_t, std::uint8_t>(m, "pccc_encoder_bb");
+    bind_pccc_encoder_template<std::uint8_t, std::int16_t>(m, "pccc_encoder_bs");
+    bind_pccc_encoder_template<std::uint8_t, std::int32_t>(m, "pccc_encoder_bi");
+    bind_pccc_encoder_template<std::int16_t, std::int16_t>(m, "pccc_encoder_ss");
+    bind_pccc_encoder_template<std::int16_t, std::int32_t>(m, "pccc_encoder_si");
+    bind_pccc_encoder_template<std::int32_t, std::int32_t>(m, "pccc_encoder_ii");
 }
