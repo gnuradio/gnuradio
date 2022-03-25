@@ -73,6 +73,36 @@ class test_trellis (gr_unittest.TestCase):
             # Make sure all packets successfully transmitted.
             self.assertEqual(tb.dst.ntotal(), tb.dst.nright())
 
+    def test_001_sccc_decoder(self):
+        ftypes = ["b", "s", "i"]
+        for ftype in ftypes:
+            tb = trellis_sccc_decoder_tb(ftype)
+            tb.run()
+
+
+class trellis_sccc_decoder_tb(gr.top_block):
+    """
+    A simple top block for use testing gr-trellis.
+    """
+
+    def __init__(self, ftype):
+        super(trellis_sccc_decoder_tb, self).__init__()
+        func = eval("trellis.sccc_decoder_" + ftype)
+        dsttype = gr.sizeof_int
+        if ftype == "b":
+            dsttype = gr.sizeof_char
+        elif ftype == "s":
+            dsttype = gr.sizeof_short
+        elif ftype == "i":
+            dsttype = gr.sizeof_int
+        data = [1 * 200]
+        src = blocks.vector_source_f(data)
+        self.dst = blocks.null_sink(dsttype * 1)
+        vbc = func(trellis.fsm(), 0, -1, trellis.fsm(trellis.fsm(1, 3, [91, 121, 117])),
+                   0, -1, trellis.interleaver(), 10, 10, trellis.TRELLIS_MIN_SUM)
+        self.connect((src, 0), (vbc, 0))
+        self.connect((vbc, 0), (self.dst, 0))
+
 
 class trellis_tb(gr.top_block):
     """
