@@ -111,7 +111,6 @@ class trellis_sccc_decoder_combined_tb(gr.top_block):
         self.connect((vbc, 0), (self.dst, 0))
 
 
-
 class trellis_tb(gr.top_block):
     """
     A simple top block for use testing gr-trellis.
