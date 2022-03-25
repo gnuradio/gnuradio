@@ -79,6 +79,11 @@ class test_trellis (gr_unittest.TestCase):
             tb = trellis_comb_tb(ftype)
             tb.run()
 
+    def test_001_pccc_decoder_combined(self):
+        ftypes = ["fb", "fs", "fi", "cb", "cs", "ci"]
+        for ftype in ftypes:
+            tb = trellis_pccc_decoder_combined_tb(ftype)
+            tb.run()
 
 class trellis_comb_tb(gr.top_block):
     """
@@ -167,6 +172,37 @@ class trellis_tb(gr.top_block):
         self.connect(mod, (add, 0))
         self.connect(noise, (add, 1))
         self.connect(add, metrics, va, fsmi2s, self.dst)
+
+
+class trellis_pccc_decoder_combined_tb(gr.top_block):
+    """
+    A simple top block for use testing gr-trellis.
+    """
+
+    def __init__(self, ftype):
+        super(trellis_pccc_decoder_combined_tb, self).__init__()
+        func = eval("trellis.pccc_decoder_combined_" + ftype)
+        dsttype = gr.sizeof_int
+        if ftype[1] == "b":
+            dsttype = gr.sizeof_char
+        elif ftype[1] == "s":
+            dsttype = gr.sizeof_short
+        elif ftype[1] == "i":
+            dsttype = gr.sizeof_int
+        src_func = eval("blocks.vector_source_" + ftype[0])
+        data = [1 * 200]
+        src = src_func(data)
+        self.dst = blocks.null_sink(dsttype * 1)
+        constellation = [1, 1, 1, 1, 1, -1, 1, -1, 1, 1, -1, -1, -1, 1, 1, -1, 1, -1, -1, -1, 1, -1, -1, -1]
+        vbc = func(trellis.fsm(), 0, -1, trellis.fsm(), 0, -1, trellis.interleaver(), 10, 10,
+                   trellis.TRELLIS_MIN_SUM, 2, constellation, digital.TRELLIS_EUCLIDEAN, 1.0)
+
+        ##################################################
+        # Connections
+        ##################################################
+
+        self.connect((src, 0), (vbc, 0))
+        self.connect((vbc, 0), (self.dst, 0))
 
 
 if __name__ == '__main__':
