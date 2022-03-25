@@ -32,23 +32,21 @@ void bind_pccc_encoder_template(py::module& m, const char* classname)
 {
     using pccc_encoder = gr::trellis::pccc_encoder<IN_T, OUT_T>;
 
-    py::class_<pccc_encoder,
-              gr::block,
-              gr::basic_block,
-              std::shared_ptr<pccc_encoder>>(m, classname)
-       .def(py::init(&gr::trellis::pccc_encoder<IN_T, OUT_T>::make),
-            py::arg("FSM1"),
-            py::arg("ST1"),
-            py::arg("FSM2"),
-            py::arg("ST2"),
-            py::arg("INTERLEAVER"),
-            py::arg("blocklength"))
-       .def("FSM1", &pccc_encoder::FSM1)
-       .def("ST1", &pccc_encoder::ST1)
-       .def("FSM2", &pccc_encoder::FSM2)
-       .def("ST2", &pccc_encoder::ST2)
-       .def("INTERLEAVER", &pccc_encoder::INTERLEAVER)
-       .def("blocklength", &pccc_encoder::blocklength);
+    py::class_<pccc_encoder, gr::block, gr::basic_block, std::shared_ptr<pccc_encoder>>(
+        m, classname)
+        .def(py::init(&gr::trellis::pccc_encoder<IN_T, OUT_T>::make),
+             py::arg("FSM1"),
+             py::arg("ST1"),
+             py::arg("FSM2"),
+             py::arg("ST2"),
+             py::arg("INTERLEAVER"),
+             py::arg("blocklength"))
+        .def("FSM1", &pccc_encoder::FSM1)
+        .def("ST1", &pccc_encoder::ST1)
+        .def("FSM2", &pccc_encoder::FSM2)
+        .def("ST2", &pccc_encoder::ST2)
+        .def("INTERLEAVER", &pccc_encoder::INTERLEAVER)
+        .def("blocklength", &pccc_encoder::blocklength);
 }
 
 void bind_pccc_encoder(py::module& m)
