@@ -73,6 +73,46 @@ class test_trellis (gr_unittest.TestCase):
             # Make sure all packets successfully transmitted.
             self.assertEqual(tb.dst.ntotal(), tb.dst.nright())
 
+    def test_001_viterbi_combined(self):
+        ftypes = ["ss", "si", "ib", "is", "ii", "fb", "fs", "fi", "cb", "cs", "ci"]
+        for ftype in ftypes:
+            tb = trellis_comb_tb(ftype)
+            tb.run()
+
+
+class trellis_comb_tb(gr.top_block):
+    """
+    A simple top block for use testing gr-trellis.
+    """
+
+    def __init__(self, ftype):
+        super(trellis_comb_tb, self).__init__()
+        func = eval("trellis.viterbi_combined_" + ftype)
+        dsttype = gr.sizeof_int
+        if ftype[1] == "b":
+            dsttype = gr.sizeof_char
+        elif ftype[1] == "i":
+            dsttype = gr.sizeof_int
+        elif ftype[1] == "s":
+            dsttype = gr.sizeof_short
+        elif ftype[1] == "f":
+            dsttype = gr.sizeof_float
+        elif ftype[1] == "c":
+            dsttype = gr.sizeof_gr_complex
+        src_func = eval("blocks.vector_source_" + ftype[0])
+        data = [1 * 200]
+        src = src_func(data)
+        self.dst = blocks.null_sink(dsttype * 1)
+        constellation = [1, 1, 1, 1, 1, -1, 1, -1, 1, 1, -1, -1, -1, 1, 1, -1, 1, -1, -1, -1, 1, -1, -1, -1]
+        vbc = func(trellis.fsm(1, 3, [91, 121, 117]), 1, 0, -1, 3, constellation, digital.TRELLIS_EUCLIDEAN)
+
+        ##################################################
+        # Connections
+        ##################################################
+
+        self.connect((src, 0), (vbc, 0))
+        self.connect((vbc, 0), (self.dst, 0))
+
 
 class trellis_tb(gr.top_block):
     """
