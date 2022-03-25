@@ -125,31 +125,33 @@ class trellis_sccc_encoder_tb(gr.top_block):
 
 
 class trellis_pccc_encoder_tb(gr.top_block):
+    def test_001_sccc_decoder(self):
+        ftypes = ["b", "s", "i"]
+        for ftype in ftypes:
+            tb = trellis_sccc_decoder_tb(ftype)
+            tb.run()
+
+
+class trellis_sccc_decoder_tb(gr.top_block):
     """
     A simple top block for use testing gr-trellis.
     """
 
     def __init__(self, ftype):
-        super(trellis_pccc_encoder_tb, self).__init__()
-        func = eval("trellis.pccc_encoder_" + ftype)
+        super(trellis_sccc_decoder_tb, self).__init__()
+        func = eval("trellis.sccc_decoder_" + ftype)
         dsttype = gr.sizeof_int
-        if ftype[1] == "b":
+        if ftype == "b":
             dsttype = gr.sizeof_char
-        elif ftype[1] == "s":
+        elif ftype == "s":
             dsttype = gr.sizeof_short
-        elif ftype[1] == "i":
+        elif ftype == "i":
             dsttype = gr.sizeof_int
-        src_func = eval("blocks.vector_source_" + ftype[0])
         data = [1 * 200]
-        src = src_func(data)
+        src = blocks.vector_source_f(data)
         self.dst = blocks.null_sink(dsttype * 1)
-        vbc = func(trellis.fsm(), 0, trellis.fsm(), 0, trellis.interleaver(), 10)
-
-        ##################################################
-        # Connections
-        ##################################################
-
-        vbc = func(trellis.fsm(), 0, trellis.fsm(), 0, trellis.interleaver(), 2)
+        vbc = func(trellis.fsm(), 0, -1, trellis.fsm(trellis.fsm(1, 3, [91, 121, 117])),
+                   0, -1, trellis.interleaver(), 10, 10, trellis.TRELLIS_MIN_SUM)
         self.connect((src, 0), (vbc, 0))
         self.connect((vbc, 0), (self.dst, 0))
 
