@@ -30,9 +30,9 @@ namespace py = pybind11;
 template <class IN_T, class OUT_T>
 void bind_sccc_decoder_combined_blk_template(py::module& m, const char* classname)
 {
-   using sccc_decoder_combined_blk = gr::trellis::sccc_decoder_combined_blk<IN_T, OUT_T>;
+    using sccc_decoder_combined_blk = gr::trellis::sccc_decoder_combined_blk<IN_T, OUT_T>;
 
-   py::class_<sccc_decoder_combined_blk,
+    py::class_<sccc_decoder_combined_blk,
               gr::block,
               gr::basic_block,
               std::shared_ptr<sccc_decoder_combined_blk>>(m, classname)
@@ -69,10 +69,16 @@ void bind_sccc_decoder_combined_blk_template(py::module& m, const char* classnam
 
 void bind_sccc_decoder_combined_blk(py::module& m)
 {
-   bind_sccc_decoder_combined_blk_template<float, std::uint8_t>(m, "sccc_decoder_combined_fb");
-   bind_sccc_decoder_combined_blk_template<float, std::int16_t>(m, "sccc_decoder_combined_fs");
-   bind_sccc_decoder_combined_blk_template<float, std::int32_t>(m, "sccc_decoder_combined_fi");
-   bind_sccc_decoder_combined_blk_template<gr_complex, std::uint8_t>(m, "sccc_decoder_combined_cb");
-   bind_sccc_decoder_combined_blk_template<gr_complex, std::int16_t>(m, "sccc_decoder_combined_cs");
-   bind_sccc_decoder_combined_blk_template<gr_complex, std::int32_t>(m, "sccc_decoder_combined_ci");
+    bind_sccc_decoder_combined_blk_template<float, std::uint8_t>(
+        m, "sccc_decoder_combined_fb");
+    bind_sccc_decoder_combined_blk_template<float, std::int16_t>(
+        m, "sccc_decoder_combined_fs");
+    bind_sccc_decoder_combined_blk_template<float, std::int32_t>(
+        m, "sccc_decoder_combined_fi");
+    bind_sccc_decoder_combined_blk_template<gr_complex, std::uint8_t>(
+        m, "sccc_decoder_combined_cb");
+    bind_sccc_decoder_combined_blk_template<gr_complex, std::int16_t>(
+        m, "sccc_decoder_combined_cs");
+    bind_sccc_decoder_combined_blk_template<gr_complex, std::int32_t>(
+        m, "sccc_decoder_combined_ci");
 }
