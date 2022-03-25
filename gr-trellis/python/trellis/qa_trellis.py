@@ -98,7 +98,7 @@ class trellis_sccc_decoder_tb(gr.top_block):
         data = [1 * 200]
         src = blocks.vector_source_f(data)
         self.dst = blocks.null_sink(dsttype * 1)
-        vbc = func(trellis.fsm(), 0, -1, trellis.fsm(trellis.fsm(1, 3, [91, 121, 117])),
+        vbc = func(trellis.fsm(), 0, -1, trellis.fsm(1, 3, [91, 121, 117]),
                    0, -1, trellis.interleaver(), 10, 10, trellis.TRELLIS_MIN_SUM)
         self.connect((src, 0), (vbc, 0))
         self.connect((vbc, 0), (self.dst, 0))
