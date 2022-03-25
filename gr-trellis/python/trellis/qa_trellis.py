@@ -85,6 +85,7 @@ class test_trellis (gr_unittest.TestCase):
             tb = trellis_pccc_decoder_combined_tb(ftype)
             tb.run()
 
+
 class trellis_comb_tb(gr.top_block):
     """
     A simple top block for use testing gr-trellis.
