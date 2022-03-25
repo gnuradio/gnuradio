@@ -89,6 +89,11 @@ class test_trellis (gr_unittest.TestCase):
             tb = trellis_pccc_decoder_tb(ftype)
             tb.run()
 
+    def test_001_pccc_decoder_combined(self):
+        ftypes = ["fb", "fs", "fi", "cb", "cs", "ci"]
+        for ftype in ftypes:
+            tb = trellis_pccc_decoder_combined_tb(ftype)
+            tb.run()
 
 class trellis_comb_tb(gr.top_block):
     def test_001_sccc_encoder(self):
@@ -223,27 +228,33 @@ class trellis_tb(gr.top_block):
         self.connect(noise, (add, 1))
         self.connect(add, metrics, va, fsmi2s, self.dst)
 
-
-class trellis_pccc_decoder_tb(gr.top_block):
+class trellis_pccc_decoder_combined_tb(gr.top_block):
     """
     A simple top block for use testing gr-trellis.
     """
 
     def __init__(self, ftype):
-        super(trellis_pccc_decoder_tb, self).__init__()
-        func = eval("trellis.pccc_decoder_" + ftype)
+        super(trellis_pccc_decoder_combined_tb, self).__init__()
+        func = eval("trellis.pccc_decoder_combined_" + ftype)
         dsttype = gr.sizeof_int
-        if ftype == "b":
+        if ftype[1] == "b":
             dsttype = gr.sizeof_char
-        elif ftype == "s":
+        elif ftype[1] == "s":
             dsttype = gr.sizeof_short
-        elif ftype == "i":
+        elif ftype[1] == "i":
             dsttype = gr.sizeof_int
+        src_func = eval("blocks.vector_source_" + ftype[0])
         data = [1 * 200]
-        src = blocks.vector_source_f(data)
+        src = src_func(data)
         self.dst = blocks.null_sink(dsttype * 1)
-        vbc = func(trellis.fsm(1, 3, [91, 121, 117]), 0, -1, trellis.fsm(1, 3, [91, 121, 117]),
-                   0, -1, trellis.interleaver(), 10, 10, trellis.TRELLIS_MIN_SUM)
+        constellation = [1, 1, 1, 1, 1, -1, 1, -1, 1, 1, -1, -1, -1, 1, 1, -1, 1, -1, -1, -1, 1, -1, -1, -1]
+        vbc = func(trellis.fsm(), 0, -1, trellis.fsm(), 0, -1, trellis.interleaver(), 10, 10,
+                   trellis.TRELLIS_MIN_SUM, 2, constellation, digital.TRELLIS_EUCLIDEAN, 1.0)
+
+        ##################################################
+        # Connections
+        ##################################################
+
         self.connect((src, 0), (vbc, 0))
         self.connect((vbc, 0), (self.dst, 0))
 
