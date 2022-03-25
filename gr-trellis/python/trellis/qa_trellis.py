@@ -95,6 +95,7 @@ class test_trellis (gr_unittest.TestCase):
             tb = trellis_pccc_decoder_combined_tb(ftype)
             tb.run()
 
+
 class trellis_comb_tb(gr.top_block):
     def test_001_sccc_encoder(self):
         ftypes = ["bb", "bs", "bi", "ss", "si", "ii"]
