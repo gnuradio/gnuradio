@@ -79,6 +79,12 @@ class test_trellis (gr_unittest.TestCase):
             tb = trellis_comb_tb(ftype)
             tb.run()
 
+    def test_001_pccc_encoder(self):
+        ftypes = ["bb", "bs", "bi", "ss", "si", "ii"]
+        for ftype in ftypes:
+            tb = trellis_pccc_encoder_tb(ftype)
+            tb.run()
+
 
 class trellis_comb_tb(gr.top_block):
     """
@@ -105,6 +111,35 @@ class trellis_comb_tb(gr.top_block):
         self.dst = blocks.null_sink(dsttype * 1)
         constellation = [1, 1, 1, 1, 1, -1, 1, -1, 1, 1, -1, -1, -1, 1, 1, -1, 1, -1, -1, -1, 1, -1, -1, -1]
         vbc = func(trellis.fsm(1, 3, [91, 121, 117]), 1, 0, -1, 3, constellation, digital.TRELLIS_EUCLIDEAN)
+
+        ##################################################
+        # Connections
+        ##################################################
+
+        self.connect((src, 0), (vbc, 0))
+        self.connect((vbc, 0), (self.dst, 0))
+
+
+class trellis_pccc_encoder_tb(gr.top_block):
+    """
+    A simple top block for use testing gr-trellis.
+    """
+
+    def __init__(self, ftype):
+        super(trellis_pccc_encoder_tb, self).__init__()
+        func = eval("trellis.pccc_encoder_" + ftype)
+        dsttype = gr.sizeof_int
+        if ftype[1] == "b":
+            dsttype = gr.sizeof_char
+        elif ftype[1] == "s":
+            dsttype = gr.sizeof_short
+        elif ftype[1] == "i":
+            dsttype = gr.sizeof_int
+        src_func = eval("blocks.vector_source_" + ftype[0])
+        data = [1 * 200]
+        src = src_func(data)
+        self.dst = blocks.null_sink(dsttype * 1)
+        vbc = func(trellis.fsm(), 0, trellis.fsm(), 0, trellis.interleaver(), 10)
 
         ##################################################
         # Connections
