@@ -78,6 +78,15 @@ class test_qtgui(gr_unittest.TestCase):
     def test14(self):
         self.qtsnk = qtgui.eye_sink_c(1024, 1, 1, None)
 
+    def test15(self):
+        self.qtsnk = qtgui.display_text_sink("Test")
+
+    def test16(self):
+        self.qtsnk = qtgui.display_text_msg("Test",'text',80)
+
+    def test17(self):
+        self.qtsnk = qtgui.display_image(1400,2080)
+
 
 if __name__ == '__main__':
     gr_unittest.run(test_qtgui)

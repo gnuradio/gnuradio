@@ -12,6 +12,11 @@
 
 add_library(gnuradio-qtgui
     DisplayPlot.cc
+    display_image_impl.cc
+    display_text_msg_impl.cc
+    display_text_sink_impl.cc
+    display_text_window.cc
+    showpngpicture.cc
     FrequencyDisplayPlot.cc
     EyeDisplayPlot.cc
     TimeDomainDisplayPlot.cc
@@ -103,6 +108,8 @@ set(qtgui_mod_includedir ${CMAKE_CURRENT_SOURCE_DIR}/../include/gnuradio/qtgui)
 QT5_WRAP_CPP(qtgui_moc_sources
     ${qtgui_mod_includedir}/spectrumdisplayform.h
     ${qtgui_mod_includedir}/displayform.h
+    display_text_window.h
+    showpngpicture.h
     ${qtgui_mod_includedir}/eyedisplaysform.h
     ${qtgui_mod_includedir}/eyedisplayform.h
     ${qtgui_mod_includedir}/timedisplayform.h
@@ -131,7 +138,7 @@ QT5_WRAP_CPP(qtgui_moc_sources
   target_sources(gnuradio-qtgui PRIVATE
     ${qtgui_moc_sources}
     )
-  QT5_WRAP_UI(qtgui_ui_hdrs spectrumdisplayform.ui)
+  QT5_WRAP_UI(qtgui_ui_hdrs spectrumdisplayform.ui showpngpicture.ui)
   target_sources(gnuradio-qtgui PRIVATE
     ${qtgui_ui_hdrs}
     )
@@ -143,7 +150,10 @@ set(spectrum_ui_hdr ${CMAKE_CURRENT_BINARY_DIR}/spectrumdisplayform.ui.h)
 if(NOT EXISTS ${spectrum_ui_hdr})
     file(WRITE ${spectrum_ui_hdr} "#include <ui_spectrumdisplayform.h>\n")
 endif()
-
+set(showpngpicture_ui_hdr ${CMAKE_CURRENT_BINARY_DIR}/showpngpicture.ui.h)
+if(NOT EXISTS ${showpngpicture_ui_hdr})
+    file(WRITE ${showpngpicture_ui_hdr} "#include <ui_showpngpicture.h>\n")
+endif()
 #Add Windows DLL resource file if using MSVC
 if(MSVC)
     include(${CMAKE_SOURCE_DIR}/cmake/Modules/GrVersion.cmake)

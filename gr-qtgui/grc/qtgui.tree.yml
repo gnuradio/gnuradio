@@ -1,8 +1,11 @@
 '[Core]':
 - Instrumentation:
   - QT:
+    - qtgui_display_text
+    - qtgui_display_text_msg
     - qtgui_eye_sink_x
     - qtgui_freq_sink_x
+    - qtgui_display_image
     - qtgui_time_sink_x
     - qtgui_const_sink_x
     - qtgui_waterfall_sink_x

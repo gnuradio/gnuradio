@@ -19,6 +19,9 @@ list(APPEND qtgui_python_files
     const_sink_c_python.cc
     constellationdisplayform_python.cc
     displayform_python.cc
+    display_image_sink_python.cc
+    display_text_msg_python.cc
+    display_text_sink_python.cc
     edit_box_msg_python.cc
     eye_sink_c_python.cc
     eye_sink_f_python.cc

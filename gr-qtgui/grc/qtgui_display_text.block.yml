@@ -1,0 +1,55 @@
+id: qtgui_display_text
+label: QT GUI Text Sink
+flags: [ python ]
+
+parameters:
+
+-   id: label
+    label: Label
+    dtype: string
+-   id: splitlength
+    label: "Maximum line length"
+    dtype: int
+    default: 0
+-   id: maxlines
+    label: "Maximum of lines"
+    dtype: int
+    default: 100
+-   id: gui_hint
+    label: GUI Hint
+    dtype: gui_hint
+    hide: part
+
+inputs:
+-   domain: stream
+    label: in
+    dtype: byte
+
+assert:
+- ${splitlength >= 0}
+- ${maxlines >= 2}
+
+templates:
+    imports: |-
+             from PyQt5 import Qt
+             from gnuradio import qtgui
+             import sip
+
+    make: |-
+           <%
+              win = 'self._%s_win'%id
+           %>\
+           qtgui.display_text_sink(${label}, ${splitlength}, ${maxlines})
+           self._${id}_win = sip.wrapinstance(self.${id}.qwidget(), Qt.QWidget)
+           ${gui_hint() % win}
+
+documentation: |-
+
+    Label: You can insert a header text. Usefull if you have several text sinks.
+    Maximum line length: 0 use only nl chars of the input stream to switch to next line.
+                         >0 Switch to next line, if maximum line characters without any nl char were received.
+    Maximum of lines: Maximal number of lines, that can be displayed in the scroll area.
+ 
+    The GUI hint can be used to position the widget within the application. The hint is of the form [tab_id@tab_index]: [row, col, row_span, col_span]. Both the tab specification and the grid position are optional.
+
+file_format: 1

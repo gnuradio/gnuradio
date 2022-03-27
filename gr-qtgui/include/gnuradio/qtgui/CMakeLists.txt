@@ -14,6 +14,9 @@ install(FILES
   constellationdisplayform.h
   ConstellationDisplayPlot.h
   const_sink_c.h
+  display_image_sink.h
+  display_text_msg.h
+  display_text_sink.h
   displayform.h
   eyedisplaysform.h
   DisplayPlot.h
