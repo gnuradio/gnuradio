@@ -56,6 +56,12 @@ GR_PYTHON_CHECK_MODULE_RAW(
     NUMPY_FOUND
 )
 
+GR_PYTHON_CHECK_MODULE_RAW(
+  "jsonschema"
+  "import jsonschema"
+  JSONSCHEMA_FOUND
+)
+
 ########################################################################
 # Register component
 ########################################################################
@@ -79,6 +85,11 @@ GR_REGISTER_COMPONENT("gnuradio-companion" ENABLE_GRC
 )
 
 if(ENABLE_GRC)
+
+  GR_REGISTER_COMPONENT("JSON/YAML config blocks" ENABLE_JSONYAML_BLOCKS
+    ENABLE_GRC
+    JSONSCHEMA_FOUND
+    )
 
 ########################################################################
 # Create and install the grc and grc-docs conf file

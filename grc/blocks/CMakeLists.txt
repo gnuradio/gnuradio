@@ -37,6 +37,11 @@ GEN_BLOCK_YML(variable_struct.block.yml.py variable_struct.block.yml)
 
 add_custom_target(grc_generated_yml ALL DEPENDS ${generated_yml_files})
 
+if(NOT ENABLE_JSONYAML_BLOCKS)
+  list(REMOVE_ITEM yml_files "json_config.block.yml")
+  list(REMOVE_ITEM yml_files "yaml_config.block.yml")
+endif()
+
 install(
     FILES ${yml_files} ${generated_yml_files}
     DESTINATION ${GRC_BLOCKS_DIR}
