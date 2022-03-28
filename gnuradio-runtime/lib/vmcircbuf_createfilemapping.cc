@@ -54,7 +54,7 @@ vmcircbuf_createfilemapping::vmcircbuf_createfilemapping(size_t size)
     gr::configure_default_loggers(
         d_logger, d_debug_logger, "vmcircbuf_createfilemapping");
 #if !defined(HAVE_CREATEFILEMAPPING)
-    d_logger->error("{:s}: createfilemapping is not available", __FUNCTION__);
+    d_debug_logger->info("{:s}: CreateFileMapping is not available", __FUNCTION__);
     throw std::runtime_error("gr::vmcircbuf_createfilemapping");
 #else
     gr::thread::scoped_lock guard(s_vm_mutex);
