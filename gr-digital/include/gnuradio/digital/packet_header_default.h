@@ -11,6 +11,7 @@
 #define INCLUDED_DIGITAL_PACKET_HEADER_DEFAULT_H
 
 #include <gnuradio/digital/api.h>
+#include <gnuradio/digital/crc.h>
 #include <gnuradio/tags.h>
 #include <boost/crc.hpp>
 
@@ -91,7 +92,7 @@ protected:
     int d_bits_per_byte;
     unsigned d_header_number;
     unsigned d_mask;
-    boost::crc_optimal<8, 0x07, 0xFF, 0x00, false, false> d_crc_impl;
+    crc d_crc_impl;
 };
 
 } // namespace digital
