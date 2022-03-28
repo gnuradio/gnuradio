@@ -80,6 +80,7 @@ requirements:
     - lxml
     - pygobject
     - pyyaml
+    - jsonschema
   # gnuradio.iio
     - libiio
     - libad9361-iio
@@ -114,6 +115,7 @@ requirements:
     - pyqt
     - python
     - pyyaml
+    - jsonschema
     - pyzmq
     - {{ pin_compatible('qwt', max_pin='x.x') }}
     # need setuptools because modtool uses pkg_resources
