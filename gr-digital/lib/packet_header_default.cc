@@ -36,7 +36,8 @@ packet_header_default::packet_header_default(long header_len,
       d_num_tag_key(num_tag_key.empty() ? pmt::PMT_NIL
                                         : pmt::string_to_symbol(num_tag_key)),
       d_bits_per_byte(bits_per_byte),
-      d_header_number(0)
+      d_header_number(0),
+      d_crc_impl(8, 0x07, 0xFF, 0x00, false, false)
 {
     if (d_bits_per_byte < 1 || d_bits_per_byte > 8) {
         throw std::invalid_argument("bits_per_byte must be in [1, 8]");
@@ -51,10 +52,11 @@ bool packet_header_default::header_formatter(long packet_len,
                                              const std::vector<tag_t>& tags)
 {
     packet_len &= 0x0FFF;
-    d_crc_impl.reset();
-    d_crc_impl.process_bytes((void const*)&packet_len, 2);
-    d_crc_impl.process_bytes((void const*)&d_header_number, 2);
-    unsigned char crc = d_crc_impl();
+    unsigned char buffer[] = { (unsigned char)(packet_len & 0xFF),
+                               (unsigned char)(packet_len >> 8),
+                               (unsigned char)(d_header_number & 0xFF),
+                               (unsigned char)(d_header_number >> 8) };
+    unsigned char crc = d_crc_impl.compute(buffer, sizeof(buffer));
 
     memset(out, 0x00, d_header_len);
     int k = 0; // Position in out
@@ -104,10 +106,11 @@ bool packet_header_default::header_parser(const unsigned char* in,
         return true;
     }
 
-    d_crc_impl.reset();
-    d_crc_impl.process_bytes((void const*)&header_len, 2);
-    d_crc_impl.process_bytes((void const*)&header_num, 2);
-    unsigned char crc_calcd = d_crc_impl();
+    unsigned char buffer[] = { (unsigned char)(header_len & 0xFF),
+                               (unsigned char)(header_len >> 8),
+                               (unsigned char)(header_num & 0xFF),
+                               (unsigned char)(header_num >> 8) };
+    unsigned char crc_calcd = d_crc_impl.compute(buffer, sizeof(buffer));
     for (int i = 0; i < 8 && k < d_header_len; i += d_bits_per_byte, k++) {
         if ((((int)in[k]) & d_mask) != (((int)crc_calcd >> i) & d_mask)) {
             return false;

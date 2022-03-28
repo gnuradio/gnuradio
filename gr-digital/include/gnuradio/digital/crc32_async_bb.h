@@ -38,8 +38,7 @@ namespace digital {
  * calculated on the PDU and appended to it. The output is then 4
  * bytes longer than the input.
  *
- * This block implements the CRC32 using the Boost crc_optimal
- * class for 32-bit CRCs with the standard generator 0x04C11DB7.
+ * This block implements the CRC32 using the standard generator 0x04C11DB7.
  */
 class DIGITAL_API crc32_async_bb : virtual public block
 {

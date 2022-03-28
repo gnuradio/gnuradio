@@ -26,6 +26,7 @@ crc32_async_bb::sptr crc32_async_bb::make(bool check)
 
 crc32_async_bb_impl::crc32_async_bb_impl(bool check)
     : block("crc32_async_bb", io_signature::make(0, 0, 0), io_signature::make(0, 0, 0)),
+      d_crc_impl(32, 0x04C11DB7, 0xFFFFFFFF, 0xFFFFFFFF, true, true),
       d_npass(0),
       d_nfail(0)
 {
@@ -54,9 +55,7 @@ void crc32_async_bb_impl::calc(pmt::pmt_t msg)
     const uint8_t* bytes_in = pmt::u8vector_elements(bytes, pkt_len);
     std::vector<uint8_t> bytes_out(4 + pkt_len);
 
-    d_crc_impl.reset();
-    d_crc_impl.process_bytes(bytes_in, pkt_len);
-    crc = d_crc_impl();
+    crc = d_crc_impl.compute(bytes_in, pkt_len);
     memcpy((void*)bytes_out.data(), (const void*)bytes_in, pkt_len);
     memcpy((void*)(bytes_out.data() + pkt_len),
            &crc,
@@ -79,9 +78,7 @@ void crc32_async_bb_impl::check(pmt::pmt_t msg)
     size_t pkt_len(0);
     const uint8_t* bytes_in = pmt::u8vector_elements(bytes, pkt_len);
 
-    d_crc_impl.reset();
-    d_crc_impl.process_bytes(bytes_in, pkt_len - 4);
-    crc = d_crc_impl();
+    crc = d_crc_impl.compute(bytes_in, pkt_len - 4);
     if (crc != *(unsigned int*)(bytes_in + pkt_len - 4)) { // Drop package
         d_nfail++;
         return;
