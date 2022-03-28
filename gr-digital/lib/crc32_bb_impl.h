@@ -11,8 +11,8 @@
 #ifndef INCLUDED_DIGITAL_CRC32_BB_IMPL_H
 #define INCLUDED_DIGITAL_CRC32_BB_IMPL_H
 
+#include <gnuradio/digital/crc.h>
 #include <gnuradio/digital/crc32_bb.h>
-#include <boost/crc.hpp>
 
 namespace gr {
 namespace digital {
@@ -22,9 +22,9 @@ class crc32_bb_impl : public crc32_bb
 private:
     bool d_check;
     bool d_packed;
-    boost::crc_optimal<32, 0x04C11DB7, 0xFFFFFFFF, 0xFFFFFFFF, true, true> d_crc_impl;
+    crc d_crc_impl;
     unsigned int d_crc_length;
-    std::vector<char> d_buffer;
+    std::vector<unsigned char> d_buffer;
     unsigned int calculate_crc32(const unsigned char* in, size_t packet_length);
 
 public:
