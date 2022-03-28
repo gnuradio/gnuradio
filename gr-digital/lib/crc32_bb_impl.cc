@@ -29,14 +29,15 @@ crc32_bb_impl::crc32_bb_impl(bool check, const std::string& lengthtagname, bool 
                           io_signature::make(1, 1, sizeof(char)),
                           lengthtagname),
       d_check(check),
-      d_packed(packed)
+      d_packed(packed),
+      d_crc_impl(32, 0x04C11DB7, 0xFFFFFFFF, 0xFFFFFFFF, true, true)
 {
     d_crc_length = 4;
     if (!d_packed) {
         d_crc_length = 32;
-        d_buffer = std::vector<char>(d_crc_length);
+        d_buffer = std::vector<unsigned char>(d_crc_length);
     } else {
-        d_buffer = std::vector<char>(4096);
+        d_buffer = std::vector<unsigned char>(4096);
     }
     set_tag_propagation_policy(TPP_DONT);
 }
@@ -55,7 +56,6 @@ int crc32_bb_impl::calculate_output_stream_length(const gr_vector_int& ninput_it
 unsigned int crc32_bb_impl::calculate_crc32(const unsigned char* in, size_t packet_length)
 {
     unsigned int crc = 0;
-    d_crc_impl.reset();
     if (!d_packed) {
         const size_t n_packed_length = 1 + ((packet_length - 1) / 8);
         if (n_packed_length > d_buffer.size()) {
@@ -65,11 +65,9 @@ unsigned int crc32_bb_impl::calculate_crc32(const unsigned char* in, size_t pack
         for (size_t bit = 0; bit < packet_length; bit++) {
             d_buffer[bit / 8] |= (in[bit] << (bit % 8));
         }
-        d_crc_impl.process_bytes(&d_buffer[0], n_packed_length);
-        crc = d_crc_impl();
+        crc = d_crc_impl.compute(&d_buffer[0], n_packed_length);
     } else {
-        d_crc_impl.process_bytes(in, packet_length);
-        crc = d_crc_impl();
+        crc = d_crc_impl.compute(in, packet_length);
     }
     return crc;
 }
@@ -89,7 +87,6 @@ int crc32_bb_impl::work(int noutput_items,
         if (packet_length <= d_crc_length) {
             return 0;
         }
-        d_crc_impl.process_bytes(in, packet_length - d_crc_length);
         crc = calculate_crc32(in, packet_length - d_crc_length);
         if (d_packed) {
             if (crc !=

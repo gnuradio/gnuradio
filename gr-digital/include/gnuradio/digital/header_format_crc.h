@@ -11,9 +11,9 @@
 #define INCLUDED_DIGITAL_HEADER_FORMAT_CRC_H
 
 #include <gnuradio/digital/api.h>
+#include <gnuradio/digital/crc.h>
 #include <gnuradio/digital/header_format_default.h>
 #include <pmt/pmt.h>
-#include <boost/crc.hpp>
 
 namespace gr {
 namespace digital {
@@ -90,7 +90,7 @@ protected:
     uint16_t d_header_number;
     pmt::pmt_t d_len_key_name;
     pmt::pmt_t d_num_key_name;
-    boost::crc_optimal<8, 0x07, 0xFF, 0x00, false, false> d_crc_impl;
+    crc d_crc_impl;
 
     //! Verify that the header is valid
     bool header_ok() override;
