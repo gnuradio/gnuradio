@@ -59,7 +59,7 @@ int vmcircbuf_prefs::get(const char* key, char* value, int value_size)
     gr::configure_default_loggers(logger, debug_logger, "vmcircbuf_prefs::get");
 
     if (fp == 0) {
-        logger->error("{:s}: {:s}", pathname(key), strerror(errno));
+        debug_logger->info("{:s}: {:s}", pathname(key), strerror(errno));
         return 0;
     }
 
