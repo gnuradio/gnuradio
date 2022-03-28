@@ -23,9 +23,11 @@ bash $MINIFORGE_FILE -b -p ${MINIFORGE_HOME}
 source ${MINIFORGE_HOME}/etc/profile.d/conda.sh
 conda activate base
 
-echo -e "\n\nInstalling conda-forge-ci-setup=3 and conda-build."
-mamba install -n base --update-specs --quiet --yes "conda-forge-ci-setup=3" conda-build pip boa
-mamba update -n base --update-specs --quiet --yes "conda-forge-ci-setup=3" conda-build pip boa
+echo -e "\n\nInstalling ['conda-forge-ci-setup=3'] and conda-build."
+mamba install --update-specs --quiet --yes --channel conda-forge \
+    conda-build pip boa conda-forge-ci-setup=3
+mamba update --update-specs --yes --quiet --channel conda-forge \
+    conda-build pip boa conda-forge-ci-setup=3
 
 
 
@@ -51,16 +53,30 @@ source run_conda_forge_build_setup
 
 ( endgroup "Configuring conda" ) 2> /dev/null
 
-
 echo -e "\n\nMaking the build clobber file"
 make_build_number ./ ./.packaging/conda_recipe ./.ci_support/${CONFIG}.yaml
 
-conda mambabuild ./.packaging/conda_recipe -m ./.ci_support/${CONFIG}.yaml --suppress-variables --clobber-file ./.ci_support/clobber_${CONFIG}.yaml ${EXTRA_CB_OPTIONS:-}
 
-( startgroup "Uploading packages" ) 2> /dev/null
+if [[ "${BUILD_WITH_CONDA_DEBUG:-0}" == 1 ]]; then
+    if [[ "x${BUILD_OUTPUT_ID:-}" != "x" ]]; then
+        EXTRA_CB_OPTIONS="${EXTRA_CB_OPTIONS:-} --output-id ${BUILD_OUTPUT_ID}"
+    fi
+    conda debug ./.packaging/conda_recipe -m ./.ci_support/${CONFIG}.yaml \
+        ${EXTRA_CB_OPTIONS:-} \
+        --clobber-file ./.ci_support/clobber_${CONFIG}.yaml
 
-if [[ "${UPLOAD_PACKAGES}" != "False" ]] && [[ "${IS_PR_BUILD}" == "False" ]]; then
-  upload_package  ./ ./.packaging/conda_recipe ./.ci_support/${CONFIG}.yaml
+    # Drop into an interactive shell
+    /bin/bash
+else
+    conda mambabuild ./.packaging/conda_recipe -m ./.ci_support/${CONFIG}.yaml \
+        --suppress-variables ${EXTRA_CB_OPTIONS:-} \
+        --clobber-file ./.ci_support/clobber_${CONFIG}.yaml
+
+    ( startgroup "Uploading packages" ) 2> /dev/null
+
+    if [[ "${UPLOAD_PACKAGES}" != "False" ]] && [[ "${IS_PR_BUILD}" == "False" ]]; then
+      upload_package  ./ ./.packaging/conda_recipe ./.ci_support/${CONFIG}.yaml
+    fi
+
+    ( endgroup "Uploading packages" ) 2> /dev/null
 fi
-
-( endgroup "Uploading packages" ) 2> /dev/null

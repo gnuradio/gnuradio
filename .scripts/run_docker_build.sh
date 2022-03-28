@@ -14,7 +14,7 @@ set -xeo pipefail
 THISDIR="$( cd "$( dirname "$0" )" >/dev/null && pwd )"
 PROVIDER_DIR="$(basename $THISDIR)"
 
-FEEDSTOCK_ROOT=$(cd "$(dirname "$0")/.."; pwd;)
+FEEDSTOCK_ROOT="$( cd "$( dirname "$0" )/.." >/dev/null && pwd )"
 RECIPE_ROOT="${FEEDSTOCK_ROOT}/.packaging/conda_recipe"
 
 if [ -z ${FEEDSTOCK_NAME} ]; then

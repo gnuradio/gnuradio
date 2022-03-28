@@ -66,6 +66,7 @@ BuildRequires:	python3-click-plugins
 BuildRequires:	python3-gobject
 BuildRequires:	python3-numpy
 BuildRequires:	python3-pyyaml
+BuildRequires:	python3-jsonschema
 BuildRequires:	python3-lxml
 BuildRequires:	python3-mako
 BuildRequires:	python3-qt5-devel
@@ -92,6 +93,7 @@ Requires:	python3-thrift
 Requires:	python3-pyopengl
 %endif
 Requires:	python3-pyyaml
+Requires:	python3-jsonschema
 Requires:	python3-gobject
 Requires:	python3-mako
 Requires:	python3-click-plugins
