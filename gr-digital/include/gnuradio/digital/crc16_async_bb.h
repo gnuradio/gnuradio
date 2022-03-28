@@ -40,8 +40,7 @@ namespace digital {
  * calculated on the PDU and appended to it. The output is then 2
  * bytes longer than the input.
  *
- * This block implements the CRC16 using the Boost crc_optimal
- * class for 16-bit CRCs with the standard generator 0x1021.
+ * This block implements the CRC16 using the standard generator 0x1021.
  */
 class DIGITAL_API crc16_async_bb : virtual public block
 {

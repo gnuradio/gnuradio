@@ -11,8 +11,8 @@
 #ifndef INCLUDED_DIGITAL_CRC32_ASYNC_BB_IMPL_H
 #define INCLUDED_DIGITAL_CRC32_ASYNC_BB_IMPL_H
 
+#include <gnuradio/digital/crc.h>
 #include <gnuradio/digital/crc32_async_bb.h>
-#include <boost/crc.hpp>
 
 namespace gr {
 namespace digital {
@@ -20,7 +20,7 @@ namespace digital {
 class crc32_async_bb_impl : public crc32_async_bb
 {
 private:
-    boost::crc_optimal<32, 0x04C11DB7, 0xFFFFFFFF, 0xFFFFFFFF, true, true> d_crc_impl;
+    crc d_crc_impl;
 
     pmt::pmt_t d_in_port;
     pmt::pmt_t d_out_port;
