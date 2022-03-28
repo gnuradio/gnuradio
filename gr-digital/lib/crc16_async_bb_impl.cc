@@ -26,6 +26,7 @@ crc16_async_bb::sptr crc16_async_bb::make(bool check)
 
 crc16_async_bb_impl::crc16_async_bb_impl(bool check)
     : block("crc16_async_bb", io_signature::make(0, 0, 0), io_signature::make(0, 0, 0)),
+      d_crc_ccitt_impl(16, 0x1021, 0xFFFF, 0, false, false),
       d_npass(0),
       d_nfail(0)
 {
@@ -72,9 +73,7 @@ unsigned int crc16_async_bb_impl::process_crc(const uint8_t* bytes_in,
 
     unsigned int result;
 
-    d_crc_ccitt_impl.reset();
-    d_crc_ccitt_impl.process_bytes(bytes_in, n_bytes_prcss);
-    result = d_crc_ccitt_impl();
+    result = d_crc_ccitt_impl.compute(bytes_in, n_bytes_prcss);
     return result;
 }
 
