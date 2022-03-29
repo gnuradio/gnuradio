@@ -87,7 +87,8 @@ def make_yml(num_fields):
         HEADER.format(num_fields),
         FIELD0, ''.join(FIELDS.format(i) for i in range(1, num_fields)),
         ''.join(VALUES.format(i) for i in range(num_fields)),
-        'value: ${value}\n\nasserts:\n',
+        'value: ${'+','.join("value{0}".format(i) for i in range(num_fields))+'}\n\n',
+        'asserts:\n',
         ''.join(ASSERTS.format(i) for i in range(num_fields)),
         ''.join(TEMPLATES.format(num_fields)),
         FOOTER
