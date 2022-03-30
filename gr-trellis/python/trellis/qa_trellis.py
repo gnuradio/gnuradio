@@ -83,6 +83,7 @@ class test_trellis (gr_unittest.TestCase):
         ftypes = ["bb", "bs", "bi", "ss", "si", "ii"]
         for ftype in ftypes:
             tb = trellis_pccc_encoder_tb(ftype)
+
     def test_001_pccc_decoder(self):
         ftypes = ["b", "s", "i"]
         for ftype in ftypes:
@@ -229,6 +230,7 @@ class trellis_tb(gr.top_block):
         self.connect(noise, (add, 1))
         self.connect(add, metrics, va, fsmi2s, self.dst)
 
+
 class trellis_pccc_decoder_tb(gr.top_block):
     """
     A simple top block for use testing gr-trellis.
@@ -251,6 +253,7 @@ class trellis_pccc_decoder_tb(gr.top_block):
                    0, -1, trellis.interleaver(), 10, 10, trellis.TRELLIS_MIN_SUM)
         self.connect((src, 0), (vbc, 0))
         self.connect((vbc, 0), (self.dst, 0))
+
 
 class trellis_pccc_decoder_combined_tb(gr.top_block):
     """
