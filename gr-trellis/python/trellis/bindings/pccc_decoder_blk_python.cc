@@ -27,4 +27,41 @@ namespace py = pybind11;
 // pydoc.h is automatically generated in the build directory
 #include <pccc_decoder_blk_pydoc.h>
 
-void bind_pccc_decoder_blk(py::module& m) {}
+template <class T>
+void bind_pccc_decoder_blk_template(py::module& m, const char* classname)
+{
+    using pccc_decoder_blk = gr::trellis::pccc_decoder_blk<T>;
+
+    py::class_<pccc_decoder_blk,
+               gr::block,
+               gr::basic_block,
+               std::shared_ptr<pccc_decoder_blk>>(m, classname)
+        .def(py::init(&gr::trellis::pccc_decoder_blk<T>::make),
+             py::arg("FSM1"),
+             py::arg("FSM2"),
+             py::arg("ST10"),
+             py::arg("ST1K"),
+             py::arg("ST20"),
+             py::arg("ST2K"),
+             py::arg("INTERLEAVER"),
+             py::arg("blocklength"),
+             py::arg("repetitions"),
+             py::arg("SISO_TYPE"))
+        .def("FSM1", &pccc_decoder_blk::FSM1)
+        .def("FSM2", &pccc_decoder_blk::FSM2)
+        .def("ST10", &pccc_decoder_blk::ST10)
+        .def("ST1K", &pccc_decoder_blk::ST1K)
+        .def("ST20", &pccc_decoder_blk::ST20)
+        .def("ST2K", &pccc_decoder_blk::ST2K)
+        .def("INTERLEAVER", &pccc_decoder_blk::INTERLEAVER)
+        .def("blocklength", &pccc_decoder_blk::blocklength)
+        .def("repetitions", &pccc_decoder_blk::repetitions)
+        .def("SISO_TYPE", &pccc_decoder_blk::SISO_TYPE);
+}
+
+void bind_pccc_decoder_blk(py::module& m)
+{
+    bind_pccc_decoder_blk_template<std::uint8_t>(m, "pccc_decoder_b");
+    bind_pccc_decoder_blk_template<std::int16_t>(m, "pccc_decoder_s");
+    bind_pccc_decoder_blk_template<std::int32_t>(m, "pccc_decoder_i");
+}
