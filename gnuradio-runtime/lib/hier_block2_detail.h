@@ -15,18 +15,19 @@
 #include <gnuradio/hier_block2.h>
 #include <gnuradio/logger.h>
 #include <flat_flowgraph.h>
-#include <boost/core/noncopyable.hpp>
 
 namespace gr {
 
 /*!
  * \ingroup internal
  */
-class GR_RUNTIME_API hier_block2_detail : boost::noncopyable
+class GR_RUNTIME_API hier_block2_detail
 {
 public:
     hier_block2_detail(hier_block2* owner);
     ~hier_block2_detail();
+    hier_block2_detail(const hier_block2_detail&) = delete;
+    hier_block2_detail& operator=(const hier_block2_detail&) = delete;
 
     void connect(basic_block_sptr block);
     void connect(basic_block_sptr src, int src_port, basic_block_sptr dst, int dst_port);

@@ -18,7 +18,6 @@
 #include <gnuradio/api.h>
 #include <gnuradio/thread/thread.h>
 #include <boost/any.hpp>
-#include <boost/core/noncopyable.hpp>
 #include <boost/function.hpp>
 #include <boost/thread/shared_mutex.hpp>
 #include <memory>
@@ -26,11 +25,13 @@
 namespace gr {
 namespace thread {
 
-class GR_RUNTIME_API thread_group : public boost::noncopyable
+class GR_RUNTIME_API thread_group
 {
 public:
     thread_group();
     ~thread_group();
+    thread_group(const thread_group&) = delete;
+    thread_group& operator=(const thread_group&) = delete;
 
     boost::thread* create_thread(const boost::function0<void>& threadfunc);
     void add_thread(std::unique_ptr<boost::thread> thrd);
