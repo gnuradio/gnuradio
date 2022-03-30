@@ -14,7 +14,6 @@
 #include "flat_flowgraph.h"
 #include <gnuradio/api.h>
 #include <gnuradio/block.h>
-#include <boost/core/noncopyable.hpp>
 
 namespace gr {
 
@@ -28,7 +27,7 @@ typedef std::shared_ptr<scheduler> scheduler_sptr;
  * Preconditions: details, buffers and buffer readers have been
  * assigned.
  */
-class GR_RUNTIME_API scheduler : boost::noncopyable
+class GR_RUNTIME_API scheduler
 {
 public:
     /*!
@@ -40,6 +39,9 @@ public:
     scheduler(flat_flowgraph_sptr ffg, int max_noutput_items, bool catch_exceptions);
 
     virtual ~scheduler();
+
+    scheduler(const scheduler&) = delete;
+    scheduler& operator=(const scheduler&) = delete;
 
     /*!
      * \brief Tell the scheduler to stop executing.
