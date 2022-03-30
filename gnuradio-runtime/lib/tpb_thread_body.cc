@@ -16,6 +16,7 @@
 #include <gnuradio/prefs.h>
 #include <pmt/pmt.h>
 #include <boost/thread.hpp>
+#include <chrono>
 #include <iostream>
 
 namespace gr {
@@ -128,10 +129,9 @@ tpb_thread_body::tpb_thread_body(block_sptr block,
             gr::thread::scoped_lock guard(d->d_tpb.mutex);
 
             if (!d->d_tpb.input_changed) {
-                boost::system_time const timeout =
-                    boost::get_system_time() +
-                    boost::posix_time::milliseconds(block->blkd_input_timer_value());
-                d->d_tpb.input_cond.timed_wait(guard, timeout);
+                std::chrono::duration const timeout =
+                    std::chrono::milliseconds(block->blkd_input_timer_value());
+                d->d_tpb.input_cond.wait_for(guard, timeout);
             }
         } break;
 

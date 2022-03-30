@@ -17,10 +17,10 @@
 
 #include <gnuradio/api.h>
 #include <gnuradio/thread/thread.h>
+#include <shared_mutex>
 #include <boost/any.hpp>
 #include <boost/core/noncopyable.hpp>
 #include <boost/function.hpp>
-#include <boost/thread/shared_mutex.hpp>
 #include <memory>
 
 namespace gr {
@@ -41,7 +41,7 @@ public:
 
 private:
     std::list<std::unique_ptr<boost::thread>> m_threads;
-    mutable boost::shared_mutex m_mutex;
+    mutable std::shared_mutex m_mutex;
 };
 
 } /* namespace thread */

@@ -18,7 +18,6 @@
 #include <gnuradio/runtime_types.h>
 #include <gnuradio/sptr_magic.h>
 #include <gnuradio/thread/thread.h>
-#include <boost/thread/condition_variable.hpp>
 #include <deque>
 #include <functional>
 #include <map>
