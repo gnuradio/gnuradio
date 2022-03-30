@@ -13,7 +13,6 @@
 
 #include <pmt/api.h>
 #include <boost/any.hpp>
-#include <boost/noncopyable.hpp>
 #include <complex>
 #include <cstdint>
 #include <iosfwd>
