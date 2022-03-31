@@ -289,8 +289,8 @@ if(WIN32)
     target_compile_definitions(gnuradio-runtime PUBLIC -DWIN32_LEAN_AND_MEAN)
 endif(WIN32)
 
-#need to link with librt on ubuntu 11.10 for shm_*
-if((LINUX) OR (CMAKE_SYSTEM_NAME STREQUAL "kFreeBSD"))
+#need to link with librt on ubuntu 11.10 and Hurd for shm_*
+if((LINUX) OR (CMAKE_SYSTEM_NAME MATCHES "^(kFreeBSD|GNU)$"))
     target_link_libraries(gnuradio-runtime PUBLIC rt)
 endif()
 
