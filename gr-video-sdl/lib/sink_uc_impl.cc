@@ -96,7 +96,7 @@ sink_uc_impl::sink_uc_impl(double framerate,
         msg << "Unable to set SDL video mode: " << SDL_GetError()
             << "; SDL_SetVideoMode() Failed";
         GR_LOG_ERROR(d_logger, msg.str());
-        exit(1);
+        throw std::runtime_error("video_sdl::sink_uc");
     }
 
     if (d_image) {
