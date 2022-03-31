@@ -56,7 +56,7 @@ blocks:
   id: variable
   parameters:
     comment: ''
-    value: 2**13
+    value: 8192
   states:
     coordinate: [301, -1]
     rotation: 0

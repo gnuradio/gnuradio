@@ -1,5 +1,6 @@
 id: vocoder_alaw_decode_bs
 label: Alaw Audio Decoder
+flags: [ python, cpp ]
 
 inputs:
 -   domain: stream
@@ -12,5 +13,11 @@ outputs:
 templates:
     imports: from gnuradio import vocoder
     make: vocoder.alaw_decode_bs()
+
+cpp_templates:
+    includes: [ '#include <gnuradio/vocoder/alaw_decode_bs.h>' ]
+    declarations: 'vocoder::alaw_decode_bs::sptr ${id};'
+    make: 'this->${id} = vocoder::alaw_decode_bs::make();'
+    link: ['gnuradio-vocoder']
 
 file_format: 1

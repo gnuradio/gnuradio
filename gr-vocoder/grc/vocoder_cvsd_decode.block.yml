@@ -1,5 +1,6 @@
 id: vocoder_cvsd_decode_bf
 label: CVSD Decoder
+flags: [ python ]
 
 parameters:
 -   id: resample
