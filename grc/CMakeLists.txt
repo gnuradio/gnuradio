@@ -102,12 +102,12 @@ endif(CMAKE_INSTALL_PREFIX STREQUAL "/usr")
 
 if(UNIX)
     find_program(GRC_XTERM_EXE
-        NAMES xterminal-emulator gnome-terminal konsole xterm
+        NAMES x-terminal-emulator gnome-terminal konsole xterm foot
         HINTS ENV PATH
         DOC "graphical terminal emulator used in GRC's no-gui-mode"
     )
     if(NOT GRC_XTERM_EXE)
-        set(GRC_XTERM_EXE "")
+        set(GRC_XTERM_EXE "x-terminal-emulator")
     endif()
 else()  # APPLE CYGWIN
     set(GRC_XTERM_EXE "xterm")
