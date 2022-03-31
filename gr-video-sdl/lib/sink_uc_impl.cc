@@ -79,7 +79,7 @@ sink_uc_impl::sink_uc_impl(
     if (d_screen == NULL) {
         d_logger->error("Unable to set SDL video mode: {:s}; SDL_SetVideoMode() Failed",
                         SDL_GetError());
-        exit(1);
+        throw std::runtime_error("video_sdl::sink_uc");
     }
 
     if (d_image) {
