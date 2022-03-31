@@ -136,7 +136,8 @@ void interleaver::write_interleaver_txt(std::string filename)
 {
     std::ofstream interleaver_fname(filename.c_str());
     if (!interleaver_fname) {
-	throw std::runtime_error("interleaver::write_interleaver(std::string filename): file not found error");
+        throw std::runtime_error(
+            "interleaver::write_interleaver(std::string filename): file not found error");
     }
     interleaver_fname << d_K << std::endl;
     interleaver_fname << std::endl;
