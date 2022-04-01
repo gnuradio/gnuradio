@@ -14,7 +14,8 @@
 #include <gnuradio/fft/ctrlport_probe_psd.h>
 #include <gnuradio/fft/fft.h>
 #include <gnuradio/rpcregisterhelpers.h>
-#include <boost/thread/shared_mutex.hpp>
+#include <condition_variable>
+#include <mutex>
 
 namespace gr {
 namespace fft {
@@ -25,9 +26,9 @@ private:
     std::string d_id;
     std::string d_desc;
     size_t d_len;
-    boost::shared_mutex mutex_buffer;
-    mutable boost::mutex mutex_notify;
-    boost::condition_variable condition_buffer_ready;
+    std::mutex mutex_buffer;
+    mutable std::mutex mutex_notify;
+    std::condition_variable condition_buffer_ready;
 
     std::vector<gr_complex> d_buffer;
     gr::fft::fft_complex_fwd d_fft;

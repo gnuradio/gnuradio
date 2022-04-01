@@ -40,13 +40,13 @@ namespace fs = std::filesystem;
 
 namespace gr {
 namespace fft {
-static boost::mutex wisdom_thread_mutex;
+static std::mutex wisdom_thread_mutex;
 boost::interprocess::file_lock wisdom_lock;
 static bool wisdom_lock_init_done = false; // Modify while holding 'wisdom_thread_mutex'
 
-boost::mutex& planner::mutex()
+std::mutex& planner::mutex()
 {
-    static boost::mutex s_planning_mutex;
+    static std::mutex s_planning_mutex;
 
     return s_planning_mutex;
 }
@@ -139,7 +139,7 @@ fft<T, forward>::fft(int fft_size, int nthreads)
     : d_nthreads(nthreads), d_inbuf(fft_size), d_outbuf(fft_size), d_logger("fft_complex")
 {
     // Hold global mutex during plan construction and destruction.
-    planner::scoped_lock lock(planner::mutex());
+    std::scoped_lock lock(planner::mutex());
 
     static_assert(sizeof(fftwf_complex) == sizeof(gr_complex),
                   "The size of fftwf_complex is not equal to gr_complex");
@@ -205,7 +205,7 @@ template <class T, bool forward>
 fft<T, forward>::~fft()
 {
     // Hold global mutex during plan construction and destruction.
-    planner::scoped_lock lock(planner::mutex());
+    std::scoped_lock lock(planner::mutex());
 
     fftwf_destroy_plan((fftwf_plan)d_plan);
 }

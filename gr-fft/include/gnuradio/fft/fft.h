@@ -19,7 +19,7 @@
 #include <gnuradio/gr_complex.h>
 #include <gnuradio/logger.h>
 #include <volk/volk_alloc.hh>
-#include <boost/thread.hpp>
+#include <mutex>
 
 namespace gr {
 namespace fft {
@@ -31,11 +31,10 @@ namespace fft {
 class FFT_API planner
 {
 public:
-    typedef boost::mutex::scoped_lock scoped_lock;
     /*!
      * Return reference to planner mutex
      */
-    static boost::mutex& mutex();
+    static std::mutex& mutex();
 };
 
 
