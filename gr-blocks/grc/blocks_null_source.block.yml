@@ -35,11 +35,11 @@ outputs:
 
 templates:
     imports: from gnuradio import blocks
-    make: blocks.null_source(${type.size}*${vlen})
+    make: blocks.null_source(${type.size}*(${vlen}))
 
 cpp_templates:
     includes: ['#include <gnuradio/blocks/null_source.h>']
     declarations: 'blocks::null_source::sptr ${id};'
-    make: 'this->${id} = blocks::null_source::make(${type.size}*${vlen});'
+    make: 'this->${id} = blocks::null_source::make(${type.size}*(${vlen}));'
 
 file_format: 1

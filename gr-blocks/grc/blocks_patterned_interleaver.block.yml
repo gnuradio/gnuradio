@@ -38,11 +38,11 @@ asserts:
 
 templates:
     imports: from gnuradio import blocks
-    make: blocks.patterned_interleaver(${type.size}*${vlen}, ${pattern})
+    make: blocks.patterned_interleaver(${type.size}*(${vlen}), ${pattern})
 
 cpp_templates:
     includes: ['#include <gnuradio/blocks/patterned_interleaver.h>']
     declarations: 'blocks::patterned_interleaver::sptr ${id};'
-    make: 'this->${id} = blocks::patterned_interleaver::make(${type.size}*${vlen}, ${pattern});'
+    make: 'this->${id} = blocks::patterned_interleaver::make(${type.size}*(${vlen}), ${pattern});'
 
 file_format: 1

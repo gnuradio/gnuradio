@@ -47,14 +47,14 @@ asserts:
 
 templates:
     imports: from gnuradio import blocks
-    make: blocks.delay(${type.size}*${vlen}, ${delay})
+    make: blocks.delay(${type.size}*(${vlen}), ${delay})
     callbacks:
     - set_dly(${delay})
 
 cpp_templates:
     includes: ['#include <gnuradio/blocks/delay.h>']
     declarations: 'blocks::delay::sptr ${id};'
-    make: 'this->${id} = blocks::delay::make(${type.size}*${vlen}, ${delay});'
+    make: 'this->${id} = blocks::delay::make(${type.size}*(${vlen}), ${delay});'
     callbacks:
     - set_dly(${delay})
 

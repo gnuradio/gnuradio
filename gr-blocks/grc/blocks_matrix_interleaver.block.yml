@@ -6,7 +6,7 @@ templates:
     imports: from gnuradio import blocks
     make: |-
         blocks.matrix_interleaver(
-            itemsize=${ type.size } * ${ vlen }, rows=${ rows }, cols=${ cols }, deint=${ deint }
+            itemsize=${ type.size } * (${ vlen }), rows=${ rows }, cols=${ cols }, deint=${ deint }
         )
     callbacks:
     - set_rowsandcols(${ rows }, ${ cols }, ${ deint })

@@ -39,11 +39,11 @@ asserts:
 
 templates:
     imports: from gnuradio import blocks
-    make: blocks.streams_to_stream(${type.size}*${vlen}, ${num_streams})
+    make: blocks.streams_to_stream(${type.size}*(${vlen}), ${num_streams})
 
 cpp_templates:
     includes: ['#include <gnuradio/blocks/streams_to_stream.h>']
     declarations: 'blocks::streams_to_stream::sptr ${id};'
-    make: 'this->${id} = blocks::streams_to_stream::make(${type.size}*${vlen}, ${num_streams});'
+    make: 'this->${id} = blocks::streams_to_stream::make(${type.size}*(${vlen}), ${num_streams});'
 
 file_format: 1

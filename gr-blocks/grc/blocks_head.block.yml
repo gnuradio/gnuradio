@@ -37,14 +37,14 @@ asserts:
 
 templates:
     imports: from gnuradio import blocks
-    make: blocks.head(${type.size}*${vlen}, ${num_items})
+    make: blocks.head(${type.size}*(${vlen}), ${num_items})
     callbacks:
     - set_length(${num_items})
 
 cpp_templates:
     includes: ['#include <gnuradio/blocks/head.h>']
     declarations: 'blocks::head::sptr ${id};'
-    make: 'this->${id} = blocks::head::make(${type.size}*${vlen}, ${num_items});'
+    make: 'this->${id} = blocks::head::make(${type.size}*(${vlen}), ${num_items});'
     callbacks:
     - set_length(${num_items})
 

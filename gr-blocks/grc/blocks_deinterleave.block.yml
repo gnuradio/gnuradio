@@ -44,11 +44,11 @@ asserts:
 
 templates:
     imports: from gnuradio import blocks
-    make: blocks.deinterleave(${type.size}*${vlen}, ${blocksize})
+    make: blocks.deinterleave(${type.size}*(${vlen}), ${blocksize})
 
 cpp_templates:
     includes: ['#include <gnuradio/blocks/deinterleave.h>']
     declarations: 'blocks::deinterleave::sptr ${id};'
-    make: 'this->${id} = blocks::deinterleave::make(${type.size}*${vlen}, ${blocksize});'
+    make: 'this->${id} = blocks::deinterleave::make(${type.size}*(${vlen}), ${blocksize});'
 
 file_format: 1

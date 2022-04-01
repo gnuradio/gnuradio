@@ -41,7 +41,7 @@ templates:
     imports: |-
         from gnuradio import blocks
         import pmt
-    make: blocks.tags_strobe(${type.size}*${vlen}, ${value}, ${nsamps}, ${key})
+    make: blocks.tags_strobe(${type.size}*(${vlen}), ${value}, ${nsamps}, ${key})
     callbacks:
     - set_value(${value})
     - set_key(${key})

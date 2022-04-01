@@ -42,11 +42,11 @@ outputs:
 
 templates:
     imports: from gnuradio import blocks
-    make: blocks.tagged_stream_mux(${type.size}*${vlen}, ${lengthtagname}, ${tag_preserve_head_pos})
+    make: blocks.tagged_stream_mux(${type.size}*(${vlen}), ${lengthtagname}, ${tag_preserve_head_pos})
 
 cpp_templates:
     includes: ['#include <gnuradio/blocks/tagged_stream_mux.h>']
     declarations: 'blocks::tagged_stream_mux::sptr ${id};'
-    make: 'this->${id} = blocks::tagged_stream_mux::make(${type.size}*${vlen}, ${lengthtagname}, ${tag_preserve_head_pos});'
+    make: 'this->${id} = blocks::tagged_stream_mux::make(${type.size}*(${vlen}), ${lengthtagname}, ${tag_preserve_head_pos});'
 
 file_format: 1

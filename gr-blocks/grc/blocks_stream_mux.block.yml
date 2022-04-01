@@ -44,11 +44,11 @@ asserts:
 
 templates:
     imports: from gnuradio import blocks
-    make: blocks.stream_mux(${type.size}*${vlen}, ${lengths})
+    make: blocks.stream_mux(${type.size}*(${vlen}), ${lengths})
 
 cpp_templates:
     includes: ['#include <gnuradio/blocks/stream_mux.h>']
     declarations: 'blocks::stream_mux::sptr ${id};'
-    make: 'this->${id} = blocks::stream_mux::make(${type.size}*${vlen}, ${lengths});'
+    make: 'this->${id} = blocks::stream_mux::make(${type.size}*(${vlen}), ${lengths});'
 
 file_format: 1

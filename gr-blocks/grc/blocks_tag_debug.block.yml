@@ -48,7 +48,7 @@ asserts:
 templates:
     imports: from gnuradio import blocks
     make: |-
-        blocks.tag_debug(${type.size}*${vlen}, ${name}, ${filter})
+        blocks.tag_debug(${type.size}*(${vlen}), ${name}, ${filter})
         self.${id}.set_display(${display})
     callbacks:
     - set_display(${display})
@@ -57,7 +57,7 @@ cpp_templates:
     includes: ['#include <gnuradio/blocks/tag_debug.h>']
     declarations: 'blocks::tag_debug::sptr ${id};'
     make: |-
-        this->${id} = blocks::tag_debug::make(${type.size}*${vlen}, ${name}, ${filter});
+        this->${id} = blocks::tag_debug::make(${type.size}*(${vlen}), ${name}, ${filter});
         this->${id}.set_display(${display});
     callbacks:
     - set_display(${display})

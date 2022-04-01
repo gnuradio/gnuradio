@@ -43,7 +43,7 @@ asserts:
 templates:
     imports: from gnuradio import blocks
     make: |-
-        blocks.tag_gate(${type.size} * ${vlen}, ${propagate_tags})
+        blocks.tag_gate(${type.size} * (${vlen}), ${propagate_tags})
         self.${id}.set_single_key(${single_key})
     callbacks:
     - self.${id}.set_single_key(${single_key})
@@ -51,7 +51,7 @@ templates:
 cpp_templates:
     includes: ['#include <gnuradio/blocks/tag_gate.h>']
     make: |-
-        this->${id} = blocks::tag_gate::make(${type.size} * ${vlen}, ${propagate_tags});
+        this->${id} = blocks::tag_gate::make(${type.size} * (${vlen}), ${propagate_tags});
         this->${id}.set_single_key(${single_key});
     callbacks:
     - self.${id}.set_single_key(${single_key})

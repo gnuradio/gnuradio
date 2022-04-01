@@ -41,7 +41,7 @@ asserts:
 
 templates:
     imports: from gnuradio import network
-    make: network.tcp_source.tcp_source(itemsize=${type.size}*${vlen},addr=${addr},port=${port},server=${server})
+    make: network.tcp_source.tcp_source(itemsize=${type.size}*(${vlen}),addr=${addr},port=${port},server=${server})
 
 documentation: "This block supports TCP connections in both server (listening for inbound\
     \ connections) and client mode (initiating connections to other systems as a client).\

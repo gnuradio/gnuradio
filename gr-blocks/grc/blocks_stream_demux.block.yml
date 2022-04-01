@@ -44,11 +44,11 @@ asserts:
 
 templates:
     imports: from gnuradio import blocks
-    make: blocks.stream_demux(${type.size}*${vlen}, ${lengths})
+    make: blocks.stream_demux(${type.size}*(${vlen}), ${lengths})
 
 cpp_templates:
     includes: ['#include <gnuradio/blocks/stream_demux.h>']
     declarations: 'blocks::stream_demux::sptr ${id};'
-    make: 'this->${id} = blocks::stream_demux::make(${type.size}*${vlen}, ${lengths});'
+    make: 'this->${id} = blocks::stream_demux::make(${type.size}*(${vlen}), ${lengths});'
 
 file_format: 1

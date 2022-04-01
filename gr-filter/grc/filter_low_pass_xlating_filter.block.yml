@@ -67,7 +67,7 @@ templates:
             ${decim}, 
             firdes.low_pass(
                 ${gain}, 
-                2*${samp_rate}, 
+                2*(${samp_rate}), 
                 ${cutoff_freq}, 
                 ${width}, 
                 ${win}, 
@@ -75,7 +75,7 @@ templates:
             ${center_freq}, 
             ${samp_rate})
     callbacks:
-    - set_taps(firdes.low_pass(${gain}, 2*${samp_rate}, ${cutoff_freq}, ${width},
+    - set_taps(firdes.low_pass(${gain}, 2*(${samp_rate}), ${cutoff_freq}, ${width},
         ${win}, ${beta}))
     - set_center_freq(${center_freq})
 

@@ -76,7 +76,7 @@ asserts:
 templates:
     imports: from gnuradio import blocks
     make: |-
-        blocks.selector(${type.size}*${vlen},${input_index},${output_index})
+        blocks.selector(${type.size}*(${vlen}),${input_index},${output_index})
         self.${id}.set_enabled(${enabled})
     callbacks:
     - set_enabled(${enabled})
@@ -87,7 +87,7 @@ cpp_templates:
     includes: ['#include <gnuradio/blocks/copy.h>']
     declarations: 'blocks::selector::sptr ${id};'
     make: |-
-        this->${id} = blocks::selector::make(${type.size}*${vlen},${input_index},${output_index});
+        this->${id} = blocks::selector::make(${type.size}*(${vlen}),${input_index},${output_index});
         self->${id}.set_enabled(${enabled});
     callbacks:
     - set_enabled(${enabled})

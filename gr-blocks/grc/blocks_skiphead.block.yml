@@ -36,11 +36,11 @@ asserts:
 
 templates:
     imports: from gnuradio import blocks
-    make: blocks.skiphead(${type.size}*${vlen}, ${num_items})
+    make: blocks.skiphead(${type.size}*(${vlen}), ${num_items})
 
 cpp_templates:
     includes: ['#include <gnuradio/blocks/skiphead.h>']
     declarations: 'blocks::skiphead::sptr ${id};'
-    make: 'this->${id} = blocks::skiphead::make(${type.size}*${vlen}, ${num_items});'
+    make: 'this->${id} = blocks::skiphead::make(${type.size}*(${vlen}), ${num_items});'
 
 file_format: 1

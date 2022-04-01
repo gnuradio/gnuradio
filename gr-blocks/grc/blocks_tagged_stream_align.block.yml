@@ -33,11 +33,11 @@ outputs:
 
 templates:
     imports: from gnuradio import blocks
-    make: blocks.tagged_stream_align(${type.size}*${vlen}, ${lengthtagname})
+    make: blocks.tagged_stream_align(${type.size}*(${vlen}), ${lengthtagname})
 
 cpp_templates:
     includes: ['#include <gnuradio/blocks/tagged_stream_align.h>']
     declarations: 'blocks::tagged_stream_align::sptr ${id};'
-    make: 'this->${id} = blocks::tagged_stream_align::make(${type.size}*${vlen}, ${lengthtagname});'
+    make: 'this->${id} = blocks::tagged_stream_align::make(${type.size}*(${vlen}), ${lengthtagname});'
 
 file_format: 1

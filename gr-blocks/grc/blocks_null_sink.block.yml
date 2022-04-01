@@ -39,11 +39,11 @@ asserts:
 
 templates:
     imports: from gnuradio import blocks
-    make: blocks.null_sink(${type.size}*${vlen})
+    make: blocks.null_sink(${type.size}*(${vlen}))
 
 cpp_templates:
     includes: ['#include <gnuradio/blocks/null_sink.h>']
     declarations: 'blocks::null_sink::sptr ${id};'
-    make: 'this->${id} = blocks::null_sink::make(${type.size}*${vlen});'
+    make: 'this->${id} = blocks::null_sink::make(${type.size}*(${vlen}));'
 
 file_format: 1

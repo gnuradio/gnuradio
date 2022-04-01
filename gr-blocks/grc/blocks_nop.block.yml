@@ -40,11 +40,11 @@ asserts:
 
 templates:
     imports: from gnuradio import blocks
-    make: blocks.nop(${type.size}*${vlen})
+    make: blocks.nop(${type.size}*(${vlen}))
 
 cpp_templates:
     includes: ['#include <gnuradio/blocks/nop.h>']
     declarations: 'blocks::nop::sptr ${id};'
-    make: 'this->${id} = blocks::nop::make(${type.size}*${vlen});'
+    make: 'this->${id} = blocks::nop::make(${type.size}*(${vlen}));'
 
 file_format: 1

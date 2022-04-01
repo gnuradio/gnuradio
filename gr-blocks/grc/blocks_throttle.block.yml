@@ -42,14 +42,14 @@ asserts:
 
 templates:
     imports: from gnuradio import blocks
-    make: blocks.throttle(${type.size}*${vlen}, ${samples_per_second},${ignoretag})
+    make: blocks.throttle(${type.size}*(${vlen}), ${samples_per_second},${ignoretag})
     callbacks:
     - set_sample_rate(${samples_per_second})
 
 cpp_templates:
     includes: ['#include <gnuradio/blocks/throttle.h>']
     declarations: 'blocks::throttle::sptr ${id};'
-    make: 'this->${id} = blocks::throttle::make(${type.size}*${vlen}, ${samples_per_second}, ${ignoretag});'
+    make: 'this->${id} = blocks::throttle::make(${type.size}*(${vlen}), ${samples_per_second}, ${ignoretag});'
     callbacks:
     - set_sample_rate(${samples_per_second})
     translations:

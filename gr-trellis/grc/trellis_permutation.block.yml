@@ -41,7 +41,7 @@ asserts:
 
 templates:
     imports: from gnuradio import trellis
-    make: trellis.permutation(${interleaver_size}, ${table}, ${syms_per_block}, ${type.size}*${vlen})
+    make: trellis.permutation(${interleaver_size}, ${table}, ${syms_per_block}, ${type.size}*(${vlen}))
     callbacks:
     - set_K(${interleaver_size})
     - set_TABLE(${table})

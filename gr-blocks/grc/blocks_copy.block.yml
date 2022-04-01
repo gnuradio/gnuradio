@@ -48,7 +48,7 @@ asserts:
 templates:
     imports: from gnuradio import blocks
     make: |-
-        blocks.copy(${type.size}*${vlen})
+        blocks.copy(${type.size}*(${vlen}))
         self.${id}.set_enabled(${enabled})
     callbacks:
     - set_enabled(${enabled})
@@ -57,7 +57,7 @@ cpp_templates:
     includes: ['#include <gnuradio/blocks/copy.h>']
     declarations: 'blocks::copy::sptr ${id};'
     make: |-
-        this->${id} = blocks::copy::make(${type.size}*${vlen});
+        this->${id} = blocks::copy::make(${type.size}*(${vlen}));
         self->${id}.set_enabled(${enabled});
     callbacks:
     - set_enabled(${enabled})

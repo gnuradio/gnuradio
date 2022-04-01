@@ -131,7 +131,7 @@ templates:
             ${plotconst}, #plotconst
             None # parent
         )
-        self.${id}.set_update_time(1.0/${rate})
+        self.${id}.set_update_time(1.0/(${rate}))
         ${win} = sip.wrapinstance(self.${id}.qwidget(), Qt.QWidget)
 
         self.${id}.enable_rf_freq(${showrf})
@@ -157,7 +157,7 @@ cpp_templates:
             ${plottime}, //plottime
             ${plotconst} //plotconst
         );
-    ${id}->set_update_time(1.0/${rate});   
+    ${id}->set_update_time(1.0/(${rate}));   
     ${id}->enable_rf_freq(${showrf});
     QWidget* _${id}_win;
     _${id}_win = this->${id}->qwidget();
