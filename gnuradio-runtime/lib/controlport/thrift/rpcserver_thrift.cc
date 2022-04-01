@@ -14,8 +14,8 @@
 #include <thrift/protocol/TBinaryProtocol.h>
 #include <thrift/transport/TSocket.h>
 #include <thrift/transport/TTransportUtils.h>
-#include <boost/xpressive/xpressive.hpp>
 #include <iostream>
+#include <regex>
 #include <sstream>
 #include <stdexcept>
 
@@ -212,9 +212,8 @@ void rpcserver_thrift::getRe(GNURadio::KnobMap& _return,
         QueryCallbackMap_t::iterator it;
         for (it = d_getcallbackmap.begin(); it != d_getcallbackmap.end(); it++) {
             for (size_t j = 0; j < knobs.size(); j++) {
-                const boost::xpressive::sregex re(
-                    boost::xpressive::sregex::compile(knobs[j]));
-                if (boost::xpressive::regex_match(it->first, re)) {
+                const std::regex re(knobs[j]);
+                if (std::regex_match(it->first, re)) {
                     get_f<GNURadio::KnobIDList::value_type, QueryCallbackMap_t>(
                         d_getcallbackmap, cur_priv, _return)(it->first);
                     break;
