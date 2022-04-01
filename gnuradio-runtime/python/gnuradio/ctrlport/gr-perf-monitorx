@@ -877,8 +877,7 @@ class MForm(Qt.QWidget):
                                node_color='#A0CBE2',
                                node_shape="s",
                                node_size=self.node_weights,
-                               ax=self.sp,
-                               arrows=False)
+                               ax=self.sp)
 
         nx.draw_networkx_edges(self.G, self.pos,
                                edge_color=self.edge_weights,
