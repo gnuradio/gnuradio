@@ -24,9 +24,9 @@ templates:
     imports: |-
         from gnuradio import blocks
         import math
-    make: blocks.rotator_cc(2.0*math.pi*${freq}/${sample_rate})
+    make: blocks.rotator_cc(2.0*math.pi*(${freq})/(${sample_rate}))
     callbacks:
-    - set_phase_inc(2.0*math.pi*${freq}/${sample_rate})
+    - set_phase_inc(2.0*math.pi*(${freq})/(${sample_rate}))
 
 documentation: |-
     This block is a convenience wrapper around using a rotator block for frequency shifting.  This block obfuscates the 2*Pi*freq/samp_rate phase_inc field and calculation, and only requires the designer to provide the frequency and sample rate.
