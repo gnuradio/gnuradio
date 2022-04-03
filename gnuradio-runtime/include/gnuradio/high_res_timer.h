@@ -95,7 +95,7 @@ inline gr::high_res_timer_type gr::high_res_timer_tps(void)
 {
     mach_timebase_info_data_t info;
     mach_timebase_info(&info);
-    return gr::high_res_timer_type(info.numer * 1000000000UL) / info.denom;
+    return gr::high_res_timer_type(info.denom * 1000000000UL) / info.numer;
 }
 #endif
 
