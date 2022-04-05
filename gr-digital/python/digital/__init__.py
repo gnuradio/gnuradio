@@ -50,7 +50,7 @@ from .soft_dec_lut_gen import (
     show_table,
     soft_dec_table_generator,
     calc_soft_dec,
-    calc_soft_dec_from_table
+    calc_soft_dec_from_table,
 )
 from .psk_constellations import *
 from .qam_constellations import *
