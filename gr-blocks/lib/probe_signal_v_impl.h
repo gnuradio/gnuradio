@@ -23,12 +23,13 @@ class probe_signal_v_impl : public probe_signal_v<T>
 private:
     std::vector<T> d_level;
     const size_t d_size;
+    mutable gr::thread::mutex d_mutex;
 
 public:
     probe_signal_v_impl(size_t size);
     ~probe_signal_v_impl() override;
 
-    std::vector<T> level() const override { return d_level; }
+    std::vector<T> level() const override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
