@@ -56,6 +56,7 @@ from .psk_constellations import *
 from .qam_constellations import *
 from .constellation_map_generator import constellation_map_generator
 from . import packet_utils
+from generic_mod_demod import generic_mod, generic_demod
 
 
 class gmskmod_bc(cpmmod_bc):
