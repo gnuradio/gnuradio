@@ -71,7 +71,7 @@ class qa_add_system_time(gr_unittest.TestCase):
                                         pmt.intern("systime"),
                                         pmt.from_double(0.0)))
         # should be sufficient tolerance
-        self.assertAlmostEqual(t0, t1 - 1, delta=0.2)
+        self.assertAlmostEqual(t0, t1 - 1, delta=0.5)
 
 
 if __name__ == '__main__':
