@@ -62,7 +62,7 @@ class test_uncaught_exception(gr_unittest.TestCase):
         p = Process(target=process_func, args=(False,))
         p.daemon = True
         p.start()
-        p.join(2.5)
+        p.join(10.0)
         exit_code = p.exitcode
         self.assertIsNotNone(
             exit_code, "exception did not cause flowgraph exit")
