@@ -29,7 +29,7 @@ from .psk import (
     psk_demod,
     psk_constellation,
 )
-from .qam import(
+from .qam import (
     is_power_of_four,
     get_bit,
     get_bits,

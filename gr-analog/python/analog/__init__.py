@@ -37,11 +37,10 @@ from .fm_emph import (
 from .nbfm_rx import nbfm_rx
 from .nbfm_tx import (
     nbfm_tx,
-   ctcss_gen_f,
+    ctcss_gen_f,
 )
 from .standard_squelch import standard_squelch
 from .wfm_rcv import wfm_rcv
 from .wfm_rcv_fmdet import wfm_rcv_fmdet
 from .wfm_rcv_pll import wfm_rcv_pll
 from .wfm_tx import wfm_tx
-
