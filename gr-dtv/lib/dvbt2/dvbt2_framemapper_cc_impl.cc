@@ -252,7 +252,7 @@ dvbt2_framemapper_cc_impl::dvbt2_framemapper_cc_impl(
     } else {
         l1postinit->reserved_3 = 0;
     }
-    l1postinit->plp_id = 0;
+    l1postinit->plp_id_dynamic = 0;
     l1postinit->plp_start = 0;
     l1postinit->plp_num_blocks = fecblocks;
     if (reservedbiasbits == RESERVED_ON && version == VERSION_131) {
