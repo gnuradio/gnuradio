@@ -311,7 +311,7 @@ class Application(Gtk.Application):
             flow_graph.move_selected(coords)
 
             # Set flow graph to heir block type
-            top_block = flow_graph.get_block("top_block")
+            top_block = flow_graph.get_block(Constants.DEFAULT_FLOW_GRAPH_ID)
             top_block.params['generate_options'].set_value('hb')
 
             # this needs to be a unique name
