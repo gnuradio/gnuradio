@@ -13,6 +13,7 @@
 #define PROBE_SIGNAL_IMPL_H
 
 #include <gnuradio/blocks/probe_signal.h>
+#include <atomic>
 
 namespace gr {
 namespace blocks {
@@ -21,7 +22,7 @@ template <class T>
 class probe_signal_impl : public probe_signal<T>
 {
 private:
-    T d_level;
+    std::atomic<T> d_level;
 
 public:
     probe_signal_impl();

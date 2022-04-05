@@ -222,6 +222,10 @@ IF(MSVC)
     )
 ENDIF(MSVC)
 
+if(MSVC)
+    target_compile_definitions(gnuradio-blocks PUBLIC _ENABLE_ATOMIC_ALIGNMENT_FIX)
+endif()
+
 if(BUILD_SHARED_LIBS)
     if (SNDFILE_FOUND)
         GR_LIBRARY_FOO(gnuradio-blocks SNDFILE)
