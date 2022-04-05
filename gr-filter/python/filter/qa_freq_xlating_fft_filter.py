@@ -72,8 +72,8 @@ class test_freq_xlating_filter(gr_unittest.TestCase):
 
     def assert_fft_ok(self, expected_result, result_data):
         expected_result = expected_result[:len(result_data)]
-        self.assertComplexTuplesAlmostEqual2(expected_result, result_data,
-                                             abs_eps=1e-9, rel_eps=1.5e-3)
+        self.assertComplexTuplesAlmostEqual(expected_result, result_data,
+                                            places=5)
 
     def test_fft_filter_ccf_001(self):
         self.generate_ccf_source()
