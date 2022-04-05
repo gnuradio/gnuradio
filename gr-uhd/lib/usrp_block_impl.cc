@@ -376,7 +376,7 @@ uint32_t usrp_block_impl::get_gpio_attr(const std::string& bank,
                                         const std::string& attr,
                                         const size_t mboard)
 {
-    throw std::runtime_error("not implemented in this version");
+    return _dev->get_gpio_attr(bank, attr, mboard);
 }
 
 void usrp_block_impl::set_time_now(const ::uhd::time_spec_t& time_spec, size_t mboard)
