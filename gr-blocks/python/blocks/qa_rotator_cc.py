@@ -39,12 +39,13 @@ class qa_rotator_cc(gr_unittest.TestCase):
         #
         self.tb = gr.top_block()
         self.source = blocks.vector_source_c(in_samples)
+        self.throttle = blocks.throttle(gr.sizeof_gr_complex, 2**16)
         self.rotator_cc = blocks.rotator_cc(phase_inc, tag_inc_updates)
         self.sink = blocks.vector_sink_c()
         self.tag_sink = blocks.tag_debug(gr.sizeof_gr_complex, "rot_phase_inc",
                                          "rot_phase_inc")
         self.tag_sink.set_save_all(True)
-        self.tb.connect(self.source, self.rotator_cc, self.sink)
+        self.tb.connect(self.source, self.throttle, self.rotator_cc, self.sink)
         self.tb.connect(self.rotator_cc, self.tag_sink)
 
     def setUp(self):
