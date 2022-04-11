@@ -198,6 +198,12 @@ bool host_buffer::input_blocked_callback(int items_required,
                                           d_device_base,
                                           host_buffer::device_memcpy,
                                           host_buffer::device_memmove);
+        if (rc && d_transfer_type == transfer_type::HOST_TO_DEVICE) {
+            // Propagate buffer changes to keep host and device buffers in sync.
+            // NOTE: the input blocked callback realigned the read pointer to
+            // zero so copy from the beginning of the buffer to the write pointer.
+            std::memcpy(d_device_base, d_base, d_write_index * d_sizeof_item);
+        }
         break;
 
     case transfer_type::DEVICE_TO_HOST:
@@ -205,6 +211,12 @@ bool host_buffer::input_blocked_callback(int items_required,
         // Adjust host buffer
         rc = input_blocked_callback_logic(
             items_required, items_avail, read_index, d_base, std::memcpy, std::memmove);
+        if (rc && d_transfer_type == transfer_type::DEVICE_TO_HOST) {
+            // Propagate buffer changes to keep host and device buffers in sync.
+            // NOTE: the output blocked callback realigned the read pointer to
+            // zero so copy from the beginning of the buffer to the write pointer.
+            std::memcpy(d_base, d_device_base, d_write_index * d_sizeof_item);
+        }
         break;
 
     default:
@@ -232,6 +244,12 @@ bool host_buffer::output_blocked_callback(int output_multiple, bool force)
     case transfer_type::HOST_TO_HOST:
         // Adjust host buffer
         rc = output_blocked_callback_logic(output_multiple, force, d_base, std::memmove);
+        if (rc && d_transfer_type == transfer_type::HOST_TO_DEVICE) {
+            // Propagate buffer changes to keep host and device buffers in sync.
+            // NOTE: the output blocked callback realigned the read pointer to
+            // zero so copy from the beginning of the buffer to the write pointer.
+            std::memcpy(d_device_base, d_base, d_write_index * d_sizeof_item);
+        }
         break;
 
     case transfer_type::DEVICE_TO_HOST:
@@ -239,6 +257,12 @@ bool host_buffer::output_blocked_callback(int output_multiple, bool force)
         // Adjust "device" buffer
         rc = output_blocked_callback_logic(
             output_multiple, force, d_device_base, host_buffer::device_memmove);
+        if (rc && d_transfer_type == transfer_type::DEVICE_TO_HOST) {
+            // Propagate buffer changes to keep host and device buffers in sync.
+            // NOTE: the output blocked callback realigned the read pointer to
+            // zero so copy from the beginning of the buffer to the write pointer.
+            std::memcpy(d_base, d_device_base, d_write_index * d_sizeof_item);
+        }
         break;
 
     default:
