@@ -111,10 +111,6 @@ void waterfall_sink_c_impl::initialize()
     if (qApp != NULL) {
         d_qApplication = qApp;
     } else {
-#if QT_VERSION >= 0x040500 && QT_VERSION < 0x050000
-        std::string style = prefs::singleton()->get_string("qtgui", "style", "raster");
-        QApplication::setGraphicsSystem(QString(style.c_str()));
-#endif
         d_qApplication = new QApplication(d_argc, &d_argv);
     }
 

@@ -18,9 +18,7 @@
 #include <stdexcept>
 #include <vector>
 
-#if QT_VERSION >= 0x050000
 #include <QtWidgets/QtWidgets>
-#endif
 
 #include <gnuradio/filter/firdes.h>
 #include <gnuradio/qtgui/qtgui_types.h>
