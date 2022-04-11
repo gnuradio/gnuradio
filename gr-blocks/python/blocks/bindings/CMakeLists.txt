@@ -70,6 +70,7 @@ list(APPEND blocks_python_files
     float_to_short_python.cc
     float_to_uchar_python.cc
     head_python.cc
+    host_buffer_copy_python.cc
     int_to_float_python.cc
     integrate_python.cc
     interleave_python.cc

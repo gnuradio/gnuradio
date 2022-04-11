@@ -96,6 +96,7 @@ set(BLOCKS_SOURCES
     float_array_to_uchar.cc
     float_to_uchar_impl.cc
     head_impl.cc
+    host_buffer_copy_impl.cc
     int_to_float_impl.cc
     interleave_impl.cc
     interleaved_short_to_complex_impl.cc

@@ -24,6 +24,7 @@ install(FILES
     count_bits.h
     divide.h
     file_sink_base.h
+    host_buffer_copy.h
     integrate.h
     lfsr_15_1_0.h
     lfsr_32k.h

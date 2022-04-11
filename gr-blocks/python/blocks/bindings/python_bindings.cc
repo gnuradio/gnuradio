@@ -74,6 +74,7 @@ void bind_float_to_int(py::module&);
 void bind_float_to_short(py::module&);
 void bind_float_to_uchar(py::module&);
 void bind_head(py::module&);
+void bind_host_buffer_copy(py::module&);
 void bind_int_to_float(py::module&);
 void bind_integrate(py::module&);
 void bind_interleave(py::module&);
@@ -246,6 +247,7 @@ PYBIND11_MODULE(blocks_python, m)
     bind_float_to_short(m);
     bind_float_to_uchar(m);
     bind_head(m);
+    bind_host_buffer_copy(m);
     bind_int_to_float(m);
     bind_integrate(m);
     bind_interleave(m);
