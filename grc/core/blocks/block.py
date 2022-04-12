@@ -250,12 +250,8 @@ class Block(Element):
         for expr in self.asserts:
             try:
                 if not self.evaluate(expr):
-                    msg = expr.split('#')
-                    if len(msg) < 2:
-                        self.add_error_message(
-                            'Assertion "{}" failed.'.format(expr))
-                    else:
-                        self.add_error_message(msg[1])
+                    self.add_error_message(
+                        'Assertion "{}" failed.'.format(expr))
             except Exception:
                 self.add_error_message(
                     'Assertion "{}" did not evaluate.'.format(expr))
