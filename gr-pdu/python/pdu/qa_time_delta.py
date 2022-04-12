@@ -89,7 +89,7 @@ class qa_time_delta(gr_unittest.TestCase):
         delta_tag = pmt.dict_ref(a_meta, pmt.intern(
             "sys time delta (ms)"), pmt.PMT_NIL)
         self.assertAlmostEqual(tnow - 10.0, pmt.to_double(time_tag), delta=1e-6)
-        self.assertAlmostEqual(10000, pmt.to_double(delta_tag), delta=50)
+        self.assertAlmostEqual(10000, pmt.to_double(delta_tag), delta=250)
 
 
 if __name__ == '__main__':
