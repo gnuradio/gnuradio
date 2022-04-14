@@ -38,11 +38,22 @@ ENDMACRO()
 
 if(GIT_FOUND AND EXISTS ${CMAKE_SOURCE_DIR}/.git)
     message(STATUS "Extracting version information from git describe...")
+    # try to get long description with tag followed by hash
     execute_process(
-        COMMAND ${GIT_EXECUTABLE} describe --always --abbrev=8 --long
+        COMMAND ${GIT_EXECUTABLE} describe --abbrev=8 --long
         OUTPUT_VARIABLE GIT_DESCRIBE OUTPUT_STRIP_TRAILING_WHITESPACE
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
     )
+    # long description failed, so try to just get commit hash
+    # (prefixed by "g" so that a hash that is just a number is not misinterpreted)
+    if(GIT_DESCRIBE STREQUAL "")
+        execute_process(
+            COMMAND ${GIT_EXECUTABLE} log --format=g%h -n 1
+            OUTPUT_VARIABLE GIT_DESCRIBE OUTPUT_STRIP_TRAILING_WHITESPACE
+            WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+        )
+    endif()
+    # git is failing, fallback
     if(GIT_DESCRIBE STREQUAL "")
         create_manual_git_describe()
     endif()
