@@ -1,6 +1,6 @@
 {% set oot_name = "howto" %}
 {% set name = "gnuradio-" + oot_name %}
-{% set version = (environ.get("GIT_DESCRIBE_TAG_PEP440", "0.0.0." + datetime.datetime.now().strftime("%Y%m%d%H%M") + ".dev+" + environ.get("GIT_DESCRIBE_HASH", "local"))|string) %}
+{% set version = (environ.get("GIT_DESCRIBE_TAG_PEP440", "0.0.0." + datetime.datetime.now().strftime("%Y%m%d") + ".dev+" + environ.get("GIT_DESCRIBE_HASH", "local"))|string) %}
 
 package:
   name: {{ name|lower }}
