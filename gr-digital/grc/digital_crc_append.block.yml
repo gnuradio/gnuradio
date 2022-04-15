@@ -13,7 +13,7 @@ parameters:
     dtype: hex
     default: '0x4C11DB7'
 -   id: initial_value
-    label: Initial regsiter value
+    label: Initial register value
     dtype: hex
     default: '0xFFFFFFFF'
     hide: part
