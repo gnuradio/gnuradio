@@ -383,6 +383,7 @@ bool block_impl::stop()
 {
     if (d_stream) {
         std::lock_guard<std::mutex> l(d_device_mutex);
+        d_device->deactivateStream(d_stream);
         d_device->closeStream(d_stream);
         d_stream = nullptr;
     }
