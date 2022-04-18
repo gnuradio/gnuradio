@@ -29,7 +29,7 @@ inputs:
     id: text
     optional: true
 
-assert:
+asserts:
 - ${splitlength >= 0}
 - ${maxlines >= 2}
 

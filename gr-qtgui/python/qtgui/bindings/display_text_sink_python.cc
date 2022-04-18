@@ -20,21 +20,24 @@ namespace py = pybind11;
 void bind_display_text_sink(py::module& m)
 {
 
-    using display_text_sink    = ::gr::qtgui::display_text_sink;
+    using display_text_sink = ::gr::qtgui::display_text_sink;
 
 
-    py::class_<display_text_sink, gr::sync_block, gr::block, gr::basic_block,
-        std::shared_ptr<display_text_sink>>(m, "display_text_sink", D(display_text_sink))
+    py::class_<display_text_sink,
+               gr::sync_block,
+               gr::block,
+               gr::basic_block,
+               std::shared_ptr<display_text_sink>>(
+        m, "display_text_sink", D(display_text_sink))
 
         .def(py::init(&display_text_sink::make),
-           py::arg("label"),
-           py::arg("splitlength") = 80,
-           py::arg("maxline") = 100,
-           py::arg("parent") = nullptr,
-           D(display_text_sink,make)
-        )
-        
-        
+             py::arg("label"),
+             py::arg("splitlength") = 80,
+             py::arg("maxline") = 100,
+             py::arg("parent") = nullptr,
+             D(display_text_sink, make))
+
+
         .def(
             "qwidget",
             [](display_text_sink& self) {
@@ -43,18 +46,7 @@ void bind_display_text_sink(py::module& m)
             D(display_text_sink, qwidget))
 
 
-        
-        .def("exec_",&display_text_sink::exec_,       
-            D(display_text_sink,exec_)
-        )
+        .def("exec_", &display_text_sink::exec_, D(display_text_sink, exec_))
 
         ;
 }
-
-
-
-
-
-
-
-

@@ -20,25 +20,25 @@ namespace py = pybind11;
 void bind_display_text_msg(py::module& m)
 {
 
-    using display_text_msg    = ::gr::qtgui::display_text_msg;
+    using display_text_msg = ::gr::qtgui::display_text_msg;
 
 
-    py::class_<display_text_msg, gr::block, gr::basic_block,
-        std::shared_ptr<display_text_msg>>(m, "display_text_msg", D(display_text_msg))
+    py::class_<display_text_msg,
+               gr::block,
+               gr::basic_block,
+               std::shared_ptr<display_text_msg>>(
+        m, "display_text_msg", D(display_text_msg))
 
         .def(py::init(&display_text_msg::make),
-           py::arg("label"),
-           py::arg("message_key"),
-           py::arg("splitlength") = 80,
-           py::arg("maxline") = 100,          
-           py::arg("parent") = nullptr,
-           D(display_text_msg,make)
-        )
-        
-     
-        .def("exec_",&display_text_msg::exec_,       
-            D(display_text_msg,exec_)
-        )
+             py::arg("label"),
+             py::arg("message_key"),
+             py::arg("splitlength") = 80,
+             py::arg("maxline") = 100,
+             py::arg("parent") = nullptr,
+             D(display_text_msg, make))
+
+
+        .def("exec_", &display_text_msg::exec_, D(display_text_msg, exec_))
 
 
         .def(
@@ -49,13 +49,4 @@ void bind_display_text_msg(py::module& m)
             D(display_text_msg, qwidget))
 
         ;
-
 }
-
-
-
-
-
-
-
-

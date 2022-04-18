@@ -25,7 +25,7 @@ inputs:
     label: in
     dtype: byte
 
-assert:
+asserts:
 - ${splitlength >= 0}
 - ${maxlines >= 2}
 

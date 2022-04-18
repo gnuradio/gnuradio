@@ -35,7 +35,7 @@ inputs:
     label: ctrl
     dtype:  byte
 
-assert:
+asserts:
 - ${imagewidth > 0 }
 - ${imageheight > 0}
 

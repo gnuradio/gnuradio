@@ -82,10 +82,10 @@ class test_qtgui(gr_unittest.TestCase):
         self.qtsnk = qtgui.display_text_sink("Test")
 
     def test16(self):
-        self.qtsnk = qtgui.display_text_msg("Test",'text',80)
+        self.qtsnk = qtgui.display_text_msg("Test", 'text', 80)
 
     def test17(self):
-        self.qtsnk = qtgui.display_image(1400,2080)
+        self.qtsnk = qtgui.display_image(1400, 2080)
 
 
 if __name__ == '__main__':

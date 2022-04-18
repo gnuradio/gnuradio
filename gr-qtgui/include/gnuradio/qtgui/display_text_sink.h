@@ -47,13 +47,13 @@ public:
      *              usefull  if using several windows
      * \param splitlength enter newline after splitlength
      *                    characters without newline
-     * \param maxlength maximum number of lines that
+     * \param maxlines maximum number of lines that
      *                  can be displayed in the scrollarea
      * \param parent a QWidget parent in the QT app.
      */
     static sptr make(const std::string& label,
                      int splitlength = 80,
-                     int maxlength = 100,
+                     int maxlines = 100,
                      QWidget* parent = nullptr);
     virtual QWidget* qwidget() = 0;
     virtual void exec_() = 0;

@@ -55,7 +55,7 @@ public:
      * \param message_key name of the message key or empty
      * \param splitlength enter newline after splitlength
      *                    characters without newline
-     * \param maxlength maximum number of lines that
+     * \param maxlines maximum number of lines that
      *                  can be displayed in the scrollarea
      * \param parent a QWidget parent in the QT app.
      *

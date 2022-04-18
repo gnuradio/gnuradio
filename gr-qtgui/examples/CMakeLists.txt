@@ -25,6 +25,8 @@ GR_PYTHON_INSTALL(PROGRAMS
 
 install(
     FILES
+    qtgui_display_text_msg.grc
+    qtgui_display_text_sink.grc
     qtgui_message_inputs.grc
     qtgui_multi_input.grc
     qtgui_tags_viewing.grc
