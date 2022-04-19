@@ -12,6 +12,7 @@ from gnuradio.blocktool import BlockHeaderParser, GenericHeaderParser
 
 import os
 import pathlib
+import subprocess
 import json
 from mako.template import Template
 from datetime import datetime
@@ -92,6 +93,19 @@ class BindingGenerator:
 
         )
 
+    def clang_format(self, s):
+        try:
+            p = subprocess.Popen(
+                ["clang-format"], stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+            out, err = p.communicate(s.encode('utf-8'))
+            if p.returncode != 0:
+                print("Failed to run clang-format: %s", err)
+                return s
+            return out.decode('utf-8')
+        except (RuntimeError, FileNotFoundError) as e:
+            print("Failed to run clang-format: %s", e)
+            return s
+
     def write_pydoc_h(self, header_info, base_name, output_dir):
 
         doc_pathname = os.path.join(
@@ -102,7 +116,7 @@ class BindingGenerator:
                 header_info, base_name)
             with open(doc_pathname, 'w+') as outfile:
                 print("Writing binding code to {}".format(doc_pathname))
-                outfile.write(pybind_code)
+                outfile.write(self.clang_format(pybind_code))
             return doc_pathname
         except Exception as e:
             print(e)
@@ -118,7 +132,7 @@ class BindingGenerator:
                 header_info, base_name)
             with open(binding_pathname_cc, 'w+') as outfile:
                 print("Writing binding code to {}".format(binding_pathname_cc))
-                outfile.write(pybind_code)
+                outfile.write(self.clang_format(pybind_code))
             return binding_pathname_cc
         except Exception as e:
             print(e)
