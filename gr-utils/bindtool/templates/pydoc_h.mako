@@ -13,7 +13,7 @@ ${license}
 %>\
 \
 #include "pydoc_macros.h"
-#define D(...) DOC(gr,${modname}, __VA_ARGS__ )
+#define D(...) DOC(gr, ${modname}, __VA_ARGS__)
 \
 /*
   This file contains placeholders for docstrings for the Python bindings.
@@ -51,7 +51,7 @@ static const char *__doc_${'_'.join(names)}${suffix} = R"doc(${docstring})doc";
         constructors = cls['constructors'] if 'constructors' in cls else []
         class_enums = cls['enums'] if 'enums' in cls else []
         class_variables = cls['variables'] if 'variables' in cls else []
-%> \
+%>\
 \
 ${render_docstring_const(modname,namespace['name'].split('::')+[cls['name']],cls,cls['docstring'] if 'docstring' in cls else "")}
 \

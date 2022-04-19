@@ -65,11 +65,16 @@ func = '\n\
                return PyLong_AsLongLong(p->'+fcn_name+'());\n\
         }'
 %>
+%       elif fcn['return_type'] == 'QWidget *':
+<%
+func = '\n\
+            []('+cls_name+'& self) { return reinterpret_cast<uintptr_t>(self.'+fcn_name+'()); }'
+%>
 %       else: ## No PyObject pointer 
 <%
 func = overloaded_str+'&'+cls_name+'::'+fcn_name
 %>        
-%       endif                    
+%       endif
         ${modvar if isfree else ""}${".def_static" if has_static and not isfree else ".def"}("${fcn['name']}",${func},       
 % for arg in fcn_args:
             py::arg("${arg['name']}")${" = " + arg['default'] if arg['default'] else ''},
