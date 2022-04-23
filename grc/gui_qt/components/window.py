@@ -131,6 +131,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
         log.debug("Loading flowgraph model")
         self.fg_view = FlowgraphView(self)
+        self.fg_view.centerOn(0, 0)
         initial_state = self.platform.parse_flow_graph("")
         self.fg_view.flowgraph.import_data(initial_state)
         log.debug("Adding flowgraph view")

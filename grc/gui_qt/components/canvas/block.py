@@ -402,7 +402,7 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
             painter.setPen(QtGui.QPen(1))
         else:
             painter.setPen(Qt.red)
-        painter.drawText(QtCore.QRectF(0, 0 - self.height/2 + 10, self.width, self.height), Qt.AlignCenter, self.label)  # NOTE the 3rd/4th arg in  QRectF seems to set the bounding box of the text, so if there is ever any clipping, thats why
+        painter.drawText(QtCore.QRectF(0, 0 - self.height/2 + 15, self.width, self.height), Qt.AlignCenter, self.label)  # NOTE the 3rd/4th arg in  QRectF seems to set the bounding box of the text, so if there is ever any clipping, thats why
 
         # Draw param text
         y_offset = 30 # params start 30 down from the top of the box
