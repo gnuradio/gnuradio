@@ -214,6 +214,8 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
 
     def create_shapes_and_labels(self):
         self.prepareGeometryChange()
+        font = QtGui.QFont('Helvetica', 10)
+        font.setBold(True)
 
         # figure out height of block based on how many params there are
         i = 30
@@ -242,7 +244,7 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
                      get_min_height_for_ports(self.active_sinks),
                      get_min_height_for_ports(self.active_sources))
         # figure out width of block based on widest line of text
-        fm = QtGui.QFontMetrics(QtGui.QFont('Helvetica Bold', 10))
+        fm = QtGui.QFontMetrics(font)
         largest_width = fm.width(self.label)
         for key, item in self.params.items():
             name = item.name
@@ -417,9 +419,9 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
                 font.setBold(True)
                 painter.setFont(font)
                 painter.drawText(QtCore.QRectF(7.5, 0 + y_offset, self.width, self.height), Qt.AlignLeft, name + ': ')
+                fm = QtGui.QFontMetrics(font)
                 font.setBold(False)
                 painter.setFont(font)
-                fm = QtGui.QFontMetrics(QtGui.QFont('Helvetica Bold', 10))
                 painter.drawText(QtCore.QRectF(7.5 + fm.width(name + ": "), 0 + y_offset, self.width, self.height), Qt.AlignLeft, value_label)
                 y_offset += 20
 
