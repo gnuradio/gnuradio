@@ -244,6 +244,9 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
                                        self, statusTip=_("flowgraph-properties-tooltip"))
 
         # View Actions
+        actions['toggle_grid'] = Action(_("toggle_grid"), self, shortcut='G',
+                                   statusTip=_("toggle_grid-tooltip"))
+
         actions['errors'] = Action(Icons('dialog-error'), _("errors"), self, shortcut='E',
                                    statusTip=_("errors-tooltip"))
 
@@ -418,6 +421,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         view.addMenu(panels)
         view.addMenu(toolbars)
         view.addSeparator()
+        view.addAction(actions['toggle_grid'])
         view.addAction(actions['errors'])
         view.addAction(actions['find'])
         menus['view'] = view
@@ -636,15 +640,18 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
             block.state = 'disabled'
             block.create_shapes_and_labels()
 
+    def generate_triggered(self):
+        log.debug('generate')
+        generator = self.platform.Generator(self.currentFlowgraph, os.path.dirname(self.file_path))
+        generator.write()
+
     def execute_triggered(self):
         log.debug('execute')
         py_path = self.file_path[0:-3] + 'py'
         subprocess.Popen(f'/usr/bin/python {py_path}', shell=True)
 
-    def generate_triggered(self):
-        log.debug('generate')
-        generator = self.platform.Generator(self.currentFlowgraph, os.path.dirname(self.file_path))
-        generator.write()
+    def kill_triggered(self):
+        log.debug('kill')
 
     def types_triggered(self):
         log.debug('types')
@@ -661,9 +668,6 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
     def help_triggered(self):
         log.debug('help')
         self.help()
-
-    def kill_triggered(self):
-        log.debug('kill')
 
     def report_triggered(self):
         log.debug('report')
