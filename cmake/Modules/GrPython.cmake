@@ -159,7 +159,7 @@ except AttributeError: pass
 
 if not install_dir:
     #find where to install the python module
-    install_dir = sysconfig.get_path('platlib')
+    install_dir = sysconfig.get_path('platlib','posix_prefix')
     prefix = sysconfig.get_config_var('prefix')
 
 #strip the prefix to return a relative path
