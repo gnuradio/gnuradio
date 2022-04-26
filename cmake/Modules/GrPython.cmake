@@ -159,7 +159,12 @@ except AttributeError: pass
 
 if not install_dir:
     #find where to install the python module
-    install_dir = sysconfig.get_path('platlib','posix_prefix')
+    #for Python 3.11+, we could use the 'venv' scheme for all platforms
+    if os.name == 'nt':
+        scheme = 'nt'
+    else:
+        scheme = 'posix_prefix'
+    install_dir = sysconfig.get_path('platlib', scheme)
     prefix = sysconfig.get_config_var('prefix')
 
 #strip the prefix to return a relative path
