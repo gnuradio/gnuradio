@@ -113,7 +113,7 @@ templates:
         - set_bandwidth(${bandwidth})
         - set_frequency(${frequency})
         - set_samplerate(${samplerate})
-        - set_attenuation(${attenuation1})
+        - set_attenuation(0,${attenuation1})
         - set_filter_params(${filter_source}, ${filter}, ${fpass}, ${fstop})
 
 file_format: 1
