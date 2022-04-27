@@ -1,0 +1,1096 @@
+{
+    "title": "GNU Radio",
+    "description": "GNU Radio is a free & open-source software development toolkit that provides signal processing blocks to implement software radios. It can be used with readily-available, low-cost external RF hardware to create software-defined radios, or without hardware in a simulation-like environment. It is widely used in hobbyist, academic, and commercial environments to support both wireless communications research and real-world radio systems.",
+    "license": {
+        "id": "GPL-3.0-or-later"
+    },
+    "keywords": [
+        "radio",
+        "communication",
+        "wireless",
+        "software radio",
+        "SDR",
+        "DSP",
+        "cybersecurity",
+        "C",
+        "C++",
+        "Python",
+        "libr"
+    ],
+    "creators": [
+        {
+            "name": "Long, Jeff"
+        },
+        {
+            "name": "Morman, Josh"
+        },
+        {
+            "name": "Abele, Jason"
+        },
+        {
+            "name": "Aigner, Philipp"
+        },
+        {
+            "name": "Alok, Aradhana"
+        },
+        {
+            "name": "Anastasopoulos, Achilleas"
+        },
+        {
+            "name": "Anderson, Douglas"
+        },
+        {
+            "name": "Apitzsch, Andr\u00e9"
+        },
+        {
+            "name": "Arnold, Julian"
+        },
+        {
+            "name": "Ashton, Brennan"
+        },
+        {
+            "name": "Atreides, Paul"
+        },
+        {
+            "name": "Baier, Gerald"
+        },
+        {
+            "name": "Balister, Philip"
+        },
+        {
+            "name": "Banti, Stefano"
+        },
+        {
+            "name": "Barnhart, William"
+        },
+        {
+            "name": "Bauer, Mark"
+        },
+        {
+            "name": "Becker, Johannes K"
+        },
+        {
+            "name": "Beeri, Gilad"
+        },
+        {
+            "name": "Behar, Doron"
+        },
+        {
+            "name": "Bell, Richard C."
+        },
+        {
+            "name": "Berman, Michael"
+        },
+        {
+            "name": "Berndt, Luke"
+        },
+        {
+            "affiliation": "Carnegie Mellon University, IIT Bombay",
+            "name": "Bhowmick, Abhishek"
+        },
+        {
+            "name": "Bigot, Peter A."
+        },
+        {
+            "name": "Bird, Alistair"
+        },
+        {
+            "name": "Bloessl, Bastian"
+        },
+        {
+            "name": "Blomberg, Tobias"
+        },
+        {
+            "name": "Blossom, Eric"
+        },
+        {
+            "name": "Blot, Emmanuel"
+        },
+        {
+            "name": "Blum, Josh"
+        },
+        {
+            "name": "Boone, Jared"
+        },
+        {
+            "name": "Bottoms, A. Maitland"
+        },
+        {
+            "name": "Boven, Paul"
+        },
+        {
+            "name": "Braun, Martin"
+        },
+        {
+            "name": "Bruce, Nicholas"
+        },
+        {
+            "name": "Brucker, Jonathan"
+        },
+        {
+            "name": "Bruns, Stefan"
+        },
+        {
+            "name": "Byers, Michael"
+        },
+        {
+            "name": "Cercueil, Paul"
+        },
+        {
+            "name": "Chavez, Christopher"
+        },
+        {
+            "name": "Chiang, Johann"
+        },
+        {
+            "name": "Clark, Bill"
+        },
+        {
+            "name": "Collins, Travis F."
+        },
+        {
+            "name": "Conn, Tracie"
+        },
+        {
+            "affiliation": "Corgan Labs",
+            "name": "Corgan, Johnathan"
+        },
+        {
+            "affiliation": "Skylark Wireless (@skylarkwireless)",
+            "name": "Corgan, Nicholas"
+        },
+        {
+            "name": "Cornelius, Mike"
+        },
+        {
+            "name": "Cottrell, Mark"
+        },
+        {
+            "name": "Cox, Grant"
+        },
+        {
+            "name": "Csete, Alexandru"
+        },
+        {
+            "name": "Cuervo, Nicolas"
+        },
+        {
+            "name": "Cutler, Justin R."
+        },
+        {
+            "name": "David, Paul"
+        },
+        {
+            "name": "Davis, Andrew"
+        },
+        {
+            "affiliation": "Department of Communications Engineering, University of Bremen, Germany",
+            "name": "Demel, Johannes",
+            "orcid": "0000-0002-5434-7232"
+        },
+        {
+            "name": "Diaconescu, Bogdan"
+        },
+        {
+            "name": "Dickens, Michael"
+        },
+        {
+            "name": "Dijke, Martyn van"
+        },
+        {
+            "name": "Donohue, Chris"
+        },
+        {
+            "name": "Drake, Jeremy"
+        },
+        {
+            "name": "Duggan, Barry"
+        },
+        {
+            "name": "Dulmage, Jared"
+        },
+        {
+            "name": "Dumps, Jeff"
+        },
+        {
+            "name": "Durst, Julius"
+        },
+        {
+            "name": "DvH, Martin"
+        },
+        {
+            "name": "Economos, Ron"
+        },
+        {
+            "name": "Enochs, Brandon P."
+        },
+        {
+            "name": "Eslinger, Gregory"
+        },
+        {
+            "name": "Est\u00e9vez, Daniel"
+        },
+        {
+            "name": "Ettus, Matt"
+        },
+        {
+            "name": "Feng, Zhe"
+        },
+        {
+            "name": "Fischer, Moritz"
+        },
+        {
+            "name": "Flynn, Toby"
+        },
+        {
+            "name": "Foster, Nick"
+        },
+        {
+            "name": "Franzen, Florian"
+        },
+        {
+            "name": "Freire, Igor"
+        },
+        {
+            "name": "Garver, Paul"
+        },
+        {
+            "name": "Gauthier, Philippe"
+        },
+        {
+            "name": "Geiger, Douglas"
+        },
+        {
+            "name": "Gelman, Andriy"
+        },
+        {
+            "name": "Gentile, Kevin"
+        },
+        {
+            "name": "Gerhard, Davide"
+        },
+        {
+            "name": "Gerlits, Ferenc"
+        },
+        {
+            "name": "Ghani, Armin"
+        },
+        {
+            "name": "Gilbert, Jacob"
+        },
+        {
+            "name": "Glass, Steve"
+        },
+        {
+            "name": "Goavec-Merou, Gwenhael"
+        },
+        {
+            "name": "Goergen, Nate"
+        },
+        {
+            "name": "Gottula, Brett"
+        },
+        {
+            "name": "Govostes, Ryan"
+        },
+        {
+            "name": "Grambihler, Daniel"
+        },
+        {
+            "name": "Griffiths, Matt"
+        },
+        {
+            "name": "Gupta, Alekh"
+        },
+        {
+            "name": "Gupta, Arpit"
+        },
+        {
+            "name": "Gupta, Sugandha"
+        },
+        {
+            "name": "Habets, Thomas"
+        },
+        {
+            "name": "Haynal, Steve"
+        },
+        {
+            "name": "Heel, Martin Dudok van"
+        },
+        {
+            "name": "Hein, Jason"
+        },
+        {
+            "name": "Hennepe, Harm te"
+        },
+        {
+            "name": "Hermann, Uwe"
+        },
+        {
+            "name": "Hilburn, Ben"
+        },
+        {
+            "name": "Hitefield, Seth"
+        },
+        {
+            "name": "Horden, Adam"
+        },
+        {
+            "name": "Horvath, Peter"
+        },
+        {
+            "name": "Hostetter, Matt"
+        },
+        {
+            "name": "Hsu, Bolin"
+        },
+        {
+            "name": "Huggins, Tim"
+        },
+        {
+            "name": "Iannucci, Bob"
+        },
+        {
+            "name": "Jackson, Barry"
+        },
+        {
+            "name": "Jameson, Mike"
+        },
+        {
+            "name": "Johnson, Eric"
+        },
+        {
+            "name": "Joost, Laur"
+        },
+        {
+            "name": "Kal\u00f8r, Anders"
+        },
+        {
+            "name": "Kamat, Jay"
+        },
+        {
+            "name": "Kapoor, Siddharth"
+        },
+        {
+            "name": "Kat, Kerem"
+        },
+        {
+            "name": "Kawamoto, Darek"
+        },
+        {
+            "name": "Kerler, Bjoern"
+        },
+        {
+            "name": "Kigwana, Edward"
+        },
+        {
+            "name": "Koehler, Christoph"
+        },
+        {
+            "name": "Koehn, Thaddeus"
+        },
+        {
+            "name": "Koslowski, Sebastian"
+        },
+        {
+            "name": "Kozel, Derek"
+        },
+        {
+            "name": "Kravchuk, Oleksandr"
+        },
+        {
+            "name": "Krysik, Piotr"
+        },
+        {
+            "name": "Kr\u00e4mer, Jan"
+        },
+        {
+            "name": "Kuester, Tim"
+        },
+        {
+            "name": "Kuethe, Chris"
+        },
+        {
+            "name": "Kuzmiak, Lukas"
+        },
+        {
+            "name": "LANGE, Ludovic"
+        },
+        {
+            "name": "Lajovic, Andrej"
+        },
+        {
+            "name": "Larew, Stephen"
+        },
+        {
+            "name": "Ledet-Pedersen, Jeppe"
+        },
+        {
+            "name": "Leech, Marcus"
+        },
+        {
+            "name": "Lessard, Louis Philippe"
+        },
+        {
+            "name": "Lichtman, Marc"
+        },
+        {
+            "name": "Lindfors, Timo"
+        },
+        {
+            "name": "Lobo, Pedro"
+        },
+        {
+            "name": "Ludwig, Stephan"
+        },
+        {
+            "name": "L\u00f8faldli, Andr\u00e9"
+        },
+        {
+            "name": "M, Nick"
+        },
+        {
+            "name": "Madeira, Joao"
+        },
+        {
+            "name": "Madeira, Jo\u00e3o"
+        },
+        {
+            "name": "Maier, Kristian"
+        },
+        {
+            "name": "Markgraf, Steve"
+        },
+        {
+            "name": "Maroti, Miklos"
+        },
+        {
+            "name": "May, Terry"
+        },
+        {
+            "name": "Mayer, Christoph"
+        },
+        {
+            "name": "Mayo, Chris"
+        },
+        {
+            "name": "McCarthy, Nicholas"
+        },
+        {
+            "name": "McCarthy, Nick"
+        },
+        {
+            "name": "McCodeface, Codey"
+        },
+        {
+            "name": "McDiarmid, Campbell"
+        },
+        {
+            "name": "McGwier, Bob"
+        },
+        {
+            "name": "McQuiggin, Kevin"
+        },
+        {
+            "name": "Mendez, Alba"
+        },
+        {
+            "name": "Michel, Adrien"
+        },
+        {
+            "name": "Mills, Matt"
+        },
+        {
+            "name": "Mochalov, Konstantin"
+        },
+        {
+            "name": "Molenkamp, Ray"
+        },
+        {
+            "name": "Monahan-Mitchell, Tim"
+        },
+        {
+            "name": "Morin, Cyrille"
+        },
+        {
+            "name": "Munaut, Sylvain"
+        },
+        {
+            "name": "Muzika, Bill"
+        },
+        {
+            "name": "Mu\u00f1oz, Eduardo S\u00e1nchez"
+        },
+        {
+            "name": "M\u00fcller, Marcus"
+        },
+        {
+            "name": "M\u00fcller, Sebastian"
+        },
+        {
+            "name": "Naranjo, Carlos Alberto Ruiz"
+        },
+        {
+            "name": "Negi, Swapnil"
+        },
+        {
+            "name": "Newman, Tim"
+        },
+        {
+            "name": "Nguy\u1ec5n, Ch\u00ed-Thanh Christopher"
+        },
+        {
+            "affiliation": "GCN Development",
+            "name": "Nieboer, Geof"
+        },
+        {
+            "name": "Niedermayer, Philipp"
+        },
+        {
+            "name": "Nil, Michael De"
+        },
+        {
+            "name": "Nowlan, Sean"
+        },
+        {
+            "name": "Nychis, George"
+        },
+        {
+            "affiliation": "@deepsig",
+            "name": "O'Shea, Tim"
+        },
+        {
+            "name": "Olivain, Julien"
+        },
+        {
+            "name": "Olsen, Sebastian"
+        },
+        {
+            "name": "Oltmanns, Stefan"
+        },
+        {
+            "name": "Orlando, John"
+        },
+        {
+            "name": "Orr, Brian"
+        },
+        {
+            "name": "Ossmann, Michael"
+        },
+        {
+            "name": "P, Vladisslav"
+        },
+        {
+            "name": "Padalino, Brian"
+        },
+        {
+            "name": "Patel, Kartik"
+        },
+        {
+            "name": "Patulea, Catalin"
+        },
+        {
+            "name": "Pendlum, Jonathon"
+        },
+        {
+            "name": "Pentler, Mark"
+        },
+        {
+            "name": "Pi, David"
+        },
+        {
+            "name": "Pinkava, Jiri"
+        },
+        {
+            "name": "Pinkava, Ji\u0159\u00ed"
+        },
+        {
+            "name": "Pisarenko, Artem"
+        },
+        {
+            "name": "Piscopo, Mike"
+        },
+        {
+            "name": "Plett, Mark"
+        },
+        {
+            "name": "Porges, Donald"
+        },
+        {
+            "name": "Pyle, Hugh"
+        },
+        {
+            "name": "Quaresma, Jose"
+        },
+        {
+            "name": "Radulescu, Bogdan"
+        },
+        {
+            "name": "Rajendran, Sreeraj"
+        },
+        {
+            "name": "Rasmussen, Mathias"
+        },
+        {
+            "name": "Reid, Kevin"
+        },
+        {
+            "name": "Rene, Mathieu"
+        },
+        {
+            "name": "Reynwar, Ben"
+        },
+        {
+            "name": "Ribero, Marco"
+        },
+        {
+            "name": "Richardson, Glenn"
+        },
+        {
+            "name": "Roberts, Wayne"
+        },
+        {
+            "name": "Robertson, Dan"
+        },
+        {
+            "name": "Rocca, Federico La"
+        },
+        {
+            "name": "Rode, Andrej"
+        },
+        {
+            "name": "Roe, Michael"
+        },
+        {
+            "affiliation": "GNU Radio",
+            "name": "Rondeau, Tom"
+        },
+        {
+            "name": "Ross, Spencer"
+        },
+        {
+            "name": "Rui, Huang"
+        },
+        {
+            "name": "Saari, James"
+        },
+        {
+            "name": "Sabaghi, Behnam"
+        },
+        {
+            "name": "Sallay, John"
+        },
+        {
+            "name": "Savoye, Rob"
+        },
+        {
+            "name": "Schmidt, Fabian P."
+        },
+        {
+            "name": "Schmitz, Johannes"
+        },
+        {
+            "name": "Schneider, Eric"
+        },
+        {
+            "name": "Schroer, Volker"
+        },
+        {
+            "name": "Schueler, Joshua"
+        },
+        {
+            "name": "Schutt, Ryan"
+        },
+        {
+            "name": "Seeber, Balint"
+        },
+        {
+            "name": "Seguinot, Christophe"
+        },
+        {
+            "name": "Semich, Karl"
+        },
+        {
+            "name": "Sharan, Ravi"
+        },
+        {
+            "name": "Sharma, Rohan"
+        },
+        {
+            "name": "Shepard, Tim"
+        },
+        {
+            "name": "Singh, Adarsh"
+        },
+        {
+            "name": "Sloane, Andy"
+        },
+        {
+            "name": "Smith, Clayton"
+        },
+        {
+            "name": "Solano, Camilo"
+        },
+        {
+            "name": "Sorber, David"
+        },
+        {
+            "name": "Spanbauer, Rick"
+        },
+        {
+            "name": "Spytz, Zackery"
+        },
+        {
+            "name": "Srairi, Imad-Eddine"
+        },
+        {
+            "name": "Stapleton, Brent"
+        },
+        {
+            "name": "Statzer, Eric"
+        },
+        {
+            "name": "Stiefel, Maximilian"
+        },
+        {
+            "name": "Stolnikov, Dimitri"
+        },
+        {
+            "name": "Suciu, Adrian"
+        },
+        {
+            "name": "Swiger, Chuck"
+        },
+        {
+            "name": "Szymaniak, Jon"
+        },
+        {
+            "name": "Tagunov, Ilya"
+        },
+        {
+            "name": "Talbert, Scott"
+        },
+        {
+            "name": "Tan, Solomon"
+        },
+        {
+            "name": "Temple, Nate"
+        },
+        {
+            "name": "Thakur, Anshul"
+        },
+        {
+            "name": "Thomas, Aditya"
+        },
+        {
+            "name": "Thompson, Roy"
+        },
+        {
+            "name": "Torborg, Scott"
+        },
+        {
+            "name": "Trewhitt, Ethan"
+        },
+        {
+            "name": "Trotter, Brett L."
+        },
+        {
+            "name": "Tsiligiannis, Vasilis"
+        },
+        {
+            "name": "Tsou, Thomas"
+        },
+        {
+            "name": "Tuerkyilmaz, Eral"
+        },
+        {
+            "name": "Tyers, Bernard"
+        },
+        {
+            "name": "Uher, Jason"
+        },
+        {
+            "name": "Undheim, Ruben"
+        },
+        {
+            "name": "Unice, Kyle"
+        },
+        {
+            "name": "Vanhoy, Garrett"
+        },
+        {
+            "name": "Velichkov, Vasil"
+        },
+        {
+            "name": "Vierinen, Juha"
+        },
+        {
+            "affiliation": "@MITHaystack",
+            "name": "Volz, Ryan"
+        },
+        {
+            "name": "Vutukuri, Srinivas Naga"
+        },
+        {
+            "name": "V\u00e5gsether, H\u00e5kon"
+        },
+        {
+            "name": "Walls, Andy"
+        },
+        {
+            "name": "Walters, Mike"
+        },
+        {
+            "name": "Ward, Don"
+        },
+        {
+            "name": "Warnes, Gregory"
+        },
+        {
+            "name": "Weber, Douglas"
+        },
+        {
+            "name": "Wecksell, Elof"
+        },
+        {
+            "name": "West, Nathan"
+        },
+        {
+            "name": "Wicks, Paul"
+        },
+        {
+            "name": "Wiedemann, Bernhard M."
+        },
+        {
+            "name": "Willecke, Alexander"
+        },
+        {
+            "name": "Winter, David"
+        },
+        {
+            "name": "Witkowski, Peter"
+        },
+        {
+            "name": "Wollesen, Victor"
+        },
+        {
+            "name": "Wunsch, Felix"
+        },
+        {
+            "name": "Wunsch, Stefan"
+        },
+        {
+            "name": "Wyk, Hendrik van"
+        },
+        {
+            "name": "Xu, Henry"
+        },
+        {
+            "name": "Z, Liu, Andrew"
+        },
+        {
+            "name": "Zapodovnikov, Valerii"
+        },
+        {
+            "name": "Zehl, Stefan"
+        },
+        {
+            "name": "Zhao, Alick"
+        },
+        {
+            "name": "Zheng, Kevin"
+        },
+        {
+            "name": "Zhu, Chuang"
+        },
+        {
+            "name": "Zy, Jakub"
+        },
+        {
+            "name": "yang, dae hyun,"
+        },
+        {
+            "name": "\u00d8stergaard, Nick"
+        },
+        {
+            "name": "\u0160af\u00e1\u0159, Jan"
+        },
+        {
+            "name": "\u0160karvada, Jaroslav"
+        },
+        {
+            "name": "Antetokounpo"
+        },
+        {
+            "name": "AsciiWolf"
+        },
+        {
+            "name": "Callyan"
+        },
+        {
+            "name": "Cate"
+        },
+        {
+            "name": "Dhruvadityamittal"
+        },
+        {
+            "name": "Federico"
+        },
+        {
+            "name": "Flamewires"
+        },
+        {
+            "name": "Head4che"
+        },
+        {
+            "name": "Ipsit"
+        },
+        {
+            "name": "JaredD"
+        },
+        {
+            "name": "Lennart"
+        },
+        {
+            "name": "MBoerschig"
+        },
+        {
+            "name": "Moeller"
+        },
+        {
+            "name": "Niki"
+        },
+        {
+            "name": "Oliver"
+        },
+        {
+            "name": "Pavon"
+        },
+        {
+            "name": "RedStone002"
+        },
+        {
+            "name": "Seeker"
+        },
+        {
+            "name": "Shane"
+        },
+        {
+            "name": "Unknown"
+        },
+        {
+            "name": "Zero_Chaos"
+        },
+        {
+            "name": "a-andre"
+        },
+        {
+            "name": "aidan"
+        },
+        {
+            "name": "beitler"
+        },
+        {
+            "name": "beroset"
+        },
+        {
+            "name": "cmrincon"
+        },
+        {
+            "name": "cswiger"
+        },
+        {
+            "name": "eb"
+        },
+        {
+            "name": "efardin"
+        },
+        {
+            "name": "ejk"
+        },
+        {
+            "name": "elms"
+        },
+        {
+            "name": "gdt"
+        },
+        {
+            "name": "gmazilla"
+        },
+        {
+            "name": "gr-sp"
+        },
+        {
+            "name": "hatsunearu"
+        },
+        {
+            "name": "ilovezfs"
+        },
+        {
+            "name": "japm48"
+        },
+        {
+            "name": "jb41997"
+        },
+        {
+            "name": "jcoy"
+        },
+        {
+            "name": "karel"
+        },
+        {
+            "name": "karel-"
+        },
+        {
+            "name": "kc1212"
+        },
+        {
+            "name": "lenhart"
+        },
+        {
+            "name": "linwei"
+        },
+        {
+            "name": "luzpaz"
+        },
+        {
+            "name": "mark"
+        },
+        {
+            "name": "masw"
+        },
+        {
+            "name": "matt"
+        },
+        {
+            "name": "mi-a"
+        },
+        {
+            "name": "phansel"
+        },
+        {
+            "name": "rajb245"
+        },
+        {
+            "name": "rear1019"
+        },
+        {
+            "name": "schneider42"
+        },
+        {
+            "name": "shwhiti"
+        },
+        {
+            "name": "soggysec"
+        },
+        {
+            "name": "tttx"
+        },
+        {
+            "name": "vermillionsands"
+        },
+        {
+            "name": "wcampbell"
+        }
+    ]
+}
