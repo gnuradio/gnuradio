@@ -132,7 +132,7 @@ def get_block_names(pattern, modname):
     blocknames = []
     reg = re.compile(pattern)
     fname_re = re.compile(r'[a-zA-Z]\w+\.\w{1,5}$')
-    with open(f'include/{modname}/CMakeLists.txt', 'r') as f:
+    with open(f'include/gnuradio/{modname}/CMakeLists.txt', 'r') as f:
         for line in f.read().splitlines():
             if len(line.strip()) == 0 or line.strip()[0] == '#':
                 continue
