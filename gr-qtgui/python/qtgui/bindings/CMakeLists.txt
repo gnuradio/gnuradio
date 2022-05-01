@@ -56,7 +56,13 @@ list(APPEND qtgui_python_files
     waterfalldisplayform_python.cc
     python_bindings.cc)
 
-GR_PYBIND_MAKE(qtgui 
+set(include_dirs ${Qt5Widgets_INCLUDE_DIRS})
+if(QWT_FOUND)
+    list(APPEND include_dirs ${QWT_INCLUDE_DIRS})
+endif(QWT_FOUND)
+list(JOIN include_dirs "," extra_includes)
+
+GR_PYBIND_MAKE_CHECK_HASH(qtgui 
    ../../.. 
    gr::qtgui
    "${qtgui_python_files}")
