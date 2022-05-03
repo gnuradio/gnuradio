@@ -121,7 +121,7 @@ class TestCase(unittest.TestCase):
             if item[0] != item[1]:
                 total_miscompares += 1
                 print(
-                    'Miscompare at: {:d} ({:d} -- {:d})'.format(idx, item[0], item[1]))
+                    'Miscompare at: {:d} ({} -- {})'.format(idx, item[0], item[1]))
         if total_miscompares > 0:
             print('Total miscompares: {:d}'.format(total_miscompares))
         self.assertTrue(total_miscompares == 0)
