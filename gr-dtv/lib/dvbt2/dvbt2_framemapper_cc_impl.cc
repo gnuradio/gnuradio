@@ -938,7 +938,7 @@ void dvbt2_framemapper_cc_impl::forecast(int noutput_items,
 
 int dvbt2_framemapper_cc_impl::add_crc32_bits(unsigned char* in, int length)
 {
-    int crc = 0xffffffff;
+    unsigned int crc = 0xffffffff;
     int b;
     int i = 0;
 
