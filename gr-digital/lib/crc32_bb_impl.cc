@@ -89,8 +89,9 @@ int crc32_bb_impl::work(int noutput_items,
         }
         crc = calculate_crc32(in, packet_length - d_crc_length);
         if (d_packed) {
-            if (crc !=
-                *(unsigned int*)(in + packet_length - d_crc_length)) { // Drop package
+            if (memcmp(&crc,
+                       in + packet_length - d_crc_length,
+                       d_crc_length)) { // Drop package
                 return 0;
             }
         } else {
