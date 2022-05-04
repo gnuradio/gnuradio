@@ -64,7 +64,7 @@ public:
      */
     static float cos(int32_t x)
     {
-        uint32_t ux = x + 0x40000000;
+        uint32_t ux = (uint32_t)x + 0x40000000;
         int index = ux >> (WORDBITS - NBITS);
         return s_sine_table[index][0] * (ux & ACCUM_MASK) + s_sine_table[index][1];
     }
@@ -78,7 +78,7 @@ public:
         int sin_index = ux >> (WORDBITS - NBITS);
         *s = s_sine_table[sin_index][0] * (ux & ACCUM_MASK) + s_sine_table[sin_index][1];
 
-        ux = x + 0x40000000;
+        ux = (uint32_t)x + 0x40000000;
         int cos_index = ux >> (WORDBITS - NBITS);
         *c = s_sine_table[cos_index][0] * (ux & ACCUM_MASK) + s_sine_table[cos_index][1];
 
