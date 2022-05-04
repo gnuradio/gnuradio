@@ -38,7 +38,7 @@ public:
     virtual QwtDoubleInterval range() const;
     virtual void setRange(const QwtDoubleInterval&);
 #elif QWT_VERSION >= 0x060200
-    virtual QwtInterval interval(Qt::Axis) const;
+    virtual QwtInterval interval(Qt::Axis) const override;
     void setInterval(Qt::Axis, const QwtInterval&);
 #endif
 
