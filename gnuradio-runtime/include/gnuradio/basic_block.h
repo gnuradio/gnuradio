@@ -28,6 +28,25 @@
 
 namespace gr {
 
+class msg_queue_comparator
+{
+private:
+    const pmt::pmt_t d_system_port = pmt::intern("system");
+
+public:
+    bool operator()(pmt::pmt_t const& queue_key1, pmt::pmt_t const& queue_key2) const
+    {
+        if (pmt::eqv(queue_key2, d_system_port))
+            return false;
+        else if (pmt::eqv(queue_key1, d_system_port))
+            return true;
+        else {
+            pmt::comparator cmp;
+            return cmp(queue_key1, queue_key2);
+        }
+    }
+};
+
 /*!
  * \brief The abstract base class for all signal processing blocks.
  * \ingroup internal
@@ -49,8 +68,8 @@ private:
     d_msg_handlers_t d_msg_handlers;
 
     typedef std::deque<pmt::pmt_t> msg_queue_t;
-    typedef std::map<pmt::pmt_t, msg_queue_t, pmt::comparator> msg_queue_map_t;
-    typedef std::map<pmt::pmt_t, msg_queue_t, pmt::comparator>::iterator
+    typedef std::map<pmt::pmt_t, msg_queue_t, msg_queue_comparator> msg_queue_map_t;
+    typedef std::map<pmt::pmt_t, msg_queue_t, msg_queue_comparator>::iterator
         msg_queue_map_itr;
 
     gr::thread::mutex mutex; //< protects all vars
