@@ -49,8 +49,8 @@ source_impl::source_impl(const std::string& device,
 }
 
 int source_impl::general_work(int noutput_items,
-                              __GR_ATTR_UNUSED gr_vector_int& ninput_items,
-                              __GR_ATTR_UNUSED gr_vector_const_void_star& input_items,
+                              [[maybe_unused]] gr_vector_int& ninput_items,
+                              [[maybe_unused]] gr_vector_const_void_star& input_items,
                               gr_vector_void_star& output_items)
 {
     long long int time_ns = 0;
