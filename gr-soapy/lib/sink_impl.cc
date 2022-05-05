@@ -53,10 +53,10 @@ void sink_impl::set_length_tag_name(const std::string& length_tag_name)
     d_length_tag_key = pmt::mp(length_tag_name);
 }
 
-int sink_impl::general_work(__GR_ATTR_UNUSED int noutput_items,
+int sink_impl::general_work([[maybe_unused]] int noutput_items,
                             gr_vector_int& ninput_items,
                             gr_vector_const_void_star& input_items,
-                            __GR_ATTR_UNUSED gr_vector_void_star& output_items)
+                            [[maybe_unused]] gr_vector_void_star& output_items)
 {
     int nin = ninput_items[0];
     long long int time_ns = 0;
