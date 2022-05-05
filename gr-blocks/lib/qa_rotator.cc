@@ -21,7 +21,7 @@
 #include <cmath>
 
 // error vector magnitude
-__GR_ATTR_UNUSED static float error_vector_mag(gr_complex a, gr_complex b)
+[[maybe_unused]] static float error_vector_mag(gr_complex a, gr_complex b)
 {
     return abs(a - b);
 }
