@@ -79,7 +79,7 @@ void crc32_async_bb_impl::check(pmt::pmt_t msg)
     const uint8_t* bytes_in = pmt::u8vector_elements(bytes, pkt_len);
 
     crc = d_crc_impl.compute(bytes_in, pkt_len - 4);
-    if (crc != *(unsigned int*)(bytes_in + pkt_len - 4)) { // Drop package
+    if (memcmp(&crc, bytes_in + pkt_len - 4, 4)) { // Drop package
         d_nfail++;
         return;
     }
