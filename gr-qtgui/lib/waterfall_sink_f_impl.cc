@@ -482,7 +482,7 @@ void waterfall_sink_f_impl::handle_pdus(pmt::pmt_t msg)
         int j = 0;
         size_t min = 0;
         size_t max = std::min(d_fftsize, static_cast<int>(len));
-        for (size_t i = 0; j < d_nrows; i += stride) {
+        while (j < d_nrows) {
             // Clear residbufs if len < d_fftsize
             memset(d_residbufs[d_nconnections].data(), 0x00, sizeof(float) * d_fftsize);
 
