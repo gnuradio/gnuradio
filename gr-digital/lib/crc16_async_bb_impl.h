@@ -25,7 +25,6 @@ private:
     pmt::pmt_t d_in_port;
     pmt::pmt_t d_out_port;
 
-    unsigned int process_crc(const uint8_t* bytes_in, size_t n_bytes_prcss);
     void calc(pmt::pmt_t msg);
     void check(pmt::pmt_t msg);
 
