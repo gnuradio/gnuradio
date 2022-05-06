@@ -55,8 +55,7 @@ void crc16_async_bb_impl::calc(pmt::pmt_t msg)
     const uint8_t* bytes_in = pmt::u8vector_elements(bytes, pkt_len);
     std::vector<uint8_t> bytes_out(2 + pkt_len);
 
-    crc = process_crc(bytes_in, pkt_len);
-
+    crc = d_crc_ccitt_impl.compute(bytes_in, pkt_len);
     memcpy((void*)bytes_out.data(), (const void*)bytes_in, pkt_len);
     memcpy((void*)(bytes_out.data() + pkt_len), &crc, 2);
 
@@ -65,16 +64,6 @@ void crc16_async_bb_impl::calc(pmt::pmt_t msg)
         bytes_out.data()); // this copies the values from bytes_out into the u8vector
     pmt::pmt_t msg_pair = pmt::cons(meta, output);
     message_port_pub(d_out_port, msg_pair);
-}
-
-unsigned int crc16_async_bb_impl::process_crc(const uint8_t* bytes_in,
-                                              size_t n_bytes_prcss)
-{
-
-    unsigned int result;
-
-    result = d_crc_ccitt_impl.compute(bytes_in, n_bytes_prcss);
-    return result;
 }
 
 void crc16_async_bb_impl::check(pmt::pmt_t msg)
@@ -87,8 +76,7 @@ void crc16_async_bb_impl::check(pmt::pmt_t msg)
     size_t pkt_len(0);
     const uint8_t* bytes_in = pmt::u8vector_elements(bytes, pkt_len);
 
-    crc = process_crc(bytes_in, pkt_len - 2);
-
+    crc = d_crc_ccitt_impl.compute(bytes_in, pkt_len - 2);
     if (crc != *(unsigned int*)(bytes_in + pkt_len - 2)) { // Drop package
         d_nfail++;
         return;
