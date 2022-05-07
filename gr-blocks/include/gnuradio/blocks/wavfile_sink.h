@@ -36,7 +36,7 @@ public:
      * \param filename The .wav file to be opened
      * \param n_channels Number of channels (2 = stereo or I/Q output)
      * \param sample_rate Sample rate [S/s]
-     * \param format Output format (WAV, FLAC, Ogg Vorbis, RF64)
+     * \param format Output format (WAV, FLAC, Ogg, RF64)
      * \param subformat Bits per sample
      * \param append Append to existing file
      */
