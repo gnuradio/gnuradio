@@ -111,7 +111,7 @@ class test_filterbank_vcvcf(gr_unittest.TestCase):
         fb.set_taps(taps2)
         outdata2 = None
         # Wait until we have new data.
-        while (not outdata2) or outdata[0] == outdata2[0]:
+        while (not outdata2) or abs(outdata2[0] - outdata[0]) < 1e-6:
             time.sleep(waittime)
             outdata2 = snk.level()
         self.tb.stop()
