@@ -83,6 +83,9 @@ wavfile_sink_impl::wavfile_sink_impl(const char* filename,
     case FORMAT_VORBIS:
         bits_per_sample = 32;
         break;
+    case FORMAT_OPUS:
+        bits_per_sample = 32;
+        break;
     }
     set_bits_per_sample_unlocked(bits_per_sample);
     d_h.bytes_per_sample = d_bytes_per_sample_new;
@@ -168,6 +171,13 @@ bool wavfile_sink_impl::open(const char* filename)
             switch (d_h.subformat) {
             case FORMAT_VORBIS:
                 sfinfo.format = (SF_FORMAT_OGG | SF_FORMAT_VORBIS);
+                break;
+            case FORMAT_OPUS:
+#ifdef HAVE_SF_FORMAT_OPUS
+                sfinfo.format = (SF_FORMAT_OGG | SF_FORMAT_OPUS);
+#else
+                throw std::runtime_error("libsndfile < 1.0.29 does not support Opus.");
+#endif
                 break;
             }
             break;
