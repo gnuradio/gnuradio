@@ -11,6 +11,12 @@
 include(GrMiscUtils)
 GR_CHECK_HDR_N_DEF(io.h HAVE_IO_H)
 
+if(SNDFILE_FOUND)
+    if(NOT PC_SNDFILE_VERSION VERSION_LESS 1.0.29)
+        add_definitions(-DHAVE_SF_FORMAT_OPUS)
+    endif()
+endif()
+
 ########################################################################
 # Setup library
 ########################################################################

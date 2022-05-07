@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(wavfile.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(69b513925578f5e61e5c98a083388fae)                     */
+/* BINDTOOL_HEADER_FILE_HASH(60587b1cdfc073a9bbe35dd38aba64ea)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -55,6 +55,7 @@ void bind_wavfile(py::module& m)
         .value("FORMAT_FLOAT", ::gr::blocks::FORMAT_FLOAT)   // 6
         .value("FORMAT_DOUBLE", ::gr::blocks::FORMAT_DOUBLE) // 7
         .value("FORMAT_VORBIS", ::gr::blocks::FORMAT_VORBIS) // 96
+        .value("FORMAT_OPUS", ::gr::blocks::FORMAT_OPUS)     // 100
         .export_values();
 
     py::implicitly_convertible<int, ::gr::blocks::wavfile_format_t>();
