@@ -19,7 +19,7 @@ parameters:
     label: Output Format
     dtype: enum
     options: [FORMAT_WAV, FORMAT_FLAC, FORMAT_OGG, FORMAT_RF64]
-    option_labels: [WAV, FLAC, Ogg Vorbis, 64-bit WAV]
+    option_labels: [WAV, FLAC, Ogg, 64-bit WAV]
     default: FORMAT_WAV
     option_attributes:
         hide_wav: [none, all, all, all]
@@ -47,13 +47,13 @@ parameters:
         val: [blocks.FORMAT_PCM_S8, blocks.FORMAT_PCM_16, blocks.FORMAT_PCM_24]
     hide: ${ format.hide_flac }
 -   id: bits_per_sample3
-    label: Bits per Sample
+    label: Codec
     dtype: enum
-    options: [FORMAT_VORBIS]
-    option_labels: [Vorbis]
+    options: [FORMAT_VORBIS, FORMAT_OPUS]
+    option_labels: [Vorbis, Opus]
     default: FORMAT_VORBIS
     option_attributes:
-        val: [blocks.FORMAT_VORBIS]
+        val: [blocks.FORMAT_VORBIS, blocks.FORMAT_OPUS]
     hide: ${ format.hide_ogg }
 -   id: bits_per_sample4
     label: Bits per Sample
