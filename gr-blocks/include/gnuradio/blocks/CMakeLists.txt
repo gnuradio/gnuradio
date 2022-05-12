@@ -133,6 +133,8 @@ install(FILES
     streams_to_stream.h
     streams_to_vector.h
     stretch_ff.h
+    symbolinterleaving.h
+    symbolinterleaver_xx.h
     tag_debug.h
     tag_gate.h
     tag_share.h

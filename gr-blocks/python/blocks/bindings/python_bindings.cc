@@ -137,6 +137,7 @@ void bind_streams_to_stream(py::module&);
 void bind_streams_to_vector(py::module&);
 void bind_stretch_ff(py::module&);
 void bind_sub(py::module&);
+void bind_symbolinterleaver_xx(py::module& m);
 void bind_tag_debug(py::module&);
 void bind_tag_gate(py::module&);
 void bind_tag_share(py::module&);
@@ -310,6 +311,7 @@ PYBIND11_MODULE(blocks_python, m)
     bind_streams_to_vector(m);
     bind_stretch_ff(m);
     bind_sub(m);
+    bind_symbolinterleaver_xx(m);
     bind_tag_debug(m);
     bind_tag_gate(m);
     bind_tag_share(m);

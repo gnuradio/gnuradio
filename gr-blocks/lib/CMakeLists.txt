@@ -138,6 +138,8 @@ set(BLOCKS_SOURCES
     streams_to_stream_impl.cc
     streams_to_vector_impl.cc
     stretch_ff_impl.cc
+    symbolinterleaving.cc
+    symbolinterleaver_xx_impl.cc
     tag_share_impl.cc
     tagged_file_sink_impl.cc
     tagged_stream_multiply_length_impl.cc

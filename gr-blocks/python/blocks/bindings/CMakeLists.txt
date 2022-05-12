@@ -133,6 +133,7 @@ list(APPEND blocks_python_files
     streams_to_vector_python.cc
     stretch_ff_python.cc
     sub_python.cc
+    symbolinterleaver_xx_python.cc
     tag_debug_python.cc
     tag_gate_python.cc
     tag_share_python.cc
