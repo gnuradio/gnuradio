@@ -26,6 +26,7 @@
 #include <sstream>
 #include <stdexcept>
 
+#define MAX_QUEUE_SIZE 100
 
 namespace gr {
 namespace audio {
@@ -144,6 +145,7 @@ int windows_source::work(int noutput_items,
 {
     float *f0, *f1;
     DWORD dw_items = 0;
+    std::unique_lock<std::mutex> lock(buffer_queue_mutex);
 
     while (!buffer_queue.empty()) {
         // Pull the next incoming buffer off the queue
@@ -181,11 +183,14 @@ int windows_source::work(int noutput_items,
                 dw_items += buffer_length / 2;
             }
             buffer_queue.pop();
+            lock.unlock();
 
             // Recycle the buffer
             next_header->dwFlags = 0;
             waveInPrepareHeader(d_h_wavein, next_header, sizeof(WAVEHDR));
             waveInAddBuffer(d_h_wavein, next_header, sizeof(WAVEHDR));
+
+            lock.lock();
         }
     }
     return dw_items;
@@ -306,7 +311,7 @@ int windows_source::open_wavein_device(void)
                         u_device_id,
                         &wave_format,
                         (DWORD_PTR)&read_wavein,
-                        (DWORD_PTR)&buffer_queue,
+                        (DWORD_PTR)this,
                         CALLBACK_FUNCTION | WAVE_ALLOWSYNC);
 
     if (result) {
@@ -327,11 +332,13 @@ static void CALLBACK read_wavein(
                           strerror(errno));
         }
         LPWAVEHDR lp_wave_hdr = (LPWAVEHDR)dwParam1; // The new audio data
-        boost::lockfree::spsc_queue<LPWAVEHDR>* q =
-            (boost::lockfree::spsc_queue<LPWAVEHDR>*)
-                dwInstance;   // The buffer queue we assigned to the device to track the
-                              // buffers that need to be sent
-        q->push(lp_wave_hdr); // Add the buffer to that queue
+        windows_source* source = (windows_source*)dwInstance;
+        {
+            std::lock_guard<std::mutex> lock(source->buffer_queue_mutex);
+            if (source->buffer_queue.size() < MAX_QUEUE_SIZE) {
+                source->buffer_queue.push(lp_wave_hdr); // Add the buffer to the queue
+            }
+        }
     }
 }
 } /* namespace audio */

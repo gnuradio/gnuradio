@@ -17,9 +17,11 @@
 #include "alsa_sink.h"
 #include <gnuradio/io_signature.h>
 #include <gnuradio/prefs.h>
+#include <chrono>
 #include <cstdio>
 #include <future>
 #include <stdexcept>
+#include <thread>
 
 namespace gr {
 namespace audio {
@@ -81,7 +83,7 @@ alsa_sink::alsa_sink(int sampling_rate, const std::string device_name, bool ok_t
         error = snd_pcm_open(&t, d_device_name.c_str(), SND_PCM_STREAM_PLAYBACK, 0);
         d_pcm_handle.set(t);
         if (error < 0) {
-            boost::this_thread::sleep(boost::posix_time::milliseconds(10));
+            std::this_thread::sleep_for(std::chrono::milliseconds(10));
         }
     }
     if (ok_to_block == false)
