@@ -15,7 +15,7 @@
  * Send a tone each to the left and right channels of stereo audio
  * output and let the user's brain sum them.
  *
- * GNU Radio makes extensive use of Boost shared pointers.  Signal processing
+ * GNU Radio makes extensive use of shared pointers.  Signal processing
  * blocks are typically created by calling a "make" factory function, which
  * returns an instance of the block as a typedef'd shared pointer that can
  * be used in any way a regular pointer can.  Shared pointers created this way
