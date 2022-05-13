@@ -1,0 +1,45 @@
+id: blocks_symbolinterleaver_xx
+label: Symbol interleaver
+flags: [ python, cpp ]
+
+parameters:
+-   id: type
+    label: IO Type
+    dtype: enum
+    options: [byte, complex, float, int, short]
+    option_attributes:
+        fcn: [bb, cc, ff, ii, ss]
+    hide: part
+-   id: interleaver_indices
+    label: Interleaver indices
+    dtype: int_vector
+    default: '[1, 2, 0]'
+-   id: is_packed
+    label: Packed bytes
+    dtype: bool
+    default: False
+-   id: interleaver_mode
+    label: Mode
+    dtype: enum
+    options: [interleave, deinterleave]
+    option_attributes:
+        fcn: [True, False]
+
+inputs:
+-   domain: stream
+    dtype: ${ type }
+
+outputs:
+-   domain: stream
+    dtype: ${ type }
+
+templates:
+    imports: from gnuradio import blocks
+    make: blocks.symbolinterleaver_${type.fcn}(${interleaver_indices}, ${is_packed}, ${interleaver_mode})
+
+cpp_templates:
+    includes: ['#include <gnuradio/symbolinterleaver_xx.h>']
+    declarations: 'blocks::symbolinterleaver_${type.fcn}::sptr ${id};'
+    make: 'this->${id} = blocks::symbolinterleaver_${type.fcn}::make(${interleaver_indices}, ${is_packed}, ${interleaver_mode});'
+
+file_format: 1
