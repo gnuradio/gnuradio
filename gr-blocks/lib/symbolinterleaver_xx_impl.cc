@@ -27,10 +27,27 @@ typename symbolinterleaver_xx<T>::sptr symbolinterleaver_xx<T>::make(
         interleaver_indices, is_packed, interleave_mode);
 }
 
+
+/*
+ * These are explicit template declarations to make sure that all these specialized make
+ * functions are present in the compiled shared library. So far this is unnecessary for
+ * other blocks. However, the reasons are yet unknown.
+ */
 template typename symbolinterleaver_xx<uint8_t>::sptr symbolinterleaver_xx<uint8_t>::make(
     std::vector<size_t> interleaver_indices, bool is_packed, bool interleave_mode);
 
+template typename symbolinterleaver_xx<gr_complex>::sptr
+symbolinterleaver_xx<gr_complex>::make(std::vector<size_t> interleaver_indices,
+                                       bool is_packed,
+                                       bool interleave_mode);
+
 template typename symbolinterleaver_xx<float>::sptr symbolinterleaver_xx<float>::make(
+    std::vector<size_t> interleaver_indices, bool is_packed, bool interleave_mode);
+
+template typename symbolinterleaver_xx<int32_t>::sptr symbolinterleaver_xx<int32_t>::make(
+    std::vector<size_t> interleaver_indices, bool is_packed, bool interleave_mode);
+
+template typename symbolinterleaver_xx<int16_t>::sptr symbolinterleaver_xx<int16_t>::make(
     std::vector<size_t> interleaver_indices, bool is_packed, bool interleave_mode);
 
 
@@ -150,6 +167,9 @@ int symbolinterleaver_xx_impl<T>::work(int noutput_items,
 }
 
 template class symbolinterleaver_xx_impl<uint8_t>;
+template class symbolinterleaver_xx_impl<gr_complex>;
 template class symbolinterleaver_xx_impl<float>;
+template class symbolinterleaver_xx_impl<int32_t>;
+template class symbolinterleaver_xx_impl<int16_t>;
 } /* namespace blocks */
 } /* namespace gr */

@@ -25,9 +25,11 @@ namespace blocks {
  * \details
  * This block accepts item multiples of size \p interleaver_indices.size() and interleaves
  * or deinterleaves them on the output.
+ *
  * \param interleaver_indices indices of items in output vector.
  * \param is_packed Assume packed bytes.
- * \param interleave_mode Switch between interleaver [true] and deinterleaver mode [false].
+ * \param interleave_mode Switch between interleaver [true] and deinterleaver mode
+ * [false].
  */
 template <class T>
 class BLOCKS_API symbolinterleaver_xx : virtual public sync_block
@@ -40,7 +42,8 @@ public:
      *
      * \param interleaver_indices indices of items in output vector.
      * \param is_packed Assume packed bytes.
-     * \param interleave_mode Switch between interleaver [true] and deinterleaver mode [false].
+     * \param interleave_mode Switch between interleaver [true] and deinterleaver mode
+     * [false].
      */
     static sptr
     make(std::vector<size_t> interleaver_indices, bool is_packed, bool interleave_mode);
@@ -67,7 +70,10 @@ public:
 };
 
 typedef symbolinterleaver_xx<uint8_t> symbolinterleaver_bb;
+typedef symbolinterleaver_xx<gr_complex> symbolinterleaver_cc;
 typedef symbolinterleaver_xx<float> symbolinterleaver_ff;
+typedef symbolinterleaver_xx<int32_t> symbolinterleaver_ii;
+typedef symbolinterleaver_xx<int16_t> symbolinterleaver_ss;
 } /* namespace blocks */
 } /* namespace gr */
 

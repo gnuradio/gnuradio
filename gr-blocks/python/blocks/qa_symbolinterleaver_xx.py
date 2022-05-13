@@ -107,7 +107,6 @@ class test_symbolinterleaver_xx(gr_unittest.TestCase):
         interleaver = blocks.symbolinterleaver_ff(interleaver_indices, False, True)
 
         data = np.random.normal(size=nbits * nframes).astype(np.float32)
-        # data = np.random.randint(0, 2, nbits * nframes)
         ref = np.array([], dtype=data.dtype)
         for f in np.reshape(data, (nframes, -1)):
             ref = np.concatenate((ref, f[interleaver_indices]))
@@ -129,7 +128,6 @@ class test_symbolinterleaver_xx(gr_unittest.TestCase):
         interleaver = blocks.symbolinterleaver_ff(interleaver_indices, False, False)
 
         data = np.random.normal(size=nbits * nframes).astype(np.float32)
-        # data = np.random.randint(0, 2, nbits * nframes)
         ref = np.array([], dtype=data.dtype)
         for f in np.reshape(data, (nframes, -1)):
             ref = np.concatenate((ref, f[interleaver_indices]))
@@ -142,6 +140,71 @@ class test_symbolinterleaver_xx(gr_unittest.TestCase):
         # # check data
         res = np.array(snk.data())
         self.assertTupleEqual(tuple(res), tuple(data))
+
+    def test_006_cc_unpacked(self):
+        nframes = 5
+        nbits = 16 * 7
+        interleaver_indices = np.random.permutation(nbits)
+
+        interleaver = blocks.symbolinterleaver_cc(interleaver_indices, False, True)
+
+        data = np.random.normal(size=nbits * nframes).astype(
+            np.float32
+        ) + 1.0j * np.random.normal(size=nbits * nframes).astype(np.float32)
+        ref = np.array([], dtype=data.dtype)
+        for f in np.reshape(data, (nframes, -1)):
+            ref = np.concatenate((ref, f[interleaver_indices]))
+        src = blocks.vector_source_c(data)
+        snk = blocks.vector_sink_c()
+
+        self.tb.connect(src, interleaver, snk)
+        # set up fg
+        self.tb.run()
+        # # check data
+        res = np.array(snk.data())
+        self.assertTupleEqual(tuple(res), tuple(ref))
+
+    def test_007_ss_unpacked(self):
+        nframes = 5
+        nbits = 16 * 7
+        interleaver_indices = np.random.permutation(nbits)
+
+        interleaver = blocks.symbolinterleaver_ss(interleaver_indices, False, True)
+
+        data = np.random.normal(size=nbits * nframes).astype(np.int16)
+        ref = np.array([], dtype=data.dtype)
+        for f in np.reshape(data, (nframes, -1)):
+            ref = np.concatenate((ref, f[interleaver_indices]))
+        src = blocks.vector_source_s(data)
+        snk = blocks.vector_sink_s()
+
+        self.tb.connect(src, interleaver, snk)
+        # set up fg
+        self.tb.run()
+        # # check data
+        res = np.array(snk.data())
+        self.assertTupleEqual(tuple(res), tuple(ref))
+
+    def test_008_ii_unpacked(self):
+        nframes = 5
+        nbits = 16 * 7
+        interleaver_indices = np.random.permutation(nbits)
+
+        interleaver = blocks.symbolinterleaver_ii(interleaver_indices, False, True)
+
+        data = np.random.normal(size=nbits * nframes).astype(np.int32)
+        ref = np.array([], dtype=data.dtype)
+        for f in np.reshape(data, (nframes, -1)):
+            ref = np.concatenate((ref, f[interleaver_indices]))
+        src = blocks.vector_source_i(data)
+        snk = blocks.vector_sink_i()
+
+        self.tb.connect(src, interleaver, snk)
+        # set up fg
+        self.tb.run()
+        # # check data
+        res = np.array(snk.data())
+        self.assertTupleEqual(tuple(res), tuple(ref))
 
 
 if __name__ == "__main__":

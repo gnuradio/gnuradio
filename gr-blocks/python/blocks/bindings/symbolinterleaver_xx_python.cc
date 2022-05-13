@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(symbolinterleaver_xx.h)                                    */
-/* BINDTOOL_HEADER_FILE_HASH(9038706f457ceba213305d47b60adaf4)                     */
+/* BINDTOOL_HEADER_FILE_HASH(adf461ecf429376c18f5f15ce9f78963)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -48,5 +48,8 @@ void bind_symbolinterleaver_template(py::module& m, const char* classname)
 void bind_symbolinterleaver_xx(py::module& m)
 {
     bind_symbolinterleaver_template<uint8_t>(m, "symbolinterleaver_bb");
+    bind_symbolinterleaver_template<gr_complex>(m, "symbolinterleaver_cc");
     bind_symbolinterleaver_template<float>(m, "symbolinterleaver_ff");
+    bind_symbolinterleaver_template<int32_t>(m, "symbolinterleaver_ii");
+    bind_symbolinterleaver_template<int16_t>(m, "symbolinterleaver_ss");
 }
