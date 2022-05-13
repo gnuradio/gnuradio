@@ -69,7 +69,10 @@ symbolinterleaver_xx_impl<T>::symbolinterleaver_xx_impl(
     }
     if (is_packed and d_interleaver->interleaver_length() % 8) {
         throw std::invalid_argument(
-            "Packed Interleaver requires 'interleaver_indices' to be a multiple of 8!");
+            fmt::format("Packed Interleaver requires 'interleaver_indices.size()' to be "
+                        "a multiple of 8 but got modulo8({}) = {}!",
+                        interleaver_indices.size(),
+                        interleaver_indices.size() % 8));
     }
     d_unpacked_original.resize(d_interleaver->interleaver_length());
     d_unpacked_interleaved.resize(d_interleaver->interleaver_length());

@@ -9,7 +9,7 @@
  */
 
 #include <gnuradio/blocks/symbolinterleaving.h>
-#include <fmt/core.h>
+#include <spdlog/fmt/fmt.h>
 #include <algorithm>
 #include <numeric>
 
