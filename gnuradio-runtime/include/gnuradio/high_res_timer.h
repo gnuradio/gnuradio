@@ -12,7 +12,8 @@
 #define INCLUDED_GNURADIO_HIGH_RES_TIMER_H
 
 #include <gnuradio/api.h>
-#include <boost/date_time/posix_time/posix_time.hpp>
+#include <chrono>
+#include <ratio>
 
 ////////////////////////////////////////////////////////////////////////
 // Use architecture defines to determine the implementation
@@ -28,7 +29,7 @@
 #define GNURADIO_HRT_USE_CLOCK_GETTIME
 #include <ctime>
 #else
-#define GNURADIO_HRT_USE_MICROSEC_CLOCK
+#define GNURADIO_HRT_USE_GENERIC_CLOCK
 #endif
 
 
@@ -123,11 +124,12 @@ inline gr::high_res_timer_type gr::high_res_timer_tps(void)
 #endif
 
 ////////////////////////////////////////////////////////////////////////
-#ifdef GNURADIO_HRT_USE_MICROSEC_CLOCK
+#ifdef GNURADIO_HRT_USE_GENERIC_CLOCK
 inline gr::high_res_timer_type gr::high_res_timer_now(void)
 {
-    static const boost::posix_time::ptime epoch(boost::posix_time::from_time_t(0));
-    return (boost::posix_time::microsec_clock::universal_time() - epoch).ticks();
+    return std::chrono::duration<gr::high_res_timer_type, std::nano>(
+               std::chrono::steady_clock::now().time_since_epoch())
+        .count();
 }
 
 inline gr::high_res_timer_type gr::high_res_timer_now_perfmon(void)
@@ -135,22 +137,17 @@ inline gr::high_res_timer_type gr::high_res_timer_now_perfmon(void)
     return gr::high_res_timer_now();
 }
 
-inline gr::high_res_timer_type gr::high_res_timer_tps(void)
-{
-    return boost::posix_time::time_duration::ticks_per_second();
-}
+inline gr::high_res_timer_type gr::high_res_timer_tps(void) { return 1000000000UL; }
 #endif
 
 ////////////////////////////////////////////////////////////////////////
 inline gr::high_res_timer_type gr::high_res_timer_epoch(void)
 {
-    static const double hrt_ticks_per_utc_ticks =
-        gr::high_res_timer_tps() /
-        double(boost::posix_time::time_duration::ticks_per_second());
-    boost::posix_time::time_duration utc =
-        boost::posix_time::microsec_clock::universal_time() -
-        boost::posix_time::from_time_t(0);
-    return gr::high_res_timer_now() - utc.ticks() * hrt_ticks_per_utc_ticks;
+    static const double ticks_per_second = gr::high_res_timer_tps();
+    const double seconds_since_epoch =
+        std::chrono::duration<double>(std::chrono::system_clock::now().time_since_epoch())
+            .count();
+    return gr::high_res_timer_now() - seconds_since_epoch * ticks_per_second;
 }
 
 #endif /* INCLUDED_GNURADIO_HIGH_RES_TIMER_H */
