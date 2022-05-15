@@ -19,6 +19,7 @@ import math
 import operator
 
 from gnuradio.ctrlport.GNURadioControlPortClient import GNURadioControlPortClient
+from PyQt5 import QtCore, Qt
 
 try:
     import networkx as nx
@@ -40,7 +41,6 @@ except ImportError:
           "Please check that they are installed and try again.")
     sys.exit(1)
 
-from PyQt5 import QtCore, Qt
 import itertools
 
 from gnuradio import gr, ctrlport
