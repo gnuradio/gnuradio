@@ -15,8 +15,9 @@
 #include <gnuradio/logger.h>
 #include <gnuradio/prefs.h>
 #include <gnuradio/thread/thread.h>
-#include <boost/date_time/posix_time/posix_time.hpp>
+#include <chrono>
 #include <memory>
+#include <thread>
 
 namespace {
 // Time, in milliseconds, to wait between checks to the Thrift runtime to see if
@@ -208,8 +209,8 @@ void thrift_application_base<TserverBase, TserverClass>::start_application()
         bool app_started(false);
         for (unsigned int attempts(0); (!app_started && attempts < max_init_attempts);
              ++attempts) {
-            boost::this_thread::sleep(
-                boost::posix_time::milliseconds(THRIFTAPPLICATION_ACTIVATION_TIMEOUT_MS));
+            std::this_thread::sleep_for(
+                std::chrono::milliseconds(THRIFTAPPLICATION_ACTIVATION_TIMEOUT_MS));
             app_started = d_application->application_started();
         }
 

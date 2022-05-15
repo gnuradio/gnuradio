@@ -16,8 +16,8 @@
 #include <gnuradio/logger.h>
 #include <gnuradio/rpcpmtconverters_thrift.h>
 #include <gnuradio/rpcserver_base.h>
-#include <boost/thread/mutex.hpp>
 #include <map>
+#include <mutex>
 #include <string>
 
 #define S(x) #x
@@ -79,7 +79,7 @@ private:
     static gr::logger_ptr d_logger;
     static gr::logger_ptr d_debug_logger;
 
-    boost::mutex d_callback_map_lock;
+    std::mutex d_callback_map_lock;
 
     typedef std::map<std::string, configureCallback_t> ConfigureCallbackMap_t;
     ConfigureCallbackMap_t d_setcallbackmap;
