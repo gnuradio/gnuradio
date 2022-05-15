@@ -22,7 +22,7 @@ thread_group::thread_group() {}
 
 thread_group::~thread_group() {}
 
-boost::thread* thread_group::create_thread(const boost::function0<void>& threadfunc)
+boost::thread* thread_group::create_thread(const std::function<void()>& threadfunc)
 {
     // No scoped_lock required here since the only "shared data" that's
     // modified here occurs inside add_thread which does scoped_lock.

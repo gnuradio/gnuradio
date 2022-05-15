@@ -18,8 +18,8 @@
 #include <gnuradio/api.h>
 #include <gnuradio/thread/thread.h>
 #include <boost/any.hpp>
-#include <boost/function.hpp>
 #include <boost/thread/shared_mutex.hpp>
+#include <functional>
 #include <memory>
 
 namespace gr {
@@ -33,7 +33,7 @@ public:
     thread_group(const thread_group&) = delete;
     thread_group& operator=(const thread_group&) = delete;
 
-    boost::thread* create_thread(const boost::function0<void>& threadfunc);
+    boost::thread* create_thread(const std::function<void()>& threadfunc);
     void add_thread(std::unique_ptr<boost::thread> thrd);
     void remove_thread(boost::thread* thrd);
     void join_all();
