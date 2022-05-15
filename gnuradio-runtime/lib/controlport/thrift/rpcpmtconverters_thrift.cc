@@ -11,7 +11,6 @@
 #include <gnuradio/gr_complex.h>
 #include <gnuradio/logger.h>
 #include <gnuradio/rpcpmtconverters_thrift.h>
-#include <boost/assign/ptr_map_inserter.hpp>
 
 GNURadio::Knob rpcpmtconverter::from_pmt(const pmt::pmt_t& knob)
 {
@@ -247,7 +246,7 @@ template <typename TO_PMT_F>
 rpcpmtconverter::to_pmt_reg<TO_PMT_F>::to_pmt_reg(To_PMT& instance,
                                                   const GNURadio::BaseTypes::type type)
 {
-    boost::assign::ptr_map_insert<TO_PMT_F>(instance.to_pmt_map)(type);
+    instance.to_pmt_map.emplace(type, TO_PMT_F());
 }
 
 pmt::pmt_t rpcpmtconverter::to_pmt_f::operator()(const GNURadio::Knob& knob)
