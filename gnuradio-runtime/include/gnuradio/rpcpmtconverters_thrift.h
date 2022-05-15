@@ -12,7 +12,7 @@
 
 #include "thrift/gnuradio_types.h"
 #include <pmt/pmt.h>
-#include <boost/ptr_container/ptr_map.hpp>
+#include <map>
 
 
 namespace rpcpmtconverter {
@@ -82,7 +82,7 @@ public:
     pmt::pmt_t operator()(const GNURadio::Knob& knob);
 
 protected:
-    boost::ptr_map<GNURadio::BaseTypes::type, to_pmt_f> to_pmt_map;
+    std::map<GNURadio::BaseTypes::type, to_pmt_f> to_pmt_map;
 
 private:
     To_PMT() { ; }
