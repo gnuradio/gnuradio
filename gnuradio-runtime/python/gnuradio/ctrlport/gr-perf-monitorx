@@ -17,6 +17,7 @@ import signal
 import random
 import math
 import operator
+import thrift
 
 from gnuradio.ctrlport.GNURadioControlPortClient import GNURadioControlPortClient
 from PyQt5 import QtCore, Qt
@@ -908,7 +909,7 @@ class MyApp(object):
         try:
             GNURadioControlPortClient(
                 args.host, args.port, 'thrift', self.run, Qt.QApplication(sys.argv).exec_)
-        except:
+        except thrift.transport.TTransport.TTransportException:
             print("ControlPort failed to connect. Check the config of your endpoint.")
             print("\t[ControlPort] on = True")
             print("\t[ControlPort] edges_list = True")
