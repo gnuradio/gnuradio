@@ -67,12 +67,11 @@ blockinterleaver_xx_impl<T>::blockinterleaver_xx_impl(
         is_packed = false;
         d_is_packed = false;
     }
-    if (is_packed and d_interleaver->interleaver_length() % 8) {
-        throw std::invalid_argument(
-            fmt::format("Packed Interleaver requires 'interleaver_indices.size()' to be "
-                        "a multiple of 8 but got modulo8({}) = {}!",
-                        interleaver_indices.size(),
-                        interleaver_indices.size() % 8));
+    if (is_packed && d_interleaver->interleaver_length() % 8) {
+        throw std::invalid_argument(fmt::format(
+            "Interleaver with packed byte input requires the length of "
+            "interleaver_indices to be divisible by 8. {} is not divisible by 8!",
+            interleaver_indices.size()));
     }
     d_unpacked_original.resize(d_interleaver->interleaver_length());
     d_unpacked_interleaved.resize(d_interleaver->interleaver_length());

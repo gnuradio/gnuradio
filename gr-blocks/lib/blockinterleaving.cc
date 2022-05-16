@@ -29,7 +29,7 @@ void block_interleaving::set_interleaver_indices(
     std::sort(test.begin(), test.end());
     std::unique(test.begin(), test.end());
     const auto [min, max] = std::minmax_element(test.begin(), test.end());
-    if (test.size() != interleaver_indices.size() or *min != 0 or
+    if (test.size() != interleaver_indices.size() || *min != 0 ||
         *max != interleaver_indices.size() - 1) {
         throw std::invalid_argument(
             fmt::format("Incorrect interleaver indices! Expected {} unique elements in "
