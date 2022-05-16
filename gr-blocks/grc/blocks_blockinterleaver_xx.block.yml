@@ -1,5 +1,5 @@
-id: blocks_symbolinterleaver_xx
-label: Symbol interleaver
+id: blocks_blockinterleaver_xx
+label: Block interleaver
 flags: [ python, cpp ]
 
 parameters:
@@ -14,16 +14,18 @@ parameters:
     label: Interleaver indices
     dtype: int_vector
     default: '[1, 2, 0]'
--   id: is_packed
-    label: Packed bytes
-    dtype: bool
-    default: False
 -   id: interleaver_mode
     label: Mode
     dtype: enum
     options: [interleave, deinterleave]
     option_attributes:
         fcn: [True, False]
+-   id: is_packed
+    label: Packed bytes
+    dtype: bool
+    default: False
+    hide: ${ 'all' if type != 'byte' else 'none' }
+
 
 inputs:
 -   domain: stream
@@ -35,11 +37,11 @@ outputs:
 
 templates:
     imports: from gnuradio import blocks
-    make: blocks.symbolinterleaver_${type.fcn}(${interleaver_indices}, ${is_packed}, ${interleaver_mode})
+    make: blocks.blockinterleaver_${type.fcn}(${interleaver_indices}, ${interleaver_mode}, ${ is_packed if type == 'byte' else False })
 
 cpp_templates:
     includes: ['#include <gnuradio/symbolinterleaver_xx.h>']
     declarations: 'blocks::symbolinterleaver_${type.fcn}::sptr ${id};'
-    make: 'this->${id} = blocks::symbolinterleaver_${type.fcn}::make(${interleaver_indices}, ${is_packed}, ${interleaver_mode});'
+    make: 'this->${id} = blocks::symbolinterleaver_${type.fcn}::make(${interleaver_indices}, ${interleaver_mode}, ${ is_packed if type == "byte" else false });'
 
 file_format: 1

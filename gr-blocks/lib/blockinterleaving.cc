@@ -8,7 +8,7 @@
  *
  */
 
-#include <gnuradio/blocks/symbolinterleaving.h>
+#include <gnuradio/blocks/blockinterleaving.h>
 #include <spdlog/fmt/fmt.h>
 #include <algorithm>
 #include <numeric>
@@ -16,13 +16,13 @@
 namespace gr {
 namespace blocks {
 
-symbol_interleaving::symbol_interleaving(std::vector<size_t> interleaver_indices)
+block_interleaving::block_interleaving(std::vector<size_t> interleaver_indices)
 {
     set_interleaver_indices(interleaver_indices);
 }
 
 
-void symbol_interleaving::set_interleaver_indices(
+void block_interleaving::set_interleaver_indices(
     const std::vector<size_t>& interleaver_indices)
 {
     std::vector<size_t> test(interleaver_indices);

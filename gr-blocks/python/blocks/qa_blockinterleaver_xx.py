@@ -12,7 +12,7 @@ from gnuradio import gr, gr_unittest, blocks
 import numpy as np
 
 
-class test_symbolinterleaver_xx(gr_unittest.TestCase):
+class test_blockinterleaver_xx(gr_unittest.TestCase):
     def setUp(self):
         self.tb = gr.top_block()
 
@@ -26,19 +26,19 @@ class test_symbolinterleaver_xx(gr_unittest.TestCase):
         # Test if packed interleaver catches byte multiple errors.
         self.assertRaises(
             Exception,
-            blocks.symbolinterleaver_bb,
+            blocks.blockinterleaver_bb,
             [np.sort(interleaver_indices)[0:13], True, True],
         )
 
         # Test if interleaver detects malformed interleaver indices.
         self.assertRaises(
             Exception,
-            blocks.symbolinterleaver_bb,
+            blocks.blockinterleaver_bb,
             [interleaver_indices[0:13], True, True],
         )
 
         # Make sure output multiple is set correctly!
-        interleaver = blocks.symbolinterleaver_bb(interleaver_indices, True, True)
+        interleaver = blocks.blockinterleaver_bb(interleaver_indices, True, True)
         self.assertEqual(interleaver.output_multiple(), nbits // 8)
         self.assertTrue(interleaver.is_packed())
         self.assertTrue(interleaver.interleaver_mode())
@@ -50,7 +50,7 @@ class test_symbolinterleaver_xx(gr_unittest.TestCase):
             np.array(interleaver.deinterleaver_indices()).size, interleaver_indices.size
         )
 
-        interleaveru = blocks.symbolinterleaver_bb(interleaver_indices, False, False)
+        interleaveru = blocks.blockinterleaver_bb(interleaver_indices, False, False)
         self.assertEqual(interleaveru.output_multiple(), nbits)
         self.assertFalse(interleaveru.is_packed())
         self.assertFalse(interleaveru.interleaver_mode())
@@ -60,7 +60,7 @@ class test_symbolinterleaver_xx(gr_unittest.TestCase):
         nbits = 16 * 7
         interleaver_indices = np.random.permutation(nbits)
 
-        interleaver = blocks.symbolinterleaver_bb(interleaver_indices, False, True)
+        interleaver = blocks.blockinterleaver_bb(interleaver_indices, True, False)
 
         data = np.random.randint(0, 2, nbits * nframes)
         ref = np.array([], dtype=data.dtype)
@@ -81,7 +81,7 @@ class test_symbolinterleaver_xx(gr_unittest.TestCase):
         nbits = 16 * 17
         interleaver_indices = np.random.permutation(nbits)
 
-        interleaver = blocks.symbolinterleaver_bb(interleaver_indices, True, True)
+        interleaver = blocks.blockinterleaver_bb(interleaver_indices, True, True)
 
         data = np.random.randint(0, 2, nbits * nframes)
         ref = np.array([], dtype=data.dtype)
@@ -104,7 +104,7 @@ class test_symbolinterleaver_xx(gr_unittest.TestCase):
         nbits = 16 * 7
         interleaver_indices = np.random.permutation(nbits)
 
-        interleaver = blocks.symbolinterleaver_ff(interleaver_indices, False, True)
+        interleaver = blocks.blockinterleaver_ff(interleaver_indices, True)
 
         data = np.random.normal(size=nbits * nframes).astype(np.float32)
         ref = np.array([], dtype=data.dtype)
@@ -125,7 +125,7 @@ class test_symbolinterleaver_xx(gr_unittest.TestCase):
         nbits = 16 * 17
         interleaver_indices = np.random.permutation(nbits)
 
-        interleaver = blocks.symbolinterleaver_ff(interleaver_indices, False, False)
+        interleaver = blocks.blockinterleaver_ff(interleaver_indices, False)
 
         data = np.random.normal(size=nbits * nframes).astype(np.float32)
         ref = np.array([], dtype=data.dtype)
@@ -146,7 +146,7 @@ class test_symbolinterleaver_xx(gr_unittest.TestCase):
         nbits = 16 * 7
         interleaver_indices = np.random.permutation(nbits)
 
-        interleaver = blocks.symbolinterleaver_cc(interleaver_indices, False, True)
+        interleaver = blocks.blockinterleaver_cc(interleaver_indices, True)
 
         data = np.random.normal(size=nbits * nframes).astype(
             np.float32
@@ -169,7 +169,7 @@ class test_symbolinterleaver_xx(gr_unittest.TestCase):
         nbits = 16 * 7
         interleaver_indices = np.random.permutation(nbits)
 
-        interleaver = blocks.symbolinterleaver_ss(interleaver_indices, False, True)
+        interleaver = blocks.blockinterleaver_ss(interleaver_indices, True)
 
         data = np.random.normal(size=nbits * nframes).astype(np.int16)
         ref = np.array([], dtype=data.dtype)
@@ -190,7 +190,7 @@ class test_symbolinterleaver_xx(gr_unittest.TestCase):
         nbits = 16 * 7
         interleaver_indices = np.random.permutation(nbits)
 
-        interleaver = blocks.symbolinterleaver_ii(interleaver_indices, False, True)
+        interleaver = blocks.blockinterleaver_ii(interleaver_indices, True)
 
         data = np.random.normal(size=nbits * nframes).astype(np.int32)
         ref = np.array([], dtype=data.dtype)
@@ -208,4 +208,4 @@ class test_symbolinterleaver_xx(gr_unittest.TestCase):
 
 
 if __name__ == "__main__":
-    gr_unittest.run(test_symbolinterleaver_xx)
+    gr_unittest.run(test_blockinterleaver_xx)

@@ -8,8 +8,8 @@
  *
  */
 
-#ifndef INCLUDE_SYMBOLINTERLEAVER_H
-#define INCLUDE_SYMBOLINTERLEAVER_H
+#ifndef INCLUDE_BLOCKINTERLEAVER_H
+#define INCLUDE_BLOCKINTERLEAVER_H
 
 #include <gnuradio/blocks/api.h>
 #include <gnuradio/sync_block.h>
@@ -19,7 +19,7 @@ namespace gr {
 namespace blocks {
 
 /*!
- * \brief Fully parameterizable symbol interleaver
+ * \brief Fully parameterizable block interleaver
  * \ingroup blocks
  *
  * \details
@@ -27,26 +27,27 @@ namespace blocks {
  * or deinterleaves them on the output.
  *
  * \param interleaver_indices indices of items in output vector.
- * \param is_packed Assume packed bytes.
  * \param interleave_mode Switch between interleaver [true] and deinterleaver mode
  * [false].
+ * \param is_packed Assume packed bytes. For uint8_t I/O only.
  */
 template <class T>
-class BLOCKS_API symbolinterleaver_xx : virtual public sync_block
+class BLOCKS_API blockinterleaver_xx : virtual public sync_block
 {
 public:
-    typedef std::shared_ptr<symbolinterleaver_xx<T>> sptr;
+    typedef std::shared_ptr<blockinterleaver_xx<T>> sptr;
 
     /*!
-     * \brief Build a symbolinterleaver block
+     * \brief Build a blockinterleaver block
      *
      * \param interleaver_indices indices of items in output vector.
-     * \param is_packed Assume packed bytes.
      * \param interleave_mode Switch between interleaver [true] and deinterleaver mode
      * [false].
+     * \param is_packed Assume packed bytes.
      */
-    static sptr
-    make(std::vector<size_t> interleaver_indices, bool is_packed, bool interleave_mode);
+    static sptr make(std::vector<size_t> interleaver_indices,
+                     bool interleave_mode,
+                     bool is_packed = false);
 
     /*!
      * \brief Return interleaver indices
@@ -69,12 +70,12 @@ public:
     virtual bool interleaver_mode() const = 0;
 };
 
-typedef symbolinterleaver_xx<uint8_t> symbolinterleaver_bb;
-typedef symbolinterleaver_xx<gr_complex> symbolinterleaver_cc;
-typedef symbolinterleaver_xx<float> symbolinterleaver_ff;
-typedef symbolinterleaver_xx<int32_t> symbolinterleaver_ii;
-typedef symbolinterleaver_xx<int16_t> symbolinterleaver_ss;
+typedef blockinterleaver_xx<uint8_t> blockinterleaver_bb;
+typedef blockinterleaver_xx<gr_complex> blockinterleaver_cc;
+typedef blockinterleaver_xx<float> blockinterleaver_ff;
+typedef blockinterleaver_xx<int32_t> blockinterleaver_ii;
+typedef blockinterleaver_xx<int16_t> blockinterleaver_ss;
 } /* namespace blocks */
 } /* namespace gr */
 
-#endif /* INCLUDE_SYMBOLINTERLEAVER_H */
+#endif /* INCLUDE_BLOCKINTERLEAVER_H */

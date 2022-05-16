@@ -8,12 +8,12 @@
  *
  */
 
-#ifndef INCLUDE_SYMBOLINTERLEAVER_IMPL_H
-#define INCLUDE_SYMBOLINTERLEAVER_IMPL_H
+#ifndef INCLUDE_BLOCKINTERLEAVER_IMPL_H
+#define INCLUDE_BLOCKINTERLEAVER_IMPL_H
 
+#include <gnuradio/blocks/blockinterleaver_xx.h>
+#include <gnuradio/blocks/blockinterleaving.h>
 #include <gnuradio/blocks/pack_k_bits.h>
-#include <gnuradio/blocks/symbolinterleaver_xx.h>
-#include <gnuradio/blocks/symbolinterleaving.h>
 #include <gnuradio/blocks/unpack_k_bits.h>
 #include <memory>
 #include <vector>
@@ -22,15 +22,15 @@ namespace gr {
 namespace blocks {
 
 template <class T>
-class BLOCKS_API symbolinterleaver_xx_impl : public symbolinterleaver_xx<T>
+class BLOCKS_API blockinterleaver_xx_impl : public blockinterleaver_xx<T>
 {
 private:
-    bool d_is_packed;
     bool d_interleave_mode; // True==interleave, False==deinterleave
+    bool d_is_packed;
 
     std::unique_ptr<gr::blocks::kernel::unpack_k_bits> d_unpacker;
     std::unique_ptr<gr::blocks::kernel::pack_k_bits> d_packer;
-    std::unique_ptr<gr::blocks::symbol_interleaving> d_interleaver;
+    std::unique_ptr<gr::blocks::block_interleaving> d_interleaver;
 
     std::vector<uint8_t> d_unpacked_original;
     std::vector<uint8_t> d_unpacked_interleaved;
@@ -39,9 +39,9 @@ private:
     void deinterleave_packed(T* out, const T* in, const unsigned nbytes_per_frame);
 
 public:
-    symbolinterleaver_xx_impl(std::vector<size_t> interleaver_indices,
-                              bool is_packed,
-                              bool interleave_mode);
+    blockinterleaver_xx_impl(std::vector<size_t> interleaver_indices,
+                             bool interleave_mode,
+                             bool is_packed = false);
 
     std::vector<size_t> interleaver_indices() const override
     {
@@ -63,4 +63,4 @@ public:
 } /* namespace blocks */
 } /* namespace gr */
 
-#endif /* INCLUDE_SYMBOLINTERLEAVER_IMPL_H */
+#endif /* INCLUDE_BLOCKINTERLEAVER_IMPL_H */

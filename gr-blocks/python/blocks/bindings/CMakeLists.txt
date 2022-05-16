@@ -25,6 +25,7 @@ list(APPEND blocks_python_files
     annotator_alltoall_python.cc
     annotator_raw_python.cc
     argmax_python.cc
+    blockinterleaver_xx_python.cc
     burst_tagger_python.cc
     char_to_float_python.cc
     char_to_short_python.cc
@@ -133,7 +134,6 @@ list(APPEND blocks_python_files
     streams_to_vector_python.cc
     stretch_ff_python.cc
     sub_python.cc
-    symbolinterleaver_xx_python.cc
     tag_debug_python.cc
     tag_gate_python.cc
     tag_share_python.cc

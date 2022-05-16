@@ -21,6 +21,8 @@ set(BLOCKS_SOURCES
     and_blk_impl.cc
     and_const_impl.cc
     argmax_impl.cc
+    blockinterleaver_xx_impl.cc
+    blockinterleaving.cc
     correctiq_auto_impl.cc
     correctiq_impl.cc
     correctiq_man_impl.cc
@@ -138,8 +140,6 @@ set(BLOCKS_SOURCES
     streams_to_stream_impl.cc
     streams_to_vector_impl.cc
     stretch_ff_impl.cc
-    symbolinterleaving.cc
-    symbolinterleaver_xx_impl.cc
     tag_share_impl.cc
     tagged_file_sink_impl.cc
     tagged_stream_multiply_length_impl.cc

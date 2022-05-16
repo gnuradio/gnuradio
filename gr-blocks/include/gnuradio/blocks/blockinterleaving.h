@@ -8,8 +8,8 @@
  *
  */
 
-#ifndef INCLUDED_GR_BLOCKS_SYMBOLINTERLEAVING_H
-#define INCLUDED_GR_BLOCKS_SYMBOLINTERLEAVING_H
+#ifndef INCLUDED_GR_BLOCKS_BLOCKINTERLEAVING_H
+#define INCLUDED_GR_BLOCKS_BLOCKINTERLEAVING_H
 
 #include <gnuradio/blocks/api.h>
 
@@ -18,10 +18,10 @@ namespace gr {
 namespace blocks {
 
 
-class BLOCKS_API symbol_interleaving
+class BLOCKS_API block_interleaving
 {
 public:
-    symbol_interleaving(std::vector<size_t> interleaver_indices);
+    block_interleaving(std::vector<size_t> interleaver_indices);
 
     size_t interleaver_length() { return _interleaver_indices.size(); };
     std::vector<size_t> interleaver_indices() { return _interleaver_indices; };
@@ -54,4 +54,4 @@ private:
 } /* namespace blocks */
 } /* namespace gr */
 
-#endif /* INCLUDED_GR_BLOCKS_SYMBOLINTERLEAVING_H */
+#endif /* INCLUDED_GR_BLOCKS_BLOCKINTERLEAVING_H */
