@@ -206,6 +206,27 @@ class test_blockinterleaver_xx(gr_unittest.TestCase):
         res = np.array(snk.data())
         self.assertTupleEqual(tuple(res), tuple(ref))
 
+    def test_009_bb_unpacked_huge(self):
+        nframes = 2
+        nbits = int(2 ** 16) + int(2 ** 15)
+        interleaver_indices = np.random.permutation(nbits)
+
+        interleaver = blocks.blockinterleaver_bb(interleaver_indices, True, False)
+
+        data = np.random.randint(0, 2, nbits * nframes)
+        ref = np.array([], dtype=data.dtype)
+        for f in np.reshape(data, (nframes, -1)):
+            ref = np.concatenate((ref, f[interleaver_indices]))
+        src = blocks.vector_source_b(data)
+        snk = blocks.vector_sink_b()
+
+        self.tb.connect(src, interleaver, snk)
+        # set up fg
+        self.tb.run()
+        # # check data
+        res = np.array(snk.data())
+        self.assertTupleEqual(tuple(res), tuple(ref))
+
 
 if __name__ == "__main__":
     gr_unittest.run(test_blockinterleaver_xx)
