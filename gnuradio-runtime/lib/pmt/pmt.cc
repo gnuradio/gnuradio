@@ -18,6 +18,7 @@
 #include <pmt/pmt_pool.h>
 #include <cstdio>
 #include <cstring>
+#include <mutex>
 #include <vector>
 
 namespace pmt {
@@ -163,8 +164,8 @@ pmt_t string_to_symbol(const std::string& name)
     }
 
     // Lock the table on insert for thread safety:
-    static boost::mutex thread_safety;
-    boost::mutex::scoped_lock lock(thread_safety);
+    static std::mutex thread_safety;
+    std::scoped_lock lock(thread_safety);
     // Re-do the search in case another thread inserted this symbol into the table
     // before we got the lock
     for (pmt_t sym = (*get_symbol_hash_table())[hash]; sym; sym = _symbol(sym)->next()) {
