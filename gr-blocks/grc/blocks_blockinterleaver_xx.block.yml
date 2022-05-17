@@ -26,7 +26,6 @@ parameters:
     default: False
     hide: ${ 'all' if type != 'byte' else 'none' }
 
-
 inputs:
 -   domain: stream
     dtype: ${ type }
@@ -37,11 +36,11 @@ outputs:
 
 templates:
     imports: from gnuradio import blocks
-    make: blocks.blockinterleaver_${type.fcn}(${interleaver_indices}, ${interleaver_mode}, ${ is_packed if type == 'byte' else False })
+    make: blocks.blockinterleaver_${type.fcn}(${interleaver_indices}, ${interleaver_mode.fcn}, ${ is_packed if type == 'byte' else False })
 
 cpp_templates:
-    includes: ['#include <gnuradio/symbolinterleaver_xx.h>']
-    declarations: 'blocks::symbolinterleaver_${type.fcn}::sptr ${id};'
-    make: 'this->${id} = blocks::symbolinterleaver_${type.fcn}::make(${interleaver_indices}, ${interleaver_mode}, ${ is_packed if type == "byte" else false });'
+    includes: ['#include <gnuradio/blockinterleaver_xx.h>']
+    declarations: 'blocks::blockinterleaver_${type.fcn}::sptr ${id};'
+    make: 'this->${id} = blocks::blockinterleaver_${type.fcn}::make(${interleaver_indices}, ${interleaver_mode.fcn}, ${ is_packed if type == "byte" else false });'
 
 file_format: 1
