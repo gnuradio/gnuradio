@@ -365,7 +365,7 @@ long block::min_output_buffer(size_t i)
 void block::set_min_output_buffer(long min_output_buffer)
 {
     d_logger->info(
-        "set_min_output_buffer on block {:s} to {:d}", unique_id(), min_output_buffer);
+        "set_min_output_buffer on block {:d} to {:d}", unique_id(), min_output_buffer);
     for (int i = 0; i < output_signature()->max_streams(); i++) {
         set_min_output_buffer(i, min_output_buffer);
     }
