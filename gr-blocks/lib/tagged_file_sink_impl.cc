@@ -155,7 +155,7 @@ int tagged_file_sink_impl::work(int noutput_items,
                     // FIXME:
                     // if((d_handle = fdopen (fd, d_is_binary ? "wb" : "w")) == NULL) {
                     if ((d_handle = fdopen(fd, "wb")) == NULL) {
-                        d_logger->error("fdopen {:s}:{:s", filename, strerror(errno));
+                        d_logger->error("fdopen {:s}:{:s}", filename, strerror(errno));
                         ::close(fd); // don't leak file descriptor if fdopen fails.
                     }
 

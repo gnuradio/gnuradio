@@ -185,7 +185,7 @@ void fll_band_edge_cc_impl::print_taps()
         ss << " " << tap.real() << " + " << tap.imag() << "j,";
     ss << "]\n";
 
-    d_logger->info(ss.str());
+    d_logger->info("{:s}", ss.str());
 }
 
 int fll_band_edge_cc_impl::work(int noutput_items,
