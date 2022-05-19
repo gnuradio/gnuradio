@@ -58,7 +58,7 @@ int file_descriptor_sink_impl::work(int noutput_items,
             if (errno == EINTR)
                 continue;
             else {
-                d_logger->error(strerror(errno));
+                d_logger->error("{:s}", strerror(errno));
                 return -1; // indicate we're done
             }
         } else {
