@@ -49,12 +49,6 @@ noise_source_impl<gr_complex>::noise_source_impl(noise_type_t type, float ampl, 
 {
 }
 
-
-template <class T>
-noise_source_impl<T>::~noise_source_impl<T>()
-{
-}
-
 template <class T>
 void noise_source_impl<T>::set_type(noise_type_t type)
 {
