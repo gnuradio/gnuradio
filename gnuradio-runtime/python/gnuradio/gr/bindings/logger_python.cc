@@ -62,52 +62,52 @@ void bind_logger(py::module& m)
         .def("get_string_level", &logger::get_string_level, D(logger, get_string_level))
         .def(
             "trace",
-            [](logger& log, const std::string& msg) { log.trace(msg); },
+            [](logger& log, const std::string& msg) { log.trace("{:s}", msg); },
             py::arg("msg"),
             D(logger, trace))
         .def(
             "debug",
-            [](logger& log, const std::string& msg) { log.debug(msg); },
+            [](logger& log, const std::string& msg) { log.debug("{:s}", msg); },
             py::arg("msg"),
             D(logger, debug))
         .def(
             "info",
-            [](logger& log, const std::string& msg) { log.info(msg); },
+            [](logger& log, const std::string& msg) { log.info("{:s}", msg); },
             py::arg("msg"),
             D(logger, info))
         .def(
             "notice",
-            [](logger& log, const std::string& msg) { log.notice(msg); },
+            [](logger& log, const std::string& msg) { log.notice("{:s}", msg); },
             py::arg("msg"),
             D(logger, notice))
         .def(
             "warn",
-            [](logger& log, const std::string& msg) { log.warn(msg); },
+            [](logger& log, const std::string& msg) { log.warn("{:s}", msg); },
             py::arg("msg"),
             D(logger, warn))
         .def(
             "error",
-            [](logger& log, const std::string& msg) { log.error(msg); },
+            [](logger& log, const std::string& msg) { log.error("{:s}", msg); },
             py::arg("msg"),
             D(logger, error))
         .def(
             "crit",
-            [](logger& log, const std::string& msg) { log.crit(msg); },
+            [](logger& log, const std::string& msg) { log.crit("{:s}", msg); },
             py::arg("msg"),
             D(logger, crit))
         .def(
             "alert",
-            [](logger& log, const std::string& msg) { log.alert(msg); },
+            [](logger& log, const std::string& msg) { log.alert("{:s}", msg); },
             py::arg("msg"),
             D(logger, alert))
         .def(
             "fatal",
-            [](logger& log, const std::string& msg) { log.fatal(msg); },
+            [](logger& log, const std::string& msg) { log.fatal("{:s}", msg); },
             py::arg("msg"),
             D(logger, fatal))
         .def(
             "emerg",
-            [](logger& log, const std::string& msg) { log.emerg(msg); },
+            [](logger& log, const std::string& msg) { log.emerg("{:s}", msg); },
             py::arg("msg"),
             D(logger, emerg));
 

@@ -116,7 +116,7 @@ static bool check_mapping(
 {
     bool ok = true;
 
-    debug_logger->info(msg);
+    debug_logger->info("{:s}", msg);
 
     unsigned int* p1 = (unsigned int*)c.pointer_to_first_copy();
     unsigned int* p2 = (unsigned int*)c.pointer_to_second_copy();

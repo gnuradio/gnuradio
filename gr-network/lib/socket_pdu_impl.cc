@@ -210,7 +210,7 @@ void socket_pdu_impl::handle_tcp_accept(tcp_connection::sptr new_connection,
         d_tcp_connections.push_back(new_connection);
         start_tcp_accept();
     } else {
-        d_logger->error(error.message());
+        d_logger->error("{:s}", error.message());
     }
 }
 

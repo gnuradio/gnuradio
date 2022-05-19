@@ -586,7 +586,7 @@ void hier_block2_detail::flatten_aux(flat_flowgraph_sptr sfg) const
                     if (hh != 0) {
                         if (hh->min_output_buffer(0) != min_buff) {
                             d_debug_logger->debug(
-                                "HBlock ({:s}) min_buff ({:s})", hh->alias(), min_buff);
+                                "HBlock ({:s}) min_buff ({:d})", hh->alias(), min_buff);
                             hh->set_min_output_buffer(min_buff);
                         }
                     }
