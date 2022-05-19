@@ -27,7 +27,6 @@ class noise_source_impl : public noise_source<T>
 
 public:
     noise_source_impl(noise_type_t type, float ampl, long seed = 0);
-    ~noise_source_impl() override;
 
     void set_type(noise_type_t type) override;
     void set_amplitude(float ampl) override;
