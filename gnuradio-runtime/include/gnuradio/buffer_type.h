@@ -111,7 +111,7 @@ public:
                                     buf_owner);
     }
 
-    buftype<classname, factory_class>() : buffer_type_base(typeid(classname).name()) {}
+    buftype() : buffer_type_base(typeid(classname).name()) {}
 };
 
 } // namespace gr
