@@ -1,5 +1,6 @@
 id: qtgui_time_sink_x
 label: QT GUI Time Sink
+flags: [ python, cpp ]
 
 parameters:
 -   id: type
@@ -1002,7 +1003,6 @@ templates:
         from gnuradio.filter import firdes
         import sip
     callbacks:
-    - set_time_domain_axis(${min}, ${max})
     - set_update_time(${update_time})
     - set_y_axis(${ymin}, ${ymax})
     - set_samp_rate(${srate})
@@ -1079,6 +1079,100 @@ templates:
 
         ${win} = sip.wrapinstance(self.${id}.qwidget(), Qt.QWidget)
         ${gui_hint() % win}
+
+cpp_templates:
+    includes: ['#include <gnuradio/qtgui/${type.fcn}.h>']
+    declarations: 'qtgui::${type.fcn}::sptr ${id};'
+    callbacks:
+    - set_update_time(${update_time})
+    - set_y_axis(${ymin}, ${ymax})
+    - set_samp_rate(${srate})
+    - set_trigger_mode(${tr_mode.replace('qtgui.','gr::qtgui::')}, ${tr_slope.replace('qtgui.','gr::qtgui::')}, ${tr_level}, ${tr_delay},
+        ${tr_chan}, ${tr_tag})
+    link: ['gnuradio::gnuradio-qtgui']
+    make: |-
+        <%
+            win = '_%s_win'%id
+        %>\
+        ${id} = qtgui::${type.fcn}::make(
+            ${size}, // size
+            ${srate}, // samp_rate
+            "${no_quotes(name)}", // name
+            ${0 if type.startswith('msg') else nconnections} // number of inputs
+        );
+
+        QWidget* _${id}_win;
+        ${id}->set_update_time(${update_time});
+        ${id}->set_y_axis(${ymin}, ${ymax});
+
+        ${id}->set_y_label("${no_quotes(ylabel)}", "${no_quotes(yunit)}");
+
+        ${id}->enable_tags(${entags});
+        ${id}->set_trigger_mode(${tr_mode.replace('qtgui.','gr::qtgui::')}, ${tr_slope.replace('qtgui.','gr::qtgui::')}, ${tr_level}, ${tr_delay},${tr_chan}, ${tr_tag});
+
+        ${id}->enable_autoscale(${autoscale});
+        ${id}->enable_grid(${grid});
+        ${id}->enable_axis_labels(${axislabels});
+        ${id}->enable_control_panel(${ctrlpanel});
+        ${id}->enable_stem_plot(${stemplot});
+        % if legend == "False":
+        ${id}->disable_legend();
+        % endif
+
+        {
+            std::string labels[10] = {"${label1.strip("'")}", "${label2.strip("'")}", "${label3.strip("'")}", "${label4.strip("'")}", "${label5.strip("'")}",
+                "${label6.strip("'")}", "${label7.strip("'")}", "${label8.strip("'")}", "${label9.strip("'")}", "${label10.strip("'")}"};
+            int widths[10] = {${width1}, ${width2}, ${width3}, ${width4}, ${width5},
+                ${width6}, ${width7}, ${width8}, ${width9}, ${width10}};
+            std::string colors[10] = {"${color1}", "${color2}", "${color3}", "${color4}", "${color5}",
+                "${color6}", "${color7}", "${color8}", "${color9}", "${color10}"};
+            double alphas[10] = {${alpha1}, ${alpha2}, ${alpha3}, ${alpha4}, ${alpha5},
+                ${alpha6}, ${alpha7}, ${alpha8}, ${alpha9}, ${alpha10}};
+            int markers[10] = {${marker1}, ${marker2}, ${marker3}, ${marker4}, ${marker5},
+                ${marker6}, ${marker7}, ${marker8}, ${marker9}, ${marker10}};
+            int styles[10] = {${style1}, ${style2}, ${style3}, ${style4}, ${style5},
+                ${style6}, ${style7}, ${style8}, ${style9}, ${style10}};
+
+        % if type.endswith('complex'):
+            for(int i=0; i <${2 if type == 'msg_complex' else 2*int(nconnections)}; i++) {
+                if (sizeof(labels[i]) == 0) {
+                    if (i % 2 == 0) 
+                        ${id}->set_line_label(i, "Re Data " + std::to_string(i));
+                    else     
+                        ${id}->set_line_label(i, "Im Data " + std::to_string(i));
+                }
+                else
+                    ${id}->set_line_label(i, labels[i]);
+
+                ${id}->set_line_width(i, widths[i]);
+                ${id}->set_line_color(i, colors[i]);
+                ${id}->set_line_style(i, styles[i]);
+                ${id}->set_line_marker(i, markers[i]);
+                ${id}->set_line_alpha(i, alphas[i]);
+          }
+        % else:
+            for (int i = 0; i < ${ 1 if (type == 'msg_float') else nconnections }; i++) {
+                if (sizeof(labels[i]) == 0) {
+                    ${id}->set_line_label(i, "Data " + std::to_string(i));
+                } else {
+                    ${id}->set_line_label(i, labels[i]);
+                }
+                ${id}->set_line_width(i, widths[i]);
+                ${id}->set_line_color(i, colors[i]);
+                ${id}->set_line_style(i, styles[i]);
+                ${id}->set_line_marker(i, markers[i]);
+                ${id}->set_line_alpha(i, alphas[i]);
+            }
+        % endif
+        }
+
+        _${id}_win = this->${id}->qwidget();
+
+        ${gui_hint() % win}
+
+    translations:
+        'True': 'true'
+        'False': 'false'
 
 documentation: |-
     The GUI hint can be used to position the widget within the application. The hint is of the form [tab_id@tab_index]: [row, col, row_span, col_span]. Both the tab specification and the grid position are optional.
