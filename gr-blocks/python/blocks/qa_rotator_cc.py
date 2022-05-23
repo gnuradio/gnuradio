@@ -16,6 +16,7 @@ import pmt
 
 
 class qa_rotator_cc(gr_unittest.TestCase):
+
     def _setUp(self, n_samples=100, tag_inc_updates=True):
         """Base fixture: set up flowgraph and parameters"""
         self.n_samples = n_samples  # number of IQ samples to generate
@@ -76,6 +77,81 @@ class qa_rotator_cc(gr_unittest.TestCase):
                                    places=5)
             self.assertEqual(tags[idx].offset, offset)
 
+    def _compute_expected_samples(self, offsets, new_phase_incs):
+        """Compute the samples expected on the rotator output
+
+        Args:
+            offsets (list): Sample offsets where the updates are expected.
+            new_phase_incs (list): Rotator phase increments for each update.
+
+        Returns:
+            np.array: Array of expected IQ samples on the rotator output.
+
+        """
+        # Initial samples (preceding the first phase increment update)
+        f_out = self.f_in + self.f_shift
+        expected_angles = 2 * np.pi * np.arange(offsets[0]) * f_out
+        expected_samples = np.exp(1j * expected_angles)
+
+        for idx, (offset,
+                  rot_phase_inc) in enumerate(zip(offsets, new_phase_incs)):
+            prev_f_out = f_out  # Previous output frequency
+            new_f_shift = rot_phase_inc / (2.0 * np.pi)  # New frequency shift
+            f_out = self.f_in + new_f_shift  # New output frequency
+
+            if idx == len(offsets) - 1:
+                segment_len = self.n_samples - offset
+            else:
+                segment_len = offsets[idx + 1] - offset
+
+            # NOTE: when the phase increment is updated, the assumption is that
+            # the update occurs at the beginning of the sample period. Hence,
+            # the new phase rotation pace is only observed in the succeeding
+            # sample, at the beginning of the next sample period. In other
+            # words, the new phase increment can only be observed after some
+            # time goes by such that the rotator phase accumulates.
+            #
+            # For example, suppose there are ten samples, and the update occurs
+            # at offset 5 (i.e., the sixth sample). Suppose also that the
+            # initial phase increment is 0.1, and the new increment is 0.2. In
+            # this case, we have the following sequence of angles:
+            #
+            #    [0, 0.1, 0.2, 0.3, 0.4, 0.5. 0.7, 0.9, 1.1, 1.3]
+            #                             |     \
+            #                             |      \--------\
+            #                           update             \
+            #                           applied         new phase
+            #                                        increment observed
+            #
+            # Ultimately, the phase seen at the sample where the update is
+            # applied is still determined by the preceding phase increment.
+            expected_angles = expected_angles[-1] + (2 * np.pi * prev_f_out) +\
+                (2 * np.pi * np.arange(segment_len) * f_out)
+            expected_samples = np.concatenate(
+                (expected_samples, np.exp(1j * expected_angles)))
+
+        return expected_samples
+
+    def _post_random_phase_inc_updates(self, offsets):
+        """Update the phase increment randomly at chosen offsets
+
+        Args:
+            offsets (list): Sample offsets where the updates are to be applied.
+
+        Returns:
+            list: New phase increments defined randomly (list).
+
+        """
+        new_phase_incs = list()
+        for offset in offsets:
+            new_f_out = uniform(high=0.5)
+            new_f_shift = new_f_out - self.f_in
+            new_phase_inc = float(2 * np.pi * new_f_shift)
+            new_phase_incs.append(new_phase_inc)
+            self._post_phase_inc_cmd(new_phase_inc, offset)
+
+        return new_phase_incs
+
     def test_freq_shift(self):
         """Complex sinusoid frequency shift"""
         f_out = self.f_in + self.f_shift  # expected output frequency
@@ -89,66 +165,16 @@ class qa_rotator_cc(gr_unittest.TestCase):
                                             expected_samples,
                                             places=4)
 
-    def _test_scheduled_phase_inc_update(self):
-        """Update the phase increment at a chosen offset via command message
-
-        Returns:
-            Tuple with the new phase increment, the phase increment update
-            sample offset, and a list with the expected rotated IQ samples.
-
-        """
-        new_f_shift = uniform(high=0.5) - self.f_in  # rotator's new frequency
-        new_phase_inc = float(2 * np.pi * new_f_shift)  # new phase increment
-        offset = int(self.n_samples / 2)  # when to update the phase increment
-        f_out_1 = self.f_in + self.f_shift  # output frequency before update
-        f_out_2 = self.f_in + new_f_shift  # output frequency after update
-
-        # Post the phase increment command message to the rotator block
-        self._post_phase_inc_cmd(new_phase_inc, offset)
-
-        # Samples before and after the phase increment update
-        n_before = offset
-        n_after = self.n_samples - offset
-
-        # Expected IQ samples
-        #
-        # Note: when the phase increment is updated, the assumption is that the
-        # update occurs at the beginning of the sample period. Hence, the new
-        # phase rotation pace will only be observed in the following sample. In
-        # other words, the new phase increment can only be observed after some
-        # time goes by such that the rotator's phase accumulates.
-        #
-        # For example, suppose there are ten samples, and the update occurs on
-        # offset 5 (i.e., the sixth sample). Suppose also that the initial
-        # phase increment is 0.1, and the new increment is 0.2. In this case,
-        # we have the following sequence of angles:
-        #
-        #    [0, 0.1, 0.2, 0.3, 0.4, 0.5. 0.7, 0.9, 1.1, 1.3]
-        #                             |     \
-        #                             |      \--------\
-        #                           update             \
-        #                           applied         new phase
-        #                                        increment observed
-        #
-        # Ultimately, this means that the phase seen at the sample where the
-        # update is applied is still determined by the old phase increment.
-        angles_before_update = 2 * np.pi * np.arange(n_before + 1) * f_out_1
-        angles_after_update = angles_before_update[-1] + (
-            2 * np.pi * np.arange(1, n_after) * f_out_2)
-        expected_angles = np.concatenate(
-            (angles_before_update, angles_after_update))
-        expected_samples = np.exp(1j * expected_angles)
-
-        return new_phase_inc, offset, expected_samples
-
     def test_scheduled_phase_inc_update(self):
         """Update the phase increment at a chosen offset via command message"""
-        new_phase_inc, \
-            offset, \
-            expected_samples = self._test_scheduled_phase_inc_update()
+        offset = int(self.n_samples / 2)  # when to update the phase increment
+        offsets = [offset]
+        new_phase_incs = self._post_random_phase_inc_updates(offsets)
+        expected_samples = self._compute_expected_samples(
+            offsets, new_phase_incs)
 
         self.tb.run()
-        self._assert_tags([new_phase_inc], [offset])
+        self._assert_tags(new_phase_incs, offsets)
         self.assertComplexTuplesAlmostEqual(self.sink.data(),
                                             expected_samples,
                                             places=4)
@@ -161,7 +187,11 @@ class qa_rotator_cc(gr_unittest.TestCase):
         """
         self._setUp(tag_inc_updates=False)
 
-        _, _, expected_samples = self._test_scheduled_phase_inc_update()
+        offset = int(self.n_samples / 2)  # when to update the phase increment
+        offsets = [offset]
+        new_phase_incs = self._post_random_phase_inc_updates(offsets)
+        expected_samples = self._compute_expected_samples(
+            offsets, new_phase_incs)
 
         self.tb.run()
         tags = self.tag_sink.current_tags()
@@ -225,16 +255,16 @@ class qa_rotator_cc(gr_unittest.TestCase):
 
     def test_consecutive_phase_inc_updates(self):
         """Test tagging of a few consecutive phase increment updates"""
-        n_updates = 3
-        new_f_shifts = uniform(high=0.5, size=n_updates)  # new frequencies
-        new_phase_incs = 2 * np.pi * new_f_shifts  # new phase increments
-        offsets = self.n_samples * np.arange(1, 4, 1) / 4  # when to update
-
-        for new_phase_inc, offset in zip(new_phase_incs, offsets):
-            self._post_phase_inc_cmd(new_phase_inc, int(offset))
+        offsets = list(map(int, self.n_samples * np.arange(1, 4, 1) / 4))
+        new_phase_incs = self._post_random_phase_inc_updates(offsets)
+        expected_samples = self._compute_expected_samples(
+            offsets, new_phase_incs)
 
         self.tb.run()
         self._assert_tags(new_phase_incs, offsets)
+        self.assertComplexTuplesAlmostEqual(self.sink.data(),
+                                            expected_samples,
+                                            places=4)
 
     def test_out_of_order_phase_inc_updates(self):
         """Test tagging of a few out-of-order phase increment updates
@@ -248,36 +278,42 @@ class qa_rotator_cc(gr_unittest.TestCase):
         offsets = self.n_samples * np.arange(1, 4, 1) / 4  # when to update
 
         # Post the phase increment command messages out of order
-        self._post_phase_inc_cmd(new_phase_incs[0], int(offsets[0]))
-        self._post_phase_inc_cmd(new_phase_incs[2], int(offsets[2]))
-        self._post_phase_inc_cmd(new_phase_incs[1], int(offsets[1]))
+        for i in [0, 2, 1]:
+            self._post_phase_inc_cmd(new_phase_incs[i], int(offsets[i]))
 
         self.tb.run()
 
         # Confirm they are received in order
         self._assert_tags(new_phase_incs, offsets)
 
+        # Confirm the output waveform
+        expected_samples = self._compute_expected_samples(
+            offsets, new_phase_incs)
+        self.assertComplexTuplesAlmostEqual(self.sink.data(),
+                                            expected_samples,
+                                            places=4)
+
     def test_duplicate_phase_inc_updates(self):
         """Test multiple phase increment updates scheduled for the same sample
 
         The rotator block applies all updates scheduled for the same sample
-        offset. Hence, only the last update shall take effect.
+        offset. In the end, only the last update shall take effect.
 
         """
         n_updates = 3
-
+        offset = int(self.n_samples / 2)
+        all_new_phase_incs = list()
         # Post the phase increment command messages
-        new_phase_incs = []
         for i in range(n_updates):
-            new_phase_inc, \
-                offset, \
-                expected_samples = self._test_scheduled_phase_inc_update()
-            new_phase_incs.append(new_phase_inc)
+            new_phase_incs = self._post_random_phase_inc_updates([offset])
+            expected_samples = self._compute_expected_samples([offset],
+                                                              new_phase_incs)
+            all_new_phase_incs.extend(new_phase_incs)
 
         self.tb.run()
 
         # All "n_updates" tags are expected to be present
-        self._assert_tags(new_phase_incs, [offset] * n_updates)
+        self._assert_tags(all_new_phase_incs, [offset] * n_updates)
 
         # However, only the last update takes effect on the rotated samples
         self.assertComplexTuplesAlmostEqual(self.sink.data(),
