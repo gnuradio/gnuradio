@@ -111,7 +111,8 @@ int rotator_cc_impl::work(int noutput_items,
 
             // Process all samples until the scheduled phase increment update
             int items_before_update = next_update.offset - n_written - nprocessed_items;
-            d_r.rotateN(out, in, items_before_update);
+            d_r.rotateN(
+                out + nprocessed_items, in + nprocessed_items, items_before_update);
             nprocessed_items += items_before_update;
 
             set_phase_inc(next_update.phase_inc);
