@@ -13,6 +13,7 @@
  */
 
 #include <gnuradio/thread/thread_group.h>
+#include <cassert>
 #include <memory>
 
 namespace gr {
@@ -40,7 +41,7 @@ void thread_group::add_thread(std::unique_ptr<boost::thread> thrd)
     // multiple times. Should we consider this an error and either
     // throw or return an error value?
     auto it = std::find(m_threads.begin(), m_threads.end(), thrd);
-    BOOST_ASSERT(it == m_threads.end());
+    assert(it == m_threads.end());
     if (it == m_threads.end())
         m_threads.push_back(std::move(thrd));
 }
@@ -56,7 +57,7 @@ void thread_group::remove_thread(boost::thread* thrd)
         m_threads.begin(),
         m_threads.end(),
         [&thrd](std::unique_ptr<boost::thread>& it) -> bool { return thrd == it.get(); });
-    BOOST_ASSERT(it != m_threads.end());
+    assert(it != m_threads.end());
     if (it != m_threads.end())
         m_threads.erase(it);
 }
