@@ -35,7 +35,7 @@ boost::thread* thread_group::create_thread(const std::function<void()>& threadfu
 
 void thread_group::add_thread(std::unique_ptr<boost::thread> thrd)
 {
-    boost::lock_guard<boost::shared_mutex> guard(m_mutex);
+    std::scoped_lock guard(m_mutex);
 
     // For now we'll simply ignore requests to add a thread object
     // multiple times. Should we consider this an error and either
@@ -48,7 +48,7 @@ void thread_group::add_thread(std::unique_ptr<boost::thread> thrd)
 
 void thread_group::remove_thread(boost::thread* thrd)
 {
-    boost::lock_guard<boost::shared_mutex> guard(m_mutex);
+    std::scoped_lock guard(m_mutex);
 
     // For now we'll simply ignore requests to remove a thread
     // object that's not in the group. Should we consider this an
@@ -64,7 +64,7 @@ void thread_group::remove_thread(boost::thread* thrd)
 
 void thread_group::join_all()
 {
-    boost::shared_lock<boost::shared_mutex> guard(m_mutex);
+    std::shared_lock<std::shared_mutex> guard(m_mutex);
     for (auto& thrd : m_threads) {
         thrd->join();
     }
@@ -72,7 +72,7 @@ void thread_group::join_all()
 
 void thread_group::interrupt_all()
 {
-    boost::shared_lock<boost::shared_mutex> guard(m_mutex);
+    std::shared_lock<std::shared_mutex> guard(m_mutex);
     for (auto& thrd : m_threads) {
         thrd->interrupt();
     }
@@ -80,7 +80,7 @@ void thread_group::interrupt_all()
 
 size_t thread_group::size() const
 {
-    boost::shared_lock<boost::shared_mutex> guard(m_mutex);
+    std::shared_lock<std::shared_mutex> guard(m_mutex);
     return m_threads.size();
 }
 

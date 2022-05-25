@@ -17,8 +17,7 @@
 
 #include <gnuradio/api.h>
 #include <gnuradio/thread/thread.h>
-#include <boost/any.hpp>
-#include <boost/thread/shared_mutex.hpp>
+#include <shared_mutex>
 #include <functional>
 #include <memory>
 
@@ -42,7 +41,7 @@ public:
 
 private:
     std::list<std::unique_ptr<boost::thread>> m_threads;
-    mutable boost::shared_mutex m_mutex;
+    mutable std::shared_mutex m_mutex;
 };
 
 } /* namespace thread */
