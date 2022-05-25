@@ -36,6 +36,9 @@ parameters:
     label: Beta
     dtype: float
     default: '6.76'
+-   id: value
+    dtype: float_vector
+    hide: all
 value: ${ getattr(firdes, str(type))(gain, samp_rate, low_cutoff_freq, high_cutoff_freq,
     width, win, beta) }
 
@@ -51,8 +54,8 @@ cpp_templates:
     includes: ['#include <gnuradio/filter/firdes.h>']
     declarations: 'filter::firdes::sptr ${id};'
     var_make: |-
-        this->${id} = ${id} = firdes.${type}(${gain}, ${samp_rate}, ${low_cutoff_freq}, \
-        ${high_cutoff_freq}, ${width}, ${win}, ${beta});
+        ${id} = filter::firdes::${type}(${gain}, ${samp_rate}, ${low_cutoff_freq}, \
+        ${high_cutoff_freq}, ${width}, ${win.replace('window.','fft::window::')}, ${beta});
     link: ['gnuradio::gnuradio-filter']
 
 documentation: |-

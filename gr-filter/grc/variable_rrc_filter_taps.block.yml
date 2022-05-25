@@ -22,6 +22,9 @@ parameters:
     label: Num Taps
     dtype: int
     default: 11*sps
+-   id: value
+    dtype: float_vector
+    hide: all
 value: ${ firdes.root_raised_cosine(gain, samp_rate, sym_rate, alpha, ntaps) }
 
 templates:
@@ -36,7 +39,7 @@ cpp_templates:
     includes: ['#include <gnuradio/filter/firdes.h>']
     declarations: 'filter::firdes::sptr ${id};'
     var_make: |-
-        this->${id} = ${id} = firdes.root_raised_cosine(${gain}, ${samp_rate},\
+        ${id} = filter::firdes::root_raised_cosine(${gain}, ${samp_rate},\
         ${sym_rate}, ${alpha}, ${ntaps});
     link: ['gnuradio::gnuradio-filter']
 

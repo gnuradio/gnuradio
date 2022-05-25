@@ -48,18 +48,13 @@ templates:
     - set_taps(${taps})
 
 cpp_templates:
-    includes: ['#include <gnuradio/filter/fir_filter_${type}.h>']
+    includes: ['#include <gnuradio/filter/fir_filter_blk.h>']
     declarations: 'filter::fir_filter_${type}::sptr ${id};'
     make: |-
-        % if str(type.taps) == "complex_vector":
-        std::vector<gr_complex> taps = {${str(taps)[1:-1]}};
-        % else:
-        std::vector<float> taps = {${str(taps)[1:-1]}};
-        % endif
         this->${id} = filter::fir_filter_${type}::make(
             ${decim}, 
-            taps);
-        this->${id}.declare_sample_delay(${samp_delay});
+            ${taps});
+        this->${id}->declare_sample_delay(${samp_delay});
     link: ['gnuradio::gnuradio-filter']
     callbacks:
     - set_taps(taps)
