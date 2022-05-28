@@ -64,16 +64,19 @@ jobs:
             cxxflags: -Werror -Wno-error=invalid-pch
             ctest_args: '-E "qa_cpp_py_binding|qa_cpp_py_binding_set|qa_ctrlport_probes|qa_qtgui|metainfo_test"'
             ldpath:
-          - distro: 'Fedora 34'
-            containerid: 'gnuradio/ci:fedora-34-3.9'
-            cxxflags: -Werror -Wno-error=invalid-pch -Wno-error=deprecated-declarations
-            ctest_args: '-E "qa_cpp_py_binding|qa_cpp_py_binding_set|qa_ctrlport_probes|qa_qtgui"'
-            ldpath: /usr/local/lib64/
+            pypath:
           - distro: 'Fedora 35'
             containerid: 'gnuradio/ci:fedora-35-3.9'
             cxxflags: -Werror -Wno-error=invalid-pch -Wno-error=deprecated-declarations
             ctest_args: '-E "qa_cpp_py_binding|qa_cpp_py_binding_set|qa_ctrlport_probes|qa_qtgui"'
             ldpath: /usr/local/lib64/
+            pypath:
+          - distro: 'Fedora 36'
+            containerid: 'gnuradio/ci:fedora-36-3.9'
+            cxxflags: -Werror -Wno-error=invalid-pch -Wno-error=deprecated-declarations
+            ctest_args: '-E "qa_cpp_py_binding|qa_cpp_py_binding_set|qa_ctrlport_probes|qa_qtgui"'
+            ldpath: /usr/local/lib64/
+            pypath: local/
           # - distro: 'CentOS 8.4'
           #   containerid: 'gnuradio/ci:centos-8.4-3.10'
           #   cxxflags: ''
@@ -84,6 +87,7 @@ jobs:
             cxxflags: -Werror -Wno-error=invalid-pch
             ctest_args: '-E "qa_cpp_py_binding|qa_cpp_py_binding_set|qa_ctrlport_probes|qa_qtgui|qa_polar_..coder_(sc_)?systematic"'
             ldpath:
+            pypath:
     name: ${{ matrix.distro }}
     container:
       image: ${{ matrix.containerid }}
@@ -108,7 +112,9 @@ jobs:
        su -c "echo ${{matrix.ldpath}} >> /etc/ld.so.conf"
        su -c ldconfig
     - name: Test Python3
-      run: python3 -c "import gnuradio.blocks; print(gnuradio.blocks.complex_to_float())"
+      run: |
+       export PYTHONPATH=$PYTHONPATH:$(python3 -c "import sys; print(f'/usr/${{matrix.pypath}}local/lib64/python{sys.version_info.major}.{sys.version_info.minor}/site-packages')")
+       python3 -c "import gnuradio.blocks; print(gnuradio.blocks.complex_to_float())"
   no-python:
   # All of these shall depend on the formatting check (needs: check-formatting)
     needs: [check-formatting, check-python-formatting]
