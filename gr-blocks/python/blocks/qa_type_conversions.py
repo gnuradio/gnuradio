@@ -193,8 +193,8 @@ class test_type_conversions(gr_unittest.TestCase):
         self.assertFloatTuplesAlmostEqual(expected_data, dst.data())
 
     def test_float_to_int_identity(self):
-        src_data = (1.0, 2.0, 3.0, 4.0, 5.0)
-        expected_data = [1, 2, 3, 4, 5]
+        src_data = (1.0, 2.0, 3.0, 4.0, 5.0, float.fromhex('0x1.0p31'))
+        expected_data = [1, 2, 3, 4, 5, 2147483647]
         src = blocks.vector_source_f(src_data)
         op = blocks.float_to_int()
         dst = blocks.vector_sink_i()
