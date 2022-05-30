@@ -30,16 +30,16 @@ device_sink::sptr device_sink::make(const std::string& uri,
                                     unsigned int interpolation,
                                     bool cyclic)
 {
-    return gnuradio::get_initial_sptr(
-        new device_sink_impl(device_source_impl::get_context(uri),
-                             true,
-                             device,
-                             channels,
-                             device_phy,
-                             params,
-                             buffer_size,
-                             interpolation,
-                             cyclic));
+    return gnuradio::make_block_sptr<device_sink_impl>(
+        device_source_impl::get_context(uri),
+        true,
+        device,
+        channels,
+        device_phy,
+        params,
+        buffer_size,
+        interpolation,
+        cyclic);
 }
 
 device_sink::sptr device_sink::make_from(iio_context* ctx,
