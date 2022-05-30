@@ -26,8 +26,8 @@ typename fft_v<T, forward>::sptr fft_v<T, forward>::make(int fft_size,
                                                          bool shift,
                                                          int nthreads)
 {
-    return gnuradio::get_initial_sptr(
-        new fft_v_fftw<T, forward>(fft_size, window, shift, nthreads));
+    return gnuradio::make_block_sptr<fft_v_fftw<T, forward>>(
+        fft_size, window, shift, nthreads);
 }
 
 template <class T, bool forward>

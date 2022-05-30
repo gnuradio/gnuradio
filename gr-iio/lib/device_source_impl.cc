@@ -31,15 +31,15 @@ device_source::sptr device_source::make(const std::string& uri,
                                         unsigned int buffer_size,
                                         unsigned int decimation)
 {
-    return gnuradio::get_initial_sptr(
-        new device_source_impl(device_source_impl::get_context(uri),
-                               true,
-                               device,
-                               channels,
-                               device_phy,
-                               params,
-                               buffer_size,
-                               decimation));
+    return gnuradio::make_block_sptr<device_source_impl>(
+        device_source_impl::get_context(uri),
+        true,
+        device,
+        channels,
+        device_phy,
+        params,
+        buffer_size,
+        decimation);
 }
 
 device_source::sptr device_source::make_from(iio_context* ctx,

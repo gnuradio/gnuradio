@@ -30,14 +30,14 @@ crc_append::sptr crc_append::make(unsigned num_bits,
                                   bool swap_endianness,
                                   unsigned skip_header_bytes)
 {
-    return gnuradio::get_initial_sptr(new crc_append_impl(num_bits,
-                                                          poly,
-                                                          initial_value,
-                                                          final_xor,
-                                                          input_reflected,
-                                                          result_reflected,
-                                                          swap_endianness,
-                                                          skip_header_bytes));
+    return gnuradio::make_block_sptr<crc_append_impl>(num_bits,
+                                                      poly,
+                                                      initial_value,
+                                                      final_xor,
+                                                      input_reflected,
+                                                      result_reflected,
+                                                      swap_endianness,
+                                                      skip_header_bytes);
 }
 
 crc_append_impl::crc_append_impl(unsigned num_bits,

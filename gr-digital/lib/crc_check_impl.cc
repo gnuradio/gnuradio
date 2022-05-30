@@ -31,15 +31,15 @@ crc_check::sptr crc_check::make(unsigned num_bits,
                                 bool discard_crc,
                                 unsigned skip_header_bytes)
 {
-    return gnuradio::get_initial_sptr(new crc_check_impl(num_bits,
-                                                         poly,
-                                                         initial_value,
-                                                         final_xor,
-                                                         input_reflected,
-                                                         result_reflected,
-                                                         swap_endianness,
-                                                         discard_crc,
-                                                         skip_header_bytes));
+    return gnuradio::make_block_sptr<crc_check_impl>(num_bits,
+                                                     poly,
+                                                     initial_value,
+                                                     final_xor,
+                                                     input_reflected,
+                                                     result_reflected,
+                                                     swap_endianness,
+                                                     discard_crc,
+                                                     skip_header_bytes);
 }
 
 crc_check_impl::crc_check_impl(unsigned num_bits,
