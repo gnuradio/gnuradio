@@ -231,8 +231,8 @@ public:
                                                         Fpass,
                                                         Fstop);
 
-        return gnuradio::get_initial_sptr(
-            new fmcomms5_sink_f32c(tx1_en, tx2_en, tx3_en, tx4_en, block));
+        return gnuradio::make_block_sptr<fmcomms5_sink_f32c>(
+            tx1_en, tx2_en, tx3_en, tx4_en, block);
     }
 
     void set_params(unsigned long long frequency1,
