@@ -51,11 +51,6 @@ target_include_directories(gnuradio-pdu
   )
 
 
-# we need -no-as-needed or else -lgslcblas gets stripped out on newer version of gcc
-if(CMAKE_COMPILER_IS_GNUCC AND NOT APPLE)
-    SET_TARGET_PROPERTIES(gnuradio-pdu PROPERTIES LINK_FLAGS "-Wl,--no-as-needed")
-endif()
-
 if(BUILD_SHARED_LIBS)
   GR_LIBRARY_FOO(gnuradio-pdu)
 endif()
