@@ -43,11 +43,6 @@ target_include_directories(gnuradio-wavelet
   )
 
 
-# we need -no-as-needed or else -lgslcblas gets stripped out on newer version of gcc
-if(CMAKE_COMPILER_IS_GNUCC AND NOT APPLE)
-    SET_TARGET_PROPERTIES(gnuradio-wavelet PROPERTIES LINK_FLAGS "-Wl,--no-as-needed")
-endif()
-
 if(BUILD_SHARED_LIBS)
   GR_LIBRARY_FOO(gnuradio-wavelet)
 endif()
