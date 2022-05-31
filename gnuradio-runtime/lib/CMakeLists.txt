@@ -132,8 +132,6 @@ target_link_libraries(gnuradio-runtime PUBLIC
   gnuradio-pmt
   Volk::volk
   Boost::program_options
-  Boost::system
-  Boost::regex
   Boost::thread
   spdlog::spdlog
   MPLib::mplib
