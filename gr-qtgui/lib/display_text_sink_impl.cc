@@ -23,8 +23,8 @@ display_text_sink::sptr display_text_sink::make(const std::string& label,
                                                 int maxlines,
                                                 QWidget* parent)
 {
-    return gnuradio::get_initial_sptr(
-        new display_text_sink_impl(label, splitlength, maxlines, parent));
+    return gnuradio::make_block_sptr<display_text_sink_impl>(
+        label, splitlength, maxlines, parent);
 }
 
 /*

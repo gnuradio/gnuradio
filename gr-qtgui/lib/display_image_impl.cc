@@ -20,8 +20,7 @@ namespace qtgui {
 
 display_image::sptr display_image::make(int imagewidth, int imageheight, QWidget* parent)
 {
-    return gnuradio::get_initial_sptr(
-        new display_image_impl(imagewidth, imageheight, parent));
+    return gnuradio::make_block_sptr<display_image_impl>(imagewidth, imageheight, parent);
 }
 
 /*

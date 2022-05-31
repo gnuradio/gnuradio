@@ -25,8 +25,8 @@ display_text_msg::sptr display_text_msg::make(const std::string& label,
                                               int maxline,
                                               QWidget* parent)
 {
-    return gnuradio::get_initial_sptr(
-        new display_text_msg_impl(label, message_key, splitlength, maxline, parent));
+    return gnuradio::make_block_sptr<display_text_msg_impl>(
+        label, message_key, splitlength, maxline, parent);
 }
 
 display_text_msg_impl::display_text_msg_impl(const std::string& label,
