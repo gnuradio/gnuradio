@@ -30,7 +30,6 @@ endif(MSVC)
 
 target_link_libraries(gnuradio-wavelet PUBLIC
     gnuradio-runtime
-    gnuradio-blocks
     GSL::gsl
 )
 
