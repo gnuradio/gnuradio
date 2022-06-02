@@ -39,8 +39,6 @@ endif(MSVC)
 
 target_link_libraries(gnuradio-pdu PUBLIC
     gnuradio-runtime
-    gnuradio-blocks
-    gnuradio-filter
 )
 
 if(ENABLE_COMMON_PCH)
