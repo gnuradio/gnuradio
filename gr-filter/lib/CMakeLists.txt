@@ -57,7 +57,6 @@ add_library(gnuradio-filter
 target_link_libraries(gnuradio-filter PUBLIC
     gnuradio-runtime
     gnuradio-fft
-    gnuradio-blocks
     Volk::volk
 )
 
