@@ -328,7 +328,7 @@ cpp_templates:
             ${wintype.cpp_opts}, // wintype
             ${fc}, // fc
             ${bw}, // bw
-            ${name}, // name
+            "${no_quotes(name)}", // name
             ${ (0 if type.startswith('msg') else nconnections) } // number of inputs
         );
 
