@@ -50,7 +50,7 @@ parameters:
     hide: part
 
   - id: vga
-    label: VGA Gain (0dB - 62dB)'
+    label: 'VGA Gain (0dB - 62dB)'
     category: RF Options
     dtype: real
     default: '16'
