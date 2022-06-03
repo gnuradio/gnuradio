@@ -90,7 +90,7 @@ void crc16_async_bb_impl::check(pmt::pmt_t msg)
 
     crc = process_crc(bytes_in, pkt_len - 2);
 
-    if (crc != *(unsigned int*)(bytes_in + pkt_len - 2)) { // Drop package
+    if (memcmp(&crc, bytes_in + pkt_len - 2, 2)) { // Drop package
         d_nfail++;
         return;
     }

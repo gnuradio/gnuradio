@@ -82,7 +82,7 @@ void crc32_async_bb_impl::check(pmt::pmt_t msg)
     d_crc_impl.reset();
     d_crc_impl.process_bytes(bytes_in, pkt_len - 4);
     crc = d_crc_impl();
-    if (crc != *(unsigned int*)(bytes_in + pkt_len - 4)) { // Drop package
+    if (memcmp(&crc, bytes_in + pkt_len - 4, 4)) { // Drop package
         d_nfail++;
         return;
     }
