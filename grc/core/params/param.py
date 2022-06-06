@@ -308,6 +308,8 @@ class Param(Element):
                 self.evaluate()
             return '[' + value + ']' if self._lisitify_flag else value
         else:
+            if self.dtype in ('int', 'real') and ('+' in value or '-' in value or '*' in value or '/' in value):
+                value = '(' + value + ')'
             return value
 
     def get_opt(self, item):
