@@ -7,6 +7,98 @@ Versioning](http://semver.org/spec/v2.0.0.html), starting with version 3.7.12.0.
 
 Older Logs can be found in `docs/RELEASE-NOTES-*`.
 
+## [3.10.3.0] - 2022-06-09
+
+### Changed
+
+#### Project Scope
+
+- Continue replacement of Boost functionality with standard C++ continues, where practical, making the code more maintainable.
+- Fix more flaky CI tests that were failing unnecessarily. This helps greatly with maintenance.
+
+#### gnuradio-runtime
+- Only catch Thrift transport exceptions
+- Import PyQt5 before matplotlib to work around a bug
+- Fix broken log format string in set_min_output_buffer
+- Process system messages before others. This helps with orderly flowgraph termination.
+- Custom buffers: add missing (simulated) data transfer to input/output_blocked_callback functions in host_buffer class
+- Fix Mach-kernel timebase (numer and denom were reversed)
+- Fix signed integer overflows in fixed-point table generation
+
+#### GRC
+- Add parentheses on arithmetic expressions to avoid operator precedence problems in templated code
+- Fix create hier / missing top_block error
+
+#### Build system and packaging
+- CI: Add testing for Fedora 36, remove Fedora 34.
+- cmake: Use platform-specific Python install schemes
+- cmake: Always prefix git hash used as version with "g"
+- cmake: Allow MPIR/MPLIB package find to fail gracefully
+- cmake: Remove 'REQUIRED' flag for Volk
+
+#### gr-blocks
+- Fix rotator_cc scheduled phase increment updates
+- Wavefile Sink: add support for Ogg Opus if libsndfile is >= 1.0.29
+- Probe Signal: synchronize access to d_level to prevent race conditions
+
+#### gr-digital
+- Use memcmp for CRC comparisons to avoid alignment errors
+
+#### gr-dtv
+- Use unsigned integer for CRC calculation
+- Fix use of uninitialized memory
+- Fix initialization of L1Post struct
+
+#### gr-filter
+- Fix various bugs in Generic Filterbank
+
+#### gr-iio
+- Fix grc pluto sink attenuation callback
+
+#### gr-qtgui
+- Several sinks produce wrong error messages, when GUI Hint is used. Reorder params in yml files to fix.
+
+#### gr-soapy
+- Deactivate stream before closing. Some modules depend on this behavior.
+
+#### gr-uhd
+- Implement `get_gpio_attr()`
+
+#### Code generation tools
+- C++ generation: Fix various template errors
+
+#### Modtool
+- gr_newmod: Fix copying python bindings to test dir on Windows
+- gr_newmod: Make untagged conda package version less specific
+- modtool: Add a conda recipe to the OOT template
+- Make the pydoc_h.mako more clang compliant
+
+#### Documentation
+- Add shim Sphinx config for readthedocs
+
+### Authors
+
+The following people contributed commits to this release. They are credited by the name used in commits. There are may people who contribute in other ways ... discussions, reviews, bug reporting, testing, etc. We just don't have an easy way to provide credit for all that valuable work.
+
+- Adrian Suciu <adrian.suciu@analog.com>
+- Bjoern Kerler <info@revskills.de>
+- Clayton Smith <argilo@gmail.com>
+- Daniel Estévez <daniel@destevez.net>
+- David Sorber <david.sorber@blacklynx.tech>
+- Igor Freire <igor@blockstream.com>
+- Jeff Long <willcode4@gmail.com>
+- Josh Morman <jmorman@gnuradio.org>
+- maitbot
+- Martin Braun <martin@gnuradio.org>
+- Michael Roe
+- Paul Atreides <maud.dib1984@gmail.com>
+- Philipp Niedermayer <eltos@outlook.de>
+- Ron Economos <w6rz@comcast.net>
+- Ryan Volz <ryan.volz@gmail.com>
+- Volker Schroer
+- wakass
+
+
 ## [3.10.2.0] - 2022-04-09
 
 ### Changed
