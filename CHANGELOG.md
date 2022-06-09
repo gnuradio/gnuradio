@@ -7,6 +7,71 @@ Versioning](http://semver.org/spec/v2.0.0.html), starting with version 3.7.12.0.
 
 Older Logs can be found in `docs/RELEASE-NOTES-*`.
 
+## [3.9.7.0] - 2022-06-09
+
+### Changed
+
+#### Project Scope
+
+- Fix more flaky CI tests that were failing unnecessarily. This helps greatly with maintenance.
+
+#### gnuradio-runtime
+- Only catch Thrift transport exceptions
+- Import PyQt5 before matplotlib to work around a bug
+- Process system messages before others. This helps with orderly flowgraph termination.
+- Fix Mach-kernel timebase (numer and denom were reversed)
+- Fix signed integer overflows in fixed-point table generation
+
+#### GRC
+- Fix create hier / missing top_block error
+
+#### Build system and packaging
+- CI: Add testing for Fedora 36, remove Fedora 34.
+- cmake: Allow MPIR/MPLIB package find to fail gracefully
+
+#### gr-blocks
+- Fix rotator_cc scheduled phase increment updates
+- Probe Signal: synchronize access to d_level to prevent race conditions
+
+#### gr-digital
+- Use memcmp for CRC comparisons to avoid alignment errors
+
+#### gr-dtv
+- Use unsigned integer for CRC calculation
+- Fix use of uninitialized memory
+- Fix initialization of L1Post struct
+
+#### gr-filter
+- Fix various bugs in Generic Filterbank
+
+#### gr-qtgui
+- Several sinks produce wrong error messages, when GUI Hint is used. Reorder params in yml files to fix.
+
+#### gr-soapy
+- Deactivate stream before closing. Some modules depend on this behavior.
+
+#### gr-uhd
+- Implement `get_gpio_attr()`
+
+#### Modtool
+- gr_newmod: Fix copying python bindings to test dir on Windows
+- Make the pydoc_h.mako more clang compliant
+
+### Authors
+
+The following people contributed commits to this release. They are credited by the name used in commits. There are may people who contribute in other ways ... discussions, reviews, bug reporting, testing, etc. We just don't have an easy way to provide credit for all that valuable work.
+
+- Bjoern Kerler <info@revskills.de>
+- Clayton Smith <argilo@gmail.com>
+- Igor Freire <igor@blockstream.com>
+- Jeff Long <willcode4@gmail.com>
+- maitbot
+- Philipp Niedermayer <eltos@outlook.de>
+- Ron Economos <w6rz@comcast.net>
+- Ryan Volz <ryan.volz@gmail.com>
+- Volker Schroer
+- wakass
+
 ## [3.9.6.0] - 2022-04-09
 
 ### Changed
