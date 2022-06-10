@@ -12,7 +12,7 @@ cmake_config_args=(
     -DGR_PYTHON_DIR=$SP_DIR
 )
 
-cmake -G "Ninja" .. "${cmake_config_args[@]}"
+cmake ${CMAKE_ARGS} -G "Ninja" .. "${cmake_config_args[@]}"
 cmake --build . --config Release -- -j${CPU_COUNT}
 
 cmake --build . --config Release --target install
