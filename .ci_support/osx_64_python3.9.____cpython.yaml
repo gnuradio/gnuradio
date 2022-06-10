@@ -7,7 +7,7 @@ boost_cpp:
 c_compiler:
 - clang
 c_compiler_version:
-- '12'
+- '13'
 channel_sources:
 - conda-forge
 channel_targets:
@@ -15,7 +15,7 @@ channel_targets:
 cxx_compiler:
 - clangxx
 cxx_compiler_version:
-- '12'
+- '13'
 fftw:
 - '3'
 gmp:
@@ -25,7 +25,7 @@ gsl:
 libiio:
 - '0'
 libthrift:
-- 0.15.0
+- 0.16.0
 macos_machine:
 - x86_64-apple-darwin13.4.0
 numpy:
@@ -40,24 +40,22 @@ pin_run_as_build:
   python:
     min_pin: x.x
     max_pin: x.x
-  qt:
-    max_pin: x.x
   zeromq:
     max_pin: x.x
 pybind11_abi:
 - '4'
 python:
 - 3.9.* *_cpython
-qt:
-- '5.12'
+qt_main:
+- '5.15'
 soapysdr:
 - '0.8'
 spdlog:
-- '1.9'
+- '1.10'
 target_platform:
 - osx-64
 uhd:
-- 4.1.0
+- 4.2.0
 volk:
 - '2.5'
 zeromq:

@@ -1,5 +1,5 @@
 alsa_lib:
-- 1.2.3
+- 1.2.6
 boost_cpp:
 - 1.74.0
 c_compiler:
@@ -25,11 +25,11 @@ gmp:
 gsl:
 - '2.7'
 libcblas:
-- 3.8 *netlib
+- 3.9 *netlib
 libiio:
 - '0'
 libthrift:
-- 0.15.0
+- 0.16.0
 numpy:
 - '1.19'
 pin_run_as_build:
@@ -42,24 +42,22 @@ pin_run_as_build:
   python:
     min_pin: x.x
     max_pin: x.x
-  qt:
-    max_pin: x.x
   zeromq:
     max_pin: x.x
 pybind11_abi:
 - '4'
 python:
 - 3.9.* *_cpython
-qt:
-- '5.12'
+qt_main:
+- '5.15'
 soapysdr:
 - '0.8'
 spdlog:
-- '1.9'
+- '1.10'
 target_platform:
 - linux-64
 uhd:
-- 4.1.0
+- 4.2.0
 volk:
 - '2.5'
 zeromq:
