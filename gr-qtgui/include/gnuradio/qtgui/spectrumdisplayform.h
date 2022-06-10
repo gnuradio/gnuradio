@@ -23,6 +23,7 @@ class SpectrumGUIClass;
 #include <gnuradio/qtgui/WaterfallDisplayPlot.h>
 #include <QTimer>
 #include <QValidator>
+#include <deque>
 #include <vector>
 
 class SpectrumDisplayForm : public QWidget, public Ui::SpectrumDisplayForm
