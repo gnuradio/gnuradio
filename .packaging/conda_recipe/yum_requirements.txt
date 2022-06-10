@@ -1,6 +1,8 @@
 mesa-libGL
 mesa-dri-drivers
+libice
 libselinux
+libsm
 libX11
 libXcomposite
 libXcursor
@@ -11,3 +13,9 @@ libXi
 libXinerama
 libXrandr
 libXxf86vm
+xcb-util
+xcb-util-image
+xcb-util-keysyms
+xcb-util-renderutil
+xcb-util-wm
+xorg-x11-server-Xvfb
