@@ -1,12 +1,14 @@
 {% set name = "gnuradio-dev" %}
-{% set version = (environ.get('GIT_DESCRIBE_TAG', 'untagged')|string|replace('-','_')|replace('v','')|replace('git','')) + '.dev' + environ.get('GIT_DESCRIBE_NUMBER', '0') + '+' + environ.get('GIT_DESCRIBE_HASH', 'local') %}
+{% set version = (environ.get("GIT_DESCRIBE_TAG_PEP440", "0.0.0." + datetime.datetime.now().strftime("%Y%m%d") + ".dev+" + environ.get("GIT_DESCRIBE_HASH", "local"))|string) %}
 
 package:
   name: {{ name|lower }}
   version: {{ version }}
 
 source:
-  git_url: {{ environ.get('FEEDSTOCK_ROOT', '../..') }}
+  # use local path or git repository depending on if the build is local or done on CI
+  path: "../.."  # [not os.environ.get("CI")]
+  git_url: {{ environ.get('FEEDSTOCK_ROOT', "../..") }}  # [os.environ.get("CI")]
 
 build:
   number: 0
@@ -25,6 +27,7 @@ requirements:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
     - cmake >=3.8
+    - git
     - ninja
     - pkg-config  # [not win]
     - sysroot_linux-64 2.17  # [linux64]
