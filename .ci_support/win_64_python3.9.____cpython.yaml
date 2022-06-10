@@ -24,24 +24,22 @@ pin_run_as_build:
   python:
     min_pin: x.x
     max_pin: x.x
-  qt:
-    max_pin: x.x
   zeromq:
     max_pin: x.x.x
 pybind11_abi:
 - '4'
 python:
 - 3.9.* *_cpython
-qt:
-- '5.12'
+qt_main:
+- '5.15'
 soapysdr:
 - '0.8'
 spdlog:
-- '1.9'
+- '1.10'
 target_platform:
 - win-64
 uhd:
-- 4.1.0
+- 4.2.0
 volk:
 - '2.5'
 zeromq:
