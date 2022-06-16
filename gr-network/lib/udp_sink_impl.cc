@@ -121,15 +121,15 @@ bool udp_sink_impl::start()
 
     d_localqueue = new boost::circular_buffer<char>(max_circ_buffer);
 
-    d_udpsocket = new boost::asio::ip::udp::socket(d_io_service);
+    d_udpsocket = new asio::ip::udp::socket(d_io_context);
 
     std::string str_port = std::to_string(d_port);
     std::string str_host = d_host.empty() ? std::string("localhost") : d_host;
-    boost::asio::ip::udp::resolver resolver(d_io_service);
-    boost::asio::ip::udp::resolver::query query(
-        str_host, str_port, boost::asio::ip::resolver_query_base::passive);
+    asio::ip::udp::resolver resolver(d_io_context);
+    asio::ip::udp::resolver::query query(
+        str_host, str_port, asio::ip::resolver_query_base::passive);
 
-    boost::system::error_code err;
+    asio::error_code err;
     d_endpoint = *resolver.resolve(query, err);
 
     if (err) {
@@ -149,9 +149,9 @@ bool udp_sink_impl::start()
     }
 
     if (is_ipv6) {
-        d_udpsocket->open(boost::asio::ip::udp::v6());
+        d_udpsocket->open(asio::ip::udp::v6());
     } else {
-        d_udpsocket->open(boost::asio::ip::udp::v4());
+        d_udpsocket->open(asio::ip::udp::v4());
     }
 
     return true;
@@ -171,14 +171,14 @@ bool udp_sink_impl::stop()
             // Send a few zero-length packets to signal receiver we are done
             std::array<char, 0> send_buf;
             for (int i = 0; i < 3; i++)
-                d_udpsocket->send_to(boost::asio::buffer(send_buf), d_endpoint);
+                d_udpsocket->send_to(asio::buffer(send_buf), d_endpoint);
         }
 
         d_udpsocket->close();
         d_udpsocket = NULL;
 
-        d_io_service.reset();
-        d_io_service.stop();
+        d_io_context.reset();
+        d_io_context.stop();
     }
 
     if (d_localbuffer) {
@@ -228,8 +228,8 @@ int udp_sink_impl::work(int noutput_items,
         d_localqueue->push_back(in[i]);
     }
 
-    // Local boost buffer for transmitting
-    std::vector<boost::asio::const_buffer> transmitbuffer;
+    // Local buffer for transmitting
+    std::vector<asio::const_buffer> transmitbuffer;
 
     // Let's see how many blocks are in the buffer
     int bytes_available = d_localqueue->size();
@@ -244,7 +244,7 @@ int udp_sink_impl::work(int noutput_items,
             build_header();
 
             transmitbuffer.push_back(
-                boost::asio::buffer((const void*)d_tmpheaderbuff, d_header_size));
+                asio::buffer((const void*)d_tmpheaderbuff, d_header_size));
         }
 
         // Fill the data buffer
@@ -255,7 +255,7 @@ int udp_sink_impl::work(int noutput_items,
 
         // Set up for transmit
         transmitbuffer.push_back(
-            boost::asio::buffer((const void*)d_localbuffer, d_precomp_datasize));
+            asio::buffer((const void*)d_localbuffer, d_precomp_datasize));
 
         // Send
         d_udpsocket->send_to(transmitbuffer, d_endpoint);

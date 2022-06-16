@@ -91,6 +91,8 @@ requirements:
     - pyqt
     - qt-main
     - qwt
+  # gnuradio.network
+    - asio
   # gnuradio.soapy
     - soapysdr
   # gnuradio.uhd

@@ -81,6 +81,7 @@ BuildRequires:	SoapySDR-devel
 BuildRequires:	xdg-utils
 BuildRequires:	xmlto
 BuildRequires:	zeromq-devel
+BuildRequires:	asio
 BuildRequires:	python3-gobject
 BuildRequires:	pybind11-devel
 BuildRequires:	volk-devel

@@ -26,7 +26,10 @@ add_library(gnuradio-network
     udp_source_impl.cc
 )
 
-target_link_libraries(gnuradio-network PUBLIC gnuradio-runtime)
+target_link_libraries(gnuradio-network PUBLIC
+  gnuradio-runtime
+  asio::asio
+)
 
 if(ENABLE_COMMON_PCH)
   target_link_libraries(gnuradio-network PRIVATE common-precompiled-headers)

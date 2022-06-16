@@ -63,6 +63,9 @@ Other compilers may work, but are not supported.
 \subsection dep_fft gr-fft: Fast Frequency Transform
 \li fftw3f      (>= 3.0.1)   http://www.fftw.org/download.html
 
+\subsection dep_gr_network gr-network: Network package
+\li asio        (>= 1.12)    https://think-async.com/Asio/
+
 \subsection dep_zeromq gr-zeromq: ZeroMQ Network layer
 \li ZeroMQ      (>= 3.2.5)       http://www.zeromq.org/
 \li cppzmq      (>= git 6c17af2) https://github.com/zeromq/cppzmq

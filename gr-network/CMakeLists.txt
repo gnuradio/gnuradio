@@ -8,14 +8,15 @@
 ########################################################################
 # Setup dependencies
 ########################################################################
-include(GrBoost)
+include(GrBoost)  # needed for boost::circular_buffer
+find_package(Asio)
 
 ########################################################################
 # Register component
 ########################################################################
 include(GrComponent)
 GR_REGISTER_COMPONENT("gr-network" ENABLE_GR_NETWORK
-    Boost_FOUND
+    Asio_FOUND
     ENABLE_GNURADIO_RUNTIME
 )
 

@@ -100,11 +100,18 @@ GR_REGISTER_COMPONENT("gr-ctrlport" ENABLE_GR_CTRLPORT
 
 # find thrift quietly to determine whether it should be enabled by default
 find_package(THRIFT ${GR_THRIFT_MIN_VERSION} QUIET)
-option(ENABLE_CTRLPORT_THRIFT "Enable ControlPort Thrift support" ${THRIFT_FOUND})
+find_package(Asio QUIET)
+
+if(THRIFT_FOUND AND Asio_FOUND)
+  set(DEFAULT_THRIFT_ENABLE true)
+endif()
+
+option(ENABLE_CTRLPORT_THRIFT "Enable ControlPort Thrift support" ${DEFAULT_THRIFT_ENABLE})
 
 if(ENABLE_CTRLPORT_THRIFT)
   # ensure we have thrift, loudly, since it is enabled
   find_package(THRIFT ${GR_THRIFT_MIN_VERSION} REQUIRED)
+  find_package(Asio REQUIRED)
 endif()
 
 ########################################################################

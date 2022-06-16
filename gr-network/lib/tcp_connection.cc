@@ -19,20 +19,20 @@
 namespace gr {
 namespace network {
 
-tcp_connection::sptr tcp_connection::make(boost::asio::io_service& io_service,
+tcp_connection::sptr tcp_connection::make(asio::io_context& io_context,
                                           int MTU /*= 10000*/,
                                           bool no_delay /*=false*/)
 {
-    return sptr(new tcp_connection(io_service, MTU, no_delay));
+    return sptr(new tcp_connection(io_context, MTU, no_delay));
 }
 
-tcp_connection::tcp_connection(boost::asio::io_service& io_service,
+tcp_connection::tcp_connection(asio::io_context& io_context,
                                int MTU /*= 10000*/,
                                bool no_delay /*=false*/)
-    : d_socket(io_service), d_buf(MTU), d_block(NULL), d_no_delay(no_delay)
+    : d_socket(io_context), d_buf(MTU), d_block(NULL), d_no_delay(no_delay)
 {
     try {
-        d_socket.set_option(boost::asio::ip::tcp::no_delay(no_delay));
+        d_socket.set_option(asio::ip::tcp::no_delay(no_delay));
     } catch (...) {
         // Silently ignore failure (socket might be current in accept stage) and try again
         // in 'start'
@@ -55,10 +55,10 @@ void tcp_connection::send(pmt::pmt_t vector)
         // FIXME: Note that this has the effect of breaking a large PDU into several
         // smaller PDUs, each containing <= MTU bytes. Is this the desired behavior?
         size_t send_len = std::min((len - offset), d_buf.size());
-        boost::asio::async_write(
+        asio::async_write(
             d_socket,
-            boost::asio::buffer(txbuf->data() + offset, send_len),
-            [txbuf](const boost::system::error_code& error, size_t bytes_transferred) {});
+            asio::buffer(txbuf->data() + offset, send_len),
+            [txbuf](const asio::error_code& error, size_t bytes_transferred) {});
         offset += send_len;
     }
 }
@@ -66,16 +66,15 @@ void tcp_connection::send(pmt::pmt_t vector)
 void tcp_connection::start(gr::basic_block* block)
 {
     d_block = block;
-    d_socket.set_option(boost::asio::ip::tcp::no_delay(d_no_delay));
+    d_socket.set_option(asio::ip::tcp::no_delay(d_no_delay));
     d_socket.async_read_some(
-        boost::asio::buffer(d_buf),
-        [this](const boost::system::error_code& error, size_t bytes_transferred) {
+        asio::buffer(d_buf),
+        [this](const asio::error_code& error, size_t bytes_transferred) {
             handle_read(error, bytes_transferred);
         });
 }
 
-void tcp_connection::handle_read(const boost::system::error_code& error,
-                                 size_t bytes_transferred)
+void tcp_connection::handle_read(const asio::error_code& error, size_t bytes_transferred)
 {
     if (!error) {
         if (d_block) {
@@ -87,12 +86,12 @@ void tcp_connection::handle_read(const boost::system::error_code& error,
         }
 
         d_socket.async_read_some(
-            boost::asio::buffer(d_buf),
-            [this](const boost::system::error_code& error, size_t bytes_transferred) {
+            asio::buffer(d_buf),
+            [this](const asio::error_code& error, size_t bytes_transferred) {
                 handle_read(error, bytes_transferred);
             });
     } else {
-        d_socket.shutdown(boost::asio::ip::tcp::socket::shutdown_both);
+        d_socket.shutdown(asio::ip::tcp::socket::shutdown_both);
         d_socket.close();
     }
 }

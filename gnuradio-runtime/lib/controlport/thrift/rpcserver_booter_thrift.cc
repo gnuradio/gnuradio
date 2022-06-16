@@ -11,7 +11,7 @@
 #include <gnuradio/rpcserver_booter_thrift.h>
 #include <gnuradio/rpcserver_thrift.h>
 
-#include <boost/asio/ip/host_name.hpp>
+#include <asio/ip/host_name.hpp>
 
 namespace {
 static const char* const CONTROL_PORT_CLASS("thrift");
@@ -117,7 +117,7 @@ bool thrift_application_base<rpcserver_base,
 
     if (used_port > 0) {
         // Determine the hostname of this host
-        const std::string boost_hostname(boost::asio::ip::host_name());
+        const std::string boost_hostname(asio::ip::host_name());
 
         std::string endpoint =
             "-h " + boost_hostname + " -p " + std::to_string(used_port);
