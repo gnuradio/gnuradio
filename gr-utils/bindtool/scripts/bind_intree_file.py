@@ -35,16 +35,16 @@ args = parser.parse_args()
 prefix = args.prefix
 output_dir = args.output_dir
 includes = args.include
-pythonlibs=args.extra_pythonlibs
+pythonlibs = args.extra_pythonlibs
 
 if pythonlibs:
     for extra in pythonlibs:
-        sys.path.insert(0,extra)
+        sys.path.insert(0, extra)
 
 from gnuradio.bindtool import BindingGenerator
 
 name = args.module
-print('Module: ',name)
+
 if name not in ['gr', 'pmt']:
     namespace = ['gr', name]
     prefix_include_root = 'gnuradio/' + name  # pmt, gnuradio/digital, etc.
