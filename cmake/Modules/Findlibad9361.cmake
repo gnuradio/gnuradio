@@ -85,6 +85,15 @@ if(libad9361_FOUND)
   set(libad9361_LIBRARIES ${libad9361_LIBRARY})
 endif()
 
+if (${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
+  include(CMakeFindFrameworks)
+  CMAKE_FIND_FRAMEWORKS(ad9361)
+  if(ad9361_FRAMEWORKS)
+    list(GET ad9361_FRAMEWORKS 0 libad9361_LIBRARY)
+    set(libad9361_LIBRARY ${libad9361_LIBRARY}/ad9361)
+  endif()
+endif()
+
 if(libad9361_FOUND AND NOT TARGET libad9361::ad9361)
   add_library(libad9361::ad9361 UNKNOWN IMPORTED)
   set_target_properties(libad9361::ad9361 PROPERTIES

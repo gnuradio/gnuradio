@@ -85,6 +85,15 @@ if(libiio_FOUND)
   set(libiio_LIBRARIES ${libiio_LIBRARY})
 endif()
 
+if (${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
+  include(CMakeFindFrameworks)
+  CMAKE_FIND_FRAMEWORKS(iio)
+  if(iio_FRAMEWORKS)
+    list(GET iio_FRAMEWORKS 0 libiio_LIBRARY)
+    set(libiio_LIBRARY ${libiio_LIBRARY}/iio)
+  endif()
+endif()
+
 if(libiio_FOUND AND NOT TARGET libiio::iio)
   add_library(libiio::iio UNKNOWN IMPORTED)
   set_target_properties(libiio::iio PROPERTIES
