@@ -83,7 +83,7 @@ tpb_thread_body::tpb_thread_body(block_sptr block,
                 // prune the queue from the front to keep memory in check.
                 if (block->nmsgs(i.first) > max_nmsgs) {
                     logger.warn(
-                        "asynchronous message buffer overflowing, dropping message");
+                        f"{block.identifier()} received a message to port {i.first} which has no handler registered. Message discarded.");
                     msg = block->delete_head_nowait(i.first);
                 }
             }
