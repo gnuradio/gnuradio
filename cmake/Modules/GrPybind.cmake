@@ -107,6 +107,7 @@ foreach(file ${files})
                     "--flag_automatic" ${flag_auto}
                     "--flag_pygccxml" ${flag_pygccxml}
                     # "--include" "$<INSTALL_INTERFACE:include>"  #FIXME: Make the pygccxml generation use the source tree headers
+                    "--extra_pythonlibs" ${CMAKE_BINARY_DIR}/gnuradio-runtime/python
                     COMMENT "Automatic generation of pybind11 bindings for " ${header_full_path})
                 add_custom_target(${file}_regen_bindings ALL DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}}/${file})
                 list(APPEND regen_targets ${file}_regen_bindings)

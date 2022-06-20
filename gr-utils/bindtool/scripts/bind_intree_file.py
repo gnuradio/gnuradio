@@ -1,6 +1,5 @@
 import warnings
 import argparse
-from gnuradio.bindtool import BindingGenerator
 import sys
 import tempfile
 
@@ -28,13 +27,24 @@ parser.add_argument(
     '--flag_pygccxml', default='0'
 )
 
+parser.add_argument(
+    '--extra_pythonlibs', help='Additional Include Dirs, comma separated', default=(), nargs='*')
+
 args = parser.parse_args()
 
 prefix = args.prefix
 output_dir = args.output_dir
 includes = args.include
-name = args.module
+pythonlibs=args.extra_pythonlibs
 
+if pythonlibs:
+    for extra in pythonlibs:
+        sys.path.insert(0,extra)
+
+from gnuradio.bindtool import BindingGenerator
+
+name = args.module
+print('Module: ',name)
 if name not in ['gr', 'pmt']:
     namespace = ['gr', name]
     prefix_include_root = 'gnuradio/' + name  # pmt, gnuradio/digital, etc.
