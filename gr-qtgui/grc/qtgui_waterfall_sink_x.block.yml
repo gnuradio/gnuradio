@@ -343,10 +343,9 @@ cpp_templates:
             this->${id}->disable_legend(); // if (!legend)
         }
 
-        /* C++ doesn't have this
-        if ("${type}" == "float" or "${type}" == "msg_float") {
-            this->${id}->set_plot_pos_half(not ${freqhalf});
-        }*/
+        % if type.endswith('float'):
+        ${id}->set_plot_pos_half(not ${freqhalf});
+        % endif
         {
             std::string labels[10] = {"${label1.strip("'")}", "${label2.strip("'")}", "${label3.strip("'")}", "${label4.strip("'")}", "${label5.strip("'")}",
                 "${label6.strip("'")}", "${label7.strip("'")}", "${label8.strip("'")}", "${label9.strip("'")}", "${label10.strip("'")}"};
