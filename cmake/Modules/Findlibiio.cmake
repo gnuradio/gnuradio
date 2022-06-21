@@ -86,10 +86,10 @@ if(libiio_FOUND)
 endif()
 
 if(libiio_FOUND AND NOT TARGET libiio::iio)
-  add_library(libiio::iio UNKNOWN IMPORTED)
+  add_library(libiio::iio INTERFACE IMPORTED)
   set_target_properties(libiio::iio PROPERTIES
-    IMPORTED_LOCATION "${libiio_LIBRARY}"
-    INTERFACE_INCLUDE_DIRECTORIES "${libiio_INCLUDE_DIR}"
+    INTERFACE_LINK_LIBRARIES "${libiio_LIBRARIES}"
+    INTERFACE_INCLUDE_DIRECTORIES "${libiio_INCLUDE_DIRS}"
   )
 endif()
 
