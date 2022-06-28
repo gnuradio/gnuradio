@@ -61,7 +61,8 @@ blockinterleaver_xx_impl<T>::blockinterleaver_xx_impl(
       d_is_packed(is_packed),
       d_unpacker(std::make_unique<gr::blocks::kernel::unpack_k_bits>(8)),
       d_packer(std::make_unique<gr::blocks::kernel::pack_k_bits>(8)),
-      d_interleaver(std::make_unique<block_interleaving>(interleaver_indices))
+      d_interleaver(
+          std::make_unique<gr::blocks::kernel::block_interleaving>(interleaver_indices))
 {
     if (!std::is_same<T, uint8_t>::value) {
         is_packed = false;

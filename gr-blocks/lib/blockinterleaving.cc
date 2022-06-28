@@ -15,6 +15,7 @@
 
 namespace gr {
 namespace blocks {
+namespace kernel {
 
 block_interleaving::block_interleaving(std::vector<size_t> interleaver_indices)
 {
@@ -54,6 +55,6 @@ void block_interleaving::set_interleaver_indices(
               });
 }
 
-
+} /* namespace kernel */
 } /* namespace blocks */
 } /* namespace gr */

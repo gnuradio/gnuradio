@@ -30,7 +30,7 @@ private:
 
     std::unique_ptr<gr::blocks::kernel::unpack_k_bits> d_unpacker;
     std::unique_ptr<gr::blocks::kernel::pack_k_bits> d_packer;
-    std::unique_ptr<gr::blocks::block_interleaving> d_interleaver;
+    std::unique_ptr<gr::blocks::kernel::block_interleaving> d_interleaver;
 
     std::vector<uint8_t> d_unpacked_original;
     std::vector<uint8_t> d_unpacked_interleaved;

@@ -16,7 +16,7 @@
 
 namespace gr {
 namespace blocks {
-
+namespace kernel {
 
 class BLOCKS_API block_interleaving
 {
@@ -50,7 +50,7 @@ private:
     void set_interleaver_indices(const std::vector<size_t>& interleaver_indices);
 };
 
-
+} /* namespace kernel */
 } /* namespace blocks */
 } /* namespace gr */
 
