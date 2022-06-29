@@ -69,9 +69,9 @@ jobs:
             cxxflags: -Werror -Wno-error=invalid-pch -Wno-error=deprecated-declarations
             ctest_args: '-E "qa_cpp_py_binding|qa_cpp_py_binding_set|qa_ctrlport_probes|qa_qtgui"'
             ldpath: /usr/local/lib64/
-          - distro: 'Fedora 36'
+          - distro: 'Fedora 36 (with 0xFE memory initialization)'
             containerid: 'gnuradio/ci:fedora-36-3.9'
-            cxxflags: -Werror -Wno-error=invalid-pch -Wno-error=deprecated-declarations
+            cxxflags: -Werror -Wno-error=invalid-pch -Wno-error=deprecated-declarations -ftrivial-auto-var-init=pattern
             ctest_args: '-E "qa_cpp_py_binding|qa_cpp_py_binding_set|qa_ctrlport_probes|qa_qtgui"'
             ldpath: /usr/local/lib64/
           # - distro: 'CentOS 8.4'
@@ -97,6 +97,8 @@ jobs:
       env:
         CXXFLAGS: ${{ matrix.cxxflags }}
       run: 'cd /build && cmake ${GITHUB_WORKSPACE} -DENABLE_DOXYGEN=OFF'
+    - name: Dump compile commands
+      run: 'cd /build && cat compile_commands.json'
     - name: Make
       run: 'cd /build && make -j2 -k'
     - name: Make Test
