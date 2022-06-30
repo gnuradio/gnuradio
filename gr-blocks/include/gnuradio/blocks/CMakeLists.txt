@@ -16,6 +16,8 @@ install(FILES
     and_const.h
     api.h
     argmax.h
+    blockinterleaver_xx.h
+    blockinterleaving.h
     control_loop.h
     correctiq.h
     correctiq_auto.h
