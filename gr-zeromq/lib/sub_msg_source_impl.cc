@@ -43,7 +43,11 @@ sub_msg_source_impl::sub_msg_source_impl(char* address, int timeout, bool bind)
         d_timeout = timeout * 1000;
     }
 
+#if USE_NEW_CPPZMQ_SET_GET
+    d_socket.set(zmq::sockopt::subscribe, "");
+#else
     d_socket.setsockopt(ZMQ_SUBSCRIBE, "", 0);
+#endif
 
     if (bind) {
         d_socket.bind(address);
@@ -76,7 +80,7 @@ void sub_msg_source_impl::readloop()
     while (!d_finished) {
 
         zmq::pollitem_t items[] = { { static_cast<void*>(d_socket), 0, ZMQ_POLLIN, 0 } };
-        zmq::poll(&items[0], 1, d_timeout);
+        zmq::poll(&items[0], 1, std::chrono::milliseconds{ d_timeout });
 
         //  If we got a reply, process
         if (items[0].revents & ZMQ_POLLIN) {

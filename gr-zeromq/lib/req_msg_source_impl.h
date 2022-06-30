@@ -40,10 +40,14 @@ public:
 
     std::string last_endpoint() override
     {
+#if USE_NEW_CPPZMQ_SET_GET
+        return d_socket.get(zmq::sockopt::last_endpoint);
+#else
         char addr[256];
         size_t addr_len = sizeof(addr);
         d_socket.getsockopt(ZMQ_LAST_ENDPOINT, addr, &addr_len);
         return std::string(addr, addr_len - 1);
+#endif
     }
 };
 
