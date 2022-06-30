@@ -50,7 +50,7 @@ int rep_sink_impl::work(int noutput_items,
         /* We only wait if its the first iteration, for the others we'll
          * let the scheduler retry */
         zmq::pollitem_t items[] = { { static_cast<void*>(d_socket), 0, ZMQ_POLLIN, 0 } };
-        zmq::poll(&items[0], 1, first ? d_timeout : 0);
+        zmq::poll(&items[0], 1, std::chrono::milliseconds{ first ? d_timeout : 0 });
 
         /* If we don't have anything, we're done */
         if (!(items[0].revents & ZMQ_POLLIN))
