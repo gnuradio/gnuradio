@@ -1,0 +1,377 @@
+options:
+  parameters:
+    author: Johannes Demel
+    catch_exceptions: 'True'
+    category: '[GRC Hier Blocks]'
+    cmake_opt: ''
+    comment: ''
+    copyright: ''
+    description: ''
+    gen_cmake: 'On'
+    gen_linking: dynamic
+    generate_options: qt_gui
+    hier_block_src_path: '.:'
+    id: blockinterleaver
+    max_nouts: '0'
+    output_language: python
+    placement: (0,0)
+    qt_qss_theme: ''
+    realtime_scheduling: ''
+    run: 'True'
+    run_command: '{python} -u {filename}'
+    run_options: prompt
+    sizing_mode: fixed
+    thread_safe_setters: ''
+    title: Block Interleaver Example
+    window_size: (1000,1000)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 8]
+    rotation: 0
+    state: enabled
+
+blocks:
+- name: interleaver_indices
+  id: variable
+  parameters:
+    comment: 'Example interleaver indices.
+
+      e.g. `np.random.permutation(64)`.'
+    value: np.reshape(np.arange(64), (4, 16)).T.flatten()
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [312, 12.0]
+    rotation: 0
+    state: enabled
+- name: samp_rate
+  id: variable
+  parameters:
+    comment: ''
+    value: '32000'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [184, 12]
+    rotation: 0
+    state: enabled
+- name: analog_random_source_bits
+  id: analog_random_source_x
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    max: '2'
+    maxoutbuf: '0'
+    min: '0'
+    minoutbuf: '0'
+    num_samps: '1000'
+    repeat: 'True'
+    type: byte
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [24, 188.0]
+    rotation: 0
+    state: true
+- name: blocks_blockinterleaver_bb
+  id: blocks_blockinterleaver_xx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: unpacked bits interleaver.
+    interleaver_indices: interleaver_indices
+    interleaver_mode: interleave
+    is_packed: 'False'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: byte
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [400, 196.0]
+    rotation: 0
+    state: true
+- name: blocks_blockinterleaver_bb_packed
+  id: blocks_blockinterleaver_xx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: Packed (de)interleaver for bit input only.
+    interleaver_indices: interleaver_indices
+    interleaver_mode: deinterleave
+    is_packed: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: byte
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [664, 268.0]
+    rotation: 180
+    state: true
+- name: blocks_blockinterleaver_ff
+  id: blocks_blockinterleaver_xx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: Float deinterleaver with derived de-interleaver indices.
+    interleaver_indices: interleaver_indices
+    interleaver_mode: deinterleave
+    is_packed: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: float
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [768, 468.0]
+    rotation: 0
+    state: true
+- name: blocks_char_to_float_bb_deinterleaved
+  id: blocks_char_to_float
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    scale: '1'
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [840, 380.0]
+    rotation: 0
+    state: true
+- name: blocks_char_to_float_ff_interleaved
+  id: blocks_char_to_float
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    scale: '1'
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [624, 476.0]
+    rotation: 0
+    state: true
+- name: blocks_char_to_float_source
+  id: blocks_char_to_float
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    scale: '1'
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [400, 148.0]
+    rotation: 0
+    state: true
+- name: blocks_packed_to_unpacked_deinterleaved
+  id: blocks_packed_to_unpacked_xx
+  parameters:
+    affinity: ''
+    alias: ''
+    bits_per_chunk: '1'
+    comment: ''
+    endianness: gr.GR_MSB_FIRST
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_ports: '1'
+    type: byte
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [664, 372.0]
+    rotation: 0
+    state: true
+- name: blocks_throttle_0
+  id: blocks_throttle
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    ignoretag: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    samples_per_second: samp_rate
+    type: byte
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [184, 212.0]
+    rotation: 0
+    state: true
+- name: blocks_unpacked_to_packed_interleaved
+  id: blocks_unpacked_to_packed_xx
+  parameters:
+    affinity: ''
+    alias: ''
+    bits_per_chunk: '1'
+    comment: ''
+    endianness: gr.GR_MSB_FIRST
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_ports: '1'
+    type: byte
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [664, 204.0]
+    rotation: 0
+    state: true
+- name: import_0
+  id: import
+  parameters:
+    alias: ''
+    comment: ''
+    imports: import numpy as np
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [40, 108.0]
+    rotation: 0
+    state: true
+- name: qtgui_time_sink_x_0
+  id: qtgui_time_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'False'
+    axislabels: 'True'
+    color1: blue
+    color10: dark blue
+    color2: red
+    color3: green
+    color4: black
+    color5: cyan
+    color6: magenta
+    color7: yellow
+    color8: dark red
+    color9: dark green
+    comment: ''
+    ctrlpanel: 'False'
+    entags: 'True'
+    grid: 'True'
+    gui_hint: ''
+    label1: source
+    label10: Signal 10
+    label2: after packed deinterleaver
+    label3: after float deinterleaver
+    label4: Signal 4
+    label5: Signal 5
+    label6: Signal 6
+    label7: Signal 7
+    label8: Signal 8
+    label9: Signal 9
+    legend: 'True'
+    marker1: '0'
+    marker10: '-1'
+    marker2: '7'
+    marker3: '-1'
+    marker4: '-1'
+    marker5: '-1'
+    marker6: '-1'
+    marker7: '-1'
+    marker8: '-1'
+    marker9: '-1'
+    name: '"Random bits and deinterleaved streams"'
+    nconnections: '3'
+    size: '128'
+    srate: samp_rate
+    stemplot: 'False'
+    style1: '1'
+    style10: '1'
+    style2: '1'
+    style3: '1'
+    style4: '1'
+    style5: '1'
+    style6: '1'
+    style7: '1'
+    style8: '1'
+    style9: '1'
+    tr_chan: '0'
+    tr_delay: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_slope: qtgui.TRIG_SLOPE_POS
+    tr_tag: '""'
+    type: float
+    update_time: '0.10'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    ylabel: Bit Level
+    ymax: '1.1'
+    ymin: '-0.1'
+    yunit: '"bit"'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1072, 152.0]
+    rotation: 0
+    state: true
+
+connections:
+- [analog_random_source_bits, '0', blocks_throttle_0, '0']
+- [blocks_blockinterleaver_bb, '0', blocks_char_to_float_ff_interleaved, '0']
+- [blocks_blockinterleaver_bb, '0', blocks_unpacked_to_packed_interleaved, '0']
+- [blocks_blockinterleaver_bb_packed, '0', blocks_packed_to_unpacked_deinterleaved,
+  '0']
+- [blocks_blockinterleaver_ff, '0', qtgui_time_sink_x_0, '2']
+- [blocks_char_to_float_bb_deinterleaved, '0', qtgui_time_sink_x_0, '1']
+- [blocks_char_to_float_ff_interleaved, '0', blocks_blockinterleaver_ff, '0']
+- [blocks_char_to_float_source, '0', qtgui_time_sink_x_0, '0']
+- [blocks_packed_to_unpacked_deinterleaved, '0', blocks_char_to_float_bb_deinterleaved,
+  '0']
+- [blocks_throttle_0, '0', blocks_blockinterleaver_bb, '0']
+- [blocks_throttle_0, '0', blocks_char_to_float_source, '0']
+- [blocks_unpacked_to_packed_interleaved, '0', blocks_blockinterleaver_bb_packed,
+  '0']
+
+metadata:
+  file_format: 1
+  grc_version: v3.11.0.0git-151-ga7ee4c64

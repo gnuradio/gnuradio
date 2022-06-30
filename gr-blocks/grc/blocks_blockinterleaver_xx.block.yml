@@ -1,0 +1,46 @@
+id: blocks_blockinterleaver_xx
+label: Block interleaver
+flags: [ python, cpp ]
+
+parameters:
+-   id: type
+    label: IO Type
+    dtype: enum
+    options: [byte, complex, float, int, short]
+    option_attributes:
+        fcn: [bb, cc, ff, ii, ss]
+    hide: part
+-   id: interleaver_indices
+    label: Interleaver indices
+    dtype: int_vector
+    default: '[1, 2, 0]'
+-   id: interleaver_mode
+    label: Mode
+    dtype: enum
+    options: [interleave, deinterleave]
+    option_attributes:
+        fcn: [True, False]
+-   id: is_packed
+    label: Packed bytes
+    dtype: bool
+    default: False
+    hide: ${ 'all' if type != 'byte' else 'none' }
+
+inputs:
+-   domain: stream
+    dtype: ${ type }
+
+outputs:
+-   domain: stream
+    dtype: ${ type }
+
+templates:
+    imports: from gnuradio import blocks
+    make: blocks.blockinterleaver_${type.fcn}(${interleaver_indices}, ${interleaver_mode.fcn}, ${ is_packed if type == 'byte' else False })
+
+cpp_templates:
+    includes: ['#include <gnuradio/blockinterleaver_xx.h>']
+    declarations: 'blocks::blockinterleaver_${type.fcn}::sptr ${id};'
+    make: 'this->${id} = blocks::blockinterleaver_${type.fcn}::make(${interleaver_indices}, ${interleaver_mode.fcn}, ${ is_packed if type == "byte" else false });'
+
+file_format: 1
