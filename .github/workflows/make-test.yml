@@ -64,6 +64,11 @@ jobs:
             cxxflags: -Werror -Wno-error=invalid-pch
             ctest_args: '-E "qa_cpp_py_binding|qa_cpp_py_binding_set|qa_ctrlport_probes|qa_qtgui|metainfo_test"'
             ldpath:
+          - distro: 'Ubuntu 22.04'
+            containerid: 'gnuradio/ci:ubuntu-22.04-3.9'
+            cxxflags: -Werror -Wno-error=invalid-pch
+            ctest_args: '-E "qa_cpp_py_binding|qa_cpp_py_binding_set|qa_ctrlport_probes|qa_qtgui|qa_polar_..coder_(sc_)?systematic"'
+            ldpath:
           - distro: 'Fedora 35'
             containerid: 'gnuradio/ci:fedora-35-3.9'
             cxxflags: -Werror -Wno-error=invalid-pch -Wno-error=deprecated-declarations
