@@ -27,6 +27,8 @@ set(BLOCKS_SOURCES
     and_blk_impl.cc
     and_const_impl.cc
     argmax_impl.cc
+    blockinterleaver_xx_impl.cc
+    blockinterleaving.cc
     correctiq_auto_impl.cc
     correctiq_impl.cc
     correctiq_man_impl.cc

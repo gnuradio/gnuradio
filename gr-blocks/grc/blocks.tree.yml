@@ -132,6 +132,7 @@
   - blocks_repeat
   - blocks_regenerate_bb
   - blocks_stretch_ff
+  - blocks_blockinterleaver_xx
 - Stream Tag Tools:
   - blocks_tag_debug
   - blocks_tag_gate
