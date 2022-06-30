@@ -165,7 +165,7 @@ if not install_dir:
     else:
         scheme = 'posix_prefix'
     install_dir = sysconfig.get_path('platlib', scheme)
-    prefix = sysconfig.get_path('data')
+    prefix = sysconfig.get_path('data', scheme)
 
 #strip the prefix to return a relative path
 print(os.path.relpath(install_dir, prefix))"
