@@ -40,8 +40,11 @@ pub_msg_sink_impl::pub_msg_sink_impl(char* address, int timeout, bool bind)
     }
 
     int time = 0;
+#if USE_NEW_CPPZMQ_SET_GET
+    d_socket.set(zmq::sockopt::linger, time);
+#else
     d_socket.setsockopt(ZMQ_LINGER, &time, sizeof(time));
-
+#endif
     if (bind) {
         d_socket.bind(address);
     } else {
