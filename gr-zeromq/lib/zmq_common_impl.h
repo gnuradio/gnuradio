@@ -20,4 +20,11 @@
 #define USE_NEW_CPPZMQ_SEND_RECV 0
 #endif
 
+#if defined(CPPZMQ_VERSION) && defined(ZMQ_MAKE_VERSION) && \
+    CPPZMQ_VERSION >= ZMQ_MAKE_VERSION(4, 8, 0)
+#define USE_NEW_CPPZMQ_SET_GET 1
+#else
+#define USE_NEW_CPPZMQ_SET_GET 0
+#endif
+
 #endif /* INCLUDED_ZEROMQ_ZMQ_COMMON_IMPL_H */

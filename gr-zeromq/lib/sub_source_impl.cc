@@ -44,7 +44,11 @@ sub_source_impl::sub_source_impl(size_t itemsize,
       base_source_impl(ZMQ_SUB, itemsize, vlen, address, timeout, pass_tags, hwm, key)
 {
     /* Subscribe */
+#if USE_NEW_CPPZMQ_SET_GET
+    d_socket.set(zmq::sockopt::subscribe, key);
+#else
     d_socket.setsockopt(ZMQ_SUBSCRIBE, key.c_str(), key.size());
+#endif
 }
 
 int sub_source_impl::work(int noutput_items,
