@@ -40,7 +40,7 @@ from .canvas.connection import Connection
 from .. import base
 from ...core.FlowGraph import FlowGraph as CoreFlowgraph
 from .. import Utils
-from .undoable_actions import MoveCommand
+from .undoable_actions import ChangeStateCommand
 
 # Logging
 log = logging.getLogger(__name__)
@@ -215,12 +215,12 @@ class Flowgraph(QtWidgets.QGraphicsScene, base.Component, CoreFlowgraph):
         for block in self.selected_blocks() + [clicked_block]:
             block.registerMoveStarting()
 
-    def registerMoveCommand(self, block):
+    def registerChangeStateCommand(self, block):
         log.debug('move_cmd')
         for block in self.selected_blocks():
             block.registerMoveEnding()
-        moveCommand = MoveCommand(self, self.selected_blocks())
-        self.undoStack.push(moveCommand)
+        command = ChangeStateCommand(self, self.selected_blocks())
+        self.undoStack.push(command)
         self.app.MainWindow.updateActions()
 
     def mousePressEvent(self,  event):

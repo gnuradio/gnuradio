@@ -434,16 +434,27 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
     def registerMoveStarting(self):
         print(f"{self} moving")
         self.moving = True
-        self.movingFrom = self.pos()
+        self.fromStates = self.states
+
+    def setStates(self, states):
+        self.states = states
+        try:
+            x,y = states['coordinate']
+            print(f"{x}, {y}")
+            self.setPos(x, y)
+        except:
+            coor = states['coordinate']
+            print(coor)
+            self.setPos(coor)
 
     def registerMoveEnding(self):
         print(f"{self} moved")
         self.moving = False
-        self.movingTo = self.pos()
+        self.toStates = self.states
 
     def mouseReleaseEvent(self, e):
         if not self.movingFrom == self.pos():
-            self.parent.registerMoveCommand(self)
+            self.parent.registerChangeStateCommand(self)
         super(self.__class__, self).mouseReleaseEvent(e)
 
     def mousePressEvent(self, e):
