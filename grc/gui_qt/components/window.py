@@ -33,7 +33,7 @@ from PyQt5.QtGui import QStandardItemModel
 # Custom modules
 from . import FlowgraphView
 from .. import base
-from . import RotateCommand
+from .undoable_actions import ChangeStateCommand
 
 # Logging
 log = logging.getLogger(__name__)
