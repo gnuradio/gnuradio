@@ -393,7 +393,8 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
         painter.setBrush(QtGui.QBrush(self._bg_color))
 
         ARC = 10
-        painter.drawRoundedRect(0, 0, self.width, self.height, ARC, ARC);
+        rect = QtCore.QRectF(0, 0, self.width, self.height)
+        painter.drawRoundedRect(rect, ARC, ARC);
         painter.setPen(QtGui.QPen(1))
 
         # Draw block label text

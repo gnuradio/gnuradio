@@ -43,11 +43,11 @@ class BlockSearchBar(QtWidgets.QLineEdit):
     def add_block(self):
         label = self.text()
         if label in self.parent._block_tree_flat:
-            scene = self.parent.app.MainWindow.flowgraph.scene
-            block = scene.new_block(self.parent._block_tree_flat[label].key)
-            scene.addItem(block)
+            fg = self.parent.app.MainWindow.currentFlowgraph
+            block = fg.new_block(self.parent._block_tree_flat[label].key)
+            fg.addItem(block)
             block.moveToTop()
-            scene.update()
+            fg.update()
             # TODO: Move it to the middle of the view
             self.setText('')
             self.parent.populate_tree(self.parent._block_tree)
