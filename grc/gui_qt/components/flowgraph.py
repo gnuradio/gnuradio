@@ -461,9 +461,6 @@ class FlowgraphView(QtWidgets.QGraphicsView, base.Component): # added base.Compo
             self.mousePressed = False
         super(FlowgraphView, self).mouseReleaseEvent(event)
 
-    def mouseDoubleClickEvent(self, event): # Will be used to open up dialog box of a block
-        pass
-
     def keyPressEvent(self, event):
         super(FlowgraphView, self).keyPressEvent(event)
 
