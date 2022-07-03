@@ -80,3 +80,19 @@ def test_add_null_source(qtbot, qapp_cls):
     keystroke(qtbot, qapp_cls, QtCore.Qt.Key_Enter)
     qtbot.wait(100)
     assert 'blocks_null_source' in [block.key for block in qapp_cls.MainWindow.currentFlowgraph.blocks]
+
+
+def test_open_properties(qtbot, qapp_cls):
+    qtbot.wait(1000)
+    qtbot.mouseDClick(
+            qapp_cls.MainWindow.currentView.viewport(), 
+            QtCore.Qt.LeftButton, 
+            pos=qapp_cls.MainWindow.currentView.mapFromScene(qapp_cls.MainWindow.currentFlowgraph.options_block.pos()+QtCore.QPoint(15,15)))
+    qtbot.wait(500)
+    keystroke(qtbot, qapp_cls, QtCore.Qt.Key_Enter)
+    assert 'blocks_null_source' in [block.key for block in qapp_cls.MainWindow.currentFlowgraph.blocks]
+
+def test_quit(qtbot, qapp_cls):
+    qapp_cls.MainWindow.actions["exit"].trigger()
+    qtbot.wait(1000)
+    assert True

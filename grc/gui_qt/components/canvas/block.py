@@ -29,6 +29,7 @@ class PropsDialog(QtWidgets.QDialog):
         super().__init__()
         self.setMinimumSize(600, 400)
         self._block = parent_block
+        self.setModal(True)
 
         self.setWindowTitle(f"Properties: {self._block.label}")
 
@@ -471,11 +472,14 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
     def mouseDoubleClickEvent(self, e):
         log.debug(f"Detected double click on block {self.name}, opening PropsDialog")
         super(self.__class__, self).mouseDoubleClickEvent(e)
-        props = PropsDialog(self)
+        self.props_dialog = PropsDialog(self)
+        self.props_dialog.show()
+        '''
         if props.exec():
             log.debug(f"Pressed Ok on block {self.name}'s PropsDialog")
         else:
             log.debug(f"Pressed Cancel on block {self.name}'s PropsDialog")
+        '''
 
     def import_data(self, name, states, parameters, **_):
         CoreBlock.import_data(self, name, states, parameters, **_)

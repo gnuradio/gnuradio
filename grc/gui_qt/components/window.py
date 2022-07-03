@@ -155,6 +155,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
     @property
     def currentFlowgraph(self):
+        #something is fishy here
         return self.tabWidget.currentWidget().flowgraph
 
     def createActions(self, actions):
