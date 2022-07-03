@@ -50,8 +50,8 @@ class PropsDialog(QtWidgets.QDialog):
         for cat in unique_categories():
             qvb = QtWidgets.QGridLayout()
             qvb.setAlignment(QtCore.Qt.AlignTop)
-            qvb.setVerticalSpacing(5.0)
-            qvb.setHorizontalSpacing(20.0)
+            qvb.setVerticalSpacing(5)
+            qvb.setHorizontalSpacing(20)
             i = 0
             for param in self._block.params.values():
                 if param.category == cat and param.hide != 'all':
