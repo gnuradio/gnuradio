@@ -43,9 +43,8 @@ public:
      *        this is the complex source, this parameter is split
      *        among the real and imaginary parts:
      *        <pre>(ampl/sqrt(2))x + j(ampl/sqrt(2))y</pre>
-     * \param seed seed for random generators. Note that for uniform
-     *        and Gaussian distributions, this should be a negative
-     *        number.
+     * \param seed seed for random generators. seed = 0 initializes
+     *        the random number generator with the system time.
      * \param samples Number of samples to pre-generate. For performance
      *        reasons, prefer a power of 2.
      */
