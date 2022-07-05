@@ -26,7 +26,7 @@ class noise_source_impl : public noise_source<T>
     gr::random d_rng;
 
 public:
-    noise_source_impl(noise_type_t type, float ampl, long seed = 0);
+    noise_source_impl(noise_type_t type, float ampl, uint64_t seed = 0);
 
     void set_type(noise_type_t type) override;
     void set_amplitude(float ampl) override;

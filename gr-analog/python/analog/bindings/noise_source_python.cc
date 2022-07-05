@@ -14,7 +14,11 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(noise_source.h)                                        */
+<<<<<<< HEAD
 /* BINDTOOL_HEADER_FILE_HASH(0071cb1f3a9d94514520262c90a968e9)                     */
+=======
+/* BINDTOOL_HEADER_FILE_HASH(65566b2708852e8118e54a18aed0a292)                     */
+>>>>>>> analog: Change noise_source seed type to uint64_t
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
