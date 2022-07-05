@@ -81,7 +81,6 @@ def test_add_null_source(qtbot, qapp_cls):
     qtbot.wait(100)
     assert 'blocks_null_source' in [block.key for block in qapp_cls.MainWindow.currentFlowgraph.blocks]
 
-
 def test_open_properties(qtbot, qapp_cls):
     qtbot.wait(1000)
     qtbot.mouseDClick(
@@ -89,10 +88,68 @@ def test_open_properties(qtbot, qapp_cls):
             QtCore.Qt.LeftButton, 
             pos=qapp_cls.MainWindow.currentView.mapFromScene(qapp_cls.MainWindow.currentFlowgraph.options_block.pos()+QtCore.QPoint(15,15)))
     qtbot.wait(500)
+    assert True
+
+def test_change_id(qtbot, qapp_cls):
+    qtbot.mouseDClick(qapp_cls.MainWindow.currentFlowgraph.options_block.props_dialog.edit_params[1],
+            QtCore.Qt.LeftButton)
+    type_text(qtbot, qapp_cls, "changed")
+    qtbot.wait(500)
     keystroke(qtbot, qapp_cls, QtCore.Qt.Key_Enter)
-    assert 'blocks_null_source' in [block.key for block in qapp_cls.MainWindow.currentFlowgraph.blocks]
+    qtbot.wait(2000)
+    val = qapp_cls.MainWindow.currentFlowgraph.options_block.params['title'].value
+    assert val == "Not titled changed"
+
+def test_rotate_block(qtbot, qapp_cls):
+    block = qapp_cls.MainWindow.currentFlowgraph.options_block
+    old_rotation = block.states['rotation']
+    keystroke(qtbot, qapp_cls, QtCore.Qt.Key_Left)
+    qtbot.wait(500)
+    new_rotation = block.states['rotation']
+    assert new_rotation == old_rotation - 90
+
+def test_disable_enable(qtbot, qapp_cls):
+    assert False
+
+def test_create_connection(qtbot, qapp_cls):
+    fg = qapp_cls.MainWindow.currentFlowgraph
+    assert len(fg.connections) == 0
+    # Insert code here
+    assert len(fg.connections) > 0
+
+
+def test_bypass(qtbot, qapp_cls):
+    assert False
+
+'''
+# Looks like this won't work with pytest-qt, at least not this way
+def test_move_block(qtbot, qapp_cls):
+    block = qapp_cls.MainWindow.currentFlowgraph.options_block
+    qtbot.wait(500)
+    qtbot.mousePress(
+            qapp_cls.MainWindow.currentView.viewport(), 
+            QtCore.Qt.LeftButton, 
+            pos=qapp_cls.MainWindow.currentView.mapFromScene(block.pos()+QtCore.QPoint(15,15)))
+    qtbot.wait(500)
+    qtbot.mouseMove(
+            qapp_cls.MainWindow.currentView.viewport(), 
+            pos=qapp_cls.MainWindow.currentView.mapFromScene(block.pos()+QtCore.QPoint(15,15)))
+    qtbot.wait(500)
+    qtbot.mouseMove(
+            qapp_cls.MainWindow.currentView.viewport(), 
+            pos=qapp_cls.MainWindow.currentView.mapFromScene(block.pos()+QtCore.QPoint(150,150)))
+    qtbot.wait(500)
+    qtbot.mousePress(
+            qapp_cls.MainWindow.currentView.viewport(), 
+            QtCore.Qt.LeftButton, 
+            pos=qapp_cls.MainWindow.currentView.mapFromScene(block.pos()+QtCore.QPoint(200,200)))
+    qtbot.wait(500)
+    new_rotation = block.states['rotation']
+    assert True
+'''
 
 def test_quit(qtbot, qapp_cls):
     qapp_cls.MainWindow.actions["exit"].trigger()
     qtbot.wait(1000)
     assert True
+
