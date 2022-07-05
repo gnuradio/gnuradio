@@ -1028,12 +1028,12 @@ void block::setup_pc_rpc()
 
 std::string block::identifier() const
 {
-    return d_name + "(" + std::to_string(d_unique_id) + ")";
+    return fmt::format("{}({})", d_name, d_unique_id);
 }
 
 std::ostream& operator<<(std::ostream& os, const block* m)
 {
-    os << "<block " << m->identifier() << ">";
+    os << fmt::format("<block {}>", m->identifier());
     return os;
 }
 
