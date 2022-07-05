@@ -22,13 +22,13 @@ namespace analog {
 
 template <class T>
 typename noise_source<T>::sptr
-noise_source<T>::make(noise_type_t type, float ampl, long seed)
+noise_source<T>::make(noise_type_t type, float ampl, uint64_t seed)
 {
     return gnuradio::make_block_sptr<noise_source_impl<T>>(type, ampl, seed);
 }
 
 template <class T>
-noise_source_impl<T>::noise_source_impl(noise_type_t type, float ampl, long seed)
+noise_source_impl<T>::noise_source_impl(noise_type_t type, float ampl, uint64_t seed)
     : sync_block("noise_source",
                  io_signature::make(0, 0, 0),
                  io_signature::make(1, 1, sizeof(T))),
@@ -39,7 +39,9 @@ noise_source_impl<T>::noise_source_impl(noise_type_t type, float ampl, long seed
 }
 
 template <>
-noise_source_impl<gr_complex>::noise_source_impl(noise_type_t type, float ampl, long seed)
+noise_source_impl<gr_complex>::noise_source_impl(noise_type_t type,
+                                                 float ampl,
+                                                 uint64_t seed)
     : sync_block("noise_source",
                  io_signature::make(0, 0, 0),
                  io_signature::make(1, 1, sizeof(gr_complex))),

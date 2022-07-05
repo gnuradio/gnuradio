@@ -44,7 +44,7 @@ public:
      * \param seed seed for random generators. seed = 0 initializes
      *        the random number generator with the system time.
      */
-    static sptr make(noise_type_t type, float ampl, long seed = 0);
+    static sptr make(noise_type_t type, float ampl, uint64_t seed = 0);
 
     /*!
      * Set the noise type. Nominally from the
