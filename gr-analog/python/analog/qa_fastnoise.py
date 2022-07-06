@@ -49,6 +49,30 @@ class test_fastnoise_source(gr_unittest.TestCase):
         tb.run()
         return numpy.array(sink.data())
 
+    def test_000_real_negative_seed_instantiation(self):
+        _ = analog.fastnoise_source_f(analog.noise_type_t.GR_GAUSSIAN,
+                                      2.0,
+                                      -666,
+                                      128)
+
+    def test_000_complex_negative_seed_instantiation(self):
+        _ = analog.fastnoise_source_c(analog.noise_type_t.GR_GAUSSIAN,
+                                      2.0,
+                                      -666,
+                                      128)
+
+    def test_000_real_64bit_seed_instantiation(self):
+        _ = analog.fastnoise_source_f(analog.noise_type_t.GR_GAUSSIAN,
+                                      2.0,
+                                      0xFFFFFFFFFFFFFFFF,
+                                      128)
+
+    def test_000_complex_64bit_seed_instantiation(self):
+        _ = analog.fastnoise_source_f(analog.noise_type_t.GR_GAUSSIAN,
+                                      2.0,
+                                      0xFFFFFFFFFFFFFFFF,
+                                      128)
+
     def test_001_real_uniform_moments(self):
 
         data = self.run_test_real(analog.GR_UNIFORM)
