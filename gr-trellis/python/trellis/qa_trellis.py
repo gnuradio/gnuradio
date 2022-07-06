@@ -211,7 +211,7 @@ class trellis_tb(gr.top_block):
         # CHANNEL
         add = blocks.add_cc()
         noise = analog.noise_source_c(
-            analog.GR_GAUSSIAN, math.sqrt(
+            analog.noise_type_t.GR_GAUSSIAN, math.sqrt(
                 N0 / 2), seed)
 
         # RX

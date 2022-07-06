@@ -1,5 +1,6 @@
 /*
  * Copyright 2020 Free Software Foundation, Inc.
+ * Copyright 2022 Marcus Müller
  *
  * This file is part of GNU Radio
  *
@@ -35,10 +36,32 @@ void bind_fastnoise_source_template(py::module& m, const char* classname)
                gr::block,
                gr::basic_block,
                std::shared_ptr<fastnoise_source>>(m, classname)
-        .def(py::init(&gr::analog::fastnoise_source<T>::make),
+
+        /* while we do want to have an uint64_t seed API in C++, Pybind will not allow us
+         * to pass in negative ints that way. If we instead settle on a wrapper that's
+         * int64_t, we only get positive ints up to 2**63-1. To get up to 2**64-1, we need
+         * to also explicitly declare an uint64_t wrapper, and forbid automatic type
+         * conversion.
+         */
+        .def(py::init([](gr::analog::noise_type_t type,
+                         float ampl,
+                         uint64_t seed,
+                         size_t samples) {
+                 return gr::analog::fastnoise_source<T>::make(type, ampl, seed, samples);
+             }),
              py::arg("type"),
              py::arg("ampl"),
-             py::arg("seed") = 0,
+             py::arg("seed").noconvert(true) = 0,
+             py::arg("samples") = 1024 * 16)
+        .def(py::init([](gr::analog::noise_type_t type,
+                         float ampl,
+                         int64_t seed,
+                         size_t samples) {
+                 return gr::analog::fastnoise_source<T>::make(type, ampl, seed, samples);
+             }),
+             py::arg("type"),
+             py::arg("ampl"),
+             py::arg("seed").noconvert(true) = 0,
              py::arg("samples") = 1024 * 16)
 
         .def("sample", &fastnoise_source::sample)
@@ -48,9 +71,7 @@ void bind_fastnoise_source_template(py::module& m, const char* classname)
         .def("set_type", &fastnoise_source::set_type, py::arg("type"))
         .def("set_amplitude", &fastnoise_source::set_amplitude, py::arg("amplitude"))
         .def("type", &fastnoise_source::type)
-        .def("amplitude", &fastnoise_source::amplitude)
-
-        ;
+        .def("amplitude", &fastnoise_source::amplitude);
 }
 
 void bind_fastnoise_source(py::module& m)

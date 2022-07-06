@@ -1,5 +1,6 @@
 /*
  * Copyright 2020 Free Software Foundation, Inc.
+ * Copyright 2022 Marcus Müller
  *
  * This file is part of GNU Radio
  *
@@ -14,11 +15,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(noise_source.h)                                        */
-<<<<<<< HEAD
-/* BINDTOOL_HEADER_FILE_HASH(0071cb1f3a9d94514520262c90a968e9)                     */
-=======
-/* BINDTOOL_HEADER_FILE_HASH(65566b2708852e8118e54a18aed0a292)                     */
->>>>>>> analog: Change noise_source seed type to uint64_t
+/* BINDTOOL_HEADER_FILE_HASH(1225d21c7d3f1525c34938764ac179bf)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -39,10 +36,18 @@ void bind_noise_source_template(py::module& m, const char* classname)
                gr::block,
                gr::basic_block,
                std::shared_ptr<noise_source>>(m, classname)
-        .def(py::init(&gr::analog::noise_source<T>::make),
+        .def(py::init([](gr::analog::noise_type_t type, float ampl, int64_t seed) {
+                 return gr::analog::noise_source<T>::make(type, ampl, seed);
+             }),
              py::arg("type"),
              py::arg("ampl"),
-             py::arg("seed") = 0)
+             py::arg("seed").noconvert(true) = 0)
+        .def(py::init([](gr::analog::noise_type_t type, float ampl, uint64_t seed) {
+                 return gr::analog::noise_source<T>::make(type, ampl, seed);
+             }),
+             py::arg("type"),
+             py::arg("ampl"),
+             py::arg("seed").noconvert(true) = 0)
 
         .def("set_type", &noise_source::set_type, py::arg("type"))
         .def("set_amplitude", &noise_source::set_amplitude, py::arg("ampl"))
