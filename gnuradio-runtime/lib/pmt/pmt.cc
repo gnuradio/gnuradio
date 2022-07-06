@@ -1,16 +1,13 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2006,2009,2010 Free Software Foundation, Inc.
+ * Copyright 2022 Marcus Müller
  *
  * This file is part of GNU Radio
  *
  * SPDX-License-Identifier: GPL-3.0-or-later
  *
  */
-
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
 
 #include "pmt_int.h"
 #include <gnuradio/messages/msg_accepter.h>
