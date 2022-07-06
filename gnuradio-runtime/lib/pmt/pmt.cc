@@ -13,6 +13,7 @@
 #include <gnuradio/messages/msg_accepter.h>
 #include <pmt/pmt.h>
 #include <pmt/pmt_pool.h>
+#include <string_view>
 #include <cstdio>
 #include <cstring>
 #include <mutex>
@@ -145,14 +146,14 @@ static std::vector<pmt_t>* get_symbol_hash_table()
     return &s_symbol_hash_table;
 }
 
-pmt_symbol::pmt_symbol(const std::string& name) : d_name(name) {}
+pmt_symbol::pmt_symbol(std::string_view name) : d_name(name) {}
 
 
 bool is_symbol(const pmt_t& obj) { return obj->is_symbol(); }
 
-pmt_t string_to_symbol(const std::string& name)
+pmt_t string_to_symbol(std::string_view name)
 {
-    unsigned hash = std::hash<std::string>()(name) % get_symbol_hash_table_size();
+    unsigned hash = std::hash<std::string_view>{}(name) % get_symbol_hash_table_size();
 
     // Does a symbol with this name already exist?
     for (pmt_t sym = (*get_symbol_hash_table())[hash]; sym; sym = _symbol(sym)->next()) {
@@ -178,7 +179,7 @@ pmt_t string_to_symbol(const std::string& name)
 }
 
 // alias...
-pmt_t intern(const std::string& name) { return string_to_symbol(name); }
+pmt_t intern(std::string_view name) { return string_to_symbol(name); }
 
 const std::string symbol_to_string(const pmt_t& sym)
 {

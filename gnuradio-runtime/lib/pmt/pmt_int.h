@@ -11,6 +11,7 @@
 #define INCLUDED_PMT_INT_H
 
 #include <pmt/pmt.h>
+#include <string_view>
 #include <any>
 
 /*
@@ -38,7 +39,7 @@ class pmt_symbol : public pmt_base
     pmt_t d_next;
 
 public:
-    pmt_symbol(const std::string& name);
+    pmt_symbol(std::string_view name);
     //~pmt_symbol(){}
 
     bool is_symbol() const override { return true; }
