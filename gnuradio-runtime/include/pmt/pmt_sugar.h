@@ -17,11 +17,12 @@
  */
 
 #include <gnuradio/messages/msg_accepter.h>
+#include <string_view>
 
 namespace pmt {
 
 //! Make pmt symbol
-static inline pmt_t mp(const std::string& s) { return string_to_symbol(s); }
+static inline pmt_t mp(std::string_view s) { return string_to_symbol(s); }
 
 //! Make pmt symbol
 static inline pmt_t mp(const char* s) { return string_to_symbol(s); }

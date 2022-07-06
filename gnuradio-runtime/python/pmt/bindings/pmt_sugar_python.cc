@@ -21,7 +21,7 @@ namespace py = pybind11;
 
 void bind_pmt_sugar(py::module& m)
 {
-    m.def("mp", (pmt::pmt_t(*)(std::string const&)) & ::pmt::mp, py::arg("s"), D(mp, 0));
+    m.def("mp", (pmt::pmt_t(*)(std::string_view)) & ::pmt::mp, py::arg("s"), D(mp, 0));
 
 
     m.def("mp", (pmt::pmt_t(*)(char const*)) & ::pmt::mp, py::arg("s"), D(mp, 1));
