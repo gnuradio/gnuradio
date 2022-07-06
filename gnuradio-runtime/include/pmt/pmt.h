@@ -637,6 +637,25 @@ PMT_API pmt_t dcons(const pmt_t& x, const pmt_t& y);
 //! Make an empty dictionary
 PMT_API pmt_t make_dict();
 
+/*!
+ * \brief Make a dictionary from an existing mapping type.
+ * The constraint for this to work is the ability for the map_t to iterate over [key,
+ * value] pairs, that is, to be able to be used in a
+ *
+ * <pre>for(const auto& [key, val] : prototype)<pre>
+ *
+ * loop.
+ */
+template <typename map_t>
+pmt_t dict_from_mapping(const map_t& prototype)
+{
+    pmt_t protodict = make_dict();
+    for (const auto& [key, value] : prototype) {
+        protodict = dict_add(protodict, key, value);
+    }
+    return protodict;
+}
+
 //! Return a new dictionary with \p key associated with \p value.
 PMT_API pmt_t dict_add(const pmt_t& dict, const pmt_t& key, const pmt_t& value);
 
