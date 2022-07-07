@@ -15,7 +15,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(logger.h)                                                  */
-/* BINDTOOL_HEADER_FILE_HASH(132b88712cdbc1c5b5acee7ee9b546f5)                     */
+/* BINDTOOL_HEADER_FILE_HASH(b62b327197c0c1d4d5c662725810d1b6)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -110,7 +110,15 @@ void bind_logger(py::module& m)
             "emerg",
             [](logger& log, const std::string& msg) { log.emerg("{:s}", msg); },
             py::arg("msg"),
-            D(logger, emerg));
+            D(logger, emerg))
+        .def(
+            "log",
+            [](logger& log, spdlog::level::level_enum level, const std::string& msg) {
+                log.log(level, "{:s}", msg);
+            },
+            py::arg("level"),
+            py::arg("msg"),
+            D(logger, log));
 
     using logging = gr::logging;
 

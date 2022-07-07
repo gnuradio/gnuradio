@@ -31,6 +31,8 @@ static const char* __doc_gr_logger_alert = R"doc()doc";
 static const char* __doc_gr_logger_fatal = R"doc()doc";
 static const char* __doc_gr_logger_emerg = R"doc()doc";
 
+static const char* __doc_gr_logger_log = R"doc()doc";
+
 static const char* __doc_gr_logging_singleton = R"doc()doc";
 static const char* __doc_gr_logging_default_level = R"doc()doc";
 static const char* __doc_gr_logging_set_default_level = R"doc()doc";
