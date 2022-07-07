@@ -1,6 +1,7 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2005,2012-2013 Free Software Foundation, Inc.
+ * Copyright 2022,2023 Marcus Müller
  *
  * This file is part of GNU Radio
  *
@@ -13,6 +14,7 @@
 
 #include <gnuradio/block.h>
 #include <gnuradio/blocks/api.h>
+#include <spdlog/common.h>
 
 namespace gr {
 namespace blocks {
@@ -46,8 +48,10 @@ public:
      * to disable PDU vector printing and has two message ports: print and store.
      *
      * \param en_uvec Enable PDU Vector Printing.
+     * \param log_level The log level of the `log` port. Defaults to "info".
      */
-    static sptr make(bool en_uvec = true);
+    static sptr make(bool en_uvec = true,
+                     spdlog::level::level_enum log_level = spdlog::level::info);
 
     /*!
      * \brief Reports the number of messages received by this block.
@@ -73,6 +77,15 @@ public:
      * \brief Enables or disables printing of PDU uniform vector data.
      */
     virtual void set_vector_print(bool en) = 0;
+
+    /*!
+     * \brief get the log level
+     */
+    virtual spdlog::level::level_enum level() const = 0;
+    /*!
+     * \brief set the log level
+     */
+    virtual void set_level(spdlog::level::level_enum log_level) = 0;
 };
 
 } /* namespace blocks */
