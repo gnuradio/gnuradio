@@ -1,6 +1,7 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2005,2012-2013 Free Software Foundation, Inc.
+ * Copyright 2022 Marcus Müller
  *
  * This file is part of GNU Radio
  *
@@ -15,6 +16,7 @@
 #include <gnuradio/blocks/message_debug.h>
 #include <gnuradio/thread/thread.h>
 #include <pmt/pmt.h>
+#include <spdlog/common.h>
 
 namespace gr {
 namespace blocks {
@@ -23,6 +25,20 @@ class message_debug_impl : public message_debug
 {
 private:
     bool d_en_uvec;
+
+    /*!
+     * \brief Messages received in this port are properly logged.
+     *
+     * This port receives messages from the scheduler's message
+     * handling mechanism and logs them to the internal logging system.
+     * This message handler function is only meant to be used by the scheduler to
+     * handle messages posted to port 'log'. If the message is a
+     * PDU, special formatting will be applied.
+     *
+     * \param msg A pmt message passed from the scheduler's message handling.
+     * \param level the logging level, defaults to information only
+     */
+    void log(const pmt::pmt_t& msg);
 
     /*!
      * \brief Messages received in this port are printed to stdout.
@@ -66,14 +82,23 @@ private:
 
     gr::thread::mutex d_mutex;
     std::vector<pmt::pmt_t> d_messages;
+    spdlog::level::level_enum d_level;
 
 public:
-    message_debug_impl(bool en_uvec);
+    message_debug_impl(bool en_uvec, spdlog::level::level_enum level);
     ~message_debug_impl() override;
 
     size_t num_messages() override;
     pmt::pmt_t get_message(size_t i) override;
     void set_vector_print(bool en) override { d_en_uvec = en; };
+    /*!
+     * \brief get the log level
+     */
+    spdlog::level::level_enum level() const override;
+    /*!
+     * \brief set the log level
+     */
+    void set_level(spdlog::level::level_enum log_level) override;
 };
 
 } /* namespace blocks */
