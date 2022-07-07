@@ -8,6 +8,7 @@
  *
  */
 
+#include "pmt/pmt.h"
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
@@ -18,12 +19,19 @@
 namespace gr {
 namespace blocks {
 
-probe_rate::sptr probe_rate::make(size_t itemsize, double update_rate_ms, double alpha)
+probe_rate::sptr probe_rate::make(size_t itemsize,
+                                  double update_rate_ms,
+                                  double alpha,
+                                  std::string_view name)
 {
-    return gnuradio::make_block_sptr<probe_rate_impl>(itemsize, update_rate_ms, alpha);
+    return gnuradio::make_block_sptr<probe_rate_impl>(
+        itemsize, update_rate_ms, alpha, name);
 }
 
-probe_rate_impl::probe_rate_impl(size_t itemsize, double update_rate_ms, double alpha)
+probe_rate_impl::probe_rate_impl(size_t itemsize,
+                                 double update_rate_ms,
+                                 double alpha,
+                                 std::string_view name)
     : sync_block("probe_rate",
                  io_signature::make(1, 1, itemsize),
                  io_signature::make(0, 0, itemsize)),
@@ -37,6 +45,16 @@ probe_rate_impl::probe_rate_impl(size_t itemsize, double update_rate_ms, double 
       d_dict_now(pmt::mp("rate_now"))
 {
     message_port_register_out(d_port);
+    set_name(name);
+}
+
+void probe_rate_impl::set_name(std::string_view name)
+{
+    if (name.empty()) {
+        d_data_dict.erase(pmt::mp("name"));
+    } else {
+        d_data_dict[pmt::mp("name")] = pmt::mp(name);
+    }
 }
 
 probe_rate_impl::~probe_rate_impl() {}
@@ -58,10 +76,9 @@ int probe_rate_impl::work(int noutput_items,
         } else {
             d_avg = rate_this_update * d_alpha + d_avg * d_beta;
         }
-        pmt::pmt_t d = pmt::make_dict();
-        d = pmt::dict_add(d, d_dict_avg, pmt::mp(d_avg));
-        d = pmt::dict_add(d, d_dict_now, pmt::mp(rate_this_update));
-        message_port_pub(d_port, pmt::cons(d, pmt::PMT_NIL));
+        d_data_dict[d_dict_avg] = pmt::mp(d_avg);
+        d_data_dict[d_dict_now] = pmt::mp(rate_this_update);
+        message_port_pub(d_port, pmt::dict_from_mapping(d_data_dict));
     }
     return noutput_items;
 }
