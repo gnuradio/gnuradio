@@ -30,6 +30,9 @@ static const char* __doc_gr_blocks_probe_rate_make = R"doc()doc";
 static const char* __doc_gr_blocks_probe_rate_set_alpha = R"doc()doc";
 
 
+static const char* __doc_gr_blocks_probe_rate_set_name = R"doc()doc";
+
+
 static const char* __doc_gr_blocks_probe_rate_rate = R"doc()doc";
 
 

@@ -24,6 +24,9 @@ parameters:
     label: Update Alpha
     dtype: real
     default: '0.15'
+-   id: name
+    label: Name
+    dtype: string
 
 inputs:
 -   domain: stream
@@ -40,11 +43,15 @@ asserts:
 
 templates:
     imports: from gnuradio import blocks
-    make: blocks.probe_rate(${type.size}*${vlen}, ${mintime}, ${alpha})
+    make: blocks.probe_rate(${type.size}*${vlen}, ${mintime}, ${alpha}, ${name})
+    callbacks:
+    - set_alpha(${alpha})
+    - set_name(${name})
+
 
 cpp_templates:
     includes: ['#include <gnuradio/blocks/probe_rate.h>']
     declarations: 'blocks::probe_rate::sptr ${id};'
-    make: 'this->${id} = blocks::probe_rate::make(${type.size}*${vlen}, ${mintime}, ${alpha});'
+    make: 'this->${id} = blocks::probe_rate::make(${type.size}*${vlen}, ${mintime}, ${alpha}, ${name});'
 
 file_format: 1
