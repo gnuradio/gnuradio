@@ -12,12 +12,6 @@
  * directory into a single test suite.  As you create new test cases,
  * add them here.
  */
-
-#include <boost/test/tools/old/interface.hpp>
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
 #include <gnuradio/logger.h>
 #include <boost/test/unit_test.hpp>
 #include <memory>
@@ -26,7 +20,7 @@ BOOST_AUTO_TEST_CASE(t1)
 {
     // This doesn't really test anything, more just
     // making sure nothing's gone horribly wrong.
-    auto log = std::make_shared<gr::logger>("main");
+    auto log = std::make_shared<gr::logger>("t1");
     GR_LOG_NOTICE(log, "test from c++ NOTICE");
     GR_LOG_DEBUG(log, "test from c++ DEBUG");
     GR_LOG_INFO(log, "test from c++ INFO");
@@ -38,9 +32,18 @@ BOOST_AUTO_TEST_CASE(t1)
 
 BOOST_AUTO_TEST_CASE(t2)
 {
-    auto& logsys = gr::logging::singleton();
-    logsys.set_default_level(gr::log_level::critical);
-    BOOST_CHECK_EQUAL(logsys.default_level(), gr::log_level::critical);
-    logsys.set_default_level(gr::log_level::info);
-    BOOST_CHECK_EQUAL(logsys.default_level(), gr::log_level::info);
+    gr::logger log("t2");
+    unsigned int counter = 0;
+    log.trace("{} test", ++counter);
+    log.debug("{} test", ++counter);
+    log.info("{} test", ++counter);
+    log.warn("{} test", ++counter);
+    log.error("{} test", ++counter);
+    log.crit("{} test", ++counter);
+    {
+        using namespace spdlog::level;
+        for (const auto& level : { trace, debug, info, warn, err, critical }) {
+            log.log(level, "{} test", ++counter);
+        }
+    }
 }
