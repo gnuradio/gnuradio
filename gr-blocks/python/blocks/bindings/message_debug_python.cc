@@ -1,5 +1,6 @@
 /*
  * Copyright 2021 Free Software Foundation, Inc.
+ * Copyright 2022 Marcus Müller
  *
  * This file is part of GNU Radio
  *
@@ -14,12 +15,13 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(message_debug.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(23b39e92e05151acfe9f9c5ed93c3c43)                     */
+/* BINDTOOL_HEADER_FILE_HASH(6f4bb7d39b43ec95fce8da7dbc15bd7b)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
+#include <spdlog/common.h>
 
 namespace py = pybind11;
 
@@ -38,6 +40,7 @@ void bind_message_debug(py::module& m)
 
         .def(py::init(&message_debug::make),
              py::arg("en_uvec") = true,
+             py::arg("level") = spdlog::level::info,
              D(message_debug, make))
 
 
@@ -54,6 +57,13 @@ void bind_message_debug(py::module& m)
              &message_debug::set_vector_print,
              py::arg("en"),
              D(message_debug, set_vector_print))
+
+        .def_property(
+            "level",
+            [](const message_debug& instance) { return instance.level(); },
+            [](message_debug& instance, spdlog::level::level_enum level) {
+                instance.set_level(level);
+            })
 
         ;
 }

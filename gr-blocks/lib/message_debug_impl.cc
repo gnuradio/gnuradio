@@ -1,7 +1,7 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2005,2010,2012-2013 Free Software Foundation, Inc.
- * Copyright 2021 Marcus Müller
+ * Copyright 2021,2022 Marcus Müller
  *
  * This file is part of GNU Radio
  *
@@ -9,13 +9,14 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "message_debug_impl.h"
 #include <gnuradio/io_signature.h>
+#include <pmt/pmt.h>
+#include <spdlog/common.h>
 #include <spdlog/fmt/fmt.h>
+#include <functional>
+#include <utility>
+#include <vector>
 
 namespace gr {
 namespace blocks {
@@ -24,30 +25,54 @@ namespace blocks {
 // old *** HEADING *** line length.
 constexpr unsigned int PRINT_LINE_LENGTH = 36;
 
-message_debug::sptr message_debug::make(bool en_uvec)
+message_debug::sptr message_debug::make(bool en_uvec, spdlog::level::level_enum log_level)
 {
-    return gnuradio::make_block_sptr<message_debug_impl>(en_uvec);
+    return gnuradio::make_block_sptr<message_debug_impl>(en_uvec, log_level);
 }
 
-message_debug_impl::message_debug_impl(bool en_uvec)
+message_debug_impl::message_debug_impl(bool en_uvec, spdlog::level::level_enum log_level)
     : block("message_debug", io_signature::make(0, 0, 0), io_signature::make(0, 0, 0)),
-      d_en_uvec(en_uvec)
+      d_en_uvec(en_uvec),
+      d_level(log_level)
 {
-    message_port_register_in(pmt::mp("print"));
-    set_msg_handler(pmt::mp("print"),
-                    [this](const pmt::pmt_t& msg) { this->print(msg); });
-
-    message_port_register_in(pmt::mp("store"));
-    set_msg_handler(pmt::mp("store"),
-                    [this](const pmt::pmt_t& msg) { this->store(msg); });
-
-    message_port_register_in(pmt::mp("print_pdu"));
-    set_msg_handler(pmt::mp("print_pdu"),
-                    [this](const pmt::pmt_t& msg) { this->print_pdu(msg); });
+    using msg_t = const pmt::pmt_t&;
+    std::vector<std::pair<std::string, std::function<void(msg_t)>>> mapping{
+        { "log", [&](msg_t m) { log(m); } },
+        { "print", [&](msg_t m) { print(m); } },
+        { "print_pdu", [&](msg_t m) { print_pdu(m); } },
+        { "store", [&](msg_t m) { store(m); } }
+    };
+    for (const auto& [name, handler] : mapping) {
+        const auto symbol = pmt::mp(name);
+        message_port_register_in(symbol);
+        set_msg_handler(symbol, handler);
+    }
 }
 
 message_debug_impl::~message_debug_impl() {}
 
+void message_debug_impl::log(const pmt::pmt_t& msg)
+{
+    if (pmt::is_pdu(msg)) {
+        const auto& meta = pmt::car(msg);
+        const auto& vector = pmt::cdr(msg);
+        auto length = pmt::blob_length(vector);
+        auto begin = reinterpret_cast<const uint8_t*>(pmt::blob_data(vector));
+        auto output_length = length;
+        if (!d_en_uvec)
+            output_length = std::min<decltype(length)>(output_length, 16);
+        auto datastring = fmt::format("{:X}{}",
+                                      fmt::join(begin, begin + output_length, " "),
+                                      output_length < length ? " …" : "");
+        d_logger->log(d_level,
+                      "PDU {:s}: {:10d} B [{}] ",
+                      pmt::write_string(meta),
+                      length,
+                      datastring);
+        return;
+    }
+    d_logger->log(d_level, "Message: {}", pmt::write_string(msg));
+}
 void message_debug_impl::print(const pmt::pmt_t& msg)
 {
     if (pmt::is_pdu(msg)) {
@@ -125,6 +150,9 @@ pmt::pmt_t message_debug_impl::get_message(size_t i)
 
     return d_messages[i];
 }
+
+spdlog::level::level_enum message_debug_impl::level() const { return d_level; }
+void message_debug_impl::set_level(spdlog::level::level_enum level) { d_level = level; }
 
 } /* namespace blocks */
 } /* namespace gr */
