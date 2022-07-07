@@ -1,5 +1,6 @@
 """
 Copyright 2008-2011,2015 Free Software Foundation, Inc.
+Copyright 2022 Marcus Müller
 This file is part of GNU Radio
 
 SPDX-License-Identifier: GPL-2.0-or-later
@@ -9,8 +10,8 @@ SPDX-License-Identifier: GPL-2.0-or-later
 
 from sys import platform
 import os
-import numbers
 
+import numpy
 from gi.repository import GLib
 import cairo
 
@@ -70,28 +71,35 @@ def align_to_grid(coor, mode=round):
         return align(coor)
 
 
-def num_to_str(num):
+def num_to_str(num) -> str:
     """ Display logic for numbers """
-    def eng_notation(value, fmt='g'):
-        """Convert a number to a string in engineering notation.  E.g., 5e-9 -> 5n"""
-        template = '{:' + fmt + '}{}'
-        magnitude = abs(value)
-        for exp, symbol in zip(range(9, -15 - 1, -3), 'GMk munpf'):
-            factor = 10 ** exp
-            if magnitude >= factor:
-                return template.format(value / factor, symbol.strip())
-        return template.format(value, '')
 
-    if isinstance(num, numbers.Complex):
-        num = complex(num)  # Cast to python complex
-        if num == 0:
-            return '0'
-        output = eng_notation(num.real) if num.real else ''
-        output += eng_notation(num.imag, '+g' if output else 'g') + \
-            'j' if num.imag else ''
-        return output
-    else:
-        return str(num)
+    def clean_e(unclean: str) -> str:
+        """
+        Removes the + from 1.2e+09, and the 0 from both 1.2e-09 and 1.2e09
+        """
+        return unclean\
+            .replace("e-0", "e-")\
+            .replace("e+0", "e+")\
+            .replace("e+", "e")\
+            .strip()
+
+    if numpy.iscomplex(num):
+        intreal = int(numpy.real(num))
+        intimag = int(numpy.imag(num))
+        if intreal == numpy.real(num) and \
+           intimag == numpy.imag(num) and \
+           abs(num) < 2**0.5 * 10**6:
+            if intreal < 10**6 and intimag < 10**6:
+                return f"{intreal:d}{intimag:+d}j"
+            return f"{intreal:_d}{intimag:+_d}j"
+        return clean_e(f"{numpy.real(num):5.4g}{numpy.imag(num):+5.4g}j")
+
+    if int(num) == num and abs(num) < 10**9:
+        if abs(num) < 10**6:
+            return f"{int(num):d}"
+        return f"{int(num):_d}"
+    return clean_e(f"{num:9g}")
 
 
 def encode(value):
