@@ -221,6 +221,14 @@ public:
     {
         d_logger->critical(msg, args...);
     }
+    /*! \brief inline function, wrapper for logging with ad-hoc adjustable level*/
+    template <typename... Args>
+    inline void log(spdlog::level::level_enum level,
+                    const spdlog::string_view_t& msg,
+                    const Args&... args)
+    {
+        d_logger->log(level, msg, args...);
+    }
 };
 using logger_ptr = std::shared_ptr<logger>;
 
