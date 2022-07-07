@@ -452,8 +452,7 @@ class channelizer_hier_ccf(gr.hier_block2):
             gr.io_signature(1, 1, gr.sizeof_gr_complex),
             gr.io_signature(len(outchans), len(outchans), gr.sizeof_gr_complex))
         if taps is None:
-            taps = self.create_taps(
-                n_chans, atten=100, bw=1.0, tb=0.2, ripple=0.1)
+            taps = self.create_taps(n_chans, atten, bw, tb, ripple)
         taps = list(taps)
         extra_taps = int(math.ceil(1.0 * len(taps) / n_chans) *
                          n_chans - len(taps))
