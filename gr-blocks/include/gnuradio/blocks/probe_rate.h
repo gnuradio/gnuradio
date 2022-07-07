@@ -13,6 +13,7 @@
 
 #include <gnuradio/blocks/api.h>
 #include <gnuradio/sync_block.h>
+#include <string_view>
 
 namespace gr {
 namespace blocks {
@@ -32,11 +33,26 @@ public:
      * \param itemsize size of each stream item
      * \param update_rate_ms minimum update time in milliseconds
      * \param alpha gain for running average filter
+     * \param name name for this probe (used in generated dictionaries)
+     *
+     * If the name is empty, the "name" field in the emitted dictionaries is
+     * omitted.
      */
-    static sptr
-    make(size_t itemsize, double update_rate_ms = 500.0, double alpha = 0.0001);
+    static sptr make(size_t itemsize,
+                     double update_rate_ms = 500.0,
+                     double alpha = 0.0001,
+                     std::string_view name = "");
 
+    /*!
+     * \brief Set the decay of the exponential rate average
+     */
     virtual void set_alpha(double alpha) = 0;
+
+    /*!
+     * \brief Set the name of this probe
+     * Used in the emitted dictionaries if not empty
+     */
+    virtual void set_name(std::string_view name) = 0;
 
     virtual double rate() = 0;
 
