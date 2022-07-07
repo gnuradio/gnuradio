@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(probe_rate.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(6217f03a5dbd6c39f9dcdea629362e39)                     */
+/* BINDTOOL_HEADER_FILE_HASH(5af71a4dfd73a4001d02a2253e28bd64)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -43,6 +43,7 @@ void bind_probe_rate(py::module& m)
              py::arg("itemsize"),
              py::arg("update_rate_ms") = 500.,
              py::arg("alpha") = 1.0E-4,
+             py::arg("name") = "",
              D(probe_rate, make))
 
 
@@ -50,6 +51,8 @@ void bind_probe_rate(py::module& m)
              &probe_rate::set_alpha,
              py::arg("alpha"),
              D(probe_rate, set_alpha))
+
+        .def("set_name", &probe_rate::set_name, py::arg("name"), D(probe_rate, set_name))
 
 
         .def("rate", &probe_rate::rate, D(probe_rate, rate))
