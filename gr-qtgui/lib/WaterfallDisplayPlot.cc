@@ -28,6 +28,7 @@
 #endif /* QWT_VERSION < 0x060100 */
 
 #include <QDebug>
+#include <cmath>
 
 /***********************************************************************
  * Text scale widget to provide Y (time) axis text
