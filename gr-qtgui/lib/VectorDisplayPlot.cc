@@ -25,6 +25,8 @@
 #include <qwt_legend_label.h>
 #endif /* QWT_VERSION < 0x060100 */
 
+#include <cmath>
+
 /***********************************************************************
  * Widget to provide mouse pointer coordinate text
  **********************************************************************/
