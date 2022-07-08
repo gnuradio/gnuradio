@@ -16,7 +16,7 @@
 #include <gnuradio/qtgui/qtgui_types.h>
 #include <qwt_scale_draw.h>
 #include <QColor>
-
+#include <cmath>
 
 /***********************************************************************
  * Widget to provide mouse pointer coordinate text
