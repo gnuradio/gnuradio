@@ -240,14 +240,17 @@ def test_bypass(qtbot, qapp_cls):
     assert throttle.state == 'enabled'
     click_pos = qapp_cls.MainWindow.currentView.mapToGlobal((throttle.pos()+QtCore.QPoint(4,4)).toPoint())
     pag.click(click_pos.x(), click_pos.y(), button="left")
+    qtbot.wait(50)
     keystroke(qtbot, qapp_cls, QtCore.Qt.Key_B)
+    qtbot.wait(50)
     assert throttle.state == 'bypassed'
+    qtbot.wait(50)
     keystroke(qtbot, qapp_cls, QtCore.Qt.Key_E)
     assert throttle.state == 'enabled'
 
 
 def test_quit(qtbot, qapp_cls):
     qapp_cls.MainWindow.actions["exit"].trigger()
-    qtbot.wait(1000)
     assert True
+    time.sleep(1)
 

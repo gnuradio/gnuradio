@@ -226,7 +226,8 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
                                    shortcut="E")
         actions['disable'] = Action(_("disable"), self,
                                    shortcut="D")
-        actions['bypass'] = Action(_("bypass"), self)
+        actions['bypass'] = Action(_("bypass"), self,
+                                   shortcut="B")
 
         actions['vertical_align_top'] = Action(_("vertical_align_top"), self)
         actions['vertical_align_middle'] = Action(_("vertical_align_middle"), self)
@@ -342,6 +343,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
             self.actions['rotate_ccw'].setEnabled(True)
             self.actions['enable'].setEnabled(True)
             self.actions['disable'].setEnabled(True)
+            self.actions['bypass'].setEnabled(True)
 
     def createMenus(self, actions, menus):
         ''' Setup the main menubar for the application '''
@@ -639,6 +641,13 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         log.debug('disable')
         for block in self.currentFlowgraph.selected_blocks():
             block.state = 'disabled'
+            block.create_shapes_and_labels()
+
+    def bypass_triggered(self):
+        log.warning('bypass')
+        print("bypass")
+        for block in self.currentFlowgraph.selected_blocks():
+            block.state = 'bypassed'
             block.create_shapes_and_labels()
 
     def generate_triggered(self):
