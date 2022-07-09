@@ -51,6 +51,7 @@ class Port(QtWidgets.QGraphicsItem, CorePort):
         self._border_color = self._bg_color = colors.BLOCK_ENABLED_COLOR
         self.parent_block.parent.addItem(self)
         self.setFlag(QtWidgets.QGraphicsItem.ItemStacksBehindParent)
+        self.setFlag(QtWidgets.QGraphicsItem.ItemIsSelectable)
 
     def itemChange(self, change, value):
         if self._dir == "sink":
