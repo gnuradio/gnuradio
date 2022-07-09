@@ -225,13 +225,19 @@ class Flowgraph(QtWidgets.QGraphicsScene, base.Component, CoreFlowgraph):
 
     def mousePressEvent(self,  event):
         item = self.itemAt(event.scenePos(), QtGui.QTransform())
+        selected = self.selectedItems()
+        conn_made = False
         if item:
             if item.is_port:
-                self.startPort = item
-                self.newConnection = QtWidgets.QGraphicsLineItem(QtCore.QLineF(event.scenePos(), event.scenePos()))
-                self.newConnection.setPen(QtGui.QPen(1))
-                self.addItem(self.newConnection)
-                print("clicked a port")
+                if len(selected) == 1:
+                    if selected[0].is_port and selected[0] != item:
+                        self.connections.add(Connection(self, selected[0], item))
+                        conn_made = True
+                if not conn_made:
+                    self.startPort = item
+                    self.newConnection = QtWidgets.QGraphicsLineItem(QtCore.QLineF(event.scenePos(), event.scenePos()))
+                    self.newConnection.setPen(QtGui.QPen(1))
+                    self.addItem(self.newConnection)
         if event.button() == Qt.LeftButton:
             self.mousePressed = True
             super(Flowgraph, self).mousePressEvent(event)
