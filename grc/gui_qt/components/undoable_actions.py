@@ -1,30 +1,39 @@
 from PyQt5.QtWidgets import QUndoCommand
 
 import logging
+from copy import copy
 
 log = logging.getLogger(__name__)
 
-# Movement, rotation
-class ChangeStateCommand(QUndoCommand):
-    def __init__(self, flowgraph, blocks):
-        QUndoCommand.__init__(self)
-        log.debug("init ChangeState")
-        self.flowgraph = flowgraph
-        self.blocks = blocks
-        self.oldStates = [block.fromStates for block in blocks]
-        self.newStates = [block.toStates for block in blocks]
-
+# Movement, rotation, enable/disable/bypass, bus ports
+class ChangeStateAction(QUndoCommand):
     def redo(self):
         log.debug("redo ChangeState")
+        log.warn(f"blocks len: {len(self.blocks)}")
         for i in range(len(self.blocks)):
             self.blocks[i].setStates(self.newStates[i])
         self.flowgraph.update()
 
     def undo(self):
         log.debug("undo ChangeState")
+        log.warn(f"blocks len: {len(self.blocks)}")
         for i in range(len(self.blocks)):
             self.blocks[i].setStates(self.oldStates[i])
         self.flowgraph.update()
+
+class RotateAction(ChangeStateAction):
+    def __init__(self, flowgraph, delta_angle):
+        QUndoCommand.__init__(self)
+        log.debug("init ChangeState")
+        self.oldStates = []
+        self.newStates = []
+        self.flowgraph = flowgraph
+        self.blocks = flowgraph.selected_blocks()
+        log.warn(f"blocks len: {len(self.blocks)}")
+        for block in self.blocks:
+            self.oldStates.append(copy(block.fromStates))
+            self.newStates.append(copy(block.fromStates))
+            self.newStates[-1]['rotation'] += delta_angle
 
 # Blocks and connections
 class NewElementCommand(QUndoCommand):
