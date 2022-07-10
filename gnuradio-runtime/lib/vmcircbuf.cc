@@ -10,6 +10,8 @@
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
+#else
+#error "There should really be a config.h; HAVE_CONFIG_H undefined"
 #endif
 
 #include "local_sighandler.h"
