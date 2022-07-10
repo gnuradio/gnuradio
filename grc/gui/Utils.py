@@ -108,7 +108,13 @@ def make_screenshot(flow_graph, file_path, transparent_bg=False):
     height = y_max - y_min + 2 * padding
 
     if file_path.endswith('.png'):
-        psurf = cairo.ImageSurface(cairo.FORMAT_ARGB32, width, height)
+        # ImageSurface is pixel-based, so dimensions need to be integers
+        # We don't round up here, because our padding should allow for up
+        # to half a pixel size in loss of image area without optically bad
+        # effects
+        psurf = cairo.ImageSurface(cairo.FORMAT_ARGB32,
+                                   round(width),
+                                   round(height))
     elif file_path.endswith('.pdf'):
         psurf = cairo.PDFSurface(file_path, width, height)
     elif file_path.endswith('.svg'):
