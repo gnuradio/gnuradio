@@ -84,6 +84,18 @@ def num_to_str(num) -> str:
             .replace("e+", "e")\
             .strip()
 
+    def thousands_sep(inputstr: str,
+                      replacement: str = "\N{SPACE}",
+                      original_sep: str = "_") -> str:
+        """
+        Python allows us to group thousands with _ , but not with arbitrary
+        characters.
+
+        This function is just a simple str.replace wrapper to keep the default
+        somewhere visible
+        """
+        return inputstr.replace(original_sep, replacement)
+
     if numpy.iscomplex(num):
         intreal = int(numpy.real(num))
         intimag = int(numpy.imag(num))
@@ -92,13 +104,13 @@ def num_to_str(num) -> str:
            abs(num) < 2**0.5 * 10**6:
             if intreal < 10**6 and intimag < 10**6:
                 return f"{intreal:d}{intimag:+d}j"
-            return f"{intreal:_d}{intimag:+_d}j"
+            return thousands_sep(f"{intreal:_d}{intimag:+_d}j")
         return clean_e(f"{numpy.real(num):5.4g}{numpy.imag(num):+5.4g}j")
 
     if int(num) == num and abs(num) < 10**9:
         if abs(num) < 10**6:
             return f"{int(num):d}"
-        return f"{int(num):_d}"
+        return thousands_sep(f"{int(num):_d}")
     return clean_e(f"{num:9g}")
 
 
