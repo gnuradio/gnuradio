@@ -9,14 +9,12 @@ log = logging.getLogger(__name__)
 class ChangeStateAction(QUndoCommand):
     def redo(self):
         log.debug("redo ChangeState")
-        log.warn(f"blocks len: {len(self.blocks)}")
         for i in range(len(self.blocks)):
             self.blocks[i].setStates(self.newStates[i])
         self.flowgraph.update()
 
     def undo(self):
         log.debug("undo ChangeState")
-        log.warn(f"blocks len: {len(self.blocks)}")
         for i in range(len(self.blocks)):
             self.blocks[i].setStates(self.oldStates[i])
         self.flowgraph.update()
@@ -29,10 +27,10 @@ class RotateAction(ChangeStateAction):
         self.newStates = []
         self.flowgraph = flowgraph
         self.blocks = flowgraph.selected_blocks()
-        log.warn(f"blocks len: {len(self.blocks)}")
         for block in self.blocks:
-            self.oldStates.append(copy(block.fromStates))
-            self.newStates.append(copy(block.fromStates))
+            #print(block.states
+            self.oldStates.append(copy(block.states))
+            self.newStates.append(copy(block.states))
             self.newStates[-1]['rotation'] += delta_angle
 
 # Blocks and connections
