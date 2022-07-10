@@ -33,7 +33,7 @@ from PyQt5.QtGui import QStandardItemModel
 # Custom modules
 from . import FlowgraphView
 from .. import base
-from .undoable_actions import ChangeStateCommand
+from .undoable_actions import ChangeStateAction, RotateAction
 
 # Logging
 log = logging.getLogger(__name__)
@@ -602,14 +602,16 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         self.currentFlowgraph.delete_selected()
 
     def rotate_ccw_triggered(self):
+        # Pass to Undo/Redo
         log.debug('rotate_ccw')
-        rotateCommand = RotateCommand(self.currentFlowgraph, -90)
+        rotateCommand = RotateAction(self.currentFlowgraph, -90)
         self.currentFlowgraph.undoStack.push(rotateCommand)
         self.updateActions()
 
     def rotate_cw_triggered(self):
+        # Pass to Undo/Redo
         log.debug('rotate_cw')
-        rotateCommand = RotateCommand(self.currentFlowgraph, 90)
+        rotateCommand = RotateAction(self.currentFlowgraph, 90)
         self.currentFlowgraph.undoStack.push(rotateCommand)
         self.updateActions()
 
@@ -632,20 +634,22 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         log.debug('properties')
 
     def enable_triggered(self):
+        # Pass to Undo/Redo
         log.debug('enable')
         for block in self.currentFlowgraph.selected_blocks():
             block.state = 'enabled'
             block.create_shapes_and_labels()
 
     def disable_triggered(self):
+        # Pass to Undo/Redo
         log.debug('disable')
         for block in self.currentFlowgraph.selected_blocks():
             block.state = 'disabled'
             block.create_shapes_and_labels()
 
     def bypass_triggered(self):
-        log.warning('bypass')
-        print("bypass")
+        # Pass to Undo/Redo
+        log.debug('bypass')
         for block in self.currentFlowgraph.selected_blocks():
             block.state = 'bypassed'
             block.create_shapes_and_labels()

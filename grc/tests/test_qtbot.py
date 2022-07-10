@@ -92,7 +92,7 @@ def test_add_throttle(qtbot, qapp_cls):
     assert 'blocks_throttle' in [block.key for block in qapp_cls.MainWindow.currentFlowgraph.blocks]
 
 def test_open_properties(qtbot, qapp_cls):
-    qtbot.wait(1000)
+    qtbot.wait(500)
     qtbot.mouseDClick(
             qapp_cls.MainWindow.currentView.viewport(), 
             QtCore.Qt.LeftButton, 
@@ -106,12 +106,17 @@ def test_change_id(qtbot, qapp_cls):
     type_text(qtbot, qapp_cls, "changed")
     qtbot.wait(500)
     keystroke(qtbot, qapp_cls, QtCore.Qt.Key_Enter)
-    qtbot.wait(2000)
+    qtbot.wait(500)
     val = qapp_cls.MainWindow.currentFlowgraph.options_block.params['title'].value
     assert val == "Not titled changed"
 
 def test_rotate_block(qtbot, qapp_cls):
     block = qapp_cls.MainWindow.currentFlowgraph.options_block
+    qtbot.mouseClick(
+            qapp_cls.MainWindow.currentView.viewport(), 
+            QtCore.Qt.LeftButton, 
+            pos=qapp_cls.MainWindow.currentView.mapFromScene(block.pos()+QtCore.QPoint(15,15)))
+    qtbot.wait(500)
     old_rotation = block.states['rotation']
     keystroke(qtbot, qapp_cls, QtCore.Qt.Key_Left)
     qtbot.wait(500)
