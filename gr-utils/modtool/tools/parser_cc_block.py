@@ -72,9 +72,9 @@ class ParserCCBlock(object):
             elif len(vlen_parts) > 1:
                 return '*'.join(vlen_parts).strip()
         iosig = {}
-        iosig_regex = r'(?P<incall>gr::io_signature::make[23v]?)\s*\(\s*(?P<inmin>[^,]+),\s*(?P<inmax>[^,]+),' + \
+        iosig_regex = r'(?P<incall>(gr::)?io_signature::make[23v]?)\s*\(\s*(?P<inmin>[^,]+),\s*(?P<inmax>[^,]+),' + \
                       r'\s*(?P<intype>(\([^\)]*\)|[^)])+)\),\s*' + \
-                      r'(?P<outcall>gr::io_signature::make[23v]?)\s*\(\s*(?P<outmin>[^,]+),\s*(?P<outmax>[^,]+),' + \
+                      r'(?P<outcall>(gr::)?io_signature::make[23v]?)\s*\(\s*(?P<outmin>[^,]+),\s*(?P<outmax>[^,]+),' + \
                       r'\s*(?P<outtype>(\([^\)]*\)|[^)])+)\)'
         iosig_match = re.compile(
             iosig_regex, re.MULTILINE).search(self.code_cc)
