@@ -49,10 +49,7 @@ base_impl::~base_impl() {}
 
 std::string base_impl::last_endpoint()
 {
-    char addr[256];
-    size_t addr_len = sizeof(addr);
-    d_socket.getsockopt(ZMQ_LAST_ENDPOINT, addr, &addr_len);
-    return std::string(addr, addr_len - 1);
+    return d_socket.get(zmq::sockopt::last_endpoint);
 }
 
 
@@ -69,15 +66,15 @@ base_sink_impl::base_sink_impl(int type,
     /* Set high watermark */
     if (hwm >= 0) {
 #ifdef ZMQ_SNDHWM
-        d_socket.setsockopt(ZMQ_SNDHWM, &hwm, sizeof(hwm));
+        d_socket.set(zmq::sockopt::sndhwm, hwm);
 #else // major < 3
         uint64_t tmp = hwm;
-        d_socket.setsockopt(ZMQ_HWM, &tmp, sizeof(tmp));
+        d_socket.set(zmq::sockopt::hwm, tmp);
 #endif
     }
 
-    /* Set ZMQ_LINGER so socket won't infinitely block during teardown */
-    d_socket.setsockopt(ZMQ_LINGER, &LINGER_DEFAULT, sizeof(LINGER_DEFAULT));
+    /* Set LINGER so socket won't infinitely block during teardown */
+    d_socket.set(zmq::sockopt::linger, LINGER_DEFAULT);
 
     /* Bind */
     d_socket.bind(address);
@@ -143,15 +140,15 @@ base_source_impl::base_source_impl(int type,
     /* Set high watermark */
     if (hwm >= 0) {
 #ifdef ZMQ_RCVHWM
-        d_socket.setsockopt(ZMQ_RCVHWM, &hwm, sizeof(hwm));
+        d_socket.set(zmq::sockopt::rcvhwm, hwm);
 #else // major < 3
         uint64_t tmp = hwm;
-        d_socket.setsockopt(ZMQ_HWM, &tmp, sizeof(tmp));
+        d_socket.set(zmq::sockopt::hwm, tmp);
 #endif
     }
 
     /* Set ZMQ_LINGER so socket won't infinitely block during teardown */
-    d_socket.setsockopt(ZMQ_LINGER, &LINGER_DEFAULT, sizeof(LINGER_DEFAULT));
+    d_socket.set(zmq::sockopt::linger, LINGER_DEFAULT);
 
     /* Connect */
     d_socket.connect(address);
@@ -198,9 +195,7 @@ bool base_source_impl::load_message(bool wait)
         return false;
 
     /* Is this the start or continuation of a multi-part message? */
-    int64_t more = 0;
-    size_t more_len = sizeof(more);
-    d_socket.getsockopt(ZMQ_RCVMORE, &more, &more_len);
+    int64_t more = d_socket.get(zmq::sockopt::rcvmore);
 
     /* Reset */
     d_msg.rebuild();
@@ -224,8 +219,7 @@ bool base_source_impl::load_message(bool wait)
     /* Throw away key and get the first message. Avoid blocking if a multi-part
      * message is not sent */
     if (!d_key.empty() && !more) {
-        int64_t is_multipart;
-        d_socket.getsockopt(ZMQ_RCVMORE, &is_multipart, &more_len);
+        int64_t is_multipart = d_socket.get(zmq::sockopt::rcvmore);
 
         d_msg.rebuild();
         if (is_multipart) {

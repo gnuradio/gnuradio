@@ -43,8 +43,7 @@ req_msg_source_impl::req_msg_source_impl(char* address, int timeout, bool bind)
         d_timeout = timeout * 1000;
     }
 
-    int time = 0;
-    d_socket.setsockopt(ZMQ_LINGER, &time, sizeof(time));
+    d_socket.set(zmq::sockopt::linger, 0);
 
     if (bind) {
         d_socket.bind(address);

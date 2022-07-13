@@ -43,7 +43,7 @@ sub_msg_source_impl::sub_msg_source_impl(char* address, int timeout, bool bind)
         d_timeout = timeout * 1000;
     }
 
-    d_socket.setsockopt(ZMQ_SUBSCRIBE, "", 0);
+    d_socket.set(zmq::sockopt::subscribe, "");
 
     if (bind) {
         d_socket.bind(address);
