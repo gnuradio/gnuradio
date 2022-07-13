@@ -21,7 +21,7 @@ namespace zeromq {
 class rep_msg_sink_impl : public rep_msg_sink
 {
 private:
-    int d_timeout;
+    std::chrono::milliseconds d_timeout;
     zmq::context_t d_context;
     zmq::socket_t d_socket;
     std::unique_ptr<std::thread> d_thread;

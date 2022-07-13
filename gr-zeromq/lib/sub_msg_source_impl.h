@@ -21,7 +21,7 @@ namespace zeromq {
 class sub_msg_source_impl : public sub_msg_source
 {
 private:
-    int d_timeout; // microseconds, -1 is blocking
+    std::chrono::milliseconds d_timeout; // microseconds, -1 is blocking
     zmq::context_t d_context;
     zmq::socket_t d_socket;
     std::unique_ptr<std::thread> d_thread;

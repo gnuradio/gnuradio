@@ -32,7 +32,7 @@ base_impl::base_impl(int type,
     : d_context(1),
       d_socket(d_context, type),
       d_vsize(itemsize * vlen),
-      d_timeout(timeout),
+      d_timeout(std::chrono::milliseconds{timeout}),
       d_pass_tags(pass_tags),
       d_key(key)
 {
@@ -189,7 +189,7 @@ bool base_source_impl::load_message(bool wait)
 {
     /* Poll for input */
     zmq::pollitem_t items[] = { { static_cast<void*>(d_socket), 0, ZMQ_POLLIN, 0 } };
-    zmq::poll(&items[0], 1, wait ? d_timeout : 0);
+    zmq::poll(&items[0], 1, wait ? d_timeout : std::chrono::milliseconds{0});
 
     if (!(items[0].revents & ZMQ_POLLIN))
         return false;

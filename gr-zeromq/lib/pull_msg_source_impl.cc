@@ -31,7 +31,7 @@ pull_msg_source_impl::pull_msg_source_impl(char* address, int timeout, bool bind
     : gr::block("pull_msg_source",
                 gr::io_signature::make(0, 0, 0),
                 gr::io_signature::make(0, 0, 0)),
-      d_timeout(timeout),
+      d_timeout(std::chrono::milliseconds{timeout}),
       d_context(1),
       d_socket(d_context, ZMQ_PULL),
       d_port(pmt::mp("out"))
@@ -40,7 +40,7 @@ pull_msg_source_impl::pull_msg_source_impl(char* address, int timeout, bool bind
     zmq::version(&major, &minor, &patch);
 
     if (major < 3) {
-        d_timeout = timeout * 1000;
+        d_timeout = std::chrono::milliseconds{timeout * 1000};
     }
 
     d_socket.set(zmq::sockopt::linger, 0);
