@@ -14,7 +14,7 @@ log = logging.getLogger(__name__)
 ARC        = 10  # arc radius for block corners
 LONG_VALUE = 20  # maximum length of a param string.
                  # if exceeded, '...' will be displayed
-
+'''
 class ParameterEdit(QtWidgets.QWidget):
     def __init__(self, label, value):
         super().__init__()
@@ -22,6 +22,7 @@ class ParameterEdit(QtWidgets.QWidget):
         self.layout.addWidget(QtWidgets.QLabel(label))
         edit = QtWidgets.QLineEdit(value)
         self.layout.addWidget(edit)
+'''
 
 #TODO: Move this to a separate file
 class PropsDialog(QtWidgets.QDialog):
