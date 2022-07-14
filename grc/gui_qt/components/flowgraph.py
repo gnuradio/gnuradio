@@ -176,6 +176,13 @@ class Flowgraph(QtWidgets.QGraphicsScene, base.Component, CoreFlowgraph):
                 blocks.append(item)
         return blocks
 
+    def selected_connections(self):
+        conns = []
+        for item in self.selectedItems():
+            if item.is_connection:
+                conns.append(item)
+        return conns
+
     def delete_selected(self):
         for item in self.selectedItems():
             self.remove_element(item)

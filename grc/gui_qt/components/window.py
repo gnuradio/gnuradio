@@ -302,19 +302,8 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
     def updateActions(self):
         ''' Update the available actions based on what is selected '''
 
-        def there_are_blocks_in(selection):
-            for element in selection:
-                if element.is_block:
-                    return True
-            return False
-
-        def there_are_connections_in(selection):
-            for element in selection:
-                if element.is_connection:
-                    return True
-            return False
-
-        selected_elements = self.currentFlowgraph.selectedItems()
+        blocks = self.currentFlowgraph.selected_blocks()
+        conns = self.currentFlowgraph.selected_connections()
         undoStack = self.currentFlowgraph.undoStack
         canUndo = undoStack.canUndo()
         canRedo = undoStack.canRedo()
@@ -331,10 +320,10 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         self.actions['disable'].setEnabled(False)
         self.actions['bypass'].setEnabled(False)
 
-        if there_are_connections_in(selected_elements):
+        if len(conns) > 0:
             self.actions['delete'].setEnabled(True)
 
-        if there_are_blocks_in(selected_elements):
+        if len(blocks) > 0:
             self.actions['cut'].setEnabled(True)
             self.actions['copy'].setEnabled(True)
             self.actions['paste'].setEnabled(True)
@@ -344,6 +333,10 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
             self.actions['enable'].setEnabled(True)
             self.actions['disable'].setEnabled(True)
             self.actions['bypass'].setEnabled(True)
+
+            for block in blocks:
+                if not block.can_bypass():
+                    self.actions['bypass'].setEnabled(False)
 
     def createMenus(self, actions, menus):
         ''' Setup the main menubar for the application '''
