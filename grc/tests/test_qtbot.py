@@ -242,7 +242,7 @@ def test_bypass(qtbot, qapp_cls):
             n_src = block
         if block.key == 'blocks_null_sink':
             n_sink = block
-    assert throttle.state == 'enabled'
+    # Bypass the throttle block
     click_pos = qapp_cls.MainWindow.currentView.mapToGlobal((throttle.pos()+QtCore.QPoint(4,4)).toPoint())
     pag.click(click_pos.x(), click_pos.y(), button="left")
     qtbot.wait(50)
@@ -252,7 +252,13 @@ def test_bypass(qtbot, qapp_cls):
     qtbot.wait(50)
     keystroke(qtbot, qapp_cls, QtCore.Qt.Key_E)
     assert throttle.state == 'enabled'
-
+    # Try to bypass the null source, this shouldn't work
+    click_pos = qapp_cls.MainWindow.currentView.mapToGlobal((n_src.pos()+QtCore.QPoint(4,4)).toPoint())
+    pag.click(click_pos.x(), click_pos.y(), button="left")
+    qtbot.wait(50)
+    keystroke(qtbot, qapp_cls, QtCore.Qt.Key_B)
+    qtbot.wait(50)
+    assert n_src.state == 'enabled'
 
 def test_quit(qtbot, qapp_cls):
     qapp_cls.MainWindow.actions["exit"].trigger()
