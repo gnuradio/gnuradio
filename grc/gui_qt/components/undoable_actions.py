@@ -55,6 +55,29 @@ class MoveAction(ChangeStateAction):
             self.oldStates[i] = dict((k, v) for k, v in self.oldStates[i].items() if all(k == 'coordinate' for x in k))
             self.newStates[i] = dict((k, v) for k, v in self.newStates[i].items() if all(k == 'coordinate' for x in k))
 
+class EnableAction(ChangeStateAction):
+    def __init__(self, flowgraph):
+        ChangeStateAction.__init__(self, flowgraph)
+        log.debug("init EnableAction")
+        for i in range(len(self.blocks)):
+            self.newStates[i]['state'] = 'enabled'
+class DisableAction(ChangeStateAction):
+    def __init__(self, flowgraph):
+        ChangeStateAction.__init__(self, flowgraph)
+        log.debug("init DisableAction")
+        for i in range(len(self.blocks)):
+            self.newStates[i]['state'] = 'disabled'
+class BypassAction(ChangeStateAction):
+    def __init__(self, flowgraph):
+        ChangeStateAction.__init__(self, flowgraph)
+        log.debug("init BypassAction")
+        for i in range(len(self.blocks)):
+            self.newStates[i]['state'] = 'bypassed'
+
+
+
+
+
 # Blocks and connections
 class NewElementCommand(QUndoCommand):
     def __init__(self):
