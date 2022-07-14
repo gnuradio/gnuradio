@@ -30,7 +30,7 @@ rep_msg_sink_impl::rep_msg_sink_impl(char* address, int timeout, bool bind)
     : gr::block("rep_msg_sink",
                 gr::io_signature::make(0, 0, 0),
                 gr::io_signature::make(0, 0, 0)),
-      d_timeout(std::chrono::milliseconds{timeout}),
+      d_timeout(std::chrono::milliseconds{ timeout }),
       d_context(1),
       d_socket(d_context, ZMQ_REP),
       d_port(pmt::mp("in"))
@@ -39,7 +39,7 @@ rep_msg_sink_impl::rep_msg_sink_impl(char* address, int timeout, bool bind)
     zmq::version(&major, &minor, &patch);
 
     if (major < 3) {
-        d_timeout = std::chrono::milliseconds{timeout * 1000};
+        d_timeout = std::chrono::milliseconds{ timeout * 1000 };
     }
 
     d_socket.set(zmq::sockopt::linger, 0);
