@@ -33,7 +33,7 @@ from PyQt5.QtGui import QStandardItemModel
 # Custom modules
 from . import FlowgraphView
 from .. import base
-from .undoable_actions import ChangeStateAction, RotateAction
+from .undoable_actions import ChangeStateAction, RotateAction, EnableAction, DisableAction, BypassAction
 
 # Logging
 log = logging.getLogger(__name__)
@@ -636,23 +636,23 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
     def enable_triggered(self):
         # Pass to Undo/Redo
         log.debug('enable')
-        for block in self.currentFlowgraph.selected_blocks():
-            block.state = 'enabled'
-            block.create_shapes_and_labels()
+        cmd = EnableAction(self.currentFlowgraph)
+        self.currentFlowgraph.undoStack.push(cmd)
+        self.updateActions()
 
     def disable_triggered(self):
         # Pass to Undo/Redo
         log.debug('disable')
-        for block in self.currentFlowgraph.selected_blocks():
-            block.state = 'disabled'
-            block.create_shapes_and_labels()
+        cmd = DisableAction(self.currentFlowgraph)
+        self.currentFlowgraph.undoStack.push(cmd)
+        self.updateActions()
 
     def bypass_triggered(self):
         # Pass to Undo/Redo
         log.debug('bypass')
-        for block in self.currentFlowgraph.selected_blocks():
-            block.state = 'bypassed'
-            block.create_shapes_and_labels()
+        cmd = BypassAction(self.currentFlowgraph)
+        self.currentFlowgraph.undoStack.push(cmd)
+        self.updateActions()
 
     def generate_triggered(self):
         log.debug('generate')

@@ -114,7 +114,6 @@ class Port(QtWidgets.QGraphicsItem, CorePort):
             return
         painter.setRenderHint(QtGui.QPainter.Antialiasing)
 
-        x, y = tuple(self.parent.states['coordinate'])
         pen = QtGui.QPen(self._border_color)
         painter.setPen(pen)
         painter.setBrush(QtGui.QBrush(self._bg_color))
