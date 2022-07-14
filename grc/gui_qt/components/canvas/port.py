@@ -101,7 +101,6 @@ class Port(QtWidgets.QGraphicsItem, CorePort):
         #self._border_color = tuple(max(c - 0.3, 0) for c in color)
 
     def boundingRect(self):
-        x, y = tuple(self.parent.states['coordinate'])
         if self._dir == "sink":
             return QtCore.QRectF(-max(0, self.width - 15), 0, self.width, 15) # same as the rectangle we draw, but with a 0.5*pen width margin
         else:

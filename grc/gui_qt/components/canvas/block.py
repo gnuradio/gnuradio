@@ -213,31 +213,23 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
         for source in self.sources:
             source.setParentItem(self)
 
-
-        #self.__dict__.update(attrib)
-        #self.params = params
-        #self.x = attrib['_coordinate'][0]
-        #self.y = attrib['_coordinate'][1]
-        #self.x = 500
-        #self.y = 300
-        try:
-            self.coordinate = tuple(self.states['coordinate'])
-        except KeyError:
-            self.coordinate = (500,300)
         self.width = 300 # default shouldnt matter, it will change immedaitely after the first paint
         #self.block_key = block_key
         #self.block_label = block_label
         self.block_label = self.key
 
-
-        x,y = self.coordinate
-        self.setPos(x, y)
+        if 'coordinate' not in self.states.keys():
+            self.states['coordinate'] = QtCore.QPointF(500, 300)
+            self.setPos(self.states['coordinate'])
+        if 'rotation' not in self.states.keys():
+            self.states['rotation'] = 0.0
 
         self.create_shapes_and_labels()
 
         self.moving = False
-        self.movingFrom = None
-        self.movingTo = None
+        self.oldPos = self.pos()
+        self.newPos = self.pos()
+        self.states['coordinate'] = self.pos()
 
         self.setFlag(QtWidgets.QGraphicsItem.ItemIsMovable)
         self.setFlag(QtWidgets.QGraphicsItem.ItemIsSelectable)
@@ -277,7 +269,7 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
 
     def paint(self, painter, option, widget):
         x,y = (self.x(), self.y())
-        self.states['coordinate'] = (x,y)
+        self.states['coordinate'] = self.pos()
         # Set font
         font = QtGui.QFont('Helvetica', 10)
         #font.setStretch(70) # makes it more condensed
@@ -331,37 +323,28 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
                 painter.drawText(QtCore.QRectF(7.5 + fm.width(name + ": "), 0 + y_offset, self.width, self.height), Qt.AlignLeft, value_label)
                 y_offset += 20
 
+
+
+
     def boundingRect(self): # required to have
-        x,y = (self.x(), self.y())
-        self.states['coordinate'] = (x,y)
         return QtCore.QRectF(-2.5, -2.5, self.width+5, self.height+5) # margin to avoid artifacts
 
     def registerMoveStarting(self):
-        print(f"{self} moving")
         self.moving = True
-        self.fromStates = self.states
+        self.oldPos = self.states['coordinate']
 
     def setStates(self, states):
-        self.states = states
-        try:
-            x,y = states['coordinate']
-            print(f"{x}, {y}")
-            self.setPos(x, y)
-            self.setRotation(states['rotation'])
-        except:
-            coor = states['coordinate']
-            print(coor)
-            self.setPos(coor)
-            self.setRotation(states['rotation'])
+        for k, v in states.items():
+            self.states[k] = v
 
-    def registerMoveEnding(self):
-        print(f"{self} moved")
-        self.moving = False
-        self.toStates = self.states
+        self.setPos(self.states['coordinate'])
+        self.setRotation(self.states['rotation'])
 
     def mouseReleaseEvent(self, e):
-        if not self.movingFrom == self.pos():
+        if not self.oldPos == self.pos():
+            self.newPos = self.states['coordinate']
             self.parent.registerChangeStateAction(self)
+        self.moving = False
         super(self.__class__, self).mouseReleaseEvent(e)
 
     def mousePressEvent(self, e):
@@ -389,10 +372,10 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
 
     def import_data(self, name, states, parameters, **_):
         CoreBlock.import_data(self, name, states, parameters, **_)
+        self.states['coordinate'] = QtCore.QPointF(states['coordinate'][0], states['coordinate'][1])
+        self.setPos(self.states['coordinate'])
         self.rewrite()
         self.create_shapes_and_labels()
-        x,y = tuple(states['coordinate'])
-        self.setPos(x, y)
 
     def rotate(self, rotation):
         log.debug(f"Rotating {self.name}")

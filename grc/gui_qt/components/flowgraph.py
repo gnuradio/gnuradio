@@ -40,7 +40,7 @@ from .canvas.connection import Connection
 from .. import base
 from ...core.FlowGraph import FlowGraph as CoreFlowgraph
 from .. import Utils
-from .undoable_actions import ChangeStateAction
+from .undoable_actions import MoveAction
 
 # Logging
 log = logging.getLogger(__name__)
@@ -155,7 +155,7 @@ class Flowgraph(QtWidgets.QGraphicsScene, base.Component, CoreFlowgraph):
                 id = self._get_unique_id(block_key)
                 
                 block = self.new_block(block_key, attrib=attrib)
-                block.states['coordinate'] = attrib['_coordinate']
+                block.states['coordinate'] = QtCore.QPointF(cursor_pos.x(), cursor_pos.y())
                 block.setPos(cursor_pos.x(), cursor_pos.y())
                 block.params['id'].set_value(id)
                 self.addItem(block)
@@ -217,10 +217,7 @@ class Flowgraph(QtWidgets.QGraphicsScene, base.Component, CoreFlowgraph):
 
     def registerChangeStateAction(self, block):
         log.debug('move_cmd')
-        return
-        for block in self.selected_blocks():
-            block.registerMoveEnding()
-        command = ChangeStateAction(self)
+        command = MoveAction(self)
         self.undoStack.push(command)
         self.app.MainWindow.updateActions()
 
