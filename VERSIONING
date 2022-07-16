@@ -1,0 +1,132 @@
+# GNU Radio Versioning
+
+For the 3.8 Release and going on, the following versioning scheme is to be used.
+For 3.7 and earlier, other schemes apply.
+
+GNU Radio versioning is based on [Semantic Versioning](https://semver.org).
+
+## GNU Radio Versioning in 60s or less
+
+If in doubt, the formal definition below applies. However, to ease use of this
+versioning scheme, an abridged, specified conclusion is given in this section.
+
+GNU Radio uses a four-number versioning:
+
+```
+A.B.C.D
+```
+
+* A is the paradigm version. This has been '3' for more than a decade, meaning:
+
+> GNU Radio is a block-based flow graph framework that uses classes to represent
+> blocks whose main feature is a `work()` function taking input samples from
+> quasi-circular buffers and putting results in quasi-circular output buffers.
+
+  It's encouraged that in the future, relevant modifications and extensions of
+  that model will lead to changes to the paradigm version number.
+* A.B is the public API version. We'll only accept patches that don't change the
+  public API on a `maint-A.B` branch. GNU Radio users need not change their code
+  to stay compatible with any future A.B.x.x version (barring bugs), but might
+  have to recompile.
+  Forward-going development should happen on the A.(B+1) branch, once A.B is
+  released.
+* A.B.C is the ABI version. This includes C/C++, Python bindings and the
+  interfaces of GRC blocks. Programmers need not recompile their code if A.B.C
+  stays unchanged.
+* A.B.C.D is the patch level. Versions A.B.C.D and A.B.C.D' are compatible with
+  one another, both binary and in API, although one versions might have fixed
+  bugs that the other has not.
+
+### Formal Definition of GNU Radio's Semantic Versioning
+
+The key words “MUST”, “MUST NOT”, “REQUIRED”, “SHALL”, “SHALL NOT”,
+“SHOULD”, “SHOULD NOT”, “RECOMMENDED”, “MAY”, and “OPTIONAL” in this
+document are to be interpreted as described in [*RFC
+2119*](http://tools.ietf.org/html/rfc2119).
+
+1.  Software using Semantic Versioning MUST declare a public API. This
+    API could be declared in the code itself or exist strictly
+    in documentation. However it is done, it should be precise
+    and comprehensive.
+
+2.  A normal version number MUST take the form W.X.Y.Z where W, X, Y,
+    and Z are non-negative integers, and MUST NOT contain
+    leading zeroes. W is the major version, X is the API version, Y
+    is the ABI version, and Z is the patch version. Each element
+    MUST increase numerically. For instance: 3.1.9.0 -> 3.1.10.0
+    -> 3.1.11.0.
+
+3.  Once a versioned package has been released, the contents of that
+    version MUST NOT be modified. Any modifications MUST be released
+    as a new version.
+
+4.  Patch version Z (w.x.y.Z) MUST be incremented if only backwards
+    API-compatible & ABI-compatible changes are introduced.
+
+5.  ABI version Y (w.x.Y.z) MUST be incremented if changes break ABI
+    compatibility with the previous release.
+
+6.  API version X (w.X.y.z) MUST be incremented if changes break public
+    API compatibility with the previous release. It MAY include ABI
+    and patch level changes. It MAY be incremented if substantial new
+    functionality or improvements are introduced within private code.
+    ABI and PATCH version MUST be reset to 0 when API version
+    is incremented. An API breakage is defined as the case where
+    recompiling software against GNU Radio without modifications may yield
+    different results. The following cases, for example, are typically
+    not API-breaking, but are ABI-breaking: adding new public methods,
+    adding new default parameters to public methods if the default
+    case is identical to the previous case.
+
+7.  MAJOR version W (W.x.y.z) MAY be incremented if significant
+    architectural or technological changes are made that warrant
+    identifying the software as a new generation of product.
+
+8.  A pre-release version MAY be denoted by appending a hyphen and a
+    series of dot separated identifiers immediately following the
+    patch version. Identifiers MUST comprise only ASCII alphanumerics
+    and hyphen [0-9A-Za-z-]. Identifiers MUST NOT be empty. Numeric
+    identifiers MUST NOT include leading zeroes. Pre-release versions
+    have a lower precedence than the associated normal version. A
+    pre-release version indicates that the version is unstable and
+    might not satisfy the intended compatibility requirements as
+    denoted by its associated normal version. Examples: 3.1.0.0-alpha,
+    3.1.0.0-alpha.1, 3.1.0.0-0.3.7, 3.1.0.0-x.7.z.92.
+
+9.  Build metadata MAY be denoted by appending a plus sign and a series
+    of dot separated identifiers immediately following the patch or
+    pre-release version. Identifiers MUST comprise only ASCII
+    alphanumerics and hyphen [0-9A-Za-z-]. Identifiers MUST NOT
+    be empty. Build metadata SHOULD be ignored when determining
+    version precedence. Thus two versions that differ only in the
+    build metadata, have the same precedence. Examples:
+    3.1.0.0-alpha+001, 3.1.0.0+20130313144700, 3.1.0.0-beta+exp.sha.5114f85.
+
+10. Precedence refers to how versions are compared to each other
+    when ordered. Precedence MUST be calculated by separating the
+    version into major, API, ABI, patch and pre-release
+    identifiers in that order (Build metadata does not figure
+    into precedence). Precedence is determined by the first difference
+    when comparing each of these identifiers from left to right as
+    follows: Major, API, ABI, and patch versions are always
+    compared numerically. Example: 3.1.0.0 < 3.2.0.0 < 3.2.1.0
+    < 3.2.1.1. When major, API, ABI, and patch are equal, a
+    pre-release version has lower precedence than a normal version.
+    Example: 3.1.0.0-alpha < 3.1.0.0. Precedence for two
+    pre-release versions with the same major, API ABI, and patch
+    version MUST be determined by comparing each dot separated
+    identifier from left to right until a difference is found as
+    follows: identifiers consisting of only digits are compared
+    numerically and identifiers with letters or hyphens are compared
+    lexically in ASCII sort order. Numeric identifiers always have
+    lower precedence than non-numeric identifiers. A larger set of
+    pre-release fields has a higher precedence than a smaller set, if
+    all of the preceding identifiers are equal. Example: 3.1.0.0-alpha
+    < 3.1.0.0-alpha.1 < 3.1.0.0-alpha.beta < 3.1.0.0-beta
+    < 4.1.0.0-beta.2 < 3.1.0.0-beta.11 < 3.1.0.0-rc.1 < 3.1.0.0.
+
+#### License of this Document
+
+The versioning scheme is based on [*SemVer 2.0.0*](http://semver.org/); it's
+licensed under
+[*Creative Commons - CC BY 3.0*](http://creativecommons.org/licenses/by/3.0/)

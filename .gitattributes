@@ -1,0 +1,17 @@
+#
+# The following turn off LF->CRLF conversion for some files on Windows.
+# these conversions cause syntax errors on MinGW/MSYS.  They should not
+# have any effect on non-Windows systems or on Cygwin.  Any files that
+# required svn:eof-style=lf under subversion should be included here.
+#
+*.m4	-crlf
+*.ac	-crlf
+*.scm	-crlf
+#
+# In GNURadio 3.9, pybind11 compares hash values of headers and source
+# files against knowns values.  Conversion of values to CRLF on checkout
+# break those checks so keep LF values when files are subject to said checks
+#
+*.h    text eol=lf
+*.c    text eol=lf
+*.cc   text eol=lf
