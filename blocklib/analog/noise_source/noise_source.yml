@@ -1,0 +1,44 @@
+module: analog
+block: noise_source
+label: Noise Source
+blocktype: sync_block
+includes:
+  - gnuradio/analog/enums.h
+
+typekeys:
+  - id: T
+    type: class
+    options: 
+        - cf32
+        - rf32
+        - ri32
+        - ri16
+   
+parameters:
+-   id: type
+    label: Type
+    dtype: gr::analog::noise_t
+    settable: true
+    is_enum: true # this should be handled better
+-   id: amplitude
+    label: Amplitude
+    dtype: float
+    settable: true
+-   id: seed
+    label: Seed
+    dtype: long
+    settable: false
+    default: 0
+
+# Example Ports
+ports:
+-   domain: stream
+    id: out
+    direction: output
+    type: typekeys/T
+
+implementations:
+-   id: cpu
+# -   id: cuda
+
+file_format: 1

@@ -1,0 +1,36 @@
+module: streamops
+block: delay
+label: Delay
+blocktype: block
+
+parameters:
+-   id: dly
+    label: Delay
+    dtype: size_t
+    settable: true
+-   id: itemsize
+    label: Item Size
+    dtype: size_t
+    settable: false
+    default: 0
+    grc:
+        hide: part
+
+ports:
+-   domain: stream
+    id: in
+    direction: input
+    type: untyped
+    size: parameters/itemsize
+
+-   domain: stream
+    id: out
+    direction: output
+    type: untyped
+    size: parameters/itemsize
+
+implementations:
+-   id: cpu
+# -   id: cuda
+
+file_format: 1

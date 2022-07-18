@@ -1,0 +1,69 @@
+module: streamops
+block: deinterleave
+label: deinterleave
+blocktype: block
+
+doc:
+  brief: deinterleave an input block of samples into N outputs
+  detail: |-
+    This block deinterleaves blocks of samples. For each output
+    connection, the input stream will be deinterleaved successively
+    to the output connections. By default, the block deinterleaves
+    a single input to each output unless blocksize is given in the
+    constructor.
+    
+    \code
+    blocksize = 1
+    connections = 2
+    input = [a, b, c, d, e, f, g, h]
+    output[0] = [a, c, e, g]
+    output[1] = [b, d, f, h]
+    \endcode
+    
+    \code
+    blocksize = 2
+    connections = 2
+    input = [a, b, c, d, e, f, g, h]
+    output[0] = [a, b, e, f]
+    output[1] = [c, d, g, h]
+    \endcode
+
+parameters:
+-   id: nstreams
+    label: Num Streams
+    dtype: size_t
+    settable: false
+    grc:
+        default: 2
+-   id: blocksize
+    label: Block Size
+    dtype: size_t
+    settable: false
+    default: 1
+-   id: itemsize
+    label: Item Size
+    dtype: size_t
+    settable: false
+    default: 0
+    grc:
+        hide: part
+
+ports:
+-   domain: stream
+    id: in
+    direction: input
+    type: untyped
+    size: parameters/itemsize
+
+-   domain: stream
+    id: out
+    direction: output
+    type: untyped
+    size: parameters/itemsize
+    multiplicity: parameters/nstreams
+
+implementations:
+-   id: cpu
+# -   id: cuda
+
+file_format: 1

@@ -1,0 +1,32 @@
+{% import 'macros.j2' as macros -%}
+{{ macros.header() }}
+#pragma once
+
+#include <gnuradio/{{blocktype}}.h>
+#include <gnuradio/types.h>
+
+{{ macros.includes(includes) }}
+
+namespace gr {
+namespace {{module}} {
+
+{{ macros.class_statement(block, blocktype) }}
+{
+public:
+{{ macros.block_args(parameters) }}
+    
+    using sptr = std::shared_ptr<{{ block }}>;
+    {{ macros.cotr_statement(block) }};
+
+    {{ macros.implementations(implementations) }}
+
+    {{ macros.callbacks(callbacks) }}    
+
+protected:
+    {{ macros.message_ports(ports) }} 
+
+{{ macros.parameter_declarations(parameters) }}
+};
+
+} // namespace {{ module }}
+} // namespace gr

@@ -1,0 +1,48 @@
+module: math
+block: add
+label: Add
+blocktype: sync_block
+
+typekeys:
+  - id: T
+    type: class
+    options:
+        - cf32
+        - rf32
+        - ri32
+        - ri16
+
+parameters:
+-   id: nports
+    label: Num Ports
+    dtype: size_t
+    default: 2
+    grc:
+      default: 2
+      hide: part
+-   id: vlen
+    label: Vec. Length
+    dtype: size_t
+    default: 1
+
+ports:
+-   domain: stream
+    id: in
+    direction: input
+    type: typekeys/T
+    shape: parameters/vlen
+    multiplicity: parameters/nports
+
+-   domain: stream
+    id: out
+    direction: output
+    type: typekeys/T
+    shape: parameters/vlen
+
+implementations:
+-   id: cpu
+-   id: cuda
+-   id: numpy
+    lang: python
+
+file_format: 2

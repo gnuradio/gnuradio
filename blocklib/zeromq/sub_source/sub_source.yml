@@ -1,0 +1,48 @@
+module: zeromq
+block: sub_source
+label: SUB Source
+blocktype: sync_block
+
+# Example Parameters
+parameters:
+    - id: address
+      label: IP Address
+      dtype: std::string
+      settable: false
+    - id: timeout
+      label: Timeout
+      dtype: int
+      settable: false
+      default: 100
+    - id: pass_tags
+      label: Pass Tags
+      dtype: bool
+      settable: false
+      default: "false"
+    - id: hwm
+      label: HWM
+      dtype: int
+      settable: false
+      default: -1
+    - id: key
+      label: Key
+      dtype: std::string
+      settable: false
+      default: "\"\""
+    - id: itemsize
+      label: Item Size
+      dtype: size_t
+      settable: false
+      default: 0
+      
+ports:
+    - domain: stream
+      id: out
+      direction: output
+      type: untyped
+      size: parameters/itemsize
+
+implementations:
+    - id: cpu
+
+file_format: 1

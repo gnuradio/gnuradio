@@ -1,0 +1,41 @@
+module: blocks
+block: message_debug
+label: Message Debug
+blocktype: block
+
+parameters:
+-   id: en_uvec
+    label: Enable Vector Printing
+    dtype: bool
+    settable: true
+    default: "false"
+
+callbacks:
+    # virtual size_t num_messages() = 0;
+-   id: num_messages
+    return: size_t
+    
+    # virtual pmt::pmt_t get_message(size_t i) = 0;
+-   id: get_message
+    return: pmtf::pmt
+    args:
+    - id: i
+      dtype: size_t
+
+
+
+ports:
+-   domain: message
+    id: print
+    direction: input
+    optional: true
+-   domain: message
+    id: store
+    direction: input
+    optional: true
+
+implementations:
+-   id: cpu
+# -   id: cuda
+
+file_format: 1

@@ -1,0 +1,106 @@
+{% import 'macros.j2' as macros -%}
+{% set typestr = typekeys|map(attribute="id")|join(",")%}
+
+#include <pybind11/complex.h>
+#include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
+
+namespace py = pybind11;
+
+#include <gnuradio/{{ module }}/{{ block }}.h>
+using namespace gr::{{module}};
+
+template <{% for key in typekeys -%}{{key['type']}} {{key['id']}}{{ ", " if not loop.last }}{%endfor%}>
+void bind_{{ block }}_template(py::module& m, const char* classname)
+{
+    // using block_class = gr::{{ module }}::{{ block }}<{{typestr}}>;
+
+    py::class_<gr::{{ module }}::{{ block }}<{{typestr}}>, {{ inherits }}{{',' if inherits}} {% if blocktype != 'block'%} {{ "gr::" if blocktype[:4] != "gr::" }}{{blocktype}},{% endif %}
+    gr::block, gr::node,
+    std::shared_ptr<gr::{{ module }}::{{ block }}<{{typestr}}>>> {{block}}_class(m, classname);
+
+    py::enum_<typename ::gr::{{ module }}::{{ block }}<{{typestr}}>::available_impl>({{block}}_class, "available_impl")
+    {% set vars = {'pyshell': False} -%}
+    {% for impl in implementations -%}
+    {% if 'lang' not in impl or impl['lang'] == 'cpp' -%}
+        .value("{{ impl['id'] | lower }}", ::gr::{{module}}::{{block}}<{{typestr}}>::available_impl::{{ impl['id'] | upper }}) 
+    {% elif 'lang' in impl and impl['lang'] == 'python' and not vars.pyshell -%}
+        .value("pyshell", ::gr::{{module}}::{{block}}<{{typestr}}>::available_impl::PYSHELL) 
+    {% if vars.update({'pyshell': True}) %} {% endif %}
+    {% endif -%}
+    {% endfor -%}
+        //.value("base", ::gr::{{module}}::{{block}}<{{typestr}}>::available_impl::BASE ) 
+        .export_values();
+
+    {{block}}_class.def(py::init([]({% if parameters %}{% for param in parameters -%}{% if 'cotr' not in param or param['cotr']%}{{ macros.get_linked_value(param['dtype']) if param['container'] != 'vector' else "std::vector<" + param['dtype'] + ">"}} {{ param['id'] }},{%endif%} {%endfor%}{% endif %} typename gr::{{module}}::{{block}}<{{typestr}}>::available_impl impl) {
+                       return ::gr::{{ module }}::{{block}}<{{typestr}}>::make({ {% if parameters %}{% for param in parameters -%}{% if 'cotr' not in param or param['cotr']%}{{ param['id'] }}{{ ", " if not loop.last }}{% endif %}{%endfor%}{% endif %} }, impl);
+                   }),
+        {% if parameters %} {% for param in parameters -%}{% if 'cotr' not in param or param['cotr']%}
+        py::arg("{{ param['id'] }}"){% if 'default' in param %} = {{param['default']}}{% endif %},{% endif %}
+        {% endfor -%} {% endif %}
+                   py::arg("impl") = gr::{{module}}::{{block}}<{{typestr}}>::available_impl::{{ implementations[0]['id'] | upper }})
+        .def_static("make_from_params", &::gr::{{module}}::{{block}}<{{typestr}}>::make_from_params, 
+        py::arg("json_str"),
+        py::arg("impl") = gr::{{module}}::{{block}}<{{typestr}}>::available_impl::{{ implementations[0]['id'] | upper }})
+        {% for cb in callbacks -%}
+        {% if 'binding' in cb %}
+        .def("{{cb['id']}}", {{cb['binding']}})
+        {% else %}
+        .def("{{cb['id']}}", &gr::{{module}}::{{block}}<{{typestr}}>::{{cb['id']}})
+        {% endif %}
+        {% endfor %} 
+        {% for p in parameters -%}
+        {% if p['settable'] %}
+        .def("set_{{p['id']}}", &gr::{{module}}::{{block}}<{{typestr}}>::set_{{p['id']}})
+        {% endif -%}
+        {% if p['settable'] and not 'gettable' in p or p['gettable'] %}
+        .def("{{p['id']}}", &gr::{{module}}::{{block}}<{{typestr}}>::{{p['id']}})
+        {% endif %}
+        {% endfor %} 
+        ;
+}
+
+void bind_{{ block }}(py::module& m)
+{
+{%if typekeys | length == 1 -%}
+{%set key1 = typekeys|first %}
+{% for opt in key1['options'] -%}
+    bind_{{ block }}_template<{{  macros.cpp_type_lookup(opt) }}>(m, "{{ block }}_{{macros.typekey_suffix(opt, key1['id'],ports)}}");
+{% endfor %}
+{% elif typekeys | length == 2 -%}
+{%set key1 = typekeys|first %}
+{%set key2 = typekeys|last %}
+{% for opt1 in key1['options'] -%}
+{% for opt2 in key2['options'] -%}
+{% if type_inst -%}
+{% for typev in type_inst -%}
+{% if opt1 == typev['value'][0] and opt2 == typev['value'][1] -%}
+    bind_{{ block }}_template<{{  macros.cpp_type_lookup(opt1)}}, {{ macros.cpp_type_lookup(opt2)}}>(m, "{{ block }}_{{ macros.typekey_suffix(opt1, key1['id'],ports) }}{{ macros.typekey_suffix(opt2, key2['id'],ports) }}");
+{% endif %}
+{% endfor %}
+{% else %}
+    bind_{{ block }}_template<{{  macros.cpp_type_lookup(opt1)}}, {{ macros.cpp_type_lookup(opt2)}}>(m, "{{ block }}_{{ macros.typekey_suffix(opt1, key1['id'],ports) }}{{ macros.typekey_suffix(opt2, key2['id'],ports) }}");
+{% endif %}
+{% endfor %}
+{% endfor %}
+{% else -%}
+{%set key1 = typekeys|first %}
+{%set key2 = typekeys[1] %}
+{%set key3 = typekeys|last %}
+{% for opt1 in key1['options'] -%}
+{% for opt2 in key2['options'] -%}
+{% for opt3 in key3['options'] -%}
+{% if type_inst -%}
+{% for typev in type_inst -%}
+{% if opt1 == typev['value'][0] and opt2 == typev['value'][1] and opt3 == typev['value'][2] -%}
+    bind_{{ block }}_template<{{ macros.cpp_type_lookup(opt1)}}, {{ macros.cpp_type_lookup(opt2)}}, {{ macros.cpp_type_lookup(opt3)}}>(m, "{{ block }}_{{ macros.typekey_suffix(opt1, key1['id'],ports) }}{{ macros.typekey_suffix(opt2, key2['id'],ports) }}{{ macros.typekey_suffix(opt3, key3['id'],ports) }}");
+{% endif %}
+{% endfor %}
+{% else %}
+    bind_{{ block }}_template<{{ macros.cpp_type_lookup(opt1)}}, {{ macros.cpp_type_lookup(opt2)}}, {{ macros.cpp_type_lookup(opt3)}}>(m, "{{ block }}_{{ macros.typekey_suffix(opt1, key1['id'],ports) }}{{ macros.typekey_suffix(opt2, key2['id'],ports) }}{{ macros.typekey_suffix(opt3, key3['id'],ports) }}");
+{% endif %}
+{% endfor %}
+{% endfor %}
+{% endfor %}
+{% endif %}
+}

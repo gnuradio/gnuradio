@@ -1,0 +1,406 @@
+{
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "$ref": "#/definitions/TopLevel",
+    "definitions": {
+        "TopLevel": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "module": {
+                    "type": "string"
+                },
+                "block": {
+                    "type": "string"
+                },
+                "label": {
+                    "type": "string"
+                },
+                "blocktype": {
+                    "type": "string"
+                },
+                "includes": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "grc": {
+                    "$ref": "#/definitions/GrcTop"
+                },
+                "typekeys": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Typekey"
+                    }
+                },
+                "type_inst": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/TypeInst"
+                    }
+                },
+                "parameters": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Parameter"
+                    }
+                },
+                "callbacks": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Callback"
+                    }
+                },
+                "ports": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Port"
+                    }
+                },
+                "implementations": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Implementation"
+                    }
+                },
+                "file_format": {
+                    "type": "integer"
+                },
+                "doc": {
+                    "$ref": "#/definitions/Doc"
+                }
+            },
+            "required": [
+                "block",
+                "blocktype",
+                "file_format",
+                "implementations",
+                "label",
+                "module"
+            ],
+            "title": "GNU Radio Block"
+        },
+        "Doc": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "brief": {
+                    "type": "string"
+                },
+                "detail": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "brief"
+            ],
+            "title": "Doc"
+        },
+        "Callback": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "const": {
+                    "type": "boolean",
+                    "default": false
+                },
+                "return": {
+                    "type": "string"
+                },
+                "args": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/CallbackArg"
+                    }
+                },
+                "binding": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "id",
+                "return"
+            ],
+            "title": "Callback"
+        },
+        "CallbackArg": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "dtype": {
+                    "type": "string"
+                },
+                "default": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "id",
+                "dtype"
+            ],
+            "title": "CallbackArg"
+        },
+        "Implementation": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "lang": {
+                    "type": "string",
+                    "default": "cpp"
+                },
+                "domain": {
+                    "type": "string",
+                    "default": "cpu"
+                }                
+            },
+            "required": [
+                "id"
+            ],
+            "title": "Implementation"
+        },
+        "Parameter": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "label": {
+                    "type": "string"
+                },
+                "category": {
+                    "type": "string"
+                },
+                "dtype": {
+                    "type": "string"
+                },
+                "settable": {
+                    "type": "boolean",
+                    "default": false
+                },
+                "gettable": {
+                    "type": "boolean",
+                    "default": false
+                },
+                "default": {
+                    "anyOf": [
+                        {
+                            "type": "string",
+                            "default": ""
+                        },
+                        {
+                            "type": "number",
+                            "default": 0.0
+                        },
+                        {
+                            "type": "integer",
+                            "default": 0
+                        },
+                        {
+                            "type": "boolean",
+                            "default": false
+                        },
+                        {
+                            "type": "array",
+                            "default": []
+                        }
+                    ],
+                    "default": ""
+                },
+                "container": {
+                    "type": "string"
+                },
+                "cotr": {
+                    "type": "boolean"
+                },
+                "serializable": {
+                    "type": "boolean",
+                    "default": false
+                },
+                "grc": {
+                    "$ref": "#/definitions/Grc"
+                },
+                "is_enum": {
+                    "type": "boolean",
+                    "default": false
+                },
+                "doc": {
+                    "type": "string",
+                    "default": ""
+                }
+            },
+            "required": [
+                "dtype",
+                "id",
+                "label"
+            ],
+            "title": "Parameter"
+        },
+        "GrcTop": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "flags": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "templates": {
+                    "$ref": "#/definitions/GrcTemplates"
+                }
+            },
+            "required": [
+                "templates"
+            ],
+            "title": "GrcTop"
+        },
+        "GrcTemplates": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "imports": {
+                    "type": "string"
+                },
+                "make": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "make"
+            ],
+            "title": "GrcTemplates"
+        },
+        "Grc": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "hide": {
+                    "type": "string"
+                },
+                "default": {
+                    "anyOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "number"
+                        },
+                        {
+                            "type": "integer"
+                        },
+                        {
+                            "type": "boolean"
+                        },
+                        {
+                            "type": "array"
+                        }
+                    ]
+                }
+            },
+            "required": [],
+            "title": "Grc"
+        },
+        "Port": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "domain": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "direction": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "size": {
+                    "type": "string"
+                },
+                "shape": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "multiplicity": {
+                    "type": "string",
+                    "default": "1"
+                },
+                "optional": {
+                    "type": "boolean",
+                    "default": false
+                }
+            },
+            "required": [
+                "direction",
+                "domain",
+                "id"
+            ],
+            "title": "Port"
+        },
+        "Typekey": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "label": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "options": {
+                    "type": "array",
+                    "items": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "array"
+                            }
+                        ]
+                    }
+                }
+            },
+            "required": [
+                "id",
+                "options",
+                "type"
+            ],
+            "title": "Typekey"
+        },
+        "TypeInst": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "value": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "label": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "value"
+            ],
+            "title": "Typekey"
+        }
+    }
+}

@@ -1,0 +1,41 @@
+module: blocks
+block: msg_forward
+label: Message Forward
+blocktype: sync_block
+includes: 
+  - pmtf/wrap.hpp
+
+parameters:
+-   id: max_messages
+    label: Max Messages
+    dtype: size_t
+    settable: false
+    default: 0
+-   id: message_count
+    label: Message Count
+    dtype: size_t
+    cotr: false
+    gettable: true
+    grc:
+      hide: all
+
+ports:
+-   domain: message
+    id: in
+    direction: input
+    optional: true
+
+-   domain: message
+    id: out
+    direction: output
+    optional: true
+
+# callbacks:
+# -   id: message_count
+#     return: size_t
+
+implementations:
+-   id: cpu
+# -   id: cuda
+
+file_format: 1

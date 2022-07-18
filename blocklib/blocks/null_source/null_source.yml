@@ -1,0 +1,32 @@
+module: blocks
+block: null_source
+label: Null Source
+blocktype: sync_block
+
+parameters:
+-   id: nports
+    label: Num. Ports
+    dtype: size_t
+    default: 1
+    settable: false
+-   id: itemsize
+    label: Item Size
+    dtype: size_t
+    settable: false
+    default: 0
+    grc:
+        hide: part
+        
+ports:
+-   domain: stream
+    id: out
+    direction: output
+    type: untyped
+    size: parameters/itemsize
+    multiplicity: parameters/nports
+
+implementations:
+-   id: cpu
+# -   id: cuda
+
+file_format: 1

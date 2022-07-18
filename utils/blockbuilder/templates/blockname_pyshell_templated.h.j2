@@ -1,0 +1,59 @@
+#pragma once
+
+#include <pybind11/embed.h>
+#include <pybind11/pybind11.h> // must be first
+#include <pybind11/stl.h>
+namespace py = pybind11;
+
+#include <gnuradio/{{module}}/{{block}}.h>
+#include <gnuradio/pyblock_detail.h>
+
+namespace gr {
+namespace {{module}} {
+
+template <class T>
+class {{block}}_pyshell : public {{block}}<T>
+{
+public:
+    {{block}}_pyshell(const typename {{block}}<T>::block_args& args) : {{blocktype}}("{{block}}", "{{module}}"), {{block}}<T>(args)
+    {
+        
+    }
+
+    work_return_code_t
+    work(work_io& wio) override
+    {
+        py::gil_scoped_acquire acquire;
+
+        py::object ret = this->pb_detail()->handle().attr("work")(&wio);
+
+        return ret.cast<work_return_code_t>();
+    }
+
+    bool start(void)
+    {
+        py::gil_scoped_acquire acquire;
+        if (py::hasattr(this->pb_detail()->handle(), "start")) {
+            py::object ret = this->pb_detail()->handle().attr("start")();
+            return ret.cast<bool>() && block::start();
+        }
+ 
+        return block::start();
+    }
+
+    bool stop(void)
+    {
+        py::gil_scoped_acquire acquire;
+        if (py::hasattr(this->pb_detail()->handle(), "stop")) {
+            py::object ret = this->pb_detail()->handle().attr("stop")();
+            return ret.cast<bool>() && block::stop();
+        }
+
+        return block::stop();
+    }
+
+};
+
+
+} // namespace {{module}}
+} // namespace gr

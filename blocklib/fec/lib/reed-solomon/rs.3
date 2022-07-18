@@ -1,0 +1,170 @@
+.TH REED-SOLOMON 3
+.SH NAME
+init_rs_int, encode_rs_int, decode_rs_int, free_rs_int,
+init_rs_char, encode_rs_char, decode_rs_char, free_rs_char,
+encode_rs_8, decode_rs_8, encode_rs_ccsds, decode_rs_ccsds
+.SH SYNOPSIS
+.nf
+.ft B
+#include "rs.h"
+
+void *init_rs_int(unsigned int symsize,unsigned int gfpoly,unsigned fcr,
+unsigned prim,unsigned int nroots);
+void encode_rs_int(void *rs,int *data,int *parity);
+int decode_rs_int(void *rs,int *data,int *eras_pos,int no_eras);
+void free_rs_int(void *rs);
+
+void *init_rs_char(unsigned int symsize,unsigned int gfpoly,unsigned fcr,
+unsigned prim,unsigned int nroots);
+void encode_rs_char(void *rs,unsigned char *data,unsigned char *parity);
+int decode_rs_char(void *rs,unsigned char *data,int *eras_pos,int no_eras);
+void free_rs_char(void *rs);
+
+void encode_rs_8(unsigned char *data,unsigned char  *parity);
+int decode_rs_8(unsigned char *data,int *eras_pos,int no_eras);
+
+void encode_rs_ccsds(unsigned char *data,unsigned char  *parity);
+int decode_rs_ccsds(unsigned char *data,int *eras_pos,int no_eras);
+
+unsigned char Taltab[256];
+unsigned char Tal1tab[256];
+
+.fi
+
+.SH DESCRIPTION
+These functions implement Reed-Solomon error control encoding and
+decoding. For optimal performance in a variety of applications, three
+sets of functions are supplied. To access these functions, add "-lrs"
+to your linker command line.
+
+The functions with names ending in "_int" handle data in integer arrays,
+permitting arbitrarily large codewords limited only by machine
+resources.
+
+The functions with names ending in "_char" take unsigned char arrays and can
+handle codes with symbols of 8 bits or less (i.e., with codewords of
+255 symbols or less).
+
+\fBencode_rs_8\fR and \fBdecode_rs_8\fR implement a specific
+(255,223) code with 8-bit symbols specified by the CCSDS:
+a field generator of 1 + X + X^2 + X^7 + X^8 and a code
+generator with first consecutive root = 112 and a primitive element of
+11. These functions use the conventional
+polynomial form, \fBnot\fR the dual-basis specified in
+the CCSDS standard, to represent symbols.
+
+For full CCSDS compatibility, \fBencode_rs_ccsds\fR and
+\fBdecode_rs_ccsds\fR are provided. These functions use two lookup
+tables, \fBTaltab\fR to convert from conventional to dual-basis, and
+\fBTal1tab\fR to perform the inverse mapping from dual-basis to
+conventional form, before and after calls to \fBencode_rs_8\fR
+and \fBdecode_rs_8\fR.
+
+The _8 and _ccsds functions do not require initialization.
+To use the general purpose RS encoder or decoder (i.e.,
+the _char or _int versions), the user must first
+call \fBinit_rs_int\fR or \fBinit_rs_char\fR as appropriate. The
+arguments are as follows:
+
+\fBsymsize\fR gives the symbol size in bits, up to 8 for \fBinit_rs_char\fR
+or 32 for \fBinit_rs_int\fR on a machine with 32-bit ints (though such a
+huge code would exhaust memory limits on a 32-bit machine). The resulting
+Reed-Solomon code word will have 2^\fBsymsize\fR - 1 symbols,
+each containing \fBsymsize\fR bits.
+
+\fBgfpoly\fR gives the extended Galois field generator polynomial coefficients,
+with the 0th coefficient in the low order bit. The polynomial
+\fImust\fR be primitive; if not, the call will fail and NULL will be
+returned.
+
+\fBfcr\fR gives, in index form, the first consecutive root of the
+Reed Solomon code generator polynomial.
+
+\fBprim\fR gives, in index form, the primitive element in the Galois field
+used to generate the Reed Solomon code generator polynomial.
+
+\fBnroots\fR gives the number of roots in the Reed Solomon code
+generator polynomial. This equals the number of parity symbols
+per code block.
+
+The resulting Reed-Solomon code has parameters (N,K), where
+N = 2^\fBsymsize\fR-1 and K = N-\fBnroots\fR.
+
+The \fBencode_rs_char\fR and \fBencode_rs_int\fR functions accept
+the pointer returned by \fBinit_rs_char\fR or
+\fBinit_rs_int\fR, respectively, to
+encode a block of data using the specified code.
+The input data array is expected to
+contain K symbols (of \fBsymsize\fR bits each, right justified
+in each char or int) and \fBnroots\fR parity symbols will be placed
+into the \fBparity\fR array, right justified.
+
+The \fBdecode_rs_char\fR and \fBdecode_rs_int\fR functions correct
+the errors in a Reed-Solomon codeword up to the capability of the code.
+An optional list of "erased" symbol indices may be given in the \fBeras_pos\fR
+array to assist the decoder; this parameter may be NULL if no erasures
+are given. The number of erased symbols must be given in the \fBno_eras\fR
+parameter.
+
+To maximize performance, the encode and decode functions perform no
+"sanity checking" of their inputs. Decoder failure may result if
+\fBeras_pos\fR contains duplicate entries, and both encoder and
+decoder will fail if an input symbol exceeds its allowable range.
+(Symbol range overflow cannot occur with the _8 or _ccsds functions,
+or with the _char functions when 8-bit symbols are specified.)
+
+The decoder corrects the symbols "in place", returning the number
+of symbols in error. If the codeword is uncorrectable, -1 is returned
+and the data block is unchanged. If \fBeras_pos\fR is non-null, it is
+used to return a list of corrected symbol positions, in no particular
+order.  This means that the
+array passed through this parameter \fImust\fR have at least \fBnroots\fR
+elements to prevent a possible buffer overflow.
+
+The \fBfree_rs_int\fR and \fBfree_rs_char\fR functions free the internal
+space allocated by the \fBinit_rs_int\fR and \fBinit_rs_char\fR functions,
+respecitively.
+
+The functions \fBencode_rs_8\fR and \fBdecode_rs_8\fR do not have
+corresponding \fBinit\fR and \fBfree\fR, nor do they take the
+\fBrs\fR argument accepted by the other functions as their parameters
+are statically compiled. These functions implement a code
+equivalent to calling
+
+\fBinit_rs_char\fR(8,0x187,112,11,32);
+
+and using the resulting pointer with \fBencode_rs_char\fR and
+\fBdecode_rs_char\fR.
+
+.SH RETURN VALUES
+\fBinit_rs_int\fR and \fBinit_rs_char\fR return a pointer to an internal
+control structure that must be passed to the corresponding encode, decode
+and free functions. These functions return NULL on error.
+
+The decode functions return a count of corrected
+symbols, or -1 if the block was uncorrectible.
+
+.SH AUTHOR
+Phil Karn, KA9Q (karn@ka9q.net), based heavily on earlier work by Robert
+Morelos-Zaragoza (rober@spectra.eng.hawaii.edu) and Hari Thirumoorthy
+(harit@spectra.eng.hawaii.edu).
+
+.SH COPYRIGHT
+Copyright 2002, Phil Karn, KA9Q. May be used under the terms of the
+GNU General Public License (GPL).
+
+.SH SEE ALSO
+CCSDS 101.0-B-5: Telemetry Channel Coding.
+http://www.ccsds.org/documents/pdf/CCSDS-101.0-B-5.pdf
+
+.SH NOTE
+CCSDS chose the "dual basis" symbol representation because it
+simplified the implementation of a Reed-Solomon encoder in dedicated
+hardware. However, this approach holds no advantages for a software
+implementation on a general purpose computer, so use of the dual basis
+is recommended only if compatibility with the CCSDS standard is needed,
+e.g., to decode data from an existing spacecraft using the CCSDS
+standard. If you just want a fast (255,223) RS codec without needing
+to interoperate with a CCSDS standard code, use \fBencode_rs_8\fR
+and \fBdecode_rs_8\fR.
+

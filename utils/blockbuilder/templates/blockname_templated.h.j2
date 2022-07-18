@@ -1,0 +1,82 @@
+{% import 'macros.j2' as macros -%}
+{{ macros.header() }}
+#pragma once
+{% set blocktype_include = blocktype %}
+{% if '::' in blocktype_include %}
+{% set list = blocktype_include.split('::') %}
+{% set blocktype_include = list[(list | length )-1] %}
+{% endif %}
+#include <gnuradio/{{blocktype_include}}.h>
+#include <gnuradio/types.h>
+
+{{ macros.includes(includes) }}
+
+namespace gr {
+namespace {{module}} {
+
+template <{% for key in typekeys -%}{{key['type']}} {{key['id']}}{{ ", " if not loop.last }}{%endfor%}>
+{{ macros.class_statement(block, blocktype) }}
+{
+public:
+{{ macros.block_args(parameters) }}
+    using sptr = std::shared_ptr<{{ block }}>;
+    {{ macros.cotr_statement(block) }};
+
+    {{ macros.implementations(implementations) }}
+
+    {{ macros.callbacks(callbacks) }}    
+
+{{ macros.parameter_declarations(parameters)}} 
+
+    virtual std::string suffix() override;
+
+protected:
+    {{ macros.message_ports(ports) }} 
+    
+};
+
+
+{%if typekeys | length == 1 -%}
+{%set key1 = typekeys|first %}
+{% for opt in key1['options'] -%}
+using {{block}}_{{ macros.typekey_suffix(opt, key1['id'],ports) }} = {{block}}<{{ macros.cpp_type_lookup(opt) }}>;
+{% endfor -%}
+{% elif typekeys | length == 2 -%}
+{%set key1 = typekeys|first %}
+{%set key2 = typekeys|last %}
+{% for opt1 in key1['options'] -%}
+{% for opt2 in key2['options'] -%}
+{% if type_inst -%}
+{% for typev in type_inst -%}
+{% if opt1 == typev['value'][0] and opt2 == typev['value'][1] -%}
+using {{block}}_{{ macros.typekey_suffix(opt1, key1['id'],ports) }}{{ macros.typekey_suffix(opt2, key2['id'],ports) }} = {{block}}<{{ macros.cpp_type_lookup(opt1)+ ", " + macros.cpp_type_lookup(opt2)}}>;
+{% endif -%}
+{% endfor -%}
+{% else -%}
+using {{block}}_{{ macros.typekey_suffix(opt1, key1['id'],ports) }}{{ macros.typekey_suffix(opt2, key2['id'],ports) }} = {{block}}<{{ macros.cpp_type_lookup(opt1)+ ", " + macros.cpp_type_lookup(opt2)}}>;
+{% endif -%}
+{% endfor -%}
+{% endfor -%}
+{% else -%}
+{%set key1 = typekeys|first %}
+{%set key2 = typekeys[1] %}
+{%set key3 = typekeys|last %}
+{% for opt1 in key1['options'] -%}
+{% for opt2 in key2['options'] -%}
+{% for opt3 in key3['options'] -%}
+{% if type_inst -%}
+{% for typev in type_inst -%}
+{% if opt1 == typev['value'][0] and opt2 == typev['value'][1] and opt3 == typev['value'][2] -%}
+using {{block}}_{{ macros.typekey_suffix(opt1, key1['id'],ports) }}{{ macros.typekey_suffix(opt2, key2['id'],ports) }}{{ macros.typekey_suffix(opt3, key3['id'],ports) }} = {{block}}<{{ macros.cpp_type_lookup(opt1)+ ", " + macros.cpp_type_lookup(opt2)+ ", " + macros.cpp_type_lookup(opt3)}}>;
+{% endif %}
+{% endfor %}
+{%else %}
+using {{block}}_{{ macros.typekey_suffix(opt1, key1['id'],ports) }}{{ macros.typekey_suffix(opt2, key2['id'],ports) }}{{ macros.typekey_suffix(opt3, key3['id'],ports) }} = {{block}}<{{ macros.cpp_type_lookup(opt1)+ ", " + macros.cpp_type_lookup(opt2)+ ", " + macros.cpp_type_lookup(opt3)}}>;
+{% endif %}
+{% endfor -%}
+{% endfor -%}
+{% endfor -%}
+{% endif -%}
+
+} // namespace {{ module }}
+} // namespace gr

@@ -1,0 +1,78 @@
+{% import 'macros.j2' as macros -%}
+{{ macros.header() }}
+
+#include <gnuradio/{{module}}/{{block}}.h>
+#include <nlohmann/json.hpp>
+
+namespace gr {
+namespace {{module}} {
+
+{{block}}::sptr {{block}}::make(const block_args& args, available_impl impl)
+{
+    {% set vars = {'pyshell': False} %}
+    switch (impl) {
+    {% for impl in implementations %}
+    {% if 'lang' not in impl or impl['lang'] == 'cpp' -%}
+    #ifdef HAVE_{{ impl['id'] | upper }}
+    case available_impl::{{ impl['id'] | upper }}:
+        return make_{{ impl['id'] | lower }}(args);
+        break;
+    #endif
+    {% elif 'lang' in impl and impl['lang'] == 'python' and not vars.pyshell -%}
+    case available_impl::PYSHELL:
+        return make_pyshell(args);
+        break;
+    {% if vars.update({'pyshell': True}) %} {% endif %}
+    {% endif -%}
+    {% endfor %}
+        
+    default:
+        throw std::invalid_argument(
+            "invalid implementation specified");
+    }
+}
+
+{{block}}::sptr {{block}}::make_from_params(const std::string& json_str, available_impl impl)
+{
+    block_args args;
+
+    // Parse the json string
+    using json = nlohmann::json;
+    auto json_obj = json::parse(json_str);
+
+    {% for p in parameters -%}
+    {% if ('cotr' not in p or p['cotr']) and ('serializable' not in p or p['serializable'])%}
+    args.{{p['id']}} = pmtf::get_as<{{ 'std::vector<'+p['dtype']+'>' if 'container' in p and p['container'] == 'vector' else p['dtype']}}>(pmtf::pmt::from_base64(json_obj["{{p['id']}}"].get<std::string>()));
+    {% endif %}
+    {% endfor -%}
+
+    return make(args, impl);
+}
+
+
+{{block}}::{{block}}(const block_args& args) : {{blocktype}}("{{ block }}", "{{ module }}") {
+ {{ macros.ports(ports, parameters) }}
+ {{ macros.parameter_instantiations(parameters) }}
+}
+
+// Settable Parameters
+{% if parameters %}
+{% for p in parameters -%}
+{% if p['settable']%}
+void {{block}}::set_{{p['id']}}({{p['dtype']}} {{p['id']}})
+{
+    return request_parameter_change(params::id_{{p['id']}},{{p['id']}});
+}
+{% endif -%}
+{% if p['settable'] and not 'gettable' in p or p['gettable'] %}
+{{p['dtype']}} {{block}}::{{p['id']}}()
+{
+    return pmtf::get_as<{{ 'std::vector<'+p['dtype']+'>' if 'container' in p and p['container'] == 'vector' else p['dtype']}}>(request_parameter_query(params::id_{{p['id']}}));
+}
+{% endif %}
+{% endfor -%}
+{% endif %}
+
+
+} // namespace {{ module }}
+} // namespace gr

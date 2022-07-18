@@ -1,0 +1,71 @@
+module: streamops
+block: interleave
+label: interleave
+blocktype: block
+
+doc:
+    brief:  interleave N inputs into a single output
+    detail: |-
+        This block interleaves blocks of samples. For each input
+        connection, the samples are interleaved successively to the
+        output connection. By default, the block interleaves a single
+        sample from each input to the output unless blocksize is given
+        in the constructor.
+
+        \code
+        blocksize = 1
+        connections = 2
+        input[0] = [a, c, e, g]
+        input[1] = [b, d, f, h]
+        output = [a, b, c, d, e, f, g, h]
+        \endcode
+
+        \code
+        blocksize = 2
+        connections = 2
+        input[0] = [a, b, e, f]
+        input[1] = [c, d, g, h]
+        output = [a, b, c, d, e, f, g, h]
+        \endcode
+
+
+parameters:
+-   id: nstreams
+    label: Num Streams
+    dtype: size_t
+    settable: false
+    grc:
+        default: 2
+-   id: blocksize
+    label: Block Size
+    dtype: size_t
+    settable: false
+    default: 1
+-   id: itemsize
+    label: Item Size
+    dtype: size_t
+    settable: false
+    default: 0
+    grc:
+        hide: part
+
+ports:
+-   domain: stream
+    id: in
+    direction: input
+    type: untyped
+    size: parameters/itemsize
+    multiplicity: parameters/nstreams
+
+-   domain: stream
+    id: out
+    direction: output
+    type: untyped
+    size: parameters/itemsize
+
+
+implementations:
+-   id: cpu
+# -   id: cuda
+
+file_format: 1

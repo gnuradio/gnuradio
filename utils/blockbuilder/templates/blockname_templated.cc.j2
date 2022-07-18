@@ -1,0 +1,139 @@
+{% import 'macros.j2' as macros -%}
+{{ macros.header() }}
+#include <gnuradio/{{module}}/{{block}}.h>
+#include <nlohmann/json.hpp>
+
+namespace gr {
+namespace {{module}} {
+
+template <{% for key in typekeys -%}{{key['type']}} {{key['id']}}{{ ", " if not loop.last }}{%endfor%}>
+typename {{block}}<{% for key in typekeys -%}{{key['id']}}{{ ", " if not loop.last }}{%endfor%}>::sptr {{block}}<{% for key in typekeys -%}{{key['id']}}{{ ", " if not loop.last }}{%endfor%}>::make(const block_args& args, available_impl impl)
+{
+    {% set vars = {'pyshell': False} %}
+    switch (impl) {
+    {% for impl in implementations %}
+    {% if 'lang' not in impl or impl['lang'] == 'cpp' -%}
+    #ifdef HAVE_{{ impl['id'] | upper }}
+    case available_impl::{{ impl['id'] | upper }}:
+        return make_{{ impl['id'] | lower }}(args);
+        break;
+    #endif
+    {% elif 'lang' in impl and impl['lang'] == 'python' and not vars.pyshell -%}
+    case available_impl::PYSHELL:
+        return make_pyshell(args);
+        break;
+    {% if vars.update({'pyshell': True}) %} {% endif %}
+    {% endif -%}
+    {% endfor %}
+        
+    default:
+        throw std::invalid_argument(
+            "invalid implementation specified");
+    }
+}
+
+template <{% for key in typekeys -%}{{key['type']}} {{key['id']}}{{ ", " if not loop.last }}{%endfor%}>
+typename {{block}}<{% for key in typekeys -%}{{key['id']}}{{ ", " if not loop.last }}{%endfor%}>::sptr {{block}}<{% for key in typekeys -%}{{key['id']}}{{ ", " if not loop.last }}{%endfor%}>::make_from_params(const std::string& json_str, available_impl impl)
+{
+    block_args args;
+
+    // Parse the json string
+    using json = nlohmann::json;
+    auto json_obj = json::parse(json_str);
+
+    {% for p in parameters -%}
+    {% if ('cotr' not in p or p['cotr']) and ('serializable' not in p or p['serializable'])%}
+    args.{{p['id']}} = {{'('+macros.get_linked_value(p['dtype'])+')' if p['is_enum']}}pmtf::get_as<{{ 'std::vector<'+p['dtype']+'>' if 'container' in p and p['container'] == 'vector' else 'int' if p['is_enum'] else p['dtype']}}>(deserialize_param_to_pmt(json_obj["{{p['id']}}"].get<std::string>()));
+    {% endif %}
+    {% endfor -%}
+
+    return make(args, impl);
+}
+
+template <{% for key in typekeys -%}{{key['type']}} {{key['id']}}{{ ", " if not loop.last }}{%endfor%}>
+{{block}}<{% for key in typekeys -%}{{key['id']}}{{ ", " if not loop.last }}{%endfor%}>::{{block}}(const block_args& args) : {{blocktype}}("{{ block }}", "{{ module }}") {
+ {{ macros.ports(ports, parameters, typekeys) }}
+ {{ macros.parameter_instantiations(parameters) }}
+
+}
+
+// Settable Parameters
+{% for p in parameters -%}
+{% if p['settable']%}
+template <{% for key in typekeys -%}{{key['type']}} {{key['id']}}{{ ", " if not loop.last }}{%endfor%}>
+void {{block}}<{% for key in typekeys -%}{{key['id']}}{{ ", " if not loop.last }}{%endfor%}>::set_{{p['id']}}({{ 'std::vector<'+p['dtype']+'>' if 'container' in p and p['container'] == 'vector' else macros.get_linked_value(p['dtype'])}} {{p['id']}})
+{
+    return request_parameter_change(params::id_{{p['id']}}, {{"(int)" if p['is_enum']}}{{p['id']}});
+}
+{% endif -%}
+{% if p['settable'] and not 'gettable' in p or p['gettable'] %}
+template <{% for key in typekeys -%}{{key['type']}} {{key['id']}}{{ ", " if not loop.last }}{%endfor%}>
+{{ 'std::vector<'+p['dtype']+'>' if 'container' in p and p['container'] == 'vector' else macros.get_linked_value(p['dtype'])}} {{block}}<{% for key in typekeys -%}{{key['id']}}{{ ", " if not loop.last }}{%endfor%}>::{{p['id']}}()
+{
+{% if p['is_enum'] %}
+{% if 'container' in p and p['container'] == 'vector' %}
+    return pmtf::get_as<{{ 'std::vector<int>' }}>(request_parameter_query(params::id_{{p['id']}}));
+{% else %}
+    return ({{macros.get_linked_value(p['dtype'])}}) pmtf::get_as<int>(request_parameter_query(params::id_{{p['id']}}));
+{% endif %}
+{% else %}
+    return pmtf::get_as<{{ 'std::vector<'+p['dtype']+'>' if 'container' in p and p['container'] == 'vector' else p['dtype']}}>(request_parameter_query(params::id_{{p['id']}}));
+{% endif %}
+}
+{% endif %}
+{% endfor -%}
+
+{%if typekeys | length == 1 -%}
+{%set key1 = typekeys|first %}
+{% for opt in key1['options'] -%}
+
+template <>
+std::string {{block}}<{{ macros.cpp_type_lookup(opt) }}>::suffix(){ return "_{{macros.typekey_suffix(opt, key1['id'],ports)}}"; }
+template class {{block}}<{{ macros.cpp_type_lookup(opt) }}>;
+{% endfor -%}
+{% elif typekeys | length == 2 -%}
+{%set key1 = typekeys|first %}
+{%set key2 = typekeys|last %}
+{% for opt1 in key1['options'] -%}
+{% for opt2 in key2['options'] -%}
+{% if type_inst -%}
+{% for typev in type_inst -%}
+{% if opt1 == typev['value'][0] and opt2 == typev['value'][1] -%}
+template <>
+std::string {{block}}<{{ macros.cpp_type_lookup(opt1)}}, {{ macros.cpp_type_lookup(opt2)}}>::suffix(){ return "_{{macros.typekey_suffix(opt1, key1['id'],ports)}}{{macros.typekey_suffix(opt2, key2['id'],ports)}}"; }
+template class {{block}}<{{ macros.cpp_type_lookup(opt1)}}, {{ macros.cpp_type_lookup(opt2)}}>;
+{% endif %}
+{% endfor %}
+{% else %}
+template <>
+std::string {{block}}<{{ macros.cpp_type_lookup(opt1)}}, {{ macros.cpp_type_lookup(opt2)}}>::suffix(){ return "_{{macros.typekey_suffix(opt1, key1['id'],ports)}}{{macros.typekey_suffix(opt2, key2['id'],ports)}}"; }
+template class {{block}}<{{ macros.cpp_type_lookup(opt1)}}, {{ macros.cpp_type_lookup(opt2)}}>;
+{% endif %}
+{% endfor -%}
+{% endfor -%}
+{% else %}
+{%set key1 = typekeys|first %}
+{%set key2 = typekeys[1]%}
+{%set key3 = typekeys|last %}
+{% for opt1 in key1['options'] -%}
+{% for opt2 in key2['options'] -%}
+{% for opt3 in key3['options'] -%}
+{% if type_inst -%}
+{% for typev in type_inst -%}
+{% if opt1 == typev['value'][0] and opt2 == typev['value'][1] and opt3 == typev['value'][2] -%}
+template <>
+std::string {{block}}<{{ macros.cpp_type_lookup(opt1)}}, {{ macros.cpp_type_lookup(opt2)}}, {{ macros.cpp_type_lookup(opt3)}}>::suffix(){ return "_{{macros.typekey_suffix(opt1, key1['id'],ports)}}{{macros.typekey_suffix(opt2, key2['id'],ports)}}{{macros.typekey_suffix(opt3, key3['id'],ports)}}"; }
+template class {{block}}<{{ macros.cpp_type_lookup(opt1)}}, {{ macros.cpp_type_lookup(opt2)}}, {{ macros.cpp_type_lookup(opt3)}}>;
+{% endif -%}
+{% endfor -%}
+{% else %}
+template <>
+std::string {{block}}<{{ macros.cpp_type_lookup(opt1)}}, {{ macros.cpp_type_lookup(opt2)}}, {{ macros.cpp_type_lookup(opt3)}}>::suffix(){ return "_{{macros.typekey_suffix(opt1, key1['id'],ports)}}{{macros.typekey_suffix(opt2, key2['id'],ports)}}{{macros.typekey_suffix(opt3, key3['id'],ports)}}"; }
+template class {{block}}<{{ macros.cpp_type_lookup(opt1)}}, {{ macros.cpp_type_lookup(opt2)}}, {{ macros.cpp_type_lookup(opt3)}}>;
+{% endif %}
+{% endfor -%}
+{% endfor -%}
+{% endfor -%}
+{% endif -%}
+} // namespace {{ module }}
+} // namespace gr

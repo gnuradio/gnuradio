@@ -1,0 +1,30 @@
+module: math
+block: complex_to_mag
+label: Complex to Magnitude
+blocktype: sync_block
+
+parameters:
+-   id: vlen
+    label: Vector Length
+    dtype: size_t
+    settable: false
+    default: 1
+
+ports:
+-   domain: stream
+    id: in
+    direction: input
+    type: gr_complex
+    shape: parameters/vlen
+
+-   domain: stream
+    id: out
+    direction: output
+    type: float
+    shape: parameters/vlen
+
+implementations:
+-   id: cpu
+# -   id: cuda
+
+file_format: 1

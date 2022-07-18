@@ -1,0 +1,5 @@
+# Default Logging Options
+LOG:
+  log_level: debug
+  debug_level: emerg
+  log_file: stderr

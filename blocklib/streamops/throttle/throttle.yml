@@ -1,0 +1,40 @@
+module: streamops
+block: throttle
+label: Throttle
+blocktype: sync_block
+
+parameters:
+-   id: samples_per_sec
+    label: Samples Per Second
+    dtype: double
+    settable: false
+-   id: ignore_tags
+    label: Ignore Tags
+    dtype: bool
+    settable: false
+    default: 'true'
+-   id: itemsize
+    label: Item Size
+    dtype: size_t
+    settable: false
+    default: 0
+    grc:
+        hide: part
+        
+ports:
+-   domain: stream
+    id: in
+    direction: input
+    type: untyped
+    size: parameters/itemsize
+
+-   domain: stream
+    id: out
+    direction: output
+    type: untyped
+    size: parameters/itemsize
+
+implementations:
+-   id: cpu
+
+file_format: 1

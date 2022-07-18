@@ -1,0 +1,78 @@
+module: filter
+block: pfb_arb_resampler
+label: pfb_arb_resampler
+blocktype: block
+
+typekeys:
+  - id: IN_T
+    type: class
+    options: 
+        - cf32
+        - rf32
+  - id: OUT_T
+    type: class
+    options: 
+        - cf32
+        - rf32
+  - id: TAP_T
+    type: class
+    options: 
+        - cf32
+        - rf32
+
+type_inst:
+  - value: [cf32, cf32, cf32]
+    label: Complex->Complex (Complex Taps)
+  - value: [cf32, cf32, rf32]
+    label: Complex->Complex (Real Taps)
+  - value: [rf32, rf32, rf32]
+    label: Float->Float (Real Taps)
+
+parameters:
+-   id: rate
+    label: Rate
+    dtype: float
+    settable: true
+-   id: taps
+    label: Taps
+    dtype: TAP_T
+    container: vector
+    settable: true
+-   id: filter_size
+    label: Filter Size
+    dtype: float
+    settable: false
+    default: 32
+
+
+# Example Ports
+ports:
+-   domain: stream
+    id: in
+    direction: input
+    type: typekeys/IN_T
+
+-   domain: stream
+    id: out
+    direction: output
+    type: typekeys/OUT_T
+
+callbacks:
+-   id: group_delay
+    return: size_t
+    const: true
+-   id: phase_offset
+    return: size_t
+    args:
+    - id: freq
+      dtype: float
+    - id: fs
+      dtype: float
+    const: true
+
+
+implementations:
+-   id: cpu
+# -   id: cuda
+
+file_format: 1

@@ -1,0 +1,21 @@
+module: math
+block: conjugate
+label: Complex Conjugate
+blocktype: sync_block
+
+ports:
+-   domain: stream
+    id: in
+    direction: input
+    type: gr_complex
+
+-   domain: stream
+    id: out
+    direction: output
+    type: gr_complex
+
+implementations:
+-   id: cpu
+# -   id: cuda
+
+file_format: 1

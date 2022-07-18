@@ -1,0 +1,38 @@
+module: streamops
+block: copy
+label: Copy
+blocktype: sync_block
+
+doc:
+  brief: output[i] = input[i]
+  detail: |- 
+    When enabled (default), this block copies its input to its
+    output. When disabled, this block drops its input on the floor.
+
+parameters:
+    - id: itemsize
+      label: Item Size
+      dtype: size_t
+      settable: false
+      default: 0
+      grc:
+          hide: part
+      doc: Size in bytes of each item to be copied (set to 0 [default] to propagate from connected ports)
+ports:
+    - domain: stream
+      id: in
+      direction: input
+      type: untyped
+      size: parameters/itemsize
+
+    - domain: stream
+      id: out
+      direction: output
+      type: untyped
+      size: parameters/itemsize
+
+implementations:
+    - id: cpu
+    - id: cuda
+
+file_format: 1

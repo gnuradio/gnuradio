@@ -1,0 +1,13 @@
+{% import 'macros.j2' as macros -%}
+{{ macros.header() }}
+#pragma once
+
+namespace gr {
+namespace {{module}} {
+
+{% for e in enums %}
+    enum class {{e}} { {% for v in enums[e]['enumerators'] %}{{v['id']}}{{"="+v['value']|string() if 'value' in v }}{{"," if not loop.last}}{% endfor %} };
+{% endfor %}
+
+} // namespace {{ module }}
+} // namespace gr

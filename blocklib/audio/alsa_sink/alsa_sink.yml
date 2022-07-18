@@ -1,0 +1,48 @@
+module: audio
+block: alsa_sink
+label: ALSA Sink
+blocktype: sync_block
+
+# Example Parameters
+parameters:
+-   id: sampling_rate
+    label: Sampling Rate
+    dtype: unsigned int
+    settable: false
+    default: 0
+    grc:
+        hide: part
+-   id: device_name
+    label: Device Name
+    dtype: std::string
+    settable: false
+    grc:
+        hide: part
+-   id: num_inputs
+    label: Num Inputs
+    dtype: size_t
+    settable: false
+    default: 1
+    grc:
+        hide: part
+-   id: ok_to_block
+    label: OK to Block
+    dtype: bool
+    settable: false
+    default: 'true'
+    grc:
+        hide: part
+
+# Example Ports
+ports:
+-   domain: stream
+    id: in
+    direction: input
+    type: float
+    multiplicity: parameters/num_inputs
+
+implementations:
+-   id: cpu
+# -   id: cuda
+
+file_format: 1
