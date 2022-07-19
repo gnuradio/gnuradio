@@ -59,18 +59,17 @@ Each of the parameters that are defined in the `.yml` are available as a member 
 Work functions are conceptually the same as GR3, but syntactically slightly different to keep the block API separated from the scheduler API.
 
 ```c++
-    work_return_code_t work(work_io&)
-                                     override;
+    work_return_code_t work(work_io& wio) override;
 ```
 
 First, the work function takes in a vector of pointers to input objects, and a vector of pointers to output objects.
 
 To get the `noutput_items` would be
 ```c++
-auto noutput_items = work_output[0].n_items;
+auto noutput_items = wio.outputs()[0].n_items;
 ```
 
-`block_work_input_sptr` contains a pointer to the underlying buffer object - it is not just raw pointers.  But it is easy to get the underlying pointer
+`block_work_input` contains a pointer to the underlying buffer object - it is not just raw pointers.  But it is easy to get the underlying pointer
 
 ```c++
     auto in = wio.inputs()[0].items<T>();
