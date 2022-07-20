@@ -431,7 +431,7 @@ void header_payload_demux_impl::parse_header_data_msg(pmt::pmt_t header_data)
     }
     if (d_state == STATE_HEADER_RX_SUCCESS) {
         if (d_curr_payload_len < 0) {
-            d_logger->warn("Detected a packet larger than max frame size ({:d} symbols)",
+            d_logger->warn("Received negative payload length: ({:d} symbols)",
                            d_curr_payload_len);
             d_curr_payload_len = 0;
             d_state = STATE_HEADER_RX_FAIL;
