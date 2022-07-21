@@ -349,7 +349,7 @@ class Param(Element):
             e = self.parent_flowgraph.evaluate(pos)
 
             if not isinstance(e, (list, tuple)) or len(e) not in (2, 4) or not all(isinstance(ei, int) for ei in e):
-                raise Exception(
+                self.add_error_message(
                     'Invalid GUI Hint entered: {e!r} (Must be a list of {{2,4}} non-negative integers).'.format(e=e))
 
             if len(e) == 2:
@@ -359,11 +359,11 @@ class Param(Element):
                 row, col, row_span, col_span = e
 
             if (row < 0) or (col < 0):
-                raise Exception(
-                    'Invalid GUI Hint entered: {e!r} (non-negative integers only).'.format(e=e))
+                self.add_error_message(
+                    'Invalid GUI Hint entered: {e!r} (non-negative rows/cols only).'.format(e=e))
 
             if (row_span < 1) or (col_span < 1):
-                raise Exception(
+                self.add_error_message(
                     'Invalid GUI Hint entered: {e!r} (positive row/column span required).'.format(e=e))
 
             return row, col, row_span, col_span
@@ -373,13 +373,14 @@ class Param(Element):
                     if block.key == 'qtgui_tab_widget' and block.name == tab)
             tab_block = next(iter(tabs), None)
             if not tab_block:
-                raise Exception(
+                self.add_error_message(
                     'Invalid tab name entered: {tab} (Tab name not found).'.format(tab=tab))
+                return
 
             tab_index_size = int(tab_block.params['num_tabs'].value)
             if index >= tab_index_size:
-                raise Exception('Invalid tab index entered: {tab}@{index} (Index out of range).'.format(
-                    tab=tab, index=index))
+                self.add_error_message(
+                    'Invalid tab index entered: {tab}@{index} (Index out of range).'.format(tab=tab, index=index))
 
         # Collision Detection
         def collision_detection(row, col, row_span, col_span):
@@ -396,7 +397,7 @@ class Param(Element):
                 collision = next(
                     iter(self.hostage_cells & other.hostage_cells), None)
                 if collision:
-                    raise Exception('Block {block!r} is also using parent {parent!r}, cell {cell!r}.'.format(
+                    self.add_error_message('Block {block!r} is also using parent {parent!r}, cell {cell!r}.'.format(
                         block=other.parent_block.name, parent=collision[0], cell=collision[1]
                     ))
 

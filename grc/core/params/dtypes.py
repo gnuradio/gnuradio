@@ -115,6 +115,9 @@ def validate_vector(param, black_listed_ids):
 @validates('gui_hint')
 def validate_gui_hint(param, black_listed_ids):
     try:
+        # Only parse the param if there are no errors
+        if len(param.get_error_messages()) > 0:
+            return
         param.parse_gui_hint(param.value)
     except Exception as e:
         raise ValidateError(str(e))
