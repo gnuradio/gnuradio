@@ -58,16 +58,16 @@ parameters:
     dtype: string
     default: 'value'
     hide: part
--   id: gui_hint
-    label: GUI Hint
-    dtype: gui_hint
-    hide: part
 -   id: showports
     label: Show Msg Ports
     dtype: enum
     options: ['True', 'False']
     option_labels: ['Yes', 'No']
     default: 'False'
+    hide: part
+-   id: gui_hint
+    label: GUI Hint
+    dtype: gui_hint
     hide: part
 value: ${ value }
 
