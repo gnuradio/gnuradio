@@ -41,15 +41,6 @@ gnuradio_blocklib_fft_dep = declare_dependency(include_directories : incdir,
 					   link_with : gnuradio_blocklib_fft_lib,
                        dependencies : fft_deps)
 
-# TODO - export this as a subproject of gnuradio
-
-conf = configuration_data()
-conf.set('prefix', prefix)
-conf.set('exec_prefix', '${prefix}')
-conf.set('libdir', join_paths('${prefix}',get_option('libdir')))
-conf.set('includedir', join_paths('${prefix}',get_option('includedir')))
-conf.set('LIBVER', '0.0.1')
-
 cmake_conf = configuration_data()
 cmake_conf.set('libdir', join_paths(prefix,get_option('libdir')))
 cmake_conf.set('module', 'fft')
@@ -68,5 +59,4 @@ pkg.generate(libraries : libs,
              version : meson.project_version(),
              name : 'libgnuradio-fft',
              filebase : 'gnuradio-fft',
-             install_dir : get_option('prefix') / 'lib' / 'pkgconfig',
              description : 'GNU Radio FFT Blocks')

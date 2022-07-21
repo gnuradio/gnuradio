@@ -96,5 +96,4 @@ pkg.generate(libraries : libs,
              version : meson.project_version(),
              name : 'libgnuradio-kernel',
              filebase : 'gnuradio-kernel',
-             install_dir : get_option('prefix') / 'lib' / 'pkgconfig',
              description : 'GNU Radio Kernel Library (Math and Signal Processing)')

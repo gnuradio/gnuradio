@@ -1,6 +1,6 @@
 # incdir = include_directories('../include')
 
-if (CLI11_dep.found())
+if CLI11_dep.found()
 srcs = ['bm_copy.cc']
 executable('bm_nbt_copy', 
     srcs, 

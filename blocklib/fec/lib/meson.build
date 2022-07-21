@@ -1,14 +1,5 @@
 subdir('reed-solomon')
 
-# TODO - export this as a subproject of gnuradio
-
-conf = configuration_data()
-conf.set('prefix', prefix)
-conf.set('exec_prefix', '${prefix}')
-conf.set('libdir', join_paths('${prefix}',get_option('libdir')))
-conf.set('includedir', join_paths('${prefix}',get_option('includedir')))
-conf.set('LIBVER', '0.0.0')
-
 cmake_conf = configuration_data()
 cmake_conf.set('libdir', join_paths(prefix,get_option('libdir')))
 cmake_conf.set('module', 'fec')
@@ -27,5 +18,4 @@ pkg.generate(libraries : libs,
              version : meson.project_version(),
              name : 'libgnuradio-fec',
              filebase : 'gnuradio-fec',
-             install_dir : get_option('prefix') / 'lib' / 'pkgconfig',
              description : 'GNU Radio FEC Blocks')

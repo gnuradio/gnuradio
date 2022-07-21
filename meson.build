@@ -27,9 +27,8 @@ python3_embed_dep = dependency('python3-embed', required : get_option('enable_py
 
 # Import python3 meson module which is used to find the Python dependencies.
 py3_inst = import('python').find_installation('python3')
-py3_mod = import('python3')
-py3 = py3_mod.find_python()
-py3_version = py3_mod.language_version()
+py3 = py3_inst
+py3_version = py3_inst.language_version()
 if py3_version.version_compare('< 3.6')
   error('Invalid python version!?')
 endif

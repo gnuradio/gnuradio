@@ -38,15 +38,6 @@ gnuradio_blocklib_math_dep = declare_dependency(include_directories : incdir,
 					   link_with : gnuradio_blocklib_math_lib,
                        dependencies : math_deps)
 
-# TODO - export this as a subproject of gnuradio
-
-conf = configuration_data()
-conf.set('prefix', prefix)
-conf.set('exec_prefix', '${prefix}')
-conf.set('libdir', join_paths('${prefix}',get_option('libdir')))
-conf.set('includedir', join_paths('${prefix}',get_option('includedir')))
-conf.set('LIBVER', '0.0.0')
-
 cmake_conf = configuration_data()
 cmake_conf.set('libdir', join_paths(prefix,get_option('libdir')))
 cmake_conf.set('module', 'math')
@@ -65,5 +56,4 @@ pkg.generate(libraries : libs,
              version : meson.project_version(),
              name : 'libgnuradio-math',
              filebase : 'gnuradio-math',
-             install_dir : get_option('prefix') / 'lib' / 'pkgconfig',
              description : 'GNU Radio Math Blocks')

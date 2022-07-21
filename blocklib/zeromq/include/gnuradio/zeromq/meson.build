@@ -4,15 +4,6 @@ zeromq_headers = [
 
 install_headers(zeromq_headers, subdir : 'gnuradio/zeromq')
 
-# TODO - export this as a subproject of gnuradio
-
-conf = configuration_data()
-conf.set('prefix', prefix)
-conf.set('exec_prefix', '${prefix}')
-conf.set('libdir', join_paths('${prefix}',get_option('libdir')))
-conf.set('includedir', join_paths('${prefix}',get_option('includedir')))
-conf.set('LIBVER', '0.0.1')
-
 cmake_conf = configuration_data()
 cmake_conf.set('libdir', join_paths(prefix,get_option('libdir')))
 cmake_conf.set('module', 'zeromq')
@@ -31,5 +22,4 @@ pkg.generate(libraries : libs,
              version : meson.project_version(),
              name : 'libgnuradio-zeromq',
              filebase : 'gnuradio-zeromq',
-             install_dir : get_option('prefix') / 'lib' / 'pkgconfig',
              description : 'GNU Radio ZeroMQ Blocks')
