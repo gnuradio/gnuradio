@@ -357,9 +357,9 @@ int fmcomms2_sink_impl<gr_complex>::work(int noutput_items,
             d_float_r.data(), d_float_i.data(), in, noutput_items);
         // float to short
         volk_32f_s32f_convert_16i(
-            d_device_bufs[2 * i].data(), d_float_r.data(), 2048.0, noutput_items);
+            d_device_bufs[2 * i].data(), d_float_r.data(), 32768.0, noutput_items);
         volk_32f_s32f_convert_16i(
-            d_device_bufs[2 * i + 1].data(), d_float_i.data(), 2048.0, noutput_items);
+            d_device_bufs[2 * i + 1].data(), d_float_i.data(), 32768.0, noutput_items);
     }
 
 
