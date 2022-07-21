@@ -41,6 +41,9 @@ jobs:
           - distro: 'Fedora 35'
             containerid: 'mormj/newsched-ci-docker:fedora-35'
             cxxflags: ''
+          - distro: 'Fedora 36'
+            containerid: 'mormj/newsched-ci-docker:fedora-36'
+            cxxflags: ''
     name: ${{ matrix.distro }}
     container:
       image: ${{ matrix.containerid }}

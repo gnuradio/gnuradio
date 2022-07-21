@@ -51,7 +51,9 @@ libcpphttp = subproject('cpp-httplib')
 cpphttp_dep = libcpphttp.get_variable('cpp_httplib_dep')
 
 cmake = import('cmake')
-libcppzmq = cmake.subproject('cppzmq')
+opt_var = cmake.subproject_options()
+opt_var.add_cmake_defines({'CPPZMQ_BUILD_TESTS': false})
+libcppzmq = cmake.subproject('cppzmq', options: opt_var)
 cppzmq_dep = libcppzmq.dependency('cppzmq')
 
 if USE_CUDA
