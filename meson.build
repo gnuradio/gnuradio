@@ -41,11 +41,8 @@ cuda_dep = dependency('cuda', version : '>=10.1', required : USE_CUDA, modules :
 libpmtf = subproject('pmt')
 pmtf_dep = libpmtf.get_variable('pmtf_dep')
 
-libCLI11 = subproject('CLI11')
-CLI11_dep = libCLI11.get_variable('CLI11_dep')
-
-libjson = subproject('json')
-json_dep = libjson.get_variable('nlohmann_json_dep')
+CLI11_dep = dependency('cli11')
+json_dep = dependency('nlohmann_json')
 
 libcpphttp = subproject('cpp-httplib')
 cpphttp_dep = libcpphttp.get_variable('cpp_httplib_dep')
