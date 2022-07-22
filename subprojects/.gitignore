@@ -1,7 +1,8 @@
-CLI11/
+CLI11-*
 pmt/
-json/
+nlohmann_json-*
 cpp-httplib/
 cppzmq/
 moodycamel/
 cusp/
+packagecache/
