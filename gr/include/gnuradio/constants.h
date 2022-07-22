@@ -31,6 +31,11 @@ GR_RUNTIME_API const std::string sysconfdir();
 GR_RUNTIME_API const std::string prefsdir();
 
 /*!
+ * \brief return lib directory.
+ */
+GR_RUNTIME_API const std::string libdir();
+
+/*!
  * \brief return date/time of build, as set when 'cmake' is run
  */
 GR_RUNTIME_API const std::string build_date();
