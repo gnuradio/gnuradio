@@ -67,11 +67,32 @@ void registry::_init()
 {
     std::string prefix("libgnuradio-blocklib");
     // Get the list of shared object files in libdir
-    for (const auto& file : directory_iterator(libdir())) {
-        auto fn = file.path().string();
-        auto pos = fn.find(prefix);
-        if (pos != std::string::npos) {
-            [[maybe_unused]] void* handle = dlopen(fn.c_str(), RTLD_LAZY);
+    std::string default_lib_dir = libdir();
+    std::vector<std::string> dirlist;
+
+    if (const char* env_p = std::getenv("LD_LIBRARY_PATH")) {
+        std::string str(env_p);
+
+        char* token = strtok(const_cast<char*>(str.c_str()), ":");
+        while (token != nullptr) {
+            dirlist.push_back(std::string(token));
+            token = strtok(nullptr, ":");
+        }
+    }
+    else {
+        dirlist.push_back(default_lib_dir);
+    }
+
+    for (auto& d : dirlist) {
+        try {
+            for (const auto& file : directory_iterator(d)) {
+                auto fn = file.path().string();
+                auto pos = fn.find(prefix);
+                if (pos != std::string::npos) {
+                    [[maybe_unused]] void* handle = dlopen(fn.c_str(), RTLD_LAZY);
+                }
+            }
+        } catch (...) {
         }
     }
 
