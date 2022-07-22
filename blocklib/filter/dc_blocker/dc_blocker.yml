@@ -1,0 +1,39 @@
+module: filter
+block: dc_blocker
+label: DC Blocker
+blocktype: sync_block
+
+typekeys:
+  - id: T
+    type: class
+    options: 
+      - cf32
+      - rf32
+
+parameters:
+-   id: D
+    label: Delay Line Length
+    dtype: int
+    settable: true
+-   id: long_form
+    label: Long Form
+    dtype: bool
+    settable: false
+    default: 'true'
+
+ports:
+-   domain: stream
+    id: in
+    direction: input
+    type: typekeys/T
+
+-   domain: stream
+    id: out
+    direction: output
+    type: typekeys/T
+
+implementations:
+-   id: cpu
+# -   id: cuda
+
+file_format: 1

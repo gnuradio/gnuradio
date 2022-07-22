@@ -1,0 +1,44 @@
+module: streamops
+block: probe_signal_v
+label: Probe Signal Vector
+blocktype: sync_block
+
+doc:
+  brief: Sink that allows a vector of samples to be grabbed from Python.
+
+typekeys:
+  - id: T
+    type: class
+    options: 
+        - cf32
+        - rf32
+        - ri32
+        - ri16
+        - ri8
+
+parameters:
+-   id: vlen
+    label: Vec. Length
+    dtype: size_t
+    settable: false
+-   id: level
+    label: Constant
+    dtype: T
+    gettable: true
+    container: vector
+    cotr: false
+    grc:
+      hide: all
+
+ports:
+-   domain: stream
+    id: in
+    direction: input
+    type: typekeys/T
+    shape: parameters/vlen
+
+implementations:
+-   id: cpu
+# -   id: cuda
+
+file_format: 1

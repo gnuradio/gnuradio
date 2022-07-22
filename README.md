@@ -3,7 +3,7 @@
 </p>
 
 The `dev-4.0` branch is where GR 4.0 development will be taking place.  
-It is expected that API and functionality will move quickly until 4.0 is released
+It is expected that API and functionality will change rapidly until 4.0 is released
 
 GNU Radio is a free & open-source software development toolkit that 
 provides signal processing blocks to implement software radios. It can 
@@ -17,7 +17,18 @@ radio systems.
 
 ### From Source
 
-TODO: update build instructions
+```
+git clone https://github.com/gnuradio --branch dev-4.0
+cd gnuradio
+meson setup build
+cd build && ninja 
+ninja test
+ninja install # (sudo ninja install if not root)
+```
+to install to a custom prefix:
+```
+meson setup build --buildtype=debugoptimized --prefix=path/to/prefix --libdir=lib
+```
 
 ## Legal Matters
 

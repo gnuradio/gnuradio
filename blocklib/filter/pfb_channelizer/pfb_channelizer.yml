@@ -1,0 +1,46 @@
+module: filter
+block: pfb_channelizer
+label: PFB Channelizer
+blocktype: block
+
+typekeys:
+  - id: T
+    type: class
+    options: 
+      - cf32
+    #   - rf32
+
+
+parameters:
+-   id: numchans
+    label: Number of Channels
+    dtype: size_t
+    settable: false
+-   id: taps
+    label: Filter Taps
+    dtype: float
+    container: vector
+    settable: false
+-   id: oversample_rate
+    label: Oversample Rate
+    dtype: float
+    settable: false
+
+ports:
+-   domain: stream
+    id: in
+    direction: input
+    type: typekeys/T
+    # multiplicity: parameters/numchans
+
+-   domain: stream
+    id: out
+    direction: output
+    type: typekeys/T
+    multiplicity: parameters/numchans
+
+implementations:
+-   id: cpu
+-   id: cuda
+
+file_format: 1

@@ -1,0 +1,32 @@
+if(NOT PKG_CONFIG_FOUND)
+    INCLUDE(FindPkgConfig)
+endif()
+PKG_CHECK_MODULES(PC_GNURADIO gnuradio-@module@)
+
+FIND_PATH(
+    GNURADIO_INCLUDE_DIRS
+    NAMES gnuradio/@module@/api.h
+    HINTS $ENV{GNURADIO_DIR}/include
+        ${PC_GNURADIO_INCLUDEDIR}
+    PATHS ${CMAKE_INSTALL_PREFIX}/include
+          /usr/local/include
+          /usr/include
+)
+
+FIND_LIBRARY(
+    GNURADIO_LIBRARIES
+    NAMES gnuradio-@module@
+    HINTS $ENV{GNURADIO_DIR}/lib
+        ${PC_GNURADIO_LIBDIR}
+    PATHS ${CMAKE_INSTALL_PREFIX}/lib
+          ${CMAKE_INSTALL_PREFIX}/lib64
+          /usr/local/lib
+          /usr/local/lib64
+          /usr/lib
+          /usr/lib64
+          @libdir@
+          )
+
+INCLUDE(FindPackageHandleStandardArgs)
+FIND_PACKAGE_HANDLE_STANDARD_ARGS(GNURADIO DEFAULT_MSG GNURADIO_LIBRARIES GNURADIO_INCLUDE_DIRS)
+MARK_AS_ADVANCED(GNURADIO_LIBRARIES GNURADIO_INCLUDE_DIRS)

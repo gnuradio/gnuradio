@@ -1,0 +1,86 @@
+{% import 'macros.j2' as macros -%}
+{{ macros.header() }}
+
+#include <pmtf/base.hpp>
+#include <gnuradio/sptr_magic.h>
+
+namespace gr {
+namespace {{module}} {
+
+{%if typekeys | length > 0 -%}
+template <{% for key in typekeys -%}{{key['type']}} {{key['id']}}{{ ", " if not loop.last }}{%endfor%}>
+typename {{block}}<{% for key in typekeys -%}{{key['id']}}{{ ", " if not loop.last }}{%endfor%}>::sptr {{block}}<{% for key in typekeys -%}{{key['id']}}{{ ", " if not loop.last }}{%endfor%}>::make_{{impl}}(const block_args& args)
+{
+    return gnuradio::make_block_sptr<{{block}}_{{impl}}<{% for key in typekeys -%}{{key['id']}}{{ ", " if not loop.last }}{%endfor%}>>(args);
+}
+{%else-%}
+{{block}}::sptr {{block}}::make_{{impl}}(const block_args& args)
+{
+    return gnuradio::make_block_sptr<{{block}}_{{impl}}>(args);
+}
+{%endif-%}
+
+{%if typekeys | length == 1 -%}
+{%set key1 = typekeys|first %}
+{% for opt in key1['options'] -%}
+template class {{block}}<{{ macros.cpp_type_lookup(opt) }}>;
+{% endfor -%}
+{% elif typekeys | length == 2 -%}
+{%set key1 = typekeys|first %}
+{%set key2 = typekeys|last %}
+{% for opt1 in key1['options'] -%}
+{% for opt2 in key2['options'] -%}
+{% if type_inst -%}
+{% for typev in type_inst -%}
+{% if opt1 == typev['value'][0] and opt2 == typev['value'][1] -%}
+template class {{block}}<{{ macros.cpp_type_lookup(opt1)}}, {{ macros.cpp_type_lookup(opt2)}}>;
+{% endif %}
+{% endfor %}
+{% else %}
+template class {{block}}<{{ macros.cpp_type_lookup(opt1)}}, {{  macros.cpp_type_lookup(opt2)}}>;
+{% endif %}
+{% endfor -%}
+{% endfor -%}
+{% elif typekeys | length == 3 -%}
+{%set key1 = typekeys|first %}
+{%set key2 = typekeys[1] %}
+{%set key3 = typekeys|last %}
+{% for opt1 in key1['options'] -%}
+{% for opt2 in key2['options'] -%}
+{% for opt3 in key3['options'] -%}
+{% if type_inst -%}
+{% for typev in type_inst -%}
+{% if opt1 == typev['value'][0] and opt2 == typev['value'][1] and opt3 == typev['value'][2] -%}
+template class {{block}}<{{ macros.cpp_type_lookup(opt1)}}, {{ macros.cpp_type_lookup(opt2)}},  {{macros.cpp_type_lookup(opt3)}}>;
+{% endif %}
+{% endfor %}
+{% else %}
+template class {{block}}<{{ macros.cpp_type_lookup(opt1)}}, {{ macros.cpp_type_lookup(opt2)}},  {{macros.cpp_type_lookup(opt3)}}>;
+{% endif %}
+{% endfor -%}
+{% endfor -%}
+{% endfor -%}
+{% endif -%}
+
+{%if typekeys | length == 1 -%}
+#define INHERITED_CONSTRUCTORS(type) {{blocktype}}("{{block}}", "{{module}}"), {{block}}<type>(args)
+{%elif typekeys | length == 2 -%}
+#define INHERITED_CONSTRUCTORS(type1,type2) {{blocktype}}("{{block}}", "{{module}}"), {{block}}<type1,type2>(args)
+{%elif typekeys | length == 3 -%}
+#define INHERITED_CONSTRUCTORS(type1,type2,type3) {{blocktype}}("{{block}}", "{{module}}"), {{block}}<type1,type2,type3>(args)
+{%else-%}
+#define INHERITED_CONSTRUCTORS {{blocktype}}("{{block}}", "{{module}}"), {{block}}(args)
+{% endif %}
+
+
+// Convenience parameter access macros
+// Figure out a way to do this elegantly without macros or string lookups
+{% if parameters %} {% for param in parameters -%}
+{% if 'container' not in param or param['container'] == scalar %}
+#define GET_PARAM_{{param['id']|upper()}} pmtf::get_as<{{param['dtype']}}>(*this->param_{{param['id']}})
+{% elif param['container'] == 'vector' %}
+{% endif %}
+{% endfor %}
+{% endif %}
+} // namespace {{module}}
+} // namespace gr

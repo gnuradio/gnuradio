@@ -1,0 +1,36 @@
+module: zeromq
+block: pull_msg_source
+label: Pull Msg Source
+blocktype: sync_block
+
+parameters:
+    - id: address
+      label: IP Address
+      dtype: std::string
+      settable: false
+    - id: timeout
+      label: Timeout
+      dtype: int
+      settable: false
+      default: 100
+    - id: bind
+      label: Bind
+      dtype: bool
+      settable: false
+      default: "false"
+
+callbacks:
+-   id: last_endpoint
+    return: std::string
+    const: true
+    
+ports:
+-   domain: message
+    id: out
+    direction: output
+
+implementations:
+-   id: cpu
+# -   id: cuda
+
+file_format: 1

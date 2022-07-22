@@ -1,0 +1,46 @@
+module: newmod
+block: newblock
+label: newblock
+blocktype: sync_block
+
+typekeys:
+  - id: T
+    type: class
+    options: 
+        - cf32
+        - rf32
+        - ri32
+        - ri16
+        - ri8
+
+# Example Parameters
+parameters:
+-   id: k
+    label: Constant
+    dtype: T
+    settable: true
+-   id: vlen
+    label: Vec. Length
+    dtype: size_t
+    settable: false
+    default: 1
+
+# Example Ports
+ports:
+-   domain: stream
+    id: in
+    direction: input
+    type: typekeys/T
+    shape: parameters/vlen
+
+-   domain: stream
+    id: out
+    direction: output
+    type: typekeys/T
+    shape: parameters/vlen
+
+implementations:
+-   id: cpu
+# -   id: cuda
+
+file_format: 1

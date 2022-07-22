@@ -1,0 +1,68 @@
+module: filter
+block: iir_filter
+label: IIR Filter
+blocktype: sync_block
+
+typekeys:
+    - id: T_IN
+      type: class
+      options:
+          - cf32
+          - rf32
+    - id: T_OUT
+      type: class
+      options:
+          - cf32
+          - rf32
+    - id: TAP_T
+      type: class
+      options:
+          - cf64
+          - cf32
+          - rf64
+          - rf32
+type_inst:          
+  - value: [rf32, rf32, rf64]
+    label: Float->Float (Double Taps)
+  - value: [cf32, cf32, rf32]
+    label: Complex->Complex (Float Taps)
+  - value: [cf32, cf32, rf64]
+    label: Complex->Complex (Double Taps)
+  - value: [cf32, cf32, cf32]
+    label: Complex->Complex (Complex Taps)
+  - value: [cf32, cf32, cf64]
+    label: Complex->Complex (Complex Double Taps)
+
+parameters:
+-   id: fftaps
+    label: Feed Forward Taps
+    dtype: TAP_T
+    container: vector
+    settable: true
+-   id: fbtaps
+    label: Feed Back Taps
+    dtype: TAP_T
+    container: vector
+    settable: true
+-   id: oldstyle
+    label: Old Style Taps
+    dtype: bool
+    default: 'true'
+    settable: false
+
+ports:
+    - domain: stream
+      id: in
+      direction: input
+      type: typekeys/T_IN
+
+    - domain: stream
+      id: out
+      direction: output
+      type: typekeys/T_OUT
+
+implementations:
+    - id: cpu
+# -   id: cuda
+
+file_format: 1

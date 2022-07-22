@@ -1,0 +1,49 @@
+module: filter
+block: moving_average
+label: Moving Average
+blocktype: block
+
+typekeys:
+  - id: T
+    type: class
+    options: 
+      - cf32
+      - rf32
+
+parameters:
+-   id: length
+    label: Length
+    dtype: size_t
+    settable: true
+-   id: scale
+    label: Scale
+    dtype: T
+    settable: true
+-   id: max_iter
+    label: Max Iter
+    dtype: size_t
+    settable: false
+    default: 4096
+-   id: vlen
+    label: Vector Length
+    dtype: size_t
+    settable: false
+    default: 1
+
+
+ports:
+-   domain: stream
+    id: in
+    direction: input
+    type: typekeys/T
+
+-   domain: stream
+    id: out
+    direction: output
+    type: typekeys/T
+
+implementations:
+-   id: cpu
+-   id: cuda
+
+file_format: 1

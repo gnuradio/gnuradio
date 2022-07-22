@@ -1,0 +1,38 @@
+module: streamops
+block: load
+label: Load
+blocktype: sync_block
+
+parameters:
+-   id: iterations
+    label: Iterations (Load)
+    dtype: size_t
+-   id: use_cb
+    label: Use Custom Buffers
+    dtype: bool
+    default: 'true'
+-   id: itemsize
+    label: Item Size
+    dtype: size_t
+    settable: false
+    default: 0
+    grc:
+        hide: part
+ports:
+-   domain: stream
+    id: in
+    direction: input
+    type: untyped
+    size: parameters/itemsize
+
+-   domain: stream
+    id: out
+    direction: output
+    type: untyped
+    size: parameters/itemsize
+
+implementations:
+-   id: cpu
+-   id: cuda
+
+file_format: 1

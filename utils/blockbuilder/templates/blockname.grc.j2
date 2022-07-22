@@ -1,0 +1,168 @@
+{% import 'macros.j2' as macros -%}
+{%- macro type_lookup(type, default) -%}
+{%- if type | is_list() -%}{% set type = type[0] -%}{%- endif -%}{%- if default | is_list() -%}{% set default = default[0] -%}{%- endif -%}
+{%- if type in ['ri32','ru32', 'uint32_t', 'int32_t', 'size_t',  'unsigned', 'unsigned int', 'long', 'unsigned long', 'long long', 'unsigned long long']  -%}int
+{%- elif type in ['ri16','ru16','short', 'unsigned short', 'uint16_t', 'int16_t'] -%}short
+{%- elif type in ['ri8','ru8','uint8_t', 'int8_t', 'byte', 'char', 'unsigned char'] -%}byte
+{%- elif type in ['cf64','cf32','std::complex<float>', 'gr_complex'] -%}complex
+{%- elif type in ['rf64','rf32','float'] -%}float
+{%- elif type in ['const char *', 'const std::string&'] -%}string
+{%- elif type in ['bool'] -%}bool
+{%- elif type in ['gui_hint'] -%}gui_hint
+{%- elif type.startswith('enums/') %}enum
+{%- else -%}{{default}}{%-endif-%}
+{%- endmacro -%}
+{%- macro vec_type_lookup(type, default) -%}
+{%- if type | is_list() -%}{% set type = type[0] -%}{%- endif -%}{%- if default | is_list() -%}{% set default = default[0] -%}{%- endif -%}
+{%- if type in ['ri32','ru32','int', 'uint32_t', 'int32_t', 'size_t',  'unsigned', 'unsigned int', 'long', 'unsigned long', 'long long', 'unsigned long long']  -%}int_vector
+{%- elif type in ['ri16','ru16','short', 'unsigned short', 'uint16_t', 'int16_t'] -%}int_vector
+{%- elif type in ['ri8','ru8','uint8_t', 'int8_t', 'byte', 'char', 'unsigned char'] -%}int_vector
+{%- elif type in ['cf64','cf32','std::complex<float>', 'gr_complex'] -%}complex_vector
+{%- elif type in ['rf64','rf32','float'] -%}float_vector
+{%- else -%}{{default}}{%-endif-%}
+{%- endmacro -%}
+{% macro get_linked_value(value, ports, parameters, typekeys) -%}
+    {% set newvalue = value -%}
+    {% if '/' in value | string() -%}
+        {% set list1 = value.split('/') -%}
+        {% set newvalue = '${' + list1[1] + '}' -%}
+        {# {% if list1[0] == 'typekeys' %}
+        # {% set newvalue = '${' + list1[1] + '}' %}{% endif -%} #}
+    {%- endif -%}
+{{newvalue}}{% endmacro -%}
+{% macro get_linked_value2(value, ports, parameters, typekeys) -%}
+    {% set newvalue = value -%}
+    {% if '/' in value | string() -%}
+        {% set list1 = value.split('/') -%}
+        {% set newvalue = list1[1] -%}
+        {# {% if list1[0] == 'typekeys' %}
+        # {% set newvalue = '${' + list1[1] + '}' %}{% endif -%} #}
+    {%- endif -%}
+{{newvalue}}{% endmacro -%}
+id: {{module}}_{% if grc and 'id' in grc %}{{grc['id']}}{% else %}{{block}}{%endif%}
+label: '{% if grc and 'label' in grc %}{{grc['label']}}{% else %}{{label if label else block}}{%endif%}'
+{% if grc %}flags: {{grc['flags']}}{% else %}flags: [python]{% endif %}
+category: '[GR 4.0]/{{module}}'
+
+parameters:
+{% if typekeys -%} {# We have a templated block, enable type parameter#}
+{% if type_inst -%}{# We are limiting the permutations of type combinations#}
+-   id: type_inst
+    label: Type
+    dtype: enum
+    options: [{% for typev in type_inst %}{%for v in typev['value']%}{%for o in typekeys[loop.index0]['options']%}{{macros.typekey_suffix(o) if o==v}}{%endfor%}{%endfor%},{%endfor%}]
+    option_labels: [{% for opt in type_inst %}{{opt['label']}}{{"," if not loop.last}} {% endfor %}]
+    option_attributes:
+    {%-for key in typekeys%} {% set outer_loop = loop %}
+        {{key['id']}}: [{% for typev in type_inst %}{{type_lookup(typev['value'][outer_loop.index0])}},{%endfor%}]
+    {%-endfor-%}
+{% else %}
+{% for key in typekeys -%}
+-   id: {{key['id']}}
+    label: {% if 'label' in key %}{{key['label']}}{% else %}IO Type{% endif %}
+    dtype: enum
+    options: [{% for opt in key['options'] %}{{type_lookup(opt,opt)}}{{"," if not loop.last}} {% endfor %}]
+    option_attributes:
+        fcn: [{% for opt in key['options'] %}{{macros.typekey_suffix(opt,key['id'],ports)}}{{"," if not loop.last}} {% endfor %}]
+    hide: part
+{% endfor %}
+{% endif %}
+{% endif -%}
+{% if parameters %}{% for param in parameters -%}
+{% if 'grc' not in param or 'hide' not in param['grc'] or ('hide' in param['grc'] and param['grc']['hide'] != 'all') -%}
+-   id: {{param['id']}}
+    label: {{param['label']}}
+    dtype: {{type_lookup(param['dtype'],'raw') if 'container' not in param or param['container'] == 'scalar' else vec_type_lookup(param['dtype'],'raw')}}
+    {%if 'is_enum' in param and param['is_enum'] %}
+    options: [{%for k1,enum_type in module_enums.items() %}{% if param['dtype'].endswith(k1) %}{% for val in enum_type['enumerators']%} {{module}}.{{k1}}.{{val['id']}}{{',' if not loop.last}}{%endfor%}{%endif%}{%endfor%}]
+    option_labels: [{%for k1,enum_type in module_enums.items() %}{% if param['dtype'].endswith(k1) %}{% for val in enum_type['enumerators']%}{{val['label'] if 'label' in val else val['id'] | upper}}{{',' if not loop.last}}{%endfor%}{%endif%}{%endfor%}]
+    {%endif%}
+    {%if 'grc' in param and 'default' in param['grc']%}default: {{param['grc']['default']}}{%elif 'default' in param %}default: {{param['default']}}{%endif%}
+    {%if 'grc' in param and 'hide' in param['grc']%}hide: {{param['grc']['hide']}}{%endif%}
+{% endif %}{% endfor -%}{% endif %}
+{% if grc and 'parameters' in grc -%}
+{% for param in grc['parameters'] -%}
+-   id: {{param['id']}}
+    label: {{param['label']}}
+    dtype: {{param['dtype']}}
+    {% if 'default' in param %}default: {{param['default']}}{%endif%}
+    {% if 'hide' in param %}hide: {{param['hide']}}{%endif%}
+{% endfor -%}
+{% endif -%}
+{# Add a parameter for the implementation -#}
+-   id: impl
+    label: Implementation
+    dtype: enum
+    options: [{% for impl in implementations %}'{{impl['id']}}',{% endfor %}]
+    option_labels: [{% for impl in implementations %}'{{impl['id'] | upper()}}',{% endfor %}]
+    option_attributes:
+        domain: [{% for impl in implementations %}'{{impl['domain'] if 'domain' in impl else impl['id']}}',{% endfor %}]
+    category: Advanced
+    default: '{{implementations[0]['id']}}'
+    hide: 'none'
+-   id: showports
+    label: Show Msg Ports
+    category: Advanced
+    dtype: bool
+    default: False
+    hide: 'part'
+
+inputs:
+{% for port in ports -%}{%- if port['direction'] == 'input'%}
+-   domain: {{'${impl.domain}' if port['domain'] == 'stream' else port['domain']}}
+{% if type_inst %}
+    dtype: ${ type_inst.{{type_lookup(get_linked_value2(port['type']),get_linked_value2(port['type']))}} }
+{% else %}
+    dtype: {{type_lookup(get_linked_value(port['type']),get_linked_value(port['type']))}}
+{% endif %}
+    {%if 'shape' in port %}vlen: {{get_linked_value(port['shape'])}}{% endif %}
+    {%if 'multiplicity' in port %}multiplicity: {{get_linked_value(port['multiplicity'])}}{% endif %}
+    label: {{port['id']}}
+    optional: {{ port['optional'] if 'optional' in port else 'false' }}
+{% endif %}{% endfor %}
+-   domain: message
+    id: param_update
+    label: param
+    optional: true
+    hide: ${ not showports }
+
+outputs:
+{% for port in ports -%}
+{% if port['direction'] == 'output'-%}
+-   domain: {{'${impl.domain}' if port['domain'] == 'stream' else port['domain']}}
+{% if type_inst %}
+    dtype: ${ type_inst.{{type_lookup(get_linked_value2(port['type']),get_linked_value2(port['type']))}} }
+{% else %}
+    dtype: {{type_lookup(get_linked_value(port['type']),get_linked_value(port['type']))}}
+{% endif %}
+    {%if 'shape' in port %}vlen: {{get_linked_value(port['shape'])}}{% endif %}
+    {%if 'multiplicity' in port %}multiplicity: {{get_linked_value(port['multiplicity'])}}{% endif %}
+    label: {{port['id']}}
+    optional: {{ port['optional'] if 'optional' in port else 'false' }}
+{% endif -%}
+{% endfor -%}
+
+templates:
+{% if grc and 'templates' in grc %}
+    imports: |-
+{{grc['templates']['imports'] | indent(width=8,first=True)}}
+    make: |- 
+{{grc['templates']['make'] | indent(width=8,first=True)}}
+{% else -%}{# Do the default template #}
+    imports: from gnuradio import {{module}}
+    {%- if type_inst %}
+    make: {{module}}.{{block}}{% if typekeys -%}_{{'${type_inst}'}}{%endif%}(
+    {%- else %}
+    make: {{module}}.{{block}}{% if typekeys -%}_{% for key in typekeys %}{{'${' + key['id'] + '.fcn}'}}{% endfor %}{%endif%}(
+    {%- endif %}
+        {% if parameters %}{%- for param in parameters -%}
+          {%- if 'cotr' not in param or param['cotr'] -%}
+            {{'${'}}{{param['id']}}{{'}'}},
+        {%- endif -%}
+        {%-endfor-%}{% endif %} impl={{module}}.{{block}}{%if type_inst%}_${type_inst}{% elif typekeys -%}_{% for key in typekeys %}{{'${' + key['id'] + '.fcn}'}}{% endfor %}{%endif%}.${impl})
+    {%- if grc and 'addl_make' in grc %}
+        {{grc['addl_make'] | indent(width=8,first=False)}}
+    {%- endif %}
+{% endif %}
+
+file_format: 1 {# TODO - should this increment for GR 4.0 #}

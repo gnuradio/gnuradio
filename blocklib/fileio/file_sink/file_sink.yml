@@ -1,0 +1,39 @@
+module: fileio
+block: file_sink
+label: File Sink
+blocktype: sync_block
+
+parameters:
+-   id: filename
+    label: Filename
+    dtype: std::string
+    settable: false
+-   id: itemsize
+    label: Item Size
+    dtype: size_t
+    settable: false
+    default: 0
+-   id: append
+    label: Append
+    dtype: bool
+    settable: false
+    default: 'false'
+
+ports:
+-   domain: stream
+    id: in
+    direction: input
+    type: untyped
+    size: parameters/itemsize
+
+callbacks:
+-   id: set_unbuffered
+    return: void
+    args:
+    - id: unbuffered
+      dtype: bool
+
+implementations:
+-   id: cpu
+
+file_format: 1

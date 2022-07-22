@@ -1,0 +1,60 @@
+# This YAML is currently not used because ports need to support multiplicity
+## As it is currently implemented, the ports are added in the _cpu constructor
+## which we need to be in the top level constructor, but requires extra logic
+
+module: streamops
+block: annotator
+label: Annotator
+blocktype: sync_block
+
+parameters:
+-   id: when
+    label: When
+    dtype: uint64_t
+    settable: false
+-   id: num_inputs
+    label: Num Inputs
+    dtype: size_t
+    settable: false
+-   id: num_outputs
+    label: Num Outputs
+    dtype: size_t
+    settable: false
+-   id: tpp
+    label: Tag Propagation Policy
+    dtype: gr::tag_propagation_policy_t
+    settable: false
+    serializable: false
+-   id: itemsize
+    label: Item Size
+    dtype: size_t
+    settable: false
+    default: 0
+    grc:
+        hide: part
+
+ports:
+-   domain: stream
+    id: in
+    direction: input
+    type: untyped
+    size: parameters/itemsize
+    multiplicity: parameters/num_inputs
+
+-   domain: stream
+    id: out
+    direction: output
+    type: untyped
+    size: parameters/itemsize
+    multiplicity: parameters/num_outputs
+
+callbacks:
+-   id: data
+    return: std::vector<tag_t>
+    const: true
+
+implementations:
+-   id: cpu
+# -   id: cuda
+
+file_format: 1

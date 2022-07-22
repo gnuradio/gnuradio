@@ -1,0 +1,54 @@
+module: blocks
+block: vector_sink
+label: Vector Sink
+blocktype: sync_block
+
+typekeys:
+  - id: T
+    type: class
+    options:
+      - cf32
+      - rf32
+      - ri32
+      - ri16
+      - ru8
+
+parameters:
+  - id: vlen
+    label: Vec. Length
+    dtype: size_t
+    settable: false
+    gettable: true
+    default: 1
+  - id: reserve_items
+    label: Reserve Items
+    dtype: size_t
+    settable: false
+    default: 1024
+  - id: data
+    label: Data
+    dtype: T
+    container: vector
+    gettable: true
+    cotr: false
+    grc:
+      hide: all
+
+callbacks:
+  # -   id: data
+  #     return: std::vector<T>
+  - id: tags
+    return: std::vector<gr::tag_t>
+
+ports:
+  - domain: stream
+    id: in
+    direction: input
+    type: typekeys/T
+    shape: parameters/vlen
+
+implementations:
+  - id: cpu
+# -   id: cuda
+
+file_format: 1

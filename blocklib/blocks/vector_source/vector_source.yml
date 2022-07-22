@@ -1,0 +1,66 @@
+module: blocks
+block: vector_source
+label: Vector Source
+blocktype: sync_block
+
+typekeys:
+    - id: T
+      type: class
+      options: 
+        - cf32
+        - rf32
+        - ri32
+        - ri16
+        - ru8
+
+parameters:
+-   id: data
+    label: Data
+    dtype: T
+    container: vector
+    settable: false
+    grc:
+      default: '[0, 0, 0]'
+-   id: repeat
+    label: Repeat
+    dtype: bool
+    settable: true
+    default: 'false'
+-   id: vlen
+    label: Vec. Length
+    dtype: size_t
+    settable: false
+    default: 1
+-   id: tags
+    label: Tags
+    dtype: gr::tag_t
+    container: vector
+    settable: false
+    default: std::vector<gr::tag_t>()
+    grc:
+      default: '[]'
+    serializable: false
+
+callbacks:
+- id: set_data_and_tags
+  return: void
+  args:
+  - id: data
+    dtype: std::vector<T>
+  - id: tags
+    dtype: std::vector<gr::tag_t>
+- id: rewind
+  return: void
+
+ports:
+-   domain: stream
+    id: out
+    direction: output
+    type: typekeys/T
+    shape: parameters/vlen
+
+implementations:
+-   id: cpu
+# -   id: cuda
+
+file_format: 1

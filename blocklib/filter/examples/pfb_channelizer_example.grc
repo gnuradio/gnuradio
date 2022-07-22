@@ -1,0 +1,263 @@
+options:
+  parameters:
+    author: josh
+    catch_exceptions: 'True'
+    category: '[GRC Hier Blocks]'
+    cmake_opt: ''
+    comment: ''
+    copyright: ''
+    description: ''
+    gen_cmake: 'On'
+    gen_linking: dynamic
+    generate_options: qt_gui
+    hier_block_src_path: '.:'
+    id: pfb_channelizer_example
+    max_nouts: '0'
+    output_language: python
+    placement: (0,0)
+    qt_qss_theme: ''
+    realtime_scheduling: ''
+    run: 'True'
+    run_command: '{python} -u {filename}'
+    run_options: prompt
+    sizing_mode: fixed
+    thread_safe_setters: ''
+    title: Not titled yet
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 8]
+    rotation: 0
+    state: enabled
+
+blocks:
+- name: samp_rate
+  id: variable
+  parameters:
+    comment: ''
+    value: '32000'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [184, 12]
+    rotation: 0
+    state: enabled
+- name: analog_noise_source_0
+  id: analog_noise_source
+  parameters:
+    T: complex
+    affinity: ''
+    alias: ''
+    amplitude: '0.1'
+    comment: ''
+    domain: cpu
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    seed: '0'
+    showports: 'False'
+    type: analog.noise_t.gaussian
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [248, 604.0]
+    rotation: 0
+    state: true
+- name: analog_sig_source_0
+  id: analog_sig_source
+  parameters:
+    T: complex
+    affinity: ''
+    alias: ''
+    ampl: '1.0'
+    comment: ''
+    domain: cpu
+    frequency: '10000'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    offset: '0'
+    phase: '0'
+    sampling_freq: samp_rate
+    showports: 'False'
+    waveform: analog.waveform_t.cos
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [160, 428.0]
+    rotation: 0
+    state: true
+- name: analog_sig_source_0_0
+  id: analog_sig_source
+  parameters:
+    T: complex
+    affinity: ''
+    alias: ''
+    ampl: '1.0'
+    comment: ''
+    domain: cpu
+    frequency: '1000'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    offset: '0'
+    phase: '0'
+    sampling_freq: samp_rate
+    showports: 'False'
+    waveform: analog.waveform_t.cos
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [160, 252.0]
+    rotation: 0
+    state: true
+- name: filter_pfb_channelizer_0
+  id: filter_pfb_channelizer
+  parameters:
+    T: complex
+    affinity: ''
+    alias: ''
+    comment: ''
+    domain: cpu
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    numchans: '2'
+    oversample_rate: '1'
+    showports: 'False'
+    taps: filterk.firdes.low_pass(1.0, 2.0, 0.45, 0.01)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [736, 204.0]
+    rotation: 0
+    state: true
+- name: import_0
+  id: import
+  parameters:
+    alias: ''
+    comment: ''
+    imports: from gnuradio.kernel import fft as fftk
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [352, 28.0]
+    rotation: 0
+    state: true
+- name: import_0_0
+  id: import
+  parameters:
+    alias: ''
+    comment: ''
+    imports: from gnuradio.kernel import filter as filterk
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [456, 28.0]
+    rotation: 0
+    state: true
+- name: math_add_0
+  id: math_add
+  parameters:
+    T: complex
+    affinity: ''
+    alias: ''
+    comment: ''
+    domain: cpu
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    nports: '3'
+    showports: 'False'
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [416, 388.0]
+    rotation: 0
+    state: true
+- name: qtgui_freq_sink_0_0
+  id: qtgui_freq_sink
+  parameters:
+    T: complex
+    affinity: ''
+    alias: ''
+    bw: samp_rate / 2
+    comment: ''
+    domain: cpu
+    fc: '0'
+    fftsize: '1024'
+    gui_hint: ''
+    name: '"1"'
+    nconnections: '1'
+    showports: 'False'
+    wintype: '5'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1168, 180.0]
+    rotation: 0
+    state: enabled
+- name: qtgui_freq_sink_0_0_0
+  id: qtgui_freq_sink
+  parameters:
+    T: complex
+    affinity: ''
+    alias: ''
+    bw: samp_rate / 2
+    comment: ''
+    domain: cpu
+    fc: '0'
+    fftsize: '1024'
+    gui_hint: ''
+    name: '"2"'
+    nconnections: '1'
+    showports: 'False'
+    wintype: '5'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1096, 372.0]
+    rotation: 0
+    state: enabled
+- name: qtgui_freq_sink_0_1
+  id: qtgui_freq_sink
+  parameters:
+    T: complex
+    affinity: ''
+    alias: ''
+    bw: samp_rate
+    comment: ''
+    domain: cpu
+    fc: '0'
+    fftsize: '1024'
+    gui_hint: ''
+    name: '"ALL"'
+    nconnections: '1'
+    showports: 'False'
+    wintype: '5'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [720, 404.0]
+    rotation: 0
+    state: enabled
+
+connections:
+- [analog_noise_source_0, '0', math_add_0, '2']
+- [analog_sig_source_0, '0', math_add_0, '1']
+- [analog_sig_source_0_0, '0', math_add_0, '0']
+- [filter_pfb_channelizer_0, '0', qtgui_freq_sink_0_0, '0']
+- [filter_pfb_channelizer_0, '1', qtgui_freq_sink_0_0_0, '0']
+- [math_add_0, '0', filter_pfb_channelizer_0, '0']
+- [math_add_0, '0', qtgui_freq_sink_0_1, '0']
+
+metadata:
+  file_format: 1

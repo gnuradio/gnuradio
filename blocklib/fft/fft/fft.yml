@@ -1,0 +1,53 @@
+module: fft
+block: fft
+label: FFT
+blocktype: sync_block
+
+typekeys:
+  - id: T
+    type: class
+    options:
+        - cf32
+        - rf32
+  - id: direction
+    type: bool
+    label: Direction
+    options:
+      - ['true','_fwd']
+      - ['false','_rev']
+
+
+parameters:
+-   id: fft_size
+    label: FFT Size
+    dtype: size_t
+    settable: false
+-   id: window
+    label: Window
+    dtype: float
+    container: vector
+    settable: false
+-   id: shift
+    label: Shift
+    dtype: bool
+    default: 'false'
+    settable: false
+
+ports:
+-   domain: stream
+    id: in
+    direction: input
+    type: typekeys/T
+    shape: parameters/fft_size
+
+-   domain: stream
+    id: out
+    direction: output
+    type: typekeys/T
+    shape: parameters/fft_size
+
+implementations:
+-   id: cpu
+-   id: cuda
+
+file_format: 1

@@ -1,0 +1,35 @@
+module: blocks
+block: tags_strobe
+label: Tag Strobe
+blocktype: sync_block
+
+parameters:
+-   id: value
+    label: "Value"
+    dtype: pmtf::pmt
+-   id: nsamps
+    label: "Num Samps"
+    dtype: size_t
+-   id: key
+    label: "Key"
+    dtype: std::string
+-   id: itemsize
+    label: Item Size
+    dtype: size_t
+    settable: false
+    default: 0
+    grc:
+        hide: part
+
+ports:
+-   domain: stream
+    id: out
+    direction: output
+    type: untyped
+    size: parameters/itemsize
+
+implementations:
+-   id: cpu
+# -   id: cuda
+
+file_format: 1

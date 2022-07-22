@@ -1,0 +1,22 @@
+This package implements a general purpose Reed-Solomon encoding and decoding
+facility. See the rs.3 man page for details.
+
+To install, simply do the following after extracting this tarball into
+an empty directory:
+
+./configure
+make
+make install
+
+The command "make test" runs a battery of encode/decode tests using a
+variety of RS codes using random data and random errors. Each test
+should pass with an "OK"; if any fail, please let me know so I can
+track down the problem.
+
+Phil Karn (karn@ka9q.net) 1 Jan 2002
+
+Copyright 2002, Phil Karn, KA9Q
+This software may be used under the terms of the GNU General Public License (GPL).
+
+
+

@@ -1,0 +1,66 @@
+name: build and run tests
+on:
+  push:
+    branches: [dev-4.0]
+  pull_request:
+    branches: [dev-4.0]
+jobs:
+  check-formatting:
+    name: Check C++ Formatting
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: gnuradio/clang-format-lint-action@v0.5-4
+      with:
+        source: '.'
+        exclude: './subprojects'
+        extensions: 'h,hpp,cpp,cc,cc.in'
+  linux-docker:
+  # All of these shall depend on the formatting check (needs: check-formatting)
+    needs: [check-formatting]
+    runs-on: ubuntu-20.04
+    # The GH default is 360 minutes (it's also the max as of Feb-2021). However
+    # we should fail sooner. The only reason to exceed this time is if a test
+    # hangs.
+    timeout-minutes: 120
+    strategy:
+      # Enabling fail-fast would kill all Dockers if one of them fails. We want
+      # maximum output.
+      fail-fast: false
+      matrix:
+        # For every distro we want to test here, add one key 'distro' with a
+        # descriptive name, and one key 'containerid' with the name of the
+        # container (i.e., what you want to docker-pull)
+        include:
+          - distro: 'Ubuntu 20.04'
+            containerid: 'mormj/newsched-ci-docker:ubuntu-20.04'
+            cxxflags: -Werror
+          - distro: 'Ubuntu 22.04'
+            containerid: 'mormj/newsched-ci-docker:ubuntu-22.04'
+            cxxflags: -Werror
+          - distro: 'Fedora 35'
+            containerid: 'mormj/newsched-ci-docker:fedora-35'
+            cxxflags: ''
+          - distro: 'Fedora 36'
+            containerid: 'mormj/newsched-ci-docker:fedora-36'
+            cxxflags: ''
+    name: ${{ matrix.distro }}
+    container:
+      image: ${{ matrix.containerid }}
+      volumes:
+        - build_data:/build
+      options: --cpus 2
+    steps:
+    - uses: actions/checkout@v2
+      name: Checkout Project
+    - name: Meson Setup
+      run: 'cd ${GITHUB_WORKSPACE} && meson setup build --buildtype=debugoptimized -Denable_testing=true' 
+    - name: Make
+      run: 'cd ${GITHUB_WORKSPACE}/build && ninja'
+    - name: Make Test
+      run: 'cd ${GITHUB_WORKSPACE}/build && ninja test'
+    - uses: actions/upload-artifact@v1
+      if: failure()
+      with:
+        name: Linux_Meson_Testlog
+        path: build/meson-logs/testlog.txt

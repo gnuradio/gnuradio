@@ -31,7 +31,7 @@ BraceWrapping:
   AfterStruct:     false
   AfterUnion:      false
   BeforeCatch:     false
-  BeforeElse:      false
+  BeforeElse:      true
   IndentBraces:    false
 BreakBeforeBinaryOperators: None
 BreakBeforeTernaryOperators: true

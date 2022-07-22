@@ -1,0 +1,42 @@
+module: analog
+block: agc
+label: AGC
+blocktype: sync_block
+
+typekeys:
+  - id: T
+    type: class
+    options: 
+        - cf32
+        - rf32
+
+# float rate = 1e-4, float reference = 1.0, float gain = 1.0)
+parameters:
+-   id: rate
+    label: Rate
+    dtype: float
+    default: 1e-4
+-   id: reference
+    label: Reference
+    dtype: float
+    default: 1.0
+-   id: gain
+    label: Gain
+    dtype: float
+    default: 1.0
+
+ports:
+-   domain: stream
+    id: in
+    direction: input
+    type: typekeys/T
+
+-   domain: stream
+    id: out
+    direction: output
+    type: typekeys/T
+
+implementations:
+-   id: cpu
+
+file_format: 1

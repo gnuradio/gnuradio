@@ -1,0 +1,41 @@
+{% import 'macros.j2' as macros -%}
+{{ macros.header() }}
+
+#include "{{block}}_pyshell.h"
+#include <gnuradio/sptr_magic.h>
+
+namespace gr {
+namespace {{module}} {
+
+{%if typekeys | length > 0 -%}
+template <{% for key in typekeys -%}{{key['type']}} {{key['id']}}{{ ", " if not loop.last }}{%endfor%}>
+typename {{block}}<{% for key in typekeys -%}{{key['id']}}{{ ", " if not loop.last }}{%endfor%}>::sptr {{block}}<{% for key in typekeys -%}{{key['id']}}{{ ", " if not loop.last }}{%endfor%}>::make_pyshell(const block_args& args)
+{
+    return gnuradio::make_block_sptr<{{block}}_pyshell<{% for key in typekeys -%}{{key['id']}}{{ ", " if not loop.last }}{%endfor%}>>(args);
+}
+{%else-%}
+{{block}}::sptr {{block}}::make_pyshell(const block_args& args)
+{
+    return gnuradio::make_block_sptr<{{block}}_pyshell>(args);
+}
+{%endif-%}
+
+{%if typekeys | length == 1 -%}
+{%set key1 = typekeys|first %}
+{% for opt in key1['options'] -%}
+template class {{block}}<{{ macros.cpp_type_lookup(opt)}}>;
+{% endfor -%}
+{% elif typekeys | length == 2 -%}
+{%set key1 = typekeys|first %}
+{%set key2 = typekeys|last %}
+{% for opt1 in key1['options'] -%}
+{% for opt2 in key2['options'] -%}
+template class {{block}}<{{ opt1|lower if key1['type'] == 'bool' else opt1}}, {{ opt2|lower if key2['type'] == 'bool' else opt2}}>;
+{% endfor -%}
+{% endfor -%}
+{% endif -%}
+
+} // namespace {{module}}
+} // namespace gr
+
+

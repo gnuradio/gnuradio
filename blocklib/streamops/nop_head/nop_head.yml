@@ -1,0 +1,35 @@
+module: streamops
+block: nop_head
+label: Nop Head
+blocktype: sync_block
+
+parameters:
+-   id: nitems
+    label: Num. Items
+    dtype: size_t
+    settable: false
+-   id: itemsize
+    label: Item Size
+    dtype: size_t
+    settable: false
+    default: 0
+    grc:
+        hide: part
+ports:
+-   domain: stream
+    id: in
+    direction: input
+    type: untyped
+    size: parameters/itemsize
+
+-   domain: stream
+    id: out
+    direction: output
+    type: untyped
+    size: parameters/itemsize
+
+implementations:
+-   id: cpu
+# -   id: cuda
+
+file_format: 1

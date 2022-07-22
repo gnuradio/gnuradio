@@ -1,0 +1,16 @@
+#include <pybind11/pybind11.h>
+
+namespace py = pybind11;
+
+#include <gnuradio/{{module}}/enums.h>
+void bind_enums(py::module& m)
+{
+{% for e in enums %}
+    py::enum_<::gr::{{module}}::{{e}}>(m, "{{e}}")
+{% for v in enums[e]['enumerators'] -%}
+        .value("{{v['id']}}", ::gr::{{module}}::{{e}}::{{v['id']}})  
+{% endfor -%};
+
+    py::implicitly_convertible<int, ::gr::{{module}}::{{e}}>();
+{% endfor -%}
+}
