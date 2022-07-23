@@ -27,4 +27,26 @@ namespace py = pybind11;
 // pydoc.h is automatically generated in the build directory
 #include <metrics_pydoc.h>
 
-void bind_metrics(py::module& m) {}
+template <class T>
+void bind_metrics_template(py::module& m, const char* classname)
+{
+    using metrics = gr::trellis::metrics<T>;
+    py::class_<metrics, gr::block, gr::basic_block, std::shared_ptr<metrics>>(m,
+                                                                              classname)
+        .def(py::init(&gr::trellis::metrics<T>::make),
+             py::arg("O"),
+             py::arg("D"),
+             py::arg("TABLE"),
+             py::arg("TYPE"))
+        .def("O", &metrics::O)
+        .def("D", &metrics::D)
+        .def("TABLE", &metrics::TABLE)
+        .def("TYPE", &metrics::TYPE);
+}
+void bind_metrics(py::module& m)
+{
+    bind_metrics_template<std::int16_t>(m, "metrics_s");
+    bind_metrics_template<std::int32_t>(m, "metrics_i");
+    bind_metrics_template<float>(m, "metrics_f");
+    bind_metrics_template<gr_complex>(m, "metrics_c");
+}
