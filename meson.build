@@ -20,8 +20,8 @@ SCRIPTS_DIR=join_paths(meson.project_source_root(),'utils','blockbuilder','scrip
 
 volk_dep = dependency('volk', version : '>=2.2')
 yaml_dep = dependency('yaml-cpp', version : '>=0.6')
-fmt_dep = dependency('fmt', method: 'cmake', modules: ['fmt::fmt'])
-spdlog_dep = dependency('spdlog', method: 'cmake', modules : ['spdlog::spdlog'])
+fmt_dep = dependency('fmt')
+spdlog_dep = dependency('spdlog')
 python3_dep = dependency('python3', required : get_option('enable_python'))
 python3_embed_dep = dependency('python3-embed', required : get_option('enable_python'))
 
