@@ -9,6 +9,8 @@ parameters:
     label: Samples Per Second
     dtype: double
     settable: false
+    grc:
+        default: samp_rate
 -   id: ignore_tags
     label: Ignore Tags
     dtype: bool
