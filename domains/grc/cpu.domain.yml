@@ -1,0 +1,10 @@
+id: cpu
+label: CPU
+color: "#000000"
+
+multiple_connections_per_input: false
+multiple_connections_per_output: true
+
+templates:
+-   type: [cpu, cpu]
+    connect: self.connect(${ make_port_sig(source) }, ${ make_port_sig(sink) })

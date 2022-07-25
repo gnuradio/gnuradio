@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=GNU Radio Companion
+Comment=Graphical tool for creating signal flow graphs and generating flow-graph source code with the GNU Radio framework
+Exec=gnuradio-companion %F
+Categories=Development;HamRadio;Science;
+Keywords=SDR;Radio;HAM;RF;
+MimeType=application/gnuradio-grc;
+Icon=gnuradio-grc
+StartupWMClass=gnuradio-companion

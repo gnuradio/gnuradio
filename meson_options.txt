@@ -17,3 +17,6 @@ option('enable_gr_soapy', type : 'boolean', value : true)
 option('enable_gr_streamops', type : 'boolean', value : true)
 option('enable_gr_zeromq', type : 'boolean', value : true)
 option('enable_gr_audio', type : 'boolean', value : true)
+
+option('enable_grc', type : 'boolean', value : true)
+
