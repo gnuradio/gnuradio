@@ -7,7 +7,11 @@ if (prefix == '/usr')
   blocksdir = blocksdir + ':' + join_paths('/usr/local/',GRC_BLOcKS_DIR)
 endif
 
-GRC_XTERM_EXE = find_program('xterminal-emulator','gnome-terminal','konsole','xterm', required : false).full_path()
+grc_xterm_program = find_program('xterminal-emulator','gnome-terminal','konsole','xterm', required : false)
+GRC_XTERM_EXE = ''
+if grc_xterm_program.found()
+  GRC_XTERM_EXE = grc_xterm_program.full_path()
+endif
 
 cdata = configuration_data()
 cdata.set('GRC_XTERM_EXE', GRC_XTERM_EXE)
