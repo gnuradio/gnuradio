@@ -2,6 +2,7 @@ module: zeromq
 block: push_msg_sink
 label: Push Msg Sink
 blocktype: block
+category: '[Core]/ZeroMQ Interfaces'
 
 # Example Parameters
 parameters:

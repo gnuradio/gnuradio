@@ -2,6 +2,7 @@ module: streamops
 block: interleave
 label: interleave
 blocktype: block
+category: '[Core]/Stream Operators'
 
 doc:
     brief:  interleave N inputs into a single output

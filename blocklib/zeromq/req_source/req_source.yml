@@ -2,6 +2,7 @@ module: zeromq
 block: req_source
 label: REQ Source
 blocktype: sync_block
+category: '[Core]/ZeroMQ Interfaces'
 # inherits: base
 
 parameters:

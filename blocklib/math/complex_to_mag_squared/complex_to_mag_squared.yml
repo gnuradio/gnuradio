@@ -2,6 +2,7 @@ module: math
 block: complex_to_mag_squared
 label: Complex to Magnitude Squared
 blocktype: sync_block
+category: '[Core]/Math Operators'
 
 parameters:
 -   id: vlen

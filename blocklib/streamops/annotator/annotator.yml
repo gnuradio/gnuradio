@@ -6,6 +6,7 @@ module: streamops
 block: annotator
 label: Annotator
 blocktype: sync_block
+category: '[Core]/Debug Tools'
 
 parameters:
 -   id: when

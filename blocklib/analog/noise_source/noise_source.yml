@@ -2,6 +2,7 @@ module: analog
 block: noise_source
 label: Noise Source
 blocktype: sync_block
+category: '[Core]/Waveform Generators'
 includes:
   - gnuradio/analog/enums.h
 

@@ -2,6 +2,7 @@ module: blocks
 block: vector_source
 label: Vector Source
 blocktype: sync_block
+category: '[Core]/Misc'
 
 typekeys:
     - id: T

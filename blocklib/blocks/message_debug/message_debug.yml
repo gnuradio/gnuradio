@@ -2,6 +2,7 @@ module: blocks
 block: message_debug
 label: Message Debug
 blocktype: block
+category: '[Core]/Debug Tools'
 
 parameters:
 -   id: en_uvec

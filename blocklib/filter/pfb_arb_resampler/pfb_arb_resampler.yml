@@ -2,6 +2,7 @@ module: filter
 block: pfb_arb_resampler
 label: pfb_arb_resampler
 blocktype: block
+category: '[Core]/Resamplers'
 
 typekeys:
   - id: IN_T

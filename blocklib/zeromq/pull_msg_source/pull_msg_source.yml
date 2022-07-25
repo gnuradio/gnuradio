@@ -2,6 +2,7 @@ module: zeromq
 block: pull_msg_source
 label: Pull Msg Source
 blocktype: sync_block
+category: '[Core]/ZeroMQ Interfaces'
 
 parameters:
     - id: address

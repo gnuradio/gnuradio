@@ -2,6 +2,7 @@ module: blocks
 block: null_source
 label: Null Source
 blocktype: sync_block
+category: '[Core]/Misc'
 
 parameters:
 -   id: nports

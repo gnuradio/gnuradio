@@ -2,6 +2,7 @@ module: math
 block: multiply_const
 label: Multiply Constant
 blocktype: sync_block
+category: '[Core]/Math Operators'
 
 typekeys:
   - id: T

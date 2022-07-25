@@ -2,6 +2,7 @@ module: streamops
 block: load
 label: Load
 blocktype: sync_block
+category: '[Core]/Debug Tools'
 
 parameters:
 -   id: iterations

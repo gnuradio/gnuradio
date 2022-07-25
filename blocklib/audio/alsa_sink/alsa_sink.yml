@@ -2,6 +2,7 @@ module: audio
 block: alsa_sink
 label: ALSA Sink
 blocktype: sync_block
+category: '[Core]/Audio'
 
 # Example Parameters
 parameters:

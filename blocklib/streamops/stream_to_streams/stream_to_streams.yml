@@ -2,6 +2,7 @@ module: streamops
 block: stream_to_streams
 label: Stream To Streams
 blocktype: block
+category: '[Core]/Stream Operators'
 
 parameters:
 -   id: nstreams
