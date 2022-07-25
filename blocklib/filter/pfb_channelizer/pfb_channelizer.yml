@@ -2,6 +2,7 @@ module: filter
 block: pfb_channelizer
 label: PFB Channelizer
 blocktype: block
+category: '[Core]/Channelizers'
 
 typekeys:
   - id: T

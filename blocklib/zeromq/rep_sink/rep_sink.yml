@@ -2,6 +2,7 @@ module: zeromq
 block: rep_sink
 label: REP Sink
 blocktype: sync_block
+category: '[Core]/ZeroMQ Interfaces'
 # inherits: gr::zeromq::base
 # includes: 
 #   - gnuradio/zeromq/base.h

@@ -2,6 +2,7 @@ module: filter
 block: dc_blocker
 label: DC Blocker
 blocktype: sync_block
+category: '[Core]/Filters'
 
 typekeys:
   - id: T

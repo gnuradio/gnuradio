@@ -2,6 +2,7 @@ module: streamops
 block: interleaved_short_to_complex
 label: Interleaved Short to Complex
 blocktype: sync_block
+category: '[Core]/Stream Operators'
 
 parameters:
 -   id: swap

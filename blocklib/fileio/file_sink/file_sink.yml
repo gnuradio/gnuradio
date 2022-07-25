@@ -2,6 +2,7 @@ module: fileio
 block: file_sink
 label: File Sink
 blocktype: sync_block
+category: '[Core]/File Operators'
 
 parameters:
 -   id: filename

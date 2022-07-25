@@ -2,6 +2,7 @@ module: streamops
 block: probe_signal_v
 label: Probe Signal Vector
 blocktype: sync_block
+category: '[Core]/Measurement Tools'
 
 doc:
   brief: Sink that allows a vector of samples to be grabbed from Python.

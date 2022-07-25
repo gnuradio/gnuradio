@@ -2,6 +2,7 @@ module: math
 block: conjugate
 label: Complex Conjugate
 blocktype: sync_block
+category: '[Core]/Math Operators'
 
 ports:
 -   domain: stream

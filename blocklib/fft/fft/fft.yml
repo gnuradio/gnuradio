@@ -2,6 +2,7 @@ module: fft
 block: fft
 label: FFT
 blocktype: sync_block
+category: '[Core]/Fourier Analysis'
 
 typekeys:
   - id: T

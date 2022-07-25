@@ -2,6 +2,7 @@ module: streamops
 block: deinterleave
 label: deinterleave
 blocktype: block
+category: '[Core]/Stream Operators'
 
 doc:
   brief: deinterleave an input block of samples into N outputs
