@@ -79,13 +79,11 @@ def main():
         version=gr.version(),
         version_parts=(gr.major_version(), gr.api_version(),
                        gr.minor_version()),
-        prefs=None,  # FIXME #gr.prefs(),
+        prefs=gr.prefs,
         install_prefix=gr.prefix()
     )
 
-    hack_blocks_path = [os.path.join(
-        gr.prefix(), 'share', 'gnuradio', 'grc', 'blocks')]
-    platform.build_library(path=hack_blocks_path)
+    platform.build_library()
 
     log.debug("Loading application")
     app = Application(args.flow_graphs, platform)
