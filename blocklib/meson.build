@@ -32,3 +32,6 @@ endif
 if get_option('enable_gr_audio')
 subdir('audio')
 endif
+if get_option('enable_gr_soapy') and soapysdr_dep.found()
+subdir('soapy')
+endif

@@ -1,0 +1,76 @@
+module: soapy
+block: hackrf_source
+label: HackRF Source
+blocktype: hier_block
+
+typekeys:
+    - id: T
+      type: class
+      options:
+          - cf32
+          # - rf32
+
+parameters:
+    - id: samp_rate
+      label: Sample Rate
+      dtype: float
+      grc:
+          default: "samp_rate"
+      settable: true
+    - id: center_freq
+      label: "Center Freq (Hz)"
+      category: RF Options
+      dtype: float
+      grc:
+          default: "freq"
+      settable: true
+    - id: gain
+      label: "IF Gain (0dB - 40dB)"
+      category: RF Options
+      dtype: float
+      default: "16"
+      grc: 
+        hide: part  
+      settable: true
+    - id: bandwidth
+      label: Bandwidth (0=auto)
+      category: RF Options
+      dtype: float
+      default: 0
+      grc:
+          hide: part
+      settable: true
+    - id: amp
+      label: "Amp On (+14 dB)"
+      category: RF Options
+      dtype: bool
+      default: "false"
+      grc:
+          hide: part
+      settable: true
+    - id: vga
+      label: VGA Gain (0dB - 62dB)'
+      category: RF Options
+      dtype: float
+      default: "16"
+      grc:
+          hide: part
+      settable: true
+    - id: dev_args
+      label: Device arguments
+      dtype: std::string
+      default: '""'
+      grc:
+          hide: part
+
+ports:
+    - domain: stream
+      id: out
+      direction: output
+      type: typekeys/T
+
+implementations:
+    - id: cpu
+# -   id: cuda
+
+file_format: 1

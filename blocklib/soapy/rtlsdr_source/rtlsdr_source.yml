@@ -1,0 +1,63 @@
+module: soapy
+block: rtlsdr_source
+label: RTLSDR Source
+blocktype: hier_block
+
+typekeys:
+    - id: T
+      type: class
+      options:
+          - cf32
+          # - rf32
+
+# Example Parameters
+parameters:
+    - id: samp_rate
+      label: Sample Rate
+      dtype: float
+      grc:
+          default: "samp_rate"
+      settable: true
+    - id: center_freq
+      label: "Center Freq (Hz)"
+      category: RF Options
+      dtype: float
+      grc:
+          default: "freq"
+      settable: true
+    - id: gain
+      label: "RF Gain"
+      category: RF Options
+      dtype: float
+      grc:
+          default: "20"
+          hide: ${'all' if agc else 'part'}
+      settable: true
+    - id: freq_correction
+      label: "Frequency Correction (PPM)"
+      category: RF Options
+      dtype: float
+      default: 0
+      grc:
+          hide: "part"
+    - id: agc
+      label: "AGC"
+      category: RF Options
+      dtype: bool
+      default: 'false'
+      grc:
+          hide: "part"
+
+
+# Example Ports
+ports:
+    - domain: stream
+      id: out
+      direction: output
+      type: typekeys/T
+
+implementations:
+    - id: cpu
+# -   id: cuda
+
+file_format: 1

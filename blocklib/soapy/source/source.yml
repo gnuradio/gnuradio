@@ -1,0 +1,98 @@
+module: soapy
+block: source
+label: source
+blocktype: gr::soapy::block
+# inherits: gr::soapy::block
+
+# This needs a lot of work - for soapy there is an N:1 relationship 
+#  between the grc files and block
+#  Do we 
+#   1) have all that info here and generate multiple files
+#   2) have multiple grc files in tree and don't generate
+# grc:
+#   flags: [python]
+#   templates:
+#       imports: |- 
+#         from gnuradio import soapy
+#       make: |-
+#         self.${id} = soapy.source_${T.fcn}(${device},${nchan})
+#         self.${id}.set_sample_rate(0, samp_rate)
+#         self.${id}.set_gain_mode(0, False)
+#         self.${id}.set_frequency(0, ${frequency})
+#         self.${id}.set_frequency_correction(0, 0)
+#         self.${id}.set_gain(0, 'TUNER', ${gain})
+
+typekeys:
+  - id: T
+    type: class
+    options:
+        - cf32
+        # - rf32
+
+
+includes:
+  - gnuradio/soapy/block.h
+
+parameters:
+-   id: device
+    label: Device
+    dtype: std::string
+    settable: false
+    grc:
+      hide: 'all'
+-   id: nchan
+    label: Number of Channels
+    dtype: size_t
+    settable: false
+    grc:
+        hide: 'all'
+-   id: dev_args
+    label: Device Args
+    dtype: std::string
+    settable: false
+    default: '""'
+-   id: stream_args
+    label: Stream Args
+    dtype: std::string
+    settable: false
+    default: '""'
+    grc:
+        hide: 'all'
+-   id: tune_args
+    label: Tune Args
+    dtype: std::string
+    container: vector
+    settable: false
+    serializable: false # don't support vectors of strings yet
+    default: std::vector<std::string>{""}
+    grc:
+        default: '[]'
+        hide: 'all'
+-   id: other_settings
+    label: Other Settings
+    dtype: std::string
+    container: vector
+    settable: false
+    serializable: false # don't support vectors of strings yet
+    default: std::vector<std::string>{""}
+    grc:
+        default: '[]'
+        hide: 'all'
+
+ports:
+# -   domain: stream
+#     id: in
+#     direction: input
+#     type: T
+
+-   domain: stream
+    id: out
+    direction: output
+    type: typekeys/T
+    multiplicity: parameters/nchan
+
+implementations:
+-   id: cpu
+# -   id: cuda
+
+file_format: 1
