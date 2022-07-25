@@ -57,7 +57,14 @@ void bind_block_work_io(py::module& m)
             [](gr::io_vec_wrap<gr::block_work_output>& obj, const std::string& name) {
                 return &obj[name];
             },
-            py::return_value_policy::reference);
+            py::return_value_policy::reference)
+        .def(
+            "__iter__",
+            [](gr::io_vec_wrap<gr::block_work_output>& s) {
+                return py::make_iterator(s.begin(), s.end());
+            },
+            py::keep_alive<0,
+                           1>() /* Essential: keep object alive while iterator exists */);
 
     py::class_<gr::io_vec_wrap<gr::block_work_input>>(m, "io_vec_wrap_input")
         .def(
@@ -71,7 +78,15 @@ void bind_block_work_io(py::module& m)
             [](gr::io_vec_wrap<gr::block_work_input>& obj, const std::string& name) {
                 return &obj[name];
             },
-            py::return_value_policy::reference);
+            py::return_value_policy::reference)
+        .def(
+            "__iter__",
+            [](gr::io_vec_wrap<gr::block_work_input>& s) {
+                return py::make_iterator(s.begin(), s.end());
+            },
+            py::keep_alive<0,
+                           1>() /* Essential: keep object alive while iterator exists */);
+    ;
 
     py::class_<gr::work_io, std::unique_ptr<gr::work_io>>(m, "work_io")
         .def("inputs", &gr::work_io::inputs, py::return_value_policy::reference)
