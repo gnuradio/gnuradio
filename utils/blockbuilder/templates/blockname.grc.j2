@@ -42,7 +42,7 @@
 id: {{module}}_{% if grc and 'id' in grc %}{{grc['id']}}{% else %}{{block}}{%endif%}
 label: '{% if grc and 'label' in grc %}{{grc['label']}}{% else %}{{label if label else block}}{%endif%}'
 {% if grc %}flags: {{grc['flags']}}{% else %}flags: [python]{% endif %}
-category: '[GR 4.0]/{{module}}'
+category: {% if category %}'{{category}}'{% else %}'[GR 4.0]/{{module}}'{% endif %}
 
 parameters:
 {% if typekeys -%} {# We have a templated block, enable type parameter#}

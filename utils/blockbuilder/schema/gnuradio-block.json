@@ -18,6 +18,9 @@
                 "blocktype": {
                     "type": "string"
                 },
+                "category": {
+                    "type": "string"
+                },
                 "includes": {
                     "type": "array",
                     "items": {
