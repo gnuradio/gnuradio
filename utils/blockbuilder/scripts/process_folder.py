@@ -77,6 +77,7 @@ def main():
 
         # Populate the dictionary with defaults from the schema
         default_obj = jsonschema_default.create_from(block_schema)
+        default_obj.pop('grc')
         default_obj.update(d)
         d = default_obj
 
