@@ -1,0 +1,46 @@
+id: snippet
+label: Python Snippet
+flags: [ python ]
+
+parameters:
+-   id: section
+    label: Section of Flowgraph
+    dtype: string
+    options: ['main_after_init', 'main_after_start', 'main_after_stop' ]
+    option_labels: ['Main - After Init', 'Main - After Start', 'Main - After Stop']
+-   id: priority
+    label: Priority
+    dtype: int
+    default: "0"
+    hide: ${'part' if priority <= 0 else 'none'}
+-   id: code
+    label: Code Snippet
+    dtype: _multiline
+
+templates:
+    var_make: ${code}
+
+documentation: |-
+    CAUTION: This is an ADVANCED feature and can lead to unintended consequences in the rendering of a flowgraph.  Use at your own risk.
+
+    Insert a snippet of Python code directly into the flowgraph at the end of the specified section. \
+    For each snippet a function is generated with the block name of the snippet (use GRC Show Block IDs option to modify).  These functions are\
+    then grouped into their respective sections in the rendered flowgraph.
+
+    The purpose of the python snippets is to be able to exercise features from within GRC that are not entirely supported by the block callbacks, \ 
+    methods and mechanisms to generate the code.  One example of this would be calling UHD timed commands before starting the flowgraph
+
+    Indents will be handled upon insertion into the python flowgraph
+
+    Example 1:
+    epy_mod_0.some_function(self.some_block.some_property)
+
+    Will place the function call in the generated .py file using the name of the appropriate embedded python block in the proper scope
+    The scope is relative to the blocks in the flowgraph, e.g. to reference a block, it should be identified as self.block
+
+    Example 2:
+    print('The flowgraph has been stopped')
+
+    With section selected as 'Main - After Stop', will place the print statement after the flowgraph has been stopped.
+
+file_format: 1

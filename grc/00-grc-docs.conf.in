@@ -1,0 +1,4 @@
+# This should link to the wiki page-per-block documentation, when the block label (e.g., FFT) is appended to the end of the string
+
+[grc-docs]
+wiki_block_docs_url_prefix = @GRC_DOCS_URL_PREFIX@

@@ -76,6 +76,25 @@ if (get_option('enable_testing'))
 
 endif
 
+prefix = get_option('prefix')
+
+GR_DATA_DIR = 'share'
+GR_PKG_DATA_DIR = join_paths(GR_DATA_DIR,meson.project_name())
+
+# Set location of config/prefs files in /etc
+# Special exception if prefix is /usr so we don't make a /usr/etc.
+GR_CONF_DIR = 'etc'
+isusr = prefix == '/usr'
+if isusr
+  SYSCONFDIR = join_paths('/',GR_CONF_DIR)
+else
+  SYSCONFDIR = join_paths(prefix, GR_CONF_DIR)
+endif
+GR_PKG_CONF_DIR = join_paths(SYSCONFDIR, meson.project_name(), 'conf.d')
+GR_PREFSDIR = join_paths(SYSCONFDIR, meson.project_name(), 'conf.d')
+GRC_BLOCKS_DIR = join_paths(GR_PKG_DATA_DIR, 'grc/blocks')
+
+
 subdir('gr')
 subdir('kernel')
 subdir('blocklib')
@@ -83,6 +102,8 @@ subdir('schedulers')
 subdir('utils')
 if (get_option('enable_python'))
   subdir('python/gnuradio')
+  subdir('grc')
+  subdir('domains/grc')
 endif
 if (get_option('enable_testing'))
     subdir('test')

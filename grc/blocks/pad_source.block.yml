@@ -1,0 +1,56 @@
+id: pad_source
+label: Pad Source
+flags: [ python, cpp ]
+
+parameters:
+-   id: label
+    label: Label
+    dtype: string
+    default: in
+-   id: type
+    label: Output Type
+    dtype: enum
+    options: [complex, float, int, short, byte, bit, message, '']
+    option_labels: [Complex, Float, Int, Short, Byte, Bits, Message, Wildcard]
+    option_attributes:
+        size: [gr.sizeof_gr_complex, gr.sizeof_float, gr.sizeof_int, gr.sizeof_short,
+            gr.sizeof_char, gr.sizeof_char, '0', '0']
+        cpp_size: [sizeof(gr_complex), sizeof(float), sizeof(int), sizeof(short),
+            sizeof(char), sizeof(char), '0', '0']
+    hide: part
+-   id: vlen
+    label: Vector Length
+    dtype: int
+    default: '1'
+    hide: ${ 'part' if vlen == 1 else 'none' }
+-   id: num_streams
+    label: Num Streams
+    dtype: int
+    default: '1'
+    hide: part
+-   id: optional
+    label: Optional
+    dtype: bool
+    default: 'False'
+    options: ['True', 'False']
+    option_labels: [Optional, Required]
+    hide: part
+
+outputs:
+-   domain: stream
+    dtype: ${ type }
+    vlen: ${ vlen }
+    multiplicity: ${ num_streams }
+    optional: ${optional}
+
+
+asserts:
+- ${ vlen > 0 }
+- ${ num_streams > 0 }
+
+documentation: |-
+    The outputs of this block will become the inputs to this flow graph when it is instantiated as a hierarchical block.
+
+    Pad sources will be ordered alphabetically by their ids. The first pad source will have an index of 0.
+
+file_format: 1

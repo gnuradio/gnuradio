@@ -1,0 +1,14 @@
+id: cuda
+label: CUDA
+color: "#13fe66"
+
+multiple_connections_per_input: false
+multiple_connections_per_output: true
+
+templates:
+-   type: [cuda, cuda]
+    connect: self.connect(${ make_port_sig(source) }, ${ make_port_sig(sink) }).set_custom_buffer(gr.buffer_cuda_properties.make(gr.buffer_cuda_type.D2D))
+-   type: [cuda, cpu]
+    connect: self.connect(${ make_port_sig(source) }, ${ make_port_sig(sink) }).set_custom_buffer(gr.buffer_cuda_properties.make(gr.buffer_cuda_type.D2H))
+-   type: [cpu, cuda]
+    connect: self.connect(${ make_port_sig(source) }, ${ make_port_sig(sink) }).set_custom_buffer(gr.buffer_cuda_properties.make(gr.buffer_cuda_type.H2D))
