@@ -28,7 +28,7 @@ class Config(CoreConfig):
     name = 'GNU Radio Companion'
 
     gui_prefs_file = os.environ.get(
-        'GRC_PREFS_PATH', os.path.expanduser('~/.gnuradio/grc.conf'))
+        'GRC_PREFS_PATH', os.path.expanduser('~/.gnuradio/grc.yml'))
 
     def __init__(self, install_prefix, *args, **kwargs):
         CoreConfig.__init__(self, *args, **kwargs)

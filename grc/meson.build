@@ -12,8 +12,8 @@ GRC_XTERM_EXE = find_program('xterminal-emulator','gnome-terminal','konsole','xt
 cdata = configuration_data()
 cdata.set('GRC_XTERM_EXE', GRC_XTERM_EXE)
 cdata.set('blocksdir', blocksdir)
-grc_conf_file = configure_file(input: 'grc.conf.in',
-                            output: 'grc.conf',
+grc_conf_file = configure_file(input: 'grc.yml.in',
+                            output: 'grc.yml',
                             configuration: cdata,
                             install: true,
                             install_dir: GR_PREFSDIR)
