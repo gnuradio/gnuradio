@@ -40,7 +40,7 @@ int dc_blocker_cpu<T>::group_delay()
 }
 
 template <class T>
-work_return_code_t dc_blocker_cpu<T>::work(work_io& wio)
+work_return_t dc_blocker_cpu<T>::work(work_io& wio)
 {
 
     auto in = wio.inputs()[0].items<T>();
@@ -72,7 +72,7 @@ work_return_code_t dc_blocker_cpu<T>::work(work_io& wio)
     }
 
     wio.outputs()[0].n_produced = noutput_items;
-    return work_return_code_t::WORK_OK;
+    return work_return_t::OK;
 }
 
 } /* namespace filter */

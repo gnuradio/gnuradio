@@ -40,7 +40,7 @@ void fir_filter_cpu<IN_T, OUT_T, TAP_T>::on_parameter_change(param_action_sptr a
 }
 
 template <class IN_T, class OUT_T, class TAP_T>
-work_return_code_t fir_filter_cpu<IN_T, OUT_T, TAP_T>::work(work_io& wio)
+work_return_t fir_filter_cpu<IN_T, OUT_T, TAP_T>::work(work_io& wio)
 {
     // Do forecasting
     size_t ninput = wio.inputs()[0].n_items;
@@ -60,7 +60,7 @@ work_return_code_t fir_filter_cpu<IN_T, OUT_T, TAP_T>::work(work_io& wio)
     auto noutput_items = std::min(min_ninput / decim, noutput);
 
     if (noutput_items <= 0) {
-        return work_return_code_t::WORK_INSUFFICIENT_INPUT_ITEMS;
+        return work_return_t::INSUFFICIENT_INPUT_ITEMS;
     }
 
 
@@ -82,7 +82,7 @@ work_return_code_t fir_filter_cpu<IN_T, OUT_T, TAP_T>::work(work_io& wio)
         d_hist_change = 0;
         d_hist_updated = false;
     }
-    return work_return_code_t::WORK_OK;
+    return work_return_t::OK;
 }
 
 } /* namespace filter */

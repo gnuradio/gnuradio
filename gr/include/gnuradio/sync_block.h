@@ -41,9 +41,9 @@ public:
      *
      * @param work_input
      * @param work_output
-     * @return work_return_code_t
+     * @return work_return_t
      */
-    work_return_code_t do_work(work_io& wio) override
+    work_return_t do_work(work_io& wio) override
     {
         // Check all inputs and outputs have the same number of items
         auto min_num_items = std::numeric_limits<size_t>::max();
@@ -68,11 +68,11 @@ public:
 
         for (auto& w : wio.outputs()) {
             if (w.n_items < output_multiple()) {
-                return work_return_code_t::WORK_INSUFFICIENT_OUTPUT_ITEMS;
+                return work_return_t::INSUFFICIENT_OUTPUT_ITEMS;
             }
         }
 
-        work_return_code_t ret = work(wio);
+        work_return_t ret = work(wio);
 
         // For a sync block the n_produced must be the same on every
         // output port

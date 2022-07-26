@@ -21,7 +21,7 @@ class divide_cpu : public divide<T>
 public:
     divide_cpu(const typename divide<T>::block_args& args);
 
-    work_return_code_t work(work_io&) override;
+    work_return_t work(work_io&) override;
 
 protected:
     size_t d_num_inputs;

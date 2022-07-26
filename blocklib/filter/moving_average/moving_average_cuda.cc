@@ -37,12 +37,12 @@ moving_average_cuda<T>::moving_average_cuda(
 }
 
 template <class T>
-work_return_code_t moving_average_cuda<T>::work(work_io& wio)
+work_return_t moving_average_cuda<T>::work(work_io& wio)
 {
     if (wio.inputs()[0].n_items < d_length) {
         wio.outputs()[0].n_produced = 0;
         wio.inputs()[0].n_consumed = 0;
-        return work_return_code_t::WORK_INSUFFICIENT_INPUT_ITEMS;
+        return work_return_t::INSUFFICIENT_INPUT_ITEMS;
     }
 
     auto in = wio.inputs()[0].items<T>();
@@ -65,7 +65,7 @@ work_return_code_t moving_average_cuda<T>::work(work_io& wio)
     wio.outputs()[0].n_produced = tr == 0 ? num_iter : num_iter - (d_length - 1);
     wio.inputs()[0].n_consumed =
         tr == 0 ? num_iter - (d_length - 1) : num_iter - (d_length - 1);
-    return work_return_code_t::WORK_OK;
+    return work_return_t::OK;
 } // namespace filter
 
 } // namespace filter

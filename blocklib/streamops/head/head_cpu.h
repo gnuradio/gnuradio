@@ -19,7 +19,7 @@ class head_cpu : public head
 {
 public:
     head_cpu(const block_args& args);
-    work_return_code_t work(work_io&) override;
+    work_return_t work(work_io&) override;
 
 private:
     size_t d_nitems;

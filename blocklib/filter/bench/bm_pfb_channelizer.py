@@ -31,7 +31,7 @@ class benchmark_pfb_channelizer(gr.flowgraph):
         attn = args.attenuation
         bufsize = args.buffer_size
                 
-        taps = firdes.low_pass_2(1, nchans, 1 / 2, 1 / 10,  attenuation_dB=attn,window=window.WIN_BLACKMAN_hARRIS)
+        taps = firdes.low_pass_2(1, nchans, 1 / 2, 1 / 10,  attenuation_dB=attn,window=window.BLACKMAN_hARRIS)
 
         ##################################################
         # Blocks

@@ -38,12 +38,12 @@ bool throttle_cpu::start()
     return block::start();
 }
 
-work_return_code_t throttle_cpu::work(work_io& wio)
+work_return_t throttle_cpu::work(work_io& wio)
 {
     if (d_sleeping) {
         wio.produce_each(0);
         wio.consume_each(0);
-        return work_return_code_t::WORK_OK;
+        return work_return_t::OK;
     }
 
     // copy all samples output[i] <= input[i]
@@ -69,7 +69,7 @@ work_return_code_t throttle_cpu::work(work_io& wio)
         d_total_samples -= noutput_items;
         wio.produce_each(0);
         wio.consume_each(0);
-        return work_return_code_t::WORK_OK;
+        return work_return_t::OK;
     }
 
     // TODO: blocks like throttle shouldn't need to do a memcpy, but this would have to be
@@ -80,7 +80,7 @@ work_return_code_t throttle_cpu::work(work_io& wio)
     wio.outputs()[0].n_produced = n;
 
     d_debug_logger->debug("Throttle produced {}", n);
-    return work_return_code_t::WORK_OK;
+    return work_return_t::OK;
 }
 
 

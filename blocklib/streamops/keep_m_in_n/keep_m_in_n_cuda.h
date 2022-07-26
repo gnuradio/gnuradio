@@ -21,7 +21,7 @@ class keep_m_in_n_cuda : public keep_m_in_n
 {
 public:
     keep_m_in_n_cuda(block_args args);
-    work_return_code_t work(work_io&) override;
+    work_return_t work(work_io&) override;
 
 private:
     int d_min_block;

@@ -23,7 +23,7 @@ vector_sink_cpu<T>::vector_sink_cpu(const typename vector_sink<T>::block_args& a
 }
 
 template <class T>
-work_return_code_t vector_sink_cpu<T>::work(work_io& wio)
+work_return_t vector_sink_cpu<T>::work(work_io& wio)
 {
     auto iptr = wio.inputs()[0].items<T>();
     int noutput_items = wio.inputs()[0].n_items;
@@ -36,7 +36,7 @@ work_return_code_t vector_sink_cpu<T>::work(work_io& wio)
 
     wio.consume_each(noutput_items);
     this->d_debug_logger->debug("sizeof_data: {}", d_data.size());
-    return work_return_code_t::WORK_OK;
+    return work_return_t::OK;
 }
 
 } /* namespace blocks */

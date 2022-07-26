@@ -85,7 +85,7 @@ void fft_cuda<float, false>::fft_and_shift(const float* in, gr_complex* out, int
 }
 
 template <class T, bool forward>
-work_return_code_t fft_cuda<T, forward>::work(work_io& wio)
+work_return_t fft_cuda<T, forward>::work(work_io& wio)
 {
 
     auto in = wio.inputs()[0].items<T>();
@@ -95,7 +95,7 @@ work_return_code_t fft_cuda<T, forward>::work(work_io& wio)
     fft_and_shift(in, out, noutput_items);
     cudaStreamSynchronize(d_stream);
     wio.produce_each(noutput_items);
-    return work_return_code_t::WORK_OK;
+    return work_return_t::OK;
 }
 
 } // namespace fft

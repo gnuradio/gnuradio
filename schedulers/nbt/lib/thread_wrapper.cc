@@ -75,7 +75,7 @@ bool thread_wrapper::handle_work_notification()
     // Based on state of the run_one_iteration, do things
     // If any of the blocks are done, notify the flowgraph monitor
     for (auto elem : s) {
-        if (elem.second == executor_iteration_status::DONE) {
+        if (elem.second == executor_iteration_status_t::DONE) {
             d_debug_logger->debug("Signalling DONE to RTMON from block {}", elem.first);
             d_rtmon->push_message(
                 rt_monitor_message::make(rt_monitor_message_t::DONE, id(), elem.first));
@@ -87,15 +87,15 @@ bool thread_wrapper::handle_work_notification()
     // bool kick = false;
     bool all_blkd = true;
     for (auto elem : s) {
-        if (elem.second == executor_iteration_status::READY ||
-            elem.second == executor_iteration_status::BLKD_OUT) {
+        if (elem.second == executor_iteration_status_t::READY ||
+            elem.second == executor_iteration_status_t::BLKD_OUT) {
             notify_self_ = true;
         }
-        else if (elem.second == executor_iteration_status::BLKD_IN) {
+        else if (elem.second == executor_iteration_status_t::BLKD_IN) {
             // kick = true;
         }
 
-        if (elem.second == executor_iteration_status::MSG_ONLY) {
+        if (elem.second == executor_iteration_status_t::MSG_ONLY) {
             //     gr_log_debug(d_debug_logger,
             //                  "size_approx {}",
             //                  msgq.size_approx());
@@ -104,8 +104,8 @@ bool thread_wrapper::handle_work_notification()
             //     all_blkd = false;
             // }
         }
-        else if (elem.second != executor_iteration_status::BLKD_IN &&
-                 elem.second != executor_iteration_status::BLKD_OUT) {
+        else if (elem.second != executor_iteration_status_t::BLKD_IN &&
+                 elem.second != executor_iteration_status_t::BLKD_OUT) {
             // Ignore source blocks
             if (d_block_id_to_block_map[elem.first]->input_stream_ports().empty()) {
                 all_blkd = false;

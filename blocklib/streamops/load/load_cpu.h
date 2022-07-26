@@ -19,7 +19,7 @@ class load_cpu : public load
 {
 public:
     load_cpu(block_args args);
-    work_return_code_t work(work_io&) override;
+    work_return_t work(work_io&) override;
 
 protected:
     size_t d_load;

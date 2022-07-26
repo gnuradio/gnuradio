@@ -22,7 +22,7 @@ class dc_blocker_cpu : public dc_blocker<T>
 public:
     dc_blocker_cpu(const typename dc_blocker<T>::block_args& args);
 
-    work_return_code_t work(work_io&) override;
+    work_return_t work(work_io&) override;
 
     int group_delay();
 

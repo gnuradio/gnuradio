@@ -23,7 +23,7 @@ class copy_cuda : public copy
 {
 public:
     copy_cuda(block_args args);
-    work_return_code_t work(work_io&) override;
+    work_return_t work(work_io&) override;
 
 protected:
     int d_block_size;

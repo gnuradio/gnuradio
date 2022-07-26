@@ -46,10 +46,10 @@ constellation::constellation(std::vector<gr_complex> constell,
     unsigned int constsize = d_constellation.size();
     float summed_mag = 0;
     switch (normalization) {
-    case NO_NORMALIZATION:
+    case normalization_t::NO_NORMALIZATION:
         break;
 
-    case POWER_NORMALIZATION:
+    case normalization_t::POWER_NORMALIZATION:
         // Scale constellation points so that average power is 1.
         for (unsigned int i = 0; i < constsize; i++) {
             gr_complex c = d_constellation[i];
@@ -61,7 +61,7 @@ constellation::constellation(std::vector<gr_complex> constell,
         }
         break;
 
-    case AMPLITUDE_NORMALIZATION:
+    case normalization_t::AMPLITUDE_NORMALIZATION:
         // Scale constellation points so that average magnitude is 1.
         for (unsigned int i = 0; i < constsize; i++) {
             gr_complex c = d_constellation[i];
@@ -185,13 +185,13 @@ void constellation::calc_metric(const gr_complex* sample,
                                 trellis_metric_type_t type)
 {
     switch (type) {
-    case TRELLIS_EUCLIDEAN:
+    case trellis_metric_type_t::EUCLIDEAN:
         calc_euclidean_metric(sample, metric);
         break;
-    case TRELLIS_HARD_SYMBOL:
+    case trellis_metric_type_t::HARD_SYMBOL:
         calc_hard_symbol_metric(sample, metric);
         break;
-    case TRELLIS_HARD_BIT:
+    case trellis_metric_type_t::HARD_BIT:
         throw std::runtime_error("Invalid metric type (not yet implemented).");
         break;
     default:

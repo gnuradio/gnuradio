@@ -28,7 +28,7 @@ namespace filter {
 class firdes
 {
 public:
-    static std::vector<float> window(fft::window::win_type type, int ntaps, double param);
+    static std::vector<float> window(fft::window::window_t type, int ntaps, double param);
 
     // ... class methods ...
 
@@ -42,7 +42,7 @@ public:
      * \param sampling_freq       sampling freq (Hz)
      * \param cutoff_freq         center of transition band (Hz)
      * \param transition_width    width of transition band (Hz)
-     * \param window              one of fft::window::win_type
+     * \param window              one of fft::window::window_t
      * \param param               parameter for Kaiser, Exp., Gaussian, Tukey windows
      */
     static std::vector<float>
@@ -50,7 +50,7 @@ public:
              double sampling_freq,
              double cutoff_freq,      // Hz center of transition band
              double transition_width, // Hz width of transition band
-             fft::window::win_type window = fft::window::win_type::WIN_HAMMING,
+             fft::window::window_t window = fft::window::window_t::HAMMING,
              double param = 6.76); // used for Kaiser, Exp., Gaussian, Tukey windows
 
     /*!
@@ -65,7 +65,7 @@ public:
      * \param cutoff_freq         beginning of transition band (Hz)
      * \param transition_width    width of transition band (Hz)
      * \param attenuation_dB      required stopband attenuation
-     * \param window              one of fft::window::win_type
+     * \param window              one of fft::window::window_t
      * \param param               parameter for Kaiser, Exp., Gaussian, Tukey windows
      */
     static std::vector<float>
@@ -74,7 +74,7 @@ public:
                double cutoff_freq,      // Hz beginning transition band
                double transition_width, // Hz width of transition band
                double attenuation_dB,   // out of band attenuation dB
-               fft::window::win_type window = fft::window::win_type::WIN_HAMMING,
+               fft::window::window_t window = fft::window::window_t::HAMMING,
                double param = 6.76); // used for Kaiser, Exp., Gaussian, Tukey windows
 
     /*!
@@ -87,7 +87,7 @@ public:
      * \param sampling_freq       sampling freq (Hz)
      * \param cutoff_freq         center of transition band (Hz)
      * \param transition_width    width of transition band (Hz)
-     * \param window              one of fft::window::win_type
+     * \param window              one of fft::window::window_t
      * \param param               parameter for Kaiser, Exp., Gaussian, Tukey windows
      */
     static std::vector<float>
@@ -95,7 +95,7 @@ public:
               double sampling_freq,
               double cutoff_freq,      // Hz center of transition band
               double transition_width, // Hz width of transition band
-              fft::window::win_type window = fft::window::win_type::WIN_HAMMING,
+              fft::window::window_t window = fft::window::window_t::HAMMING,
               double param = 6.76); // used for Kaiser, Exp., Gaussian, Tukey windows
 
     /*!
@@ -110,7 +110,7 @@ public:
      * \param cutoff_freq         center of transition band (Hz)
      * \param transition_width    width of transition band (Hz).
      * \param attenuation_dB      out of band attenuation
-     * \param window              one of fft::window::win_type
+     * \param window              one of fft::window::window_t
      * \param param               parameter for Kaiser, Exp., Gaussian, Tukey windows
      */
     static std::vector<float>
@@ -119,7 +119,7 @@ public:
                 double cutoff_freq,      // Hz center of transition band
                 double transition_width, // Hz width of transition band
                 double attenuation_dB,   // out of band attenuation dB
-                fft::window::win_type window = fft::window::win_type::WIN_HAMMING,
+                fft::window::window_t window = fft::window::window_t::HAMMING,
                 double param = 6.76); // used for Kaiser, Exp., Gaussian, Tukey windows
 
     /*!
@@ -133,7 +133,7 @@ public:
      * \param low_cutoff_freq     center of transition band (Hz)
      * \param high_cutoff_freq    center of transition band (Hz)
      * \param transition_width    width of transition band (Hz).
-     * \param window              one of fft::window::win_type
+     * \param window              one of fft::window::window_t
      * \param param               parameter for Kaiser, Exp., Gaussian, Tukey windows
      */
     static std::vector<float>
@@ -142,7 +142,7 @@ public:
               double low_cutoff_freq,  // Hz center of transition band
               double high_cutoff_freq, // Hz center of transition band
               double transition_width, // Hz width of transition band
-              fft::window::win_type window = fft::window::win_type::WIN_HAMMING,
+              fft::window::window_t window = fft::window::window_t::HAMMING,
               double param = 6.76); // used for Kaiser, Exp., Gaussian, Tukey windows
 
     /*!
@@ -158,7 +158,7 @@ public:
      * \param high_cutoff_freq    center of transition band (Hz)
      * \param transition_width    width of transition band (Hz).
      * \param attenuation_dB      out of band attenuation
-     * \param window              one of fft::window::win_type
+     * \param window              one of fft::window::window_t
      * \param param               parameter for Kaiser, Exp., Gaussian, Tukey windows
      */
     static std::vector<float>
@@ -168,7 +168,7 @@ public:
                 double high_cutoff_freq, // Hz beginning transition band
                 double transition_width, // Hz width of transition band
                 double attenuation_dB,   // out of band attenuation dB
-                fft::window::win_type window = fft::window::win_type::WIN_HAMMING,
+                fft::window::window_t window = fft::window::window_t::HAMMING,
                 double param = 6.76); // used for Kaiser, Exp., Gaussian, Tukey windows
     /*!
      * \brief Use the "window method" to design a complex band-reject FIR
@@ -181,7 +181,7 @@ public:
      * \param low_cutoff_freq     center of transition band (Hz)
      * \param high_cutoff_freq    center of transition band (Hz)
      * \param transition_width    width of transition band (Hz)
-     * \param window              one of fft::window::win_type
+     * \param window              one of fft::window::window_t
      * \param param               parameter for Kaiser, Exp., Gaussian, Tukey windows
      */
     static std::vector<gr_complex> complex_band_reject(
@@ -190,7 +190,7 @@ public:
         double low_cutoff_freq,
         double high_cutoff_freq,
         double transition_width, // Hz width of transition band
-        fft::window::win_type window = fft::window::win_type::WIN_HAMMING,
+        fft::window::window_t window = fft::window::window_t::HAMMING,
         double param = 6.76); // used for Kaiser, Exp., Gaussian, Tukey windows
 
     /*!
@@ -206,7 +206,7 @@ public:
      * \param high_cutoff_freq    center of transition band (Hz)
      * \param transition_width    width of transition band (Hz)
      * \param attenuation_dB      out of band attenuation
-     * \param window              one of fft::window::win_type
+     * \param window              one of fft::window::window_t
      * \param param               parameter for Kaiser, Exp., Gaussian, Tukey windows
      */
     static std::vector<gr_complex> complex_band_reject_2(
@@ -216,7 +216,7 @@ public:
         double high_cutoff_freq, // Hz beginning transition band
         double transition_width, // Hz width of transition band
         double attenuation_dB,   // out of band attenuation dB
-        fft::window::win_type window = fft::window::win_type::WIN_HAMMING,
+        fft::window::window_t window = fft::window::window_t::HAMMING,
         double param = 6.76); // used for Kaiser, Exp., Gaussian, Tukey windows
 
     /*!
@@ -230,7 +230,7 @@ public:
      * \param low_cutoff_freq     center of transition band (Hz)
      * \param high_cutoff_freq    center of transition band (Hz)
      * \param transition_width    width of transition band (Hz)
-     * \param window              one of fft::window::win_type
+     * \param window              one of fft::window::window_t
      * \param param               parameter for Kaiser, Exp., Gaussian, Tukey windows
      */
     static std::vector<gr_complex> complex_band_pass(
@@ -239,7 +239,7 @@ public:
         double low_cutoff_freq,  // Hz center of transition band
         double high_cutoff_freq, // Hz center of transition band
         double transition_width, // Hz width of transition band
-        fft::window::win_type window = fft::window::win_type::WIN_HAMMING,
+        fft::window::window_t window = fft::window::window_t::HAMMING,
         double param = 6.76); // used for Kaiser, Exp., Gaussian, Tukey windows
 
     /*!
@@ -255,7 +255,7 @@ public:
      * \param high_cutoff_freq    center of transition band (Hz)
      * \param transition_width    width of transition band (Hz)
      * \param attenuation_dB      out of band attenuation
-     * \param window              one of fft::window::win_type
+     * \param window              one of fft::window::window_t
      * \param param               parameter for Kaiser, Exp., Gaussian, Tukey windows
      */
     static std::vector<gr_complex> complex_band_pass_2(
@@ -265,7 +265,7 @@ public:
         double high_cutoff_freq, // Hz beginning transition band
         double transition_width, // Hz width of transition band
         double attenuation_dB,   // out of band attenuation dB
-        fft::window::win_type window = fft::window::win_type::WIN_HAMMING,
+        fft::window::window_t window = fft::window::window_t::HAMMING,
         double param = 6.76); // used for Kaiser, Exp., Gaussian, Tukey windows
 
     /*!
@@ -279,7 +279,7 @@ public:
      * \param low_cutoff_freq     center of transition band (Hz)
      * \param high_cutoff_freq    center of transition band (Hz)
      * \param transition_width    width of transition band (Hz)
-     * \param window              one of fft::window::win_type
+     * \param window              one of fft::window::window_t
      * \param param               parameter for Kaiser, Exp., Gaussian, Tukey windows
      */
     static std::vector<float>
@@ -288,7 +288,7 @@ public:
                 double low_cutoff_freq,  // Hz center of transition band
                 double high_cutoff_freq, // Hz center of transition band
                 double transition_width, // Hz width of transition band
-                fft::window::win_type window = fft::window::win_type::WIN_HAMMING,
+                fft::window::window_t window = fft::window::window_t::HAMMING,
                 double param = 6.76); // used for Kaiser, Exp., Gaussian, Tukey windows
 
     /*!
@@ -304,7 +304,7 @@ public:
      * \param high_cutoff_freq    center of transition band (Hz)
      * \param transition_width    width of transition band (Hz).
      * \param attenuation_dB      out of band attenuation
-     * \param window              one of fft::window::win_type
+     * \param window              one of fft::window::window_t
      * \param param               parameter for Kaiser, Exp., Gaussian, Tukey windows
      */
     static std::vector<float>
@@ -314,18 +314,18 @@ public:
                   double high_cutoff_freq, // Hz beginning transition band
                   double transition_width, // Hz width of transition band
                   double attenuation_dB,   // out of band attenuation dB
-                  fft::window::win_type window = fft::window::win_type::WIN_HAMMING,
+                  fft::window::window_t window = fft::window::window_t::HAMMING,
                   double param = 6.76); // used for Kaiser, Exp., Gaussian, Tukey windows
 
     /*!\brief design a Hilbert Transform Filter
      *
      * \param ntaps           number of taps, must be odd
-     * \param windowtype      one kind of fft::window::win_type
+     * \param windowtype      one kind of fft::window::window_t
      * \param param           parameter for Kaiser, Exp., Gaussian, Tukey windows
      */
     static std::vector<float>
     hilbert(unsigned int ntaps = 19,
-            fft::window::win_type windowtype = fft::window::win_type::WIN_RECTANGULAR,
+            fft::window::window_t windowtype = fft::window::window_t::RECTANGULAR,
             double param = 6.76);
 
     /*!
@@ -369,7 +369,7 @@ private:
 
     static int compute_ntaps(double sampling_freq,
                              double transition_width,
-                             fft::window::win_type window_type,
+                             fft::window::window_t window_type,
                              double param);
 
     static int compute_ntaps_windes(double sampling_freq,

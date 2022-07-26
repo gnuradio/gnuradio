@@ -29,7 +29,7 @@ pfb_arb_resampler_cpu<IN_T, OUT_T, TAP_T>::pfb_arb_resampler_cpu(
 }
 
 template <class IN_T, class OUT_T, class TAP_T>
-work_return_code_t pfb_arb_resampler_cpu<IN_T, OUT_T, TAP_T>::work(work_io& wio)
+work_return_t pfb_arb_resampler_cpu<IN_T, OUT_T, TAP_T>::work(work_io& wio)
 {
     auto noutput_items = wio.outputs()[0].n_items;
 
@@ -46,7 +46,7 @@ work_return_code_t pfb_arb_resampler_cpu<IN_T, OUT_T, TAP_T>::work(work_io& wio)
 
     auto ninput_items = wio.inputs()[0].n_items;
     if (ninput_items < min_ninput) {
-        return work_return_code_t::WORK_INSUFFICIENT_INPUT_ITEMS;
+        return work_return_t::INSUFFICIENT_INPUT_ITEMS;
     }
 
     size_t nitems =
@@ -61,7 +61,7 @@ work_return_code_t pfb_arb_resampler_cpu<IN_T, OUT_T, TAP_T>::work(work_io& wio)
 
     wio.consume_each(nitems_read);
     wio.produce_each(processed);
-    return work_return_code_t::WORK_OK;
+    return work_return_t::OK;
 }
 
 } /* namespace filter */

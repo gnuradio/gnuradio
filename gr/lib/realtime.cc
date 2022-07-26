@@ -61,7 +61,7 @@ rt_status_t enable_realtime_scheduling(rt_sched_param p)
     // set the priority class on the process
     int pri_class = (true) ? REALTIME_PRIORITY_CLASS : NORMAL_PRIORITY_CLASS;
     if (SetPriorityClass(GetCurrentProcess(), pri_class) == 0)
-        return RT_OTHER_ERROR;
+        return rt_status_t::OTHER_ERROR;
 
     // scale the priority value to the constants
     int priorities[] = { THREAD_PRIORITY_IDLE,         THREAD_PRIORITY_LOWEST,
@@ -74,10 +74,10 @@ rt_status_t enable_realtime_scheduling(rt_sched_param p)
 
     // set the thread priority on the thread
     if (SetThreadPriority(GetCurrentThread(), priorities[pri_index]) == 0)
-        return RT_OTHER_ERROR;
+        return rt_status_t::OTHER_ERROR;
 
     // printf("SetPriorityClass + SetThreadPriority\n");
-    return RT_OK;
+    return rt_status_t::OK;
 }
 } // namespace gr
 
@@ -87,7 +87,7 @@ namespace gr {
 
 rt_status_t enable_realtime_scheduling(rt_sched_param p)
 {
-    int policy = p.policy == RT_SCHED_FIFO ? SCHED_FIFO : SCHED_RR;
+    int policy = p.policy == rt_sched_policy_t::FIFO ? SCHED_FIFO : SCHED_RR;
     int min_real_pri = sched_get_priority_min(policy);
     int max_real_pri = sched_get_priority_max(policy);
     int pri = rescale_virtual_pri(p.priority, min_real_pri, max_real_pri);
@@ -101,18 +101,18 @@ rt_status_t enable_realtime_scheduling(rt_sched_param p)
     int result = pthread_setschedparam(pthread_self(), policy, &param);
     if (result != 0) {
         if (result == EPERM) // N.B., return value, not errno
-            return RT_NO_PRIVS;
+            return rt_status_t::NO_PRIVS;
         else {
             gr::logger_ptr logger, debug_logger;
             gr::configure_default_loggers(logger, debug_logger, "realtime");
             logger->error("pthread_setschedparam: failed to set real time priority: {}",
                           strerror(result));
-            return RT_OTHER_ERROR;
+            return rt_status_t::OTHER_ERROR;
         }
     }
 
     // printf("SCHED_FIFO enabled with priority = %d\n", pri);
-    return RT_OK;
+    return rt_status_t::OK;
 }
 } // namespace gr
 
@@ -123,7 +123,7 @@ namespace gr {
 
 rt_status_t enable_realtime_scheduling(rt_sched_param p)
 {
-    int policy = p.policy == RT_SCHED_FIFO ? SCHED_FIFO : SCHED_RR;
+    int policy = p.policy == rt_sched_policy_t::FIFO ? SCHED_FIFO : SCHED_RR;
     int min_real_pri = sched_get_priority_min(policy);
     int max_real_pri = sched_get_priority_max(policy);
     int pri = rescale_virtual_pri(p.priority, min_real_pri, max_real_pri);
@@ -138,18 +138,18 @@ rt_status_t enable_realtime_scheduling(rt_sched_param p)
     int result = sched_setscheduler(pid, policy, &param);
     if (result != 0) {
         if (errno == EPERM)
-            return RT_NO_PRIVS;
+            return rt_status_t::NO_PRIVS;
         else {
             gr::logger_ptr logger, debug_logger;
             gr::configure_default_loggers(logger, debug_logger, "realtime");
             logger->error("sched_setscheduler: failed to set real time priority: {}",
                           strerror(result));
-            return RT_OTHER_ERROR;
+            return rt_status_t::OTHER_ERROR;
         }
     }
 
     // printf("SCHED_FIFO enabled with priority = %d\n", pri);
-    return RT_OK;
+    return rt_status_t::OK;
 }
 
 } // namespace gr
@@ -157,7 +157,10 @@ rt_status_t enable_realtime_scheduling(rt_sched_param p)
 #else
 
 namespace gr {
-rt_status_t enable_realtime_scheduling(rt_sched_param p) { return RT_NOT_IMPLEMENTED; }
+rt_status_t enable_realtime_scheduling(rt_sched_param p)
+{
+    return rt_status_t::NOT_IMPLEMENTED;
+}
 } // namespace gr
 
 #endif

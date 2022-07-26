@@ -14,14 +14,14 @@ namespace blocks {
 
 nop_source_cpu::nop_source_cpu(block_args args) : INHERITED_CONSTRUCTORS {}
 
-work_return_code_t nop_source_cpu::work(work_io& wio)
+work_return_t nop_source_cpu::work(work_io& wio)
 {
     for (auto& out : wio.outputs()) {
         auto noutput_items = out.n_items;
         out.n_produced = noutput_items;
     }
 
-    return work_return_code_t::WORK_OK;
+    return work_return_t::OK;
 }
 
 

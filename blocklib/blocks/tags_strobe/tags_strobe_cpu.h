@@ -19,7 +19,7 @@ class tags_strobe_cpu : public virtual tags_strobe
 {
 public:
     tags_strobe_cpu(block_args args);
-    work_return_code_t work(work_io& wio) override;
+    work_return_t work(work_io& wio) override;
 
 private:
     uint64_t d_nsamps;

@@ -33,7 +33,7 @@ void delay_cpu::set_dly(size_t d)
     }
 }
 
-work_return_code_t delay_cpu::work(work_io& wio)
+work_return_t delay_cpu::work(work_io& wio)
 {
     auto itemsize = wio.outputs()[0].buf().item_size();
 
@@ -104,7 +104,7 @@ work_return_code_t delay_cpu::work(work_io& wio)
     wio.consume_each(cons);
     wio.produce_each(ret);
 
-    return work_return_code_t::WORK_OK;
+    return work_return_t::OK;
 }
 
 

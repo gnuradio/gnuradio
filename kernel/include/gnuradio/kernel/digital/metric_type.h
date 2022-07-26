@@ -14,11 +14,7 @@ namespace gr {
 namespace kernel {
 namespace digital {
 
-enum trellis_metric_type_t {
-    TRELLIS_EUCLIDEAN = 200,
-    TRELLIS_HARD_SYMBOL,
-    TRELLIS_HARD_BIT
-};
+enum class trellis_metric_type_t { EUCLIDEAN = 200, HARD_SYMBOL, HARD_BIT };
 
 } // namespace digital
 } // namespace kernel

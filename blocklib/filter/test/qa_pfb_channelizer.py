@@ -40,7 +40,7 @@ class test_pfb_channelizer(gr_unittest.TestCase):
         self.taps = firdes.low_pass_2(
             1, self.ifs, self.fs / 2, self.fs / 10,
             attenuation_dB=80,
-            window=window.WIN_BLACKMAN_hARRIS)
+            window=window.BLACKMAN_hARRIS)
 
         self.Ntest = 50
 

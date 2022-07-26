@@ -43,7 +43,7 @@ keep_m_in_n_cpu::keep_m_in_n_cpu(block_args args) : INHERITED_CONSTRUCTORS
     set_relative_rate((double)args.m / args.n);
 }
 
-work_return_code_t keep_m_in_n_cpu::work(work_io& wio)
+work_return_t keep_m_in_n_cpu::work(work_io& wio)
 
 {
     auto out = wio.outputs()[0].items<uint8_t>();
@@ -77,7 +77,7 @@ work_return_code_t keep_m_in_n_cpu::work(work_io& wio)
 
     wio.consume_each(blks * n);
     wio.produce_each(blks * m);
-    return work_return_code_t::WORK_OK;
+    return work_return_t::OK;
 }
 
 void keep_m_in_n_cpu::on_parameter_change(param_action_sptr action)

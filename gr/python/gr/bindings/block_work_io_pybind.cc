@@ -17,15 +17,15 @@ namespace py = pybind11;
 
 void bind_block_work_io(py::module& m)
 {
-    py::enum_<gr::work_return_code_t>(m, "work_return_t")
-        .value("WORK_ERROR", gr::work_return_code_t::WORK_ERROR) // -100
-        .value("WORK_INSUFFICIENT_OUTPUT_ITEMS",
-               gr::work_return_code_t::WORK_INSUFFICIENT_OUTPUT_ITEMS) // -3
-        .value("WORK_INSUFFICIENT_INPUT_ITEMS",
-               gr::work_return_code_t::WORK_INSUFFICIENT_INPUT_ITEMS) // -2
-        .value("WORK_DONE", gr::work_return_code_t::WORK_DONE)        // -1
-        .value("WORK_OK", gr::work_return_code_t::WORK_OK)            //  0
-        .export_values();
+    py::enum_<gr::work_return_t>(m, "work_return_t")
+        .value("ERROR", gr::work_return_t::ERROR) // -100
+        .value("INSUFFICIENT_OUTPUT_ITEMS",
+               gr::work_return_t::INSUFFICIENT_OUTPUT_ITEMS) // -3
+        .value("INSUFFICIENT_INPUT_ITEMS",
+               gr::work_return_t::INSUFFICIENT_INPUT_ITEMS) // -2
+        .value("DONE", gr::work_return_t::DONE)             // -1
+        .value("OK", gr::work_return_t::OK)                 //  0
+        ;
 
     py::class_<gr::block_work_output>(m, "block_work_output")
         .def_readwrite("n_items", &gr::block_work_output::n_items)

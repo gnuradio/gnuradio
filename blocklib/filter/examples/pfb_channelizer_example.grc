@@ -57,7 +57,7 @@ blocks:
     minoutbuf: '0'
     seed: '0'
     showports: 'False'
-    type: analog.noise_t.gaussian
+    type: analog.noise_t.GAUSSIAN
   states:
     bus_sink: false
     bus_source: false
@@ -81,7 +81,7 @@ blocks:
     phase: '0'
     sampling_freq: samp_rate
     showports: 'False'
-    waveform: analog.waveform_t.cos
+    waveform: analog.waveform_t.COS
   states:
     bus_sink: false
     bus_source: false
@@ -105,7 +105,7 @@ blocks:
     phase: '0'
     sampling_freq: samp_rate
     showports: 'False'
-    waveform: analog.waveform_t.cos
+    waveform: analog.waveform_t.COS
   states:
     bus_sink: false
     bus_source: false

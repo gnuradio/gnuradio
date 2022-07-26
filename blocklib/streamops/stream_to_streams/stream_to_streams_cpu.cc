@@ -20,7 +20,7 @@ stream_to_streams_cpu::stream_to_streams_cpu(const block_args& args)
 {
 }
 
-work_return_code_t stream_to_streams_cpu::work(work_io& wio)
+work_return_t stream_to_streams_cpu::work(work_io& wio)
 {
     auto in = wio.inputs()[0].items<uint8_t>();
 
@@ -41,7 +41,7 @@ work_return_code_t stream_to_streams_cpu::work(work_io& wio)
 
     wio.produce_each(total_items);
     wio.consume_each(total_items * nstreams);
-    return work_return_code_t::WORK_OK;
+    return work_return_t::OK;
 }
 
 

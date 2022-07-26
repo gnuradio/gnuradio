@@ -41,7 +41,7 @@ vector_source_cpu<T>::vector_source_cpu(const typename vector_source<T>::block_a
 
 
 template <class T>
-work_return_code_t vector_source_cpu<T>::work(work_io& wio)
+work_return_t vector_source_cpu<T>::work(work_io& wio)
 {
 
     // size_t noutput_ports = wio.outputs().size(); // is 1 for this block
@@ -52,7 +52,7 @@ work_return_code_t vector_source_cpu<T>::work(work_io& wio)
         unsigned int size = d_data.size();
         unsigned int offset = d_offset;
         if (size == 0)
-            return work_return_code_t::WORK_DONE;
+            return work_return_t::DONE;
 
         if (d_settags) {
             int n_outputitems_per_vector = d_data.size() / d_vlen;
@@ -79,12 +79,12 @@ work_return_code_t vector_source_cpu<T>::work(work_io& wio)
         d_offset = offset;
 
         wio.outputs()[0].n_produced = noutput_items;
-        return work_return_code_t::WORK_OK;
+        return work_return_t::OK;
     }
     else {
         if (d_offset >= d_data.size()) {
             wio.outputs()[0].n_produced = 0;
-            return work_return_code_t::WORK_DONE; // Done!
+            return work_return_t::DONE; // Done!
         }
 
         unsigned n = std::min(d_data.size() - d_offset, noutput_items * d_vlen);
@@ -99,7 +99,7 @@ work_return_code_t vector_source_cpu<T>::work(work_io& wio)
         d_offset += n;
 
         wio.outputs()[0].n_produced = n / d_vlen;
-        return work_return_code_t::WORK_OK;
+        return work_return_t::OK;
     }
 }
 

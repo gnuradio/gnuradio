@@ -19,7 +19,7 @@ class newblock_cpu : public virtual newblock
 {
 public:
     newblock_cpu(block_args args);
-    work_return_code_t work(work_io& wio) override;
+    work_return_t work(work_io& wio) override;
 
 private:
     // private variables here

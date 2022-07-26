@@ -19,7 +19,7 @@ class selector_cpu : public virtual selector
 {
 public:
     selector_cpu(block_args args);
-    work_return_code_t work(work_io&) override;
+    work_return_t work(work_io&) override;
 
 private:
     size_t d_itemsize = 0;

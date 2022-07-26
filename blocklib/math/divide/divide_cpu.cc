@@ -39,7 +39,7 @@ divide_cpu<gr_complex>::divide_cpu(const typename divide<gr_complex>::block_args
 
 
 template <>
-work_return_code_t divide_cpu<float>::work(work_io& wio)
+work_return_t divide_cpu<float>::work(work_io& wio)
 {
     auto optr = wio.outputs()[0].items<float>();
     auto noutput_items = wio.outputs()[0].n_items;
@@ -52,11 +52,11 @@ work_return_code_t divide_cpu<float>::work(work_io& wio)
     }
 
     wio.outputs()[0].n_produced = wio.outputs()[0].n_items;
-    return work_return_code_t::WORK_OK;
+    return work_return_t::OK;
 }
 
 template <>
-work_return_code_t divide_cpu<gr_complex>::work(work_io& wio)
+work_return_t divide_cpu<gr_complex>::work(work_io& wio)
 
 {
     auto optr = wio.outputs()[0].items<gr_complex>();
@@ -72,11 +72,11 @@ work_return_code_t divide_cpu<gr_complex>::work(work_io& wio)
     }
 
     wio.outputs()[0].n_produced = wio.outputs()[0].n_items;
-    return work_return_code_t::WORK_OK;
+    return work_return_t::OK;
 }
 
 template <class T>
-work_return_code_t divide_cpu<T>::work(work_io& wio)
+work_return_t divide_cpu<T>::work(work_io& wio)
 
 {
     auto optr = wio.outputs()[0].items<T>();
@@ -92,7 +92,7 @@ work_return_code_t divide_cpu<T>::work(work_io& wio)
 
     wio.outputs()[0].n_produced = wio.outputs()[0].n_items;
     wio.inputs()[0].n_consumed = wio.inputs()[0].n_items;
-    return work_return_code_t::WORK_OK;
+    return work_return_t::OK;
 }
 
 

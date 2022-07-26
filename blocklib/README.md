@@ -59,7 +59,7 @@ Each of the parameters that are defined in the `.yml` are available as a member 
 Work functions are conceptually the same as GR3, but syntactically slightly different to keep the block API separated from the scheduler API.
 
 ```c++
-    work_return_code_t work(work_io& wio) override;
+    work_return_t work(work_io& wio) override;
 ```
 
 First, the work function takes in a vector of pointers to input objects, and a vector of pointers to output objects.
@@ -88,7 +88,7 @@ wio.outputs()[0].n_produced = noutput_items;
 ```
 and then 
 ```
-return work_return_code_t::WORK_OK;
+return work_return_t::OK;
 ```
 
 ### Message Handlers

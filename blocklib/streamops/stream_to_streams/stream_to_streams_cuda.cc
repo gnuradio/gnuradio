@@ -23,7 +23,7 @@ stream_to_streams_cuda::stream_to_streams_cuda(const block_args& args)
     cudaStreamCreate(&d_stream);
 }
 
-work_return_code_t stream_to_streams_cuda::work(work_io& wio)
+work_return_t stream_to_streams_cuda::work(work_io& wio)
 
 {
     auto noutput_items = wio.outputs()[0].n_items;
@@ -49,7 +49,7 @@ work_return_code_t stream_to_streams_cuda::work(work_io& wio)
 
     wio.produce_each(total_items);
     wio.consume_each(total_items * nstreams);
-    return work_return_code_t::WORK_OK;
+    return work_return_t::OK;
 }
 
 

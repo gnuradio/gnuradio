@@ -39,7 +39,7 @@ int main(int argc, char* argv[])
                    "Buffer Type (0:simple, 1:vmcirc, 2:cuda, 3:cuda_pinned");
     app.add_flag("--rt_prio", rt_prio, "Enable Real-time priority");
 
-    if (rt_prio && gr::enable_realtime_scheduling() != RT_OK) {
+    if (rt_prio && gr::enable_realtime_scheduling() != rt_status_t::OK) {
         std::cout << "Error: failed to enable real-time scheduling." << std::endl;
     }
 

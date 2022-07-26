@@ -2,8 +2,8 @@
 
 namespace gr {
 
-enum class executor_state { WORKING, DONE, FLUSHED, EXIT };
-enum class executor_iteration_status {
+enum class executor_state_t { WORKING, DONE, FLUSHED, EXIT };
+enum class executor_iteration_status_t {
     READY,           // We made progress; everything's cool.
     READY_NO_OUTPUT, // We consumed some input, but produced no output.
     BLKD_IN,         // no progress; we're blocked waiting for input data.

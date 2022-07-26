@@ -20,7 +20,7 @@ class delay_cpu : public delay
 {
 public:
     delay_cpu(const block_args& args);
-    work_return_code_t work(work_io&) override;
+    work_return_t work(work_io&) override;
     size_t dly() override { return d_delay; }
     void set_dly(size_t d) override;
 

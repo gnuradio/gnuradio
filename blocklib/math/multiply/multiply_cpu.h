@@ -21,7 +21,7 @@ class multiply_cpu : public multiply<T>
 public:
     multiply_cpu(const typename multiply<T>::block_args& args);
 
-    work_return_code_t work(work_io&) override;
+    work_return_t work(work_io&) override;
 
 protected:
     size_t d_num_inputs;

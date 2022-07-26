@@ -16,11 +16,11 @@ namespace newmod {
 
 newblock_cpu::newblock_cpu(block_args args) : INHERITED_CONSTRUCTORS {}
 
-work_return_code_t newblock_cpu::work(work_io& wio)
+work_return_t newblock_cpu::work(work_io& wio)
 {
     // Do <+signal processing+>
     // Block specific code goes here
-    return work_return_code_t::WORK_OK;
+    return work_return_t::OK;
 }
 
 

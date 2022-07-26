@@ -99,16 +99,16 @@ public:
  * @brief Enum for return codes from calls to block::work
  *
  */
-enum class work_return_code_t {
-    WORK_ERROR = -100, /// error occurred in the work function
-    WORK_INSUFFICIENT_OUTPUT_ITEMS =
+enum class work_return_t {
+    ERROR = -100, /// error occurred in the work function
+    INSUFFICIENT_OUTPUT_ITEMS =
         -3, /// work requires a larger output buffer to produce output
-    WORK_INSUFFICIENT_INPUT_ITEMS =
+    INSUFFICIENT_INPUT_ITEMS =
         -2, /// work requires a larger input buffer to produce output
-    WORK_DONE =
+    DONE =
         -1, /// this block has completed its processing and the flowgraph should be done
-    WORK_OK = 0, /// work call was successful and return values in i/o structs are valid
-    WORK_CALLBACK_INITIATED =
+    OK = 0, /// work call was successful and return values in i/o structs are valid
+    CALLBACK_INITIATED =
         1, /// rather than blocking in the work function, the block will call back to the
            /// parent interface when it is ready to be called again
 };

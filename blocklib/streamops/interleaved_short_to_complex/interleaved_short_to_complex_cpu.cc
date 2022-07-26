@@ -26,7 +26,7 @@ void interleaved_short_to_complex_cpu::set_scale_factor(float new_value)
     d_scalar = new_value;
 }
 
-work_return_code_t interleaved_short_to_complex_cpu::work(work_io& wio)
+work_return_t interleaved_short_to_complex_cpu::work(work_io& wio)
 
 {
     auto in = wio.inputs()[0].items<short>();
@@ -46,7 +46,7 @@ work_return_code_t interleaved_short_to_complex_cpu::work(work_io& wio)
     }
 
     wio.outputs()[0].n_produced = noutput_items;
-    return work_return_code_t::WORK_OK;
+    return work_return_t::OK;
 }
 
 

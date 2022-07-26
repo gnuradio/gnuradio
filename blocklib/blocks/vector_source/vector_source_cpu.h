@@ -21,7 +21,7 @@ class vector_source_cpu : public vector_source<T>
 public:
     vector_source_cpu(const typename vector_source<T>::block_args& args);
 
-    work_return_code_t work(work_io& wio) override;
+    work_return_t work(work_io& wio) override;
 
     void set_data_and_tags(std::vector<T> data, std::vector<gr::tag_t> tags) override;
     void rewind() override { d_offset = 0; }

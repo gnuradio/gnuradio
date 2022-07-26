@@ -172,7 +172,7 @@ void fft_cpu<float, false>::fft_and_shift(const float* in, gr_complex* out)
 }
 
 template <class T, bool forward>
-work_return_code_t fft_cpu<T, forward>::work(work_io& wio)
+work_return_t fft_cpu<T, forward>::work(work_io& wio)
 {
     auto in = wio.inputs()[0].items<T>();
     auto out = wio.outputs()[0].items<gr_complex>();
@@ -190,7 +190,7 @@ work_return_code_t fft_cpu<T, forward>::work(work_io& wio)
 
 
     wio.produce_each(noutput_items);
-    return work_return_code_t::WORK_OK;
+    return work_return_t::OK;
 }
 
 

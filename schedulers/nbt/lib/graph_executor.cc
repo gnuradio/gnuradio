@@ -8,10 +8,10 @@ inline static unsigned int round_down(unsigned int n, unsigned int multiple)
     return (n / multiple) * multiple;
 }
 
-std::map<nodeid_t, executor_iteration_status>
+std::map<nodeid_t, executor_iteration_status_t>
 graph_executor::run_one_iteration(std::vector<block_sptr> blocks)
 {
-    std::map<nodeid_t, executor_iteration_status> per_block_status;
+    std::map<nodeid_t, executor_iteration_status_t> per_block_status;
 
     // If no blocks are specified for the iteration, then run over all the blocks
     // in the default ordering
@@ -30,14 +30,14 @@ graph_executor::run_one_iteration(std::vector<block_sptr> blocks)
         // If a block is a message port only block, it will raise the finished() flag
         // to indicate that the rest of the flowgraph should clean up
         if (b->finished()) {
-            per_block_status[b->id()] = executor_iteration_status::DONE;
+            per_block_status[b->id()] = executor_iteration_status_t::DONE;
             d_debug_logger->debug("pbs[{}]: {}", b->id(), (int)per_block_status[b->id()]);
             continue;
         }
 
         if (wio.inputs().empty() && wio.outputs().empty()) {
             // There is no streaming work to do for this block
-            per_block_status[b->id()] = executor_iteration_status::MSG_ONLY;
+            per_block_status[b->id()] = executor_iteration_status_t::MSG_ONLY;
             continue;
         }
 
@@ -79,7 +79,7 @@ graph_executor::run_one_iteration(std::vector<block_sptr> blocks)
         }
 
         if (!ready) {
-            per_block_status[b->id()] = executor_iteration_status::BLKD_IN;
+            per_block_status[b->id()] = executor_iteration_status_t::BLKD_IN;
             continue;
         }
 
@@ -140,12 +140,12 @@ graph_executor::run_one_iteration(std::vector<block_sptr> blocks)
         }
 
         if (!ready) {
-            per_block_status[b->id()] = executor_iteration_status::BLKD_OUT;
+            per_block_status[b->id()] = executor_iteration_status_t::BLKD_OUT;
             continue;
         }
 
         if (ready) {
-            work_return_code_t ret;
+            work_return_t ret;
             while (true) {
 
                 if (!wio.outputs().empty()) {
@@ -165,16 +165,16 @@ graph_executor::run_one_iteration(std::vector<block_sptr> blocks)
 
                 ret = b->do_work(wio);
                 d_debug_logger->debug("do_work returned {}", (int)ret);
-                // ret = work_return_code_t::WORK_OK;
+                // ret = work_return_t::OK;
 
-                if (ret == work_return_code_t::WORK_DONE) {
-                    per_block_status[b->id()] = executor_iteration_status::DONE;
+                if (ret == work_return_t::DONE) {
+                    per_block_status[b->id()] = executor_iteration_status_t::DONE;
                     d_debug_logger->debug(
                         "pbs[{}]: {}", b->id(), (int)per_block_status[b->id()]);
                     break;
                 }
-                else if (ret == work_return_code_t::WORK_OK) {
-                    per_block_status[b->id()] = executor_iteration_status::READY;
+                else if (ret == work_return_t::OK) {
+                    per_block_status[b->id()] = executor_iteration_status_t::READY;
                     d_debug_logger->debug(
                         "pbs[{}]: {}", b->id(), (int)per_block_status[b->id()]);
 
@@ -186,7 +186,7 @@ graph_executor::run_one_iteration(std::vector<block_sptr> blocks)
                         }
                         if (max_output <= 0) {
                             per_block_status[b->id()] =
-                                executor_iteration_status::BLKD_IN;
+                                executor_iteration_status_t::BLKD_IN;
                             d_debug_logger->debug(
                                 "pbs[{}]: {}", b->id(), (int)per_block_status[b->id()]);
                         }
@@ -195,7 +195,7 @@ graph_executor::run_one_iteration(std::vector<block_sptr> blocks)
 
                     break;
                 }
-                else if (ret == work_return_code_t::WORK_INSUFFICIENT_INPUT_ITEMS) {
+                else if (ret == work_return_t::INSUFFICIENT_INPUT_ITEMS) {
                     // FIXME: Do for all the outputs
                     if (b->output_multiple_set()) {
                         wio.outputs()[0].n_items -= b->output_multiple();
@@ -205,15 +205,15 @@ graph_executor::run_one_iteration(std::vector<block_sptr> blocks)
                     }
                     if (wio.outputs()[0].n_items < b->output_multiple()) // min block size
                     {
-                        per_block_status[b->id()] = executor_iteration_status::BLKD_IN;
+                        per_block_status[b->id()] = executor_iteration_status_t::BLKD_IN;
                         d_debug_logger->debug(
                             "pbs[{}]: {}", b->id(), (int)per_block_status[b->id()]);
                         // call the input blocked callback
                         break;
                     }
                 }
-                else if (ret == work_return_code_t::WORK_INSUFFICIENT_OUTPUT_ITEMS) {
-                    per_block_status[b->id()] = executor_iteration_status::BLKD_OUT;
+                else if (ret == work_return_t::INSUFFICIENT_OUTPUT_ITEMS) {
+                    per_block_status[b->id()] = executor_iteration_status_t::BLKD_OUT;
                     d_debug_logger->debug(
                         "pbs[{}]: {}", b->id(), (int)per_block_status[b->id()]);
                     // call the output blocked callback
@@ -222,8 +222,7 @@ graph_executor::run_one_iteration(std::vector<block_sptr> blocks)
             }
             // TODO - handle READY_NO_OUTPUT
 
-            if (ret == work_return_code_t::WORK_OK ||
-                ret == work_return_code_t::WORK_DONE) {
+            if (ret == work_return_t::OK || ret == work_return_t::DONE) {
 
 
                 int input_port_index = 0;

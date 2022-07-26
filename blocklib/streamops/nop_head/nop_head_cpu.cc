@@ -17,20 +17,20 @@ nop_head_cpu::nop_head_cpu(const block_args& args)
 {
 }
 
-work_return_code_t nop_head_cpu::work(work_io& wio)
+work_return_t nop_head_cpu::work(work_io& wio)
 
 {
 
     if (d_ncopied_items >= d_nitems) {
         wio.outputs()[0].n_produced = 0;
-        return work_return_code_t::WORK_DONE; // Done!
+        return work_return_t::DONE; // Done!
     }
 
     unsigned n = std::min(d_nitems - d_ncopied_items, (uint64_t)wio.outputs()[0].n_items);
 
     if (n == 0) {
         wio.outputs()[0].n_produced = 0;
-        return work_return_code_t::WORK_OK;
+        return work_return_t::OK;
     }
 
     // Do Nothing
@@ -38,7 +38,7 @@ work_return_code_t nop_head_cpu::work(work_io& wio)
     d_ncopied_items += n;
     wio.outputs()[0].n_produced = n;
 
-    return work_return_code_t::WORK_OK;
+    return work_return_t::OK;
 }
 
 } /* namespace streamops */

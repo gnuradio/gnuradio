@@ -25,14 +25,14 @@ interleave_cpu::interleave_cpu(block_args args)
     set_output_multiple(d_blocksize * d_ninputs);
 }
 
-work_return_code_t interleave_cpu::work(work_io& wio)
+work_return_t interleave_cpu::work(work_io& wio)
 
 {
 
     // Since itemsize can be set after construction
     if (d_itemsize == 0) {
         d_itemsize = wio.inputs()[0].buf().item_size();
-        return work_return_code_t::WORK_OK;
+        return work_return_t::OK;
     }
 
     // Forecasting
@@ -42,7 +42,7 @@ work_return_code_t interleave_cpu::work(work_io& wio)
         std::min(ninput_items / d_blocksize, noutput_items / (d_blocksize * d_ninputs));
 
     if (noutput_blocks < 1) {
-        return work_return_code_t::WORK_INSUFFICIENT_OUTPUT_ITEMS;
+        return work_return_t::INSUFFICIENT_OUTPUT_ITEMS;
     }
 
     auto out = wio.outputs()[0].items<uint8_t>();
@@ -57,7 +57,7 @@ work_return_code_t interleave_cpu::work(work_io& wio)
     }
     wio.consume_each(noutput_blocks * d_blocksize);
     wio.produce_each(noutput_blocks * d_blocksize * d_ninputs);
-    return work_return_code_t::WORK_OK;
+    return work_return_t::OK;
 }
 
 

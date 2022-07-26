@@ -22,7 +22,7 @@ class fir_filter_cpu : public fir_filter<IN_T, OUT_T, TAP_T>
 public:
     fir_filter_cpu(const typename fir_filter<IN_T, OUT_T, TAP_T>::block_args& args);
 
-    work_return_code_t work(work_io&) override;
+    work_return_t work(work_io&) override;
 
     void on_parameter_change(param_action_sptr action) override;
 

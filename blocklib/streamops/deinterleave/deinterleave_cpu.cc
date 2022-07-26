@@ -25,7 +25,7 @@ deinterleave_cpu::deinterleave_cpu(block_args args) : INHERITED_CONSTRUCTORS
     set_relative_rate(1.0 / args.nstreams);
 }
 
-work_return_code_t deinterleave_cpu::work(work_io& wio)
+work_return_t deinterleave_cpu::work(work_io& wio)
 
 {
     auto blocksize = pmtf::get_as<size_t>(*this->param_blocksize);
@@ -35,7 +35,7 @@ work_return_code_t deinterleave_cpu::work(work_io& wio)
     if (d_size_bytes == 0) {
         d_size_bytes = itemsize * blocksize;
         set_output_multiple(blocksize);
-        return work_return_code_t::WORK_OK;
+        return work_return_t::OK;
     }
 
     // Forecasting
@@ -44,7 +44,7 @@ work_return_code_t deinterleave_cpu::work(work_io& wio)
     auto ninput_items = wio.inputs()[0].n_items;
     auto min_output = blocksize * (ninput_items / (blocksize * nstreams));
     if (min_output < 1) {
-        return work_return_code_t::WORK_INSUFFICIENT_INPUT_ITEMS;
+        return work_return_t::INSUFFICIENT_INPUT_ITEMS;
     }
     noutput_items = std::min(noutput_items, min_output);
     ninput_items = noutput_items * nstreams;
@@ -75,7 +75,7 @@ work_return_code_t deinterleave_cpu::work(work_io& wio)
         count += blocksize;
     }
     wio.consume_each(totalcount);
-    return work_return_code_t::WORK_OK;
+    return work_return_t::OK;
 }
 
 

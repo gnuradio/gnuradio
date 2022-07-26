@@ -34,7 +34,7 @@ annotator_cpu::annotator_cpu(const block_args& args)
     // set_relative_rate(1, 1);
 }
 
-work_return_code_t annotator_cpu::work(work_io& wio)
+work_return_t annotator_cpu::work(work_io& wio)
 
 {
     auto noutput_items = wio.outputs()[0].n_items;
@@ -75,7 +75,7 @@ work_return_code_t annotator_cpu::work(work_io& wio)
         wio.outputs()[i].n_produced = noutput_items;
     }
 
-    return work_return_code_t::WORK_OK;
+    return work_return_t::OK;
 }
 
 } /* namespace streamops */

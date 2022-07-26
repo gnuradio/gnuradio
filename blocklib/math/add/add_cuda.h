@@ -20,7 +20,7 @@ class add_cuda : public add<T>
 public:
     add_cuda(const typename add<T>::block_args& args);
 
-    work_return_code_t work(work_io&) override;
+    work_return_t work(work_io&) override;
 
 private:
     const size_t d_vlen;

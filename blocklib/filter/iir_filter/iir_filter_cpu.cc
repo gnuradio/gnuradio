@@ -23,7 +23,7 @@ iir_filter_cpu<T_IN, T_OUT, TAP_T>::iir_filter_cpu(
 }
 
 template <class T_IN, class T_OUT, class TAP_T>
-work_return_code_t iir_filter_cpu<T_IN, T_OUT, TAP_T>::work(work_io& wio)
+work_return_t iir_filter_cpu<T_IN, T_OUT, TAP_T>::work(work_io& wio)
 {
     auto in = wio.inputs()[0].items<T_IN>();
     auto out = wio.outputs()[0].items<T_OUT>();
@@ -31,7 +31,7 @@ work_return_code_t iir_filter_cpu<T_IN, T_OUT, TAP_T>::work(work_io& wio)
 
     d_iir.filter_n(out, in, noutput_items);
     wio.produce_each(noutput_items);
-    return work_return_code_t::WORK_OK;
+    return work_return_t::OK;
 }
 
 } /* namespace filter */

@@ -21,10 +21,10 @@ newblock_cpu<T>::newblock_cpu(const typename newblock<T>::block_args& args)
 }
 
 template <class T>
-work_return_code_t newblock_cpu<T>::work(work_io&)
+work_return_t newblock_cpu<T>::work(work_io&)
 {
     // Do work specific code here
-    return work_return_code_t::WORK_OK;
+    return work_return_t::OK;
 }
 
 } /* namespace newmod */

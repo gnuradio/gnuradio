@@ -21,7 +21,7 @@ class fft_cuda : public fft<T, forward>
 {
 public:
     fft_cuda(const typename fft<T, forward>::block_args& args);
-    work_return_code_t work(work_io&) override;
+    work_return_t work(work_io&) override;
 
 protected:
     size_t d_fft_size;

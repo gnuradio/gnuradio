@@ -17,7 +17,7 @@ class copy_cpu : public copy
 {
 public:
     copy_cpu(block_args args);
-    work_return_code_t work(work_io&) override;
+    work_return_t work(work_io&) override;
 };
 
 } // namespace streamops
