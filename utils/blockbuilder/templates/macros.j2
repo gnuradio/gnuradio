@@ -48,17 +48,17 @@ class {{ block }} : virtual public {{blocktype}}{#{{',' if inherits != ''}}  {{ 
         {% for port in ports %}
         {% if port['domain'] != 'message' -%}
         {% if port['type'] == 'untyped'%}   
-        for (size_t i = 0; i < {{ port['multiplicity']|get_linked_value()}}; i++) {
+        for (size_t i = 0; i < {{ port['multiplicity']|get_linked_value_with_args()}}; i++) {
         add_port(untyped_port::make(
-            "{{ port['id'] }}" {{ "+ std::to_string(i)" if port['multiplicity']|get_linked_value()|int() > 1}}, 
+            "{{ port['id'] }}" {{ "+ std::to_string(i)" if port['multiplicity']|get_linked_value_with_args()|int() > 1}}, 
             {{ 'port_direction_t::INPUT' if port['direction'] == "input" else 'port_direction_t::OUTPUT' }}, 
-            {{ port['size']|get_linked_value() }}, {{port['optional']|lower()}}));
+            {{ port['size']|get_linked_value_with_args() }}, {{port['optional']|lower()}}));
         }
         {% else %}
-        for (size_t i = 0; i < {{ port['multiplicity']|get_linked_value()}}; i++) {
-        add_port(port<{{port['type']|cpp_type}}>::make("{{ port['id'] }}" {{ "+ std::to_string(i)" if port['multiplicity']|get_linked_value()|int() > 1}}, 
+        for (size_t i = 0; i < {{ port['multiplicity']|get_linked_value_with_args()}}; i++) {
+        add_port(port<{{port['type']|cpp_type}}>::make("{{ port['id'] }}" {{ "+ std::to_string(i)" if port['multiplicity']|get_linked_value_with_args()|int() > 1}}, 
                             {{ 'port_direction_t::INPUT' if port['direction'] == "input" else 'port_direction_t::OUTPUT' }},
-                            std::vector<size_t>{ {{ port['shape']|get_linked_value()}} }, {{port['optional']|lower()}}));
+                            std::vector<size_t>{ {{ port['shape']|get_linked_value_with_args()}} }, {{port['optional']|lower()}}));
         }
         {% endif %}
         {% else %}
