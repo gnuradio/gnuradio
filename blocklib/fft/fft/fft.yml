@@ -21,11 +21,11 @@ typekeys:
 parameters:
 -   id: fft_size
     label: FFT Size
-    dtype: size_t
+    dtype: size
     settable: false
 -   id: window
     label: Window
-    dtype: float
+    dtype: rf32
     container: vector
     settable: false
 -   id: shift

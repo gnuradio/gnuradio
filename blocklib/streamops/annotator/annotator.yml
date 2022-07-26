@@ -11,15 +11,15 @@ category: '[Core]/Debug Tools'
 parameters:
 -   id: when
     label: When
-    dtype: uint64_t
+    dtype: ru64
     settable: false
 -   id: num_inputs
     label: Num Inputs
-    dtype: size_t
+    dtype: size
     settable: false
 -   id: num_outputs
     label: Num Outputs
-    dtype: size_t
+    dtype: size
     settable: false
 -   id: tpp
     label: Tag Propagation Policy
@@ -28,7 +28,7 @@ parameters:
     serializable: false
 -   id: itemsize
     label: Item Size
-    dtype: size_t
+    dtype: size
     settable: false
     default: 0
     grc:
