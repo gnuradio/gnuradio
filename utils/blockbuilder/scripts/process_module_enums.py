@@ -3,6 +3,7 @@ import os
 import argparse
 import yaml
 import shutil
+import filters
 
 def argParse():
     """Parses commandline args."""
@@ -24,6 +25,7 @@ def main():
     paths.append(os.path.join(os.path.dirname(os.path.realpath(__file__)),'..','templates'))
     paths.append(os.path.dirname(os.path.realpath(args.yaml_file)))
     env = Environment(loader = FileSystemLoader(paths))
+    env.filters.update(filters.custom_filters())
 
     with open(args.yaml_file) as file:
         d = yaml.load(file, Loader=yaml.FullLoader)

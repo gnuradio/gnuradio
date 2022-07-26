@@ -31,30 +31,13 @@
 class {{ block }} : virtual public {{blocktype}}{#{{',' if inherits != ''}}  {{ inherits }}#}
 {% endmacro %}
 
-{% macro get_linked_value(value, ports, parameters, typekeys, enums) -%}
-    {% set newvalue = value -%}
-    {% if '/' in value | string() -%}
-    {% set list1 = value.split('/') -%}
-    {% set category = list1[0] -%}
-        {% if category == 'ports' -%}
-            {% set newvalue = list1[1] -%}
-        {% elif category == 'parameters' -%}
-            {% set newvalue = 'args.' + list1[1] -%}
-        {% elif category == 'typekeys' -%}
-            {% set newvalue = list1[1] -%}
-        {% elif category == 'enums' -%}
-            {% set newvalue = list1[1] -%}
-        {% endif -%}
-    {% endif -%}
-{{newvalue}}{% endmacro -%}
-
 {% macro block_args(parameters) -%}
     struct block_args {
         {% if parameters %} {% for param in parameters -%}{% if 'cotr' not in param or param['cotr'] == true %}
         {% if param['container'] == 'vector' -%}
-        std::vector<{{ param['dtype'] }}> {{ param['id'] }}{% if 'default' in param %} = {{param['default']}}{% endif %};
+        std::vector<{{ param['dtype']|cpp_type }}> {{ param['id'] }}{% if 'default' in param %} = {{param['default']}}{% endif %};
         {% else %}
-        {{get_linked_value(param['dtype']) }} {{ param['id'] }}{% if 'default' in param %} = {{param['default']}}{% endif %};
+        {{param['dtype']|cpp_type }} {{ param['id'] }}{% if 'default' in param %} = {{param['default']}}{% endif %};
         {% endif %}
         {% endif %}{% endfor -%}{% endif %}};
 {% endmacro %}
@@ -67,20 +50,19 @@ class {{ block }} : virtual public {{blocktype}}{#{{',' if inherits != ''}}  {{ 
 
 {% macro ports(ports, parameters, typekeys) -%}
         {% for port in ports %}
-        {% set porttype = get_linked_value(port['type']) -%}
         {% if port['domain'] != 'message' -%}
         {% if port['type'] == 'untyped'%}   
-        for (size_t i = 0; i < {{ get_linked_value(port['multiplicity'])}}; i++) {
+        for (size_t i = 0; i < {{ port['multiplicity']|get_linked_value()}}; i++) {
         add_port(untyped_port::make(
-            "{{ port['id'] }}" {{ "+ std::to_string(i)" if get_linked_value(port['multiplicity'])|int() > 1}}, 
+            "{{ port['id'] }}" {{ "+ std::to_string(i)" if port['multiplicity']|get_linked_value()|int() > 1}}, 
             {{ 'port_direction_t::INPUT' if port['direction'] == "input" else 'port_direction_t::OUTPUT' }}, 
-            {{ get_linked_value(port['size'])}}, {{port['optional']|lower()}}));
+            {{ port['size']|get_linked_value() }}, {{port['optional']|lower()}}));
         }
         {% else %}
-        for (size_t i = 0; i < {{ get_linked_value(port['multiplicity'])}}; i++) {
-        add_port(port<{{porttype}}>::make("{{ port['id'] }}" {{ "+ std::to_string(i)" if get_linked_value(port['multiplicity'])|int() > 1}}, 
+        for (size_t i = 0; i < {{ port['multiplicity']|get_linked_value()}}; i++) {
+        add_port(port<{{port['type']|cpp_type}}>::make("{{ port['id'] }}" {{ "+ std::to_string(i)" if port['multiplicity']|get_linked_value()|int() > 1}}, 
                             {{ 'port_direction_t::INPUT' if port['direction'] == "input" else 'port_direction_t::OUTPUT' }},
-                            std::vector<size_t>{ {{ get_linked_value(port['shape'])}} }, {{port['optional']|lower()}}));
+                            std::vector<size_t>{ {{ port['shape']|get_linked_value()}} }, {{port['optional']|lower()}}));
         }
         {% endif %}
         {% else %}
@@ -124,10 +106,10 @@ class {{ block }} : virtual public {{blocktype}}{#{{',' if inherits != ''}}  {{ 
 {% macro callbacks(callbacks) -%}
     {% for cb in callbacks -%}
     {% if 'inherited' not in cb or not cb['inherited'] -%}
-    virtual  {{cb['return']}} {{cb['id']}} (
+    virtual  {{cb['return']|cpp_type}} {{cb['id']}} (
     {% if 'args' in cb -%}
     {% for arg in cb['args'] -%}
-    {{get_linked_value(arg['dtype'])}} {{arg['id']}}{{ ", " if not loop.last }}
+    {{arg['dtype']|cpp_type}} {{arg['id']}}{{ ", " if not loop.last }}
     {% endfor -%}
     {% endif -%}
     ) {% if cb['const'] %}const {%endif%} = 0;
@@ -150,17 +132,17 @@ public:
     {% for p in parameters -%}
         {% if p['container'] == 'vector' -%}
             {% if p['settable']%}
-    virtual void set_{{p['id']}}(std::vector<{{p['dtype']}}> {{p['id']}}); 
+    virtual void set_{{p['id']}}(std::vector<{{p['dtype']|cpp_type}}> {{p['id']}}); 
             {% endif -%}
             {% if p['settable'] and not 'gettable' in p or p['gettable'] %}
-    virtual std::vector<{{p['dtype']}}> {{p['id']}}();
+    virtual std::vector<{{p['dtype']|cpp_type}}> {{p['id']}}();
             {% endif -%}
         {% else -%}
             {% if p['settable']%}
-    virtual void set_{{p['id']}}({{get_linked_value(p['dtype'])}} {{p['id']}}); 
+    virtual void set_{{p['id']}}({{p['dtype']|cpp_type}} {{p['id']}}); 
             {% endif -%}
             {% if p['settable'] and not 'gettable' in p or p['gettable'] %}
-    virtual {{get_linked_value(p['dtype'])}} {{p['id']}}();
+    virtual {{p['dtype']|cpp_type}} {{p['id']}}();
             {% endif -%}
         {% endif -%}
     {% endfor -%}
@@ -168,11 +150,7 @@ protected:
     enum params : uint32_t { {% for p in parameters -%}{#% if p['settable'] or p['gettable'] %#}id_{{p['id']}},{#% endif %#}{% endfor %} num_params };
 {% for p in parameters -%}
 {#% if p['settable'] or p['gettable'] %#}{% if 'serializable' not in p or p['serializable'] %}
-    {% if 'string' in p['dtype'] %}
     pmt_sptr param_{{p['id']}};
-    {% else %}
-    pmt_sptr param_{{p['id']}};
-    {% endif %}
     
 {% endif %}
 {% endfor -%}
@@ -187,16 +165,12 @@ protected:
 {% for p in parameters -%}
 {#% if p['settable'] or p['gettable']%#}{% if 'serializable' not in p or p['serializable'] %}
     {% if 'string' in p['dtype'] %}
-    //param_{{p['id']}} = string_param::make(params::id_{{p['id']}}, 
-    //    "{{p['id']}}"{{", args."+p['id'] if 'cotr' not in p or p['cotr']}});
     param_{{p['id']}} = std::make_shared<pmtf::pmt>(pmtf::string({{"args."+p['id'] if 'cotr' not in p or p['cotr']}}));
     {% else %}
-    //param_{{p['id']}} = {{ 'scalar' if 'container' not in p else p['container']}}_param<{{p['dtype']}}>::make(params::id_{{p['id']}}, 
-    //    "{{p['id']}}"{{", args."+p['id'] if 'cotr' not in p or p['cotr']}});
     {%if 'cotr' not in p or p['cotr']%}
     param_{{p['id']}} = std::make_shared<pmtf::pmt>({{'(int)' if p['is_enum']}}{{"args."+p['id']}});
     {%else%}
-    param_{{p['id']}} = std::make_shared<pmtf::pmt>(pmtf::{{'scalar' if 'container' not in p else p['container']}}<{{p['dtype']}}>({%if 'default' in p %}{{p['default'] | string() | lower()}}{%endif%}));
+    param_{{p['id']}} = std::make_shared<pmtf::pmt>(pmtf::{{'scalar' if 'container' not in p else p['container']}}<{{p['dtype']|cpp_type}}>({%if 'default' in p %}{{p['default'] | string() | lower()}}{%endif%}));
     {%endif%}
     {% endif %}
     add_param("{{p['id']}}", d_param_str_map["{{p['id']}}"], param_{{p['id']}});
@@ -219,24 +193,6 @@ Ports:
 )"
 {% endif -%}
 {% endmacro%}
-
-{% macro cpp_type_lookup(sigmf_type) %}
-{%- set lu_type = sigmf_type -%}{%- if sigmf_type | is_list() -%}{%- set lu_type = sigmf_type[0] -%}{% endif %}
-{%- set cpp_type = lu_type -%}
-{%- if sigmf_type | trim() == 'cf32'-%}{%- set cpp_type = 'gr_complex' -%}
-{%- elif sigmf_type | trim() == 'cf64'-%}{%- set cpp_type = 'gr_complexd' -%}
-{%- elif sigmf_type | trim() == 'rf64'-%}{%- set cpp_type = 'double' -%}
-{%- elif sigmf_type | trim() == 'rf32'-%}{%- set cpp_type = 'float' -%}
-{%- elif sigmf_type | trim() == 'ri64'-%}{%- set cpp_type = 'std::int64_t' -%}
-{%- elif sigmf_type | trim() == 'ri32'-%}{%- set cpp_type = 'std::int32_t' -%}
-{%- elif sigmf_type | trim() == 'ri16'-%}{%- set cpp_type = 'std::int16_t' -%}
-{%- elif sigmf_type | trim() == 'ri8'-%}{%- set cpp_type = 'std::int8_t' -%}
-{%- elif sigmf_type | trim() == 'ru64'-%}{%- set cpp_type = 'std::uint64_t' -%}
-{%- elif sigmf_type | trim() == 'ru32'-%}{%- set cpp_type = 'std::uint32_t' -%}
-{%- elif sigmf_type | trim() == 'ru16'-%}{%- set cpp_type = 'std::uint16_t' -%}
-{%- elif sigmf_type | trim() == 'ru8'-%}{%- set cpp_type = 'std::uint8_t' -%}
-{%- endif -%}{{cpp_type}}
-{%- endmacro -%}
 
 {% macro suffix_lookup(type) %}
 {%- set suffix = type -%}

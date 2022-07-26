@@ -23,7 +23,7 @@ typename {{block}}<{% for key in typekeys -%}{{key['id']}}{{ ", " if not loop.la
 {%if typekeys | length == 1 -%}
 {%set key1 = typekeys|first %}
 {% for opt in key1['options'] -%}
-template class {{block}}<{{ macros.cpp_type_lookup(opt)}}>;
+template class {{block}}<{{ opt | cpp_type}}>;
 {% endfor -%}
 {% elif typekeys | length == 2 -%}
 {%set key1 = typekeys|first %}

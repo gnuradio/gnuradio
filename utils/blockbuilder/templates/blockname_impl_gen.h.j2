@@ -23,7 +23,7 @@ typename {{block}}<{% for key in typekeys -%}{{key['id']}}{{ ", " if not loop.la
 {%if typekeys | length == 1 -%}
 {%set key1 = typekeys|first %}
 {% for opt in key1['options'] -%}
-template class {{block}}<{{ macros.cpp_type_lookup(opt) }}>;
+template class {{block}}<{{ opt | cpp_type }}>;
 {% endfor -%}
 {% elif typekeys | length == 2 -%}
 {%set key1 = typekeys|first %}
@@ -33,11 +33,11 @@ template class {{block}}<{{ macros.cpp_type_lookup(opt) }}>;
 {% if type_inst -%}
 {% for typev in type_inst -%}
 {% if opt1 == typev['value'][0] and opt2 == typev['value'][1] -%}
-template class {{block}}<{{ macros.cpp_type_lookup(opt1)}}, {{ macros.cpp_type_lookup(opt2)}}>;
+template class {{block}}<{{ opt1 | cpp_type}}, {{ opt2 | cpp_type}}>;
 {% endif %}
 {% endfor %}
 {% else %}
-template class {{block}}<{{ macros.cpp_type_lookup(opt1)}}, {{  macros.cpp_type_lookup(opt2)}}>;
+template class {{block}}<{{ opt1 | cpp_type}}, {{  opt2 | cpp_type}}>;
 {% endif %}
 {% endfor -%}
 {% endfor -%}
@@ -51,11 +51,11 @@ template class {{block}}<{{ macros.cpp_type_lookup(opt1)}}, {{  macros.cpp_type_
 {% if type_inst -%}
 {% for typev in type_inst -%}
 {% if opt1 == typev['value'][0] and opt2 == typev['value'][1] and opt3 == typev['value'][2] -%}
-template class {{block}}<{{ macros.cpp_type_lookup(opt1)}}, {{ macros.cpp_type_lookup(opt2)}},  {{macros.cpp_type_lookup(opt3)}}>;
+template class {{block}}<{{ opt1 | cpp_type}}, {{ opt2 | cpp_type}},  {{opt3 | cpp_type}}>;
 {% endif %}
 {% endfor %}
 {% else %}
-template class {{block}}<{{ macros.cpp_type_lookup(opt1)}}, {{ macros.cpp_type_lookup(opt2)}},  {{macros.cpp_type_lookup(opt3)}}>;
+template class {{block}}<{{ opt1 | cpp_type}}, {{ opt2 | cpp_type}},  {{opt3 | cpp_type}}>;
 {% endif %}
 {% endfor -%}
 {% endfor -%}
@@ -77,7 +77,7 @@ template class {{block}}<{{ macros.cpp_type_lookup(opt1)}}, {{ macros.cpp_type_l
 // Figure out a way to do this elegantly without macros or string lookups
 {% if parameters %} {% for param in parameters -%}
 {% if 'container' not in param or param['container'] == scalar %}
-#define GET_PARAM_{{param['id']|upper()}} pmtf::get_as<{{param['dtype']}}>(*this->param_{{param['id']}})
+#define GET_PARAM_{{param['id']|upper()}} pmtf::get_as<{{param['dtype']|cpp_type}}>(*this->param_{{param['id']}})
 {% elif param['container'] == 'vector' %}
 {% endif %}
 {% endfor %}
