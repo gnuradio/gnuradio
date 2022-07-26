@@ -6,11 +6,11 @@ blocktype: block
 parameters:
 -   id: nstreams
     label: Number of Streams
-    dtype: size_t
+    dtype: size
     settable: false
 -   id: itemsize
     label: Item Size
-    dtype: size_t
+    dtype: size
     settable: false
     default: 0
     grc:

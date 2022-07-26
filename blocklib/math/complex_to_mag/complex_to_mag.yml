@@ -6,7 +6,7 @@ blocktype: sync_block
 parameters:
 -   id: vlen
     label: Vector Length
-    dtype: size_t
+    dtype: size
     settable: false
     default: 1
 

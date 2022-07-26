@@ -7,20 +7,20 @@ blocktype: sync_block
 parameters:
 -   id: sampling_rate
     label: Sampling Rate
-    dtype: unsigned int
+    dtype: ru32
     settable: false
     default: 0
     grc:
         hide: part
 -   id: device_name
     label: Device Name
-    dtype: std::string
+    dtype: string
     settable: false
     grc:
         hide: part
 -   id: num_inputs
     label: Num Inputs
-    dtype: size_t
+    dtype: size
     settable: false
     default: 1
     grc:

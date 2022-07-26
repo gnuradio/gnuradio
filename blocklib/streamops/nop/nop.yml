@@ -6,7 +6,7 @@ blocktype: sync_block
 parameters:
 -   id: itemsize
     label: Item Size
-    dtype: size_t
+    dtype: size
     settable: false
     default: 0
     grc:

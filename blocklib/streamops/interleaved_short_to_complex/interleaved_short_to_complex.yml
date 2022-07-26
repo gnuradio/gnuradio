@@ -11,7 +11,7 @@ parameters:
     default: 'false'
 -   id: scale_factor
     label: Scale Factor
-    dtype: float
+    dtype: rf32
     settable: true
     default: 1.0
 

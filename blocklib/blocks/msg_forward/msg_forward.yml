@@ -8,12 +8,12 @@ includes:
 parameters:
 -   id: max_messages
     label: Max Messages
-    dtype: size_t
+    dtype: size
     settable: false
     default: 0
 -   id: message_count
     label: Message Count
-    dtype: size_t
+    dtype: size
     cotr: false
     gettable: true
     grc:

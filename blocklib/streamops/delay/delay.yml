@@ -6,11 +6,11 @@ blocktype: block
 parameters:
 -   id: dly
     label: Delay
-    dtype: size_t
+    dtype: size
     settable: true
 -   id: itemsize
     label: Item Size
-    dtype: size_t
+    dtype: size
     settable: false
     default: 0
     grc:

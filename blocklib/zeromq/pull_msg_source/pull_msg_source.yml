@@ -6,7 +6,7 @@ blocktype: sync_block
 parameters:
     - id: address
       label: IP Address
-      dtype: std::string
+      dtype: string
       settable: false
     - id: timeout
       label: Timeout

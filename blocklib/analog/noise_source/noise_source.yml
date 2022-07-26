@@ -17,16 +17,16 @@ typekeys:
 parameters:
 -   id: type
     label: Type
-    dtype: gr::analog::noise_t
+    dtype: enums/noise_t
     settable: true
     is_enum: true # this should be handled better
 -   id: amplitude
     label: Amplitude
-    dtype: float
+    dtype: rf32
     settable: true
 -   id: seed
     label: Seed
-    dtype: long
+    dtype: ru64
     settable: false
     default: 0
 

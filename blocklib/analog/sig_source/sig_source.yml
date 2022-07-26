@@ -18,7 +18,7 @@ typekeys:
 parameters:
 -   id: sampling_freq
     label: Sampling Freq
-    dtype: double
+    dtype: rf64
     settable: true
     grc:
         default: samp_rate
@@ -31,13 +31,13 @@ parameters:
         default: analog.waveform.sin
 -   id: frequency
     label: Wave Freq
-    dtype: double
+    dtype: rf64
     settable: true
     grc:
         default: 1000
 -   id: ampl
     label: Amplitude
-    dtype: double
+    dtype: rf64
     settable: true
     grc:
         default: 1.0
@@ -48,7 +48,7 @@ parameters:
     default: 0
 -   id: phase
     label: Phase
-    dtype: double
+    dtype: rf64
     settable: true
     default: 0    
 

@@ -9,13 +9,13 @@ parameters:
     dtype: pmtf::pmt
 -   id: nsamps
     label: "Num Samps"
-    dtype: size_t
+    dtype: size
 -   id: key
     label: "Key"
-    dtype: std::string
+    dtype: string
 -   id: itemsize
     label: Item Size
-    dtype: size_t
+    dtype: size
     settable: false
     default: 0
     grc:

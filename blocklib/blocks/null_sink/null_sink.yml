@@ -6,12 +6,12 @@ blocktype: sync_block
 parameters:
 -   id: nports
     label: Num. Ports
-    dtype: size_t
+    dtype: size
     default: 1
     settable: false
 -   id: itemsize
     label: Item Size
-    dtype: size_t
+    dtype: size
     settable: false
     default: 0
     grc:

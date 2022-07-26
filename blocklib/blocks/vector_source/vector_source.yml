@@ -28,7 +28,7 @@ parameters:
     default: 'false'
 -   id: vlen
     label: Vec. Length
-    dtype: size_t
+    dtype: size
     settable: false
     default: 1
 -   id: tags

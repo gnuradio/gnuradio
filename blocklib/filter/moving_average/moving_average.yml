@@ -13,7 +13,7 @@ typekeys:
 parameters:
 -   id: length
     label: Length
-    dtype: size_t
+    dtype: size
     settable: true
 -   id: scale
     label: Scale
@@ -21,12 +21,12 @@ parameters:
     settable: true
 -   id: max_iter
     label: Max Iter
-    dtype: size_t
+    dtype: size
     settable: false
     default: 4096
 -   id: vlen
     label: Vector Length
-    dtype: size_t
+    dtype: size
     settable: false
     default: 1
 

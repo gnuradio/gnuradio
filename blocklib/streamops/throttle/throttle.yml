@@ -6,7 +6,7 @@ blocktype: sync_block
 parameters:
 -   id: samples_per_sec
     label: Samples Per Second
-    dtype: double
+    dtype: rf64
     settable: false
 -   id: ignore_tags
     label: Ignore Tags
@@ -15,7 +15,7 @@ parameters:
     default: 'true'
 -   id: itemsize
     label: Item Size
-    dtype: size_t
+    dtype: size
     settable: false
     default: 0
     grc:

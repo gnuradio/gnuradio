@@ -6,7 +6,7 @@ blocktype: sync_block
 parameters:
 -   id: filename
     label: File Name
-    dtype: std::string
+    dtype: string
     settable: false
 -   id: repeat
     label: Repeat
@@ -15,17 +15,17 @@ parameters:
     default: 'false'
 -   id: itemsize
     label: Item Size
-    dtype: size_t
+    dtype: size
     settable: false
     default: 0
 -   id: offset
     label: Offset
-    dtype: uint64_t
+    dtype: ru64
     settable: false
     default: 0
 -   id: len
     label: Length
-    dtype: uint64_t
+    dtype: ru64
     settable: false
     default: 0
 
@@ -41,7 +41,7 @@ callbacks:
     return: bool
     args:
     - id: seek_point
-      dtype: int64_t
+      dtype: ri64
     - id: whence
       dtype: int
 

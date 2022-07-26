@@ -6,14 +6,14 @@ blocktype: sync_block
 parameters:
 -   id: iterations
     label: Iterations (Load)
-    dtype: size_t
+    dtype: size
 -   id: use_cb
     label: Use Custom Buffers
     dtype: bool
     default: 'true'
 -   id: itemsize
     label: Item Size
-    dtype: size_t
+    dtype: size
     settable: false
     default: 0
     grc:

@@ -9,7 +9,7 @@ blocktype: sync_block
 parameters:
     - id: address
       label: IP Address
-      dtype: std::string
+      dtype: string
       settable: false
     - id: timeout
       label: Timeout
@@ -28,7 +28,7 @@ parameters:
       default: -1
     - id: itemsize
       label: Item Size
-      dtype: size_t
+      dtype: size
       settable: false
       default: 0
 callbacks:

@@ -15,12 +15,12 @@ typekeys:
 parameters:
 -   id: num_inputs
     label: Number of Inputs
-    dtype: size_t
+    dtype: size
     settable: false
     default: 2 
 -   id: vlen
     label: Vec. Length
-    dtype: size_t
+    dtype: size
     settable: false
     default: 1
 
