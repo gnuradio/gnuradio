@@ -39,7 +39,7 @@ protected:
 {%if typekeys | length == 1 -%}
 {%set key1 = typekeys|first %}
 {% for opt in key1['options'] -%}
-using {{block}}_{{ macros.typekey_suffix(opt, key1['id'],ports) }} = {{block}}<{{ macros.cpp_type_lookup(opt) }}>;
+using {{block}}_{{ macros.typekey_suffix(opt, key1['id'],ports) }} = {{block}}<{{ opt | cpp_type }}>;
 {% endfor -%}
 {% elif typekeys | length == 2 -%}
 {%set key1 = typekeys|first %}
@@ -49,11 +49,11 @@ using {{block}}_{{ macros.typekey_suffix(opt, key1['id'],ports) }} = {{block}}<{
 {% if type_inst -%}
 {% for typev in type_inst -%}
 {% if opt1 == typev['value'][0] and opt2 == typev['value'][1] -%}
-using {{block}}_{{ macros.typekey_suffix(opt1, key1['id'],ports) }}{{ macros.typekey_suffix(opt2, key2['id'],ports) }} = {{block}}<{{ macros.cpp_type_lookup(opt1)+ ", " + macros.cpp_type_lookup(opt2)}}>;
+using {{block}}_{{ macros.typekey_suffix(opt1, key1['id'],ports) }}{{ macros.typekey_suffix(opt2, key2['id'],ports) }} = {{block}}<{{ opt1 | cpp_type+ ", " + opt2 | cpp_type}}>;
 {% endif -%}
 {% endfor -%}
 {% else -%}
-using {{block}}_{{ macros.typekey_suffix(opt1, key1['id'],ports) }}{{ macros.typekey_suffix(opt2, key2['id'],ports) }} = {{block}}<{{ macros.cpp_type_lookup(opt1)+ ", " + macros.cpp_type_lookup(opt2)}}>;
+using {{block}}_{{ macros.typekey_suffix(opt1, key1['id'],ports) }}{{ macros.typekey_suffix(opt2, key2['id'],ports) }} = {{block}}<{{ opt1 | cpp_type+ ", " + opt2 | cpp_type}}>;
 {% endif -%}
 {% endfor -%}
 {% endfor -%}
@@ -67,11 +67,11 @@ using {{block}}_{{ macros.typekey_suffix(opt1, key1['id'],ports) }}{{ macros.typ
 {% if type_inst -%}
 {% for typev in type_inst -%}
 {% if opt1 == typev['value'][0] and opt2 == typev['value'][1] and opt3 == typev['value'][2] -%}
-using {{block}}_{{ macros.typekey_suffix(opt1, key1['id'],ports) }}{{ macros.typekey_suffix(opt2, key2['id'],ports) }}{{ macros.typekey_suffix(opt3, key3['id'],ports) }} = {{block}}<{{ macros.cpp_type_lookup(opt1)+ ", " + macros.cpp_type_lookup(opt2)+ ", " + macros.cpp_type_lookup(opt3)}}>;
+using {{block}}_{{ macros.typekey_suffix(opt1, key1['id'],ports) }}{{ macros.typekey_suffix(opt2, key2['id'],ports) }}{{ macros.typekey_suffix(opt3, key3['id'],ports) }} = {{block}}<{{ opt1 | cpp_type+ ", " + opt2 | cpp_type+ ", " + opt3 | cpp_type}}>;
 {% endif %}
 {% endfor %}
 {%else %}
-using {{block}}_{{ macros.typekey_suffix(opt1, key1['id'],ports) }}{{ macros.typekey_suffix(opt2, key2['id'],ports) }}{{ macros.typekey_suffix(opt3, key3['id'],ports) }} = {{block}}<{{ macros.cpp_type_lookup(opt1)+ ", " + macros.cpp_type_lookup(opt2)+ ", " + macros.cpp_type_lookup(opt3)}}>;
+using {{block}}_{{ macros.typekey_suffix(opt1, key1['id'],ports) }}{{ macros.typekey_suffix(opt2, key2['id'],ports) }}{{ macros.typekey_suffix(opt3, key3['id'],ports) }} = {{block}}<{{ opt1 | cpp_type+ ", " + opt2 | cpp_type+ ", " + opt3 | cpp_type}}>;
 {% endif %}
 {% endfor -%}
 {% endfor -%}

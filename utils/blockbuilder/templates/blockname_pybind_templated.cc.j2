@@ -32,7 +32,7 @@ void bind_{{ block }}_template(py::module& m, const char* classname)
         //.value("base", ::gr::{{module}}::{{block}}<{{typestr}}>::available_impl::BASE ) 
         .export_values();
 
-    {{block}}_class.def(py::init([]({% if parameters %}{% for param in parameters -%}{% if 'cotr' not in param or param['cotr']%}{{ macros.get_linked_value(param['dtype']) if param['container'] != 'vector' else "std::vector<" + param['dtype'] + ">"}} {{ param['id'] }},{%endif%} {%endfor%}{% endif %} typename gr::{{module}}::{{block}}<{{typestr}}>::available_impl impl) {
+    {{block}}_class.def(py::init([]({% if parameters %}{% for param in parameters -%}{% if 'cotr' not in param or param['cotr']%}{{ param['dtype']|cpp_type if param['container'] != 'vector' else "std::vector<" + param['dtype']|cpp_type + ">"}} {{ param['id'] }},{%endif%} {%endfor%}{% endif %} typename gr::{{module}}::{{block}}<{{typestr}}>::available_impl impl) {
                        return ::gr::{{ module }}::{{block}}<{{typestr}}>::make({ {% if parameters %}{% for param in parameters -%}{% if 'cotr' not in param or param['cotr']%}{{ param['id'] }}{{ ", " if not loop.last }}{% endif %}{%endfor%}{% endif %} }, impl);
                    }),
         {% if parameters %} {% for param in parameters -%}{% if 'cotr' not in param or param['cotr']%}
@@ -65,7 +65,7 @@ void bind_{{ block }}(py::module& m)
 {%if typekeys | length == 1 -%}
 {%set key1 = typekeys|first %}
 {% for opt in key1['options'] -%}
-    bind_{{ block }}_template<{{  macros.cpp_type_lookup(opt) }}>(m, "{{ block }}_{{macros.typekey_suffix(opt, key1['id'],ports)}}");
+    bind_{{ block }}_template<{{ opt | cpp_type }}>(m, "{{ block }}_{{macros.typekey_suffix(opt, key1['id'],ports)}}");
 {% endfor %}
 {% elif typekeys | length == 2 -%}
 {%set key1 = typekeys|first %}
@@ -75,11 +75,11 @@ void bind_{{ block }}(py::module& m)
 {% if type_inst -%}
 {% for typev in type_inst -%}
 {% if opt1 == typev['value'][0] and opt2 == typev['value'][1] -%}
-    bind_{{ block }}_template<{{  macros.cpp_type_lookup(opt1)}}, {{ macros.cpp_type_lookup(opt2)}}>(m, "{{ block }}_{{ macros.typekey_suffix(opt1, key1['id'],ports) }}{{ macros.typekey_suffix(opt2, key2['id'],ports) }}");
+    bind_{{ block }}_template<{{ opt1 | cpp_type }}, {{ opt2 | cpp_type}}>(m, "{{ block }}_{{ macros.typekey_suffix(opt1, key1['id'],ports) }}{{ macros.typekey_suffix(opt2, key2['id'],ports) }}");
 {% endif %}
 {% endfor %}
 {% else %}
-    bind_{{ block }}_template<{{  macros.cpp_type_lookup(opt1)}}, {{ macros.cpp_type_lookup(opt2)}}>(m, "{{ block }}_{{ macros.typekey_suffix(opt1, key1['id'],ports) }}{{ macros.typekey_suffix(opt2, key2['id'],ports) }}");
+    bind_{{ block }}_template<{{ opt1 | cpp_type}}, {{ opt2 | cpp_type}}>(m, "{{ block }}_{{ macros.typekey_suffix(opt1, key1['id'],ports) }}{{ macros.typekey_suffix(opt2, key2['id'],ports) }}");
 {% endif %}
 {% endfor %}
 {% endfor %}
@@ -93,11 +93,11 @@ void bind_{{ block }}(py::module& m)
 {% if type_inst -%}
 {% for typev in type_inst -%}
 {% if opt1 == typev['value'][0] and opt2 == typev['value'][1] and opt3 == typev['value'][2] -%}
-    bind_{{ block }}_template<{{ macros.cpp_type_lookup(opt1)}}, {{ macros.cpp_type_lookup(opt2)}}, {{ macros.cpp_type_lookup(opt3)}}>(m, "{{ block }}_{{ macros.typekey_suffix(opt1, key1['id'],ports) }}{{ macros.typekey_suffix(opt2, key2['id'],ports) }}{{ macros.typekey_suffix(opt3, key3['id'],ports) }}");
+    bind_{{ block }}_template<{{ opt1 | cpp_type}}, {{ opt2 | cpp_type}}, {{ opt3 | cpp_type}}>(m, "{{ block }}_{{ macros.typekey_suffix(opt1, key1['id'],ports) }}{{ macros.typekey_suffix(opt2, key2['id'],ports) }}{{ macros.typekey_suffix(opt3, key3['id'],ports) }}");
 {% endif %}
 {% endfor %}
 {% else %}
-    bind_{{ block }}_template<{{ macros.cpp_type_lookup(opt1)}}, {{ macros.cpp_type_lookup(opt2)}}, {{ macros.cpp_type_lookup(opt3)}}>(m, "{{ block }}_{{ macros.typekey_suffix(opt1, key1['id'],ports) }}{{ macros.typekey_suffix(opt2, key2['id'],ports) }}{{ macros.typekey_suffix(opt3, key3['id'],ports) }}");
+    bind_{{ block }}_template<{{ opt1 | cpp_type}}, {{ opt2 | cpp_type}}, {{ opt3 | cpp_type}}>(m, "{{ block }}_{{ macros.typekey_suffix(opt1, key1['id'],ports) }}{{ macros.typekey_suffix(opt2, key2['id'],ports) }}{{ macros.typekey_suffix(opt3, key3['id'],ports) }}");
 {% endif %}
 {% endfor %}
 {% endfor %}
