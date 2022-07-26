@@ -7,6 +7,7 @@ import json
 import jsonschema
 from jsonschema import validate
 import jsonschema_default
+import filters
 
 def argParse():
     """Parses commandline args."""
@@ -22,10 +23,6 @@ def argParse():
     parser.add_argument("--build_dir")
 
     return parser.parse_args()
-
-def is_list(value):
-    return isinstance(value, list)
-
 
 def validate_json(d, schema):
     try:
@@ -53,7 +50,7 @@ def main():
     paths.append(os.path.join(os.path.dirname(os.path.realpath(__file__)),'..','templates'))
     paths.append(os.path.dirname(os.path.realpath(args.yaml_file)))
     env = Environment(loader = FileSystemLoader(paths))
-    env.filters['is_list'] = is_list
+    env.filters.update(filters.custom_filters())
 
     
     blockname = os.path.basename(os.path.dirname(os.path.realpath(args.yaml_file)))

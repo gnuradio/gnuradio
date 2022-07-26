@@ -43,7 +43,7 @@ typename {{block}}<{% for key in typekeys -%}{{key['id']}}{{ ", " if not loop.la
 
     {% for p in parameters -%}
     {% if ('cotr' not in p or p['cotr']) and ('serializable' not in p or p['serializable'])%}
-    args.{{p['id']}} = {{'('+macros.get_linked_value(p['dtype'])+')' if p['is_enum']}}pmtf::get_as<{{ 'std::vector<'+p['dtype']+'>' if 'container' in p and p['container'] == 'vector' else 'int' if p['is_enum'] else p['dtype']}}>(deserialize_param_to_pmt(json_obj["{{p['id']}}"].get<std::string>()));
+    args.{{p['id']}} = {{'('+p['dtype']|cpp_type+')' if p['is_enum']}}pmtf::get_as<{{ 'std::vector<'+p['dtype']|cpp_type+'>' if 'container' in p and p['container'] == 'vector' else 'int' if p['is_enum'] else p['dtype']|cpp_type}}>(deserialize_param_to_pmt(json_obj["{{p['id']}}"].get<std::string>()));
     {% endif %}
     {% endfor -%}
 
@@ -61,23 +61,23 @@ template <{% for key in typekeys -%}{{key['type']}} {{key['id']}}{{ ", " if not 
 {% for p in parameters -%}
 {% if p['settable']%}
 template <{% for key in typekeys -%}{{key['type']}} {{key['id']}}{{ ", " if not loop.last }}{%endfor%}>
-void {{block}}<{% for key in typekeys -%}{{key['id']}}{{ ", " if not loop.last }}{%endfor%}>::set_{{p['id']}}({{ 'std::vector<'+p['dtype']+'>' if 'container' in p and p['container'] == 'vector' else macros.get_linked_value(p['dtype'])}} {{p['id']}})
+void {{block}}<{% for key in typekeys -%}{{key['id']}}{{ ", " if not loop.last }}{%endfor%}>::set_{{p['id']}}({{ 'std::vector<'+p['dtype']|cpp_type+'>' if 'container' in p and p['container'] == 'vector' else p['dtype'] | cpp_type}} {{p['id']}})
 {
     return request_parameter_change(params::id_{{p['id']}}, {{"(int)" if p['is_enum']}}{{p['id']}});
 }
 {% endif -%}
 {% if p['settable'] and not 'gettable' in p or p['gettable'] %}
 template <{% for key in typekeys -%}{{key['type']}} {{key['id']}}{{ ", " if not loop.last }}{%endfor%}>
-{{ 'std::vector<'+p['dtype']+'>' if 'container' in p and p['container'] == 'vector' else macros.get_linked_value(p['dtype'])}} {{block}}<{% for key in typekeys -%}{{key['id']}}{{ ", " if not loop.last }}{%endfor%}>::{{p['id']}}()
+{{ 'std::vector<'+p['dtype']|cpp_type+'>' if 'container' in p and p['container'] == 'vector' else p['dtype']|cpp_type}} {{block}}<{% for key in typekeys -%}{{key['id']}}{{ ", " if not loop.last }}{%endfor%}>::{{p['id']}}()
 {
 {% if p['is_enum'] %}
 {% if 'container' in p and p['container'] == 'vector' %}
     return pmtf::get_as<{{ 'std::vector<int>' }}>(request_parameter_query(params::id_{{p['id']}}));
 {% else %}
-    return ({{macros.get_linked_value(p['dtype'])}}) pmtf::get_as<int>(request_parameter_query(params::id_{{p['id']}}));
+    return ({{p['dtype']|cpp_type}}) pmtf::get_as<int>(request_parameter_query(params::id_{{p['id']}}));
 {% endif %}
 {% else %}
-    return pmtf::get_as<{{ 'std::vector<'+p['dtype']+'>' if 'container' in p and p['container'] == 'vector' else p['dtype']}}>(request_parameter_query(params::id_{{p['id']}}));
+    return pmtf::get_as<{{ 'std::vector<'+p['dtype']|cpp_type+'>' if 'container' in p and p['container'] == 'vector' else p['dtype']|cpp_type}}>(request_parameter_query(params::id_{{p['id']}}));
 {% endif %}
 }
 {% endif %}
@@ -88,8 +88,8 @@ template <{% for key in typekeys -%}{{key['type']}} {{key['id']}}{{ ", " if not 
 {% for opt in key1['options'] -%}
 
 template <>
-std::string {{block}}<{{ macros.cpp_type_lookup(opt) }}>::suffix(){ return "_{{macros.typekey_suffix(opt, key1['id'],ports)}}"; }
-template class {{block}}<{{ macros.cpp_type_lookup(opt) }}>;
+std::string {{block}}<{{ opt | cpp_type }}>::suffix(){ return "_{{macros.typekey_suffix(opt, key1['id'],ports)}}"; }
+template class {{block}}<{{ opt | cpp_type }}>;
 {% endfor -%}
 {% elif typekeys | length == 2 -%}
 {%set key1 = typekeys|first %}
@@ -100,14 +100,14 @@ template class {{block}}<{{ macros.cpp_type_lookup(opt) }}>;
 {% for typev in type_inst -%}
 {% if opt1 == typev['value'][0] and opt2 == typev['value'][1] -%}
 template <>
-std::string {{block}}<{{ macros.cpp_type_lookup(opt1)}}, {{ macros.cpp_type_lookup(opt2)}}>::suffix(){ return "_{{macros.typekey_suffix(opt1, key1['id'],ports)}}{{macros.typekey_suffix(opt2, key2['id'],ports)}}"; }
-template class {{block}}<{{ macros.cpp_type_lookup(opt1)}}, {{ macros.cpp_type_lookup(opt2)}}>;
+std::string {{block}}<{{ opt1 | cpp_type}}, {{ opt2 | cpp_type}}>::suffix(){ return "_{{macros.typekey_suffix(opt1, key1['id'],ports)}}{{macros.typekey_suffix(opt2, key2['id'],ports)}}"; }
+template class {{block}}<{{ opt1 | cpp_type}}, {{ opt2 | cpp_type}}>;
 {% endif %}
 {% endfor %}
 {% else %}
 template <>
-std::string {{block}}<{{ macros.cpp_type_lookup(opt1)}}, {{ macros.cpp_type_lookup(opt2)}}>::suffix(){ return "_{{macros.typekey_suffix(opt1, key1['id'],ports)}}{{macros.typekey_suffix(opt2, key2['id'],ports)}}"; }
-template class {{block}}<{{ macros.cpp_type_lookup(opt1)}}, {{ macros.cpp_type_lookup(opt2)}}>;
+std::string {{block}}<{{ opt1 | cpp_type}}, {{ opt2 | cpp_type}}>::suffix(){ return "_{{macros.typekey_suffix(opt1, key1['id'],ports)}}{{macros.typekey_suffix(opt2, key2['id'],ports)}}"; }
+template class {{block}}<{{ opt1 | cpp_type}}, {{ opt2 | cpp_type}}>;
 {% endif %}
 {% endfor -%}
 {% endfor -%}
@@ -122,14 +122,14 @@ template class {{block}}<{{ macros.cpp_type_lookup(opt1)}}, {{ macros.cpp_type_l
 {% for typev in type_inst -%}
 {% if opt1 == typev['value'][0] and opt2 == typev['value'][1] and opt3 == typev['value'][2] -%}
 template <>
-std::string {{block}}<{{ macros.cpp_type_lookup(opt1)}}, {{ macros.cpp_type_lookup(opt2)}}, {{ macros.cpp_type_lookup(opt3)}}>::suffix(){ return "_{{macros.typekey_suffix(opt1, key1['id'],ports)}}{{macros.typekey_suffix(opt2, key2['id'],ports)}}{{macros.typekey_suffix(opt3, key3['id'],ports)}}"; }
-template class {{block}}<{{ macros.cpp_type_lookup(opt1)}}, {{ macros.cpp_type_lookup(opt2)}}, {{ macros.cpp_type_lookup(opt3)}}>;
+std::string {{block}}<{{ opt1 | cpp_type}}, {{ opt2 | cpp_type}}, {{ opt3 | cpp_type}}>::suffix(){ return "_{{macros.typekey_suffix(opt1, key1['id'],ports)}}{{macros.typekey_suffix(opt2, key2['id'],ports)}}{{macros.typekey_suffix(opt3, key3['id'],ports)}}"; }
+template class {{block}}<{{ opt1 | cpp_type}}, {{ opt2 | cpp_type}}, {{ opt3 | cpp_type}}>;
 {% endif -%}
 {% endfor -%}
 {% else %}
 template <>
-std::string {{block}}<{{ macros.cpp_type_lookup(opt1)}}, {{ macros.cpp_type_lookup(opt2)}}, {{ macros.cpp_type_lookup(opt3)}}>::suffix(){ return "_{{macros.typekey_suffix(opt1, key1['id'],ports)}}{{macros.typekey_suffix(opt2, key2['id'],ports)}}{{macros.typekey_suffix(opt3, key3['id'],ports)}}"; }
-template class {{block}}<{{ macros.cpp_type_lookup(opt1)}}, {{ macros.cpp_type_lookup(opt2)}}, {{ macros.cpp_type_lookup(opt3)}}>;
+std::string {{block}}<{{ opt1 | cpp_type}}, {{ opt2 | cpp_type}}, {{ opt3 | cpp_type}}>::suffix(){ return "_{{macros.typekey_suffix(opt1, key1['id'],ports)}}{{macros.typekey_suffix(opt2, key2['id'],ports)}}{{macros.typekey_suffix(opt3, key3['id'],ports)}}"; }
+template class {{block}}<{{ opt1 | cpp_type}}, {{ opt2 | cpp_type}}, {{ opt3 | cpp_type}}>;
 {% endif %}
 {% endfor -%}
 {% endfor -%}

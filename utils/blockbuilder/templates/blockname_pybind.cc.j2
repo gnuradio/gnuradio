@@ -29,7 +29,7 @@ void bind_{{block}}(py::module& m)
     {% endfor -%}
         .export_values();
 
-    {{block}}_class.def(py::init([]({% if parameters %}{% for param in parameters -%}{% if 'cotr' not in param or param['cotr']%}{{ param['dtype'] if param['container'] != 'vector' else "std::vector<" + param['dtype'] + ">"}} {{ param['id'] }},{%endif%} {%endfor%}{% endif %} typename gr::{{module}}::{{block}}::available_impl impl) {
+    {{block}}_class.def(py::init([]({% if parameters %}{% for param in parameters -%}{% if 'cotr' not in param or param['cotr']%}{{ param['dtype']|cpp_type if param['container'] != 'vector' else "std::vector<" + param['dtype']|cpp_type + ">"}} {{ param['id'] }},{%endif%} {%endfor%}{% endif %} typename gr::{{module}}::{{block}}::available_impl impl) {
                        return {{block}}::make({ {% if parameters %}{% for param in parameters -%}{% if 'cotr' not in param or param['cotr']%}{{ param['id'] }}{{ ", " if not loop.last }}{% endif %}{%endfor%}{% endif %} }, impl);
                    }),
         {% if parameters %} {% for param in parameters -%}{% if 'cotr' not in param or param['cotr']%}
