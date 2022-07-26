@@ -42,7 +42,7 @@ namespace {{module}} {
 
     {% for p in parameters -%}
     {% if ('cotr' not in p or p['cotr']) and ('serializable' not in p or p['serializable'])%}
-    args.{{p['id']}} = pmtf::get_as<{{ 'std::vector<'+p['dtype']|cpp_type+'>' if 'container' in p and p['container'] == 'vector' else p['dtype']|cpp_type}}>(pmtf::pmt::from_base64(json_obj["{{p['id']}}"].get<std::string>()));
+    args.{{p['id']}} = pmtf::get_as<{{ p['dtype']|cpp_type(vec=p['container']=='vector')}}>(pmtf::pmt::from_base64(json_obj["{{p['id']}}"].get<std::string>()));
     {% endif %}
     {% endfor -%}
 
@@ -67,7 +67,7 @@ void {{block}}::set_{{p['id']}}({{p['dtype']|cpp_type}} {{p['id']}})
 {% if p['settable'] and not 'gettable' in p or p['gettable'] %}
 {{p['dtype']|cpp_type}} {{block}}::{{p['id']}}()
 {
-    return pmtf::get_as<{{ 'std::vector<'+p['dtype']|cpp_type+'>' if 'container' in p and p['container'] == 'vector' else p['dtype']|cpp_type}}>(request_parameter_query(params::id_{{p['id']}}));
+    return pmtf::get_as<{{ p['dtype']|cpp_type(vec=p['container']=='vector')}}>(request_parameter_query(params::id_{{p['id']}}));
 }
 {% endif %}
 {% endfor -%}

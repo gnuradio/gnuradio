@@ -34,11 +34,7 @@ class {{ block }} : virtual public {{blocktype}}{#{{',' if inherits != ''}}  {{ 
 {% macro block_args(parameters) -%}
     struct block_args {
         {% if parameters %} {% for param in parameters -%}{% if 'cotr' not in param or param['cotr'] == true %}
-        {% if param['container'] == 'vector' -%}
-        std::vector<{{ param['dtype']|cpp_type }}> {{ param['id'] }}{% if 'default' in param %} = {{param['default']}}{% endif %};
-        {% else %}
-        {{param['dtype']|cpp_type }} {{ param['id'] }}{% if 'default' in param %} = {{param['default']}}{% endif %};
-        {% endif %}
+        {{param['dtype']|cpp_type(vec=param['container']=='vector') }} {{ param['id'] }}{% if 'default' in param %} = {{param['default']}}{% endif %};
         {% endif %}{% endfor -%}{% endif %}};
 {% endmacro %}
 
@@ -130,20 +126,11 @@ class {{ block }} : virtual public {{blocktype}}{#{{',' if inherits != ''}}  {{ 
 {% if parameters -%}
 public:
     {% for p in parameters -%}
-        {% if p['container'] == 'vector' -%}
-            {% if p['settable']%}
-    virtual void set_{{p['id']}}(std::vector<{{p['dtype']|cpp_type}}> {{p['id']}}); 
-            {% endif -%}
-            {% if p['settable'] and not 'gettable' in p or p['gettable'] %}
-    virtual std::vector<{{p['dtype']|cpp_type}}> {{p['id']}}();
-            {% endif -%}
-        {% else -%}
-            {% if p['settable']%}
-    virtual void set_{{p['id']}}({{p['dtype']|cpp_type}} {{p['id']}}); 
-            {% endif -%}
-            {% if p['settable'] and not 'gettable' in p or p['gettable'] %}
-    virtual {{p['dtype']|cpp_type}} {{p['id']}}();
-            {% endif -%}
+        {% if p['settable']%}
+    virtual void set_{{p['id']}}({{p['dtype']|cpp_type(vec=p['container']=='vector')}} {{p['id']}}); 
+        {% endif -%}
+        {% if p['settable'] and not 'gettable' in p or p['gettable'] %}
+    virtual {{p['dtype']|cpp_type(vec=p['container']=='vector')}} {{p['id']}}();
         {% endif -%}
     {% endfor -%}
 protected:
