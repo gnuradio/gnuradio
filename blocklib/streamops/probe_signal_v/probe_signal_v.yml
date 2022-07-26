@@ -20,7 +20,7 @@ typekeys:
 parameters:
 -   id: vlen
     label: Vec. Length
-    dtype: size_t
+    dtype: size
     settable: false
 -   id: level
     label: Constant

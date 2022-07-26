@@ -7,11 +7,11 @@ category: '[Core]/Debug Tools'
 parameters:
 -   id: nitems
     label: Num. Items
-    dtype: size_t
+    dtype: size
     settable: false
 -   id: itemsize
     label: Item Size
-    dtype: size_t
+    dtype: size
     settable: false
     default: 0
     grc:

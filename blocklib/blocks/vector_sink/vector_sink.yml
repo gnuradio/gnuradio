@@ -17,13 +17,13 @@ typekeys:
 parameters:
   - id: vlen
     label: Vec. Length
-    dtype: size_t
+    dtype: size
     settable: false
     gettable: true
     default: 1
   - id: reserve_items
     label: Reserve Items
-    dtype: size_t
+    dtype: size
     settable: false
     default: 1024
   - id: data

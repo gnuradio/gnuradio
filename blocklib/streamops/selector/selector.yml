@@ -7,33 +7,33 @@ category: '[Core]/Misc'
 parameters:
 -   id: num_inputs
     label: Num Inputs
-    dtype: size_t
+    dtype: size
     settable: false
     grc:
         hide: part
         default: 2
 -   id: num_outputs
     label: Num Outputs
-    dtype: size_t
+    dtype: size
     settable: false
     grc:
         hide: part
         default: 2
 -   id: input_index
     label: Input Index
-    dtype: size_t
+    dtype: size
     settable: true
     grc:
         default: 0
 -   id: output_index
     label: Output Index
-    dtype: size_t
+    dtype: size
     settable: true
     grc:
         default: 0
 -   id: itemsize
     label: Item Size
-    dtype: size_t
+    dtype: size
     settable: false
     default: 0
     grc:

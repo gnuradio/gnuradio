@@ -8,25 +8,25 @@ category: '[Core]/Stream Operators'
 parameters:
 -   id: m
     label: M
-    dtype: size_t
+    dtype: size
     settable: true
     grc:
       default: 1
 -   id: n
     label: N
-    dtype: size_t
+    dtype: size
     settable: true
     grc:
       default: 2
 -   id: offset
     label: offset
-    dtype: size_t
+    dtype: size
     settable: true
     grc:
       default: 0
 -   id: itemsize
     label: Item Size
-    dtype: size_t
+    dtype: size
     settable: false
     default: 0
     grc:

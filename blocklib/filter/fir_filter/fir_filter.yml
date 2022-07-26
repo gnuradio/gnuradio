@@ -42,7 +42,7 @@ type_inst:
 parameters:
 -   id: decimation
     label: Decimation
-    dtype: size_t
+    dtype: size
     settable: false
 -   id: taps
     label: Taps

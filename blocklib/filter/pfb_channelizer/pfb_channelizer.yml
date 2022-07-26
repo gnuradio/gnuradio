@@ -15,16 +15,16 @@ typekeys:
 parameters:
 -   id: numchans
     label: Number of Channels
-    dtype: size_t
+    dtype: size
     settable: false
 -   id: taps
     label: Filter Taps
-    dtype: float
+    dtype: rf32
     container: vector
     settable: false
 -   id: oversample_rate
     label: Oversample Rate
-    dtype: float
+    dtype: rf32
     settable: false
 
 ports:

@@ -7,7 +7,7 @@ category: '[Core]/Misc'
 parameters:
 -   id: samples_per_sec
     label: Samples Per Second
-    dtype: double
+    dtype: rf64
     settable: false
     grc:
         default: samp_rate
@@ -18,7 +18,7 @@ parameters:
     default: 'true'
 -   id: itemsize
     label: Item Size
-    dtype: size_t
+    dtype: size
     settable: false
     default: 0
     grc:

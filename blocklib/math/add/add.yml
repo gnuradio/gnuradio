@@ -16,14 +16,14 @@ typekeys:
 parameters:
 -   id: nports
     label: Num Ports
-    dtype: size_t
+    dtype: size
     default: 2
     grc:
       default: 2
       hide: part
 -   id: vlen
     label: Vec. Length
-    dtype: size_t
+    dtype: size
     default: 1
 
 ports:

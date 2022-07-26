@@ -33,18 +33,18 @@ doc:
 parameters:
 -   id: nstreams
     label: Num Streams
-    dtype: size_t
+    dtype: size
     settable: false
     grc:
         default: 2
 -   id: blocksize
     label: Block Size
-    dtype: size_t
+    dtype: size
     settable: false
     default: 1
 -   id: itemsize
     label: Item Size
-    dtype: size_t
+    dtype: size
     settable: false
     default: 0
     grc:

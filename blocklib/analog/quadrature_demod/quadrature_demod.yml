@@ -32,7 +32,7 @@ doc:
 parameters:
 -   id: gain
     label: Gain
-    dtype: float
+    dtype: rf32
     settable: true
     grc:
         hide: part

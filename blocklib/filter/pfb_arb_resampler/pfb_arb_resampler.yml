@@ -32,7 +32,7 @@ type_inst:
 parameters:
 -   id: rate
     label: Rate
-    dtype: float
+    dtype: rf32
     settable: true
 -   id: taps
     label: Taps
@@ -41,7 +41,7 @@ parameters:
     settable: true
 -   id: filter_size
     label: Filter Size
-    dtype: float
+    dtype: rf32
     settable: false
     default: 32
 
@@ -66,9 +66,9 @@ callbacks:
     return: size_t
     args:
     - id: freq
-      dtype: float
+      dtype: rf32
     - id: fs
-      dtype: float
+      dtype: rf32
     const: true
 
 

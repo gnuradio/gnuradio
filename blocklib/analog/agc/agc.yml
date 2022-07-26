@@ -15,15 +15,15 @@ typekeys:
 parameters:
 -   id: rate
     label: Rate
-    dtype: float
+    dtype: rf32
     default: 1e-4
 -   id: reference
     label: Reference
-    dtype: float
+    dtype: rf32
     default: 1.0
 -   id: gain
     label: Gain
-    dtype: float
+    dtype: rf32
     default: 1.0
 
 ports:

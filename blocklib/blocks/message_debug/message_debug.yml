@@ -14,14 +14,14 @@ parameters:
 callbacks:
     # virtual size_t num_messages() = 0;
 -   id: num_messages
-    return: size_t
+    return: size
     
     # virtual pmt::pmt_t get_message(size_t i) = 0;
 -   id: get_message
     return: pmtf::pmt
     args:
     - id: i
-      dtype: size_t
+      dtype: size
 
 
 

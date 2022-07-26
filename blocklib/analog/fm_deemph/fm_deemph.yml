@@ -13,7 +13,7 @@ parameters:
         default: 400000
 -   id: tau
     label: Tau
-    dtype: double
+    dtype: rf64
     default: 75e-6
 
 
