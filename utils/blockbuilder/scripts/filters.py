@@ -33,13 +33,17 @@ def get_linked_value(value):
             newvalue = 'args.' + newvalue
     return newvalue
 
-def cpp_type(input):
+def cpp_type(input, vec=False):
     if is_list(input):
         input = input[0]
     if input in type_lookup:
-        return type_lookup[input][0]
+        x = type_lookup[input][0]
     else:
-        return get_linked_value(input)
+        x = get_linked_value(input)
+    
+    if (vec):
+        return f'std::vector<{x}>'
+    return x
 
 def py_type(input):
     if input in type_lookup:
