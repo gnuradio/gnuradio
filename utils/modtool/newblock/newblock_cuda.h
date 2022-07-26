@@ -23,7 +23,7 @@ class newblock_cuda : public newblock
 {
 public:
     newblock_cuda(block_args args);
-    work_return_code_t work(work_io&) override;
+    work_return_t work(work_io&) override;
 
 private:
     int d_block_size;

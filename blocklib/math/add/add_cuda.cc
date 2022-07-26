@@ -22,7 +22,7 @@ add_cuda<T>::add_cuda(const typename add<T>::block_args& args)
 }
 
 template <class T>
-work_return_code_t add_cuda<T>::work(work_io& wio)
+work_return_t add_cuda<T>::work(work_io& wio)
 {
     auto out = wio.outputs()[0].items<T>();
     auto noutput_items = wio.outputs()[0].n_items;
@@ -37,7 +37,7 @@ work_return_code_t add_cuda<T>::work(work_io& wio)
 
     wio.produce_each(noutput_items);
     wio.consume_each(noutput_items);
-    return work_return_code_t::WORK_OK;
+    return work_return_t::OK;
 }
 
 } /* namespace math */

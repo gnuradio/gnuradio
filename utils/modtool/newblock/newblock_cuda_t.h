@@ -25,7 +25,7 @@ class newblock_cuda : public newblock<T>
 public:
     newblock_cuda(const typename newblock<T>::block_args& args);
 
-    work_return_code_t work(work_io&) override;
+    work_return_t work(work_io&) override;
 
 private:
     T d_k;

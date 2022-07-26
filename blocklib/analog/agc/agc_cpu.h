@@ -11,7 +11,7 @@ class agc_cpu : public agc<T>, kernel::analog::agc<T>
 {
 public:
     agc_cpu(const typename agc<T>::block_args& args);
-    work_return_code_t work(work_io&) override;
+    work_return_t work(work_io&) override;
 
 protected:
 };

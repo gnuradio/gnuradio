@@ -21,7 +21,7 @@ probe_signal_cpu<T>::probe_signal_cpu(const typename probe_signal<T>::block_args
 }
 
 template <class T>
-work_return_code_t probe_signal_cpu<T>::work(work_io& wio)
+work_return_t probe_signal_cpu<T>::work(work_io& wio)
 
 {
     auto in = wio.inputs()[0].items<T>();
@@ -31,7 +31,7 @@ work_return_code_t probe_signal_cpu<T>::work(work_io& wio)
         *this->param_level = in[ninput_items - 1];
 
     wio.consume_each(ninput_items);
-    return work_return_code_t::WORK_OK;
+    return work_return_t::OK;
 }
 
 } /* namespace streamops */

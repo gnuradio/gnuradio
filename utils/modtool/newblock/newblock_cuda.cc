@@ -26,14 +26,14 @@ newblock_cuda::newblock_cuda(block_args args) : INHERITED_CONSTRUCTORS
     cudaStreamCreate(&d_stream);
 }
 
-work_return_code_t newblock_cuda::work(work_io& wio)
+work_return_t newblock_cuda::work(work_io& wio)
 {
     // Do <+signal processing+>
     // Block specific code goes here
     cudaStreamSynchronize(d_stream);
 
     // produce_each(n, work_output);
-    return work_return_code_t::WORK_OK;
+    return work_return_t::OK;
 }
 } // namespace newmod
 } // namespace gr

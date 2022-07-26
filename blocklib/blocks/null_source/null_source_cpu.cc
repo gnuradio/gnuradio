@@ -14,7 +14,7 @@ namespace blocks {
 
 null_source_cpu::null_source_cpu(block_args args) : INHERITED_CONSTRUCTORS {}
 
-work_return_code_t null_source_cpu::work(work_io& wio)
+work_return_t null_source_cpu::work(work_io& wio)
 {
     auto itemsize = wio.outputs()[0].buf().item_size();
     for (auto& out : wio.outputs()) {
@@ -23,7 +23,7 @@ work_return_code_t null_source_cpu::work(work_io& wio)
         out.n_produced = noutput_items;
     }
 
-    return work_return_code_t::WORK_OK;
+    return work_return_t::OK;
 }
 
 

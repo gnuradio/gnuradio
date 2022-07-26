@@ -12,11 +12,11 @@
 
 namespace gr {
 
-enum rt_status_t { RT_OK = 0, RT_NOT_IMPLEMENTED, RT_NO_PRIVS, RT_OTHER_ERROR };
+enum class rt_status_t { OK = 0, NOT_IMPLEMENTED, NO_PRIVS, OTHER_ERROR };
 
-enum rt_sched_policy {
-    RT_SCHED_RR = 0,   // round robin
-    RT_SCHED_FIFO = 1, // first in first out
+enum class rt_sched_policy_t {
+    RR = 0,   // round robin
+    FIFO = 1, // first in first out
 };
 
 /*!

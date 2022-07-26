@@ -21,7 +21,7 @@ class conjugate_cpu : public conjugate
 public:
     conjugate_cpu(const block_args& args);
 
-    work_return_code_t work(work_io&) override;
+    work_return_t work(work_io&) override;
 };
 
 } // namespace math

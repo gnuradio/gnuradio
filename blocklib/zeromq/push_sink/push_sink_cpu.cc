@@ -10,7 +10,7 @@ push_sink_cpu::push_sink_cpu(block_args args)
           ZMQ_PUSH, args.itemsize, args.address, args.timeout, args.pass_tags, args.hwm)
 {
 }
-work_return_code_t push_sink_cpu::work(work_io& wio)
+work_return_t push_sink_cpu::work(work_io& wio)
 
 {
     // Poll with a timeout (FIXME: scheduler can't wait for us)
@@ -26,7 +26,7 @@ work_return_code_t push_sink_cpu::work(work_io& wio)
                          wio.inputs()[0].tags_in_window(0, wio.inputs()[0].n_items));
     }
 
-    return work_return_code_t::WORK_OK;
+    return work_return_t::OK;
 }
 
 

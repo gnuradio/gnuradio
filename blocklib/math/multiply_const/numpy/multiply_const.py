@@ -25,4 +25,4 @@ class multiply_const_ff(math.multiply_const_ff):
 
         outbuf1[:] = inbuf1 * self.k
 
-        return gr.work_return_t.WORK_OK 
+        return gr.work_return_t.OK 

@@ -20,7 +20,7 @@ rep_sink_cpu::rep_sink_cpu(block_args args)
           ZMQ_REP, args.itemsize, args.address, args.timeout, args.pass_tags, args.hwm)
 {
 }
-work_return_code_t rep_sink_cpu::work(work_io& wio)
+work_return_t rep_sink_cpu::work(work_io& wio)
 {
     auto in = wio.inputs()[0].items<uint8_t>();
     auto noutput_items = wio.inputs()[0].n_items;
@@ -66,7 +66,7 @@ work_return_code_t rep_sink_cpu::work(work_io& wio)
     }
 
     wio.inputs()[0].n_consumed = done;
-    return work_return_code_t::WORK_OK;
+    return work_return_t::OK;
 }
 
 

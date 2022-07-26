@@ -36,10 +36,10 @@ void bind_constellation(py::module& m)
         m, "constellation", D(constellation));
 
     py::enum_<constellation::normalization_t>(constellation_class, "normalization")
-        .value("NO_NORMALIZATION", constellation::NO_NORMALIZATION)
-        .value("POWER_NORMALIZATION", constellation::POWER_NORMALIZATION)
-        .value("AMPLITUDE_NORMALIZATION", constellation::AMPLITUDE_NORMALIZATION)
-        .export_values();
+        .value("NO_NORMALIZATION", constellation::normalization_t::NO_NORMALIZATION)
+        .value("POWER_NORMALIZATION", constellation::normalization_t::POWER_NORMALIZATION)
+        .value("AMPLITUDE_NORMALIZATION",
+               constellation::normalization_t::AMPLITUDE_NORMALIZATION);
 
     py::implicitly_convertible<int,
                                gr::kernel::digital::constellation::normalization_t>();
@@ -195,7 +195,8 @@ void bind_constellation(py::module& m)
              py::arg("pre_diff_code"),
              py::arg("rotational_symmetry"),
              py::arg("dimensionality"),
-             py::arg("normalization") = constellation::AMPLITUDE_NORMALIZATION,
+             py::arg("normalization") =
+                 constellation::normalization_t::AMPLITUDE_NORMALIZATION,
              D(constellation_calcdist, make))
 
 
@@ -233,7 +234,8 @@ void bind_constellation(py::module& m)
              py::arg("imag_sectors"),
              py::arg("width_real_sectors"),
              py::arg("width_imag_sectors"),
-             py::arg("normalization") = constellation::AMPLITUDE_NORMALIZATION,
+             py::arg("normalization") =
+                 constellation::normalization_t::AMPLITUDE_NORMALIZATION,
              D(constellation_rect, make));
 
 

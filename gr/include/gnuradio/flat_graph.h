@@ -36,8 +36,8 @@ public:
 class flat_graph : public graph
 {
     static constexpr const char* BLOCK_COLOR_KEY = "color";
-    enum vcolor { WHITE, GREY, BLACK };
-    enum io { INPUT, OUTPUT };
+    enum class vcolor_t { WHITE, GREY, BLACK };
+    enum class io_t { INPUT, OUTPUT };
 
 public:
     void clear() override;
@@ -256,7 +256,7 @@ private:
     std::vector<block_vector_t> partition();
     block_vector_t topological_sort(block_vector_t& blocks);
 
-    std::map<block_sptr, int> block_color;
+    std::map<block_sptr, vcolor_t> block_color;
 }; // namespace gr
 
 using flat_graph_sptr = std::shared_ptr<flat_graph>;

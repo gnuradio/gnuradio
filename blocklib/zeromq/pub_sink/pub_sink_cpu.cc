@@ -16,7 +16,7 @@ pub_sink_cpu::pub_sink_cpu(block_args args)
 {
 }
 
-work_return_code_t pub_sink_cpu::work(work_io& wio)
+work_return_t pub_sink_cpu::work(work_io& wio)
 {
     auto noutput_items = wio.inputs()[0].n_items;
     auto nread = wio.inputs()[0].nitems_read();
@@ -25,7 +25,7 @@ work_return_code_t pub_sink_cpu::work(work_io& wio)
                               nread,
                               wio.inputs()[0].tags_in_window(0, noutput_items));
     wio.consume_each(nsent);
-    return work_return_code_t::WORK_OK;
+    return work_return_t::OK;
 }
 
 

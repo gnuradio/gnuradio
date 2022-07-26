@@ -22,7 +22,7 @@ complex_to_mag_cpu::complex_to_mag_cpu(const block_args& args)
     // set_output_multiple(std::max(1, alignment_multiple));
 }
 
-work_return_code_t complex_to_mag_cpu::work(work_io& wio)
+work_return_t complex_to_mag_cpu::work(work_io& wio)
 {
     auto noutput_items = wio.outputs()[0].n_items;
     int noi = noutput_items * d_vlen;
@@ -33,7 +33,7 @@ work_return_code_t complex_to_mag_cpu::work(work_io& wio)
     volk_32fc_magnitude_32f_u(optr, iptr, noi);
 
     wio.produce_each(noutput_items);
-    return work_return_code_t::WORK_OK;
+    return work_return_t::OK;
 }
 
 

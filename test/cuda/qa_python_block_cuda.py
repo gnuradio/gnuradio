@@ -37,7 +37,7 @@ class add_2_f32_1_f32(gr.cupy_sync_block):
         outbuf1[:] = inbuf1 + inbuf2
 
 
-        return gr.work_return_t.WORK_OK
+        return gr.work_return_t.OK
 
 
 class copy_f32(gr.cupy_sync_block):
@@ -64,7 +64,7 @@ class copy_f32(gr.cupy_sync_block):
         outbuf1[:] = inbuf1
 
 
-        return gr.work_return_t.WORK_OK
+        return gr.work_return_t.OK
 
 class test_block_gateway(gr_unittest.TestCase):
 

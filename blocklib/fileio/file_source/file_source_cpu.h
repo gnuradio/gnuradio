@@ -20,7 +20,7 @@ class file_source_cpu : public file_source
 public:
     file_source_cpu(const block_args& args);
     ~file_source_cpu() override;
-    work_return_code_t work(work_io&) override;
+    work_return_t work(work_io&) override;
 
     /*!
      * \brief seek file to \p seek_point relative to \p whence

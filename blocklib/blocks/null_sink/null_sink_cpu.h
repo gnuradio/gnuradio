@@ -17,7 +17,7 @@ class null_sink_cpu : public null_sink
 {
 public:
     null_sink_cpu(block_args args);
-    work_return_code_t work(work_io&) override;
+    work_return_t work(work_io&) override;
 
 protected:
     size_t d_nports;

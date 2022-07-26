@@ -24,7 +24,7 @@ file_sink_cpu::file_sink_cpu(const block_args& args)
 
 file_sink_cpu::~file_sink_cpu() {}
 
-work_return_code_t file_sink_cpu::work(work_io& wio)
+work_return_t file_sink_cpu::work(work_io& wio)
 {
     auto inbuf = wio.inputs()[0].items<uint8_t>();
     auto noutput_items = wio.inputs()[0].n_items;
@@ -39,7 +39,7 @@ work_return_code_t file_sink_cpu::work(work_io& wio)
 
     if (!d_fp) {
         wio.inputs()[0].n_consumed = noutput_items; // drop output on the floor
-        return work_return_code_t::WORK_OK;
+        return work_return_t::OK;
     }
 
     while (nwritten < noutput_items) {
@@ -62,7 +62,7 @@ work_return_code_t file_sink_cpu::work(work_io& wio)
         fflush(d_fp);
 
     wio.consume_each(nwritten);
-    return work_return_code_t::WORK_OK;
+    return work_return_t::OK;
 }
 
 bool file_sink_cpu::stop()

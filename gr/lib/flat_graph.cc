@@ -119,14 +119,14 @@ block_vector_t flat_graph::calc_reachable_blocks(block_sptr block, block_vector_
 
     // Mark all blocks as unvisited
     for (auto& b : blocks)
-        block_color[b] = WHITE;
+        block_color[b] = vcolor_t::WHITE;
 
     // Recursively mark all reachable blocks
     reachable_dfs_visit(block, blocks);
 
     // Collect all the blocks that have been visited
     for (auto& b : blocks)
-        if (block_color[b] == BLACK)
+        if (block_color[b] == vcolor_t::BLACK)
             result.push_back(b);
 
     return result;
@@ -136,13 +136,13 @@ block_vector_t flat_graph::calc_reachable_blocks(block_sptr block, block_vector_
 void flat_graph::reachable_dfs_visit(block_sptr block, block_vector_t& blocks)
 {
     // Mark the current one as visited
-    block_color[block] = BLACK;
+    block_color[block] = vcolor_t::BLACK;
 
     // Recurse into adjacent vertices
     block_vector_t adjacent = calc_adjacent_blocks(block, blocks);
 
     for (auto& b : adjacent)
-        if (block_color[b] == WHITE)
+        if (block_color[b] == vcolor_t::WHITE)
             reachable_dfs_visit(b, blocks);
 }
 
@@ -170,10 +170,10 @@ block_vector_t flat_graph::topological_sort(block_vector_t& blocks)
 
     // Start 'em all white
     for (auto& b : tmp)
-        block_color[b] = WHITE;
+        block_color[b] = vcolor_t::WHITE;
 
     for (auto& b : tmp) {
-        if (block_color[b] == WHITE)
+        if (block_color[b] == vcolor_t::WHITE)
             topological_dfs_visit(b, result);
     }
 
@@ -205,19 +205,19 @@ bool flat_graph::source_p(block_sptr block) { return calc_upstream_edges(block).
 
 void flat_graph::topological_dfs_visit(block_sptr block, block_vector_t& output)
 {
-    block_color[block] = GREY;
+    block_color[block] = vcolor_t::GREY;
     block_vector_t blocks(calc_downstream_blocks(block));
 
     for (auto& b : blocks) {
         switch (block_color[b]) {
-        case WHITE:
+        case vcolor_t::WHITE:
             topological_dfs_visit(b, output);
             break;
 
-        case GREY:
+        case vcolor_t::GREY:
             throw std::runtime_error("flow graph has loops!");
 
-        case BLACK:
+        case vcolor_t::BLACK:
             continue;
 
         default:

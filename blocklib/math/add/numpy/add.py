@@ -17,4 +17,4 @@ class add_ff(math.add_ff):
 
         outbuf1[:] = inbuf1 + inbuf2
 
-        return gr.work_return_t.WORK_OK 
+        return gr.work_return_t.OK 

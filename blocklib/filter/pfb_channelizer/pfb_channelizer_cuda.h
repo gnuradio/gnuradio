@@ -23,7 +23,7 @@ class pfb_channelizer_cuda : public pfb_channelizer<T>
 public:
     pfb_channelizer_cuda(const typename pfb_channelizer<T>::block_args& args);
 
-    work_return_code_t work(work_io&) override;
+    work_return_t work(work_io&) override;
 
 
 private:

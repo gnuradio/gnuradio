@@ -40,7 +40,7 @@ multiply_const_cuda<gr_complex>::multiply_const_cuda(
 }
 
 template <class T>
-work_return_code_t multiply_const_cuda<T>::work(work_io& wio)
+work_return_t multiply_const_cuda<T>::work(work_io& wio)
 {
     auto out = wio.outputs()[0].items<T>();
     auto noutput_items = wio.outputs()[0].n_items;
@@ -51,7 +51,7 @@ work_return_code_t multiply_const_cuda<T>::work(work_io& wio)
 
     wio.outputs()[0].n_produced = wio.outputs()[0].n_items;
     wio.inputs()[0].n_consumed = wio.inputs()[0].n_items;
-    return work_return_code_t::WORK_OK;
+    return work_return_t::OK;
 }
 
 } /* namespace math */

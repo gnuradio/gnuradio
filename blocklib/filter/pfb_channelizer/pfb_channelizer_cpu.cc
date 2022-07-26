@@ -89,7 +89,7 @@ void pfb_channelizer_cpu<T>::set_taps(const std::vector<float>& taps)
 
 
 template <class T>
-work_return_code_t pfb_channelizer_cpu<T>::work(work_io& wio)
+work_return_t pfb_channelizer_cpu<T>::work(work_io& wio)
 {
     // std::scoped_lock guard(d_mutex);
 
@@ -99,12 +99,12 @@ work_return_code_t pfb_channelizer_cpu<T>::work(work_io& wio)
     auto ninput_items = wio.inputs()[0].n_items;
 
     if ((size_t)ninput_items < d_history * d_nchans) { // if we can produce 1 output item
-        return work_return_code_t::WORK_INSUFFICIENT_INPUT_ITEMS;
+        return work_return_t::INSUFFICIENT_INPUT_ITEMS;
     }
 
     if (d_updated) {
         d_updated = false;
-        return work_return_code_t::WORK_OK; // history requirements may have changed.
+        return work_return_t::OK; // history requirements may have changed.
     }
 
     // includes history
@@ -173,7 +173,7 @@ work_return_code_t pfb_channelizer_cpu<T>::work(work_io& wio)
     wio.consume_each(toconsume * d_nchans);
     // this->produce_each(noutput_items - (d_history / d_nchans - 1), work_output);
     wio.produce_each(noutput_items);
-    return work_return_code_t::WORK_OK;
+    return work_return_t::OK;
 }
 
 } /* namespace filter */

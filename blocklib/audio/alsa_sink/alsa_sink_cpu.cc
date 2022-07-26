@@ -269,7 +269,7 @@ bool alsa_sink_cpu::start()
     return true;
 }
 
-work_return_code_t alsa_sink_cpu::work(work_io& wio)
+work_return_t alsa_sink_cpu::work(work_io& wio)
 
 {
     // assert((noutput_items % d_period_size) == 0);
@@ -282,7 +282,7 @@ work_return_code_t alsa_sink_cpu::work(work_io& wio)
 /*
  * Work function that deals with float to S16 conversion
  */
-work_return_code_t alsa_sink_cpu::work_s16(work_io& wio)
+work_return_t alsa_sink_cpu::work_s16(work_io& wio)
 {
     typedef int16_t sample_t; // the type of samples we're creating
     static const float scale_factor = std::pow(2.0f, 16 - 1) - 1;
@@ -315,18 +315,18 @@ work_return_code_t alsa_sink_cpu::work_s16(work_io& wio)
             in[chan] += d_period_size;
 
         if (!write_buffer(buf, d_period_size, sizeof_frame))
-            return work_return_code_t::WORK_DONE; // No fixing this problem.  Say
-                                                  // we're done.
+            return work_return_t::DONE; // No fixing this problem.  Say
+                                        // we're done.
     }
 
     wio.consume_each(n);
-    return work_return_code_t::WORK_OK;
+    return work_return_t::OK;
 }
 
 /*
  * Work function that deals with float to S32 conversion
  */
-work_return_code_t alsa_sink_cpu::work_s32(work_io& wio)
+work_return_t alsa_sink_cpu::work_s32(work_io& wio)
 {
     typedef int32_t sample_t; // the type of samples we're creating
     static const float scale_factor = std::pow(2.0f, 32 - 1) - 1;
@@ -359,19 +359,19 @@ work_return_code_t alsa_sink_cpu::work_s32(work_io& wio)
             in[chan] += d_period_size;
 
         if (!write_buffer(buf, d_period_size, sizeof_frame))
-            return work_return_code_t::WORK_DONE; // No fixing this problem.  Say
-                                                  // we're done.
+            return work_return_t::DONE; // No fixing this problem.  Say
+                                        // we're done.
     }
 
     wio.consume_each(n);
-    return work_return_code_t::WORK_OK;
+    return work_return_t::OK;
 }
 
 /*
  * Work function that deals with float to S16 conversion and
  * mono to stereo kludge.
  */
-work_return_code_t alsa_sink_cpu::work_s16_1x2(work_io& wio)
+work_return_t alsa_sink_cpu::work_s16_1x2(work_io& wio)
 {
     typedef int16_t sample_t; // the type of samples we're creating
     static const float scale_factor = std::pow(2.0f, 16 - 1) - 1;
@@ -404,19 +404,19 @@ work_return_code_t alsa_sink_cpu::work_s16_1x2(work_io& wio)
         in[0] += d_period_size;
 
         if (!write_buffer(buf, d_period_size, sizeof_frame))
-            return work_return_code_t::WORK_DONE; // No fixing this problem.  Say
-                                                  // we're done.
+            return work_return_t::DONE; // No fixing this problem.  Say
+                                        // we're done.
     }
 
     wio.consume_each(n);
-    return work_return_code_t::WORK_OK;
+    return work_return_t::OK;
 }
 
 /*
  * Work function that deals with float to S32 conversion and
  * mono to stereo kludge.
  */
-work_return_code_t alsa_sink_cpu::work_s32_1x2(work_io& wio)
+work_return_t alsa_sink_cpu::work_s32_1x2(work_io& wio)
 {
     typedef int32_t sample_t; // the type of samples we're creating
     static const float scale_factor = std::pow(2.0f, 32 - 1) - 1;
@@ -448,12 +448,12 @@ work_return_code_t alsa_sink_cpu::work_s32_1x2(work_io& wio)
         in[0] += d_period_size;
 
         if (!write_buffer(buf, d_period_size, sizeof_frame))
-            return work_return_code_t::WORK_DONE; // No fixing this problem.  Say
-                                                  // we're done.
+            return work_return_t::DONE; // No fixing this problem.  Say
+                                        // we're done.
     }
 
     wio.consume_each(n);
-    return work_return_code_t::WORK_OK;
+    return work_return_t::OK;
 }
 
 bool alsa_sink_cpu::write_buffer(const void* vbuffer,

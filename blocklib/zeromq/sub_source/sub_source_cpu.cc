@@ -22,7 +22,7 @@ sub_source_cpu::sub_source_cpu(block_args args)
     d_socket.set(zmq::sockopt::subscribe, args.key);
 }
 
-work_return_code_t sub_source_cpu::work(work_io& wio)
+work_return_t sub_source_cpu::work(work_io& wio)
 {
     auto noutput_items = wio.outputs()[0].n_items;
     bool first = true;
@@ -52,7 +52,7 @@ work_return_code_t sub_source_cpu::work(work_io& wio)
     }
 
     wio.produce_each(done);
-    return work_return_code_t::WORK_OK;
+    return work_return_t::OK;
 }
 
 

@@ -31,29 +31,30 @@ void bind_window(py::module& m)
 
     py::class_<window, std::shared_ptr<window>> window_class(m, "window");
 
-    py::enum_<gr::kernel::fft::window::win_type>(window_class, "win_type")
-        .value("WIN_HAMMING", gr::kernel::fft::window::WIN_HAMMING)                   // 0
-        .value("WIN_HANN", gr::kernel::fft::window::WIN_HANN)                         // 1
-        .value("WIN_HANNING", gr::kernel::fft::window::WIN_HANNING)                   // 1
-        .value("WIN_BLACKMAN", gr::kernel::fft::window::WIN_BLACKMAN)                 // 2
-        .value("WIN_RECTANGULAR", gr::kernel::fft::window::WIN_RECTANGULAR)           // 3
-        .value("WIN_KAISER", gr::kernel::fft::window::WIN_KAISER)                     // 4
-        .value("WIN_BLACKMAN_hARRIS", gr::kernel::fft::window::WIN_BLACKMAN_hARRIS)   // 5
-        .value("WIN_BLACKMAN_HARRIS", gr::kernel::fft::window::WIN_BLACKMAN_HARRIS)   // 5
-        .value("WIN_BARTLETT", gr::kernel::fft::window::WIN_BARTLETT)                 // 6
-        .value("WIN_FLATTOP", gr::kernel::fft::window::WIN_FLATTOP)                   // 7
-        .value("WIN_NUTTALL", gr::kernel::fft::window::WIN_NUTTALL)                   // 8
-        .value("WIN_BLACKMAN_NUTTALL", gr::kernel::fft::window::WIN_BLACKMAN_NUTTALL) // 8
-        .value("WIN_NUTTALL_CFD", gr::kernel::fft::window::WIN_NUTTALL_CFD)           // 9
-        .value("WIN_WELCH", gr::kernel::fft::window::WIN_WELCH)             // 10
-        .value("WIN_PARZEN", gr::kernel::fft::window::WIN_PARZEN)           // 11
-        .value("WIN_EXPONENTIAL", gr::kernel::fft::window::WIN_EXPONENTIAL) // 12
-        .value("WIN_RIEMANN", gr::kernel::fft::window::WIN_RIEMANN)         // 13
-        .value("WIN_GAUSSIAN", gr::kernel::fft::window::WIN_GAUSSIAN)       // 14
-        .value("WIN_TUKEY", gr::kernel::fft::window::WIN_TUKEY)             // 15
+    py::enum_<gr::kernel::fft::window::window_t>(window_class, "window_t")
+        .value("HAMMING", gr::kernel::fft::window::window_t::HAMMING)                 // 0
+        .value("HANN", gr::kernel::fft::window::window_t::HANN)                       // 1
+        .value("HANNING", gr::kernel::fft::window::window_t::HANNING)                 // 1
+        .value("BLACKMAN", gr::kernel::fft::window::window_t::BLACKMAN)               // 2
+        .value("RECTANGULAR", gr::kernel::fft::window::window_t::RECTANGULAR)         // 3
+        .value("KAISER", gr::kernel::fft::window::window_t::KAISER)                   // 4
+        .value("BLACKMAN_hARRIS", gr::kernel::fft::window::window_t::BLACKMAN_hARRIS) // 5
+        .value("BLACKMAN_HARRIS", gr::kernel::fft::window::window_t::BLACKMAN_HARRIS) // 5
+        .value("BARTLETT", gr::kernel::fft::window::window_t::BARTLETT)               // 6
+        .value("FLATTOP", gr::kernel::fft::window::window_t::FLATTOP)                 // 7
+        .value("NUTTALL", gr::kernel::fft::window::window_t::NUTTALL)                 // 8
+        .value("BLACKMAN_NUTTALL",
+               gr::kernel::fft::window::window_t::BLACKMAN_NUTTALL)           // 8
+        .value("NUTTALL_CFD", gr::kernel::fft::window::window_t::NUTTALL_CFD) // 9
+        .value("WELCH", gr::kernel::fft::window::window_t::WELCH)             // 10
+        .value("PARZEN", gr::kernel::fft::window::window_t::PARZEN)           // 11
+        .value("EXPONENTIAL", gr::kernel::fft::window::window_t::EXPONENTIAL) // 12
+        .value("RIEMANN", gr::kernel::fft::window::window_t::RIEMANN)         // 13
+        .value("GAUSSIAN", gr::kernel::fft::window::window_t::GAUSSIAN)       // 14
+        .value("TUKEY", gr::kernel::fft::window::window_t::TUKEY)             // 15
         .export_values();
 
-    py::implicitly_convertible<int, gr::kernel::fft::window::win_type>();
+    py::implicitly_convertible<int, gr::kernel::fft::window::window_t>();
 
     window_class
         .def_static("max_attenuation",

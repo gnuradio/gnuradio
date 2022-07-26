@@ -20,7 +20,7 @@ class annotator_cpu : public annotator
 {
 public:
     annotator_cpu(const block_args& args);
-    work_return_code_t work(work_io&) override;
+    work_return_t work(work_io&) override;
 
     std::vector<tag_t> data() const override { return d_stored_tags; };
 

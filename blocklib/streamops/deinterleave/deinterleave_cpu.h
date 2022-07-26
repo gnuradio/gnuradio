@@ -19,7 +19,7 @@ class deinterleave_cpu : public virtual deinterleave
 {
 public:
     deinterleave_cpu(block_args args);
-    work_return_code_t work(work_io&) override;
+    work_return_t work(work_io&) override;
 
 private:
     size_t d_current_output = 0;

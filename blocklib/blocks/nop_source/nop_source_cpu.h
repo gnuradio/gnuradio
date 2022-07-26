@@ -17,7 +17,7 @@ class nop_source_cpu : public nop_source
 {
 public:
     nop_source_cpu(block_args args);
-    work_return_code_t work(work_io&) override;
+    work_return_t work(work_io&) override;
 
 protected:
     size_t d_nports;

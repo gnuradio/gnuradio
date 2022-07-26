@@ -49,7 +49,7 @@ int main(int argc, char* argv[])
 
     CLI11_PARSE(app, argc, argv);
 
-    if (rt_prio && gr::enable_realtime_scheduling() != RT_OK) {
+    if (rt_prio && gr::enable_realtime_scheduling() != rt_status_t::OK) {
         std::cout << "Error: failed to enable real-time scheduling." << std::endl;
     }
 

@@ -26,7 +26,7 @@ copy_cuda::copy_cuda(block_args args) : INHERITED_CONSTRUCTORS
     cudaStreamCreate(&d_stream);
 }
 
-work_return_code_t copy_cuda::work(work_io& wio)
+work_return_t copy_cuda::work(work_io& wio)
 
 {
     auto in = wio.inputs()[0].items<uint8_t>();
@@ -41,7 +41,7 @@ work_return_code_t copy_cuda::work(work_io& wio)
 
     // Tell runtime system how many output items we produced.
     wio.produce_each(noutput_items);
-    return work_return_code_t::WORK_OK;
+    return work_return_t::OK;
 }
 } // namespace streamops
 } // namespace gr

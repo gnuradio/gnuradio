@@ -20,7 +20,7 @@ class interleaved_short_to_complex_cpu : public interleaved_short_to_complex
 public:
     interleaved_short_to_complex_cpu(const block_args& args);
 
-    work_return_code_t work(work_io&) override;
+    work_return_t work(work_io&) override;
 
 
     void set_swap(bool swap);

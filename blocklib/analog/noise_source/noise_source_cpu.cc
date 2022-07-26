@@ -32,7 +32,7 @@ noise_source_cpu<gr_complex>::noise_source_cpu(
 }
 
 template <class T>
-work_return_code_t noise_source_cpu<T>::work(work_io& wio)
+work_return_t noise_source_cpu<T>::work(work_io& wio)
 
 {
     auto out = wio.outputs()[0].items<T>();
@@ -42,25 +42,25 @@ work_return_code_t noise_source_cpu<T>::work(work_io& wio)
     auto ampl = pmtf::get_as<float>(*this->param_amplitude);
 
     switch (static_cast<noise_t>(type)) {
-    case noise_t::uniform:
+    case noise_t::UNIFORM:
         for (size_t i = 0; i < noutput_items; i++) {
             out[i] = static_cast<T>(ampl * ((d_rng.ran1() * 2.0) - 1.0));
         }
         break;
 
-    case noise_t::gaussian:
+    case noise_t::GAUSSIAN:
         for (size_t i = 0; i < noutput_items; i++) {
             out[i] = static_cast<T>(ampl * d_rng.gasdev());
         }
         break;
 
-    case noise_t::laplacian:
+    case noise_t::LAPLACIAN:
         for (size_t i = 0; i < noutput_items; i++) {
             out[i] = static_cast<T>(ampl * d_rng.laplacian());
         }
         break;
 
-    case noise_t::impulse: // FIXME changeable impulse settings
+    case noise_t::IMPULSE: // FIXME changeable impulse settings
         for (size_t i = 0; i < noutput_items; i++) {
             out[i] = static_cast<T>(ampl * d_rng.impulse(9));
         }
@@ -70,7 +70,7 @@ work_return_code_t noise_source_cpu<T>::work(work_io& wio)
     }
 
     wio.produce_each(noutput_items);
-    return work_return_code_t::WORK_OK;
+    return work_return_t::OK;
 }
 
 } /* namespace analog */

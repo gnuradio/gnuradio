@@ -24,7 +24,7 @@ class sig_source_cpu : public sig_source<T>
 public:
     sig_source_cpu(const typename sig_source<T>::block_args& args);
 
-    work_return_code_t work(work_io&) override;
+    work_return_t work(work_io&) override;
 
 
     void on_parameter_change(param_action_sptr action) override

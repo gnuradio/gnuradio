@@ -20,14 +20,14 @@ public:
         
     }
 
-    work_return_code_t
+    work_return_t
     work(work_io& wio) override
     {
         py::gil_scoped_acquire acquire;
 
         py::object ret = this->pb_detail()->handle().attr("work")(&wio);
 
-        return ret.cast<work_return_code_t>();
+        return ret.cast<work_return_t>();
     }
 
     bool start(void)

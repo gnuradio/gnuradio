@@ -24,7 +24,7 @@ req_source_cpu::req_source_cpu(block_args args)
 {
 }
 
-work_return_code_t req_source_cpu::work(work_io& wio)
+work_return_t req_source_cpu::work(work_io& wio)
 {
 
     auto noutput_items = wio.outputs()[0].n_items;
@@ -70,7 +70,7 @@ work_return_code_t req_source_cpu::work(work_io& wio)
     }
 
     wio.outputs()[0].n_produced = done;
-    return work_return_code_t::WORK_OK;
+    return work_return_t::OK;
 }
 
 

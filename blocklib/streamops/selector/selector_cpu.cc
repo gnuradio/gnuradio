@@ -23,7 +23,7 @@ selector_cpu::selector_cpu(block_args args)
     set_tag_propagation_policy(gr::tag_propagation_policy_t::TPP_CUSTOM);
 }
 
-work_return_code_t selector_cpu::work(work_io& wio)
+work_return_t selector_cpu::work(work_io& wio)
 
 {
     auto input_index = pmtf::get_as<size_t>(*this->param_input_index);
@@ -55,7 +55,7 @@ work_return_code_t selector_cpu::work(work_io& wio)
     }
 
     wio.consume_each(noutput_items);
-    return work_return_code_t::WORK_OK;
+    return work_return_t::OK;
 }
 
 

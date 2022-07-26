@@ -86,22 +86,22 @@ public:
      *
      * @param work_input Vector of block_work_input structs
      * @param work_output Vector of block_work_output structs
-     * @return work_return_code_t
+     * @return work_return_t
      */
-    virtual work_return_code_t work(work_io& wio)
+    virtual work_return_t work(work_io& wio)
     {
         throw std::runtime_error("work function has been called but not implemented");
     }
-    using work_t = std::function<work_return_code_t(work_io&)>;
+    using work_t = std::function<work_return_t(work_io&)>;
     /**
      * @brief Wrapper for work to perform special checks and take care of special
      * cases for certain types of blocks, e.g. sync_block, decim_block
      *
      * @param work_input Vector of block_work_input structs
      * @param work_output Vector of block_work_output structs
-     * @return work_return_code_t
+     * @return work_return_t
      */
-    virtual work_return_code_t do_work(work_io& wio) { return work(wio); };
+    virtual work_return_t do_work(work_io& wio) { return work(wio); };
 
     void set_parent_intf(neighbor_interface_sptr sched) { p_scheduler = sched; }
     parameter_config d_parameters;

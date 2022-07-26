@@ -25,7 +25,7 @@ class moving_average_cuda : public moving_average<T>
 public:
     moving_average_cuda(const typename moving_average<T>::block_args& args);
 
-    work_return_code_t work(work_io&) override;
+    work_return_t work(work_io&) override;
 
     int group_delay();
 

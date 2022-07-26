@@ -18,7 +18,7 @@ namespace gr {
 namespace kernel {
 namespace filter {
 
-std::vector<float> firdes::window(fft::window::win_type type, int ntaps, double param)
+std::vector<float> firdes::window(fft::window::window_t type, int ntaps, double param)
 {
     return fft::window::build(type, ntaps, param);
 }
@@ -32,7 +32,7 @@ vector<float> firdes::low_pass_2(double gain,
                                  double cutoff_freq,   // Hz BEGINNING of transition band
                                  double transition_width, // Hz width of transition band
                                  double attenuation_dB,   // attenuation dB
-                                 fft::window::win_type window_type,
+                                 fft::window::window_t window_type,
                                  double param) // used with Kaiser, Exp., Gaussian, Tukey
 {
     sanity_check_1f(sampling_freq, cutoff_freq, transition_width);
@@ -75,7 +75,7 @@ vector<float> firdes::low_pass(double gain,
                                double sampling_freq,
                                double cutoff_freq,      // Hz center of transition band
                                double transition_width, // Hz width of transition band
-                               fft::window::win_type window_type,
+                               fft::window::window_t window_type,
                                double param) // used with Kaiser, Exp., Gaussian, Tukey
 {
     sanity_check_1f(sampling_freq, cutoff_freq, transition_width);
@@ -124,7 +124,7 @@ vector<float> firdes::high_pass_2(double gain,
                                   double cutoff_freq,      // Hz center of transition band
                                   double transition_width, // Hz width of transition band
                                   double attenuation_dB,   // attenuation dB
-                                  fft::window::win_type window_type,
+                                  fft::window::window_t window_type,
                                   double param) // used with Kaiser, Exp., Gaussian, Tukey
 {
     sanity_check_1f(sampling_freq, cutoff_freq, transition_width);
@@ -168,7 +168,7 @@ vector<float> firdes::high_pass(double gain,
                                 double sampling_freq,
                                 double cutoff_freq,      // Hz center of transition band
                                 double transition_width, // Hz width of transition band
-                                fft::window::win_type window_type,
+                                fft::window::window_t window_type,
                                 double param) // used with Kaiser, Exp., Gaussian, Tukey
 {
     sanity_check_1f(sampling_freq, cutoff_freq, transition_width);
@@ -217,7 +217,7 @@ vector<float> firdes::band_pass_2(double gain,
                                   double high_cutoff_freq, // Hz center of transition band
                                   double transition_width, // Hz width of transition band
                                   double attenuation_dB,   // attenuation dB
-                                  fft::window::win_type window_type,
+                                  fft::window::window_t window_type,
                                   double param) // used with Kaiser, Exp., Gaussian, Tukey
 {
     sanity_check_2f(sampling_freq, low_cutoff_freq, high_cutoff_freq, transition_width);
@@ -260,7 +260,7 @@ vector<float> firdes::band_pass(double gain,
                                 double low_cutoff_freq,  // Hz center of transition band
                                 double high_cutoff_freq, // Hz center of transition band
                                 double transition_width, // Hz width of transition band
-                                fft::window::win_type window_type,
+                                fft::window::window_t window_type,
                                 double param) // used with Kaiser, Exp., Gaussian, Tukey
 {
     sanity_check_2f(sampling_freq, low_cutoff_freq, high_cutoff_freq, transition_width);
@@ -310,7 +310,7 @@ firdes::complex_band_pass_2(double gain,
                             double high_cutoff_freq, // Hz center of transition band
                             double transition_width, // Hz width of transition band
                             double attenuation_dB,   // attenuation dB
-                            fft::window::win_type window_type,
+                            fft::window::window_t window_type,
                             double param) // used with Kaiser, Exp., Gaussian, Tukey
 {
     sanity_check_2f_c(sampling_freq, low_cutoff_freq, high_cutoff_freq, transition_width);
@@ -354,7 +354,7 @@ firdes::complex_band_pass(double gain,
                           double low_cutoff_freq,  // Hz center of transition band
                           double high_cutoff_freq, // Hz center of transition band
                           double transition_width, // Hz width of transition band
-                          fft::window::win_type window_type,
+                          fft::window::window_t window_type,
                           double param) // used with Kaiser, Exp., Gaussian, Tukey
 {
     sanity_check_2f_c(sampling_freq, low_cutoff_freq, high_cutoff_freq, transition_width);
@@ -403,7 +403,7 @@ firdes::complex_band_reject_2(double gain,
                               double high_cutoff_freq, // Hz center of transition band
                               double transition_width, // Hz width of transition band
                               double attenuation_dB,   // attenuation dB
-                              fft::window::win_type window_type,
+                              fft::window::window_t window_type,
                               double param) // used with Kaiser, Exp., Gaussian, Tukey
 {
     sanity_check_2f_c(sampling_freq, low_cutoff_freq, high_cutoff_freq, transition_width);
@@ -448,7 +448,7 @@ firdes::complex_band_reject(double gain,
                             double low_cutoff_freq,  // Hz center of transition band
                             double high_cutoff_freq, // Hz center of transition band
                             double transition_width, // Hz width of transition band
-                            fft::window::win_type window_type,
+                            fft::window::window_t window_type,
                             double param) // used with Kaiser, Exp., Gaussian, Tukey
 {
     sanity_check_2f_c(sampling_freq, low_cutoff_freq, high_cutoff_freq, transition_width);
@@ -497,7 +497,7 @@ firdes::band_reject_2(double gain,
                       double high_cutoff_freq, // Hz center of transition band
                       double transition_width, // Hz width of transition band
                       double attenuation_dB,   // attenuation dB
-                      fft::window::win_type window_type,
+                      fft::window::window_t window_type,
                       double param) // used with Kaiser, Exp., Gaussian, Tukey
 {
     sanity_check_2f(sampling_freq, low_cutoff_freq, high_cutoff_freq, transition_width);
@@ -541,7 +541,7 @@ vector<float> firdes::band_reject(double gain,
                                   double low_cutoff_freq,  // Hz center of transition band
                                   double high_cutoff_freq, // Hz center of transition band
                                   double transition_width, // Hz width of transition band
-                                  fft::window::win_type window_type,
+                                  fft::window::window_t window_type,
                                   double param) // used with Kaiser, Exp., Gaussian, Tukey
 {
     sanity_check_2f(sampling_freq, low_cutoff_freq, high_cutoff_freq, transition_width);
@@ -585,7 +585,7 @@ vector<float> firdes::band_reject(double gain,
 //
 
 vector<float>
-firdes::hilbert(unsigned int ntaps, fft::window::win_type windowtype, double param)
+firdes::hilbert(unsigned int ntaps, fft::window::window_t windowtype, double param)
 {
     if (!(ntaps & 1))
         throw std::out_of_range("Hilbert:  Must have odd number of taps");
@@ -705,7 +705,7 @@ int firdes::compute_ntaps_windes(
 
 int firdes::compute_ntaps(double sampling_freq,
                           double transition_width,
-                          fft::window::win_type window_type,
+                          fft::window::window_t window_type,
                           double param)
 {
     double a = fft::window::max_attenuation(window_type, param);

@@ -39,7 +39,7 @@ public:
         d_blocks = blocks;
     }
 
-    std::map<nodeid_t, executor_iteration_status>
+    std::map<nodeid_t, executor_iteration_status_t>
     run_one_iteration(std::vector<block_sptr> blocks = std::vector<block_sptr>());
 };
 

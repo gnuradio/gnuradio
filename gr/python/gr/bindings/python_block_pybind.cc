@@ -33,11 +33,4 @@ void bind_python_block(py::module& m)
                std::shared_ptr<python_sync_block>>(m, "python_sync_block")
 
         .def(py::init(&python_sync_block::make), py::arg("p"), py::arg("name"));
-
-    py::enum_<gr::py_block_t>(m, "py_block_t")
-        .value("PY_BLOCK_GENERAL", gr::PY_BLOCK_GENERAL)
-        .value("PY_BLOCK_SYNC", gr::PY_BLOCK_SYNC)
-        .value("PY_BLOCK_DECIM", gr::PY_BLOCK_DECIM)
-        .value("PY_BLOCK_INTERP", gr::PY_BLOCK_INTERP)
-        .export_values();
 }

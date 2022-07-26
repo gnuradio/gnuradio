@@ -23,7 +23,7 @@ class multiply_const_cuda : public multiply_const<T>
 public:
     multiply_const_cuda(const typename multiply_const<T>::block_args& args);
 
-    work_return_code_t work(work_io&) override;
+    work_return_t work(work_io&) override;
 
 protected:
     T d_k;

@@ -33,11 +33,11 @@ static inline int rt_priority_default() { return 1; }
 
 struct rt_sched_param {
     int priority;
-    rt_sched_policy policy;
+    rt_sched_policy_t policy;
 
-    rt_sched_param() : priority(rt_priority_default()), policy(RT_SCHED_RR) {}
+    rt_sched_param() : priority(rt_priority_default()), policy(rt_sched_policy_t::RR) {}
 
-    rt_sched_param(int priority_, rt_sched_policy policy_ = RT_SCHED_RR)
+    rt_sched_param(int priority_, rt_sched_policy_t policy_ = rt_sched_policy_t::RR)
     {
         if (priority_ < rt_priority_min() || priority_ > rt_priority_max())
             throw std::invalid_argument("rt_sched_param: priority out of range");

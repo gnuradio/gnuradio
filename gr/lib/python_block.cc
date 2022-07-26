@@ -29,13 +29,13 @@ python_block::python_block(const py::handle& p, const std::string& name) : block
     d_py_handle = p;
 }
 
-work_return_code_t python_block::work(work_io& wio)
+work_return_t python_block::work(work_io& wio)
 {
     py::gil_scoped_acquire acquire;
 
     py::object ret = d_py_handle.attr("handle_work")(&wio);
 
-    return ret.cast<work_return_code_t>();
+    return ret.cast<work_return_t>();
 }
 
 bool python_block::start(void)
@@ -70,14 +70,14 @@ python_sync_block::python_sync_block(const py::handle& p, const std::string& nam
 }
 
 
-work_return_code_t python_sync_block::work(work_io& wio)
+work_return_t python_sync_block::work(work_io& wio)
 {
     py::gil_scoped_acquire acquire;
 
     auto ww = d_py_handle.attr("work");
     py::object ret = ww(&wio);
 
-    return ret.cast<work_return_code_t>();
+    return ret.cast<work_return_t>();
 }
 
 bool python_sync_block::start(void)

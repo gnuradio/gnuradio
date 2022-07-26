@@ -22,7 +22,7 @@ class fft_cpu : public fft<T, forward>
 {
 public:
     fft_cpu(const typename fft<T, forward>::block_args& args);
-    work_return_code_t work(work_io&) override;
+    work_return_t work(work_io&) override;
 
     void set_nthreads(int n);
     int nthreads() const;

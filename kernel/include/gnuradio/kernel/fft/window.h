@@ -25,35 +25,33 @@ public:
     // illegal value for any window that requires a parameter
     static constexpr double INVALID_WIN_PARAM = -1;
 
-    enum win_type {
-        WIN_NONE = -1,       //!< don't use a window
-        WIN_HAMMING = 0,     //!< Hamming window; max attenuation 53 dB
-        WIN_HANN = 1,        //!< Hann window; max attenuation 44 dB
-        WIN_HANNING = 1,     //!< alias to WIN_HANN
-        WIN_BLACKMAN = 2,    //!< Blackman window; max attenuation 74 dB
-        WIN_RECTANGULAR = 3, //!< Basic rectangular window; max attenuation 21 dB
-        WIN_KAISER = 4, //!< Kaiser window; max attenuation see window::max_attenuation
-        WIN_BLACKMAN_hARRIS = 5, //!< Blackman-harris window; max attenuation 92 dB
-        WIN_BLACKMAN_HARRIS =
-            5,            //!< alias to WIN_BLACKMAN_hARRIS for capitalization consistency
-        WIN_BARTLETT = 6, //!< Barlett (triangular) window; max attenuation 26 dB
-        WIN_FLATTOP = 7,  //!< flat top window; useful in FFTs; max attenuation 93 dB
-        WIN_NUTTALL = 8,  //!< Nuttall window; max attenuation 114 dB
-        WIN_BLACKMAN_NUTTALL = 8, //!< Nuttall window; max attenuation 114 dB
-        WIN_NUTTALL_CFD =
+    enum class window_t {
+        NONE = -1,       //!< don't use a window
+        HAMMING = 0,     //!< Hamming window; max attenuation 53 dB
+        HANN = 1,        //!< Hann window; max attenuation 44 dB
+        HANNING = 1,     //!< alias to HANN
+        BLACKMAN = 2,    //!< Blackman window; max attenuation 74 dB
+        RECTANGULAR = 3, //!< Basic rectangular window; max attenuation 21 dB
+        KAISER = 4,      //!< Kaiser window; max attenuation see window::max_attenuation
+        BLACKMAN_hARRIS = 5,  //!< Blackman-harris window; max attenuation 92 dB
+        BLACKMAN_HARRIS = 5,  //!< alias to BLACKMAN_hARRIS for capitalization consistency
+        BARTLETT = 6,         //!< Barlett (triangular) window; max attenuation 26 dB
+        FLATTOP = 7,          //!< flat top window; useful in FFTs; max attenuation 93 dB
+        NUTTALL = 8,          //!< Nuttall window; max attenuation 114 dB
+        BLACKMAN_NUTTALL = 8, //!< Nuttall window; max attenuation 114 dB
+        NUTTALL_CFD =
             9, //!< Nuttall continuous-first-derivative window; max attenuation 112 dB
-        WIN_WELCH = 10,  //!< Welch window; max attenuation 31 dB
-        WIN_PARZEN = 11, //!< Parzen window; max attenuation 56 dB
-        WIN_EXPONENTIAL =
-            12, //!< Exponential window; max attenuation see window::max_attenuation
-        WIN_RIEMANN = 13, //!< Riemann window; max attenuation 39 dB
-        WIN_GAUSSIAN =
-            14,         //!< Gaussian window; max attenuation see window::max_attenuation
-        WIN_TUKEY = 15, //!< Tukey window; max attenuation see window::max_attenuation
+        WELCH = 10,  //!< Welch window; max attenuation 31 dB
+        PARZEN = 11, //!< Parzen window; max attenuation 56 dB
+        EXPONENTIAL =
+            12,       //!< Exponential window; max attenuation see window::max_attenuation
+        RIEMANN = 13, //!< Riemann window; max attenuation 39 dB
+        GAUSSIAN = 14, //!< Gaussian window; max attenuation see window::max_attenuation
+        TUKEY = 15,    //!< Tukey window; max attenuation see window::max_attenuation
     };
 
     /*!
-     * \brief Given a window::win_type, this tells you the maximum
+     * \brief Given a window::window_t, this tells you the maximum
      * attenuation (really the maximum approximation error) you can expect.
      *
      * \details
@@ -79,11 +77,11 @@ public:
      * Tukey windows provide attenuation that varies non-linearily between Rectangular (21
      * dB) and Hann (44 dB) windows.
      *
-     * \param type The window::win_type enumeration of the window type.
+     * \param type The window::window_t enumeration of the window type.
      * \param param Parameter value used for Kaiser (beta), Exponential (d), Gaussian
      * (sigma) and Tukey (alpha) window creation.
      */
-    static double max_attenuation(win_type type, double param = INVALID_WIN_PARAM);
+    static double max_attenuation(window_t type, double param = INVALID_WIN_PARAM);
 
     /*!
      * \brief Helper function to build cosine-based windows. 3-coefficient version.
@@ -352,16 +350,16 @@ public:
     static std::vector<float> gaussian(int ntaps, float sigma);
 
     /*!
-     * \brief Build a window using gr::fft::win_type to index the
+     * \brief Build a window using gr::fft::window_t to index the
      * type of window desired.
      *
-     * \param type a gr::fft::win_type index for the type of window.
+     * \param type a gr::fft::window_t index for the type of window.
      * \param ntaps Number of coefficients in the window.
      * \param param Parameter value used for Kaiser (beta), Exponential (d), Gaussian
      * (sigma) and Tukey (alpha) window creation. \param normalize If true, return a
      * window with unit power
      */
-    static std::vector<float> build(win_type type,
+    static std::vector<float> build(window_t type,
                                     int ntaps,
                                     double param = INVALID_WIN_PARAM,
                                     const bool normalize = false);

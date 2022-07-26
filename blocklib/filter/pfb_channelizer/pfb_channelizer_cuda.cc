@@ -50,7 +50,7 @@ pfb_channelizer_cuda<T>::pfb_channelizer_cuda(
 }
 
 template <class T>
-work_return_code_t pfb_channelizer_cuda<T>::work(work_io& wio)
+work_return_t pfb_channelizer_cuda<T>::work(work_io& wio)
 {
     // std::scoped_lock guard(d_mutex);
 
@@ -58,7 +58,7 @@ work_return_code_t pfb_channelizer_cuda<T>::work(work_io& wio)
     auto ninput_items = wio.inputs()[0].n_items;
 
     if ((size_t)ninput_items < noutput_items * d_nchans + d_overlap) {
-        return work_return_code_t::WORK_INSUFFICIENT_INPUT_ITEMS;
+        return work_return_t::INSUFFICIENT_INPUT_ITEMS;
     }
 
     d_in_items = wio.all_input_ptrs();
@@ -74,7 +74,7 @@ work_return_code_t pfb_channelizer_cuda<T>::work(work_io& wio)
 
     wio.consume_each(noutput_items * d_nchans);
     wio.produce_each(noutput_items);
-    return work_return_code_t::WORK_OK;
+    return work_return_t::OK;
 }
 
 } /* namespace filter */

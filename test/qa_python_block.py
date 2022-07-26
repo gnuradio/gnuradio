@@ -33,7 +33,7 @@ class add_2_f32_1_f32(gr.sync_block):
 
         outbuf1[:] = inbuf1 + inbuf2
 
-        return gr.work_return_t.WORK_OK
+        return gr.work_return_t.OK
 
 class add_2_f32_1_f32_named(gr.sync_block):
     def __init__(self, shape=[1]):
@@ -55,7 +55,7 @@ class add_2_f32_1_f32_named(gr.sync_block):
         outbuf1[:] = inbuf1 + inbuf2
 
         out.produce(out.n_items)
-        return gr.work_return_t.WORK_OK
+        return gr.work_return_t.OK
 
 # This test extends the existing add_ff block by adding a custom python implementation
 class add_ff_numpy(math.add_ff):
@@ -74,7 +74,7 @@ class add_ff_numpy(math.add_ff):
 
         outbuf1[:] = inbuf1 + inbuf2
 
-        return gr.work_return_t.WORK_OK
+        return gr.work_return_t.OK
 
 class test_block_gateway(gr_unittest.TestCase):
 

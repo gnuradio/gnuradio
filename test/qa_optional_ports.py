@@ -29,7 +29,7 @@ class add_optional(gr.sync_block):
         if (len(wio.inputs()) > 2):
             outbuf1[:] = outbuf1[:] + inbuf3
 
-        return gr.work_return_t.WORK_OK
+        return gr.work_return_t.OK
 
 class test_optional_ports(gr_unittest.TestCase):
 

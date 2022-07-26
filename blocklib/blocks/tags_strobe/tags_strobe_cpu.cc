@@ -22,7 +22,7 @@ tags_strobe_cpu::tags_strobe_cpu(block_args args)
 {
 }
 
-work_return_code_t tags_strobe_cpu::work(work_io& wio)
+work_return_t tags_strobe_cpu::work(work_io& wio)
 {
     auto optr = wio.outputs()[0].raw_items();
     auto itemsize = wio.outputs()[0].buf().item_size();
@@ -38,7 +38,7 @@ work_return_code_t tags_strobe_cpu::work(work_io& wio)
     }
 
     wio.produce_each(noutput_items);
-    return work_return_code_t::WORK_OK;
+    return work_return_t::OK;
 }
 
 

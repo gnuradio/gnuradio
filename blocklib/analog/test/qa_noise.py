@@ -22,11 +22,11 @@ class test_noise_source(gr_unittest.TestCase):
 
     def test_001(self):
         # Just confirm that we can instantiate a noise source
-        op = analog.noise_source_f(analog.noise_t.gaussian, 10, 10)
+        op = analog.noise_source_f(analog.noise_t.GAUSSIAN, 10, 10)
 
     def test_002(self):
         # Test get methods
-        set_type = analog.noise_t.gaussian
+        set_type = analog.noise_t.GAUSSIAN
         set_ampl = 10
         op = analog.noise_source_f(set_type, set_ampl, 10)
         get_type = op.type()

@@ -252,7 +252,7 @@ void file_source_cpu::do_update()
 
 void file_source_cpu::set_begin_tag(const std::string& val) { d_add_begin_tag = val; }
 
-work_return_code_t file_source_cpu::work(work_io& wio)
+work_return_t file_source_cpu::work(work_io& wio)
 {
     auto out = wio.outputs()[0].items<uint8_t>();
     auto noutput_items = wio.outputs()[0].n_items;
@@ -272,7 +272,7 @@ work_return_code_t file_source_cpu::work(work_io& wio)
     // No items remaining - all done
     if (d_items_remaining == 0) {
         wio.outputs()[0].n_produced = 0;
-        return work_return_code_t::WORK_DONE;
+        return work_return_t::DONE;
     }
 
     while (size) {
@@ -327,7 +327,7 @@ work_return_code_t file_source_cpu::work(work_io& wio)
     }
 
     wio.produce_each(noutput_items - size);
-    return work_return_code_t::WORK_OK;
+    return work_return_t::OK;
 }
 
 

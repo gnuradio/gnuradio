@@ -23,7 +23,7 @@ class iir_filter_cpu : public iir_filter<T_IN, T_OUT, TAP_T>
 public:
     iir_filter_cpu(const typename iir_filter<T_IN, T_OUT, TAP_T>::block_args& args);
 
-    work_return_code_t work(work_io&) override;
+    work_return_t work(work_io&) override;
 
 private:
     bool d_updated;

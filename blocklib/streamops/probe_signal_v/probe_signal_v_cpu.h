@@ -21,7 +21,7 @@ class probe_signal_v_cpu : public probe_signal_v<T>
 public:
     probe_signal_v_cpu(const typename probe_signal_v<T>::block_args& args);
 
-    work_return_code_t work(work_io&) override;
+    work_return_t work(work_io&) override;
 
 private:
     // Just work with the private member variable, and pass it out as pmt when queried
