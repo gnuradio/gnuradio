@@ -12,7 +12,9 @@
 @PY_QT_IMPORT@
 from .util import check_set_qss
 import gnuradio.eng_notation as eng_notation
+from gnuradio import gr
 import re
+import pmt
 
 class Range(object):
     def __init__(self, minv, maxv, step, default, min_length):
@@ -101,7 +103,7 @@ class RangeWidget(QtWidgets.QWidget):
         # Top-block function to call when any value changes
         # Some widgets call this directly when their value changes.
         # Others have intermediate functions to map the value into the right range.
-        self.notifyChanged = slot
+        self.__slot = slot
 
         layout = Qt.QHBoxLayout()
         layout.setContentsMargins(0, 0, 0, 0)
@@ -132,6 +134,10 @@ class RangeWidget(QtWidgets.QWidget):
 
         layout.addWidget(self.d_widget)
         self.setLayout(layout)
+
+    def notifyChanged(self, value):
+        self.message_port_pub(self.outputportname_pmt, pmt.cons(self.outputmsgname_pmt, self.value_to_pmt(value)))
+        self.__slot(value)
 
     class Dial(QtWidgets.QDial):
         """ Creates the range using a dial """
@@ -390,6 +396,23 @@ class RangeWidget(QtWidgets.QWidget):
                 self.slider.setValue(new)
                 self.first = False
 
+class GrRangeWidget(gr.sync_block, RangeWidget):
+    def __init__(self, ranges, varCallback, label, style, rangeType=float,
+            orientation=QtCore.Qt.Horizontal, outputmsgname='value'):
+        RangeWidget.__init__(self, ranges, varCallback, label, style, rangeType, orientation)
+        gr.sync_block.__init__(self, name='GrRangeWidget', in_sig=None, out_sig=None)
+        self.outputportname_pmt = pmt.intern('out')
+        self.outputmsgname_pmt = pmt.intern(outputmsgname)
+        self.message_port_register_out(self.outputportname_pmt)
+        self.value_to_pmt = (pmt.from_float if self.rangeType is float else pmt.from_long)
+        self.varCallback = varCallback
+
+    def valueChanged(self, new_value):
+        if self.varCallback is not None:
+            self.varCallback(new_value)
+        self.message_port_pub(self.outputportname_pmt,
+                pmt.cons(self.outputmsgname_pmt, self.value_to_pmt(value)))
+
 
 if __name__ == "__main__":
     from PyQt5 import Qt
@@ -399,7 +422,7 @@ if __name__ == "__main__":
         print("Value updated - " + str(frequency))
 
     app = Qt.QApplication(sys.argv)
-    widget = RangeWidget(Range(0, 100, 10, 1, 100),
+    widget = GrRangeWidget(Range(0, 100, 10, 1, 100),
                          valueChanged, "Test", "counter_slider", int)
 
     widget.show()
