@@ -31,7 +31,7 @@ except ImportError:
     gr.log.warn("Matplotlib is a required dependency to use DistanceRadar and AzElPlot."
                 "  Please install matplotlib to use these blocks (https://matplotlib.org/)")
 
-from .range import Range, RangeWidget
+from .range import Range, RangeWidget, GrRangeWidget
 from . import util
 
 from .compass import GrCompass
