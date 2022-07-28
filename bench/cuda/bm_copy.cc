@@ -52,7 +52,7 @@ int main(int argc, char* argv[])
 
     CLI11_PARSE(app, argc, argv);
 
-    if (rt_prio && gr::enable_realtime_scheduling() != RT_OK) {
+    if (rt_prio && gr::enable_realtime_scheduling() != rt_status_t::OK) {
         std::cout << "Error: failed to enable real-time scheduling." << std::endl;
     }
 
@@ -142,7 +142,7 @@ int main(int argc, char* argv[])
     // // rt->add_scheduler(sched);
     // rt->initialize(fg);
 
-    if (rt_prio && gr::enable_realtime_scheduling() != gr::rt_status_t::RT_OK)
+    if (rt_prio && gr::enable_realtime_scheduling() != gr::rt_status_t::OK)
         std::cout << "Unable to enable realtime scheduling " << std::endl;
 
     auto t1 = std::chrono::steady_clock::now();
