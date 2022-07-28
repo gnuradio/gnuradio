@@ -9,7 +9,7 @@
 # Setup dependencies
 ########################################################################
 include(GrBoost)  # needed for boost::circular_buffer
-find_package(Asio)
+find_package(Asio ${GR_ASIO_MIN_VERSION} REQUIRED)
 
 ########################################################################
 # Register component
