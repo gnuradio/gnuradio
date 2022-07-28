@@ -52,7 +52,7 @@ parameters:
     label: {{param['label']}}
     dtype: {{param['dtype']|grc_type(ref=True,vec=param['container']=='vector')}}
     {%if 'is_enum' in param and param['is_enum'] %}
-    options: [{%for k1,enum_type in module_enums.items() %}{% if param['dtype'].endswith(k1) %}{% for val in enum_type['enumerators']%} {{module}}.{{k1}}.{{val['id']}}{{',' if not loop.last}}{%endfor%}{%endif%}{%endfor%}]
+    options: [{%for k1,enum_type in module_enums.items() %}{% if param['dtype'].endswith(k1) %}{% for val in enum_type['enumerators']%} {{module}}.{{k1}}.{{val['id']|upper}}{{',' if not loop.last}}{%endfor%}{%endif%}{%endfor%}]
     option_labels: [{%for k1,enum_type in module_enums.items() %}{% if param['dtype'].endswith(k1) %}{% for val in enum_type['enumerators']%}{{val['label'] if 'label' in val else val['id'] | upper}}{{',' if not loop.last}}{%endfor%}{%endif%}{%endfor%}]
     {%endif%}
     {%if 'grc' in param and 'default' in param['grc']%}default: {{param['grc']['default']}}{%elif 'default' in param %}default: {{param['default']}}{%endif%}
