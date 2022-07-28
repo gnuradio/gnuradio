@@ -1,0 +1,31 @@
+module: pdu
+block: pdu_to_stream
+label: pdu_to_stream
+blocktype: sync_block
+
+typekeys:
+    - id: T
+      type: class
+      options:
+          - cf32
+          - rf32
+          - ri32
+          - ri16
+          - ri8
+
+ports:
+    - domain: message
+      id: pdus
+      direction: input
+      optional: true
+
+    - domain: stream
+      id: out
+      direction: output
+      type: typekeys/T
+
+implementations:
+    - id: cpu
+# -   id: cuda
+
+file_format: 1

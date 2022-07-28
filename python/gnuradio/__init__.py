@@ -49,3 +49,4 @@ if path.endswith(path_ending):
     __path__.append(os.path.join(build_path, 'blocklib', 'soapy', 'python'))
     __path__.append(os.path.join(build_path, 'blocklib', 'streamops', 'python'))
     __path__.append(os.path.join(build_path, 'blocklib', 'zeromq', 'python'))
+    __path__.append(os.path.join(build_path, 'blocklib', 'pdu', 'python'))

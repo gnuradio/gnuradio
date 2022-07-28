@@ -62,7 +62,7 @@ if (get_option('enable_testing'))
     TEST_ENV = environment()
     TEST_ENV.prepend('LD_LIBRARY_PATH', 
       join_paths( meson.build_root(),'schedulers','nbt','lib'),
-      join_paths( meson.build_root(),'runtime','lib'),
+      join_paths( meson.build_root(),'gr','lib'),
       join_paths( meson.build_root(),'blocklib','analog','lib'),
       join_paths( meson.build_root(),'blocklib','blocks','lib'),
       join_paths( meson.build_root(),'blocklib','fec','lib'),
@@ -71,6 +71,7 @@ if (get_option('enable_testing'))
       join_paths( meson.build_root(),'blocklib','filter','lib'),
       join_paths( meson.build_root(),'blocklib','math','lib'),
       join_paths( meson.build_root(),'blocklib','streamops','lib'),
+      join_paths( meson.build_root(),'blocklib','pdu','lib'),
     )
     TEST_ENV.prepend('PYTHONPATH', join_paths(meson.build_root(),'python')+':'+join_paths(meson.build_root(), 'subprojects/pmt/python') )
 

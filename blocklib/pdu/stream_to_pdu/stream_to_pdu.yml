@@ -1,0 +1,39 @@
+module: pdu
+block: stream_to_pdu
+label: stream_to_pdu
+blocktype: sync_block
+
+typekeys:
+    - id: T
+      type: class
+      options:
+          - cf32
+          - rf32
+          - ri32
+          - ri16
+          - ri8
+
+parameters:
+    #TODO: make this block handle SOB/EOB/pkt_len tags as well
+    - id: packet_len
+      label: Packet Length
+      dtype: size_t
+      grc:
+          default: 96
+
+ports:
+    - domain: stream
+      id: in
+      direction: input
+      type: typekeys/T
+
+    - domain: message
+      id: pdus
+      direction: output
+      optional: true
+
+implementations:
+    - id: cpu
+# -   id: cuda
+
+file_format: 1
