@@ -17,6 +17,7 @@ type_lookup = {
     'size': ['size_t', 'int', 'int'],
     'string': ['std::string', 'str', 'string'],
     'bool': ['bool', 'bool', 'bool'],
+    'untyped': ['','','untyped']
 }
 
 def is_list(value):
