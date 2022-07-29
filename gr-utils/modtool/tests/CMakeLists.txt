@@ -16,7 +16,7 @@ if(ENABLE_TESTING)
   set(GR_TEST_LIBRARY_DIRS "")
   set(GR_TEST_PYTHON_DIRS
     ${CMAKE_CURRENT_SOURCE_DIR}/../..
-    ${GNURADIO_BINARY_DIR}/gnuradio-runtime/python
+    ${PROJECT_BINARY_DIR}/gnuradio-runtime/python
     )
 
   include(GrTest)

@@ -111,7 +111,7 @@ target_include_directories(gnuradio-digital
 
 #Add Windows DLL resource file if using MSVC
 IF(MSVC)
-    include(${GNURADIO_SOURCE_DIR}/cmake/Modules/GrVersion.cmake)
+    include(${PROJECT_SOURCE_DIR}/cmake/Modules/GrVersion.cmake)
 
     configure_file(
         ${CMAKE_CURRENT_SOURCE_DIR}/gnuradio-digital.rc.in
