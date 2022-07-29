@@ -25,8 +25,11 @@ project(gnuradio CXX C)
 enable_testing()
 option(BUILD_SHARED_LIBS "Build shared libraries" ON)
 
+set(GNURADIO_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
+set(GNURADIO_BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR})
+
 # Make sure our local CMake Modules path comes first
-list(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_SOURCE_DIR}/cmake/Modules)
+list(INSERT CMAKE_MODULE_PATH 0 ${GNURADIO_SOURCE_DIR}/cmake/Modules)
 
 # Add more build types and check that requested build type is valid
 include(GrBuildTypes)
@@ -83,7 +86,7 @@ if(IMPORT_EXECUTABLES)
 endif(IMPORT_EXECUTABLES)
 
 #set file that the native build will fill with exports
-SET(EXPORT_FILE ${CMAKE_BINARY_DIR}/ImportExecutables.cmake)
+SET(EXPORT_FILE ${GNURADIO_BINARY_DIR}/ImportExecutables.cmake)
 file(WRITE ${EXPORT_FILE}) #blank the file (subdirs will append)
 
 ########################################################################
@@ -216,7 +219,7 @@ endif(APPLE)
 # Create uninstall target
 ########################################################################
 configure_file(
-    ${CMAKE_SOURCE_DIR}/cmake/cmake_uninstall.cmake.in
+    ${GNURADIO_SOURCE_DIR}/cmake/cmake_uninstall.cmake.in
     ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake
 @ONLY)
 
@@ -351,8 +354,8 @@ install(
 # The following dependency libraries are needed by all gr modules:
 ########################################################################
 list(APPEND GR_TEST_PYTHON_DIRS
-    ${CMAKE_BINARY_DIR}/gnuradio-runtime/python
-    ${CMAKE_SOURCE_DIR}/gnuradio-runtime/python
+    ${GNURADIO_BINARY_DIR}/gnuradio-runtime/python
+    ${GNURADIO_SOURCE_DIR}/gnuradio-runtime/python
 )
 
 
@@ -422,24 +425,24 @@ endif(ENABLE_GR_CTRLPORT)
 # Install all other cmake files into same directory
 file(GLOB cmake_others "cmake/Modules/*.cmake")
 list(REMOVE_ITEM cmake_others
-    "${CMAKE_SOURCE_DIR}/cmake/Modules/FindGnuradio.cmake"
+    "${GNURADIO_SOURCE_DIR}/cmake/Modules/FindGnuradio.cmake"
 )
 
 include(CMakePackageConfigHelpers)
 configure_package_config_file(
-  ${CMAKE_SOURCE_DIR}/cmake/Modules/GnuradioConfig.cmake.in
-  ${CMAKE_BINARY_DIR}/cmake/Modules/GnuradioConfig.cmake
+  ${GNURADIO_SOURCE_DIR}/cmake/Modules/GnuradioConfig.cmake.in
+  ${GNURADIO_BINARY_DIR}/cmake/Modules/GnuradioConfig.cmake
   INSTALL_DESTINATION ${CMAKE_MODULES_DIR}/gnuradio
   )
 
 configure_file(
-  ${CMAKE_SOURCE_DIR}/cmake/Modules/GnuradioConfigVersion.cmake.in
-  ${CMAKE_BINARY_DIR}/cmake/Modules/GnuradioConfigVersion.cmake
+  ${GNURADIO_SOURCE_DIR}/cmake/Modules/GnuradioConfigVersion.cmake.in
+  ${GNURADIO_BINARY_DIR}/cmake/Modules/GnuradioConfigVersion.cmake
 @ONLY)
 
 SET(cmake_configs
-  ${CMAKE_BINARY_DIR}/cmake/Modules/GnuradioConfig.cmake
-  ${CMAKE_BINARY_DIR}/cmake/Modules/GnuradioConfigVersion.cmake
+  ${GNURADIO_BINARY_DIR}/cmake/Modules/GnuradioConfig.cmake
+  ${GNURADIO_BINARY_DIR}/cmake/Modules/GnuradioConfigVersion.cmake
 )
 
 
