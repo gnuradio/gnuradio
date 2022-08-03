@@ -44,7 +44,11 @@ class BlockSearchBar(QtWidgets.QLineEdit):
         label = self.text()
         if label in self.parent._block_tree_flat:
             fg = self.parent.app.MainWindow.currentFlowgraph
-            block = fg.new_block(self.parent._block_tree_flat[label].key)
+            block_key = self.parent._block_tree_flat[label].key
+            id = fg._get_unique_id(block_key)
+
+            block = fg.new_block(block_key)
+            block.params['id'].set_value(id)
             fg.addItem(block)
             block.moveToTop()
             fg.update()
