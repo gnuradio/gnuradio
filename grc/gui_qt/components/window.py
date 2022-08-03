@@ -307,9 +307,14 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         undoStack = self.currentFlowgraph.undoStack
         canUndo = undoStack.canUndo()
         canRedo = undoStack.canRedo()
+        valid_fg = self.currentFlowgraph.is_valid()
 
         self.actions['undo'].setEnabled(canUndo)
         self.actions['redo'].setEnabled(canRedo)
+        self.actions['generate'].setEnabled(valid_fg)
+        self.actions['execute'].setEnabled(valid_fg)
+        self.actions['kill'].setEnabled(False) # TODO: Set this properly
+
         self.actions['cut'].setEnabled(False)
         self.actions['copy'].setEnabled(False)
         self.actions['paste'].setEnabled(False)
