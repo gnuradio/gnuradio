@@ -82,7 +82,7 @@ void pull_msg_source_cpu::readloop()
                 auto m = pmtf::pmt::deserialize(sb);
                 d_msg_out->post(m);
             } catch (...) { // Take out PMT specific exception for now
-                d_logger->error(std::string("Invalid PMT message: "));
+                d_logger->error("Invalid PMT message");
             }
         }
         else {
