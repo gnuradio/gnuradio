@@ -4,8 +4,7 @@
 project('gnuradio', 'cpp', 
   version : '4.0.0.0-preview0',
   license : 'GPLv3',
-  default_options : ['cpp_std=c++17'])
-
+  default_options : ['cpp_std=c++20'])
 cc = meson.get_compiler('cpp')
 rt_dep = cc.find_library('rt', required : false)
 libdl_dep = cc.find_library('dl')
