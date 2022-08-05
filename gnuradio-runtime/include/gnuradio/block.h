@@ -815,7 +815,7 @@ protected:
      *
      * \param which_output an integer of which output stream to attach the tag
      * \param abs_offset   a uint64 number of the absolute item number
-     *                     assicated with the tag. Can get from nitems_written.
+     *                     associated with the tag. Can get from nitems_written.
      * \param key          the tag key as a PMT symbol
      * \param value        any PMT holding any value for the given key
      * \param srcid        optional source ID specifier; defaults to PMT_F
@@ -847,7 +847,7 @@ protected:
      *
      * \param which_input an integer of which input stream to remove the tag from
      * \param abs_offset   a uint64 number of the absolute item number
-     *                     assicated with the tag. Can get from nitems_written.
+     *                     associated with the tag. Can get from nitems_written.
      * \param key          the tag key as a PMT symbol
      * \param value        any PMT holding any value for the given key
      * \param srcid        optional source ID specifier; defaults to PMT_F

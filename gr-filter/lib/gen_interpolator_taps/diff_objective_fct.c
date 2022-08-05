@@ -35,7 +35,7 @@ gsl_integration_workspace* global_gsl_int_workspace = NULL;
  * approximation defined by the FIR coefficients in global_h[]
  *
  * See eqn (9-7), "Digital Communication Receivers", Meyr, Moeneclaey
- * and Fechtel, Wiley, 1998. for the jist of what going on here.
+ * and Fechtel, Wiley, 1998. for the gist of what's going on here.
  *
  * See eqns (7.99) and (7.100), "Discrete Time Signal Processing",
  * Oppenheim, Alan V., Schafer, Ronald W., Prentice Hall 1989. for the
