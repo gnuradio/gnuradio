@@ -200,12 +200,12 @@ void file_source_cpu::open(const std::string& filename,
         if (file_size && file_size != INT64_MAX) {
             if (auto ret = posix_fadvise(
                     fd, start_offset, file_size - start_offset, POSIX_FADV_SEQUENTIAL)) {
-                d_logger->warn("failed to advise to read sequentially, " +
+                d_logger->warn("failed to advise to read sequentially, {}",
                                fadv_errstrings.at(ret));
             }
             if (auto ret = posix_fadvise(
                     fd, start_offset, file_size - start_offset, POSIX_FADV_WILLNEED)) {
-                d_logger->warn("failed to advise we'll need file contents soon, " +
+                d_logger->warn("failed to advise we'll need file contents soon, {}",
                                fadv_errstrings.at(ret));
             }
         }
