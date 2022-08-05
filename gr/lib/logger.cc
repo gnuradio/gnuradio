@@ -113,15 +113,22 @@ void logger::set_level(const std::string& level)
 {
     auto parsed_level = spdlog::level::from_str(level);
     if (parsed_level == spdlog::level::off) {
-        if (level == "notice") {
-            parsed_level = spdlog::level::info;
-        }
-        else if (level == "warn") {
+        if (level == "warn") {
             // older versions of spdlog don't convert this themselves
             parsed_level = spdlog::level::warn;
         }
         else if (level == "crit" || level == "alert" || level == "fatal" ||
                  level == "emerg") {
+            /* We've not deprecated the crit level, but replaced it with critical; since
+            we're breaking API in 4.0, this is no big deal, as this leads to
+            easy-to-recognize compile-time error. However, if someone relies on string
+            conversion, that would lead to surprising run-time behaviour, where a
+            high-priority message would not be logged. Hence, we're keeping this for human
+            backwards compatibility.*/
+            d_logger->debug(
+                "Using legacy level '{}' as string level, which maps to logging level "
+                "'critical'. Use 'critical' to silence this message.",
+                level);
             parsed_level = spdlog::level::critical;
         }
     }

@@ -34,10 +34,10 @@ void fft_filter<gr_complex, gr_complex>::compute_sizes(int ntaps)
     d_nsamples = d_fftsize - d_ntaps + 1;
 
     if (VERBOSE) {
-        d_logger->alert("fft_filter_ccc: ntaps = {:d} fftsize = {:d} nsamples = {:d}",
-                        d_ntaps,
-                        d_fftsize,
-                        d_nsamples);
+        d_logger->info("fft_filter_ccc: ntaps = {:d} fftsize = {:d} nsamples = {:d}",
+                       d_ntaps,
+                       d_fftsize,
+                       d_nsamples);
     }
 
     // compute new plans
@@ -159,10 +159,10 @@ void fft_filter<gr_complex, float>::compute_sizes(int ntaps)
     d_nsamples = d_fftsize - d_ntaps + 1;
 
     if (VERBOSE) {
-        d_logger->alert("fft_filter_ccf: ntaps = {:d} fftsize = {:d} nsamples = {:d}",
-                        d_ntaps,
-                        d_fftsize,
-                        d_nsamples);
+        d_logger->info("fft_filter_ccf: ntaps = {:d} fftsize = {:d} nsamples = {:d}",
+                       d_ntaps,
+                       d_fftsize,
+                       d_nsamples);
     }
 
     // compute new plans
@@ -291,10 +291,10 @@ void fft_filter<T, TAPS_T>::compute_sizes(int ntaps)
     d_nsamples = d_fftsize - d_ntaps + 1;
 
     if (VERBOSE) {
-        d_logger->alert("fft_filter_fff: ntaps = {:d} fftsize = {:d} nsamples = {:d}",
-                        d_ntaps,
-                        d_fftsize,
-                        d_nsamples);
+        d_logger->info("fft_filter_fff: ntaps = {:d} fftsize = {:d} nsamples = {:d}",
+                       d_ntaps,
+                       d_fftsize,
+                       d_nsamples);
     }
 
     // compute new plans
