@@ -154,7 +154,7 @@ static void export_wisdom()
     else {
         gr::logger_ptr logger, debug_logger;
         gr::configure_default_loggers(logger, debug_logger, "fft::import_wisdom");
-        logger->error("{}}: {}}", filename.c_str(), strerror(errno));
+        logger->error("{}: {}", filename.c_str(), strerror(errno));
     }
 }
 
