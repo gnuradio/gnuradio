@@ -39,8 +39,8 @@ macro(INCLUDE_DIRECTORIES)
       get_filename_component(inc_dir_abs ${inc_dir} ABSOLUTE)
 
       # is this include directory located within the SOURCE or BUILD?
-      string(FIND ${inc_dir_abs} ${CMAKE_SOURCE_DIR} IS_IN_SOURCE)
-      string(FIND ${inc_dir_abs} ${CMAKE_BINARY_DIR} IS_IN_BINARY)
+      string(FIND ${inc_dir_abs} ${PROJECT_SOURCE_DIR} IS_IN_SOURCE)
+      string(FIND ${inc_dir_abs} ${PROJECT_BINARY_DIR} IS_IN_BINARY)
       if(${IS_IN_SOURCE} EQUAL 0 OR ${IS_IN_BINARY} EQUAL 0)
         # yes: local SOURCE or BINARY; internal.
         # call the overloaded INCLUDE_DIRECTORIES,
