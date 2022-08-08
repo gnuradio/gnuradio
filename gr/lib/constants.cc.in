@@ -53,6 +53,13 @@ const std::string prefsdir()
     return prefsdir_path.lexically_normal().string();
 }
 
+const std::string libdir()
+{
+    path prefix_path = prefix();
+    path libdir_path = prefix_path / "@LIBDIR@";
+    return libdir_path.lexically_normal().string();
+}
+
 const std::string build_date() { return "@BUILD_DATE@"; }
 
 const std::string version() { return "@VERSION@"; }

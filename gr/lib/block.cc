@@ -75,7 +75,7 @@ void block::set_tag_propagation_policy(tag_propagation_policy_t policy)
 
 void block::on_parameter_change(param_action_sptr action)
 {
-    d_debug_logger->debug(
+    d_debug_logger->trace(
         "block {}: on_parameter_change param_id: {}", id(), action->id());
     auto param = d_parameters.get(action->id());
     *param = action->pmt_value();
@@ -83,7 +83,7 @@ void block::on_parameter_change(param_action_sptr action)
 
 void block::on_parameter_query(param_action_sptr action)
 {
-    d_debug_logger->debug(
+    d_debug_logger->trace(
         "block {}: on_parameter_query param_id: {}", id(), action->id());
     auto param = d_parameters.get(action->id());
     action->set_pmt_value(*param);
