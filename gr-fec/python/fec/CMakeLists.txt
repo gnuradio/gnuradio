@@ -34,9 +34,9 @@ add_subdirectory(polar)
 if(ENABLE_TESTING)
 
 list(APPEND GR_TEST_PYTHON_DIRS
-    ${CMAKE_BINARY_DIR}/gnuradio-runtime/python 
-    ${CMAKE_BINARY_DIR}/gr-fec/python
-    ${CMAKE_BINARY_DIR}/gr-blocks/python
+    ${PROJECT_BINARY_DIR}/gnuradio-runtime/python
+    ${PROJECT_BINARY_DIR}/gr-fec/python
+    ${PROJECT_BINARY_DIR}/gr-blocks/python
 )
 
 list(APPEND GR_TEST_TARGET_DEPS gnuradio-fec)

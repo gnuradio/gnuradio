@@ -2,9 +2,9 @@ include(GrPython)
 
 find_package(pybind11 REQUIRED)
 
-macro(GR_PYBIND_MAKE name updir filter files) 
+macro(GR_PYBIND_MAKE name updir filter files)
 
-configure_file(${CMAKE_SOURCE_DIR}/docs/doxygen/pydoc_macros.h ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
+configure_file(${PROJECT_SOURCE_DIR}/docs/doxygen/pydoc_macros.h ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
 
 pybind11_add_module(${name}_python ${files})
 
@@ -14,10 +14,10 @@ if (${name} STREQUAL gr)
 endif()
 
 if(ENABLE_DOXYGEN)
-    add_custom_command( 
+    add_custom_command(
         OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/docstring_status
-        COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_SOURCE_DIR}/docs/doxygen/update_pydoc.py "sub"
-        "--json_path" ${CMAKE_BINARY_DIR}/docs/doxygen/gnuradio_docstrings.json
+        COMMAND ${PYTHON_EXECUTABLE} ${PROJECT_SOURCE_DIR}/docs/doxygen/update_pydoc.py "sub"
+        "--json_path" ${PROJECT_BINARY_DIR}/docs/doxygen/gnuradio_docstrings.json
         "--bindings_dir" ${CMAKE_CURRENT_SOURCE_DIR}/docstrings
         "--output_dir" ${CMAKE_CURRENT_BINARY_DIR}
         "--filter" ${filter}
@@ -25,9 +25,9 @@ if(ENABLE_DOXYGEN)
         DEPENDS gnuradio_docstrings)
     add_custom_target(${name}_docstrings ALL DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/docstring_status)
 else(ENABLE_DOXYGEN)
-    add_custom_command( 
+    add_custom_command(
         OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/docstring_status
-        COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_SOURCE_DIR}/docs/doxygen/update_pydoc.py "copy"
+        COMMAND ${PYTHON_EXECUTABLE} ${PROJECT_SOURCE_DIR}/docs/doxygen/update_pydoc.py "copy"
         "--bindings_dir" ${CMAKE_CURRENT_SOURCE_DIR}/docstrings
         "--output_dir" ${CMAKE_CURRENT_BINARY_DIR}
         COMMENT "Copying ${name} docstring templates as pybind headers ...")
@@ -50,19 +50,19 @@ add_dependencies(${name}_python ${name}_docstrings)
 endmacro(GR_PYBIND_MAKE)
 
 
-macro(GR_PYBIND_MAKE_CHECK_HASH name updir filter files) 
+macro(GR_PYBIND_MAKE_CHECK_HASH name updir filter files)
 
-configure_file(${CMAKE_SOURCE_DIR}/docs/doxygen/pydoc_macros.h ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
+configure_file(${PROJECT_SOURCE_DIR}/docs/doxygen/pydoc_macros.h ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
 
 list(APPEND regen_targets "")
 foreach(file ${files})
 
     execute_process(COMMAND "${PYTHON_EXECUTABLE}"
-    ${CMAKE_SOURCE_DIR}/gr-utils/bindtool/scripts/header_utils.py
+    ${PROJECT_SOURCE_DIR}/gr-utils/bindtool/scripts/header_utils.py
     "all"
     ${CMAKE_CURRENT_SOURCE_DIR}/${file}
     OUTPUT_VARIABLE flags_all
-    ) 
+    )
     list(GET flags_all 0 flag_auto)
     list(GET flags_all 1 flag_pygccxml)
     list(GET flags_all 2 header_filename)
@@ -76,7 +76,7 @@ foreach(file ${files})
         else()
             set(header_full_path ${CMAKE_CURRENT_SOURCE_DIR}/${updir}/include/gnuradio/${name}/${header_filename})
         endif()
-        
+
         file(MD5 ${header_full_path} calc_hash)
         # message(STATUS ${ii} " " ${calc_hash} " " ${saved_hash})
         if (NOT ${calc_hash} STREQUAL ${header_file_hash})
@@ -85,12 +85,12 @@ foreach(file ${files})
                 # if (NOT bindtool_use_pygccxml STREQUAL )
                 message(FATAL_ERROR "Python bindings for " ${header_filename} " are out of sync" )
             else()
-                if (flag_pygccxml STREQUAL "True") 
+                if (flag_pygccxml STREQUAL "True")
                     if(NOT PYGCCXML_FOUND)
                         message(FATAL_ERROR "Python bindings for " ${header_filename} " require pygccxml for automatic regeneration" )
                     endif()
                 endif()
-                
+
                 message(STATUS "Regenerating Bindings in-place for " ${header_filename})
 
                 file(REMOVE ${CMAKE_CURRENT_BINARY_DIR}/${file}.regen_status)
@@ -98,12 +98,12 @@ foreach(file ${files})
                 add_custom_command( 
                     OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}}/${file}
                     COMMAND  "${PYTHON_EXECUTABLE}"
-                    ${CMAKE_SOURCE_DIR}/gr-utils/bindtool/scripts/bind_intree_file.py
+                    ${PROJECT_SOURCE_DIR}/gr-utils/bindtool/scripts/bind_intree_file.py
                     "--output_dir" ${CMAKE_CURRENT_SOURCE_DIR}/..
                     "--prefix" ${CMAKE_INSTALL_PREFIX}
-                    "--module" ${name} 
+                    "--module" ${name}
                     "--filename" ${header_full_path}
-                    "--status" ${CMAKE_CURRENT_BINARY_DIR}/${file}.regen_status 
+                    "--status" ${CMAKE_CURRENT_BINARY_DIR}/${file}.regen_status
                     "--flag_automatic" ${flag_auto}
                     "--flag_pygccxml" ${flag_pygccxml}
                     # "--include" "$<INSTALL_INTERFACE:include>"  #FIXME: Make the pygccxml generation use the source tree headers
@@ -130,8 +130,8 @@ endif()
 if(ENABLE_DOXYGEN)
     add_custom_command(
         OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/docstring_status
-        COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_SOURCE_DIR}/docs/doxygen/update_pydoc.py "sub"
-        "--json_path" ${CMAKE_BINARY_DIR}/docs/doxygen/gnuradio_docstrings.json
+        COMMAND ${PYTHON_EXECUTABLE} ${PROJECT_SOURCE_DIR}/docs/doxygen/update_pydoc.py "sub"
+        "--json_path" ${PROJECT_BINARY_DIR}/docs/doxygen/gnuradio_docstrings.json
         "--bindings_dir" ${CMAKE_CURRENT_SOURCE_DIR}/docstrings
         "--output_dir" ${CMAKE_CURRENT_BINARY_DIR}
         "--filter" ${filter}
@@ -141,7 +141,7 @@ if(ENABLE_DOXYGEN)
 else(ENABLE_DOXYGEN)
     add_custom_command(
         OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/docstring_status
-        COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_SOURCE_DIR}/docs/doxygen/update_pydoc.py "copy"
+        COMMAND ${PYTHON_EXECUTABLE} ${PROJECT_SOURCE_DIR}/docs/doxygen/update_pydoc.py "copy"
         "--bindings_dir" ${CMAKE_CURRENT_SOURCE_DIR}/docstrings
         "--output_dir" ${CMAKE_CURRENT_BINARY_DIR}
         COMMENT "Copying ${name} docstring templates as pybind headers ...")
@@ -178,13 +178,13 @@ endif(CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR
 if(NOT SNDFILE_FOUND AND ${name} STREQUAL blocks)
     target_compile_options(${name}_python PRIVATE -DNO_WAVFILE)
 endif()
-add_dependencies(${name}_python ${name}_docstrings ${regen_targets}) 
+add_dependencies(${name}_python ${name}_docstrings ${regen_targets})
 
 endmacro(GR_PYBIND_MAKE_CHECK_HASH)
 
 
 
-macro(GR_PYBIND_MAKE_OOT name updir filter files) 
+macro(GR_PYBIND_MAKE_OOT name updir filter files)
 
 list(APPEND regen_targets "")
 foreach(file ${files})
@@ -194,7 +194,7 @@ foreach(file ${files})
     "all"
     ${CMAKE_CURRENT_SOURCE_DIR}/${file}
     OUTPUT_VARIABLE flags_all
-    ) 
+    )
     list(GET flags_all 0 flag_auto)
     list(GET flags_all 1 flag_pygccxml)
     list(GET flags_all 2 header_filename)
@@ -210,7 +210,7 @@ foreach(file ${files})
         if(NOT EXISTS ${header_full_path})
             set(header_full_path ${CMAKE_CURRENT_SOURCE_DIR}/${updir}/include/gnuradio/${name}/${header_filename})
         ENDIF()
-        
+
         file(MD5 ${header_full_path} calc_hash)
         # message(STATUS ${ii} " " ${calc_hash} " " ${saved_hash})
         if (NOT ${calc_hash} STREQUAL ${header_file_hash})
@@ -219,27 +219,27 @@ foreach(file ${files})
                 # if (NOT bindtool_use_pygccxml STREQUAL )
                 message(FATAL_ERROR "Python bindings for " ${header_filename} " are out of sync" )
             else()
-                if (flag_pygccxml STREQUAL "True") 
+                if (flag_pygccxml STREQUAL "True")
                     if(NOT PYGCCXML_FOUND)
                         message(FATAL_ERROR "Python bindings for " ${header_filename} " require pygccxml for automatic regeneration" )
                     endif()
                 endif()
-                
+
                 message(STATUS "Regenerating Bindings in-place for " ${header_filename})
 
                 file(REMOVE ${CMAKE_CURRENT_BINARY_DIR}/${file}.regen_status)
                 # Automatically regenerate the bindings
                 string(REPLACE ";" ","  extra_include_list "${extra_includes}")  #Convert ';' separated extra_includes to ',' separated list format
                 string(REPLACE ";" ","  defines "${define_symbols}")  #Convert ';' separated define_symbols to ',' separated list format
-                add_custom_command( 
+                add_custom_command(
                     OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}}/${file}
                     COMMAND  "${PYTHON_EXECUTABLE}"
                     ${CMAKE_CURRENT_SOURCE_DIR}/bind_oot_file.py
                     "--output_dir" ${CMAKE_CURRENT_SOURCE_DIR}/..
                     "--prefix" ${CMAKE_INSTALL_PREFIX}
-                    "--module" ${name} 
+                    "--module" ${name}
                     "--filename" ${header_full_path}
-                    "--status" ${CMAKE_CURRENT_BINARY_DIR}/${file}.regen_status 
+                    "--status" ${CMAKE_CURRENT_BINARY_DIR}/${file}.regen_status
                     "--flag_automatic" ${flag_auto}
                     "--flag_pygccxml" ${flag_pygccxml}
                     "--defines" ${defines} #Add preprocessor defines
@@ -254,7 +254,7 @@ foreach(file ${files})
 endforeach()
 
 
-configure_file(${CMAKE_SOURCE_DIR}/docs/doxygen/pydoc_macros.h ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
+configure_file(${PROJECT_SOURCE_DIR}/docs/doxygen/pydoc_macros.h ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
 
 pybind11_add_module(${name}_python ${files})
 
@@ -264,11 +264,11 @@ if (${name} STREQUAL gr)
 endif()
 
 if(ENABLE_DOXYGEN)
-    
-    add_custom_command( 
+
+    add_custom_command(
         OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/extracted_docstrings.json
-        COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_SOURCE_DIR}/docs/doxygen/update_pydoc.py "scrape"
-        "--xml_path" ${CMAKE_BINARY_DIR}/docs/doxygen/xml
+        COMMAND ${PYTHON_EXECUTABLE} ${PROJECT_SOURCE_DIR}/docs/doxygen/update_pydoc.py "scrape"
+        "--xml_path" ${PROJECT_BINARY_DIR}/docs/doxygen/xml
         "--json_path" ${CMAKE_CURRENT_BINARY_DIR}/extracted_docstrings.json
         COMMENT "Scraping generated documentation for docstrings ..."
         DEPENDS gnuradio-${MODULE_NAME} doxygen_target)
@@ -278,9 +278,9 @@ if(ENABLE_DOXYGEN)
         DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/extracted_docstrings.json
         )
 
-    add_custom_command( 
+    add_custom_command(
         OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/docstring_status
-        COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_SOURCE_DIR}/docs/doxygen/update_pydoc.py "sub"
+        COMMAND ${PYTHON_EXECUTABLE} ${PROJECT_SOURCE_DIR}/docs/doxygen/update_pydoc.py "sub"
         "--json_path" ${CMAKE_CURRENT_BINARY_DIR}/extracted_docstrings.json
         "--bindings_dir" ${CMAKE_CURRENT_SOURCE_DIR}/docstrings
         "--output_dir" ${CMAKE_CURRENT_BINARY_DIR}
@@ -289,9 +289,9 @@ if(ENABLE_DOXYGEN)
         DEPENDS extracted_docstrings)
     add_custom_target(${name}_docstrings ALL DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/docstring_status)
 else(ENABLE_DOXYGEN)
-    add_custom_command( 
+    add_custom_command(
         OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/docstring_status
-        COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_SOURCE_DIR}/docs/doxygen/update_pydoc.py "copy"
+        COMMAND ${PYTHON_EXECUTABLE} ${PROJECT_SOURCE_DIR}/docs/doxygen/update_pydoc.py "copy"
         "--bindings_dir" ${CMAKE_CURRENT_SOURCE_DIR}/docstrings
         "--output_dir" ${CMAKE_CURRENT_BINARY_DIR}
         COMMENT "Copying ${name} docstring templates as pybind headers ...")

@@ -46,9 +46,9 @@ if(ENABLE_CTRLPORT_THRIFT)
   )
 
   add_custom_command(
-    DEPENDS ${CMAKE_SOURCE_DIR}/gnuradio-runtime/lib/controlport/thrift/gnuradio.thrift
+    DEPENDS ${PROJECT_SOURCE_DIR}/gnuradio-runtime/lib/controlport/thrift/gnuradio.thrift
     OUTPUT ${thrift_targets}
-    COMMAND ${THRIFT_BIN} --gen py -out ${CMAKE_CURRENT_BINARY_DIR}/ ${CMAKE_SOURCE_DIR}/gnuradio-runtime/lib/controlport/thrift/gnuradio.thrift
+    COMMAND ${THRIFT_BIN} --gen py -out ${CMAKE_CURRENT_BINARY_DIR}/ ${PROJECT_SOURCE_DIR}/gnuradio-runtime/lib/controlport/thrift/gnuradio.thrift
   )
 
   add_custom_target(ctrlport_thrift_python ALL

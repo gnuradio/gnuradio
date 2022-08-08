@@ -138,13 +138,13 @@ function(GRCC)
   set(filenames ${ARGV})
   file(MAKE_DIRECTORY ${directory})
 
-  SET(GRCC_COMMAND ${CMAKE_SOURCE_DIR}/gr-utils/python/grcc)
+  SET(GRCC_COMMAND ${PROJECT_SOURCE_DIR}/gr-utils/python/grcc)
 
   # GRCC uses some stuff in grc and gnuradio-runtime, so we force
   # the known paths here
   list(APPEND PYTHONPATHS
-    ${CMAKE_SOURCE_DIR}
-    ${CMAKE_SOURCE_DIR}/gnuradio-runtime/python
+    ${PROJECT_SOURCE_DIR}
+    ${PROJECT_SOURCE_DIR}/gnuradio-runtime/python
     )
 
   if(WIN32)
