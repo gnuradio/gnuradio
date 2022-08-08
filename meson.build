@@ -33,6 +33,16 @@ if py3_version.version_compare('< 3.6')
   error('Invalid python version!?')
 endif
 
+# Python module min versions
+py_check_script = join_paths(meson.project_source_root(),'utils','py_module_check.py')
+run_command('python3', py_check_script, 'numpy', '1.22', check:true)
+run_command('python3', py_check_script, 'jinja2', '3.0.2', check:true)
+run_command('python3', py_check_script, 'yaml', '5.3.1', check:true)
+run_command('python3', py_check_script, 'zmq', '22.3.0', check:true)
+run_command('python3', py_check_script, 'jsonschema', '3.2.0', check:true)
+run_command('python3', py_check_script, 'jsonschema_default', check:true)
+
+
 pybind11_dep = dependency('pybind11', required : get_option('enable_python'))
 threads_dep = dependency('threads')
 gtest_dep = dependency('gtest', main : true, version : '>=1.10', required : get_option('enable_testing'))
