@@ -90,6 +90,7 @@ class {{ block }} : virtual public {{blocktype}}{% for inh in inherits %}, publi
      * @return std::shared_ptr<{{ block }}> 
      */
     static sptr make_{{impl['id']}}(const block_args& args);
+    static sptr make_from_params_{{impl['id']}}(std::map<std::string, pmtf::pmt>&);
     {% elif 'lang' in impl and impl['lang'] == 'python' and not vars.pyshell -%}
     static sptr make_pyshell(const std::string& py_impl, const block_args& args);
     {% if vars.update({'pyshell': True}) %} {% endif %}

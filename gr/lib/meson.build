@@ -18,6 +18,8 @@ cdata = configuration_data()
 cdata.set('VERSION', meson.project_version())
 cdata.set('prefix_relative_to_lib', prefix_relative_to_lib)
 cdata.set('GR_PREFSDIR_relative_to_prefix', 'etc/gnuradio/conf.d')
+cdata.set('LIBDIR', libdir)
+cdata.set('PREFIX', prefix)
 constants_file = configure_file(input: 'constants.cc.in',
                           output: 'constants.cc',
                           configuration: cdata,
@@ -58,7 +60,8 @@ runtime_sources = [
   'sptr_magic.cc',
   'hier_block.cc',
   'prefs.cc',
-  'tag.cc'
+  'tag.cc',
+  'registry.cc'
 ]
 
 if USE_CUDA

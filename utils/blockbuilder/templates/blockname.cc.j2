@@ -2,6 +2,7 @@
 {{ macros.header() }}
 
 #include <gnuradio/{{module}}/{{block}}.h>
+#include <gnuradio/registry.h>
 #include <nlohmann/json.hpp>
 
 namespace gr {
@@ -49,6 +50,22 @@ namespace {{module}} {
     return make(args, impl);
 }
 
+{% for impl in implementations %}
+{% if 'lang' not in impl or impl['lang'] == 'cpp' -%}
+{{block}}::sptr {{block}}::make_from_params_{{impl['id']}}(std::map<std::string, pmtf::pmt>& param_map)
+{
+    block_args args;
+
+    {% for p in parameters -%}
+    {% if ('cotr' not in p or p['cotr']) and ('serializable' not in p or p['serializable'])%}
+    args.{{p['id']}} = {{'('+p['dtype']|cpp_type+')' if p['is_enum']}}pmtf::get_as<{{ 'int' if p['is_enum'] else p['dtype']|cpp_type(vec=p['container']=='vector')}}>(param_map["{{p['id']}}"]);
+    {% endif %}
+    {% endfor -%}
+
+    return make(args, available_impl::{{impl['id'] | upper }});
+}
+{% endif %}
+{% endfor %}
 
 {{block}}::{{block}}(const block_args& args) : {{blocktype}}("{{ block }}", "{{ module }}") {
  {{ macros.ports(ports, parameters) }}
@@ -73,6 +90,11 @@ void {{block}}::set_{{p['id']}}({{p['dtype']|cpp_type}} {{p['id']}})
 {% endfor -%}
 {% endif %}
 
+{% for impl in implementations -%}
+{% if 'lang' not in impl or impl['lang'] == 'cpp' -%}
+[[maybe_unused]] static auto reg_{{module}}_{{block}}_{{impl['id']}} = gr::registry::register_class("{{module}}","{{block}}","{{impl['id']}}",{{block}}::make_from_params_{{impl['id']}});
+{% endif -%}
+{% endfor -%}
 
 } // namespace {{ module }}
 } // namespace gr

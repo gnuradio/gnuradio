@@ -7,7 +7,8 @@ qa_srcs = ['qa_default_runtime',
            'qa_message_ports',
            'qa_tags',
            'qa_zmq_buffers',
-           'qa_hier_block'
+           'qa_hier_block',
+           'qa_reflection',
           ]
 deps = [gnuradio_gr_dep,
                 gnuradio_blocklib_blocks_dep,
