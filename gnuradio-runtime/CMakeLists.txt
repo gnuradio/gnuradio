@@ -48,7 +48,7 @@ GR_REGISTER_COMPONENT("gnuradio-runtime" ENABLE_GNURADIO_RUNTIME
 endif()
 
 get_filename_component(GNURADIO_RUNTIME_PYTHONPATH
-    ${CMAKE_SOURCE_DIR}/python ABSOLUTE
+    ${PROJECT_SOURCE_DIR}/python ABSOLUTE
 )
 ########################################################################
 # Setup precompiled header pseudo-component

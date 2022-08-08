@@ -22,7 +22,7 @@ if(ENABLE_TESTING)
   set(GR_TEST_TARGET_DEPS "")
   set(GR_TEST_LIBRARY_DIRS "")
   set(GR_TEST_PYTHON_DIRS
-    ${CMAKE_BINARY_DIR}/gnuradio-runtime/python
+    ${PROJECT_BINARY_DIR}/gnuradio-runtime/python
     )
   include(GrTest)
   file(GLOB py_qa_test_files "qa_*.py")
