@@ -139,7 +139,7 @@ target_link_libraries(gnuradio-runtime PUBLIC
   # (importantly, extension modules can avoid linking against Python and resolve
   #  their own Python symbols at runtime through the Python interpreter's linking)
   PRIVATE
-    libunwind::libunwind 
+    libunwind::libunwind
   )
 
 if (ENABLE_PYTHON)
@@ -297,7 +297,7 @@ endif()
 ########################################################################
 
 if(MSVC)
-    include(${CMAKE_SOURCE_DIR}/cmake/Modules/GrVersion.cmake)
+    include(${PROJECT_SOURCE_DIR}/cmake/Modules/GrVersion.cmake)
 
     configure_file(
         ${CMAKE_CURRENT_SOURCE_DIR}/gnuradio-runtime.rc.in

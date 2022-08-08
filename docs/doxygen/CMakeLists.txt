@@ -8,10 +8,10 @@
 ########################################################################
 # Create the doxygen configuration file
 ########################################################################
-file(TO_NATIVE_PATH ${CMAKE_SOURCE_DIR} top_srcdir)
-file(TO_NATIVE_PATH ${CMAKE_BINARY_DIR} top_builddir)
-file(TO_NATIVE_PATH ${CMAKE_SOURCE_DIR} abs_top_srcdir)
-file(TO_NATIVE_PATH ${CMAKE_BINARY_DIR} abs_top_builddir)
+file(TO_NATIVE_PATH ${PROJECT_SOURCE_DIR} top_srcdir)
+file(TO_NATIVE_PATH ${PROJECT_BINARY_DIR} top_builddir)
+file(TO_NATIVE_PATH ${PROJECT_SOURCE_DIR} abs_top_srcdir)
+file(TO_NATIVE_PATH ${PROJECT_BINARY_DIR} abs_top_builddir)
 
 set(HAVE_DOT ${DOXYGEN_DOT_FOUND})
 set(enable_html_docs YES)
@@ -52,8 +52,8 @@ add_custom_target(doxygen_target ALL DEPENDS ${BUILT_DIRS})
 if(ENABLE_DOXYGEN)
     add_custom_command(
     OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/gnuradio_docstrings.json
-    COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_SOURCE_DIR}/docs/doxygen/update_pydoc.py "scrape"
-    "--xml_path" ${CMAKE_BINARY_DIR}/docs/doxygen/xml
+    COMMAND ${PYTHON_EXECUTABLE} ${PROJECT_SOURCE_DIR}/docs/doxygen/update_pydoc.py "scrape"
+    "--xml_path" ${PROJECT_BINARY_DIR}/docs/doxygen/xml
     "--json_path" ${CMAKE_CURRENT_BINARY_DIR}/gnuradio_docstrings.json
     COMMENT "Scraping generated documentation for docstrings ..."
     DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/update_pydoc.py doxygen_target)

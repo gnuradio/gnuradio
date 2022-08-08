@@ -25,7 +25,7 @@ file(GLOB py_qa_test_files "qa_*.py")
 foreach(py_qa_test_file ${py_qa_test_files})
     get_filename_component(py_qa_test_name ${py_qa_test_file} NAME_WE)
     set(GR_TEST_PYTHON_DIRS
-        ${CMAKE_BINARY_DIR}/gnuradio-runtime/python
+        ${PROJECT_BINARY_DIR}/gnuradio-runtime/python
     )
     set(GR_TEST_TARGET_DEPS gnuradio-runtime)
     if (CMAKE_CROSSCOMPILING)

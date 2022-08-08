@@ -63,7 +63,7 @@ function(GR_ADD_TEST test_name)
 
     # add test module directory to PYTHONPATH to allow CTest to find QA test modules.
     # We add it to the beginning of the list to use locally-built modules before installed ones.
-    list(INSERT pypath 0 "${CMAKE_BINARY_DIR}/test_modules")
+    list(INSERT pypath 0 "${PROJECT_BINARY_DIR}/test_modules")
 
     set(environs "VOLK_GENERIC=1" "GR_DONT_LOAD_PREFS=1" "srcdir=${srcdir}"
         "GR_CONF_CONTROLPORT_ON=False")

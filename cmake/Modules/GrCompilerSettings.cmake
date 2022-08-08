@@ -91,8 +91,7 @@ endif(CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR
       CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
 
 if(MSVC)
-    include_directories(${CMAKE_SOURCE_DIR}/cmake/msvc) #missing headers
+    include_directories(${PROJECT_SOURCE_DIR}/cmake/msvc) #missing headers
     add_compile_options(/MP) #build with multiple processors
     add_compile_options(/bigobj) #allow for larger object files
 endif(MSVC)
-
