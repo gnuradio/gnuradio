@@ -62,6 +62,13 @@ def main():
 
     with open(args.yaml_file) as file:
         d = yaml.load(file, Loader=yaml.FullLoader)
+        # copy the yaml file to the build dir
+        block_builddir = os.path.join(args.build_dir, 'blocklib', d['module'], blockname)
+        shutil.copy(args.yaml_file, block_builddir)
+        # copy the json to the build dir
+        with open(os.path.join(block_builddir, os.path.basename(os.path.splitext(args.yaml_file)[0] + '.json')), 'w') as json_file:
+            json.dump(d, json_file)
+
          # Validate the YAML file
         if not (validate_json(d, block_schema)):
             raise Exception(f"{args.yaml_file} does not validate against the schema")
