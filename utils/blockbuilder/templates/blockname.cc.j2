@@ -90,6 +90,19 @@ void {{block}}::set_{{p['id']}}({{p['dtype']|cpp_type}} {{p['id']}})
 {% endfor -%}
 {% endif %}
 
+{% if parameters %}{% for p in parameters -%}
+[[maybe_unused]] static auto reg_{{module}}_{{block}}_{{p['id']}} = gr::registry::register_parameter("{{module}}","{{block}}", 
+{
+  "{{p['id']}}",
+  "{{p['label']}}",
+  "{{p['dtype'] }}",
+  {{p['settable']|lower if p['settable'] else 'false'}},
+  {{p['gettable']|lower if p['gettable'] else 'true'}},
+  "{{p['container'] if p['container'] else 'scalar'}}",
+  {{p['cotr']|lower if p['cotr'] else 'true'}},
+  {{p['is_enum']|lower if p['is_enum'] else 'false'}},
+});
+{% endfor -%}{% endif %}
 {% for impl in implementations -%}
 {% if 'lang' not in impl or impl['lang'] == 'cpp' -%}
 [[maybe_unused]] static auto reg_{{module}}_{{block}}_{{impl['id']}} = gr::registry::register_class("{{module}}","{{block}}","{{impl['id']}}",{{block}}::make_from_params_{{impl['id']}});

@@ -186,9 +186,6 @@
                 "label": {
                     "type": "string"
                 },
-                "category": {
-                    "type": "string"
-                },
                 "dtype": {
                     "type": "string"
                 },
@@ -229,7 +226,8 @@
                     "type": "string"
                 },
                 "cotr": {
-                    "type": "boolean"
+                    "type": "boolean",
+                    "default": true
                 },
                 "serializable": {
                     "type": "boolean",

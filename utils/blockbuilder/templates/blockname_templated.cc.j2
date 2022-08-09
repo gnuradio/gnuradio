@@ -110,6 +110,19 @@ template <{% for key in typekeys -%}{{key['type']}} {{key['id']}}{{ ", " if not 
 template <>
 std::string {{block}}<{{ opt | cpp_type }}>::suffix(){ return "_{{macros.typekey_suffix(opt, key1['id'],ports)}}"; }
 template class {{block}}<{{ opt | cpp_type }}>;
+{% if parameters %}{% for p in parameters -%}
+[[maybe_unused]] static auto reg_{{module}}_{{block}}_{{ macros.typekey_suffix(opt, key1['id'],ports) }}_{{p['id']}} = gr::registry::register_parameter("{{module}}","{{block}}_{{ macros.typekey_suffix(opt, key1['id'],ports) }}", 
+{
+  "{{p['id']}}",
+  "{{p['label']}}",
+  "{{p['dtype'] }}",
+  {{p['settable']|lower if p['settable'] else 'false'}},
+  {{p['gettable']|lower if p['gettable'] else 'true'}},
+  "{{p['container'] if p['container'] else 'scalar'}}",
+  {{p['cotr']|lower if p['cotr'] else 'true'}},
+  {{p['is_enum']|lower if p['is_enum'] else 'false'}},
+});
+{% endfor -%}{% endif %}
 {% for impl in implementations -%}
 {% if 'lang' not in impl or impl['lang'] == 'cpp' -%}
 [[maybe_unused]] static auto reg_{{module}}_{{block}}_{{ macros.typekey_suffix(opt, key1['id'],ports) }}_{{impl['id']}} = gr::registry::register_class("{{module}}","{{block}}_{{ macros.typekey_suffix(opt, key1['id'],ports) }}","{{impl['id']}}",{{block}}<{{ opt|cpp_type }}>::make_from_params_{{impl['id']}});
@@ -127,6 +140,19 @@ template class {{block}}<{{ opt | cpp_type }}>;
 template <>
 std::string {{block}}<{{ opt1 | cpp_type}}, {{ opt2 | cpp_type}}>::suffix(){ return "_{{macros.typekey_suffix(opt1, key1['id'],ports)}}{{macros.typekey_suffix(opt2, key2['id'],ports)}}"; }
 template class {{block}}<{{ opt1 | cpp_type}}, {{ opt2 | cpp_type}}>;
+{% if parameters %}{% for p in parameters -%}
+[[maybe_unused]] static auto reg_{{module}}_{{block}}_{{ macros.typekey_suffix(opt1, key1['id'],ports) }}{{ macros.typekey_suffix(opt2, key2['id'],ports) }}_{{p['id']}} = gr::registry::register_parameter("{{module}}","{{block}}_{{ macros.typekey_suffix(opt1, key1['id'],ports) }}{{ macros.typekey_suffix(opt2, key2['id'],ports) }}", 
+{
+  "{{p['id']}}",
+  "{{p['label']}}",
+  "{{p['dtype'] }}",
+  {{p['settable']|lower if p['settable'] else 'false'}},
+  {{p['gettable']|lower if p['gettable'] else 'true'}},
+  "{{p['container'] if p['container'] else 'scalar'}}",
+  {{p['cotr']|lower if p['cotr'] else 'true'}},
+  {{p['is_enum']|lower if p['is_enum'] else 'false'}},
+});
+{% endfor -%}{% endif %}
 {% for impl in implementations -%}{% if 'lang' not in impl or impl['lang'] == 'cpp' -%}
 [[maybe_unused]] static auto reg_{{module}}_{{block}}_{{ macros.typekey_suffix(opt1, key1['id'],ports) }}{{ macros.typekey_suffix(opt2, key2['id'],ports) }}_{{impl['id']}} = gr::registry::register_class("{{module}}","{{block}}_{{ macros.typekey_suffix(opt1, key1['id'],ports) }}{{ macros.typekey_suffix(opt2, key2['id'],ports) }}","{{impl['id']}}",{{block}}<{{ opt1|cpp_type }}, {{ opt2|cpp_type }}>::make_from_params_{{impl['id']}});
 {% endif -%}{% endfor -%}
@@ -136,6 +162,19 @@ template class {{block}}<{{ opt1 | cpp_type}}, {{ opt2 | cpp_type}}>;
 template <>
 std::string {{block}}<{{ opt1 | cpp_type}}, {{ opt2 | cpp_type}}>::suffix(){ return "_{{macros.typekey_suffix(opt1, key1['id'],ports)}}{{macros.typekey_suffix(opt2, key2['id'],ports)}}"; }
 template class {{block}}<{{ opt1 | cpp_type}}, {{ opt2 | cpp_type}}>;
+{% if parameters %}{% for p in parameters -%}
+[[maybe_unused]] static auto reg_{{module}}_{{block}}_{{ macros.typekey_suffix(opt1, key1['id'],ports) }}{{ macros.typekey_suffix(opt2, key2['id'],ports) }}_{{p['id']}} = gr::registry::register_parameter("{{module}}","{{block}}_{{ macros.typekey_suffix(opt1, key1['id'],ports) }}{{ macros.typekey_suffix(opt2, key2['id'],ports) }}", 
+{
+  "{{p['id']}}",
+  "{{p['label']}}",
+  "{{p['dtype'] }}",
+  {{p['settable']|lower if p['settable'] else 'false'}},
+  {{p['gettable']|lower if p['gettable'] else 'true'}},
+  "{{p['container'] if p['container'] else 'scalar'}}",
+  {{p['cotr']|lower if p['cotr'] else 'true'}},
+  {{p['is_enum']|lower if p['is_enum'] else 'false'}},
+});
+{% endfor -%}{% endif %}
 {% for impl in implementations -%}{% if 'lang' not in impl or impl['lang'] == 'cpp' -%}
 [[maybe_unused]] static auto reg_{{module}}_{{block}}_{{ macros.typekey_suffix(opt1, key1['id'],ports) }}{{ macros.typekey_suffix(opt2, key2['id'],ports) }}_{{impl['id']}} = gr::registry::register_class("{{module}}","{{block}}_{{ macros.typekey_suffix(opt1, key1['id'],ports) }}{{ macros.typekey_suffix(opt2, key2['id'],ports) }}","{{impl['id']}}",{{block}}<{{ opt1|cpp_type }}, {{ opt2|cpp_type }}>::make_from_params_{{impl['id']}});
 {% endif -%}{% endfor -%}

@@ -87,10 +87,23 @@ public:
     }
 };
 
+// Should follow closely to the yaml
+struct parameter_info {
+    std::string id;
+    std::string label;
+    std::string dtype;
+    bool settable = false;
+    bool gettable = true;
+    std::string container = "scalar";
+    bool cotr = true;
+    bool is_enum = false;
+    // default -- make it a variant
+};
+
 struct parameter_config {
     std::map<std::string, pmt_sptr> param_map;
     std::map<int, pmt_sptr> param_map_int;
-    size_t num() { return param_map.size(); }
+    size_t size() { return param_map.size(); }
     void add(const std::string& name, int id, pmt_sptr b)
     {
         param_map[name] = b;

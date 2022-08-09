@@ -42,7 +42,13 @@ std::vector<std::string> registry::blocks(const std::string& module)
 std::vector<std::string> registry::impls(const std::string& module,
                                          const std::string& block)
 {
-    return get_instance().impls(module, block);
+    return get_instance()._impls(module, block);
+}
+
+std::vector<std::string> registry::parameters(const std::string& module,
+                                         const std::string& block)
+{
+    return get_instance()._parameters(module, block);
 }
 
 generic_block_factory registry::factory(const std::string& module,
@@ -52,12 +58,27 @@ generic_block_factory registry::factory(const std::string& module,
     return get_instance()._factory(module, block, impl);
 }
 
+parameter_info& registry::parameter(const std::string& module,
+                                    const std::string& block,
+                                    const std::string& id)
+{
+    return get_instance()._parameter(module, block, id);
+}
+
 registry& registry::register_class(const std::string& module,
                                    const std::string& block,
                                    const std::string& impl,
                                    generic_block_factory factory)
 {
     return get_instance()._register_class(module, block, impl, factory);
+}
+
+
+registry& registry::register_parameter(const std::string& module,
+                                       const std::string& block,
+                                       const parameter_info& info)
+{
+    return get_instance()._register_parameter(module, block, info);
 }
 
 
@@ -135,6 +156,19 @@ std::vector<std::string> registry::_impls(const std::string& module,
     return ret;
 }
 
+std::vector<std::string> registry::_parameters(const std::string& module,
+                                               const std::string& block)
+{
+    if (!_initialized) {
+        _init();
+    }
+    std::vector<std::string> ret;
+    for (const auto& [key, value] : _parameter_map[module][block]) {
+        ret.push_back(key);
+    }
+    return ret;
+}
+
 generic_block_factory registry::_factory(const std::string& module,
                                          const std::string& block,
                                          const std::string& impl)
@@ -144,6 +178,17 @@ generic_block_factory registry::_factory(const std::string& module,
     }
     return _constructor_map[module][block][impl];
 }
+
+parameter_info& registry::_parameter(const std::string& module,
+                                     const std::string& block,
+                                     const std::string& id)
+{
+    if (!_initialized) {
+        _init();
+    }
+    return _parameter_map[module][block][id];
+}
+
 
 registry& registry::_register_class(const std::string& module,
                                     const std::string& block,
@@ -171,5 +216,30 @@ registry& registry::_register_class(const std::string& module,
     return *this;
 }
 
+
+registry& registry::_register_parameter(const std::string& module,
+                                        const std::string& block,
+                                        const parameter_info& info)
+{
+    if (_parameter_map.count(module)) {
+        if (_parameter_map[module].count(block)) {
+            _parameter_map[module][block][info.id] = info;
+        }
+        else {
+            _parameter_map[module][block] = {
+                { info.id, info },
+            };
+        }
+    }
+    else {
+        _parameter_map[module] = {
+            { block,
+              {
+                  { info.id, info },
+              } },
+        };
+    }
+    return *this;
+}
 
 } // namespace gr

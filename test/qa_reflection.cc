@@ -40,11 +40,25 @@ TEST(Reflection, Basic)
     std::map<std::string, pmtf::pmt> param_map{ { "k", orig_value }, { "vlen", 1 } };
     auto blk = gr::registry::factory("math", "multiply_const_ff")(param_map);
     EXPECT_EQ(blk->request_parameter_query("k"), orig_value);
-    // list = gr::registry::parameters("blocks","multiply_const_ff");
-    // Verify that "k" is on the list
-    // Verify that "vlen" is on the list
 
     float newval = 17.3;
     blk->request_parameter_change("k", newval);
     EXPECT_EQ(blk->request_parameter_query("k"), newval);
+}
+
+
+TEST(Reflection, Parameters)
+{
+    gr::registry::init();
+    auto list = gr::registry::modules();
+    list = gr::registry::blocks("math");
+    list = gr::registry::parameters("streamops", "load");
+    auto p1 = gr::registry::parameter("streamops","load","iterations");
+    list = gr::registry::parameters("math", "multiply_const_ff");
+    // verify that "k" is on the list
+    EXPECT_TRUE(is_in_list(list, "k"));
+    EXPECT_TRUE(is_in_list(list, "vlen"));
+
+    auto p = gr::registry::parameter("math","multiply_const_ff","k");
+    EXPECT_TRUE(p.dtype == "rf32");
 }
