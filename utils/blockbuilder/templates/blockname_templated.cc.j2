@@ -115,7 +115,7 @@ template class {{block}}<{{ opt | cpp_type }}>;
 {
   "{{p['id']}}",
   "{{p['label']}}",
-  "{{p['dtype'] }}",
+  "{{p['dtype']|typekey_lookup({key1['id']:opt})}}",
   {{p['settable']|lower if p['settable'] else 'false'}},
   {{p['gettable']|lower if p['gettable'] else 'true'}},
   "{{p['container'] if p['container'] else 'scalar'}}",
@@ -145,7 +145,7 @@ template class {{block}}<{{ opt1 | cpp_type}}, {{ opt2 | cpp_type}}>;
 {
   "{{p['id']}}",
   "{{p['label']}}",
-  "{{p['dtype'] }}",
+  "{{p['dtype']|typekey_lookup({key1['id']:opt1, key2['id']:opt2})}} }}",
   {{p['settable']|lower if p['settable'] else 'false'}},
   {{p['gettable']|lower if p['gettable'] else 'true'}},
   "{{p['container'] if p['container'] else 'scalar'}}",
@@ -167,7 +167,7 @@ template class {{block}}<{{ opt1 | cpp_type}}, {{ opt2 | cpp_type}}>;
 {
   "{{p['id']}}",
   "{{p['label']}}",
-  "{{p['dtype'] }}",
+  "{{p['dtype']|typekey_lookup({key1['id']:opt1, key2['id']:opt2})}} }}",
   {{p['settable']|lower if p['settable'] else 'false'}},
   {{p['gettable']|lower if p['gettable'] else 'true'}},
   "{{p['container'] if p['container'] else 'scalar'}}",

@@ -88,6 +88,19 @@ def py_type(input):
     else:
         return input
 
+def typekey_lookup(input, typekeys):
+    if is_list(input):
+        input = input[0]
+    if input in type_lookup:
+        x = input
+    else: # typekeys/
+        x = get_linked_value(input)
+        # find x in the typekeys, e.g. x == 'T'
+        for key in typekeys:
+            x = typekeys[key]
+
+    return x
+
 def custom_filters():
     return {
         'is_list': is_list,
@@ -96,4 +109,5 @@ def custom_filters():
         'py_type': py_type,
         'get_linked_value': get_linked_value,
         'get_linked_value_with_args': get_linked_value_with_args,
+        'typekey_lookup': typekey_lookup
     }

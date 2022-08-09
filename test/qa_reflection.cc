@@ -53,12 +53,16 @@ TEST(Reflection, Parameters)
     auto list = gr::registry::modules();
     list = gr::registry::blocks("math");
     list = gr::registry::parameters("streamops", "load");
-    auto p1 = gr::registry::parameter("streamops","load","iterations");
+    auto p1 = gr::registry::parameter("streamops", "load", "iterations");
     list = gr::registry::parameters("math", "multiply_const_ff");
     // verify that "k" is on the list
     EXPECT_TRUE(is_in_list(list, "k"));
     EXPECT_TRUE(is_in_list(list, "vlen"));
 
-    auto p = gr::registry::parameter("math","multiply_const_ff","k");
+    auto p = gr::registry::parameter("math", "multiply_const_ff", "k");
     EXPECT_TRUE(p.dtype == "rf32");
+    p = gr::registry::parameter("math", "multiply_const_ff", "vlen");
+    EXPECT_TRUE(p.dtype == "size");
+    EXPECT_FALSE(p.settable);
+    EXPECT_FALSE(p.is_enum);
 }

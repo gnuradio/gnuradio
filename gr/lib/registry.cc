@@ -46,7 +46,7 @@ std::vector<std::string> registry::impls(const std::string& module,
 }
 
 std::vector<std::string> registry::parameters(const std::string& module,
-                                         const std::string& block)
+                                              const std::string& block)
 {
     return get_instance()._parameters(module, block);
 }

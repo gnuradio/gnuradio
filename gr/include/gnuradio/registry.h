@@ -62,13 +62,13 @@ public:
 
     /**
      * @brief Returns a list of parameters available for specified block
-     * 
-     * @param module 
-     * @param block 
-     * @return std::vector<parameter_info> 
+     *
+     * @param module
+     * @param block
+     * @return std::vector<parameter_info>
      */
     static std::vector<std::string> parameters(const std::string& module,
-                                         const std::string& block);
+                                               const std::string& block);
 
     /**
      * @brief Return the generic block factory for a specified block
@@ -85,15 +85,14 @@ public:
 
     /**
      * @brief Return info about specified parameter
-     * 
-     * @param module 
-     * @param block 
-     * @param id 
-     * @return parameter_info& 
+     *
+     * @param module
+     * @param block
+     * @param id
+     * @return parameter_info&
      */
-    static parameter_info& parameter(const std::string& module,
-                                         const std::string& block,
-                                         const std::string& id);
+    static parameter_info&
+    parameter(const std::string& module, const std::string& block, const std::string& id);
     /**
      * @brief Register a block class at initialization time
      *
@@ -111,15 +110,15 @@ public:
 
     /**
      * @brief Register a parameter at static initialization time
-     * 
-     * @param module 
-     * @param block 
-     * @param info 
-     * @return registry& 
+     *
+     * @param module
+     * @param block
+     * @param info
+     * @return registry&
      */
     static registry& register_parameter(const std::string& module,
-                                    const std::string& block,
-                                    const parameter_info& info);
+                                        const std::string& block,
+                                        const parameter_info& info);
 
 private:
     registry();
@@ -128,8 +127,7 @@ private:
              std::map<std::string, std::map<std::string, generic_block_factory>>>
         _constructor_map;
     // [module][block][id] --> parameter_info
-    std::map<std::string,
-             std::map<std::string, std::map<std::string, parameter_info>>>
+    std::map<std::string, std::map<std::string, std::map<std::string, parameter_info>>>
         _parameter_map;
 
     bool _initialized = false;
@@ -140,15 +138,16 @@ private:
 
     std::vector<std::string> _blocks(const std::string& module);
     std::vector<std::string> _impls(const std::string& module, const std::string& block);
-    std::vector<std::string> _parameters(const std::string& module, const std::string& block);
+    std::vector<std::string> _parameters(const std::string& module,
+                                         const std::string& block);
 
     generic_block_factory _factory(const std::string& module,
                                    const std::string& block,
                                    const std::string& impl);
 
     parameter_info& _parameter(const std::string& module,
-                                   const std::string& block,
-                                   const std::string& id);
+                               const std::string& block,
+                               const std::string& id);
 
     registry& _register_class(const std::string& module,
                               const std::string& block,
@@ -156,8 +155,8 @@ private:
                               generic_block_factory factory);
 
     registry& _register_parameter(const std::string& module,
-                                    const std::string& block,
-                                    const parameter_info& info);
+                                  const std::string& block,
+                                  const parameter_info& info);
 
     // public:
     //     registry(registry const&) = delete;
