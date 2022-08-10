@@ -6,8 +6,8 @@
 namespace py = pybind11;
 
 #include <gnuradio/{{module}}/{{block}}.h>
-// pydoc.h is automatically generated in the build directory
-// #include <{{block}}_pydoc.h>
+using namespace gr::{{module}};
+
 
 void bind_{{block}}(py::module& m)
 {
