@@ -32,9 +32,6 @@ jobs:
         # descriptive name, and one key 'containerid' with the name of the
         # container (i.e., what you want to docker-pull)
         include:
-          - distro: 'Ubuntu 20.04'
-            containerid: 'mormj/newsched-ci-docker:ubuntu-20.04'
-            cxxflags: -Werror
           - distro: 'Ubuntu 22.04'
             containerid: 'mormj/newsched-ci-docker:ubuntu-22.04'
             cxxflags: -Werror
