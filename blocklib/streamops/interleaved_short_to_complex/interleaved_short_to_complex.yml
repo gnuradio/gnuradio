@@ -26,7 +26,7 @@ ports:
 -   domain: stream
     id: out
     direction: output
-    type: gr_complex
+    type: cf32
 
 implementations:
 -   id: cpu
