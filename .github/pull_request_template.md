@@ -1,13 +1,3 @@
----
-name: Pull Request Template
-about: A template to help contributors submit clear pull-requests.
-title: ''
-labels: ''
-assignees: ''
-
----
-
-# Pull Request Details
 <!--- The title of the PR should summarize the change implemented. -->
 <!--- Example commit message format: -->
 <!--- `module: summary of change` -->
