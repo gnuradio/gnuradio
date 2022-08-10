@@ -93,7 +93,7 @@ inputs:
 {% else %}
     dtype: {{port['type']|grc_type(ref=True)}}
 {% endif %}
-    {%if 'shape' in port %}vlen: {{port['shape']|get_linked_value}}{% endif %}
+    {%if 'shape' in port %}vlen: {{port['shape']|grc_type(ref=True)}}{% endif %}
     {%if 'multiplicity' in port %}multiplicity: {{port['multiplicity']|grc_type(ref=True)}}{% endif %}
     label: {{port['id']}}
     optional: {{ port['optional'] if 'optional' in port else 'false' }}
