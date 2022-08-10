@@ -15,13 +15,13 @@ ports:
 -   domain: stream
     id: in
     direction: input
-    type: gr_complex
+    type: cf32
     shape: parameters/vlen
 
 -   domain: stream
     id: out
     direction: output
-    type: float
+    type: rf32
     shape: parameters/vlen
 
 implementations:

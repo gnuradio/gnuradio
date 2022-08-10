@@ -39,7 +39,7 @@ ports:
 -   domain: stream
     id: in
     direction: input
-    type: float
+    type: rf32
     multiplicity: parameters/num_inputs
 
 implementations:

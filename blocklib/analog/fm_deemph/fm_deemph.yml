@@ -22,12 +22,12 @@ ports:
 -   domain: stream
     id: in
     direction: input
-    type: float
+    type: rf32
 
 -   domain: stream
     id: out
     direction: output
-    type: float
+    type: rf32
 
 implementations:
 -   id: cpu
