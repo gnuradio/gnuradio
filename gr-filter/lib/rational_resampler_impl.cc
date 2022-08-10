@@ -16,6 +16,7 @@
 #include <gnuradio/fft/window.h>
 #include <gnuradio/filter/firdes.h>
 #include <gnuradio/io_signature.h>
+#include <spdlog/fmt/fmt.h>
 #include <numeric>
 #include <stdexcept>
 
@@ -40,7 +41,8 @@ std::vector<TAP_T> design_resampler_filter(const unsigned interpolation,
 {
 
     if (fractional_bw >= 0.5 || fractional_bw <= 0) {
-        throw std::range_error("Invalid fractional_bandwidth, must be in (0, 0.5)");
+        throw std::range_error(fmt::format(
+            "Invalid fractional_bandwidth {:.2f}, must be in (0, 0.5)", fractional_bw));
     }
 
     // These are default values used to generate the filter when no taps are known
