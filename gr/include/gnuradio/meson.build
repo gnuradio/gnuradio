@@ -42,7 +42,9 @@ runtime_headers = [
     'port_interface.h',
     'hier_block.h',
     'runtime_proxy.h',
-    'sptr_magic.h'
+    'sptr_magic.h',
+    'realtime.h',
+    'runtime.h'
 ]
 
 install_headers(runtime_headers, subdir : 'gnuradio')
