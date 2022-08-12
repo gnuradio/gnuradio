@@ -26,7 +26,7 @@ python3_dep = dependency('python3', required : get_option('enable_python'))
 python3_embed_dep = dependency('python3-embed', required : get_option('enable_python'))
 
 # Import python3 meson module which is used to find the Python dependencies.
-py3_inst = import('python').find_installation('python3')
+py3_inst = import('python').find_installation('python3', modules: ['packaging', 'jsonschema_default'])
 py3 = py3_inst
 py3_version = py3_inst.language_version()
 if py3_version.version_compare('< 3.6')
@@ -40,7 +40,6 @@ run_command('python3', py_check_script, 'jinja2', '3.0.2', check:true)
 run_command('python3', py_check_script, 'yaml', '5.3.1', check:true)
 run_command('python3', py_check_script, 'zmq', '22.3.0', check:true)
 run_command('python3', py_check_script, 'jsonschema', '3.2.0', check:true)
-run_command('python3', py_check_script, 'jsonschema_default', check:true)
 
 
 pybind11_dep = dependency('pybind11', required : get_option('enable_python'))
