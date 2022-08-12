@@ -4,6 +4,18 @@
 # this file alone
 srcs = []
 
+{% if blocktype == 'grc' %}
+gen_srcs = custom_target('gen_{{block}}_srcs',
+                        input : ['{{block}}.yml'],
+                        output : ['{{module}}_{{block}}.block.yml'
+                        ], 
+                        command : ['python3', join_paths(SCRIPTS_DIR,'process_folder.py'),
+                            '--yaml_file', '@INPUT@', 
+                            '--output-grc', '@OUTPUT0@', 
+                            '--build_dir', join_paths(meson.build_root())],
+                        install : true,
+                        install_dir : ['share/gnuradio/grc/blocks'])
+{% else %}
 {% set vars = {'pyshell': False, 'cpp': False} %}
 {% for impl in implementations -%}
 {% if 'lang' not in impl or impl['lang'] == 'cpp'%}
@@ -77,3 +89,4 @@ if get_option('enable_python')
     {{module}}_pybind_sources += gen_srcs[2]
     {{module}}_pybind_names += '{{block}}'
 endif
+{% endif %}

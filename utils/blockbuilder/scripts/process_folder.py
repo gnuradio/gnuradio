@@ -14,10 +14,10 @@ def argParse():
     desc='Scrape the doxygen generated xml for docstrings to insert into python bindings'
     parser = argparse.ArgumentParser(description=desc)
     
-    parser.add_argument("--yaml_file")
-    parser.add_argument("--output-cc")
-    parser.add_argument("--output-hh")
-    parser.add_argument("--output-pybind")
+    parser.add_argument("--yaml_file", default=None)
+    parser.add_argument("--output-cc", default=None)
+    parser.add_argument("--output-hh", default=None)
+    parser.add_argument("--output-pybind", default=None)
     parser.add_argument("--output-grc", nargs='+')
     parser.add_argument("--grc-index", nargs='+')
     parser.add_argument("--build_dir")
