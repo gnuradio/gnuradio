@@ -161,14 +161,22 @@ STRIP_FROM_INC_PATH    = @PROJECT_SOURCE_DIR@/gnuradio-runtime/include \
                          @PROJECT_BINARY_DIR@/gr-fft/include \
                          @PROJECT_SOURCE_DIR@/gr-filter/include \
                          @PROJECT_BINARY_DIR@/gr-filter/include \
+                         @PROJECT_SOURCE_DIR@/gr-iio/include \
+                         @PROJECT_BINARY_DIR@/gr-iio/include \
+                         @PROJECT_SOURCE_DIR@/gr-network/include \
+                         @PROJECT_BINARY_DIR@/gr-network/include \
                          @PROJECT_SOURCE_DIR@/gr-pdu/include \
                          @PROJECT_BINARY_DIR@/gr-pdu/include \
                          @PROJECT_SOURCE_DIR@/gr-qtgui/include \
                          @PROJECT_BINARY_DIR@/gr-qtgui/include \
+                         @PROJECT_SOURCE_DIR@/gr-soapy/include \
+                         @PROJECT_BINARY_DIR@/gr-soapy/include \
                          @PROJECT_SOURCE_DIR@/gr-trellis/include \
                          @PROJECT_BINARY_DIR@/gr-trellis/include \
                          @PROJECT_SOURCE_DIR@/gr-uhd/include \
                          @PROJECT_BINARY_DIR@/gr-uhd/include \
+                         @PROJECT_SOURCE_DIR@/gr-utils/include \
+                         @PROJECT_BINARY_DIR@/gr-utils/include \
                          @PROJECT_SOURCE_DIR@/gr-video-sdl/include \
                          @PROJECT_BINARY_DIR@/gr-video-sdl/include \
                          @PROJECT_SOURCE_DIR@/gr-vocoder/include \
@@ -764,10 +772,20 @@ EXCLUDE                = @abs_top_builddir@/cmake/msvc \
                          @abs_top_builddir@/gr-filter/lib \
                          @abs_top_srcdir@/gr-fft/lib \
                          @abs_top_builddir@/gr-fft/lib \
+                         @abs_top_srcdir@/gr-iio/lib \
+                         @abs_top_builddir@/gr-iio/lib \
+                         @abs_top_srcdir@/gr-network/lib \
+                         @abs_top_builddir@/gr-network/lib \
                          @abs_top_srcdir@/gr-pdu/lib \
                          @abs_top_builddir@/gr-pdu/lib \
                          @abs_top_srcdir@/gr-qtgui/lib \
                          @abs_top_builddir@/gr-qtgui/lib \
+                         @abs_top_srcdir@/gr-qtgui/examples \
+                         @abs_top_builddir@/gr-qtgui/examples \
+                         @abs_top_srcdir@/gr-soapy/lib \
+                         @abs_top_builddir@/gr-soapy/lib \
+                         @abs_top_srcdir@/gr-soapy/python \
+                         @abs_top_builddir@/gr-soapy/python \
                          @abs_top_srcdir@/gr-trellis/lib \
                          @abs_top_builddir@/gr-trellis/lib \
                          @abs_top_srcdir@/gr-uhd/lib \
