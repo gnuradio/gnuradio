@@ -1,0 +1,57 @@
+module: analog
+block: random_source
+label: Random Source
+blocktype: grc
+category: '[Core]/Waveform Generators'
+
+typekeys:
+  - id: T
+    type: class
+    options: 
+        - ri32
+        - ri16
+        - ri8
+
+grc:
+    templates:
+        imports: |-
+            from gnuradio import blocks
+            import numpy
+        make: |-
+            blocks.vector_source_${T.fcn}(list(map(int, numpy.random.randint(${min}, ${max},
+            ${num_samps}))), ${repeat})
+
+# Example Parameters
+parameters:
+-   id: min
+    label: Minimum
+    dtype: typekeys/T
+    grc:
+        default: 0
+-   id: max
+    label: Maximum
+    dtype: typekeys/T
+    grc:
+        default: 2
+-   id: num_samps
+    label: Num Samples
+    dtype: size
+    grc:
+        default: 1000
+-   id: repeat
+    label: Repeat
+    dtype: bool
+    grc:    
+        default: true
+
+# Example Ports
+ports:
+-   domain: stream
+    id: out
+    direction: output
+    type: typekeys/T
+
+implementations:
+-   id: cpu
+
+file_format: 1
