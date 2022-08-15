@@ -17,11 +17,11 @@ typekeys:
 parameters:
 -   id: k
     label: Constant
-    dtype: T
+    dtype: typekeys/T
     settable: true
 -   id: vlen
     label: Vec. Length
-    dtype: size_t
+    dtype: size
     settable: false
     default: 1
 
