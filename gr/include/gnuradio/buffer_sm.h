@@ -19,6 +19,7 @@ class buffer_sm : public buffer
 {
 private:
     std::vector<uint8_t> _buffer;
+    uint8_t* _raw_buffer;
 
     // logger_ptr d_logger;
     // logger_ptr d_debug_logger;
@@ -51,6 +52,14 @@ public:
                                   size_t itemsize) override;
 
     bool adjust_buffer_data(memcpy_func_t memcpy_func, memmove_func_t memmove_func);
+
+    // Wipes away the default single mapped buffer and replaces it with something
+    // defined externally in the derived class
+    void set_bufp(uint8_t* ptr)
+    {
+        _raw_buffer = ptr;
+        _buffer.resize(0);
+    }
 };
 
 class buffer_sm_reader : public buffer_reader

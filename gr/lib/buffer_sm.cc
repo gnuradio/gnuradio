@@ -18,6 +18,7 @@ buffer_sm::buffer_sm(size_t num_items,
     : buffer(num_items, item_size, buf_properties)
 {
     _buffer.resize(_buf_size); // singly mapped buffer
+    _raw_buffer = _buffer.data();
     _write_index = 0;
 
     set_type("buffer_sm");
@@ -33,8 +34,8 @@ buffer_uptr buffer_sm::make(size_t num_items,
     return buffer_uptr(new buffer_sm(num_items, item_size, buffer_properties));
 }
 
-void* buffer_sm::read_ptr(size_t index) { return (void*)&_buffer[index]; }
-void* buffer_sm::write_ptr() { return (void*)&_buffer[_write_index]; }
+void* buffer_sm::read_ptr(size_t index) { return (void*)&_raw_buffer[index]; }
+void* buffer_sm::write_ptr() { return (void*)&_raw_buffer[_write_index]; }
 
 void buffer_sm::post_write(int num_items)
 {
@@ -93,7 +94,7 @@ bool buffer_sm::output_blocked_callback_logic(bool force, memmove_func_t memmove
         //     d_debug_logger, "output_blocked_callback, moving {} bytes", to_move_bytes);
 
         // Shift "to be read" data back to the beginning of the buffer
-        std::memmove(_buffer.data(), _buffer.data() + (min_read_idx), to_move_bytes);
+        std::memmove(_raw_buffer, _raw_buffer + (min_read_idx), to_move_bytes);
 
         // Adjust write index and each reader index
         _write_index -= min_read_idx;
@@ -206,13 +207,13 @@ bool buffer_sm::adjust_buffer_data(memcpy_func_t memcpy_func, memmove_func_t mem
 
     // Shift existing data down to make room for blocked data at end of buffer
     auto move_data_size = _write_index;
-    auto dest = _buffer.data() + max_bytes_avail;
-    memmove_func(dest, _buffer.data(), move_data_size);
+    auto dest = _raw_buffer + max_bytes_avail;
+    memmove_func(dest, _raw_buffer, move_data_size);
 
     // Next copy the data from the end of the buffer back to the beginning
     auto avail_data_size = max_bytes_avail;
-    auto src = _buffer.data() + (min_read_idx * _item_size);
-    memcpy_func(_buffer.data(), src, avail_data_size);
+    auto src = _raw_buffer + (min_read_idx * _item_size);
+    memcpy_func(_raw_buffer, src, avail_data_size);
 
     // Finally adjust all reader pointers
     for (size_t idx = 0; idx < _readers.size(); ++idx) {
