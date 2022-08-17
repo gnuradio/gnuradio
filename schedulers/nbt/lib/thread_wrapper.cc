@@ -85,36 +85,47 @@ bool thread_wrapper::handle_work_notification()
 
     bool notify_self_ = false;
     // bool kick = false;
-    bool all_blkd = true;
-    for (auto elem : s) {
-        if (elem.second == executor_iteration_status_t::READY ||
-            elem.second == executor_iteration_status_t::READY_NO_OUTPUT ||
-            elem.second == executor_iteration_status_t::BLKD_OUT) {
-            notify_self_ = true;
-        }
-        else if (elem.second == executor_iteration_status_t::BLKD_IN) {
-            // kick = true;
+
+
+    bool profiling = true;
+    if (d_flushing) {
+
+        // For profiling, we don't want to compare against the flushing logic
+        if (profiling) {
+            d_rtmon->push_message(
+                rt_monitor_message::make(rt_monitor_message_t::FLUSHED, id()));
+            return false;
         }
 
-        if (elem.second == executor_iteration_status_t::MSG_ONLY) {
-            //     gr_log_debug(d_debug_logger,
-            //                  "size_approx {}",
-            //                  msgq.size_approx());
-            // if (msgq.size_approx() != 0)
-            // {
-            //     all_blkd = false;
-            // }
-        }
-        else if (elem.second != executor_iteration_status_t::BLKD_IN &&
-                 elem.second != executor_iteration_status_t::BLKD_OUT) {
-            // Ignore source blocks
-            if (d_block_id_to_block_map[elem.first]->input_stream_ports().empty()) {
-                all_blkd = false;
+        bool all_blkd = true;
+        for (auto elem : s) {
+            if (elem.second == executor_iteration_status_t::READY ||
+                elem.second == executor_iteration_status_t::READY_NO_OUTPUT ||
+                elem.second == executor_iteration_status_t::BLKD_OUT) {
+                notify_self_ = true;
+            }
+            else if (elem.second == executor_iteration_status_t::BLKD_IN) {
+                // kick = true;
+            }
+
+            if (elem.second == executor_iteration_status_t::MSG_ONLY) {
+                //     gr_log_debug(d_debug_logger,
+                //                  "size_approx {}",
+                //                  msgq.size_approx());
+                // if (msgq.size_approx() != 0)
+                // {
+                //     all_blkd = false;
+                // }
+            }
+            else if (elem.second != executor_iteration_status_t::BLKD_IN &&
+                     elem.second != executor_iteration_status_t::BLKD_OUT) {
+                // Ignore source blocks
+                if (d_block_id_to_block_map[elem.first]->input_stream_ports().empty()) {
+                    all_blkd = false;
+                }
             }
         }
-    }
 
-    if (d_flushing) {
         if (all_blkd) {
             if (++d_flush_cnt >= 8) {
                 d_debug_logger->debug("All blocks in thread {} blocked, pushing flushed",
