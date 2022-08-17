@@ -45,7 +45,8 @@ runtime_monitor::runtime_monitor(std::vector<std::shared_ptr<scheduler>>& sched_
                     d_debug_logger->debug("DONE");
                     // One scheduler signaled it is done
                     // Notify the other schedulers that they need to flush
-                    std::this_thread::sleep_for(std::chrono::milliseconds(100)); // DEBUG
+                    // std::this_thread::sleep_for(std::chrono::milliseconds(100)); //
+                    // DEBUG
                     for (auto& s : d_schedulers) {
                         s->push_message(std::make_shared<scheduler_action>(
                             scheduler_action_t::DONE, 0));
