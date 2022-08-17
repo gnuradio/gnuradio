@@ -269,7 +269,7 @@ public:
     virtual bool output_blocked_callback(bool force = false)
     {
         // Only singly mapped buffers need to do anything with this callback
-        return true;
+        return false;
     }
 };
 
@@ -344,7 +344,7 @@ public:
     virtual bool input_blocked_callback(size_t items_required)
     {
         // Only singly mapped buffers need to do anything with this callback
-        return true;
+        return false;
     }
 
     std::vector<tag_t> tags_in_window(const uint64_t item_start, const uint64_t item_end);

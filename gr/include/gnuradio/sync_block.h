@@ -50,6 +50,9 @@ public:
         for (auto& w : wio.inputs()) {
             min_num_items = std::min(min_num_items, w.n_items);
         }
+        if (min_num_items < output_multiple()) {
+            return work_return_t::INSUFFICIENT_INPUT_ITEMS;
+        }
         for (auto& w : wio.outputs()) {
             min_num_items = std::min(min_num_items, w.n_items);
         }
