@@ -88,6 +88,7 @@ bool thread_wrapper::handle_work_notification()
     bool all_blkd = true;
     for (auto elem : s) {
         if (elem.second == executor_iteration_status_t::READY ||
+            elem.second == executor_iteration_status_t::READY_NO_OUTPUT ||
             elem.second == executor_iteration_status_t::BLKD_OUT) {
             notify_self_ = true;
         }
