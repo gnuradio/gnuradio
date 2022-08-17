@@ -51,10 +51,11 @@ graph_executor::run_one_iteration(std::vector<block_sptr> blocks)
 
                 buffer_info_t read_info;
                 ready = p_buf->read_info(read_info);
-                d_debug_logger->debug("read_info {} - {} - {}",
+                d_debug_logger->debug("read_info {} - {} - {}, total: {}",
                                       b->alias(),
                                       read_info.n_items,
-                                      read_info.item_size);
+                                      read_info.item_size,
+                                      read_info.total_items);
 
                 if (!ready)
                     break;
@@ -62,7 +63,10 @@ graph_executor::run_one_iteration(std::vector<block_sptr> blocks)
                 if (read_info.n_items < s_min_items_to_process ||
                     (min_read > 0 && read_info.n_items < (int)min_read)) {
 
-                    p_buf->input_blocked_callback(s_min_items_to_process);
+                    if (p_buf->input_blocked_callback(s_min_items_to_process)) {
+                        w.port->notify_scheduler_action(
+                            scheduler_action_t::NOTIFY_OUTPUT);
+                    }
 
                     ready = false;
                     break;
@@ -99,17 +103,22 @@ graph_executor::run_one_iteration(std::vector<block_sptr> blocks)
 
                 buffer_info_t write_info;
                 ready = p_buf->write_info(write_info);
-                d_debug_logger->debug("write_info {} - {} @ {} {}",
+                d_debug_logger->debug("write_info {} - {} @ {} {}, total: {}",
                                       b->alias(),
                                       write_info.n_items,
                                       write_info.ptr,
-                                      write_info.item_size);
+                                      write_info.item_size,
+                                      write_info.total_items);
 
                 size_t tmp_buf_size = write_info.n_items;
                 if (tmp_buf_size < s_min_buf_items ||
                     (min_fill > 0 && tmp_buf_size < min_fill)) {
                     ready = false;
-                    p_buf->output_blocked_callback(false);
+                    if (p_buf->output_blocked_callback(false)) {
+                        w.port->notify_scheduler_action(scheduler_action_t::NOTIFY_INPUT);
+                        // w.port->push_message(std::make_shared<scheduler_action>(
+                        //     scheduler_action_t::NOTIFY_INPUT));
+                    }
                     break;
                 }
 
@@ -121,11 +130,17 @@ graph_executor::run_one_iteration(std::vector<block_sptr> blocks)
                 }
 
                 if (b->output_multiple_set()) {
+                    d_debug_logger->debug("output_multiple {}", b->output_multiple());
                     max_output_buffer =
                         round_down(max_output_buffer, b->output_multiple());
                 }
 
                 if (max_output_buffer <= 0) {
+                    if (p_buf->output_blocked_callback()) {
+                        w.port->notify_scheduler_action(scheduler_action_t::NOTIFY_INPUT);
+                        // w.port->push_message(std::make_shared<scheduler_action>(
+                        //     scheduler_action_t::NOTIFY_INPUT));
+                    }
                     ready = false;
                 }
 
@@ -206,9 +221,22 @@ graph_executor::run_one_iteration(std::vector<block_sptr> blocks)
                     if (wio.outputs()[0].n_items < b->output_multiple()) // min block size
                     {
                         per_block_status[b->id()] = executor_iteration_status_t::BLKD_IN;
+
+                        // call the input blocked callback
+                        bool notify = false;
+                        for (auto& w : wio.inputs()) {
+                            notify |=
+                                w.buf().input_blocked_callback(b->output_multiple());
+                        }
+                        if (notify) {
+                            wio.inputs()[0].port->push_message(
+                                std::make_shared<scheduler_action>(
+                                    scheduler_action_t::NOTIFY_INPUT));
+                        }
+                        per_block_status[b->id()] =
+                            executor_iteration_status_t::READY_NO_OUTPUT;
                         d_debug_logger->debug(
                             "pbs[{}]: {}", b->id(), (int)per_block_status[b->id()]);
-                        // call the input blocked callback
                         break;
                     }
                 }
@@ -251,8 +279,10 @@ graph_executor::run_one_iteration(std::vector<block_sptr> blocks)
                             }
                         }
 
-                        d_debug_logger->debug(
-                            "post_read {} - {}", b->alias(), w.n_consumed);
+                        d_debug_logger->debug("post_read {} - {}, total: {}",
+                                              b->alias(),
+                                              w.n_consumed,
+                                              w.nitems_read());
 
                         p_buf->post_read(w.n_consumed);
                         w.port->notify_scheduler_action(
@@ -265,8 +295,10 @@ graph_executor::run_one_iteration(std::vector<block_sptr> blocks)
                 for (auto& wo : wio.outputs()) {
                     auto p_buf = wo.bufp();
                     if (p_buf) {
-                        d_debug_logger->debug(
-                            "post_write {} - {}", b->alias(), wo.n_produced);
+                        d_debug_logger->debug("post_write {} - {}, total: {}",
+                                              b->alias(),
+                                              wo.n_produced,
+                                              wo.nitems_written());
                         p_buf->post_write(wo.n_produced);
                         wo.port->notify_scheduler_action(
                             scheduler_action_t::NOTIFY_INPUT);
