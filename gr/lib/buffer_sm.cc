@@ -64,22 +64,24 @@ bool buffer_sm::output_blocked_callback_logic(bool force, memmove_func_t memmove
     if ((space_avail > 0) || force) {
         // Find reader with the smallest read index
         uint32_t min_read_idx = _readers[0]->read_index();
+        uint64_t min_read_idx_nitems = _readers[0]->total_read();
         for (size_t idx = 1; idx < _readers.size(); ++idx) {
             // Record index of reader with minimum read-index
             if (_readers[idx]->read_index() < min_read_idx) {
                 min_read_idx = _readers[idx]->read_index();
+                min_read_idx_nitems = _readers[idx]->total_read();
             }
         }
 
-        // GR_LOG_DEBUG(d_debug_logger,
-        //              "output_blocked_callback, space_avail {}, min_read_idx {}, "
-        //              "_write_index {}",
-        //              space_avail,
-        //              min_read_idx,
-        //              _write_index);
+        d_debug_logger->debug("output_blocked_callback, space_avail {}, min_read_idx {}, "
+                              "_write_index {}",
+                              space_avail,
+                              min_read_idx,
+                              _write_index);
 
         // Make sure we have enough room to start writing back at the beginning
-        if ((min_read_idx == 0) || (min_read_idx >= _write_index)) {
+        if ((min_read_idx == 0) || (min_read_idx > _write_index) ||
+            (min_read_idx == _write_index && min_read_idx_nitems != total_written())) {
             return false;
         }
 
@@ -90,8 +92,8 @@ bool buffer_sm::output_blocked_callback_logic(bool force, memmove_func_t memmove
             return false;
         }
 
-        // GR_LOG_DEBUG(
-        //     d_debug_logger, "output_blocked_callback, moving {} bytes", to_move_bytes);
+
+        d_debug_logger->debug("output_blocked_callback, moving {} bytes", to_move_bytes);
 
         // Shift "to be read" data back to the beginning of the buffer
         std::memmove(_raw_buffer, _raw_buffer + (min_read_idx), to_move_bytes);
@@ -99,12 +101,11 @@ bool buffer_sm::output_blocked_callback_logic(bool force, memmove_func_t memmove
         // Adjust write index and each reader index
         _write_index -= min_read_idx;
 
-        // for (size_t idx = 0; idx < _readers.size(); ++idx) {
-        //     GR_LOG_DEBUG(d_debug_logger,
-        //                  "output_blocked_callback,setting _read_index to {}",
-        //                  _readers[idx]->read_index() - min_read_idx);
-        //     _readers[idx]->set_read_index(_readers[idx]->read_index() - min_read_idx);
-        // }
+        for (size_t idx = 0; idx < _readers.size(); ++idx) {
+            d_debug_logger->debug("output_blocked_callback,setting _read_index to {}",
+                                  _readers[idx]->read_index() - min_read_idx);
+            _readers[idx]->set_read_index(_readers[idx]->read_index() - min_read_idx);
+        }
 
         return true;
     }
@@ -212,7 +213,7 @@ bool buffer_sm::adjust_buffer_data(memcpy_func_t memcpy_func, memmove_func_t mem
 
     // Next copy the data from the end of the buffer back to the beginning
     auto avail_data_size = max_bytes_avail;
-    auto src = _raw_buffer + (min_read_idx * _item_size);
+    auto src = _raw_buffer + min_read_idx;
     memcpy_func(_raw_buffer, src, avail_data_size);
 
     // Finally adjust all reader pointers
