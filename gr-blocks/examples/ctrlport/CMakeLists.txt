@@ -7,18 +7,9 @@
 
 include(GrPython)
 
-install(
-  FILES
-  comparing_resamplers.grc
-  pfb_sync_test.grc
-  simple_copy.grc
-  usrp_source_control.grc
-  DESTINATION ${GR_PKG_DATA_DIR}/examples/ctrlport
-)
+install(FILES comparing_resamplers.grc pfb_sync_test.grc simple_copy.grc
+              usrp_source_control.grc DESTINATION ${GR_PKG_DATA_DIR}/examples/ctrlport)
 
-GR_PYTHON_INSTALL(PROGRAMS
-  simple_copy_controller.py
-  usrp_source_controller.py
-  usrp_sink_controller.py
-  DESTINATION ${GR_PKG_DATA_DIR}/examples/ctrlport
-)
+gr_python_install(
+    PROGRAMS simple_copy_controller.py usrp_source_controller.py usrp_sink_controller.py
+    DESTINATION ${GR_PKG_DATA_DIR}/examples/ctrlport)

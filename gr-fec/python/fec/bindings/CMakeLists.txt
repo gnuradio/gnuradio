@@ -4,7 +4,9 @@ include(GrPybind)
 # Python Bindings
 ########################################################################
 
-list(APPEND fec_python_files
+list(
+    APPEND
+    fec_python_files
     #alist_python.cc
     async_decoder_python.cc
     async_encoder_python.cc
@@ -22,7 +24,7 @@ list(APPEND fec_python_files
     dummy_decoder_python.cc
     dummy_encoder_python.cc
     encode_ccsds_27_bb_python.cc
-    encoder_python.cc    
+    encoder_python.cc
     generic_decoder_python.cc
     generic_encoder_python.cc
     #gf2mat_python.cc
@@ -48,10 +50,12 @@ list(APPEND fec_python_files
     tpc_decoder_python.cc
     tpc_encoder_python.cc
     # #viterbi_python.cc
-    )
+)
 
 if(GSL_FOUND)
-    list(APPEND fec_python_files
+    list(
+        APPEND
+        fec_python_files
         fec_mtrx_python.cc
         ldpc_G_matrix_python.cc
         ldpc_H_matrix_python.cc
@@ -60,17 +64,15 @@ if(GSL_FOUND)
         ldpc_par_mtrx_encoder_python.cc)
 endif(GSL_FOUND)
 
+list(APPEND fec_python_files python_bindings.cc)
 
-list(APPEND fec_python_files
-    python_bindings.cc)
-
-GR_PYBIND_MAKE_CHECK_HASH(fec 
-   ../../.. 
-   gr::fec
-   "${fec_python_files}") 
+gr_pybind_make_check_hash(fec ../../.. gr::fec "${fec_python_files}")
 
 target_link_libraries(fec_python PUBLIC gnuradio-runtime gnuradio-blocks)
 if(GSL_FOUND)
     target_compile_definitions(fec_python PUBLIC -DHAVE_GSL)
 endif(GSL_FOUND)
-install(TARGETS fec_python DESTINATION ${GR_PYTHON_DIR}/gnuradio/fec COMPONENT pythonapi)
+install(
+    TARGETS fec_python
+    DESTINATION ${GR_PYTHON_DIR}/gnuradio/fec
+    COMPONENT pythonapi)

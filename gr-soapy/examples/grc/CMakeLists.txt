@@ -5,12 +5,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
 
-install(
-    FILES
-    fm_radio_receiver_soapy.grc
-    fm_radio_receiver_soapyremote.grc
-    soapy_receive2.grc
-    soapy_receive.grc
-    soapy_transmit.grc
-    DESTINATION ${GR_PKG_SOAPY_EXAMPLES_DIR}
-)
+install(FILES fm_radio_receiver_soapy.grc fm_radio_receiver_soapyremote.grc
+              soapy_receive2.grc soapy_receive.grc soapy_transmit.grc
+        DESTINATION ${GR_PKG_SOAPY_EXAMPLES_DIR})

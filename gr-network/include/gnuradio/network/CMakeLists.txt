@@ -8,14 +8,13 @@
 ########################################################################
 #Install public header files
 ########################################################################
-install(FILES
-    api.h
-    packet_headers.h
-    socket_pdu.h
-    tcp_sink.h
-    tuntap_pdu.h
-    udp_header_types.h
-    udp_sink.h
-    udp_source.h
-    DESTINATION ${GR_INCLUDE_DIR}/gnuradio/network
-)
+install(
+    FILES api.h
+          packet_headers.h
+          socket_pdu.h
+          tcp_sink.h
+          tuntap_pdu.h
+          udp_header_types.h
+          udp_sink.h
+          udp_source.h
+    DESTINATION ${GR_INCLUDE_DIR}/gnuradio/network)

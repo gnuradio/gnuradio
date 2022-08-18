@@ -9,7 +9,8 @@
 # Setup library
 ########################################################################
 
-add_library(gnuradio-digital
+add_library(
+    gnuradio-digital
     additive_scrambler_bb_impl.cc
     binary_slicer_fb_impl.cc
     burst_shaper_impl.cc
@@ -88,60 +89,46 @@ add_library(gnuradio-digital
     interpolating_resampler.cc
     symbol_sync_cc_impl.cc
     symbol_sync_ff_impl.cc
-    timing_error_detector.cc
-    )
+    timing_error_detector.cc)
 
-target_link_libraries(gnuradio-digital PUBLIC
-    gnuradio-runtime
-    gnuradio-filter
-    gnuradio-blocks
-    gnuradio-analog
-    Boost::boost
-    Volk::volk
-)
+target_link_libraries(
+    gnuradio-digital PUBLIC gnuradio-runtime gnuradio-filter gnuradio-blocks
+                            gnuradio-analog Boost::boost Volk::volk)
 
 if(ENABLE_COMMON_PCH)
-  target_link_libraries(gnuradio-digital PRIVATE common-precompiled-headers)
+    target_link_libraries(gnuradio-digital PRIVATE common-precompiled-headers)
 endif()
 
-target_include_directories(gnuradio-digital
-  PUBLIC $<INSTALL_INTERFACE:include>
-  PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>
-  )
+target_include_directories(
+    gnuradio-digital
+    PUBLIC $<INSTALL_INTERFACE:include>
+    PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>)
 
 #Add Windows DLL resource file if using MSVC
-IF(MSVC)
+if(MSVC)
     include(${PROJECT_SOURCE_DIR}/cmake/Modules/GrVersion.cmake)
 
-    configure_file(
-        ${CMAKE_CURRENT_SOURCE_DIR}/gnuradio-digital.rc.in
-        ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-digital.rc
-    @ONLY)
+    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/gnuradio-digital.rc.in
+                   ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-digital.rc @ONLY)
 
-    target_sources(gnuradio-digital PRIVATE
-        ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-digital.rc
-    )
-ENDIF(MSVC)
+    target_sources(gnuradio-digital
+                   PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-digital.rc)
+endif(MSVC)
 
 if(BUILD_SHARED_LIBS)
-    GR_LIBRARY_FOO(gnuradio-digital)
+    gr_library_foo(gnuradio-digital)
 endif()
 
 ########################################################################
 # QA C++ Code for gr-blocks
 ########################################################################
 if(ENABLE_TESTING)
-  include(GrTest)
+    include(GrTest)
 
-  list(APPEND test_gr_digital_sources
-    qa_header_format.cc
-    qa_header_buffer.cc
-  )
-  list(APPEND GR_TEST_TARGET_DEPS gnuradio-digital)
+    list(APPEND test_gr_digital_sources qa_header_format.cc qa_header_buffer.cc)
+    list(APPEND GR_TEST_TARGET_DEPS gnuradio-digital)
 
-  foreach(qa_file ${test_gr_digital_sources})
-    GR_ADD_CPP_TEST("digital_${qa_file}"
-      ${CMAKE_CURRENT_SOURCE_DIR}/${qa_file}
-    )
-  endforeach(qa_file)
+    foreach(qa_file ${test_gr_digital_sources})
+        gr_add_cpp_test("digital_${qa_file}" ${CMAKE_CURRENT_SOURCE_DIR}/${qa_file})
+    endforeach(qa_file)
 endif(ENABLE_TESTING)

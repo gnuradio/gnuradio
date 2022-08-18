@@ -7,16 +7,8 @@
 
 include(GrPython)
 
-GR_PYTHON_INSTALL(PROGRAMS
-  affinity_set.py
-  plot_flops.py
-  run_synthetic.py
-  synthetic.py
-  wfm_rcv_pll_to_wav.py
-  DESTINATION ${GR_PKG_DATA_DIR}/examples/mp-sched
-)
+gr_python_install(
+    PROGRAMS affinity_set.py plot_flops.py run_synthetic.py synthetic.py
+             wfm_rcv_pll_to_wav.py DESTINATION ${GR_PKG_DATA_DIR}/examples/mp-sched)
 
-install(
-    FILES README
-    DESTINATION ${GR_PKG_DATA_DIR}/examples/mp-sched
-)
+install(FILES README DESTINATION ${GR_PKG_DATA_DIR}/examples/mp-sched)

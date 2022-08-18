@@ -4,7 +4,9 @@ include(GrPybind)
 # Python Bindings
 ########################################################################
 
-list(APPEND pdu_python_files
+list(
+    APPEND
+    pdu_python_files
     add_system_time_python.cc
     pdu_filter_python.cc
     pdu_remove_python.cc
@@ -19,9 +21,9 @@ list(APPEND pdu_python_files
     time_delta_python.cc
     python_bindings.cc)
 
-GR_PYBIND_MAKE_CHECK_HASH(pdu
-   ../../..
-   gr::pdu
-   "${pdu_python_files}")
+gr_pybind_make_check_hash(pdu ../../.. gr::pdu "${pdu_python_files}")
 
-install(TARGETS pdu_python DESTINATION ${GR_PYTHON_DIR}/gnuradio/pdu COMPONENT pythonapi)
+install(
+    TARGETS pdu_python
+    DESTINATION ${GR_PYTHON_DIR}/gnuradio/pdu
+    COMPONENT pythonapi)

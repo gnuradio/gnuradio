@@ -6,22 +6,21 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
 
-install(FILES
-    soapy.tree.yml
-    soapy_source.block.yml
-    soapy_sink.block.yml
-    soapy_rtlsdr_source.block.yml
-    soapy_airspyhf_source.block.yml
-    soapy_hackrf_source.block.yml
-    soapy_hackrf_sink.block.yml
-    soapy_plutosdr_source.block.yml
-    soapy_plutosdr_sink.block.yml
-    soapy_limesdr_source.block.yml
-    soapy_limesdr_sink.block.yml
-    soapy_bladerf_source.block.yml
-    soapy_bladerf_sink.block.yml
-    soapy_sdrplay_source.block.yml
-    soapy_custom_source.block.yml
-    soapy_custom_sink.block.yml
-    DESTINATION share/gnuradio/grc/blocks
-)
+install(
+    FILES soapy.tree.yml
+          soapy_source.block.yml
+          soapy_sink.block.yml
+          soapy_rtlsdr_source.block.yml
+          soapy_airspyhf_source.block.yml
+          soapy_hackrf_source.block.yml
+          soapy_hackrf_sink.block.yml
+          soapy_plutosdr_source.block.yml
+          soapy_plutosdr_sink.block.yml
+          soapy_limesdr_source.block.yml
+          soapy_limesdr_sink.block.yml
+          soapy_bladerf_source.block.yml
+          soapy_bladerf_sink.block.yml
+          soapy_sdrplay_source.block.yml
+          soapy_custom_source.block.yml
+          soapy_custom_sink.block.yml
+    DESTINATION share/gnuradio/grc/blocks)

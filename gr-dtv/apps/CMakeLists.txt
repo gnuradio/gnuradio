@@ -10,7 +10,4 @@ include(GrPython)
 ########################################################################
 # Install some dtv apps
 ########################################################################
-GR_PYTHON_INSTALL(
-    PROGRAMS
-    DESTINATION ${GR_RUNTIME_DIR}
-)
+gr_python_install(PROGRAMS DESTINATION ${GR_RUNTIME_DIR})

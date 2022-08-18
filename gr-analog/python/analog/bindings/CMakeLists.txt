@@ -4,7 +4,9 @@ include(GrPybind)
 # Python Bindings
 ########################################################################
 
-list(APPEND analog_python_files
+list(
+    APPEND
+    analog_python_files
     agc_python.cc
     # agc2_python.cc
     agc2_cc_python.cc
@@ -41,9 +43,9 @@ list(APPEND analog_python_files
     squelch_base_ff_python.cc
     python_bindings.cc)
 
-GR_PYBIND_MAKE_CHECK_HASH(analog 
-   ../../.. 
-   gr::analog
-   "${analog_python_files}")
+gr_pybind_make_check_hash(analog ../../.. gr::analog "${analog_python_files}")
 
-install(TARGETS analog_python DESTINATION ${GR_PYTHON_DIR}/gnuradio/analog COMPONENT pythonapi)
+install(
+    TARGETS analog_python
+    DESTINATION ${GR_PYTHON_DIR}/gnuradio/analog
+    COMPONENT pythonapi)

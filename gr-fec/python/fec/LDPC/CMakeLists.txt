@@ -8,10 +8,6 @@
 #####################################################################
 include(GrPython)
 
-GR_PYTHON_INSTALL(
-    FILES
-    __init__.py
-    Generate_LDPC_matrix_functions.py
-    Generate_LDPC_matrix.py
-    DESTINATION ${GR_PYTHON_DIR}/gnuradio/fec/LDPC
-)
+gr_python_install(
+    FILES __init__.py Generate_LDPC_matrix_functions.py Generate_LDPC_matrix.py
+    DESTINATION ${GR_PYTHON_DIR}/gnuradio/fec/LDPC)

@@ -28,36 +28,27 @@
 #
 #####
 
-
 # TODO: in cmake 3.10+ use include_guard()
 if(__INCLUDED_MATHJAX2)
-  return()
+    return()
 endif()
 set(__INCLUDED_MATHJAX2 TRUE)
 
-
 if(DEFINED MATHJAX2_USE_ROOT)
-  set(MATHJAX2_FOUND   TRUE)
-  set(MATHJAX2_PATH    "${MATHJAX2_USE_ROOT}/")
-  set(MATHJAX2_JS_PATH "${MATHJAX2_USE_ROOT}/MathJax.js")
+    set(MATHJAX2_FOUND TRUE)
+    set(MATHJAX2_PATH "${MATHJAX2_USE_ROOT}/")
+    set(MATHJAX2_JS_PATH "${MATHJAX2_USE_ROOT}/MathJax.js")
 else()
-  find_file(MATHJAX2_JS_PATH
-      NAMES
-        MathJax.js
-      HINTS
-        "${MATHJAX2_ROOT}"
-      PATHS
-        /usr/share
-        /usr/local/share
-      PATH_SUFFIXES
-        mathjax2
-        javascript/mathjax
-  )
+    find_file(
+        MATHJAX2_JS_PATH
+        NAMES MathJax.js
+        HINTS "${MATHJAX2_ROOT}"
+        PATHS /usr/share /usr/local/share
+        PATH_SUFFIXES mathjax2 javascript/mathjax)
 
-  get_filename_component(MATHJAX2_PATH ${MATHJAX2_JS_PATH} DIRECTORY)
+    get_filename_component(MATHJAX2_PATH ${MATHJAX2_JS_PATH} DIRECTORY)
 
-  FIND_PACKAGE_HANDLE_STANDARD_ARGS(MathJax2 DEFAULT_MSG MATHJAX2_JS_PATH)
+    find_package_handle_standard_args(MathJax2 DEFAULT_MSG MATHJAX2_JS_PATH)
 endif()
 
 mark_as_advanced(MATHJAX2_JS_PATH)
-

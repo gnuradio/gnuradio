@@ -14,7 +14,9 @@ include(GrPybind)
 # For setting string conversions
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../../lib)
 
-list(APPEND soapy_python_files
+list(
+    APPEND
+    soapy_python_files
     block_python.cc
     soapy_common.cc
     soapy_types_python.cc
@@ -22,11 +24,11 @@ list(APPEND soapy_python_files
     sink_python.cc
     python_bindings.cc)
 
-GR_PYBIND_MAKE_CHECK_HASH(soapy
-   ../../..
-   gr::soapy
-   "${soapy_python_files}")
+gr_pybind_make_check_hash(soapy ../../.. gr::soapy "${soapy_python_files}")
 
 target_compile_features(soapy_python PRIVATE ${GR_CXX_VERSION_FEATURE})
 
-install(TARGETS soapy_python DESTINATION ${GR_PYTHON_DIR}/gnuradio/soapy COMPONENT pythonapi)
+install(
+    TARGETS soapy_python
+    DESTINATION ${GR_PYTHON_DIR}/gnuradio/soapy
+    COMPONENT pythonapi)

@@ -4,7 +4,9 @@ include(GrPybind)
 # Python Bindings
 ########################################################################
 
-list(APPEND qtgui_python_files
+list(
+    APPEND
+    qtgui_python_files
     # ConstellationDisplayPlot_python.cc
     # DisplayPlot_python.cc
     # FrequencyDisplayPlot_python.cc
@@ -62,9 +64,9 @@ if(QWT_FOUND)
 endif(QWT_FOUND)
 list(JOIN include_dirs "," extra_includes)
 
-GR_PYBIND_MAKE_CHECK_HASH(qtgui 
-   ../../.. 
-   gr::qtgui
-   "${qtgui_python_files}")
+gr_pybind_make_check_hash(qtgui ../../.. gr::qtgui "${qtgui_python_files}")
 
-install(TARGETS qtgui_python DESTINATION ${GR_PYTHON_DIR}/gnuradio/qtgui COMPONENT pythonapi)
+install(
+    TARGETS qtgui_python
+    DESTINATION ${GR_PYTHON_DIR}/gnuradio/qtgui
+    COMPONENT pythonapi)

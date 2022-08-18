@@ -8,9 +8,5 @@
 ########################################################################
 # Install header files
 ########################################################################
-install(FILES
-  thread.h
-  thread_body_wrapper.h
-  thread_group.h
-  DESTINATION ${GR_INCLUDE_DIR}/gnuradio/thread
-)
+install(FILES thread.h thread_body_wrapper.h thread_group.h
+        DESTINATION ${GR_INCLUDE_DIR}/gnuradio/thread)

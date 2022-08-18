@@ -6,23 +6,21 @@
 #
 
 install(
-  FILES
-  matrix_interleaver.grc
-  matrix_multiplexer.grc
-  peak_detector2.grc
-  py_snippets_demo.grc
-  selector.grc
-  stream_mux_demo.grc
-  stream_demux_demo.grc
-  vector_source_with_tags.grc
-  msg_to_var.grc
-  var_to_msg.grc
-  DESTINATION ${GR_PKG_DATA_DIR}/examples/blocks
-)
+    FILES matrix_interleaver.grc
+          matrix_multiplexer.grc
+          peak_detector2.grc
+          py_snippets_demo.grc
+          selector.grc
+          stream_mux_demo.grc
+          stream_demux_demo.grc
+          vector_source_with_tags.grc
+          msg_to_var.grc
+          var_to_msg.grc
+    DESTINATION ${GR_PKG_DATA_DIR}/examples/blocks)
 
 add_subdirectory(metadata)
 add_subdirectory(tags)
 
 if(ENABLE_GR_CTRLPORT)
-add_subdirectory(ctrlport)
+    add_subdirectory(ctrlport)
 endif(ENABLE_GR_CTRLPORT)

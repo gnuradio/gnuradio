@@ -8,11 +8,5 @@
 ########################################################################
 # Install the headers
 ########################################################################
-install(FILES
-  api.h
-  pmt.h
-  pmt_pool.h
-  pmt_sugar.h
-  pmt_serial_tags.h
-  DESTINATION ${GR_INCLUDE_DIR}/pmt
-)
+install(FILES api.h pmt.h pmt_pool.h pmt_sugar.h pmt_serial_tags.h
+        DESTINATION ${GR_INCLUDE_DIR}/pmt)

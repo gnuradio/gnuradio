@@ -73,66 +73,77 @@
 # (To distribute this file outside of CMake, substitute the full
 #  License text for the above reference.)
 
-
 if(__CMAKE_PARSE_ARGUMENTS_INCLUDED)
-  return()
+    return()
 endif()
 set(__CMAKE_PARSE_ARGUMENTS_INCLUDED TRUE)
 
-
 function(CMAKE_PARSE_ARGUMENTS prefix _optionNames _singleArgNames _multiArgNames)
-  # first set all result variables to empty/FALSE
-  foreach(arg_name ${_singleArgNames} ${_multiArgNames})
-    set(${prefix}_${arg_name})
-  endforeach(arg_name)
+    # first set all result variables to empty/FALSE
+    foreach(arg_name ${_singleArgNames} ${_multiArgNames})
+        set(${prefix}_${arg_name})
+    endforeach(arg_name)
 
-  foreach(option ${_optionNames})
-    set(${prefix}_${option} FALSE)
-  endforeach(option)
+    foreach(option ${_optionNames})
+        set(${prefix}_${option} FALSE)
+    endforeach(option)
 
-  set(${prefix}_UNPARSED_ARGUMENTS)
+    set(${prefix}_UNPARSED_ARGUMENTS)
 
-  set(insideValues FALSE)
-  set(currentArgName)
+    set(insideValues FALSE)
+    set(currentArgName)
 
-  # now iterate over all arguments and fill the result variables
-  foreach(currentArg ${ARGN})
-    list(FIND _optionNames "${currentArg}" optionIndex)  # ... then this marks the end of the arguments belonging to this keyword
-    list(FIND _singleArgNames "${currentArg}" singleArgIndex)  # ... then this marks the end of the arguments belonging to this keyword
-    list(FIND _multiArgNames "${currentArg}" multiArgIndex)  # ... then this marks the end of the arguments belonging to this keyword
+    # now iterate over all arguments and fill the result variables
+    foreach(currentArg ${ARGN})
+        list(FIND _optionNames "${currentArg}" optionIndex
+        )# ... then this marks the end of the arguments belonging to this keyword
+        list(FIND _singleArgNames "${currentArg}" singleArgIndex
+        )# ... then this marks the end of the arguments belonging to this keyword
+        list(FIND _multiArgNames "${currentArg}" multiArgIndex
+        )# ... then this marks the end of the arguments belonging to this keyword
 
-    if(${optionIndex} EQUAL -1  AND  ${singleArgIndex} EQUAL -1  AND  ${multiArgIndex} EQUAL -1)
-      if(insideValues)
-        if("${insideValues}" STREQUAL "SINGLE")
-          set(${prefix}_${currentArgName} ${currentArg})
-          set(insideValues FALSE)
-        elseif("${insideValues}" STREQUAL "MULTI")
-          list(APPEND ${prefix}_${currentArgName} ${currentArg})
+        if(${optionIndex} EQUAL -1
+           AND ${singleArgIndex} EQUAL -1
+           AND ${multiArgIndex} EQUAL -1)
+            if(insideValues)
+                if("${insideValues}" STREQUAL "SINGLE")
+                    set(${prefix}_${currentArgName} ${currentArg})
+                    set(insideValues FALSE)
+                elseif("${insideValues}" STREQUAL "MULTI")
+                    list(APPEND ${prefix}_${currentArgName} ${currentArg})
+                endif()
+            else(insideValues)
+                list(APPEND ${prefix}_UNPARSED_ARGUMENTS ${currentArg})
+            endif(insideValues)
+        else()
+            if(NOT ${optionIndex} EQUAL -1)
+                set(${prefix}_${currentArg} TRUE)
+                set(insideValues FALSE)
+            elseif(NOT ${singleArgIndex} EQUAL -1)
+                set(currentArgName ${currentArg})
+                set(${prefix}_${currentArgName})
+                set(insideValues "SINGLE")
+            elseif(NOT ${multiArgIndex} EQUAL -1)
+                set(currentArgName ${currentArg})
+                set(${prefix}_${currentArgName})
+                set(insideValues "MULTI")
+            endif()
         endif()
-      else(insideValues)
-        list(APPEND ${prefix}_UNPARSED_ARGUMENTS ${currentArg})
-      endif(insideValues)
-    else()
-      if(NOT ${optionIndex} EQUAL -1)
-        set(${prefix}_${currentArg} TRUE)
-        set(insideValues FALSE)
-      elseif(NOT ${singleArgIndex} EQUAL -1)
-        set(currentArgName ${currentArg})
-        set(${prefix}_${currentArgName})
-        set(insideValues "SINGLE")
-      elseif(NOT ${multiArgIndex} EQUAL -1)
-        set(currentArgName ${currentArg})
-        set(${prefix}_${currentArgName})
-        set(insideValues "MULTI")
-      endif()
-    endif()
 
-  endforeach(currentArg)
+    endforeach(currentArg)
 
-  # propagate the result variables to the caller:
-  foreach(arg_name ${_singleArgNames} ${_multiArgNames} ${_optionNames})
-    set(${prefix}_${arg_name}  ${${prefix}_${arg_name}} PARENT_SCOPE)
-  endforeach(arg_name)
-  set(${prefix}_UNPARSED_ARGUMENTS ${${prefix}_UNPARSED_ARGUMENTS} PARENT_SCOPE)
+    # propagate the result variables to the caller:
+    foreach(arg_name ${_singleArgNames} ${_multiArgNames} ${_optionNames})
+        set(${prefix}_${arg_name}
+            ${${prefix}_${arg_name}}
+            PARENT_SCOPE)
+    endforeach(arg_name)
+    set(${prefix}_UNPARSED_ARGUMENTS
+        ${${prefix}_UNPARSED_ARGUMENTS}
+        PARENT_SCOPE)
 
-endfunction(CMAKE_PARSE_ARGUMENTS _options _singleArgs _multiArgs)
+endfunction(
+    CMAKE_PARSE_ARGUMENTS
+    _options
+    _singleArgs
+    _multiArgs)

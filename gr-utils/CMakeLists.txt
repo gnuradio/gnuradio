@@ -10,78 +10,52 @@
 ########################################################################
 include(GrPython)
 
-GR_PYTHON_CHECK_MODULE(
-  "Mako >= ${GR_MAKO_MIN_VERSION}"
-  mako
-  "LooseVersion(mako.__version__) >= LooseVersion('${GR_MAKO_MIN_VERSION}')"
-  MAKO_FOUND)
+gr_python_check_module(
+    "Mako >= ${GR_MAKO_MIN_VERSION}" mako
+    "LooseVersion(mako.__version__) >= LooseVersion('${GR_MAKO_MIN_VERSION}')" MAKO_FOUND)
 
-GR_PYTHON_CHECK_MODULE_RAW(
-  "click"
-  "import click"
-  CLICK_FOUND
-  )
+gr_python_check_module_raw("click" "import click" CLICK_FOUND)
 
-GR_PYTHON_CHECK_MODULE_RAW(
-  "click-plugins"
-  "import click_plugins"
-  CLICK_PLUGINS_FOUND
-  )
+gr_python_check_module_raw("click-plugins" "import click_plugins" CLICK_PLUGINS_FOUND)
 
 ########################################################################
 # Register component
 ########################################################################
 include(GrComponent)
 if(NOT CMAKE_CROSSCOMPILING)
-    set(utils_python_deps
-        MAKO_FOUND
-    )
+    set(utils_python_deps MAKO_FOUND)
 
-    set(utils_modtool_deps
-      CLICK_FOUND
-      CLICK_PLUGINS_FOUND
-    )
+    set(utils_modtool_deps CLICK_FOUND CLICK_PLUGINS_FOUND)
 
 endif(NOT CMAKE_CROSSCOMPILING)
 
-GR_REGISTER_COMPONENT("gr-utils" ENABLE_GR_UTILS
-    ENABLE_GNURADIO_RUNTIME
-    ENABLE_PYTHON
-    ${utils_python_deps}
-)
+gr_register_component("gr-utils" ENABLE_GR_UTILS ENABLE_GNURADIO_RUNTIME ENABLE_PYTHON
+                      ${utils_python_deps})
 
-GR_REGISTER_COMPONENT("gr_modtool" ENABLE_GR_MODTOOL
-    ENABLE_GNURADIO_RUNTIME
-    ENABLE_PYTHON
-    ${utils_modtool_deps}
-)
+gr_register_component("gr_modtool" ENABLE_GR_MODTOOL ENABLE_GNURADIO_RUNTIME
+                      ENABLE_PYTHON ${utils_modtool_deps})
 
- GR_REGISTER_COMPONENT("gr_blocktool" ENABLE_GR_BLOCKTOOL
-     ENABLE_GNURADIO_RUNTIME
-     ENABLE_PYTHON
- )
-
+gr_register_component("gr_blocktool" ENABLE_GR_BLOCKTOOL ENABLE_GNURADIO_RUNTIME
+                      ENABLE_PYTHON)
 
 ########################################################################
 # Begin conditional configuration
 ########################################################################
 if(ENABLE_GR_UTILS)
 
-########################################################################
-# Add subdirectories
-########################################################################
-add_subdirectory(plot_tools)
-add_subdirectory(read_file_metadata)
+    ########################################################################
+    # Add subdirectories
+    ########################################################################
+    add_subdirectory(plot_tools)
+    add_subdirectory(read_file_metadata)
 
-if(ENABLE_GR_BLOCKTOOL)
-add_subdirectory(blocktool)
-endif(ENABLE_GR_BLOCKTOOL)
+    if(ENABLE_GR_BLOCKTOOL)
+        add_subdirectory(blocktool)
+    endif(ENABLE_GR_BLOCKTOOL)
 
-if(ENABLE_GR_MODTOOL)
-add_subdirectory(bindtool)
-add_subdirectory(modtool)
-endif(ENABLE_GR_MODTOOL)
-
-
+    if(ENABLE_GR_MODTOOL)
+        add_subdirectory(bindtool)
+        add_subdirectory(modtool)
+    endif(ENABLE_GR_MODTOOL)
 
 endif(ENABLE_GR_UTILS)

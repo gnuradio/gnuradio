@@ -7,8 +7,4 @@
 
 include(GrPython)
 
-GR_PYTHON_INSTALL(
-    PROGRAMS
-    freq_hopping.py
-    DESTINATION ${GR_PKG_UHD_EXAMPLES_DIR}
-)
+gr_python_install(PROGRAMS freq_hopping.py DESTINATION ${GR_PKG_UHD_EXAMPLES_DIR})

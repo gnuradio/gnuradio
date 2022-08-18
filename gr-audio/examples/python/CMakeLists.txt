@@ -7,16 +7,15 @@
 
 include(GrPython)
 
-GR_PYTHON_INSTALL(PROGRAMS
-    audio_copy.py
-    audio_play.py
-    audio_to_file.py
-    dial_tone.py
-    dial_tone_wav.py
-    mono_tone.py
-    multi_tone.py
-    noise.py
-    spectrum_inversion.py
-    test_resampler.py
-    DESTINATION ${GR_PKG_AUDIO_EXAMPLES_DIR}
-)
+gr_python_install(
+    PROGRAMS audio_copy.py
+             audio_play.py
+             audio_to_file.py
+             dial_tone.py
+             dial_tone_wav.py
+             mono_tone.py
+             multi_tone.py
+             noise.py
+             spectrum_inversion.py
+             test_resampler.py
+    DESTINATION ${GR_PKG_AUDIO_EXAMPLES_DIR})

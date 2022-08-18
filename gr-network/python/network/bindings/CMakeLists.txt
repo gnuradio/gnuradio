@@ -4,7 +4,9 @@ include(GrPybind)
 # Python Bindings
 ########################################################################
 
-list(APPEND network_python_files
+list(
+    APPEND
+    network_python_files
     # packet_headers_python.cc
     socket_pdu_python.cc
     tcp_sink_python.cc
@@ -14,9 +16,9 @@ list(APPEND network_python_files
     udp_source_python.cc
     python_bindings.cc)
 
-GR_PYBIND_MAKE_CHECK_HASH(network
-   ../../..
-   gr::network
-   "${network_python_files}")
+gr_pybind_make_check_hash(network ../../.. gr::network "${network_python_files}")
 
-install(TARGETS network_python DESTINATION ${GR_PYTHON_DIR}/gnuradio/network COMPONENT pythonapi)
+install(
+    TARGETS network_python
+    DESTINATION ${GR_PYTHON_DIR}/gnuradio/network
+    COMPONENT pythonapi)

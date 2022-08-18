@@ -8,49 +8,40 @@
 ########################################################################
 # Setup library
 ########################################################################
-add_library(gnuradio-channels
-  channel_model_impl.cc
-  channel_model2_impl.cc
-  dynamic_channel_model_impl.cc
-  fading_model_impl.cc
-  selective_fading_model_impl.cc
-  selective_fading_model2_impl.cc
-  flat_fader_impl.cc
-  cfo_model_impl.cc
-  sro_model_impl.cc
-)
+add_library(
+    gnuradio-channels
+    channel_model_impl.cc
+    channel_model2_impl.cc
+    dynamic_channel_model_impl.cc
+    fading_model_impl.cc
+    selective_fading_model_impl.cc
+    selective_fading_model2_impl.cc
+    flat_fader_impl.cc
+    cfo_model_impl.cc
+    sro_model_impl.cc)
 
-target_link_libraries(gnuradio-channels PUBLIC
-    gnuradio-runtime
-    gnuradio-filter
-    gnuradio-analog
-    gnuradio-blocks
-)
+target_link_libraries(gnuradio-channels PUBLIC gnuradio-runtime gnuradio-filter
+                                               gnuradio-analog gnuradio-blocks)
 
 if(ENABLE_COMMON_PCH)
-  target_link_libraries(gnuradio-channels PRIVATE common-precompiled-headers)
+    target_link_libraries(gnuradio-channels PRIVATE common-precompiled-headers)
 endif()
 
-target_include_directories(gnuradio-channels
-  PUBLIC
-  $<INSTALL_INTERFACE:include>
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>
-  )
+target_include_directories(
+    gnuradio-channels PUBLIC $<INSTALL_INTERFACE:include>
+                             $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>)
 
 #Add Windows DLL resource file if using MSVC
 if(MSVC)
     include(${PROJECT_SOURCE_DIR}/cmake/Modules/GrVersion.cmake)
 
-    configure_file(
-        ${CMAKE_CURRENT_SOURCE_DIR}/gnuradio-channels.rc.in
-        ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-channels.rc
-    @ONLY)
+    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/gnuradio-channels.rc.in
+                   ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-channels.rc @ONLY)
 
-    target_sources(gnuradio-channels PRIVATE
-        ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-channels.rc
-    )
+    target_sources(gnuradio-channels
+                   PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-channels.rc)
 endif(MSVC)
 
 if(BUILD_SHARED_LIBS)
-  GR_LIBRARY_FOO(gnuradio-channels)
+    gr_library_foo(gnuradio-channels)
 endif()
