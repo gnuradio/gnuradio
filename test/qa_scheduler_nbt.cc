@@ -61,8 +61,8 @@ TEST(SchedulerMTTest, MultiDomainBasic)
     fg->connect(mult1, mult2);
     fg->connect(mult2, snk);
 
-    auto sched1 = schedulers::scheduler_nbt::make("sched1");
-    auto sched2 = schedulers::scheduler_nbt::make("sched2");
+    auto sched1 = schedulers::scheduler_nbt::make();
+    auto sched2 = schedulers::scheduler_nbt::make();
 
     auto rt = runtime::make();
     rt->add_scheduler({ sched1, { src, mult1 } });

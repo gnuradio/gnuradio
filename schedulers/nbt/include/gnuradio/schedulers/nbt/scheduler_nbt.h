@@ -4,27 +4,26 @@
 #include <gnuradio/graph_utils.h>
 #include <gnuradio/scheduler.h>
 
+#include "scheduler_nbt_options.h"
 #include "thread_wrapper.h"
 namespace gr {
 namespace schedulers {
+
 class scheduler_nbt : public scheduler
 {
 private:
     std::vector<thread_wrapper::sptr> _threads;
-    const int s_fixed_buf_size;
+    const scheduler_nbt_options _opts;
     std::map<nodeid_t, neighbor_interface_sptr> _block_thread_map;
     std::vector<block_group_properties> _block_groups;
 
 public:
     using sptr = std::shared_ptr<scheduler_nbt>;
-    static sptr make(const std::string name = "multi_threaded",
-                     const unsigned int fixed_buf_size = 32768)
+    static sptr make(const scheduler_nbt_options& opts = {})
     {
-        return std::make_shared<scheduler_nbt>(name, fixed_buf_size);
+        return std::make_shared<scheduler_nbt>(opts);
     }
-    scheduler_nbt(const std::string name = "multi_threaded",
-                  const unsigned int fixed_buf_size = 32768)
-        : scheduler(name), s_fixed_buf_size(fixed_buf_size)
+    scheduler_nbt(const scheduler_nbt_options& opts) : scheduler(opts.name), _opts(opts)
     {
         _default_buf_properties =
             buffer_cpu_vmcirc_properties::make(buffer_cpu_vmcirc_type::AUTO);

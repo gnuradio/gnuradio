@@ -17,7 +17,7 @@ runtime::runtime()
     std::shared_ptr<scheduler> (*factory)(const std::string&) =
         (std::shared_ptr<scheduler>(*)(const std::string&))dlsym(handle, "factory");
     // Instantiate the default scheduler
-    d_default_scheduler = factory("{name: nbt, buffer_size: 32768}");
+    d_default_scheduler = factory("{}");
     d_schedulers = { d_default_scheduler };
 }
 

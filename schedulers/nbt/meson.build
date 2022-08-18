@@ -5,3 +5,5 @@ subdir('lib')
 if (get_option('enable_python'))
     subdir('python/schedulers/nbt')
 endif
+
+install_data(sources : 'nbt.scheduler.conf.yml', install_dir : 'etc/gnuradio/conf.d')

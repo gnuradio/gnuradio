@@ -75,7 +75,7 @@ int main(int argc, char* argv[])
                 ->set_custom_buffer(BUFFER_CPU_VMCIRC_ARGS);
         }
 
-        auto sched = schedulers::scheduler_nbt::make("nbt", 32768);
+        auto sched = schedulers::scheduler_nbt::make();
         if (buffer_type == 1) {
             sched->set_default_buffer_factory(BUFFER_CPU_VMCIRC_ARGS);
         }

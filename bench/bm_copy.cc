@@ -26,7 +26,7 @@ int main(int argc, char* argv[])
     unsigned int nthreads = 0;
     int veclen = 1;
     int buffer_type = 1;
-    int buffer_size = 32768;
+    size_t buffer_size = 32768;
     bool rt_prio = false;
 
     std::vector<unsigned int> cpu_affinity;
@@ -86,7 +86,7 @@ int main(int argc, char* argv[])
 
         std::cout << "Initializing NBT scheduler with buffer size of " << buffer_size
                   << std::endl;
-        auto sched = schedulers::scheduler_nbt::make("nbt", buffer_size);
+        auto sched = schedulers::scheduler_nbt::make({ "nbt", buffer_size });
 
         if (buffer_type == 1) {
             sched->set_default_buffer_factory(BUFFER_CPU_VMCIRC_ARGS);
