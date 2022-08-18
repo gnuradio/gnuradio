@@ -7,10 +7,5 @@
 
 include(GrPython)
 
-install(
-  FILES
-  strobe.grc
-  hier/test_msg_hier.grc
-  hier/test_msg_hier_topblock.grc
-  DESTINATION ${GR_PKG_DATA_DIR}/examples/msg_passing
-)
+install(FILES strobe.grc hier/test_msg_hier.grc hier/test_msg_hier_topblock.grc
+        DESTINATION ${GR_PKG_DATA_DIR}/examples/msg_passing)

@@ -15,16 +15,16 @@ find_package(MathJax2)
 # Register components
 ########################################################################
 include(GrComponent)
-GR_REGISTER_COMPONENT("doxygen" ENABLE_DOXYGEN DOXYGEN_FOUND)
-GR_REGISTER_COMPONENT("man-pages" ENABLE_MANPAGES)
+gr_register_component("doxygen" ENABLE_DOXYGEN DOXYGEN_FOUND)
+gr_register_component("man-pages" ENABLE_MANPAGES)
 
 ########################################################################
 # Begin conditional configuration
 ########################################################################
 if(ENABLE_DOXYGEN)
-add_subdirectory(doxygen)
+    add_subdirectory(doxygen)
 endif(ENABLE_DOXYGEN)
 
 if(ENABLE_MANPAGES)
-add_subdirectory(man)
+    add_subdirectory(man)
 endif(ENABLE_MANPAGES)

@@ -10,11 +10,13 @@ if(DEFINED __INCLUDED_GR_TEST_CMAKE)
 endif()
 set(__INCLUDED_GR_TEST_CMAKE TRUE)
 
-function (GR_CONVERT_QUOTED_STRING path_str quoted_path)
+function(GR_CONVERT_QUOTED_STRING path_str quoted_path)
     file(TO_NATIVE_PATH "${path_str}" path_str)
     string(CONCAT path_str "\"" ${path_str} "\"")
     string(REPLACE "\\ " " " path_str ${path_str})
-    set(${quoted_path} "${path_str}" PARENT_SCOPE)
+    set(${quoted_path}
+        "${path_str}"
+        PARENT_SCOPE)
 endfunction()
 
 ########################################################################
@@ -29,34 +31,34 @@ endfunction()
 ########################################################################
 function(GR_ADD_TEST test_name)
 
-        #Ensure that the build exe also appears in the PATH.
-        list(APPEND GR_TEST_TARGET_DEPS ${ARGN})
+    #Ensure that the build exe also appears in the PATH.
+    list(APPEND GR_TEST_TARGET_DEPS ${ARGN})
 
-        #In the land of windows, all libraries must be in the PATH.
-        #Since the dependent libraries are not yet installed,
-        #we must manually set them in the PATH to run tests.
-        #The following appends the path of a target dependency.
-        foreach(target ${GR_TEST_TARGET_DEPS})
-            get_filename_component(path $<TARGET_FILE:$target> PATH)
-            string(REGEX REPLACE "\\$\\(.*\\)" "${CMAKE_BUILD_TYPE}" path "${path}")
-            list(APPEND GR_TEST_LIBRARY_DIRS ${path})
-        endforeach(target)
+    #In the land of windows, all libraries must be in the PATH.
+    #Since the dependent libraries are not yet installed,
+    #we must manually set them in the PATH to run tests.
+    #The following appends the path of a target dependency.
+    foreach(target ${GR_TEST_TARGET_DEPS})
+        get_filename_component(PATH $<TARGET_FILE:$target> PATH)
+        string(REGEX REPLACE "\\$\\(.*\\)" "${CMAKE_BUILD_TYPE}" path "${path}")
+        list(APPEND GR_TEST_LIBRARY_DIRS ${path})
+    endforeach(target)
 
     if(WIN32)
         #SWIG generates the python library files into a subdirectory.
         #Therefore, we must append this subdirectory into PYTHONPATH.
         #Only do this for the python directories matching the following:
         foreach(pydir ${GR_TEST_PYTHON_DIRS})
-            get_filename_component(name ${pydir} NAME)
+            get_filename_component(NAME ${pydir} NAME)
             if(name MATCHES "^(lib|src)$")
                 list(APPEND GR_TEST_PYTHON_DIRS ${pydir}/${CMAKE_BUILD_TYPE})
             endif()
         endforeach(pydir)
     endif(WIN32)
 
-    GR_CONVERT_QUOTED_STRING("${CMAKE_CURRENT_BINARY_DIR}" bindir)
-    GR_CONVERT_QUOTED_STRING("${CMAKE_CURRENT_SOURCE_DIR}" srcdir)
-    GR_CONVERT_QUOTED_STRING("${GR_TEST_LIBRARY_DIRS}" libpath)
+    gr_convert_quoted_string("${CMAKE_CURRENT_BINARY_DIR}" bindir)
+    gr_convert_quoted_string("${CMAKE_CURRENT_SOURCE_DIR}" srcdir)
+    gr_convert_quoted_string("${GR_TEST_LIBRARY_DIRS}" libpath)
     #GR_CONVERT_QUOTED_STRING("${GR_TEST_PYTHON_DIRS}" pypath)
     # Keep the original path conversion for pypath - the above commented line breaks CI tests
     file(TO_NATIVE_PATH "${GR_TEST_PYTHON_DIRS}" pypath) #ok to use on dir list?
@@ -66,7 +68,7 @@ function(GR_ADD_TEST test_name)
     list(INSERT pypath 0 "${PROJECT_BINARY_DIR}/test_modules")
 
     set(environs "VOLK_GENERIC=1" "GR_DONT_LOAD_PREFS=1" "srcdir=${srcdir}"
-        "GR_CONF_CONTROLPORT_ON=False")
+                 "GR_CONF_CONTROLPORT_ON=False")
     list(APPEND environs ${GR_TEST_ENVIRONS})
 
     #http://www.cmake.org/pipermail/cmake/2009-May/029464.html
@@ -88,22 +90,23 @@ function(GR_ADD_TEST test_name)
         #replace list separator with the path separator
         string(REPLACE ";" ":" libpath "${libpath}")
         string(REPLACE ";" ":" pypath "${pypath}")
-        list(APPEND environs "PATH=${binpath}" "${LD_PATH_VAR}=${libpath}" "PYTHONPATH=${pypath}")
+        list(APPEND environs "PATH=${binpath}" "${LD_PATH_VAR}=${libpath}"
+             "PYTHONPATH=${pypath}")
 
         #generate a bat file that sets the environment and runs the test
-	if (CMAKE_CROSSCOMPILING)
-                set(SHELL "/bin/sh")
+        if(CMAKE_CROSSCOMPILING)
+            set(SHELL "/bin/sh")
         else(CMAKE_CROSSCOMPILING)
-                find_program(SHELL sh)
+            find_program(SHELL sh)
         endif(CMAKE_CROSSCOMPILING)
         set(sh_file ${CMAKE_CURRENT_BINARY_DIR}/${test_name}_test.sh)
         file(WRITE ${sh_file} "#!${SHELL}\n")
-        if (NOT CMAKE_CROSSCOMPILING)
-		#each line sets an environment variable
-        	foreach(environ ${environs})
-	            file(APPEND ${sh_file} "export ${environ}\n")
-	        endforeach(environ)
-	        #load the command to run with its arguments
+        if(NOT CMAKE_CROSSCOMPILING)
+            #each line sets an environment variable
+            foreach(environ ${environs})
+                file(APPEND ${sh_file} "export ${environ}\n")
+            endforeach(environ)
+            #load the command to run with its arguments
         endif(NOT CMAKE_CROSSCOMPILING)
         foreach(arg ${ARGN})
             file(APPEND ${sh_file} "${arg} ")
@@ -155,15 +158,10 @@ endfunction(GR_ADD_TEST)
 ########################################################################
 function(GR_ADD_CPP_TEST test_name test_source)
     add_executable(${test_name} ${test_source})
-    target_link_libraries(
-        ${test_name}
-        ${GR_TEST_TARGET_DEPS}
-        Boost::unit_test_framework
-    )
-    set_target_properties(${test_name}
-        PROPERTIES COMPILE_DEFINITIONS "BOOST_TEST_DYN_LINK;BOOST_TEST_MAIN"
-    )
-    if (NOT CMAKE_CROSSCOMPILING)
-        GR_ADD_TEST(${test_name} ${test_name})
+    target_link_libraries(${test_name} ${GR_TEST_TARGET_DEPS} Boost::unit_test_framework)
+    set_target_properties(${test_name} PROPERTIES COMPILE_DEFINITIONS
+                                                  "BOOST_TEST_DYN_LINK;BOOST_TEST_MAIN")
+    if(NOT CMAKE_CROSSCOMPILING)
+        gr_add_test(${test_name} ${test_name})
     endif(NOT CMAKE_CROSSCOMPILING)
 endfunction(GR_ADD_CPP_TEST)

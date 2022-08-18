@@ -19,14 +19,10 @@
 
 include(GrPython)
 
-GR_PYTHON_INSTALL(FILES
-    __init__.py
-    DESTINATION ${GR_PYTHON_DIR}/gnuradio/bindtool
-)
+gr_python_install(FILES __init__.py DESTINATION ${GR_PYTHON_DIR}/gnuradio/bindtool)
 
 ########################################################################
 # Add subdirectories
 ########################################################################
 add_subdirectory(core)
 add_subdirectory(templates)
-

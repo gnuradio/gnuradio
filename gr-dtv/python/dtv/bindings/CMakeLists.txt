@@ -4,7 +4,9 @@ include(GrPybind)
 # Python Bindings
 ########################################################################
 
-list(APPEND dtv_python_files
+list(
+    APPEND
+    dtv_python_files
     atsc_consts_python.cc
     atsc_deinterleaver_python.cc
     atsc_depad_python.cc
@@ -65,9 +67,9 @@ list(APPEND dtv_python_files
     dvbt_viterbi_decoder_python.cc
     python_bindings.cc)
 
-GR_PYBIND_MAKE_CHECK_HASH(dtv 
-   ../../.. 
-   gr::dtv
-   "${dtv_python_files}")
+gr_pybind_make_check_hash(dtv ../../.. gr::dtv "${dtv_python_files}")
 
-install(TARGETS dtv_python DESTINATION ${GR_PYTHON_DIR}/gnuradio/dtv COMPONENT pythonapi)
+install(
+    TARGETS dtv_python
+    DESTINATION ${GR_PYTHON_DIR}/gnuradio/dtv
+    COMPONENT pythonapi)

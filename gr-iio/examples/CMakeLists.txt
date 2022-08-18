@@ -5,8 +5,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
 
-INSTALL(
+install(
     FILES
     DESTINATION ${GR_PKG_IIO_EXAMPLES_DIR}
-    COMPONENT "iio_python"
-)
+    COMPONENT "iio_python")

@@ -4,7 +4,9 @@ include(GrPybind)
 # Python Bindings
 ########################################################################
 
-list(APPEND digital_python_files
+list(
+    APPEND
+    digital_python_files
     adaptive_algorithm_python.cc
     adaptive_algorithm_cma_python.cc
     adaptive_algorithm_lms_python.cc
@@ -92,9 +94,9 @@ list(APPEND digital_python_files
     timing_error_detector_type_python.cc
     python_bindings.cc)
 
-GR_PYBIND_MAKE_CHECK_HASH(digital 
-   ../../.. 
-   gr::digital
-   "${digital_python_files}")
+gr_pybind_make_check_hash(digital ../../.. gr::digital "${digital_python_files}")
 
-install(TARGETS digital_python DESTINATION ${GR_PYTHON_DIR}/gnuradio/digital COMPONENT pythonapi)
+install(
+    TARGETS digital_python
+    DESTINATION ${GR_PYTHON_DIR}/gnuradio/digital
+    COMPONENT pythonapi)

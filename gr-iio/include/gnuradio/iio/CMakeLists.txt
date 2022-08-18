@@ -9,23 +9,20 @@
 # Install public header files
 ########################################################################
 
-install(FILES
-  api.h
-  attr_sink.h
-  attr_source.h
-  attr_updater.h
-  device_sink.h
-  device_source.h
-  dds_control.h
-  iio_types.h
-  DESTINATION ${GR_INCLUDE_DIR}/gnuradio/iio
-)
+install(
+    FILES api.h
+          attr_sink.h
+          attr_source.h
+          attr_updater.h
+          device_sink.h
+          device_source.h
+          dds_control.h
+          iio_types.h
+    DESTINATION ${GR_INCLUDE_DIR}/gnuradio/iio)
 if(libad9361_SUFFICIENT)
-  install(FILES
-    fmcomms2_sink.h
-    fmcomms2_source.h
-    # fmcomms5_sink.h
-    # fmcomms5_source.h
-    DESTINATION ${GR_INCLUDE_DIR}/gnuradio/iio
-    )
+    install(
+        FILES fmcomms2_sink.h fmcomms2_source.h
+              # fmcomms5_sink.h
+              # fmcomms5_source.h
+        DESTINATION ${GR_INCLUDE_DIR}/gnuradio/iio)
 endif()

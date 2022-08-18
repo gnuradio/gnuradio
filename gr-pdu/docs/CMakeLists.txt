@@ -5,7 +5,4 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
 
-install(
-    FILES README.pdu
-    DESTINATION ${GR_PKG_DOC_DIR}
-)
+install(FILES README.pdu DESTINATION ${GR_PKG_DOC_DIR})
