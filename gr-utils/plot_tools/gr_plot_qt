@@ -577,7 +577,7 @@ class gr_plot_qt(QtGui.QMainWindow):
         self.rightAxis.setColorMap(self.spec.data().range(),
                                    self.spec.colorMap())
 
-        # Set the new axis base; include right axis for the intenisty color bar
+        # Set the new axis base; include right axis for the intensity color bar
         self.gui.specPlot.setAxisScale(self.gui.specPlot.xBottom,
                                        min(self.spec_f),
                                        max(self.spec_f))

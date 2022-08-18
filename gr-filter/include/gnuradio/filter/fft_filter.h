@@ -348,7 +348,7 @@ public:
     /*!
      * \brief Returns the actual size of the filter.
      *
-     * \details This value could be equal to ntaps, but we ofter
+     * \details This value could be equal to ntaps, but we often
      * build a longer filter to allow us to calculate a more
      * efficient FFT. This value is the actual size of the filters
      * used in the calculation of the overlap-and-save operation.

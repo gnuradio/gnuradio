@@ -380,7 +380,7 @@ interp_resampler_pfb_mf_ccf::interp_resampler_pfb_mf_ccf(const std::vector<float
     diff_taps[0] = 0.0f;
     diff_taps[diff_taps.size() - 1] = 0.0f;
 
-    // Normalize the prototype derviative filter gain to the number of
+    // Normalize the prototype derivative filter gain to the number of
     // filter arms
     n = diff_taps.size();
     float mag = 0.0f;
@@ -518,7 +518,7 @@ interp_resampler_pfb_mf_fff::interp_resampler_pfb_mf_fff(const std::vector<float
     diff_taps[0] = 0.0f;
     diff_taps[diff_taps.size() - 1] = 0.0f;
 
-    // Normalize the prototype derviative filter gain to the number of
+    // Normalize the prototype derivative filter gain to the number of
     // filter arms
     n = diff_taps.size();
     float mag = 0.0f;
