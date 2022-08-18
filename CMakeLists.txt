@@ -41,11 +41,13 @@ message(STATUS "Build date set to ${BUILD_DATE}.")
 include(GrComponent)
 
 # Set the version information here
+# cmake-format: off
 SET(VERSION_MAJOR 3)
 SET(VERSION_API   11)
 SET(VERSION_ABI   0)
 SET(VERSION_PATCH git)
 include(GrVersion) #setup version info
+# cmake-format: on
 
 #Set minimum version requirements
 include(GrMinReq)
@@ -138,6 +140,7 @@ if(NOT CMAKE_MODULES_DIR)
   SET(CMAKE_MODULES_DIR lib${LIB_SUFFIX}/cmake)
 endif(NOT CMAKE_MODULES_DIR)
 
+# cmake-format: off
 SET(GR_RUNTIME_DIR     bin CACHE PATH "Path to install all binaries")
 SET(GR_LIBRARY_DIR     lib${LIB_SUFFIX} CACHE PATH "Path to install libraries")
 SET(GR_INCLUDE_DIR     include CACHE PATH "Path to install header files")
@@ -151,6 +154,7 @@ SET(GR_LIBEXEC_DIR     libexec CACHE PATH "Path to install libexec files")
 SET(GR_PKG_LIBEXEC_DIR ${GR_LIBEXEC_DIR}/${CMAKE_PROJECT_NAME} CACHE PATH "Path to install package libexec files")
 SET(GRC_BLOCKS_DIR     ${GR_PKG_DATA_DIR}/grc/blocks CACHE PATH "Path to install GRC blocks")
 SET(GR_THEMES_DIR      ${GR_PKG_DATA_DIR}/themes CACHE PATH "Path to install QTGUI themes")
+# cmake-format: on
 
 # Set location of config/prefs files in /etc
 # Special exception if prefix is /usr so we don't make a /usr/etc.
@@ -177,12 +181,14 @@ endif(ENABLE_PERFORMANCE_COUNTERS)
 ########################################################################
 # Variables replaced when configuring the package config files
 ########################################################################
+# cmake-format: off
 file(TO_CMAKE_PATH "${CMAKE_INSTALL_PREFIX}"           prefix)
 file(TO_CMAKE_PATH "\${prefix}"                        exec_prefix)
 file(TO_CMAKE_PATH "\${exec_prefix}/${GR_LIBRARY_DIR}" libdir)
 file(TO_CMAKE_PATH "\${prefix}/${GR_INCLUDE_DIR}"      includedir)
 file(TO_CMAKE_PATH "${SYSCONFDIR}"                     SYSCONFDIR)
 file(TO_CMAKE_PATH "${GR_PREFSDIR}"                    GR_PREFSDIR)
+# cmake-format: on
 
 if(WIN32)
     file(RELATIVE_PATH prefix_relative_to_lib "${prefix}/${GR_RUNTIME_DIR}" "${prefix}")
