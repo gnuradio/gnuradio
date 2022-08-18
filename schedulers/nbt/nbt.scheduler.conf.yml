@@ -1,0 +1,10 @@
+# Default Logging Options
+scheduler.nbt:
+  # for benchmarking and comparing with GR 3.x
+  #  we may not want to go through the whole flushing
+  #  sequence (flush=true), instead - finish ungracefully (flush=false)
+  flush: true
+  flush_count: 8
+  flush_sleep_ms: 10
+  default_buffer_size: 32768 # in bytes
+

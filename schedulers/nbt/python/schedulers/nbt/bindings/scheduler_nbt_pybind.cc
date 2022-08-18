@@ -38,12 +38,21 @@ PYBIND11_MODULE(scheduler_nbt_python, m)
 
     // Allow access to base block methods
     py::module::import("gnuradio.gr");
-
     using nbt = gr::schedulers::scheduler_nbt;
     py::class_<nbt, gr::scheduler, std::shared_ptr<nbt>>(m, "scheduler_nbt")
-        .def(py::init(&gr::schedulers::scheduler_nbt::make),
-             py::arg("name") = "multi_threaded",
-             py::arg("fixed_buf_size") = 32768)
+        .def(py::init([](const std::string& name = "nbt",
+                         size_t default_buffer_size = 32768,
+                         bool flush = true,
+                         size_t flush_count = 8,
+                         size_t flush_sleep_ms = 10) {
+                 return ::gr::schedulers::scheduler_nbt::make(
+                     { name, default_buffer_size, flush, flush_count, flush_sleep_ms });
+             }),
+             py::arg("name") = "nbt",
+             py::arg("default_buffer_size") = 32768,
+             py::arg("flush") = true,
+             py::arg("flush_count") = 8,
+             py::arg("flush_sleep_ms") = 10)
         .def("add_block_group",
              &gr::schedulers::scheduler_nbt::add_block_group,
              py::arg("blocks"),

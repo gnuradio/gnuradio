@@ -38,7 +38,7 @@ TEST(SchedulerBlockGrouping, BasicBlockGrouping)
 
             flowgraph_sptr fg(new flowgraph());
 
-            auto sch = schedulers::scheduler_nbt::make("nbtsched");
+            auto sch = schedulers::scheduler_nbt::make();
             fg->connect(src, 0, mult_blks[0], 0);
             for (int n = 0; n < ngroups; n++) {
                 std::vector<block_sptr> bg;

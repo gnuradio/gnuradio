@@ -11,6 +11,7 @@
 #include <thread>
 
 #include "graph_executor.h"
+#include "scheduler_nbt_options.h"
 
 namespace gr {
 namespace schedulers {
@@ -48,21 +49,25 @@ private:
     int d_flush_cnt = 0;
     std::atomic<bool> kick_pending = false;
 
+    scheduler_nbt_options _opts;
+
 public:
     using sptr = std::shared_ptr<thread_wrapper>;
 
     static sptr make(int id,
                      block_group_properties bgp,
                      buffer_manager::sptr bufman,
-                     runtime_monitor_sptr rtmon)
+                     runtime_monitor_sptr rtmon,
+                     const scheduler_nbt_options& opts)
     {
-        return std::make_shared<thread_wrapper>(id, bgp, bufman, rtmon);
+        return std::make_shared<thread_wrapper>(id, bgp, bufman, rtmon, opts);
     }
 
     thread_wrapper(int id,
                    block_group_properties bgp,
                    buffer_manager::sptr bufman,
-                   runtime_monitor_sptr rtmon);
+                   runtime_monitor_sptr rtmon,
+                   const scheduler_nbt_options& opts);
     int id() { return _id; }
     const std::string& name() { return d_block_group.name(); }
 

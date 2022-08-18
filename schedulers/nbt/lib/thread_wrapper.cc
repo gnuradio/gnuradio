@@ -9,8 +9,9 @@ namespace schedulers {
 thread_wrapper::thread_wrapper(int id,
                                block_group_properties bgp,
                                buffer_manager::sptr bufman,
-                               runtime_monitor_sptr rtmon)
-    : _id(id), d_block_group(bgp), d_blocks(bgp.blocks())
+                               runtime_monitor_sptr rtmon,
+                               const scheduler_nbt_options& opts)
+    : _id(id), d_block_group(bgp), d_blocks(bgp.blocks()), _opts(opts)
 {
     gr::configure_default_loggers(d_logger, d_debug_logger, bgp.name());
 
@@ -87,11 +88,9 @@ bool thread_wrapper::handle_work_notification()
     // bool kick = false;
 
 
-    bool profiling = true;
     if (d_flushing) {
-
-        // For profiling, we don't want to compare against the flushing logic
-        if (profiling) {
+        // For profiling, we don't want to compare go into the flushing logic
+        if (!_opts.flush) {
             d_rtmon->push_message(
                 rt_monitor_message::make(rt_monitor_message_t::FLUSHED, id()));
             return false;
@@ -127,7 +126,7 @@ bool thread_wrapper::handle_work_notification()
         }
 
         if (all_blkd) {
-            if (++d_flush_cnt >= 8) {
+            if (++d_flush_cnt >= _opts.flush_count) {
                 d_debug_logger->debug("All blocks in thread {} blocked, pushing flushed",
                                       id());
                 d_rtmon->push_message(
@@ -135,7 +134,8 @@ bool thread_wrapper::handle_work_notification()
                 return false;
             }
             else {
-                std::this_thread::sleep_for(std::chrono::milliseconds(10));
+                std::this_thread::sleep_for(
+                    std::chrono::milliseconds(_opts.flush_sleep_ms));
                 push_message(std::make_shared<scheduler_action>(
                     scheduler_action_t::NOTIFY_ALL, 0));
             }
