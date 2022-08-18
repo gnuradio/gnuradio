@@ -90,7 +90,7 @@ class test_python_message_passing(gr_unittest.TestCase):
         # Connect message generator to message consumer
         self.tb.msg_connect(msg_gen, 'out_port', msg_cons, 'in_port')
 
-        # Verify that the messgae port query functions work
+        # Verify that the message port query functions work
         self.assertEqual(
             pmt.to_python(
                 msg_gen.message_ports_out())[0],

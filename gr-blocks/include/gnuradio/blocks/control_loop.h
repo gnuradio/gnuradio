@@ -322,7 +322,7 @@ static float tanh_lut_table[256] = {
 };
 
 /*!
- * A look-up table (LUT) tanh calcuation. This function returns an
+ * A look-up table (LUT) tanh calculation. This function returns an
  * estimate to tanh(x) based on a 256-point LUT between -2 and
  * 2. If x < -2, it returns -1; if > 2, it returns 1.
  *
