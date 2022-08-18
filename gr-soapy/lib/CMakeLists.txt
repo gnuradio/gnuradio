@@ -9,65 +9,51 @@
 ########################################################################
 # Setup library
 ########################################################################
-add_library(gnuradio-soapy
-  block_impl.cc
-  source_impl.cc
-  sink_impl.cc
-)
+add_library(gnuradio-soapy block_impl.cc source_impl.cc sink_impl.cc)
 
 target_compile_features(gnuradio-soapy PRIVATE ${GR_CXX_VERSION_FEATURE})
 
-target_link_libraries(gnuradio-soapy PUBLIC
-    gnuradio-runtime
-    ${SoapySDR_LIBRARIES}
-)
+target_link_libraries(gnuradio-soapy PUBLIC gnuradio-runtime ${SoapySDR_LIBRARIES})
 
 if(ENABLE_COMMON_PCH)
-  target_link_libraries(gnuradio-soapy PRIVATE common-precompiled-headers)
+    target_link_libraries(gnuradio-soapy PRIVATE common-precompiled-headers)
 endif()
 
-target_include_directories(gnuradio-soapy PUBLIC
-    $<INSTALL_INTERFACE:include>
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>
-)
+target_include_directories(
+    gnuradio-soapy PUBLIC $<INSTALL_INTERFACE:include>
+                          $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>)
 
 #Add Windows DLL resource file if using MSVC
-if (MSVC)
+if(MSVC)
     include(${PROJECT_SOURCE_DIR}/cmake/Modules/GrVersion.cmake)
 
-    configure_file(
-        ${CMAKE_CURRENT_SOURCE_DIR}/gnuradio-soapy.rc.in
-        ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-soapy.rc
-    @ONLY)
+    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/gnuradio-soapy.rc.in
+                   ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-soapy.rc @ONLY)
 
-    target_sources(gnuradio-soapy PRIVATE
-        ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-soapy.rc
-    )
-endif (MSVC)
+    target_sources(gnuradio-soapy PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-soapy.rc)
+endif(MSVC)
 
 if(BUILD_SHARED_LIBS)
-  GR_LIBRARY_FOO(gnuradio-soapy SoapySDR)
+    gr_library_foo(gnuradio-soapy SoapySDR)
 endif()
 
 if(ENABLE_TESTING)
-  include(GrTest)
+    include(GrTest)
 
-  # If your unit tests require special include paths, add them here
-  #include_directories()
-  # List all files that contain Boost.UTF unit tests here
-  list(APPEND test_soapy_sources)
+    # If your unit tests require special include paths, add them here
+    #include_directories()
+    # List all files that contain Boost.UTF unit tests here
+    list(APPEND test_soapy_sources)
 
-  # Anything we need to link to for the unit tests go here
-  list(APPEND GR_TEST_TARGET_DEPS gnuradio-soapy)
+    # Anything we need to link to for the unit tests go here
+    list(APPEND GR_TEST_TARGET_DEPS gnuradio-soapy)
 
-  if(NOT test_soapy_sources)
-    MESSAGE(STATUS "No C++ unit tests... skipping")
-    return()
-  endif(NOT test_soapy_sources)
+    if(NOT test_soapy_sources)
+        message(STATUS "No C++ unit tests... skipping")
+        return()
+    endif(NOT test_soapy_sources)
 
-  foreach(qa_file ${test_soapy_sources})
-    GR_ADD_CPP_TEST("soapy_${qa_file}"
-        ${CMAKE_CURRENT_SOURCE_DIR}/${qa_file}
-    )
-  endforeach(qa_file)
+    foreach(qa_file ${test_soapy_sources})
+        gr_add_cpp_test("soapy_${qa_file}" ${CMAKE_CURRENT_SOURCE_DIR}/${qa_file})
+    endforeach(qa_file)
 endif()

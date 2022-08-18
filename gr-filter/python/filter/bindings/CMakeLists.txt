@@ -2,7 +2,9 @@
 # Python Bindings
 ########################################################################
 
-list(APPEND filter_python_files
+list(
+    APPEND
+    filter_python_files
     dc_blocker_cc_python.cc
     dc_blocker_ff_python.cc
     fft_filter_python.cc
@@ -50,9 +52,9 @@ list(APPEND filter_python_files
     single_pole_iir_filter_ff_python.cc
     python_bindings.cc)
 
-GR_PYBIND_MAKE_CHECK_HASH(filter 
-   ../../.. 
-   gr::filter
-   "${filter_python_files}")
+gr_pybind_make_check_hash(filter ../../.. gr::filter "${filter_python_files}")
 
-install(TARGETS filter_python DESTINATION ${GR_PYTHON_DIR}/gnuradio/filter COMPONENT pythonapi)
+install(
+    TARGETS filter_python
+    DESTINATION ${GR_PYTHON_DIR}/gnuradio/filter
+    COMPONENT pythonapi)
