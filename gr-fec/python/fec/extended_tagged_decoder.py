@@ -144,7 +144,7 @@ class extended_tagged_decoder(gr.hier_block2):
                 if 1.0 / self.ann.count("1") >= i:
                     synd_garble = self.garbletable[i]
             print(
-                "using syndrom garble threshold " +
+                "using syndrome garble threshold " +
                 str(synd_garble) +
                 "for conv_bit_corr_bb"
             )

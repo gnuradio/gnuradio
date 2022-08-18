@@ -177,7 +177,7 @@ namespace digital {
  * error, which has some gain \f$K_{ted}\f$.  The gain, \f$K_{ted}\f$, is
  * defined as the slope of a TED's S-curve plot at a symbol clock phase
  * offset of \f$\tau = 0\f$.  The S-curve shape and central slope, and
- * hence the gain \f$K_{ted}\f$, depend on the TED's estimator espression,
+ * hence the gain \f$K_{ted}\f$, depend on the TED's estimator expression,
  * the input signal level, the pulse shaping filter, and the \f$E_s/N_0\f$
  * of the incoming signal.  The user must determine the TED's
  * S-curve by analysis or simulation of the particular situation, in order

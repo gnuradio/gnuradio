@@ -21,7 +21,7 @@ options:
     run_options: prompt
     sizing_mode: fixed
     thread_safe_setters: ''
-    title: Codec2 Looback Test
+    title: Codec2 Loopback Test
     window_size: 1280, 1024
   states:
     coordinate: [0, -1]

@@ -169,7 +169,7 @@ def calc_soft_dec_from_table(sample, table, prec, Es=1.0):
 
 def calc_soft_dec(sample, constel, symbols, npwr=1):
     '''
-    This function takes in any consteallation and symbol symbol set
+    This function takes in any constellation and symbol set
     (where symbols[i] is the set of bits at constellation point
     constel[i] and an estimate of the noise power and produces the
     soft decisions for the given sample.

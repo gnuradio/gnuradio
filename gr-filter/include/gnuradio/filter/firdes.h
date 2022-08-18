@@ -58,7 +58,7 @@ public:
      * normalized width of the transition band and the required stop band
      * attenuation is what sets the number of taps required.  Narrow --> more
      * taps More attenuation --> more taps. The window type determines
-     * maximum attentuation and passband ripple.
+     * maximum attenuation and passband ripple.
      *
      * \param gain                overall gain of filter (typically 1.0)
      * \param sampling_freq       sampling freq (Hz)

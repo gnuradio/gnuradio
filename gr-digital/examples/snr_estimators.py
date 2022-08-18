@@ -21,7 +21,7 @@ except ImportError:
 try:
     from matplotlib import pyplot
 except ImportError:
-    print("Error: Program requires Matplotlib (matplotlib.sourceforge.net).")
+    print("Error: Program requires Matplotlib (matplotlib.org).")
     sys.exit(1)
 
 from gnuradio import gr, digital, filter
@@ -34,7 +34,7 @@ from gnuradio.eng_option import eng_option
 This example program uses Python and GNU Radio to calculate SNR of a
 noise BPSK signal to compare them.
 
-For an explination of the online algorithms, see:
+For an explanation of the online algorithms, see:
 http://en.wikipedia.org/wiki/Algorithms_for_calculating_variance#Higher-order_statistics
 '''
 

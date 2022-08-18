@@ -47,7 +47,7 @@ public:
      * \param swap_endianness true if the CRC is stored as little-endian in the PDU,
        false if not
      * \param discard_crc If true, the CRC is removed from the PDU before sending
-       it to the output port. If false, the CRC is preserved in the outupt PDU.
+       it to the output port. If false, the CRC is preserved in the output PDU.
      * \param skip_header_bytes gives the number of header byte to skip in the CRC
        calculation
      */
