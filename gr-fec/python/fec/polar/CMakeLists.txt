@@ -8,21 +8,15 @@
 ########################################################################
 include(GrPython)
 
-GR_PYTHON_INSTALL(
-    FILES
-    __init__.py
-    channel_construction.py
-    channel_construction_awgn.py
-    channel_construction_bec.py
-    helper_functions.py
-    encoder.py
-    decoder.py
-    common.py
-    DESTINATION ${GR_PYTHON_DIR}/gnuradio/fec/polar
-)
+gr_python_install(
+    FILES __init__.py
+          channel_construction.py
+          channel_construction_awgn.py
+          channel_construction_bec.py
+          helper_functions.py
+          encoder.py
+          decoder.py
+          common.py
+    DESTINATION ${GR_PYTHON_DIR}/gnuradio/fec/polar)
 
-GR_PYTHON_INSTALL(
-    PROGRAMS
-    polar_channel_construction
-    DESTINATION ${GR_RUNTIME_DIR}
-)
+gr_python_install(PROGRAMS polar_channel_construction DESTINATION ${GR_RUNTIME_DIR})

@@ -28,15 +28,15 @@ set(git_names git eg)
 # in the MSYS shell.
 #
 if(WIN32)
-  if(NOT CMAKE_GENERATOR MATCHES "MSYS")
-    set(git_names git.cmd git eg.cmd eg)
-  endif()
+    if(NOT CMAKE_GENERATOR MATCHES "MSYS")
+        set(git_names git.cmd git eg.cmd eg)
+    endif()
 endif()
 
-find_program(GIT_EXECUTABLE
-  NAMES ${git_names}
-  DOC "git command line client"
-  )
+find_program(
+    GIT_EXECUTABLE
+    NAMES ${git_names}
+    DOC "git command line client")
 mark_as_advanced(GIT_EXECUTABLE)
 
 # Handle the QUIETLY and REQUIRED arguments and set GIT_FOUND to TRUE if

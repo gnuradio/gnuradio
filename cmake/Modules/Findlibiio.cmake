@@ -46,54 +46,41 @@ The following cache variables may also be set:
 
 #]=======================================================================]
 
-
 find_package(PkgConfig)
 pkg_check_modules(PC_libiio QUIET libiio)
 
-find_path(libiio_INCLUDE_DIR
-  NAMES iio.h
-  HINTS ${PC_libiio_INCLUDE_DIRS}
-  PATHS /usr/include
-        /usr/local/include
-        /opt/local/include
-)
+find_path(
+    libiio_INCLUDE_DIR
+    NAMES iio.h
+    HINTS ${PC_libiio_INCLUDE_DIRS}
+    PATHS /usr/include /usr/local/include /opt/local/include)
 
-find_library(libiio_LIBRARY
-  NAMES iio libiio
-  HINTS ${PC_libiio_LIBRARY_DIRS}
-  PATHS /usr/lib
-        /usr/lib64
-        /usr/local/lib
-        /usr/local/lib64
-        /opt/local/lib
-        /opt/local/lib64
-)
+find_library(
+    libiio_LIBRARY
+    NAMES iio libiio
+    HINTS ${PC_libiio_LIBRARY_DIRS}
+    PATHS /usr/lib /usr/lib64 /usr/local/lib /usr/local/lib64 /opt/local/lib
+          /opt/local/lib64)
 
 # only way we have to get version is to rely on pkg-config
 set(libiio_VERSION ${PC_libiio_VERSION})
 
 include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(libiio
-  REQUIRED_VARS
-    libiio_LIBRARY
-    libiio_INCLUDE_DIR
-  VERSION_VAR libiio_VERSION
-)
+find_package_handle_standard_args(
+    libiio
+    REQUIRED_VARS libiio_LIBRARY libiio_INCLUDE_DIR
+    VERSION_VAR libiio_VERSION)
 
 if(libiio_FOUND)
-  set(libiio_INCLUDE_DIRS ${libiio_INCLUDE_DIR})
-  set(libiio_LIBRARIES ${libiio_LIBRARY})
+    set(libiio_INCLUDE_DIRS ${libiio_INCLUDE_DIR})
+    set(libiio_LIBRARIES ${libiio_LIBRARY})
 endif()
 
 if(libiio_FOUND AND NOT TARGET libiio::iio)
-  add_library(libiio::iio INTERFACE IMPORTED)
-  set_target_properties(libiio::iio PROPERTIES
-    INTERFACE_LINK_LIBRARIES "${libiio_LIBRARIES}"
-    INTERFACE_INCLUDE_DIRECTORIES "${libiio_INCLUDE_DIRS}"
-  )
+    add_library(libiio::iio INTERFACE IMPORTED)
+    set_target_properties(
+        libiio::iio PROPERTIES INTERFACE_LINK_LIBRARIES "${libiio_LIBRARIES}"
+                               INTERFACE_INCLUDE_DIRECTORIES "${libiio_INCLUDE_DIRS}")
 endif()
 
-mark_as_advanced(
-  libiio_INCLUDE_DIR
-  libiio_LIBRARY
-)
+mark_as_advanced(libiio_INCLUDE_DIR libiio_LIBRARY)

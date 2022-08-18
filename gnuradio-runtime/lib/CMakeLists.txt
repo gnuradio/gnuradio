@@ -19,13 +19,9 @@ find_package(libunwind)
 message(STATUS "Loading build date ${BUILD_DATE} into constants...")
 message(STATUS "Loading version ${VERSION} into constants...")
 
-
 #Generate the constants file, now that we actually know which components will be enabled.
-configure_file(
-  ${CMAKE_CURRENT_SOURCE_DIR}/constants.cc.in
-  ${CMAKE_CURRENT_BINARY_DIR}/constants.cc
-  ESCAPE_QUOTES
-  @ONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/constants.cc.in
+               ${CMAKE_CURRENT_BINARY_DIR}/constants.cc ESCAPE_QUOTES @ONLY)
 
 #########################################################################
 # Include subdirs rather to populate to the sources lists.
@@ -39,130 +35,126 @@ add_subdirectory(pmt)
 #Generate sine table header file for Math part of library
 set(MATH_SINE_TABLE_HEADER ${CMAKE_CURRENT_BINARY_DIR}/math/generated/sine_table.h)
 set(MATH_SINE_TABLE_GENERATOR ${CMAKE_CURRENT_SOURCE_DIR}/math/gen_sine_table.py)
-execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_CURRENT_BINARY_DIR}/math/generated")
+execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory
+                        "${CMAKE_CURRENT_BINARY_DIR}/math/generated")
 add_custom_command(
-  DEPENDS ${MATH_SINE_TABLE_GENERATOR}
-  OUTPUT ${MATH_SINE_TABLE_HEADER}
-  COMMAND ${PYTHON_EXECUTABLE} ${MATH_SINE_TABLE_GENERATOR} > ${MATH_SINE_TABLE_HEADER}
-)
+    DEPENDS ${MATH_SINE_TABLE_GENERATOR}
+    OUTPUT ${MATH_SINE_TABLE_HEADER}
+    COMMAND ${PYTHON_EXECUTABLE} ${MATH_SINE_TABLE_GENERATOR} > ${MATH_SINE_TABLE_HEADER})
 
-add_library(gnuradio-runtime
-  ${CMAKE_CURRENT_BINARY_DIR}/constants.cc
-  basic_block.cc
-  block.cc
-  block_detail.cc
-  block_executor.cc
-  block_registry.cc
-  buffer.cc
-  buffer_double_mapped.cc
-  buffer_reader.cc
-  buffer_reader_sm.cc
-  buffer_single_mapped.cc
-  flat_flowgraph.cc
-  flowgraph.cc
-  hier_block2.cc
-  hier_block2_detail.cc
-  high_res_timer.cc
-  host_buffer.cc
-  io_signature.cc
-  local_sighandler.cc
-  logger.cc
-  message.cc
-  msg_accepter.cc
-  msg_handler.cc
-  msg_queue.cc
-  pagesize.cc
-  pdu.cc
-  prefs.cc
-  realtime.cc
-  realtime_impl.cc
-  scheduler.cc
-  scheduler_tpb.cc
-  sptr_magic.cc
-  sync_block.cc
-  sync_decimator.cc
-  sync_interpolator.cc
-  sys_paths.cc
-  tagged_stream_block.cc
-  terminate_handler.cc
-  top_block.cc
-  top_block_impl.cc
-  tpb_detail.cc
-  tpb_thread_body.cc
-  transfer_type.cc
-  vmcircbuf.cc
-  vmcircbuf_createfilemapping.cc
-  vmcircbuf_mmap_shm_open.cc
-  vmcircbuf_mmap_tmpfile.cc
-  vmcircbuf_prefs.cc
-  vmcircbuf_sysv_shm.cc
-  )
+add_library(
+    gnuradio-runtime
+    ${CMAKE_CURRENT_BINARY_DIR}/constants.cc
+    basic_block.cc
+    block.cc
+    block_detail.cc
+    block_executor.cc
+    block_registry.cc
+    buffer.cc
+    buffer_double_mapped.cc
+    buffer_reader.cc
+    buffer_reader_sm.cc
+    buffer_single_mapped.cc
+    flat_flowgraph.cc
+    flowgraph.cc
+    hier_block2.cc
+    hier_block2_detail.cc
+    high_res_timer.cc
+    host_buffer.cc
+    io_signature.cc
+    local_sighandler.cc
+    logger.cc
+    message.cc
+    msg_accepter.cc
+    msg_handler.cc
+    msg_queue.cc
+    pagesize.cc
+    pdu.cc
+    prefs.cc
+    realtime.cc
+    realtime_impl.cc
+    scheduler.cc
+    scheduler_tpb.cc
+    sptr_magic.cc
+    sync_block.cc
+    sync_decimator.cc
+    sync_interpolator.cc
+    sys_paths.cc
+    tagged_stream_block.cc
+    terminate_handler.cc
+    top_block.cc
+    top_block_impl.cc
+    tpb_detail.cc
+    tpb_thread_body.cc
+    transfer_type.cc
+    vmcircbuf.cc
+    vmcircbuf_createfilemapping.cc
+    vmcircbuf_mmap_shm_open.cc
+    vmcircbuf_mmap_tmpfile.cc
+    vmcircbuf_prefs.cc
+    vmcircbuf_sysv_shm.cc)
 
-if (ENABLE_PYTHON)
-  target_sources(gnuradio-runtime PRIVATE
-    block_gateway_impl.cc
-  )
+if(ENABLE_PYTHON)
+    target_sources(gnuradio-runtime PRIVATE block_gateway_impl.cc)
 endif()
 
 # Messages
-target_sources(gnuradio-runtime PRIVATE
-  ${CMAKE_CURRENT_SOURCE_DIR}/messages/msg_accepter.cc
-  ${CMAKE_CURRENT_SOURCE_DIR}/messages/msg_accepter_msgq.cc
-  ${CMAKE_CURRENT_SOURCE_DIR}/messages/msg_producer.cc
-  ${CMAKE_CURRENT_SOURCE_DIR}/messages/msg_queue.cc
-  )
+target_sources(
+    gnuradio-runtime
+    PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/messages/msg_accepter.cc
+            ${CMAKE_CURRENT_SOURCE_DIR}/messages/msg_accepter_msgq.cc
+            ${CMAKE_CURRENT_SOURCE_DIR}/messages/msg_producer.cc
+            ${CMAKE_CURRENT_SOURCE_DIR}/messages/msg_queue.cc)
 
 # Thread
-target_sources(gnuradio-runtime PRIVATE
-  ${CMAKE_CURRENT_SOURCE_DIR}/thread/thread.cc
-  ${CMAKE_CURRENT_SOURCE_DIR}/thread/thread_body_wrapper.cc
-  ${CMAKE_CURRENT_SOURCE_DIR}/thread/thread_group.cc
-  )
+target_sources(
+    gnuradio-runtime
+    PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/thread/thread.cc
+            ${CMAKE_CURRENT_SOURCE_DIR}/thread/thread_body_wrapper.cc
+            ${CMAKE_CURRENT_SOURCE_DIR}/thread/thread_group.cc)
 
 # Math
 target_include_directories(gnuradio-runtime PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/math)
-target_sources(gnuradio-runtime PRIVATE
-  ${CMAKE_CURRENT_SOURCE_DIR}/math/fast_atan2f.cc
-  ${CMAKE_CURRENT_SOURCE_DIR}/math/fxpt.cc
-  ${CMAKE_CURRENT_SOURCE_DIR}/math/random.cc
-  ${MATH_SINE_TABLE_HEADER}
-  )
+target_sources(
+    gnuradio-runtime
+    PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/math/fast_atan2f.cc
+            ${CMAKE_CURRENT_SOURCE_DIR}/math/fxpt.cc
+            ${CMAKE_CURRENT_SOURCE_DIR}/math/random.cc ${MATH_SINE_TABLE_HEADER})
 
-target_link_libraries(gnuradio-runtime PUBLIC
-  gnuradio-pmt
-  Volk::volk
-  Boost::program_options
-  Boost::thread
-  spdlog::spdlog
-  MPLib::mplib
-  # INTERFACE/PRIVATE split so users of the library can choose how to link to Python
-  # (importantly, extension modules can avoid linking against Python and resolve
-  #  their own Python symbols at runtime through the Python interpreter's linking)
-  PRIVATE
-    libunwind::libunwind
-  )
+target_link_libraries(
+    gnuradio-runtime
+    PUBLIC
+        gnuradio-pmt
+        Volk::volk
+        Boost::program_options
+        Boost::thread
+        spdlog::spdlog
+        MPLib::mplib
+        # INTERFACE/PRIVATE split so users of the library can choose how to link to Python
+        # (importantly, extension modules can avoid linking against Python and resolve
+        #  their own Python symbols at runtime through the Python interpreter's linking)
+    PRIVATE libunwind::libunwind)
 
-if (ENABLE_PYTHON)
-target_link_libraries(gnuradio-runtime
-  INTERFACE
-  Python::Module
-  PRIVATE
-  Python::Python
-  pybind11::pybind11
-)
+if(ENABLE_PYTHON)
+    target_link_libraries(
+        gnuradio-runtime
+        INTERFACE Python::Module
+        PRIVATE Python::Python pybind11::pybind11)
 endif()
 
 # Address linker issues with std::filesystem on Centos 8 and Debian
-target_link_libraries(gnuradio-runtime PUBLIC $<$<AND:$<CXX_COMPILER_ID:GNU>,$<VERSION_LESS:$<CXX_COMPILER_VERSION>,9.0>>:stdc++fs>)
+target_link_libraries(
+    gnuradio-runtime
+    PUBLIC
+        $<$<AND:$<CXX_COMPILER_ID:GNU>,$<VERSION_LESS:$<CXX_COMPILER_VERSION>,9.0>>:stdc++fs>
+)
 
-target_include_directories(gnuradio-runtime
-  PUBLIC
-    $<INSTALL_INTERFACE:include>
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/../include>
-  PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}
-    )
+target_include_directories(
+    gnuradio-runtime
+    PUBLIC $<INSTALL_INTERFACE:include>
+           $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>
+           $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/../include>
+    PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
 target_compile_features(gnuradio-runtime PUBLIC cxx_std_17)
 
@@ -172,11 +164,9 @@ target_compile_definitions(gnuradio-runtime PUBLIC ${MPLIB_DEFINITIONS})
 target_compile_definitions(gnuradio-runtime PRIVATE BOOST_DLL_USE_STD_FS)
 
 if(${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.16.0")
-  target_precompile_headers(
-    gnuradio-runtime
-    PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}/../include/gnuradio/sync_block.h
-    )
+    target_precompile_headers(
+        gnuradio-runtime PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/../include/gnuradio/sync_block.h)
 endif()
 
 ########################################################################
@@ -185,68 +175,69 @@ endif()
 # Controlport
 if(ENABLE_GR_CTRLPORT)
 
-# Keep track of the number of backends ControlPort supports
-SET(CTRLPORT_BACKENDS 0)
+    # Keep track of the number of backends ControlPort supports
+    set(CTRLPORT_BACKENDS 0)
 
-target_sources(gnuradio-runtime PRIVATE
-  ${CMAKE_CURRENT_SOURCE_DIR}/controlport/rpcmanager.cc
-  ${CMAKE_CURRENT_SOURCE_DIR}/controlport/rpcserver_aggregator.cc
-  ${CMAKE_CURRENT_SOURCE_DIR}/controlport/rpcserver_booter_aggregator.cc
-  ${CMAKE_CURRENT_SOURCE_DIR}/controlport/rpcserver_selector.cc
-)
+    target_sources(
+        gnuradio-runtime
+        PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/controlport/rpcmanager.cc
+                ${CMAKE_CURRENT_SOURCE_DIR}/controlport/rpcserver_aggregator.cc
+                ${CMAKE_CURRENT_SOURCE_DIR}/controlport/rpcserver_booter_aggregator.cc
+                ${CMAKE_CURRENT_SOURCE_DIR}/controlport/rpcserver_selector.cc)
 
-if(ENABLE_CTRLPORT_THRIFT)
-MATH(EXPR CTRLPORT_BACKENDS "${CTRLPORT_BACKENDS} + 1")
+    if(ENABLE_CTRLPORT_THRIFT)
+        math(EXPR CTRLPORT_BACKENDS "${CTRLPORT_BACKENDS} + 1")
 
-# Indicate thrift as an installed backend in the cmake summary.
-message(STATUS "Enabling Thrift backend to ControlPort")
-GR_APPEND_SUBCOMPONENT("thrift")
+        # Indicate thrift as an installed backend in the cmake summary.
+        message(STATUS "Enabling Thrift backend to ControlPort")
+        gr_append_subcomponent("thrift")
 
-# Run Thrift To compile C++ and Python files
-message(STATUS "Running thrift to build C++ bindings")
-file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/controlport/thrift/)
+        # Run Thrift To compile C++ and Python files
+        message(STATUS "Running thrift to build C++ bindings")
+        file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/controlport/thrift/)
 
-list(APPEND gnuradio_thrift_generated_sources
-  ${CMAKE_CURRENT_BINARY_DIR}/controlport/thrift/gnuradio_types.cpp
-  ${CMAKE_CURRENT_BINARY_DIR}/controlport/thrift/gnuradio_constants.cpp
-  ${CMAKE_CURRENT_BINARY_DIR}/controlport/thrift/ControlPort.cpp
-  )
-add_custom_command(
-  DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/controlport/thrift/gnuradio.thrift
-  OUTPUT ${gnuradio_thrift_generated_sources}
-  COMMAND ${THRIFT_BIN} --gen cpp -out ${CMAKE_CURRENT_BINARY_DIR}/controlport/thrift/ ${CMAKE_CURRENT_SOURCE_DIR}/controlport/thrift/gnuradio.thrift
-  )
+        list(
+            APPEND
+            gnuradio_thrift_generated_sources
+            ${CMAKE_CURRENT_BINARY_DIR}/controlport/thrift/gnuradio_types.cpp
+            ${CMAKE_CURRENT_BINARY_DIR}/controlport/thrift/gnuradio_constants.cpp
+            ${CMAKE_CURRENT_BINARY_DIR}/controlport/thrift/ControlPort.cpp)
+        add_custom_command(
+            DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/controlport/thrift/gnuradio.thrift
+            OUTPUT ${gnuradio_thrift_generated_sources}
+            COMMAND
+                ${THRIFT_BIN} --gen cpp -out
+                ${CMAKE_CURRENT_BINARY_DIR}/controlport/thrift/
+                ${CMAKE_CURRENT_SOURCE_DIR}/controlport/thrift/gnuradio.thrift)
 
-target_include_directories(gnuradio-runtime PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/controlport>)
+        target_include_directories(
+            gnuradio-runtime
+            PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/controlport>)
 
-target_sources(gnuradio-runtime PRIVATE
-  ${CMAKE_CURRENT_SOURCE_DIR}/controlport/thrift/rpcserver_thrift.cc
-  ${CMAKE_CURRENT_SOURCE_DIR}/controlport/thrift/rpcpmtconverters_thrift.cc
-  ${CMAKE_CURRENT_SOURCE_DIR}/controlport/thrift/rpcserver_booter_thrift.cc
-  ${CMAKE_CURRENT_SOURCE_DIR}/controlport/thrift/thrift_application_base.cc
-  # add files built by compiling gnuradio.thrift
-  ${gnuradio_thrift_generated_sources}
-  )
-target_link_libraries(gnuradio-runtime PRIVATE
-  Thrift::thrift
-  )
+        target_sources(
+            gnuradio-runtime
+            PRIVATE
+                ${CMAKE_CURRENT_SOURCE_DIR}/controlport/thrift/rpcserver_thrift.cc
+                ${CMAKE_CURRENT_SOURCE_DIR}/controlport/thrift/rpcpmtconverters_thrift.cc
+                ${CMAKE_CURRENT_SOURCE_DIR}/controlport/thrift/rpcserver_booter_thrift.cc
+                ${CMAKE_CURRENT_SOURCE_DIR}/controlport/thrift/thrift_application_base.cc
+                # add files built by compiling gnuradio.thrift
+                ${gnuradio_thrift_generated_sources})
+        target_link_libraries(gnuradio-runtime PRIVATE Thrift::thrift)
 
-target_compile_definitions(gnuradio-runtime PUBLIC GR_CTRLPORT)
+        target_compile_definitions(gnuradio-runtime PUBLIC GR_CTRLPORT)
 
-# Add install rule to move example Thrift configuration file into a
-# documentation directory
-install(
-  FILES ${CMAKE_CURRENT_SOURCE_DIR}/controlport/thrift/thrift.conf.example
-  DESTINATION ${GR_PKG_DOC_DIR}/config
-)
+        # Add install rule to move example Thrift configuration file into a
+        # documentation directory
+        install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/controlport/thrift/thrift.conf.example
+                DESTINATION ${GR_PKG_DOC_DIR}/config)
 
-endif(ENABLE_CTRLPORT_THRIFT)
+    endif(ENABLE_CTRLPORT_THRIFT)
 
-# Save the number of backends for testing against later
-set(
-  CTRLPORT_BACKENDS ${CTRLPORT_BACKENDS}
-  CACHE INTERNAL "Number of ControlPort backends available"
-)
+    # Save the number of backends for testing against later
+    set(CTRLPORT_BACKENDS
+        ${CTRLPORT_BACKENDS}
+        CACHE INTERNAL "Number of ControlPort backends available")
 
 endif(ENABLE_GR_CTRLPORT)
 
@@ -255,32 +246,32 @@ endif(ENABLE_GR_CTRLPORT)
 ########################################################################
 
 if(ENABLE_PERFORMANCE_COUNTERS)
-  target_compile_definitions(gnuradio-runtime PUBLIC -DGR_PERFORMANCE_COUNTERS)
+    target_compile_definitions(gnuradio-runtime PUBLIC -DGR_PERFORMANCE_COUNTERS)
 endif()
 
 if(GR_IS_BIG_ENDIAN)
-  target_compile_definitions(gnuradio-runtime PUBLIC -DGR_IS_BIG_ENDIAN)
+    target_compile_definitions(gnuradio-runtime PUBLIC -DGR_IS_BIG_ENDIAN)
 endif(GR_IS_BIG_ENDIAN)
 
 if(MSVC)
-  target_compile_definitions(gnuradio-runtime PUBLIC
-    # Minimum version: "Windows Server 2003 with SP1, Windows XP with SP2"
-    -D_WIN32_WINNT=0x0502
-    # disables stupidity and enables std::min and std::max
-    -DNOMINMAX
-    # stop all kinds of compatibility warnings
-    -D_SCL_SECURE_NO_WARNINGS
-    -D_CRT_SECURE_NO_WARNINGS
-    -D_CRT_SECURE_NO_DEPRECATE
-    -D_CRT_NONSTDC_NO_DEPRECATE
-  )
+    target_compile_definitions(
+        gnuradio-runtime
+        PUBLIC # Minimum version: "Windows Server 2003 with SP1, Windows XP with SP2"
+               -D_WIN32_WINNT=0x0502
+               # disables stupidity and enables std::min and std::max
+               -DNOMINMAX
+               # stop all kinds of compatibility warnings
+               -D_SCL_SECURE_NO_WARNINGS
+               -D_CRT_SECURE_NO_WARNINGS
+               -D_CRT_SECURE_NO_DEPRECATE
+               -D_CRT_NONSTDC_NO_DEPRECATE)
 endif(MSVC)
 
 if(WIN32)
-  target_compile_definitions(gnuradio-runtime PUBLIC -D_USE_MATH_DEFINES)
-  if (CMAKE_SIZEOF_VOID_P EQUAL 8)
-    target_compile_definitions(gnuradio-runtime PUBLIC -DMS_WIN64)
-  endif(CMAKE_SIZEOF_VOID_P EQUAL 8)
+    target_compile_definitions(gnuradio-runtime PUBLIC -D_USE_MATH_DEFINES)
+    if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+        target_compile_definitions(gnuradio-runtime PUBLIC -DMS_WIN64)
+    endif(CMAKE_SIZEOF_VOID_P EQUAL 8)
 endif(WIN32)
 
 if(WIN32)
@@ -299,14 +290,11 @@ endif()
 if(MSVC)
     include(${PROJECT_SOURCE_DIR}/cmake/Modules/GrVersion.cmake)
 
-    configure_file(
-        ${CMAKE_CURRENT_SOURCE_DIR}/gnuradio-runtime.rc.in
-        ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-runtime.rc
-    @ONLY)
+    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/gnuradio-runtime.rc.in
+                   ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-runtime.rc @ONLY)
 
-    target_sources(gnuradio-runtime PRIVATE
-        ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-runtime.rc
-    )
+    target_sources(gnuradio-runtime
+                   PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-runtime.rc)
 endif(MSVC)
 
 ########################################################################
@@ -329,58 +317,54 @@ endif(WIN32)
 message(STATUS "TRY_SHM_VMCIRCBUF set to ${TRY_SHM_VMCIRCBUF}.")
 
 if(TRY_SHM_VMCIRCBUF)
-    target_compile_definitions(gnuradio-runtime PRIVATE -DTRY_SHM_VMCIRCBUF )
+    target_compile_definitions(gnuradio-runtime PRIVATE -DTRY_SHM_VMCIRCBUF)
 endif(TRY_SHM_VMCIRCBUF)
 
 gr_library_foo(gnuradio-runtime)
-
 
 ########################################################################
 # Setup tests
 ########################################################################
 if(ENABLE_TESTING)
-  include(GrTest)
+    include(GrTest)
 
-  # Regular runtime tests:
-  list(APPEND test_gnuradio_runtime_sources
-    qa_buffer.cc
-    qa_io_signature.cc
-    qa_logger.cc
-    qa_host_buffer.cc
-    qa_vmcircbuf.cc
-  )
-  list(APPEND GR_TEST_TARGET_DEPS gnuradio-runtime gnuradio-pmt)
+    # Regular runtime tests:
+    list(
+        APPEND
+        test_gnuradio_runtime_sources
+        qa_buffer.cc
+        qa_io_signature.cc
+        qa_logger.cc
+        qa_host_buffer.cc
+        qa_vmcircbuf.cc)
+    list(APPEND GR_TEST_TARGET_DEPS gnuradio-runtime gnuradio-pmt)
 
-  foreach(qa_file ${test_gnuradio_runtime_sources})
-    gr_add_cpp_test("runtime_${qa_file}"
-      ${CMAKE_CURRENT_SOURCE_DIR}/${qa_file}
-      )
+    foreach(qa_file ${test_gnuradio_runtime_sources})
+        gr_add_cpp_test("runtime_${qa_file}" ${CMAKE_CURRENT_SOURCE_DIR}/${qa_file})
 
-  endforeach(qa_file)
+    endforeach(qa_file)
 
-  # Math tests:
-  list(APPEND test_gnuradio_math_sources
-    qa_fxpt.cc
-    qa_fxpt_nco.cc
-    qa_fxpt_vco.cc
-    qa_math.cc
-    qa_sincos.cc
-    qa_fast_atan2f.cc
-  )
+    # Math tests:
+    list(
+        APPEND
+        test_gnuradio_math_sources
+        qa_fxpt.cc
+        qa_fxpt_nco.cc
+        qa_fxpt_vco.cc
+        qa_math.cc
+        qa_sincos.cc
+        qa_fast_atan2f.cc)
 
-  foreach(qa_file ${test_gnuradio_math_sources})
-    gr_add_cpp_test("math_${qa_file}"
-      ${CMAKE_CURRENT_SOURCE_DIR}/math/${qa_file}
-      )
-    target_include_directories("math_${qa_file}"
-      PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/math
-      )
-  endforeach(qa_file)
+    foreach(qa_file ${test_gnuradio_math_sources})
+        gr_add_cpp_test("math_${qa_file}" ${CMAKE_CURRENT_SOURCE_DIR}/math/${qa_file})
+        target_include_directories("math_${qa_file}"
+                                   PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/math)
+    endforeach(qa_file)
 
-  # PMT tests:
-  gr_add_cpp_test("pmt_prims" ${CMAKE_CURRENT_SOURCE_DIR}/pmt/qa_pmt_prims.cc)
-  gr_add_cpp_test("pmt_unv" ${CMAKE_CURRENT_SOURCE_DIR}/pmt/qa_pmt_unv.cc)
-  target_include_directories("pmt_prims" PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/pmt)
-  target_include_directories("pmt_unv" PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/pmt)
+    # PMT tests:
+    gr_add_cpp_test("pmt_prims" ${CMAKE_CURRENT_SOURCE_DIR}/pmt/qa_pmt_prims.cc)
+    gr_add_cpp_test("pmt_unv" ${CMAKE_CURRENT_SOURCE_DIR}/pmt/qa_pmt_unv.cc)
+    target_include_directories("pmt_prims" PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/pmt)
+    target_include_directories("pmt_unv" PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/pmt)
 
 endif(ENABLE_TESTING)

@@ -28,13 +28,13 @@ set(MPLIB_INCLUDE_DIRS ${MPLIB_INCLUDE_DIR})
 set(MPLIB_LIBRARIES ${MPLIBXX_LIBRARY} ${MPLIB_LIBRARY})
 
 include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(MPLIB DEFAULT_MSG MPLIBXX_LIBRARY MPLIB_LIBRARY MPLIB_INCLUDE_DIR)
+find_package_handle_standard_args(MPLIB DEFAULT_MSG MPLIBXX_LIBRARY MPLIB_LIBRARY
+                                  MPLIB_INCLUDE_DIR)
 mark_as_advanced(MPLIBXX_LIBRARY MPLIB_LIBRARY MPLIB_INCLUDE_DIR)
 
-if (MPLIB_LIBRARIES AND NOT TARGET MPLib::mplib)
-  add_library(MPLib::mplib INTERFACE IMPORTED)
-  set_target_properties(MPLib::mplib PROPERTIES
-    INTERFACE_INCLUDE_DIRECTORIES "${MPLIB_INCLUDE_DIRS}"
-    INTERFACE_LINK_LIBRARIES "${MPLIB_LIBRARIES}"
-  )
+if(MPLIB_LIBRARIES AND NOT TARGET MPLib::mplib)
+    add_library(MPLib::mplib INTERFACE IMPORTED)
+    set_target_properties(
+        MPLib::mplib PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${MPLIB_INCLUDE_DIRS}"
+                                INTERFACE_LINK_LIBRARIES "${MPLIB_LIBRARIES}")
 endif()

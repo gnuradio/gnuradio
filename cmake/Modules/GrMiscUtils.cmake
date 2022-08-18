@@ -10,7 +10,6 @@ if(DEFINED __INCLUDED_GR_MISC_UTILS_CMAKE)
 endif()
 set(__INCLUDED_GR_MISC_UTILS_CMAKE TRUE)
 
-
 ########################################################################
 # Set the pre-processor definition if the condition is true.
 #  - def the pre-processor definition to set and condition name
@@ -28,8 +27,8 @@ endfunction(GR_ADD_COND_DEF)
 ########################################################################
 function(GR_CHECK_HDR_N_DEF hdr def)
     include(CheckIncludeFileCXX)
-    CHECK_INCLUDE_FILE_CXX(${hdr} ${def})
-    GR_ADD_COND_DEF(${def})
+    check_include_file_cxx(${hdr} ${def})
+    gr_add_cond_def(${def})
 endfunction(GR_CHECK_HDR_N_DEF)
 
 ########################################################################
@@ -39,13 +38,13 @@ endfunction(GR_CHECK_HDR_N_DEF)
 ########################################################################
 macro(GR_ADD_CXX_COMPILER_FLAG_IF_AVAILABLE flag have)
     include(CheckCXXCompilerFlag)
-    CHECK_CXX_COMPILER_FLAG(${flag} ${have})
+    check_cxx_compiler_flag(${flag} ${have})
     if(${have})
-      STRING(FIND "${CMAKE_CXX_FLAGS}" "${flag}" flag_dup)
-      if(${flag_dup} EQUAL -1)
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${flag}")
-        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${flag}")
-      endif(${flag_dup} EQUAL -1)
+        string(FIND "${CMAKE_CXX_FLAGS}" "${flag}" flag_dup)
+        if(${flag_dup} EQUAL -1)
+            set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${flag}")
+            set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${flag}")
+        endif(${flag_dup} EQUAL -1)
     endif(${have})
 endmacro(GR_ADD_CXX_COMPILER_FLAG_IF_AVAILABLE)
 
@@ -61,33 +60,31 @@ function(GR_LIBRARY_FOO target)
     set_target_properties(${target} PROPERTIES VERSION ${VERSION})
 
     #install the generated files like so...
-    install(TARGETS ${target}
+    install(
+        TARGETS ${target}
         EXPORT ${target}-export
         LIBRARY DESTINATION ${GR_LIBRARY_DIR} # .so/.dylib file
         ARCHIVE DESTINATION ${GR_LIBRARY_DIR} # .lib file
         RUNTIME DESTINATION ${GR_RUNTIME_DIR} # .dll file
-        )
+    )
 
     #install the exported target files
-    install(EXPORT ${target}-export
-      FILE ${target}Targets.cmake
-      NAMESPACE gnuradio::
-      DESTINATION ${GR_CMAKE_DIR}
-      )
+    install(
+        EXPORT ${target}-export
+        FILE ${target}Targets.cmake
+        NAMESPACE gnuradio::
+        DESTINATION ${GR_CMAKE_DIR})
 
     include(CMakePackageConfigHelpers)
     set(TARGET ${target})
     set(TARGET_DEPENDENCIES ${ARGN})
 
     configure_package_config_file(
-      ${PROJECT_SOURCE_DIR}/cmake/Modules/targetConfig.cmake.in
-      ${CMAKE_CURRENT_BINARY_DIR}/cmake/Modules/${target}Config.cmake
-      INSTALL_DESTINATION ${GR_CMAKE_DIR}
-      )
-    install(
-      FILES ${CMAKE_CURRENT_BINARY_DIR}/cmake/Modules/${target}Config.cmake
-      DESTINATION ${GR_CMAKE_DIR}
-      )
+        ${PROJECT_SOURCE_DIR}/cmake/Modules/targetConfig.cmake.in
+        ${CMAKE_CURRENT_BINARY_DIR}/cmake/Modules/${target}Config.cmake
+        INSTALL_DESTINATION ${GR_CMAKE_DIR})
+    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/cmake/Modules/${target}Config.cmake
+            DESTINATION ${GR_CMAKE_DIR})
 
 endfunction(GR_LIBRARY_FOO)
 
@@ -101,24 +98,25 @@ endfunction(GR_LIBRARY_FOO)
 # and executables can depend on targets. So this is the process:
 ########################################################################
 function(GR_GEN_TARGET_DEPS name var)
-    file(
-        WRITE ${CMAKE_CURRENT_BINARY_DIR}/${name}.cpp.in
-        "int main(void){return 0;}\n"
-    )
+    file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/${name}.cpp.in "int main(void){return 0;}\n")
     execute_process(
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        ${CMAKE_CURRENT_BINARY_DIR}/${name}.cpp.in
-        ${CMAKE_CURRENT_BINARY_DIR}/${name}.cpp
-    )
+        COMMAND
+            ${CMAKE_COMMAND} -E copy_if_different
+            ${CMAKE_CURRENT_BINARY_DIR}/${name}.cpp.in
+            ${CMAKE_CURRENT_BINARY_DIR}/${name}.cpp)
     add_executable(${name} ${CMAKE_CURRENT_BINARY_DIR}/${name}.cpp)
     if(ARGN)
         add_dependencies(${name} ${ARGN})
     endif(ARGN)
 
     if(CMAKE_CROSSCOMPILING)
-        set(${var} "DEPENDS;${name}" PARENT_SCOPE) #can't call command when cross
+        set(${var}
+            "DEPENDS;${name}"
+            PARENT_SCOPE) #can't call command when cross
     else()
-        set(${var} "DEPENDS;${name};COMMAND;${name}" PARENT_SCOPE)
+        set(${var}
+            "DEPENDS;${name};COMMAND;${name}"
+            PARENT_SCOPE)
     endif()
 endfunction(GR_GEN_TARGET_DEPS)
 
@@ -132,58 +130,57 @@ endfunction(GR_GEN_TARGET_DEPS)
 #    - Sets PYFILES: output converted GRC file names to Python files.
 ########################################################################
 function(GRCC)
-  # Extract directory from list of args, remove it for the list of filenames.
-  list(GET ARGV -1 directory)
-  list(REMOVE_AT ARGV -1)
-  set(filenames ${ARGV})
-  file(MAKE_DIRECTORY ${directory})
+    # Extract directory from list of args, remove it for the list of filenames.
+    list(GET ARGV -1 directory)
+    list(REMOVE_AT ARGV -1)
+    set(filenames ${ARGV})
+    file(MAKE_DIRECTORY ${directory})
 
-  SET(GRCC_COMMAND ${PROJECT_SOURCE_DIR}/gr-utils/python/grcc)
+    set(GRCC_COMMAND ${PROJECT_SOURCE_DIR}/gr-utils/python/grcc)
 
-  # GRCC uses some stuff in grc and gnuradio-runtime, so we force
-  # the known paths here
-  list(APPEND PYTHONPATHS
-    ${PROJECT_SOURCE_DIR}
-    ${PROJECT_SOURCE_DIR}/gnuradio-runtime/python
-    )
+    # GRCC uses some stuff in grc and gnuradio-runtime, so we force
+    # the known paths here
+    list(APPEND PYTHONPATHS ${PROJECT_SOURCE_DIR}
+         ${PROJECT_SOURCE_DIR}/gnuradio-runtime/python)
 
-  if(WIN32)
-    #SWIG generates the python library files into a subdirectory.
-    #Therefore, we must append this subdirectory into PYTHONPATH.
-    #Only do this for the python directories matching the following:
-    foreach(pydir ${PYTHONPATHS})
-      get_filename_component(name ${pydir} NAME)
-      if(name MATCHES "^(lib|src)$")
-        list(APPEND PYTHONPATHS ${pydir}/${CMAKE_BUILD_TYPE})
-      endif()
-    endforeach(pydir)
-  endif(WIN32)
+    if(WIN32)
+        #SWIG generates the python library files into a subdirectory.
+        #Therefore, we must append this subdirectory into PYTHONPATH.
+        #Only do this for the python directories matching the following:
+        foreach(pydir ${PYTHONPATHS})
+            get_filename_component(NAME ${pydir} NAME)
+            if(name MATCHES "^(lib|src)$")
+                list(APPEND PYTHONPATHS ${pydir}/${CMAKE_BUILD_TYPE})
+            endif()
+        endforeach(pydir)
+    endif(WIN32)
 
-  file(TO_NATIVE_PATH "${PYTHONPATHS}" pypath)
+    file(TO_NATIVE_PATH "${PYTHONPATHS}" pypath)
 
-  if(UNIX)
-    list(APPEND pypath "$PYTHONPATH")
-    string(REPLACE ";" ":" pypath "${pypath}")
-    set(ENV{PYTHONPATH} ${pypath})
-  endif(UNIX)
+    if(UNIX)
+        list(APPEND pypath "$PYTHONPATH")
+        string(REPLACE ";" ":" pypath "${pypath}")
+        set(ENV{PYTHONPATH} ${pypath})
+    endif(UNIX)
 
-  if(WIN32)
-    list(APPEND pypath "%PYTHONPATH%")
-    string(REPLACE ";" "\\;" pypath "${pypath}")
-    #list(APPEND environs "PYTHONPATH=${pypath}")
-    set(ENV{PYTHONPATH} ${pypath})
-  endif(WIN32)
+    if(WIN32)
+        list(APPEND pypath "%PYTHONPATH%")
+        string(REPLACE ";" "\\;" pypath "${pypath}")
+        #list(APPEND environs "PYTHONPATH=${pypath}")
+        set(ENV{PYTHONPATH} ${pypath})
+    endif(WIN32)
 
-  foreach(f ${filenames})
-    execute_process(
-      COMMAND ${GRCC_COMMAND} -d ${directory} ${f}
-      )
-    string(REPLACE ".grc" ".py" pyfile "${f}")
-    string(REPLACE "${CMAKE_CURRENT_SOURCE_DIR}" "${CMAKE_CURRENT_BINARY_DIR}" pyfile "${pyfile}")
-    list(APPEND pyfiles ${pyfile})
-  endforeach(f)
+    foreach(f ${filenames})
+        execute_process(COMMAND ${GRCC_COMMAND} -d ${directory} ${f})
+        string(REPLACE ".grc" ".py" pyfile "${f}")
+        string(REPLACE "${CMAKE_CURRENT_SOURCE_DIR}" "${CMAKE_CURRENT_BINARY_DIR}" pyfile
+                       "${pyfile}")
+        list(APPEND pyfiles ${pyfile})
+    endforeach(f)
 
-  set(PYFILES ${pyfiles} PARENT_SCOPE)
+    set(PYFILES
+        ${pyfiles}
+        PARENT_SCOPE)
 endfunction(GRCC)
 
 ########################################################################
@@ -191,25 +188,27 @@ endfunction(GRCC)
 #  should be defined
 ########################################################################
 macro(GR_CHECK_LINUX_SCHED_AVAIL)
-set(CMAKE_REQUIRED_LIBRARIES -lpthread)
-    CHECK_CXX_SOURCE_COMPILES("
+    set(CMAKE_REQUIRED_LIBRARIES -lpthread)
+    check_cxx_source_compiles(
+        "
         #include <pthread.h>
         int main(){
             pthread_t pthread;
             pthread_setschedparam(pthread,  0, 0);
             return 0;
-        } " HAVE_PTHREAD_SETSCHEDPARAM
-    )
-    GR_ADD_COND_DEF(HAVE_PTHREAD_SETSCHEDPARAM)
+        } "
+        HAVE_PTHREAD_SETSCHEDPARAM)
+    gr_add_cond_def(HAVE_PTHREAD_SETSCHEDPARAM)
 
-    CHECK_CXX_SOURCE_COMPILES("
+    check_cxx_source_compiles(
+        "
         #include <sched.h>
         int main(){
             pid_t pid;
             sched_setscheduler(pid, 0, 0);
             return 0;
-        } " HAVE_SCHED_SETSCHEDULER
-    )
-    GR_ADD_COND_DEF(HAVE_SCHED_SETSCHEDULER)
-set(CMAKE_REQUIRED_LIBRARIES)
+        } "
+        HAVE_SCHED_SETSCHEDULER)
+    gr_add_cond_def(HAVE_SCHED_SETSCHEDULER)
+    set(CMAKE_REQUIRED_LIBRARIES)
 endmacro(GR_CHECK_LINUX_SCHED_AVAIL)

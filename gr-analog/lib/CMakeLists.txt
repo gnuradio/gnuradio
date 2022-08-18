@@ -9,7 +9,8 @@
 # Setup library
 ########################################################################
 
-add_library(gnuradio-analog
+add_library(
+    gnuradio-analog
     cpm.cc
     squelch_base_cc_impl.cc
     squelch_base_ff_impl.cc
@@ -39,59 +40,46 @@ add_library(gnuradio-analog
     rail_ff_impl.cc
     random_uniform_source_impl.cc
     sig_source_impl.cc
-    simple_squelch_cc_impl.cc
-    )
+    simple_squelch_cc_impl.cc)
 
 if(ENABLE_COMMON_PCH)
-  set(PRIVATE_LIBS common-precompiled-headers)
+    set(PRIVATE_LIBS common-precompiled-headers)
 endif()
 
-target_link_libraries(gnuradio-analog PUBLIC
-  gnuradio-runtime
-  gnuradio-blocks
-  gnuradio-filter
-  PRIVATE
-  ${PRIVATE_LIBS}
-  )
+target_link_libraries(
+    gnuradio-analog
+    PUBLIC gnuradio-runtime gnuradio-blocks gnuradio-filter
+    PRIVATE ${PRIVATE_LIBS})
 
-target_include_directories(gnuradio-analog
-  PUBLIC
-  $<INSTALL_INTERFACE:include>
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>
-  )
+target_include_directories(
+    gnuradio-analog PUBLIC $<INSTALL_INTERFACE:include>
+                           $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>)
 
 #Add Windows DLL resource file if using MSVC
-IF(MSVC)
+if(MSVC)
     include(${PROJECT_SOURCE_DIR}/cmake/Modules/GrVersion.cmake)
 
-    configure_file(
-        ${CMAKE_CURRENT_SOURCE_DIR}/gnuradio-analog.rc.in
-        ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-analog.rc
-    @ONLY)
+    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/gnuradio-analog.rc.in
+                   ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-analog.rc @ONLY)
 
-    target_sources(gnuradio-analog PRIVATE
-        ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-analog.rc
-    )
+    target_sources(gnuradio-analog PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-analog.rc)
 
-ENDIF(MSVC)
+endif(MSVC)
 
 if(BUILD_SHARED_LIBS)
-    GR_LIBRARY_FOO(gnuradio-analog)
+    gr_library_foo(gnuradio-analog)
 endif()
 
 ########################################################################
 # QA C++ Code for gr-analog
 ########################################################################
 if(ENABLE_TESTING)
-  include(GrTest)
+    include(GrTest)
 
-  list(APPEND test_gr_analog_sources
-  )
-  list(APPEND GR_TEST_TARGET_DEPS gnuradio-analog)
+    list(APPEND test_gr_analog_sources)
+    list(APPEND GR_TEST_TARGET_DEPS gnuradio-analog)
 
-  foreach(qa_file ${test_gr_analog_sources})
-    GR_ADD_CPP_TEST("analog_${qa_file}"
-      ${CMAKE_CURRENT_SOURCE_DIR}/${qa_file}
-    )
-  endforeach(qa_file)
+    foreach(qa_file ${test_gr_analog_sources})
+        gr_add_cpp_test("analog_${qa_file}" ${CMAKE_CURRENT_SOURCE_DIR}/${qa_file})
+    endforeach(qa_file)
 endif(ENABLE_TESTING)
