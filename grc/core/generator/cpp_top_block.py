@@ -305,7 +305,7 @@ class CppTopBlockGenerator(object):
 
         type_translation = {'complex': 'gr_complex', 'real': 'double', 'float': 'float', 'int': 'int', 'complex_vector': 'std::vector<gr_complex>',
                             'real_vector': 'std::vector<double>', 'float_vector': 'std::vector<float>', 'int_vector': 'std::vector<int>', 'string': 'std::string', 'bool': 'bool'}
-        # If the type is explcitly specified, translate to the corresponding C++ type
+        # If the type is explicitly specified, translate to the corresponding C++ type
         for var in list(variables):
             if var.params['value'].dtype != 'raw':
                 var.vtype = type_translation[var.params['value'].dtype]

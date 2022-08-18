@@ -21,7 +21,7 @@ options:
     run_options: prompt
     sizing_mode: fixed
     thread_safe_setters: ''
-    title: GSM Full-Rate 06.10 Codec Looback Test
+    title: GSM Full-Rate 06.10 Codec Loopback Test
     window_size: 1280, 1024
   states:
     coordinate: [0, -1]
