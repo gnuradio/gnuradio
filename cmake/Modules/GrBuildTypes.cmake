@@ -24,10 +24,18 @@ set(__INCLUDED_GR_BUILD_TYPES_CMAKE TRUE)
 
 # Defines the list of acceptable cmake build types. When adding a new
 # build type below, make sure to add it to this list.
-list(APPEND AVAIL_BUILDTYPES
-  None Debug Release RelWithDebInfo MinSizeRel
-  Coverage NoOptWithASM O2WithASM O3WithASM
-)
+list(
+    APPEND
+    AVAIL_BUILDTYPES
+    None
+    Debug
+    Release
+    RelWithDebInfo
+    MinSizeRel
+    Coverage
+    NoOptWithASM
+    O2WithASM
+    O3WithASM)
 
 ########################################################################
 # GR_CHECK_BUILD_TYPE(build type)
@@ -41,15 +49,17 @@ list(APPEND AVAIL_BUILDTYPES
 # the available build types.
 ########################################################################
 function(GR_CHECK_BUILD_TYPE settype)
-  STRING(TOUPPER ${settype} _settype)
-  foreach(btype ${AVAIL_BUILDTYPES})
-    STRING(TOUPPER ${btype} _btype)
-    if(${_settype} STREQUAL ${_btype})
-      return() # found it; exit cleanly
-    endif(${_settype} STREQUAL ${_btype})
-  endforeach(btype)
-  # Build type not found; error out
-  message(FATAL_ERROR "Build type '${settype}' not valid, must be one of: ${AVAIL_BUILDTYPES}")
+    string(TOUPPER ${settype} _settype)
+    foreach(btype ${AVAIL_BUILDTYPES})
+        string(TOUPPER ${btype} _btype)
+        if(${_settype} STREQUAL ${_btype})
+            return() # found it; exit cleanly
+        endif(${_settype} STREQUAL ${_btype})
+    endforeach(btype)
+    # Build type not found; error out
+    message(
+        FATAL_ERROR
+            "Build type '${settype}' not valid, must be one of: ${AVAIL_BUILDTYPES}")
 endfunction(GR_CHECK_BUILD_TYPE)
 
 ########################################################################
@@ -63,24 +73,22 @@ endfunction(GR_CHECK_BUILD_TYPE)
 # NOTE: This is not defined on Windows systems.
 ########################################################################
 if(NOT WIN32)
-  SET(CMAKE_CXX_FLAGS_COVERAGE "-Wall -pedantic -pthread -g -O0 -fprofile-arcs -ftest-coverage" CACHE STRING
-    "Flags used by the C++ compiler during Coverage builds." FORCE)
-  SET(CMAKE_C_FLAGS_COVERAGE "-Wall -pedantic -pthread -g -O0 -fprofile-arcs -ftest-coverage" CACHE STRING
-    "Flags used by the C compiler during Coverage builds." FORCE)
-  SET(CMAKE_EXE_LINKER_FLAGS_COVERAGE
-    "-Wl,--warn-unresolved-symbols,--warn-once,-lgcov" CACHE STRING
-    "Flags used for linking binaries during Coverage builds." FORCE)
-  SET(CMAKE_SHARED_LINKER_FLAGS_COVERAGE
-    "-Wl,--warn-unresolved-symbols,--warn-once,-lgcov" CACHE STRING
-    "Flags used by the shared lib linker during Coverage builds." FORCE)
+    set(CMAKE_CXX_FLAGS_COVERAGE
+        "-Wall -pedantic -pthread -g -O0 -fprofile-arcs -ftest-coverage"
+        CACHE STRING "Flags used by the C++ compiler during Coverage builds." FORCE)
+    set(CMAKE_C_FLAGS_COVERAGE
+        "-Wall -pedantic -pthread -g -O0 -fprofile-arcs -ftest-coverage"
+        CACHE STRING "Flags used by the C compiler during Coverage builds." FORCE)
+    set(CMAKE_EXE_LINKER_FLAGS_COVERAGE
+        "-Wl,--warn-unresolved-symbols,--warn-once,-lgcov"
+        CACHE STRING "Flags used for linking binaries during Coverage builds." FORCE)
+    set(CMAKE_SHARED_LINKER_FLAGS_COVERAGE
+        "-Wl,--warn-unresolved-symbols,--warn-once,-lgcov"
+        CACHE STRING "Flags used by the shared lib linker during Coverage builds." FORCE)
 
-  MARK_AS_ADVANCED(
-    CMAKE_CXX_FLAGS_COVERAGE
-    CMAKE_C_FLAGS_COVERAGE
-    CMAKE_EXE_LINKER_FLAGS_COVERAGE
-    CMAKE_SHARED_LINKER_FLAGS_COVERAGE)
+    mark_as_advanced(CMAKE_CXX_FLAGS_COVERAGE CMAKE_C_FLAGS_COVERAGE
+                     CMAKE_EXE_LINKER_FLAGS_COVERAGE CMAKE_SHARED_LINKER_FLAGS_COVERAGE)
 endif(NOT WIN32)
-
 
 ########################################################################
 # For GCC and Clang, we can set a build type:
@@ -94,25 +102,24 @@ endif(NOT WIN32)
 # NOTE: This is not defined on Windows systems.
 ########################################################################
 if(NOT WIN32)
-  SET(CMAKE_CXX_FLAGS_NOOPTWITHASM "-Wall -save-temps -g -O0" CACHE STRING
-    "Flags used by the C++ compiler during NoOptWithASM builds." FORCE)
-  SET(CMAKE_C_FLAGS_NOOPTWITHASM "-Wall -save-temps -g -O0" CACHE STRING
-    "Flags used by the C compiler during NoOptWithASM builds." FORCE)
-  SET(CMAKE_EXE_LINKER_FLAGS_NOOPTWITHASM
-    "-Wl,--warn-unresolved-symbols,--warn-once" CACHE STRING
-    "Flags used for linking binaries during NoOptWithASM builds." FORCE)
-  SET(CMAKE_SHARED_LINKER_FLAGS_NOOPTWITHASM
-    "-Wl,--warn-unresolved-symbols,--warn-once" CACHE STRING
-    "Flags used by the shared lib linker during NoOptWithASM builds." FORCE)
+    set(CMAKE_CXX_FLAGS_NOOPTWITHASM
+        "-Wall -save-temps -g -O0"
+        CACHE STRING "Flags used by the C++ compiler during NoOptWithASM builds." FORCE)
+    set(CMAKE_C_FLAGS_NOOPTWITHASM
+        "-Wall -save-temps -g -O0"
+        CACHE STRING "Flags used by the C compiler during NoOptWithASM builds." FORCE)
+    set(CMAKE_EXE_LINKER_FLAGS_NOOPTWITHASM
+        "-Wl,--warn-unresolved-symbols,--warn-once"
+        CACHE STRING "Flags used for linking binaries during NoOptWithASM builds." FORCE)
+    set(CMAKE_SHARED_LINKER_FLAGS_NOOPTWITHASM
+        "-Wl,--warn-unresolved-symbols,--warn-once"
+        CACHE STRING "Flags used by the shared lib linker during NoOptWithASM builds."
+              FORCE)
 
-  MARK_AS_ADVANCED(
-    CMAKE_CXX_FLAGS_NOOPTWITHASM
-    CMAKE_C_FLAGS_NOOPTWITHASM
-    CMAKE_EXE_LINKER_FLAGS_NOOPTWITHASM
-    CMAKE_SHARED_LINKER_FLAGS_NOOPTWITHASM)
+    mark_as_advanced(
+        CMAKE_CXX_FLAGS_NOOPTWITHASM CMAKE_C_FLAGS_NOOPTWITHASM
+        CMAKE_EXE_LINKER_FLAGS_NOOPTWITHASM CMAKE_SHARED_LINKER_FLAGS_NOOPTWITHASM)
 endif(NOT WIN32)
-
-
 
 ########################################################################
 # For GCC and Clang, we can set a build type:
@@ -127,24 +134,22 @@ endif(NOT WIN32)
 ########################################################################
 
 if(NOT WIN32)
-  SET(CMAKE_CXX_FLAGS_O2WITHASM "-Wall -save-temps -g -O2" CACHE STRING
-    "Flags used by the C++ compiler during O2WithASM builds." FORCE)
-  SET(CMAKE_C_FLAGS_O2WITHASM "-Wall -save-temps -g -O2" CACHE STRING
-    "Flags used by the C compiler during O2WithASM builds." FORCE)
-  SET(CMAKE_EXE_LINKER_FLAGS_O2WITHASM
-    "-Wl,--warn-unresolved-symbols,--warn-once" CACHE STRING
-    "Flags used for linking binaries during O2WithASM builds." FORCE)
-  SET(CMAKE_SHARED_LINKER_FLAGS_O2WITHASM
-    "-Wl,--warn-unresolved-symbols,--warn-once" CACHE STRING
-    "Flags used by the shared lib linker during O2WithASM builds." FORCE)
+    set(CMAKE_CXX_FLAGS_O2WITHASM
+        "-Wall -save-temps -g -O2"
+        CACHE STRING "Flags used by the C++ compiler during O2WithASM builds." FORCE)
+    set(CMAKE_C_FLAGS_O2WITHASM
+        "-Wall -save-temps -g -O2"
+        CACHE STRING "Flags used by the C compiler during O2WithASM builds." FORCE)
+    set(CMAKE_EXE_LINKER_FLAGS_O2WITHASM
+        "-Wl,--warn-unresolved-symbols,--warn-once"
+        CACHE STRING "Flags used for linking binaries during O2WithASM builds." FORCE)
+    set(CMAKE_SHARED_LINKER_FLAGS_O2WITHASM
+        "-Wl,--warn-unresolved-symbols,--warn-once"
+        CACHE STRING "Flags used by the shared lib linker during O2WithASM builds." FORCE)
 
-  MARK_AS_ADVANCED(
-    CMAKE_CXX_FLAGS_O2WITHASM
-    CMAKE_C_FLAGS_O2WITHASM
-    CMAKE_EXE_LINKER_FLAGS_O2WITHASM
-    CMAKE_SHARED_LINKER_FLAGS_O2WITHASM)
+    mark_as_advanced(CMAKE_CXX_FLAGS_O2WITHASM CMAKE_C_FLAGS_O2WITHASM
+                     CMAKE_EXE_LINKER_FLAGS_O2WITHASM CMAKE_SHARED_LINKER_FLAGS_O2WITHASM)
 endif(NOT WIN32)
-
 
 ########################################################################
 # For GCC and Clang, we can set a build type:
@@ -159,20 +164,19 @@ endif(NOT WIN32)
 ########################################################################
 
 if(NOT WIN32)
-  SET(CMAKE_CXX_FLAGS_O3WITHASM "-Wall -save-temps -g -O3" CACHE STRING
-    "Flags used by the C++ compiler during O3WithASM builds." FORCE)
-  SET(CMAKE_C_FLAGS_O3WITHASM "-Wall -save-temps -g -O3" CACHE STRING
-    "Flags used by the C compiler during O3WithASM builds." FORCE)
-  SET(CMAKE_EXE_LINKER_FLAGS_O3WITHASM
-    "-Wl,--warn-unresolved-symbols,--warn-once" CACHE STRING
-    "Flags used for linking binaries during O3WithASM builds." FORCE)
-  SET(CMAKE_SHARED_LINKER_FLAGS_O3WITHASM
-    "-Wl,--warn-unresolved-symbols,--warn-once" CACHE STRING
-    "Flags used by the shared lib linker during O3WithASM builds." FORCE)
+    set(CMAKE_CXX_FLAGS_O3WITHASM
+        "-Wall -save-temps -g -O3"
+        CACHE STRING "Flags used by the C++ compiler during O3WithASM builds." FORCE)
+    set(CMAKE_C_FLAGS_O3WITHASM
+        "-Wall -save-temps -g -O3"
+        CACHE STRING "Flags used by the C compiler during O3WithASM builds." FORCE)
+    set(CMAKE_EXE_LINKER_FLAGS_O3WITHASM
+        "-Wl,--warn-unresolved-symbols,--warn-once"
+        CACHE STRING "Flags used for linking binaries during O3WithASM builds." FORCE)
+    set(CMAKE_SHARED_LINKER_FLAGS_O3WITHASM
+        "-Wl,--warn-unresolved-symbols,--warn-once"
+        CACHE STRING "Flags used by the shared lib linker during O3WithASM builds." FORCE)
 
-  MARK_AS_ADVANCED(
-    CMAKE_CXX_FLAGS_O3WITHASM
-    CMAKE_C_FLAGS_O3WITHASM
-    CMAKE_EXE_LINKER_FLAGS_O3WITHASM
-    CMAKE_SHARED_LINKER_FLAGS_O3WITHASM)
+    mark_as_advanced(CMAKE_CXX_FLAGS_O3WITHASM CMAKE_C_FLAGS_O3WITHASM
+                     CMAKE_EXE_LINKER_FLAGS_O3WITHASM CMAKE_SHARED_LINKER_FLAGS_O3WITHASM)
 endif(NOT WIN32)

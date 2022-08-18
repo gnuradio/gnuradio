@@ -10,7 +10,9 @@ include(GrPybind)
 ########################################################################
 # Python Bindings
 ########################################################################
-list(APPEND blocks_python_files
+list(
+    APPEND
+    blocks_python_files
     abs_blk_python.cc
     add_blk_python.cc
     add_const_bb_python.cc
@@ -162,16 +164,14 @@ list(APPEND blocks_python_files
     xor_blk_python.cc
     python_bindings.cc)
 
-if (SNDFILE_FOUND)
-    list(APPEND blocks_python_files
-        wavfile_python.cc
-        wavfile_sink_python.cc
-        wavfile_source_python.cc)
+if(SNDFILE_FOUND)
+    list(APPEND blocks_python_files wavfile_python.cc wavfile_sink_python.cc
+         wavfile_source_python.cc)
 endif()
 
-GR_PYBIND_MAKE_CHECK_HASH(blocks
-  ../../..
-  gr::blocks
-  "${blocks_python_files}")
+gr_pybind_make_check_hash(blocks ../../.. gr::blocks "${blocks_python_files}")
 
-install(TARGETS blocks_python DESTINATION ${GR_PYTHON_DIR}/gnuradio/blocks COMPONENT pythonapi)
+install(
+    TARGETS blocks_python
+    DESTINATION ${GR_PYTHON_DIR}/gnuradio/blocks
+    COMPONENT pythonapi)
