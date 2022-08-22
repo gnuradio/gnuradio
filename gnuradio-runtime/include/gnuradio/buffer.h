@@ -126,11 +126,7 @@ public:
 
     uint64_t nitems_written() { return d_abs_write_offset; }
 
-    void reset_nitem_counter()
-    {
-        d_write_index = 0;
-        d_abs_write_offset = 0;
-    }
+    void reset_nitem_counter() { d_abs_write_offset = 0; }
 
     size_t get_sizeof_item() { return d_sizeof_item; }
 

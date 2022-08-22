@@ -106,11 +106,7 @@ public:
 
     uint64_t nitems_read() const { return d_abs_read_offset; }
 
-    void reset_nitem_counter()
-    {
-        d_read_index = 0;
-        d_abs_read_offset = 0;
-    }
+    void reset_nitem_counter() { d_abs_read_offset = 0; }
 
     size_t get_sizeof_item() { return d_buffer->get_sizeof_item(); }
 
