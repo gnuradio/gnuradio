@@ -13,6 +13,14 @@ py3_inst = import('python').find_installation('python3')
 pybind11_dep = dependency('pybind11', required : get_option('enable_python'))
 json_dep = dependency('nlohmann_json')
 
+if (get_option('enable_testing'))
+    TEST_ENV = environment()
+    TEST_ENV.prepend('LD_LIBRARY_PATH', 
+      join_paths( meson.build_root(),'blocklib','newmod','lib'),
+    )
+    TEST_ENV.prepend('PYTHONPATH', join_paths(meson.build_root(),'blocklib/newmod/python'))
+endif
+
 prefix = get_option('prefix')
 # Escape spaces
 prefix_parts = prefix.split(' ')
