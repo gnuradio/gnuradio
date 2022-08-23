@@ -48,14 +48,11 @@ void scheduler_nbt::initialize(flat_graph_sptr fg, runtime_monitor_sptr fgmon)
             auto t = thread_wrapper::make(id(), bg, bufman, fgmon, _opts);
             _threads.push_back(t);
 
-            std::vector<node_sptr> node_vec;
             for (auto& b : bg.blocks()) {
                 auto it = std::find(blocks.begin(), blocks.end(), b);
                 if (it != blocks.end()) {
                     blocks.erase(it);
                 }
-
-                node_vec.push_back(b);
 
                 b->set_parent_intf(t);
                 for (auto& p : b->all_ports()) {
@@ -68,10 +65,6 @@ void scheduler_nbt::initialize(flat_graph_sptr fg, runtime_monitor_sptr fgmon)
 
     // For the remaining blocks that weren't in block groups
     for (auto& b : blocks) {
-
-        std::vector<node_sptr> node_vec;
-        node_vec.push_back(b);
-
         auto t = thread_wrapper::make(
             id(), block_group_properties({ b }), bufman, fgmon, _opts);
         _threads.push_back(t);
