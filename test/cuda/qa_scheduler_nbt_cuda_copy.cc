@@ -41,7 +41,7 @@ TEST(SchedulerMTTest, CudaCopyBasic)
     fg->connect(copy1, 0, copy2, 0)->set_custom_buffer(CUDA_BUFFER_ARGS_D2D);
     fg->connect(copy2, 0, snk1, 0)->set_custom_buffer(CUDA_BUFFER_ARGS_D2H);
 
-    auto sched = schedulers::scheduler_nbt::make("sched", 32768);
+    auto sched = schedulers::scheduler_nbt::make();
     sched->add_block_group({ copy1, copy2 });
 
     auto rt = runtime::make();
@@ -120,7 +120,7 @@ TEST(SchedulerMTTest, CudaCopySingleMapped)
     fg->connect(copy1, 0, copy2, 0)->set_custom_buffer(CUDA_BUFFER_SM_ARGS_D2D);
     fg->connect(copy2, 0, snk1, 0)->set_custom_buffer(CUDA_BUFFER_SM_ARGS_D2H);
 
-    auto sched = schedulers::scheduler_nbt::make("sched", 32768);
+    auto sched = schedulers::scheduler_nbt::make();
     sched->add_block_group({ copy1, copy2 });
 
     auto rt = runtime::make();
