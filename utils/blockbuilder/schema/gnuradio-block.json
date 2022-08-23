@@ -27,6 +27,12 @@
                         "type": "string"
                     }
                 },
+                "inherits": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
                 "grc": {
                     "$ref": "#/definitions/GrcTop"
                 },

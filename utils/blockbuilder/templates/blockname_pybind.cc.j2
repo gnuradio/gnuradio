@@ -13,7 +13,7 @@ void bind_{{block}}(py::module& m)
 {
     using {{block}} = ::gr::{{module}}::{{block}};
 
-    py::class_<{{block}}, {{ inherits }}{{',' if inherits}}{% if blocktype != 'block'%} gr::{{blocktype}},{% endif %}
+    py::class_<{{block}}, {% if inherits %}{% for inh in inherits%}{{inh}},{%endfor%}{%endif%}{% if blocktype != 'block'%} gr::{{blocktype}},{% endif %}
     gr::block, gr::node,
     std::shared_ptr<{{block}}>> {{block}}_class(m, "{{block}}"{{macros.block_docstring(doc,parameters,ports)}});
 

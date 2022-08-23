@@ -15,7 +15,7 @@ void bind_{{ block }}_template(py::module& m, const char* classname)
 {
     // using block_class = gr::{{ module }}::{{ block }}<{{typestr}}>;
 
-    py::class_<gr::{{ module }}::{{ block }}<{{typestr}}>, {{ inherits }}{{',' if inherits}} {% if blocktype != 'block'%} {{ "gr::" if blocktype[:4] != "gr::" }}{{blocktype}},{% endif %}
+    py::class_<gr::{{ module }}::{{ block }}<{{typestr}}>, {% if inherits %}{% for inh in inherits%}{{inh}},{%endfor%}{%endif%} {% if blocktype != 'block'%} {{ "gr::" if blocktype[:4] != "gr::" }}{{blocktype}},{% endif %}
     gr::block, gr::node,
     std::shared_ptr<gr::{{ module }}::{{ block }}<{{typestr}}>>> {{block}}_class(m, classname);
 
