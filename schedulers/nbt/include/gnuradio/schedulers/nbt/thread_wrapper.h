@@ -46,7 +46,7 @@ private:
     runtime_monitor_sptr d_rtmon;
 
     bool d_flushing = false;
-    int d_flush_cnt = 0;
+    size_t d_flush_cnt = 0;
     std::atomic<bool> kick_pending = false;
 
     scheduler_nbt_options _opts;
