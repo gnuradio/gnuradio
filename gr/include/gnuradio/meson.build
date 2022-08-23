@@ -45,7 +45,9 @@ runtime_headers = [
     'sptr_magic.h',
     'realtime.h',
     'runtime.h',
-    'buffer_sm.h'
+    'buffer_sm.h',
+    'executor.h',
+    'constants.h'
 ]
 
 install_headers(runtime_headers, subdir : 'gnuradio')
