@@ -355,12 +355,6 @@ void flat_flowgraph::merge_connections(flat_flowgraph_sptr old_ffg)
                 i->src().port(),
                 pmt::cons(i->dst().block()->alias_pmt(), i->dst().port()));
         }
-
-        // Now deal with the fact that the block details might have
-        // changed numbers of inputs and outputs vs. in the old
-        // flowgraph.
-        block->detail()->reset_nitem_counters();
-        block->detail()->clear_tags();
     }
 }
 

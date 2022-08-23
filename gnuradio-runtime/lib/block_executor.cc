@@ -150,31 +150,40 @@ static bool propagate_tags(block::tag_propagation_policy_t policy,
             std::vector<tag_t>::iterator t;
             if (rrate == 1.0) {
                 for (t = rtags.begin(); t != rtags.end(); t++) {
-                    for (int o = 0; o < d->noutputs(); o++)
-                        out_buf[o]->add_item_tag(*t);
+                    for (int o = 0; o < d->noutputs(); o++) {
+                        tag_t new_tag = *t;
+                        new_tag.offset =
+                            new_tag.offset - start_nitems_read[i] + d->nitems_written(o);
+                        out_buf[o]->add_item_tag(new_tag);
+                    }
                 }
             } else if (use_fp_rrate) {
                 for (t = rtags.begin(); t != rtags.end(); t++) {
-                    tag_t new_tag = *t;
-                    new_tag.offset = std::llround((double)new_tag.offset * rrate);
-                    for (int o = 0; o < d->noutputs(); o++)
+                    for (int o = 0; o < d->noutputs(); o++) {
+                        tag_t new_tag = *t;
+                        new_tag.offset = new_tag.offset - start_nitems_read[i];
+                        new_tag.offset = std::llround((double)new_tag.offset * rrate) +
+                                         d->nitems_written(o);
                         out_buf[o]->add_item_tag(new_tag);
+                    }
                 }
             } else {
                 mpz_class offset;
                 for (t = rtags.begin(); t != rtags.end(); t++) {
-                    tag_t new_tag = *t;
-                    mpz_import(offset.get_mpz_t(),
-                               1,
-                               1,
-                               sizeof(new_tag.offset),
-                               0,
-                               0,
-                               &new_tag.offset);
-                    offset = offset * mp_rrate + one_half;
-                    new_tag.offset = offset.get_ui();
-                    for (int o = 0; o < d->noutputs(); o++)
+                    for (int o = 0; o < d->noutputs(); o++) {
+                        tag_t new_tag = *t;
+                        mpz_import(offset.get_mpz_t(),
+                                   1,
+                                   1,
+                                   sizeof(new_tag.offset),
+                                   0,
+                                   0,
+                                   &new_tag.offset);
+                        offset = (offset - start_nitems_read[i]) * mp_rrate + one_half +
+                                 d->nitems_written(o);
+                        new_tag.offset = offset.get_ui();
                         out_buf[o]->add_item_tag(new_tag);
+                    }
                 }
             }
         }
@@ -199,12 +208,17 @@ static bool propagate_tags(block::tag_propagation_policy_t policy,
                 std::vector<tag_t>::iterator t;
                 if (rrate == 1.0) {
                     for (t = rtags.begin(); t != rtags.end(); t++) {
-                        out_buf->add_item_tag(*t);
+                        tag_t new_tag = *t;
+                        new_tag.offset =
+                            new_tag.offset - start_nitems_read[i] + d->nitems_written(i);
+                        out_buf->add_item_tag(new_tag);
                     }
                 } else if (use_fp_rrate) {
                     for (t = rtags.begin(); t != rtags.end(); t++) {
                         tag_t new_tag = *t;
-                        new_tag.offset = std::llround((double)new_tag.offset * rrate);
+                        new_tag.offset = new_tag.offset - start_nitems_read[i];
+                        new_tag.offset = std::llround((double)new_tag.offset * rrate) +
+                                         d->nitems_written(i);
                         out_buf->add_item_tag(new_tag);
                     }
                 } else {
@@ -218,7 +232,8 @@ static bool propagate_tags(block::tag_propagation_policy_t policy,
                                    0,
                                    0,
                                    &new_tag.offset);
-                        offset = offset * mp_rrate + one_half;
+                        offset = (offset - start_nitems_read[i]) * mp_rrate + one_half +
+                                 d->nitems_written(i);
                         new_tag.offset = offset.get_ui();
                         out_buf->add_item_tag(new_tag);
                     }

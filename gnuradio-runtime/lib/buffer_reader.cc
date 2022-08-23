@@ -65,11 +65,7 @@ buffer_add_reader(buffer_sptr buf, int nzero_preload, block_sptr link, int delay
 }
 
 buffer_reader::buffer_reader(buffer_sptr buffer, unsigned int read_index, block_sptr link)
-    : d_buffer(buffer),
-      d_read_index(read_index),
-      d_abs_read_offset(0),
-      d_link(link),
-      d_attr_delay(0)
+    : d_buffer(buffer), d_read_index(read_index), d_link(link), d_attr_delay(0)
 {
 #ifdef BUFFER_DEBUG
     gr::configure_default_loggers(d_logger, d_debug_logger, "buffer_reader");
@@ -124,7 +120,6 @@ void buffer_reader::update_read_pointer(int nitems)
 #endif
 
     d_read_index = d_buffer->index_add(d_read_index, nitems);
-    d_abs_read_offset += nitems;
 
 #ifdef BUFFER_DEBUG
     std::ostringstream msg;
@@ -133,6 +128,12 @@ void buffer_reader::update_read_pointer(int nitems)
         << " -- nitems: " << nitems << " -- d_read_index: " << d_read_index;
     GR_LOG_DEBUG(d_buffer->d_logger, msg.str());
 #endif
+}
+
+uint64_t buffer_reader::nitems_read()
+{
+    unsigned history = d_link.expired() ? 1 : d_link.lock()->history();
+    return d_buffer->nitems_written() - items_available() + history - 1;
 }
 
 void buffer_reader::get_tags_in_range(std::vector<tag_t>& v,

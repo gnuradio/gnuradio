@@ -25,7 +25,7 @@ namespace gr {
 
 buffer_reader_sm::~buffer_reader_sm() {}
 
-int buffer_reader_sm::items_available() const
+int buffer_reader_sm::items_available()
 {
     int available = 0;
 

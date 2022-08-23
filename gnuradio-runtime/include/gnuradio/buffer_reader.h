@@ -104,13 +104,9 @@ public:
 
     gr::thread::mutex* mutex() { return d_buffer->mutex(); }
 
-    uint64_t nitems_read() const { return d_abs_read_offset; }
+    uint64_t nitems_read();
 
-    void reset_nitem_counter()
-    {
-        d_read_index = 0;
-        d_abs_read_offset = 0;
-    }
+    void reset_nitem_counter() { d_read_index = 0; }
 
     size_t get_sizeof_item() { return d_buffer->get_sizeof_item(); }
 
@@ -159,7 +155,7 @@ public:
 
     // -------------------------------------------------------------------------
     unsigned int get_read_index() const { return d_read_index; }
-    uint64_t get_abs_read_offset() const { return d_abs_read_offset; }
+    uint64_t get_abs_read_offset() { return nitems_read(); }
 
 protected:
     friend class buffer;
@@ -174,7 +170,6 @@ protected:
 
     buffer_sptr d_buffer;
     unsigned int d_read_index;   // in items [0,d->buffer.d_bufsize) ** see NB
-    uint64_t d_abs_read_offset;  // num items seen since the start   ** see NB
     std::weak_ptr<block> d_link; // block that reads via this buffer reader
     unsigned d_attr_delay;       // sample delay attribute for tag propagation
     // ** NB: buffer::d_mutex protects d_read_index and d_abs_read_offset
