@@ -27,8 +27,8 @@
 {% endif -%}
 {% endmacro %}
 
-{% macro class_statement(block, blocktype) -%}
-class {{ block }} : virtual public {{blocktype}}{#{{',' if inherits != ''}}  {{ inherits }}#}
+{% macro class_statement(block, blocktype, inherits) -%}
+class {{ block }} : virtual public {{blocktype}}{% for inh in inherits %}, public {{ inh }}{%endfor%}
 {% endmacro %}
 
 {% macro block_args(parameters) -%}

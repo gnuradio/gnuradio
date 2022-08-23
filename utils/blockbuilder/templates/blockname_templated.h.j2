@@ -15,7 +15,7 @@ namespace gr {
 namespace {{module}} {
 
 template <{% for key in typekeys -%}{{key['type']}} {{key['id']}}{{ ", " if not loop.last }}{%endfor%}>
-{{ macros.class_statement(block, blocktype) }}
+{{ macros.class_statement(block, blocktype, inherits) }}
 {
 public:
 {{ macros.block_args(parameters) }}
