@@ -89,6 +89,19 @@ void block::on_parameter_query(param_action_sptr action)
     action->set_pmt_value(*param);
 }
 
+pmt_sptr block::get_parameter(const std::string& param_str)
+{
+    auto param = d_parameters.get(param_str);
+    return param;
+}
+
+void block::set_parameter(const std::string& param_str, pmt_sptr new_value)
+{
+    auto param = d_parameters.get(param_str);
+    *param = *new_value;
+}
+
+
 void block::set_output_multiple(size_t multiple)
 {
     if (multiple < 1)

@@ -123,6 +123,9 @@ public:
     };
     virtual void on_parameter_change(param_action_sptr action);
     virtual void on_parameter_query(param_action_sptr action);
+    pmt_sptr get_parameter(const std::string& param_str);
+    void set_parameter(const std::string& param_str, pmt_sptr new_value);
+
     void set_output_multiple(size_t multiple);
     size_t output_multiple() const { return d_output_multiple; }
     bool output_multiple_set() const { return d_output_multiple_set; }

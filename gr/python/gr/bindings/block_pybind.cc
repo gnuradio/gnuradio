@@ -37,6 +37,10 @@ void bind_block(py::module& m)
         .def("request_parameter_change",
              py::overload_cast<const std::string&, pmtf::pmt, bool>(
                  &block::request_parameter_change))
+
+        .def("get_parameter", &block::get_parameter)
+        .def("set_parameter", &block::set_parameter)
+
         .def_static("deserialize_param_to_pmt", &block::deserialize_param_to_pmt)
         .def("to_json", &block::to_json);
 }
