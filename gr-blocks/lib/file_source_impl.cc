@@ -107,6 +107,7 @@ bool file_source_impl::seek(int64_t seek_point, int whence)
             GR_LOG_WARN(d_logger, "bad seek point");
             return 0;
         }
+        d_items_remaining = d_length_items - (seek_point - d_start_offset_items);
         return GR_FSEEK((FILE*)d_fp, seek_point * d_itemsize, SEEK_SET) == 0;
     } else {
         GR_LOG_WARN(d_logger, "file not seekable");
