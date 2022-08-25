@@ -151,10 +151,14 @@ static bool propagate_tags(block::tag_propagation_policy_t policy,
             if (rrate == 1.0) {
                 for (t = rtags.begin(); t != rtags.end(); t++) {
                     for (int o = 0; o < d->noutputs(); o++) {
-                        tag_t new_tag = *t;
-                        new_tag.offset =
-                            new_tag.offset - start_nitems_read[i] + d->nitems_written(o);
-                        out_buf[o]->add_item_tag(new_tag);
+                        if (start_nitems_read[i] == d->nitems_written(o))
+                            out_buf[o]->add_item_tag(*t);
+                        else {
+                            tag_t new_tag = *t;
+                            new_tag.offset = new_tag.offset - start_nitems_read[i] +
+                                             d->nitems_written(o);
+                            out_buf[o]->add_item_tag(new_tag);
+                        }
                     }
                 }
             } else if (use_fp_rrate) {
@@ -208,10 +212,14 @@ static bool propagate_tags(block::tag_propagation_policy_t policy,
                 std::vector<tag_t>::iterator t;
                 if (rrate == 1.0) {
                     for (t = rtags.begin(); t != rtags.end(); t++) {
-                        tag_t new_tag = *t;
-                        new_tag.offset =
-                            new_tag.offset - start_nitems_read[i] + d->nitems_written(i);
-                        out_buf->add_item_tag(new_tag);
+                        if (start_nitems_read[i] == d->nitems_written(i))
+                            out_buf->add_item_tag(*t);
+                        else {
+                            tag_t new_tag = *t;
+                            new_tag.offset = new_tag.offset - start_nitems_read[i] +
+                                             d->nitems_written(i);
+                            out_buf->add_item_tag(new_tag);
+                        }
                     }
                 } else if (use_fp_rrate) {
                     for (t = rtags.begin(); t != rtags.end(); t++) {
