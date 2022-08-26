@@ -19,7 +19,7 @@ private:
 
 public:
     using sptr = std::shared_ptr<scheduler_nbt>;
-    static sptr make(const scheduler_nbt_options& opts = {})
+    static sptr make(const scheduler_nbt_options& opts = opts_from_yaml("{}"))
     {
         return std::make_shared<scheduler_nbt>(opts);
     }
@@ -35,6 +35,7 @@ public:
                          const std::string& name = "",
                          const std::vector<unsigned int>& affinity_mask = {});
 
+    static scheduler_nbt_options opts_from_yaml(const std::string options = "{}");
     /**
      * @brief Initialize the multi-threaded scheduler
      *

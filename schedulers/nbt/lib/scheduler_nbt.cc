@@ -113,20 +113,10 @@ void scheduler_nbt::kill()
     }
 }
 
-} // namespace schedulers
-} // namespace gr
-
-
-// External plugin interface for instantiating out of tree schedulers
-// TODO: name, version, other info methods
-extern "C" {
-std::shared_ptr<gr::scheduler> factory(const std::string& options)
+scheduler_nbt_options scheduler_nbt::opts_from_yaml(const std::string options)
 {
-    // const std::string& name = "nbt";
-    // size_t buf_size = 32768;
-
     auto opt_yaml = YAML::Load(options);
-    gr::schedulers::scheduler_nbt_options opts = {};
+    scheduler_nbt_options opts = {};
 
     opts.default_buffer_size = opt_yaml["buffer_size"].as<size_t>(
         gr::prefs::get_long("scheduler.nbt", "default_buffer_size", 32768));
@@ -138,6 +128,20 @@ std::shared_ptr<gr::scheduler> factory(const std::string& options)
     opts.flush_sleep_ms = opt_yaml["flush_count"].as<long>(
         gr::prefs::get_long("scheduler.nbt", "flush_count", 8));
 
-    return gr::schedulers::scheduler_nbt::make(opts);
+    return opts;
+}
+
+
+} // namespace schedulers
+} // namespace gr
+
+
+// External plugin interface for instantiating out of tree schedulers
+// TODO: name, version, other info methods
+extern "C" {
+std::shared_ptr<gr::scheduler> factory(const std::string& options)
+{
+    return gr::schedulers::scheduler_nbt::make(
+        gr::schedulers::scheduler_nbt::opts_from_yaml(options));
 }
 }
