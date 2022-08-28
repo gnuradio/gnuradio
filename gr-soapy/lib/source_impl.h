@@ -20,6 +20,10 @@
 #include <SoapySDR/Registry.hpp>
 #include <SoapySDR/Version.hpp>
 
+static const pmt::pmt_t TIME_KEY = pmt::string_to_symbol("rx_time");
+static const pmt::pmt_t FREQ_KEY = pmt::string_to_symbol("rx_freq");
+static const pmt::pmt_t RATE_KEY = pmt::string_to_symbol("rx_rate");
+
 namespace gr {
 namespace soapy {
 
@@ -43,6 +47,17 @@ public:
                      gr_vector_int& ninput_items,
                      gr_vector_const_void_star& input_items,
                      gr_vector_void_star& output_items) override;
+
+    bool start() override;
+
+    void
+    set_frequency(size_t channel, const std::string& name, double frequency) override;
+    void set_hardware_time(long long timeNs, const std::string& what) override;
+    void set_sample_rate(size_t channel, double sample_rate) override;
+
+private:
+    bool _add_tag;
+    const bool _has_hardware_time;
 };
 
 } // namespace soapy
