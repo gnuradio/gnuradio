@@ -39,7 +39,6 @@ private:
     const std::string d_args;
 
     size_t d_mtu = 0;
-    size_t d_nchan;
     std::string d_stream_args;
     std::vector<size_t> d_channels;
     std::string d_soapy_type;
@@ -68,6 +67,7 @@ protected:
     block_impl& operator=(block_impl&&) = delete;
     virtual ~block_impl();
 
+    size_t d_nchan;
     std::mutex d_device_mutex;
     device_ptr_t d_device;
     SoapySDR::Stream* d_stream = nullptr;
