@@ -1,20 +1,22 @@
 from gnuradio import math
 from gnuradio import gr
 
-class add_ff(math.add_ff):
-    def __init__(self, *args, **kwargs):
-        math.add_ff.__init__(self, *args, **kwargs, impl = math.add_ff.available_impl.pyshell)
-        self.set_pyblock_detail(gr.pyblock_detail(self))
-    
+class add_ff:
+    def __init__(self, blk, **kwargs):
+        self.blk = blk
+        self.nports = kwargs["nports"]
+
     def work(self, wio):
         out = wio.outputs()[0]
         noutput_items = out.n_items
         out.produce(noutput_items)
 
-        inbuf1 = gr.get_input_array(self, wio, 0)
-        inbuf2 = gr.get_input_array(self, wio, 1)
-        outbuf1 = gr.get_output_array(self, wio, 0)
+        inbuf1 = gr.get_input_array(self.blk, wio, 0)
+        outbuf1 = gr.get_output_array(self.blk, wio, 0)
 
-        outbuf1[:] = inbuf1 + inbuf2
+        outbuf1[:] = inbuf1
+        for i in range(1, self.nports):
+            inbufN = gr.get_input_array(self.blk, wio, i)
+            outbuf1[:] += inbufN
 
         return gr.work_return_t.OK 

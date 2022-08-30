@@ -1,5 +1,6 @@
 from gnuradio import blocks
-from gnuradio.math.numpy import add_ff, multiply_const_ff
+# from gnuradio.math.numpy import add_ff, multiply_const_ff
+from gnuradio import math
 from gnuradio import gr
 from gnuradio import gr_unittest
 
@@ -16,8 +17,8 @@ class test_add_numpy(gr_unittest.TestCase):
         src0 = blocks.vector_source_f([1, 3, 5, 7, 9], False)
         src1 = blocks.vector_source_f([0, 2, 4, 6, 8], False)
         expected_result = [3,15,27,13*3,17*3]
-        adder = add_ff()
-        mult = multiply_const_ff(3)
+        adder = math.add_ff(impl=math.add_ff.available_impl.numpy)
+        mult = math.multiply_const_ff(3, impl=math.multiply_const_ff.available_impl.numpy)
         sink = blocks.vector_sink_f()
         self.tb.connect((src0, 0), (adder, 0))
         self.tb.connect((src1, 0), (adder, 1))
