@@ -35,9 +35,10 @@ def main():
     
     blockname = os.path.basename(os.path.dirname(os.path.realpath(args.yaml_file)))
     
-
+    root = os.path.dirname(os.path.realpath(args.yaml_file))
     with open(args.yaml_file) as file:
         d = yaml.load(file, Loader=yaml.FullLoader)
+        
         # Does this block specify a templated version
         templated = 0
         if ('typekeys' in d and len(d['typekeys']) > 0):

@@ -9,7 +9,7 @@ import glob
 
 def argParse():
     """Parses commandline args."""
-    desc='Scrape the doxygen generated xml for docstrings to insert into python bindings'
+    desc='Generates meson.build for each block'
     parser = argparse.ArgumentParser(description=desc)
     
     parser.add_argument("blocklib_path")
@@ -51,6 +51,18 @@ def main():
                 with open(new_meson_filename, 'w') as file:
                     print(f'generating: {root}/{new_meson_filename}')
                     file.write(rendered)
+                if 'implementations' in d:
+                    for impl in d['implementations']:
+                        if 'lang' in impl and impl['lang'] == 'python':
+                            template = env.get_template('blockname_python_impl_meson.build.j2')
+                            tmp = d
+                            tmp['impl'] = impl
+                            rendered = template.render(tmp)
+                            meson_filename = os.path.join(root,impl['id'],'meson.build')
+                            with open(meson_filename, 'w') as file:
+                                print("generating " + meson_filename)
+                                file.write(rendered)
+
 
     modulesdirs = []
     for x in [x for x in os.listdir(args.blocklib_path)]:
