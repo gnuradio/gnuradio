@@ -95,7 +95,7 @@ foreach(file ${files})
 
                 file(REMOVE ${CMAKE_CURRENT_BINARY_DIR}/${file}.regen_status)
                 # Automatically regenerate the bindings
-                add_custom_command( 
+                add_custom_command(
                     OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}}/${file}
                     COMMAND  "${PYTHON_EXECUTABLE}"
                     ${PROJECT_SOURCE_DIR}/gr-utils/bindtool/scripts/bind_intree_file.py
