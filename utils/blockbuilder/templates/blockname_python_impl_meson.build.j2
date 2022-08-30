@@ -1,0 +1,5 @@
+r = run_command('python3', join_paths(SCRIPTS_DIR,'copyfile.py'), 
+    '--input_file', join_paths(meson.current_source_dir(), '{{block}}.py'), '--output_file', 
+    join_paths(meson.project_build_root(),'blocklib','{{module}}','python','{{module}}','{{impl['id']}}','{{block}}.py'),
+    check:true)
+
