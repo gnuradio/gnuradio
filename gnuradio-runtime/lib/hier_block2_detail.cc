@@ -90,8 +90,9 @@ void hier_block2_detail::connect(basic_block_sptr src,
 {
     std::stringstream msg;
 
-    d_debug_logger->debug(
-        "connecting: {} -> {}", endpoint(src, src_port), endpoint(dst, dst_port));
+    d_debug_logger->debug("connecting: {} -> {}",
+                          endpoint(src, src_port).identifier(),
+                          endpoint(dst, dst_port).identifier());
 
     if (src.get() == dst.get())
         throw std::invalid_argument(
@@ -182,11 +183,11 @@ void hier_block2_detail::msg_connect(basic_block_sptr src,
 
     // add edge for this message connection
     d_debug_logger->debug("msg_connect( ({}, {}, {:d}), ({}, {}, {:d}) )",
-                          src,
-                          srcport,
+                          src->identifier(),
+                          pmt::write_string(srcport),
                           hier_out,
-                          dst,
-                          dstport,
+                          dst->identifier(),
+                          pmt::write_string(dstport),
                           hier_in);
     d_fg->connect(msg_endpoint(src, srcport, hier_out),
                   msg_endpoint(dst, dstport, hier_in));
@@ -271,7 +272,8 @@ void hier_block2_detail::disconnect(basic_block_sptr block)
         if ((*p).src().block() == block || (*p).dst().block() == block) {
             edges.push_back(*p);
 
-            d_debug_logger->debug("disconnect: block found in edge {}", *p);
+            d_debug_logger->debug("disconnect: block found in edge {}",
+                                  (*p).identifier());
         }
     }
 
@@ -292,8 +294,9 @@ void hier_block2_detail::disconnect(basic_block_sptr src,
                                     basic_block_sptr dst,
                                     int dst_port)
 {
-    d_debug_logger->debug(
-        "disconnecting: {} -> {}", endpoint(src, src_port), endpoint(dst, dst_port));
+    d_debug_logger->debug("disconnecting: {} -> {}",
+                          endpoint(src, src_port).identifier(),
+                          endpoint(dst, dst_port).identifier());
 
     if (src.get() == dst.get())
         throw std::invalid_argument(
@@ -514,7 +517,8 @@ endpoint_vector_t hier_block2_detail::resolve_endpoint(const endpoint& endp,
 
     // Check if endpoint is a leaf node
     if (cast_to_block_sptr(endp.block())) {
-        d_debug_logger->debug("Block {} is a leaf node, returning.", endp.block());
+        d_debug_logger->debug("Block {} is a leaf node, returning.",
+                              endp.block()->identifier());
         result.push_back(endp);
         return result;
     }
@@ -523,7 +527,7 @@ endpoint_vector_t hier_block2_detail::resolve_endpoint(const endpoint& endp,
     hier_block2_sptr hier_block2(cast_to_hier_block2_sptr(endp.block()));
     if (hier_block2) {
         d_debug_logger->debug("Resolving endpoint {} as an {:s}, recursing",
-                              endp,
+                              endp.identifier(),
                               is_input ? "input" : "output");
         return hier_block2->d_detail->resolve_port(endp.port(), is_input);
     }
@@ -666,7 +670,7 @@ void hier_block2_detail::flatten_aux(flat_flowgraph_sptr sfg) const
     d_debug_logger->debug("Flattening stream connections: ");
 
     for (p = edges.begin(); p != edges.end(); p++) {
-        d_debug_logger->debug("Flattening edge {}", *p);
+        d_debug_logger->debug("Flattening edge {}", (*p).identifier());
 
         endpoint_vector_t src_endps = resolve_endpoint(p->src(), false);
         endpoint_vector_t dst_endps = resolve_endpoint(p->dst(), true);
@@ -674,7 +678,7 @@ void hier_block2_detail::flatten_aux(flat_flowgraph_sptr sfg) const
         endpoint_viter_t s, d;
         for (s = src_endps.begin(); s != src_endps.end(); s++) {
             for (d = dst_endps.begin(); d != dst_endps.end(); d++) {
-                d_debug_logger->debug(" {} -> {}", *s, *d);
+                d_debug_logger->debug(" {} -> {}", (*s).identifier(), (*d).identifier());
                 sfg->connect(*s, *d);
             }
         }
@@ -686,28 +690,29 @@ void hier_block2_detail::flatten_aux(flat_flowgraph_sptr sfg) const
     std::vector<std::pair<msg_endpoint, bool>> resolved_endpoints;
     for (q = msg_edges.begin(); q != msg_edges.end(); q++) {
         d_debug_logger->debug(" flattening edge ( {}, {}, {:d}) -> ( {}, {}, {:d})",
-                              q->src().block(),
-                              q->src().port(),
+                              q->src().block()->identifier(),
+                              pmt::write_string(q->src().port()),
                               q->src().is_hier(),
-                              q->dst().block(),
-                              q->dst().port(),
+                              q->dst().block()->identifier(),
+                              pmt::write_string(q->dst().port()),
                               q->dst().is_hier());
 
 
         if (q->src().is_hier() && q->src().block().get() == d_owner) {
             // connection into this block ..
-            d_debug_logger->debug("hier incoming port: {}", q->src());
+            d_debug_logger->debug("hier incoming port: {}", q->src().identifier());
             sfg->replace_endpoint(q->src(), q->dst(), false);
             resolved_endpoints.push_back(std::pair<msg_endpoint, bool>(q->src(), false));
         } else if (q->dst().is_hier() && q->dst().block().get() == d_owner) {
             // connection out of this block
-            d_debug_logger->debug("hier outgoing port: {}", q->dst());
+            d_debug_logger->debug("hier outgoing port: {}", q->dst().identifier());
             sfg->replace_endpoint(q->dst(), q->src(), true);
             resolved_endpoints.push_back(std::pair<msg_endpoint, bool>(q->dst(), true));
         } else {
             // internal connection only
-            d_debug_logger->debug(
-                "internal msg connection: {} --> {}", q->src(), q->dst());
+            d_debug_logger->debug("internal msg connection: {} --> {}",
+                                  q->src().identifier(),
+                                  q->dst().identifier());
             sfg->connect(q->src(), q->dst());
         }
     }
@@ -716,7 +721,8 @@ void hier_block2_detail::flatten_aux(flat_flowgraph_sptr sfg) const
              resolved_endpoints.begin();
          it != resolved_endpoints.end();
          it++) {
-        d_debug_logger->debug("sfg->clear_endpoint({}, {})", it->first, it->second);
+        d_debug_logger->debug(
+            "sfg->clear_endpoint({}, {})", it->first.identifier(), it->second);
         sfg->clear_endpoint((*it).first, (*it).second);
     }
 

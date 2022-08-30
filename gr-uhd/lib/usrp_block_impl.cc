@@ -433,7 +433,8 @@ void usrp_block_impl::msg_handler_command(pmt::pmt_t msg)
     // hopefully remove this:
     if (pmt::is_tuple(msg)) {
         if (pmt::length(msg) != 2 && pmt::length(msg) != 3) {
-            d_logger->alert("Error while unpacking command PMT: {}", msg);
+            d_logger->alert("Error while unpacking command PMT: {}",
+                            pmt::write_string(msg));
             return;
         }
         pmt::pmt_t new_msg = pmt::make_dict();
@@ -441,7 +442,8 @@ void usrp_block_impl::msg_handler_command(pmt::pmt_t msg)
         if (pmt::length(msg) == 3) {
             new_msg = pmt::dict_add(new_msg, cmd_chan_key(), pmt::tuple_ref(msg, 2));
         }
-        d_debug_logger->warn("Using legacy message format (tuples): {}", msg);
+        d_debug_logger->warn("Using legacy message format (tuples): {}",
+                             pmt::write_string(msg));
         return msg_handler_command(new_msg);
     }
     // End of legacy backward compat code.
@@ -451,15 +453,16 @@ void usrp_block_impl::msg_handler_command(pmt::pmt_t msg)
     if (!(pmt::is_dict(msg)) && pmt::is_pair(msg)) {
         d_logger->debug(
             "Command message is pair, converting to dict: '{}': car({}), cdr({})",
-            msg,
-            pmt::car(msg),
-            pmt::cdr(msg));
+            pmt::write_string(msg),
+            pmt::write_string(pmt::car(msg)),
+            pmt::write_string(pmt::cdr(msg)));
         msg = pmt::dict_add(pmt::make_dict(), pmt::car(msg), pmt::cdr(msg));
     }
 
     // Make sure, we use dicts!
     if (!pmt::is_dict(msg)) {
-        d_logger->error("Command message is neither dict nor pair: {}", msg);
+        d_logger->error("Command message is neither dict nor pair: {}",
+                        pmt::write_string(msg));
         return;
     }
 
@@ -494,7 +497,7 @@ void usrp_block_impl::msg_handler_command(pmt::pmt_t msg)
     _force_tune = pmt::dict_has_key(msg, cmd_direction_key());
 
     /// 4) Loop through all the values
-    d_debug_logger->debug("Processing command message {}", msg);
+    d_debug_logger->debug("Processing command message {}", pmt::write_string(msg));
     pmt::pmt_t msg_items = pmt::dict_items(msg);
     for (size_t i = 0; i < pmt::length(msg_items); i++) {
         try {
@@ -504,8 +507,8 @@ void usrp_block_impl::msg_handler_command(pmt::pmt_t msg)
                                      msg);
         } catch (pmt::wrong_type& e) {
             d_logger->alert("Invalid command value for key {}: {}",
-                            pmt::car(pmt::nth(i, msg_items)),
-                            pmt::cdr(pmt::nth(i, msg_items)));
+                            pmt::write_string(pmt::car(pmt::nth(i, msg_items))),
+                            pmt::write_string(pmt::cdr(pmt::nth(i, msg_items))));
             break;
         }
     }
@@ -672,7 +675,8 @@ void usrp_block_impl::_cmd_handler_gpio(const pmt::pmt_t& gpio_attr,
         ));
 
     if (!pmt::is_dict(gpio_attr)) {
-        d_logger->error("gpio_attr in  message is neither dict nor pair: {}", gpio_attr);
+        d_logger->error("gpio_attr in  message is neither dict nor pair: {}",
+                        pmt::write_string(gpio_attr));
         return;
     }
     if (!pmt::dict_has_key(gpio_attr, pmt::mp("bank")) ||

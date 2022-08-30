@@ -77,7 +77,7 @@ void flowgraph::validate()
         std::vector<int> used_ports;
         int ninputs, noutputs;
 
-        d_debug_logger->debug("Validating block: {}", *p);
+        d_debug_logger->debug("Validating block: {}", (*p)->identifier());
 
         used_ports = calc_used_ports(*p, true); // inputs
         ninputs = used_ports.size();
@@ -125,15 +125,16 @@ void flowgraph::check_valid_port(gr::io_signature::sptr sig, int port)
 
 void flowgraph::check_valid_port(const msg_endpoint& e)
 {
-    d_debug_logger->debug("check_valid_port({}, {})", e.block(), e.port());
+    d_debug_logger->debug(
+        "check_valid_port({}, {})", e.block()->identifier(), pmt::write_string(e.port()));
 
     if (!e.block()->has_msg_port(e.port())) {
         const gr::basic_block::msg_queue_map_t& msg_map = e.block()->get_msg_map();
-        d_logger->warn("Could not find port {} in:", e.port());
+        d_logger->warn("Could not find port {} in:", pmt::write_string(e.port()));
         for (gr::basic_block::msg_queue_map_t::const_iterator it = msg_map.begin();
              it != msg_map.end();
              ++it)
-            d_logger->warn("  {}", it->first);
+            d_logger->warn("  {}", pmt::write_string(it->first));
         throw std::invalid_argument("invalid msg port in connect() or disconnect()");
     }
 }
