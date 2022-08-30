@@ -113,7 +113,7 @@ void sig_source_impl<T>::set_cmd_msg(pmt::pmt_t msg)
                 this->d_logger->warn("offset value needs to be a number");
             }
         } else {
-            this->d_logger->warn("unsupported message key {}", key);
+            this->d_logger->warn("unsupported message key {}", pmt::write_string(key));
         }
 
         // advance to next item, if any

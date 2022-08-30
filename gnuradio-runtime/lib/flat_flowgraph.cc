@@ -64,10 +64,10 @@ void flat_flowgraph::setup_connections()
     // Connect message ports connections
     for (msg_edge_viter_t i = d_msg_edges.begin(); i != d_msg_edges.end(); i++) {
         d_debug_logger->debug("flat_fg connecting msg primitives: ({}, {})->({}, {})\n",
-                              i->src().block(),
-                              i->src().port(),
-                              i->dst().block(),
-                              i->dst().port());
+                              i->src().block()->identifier(),
+                              pmt::write_string(i->src().port()),
+                              i->dst().block()->identifier(),
+                              pmt::write_string(i->dst().port()));
         i->src().block()->message_port_sub(
             i->src().port(), pmt::cons(i->dst().block()->alias_pmt(), i->dst().port()));
     }
@@ -347,10 +347,10 @@ void flat_flowgraph::merge_connections(flat_flowgraph_sptr old_ffg)
         for (msg_edge_viter_t i = d_msg_edges.begin(); i != d_msg_edges.end(); i++) {
             d_debug_logger->debug(
                 "flat_fg connecting msg primitives: ({}, {})->({}, {})\n",
-                i->src().block(),
-                i->src().port(),
-                i->dst().block(),
-                i->dst().port());
+                i->src().block()->identifier(),
+                pmt::write_string(i->src().port()),
+                i->dst().block()->identifier(),
+                pmt::write_string(i->dst().port()));
             i->src().block()->message_port_sub(
                 i->src().port(),
                 pmt::cons(i->dst().block()->alias_pmt(), i->dst().port()));
@@ -411,24 +411,31 @@ std::string flat_flowgraph::msg_edge_list()
 void flat_flowgraph::dump()
 {
     for (edge_viter_t e = d_edges.begin(); e != d_edges.end(); e++)
-        d_logger->info(" edge: {}", *e);
+        d_logger->info(" edge: {}", (*e).identifier());
 
     for (basic_block_viter_t p = d_blocks.begin(); p != d_blocks.end(); p++) {
-        d_logger->info(" block: {}", *p);
+        d_logger->info(" block: {}", (*p)->identifier());
         block_detail_sptr detail = cast_to_block_sptr(*p)->detail();
-        d_logger->info(" detail @{}:", detail);
+        d_logger->info(" detail @{}:", static_cast<void*>(detail.get()));
 
         int ni = detail->ninputs();
         int no = detail->noutputs();
         for (int i = 0; i < no; i++) {
             buffer_sptr buffer = detail->output(i);
-            d_logger->info("   output {:d}: {}", i, buffer);
+            d_logger->info(
+                "   output {:d}: {}",
+                i,
+                static_cast<std::stringstream&&>(std::stringstream() << buffer).str());
         }
 
         for (int i = 0; i < ni; i++) {
             buffer_reader_sptr reader = detail->input(i);
             d_logger->info(
-                "   reader {:d}: {} reading from buffer={}", i, reader, reader->buffer());
+                "   reader {:d}: {} reading from buffer={}",
+                i,
+                static_cast<std::stringstream&&>(std::stringstream() << reader).str(),
+                static_cast<std::stringstream&&>(std::stringstream() << reader->buffer())
+                    .str());
         }
     }
 }
@@ -481,16 +488,16 @@ void flat_flowgraph::replace_endpoint(const msg_endpoint& e,
 {
     size_t n_replr(0);
     d_debug_logger->debug("flat_flowgraph::replace_endpoint( {}, {}, {:d} )\n",
-                          e.block(),
-                          r.block(),
+                          e.block()->identifier(),
+                          r.block()->identifier(),
                           is_src);
     for (size_t i = 0; i < d_msg_edges.size(); i++) {
         if (is_src) {
             if (d_msg_edges[i].src() == e) {
                 d_debug_logger->debug(
                     "flat_flowgraph::replace_endpoint() flattening to ( {}, {} )\n",
-                    r,
-                    d_msg_edges[i].dst());
+                    r.identifier(),
+                    d_msg_edges[i].dst().identifier());
                 d_msg_edges.push_back(msg_edge(r, d_msg_edges[i].dst()));
                 n_replr++;
             }
@@ -498,8 +505,8 @@ void flat_flowgraph::replace_endpoint(const msg_endpoint& e,
             if (d_msg_edges[i].dst() == e) {
                 d_debug_logger->debug(
                     "flat_flowgraph::replace_endpoint() flattening to ( {}, {} )\n",
-                    r,
-                    d_msg_edges[i].src());
+                    r.identifier(),
+                    d_msg_edges[i].src().identifier());
                 d_msg_edges.push_back(msg_edge(d_msg_edges[i].src(), r));
                 n_replr++;
             }
