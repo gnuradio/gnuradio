@@ -1,7 +1,7 @@
 from gnuradio import math
 from gnuradio import gr
 
-class add_ff:
+class add_blk:
     def __init__(self, blk, **kwargs):
         self.blk = blk
         self.nports = kwargs["nports"]
@@ -20,3 +20,23 @@ class add_ff:
             outbuf1[:] += inbufN
 
         return gr.work_return_t.OK 
+
+class add_cc(add_blk):
+    def __init__(self, blk, **kwargs):
+        super().__init__(blk, **kwargs)
+
+class add_ff(add_blk):
+    def __init__(self, blk, **kwargs):
+        super().__init__(blk, **kwargs)
+
+class add_ii(add_blk):
+    def __init__(self, blk, **kwargs):
+        super().__init__(blk, **kwargs)
+
+class add_ss(add_blk):
+    def __init__(self, blk, **kwargs):
+        super().__init__(blk, **kwargs)
+
+class add_bb(add_blk):
+    def __init__(self, blk, **kwargs):
+        super().__init__(blk, **kwargs)

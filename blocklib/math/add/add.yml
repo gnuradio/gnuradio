@@ -45,5 +45,6 @@ implementations:
 -   id: cuda
 -   id: numpy
     lang: python
+    domain: cpu
 
 file_format: 2
