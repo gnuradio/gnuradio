@@ -9,14 +9,14 @@ namespace {{module}} {
 
 {%if typekeys | length > 0 -%}
 template <{% for key in typekeys -%}{{key['type']}} {{key['id']}}{{ ", " if not loop.last }}{%endfor%}>
-typename {{block}}<{% for key in typekeys -%}{{key['id']}}{{ ", " if not loop.last }}{%endfor%}>::sptr {{block}}<{% for key in typekeys -%}{{key['id']}}{{ ", " if not loop.last }}{%endfor%}>::make_pyshell(const block_args& args)
+typename {{block}}<{% for key in typekeys -%}{{key['id']}}{{ ", " if not loop.last }}{%endfor%}>::sptr {{block}}<{% for key in typekeys -%}{{key['id']}}{{ ", " if not loop.last }}{%endfor%}>::make_pyshell(const std::string& impl, const block_args& args)
 {
-    return gnuradio::make_block_sptr<{{block}}_pyshell<{% for key in typekeys -%}{{key['id']}}{{ ", " if not loop.last }}{%endfor%}>>(args);
+    return gnuradio::make_block_sptr<{{block}}_pyshell<{% for key in typekeys -%}{{key['id']}}{{ ", " if not loop.last }}{%endfor%}>>(impl, args);
 }
 {%else-%}
-{{block}}::sptr {{block}}::make_pyshell(const block_args& args)
+{{block}}::sptr {{block}}::make_pyshell(const std::string& impl, const block_args& args)
 {
-    return gnuradio::make_block_sptr<{{block}}_pyshell>(args);
+    return gnuradio::make_block_sptr<{{block}}_pyshell>(impl, args);
 }
 {%endif-%}
 

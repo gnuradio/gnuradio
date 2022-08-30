@@ -91,7 +91,7 @@ class {{ block }} : virtual public {{blocktype}}{% for inh in inherits %}, publi
      */
     static sptr make_{{impl['id']}}(const block_args& args);
     {% elif 'lang' in impl and impl['lang'] == 'python' and not vars.pyshell -%}
-    static sptr make_pyshell(const block_args& args);
+    static sptr make_pyshell(const std::string& py_impl, const block_args& args);
     {% if vars.update({'pyshell': True}) %} {% endif %}
     {% endif -%}
     {% endfor %}

@@ -4,6 +4,7 @@
 #include <pybind11/pybind11.h> // must be first
 #include <pybind11/stl.h>
 namespace py = pybind11;
+using namespace py::literals;
 
 #include <gnuradio/{{module}}/{{block}}.h>
 #include <gnuradio/pyblock_detail.h>
@@ -11,13 +12,27 @@ namespace py = pybind11;
 namespace gr {
 namespace {{module}} {
 
+// This is the artifact of pybind11 fvisibility settings
+#pragma GCC visibility push(hidden)
 template <class T>
 class {{block}}_pyshell : public {{block}}<T>
 {
+private:
+    py::object _pyimpl;
 public:
-    {{block}}_pyshell(const typename {{block}}<T>::block_args& args) : {{blocktype}}("{{block}}", "{{module}}"), {{block}}<T>(args)
+    {{block}}_pyshell(const std::string& impl, const typename {{block}}<T>::block_args& args) : {{blocktype}}("{{block}}", "{{module}}"), {{block}}<T>(args)
     {
-        
+        py::module_ mod = py::module_::import(std::string("gnuradio.{{module}}." + impl).c_str());
+        auto kwargs = py::dict(
+        {%- if parameters -%}
+        {%- for p in parameters -%}
+        {%- if 'cotr' not in p or p['cotr'] %}
+        "{{p['id']}}"_a = args.{{p['id']}}{{"," if not loop.last}}
+        {%- endif -%}
+        {%- endfor -%}
+        {%- endif -%});
+
+        _pyimpl = mod.attr((std::string("{{block}}")+this->suffix()).c_str())(dynamic_cast<{{block}}<T>*>(this), **kwargs);
     }
 
     work_return_t
@@ -25,7 +40,7 @@ public:
     {
         py::gil_scoped_acquire acquire;
 
-        py::object ret = this->pb_detail()->handle().attr("work")(&wio);
+        py::object ret = _pyimpl.attr("work")(&wio);
 
         return ret.cast<work_return_t>();
     }
@@ -33,8 +48,8 @@ public:
     bool start(void)
     {
         py::gil_scoped_acquire acquire;
-        if (py::hasattr(this->pb_detail()->handle(), "start")) {
-            py::object ret = this->pb_detail()->handle().attr("start")();
+        if (py::hasattr(_pyimpl, "start")) {
+            py::object ret = _pyimpl.attr("start")();
             return ret.cast<bool>() && block::start();
         }
  
@@ -44,8 +59,8 @@ public:
     bool stop(void)
     {
         py::gil_scoped_acquire acquire;
-        if (py::hasattr(this->pb_detail()->handle(), "stop")) {
-            py::object ret = this->pb_detail()->handle().attr("stop")();
+        if (py::hasattr(_pyimpl, "stop")) {
+            py::object ret = _pyimpl.attr("stop")();
             return ret.cast<bool>() && block::stop();
         }
 
@@ -53,6 +68,7 @@ public:
     }
 
 };
+#pragma GCC visibility pop
 
 
 } // namespace {{module}}
