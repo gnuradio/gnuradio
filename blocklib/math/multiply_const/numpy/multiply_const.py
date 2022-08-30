@@ -1,7 +1,7 @@
 from gnuradio import math
 from gnuradio import gr
 
-class multiply_const_ff:
+class multiply_const_blk:
     def __init__(self, blk, **kwargs):
     
         # In the future we should be able to use the block parameters
@@ -24,3 +24,19 @@ class multiply_const_ff:
 
         wio.produce_each(noutput_items)
         return gr.work_return_t.OK 
+
+class multiply_const_cc(multiply_const_blk):
+    def __init__(self, blk, **kwargs):
+        super().__init__(blk, **kwargs)
+
+class multiply_const_ff(multiply_const_blk):
+    def __init__(self, blk, **kwargs):
+        super().__init__(blk, **kwargs)
+
+class multiply_const_ii(multiply_const_blk):
+    def __init__(self, blk, **kwargs):
+        super().__init__(blk, **kwargs)
+
+class multiply_const_ss(multiply_const_blk):
+    def __init__(self, blk, **kwargs):
+        super().__init__(blk, **kwargs)
