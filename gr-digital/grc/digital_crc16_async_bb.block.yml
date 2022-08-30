@@ -1,6 +1,6 @@
 id: digital_crc16_async_bb
 label: Async CRC16
-flags: [ python, cpp ]
+flags: [ python, cpp, deprecated ]
 
 parameters:
 -   id: check
