@@ -4,6 +4,7 @@
 #include <pybind11/pybind11.h> // must be first
 #include <pybind11/stl.h>
 namespace py = pybind11;
+using namespace py::literals;
 
 #include <gnuradio/{{module}}/{{block}}.h>
 #include <gnuradio/pyblock_detail.h>
@@ -13,10 +14,23 @@ namespace {{module}} {
 
 class {{block}}_pyshell : public {{block}}
 {
+private:
+    py::object _block;
 public:
-    {{block}}_pyshell(const typename {{block}}::block_args& args) : {{blocktype}}("{{block}}", "{{module}}"), {{block}}(args)
+    {{block}}_pyshell(const std::string& impl, const typename {{block}}::block_args& args) : {{blocktype}}("{{block}}", "{{module}}"), {{block}}(args)
     {
-        
+        py::module_ mod = py::module_::import(std::string("gnuradio.{{module}}." + impl).c_str());
+        auto kwargs = py::dict(
+        {%- if parameters -%}
+        {%- for p in parameters -%}
+        {%- if 'cotr' not in p or p['cotr'] %}
+        "{{p['id']}}"_a = args.{{p['id']}}{{"," if not loop.last}}
+        {%- endif -%}
+        {%- endfor -%}
+        {%- endif -%});
+
+        _pyimpl = mod.attr("{{block}}")(dynamic_cast<{{block}}*>(this), **kwargs);
+    
     }
 
 {% if blocktype != "hier_block" %}
@@ -25,7 +39,7 @@ public:
     {
         py::gil_scoped_acquire acquire;
 
-        py::object ret = this->pb_detail()->handle().attr("work")(&wio);
+        py::object ret = _pyimpl.attr("work")(&wio);
 
         return ret.cast<work_return_t>();
     }
@@ -33,8 +47,8 @@ public:
     bool start(void)
     {
         py::gil_scoped_acquire acquire;
-        if (py::hasattr(this->pb_detail()->handle(), "start")) {
-            py::object ret = this->pb_detail()->handle().attr("start")();
+        if (py::hasattr(_pyimpl, "start")) {
+            py::object ret = _pyimpl.attr("start")();
             return ret.cast<bool>() && block::start();
         }
         else
@@ -44,8 +58,8 @@ public:
     bool stop(void)
     {
         py::gil_scoped_acquire acquire;
-        if (py::hasattr(this->pb_detail()->handle(), "stop")) {
-            py::object ret = this->pb_detail()->handle().attr("stop")();
+        if (py::hasattr(_pyimpl, "stop")) {
+            py::object ret = _pyimpl.attr("stop")();
             return ret.cast<bool>() && block::stop();
         }
         else
@@ -58,8 +72,8 @@ public:
     virtual void handle_msg_{{port['id']}}(pmtf::pmt msg) override
     {
         py::gil_scoped_acquire acquire;
-        if (py::hasattr(this->pb_detail()->handle(), "{{"handle_msg_" + port['id']}}")) {
-            py::object ret = this->pb_detail()->handle().attr("{{"handle_msg_" + port['id']}}")(msg);
+        if (py::hasattr(_pyimpl, "{{"handle_msg_" + port['id']}}")) {
+            py::object ret = _pyimpl.attr("{{"handle_msg_" + port['id']}}")(msg);
         }
         else
             throw std::runtime_error("Message port handler not found");

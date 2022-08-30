@@ -18,14 +18,8 @@ void bind_{{block}}(py::module& m)
     std::shared_ptr<{{block}}>> {{block}}_class(m, "{{block}}"{{macros.block_docstring(doc,parameters,ports)}});
 
     py::enum_<::gr::{{ module }}::{{ block }}::available_impl>({{block}}_class, "available_impl")
-    {% set vars = {'pyshell': False} -%}
     {% for impl in implementations -%}
-    {% if 'lang' not in impl or impl['lang'] == 'cpp' -%}
         .value("{{ impl['id'] | lower }}", ::gr::{{module}}::{{block}}::available_impl::{{ impl['id'] | upper }}) 
-    {% elif 'lang' in impl and impl['lang'] == 'python' and not vars.pyshell -%}
-        .value("pyshell", ::gr::{{module}}::{{block}}::available_impl::PYSHELL) 
-    {% if vars.update({'pyshell': True}) %} {% endif %}
-    {% endif -%}
     {% endfor -%}
         .export_values();
 

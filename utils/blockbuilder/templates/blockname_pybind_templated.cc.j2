@@ -20,14 +20,8 @@ void bind_{{ block }}_template(py::module& m, const char* classname)
     std::shared_ptr<gr::{{ module }}::{{ block }}<{{typestr}}>>> {{block}}_class(m, classname);
 
     py::enum_<typename ::gr::{{ module }}::{{ block }}<{{typestr}}>::available_impl>({{block}}_class, "available_impl")
-    {% set vars = {'pyshell': False} -%}
     {% for impl in implementations -%}
-    {% if 'lang' not in impl or impl['lang'] == 'cpp' -%}
         .value("{{ impl['id'] | lower }}", ::gr::{{module}}::{{block}}<{{typestr}}>::available_impl::{{ impl['id'] | upper }}) 
-    {% elif 'lang' in impl and impl['lang'] == 'python' and not vars.pyshell -%}
-        .value("pyshell", ::gr::{{module}}::{{block}}<{{typestr}}>::available_impl::PYSHELL) 
-    {% if vars.update({'pyshell': True}) %} {% endif %}
-    {% endif -%}
     {% endfor -%}
         //.value("base", ::gr::{{module}}::{{block}}<{{typestr}}>::available_impl::BASE ) 
         .export_values();

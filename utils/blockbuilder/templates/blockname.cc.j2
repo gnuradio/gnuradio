@@ -18,9 +18,9 @@ namespace {{module}} {
         return make_{{ impl['id'] | lower }}(args);
         break;
     #endif
-    {% elif 'lang' in impl and impl['lang'] == 'python' and not vars.pyshell -%}
-    case available_impl::PYSHELL:
-        return make_pyshell(args);
+    {% elif 'lang' in impl and impl['lang'] == 'python' -%}
+    case available_impl::{{ impl['id'] | upper }}:
+        return make_pyshell("{{ impl['id'] | lower }}", args);
         break;
     {% if vars.update({'pyshell': True}) %} {% endif %}
     {% endif -%}
