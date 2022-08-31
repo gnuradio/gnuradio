@@ -70,6 +70,18 @@ public:
 
 {% endif %}
 
+    py::object py_method(const std::string& name, py::tuple args = py::tuple(), py::dict kwargs = py::dict())
+    {
+        py::gil_scoped_acquire acquire;
+        if (py::hasattr(_pyimpl, name.c_str())) {
+            py::object ret = _pyimpl.attr(name.c_str())(*args, **kwargs);
+            return ret;
+        }
+
+        return py::object();
+
+    }
+
 {% for port in ports %}{% if port['domain'] == 'message' and port['direction'] == 'input' -%}
     virtual void handle_msg_{{port['id']}}(pmtf::pmt msg) override
     {

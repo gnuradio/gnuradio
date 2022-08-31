@@ -66,6 +66,18 @@ public:
         return block::stop();
     }
 
+    py::object py_method(const std::string& name, py::tuple args = py::tuple(), py::dict kwargs = py::dict())
+    {
+        py::gil_scoped_acquire acquire;
+        if (py::hasattr(_pyimpl, name.c_str())) {
+            py::object ret = _pyimpl.attr(name.c_str())(*args, **kwargs);
+            return ret;
+        }
+
+        return py::object();
+
+    }
+    
 };
 #pragma GCC visibility pop
 

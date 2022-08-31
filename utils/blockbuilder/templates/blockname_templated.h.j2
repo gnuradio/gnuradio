@@ -11,6 +11,10 @@
 
 {{ macros.includes(includes) }}
 
+// TODO: only put this here if lang:python in implementations
+#include <pybind11/pybind11.h> // must be first
+namespace py = pybind11;
+
 namespace gr {
 namespace {{module}} {
 
@@ -25,8 +29,11 @@ public:
     {{ macros.implementations(implementations) }}
 
     {{ macros.callbacks(callbacks) }}    
+    // TODO: only put this here if lang:python in implementations
+    virtual py::object py_method(const std::string& name, py::tuple args = py::tuple(), py::dict kwargs = py::dict()) = 0;
 
 {{ macros.parameter_declarations(parameters)}} 
+
 
     virtual std::string suffix() override;
 
