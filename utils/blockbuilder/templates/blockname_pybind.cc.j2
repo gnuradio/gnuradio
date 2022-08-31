@@ -50,5 +50,9 @@ void bind_{{block}}(py::module& m)
         .def("{{p['id']}}", &gr::{{module}}::{{block}}::{{p['id']}})
         {% endif -%}
         {% endfor %}{% endif %}  
+        .def("py_method", &gr::{{module}}::{{block}}::py_method,
+            py::arg("name"),
+            py::arg("args") = py::tuple(),
+            py::arg("kwargs") = py::dict())
                    ;
 }

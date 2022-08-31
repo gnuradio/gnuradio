@@ -51,6 +51,10 @@ void bind_{{ block }}_template(py::module& m, const char* classname)
         .def("{{p['id']}}", &gr::{{module}}::{{block}}<{{typestr}}>::{{p['id']}})
         {% endif %}
         {% endfor %} 
+        .def("py_method", &gr::{{module}}::{{block}}<{{typestr}}>::py_method,
+            py::arg("name"),
+            py::arg("args") = py::tuple(),
+            py::arg("kwargs") = py::dict())
         ;
 }
 
