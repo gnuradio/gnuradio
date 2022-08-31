@@ -12,10 +12,12 @@ using namespace py::literals;
 namespace gr {
 namespace {{module}} {
 
+// This is the artifact of pybind11 fvisibility settings
+#pragma GCC visibility push(hidden)
 class {{block}}_pyshell : public {{block}}
 {
 private:
-    py::object _block;
+    py::object _pyimpl;
 public:
     {{block}}_pyshell(const std::string& impl, const typename {{block}}::block_args& args) : {{blocktype}}("{{block}}", "{{module}}"), {{block}}(args)
     {
@@ -82,7 +84,7 @@ public:
 {% endif %}{% endfor%}
 
 };
-
+#pragma GCC visibility pop
 
 } // namespace {{module}}
 } // namespace gr
