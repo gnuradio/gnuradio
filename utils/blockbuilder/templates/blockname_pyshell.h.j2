@@ -70,6 +70,9 @@ public:
 
 {% endif %}
 
+    {% set vars = {'py_impl': False} %}
+    {% for impl in implementations -%}
+    {% if 'lang' in impl and impl['lang'] == 'python' and not vars.py_impl -%}
     py::object py_method(const std::string& name, py::tuple args = py::tuple(), py::dict kwargs = py::dict())
     {
         py::gil_scoped_acquire acquire;
@@ -78,9 +81,11 @@ public:
             return ret;
         }
 
-        return py::object();
+        throw py::error_already_set();
 
     }
+    {% if vars.update({'py_impl': True}) %} {% endif %}{% endif %}
+    {%- endfor -%}
 
 {% for port in ports %}{% if port['domain'] == 'message' and port['direction'] == 'input' -%}
     virtual void handle_msg_{{port['id']}}(pmtf::pmt msg) override
