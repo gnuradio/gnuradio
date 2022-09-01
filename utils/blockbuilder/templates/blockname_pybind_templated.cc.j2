@@ -51,10 +51,15 @@ void bind_{{ block }}_template(py::module& m, const char* classname)
         .def("{{p['id']}}", &gr::{{module}}::{{block}}<{{typestr}}>::{{p['id']}})
         {% endif %}
         {% endfor %} 
+    {% set vars = {'py_impl': False} %}
+    {% for impl in implementations -%}
+    {% if 'lang' in impl and impl['lang'] == 'python' and not vars.py_impl -%}
         .def("py_method", &gr::{{module}}::{{block}}<{{typestr}}>::py_method,
             py::arg("name"),
             py::arg("args") = py::tuple(),
             py::arg("kwargs") = py::dict())
+    {% if vars.update({'py_impl': True}) %} {% endif %}{% endif %}
+    {%- endfor -%}
         ;
 }
 

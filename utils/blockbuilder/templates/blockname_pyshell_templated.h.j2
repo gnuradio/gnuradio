@@ -66,6 +66,7 @@ public:
         return block::stop();
     }
 
+
     py::object py_method(const std::string& name, py::tuple args = py::tuple(), py::dict kwargs = py::dict())
     {
         py::gil_scoped_acquire acquire;
@@ -74,10 +75,9 @@ public:
             return ret;
         }
 
-        return py::object();
-
+        throw py::error_already_set();
     }
-    
+
 };
 #pragma GCC visibility pop
 

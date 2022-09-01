@@ -11,9 +11,14 @@
 
 {{ macros.includes(includes) }}
 
-// TODO: only put this here if lang:python in implementations
+{% set vars = {'py_incl': False} %}
+{% for impl in implementations -%}
+{% if 'lang' in impl and impl['lang'] == 'python' and not vars.py_incl -%}
 #include <pybind11/pybind11.h> // must be first
 namespace py = pybind11;
+{% if vars.update({'py_incl': True}) %} {% endif %}{% endif %}
+{%- endfor -%}
+
 
 namespace gr {
 namespace {{module}} {
@@ -29,8 +34,12 @@ public:
     {{ macros.implementations(implementations) }}
 
     {{ macros.callbacks(callbacks) }}    
-    // TODO: only put this here if lang:python in implementations
-    virtual py::object py_method(const std::string& name, py::tuple args = py::tuple(), py::dict kwargs = py::dict()) = 0;
+    {% set vars = {'py_impl': False} %}
+    {% for impl in implementations -%}
+    {% if 'lang' in impl and impl['lang'] == 'python' and not vars.py_impl -%}
+    virtual py::object py_method(const std::string& name, py::tuple args = py::tuple(), py::dict kwargs = py::dict()) {throw std::runtime_error("py_method only defined for python implementations");};
+    {% if vars.update({'py_impl': True}) %} {% endif %}{% endif %}
+    {%- endfor -%}
 
 {{ macros.parameter_declarations(parameters)}} 
 

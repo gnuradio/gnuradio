@@ -50,9 +50,14 @@ void bind_{{block}}(py::module& m)
         .def("{{p['id']}}", &gr::{{module}}::{{block}}::{{p['id']}})
         {% endif -%}
         {% endfor %}{% endif %}  
+    {% set vars = {'py_impl': False} %}
+    {% for impl in implementations -%}
+    {% if 'lang' in impl and impl['lang'] == 'python' and not vars.py_impl -%}
         .def("py_method", &gr::{{module}}::{{block}}::py_method,
             py::arg("name"),
             py::arg("args") = py::tuple(),
             py::arg("kwargs") = py::dict())
+    {% if vars.update({'py_impl': True}) %} {% endif %}{% endif %}
+    {%- endfor -%}
                    ;
 }
