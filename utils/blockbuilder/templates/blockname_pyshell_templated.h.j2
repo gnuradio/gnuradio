@@ -26,10 +26,11 @@ public:
         {%- if parameters -%}
         {%- for p in parameters -%}
         {%- if 'cotr' not in p or p['cotr'] %}
-        "{{p['id']}}"_a = args.{{p['id']}}{{"," if not loop.last}}
+        "{{p['id']}}"_a = args.{{p['id']}},
         {%- endif -%}
         {%- endfor -%}
-        {%- endif -%});
+        {%- endif -%}"__dummy"_a=0
+        );
 
         _pyimpl = mod.attr((std::string("{{block}}")+this->suffix()).c_str())(dynamic_cast<{{block}}<T>*>(this), **kwargs);
     }
