@@ -152,7 +152,7 @@ protected:
 {% for p in parameters -%}
 {#% if p['settable'] or p['gettable']%#}{% if 'serializable' not in p or p['serializable'] %}
     {% if 'string' in p['dtype'] %}
-    param_{{p['id']}} = std::make_shared<pmtf::pmt>(pmtf::string({{"args."+p['id'] if 'cotr' not in p or p['cotr']}}));
+    param_{{p['id']}} = std::make_shared<pmtf::pmt>(pmtf::string({{"args."+p['id'] if 'cotr' not in p or p['cotr'] else "\"" + p['default'] | string() + "\"" if 'default' in p }}));
     {% else %}
     {%if 'cotr' not in p or p['cotr']%}
     param_{{p['id']}} = std::make_shared<pmtf::pmt>({{'(int)' if p['is_enum']}}{{"args."+p['id']}});
