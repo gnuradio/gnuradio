@@ -10,6 +10,7 @@ project('ns-newmod', 'cpp',
 python3_dep = dependency('python3', required : get_option('enable_python'))
 python3_embed_dep = dependency('python3-embed', required : get_option('enable_python'))
 py3_inst = import('python').find_installation('python3')
+py3 = py3_inst
 pybind11_dep = dependency('pybind11', required : get_option('enable_python'))
 json_dep = dependency('nlohmann_json')
 
