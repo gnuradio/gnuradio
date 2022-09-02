@@ -1,0 +1,75 @@
+module: soapy
+block: source
+label: source
+blocktype: gr::soapy::block
+# inherits: gr::soapy::block
+category: '[Core]/Soapy'
+
+typekeys:
+  - id: T
+    type: class
+    options:
+        - cf32
+        # - rf32
+
+includes:
+  - gnuradio/soapy/block.h
+
+parameters:
+-   id: device
+    label: Device
+    dtype: string
+    settable: false
+    grc:
+      hide: 'all'
+-   id: nchan
+    label: Number of Channels
+    dtype: size_t
+    settable: false
+    grc:
+        hide: 'all'
+-   id: dev_args
+    label: Device Args
+    dtype: string
+    settable: false
+    default: '""'
+-   id: stream_args
+    label: Stream Args
+    dtype: string
+    settable: false
+    default: '""'
+    grc:
+        hide: 'all'
+-   id: tune_args
+    label: Tune Args
+    dtype: string
+    container: vector
+    settable: false
+    serializable: false # pmtf library doesn't support vectors of strings yet
+    default: std::vector<std::string>{""}
+    grc:
+        default: '[]'
+        hide: 'all'
+-   id: other_settings
+    label: Other Settings
+    dtype: std::string
+    container: vector
+    settable: false
+    serializable: false # pmtf library doesn't support vectors of strings yet
+    default: std::vector<std::string>{""}
+    grc:
+        default: '[]'
+        hide: 'all'
+
+ports:
+-   domain: stream
+    id: out
+    direction: output
+    type: typekeys/T
+    multiplicity: parameters/nchan
+
+implementations:
+-   id: cpu
+# -   id: cuda
+
+file_format: 1

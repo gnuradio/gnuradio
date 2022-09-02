@@ -1,0 +1,103 @@
+module: soapy
+block: hackrf_source
+label: HackRF Source
+blocktype: grc
+category: '[Core]/Soapy'
+
+typekeys:
+  - id: T
+    type: class
+    options: 
+        - cf32
+        # - rf32
+
+grc:
+    templates:
+        imports: |-
+            from gnuradio import soapy
+        make: |-
+            dev = 'driver=hackrf'
+            stream_args = ''
+            tune_args = ['']
+            settings = ['']
+
+            self.${id} = soapy.source_${T.fcn}(dev, 1, ${dev_args},
+                                      stream_args, tune_args, settings)
+            self.${id}.set_sample_rate(0, ${samp_rate})
+            self.${id}.set_bandwidth(0, ${bandwidth})
+            self.${id}.set_frequency(0, ${center_freq})
+            self.${id}.set_gain(0, 'AMP', ${amp})
+            self.${id}.set_gain(0, 'LNA', min(max(${gain}, 0.0), 40.0))
+            self.${id}.set_gain(0, 'VGA', min(max(${vga}, 0.0), 62.0))
+        callbacks:
+          - set_sample_rate(0, ${samp_rate})
+          - set_bandwidth(0, ${bandwidth})
+          - set_frequency(0, ${center_freq})
+          - set_gain(0, 'AMP', ${amp})
+          - set_gain(0, 'LNA', min(max(${gain}, 0.0), 40.0))
+          - set_gain(0, 'VGA', min(max(${vga}, 0.0), 62.0))
+
+
+parameters:
+    - id: dev_args
+      label: Device arguments
+      dtype: string
+      grc:
+        hide: ${'part' if not dev_args else 'none'}
+
+    - id: samp_rate
+      label: Sample Rate
+      dtype: rf32
+      grc:
+        default: 'samp_rate'
+
+    - id: bandwidth
+      label: Bandwidth (0=auto)
+      dtype: rf32
+      grc:
+        category: RF Options
+        default: '0'
+        hide: part
+
+    - id: center_freq
+      label: 'Center Freq (Hz)'
+      
+      dtype: rf32
+      grc:
+        category: RF Options
+        default: 'freq'
+
+    - id: amp
+      label: 'Amp On (+14 dB)'
+      dtype: bool
+      grc:
+        category: RF Options
+        default: 'False'
+        hide: part
+
+    - id: gain
+      label: 'IF Gain (0dB - 40dB)'
+      dtype: rf32
+      grc:
+        category: RF Options
+        default: '16'
+        hide: part
+
+    - id: vga
+      label: 'VGA Gain (0dB - 62dB)'
+      dtype: rf32
+      grc:
+        category: RF Options
+        default: '16'
+        hide: part
+
+ports:
+    - domain: stream
+      id: out
+      direction: output
+      type: typekeys/T
+
+implementations:
+-   id: cpu
+
+file_format: 1

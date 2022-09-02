@@ -282,6 +282,16 @@
                 },
                 "make": {
                     "type": "string"
+                },
+                "callbacks": {
+                    "type": "array",
+                    "items": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            }
+                        ]
+                    }
                 }
             },
             "required": [
@@ -294,6 +304,9 @@
             "additionalProperties": false,
             "properties": {
                 "hide": {
+                    "type": "string"
+                },
+                "category": {
                     "type": "string"
                 },
                 "default": {

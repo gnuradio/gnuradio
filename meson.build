@@ -23,6 +23,7 @@ fmt_dep = dependency('fmt')
 spdlog_dep = dependency('spdlog')
 python3_dep = dependency('python3', required : get_option('enable_python'))
 python3_embed_dep = dependency('python3-embed', required : get_option('enable_python'))
+soapysdr_dep = dependency('SoapySDR', version : '>=0.7', required : false)
 
 # Import python3 meson module which is used to find the Python dependencies.
 py3_inst = import('python').find_installation('python3')
@@ -70,6 +71,7 @@ if (get_option('enable_testing'))
       join_paths( meson.build_root(),'blocklib','filter','lib'),
       join_paths( meson.build_root(),'blocklib','math','lib'),
       join_paths( meson.build_root(),'blocklib','streamops','lib'),
+      join_paths( meson.build_root(),'blocklib','soapy','lib'),
     )
     TEST_ENV.prepend('PYTHONPATH', join_paths(meson.build_root(),'python')+':'+join_paths(meson.build_root(), 'subprojects/pmt/python') )
 
