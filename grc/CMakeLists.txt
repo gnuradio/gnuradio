@@ -102,7 +102,7 @@ endif(CMAKE_INSTALL_PREFIX STREQUAL "/usr")
 
 if(UNIX)
     find_program(GRC_XTERM_EXE
-        NAMES x-terminal-emulator gnome-terminal konsole xterm foot
+        NAMES x-terminal-emulator gnome-terminal konsole xfce4-terminal urxvt xterm foot
         HINTS ENV PATH
         DOC "graphical terminal emulator used in GRC's no-gui-mode"
     )
