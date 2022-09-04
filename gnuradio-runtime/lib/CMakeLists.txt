@@ -341,7 +341,7 @@ if(ENABLE_TESTING)
 
     foreach(qa_file ${test_gnuradio_runtime_sources})
         gr_add_cpp_test("runtime_${qa_file}" ${CMAKE_CURRENT_SOURCE_DIR}/${qa_file})
-
+        target_link_libraries("runtime_${qa_file}" spdlog::spdlog)
     endforeach(qa_file)
 
     # Math tests:
@@ -357,6 +357,7 @@ if(ENABLE_TESTING)
 
     foreach(qa_file ${test_gnuradio_math_sources})
         gr_add_cpp_test("math_${qa_file}" ${CMAKE_CURRENT_SOURCE_DIR}/math/${qa_file})
+        target_link_libraries("math_${qa_file}" spdlog::spdlog)
         target_include_directories("math_${qa_file}"
                                    PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/math)
     endforeach(qa_file)
