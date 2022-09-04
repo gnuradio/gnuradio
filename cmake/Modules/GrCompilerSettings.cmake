@@ -34,7 +34,19 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
                 "\nCannot determine the version of the compiler selected to build GNU Radio (GCC : ${CMAKE_CXX_COMPILER}). This build may or not work. We highly recommend using GCC version ${GCC_MIN_VERSION} or more recent."
         )
     endif()
-elseif(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+  elseif(CMAKE_CXX_COMPILER_ID MATCHES "[Cc]lang")
+    if(CMAKE_SYSTEM_NAME MATCHES "Linux")
+      # on moderner clangs, the libgcc_s C++ runtime might be used, which does not
+      # include atomic builtins; interestingly, this only starts mattering if the
+      # atomic builtins are pulled in through external libraries, so there's no
+      # easy compile check that could determine that.
+      #
+      # To remedy that, link against libatomic; has no downsides as far as I'm aware.
+      foreach(TARGETTYPE EXE SHARED MODULE)
+        set(CMAKE_${TARGETTYPE}_LINKER_FLAGS "${CMAKE_${TARGETTYPE}_LINKER_FLAGS} -latomic")
+      endforeach()
+    endif() # LINUX
+
     execute_process(
         COMMAND ${CMAKE_CXX_COMPILER} -v
         RESULT_VARIABLE _res
