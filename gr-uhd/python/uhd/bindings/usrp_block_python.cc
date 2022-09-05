@@ -25,6 +25,8 @@ void bind_usrp_block(py::module& m)
     m.attr("ALL_MBOARDS") = py::int_(::uhd::usrp::multi_usrp::ALL_MBOARDS);
     m.attr("ALL_LOS") = py::str(::uhd::usrp::multi_usrp::ALL_LOS);
 
+    m.def("find", [](const uhd::device_addr_t& hint) { return uhd::device::find(hint); });
+
     py::class_<usrp_block,
                gr::sync_block,
                gr::block,
