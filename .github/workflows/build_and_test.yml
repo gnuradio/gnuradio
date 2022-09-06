@@ -41,6 +41,9 @@ jobs:
           - distro: 'Fedora 36'
             containerid: 'mormj/newsched-ci-docker:fedora-36'
             cxxflags: ''
+          - distro: 'OpenSUSE Tumbleweed'
+            containerid: 'mormj/newsched-ci-docker:opensuse-tumbleweed'
+            cxxflags: ''
     name: ${{ matrix.distro }}
     container:
       image: ${{ matrix.containerid }}
