@@ -33,6 +33,11 @@ if py3_version.version_compare('< 3.6')
   error('Invalid python version!?')
 endif
 
+incdir_numpy = run_command(py3,
+  ['-c', 'import os; os.chdir(".."); import numpy; print(numpy.get_include())'],
+  check : true
+).stdout().strip()
+
 pybind11_dep = dependency('pybind11', required : get_option('enable_python'))
 threads_dep = dependency('threads')
 gtest_dep = dependency('gtest', main : true, version : '>=1.10', required : get_option('enable_testing'))

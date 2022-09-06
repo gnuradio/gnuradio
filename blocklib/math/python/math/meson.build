@@ -31,15 +31,15 @@ gen_math_pybind = custom_target('gen_math_pybind',
                             '--blocks', d['blocks'],
                             '--imports', d['imports'],
                             '--module', d['module'],
-                            '--output_file', '@OUTPUT@', 
+                            '--output_file', '@OUTPUT@',
                             '--build_dir', join_paths(meson.build_root())],
-                        install : false)      
+                        install : false)
 
 math_pybind_sources += gen_math_pybind
 
 gnuradio_blocklib_math_pybind = py3_inst.extension_module('math_python',
-    math_pybind_sources, 
-    include_directories: ['../../lib'],
+    math_pybind_sources,
+    include_directories: ['../../lib', incdir_numpy],
     dependencies : [gnuradio_blocklib_math_dep, python3_dep, pybind11_dep],
     link_language : 'cpp',
     install : true,
