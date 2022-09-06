@@ -30,15 +30,15 @@ gen_filter_pybind = custom_target('gen_filter_pybind',
                             '--blocks', d['blocks'],
                             '--imports', d['imports'],
                             '--module', d['module'],
-                            '--output_file', '@OUTPUT@', 
+                            '--output_file', '@OUTPUT@',
                             '--build_dir', join_paths(meson.build_root())],
-                        install : false)      
+                        install : false)
 
 filter_pybind_sources += gen_filter_pybind
 
 gnuradio_blocklib_filter_pybind = py3_inst.extension_module('filter_python',
-    filter_pybind_sources, 
-    include_directories: ['../../lib'],
+    filter_pybind_sources,
+    include_directories: ['../../lib', incdir_numpy],
     dependencies : [gnuradio_blocklib_filter_dep, python3_dep, pybind11_dep],
     link_language : 'cpp',
     install : true,

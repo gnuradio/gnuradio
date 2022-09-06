@@ -35,8 +35,9 @@ if USE_CUDA
     cpp_args = '-DHAVE_CUDA'
 endif
 gnuradio_runtime_pybind = py3_inst.extension_module('gr_python',
-    runtime_pybind_sources, 
+    runtime_pybind_sources,
     dependencies : runtime_pybind_deps,
+    include_directories: incdir_numpy,
     link_language : 'cpp',
     install : true,
     cpp_args : cpp_args,
