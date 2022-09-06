@@ -242,9 +242,9 @@ int fmcomms2_source_impl<gr_complex>::work(int noutput_items,
         // }
 
         volk_16i_s32f_convert_32f(
-            d_float_rvec.data(), d_device_bufs[i].data(), 2048.0, noutput_items);
+            d_float_rvec.data(), d_device_bufs[i * 2].data(), 2048.0, noutput_items);
         volk_16i_s32f_convert_32f(
-            d_float_ivec.data(), d_device_bufs[i + 1].data(), 2048.0, noutput_items);
+            d_float_ivec.data(), d_device_bufs[i * 2 + 1].data(), 2048.0, noutput_items);
 
         volk_32f_x2_interleave_32fc(
             out, d_float_rvec.data(), d_float_ivec.data(), noutput_items);
