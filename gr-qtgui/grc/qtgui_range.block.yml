@@ -95,7 +95,6 @@ templates:
         %>\
         ${range} = Range(${start}, ${stop}, ${step}, ${value}, ${min_len})
         ${win} = GrRangeWidget(${range}, self.set_${id}, "${no_quotes(label,repr(id))}", "${widget}", ${rangeType}, ${orient}, "${no_quotes(outputmsgname)}")
-        self.${id} = ${win}
 
         ${gui_hint() % win}
 

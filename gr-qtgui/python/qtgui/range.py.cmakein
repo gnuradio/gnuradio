@@ -411,7 +411,7 @@ class GrRangeWidget(gr.sync_block, RangeWidget):
         if self.varCallback is not None:
             self.varCallback(new_value)
         self.message_port_pub(self.outputportname_pmt,
-                pmt.cons(self.outputmsgname_pmt, self.value_to_pmt(value)))
+                pmt.cons(self.outputmsgname_pmt, self.value_to_pmt(new_value)))
 
 
 if __name__ == "__main__":
