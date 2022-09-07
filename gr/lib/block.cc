@@ -135,11 +135,7 @@ void block::handle_msg_system(pmtf::pmt msg)
 
 void block::request_parameter_change(int param_id, pmtf::pmt new_value, bool block)
 {
-    if (rpc_client() && !rpc_name().empty()) {
-        rpc_client()->block_parameter_change(
-            rpc_name(), get_param_str(param_id), new_value.to_base64());
-    }
-    else if (p_scheduler && d_running) {
+    if (p_scheduler && d_running) {
         std::condition_variable cv;
         std::mutex m;
         bool ready{ false };
@@ -173,13 +169,7 @@ void block::request_parameter_change(int param_id, pmtf::pmt new_value, bool blo
 pmtf::pmt block::request_parameter_query(int param_id)
 {
 
-    if (rpc_client() && !rpc_name().empty()) {
-        auto encoded_str =
-            rpc_client()->block_parameter_query(rpc_name(), get_param_str(param_id));
-        return pmtf::pmt::from_base64(encoded_str);
-    }
-    // call back to the scheduler if ptr is not null
-    else if (p_scheduler && d_running) {
+    if (p_scheduler && d_running) {
         std::condition_variable cv;
         std::mutex m;
         pmtf::pmt newval;

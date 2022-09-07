@@ -1,7 +1,6 @@
 CLI11-*
 pmt/
 nlohmann_json-*
-cpp-httplib/
 cppzmq/
 moodycamel/
 cusp/

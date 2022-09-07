@@ -41,9 +41,6 @@ void bind_node(py::module& m)
         .def("get_message_port",
              &node::get_message_port,
              py::return_value_policy::reference)
-        .def("set_rpc", &node::set_rpc)
-        .def("rpc_client", &node::rpc_client)
-        .def("rpc_name", &node::rpc_name)
         .def("input_ports", &node::input_ports)
         .def("output_ports", &node::output_ports)
         .def(

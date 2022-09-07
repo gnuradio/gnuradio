@@ -20,7 +20,6 @@ runtime_pybind_sources = files([
     'runtime_pybind.cc',
     'runtime_proxy_pybind.cc',
     'graph_utils_pybind.cc',
-    'rpc_client_interface_pybind.cc',
     'prefs_pybind.cc'
  ] )
 
