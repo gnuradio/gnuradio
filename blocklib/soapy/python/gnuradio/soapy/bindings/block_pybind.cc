@@ -109,14 +109,14 @@ void bind_block(py::module& m)
 
 
         .def("set_frequency",
-             (void (block::*)(size_t, double)) & block::set_frequency,
+             (void(block::*)(size_t, double)) & block::set_frequency,
              py::arg("channel"),
              py::arg("freq"),
              D(block, set_frequency, 0))
 
 
         .def("set_frequency",
-             (void (block::*)(size_t, const std::string&, double)) & block::set_frequency,
+             (void(block::*)(size_t, const std::string&, double)) & block::set_frequency,
              py::arg("channel"),
              py::arg("name"),
              py::arg("freq"),
@@ -124,13 +124,13 @@ void bind_block(py::module& m)
 
 
         .def("get_frequency",
-             (double (block::*)(size_t) const) & block::get_frequency,
+             (double(block::*)(size_t) const) & block::get_frequency,
              py::arg("channel"),
              D(block, get_frequency, 0))
 
 
         .def("get_frequency",
-             (double (block::*)(size_t, const std::string&) const) & block::get_frequency,
+             (double(block::*)(size_t, const std::string&) const) & block::get_frequency,
              py::arg("channel"),
              py::arg("name"),
              D(block, get_frequency, 1))
@@ -222,14 +222,14 @@ void bind_block(py::module& m)
 
 
         .def("set_gain",
-             (void (block::*)(size_t, double)) & block::set_gain,
+             (void(block::*)(size_t, double)) & block::set_gain,
              py::arg("channel"),
              py::arg("gain"),
              D(block, set_gain, 0))
 
 
         .def("set_gain",
-             (void (block::*)(size_t, const std::string&, double)) & block::set_gain,
+             (void(block::*)(size_t, const std::string&, double)) & block::set_gain,
              py::arg("channel"),
              py::arg("name"),
              py::arg("gain"),
@@ -237,13 +237,13 @@ void bind_block(py::module& m)
 
 
         .def("get_gain",
-             (double (block::*)(size_t) const) & block::get_gain,
+             (double(block::*)(size_t) const) & block::get_gain,
              py::arg("channel"),
              D(block, get_gain, 0))
 
 
         .def("get_gain",
-             (double (block::*)(size_t, const std::string&) const) & block::get_gain,
+             (double(block::*)(size_t, const std::string&) const) & block::get_gain,
              py::arg("channel"),
              py::arg("name"),
              D(block, get_gain, 1))
@@ -576,15 +576,14 @@ void bind_block(py::module& m)
 
 
         .def("write_gpio",
-             (void (block::*)(const std::string&, unsigned)) & block::write_gpio,
+             (void(block::*)(const std::string&, unsigned)) & block::write_gpio,
              py::arg("bank"),
              py::arg("value"),
              D(block, write_gpio, 0))
 
 
         .def("write_gpio",
-             (void (block::*)(const std::string&, unsigned, unsigned)) &
-                 block::write_gpio,
+             (void(block::*)(const std::string&, unsigned, unsigned)) & block::write_gpio,
              py::arg("bank"),
              py::arg("value"),
              py::arg("mask"),
@@ -595,14 +594,14 @@ void bind_block(py::module& m)
 
 
         .def("write_gpio_dir",
-             (void (block::*)(const std::string&, unsigned)) & block::write_gpio_dir,
+             (void(block::*)(const std::string&, unsigned)) & block::write_gpio_dir,
              py::arg("bank"),
              py::arg("value"),
              D(block, write_gpio_dir, 0))
 
 
         .def("write_gpio_dir",
-             (void (block::*)(const std::string&, unsigned, unsigned)) &
+             (void(block::*)(const std::string&, unsigned, unsigned)) &
                  block::write_gpio_dir,
              py::arg("bank"),
              py::arg("value"),
