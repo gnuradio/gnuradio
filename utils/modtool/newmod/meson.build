@@ -14,6 +14,11 @@ py3 = py3_inst
 pybind11_dep = dependency('pybind11', required : get_option('enable_python'))
 json_dep = dependency('nlohmann_json')
 
+incdir_numpy = run_command(py3,
+  ['-c', 'import os; os.chdir(".."); import numpy; print(numpy.get_include())'],
+  check : true
+).stdout().strip()
+
 if (get_option('enable_testing'))
     TEST_ENV = environment()
     TEST_ENV.prepend('LD_LIBRARY_PATH', 
