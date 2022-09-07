@@ -1,0 +1,91 @@
+module: soapy
+block: hackrf_sink
+label: HackRF Sink
+blocktype: grc
+category: '[Core]/Soapy'
+
+typekeys:
+  - id: T
+    type: class
+    options: 
+        - cf32
+        # - rf32
+
+grc:
+  templates:
+    imports: from gnuradio import soapy
+    make: |-
+        dev = 'driver=hackrf'
+        stream_args = ''
+        tune_args = ['']
+        settings = ['']
+
+        self.${id} = soapy.sink_${T.fcn}(dev, 1, ${dev_args},
+                                  stream_args, tune_args, settings)
+        self.${id}.set_sample_rate(0, ${samp_rate})
+        self.${id}.set_bandwidth(0, ${bandwidth})
+        self.${id}.set_frequency(0, ${center_freq})
+        self.${id}.set_gain(0, 'AMP', ${amp})
+        self.${id}.set_gain(0, 'VGA', min(max(${vga}, 0.0), 47.0))
+    callbacks:
+      - set_sample_rate(0, ${samp_rate})
+      - set_bandwidth(0, ${bandwidth})
+      - set_frequency(0, ${center_freq})
+      - set_gain(0, 'AMP', ${amp})
+      - set_gain(0, 'VGA', min(max(${vga}, 0.0), 47.0))
+
+
+parameters:
+  - id: dev_args
+    label: Device arguments
+    dtype: string
+    grc:
+      hide: ${'part' if not dev_args else 'none'}
+
+  - id: samp_rate
+    label: Sample Rate
+    dtype: rf32
+    grc:
+      default: 'samp_rate'
+
+  - id: bandwidth
+    label: Bandwidth (0=auto)
+    dtype: rf32
+    grc: 
+      default: '0'
+      hide: part
+      category: RF Options
+
+  - id: center_freq
+    label: 'Center Freq (Hz)'
+    dtype: rf64
+    grc:
+      category: RF Options
+      default: 'freq'
+
+  - id: amp
+    label: 'Amp On (+14 dB)'
+    dtype: bool
+    grc:
+      default: 'False'
+      hide: part
+      category: RF Options
+
+  - id: vga
+    label: 'VGA Gain (0dB - 47dB)'
+    dtype: rf64
+    grc:
+      default: '16'
+      hide: part
+      category: RF Options
+
+ports:
+    - domain: stream
+      id: in
+      direction: input
+      type: typekeys/T
+
+implementations:
+-   id: cpu
+
+file_format: 1

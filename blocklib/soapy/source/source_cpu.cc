@@ -86,6 +86,14 @@ work_return_t source_cpu<T>::work(work_io& wio)
     };
 
     wio.produce_each(nout);
+
+    // if we didn't produce anything, need to kick the scheduler
+    // This emulates GR 3.x scheduler behavior but also allows for
+    // a non-blocking implementation above
+    if (!nout) {
+        this->come_back_later(100);
+    }
+
     return work_return_t::OK;
 }
 

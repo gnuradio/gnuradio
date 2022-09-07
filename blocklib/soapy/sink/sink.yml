@@ -1,6 +1,6 @@
 module: soapy
-block: source
-label: Source
+block: sink
+label: Sink
 blocktype: gr::soapy::block
 # inherits: gr::soapy::block
 category: '[Core]/Soapy'
@@ -52,7 +52,7 @@ parameters:
         hide: 'all'
 -   id: other_settings
     label: Other Settings
-    dtype: std::string
+    dtype: string
     container: vector
     settable: false
     serializable: false # pmtf library doesn't support vectors of strings yet
@@ -61,10 +61,19 @@ parameters:
         default: '[]'
         hide: 'all'
 
+-   id: length_tag_name
+    label: Length Tag Name
+    dtype: string
+    cotr: false
+    settable: true
+    default: '""'
+    grc:    
+        hide: 'part'
+
 ports:
 -   domain: stream
-    id: out
-    direction: output
+    id: in
+    direction: input
     type: typekeys/T
     multiplicity: parameters/nchan
 
