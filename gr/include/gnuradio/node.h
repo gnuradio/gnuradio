@@ -7,7 +7,6 @@
 #include <gnuradio/logger.h>
 #include <gnuradio/nodeid_generator.h>
 #include <gnuradio/port.h>
-#include <gnuradio/rpc_client_interface.h>
 
 
 namespace gr {
@@ -39,9 +38,6 @@ protected:
 
     gr::logger_ptr d_logger;
     gr::logger_ptr d_debug_logger;
-
-    std::string d_rpc_name = "";
-    rpc_client_interface_sptr d_rpc_client = nullptr;
 
 public:
     node() : d_name("") {}
@@ -80,15 +76,6 @@ public:
     message_port_ptr get_message_port(const std::string& name);
     message_port_ptr get_first_message_port(port_direction_t direction);
     port_ptr get_port(unsigned int index, port_type_t type, port_direction_t direction);
-
-    void set_rpc(const std::string& rpc_name, rpc_client_interface_sptr rpc_client)
-    {
-        d_rpc_name = rpc_name;
-        d_rpc_client = rpc_client;
-    }
-    rpc_client_interface_sptr rpc_client() { return d_rpc_client; }
-    std::string rpc_name() { return d_rpc_name; }
-    bool is_rpc() { return !(d_rpc_client == nullptr || !d_rpc_name.empty()); }
 };
 
 using node_sptr = node::sptr;

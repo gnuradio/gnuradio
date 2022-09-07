@@ -36,7 +36,6 @@ runtime_headers = [
     'helper_string.h',
     'python_block.h',
     'pyblock_detail.h',
-    'rpc_client_interface.h',
     'sys_paths.h',
     'gr_complex.h',
     'port_interface.h',

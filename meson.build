@@ -44,9 +44,6 @@ pmtf_dep = libpmtf.get_variable('pmtf_dep')
 CLI11_dep = dependency('cli11')
 json_dep = dependency('nlohmann_json')
 
-libcpphttp = subproject('cpp-httplib')
-cpphttp_dep = libcpphttp.get_variable('cpp_httplib_dep')
-
 cmake = import('cmake')
 opt_var = cmake.subproject_options()
 opt_var.add_cmake_defines({'CPPZMQ_BUILD_TESTS': false})
