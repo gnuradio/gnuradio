@@ -10,11 +10,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - uses: gnuradio/clang-format-lint-action@v0.5-4
+    - uses: DoozyX/clang-format-lint-action@v0.14
       with:
         source: '.'
-        exclude: './subprojects'
+        exclude: './subprojects ./gr/include/moodycamel'
         extensions: 'h,hpp,cpp,cc,cc.in'
+        clangFormatVersion: 14
   linux-docker:
   # All of these shall depend on the formatting check (needs: check-formatting)
     needs: [check-formatting]
