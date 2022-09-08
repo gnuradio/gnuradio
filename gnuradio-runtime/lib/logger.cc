@@ -23,9 +23,27 @@
 #include <spdlog/sinks/stdout_color_sinks.h>
 #include <spdlog/spdlog.h>
 
+#include <iostream>
 #include <memory>
 
 namespace gr {
+
+static void setup_logger(const std::shared_ptr<spdlog::sinks::dist_sink_mt>& backend,
+                         const std::string& filename)
+{
+    if (filename == "stderr") {
+        auto console_sink = std::make_shared<spdlog::sinks::stderr_color_sink_st>();
+        backend->add_sink(console_sink);
+    } else if (filename == "stdout") {
+        auto console_sink = std::make_shared<spdlog::sinks::stdout_color_sink_st>();
+        backend->add_sink(console_sink);
+    } else if (!filename.empty()) {
+        auto file_sink =
+            std::make_shared<spdlog::sinks::basic_file_sink_st>(filename, true);
+        backend->add_sink(file_sink);
+    }
+}
+
 logging::logging()
     : _default_level(spdlog::level::from_str(
           prefs::singleton()->get_string("LOG", "log_level", "off"))),
@@ -37,26 +55,12 @@ logging::logging()
     _default_backend->set_level(_default_level);
     _debug_backend->set_level(_debug_level);
 
-
-    auto debug_console_sink = std::make_shared<spdlog::sinks::stderr_color_sink_st>();
-    _debug_backend->add_sink(debug_console_sink);
-
     const auto pref = prefs::singleton();
     const auto default_file = pref->get_string("LOG", "log_file", "");
+    const auto debug_file = pref->get_string("LOG", "debug_file", "");
 
-    if (default_file == "stderr") {
-        auto console_sink = std::make_shared<spdlog::sinks::stderr_color_sink_st>();
-        _default_backend->add_sink(console_sink);
-    } else if ((!default_file.empty()) && default_file != "stdout") {
-        auto file_sink =
-            std::make_shared<spdlog::sinks::basic_file_sink_st>(default_file, true);
-        _default_backend->add_sink(file_sink);
-    }
-
-    if (default_file == "stdout") {
-        auto console_sink = std::make_shared<spdlog::sinks::stdout_color_sink_st>();
-        _default_backend->add_sink(console_sink);
-    }
+    setup_logger(_default_backend, default_file);
+    setup_logger(_debug_backend, debug_file);
 }
 
 
