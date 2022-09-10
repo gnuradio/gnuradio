@@ -122,6 +122,10 @@ def test_rotate_block(qtbot, qapp_cls):
     qtbot.wait(500)
     new_rotation = block.states['rotation']
     assert new_rotation == old_rotation - 90
+    keystroke(qtbot, qapp_cls, QtCore.Qt.Key_Right)
+    qtbot.wait(500)
+    new_rotation = block.states['rotation']
+    assert new_rotation == old_rotation
 
 def test_disable_enable(qtbot, qapp_cls):
     vp = qapp_cls.MainWindow.currentView.viewport()
@@ -228,8 +232,42 @@ def test_create_connection(qtbot, qapp_cls):
     qtbot.wait(50)
     assert len(fg.connections) > 0
 
+def test_num_inputs(qtbot, qapp_cls):
+    fg = qapp_cls.MainWindow.currentFlowgraph
+    vp = qapp_cls.MainWindow.currentView.viewport()
+    n_sink = None
+    for block in fg.blocks:
+        if block.key == 'blocks_null_sink':
+            n_sink = block
+
+    assert len(n_sink.sinks) == 1
+    assert len(fg.connections) == 1
+    click_pos = qapp_cls.MainWindow.currentView.mapToGlobal((n_sink.pos()+QtCore.QPoint(4,4)).toPoint())
+    pag.doubleClick(click_pos.x(), click_pos.y(), button="left")
+    qtbot.wait(500)
+    qtbot.mouseDClick(n_sink.props_dialog.edit_params[2],
+            QtCore.Qt.LeftButton)
+    type_text(qtbot, qapp_cls, "2")
+    qtbot.wait(500)
+    keystroke(qtbot, qapp_cls, QtCore.Qt.Key_Enter)
+    qtbot.wait(500)
+    assert len(n_sink.sinks) == 2
+    assert len(fg.connections) == 1
+    click_pos = qapp_cls.MainWindow.currentView.mapToGlobal((n_sink.pos()+QtCore.QPoint(4,4)).toPoint())
+    pag.doubleClick(click_pos.x(), click_pos.y(), button="left")
+    qtbot.wait(500)
+    qtbot.mouseDClick(n_sink.props_dialog.edit_params[2],
+            QtCore.Qt.LeftButton)
+    type_text(qtbot, qapp_cls, "1")
+    qtbot.wait(500)
+    keystroke(qtbot, qapp_cls, QtCore.Qt.Key_Enter)
+    qtbot.wait(500)
+    assert len(n_sink.sinks) == 1
+    assert len(fg.connections) == 1
 
 def test_bypass(qtbot, qapp_cls):
+    click_pos = qapp_cls.MainWindow.currentView.mapToGlobal(QtCore.QPoint(1,1))
+    pag.click(click_pos.x(), click_pos.y(), button="left")
     fg = qapp_cls.MainWindow.currentFlowgraph
     vp = qapp_cls.MainWindow.currentView.viewport()
     throttle = None
