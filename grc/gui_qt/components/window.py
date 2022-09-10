@@ -612,6 +612,10 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         log.debug('delete')
         self.currentFlowgraph.delete_selected()
 
+    def select_all_triggered(self):
+        log.debug('select_all')
+        self.currentFlowgraph.select_all()
+
     def rotate_ccw_triggered(self):
         # Pass to Undo/Redo
         log.debug('rotate_ccw')
