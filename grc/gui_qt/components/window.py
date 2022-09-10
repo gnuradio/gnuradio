@@ -276,9 +276,19 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         actions['help'] = Action(Icons('help-browser'), _("help"), self,
                                  shortcut=Keys.HelpContents, statusTip=_("help-tooltip"))
 
+        actions['filter_design_tool'] = Action("Filter Design Tool", self)
+
+        actions['set_default_qt_gui_theme'] = Action("Set Default Qt GUI Theme", self)
+
+        actions['show_flowgraph_complexity'] = Action("Show Flowgraph Complexity", self)
+
         actions['types'] = Action("Types", self)
 
+        actions['keys'] = Action("Keys", self)
 
+        actions['parser_errors'] = Action("Parser Errors", self)
+
+        actions['get_involved'] = Action("Get Involved", self)
 
         actions['preferences'] = Action(Icons('preferences-system'), _("preferences"), self,
                                         statusTip=_("preferences-tooltip"))
@@ -438,7 +448,10 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         help = Menu("&Help")
         help.addAction(actions['help'])
         help.addAction(actions['types'])
+        help.addAction(actions['keys'])
+        help.addAction(actions['parser_errors'])
         help.addSeparator()
+        help.addAction(actions['get_involved'])
         help.addAction(actions['about'])
         help.addAction(actions['about_qt'])
         menus['help'] = help

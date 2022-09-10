@@ -55,6 +55,7 @@ class MoveAction(ChangeStateAction):
             self.oldStates[i] = dict((k, v) for k, v in self.oldStates[i].items() if all(k == 'coordinate' for x in k))
             self.newStates[i] = dict((k, v) for k, v in self.newStates[i].items() if all(k == 'coordinate' for x in k))
 
+# TODO: Don't create a new enable action if the block is already enabled
 class EnableAction(ChangeStateAction):
     def __init__(self, flowgraph):
         ChangeStateAction.__init__(self, flowgraph)
@@ -74,9 +75,16 @@ class BypassAction(ChangeStateAction):
         for i in range(len(self.blocks)):
             self.newStates[i]['state'] = 'bypassed'
 
+# Change properties
+# This can only be performed on one block at a time
+class ChangeBlockCommand(ChangeStateAction):
+    def __init__(self, flowgraph):
+        ChangeStateAction.__init__(self, flowgraph)
+        log.debug("init ChangeBlockCommand")
 
-
-
+class ToggleBusCommand(ChangeStateAction):
+    def __init__(self):
+        pass
 
 # Blocks and connections
 class NewElementCommand(QUndoCommand):
@@ -88,12 +96,4 @@ class DeleteElementCommand(QUndoCommand):
     def __init__(self):
         pass
 
-# Enable, disable, bypass, change properties
-class ChangeBlockCommand(QUndoCommand):
-    def __init__(self):
-        pass
-
-class ToggleBusCommand(QUndoCommand):
-    def __init__(self):
-        pass
 

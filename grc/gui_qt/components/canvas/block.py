@@ -11,7 +11,6 @@ from ....core.blocks.block import Block as CoreBlock
 # Logging
 log = logging.getLogger(__name__)
 
-ARC        = 10  # arc radius for block corners
 LONG_VALUE = 20  # maximum length of a param string.
                  # if exceeded, '...' will be displayed
 '''
@@ -95,6 +94,7 @@ class PropsDialog(QtWidgets.QDialog):
 
         self.setLayout(self.layout)
 
+    # Move to Block?
     def accept(self):
         super().accept()
         for par in self.edit_params:
@@ -289,15 +289,14 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
 
         painter.setBrush(QtGui.QBrush(self._bg_color))
 
-        ARC = 10
         rect = QtCore.QRectF(0, 0, self.width, self.height)
-        painter.drawRoundedRect(rect, ARC, ARC)
+        painter.drawRect(rect)
         painter.setPen(QtGui.QPen(1))
 
         # Draw block label text
         painter.setFont(font)
         if self.is_valid():
-            painter.setPen(QtGui.QPen(1))
+            painter.setPen(Qt.black)
         else:
             painter.setPen(Qt.red)
         painter.drawText(QtCore.QRectF(0, 0 - self.height/2 + 15, self.width, self.height), Qt.AlignCenter, self.label)  # NOTE the 3rd/4th arg in  QRectF seems to set the bounding box of the text, so if there is ever any clipping, thats why
