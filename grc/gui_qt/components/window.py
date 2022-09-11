@@ -122,6 +122,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         self.registerMenu(menus["edit"])
         self.registerMenu(menus["view"])
         self.registerMenu(menus["build"])
+        self.registerMenu(menus["tools"])
         self.registerMenu(menus["help"])
 
         toolbars = self.toolbars
@@ -182,6 +183,8 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
         actions['save_as'] = Action(Icons("document-save-as"), _("save_as"), self,
                                     shortcut=Keys.SaveAs, statusTip=_("save_as-tooltip"))
+
+        actions['save_copy'] = Action(_("save_copy"), self)
 
         actions['print'] = Action(Icons('document-print'), _("print"), self,
                                   shortcut=Keys.Print, statusTip=_("print-tooltip"))
@@ -246,6 +249,9 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
                                        self, statusTip=_("flowgraph-properties-tooltip"))
 
         # View Actions
+        actions['snap_to_grid'] = Action(_("snap_to_grid"), self)
+        actions['snap_to_grid'].setCheckable(True)
+
         actions['toggle_grid'] = Action(_("toggle_grid"), self, shortcut='G',
                                    statusTip=_("toggle_grid-tooltip"))
 
@@ -276,11 +282,14 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         actions['help'] = Action(Icons('help-browser'), _("help"), self,
                                  shortcut=Keys.HelpContents, statusTip=_("help-tooltip"))
 
-        actions['filter_design_tool'] = Action("Filter Design Tool", self)
+        actions['filter_design_tool'] = Action(_("filter_design_tool"), self)
 
-        actions['set_default_qt_gui_theme'] = Action("Set Default Qt GUI Theme", self)
+        actions['set_default_qt_gui_theme'] = Action(_("set_default_qt_gui_theme"), self)
 
-        actions['show_flowgraph_complexity'] = Action("Show Flowgraph Complexity", self)
+        actions['module_browser'] = Action(_("module_browser"), self)
+
+        actions['show_flowgraph_complexity'] = Action(_("show_flowgraph_complexity"), self)
+        actions['show_flowgraph_complexity'].setCheckable(True)
 
         actions['types'] = Action("Types", self)
 
@@ -334,6 +343,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         self.actions['enable'].setEnabled(False)
         self.actions['disable'].setEnabled(False)
         self.actions['bypass'].setEnabled(False)
+        self.actions['properties'].setEnabled(False)
 
         if len(conns) > 0:
             self.actions['delete'].setEnabled(True)
@@ -348,6 +358,26 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
             self.actions['enable'].setEnabled(True)
             self.actions['disable'].setEnabled(True)
             self.actions['bypass'].setEnabled(True)
+
+            self.actions['vertical_align_top'].setEnabled(False)
+            self.actions['vertical_align_middle'].setEnabled(False)
+            self.actions['vertical_align_bottom'].setEnabled(False)
+
+            self.actions['horizontal_align_left'].setEnabled(False)
+            self.actions['horizontal_align_center'].setEnabled(False)
+            self.actions['horizontal_align_right'].setEnabled(False)
+
+            if len(blocks) == 1:
+                self.actions['properties'].setEnabled(True)
+
+            if len(blocks) > 1:
+                self.actions['vertical_align_top'].setEnabled(True)
+                self.actions['vertical_align_middle'].setEnabled(True)
+                self.actions['vertical_align_bottom'].setEnabled(True)
+
+                self.actions['horizontal_align_left'].setEnabled(True)
+                self.actions['horizontal_align_center'].setEnabled(True)
+                self.actions['horizontal_align_right'].setEnabled(True)
 
             for block in blocks:
                 if not block.can_bypass():
@@ -369,6 +399,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         file.addSeparator()
         file.addAction(actions['save'])
         file.addAction(actions['save_as'])
+        file.addAction(actions['save_copy'])
         file.addSeparator()
         file.addAction(actions['screen_capture'])
         file.addAction(actions['print'])
@@ -443,6 +474,15 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         build.addAction(actions['execute'])
         build.addAction(actions['kill'])
         menus['build'] = build
+
+        # Setup the tools menu
+        tools = Menu("&Tools")
+        tools.addAction(actions['filter_design_tool'])
+        tools.addAction(actions['set_default_qt_gui_theme'])
+        tools.addAction(actions['module_browser'])
+        tools.addSeparator()
+        tools.addAction(actions['show_flowgraph_complexity'])
+        menus['tools'] = tools
 
         # Setup the help menu
         help = Menu("&Help")
