@@ -86,7 +86,7 @@ class BlockLibrary(QtWidgets.QDockWidget, base.Component):
         base.Component.__init__(self)
 
         self.setObjectName('block_library')
-        self.setWindowTitle('Available Blocks')
+        self.setWindowTitle('Block Library')
 
         # TODO: Pull from preferences and revert to default if not found?
         self.resize(400, 300)
