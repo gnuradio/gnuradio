@@ -131,16 +131,17 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         self.registerToolBar(toolbars["run"])
 
         log.debug("Loading flowgraph model")
-        self.fg_view = FlowgraphView(self)
-        self.fg_view.centerOn(0, 0)
+        fg_view = FlowgraphView(self)
+        fg_view.centerOn(0, 0)
         initial_state = self.platform.parse_flow_graph("")
-        self.fg_view.flowgraph.import_data(initial_state)
+        fg_view.flowgraph.import_data(initial_state)
         log.debug("Adding flowgraph view")
+
         self.tabWidget = QtWidgets.QTabWidget()
         self.tabWidget.setTabsClosable(True)
         #TODO: Don't close if the tab has not been saved
         self.tabWidget.tabCloseRequested.connect(lambda index: self.close_triggered(index))
-        self.tabWidget.addTab(self.fg_view, "Untitled")
+        self.tabWidget.addTab(fg_view, "Untitled")
         self.setCentralWidget(self.tabWidget)
         self.currentFlowgraph.selectionChanged.connect(self.updateActions)
         #self.new_tab(self.flowgraph)
@@ -533,9 +534,6 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         log.debug("Creating status bar")
         self.statusBar().showMessage(_("ready-message"))
 
-    def new_tab(self, flowgraph):
-        self.setCentralWidget(flowgraph)
-
     def open(self):
         Open = QtWidgets.QFileDialog.getOpenFileName
         filename, filtr = Open(self, self.actions['open'].statusTip(),
@@ -581,7 +579,16 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
     # Action Handlers
     def new_triggered(self):
-        log.debug('new file')
+        log.debug('New')
+        log.debug("Loading flowgraph model")
+        fg_view = FlowgraphView(self)
+        fg_view.centerOn(0, 0)
+        initial_state = self.platform.parse_flow_graph("")
+        fg_view.flowgraph.import_data(initial_state)
+        log.debug("Adding flowgraph view")
+
+        self.tabWidget.addTab(fg_view, "Untitled")
+
 
     def open_triggered(self):
         log.debug('open')
@@ -613,15 +620,25 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         log.info(filename)
 
     def close_triggered(self, tab_index=None):
-        log.debug('close')
+        log.warning(f'Closing a tab (index {tab_index})')
         if tab_index is None:
-            self.tabWidget.removeTab(self.tabWidget.currentIndex())
-        else:
-            # TODO: Only if saved
+            tab_index = self.tabWidget.currentIndex()
+
+        if self.tabWidget.widget(tab_index).saved:
             self.tabWidget.removeTab(tab_index)
+        else:
+            self.setCurrentIndex(tab_index)
+
+        if self.tabWidget.count() == 0:
+            self.new_triggered()
 
     def close_all_triggered(self):
         log.debug('close')
+
+        while self.tabWidget.count() > 1:
+            self.close_triggered()
+        # Close the final tab
+        self.close_triggered()
 
     def print_triggered(self):
         log.debug('print')

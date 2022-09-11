@@ -356,6 +356,8 @@ class FlowgraphView(QtWidgets.QGraphicsView, base.Component): # added base.Compo
         self.isPanning    = False
         self.mousePressed = False
 
+        self.saved = True
+
 
         '''
         QGraphicsView.__init__(self, flow_graph, parent)
