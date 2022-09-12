@@ -35,8 +35,8 @@ new_dir = os.path.join(new_mod_dir, 'blocklib', mod_name, 'include', 'gnuradio',
 os.rename(old_dir, new_dir)
 
 # python dir
-old_dir = os.path.join(new_mod_dir, 'blocklib', mod_name, 'python', 'newmod')
-new_dir = os.path.join(new_mod_dir, 'blocklib', mod_name, 'python', mod_name)
+old_dir = os.path.join(new_mod_dir, 'blocklib', mod_name, 'python', 'gnuradio', 'newmod')
+new_dir = os.path.join(new_mod_dir, 'blocklib', mod_name, 'python', 'gnuradio', mod_name)
 os.rename(old_dir, new_dir)
 
 # change all occurances of newmod in files to mod_name

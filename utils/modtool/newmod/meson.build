@@ -2,7 +2,7 @@
 ###############################################################################
 # If this is an OOT module, the following top level project things are needed
 ###############################################################################
-project('ns-newmod', 'cpp', 
+project('gr4-newmod', 'cpp', 
   version : '0.0.0',
   license : 'GPLv3',
   default_options : ['cpp_std=c++17'])

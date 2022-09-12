@@ -38,7 +38,7 @@ filter_pybind_sources += gen_filter_pybind
 
 gnuradio_blocklib_filter_pybind = py3_inst.extension_module('filter_python',
     filter_pybind_sources,
-    include_directories: ['../../lib', incdir_numpy],
+    include_directories: ['../../../lib', incdir_numpy],
     dependencies : [gnuradio_blocklib_filter_dep, python3_dep, pybind11_dep],
     link_language : 'cpp',
     install : true,
