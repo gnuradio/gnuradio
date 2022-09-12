@@ -13,39 +13,58 @@ GNU Radio is licensed under the GNU General Public License (GPL) version 3. All 
 
 import os
 
+from pkgutil import extend_path
+
+# Allow OOT modules to be installed elsewhere on the PYTHONPATH
+# For example, gnuradio might be installed to /usr/lib/python3.8/site-packages/gnuradio
+#  But an OOT might be installed to /some/other/directory/gnuradio/myoot
+#  As long as /some/other/directory/ is in PYTHONPATH, this init file should find it
+#  and `from gnuradio import myoot` will work as expected
+__path__ = extend_path(__path__, __name__)
+
+# python3.8 and up need to have the dll search path set
+# https://docs.python.org/3/whatsnew/3.8.html#bpo-36085-whatsnew
+if os.name == 'nt' and hasattr(os, 'add_dll_directory'):
+    root_dir = __file__
+    for i in range(5):  # limit search depth
+        root_dir = os.path.dirname(root_dir)
+        bin_dir = os.path.join(root_dir, 'bin')
+        if os.path.exists(bin_dir):
+            try:
+                os.add_dll_directory(bin_dir)
+            except Exception as ex:
+                print('add_dll_directory(%s): %s' % (bin_dir, ex))
+            break
+
 # Check if the gnuradio package is installed or whether we're attempting to import it from
 # the build directory.
 path_ending = os.path.join('python', 'gnuradio', '__init__.py')
-print(path_ending)
 path = os.path.abspath(__file__)
 if path.endswith('.pyc'):
     path = path[:-1]
 
-print(path)
-
 if path.endswith(path_ending):
     # We importing it from build directory.
     build_path = os.path.join(path[:-len(path_ending)])
-    print(build_path)
 
     # Place these directories on __path__ so that their contents are
     # part of the gnuradio package.
-    __path__.append(os.path.join(build_path, 'gr', 'python'))
-    __path__.append(os.path.join(build_path, 'schedulers', 'nbt', 'python'))
+    __path__.append(os.path.join(build_path, 'gr', 'python', 'gnuradio'))
+    __path__.append(os.path.join(build_path, 'schedulers', 'nbt', 'python', 'gnuradio'))
 
     ###KERNEL###
-    __path__.append(os.path.join(build_path, 'kernel', 'python'))
+    __path__.append(os.path.join(build_path, 'kernel', 'python', 'gnuradio'))
 
     ###BLOCKLIB###
-    __path__.append(os.path.join(build_path, 'blocklib', 'analog', 'python'))
-    __path__.append(os.path.join(build_path, 'blocklib', 'blocks', 'python'))
-    __path__.append(os.path.join(build_path, 'blocklib', 'digital', 'python'))
-    __path__.append(os.path.join(build_path, 'blocklib', 'fec', 'python'))    
-    __path__.append(os.path.join(build_path, 'blocklib', 'fft', 'python'))
-    __path__.append(os.path.join(build_path, 'blocklib', 'fileio', 'python'))
-    __path__.append(os.path.join(build_path, 'blocklib', 'filter', 'python'))
-    __path__.append(os.path.join(build_path, 'blocklib', 'math', 'python'))   
-    __path__.append(os.path.join(build_path, 'blocklib', 'qtgui', 'python'))
-    __path__.append(os.path.join(build_path, 'blocklib', 'soapy', 'python'))
-    __path__.append(os.path.join(build_path, 'blocklib', 'streamops', 'python'))
-    __path__.append(os.path.join(build_path, 'blocklib', 'zeromq', 'python'))
+    __path__.append(os.path.join(build_path, 'blocklib', 'analog', 'python', 'gnuradio'))
+    __path__.append(os.path.join(build_path, 'blocklib', 'blocks', 'python', 'gnuradio'))
+    __path__.append(os.path.join(build_path, 'blocklib', 'digital', 'python', 'gnuradio'))
+    __path__.append(os.path.join(build_path, 'blocklib', 'fec', 'python', 'gnuradio'))    
+    __path__.append(os.path.join(build_path, 'blocklib', 'fft', 'python', 'gnuradio'))
+    __path__.append(os.path.join(build_path, 'blocklib', 'fileio', 'python', 'gnuradio'))
+    __path__.append(os.path.join(build_path, 'blocklib', 'filter', 'python', 'gnuradio'))
+    __path__.append(os.path.join(build_path, 'blocklib', 'math', 'python', 'gnuradio'))   
+    __path__.append(os.path.join(build_path, 'blocklib', 'qtgui', 'python', 'gnuradio'))
+    __path__.append(os.path.join(build_path, 'blocklib', 'soapy', 'python', 'gnuradio'))
+    __path__.append(os.path.join(build_path, 'blocklib', 'streamops', 'python', 'gnuradio'))
+    __path__.append(os.path.join(build_path, 'blocklib', 'zeromq', 'python', 'gnuradio'))

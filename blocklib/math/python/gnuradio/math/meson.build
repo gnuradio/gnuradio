@@ -39,7 +39,7 @@ math_pybind_sources += gen_math_pybind
 
 gnuradio_blocklib_math_pybind = py3_inst.extension_module('math_python',
     math_pybind_sources,
-    include_directories: ['../../lib', incdir_numpy],
+    include_directories: ['../../../lib', incdir_numpy],
     dependencies : [gnuradio_blocklib_math_dep, python3_dep, pybind11_dep],
     link_language : 'cpp',
     install : true,

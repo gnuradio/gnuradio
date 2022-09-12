@@ -38,7 +38,7 @@ gen_{{module}}_pybind = custom_target('gen_{{module}}_pybind',
 
 gnuradio_blocklib_{{module}}_pybind = py3_inst.extension_module('{{module}}_python',
     {{module}}_pybind_sources, 
-    include_directories: ['../../lib', incdir_numpy],
+    include_directories: ['../../../lib', incdir_numpy],
     dependencies : [gnuradio_blocklib_{{module}}_dep, python3_dep, pybind11_dep],
     link_language : 'cpp',
     install : true,
