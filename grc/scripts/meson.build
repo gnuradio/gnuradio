@@ -8,6 +8,6 @@ configure_file(
   input         : 'gnuradio-companion',
   install       : true,
   install_dir   : 'bin',
-  install_mode  : 'rwxr--r--',
+  install_mode  : 'rwxr-xr-x',
   output: 'gnuradio-companion'
 )
