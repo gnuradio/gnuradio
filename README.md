@@ -18,7 +18,7 @@ radio systems.
 ### From Source
 
 ```
-git clone https://github.com/gnuradio.git --branch dev-4.0
+git clone https://github.com/gnuradio/gnuradio --branch dev-4.0
 cd gnuradio
 meson setup build
 cd build && ninja 
