@@ -7,6 +7,35 @@ Versioning](http://semver.org/spec/v2.0.0.html), starting with version 3.7.12.0.
 
 Older Logs can be found in `docs/RELEASE-NOTES-*`.
 
+## [3.9.8.0] - 2022-09-16
+
+This is last quarterly release of GNU Radio 3.9. Version 3.10 is _mostly_ compatible with 3.9, so we recommend that all users of 3.9 migrate to 3.10 when able.
+
+### Changed
+
+#### Project Scope
+- Replace `get_initial_sptr()` calls with `make_block_sptr()` calls. There were a number of places the incorrect function was being used.
+
+#### GRC
+- Add xfce4-terminal and urxvt to the list of terminal emulators discovered during the build process.
+- Suppress GUI hint errors that were being shown in the terminal window.
+- Use integers for screenshot size (floats were causing Cairo errors).
+
+#### gr-blocks
+- Correct calculation of `items_remaining` in File Source, which allows `seek()` to work correctly.
+
+#### gr-filter
+- Fix demo for PFB channelizer
+
+#### gr-trellis
+- Correct Python bindings for `trellis::metrics`.
+
+#### gr-uhd
+- Add Python bindings for the UHD `find()` functino.
+
+#### Testing
+- Ignore Python "missing whitespace after keywork" formatting error.
+
 ## [3.9.7.0] - 2022-06-09
 
 ### Changed
