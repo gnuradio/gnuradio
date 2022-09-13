@@ -286,6 +286,7 @@ class GenericHeaderParser(BlockTool):
             namespace_dict['name'] = "::".join(namespace_to_parse)
             class_dict = {}
             class_dict['name'] = blockname
+            class_dict['bases'] = ["::", "gr", "block"]
 
             mf_dict = {
                 "name": "make",
