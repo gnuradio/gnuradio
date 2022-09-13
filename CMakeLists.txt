@@ -44,7 +44,7 @@ include(GrComponent)
 SET(VERSION_MAJOR 3)
 SET(VERSION_API   9)
 SET(VERSION_ABI   8)
-SET(VERSION_PATCH 0-rc1)
+SET(VERSION_PATCH 0)
 include(GrVersion) #setup version info
 
 # Minimum dependency versions for central dependencies:
