@@ -13,7 +13,7 @@ size_t buffer::space_available()
         }
     }
 
-    int space_in_items = (_num_items * _item_size - n_available) / _item_size - 1;
+    int space_in_items = (_num_items * _item_size - n_available) / _item_size;
 
     if (space_in_items < 0)
         space_in_items = 0;
@@ -121,8 +121,13 @@ size_t buffer_reader::bytes_available()
     size_t w = _buffer->write_index();
     size_t r = _read_index;
 
-    if (w < r)
+    if (w < r) {
         w += _buffer->buf_size();
+    }
+    else if (w == r && _buffer->total_written() > _total_read) {
+        return _buffer->buf_size();
+    }
+
     return (w - r);
 }
 
