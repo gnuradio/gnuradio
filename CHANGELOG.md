@@ -7,6 +7,70 @@ Versioning](http://semver.org/spec/v2.0.0.html), starting with version 3.7.12.0.
 
 Older Logs can be found in `docs/RELEASE-NOTES-*`.
 
+## [3.10.4.0] - 2022-09-16
+
+### Changed
+
+#### Project Scope
+- Replace `get_initial_sptr()` calls with `make_block_sptr()` calls. There were a number of places the incorrect function was being used.
+
+#### Runtime
+- Use correctly typed arguments to log messages to prevent build errors.
+
+#### GRC
+- Add xfce4-terminal and urxvt to the list of terminal emulators discovered during the build process.
+- Suppress GUI hint errors that were being shown in the terminal window.
+- Use integers for screenshot size (floats were causing Cairo errors).
+
+#### Build system and packaging
+- Reformat cmake files and make cmake formatting part of the workflow.
+- Allow GNU Radio to be a part of other cmake-based projects.
+- Correct linking to libiio and libad9361 on macOS.
+- Update method for determining Python installation directory. This should work correctly now on (all?) distro releases.
+
+#### gr-blocks
+- New Block Interleaver/Deinterleaver interleaves blocks of symbols
+- Correct calculation of `items_remaining` in File Source, which allows `seek()` to work correctly.
+- Add an example for Wavefile Sink
+
+#### gr-digital
+- Deprecate the CRC32 and CRC16 blocks, which will be removed in the future. There are more general CRC blocks which do the same thing (and more).
+
+#### gr-filter
+- Fix demo for PFB channelizer
+
+#### gr-iio
+- FMCOMMS2 Sink assumes CS16 data is scaled to 32768, rather than 2048.
+- FMCOMMS2 returns the correct samples for the second channel in 2-channel mode.
+
+#### gr-trellis
+- Correct Python bindings for `trellis::metrics`.
+
+#### gr-qtgui
+- Range widget can now output messages when value changes.
+- Add C++ code generation for Time Sink
+- Regenerate Python bindings for some blocks when necessary.
+- Waterfall Sink correctly uses half spectrum for float input.
+
+#### gr-uhd
+- Add Python bindings for the UHD `find()` functino.
+
+#### gr-zeromq
+- Support newer `get()` and older/deprecated `getsockopt()` functions in cppzmq depending on availability.
+
+#### Modtool
+- Parse IO signatures with or without `gr::` prefix.
+
+#### Documentation
+
+- Update certain file lists to keep build paths out of documentation.
+
+#### Testing
+- Update Conda recipe for Qt 5.15 and re-render CI support files.
+- Add testing on Ubuntu 22.04.
+- Link tests directly against spdlog with not linking to GR runtime.
+- Ignore Python "missing whitespace after keywork" formatting error.
+
 ## [3.10.3.0] - 2022-06-09
 
 ### Changed
