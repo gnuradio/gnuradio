@@ -3,7 +3,7 @@ newmod_deps += [gnuradio_gr_dep, volk_dep, fmt_dep, pmtf_dep, python3_embed_dep,
 
 block_cpp_args = ['-DHAVE_CPU']
 
-# if cuda_dep.found() and get_option('enable_cuda')
+# if IMPLEMENT_CUDA
 #     block_cpp_args += '-DHAVE_CUDA'
 
 #     gnuradio_blocklib_newmod_cu = library('gnuradio-blocklib-newmod-cu', 

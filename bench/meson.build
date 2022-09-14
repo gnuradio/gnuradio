@@ -50,7 +50,7 @@ executable('bm_msg_forward',
     install : true)
 
 
-if cuda_dep.found() and get_option('enable_cuda')
+if IMPLEMENT_CUDA
     subdir('cuda')
 endif
 endif

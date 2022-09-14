@@ -1,7 +1,7 @@
 fileio_deps += [gnuradio_gr_dep, volk_dep, fmt_dep, pmtf_dep]
 fileio_sources += 'file_sink_base.cc'
 block_cpp_args = ['-DHAVE_CPU']
-# if cuda_dep.found() and get_option('enable_cuda')
+# if IMPLEMENT_CUDA
 #     block_cpp_args += '-DHAVE_CUDA'
 
 #     gnuradio_blocklib_fileio_cu = library('gnuradio-blocklib-fileio-cu', 

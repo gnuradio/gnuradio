@@ -3,13 +3,13 @@ fft_deps += [gnuradio_gr_dep, volk_dep, fmt_dep, pmtf_dep, gr_kernel_lib_dep]
 # fft_sources += ['fftw_fft.cc','window.cc']
 link_args = []
 
-if USE_CUDA
+if IMPLEMENT_CUDA
     fft_deps += cuda_dep
     fft_deps += cusp_dep
 endif
 
 block_cpp_args = ['-DHAVE_CPU']
-if USE_CUDA
+if IMPLEMENT_CUDA
     block_cpp_args += '-DHAVE_CUDA'
 
     gnuradio_blocklib_fft_cu = library('gnuradio-blocklib-fft-cu', 

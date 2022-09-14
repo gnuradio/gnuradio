@@ -25,7 +25,7 @@ runtime_pybind_sources = files([
 
 cpp_args = []
 runtime_pybind_deps = [gnuradio_gr_dep, python3_dep, pybind11_dep, pmtf_dep]
-if USE_CUDA
+if IMPLEMENT_CUDA
     runtime_pybind_sources += [
         'buffer_cuda_pybind.cc', 
         'buffer_cuda_pinned.cc',

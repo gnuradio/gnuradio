@@ -64,7 +64,7 @@ runtime_sources = [
   'registry.cc'
 ]
 
-if USE_CUDA
+if IMPLEMENT_CUDA
   runtime_sources += [
     'buffer_cuda.cc',
     'buffer_cuda_pinned.cc',

@@ -2,7 +2,7 @@ analog_deps += [gnuradio_gr_dep, gnuradio_blocklib_filter_dep, volk_dep, fmt_dep
 
 # analog_sources += 'kernel/agc.cc'
 block_cpp_args = ['-DHAVE_CPU', '-DHAVE_HIER']
-# if cuda_dep.found() and get_option('enable_cuda')
+# if IMPLEMENT_CUDA
 #     block_cpp_args += '-DHAVE_CUDA'
 
 #     gnuradio_blocklib_analog_cu = library('gnuradio-blocklib-analog-cu', 
