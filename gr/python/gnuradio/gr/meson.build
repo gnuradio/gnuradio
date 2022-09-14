@@ -8,7 +8,7 @@ srcs = [
     'numpy_helpers.py'
     ]
 
-if USE_CUDA
+if IMPLEMENT_CUDA
     srcs += 'gateway_cupy.py'
 endif
 

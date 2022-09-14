@@ -10,7 +10,7 @@ filter_sources += sources
 filter_deps += [gnuradio_gr_dep, gnuradio_blocklib_fft_dep, volk_dep, fmt_dep, pmtf_dep, gr_kernel_lib_dep]
 link_args = []
 block_cpp_args = ['-DHAVE_CPU']
-if USE_CUDA
+if IMPLEMENT_CUDA
     block_cpp_args += '-DHAVE_CUDA'
 
 #     gnuradio_blocklib_filter_cu = library('gnuradio-blocklib-filter-cu', 

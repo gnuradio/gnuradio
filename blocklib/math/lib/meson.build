@@ -6,7 +6,7 @@ math_deps += [gnuradio_gr_dep, volk_dep, fmt_dep, pmtf_dep]
 
 link_args = []
 block_cpp_args = ['-DHAVE_CPU', '-DHAVE_NUMPY']
-if USE_CUDA
+if IMPLEMENT_CUDA
     block_cpp_args += '-DHAVE_CUDA'
 
     # gnuradio_blocklib_math_cu = library('gnuradio-blocklib-math-cu', 

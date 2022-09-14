@@ -6,7 +6,7 @@ streamops_deps += [gnuradio_gr_dep, volk_dep, fmt_dep, pmtf_dep]
 
 block_cpp_args = ['-DHAVE_CPU']
 link_args = []
-if USE_CUDA
+if IMPLEMENT_CUDA
     block_cpp_args += '-DHAVE_CUDA'
 
     gnuradio_blocklib_streamops_cu = library('gnuradio-blocklib-streamops-cu', 
