@@ -45,6 +45,16 @@ incdir_numpy = run_command(py3,
   ['-c', 'import os; os.chdir(".."); import numpy; print(numpy.get_include())'],
   check : true
 ).stdout().strip()
+
+# Python module min versions
+# TODO: distinguish between build and runtime requirements
+py_check_script = join_paths(meson.project_source_root(),'utils','py_module_check.py')
+run_command('python3', py_check_script, 'numpy', '1.22', check:true)
+run_command('python3', py_check_script, 'jinja2', '3.0.2', check:true)
+run_command('python3', py_check_script, 'yaml', '5.3.1', check:true)
+run_command('python3', py_check_script, 'zmq', '22.3.0', check:true)
+run_command('python3', py_check_script, 'jsonschema', '3.2.0', check:true)
+run_command('python3', py_check_script, 'jsonschema_default', check:true)
 endif
 
 if (get_option('enable_cuda'))
