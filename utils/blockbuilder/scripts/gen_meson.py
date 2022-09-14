@@ -14,6 +14,7 @@ def argParse():
     
     parser.add_argument("blocklib_path")
     parser.add_argument("--clear", action='store_true')
+    parser.add_argument("--enable_python", action='store_true')
 
     return parser.parse_args()
 
@@ -44,6 +45,7 @@ def main():
 
             with open(yml_files[0]) as file:
                 d = yaml.load(file, Loader=yaml.FullLoader)
+                d['GR_ENABLE_PYTHON'] = args.enable_python
                 new_meson_filename = os.path.join(os.path.dirname(yml_files[0]),'meson.build')
                 template = env.get_template('blockname.meson.build.j2')
                 cufiles = [os.path.basename(x) for x in glob.glob(os.path.join(root,'*.cu'))]

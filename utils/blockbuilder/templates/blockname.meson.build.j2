@@ -47,7 +47,8 @@ gen_srcs = custom_target('gen_{{block}}_srcs',
                             '--output-pybind', '@OUTPUT2@', 
                             '--output-grc', [{%for ii in grc_idxs%}'@OUTPUT{{loop.index0+3}}@',{%endfor%}], 
                             '--grc-index', [{%for ii in grc_idxs%}'{{ii}}',{%endfor%}],
-                            '--build_dir', join_paths(meson.build_root())],
+                            '--build_dir', join_paths(meson.build_root())
+                            {{',' + '\'--enable_python\'' if GR_ENABLE_PYTHON}}],
                         install : true,
                         install_dir : [false, 'include/gnuradio/{{module}}',false,{%for ii in grc_idxs%}'share/gnuradio/grc/blocks',{%endfor%}])
 
@@ -63,7 +64,7 @@ gen_impls = custom_target('gen_{{block}}_impl',
 {{module}}_deps += declare_dependency(sources : [gen_srcs[1]] ) 
 {{module}}_sources += [srcs, gen_srcs[0], gen_impls]
 
-if get_option('enable_python') 
+if GR_ENABLE_PYTHON 
     {% if vars.pyshell -%}
     # If we have python implementations, generate the pyshell
     gen_pyshell = custom_target('gen_{{block}}_pyshell',

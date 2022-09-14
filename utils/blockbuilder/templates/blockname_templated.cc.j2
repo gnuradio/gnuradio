@@ -19,7 +19,7 @@ typename {{block}}<{% for key in typekeys -%}{{key['id']}}{{ ", " if not loop.la
         return make_{{ impl['id'] | lower }}(args);
         break;
     #endif
-    {% elif 'lang' in impl and impl['lang'] == 'python' -%}
+    {% elif 'lang' in impl and impl['lang'] == 'python' and GR_ENABLE_PYTHON -%}
     case available_impl::{{ impl['id'] | upper }}:
         return make_pyshell("{{ impl['id'] | lower }}", args);
         break;

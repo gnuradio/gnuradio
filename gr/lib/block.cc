@@ -1,5 +1,4 @@
 #include <gnuradio/block.h>
-#include <gnuradio/pyblock_detail.h>
 #include <gnuradio/scheduler.h>
 #include <gnuradio/scheduler_message.h>
 #include <nlohmann/json.hpp>
@@ -27,11 +26,6 @@ block::block(const std::string& name, const std::string& module)
     add_port(std::move(msg_system));
 }
 
-void block::set_pyblock_detail(std::shared_ptr<pyblock_detail> p)
-{
-    d_pyblock_detail = p;
-}
-std::shared_ptr<pyblock_detail> block::pb_detail() { return d_pyblock_detail; }
 bool block::start()
 {
     d_running = true;

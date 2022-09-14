@@ -1,5 +1,11 @@
-run_command('python3', join_paths(meson.project_source_root(),'utils','blockbuilder','scripts','gen_meson.py'), 
-  join_paths(meson.project_source_root(),'blocklib'), check: true)
+
+gen_meson_args = join_paths(meson.project_source_root(),'utils','blockbuilder','scripts','gen_meson.py')
+if GR_ENABLE_PYTHON
+run_command('python3', gen_meson_args, join_paths(meson.project_source_root(),'blocklib'), '--enable_python', check: true)
+else
+run_command('python3', gen_meson_args, join_paths(meson.project_source_root(),'blocklib'), check: true)
+endif
+  
 
 if get_option('enable_gr_math') 
 subdir('math')

@@ -35,7 +35,6 @@ runtime_headers = [
     'helper_cuda.h',
     'helper_string.h',
     'python_block.h',
-    'pyblock_detail.h',
     'sys_paths.h',
     'gr_complex.h',
     'port_interface.h',

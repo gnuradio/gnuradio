@@ -28,10 +28,12 @@ foreach qa : qa_srcs
     test(qa, e, env: TEST_ENV)
 endforeach
 
+if GR_ENABLE_PYTHON
 test('Basic Python', py3, args : files('qa_basic.py'), env: TEST_ENV)
 test('Block Parameters', py3, args : files('qa_parameters.py'), env: TEST_ENV)
 test('Python Blocks', py3, args : files('qa_python_block.py'), env: TEST_ENV)
 test('Hier Block', py3, args : files('qa_hier_block.py'), env: TEST_ENV)
+endif
 
 if IMPLEMENT_CUDA
     subdir('cuda')

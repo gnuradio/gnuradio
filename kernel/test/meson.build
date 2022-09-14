@@ -22,5 +22,7 @@ foreach qa : qa_srcs
     test(qa, e, env: TEST_ENV)
 endforeach
 
-test('Random', py3, args : files('qa_random.py'), env: TEST_ENV)
+if GR_ENABLE_PYTHON
+    test('Random', py3, args : files('qa_random.py'), env: TEST_ENV)
+endif
 

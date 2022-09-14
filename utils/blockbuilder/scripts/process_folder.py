@@ -21,6 +21,7 @@ def argParse():
     parser.add_argument("--output-grc", nargs='+')
     parser.add_argument("--grc-index", nargs='+')
     parser.add_argument("--build_dir")
+    parser.add_argument("--enable_python", action='store_true')
 
     return parser.parse_args()
 
@@ -42,9 +43,6 @@ def main():
     blockdir = os.path.dirname(os.path.realpath(args.yaml_file))
     # print("blockdir is " + blockdir)
 
-   
-
-
 
     paths = []
     paths.append(os.path.join(os.path.dirname(os.path.realpath(__file__)),'..','templates'))
@@ -62,6 +60,7 @@ def main():
 
     with open(args.yaml_file) as file:
         d = yaml.load(file, Loader=yaml.FullLoader)
+        
         # copy the yaml file to the build dir
         block_builddir = os.path.join(args.build_dir, 'blocklib', d['module'], blockname)
         shutil.copy(args.yaml_file, block_builddir)
@@ -90,6 +89,7 @@ def main():
             default_obj.update(p)
             d['ports'][idx] = default_obj
 
+        d['GR_ENABLE_PYTHON'] = args.enable_python
         # Does this block specify a templated version
         templated = 0
         if ('typekeys' in d and len(d['typekeys']) > 0):

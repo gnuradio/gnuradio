@@ -24,7 +24,6 @@ void bind_tag(py::module&);
 void bind_port(py::module&);
 void bind_block_work_io(py::module&);
 void bind_node(py::module&);
-void bind_pyblock_detail(py::module&);
 void bind_block(py::module&);
 void bind_sync_block(py::module&);
 void bind_edge(py::module&);
@@ -70,7 +69,6 @@ PYBIND11_MODULE(gr_python, m)
     bind_block_work_io(m);
     bind_port(m);
     bind_node(m);
-    bind_pyblock_detail(m);
     bind_block(m);
     bind_sync_block(m);
     bind_edge(m);
