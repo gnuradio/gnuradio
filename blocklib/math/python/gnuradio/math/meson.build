@@ -37,13 +37,13 @@ gen_math_pybind = custom_target('gen_math_pybind',
 
 math_pybind_sources += gen_math_pybind
 
-gnuradio_blocklib_math_pybind = py3_inst.extension_module('math_python',
+gnuradio_blocklib_math_pybind = py3.extension_module('math_python',
     math_pybind_sources,
     include_directories: ['../../../lib', incdir_numpy],
     dependencies : [gnuradio_blocklib_math_dep, python3_dep, pybind11_dep],
     link_language : 'cpp',
     install : true,
-    install_dir : join_paths(py3_inst.get_install_dir(),'gnuradio','math')
+    install_dir : join_paths(py3.get_install_dir(),'gnuradio','math')
 )
 
 gnuradio_blocklib_math_pybind_dep = declare_dependency(include_directories : incdir,
@@ -52,7 +52,7 @@ gnuradio_blocklib_math_pybind_dep = declare_dependency(include_directories : inc
 
 
 # Target for pure python
-py3_inst.install_sources(srcs, subdir : join_paths('gnuradio','math'))
+py3.install_sources(srcs, subdir : join_paths('gnuradio','math'))
 
 subdir('numpy')
-py3_inst.install_sources(files('numpy/__init__.py'), subdir : join_paths('gnuradio','math','numpy'))
+py3.install_sources(files('numpy/__init__.py'), subdir : join_paths('gnuradio','math','numpy'))

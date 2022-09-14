@@ -78,7 +78,7 @@ if get_option('enable_python')
     {{module}}_sources += gen_pyshell[1]
     {% for impl in implementations -%}
     {% if 'lang' in impl and impl['lang'] == 'python'%}
-    py3_inst.install_sources(files('{{impl['id']}}/{{block}}.py'), subdir : join_paths('gnuradio','{{module}}','{{impl['id']}}'))
+    py3.install_sources(files('{{impl['id']}}/{{block}}.py'), subdir : join_paths('gnuradio','{{module}}','{{impl['id']}}'))
     subdir('{{impl['id']}}')
     {% endif %}
     {% endfor -%}
