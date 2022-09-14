@@ -12,4 +12,4 @@ configure_file(copy: true,
 )
 endforeach
 
-py3_inst.install_sources(files(srcs), subdir : join_paths('gnuradio', 'kernel', 'digital'))
+py3.install_sources(files(srcs), subdir : join_paths('gnuradio', 'kernel', 'digital'))
