@@ -37,6 +37,7 @@ if (get_option('enable_testing'))
 gtest_dep = dependency('gtest', main : true, version : '>=1.10', required : get_option('enable_testing'))
 endif
 
+GR_ENABLE_PYTHON = false
 if (get_option('enable_python'))
 python3_dep = dependency('python3', required : get_option('enable_python'))
 python3_embed_dep = dependency('python3-embed', required : get_option('enable_python'))
@@ -55,6 +56,7 @@ run_command('python3', py_check_script, 'yaml', '5.3.1', check:true)
 run_command('python3', py_check_script, 'zmq', '22.3.0', check:true)
 run_command('python3', py_check_script, 'jsonschema', '3.2.0', check:true)
 run_command('python3', py_check_script, 'jsonschema_default', check:true)
+GR_ENABLE_PYTHON = true
 endif
 
 if (get_option('enable_cuda'))

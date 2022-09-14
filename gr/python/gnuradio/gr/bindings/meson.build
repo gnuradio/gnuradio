@@ -16,7 +16,6 @@ runtime_pybind_sources = files([
     'buffer_net_zmq_pybind.cc',
     'constants_pybind.cc',
     'python_block_pybind.cc',
-    'pyblock_detail_pybind.cc',
     'runtime_pybind.cc',
     'runtime_proxy_pybind.cc',
     'graph_utils_pybind.cc',

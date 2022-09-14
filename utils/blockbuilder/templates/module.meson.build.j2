@@ -25,7 +25,7 @@ gen_srcs = custom_target('gen_{{module}}_enums',
                         install : true,
                         install_dir : ['include/gnuradio/{{module}}', false])
 
-if get_option('enable_python') 
+if GR_ENABLE_PYTHON 
     {{module}}_pybind_sources += gen_srcs[1]
     {{module}}_pybind_names += 'enums'
 endif

@@ -73,10 +73,9 @@ if IMPLEMENT_CUDA
   gr_deps += cuda_dep
 endif
 
-if (pybind11_dep.found() and python3_dep.found() and python3_embed_dep.found() and get_option('enable_python'))
+if (GR_ENABLE_PYTHON)
 runtime_sources += [
   'python_block.cc',
-  'pyblock_detail.cc'
 ]
 gr_deps += [python3_dep, python3_embed_dep, pybind11_dep]
 endif

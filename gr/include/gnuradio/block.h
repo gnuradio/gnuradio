@@ -19,7 +19,6 @@
 
 namespace gr {
 
-class pyblock_detail;
 /**
  * @brief The abstract base class for all signal processing blocks in the GR
  * Block Library
@@ -46,7 +45,6 @@ protected:
     neighbor_interface_sptr p_scheduler = nullptr;
     std::map<std::string, int> d_param_str_map;
     std::map<int, std::string> d_str_param_map;
-    std::shared_ptr<pyblock_detail> d_pyblock_detail;
     bool d_finished = false;
 
     void notify_scheduler();
@@ -79,8 +77,6 @@ public:
 
     tag_propagation_policy_t tag_propagation_policy();
     void set_tag_propagation_policy(tag_propagation_policy_t policy);
-    void set_pyblock_detail(std::shared_ptr<pyblock_detail> p);
-    std::shared_ptr<pyblock_detail> pb_detail();
     /**
      * @brief Abstract method to call signal processing work from a derived block
      *
