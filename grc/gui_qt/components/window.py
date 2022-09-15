@@ -620,7 +620,8 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         log.info(filename)
 
     def close_triggered(self, tab_index=None):
-        log.warning(f'Closing a tab (index {tab_index})')
+        log.debug(f'Closing a tab (index {tab_index})')
+
         if tab_index is None:
             tab_index = self.tabWidget.currentIndex()
 
@@ -706,21 +707,18 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         log.debug('properties')
 
     def enable_triggered(self):
-        # Pass to Undo/Redo
         log.debug('enable')
         cmd = EnableAction(self.currentFlowgraph)
         self.currentFlowgraph.undoStack.push(cmd)
         self.updateActions()
 
     def disable_triggered(self):
-        # Pass to Undo/Redo
         log.debug('disable')
         cmd = DisableAction(self.currentFlowgraph)
         self.currentFlowgraph.undoStack.push(cmd)
         self.updateActions()
 
     def bypass_triggered(self):
-        # Pass to Undo/Redo
         log.debug('bypass')
         cmd = BypassAction(self.currentFlowgraph)
         self.currentFlowgraph.undoStack.push(cmd)
