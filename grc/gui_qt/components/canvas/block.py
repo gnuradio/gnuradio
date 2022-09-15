@@ -347,7 +347,7 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
         super(self.__class__, self).mouseReleaseEvent(e)
 
     def mousePressEvent(self, e):
-        print(f"{self} clicked")
+        log.debug(f"{self} clicked")
         self.parent.registerBlockMovement(self)
         try:
             self.parent.app.DocumentationTab.setText(self.documentation[self.key])
