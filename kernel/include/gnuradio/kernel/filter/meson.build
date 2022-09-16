@@ -11,4 +11,4 @@ headers = [
     'single_pole_iir.h'
 ]
 
-install_headers(headers, subdir : 'gnuradio/kernel/digital')
+install_headers(headers, subdir : 'gnuradio/kernel/filter')
