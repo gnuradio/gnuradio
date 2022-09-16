@@ -11,6 +11,8 @@
 #pragma once
 
 #include <gnuradio/api.h>
+#include <chrono>
+#include <ratio>
 
 ////////////////////////////////////////////////////////////////////////
 // Use architecture defines to determine the implementation
@@ -25,6 +27,8 @@
 #elif defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__)
 #define GNURADIO_HRT_USE_CLOCK_GETTIME
 #include <ctime>
+#else
+#define GNURADIO_HRT_USE_GENERIC_CLOCK
 #endif
 
 
@@ -32,7 +36,7 @@
 namespace gr {
 
 //! Typedef for the timer tick count
-using high_res_timer_type = signed long long;
+typedef signed long long high_res_timer_type;
 
 //! Get the current time in ticks
 high_res_timer_type high_res_timer_now(void);
@@ -42,6 +46,9 @@ high_res_timer_type high_res_timer_now_perfmon(void);
 
 //! Get the number of ticks per second
 high_res_timer_type high_res_timer_tps(void);
+
+//! Get the tick count at the epoch
+high_res_timer_type high_res_timer_epoch(void);
 
 #ifdef GNURADIO_HRT_USE_CLOCK_GETTIME
 //! storage for high res timer type
@@ -87,7 +94,7 @@ inline gr::high_res_timer_type gr::high_res_timer_tps(void)
 {
     mach_timebase_info_data_t info;
     mach_timebase_info(&info);
-    return gr::high_res_timer_type(info.numer * 1000000000UL) / info.denom;
+    return gr::high_res_timer_type(info.denom * 1000000000UL) / info.numer;
 }
 #endif
 
@@ -114,3 +121,30 @@ inline gr::high_res_timer_type gr::high_res_timer_tps(void)
     return freq.QuadPart;
 }
 #endif
+
+////////////////////////////////////////////////////////////////////////
+#ifdef GNURADIO_HRT_USE_GENERIC_CLOCK
+inline gr::high_res_timer_type gr::high_res_timer_now(void)
+{
+    return std::chrono::duration<gr::high_res_timer_type, std::nano>(
+               std::chrono::steady_clock::now().time_since_epoch())
+        .count();
+}
+
+inline gr::high_res_timer_type gr::high_res_timer_now_perfmon(void)
+{
+    return gr::high_res_timer_now();
+}
+
+inline gr::high_res_timer_type gr::high_res_timer_tps(void) { return 1000000000UL; }
+#endif
+
+////////////////////////////////////////////////////////////////////////
+inline gr::high_res_timer_type gr::high_res_timer_epoch(void)
+{
+    static const double ticks_per_second = gr::high_res_timer_tps();
+    const double seconds_since_epoch =
+        std::chrono::duration<double>(std::chrono::system_clock::now().time_since_epoch())
+            .count();
+    return gr::high_res_timer_now() - seconds_since_epoch * ticks_per_second;
+}
