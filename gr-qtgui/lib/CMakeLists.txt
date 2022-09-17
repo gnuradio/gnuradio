@@ -91,13 +91,6 @@ target_link_libraries(gnuradio-qtgui
     PUBLIC ${QTGUI_LIBS}
     PRIVATE ${PRIVATE_LIBS}
 )
-if(WIN32)
-    target_link_libraries(gnuradio-qtgui PUBLIC dwrite)
-endif(WIN32)
-
-if(ENABLE_COMMON_PCH)
-    target_link_libraries(gnuradio-qtgui PRIVATE common-precompiled-headers)
-endif()
 
 set(qtgui_mod_includedir ${CMAKE_CURRENT_SOURCE_DIR}/../include/gnuradio/qtgui)
 qt5_wrap_cpp(
@@ -150,5 +143,5 @@ if(MSVC)
 endif(MSVC)
 
 if(BUILD_SHARED_LIBS)
-    gr_library_foo(gnuradio-qtgui Qwt Qt5Widgets FFTW3f)
+    gr_library_foo(gnuradio-qtgui Qwt Qt5Widgets)
 endif()

@@ -20,8 +20,10 @@ add_library(
     cfo_model_impl.cc
     sro_model_impl.cc)
 
-target_link_libraries(gnuradio-channels PUBLIC gnuradio-runtime gnuradio-filter
-                                               gnuradio-analog gnuradio-blocks)
+target_link_libraries(
+    gnuradio-channels
+    PUBLIC gnuradio-runtime
+    PRIVATE gnuradio-filter gnuradio-analog gnuradio-blocks)
 
 if(ENABLE_COMMON_PCH)
     target_link_libraries(gnuradio-channels PRIVATE common-precompiled-headers)

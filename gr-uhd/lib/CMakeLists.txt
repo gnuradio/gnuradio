@@ -28,7 +28,7 @@ endif(ENABLE_UHD_RFNOC)
 
 add_library(gnuradio-uhd ${LIB_GR_UHD_SOURCES})
 
-target_link_libraries(gnuradio-uhd gnuradio-runtime UHD::UHD)
+target_link_libraries(gnuradio-uhd PUBLIC gnuradio-runtime UHD::UHD)
 
 target_include_directories(
     gnuradio-uhd PUBLIC $<INSTALL_INTERFACE:include>
