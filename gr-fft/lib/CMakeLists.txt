@@ -10,7 +10,10 @@
 ########################################################################
 add_library(gnuradio-fft fft.cc fft_v_fftw.cc goertzel_fc_impl.cc goertzel.cc window.cc)
 
-target_link_libraries(gnuradio-fft PUBLIC gnuradio-runtime fftw3f::fftw3f Volk::volk)
+target_link_libraries(
+    gnuradio-fft
+    PUBLIC gnuradio-runtime Volk::volk
+    PRIVATE fftw3f::fftw3f)
 
 if(ENABLE_COMMON_PCH)
     target_link_libraries(gnuradio-fft PRIVATE common-precompiled-headers)
@@ -42,7 +45,7 @@ if(MSVC)
 endif(MSVC)
 
 if(BUILD_SHARED_LIBS)
-    gr_library_foo(gnuradio-fft FFTW3f)
+    gr_library_foo(gnuradio-fft)
 endif()
 
 if(ENABLE_TESTING)
