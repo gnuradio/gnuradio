@@ -60,11 +60,13 @@ target_link_libraries(${class_name}
     % if generate_options == 'qt_gui':
     gnuradio::gnuradio-qtgui
     % endif
+    % if parameters:
+    Boost::program_options
+    % endif
     % for link in links:
     % if link:
     ${link}
     % endif
     % endfor
-
 )
 
