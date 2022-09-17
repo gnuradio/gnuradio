@@ -12,6 +12,7 @@
 #include <spdlog/fmt/fmt.h>
 #include <algorithm>
 #include <numeric>
+#include <vector>
 
 namespace gr {
 namespace blocks {
