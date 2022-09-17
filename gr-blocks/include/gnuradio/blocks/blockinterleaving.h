@@ -12,7 +12,7 @@
 #define INCLUDED_GR_BLOCKS_BLOCKINTERLEAVING_H
 
 #include <gnuradio/blocks/api.h>
-
+#include <vector>
 
 namespace gr {
 namespace blocks {
