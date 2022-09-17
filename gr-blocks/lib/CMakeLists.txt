@@ -172,20 +172,15 @@ endif()
 
 add_library(gnuradio-blocks ${BLOCKS_SOURCES})
 
-set(BLOCKS_LIBS gnuradio-runtime Volk::volk)
+target_link_libraries(gnuradio-blocks PUBLIC gnuradio-runtime Volk::volk)
 
 if(SNDFILE_FOUND)
-    set(BLOCKS_LIBS ${BLOCKS_LIBS} sndfile::sndfile)
+    target_link_libraries(gnuradio-blocks PRIVATE sndfile::sndfile)
 endif()
 
 if(ENABLE_COMMON_PCH)
-    set(PRIVATE_LIBS common-precompiled-headers)
+    target_link_libraries(gnuradio-blocks PRIVATE common-precompiled-headers)
 endif()
-
-target_link_libraries(
-    gnuradio-blocks
-    PUBLIC ${BLOCKS_LIBS}
-    PRIVATE ${PRIVATE_LIBS})
 
 target_include_directories(
     gnuradio-blocks PUBLIC $<INSTALL_INTERFACE:include>
@@ -213,11 +208,7 @@ if(MSVC)
 endif(MSVC)
 
 if(BUILD_SHARED_LIBS)
-    if(SNDFILE_FOUND)
-        gr_library_foo(gnuradio-blocks SNDFILE)
-    else()
-        gr_library_foo(gnuradio-blocks)
-    endif()
+    gr_library_foo(gnuradio-blocks)
 endif()
 
 ########################################################################

@@ -69,8 +69,10 @@ add_library(
     catv/catv_frame_sync_enc_bb_impl.cc
     catv/catv_trellis_enc_bb_impl.cc)
 
-target_link_libraries(gnuradio-dtv PUBLIC gnuradio-runtime gnuradio-analog
-                                          gnuradio-filter gnuradio-fec Volk::volk)
+target_link_libraries(
+    gnuradio-dtv
+    PUBLIC gnuradio-runtime
+    PRIVATE gnuradio-analog gnuradio-filter gnuradio-fec Volk::volk)
 
 if(ENABLE_COMMON_PCH)
     target_link_libraries(gnuradio-dtv PRIVATE common-precompiled-headers)
