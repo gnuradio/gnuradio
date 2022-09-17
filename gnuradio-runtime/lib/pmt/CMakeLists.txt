@@ -11,7 +11,10 @@ add_library(
     ${CMAKE_CURRENT_SOURCE_DIR}/pmt_io.cc ${CMAKE_CURRENT_SOURCE_DIR}/pmt_pool.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/pmt_serialize.cc)
 
-target_link_libraries(gnuradio-pmt Boost::boost Boost::thread spdlog::spdlog Volk::volk)
+target_link_libraries(
+    gnuradio-pmt
+    PUBLIC Boost::boost
+    PRIVATE Volk::volk)
 
 target_include_directories(
     gnuradio-pmt

@@ -68,7 +68,6 @@ list(APPEND fec_python_files python_bindings.cc)
 
 gr_pybind_make_check_hash(fec ../../.. gr::fec "${fec_python_files}")
 
-target_link_libraries(fec_python PUBLIC gnuradio-runtime gnuradio-blocks)
 if(GSL_FOUND)
     target_compile_definitions(fec_python PUBLIC -DHAVE_GSL)
 endif(GSL_FOUND)

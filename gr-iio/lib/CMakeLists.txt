@@ -22,18 +22,16 @@ add_library(
 target_include_directories(
     gnuradio-iio PUBLIC $<INSTALL_INTERFACE:include>
                         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>)
-set(iio_deps "libiio")
 target_link_libraries(
     gnuradio-iio
-    PUBLIC gnuradio-runtime libiio::iio ${GR_VOLK_LIB}
-    PRIVATE gnuradio-blocks)
+    PUBLIC gnuradio-runtime
+    PRIVATE gnuradio-blocks libiio::iio Volk::volk)
 
 if(libad9361_SUFFICIENT)
     target_sources(gnuradio-iio PRIVATE fmcomms2_sink_impl.cc fmcomms2_source_impl.cc
                                         pluto_utils.cc)
-    target_link_libraries(gnuradio-iio PUBLIC libad9361::ad9361)
-    target_compile_definitions(gnuradio-iio PUBLIC -DGR_IIO_LIBAD9361)
-    list(APPEND iio_deps "libad9361")
+    target_link_libraries(gnuradio-iio PRIVATE libad9361::ad9361)
+    target_compile_definitions(gnuradio-iio PRIVATE -DGR_IIO_LIBAD9361)
 endif(libad9361_SUFFICIENT)
 
 if(ENABLE_COMMON_PCH)
@@ -51,5 +49,5 @@ if(MSVC)
 endif(MSVC)
 
 if(BUILD_SHARED_LIBS)
-    gr_library_foo(gnuradio-iio ${iio_deps})
+    gr_library_foo(gnuradio-iio)
 endif()
