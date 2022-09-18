@@ -25,8 +25,7 @@ namespace filter {
  * \ingroup filter_blk
  *
  * \details
- * real output is input appropriately delayed.
- * imaginary output is hilbert filtered (90 degree phase shift)
+ * the output is hilbert transformed (90 degree phase shift)
  * version of input.
  */
 class FILTER_API hilbert_fc : virtual public sync_block
