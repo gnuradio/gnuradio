@@ -10,7 +10,7 @@ cmake_conf.set('module', 'blocks')
 cmake.configure_package_config_file(
   name : 'gnuradio-blocks',
   input : join_paths(meson.source_root(),'cmake','Modules','gnuradioConfigModule.cmake.in'),
-  install_dir : get_option('prefix') / 'lib' / 'cmake' / 'gnuradio',
+  install_dir : get_option('prefix') / get_option('libdir') / 'cmake' / 'gnuradio',
   configuration : cmake_conf
 )
 

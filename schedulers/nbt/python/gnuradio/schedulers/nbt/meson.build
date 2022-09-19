@@ -8,4 +8,4 @@ configure_file(copy: true,
 )
 endforeach
 
-py3.install_sources(files('__init__.py'), subdir : join_paths('gnuradio','schedulers','nbt'))
+py3.install_sources(files('__init__.py'), subdir : join_paths('gnuradio','schedulers','nbt'), pure : py3_purelib)

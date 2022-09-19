@@ -12,4 +12,4 @@ configure_file(copy: true,
 )
 endforeach
 
-py3.install_sources(files(srcs), subdir : join_paths('gnuradio', 'kernel', 'fft'))
+py3.install_sources(files(srcs), subdir : join_paths('gnuradio', 'kernel', 'fft'), pure : py3_purelib)

@@ -42,7 +42,7 @@ gnuradio_blocklib_filter_pybind = py3.extension_module('filter_python',
     dependencies : [gnuradio_blocklib_filter_dep, python3_dep, pybind11_dep],
     link_language : 'cpp',
     install : true,
-    install_dir : join_paths(py3.get_install_dir(),'gnuradio','filter')
+    install_dir : join_paths(py3_install_dir,'gnuradio','filter')
 )
 
 gnuradio_blocklib_filter_pybind_dep = declare_dependency(include_directories : incdir,
@@ -51,4 +51,4 @@ gnuradio_blocklib_filter_pybind_dep = declare_dependency(include_directories : i
 
 
 # Target for pure python
-py3.install_sources(srcs, subdir : join_paths('gnuradio','filter'))
+install_data(srcs, install_dir : join_paths(py3_install_dir,'gnuradio','filter'))

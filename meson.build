@@ -32,7 +32,9 @@ py3_version = py3.language_version()
 if py3_version.version_compare('< 3.6')
   error('Invalid python version!?')
 endif
-
+py3_purelib = (get_option('libdir') == 'lib')
+py3_install_dir = py3.get_install_dir( pure : py3_purelib)
+GR_PURELIB = py3_purelib
 if (get_option('enable_testing'))
 gtest_dep = dependency('gtest', main : true, version : '>=1.10', required : get_option('enable_testing'))
 endif
@@ -72,7 +74,7 @@ endif
 ## Subprojects
 libpmtf = subproject('pmt')
 pmtf_dep = libpmtf.get_variable('pmtf_dep')
-
+#py3_install_dir_dep = libpmtf.get_variable('py3_install_dir_dep')
 CLI11_dep = dependency('cli11')
 json_dep = dependency('nlohmann_json')
 
@@ -150,3 +152,10 @@ if (get_option('enable_bench'))
     subdir('bench')
 endif
 subdir('docs')
+summary({'bindir': get_option('bindir'),
+        'libdir': get_option('libdir'),
+        'datadir': get_option('datadir'),
+        'prefix': get_option('prefix'),
+        }, section: 'Directories')
+message('Python dir:')
+message(py3_install_dir)
