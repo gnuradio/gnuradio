@@ -1,4 +1,4 @@
-fft_deps += [gnuradio_gr_dep, volk_dep, fmt_dep, pmtf_dep, gr_kernel_lib_dep]
+fft_deps += [gnuradio_gr_dep, volk_dep, fmt_dep, pmtf_dep, gr_kernel_fft_lib_dep]
 
 # fft_sources += ['fftw_fft.cc','window.cc']
 link_args = []

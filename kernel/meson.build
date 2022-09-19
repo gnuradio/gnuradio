@@ -1,10 +1,5 @@
-subdir('include/gnuradio/kernel')
-subdir('lib')
-
-if (get_option('enable_python'))
-    subdir('python/gnuradio/kernel')
-endif
-
-if (get_option('enable_testing'))
-    subdir('test')
-endif
+subdir('math')
+subdir('fft')
+subdir('filter')
+subdir('analog')
+subdir('digital')
