@@ -1,6 +1,7 @@
 srcs = files([
     'kernel_filter_pybind.cc',
-    'firdes_pybind.cc'
+    'firdes_pybind.cc',
+    'pm_remez_pybind.cc'
  ] )
 
 cpp_args = []

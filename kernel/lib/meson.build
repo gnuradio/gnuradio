@@ -9,6 +9,7 @@ kernel_sources = [
     'filter/fft_filter.cc',
     'filter/fir_filter.cc',
     'filter/firdes.cc',
+    'filter/pm_remez.cc',
     'filter/mmse_fir_interpolator_ff.cc',
     'filter/moving_averager.cc',
     'filter/pfb_arb_resampler.cc',
