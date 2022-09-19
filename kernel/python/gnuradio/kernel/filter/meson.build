@@ -3,6 +3,7 @@ subdir('bindings')
 
 srcs = [
     '__init__.py',
+    'optfir.py'
     ]
 
 foreach s: srcs
