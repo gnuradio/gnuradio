@@ -103,8 +103,15 @@ if (get_option('enable_testing'))
       join_paths( meson.build_root(),'blocklib','math','lib'),
       join_paths( meson.build_root(),'blocklib','streamops','lib'),
       join_paths( meson.build_root(),'blocklib','soapy','lib'),
+
+      join_paths( meson.build_root(),'kernel','analog','lib'),
+      join_paths( meson.build_root(),'kernel','digital','lib'),
+      join_paths( meson.build_root(),'kernel','fft','lib'),
+      join_paths( meson.build_root(),'kernel','filter','lib'),
+      join_paths( meson.build_root(),'kernel','math','lib'),
     )
-    TEST_ENV.prepend('PYTHONPATH', join_paths(meson.build_root(),'python')+':'+join_paths(meson.build_root(), 'subprojects/pmt/python') )
+    TEST_ENV.prepend('PYTHONPATH', join_paths(meson.build_root(),'python')+':'+
+                                   join_paths(meson.build_root(), 'subprojects/pmt/python') )
 endif
 
 prefix = get_option('prefix')

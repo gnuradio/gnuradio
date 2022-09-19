@@ -16,7 +16,9 @@ deps = [gnuradio_gr_dep,
                 gnuradio_blocklib_math_dep,
                 gnuradio_scheduler_nbt_dep,
                 gtest_dep,
-                gr_kernel_lib_dep]
+                gr_kernel_math_lib_dep,
+                gr_kernel_filter_lib_dep,
+                gr_kernel_fft_lib_dep,]
 
 foreach qa : qa_srcs
     e = executable(qa, 

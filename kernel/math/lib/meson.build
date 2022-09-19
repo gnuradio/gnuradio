@@ -1,0 +1,49 @@
+deps = [gnuradio_gr_dep]
+
+srcs = [
+    'fast_atan2f.cc',
+    'fxpt.cc',
+    'random.cc'
+]
+
+#### Generate the Sin/Cos Tables
+gen_srcs = custom_target('gen_sin_table',
+                        input : [],
+                        output : ['sine_table.h'], 
+                        command : ['python3', join_paths(meson.current_source_dir(),'gen_sine_table.py'),
+                            '--output', '@OUTPUT0@'],  
+                        install : false)
+
+deps += declare_dependency(sources : [gen_srcs[0]] )
+
+incdir = include_directories(['../include'])
+gr_kernel_math_lib = shared_library('gnuradio-kernel-math', 
+    srcs, 
+    include_directories : incdir, 
+    install : true,
+    link_language: 'cpp',
+    dependencies : deps)
+
+gr_kernel_math_lib_dep = declare_dependency(include_directories : incdir,
+					   link_with : gr_kernel_math_lib,
+                       dependencies : deps)
+
+cmake_conf = configuration_data()
+cmake_conf.set('libdir', join_paths(prefix,get_option('libdir')))
+cmake_conf.set('module', 'kernel-math')
+cmake.configure_package_config_file(
+  name : 'gnuradio-kernel-math',
+  input : join_paths(meson.source_root(),'cmake','Modules','gnuradioConfigModule.cmake.in'),
+  install_dir : get_option('prefix') / 'lib' / 'cmake' / 'gnuradio',
+  configuration : cmake_conf
+)
+
+pkg = import('pkgconfig')
+libs = []     # the library/libraries users need to link against
+h = ['.'] # subdirectories of ${prefix}/${includedir} to add to header path
+pkg.generate(libraries : libs,
+             subdirs : h,
+             version : meson.project_version(),
+             name : 'libgnuradio-kernel-math',
+             filebase : 'gnuradio-kernel-math',
+             description : 'GNU Radio Kernel - Math')

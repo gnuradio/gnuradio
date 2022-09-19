@@ -53,7 +53,12 @@ if path.endswith(path_ending):
     __path__.append(os.path.join(build_path, 'schedulers', 'nbt', 'python', 'gnuradio'))
 
     ###KERNEL###
-    __path__.append(os.path.join(build_path, 'kernel', 'python', 'gnuradio'))
+    __path__.append(os.path.join(build_path, 'kernel', 'analog', 'python'))
+    __path__.append(os.path.join(build_path, 'kernel', 'digital', 'python'))
+    __path__.append(os.path.join(build_path, 'kernel', 'fft', 'python'))
+    __path__.append(os.path.join(build_path, 'kernel', 'filter', 'python'))
+    __path__.append(os.path.join(build_path, 'kernel', 'math', 'python'))
+    
 
     ###BLOCKLIB###
     __path__.append(os.path.join(build_path, 'blocklib', 'analog', 'python', 'gnuradio'))
