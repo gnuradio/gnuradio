@@ -268,7 +268,7 @@ cmake_conf.set('libdir', join_paths(prefix,get_option('libdir')))
 cmake.configure_package_config_file(
   name : 'gnuradio-runtime',
   input : join_paths(meson.source_root(),'cmake','Modules','gnuradioConfig.cmake.in'),
-  install_dir : get_option('prefix') / 'lib' / 'cmake' / 'gnuradio',
+  install_dir : get_option('prefix') / get_option('libdir') / 'cmake' / 'gnuradio',
   configuration : cmake_conf
 )
 

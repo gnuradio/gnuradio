@@ -42,7 +42,11 @@ gnuradio_blocklib_{{module}}_pybind = py3.extension_module('{{module}}_python',
     dependencies : [gnuradio_blocklib_{{module}}_dep, python3_dep, pybind11_dep],
     link_language : 'cpp',
     install : true,
-    install_dir : join_paths(py3.get_install_dir(),'gnuradio','{{module}}')
+{% if GR_PURELIB %}
+    install_dir : join_paths(py3.get_install_dir(pure: true),'gnuradio','{{module}}')
+{% else %}
+    install_dir : join_paths(py3.get_install_dir(pure: false),'gnuradio','{{module}}')
+{% endif %}
 )
 
 gnuradio_blocklib_{{module}}_pybind_dep = declare_dependency(include_directories : incdir,
@@ -51,4 +55,8 @@ gnuradio_blocklib_{{module}}_pybind_dep = declare_dependency(include_directories
 
 
 # Target for pure python
-py3.install_sources(srcs, subdir : join_paths('gnuradio','{{module}}'))
+{% if GR_PURELIB %}
+py3.install_sources(srcs, subdir : join_paths('gnuradio','{{module}}'), pure: true)
+{% else %}
+py3.install_sources(srcs, subdir : join_paths('gnuradio','{{module}}'), pure: false)
+{% endif %}

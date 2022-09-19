@@ -19,4 +19,4 @@ configure_file(copy: true,
 )
 endforeach
 
-py3.install_sources(files(srcs), subdir : join_paths('gnuradio','gr'))
+py3.install_sources(files(srcs), subdir : join_paths('gnuradio','gr'), pure : py3_purelib)

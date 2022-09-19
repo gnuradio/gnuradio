@@ -8,7 +8,7 @@ gnuradio_scheduler_nbt_pybind = py3.extension_module('scheduler_nbt_python',
     include_directories: incdir_numpy,
     link_language : 'cpp',
     install : true,
-    install_dir : join_paths(py3.get_install_dir(),'gnuradio','schedulers','nbt')
+    install_dir : join_paths(py3.get_install_dir( pure : py3_purelib),'gnuradio','schedulers','nbt')
 )
 
 gnuradio_runtime_pybind_dep = declare_dependency(

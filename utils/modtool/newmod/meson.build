@@ -34,7 +34,7 @@ json_dep = dependency('nlohmann_json')
 if (get_option('enable_testing'))
     TEST_ENV = environment()
     TEST_ENV.prepend('LD_LIBRARY_PATH', 
-      join_paths( meson.build_root(),'blocklib','newmod','lib'),
+      join_paths( meson.build_root(),'blocklib','newmod',get_option('libdir')),
     )
     TEST_ENV.prepend('PYTHONPATH', join_paths(meson.build_root(),'blocklib/newmod/python'))
 endif

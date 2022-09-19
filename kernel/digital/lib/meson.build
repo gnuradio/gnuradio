@@ -22,7 +22,7 @@ cmake_conf.set('module', 'kernel-digital')
 cmake.configure_package_config_file(
   name : 'gnuradio-kernel-digital',
   input : join_paths(meson.source_root(),'cmake','Modules','gnuradioConfigModule.cmake.in'),
-  install_dir : get_option('prefix') / 'lib' / 'cmake' / 'gnuradio',
+  install_dir : get_option('prefix') / get_option('libdir') / 'cmake' / 'gnuradio',
   configuration : cmake_conf
 )
 

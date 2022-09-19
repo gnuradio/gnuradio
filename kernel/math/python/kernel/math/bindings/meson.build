@@ -13,7 +13,7 @@ kernel_math_pybind = py3.extension_module('kernel_math_python',
     link_language : 'cpp',
     install : true,
     cpp_args : cpp_args,
-    install_dir : join_paths(py3.get_install_dir(),'gnuradio','kernel','math')
+    install_dir : join_paths(py3_install_dir,'gnuradio','kernel','math')
 )
 
 kernel_math_pybind_dep = declare_dependency(

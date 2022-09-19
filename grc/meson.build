@@ -27,19 +27,20 @@ subdir('scripts')
 
 install_subdir(
   'core',
-  install_dir         : join_paths(py3.get_install_dir(),'gnuradio','grc'),
+  install_dir         : join_paths(py3_install_dir,'gnuradio','grc'),
   strip_directory     : false,
 )
 
 install_subdir(
   'converter',
-  install_dir         : join_paths(py3.get_install_dir(),'gnuradio','grc'),
+  install_dir         : join_paths(py3_install_dir,'gnuradio','grc'),
   strip_directory     : false,
 )
 
 install_subdir(
   'gui',
-  install_dir         : join_paths(py3.get_install_dir(),'gnuradio','grc'),
+
+  install_dir         : join_paths(py3_install_dir,'gnuradio','grc'),
   strip_directory     : false,
 )
 
@@ -50,4 +51,13 @@ py3.install_sources([
     'compiler.py',
     'main.py',
 ], 
-subdir : join_paths('gnuradio','grc'))
+subdir : join_paths('gnuradio','grc'),
+pure : py3_purelib)
+
+#install_data([
+#    '__init__.py',
+#    '__main__.py',
+#    'compiler.py',
+#    'main.py',
+#], 
+#install_dir : join_paths(py3_install_dir,'gnuradio','grc'))
