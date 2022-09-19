@@ -18,6 +18,7 @@
 namespace py = pybind11;
 
 void bind_firdes(py::module&);
+void bind_pm_remez(py::module&);
 
 // We need this hack because import_array() returns NULL
 // for newer Python versions.
@@ -37,4 +38,5 @@ PYBIND11_MODULE(kernel_filter_python, m)
 
     init_numpy();
     bind_firdes(m);
+    bind_pm_remez(m);
 }
