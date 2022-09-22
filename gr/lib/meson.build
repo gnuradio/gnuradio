@@ -61,7 +61,8 @@ runtime_sources = [
   'hier_block.cc',
   'prefs.cc',
   'tag.cc',
-  'registry.cc'
+  'registry.cc',
+  'buffer_cpu_host.cc'
 ]
 
 if IMPLEMENT_CUDA

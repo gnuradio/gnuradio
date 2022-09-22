@@ -6,4 +6,8 @@ if (get_option('enable_python'))
     subdir('python/gnuradio/gr')
 endif
 
+if (get_option('enable_testing'))
+    subdir('test')
+endif
+
 install_data(sources : 'gr.conf.yml', install_dir : 'etc/gnuradio/conf.d')
