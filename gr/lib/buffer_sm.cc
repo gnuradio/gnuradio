@@ -154,7 +154,7 @@ size_t buffer_sm::space_available()
     // Only half fill the buffer
     // Leave extra space in case the reader gets stuck and needs realignment
 
-    space = std::min(space, _num_items / 2);
+    space = std::min(space, _num_items);
 
     return space;
 }
