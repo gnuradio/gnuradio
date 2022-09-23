@@ -9,14 +9,14 @@
 #include <gnuradio/buffer_sm.h>
 
 namespace gr {
-enum class buffer_cpu_host_type { D2D, H2D, D2H, UNKNOWN };
+enum class buffer_cpu_host_type { H2H, D2D, H2D, D2H, UNKNOWN };
 class buffer_cpu_host_reader;
 class buffer_cpu_host : public buffer_sm
 {
 private:
-    uint8_t* _host_buffer;
-    uint8_t* _device_buffer;
-    buffer_cpu_host_type _transfer_type = buffer_cpu_host_type::UNKNOWN;
+    std::vector<uint8_t> _host_buffer;
+    std::vector<uint8_t> _device_buffer;
+    buffer_cpu_host_type _transfer_type = buffer_cpu_host_type::H2H;
 
 public:
     buffer_cpu_host(size_t num_items,
@@ -41,8 +41,8 @@ public:
     virtual bool output_blocked_callback(bool force = false) override
     {
         switch (_transfer_type) {
+        case buffer_cpu_host_type::H2H:
         case buffer_cpu_host_type::H2D:
-            return output_blocked_callback_logic(force, std::memmove);
         case buffer_cpu_host_type::D2D:
         case buffer_cpu_host_type::D2H:
             return output_blocked_callback_logic(force, std::memmove);
@@ -94,9 +94,9 @@ public:
             // GR_LOG_DEBUG(d_debug_logger, "Calling adjust_buffer_data ");
 
             switch (_buffer_cpu_host->transfer_type()) {
+            case buffer_cpu_host_type::H2H:
             case buffer_cpu_host_type::H2D:
             case buffer_cpu_host_type::D2D:
-                return _buffer_cpu_host->adjust_buffer_data(std::memcpy, std::memmove);
             case buffer_cpu_host_type::D2H:
                 return _buffer_cpu_host->adjust_buffer_data(std::memcpy, std::memmove);
             default:
@@ -119,7 +119,7 @@ public:
     }
     buffer_cpu_host_type buffer_type() { return _buffer_type; }
     static std::shared_ptr<buffer_properties>
-    make(buffer_cpu_host_type buffer_type_ = buffer_cpu_host_type::D2D)
+    make(buffer_cpu_host_type buffer_type_ = buffer_cpu_host_type::H2H)
     {
         return std::static_pointer_cast<buffer_properties>(
             std::make_shared<buffer_cpu_host_properties>(buffer_type_));
@@ -129,7 +129,8 @@ private:
     buffer_cpu_host_type _buffer_type;
 };
 
-
+#define BUFFER_CPU_HOST_ARGS_H2H \
+    buffer_cpu_host_properties::make(buffer_cpu_host_type::H2H)
 #define BUFFER_CPU_HOST_ARGS_H2D \
     buffer_cpu_host_properties::make(buffer_cpu_host_type::H2D)
 #define BUFFER_CPU_HOST_ARGS_D2H \

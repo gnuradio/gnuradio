@@ -1,5 +1,6 @@
 #include <gnuradio/block_group_properties.h>
 #include <gnuradio/buffer_cpu_vmcirc.h>
+#include <gnuradio/buffer_cpu_host.h>
 // #include <gnuradio/buffer_cpu_simple.h>
 #include <gnuradio/graph_utils.h>
 #include <gnuradio/scheduler.h>
@@ -25,8 +26,10 @@ public:
     }
     scheduler_nbt(const scheduler_nbt_options& opts) : scheduler(opts.name), _opts(opts)
     {
+        // _default_buf_properties =
+        //     buffer_cpu_vmcirc_properties::make(buffer_cpu_vmcirc_type::AUTO);
         _default_buf_properties =
-            buffer_cpu_vmcirc_properties::make(buffer_cpu_vmcirc_type::AUTO);
+            buffer_cpu_host_properties::make(buffer_cpu_host_type::H2H);
     }
     ~scheduler_nbt() override{};
 

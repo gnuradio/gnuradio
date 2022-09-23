@@ -9,23 +9,20 @@
 
 namespace gr {
 buffer_cpu_host::buffer_cpu_host(size_t num_items,
-                               size_t item_size,
-                               buffer_cpu_host_type type,
-                               std::shared_ptr<buffer_properties> buf_properties)
+                                 size_t item_size,
+                                 buffer_cpu_host_type type,
+                                 std::shared_ptr<buffer_properties> buf_properties)
     : gr::buffer_sm(num_items, item_size, buf_properties), _transfer_type(type)
 {
-    static std::vector<uint8_t> __host_buffer(_buf_size);
-    static std::vector<uint8_t> __device_buffer(_buf_size);
-
-    _host_buffer = __host_buffer.data();
-    _device_buffer = __device_buffer.data();
+    _host_buffer.resize(_buf_size);
+    _device_buffer.resize(_buf_size);
 
     set_type("buffer_cpu_host_" + std::to_string((int)_transfer_type));
 }
 
 buffer_uptr buffer_cpu_host::make(size_t num_items,
-                                 size_t item_size,
-                                 std::shared_ptr<buffer_properties> buffer_properties)
+                                  size_t item_size,
+                                  std::shared_ptr<buffer_properties> buffer_properties)
 {
     auto cbp = std::static_pointer_cast<buffer_cpu_host_properties>(buffer_properties);
     if (cbp != nullptr) {
@@ -40,7 +37,8 @@ buffer_uptr buffer_cpu_host::make(size_t num_items,
 
 void* buffer_cpu_host::read_ptr(size_t index)
 {
-    if (_transfer_type == buffer_cpu_host_type::D2H) {
+    if (_transfer_type == buffer_cpu_host_type::D2H ||
+        _transfer_type == buffer_cpu_host_type::H2H) {
         return (void*)&_host_buffer[index];
     }
     else {
@@ -49,7 +47,8 @@ void* buffer_cpu_host::read_ptr(size_t index)
 }
 void* buffer_cpu_host::write_ptr()
 {
-    if (_transfer_type == buffer_cpu_host_type::H2D) {
+    if (_transfer_type == buffer_cpu_host_type::H2D ||
+        _transfer_type == buffer_cpu_host_type::H2H) {
         return (void*)&_host_buffer[_write_index];
     }
     else {
@@ -67,14 +66,10 @@ void buffer_cpu_host::post_write(int num_items)
     // num_items were written to the buffer
 
     if (_transfer_type == buffer_cpu_host_type::H2D) {
-        memcpy(&_device_buffer[wi1],
-                        &_host_buffer[wi1],
-                        bytes_written);
+        memcpy(&_device_buffer[wi1], &_host_buffer[wi1], bytes_written);
     }
     else if (_transfer_type == buffer_cpu_host_type::D2H) {
-        memcpy(&_host_buffer[wi1],
-                        &_device_buffer[wi1],
-                        bytes_written);
+        memcpy(&_host_buffer[wi1], &_device_buffer[wi1], bytes_written);
     }
 
     // advance the write pointer
