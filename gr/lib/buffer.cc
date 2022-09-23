@@ -114,6 +114,33 @@ void buffer::prune_tags()
     }
 }
 
+
+void buffer::on_lock(std::unique_lock<std::mutex>& lock)
+{
+    // NOTE: the protecting mutex (scoped_lock) is held by the custom_lock object
+
+    // Wait until no other callback is active and no pointers are active for
+    // the buffer, then mark the callback flag active.
+    d_cv.wait(lock, [this]() {
+        return (d_callback_flag == false && d_active_pointer_counter == 0);
+    });
+    d_callback_flag = true;
+}
+
+void buffer::on_unlock()
+{
+    // NOTE: the protecting mutex (scoped_lock) is held by the custom_lock object
+
+    // Mark the callback flag inactive and notify anyone waiting
+    d_callback_flag = false;
+    d_cv.notify_all();
+}
+
+
+/**************************************************************************************/
+/*******                    BUFFER_READER                 *****************************/
+/**************************************************************************************/
+
 size_t buffer_reader::items_available() { return bytes_available() / _itemsize; }
 
 size_t buffer_reader::bytes_available()

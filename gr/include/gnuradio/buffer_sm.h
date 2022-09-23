@@ -44,6 +44,10 @@ public:
     output_blocked_callback_logic(bool force = false,
                                   memmove_func_t memmove_func = std::memmove);
 
+    /*!
+     * \brief Return true if thread is ready to call the callback, false otherwise
+     */
+    bool output_blkd_cb_ready(int output_multiple) override;
     bool output_blocked_callback(bool force = false) override;
     size_t space_available() override;
 
@@ -79,6 +83,11 @@ public:
 
     void post_read(int num_items) override;
 
+    /*!
+     * \brief Return true if thread is ready to call input_blocked_callback,
+     * false otherwise
+     */
+    bool input_blkd_cb_ready(int items_required, unsigned read_index) override;
     bool input_blocked_callback(size_t items_required) override;
     size_t bytes_available() override;
 };
