@@ -328,14 +328,14 @@ size_t buffer_sm_reader::bytes_available()
     //              total_read(),
     //              _buffer->total_written());
 
-    if (_buffer->total_written() - total_read() < ret * _itemsize) {
-        // GR_LOG_DEBUG(d_debug_logger,
-        //              "check_math {} {} {} {}",
-        //              _buffer->total_written() - total_read(),
-        //              ret,
-        //              total_read(),
-        //              _buffer->total_written());
-    }
+    // if (_itemsize*(_buffer->total_written() - total_read()) < ret) {
+    //     d_debug_logger->debug(
+    //                  "check_math {} {} {} {}",
+    //                  _buffer->total_written() - total_read(),
+    //                  ret,
+    //                  total_read(),
+    //                  _buffer->total_written());
+    // }
 
     return ret; // in bytes
 }
