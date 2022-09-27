@@ -39,6 +39,14 @@ parameters:
     label: Filter Key
     dtype: string
     default: ''
+-   id: drop_on_hwm
+    category: Advanced
+    label: On Full Buffer
+    dtype: enum
+    default: 'True'
+    options: ['True', 'False']
+    option_labels: ['Drop', 'Block']
+    hide: 'part'
 
 inputs:
 -   domain: stream
@@ -48,7 +56,7 @@ inputs:
 templates:
     imports: from gnuradio import zeromq
     make: zeromq.pub_sink(${type.itemsize}, ${vlen}, ${address}, ${timeout}, ${pass_tags},
-        ${hwm}, ${key})
+        ${hwm}, ${key}, ${drop_on_hwm})
         
 cpp_templates:
     includes: [ '#include <gnuradio/zeromq/pub_sink.h>' ]
@@ -58,7 +66,9 @@ cpp_templates:
         const_cast<char *>(${address}${'.c_str())' if str(address)[0] not in '"\'' else ')'},
         ${timeout}, 
         ${pass_tags}, 
-        ${hwm});
+        ${hwm},
+        ${key},
+        ${drop_on_hwm});
     link: ['gnuradio::gnuradio-zeromq']      
     translations:
       'True': 'true'
