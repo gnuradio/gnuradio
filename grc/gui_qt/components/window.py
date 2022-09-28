@@ -32,8 +32,7 @@ from PyQt5.QtGui import QStandardItemModel
 
 # Custom modules
 from . import FlowgraphView
-from .. import base, Constants, Utils
-from ..errorsdialog import ErrorsDialog, PropsDialog
+from .. import base
 from .undoable_actions import ChangeStateAction, RotateAction, EnableAction, DisableAction, BypassAction
 
 # Logging
@@ -332,7 +331,6 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
         self.actions['undo'].setEnabled(canUndo)
         self.actions['redo'].setEnabled(canRedo)
-        self.actions['errors'].setEnabled(not valid_fg)
         self.actions['generate'].setEnabled(valid_fg)
         self.actions['execute'].setEnabled(valid_fg)
         self.actions['kill'].setEnabled(False) # TODO: Set this properly
@@ -677,42 +675,29 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         self.currentFlowgraph.select_all()
 
     def rotate_ccw_triggered(self):
+        # Pass to Undo/Redo
         log.debug('rotate_ccw')
         rotateCommand = RotateAction(self.currentFlowgraph, -90)
         self.currentFlowgraph.undoStack.push(rotateCommand)
         self.updateActions()
 
     def rotate_cw_triggered(self):
+        # Pass to Undo/Redo
         log.debug('rotate_cw')
         rotateCommand = RotateAction(self.currentFlowgraph, 90)
         self.currentFlowgraph.undoStack.push(rotateCommand)
         self.updateActions()
 
     def errors_triggered(self):
-        log.warning('errors')
-        dialog = ErrorsDialog(self.currentFlowgraph)
-        dialog.exec()
+        log.debug('errors')
 
     def find_triggered(self):
         log.debug('find block')
         self._app().BlockLibrary._search_bar.setFocus()
 
-    def get_involved_triggered(self):
-        log.debug('get involved')
-        ad = QtWidgets.QMessageBox()
-        ad.setWindowTitle("Get Involved Instructions")
-        ad.setText("""\
-            <b>Welcome to the GNU Radio Community!</b><br/><br/>
-            For more details on contributing to GNU Radio and getting engaged with our great community visit <a href="https://wiki.gnuradio.org/index.php/HowToGetInvolved">here</a>.<br/><br/>
-            You can also join our <a href="https://chat.gnuradio.org/">Matrix chat server</a>, IRC Channel (#gnuradio) or contact through our <a href="https://lists.gnu.org/mailman/listinfo/discuss-gnuradio">mailing list (discuss-gnuradio)</a>.
-        """)
-        ad.exec()
-
     def about_triggered(self):
         log.debug('about')
-        config = self.platform.config
-        py_version = sys.version.split()[0]
-        ad = QtWidgets.QMessageBox.about(self, "About GNU Radio", f"GNU Radio {config.version} (Python {py_version})")
+        self.about()
 
     def about_qt_triggered(self):
         log.debug('about_qt')
@@ -754,25 +739,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
     def types_triggered(self):
         log.debug('types')
-        colors = [(name, color)
-              for name, key, sizeof, color in Constants.CORE_TYPES]
-        max_len = 10 + max(len(name) for name, code in colors)
-
-        message = """
-        <table>
-        <tbody>
-        """
-
-        message += '\n'.join(
-            '<tr bgcolor="{color}"><td><tt>{name}</tt></td></tr>'
-            ''.format(color=color, name=name)
-            for name, color in colors
-        )
-        message += "</tbody></table>"
-        ad = QtWidgets.QMessageBox()
-        ad.setWindowTitle("Stream Types")
-        ad.setText(message)
-        ad.exec()
+        self.types()
 
     def preferences_triggered(self):
         log.debug('preferences')
