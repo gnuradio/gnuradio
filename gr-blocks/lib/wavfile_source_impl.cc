@@ -38,10 +38,17 @@ wavfile_source_impl::wavfile_source_impl(const char* filename, bool repeat)
     SF_INFO sfinfo;
 
     sfinfo.format = 0;
+    errno = 0;
     if (!(d_fp = sf_open(filename, SFM_READ, &sfinfo))) {
-        GR_LOG_ERROR(d_logger,
-                     boost::format("sf_open failed: %s: %s") % filename %
-                         strerror(errno));
+        if (errno) {
+            GR_LOG_ERROR(d_logger,
+                         boost::format("sf_open failed: %s: %s") % filename %
+                             strerror(errno));
+        } else {
+            GR_LOG_ERROR(d_logger,
+                         boost::format("sf_open failed: %s: %s") % filename %
+                             sf_strerror(NULL));
+        }
         throw std::runtime_error("Can't open WAV file.");
     }
 
