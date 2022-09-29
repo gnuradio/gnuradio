@@ -2,7 +2,7 @@ import logging
 
 # third-party modules
 from PyQt5 import QtGui, QtCore, QtWidgets
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QUrl
 
 from . import colors
 from ... import Constants
@@ -351,6 +351,8 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
         self.parent.registerBlockMovement(self)
         try:
             self.parent.app.DocumentationTab.setText(self.documentation[self.key])
+            prefix = str(self.parent.app.platform.Config.wiki_block_docs_url_prefix)
+            self.parent.app.WikiTab.setURL(QUrl(prefix + self.label.replace(" ", "_")))
         except KeyError:
             pass
 

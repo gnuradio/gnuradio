@@ -72,6 +72,8 @@ class Application(QtWidgets.QApplication):
         stopwatch.lap('blocklibrary')
         self.DocumentationTab = components.DocumentationTab()
         stopwatch.lap('documentationtab')
+        self.WikiTab = components.WikiTab()
+        stopwatch.lap('wikitab')
 
         # Debug times
         log.debug("Loaded MainWindow controller - {:.4f}s".format(stopwatch.elapsed("mainwindow")))
