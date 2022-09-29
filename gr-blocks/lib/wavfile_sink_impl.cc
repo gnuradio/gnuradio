@@ -112,8 +112,16 @@ bool wavfile_sink_impl::open(const char* filename)
     if (d_append) {
         // We are appending to an existing file, be extra careful here.
         sfinfo.format = 0;
+        errno = 0;
         if (!(d_new_fp = sf_open(filename, SFM_RDWR, &sfinfo))) {
-            d_logger->error("sf_open(1) failed: {:s}: {:s}", filename, strerror(errno));
+            if (errno) {
+                d_logger->error(
+                    "sf_open(1) failed: {:s}: {:s}", filename, strerror(errno));
+            } else {
+                d_logger->error(
+                    "sf_open(1) failed: {:s}: {:s}", filename, sf_strerror(NULL));
+            }
+
             return false;
         }
         if (d_h.sample_rate != sfinfo.samplerate || d_h.nchans != sfinfo.channels ||
@@ -204,8 +212,16 @@ bool wavfile_sink_impl::open(const char* filename)
             }
             break;
         }
+        errno = 0;
         if (!(d_new_fp = sf_open(filename, SFM_WRITE, &sfinfo))) {
-            d_logger->error("sf_open(2) failed: {:s}: {:s}", filename, strerror(errno));
+            if (errno) {
+                d_logger->error(
+                    "sf_open(2) failed: {:s}: {:s}", filename, strerror(errno));
+            } else {
+                d_logger->error(
+                    "sf_open(2) failed: {:s}: {:s}", filename, sf_strerror(NULL));
+            }
+
             return false;
         }
     }
