@@ -407,7 +407,11 @@ constellation_calcdist::constellation_calcdist(std::vector<gr_complex> constell,
 // Inefficient.
 unsigned int constellation_calcdist::decision_maker(const gr_complex* sample)
 {
-    return get_closest_point(sample);
+    const auto point = get_closest_point(sample);
+    if (d_apply_pre_diff_code) {
+        return d_pre_diff_code.at(point);
+    }
+    return point;
 }
 
 
