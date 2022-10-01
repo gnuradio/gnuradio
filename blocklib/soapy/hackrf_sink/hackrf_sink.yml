@@ -12,6 +12,7 @@ typekeys:
         # - rf32
 
 grc:
+  flags: [python]
   templates:
     imports: from gnuradio import soapy
     make: |-
