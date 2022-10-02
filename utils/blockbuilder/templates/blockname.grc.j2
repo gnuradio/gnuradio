@@ -86,7 +86,7 @@ parameters:
     hide: 'part'
 
 inputs:
-{% for port in ports -%}{%- if port['direction'] == 'input'%}
+{% for port in ports if port['direction'] == 'input'%}
 -   domain: {{'${impl.domain}' if port['domain'] == 'stream' else port['domain']}}
 {% if type_inst %}
     dtype: ${ type_inst.{{port['type']|grc_type}} }
@@ -97,16 +97,17 @@ inputs:
     {%if 'multiplicity' in port %}multiplicity: {{port['multiplicity']|grc_type(ref=True)}}{% endif %}
     label: {{port['id']}}
     optional: {{ port['optional'] if 'optional' in port else 'false' }}
-{% endif %}{% endfor %}
+{% endfor %}
 -   domain: message
     id: param_update
     label: param
     optional: true
     hide: ${ not showports }
 
+{% for port in ports if port['direction'] == 'output'%}
+{% if loop.first %}
 outputs:
-{% for port in ports -%}
-{% if port['direction'] == 'output'-%}
+{% endif %}
 -   domain: {{'${impl.domain}' if port['domain'] == 'stream' else port['domain']}}
 {% if type_inst %}
     dtype: ${ type_inst.{{port['type']|grc_type}} }
@@ -117,7 +118,6 @@ outputs:
     {%if 'multiplicity' in port %}multiplicity: {{port['multiplicity']|grc_type(ref=True)}}{% endif %}
     label: {{port['id']}}
     optional: {{ port['optional'] if 'optional' in port else 'false' }}
-{% endif -%}
 {% endfor -%}
 
 templates:
