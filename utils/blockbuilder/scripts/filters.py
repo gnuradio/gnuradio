@@ -72,13 +72,21 @@ def grc_type(input, vec=False, ref=False):
     
     if input in type_lookup:
         x = type_lookup[input][2]
+
     else:
-        x = get_linked_value(input)
         if (ref):
-            x = f'${{{x}}}'
+            if input.startswith('typekeys/'):
+                x = get_linked_value(input)
+                if (vec):
+                    x = f'${{{x}.vec}}'
+                else:
+                    x = f'${{{x}}}'
+            else:
+                x = 'raw'
+        else:
+            x = 'raw'
         
-    if (vec):
-        return f'{x}_vector'
+
 
     return x
 
