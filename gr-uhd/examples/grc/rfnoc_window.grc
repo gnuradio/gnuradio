@@ -1,0 +1,412 @@
+options:
+  parameters:
+    author: Jonathon Pendlum
+    catch_exceptions: 'True'
+    category: Custom
+    cmake_opt: ''
+    comment: ''
+    copyright: ''
+    description: ''
+    gen_cmake: 'On'
+    gen_linking: dynamic
+    generate_options: qt_gui
+    hier_block_src_path: '.:'
+    id: rfnoc_radio_window
+    max_nouts: '0'
+    output_language: python
+    placement: (0,0)
+    qt_qss_theme: ''
+    realtime_scheduling: ''
+    run: 'True'
+    run_command: '{python} -u {filename}'
+    run_options: prompt
+    sizing_mode: fixed
+    thread_safe_setters: ''
+    title: 'RFNoC: Window Example'
+    window_size: ''
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 8]
+    rotation: 0
+    state: enabled
+
+blocks:
+- name: coeffs
+  id: variable
+  parameters:
+    comment: ''
+    value: getattr(window, qt_window_chooser)(num_coeffs)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [960, 8.0]
+    rotation: 0
+    state: true
+- name: device_type
+  id: variable
+  parameters:
+    comment: ''
+    value: '"type=x300"'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [240, 80.0]
+    rotation: 0
+    state: enabled
+- name: device_type
+  id: variable
+  parameters:
+    comment: ''
+    value: '"type=e3xx"'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [376, 152.0]
+    rotation: 0
+    state: disabled
+- name: device_type
+  id: variable
+  parameters:
+    comment: ''
+    value: '"type=n3xx"'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [376, 80.0]
+    rotation: 0
+    state: disabled
+- name: device_type
+  id: variable
+  parameters:
+    comment: ''
+    value: '"type=x4xx"'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [240, 152.0]
+    rotation: 0
+    state: disabled
+- name: num_coeffs
+  id: variable
+  parameters:
+    comment: ''
+    value: '4096'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [632, 8.0]
+    rotation: 0
+    state: true
+- name: qt_window_chooser
+  id: variable_qtgui_chooser
+  parameters:
+    comment: ''
+    gui_hint: 0,0,1,1
+    label: Window Type
+    label0: Blackman-Harris
+    label1: Hanning
+    label2: Flat Top
+    label3: Triangle
+    label4: ''
+    labels: '[]'
+    num_opts: '4'
+    option0: blackmanharris
+    option1: hanning
+    option2: flattop
+    option3: bartlett
+    option4: '4'
+    options: '[0, 1, 2]'
+    orient: Qt.QVBoxLayout
+    type: string
+    value: blackmanharris
+    widget: radio_buttons
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [752, 12.0]
+    rotation: 0
+    state: true
+- name: uhd_rfnoc_graph
+  id: uhd_rfnoc_graph
+  parameters:
+    alias: ''
+    clock_source_0: ''
+    clock_source_1: ''
+    clock_source_2: ''
+    clock_source_3: ''
+    clock_source_4: ''
+    clock_source_5: ''
+    clock_source_6: ''
+    clock_source_7: ''
+    comment: ''
+    dev_addr: device_type
+    dev_args: ''
+    num_mboards: '1'
+    time_source_0: ''
+    time_source_1: ''
+    time_source_2: ''
+    time_source_3: ''
+    time_source_4: ''
+    time_source_5: ''
+    time_source_6: ''
+    time_source_7: ''
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [240, 8.0]
+    rotation: 0
+    state: true
+- name: analog_const_source_x_0
+  id: analog_const_source_x
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    const: 1+1j
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: complex
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [24, 328.0]
+    rotation: 0
+    state: enabled
+- name: import_0
+  id: import
+  parameters:
+    alias: ''
+    comment: ''
+    imports: from gnuradio.fft import window
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 120.0]
+    rotation: 0
+    state: true
+- name: qtgui_time_sink_x_0
+  id: qtgui_time_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'False'
+    axislabels: 'True'
+    color1: blue
+    color10: dark blue
+    color2: red
+    color3: green
+    color4: black
+    color5: cyan
+    color6: magenta
+    color7: yellow
+    color8: dark red
+    color9: dark green
+    comment: ''
+    ctrlpanel: 'False'
+    entags: 'False'
+    grid: 'True'
+    gui_hint: 1,0,32,1
+    label1: I
+    label10: Signal 10
+    label2: Q
+    label3: Signal 3
+    label4: Signal 4
+    label5: Signal 5
+    label6: Signal 6
+    label7: Signal 7
+    label8: Signal 8
+    label9: Signal 9
+    legend: 'True'
+    marker1: '-1'
+    marker10: '-1'
+    marker2: '-1'
+    marker3: '-1'
+    marker4: '-1'
+    marker5: '-1'
+    marker6: '-1'
+    marker7: '-1'
+    marker8: '-1'
+    marker9: '-1'
+    name: '""'
+    nconnections: '1'
+    size: num_coeffs
+    srate: '1'
+    stemplot: 'False'
+    style1: '1'
+    style10: '1'
+    style2: '1'
+    style3: '1'
+    style4: '1'
+    style5: '1'
+    style6: '1'
+    style7: '1'
+    style8: '1'
+    style9: '1'
+    tr_chan: '0'
+    tr_delay: '2048'
+    tr_level: '0.999'
+    tr_mode: qtgui.TRIG_MODE_AUTO
+    tr_slope: qtgui.TRIG_SLOPE_POS
+    tr_tag: '""'
+    type: complex
+    update_time: '0.10'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    ylabel: Amplitude
+    ymax: '1.1'
+    ymin: '-0.1'
+    yunit: '""'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [976, 312.0]
+    rotation: 0
+    state: true
+- name: uhd_rfnoc_rx_streamer_0
+  id: uhd_rfnoc_rx_streamer
+  parameters:
+    affinity: ''
+    alias: ''
+    args: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_chans: '1'
+    otw: sc16
+    output_type: fc32
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [744, 336.0]
+    rotation: 0
+    state: true
+- name: uhd_rfnoc_tx_streamer_0
+  id: uhd_rfnoc_tx_streamer
+  parameters:
+    affinity: ''
+    alias: ''
+    args: ''
+    comment: ''
+    input_type: fc32
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_chans: '1'
+    otw: sc16
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [232, 336.0]
+    rotation: 0
+    state: true
+- name: uhd_rfnoc_window_0
+  id: uhd_rfnoc_window
+  parameters:
+    affinity: ''
+    alias: ''
+    block_args: ''
+    coeffs_float0: coeffs
+    coeffs_float1: coeffs
+    coeffs_float10: '[1.0]'
+    coeffs_float11: '[1.0]'
+    coeffs_float12: '[1.0]'
+    coeffs_float13: '[1.0]'
+    coeffs_float14: '[1.0]'
+    coeffs_float15: '[1.0]'
+    coeffs_float2: '[1.0]'
+    coeffs_float3: '[1.0]'
+    coeffs_float4: '[1.0]'
+    coeffs_float5: '[1.0]'
+    coeffs_float6: '[1.0]'
+    coeffs_float7: '[1.0]'
+    coeffs_float8: '[1.0]'
+    coeffs_float9: '[1.0]'
+    coeffs_int0: '[int(32767*num) for num in coeffs]'
+    coeffs_int1: '[int(32767*num) for num in coeffs]'
+    coeffs_int10: '[32767]'
+    coeffs_int11: '[32767]'
+    coeffs_int12: '[32767]'
+    coeffs_int13: '[32767]'
+    coeffs_int14: '[32767]'
+    coeffs_int15: '[32767]'
+    coeffs_int2: '[32767]'
+    coeffs_int3: '[32767]'
+    coeffs_int4: '[32767]'
+    coeffs_int5: '[32767]'
+    coeffs_int6: '[32767]'
+    coeffs_int7: '[32767]'
+    coeffs_int8: '[32767]'
+    coeffs_int9: '[32767]'
+    coeffs_type0: float
+    coeffs_type1: float
+    coeffs_type10: float
+    coeffs_type11: float
+    coeffs_type12: float
+    coeffs_type13: float
+    coeffs_type14: float
+    coeffs_type15: float
+    coeffs_type2: float
+    coeffs_type3: float
+    coeffs_type4: float
+    coeffs_type5: float
+    coeffs_type6: float
+    coeffs_type7: float
+    coeffs_type8: float
+    coeffs_type9: float
+    comment: ''
+    device_select: '-1'
+    instance_index: '-1'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_chans: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [480, 320.0]
+    rotation: 0
+    state: true
+
+connections:
+- [analog_const_source_x_0, '0', uhd_rfnoc_tx_streamer_0, '0']
+- [uhd_rfnoc_rx_streamer_0, '0', qtgui_time_sink_x_0, '0']
+- [uhd_rfnoc_tx_streamer_0, '0', uhd_rfnoc_window_0, '0']
+- [uhd_rfnoc_window_0, '0', uhd_rfnoc_rx_streamer_0, '0']
+
+metadata:
+  file_format: 1
+  grc_version: v3.11.0.0git-233-g1699c828
