@@ -23,7 +23,10 @@ if(ENABLE_UHD_RFNOC)
         rfnoc_ddc_python.cc
         rfnoc_duc_python.cc
         rfnoc_block_generic_python.cc
+        rfnoc_siggen_python.cc
+        rfnoc_window_python.cc
         rfnoc_graph_python.cc
+        rfnoc_fir_filter_python.cc
         rfnoc_rx_radio_python.cc
         rfnoc_rx_streamer_python.cc
         rfnoc_tx_radio_python.cc

@@ -1,0 +1,534 @@
+options:
+  parameters:
+    author: Brian Padalino
+    catch_exceptions: 'True'
+    category: Custom
+    cmake_opt: ''
+    comment: ''
+    copyright: ''
+    description: Example of using the RFNoC SigGen Block
+    gen_cmake: 'On'
+    gen_linking: dynamic
+    generate_options: qt_gui
+    hier_block_src_path: '.:'
+    id: rfnoc_siggen
+    max_nouts: '0'
+    output_language: python
+    placement: (0,0)
+    qt_qss_theme: ''
+    realtime_scheduling: ''
+    run: 'True'
+    run_command: '{python} -u {filename}'
+    run_options: prompt
+    sizing_mode: fixed
+    thread_safe_setters: ''
+    title: RFNoC SigGen Example
+    window_size: (1000,1000)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 8]
+    rotation: 0
+    state: enabled
+
+blocks:
+- name: amp
+  id: variable_qtgui_range
+  parameters:
+    comment: ''
+    gui_hint: (2, 0, 1, 1)
+    label: amp
+    min_len: '200'
+    orient: QtCore.Qt.Horizontal
+    outputmsgname: value
+    rangeType: float
+    showports: 'False'
+    start: '0'
+    step: '0.01'
+    stop: '1'
+    value: '1'
+    widget: counter_slider
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [968, 12.0]
+    rotation: 0
+    state: true
+- name: device_type
+  id: variable
+  parameters:
+    comment: ''
+    value: '"type=e3xx"'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [360, 152.0]
+    rotation: 0
+    state: disabled
+- name: device_type
+  id: variable
+  parameters:
+    comment: ''
+    value: '"type=x300"'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [224, 80.0]
+    rotation: 0
+    state: enabled
+- name: device_type
+  id: variable
+  parameters:
+    comment: ''
+    value: '"type=n3xx"'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [360, 80.0]
+    rotation: 0
+    state: disabled
+- name: device_type
+  id: variable
+  parameters:
+    comment: ''
+    value: '"type=x4xx"'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [224, 152.0]
+    rotation: 0
+    state: disabled
+- name: enable
+  id: variable_qtgui_check_box
+  parameters:
+    comment: 'Note: You have to click the ''enable''
+
+      box for data to run through this
+
+      flow graph!'
+    'false': 'False'
+    gui_hint: (0,0,1,1)
+    label: enable
+    'true': 'True'
+    type: bool
+    value: 'False'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [536, 8.0]
+    rotation: 0
+    state: true
+- name: fs
+  id: variable
+  parameters:
+    comment: ''
+    value: 10e6
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [416, 8.0]
+    rotation: 0
+    state: true
+- name: tone_freq
+  id: variable_qtgui_range
+  parameters:
+    comment: ''
+    gui_hint: (1,0,1,1)
+    label: tone_freq
+    min_len: '200'
+    orient: QtCore.Qt.Horizontal
+    outputmsgname: value
+    rangeType: float
+    showports: 'False'
+    start: -fs/2
+    step: '1'
+    stop: fs/2
+    value: fs/4
+    widget: counter_slider
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [816, 12.0]
+    rotation: 0
+    state: enabled
+- name: uhd_rfnoc_graph
+  id: uhd_rfnoc_graph
+  parameters:
+    alias: ''
+    clock_source_0: ''
+    clock_source_1: ''
+    clock_source_2: ''
+    clock_source_3: ''
+    clock_source_4: ''
+    clock_source_5: ''
+    clock_source_6: ''
+    clock_source_7: ''
+    comment: ''
+    dev_addr: device_type
+    dev_args: ''
+    num_mboards: '1'
+    time_source_0: ''
+    time_source_1: ''
+    time_source_2: ''
+    time_source_3: ''
+    time_source_4: ''
+    time_source_5: ''
+    time_source_6: ''
+    time_source_7: ''
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [224, 8.0]
+    rotation: 0
+    state: true
+- name: blocks_throttle_0
+  id: blocks_throttle
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    ignoretag: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    samples_per_second: fs
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [544, 344.0]
+    rotation: 0
+    state: enabled
+- name: qtgui_freq_sink_x_0
+  id: qtgui_freq_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'False'
+    average: '1.0'
+    axislabels: 'True'
+    bw: fs
+    color1: '"blue"'
+    color10: '"dark blue"'
+    color2: '"red"'
+    color3: '"green"'
+    color4: '"black"'
+    color5: '"cyan"'
+    color6: '"magenta"'
+    color7: '"yellow"'
+    color8: '"dark red"'
+    color9: '"dark green"'
+    comment: ''
+    ctrlpanel: 'False'
+    fc: '0'
+    fftsize: '1024'
+    freqhalf: 'True'
+    grid: 'False'
+    gui_hint: (3,0,1,1)
+    label: Relative Gain
+    label1: SigGen
+    label10: ''''''
+    label2: ''''''
+    label3: ''''''
+    label4: ''''''
+    label5: ''''''
+    label6: ''''''
+    label7: ''''''
+    label8: ''''''
+    label9: ''''''
+    legend: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    name: '""'
+    nconnections: '1'
+    norm_window: 'False'
+    showports: 'False'
+    tr_chan: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_tag: '""'
+    type: complex
+    units: dB
+    update_time: '0.10'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    wintype: window.WIN_BLACKMAN_hARRIS
+    ymax: '10'
+    ymin: '-140'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [816, 328.0]
+    rotation: 0
+    state: enabled
+- name: qtgui_time_sink_x_0
+  id: qtgui_time_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'False'
+    axislabels: 'True'
+    color1: blue
+    color10: dark blue
+    color2: red
+    color3: green
+    color4: black
+    color5: cyan
+    color6: magenta
+    color7: yellow
+    color8: dark red
+    color9: dark green
+    comment: ''
+    ctrlpanel: 'False'
+    entags: 'True'
+    grid: 'False'
+    gui_hint: (4,0,1,1)
+    label1: Re
+    label10: Signal 10
+    label2: Im
+    label3: Signal 3
+    label4: Signal 4
+    label5: Signal 5
+    label6: Signal 6
+    label7: Signal 7
+    label8: Signal 8
+    label9: Signal 9
+    legend: 'True'
+    marker1: '-1'
+    marker10: '-1'
+    marker2: '-1'
+    marker3: '-1'
+    marker4: '-1'
+    marker5: '-1'
+    marker6: '-1'
+    marker7: '-1'
+    marker8: '-1'
+    marker9: '-1'
+    name: '""'
+    nconnections: '1'
+    size: '1024'
+    srate: fs
+    stemplot: 'False'
+    style1: '1'
+    style10: '1'
+    style2: '1'
+    style3: '1'
+    style4: '1'
+    style5: '1'
+    style6: '1'
+    style7: '1'
+    style8: '1'
+    style9: '1'
+    tr_chan: '0'
+    tr_delay: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_slope: qtgui.TRIG_SLOPE_POS
+    tr_tag: '""'
+    type: complex
+    update_time: '0.10'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    ylabel: Amplitude
+    ymax: '1'
+    ymin: '-1'
+    yunit: '""'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [816, 416.0]
+    rotation: 0
+    state: enabled
+- name: snippet_0
+  id: snippet
+  parameters:
+    alias: ''
+    code: self.uhd_rfnoc_siggen_0.set_enable(False, 0);
+    comment: Automatically disables SigGen output when ending flowgraph
+    priority: '0'
+    section: main_after_stop
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [880, 160.0]
+    rotation: 0
+    state: true
+- name: uhd_rfnoc_rx_streamer_0
+  id: uhd_rfnoc_rx_streamer
+  parameters:
+    affinity: ''
+    alias: ''
+    args: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_chans: '1'
+    otw: sc16
+    output_type: fc32
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [312, 352.0]
+    rotation: 0
+    state: enabled
+- name: uhd_rfnoc_siggen_0
+  id: uhd_rfnoc_siggen
+  parameters:
+    affinity: ''
+    alias: ''
+    block_args: ''
+    comment: ''
+    device_select: '-1'
+    enable0: enable
+    enable1: 'True'
+    enable10: 'True'
+    enable11: 'True'
+    enable12: 'True'
+    enable13: 'True'
+    enable14: 'True'
+    enable15: 'True'
+    enable2: 'True'
+    enable3: 'True'
+    enable4: 'True'
+    enable5: 'True'
+    enable6: 'True'
+    enable7: 'True'
+    enable8: 'True'
+    enable9: 'True'
+    instance_index: '-1'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_chans: '1'
+    sample_rate0: fs
+    sample_rate1: fs
+    sample_rate10: 10e6
+    sample_rate11: 10e6
+    sample_rate12: 10e6
+    sample_rate13: 10e6
+    sample_rate14: 10e6
+    sample_rate15: 10e6
+    sample_rate2: 10e6
+    sample_rate3: 10e6
+    sample_rate4: 10e6
+    sample_rate5: 10e6
+    sample_rate6: 10e6
+    sample_rate7: 10e6
+    sample_rate8: 10e6
+    sample_rate9: 10e6
+    signal_amplitude0: amp
+    signal_amplitude1: '1.0'
+    signal_amplitude10: '1.0'
+    signal_amplitude11: '1.0'
+    signal_amplitude12: '1.0'
+    signal_amplitude13: '1.0'
+    signal_amplitude14: '1.0'
+    signal_amplitude15: '1.0'
+    signal_amplitude2: '1.0'
+    signal_amplitude3: '1.0'
+    signal_amplitude4: '1.0'
+    signal_amplitude5: '1.0'
+    signal_amplitude6: '1.0'
+    signal_amplitude7: '1.0'
+    signal_amplitude8: '1.0'
+    signal_amplitude9: '1.0'
+    signal_frequency0: tone_freq
+    signal_frequency1: '0.0'
+    signal_frequency10: '0.0'
+    signal_frequency11: '0.0'
+    signal_frequency12: '0.0'
+    signal_frequency13: '0.0'
+    signal_frequency14: '0.0'
+    signal_frequency15: '0.0'
+    signal_frequency2: '0.0'
+    signal_frequency3: '0.0'
+    signal_frequency4: '0.0'
+    signal_frequency5: '0.0'
+    signal_frequency6: '0.0'
+    signal_frequency7: '0.0'
+    signal_frequency8: '0.0'
+    signal_frequency9: '0.0'
+    signal_type0: SINE_WAVE
+    signal_type1: NOISE
+    signal_type10: NOISE
+    signal_type11: NOISE
+    signal_type12: NOISE
+    signal_type13: NOISE
+    signal_type14: NOISE
+    signal_type15: NOISE
+    signal_type2: NOISE
+    signal_type3: NOISE
+    signal_type4: NOISE
+    signal_type5: NOISE
+    signal_type6: NOISE
+    signal_type7: NOISE
+    signal_type8: NOISE
+    signal_type9: NOISE
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [64, 328.0]
+    rotation: 0
+    state: true
+
+connections:
+- [blocks_throttle_0, '0', qtgui_freq_sink_x_0, '0']
+- [blocks_throttle_0, '0', qtgui_time_sink_x_0, '0']
+- [uhd_rfnoc_rx_streamer_0, '0', blocks_throttle_0, '0']
+- [uhd_rfnoc_siggen_0, '0', uhd_rfnoc_rx_streamer_0, '0']
+
+metadata:
+  file_format: 1
+  grc_version: v3.11.0.0git-233-g1699c828

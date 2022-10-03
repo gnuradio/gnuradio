@@ -1,0 +1,423 @@
+options:
+  parameters:
+    author: Jonathon Pendlum
+    catch_exceptions: 'True'
+    category: Custom
+    cmake_opt: ''
+    comment: ''
+    copyright: ''
+    description: ''
+    gen_cmake: 'On'
+    gen_linking: dynamic
+    generate_options: qt_gui
+    hier_block_src_path: '.:'
+    id: rfnoc_radio_fir_filter
+    max_nouts: '0'
+    output_language: python
+    placement: (0,0)
+    qt_qss_theme: ''
+    realtime_scheduling: ''
+    run: 'True'
+    run_command: '{python} -u {filename}'
+    run_options: prompt
+    sizing_mode: fixed
+    thread_safe_setters: ''
+    title: 'RFNoC: FIR Filter Example'
+    window_size: ''
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 8]
+    rotation: 0
+    state: enabled
+
+blocks:
+- name: device_type
+  id: variable
+  parameters:
+    comment: ''
+    value: '"type=x300"'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [216, 80.0]
+    rotation: 0
+    state: enabled
+- name: device_type
+  id: variable
+  parameters:
+    comment: ''
+    value: '"type=n3xx"'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [352, 80.0]
+    rotation: 0
+    state: disabled
+- name: device_type
+  id: variable
+  parameters:
+    comment: ''
+    value: '"type=x4xx"'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [216, 152.0]
+    rotation: 0
+    state: disabled
+- name: device_type
+  id: variable
+  parameters:
+    comment: ''
+    value: '"type=e3xx"'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [352, 152.0]
+    rotation: 0
+    state: disabled
+- name: highpass_coeffs
+  id: variable
+  parameters:
+    comment: ''
+    value: pm_remez(num_coeffs-1,[0.0,0.45,0.55,1.0],[0.001,0.001,1.0,1.0],[1,1])
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [928, 80.0]
+    rotation: 0
+    state: true
+- name: impulse_coeffs
+  id: variable
+  parameters:
+    comment: ''
+    value: '[1.0] + (num_coeffs-1)*[0.0]'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [928, 152.0]
+    rotation: 0
+    state: true
+- name: lowpass_coeffs
+  id: variable
+  parameters:
+    comment: ''
+    value: pm_remez(num_coeffs-1,[0.0,0.45,0.55,1.0],[1,1,0.001,0.001],[1,1])
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [928, 8.0]
+    rotation: 0
+    state: true
+- name: num_coeffs
+  id: variable
+  parameters:
+    comment: ''
+    value: '41'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [592, 8.0]
+    rotation: 0
+    state: true
+- name: qt_filter_chooser
+  id: variable_qtgui_chooser
+  parameters:
+    comment: ''
+    gui_hint: ''
+    label: Filter
+    label0: Lowpass
+    label1: Highpass
+    label2: Passthru
+    label3: ''
+    label4: ''
+    labels: '[]'
+    num_opts: '3'
+    option0: lowpass_coeffs
+    option1: highpass_coeffs
+    option2: impulse_coeffs
+    option3: '3'
+    option4: '4'
+    options: '[0, 1, 2]'
+    orient: Qt.QVBoxLayout
+    type: raw
+    value: lowpass_coeffs
+    widget: radio_buttons
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [712, 8.0]
+    rotation: 0
+    state: true
+- name: uhd_rfnoc_graph
+  id: uhd_rfnoc_graph
+  parameters:
+    alias: ''
+    clock_source_0: ''
+    clock_source_1: ''
+    clock_source_2: ''
+    clock_source_3: ''
+    clock_source_4: ''
+    clock_source_5: ''
+    clock_source_6: ''
+    clock_source_7: ''
+    comment: ''
+    dev_addr: device_type
+    dev_args: ''
+    num_mboards: '1'
+    time_source_0: ''
+    time_source_1: ''
+    time_source_2: ''
+    time_source_3: ''
+    time_source_4: ''
+    time_source_5: ''
+    time_source_6: ''
+    time_source_7: ''
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [216, 8.0]
+    rotation: 0
+    state: true
+- name: analog_fastnoise_source_x_0
+  id: analog_fastnoise_source_x
+  parameters:
+    affinity: ''
+    alias: ''
+    amp: '0.9'
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    noise_type: analog.GR_GAUSSIAN
+    samples: '8192'
+    seed: '0'
+    type: complex
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [48, 296.0]
+    rotation: 0
+    state: enabled
+- name: import_0
+  id: import
+  parameters:
+    alias: ''
+    comment: ''
+    imports: from gnuradio.filter import pm_remez
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 120.0]
+    rotation: 0
+    state: true
+- name: qtgui_freq_sink_x_0
+  id: qtgui_freq_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'False'
+    average: '1.0'
+    axislabels: 'True'
+    bw: 1e6
+    color1: '"blue"'
+    color10: '"dark blue"'
+    color2: '"red"'
+    color3: '"green"'
+    color4: '"black"'
+    color5: '"cyan"'
+    color6: '"magenta"'
+    color7: '"yellow"'
+    color8: '"dark red"'
+    color9: '"dark green"'
+    comment: ''
+    ctrlpanel: 'False'
+    fc: '0'
+    fftsize: '4096'
+    freqhalf: 'True'
+    grid: 'False'
+    gui_hint: ''
+    label: Relative Gain
+    label1: ''
+    label10: ''''''
+    label2: ''''''
+    label3: ''''''
+    label4: ''''''
+    label5: ''''''
+    label6: ''''''
+    label7: ''''''
+    label8: ''''''
+    label9: ''''''
+    legend: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    name: '""'
+    nconnections: '1'
+    norm_window: 'False'
+    showports: 'False'
+    tr_chan: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_tag: '""'
+    type: complex
+    units: dB
+    update_time: '0.10'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    wintype: window.WIN_BLACKMAN_hARRIS
+    ymax: '10'
+    ymin: '-140'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1008, 304.0]
+    rotation: 0
+    state: enabled
+- name: uhd_rfnoc_fir_filter_0
+  id: uhd_rfnoc_fir_filter
+  parameters:
+    affinity: ''
+    alias: ''
+    block_args: ''
+    coeffs_float0: qt_filter_chooser
+    coeffs_float1: '[1.0]'
+    coeffs_float10: '[1.0]'
+    coeffs_float11: '[1.0]'
+    coeffs_float12: '[1.0]'
+    coeffs_float13: '[1.0]'
+    coeffs_float14: '[1.0]'
+    coeffs_float15: '[1.0]'
+    coeffs_float2: '[1.0]'
+    coeffs_float3: '[1.0]'
+    coeffs_float4: '[1.0]'
+    coeffs_float5: '[1.0]'
+    coeffs_float6: '[1.0]'
+    coeffs_float7: '[1.0]'
+    coeffs_float8: '[1.0]'
+    coeffs_float9: '[1.0]'
+    coeffs_int0: '[int(32767*coeff) for coeff in qt_filter_chooser]'
+    coeffs_int1: '[32767]'
+    coeffs_int10: '[32767]'
+    coeffs_int11: '[32767]'
+    coeffs_int12: '[32767]'
+    coeffs_int13: '[32767]'
+    coeffs_int14: '[32767]'
+    coeffs_int15: '[32767]'
+    coeffs_int2: '[32767]'
+    coeffs_int3: '[32767]'
+    coeffs_int4: '[32767]'
+    coeffs_int5: '[32767]'
+    coeffs_int6: '[32767]'
+    coeffs_int7: '[32767]'
+    coeffs_int8: '[32767]'
+    coeffs_int9: '[32767]'
+    coeffs_type0: float
+    coeffs_type1: float
+    coeffs_type10: float
+    coeffs_type11: float
+    coeffs_type12: float
+    coeffs_type13: float
+    coeffs_type14: float
+    coeffs_type15: float
+    coeffs_type2: float
+    coeffs_type3: float
+    coeffs_type4: float
+    coeffs_type5: float
+    coeffs_type6: float
+    coeffs_type7: float
+    coeffs_type8: float
+    coeffs_type9: float
+    comment: ''
+    device_select: '-1'
+    instance_index: '-1'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_chans: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [528, 320.0]
+    rotation: 0
+    state: enabled
+- name: uhd_rfnoc_rx_streamer_0
+  id: uhd_rfnoc_rx_streamer
+  parameters:
+    affinity: ''
+    alias: ''
+    args: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_chans: '1'
+    otw: sc16
+    output_type: fc32
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [808, 328.0]
+    rotation: 0
+    state: enabled
+- name: uhd_rfnoc_tx_streamer_0
+  id: uhd_rfnoc_tx_streamer
+  parameters:
+    affinity: ''
+    alias: ''
+    args: ''
+    comment: ''
+    input_type: fc32
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_chans: '1'
+    otw: sc16
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [296, 328.0]
+    rotation: 0
+    state: enabled
+
+connections:
+- [analog_fastnoise_source_x_0, '0', uhd_rfnoc_tx_streamer_0, '0']
+- [uhd_rfnoc_fir_filter_0, '0', uhd_rfnoc_rx_streamer_0, '0']
+- [uhd_rfnoc_rx_streamer_0, '0', qtgui_freq_sink_x_0, '0']
+- [uhd_rfnoc_tx_streamer_0, '0', uhd_rfnoc_fir_filter_0, '0']
+
+metadata:
+  file_format: 1
+  grc_version: v3.11.0.0git-313-g3beefac2
