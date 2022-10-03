@@ -17,7 +17,7 @@ typekeys:
 parameters:
 -   id: data
     label: Data
-    dtype: T
+    dtype: typekeys/T
     container: vector
     settable: false
     grc:

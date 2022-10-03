@@ -42,6 +42,7 @@ parameters:
     options: [{% for opt in key['options'] %}{{opt|grc_type}}{{"," if not loop.last}} {% endfor %}]
     option_attributes:
         fcn: [{% for opt in key['options'] %}{{macros.typekey_suffix(opt,key['id'],ports)}}{{"," if not loop.last}} {% endfor %}]
+        vec: [{% for opt in key['options'] %}{{opt|grc_type}}_vector{{"," if not loop.last}} {% endfor %}]
     hide: part
 {% endfor %}
 {% endif %}
