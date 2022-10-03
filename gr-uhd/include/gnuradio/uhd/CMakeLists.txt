@@ -17,6 +17,9 @@ if(ENABLE_UHD_RFNOC)
               rfnoc_block_generic.h
               rfnoc_ddc.h
               rfnoc_duc.h
+              rfnoc_siggen.h
+              rfnoc_window.h
+              rfnoc_fir_filter.h
               rfnoc_graph.h
               rfnoc_rx_radio.h
               rfnoc_rx_streamer.h
