@@ -20,8 +20,11 @@ macro(GEN_BLOCK_YML _generator _yml_block)
         COMMAND ${PYTHON_EXECUTABLE} ${generator} ${yml_block})
 endmacro(GEN_BLOCK_YML)
 
-gen_block_yml(gen_uhd_usrp_blocks.py uhd_usrp_source.block.yml)
-gen_block_yml(gen_uhd_usrp_blocks.py uhd_usrp_sink.block.yml)
+GEN_BLOCK_YML(gen_uhd_usrp_blocks.py uhd_usrp_source.block.yml)
+GEN_BLOCK_YML(gen_uhd_usrp_blocks.py uhd_usrp_sink.block.yml)
+GEN_BLOCK_YML(gen_rfnoc_window_block_yml.py uhd_rfnoc_window.block.yml)
+GEN_BLOCK_YML(gen_rfnoc_siggen_block_yml.py uhd_rfnoc_siggen.block.yml)
+GEN_BLOCK_YML(gen_rfnoc_fir_filter_block_yml.py uhd_rfnoc_fir_filter.block.yml)
 
 add_custom_target(uhd_grc_yml_blocks ALL DEPENDS ${yml_blocks})
 

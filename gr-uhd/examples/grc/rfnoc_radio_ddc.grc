@@ -2,7 +2,7 @@ options:
   parameters:
     author: Martin Braun <martin.braun@ettus.com>
     catch_exceptions: 'True'
-    category: '[GRC Hier Blocks]'
+    category: Custom
     cmake_opt: ''
     comment: ''
     copyright: ''
