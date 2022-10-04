@@ -18,6 +18,8 @@ IMPLEMENT_CPU = true
 
 SCRIPTS_DIR=join_paths(meson.project_source_root(),'utils','blockbuilder','scripts')
 
+cmake = import('cmake')
+
 ## Build Dependencies
 volk_dep = dependency('volk', version : '>=2.2')
 yaml_dep = dependency('yaml-cpp', version : '>=0.6')
@@ -82,15 +84,18 @@ endif
 ## Subprojects
 libpmtf = subproject('pmt')
 pmtf_dep = libpmtf.get_variable('pmtf_dep')
-#py3_install_dir_dep = libpmtf.get_variable('py3_install_dir_dep')
-CLI11_dep = dependency('cli11')
+
+CLI11_dep = dependency('CLI11')
 json_dep = dependency('nlohmann_json')
 
-cmake = import('cmake')
-opt_var = cmake.subproject_options()
-opt_var.add_cmake_defines({'CPPZMQ_BUILD_TESTS': false})
-libcppzmq = cmake.subproject('cppzmq', options: opt_var)
-cppzmq_dep = libcppzmq.dependency('cppzmq')
+# can't have a dependency with a fallback to a cmake subproject, so manually do that
+cppzmq_dep = dependency('cppzmq', required : get_option('wrap_mode') == 'nofallback')
+if not cppzmq_dep.found()
+  opt_var = cmake.subproject_options()
+  opt_var.add_cmake_defines({'CPPZMQ_BUILD_TESTS' : false})
+  libcppzmq = cmake.subproject('cppzmq', options : opt_var)
+  cppzmq_dep = libcppzmq.dependency('cppzmq')
+endif
 
 if IMPLEMENT_CUDA
   libcusp = subproject('cusp')
