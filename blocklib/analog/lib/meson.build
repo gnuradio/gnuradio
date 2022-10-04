@@ -32,3 +32,23 @@ gnuradio_blocklib_analog_lib = library('gnuradio-blocklib-analog',
 gnuradio_blocklib_analog_dep = declare_dependency(include_directories : incdir,
 					   link_with : gnuradio_blocklib_analog_lib,
                        dependencies : analog_deps)
+
+cmake_conf = configuration_data()
+cmake_conf.set('libdir', join_paths(prefix,get_option('libdir')))
+cmake_conf.set('module', 'analog')
+cmake.configure_package_config_file(
+  name : 'gnuradio-analog',
+  input : join_paths(meson.source_root(),'cmake','Modules','gnuradioConfigModule.cmake.in'),
+  install_dir : get_option('prefix') / get_option('libdir') / 'cmake' / 'gnuradio',
+  configuration : cmake_conf
+)
+
+pkg = import('pkgconfig')
+libs = []     # the library/libraries users need to link against
+h = ['.'] # subdirectories of ${prefix}/${includedir} to add to header path
+pkg.generate(libraries : libs,
+             subdirs : h,
+             version : meson.project_version(),
+             name : 'libgnuradio-analog',
+             filebase : 'gnuradio-analog',
+             description : 'GNU Radio Analog Module')

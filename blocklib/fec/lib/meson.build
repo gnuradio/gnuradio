@@ -18,4 +18,4 @@ pkg.generate(libraries : libs,
              version : meson.project_version(),
              name : 'libgnuradio-fec',
              filebase : 'gnuradio-fec',
-             description : 'GNU Radio FEC Blocks')
+             description : 'GNU Radio FEC Module')
