@@ -400,10 +400,7 @@ public:
      * false otherwise. Note if input_blocked_callback is overridden then this
      * function should also be overridden.
      */
-    virtual bool input_blkd_cb_ready(int items_required)
-    {
-        return false;
-    }
+    virtual bool input_blkd_cb_ready(int items_required) { return false; }
 
     /*!
      * \brief Callback function that the scheduler will call when it determines
@@ -435,8 +432,18 @@ public:
     void notify_scheduler_input();
     void notify_scheduler_output();
 
-    inline void increment_active() { _buffer->increment_active(); }
-    inline void decrement_active() { _buffer->decrement_active(); }
+    inline void increment_active()
+    {
+        if (_buffer) {
+            _buffer->increment_active();
+        }
+    }
+    inline void decrement_active()
+    {
+        if (_buffer) {
+            _buffer->decrement_active();
+        }
+    }
 
     buffer* bufp() { return _buffer; }
 
