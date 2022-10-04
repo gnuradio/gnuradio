@@ -27,7 +27,26 @@ threads_dep = dependency('threads')
 
 # Import python3 meson module which is used to find the Python dependencies.
 # Python3 is required for code generation
-py3 = import('python').find_installation('python3')
+pymod = import('python')
+# This gets the Python interpreter that will run natively for building
+# find_program is the only way to specify native : true and pymod.find_installation
+# always defers to a cross file (if used) for finding python
+py3_build = find_program('python3', 'python', native : true, required: true, version : '>=3.6')
+py_check_script = join_paths(meson.project_source_root(),'utils','py_module_check.py')
+run_command(py3_build, py_check_script, 'jinja2', '3.0.2', check:true)
+run_command(py3_build, py_check_script, 'yaml', '5.3.1', check:true)
+run_command(py3_build, py_check_script, 'jsonschema', '3.2.0', check:true)
+run_command(py3_build, py_check_script, 'jsonschema_default', check:true)
+
+if (get_option('enable_testing'))
+gtest_dep = dependency('gtest', main : true, version : '>=1.10', required : get_option('enable_testing'))
+endif
+
+GR_ENABLE_PYTHON = false
+if (get_option('enable_python'))
+# This gets the target Python and dependency, which may be different than the
+# Python used for running scripts during build (e.g. cross-compilation)
+py3 = pymod.find_installation(required : get_option('enable_python'))
 py3_version = py3.language_version()
 if py3_version.version_compare('< 3.6')
   error('Invalid python version!?')
@@ -35,14 +54,8 @@ endif
 py3_purelib = (get_option('libdir') == 'lib')
 py3_install_dir = py3.get_install_dir( pure : py3_purelib)
 GR_PURELIB = py3_purelib
-if (get_option('enable_testing'))
-gtest_dep = dependency('gtest', main : true, version : '>=1.10', required : get_option('enable_testing'))
-endif
-
-GR_ENABLE_PYTHON = false
-if (get_option('enable_python'))
-python3_dep = dependency('python3', required : get_option('enable_python'))
-python3_embed_dep = dependency('python3-embed', required : get_option('enable_python'))
+python3_dep = py3.dependency(required : get_option('enable_python'))
+python3_embed_dep = py3.dependency(embed : true, required : get_option('enable_python'))
 pybind11_dep = dependency('pybind11', required : get_option('enable_python'))
 incdir_numpy = run_command(py3,
   ['-c', 'import os; os.chdir(".."); import numpy; print(numpy.get_include())'],
@@ -51,13 +64,8 @@ incdir_numpy = run_command(py3,
 
 # Python module min versions
 # TODO: distinguish between build and runtime requirements
-py_check_script = join_paths(meson.project_source_root(),'utils','py_module_check.py')
-run_command('python3', py_check_script, 'numpy', '1.22', check:true)
-run_command('python3', py_check_script, 'jinja2', '3.0.2', check:true)
-run_command('python3', py_check_script, 'yaml', '5.3.1', check:true)
-run_command('python3', py_check_script, 'zmq', '22.3.0', check:true)
-run_command('python3', py_check_script, 'jsonschema', '3.2.0', check:true)
-run_command('python3', py_check_script, 'jsonschema_default', check:true)
+run_command(py3, py_check_script, 'numpy', '1.22', check:true)
+run_command(py3, py_check_script, 'zmq', '22.3.0', check:true)
 GR_ENABLE_PYTHON = true
 endif
 

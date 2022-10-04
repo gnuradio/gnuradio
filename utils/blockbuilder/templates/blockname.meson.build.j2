@@ -8,10 +8,10 @@ srcs = []
 gen_srcs = custom_target('gen_{{block}}_srcs',
                         input : ['{{block}}.yml'],
                         output : ['{{module}}_{{block}}.block.yml'
-                        ], 
-                        command : ['python3', join_paths(SCRIPTS_DIR,'process_folder.py'),
-                            '--yaml_file', '@INPUT@', 
-                            '--output-grc', '@OUTPUT0@', 
+                        ],
+                        command : [py3_build, join_paths(SCRIPTS_DIR,'process_folder.py'),
+                            '--yaml_file', '@INPUT@',
+                            '--output-grc', '@OUTPUT0@',
                             '--build_dir', join_paths(meson.build_root())],
                         install : true,
                         install_dir : ['share/gnuradio/grc/blocks'])
@@ -37,15 +37,15 @@ endif
 {% set grc_idxs = ['0'] -%}
 gen_srcs = custom_target('gen_{{block}}_srcs',
                         input : ['{{block}}.yml'],
-                        output : ['{{block}}.cc', '{{block}}.h', '{{block}}_pybind.cc', 
+                        output : ['{{block}}.cc', '{{block}}.h', '{{block}}_pybind.cc',
                         '{{module}}_{{block}}.block.yml'
-                        ], 
-                        command : ['python3', join_paths(SCRIPTS_DIR,'process_folder.py'),
-                            '--yaml_file', '@INPUT@', 
-                            '--output-cc', '@OUTPUT0@', 
-                            '--output-h', '@OUTPUT1@', 
-                            '--output-pybind', '@OUTPUT2@', 
-                            '--output-grc', [{%for ii in grc_idxs%}'@OUTPUT{{loop.index0+3}}@',{%endfor%}], 
+                        ],
+                        command : [py3_build, join_paths(SCRIPTS_DIR,'process_folder.py'),
+                            '--yaml_file', '@INPUT@',
+                            '--output-cc', '@OUTPUT0@',
+                            '--output-h', '@OUTPUT1@',
+                            '--output-pybind', '@OUTPUT2@',
+                            '--output-grc', [{%for ii in grc_idxs%}'@OUTPUT{{loop.index0+3}}@',{%endfor%}],
                             '--grc-index', [{%for ii in grc_idxs%}'{{ii}}',{%endfor%}],
                             '--build_dir', join_paths(meson.build_root())
                             {{',' + '\'--enable_python\'' if GR_ENABLE_PYTHON}}],
@@ -55,25 +55,25 @@ gen_srcs = custom_target('gen_{{block}}_srcs',
 gen_impls = custom_target('gen_{{block}}_impl',
                         input : ['{{block}}.yml'],
                         output : ['{{block}}_impl_gen.h'],
-                        command : ['python3', join_paths(SCRIPTS_DIR,'process_gen_impl.py'),
-                            '--yaml_file', '@INPUT@', 
-                            '--output', '@OUTPUT@', 
+                        command : [py3_build, join_paths(SCRIPTS_DIR,'process_gen_impl.py'),
+                            '--yaml_file', '@INPUT@',
+                            '--output', '@OUTPUT@',
                             '--build_dir', join_paths(meson.build_root())],
                         install : false)
 
-{{module}}_deps += declare_dependency(sources : [gen_srcs[1]] ) 
+{{module}}_deps += declare_dependency(sources : [gen_srcs[1]] )
 {{module}}_sources += [srcs, gen_srcs[0], gen_impls]
 
-if GR_ENABLE_PYTHON 
+if GR_ENABLE_PYTHON
     {% if vars.pyshell -%}
     # If we have python implementations, generate the pyshell
     gen_pyshell = custom_target('gen_{{block}}_pyshell',
                             input : ['{{block}}.yml'],
                             output : ['{{block}}_pyshell.h','{{block}}_pyshell.cc'],
-                            command : ['python3', join_paths(SCRIPTS_DIR,'gen_pyshell.py'),
-                                '--yaml_file', '@INPUT@', 
-                                '--output-h', '@OUTPUT0@', 
-                                '--output-cc', '@OUTPUT1@', 
+                            command : [py3_build, join_paths(SCRIPTS_DIR,'gen_pyshell.py'),
+                                '--yaml_file', '@INPUT@',
+                                '--output-h', '@OUTPUT0@',
+                                '--output-cc', '@OUTPUT1@',
                                 '--build_dir', join_paths(meson.build_root())],
                             install : false)
     {{module}}_sources += gen_pyshell[1]
