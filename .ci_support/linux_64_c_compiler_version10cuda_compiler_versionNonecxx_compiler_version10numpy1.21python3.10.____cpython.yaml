@@ -1,0 +1,52 @@
+alsa_lib:
+- 1.2.7
+c_compiler:
+- gcc
+c_compiler_version:
+- '10'
+cdt_name:
+- cos6
+channel_sources:
+- conda-forge
+channel_targets:
+- gnuradio main
+cuda_compiler_version:
+- None
+cxx_compiler:
+- gxx
+cxx_compiler_version:
+- '10'
+docker_image:
+- quay.io/condaforge/linux-anvil-cos7-x86_64
+fftw:
+- '3'
+fmt:
+- '9'
+numpy:
+- '1.21'
+pin_run_as_build:
+  python:
+    min_pin: x.x
+    max_pin: x.x
+pybind11_abi:
+- '4'
+python:
+- 3.10.* *_cpython
+soapysdr:
+- '0.8'
+spdlog:
+- '1.10'
+target_platform:
+- linux-64
+volk:
+- '2.5'
+zeromq:
+- 4.3.4
+zip_keys:
+- - c_compiler_version
+  - cxx_compiler_version
+  - cuda_compiler_version
+  - cdt_name
+  - docker_image
+- - python
+  - numpy

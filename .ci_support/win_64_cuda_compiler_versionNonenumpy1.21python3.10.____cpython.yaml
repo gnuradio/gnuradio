@@ -1,0 +1,37 @@
+c_compiler:
+- vs2017
+channel_sources:
+- conda-forge
+channel_targets:
+- gnuradio main
+cuda_compiler_version:
+- None
+cxx_compiler:
+- vs2017
+fftw:
+- '3'
+fmt:
+- '9'
+numpy:
+- '1.21'
+pin_run_as_build:
+  python:
+    min_pin: x.x
+    max_pin: x.x
+pybind11_abi:
+- '4'
+python:
+- 3.10.* *_cpython
+soapysdr:
+- '0.8'
+spdlog:
+- '1.10'
+target_platform:
+- win-64
+volk:
+- '2.5'
+zeromq:
+- 4.3.4
+zip_keys:
+- - python
+  - numpy
