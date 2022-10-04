@@ -59,4 +59,4 @@ pkg.generate(libraries : libs,
              version : meson.project_version(),
              name : 'libgnuradio-fft',
              filebase : 'gnuradio-fft',
-             description : 'GNU Radio FFT Blocks')
+             description : 'GNU Radio FFT Module')

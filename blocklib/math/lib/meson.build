@@ -56,4 +56,4 @@ pkg.generate(libraries : libs,
              version : meson.project_version(),
              name : 'libgnuradio-math',
              filebase : 'gnuradio-math',
-             description : 'GNU Radio Math Blocks')
+             description : 'GNU Radio Math Module')

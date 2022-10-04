@@ -59,4 +59,4 @@ pkg.generate(libraries : libs,
              version : meson.project_version(),
              name : 'libgnuradio-filter',
              filebase : 'gnuradio-filter',
-             description : 'GNU Radio Filter Blocks')
+             description : 'GNU Radio Filter Module')
