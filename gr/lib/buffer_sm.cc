@@ -355,8 +355,9 @@ bool buffer_sm_reader::input_blkd_cb_ready(int items_required)
 {
     std::unique_lock<std::mutex>(*_buffer->mutex());
 
-    return (((_buffer->buf_size() * _itemsize - _read_index) < (uint32_t)items_required) &&
-            (_buffer->write_index() < _read_index));
+    return (
+        ((_buffer->buf_size() * _itemsize - _read_index) < (uint32_t)items_required) &&
+        (_buffer->write_index() < _read_index));
 }
 
 buffer_sm_properties::buffer_sm_properties() : buffer_properties()
