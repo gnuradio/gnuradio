@@ -87,7 +87,7 @@ public:
      * \brief Return true if thread is ready to call input_blocked_callback,
      * false otherwise
      */
-    bool input_blkd_cb_ready(int items_required, unsigned read_index) override;
+    bool input_blkd_cb_ready(int items_required) override;
     bool input_blocked_callback(size_t items_required) override;
     size_t bytes_available() override;
 };

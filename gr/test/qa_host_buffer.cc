@@ -217,8 +217,8 @@ TEST(HostBuffer, t4)
     buf->post_write(8000);
     EXPECT_TRUE(buf->space_available() == 192);
 
-    // bool ready = buf->output_blkd_cb_ready(200);
-    // EXPECT_TRUE(ready == true);
+    bool ready = buf->output_blkd_cb_ready(200);
+    EXPECT_TRUE(ready == true);
 
     bool success = buf->output_blocked_callback(200);
     EXPECT_TRUE(success == true);
@@ -268,8 +268,8 @@ TEST(HostBuffer, t5)
     EXPECT_TRUE(buf->space_available() == 15884);
     EXPECT_TRUE(rdr1->items_available() == 384);
 
-    // bool ready = rdr1->input_blkd_cb_ready(400);
-    // EXPECT_TRUE(ready == true);
+    bool ready = rdr1->input_blkd_cb_ready(400);
+    EXPECT_TRUE(ready == true);
 
     bool success = rdr1->input_blocked_callback(400);
     EXPECT_TRUE(success == true);

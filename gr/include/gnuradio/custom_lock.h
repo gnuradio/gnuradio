@@ -49,7 +49,7 @@ public:
 class custom_lock
 {
 public:
-    explicit custom_lock(std::mutex& mutex, std::shared_ptr<custom_lock_if> locker)
+    explicit custom_lock(std::mutex& mutex, custom_lock_if* locker)
         : d_lock(mutex), d_locker(locker)
     {
         d_locker->on_lock(d_lock);

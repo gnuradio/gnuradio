@@ -400,8 +400,7 @@ public:
      * false otherwise. Note if input_blocked_callback is overridden then this
      * function should also be overridden.
      */
-    virtual bool input_blkd_cb_ready([[maybe_unused]] int items_required,
-                                     [[maybe_unused]] unsigned read_index)
+    virtual bool input_blkd_cb_ready(int items_required)
     {
         return false;
     }
@@ -438,6 +437,8 @@ public:
 
     inline void increment_active() { _buffer->increment_active(); }
     inline void decrement_active() { _buffer->decrement_active(); }
+
+    buffer* bufp() { return _buffer; }
 
 protected:
     neighbor_interface_sptr p_scheduler = nullptr;
