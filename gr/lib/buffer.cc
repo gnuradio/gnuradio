@@ -26,7 +26,6 @@ bool buffer::write_info(buffer_info_t& info)
 {
     std::scoped_lock guard(_buf_mutex);
 
-
     auto space = space_available();
     info.ptr = write_ptr();
     info.n_items = space;

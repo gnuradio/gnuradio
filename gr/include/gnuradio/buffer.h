@@ -436,6 +436,9 @@ public:
     void notify_scheduler_input();
     void notify_scheduler_output();
 
+    inline void increment_active() { _buffer->increment_active(); }
+    inline void decrement_active() { _buffer->decrement_active(); }
+
 protected:
     neighbor_interface_sptr p_scheduler = nullptr;
 };

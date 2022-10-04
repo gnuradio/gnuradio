@@ -8,6 +8,19 @@ inline static unsigned int round_down(unsigned int n, unsigned int multiple)
     return (n / multiple) * multiple;
 }
 
+static void post_work_cleanup(work_io& wio)
+{
+    // Decrement active counts for all inputs and outputs
+    for (auto& outp : wio.outputs()) {
+        outp.buf().decrement_active();
+    }
+
+    for (auto& inp : wio.inputs()) {
+        inp.buf().decrement_active();
+    }
+}
+
+
 std::map<nodeid_t, executor_iteration_status_t>
 graph_executor::run_one_iteration(std::vector<block_sptr> blocks)
 {
@@ -50,6 +63,7 @@ graph_executor::run_one_iteration(std::vector<block_sptr> blocks)
                 auto min_read = p_buf->min_buffer_read();
 
                 buffer_info_t read_info;
+                p_buf->increment_active();
                 ready = p_buf->read_info(read_info);
                 d_debug_logger->debug("read_info {} - {} - {}, total: {}",
                                       b->alias(),
@@ -84,6 +98,7 @@ graph_executor::run_one_iteration(std::vector<block_sptr> blocks)
 
         if (!ready) {
             per_block_status[b->id()] = executor_iteration_status_t::BLKD_IN;
+            post_work_cleanup(wio);
             continue;
         }
 
@@ -102,6 +117,7 @@ graph_executor::run_one_iteration(std::vector<block_sptr> blocks)
                 auto min_fill = p_buf->min_buffer_fill();
 
                 buffer_info_t write_info;
+                p_buf->increment_active();
                 ready = p_buf->write_info(write_info);
                 d_debug_logger->debug("write_info {} - {} @ {} {}, total: {}",
                                       b->alias(),
@@ -156,6 +172,7 @@ graph_executor::run_one_iteration(std::vector<block_sptr> blocks)
 
         if (!ready) {
             per_block_status[b->id()] = executor_iteration_status_t::BLKD_OUT;
+            post_work_cleanup(wio);
             continue;
         }
 
@@ -307,6 +324,7 @@ graph_executor::run_one_iteration(std::vector<block_sptr> blocks)
                 }
             }
         }
+        post_work_cleanup(wio);
     }
 
 
