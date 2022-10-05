@@ -55,8 +55,13 @@ list(
     # waterfallGlobalData_python.cc
     waterfall_sink_c_python.cc
     waterfall_sink_f_python.cc
-    waterfalldisplayform_python.cc
-    python_bindings.cc)
+    waterfalldisplayform_python.cc)
+
+if(ENABLE_GR_QTGUI_OPENGL)
+    list(APPEND qtgui_python_files fosphor_display_python.cc)
+endif(ENABLE_GR_QTGUI_OPENGL)
+
+list(APPEND qtgui_python_files python_bindings.cc)
 
 set(include_dirs ${Qt5Widgets_INCLUDE_DIRS})
 if(QWT_FOUND)
@@ -65,6 +70,10 @@ endif(QWT_FOUND)
 list(JOIN include_dirs "," extra_includes)
 
 gr_pybind_make_check_hash(qtgui ../../.. gr::qtgui "${qtgui_python_files}")
+
+if(ENABLE_GR_QTGUI_OPENGL)
+    target_compile_definitions(qtgui_python PRIVATE OPENGL_FOUND)
+endif(ENABLE_GR_QTGUI_OPENGL)
 
 install(
     TARGETS qtgui_python

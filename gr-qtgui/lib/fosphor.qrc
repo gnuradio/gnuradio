@@ -1,0 +1,9 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource>
+<file>fosphor/palettes.txt</file>
+<file>fosphor/pal_test.png</file>
+<file>fosphor/pal_iron.png</file>
+<file>fosphor/pal_rainbow.png</file>
+<file>fosphor/pal_cubehelix.png</file>
+</qresource>
+</RCC>
