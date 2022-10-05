@@ -1,5 +1,5 @@
 meson.build
 !include/gnuradio/soapy/meson.build
 !lib/meson.build
-!python/soapy/bindings/meson.build
+!python/gnuradio/soapy/bindings/meson.build
 !test/meson.build
