@@ -37,6 +37,9 @@ void bind_freq_sink_c(py::module&);
 void bind_freq_sink_f(py::module&);
 void bind_freqcontrolpanel(py::module&);
 void bind_freqdisplayform(py::module&);
+#ifdef OPENGL_FOUND
+void bind_fosphor_display(py::module&);
+#endif
 void bind_histogram_sink_f(py::module&);
 void bind_histogramdisplayform(py::module&);
 void bind_number_sink(py::module&);
@@ -107,6 +110,9 @@ PYBIND11_MODULE(qtgui_python, m)
     bind_freq_sink_f(m);
     // bind_freqcontrolpanel(m);
     // bind_freqdisplayform(m);
+#ifdef OPENGL_FOUND
+    bind_fosphor_display(m);
+#endif
     bind_histogram_sink_f(m);
     // bind_histogramdisplayform(m);
     bind_number_sink(m);
