@@ -55,6 +55,17 @@ void buffer_sm::post_write(int num_items)
     _total_written += num_items;
 }
 
+bool buffer_sm::output_blkd_cb_ready(int output_multiple)
+{
+    uint32_t space_avail = 0;
+    {
+        std::unique_lock<std::mutex>(*this->mutex());
+        space_avail = space_available();
+    }
+    return ((space_avail > 0) &&
+            ((space_avail / output_multiple) * output_multiple == 0));
+}
+
 bool buffer_sm::output_blocked_callback_logic(bool force, memmove_func_t memmove_func)
 {
     auto space_avail = space_available();
@@ -154,7 +165,7 @@ size_t buffer_sm::space_available()
     // Only half fill the buffer
     // Leave extra space in case the reader gets stuck and needs realignment
 
-    space = std::min(space, _num_items / 2);
+    space = std::min(space, _num_items);
 
     return space;
 }
@@ -328,18 +339,26 @@ size_t buffer_sm_reader::bytes_available()
     //              total_read(),
     //              _buffer->total_written());
 
-    if (_buffer->total_written() - total_read() < ret * _itemsize) {
-        // GR_LOG_DEBUG(d_debug_logger,
-        //              "check_math {} {} {} {}",
-        //              _buffer->total_written() - total_read(),
-        //              ret,
-        //              total_read(),
-        //              _buffer->total_written());
-    }
+    // if (_itemsize*(_buffer->total_written() - total_read()) < ret) {
+    //     d_debug_logger->debug(
+    //                  "check_math {} {} {} {}",
+    //                  _buffer->total_written() - total_read(),
+    //                  ret,
+    //                  total_read(),
+    //                  _buffer->total_written());
+    // }
 
     return ret; // in bytes
 }
 
+bool buffer_sm_reader::input_blkd_cb_ready(int items_required)
+{
+    std::unique_lock<std::mutex>(*_buffer->mutex());
+
+    return (
+        ((_buffer->buf_size() * _itemsize - _read_index) < (uint32_t)items_required) &&
+        (_buffer->write_index() < _read_index));
+}
 
 buffer_sm_properties::buffer_sm_properties() : buffer_properties()
 {

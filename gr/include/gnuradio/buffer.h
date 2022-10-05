@@ -1,9 +1,11 @@
 #pragma once
 
 #include <gnuradio/api.h>
+#include <gnuradio/custom_lock.h>
 #include <gnuradio/logger.h>
 #include <gnuradio/neighbor_interface.h>
 #include <gnuradio/tag.h>
+#include <condition_variable>
 #include <functional>
 #include <memory>
 #include <mutex>
@@ -118,7 +120,7 @@ protected:
  * @brief Abstract buffer class
  *
  */
-class GR_RUNTIME_API buffer
+class GR_RUNTIME_API buffer : public custom_lock_if
 {
 protected:
     std::string _name;
@@ -142,6 +144,10 @@ protected:
 
     gr::logger_ptr d_logger;
     gr::logger_ptr d_debug_logger;
+
+    std::condition_variable d_cv;
+    bool d_callback_flag = false;
+    uint32_t d_active_pointer_counter = 0;
 
 public:
     buffer(size_t num_items,
@@ -266,11 +272,59 @@ public:
                                           size_t itemsize) = 0;
     // void drop_reader(buffer_reader_uptr);
 
+
+    /*!
+     * \brief Returns true if the current thread is ready to execute
+     * output_blocked_callback(), false otherwise. Note if the default
+     * output_blocked_callback is overridden this function should also be
+     * overridden.
+     */
+    virtual bool output_blkd_cb_ready([[maybe_unused]] int output_multiple)
+    {
+        return false;
+    }
+
     virtual bool output_blocked_callback(bool force = false)
     {
         // Only singly mapped buffers need to do anything with this callback
         return false;
     }
+
+    /*!
+     * \brief Increment the number of active pointers for this buffer.
+     */
+    inline void increment_active()
+    {
+        std::unique_lock<std::mutex> lock(_buf_mutex);
+
+        d_cv.wait(lock, [this]() { return d_callback_flag == false; });
+        ++d_active_pointer_counter;
+    }
+
+    /*!
+     * \brief Decrement the number of active pointers for this buffer and signal
+     * anyone waiting when the count reaches zero.
+     */
+    inline void decrement_active()
+    {
+        std::unique_lock<std::mutex> lock(_buf_mutex);
+
+        if (--d_active_pointer_counter == 0)
+            d_cv.notify_all();
+    }
+
+
+    /*!
+     * \brief "on_lock" function from the custom_lock_if.
+     */
+    void on_lock(std::unique_lock<std::mutex>& lock) override;
+
+    /*!
+     * \brief "on_unlock" function from the custom_lock_if.
+     */
+    void on_unlock() override;
+
+    friend std::ostream& operator<<(std::ostream& os, const buffer& buf);
 };
 
 using buffer_uptr = std::unique_ptr<buffer>;
@@ -341,6 +395,18 @@ public:
      */
     virtual bool read_info(buffer_info_t& info);
 
+    /*!
+     * \brief Returns true when the current thread is ready to call the callback,
+     * false otherwise. Note if input_blocked_callback is overridden then this
+     * function should also be overridden.
+     */
+    virtual bool input_blkd_cb_ready(int items_required) { return false; }
+
+    /*!
+     * \brief Callback function that the scheduler will call when it determines
+     * that the input is blocked. Delegate calls to buffer class's
+     * input_blocked_callback(). Override this function if needed.
+     */
     virtual bool input_blocked_callback(size_t items_required)
     {
         // Only singly mapped buffers need to do anything with this callback
@@ -365,6 +431,21 @@ public:
     void notify_scheduler();
     void notify_scheduler_input();
     void notify_scheduler_output();
+
+    inline void increment_active()
+    {
+        if (_buffer) {
+            _buffer->increment_active();
+        }
+    }
+    inline void decrement_active()
+    {
+        if (_buffer) {
+            _buffer->decrement_active();
+        }
+    }
+
+    buffer* bufp() { return _buffer; }
 
 protected:
     neighbor_interface_sptr p_scheduler = nullptr;

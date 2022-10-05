@@ -8,6 +8,19 @@ inline static unsigned int round_down(unsigned int n, unsigned int multiple)
     return (n / multiple) * multiple;
 }
 
+static void post_work_cleanup(work_io& wio)
+{
+    // Decrement active counts for all inputs and outputs
+    for (auto& outp : wio.outputs()) {
+        outp.buf().decrement_active();
+    }
+
+    for (auto& inp : wio.inputs()) {
+        inp.buf().decrement_active();
+    }
+}
+
+
 std::map<nodeid_t, executor_iteration_status_t>
 graph_executor::run_one_iteration(std::vector<block_sptr> blocks)
 {
@@ -50,6 +63,7 @@ graph_executor::run_one_iteration(std::vector<block_sptr> blocks)
                 auto min_read = p_buf->min_buffer_read();
 
                 buffer_info_t read_info;
+                p_buf->increment_active();
                 ready = p_buf->read_info(read_info);
                 d_debug_logger->debug("read_info {} - {} - {}, total: {}",
                                       b->alias(),
@@ -63,9 +77,13 @@ graph_executor::run_one_iteration(std::vector<block_sptr> blocks)
                 if (read_info.n_items < s_min_items_to_process ||
                     (min_read > 0 && read_info.n_items < (int)min_read)) {
 
-                    if (p_buf->input_blocked_callback(s_min_items_to_process)) {
-                        w.port->notify_scheduler_action(
-                            scheduler_action_t::NOTIFY_OUTPUT);
+                    if (p_buf->input_blkd_cb_ready(read_info.n_items + 1)) {
+                        gr::custom_lock lock(std::ref(*p_buf->mutex()), p_buf->bufp());
+
+                        if (p_buf->input_blocked_callback(s_min_items_to_process)) {
+                            w.port->notify_scheduler_action(
+                                scheduler_action_t::NOTIFY_OUTPUT);
+                        }
                     }
 
                     ready = false;
@@ -84,6 +102,7 @@ graph_executor::run_one_iteration(std::vector<block_sptr> blocks)
 
         if (!ready) {
             per_block_status[b->id()] = executor_iteration_status_t::BLKD_IN;
+            post_work_cleanup(wio);
             continue;
         }
 
@@ -102,6 +121,7 @@ graph_executor::run_one_iteration(std::vector<block_sptr> blocks)
                 auto min_fill = p_buf->min_buffer_fill();
 
                 buffer_info_t write_info;
+                p_buf->increment_active();
                 ready = p_buf->write_info(write_info);
                 d_debug_logger->debug("write_info {} - {} @ {} {}, total: {}",
                                       b->alias(),
@@ -114,10 +134,12 @@ graph_executor::run_one_iteration(std::vector<block_sptr> blocks)
                 if (tmp_buf_size < s_min_buf_items ||
                     (min_fill > 0 && tmp_buf_size < min_fill)) {
                     ready = false;
-                    if (p_buf->output_blocked_callback(false)) {
-                        w.port->notify_scheduler_action(scheduler_action_t::NOTIFY_INPUT);
-                        // w.port->push_message(std::make_shared<scheduler_action>(
-                        //     scheduler_action_t::NOTIFY_INPUT));
+                    if (p_buf->output_blkd_cb_ready(tmp_buf_size + 1)) {
+                        gr::custom_lock lock(std::ref(*p_buf->mutex()), p_buf);
+                        if (p_buf->output_blocked_callback(false)) {
+                            w.port->notify_scheduler_action(
+                                scheduler_action_t::NOTIFY_INPUT);
+                        }
                     }
                     break;
                 }
@@ -136,10 +158,12 @@ graph_executor::run_one_iteration(std::vector<block_sptr> blocks)
                 }
 
                 if (max_output_buffer <= 0) {
-                    if (p_buf->output_blocked_callback()) {
-                        w.port->notify_scheduler_action(scheduler_action_t::NOTIFY_INPUT);
-                        // w.port->push_message(std::make_shared<scheduler_action>(
-                        //     scheduler_action_t::NOTIFY_INPUT));
+                    if (p_buf->output_blkd_cb_ready(b->output_multiple())) {
+                        gr::custom_lock lock(std::ref(*p_buf->mutex()), p_buf);
+                        if (p_buf->output_blocked_callback()) {
+                            w.port->notify_scheduler_action(
+                                scheduler_action_t::NOTIFY_INPUT);
+                        }
                     }
                     ready = false;
                 }
@@ -156,6 +180,7 @@ graph_executor::run_one_iteration(std::vector<block_sptr> blocks)
 
         if (!ready) {
             per_block_status[b->id()] = executor_iteration_status_t::BLKD_OUT;
+            post_work_cleanup(wio);
             continue;
         }
 
@@ -225,8 +250,12 @@ graph_executor::run_one_iteration(std::vector<block_sptr> blocks)
                         // call the input blocked callback
                         bool notify = false;
                         for (auto& w : wio.inputs()) {
-                            notify |=
-                                w.buf().input_blocked_callback(b->output_multiple());
+                            if (w.buf().input_blkd_cb_ready(b->output_multiple())) {
+                                gr::custom_lock lock(std::ref(*w.bufp()->mutex()),
+                                                     w.buf().bufp());
+                                notify |=
+                                    w.buf().input_blocked_callback(b->output_multiple());
+                            }
                         }
                         if (notify) {
                             wio.inputs()[0].port->push_message(
@@ -307,6 +336,7 @@ graph_executor::run_one_iteration(std::vector<block_sptr> blocks)
                 }
             }
         }
+        post_work_cleanup(wio);
     }
 
 

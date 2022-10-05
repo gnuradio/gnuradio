@@ -121,6 +121,8 @@ scheduler_nbt_options scheduler_nbt::opts_from_yaml(const std::string options)
     opts.default_buffer_size = opt_yaml["buffer_size"].as<size_t>(
         gr::prefs::get_long("scheduler.nbt", "default_buffer_size", 32768));
     opts.name = opt_yaml["name"].as<std::string>("nbt");
+    opts.default_buffer_type = opt_yaml["default_buffer_type"].as<std::string>(
+        gr::prefs::get_string("scheduler.nbt", "default_buffer_type", "cpu_vmcirc"));
     opts.flush =
         opt_yaml["flush"].as<bool>(gr::prefs::get_bool("scheduler.nbt", "flush", true));
     opts.flush_count = opt_yaml["flush_count"].as<long>(
