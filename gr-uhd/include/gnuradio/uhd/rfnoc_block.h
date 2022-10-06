@@ -1,6 +1,7 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2020 Free Software Foundation, Inc.
+ * Copyright 2020 Ettus Research, A National Instruments Brand.
  *
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
@@ -77,6 +78,20 @@ public:
                      gr_vector_int& ninput_items,
                      gr_vector_const_void_star& input_items,
                      gr_vector_void_star& output_items);
+
+    template <typename T>
+    void set_property(const std::string& name, const T& value, const size_t port = 0)
+    {
+        d_block_ref->set_property<T>(name, value, port);
+    }
+
+    template <typename T>
+    const T get_property(const std::string& name, const size_t port = 0)
+    {
+        return d_block_ref->get_property<T>(name, port);
+    }
+
+    std::vector<std::string> get_property_ids();
 
 private:
     //! Reference to the underlying RFNoC block
