@@ -14,7 +14,7 @@ templates:
             channels=[],
             args=${ args },
         ),
-        1
+        ${ vlen }
     )
 
 parameters:
@@ -26,6 +26,11 @@ parameters:
 - id: args
   label: Args
   dtype: string
+  hide: part
+- id: vlen
+  label: Vector Length
+  dtype: int
+  default: 1
   hide: part
 - id: input_type
   label: Input Type
@@ -48,6 +53,7 @@ inputs:
 - domain: stream
   dtype: ${ input_type.type }
   multiplicity: ${ num_chans }
+  vlen: ${ vlen }
 
 outputs:
 - domain: rfnoc
