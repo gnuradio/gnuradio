@@ -12,7 +12,9 @@ include(GrPython)
 
 # Note: gr-qtgui requires Qt5.
 
-find_package(Qt5Widgets QUIET)
+find_package(Qt5 QUIET
+    COMPONENTS Widgets
+)
 set(QT_FOUND ${Qt5Widgets_FOUND})
 
 gr_python_check_module("PyQt5" PyQt5 True PYQT5_FOUND)
