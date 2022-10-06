@@ -9,8 +9,7 @@
 # Setup the QT file generations stuff
 ########################################################################
 
-add_library(
-    gnuradio-qtgui
+set(QTGUI_SOURCES
     DisplayPlot.cc
     FrequencyDisplayPlot.cc
     EyeDisplayPlot.cc
@@ -59,15 +58,39 @@ add_library(
     ber_sink_b_impl.cc
     vectordisplayform.cc
     vector_sink_f_impl.cc
-    edit_box_msg_impl.cc)
-target_compile_definitions(gnuradio-qtgui PRIVATE -DQWT_DLL) #setup QWT library linkage
+    edit_box_msg_impl.cc
+)
+
+set(QTGUI_LIBS
+    gnuradio-runtime
+    gnuradio-fft
+    gnuradio-filter
+    Volk::volk
+    qwt::qwt
+    Qt5::Widgets
+)
+
+if(ENABLE_COMMON_PCH)
+    set(PRIVATE_LIBS common-precompiled-headers)
+endif()
+
+
+add_library(
+    gnuradio-qtgui
+    ${QTGUI_SOURCES}
+)
+
+# Set up QWT library linkage:
+target_compile_definitions(gnuradio-qtgui PRIVATE -DQWT_DLL)
 target_include_directories(
     gnuradio-qtgui
     PUBLIC $<INSTALL_INTERFACE:include>
            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>
     PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
-target_link_libraries(gnuradio-qtgui PUBLIC gnuradio-runtime gnuradio-fft gnuradio-filter
-                                            Volk::volk qwt::qwt Qt5::Widgets)
+target_link_libraries(gnuradio-qtgui
+    PUBLIC ${QTGUI_LIBS}
+    PRIVATE ${PRIVATE_LIBS}
+)
 if(WIN32)
     target_link_libraries(gnuradio-qtgui PUBLIC dwrite)
 endif(WIN32)
