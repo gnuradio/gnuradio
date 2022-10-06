@@ -18,7 +18,7 @@ class rfnoc_block_generic_impl : public rfnoc_block_generic
 {
 public:
     rfnoc_block_generic_impl(::uhd::rfnoc::noc_block_base::sptr block_ref);
-    ~rfnoc_block_generic_impl();
+    ~rfnoc_block_generic_impl() override;
 };
 
 } // namespace uhd

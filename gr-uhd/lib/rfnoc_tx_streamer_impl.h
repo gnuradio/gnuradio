@@ -21,7 +21,7 @@ public:
                            const size_t num_chans,
                            const ::uhd::stream_args_t& stream_args,
                            const size_t vlen);
-    ~rfnoc_tx_streamer_impl();
+    ~rfnoc_tx_streamer_impl() override;
 
     /***** API ***************************************************************/
     std::string get_unique_id() const override { return d_unique_id; }
