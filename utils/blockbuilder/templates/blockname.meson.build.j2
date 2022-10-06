@@ -93,5 +93,11 @@ if GR_ENABLE_PYTHON
 
     {{module}}_pybind_sources += gen_srcs[2]
     {{module}}_pybind_names += '{{block}}'
+
+    fs = import('fs')
+    if fs.exists('qa_{{block}}.py')
+        test('qa_{{block}}', py3, args : files('qa_{{block}}.py'), env: TEST_ENV)
+    endif
+    
 endif
 {% endif %}
