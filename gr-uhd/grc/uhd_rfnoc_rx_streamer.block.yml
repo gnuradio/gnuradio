@@ -12,7 +12,7 @@ templates:
             cpu_format="${ output_type.type }",
             otw_format="${ otw.type }",
             channels=[],
-            args="",
+            args=${ args },
         ),
         1,
         True
@@ -23,6 +23,10 @@ parameters:
   label: Number of Channels
   dtype: int
   default: 1
+  hide: part
+- id: args
+  label: Args
+  dtype: string
   hide: part
 - id: otw
   label: Wire Format
