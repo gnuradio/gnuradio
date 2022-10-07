@@ -56,7 +56,8 @@ public:
                      int timeout = 100,
                      bool pass_tags = false,
                      int hwm = -1,
-                     const std::string& key = "");
+                     const std::string& key = "",
+                     bool drop_on_hwm = true);
 
     /*!
      * \brief Return a std::string of ZMQ_LAST_ENDPOINT from the underlying ZMQ socket.
