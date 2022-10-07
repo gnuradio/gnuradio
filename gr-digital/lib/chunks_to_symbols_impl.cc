@@ -142,7 +142,8 @@ int chunks_to_symbols_impl<IN_T, OUT_T>::work(int noutput_items,
             }
 
             // after the last tag, continue working on the remaining items
-            for (; in < reinterpret_cast<const IN_T*>(input_items[m]) + noutput_items;
+            for (;
+                 in < reinterpret_cast<const IN_T*>(input_items[m]) + noutput_items / d_D;
                  ++in) {
                 auto key = static_cast<unsigned int>(*in) * d_D;
                 for (unsigned int idx = 0; idx < d_D; ++idx) {
