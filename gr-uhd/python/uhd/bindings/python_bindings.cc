@@ -25,6 +25,7 @@ void bind_usrp_source(py::module&);
 void bind_rfnoc_block(py::module&);
 void bind_rfnoc_ddc(py::module&);
 void bind_rfnoc_duc(py::module&);
+void bind_rfnoc_block_generic(py::module&);
 void bind_rfnoc_graph(py::module&);
 void bind_rfnoc_rx_radio(py::module&);
 void bind_rfnoc_rx_streamer(py::module&);
@@ -60,6 +61,7 @@ PYBIND11_MODULE(uhd_python, m)
     bind_rfnoc_block(m);
     bind_rfnoc_ddc(m);
     bind_rfnoc_duc(m);
+    bind_rfnoc_block_generic(m);
     bind_rfnoc_graph(m);
     bind_rfnoc_rx_radio(m);
     bind_rfnoc_rx_streamer(m);
