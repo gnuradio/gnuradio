@@ -1,4 +1,0 @@
-usr/include
-usr/lib/*/*.so
-usr/lib/*/cmake/gnuradio
-usr/lib/*/pkgconfig/*.pc
