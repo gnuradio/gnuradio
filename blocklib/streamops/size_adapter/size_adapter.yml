@@ -1,0 +1,28 @@
+module: streamops
+block: size_adapter
+label: Size Adapter
+blocktype: block
+
+doc:
+    brief: Takes on the itemsize of the input and output ports and does memcpy accordingly
+
+parameters: []
+
+ports:
+-   domain: stream
+    id: in
+    direction: input
+    type: untyped
+    size: "0"
+
+-   domain: stream
+    id: out
+    direction: output
+    type: untyped
+    size: "0"
+
+implementations:
+-   id: cpu
+# -   id: cuda
+
+file_format: 1
