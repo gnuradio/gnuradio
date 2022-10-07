@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(rfnoc_block.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(a090f45dcc320d7e1f19f63c585e5aa0)                     */
+/* BINDTOOL_HEADER_FILE_HASH(2d5f9f02a6ee17b513f4378f9d9a7730)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -51,13 +51,10 @@ void bind_rfnoc_block(py::module& m)
         .def("get_unique_id", &rfnoc_block::get_unique_id, D(rfnoc_block, get_unique_id))
 
 
-        .def("general_work",
-             &rfnoc_block::general_work,
-             py::arg("noutput_items"),
-             py::arg("ninput_items"),
-             py::arg("input_items"),
-             py::arg("output_items"),
-             D(rfnoc_block, general_work))
+        .def("set_properties", &rfnoc_block::set_properties,
+                py::arg("props"),
+                py::arg("instance") = 0,
+                D(rfnoc_block, set_properties))
 
         ;
 }

@@ -79,12 +79,80 @@ public:
                      gr_vector_const_void_star& input_items,
                      gr_vector_void_star& output_items);
 
+    /*! Set multiple properties coming from a dictionary
+     *
+     * See the [UHD
+     * manual](https://uhd.readthedocs.io/en/latest/classuhd_1_1rfnoc_1_1node__t.html#abf34d4be8fe7a602b27927194195f1f6)
+     * for details.
+     *
+     * This function allows the client to override the \p instance parameter
+     * for each property key/value pair passed in via the \p props parameter.
+     * If the key consists of the property name, followed by a colon (':') and
+     * then a number, the number following the colon is used to determine
+     * which instance of the property this set pertains to, and the \p
+     * instance parameter is ignored for that property. (Note that if the key
+     * does not have the colon and instance number override syntax, then
+     * \p instance is still used to determine which instance of the property
+     * to set. For example, in the following call:
+     *
+     *     node->set_properties("dog=10,cat:2=5,bird:0=0.5", 1)
+     *
+     * instance 1 of node's 'dog' property is set to 10, the 1 coming from the
+     * instance parameter, instance 2 of the node's 'cat' property is set to
+     * 5 due to the override syntax provided in the string, and instance 0 of
+     * the node's 'bird' property is set to 0.5 due to its override.
+     *
+     * If the instance override is malformed, that is, there is no
+     * number following the colon, or the number cannot be parsed as an
+     * integer, a value_error is thrown.
+     *
+     * If a key in \p props is not a valid property of this block, a warning is
+     * logged, but no error is raised.
+     */
+    void set_properties(const ::uhd::device_addr_t& props, const size_t instance = 0)
+    {
+        d_block_ref->set_properties(props, instance);
+    }
+
+    /*! Set a specific user property that belongs to this block.
+     *
+     * Setting a user property will trigger a property resolution. This means
+     * that changing this block can have effects on other RFNoC blocks or nodes
+     * (like streamers).
+     *
+     * If the property does not exist, or if the property can be determined to
+     * be of a different type than \p prop_data_t due to the usage of runtime
+     * type information (RTTI), a ::uhd::lookup_error is thrown.
+     *
+     * \tparam prop_data_t The data type of the property
+     * \param id The identifier of the property to write. To find out which
+     *           values of \p id are valid, call get_property_ids()
+     * \param instance The instance number of this property
+     * \param val The new value of the property.
+     */
     template <typename T>
     void set_property(const std::string& name, const T& value, const size_t port = 0)
     {
         d_block_ref->set_property<T>(name, value, port);
     }
 
+    /*! Get the value of a specific block argument. \p The type of an argument
+     *  must be known at compile time.
+     *
+     * If the property does not exist, or if the property can be determined to
+     * be of a different type than \p prop_data_t due to the usage of runtime
+     * type information (RTTI), a ::uhd::lookup_error is thrown.
+     *
+     * Note: Despite this being a "getter", this function is not declared const.
+     * This is because internally, it can resolve properties, which may cause
+     * changes within the object.
+     *
+     * \tparam prop_data_t The data type of the property
+     * \param id The identifier of the property to write.
+     * \param instance The instance number of this property
+     * \return The value of the property.
+     * \throws uhd::lookup_error if the property can't be found.
+     */
     template <typename T>
     const T get_property(const std::string& name, const size_t port = 0)
     {
