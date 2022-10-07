@@ -24,4 +24,4 @@ static const char* __doc_gr_uhd_rfnoc_block_make_block_ref = R"doc()doc";
 static const char* __doc_gr_uhd_rfnoc_block_get_unique_id = R"doc()doc";
 
 
-static const char* __doc_gr_uhd_rfnoc_block_general_work = R"doc()doc";
+static const char* __doc_gr_uhd_rfnoc_block_set_properties = R"doc()doc";
