@@ -42,12 +42,12 @@ class qa_message_debug(gr_unittest.TestCase):
 
         self.assertAlmostEqual(msg_debug.num_messages(),
                                0, delta=2)  # 1st call, expect 0
-        time.sleep(1)  # floor(1000/100) = 10
+        time.sleep(1.05)  # floor(1050/100) = 10
         self.assertAlmostEqual(msg_debug.num_messages(),
-                               10, delta=3)  # 2nd call == 1
-        time.sleep(1)  # floor(2000/100) = 15
+                               10, delta=3)  # 2nd call == 10
+        time.sleep(1)  # floor(2050/100) = 20
         self.assertAlmostEqual(msg_debug.num_messages(),
-                               20, delta=3)  # 3th call == 3
+                               20, delta=4)  # 3rd call == 20
 
         # change test message
         msg_strobe.to_basic_block()._post(pmt.intern("set_msg"), pmt.intern(new_msg))
