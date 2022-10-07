@@ -49,7 +49,7 @@ templates:
     imports: from gnuradio import blocks
     make: blocks.delay(${type.size}*${vlen}, ${delay})
     callbacks:
-    - set_dly(${delay})
+    - set_dly(int(${delay}))
 
 cpp_templates:
     includes: ['#include <gnuradio/blocks/delay.h>']
