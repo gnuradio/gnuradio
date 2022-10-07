@@ -39,7 +39,7 @@ templates:
     imports: from gnuradio import blocks
     make: blocks.exponentiate_const_cci(${exponent}, ${vlen})
     callbacks:
-    - set_exponent(${exponent})
+    - set_exponent(int(${exponent}))
 
 cpp_templates:
     includes: ['#include <gnuradio/blocks/exponentiate_const_cci.h>']
