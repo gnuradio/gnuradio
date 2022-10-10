@@ -14,6 +14,7 @@
       - uhd_rfnoc_tx_radio
       - uhd_rfnoc_rx_streamer
       - uhd_rfnoc_tx_streamer
+      - uhd_rfnoc_keep_one_in_n
   - RFNoC Image Builder:
     - Blocks:
       - uhd_fpga_ddc
