@@ -81,6 +81,9 @@ def grc_type(input, vec=False, ref=False):
                     x = f'${{{x}.vec}}'
                 else:
                     x = f'${{{x}}}'
+            elif input.startswith('parameters/'):
+                x = get_linked_value(input)
+                x = f'${{{x}}}'
             else:
                 x = 'raw'
         else:
