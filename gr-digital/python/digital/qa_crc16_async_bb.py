@@ -43,7 +43,7 @@ class qa_crc16_async_bb(gr_unittest.TestCase):
 
         self.assertEqual(dbg_append.num_messages(), 1)
         out_append = pmt.u8vector_elements(pmt.cdr(dbg_append.get_message(0)))
-        self.assertEqual(out_append, data + [0x37, 0x3b])
+        self.assertEqual(out_append, data + [0x3b, 0x37])
 
         self.assertEqual(dbg_check.num_messages(), 1)
         out_check = pmt.u8vector_elements(pmt.cdr(dbg_check.get_message(0)))
