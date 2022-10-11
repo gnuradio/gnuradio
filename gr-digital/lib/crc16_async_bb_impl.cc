@@ -57,7 +57,8 @@ void crc16_async_bb_impl::calc(pmt::pmt_t msg)
 
     crc = d_crc_ccitt_impl.compute(bytes_in, pkt_len);
     memcpy((void*)bytes_out.data(), (const void*)bytes_in, pkt_len);
-    memcpy((void*)(bytes_out.data() + pkt_len), &crc, 2);
+    bytes_out.data()[pkt_len] = (crc >> 8) & 0xff;
+    bytes_out.data()[pkt_len + 1] = crc & 0xff;
 
     pmt::pmt_t output = pmt::init_u8vector(
         pkt_len + 2,
@@ -73,11 +74,13 @@ void crc16_async_bb_impl::check(pmt::pmt_t msg)
     pmt::pmt_t bytes(pmt::cdr(msg));
 
     unsigned int crc;
+    unsigned int crc1;
     size_t pkt_len(0);
     const uint8_t* bytes_in = pmt::u8vector_elements(bytes, pkt_len);
 
     crc = d_crc_ccitt_impl.compute(bytes_in, pkt_len - 2);
-    if (memcmp(&crc, bytes_in + pkt_len - 2, 2)) { // Drop package
+    crc1 = (bytes_in[pkt_len - 2] << 8) | bytes_in[pkt_len - 1];
+    if (crc != crc1) { // Drop packet
         d_nfail++;
         return;
     }
