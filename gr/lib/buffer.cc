@@ -140,9 +140,9 @@ void buffer::on_unlock()
 /*******                    BUFFER_READER                 *****************************/
 /**************************************************************************************/
 
-size_t buffer_reader::items_available() { return bytes_available() / _itemsize; }
+uint64_t buffer_reader::items_available() { return bytes_available() / _itemsize; }
 
-size_t buffer_reader::bytes_available()
+uint64_t buffer_reader::bytes_available()
 {
     size_t w = _buffer->write_index();
     size_t r = _read_index;
