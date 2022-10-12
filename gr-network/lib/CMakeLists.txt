@@ -35,7 +35,9 @@ endif()
 target_include_directories(
     gnuradio-network
     PUBLIC $<INSTALL_INTERFACE:include>
-    PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>)
+    PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>
+    PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/asio
+)
 
 if(HAVE_WINDOWS_H)
     target_compile_definitions(gnuradio-network PRIVATE -DHAVE_WINDOWS_H)
