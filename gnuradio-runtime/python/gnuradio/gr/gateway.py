@@ -79,7 +79,7 @@ class py_io_signature(object):
             return ()
         if nports <= ntypes:
             return self.__types[:nports]
-        return self.__types + [self.__types[-1]] * (nports - ntypes)
+        return self.__types + (self.__types[-1],) * (nports - ntypes)
 
     def __iter__(self):
         """
