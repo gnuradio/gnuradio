@@ -58,13 +58,13 @@ bool tcp_sink_impl::start()
         // as a client.
         d_logger->info("[TCP Sink] connecting to {:s} on port {:d}", d_host, d_port);
 
-        boost::system::error_code err;
-        d_tcpsocket = new boost::asio::ip::tcp::socket(d_io_service);
+        asio::error_code err;
+        d_tcpsocket = new asio::ip::tcp::socket(d_io_context);
 
         std::string s_port = std::to_string(d_port);
-        boost::asio::ip::tcp::resolver resolver(d_io_service);
-        boost::asio::ip::tcp::resolver::query query(
-            d_host, s_port, boost::asio::ip::resolver_query_base::passive);
+        asio::ip::tcp::resolver resolver(d_io_context);
+        asio::ip::tcp::resolver::query query(
+            d_host, s_port, asio::ip::resolver_query_base::passive);
 
         d_endpoint = *resolver.resolve(query, err);
 
@@ -92,7 +92,7 @@ bool tcp_sink_impl::start()
 
         d_connected = true;
 
-        boost::asio::socket_base::keep_alive option(true);
+        asio::socket_base::keep_alive option(true);
         d_tcpsocket->set_option(option);
     } else {
         // In this mode, we're starting a local port listener and waiting
@@ -121,8 +121,8 @@ void tcp_sink_impl::run_listener()
     d_thread_running = false;
 }
 
-void tcp_sink_impl::accept_handler(boost::asio::ip::tcp::socket* new_connection,
-                                   const boost::system::error_code& error)
+void tcp_sink_impl::accept_handler(asio::ip::tcp::socket* new_connection,
+                                   const asio::error_code& error)
 {
     if (!error) {
         d_logger->info("Client connection received.");
@@ -130,7 +130,7 @@ void tcp_sink_impl::accept_handler(boost::asio::ip::tcp::socket* new_connection,
         // Accept succeeded.
         d_tcpsocket = new_connection;
 
-        boost::asio::socket_base::keep_alive option(true);
+        asio::socket_base::keep_alive option(true);
         d_tcpsocket->set_option(option);
         d_connected = true;
 
@@ -152,15 +152,13 @@ void tcp_sink_impl::connect(bool initial_connection)
 
     if (initial_connection) {
         if (d_is_ipv6)
-            d_acceptor = new boost::asio::ip::tcp::acceptor(
-                d_io_service,
-                boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v6(), d_port));
+            d_acceptor = new asio::ip::tcp::acceptor(
+                d_io_context, asio::ip::tcp::endpoint(asio::ip::tcp::v6(), d_port));
         else
-            d_acceptor = new boost::asio::ip::tcp::acceptor(
-                d_io_service,
-                boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), d_port));
+            d_acceptor = new asio::ip::tcp::acceptor(
+                d_io_context, asio::ip::tcp::endpoint(asio::ip::tcp::v4(), d_port));
     } else {
-        d_io_service.reset();
+        d_io_context.reset();
     }
 
     if (d_tcpsocket) {
@@ -169,14 +167,13 @@ void tcp_sink_impl::connect(bool initial_connection)
     d_tcpsocket = NULL;
     d_connected = false;
 
-    boost::asio::ip::tcp::socket* tmpSocket =
-        new boost::asio::ip::tcp::socket(d_io_service);
+    asio::ip::tcp::socket* tmpSocket = new asio::ip::tcp::socket(d_io_context);
     d_acceptor->async_accept(*tmpSocket,
-                             [this, tmpSocket](const boost::system::error_code& error) {
+                             [this, tmpSocket](const asio::error_code& error) {
                                  accept_handler(tmpSocket, error);
                              });
 
-    d_io_service.run();
+    d_io_context.run();
 }
 
 /*
@@ -196,8 +193,8 @@ bool tcp_sink_impl::stop()
         d_tcpsocket = NULL;
     }
 
-    d_io_service.reset();
-    d_io_service.stop();
+    d_io_context.reset();
+    d_io_context.stop();
 
     if (d_acceptor) {
         delete d_acceptor;
@@ -234,13 +231,12 @@ int tcp_sink_impl::work(int noutput_items,
     p_buff = (char*)input_items[0];
 
     while ((bytes_remaining > 0) && (!ec)) {
-        bytes_written = boost::asio::write(
-            *d_tcpsocket, boost::asio::buffer((const void*)p_buff, bytes_remaining), ec);
+        bytes_written = asio::write(
+            *d_tcpsocket, asio::buffer((const void*)p_buff, bytes_remaining), ec);
         bytes_remaining -= bytes_written;
         p_buff += bytes_written;
 
-        if (ec == boost::asio::error::connection_reset ||
-            ec == boost::asio::error::broken_pipe) {
+        if (ec == asio::error::connection_reset || ec == asio::error::broken_pipe) {
 
             // Connection was reset
             d_connected = false;
