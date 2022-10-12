@@ -128,12 +128,12 @@ bool udp_source_impl::start()
     d_localqueue = new boost::circular_buffer<char>(max_circ_buffer);
 
     if (is_ipv6)
-        d_endpoint = boost::asio::ip::udp::endpoint(boost::asio::ip::udp::v6(), d_port);
+        d_endpoint = asio::ip::udp::endpoint(asio::ip::udp::v6(), d_port);
     else
-        d_endpoint = boost::asio::ip::udp::endpoint(boost::asio::ip::udp::v4(), d_port);
+        d_endpoint = asio::ip::udp::endpoint(asio::ip::udp::v4(), d_port);
 
     try {
-        d_udpsocket = new boost::asio::ip::udp::socket(d_io_service, d_endpoint);
+        d_udpsocket = new asio::ip::udp::socket(d_io_context, d_endpoint);
     } catch (const std::exception& ex) {
         throw std::runtime_error(std::string("[UDP Source] Error occurred: ") +
                                  ex.what());
@@ -156,8 +156,8 @@ bool udp_source_impl::stop()
 
         d_udpsocket = NULL;
 
-        d_io_service.reset();
-        d_io_service.stop();
+        d_io_context.reset();
+        d_io_context.stop();
     }
 
     if (d_local_buffer) {
@@ -175,7 +175,7 @@ bool udp_source_impl::stop()
 size_t udp_source_impl::data_available()
 {
     // Get amount of data available
-    boost::asio::socket_base::bytes_readable command(true);
+    asio::socket_base::bytes_readable command(true);
     d_udpsocket->io_control(command);
     size_t bytes_readable = command.get();
 
@@ -185,7 +185,7 @@ size_t udp_source_impl::data_available()
 size_t udp_source_impl::netdata_available()
 {
     // Get amount of data available
-    boost::asio::socket_base::bytes_readable command(true);
+    asio::socket_base::bytes_readable command(true);
     d_udpsocket->io_control(command);
     size_t bytes_readable = command.get();
 
@@ -255,7 +255,7 @@ int udp_source_impl::work(int noutput_items,
     // the queue. however read blocks so we want to make sure we have data before
     // we call it.
     if (bytes_available > 0) {
-        boost::asio::streambuf::mutable_buffers_type buf =
+        asio::streambuf::mutable_buffers_type buf =
             d_read_buffer.prepare(bytes_available);
         // http://stackoverflow.com/questions/28929699/boostasio-read-n-bytes-from-socket-to-streambuf
         bytes_read = d_udpsocket->receive_from(buf, d_endpoint);
@@ -266,8 +266,7 @@ int udp_source_impl::work(int noutput_items,
             // Get the data and add it to our local queue.  We have to maintain a
             // local queue in case we read more bytes than noutput_items is asking
             // for.  In that case we'll only return noutput_items bytes
-            const char* read_data =
-                boost::asio::buffer_cast<const char*>(d_read_buffer.data());
+            const char* read_data = asio::buffer_cast<const char*>(d_read_buffer.data());
             for (int i = 0; i < bytes_read; i++) {
                 d_localqueue->push_back(read_data[i]);
             }

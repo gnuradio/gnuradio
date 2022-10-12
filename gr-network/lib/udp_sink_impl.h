@@ -12,8 +12,7 @@
 #define INCLUDED_NETWORK_UDP_SINK_IMPL_H
 
 #include <gnuradio/network/udp_sink.h>
-#include <boost/asio.hpp>
-#include <boost/asio/ip/udp.hpp>
+#include <asio.hpp>
 #include <boost/circular_buffer.hpp>
 
 #include <gnuradio/network/packet_headers.h>
@@ -47,11 +46,11 @@ protected:
     boost::circular_buffer<char>* d_localqueue;
     char* d_localbuffer;
 
-    boost::system::error_code ec;
+    asio::error_code ec;
 
-    boost::asio::io_service d_io_service;
-    boost::asio::ip::udp::endpoint d_endpoint;
-    boost::asio::ip::udp::socket* d_udpsocket;
+    asio::io_context d_io_context;
+    asio::ip::udp::endpoint d_endpoint;
+    asio::ip::udp::socket* d_udpsocket;
 
     virtual void
     build_header(); // returns header size.  Header is stored in tmpHeaderBuff
