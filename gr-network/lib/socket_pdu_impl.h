@@ -20,36 +20,34 @@ namespace network {
 class socket_pdu_impl : public socket_pdu
 {
 private:
-    boost::asio::io_service d_io_service;
+    asio::io_context d_io_context;
     std::vector<char> d_rxbuf;
-    void run_io_service() { d_io_service.run(); }
+    void run_io_context() { d_io_context.run(); }
     gr::thread::thread d_thread;
     bool d_started;
 
     // TCP specific
-    boost::asio::ip::tcp::endpoint d_tcp_endpoint;
+    asio::ip::tcp::endpoint d_tcp_endpoint;
     std::vector<tcp_connection::sptr> d_tcp_connections;
-    void handle_tcp_read(const boost::system::error_code& error,
-                         size_t bytes_transferred);
+    void handle_tcp_read(const asio::error_code& error, size_t bytes_transferred);
     const bool d_tcp_no_delay;
 
     // TCP server specific
-    std::shared_ptr<boost::asio::ip::tcp::acceptor> d_acceptor_tcp;
+    std::shared_ptr<asio::ip::tcp::acceptor> d_acceptor_tcp;
     void start_tcp_accept();
     void tcp_server_send(pmt::pmt_t msg);
     void handle_tcp_accept(tcp_connection::sptr new_connection,
-                           const boost::system::error_code& error);
+                           const asio::error_code& error);
 
     // TCP client specific
-    std::shared_ptr<boost::asio::ip::tcp::socket> d_tcp_socket;
+    std::shared_ptr<asio::ip::tcp::socket> d_tcp_socket;
     void tcp_client_send(pmt::pmt_t msg);
 
     // UDP specific
-    boost::asio::ip::udp::endpoint d_udp_endpoint;
-    boost::asio::ip::udp::endpoint d_udp_endpoint_other;
-    std::shared_ptr<boost::asio::ip::udp::socket> d_udp_socket;
-    void handle_udp_read(const boost::system::error_code& error,
-                         size_t bytes_transferred);
+    asio::ip::udp::endpoint d_udp_endpoint;
+    asio::ip::udp::endpoint d_udp_endpoint_other;
+    std::shared_ptr<asio::ip::udp::socket> d_udp_socket;
+    void handle_udp_read(const asio::error_code& error, size_t bytes_transferred);
     void udp_send(pmt::pmt_t msg);
 
 public:
