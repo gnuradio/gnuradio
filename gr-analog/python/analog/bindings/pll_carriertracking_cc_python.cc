@@ -34,6 +34,7 @@ void bind_pll_carriertracking_cc(py::module& m)
 
 
     py::class_<pll_carriertracking_cc,
+               gr::blocks::control_loop,
                gr::sync_block,
                gr::block,
                gr::basic_block,
