@@ -26,7 +26,7 @@ private:
     struct viterbi_state d_state1[64];
     unsigned char d_viterbi_in[16];
 
-    int d_count;
+    unsigned int d_count;
 
 public:
     decode_ccsds_27_fb_impl();
