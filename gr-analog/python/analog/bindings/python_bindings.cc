@@ -68,6 +68,7 @@ PYBIND11_MODULE(analog_python, m)
 
     // Allow access to base block methods
     py::module::import("gnuradio.gr");
+    py::module::import("gnuradio.blocks");
 
     bind_agc(m);
     // bind_agc2(m);
