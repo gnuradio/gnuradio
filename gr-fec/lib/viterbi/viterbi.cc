@@ -49,7 +49,7 @@
  */
 #define BUTTERFLY(i, sym)                                         \
     {                                                             \
-        int m0, m1;                                               \
+        long m0, m1;                                              \
                                                                   \
         /* ACS for 0 branch */                                    \
         m0 = state[i].metric + mets[sym];          /* 2*i */      \
