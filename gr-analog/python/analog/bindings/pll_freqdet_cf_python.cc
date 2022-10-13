@@ -34,6 +34,7 @@ void bind_pll_freqdet_cf(py::module& m)
 
 
     py::class_<pll_freqdet_cf,
+               gr::blocks::control_loop,
                gr::sync_block,
                gr::block,
                gr::basic_block,

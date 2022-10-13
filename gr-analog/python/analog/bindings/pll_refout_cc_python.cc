@@ -34,6 +34,7 @@ void bind_pll_refout_cc(py::module& m)
 
 
     py::class_<pll_refout_cc,
+               gr::blocks::control_loop,
                gr::sync_block,
                gr::block,
                gr::basic_block,
