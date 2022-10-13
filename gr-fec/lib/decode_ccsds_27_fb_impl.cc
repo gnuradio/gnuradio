@@ -66,6 +66,14 @@ int decode_ccsds_27_fb_impl::work(int noutput_items,
                 viterbi_get_output(d_state0, out++);
                 // printf("%li\n", *(out-1), metric);
             }
+
+            // Periodically normalize the path metrics to prevent overflow
+            if (d_count % 65536 == 65535) {
+                long diff = d_state0[0].metric;
+                for (int j = 0; j < 64; j++) {
+                    d_state0[j].metric -= diff;
+                }
+            }
         }
 
         d_count++;
