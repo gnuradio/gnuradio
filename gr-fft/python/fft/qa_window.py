@@ -35,7 +35,7 @@ class test_window(gr_unittest.TestCase):
             21,
             normalize=True)
         power = numpy.sum([x * x for x in win]) / len(win)
-        self.assertAlmostEqual(power, 1.0)
+        self.assertAlmostEqual(power, 1.0, places=6)
 
 
 if __name__ == '__main__':
