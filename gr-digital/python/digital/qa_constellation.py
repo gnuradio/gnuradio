@@ -117,10 +117,10 @@ difficult_constellation_info = (
 def slicer(x):
     ret = []
     for xi in x:
-        if(xi < 0):
+        if xi < 0:
             ret.append(0.0)
-    else:
-        ret.append(1.0)
+        else:
+            ret.append(1.0)
     return ret
 
 
