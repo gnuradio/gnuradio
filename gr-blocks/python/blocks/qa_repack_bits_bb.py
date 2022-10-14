@@ -63,19 +63,6 @@ class qa_repack_bits_bb (gr_unittest.TestCase):
         self.tb.run()
         self.assertEqual(sink.data(), expected_data)
 
-    def test_002_three(self):
-        """ 8 -> 3 """
-        src_data = [0b11111101, 0b11111111, 0b11111111]
-        expected_data = [0b101, ] + [0b111, ] * 7
-        k = 8
-        l = 3
-        src = blocks.vector_source_b(src_data, False, 1)
-        repack = blocks.repack_bits_bb(k, l)
-        sink = blocks.vector_sink_b()
-        self.tb.connect(src, repack, sink)
-        self.tb.run()
-        self.assertEqual(sink.data(), expected_data)
-
     def test_002_three_msb(self):
         """ 8 -> 3 """
         src_data = [0b11111101, 0b11111111, 0b11111111]
