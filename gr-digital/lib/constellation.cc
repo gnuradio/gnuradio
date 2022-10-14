@@ -245,9 +245,9 @@ void constellation::gen_soft_dec_lut(int precision, float npwr)
     float maxd = 1.0f;
     float step = (2.0f * maxd) / (d_lut_scale - 1);
     float y = -maxd;
-    while (y < maxd + step) {
+    while (y < maxd + (step / 2)) {
         float x = -maxd;
-        while (x < maxd + step) {
+        while (x < maxd + (step / 2)) {
             gr_complex pt = gr_complex(x, y);
             d_soft_dec_lut.push_back(calc_soft_dec(pt, npwr));
             x += step;
