@@ -147,7 +147,7 @@ class test_moving_average(gr_unittest.TestCase):
         ref_data = ref_dst.data()
 
         # make sure result is close to zero
-        self.assertEqual(dut_data, ref_data)
+        self.assertListAlmostEqual(dut_data, ref_data, tol=3)
 
     def test_complex_scalar(self):
         tb = self.tb
