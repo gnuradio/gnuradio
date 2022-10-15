@@ -267,7 +267,6 @@ ldpc_G_matrix_impl::~ldpc_G_matrix_impl()
 {
     // Call the gsl_matrix_free function to free memory.
     gsl_matrix_free(d_G_transp_ptr);
-    gsl_matrix_free(d_H_obj);
 }
 } /* namespace code */
 } /* namespace fec */
