@@ -87,7 +87,7 @@ class test_fecapi_ldpc(gr_unittest.TestCase):
 
         self.assertEqual(data_in, data_out)
 
-    def test_parallelism0_03(self):
+    def test_parallelism0_03_gen(self):
         filename = LDPC_ALIST_DIR + "n_0100_k_0058_gen_matrix.alist"
         gap = 4
         LDPC_matrix_object = fec.ldpc_G_matrix(filename)
@@ -105,7 +105,7 @@ class test_fecapi_ldpc(gr_unittest.TestCase):
 
         self.assertEqual(data_in, data_out)
 
-    def test_parallelism0_03(self):
+    def test_parallelism0_03_par(self):
         filename = LDPC_ALIST_DIR + "n_0100_k_0058_gen_matrix.alist"
         gap = 4
         k = 100 - 58
