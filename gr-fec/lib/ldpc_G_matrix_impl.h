@@ -49,8 +49,6 @@ private:
     // GSL matrix structure for transpose of G
     gsl_matrix* d_G_transp_ptr;
 
-    gsl_matrix* d_H_obj;
-
     //! Get the generator matrix (used during encoding)
     const gsl_matrix* G_transpose() const;
 
