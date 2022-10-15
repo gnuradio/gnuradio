@@ -55,7 +55,7 @@ bool ldpc_gen_mtrx_encoder_impl::set_frame_size(unsigned int frame_size)
 
     d_frame_size = frame_size;
 
-    d_output_size = static_cast<int>(d_rate * d_frame_size);
+    d_output_size = static_cast<int>(round(d_rate * d_frame_size));
 
     return ret;
 }
