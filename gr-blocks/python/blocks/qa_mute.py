@@ -68,7 +68,7 @@ class test_mute(gr_unittest.TestCase):
         op = blocks.mute_cc(False)
         self.help_cc((src_data,), expected_result, op)
 
-    def test_unmute_cc(self):
+    def test_mute_cc(self):
         src_data = [1 + 5j, 2 + 5j, 3 + 5j, 4 + 5j, 5 + 5j]
         expected_result = [0 + 0j, 0 + 0j, 0 + 0j, 0 + 0j, 0 + 0j]
         op = blocks.mute_cc(True)
