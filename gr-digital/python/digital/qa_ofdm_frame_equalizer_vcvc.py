@@ -219,13 +219,6 @@ class qa_ofdm_frame_equalizer_vcvc (gr_unittest.TestCase):
             0, 0, 1j, 1j, 0, 1j, 1j, 0,  # Go crazy here!
             0, 0, 1j, 1j, 0, 1j, 1j, 0
         ]
-        channel = [
-            0, 0, 1, 1, 0, 1, 1, 0,
-            # These coefficients will be rotated slightly (but less than \pi/2)
-            0, 0, 1, 1, 0, 1, 1, 0,
-            0, 0, 1j, 1j, 0, 1j, 1j, 0,  # Go crazy here!
-            0, 0, 1j, 1j, 0, 1j, 1j, 0
-        ]
         for idx in range(fft_len, 2 * fft_len):
             channel[idx] = channel[idx - fft_len] * \
                 numpy.exp(1j * .1 * numpy.pi * (numpy.random.rand() - .5))
