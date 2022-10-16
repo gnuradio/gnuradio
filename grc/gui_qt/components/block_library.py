@@ -76,7 +76,7 @@ class LibraryView(QtWidgets.QTreeView):
         label = self.model().data(self.currentIndex())
         if label in self.parent().parent()._block_tree_flat:
             block_key = self.parent().parent()._block_tree_flat[label].key
-            self.parent().parent().app.DocumentationTab.setText(self.parent().parent()._block_tree_flat[label].documentation[block_key])
+            self.parent().parent().app.DocumentationTab.setText(self.parent().parent()._block_tree_flat[label].documentation[''])
 
 
 class BlockLibrary(QtWidgets.QDockWidget, base.Component):
