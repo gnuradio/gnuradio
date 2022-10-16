@@ -36,7 +36,7 @@ ctcss_squelch_ff::make(int rate, float freq, float level, int len, int ramp, boo
 int ctcss_squelch_ff_impl::find_tone(float freq)
 {
     for (int i = 0; i <= max_tone_index; i++)
-        if (ctcss_tones[i] == freq) // FIXME: make almost equal
+        if (std::abs(ctcss_tones[i] - freq) < 0.001)
             return i;
     return -1;
 }
