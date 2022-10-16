@@ -212,10 +212,6 @@ if(MSVC)
     target_sources(gnuradio-blocks PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-blocks.rc)
 endif(MSVC)
 
-if(MSVC)
-    target_compile_definitions(gnuradio-blocks PUBLIC _ENABLE_ATOMIC_ALIGNMENT_FIX)
-endif()
-
 if(BUILD_SHARED_LIBS)
     if(SNDFILE_FOUND)
         gr_library_foo(gnuradio-blocks SNDFILE)

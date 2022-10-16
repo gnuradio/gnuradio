@@ -46,6 +46,7 @@ int probe_signal_impl<T>::work(int noutput_items,
 {
     const T* in = (const T*)input_items[0];
 
+    gr::thread::scoped_lock guard(d_mutex);
     if (noutput_items > 0)
         d_level = in[noutput_items - 1];
 
@@ -57,5 +58,13 @@ template class probe_signal<std::int16_t>;
 template class probe_signal<std::int32_t>;
 template class probe_signal<float>;
 template class probe_signal<gr_complex>;
+
+template <class T>
+T probe_signal_impl<T>::level() const
+{
+    gr::thread::scoped_lock guard(d_mutex);
+    return d_level;
+}
+
 } /* namespace blocks */
 } /* namespace gr */

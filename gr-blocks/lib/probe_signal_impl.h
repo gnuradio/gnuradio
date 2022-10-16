@@ -13,7 +13,6 @@
 #define PROBE_SIGNAL_IMPL_H
 
 #include <gnuradio/blocks/probe_signal.h>
-#include <atomic>
 
 namespace gr {
 namespace blocks {
@@ -22,13 +21,14 @@ template <class T>
 class probe_signal_impl : public probe_signal<T>
 {
 private:
-    std::atomic<T> d_level;
+    T d_level;
+    mutable gr::thread::mutex d_mutex;
 
 public:
     probe_signal_impl();
     ~probe_signal_impl() override;
 
-    T level() const override { return d_level; }
+    T level() const override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
