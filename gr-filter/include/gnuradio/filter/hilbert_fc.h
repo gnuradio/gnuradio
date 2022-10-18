@@ -21,13 +21,16 @@ namespace gr {
 namespace filter {
 
 /*!
- * \brief Hilbert transformer.
+ * \brief Generate Analytic Signal.
  * \ingroup filter_blk
  *
  * \details
- * real output is input appropriately delayed.
- * imaginary output is hilbert filtered (90 degree phase shift)
- * version of input.
+ * Real part of the output is an appropriately delayed version of the input while
+ * the complex part of the output is the hilbert transform of the input.
+ *
+ * This is an indirect way of generating the hilbert transform of a signal.
+ *
+ * (https://en.wikipedia.org/wiki/Hilbert_transform#Analytic_representation)
  */
 class FILTER_API hilbert_fc : virtual public sync_block
 {
@@ -36,7 +39,7 @@ public:
     typedef std::shared_ptr<hilbert_fc> sptr;
 
     /*!
-     * Build a Hilbert transformer filter block.
+     * Build a Hilbert transformer filter block that generates the analytic signal.
      *
      * \param ntaps The number of taps for the filter.
      * \param window Window type (see fft::window::win_type) to use.
