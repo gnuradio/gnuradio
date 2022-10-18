@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2020 Free Software Foundation, Inc.
  *
@@ -13,6 +12,7 @@
 #define NPY_NO_DEPRECATED_API NPY_1_7_API_VERSION
 #include <numpy/arrayobject.h>
 
+#include <uhd/types/time_spec.hpp>
 #include <uhd/version.hpp>
 
 namespace py = pybind11;
@@ -68,6 +68,9 @@ PYBIND11_MODULE(uhd_python, m)
     bind_rfnoc_tx_radio(m);
     bind_rfnoc_tx_streamer(m);
 #endif
+
+
+    py::implicitly_convertible<double, uhd::time_spec_t>();
 
     m.def(
         "get_version_string",
