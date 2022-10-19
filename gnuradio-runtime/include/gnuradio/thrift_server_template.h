@@ -39,7 +39,7 @@ public:
     ~thrift_server_template();
 
 protected:
-    TserverBase* i_impl();
+    TserverBase* i_impl() override;
     friend class thrift_application_base<TserverBase, TImplClass>;
 
 private:
@@ -62,10 +62,10 @@ private:
             ;
         }
 
-        virtual ~TBufferedTransportFactory() {}
+        ~TBufferedTransportFactory() override {}
 
-        virtual std::shared_ptr<thrift::transport::TTransport>
-        getTransport(std::shared_ptr<thrift::transport::TTransport> trans)
+        std::shared_ptr<thrift::transport::TTransport>
+        getTransport(std::shared_ptr<thrift::transport::TTransport> trans) override
         {
             return std::shared_ptr<thrift::transport::TTransport>(
                 new thrift::transport::TBufferedTransport(trans, bufferSize));

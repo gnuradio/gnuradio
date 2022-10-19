@@ -25,49 +25,49 @@ struct to_pmt_f {
 };
 
 struct to_pmt_byte_f : public to_pmt_f {
-    pmt::pmt_t operator()(const GNURadio::Knob& knob);
+    pmt::pmt_t operator()(const GNURadio::Knob& knob) override;
 };
 struct to_pmt_short_f : public to_pmt_f {
-    pmt::pmt_t operator()(const GNURadio::Knob& knob);
+    pmt::pmt_t operator()(const GNURadio::Knob& knob) override;
 };
 struct to_pmt_int_f : public to_pmt_f {
-    pmt::pmt_t operator()(const GNURadio::Knob& knob);
+    pmt::pmt_t operator()(const GNURadio::Knob& knob) override;
 };
 struct to_pmt_long_f : public to_pmt_f {
-    pmt::pmt_t operator()(const GNURadio::Knob& knob);
+    pmt::pmt_t operator()(const GNURadio::Knob& knob) override;
 };
 struct to_pmt_double_f : public to_pmt_f {
-    pmt::pmt_t operator()(const GNURadio::Knob& knob);
+    pmt::pmt_t operator()(const GNURadio::Knob& knob) override;
 };
 struct to_pmt_string_f : public to_pmt_f {
-    pmt::pmt_t operator()(const GNURadio::Knob& knob);
+    pmt::pmt_t operator()(const GNURadio::Knob& knob) override;
 };
 struct to_pmt_bool_f : public to_pmt_f {
-    pmt::pmt_t operator()(const GNURadio::Knob& knob);
+    pmt::pmt_t operator()(const GNURadio::Knob& knob) override;
 };
 struct to_pmt_complex_f : public to_pmt_f {
-    pmt::pmt_t operator()(const GNURadio::Knob& knob);
+    pmt::pmt_t operator()(const GNURadio::Knob& knob) override;
 };
 struct to_pmt_f32vect_f : public to_pmt_f {
-    pmt::pmt_t operator()(const GNURadio::Knob& knob);
+    pmt::pmt_t operator()(const GNURadio::Knob& knob) override;
 };
 struct to_pmt_f64vect_f : public to_pmt_f {
-    pmt::pmt_t operator()(const GNURadio::Knob& knob);
+    pmt::pmt_t operator()(const GNURadio::Knob& knob) override;
 };
 struct to_pmt_s64vect_f : public to_pmt_f {
-    pmt::pmt_t operator()(const GNURadio::Knob& knob);
+    pmt::pmt_t operator()(const GNURadio::Knob& knob) override;
 };
 struct to_pmt_s32vect_f : public to_pmt_f {
-    pmt::pmt_t operator()(const GNURadio::Knob& knob);
+    pmt::pmt_t operator()(const GNURadio::Knob& knob) override;
 };
 struct to_pmt_s16vect_f : public to_pmt_f {
-    pmt::pmt_t operator()(const GNURadio::Knob& knob);
+    pmt::pmt_t operator()(const GNURadio::Knob& knob) override;
 };
 struct to_pmt_s8vect_f : public to_pmt_f {
-    pmt::pmt_t operator()(const GNURadio::Knob& knob);
+    pmt::pmt_t operator()(const GNURadio::Knob& knob) override;
 };
 struct to_pmt_c32vect_f : public to_pmt_f {
-    pmt::pmt_t operator()(const GNURadio::Knob& knob);
+    pmt::pmt_t operator()(const GNURadio::Knob& knob) override;
 };
 
 class To_PMT

@@ -26,11 +26,11 @@ class rpcserver_booter_thrift
 {
 public:
     rpcserver_booter_thrift();
-    ~rpcserver_booter_thrift();
+    ~rpcserver_booter_thrift() override;
 
-    rpcserver_base* i();
-    const std::string& type() { return d_type; }
-    const std::vector<std::string> endpoints();
+    rpcserver_base* i() override;
+    const std::string& type() override { return d_type; }
+    const std::vector<std::string> endpoints() override;
 
 private:
     std::string d_type;
