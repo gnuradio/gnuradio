@@ -27,7 +27,6 @@ if errorlevel 1 exit 1
 
 :: test
 set SKIP_TESTS=^
-qa_agc^
 %=EMPTY=%
 
 ctest --build-config Release --output-on-failure --timeout 120 -j%CPU_COUNT% -E "%SKIP_TESTS%"
