@@ -436,7 +436,7 @@ class test_agc(gr_unittest.TestCase):
         dst_data = dst1.data()
         self.assertComplexTuplesAlmostEqual(expected_result, dst_data, 4)
 
-    def test_006_sets(self):
+    def test_006_000_agc3_setters(self):
         agc = analog.agc3_cc(1e-3, 1e-1, 1)
 
         agc.set_attack_rate(1)
@@ -449,8 +449,8 @@ class test_agc(gr_unittest.TestCase):
         self.assertAlmostEqual(agc.reference(), 1.1)
         self.assertAlmostEqual(agc.gain(), 1.1)
 
-    def test_006(self):
-        ''' Test the complex AGC loop (attack and decay rate inputs) '''
+    def test_006_001_agc3(self, stride=1):
+        ''' Test the complex AGC loop agc3 (attack and decay rate inputs) '''
         tb = self.tb
 
         sampling_freq = 100
@@ -463,17 +463,34 @@ class test_agc(gr_unittest.TestCase):
         head = blocks.head(gr.sizeof_gr_complex, N)
 
         ref = 1
-        agc = analog.agc3_cc(1e-2, 1e-3, ref)
+        # attack_rate, decay_rate, reference, initial gain, stride
+        agc = analog.agc3_cc(1e-2, 1e-3, ref, ref, stride)
 
-        tb.connect(src1, head)
-        tb.connect(head, agc)
-        tb.connect(agc, dst1)
+        tb.connect(src1, agc)
+        tb.connect(agc, head)
+        tb.connect(head, dst1)
 
         tb.run()
         dst_data = dst1.data()
-        M = 100
-        result = [abs(x) for x in dst_data[N - M:]]
-        self.assertFloatTuplesAlmostEqual(result, M * [ref, ], 4)
+        self.assertEqual(len(dst_data), N, "unexpected data length")
+        result = [abs(x) for x in dst_data]
+        for idx, x in enumerate(result):
+            self.assertAlmostEqual(x, ref, 4,
+                                   f"failed at pos {idx} (stride = {stride})")
+
+    def test_006_002_agc3_striding(self):
+        for spacing in (2, 4, 5, 17, 233):
+            self.test_006_001_agc3(stride=spacing)
+
+    def test_006_003_agc3_setter_errors(self):
+        default_src = analog.agc3_cc()
+        settables = ("attack_rate", "decay_rate", "reference", "gain",
+                     "max_gain")
+        troublemakers = (getattr(default_src, f"set_{prop}")
+                         for prop in settables)
+        for troublemaker in troublemakers:
+            with self.assertRaises(ValueError):
+                troublemaker(-3.0)
 
     def test_100(self):
         ''' Test complex feedforward agc with constant input '''
