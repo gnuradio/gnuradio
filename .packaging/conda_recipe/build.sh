@@ -45,7 +45,6 @@ else
         qa_python_message_passing
         qa_rotator_cc
         qa_tcp_server_sink
-        qa_throttle
         qa_uncaught_exception
         test_modtool
     )
