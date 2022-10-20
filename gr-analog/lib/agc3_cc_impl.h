@@ -26,30 +26,32 @@ public:
                  int iir_update_decim = 1);
     ~agc3_cc_impl() override;
 
-    float attack_rate() const override { return d_attack; }
-    float decay_rate() const override { return d_decay; }
-    float reference() const override { return d_reference; }
-    float gain() const override { return d_gain; }
-    float max_gain() const override { return d_max_gain; }
+    float attack_rate() const override;
+    float decay_rate() const override;
+    float reference() const override;
+    float gain() const override;
+    float max_gain() const override;
 
-    void set_attack_rate(float rate) override { d_attack = rate; }
-    void set_decay_rate(float rate) override { d_decay = rate; }
-    void set_reference(float reference) override { d_reference = reference; }
-    void set_gain(float gain) override { d_gain = gain; }
-    void set_max_gain(float max_gain) override { d_max_gain = max_gain; }
+    void set_attack_rate(float rate) override;
+    void set_decay_rate(float rate) override;
+    void set_reference(float reference) override;
+    void set_gain(float gain) override;
+    void set_max_gain(float max_gain) override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
              gr_vector_void_star& output_items) override;
 
 private:
+    void test_and_log_value_domain(float value, std::string_view description);
+    mutable gr::thread::mutex d_setter_mutex;
     float d_attack;
     float d_decay;
     float d_reference;
     float d_gain;
     float d_max_gain;
+    unsigned int d_iir_update_decim;
     bool d_reset;
-    int d_iir_update_decim;
 };
 
 } /* namespace analog */
