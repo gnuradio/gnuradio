@@ -19,20 +19,11 @@ cmake --build . --config Release --target install
 
 if [[ $target_platform == linux* ]] ; then
     SKIP_TESTS=(
-        qa_cpp_py_binding
-        qa_cpp_py_binding_set
-        qa_ctrlport_probes
         qa_qtgui
-        qa_rotator_cc
-        test_modtool
     )
 else
     SKIP_TESTS=(
-        qa_add_system_time
         qa_block_gateway
-        qa_cpp_py_binding
-        qa_cpp_py_binding_set
-        qa_ctrlport_probes
         qa_fecapi_cc
         qa_fecapi_dummy
         qa_fecapi_ldpc
@@ -43,10 +34,7 @@ else
         qa_message_debug
         qa_message_strobe
         qa_python_message_passing
-        qa_rotator_cc
-        qa_tcp_server_sink
         qa_uncaught_exception
-        test_modtool
     )
 fi
 SKIP_TESTS_STR=$( IFS="|"; echo "${SKIP_TESTS[*]}" )

@@ -33,8 +33,6 @@ qa_agc^
 |qa_file_descriptor_source_sink^
 |qa_file_sink^
 |qa_file_source^
-|qa_rotator_cc^
-|qa_tcp_server_sink^
 |qa_wavfile^
 |test_modtool^
 %=EMPTY=%
