@@ -35,7 +35,7 @@ class test_throttle(gr_unittest.TestCase):
 
         total_time = end_time - start_time
         self.assertGreater(total_time, 0.3)
-        self.assertLess(total_time, 0.4)
+        self.assertLess(total_time, 0.6)
 
         dst_data = dst.data()
         self.assertEqual(src_data, dst_data)
@@ -58,7 +58,7 @@ class test_throttle(gr_unittest.TestCase):
 
         total_time = end_time - start_time
         self.assertGreater(total_time, 0.3)
-        self.assertLess(total_time, 0.4)
+        self.assertLess(total_time, 0.6)
 
         dst_data = dst.data()
         self.assertEqual(src_data, dst_data)
