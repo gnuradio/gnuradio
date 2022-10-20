@@ -35,7 +35,6 @@ qa_agc^
 |qa_file_source^
 |qa_rotator_cc^
 |qa_tcp_server_sink^
-|qa_throttle^
 |qa_wavfile^
 |test_modtool^
 %=EMPTY=%
