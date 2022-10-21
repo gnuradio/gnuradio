@@ -1,5 +1,5 @@
 c_compiler:
-- vs2017
+- vs2019
 channel_sources:
 - conda-forge
 channel_targets:
@@ -7,7 +7,7 @@ channel_targets:
 cuda_compiler_version:
 - None
 cxx_compiler:
-- vs2017
+- vs2019
 fftw:
 - '3'
 fmt:

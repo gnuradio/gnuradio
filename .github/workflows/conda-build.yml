@@ -8,7 +8,7 @@ on: [push, pull_request]
 jobs:
   build:
     name: ${{ matrix.CONFIG }}
-    runs-on: ${{ matrix.os }}-latest
+    runs-on: ${{ matrix.os_runs_on }}
     strategy:
       fail-fast: false
       matrix:
@@ -18,19 +18,23 @@ jobs:
             UPLOAD_PACKAGES: True
             DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
             os: ubuntu
+            os_runs_on: ubuntu-latest
           - CONFIG: linux_aarch64_numpy1.21python3.10.____cpython
             SHORT_CONFIG: linux_aarch64_numpy1.21python3.10.____cpython
             UPLOAD_PACKAGES: True
             DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
             os: ubuntu
+            os_runs_on: ubuntu-latest
           - CONFIG: win_64_cuda_compiler_versionNonenumpy1.21python3.10.____cpython
             SHORT_CONFIG: win_64_cuda_compiler_versionNonenum_h60723522fd
             UPLOAD_PACKAGES: True
             os: windows
+            os_runs_on: windows-2019
           - CONFIG: osx_64_numpy1.21python3.10.____cpython
             SHORT_CONFIG: osx_64_numpy1.21python3.10.____cpython
             UPLOAD_PACKAGES: True
             os: macos
+            os_runs_on: macos-latest
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
@@ -93,7 +97,7 @@ jobs:
         if errorlevel 1 exit 1
         setup_conda_rc .\ ".\.conda/recipe" .\.ci_support\%CONFIG%.yaml
         if errorlevel 1 exit 1
-        
+
 
         if EXIST LICENSE.txt (
           copy LICENSE.txt ".conda/recipe\\recipe-scripts-license.txt"
