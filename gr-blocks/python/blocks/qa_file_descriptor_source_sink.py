@@ -19,9 +19,13 @@ class test_file_descriptor_source_sink(gr_unittest.TestCase):
     def setUp(self):
         os.environ['GR_CONF_CONTROLPORT_ON'] = 'False'
         self.tb = gr.top_block()
+        temp = tempfile.NamedTemporaryFile(delete=False)
+        temp.close()
+        self._datafilename = temp.name
 
     def tearDown(self):
         self.tb = None
+        os.unlink(self._datafilename)
 
     def test_file_descriptor(self):
         src_data = range(1000)
@@ -29,27 +33,21 @@ class test_file_descriptor_source_sink(gr_unittest.TestCase):
 
         snk2 = blocks.vector_sink_f()
 
-        with tempfile.NamedTemporaryFile() as temp:
-            fhandle0 = open(temp.name, "wb")
-            fd0 = fhandle0.fileno()
+        binary = os.O_BINARY if os.name == "nt" else 0
+        fd0 = os.open(self._datafilename, os.O_WRONLY | binary)
 
-            src = blocks.vector_source_f(src_data)
-            snk = blocks.file_descriptor_sink(gr.sizeof_float, fd0)
+        src = blocks.vector_source_f(src_data)
+        snk = blocks.file_descriptor_sink(gr.sizeof_float, fd0)
 
-            self.tb.connect(src, snk)
-            self.tb.run()
-            os.fsync(fd0)
-            fhandle0.close()
+        self.tb.connect(src, snk)
+        self.tb.run()
 
-            fhandle1 = open(temp.name, "rb")
-            fd1 = fhandle1.fileno()
-            src2 = blocks.file_descriptor_source(gr.sizeof_float, fd1, False)
+        fd1 = os.open(self._datafilename, os.O_RDONLY | binary)
+        src2 = blocks.file_descriptor_source(gr.sizeof_float, fd1, False)
 
-            self.tb.disconnect(src, snk)
-            self.tb.connect(src2, snk2)
-            self.tb.run()
-            os.fsync(fd1)
-            fhandle1.close()
+        self.tb.disconnect(src, snk)
+        self.tb.connect(src2, snk2)
+        self.tb.run()
 
         result_data = snk2.data()
         self.assertFloatTuplesAlmostEqual(expected_result, result_data)

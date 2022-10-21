@@ -30,9 +30,6 @@ set SKIP_TESTS=^
 qa_agc^
 |qa_dtv^
 |qa_fecapi_ldpc^
-|qa_file_descriptor_source_sink^
-|qa_file_sink^
-|qa_file_source^
 |qa_wavfile^
 |test_modtool^
 %=EMPTY=%
