@@ -15,6 +15,8 @@
       - uhd_rfnoc_rx_streamer
       - uhd_rfnoc_tx_streamer
       - uhd_rfnoc_keep_one_in_n
+      - uhd_rfnoc_siggen
+      - uhd_rfnoc_window
   - RFNoC Image Builder:
     - Blocks:
       - uhd_fpga_ddc
