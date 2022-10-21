@@ -20,17 +20,14 @@ class test_file_source(gr_unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         os.environ['GR_CONF_CONTROLPORT_ON'] = 'False'
-        cls._datafile = tempfile.NamedTemporaryFile()
-        cls._datafilename = cls._datafile.name
-        cls._vector = [x for x in range(1000)]
-        with open(cls._datafilename, 'wb') as f:
-            array.array('f', cls._vector).tofile(f)
+        with tempfile.NamedTemporaryFile(delete=False) as temp:
+            cls._datafilename = temp.name
+            cls._vector = list(range(1000))
+            array.array('f', cls._vector).tofile(temp)
 
     @classmethod
     def tearDownClass(cls):
-        del cls._vector
-        del cls._datafilename
-        del cls._datafile
+        os.unlink(cls._datafilename)
 
     def setUp(self):
         self.tb = gr.top_block()
