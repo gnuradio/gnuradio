@@ -57,7 +57,7 @@ function(GR_ADD_TEST test_name)
     endif(WIN32)
 
     gr_convert_quoted_string("${CMAKE_CURRENT_BINARY_DIR}" bindir)
-    gr_convert_quoted_string("${CMAKE_CURRENT_SOURCE_DIR}" srcdir)
+    file(TO_NATIVE_PATH "${CMAKE_CURRENT_SOURCE_DIR}" srcdir)
     gr_convert_quoted_string("${GR_TEST_LIBRARY_DIRS}" libpath)
     #GR_CONVERT_QUOTED_STRING("${GR_TEST_PYTHON_DIRS}" pypath)
     # Keep the original path conversion for pypath - the above commented line breaks CI tests
