@@ -114,7 +114,7 @@ ldpc_G_matrix_impl::ldpc_G_matrix_impl(const std::string filename) : fec_mtrx_im
     d_G_transp_ptr = gsl_matrix_alloc(d_n, d_k);
     gsl_matrix_transpose_memcpy(d_G_transp_ptr, G);
 
-    d_H_sptr = matrix_sptr((matrix*)H_ptr);
+    d_H_sptr = matrix_sptr((matrix*)H_ptr, matrix_free);
 
     // Free memory
     gsl_matrix_free(P);
