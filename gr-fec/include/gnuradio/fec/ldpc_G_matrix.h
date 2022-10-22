@@ -68,6 +68,14 @@ public:
                 unsigned int frame_size,
                 unsigned int max_iterations) const override = 0;
 
+    //! Get the codeword length n
+    //  Handled in fec_mtrx parent class.
+    unsigned int n() const override = 0;
+
+    //! Get the information word length k
+    //  Handled in fec_mtrx parent class.
+    unsigned int k() const override = 0;
+
     /*!
      * \brief A pointer to make SWIG work
      *

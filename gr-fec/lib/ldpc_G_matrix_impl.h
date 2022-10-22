@@ -65,8 +65,10 @@ public:
                 unsigned int frame_size,
                 unsigned int max_iterations) const override;
 
+    //! Redefine these here as part of the public interface
     unsigned int n() const override { return fec_mtrx_impl::n(); }
 
+    //! Redefine these here as part of the public interface
     unsigned int k() const override { return fec_mtrx_impl::k(); }
 
     gsl_matrix* generate_H();
