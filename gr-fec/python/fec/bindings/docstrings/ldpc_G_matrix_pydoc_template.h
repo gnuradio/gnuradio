@@ -33,4 +33,10 @@ static const char* __doc_gr_fec_code_ldpc_G_matrix_encode = R"doc()doc";
 static const char* __doc_gr_fec_code_ldpc_G_matrix_decode = R"doc()doc";
 
 
+static const char* __doc_gr_fec_code_ldpc_G_matrix_n = R"doc()doc";
+
+
+static const char* __doc_gr_fec_code_ldpc_G_matrix_k = R"doc()doc";
+
+
 static const char* __doc_gr_fec_code_ldpc_G_matrix_get_base_sptr = R"doc()doc";
