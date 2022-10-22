@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(ldpc_G_matrix.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(00ec42731c51e3dd1f19befea06ebac1)                     */
+/* BINDTOOL_HEADER_FILE_HASH(4acdd03bcf89f8a19434e8f2de545c1d)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -58,6 +58,12 @@ void bind_ldpc_G_matrix(py::module& m)
              py::arg("frame_size"),
              py::arg("max_iterations"),
              D(code, ldpc_G_matrix, decode))
+
+
+        .def("n", &ldpc_G_matrix::n, D(code, ldpc_G_matrix, n))
+
+
+        .def("k", &ldpc_G_matrix::k, D(code, ldpc_G_matrix, k))
 
 
         .def("get_base_sptr",
