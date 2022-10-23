@@ -9,6 +9,7 @@
 """ The file for testing the gr-modtool scripts """
 
 
+import os
 import shutil
 import tempfile
 import unittest
@@ -51,11 +52,13 @@ class TestModToolCore(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         """ create a temporary directory """
+        cls.start_dir = os.getcwd()
         cls.test_dir = tempfile.mkdtemp()
 
     @classmethod
     def tearDownClass(cls):
         """ remove the directory after the test """
+        os.chdir(cls.start_dir)
         shutil.rmtree(cls.test_dir)
 
     def setUp(self):
@@ -83,6 +86,7 @@ class TestModToolCore(unittest.TestCase):
         # in setup will throw exception after first test
         # cannot remove if directory is not created
         if not self.f_newmod:
+            os.chdir(self.start_dir)
             rmdir = self.test_dir + '/gr-howto'
             shutil.rmtree(rmdir)
 
