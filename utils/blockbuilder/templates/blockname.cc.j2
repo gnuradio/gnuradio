@@ -76,13 +76,13 @@ namespace {{module}} {
 {% if parameters %}
 {% for p in parameters -%}
 {% if p['settable']%}
-void {{block}}::set_{{p['id']}}({{p['dtype']|cpp_type}} {{p['id']}})
+void {{block}}::set_{{p['id']}}({{p['dtype']|cpp_type(vec=p['container']=='vector')}} {{p['id']}})
 {
     return request_parameter_change(params::id_{{p['id']}},{{p['id']}});
 }
 {% endif -%}
 {% if p['settable'] and not 'gettable' in p or p['gettable'] %}
-{{p['dtype']|cpp_type}} {{block}}::{{p['id']}}()
+{{ p['dtype']|cpp_type(vec=p['container']=='vector')}} {{block}}::{{p['id']}}()
 {
     return pmtf::get_as<{{ p['dtype']|cpp_type(vec=p['container']=='vector')}}>(request_parameter_query(params::id_{{p['id']}}));
 }
