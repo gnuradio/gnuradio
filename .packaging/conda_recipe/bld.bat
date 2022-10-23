@@ -37,7 +37,6 @@ qa_agc^
 |qa_tcp_server_sink^
 |qa_throttle^
 |qa_wavfile^
-|test_modtool^
 %=EMPTY=%
 
 ctest --build-config Release --output-on-failure --timeout 120 -j%CPU_COUNT% -E "%SKIP_TESTS%"
