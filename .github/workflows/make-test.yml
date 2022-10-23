@@ -62,32 +62,32 @@ jobs:
           - distro: 'Ubuntu 20.04'
             containerid: 'gnuradio/ci:ubuntu-20.04-3.9'
             cxxflags: -Werror -Wno-error=invalid-pch
-            ctest_args: '-E "qa_cpp_py_binding|qa_cpp_py_binding_set|qa_ctrlport_probes|qa_qtgui|metainfo_test"'
+            ctest_args: '-E "qa_qtgui|metainfo_test"'
             ldpath:
           - distro: 'Ubuntu 22.04'
             containerid: 'gnuradio/ci:ubuntu-22.04-3.9'
             cxxflags: -Werror -Wno-error=invalid-pch
-            ctest_args: '-E "qa_cpp_py_binding|qa_cpp_py_binding_set|qa_ctrlport_probes|qa_qtgui|qa_polar_..coder_(sc_)?systematic"'
+            ctest_args: '-E "qa_qtgui|qa_polar_..coder_(sc_)?systematic"'
             ldpath:
           - distro: 'Fedora 35'
             containerid: 'gnuradio/ci:fedora-35-3.9'
             cxxflags: -Werror -Wno-error=invalid-pch -Wno-error=deprecated-declarations
-            ctest_args: '-E "qa_cpp_py_binding|qa_cpp_py_binding_set|qa_ctrlport_probes|qa_qtgui"'
+            ctest_args: '-E "qa_qtgui"'
             ldpath: /usr/local/lib64/
           - distro: 'Fedora 36 (with 0xFE memory initialization)'
             containerid: 'gnuradio/ci:fedora-36-3.9'
             cxxflags: -Werror -Wno-error=invalid-pch -Wno-error=deprecated-declarations -ftrivial-auto-var-init=pattern
-            ctest_args: '-E "qa_cpp_py_binding|qa_cpp_py_binding_set|qa_ctrlport_probes|qa_qtgui"'
+            ctest_args: '-E "qa_qtgui"'
             ldpath: /usr/local/lib64/
           # - distro: 'CentOS 8.4'
           #   containerid: 'gnuradio/ci:centos-8.4-3.10'
           #   cxxflags: ''
-          #   ctest_args: '-E "qa_cpp_py_binding|qa_cpp_py_binding_set|qa_ctrlport_probes|qa_qtgui"'
+          #   ctest_args: '-E "qa_qtgui"'
           #   ldpath: /usr/local/lib64/
           - distro: 'Debian 11'
             containerid: 'gnuradio/ci:debian-11-3.10'
             cxxflags: -Werror -Wno-error=invalid-pch
-            ctest_args: '-E "qa_cpp_py_binding|qa_cpp_py_binding_set|qa_ctrlport_probes|qa_qtgui|qa_polar_..coder_(sc_)?systematic"'
+            ctest_args: '-E "qa_qtgui|qa_polar_..coder_(sc_)?systematic"'
             ldpath:
     name: ${{ matrix.distro }}
     container:
