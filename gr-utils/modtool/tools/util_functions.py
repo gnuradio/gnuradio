@@ -11,7 +11,11 @@
 
 import re
 import sys
-import readline
+try:
+    import readline
+    have_readline = True
+except ImportError:
+    have_readline = False
 
 # None of these must depend on other modtool stuff!
 
@@ -184,9 +188,11 @@ class SequenceCompleter(object):
             return self._tmp_matches[state]
 
     def __enter__(self):
-        self._old_completer = readline.get_completer()
-        readline.set_completer(self.completefunc)
-        readline.parse_and_bind("tab: complete")
+        if have_readline:
+            self._old_completer = readline.get_completer()
+            readline.set_completer(self.completefunc)
+            readline.parse_and_bind("tab: complete")
 
     def __exit__(self, exception_type, exception_value, traceback):
-        readline.set_completer(self._old_completer)
+        if have_readline:
+            readline.set_completer(self._old_completer)
