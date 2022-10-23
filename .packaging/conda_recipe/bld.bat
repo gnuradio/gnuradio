@@ -31,7 +31,6 @@ qa_agc^
 |qa_dtv^
 |qa_fecapi_ldpc^
 |qa_wavfile^
-|test_modtool^
 %=EMPTY=%
 
 ctest --build-config Release --output-on-failure --timeout 120 -j%CPU_COUNT% -E "%SKIP_TESTS%"
