@@ -8,7 +8,7 @@ category: '[Core]/Modulators'
 parameters:
 -   id: fs
     label: Sampling Rate
-    dtype: int
+    dtype: float
     grc:
         default: 400000
 -   id: tau
