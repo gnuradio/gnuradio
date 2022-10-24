@@ -9,12 +9,13 @@ options:
     description: ''
     gen_cmake: 'On'
     gen_linking: dynamic
-    generate_options: qt_gui
+    generate_options: no_gui
     hier_block_src_path: '.:'
     id: alsa_tones
     max_nouts: '0'
     output_language: python
     placement: (0,0)
+    pyqtgraph_antialiasing: ''
     qt_qss_theme: ''
     realtime_scheduling: ''
     run: 'True'
@@ -52,8 +53,8 @@ blocks:
     alias: ''
     ampl: '0.25'
     comment: ''
-    domain: cpu
     frequency: '440'
+    impl: cpu
     maxoutbuf: '0'
     minoutbuf: '0'
     offset: '0'
@@ -76,8 +77,8 @@ blocks:
     alias: ''
     ampl: '0.25'
     comment: ''
-    domain: cpu
     frequency: '554.4'
+    impl: cpu
     maxoutbuf: '0'
     minoutbuf: '0'
     offset: '0'
@@ -99,7 +100,7 @@ blocks:
     alias: ''
     comment: ''
     device_name: '"pulse"'
-    domain: cpu
+    impl: cpu
     num_inputs: '1'
     ok_to_block: 'True'
     sampling_rate: samp_rate
@@ -131,7 +132,7 @@ blocks:
     affinity: ''
     alias: ''
     comment: ''
-    domain: cpu
+    impl: cpu
     maxoutbuf: '0'
     minoutbuf: '0'
     nports: '2'
