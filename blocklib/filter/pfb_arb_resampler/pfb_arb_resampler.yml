@@ -1,6 +1,6 @@
 module: filter
 block: pfb_arb_resampler
-label: pfb_arb_resampler
+label: PFB Arbitrary Resampler
 blocktype: block
 category: '[Core]/Resamplers'
 
