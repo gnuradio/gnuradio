@@ -1,1 +1,2 @@
 meson.build
+!python/gnuradio/analog/meson.build
