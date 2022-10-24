@@ -144,6 +144,10 @@ int buffer_manager::get_buffer_num_items(edge_sptr e, flat_graph_sptr fg)
     // If any downstream blocks are decimators and/or have a large output_multiple,
     // ensure we have a buffer at least twice their decimation
     // factor*output_multiple
+    double decimation = (1.0 / grblock->relative_rate());
+    int multiple = grblock->output_multiple();
+    // int history = grblock->history();
+    nitems = std::max(nitems, static_cast<size_t>(2 * (decimation * multiple + grblock->noconsume())));
 
     auto blocks = fg->calc_downstream_blocks(grblock, e->src().port());
 
@@ -155,7 +159,7 @@ int buffer_manager::get_buffer_num_items(edge_sptr e, flat_graph_sptr fg)
         // double decimation = (1.0 / dgrblock->relative_rate());
         double decimation = (1.0 / p->relative_rate());
         int multiple = p->output_multiple();
-        nitems = std::max(nitems, static_cast<size_t>(2 * (decimation * multiple)));
+        nitems = std::max(nitems, static_cast<size_t>(3 * (decimation * multiple + p->noconsume())));
         // std::max(nitems, static_cast<int>(2 * (decimation * multiple)));
     }
 

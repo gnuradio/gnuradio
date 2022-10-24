@@ -40,6 +40,8 @@ private:
     bool d_output_multiple_set = false;
     double d_relative_rate = 1.0;
 
+    size_t _noconsume = 0;
+
 protected:
     bool _is_hier = false;
     neighbor_interface_sptr p_scheduler = nullptr;
@@ -127,7 +129,9 @@ public:
     bool output_multiple_set() const { return d_output_multiple_set; }
     void set_relative_rate(double relative_rate) { d_relative_rate = relative_rate; }
     double relative_rate() const { return d_relative_rate; }
-
+    void declare_noconsume(size_t value) { _noconsume = value; }
+    size_t noconsume() { return _noconsume; }
+    
     virtual int get_param_id(const std::string& id) { return d_param_str_map[id]; }
     virtual std::string get_param_str(const int id) { return d_str_param_map[id]; }
     virtual std::string suffix() { return ""; }
