@@ -1,0 +1,45 @@
+module: analog
+block: pll_refout
+label: PLL Carrier Regeneration
+blocktype: sync_block
+inherits: 
+-   gr::kernel::math::control_loop
+includes:
+-   gnuradio/kernel/math/control_loop.h
+
+doc:
+    brief: Make PLL block that outputs the tracked carrier signal.
+
+# Example Parameters
+parameters:
+-   id: loop_bw
+    label: Loop Bandwidth
+    dtype: rf32
+    settable: true
+-   id: max_freq
+    label: Max Freq
+    dtype: rf32
+    settable: true
+-   id: min_freq
+    label: Min Freq
+    dtype: rf32
+    settable: true
+
+
+# Example Ports
+ports:
+-   domain: stream
+    id: in
+    direction: input
+    type: cf32
+
+-   domain: stream
+    id: out
+    direction: output
+    type: cf32
+
+implementations:
+-   id: cpu
+# -   id: cuda
+
+file_format: 1
