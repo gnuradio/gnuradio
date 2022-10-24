@@ -94,10 +94,6 @@ add_library(
     vmcircbuf_prefs.cc
     vmcircbuf_sysv_shm.cc)
 
-if(ENABLE_PYTHON)
-    target_sources(gnuradio-runtime PRIVATE block_gateway_impl.cc)
-endif()
-
 # Messages
 target_sources(
     gnuradio-runtime
@@ -130,17 +126,7 @@ target_link_libraries(
         Boost::thread
         spdlog::spdlog
         MPLib::mplib
-        # INTERFACE/PRIVATE split so users of the library can choose how to link to Python
-        # (importantly, extension modules can avoid linking against Python and resolve
-        #  their own Python symbols at runtime through the Python interpreter's linking)
     PRIVATE libunwind::libunwind)
-
-if(ENABLE_PYTHON)
-    target_link_libraries(
-        gnuradio-runtime
-        INTERFACE Python::Module
-        PRIVATE Python::Python pybind11::pybind11)
-endif()
 
 # Address linker issues with std::filesystem on Centos 8 and Debian
 target_link_libraries(
