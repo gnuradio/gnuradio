@@ -9,8 +9,6 @@ typekeys:
     type: class
     options: 
       - cf32
-    #   - rf32
-
 
 parameters:
 -   id: numchans
