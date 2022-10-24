@@ -1,0 +1,91 @@
+module: filter
+block: fft_filter
+label: FFT Filter
+blocktype: block
+category: '[Core]/Filters'
+
+typekeys:
+  - id: IN_T
+    type: class
+    options: 
+        - cf32
+        - rf32
+
+  - id: OUT_T
+    type: class
+    options: 
+        - cf32
+        - rf32
+
+  - id: TAP_T
+    type: class
+    options: 
+        - cf32
+        - rf32
+
+type_inst:
+  - value: [cf32, cf32, cf32]
+    label: Complex->Complex (Complex Taps)
+  - value: [cf32, cf32, rf32]
+    label: Complex->Complex (Real Taps)
+  - value: [rf32, rf32, rf32]
+    label: Float->Float (Real Taps)
+
+doc:
+    brief: Fast FFT filter with specified input, output and taps
+    detail: |-
+        This block implements a  decimating filter using the
+        fast convolution method via an FFT. The decimation factor is an
+        integer that is greater than or equal to 1.
+        
+        The filter takes a set of taps to use in the
+        filtering operation. These taps can be defined as anything that
+        satisfies the user's filtering needs. For standard filters such
+        as lowpass, highpass, bandpass, etc., the filter.firdes and
+        filter.optfir classes provide convenient generating methods.
+        
+        This filter is implemented by using the FFTW package to perform
+        the required FFTs. An optional argument, nthreads, may be
+        passed to the constructor (or set using the set_nthreads member
+        function) to split the FFT among N number of threads. This can
+        improve performance on very large FFTs (that is, if the number
+        of taps used is very large) if you have enough threads/cores to
+        support it.
+
+parameters:
+-   id: decimation
+    label: Decimation
+    dtype: size
+    settable: false
+-   id: taps
+    label: Taps
+    dtype: TAP_T
+    container: vector
+    settable: true
+-   id: samp_delay
+    label: Sample Delay
+    dtype: ri32
+    default: 0
+    grc:
+        hide: part
+-   id: nthreads
+    label: Num. Threads
+    dtype: ri32
+    default: 0
+
+ports:
+-   domain: stream
+    id: in
+    direction: input
+    type: typekeys/IN_T
+
+-   domain: stream
+    id: out
+    direction: output
+    type: typekeys/OUT_T
+
+implementations:
+-   id: cpu
+# -   id: cuda
+
+file_format: 1
