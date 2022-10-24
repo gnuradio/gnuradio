@@ -1,0 +1,53 @@
+module: math
+block: sub
+label: Subtract
+blocktype: sync_block
+category: '[Core]/Math Operators'
+
+typekeys:
+  - id: T
+    type: class
+    options:
+        - cf32
+        - rf32
+        - ri32
+        - ri16
+doc:
+    brief: output = input_0 -  input_1 - ...)
+    detail: Subtract across all input streams
+
+parameters:
+-   id: nports
+    label: Num Ports
+    dtype: size
+    default: 2
+    grc:
+      default: 2
+      hide: part
+-   id: vlen
+    label: Vec. Length
+    dtype: size
+    default: 1
+
+ports:
+-   domain: stream
+    id: in
+    direction: input
+    type: typekeys/T
+    shape: parameters/vlen
+    multiplicity: parameters/nports
+
+-   domain: stream
+    id: out
+    direction: output
+    type: typekeys/T
+    shape: parameters/vlen
+
+implementations:
+-   id: cpu
+# -   id: cuda
+# -   id: numpy
+#     lang: python
+#     domain: cpu
+
+file_format: 2
