@@ -28,26 +28,14 @@ find_package(spdlog CONFIG)
 # Register component
 ########################################################################
 include(GrComponent)
-if(ENABLE_PYTHON)
-    gr_register_component(
-        "gnuradio-runtime"
-        ENABLE_GNURADIO_RUNTIME
-        Boost_FOUND
-        PYTHONINTERP_FOUND
-        MPLIB_FOUND
-        spdlog_FOUND
-        pybind11_FOUND
-        Volk_FOUND)
-else()
-    gr_register_component(
-        "gnuradio-runtime"
-        ENABLE_GNURADIO_RUNTIME
-        Boost_FOUND
-        PYTHONINTERP_FOUND
-        MPLIB_FOUND
-        spdlog_FOUND
-        Volk_FOUND)
-endif()
+gr_register_component(
+    "gnuradio-runtime"
+    ENABLE_GNURADIO_RUNTIME
+    Boost_FOUND
+    PYTHONINTERP_FOUND
+    MPLIB_FOUND
+    spdlog_FOUND
+    Volk_FOUND)
 
 get_filename_component(GNURADIO_RUNTIME_PYTHONPATH ${PROJECT_SOURCE_DIR}/python ABSOLUTE)
 ########################################################################

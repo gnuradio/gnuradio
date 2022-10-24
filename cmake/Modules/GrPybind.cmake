@@ -181,7 +181,6 @@ macro(GR_PYBIND_MAKE_CHECK_HASH name updir filter files)
             ${name}_python
             PRIVATE
             ${pybind11_INCLUDE_DIR}/pybind11/pybind11.h
-            ${pybind11_INCLUDE_DIR}/pybind11/embed.h
             ${pybind11_INCLUDE_DIR}/pybind11/complex.h
             ${pybind11_INCLUDE_DIR}/pybind11/operators.h
             ${pybind11_INCLUDE_DIR}/pybind11/stl.h)
