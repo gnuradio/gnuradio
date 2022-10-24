@@ -44,6 +44,8 @@ parameters:
     label: Decimation
     dtype: size
     settable: false
+    grc:
+      default: 1
 -   id: taps
     label: Taps
     dtype: TAP_T
