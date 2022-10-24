@@ -87,7 +87,10 @@ def grc_type(input, vec=False, ref=False):
             else:
                 x = 'raw'
         else:
-            x = 'raw'
+            if input.startswith('typekeys/'):
+                x = get_linked_value(input)
+            else:
+                x = 'raw'
         
 
 
