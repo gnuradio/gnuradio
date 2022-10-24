@@ -3,10 +3,12 @@ deps = [gnuradio_gr_dep, gr_kernel_fft_lib_dep, gr_kernel_math_lib_dep]
 srcs = [
     'fft_filter.cc',
     'fir_filter.cc',
+    'fir_filter_with_buffer.cc',
     'firdes.cc',
     'iir_filter.cc',
     'mmse_fir_interpolator_ff.cc',
     'moving_averager.cc',
+    'optfir.cc',
     'pfb_arb_resampler.cc',
     'pm_remez.cc',
     'polyphase_filterbank.cc'
