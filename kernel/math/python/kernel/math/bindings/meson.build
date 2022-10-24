@@ -1,5 +1,6 @@
 srcs = files([
     'kernel_math_pybind.cc',
+    'control_loop_pybind.cc',
     'random_pybind.cc'
  ] )
 

@@ -1,6 +1,7 @@
 deps = [gnuradio_gr_dep]
 
 srcs = [
+    'control_loop.cc',
     'fast_atan2f.cc',
     'fxpt.cc',
     'random.cc'

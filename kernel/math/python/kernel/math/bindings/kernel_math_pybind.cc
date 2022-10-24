@@ -18,6 +18,7 @@
 namespace py = pybind11;
 
 void bind_random(py::module&);
+void bind_control_loop(py::module&);
 
 // We need this hack because import_array() returns NULL
 // for newer Python versions.
@@ -35,4 +36,5 @@ PYBIND11_MODULE(kernel_math_python, m)
     // (otherwise we will see segmentation faults)
     init_numpy();
     bind_random(m);
+    bind_control_loop(m);
 }
