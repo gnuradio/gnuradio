@@ -1,0 +1,74 @@
+id: uhd_rfnoc_vector_iir
+label: RFNoC Vector IIR Block
+category: '[Core]/UHD/RFNoC/Blocks'
+
+templates:
+  imports: |-
+    from gnuradio import uhd
+  make: |-
+    uhd.rfnoc_block_generic(
+        self.rfnoc_graph,
+        uhd.device_addr(${block_args}),
+        "VectorIIR",
+        ${device_select},
+        ${instance_index})
+    self.${id}.set_property('alpha', ${alpha}, typename='double')
+    self.${id}.set_property('beta',  ${beta},  typename='double')
+    self.${id}.set_property('delay', ${delay}, typename='int')
+  callbacks:
+    - set_property('alpha', ${alpha}, typename='double')
+    - set_property('beta', ${beta}, typename='double')
+    - set_property('delay', ${delay}, typename='int')
+
+parameters:
+- id: block_args
+  label: Block Args
+  dtype: string
+  default: ""
+  hide: ${ 'part' if not block_args else 'none'}
+- id: device_select
+  label: Device Select
+  dtype: int
+  default: -1
+  hide: ${ 'part' if device_select == -1 else 'none'}
+- id: instance_index
+  label: Instance Select
+  dtype: int
+  default: -1
+  hide: ${ 'part' if instance_index == -1 else 'none'}
+- id: alpha
+  label: Alpha
+  dtype: float
+  default: 0.9
+- id: beta
+  label: Beta
+  dtype: float
+  default: 0.9
+- id: delay
+  label: Delay
+  dtype: int
+  default: 5
+
+inputs:
+- domain: rfnoc
+  dtype: 'sc16'
+
+outputs:
+- domain: rfnoc
+  dtype: 'sc16'
+
+asserts:
+- ${ 5 <= delay }
+- ${ 0.0 <= alpha <= 1.0}
+- ${ 0.0 <= beta <= 1.0}
+
+
+documentation: |-
+    This module implements an IIR filter with a variable length delay line.
+    Transfer Function: H(z) = beta / (1 - alpha*z^-delay)
+    Where:
+    - beta is the feedforward tap
+    - alpha is the feedback tap
+    - delay is the feedback tap delay
+
+file_format: 1
