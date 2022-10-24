@@ -1,0 +1,94 @@
+module: filter
+block: freq_xlating_fir_filter
+label: freq_xlating_fir_filter
+blocktype: block
+category: '[Core]/Filters'
+
+doc:
+    brief: |-
+        FIR filter combined with frequency translation with \
+        IN_T input, OUT_T output and TAP_T taps
+    detail: |-
+    
+        This class efficiently combines a frequency translation
+        (typically "down conversion") with a FIR filter (typically
+        low-pass) and decimation.  It is ideally suited for a "channel
+        selection filter" and can be efficiently used to select and
+        decimate a narrow band signal out of wide bandwidth input.
+                Uses a single input array to produce a single output array.
+        Additional inputs and/or outputs are ignored.
+
+
+typekeys:
+  - id: IN_T
+    type: class
+    options: 
+        - cf32
+        - rf32
+        - ri16
+
+  - id: OUT_T
+    type: class
+    options: 
+        - cf32
+        - rf32
+        - ri16
+
+  - id: TAP_T
+    type: class
+    options: 
+        - cf32
+        - rf32
+
+type_inst:
+  - value: [cf32, cf32, cf32]
+    label: Complex->Complex (Complex Taps)
+  - value: [cf32, cf32, rf32]
+    label: Complex->Complex (Real Taps)
+  - value: [rf32, cf32, cf32]
+    label: Float->Float (Complex Taps)
+  - value: [rf32, cf32, rf32]
+    label: Float->Float (Real Taps)
+  - value: [ri16, cf32, rf32]
+    label: Short->Complex (Real Taps)
+  - value: [ri16, cf32, cf32]
+    label: Short->Complex (Complex Taps)
+
+
+parameters:
+-   id: decimation
+    label: Decimation
+    dtype: size
+    settable: false
+    grc:
+      default: 1
+-   id: taps
+    label: Taps
+    dtype: TAP_T
+    container: vector
+    settable: true
+-   id: center_freq
+    label: Center Freq
+    dtype: rf64
+    settable: true
+-   id: sampling_freq
+    label: Sampling Freq
+    dtype: rf64
+
+ports:
+-   domain: stream
+    id: in
+    direction: input
+    type: typekeys/IN_T
+
+-   domain: stream
+    id: out
+    direction: output
+    type: typekeys/OUT_T
+
+
+implementations:
+-   id: cpu
+# -   id: cuda
+
+file_format: 1
