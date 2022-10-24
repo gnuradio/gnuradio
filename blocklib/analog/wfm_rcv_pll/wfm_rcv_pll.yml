@@ -1,0 +1,48 @@
+module: analog
+block: wfm_rcv_pll
+label: WBFM Receive PLL
+blocktype: hier_block
+category: '[Core]/Modulators'
+
+doc:
+    brief: Hierarchical block for demodulating a broadcast FM signal.
+    detail: |-
+        The input is the downconverted complex baseband signal (gr_complex).
+        The output is two streams of the demodulated audio (float) 0=Left, 1=Right.
+
+parameters:
+-   id: quad_rate
+    label: Quadrature Rate
+    dtype: rf64
+    doc: input sample rate of complex baseband input
+-   id: audio_decimation
+    label: Audio Decimation
+    dtype: size
+    doc: how much to decimate demod_rate to get to audio
+-   id: deemph_tau
+    label: Deemphasis Tau
+    dtype: rf64
+    default: 75e-6
+    doc: deemphasis ime constant in seconds (75us in US, 50us in EUR)
+
+ports:
+-   domain: stream
+    id: in
+    direction: input
+    type: cf32
+    size: parameters/itemsize
+
+-   domain: stream
+    id: Lout
+    direction: output
+    type: rf32
+
+-   domain: stream
+    id: Rout
+    direction: output
+    type: rf32
+
+implementations:
+-   id: cpu
+
+file_format: 1
