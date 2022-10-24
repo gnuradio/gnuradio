@@ -17,7 +17,6 @@ install(
           basic_block.h
           block.h
           block_detail.h
-          block_gateway.h
           block_registry.h
           buffer.h
           buffer_double_mapped.h
