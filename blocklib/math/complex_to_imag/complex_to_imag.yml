@@ -1,0 +1,32 @@
+module: math
+block: complex_to_imag
+label: Complex to Imag
+blocktype: sync_block
+
+# Example Parameters
+parameters:
+-   id: vlen
+    label: Vector Length
+    dtype: size
+    settable: false
+    default: 1
+    grc:
+        hide: part
+
+# Example Ports
+ports:
+-   domain: stream
+    id: in
+    direction: input
+    type: cf32
+
+-   domain: stream
+    id: out
+    direction: output
+    type: rf32
+
+implementations:
+-   id: cpu
+# -   id: cuda
+
+file_format: 1
