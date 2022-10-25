@@ -40,7 +40,6 @@ private:
     bool d_output_multiple_set = false;
     double d_relative_rate = 1.0;
 
-    size_t _noconsume = 0;
 
 protected:
     bool _is_hier = false;
@@ -64,10 +63,10 @@ protected:
      * @return work_return_t
      *
      * This is similar to a forecasting - the scheduler provides the proposed inputs
-     * to the work method, and it is the job of enforce_constraints to provide the 
+     * to the work method, and it is the job of enforce_constraints to provide the
      * work method with tweaked input and output nitems that meet the requirements of
      * things like output_multiple, alignment, history, etc.
-     * 
+     *
      */
     virtual work_return_t enforce_constraints(work_io& wio) { return work_return_t::OK; }
 
@@ -123,6 +122,21 @@ public:
         return work(wio);
     };
 
+    virtual size_t calc_output_buffer(size_t nitems)
+    {
+        if (output_multiple_set()) {
+            nitems = std::max(nitems, static_cast<size_t>(2 * (output_multiple())));
+        }
+        return nitems;
+    }
+
+    virtual size_t calc_upstream_buffer(size_t nitems)
+    {
+        double decimation = (1.0 / relative_rate());
+        int multiple = output_multiple();
+        return std::max(nitems, static_cast<size_t>(2 * (decimation * multiple)));
+    }
+
     void set_parent_intf(neighbor_interface_sptr sched) { p_scheduler = sched; }
     parameter_config d_parameters;
     void add_param(const std::string& name, int id, pmt_sptr p)
@@ -151,8 +165,7 @@ public:
     bool output_multiple_set() const { return d_output_multiple_set; }
     void set_relative_rate(double relative_rate) { d_relative_rate = relative_rate; }
     double relative_rate() const { return d_relative_rate; }
-    void declare_noconsume(size_t value) { _noconsume = value; }
-    size_t noconsume() { return _noconsume; }
+
 
     size_t upstream_buffer_sizing(size_t);
 
