@@ -27,6 +27,8 @@ public:
     void on_parameter_change(param_action_sptr action) override;
 
 private:
+    work_return_t enforce_constraints(work_io& wio) override;
+    
     gr::kernel::filter::fft_filter<IN_T, TAP_T> d_filter;
 
     bool d_updated = true; // treat the first call to work() as an update

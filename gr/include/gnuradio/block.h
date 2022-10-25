@@ -57,6 +57,20 @@ protected:
 
     work_io d_work_io;
 
+    /**
+     * @brief Enforce constraints on proposed work method
+     *
+     * @param wio
+     * @return work_return_t
+     *
+     * This is similar to a forecasting - the scheduler provides the proposed inputs
+     * to the work method, and it is the job of enforce_constraints to provide the 
+     * work method with tweaked input and output nitems that meet the requirements of
+     * things like output_multiple, alignment, history, etc.
+     * 
+     */
+    virtual work_return_t enforce_constraints(work_io& wio) { return work_return_t::OK; }
+
 public:
     /**
      * @brief Construct a new block object
@@ -91,6 +105,7 @@ public:
         throw std::runtime_error("work function has been called but not implemented");
     }
     using work_t = std::function<work_return_t(work_io&)>;
+
     /**
      * @brief Wrapper for work to perform special checks and take care of special
      * cases for certain types of blocks, e.g. sync_block, decim_block
@@ -99,7 +114,14 @@ public:
      * @param work_output Vector of block_work_output structs
      * @return work_return_t
      */
-    virtual work_return_t do_work(work_io& wio) { return work(wio); };
+    virtual work_return_t do_work(work_io& wio)
+    {
+        auto ret = enforce_constraints(wio);
+        if (ret != work_return_t::OK)
+            return ret;
+
+        return work(wio);
+    };
 
     void set_parent_intf(neighbor_interface_sptr sched) { p_scheduler = sched; }
     parameter_config d_parameters;
@@ -131,7 +153,9 @@ public:
     double relative_rate() const { return d_relative_rate; }
     void declare_noconsume(size_t value) { _noconsume = value; }
     size_t noconsume() { return _noconsume; }
-    
+
+    size_t upstream_buffer_sizing(size_t);
+
     virtual int get_param_id(const std::string& id) { return d_param_str_map[id]; }
     virtual std::string get_param_str(const int id) { return d_str_param_map[id]; }
     virtual std::string suffix() { return ""; }

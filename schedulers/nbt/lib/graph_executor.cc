@@ -20,6 +20,20 @@ static void post_work_cleanup(work_io& wio)
     }
 }
 
+void log_work_status(logger_ptr& logger, const block_sptr& b, work_io& wio)
+{
+    if (!wio.outputs().empty()) {
+        logger->debug(
+            "do_work (output) for {}, {}", b->alias(), wio.outputs()[0].n_items);
+    }
+    else if (!wio.inputs().empty()) {
+        logger->debug("do_work (input) for {}, {}", b->alias(), wio.inputs()[0].n_items);
+    }
+    else {
+        logger->debug("do_work for {}", b->alias());
+    }
+}
+
 
 std::map<nodeid_t, executor_iteration_status_t>
 graph_executor::run_one_iteration(std::vector<block_sptr> blocks)
@@ -71,9 +85,6 @@ graph_executor::run_one_iteration(std::vector<block_sptr> blocks)
                                       read_info.item_size,
                                       read_info.total_items);
 
-                if (!ready)
-                    break;
-
                 if (read_info.n_items < s_min_items_to_process ||
                     (min_read > 0 && read_info.n_items < (int)min_read)) {
 
@@ -108,10 +119,6 @@ graph_executor::run_one_iteration(std::vector<block_sptr> blocks)
 
         // for each output port of the block
         for (auto& w : wio.outputs()) {
-
-            // When a block has multiple output buffers, it adds the restriction
-            // that the work call can only produce the minimum available across
-            // the buffers.
 
             size_t max_output_buffer = std::numeric_limits<int>::max();
 
@@ -151,28 +158,25 @@ graph_executor::run_one_iteration(std::vector<block_sptr> blocks)
                     max_output_buffer = max_fill;
                 }
 
-                if (b->output_multiple_set()) {
-                    d_debug_logger->debug("output_multiple {}", b->output_multiple());
-                    max_output_buffer =
-                        round_down(max_output_buffer, b->output_multiple());
-                }
+                // if (b->output_multiple_set()) {
+                //     d_debug_logger->debug("output_multiple {}", b->output_multiple());
+                //     max_output_buffer =
+                //         round_down(max_output_buffer, b->output_multiple());
+                // }
 
-                if (max_output_buffer <= 0) {
-                    if (p_buf->output_blkd_cb_ready(b->output_multiple())) {
-                        gr::custom_lock lock(std::ref(*p_buf->mutex()), p_buf);
-                        if (p_buf->output_blocked_callback()) {
-                            w.port->notify_scheduler_action(
-                                scheduler_action_t::NOTIFY_INPUT);
-                        }
-                    }
-                    ready = false;
-                }
+                // if (max_output_buffer <= 0) {
+                //     if (p_buf->output_blkd_cb_ready(b->output_multiple())) {
+                //         gr::custom_lock lock(std::ref(*p_buf->mutex()), p_buf);
+                //         if (p_buf->output_blocked_callback()) {
+                //             w.port->notify_scheduler_action(
+                //                 scheduler_action_t::NOTIFY_INPUT);
+                //         }
+                //     }
+                //     ready = false;
+                // }
 
                 if (!ready)
                     break;
-
-
-                std::vector<tag_t> tags; // needs to be associated with edge buffers
 
                 w.n_items = max_output_buffer;
             }
@@ -186,97 +190,66 @@ graph_executor::run_one_iteration(std::vector<block_sptr> blocks)
 
         if (ready) {
             work_return_t ret;
-            while (true) {
-
-                if (!wio.outputs().empty()) {
-                    d_debug_logger->debug("do_work (output) for {}, {}",
-                                          b->alias(),
-                                          wio.outputs()[0].n_items);
-                }
-                else if (!wio.inputs().empty()) {
-                    d_debug_logger->debug("do_work (input) for {}, {}",
-                                          b->alias(),
-                                          wio.inputs()[0].n_items);
-                }
-                else {
-                    d_debug_logger->debug("do_work for {}", b->alias());
-                }
 
 
-                ret = b->do_work(wio);
-                d_debug_logger->debug("do_work returned {}", (int)ret);
-                // ret = work_return_t::OK;
+            log_work_status(d_debug_logger, b, wio);
+            ret = b->do_work(wio);
+            d_debug_logger->debug("do_work returned {}", (int)ret);
+            // ret = work_return_t::OK;
 
-                if (ret == work_return_t::DONE) {
-                    per_block_status[b->id()] = executor_iteration_status_t::DONE;
-                    d_debug_logger->debug(
-                        "pbs[{}]: {}", b->id(), (int)per_block_status[b->id()]);
-                    break;
-                }
-                else if (ret == work_return_t::OK) {
-                    per_block_status[b->id()] = executor_iteration_status_t::READY;
-                    d_debug_logger->debug(
-                        "pbs[{}]: {}", b->id(), (int)per_block_status[b->id()]);
+            if (ret == work_return_t::DONE) {
+                per_block_status[b->id()] = executor_iteration_status_t::DONE;
+                d_debug_logger->debug(
+                    "pbs[{}]: {}", b->id(), (int)per_block_status[b->id()]);
+            }
+            else if (ret == work_return_t::OK) {
+                per_block_status[b->id()] = executor_iteration_status_t::READY;
+                d_debug_logger->debug(
+                    "pbs[{}]: {}", b->id(), (int)per_block_status[b->id()]);
 
-                    // If a source block, and no outputs were produced, mark as BLKD_IN
-                    if (wio.inputs().empty() && !wio.outputs().empty()) {
-                        size_t max_output = 0;
-                        for (auto& w : wio.outputs()) {
-                            max_output = std::max(w.n_produced, max_output);
-                        }
-                        if (max_output <= 0) {
-                            per_block_status[b->id()] =
-                                executor_iteration_status_t::BLKD_IN;
-                            d_debug_logger->debug(
-                                "pbs[{}]: {}", b->id(), (int)per_block_status[b->id()]);
-                        }
+                // If a source block, and no outputs were produced, mark as BLKD_IN
+                if (wio.inputs().empty() && !wio.outputs().empty()) {
+                    size_t max_output = 0;
+                    for (auto& w : wio.outputs()) {
+                        max_output = std::max(w.n_produced, max_output);
                     }
-
-
-                    break;
-                }
-                else if (ret == work_return_t::INSUFFICIENT_INPUT_ITEMS) {
-                    // FIXME: Do for all the outputs
-                    if (b->output_multiple_set()) {
-                        wio.outputs()[0].n_items -= b->output_multiple();
-                    }
-                    else {
-                        wio.outputs()[0].n_items >>= 1;
-                    }
-                    if (wio.outputs()[0].n_items < b->output_multiple()) // min block size
-                    {
+                    if (max_output <= 0) {
                         per_block_status[b->id()] = executor_iteration_status_t::BLKD_IN;
-
-                        // call the input blocked callback
-                        bool notify = false;
-                        for (auto& w : wio.inputs()) {
-                            if (w.buf().input_blkd_cb_ready(b->output_multiple())) {
-                                gr::custom_lock lock(std::ref(*w.bufp()->mutex()),
-                                                     w.buf().bufp());
-                                notify |=
-                                    w.buf().input_blocked_callback(b->output_multiple());
-                            }
-                        }
-                        if (notify) {
-                            wio.inputs()[0].port->push_message(
-                                std::make_shared<scheduler_action>(
-                                    scheduler_action_t::NOTIFY_INPUT));
-                        }
-                        per_block_status[b->id()] =
-                            executor_iteration_status_t::READY_NO_OUTPUT;
                         d_debug_logger->debug(
                             "pbs[{}]: {}", b->id(), (int)per_block_status[b->id()]);
-                        break;
                     }
                 }
-                else if (ret == work_return_t::INSUFFICIENT_OUTPUT_ITEMS) {
-                    per_block_status[b->id()] = executor_iteration_status_t::BLKD_OUT;
-                    d_debug_logger->debug(
-                        "pbs[{}]: {}", b->id(), (int)per_block_status[b->id()]);
-                    // call the output blocked callback
-                    break;
-                }
             }
+            else if (ret == work_return_t::INSUFFICIENT_INPUT_ITEMS) {
+
+                per_block_status[b->id()] = executor_iteration_status_t::BLKD_IN;
+
+                // // call the input blocked callback
+                // bool notify = false;
+                // for (auto& w : wio.inputs()) {
+                //     if (w.buf().input_blkd_cb_ready(b->output_multiple())) {
+                //         gr::custom_lock lock(std::ref(*w.bufp()->mutex()),
+                //                              w.buf().bufp());
+                //         notify |= w.buf().input_blocked_callback(b->output_multiple());
+                //     }
+                // }
+                // if (notify) {
+                //     // FIXME: Should just return RDY
+                //     wio.inputs()[0].port->push_message(std::make_shared<scheduler_action>(
+                //         scheduler_action_t::NOTIFY_INPUT));
+                // }
+                // per_block_status[b->id()] =
+                // executor_iteration_status_t::READY_NO_OUTPUT;
+                d_debug_logger->debug(
+                    "pbs[{}]: {}", b->id(), (int)per_block_status[b->id()]);
+            }
+            else if (ret == work_return_t::INSUFFICIENT_OUTPUT_ITEMS) {
+                per_block_status[b->id()] = executor_iteration_status_t::BLKD_OUT;
+                d_debug_logger->debug(
+                    "pbs[{}]: {}", b->id(), (int)per_block_status[b->id()]);
+                // call the output blocked callback
+            }
+
             // TODO - handle READY_NO_OUTPUT
 
             if (ret == work_return_t::OK || ret == work_return_t::DONE) {
