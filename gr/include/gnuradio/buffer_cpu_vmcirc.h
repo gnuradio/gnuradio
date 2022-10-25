@@ -58,6 +58,8 @@ public:
                              size_t read_index = 0)
         : buffer_reader(bufp, buf_props, itemsize, read_index)
     {
+            gr::configure_default_loggers(
+        d_logger, d_debug_logger, "buffer_cpu_vmcirc_rdr");
     }
 
     void post_read(int num_items) override;

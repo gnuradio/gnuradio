@@ -84,8 +84,8 @@ work_return_t fft_filter_cpu<IN_T, OUT_T, TAP_T>::work(work_io& wio)
 
     d_filter.filter(noutput_items, in, out);
 
-    wio.consume_each(noutput_items);
-    wio.produce_each(ninput_items);
+    wio.consume_each(ninput_items);
+    wio.produce_each(noutput_items);
 
     return work_return_t::OK;
 }

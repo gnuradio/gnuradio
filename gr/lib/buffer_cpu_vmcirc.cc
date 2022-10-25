@@ -77,6 +77,8 @@ void buffer_cpu_vmcirc_reader::post_read(int num_items)
         _read_index -= _buffer->buf_size();
     }
     _total_read += num_items;
+
+    d_logger->debug("_read_index: {}", _read_index);
 }
 void buffer_cpu_vmcirc::post_write(int num_items)
 {

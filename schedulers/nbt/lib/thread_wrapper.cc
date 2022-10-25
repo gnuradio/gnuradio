@@ -323,11 +323,26 @@ void thread_wrapper::thread_body(thread_wrapper* top)
                     break;
                 }
             }
+
+            // top->d_debug_logger->debug("do_some_work = {}", do_some_work);
+            // bool work_returned_ready = false;
+            // if (do_some_work) {
+            //     work_returned_ready = top->handle_work_notification();
+            //     top->d_debug_logger->debug("work_returned_ready = {}", work_returned_ready);
+            // }
+
+            // if (!work_returned_ready) {
+            //     blocking_queue = true;
+            //     break;
+            // }
+
         }
 
+        top->d_debug_logger->debug("do_some_work = {}", do_some_work);
         bool work_returned_ready = false;
         if (do_some_work) {
             work_returned_ready = top->handle_work_notification();
+            top->d_debug_logger->debug("work_returned_ready = {}", work_returned_ready);
         }
 
         if (!work_returned_ready) {

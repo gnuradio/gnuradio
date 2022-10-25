@@ -158,6 +158,8 @@ public:
           _buf_size(num_items * item_size),
           _buf_properties(buf_properties)
     {
+    gr::configure_default_loggers(
+        d_logger, d_debug_logger, "buffer");
     }
     virtual ~buffer() {}
     size_t item_size() { return _item_size; }
@@ -340,6 +342,8 @@ protected:
     size_t _read_index = 0;
     std::mutex _rdr_mutex;
 
+    gr::logger_ptr d_logger;
+    gr::logger_ptr d_debug_logger;
 
 public:
     buffer_reader(buffer* buffer,
