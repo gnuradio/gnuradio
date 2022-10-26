@@ -49,6 +49,7 @@ usrp_source_impl::usrp_source_impl(const ::uhd::device_addr_t& device_addr,
 
     _samp_rate = this->get_samp_rate();
     _samps_per_packet = 1;
+    message_port_register_out(ASYNC_MSGS_PORT_KEY);
     register_msg_cmd_handler(cmd_tag_key(),
                              [this](const pmt::pmt_t& tag, const int, const pmt::pmt_t&) {
                                  this->_cmd_handler_tag(tag);
@@ -647,6 +648,12 @@ int usrp_source_impl::work(int noutput_items,
                 std::chrono::duration_cast<std::chrono::milliseconds>(delta).count();
             d_logger->error(
                 "In the last {:d} ms, {:d} overflows occurred.", ms, _overflow_count);
+
+            pmt::pmt_t value = pmt::dict_add(
+                pmt::make_dict(), EVENT_CODE_OVERFLOW, pmt::from_uint64(_overflow_count));
+            pmt::pmt_t msg = pmt::cons(ASYNC_MSG_KEY, value);
+            message_port_pub(ASYNC_MSGS_PORT_KEY, msg);
+
             _overflow_count = 0;
         }
         // ignore overflows and try work again
