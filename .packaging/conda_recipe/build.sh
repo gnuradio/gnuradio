@@ -31,8 +31,6 @@ else
         qa_header_payload_demux
         qa_hier_block2
         qa_hier_block2_message_connections
-        qa_message_debug
-        qa_message_strobe
         qa_python_message_passing
         qa_uncaught_exception
     )
