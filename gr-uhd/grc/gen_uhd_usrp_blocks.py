@@ -119,10 +119,10 @@ outputs:
 % if sourk == 'sink':
 
 outputs:
+% endif
 -   domain: message
     id: async_msgs
     optional: true
-% endif
 
 templates:
     imports: |-

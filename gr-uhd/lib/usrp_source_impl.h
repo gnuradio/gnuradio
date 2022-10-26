@@ -21,6 +21,9 @@
 static const pmt::pmt_t TIME_KEY = pmt::string_to_symbol("rx_time");
 static const pmt::pmt_t RATE_KEY = pmt::string_to_symbol("rx_rate");
 static const pmt::pmt_t FREQ_KEY = pmt::string_to_symbol("rx_freq");
+static const pmt::pmt_t ASYNC_MSGS_PORT_KEY = pmt::string_to_symbol("async_msgs");
+static const pmt::pmt_t ASYNC_MSG_KEY = pmt::string_to_symbol("uhd_async_msg");
+static const pmt::pmt_t EVENT_CODE_OVERFLOW = pmt::string_to_symbol("overflows");
 
 namespace gr {
 namespace uhd {
