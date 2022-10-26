@@ -25,25 +25,7 @@ public:
     {
     }
 
-    /**
-     * @brief Performs checks on inputs and outputs before and after the call
-     * to the derived block's work function
-     *
-     * The sync_block guarantees that the input and output buffers to the
-     * work function of the derived block fit the constraints of the 1:1
-     * sample input/output relationship
-     *
-     * 1. Check all inputs and outputs have the same number of items
-     * 2. Fix all inputs and outputs to the absolute min across ports
-     * 3. Call the work() function on the derived block
-     * 4. Throw runtime_error if n_produced is not the same on every port
-     * 5. Set n_consumed = n_produced for every input port
-     *
-     * @param work_input
-     * @param work_output
-     * @return work_return_t
-     */
-    work_return_t do_work(work_io& wio) override
+    work_return_t enforce_constraints(work_io& wio) override
     {
         // Check all inputs and outputs have the same number of items
         auto min_num_items = std::numeric_limits<size_t>::max();
@@ -75,7 +57,34 @@ public:
             }
         }
 
-        work_return_t ret = work(wio);
+        return work_return_t::OK;
+    }
+
+    /**
+     * @brief Performs checks on inputs and outputs before and after the call
+     * to the derived block's work function
+     *
+     * The sync_block guarantees that the input and output buffers to the
+     * work function of the derived block fit the constraints of the 1:1
+     * sample input/output relationship
+     *
+     * 1. Check all inputs and outputs have the same number of items
+     * 2. Fix all inputs and outputs to the absolute min across ports
+     * 3. Call the work() function on the derived block
+     * 4. Throw runtime_error if n_produced is not the same on every port
+     * 5. Set n_consumed = n_produced for every input port
+     *
+     * @param work_input
+     * @param work_output
+     * @return work_return_t
+     */
+    work_return_t do_work(work_io& wio) override
+    {
+        auto ret = enforce_constraints(wio);
+        if (ret != work_return_t::OK)
+            return ret;
+
+        ret = work(wio);
 
         // For a sync block the n_produced must be the same on every
         // output port

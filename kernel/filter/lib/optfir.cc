@@ -12,14 +12,15 @@
 #include <algorithm>
 #include <tuple>
 #include <vector>
+#include <iostream>
 
 namespace gr {
 namespace kernel {
 namespace filter {
 
-size_t optfir::lporder(double freq1, double freq2, double delta_p, double delta_s)
+double optfir::lporder(double freq1, double freq2, double delta_p, double delta_s)
 {
-    auto df = abs(freq2 - freq1);
+    auto df = std::abs<double>(freq2 - freq1);
     auto ddp = log10(delta_p);
     auto dds = log10(delta_s);
 
@@ -40,7 +41,7 @@ size_t optfir::lporder(double freq1, double freq2, double delta_p, double delta_
 
     auto dinf = ((t1 + t2 + a3) * dds) + (t3 + t4 + a6);
     auto ff = b1 + b2 * (ddp - dds);
-    auto n = (size_t)(dinf / df - ff * df + 1);
+    auto n = dinf / df - ff * df + 1;
     return n;
 }
 std::tuple<size_t, std::vector<double>, std::vector<double>, std::vector<double>>
@@ -89,7 +90,7 @@ optfir::remezord(std::vector<double> fcuts,
         }
     }
 
-    size_t l = 0;
+    double l = 0;
     if (nbands == 2) {
         // lowpass or highpass case (use formula)
         l = lporder(f1[n], f2[n], devs[0], devs[1]);
@@ -100,8 +101,8 @@ optfir::remezord(std::vector<double> fcuts,
         //  goes through the BP specs
         l = 0;
         for (size_t i = 1; i < nbands - 1; i++) {
-            size_t l1 = lporder(f1[i - 1], f2[i - 1], devs[i], devs[i - 1]);
-            size_t l2 = lporder(f1[i], f2[i], devs[i], devs[i + 1]);
+            double l1 = lporder(f1[i - 1], f2[i - 1], devs[i], devs[i - 1]);
+            double l2 = lporder(f1[i], f2[i], devs[i], devs[i + 1]);
             l = std::max(l, std::max(l1, l2));
         }
     }
@@ -144,6 +145,16 @@ double optfir::passband_ripple_to_dev(double ripple_db)
 {
     return ((pow(10, (ripple_db / 20)) - 1) / (pow(10, (ripple_db / 20)) + 1));
 }
+
+template <class T>
+std::ostream& operator<<(std::ostream& out, const std::vector<T>& container) {
+   out << "Container dump begins: ";
+   std::copy(container.cbegin(), container.cend(), std::ostream_iterator<T>(out, " " ));
+   out << "\n";
+   return out;
+}
+
+
 std::vector<double> optfir::low_pass(double gain,
                                      double Fs,
                                      double freq1,
@@ -160,6 +171,13 @@ std::vector<double> optfir::low_pass(double gain,
         remezord({ freq1, freq2 }, desired_ampls, { passband_dev, stopband_dev }, Fs);
     // The remezord typically under-estimates the filter order, so add 2 taps by
     // default
+
+    std::cout << std::get<0>(tup) << std::endl;
+    std::cout << std::get<1>(tup) << std::endl;
+    std::cout << std::get<2>(tup) << std::endl;
+    std::cout << std::get<3>(tup) << std::endl;
+
+
     auto taps = pm_remez(std::get<0>(tup) + nextra_taps,
                          std::get<1>(tup),
                          std::get<2>(tup),

@@ -39,6 +39,8 @@ private:
     std::unique_ptr<kernel::filter::pfb_arb_resampler<IN_T, OUT_T, TAP_T>> d_resamp;
     size_t d_history;
 
+    work_return_t enforce_constraints(work_io&) override;
+
     std::vector<TAP_T> create_taps(float rate, size_t flt_size=32, float atten= 100);
 
     std::vector<float> create_taps_float(float rate, size_t flt_size = 32, float atten = 100)

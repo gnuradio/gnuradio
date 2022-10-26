@@ -42,7 +42,7 @@ public:
      * @param delta_s
      * @return size_t
      */
-    static size_t lporder(double freq1, double freq2, double delta_p, double delta_s);
+    static double lporder(double freq1, double freq2, double delta_p, double delta_s);
 
     /**
      * @brief FIR order estimator (lowpass, highpass, bandpass, mulitiband).

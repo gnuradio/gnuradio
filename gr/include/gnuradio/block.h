@@ -39,7 +39,7 @@ private:
     size_t d_output_multiple = 1;
     bool d_output_multiple_set = false;
     double d_relative_rate = 1.0;
-
+    size_t _noconsume = 0;
 
 protected:
     bool _is_hier = false;
@@ -134,8 +134,11 @@ public:
     {
         double decimation = (1.0 / relative_rate());
         int multiple = output_multiple();
-        return std::max(nitems, static_cast<size_t>(2 * (decimation * multiple)));
+        return std::max(nitems, static_cast<size_t>(2 * (decimation * multiple + noconsume())));
     }
+    
+    void declare_noconsume(size_t value) { _noconsume = value; }
+    size_t noconsume() { return _noconsume; }
 
     void set_parent_intf(neighbor_interface_sptr sched) { p_scheduler = sched; }
     parameter_config d_parameters;

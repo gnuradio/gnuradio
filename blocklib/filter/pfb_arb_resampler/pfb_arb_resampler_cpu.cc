@@ -42,49 +42,68 @@ pfb_arb_resampler_cpu<IN_T, OUT_T, TAP_T>::pfb_arb_resampler_cpu(
     const typename pfb_arb_resampler<IN_T, OUT_T, TAP_T>::block_args& args)
     : INHERITED_CONSTRUCTORS(IN_T, OUT_T, TAP_T)
 {
-    
+
     std::vector<TAP_T> taps = args.taps;
     if (taps.empty()) {
         taps = create_taps(args.rate, args.filter_size, 100.0);
     }
 
-    d_resamp = std::make_unique<kernel::filter::pfb_arb_resampler<IN_T, OUT_T, TAP_T>>(args.rate, taps, args.filter_size);
-    d_history = d_resamp->taps_per_filter();
+    d_resamp = std::make_unique<kernel::filter::pfb_arb_resampler<IN_T, OUT_T, TAP_T>>(
+        args.rate, taps, args.filter_size);
+    this->declare_noconsume(d_resamp->taps_per_filter() - 1);
 
     this->set_relative_rate(args.rate);
     if (args.rate >= 1.0f) {
-        size_t output_multiple = std::max(args.rate, args.filter_size);
+        size_t output_multiple = std::max<size_t>(args.rate, args.filter_size);
         this->set_output_multiple(output_multiple);
     }
+}
+
+
+template <class IN_T, class OUT_T, class TAP_T>
+work_return_t pfb_arb_resampler_cpu<IN_T, OUT_T, TAP_T>::enforce_constraints(work_io& wio)
+{
+    auto noutput_items = wio.outputs()[0].n_items;
+    auto ninput_items = wio.outputs()[0].n_items;
+
+    // Constrain inputs based on outputs
+    size_t nin = 0;
+    size_t nout = (noutput_items / this->output_multiple()) * this->output_multiple();
+
+    if (nout / this->relative_rate() < 1) {
+        nin = this->relative_rate() + this->noconsume();
+    }
+    else {
+        nin = nout / this->relative_rate() + this->noconsume();
+    }
+
+    if (ninput_items < nin) {
+        nin = ninput_items;
+        // Then we have to constrain from input to output
+        nout = (((ninput_items - this->noconsume()) * this->relative_rate()) /
+                         this->output_multiple()) *
+                        this->output_multiple();
+    }
+
+    if (nout < this->output_multiple()) {
+        return work_return_t::INSUFFICIENT_INPUT_ITEMS;
+    }
+
+
+    wio.inputs()[0].n_items = nin - this->noconsume();
+    wio.outputs()[0].n_items = nout;
+
+    return work_return_t::OK;
 }
 
 template <class IN_T, class OUT_T, class TAP_T>
 work_return_t pfb_arb_resampler_cpu<IN_T, OUT_T, TAP_T>::work(work_io& wio)
 {
-    auto noutput_items = wio.outputs()[0].n_items;
-
-    // forecasting - calculate the min input to produce output_multiple output item(s)
-    size_t min_ninput;
-    if (this->relative_rate() > 1) {
-        min_ninput =
-            ceil(this->output_multiple() * this->relative_rate()) + d_history - 1;
-    }
-    else {
-        min_ninput =
-            ceil(this->output_multiple() / this->relative_rate()) + d_history - 1;
-    }
-
-    auto ninput_items = wio.inputs()[0].n_items;
-    if (ninput_items < min_ninput) {
-        return work_return_t::INSUFFICIENT_INPUT_ITEMS;
-    }
-
-    size_t nitems =
-        std::min<size_t>(ninput_items - d_history + 1,
-                         floorf((float)noutput_items / this->relative_rate()));
 
     auto in = wio.inputs()[0].items<IN_T>();
     auto out = wio.outputs()[0].items<OUT_T>();
+
+    auto nitems = wio.inputs()[0].n_items;
 
     int nitems_read;
     int processed = d_resamp->filter(out, in, nitems, nitems_read);
