@@ -1,5 +1,16 @@
 #!/usr/bin/env bash
 
+if [[ $target_platform == osx* ]] ; then
+    CXXFLAGS="${CXXFLAGS} -D_LIBCPP_DISABLE_AVAILABILITY"
+fi
+
+# Workaround for no std::aligned_alloc with osx-64
+# https://github.com/chriskohlhoff/asio/issues/1090
+# Maybe remove when boost is updated to 1.80.0?
+if [[ "${target_platform}" == "osx-64" ]]; then
+  export CXXFLAGS="-DBOOST_ASIO_DISABLE_STD_ALIGNED_ALLOC ${CXXFLAGS}"
+fi
+
 cmake -E make_directory build
 cd build
 
