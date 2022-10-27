@@ -30,7 +30,7 @@ public:
 
     work_return_t work(work_io&) override;
     virtual size_t group_delay() const override { return d_resamp->group_delay(); }
-    virtual size_t phase_offset(float freq, float fs) const override
+    virtual float phase_offset(float freq, float fs) const override
     {
         return d_resamp->phase_offset(freq, fs);
     };
