@@ -57,6 +57,9 @@ pfb_arb_resampler_cpu<IN_T, OUT_T, TAP_T>::pfb_arb_resampler_cpu(
         size_t output_multiple = std::max<size_t>(args.rate, args.filter_size);
         this->set_output_multiple(output_multiple);
     }
+
+    d_padding_samps = this->noconsume();
+    d_padding_vec.resize(d_padding_samps * 2 + 1);
 }
 
 
@@ -64,7 +67,7 @@ template <class IN_T, class OUT_T, class TAP_T>
 work_return_t pfb_arb_resampler_cpu<IN_T, OUT_T, TAP_T>::enforce_constraints(work_io& wio)
 {
     auto noutput_items = wio.outputs()[0].n_items;
-    auto ninput_items = wio.outputs()[0].n_items;
+    auto ninput_items = wio.inputs()[0].n_items;
 
     // Constrain inputs based on outputs
     size_t nin = 0;
@@ -81,8 +84,8 @@ work_return_t pfb_arb_resampler_cpu<IN_T, OUT_T, TAP_T>::enforce_constraints(wor
         nin = ninput_items;
         // Then we have to constrain from input to output
         nout = (((ninput_items - this->noconsume()) * this->relative_rate()) /
-                         this->output_multiple()) *
-                        this->output_multiple();
+                this->output_multiple()) *
+               this->output_multiple();
     }
 
     if (nout < this->output_multiple()) {
@@ -105,8 +108,26 @@ work_return_t pfb_arb_resampler_cpu<IN_T, OUT_T, TAP_T>::work(work_io& wio)
 
     auto nitems = wio.inputs()[0].n_items;
 
+
+    if (!d_init_padding) {
+        d_padding_samps = this->noconsume();
+        d_init_padding = true;
+    }
+
     int nitems_read;
-    int processed = d_resamp->filter(out, in, nitems, nitems_read);
+    int processed;
+    if (d_padding_samps) {
+        // size_t nfilt = std::min(nfilt, ninput_items);
+        size_t npad = std::min(nitems, d_padding_samps);
+
+        std::copy(in, in + npad, d_padding_vec.data() + npad);
+        processed = d_resamp->filter(out, d_padding_vec.data(), npad, nitems_read);
+        d_padding_samps -= npad;
+        nitems_read -= npad;
+    }
+    else {
+        processed = d_resamp->filter(out, in, nitems, nitems_read);
+    }
 
     wio.consume_each(nitems_read);
     wio.produce_each(processed);

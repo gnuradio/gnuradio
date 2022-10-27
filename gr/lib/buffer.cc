@@ -13,18 +13,18 @@ size_t buffer::space_available()
         }
     }
 
-    d_debug_logger->debug("bytes_available: {}, item_size: {}, _num_items: {}", n_available, _item_size, _num_items);
+    // d_debug_logger->debug("bytes_available: {}, item_size: {}, _num_items: {}", n_available, _item_size, _num_items);
 
     int space_in_items = (_num_items * _item_size - n_available) / _item_size;
 
-    d_debug_logger->debug("space_in_items: {}", space_in_items);
+    // d_debug_logger->debug("space_in_items: {}", space_in_items);
 
     if (space_in_items < 0)
         space_in_items = 0;
     space_in_items =
         std::min(space_in_items, (int)(_num_items / 2)); // move to a max_fill parameter
 
-    d_debug_logger->debug("space_in_items: {}", space_in_items);
+    // d_debug_logger->debug("space_in_items: {}", space_in_items);
 
     return space_in_items;
 }

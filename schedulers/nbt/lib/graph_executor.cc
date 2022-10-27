@@ -46,27 +46,25 @@ graph_executor::run_one_iteration(std::vector<block_sptr> blocks)
         blocks = d_blocks;
     }
     
-    d_debug_logger->debug("a");
-
     for (auto const& b : blocks) { // TODO - order the blocks
         if (b->is_hier()) {
             continue;
         }
-        d_debug_logger->debug("b");
+
         work_io& wio = b->get_work_io();
         wio.reset();
-        d_debug_logger->debug("c");
+
         // If a block is a message port only block, it will raise the finished() flag
         // to indicate that the rest of the flowgraph should clean up
         if (b->finished()) {
-            d_debug_logger->debug("d");
+
             per_block_status[b->id()] = executor_iteration_status_t::DONE;
             d_debug_logger->debug("pbs[{}]: {}", b->id(), (int)per_block_status[b->id()]);
             continue;
         }
 
         if (wio.inputs().empty() && wio.outputs().empty()) {
-            d_debug_logger->debug("e");
+
             // There is no streaming work to do for this block
             per_block_status[b->id()] = executor_iteration_status_t::MSG_ONLY;
             continue;
@@ -75,7 +73,6 @@ graph_executor::run_one_iteration(std::vector<block_sptr> blocks)
         // for each input port of the block
         bool ready = true;
         for (auto& w : wio.inputs()) {
-            d_debug_logger->debug("f");
             auto p_buf = w.bufp();
             if (p_buf) {
                 auto max_read = p_buf->max_buffer_read();

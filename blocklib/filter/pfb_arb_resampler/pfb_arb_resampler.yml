@@ -63,7 +63,7 @@ callbacks:
     return: size_t
     const: true
 -   id: phase_offset
-    return: size_t
+    return: rf32
     args:
     - id: freq
       dtype: rf32

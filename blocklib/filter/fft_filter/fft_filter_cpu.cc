@@ -49,6 +49,7 @@ work_return_t fft_filter_cpu<IN_T, OUT_T, TAP_T>::enforce_constraints(work_io& w
 
     auto decim = pmtf::get_as<size_t>(*this->param_decimation);
 
+
         // if (!d_startup_complete) {
         //     d_startup_nsamps = this->noconsume();
         //     // round up the input vector size to the next output multiple
