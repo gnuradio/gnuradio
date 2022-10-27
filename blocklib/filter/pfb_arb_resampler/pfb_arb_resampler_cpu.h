@@ -30,7 +30,7 @@ public:
 
     work_return_t work(work_io&) override;
     virtual size_t group_delay() const override { return d_resamp->group_delay(); }
-    virtual size_t phase_offset(float freq, float fs) const override
+    virtual float phase_offset(float freq, float fs) const override
     {
         return d_resamp->phase_offset(freq, fs);
     };
@@ -39,9 +39,16 @@ private:
     std::unique_ptr<kernel::filter::pfb_arb_resampler<IN_T, OUT_T, TAP_T>> d_resamp;
     size_t d_history;
 
-    std::vector<TAP_T> create_taps(float rate, size_t flt_size=32, float atten= 100);
+    bool d_init_padding = false;
+    size_t d_padding_samps = 0;
+    std::vector<IN_T> d_padding_vec;
 
-    std::vector<float> create_taps_float(float rate, size_t flt_size = 32, float atten = 100)
+    work_return_t enforce_constraints(work_io&) override;
+
+    std::vector<TAP_T> create_taps(float rate, size_t flt_size = 32, float atten = 100);
+
+    std::vector<float>
+    create_taps_float(float rate, size_t flt_size = 32, float atten = 100)
     {
         // # Create a filter that covers the full bandwidth of the output signal
 
@@ -50,7 +57,7 @@ private:
         // # width of 0.5.  If rate < 1, we need to filter to less
         // # than half the output signal's bw to avoid aliasing, so
         // # the half-band here is 0.5*rate.
-        
+
         float percent = 0.80;
         if (rate < 1) {
             float halfband = 0.5 * rate;
