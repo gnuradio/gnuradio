@@ -11,6 +11,7 @@
 
 import unittest
 import pmt
+import struct
 
 
 class test_pmt(unittest.TestCase):
@@ -345,13 +346,15 @@ class test_pmt(unittest.TestCase):
         in_vec = [0x01020304 - 1j, 3.1415 + 99.99j]
         # old serialization (c32 serialized as c64):
         # in_str = b'\n\n\x00\x00\x00\x02\x01\x00Ap 0@\x00\x00\x00\xbf\xf0\x00\x00\x00\x00\x00\x00@\t!\xca\xc0\x00\x00\x00@X\xff\\ \x00\x00\x00'
-        in_str = b'\n\n\x00\x00\x00\x02\x01\x00\xbf\x80\x00\x00K\x81\x01\x82B\xc7\xfa\xe1@I\x0eV'
+        in_str = struct.pack(">BBIBBffff", 0x0a, 0x0a, len(in_vec), 1, 0,
+                             in_vec[0].real, in_vec[0].imag, in_vec[1].real, in_vec[1].imag)
         out_str = pmt.serialize_str(pmt.init_c32vector(len(in_vec), in_vec))
         self.assertEqual(out_str, in_str)
+        in_vec = [1 + 1j, .125 - 9999999j]
         # old serialization (c32 serialized as c64):
         # in_str = b'\n\n\x00\x00\x00\x02\x01\x00?\xf0\x00\x00\x00\x00\x00\x00?\xf0\x00\x00\x00\x00\x00\x00?\xc0\x00\x00\x00\x00\x00\x00\xc1c\x12\xcf\xe0\x00\x00\x00'
-        in_str = b'\n\n\x00\x00\x00\x02\x01\x00?\x80\x00\x00?\x80\x00\x00\xcb\x18\x96\x7f>\x00\x00\x00'
-        in_vec = [1 + 1j, .125 - 9999999j]
+        in_str = struct.pack(">BBIBBffff", 0x0a, 0x0a, len(in_vec), 1, 0,
+                             in_vec[0].real, in_vec[0].imag, in_vec[1].real, in_vec[1].imag)
         out_vec = pmt.c32vector_elements(pmt.deserialize_str(in_str))
         self.assertEqual(out_vec, in_vec)
 

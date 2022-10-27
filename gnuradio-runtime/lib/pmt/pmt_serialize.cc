@@ -528,10 +528,8 @@ tail_recursion:
             for (size_t i = 0; i < npad; i++) {
                 ok &= serialize_untagged_u8(0, sb);
             }
-            // Note that if endianness causes byte swap that real/imag will also be
-            // swapped
-            ok &= serialize_untagged_u64_array(
-                (uint64_t*)&c32vector_elements(obj)[0], vec_len, sb);
+            ok &= serialize_untagged_u32_array(
+                (uint32_t*)&c32vector_elements(obj)[0], vec_len * 2, sb);
             return ok;
         }
 
@@ -729,9 +727,8 @@ pmt_t deserialize(std::streambuf& sb)
             return vec;
         }
         case (UVI_C32): {
-            // Data was serialized as uint64, so do the same here
-            deserialize_untagged_u64_vector(u64v, nitems, sb);
-            pmt_t vec = init_c32vector(nitems, (std::complex<float>*)&u64v[0]);
+            deserialize_untagged_u32_vector(u32v, 2 * nitems, sb);
+            pmt_t vec = init_c32vector(nitems, (std::complex<float>*)&u32v[0]);
             return vec;
         }
 
