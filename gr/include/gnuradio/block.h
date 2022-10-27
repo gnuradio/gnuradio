@@ -69,6 +69,8 @@ protected:
      *
      */
     virtual work_return_t enforce_constraints(work_io& wio) { return work_return_t::OK; }
+    void declare_noconsume(size_t value) { _noconsume = value; }
+    size_t noconsume() { return _noconsume; }
 
 public:
     /**
@@ -137,8 +139,6 @@ public:
         return std::max(nitems, static_cast<size_t>(2 * (decimation * multiple + noconsume())));
     }
     
-    void declare_noconsume(size_t value) { _noconsume = value; }
-    size_t noconsume() { return _noconsume; }
 
     void set_parent_intf(neighbor_interface_sptr sched) { p_scheduler = sched; }
     parameter_config d_parameters;
