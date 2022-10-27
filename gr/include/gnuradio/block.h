@@ -39,6 +39,7 @@ private:
     size_t d_output_multiple = 1;
     bool d_output_multiple_set = false;
     double d_relative_rate = 1.0;
+    size_t _noconsume = 0;
 
 protected:
     bool _is_hier = false;
@@ -54,6 +55,22 @@ protected:
     std::atomic<bool> d_sleeping = false;
 
     work_io d_work_io;
+
+    /**
+     * @brief Enforce constraints on proposed work method
+     *
+     * @param wio
+     * @return work_return_t
+     *
+     * This is similar to a forecasting - the scheduler provides the proposed inputs
+     * to the work method, and it is the job of enforce_constraints to provide the
+     * work method with tweaked input and output nitems that meet the requirements of
+     * things like output_multiple, alignment, history, etc.
+     *
+     */
+    virtual work_return_t enforce_constraints(work_io& wio) { return work_return_t::OK; }
+    void declare_noconsume(size_t value) { _noconsume = value; }
+    size_t noconsume() { return _noconsume; }
 
 public:
     /**
@@ -89,6 +106,7 @@ public:
         throw std::runtime_error("work function has been called but not implemented");
     }
     using work_t = std::function<work_return_t(work_io&)>;
+
     /**
      * @brief Wrapper for work to perform special checks and take care of special
      * cases for certain types of blocks, e.g. sync_block, decim_block
@@ -97,7 +115,31 @@ public:
      * @param work_output Vector of block_work_output structs
      * @return work_return_t
      */
-    virtual work_return_t do_work(work_io& wio) { return work(wio); };
+    virtual work_return_t do_work(work_io& wio)
+    {
+        auto ret = enforce_constraints(wio);
+        if (ret != work_return_t::OK)
+            return ret;
+
+        return work(wio);
+    };
+
+    virtual size_t calc_output_buffer(size_t nitems)
+    {
+        if (output_multiple_set()) {
+            nitems = std::max(nitems, static_cast<size_t>(2 * (output_multiple())));
+        }
+        return nitems;
+    }
+
+    virtual size_t calc_upstream_buffer(size_t nitems)
+    {
+        double decimation = (1.0 / relative_rate());
+        int multiple = output_multiple();
+        return std::max(nitems,
+                        static_cast<size_t>(2 * (decimation * multiple + noconsume())));
+    }
+
 
     void set_parent_intf(neighbor_interface_sptr sched) { p_scheduler = sched; }
     parameter_config d_parameters;
