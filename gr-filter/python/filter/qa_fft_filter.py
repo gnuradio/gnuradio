@@ -16,18 +16,12 @@ import random
 
 
 def make_random_complex_tuple(L):
-    result = []
-    for x in range(L):
-        result.append(complex(2 * random.random() - 1,
-                              2 * random.random() - 1))
-    return tuple(result)
+    return [complex(2 * random.random() - 1,
+                    2 * random.random() - 1) for _ in range(L)]
 
 
 def make_random_float_tuple(L):
-    result = []
-    for x in range(L):
-        result.append(float(int(2 * random.random() - 1)))
-    return tuple(result)
+    return [(2 * random.random() - 1) for _ in range(L)]
 
 
 def reference_filter_ccc(dec, taps, input):
@@ -492,7 +486,7 @@ class test_fft_filter(gr_unittest.TestCase):
             result_data = op.taps()
             # print result_data
 
-            self.assertEqual(taps, result_data)
+            self.assertFloatTuplesAlmostEqual(taps, result_data, 4)
 
     def test_ccc_get0(self):
         random.seed(0)
