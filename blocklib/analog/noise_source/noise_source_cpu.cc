@@ -44,13 +44,24 @@ work_return_t noise_source_cpu<T>::work(work_io& wio)
     switch (static_cast<noise_t>(type)) {
     case noise_t::UNIFORM:
         for (size_t i = 0; i < noutput_items; i++) {
-            out[i] = static_cast<T>(ampl * ((d_rng.ran1() * 2.0) - 1.0));
+            if constexpr (std::is_same_v<T, gr_complex>) {
+                out[i] = gr_complex(ampl * ((d_rng.ran1() * 2.0) - 1.0),
+                                    ampl * ((d_rng.ran1() * 2.0) - 1.0));
+            }
+            else {
+                out[i] = static_cast<T>(ampl * ((d_rng.ran1() * 2.0) - 1.0));
+            }
         }
         break;
 
     case noise_t::GAUSSIAN:
         for (size_t i = 0; i < noutput_items; i++) {
-            out[i] = static_cast<T>(ampl * d_rng.gasdev());
+            if constexpr (std::is_same_v<T, gr_complex>) {
+                out[i] = ampl * d_rng.rayleigh_complex();
+            }
+            else {
+                out[i] = static_cast<T>(ampl * d_rng.gasdev());
+            }
         }
         break;
 
