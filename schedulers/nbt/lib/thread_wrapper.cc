@@ -88,6 +88,34 @@ bool thread_wrapper::handle_work_notification()
     // bool kick = false;
 
 
+    bool all_blkd = true;
+    for (auto elem : s) {
+        if (elem.second == executor_iteration_status_t::READY ||
+            elem.second == executor_iteration_status_t::READY_NO_OUTPUT ||
+            elem.second == executor_iteration_status_t::BLKD_OUT) {
+            notify_self_ = true;
+        }
+        else if (elem.second == executor_iteration_status_t::BLKD_IN) {
+            // kick = true;
+        }
+
+        if (elem.second == executor_iteration_status_t::MSG_ONLY) {
+            //     gr_log_debug(d_debug_logger,
+            //                  "size_approx {}",
+            //                  msgq.size_approx());
+            // if (msgq.size_approx() != 0)
+            // {
+            //     all_blkd = false;
+            // }
+        }
+        else if (elem.second != executor_iteration_status_t::BLKD_IN &&
+                 elem.second != executor_iteration_status_t::BLKD_OUT) {
+            // Ignore source blocks
+            if (d_block_id_to_block_map[elem.first]->input_stream_ports().empty()) {
+                all_blkd = false;
+            }
+        }
+    }
     if (d_flushing) {
         // For profiling, we don't want to compare go into the flushing logic
         if (!_opts.flush) {
@@ -95,36 +123,6 @@ bool thread_wrapper::handle_work_notification()
                 rt_monitor_message::make(rt_monitor_message_t::FLUSHED, id()));
             return false;
         }
-
-        bool all_blkd = true;
-        for (auto elem : s) {
-            if (elem.second == executor_iteration_status_t::READY ||
-                elem.second == executor_iteration_status_t::READY_NO_OUTPUT ||
-                elem.second == executor_iteration_status_t::BLKD_OUT) {
-                notify_self_ = true;
-            }
-            else if (elem.second == executor_iteration_status_t::BLKD_IN) {
-                // kick = true;
-            }
-
-            if (elem.second == executor_iteration_status_t::MSG_ONLY) {
-                //     gr_log_debug(d_debug_logger,
-                //                  "size_approx {}",
-                //                  msgq.size_approx());
-                // if (msgq.size_approx() != 0)
-                // {
-                //     all_blkd = false;
-                // }
-            }
-            else if (elem.second != executor_iteration_status_t::BLKD_IN &&
-                     elem.second != executor_iteration_status_t::BLKD_OUT) {
-                // Ignore source blocks
-                if (d_block_id_to_block_map[elem.first]->input_stream_ports().empty()) {
-                    all_blkd = false;
-                }
-            }
-        }
-
         if (all_blkd) {
             if (++d_flush_cnt >= _opts.flush_count) {
                 d_debug_logger->debug("All blocks in thread {} blocked, pushing flushed",
@@ -328,6 +326,11 @@ void thread_wrapper::thread_body(thread_wrapper* top)
         bool work_returned_ready = false;
         if (do_some_work) {
             work_returned_ready = top->handle_work_notification();
+            top->d_debug_logger->debug("work_returned_ready = {}", work_returned_ready);
+            // Try to do work again if it was productive
+            if (work_returned_ready) {
+                work_returned_ready = top->handle_work_notification();
+            }
         }
 
         if (!work_returned_ready) {
