@@ -12,6 +12,7 @@ jobs:
   check-formatting:
     name: Check C++ Formatting
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
     - uses: actions/checkout@v2
     - uses: gnuradio/clang-format-lint-action@v0.5-4
@@ -22,6 +23,7 @@ jobs:
   check-python-formatting:
     name: Check Python Formatting
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
     - uses: actions/checkout@v2
     - uses: quentinguidee/pep8-action@v1
@@ -31,6 +33,7 @@ jobs:
   doxygen:
     name: Doxygen
     runs-on: ubuntu-latest # This can run on whatever
+    timeout-minutes: 15
     container:
       image: 'gnuradio/ci:ubuntu-20.04-3.9'
       volumes:
