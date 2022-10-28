@@ -1,0 +1,38 @@
+module: streamops
+block: streams_to_vector
+label: Streams to Vector
+blocktype: sync_block
+
+parameters:
+-   id: nstreams
+    label: Number of Streams
+    dtype: size
+    settable: false
+    grc:
+        hide: part
+-   id: itemsize
+    label: Item Size
+    dtype: size
+    settable: false
+    default: 0
+    grc:
+        hide: part
+
+ports:
+-   domain: stream
+    id: in
+    direction: input
+    type: untyped
+    size: parameters/itemsize
+    multiplicity: parameters/nstreams
+
+-   domain: stream
+    id: out
+    direction: output
+    type: untyped
+    size: parameters/itemsize
+
+implementations:
+-   id: cpu
+
+file_format: 1
