@@ -164,7 +164,7 @@ def wav_read_frames(w):
     def grouper(iterable, n): return list(zip(* ([iter(iterable)] * n)))
     assert w.getsampwidth() == 2  # Assume 16 bits
     return [
-        struct.unpack('<h', bytes(frame_g))[0]
+        struct.unpack('h', bytes(frame_g))[0]
         for frame_g in grouper(w.readframes(w.getnframes()), 2)
     ]
 
