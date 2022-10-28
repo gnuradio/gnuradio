@@ -18,8 +18,8 @@ cmake --build . --config Release -- -j${CPU_COUNT}
 cmake --build . --config Release --target install
 
 if [[ $target_platform == linux* ]] ; then
+    export QT_QPA_PLATFORM=offscreen
     SKIP_TESTS=(
-        qa_qtgui
     )
 else
     SKIP_TESTS=(
@@ -37,7 +37,7 @@ else
 fi
 SKIP_TESTS_STR=$( IFS="|"; echo "${SKIP_TESTS[*]}" )
 
-ctest --build-config Release --output-on-failure --timeout 120 -j${CPU_COUNT} -E $SKIP_TESTS_STR
+ctest --build-config Release --output-on-failure --timeout 120 -j${CPU_COUNT} -E "$SKIP_TESTS_STR"
 
 # now run the skipped tests to see the failures, but don't error out
-ctest --build-config Release --output-on-failure --timeout 120 -j${CPU_COUNT} -R $SKIP_TESTS_STR || exit 0
+ctest --build-config Release --output-on-failure --timeout 120 -j${CPU_COUNT} -R "$SKIP_TESTS_STR" || exit 0
