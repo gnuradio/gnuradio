@@ -1,0 +1,37 @@
+module: streamops
+block: stream_to_vector
+label: Stream to Vector
+blocktype: block
+
+parameters:
+-   id: vlen
+    label: Vector Length
+    dtype: size
+    settable: false
+    grc:
+        hide: part
+-   id: itemsize
+    label: Item Size
+    dtype: size
+    settable: false
+    default: 0
+    grc:
+        hide: part
+
+ports:
+-   domain: stream
+    id: in
+    direction: input
+    type: untyped
+    size: parameters/itemsize
+
+-   domain: stream
+    id: out
+    direction: output
+    type: untyped
+    size: parameters/itemsize
+
+implementations:
+-   id: cpu
+
+file_format: 1
