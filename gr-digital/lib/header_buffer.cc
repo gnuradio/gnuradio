@@ -57,43 +57,22 @@ void header_buffer::add_field8(uint8_t data, int len, bool bs)
 
 void header_buffer::add_field16(uint16_t data, int len, bool bs)
 {
-    int nbytes = len / 8;
-    if (d_buffer) {
-        uint16_t x = data;
-        if (!bs) {
-            volk_16u_byteswap(&x, 1);
-            x = x >> (16 - len);
-        }
-        memcpy(&d_buffer[d_offset], &x, nbytes);
-        d_offset += nbytes;
-    }
+    add_field64(data, len, bs);
 }
 
 void header_buffer::add_field32(uint32_t data, int len, bool bs)
 {
-    int nbytes = len / 8;
-    if (d_buffer) {
-        uint32_t x = data;
-        if (!bs) {
-            volk_32u_byteswap(&x, 1);
-            x = x >> (32 - len);
-        }
-        memcpy(&d_buffer[d_offset], &x, nbytes);
-        d_offset += nbytes;
-    }
+    add_field64(data, len, bs);
 }
 
 void header_buffer::add_field64(uint64_t data, int len, bool bs)
 {
     int nbytes = len / 8;
     if (d_buffer) {
-        uint64_t x = data;
-        if (!bs) {
-            volk_64u_byteswap(&x, 1);
-            x = x >> (64 - len);
+        for (int i = 0; i < nbytes; i++) {
+            int shift = bs ? i : (nbytes - i - 1);
+            d_buffer[d_offset++] = (data >> (8 * shift)) & 0xff;
         }
-        memcpy(&d_buffer[d_offset], &x, nbytes);
-        d_offset += nbytes;
     }
 }
 
