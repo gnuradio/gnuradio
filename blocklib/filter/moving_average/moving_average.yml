@@ -2,7 +2,6 @@ module: filter
 block: moving_average
 label: Moving Average
 blocktype: block
-category: '[Core]/Filters'
 
 typekeys:
   - id: T
@@ -10,6 +9,8 @@ typekeys:
     options: 
       - cf32
       - rf32
+      - ri32
+      - ri16
 
 parameters:
 -   id: length
@@ -37,14 +38,16 @@ ports:
     id: in
     direction: input
     type: typekeys/T
+    shape: parameters/vlen
 
 -   domain: stream
     id: out
     direction: output
     type: typekeys/T
+    shape: parameters/vlen
 
 implementations:
 -   id: cpu
--   id: cuda
+# -   id: cuda
 
 file_format: 1

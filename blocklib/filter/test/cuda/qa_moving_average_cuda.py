@@ -21,7 +21,7 @@
 #
 
 
-from gnuradio import gr, gr_unittest, blocks, filter
+from gnuradio import gr, gr_unittest, blocks, filter,
 import numpy as np
 
 import math, random
@@ -167,37 +167,37 @@ class test_moving_average(gr_unittest.TestCase):
 
     # This tests implement own moving average to verify correct behaviour of the block
 
-    # def test_03(self):
-    #     tb = self.tb
+    def test_03(self):
+        tb = self.tb
 
-    #     vlen = 5
-    #     N = 10*vlen
-    #     data = make_random_float_tuple(N, 2**10)
-    #     data = [int(d*1000) for d in data]
-    #     src = blocks.vector_source_i(data, False)
-    #     one_to_many = blocks.stream_to_streams(gr.sizeof_int, vlen)
-    #     one_to_vector = blocks.stream_to_vector(gr.sizeof_int, vlen)
-    #     many_to_vector = blocks.streams_to_vector(gr.sizeof_int, vlen)
-    #     isolated  = [ filter.moving_average_ii(100, 1) for i in range(vlen)]
-    #     dut = filter.moving_average_ii(100, 1, vlen=vlen)
-    #     dut_dst = blocks.vector_sink_i(vlen=vlen)
-    #     ref_dst = blocks.vector_sink_i(vlen=vlen)
+        vlen = 5
+        N = 10*vlen
+        data = make_random_float_tuple(N, 2**10)
+        data = [int(d*1000) for d in data]
+        src = blocks.vector_source_i(data, False)
+        one_to_many = streamops.stream_to_streams(gr.sizeof_int, vlen)
+        one_to_vector = streamops.stream_to_vector(gr.sizeof_int, vlen)
+        many_to_vector = streamops.streams_to_vector(gr.sizeof_int, vlen)
+        isolated  = [ filter.moving_average_ii(100, 1) for i in range(vlen)]
+        dut = filter.moving_average_ii(100, 1, vlen=vlen)
+        dut_dst = blocks.vector_sink_i(vlen=vlen)
+        ref_dst = blocks.vector_sink_i(vlen=vlen)
 
-    #     tb.connect(src, one_to_many)
-    #     tb.connect(src, one_to_vector) #, dut, dut_dst)
-    #     tb.connect(one_to_vector, dut)
-    #     tb.connect(dut, dut_dst)
-    #     tb.connect(many_to_vector, ref_dst)
-    #     for idx, single in enumerate(isolated):
-    #         tb.connect((one_to_many,idx), single, (many_to_vector,idx))
+        tb.connect(src, one_to_many)
+        tb.connect(src, one_to_vector) #, dut, dut_dst)
+        tb.connect(one_to_vector, dut)
+        tb.connect(dut, dut_dst)
+        tb.connect(many_to_vector, ref_dst)
+        for idx, single in enumerate(isolated):
+            tb.connect((one_to_many,idx), single, (many_to_vector,idx))
 
-    #     tb.run()
+        tb.run()
 
-    #     dut_data = dut_dst.data()
-    #     ref_data = ref_dst.data()
+        dut_data = dut_dst.data()
+        ref_data = ref_dst.data()
 
-    #     # make sure result is close to zero
-    #     self.assertTupleEqual(dut_data, ref_data)
+        # make sure result is close to zero
+        self.assertTupleEqual(dut_data, ref_data)
 
     # def test_04(self):
     #     tb = self.tb
