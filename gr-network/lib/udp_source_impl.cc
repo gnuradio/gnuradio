@@ -192,15 +192,23 @@ uint64_t udp_source_impl::get_header_seqnum()
 
     switch (d_header_type) {
     case HEADERTYPE_SEQNUM: {
-        retVal = ((header_seq_num*)d_localqueue_reader->read_pointer())->seqnum;
+        header_seq_num seq_header;
+        memcpy(&seq_header, d_localqueue_reader->read_pointer(), sizeof(header_seq_num));
+        retVal = seq_header.seqnum;
     } break;
 
     case HEADERTYPE_SEQPLUSSIZE: {
-        retVal = ((header_seq_plus_size*)d_localqueue_reader->read_pointer())->seqnum;
+        header_seq_plus_size seq_header;
+        memcpy(&seq_header,
+               d_localqueue_reader->read_pointer(),
+               sizeof(header_seq_plus_size));
+        retVal = seq_header.seqnum;
     } break;
 
     case HEADERTYPE_OLDATA: {
-        retVal = ((ata_header*)d_localqueue_reader->read_pointer())->seq;
+        ata_header seq_header;
+        memcpy(&seq_header, d_localqueue_reader->read_pointer(), sizeof(ata_header));
+        retVal = seq_header.seq;
     } break;
     }
 
