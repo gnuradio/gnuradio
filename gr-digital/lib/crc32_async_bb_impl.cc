@@ -57,9 +57,10 @@ void crc32_async_bb_impl::calc(pmt::pmt_t msg)
 
     crc = d_crc_impl.compute(bytes_in, pkt_len);
     memcpy((void*)bytes_out.data(), (const void*)bytes_in, pkt_len);
-    memcpy((void*)(bytes_out.data() + pkt_len),
-           &crc,
-           4); // FIXME big-endian/little-endian, this might be wrong
+    bytes_out[pkt_len] = crc & 0xff;
+    bytes_out[pkt_len + 1] = (crc >> 8) & 0xff;
+    bytes_out[pkt_len + 2] = (crc >> 16) & 0xff;
+    bytes_out[pkt_len + 3] = (crc >> 24) & 0xff;
 
     pmt::pmt_t output = pmt::init_u8vector(
         pkt_len + 4,
@@ -74,12 +75,16 @@ void crc32_async_bb_impl::check(pmt::pmt_t msg)
     pmt::pmt_t meta(pmt::car(msg));
     pmt::pmt_t bytes(pmt::cdr(msg));
 
-    unsigned int crc;
+    unsigned int crc, received_crc;
     size_t pkt_len(0);
     const uint8_t* bytes_in = pmt::u8vector_elements(bytes, pkt_len);
 
     crc = d_crc_impl.compute(bytes_in, pkt_len - 4);
-    if (memcmp(&crc, bytes_in + pkt_len - 4, 4)) { // Drop package
+    received_crc = ((unsigned int)bytes_in[pkt_len - 4]) |
+                   ((unsigned int)bytes_in[pkt_len - 3] << 8) |
+                   ((unsigned int)bytes_in[pkt_len - 2] << 16) |
+                   ((unsigned int)bytes_in[pkt_len - 1] << 24);
+    if (crc != received_crc) { // Drop package
         d_nfail++;
         return;
     }

@@ -81,7 +81,7 @@ int crc32_bb_impl::work(int noutput_items,
     unsigned char* out = (unsigned char*)output_items[0];
     size_t packet_length = ninput_items[0];
     int packet_size_diff = d_check ? -d_crc_length : d_crc_length;
-    unsigned int crc;
+    unsigned int crc, received_crc;
 
     if (d_check) {
         if (packet_length <= d_crc_length) {
@@ -89,9 +89,11 @@ int crc32_bb_impl::work(int noutput_items,
         }
         crc = calculate_crc32(in, packet_length - d_crc_length);
         if (d_packed) {
-            if (memcmp(&crc,
-                       in + packet_length - d_crc_length,
-                       d_crc_length)) { // Drop package
+            received_crc = ((unsigned int)in[packet_length - d_crc_length]) |
+                           ((unsigned int)in[packet_length - d_crc_length + 1] << 8) |
+                           ((unsigned int)in[packet_length - d_crc_length + 2] << 16) |
+                           ((unsigned int)in[packet_length - d_crc_length + 3] << 24);
+            if (crc != received_crc) { // Drop package
                 return 0;
             }
         } else {
@@ -107,9 +109,10 @@ int crc32_bb_impl::work(int noutput_items,
         crc = calculate_crc32(in, packet_length);
         memcpy((void*)out, (const void*)in, packet_length);
         if (d_packed) {
-            memcpy((void*)(out + packet_length),
-                   &crc,
-                   d_crc_length); // FIXME big-endian/little-endian, this might be wrong
+            out[packet_length] = crc & 0xff;
+            out[packet_length + 1] = (crc >> 8) & 0xff;
+            out[packet_length + 2] = (crc >> 16) & 0xff;
+            out[packet_length + 3] = (crc >> 24) & 0xff;
         } else {
             for (unsigned int i = 0; i < d_crc_length;
                  i++) { // unpack CRC and store in buffer
