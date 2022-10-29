@@ -125,7 +125,8 @@ bool udp_source_impl::start()
             max_circ_buffer = d_payloadsize * 1500;
     }
 
-    d_localqueue = new boost::circular_buffer<char>(max_circ_buffer);
+    d_localqueue_writer = gr::make_buffer(max_circ_buffer, sizeof(char), 1, 1);
+    d_localqueue_reader = gr::buffer_add_reader(d_localqueue_writer, 0);
 
     if (is_ipv6)
         d_endpoint = asio::ip::udp::endpoint(asio::ip::udp::v6(), d_port);
@@ -165,10 +166,9 @@ bool udp_source_impl::stop()
         d_local_buffer = NULL;
     }
 
-    if (d_localqueue) {
-        delete d_localqueue;
-        d_localqueue = NULL;
-    }
+    d_localqueue_reader.reset();
+    d_localqueue_writer.reset();
+
     return true;
 }
 
@@ -179,7 +179,7 @@ size_t udp_source_impl::data_available()
     d_udpsocket->io_control(command);
     size_t bytes_readable = command.get();
 
-    return (bytes_readable + d_localqueue->size());
+    return (bytes_readable + d_localqueue_reader->items_available());
 }
 
 size_t udp_source_impl::netdata_available()
@@ -227,7 +227,7 @@ int udp_source_impl::work(int noutput_items,
     unsigned int num_requested = noutput_items * d_block_size;
 
     // quick exit if nothing to do
-    if ((bytes_available == 0) && (d_localqueue->empty())) {
+    if ((bytes_available == 0) && (d_localqueue_reader->items_available() == 0)) {
         underrun_counter++;
         d_partial_frame_counter = 0;
         if (d_source_zeros) {
@@ -267,14 +267,16 @@ int udp_source_impl::work(int noutput_items,
             // local queue in case we read more bytes than noutput_items is asking
             // for.  In that case we'll only return noutput_items bytes
             const char* read_data = asio::buffer_cast<const char*>(d_read_buffer.data());
-            for (int i = 0; i < bytes_read; i++) {
-                d_localqueue->push_back(read_data[i]);
-            }
+            if (d_localqueue_writer->space_available() < bytes_read)
+                d_localqueue_reader->update_read_pointer(
+                    bytes_read - d_localqueue_writer->space_available());
+            memcpy(d_localqueue_writer->write_pointer(), read_data, bytes_read);
+            d_localqueue_writer->update_write_pointer(bytes_read);
             d_read_buffer.consume(bytes_read);
         }
     }
 
-    if (d_localqueue->size() < d_payloadsize) {
+    if (d_localqueue_reader->items_available() < d_payloadsize) {
         // since we should be getting these in UDP packet blocks matched on the
         // sender/receiver, this should be a fringe case, or a case where another
         // app is sourcing the packets.
@@ -288,8 +290,8 @@ int udp_source_impl::work(int noutput_items,
             // This is just a safety to clear in the case there's a hanging partial
             // packet. If we've lingered through a number of calls and we still don't
             // have any data, clear the stale data.
-            while (!d_localqueue->empty())
-                d_localqueue->pop_front();
+            d_localqueue_reader->update_read_pointer(
+                d_localqueue_reader->items_available());
 
             d_partial_frame_counter = 0;
         }
@@ -309,7 +311,7 @@ int udp_source_impl::work(int noutput_items,
     // sure this is an integer multiple)
     long blocks_requested = noutput_items / d_precomp_data_over_item_size;
     // Number of blocks available accounting for the header as well.
-    long blocks_available = d_localqueue->size() / (d_payloadsize);
+    long blocks_available = d_localqueue_reader->items_available() / (d_payloadsize);
     long blocks_retrieved;
     int itemsreturned;
 
@@ -332,10 +334,9 @@ int udp_source_impl::work(int noutput_items,
 
     for (int cur_pkt = 0; cur_pkt < blocks_retrieved; cur_pkt++) {
         // Move a packet to our local buffer
-        for (int cur_byte = 0; cur_byte < d_payloadsize; cur_byte++) {
-            d_local_buffer[cur_byte] = d_localqueue->at(0);
-            d_localqueue->pop_front();
-        }
+        memcpy(d_local_buffer, d_localqueue_reader->read_pointer(), d_payloadsize);
+        d_localqueue_reader->update_read_pointer(d_payloadsize);
+
 
         // Interpret the header if present
         if (d_header_type != HEADERTYPE_NONE) {
