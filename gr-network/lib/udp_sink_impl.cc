@@ -119,7 +119,8 @@ bool udp_sink_impl::start()
             max_circ_buffer = d_payloadsize * 1500;
     }
 
-    d_localqueue = new boost::circular_buffer<char>(max_circ_buffer);
+    d_localqueue_writer = gr::make_buffer(max_circ_buffer, sizeof(char), 1, 1);
+    d_localqueue_reader = gr::buffer_add_reader(d_localqueue_writer, 0);
 
     d_udpsocket = new asio::ip::udp::socket(d_io_context);
 
@@ -186,10 +187,8 @@ bool udp_sink_impl::stop()
         d_localbuffer = NULL;
     }
 
-    if (d_localqueue) {
-        delete d_localqueue;
-        d_localqueue = NULL;
-    }
+    d_localqueue_reader.reset();
+    d_localqueue_writer.reset();
 
     return true;
 }
@@ -224,15 +223,17 @@ int udp_sink_impl::work(int noutput_items,
     const char* in = (const char*)input_items[0];
 
     // Build a long local queue to pull from so we can break it up easier
-    for (int i = 0; i < num_bytes_to_transmit; i++) {
-        d_localqueue->push_back(in[i]);
-    }
+    if (d_localqueue_writer->space_available() < num_bytes_to_transmit)
+        d_localqueue_reader->update_read_pointer(num_bytes_to_transmit -
+                                                 d_localqueue_writer->space_available());
+    memcpy(d_localqueue_writer->write_pointer(), in, num_bytes_to_transmit);
+    d_localqueue_writer->update_write_pointer(num_bytes_to_transmit);
 
     // Local buffer for transmitting
     std::vector<asio::const_buffer> transmitbuffer;
 
     // Let's see how many blocks are in the buffer
-    int bytes_available = d_localqueue->size();
+    int bytes_available = d_localqueue_reader->items_available();
     long blocks_available = bytes_available / d_precomp_datasize;
 
     for (int cur_block = 0; cur_block < blocks_available; cur_block++) {
@@ -248,10 +249,8 @@ int udp_sink_impl::work(int noutput_items,
         }
 
         // Fill the data buffer
-        for (int i = 0; i < d_precomp_datasize; i++) {
-            d_localbuffer[i] = d_localqueue->at(0);
-            d_localqueue->pop_front();
-        }
+        memcpy(d_localbuffer, d_localqueue_reader->read_pointer(), d_precomp_datasize);
+        d_localqueue_reader->update_read_pointer(d_precomp_datasize);
 
         // Set up for transmit
         transmitbuffer.push_back(
