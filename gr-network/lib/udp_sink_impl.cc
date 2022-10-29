@@ -105,8 +105,6 @@ udp_sink_impl::udp_sink_impl(size_t itemsize,
 
 bool udp_sink_impl::start()
 {
-    d_localbuffer = new char[d_payloadsize];
-
     long max_circ_buffer;
 
     // Let's keep it from getting too big
@@ -182,11 +180,6 @@ bool udp_sink_impl::stop()
         d_io_context.stop();
     }
 
-    if (d_localbuffer) {
-        delete[] d_localbuffer;
-        d_localbuffer = NULL;
-    }
-
     d_localqueue_reader.reset();
     d_localqueue_writer.reset();
 
@@ -248,16 +241,14 @@ int udp_sink_impl::work(int noutput_items,
                 asio::buffer((const void*)d_tmpheaderbuff, d_header_size));
         }
 
-        // Fill the data buffer
-        memcpy(d_localbuffer, d_localqueue_reader->read_pointer(), d_precomp_datasize);
-        d_localqueue_reader->update_read_pointer(d_precomp_datasize);
-
         // Set up for transmit
         transmitbuffer.push_back(
-            asio::buffer((const void*)d_localbuffer, d_precomp_datasize));
+            asio::buffer(d_localqueue_reader->read_pointer(), d_precomp_datasize));
 
         // Send
         d_udpsocket->send_to(transmitbuffer, d_endpoint);
+
+        d_localqueue_reader->update_read_pointer(d_precomp_datasize);
     }
 
     int itemsreturned = blocks_available * d_precomp_data_overitemsize;

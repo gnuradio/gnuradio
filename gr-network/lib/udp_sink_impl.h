@@ -46,7 +46,6 @@ protected:
     // domains: The network packets and the GR work()/scheduler
     gr::buffer_sptr d_localqueue_writer;
     gr::buffer_reader_sptr d_localqueue_reader;
-    char* d_localbuffer;
 
     asio::error_code ec;
 
