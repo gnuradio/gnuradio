@@ -112,7 +112,6 @@ udp_source_impl::udp_source_impl(size_t itemsize,
 
 bool udp_source_impl::start()
 {
-    d_local_buffer = new char[d_payloadsize];
     long max_circ_buffer;
 
     // Let's keep it from getting too big
@@ -161,11 +160,6 @@ bool udp_source_impl::stop()
         d_io_context.stop();
     }
 
-    if (d_local_buffer) {
-        delete[] d_local_buffer;
-        d_local_buffer = NULL;
-    }
-
     d_localqueue_reader.reset();
     d_localqueue_writer.reset();
 
@@ -198,15 +192,15 @@ uint64_t udp_source_impl::get_header_seqnum()
 
     switch (d_header_type) {
     case HEADERTYPE_SEQNUM: {
-        retVal = ((header_seq_num*)d_local_buffer)->seqnum;
+        retVal = ((header_seq_num*)d_localqueue_reader->read_pointer())->seqnum;
     } break;
 
     case HEADERTYPE_SEQPLUSSIZE: {
-        retVal = ((header_seq_plus_size*)d_local_buffer)->seqnum;
+        retVal = ((header_seq_plus_size*)d_localqueue_reader->read_pointer())->seqnum;
     } break;
 
     case HEADERTYPE_OLDATA: {
-        retVal = ((ata_header*)d_local_buffer)->seq;
+        retVal = ((ata_header*)d_localqueue_reader->read_pointer())->seq;
     } break;
     }
 
@@ -327,17 +321,10 @@ int udp_source_impl::work(int noutput_items,
     // We're going to have to read the data out in blocks, account for the header,
     // then just move the data part into the out[] array.
 
-    char* data_ptr;
-    data_ptr = &d_local_buffer[d_header_size];
     int out_index = 0;
     int skipped_packets = 0;
 
     for (int cur_pkt = 0; cur_pkt < blocks_retrieved; cur_pkt++) {
-        // Move a packet to our local buffer
-        memcpy(d_local_buffer, d_localqueue_reader->read_pointer(), d_payloadsize);
-        d_localqueue_reader->update_read_pointer(d_payloadsize);
-
-
         // Interpret the header if present
         if (d_header_type != HEADERTYPE_NONE) {
             uint64_t pkt_seq_num = get_header_seqnum();
@@ -356,10 +343,12 @@ int udp_source_impl::work(int noutput_items,
                 d_seq_num = pkt_seq_num;
             }
         }
+        d_localqueue_reader->update_read_pointer(d_header_size);
 
         // Move the data to the output buffer and increment the out index
-        memcpy(&out[out_index], data_ptr, d_precomp_data_size);
+        memcpy(&out[out_index], d_localqueue_reader->read_pointer(), d_precomp_data_size);
         out_index = out_index + d_precomp_data_size;
+        d_localqueue_reader->update_read_pointer(d_precomp_data_size);
     }
 
     if (skipped_packets > 0 && d_notify_missed) {
