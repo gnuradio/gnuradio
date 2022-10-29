@@ -42,8 +42,6 @@ protected:
     int d_precomp_data_over_item_size;
     size_t d_block_size;
 
-    char* d_local_buffer;
-
     asio::error_code ec;
 
     asio::io_context d_io_context;
