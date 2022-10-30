@@ -226,6 +226,8 @@ void bind_block_gateway(py::module& m)
              py::arg("which_port"),
              py::arg("handler_name"))
 
+        .def_property_readonly("logger", &block_gateway::_get_logger)
+
         ;
     py::enum_<gw_block_t>(m, "gw_block_t")
         .value("GW_BLOCK_GENERAL", GW_BLOCK_GENERAL)

@@ -33,7 +33,9 @@ static const char* __doc_gr_logger_emerg = R"doc()doc";
 
 static const char* __doc_gr_logging_singleton = R"doc()doc";
 static const char* __doc_gr_logging_default_level = R"doc()doc";
+static const char* __doc_gr_logging_set_default_level = R"doc()doc";
 static const char* __doc_gr_logging_debug_level = R"doc()doc";
+static const char* __doc_gr_logging_set_debug_level = R"doc()doc";
 static const char* __doc_gr_logging_add_default_sink = R"doc()doc";
 static const char* __doc_gr_logging_add_debug_sink = R"doc()doc";
 static const char* __doc_gr_logging_add_default_console_sink = R"doc()doc";
