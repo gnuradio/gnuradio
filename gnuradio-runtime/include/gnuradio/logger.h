@@ -1,7 +1,7 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2012-2013 Free Software Foundation, Inc.
- * Copyright 2021 Marcus Müller
+ * Copyright 2021,2022 Marcus Müller
  *
  * This file is part of GNU Radio
  *
@@ -48,15 +48,29 @@ using log_level = spdlog::level::level_enum;
 class GR_RUNTIME_API logging
 {
 public:
-    logging(logging const&) = delete; // delete copy ctor, this is a singleton class
-    void operator=(logging const&) = delete; // can't assign to singleton class
-    static logging& singleton();             //! \brief get the singleton
+    /* \brief deleted copy constructor
+     * get your own logging system, or, more likely, use the singleton.
+     */
+    logging(logging const&) = delete;
+
+    // \brief deleted assignment operator
+    void operator=(logging const&) = delete;
+
+    // \brief singleton to access the one logging system
+    static logging& singleton();
 
     //! \brief get the default logging level
-    inline log_level default_level() const { return _default_level; }
+    inline log_level default_level() const { return _default_backend->level(); }
 
     //! \brief get the debug logging level
-    inline log_level debug_level() const { return _debug_level; }
+    inline log_level debug_level() const { return _debug_backend->level(); }
+
+    //! \brief set the default logging level
+    void set_default_level(log_level level);
+
+    //! \brief set the debug logging level
+    void set_debug_level(log_level level);
+
     spdlog::sink_ptr default_backend() const;
     //! \brief adds a logging sink
     void add_default_sink(const spdlog::sink_ptr& sink);
@@ -71,7 +85,6 @@ public:
 
 private:
     logging();
-    const log_level _default_level, _debug_level;
     std::shared_ptr<spdlog::sinks::dist_sink_mt> _default_backend, _debug_backend;
 };
 
@@ -111,6 +124,10 @@ public:
     /*!
      * \brief constructor Provide name of logger to associate with this class
      * \param logger_name Name of logger associated with class
+     *
+     * Creates a new logger. Loggers inherit the logging level (through `gr.prefs` or
+     * through `gr::logging::singleton().set_default_level()`) that is set at the time of
+     * their creation.
      */
     logger(const std::string& logger_name);
 
