@@ -22,6 +22,7 @@ list(
     buffer_reader_python.cc
     buffer_type_python.cc
     constants_python.cc
+    dictionary_logger_backend_python.cc
     endianness_python.cc
     expj_python.cc
     flowgraph_python.cc
