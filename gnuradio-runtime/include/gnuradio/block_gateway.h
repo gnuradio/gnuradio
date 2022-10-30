@@ -13,6 +13,7 @@
 
 #include <gnuradio/api.h>
 #include <gnuradio/block.h>
+#include <gnuradio/logger.h>
 #include <string>
 
 #include <pybind11/pybind11.h> // must be first
@@ -107,6 +108,8 @@ public:
         gr::block::get_tags_in_window(tags, which_input, rel_start, rel_end, key);
         return tags;
     }
+
+    inline gr::logger_ptr _get_logger() const { return d_logger; }
 
     virtual void set_msg_handler_pybind(pmt::pmt_t which_port,
                                         std::string& handler_name) = 0;
