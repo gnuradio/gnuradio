@@ -27,15 +27,13 @@
 
 namespace gr {
 logging::logging()
-    : _default_level(spdlog::level::from_str(
-          prefs::singleton()->get_string("LOG", "log_level", "off"))),
-      _debug_level(spdlog::level::from_str(
-          prefs::singleton()->get_string("LOG", "debug_level", "off"))),
-      _default_backend(std::make_shared<spdlog::sinks::dist_sink_mt>()),
+    : _default_backend(std::make_shared<spdlog::sinks::dist_sink_mt>()),
       _debug_backend(std::make_shared<spdlog::sinks::dist_sink_mt>())
 {
-    _default_backend->set_level(_default_level);
-    _debug_backend->set_level(_debug_level);
+    _default_backend->set_level(spdlog::level::from_str(
+        prefs::singleton()->get_string("LOG", "log_level", "off")));
+    _debug_backend->set_level(spdlog::level::from_str(
+        prefs::singleton()->get_string("LOG", "debug_level", "off")));
 
 
     auto debug_console_sink = std::make_shared<spdlog::sinks::stderr_color_sink_st>();
@@ -59,6 +57,8 @@ logging::logging()
     }
 }
 
+void logging::set_default_level(log_level level) { _default_backend->set_level(level); }
+void logging::set_debug_level(log_level level) { _debug_backend->set_level(level); }
 
 logging& logging::singleton()
 {
@@ -92,8 +92,6 @@ logger::logger(const std::string& logger_name)
           std::make_shared<spdlog::logger>(_name, logging::singleton().default_backend()))
 {
     d_logger->set_level(logging::singleton().default_level());
-    // gr::log :%p: %c{1} - %m%n
-    //         :level: block alias - message
     d_logger->set_pattern(logging::default_pattern);
 }
 
