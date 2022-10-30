@@ -55,6 +55,7 @@ add_library(
     buffer_reader.cc
     buffer_reader_sm.cc
     buffer_single_mapped.cc
+    dictionary_logger_backend.cc
     flat_flowgraph.cc
     flowgraph.cc
     hier_block2.cc
@@ -321,6 +322,7 @@ if(ENABLE_TESTING)
         qa_buffer.cc
         qa_io_signature.cc
         qa_logger.cc
+        qa_dictionary_logger.cc
         qa_host_buffer.cc
         qa_vmcircbuf.cc)
     list(APPEND GR_TEST_TARGET_DEPS gnuradio-runtime gnuradio-pmt)
