@@ -12,6 +12,7 @@
 
 #include <gnuradio/block.h>
 #include <gnuradio/io_signature.h>
+#include <gnuradio/logger.h>
 #include <gnuradio/types.h>
 #include <pmt/pmt.h>
 
@@ -102,6 +103,8 @@ public:
     bool stop() override;
 
     void set_msg_handler_pybind(const pmt::pmt_t& which_port, std::string& handler_name);
+
+    inline gr::logger_ptr _get_logger() const { return d_logger; }
 
 private:
     py::handle d_py_handle;

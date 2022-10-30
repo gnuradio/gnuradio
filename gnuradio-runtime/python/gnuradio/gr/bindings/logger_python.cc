@@ -1,6 +1,6 @@
 /*
  * Copyright 2020 Free Software Foundation, Inc.
- * Copyright 2021 Marcus Müller
+ * Copyright 2021,2022 Marcus Müller
  *
  * This file is part of GNU Radio
  *
@@ -14,8 +14,8 @@
 /* If manual edits are made, the following tags should be modified accordingly.    */
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
-/* BINDTOOL_HEADER_FILE(logger.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(a76c325b045da079c83e294cc4abb8c6)                     */
+/* BINDTOOL_HEADER_FILE(logger.h)                                                  */
+/* BINDTOOL_HEADER_FILE_HASH(2ca21db5afd3c671852f71928ea6dfb2)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -37,6 +37,7 @@ void bind_logger(py::module& m)
         .value("info", spdlog::level::info)
         .value("warn", spdlog::level::warn)
         .value("err", spdlog::level::err)
+        .value("error", spdlog::level::err)
         .value("critical", spdlog::level::critical)
         .value("off", spdlog::level::off);
 
@@ -120,6 +121,10 @@ void bind_logger(py::module& m)
              D(logging, singleton))
         .def("default_level", &logging::default_level, D(logging, default_level))
         .def("debug_level", &logging::debug_level, D(logging, debug_level))
+        .def("set_default_level",
+             &logging::set_default_level,
+             D(logging, set_default_level))
+        .def("set_debug_level", &logging::set_debug_level, D(logging, set_debug_level))
         .def("add_default_sink",
              &logging::add_default_sink,
              py::arg("sink"),

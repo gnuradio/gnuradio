@@ -13,6 +13,7 @@
  * add them here.
  */
 
+#include <boost/test/tools/old/interface.hpp>
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
@@ -33,4 +34,13 @@ BOOST_AUTO_TEST_CASE(t1)
     GR_LOG_ERROR(log, "test from c++ ERROR");
     GR_LOG_FATAL(log, "test from c++ FATAL");
     BOOST_CHECK(true);
+}
+
+BOOST_AUTO_TEST_CASE(t2)
+{
+    auto& logsys = gr::logging::singleton();
+    logsys.set_default_level(gr::log_level::critical);
+    BOOST_CHECK_EQUAL(logsys.default_level(), gr::log_level::critical);
+    logsys.set_default_level(gr::log_level::info);
+    BOOST_CHECK_EQUAL(logsys.default_level(), gr::log_level::info);
 }
