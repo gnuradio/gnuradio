@@ -27,6 +27,7 @@ install(
           buffer_type.h
           constants.h
           custom_lock.h
+          dictionary_logger_backend.h
           endianness.h
           expj.h
           flowgraph.h
