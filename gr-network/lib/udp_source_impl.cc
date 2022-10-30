@@ -269,6 +269,14 @@ int udp_source_impl::work(int noutput_items,
             // local queue in case we read more bytes than noutput_items is asking
             // for.  In that case we'll only return noutput_items bytes
             const char* read_data = asio::buffer_cast<const char*>(d_read_buffer.data());
+
+            // Discard bytes if the input is longer than the buffer
+            long overrun = bytes_read - d_localqueue_writer->bufsize();
+            if (overrun > 0) {
+                bytes_read -= overrun;
+                read_data += overrun;
+            }
+
             if (d_localqueue_writer->space_available() < bytes_read)
                 d_localqueue_reader->update_read_pointer(
                     bytes_read - d_localqueue_writer->space_available());
