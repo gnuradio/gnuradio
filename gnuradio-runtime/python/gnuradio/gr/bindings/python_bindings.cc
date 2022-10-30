@@ -31,6 +31,7 @@ void bind_block_gateway(py::module&);
 void bind_buffer(py::module&);
 void bind_buffer_type(py::module& m);
 void bind_constants(py::module&);
+void bind_dictionary_logger_backend(py::module&);
 void bind_endianness(py::module&);
 void bind_expj(py::module&);
 void bind_flowgraph(py::module&);
@@ -146,6 +147,7 @@ PYBIND11_MODULE(gr_python, m)
     bind_math(m);
     bind_message(m);
 
+    bind_dictionary_logger_backend(m);
     // // bind_msg_accepter_msgq(m);
     // // bind_msg_passing(m);
     // // bind_msg_producer(m);
