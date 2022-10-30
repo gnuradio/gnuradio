@@ -215,6 +215,13 @@ int udp_sink_impl::work(int noutput_items,
     long num_bytes_to_transmit = noutput_items * d_block_size;
     const char* in = (const char*)input_items[0];
 
+    // Discard bytes if the input is longer than the buffer
+    long overrun = num_bytes_to_transmit - d_localqueue_writer->bufsize();
+    if (overrun > 0) {
+        num_bytes_to_transmit -= overrun;
+        in += overrun;
+    }
+
     // Build a long local queue to pull from so we can break it up easier
     if (d_localqueue_writer->space_available() < num_bytes_to_transmit)
         d_localqueue_reader->update_read_pointer(num_bytes_to_transmit -
