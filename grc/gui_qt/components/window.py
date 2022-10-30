@@ -32,7 +32,7 @@ from PyQt5.QtGui import QStandardItemModel
 
 # Custom modules
 from . import FlowgraphView
-from .. import base
+from .. import base, Constants, Utils
 from .undoable_actions import ChangeStateAction, RotateAction, EnableAction, DisableAction, BypassAction
 
 # Logging
@@ -695,9 +695,22 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         log.debug('find block')
         self._app().BlockLibrary._search_bar.setFocus()
 
+    def get_involved_triggered(self):
+        log.debug('get involved')
+        ad = QtWidgets.QMessageBox()
+        ad.setWindowTitle("Get Involved Instructions")
+        ad.setText("""\
+            <b>Welcome to the GNU Radio Community!</b><br/><br/>
+            For more details on contributing to GNU Radio and getting engaged with our great community visit <a href="https://wiki.gnuradio.org/index.php/HowToGetInvolved">here</a>.<br/><br/>
+            You can also join our <a href="https://chat.gnuradio.org/">Matrix chat server</a>, IRC Channel (#gnuradio) or contact through our <a href="https://lists.gnu.org/mailman/listinfo/discuss-gnuradio">mailing list (discuss-gnuradio)</a>.
+        """)
+        ad.exec()
+
     def about_triggered(self):
         log.debug('about')
-        self.about()
+        config = self.platform.config
+        py_version = sys.version.split()[0]
+        ad = QtWidgets.QMessageBox.about(self, "About GNU Radio", f"GNU Radio {config.version} (Python {py_version})")
 
     def about_qt_triggered(self):
         log.debug('about_qt')
@@ -739,7 +752,25 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
     def types_triggered(self):
         log.debug('types')
-        self.types()
+        colors = [(name, color)
+              for name, key, sizeof, color in Constants.CORE_TYPES]
+        max_len = 10 + max(len(name) for name, code in colors)
+
+        message = """
+        <table>
+        <tbody>
+        """
+
+        message += '\n'.join(
+            '<tr bgcolor="{color}"><td><tt>{name}</tt></td></tr>'
+            ''.format(color=color, name=name)
+            for name, color in colors
+        )
+        message += "</tbody></table>"
+        ad = QtWidgets.QMessageBox()
+        ad.setWindowTitle("Stream Types")
+        ad.setText(message)
+        ad.exec()
 
     def preferences_triggered(self):
         log.debug('preferences')
