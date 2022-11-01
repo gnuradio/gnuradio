@@ -228,7 +228,7 @@ class Compass(QWidget):
     def change_angle(self, angle):
         if angle != self._angle:
             if self.debug:
-                gr.log.info(("Compass angle: " + str(angle)))
+                gr.log.trace(f"Compass angle: {angle}")
 
             if angle < 0.0:
                 angle = 360.0 + angle  # Angle will already be negative
