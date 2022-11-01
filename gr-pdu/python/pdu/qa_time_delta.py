@@ -66,14 +66,6 @@ class qa_time_delta(gr_unittest.TestCase):
             'system_time'), pmt.from_double(tnow - 10.0))
         in_pdu = pmt.cons(meta, pmt.init_c32vector(len(in_data), in_data))
 
-        e_data = [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1,
-                  1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1]
-        e_meta = pmt.dict_add(pmt.make_dict(), pmt.intern(
-            'system_time'), pmt.from_double(tnow))
-        e_meta = pmt.dict_add(e_meta, pmt.intern(
-            'sys time delta (ms)'), pmt.from_double(10000.0))
-        e_pdu = pmt.cons(e_meta, pmt.init_c32vector(len(e_data), e_data))
-
         # set up fg
         self.tb.start()
         self.time_delta.to_basic_block()._post(pmt.intern("pdu"), in_pdu)
