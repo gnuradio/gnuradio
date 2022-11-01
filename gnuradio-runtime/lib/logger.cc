@@ -31,9 +31,9 @@ logging::logging()
       _debug_backend(std::make_shared<spdlog::sinks::dist_sink_mt>())
 {
     _default_backend->set_level(spdlog::level::from_str(
-        prefs::singleton()->get_string("LOG", "log_level", "off")));
+        prefs::singleton()->get_string("LOG", "log_level", "info")));
     _debug_backend->set_level(spdlog::level::from_str(
-        prefs::singleton()->get_string("LOG", "debug_level", "off")));
+        prefs::singleton()->get_string("LOG", "debug_level", "info")));
 
 
     auto debug_console_sink = std::make_shared<spdlog::sinks::stderr_color_sink_st>();
