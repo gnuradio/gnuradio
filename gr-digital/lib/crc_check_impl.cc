@@ -66,7 +66,8 @@ crc_check_impl::crc_check_impl(unsigned num_bits,
     message_port_register_out(pmt::mp("ok"));
     message_port_register_out(pmt::mp("fail"));
     message_port_register_in(pmt::mp("in"));
-    set_msg_handler(pmt::mp("in"), [this](pmt::pmt_t msg) { this->msg_handler(msg); });
+    set_msg_handler(pmt::mp("in"),
+                    [this](const pmt::pmt_t& msg) { this->msg_handler(msg); });
 }
 
 crc_check_impl::~crc_check_impl() {}
@@ -81,7 +82,7 @@ int crc_check_impl::general_work(int noutput_items,
     return 0;
 }
 
-void crc_check_impl::msg_handler(pmt::pmt_t pmt_msg)
+void crc_check_impl::msg_handler(const pmt::pmt_t& pmt_msg)
 {
     std::vector<uint8_t> msg = pmt::u8vector_elements(pmt::cdr(pmt_msg));
     unsigned num_bytes = d_num_bits / 8;
@@ -119,7 +120,10 @@ void crc_check_impl::msg_handler(pmt::pmt_t pmt_msg)
     }
 
     const auto out_size = d_discard_crc ? size - num_bytes : size;
-    message_port_pub(crc_ok ? pmt::mp("ok") : pmt::mp("fail"),
+    // avoid the costly string PMT'ing for every single message
+    static auto ok_port = pmt::mp("ok");
+    static auto fail_port = pmt::mp("fail");
+    message_port_pub(crc_ok ? ok_port : fail_port,
                      pmt::cons(pmt::car(pmt_msg), pmt::init_u8vector(out_size, msg)));
 }
 
