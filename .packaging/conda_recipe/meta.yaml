@@ -37,6 +37,7 @@ requirements:
     - ninja
     - pkg-config  # [not win]
     - sysroot_linux-64 2.17  # [linux64]
+    - thrift-compiler
     # cross-compilation requirements
     - python                              # [build_platform != target_platform]
     - cross-python_{{ target_platform }}  # [build_platform != target_platform]
@@ -65,8 +66,6 @@ requirements:
     - fftw
     - gmp  # [not win]
     - gsl
-    # blas needed to link with gsl
-    - libcblas  # [linux]
     - libsndfile
     - libthrift  # [not win]
     - mako
@@ -107,8 +106,10 @@ requirements:
     - cppzmq
     - zeromq
   # below needed only to run tests in host environment
+    - pytest
     - pyzmq
   run:
+    - alsa-plugins  # [linux]
     - boost-cpp
     - click
     - click-plugins
