@@ -196,7 +196,7 @@ int device_sink_impl::work(int noutput_items,
                                          "disable tagged input or tag your stream!");
             }
 
-            auto required_size = buffer_size / (interpolation + 1);
+            long required_size = buffer_size / (interpolation + 1);
             for (auto& tag : d_tags) {
                 auto packet_len = pmt::to_long(tag.value);
                 if (packet_len != required_size) {
