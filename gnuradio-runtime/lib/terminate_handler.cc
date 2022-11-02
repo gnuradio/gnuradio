@@ -29,6 +29,7 @@ void print_backtrace()
 {
     unw_cursor_t cursor;
     unw_context_t context;
+    std::ios_base::fmtflags saved_cerr_flags(std::cerr.flags());
 
     // Initialize cursor to current frame for local unwinding.
     unw_getcontext(&context);
@@ -41,7 +42,7 @@ void print_backtrace()
         if (pc == 0) {
             break;
         }
-        std::fprintf(stderr, "0x%lx:", pc);
+        std::cerr << "0x" << std::hex << pc << ":";
 
         char sym[256];
         if (unw_get_proc_name(&cursor, sym, sizeof(sym), &offset) == 0) {
@@ -51,13 +52,16 @@ void print_backtrace()
             if (status == 0) {
                 nameptr = demangled;
             }
-            std::fprintf(stderr, " (%s+0x%lx)\n", nameptr, offset);
+            std::cerr << " (" << nameptr << "+0x" << std::hex << offset << ")"
+                      << std::endl;
             std::free(demangled);
         } else {
-            std::fprintf(stderr,
-                         " -- error: unable to obtain symbol name for this frame\n");
+            std::cerr << " -- error: unable to obtain symbol name for this frame"
+                      << std::endl;
         }
     }
+
+    std::cerr.flags(saved_cerr_flags);
 }
 #endif
 
