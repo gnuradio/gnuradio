@@ -1,0 +1,125 @@
+#pragma once
+
+#include <gnuradio/block.h>
+#include <algorithm>
+#include <limits>
+#include <gnuradio/util.h>
+
+namespace gr {
+
+class GR_RUNTIME_API sync_decimator : public block
+{
+public:
+    sync_decimator(const std::string& name,
+                   const std::string& module = "",
+                   size_t decimation_ = 1)
+        : block(name, module)
+    {
+        set_decimation(decimation_);
+    }
+
+    work_return_t enforce_constraints(work_io& wio) override
+    {
+        // Check all inputs and outputs have the same number of items
+        auto min_num_input_items = std::numeric_limits<size_t>::max();
+        for (auto& w : wio.inputs()) {
+            min_num_input_items = std::min(min_num_input_items, w.n_items);
+        }
+        if (min_num_input_items < output_multiple() * decimation()) {
+            return work_return_t::INSUFFICIENT_INPUT_ITEMS;
+        }
+
+        auto min_num_output_items = min_num_input_items / decimation();
+        for (auto& w : wio.outputs()) {
+            min_num_output_items = std::min(min_num_output_items, w.n_items);
+        }
+        min_num_output_items = round_down(min_num_output_items, output_multiple());
+
+
+        // all inputs and outputs need to be fixed to the absolute min
+        for (auto& w : wio.inputs()) {
+            w.n_items = min_num_output_items * decimation();
+        }
+        for (auto& w : wio.outputs()) {
+            w.n_items = min_num_output_items;
+        }
+
+        for (auto& w : wio.outputs()) {
+            if (w.n_items < output_multiple()) {
+                return work_return_t::INSUFFICIENT_OUTPUT_ITEMS;
+            }
+        }
+
+        return work_return_t::OK;
+    }
+
+    /**
+     * @brief Performs checks on inputs and outputs before and after the call
+     * to the derived block's work function
+     *
+     * The sync_block guarantees that the input and output buffers to the
+     * work function of the derived block fit the constraints of the 1:1
+     * sample input/output relationship
+     *
+     * 1. Check all inputs and outputs have the same number of items
+     * 2. Fix all inputs and outputs to the absolute min across ports
+     * 3. Call the work() function on the derived block
+     * 4. Throw runtime_error if n_produced is not the same on every port
+     * 5. Set n_consumed = n_produced for every input port
+     *
+     * @param wio
+     * @return work_return_t
+     */
+    work_return_t do_work(work_io& wio) override
+    {
+        auto ret = enforce_constraints(wio);
+        if (ret != work_return_t::OK)
+            return ret;
+
+        ret = work(wio);
+
+        // For a sync decimator block the n_produced must be the same on every
+        // output port
+
+        bool firsttime = true;
+        size_t n_produced = 0;
+        bool allsame = true;
+        bool output_ports = false;
+        for (auto& w : wio.outputs()) {
+            if (firsttime) {
+                output_ports = true;
+                n_produced = w.n_produced;
+                firsttime = false;
+            }
+            if (n_produced != w.n_produced) {
+                allsame = false;
+                break;
+            }
+        }
+        if (!allsame) {
+            throw new std::runtime_error(
+                "outputs for sync_block must produce same number of items");
+        }
+
+        // by definition of a sync_decimator block the n_consumed must be equal to
+        // n_produced * decimation also, a sync block must consume all of its items
+        for (auto& w : wio.inputs()) {
+            w.n_consumed = output_ports ? n_produced * decimation() : w.n_items;
+        }
+
+        return ret;
+    }
+
+    size_t decimation() { return _decimation; }
+    void set_decimation(size_t decim)
+    {
+        _decimation = decim;
+        set_relative_rate(1.0 / _decimation);
+    }
+
+private:
+    size_t _decimation = 1;
+};
+
+
+} // namespace gr
