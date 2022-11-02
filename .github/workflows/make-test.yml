@@ -89,14 +89,20 @@ jobs:
             cxxflags: -Werror -Wno-error=invalid-pch
             ctest_args: '-E "qa_polar_..coder_(sc_)?systematic"'
             ldpath:
+          - distro: 'Debian 11 (32-bit)'
+            containerid: 'gnuradio/ci:debian-i386-11-3.10'
+            containeroptions: '--platform linux/i386'
+            cxxflags: -Werror -Wno-error=invalid-pch
+            ctest_args: '-E "qa_polar_..coder_(sc_)?systematic"'
+            ldpath:
     name: ${{ matrix.distro }}
     container:
       image: ${{ matrix.containerid }}
       volumes:
         - build_data:/build
-      options: --cpus 2
+      options: --cpus 2 ${{ matrix.containeroptions }}
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v1
       name: Checkout Project
     - name: CMake
       env:
