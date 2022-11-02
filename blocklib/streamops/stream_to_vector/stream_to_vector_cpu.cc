@@ -17,6 +17,7 @@ namespace streamops {
 stream_to_vector_cpu::stream_to_vector_cpu(block_args args)
     : INHERITED_CONSTRUCTORS, d_vlen(args.vlen)
 {
+    set_relative_rate(1.0 / args.vlen);
 }
 
 work_return_t stream_to_vector_cpu::enforce_constraints(work_io& wio)
