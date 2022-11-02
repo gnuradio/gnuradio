@@ -109,6 +109,11 @@ public:
         std::unique_lock<std::mutex> l(_mutex);
         _queue.clear();
     }
+    bool empty()
+    {
+        std::unique_lock<std::mutex> l(_mutex);
+        return _queue.empty();
+    }
 
 private:
     std::deque<T> _queue;
