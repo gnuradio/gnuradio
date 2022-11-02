@@ -103,7 +103,7 @@ jobs:
       image: ${{ matrix.containerid }}
       volumes:
         - build_data:/build
-      options: --cpus 2
+      options: --cpus 2 ${{matrix.options}}
     steps:
     - uses: actions/checkout@v2
       name: Checkout Project
