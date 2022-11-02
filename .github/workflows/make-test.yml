@@ -105,7 +105,7 @@ jobs:
         - build_data:/build
       options: --cpus 2 ${{matrix.options}}
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v1
       name: Checkout Project
     - name: CMake
       env:
