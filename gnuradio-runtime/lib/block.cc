@@ -407,7 +407,8 @@ void block::allocate_detail(int ninputs,
         detail->set_output(i, buffer);
 
         // Update the block's max_output_buffer based on what was actually allocated.
-        if ((max_output_buffer(i) != buffer->bufsize()) && (max_output_buffer(i) != -1))
+        if ((max_output_buffer(i) != static_cast<long>(buffer->bufsize())) &&
+            (max_output_buffer(i) != -1))
             d_logger->warn("Block ({:s}) max output buffer set to {:d}"
                            " instead of requested {:d}",
                            alias(),
