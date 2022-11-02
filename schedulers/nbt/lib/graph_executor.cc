@@ -1,12 +1,9 @@
 #include "graph_executor.h"
 
+#include <gnuradio/util.h>
+
 namespace gr {
 namespace schedulers {
-
-inline static unsigned int round_down(unsigned int n, unsigned int multiple)
-{
-    return (n / multiple) * multiple;
-}
 
 static void post_work_cleanup(work_io& wio)
 {

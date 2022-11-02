@@ -3,15 +3,9 @@
 #include <gnuradio/block.h>
 #include <algorithm>
 #include <limits>
-
+#include <gnuradio/util.h>
 
 namespace gr {
-
-inline static unsigned int round_down(unsigned int n, unsigned int multiple)
-{
-    return (n / multiple) * multiple;
-}
-
 
 /**
  * @brief synchronous 1:1 input to output
