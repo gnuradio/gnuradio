@@ -65,15 +65,13 @@ void buffer::add_tag(uint64_t offset, pmtf::map map)
     _tags.emplace_back(offset, map);
 }
 
-void buffer::propagate_tags(buffer_reader* p_in_buf, int n_consumed)
+void buffer::propagate_tags(buffer_reader* p_in_buf, int n_consumed, double relative_rate)
 {
-    double relative_rate =
-        (double)p_in_buf->item_size() / (double)p_in_buf->buffer_item_size();
     std::scoped_lock guard(_buf_mutex);
     for (auto& t : p_in_buf->tags()) {
         uint64_t new_offset = t.offset();
         if (relative_rate != 1.0) {
-            new_offset = t.offset() / relative_rate;
+            new_offset = t.offset() * relative_rate;
         }
         // Propagate the tags that occurred in the processed window
         if (new_offset >= total_written() && new_offset < total_written() + n_consumed) {
