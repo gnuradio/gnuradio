@@ -96,6 +96,7 @@ jobs:
             containerid: 'gnuradio/ci:debian-i386-11-3.10'
             cxxflags: -Werror -Wno-error=invalid-pch
             ctest_args: '-E "qa_polar_..coder_(sc_)?systematic"'
+            options: --platform linux/i386
             ldpath:
     name: ${{ matrix.distro }}
     container:
