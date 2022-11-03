@@ -91,16 +91,15 @@ templates:
     var_make: self.${id} = ${id} = ${value}
     make: |-
         <%
-            win = '_%s_toggle_button'%id
+            win = '_%s_toggle_switch'%id
         %>\
-        if ${type} == bool:
-        	self._${id}_choices = {'Pressed': bool(${pressed}), 'Released': bool(${released})}
-        elif ${type} == str:
-        	self._${id}_choices = {'Pressed': "${pressed}".replace("'",""), 'Released': "${released}".replace("'","")}
-        else:
-        	self._${id}_choices = {'Pressed': ${pressed}, 'Released': ${released}}
-        	
-        ${win} = qtgui.GrToggleSwitch(${ 'self.set_' + context.get('id')() }, ${label}, self._${id}_choices, ${initPressed},"${switchOnBackground}","${switchOffBackground}",${position}, 50, ${cellalignment}, ${verticalalignment},self,"${outputmsgname}".replace("'",""))
+        % if type == 'bool':
+        self._${id}_choices = {'Pressed': bool(${pressed}), 'Released': bool(${released})}
+        % else:
+        self._${id}_choices = {'Pressed': ${pressed}, 'Released': ${released}}
+        % endif
+
+        ${win} = qtgui.GrToggleSwitch(${ 'self.set_' + context.get('id')() }, ${label}, self._${id}_choices, ${initPressed}, "${switchOnBackground}", "${switchOffBackground}", ${position}, 50, ${cellalignment}, ${verticalalignment}, self, ${outputmsgname})
         self.${id} = ${win}
 
         ${gui_hint() % win}
@@ -108,7 +107,7 @@ templates:
 documentation: |-
     This block creates a modern toggle switch. The variable will take on one value or the other as set in the dialog.
 
-    This button will also produce a state message matching the set values.
+    This switch will also produce a state message matching the set values.
 
     The GUI hint can be used to position the widget within the application. The hint is of the form [tab_id@tab_index]: [row, col, row_span, col_span]. Both the tab specification and the grid position are optional.
 
