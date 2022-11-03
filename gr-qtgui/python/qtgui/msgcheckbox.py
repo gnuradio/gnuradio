@@ -78,7 +78,7 @@ class MsgCheckBox(gr.sync_block, QFrame):
         self.message_port_register_out(pmt.intern("state"))
 
         if initPressed:
-            self.chkctl.setChecked(True)
+            self.chkBox.setChecked(True)
 
         self.show()
 
