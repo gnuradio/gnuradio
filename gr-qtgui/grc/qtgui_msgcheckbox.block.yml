@@ -68,11 +68,15 @@ templates:
     var_make: self.${id} = ${id} = ${value}
     make: |-
         <%
-            win = '_%s_toggle_button'%id
+            win = '_%s_msgcheckbox_win'%id
         %>\
+        % if type == 'bool':
+        self._${id}_choices = {'Pressed': bool(${pressed}), 'Released': bool(${released})}
+        % else:
         self._${id}_choices = {'Pressed': ${pressed}, 'Released': ${released}}
-        	
-        ${win} = qtgui.MsgCheckBox(${ 'self.set_' + context.get('id')() }, '${no_quotes(label,repr(id))}', self._${id}_choices, ${initPressed}, ${cellalignment}, ${verticalalignment},"${outputmsgname}".replace("'",""))
+        % endif
+
+        ${win} = qtgui.MsgCheckBox(${ 'self.set_' + context.get('id')() }, "${no_quotes(label,repr(id))}", self._${id}_choices, ${initPressed}, ${cellalignment}, ${verticalalignment}, ${outputmsgname})
         self.${id} = ${win}
 
         ${gui_hint() % win}
