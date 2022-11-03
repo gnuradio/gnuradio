@@ -4,7 +4,7 @@
 ########################################################################
 blocksdir = join_paths(prefix, GRC_BLOCKS_DIR)
 if (prefix == '/usr')
-  blocksdir = blocksdir + ':' + join_paths('/usr/local/',GRC_BLOcKS_DIR)
+  blocksdir = blocksdir + ':' + join_paths('/usr/local/',GRC_BLOCKS_DIR)
 endif
 
 grc_xterm_program = find_program('xterminal-emulator','gnome-terminal','konsole','xterm', required : false)
