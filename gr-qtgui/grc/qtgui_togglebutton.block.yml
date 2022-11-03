@@ -86,15 +86,14 @@ templates:
         <%
             win = '_%s_toggle_button'%id
         %>\
-        if ${type} == bool:
-        	self._${id}_choices = {'Pressed': bool(${pressed}), 'Released': bool(${released})}
-        elif ${type} == str:
-        	self._${id}_choices = {'Pressed': "${pressed}".replace("'",""), 'Released': "${released}".replace("'","")}
-        else:
-        	self._${id}_choices = {'Pressed': ${pressed}, 'Released': ${released}}
-        	
-        ${win} = qtgui.ToggleButton(${ 'self.set_' + context.get('id')() }, ${(label if (len(label) - 2 > 0) else repr(id))}, self._${id}_choices, ${initPressed},"${outputmsgname}".replace("'",""))
-        ${win}.setColors("${relBackgroundColor}","${relFontColor}","${pressBackgroundColor}","${pressFontColor}")
+        % if type == 'bool':
+        self._${id}_choices = {'Pressed': bool(${pressed}), 'Released': bool(${released})}
+        % else:
+        self._${id}_choices = {'Pressed': ${pressed}, 'Released': ${released}}
+        % endif
+
+        ${win} = qtgui.ToggleButton(${ 'self.set_' + context.get('id')() }, ${(label if (len(label) - 2 > 0) else repr(id))}, self._${id}_choices, ${initPressed}, ${outputmsgname})
+        ${win}.setColors("${relBackgroundColor}", "${relFontColor}", "${pressBackgroundColor}", "${pressFontColor}")
         self.${id} = ${win}
 
         ${gui_hint() % win}
