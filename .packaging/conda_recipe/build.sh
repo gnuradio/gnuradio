@@ -35,18 +35,18 @@ if [[ $target_platform == linux* ]] ; then
 else
     SKIP_TESTS=(
         qa_block_gateway
+        qa_blocks_hier_block2
         qa_fecapi_cc
         qa_fecapi_dummy
         qa_fecapi_ldpc
         qa_fecapi_repetition
         qa_header_payload_demux
-        qa_hier_block2
         qa_hier_block2_message_connections
         qa_python_message_passing
         qa_uncaught_exception
     )
 fi
-SKIP_TESTS_STR=$( IFS="|"; echo "${SKIP_TESTS[*]}" )
+SKIP_TESTS_STR=$( IFS="|"; echo "^(${SKIP_TESTS[*]})$" )
 
 ctest --build-config Release --output-on-failure --timeout 120 -j${CPU_COUNT} -E "$SKIP_TESTS_STR"
 

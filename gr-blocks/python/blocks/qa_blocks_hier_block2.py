@@ -37,7 +37,7 @@ class multiply_const_ff(gr.sync_block):
         return len(output_items[0])
 
 
-class test_hier_block2(gr_unittest.TestCase):
+class test_blocks_hier_block2(gr_unittest.TestCase):
 
     def setUp(self):
         pass
@@ -518,4 +518,4 @@ class test_hier_block2(gr_unittest.TestCase):
 
 
 if __name__ == "__main__":
-    gr_unittest.run(test_hier_block2)
+    gr_unittest.run(test_blocks_hier_block2)
