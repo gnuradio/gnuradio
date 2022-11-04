@@ -77,6 +77,7 @@ public:
     {
         push_message(rt_monitor_message::make(rt_monitor_message_t::KILL, 0, 0));
     }
+    bool finished() { return _monitor_thread_stopped; }
 
 private:
     bool _monitor_thread_stopped = false;

@@ -234,6 +234,7 @@ public:
     }
 
     block_vector_t calc_downstream_blocks(block_sptr block, port_ptr port);
+    block_vector_t calc_downstream_blocks(block_sptr block);
 
 protected:
     block_vector_t d_blocks;
@@ -245,7 +246,7 @@ protected:
 private:
     edge_vector_t calc_connections(block_sptr block,
                                    bool check_inputs); // false=use outputs
-    block_vector_t calc_downstream_blocks(block_sptr block);
+
     block_vector_t calc_reachable_blocks(block_sptr blk, block_vector_t& blocks);
     void reachable_dfs_visit(block_sptr blk, block_vector_t& blocks);
     block_vector_t calc_adjacent_blocks(block_sptr blk, block_vector_t& blocks);
