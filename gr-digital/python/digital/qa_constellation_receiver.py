@@ -126,11 +126,8 @@ class test_constellation_receiver(gr_unittest.TestCase):
                 d2 = data[:int(len(data) * self.ignore_fraction)]
                 correct, overlap, offset, indices = alignment.align_sequences(
                     d1, d2, indices=self.indices)
-                if correct <= req_correct:
-                    print(
-                        "Constellation is {0}. Differential is {1}.  Required correct is {2}. Correct is {3}. FAIL.". format(
-                            constellation, differential, req_correct, correct))
-                self.assertTrue(correct > req_correct)
+                self.assertGreater(correct, req_correct,
+                                   msg=f"Constellation is {type(constellation)}. Differential is {differential}.")
 
     def test_tag(self):
         # Send data through bpsk receiver

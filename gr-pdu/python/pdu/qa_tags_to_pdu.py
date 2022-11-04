@@ -155,7 +155,7 @@ class qa_tags_to_pdu (gr_unittest.TestCase):
         self.assertAlmostEqual(pmt.to_uint64(pmt.tuple_ref(
             time_tuple1, 0)) + pmt.to_double(pmt.tuple_ref(time_tuple1, 1)), expected_time)
         #wct = pmt.to_double(pmt.dict_ref(pmt.car(dbg.get_message(0)), pmt.intern("wall_clock_time"), pmt.PMT_NIL))
-        #self.assertTrue((wct - ts) < 1.0)
+        #self.assertLess(wct - ts, 1.0)
 
         self.tb = None
 

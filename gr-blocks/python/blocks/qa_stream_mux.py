@@ -227,14 +227,11 @@ class test_stream_mux (gr_unittest.TestCase):
                 tag.key, pmt.intern('src3'))]
 
         for i in range(len(expected_tag_offsets_src1)):
-            self.assertTrue(
-                expected_tag_offsets_src1[i] == tags_src1[i].offset)
+            self.assertEqual(expected_tag_offsets_src1[i], tags_src1[i].offset)
         for i in range(len(expected_tag_offsets_src2)):
-            self.assertTrue(
-                expected_tag_offsets_src2[i] == tags_src2[i].offset)
+            self.assertEqual(expected_tag_offsets_src2[i], tags_src2[i].offset)
         for i in range(len(expected_tag_offsets_src3)):
-            self.assertTrue(
-                expected_tag_offsets_src3[i] == tags_src3[i].offset)
+            self.assertEqual(expected_tag_offsets_src3[i], tags_src3[i].offset)
 
 
 if __name__ == '__main__':
