@@ -32,7 +32,7 @@ void bind_pm_remez(py::module& m)
 
 
     m.def("pm_remez",
-          &::gr::filter::pm_remez,
+          &::gr::kernel::filter::pm_remez,
           py::arg("order"),
           py::arg("bands"),
           py::arg("ampl"),
