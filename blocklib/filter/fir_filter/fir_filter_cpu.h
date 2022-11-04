@@ -28,12 +28,9 @@ public:
 
 
 private:
-    gr::kernel::filter::fir_filter<IN_T, OUT_T, TAP_T> d_fir;
-    bool d_updated = true; // treat the first call to work() as an update
+    work_return_t enforce_constraints(work_io& wio) override;
 
-    size_t d_history = 1;
-    int d_hist_change = 1;
-    bool d_hist_updated = false;
+    gr::kernel::filter::fir_filter<IN_T, OUT_T, TAP_T> d_fir;
 };
 
 
