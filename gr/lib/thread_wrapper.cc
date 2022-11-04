@@ -1,16 +1,15 @@
-#include "thread_wrapper.h"
 #include <gnuradio/thread.h>
+#include <gnuradio/thread_wrapper.h>
 #include <fmt/core.h>
 #include <thread>
 
 namespace gr {
-namespace schedulers {
 
 thread_wrapper::thread_wrapper(int id,
                                block_group_properties bgp,
-                               buffer_manager::sptr bufman,
+                               executor_sptr exec,
                                runtime_monitor_sptr rtmon,
-                               const scheduler_nbt_options& opts)
+                               scheduler_options_sptr opts)
     : _id(id), d_block_group(bgp), d_blocks(bgp.blocks()), _opts(opts)
 {
     gr::configure_default_loggers(d_logger, d_debug_logger, bgp.name());
@@ -20,8 +19,7 @@ thread_wrapper::thread_wrapper(int id,
     }
 
     d_rtmon = rtmon;
-    _exec = std::make_unique<graph_executor>(bgp.name());
-    _exec->initialize(bufman, d_blocks);
+    _exec = exec;
     d_thread = std::thread(thread_body, this);
 }
 
@@ -90,7 +88,7 @@ bool thread_wrapper::handle_work_notification()
 
     if (d_flushing) {
         // For profiling, we don't want to compare go into the flushing logic
-        if (!_opts.flush) {
+        if (!_opts->flush) {
             d_rtmon->push_message(
                 rt_monitor_message::make(rt_monitor_message_t::FLUSHED, id()));
             return false;
@@ -126,7 +124,7 @@ bool thread_wrapper::handle_work_notification()
         }
 
         if (all_blkd) {
-            if (++d_flush_cnt >= _opts.flush_count) {
+            if (++d_flush_cnt >= _opts->flush_count) {
                 d_debug_logger->debug("All blocks in thread {} blocked, pushing flushed",
                                       id());
                 d_rtmon->push_message(
@@ -135,7 +133,7 @@ bool thread_wrapper::handle_work_notification()
             }
             else {
                 std::this_thread::sleep_for(
-                    std::chrono::milliseconds(_opts.flush_sleep_ms));
+                    std::chrono::milliseconds(_opts->flush_sleep_ms));
                 push_message(std::make_shared<scheduler_action>(
                     scheduler_action_t::NOTIFY_ALL, 0));
             }
@@ -338,5 +336,4 @@ void thread_wrapper::thread_body(thread_wrapper* top)
     top->d_debug_logger->debug("Exiting Thread");
 }
 
-} // namespace schedulers
 } // namespace gr

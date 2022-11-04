@@ -86,7 +86,10 @@ int main(int argc, char* argv[])
 
         std::cout << "Initializing NBT scheduler with buffer size of " << buffer_size
                   << std::endl;
-        auto sched = schedulers::scheduler_nbt::make({ "nbt", buffer_size });
+
+        auto opts = schedulers::scheduler_nbt_options::make();
+        opts->default_buffer_size = buffer_size;
+        auto sched = schedulers::scheduler_nbt::make(opts);
 
         if (buffer_type == 1) {
             sched->set_default_buffer_factory(BUFFER_CPU_VMCIRC_ARGS);
