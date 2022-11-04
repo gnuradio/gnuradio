@@ -11,13 +11,6 @@
 #ifndef INCLUDED_QTGUI_NUMBER_SINK_H
 #define INCLUDED_QTGUI_NUMBER_SINK_H
 
-#ifdef ENABLE_PYTHON
-#pragma push_macro("slots")
-#undef slots
-#include "Python.h"
-#pragma pop_macro("slots")
-#endif
-
 #include <gnuradio/qtgui/api.h>
 #include <gnuradio/qtgui/qtgui_types.h>
 #include <gnuradio/qtgui/trigger_mode.h>
