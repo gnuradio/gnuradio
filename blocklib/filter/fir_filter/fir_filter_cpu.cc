@@ -20,7 +20,7 @@ fir_filter_cpu<IN_T, OUT_T, TAP_T>::fir_filter_cpu(
     : INHERITED_CONSTRUCTORS(IN_T, OUT_T, TAP_T), d_fir(args.taps)
 {
     this->set_relative_rate(1.0 / args.decimation);
-
+    this->declare_noconsume(d_fir.ntaps() - 1);
     // const int alignment_multiple = volk_get_alignment() / sizeof(float);
     // this->set_alignment(std::max(1, alignment_multiple));
 }
@@ -35,12 +35,12 @@ void fir_filter_cpu<IN_T, OUT_T, TAP_T>::on_parameter_change(param_action_sptr a
     if (action->id() == fir_filter<IN_T, OUT_T, TAP_T>::id_taps) {
         auto taps = pmtf::get_as<std::vector<TAP_T>>(*this->param_taps);
         d_fir.set_taps(taps);
-        d_updated = true;
+        this->declare_noconsume(d_fir.ntaps() - 1);
     }
 }
 
 template <class IN_T, class OUT_T, class TAP_T>
-work_return_t fir_filter_cpu<IN_T, OUT_T, TAP_T>::work(work_io& wio)
+work_return_t fir_filter_cpu<IN_T, OUT_T, TAP_T>::enforce_constraints(work_io& wio)
 {
     // Do forecasting
     size_t ninput = wio.inputs()[0].n_items;
@@ -48,40 +48,41 @@ work_return_t fir_filter_cpu<IN_T, OUT_T, TAP_T>::work(work_io& wio)
 
     auto decim = pmtf::get_as<size_t>(*this->param_decimation);
 
-    if (d_updated) {
-        d_hist_change = d_history - d_fir.ntaps();
-        d_history = d_fir.ntaps();
-        d_updated = false;
-        d_hist_updated = true;
-    }
-
-    auto min_ninput = std::min(noutput * decim + d_history - 1, ninput - (d_history - 1));
-    // auto noutput_items = std::min( (min_ninput + decim - 1) / decim, noutput);
+    auto min_ninput =
+        std::min(noutput * decim + this->noconsume(), ninput - this->noconsume());
     auto noutput_items = std::min(min_ninput / decim, noutput);
 
     if (noutput_items <= 0) {
         return work_return_t::INSUFFICIENT_INPUT_ITEMS;
     }
 
+    wio.outputs()[0].n_items = noutput_items;
+    wio.inputs()[0].n_items = noutput_items * decim;
+
+    return work_return_t::OK;
+}
+
+template <class IN_T, class OUT_T, class TAP_T>
+work_return_t fir_filter_cpu<IN_T, OUT_T, TAP_T>::work(work_io& wio)
+{
+    size_t ninput = wio.inputs()[0].n_items;
+    size_t noutput = wio.outputs()[0].n_items;
 
     auto in = wio.inputs()[0].items<IN_T>();
     auto out = wio.outputs()[0].items<OUT_T>();
 
+    auto decim = pmtf::get_as<size_t>(*this->param_decimation);
+
     if (decim == 1) {
-        d_fir.filterN(out, in, noutput_items);
+        d_fir.filterN(out, in, noutput);
     }
     else {
-        d_fir.filterNdec(out, in, noutput_items, decim);
+        d_fir.filterNdec(out, in, noutput, decim);
     }
 
-    // wio.consume_each(noutput_items * decim + d_hist_change);
-    wio.consume_each(noutput_items * decim);
-    wio.produce_each(noutput_items);
+    wio.consume_each(ninput);
+    wio.produce_each(noutput);
 
-    if (d_hist_updated) {
-        d_hist_change = 0;
-        d_hist_updated = false;
-    }
     return work_return_t::OK;
 }
 
