@@ -11,10 +11,6 @@
 #ifndef INCLUDED_QTGUI_BER_SINK_B_H
 #define INCLUDED_QTGUI_BER_SINK_B_H
 
-#ifdef ENABLE_PYTHON
-#include <Python.h>
-#endif
-
 #include <gnuradio/block.h>
 #include <gnuradio/qtgui/api.h>
 #include <qapplication.h>

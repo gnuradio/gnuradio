@@ -11,10 +11,6 @@
 #ifndef INCLUDED_QTGUI_EDIT_BOX_MSG_H
 #define INCLUDED_QTGUI_EDIT_BOX_MSG_H
 
-#ifdef ENABLE_PYTHON
-#include <Python.h>
-#endif
-
 #include <gnuradio/block.h>
 #include <gnuradio/qtgui/api.h>
 #include <gnuradio/qtgui/qtgui_types.h>

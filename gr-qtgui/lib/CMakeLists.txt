@@ -99,18 +99,6 @@ if(ENABLE_COMMON_PCH)
     target_link_libraries(gnuradio-qtgui PRIVATE common-precompiled-headers)
 endif()
 
-include(GrPython)
-if(ENABLE_PYTHON)
-    target_compile_definitions(gnuradio-qtgui PUBLIC -DENABLE_PYTHON)
-    # INTERFACE/PRIVATE split so users of the library can choose how to link to Python
-    # (importantly, extension modules can avoid linking against Python and resolve
-    #  their own Python symbols at runtime through the Python interpreter's linking)
-    target_link_libraries(
-        gnuradio-qtgui
-        INTERFACE Python::Module
-        PRIVATE Python::Python)
-endif(ENABLE_PYTHON)
-
 set(qtgui_mod_includedir ${CMAKE_CURRENT_SOURCE_DIR}/../include/gnuradio/qtgui)
 qt5_wrap_cpp(
     qtgui_moc_sources
