@@ -38,6 +38,7 @@
 #endif
 
 namespace gr {
+namespace kernel {
 namespace filter {
 
 #define CONST const
@@ -853,6 +854,6 @@ std::vector<double> pm_remez(int order,
 
     return std::vector<double>(&coeff[0], &coeff[numtaps]);
 }
-
-} /* namespace filter */
-} /* namespace gr */
+} // namespace filter
+} // namespace kernel
+} // namespace gr

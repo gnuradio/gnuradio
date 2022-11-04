@@ -16,6 +16,7 @@
 #include <string>
 
 namespace gr {
+namespace kernel {
 namespace filter {
 /*!
  * \brief Parks-McClellan FIR filter design using Remez algorithm.
@@ -51,7 +52,7 @@ std::vector<double> pm_remez(int order,
                              const std::string filter_type = "bandpass",
                              int grid_density = 16) noexcept(false);
 
-} /* namespace filter */
-} /* namespace gr */
-
+} // namespace filter
+} // namespace kernel
+} // namespace gr
 #endif /* INCLUDED_FILTER_PM_REMEZ_H */
