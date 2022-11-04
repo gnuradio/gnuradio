@@ -1,6 +1,6 @@
 module: filter
 block: pfb_arb_resampler
-label: pfb_arb_resampler
+label: PFB Arbitrary Resampler
 blocktype: block
 category: '[Core]/Resamplers'
 
@@ -63,7 +63,7 @@ callbacks:
     return: size_t
     const: true
 -   id: phase_offset
-    return: size_t
+    return: rf32
     args:
     - id: freq
       dtype: rf32
