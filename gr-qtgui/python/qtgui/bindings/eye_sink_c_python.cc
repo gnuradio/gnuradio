@@ -11,7 +11,6 @@
 
 #include <pybind11/buffer_info.h>
 #include <pybind11/complex.h>
-#include <pybind11/embed.h>
 #include <pybind11/pybind11.h>
 #include <pybind11/pytypes.h>
 #include <pybind11/stl.h>
