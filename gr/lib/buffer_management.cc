@@ -137,26 +137,11 @@ int buffer_manager::get_buffer_num_items(edge_sptr e, flat_graph_sptr fg)
         grblock = std::dynamic_pointer_cast<block>(e->dst().node());
     }
 
-    if (grblock->output_multiple_set()) {
-        nitems = std::max(nitems, static_cast<size_t>(2 * (grblock->output_multiple())));
-    }
-
-    // If any downstream blocks are decimators and/or have a large output_multiple,
-    // ensure we have a buffer at least twice their decimation
-    // factor*output_multiple
-
+    nitems = std::max(nitems, 2 * grblock->min_required_output_buffer());
     auto blocks = fg->calc_downstream_blocks(grblock, e->src().port());
 
-    for (auto& p : blocks) {
-        // block_sptr dgrblock = cast_to_block_sptr(*p);
-        // if (!dgrblock)
-        //     throw std::runtime_error("allocate_buffer found non-gr::block");
-
-        // double decimation = (1.0 / dgrblock->relative_rate());
-        double decimation = (1.0 / p->relative_rate());
-        int multiple = p->output_multiple();
-        nitems = std::max(nitems, static_cast<size_t>(2 * (decimation * multiple)));
-        // std::max(nitems, static_cast<int>(2 * (decimation * multiple)));
+    for (auto& ds_block : blocks) {
+        nitems = std::max(nitems, 2 * ds_block->min_required_upstream_buffer());
     }
 
     return nitems;
