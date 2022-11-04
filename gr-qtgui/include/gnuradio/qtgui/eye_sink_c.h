@@ -10,10 +10,6 @@
 #ifndef INCLUDED_QTGUI_EYE_SINK_C_H
 #define INCLUDED_QTGUI_EYE_SINK_C_H
 
-#ifdef ENABLE_PYTHON
-#include <Python.h>
-#endif
-
 #include <gnuradio/qtgui/api.h>
 #include <gnuradio/qtgui/trigger_mode.h>
 #include <gnuradio/sync_block.h>
