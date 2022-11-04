@@ -112,19 +112,13 @@ class TestCase(unittest.TestCase):
         Note this function exists because of this bug: https://bugs.python.org/issue19217
         Calling self.assertEqual(seqA, seqB) can hang if seqA and seqB are not equal.
         """
-        if len(data_in) != len(data_out):
-            print(
-                'Lengths do not match: {:d} -- {:d}'.format(len(data_in), len(data_out)))
-        self.assertTrue(len(data_in) == len(data_out))
-        total_miscompares = 0
+        self.assertEqual(len(data_in), len(data_out), msg="Lengths do not match")
+        miscompares = []
         for idx, item in enumerate(zip(data_in, data_out)):
             if item[0] != item[1]:
-                total_miscompares += 1
-                print(
-                    'Miscompare at: {:d} ({} -- {})'.format(idx, item[0], item[1]))
-        if total_miscompares > 0:
-            print('Total miscompares: {:d}'.format(total_miscompares))
-        self.assertTrue(total_miscompares == 0)
+                miscompares.append(f"Miscompare at: {idx} ({item[0]} -- {item[1]})")
+        self.assertEqual(len(miscompares), 0,
+                         msg=f"Total miscompares: {len(miscompares)}\n" + "\n".join(miscompares))
 
     def waitFor(
             self,

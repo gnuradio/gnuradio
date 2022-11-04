@@ -42,7 +42,7 @@ class test_scrambler(gr_unittest.TestCase):
         reg = np.zeros(52, np.int8)
         reg[::-1][(51, 3, 0), ] = 1
         res = (np.convolve(seq, reg) % 2)
-        self.assertTrue(sum(res[52:-52]) == 0, "LRS not generated properly")
+        self.assertEqual(sum(res[52:-52]), 0, msg="LRS not generated properly")
 
     def test_scrambler_descrambler_001(self):
         src_data = np.random.randint(0, 2, 500, dtype=np.int8)

@@ -49,11 +49,8 @@ class test_file_source(gr_unittest.TestCase):
         """
         Try to open a non-existent file and verify exception is thrown.
         """
-        try:
-            _ = blocks.file_source(gr.sizeof_float, "___no_such_file___")
-            self.assertTrue(False)
-        except RuntimeError:
-            self.assertTrue(True)
+        with self.assertRaises(RuntimeError):
+            blocks.file_source(gr.sizeof_float, "___no_such_file___")
 
     def test_file_source_with_offset(self):
         expected_result = self._vector[100:]
