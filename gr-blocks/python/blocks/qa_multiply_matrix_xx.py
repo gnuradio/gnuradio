@@ -55,7 +55,7 @@ class test_multiply_matrix_xx (gr_unittest.TestCase):
         X_in = numpy.matrix(X_in)
         A_matrix = numpy.matrix(A)
         (N, M) = A_matrix.shape
-        self.assertTrue(N == X_in.shape[0])
+        self.assertEqual(N, X_in.shape[0])
         # Calc expected
         Y_out_exp = numpy.matrix(numpy.zeros((M, X_in.shape[1])))
         self.multiplier = BLOCK_LOOKUP[datatype]['mult'](A, tpp)

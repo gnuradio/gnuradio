@@ -165,8 +165,6 @@ class test_pfb_clock_sync(gr_unittest.TestCase):
         self.tb.stop()
         self.tb.wait()
 
-        self.assertTrue(True)
-
     def test03_f(self):
         # Test resting of taps
         excess_bw0 = 0.35
@@ -202,8 +200,6 @@ class test_pfb_clock_sync(gr_unittest.TestCase):
 
         self.tb.stop()
         self.tb.wait()
-
-        self.assertTrue(True)
 
 
 if __name__ == '__main__':
