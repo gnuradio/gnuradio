@@ -1,7 +1,6 @@
 fft_deps += [gnuradio_gr_dep, volk_dep, fmt_dep, pmtf_dep, gr_kernel_fft_lib_dep]
 
 # fft_sources += ['fftw_fft.cc','window.cc']
-link_args = []
 
 if IMPLEMENT_CUDA
     fft_deps += cuda_dep
@@ -33,7 +32,6 @@ gnuradio_blocklib_fft_lib = library('gnuradio-blocklib-fft',
     include_directories : incdir, 
     install : true,
     link_language: 'cpp',
-    link_args : link_args,
     dependencies : fft_deps,
     cpp_args : block_cpp_args)
 
@@ -52,7 +50,7 @@ cmake.configure_package_config_file(
 )
 
 pkg = import('pkgconfig')
-libs = []     # the library/libraries users need to link against
+libs = [gnuradio_blocklib_fft_lib]     # the library/libraries users need to link against
 h = ['.'] # subdirectories of ${prefix}/${includedir} to add to header path
 pkg.generate(libraries : libs,
              subdirs : h,

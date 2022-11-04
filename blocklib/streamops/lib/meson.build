@@ -5,7 +5,6 @@ streamops_sources += sources
 streamops_deps += [gnuradio_gr_dep, volk_dep, fmt_dep, pmtf_dep]
 
 block_cpp_args = ['-DHAVE_CPU']
-link_args = []
 if IMPLEMENT_CUDA
     block_cpp_args += '-DHAVE_CUDA'
 
@@ -29,7 +28,6 @@ gnuradio_blocklib_streamops_lib = library('gnuradio-blocklib-streamops',
     include_directories : incdir, 
     install : true,
     link_language: 'cpp',
-    link_args : link_args,
     dependencies : streamops_deps,
     cpp_args : block_cpp_args)
 
@@ -48,7 +46,7 @@ cmake.configure_package_config_file(
 )
 
 pkg = import('pkgconfig')
-libs = []     # the library/libraries users need to link against
+libs = [gnuradio_blocklib_streamops_lib]     # the library/libraries users need to link against
 h = ['.'] # subdirectories of ${prefix}/${includedir} to add to header path
 pkg.generate(libraries : libs,
              subdirs : h,
