@@ -29,7 +29,7 @@ class test_pmt_to_python(unittest.TestCase):
         narr.imag[:] = np.random.uniform(size=N)
         uvector = pmt2py.numpy_to_uvector(narr)
         nparr = pmt2py.uvector_to_numpy(uvector)
-        self.assertTrue(nparr.dtype == narr.dtype)
+        self.assertEqual(nparr.dtype, narr.dtype)
         self.assertTrue(np.alltrue(nparr == narr))
 
 

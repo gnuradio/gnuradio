@@ -21,19 +21,15 @@ class qa_take_skip_to_pdu_X (gr_unittest.TestCase):
     # the *contents* of a uniform vector
     def assertEqualPDU(self, pdu1, pdu2):
         # first check the equal() function:
-        if not pmt.equal(pdu1, pdu2):
-            self.assertTrue(False)
+        self.assertTrue(pmt.equal(pdu1, pdu2))
         # then check the dictionaries:
-        if not pmt.equal(pmt.car(pdu1), pmt.car(pdu2)):
-            self.assertTrue(False)
+        self.assertTrue(pmt.equal(pmt.car(pdu1), pmt.car(pdu2)))
         # then check the elements of the respective vectors
         vec1 = pmt.cdr(pdu1)
         vec2 = pmt.cdr(pdu2)
-        if not pmt.equal(vec1, vec2):
-            self.assertTrue(False)
-        if not (pmt.to_python(vec1) == pmt.to_python(vec2)).all():
-            print("vectors not equal? " + repr(vec1) + repr(vec2))
-            self.assertTrue(False)
+        self.assertTrue(pmt.equal(vec1, vec2))
+        self.assertTrue((pmt.to_python(vec1) == pmt.to_python(vec2)).all(),
+                        msg=f"vectors not equal? {vec1!r} {vec2!r}")
 
     def setUp(self):
         self.tb = gr.top_block()

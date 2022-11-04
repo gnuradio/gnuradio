@@ -95,9 +95,8 @@ class TestBlocktoolCore(unittest.TestCase):
     def test_namespace(self):
         """ test for header namespace """
         module_name = os.path.basename(self.module)
-        self.assertTrue(self.test_obj['namespace'][0] == 'gr')
-        self.assertTrue(self.test_obj['namespace']
-                        [1] == module_name.split('-')[-1])
+        self.assertEqual(self.test_obj['namespace'][0], 'gr')
+        self.assertEqual(self.test_obj['namespace'][1], module_name.split('-')[-1])
 
     @unittest.skipIf(SKIP_BLOCK_TEST, 'pygccxml not found, skipping this unittest')
     def test_io_signature(self):

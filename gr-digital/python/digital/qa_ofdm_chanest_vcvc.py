@@ -348,7 +348,7 @@ class qa_ofdm_chanest_vcvc (gr_unittest.TestCase):
                 if rx_sym_est[i] != data_sym[i]:
                     bit_errors += 1
         # This is much more than we could allow
-        self.assertTrue(bit_errors < n_iter)
+        self.assertLess(bit_errors, n_iter)
 
 
 if __name__ == '__main__':

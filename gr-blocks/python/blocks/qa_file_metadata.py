@@ -57,14 +57,9 @@ class test_file_metadata(gr_unittest.TestCase):
 
         handle = open(outfile, "rb")
         header_str = handle.read(blocks.parse_file_metadata.HEADER_LENGTH)
-        if(len(header_str) == 0):
-            self.assertFalse()
+        self.assertGreater(len(header_str), 0)
 
-        try:
-            header = pmt.deserialize_str(header_str)
-        except RuntimeError:
-            self.assertFalse()
-
+        header = pmt.deserialize_str(header_str)
         info = blocks.parse_header(header, False)
 
         extra_str = handle.read(info["extra_len"])
@@ -72,11 +67,7 @@ class test_file_metadata(gr_unittest.TestCase):
 
         handle.close()
 
-        try:
-            extra = pmt.deserialize_str(extra_str)
-        except RuntimeError:
-            self.assertFalse()
-
+        extra = pmt.deserialize_str(extra_str)
         extra_info = blocks.parse_extra_dict(extra, info, False)
 
         self.assertEqual(info['rx_rate'], samp_rate)
@@ -136,14 +127,9 @@ class test_file_metadata(gr_unittest.TestCase):
         # Open detached header for reading
         handle = open(outfile_hdr, "rb")
         header_str = handle.read(blocks.parse_file_metadata.HEADER_LENGTH)
-        if(len(header_str) == 0):
-            self.assertFalse()
+        self.assertGreater(len(header_str), 0)
 
-        try:
-            header = pmt.deserialize_str(header_str)
-        except RuntimeError:
-            self.assertFalse()
-
+        header = pmt.deserialize_str(header_str)
         info = blocks.parse_header(header, False)
 
         extra_str = handle.read(info["extra_len"])
@@ -152,11 +138,7 @@ class test_file_metadata(gr_unittest.TestCase):
 
         handle.close()
 
-        try:
-            extra = pmt.deserialize_str(extra_str)
-        except RuntimeError:
-            self.assertFalse()
-
+        extra = pmt.deserialize_str(extra_str)
         extra_info = blocks.parse_extra_dict(extra, info, False)
 
         self.assertEqual(info['rx_rate'], samp_rate)

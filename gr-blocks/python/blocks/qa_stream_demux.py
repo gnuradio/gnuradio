@@ -339,14 +339,11 @@ class qa_stream_demux(gr_unittest.TestCase):
             tag for tag in tags if pmt.eq(
                 tag.key, pmt.intern('src3'))]
         for i in range(len(expected_tag_offsets_src1)):
-            self.assertTrue(
-                expected_tag_offsets_src1[i] == tags_src1[i].offset)
+            self.assertEqual(expected_tag_offsets_src1[i], tags_src1[i].offset)
         for i in range(len(expected_tag_offsets_src2)):
-            self.assertTrue(
-                expected_tag_offsets_src2[i] == tags_src2[i].offset)
+            self.assertEqual(expected_tag_offsets_src2[i], tags_src2[i].offset)
         for i in range(len(expected_tag_offsets_src3)):
-            self.assertTrue(
-                expected_tag_offsets_src3[i] == tags_src3[i].offset)
+            self.assertEqual(expected_tag_offsets_src3[i], tags_src3[i].offset)
 
         # check the tags - result1
         tags = result1.tags()
@@ -365,14 +362,11 @@ class qa_stream_demux(gr_unittest.TestCase):
             tag for tag in tags if pmt.eq(
                 tag.key, pmt.intern('src3'))]
         for i in range(len(expected_tag_offsets_src1)):
-            self.assertTrue(
-                expected_tag_offsets_src1[i] == tags_src1[i].offset)
+            self.assertEqual(expected_tag_offsets_src1[i], tags_src1[i].offset)
         for i in range(len(expected_tag_offsets_src2)):
-            self.assertTrue(
-                expected_tag_offsets_src2[i] == tags_src2[i].offset)
+            self.assertEqual(expected_tag_offsets_src2[i], tags_src2[i].offset)
         for i in range(len(expected_tag_offsets_src3)):
-            self.assertTrue(
-                expected_tag_offsets_src3[i] == tags_src3[i].offset)
+            self.assertEqual(expected_tag_offsets_src3[i], tags_src3[i].offset)
 
         # check the tags - result2
         tags = result2.tags()
@@ -392,14 +386,11 @@ class qa_stream_demux(gr_unittest.TestCase):
             tag for tag in tags if pmt.eq(
                 tag.key, pmt.intern('src3'))]
         for i in range(len(expected_tag_offsets_src1)):
-            self.assertTrue(
-                expected_tag_offsets_src1[i] == tags_src1[i].offset)
+            self.assertEqual(expected_tag_offsets_src1[i], tags_src1[i].offset)
         for i in range(len(expected_tag_offsets_src2)):
-            self.assertTrue(
-                expected_tag_offsets_src2[i] == tags_src2[i].offset)
+            self.assertEqual(expected_tag_offsets_src2[i], tags_src2[i].offset)
         for i in range(len(expected_tag_offsets_src3)):
-            self.assertTrue(
-                expected_tag_offsets_src3[i] == tags_src3[i].offset)
+            self.assertEqual(expected_tag_offsets_src3[i], tags_src3[i].offset)
 
 
 if __name__ == '__main__':

@@ -62,7 +62,7 @@ class test_vector_insert(gr_unittest.TestCase):
         tags = dst.tags()
         offsets = [tag.offset for tag in tags]
         for i in range(len(expected_result)):
-            self.assertTrue(expected_result[i] == offsets[i])
+            self.assertEqual(expected_result[i], offsets[i])
 
     def test_003(self):  # insert tags and check their propagation, non-zero offset
         period = 11000
@@ -83,7 +83,7 @@ class test_vector_insert(gr_unittest.TestCase):
         tags = dst.tags()
         offsets = [tag.offset for tag in tags]
         for i in range(len(expected_result)):
-            self.assertTrue(expected_result[i] == offsets[i])
+            self.assertEqual(expected_result[i], offsets[i])
 
     def test_004(self):  # insert tags and check their propagation, non-zero offset, multiple tags per copy region
         period = 11000
@@ -118,7 +118,7 @@ class test_vector_insert(gr_unittest.TestCase):
         tags = dst.tags()
         offsets = [tag.offset for tag in tags]
         for i in range(len(expected_result)):
-            self.assertTrue(expected_result[i] == offsets[i])
+            self.assertEqual(expected_result[i], offsets[i])
 
 
 if __name__ == '__main__':
