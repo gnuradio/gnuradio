@@ -124,20 +124,12 @@ public:
         return work(wio);
     };
 
-    virtual size_t calc_output_buffer(size_t nitems)
-    {
-        if (output_multiple_set()) {
-            nitems = std::max(nitems, static_cast<size_t>(2 * (output_multiple())));
-        }
-        return nitems;
-    }
+    virtual size_t min_required_output_buffer() { return output_multiple(); }
 
-    virtual size_t calc_upstream_buffer(size_t nitems)
+    virtual size_t min_required_upstream_buffer()
     {
         double decimation = (1.0 / relative_rate());
-        int multiple = output_multiple();
-        return std::max(nitems,
-                        static_cast<size_t>(2 * (decimation * multiple + noconsume())));
+        return decimation * min_required_output_buffer() + noconsume();
     }
 
 
