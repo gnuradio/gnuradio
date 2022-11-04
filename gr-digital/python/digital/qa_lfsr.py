@@ -46,7 +46,7 @@ class test_lfsr(gr_unittest.TestCase):
         self.assertEqual(seq1, seq2)
 
         res = (np.convolve(seq1, [1, 0, 1, 0, 0, 1]) % 2)
-        self.assertTrue(sum(res[5:-5]) == 0, "LRS not generated properly")
+        self.assertEqual(sum(res[5:-5]), 0, msg="LRS not generated properly")
 
 
 if __name__ == '__main__':
