@@ -4,7 +4,6 @@
 
 math_deps += [gnuradio_gr_dep, volk_dep, fmt_dep, pmtf_dep]
 
-link_args = []
 block_cpp_args = ['-DHAVE_CPU', '-DHAVE_NUMPY']
 if IMPLEMENT_CUDA
     block_cpp_args += '-DHAVE_CUDA'
@@ -30,7 +29,6 @@ gnuradio_blocklib_math_lib = library('gnuradio-blocklib-math',
     include_directories : incdir, 
     install : true,
     link_language: 'cpp',
-    link_args : link_args,
     dependencies : math_deps,
     cpp_args : block_cpp_args)
 
@@ -49,7 +47,7 @@ cmake.configure_package_config_file(
 )
 
 pkg = import('pkgconfig')
-libs = []     # the library/libraries users need to link against
+libs = [gnuradio_blocklib_math_lib]     # the library/libraries users need to link against
 h = ['.'] # subdirectories of ${prefix}/${includedir} to add to header path
 pkg.generate(libraries : libs,
              subdirs : h,

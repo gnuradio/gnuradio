@@ -8,7 +8,6 @@ sources = [
 
 filter_sources += sources
 filter_deps += [gnuradio_gr_dep, gnuradio_blocklib_fft_dep, volk_dep, fmt_dep, pmtf_dep, gr_kernel_filter_lib_dep]
-link_args = []
 block_cpp_args = ['-DHAVE_CPU']
 if IMPLEMENT_CUDA
     block_cpp_args += '-DHAVE_CUDA'
@@ -34,7 +33,6 @@ gnuradio_blocklib_filter_lib = library('gnuradio-blocklib-filter',
     install : true,
     link_language: 'cpp',
     dependencies : filter_deps,
-    link_args : link_args,  # why is this necesary???
     cpp_args : block_cpp_args)
 
 gnuradio_blocklib_filter_dep = declare_dependency(include_directories : incdir,
@@ -52,7 +50,7 @@ cmake.configure_package_config_file(
 )
 
 pkg = import('pkgconfig')
-libs = []     # the library/libraries users need to link against
+libs = [gnuradio_blocklib_filter_lib]     # the library/libraries users need to link against
 h = ['.'] # subdirectories of ${prefix}/${includedir} to add to header path
 pkg.generate(libraries : libs,
              subdirs : h,

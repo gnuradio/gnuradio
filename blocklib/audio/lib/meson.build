@@ -32,7 +32,7 @@ cmake.configure_package_config_file(
 )
 
 pkg = import('pkgconfig')
-libs = []     # the library/libraries users need to link against
+libs = [gnuradio_blocklib_audio_lib]     # the library/libraries users need to link against
 h = ['.'] # subdirectories of ${prefix}/${includedir} to add to header path
 pkg.generate(libraries : libs,
              subdirs : h,
