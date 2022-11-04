@@ -1,4 +1,6 @@
 #include <gnuradio/logger.h>
+#include <gnuradio/node.h>
+#include <vector>
 
 namespace gr {
 
@@ -24,6 +26,11 @@ public:
     {
         gr::configure_default_loggers(d_logger, d_debug_logger, _name);
     }
+    virtual ~executor() {}
+    virtual std::map<nodeid_t, executor_iteration_status_t>
+    run_one_iteration(std::vector<block_sptr> blocks = std::vector<block_sptr>()) = 0;
 };
+
+using executor_sptr = std::shared_ptr<executor>;
 
 } // namespace gr

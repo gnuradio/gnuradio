@@ -3,6 +3,7 @@
 #include <gnuradio/block.h>
 #include <gnuradio/block_group_properties.h>
 #include <gnuradio/concurrent_queue.h>
+#include <gnuradio/graph_executor.h>
 #include <gnuradio/neighbor_interface.h>
 #include <gnuradio/runtime_monitor.h>
 #include <gnuradio/scheduler_message.h>
@@ -10,11 +11,9 @@
 #include <mutex>
 #include <thread>
 
-#include "graph_executor.h"
-#include "scheduler_nbt_options.h"
+#include <gnuradio/scheduler_options.h>
 
 namespace gr {
-namespace schedulers {
 
 /**
  * @brief Wrapper for scheduler thread
@@ -33,7 +32,7 @@ private:
     concurrent_queue<scheduler_message_sptr> msgq;
     std::thread d_thread;
     bool d_thread_stopped = false;
-    std::unique_ptr<graph_executor> _exec;
+    executor_sptr _exec;
 
     int _id;
     block_group_properties d_block_group;
@@ -49,25 +48,25 @@ private:
     size_t d_flush_cnt = 0;
     std::atomic<bool> kick_pending = false;
 
-    scheduler_nbt_options _opts;
+    scheduler_options_sptr _opts;
 
 public:
     using sptr = std::shared_ptr<thread_wrapper>;
 
     static sptr make(int id,
                      block_group_properties bgp,
-                     buffer_manager::sptr bufman,
+                     executor_sptr exec,
                      runtime_monitor_sptr rtmon,
-                     const scheduler_nbt_options& opts)
+                     scheduler_options_sptr opts)
     {
-        return std::make_shared<thread_wrapper>(id, bgp, bufman, rtmon, opts);
+        return std::make_shared<thread_wrapper>(id, bgp, exec, rtmon, opts);
     }
 
     thread_wrapper(int id,
                    block_group_properties bgp,
-                   buffer_manager::sptr bufman,
+                   executor_sptr exec,
                    runtime_monitor_sptr rtmon,
-                   const scheduler_nbt_options& opts);
+                   scheduler_options_sptr opts);
     int id() { return _id; }
     const std::string& name() { return d_block_group.name(); }
 
@@ -107,5 +106,5 @@ public:
     std::condition_variable _start_cv;
     bool _ready_to_start = false;
 };
-} // namespace schedulers
+
 } // namespace gr

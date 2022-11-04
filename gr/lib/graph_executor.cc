@@ -1,7 +1,6 @@
-#include "graph_executor.h"
+#include <gnuradio/graph_executor.h>
 
 namespace gr {
-namespace schedulers {
 
 inline static unsigned int round_down(unsigned int n, unsigned int multiple)
 {
@@ -29,7 +28,7 @@ graph_executor::run_one_iteration(std::vector<block_sptr> blocks)
     // If no blocks are specified for the iteration, then run over all the blocks
     // in the default ordering
     if (blocks.empty()) {
-        blocks = d_blocks;
+        blocks = _blocks;
     }
 
     for (auto const& b : blocks) { // TODO - order the blocks
@@ -131,7 +130,7 @@ graph_executor::run_one_iteration(std::vector<block_sptr> blocks)
                                       write_info.total_items);
 
                 size_t tmp_buf_size = write_info.n_items;
-                if (tmp_buf_size < s_min_buf_items ||
+                if (tmp_buf_size < s_min_buf_items || /* FIXME: query this from block */
                     (min_fill > 0 && tmp_buf_size < min_fill)) {
                     ready = false;
                     if (p_buf->output_blkd_cb_ready(tmp_buf_size + 1)) {
@@ -343,5 +342,4 @@ graph_executor::run_one_iteration(std::vector<block_sptr> blocks)
     return per_block_status;
 }
 
-} // namespace schedulers
 } // namespace gr

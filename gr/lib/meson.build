@@ -62,7 +62,9 @@ runtime_sources = [
   'prefs.cc',
   'tag.cc',
   'registry.cc',
-  'buffer_cpu_host.cc'
+  'buffer_cpu_host.cc',
+  'graph_executor.cc',
+  'thread_wrapper.cc'
 ]
 
 if IMPLEMENT_CUDA

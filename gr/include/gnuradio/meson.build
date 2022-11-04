@@ -48,7 +48,10 @@ runtime_headers = [
     'constants.h',
     'registry.h',
     'high_res_timer.h',
-    'custom_lock.h'
+    'custom_lock.h',
+    'graph_executor.h',
+    'thread_wrapper.h',
+    'scheduler_options.h'
 ]
 
 install_headers(runtime_headers, subdir : 'gnuradio')

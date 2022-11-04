@@ -4,9 +4,10 @@
 // #include <gnuradio/buffer_cpu_simple.h>
 #include <gnuradio/graph_utils.h>
 #include <gnuradio/scheduler.h>
+#include <gnuradio/thread_wrapper.h>
 
 #include "scheduler_nbt_options.h"
-#include "thread_wrapper.h"
+
 namespace gr {
 namespace schedulers {
 
@@ -14,19 +15,25 @@ class scheduler_nbt : public scheduler
 {
 private:
     std::vector<thread_wrapper::sptr> _threads;
-    const scheduler_nbt_options _opts;
+    scheduler_options_sptr _opts;
     std::map<nodeid_t, neighbor_interface_sptr> _block_thread_map;
     std::vector<block_group_properties> _block_groups;
 
 public:
     using sptr = std::shared_ptr<scheduler_nbt>;
-    static sptr make(const scheduler_nbt_options& opts = opts_from_yaml("{}"))
+    static sptr make(const std::string& opts)
+    {
+        return std::make_shared<scheduler_nbt>(
+            scheduler_nbt_options::opts_from_yaml(opts));
+    }
+    static sptr
+    make(scheduler_nbt_options_sptr opts = scheduler_nbt_options::opts_from_yaml("{}"))
     {
         return std::make_shared<scheduler_nbt>(opts);
     }
-    scheduler_nbt(const scheduler_nbt_options& opts) : scheduler(opts.name), _opts(opts)
+    scheduler_nbt(scheduler_nbt_options_sptr opts) : scheduler(opts->name), _opts(opts)
     {
-        if (opts.default_buffer_type == "cpu_host") {
+        if (opts->default_buffer_type == "cpu_host") {
             _default_buf_properties =
                 buffer_cpu_host_properties::make(buffer_cpu_host_type::H2H);
         }
@@ -42,7 +49,6 @@ public:
                          const std::string& name = "",
                          const std::vector<unsigned int>& affinity_mask = {});
 
-    static scheduler_nbt_options opts_from_yaml(const std::string options = "{}");
     /**
      * @brief Initialize the multi-threaded scheduler
      *

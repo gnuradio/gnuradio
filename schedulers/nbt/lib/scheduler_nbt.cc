@@ -29,7 +29,7 @@ void scheduler_nbt::add_block_group(const std::vector<block_sptr>& blocks,
 void scheduler_nbt::initialize(flat_graph_sptr fg, runtime_monitor_sptr fgmon)
 {
 
-    auto bufman = std::make_shared<buffer_manager>(_opts.default_buffer_size);
+    auto bufman = std::make_shared<buffer_manager>(_opts->default_buffer_size);
     bufman->initialize_buffers(fg, _default_buf_properties, base());
 
     //  Partition the flowgraph according to how blocks are specified in groups
@@ -45,7 +45,12 @@ void scheduler_nbt::initialize(flat_graph_sptr fg, runtime_monitor_sptr fgmon)
         std::vector<block_sptr> blocks_for_this_thread;
 
         if (!bg.blocks().empty()) {
-            auto t = thread_wrapper::make(id(), bg, bufman, fgmon, _opts);
+            auto t = thread_wrapper::make(
+                id(),
+                bg,
+                std::make_shared<graph_executor>(bg.name(), blocks_for_this_thread),
+                fgmon,
+                _opts);
             _threads.push_back(t);
 
             for (auto& b : bg.blocks()) {
@@ -66,7 +71,11 @@ void scheduler_nbt::initialize(flat_graph_sptr fg, runtime_monitor_sptr fgmon)
     // For the remaining blocks that weren't in block groups
     for (auto& b : blocks) {
         auto t = thread_wrapper::make(
-            id(), block_group_properties({ b }), bufman, fgmon, _opts);
+            id(),
+            block_group_properties({ b }),
+            std::make_shared<graph_executor>(b->alias(), std::vector<block_sptr>{ b }),
+            fgmon,
+            _opts);
         _threads.push_back(t);
 
         b->set_parent_intf(t);
@@ -113,26 +122,6 @@ void scheduler_nbt::kill()
     }
 }
 
-scheduler_nbt_options scheduler_nbt::opts_from_yaml(const std::string options)
-{
-    auto opt_yaml = YAML::Load(options);
-    scheduler_nbt_options opts = {};
-
-    opts.default_buffer_size = opt_yaml["buffer_size"].as<size_t>(
-        gr::prefs::get_long("scheduler.nbt", "default_buffer_size", 32768));
-    opts.name = opt_yaml["name"].as<std::string>("nbt");
-    opts.default_buffer_type = opt_yaml["default_buffer_type"].as<std::string>(
-        gr::prefs::get_string("scheduler.nbt", "default_buffer_type", "cpu_vmcirc"));
-    opts.flush =
-        opt_yaml["flush"].as<bool>(gr::prefs::get_bool("scheduler.nbt", "flush", true));
-    opts.flush_count = opt_yaml["flush_count"].as<long>(
-        gr::prefs::get_long("scheduler.nbt", "flush_count", 8));
-    opts.flush_sleep_ms = opt_yaml["flush_count"].as<long>(
-        gr::prefs::get_long("scheduler.nbt", "flush_count", 8));
-
-    return opts;
-}
-
 
 } // namespace schedulers
 } // namespace gr
@@ -144,6 +133,6 @@ extern "C" {
 std::shared_ptr<gr::scheduler> factory(const std::string& options)
 {
     return gr::schedulers::scheduler_nbt::make(
-        gr::schedulers::scheduler_nbt::opts_from_yaml(options));
+        gr::schedulers::scheduler_nbt_options::opts_from_yaml(options));
 }
 }
