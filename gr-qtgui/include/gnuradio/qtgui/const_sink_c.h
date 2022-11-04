@@ -11,10 +11,6 @@
 #ifndef INCLUDED_QTGUI_CONST_SINK_C_H
 #define INCLUDED_QTGUI_CONST_SINK_C_H
 
-#ifdef ENABLE_PYTHON
-#include <Python.h>
-#endif
-
 #include <gnuradio/filter/firdes.h>
 #include <gnuradio/qtgui/api.h>
 #include <gnuradio/qtgui/trigger_mode.h>
