@@ -47,11 +47,18 @@ prefix = '\ '.join(prefix_parts)
 cuda_available = add_languages('cuda', required : false)
 IMPLEMENT_CUDA = cuda_available and get_option('enable_cuda')
 IMPLEMENT_CPU = true
-
+###############################################################################
+# For OOT modules we need script path from gnuradio, so let's look for
+# gnuradio-runtime already here
+###############################################################################
+gnuradio_gr_dep = dependency('gnuradio-runtime')
 ###############################################################################
 # IF Out of Tree Module
+# The script dir is part of the gnuradio installation, not of the oot tree,
+# so we have to find the install prefix of gnuradio
+# Even if we build an In-Tree module, it's the correct location 
 ###############################################################################
-share_dir = join_paths(prefix,'share')
+share_dir = join_paths(gnuradio_gr_dep.get_pkgconfig_variable('prefix'),'share')
 SCRIPTS_DIR = join_paths(share_dir, 'utils','blockbuilder','scripts' )
 ###############################################################################
 # Else In-Tree module
@@ -63,8 +70,8 @@ SCRIPTS_DIR = join_paths(share_dir, 'utils','blockbuilder','scripts' )
 ###############################################################################
 volk_dep = dependency('volk', version : '>=2.2')
 fmt_dep = dependency('fmt', method: 'cmake', modules: ['fmt::fmt'])
+spdlog_dep = dependency('spdlog')
 pmtf_dep = dependency('pmtf', version : '>= 0.0.2')
-gnuradio_gr_dep = dependency('gnuradio-runtime')
 
 if GR_ENABLE_PYTHON
 run_command('python3', join_paths(SCRIPTS_DIR,'gen_meson.py'), 
