@@ -80,6 +80,7 @@ class DistanceRadar(gr.sync_block, FigureCanvas):
         FigureCanvas.setSizePolicy(self,
                                    QtWidgets.QSizePolicy.Expanding,
                                    QtWidgets.QSizePolicy.Expanding)
+        self.setMinimumSize(240, 230)
         FigureCanvas.updateGeometry(self)
 
     def msgHandler(self, msg):
