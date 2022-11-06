@@ -53,29 +53,11 @@ parameters:
     dtype: int
     default: '200'
     hide: part
--   id: outputmsgname
-    label: Message Property Name
-    dtype: string
-    default: 'value'
-    hide: part
--   id: showports
-    label: Show Msg Ports
-    dtype: enum
-    options: ['True', 'False']
-    option_labels: ['Yes', 'No']
-    default: 'False'
-    hide: part
 -   id: gui_hint
     label: GUI Hint
     dtype: gui_hint
     hide: part
 value: ${ value }
-
-outputs:
--   domain: message
-    id: out
-    optional: true
-    hide: ${ showports != 'True' }
 
 asserts:
 - ${start <= value <= stop}
@@ -83,7 +65,7 @@ asserts:
 
 templates:
     imports: |- 
-        from gnuradio.qtgui import Range, GrRangeWidget
+        from gnuradio.qtgui import Range, RangeWidget
         from PyQt5 import QtCore
     var_make: self.${id} = ${id} = ${value}
     callbacks:
@@ -94,9 +76,7 @@ templates:
             range = 'self._%s_range'%id
         %>\
         ${range} = Range(${start}, ${stop}, ${step}, ${value}, ${min_len})
-        ${win} = GrRangeWidget(${range}, self.set_${id}, "${no_quotes(label,repr(id))}", "${widget}", ${rangeType}, ${orient}, "${no_quotes(outputmsgname)}")
-        self.${id} = ${win}
-
+        ${win} = RangeWidget(${range}, self.set_${id}, "${no_quotes(label,repr(id))}", "${widget}", ${rangeType}, ${orient})
         ${gui_hint() % win}
 
 documentation: |-
