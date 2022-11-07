@@ -13,4 +13,6 @@ install(
           uhd_siggen_gui.grc
           uhd_two_tone_loopback.grc
           uhd_wbfm_receive.grc
+          rfnoc_keep1.grc
+          rfnoc_radio_ddc.grc
     DESTINATION ${GR_PKG_UHD_EXAMPLES_DIR})
