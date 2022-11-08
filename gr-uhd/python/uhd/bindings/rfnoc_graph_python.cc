@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(rfnoc_graph.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(1e32bbc2f1a925bf00fafbcf5a16bf24)                     */
+/* BINDTOOL_HEADER_FILE_HASH(859c22ff93c70b536a7dc6a1df68f256)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -54,6 +54,9 @@ void bind_rfnoc_graph(py::module& m)
         .def("create_tx_streamer",
              &rfnoc_graph::create_tx_streamer,
              D(rfnoc_graph, create_tx_streamer))
+        .def("set_streamer_adapter_id",
+             &rfnoc_graph::set_streamer_adapter_id,
+             D(rfnoc_graph, set_streamer_adapter_id))
         .def("commit", &rfnoc_graph::commit, D(rfnoc_graph, commit))
         .def("get_block_id", &rfnoc_graph::get_block_id, D(rfnoc_graph, get_block_id))
         .def("set_time_source",
