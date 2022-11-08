@@ -53,24 +53,6 @@ public:
     virtual bool lock_detector(void) = 0;
     virtual bool squelch_enable(bool) = 0;
     virtual float set_lock_threshold(float) = 0;
-
-    void set_loop_bandwidth(float bw) override = 0;
-    virtual void set_damping_factor(float df) = 0;
-    virtual void set_alpha(float alpha) = 0;
-    virtual void set_beta(float beta) = 0;
-    virtual void set_frequency(float freq) = 0;
-    virtual void set_phase(float phase) = 0;
-    virtual void set_min_freq(float freq) = 0;
-    virtual void set_max_freq(float freq) = 0;
-
-    virtual float get_loop_bandwidth() const = 0;
-    virtual float get_damping_factor() const = 0;
-    virtual float get_alpha() const = 0;
-    virtual float get_beta() const = 0;
-    virtual float get_frequency() const = 0;
-    virtual float get_phase() const = 0;
-    virtual float get_min_freq() const = 0;
-    virtual float get_max_freq() const = 0;
 };
 
 } /* namespace analog */
