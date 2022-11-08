@@ -89,7 +89,11 @@ int dvbt_bit_inner_deinterleaver_impl::general_work(
 {
     const unsigned char* in = (const unsigned char*)input_items[0];
     unsigned char* outh = (unsigned char*)output_items[0];
-    unsigned char* outl = (unsigned char*)output_items[1];
+    unsigned char* outl = nullptr;
+
+    if (d_hierarchy != NH) {
+        outl = (unsigned char*)output_items[1];
+    }
 
     int bmax = noutput_items * d_nsize / d_bsize;
 
