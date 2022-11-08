@@ -90,8 +90,12 @@ int dvbt_bit_inner_interleaver_impl::general_work(int noutput_items,
                                                   gr_vector_void_star& output_items)
 {
     const unsigned char* inh = (const unsigned char*)input_items[0];
-    const unsigned char* inl = (const unsigned char*)input_items[1];
+    const unsigned char* inl = nullptr;
     unsigned char* out = (unsigned char*)output_items[0];
+
+    if (d_hierarchy != NH) {
+        inl = (const unsigned char*)input_items[1];
+    }
 
     int bmax = noutput_items * d_nsize / d_bsize;
 
