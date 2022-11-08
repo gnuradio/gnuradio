@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(pll_carriertracking_cc.h) */
-/* BINDTOOL_HEADER_FILE_HASH(578b0d642e583a358c5866cb1b663756)                     */
+/* BINDTOOL_HEADER_FILE_HASH(f4dafcd23441b5ab55907d9df723cd86)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -64,93 +64,6 @@ void bind_pll_carriertracking_cc(py::module& m)
              py::arg("arg0"),
              D(pll_carriertracking_cc, set_lock_threshold))
 
-
-        .def("set_loop_bandwidth",
-             &pll_carriertracking_cc::set_loop_bandwidth,
-             py::arg("bw"),
-             D(pll_carriertracking_cc, set_loop_bandwidth))
-
-
-        .def("set_damping_factor",
-             &pll_carriertracking_cc::set_damping_factor,
-             py::arg("df"),
-             D(pll_carriertracking_cc, set_damping_factor))
-
-
-        .def("set_alpha",
-             &pll_carriertracking_cc::set_alpha,
-             py::arg("alpha"),
-             D(pll_carriertracking_cc, set_alpha))
-
-
-        .def("set_beta",
-             &pll_carriertracking_cc::set_beta,
-             py::arg("beta"),
-             D(pll_carriertracking_cc, set_beta))
-
-
-        .def("set_frequency",
-             &pll_carriertracking_cc::set_frequency,
-             py::arg("freq"),
-             D(pll_carriertracking_cc, set_frequency))
-
-
-        .def("set_phase",
-             &pll_carriertracking_cc::set_phase,
-             py::arg("phase"),
-             D(pll_carriertracking_cc, set_phase))
-
-
-        .def("set_min_freq",
-             &pll_carriertracking_cc::set_min_freq,
-             py::arg("freq"),
-             D(pll_carriertracking_cc, set_min_freq))
-
-
-        .def("set_max_freq",
-             &pll_carriertracking_cc::set_max_freq,
-             py::arg("freq"),
-             D(pll_carriertracking_cc, set_max_freq))
-
-
-        .def("get_loop_bandwidth",
-             &pll_carriertracking_cc::get_loop_bandwidth,
-             D(pll_carriertracking_cc, get_loop_bandwidth))
-
-
-        .def("get_damping_factor",
-             &pll_carriertracking_cc::get_damping_factor,
-             D(pll_carriertracking_cc, get_damping_factor))
-
-
-        .def("get_alpha",
-             &pll_carriertracking_cc::get_alpha,
-             D(pll_carriertracking_cc, get_alpha))
-
-
-        .def("get_beta",
-             &pll_carriertracking_cc::get_beta,
-             D(pll_carriertracking_cc, get_beta))
-
-
-        .def("get_frequency",
-             &pll_carriertracking_cc::get_frequency,
-             D(pll_carriertracking_cc, get_frequency))
-
-
-        .def("get_phase",
-             &pll_carriertracking_cc::get_phase,
-             D(pll_carriertracking_cc, get_phase))
-
-
-        .def("get_min_freq",
-             &pll_carriertracking_cc::get_min_freq,
-             D(pll_carriertracking_cc, get_min_freq))
-
-
-        .def("get_max_freq",
-             &pll_carriertracking_cc::get_max_freq,
-             D(pll_carriertracking_cc, get_max_freq))
 
         ;
 }
