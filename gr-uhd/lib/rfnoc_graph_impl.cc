@@ -52,14 +52,16 @@ public:
             _graph->connect(_tx_streamers.at(src_block_id),
                             src_block_port,
                             block_id_t(dst_block_id),
-                            dst_block_port);
+                            dst_block_port,
+                            _get_adapter_id(src_block_id, src_block_port));
             return;
         }
         if (_rx_streamers.count(dst_block_id)) {
             _graph->connect(src_block_id,
                             src_block_port,
                             _rx_streamers.at(dst_block_id),
-                            dst_block_port);
+                            dst_block_port,
+                            _get_adapter_id(dst_block_id, dst_block_port));
             return;
         }
 
@@ -108,6 +110,13 @@ public:
             std::dynamic_pointer_cast<::uhd::rfnoc::node_t>(streamer)->get_unique_id();
         _tx_streamers.insert({ streamer_id, streamer });
         return streamer;
+    }
+
+    void set_streamer_adapter_id(const std::string& stream_block_id,
+                                 const size_t port,
+                                 const size_t adapter_id)
+    {
+        _adapter_id_map[stream_block_id][port] = adapter_id;
     }
 
     void commit() override
@@ -200,6 +209,16 @@ public:
 
 
 private:
+    size_t _get_adapter_id(const std::string& streamer_id, const size_t port)
+    {
+        if (_adapter_id_map.count(streamer_id) &&
+            _adapter_id_map.at(streamer_id).count(port)) {
+            return _adapter_id_map.at(streamer_id).at(port);
+        }
+
+        return NULL_ADAPTER_ID;
+    }
+
     std::atomic<bool> _commit_called{ false };
     ::uhd::rfnoc::rfnoc_graph::sptr _graph;
 
@@ -209,6 +228,8 @@ private:
     std::mutex _block_ref_mutex;
     std::unordered_map<std::string, size_t> _acqd_block_refs;
     std::unordered_map<std::string, size_t> _max_ref_count;
+
+    std::unordered_map<std::string, std::unordered_map<size_t, size_t>> _adapter_id_map;
 
     gr::logger_ptr d_logger, d_debug_logger;
 };

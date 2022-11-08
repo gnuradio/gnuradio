@@ -16,6 +16,11 @@ templates:
         ),
         ${ vlen }
     )
+    %if use_default_adapter_id == 'False':
+    for port, adapter_id in enumerate(${ adapter_id_list }):
+        self.rfnoc_graph.set_streamer_adapter_id(
+            self.${id}.get_unique_id(), port, adapter_id)
+    %endif
 
 parameters:
 - id: num_chans
@@ -48,6 +53,23 @@ parameters:
   option_attributes:
     type: ['', sc16]
   hide: part
+- id: use_default_adapter_id
+  label: Default Adapter ID
+  dtype: bool
+  default: 'True'
+  options: ['True', 'False']
+  option_labels: ['Yes', 'No']
+  hide: part
+- id: adapter_id_list
+  label: Adapter ID List
+  dtype: int_vector
+  default: [0,]
+  hide: ${ 'all' if use_default_adapter_id else 'none' }
+
+asserts:
+  - ${ num_chans > 0 }
+  - ${ vlen > 0 }
+  - ${ use_default_adapter_id or len(adapter_id_list) == num_chans }
 
 inputs:
 - domain: stream
