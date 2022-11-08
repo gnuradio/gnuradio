@@ -1,0 +1,235 @@
+options:
+  parameters:
+    author: Martin Braun <martin.braun@ettus.com>
+    catch_exceptions: 'True'
+    category: '[GRC Hier Blocks]'
+    cmake_opt: ''
+    comment: ''
+    copyright: ''
+    description: ''
+    gen_cmake: 'On'
+    gen_linking: dynamic
+    generate_options: qt_gui
+    hier_block_src_path: '.:'
+    id: rfnoc_duc_radio
+    max_nouts: '0'
+    output_language: python
+    placement: (0,0)
+    qt_qss_theme: ''
+    realtime_scheduling: ''
+    run: 'True'
+    run_command: '{python} -u {filename}'
+    run_options: prompt
+    sizing_mode: fixed
+    thread_safe_setters: ''
+    title: 'RFNoC: Radio -> DDC Example'
+    window_size: (1000,1000)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 8]
+    rotation: 0
+    state: enabled
+
+blocks:
+- name: freq
+  id: variable_qtgui_entry
+  parameters:
+    comment: ''
+    gui_hint: ''
+    label: Frequency (Hz)
+    type: real
+    value: 1e9
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [288, 80.0]
+    rotation: 0
+    state: true
+- name: gain
+  id: variable_qtgui_entry
+  parameters:
+    comment: ''
+    gui_hint: ''
+    label: Gain (dB)
+    type: int
+    value: '0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [184, 80.0]
+    rotation: 0
+    state: true
+- name: radio_rate
+  id: variable
+  parameters:
+    comment: ''
+    value: 200e6
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 112.0]
+    rotation: 0
+    state: true
+- name: samp_rate
+  id: variable_qtgui_entry
+  parameters:
+    comment: ''
+    gui_hint: ''
+    label: Sampling Rate (Hz)
+    type: real
+    value: 1e6
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [416, 80.0]
+    rotation: 0
+    state: true
+- name: tone_freq
+  id: variable_qtgui_entry
+  parameters:
+    comment: ''
+    gui_hint: ''
+    label: Baseband Tone Frequency (Hz)
+    type: real
+    value: samp_rate/16
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [560, 80.0]
+    rotation: 0
+    state: true
+- name: uhd_rfnoc_graph
+  id: uhd_rfnoc_graph
+  parameters:
+    alias: ''
+    clock_source_0: ''
+    clock_source_1: ''
+    clock_source_2: ''
+    clock_source_3: ''
+    clock_source_4: ''
+    clock_source_5: ''
+    clock_source_6: ''
+    clock_source_7: ''
+    comment: ''
+    dev_addr: type=x300
+    dev_args: ''
+    num_mboards: '1'
+    time_source_0: ''
+    time_source_1: ''
+    time_source_2: ''
+    time_source_3: ''
+    time_source_4: ''
+    time_source_5: ''
+    time_source_6: ''
+    time_source_7: ''
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [184, 8.0]
+    rotation: 0
+    state: true
+- name: analog_sig_source_x_0
+  id: analog_sig_source_x
+  parameters:
+    affinity: ''
+    alias: ''
+    amp: '.5'
+    comment: ''
+    freq: tone_freq
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    offset: '0'
+    phase: '0'
+    samp_rate: samp_rate
+    type: complex
+    waveform: analog.GR_COS_WAVE
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [64, 224.0]
+    rotation: 0
+    state: true
+- name: uhd_rfnoc_duc_0
+  id: uhd_rfnoc_duc
+  parameters:
+    affinity: ''
+    alias: ''
+    block_args: ''
+    comment: ''
+    device_select: '-1'
+    freq: '0'
+    input_rate: samp_rate
+    instance_index: '-1'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_chans: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [512, 224.0]
+    rotation: 0
+    state: true
+- name: uhd_rfnoc_tx_radio_0
+  id: uhd_rfnoc_tx_radio
+  parameters:
+    affinity: ''
+    agc: Default
+    alias: ''
+    antenna: TX/RX
+    bandwidth: '0'
+    block_args: ''
+    comment: ''
+    device_select: '-1'
+    frequency: freq
+    gain: gain
+    instance_index: '-1'
+    num_chans: '1'
+    rate: radio_rate
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [800, 188.0]
+    rotation: 0
+    state: true
+- name: uhd_rfnoc_tx_streamer_0
+  id: uhd_rfnoc_tx_streamer
+  parameters:
+    adapter_id_list: '[0]'
+    affinity: ''
+    alias: ''
+    args: ''
+    comment: ''
+    input_type: fc32
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_chans: '1'
+    otw: sc16
+    use_default_adapter_id: 'True'
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [288, 272.0]
+    rotation: 0
+    state: true
+
+connections:
+- [analog_sig_source_x_0, '0', uhd_rfnoc_tx_streamer_0, '0']
+- [uhd_rfnoc_duc_0, '0', uhd_rfnoc_tx_radio_0, '0']
+- [uhd_rfnoc_tx_streamer_0, '0', uhd_rfnoc_duc_0, '0']
+
+metadata:
+  file_format: 1
+  grc_version: v3.11.0.0git-299-gf11a567f
