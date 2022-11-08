@@ -6,7 +6,22 @@ templates:
   imports: |-
       from gnuradio import uhd
   var_make: |
-      self.rfnoc_graph = ${id} = uhd.rfnoc_graph(uhd.device_addr(",".join((${dev_addr}, ${dev_args}))))
+      <%
+          import ast
+          # Sanitize
+          graph_args = ast.literal_eval(dev_addr.strip())
+          dev_args_s = ast.literal_eval(dev_args.strip())
+          clock_source_s = ast.literal_eval(clock_source.strip())
+          time_source_s = ast.literal_eval(time_source.strip())
+          # Build full dev args
+          if dev_args_s:
+              graph_args += f",{clock_source_s}"
+          if clock_source_s:
+              graph_args += f",clock_source={clock_source_s}"
+          if time_source_s:
+              graph_args += f",time_source={time_source_s}"
+      %>
+      self.rfnoc_graph = ${id} = uhd.rfnoc_graph(uhd.device_addr("${graph_args}")))
 
 value: ${ 'RFNoC Graph' }
 
@@ -27,101 +42,17 @@ parameters:
   default: 1
   options: [1, 2, 3, 4, 5, 6, 7, 8]
   hide: part
-- id: clock_source_0
-  label: 'Mb0: Clock Source'
+- id: clock_source
+  label: Clock Source
   dtype: string
-  options: ['', internal, external, mimo, gpsdo]
-  option_labels: [Default, Internal, External, MIMO Cable, O/B GPSDO]
-  hide: ${ 'all' if not (num_mboards > 0) else ( 'none' if clock_source_0 else 'part')}
-- id: time_source_0
-  label: 'Mb0: Time Source'
+  options: ['', internal, external, gpsdo]
+  option_labels: [Default, Internal, External, O/B GPSDO]
+  hide: ${ 'none' if clock_source else 'part' }
+- id: time_source
+  label: Time Source
   dtype: string
-  options: ['', external, mimo, gpsdo]
-  option_labels: [Default, External, MIMO Cable, O/B GPSDO]
-  hide: ${ 'all' if not (num_mboards > 0) else ('none' if time_source_0 else 'part')}
-- id: clock_source_1
-  label: 'Mb1: Clock Source'
-  dtype: string
-  options: ['', internal, external, mimo, gpsdo]
-  option_labels: [Default, Internal, External, MIMO Cable, O/B GPSDO]
-  hide: ${ 'all' if not (num_mboards > 1) else ( 'none' if clock_source_1 else 'part')}
-- id: time_source_1
-  label: 'Mb1: Time Source'
-  dtype: string
-  options: ['', external, mimo, gpsdo]
-  option_labels: [Default, External, MIMO Cable, O/B GPSDO]
-  hide: ${ 'all' if not (num_mboards > 1) else ('none' if time_source_1 else 'part')}
-- id: clock_source_2
-  label: 'Mb2: Clock Source'
-  dtype: string
-  options: ['', internal, external, mimo, gpsdo]
-  option_labels: [Default, Internal, External, MIMO Cable, O/B GPSDO]
-  hide: ${ 'all' if not (num_mboards > 2) else ( 'none' if clock_source_2 else 'part')}
-- id: time_source_2
-  label: 'Mb2: Time Source'
-  dtype: string
-  options: ['', external, mimo, gpsdo]
-  option_labels: [Default, External, MIMO Cable, O/B GPSDO]
-  hide: ${ 'all' if not (num_mboards > 2) else ('none' if time_source_2 else 'part')}
-- id: clock_source_3
-  label: 'Mb3: Clock Source'
-  dtype: string
-  options: ['', internal, external, mimo, gpsdo]
-  option_labels: [Default, Internal, External, MIMO Cable, O/B GPSDO]
-  hide: ${ 'all' if not (num_mboards > 3) else ( 'none' if clock_source_3 else 'part')}
-- id: time_source_3
-  label: 'Mb3: Time Source'
-  dtype: string
-  options: ['', external, mimo, gpsdo]
-  option_labels: [Default, External, MIMO Cable, O/B GPSDO]
-  hide: ${ 'all' if not (num_mboards > 3) else ('none' if time_source_3 else 'part')}
-- id: clock_source_4
-  label: 'Mb4: Clock Source'
-  dtype: string
-  options: ['', internal, external, mimo, gpsdo]
-  option_labels: [Default, Internal, External, MIMO Cable, O/B GPSDO]
-  hide: ${ 'all' if not (num_mboards > 4) else ( 'none' if clock_source_4 else 'part')}
-- id: time_source_4
-  label: 'Mb4: Time Source'
-  dtype: string
-  options: ['', external, mimo, gpsdo]
-  option_labels: [Default, External, MIMO Cable, O/B GPSDO]
-  hide: ${ 'all' if not (num_mboards > 4) else ('none' if time_source_4 else 'part')}
-- id: clock_source_5
-  label: 'Mb5: Clock Source'
-  dtype: string
-  options: ['', internal, external, mimo, gpsdo]
-  option_labels: [Default, Internal, External, MIMO Cable, O/B GPSDO]
-  hide: ${ 'all' if not (num_mboards > 5) else ( 'none' if clock_source_5 else 'part')}
-- id: time_source_5
-  label: 'Mb5: Time Source'
-  dtype: string
-  options: ['', external, mimo, gpsdo]
-  option_labels: [Default, External, MIMO Cable, O/B GPSDO]
-  hide: ${ 'all' if not (num_mboards > 5) else ('none' if time_source_5 else 'part')}
-- id: clock_source_6
-  label: 'Mb6: Clock Source'
-  dtype: string
-  options: ['', internal, external, mimo, gpsdo]
-  option_labels: [Default, Internal, External, MIMO Cable, O/B GPSDO]
-  hide: ${ 'all' if not (num_mboards > 6) else ( 'none' if clock_source_6 else 'part')}
-- id: time_source_6
-  label: 'Mb6: Time Source'
-  dtype: string
-  options: ['', external, mimo, gpsdo]
-  option_labels: [Default, External, MIMO Cable, O/B GPSDO]
-  hide: ${ 'all' if not (num_mboards > 6) else ('none' if time_source_6 else 'part')}
-- id: clock_source_7
-  label: 'Mb7: Clock Source'
-  dtype: string
-  options: ['', internal, external, mimo, gpsdo]
-  option_labels: [Default, Internal, External, MIMO Cable, O/B GPSDO]
-  hide: ${ 'all' if not (num_mboards > 7) else ( 'none' if clock_source_7 else 'part')}
-- id: time_source_7
-  label: 'Mb7: Time Source'
-  dtype: string
-  options: ['', external, mimo, gpsdo]
-  option_labels: [Default, External, MIMO Cable, O/B GPSDO]
-  hide: ${ 'all' if not (num_mboards > 7) else ('none' if time_source_7 else 'part')}
+  options: ['', internal, external, gpsdo]
+  option_labels: [Default, Internal, External, O/B GPSDO]
+  hide: ${ 'none' if time_source else 'part' }
 
 file_format: 1
