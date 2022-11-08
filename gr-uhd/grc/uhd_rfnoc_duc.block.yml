@@ -7,7 +7,6 @@ templates:
   make: |-
     uhd.rfnoc_duc(
         self.rfnoc_graph,
-        ${num_chans},
         uhd.device_addr(${block_args}),
         ${device_select},
         ${instance_index})
