@@ -16,7 +16,7 @@ parameters:
     options: [nh, alpha1, alpha2, alpha4]
     option_labels: [Non Hierarchical, Alpha 1, Alpha 2, Alpha 4]
     option_attributes:
-        num_streams: ['1', '2', '2', '2']
+        num_streams: [1, 2, 2, 2]
         val: [dtv.NH, dtv.ALPHA1, dtv.ALPHA2, dtv.ALPHA4]
     hide: part
 -   id: transmission_mode
