@@ -25,6 +25,8 @@ static const char* __doc_gr_uhd_rfnoc_graph_create_rx_streamer = R"doc()doc";
 
 static const char* __doc_gr_uhd_rfnoc_graph_create_tx_streamer = R"doc()doc";
 
+static const char* __doc_gr_uhd_rfnoc_graph_set_streamer_adapter_id = R"doc()doc";
+
 static const char* __doc_gr_uhd_rfnoc_graph_commit = R"doc()doc";
 
 static const char* __doc_gr_uhd_rfnoc_graph_get_block_id = R"doc()doc";
