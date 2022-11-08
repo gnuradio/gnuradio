@@ -1,5 +1,5 @@
 newmod_sources += []
-newmod_deps += [gnuradio_gr_dep, volk_dep, fmt_dep, pmtf_dep, python3_embed_dep, json_dep]
+newmod_deps += [gnuradio_gr_dep, volk_dep, fmt_dep, spdlog_dep, pmtf_dep, python3_embed_dep, json_dep]
 
 block_cpp_args = ['-DHAVE_CPU']
 
@@ -27,9 +27,18 @@ gnuradio_blocklib_newmod_lib = library('gnuradio-blocklib-newmod',
     install : true,
     link_language: 'cpp',
     dependencies : newmod_deps,
-    link_args : ['-lgnuradio-runtime'],
     cpp_args : block_cpp_args)
 
 gnuradio_blocklib_newmod_dep = declare_dependency(include_directories : incdir,
 					   link_with : gnuradio_blocklib_newmod_lib,
                        dependencies : newmod_deps)
+
+pkg = import('pkgconfig')
+libs = [gnuradio_blocklib_newmod_lib]     # the library/libraries users need to link against
+h = ['.'] # subdirectories of ${prefix}/${includedir} to add to header path
+pkg.generate(libraries : libs,
+             subdirs : h,
+             version : meson.project_version(),
+             name : 'libgnuradio-blocklib-newmod',
+             filebase : 'gnuradio-blocklib-newmod',
+             description : 'GNU Radio newmod component')
