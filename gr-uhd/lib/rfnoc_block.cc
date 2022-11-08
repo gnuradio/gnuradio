@@ -29,7 +29,11 @@ rfnoc_block::make_block_ref(rfnoc_graph::sptr graph,
     const std::string block_id =
         graph->get_block_id(block_name, device_select, block_select);
     if (block_id.empty()) {
-        throw std::runtime_error("Cannot find block!");
+        throw std::runtime_error(
+            fmt::format("Cannot find block with ID: {:s} Device/Instance: {:d}/{:d}",
+                        block_name,
+                        device_select,
+                        block_select));
     }
 
     auto block = graph->get_block_ref(block_id, max_ref_count);
