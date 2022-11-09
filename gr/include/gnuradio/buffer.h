@@ -229,7 +229,8 @@ public:
     void add_tag(uint64_t offset, tag_map map);
     void add_tag(uint64_t offset, pmtf::map map);
 
-    void propagate_tags(buffer_reader* p_in_buf, int n_consumed);
+    void
+    propagate_tags(buffer_reader* p_in_buf, int n_consumed, double relative_rate = 1.0);
 
     void prune_tags();
 
