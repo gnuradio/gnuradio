@@ -291,7 +291,8 @@ graph_executor::run_one_iteration(std::vector<block_sptr> blocks)
                                 tag_propagation_policy_t::TPP_ALL_TO_ALL) {
                                 for (auto wo : wio.outputs()) {
                                     auto p_out_buf = wo.bufp();
-                                    p_out_buf->propagate_tags(p_buf, w.n_consumed);
+                                    p_out_buf->propagate_tags(
+                                        p_buf, w.n_consumed, b->relative_rate());
                                 }
                             }
                             else if (b->tag_propagation_policy() ==
@@ -300,7 +301,8 @@ graph_executor::run_one_iteration(std::vector<block_sptr> blocks)
                                 for (auto wo : wio.outputs()) {
                                     if (output_port_index == input_port_index) {
                                         auto p_out_buf = wo.bufp();
-                                        p_out_buf->propagate_tags(p_buf, w.n_consumed);
+                                        p_out_buf->propagate_tags(
+                                            p_buf, w.n_consumed, b->relative_rate());
                                     }
                                     output_port_index++;
                                 }
