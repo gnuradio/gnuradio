@@ -1,0 +1,444 @@
+options:
+  parameters:
+    author: Grant Meyerhoff <grant.meyerhoff@ni.com>
+    catch_exceptions: 'True'
+    category: '[GRC Hier Blocks]'
+    cmake_opt: ''
+    comment: ''
+    copyright: ''
+    description: ''
+    gen_cmake: 'On'
+    gen_linking: dynamic
+    generate_options: qt_gui
+    hier_block_src_path: '.:'
+    id: rfnoc_addsub
+    max_nouts: '0'
+    output_language: python
+    placement: (0,0)
+    qt_qss_theme: ''
+    realtime_scheduling: ''
+    run: 'True'
+    run_command: '{python} -u {filename}'
+    run_options: prompt
+    sizing_mode: fixed
+    thread_safe_setters: ''
+    title: 'RFNoC: AddSub Example'
+    window_size: (1000,1000)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [32, 4.0]
+    rotation: 0
+    state: enabled
+
+blocks:
+- name: samp_rate
+  id: variable
+  parameters:
+    comment: ''
+    value: 1e6
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [216, 4.0]
+    rotation: 0
+    state: enabled
+- name: uhd_rfnoc_graph
+  id: uhd_rfnoc_graph
+  parameters:
+    alias: ''
+    clock_source: ''
+    comment: ''
+    dev_addr: type=n3xx
+    dev_args: ''
+    num_mboards: '1'
+    time_source: ''
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [312, 4.0]
+    rotation: 0
+    state: true
+- name: analog_sig_source_x_0
+  id: analog_sig_source_x
+  parameters:
+    affinity: ''
+    alias: ''
+    amp: '.65'
+    comment: ''
+    freq: samp_rate/32
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    offset: '0'
+    phase: '0'
+    samp_rate: samp_rate
+    type: complex
+    waveform: analog.GR_COS_WAVE
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [32, 188.0]
+    rotation: 0
+    state: true
+- name: analog_sig_source_x_0_0
+  id: analog_sig_source_x
+  parameters:
+    affinity: ''
+    alias: ''
+    amp: '.25'
+    comment: ''
+    freq: samp_rate/32
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    offset: '0'
+    phase: '0'
+    samp_rate: samp_rate
+    type: complex
+    waveform: analog.GR_COS_WAVE
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [32, 324.0]
+    rotation: 0
+    state: true
+- name: blocks_throttle_0
+  id: blocks_throttle
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    ignoretag: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    samples_per_second: samp_rate
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [240, 228.0]
+    rotation: 0
+    state: true
+- name: blocks_throttle_0_0
+  id: blocks_throttle
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    ignoretag: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    samples_per_second: samp_rate
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [240, 364.0]
+    rotation: 0
+    state: true
+- name: qtgui_time_sink_x_0_0_0
+  id: qtgui_time_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'False'
+    axislabels: 'True'
+    color1: blue
+    color10: dark blue
+    color2: red
+    color3: green
+    color4: black
+    color5: cyan
+    color6: magenta
+    color7: yellow
+    color8: dark red
+    color9: dark green
+    comment: ''
+    ctrlpanel: 'False'
+    entags: 'True'
+    grid: 'False'
+    gui_hint: ''
+    label1: Sum I
+    label10: Signal 10
+    label2: Sum Q
+    label3: Signal 1 I
+    label4: Signal 1 Q
+    label5: Signal 2 I
+    label6: Signal 2 Q
+    label7: Signal 7
+    label8: Signal 8
+    label9: Signal 9
+    legend: 'True'
+    marker1: '-1'
+    marker10: '-1'
+    marker2: '-1'
+    marker3: '-1'
+    marker4: '-1'
+    marker5: '-1'
+    marker6: '-1'
+    marker7: '-1'
+    marker8: '-1'
+    marker9: '-1'
+    name: '"Sum"'
+    nconnections: '3'
+    size: '1024'
+    srate: samp_rate
+    stemplot: 'False'
+    style1: '1'
+    style10: '1'
+    style2: '1'
+    style3: '2'
+    style4: '2'
+    style5: '2'
+    style6: '2'
+    style7: '1'
+    style8: '1'
+    style9: '1'
+    tr_chan: '0'
+    tr_delay: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_slope: qtgui.TRIG_SLOPE_POS
+    tr_tag: '""'
+    type: complex
+    update_time: '0.10'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    ylabel: Amplitude
+    ymax: '1'
+    ymin: '-1'
+    yunit: '""'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1176, 200.0]
+    rotation: 0
+    state: true
+- name: qtgui_time_sink_x_0_0_0_0
+  id: qtgui_time_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'False'
+    axislabels: 'True'
+    color1: blue
+    color10: dark blue
+    color2: red
+    color3: green
+    color4: black
+    color5: cyan
+    color6: magenta
+    color7: yellow
+    color8: dark red
+    color9: dark green
+    comment: ''
+    ctrlpanel: 'False'
+    entags: 'True'
+    grid: 'False'
+    gui_hint: ''
+    label1: Difference I
+    label10: Signal 10
+    label2: Difference Q
+    label3: Signal 1 I
+    label4: Signal 1 Q
+    label5: Signal 2 I
+    label6: Signal 2 Q
+    label7: Signal 7
+    label8: Signal 8
+    label9: Signal 9
+    legend: 'True'
+    marker1: '-1'
+    marker10: '-1'
+    marker2: '-1'
+    marker3: '-1'
+    marker4: '-1'
+    marker5: '-1'
+    marker6: '-1'
+    marker7: '-1'
+    marker8: '-1'
+    marker9: '-1'
+    name: '"Difference"'
+    nconnections: '3'
+    size: '1024'
+    srate: samp_rate
+    stemplot: 'False'
+    style1: '1'
+    style10: '1'
+    style2: '1'
+    style3: '2'
+    style4: '2'
+    style5: '2'
+    style6: '2'
+    style7: '1'
+    style8: '1'
+    style9: '1'
+    tr_chan: '0'
+    tr_delay: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_slope: qtgui.TRIG_SLOPE_POS
+    tr_tag: '""'
+    type: complex
+    update_time: '0.10'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    ylabel: Amplitude
+    ymax: '1'
+    ymin: '-1'
+    yunit: '""'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1176, 320.0]
+    rotation: 0
+    state: true
+- name: uhd_rfnoc_addsub_0
+  id: uhd_rfnoc_addsub
+  parameters:
+    affinity: ''
+    alias: ''
+    block_args: ''
+    comment: ''
+    device_select: '-1'
+    instance_index: '-1'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [672, 128.0]
+    rotation: 0
+    state: true
+- name: uhd_rfnoc_rx_streamer_0
+  id: uhd_rfnoc_rx_streamer
+  parameters:
+    adapter_id_list: '[0]'
+    affinity: ''
+    alias: ''
+    args: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_chans: '1'
+    otw: sc16
+    output_type: fc32
+    use_default_adapter_id: 'True'
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [936, 128.0]
+    rotation: 0
+    state: true
+- name: uhd_rfnoc_rx_streamer_0_0
+  id: uhd_rfnoc_rx_streamer
+  parameters:
+    adapter_id_list: '[0]'
+    affinity: ''
+    alias: ''
+    args: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_chans: '1'
+    otw: sc16
+    output_type: fc32
+    use_default_adapter_id: 'True'
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [936, 160.0]
+    rotation: 0
+    state: true
+- name: uhd_rfnoc_tx_streamer_0
+  id: uhd_rfnoc_tx_streamer
+  parameters:
+    adapter_id_list: '[0]'
+    affinity: ''
+    alias: ''
+    args: ''
+    comment: ''
+    input_type: fc32
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_chans: '2'
+    otw: sc16
+    use_default_adapter_id: 'True'
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [472, 128.0]
+    rotation: 0
+    state: true
+
+connections:
+- [analog_sig_source_x_0, '0', blocks_throttle_0, '0']
+- [analog_sig_source_x_0_0, '0', blocks_throttle_0_0, '0']
+- [blocks_throttle_0, '0', qtgui_time_sink_x_0_0_0, '1']
+- [blocks_throttle_0, '0', qtgui_time_sink_x_0_0_0_0, '1']
+- [blocks_throttle_0, '0', uhd_rfnoc_tx_streamer_0, '0']
+- [blocks_throttle_0_0, '0', qtgui_time_sink_x_0_0_0, '2']
+- [blocks_throttle_0_0, '0', qtgui_time_sink_x_0_0_0_0, '2']
+- [blocks_throttle_0_0, '0', uhd_rfnoc_tx_streamer_0, '1']
+- [uhd_rfnoc_addsub_0, '0', uhd_rfnoc_rx_streamer_0, '0']
+- [uhd_rfnoc_addsub_0, '1', uhd_rfnoc_rx_streamer_0_0, '0']
+- [uhd_rfnoc_rx_streamer_0, '0', qtgui_time_sink_x_0_0_0, '0']
+- [uhd_rfnoc_rx_streamer_0_0, '0', qtgui_time_sink_x_0_0_0_0, '0']
+- [uhd_rfnoc_tx_streamer_0, '0', uhd_rfnoc_addsub_0, '0']
+- [uhd_rfnoc_tx_streamer_0, '1', uhd_rfnoc_addsub_0, '1']
+
+metadata:
+  file_format: 1
+  grc_version: v3.11-compat-xxx-xunknown

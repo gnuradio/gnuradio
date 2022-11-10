@@ -1,0 +1,51 @@
+id: uhd_rfnoc_addsub
+label: RFNoC Fast Add-Subtract Block
+category: '[Core]/UHD/RFNoC/Blocks'
+
+templates:
+  imports: |-
+    from gnuradio import uhd
+  make: |-
+    uhd.rfnoc_block_generic(
+        self.rfnoc_graph,
+        uhd.device_addr(${block_args}),
+        "AddSub",
+        ${device_select},
+        ${instance_index})
+
+parameters:
+- id: block_args
+  label: Block Args
+  dtype: string
+  default: ""
+  hide: ${ 'part' if not block_args else 'none'}
+- id: device_select
+  label: Device Select
+  dtype: int
+  default: -1
+  hide: ${ 'part' if device_select == -1 else 'none'}
+- id: instance_index
+  label: Instance Select
+  dtype: int
+  default: -1
+  hide: ${ 'part' if instance_index == -1 else 'none'}
+
+inputs:
+- domain: rfnoc
+  dtype: 'sc16'
+  multiplicity: 2
+
+outputs:
+- domain: rfnoc
+  dtype: 'sc16'
+  label: sum
+- domain: rfnoc
+  dtype: 'sc16'
+  label: diff
+
+documentation: |-
+  RFNoC AddSub Block:
+  For two complex input streams x and y, return the sum (x+y) and the difference
+  (x-y) of those two input streams.
+
+file_format: 1
