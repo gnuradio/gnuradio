@@ -1,0 +1,50 @@
+id: uhd_rfnoc_logpwr
+label: RFNoC Log-Power Block
+category: '[Core]/UHD/RFNoC/Blocks'
+
+templates:
+  imports: |-
+    from gnuradio import uhd
+  make: |-
+    uhd.rfnoc_block_generic(
+        self.rfnoc_graph,
+        uhd.device_addr(),
+        "LogPwr",
+        ${device_select},
+        ${instance_index})
+
+parameters:
+- id: num_chans
+  label: Number of Channels
+  dtype: int
+  default: 1
+  hide: ${ 'part' if num_chans == 1 else 'none'}
+- id: device_select
+  label: Device Select
+  dtype: int
+  default: -1
+  hide: ${ 'part' if device_select == -1 else 'none'}
+- id: instance_index
+  label: Instance Select
+  dtype: int
+  default: -1
+  hide: ${ 'part' if instance_index == -1 else 'none'}
+
+inputs:
+- domain: rfnoc
+  dtype: 'sc16'
+  multiplicity: ${num_chans}
+
+outputs:
+- domain: rfnoc
+  dtype: 's16'
+  multiplicity: ${num_chans}
+
+documentation: |-
+    This block takes in signed 16-bit complex samples and computes an
+    estimate of 1024 * log2(i^2+q^2), and puts the result in the upper
+    16-bits of each 32-bit output item. The log is estimated using a lookup
+    table and random noise is may be added to reduce quantization effects
+    (this feature is enabled at bitstream synthesis time).
+
+file_format: 1
