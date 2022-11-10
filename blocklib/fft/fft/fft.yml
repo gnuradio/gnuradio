@@ -23,11 +23,15 @@ parameters:
     label: FFT Size
     dtype: size
     settable: false
+    grc:
+        default: 1024
 -   id: window
     label: Window
     dtype: rf32
     container: vector
     settable: false
+    grc:
+        default: '"[]"'
 -   id: shift
     label: Shift
     dtype: bool
