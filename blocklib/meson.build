@@ -17,31 +17,6 @@ endif
 if get_option('enable_gr_blocks')
 subdir('blocks')
 endif
-
-if get_option('enable_gr_fec')
-subdir('fec')
-endif
-if get_option('enable_gr_fft')
-subdir('fft')
-endif
-if get_option('enable_gr_filter')
-subdir('filter')
-endif
-if get_option('enable_gr_analog')
-subdir('analog')
-endif
 if get_option('enable_gr_streamops')
 subdir('streamops')
-endif
-if get_option('enable_gr_fileio')
-subdir('fileio')
-endif
-if get_option('enable_gr_zeromq')
-subdir('zeromq')
-endif
-if get_option('enable_gr_audio')
-subdir('audio')
-endif
-if get_option('enable_gr_soapy')
-subdir('soapy')
 endif

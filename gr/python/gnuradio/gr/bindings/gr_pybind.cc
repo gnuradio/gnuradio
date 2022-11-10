@@ -35,7 +35,6 @@ void bind_buffer(py::module&);
 void bind_vmcircbuf(py::module&);
 void bind_constants(py::module&);
 void bind_python_block(py::module&);
-void bind_buffer_net_zmq(py::module& m);
 void bind_runtime(py::module&);
 void bind_runtime_proxy(py::module&);
 void bind_graph_utils(py::module&);
@@ -77,7 +76,6 @@ PYBIND11_MODULE(gr_python, m)
     bind_flowgraph(m);
     bind_scheduler(m);
     bind_buffer(m);
-    bind_buffer_net_zmq(m);
     bind_vmcircbuf(m);
     bind_constants(m);
     bind_python_block(m);

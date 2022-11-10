@@ -25,18 +25,6 @@ executable('bm_nbt_fanout',
                    CLI11_dep], 
     install : true)
 
-srcs = ['bm_nop.cc']
-executable('bm_nbt_nop', 
-    srcs, 
-    # include_directories : incdir, 
-    link_language : 'cpp',
-    dependencies: [gnuradio_gr_dep,
-                   gnuradio_blocklib_blocks_dep,
-                   gnuradio_blocklib_streamops_dep,
-                   gnuradio_scheduler_nbt_dep,
-                   CLI11_dep], 
-    install : true)
-
 srcs = ['bm_msg_forward.cc']
 executable('bm_msg_forward', 
     srcs, 

@@ -8,8 +8,6 @@ runtime_headers = [
     'block_group_properties.h',
     'clonable_block.h',
     'concurrent_queue.h',
-    'buffer_cuda.h',
-    'buffer_cuda_pinned.h',
     'edge.h',
     'flat_graph.h',
     'flowgraph.h',
@@ -43,12 +41,10 @@ runtime_headers = [
     'sptr_magic.h',
     'realtime.h',
     'runtime.h',
-    'buffer_sm.h',
     'executor.h',
     'constants.h',
     'registry.h',
     'high_res_timer.h',
-    'custom_lock.h'
 ]
 
 install_headers(runtime_headers, subdir : 'gnuradio')

@@ -32,7 +32,6 @@ runtime_sources = [
   'block.cc',
   'port.cc',
   'buffer.cc',
-  'buffer_sm.cc',
   'buffer_management.cc',
   'buffer_cpu_simple.cc',
   'realtime.cc',
@@ -56,13 +55,11 @@ runtime_sources = [
   'buffer_cpu_vmcirc_sysv_shm.cc',
   # mmap requires librt - FIXME - handle this a conditional dependency
   'buffer_cpu_vmcirc_mmap_shm_open.cc',
-  'buffer_net_zmq.cc',
   'sptr_magic.cc',
   'hier_block.cc',
   'prefs.cc',
   'tag.cc',
   'registry.cc',
-  'buffer_cpu_host.cc'
 ]
 
 if IMPLEMENT_CUDA

@@ -124,37 +124,37 @@ class test_add_mult_div_sub(gr_unittest.TestCase):
 
     # multiply_XX
 
-    def test_multiply_ss(self):
-        src1_data = [1, 2, 3, 4, 5]
-        src2_data = [8, -3, 4, 8, 2]
-        expected_result = [8, -6, 12, 32, 10]
-        op = math.multiply_ss(2)
-        self.help_ss((src1_data, src2_data),
-                     expected_result, op)
+    # def test_multiply_ss(self):
+    #     src1_data = [1, 2, 3, 4, 5]
+    #     src2_data = [8, -3, 4, 8, 2]
+    #     expected_result = [8, -6, 12, 32, 10]
+    #     op = math.multiply_ss(2)
+    #     self.help_ss((src1_data, src2_data),
+    #                  expected_result, op)
 
-    def test_multiply_ii(self):
-        src1_data = [1, 2, 3, 4, 5]
-        src2_data = [8, -3, 4, 8, 2]
-        expected_result = [8, -6, 12, 32, 10]
-        op = math.multiply_ii(2)
-        self.help_ii((src1_data, src2_data),
-                     expected_result, op)
+    # def test_multiply_ii(self):
+    #     src1_data = [1, 2, 3, 4, 5]
+    #     src2_data = [8, -3, 4, 8, 2]
+    #     expected_result = [8, -6, 12, 32, 10]
+    #     op = math.multiply_ii(2)
+    #     self.help_ii((src1_data, src2_data),
+    #                  expected_result, op)
 
-    def test_multiply_ff(self):
-        src1_data = [1, 2, 3, 4, 5]
-        src2_data = [8, -3, 4, 8, 2]
-        expected_result = [8, -6, 12, 32, 10]
-        op = math.multiply_ff(2)
-        self.help_ff((src1_data, src2_data),
-                     expected_result, op)
+    # def test_multiply_ff(self):
+    #     src1_data = [1, 2, 3, 4, 5]
+    #     src2_data = [8, -3, 4, 8, 2]
+    #     expected_result = [8, -6, 12, 32, 10]
+    #     op = math.multiply_ff(2)
+    #     self.help_ff((src1_data, src2_data),
+    #                  expected_result, op)
 
-    def test_multiply_cc(self):
-        src1_data = [1 + 1j, 2 + 2j, 3 + 3j, 4 + 4j, 5 + 5j]
-        src2_data = [8, -3, 4, 8, 2]
-        expected_result = [8 + 8j, -6 - 6j, 12 + 12j, 32 + 32j, 10 + 10j]
-        op = math.multiply_cc(2)
-        self.help_cc((src1_data, src2_data),
-                     expected_result, op)
+    # def test_multiply_cc(self):
+    #     src1_data = [1 + 1j, 2 + 2j, 3 + 3j, 4 + 4j, 5 + 5j]
+    #     src2_data = [8, -3, 4, 8, 2]
+    #     expected_result = [8 + 8j, -6 - 6j, 12 + 12j, 32 + 32j, 10 + 10j]
+    #     op = math.multiply_cc(2)
+    #     self.help_cc((src1_data, src2_data),
+    #                  expected_result, op)
 
     # multiply_const_XX
 
@@ -268,12 +268,12 @@ class test_add_mult_div_sub(gr_unittest.TestCase):
     #     result_data = dst.data()
     #     self.assertEqual(expected_result, result_data)
 
-    def test_div_ff(self):
-        src1_data = [5, 9, -15, 1024]
-        src2_data = [10, 3, -5, 64]
-        expected_result = [0.5, 3, 3, 16]
-        op = math.divide_ff()
-        self.help_ff((src1_data, src2_data), expected_result, op)
+    # def test_div_ff(self):
+    #     src1_data = [5, 9, -15, 1024]
+    #     src2_data = [10, 3, -5, 64]
+    #     expected_result = [0.5, 3, 3, 16]
+    #     op = math.divide_ff()
+    #     self.help_ff((src1_data, src2_data), expected_result, op)
 
 
 if __name__ == '__main__':

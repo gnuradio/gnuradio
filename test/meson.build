@@ -3,10 +3,7 @@
 qa_srcs = ['qa_default_runtime',
            'qa_scheduler_nbt',
            'qa_block_grouping',
-           'qa_single_mapped_buffers',
            'qa_message_ports',
-           'qa_tags',
-           'qa_zmq_buffers',
            'qa_hier_block',
            'qa_reflection',
           ]

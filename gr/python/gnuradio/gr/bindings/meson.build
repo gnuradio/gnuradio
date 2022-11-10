@@ -13,7 +13,6 @@ runtime_pybind_sources = files([
     'scheduler_pybind.cc',
     'buffer_pybind.cc',
     'buffer_cpu_vmcirc_pybind.cc',
-    'buffer_net_zmq_pybind.cc',
     'constants_pybind.cc',
     'python_block_pybind.cc',
     'runtime_pybind.cc',
