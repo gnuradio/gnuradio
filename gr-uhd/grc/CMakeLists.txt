@@ -46,6 +46,7 @@ if(ENABLE_UHD_RFNOC)
               uhd_fpga_radio.block.yml
               uhd_fpga_sep.block.yml
               uhd_fpga_x310.block.yml
+              uhd_rfnoc_addsub.block.yml
               uhd_rfnoc_ddc.block.yml
               uhd_rfnoc_duc.block.yml
               uhd_rfnoc_fft.block.yml
