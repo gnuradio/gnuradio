@@ -17,7 +17,9 @@ type_lookup = {
     'size': ['size_t', 'int', 'int'],
     'string': ['std::string', 'str', 'string'],
     'bool': ['bool', 'bool', 'bool'],
-    'untyped': ['','','untyped']
+    'untyped': ['','','untyped'],
+    'true': ['true', 'True', 'True'],
+    'false': ['false', 'False', 'False'],
 }
 
 def is_list(value):
@@ -72,7 +74,8 @@ def grc_type(input, vec=False, ref=False):
     
     if input in type_lookup:
         x = type_lookup[input][2]
-
+        if vec:
+            x = f'{x}_vector'
     else:
         if (ref):
             if input.startswith('typekeys/'):
