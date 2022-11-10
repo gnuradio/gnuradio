@@ -41,18 +41,18 @@ parameters:
 - id: otw
   label: Wire Format
   dtype: enum
-  options: ['', sc16, s8]
-  option_labels: [Automatic, Complex int16, Byte]
+  options: ['', sc16, s16, s8]
+  option_labels: [Automatic, Complex int16, int16, Byte]
   option_attributes:
-    type: ['', sc16, s8]
+    type: ['', sc16, s16, s8]
   hide: part
 - id: output_type
   label: Output Type
   dtype: enum
-  options: [fc32, sc16, s8]
-  option_labels: [Complex float32, Complex int16, Byte]
+  options: [fc32, sc16, s16, s8]
+  option_labels: [Complex float32, Complex int16, int16, Byte]
   option_attributes:
-    type: [fc32, sc16, s8]
+    type: [fc32, sc16, s16, s8]
   hide: part
 - id: use_default_adapter_id
   label: Default Adapter ID
