@@ -1,4 +1,4 @@
-id: uhd_rfnoc_fft
+id: uhd_rfnoc_keep_one_in_n
 label: RFNoC Keep One in N Block
 
 templates:
