@@ -16,11 +16,16 @@
 #include <gnuradio/blocks/nop.h>
 #include <gnuradio/blocks/null_sink.h>
 #include <gnuradio/blocks/null_source.h>
+#include <gnuradio/blocks/throttle.h>
+#include <gnuradio/blocks/vector_sink.h>
+#include <gnuradio/blocks/vector_source.h>
 #include <gnuradio/top_block.h>
 #include <boost/test/unit_test.hpp>
 #include <iostream>
+#include <thread>
 
 #define VERBOSE 1
+
 
 BOOST_AUTO_TEST_CASE(t0)
 {
@@ -312,4 +317,29 @@ BOOST_AUTO_TEST_CASE(t12_release_shared_pointers)
     BOOST_CHECK_EQUAL(1, src.use_count());
     BOOST_CHECK_EQUAL(1, head.use_count());
     BOOST_CHECK_EQUAL(1, dst.use_count());
+}
+
+BOOST_AUTO_TEST_CASE(t13_unlock_history)
+{
+    if (VERBOSE)
+        std::cout << "qa_top_block::t13()\n";
+
+    auto tb = gr::make_top_block("top");
+
+    std::vector<int32_t> data(1000000);
+    auto src = gr::blocks::vector_source<int32_t>::make(data, false, 1);
+    auto thr = gr::blocks::throttle::make(sizeof(int32_t), 1000000);
+    auto dst = gr::blocks::vector_sink<int32_t>::make(1, 0);
+
+    tb->connect(src, 0, thr, 0);
+    tb->connect(thr, 0, dst, 0);
+
+    tb->start();
+    while (!dst->data().size())
+        std::this_thread::yield();
+    tb->lock();
+    tb->unlock();
+    tb->wait();
+
+    BOOST_CHECK_EQUAL(1000000, dst->data().size());
 }
