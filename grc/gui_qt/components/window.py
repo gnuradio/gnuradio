@@ -750,6 +750,30 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
     def kill_triggered(self):
         log.debug('kill')
 
+    def show_help(parent):
+        """ Display basic usage tips. """
+        message = """\
+            <b>Usage Tips</b>
+            \n\
+            <u>Add block</u>: drag and drop or double click a block in the block
+        selection window.
+            <u>Rotate block</u>: Select a block, press left/right on the keyboard.
+            <u>Change type</u>: Select a block, press up/down on the keyboard.
+            <u>Edit parameters</u>: double click on a block in the flow graph.
+            <u>Make connection</u>: click on the source port of one block, then
+        click on the sink port of another block.
+            <u>Remove connection</u>: select the connection and press delete, or
+        drag the connection.
+            \n\
+            *Press Ctrl+K or see menu for Keyboard - Shortcuts
+            \
+        """
+
+        ad = QtWidgets.QMessageBox()
+        ad.setWindowTitle("Help")
+        ad.setText(message)
+        ad.exec()
+
     def types_triggered(self):
         log.debug('types')
         colors = [(name, color)
@@ -782,7 +806,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
     def help_triggered(self):
         log.debug('help')
-        self.help()
+        self.show_help()
 
     def report_triggered(self):
         log.debug('report')
