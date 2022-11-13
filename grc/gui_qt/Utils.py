@@ -1,5 +1,9 @@
-from . import Constants
+import cairo
 
+from PyQt5 import QtGui, QtCore, QtWidgets, QtSvg
+
+from . import Constants
+from .components.canvas.colors import FLOWGRAPH_BACKGROUND_COLOR
 
 def get_rotated_coordinate(coor, rotation):
     """
@@ -20,3 +24,27 @@ def get_rotated_coordinate(coor, rotation):
     }[rotation]
     x, y = coor
     return x * cos_r + y * sin_r, -x * sin_r + y * cos_r
+
+def make_screenshot(fg_view, file_path, transparent_bg=False):
+    if not file_path:
+        return
+    if file_path.endswith(".png"):
+        rect = fg_view.viewport().rect()
+
+        pixmap = QtGui.QPixmap(rect.size())
+        painter = QtGui.QPainter(pixmap)
+
+        fg_view.render(painter, QtCore.QRectF(pixmap.rect()), rect)
+        pixmap.save(file_path,"PNG")
+        painter.end()
+    elif file_path.endswith(".svg"):
+        rect = fg_view.viewport().rect()
+
+        generator = QtSvg.QSvgGenerator()
+        generator.setFileName(file_path)
+        generator.setSize(rect.size())
+        painter = QtGui.QPainter(generator)
+        fg_view.render(painter)
+        painter.end()
+    elif file_path.endswith(".pdf"):
+        return # TODO

@@ -80,31 +80,48 @@ def test_file_actions(qtbot, qapp_cls_):
     qtbot.wait(100)
     
     # New
-    assert(win.tabWidget.count() == 1)
+    assert win.tabWidget.count() == 1, "File/New"
     qtbot.keyClick(qapp_cls_.focusWidget(), QtCore.Qt.Key_F, QtCore.Qt.AltModifier)
     qtbot.wait(100)
     qtbot.keyClick(menu, QtCore.Qt.Key_N)
     qtbot.wait(100)
-    assert(win.tabWidget.count() == 2)
-    
+    assert win.tabWidget.count() == 2, "File/New"
+    qtbot.keyClick(qapp_cls_.focusWidget(), QtCore.Qt.Key_F, QtCore.Qt.AltModifier)
+    qtbot.wait(100)
+    qtbot.keyClick(menu, QtCore.Qt.Key_N)
+    qtbot.wait(100)
+    assert win.tabWidget.count() == 3, "File/New"
+    qtbot.keyClick(qapp_cls_.focusWidget(), QtCore.Qt.Key_F, QtCore.Qt.AltModifier)
+    qtbot.wait(100)
+    qtbot.keyClick(menu, QtCore.Qt.Key_N)
+    qtbot.wait(100)
+    assert win.tabWidget.count() == 4, "File/New"
+
     # Open
     # TODO
 
     # Close
-    assert(win.tabWidget.count() == 2)
+    assert win.tabWidget.count() == 4, "File/Close"
     qtbot.keyClick(qapp_cls_.focusWidget(), QtCore.Qt.Key_F, QtCore.Qt.AltModifier)
     qtbot.wait(100)
     qtbot.keyClick(menu, QtCore.Qt.Key_C)
     qtbot.wait(100)
-    assert(win.tabWidget.count() == 1)
+    assert win.tabWidget.count() == 3, "File/Close"
     # Close All
+    assert win.tabWidget.count() == 3, "File/Close All"
+    qtbot.keyClick(qapp_cls_.focusWidget(), QtCore.Qt.Key_F, QtCore.Qt.AltModifier)
+    qtbot.wait(100)
+    qtbot.keyClick(menu, QtCore.Qt.Key_L)
+    qtbot.wait(100)
+    assert win.tabWidget.count() == 1, "File/Close All"
     # Save
     # Save As
     # Screen Capture
+    
     # Print
     # Exit
 
-def test_file_actions(qtbot, qapp_cls_):
+def test_edit_actions(qtbot, qapp_cls_):
     pass
 
 def test_view_actions(qtbot, qapp_cls_):
@@ -162,7 +179,7 @@ def test_help_actions(qtbot, qapp_cls_):
     qtbot.keyClick(menu, QtCore.Qt.Key_Q)
     qtbot.wait(200)
     assert(qapp_cls_.activeWindow() == qapp_cls_.MainWindow)
-    
+
 
 def test_add_null_sink(qtbot, qapp_cls_):
     qtbot.wait(100)

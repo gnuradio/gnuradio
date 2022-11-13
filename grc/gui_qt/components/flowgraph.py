@@ -61,6 +61,7 @@ class Flowgraph(QtWidgets.QGraphicsScene, base.Component, CoreFlowgraph):
         
         self.newConnection = None
         self.startPort = None
+        self._elements_to_draw = []
 
         self.undoStack = QtWidgets.QUndoStack()
         self.undoAction = self.undoStack.createUndoAction(self, "Undo")
@@ -75,9 +76,28 @@ class Flowgraph(QtWidgets.QGraphicsScene, base.Component, CoreFlowgraph):
         self.validate()
         for block in self.blocks:
             block.create_shapes_and_labels()
-        #self.update_elements_to_draw()
+        self.update_elements_to_draw()
         #self.create_labels()
         #self.create_shapes()
+    
+    def update_elements_to_draw(self):
+        #hide_disabled_blocks = Actions.TOGGLE_HIDE_DISABLED_BLOCKS.get_active()
+        hide_disabled_blocks = False
+        #hide_variables = Actions.TOGGLE_HIDE_VARIABLES.get_active()
+        hide_variables = False
+
+        def draw_order(elem):
+            return elem.isSelected(), elem.is_block, elem.enabled
+
+        elements = sorted(self.get_elements(), key=draw_order)
+        del self._elements_to_draw[:]
+
+        for element in elements:
+            if hide_disabled_blocks and not element.enabled:
+                continue  # skip hidden disabled blocks and connections
+            if hide_variables and (element.is_variable or element.is_import):
+                continue  # skip hidden disabled blocks and connections
+            self._elements_to_draw.append(element)
 
     def dragEnterEvent(self, event):
         if event.mimeData().hasUrls:
@@ -332,6 +352,23 @@ class Flowgraph(QtWidgets.QGraphicsScene, base.Component, CoreFlowgraph):
     def remove_element(self, element):
         self.removeItem(element)
         super(Flowgraph, self).remove_element(element)
+
+    def get_extents(self):
+        #show_comments = Actions.TOGGLE_SHOW_BLOCK_COMMENTS.get_active()
+        show_comments = True
+
+        def sub_extents():
+            for element in self._elements_to_draw:
+                yield element.get_extents()
+                if element.is_block and show_comments and element.enabled:
+                    yield element.get_extents_comment()
+
+        extent = 10000000, 10000000, 0, 0
+        cmps = (min, min, max, max)
+        for sub_extent in sub_extents():
+            extent = [cmp(xy, e_xy)
+                      for cmp, xy, e_xy in zip(cmps, extent, sub_extent)]
+        return tuple(extent)
 
 
 class FlowgraphView(QtWidgets.QGraphicsView, base.Component): # added base.Component so it can see platform

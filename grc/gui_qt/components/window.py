@@ -187,11 +187,8 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
         actions['save_copy'] = Action(_("save_copy"), self)
 
-        actions['print'] = Action(Icons('document-print'), _("print"), self,
-                                  shortcut=Keys.Print, statusTip=_("print-tooltip"))
-
         actions['screen_capture'] = Action(Icons('camera-photo'), _("screen_capture"), self,
-                                           statusTip=_("screen_capture-tooltip"))
+                                           shortcut=Keys.Print, statusTip=_("screen_capture-tooltip"))
 
         actions['exit'] = Action(Icons("application-exit"), _("exit"), self,
                                  shortcut=Keys.Quit, statusTip=_("exit-tooltip"))
@@ -403,7 +400,6 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         file.addAction(actions['save_copy'])
         file.addSeparator()
         file.addAction(actions['screen_capture'])
-        file.addAction(actions['print'])
         file.addSeparator()
         file.addAction(actions['exit'])
         menus['file'] = file
@@ -506,7 +502,6 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         file.addAction(actions['open'])
         file.addAction(actions['save'])
         file.addAction(actions['close'])
-        file.addAction(actions['print'])
         toolbars['file'] = file
 
         # Edit toolbar
@@ -646,6 +641,18 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
     def screen_capture_triggered(self):
         log.debug('screen capture')
+        # TODO: Should be user-set somehow
+        background_transparent = True
+
+        Save = QtWidgets.QFileDialog.getSaveFileName
+        file_path, filtr = Save(self, self.actions['save'].statusTip(),
+                               filter='PDF files (*.pdf);;PNG files (*.png);;SVG files (*.svg)')
+        if file_path is not None:
+            try:
+                Utils.make_screenshot(
+                    self.currentView, file_path, background_transparent)
+            except ValueError:
+                Messages.send('Failed to generate screenshot\n')
 
     def undo_triggered(self):
         log.debug('undo')
@@ -816,3 +823,8 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
     def library_toggled(self):
         log.debug('library_toggled')
+    
+    def filter_design_tool_triggered(self):
+        log.debug('filter_design_tool')
+        subprocess.Popen('gr_filter_design',
+                             shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
