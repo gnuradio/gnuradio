@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 
+#include <type_traits>
 #include <chrono>
 #include <iostream>
 #include <thread>
@@ -249,3 +250,19 @@ TEST(SchedulerMTTags, t5)
     BOOST_REQUIRE_EQUAL(tags2.size(), (size_t)8);
 }
 #endif
+
+TEST(SchedulerMTTags, DefaultTags)
+{
+    tag_t testTag;
+
+    testTag.insert_or_assign(tag::SAMPLE_RATE, pmtf::pmt(3.0f));
+    testTag.insert_or_assign(tag::SAMPLE_RATE(4.0f));
+    // testTag.insert_or_assign(tag::SAMPLE_RATE(5.0)); // type-mismatch -> won't compile
+    EXPECT_EQ(testTag.at(tag::SAMPLE_RATE), 4.0f);
+    EXPECT_EQ(tag::SAMPLE_RATE.shortKey(), "sample_rate");
+    EXPECT_EQ(tag::SAMPLE_RATE.key(), std::string{ GR_TAG_PREFIX }.append("sample_rate"));
+
+    EXPECT_TRUE(testTag.get(tag::SAMPLE_RATE).has_value());
+    EXPECT_FALSE(std::is_const_v<decltype(testTag.get(tag::SAMPLE_RATE).value())>);
+    EXPECT_FALSE(testTag.get(tag::SIGNAL_NAME).has_value());
+}
