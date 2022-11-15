@@ -20,3 +20,5 @@ option('enable_gr_audio', type : 'boolean', value : true)
 
 option('enable_grc', type : 'boolean', value : true)
 
+option('custom_blocks_path', type: 'string', value : '', description: 'Path to OOT blocks for grc, empty if in tree')
+
