@@ -74,12 +74,12 @@ jobs:
             ldpath:
           - distro: 'Fedora 36'
             containerid: 'gnuradio/ci:fedora-36-3.9'
-            cxxflags: -Werror -Wno-error=deprecated-declarations 
+            cxxflags: -Werror
             ctest_args: '-E ""'
             ldpath: /usr/local/lib64/
           - distro: 'Fedora 37'
             containerid: 'gnuradio/ci:fedora-37-3.9'
-            cxxflags: -Werror -Wno-error=deprecated-declarations
+            cxxflags: -Werror
             ctest_args: '-E ""'
             ldpath: /usr/local/lib64/
           # - distro: 'CentOS 8.4'
