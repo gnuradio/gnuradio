@@ -186,7 +186,8 @@ target_include_directories(
     gnuradio-blocks PUBLIC $<INSTALL_INTERFACE:include>
                            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>)
 
-set_source_files_properties(file_source_impl.cc PROPERTIES COMPILE_FLAGS
+set_source_files_properties(file_source_impl.cc PROPERTIES SKIP_PRECOMPILE_HEADERS ON
+                                                           COMPILE_FLAGS
                                                            -D_FILE_OFFSET_BITS=64)
 
 if(ENABLE_GR_CTRLPORT)
