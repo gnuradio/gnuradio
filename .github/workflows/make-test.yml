@@ -64,22 +64,22 @@ jobs:
         include:
           - distro: 'Ubuntu 20.04'
             containerid: 'gnuradio/ci:ubuntu-20.04-3.9'
-            cxxflags: -Werror -Wno-error=invalid-pch
+            cxxflags: -Werror
             ctest_args: '-E ""'
             ldpath:
           - distro: 'Ubuntu 22.04'
             containerid: 'gnuradio/ci:ubuntu-22.04-3.9'
-            cxxflags: -Werror -Wno-error=invalid-pch
+            cxxflags: -Werror
             ctest_args: '-E "qa_polar_..coder_(sc_)?systematic"'
             ldpath:
           - distro: 'Fedora 36'
             containerid: 'gnuradio/ci:fedora-36-3.9'
-            cxxflags: -Werror -Wno-error=invalid-pch -Wno-error=deprecated-declarations 
+            cxxflags: -Werror -Wno-error=deprecated-declarations 
             ctest_args: '-E ""'
             ldpath: /usr/local/lib64/
           - distro: 'Fedora 37'
             containerid: 'gnuradio/ci:fedora-37-3.9'
-            cxxflags: -Werror -Wno-error=invalid-pch -Wno-error=deprecated-declarations
+            cxxflags: -Werror -Wno-error=deprecated-declarations
             ctest_args: '-E ""'
             ldpath: /usr/local/lib64/
           # - distro: 'CentOS 8.4'
@@ -89,13 +89,13 @@ jobs:
           #   ldpath: /usr/local/lib64/
           - distro: 'Debian 11'
             containerid: 'gnuradio/ci:debian-11-3.10'
-            cxxflags: -Werror -Wno-error=invalid-pch
+            cxxflags: -Werror
             ctest_args: '-E "qa_polar_..coder_(sc_)?systematic"'
             ldpath:
           - distro: 'Debian 11 (32-bit)'
             containerid: 'gnuradio/ci:debian-i386-11-3.10'
             containeroptions: '--platform linux/i386'
-            cxxflags: -Werror -Wno-error=invalid-pch
+            cxxflags: -Werror
             ctest_args: '-E "qa_polar_..coder_(sc_)?systematic"'
             ldpath:
     name: ${{ matrix.distro }}
@@ -144,7 +144,7 @@ jobs:
       name: Checkout Project
     - name: CMake
       env:
-        CXXFLAGS: -Werror -Wno-error=invalid-pch
+        CXXFLAGS: -Werror
       run: 'cd /build && cmake ${GITHUB_WORKSPACE} -DENABLE_DOXYGEN=OFF -DENABLE_PYTHON=OFF'
     - name: Make
       run: 'cd /build && make -j2 -k'
