@@ -16,6 +16,7 @@
 #include <gnuradio/logger.h>
 #include <gnuradio/rpcpmtconverters_thrift.h>
 #include <gnuradio/rpcserver_base.h>
+#include <functional>
 #include <map>
 #include <mutex>
 #include <string>
@@ -111,7 +112,7 @@ private:
 
 
     template <typename T, typename TMap>
-    struct set_f : public std::unary_function<T, void> {
+    struct set_f : public std::function<void(T)> {
         set_f(TMap& _setcallbackmap, const priv_lvl_t& _cur_priv)
             : d_setcallbackmap(_setcallbackmap), cur_priv(_cur_priv)
         {
@@ -142,7 +143,7 @@ private:
     };
 
     template <typename T, typename TMap>
-    struct get_f : public std::unary_function<T, void> {
+    struct get_f : public std::function<void(T)> {
         get_f(TMap& _getcallbackmap,
               const priv_lvl_t& _cur_priv,
               GNURadio::KnobMap& _outknobs)
@@ -178,7 +179,7 @@ private:
     };
 
     template <typename T, typename TMap, typename TKnobMap>
-    struct get_all_f : public std::unary_function<T, void> {
+    struct get_all_f : public std::function<void(T)> {
         get_all_f(TMap& _getcallbackmap, const priv_lvl_t& _cur_priv, TKnobMap& _outknobs)
             : d_getcallbackmap(_getcallbackmap), cur_priv(_cur_priv), outknobs(_outknobs)
         {
@@ -204,7 +205,7 @@ private:
     };
 
     template <typename T, typename TMap, typename TKnobMap>
-    struct properties_all_f : public std::unary_function<T, void> {
+    struct properties_all_f : public std::function<void(T)> {
         properties_all_f(QueryCallbackMap_t& _getcallbackmap,
                          const priv_lvl_t& _cur_priv,
                          GNURadio::KnobPropMap& _outknobs)
@@ -238,7 +239,7 @@ private:
     };
 
     template <class T, typename TMap, typename TKnobMap>
-    struct properties_f : public std::unary_function<T, void> {
+    struct properties_f : public std::function<void(T)> {
         properties_f(TMap& _getcallbackmap,
                      const priv_lvl_t& _cur_priv,
                      TKnobMap& _outknobs)
