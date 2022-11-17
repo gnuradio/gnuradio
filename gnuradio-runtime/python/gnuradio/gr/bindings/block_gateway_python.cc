@@ -168,17 +168,17 @@ void bind_block_gateway(py::module& m)
              py::arg("out_sig"))
 
         .def("add_item_tag",
-             (void (block_gateway::*)(unsigned int, const gr::tag_t&)) &
+             (void(block_gateway::*)(unsigned int, const gr::tag_t&)) &
                  block_gateway::_add_item_tag,
              py::arg("which_output"),
              py::arg("tag"))
 
         .def("add_item_tag",
-             (void (block_gateway::*)(unsigned int,
-                                      uint64_t,
-                                      const pmt::pmt_t&,
-                                      const pmt::pmt_t&,
-                                      const pmt::pmt_t&)) &
+             (void(block_gateway::*)(unsigned int,
+                                     uint64_t,
+                                     const pmt::pmt_t&,
+                                     const pmt::pmt_t&,
+                                     const pmt::pmt_t&)) &
                  block_gateway::_add_item_tag,
              py::arg("which_output"),
              py::arg("abs_offset"),

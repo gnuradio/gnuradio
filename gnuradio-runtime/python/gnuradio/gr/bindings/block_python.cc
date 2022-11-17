@@ -45,14 +45,14 @@ void bind_block(py::module& m)
 
 
         .def("declare_sample_delay",
-             (void (block::*)(int, unsigned int)) & block::declare_sample_delay,
+             (void(block::*)(int, unsigned int)) & block::declare_sample_delay,
              py::arg("which"),
              py::arg("delay"),
              D(block, declare_sample_delay, 0))
 
 
         .def("declare_sample_delay",
-             (void (block::*)(unsigned int)) & block::declare_sample_delay,
+             (void(block::*)(unsigned int)) & block::declare_sample_delay,
              py::arg("delay"),
              D(block, declare_sample_delay, 1))
 
@@ -143,7 +143,7 @@ void bind_block(py::module& m)
 
 
         .def("set_relative_rate",
-             (void (block::*)(double)) & block::set_relative_rate,
+             (void(block::*)(double)) & block::set_relative_rate,
              py::arg("relative_rate"),
              D(block, set_relative_rate, 0))
 
@@ -155,7 +155,7 @@ void bind_block(py::module& m)
 
 
         .def("set_relative_rate",
-             (void (block::*)(uint64_t, uint64_t)) & block::set_relative_rate,
+             (void(block::*)(uint64_t, uint64_t)) & block::set_relative_rate,
              py::arg("interpolation"),
              py::arg("decimation"),
              D(block, set_relative_rate, 1))
@@ -249,13 +249,13 @@ void bind_block(py::module& m)
 
 
         .def("set_max_output_buffer",
-             (void (block::*)(long int)) & block::set_max_output_buffer,
+             (void(block::*)(long int)) & block::set_max_output_buffer,
              py::arg("max_output_buffer"),
              D(block, set_max_output_buffer, 0))
 
 
         .def("set_max_output_buffer",
-             (void (block::*)(int, long int)) & block::set_max_output_buffer,
+             (void(block::*)(int, long int)) & block::set_max_output_buffer,
              py::arg("port"),
              py::arg("max_output_buffer"),
              D(block, set_max_output_buffer, 1))
@@ -268,13 +268,13 @@ void bind_block(py::module& m)
 
 
         .def("set_min_output_buffer",
-             (void (block::*)(long int)) & block::set_min_output_buffer,
+             (void(block::*)(long int)) & block::set_min_output_buffer,
              py::arg("min_output_buffer"),
              D(block, set_min_output_buffer, 0))
 
 
         .def("set_min_output_buffer",
-             (void (block::*)(int, long int)) & block::set_min_output_buffer,
+             (void(block::*)(int, long int)) & block::set_min_output_buffer,
              py::arg("port"),
              py::arg("min_output_buffer"),
              D(block, set_min_output_buffer, 1))
@@ -312,19 +312,19 @@ void bind_block(py::module& m)
 
 
         .def("pc_input_buffers_full",
-             (float (block::*)(int)) & block::pc_input_buffers_full,
+             (float(block::*)(int)) & block::pc_input_buffers_full,
              py::arg("which"),
              D(block, pc_input_buffers_full, 0))
 
 
         .def("pc_input_buffers_full_avg",
-             (float (block::*)(int)) & block::pc_input_buffers_full_avg,
+             (float(block::*)(int)) & block::pc_input_buffers_full_avg,
              py::arg("which"),
              D(block, pc_input_buffers_full_avg, 0))
 
 
         .def("pc_input_buffers_full_var",
-             (float (block::*)(int)) & block::pc_input_buffers_full_var,
+             (float(block::*)(int)) & block::pc_input_buffers_full_var,
              py::arg("which"),
              D(block, pc_input_buffers_full_var, 0))
 
@@ -348,19 +348,19 @@ void bind_block(py::module& m)
 
 
         .def("pc_output_buffers_full",
-             (float (block::*)(int)) & block::pc_output_buffers_full,
+             (float(block::*)(int)) & block::pc_output_buffers_full,
              py::arg("which"),
              D(block, pc_output_buffers_full, 0))
 
 
         .def("pc_output_buffers_full_avg",
-             (float (block::*)(int)) & block::pc_output_buffers_full_avg,
+             (float(block::*)(int)) & block::pc_output_buffers_full_avg,
              py::arg("which"),
              D(block, pc_output_buffers_full_avg, 0))
 
 
         .def("pc_output_buffers_full_var",
-             (float (block::*)(int)) & block::pc_output_buffers_full_var,
+             (float(block::*)(int)) & block::pc_output_buffers_full_var,
              py::arg("which"),
              D(block, pc_output_buffers_full_var, 0))
 
