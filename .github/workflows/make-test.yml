@@ -15,11 +15,12 @@ jobs:
     timeout-minutes: 15
     steps:
     - uses: actions/checkout@v2
-    - uses: gnuradio/clang-format-lint-action@v0.5-4
+    - uses: DoozyX/clang-format-lint-action@v0.14
       with:
         source: '.'
         exclude: './volk'
         extensions: 'h,hpp,cpp,cc,cc.in'
+        clangFormatVersion: 14
   check-python-formatting:
     name: Check Python Formatting
     runs-on: ubuntu-latest
