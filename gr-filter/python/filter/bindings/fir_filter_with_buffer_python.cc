@@ -45,14 +45,14 @@ void bind_fir_filter_with_buffer(py::module& m)
 
 
         .def("filter",
-             (float (fir_filter_with_buffer_fff::*)(float)) &
+             (float(fir_filter_with_buffer_fff::*)(float)) &
                  fir_filter_with_buffer_fff::filter,
              py::arg("input"),
              D(kernel, fir_filter_with_buffer_fff, filter, 0))
 
 
         .def("filter",
-             (float (fir_filter_with_buffer_fff::*)(float const*, long unsigned int)) &
+             (float(fir_filter_with_buffer_fff::*)(float const*, long unsigned int)) &
                  fir_filter_with_buffer_fff::filter,
              py::arg("input"),
              py::arg("dec"),
