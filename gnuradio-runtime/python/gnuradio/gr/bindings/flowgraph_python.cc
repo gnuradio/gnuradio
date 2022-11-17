@@ -43,7 +43,7 @@ void bind_flowgraph(py::module& m)
 
 
         .def("connect",
-             (void (flowgraph::*)(gr::endpoint const&, gr::endpoint const&)) &
+             (void(flowgraph::*)(gr::endpoint const&, gr::endpoint const&)) &
                  flowgraph::connect,
              py::arg("src"),
              py::arg("dst"),
@@ -51,7 +51,7 @@ void bind_flowgraph(py::module& m)
 
 
         .def("disconnect",
-             (void (flowgraph::*)(gr::endpoint const&, gr::endpoint const&)) &
+             (void(flowgraph::*)(gr::endpoint const&, gr::endpoint const&)) &
                  flowgraph::disconnect,
              py::arg("src"),
              py::arg("dst"),
@@ -59,7 +59,7 @@ void bind_flowgraph(py::module& m)
 
 
         .def("connect",
-             (void (flowgraph::*)(gr::basic_block_sptr, int, gr::basic_block_sptr, int)) &
+             (void(flowgraph::*)(gr::basic_block_sptr, int, gr::basic_block_sptr, int)) &
                  flowgraph::connect,
              py::arg("src_block"),
              py::arg("src_port"),
@@ -69,7 +69,7 @@ void bind_flowgraph(py::module& m)
 
 
         .def("disconnect",
-             (void (flowgraph::*)(gr::basic_block_sptr, int, gr::basic_block_sptr, int)) &
+             (void(flowgraph::*)(gr::basic_block_sptr, int, gr::basic_block_sptr, int)) &
                  flowgraph::disconnect,
              py::arg("src_block"),
              py::arg("src_port"),
@@ -79,7 +79,7 @@ void bind_flowgraph(py::module& m)
 
 
         .def("connect",
-             (void (flowgraph::*)(gr::msg_endpoint const&, gr::msg_endpoint const&)) &
+             (void(flowgraph::*)(gr::msg_endpoint const&, gr::msg_endpoint const&)) &
                  flowgraph::connect,
              py::arg("src"),
              py::arg("dst"),
@@ -87,7 +87,7 @@ void bind_flowgraph(py::module& m)
 
 
         .def("disconnect",
-             (void (flowgraph::*)(gr::msg_endpoint const&, gr::msg_endpoint const&)) &
+             (void(flowgraph::*)(gr::msg_endpoint const&, gr::msg_endpoint const&)) &
                  flowgraph::disconnect,
              py::arg("src"),
              py::arg("dst"),

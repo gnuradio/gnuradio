@@ -142,11 +142,11 @@ void bind_block_detail(py::module& m)
 
 
         .def("get_tags_in_range",
-             (void (block_detail::*)(std::vector<gr::tag_t, std::allocator<gr::tag_t>>&,
-                                     unsigned int,
-                                     uint64_t,
-                                     uint64_t,
-                                     long int)) &
+             (void(block_detail::*)(std::vector<gr::tag_t, std::allocator<gr::tag_t>>&,
+                                    unsigned int,
+                                    uint64_t,
+                                    uint64_t,
+                                    long int)) &
                  block_detail::get_tags_in_range,
              py::arg("v"),
              py::arg("which_input"),
@@ -157,12 +157,12 @@ void bind_block_detail(py::module& m)
 
 
         .def("get_tags_in_range",
-             (void (block_detail::*)(std::vector<gr::tag_t, std::allocator<gr::tag_t>>&,
-                                     unsigned int,
-                                     uint64_t,
-                                     uint64_t,
-                                     pmt::pmt_t const&,
-                                     long int)) &
+             (void(block_detail::*)(std::vector<gr::tag_t, std::allocator<gr::tag_t>>&,
+                                    unsigned int,
+                                    uint64_t,
+                                    uint64_t,
+                                    pmt::pmt_t const&,
+                                    long int)) &
                  block_detail::get_tags_in_range,
              py::arg("v"),
              py::arg("which_input"),
@@ -221,7 +221,7 @@ void bind_block_detail(py::module& m)
 
 
         .def("pc_input_buffers_full",
-             (float (block_detail::*)(size_t)) & block_detail::pc_input_buffers_full,
+             (float(block_detail::*)(size_t)) & block_detail::pc_input_buffers_full,
              py::arg("which"),
              D(block_detail, pc_input_buffers_full, 0))
 
@@ -233,7 +233,7 @@ void bind_block_detail(py::module& m)
 
 
         .def("pc_output_buffers_full",
-             (float (block_detail::*)(size_t)) & block_detail::pc_output_buffers_full,
+             (float(block_detail::*)(size_t)) & block_detail::pc_output_buffers_full,
              py::arg("which"),
              D(block_detail, pc_output_buffers_full, 0))
 
@@ -258,7 +258,7 @@ void bind_block_detail(py::module& m)
 
 
         .def("pc_input_buffers_full_avg",
-             (float (block_detail::*)(size_t)) & block_detail::pc_input_buffers_full_avg,
+             (float(block_detail::*)(size_t)) & block_detail::pc_input_buffers_full_avg,
              py::arg("which"),
              D(block_detail, pc_input_buffers_full_avg, 0))
 
@@ -270,7 +270,7 @@ void bind_block_detail(py::module& m)
 
 
         .def("pc_output_buffers_full_avg",
-             (float (block_detail::*)(size_t)) & block_detail::pc_output_buffers_full_avg,
+             (float(block_detail::*)(size_t)) & block_detail::pc_output_buffers_full_avg,
              py::arg("which"),
              D(block_detail, pc_output_buffers_full_avg, 0))
 
@@ -302,7 +302,7 @@ void bind_block_detail(py::module& m)
 
 
         .def("pc_input_buffers_full_var",
-             (float (block_detail::*)(size_t)) & block_detail::pc_input_buffers_full_var,
+             (float(block_detail::*)(size_t)) & block_detail::pc_input_buffers_full_var,
              py::arg("which"),
              D(block_detail, pc_input_buffers_full_var, 0))
 
@@ -314,7 +314,7 @@ void bind_block_detail(py::module& m)
 
 
         .def("pc_output_buffers_full_var",
-             (float (block_detail::*)(size_t)) & block_detail::pc_output_buffers_full_var,
+             (float(block_detail::*)(size_t)) & block_detail::pc_output_buffers_full_var,
              py::arg("which"),
              D(block_detail, pc_output_buffers_full_var, 0))
 

@@ -52,14 +52,14 @@ void bind_fxpt_vco(py::module& m)
 
 
         .def("sincos",
-             (void (fxpt_vco::*)(float*, float*) const) & fxpt_vco::sincos,
+             (void(fxpt_vco::*)(float*, float*) const) & fxpt_vco::sincos,
              py::arg("sinx"),
              py::arg("cosx"),
              D(fxpt_vco, sincos, 0))
 
 
         .def("sincos",
-             (void (fxpt_vco::*)(gr_complex*, float const*, int, float, float)) &
+             (void(fxpt_vco::*)(gr_complex*, float const*, int, float, float)) &
                  fxpt_vco::sincos,
              py::arg("output"),
              py::arg("input"),
@@ -70,8 +70,7 @@ void bind_fxpt_vco(py::module& m)
 
 
         .def("cos",
-             (void (fxpt_vco::*)(float*, float const*, int, float, float)) &
-                 fxpt_vco::cos,
+             (void(fxpt_vco::*)(float*, float const*, int, float, float)) & fxpt_vco::cos,
              py::arg("output"),
              py::arg("input"),
              py::arg("noutput_items"),
@@ -80,7 +79,7 @@ void bind_fxpt_vco(py::module& m)
              D(fxpt_vco, cos, 0))
 
 
-        .def("cos", (float (fxpt_vco::*)() const) & fxpt_vco::cos, D(fxpt_vco, cos, 1))
+        .def("cos", (float(fxpt_vco::*)() const) & fxpt_vco::cos, D(fxpt_vco, cos, 1))
 
 
         .def("sin", &fxpt_vco::sin, D(fxpt_vco, sin))
