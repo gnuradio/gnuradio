@@ -245,14 +245,14 @@ void bind_time_sink_c(py::module& m)
 
 
         .def("enable_tags",
-             (void (time_sink_c::*)(unsigned int, bool)) & time_sink_c::enable_tags,
+             (void(time_sink_c::*)(unsigned int, bool)) & time_sink_c::enable_tags,
              py::arg("which"),
              py::arg("en"),
              D(time_sink_c, enable_tags, 0))
 
 
         .def("enable_tags",
-             (void (time_sink_c::*)(bool)) & time_sink_c::enable_tags,
+             (void(time_sink_c::*)(bool)) & time_sink_c::enable_tags,
              py::arg("en"),
              D(time_sink_c, enable_tags, 1))
 

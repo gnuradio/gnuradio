@@ -81,18 +81,18 @@ void bind_number_sink(py::module& m)
              D(number_sink, set_graph_type))
 
 
-        .def("set_color",
-             (void (number_sink::*)(
-                 unsigned int, std::string const&, std::string const&)) &
-                 number_sink::set_color,
-             py::arg("which"),
-             py::arg("min"),
-             py::arg("max"),
-             D(number_sink, set_color, 0))
+        .def(
+            "set_color",
+            (void(number_sink::*)(unsigned int, std::string const&, std::string const&)) &
+                number_sink::set_color,
+            py::arg("which"),
+            py::arg("min"),
+            py::arg("max"),
+            D(number_sink, set_color, 0))
 
 
         .def("set_color",
-             (void (number_sink::*)(unsigned int, int, int)) & number_sink::set_color,
+             (void(number_sink::*)(unsigned int, int, int)) & number_sink::set_color,
              py::arg("which"),
              py::arg("min"),
              py::arg("max"),

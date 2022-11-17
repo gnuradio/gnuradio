@@ -58,11 +58,11 @@ void bind_fxpt_nco(py::module& m)
              D(fxpt_nco, adjust_freq))
 
 
-        .def("step", (void (fxpt_nco::*)()) & fxpt_nco::step, D(fxpt_nco, step, 0))
+        .def("step", (void(fxpt_nco::*)()) & fxpt_nco::step, D(fxpt_nco, step, 0))
 
 
         .def("step",
-             (void (fxpt_nco::*)(int)) & fxpt_nco::step,
+             (void(fxpt_nco::*)(int)) & fxpt_nco::step,
              py::arg("n"),
              D(fxpt_nco, step, 1))
 
@@ -74,14 +74,14 @@ void bind_fxpt_nco(py::module& m)
 
 
         .def("sincos",
-             (void (fxpt_nco::*)(float*, float*) const) & fxpt_nco::sincos,
+             (void(fxpt_nco::*)(float*, float*) const) & fxpt_nco::sincos,
              py::arg("sinx"),
              py::arg("cosx"),
              D(fxpt_nco, sincos, 0))
 
 
         .def("sincos",
-             (void (fxpt_nco::*)(gr_complex*, int, double)) & fxpt_nco::sincos,
+             (void(fxpt_nco::*)(gr_complex*, int, double)) & fxpt_nco::sincos,
              py::arg("output"),
              py::arg("noutput_items"),
              py::arg("ampl") = 1.,
@@ -89,7 +89,7 @@ void bind_fxpt_nco(py::module& m)
 
 
         .def("sin",
-             (void (fxpt_nco::*)(float*, int, double)) & fxpt_nco::sin,
+             (void(fxpt_nco::*)(float*, int, double)) & fxpt_nco::sin,
              py::arg("output"),
              py::arg("noutput_items"),
              py::arg("ampl") = 1.,
@@ -97,7 +97,7 @@ void bind_fxpt_nco(py::module& m)
 
 
         .def("cos",
-             (void (fxpt_nco::*)(float*, int, double)) & fxpt_nco::cos,
+             (void(fxpt_nco::*)(float*, int, double)) & fxpt_nco::cos,
              py::arg("output"),
              py::arg("noutput_items"),
              py::arg("ampl") = 1.,
@@ -105,7 +105,7 @@ void bind_fxpt_nco(py::module& m)
 
 
         .def("sin",
-             (void (fxpt_nco::*)(int8_t*, int, double)) & fxpt_nco::sin,
+             (void(fxpt_nco::*)(int8_t*, int, double)) & fxpt_nco::sin,
              py::arg("output"),
              py::arg("noutput_items"),
              py::arg("ampl") = 1.,
@@ -113,7 +113,7 @@ void bind_fxpt_nco(py::module& m)
 
 
         .def("cos",
-             (void (fxpt_nco::*)(int8_t*, int, double)) & fxpt_nco::cos,
+             (void(fxpt_nco::*)(int8_t*, int, double)) & fxpt_nco::cos,
              py::arg("output"),
              py::arg("noutput_items"),
              py::arg("ampl") = 1.,
@@ -121,7 +121,7 @@ void bind_fxpt_nco(py::module& m)
 
 
         .def("sin",
-             (void (fxpt_nco::*)(short int*, int, double)) & fxpt_nco::sin,
+             (void(fxpt_nco::*)(short int*, int, double)) & fxpt_nco::sin,
              py::arg("output"),
              py::arg("noutput_items"),
              py::arg("ampl") = 1.,
@@ -129,7 +129,7 @@ void bind_fxpt_nco(py::module& m)
 
 
         .def("cos",
-             (void (fxpt_nco::*)(short int*, int, double)) & fxpt_nco::cos,
+             (void(fxpt_nco::*)(short int*, int, double)) & fxpt_nco::cos,
              py::arg("output"),
              py::arg("noutput_items"),
              py::arg("ampl") = 1.,
@@ -137,7 +137,7 @@ void bind_fxpt_nco(py::module& m)
 
 
         .def("sin",
-             (void (fxpt_nco::*)(int*, int, double)) & fxpt_nco::sin,
+             (void(fxpt_nco::*)(int*, int, double)) & fxpt_nco::sin,
              py::arg("output"),
              py::arg("noutput_items"),
              py::arg("ampl") = 1.,
@@ -145,17 +145,17 @@ void bind_fxpt_nco(py::module& m)
 
 
         .def("cos",
-             (void (fxpt_nco::*)(int*, int, double)) & fxpt_nco::cos,
+             (void(fxpt_nco::*)(int*, int, double)) & fxpt_nco::cos,
              py::arg("output"),
              py::arg("noutput_items"),
              py::arg("ampl") = 1.,
              D(fxpt_nco, cos, 3))
 
 
-        .def("cos", (float (fxpt_nco::*)() const) & fxpt_nco::cos, D(fxpt_nco, cos, 4))
+        .def("cos", (float(fxpt_nco::*)() const) & fxpt_nco::cos, D(fxpt_nco, cos, 4))
 
 
-        .def("sin", (float (fxpt_nco::*)() const) & fxpt_nco::sin, D(fxpt_nco, sin, 4))
+        .def("sin", (float(fxpt_nco::*)() const) & fxpt_nco::sin, D(fxpt_nco, sin, 4))
 
         ;
 }
