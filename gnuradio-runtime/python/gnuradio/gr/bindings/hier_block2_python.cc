@@ -44,19 +44,19 @@ void bind_hier_block2(py::module& m)
 
         .def("self", &hier_block2::self)
         .def("primitive_connect",
-             (void (hier_block2::*)(gr::basic_block_sptr)) & hier_block2::connect,
+             (void(hier_block2::*)(gr::basic_block_sptr)) & hier_block2::connect,
              py::arg("block"))
-        .def("primitive_connect",
-             (void (hier_block2::*)(
-                 gr::basic_block_sptr, int, gr::basic_block_sptr, int)) &
-                 hier_block2::connect,
-             py::arg("src"),
-             py::arg("src_port"),
-             py::arg("dst"),
-             py::arg("dst_port"),
-             D(hier_block2, connect, 1))
+        .def(
+            "primitive_connect",
+            (void(hier_block2::*)(gr::basic_block_sptr, int, gr::basic_block_sptr, int)) &
+                hier_block2::connect,
+            py::arg("src"),
+            py::arg("src_port"),
+            py::arg("dst"),
+            py::arg("dst_port"),
+            D(hier_block2, connect, 1))
         .def("primitive_msg_connect",
-             (void (hier_block2::*)(
+             (void(hier_block2::*)(
                  gr::basic_block_sptr, pmt::pmt_t, gr::basic_block_sptr, pmt::pmt_t)) &
                  hier_block2::msg_connect,
              py::arg("src"),
@@ -65,7 +65,7 @@ void bind_hier_block2(py::module& m)
              py::arg("dstport"),
              D(hier_block2, msg_connect, 0))
         .def("primitive_msg_connect",
-             (void (hier_block2::*)(
+             (void(hier_block2::*)(
                  gr::basic_block_sptr, std::string, gr::basic_block_sptr, std::string)) &
                  hier_block2::msg_connect,
              py::arg("src"),
@@ -74,7 +74,7 @@ void bind_hier_block2(py::module& m)
              py::arg("dstport"),
              D(hier_block2, msg_connect, 1))
         .def("primitive_msg_disconnect",
-             (void (hier_block2::*)(
+             (void(hier_block2::*)(
                  gr::basic_block_sptr, pmt::pmt_t, gr::basic_block_sptr, pmt::pmt_t)) &
                  hier_block2::msg_disconnect,
              py::arg("src"),
@@ -83,7 +83,7 @@ void bind_hier_block2(py::module& m)
              py::arg("dstport"),
              D(hier_block2, msg_disconnect, 0))
         .def("primitive_msg_disconnect",
-             (void (hier_block2::*)(
+             (void(hier_block2::*)(
                  gr::basic_block_sptr, std::string, gr::basic_block_sptr, std::string)) &
                  hier_block2::msg_disconnect,
              py::arg("src"),
@@ -92,18 +92,18 @@ void bind_hier_block2(py::module& m)
              py::arg("dstport"),
              D(hier_block2, msg_disconnect, 1))
         .def("primitive_disconnect",
-             (void (hier_block2::*)(gr::basic_block_sptr)) & hier_block2::disconnect,
+             (void(hier_block2::*)(gr::basic_block_sptr)) & hier_block2::disconnect,
              py::arg("block"),
              D(hier_block2, disconnect, 0))
-        .def("primitive_disconnect",
-             (void (hier_block2::*)(
-                 gr::basic_block_sptr, int, gr::basic_block_sptr, int)) &
-                 hier_block2::disconnect,
-             py::arg("src"),
-             py::arg("src_port"),
-             py::arg("dst"),
-             py::arg("dst_port"),
-             D(hier_block2, disconnect, 1))
+        .def(
+            "primitive_disconnect",
+            (void(hier_block2::*)(gr::basic_block_sptr, int, gr::basic_block_sptr, int)) &
+                hier_block2::disconnect,
+            py::arg("src"),
+            py::arg("src_port"),
+            py::arg("dst"),
+            py::arg("dst_port"),
+            D(hier_block2, disconnect, 1))
 
 
         .def("disconnect_all",
@@ -122,11 +122,11 @@ void bind_hier_block2(py::module& m)
              py::arg("port") = 0,
              D(hier_block2, max_output_buffer))
         .def("set_max_output_buffer",
-             (void (hier_block2::*)(int)) & hier_block2::set_max_output_buffer,
+             (void(hier_block2::*)(int)) & hier_block2::set_max_output_buffer,
              py::arg("max_output_buffer"),
              D(hier_block2, set_max_output_buffer, 0))
         .def("set_max_output_buffer",
-             (void (hier_block2::*)(size_t, int)) & hier_block2::set_max_output_buffer,
+             (void(hier_block2::*)(size_t, int)) & hier_block2::set_max_output_buffer,
              py::arg("port"),
              py::arg("max_output_buffer"),
              D(hier_block2, set_max_output_buffer, 1))
@@ -135,11 +135,11 @@ void bind_hier_block2(py::module& m)
              py::arg("port") = 0,
              D(hier_block2, min_output_buffer))
         .def("set_min_output_buffer",
-             (void (hier_block2::*)(int)) & hier_block2::set_min_output_buffer,
+             (void(hier_block2::*)(int)) & hier_block2::set_min_output_buffer,
              py::arg("min_output_buffer"),
              D(hier_block2, set_min_output_buffer, 0))
         .def("set_min_output_buffer",
-             (void (hier_block2::*)(size_t, int)) & hier_block2::set_min_output_buffer,
+             (void(hier_block2::*)(size_t, int)) & hier_block2::set_min_output_buffer,
              py::arg("port"),
              py::arg("min_output_buffer"),
              D(hier_block2, set_min_output_buffer, 1))

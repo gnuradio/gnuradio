@@ -242,14 +242,14 @@ void bind_eye_sink_c(py::module& m)
 
 
         .def("enable_tags",
-             (void (eye_sink_c::*)(unsigned int, bool)) & eye_sink_c::enable_tags,
+             (void(eye_sink_c::*)(unsigned int, bool)) & eye_sink_c::enable_tags,
              py::arg("which"),
              py::arg("en"),
              D(eye_sink_c, enable_tags, 0))
 
 
         .def("enable_tags",
-             (void (eye_sink_c::*)(bool)) & eye_sink_c::enable_tags,
+             (void(eye_sink_c::*)(bool)) & eye_sink_c::enable_tags,
              py::arg("en"),
              D(eye_sink_c, enable_tags, 1))
 

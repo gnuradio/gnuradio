@@ -75,21 +75,20 @@ void bind_rfnoc_tx_radio(py::module& m)
 
 
         .def("set_gain",
-             (double (rfnoc_tx_radio::*)(double const, size_t const)) &
+             (double(rfnoc_tx_radio::*)(double const, size_t const)) &
                  rfnoc_tx_radio::set_gain,
              py::arg("gain"),
              py::arg("chan"),
              D(rfnoc_tx_radio, set_gain, 0))
 
 
-        .def(
-            "set_gain",
-            (double (rfnoc_tx_radio::*)(double const, std::string const&, size_t const)) &
-                rfnoc_tx_radio::set_gain,
-            py::arg("gain"),
-            py::arg("name"),
-            py::arg("chan"),
-            D(rfnoc_tx_radio, set_gain, 1))
+        .def("set_gain",
+             (double(rfnoc_tx_radio::*)(double const, std::string const&, size_t const)) &
+                 rfnoc_tx_radio::set_gain,
+             py::arg("gain"),
+             py::arg("name"),
+             py::arg("chan"),
+             D(rfnoc_tx_radio, set_gain, 1))
 
 
         .def("set_gain_profile",

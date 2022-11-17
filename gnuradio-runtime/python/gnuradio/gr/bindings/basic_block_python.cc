@@ -157,24 +157,24 @@ void bind_basic_block(py::module& m)
 
 
         .def("empty_p",
-             (bool (basic_block::*)(pmt::pmt_t)) & basic_block::empty_p,
+             (bool(basic_block::*)(pmt::pmt_t)) & basic_block::empty_p,
              py::arg("which_port"),
              D(basic_block, empty_p, 0))
 
 
         .def("empty_p",
-             (bool (basic_block::*)()) & basic_block::empty_p,
+             (bool(basic_block::*)()) & basic_block::empty_p,
              D(basic_block, empty_p, 1))
 
 
         .def("empty_handled_p",
-             (bool (basic_block::*)(pmt::pmt_t)) & basic_block::empty_handled_p,
+             (bool(basic_block::*)(pmt::pmt_t)) & basic_block::empty_handled_p,
              py::arg("which_port"),
              D(basic_block, empty_handled_p, 0))
 
 
         .def("empty_handled_p",
-             (bool (basic_block::*)()) & basic_block::empty_handled_p,
+             (bool(basic_block::*)()) & basic_block::empty_handled_p,
              D(basic_block, empty_handled_p, 1))
 
 
