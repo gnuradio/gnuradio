@@ -54,9 +54,9 @@ class qa_zeromq_pubsub (gr_unittest.TestCase):
         self.send_tb.connect(src, zeromq_pub_sink)
         self.recv_tb.connect(zeromq_sub_source, sink)
         self.recv_tb.start()
-        time.sleep(0.5)
+        time.sleep(1.0)
         self.send_tb.start()
-        time.sleep(0.5)
+        time.sleep(1.0)
         self.recv_tb.stop()
         self.send_tb.stop()
         self.recv_tb.wait()
@@ -88,9 +88,9 @@ class qa_zeromq_pubsub (gr_unittest.TestCase):
 
         # start both flowgraphs
         self.recv_tb.start()
-        time.sleep(0.5)
+        time.sleep(1.0)
         self.send_tb.start()
-        time.sleep(0.5)
+        time.sleep(1.0)
         self.recv_tb.stop()
         self.send_tb.stop()
         self.recv_tb.wait()
