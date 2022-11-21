@@ -76,7 +76,7 @@ auto testNewAPI(Buffer auto& buffer,
     std::vector<std::jthread> producers;
     for (auto i = 0U; i < nProducer; i++) {
         producers.emplace_back([&]() {
-            BufferWriter auto writer = buffer.newWriterInstance();
+            BufferWriter auto writer = buffer.new_writer();
             // set thread affinity
             setCpuAffinity(threadID++);
             startMark.arrive_and_wait();
@@ -93,7 +93,7 @@ auto testNewAPI(Buffer auto& buffer,
     std::vector<std::jthread> consumers;
     for (auto i = 0U; i < nConsumer; i++) {
         consumers.emplace_back([&]() {
-            BufferReader auto reader = buffer.newReaderInstance();
+            BufferReader auto reader = buffer.new_reader();
             setCpuAffinity(threadID++);
             startMark.arrive_and_wait();
             std::size_t nSamplesConsumed = 0;

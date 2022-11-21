@@ -161,6 +161,8 @@ inline bool removeSequence(std::shared_ptr<std::vector<std::shared_ptr<Sequence>
 } // namespace gr
 
 #ifdef FMT_FORMAT_H_
+#include <fmt/core.h>
+#include <fmt/ostream.h>
 
 template <>
 struct fmt::formatter<gr::Sequence> {

@@ -42,16 +42,16 @@ static constexpr bool has_posix_mmap_interface = false;
 namespace gr {
 
 namespace util {
-constexpr int round_up(int numToRound, int multiple) noexcept
+constexpr int round_up(int num_to_round, int multiple) noexcept
 {
     if (multiple == 0) {
-        return numToRound;
+        return num_to_round;
     }
-    const int remainder = numToRound % multiple;
+    const int remainder = num_to_round % multiple;
     if (remainder == 0) {
-        return numToRound;
+        return num_to_round;
     }
-    return numToRound + multiple - remainder;
+    return num_to_round + multiple - remainder;
 }
 } // namespace util
 
@@ -163,13 +163,13 @@ public:
  *
  * for more details see
  */
-template <typename T, std::size_t SIZE = std::dynamic_extent, ProducerType producerType = ProducerType::Single, WaitStrategy WAIT_STRATEGY = SleepingWaitStrategy>
+template <typename T, std::size_t SIZE = std::dynamic_extent, ProducerType producer_type = ProducerType::Single, WaitStrategy WAIT_STRATEGY = SleepingWaitStrategy>
 requires util::is_power2_v<sizeof(T)>
 class buffer_host
 {
     using Allocator         = std::pmr::polymorphic_allocator<T>;
-    using BufferType        = buffer_host<T, SIZE, producerType, WAIT_STRATEGY>;
-    using ClaimType         = detail::producer_type_v<SIZE, producerType, WAIT_STRATEGY>;
+    using BufferType        = buffer_host<T, SIZE, producer_type, WAIT_STRATEGY>;
+    using ClaimType         = detail::producer_type_v<SIZE, producer_type, WAIT_STRATEGY>;
     using DependendsType    = std::shared_ptr<std::vector<std::shared_ptr<Sequence>>>;
 
     struct buffer_impl {
@@ -178,21 +178,21 @@ class buffer_host
         alignas(kCacheLine) const std::size_t           _size;
         alignas(kCacheLine) std::vector<T, Allocator>   _data;
         alignas(kCacheLine) Sequence                    _cursor;
-        alignas(kCacheLine) WAIT_STRATEGY               _waitStrategy = WAIT_STRATEGY();
-        alignas(kCacheLine) ClaimType                   _claimStrategy;
+        alignas(kCacheLine) WAIT_STRATEGY               _wait_strategy = WAIT_STRATEGY();
+        alignas(kCacheLine) ClaimType                   _claim_strategy;
         // list of dependent reader indices
-        alignas(kCacheLine) DependendsType              _readIndices{ std::make_shared<std::vector<std::shared_ptr<Sequence>>>() };
+        alignas(kCacheLine) DependendsType              _read_indices{ std::make_shared<std::vector<std::shared_ptr<Sequence>>>() };
 
         buffer_impl() = delete;
         buffer_impl(const std::size_t min_size, Allocator allocator) : _allocator(allocator), _is_mmap_allocated(dynamic_cast<double_mapped_memory_resource *>(_allocator.resource())),
-            _size(alignWithPageSize(min_size, _is_mmap_allocated)), _data(bufferSize(_size, _is_mmap_allocated), _allocator), _claimStrategy(ClaimType(_cursor, _waitStrategy, _size)) {
+            _size(align_with_page_size(min_size, _is_mmap_allocated)), _data(buffer_size(_size, _is_mmap_allocated), _allocator), _claim_strategy(ClaimType(_cursor, _wait_strategy, _size)) {
         }
 
-        static std::size_t alignWithPageSize(const std::size_t min_size, bool _is_mmap_allocated) {
+        static std::size_t align_with_page_size(const std::size_t min_size, bool _is_mmap_allocated) {
             return _is_mmap_allocated ? util::round_up(min_size * sizeof(T), getpagesize()) / sizeof(T) : min_size;
         }
 
-        static std::size_t bufferSize(const std::size_t size, bool _is_mmap_allocated) {
+        static std::size_t buffer_size(const std::size_t size, bool _is_mmap_allocated) {
             // double-mmaped behaviour requires the different size/alloc strategy
             // i.e. the second buffer half may not default-constructed as it's identical to the first one
             // and would result in a double dealloc during the default destruction
@@ -201,39 +201,39 @@ class buffer_host
     };
 
     template <typename U = T>
-    class buffer_host_writer {
+    class buffer_writer {
         using BufferType = std::shared_ptr<buffer_impl>;
 
         alignas(kCacheLine) BufferType                  _buffer; // controls buffer life-cycle, the rest are cache optimisations
         alignas(kCacheLine) const bool                  _is_mmap_allocated;
-        alignas(kCacheLine) DependendsType&             _readIndices;
+        alignas(kCacheLine) DependendsType&             _read_indices;
         alignas(kCacheLine) const std::size_t           _size;
         alignas(kCacheLine) std::vector<U, Allocator>&  _data;
-        alignas(kCacheLine) ClaimType&                  _claimStrategy;
+        alignas(kCacheLine) ClaimType&                  _claim_strategy;
 
     public:
-        buffer_host_writer() = delete;
-        buffer_host_writer(std::shared_ptr<buffer_impl> buffer) :
-            _buffer(buffer), _is_mmap_allocated(_buffer->_is_mmap_allocated), _readIndices(buffer->_readIndices),
-            _size(buffer->_size), _data(buffer->_data), _claimStrategy(buffer->_claimStrategy) { };
+        buffer_writer() = delete;
+        buffer_writer(std::shared_ptr<buffer_impl> buffer) :
+            _buffer(buffer), _is_mmap_allocated(_buffer->_is_mmap_allocated), _read_indices(buffer->_read_indices),
+            _size(buffer->_size), _data(buffer->_data), _claim_strategy(buffer->_claim_strategy) { };
 
         template <typename... Args, WriterCallback<U, Args...> Translator>
         constexpr void publish(Translator&& translator, std::size_t n_slots_to_claim = 1, Args&&... args) {
-            if (n_slots_to_claim <= 0 || _readIndices->empty()) {
+            if (n_slots_to_claim <= 0 || _read_indices->empty()) {
                 return;
             }
-            const auto sequence = _claimStrategy.next(*_readIndices, n_slots_to_claim);
-            translateAndPublish(std::forward<Translator>(translator), n_slots_to_claim, sequence, std::forward<Args>(args)...);
+            const auto sequence = _claim_strategy.next(*_read_indices, n_slots_to_claim);
+            translate_and_publish(std::forward<Translator>(translator), n_slots_to_claim, sequence, std::forward<Args>(args)...);
         }; // blocks until elements are available
 
         template <typename... Args, WriterCallback<U, Args...> Translator>
-        constexpr bool tryPublish(Translator&& translator, std::size_t n_slots_to_claim = 1, Args&&... args) {
-            if (n_slots_to_claim <= 0 || _readIndices->empty()) {
+        constexpr bool try_publish(Translator&& translator, std::size_t n_slots_to_claim = 1, Args&&... args) {
+            if (n_slots_to_claim <= 0 || _read_indices->empty()) {
                 return true;
             }
             try {
-                const auto sequence = _claimStrategy.tryNext(*_readIndices, n_slots_to_claim);
-                translateAndPublish(std::forward<Translator>(translator), n_slots_to_claim, sequence, std::forward<Args>(args)...);
+                const auto sequence = _claim_strategy.tryNext(*_read_indices, n_slots_to_claim);
+                translate_and_publish(std::forward<Translator>(translator), n_slots_to_claim, sequence, std::forward<Args>(args)...);
                 return true;
             } catch (const NoCapacityException &) {
                 return false;
@@ -241,19 +241,19 @@ class buffer_host
         };
 
         [[nodiscard]] constexpr std::size_t available() const noexcept {
-            return _claimStrategy.getRemainingCapacity(*_readIndices);
+            return _claim_strategy.getRemainingCapacity(*_read_indices);
         }
 
         private:
         template <typename... Args, WriterCallback<U, Args...> Translator>
-        constexpr void translateAndPublish(Translator&& translator, const std::size_t n_slots_to_claim, const std::int64_t publishSequence, const Args&... args) {
+        constexpr void translate_and_publish(Translator&& translator, const std::size_t n_slots_to_claim, const std::int64_t publishSequence, const Args&... args) {
             try {
                 const auto index = (publishSequence + _size - n_slots_to_claim) % _size;
-                std::span<U> writableData = { &_data[index], n_slots_to_claim };
+                std::span<U> writable_data = { &_data[index], n_slots_to_claim };
                 if constexpr (std::is_invocable<Translator, std::span<T>&, std::int64_t, Args...>::value) {
-                    std::invoke(std::forward<Translator>(translator), std::forward<std::span<T>&>(writableData), publishSequence - n_slots_to_claim, args...);
+                    std::invoke(std::forward<Translator>(translator), std::forward<std::span<T>&>(writable_data), publishSequence - n_slots_to_claim, args...);
                 } else {
-                    std::invoke(std::forward<Translator>(translator), std::forward<std::span<T>&>(writableData), args...);
+                    std::invoke(std::forward<Translator>(translator), std::forward<std::span<T>&>(writable_data), args...);
                 }
 
                 if (!_is_mmap_allocated) {
@@ -264,45 +264,45 @@ class buffer_host
                     std::copy(&_data[index], &_data[index + nFirstHalf], &_data[index+ _size]);
                     std::copy(&_data[_size],  &_data[_size + nSecondHalf], &_data[0]);
                 }
-                _claimStrategy.publish(publishSequence); // points at first non-writable index
+                _claim_strategy.publish(publishSequence); // points at first non-writable index
             } catch (const std::exception& e) {
                 throw (e);
             } catch (...) {
-                throw std::runtime_error("buffer_host::translateAndPublish() - unknown user exception thrown");
+                throw std::runtime_error("buffer_host::translate_and_publish() - unknown user exception thrown");
             }
         }
     };
 
     template<typename U = T>
-    class buffer_host_reader
+    class buffer_reader
     {
         using BufferType = std::shared_ptr<buffer_impl>;
 
-        alignas(kCacheLine) std::shared_ptr<Sequence>   _readIndex = std::make_shared<Sequence>();
-        alignas(kCacheLine) Sequence&                   _readIndexRef;
-        alignas(kCacheLine) std::int64_t                _readIndexCached;
+        alignas(kCacheLine) std::shared_ptr<Sequence>   _read_index = std::make_shared<Sequence>();
+        alignas(kCacheLine) Sequence&                   _read_index_ref;
+        alignas(kCacheLine) std::int64_t                _read_index_cached;
         alignas(kCacheLine) BufferType                  _buffer; // controls buffer life-cycle, the rest are cache optimisations
         alignas(kCacheLine) const std::size_t           _size;
         alignas(kCacheLine) std::vector<U, Allocator>&  _data;
-        alignas(kCacheLine) Sequence&                   _cursorRef;
+        alignas(kCacheLine) Sequence&                   _cursor_ref;
 
     public:
-        buffer_host_reader() = delete;
-        buffer_host_reader(std::shared_ptr<buffer_impl> buffer) : _readIndexRef(*_readIndex),
-            _buffer(buffer), _size(buffer->_size), _data(buffer->_data), _cursorRef(buffer->_cursor) {
-            gr::detail::addSequences(_buffer->_readIndices, _buffer->_cursor, {_readIndex});
-            _readIndexCached = _readIndex->value();
+        buffer_reader() = delete;
+        buffer_reader(std::shared_ptr<buffer_impl> buffer) : _read_index_ref(*_read_index),
+            _buffer(buffer), _size(buffer->_size), _data(buffer->_data), _cursor_ref(buffer->_cursor) {
+            gr::detail::addSequences(_buffer->_read_indices, _buffer->_cursor, {_read_index});
+            _read_index_cached = _read_index->value();
         }
-        ~buffer_host_reader() { gr::detail::removeSequence( _buffer->_readIndices, _readIndex); }
+        ~buffer_reader() { gr::detail::removeSequence( _buffer->_read_indices, _read_index); }
 
         template <bool strict_check = true>
         [[nodiscard]] constexpr std::span<const U> get(const std::size_t n_requested = 0) const noexcept {
             if constexpr (strict_check) {
                 const std::size_t n = n_requested > 0 ? std::min(n_requested, available()) : available();
-                return { &_data[_readIndexCached % _size], n };
+                return { &_data[_read_index_cached % _size], n };
             }
             const std::size_t n = n_requested > 0 ? n_requested : available();
-            return { &_data[_readIndexCached % _size], n };
+            return { &_data[_read_index_cached % _size], n };
         }
 
         template <bool strict_check = true>
@@ -315,14 +315,14 @@ class buffer_host
                     return false;
                 }
             }
-            _readIndexCached = _readIndexRef.addAndGet(n_elements);
+            _read_index_cached = _read_index_ref.addAndGet(n_elements);
             return true;
         }
 
-        [[nodiscard]] constexpr std::int64_t position() const noexcept { return _readIndexCached; }
+        [[nodiscard]] constexpr std::int64_t position() const noexcept { return _read_index_cached; }
 
         [[nodiscard]] constexpr std::size_t available() const noexcept {
-            return _cursorRef.value() - _readIndexCached;
+            return _cursor_ref.value() - _read_index_cached;
         }
     };
 
@@ -343,14 +343,14 @@ public:
     ~buffer_host() = default;
 
     [[nodiscard]] std::size_t       size() const noexcept { return _shared_buffer_ptr->_size; }
-    [[nodiscard]] BufferWriter auto newWriterInstance() { return buffer_host_writer<T>(_shared_buffer_ptr); }
-    [[nodiscard]] BufferReader auto newReaderInstance() { return buffer_host_reader<T>(_shared_buffer_ptr); }
+    [[nodiscard]] BufferWriter auto new_writer() { return buffer_writer<T>(_shared_buffer_ptr); }
+    [[nodiscard]] BufferReader auto new_reader() { return buffer_reader<T>(_shared_buffer_ptr); }
 
     // implementation specific interface -- not part of public Buffer / production-code API
-    [[nodiscard]] auto nReaders()       { return _shared_buffer_ptr->_readIndices->size(); }
-    [[nodiscard]] auto claimStrategy()  { return _shared_buffer_ptr->_claimStrategy; }
-    [[nodiscard]] auto waitStrategy()   { return _shared_buffer_ptr->_waitStrategy; }
-    [[nodiscard]] auto cursorSequence() { return _shared_buffer_ptr->_cursor; }
+    [[nodiscard]] auto n_readers()       { return _shared_buffer_ptr->_read_indices->size(); }
+    [[nodiscard]] auto claim_strategy()  { return _shared_buffer_ptr->_claim_strategy; }
+    [[nodiscard]] auto wait_strategy()   { return _shared_buffer_ptr->_wait_strategy; }
+    [[nodiscard]] auto cursor_sequence() { return _shared_buffer_ptr->_cursor; }
 
 };
 static_assert(Buffer<buffer_host<int32_t>>);

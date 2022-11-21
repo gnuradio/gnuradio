@@ -71,9 +71,9 @@ class buffer_skeleton
                      Args&&... /* args */){}; // blocks until elements are available
 
         template <typename... Args, WriterCallback<U, Args...> Translator>
-        [[nodiscard]] bool tryPublish(Translator&& translator,
-                                      std::size_t n_slots_to_claim = 1,
-                                      Args&&... /* args */) noexcept
+        [[nodiscard]] bool try_publish(Translator&& translator,
+                                       std::size_t n_slots_to_claim = 1,
+                                       Args&&... /* args */) noexcept
         {
             return n_slots_to_claim == 0;
         }; // returns false if cannot emplace data -> user may need to retry
@@ -99,13 +99,13 @@ public:
     [[nodiscard]] std::size_t size() const { return _shared_buffer_ptr->_data.size(); }
 
     template <typename WriteDataType = T>
-    BufferReader auto newReaderInstance()
+    BufferReader auto new_reader()
     {
         return buffer_reader<WriteDataType>(_shared_buffer_ptr);
     }
 
     template <typename ReadDataType = T>
-    BufferWriter auto newWriterInstance()
+    BufferWriter auto new_writer()
     {
         return buffer_writer<ReadDataType>(_shared_buffer_ptr);
     }

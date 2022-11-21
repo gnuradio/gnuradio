@@ -32,8 +32,8 @@ TYPED_TEST(Buffers, BasicConcepts)
     EXPECT_GE(buffer.size(), 1024);
 
     // compile-time interface tests
-    BufferReader auto reader = buffer.newReaderInstance(); // tests matching read concept
-    BufferWriter auto writer = buffer.newWriterInstance(); // tests matching write concept
+    BufferReader auto reader = buffer.new_reader(); // tests matching read concept
+    BufferWriter auto writer = buffer.new_writer(); // tests matching write concept
 
     // runtime interface tests
     EXPECT_EQ(reader.available(), 0);
@@ -44,9 +44,9 @@ TYPED_TEST(Buffers, BasicConcepts)
     EXPECT_GE(writer.available(), buffer.size());
     EXPECT_NO_THROW(writer.publish([](std::span<int32_t>&) {}, 0));
     EXPECT_NO_THROW(writer.publish([](std::span<int32_t>&, std::int64_t) {}, 0));
-    EXPECT_NO_THROW(EXPECT_TRUE(writer.tryPublish([](std::span<int32_t>&) {}, 0)));
+    EXPECT_NO_THROW(EXPECT_TRUE(writer.try_publish([](std::span<int32_t>&) {}, 0)));
     EXPECT_NO_THROW(
-        EXPECT_TRUE(writer.tryPublish([](std::span<int32_t>&, std::int64_t) {}, 0)));
+        EXPECT_TRUE(writer.try_publish([](std::span<int32_t>&, std::int64_t) {}, 0)));
 }
 
 TEST(Buffer, Sequence)
@@ -117,7 +117,7 @@ TEST(Buffer, DoubleMappedAllocator)
     std::vector<int32_t, Allocator> vec(size, doubleMappedAllocator);
     EXPECT_EQ(vec.size(), size);
     std::iota(vec.begin(), vec.end(), 1);
-    for (int i = 0; i < vec.size(); i++) {
+    for (auto i = 0U; i < vec.size(); i++) {
         EXPECT_EQ(vec[i], i + 1);
         // to note: can safely read beyond size for this special vector
         EXPECT_EQ(vec[size + i], vec[i]); // identical to mirrored copy
@@ -162,9 +162,9 @@ TEST(Buffer, UserApiExamples)
     using namespace gr;
     Buffer auto buffer = buffer_host<int32_t>(1024);
 
-    BufferWriter auto writer = buffer.newWriterInstance();
+    BufferWriter auto writer = buffer.new_writer();
     { // source only write example
-        BufferReader auto localReader = buffer.newReaderInstance();
+        BufferReader auto localReader = buffer.new_reader();
         EXPECT_EQ(localReader.available(), 0);
 
         auto lambda = [](auto w) { // test writer generating consecutive samples
@@ -177,11 +177,11 @@ TEST(Buffer, UserApiExamples)
         writer.publish(lambda, 10);
         EXPECT_EQ(writer.available(), buffer.size() - 10);
         EXPECT_EQ(localReader.available(), 10);
-        EXPECT_EQ(buffer.nReaders(), 1); // N.B. buffer_host<..> specific
+        EXPECT_EQ(buffer.n_readers(), 1); // N.B. buffer_host<..> specific
     }
-    EXPECT_EQ(buffer.nReaders(), 0); // reader not in scope release atomic reader index
+    EXPECT_EQ(buffer.n_readers(), 0); // reader not in scope release atomic reader index
 
-    BufferReader auto reader = buffer.newReaderInstance();
+    BufferReader auto reader = buffer.new_reader();
     // reader does not know about previous submitted data as it joined only after
     // data has been written <-> needed for thread-safe joining of readers while writing
     EXPECT_EQ(reader.available(), 0);
@@ -228,8 +228,8 @@ TEST_P(BufferTestFixture, BufferHostImplementation)
     Buffer auto buffer = buffer_host<int32_t>(1024, GetParam());
     EXPECT_GE(buffer.size(), 1024);
 
-    BufferWriter auto writer = buffer.newWriterInstance();
-    BufferReader auto reader = buffer.newReaderInstance();
+    BufferWriter auto writer = buffer.new_writer();
+    BufferReader auto reader = buffer.new_reader();
 
     int offset = 1;
     auto lambda = [&offset](auto w) {
@@ -250,7 +250,7 @@ TEST_P(BufferTestFixture, BufferHostImplementation)
     EXPECT_EQ(reader.get(1).size(), 1);
 
     // full buffer: fill buffer need to fail/return 'false'
-    EXPECT_FALSE(writer.tryPublish(lambda, buffer.size()));
+    EXPECT_FALSE(writer.try_publish(lambda, buffer.size()));
 
     EXPECT_TRUE(reader.consume(buffer.size()));
     EXPECT_EQ(reader.available(), 0);
@@ -260,7 +260,7 @@ TEST_P(BufferTestFixture, BufferHostImplementation)
     int32_t counter = 1;
     for (const std::size_t blockSize: {1, 2, 3, 5, 7, 42}) {
         for (uint32_t i = 0; i < buffer.size(); i++) {
-            EXPECT_TRUE(writer.tryPublish([&counter](auto& writable) {
+            EXPECT_TRUE(writer.try_publish([&counter](auto& writable) {
                 std::iota(writable.begin(), writable.end(), counter += writable.size());
             }, blockSize));
             auto readable = reader.get();
@@ -290,10 +290,10 @@ TEST(Buffer, StreamTagConcept)
     EXPECT_GE(tagBuffer.size(), 32);
 
 
-    BufferWriter auto writer    = buffer.newWriterInstance();
-    BufferReader auto reader    = buffer.newReaderInstance();
-    BufferWriter auto tagWriter = tagBuffer.newWriterInstance();
-    BufferReader auto tagReader = tagBuffer.newReaderInstance();
+    BufferWriter auto writer    = buffer.new_writer();
+    BufferReader auto reader    = buffer.new_reader();
+    BufferWriter auto tagWriter = tagBuffer.new_writer();
+    BufferReader auto tagReader = tagBuffer.new_reader();
 
     for (int i= 0; i < 3; i++) { // write-only worker (source) mock-up
         auto lambda = [&tagWriter](auto w, std::int64_t writePosition) {
@@ -331,13 +331,13 @@ TEST(Buffer, UserException)
     Buffer auto buffer = buffer_host<int32_t>(1024);
     EXPECT_GE(buffer.size(), 1024);
 
-    BufferWriter auto writer    = buffer.newWriterInstance();
-    BufferReader auto reader    = buffer.newReaderInstance();
+    BufferWriter auto writer    = buffer.new_writer();
+    BufferReader auto reader    = buffer.new_reader();
 
     EXPECT_THROW(writer.publish([](auto& writable){ throw std::exception();}), std::exception);
     EXPECT_THROW(writer.publish([](auto& writable){ throw "";}), std::runtime_error);
-    EXPECT_THROW(writer.tryPublish([](auto& writable){ throw std::exception();}), std::exception);
-    EXPECT_THROW(writer.tryPublish([](auto& writable){ throw "";}), std::runtime_error);
+    EXPECT_THROW(writer.try_publish([](auto& writable){ throw std::exception();}), std::exception);
+    EXPECT_THROW(writer.try_publish([](auto& writable){ throw "";}), std::runtime_error);
 
     EXPECT_EQ(reader.available(), 0); // needed otherwise buffer write will not be called
 }
@@ -348,8 +348,8 @@ TEST(Buffer, UserTypeCasting)
     Buffer auto buffer = buffer_host<std::complex<float>>(1024);
     EXPECT_GE(buffer.size(), 1024);
 
-    BufferWriter auto writer    = buffer.newWriterInstance();
-    BufferReader auto reader    = buffer.newReaderInstance();
+    BufferWriter auto writer    = buffer.new_writer();
+    BufferReader auto reader    = buffer.new_reader();
 
     writer.publish([](auto& w) {
         w[0] = std::complex(1.0f, -1.0f);

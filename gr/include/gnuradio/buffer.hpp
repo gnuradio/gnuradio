@@ -73,19 +73,19 @@ concept WriterCallback = std::is_invocable<Fn, std::span<T>&, std::int64_t, Args
 
 template<class T, typename ...Args>
 concept BufferWriter = requires(T t, const std::size_t n_items, Args ...args) {
-    { t.publish([](std::span<util::value_type_t<T>> &writableData, Args ...) {}, n_items, args...) }                                -> std::same_as<void>;
-    { t.publish([](std::span<util::value_type_t<T>> &writableData, std::int64_t /* writePos */, Args ...) {}, n_items, args...) }   -> std::same_as<void>;
-    { t.tryPublish([](std::span<util::value_type_t<T>> &writableData, Args ...) {}, n_items, args...) }                             -> std::same_as<bool>;
-    { t.tryPublish([](std::span<util::value_type_t<T>> &writableData, std::int64_t /* writePos */, Args ...) {}, n_items, args...) }-> std::same_as<bool>;
+    { t.publish([](std::span<util::value_type_t<T>> &writable_data, Args ...) {}, n_items, args...) }                                -> std::same_as<void>;
+    { t.publish([](std::span<util::value_type_t<T>> &writable_data, std::int64_t /* writePos */, Args ...) {}, n_items, args...) }   -> std::same_as<void>;
+    { t.try_publish([](std::span<util::value_type_t<T>> &writable_data, Args ...) {}, n_items, args...) }                             -> std::same_as<bool>;
+    { t.try_publish([](std::span<util::value_type_t<T>> &writable_data, std::int64_t /* writePos */, Args ...) {}, n_items, args...) }-> std::same_as<bool>;
     { t.available() }         -> std::same_as<std::size_t>;
 };
 
-template<class T, typename U1 = T, typename U2 = T>
-concept Buffer = requires(T t, const std::size_t min_size) {
-    { T(min_size) };
-    { t.size() }              -> std::same_as<std::size_t>;
-    { t.newReaderInstance() } -> BufferReader;
-    { t.newWriterInstance() } -> BufferWriter;
+template<class T, typename ...Args>
+concept Buffer = requires(T t, const std::size_t min_size, Args ...args) {
+    { T(min_size, args...) };
+    { t.size() }       -> std::same_as<std::size_t>;
+    { t.new_reader() } -> BufferReader;
+    { t.new_writer() } -> BufferWriter;
 };
 
 // compile-time unit-tests
