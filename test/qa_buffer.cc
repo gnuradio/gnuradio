@@ -9,15 +9,15 @@
 #include <fmt/ranges.h>
 
 #include <gnuradio/buffer.hpp>
-#include <gnuradio/buffer_host.hpp>
 #include <gnuradio/buffer_skeleton.hpp>
+#include <gnuradio/circular_buffer.hpp>
 #include <gnuradio/sequence.hpp>
 #include <gnuradio/wait_strategy.hpp>
 
 using buffer_typelist = testing::Types< //
     gr::test::buffer_skeleton<int32_t>,
-    gr::buffer_host<int32_t, std::dynamic_extent, gr::ProducerType::Single>,
-    gr::buffer_host<int32_t, std::dynamic_extent, gr::ProducerType::Multi>>;
+    gr::circular_buffer<int32_t, std::dynamic_extent, gr::ProducerType::Single>,
+    gr::circular_buffer<int32_t, std::dynamic_extent, gr::ProducerType::Multi>>;
 template <class>
 struct Buffers : testing::Test {
 };
@@ -160,7 +160,7 @@ TEST(Buffer, WaitStrategies)
 TEST(Buffer, UserApiExamples)
 {
     using namespace gr;
-    Buffer auto buffer = buffer_host<int32_t>(1024);
+    Buffer auto buffer = circular_buffer<int32_t>(1024);
 
     BufferWriter auto writer = buffer.new_writer();
     { // source only write example
@@ -177,7 +177,7 @@ TEST(Buffer, UserApiExamples)
         writer.publish(lambda, 10);
         EXPECT_EQ(writer.available(), buffer.size() - 10);
         EXPECT_EQ(localReader.available(), 10);
-        EXPECT_EQ(buffer.n_readers(), 1); // N.B. buffer_host<..> specific
+        EXPECT_EQ(buffer.n_readers(), 1); // N.B. circular_buffer<..> specific
     }
     EXPECT_EQ(buffer.n_readers(), 0); // reader not in scope release atomic reader index
 
@@ -225,7 +225,7 @@ Allocator allocators[] = { Allocator(gr::double_mapped_memory_resource::allocato
 TEST_P(BufferTestFixture, BufferHostImplementation)
 {
     using namespace gr;
-    Buffer auto buffer = buffer_host<int32_t>(1024, GetParam());
+    Buffer auto buffer = circular_buffer<int32_t>(1024, GetParam());
     EXPECT_GE(buffer.size(), 1024);
 
     BufferWriter auto writer = buffer.new_writer();
@@ -284,8 +284,8 @@ TEST(Buffer, StreamTagConcept)
         std::string data;
     };
     fmt::print(stderr, "tag size: {}\n", sizeof (buffer_tag));
-    Buffer auto buffer = buffer_host<int32_t>(1024);
-    Buffer auto tagBuffer = buffer_host<buffer_tag>(32);
+    Buffer auto buffer = circular_buffer<int32_t>(1024);
+    Buffer auto tagBuffer = circular_buffer<buffer_tag>(32);
     EXPECT_GE(buffer.size(), 1024);
     EXPECT_GE(tagBuffer.size(), 32);
 
@@ -328,7 +328,7 @@ TEST(Buffer, StreamTagConcept)
 TEST(Buffer, UserException)
 {
     using namespace gr;
-    Buffer auto buffer = buffer_host<int32_t>(1024);
+    Buffer auto buffer = circular_buffer<int32_t>(1024);
     EXPECT_GE(buffer.size(), 1024);
 
     BufferWriter auto writer    = buffer.new_writer();
@@ -345,7 +345,7 @@ TEST(Buffer, UserException)
 TEST(Buffer, UserTypeCasting)
 {
     using namespace gr;
-    Buffer auto buffer = buffer_host<std::complex<float>>(1024);
+    Buffer auto buffer = circular_buffer<std::complex<float>>(1024);
     EXPECT_GE(buffer.size(), 1024);
 
     BufferWriter auto writer    = buffer.new_writer();

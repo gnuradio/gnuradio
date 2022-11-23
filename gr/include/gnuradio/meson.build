@@ -9,7 +9,7 @@ runtime_headers = [
     'wait_strategy.hpp',
     'claim_strategy.hpp',
     'buffer_skeleton.hpp',
-    'buffer_host.hpp',
+    'circular_buffer.hpp',
     'buffer_management.h',
     'block_group_properties.h',
     'clonable_block.h',

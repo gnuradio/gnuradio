@@ -1,5 +1,5 @@
-#ifndef GNURADIO_BUFFER_HOST_HPP
-#define GNURADIO_BUFFER_HOST_HPP
+#ifndef GNURADIO_CIRCULAR_BUFFER_HPP
+#define GNURADIO_CIRCULAR_BUFFER_HPP
 
 #include <memory_resource>
 #include <algorithm>
@@ -165,10 +165,10 @@ public:
  */
 template <typename T, std::size_t SIZE = std::dynamic_extent, ProducerType producer_type = ProducerType::Single, WaitStrategy WAIT_STRATEGY = SleepingWaitStrategy>
 requires util::is_power2_v<sizeof(T)>
-class buffer_host
+class circular_buffer
 {
     using Allocator         = std::pmr::polymorphic_allocator<T>;
-    using BufferType        = buffer_host<T, SIZE, producer_type, WAIT_STRATEGY>;
+    using BufferType        = circular_buffer<T, SIZE, producer_type, WAIT_STRATEGY>;
     using ClaimType         = detail::producer_type_v<SIZE, producer_type, WAIT_STRATEGY>;
     using DependendsType    = std::shared_ptr<std::vector<std::shared_ptr<Sequence>>>;
 
@@ -268,7 +268,7 @@ class buffer_host
             } catch (const std::exception& e) {
                 throw (e);
             } catch (...) {
-                throw std::runtime_error("buffer_host::translate_and_publish() - unknown user exception thrown");
+                throw std::runtime_error("circular_buffer::translate_and_publish() - unknown user exception thrown");
             }
         }
     };
@@ -337,10 +337,10 @@ class buffer_host
     std::shared_ptr<buffer_impl> _shared_buffer_ptr;
 
 public:
-    buffer_host() = delete;
-    buffer_host(std::size_t min_size, Allocator allocator = DefaultAllocator())
+    circular_buffer() = delete;
+    circular_buffer(std::size_t min_size, Allocator allocator = DefaultAllocator())
         : _shared_buffer_ptr(std::make_shared<buffer_impl>(min_size, allocator)) { }
-    ~buffer_host() = default;
+    ~circular_buffer() = default;
 
     [[nodiscard]] std::size_t       size() const noexcept { return _shared_buffer_ptr->_size; }
     [[nodiscard]] BufferWriter auto new_writer() { return buffer_writer<T>(_shared_buffer_ptr); }
@@ -353,9 +353,9 @@ public:
     [[nodiscard]] auto cursor_sequence() { return _shared_buffer_ptr->_cursor; }
 
 };
-static_assert(Buffer<buffer_host<int32_t>>);
+static_assert(Buffer<circular_buffer<int32_t>>);
 // clang-format on
 
 } // namespace gr
 
-#endif // GNURADIO_BUFFER_HOST_HPP
+#endif // GNURADIO_CIRCULAR_BUFFER_HPP

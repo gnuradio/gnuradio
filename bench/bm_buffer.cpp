@@ -6,8 +6,8 @@
 #include <fmt/format.h>
 
 #include <gnuradio/buffer.hpp> // new buffer header interface
-#include <gnuradio/buffer_host.hpp>
 #include <gnuradio/buffer_skeleton.hpp>
+#include <gnuradio/circular_buffer.hpp>
 
 #include <gnuradio/buffer.h>
 #include <gnuradio/buffer_cpu_simple.h>
@@ -225,7 +225,7 @@ int main(int argc, char* argv[])
     app.add_option("--buffer_type",
                    buffer_type,
                    "Buffer Type (0:simple, 1:vmcirc, 2:cuda, 3:cuda_pinned, 4: "
-                   "buffer_host - POSIX, 5: portable");
+                   "circular_buffer - POSIX, 5: portable");
     app.add_flag(
         "--throughput", throughput, "whether to print samples/s rather than time");
     app.add_flag("--rt_prio", rt_prio, "enable real-time priority");
@@ -240,7 +240,7 @@ int main(int argc, char* argv[])
 
     auto oneTest = [&](const int nP, const int nR) {
         using BufferType =
-            buffer_host<int32_t, std::dynamic_extent, ProducerType::Single>;
+            circular_buffer<int32_t, std::dynamic_extent, ProducerType::Single>;
 
         std::chrono::duration<double, std::nano> testDuration;
         switch (buffer_type) {
