@@ -59,7 +59,7 @@ void buffer::add_tag(uint64_t offset, tag_map map)
     _tags.emplace_back(offset, map);
 }
 
-void buffer::add_tag(uint64_t offset, pmtf::map map)
+void buffer::add_tag(uint64_t offset, pmtv::pmt map)
 {
     std::scoped_lock guard(_buf_mutex);
     _tags.emplace_back(offset, map);

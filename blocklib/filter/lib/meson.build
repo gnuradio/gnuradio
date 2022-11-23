@@ -7,7 +7,7 @@ sources = [
 ]
 
 filter_sources += sources
-filter_deps += [gnuradio_gr_dep, gnuradio_blocklib_fft_dep, volk_dep, fmt_dep, pmtf_dep, gr_kernel_filter_lib_dep]
+filter_deps += [gnuradio_gr_dep, gnuradio_blocklib_fft_dep, volk_dep, fmt_dep, pmt_dep, gr_kernel_filter_lib_dep]
 block_cpp_args = ['-DHAVE_CPU']
 if IMPLEMENT_CUDA
     block_cpp_args += '-DHAVE_CUDA'

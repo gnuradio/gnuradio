@@ -7,7 +7,7 @@ category: '[Core]/Debug Tools'
 parameters:
 -   id: value
     label: "Value"
-    dtype: pmtf::pmt
+    dtype: pmtv::pmt
 -   id: nsamps
     label: "Num Samps"
     dtype: size

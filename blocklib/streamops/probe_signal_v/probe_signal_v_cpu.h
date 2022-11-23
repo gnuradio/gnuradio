@@ -27,7 +27,7 @@ private:
     // Just work with the private member variable, and pass it out as pmt when queried
     void on_parameter_query(param_action_sptr action) override
     {
-        pmtf::pmt param = d_level;
+        pmtv::pmt param = d_level;
         action->set_pmt_value(param);
     }
 

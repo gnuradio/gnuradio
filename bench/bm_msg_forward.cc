@@ -6,7 +6,7 @@
 #include <gnuradio/flowgraph.h>
 #include <gnuradio/realtime.h>
 #include <gnuradio/runtime.h>
-#include <pmtf/base.hpp>
+#include <pmtv/pmt.hpp>
 
 #include "CLI/App.hpp"
 #include "CLI/Config.hpp"
@@ -59,7 +59,7 @@ int main(int argc, char* argv[])
         rt->initialize(fg);
 
         for (size_t p = 0; p < samples; p++) {
-            pmtf::pmt msg = pmtf::vector<uint8_t>(pdu_size, 0x42);
+            auto msg = pmtv::pmt(std::vector<uint8_t>(pdu_size, 0x42));
             msg_blks[0]->input_message_port("in")->post(msg);
         }
         // msg_blks[0]->input_message_port("system")->post("done");

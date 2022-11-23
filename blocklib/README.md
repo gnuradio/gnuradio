@@ -104,7 +104,7 @@ ports:
 ```
 a virtual method is expected to be implemented in the underlying block class named 
 ```c++
-void handle_msg_in(pmtf::pmt msg) override
+void handle_msg_in(pmtv::pmt msg) override
 ```
 
 ### Callbacks

@@ -2,7 +2,7 @@ sources = [
 ]
 
 streamops_sources += sources
-streamops_deps += [gnuradio_gr_dep, volk_dep, fmt_dep, pmtf_dep]
+streamops_deps += [gnuradio_gr_dep, volk_dep, fmt_dep, pmt_dep]
 
 block_cpp_args = ['-DHAVE_CPU']
 if IMPLEMENT_CUDA

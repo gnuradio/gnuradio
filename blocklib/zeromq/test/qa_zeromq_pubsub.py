@@ -12,16 +12,16 @@
 
 from gnuradio import gr, gr_unittest
 from gnuradio import blocks, zeromq
-import pmtf
+import pmtv
 import time
 
 
 def make_tag(key, value, offset, srcid=None):
     
     if srcid is None:
-        tag = gr.tag_t(offset, {key: pmtf.pmt(value)})
+        tag = gr.tag_t(offset, {key: pmtv.pmt(value)})
     else:
-        tag = gr.tag_t(offset, {key: pmtf.pmt(value), "srcid": pmtf.pmt(srcid)})
+        tag = gr.tag_t(offset, {key: pmtv.pmt(value), "srcid": pmtv.pmt(srcid)})
     return tag
 
 

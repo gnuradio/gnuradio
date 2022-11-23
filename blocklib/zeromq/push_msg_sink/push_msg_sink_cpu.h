@@ -33,7 +33,7 @@ private:
     zmq::context_t d_context;
     zmq::socket_t d_socket;
 
-    void handle_msg_in(pmtf::pmt msg) override;
+    void handle_msg_in(pmtv::pmt msg) override;
 };
 
 } // namespace zeromq

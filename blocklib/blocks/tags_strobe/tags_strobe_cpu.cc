@@ -18,7 +18,7 @@ namespace blocks {
 tags_strobe_cpu::tags_strobe_cpu(block_args args)
     : INHERITED_CONSTRUCTORS,
       d_nsamps(args.nsamps),
-      d_tag(0, pmtf::map{ { args.key, args.value } })
+      d_tag(0, tag_map{ { args.key, args.value } })
 {
 }
 

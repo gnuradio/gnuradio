@@ -72,9 +72,9 @@ endif
 
 
 ## Subprojects
-libpmtf = subproject('pmt')
-pmtf_dep = libpmtf.get_variable('pmtf_dep')
-#py3_install_dir_dep = libpmtf.get_variable('py3_install_dir_dep')
+libpmtv = subproject('pmt')
+pmt_dep = libpmtv.get_variable('pmt_dep')
+#py3_install_dir_dep = libpmtv.get_variable('py3_install_dir_dep')
 CLI11_dep = dependency('cli11')
 json_dep = dependency('nlohmann_json')
 

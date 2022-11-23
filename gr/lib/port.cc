@@ -1,4 +1,5 @@
 #include <gnuradio/port.h>
+#include <iostream>
 
 namespace gr {
 port_base::uptr port_base::make(const std::string& name,
@@ -66,7 +67,7 @@ std::string port_base::format_descriptor()
     }
 }
 
-void port_base::notify_msgport_message(pmtf::pmt msg)
+void port_base::notify_msgport_message(pmtv::pmt msg)
 {
     for (auto& p : _connected_ports) {
         if (p) {
@@ -181,7 +182,7 @@ message_port::message_port(const std::string& name,
 }
 
 
-void message_port::post(pmtf::pmt msg)
+void message_port::post(pmtv::pmt msg)
 {
     if (direction() == port_direction_t::OUTPUT)
         notify_msgport_message(msg);

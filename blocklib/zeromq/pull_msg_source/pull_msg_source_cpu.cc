@@ -79,7 +79,7 @@ void pull_msg_source_cpu::readloop()
             std::string buf(static_cast<char*>(msg.data()), msg.size());
             std::stringbuf sb(buf);
             try {
-                auto m = pmtf::pmt::deserialize(sb);
+                auto m = pmtv::deserialize(sb);
                 d_msg_out->post(m);
             } catch (...) { // Take out PMT specific exception for now
                 d_logger->error("Invalid PMT message");

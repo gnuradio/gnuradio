@@ -44,7 +44,7 @@ typename {{block}}<{% for key in typekeys -%}{{key['id']}}{{ ", " if not loop.la
 
     {% for p in parameters -%}
     {% if ('cotr' not in p or p['cotr']) and ('serializable' not in p or p['serializable'])%}
-    args.{{p['id']}} = {{'('+p['dtype']|cpp_type+')' if p['is_enum']}}pmtf::get_as<{{ 'int' if p['is_enum'] else p['dtype']|cpp_type(vec=p['container']=='vector')}}>(deserialize_param_to_pmt(json_obj["{{p['id']}}"].get<std::string>()));
+    args.{{p['id']}} = {{'('+p['dtype']|cpp_type+')' if p['is_enum']}}pmtv::cast<{{ 'int' if p['is_enum'] else p['dtype']|cpp_type(vec=p['container']=='vector')}}>(deserialize_param_to_pmt(json_obj["{{p['id']}}"].get<std::string>()));
     {% endif %}
     {% endfor -%}
 
@@ -54,13 +54,13 @@ typename {{block}}<{% for key in typekeys -%}{{key['id']}}{{ ", " if not loop.la
 {% for impl in implementations %}
 {% if 'lang' not in impl or impl['lang'] == 'cpp' -%}
 template <{% for key in typekeys -%}{{key['type']}} {{key['id']}}{{ ", " if not loop.last }}{%endfor%}>
-typename {{block}}<{% for key in typekeys -%}{{key['id']}}{{ ", " if not loop.last }}{%endfor%}>::sptr {{block}}<{% for key in typekeys -%}{{key['id']}}{{ ", " if not loop.last }}{%endfor%}>::make_from_params_{{impl['id']}}(std::map<std::string, pmtf::pmt>& param_map)
+typename {{block}}<{% for key in typekeys -%}{{key['id']}}{{ ", " if not loop.last }}{%endfor%}>::sptr {{block}}<{% for key in typekeys -%}{{key['id']}}{{ ", " if not loop.last }}{%endfor%}>::make_from_params_{{impl['id']}}(std::map<std::string, pmtv::pmt>& param_map)
 {
     block_args args;
 
     {% for p in parameters -%}
     {% if ('cotr' not in p or p['cotr']) and ('serializable' not in p or p['serializable'])%}
-    args.{{p['id']}} = {{'('+p['dtype']|cpp_type+')' if p['is_enum']}}pmtf::get_as<{{ 'int' if p['is_enum'] else p['dtype']|cpp_type(vec=p['container']=='vector')}}>(param_map["{{p['id']}}"]);
+    args.{{p['id']}} = {{'('+p['dtype']|cpp_type+')' if p['is_enum']}}pmtv::cast<{{ 'int' if p['is_enum'] else p['dtype']|cpp_type(vec=p['container']=='vector')}}>(param_map["{{p['id']}}"]);
     {% endif %}
     {% endfor -%}
 
@@ -92,12 +92,12 @@ template <{% for key in typekeys -%}{{key['type']}} {{key['id']}}{{ ", " if not 
 {
 {% if p['is_enum'] %}
 {% if 'container' in p and p['container'] == 'vector' %}
-    return pmtf::get_as<{{ 'std::vector<int>' }}>(request_parameter_query(params::id_{{p['id']}}));
+    return pmtv::cast<{{ 'std::vector<int>' }}>(request_parameter_query(params::id_{{p['id']}}));
 {% else %}
-    return ({{p['dtype']|cpp_type}}) pmtf::get_as<int>(request_parameter_query(params::id_{{p['id']}}));
+    return ({{p['dtype']|cpp_type}}) pmtv::cast<int>(request_parameter_query(params::id_{{p['id']}}));
 {% endif %}
 {% else %}
-    return pmtf::get_as<{{ p['dtype']|cpp_type(vec=p['container']=='vector')}}>(request_parameter_query(params::id_{{p['id']}}));
+    return pmtv::cast<{{ p['dtype']|cpp_type(vec=p['container']=='vector')}}>(request_parameter_query(params::id_{{p['id']}}));
 {% endif %}
 }
 {% endif %}

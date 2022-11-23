@@ -83,7 +83,7 @@ public:
     void set_buffer_reader(buffer_reader_uptr&& rdr) { _buffer_reader = std::move(rdr); }
     buffer_reader* get_buffer_reader() { return _buffer_reader.get(); }
 
-    void notify_msgport_message(pmtf::pmt msg);
+    void notify_msgport_message(pmtv::pmt msg);
     void notify_scheduler_action(scheduler_action_t action);
     // Inbound messages
     void push_message(scheduler_message_sptr msg) override;
@@ -194,7 +194,7 @@ public:
 
     message_port_callback_fcn callback() { return _callback_fcn; }
     void register_callback(message_port_callback_fcn fcn) { _callback_fcn = fcn; }
-    void post(pmtf::pmt msg);
+    void post(pmtv::pmt msg);
     void push_message(scheduler_message_sptr msg) override;
 };
 

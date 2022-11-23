@@ -33,8 +33,8 @@ private:
     {
         // This will set the underlying PMT
         block::on_parameter_change(action);
-        auto fftaps = pmtf::get_as<std::vector<TAP_T>>(*this->param_fftaps);
-        auto fbtaps = pmtf::get_as<std::vector<TAP_T>>(*this->param_fbtaps);
+        auto fftaps = pmtv::cast<std::vector<TAP_T>>(*this->param_fftaps);
+        auto fbtaps = pmtv::cast<std::vector<TAP_T>>(*this->param_fbtaps);
 
         // Do more updating for certain parameters
         if (action->id() == iir_filter<T_IN, T_OUT, TAP_T>::id_fftaps ||

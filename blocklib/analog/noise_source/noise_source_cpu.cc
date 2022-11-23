@@ -38,8 +38,8 @@ work_return_t noise_source_cpu<T>::work(work_io& wio)
     auto out = wio.outputs()[0].items<T>();
     auto noutput_items = wio.outputs()[0].n_items;
 
-    auto type = pmtf::get_as<int>(*this->param_type);
-    auto ampl = pmtf::get_as<float>(*this->param_amplitude);
+    auto type = pmtv::cast<int>(*this->param_type);
+    auto ampl = pmtv::cast<float>(*this->param_amplitude);
 
     switch (static_cast<noise_t>(type)) {
     case noise_t::UNIFORM:

@@ -18,7 +18,7 @@ callbacks:
     
     # virtual pmt::pmt_t get_message(size_t i) = 0;
 -   id: get_message
-    return: pmtf::pmt
+    return: pmtv::pmt
     args:
     - id: i
       dtype: size

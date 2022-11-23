@@ -29,7 +29,7 @@ void bind_tag(py::module& m)
         .export_values();
 
     py::class_<::gr::tag_t, std::shared_ptr<::gr::tag_t>>(m, "tag_t")
-        .def(py::init<uint64_t, std::map<std::string, pmtf::pmt>>())
+        .def(py::init<uint64_t, std::map<std::string, pmtv::pmt>>())
         .def(py::self == py::self)
         .def(py::self != py::self)
         .def("__str__",

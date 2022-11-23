@@ -2,7 +2,7 @@
 
 #include <gnuradio/block.h>
 #include <gnuradio/graph.h>
-#include <pmtf/wrap.hpp>
+#include <pmtv/pmt.hpp>
 
 namespace gr {
 class GR_RUNTIME_API hier_block : public block

@@ -1,9 +1,6 @@
 #pragma once
 
-#include <pmtf/scalar.hpp>
-#include <pmtf/string.hpp>
-#include <pmtf/vector.hpp>
-#include <pmtf/wrap.hpp>
+#include <pmtv/pmt.hpp>
 #include <functional>
 #include <memory>
 #include <queue>
@@ -18,23 +15,23 @@ class param_action
 {
 protected:
     uint32_t _id;
-    pmtf::pmt _pmt_value;
+    pmtv::pmt _pmt_value;
     uint64_t _at_sample;
 
 public:
     using sptr = std::shared_ptr<param_action>;
     static sptr
-    make(uint32_t id, pmtf::pmt pmt_value = pmtf::pmt(), uint64_t at_sample = 0)
+    make(uint32_t id, pmtv::pmt pmt_value = pmtv::pmt(), uint64_t at_sample = 0)
     {
         return std::make_shared<param_action>(id, pmt_value, at_sample);
     }
-    param_action(uint32_t id, pmtf::pmt pmt_value, uint64_t at_sample)
+    param_action(uint32_t id, pmtv::pmt pmt_value, uint64_t at_sample)
         : _id(id), _pmt_value(pmt_value), _at_sample(at_sample)
     {
     }
     uint32_t id() const { return _id; }
-    pmtf::pmt pmt_value() { return _pmt_value; }
-    void set_pmt_value(pmtf::pmt val) { _pmt_value = val; }
+    pmtv::pmt pmt_value() { return _pmt_value; }
+    void set_pmt_value(pmtv::pmt val) { _pmt_value = val; }
     uint64_t at_sample() { return _at_sample; }
     void set_at_sample(uint64_t val) { _at_sample = val; }
 };

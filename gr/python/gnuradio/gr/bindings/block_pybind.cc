@@ -31,9 +31,9 @@ void bind_block(py::module& m)
         .def("request_parameter_query",
              py::overload_cast<const std::string&>(&block::request_parameter_query))
         .def("request_parameter_change",
-             py::overload_cast<int, pmtf::pmt, bool>(&block::request_parameter_change))
+             py::overload_cast<int, pmtv::pmt, bool>(&block::request_parameter_change))
         .def("request_parameter_change",
-             py::overload_cast<const std::string&, pmtf::pmt, bool>(
+             py::overload_cast<const std::string&, pmtv::pmt, bool>(
                  &block::request_parameter_change))
 
         .def("get_parameter", &block::get_parameter)

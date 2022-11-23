@@ -71,7 +71,7 @@ SCRIPTS_DIR = join_paths(share_dir, 'utils','blockbuilder','scripts' )
 volk_dep = dependency('volk', version : '>=2.2')
 fmt_dep = dependency('fmt', method: 'cmake', modules: ['fmt::fmt'])
 spdlog_dep = dependency('spdlog')
-pmtf_dep = dependency('pmtf', version : '>= 0.0.2')
+pmt_dep = dependency('pmtv', version : '>= 0.0.2')
 
 if GR_ENABLE_PYTHON
 run_command('python3', join_paths(SCRIPTS_DIR,'gen_meson.py'), 

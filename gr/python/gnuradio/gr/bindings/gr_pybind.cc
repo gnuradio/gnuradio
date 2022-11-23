@@ -63,7 +63,7 @@ PYBIND11_MODULE(gr_python, m)
     init_numpy();
 
     // Allow access to base block methods
-    py::module::import("pmtf");
+    py::module::import("pmtv");
 
     bind_tag(m);
     bind_block_work_io(m);

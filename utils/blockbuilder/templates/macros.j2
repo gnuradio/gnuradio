@@ -65,7 +65,7 @@ class {{ block }} : virtual public {{blocktype}}{% for inh in inherits %}, publi
         {% if port['direction'] == 'input' %}
         auto msg_{{port['id']}} = message_port::make(
             "{{port['id']}}", port_direction_t::INPUT, {{port['optional']|lower()}});
-        msg_{{port['id']}}->register_callback([this](pmtf::pmt msg) { this->handle_msg_{{port['id']}}(msg); });
+        msg_{{port['id']}}->register_callback([this](pmtv::pmt msg) { this->handle_msg_{{port['id']}}(msg); });
         {% else %}
         auto msg_{{port['id']}} = message_port::make(
             "{{port['id']}}", port_direction_t::OUTPUT, {{port['optional']|lower()}});
@@ -90,7 +90,7 @@ class {{ block }} : virtual public {{blocktype}}{% for inh in inherits %}, publi
      * @return std::shared_ptr<{{ block }}> 
      */
     static sptr make_{{impl['id']}}(const block_args& args);
-    static sptr make_from_params_{{impl['id']}}(std::map<std::string, pmtf::pmt>&);
+    static sptr make_from_params_{{impl['id']}}(std::map<std::string, pmtv::pmt>&);
     {% elif 'lang' in impl and impl['lang'] == 'python' and not vars.pyshell -%}
     static sptr make_pyshell(const std::string& py_impl, const block_args& args);
     {% if vars.update({'pyshell': True}) %} {% endif %}
@@ -119,7 +119,7 @@ class {{ block }} : virtual public {{blocktype}}{% for inh in inherits %}, publi
         message_port_ptr d_msg_{{port['id']}};
     {% endif %}{% endfor %}
     {% for port in ports %}{% if port['domain'] == 'message' and port['direction'] == 'input' -%}
-    virtual void handle_msg_{{port['id']}}(pmtf::pmt msg) {} //= 0;
+    virtual void handle_msg_{{port['id']}}(pmtv::pmt msg) {} //= 0;
     {% endif %}{% endfor%}
 {% endmacro %}
 
@@ -153,12 +153,20 @@ protected:
 {% for p in parameters -%}
 {#% if p['settable'] or p['gettable']%#}{% if 'serializable' not in p or p['serializable'] %}
     {% if 'string' in p['dtype'] %}
-    param_{{p['id']}} = std::make_shared<pmtf::pmt>(pmtf::string({{"args."+p['id'] if 'cotr' not in p or p['cotr'] else "\"" + p['default'] | string() + "\"" if 'default' in p }}));
+    param_{{p['id']}} = std::make_shared<pmtv::pmt>(std::string({{"args."+p['id'] if 'cotr' not in p or p['cotr'] else "\"" + p['default'] | string() + "\"" if 'default' in p }}));
     {% else %}
     {%if 'cotr' not in p or p['cotr']%}
-    param_{{p['id']}} = std::make_shared<pmtf::pmt>({{'(int)' if p['is_enum']}}{{"args."+p['id']}});
+    param_{{p['id']}} = std::make_shared<pmtv::pmt>({{'(int)' if p['is_enum']}}{{"args."+p['id']}});
     {%else%}
-    param_{{p['id']}} = std::make_shared<pmtf::pmt>(pmtf::{{'scalar' if 'container' not in p else p['container']}}<{{p['dtype']|cpp_type}}>({%if 'default' in p %}{{p['default'] | string() | lower()}}{%endif%}));
+    //param_{{p['id']}} = std::make_shared<pmtv::pmt>(pmtv::{{'scalar' if 'container' not in p else p['container']}}<{{p['dtype']|cpp_type}}>({%if 'default' in p %}{{p['default'] | string() | lower()}}{%endif%}));
+    param_{{p['id']}} = std::make_shared<pmtv::pmt>(
+        pmtv::pmt( 
+            {% if not 'container' in p%}
+            {{p['dtype']|cpp_type}}({%if 'default' in p %}{{p['default'] | string() | lower()}}{%endif%})
+            {% else %}
+            std::{{p['container']}}<{{p['dtype']|cpp_type}}>({%if 'default' in p %}{{p['default'] | string() | lower()}}{%endif%})
+            {% endif %}
+    ));
     {%endif%}
     {% endif %}
     add_param("{{p['id']}}", d_param_str_map["{{p['id']}}"], param_{{p['id']}});

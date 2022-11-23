@@ -3,7 +3,7 @@ incdir = [
 ]
 
 
-gr_deps = [yaml_dep, spdlog_dep, threads_dep, fmt_dep, rt_dep, pmtf_dep, libdl_dep, cppzmq_dep, json_dep]
+gr_deps = [yaml_dep, spdlog_dep, threads_dep, fmt_dep, rt_dep, pmt_dep, libdl_dep, cppzmq_dep, json_dep]
 
 libdir = get_option('libdir')
 prefix = get_option('prefix')

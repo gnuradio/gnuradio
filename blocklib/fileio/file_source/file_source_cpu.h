@@ -68,7 +68,7 @@ private:
     std::string d_add_begin_tag;
 
     std::mutex fp_mutex;
-    pmtf::pmt _id;
+    pmtv::pmt _id;
 
     void do_update();
 };

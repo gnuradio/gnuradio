@@ -1,5 +1,5 @@
 newmod_sources += []
-newmod_deps += [gnuradio_gr_dep, volk_dep, fmt_dep, spdlog_dep, pmtf_dep, python3_embed_dep, json_dep]
+newmod_deps += [gnuradio_gr_dep, volk_dep, fmt_dep, spdlog_dep, pmt_dep, python3_embed_dep, json_dep]
 
 block_cpp_args = ['-DHAVE_CPU']
 

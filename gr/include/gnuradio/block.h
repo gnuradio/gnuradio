@@ -13,9 +13,7 @@
 #include <gnuradio/parameter.h>
 #include <gnuradio/sptr_magic.h>
 
-#include <pmtf/map.hpp>
-#include <pmtf/string.hpp>
-#include <pmtf/wrap.hpp>
+#include <pmtv/pmt.hpp>
 
 namespace gr {
 
@@ -139,14 +137,14 @@ public:
     {
         d_parameters.add(name, id, p);
     }
-    pmtf::pmt request_parameter_query(int param_id);
-    pmtf::pmt request_parameter_query(const std::string& param_str)
+    pmtv::pmt request_parameter_query(int param_id);
+    pmtv::pmt request_parameter_query(const std::string& param_str)
     {
         return request_parameter_query(get_param_id(param_str));
     }
-    void request_parameter_change(int param_id, pmtf::pmt new_value, bool block = true);
+    void request_parameter_change(int param_id, pmtv::pmt new_value, bool block = true);
     void request_parameter_change(const std::string& param_str,
-                                  pmtf::pmt new_value,
+                                  pmtv::pmt new_value,
                                   bool block = true)
     {
         return request_parameter_change(get_param_id(param_str), new_value, block);
@@ -171,11 +169,11 @@ public:
     /**
      * Every Block should have a param update message handler
      */
-    virtual void handle_msg_param_update(pmtf::pmt msg);
+    virtual void handle_msg_param_update(pmtv::pmt msg);
 
-    virtual void handle_msg_system(pmtf::pmt msg);
+    virtual void handle_msg_system(pmtv::pmt msg);
 
-    static pmtf::pmt deserialize_param_to_pmt(const std::string& param_value);
+    static pmtv::pmt deserialize_param_to_pmt(const std::string& param_value);
     static sptr cast(node_sptr n) { return std::static_pointer_cast<block>(n); }
     bool is_hier() { return _is_hier; }
 };

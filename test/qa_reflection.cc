@@ -37,13 +37,13 @@ TEST(Reflection, Basic)
     EXPECT_TRUE(is_in_list(list, "vector_sink_f"));
 
     float orig_value = 12.0;
-    std::map<std::string, pmtf::pmt> param_map{ { "k", orig_value }, { "vlen", 1 } };
+    std::map<std::string, pmtv::pmt> param_map{ { "k", orig_value }, { "vlen", 1 } };
     auto blk = gr::registry::factory("math", "multiply_const_ff")(param_map);
-    EXPECT_EQ(blk->request_parameter_query("k"), orig_value);
+    EXPECT_TRUE(blk->request_parameter_query("k") == orig_value);
 
     float newval = 17.3;
     blk->request_parameter_change("k", newval);
-    EXPECT_EQ(blk->request_parameter_query("k"), newval);
+    EXPECT_TRUE(blk->request_parameter_query("k") == newval);
 }
 
 

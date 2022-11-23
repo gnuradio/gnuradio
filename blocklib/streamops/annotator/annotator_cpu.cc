@@ -11,8 +11,7 @@
 
 #include "annotator_cpu.h"
 #include "annotator_cpu_gen.h"
-#include <pmtf/scalar.hpp>
-#include <pmtf/string.hpp>
+#include <pmtv/pmt.hpp>
 #include <cstring>
 #include <iomanip>
 #include <iostream>
@@ -49,7 +48,7 @@ work_return_t annotator_cpu::work(work_io& wio)
     }
 
     // Storing the current noutput_items as the value to the "noutput_items" key
-    auto srcid = pmtf::string(alias());
+    auto srcid = pmtv::pmt(alias());
     auto key = "seq";
 
     // Work does nothing to the data stream; just copy all inputs to outputs
@@ -63,10 +62,10 @@ work_return_t annotator_cpu::work(work_io& wio)
         // for (unsigned i = 0; i < std::min(d_num_outputs, d_num_inputs); i++) {
         for (unsigned i = 0; i < d_num_outputs; i++) {
             if (abs_N % d_when == 0) {
-                auto value = pmtf::scalar<uint64_t>(d_tag_counter++);
+                auto value = pmtv::pmt(d_tag_counter++);
                 // tag_map tm = {{key, value}, {"srcid",srcid}};
                 wio.outputs()[i].buf().add_tag(
-                    abs_N, pmtf::map{ { key, value }, { "srcid", srcid } });
+                    abs_N, tag_map{ { key, value }, { "srcid", srcid } });
             }
         }
         abs_N++;
