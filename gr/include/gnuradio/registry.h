@@ -19,7 +19,7 @@
 namespace gr {
 
 using generic_block_factory =
-    std::function<std::shared_ptr<block>(std::map<std::string, pmtf::pmt>&)>;
+    std::function<std::shared_ptr<block>(std::map<std::string, pmtv::pmt>&)>;
 
 /**
  * @brief Singleton object to register instantiated classes and methods

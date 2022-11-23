@@ -91,8 +91,8 @@ public:
     void produce(int num) { n_produced = num; }
 
     void add_tag(tag_t& tag) { _buffer->add_tag(tag); }
-    void add_tag(uint64_t offset, tag_map map) { _buffer->add_tag(offset, map); }
-    void add_tag(uint64_t offset, pmtf::map map) { _buffer->add_tag(offset, map); }
+    void add_tag(uint64_t offset, const tag_map& map) { _buffer->add_tag(offset, map); }
+    void add_tag(uint64_t offset, const pmtv::pmt& map) { _buffer->add_tag(offset, map); }
 };
 
 /**

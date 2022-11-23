@@ -1,4 +1,4 @@
-fileio_deps += [gnuradio_gr_dep, volk_dep, fmt_dep, pmtf_dep]
+fileio_deps += [gnuradio_gr_dep, volk_dep, fmt_dep, pmt_dep]
 fileio_sources += 'file_sink_base.cc'
 block_cpp_args = ['-DHAVE_CPU']
 # if IMPLEMENT_CUDA

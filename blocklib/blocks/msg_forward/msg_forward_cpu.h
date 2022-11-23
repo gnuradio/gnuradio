@@ -11,7 +11,7 @@
 #pragma once
 
 #include <gnuradio/blocks/msg_forward.h>
-#include <pmtf/string.hpp>
+#include <pmtv/pmt.hpp>
 
 namespace gr {
 namespace blocks {
@@ -22,15 +22,15 @@ public:
     msg_forward_cpu(block_args args);
 
 protected:
-    void handle_msg_in(pmtf::pmt msg) override
+    void handle_msg_in(pmtv::pmt msg) override
     {
 
         // gr_log_info(
-        //     d_logger, "{} got message: {}", this->alias(), pmtf::string(msg).data());
+        //     d_logger, "{} got message: {}", this->alias(), pmtv::string(msg).data());
         // GR_LOG_INFO(d_logger, "got msg on block {}", alias());
         // d_msg_cnt++;
 
-        size_t msg_cnt = pmtf::get_as<size_t>(*param_message_count);
+        size_t msg_cnt = pmtv::cast<size_t>(*param_message_count);
         *param_message_count = ++msg_cnt;
 
         // d_debug_logger->debug( "{}", msg_cnt);

@@ -2,7 +2,7 @@ soapy_sources += ['block_impl.cc']
 
 soapysdr_dep = dependency('SoapySDR', version : '>=0.7', required : true)
 
-soapy_deps += [gnuradio_gr_dep, soapysdr_dep, volk_dep, fmt_dep, pmtf_dep]
+soapy_deps += [gnuradio_gr_dep, soapysdr_dep, volk_dep, fmt_dep, pmt_dep]
 
 block_cpp_args = ['-DHAVE_CPU']
 

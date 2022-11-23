@@ -88,7 +88,7 @@ public:
     {%- endfor -%}
 
 {% for port in ports %}{% if port['domain'] == 'message' and port['direction'] == 'input' -%}
-    virtual void handle_msg_{{port['id']}}(pmtf::pmt msg) override
+    virtual void handle_msg_{{port['id']}}(pmtv::pmt msg) override
     {
         py::gil_scoped_acquire acquire;
         if (py::hasattr(_pyimpl, "{{"handle_msg_" + port['id']}}")) {

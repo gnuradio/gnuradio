@@ -18,8 +18,7 @@
 #include <filesystem>
 #include <stdexcept>
 
-#include <pmtf/scalar.hpp>
-#include <pmtf/string.hpp>
+#include <pmtv/pmt.hpp>
 
 #ifdef _MSC_VER
 #define GR_FSEEK _fseeki64
@@ -66,7 +65,7 @@ file_source_cpu::file_source_cpu(const file_source::block_args& args)
 
     std::stringstream str;
     str << name() << id();
-    _id = pmtf::string(str.str());
+    _id = pmtv::pmt(str.str());
 }
 
 
@@ -281,8 +280,8 @@ work_return_t file_source_cpu::work(work_io& wio)
         if (d_file_begin && !d_add_begin_tag.empty()) {
             wio.outputs()[0].buf().add_tag(
                 wio.outputs()[0].buf().total_written() + noutput_items - size,
-                pmtf::map{ { d_add_begin_tag, pmtf::scalar<int64_t>(d_repeat_cnt) },
-                           { "srcid", _id } });
+                tag_map{ { d_add_begin_tag, pmtv::pmt(d_repeat_cnt) },
+                         { "srcid", _id } });
 
             d_file_begin = false;
         }

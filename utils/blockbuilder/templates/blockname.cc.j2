@@ -43,7 +43,7 @@ namespace {{module}} {
 
     {% for p in parameters -%}
     {% if ('cotr' not in p or p['cotr']) and ('serializable' not in p or p['serializable'])%}
-    args.{{p['id']}} = pmtf::get_as<{{ p['dtype']|cpp_type(vec=p['container']=='vector')}}>(pmtf::pmt::from_base64(json_obj["{{p['id']}}"].get<std::string>()));
+    args.{{p['id']}} = pmtv::cast<{{ p['dtype']|cpp_type(vec=p['container']=='vector')}}>(pmtv::from_base64(json_obj["{{p['id']}}"].get<std::string>()));
     {% endif %}
     {% endfor -%}
 
@@ -52,13 +52,13 @@ namespace {{module}} {
 
 {% for impl in implementations %}
 {% if 'lang' not in impl or impl['lang'] == 'cpp' -%}
-{{block}}::sptr {{block}}::make_from_params_{{impl['id']}}(std::map<std::string, pmtf::pmt>& param_map)
+{{block}}::sptr {{block}}::make_from_params_{{impl['id']}}(std::map<std::string, pmtv::pmt>& param_map)
 {
     block_args args;
 
     {% for p in parameters -%}
     {% if ('cotr' not in p or p['cotr']) and ('serializable' not in p or p['serializable'])%}
-    args.{{p['id']}} = {{'('+p['dtype']|cpp_type+')' if p['is_enum']}}pmtf::get_as<{{ 'int' if p['is_enum'] else p['dtype']|cpp_type(vec=p['container']=='vector')}}>(param_map["{{p['id']}}"]);
+    args.{{p['id']}} = {{'('+p['dtype']|cpp_type+')' if p['is_enum']}}pmtv::cast<{{ 'int' if p['is_enum'] else p['dtype']|cpp_type(vec=p['container']=='vector')}}>(param_map["{{p['id']}}"]);
     {% endif %}
     {% endfor -%}
 
@@ -84,7 +84,7 @@ void {{block}}::set_{{p['id']}}({{p['dtype']|cpp_type(vec=p['container']=='vecto
 {% if p['settable'] and not 'gettable' in p or p['gettable'] %}
 {{ p['dtype']|cpp_type(vec=p['container']=='vector')}} {{block}}::{{p['id']}}()
 {
-    return pmtf::get_as<{{ p['dtype']|cpp_type(vec=p['container']=='vector')}}>(request_parameter_query(params::id_{{p['id']}}));
+    return pmtv::cast<{{ p['dtype']|cpp_type(vec=p['container']=='vector')}}>(request_parameter_query(params::id_{{p['id']}}));
 }
 {% endif %}
 {% endfor -%}

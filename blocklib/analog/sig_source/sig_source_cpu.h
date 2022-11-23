@@ -34,12 +34,12 @@ public:
 
         // Do more updating for certain parameters
         if (action->id() == sig_source<T>::id_phase) {
-            auto phase = pmtf::get_as<double>(*this->param_phase);
+            auto phase = pmtv::cast<double>(*this->param_phase);
             d_nco.set_phase(phase);
         }
         else if (action->id() == sig_source<T>::id_frequency) {
-            auto freq = pmtf::get_as<double>(*this->param_frequency);
-            auto samp_freq = pmtf::get_as<double>(*this->param_sampling_freq);
+            auto freq = pmtv::cast<double>(*this->param_frequency);
+            auto samp_freq = pmtv::cast<double>(*this->param_sampling_freq);
             d_nco.set_freq(2 * GR_M_PI * freq / samp_freq);
         }
     }

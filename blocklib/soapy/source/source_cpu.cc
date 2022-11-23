@@ -13,6 +13,7 @@
 #include <SoapySDR/Errors.hpp>
 #include <SoapySDR/Formats.h>
 #include <volk/volk.h>
+#include <iostream>
 
 namespace gr {
 namespace soapy {

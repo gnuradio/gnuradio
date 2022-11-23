@@ -13,7 +13,7 @@ import time
 import zmq
 
 from gnuradio import gr, gr_unittest, blocks, zeromq
-import pmtf
+import pmtv
 
 
 class qa_zeromq_pull_msg_source(gr_unittest.TestCase):
@@ -46,8 +46,8 @@ class qa_zeromq_pull_msg_source(gr_unittest.TestCase):
 
     def test_valid_pmt(self):
         """Test receiving of valid PMT messages"""
-        msg = pmtf.pmt('test_valid_pmt')
-        self.zmq_sock.send(bytes(msg.serialize()))
+        msg = pmtv.pmt('test_valid_pmt')
+        self.zmq_sock.send(bytes(pmtv.serialize(msg)))
         for _ in range(10):
             if self.message_debug.num_messages() > 0:
                 break

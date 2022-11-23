@@ -36,7 +36,7 @@ protected:
 
         // Do more updating for certain parameters
         if (action->id() == delay::id_dly) {
-            auto dly = pmtf::get_as<double>(*this->param_dly);
+            auto dly = pmtv::cast<double>(*this->param_dly);
             set_dly(dly);
         }
     }

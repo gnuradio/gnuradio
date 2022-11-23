@@ -20,12 +20,12 @@ class message_debug_cpu : public virtual message_debug
 public:
     message_debug_cpu(block_args args);
     size_t num_messages() override { return d_messages.size(); }
-    pmtf::pmt get_message(size_t i) override { return d_messages[i]; }
+    pmtv::pmt get_message(size_t i) override { return d_messages[i]; }
 
 private:
-    std::vector<pmtf::pmt> d_messages;
-    void handle_msg_print(pmtf::pmt msg) override;
-    void handle_msg_store(pmtf::pmt msg) override;
+    std::vector<pmtv::pmt> d_messages;
+    void handle_msg_print(pmtv::pmt msg) override;
+    void handle_msg_store(pmtv::pmt msg) override;
 };
 
 } // namespace blocks

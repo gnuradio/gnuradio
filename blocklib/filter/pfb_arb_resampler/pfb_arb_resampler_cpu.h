@@ -115,12 +115,12 @@ private:
 
         // Do more updating for certain parameters
         if (action->id() == pfb_arb_resampler<IN_T, OUT_T, TAP_T>::id_taps) {
-            d_resamp->set_taps(pmtf::get_as<std::vector<TAP_T>>(*this->param_taps));
+            d_resamp->set_taps(pmtv::cast<std::vector<TAP_T>>(*this->param_taps));
             d_history = d_resamp->taps_per_filter();
         }
         else if (action->id() == pfb_arb_resampler<IN_T, OUT_T, TAP_T>::id_rate) {
-            d_resamp->set_rate(pmtf::get_as<float>(*this->param_rate));
-            this->set_relative_rate(pmtf::get_as<float>(*this->param_rate));
+            d_resamp->set_rate(pmtv::cast<float>(*this->param_rate));
+            this->set_relative_rate(pmtv::cast<float>(*this->param_rate));
         }
     }
 };

@@ -1,4 +1,4 @@
-zeromq_deps += [gnuradio_gr_dep, volk_dep, fmt_dep, pmtf_dep, cppzmq_dep]
+zeromq_deps += [gnuradio_gr_dep, volk_dep, fmt_dep, pmt_dep, cppzmq_dep]
 zeromq_sources += ['base.cc', 'tag_headers.cc']
 block_cpp_args = ['-DHAVE_CPU']
 

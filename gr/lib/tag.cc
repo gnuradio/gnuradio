@@ -17,7 +17,7 @@ size_t tag_t::serialize(std::streambuf& sb) const
     std::ostream ss(&sb);
     ss.write((const char*)&_offset, sizeof(uint64_t));
     ret += sizeof(uint64_t);
-    ret += pmtf::pmt(_map).serialize(sb);
+    ret += pmtv::serialize(sb, pmtv::pmt(_map));
 
     return ret;
 }
@@ -26,7 +26,7 @@ tag_t tag_t::deserialize(std::streambuf& sb)
 {
     uint64_t tmp_offset;
     sb.sgetn((char*)&(tmp_offset), sizeof(uint64_t));
-    return tag_t(tmp_offset, pmtf::pmt::deserialize(sb));
+    return tag_t(tmp_offset, pmtv::deserialize(sb));
 }
 
 

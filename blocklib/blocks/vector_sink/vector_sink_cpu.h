@@ -24,15 +24,15 @@ public:
     work_return_t work(work_io&) override;
 
     // on_parameter_query is overridden here because PMT currently does not
-    // support element push_back of pmtf::vector.  So it is very inefficient
+    // support element push_back of pmtv::vector.  So it is very inefficient
     // to deal with the pmt directly in the work function.  Just work with the
     // private member variable, and pass it out as pmt when queried
     void on_parameter_query(param_action_sptr action) override
     {
         this->d_debug_logger->trace(
             "block {}: on_parameter_query param_id: {}", this->id(), action->id());
-        pmtf::pmt param = d_data;
-        // auto data = pmtf::get_as<std::vector<float>>(*param);
+        pmtv::pmt param = d_data;
+        // auto data = pmtv::cast<std::vector<float>>(*param);
         action->set_pmt_value(param);
     }
 

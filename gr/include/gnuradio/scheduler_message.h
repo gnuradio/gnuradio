@@ -1,6 +1,8 @@
 #pragma once
 
-#include <pmtf/wrap.hpp>
+#include <pmtv/pmt.hpp>
+
+#include <functional>
 
 namespace gr {
 
@@ -60,23 +62,23 @@ private:
 using scheduler_action_sptr = std::shared_ptr<scheduler_action>;
 
 
-using message_port_callback_fcn = std::function<void(pmtf::pmt)>;
+using message_port_callback_fcn = std::function<void(pmtv::pmt)>;
 class msgport_message : public scheduler_message
 {
 public:
     msgport_message() {}
-    msgport_message(pmtf::pmt msg, message_port_callback_fcn cb)
+    msgport_message(pmtv::pmt msg, message_port_callback_fcn cb)
         : scheduler_message(scheduler_message_t::MSGPORT_MESSAGE), _msg(msg), _cb(cb)
     {
     }
     void set_callback(message_port_callback_fcn cb) { _cb = cb; }
     message_port_callback_fcn callback() { return _cb; }
-    pmtf::pmt message() { return _msg; }
+    pmtv::pmt message() { return _msg; }
     std::string to_json() override;
     scheduler_message_sptr from_json(const std::string& str) override;
 
 private:
-    pmtf::pmt _msg;
+    pmtv::pmt _msg;
     message_port_callback_fcn _cb;
 };
 using msgport_message_sptr = std::shared_ptr<msgport_message>;

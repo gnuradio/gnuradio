@@ -10,7 +10,7 @@
 
 
 from gnuradio import gr, gr_unittest, blocks, streamops
-import pmtf
+import pmtv
 
 
 class test_delay(gr_unittest.TestCase):
@@ -77,7 +77,7 @@ class test_delay(gr_unittest.TestCase):
         vector_sink = blocks.vector_sink_f(1)
         ref_sink = blocks.vector_sink_f(1)
         tags_strobe = blocks.tags_strobe(
-            pmtf.pmt("TEST"),
+            pmtv.pmt("TEST"),
             nsamps,
             "strobe",
             gr.sizeof_float)

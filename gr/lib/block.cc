@@ -2,7 +2,7 @@
 #include <gnuradio/scheduler.h>
 #include <gnuradio/scheduler_message.h>
 #include <nlohmann/json.hpp>
-#include <pmtf/wrap.hpp>
+#include <pmtv/pmt.hpp>
 #include <atomic>
 #include <chrono>
 #include <thread>
@@ -17,12 +17,12 @@ block::block(const std::string& name, const std::string& module)
     // {# add message handler port for parameter updates#}
     auto msg_param_update = message_port::make("param_update", port_direction_t::INPUT);
     msg_param_update->register_callback(
-        [this](pmtf::pmt msg) { this->handle_msg_param_update(msg); });
+        [this](pmtv::pmt msg) { this->handle_msg_param_update(msg); });
     add_port(std::move(msg_param_update));
 
     auto msg_system = message_port::make("system", port_direction_t::INPUT);
     msg_system->register_callback(
-        [this](pmtf::pmt msg) { this->handle_msg_system(msg); });
+        [this](pmtv::pmt msg) { this->handle_msg_system(msg); });
     add_port(std::move(msg_system));
 }
 
@@ -105,21 +105,21 @@ void block::set_output_multiple(size_t multiple)
     d_output_multiple = multiple;
 }
 
-void block::handle_msg_param_update(pmtf::pmt msg)
+void block::handle_msg_param_update(pmtv::pmt msg)
 {
-    // Update messages are a pmtf::map with the name of
+    // Update messages are a pmtv::map with the name of
     // the param as the "id" field, and the pmt::wrap
     // that holds the update as the "value" field
 
-    auto id = pmtf::string(pmtf::map(msg)["id"]).data();
-    auto value = pmtf::map(msg)["value"];
+    auto id = pmtv::cast<std::string>(pmtv::get_map(msg)["id"]);
+    auto value = pmtv::get_map(msg)["value"];
 
     request_parameter_change(get_param_id(id), value, false);
 }
 
-void block::handle_msg_system(pmtf::pmt msg)
+void block::handle_msg_system(pmtv::pmt msg)
 {
-    auto str_msg = pmtf::get_as<std::string>(msg);
+    auto str_msg = pmtv::cast<std::string>(msg);
     if (str_msg == "done") {
         d_finished = true;
         p_scheduler->push_message(
@@ -127,7 +127,7 @@ void block::handle_msg_system(pmtf::pmt msg)
     }
 }
 
-void block::request_parameter_change(int param_id, pmtf::pmt new_value, bool block)
+void block::request_parameter_change(int param_id, pmtv::pmt new_value, bool block)
 {
     if (p_scheduler && d_running) {
         std::condition_variable cv;
@@ -160,13 +160,13 @@ void block::request_parameter_change(int param_id, pmtf::pmt new_value, bool blo
     }
 }
 
-pmtf::pmt block::request_parameter_query(int param_id)
+pmtv::pmt block::request_parameter_query(int param_id)
 {
 
     if (p_scheduler && d_running) {
         std::condition_variable cv;
         std::mutex m;
-        pmtf::pmt newval;
+        pmtv::pmt newval;
         bool ready{ false };
         auto lam = [&](param_action_sptr a) {
             {
@@ -228,7 +228,7 @@ std::string block::to_json()
     json_obj["id"] = name() + suffix();
     json_obj["format"] = "b64";
     for (auto [key, val] : d_parameters.param_map) {
-        auto encoded_str = val->to_base64();
+        auto encoded_str = pmtv::to_base64(*val);
         json_obj["parameters"][key] = encoded_str;
     }
 
@@ -241,16 +241,16 @@ void block::from_json(const std::string& json_str)
     auto json_obj = json::parse(json_str);
     for (auto& [key, value] : json_obj["parameters"].items()) {
         // deserialize from the b64 string
-        auto p = pmtf::pmt::from_base64(value.get<std::string>());
+        auto p = pmtv::from_base64(value.get<std::string>());
         auto block_pmt = d_parameters.get(key);
         *block_pmt = p;
     }
 }
 
 // This should go into pmt
-pmtf::pmt block::deserialize_param_to_pmt(const std::string& encoded_str)
+pmtv::pmt block::deserialize_param_to_pmt(const std::string& encoded_str)
 {
-    return pmtf::pmt::from_base64(encoded_str);
+    return pmtv::from_base64(encoded_str);
 }
 
 

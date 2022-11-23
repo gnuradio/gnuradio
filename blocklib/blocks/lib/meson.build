@@ -1,4 +1,4 @@
-blocks_deps += [gnuradio_gr_dep, volk_dep, fmt_dep, pmtf_dep]
+blocks_deps += [gnuradio_gr_dep, volk_dep, fmt_dep, pmt_dep]
 
 block_cpp_args = ['-DHAVE_CPU']
 

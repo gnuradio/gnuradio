@@ -45,7 +45,7 @@ parameters:
     dtype: string
     container: vector
     settable: false
-    serializable: false # pmtf library doesn't support vectors of strings yet
+    serializable: false # pmtv library doesn't support vectors of strings yet
     default: std::vector<std::string>{""}
     grc:
         default: '[]'
@@ -55,7 +55,7 @@ parameters:
     dtype: std::string
     container: vector
     settable: false
-    serializable: false # pmtf library doesn't support vectors of strings yet
+    serializable: false # pmtv library doesn't support vectors of strings yet
     default: std::vector<std::string>{""}
     grc:
         default: '[]'

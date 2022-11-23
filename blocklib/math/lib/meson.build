@@ -2,7 +2,7 @@
 #     'fast_atan2f.cc'
 # ]
 
-math_deps += [gnuradio_gr_dep, volk_dep, fmt_dep, pmtf_dep]
+math_deps += [gnuradio_gr_dep, volk_dep, fmt_dep, pmt_dep]
 
 block_cpp_args = ['-DHAVE_CPU', '-DHAVE_NUMPY']
 if IMPLEMENT_CUDA

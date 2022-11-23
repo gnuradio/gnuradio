@@ -4,7 +4,7 @@ audio_sources += [
 
 alsa_dep = dependency('alsa', required: true)
 
-audio_deps += [gnuradio_gr_dep, volk_dep, fmt_dep, pmtf_dep, alsa_dep]
+audio_deps += [gnuradio_gr_dep, volk_dep, fmt_dep, pmt_dep, alsa_dep]
 
 block_cpp_args = ['-DHAVE_CPU']
 

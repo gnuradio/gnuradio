@@ -36,10 +36,10 @@ push_msg_sink_cpu::push_msg_sink_cpu(block_args args)
     }
 }
 
-void push_msg_sink_cpu::handle_msg_in(pmtf::pmt msg)
+void push_msg_sink_cpu::handle_msg_in(pmtv::pmt msg)
 {
     std::stringbuf sb("");
-    msg.serialize(sb);
+    pmtv::serialize(sb, msg);
     std::string s = sb.str();
     zmq::message_t zmsg(s.size());
     memcpy(zmsg.data(), s.c_str(), s.size());
