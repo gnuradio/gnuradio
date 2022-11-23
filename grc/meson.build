@@ -7,6 +7,12 @@ if (prefix == '/usr')
   blocksdir = blocksdir + ':' + join_paths('/usr/local/',GRC_BLOCKS_DIR)
 endif
 
+if ( get_option('custom_blocks_path') != '' )
+  localblocksdir = join_paths(get_option('custom_blocks_path'),GRC_BLOCKS_DIR)
+else
+  localblocksdir = ''
+endif
+
 grc_xterm_program = find_program('xterminal-emulator','gnome-terminal','konsole','xterm', required : false)
 GRC_XTERM_EXE = ''
 if grc_xterm_program.found()
@@ -16,6 +22,7 @@ endif
 cdata = configuration_data()
 cdata.set('GRC_XTERM_EXE', GRC_XTERM_EXE)
 cdata.set('blocksdir', blocksdir)
+cdata.set('localblocks',localblocksdir)
 grc_conf_file = configure_file(input: 'grc.yml.in',
                             output: 'grc.yml',
                             configuration: cdata,

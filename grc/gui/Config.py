@@ -17,8 +17,8 @@ from . import Constants
 HEADER = """\
 # This contains only GUI settings for GRC and is not meant for users to edit.
 #
-# GRC settings not accessible through the GUI are in config.conf under
-# section [grc].
+# GRC settings not accessible through the GUI are in config.yml under
+# section grc:.
 
 """
 

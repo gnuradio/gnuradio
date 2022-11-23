@@ -156,6 +156,6 @@ summary({'bindir': get_option('bindir'),
         'libdir': get_option('libdir'),
         'datadir': get_option('datadir'),
         'prefix': get_option('prefix'),
+        'Custom blocks path': get_option('custom_blocks_path'),
+        'Python dir': py3_install_dir,
         }, section: 'Directories')
-message('Python dir:')
-message(py3_install_dir)
