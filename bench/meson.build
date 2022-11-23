@@ -1,6 +1,15 @@
 # incdir = include_directories('../include')
 
 if CLI11_dep.found()
+srcs = ['bm_buffer.cpp']
+executable('bm_buffer',
+    srcs,
+    # include_directories : incdir,
+    link_language : 'cpp',
+    dependencies: [gnuradio_gr_dep,
+                   CLI11_dep],
+    install : true)
+
 srcs = ['bm_copy.cc']
 executable('bm_nbt_copy', 
     srcs, 
