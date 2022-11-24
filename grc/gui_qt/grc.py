@@ -49,10 +49,9 @@ class Application(QtWidgets.QApplication):
 
         log.debug("Creating QApplication instance")
         os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
-        QtWidgets.QApplication.__init__(self, settings.argv)
         QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling, True)
         QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_UseHighDpiPixmaps, True)
-
+        QtWidgets.QApplication.__init__(self, settings.argv)
 
         # Save references to the global settings and gnuradio platform
         self.settings = settings
