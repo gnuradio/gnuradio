@@ -20,6 +20,7 @@ from __future__ import absolute_import, print_function
 # Standard modules
 import logging
 import textwrap
+import os
 
 # Third-party  modules
 import six
@@ -47,7 +48,11 @@ class Application(QtWidgets.QApplication):
         log.debug("__init__")
 
         log.debug("Creating QApplication instance")
+        os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
         QtWidgets.QApplication.__init__(self, settings.argv)
+        QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling, True)
+        QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_UseHighDpiPixmaps, True)
+
 
         # Save references to the global settings and gnuradio platform
         self.settings = settings
