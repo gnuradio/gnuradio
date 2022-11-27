@@ -280,8 +280,6 @@ def test_bypass(qtbot, qapp_cls_):
     click_pos = scaling * qapp_cls_.MainWindow.currentView.mapToGlobal(throttle.center().toPoint())
     pag.click(click_pos.x(), click_pos.y(), button="left")
     qtbot.wait(100)
-    pag.click(click_pos.x(), click_pos.y(), button="left")
-    qtbot.wait(100)
     keystroke(qtbot, qapp_cls_, QtCore.Qt.Key_B)
     qtbot.wait(100)
     assert throttle.state == 'bypassed'
