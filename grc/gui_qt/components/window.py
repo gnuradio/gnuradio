@@ -731,18 +731,21 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         cmd = EnableAction(self.currentFlowgraph)
         self.currentFlowgraph.undoStack.push(cmd)
         self.updateActions()
+        self.currentFlowgraph.update()
 
     def disable_triggered(self):
         log.debug('disable')
         cmd = DisableAction(self.currentFlowgraph)
         self.currentFlowgraph.undoStack.push(cmd)
         self.updateActions()
+        self.currentFlowgraph.update()
 
     def bypass_triggered(self):
         log.debug('bypass')
         cmd = BypassAction(self.currentFlowgraph)
         self.currentFlowgraph.undoStack.push(cmd)
         self.updateActions()
+        self.currentFlowgraph.update()
 
     def generate_triggered(self):
         log.debug('generate')
