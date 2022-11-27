@@ -135,3 +135,6 @@ class Port(QtWidgets.QGraphicsItem, CorePort):
             painter.drawText(QtCore.QRectF(-max(0, self.width - 15), 0, self.width, 15), Qt.AlignCenter, self.name)
         else:
             painter.drawText(QtCore.QRectF(0, 0, self.width, 15), Qt.AlignCenter, self.name)
+
+    def center(self):
+        return QtCore.QPointF(self.x() + self.width/2, self.y() + self.height/2)
