@@ -53,6 +53,13 @@ class Application(QtWidgets.QApplication):
         QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_UseHighDpiPixmaps, True)
         QtWidgets.QApplication.__init__(self, settings.argv)
 
+
+        try:
+            import qdarkstyle
+            self.setStyleSheet(qdarkstyle.load_stylesheet())
+        except ImportError:
+            log.warning("Did not find QDarkstyle. Dark mode disabled")
+
         # Save references to the global settings and gnuradio platform
         self.settings = settings
         self.platform = platform

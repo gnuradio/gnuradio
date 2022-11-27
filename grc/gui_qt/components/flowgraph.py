@@ -387,7 +387,7 @@ class FlowgraphView(QtWidgets.QGraphicsView, base.Component): # added base.Compo
             self.initEmpty()
 
         self.setScene(self.flowgraph)
-        self.setBackgroundBrush(QtGui.QBrush(Qt.white))
+        self.setBackgroundBrush(QtGui.QBrush(QtGui.QColor(25, 35, 45)))
 
         self.isPanning    = False
         self.mousePressed = False
