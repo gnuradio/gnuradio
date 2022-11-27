@@ -253,7 +253,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         actions['toggle_grid'] = Action(_("toggle_grid"), self, shortcut='G',
                                    statusTip=_("toggle_grid-tooltip"))
 
-        actions['errors'] = Action(Icons('dialog-error'), _("errors"), self, shortcut='E',
+        actions['errors'] = Action(Icons('dialog-error'), _("errors"), self,
                                    statusTip=_("errors-tooltip"))
 
         actions['find'] = Action(Icons('edit-find'), _("find"), self,
