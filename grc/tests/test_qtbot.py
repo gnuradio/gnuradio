@@ -98,58 +98,56 @@ def test_add_throttle(qtbot, qapp_cls_):
     assert 'blocks_throttle' in [block.key for block in qapp_cls_.MainWindow.currentFlowgraph.blocks]
 
 def test_open_properties(qtbot, qapp_cls_):
-    qtbot.wait(500)
+    qtbot.wait(100)
     qtbot.mouseDClick(
             qapp_cls_.MainWindow.currentView.viewport(), 
             QtCore.Qt.LeftButton, 
             pos=qapp_cls_.MainWindow.currentView.mapFromScene(qapp_cls_.MainWindow.currentFlowgraph.options_block.pos()+QtCore.QPoint(15,15)))
-    qtbot.wait(500)
+    qtbot.wait(100)
     assert qapp_cls_.MainWindow.currentFlowgraph.options_block.props_dialog.isVisible()
 
 def test_change_id(qtbot, qapp_cls_):
     qtbot.mouseDClick(qapp_cls_.MainWindow.currentFlowgraph.options_block.props_dialog.edit_params[1],
             QtCore.Qt.LeftButton)
     type_text(qtbot, qapp_cls_, "changed")
-    qtbot.wait(500)
+    qtbot.wait(100)
     keystroke(qtbot, qapp_cls_, QtCore.Qt.Key_Enter)
-    qtbot.wait(500)
+    qtbot.wait(100)
     val = qapp_cls_.MainWindow.currentFlowgraph.options_block.params['title'].value
     assert val == "Not titled changed"
 
 def test_rotate_block(qtbot, qapp_cls_):
+    scaling = qapp_cls_.desktop().devicePixelRatio()
+    
     block = qapp_cls_.MainWindow.currentFlowgraph.options_block
-    qtbot.mouseClick(
-            qapp_cls_.MainWindow.currentView.viewport(), 
-            QtCore.Qt.LeftButton, 
-            pos=qapp_cls_.MainWindow.currentView.mapFromScene(block.pos()+QtCore.QPoint(15,15)))
-    qtbot.wait(500)
+    click_pos = scaling*qapp_cls_.MainWindow.currentView.mapToGlobal(block.center().toPoint())
+    pag.click(click_pos.x(), click_pos.y(), button="left")
     old_rotation = block.states['rotation']
     keystroke(qtbot, qapp_cls_, QtCore.Qt.Key_Left)
-    qtbot.wait(500)
+    qtbot.wait(100)
     new_rotation = block.states['rotation']
     assert new_rotation == old_rotation - 90
+'''
     keystroke(qtbot, qapp_cls_, QtCore.Qt.Key_Right)
     qtbot.wait(500)
     new_rotation = block.states['rotation']
     assert new_rotation == old_rotation
+'''
 
 def test_disable_enable(qtbot, qapp_cls_):
     vp = qapp_cls_.MainWindow.currentView.viewport()
+    scaling = qapp_cls_.desktop().devicePixelRatio()
+
     block = None
     for block_ in qapp_cls_.MainWindow.currentFlowgraph.blocks:
         if block_.key == 'variable':
             block = block_
-    qtbot.mouseClick(
-            vp,
-            QtCore.Qt.LeftButton, 
-            pos=qapp_cls_.MainWindow.currentView.mapFromScene(block.pos()+QtCore.QPoint(4,4)))
+
+    click_pos = scaling*qapp_cls_.MainWindow.currentView.mapToGlobal(block.center().toPoint())
+    pag.click(click_pos.x(), click_pos.y(), button="left")
     assert block != None
     assert block.state == 'enabled'
     qtbot.wait(100)
-    qtbot.mouseClick(
-            vp,
-            QtCore.Qt.LeftButton, 
-            pos=qapp_cls_.MainWindow.currentView.mapFromScene(block.pos()+QtCore.QPoint(4,4)))
     keystroke(qtbot, qapp_cls_, QtCore.Qt.Key_D)
     qtbot.wait(100)
     assert block.state == 'disabled'
@@ -160,6 +158,7 @@ def test_disable_enable(qtbot, qapp_cls_):
 def test_move_blocks(qtbot, qapp_cls_):
     fg = qapp_cls_.MainWindow.currentFlowgraph
     vp = qapp_cls_.MainWindow.currentView.viewport()
+    scaling = qapp_cls_.desktop().devicePixelRatio()
     
     throttle = None
     n_src = None
@@ -172,39 +171,24 @@ def test_move_blocks(qtbot, qapp_cls_):
         if block.key == 'blocks_null_sink':
             n_sink = block
 
-    start = vp.mapToGlobal(throttle.pos().toPoint()+QtCore.QPoint(5,5))
+    start = scaling*qapp_cls_.MainWindow.currentView.mapToGlobal(throttle.center().toPoint())
     pag.moveTo(start.x(), start.y())
     pag.mouseDown()
     def drag():
         for i in range(20):
-            pag.move(0, 2)
-            time.sleep(0.0001)
+            pag.move(0, 10)
     drag_t = threading.Thread(target=drag)
     drag_t.start()
     while drag_t.is_alive():
         qtbot.wait(100)
     pag.mouseUp()
 
-    start = vp.mapToGlobal(n_src.pos().toPoint()+QtCore.QPoint(5,5))
+    start = scaling*qapp_cls_.MainWindow.currentView.mapToGlobal(n_src.center().toPoint())
     pag.moveTo(start.x(), start.y())
     pag.mouseDown()
     def drag():
         for i in range(20):
-            pag.move(-8, 0)
-            time.sleep(0.0001)
-    drag_t = threading.Thread(target=drag)
-    drag_t.start()
-    while drag_t.is_alive():
-        qtbot.wait(100)
-    pag.mouseUp()
-
-    start = vp.mapToGlobal(n_sink.pos().toPoint()+QtCore.QPoint(5,5))
-    pag.moveTo(start.x(), start.y())
-    pag.mouseDown()
-    def drag():
-        for i in range(20):
-            pag.move(12, 0)
-            time.sleep(0.0001)
+            pag.move(-15, 0)
     drag_t = threading.Thread(target=drag)
     drag_t.start()
     while drag_t.is_alive():
@@ -216,6 +200,8 @@ def test_move_blocks(qtbot, qapp_cls_):
 def test_create_connection(qtbot, qapp_cls_):
     fg = qapp_cls_.MainWindow.currentFlowgraph
     vp = qapp_cls_.MainWindow.currentView.viewport()
+    scaling = qapp_cls_.desktop().devicePixelRatio()
+
     throttle = None
     n_src = None
     n_sink = None
@@ -229,10 +215,12 @@ def test_create_connection(qtbot, qapp_cls_):
     
     assert len(fg.connections) == 0
 
-    click_pos = qapp_cls_.MainWindow.currentView.mapToGlobal(n_src.mapToScene(n_src.sources[0].pos()+QtCore.QPoint(4,4)).toPoint())
+    click_pos = scaling * qapp_cls_.MainWindow.currentView.mapToGlobal(n_src.mapToScene(n_src.sources[0].center()).toPoint())
     pag.click(click_pos.x(), click_pos.y(), button="left")
-    click_pos = qapp_cls_.MainWindow.currentView.mapToGlobal(n_sink.mapToScene(n_sink.sinks[0].pos()+QtCore.QPoint(4,4)).toPoint())
+    qtbot.wait(100)
+    click_pos = scaling * qapp_cls_.MainWindow.currentView.mapToGlobal(n_sink.mapToScene(n_sink.sinks[0].center()).toPoint())
     pag.click(click_pos.x(), click_pos.y(), button="left")
+    qtbot.wait(100)
 
     qtbot.wait(50)
     assert len(fg.connections) > 0
@@ -240,39 +228,42 @@ def test_create_connection(qtbot, qapp_cls_):
 def test_num_inputs(qtbot, qapp_cls_):
     fg = qapp_cls_.MainWindow.currentFlowgraph
     vp = qapp_cls_.MainWindow.currentView.viewport()
+    scaling = qapp_cls_.desktop().devicePixelRatio()
+
     n_sink = None
     for block in fg.blocks:
+        
         if block.key == 'blocks_null_sink':
             n_sink = block
 
     assert len(n_sink.sinks) == 1
     assert len(fg.connections) == 1
-    click_pos = qapp_cls_.MainWindow.currentView.mapToGlobal((n_sink.pos()+QtCore.QPoint(4,4)).toPoint())
+    click_pos = scaling * qapp_cls_.MainWindow.currentView.mapToGlobal(n_sink.center().toPoint())
     pag.doubleClick(click_pos.x(), click_pos.y(), button="left")
-    qtbot.wait(500)
+    qtbot.wait(100)
     qtbot.mouseDClick(n_sink.props_dialog.edit_params[2],
             QtCore.Qt.LeftButton)
     type_text(qtbot, qapp_cls_, "2")
-    qtbot.wait(500)
+    qtbot.wait(100)
     keystroke(qtbot, qapp_cls_, QtCore.Qt.Key_Enter)
-    qtbot.wait(500)
+    qtbot.wait(100)
     assert len(n_sink.sinks) == 2
     assert len(fg.connections) == 1
-    click_pos = qapp_cls_.MainWindow.currentView.mapToGlobal((n_sink.pos()+QtCore.QPoint(4,4)).toPoint())
+    click_pos = scaling * qapp_cls_.MainWindow.currentView.mapToGlobal(n_sink.center().toPoint())
     pag.doubleClick(click_pos.x(), click_pos.y(), button="left")
-    qtbot.wait(500)
+    qtbot.wait(100)
     qtbot.mouseDClick(n_sink.props_dialog.edit_params[2],
             QtCore.Qt.LeftButton)
     type_text(qtbot, qapp_cls_, "1")
-    qtbot.wait(500)
+    qtbot.wait(100)
     keystroke(qtbot, qapp_cls_, QtCore.Qt.Key_Enter)
-    qtbot.wait(500)
+    qtbot.wait(100)
     assert len(n_sink.sinks) == 1
     assert len(fg.connections) == 1
 
 def test_bypass(qtbot, qapp_cls_):
-    click_pos = qapp_cls_.MainWindow.currentView.mapToGlobal(QtCore.QPoint(1,1))
-    pag.click(click_pos.x(), click_pos.y(), button="left")
+    scaling = qapp_cls_.desktop().devicePixelRatio()
+
     fg = qapp_cls_.MainWindow.currentFlowgraph
     vp = qapp_cls_.MainWindow.currentView.viewport()
     throttle = None
@@ -286,21 +277,23 @@ def test_bypass(qtbot, qapp_cls_):
         if block.key == 'blocks_null_sink':
             n_sink = block
     # Bypass the throttle block
-    click_pos = qapp_cls_.MainWindow.currentView.mapToGlobal((throttle.pos()+QtCore.QPoint(4,4)).toPoint())
+    click_pos = scaling * qapp_cls_.MainWindow.currentView.mapToGlobal(throttle.center().toPoint())
     pag.click(click_pos.x(), click_pos.y(), button="left")
-    qtbot.wait(50)
+    qtbot.wait(100)
+    pag.click(click_pos.x(), click_pos.y(), button="left")
+    qtbot.wait(100)
     keystroke(qtbot, qapp_cls_, QtCore.Qt.Key_B)
-    qtbot.wait(50)
+    qtbot.wait(100)
     assert throttle.state == 'bypassed'
-    qtbot.wait(50)
+    qtbot.wait(100)
     keystroke(qtbot, qapp_cls_, QtCore.Qt.Key_E)
     assert throttle.state == 'enabled'
     # Try to bypass the null source, this shouldn't work
-    click_pos = qapp_cls_.MainWindow.currentView.mapToGlobal((n_src.pos()+QtCore.QPoint(4,4)).toPoint())
+    click_pos = scaling * qapp_cls_.MainWindow.currentView.mapToGlobal(n_src.center().toPoint())
     pag.click(click_pos.x(), click_pos.y(), button="left")
-    qtbot.wait(50)
+    qtbot.wait(100)
     keystroke(qtbot, qapp_cls_, QtCore.Qt.Key_B)
-    qtbot.wait(50)
+    qtbot.wait(100)
     assert n_src.state == 'enabled'
 
 def test_file_actions(qtbot, qapp_cls_):
