@@ -384,3 +384,5 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
         # TODO: Is there a simpler way to do this?
         self.setZValue(self.parent.getMaxZValue() + 1)
 
+    def center(self):
+        return QtCore.QPointF(self.x() + self.width/2, self.y() + self.height/2)
