@@ -49,7 +49,7 @@ class Port(QtWidgets.QGraphicsItem, CorePort):
         self.setFlag(QtWidgets.QGraphicsItem.ItemSendsScenePositionChanges)
 
         self._border_color = self._bg_color = colors.BLOCK_ENABLED_COLOR
-        self.parent_block.parent.addItem(self)
+        self.parent_flowgraph.addItem(self)
         self.setFlag(QtWidgets.QGraphicsItem.ItemStacksBehindParent)
         self.setFlag(QtWidgets.QGraphicsItem.ItemIsSelectable)
 
@@ -61,6 +61,10 @@ class Port(QtWidgets.QGraphicsItem, CorePort):
         for conn in self.connections():
             conn.updateLine()
         return QtWidgets.QGraphicsLineItem.itemChange(self, change, value)
+
+    def remove_clone(self, port):
+        self.parent_flowgraph.removeItem(port)
+        CorePort.remove_clone(self, port)
 
     def create_shapes(self):
         """Create new areas and labels for the port."""
