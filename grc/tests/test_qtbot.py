@@ -73,114 +73,6 @@ def gather_menu_items(menu):
         ret[act.text()] = act
     return ret
 
-def test_file_actions(qtbot, qapp_cls_):
-    win = qapp_cls_.MainWindow
-    menu = qapp_cls_.MainWindow.menus['file']
-    items = gather_menu_items(menu)
-    qtbot.wait(100)
-    
-    # New
-    assert win.tabWidget.count() == 1, "File/New"
-    qtbot.keyClick(qapp_cls_.focusWidget(), QtCore.Qt.Key_F, QtCore.Qt.AltModifier)
-    qtbot.wait(100)
-    qtbot.keyClick(menu, QtCore.Qt.Key_N)
-    qtbot.wait(100)
-    assert win.tabWidget.count() == 2, "File/New"
-    qtbot.keyClick(qapp_cls_.focusWidget(), QtCore.Qt.Key_F, QtCore.Qt.AltModifier)
-    qtbot.wait(100)
-    qtbot.keyClick(menu, QtCore.Qt.Key_N)
-    qtbot.wait(100)
-    assert win.tabWidget.count() == 3, "File/New"
-    qtbot.keyClick(qapp_cls_.focusWidget(), QtCore.Qt.Key_F, QtCore.Qt.AltModifier)
-    qtbot.wait(100)
-    qtbot.keyClick(menu, QtCore.Qt.Key_N)
-    qtbot.wait(100)
-    assert win.tabWidget.count() == 4, "File/New"
-
-    # Open
-    # TODO
-
-    # Close
-    assert win.tabWidget.count() == 4, "File/Close"
-    qtbot.keyClick(qapp_cls_.focusWidget(), QtCore.Qt.Key_F, QtCore.Qt.AltModifier)
-    qtbot.wait(100)
-    qtbot.keyClick(menu, QtCore.Qt.Key_C)
-    qtbot.wait(100)
-    assert win.tabWidget.count() == 3, "File/Close"
-    # Close All
-    assert win.tabWidget.count() == 3, "File/Close All"
-    qtbot.keyClick(qapp_cls_.focusWidget(), QtCore.Qt.Key_F, QtCore.Qt.AltModifier)
-    qtbot.wait(100)
-    qtbot.keyClick(menu, QtCore.Qt.Key_L)
-    qtbot.wait(100)
-    assert win.tabWidget.count() == 1, "File/Close All"
-    # Save
-    # Save As
-    # Screen Capture
-    
-    # Print
-    # Exit
-
-def test_edit_actions(qtbot, qapp_cls_):
-    pass
-
-def test_view_actions(qtbot, qapp_cls_):
-    pass
-
-def test_build_actions(qtbot, qapp_cls_):
-    pass
-
-def test_tools_actions(qtbot, qapp_cls_):
-    pass
-
-def test_reports_actions(qtbot, qapp_cls_):
-    pass
-
-def test_help_actions(qtbot, qapp_cls_):
-    def close_modal_dialog():
-        assert(qapp_cls_.activeWindow() != qapp_cls_.MainWindow)
-        qtbot.keyClick(qapp_cls_.activeWindow(), QtCore.Qt.Key_Enter)
-
-    menu = qapp_cls_.MainWindow.menus['help']
-    items = gather_menu_items(menu)
-    qtbot.wait(100)
-
-    # Help
-    assert(qapp_cls_.activeWindow() == qapp_cls_.MainWindow)
-    window_count = len(qapp_cls_.topLevelWindows())
-    qtbot.keyClick(qapp_cls_.focusWidget(), QtCore.Qt.Key_H, QtCore.Qt.AltModifier)
-    qtbot.wait(100)
-    QtCore.QTimer.singleShot(100, close_modal_dialog)
-    qtbot.keyClick(menu, QtCore.Qt.Key_H)
-    qtbot.wait(200)
-    assert(qapp_cls_.activeWindow() == qapp_cls_.MainWindow)
-    '''
-    # TODO
-    # Types
-    # Parser Errors
-    # Get Involved
-    '''
-    # About
-    assert(qapp_cls_.activeWindow() == qapp_cls_.MainWindow)
-    window_count = len(qapp_cls_.topLevelWindows())
-    qtbot.keyClick(qapp_cls_.focusWidget(), QtCore.Qt.Key_H, QtCore.Qt.AltModifier)
-    qtbot.wait(100)
-    QtCore.QTimer.singleShot(100, close_modal_dialog)
-    qtbot.keyClick(menu, QtCore.Qt.Key_A)
-    qtbot.wait(200)
-    assert(qapp_cls_.activeWindow() == qapp_cls_.MainWindow)
-    
-    # About Qt
-    assert(qapp_cls_.activeWindow() == qapp_cls_.MainWindow)
-    window_count = len(qapp_cls_.topLevelWindows())
-    qtbot.keyClick(qapp_cls_.focusWidget(), QtCore.Qt.Key_H, QtCore.Qt.AltModifier)
-    qtbot.wait(100)
-    QtCore.QTimer.singleShot(100, close_modal_dialog)
-    qtbot.keyClick(menu, QtCore.Qt.Key_Q)
-    qtbot.wait(200)
-    assert(qapp_cls_.activeWindow() == qapp_cls_.MainWindow)
-
-
 def test_add_null_sink(qtbot, qapp_cls_):
     qtbot.wait(100)
     qtbot.keyClick(qapp_cls_.focusWidget(), QtCore.Qt.Key_F, QtCore.Qt.ControlModifier)
@@ -410,6 +302,113 @@ def test_bypass(qtbot, qapp_cls_):
     keystroke(qtbot, qapp_cls_, QtCore.Qt.Key_B)
     qtbot.wait(50)
     assert n_src.state == 'enabled'
+
+def test_file_actions(qtbot, qapp_cls_):
+    win = qapp_cls_.MainWindow
+    menu = qapp_cls_.MainWindow.menus['file']
+    items = gather_menu_items(menu)
+    qtbot.wait(100)
+    
+    # New
+    assert win.tabWidget.count() == 1, "File/New"
+    qtbot.keyClick(qapp_cls_.focusWidget(), QtCore.Qt.Key_F, QtCore.Qt.AltModifier)
+    qtbot.wait(100)
+    qtbot.keyClick(menu, QtCore.Qt.Key_N)
+    qtbot.wait(100)
+    assert win.tabWidget.count() == 2, "File/New"
+    qtbot.keyClick(qapp_cls_.focusWidget(), QtCore.Qt.Key_F, QtCore.Qt.AltModifier)
+    qtbot.wait(100)
+    qtbot.keyClick(menu, QtCore.Qt.Key_N)
+    qtbot.wait(100)
+    assert win.tabWidget.count() == 3, "File/New"
+    qtbot.keyClick(qapp_cls_.focusWidget(), QtCore.Qt.Key_F, QtCore.Qt.AltModifier)
+    qtbot.wait(100)
+    qtbot.keyClick(menu, QtCore.Qt.Key_N)
+    qtbot.wait(100)
+    assert win.tabWidget.count() == 4, "File/New"
+
+    # Open
+    # TODO
+
+    # Close
+    assert win.tabWidget.count() == 4, "File/Close"
+    qtbot.keyClick(qapp_cls_.focusWidget(), QtCore.Qt.Key_F, QtCore.Qt.AltModifier)
+    qtbot.wait(100)
+    qtbot.keyClick(menu, QtCore.Qt.Key_C)
+    qtbot.wait(100)
+    assert win.tabWidget.count() == 3, "File/Close"
+    # Close All
+    assert win.tabWidget.count() == 3, "File/Close All"
+    qtbot.keyClick(qapp_cls_.focusWidget(), QtCore.Qt.Key_F, QtCore.Qt.AltModifier)
+    qtbot.wait(100)
+    qtbot.keyClick(menu, QtCore.Qt.Key_L)
+    qtbot.wait(100)
+    assert win.tabWidget.count() == 1, "File/Close All"
+    # Save
+    # Save As
+    # Screen Capture
+    
+    # Print
+    # Exit
+
+def test_edit_actions(qtbot, qapp_cls_):
+    pass
+
+def test_view_actions(qtbot, qapp_cls_):
+    pass
+
+def test_build_actions(qtbot, qapp_cls_):
+    pass
+
+def test_tools_actions(qtbot, qapp_cls_):
+    pass
+
+def test_reports_actions(qtbot, qapp_cls_):
+    pass
+
+def test_help_actions(qtbot, qapp_cls_):
+    def close_modal_dialog():
+        assert(qapp_cls_.activeWindow() != qapp_cls_.MainWindow)
+        qtbot.keyClick(qapp_cls_.activeWindow(), QtCore.Qt.Key_Enter)
+
+    menu = qapp_cls_.MainWindow.menus['help']
+    items = gather_menu_items(menu)
+    qtbot.wait(100)
+
+    # Help
+    assert(qapp_cls_.activeWindow() == qapp_cls_.MainWindow)
+    window_count = len(qapp_cls_.topLevelWindows())
+    qtbot.keyClick(qapp_cls_.focusWidget(), QtCore.Qt.Key_H, QtCore.Qt.AltModifier)
+    qtbot.wait(100)
+    QtCore.QTimer.singleShot(100, close_modal_dialog)
+    qtbot.keyClick(menu, QtCore.Qt.Key_H)
+    qtbot.wait(100)
+    assert(qapp_cls_.activeWindow() == qapp_cls_.MainWindow)
+    
+    # TODO
+    # Types
+    # Parser Errors
+    # Get Involved
+    
+    # About
+    assert(qapp_cls_.activeWindow() == qapp_cls_.MainWindow)
+    window_count = len(qapp_cls_.topLevelWindows())
+    qtbot.keyClick(qapp_cls_.focusWidget(), QtCore.Qt.Key_H, QtCore.Qt.AltModifier)
+    qtbot.wait(100)
+    QtCore.QTimer.singleShot(100, close_modal_dialog)
+    qtbot.keyClick(menu, QtCore.Qt.Key_A)
+    qtbot.wait(100)
+    assert(qapp_cls_.activeWindow() == qapp_cls_.MainWindow)
+    
+    # About Qt
+    assert(qapp_cls_.activeWindow() == qapp_cls_.MainWindow)
+    window_count = len(qapp_cls_.topLevelWindows())
+    qtbot.keyClick(qapp_cls_.focusWidget(), QtCore.Qt.Key_H, QtCore.Qt.AltModifier)
+    qtbot.wait(100)
+    QtCore.QTimer.singleShot(100, close_modal_dialog)
+    qtbot.keyClick(menu, QtCore.Qt.Key_Q)
+    qtbot.wait(100)
+    assert(qapp_cls_.activeWindow() == qapp_cls_.MainWindow)
 
 def test_quit(qtbot, qapp_cls_):
     qapp_cls_.MainWindow.actions["exit"].trigger()
