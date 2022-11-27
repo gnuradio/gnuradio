@@ -34,6 +34,7 @@ from PyQt5.QtGui import QStandardItemModel
 from . import FlowgraphView
 from .. import base, Constants, Utils
 from .undoable_actions import ChangeStateAction, RotateAction, EnableAction, DisableAction, BypassAction
+from . import DocumentationTab
 
 # Logging
 log = logging.getLogger(__name__)
@@ -144,6 +145,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         self.tabWidget.addTab(fg_view, "Untitled")
         self.setCentralWidget(self.tabWidget)
         self.currentFlowgraph.selectionChanged.connect(self.updateActions)
+        self.currentFlowgraph.selectionChanged.connect(self.updateDocTab)
         #self.new_tab(self.flowgraph)
 
     '''def show(self):
@@ -315,6 +317,13 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         actions['disable'].setEnabled(False)
         actions['bypass'].setEnabled(False)
 
+    def updateDocTab(self):
+        doc_txt = self._app().DocumentationTab._text
+        blocks = self.currentFlowgraph.selected_blocks()
+        if len(blocks) == 1:
+            #print(blocks[0].documentation)
+            doc_string = blocks[0].documentation['']
+            doc_txt.setText(doc_string)
 
     def updateActions(self):
         ''' Update the available actions based on what is selected '''

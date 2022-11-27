@@ -54,7 +54,6 @@ class Flowgraph(QtWidgets.QGraphicsScene, base.Component, CoreFlowgraph):
     def __init__(self, *args, **kwargs):
         super(Flowgraph, self).__init__()
         self.parent = self.platform
-        self.parent_platform = self.platform
         CoreFlowgraph.__init__(self, self.platform)
         self.isPanning    = False
         self.mousePressed = False
