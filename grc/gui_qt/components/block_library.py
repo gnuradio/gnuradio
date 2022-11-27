@@ -68,16 +68,17 @@ def get_items(model):
 class LibraryView(QtWidgets.QTreeView):
     # TODO: Use selectionChanged() or something instead
     # so we can use arrow keys too
-    def handle_clicked(self):
-        if self.isExpanded(self.currentIndex()):
-            self.collapse(self.currentIndex())
-        else:
-            self.expand(self.currentIndex())
+    def updateDocTab(self):
         label = self.model().data(self.currentIndex())
         if label in self.parent().parent()._block_tree_flat:
             block_key = self.parent().parent()._block_tree_flat[label].key
             self.parent().parent().app.DocumentationTab.setText(self.parent().parent()._block_tree_flat[label].documentation[''])
 
+    def handle_clicked(self):
+        if self.isExpanded(self.currentIndex()):
+            self.collapse(self.currentIndex())
+        else:
+            self.expand(self.currentIndex())
 
 class BlockLibrary(QtWidgets.QDockWidget, base.Component):
 
@@ -117,6 +118,7 @@ class BlockLibrary(QtWidgets.QDockWidget, base.Component):
         library.setHeaderHidden(True)
         # Expand categories with a single click
         library.clicked.connect(library.handle_clicked)
+        library.selectionModel().selectionChanged.connect(library.updateDocTab)
         #library.headerItem().setText(0, "Blocks")
         self._library = library
 
@@ -280,5 +282,6 @@ class BlockLibrary(QtWidgets.QDockWidget, base.Component):
         # Call the nested function recursively to populate the block tree
         log.debug("Populating the treeview")
         _populate(block_tree, self._model.invisibleRootItem())
+        self._library.expand(self._model.item(0,0).index()) # TODO: Should be togglable in prefs
         if v_blocks:
             self._library.expandAll()
