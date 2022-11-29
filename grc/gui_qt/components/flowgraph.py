@@ -471,8 +471,7 @@ class FlowgraphView(QtWidgets.QGraphicsView, base.Component): # added base.Compo
 
     def wheelEvent(self,  event):
         # TODO: Support multi touch drag and drop for scrolling through the view
-        #if event.modifiers() == Qt.ControlModifier:
-        if False:
+        if event.modifiers() == Qt.ControlModifier:
             factor = 1.1
 
             if event.angleDelta().y() < 0:
