@@ -45,8 +45,8 @@ from .undoable_actions import MoveAction
 # Logging
 log = logging.getLogger(__name__)
 
-DEFAULT_MAX_X = 1280
-DEFAULT_MAX_Y = 1024
+DEFAULT_MAX_X = 400
+DEFAULT_MAX_Y = 300
 
 
 # TODO: Combine the scene and view? Maybe the scene should be the controller?
@@ -378,7 +378,8 @@ class FlowgraphView(QtWidgets.QGraphicsView, base.Component): # added base.Compo
 
         self.flowgraph = Flowgraph()
 
-        self.scalefactor = 1.0
+        self.scalefactor = 0.8
+        self.scale(self.scalefactor, self.scalefactor)
 
         self.setSceneRect(0,0,DEFAULT_MAX_X, DEFAULT_MAX_Y)
         if filename is not None:
@@ -387,6 +388,7 @@ class FlowgraphView(QtWidgets.QGraphicsView, base.Component): # added base.Compo
             self.initEmpty()
 
         self.setScene(self.flowgraph)
+        self.fitInView(self.flowgraph.sceneRect(), QtCore.Qt.KeepAspectRatio)
         self.setBackgroundBrush(QtGui.QBrush(QtGui.QColor(25, 35, 45)))
 
         self.isPanning    = False
