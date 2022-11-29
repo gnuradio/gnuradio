@@ -36,7 +36,7 @@ class Paths(object):
     RESOURCES = p.join(INSTALL, 'gui_qt/resources')
     LANGUAGE = p.join(INSTALL, 'gui_qt/resources/language')
     LOGO = p.join(INSTALL, 'gui_qt/resources/logo')
-    ICON = p.join(LOGO, 'gnuradio_logo_icon-square-150x150-white.png')
+    ICON = p.join(LOGO, 'gnuradio_logo_icon-square.png')
 
     # Model Paths
     MODEL = p.join(INSTALL, 'model')
