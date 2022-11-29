@@ -120,15 +120,9 @@ public:
      * that changing this block can have effects on other RFNoC blocks or nodes
      * (like streamers).
      *
-     * If the property does not exist, or if the property can be determined to
-     * be of a different type than \p prop_data_t due to the usage of runtime
-     * type information (RTTI), a ::uhd::lookup_error is thrown.
-     *
-     * \tparam prop_data_t The data type of the property
-     * \param id The identifier of the property to write. To find out which
-     *           values of \p id are valid, call get_property_ids()
-     * \param instance The instance number of this property
-     * \param val The new value of the property.
+     * \param name The name of the property.
+     * \param value The new value of the property.
+     * \param port The port of the property.
      */
     template <typename T>
     void set_property(const std::string& name, const T& value, const size_t port = 0)
@@ -139,19 +133,13 @@ public:
     /*! Get the value of a specific block argument. \p The type of an argument
      *  must be known at compile time.
      *
-     * If the property does not exist, or if the property can be determined to
-     * be of a different type than \p prop_data_t due to the usage of runtime
-     * type information (RTTI), a ::uhd::lookup_error is thrown.
-     *
      * Note: Despite this being a "getter", this function is not declared const.
      * This is because internally, it can resolve properties, which may cause
      * changes within the object.
      *
-     * \tparam prop_data_t The data type of the property
-     * \param id The identifier of the property to write.
-     * \param instance The instance number of this property
+     * \param name The name of the property.
+     * \param port The port of the property.
      * \return The value of the property.
-     * \throws uhd::lookup_error if the property can't be found.
      */
     template <typename T>
     const T get_property(const std::string& name, const size_t port = 0)
