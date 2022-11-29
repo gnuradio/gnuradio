@@ -5,7 +5,7 @@
 project('gr4-newmod', 'cpp', 
   version : '0.0.0',
   license : 'GPLv3',
-  default_options : ['cpp_std=c++17'])
+  default_options : ['cpp_std=c++20'])
 
 # Import python3 meson module which is used to find the Python dependencies.
 # Python3 is required for code generation
