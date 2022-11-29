@@ -57,6 +57,7 @@ class DocumentationTab(QtWidgets.QDockWidget, base.Component):
         layout.setSpacing(0)
         layout.setContentsMargins(5, 0, 5, 5)
         self._text = QtWidgets.QTextEdit()
+        self._text.setReadOnly(True)
         layout.addWidget(self._text)
         self._layout = layout
 
