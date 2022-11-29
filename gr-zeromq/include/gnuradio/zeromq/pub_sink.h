@@ -49,6 +49,7 @@ public:
      * \param pass_tags Whether sink will serialize and pass tags over the link.
      * \param hwm High Watermark to configure the socket to (-1 => zmq's default)
      * \param key Prepend a key/topic to the start of each message (default is none)
+     * \param drop_on_hwm Optionally drop samples when high watermark is reached.
      */
     static sptr make(size_t itemsize,
                      size_t vlen,
