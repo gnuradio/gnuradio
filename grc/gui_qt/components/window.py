@@ -60,6 +60,9 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         self.setDockOptions(QtWidgets.QMainWindow.AllowNestedDocks |
                             QtWidgets.QMainWindow.AllowTabbedDocks |
                             QtWidgets.QMainWindow.AnimatedDocks)
+        self.progress_bar = QtWidgets.QProgressBar()
+        self.statusBar().addPermanentWidget(self.progress_bar)
+        self.progress_bar.hide()
 
         # Setup the window icon
         icon = QtGui.QIcon(self.settings.path.ICON)
