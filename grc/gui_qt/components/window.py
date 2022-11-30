@@ -116,6 +116,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         # actions dynamically connected to class functions. Also, the log
         # functionality should be also allocated
         log.debug("__init__")
+        QtGui.QIcon.setThemeName("Papirus-Dark")
 
         # Add the menus from the view
         menus = self.menus
@@ -130,6 +131,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         self.registerToolBar(toolbars["file"])
         self.registerToolBar(toolbars["edit"])
         self.registerToolBar(toolbars["run"])
+        self.registerToolBar(toolbars["misc"])
 
         log.debug("Loading flowgraph model")
         fg_view = FlowgraphView(self)
@@ -301,6 +303,9 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
         actions['preferences'] = Action(Icons('preferences-system'), _("preferences"), self,
                                         statusTip=_("preferences-tooltip"))
+        
+        actions['reload'] = Action(Icons('view-refresh'), _("reload"), self,
+                                        statusTip=_("reload-tooltip"))
 
         # Disable some actions, by default
         actions['save'].setEnabled(False)
@@ -533,6 +538,11 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         run.addAction(actions['execute'])
         run.addAction(actions['kill'])
         toolbars['run'] = run
+
+        # Misc Toolbar
+        misc = Toolbar('Misc')
+        misc.addAction(actions['reload'])
+        toolbars['misc'] = misc
 
     def createStatusBar(self):
         log.debug("Creating status bar")
