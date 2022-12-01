@@ -29,12 +29,7 @@ QTGUI_API QString get_qt_style_sheet(QString filename);
 class QTGUI_API QwtDblClickPlotPicker : public QwtPlotPicker
 {
 public:
-#if QWT_VERSION < 0x060100
-    QwtDblClickPlotPicker(QwtPlotCanvas*);
-#else  /* QWT_VERSION < 0x060100 */
     QwtDblClickPlotPicker(QWidget*);
-#endif /* QWT_VERSION < 0x060100 */
-
     ~QwtDblClickPlotPicker() override;
 
     virtual QwtPickerMachine* stateMachine(int) const;
@@ -46,12 +41,8 @@ public:
     QwtPickerDblClickPointMachine();
     ~QwtPickerDblClickPointMachine() override;
 
-#if QWT_VERSION < 0x060000
-    virtual CommandList
-#else
-    QList<QwtPickerMachine::Command>
-#endif
-    transition(const QwtEventPattern& eventPattern, const QEvent* e) override;
+    QList<QwtPickerMachine::Command> transition(const QwtEventPattern& eventPattern,
+                                                const QEvent* e) override;
 };
 
 QTGUI_API void check_set_qss(QApplication* app);

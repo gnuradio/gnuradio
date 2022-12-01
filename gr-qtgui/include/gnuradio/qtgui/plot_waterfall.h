@@ -15,12 +15,8 @@
 #include <qglobal.h>
 #include <qwt_plot_rasteritem.h>
 
-#if QWT_VERSION >= 0x060000
 #include <qsize.h>
 #include <qwt_interval.h>
-
-typedef QwtInterval QwtDoubleInterval;
-#endif
 
 class QwtColorMap;
 
@@ -47,24 +43,13 @@ public:
 
     const QwtColorMap& colorMap() const;
 
-#if QWT_VERSION < 0x060000
-    virtual QwtDoubleRect boundingRect() const;
-    virtual QSize rasterHint(const QwtDoubleRect&) const;
-#endif
-
     int rtti() const override;
 
 protected:
-#if QWT_VERSION < 0x060000
-    QImage renderImage(const QwtScaleMap& xMap,
-                       const QwtScaleMap& yMap,
-                       const QwtDoubleRect& rect) const;
-#else
     QImage renderImage(const QwtScaleMap& xMap,
                        const QwtScaleMap& yMap,
                        const QRectF& rect,
                        const QSize& size = QSize(0, 0)) const override;
-#endif
 
 private:
     class PrivateData;
