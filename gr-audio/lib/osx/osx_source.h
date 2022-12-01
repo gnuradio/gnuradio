@@ -116,10 +116,6 @@ private:
                                       UInt32 in_number_frames,
                                       AudioBufferList* io_data);
 
-#ifndef GR_USE_OLD_AUDIO_UNIT
-
-    // OSX 10.4 and newer
-
     static OSStatus hardware_listener(AudioObjectID in_object_id,
                                       UInt32 in_num_addresses,
                                       const AudioObjectPropertyAddress in_addresses[],
@@ -129,18 +125,6 @@ private:
                                      UInt32 in_num_addresses,
                                      const AudioObjectPropertyAddress in_addresses[],
                                      void* in_client_data);
-
-#else
-
-    // OSX 10.6 and older; removed as of 10.7
-
-    static OSStatus hardware_listener(AudioHardwarePropertyID in_property_id,
-                                      void* in_client_data);
-
-    static OSStatus default_listener(AudioHardwarePropertyID in_property_id,
-                                     void* in_client_data);
-
-#endif
 };
 } /* namespace audio */
 } /* namespace gr */
