@@ -19,24 +19,15 @@ WaterfallData::WaterfallData(const double minimumFrequency,
                              const double maximumFrequency,
                              const uint64_t fftPoints,
                              const unsigned int historyExtent)
-#if QWT_VERSION < 0x060000
-    : QwtRasterData(QwtDoubleRect(minimumFrequency /* X START */,
-                                  0 /* Y START */,
-                                  maximumFrequency - minimumFrequency /* WIDTH */,
-                                  static_cast<double>(historyExtent) /* HEIGHT */)),
-#else
     : QwtRasterData(),
-#endif
       _spectrumData(fftPoints * historyExtent),
       _fftPoints(fftPoints),
       _historyLength(historyExtent),
-      _intensityRange(QwtDoubleInterval(-200.0, 0.0))
+      _intensityRange(QwtInterval(-200.0, 0.0))
 {
-#if QWT_VERSION >= 0x060000
     setInterval(Qt::XAxis, QwtInterval(minimumFrequency, maximumFrequency));
     setInterval(Qt::YAxis, QwtInterval(0, historyExtent));
     setInterval(Qt::ZAxis, QwtInterval(-200, 0.0));
-#endif
 
     reset();
 }
@@ -52,31 +43,18 @@ void WaterfallData::reset()
 
 void WaterfallData::copy(const WaterfallData* rhs)
 {
-#if QWT_VERSION < 0x060000
-    if ((_fftPoints != rhs->getNumFFTPoints()) ||
-        (boundingRect() != rhs->boundingRect())) {
-        _fftPoints = rhs->getNumFFTPoints();
-        setBoundingRect(rhs->boundingRect());
-        _spectrumData.resize(_fftPoints * _historyLength);
-    }
-#else
     if (_fftPoints != rhs->getNumFFTPoints()) {
         _fftPoints = rhs->getNumFFTPoints();
         _spectrumData.resize(_fftPoints * _historyLength);
     }
-#endif
 
     reset();
     setSpectrumDataBuffer(rhs->getSpectrumDataBuffer());
     setNumLinesToUpdate(rhs->getNumLinesToUpdate());
 
-#if QWT_VERSION < 0x060000
-    setRange(rhs->range());
-#else
     setInterval(Qt::XAxis, rhs->interval(Qt::XAxis));
     setInterval(Qt::YAxis, rhs->interval(Qt::YAxis));
     setInterval(Qt::ZAxis, rhs->interval(Qt::ZAxis));
-#endif
 }
 
 void WaterfallData::resizeData(const double startFreq,
@@ -88,18 +66,6 @@ void WaterfallData::resizeData(const double startFreq,
         _historyLength = history;
     }
 
-#if QWT_VERSION < 0x060000
-    if ((fftPoints != getNumFFTPoints()) ||
-        (boundingRect().width() != (stopFreq - startFreq)) ||
-        (boundingRect().left() != startFreq)) {
-
-        setBoundingRect(QwtDoubleRect(
-            startFreq, 0, stopFreq - startFreq, static_cast<double>(_historyLength)));
-        _fftPoints = fftPoints;
-        _spectrumData.resize(_fftPoints * _historyLength);
-    }
-
-#else
     if ((fftPoints != getNumFFTPoints()) ||
         (interval(Qt::XAxis).width() != (stopFreq - startFreq)) ||
         (interval(Qt::XAxis).minValue() != startFreq)) {
@@ -110,36 +76,23 @@ void WaterfallData::resizeData(const double startFreq,
         _fftPoints = fftPoints;
         _spectrumData.resize(_fftPoints * _historyLength);
     }
-#endif
 
     reset();
 }
 
 QwtRasterData* WaterfallData::copy() const
 {
-#if QWT_VERSION < 0x060000
-    WaterfallData* returnData = new WaterfallData(
-        boundingRect().left(), boundingRect().right(), _fftPoints, _historyLength);
-#else
     WaterfallData* returnData = new WaterfallData(interval(Qt::XAxis).minValue(),
                                                   interval(Qt::XAxis).maxValue(),
                                                   _fftPoints,
                                                   _historyLength);
-#endif
 
     returnData->copy(this);
     return returnData;
 }
 
 
-#if QWT_VERSION < 0x060000
-QwtDoubleInterval WaterfallData::range() const { return _intensityRange; }
-
-void WaterfallData::setRange(const QwtDoubleInterval& newRange)
-{
-    _intensityRange = newRange;
-}
-#elif QWT_VERSION >= 0x060200
+#if QWT_VERSION >= 0x060200
 void WaterfallData::setInterval(Qt::Axis axis, const QwtInterval& interval)
 {
     d_intervals[axis] = interval;
@@ -153,14 +106,6 @@ double WaterfallData::value(double x, double y) const
 {
     double returnValue = 0.0;
 
-#if QWT_VERSION < 0x060000
-    const unsigned int intY = static_cast<unsigned int>(
-        (1.0 - (y / boundingRect().height())) * static_cast<double>(_historyLength - 1));
-    const unsigned int intX = static_cast<unsigned int>(
-        (((x - boundingRect().left()) / boundingRect().width()) *
-         static_cast<double>(_fftPoints - 1)) +
-        0.5);
-#else
     double height = interval(Qt::YAxis).maxValue();
     double left = interval(Qt::XAxis).minValue();
     double right = interval(Qt::XAxis).maxValue();
@@ -169,7 +114,6 @@ double WaterfallData::value(double x, double y) const
     const unsigned int intY = static_cast<unsigned int>((1.0 - y / height) * ylen);
     const unsigned int intX =
         static_cast<unsigned int>((((x - left) / (right - left)) * xlen) + 0.5);
-#endif
 
     const int location = (intY * _fftPoints) + intX;
     if ((location > -1) &&

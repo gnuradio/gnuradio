@@ -14,11 +14,7 @@
 #include <qwt_raster_data.h>
 #include <cinttypes>
 
-#if QWT_VERSION >= 0x060000
 #include <qwt_interval.h>
-
-typedef QwtInterval QwtDoubleInterval;
-#endif
 
 class WaterfallData : public QwtRasterData
 {
@@ -34,10 +30,7 @@ public:
 
     virtual QwtRasterData* copy() const;
 
-#if QWT_VERSION < 0x060000
-    virtual QwtDoubleInterval range() const;
-    virtual void setRange(const QwtDoubleInterval&);
-#elif QWT_VERSION >= 0x060200
+#if QWT_VERSION >= 0x060200
     virtual QwtInterval interval(Qt::Axis) const override;
     void setInterval(Qt::Axis, const QwtInterval&);
 #endif
@@ -60,11 +53,7 @@ protected:
     uint64_t _historyLength;
     int _numLinesToUpdate;
 
-#if QWT_VERSION < 0x060000
-    QwtDoubleInterval _intensityRange;
-#else
     QwtInterval _intensityRange;
-#endif
 
 #if QWT_VERSION >= 0x060200
     QwtInterval d_intervals[3];

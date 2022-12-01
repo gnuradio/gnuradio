@@ -26,17 +26,7 @@ DisplayPlot::DisplayPlot(int nplots, QWidget* parent)
     d_autoscale_state = false;
 
     // Disable polygon clipping
-#if QWT_VERSION < 0x060000
-    QwtPainter::setDeviceClipping(false);
-#else
     QwtPainter::setPolylineSplitting(false);
-#endif
-
-#if QWT_VERSION < 0x060000
-    // We don't need the cache here
-    canvas()->setPaintAttribute(QwtPlotCanvas::PaintCached, false);
-    canvas()->setPaintAttribute(QwtPlotCanvas::PaintPacked, false);
-#endif
 
     QColor default_palette_color = QColor("white");
     setPaletteColor(default_palette_color);
@@ -48,18 +38,11 @@ DisplayPlot::DisplayPlot(int nplots, QWidget* parent)
     // emit the position of clicks on widget
     d_picker = new QwtDblClickPlotPicker(canvas());
 
-#if QWT_VERSION < 0x060000
-    connect(d_picker,
-            SIGNAL(selected(const QwtDoublePoint&)),
-            this,
-            SLOT(onPickerPointSelected(const QwtDoublePoint&)));
-#else
     d_picker->setStateMachine(new QwtPickerDblClickPointMachine());
     connect(d_picker,
             SIGNAL(selected(const QPointF&)),
             this,
-            SLOT(onPickerPointSelected6(const QPointF&)));
-#endif
+            SLOT(onPickerPointSelected(const QPointF&)));
 
     // Configure magnify on mouse wheel
     d_magnifier = new QwtPlotMagnifier(canvas());
@@ -79,21 +62,12 @@ DisplayPlot::DisplayPlot(int nplots, QWidget* parent)
 
     QwtLegend* legendDisplay = new QwtLegend(this);
 
-#if QWT_VERSION < 0x060100
-    legendDisplay->setItemMode(QwtLegend::CheckableItem);
-    insertLegend(legendDisplay);
-    connect(this,
-            SIGNAL(legendChecked(QwtPlotItem*, bool)),
-            this,
-            SLOT(legendEntryChecked(QwtPlotItem*, bool)));
-#else  /* QWT_VERSION < 0x060100 */
     legendDisplay->setDefaultItemMode(QwtLegendData::Checkable);
     insertLegend(legendDisplay);
     connect(legendDisplay,
             SIGNAL(checked(const QVariant&, bool, int)),
             this,
             SLOT(legendEntryChecked(const QVariant&, bool, int)));
-#endif /* QWT_VERSION < 0x060100 */
 }
 
 DisplayPlot::~DisplayPlot()
@@ -142,19 +116,12 @@ void DisplayPlot::setLineColor(unsigned int which, QColor color)
         pen.setColor(color);
         d_plot_curve[which]->setPen(pen);
         // And set the color of the markers
-#if QWT_VERSION < 0x060000
-        // d_plot_curve[which]->setBrush(QBrush(QColor(color)));
-        d_plot_curve[which]->setPen(pen);
-        QwtSymbol sym = (QwtSymbol)d_plot_curve[which]->symbol();
-        setLineMarker(which, sym.style());
-#else
         QwtSymbol* sym = (QwtSymbol*)d_plot_curve[which]->symbol();
         if (sym) {
             sym->setColor(color);
             sym->setPen(pen);
             d_plot_curve[which]->setSymbol(sym);
         }
-#endif
     }
 }
 
@@ -275,17 +242,11 @@ void DisplayPlot::setLineWidth(unsigned int which, int width)
         d_plot_curve[which]->setPen(pen);
 
         // Scale the marker size proportionally
-#if QWT_VERSION < 0x060000
-        QwtSymbol sym = (QwtSymbol)d_plot_curve[which]->symbol();
-        sym.setSize(7 + 10 * log10(1.0 * width), 7 + 10 * log10(1.0 * width));
-        d_plot_curve[which]->setSymbol(sym);
-#else
         QwtSymbol* sym = (QwtSymbol*)d_plot_curve[which]->symbol();
         if (sym) {
             sym->setSize(7 + 10 * log10(1.0 * width), 7 + 10 * log10(1.0 * width));
             d_plot_curve[which]->setSymbol(sym);
         }
-#endif
     }
 }
 
@@ -319,34 +280,19 @@ const Qt::PenStyle DisplayPlot::getLineStyle(unsigned int which) const
 void DisplayPlot::setLineMarker(unsigned int which, QwtSymbol::Style marker)
 {
     if (which < d_nplots) {
-#if QWT_VERSION < 0x060000
-        QwtSymbol sym = (QwtSymbol)d_plot_curve[which]->symbol();
-        QPen pen(d_plot_curve[which]->pen());
-        QBrush brush(pen.color());
-        sym.setStyle(marker);
-        sym.setPen(pen);
-        sym.setBrush(brush);
-        d_plot_curve[which]->setSymbol(sym);
-#else
         QwtSymbol* sym = (QwtSymbol*)d_plot_curve[which]->symbol();
         if (sym) {
             sym->setStyle(marker);
             d_plot_curve[which]->setSymbol(sym);
         }
-#endif
     }
 }
 
 const QwtSymbol::Style DisplayPlot::getLineMarker(unsigned int which) const
 {
     if (which < d_nplots) {
-#if QWT_VERSION < 0x060000
-        QwtSymbol sym = (QwtSymbol)d_plot_curve[which]->symbol();
-        return sym.style();
-#else
         QwtSymbol* sym = (QwtSymbol*)d_plot_curve[which]->symbol();
         return sym->style();
-#endif
     } else {
         return QwtSymbol::NoSymbol;
     }
@@ -365,17 +311,12 @@ void DisplayPlot::setMarkerAlpha(unsigned int which, int alpha)
         d_plot_curve[which]->setPen(pen);
 
         // And set the new color for the markers
-#if QWT_VERSION < 0x060000
-        QwtSymbol sym = (QwtSymbol)d_plot_curve[which]->symbol();
-        setLineMarker(which, sym.style());
-#else
         QwtSymbol* sym = (QwtSymbol*)d_plot_curve[which]->symbol();
         if (sym) {
             sym->setColor(color);
             sym->setPen(pen);
             d_plot_curve[which]->setSymbol(sym);
         }
-#endif
     }
 }
 
@@ -404,23 +345,11 @@ void DisplayPlot::legendEntryChecked(QwtPlotItem* plotItem, bool on)
 
 void DisplayPlot::legendEntryChecked(const QVariant& plotItem, bool on, int index)
 {
-#if QWT_VERSION < 0x060100
-    std::runtime_error("DisplayPlot::legendEntryChecked with QVariant not enabled in "
-                       "this version of QWT.");
-#else
     QwtPlotItem* p = infoToItem(plotItem);
     legendEntryChecked(p, on);
-#endif /* QWT_VERSION < 0x060100 */
 }
 
-void DisplayPlot::onPickerPointSelected(const QwtDoublePoint& p)
-{
-    QPointF point = p;
-    // fprintf(stderr,"onPickerPointSelected %f %f\n", point.x(), point.y());
-    emit plotPointSelected(point);
-}
-
-void DisplayPlot::onPickerPointSelected6(const QPointF& p)
+void DisplayPlot::onPickerPointSelected(const QPointF& p)
 {
     QPointF point = p;
     // fprintf(stderr,"onPickerPointSelected %f %f\n", point.x(), point.y());
