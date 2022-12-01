@@ -22,11 +22,7 @@
 class EyeDisplayZoomer : public QwtPlotZoomer, public TimePrecisionClass
 {
 public:
-#if QWT_VERSION < 0x060100
-    EyeDisplayZoomer(QwtPlotCanvas* canvas, const unsigned int timePrecision)
-#else  /* QWT_VERSION < 0x060100 */
     EyeDisplayZoomer(QWidget* canvas, const unsigned int timePrecision)
-#endif /* QWT_VERSION < 0x060100 */
         : QwtPlotZoomer(canvas), TimePrecisionClass(timePrecision), d_yUnitType("V")
     {
         setTrackerMode(QwtPicker::AlwaysOn);
@@ -47,7 +43,7 @@ protected:
     QwtText trackerText(const QPoint& p) const override
     {
         QwtText t;
-        QwtDoublePoint dp = QwtPlotZoomer::invTransform(p);
+        QPointF dp = QwtPlotZoomer::invTransform(p);
         if ((fabs(dp.y()) > 0.0001) && (fabs(dp.y()) < 10000)) {
             t.setText(QString("%1 %2, %3 %4")
                           .arg(dp.x(), 0, 'f', getTimePrecision())
@@ -91,10 +87,6 @@ EyeDisplayPlot::EyeDisplayPlot(unsigned int nplots,
     d_tag_background_style = Qt::NoBrush;
 
     d_zoomer = new EyeDisplayZoomer(canvas(), 0);
-
-#if QWT_VERSION < 0x060000
-    d_zoomer->setSelectionFlags(QwtPicker::RectSelection | QwtPicker::DragSelection);
-#endif
 
     d_zoomer->setMousePattern(
         QwtEventPattern::MouseSelect2, Qt::RightButton, Qt::ControlModifier);
@@ -147,15 +139,9 @@ EyeDisplayPlot::EyeDisplayPlot(unsigned int nplots,
                                           QPen(colors[d_curve_index]),
                                           QSize(7, 7));
 
-#if QWT_VERSION < 0x060000
-        d_plot_curve[i]->setRawData(
-            d_xdata.data(), d_ydata[i].data(), d_numPointsPerPeriod);
-        d_plot_curve[i]->setSymbol(*symbol);
-#else
         d_plot_curve[i]->setRawSamples(
             d_xdata.data(), d_ydata[i].data(), d_numPointsPerPeriod);
         d_plot_curve[i]->setSymbol(symbol);
-#endif
     }
 
     d_sample_rate = 1;
@@ -231,15 +217,9 @@ void EyeDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
                                                       QPen(colors[d_curve_index]),
                                                       QSize(7, 7));
 
-#if QWT_VERSION < 0x060000
-                    d_plot_curve[i]->setRawData(
-                        d_xdata.data(), d_ydata[i].data(), d_numPointsPerPeriod);
-                    d_plot_curve[i]->setSymbol(*symbol);
-#else
                     d_plot_curve[i]->setRawSamples(
                         d_xdata.data(), d_ydata[i].data(), d_numPointsPerPeriod);
                     d_plot_curve[i]->setSymbol(symbol);
-#endif
                 }
             } else {
                 // New data
@@ -323,11 +303,7 @@ void EyeDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
                             m->setLabelAlignment(Qt::AlignBottom);
                         }
 
-#if QWT_VERSION < 0x060000
-                        m->setSymbol(*sym);
-#else
                         m->setSymbol(sym);
-#endif
                         QwtText tag_label(s.str().c_str());
                         tag_label.setColor(getTagTextColor());
                         m->setLabel(tag_label);
@@ -396,13 +372,8 @@ void EyeDisplayPlot::legendEntryChecked(QwtPlotItem* plotItem, bool on)
 
 void EyeDisplayPlot::legendEntryChecked(const QVariant& plotItem, bool on, int index)
 {
-#if QWT_VERSION < 0x060100
-    std::runtime_error("EyeDisplayPlot::legendEntryChecked with QVariant not "
-                       "enabled in this version of QWT.");
-#else
     QwtPlotItem* p = infoToItem(plotItem);
     legendEntryChecked(p, on);
-#endif /* QWT_VERSION < 0x060100 */
 }
 
 void EyeDisplayPlot::_resetXAxisPoints()
@@ -415,7 +386,7 @@ void EyeDisplayPlot::_resetXAxisPoints()
     setAxisScale(QwtPlot::xBottom, 0, 2.0 * delt * d_sps);
     // Set up zoomer base for maximum unzoom x-axis
     // and reset to maximum unzoom level
-    QwtDoubleRect zbase = d_zoomer->zoomBase();
+    QRectF zbase = d_zoomer->zoomBase();
     zbase.setLeft(0.0);
     zbase.setRight(2.0 * delt * d_sps);
     d_zoomer->zoom(zbase);
@@ -545,18 +516,12 @@ void EyeDisplayPlot::setLineColor(unsigned int which, QColor color)
         pen.setColor(color);
         d_plot_curve[i]->setPen(pen);
         // And set the color of the markers
-#if QWT_VERSION < 0x060000
-        d_plot_curve[i]->setPen(pen);
-        QwtSymbol sym = (QwtSymbol)d_plot_curve[i]->symbol();
-        setLineMarker(i, sym.style());
-#else
         QwtSymbol* sym = (QwtSymbol*)d_plot_curve[i]->symbol();
         if (sym) {
             sym->setColor(color);
             sym->setPen(pen);
             d_plot_curve[i]->setSymbol(sym);
         }
-#endif
     }
 }
 
@@ -570,17 +535,11 @@ void EyeDisplayPlot::setLineWidth(unsigned int which, int width)
         d_plot_curve[i]->setPen(pen);
 
         // Scale the marker size proportionally
-#if QWT_VERSION < 0x060000
-        QwtSymbol sym = (QwtSymbol)d_plot_curve[i]->symbol();
-        sym.setSize(7 + 10 * log10(1.0 * width), 7 + 10 * log10(1.0 * width));
-        d_plot_curve[i]->setSymbol(sym);
-#else
         QwtSymbol* sym = (QwtSymbol*)d_plot_curve[i]->symbol();
         if (sym) {
             sym->setSize(7 + 10 * log10(1.0 * i), 7 + 10 * log10(1.0 * i));
             d_plot_curve[i]->setSymbol(sym);
         }
-#endif
     }
 }
 
@@ -588,21 +547,11 @@ void EyeDisplayPlot::setLineWidth(unsigned int which, int width)
 void EyeDisplayPlot::setLineMarker(unsigned int which, QwtSymbol::Style marker)
 {
     for (unsigned int i = 0; i < d_plot_curve.size(); ++i) {
-#if QWT_VERSION < 0x060000
-        QwtSymbol sym = (QwtSymbol)d_plot_curve[i]->symbol();
-        QPen pen(d_plot_curve[i]->pen());
-        QBrush brush(pen.color());
-        sym.setStyle(marker);
-        sym.setPen(pen);
-        sym.setBrush(brush);
-        d_plot_curve[i]->setSymbol(sym);
-#else
         QwtSymbol* sym = (QwtSymbol*)d_plot_curve[i]->symbol();
         if (sym) {
             sym->setStyle(marker);
             d_plot_curve[i]->setSymbol(sym);
         }
-#endif
     }
 }
 
@@ -630,17 +579,12 @@ void EyeDisplayPlot::setMarkerAlpha(unsigned int which, int alpha)
         d_plot_curve[i]->setPen(pen);
 
         // And set the new color for the markers
-#if QWT_VERSION < 0x060000
-        QwtSymbol sym = (QwtSymbol)d_plot_curve[i]->symbol();
-        setLineMarker(i, sym.style());
-#else
         QwtSymbol* sym = (QwtSymbol*)d_plot_curve[i]->symbol();
         if (sym) {
             sym->setColor(color);
             sym->setPen(pen);
             d_plot_curve[i]->setSymbol(sym);
         }
-#endif
     }
 }
 

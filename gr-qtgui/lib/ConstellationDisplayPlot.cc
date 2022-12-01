@@ -21,12 +21,7 @@
 class ConstellationDisplayZoomer : public QwtPlotZoomer
 {
 public:
-#if QWT_VERSION < 0x060100
-    ConstellationDisplayZoomer(QwtPlotCanvas* canvas)
-#else  /* QWT_VERSION < 0x060100 */
-    ConstellationDisplayZoomer(QWidget* canvas)
-#endif /* QWT_VERSION < 0x060100 */
-        : QwtPlotZoomer(canvas)
+    ConstellationDisplayZoomer(QWidget* canvas) : QwtPlotZoomer(canvas)
     {
         setTrackerMode(QwtPicker::AlwaysOn);
     }
@@ -39,7 +34,7 @@ protected:
     using QwtPlotZoomer::trackerText;
     QwtText trackerText(const QPoint& p) const override
     {
-        QwtDoublePoint dp = QwtPlotZoomer::invTransform(p);
+        QPointF dp = QwtPlotZoomer::invTransform(p);
         QwtText t(QString("(%1, %2)").arg(dp.x(), 0, 'f', 4).arg(dp.y(), 0, 'f', 4));
         return t;
     }
@@ -54,10 +49,6 @@ ConstellationDisplayPlot::ConstellationDisplayPlot(int nplots, QWidget* parent)
     d_pen_size = 5;
 
     d_zoomer = new ConstellationDisplayZoomer(canvas());
-
-#if QWT_VERSION < 0x060000
-    d_zoomer->setSelectionFlags(QwtPicker::RectSelection | QwtPicker::DragSelection);
-#endif
 
     d_zoomer->setMousePattern(
         QwtEventPattern::MouseSelect2, Qt::RightButton, Qt::ControlModifier);
@@ -98,15 +89,9 @@ ConstellationDisplayPlot::ConstellationDisplayPlot(int nplots, QWidget* parent)
         QwtSymbol* symbol = new QwtSymbol(
             QwtSymbol::NoSymbol, QBrush(colors[i]), QPen(colors[i]), QSize(7, 7));
 
-#if QWT_VERSION < 0x060000
-        d_plot_curve[i]->setRawData(
-            d_real_data[i].data(), d_imag_data[i].data(), d_numPoints);
-        d_plot_curve[i]->setSymbol(*symbol);
-#else
         d_plot_curve[i]->setRawSamples(
             d_real_data[i].data(), d_imag_data[i].data(), d_numPoints);
         d_plot_curve[i]->setSymbol(symbol);
-#endif
 
         setLineStyle(i, Qt::NoPen);
         setLineMarker(i, QwtSymbol::Ellipse);
@@ -160,13 +145,8 @@ void ConstellationDisplayPlot::plotNewData(const std::vector<double*> realDataPo
                     d_real_data[i].resize(d_numPoints);
                     d_imag_data[i].resize(d_numPoints);
 
-#if QWT_VERSION < 0x060000
-                    d_plot_curve[i]->setRawData(
-                        d_real_data[i].data(), d_imag_data[i].data(), d_numPoints);
-#else
                     d_plot_curve[i]->setRawSamples(
                         d_real_data[i].data(), d_imag_data[i].data(), d_numPoints);
-#endif
                 }
             }
 

@@ -22,11 +22,7 @@
 class TimeDomainDisplayZoomer : public QwtPlotZoomer, public TimePrecisionClass
 {
 public:
-#if QWT_VERSION < 0x060100
-    TimeDomainDisplayZoomer(QwtPlotCanvas* canvas, const unsigned int timePrecision)
-#else  /* QWT_VERSION < 0x060100 */
     TimeDomainDisplayZoomer(QWidget* canvas, const unsigned int timePrecision)
-#endif /* QWT_VERSION < 0x060100 */
         : QwtPlotZoomer(canvas), TimePrecisionClass(timePrecision), d_yUnitType("V")
     {
         setTrackerMode(QwtPicker::AlwaysOn);
@@ -47,7 +43,7 @@ protected:
     QwtText trackerText(const QPoint& p) const override
     {
         QwtText t;
-        QwtDoublePoint dp = QwtPlotZoomer::invTransform(p);
+        QPointF dp = QwtPlotZoomer::invTransform(p);
         if ((fabs(dp.y()) > 0.0001) && (fabs(dp.y()) < 10000)) {
             t.setText(QString("%1 %2, %3 %4")
                           .arg(dp.x(), 0, 'f', getTimePrecision())
@@ -79,10 +75,6 @@ TimeDomainDisplayPlot::TimeDomainDisplayPlot(int nplots, QWidget* parent)
     d_numPoints = d_xdata.size();
 
     d_zoomer = new TimeDomainDisplayZoomer(canvas(), 0);
-
-#if QWT_VERSION < 0x060000
-    d_zoomer->setSelectionFlags(QwtPicker::RectSelection | QwtPicker::DragSelection);
-#endif
 
     d_zoomer->setMousePattern(
         QwtEventPattern::MouseSelect2, Qt::RightButton, Qt::ControlModifier);
@@ -130,13 +122,8 @@ TimeDomainDisplayPlot::TimeDomainDisplayPlot(int nplots, QWidget* parent)
         QwtSymbol* symbol = new QwtSymbol(
             QwtSymbol::NoSymbol, QBrush(colors[i]), QPen(colors[i]), QSize(7, 7));
 
-#if QWT_VERSION < 0x060000
-        d_plot_curve[i]->setRawData(d_xdata.data(), d_ydata[i].data(), d_numPoints);
-        d_plot_curve[i]->setSymbol(*symbol);
-#else
         d_plot_curve[i]->setRawSamples(d_xdata.data(), d_ydata[i].data(), d_numPoints);
         d_plot_curve[i]->setSymbol(symbol);
-#endif
     }
 
     d_sample_rate = 1;
@@ -183,13 +170,8 @@ void TimeDomainDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
                 for (unsigned int i = 0; i < d_nplots; ++i) {
                     d_ydata[i].resize(d_numPoints);
 
-#if QWT_VERSION < 0x060000
-                    d_plot_curve[i]->setRawData(
-                        d_xdata.data(), d_ydata[i].data(), d_numPoints);
-#else
                     d_plot_curve[i]->setRawSamples(
                         d_xdata.data(), d_ydata[i].data(), d_numPoints);
-#endif
                 }
 
                 _resetXAxisPoints();
@@ -298,11 +280,7 @@ void TimeDomainDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
                                 m->setLabelAlignment(Qt::AlignBottom);
                             }
 
-#if QWT_VERSION < 0x060000
-                            m->setSymbol(*sym);
-#else
                             m->setSymbol(sym);
-#endif
                             QwtText tag_label(s.str().c_str());
                             tag_label.setColor(getTagTextColor());
                             m->setLabel(tag_label);
@@ -382,13 +360,8 @@ void TimeDomainDisplayPlot::legendEntryChecked(const QVariant& plotItem,
                                                bool on,
                                                int index)
 {
-#if QWT_VERSION < 0x060100
-    std::runtime_error("TimeDomainDisplayPlot::legendEntryChecked with QVariant not "
-                       "enabled in this version of QWT.");
-#else
     QwtPlotItem* p = infoToItem(plotItem);
     legendEntryChecked(p, on);
-#endif /* QWT_VERSION < 0x060100 */
 }
 
 void TimeDomainDisplayPlot::_resetXAxisPoints()
@@ -400,7 +373,7 @@ void TimeDomainDisplayPlot::_resetXAxisPoints()
 
     // Set up zoomer base for maximum unzoom x-axis
     // and reset to maximum unzoom level
-    QwtDoubleRect zbase = d_zoomer->zoomBase();
+    QRectF zbase = d_zoomer->zoomBase();
 
     if (d_semilogx) {
         setAxisScale(QwtPlot::xBottom, 1e-1, d_numPoints * delt);
@@ -484,11 +457,7 @@ void TimeDomainDisplayPlot::setSemilogx(bool en)
     if (!d_semilogx) {
         setAxisScaleEngine(QwtPlot::xBottom, new QwtLinearScaleEngine);
     } else {
-#if QWT_VERSION < 0x060100
-        setAxisScaleEngine(QwtPlot::xBottom, new QwtLog10ScaleEngine);
-#else  /* QWT_VERSION < 0x060100 */
         setAxisScaleEngine(QwtPlot::xBottom, new QwtLogScaleEngine);
-#endif /*QWT_VERSION < 0x060100 */
     }
     _resetXAxisPoints();
 }
@@ -498,21 +467,13 @@ void TimeDomainDisplayPlot::setSemilogy(bool en)
     if (d_semilogy != en) {
         d_semilogy = en;
 
-#if QWT_VERSION < 0x060100
-        double max = axisScaleDiv(QwtPlot::yLeft)->upperBound();
-#else  /* QWT_VERSION < 0x060100 */
         double max = axisScaleDiv(QwtPlot::yLeft).upperBound();
-#endif /* QWT_VERSION < 0x060100 */
 
         if (!d_semilogy) {
             setAxisScaleEngine(QwtPlot::yLeft, new QwtLinearScaleEngine);
             setYaxis(-pow(10.0, max / 10.0), pow(10.0, max / 10.0));
         } else {
-#if QWT_VERSION < 0x060100
-            setAxisScaleEngine(QwtPlot::yLeft, new QwtLog10ScaleEngine);
-#else  /* QWT_VERSION < 0x060100 */
             setAxisScaleEngine(QwtPlot::yLeft, new QwtLogScaleEngine);
-#endif /*QWT_VERSION < 0x060100 */
             setYaxis(1e-10, 10.0 * log10(max));
         }
     }
