@@ -114,7 +114,7 @@ public:
 
     void set_streamer_adapter_id(const std::string& stream_block_id,
                                  const size_t port,
-                                 const size_t adapter_id)
+                                 const size_t adapter_id) override
     {
         _adapter_id_map[stream_block_id][port] = adapter_id;
     }

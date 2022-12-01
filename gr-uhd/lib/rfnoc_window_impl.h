@@ -22,10 +22,10 @@ public:
     ~rfnoc_window_impl() override;
 
     /*** API *****************************************************************/
-    void set_coefficients(const std::vector<float>& coeffs, const size_t chan);
-    void set_coefficients(const std::vector<int16_t>& coeffs, const size_t chan);
-    size_t get_max_num_coefficients(const size_t chan);
-    std::vector<int16_t> get_coefficients(const size_t chan);
+    void set_coefficients(const std::vector<float>& coeffs, const size_t chan) override;
+    void set_coefficients(const std::vector<int16_t>& coeffs, const size_t chan) override;
+    size_t get_max_num_coefficients(const size_t chan) override;
+    std::vector<int16_t> get_coefficients(const size_t chan) override;
 
 private:
     ::uhd::rfnoc::window_block_control::sptr d_window_ref;
