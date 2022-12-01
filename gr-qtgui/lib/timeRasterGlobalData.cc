@@ -16,12 +16,7 @@
 #include <cmath>
 #include <cstdio>
 
-TimeRasterData::TimeRasterData(const double rows, const double cols)
-#if QWT_VERSION < 0x060000
-    : QwtRasterData(QwtDoubleRect(0, 0, rows, cols))
-#else
-    : QwtRasterData()
-#endif
+TimeRasterData::TimeRasterData(const double rows, const double cols) : QwtRasterData()
 {
     d_nitems = 0;
     d_rows = rows;
@@ -32,14 +27,12 @@ TimeRasterData::TimeRasterData(const double rows, const double cols)
     // (helps when d_cols is fractional and we have to slide).
     d_totalitems = static_cast<int>((d_rows + 1) * floor(d_cols));
 
-    d_intensityRange = QwtDoubleInterval(0.0, 10.0);
+    d_intensityRange = QwtInterval(0.0, 10.0);
     d_data.resize(d_totalitems + static_cast<int>(floor(d_cols)));
 
-#if QWT_VERSION >= 0x060000
     setInterval(Qt::XAxis, QwtInterval(0, cols));
     setInterval(Qt::YAxis, QwtInterval(0, rows));
     setInterval(Qt::ZAxis, QwtInterval(0.0, 10.0));
-#endif
 
     reset();
 }
@@ -55,47 +48,22 @@ void TimeRasterData::reset()
 
 void TimeRasterData::copy(const TimeRasterData* rhs)
 {
-#if QWT_VERSION < 0x060000
-    if ((d_cols != rhs->getNumCols()) || (boundingRect() != rhs->boundingRect())) {
-        d_cols = rhs->getNumCols();
-        d_rows = rhs->getNumRows();
-        d_totalitems = static_cast<int>((d_rows + 1) * floor(d_cols));
-        setBoundingRect(rhs->boundingRect());
-        d_data.resize(d_totalitems + static_cast<int>(floor(d_cols)));
-    }
-#else
     if ((d_cols != rhs->getNumCols()) || (d_rows != rhs->getNumRows())) {
         d_cols = rhs->getNumCols();
         d_rows = rhs->getNumRows();
         d_totalitems = static_cast<int>((d_rows + 1) * floor(d_cols));
         d_data.resize(d_totalitems + static_cast<int>(floor(d_cols)));
     }
-#endif
 
     reset();
 
-#if QWT_VERSION < 0x060000
-    setRange(rhs->range());
-#else
     setInterval(Qt::XAxis, rhs->interval(Qt::XAxis));
     setInterval(Qt::YAxis, rhs->interval(Qt::YAxis));
     setInterval(Qt::ZAxis, rhs->interval(Qt::ZAxis));
-#endif
 }
 
 void TimeRasterData::resizeData(const double rows, const double cols)
 {
-#if QWT_VERSION < 0x060000
-    if ((cols != getNumCols()) || (boundingRect().width() != cols) ||
-        (rows != getNumRows()) || (boundingRect().height() != cols)) {
-        setBoundingRect(QwtDoubleRect(0, 0, cols, rows));
-        d_cols = cols;
-        d_rows = rows;
-        d_totalitems = static_cast<int>((d_rows + 1) * floor(d_cols));
-        d_data.resize(d_totalitems + static_cast<int>(floor(d_cols)));
-    }
-
-#else
     if ((cols != getNumCols()) || (interval(Qt::XAxis).width() != cols) ||
         (rows != getNumRows()) || (interval(Qt::YAxis).width() != rows)) {
 
@@ -107,32 +75,20 @@ void TimeRasterData::resizeData(const double rows, const double cols)
         d_totalitems = static_cast<int>((d_rows + 1) * floor(d_cols));
         d_data.resize(d_totalitems + static_cast<int>(floor(d_cols)));
     }
-#endif
 
     reset();
 }
 
 QwtRasterData* TimeRasterData::copy() const
 {
-#if QWT_VERSION < 0x060000
     TimeRasterData* returnData = new TimeRasterData(d_cols, d_rows);
-#else
-    TimeRasterData* returnData = new TimeRasterData(d_cols, d_rows);
-#endif
 
     returnData->copy(this);
     return returnData;
 }
 
 
-#if QWT_VERSION < 0x060000
-QwtDoubleInterval TimeRasterData::range() const { return d_intensityRange; }
-
-void TimeRasterData::setRange(const QwtDoubleInterval& newRange)
-{
-    d_intensityRange = newRange;
-}
-#elif QWT_VERSION >= 0x060200
+#if QWT_VERSION >= 0x060200
 void TimeRasterData::setInterval(Qt::Axis axis, const QwtInterval& interval)
 {
     d_intervals[axis] = interval;
@@ -145,17 +101,10 @@ QwtInterval TimeRasterData::interval(Qt::Axis a) const { return d_intervals[a]; 
 
 double TimeRasterData::value(double x, double y) const
 {
-#if QWT_VERSION < 0x060000
-    double top = boundingRect().top();
-    double bottom = top - boundingRect().height();
-    double left = boundingRect().left();
-    double right = left - boundingRect().width();
-#else
     double top = interval(Qt::YAxis).maxValue();
     double bottom = interval(Qt::YAxis).minValue();
     double left = interval(Qt::XAxis).minValue();
     double right = interval(Qt::XAxis).maxValue();
-#endif
 
     if ((x < left) || (x > right) || (y < bottom) || (y > top))
         return 0.0;

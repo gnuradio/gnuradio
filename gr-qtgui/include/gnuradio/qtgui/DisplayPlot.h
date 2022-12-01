@@ -28,22 +28,11 @@
 #include <cstdio>
 #include <vector>
 
-#if QWT_VERSION >= 0x060000
-typedef QPointF QwtDoublePoint;
-typedef QRectF QwtDoubleRect;
-
-typedef QwtInterval QwtDoubleInterval;
-#endif
-
 typedef QList<QColor> QColorList;
 Q_DECLARE_METATYPE(QColorList)
 
-#if QWT_VERSION < 0x060100
-#include <qwt_legend_item.h>
-#else /* QWT_VERSION < 0x060100 */
 #include <qwt_legend_data.h>
 #include <qwt_legend_label.h>
-#endif /* QWT_VERSION < 0x060100 */
 
 /*!
  * \brief QWidget base plot to build QTGUI plotting tools.
@@ -263,11 +252,7 @@ public slots:
 
     void resizeSlot(QSize* s);
 
-    // Because of the preprocessing of slots in QT, these are not
-    // easily separated by the version check. Make one for each
-    // version until it's worked out.
-    void onPickerPointSelected(const QwtDoublePoint& p);
-    void onPickerPointSelected6(const QPointF& p);
+    void onPickerPointSelected(const QPointF& p);
 
 signals:
     void plotPointSelected(const QPointF p);

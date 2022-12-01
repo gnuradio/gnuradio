@@ -18,10 +18,6 @@
 #include <qpen.h>
 
 
-#if QWT_VERSION < 0x060000
-#include "qwt_double_interval.h"
-#endif
-
 typedef QVector<QRgb> QwtColorTable;
 
 class PlotTimeRasterImage : public QImage
@@ -113,33 +109,6 @@ void PlotTimeRaster::setColorMap(const QwtColorMap* map)
 const QwtColorMap& PlotTimeRaster::colorMap() const { return *d_data->colorMap; }
 
 /*!
-  \return Bounding rect of the data
-  \sa QwtRasterData::boundingRect
-*/
-#if QWT_VERSION < 0x060000
-QwtDoubleRect PlotTimeRaster::boundingRect() const
-{
-    return d_data->data->boundingRect();
-}
-#endif
-
-/*!
-  \brief Returns the recommended raster for a given rect.
-
-  F.e the raster hint is used to limit the resolution of
-  the image that is rendered.
-
-  \param rect Rect for the raster hint
-  \return data().rasterHint(rect)
-*/
-#if QWT_VERSION < 0x060000
-QSize PlotTimeRaster::rasterHint(const QwtDoubleRect& rect) const
-{
-    return d_data->data->rasterHint(rect);
-}
-#endif
-
-/*!
   \brief Render an image from the data and color map.
 
   The area is translated into a rect of the paint device.
@@ -156,28 +125,16 @@ QSize PlotTimeRaster::rasterHint(const QwtDoubleRect& rect) const
   \sa QwtRasterData::intensity(), QwtColorMap::rgb(),
   QwtColorMap::colorIndex()
 */
-#if QWT_VERSION < 0x060000
-QImage PlotTimeRaster::renderImage(const QwtScaleMap& xMap,
-                                   const QwtScaleMap& yMap,
-                                   const QwtDoubleRect& area) const
-#else
 QImage PlotTimeRaster::renderImage(const QwtScaleMap& xMap,
                                    const QwtScaleMap& yMap,
                                    const QRectF& area,
                                    const QSize& size) const
-#endif
 {
     if (area.isEmpty())
         return QImage();
 
-#if QWT_VERSION < 0x060000
-    QRect rect = transform(xMap, yMap, area);
-    const QSize res = d_data->data->rasterHint(area);
-#else
     QRect rect = QwtScaleMap::transform(xMap, yMap, area).toRect();
     const QSize res(-1, -1);
-
-#endif
 
     QwtScaleMap xxMap = xMap;
     QwtScaleMap yyMap = yMap;
@@ -219,11 +176,7 @@ QImage PlotTimeRaster::renderImage(const QwtScaleMap& xMap,
 
     PlotTimeRasterImage image(rect.size(), d_data->colorMap->format());
 
-#if QWT_VERSION < 0x060000
-    const QwtDoubleInterval intensityRange = d_data->data->range();
-#else
     const QwtInterval intensityRange = d_data->data->interval(Qt::ZAxis);
-#endif
     if (!intensityRange.isValid())
         return std::move(image);
 
@@ -281,16 +234,7 @@ QImage PlotTimeRaster::renderImage(const QwtScaleMap& xMap,
     return std::move(image);
 }
 
-#if QWT_VERSION < 0x060000
-QwtDoubleInterval PlotTimeRaster::interval(Qt::Axis ax) const
-{
-    return d_data->data->range();
-}
-
-#else
-
 QwtInterval PlotTimeRaster::interval(Qt::Axis ax) const
 {
     return d_data->data->interval(ax);
 }
-#endif
