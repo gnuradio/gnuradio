@@ -32,7 +32,7 @@ enum BaseTypes { BOOL, BYTE, SHORT, INT, LONG, DOUBLE, STRING, COMPLEX,
 
 struct KnobBase {
   1: bool a_bool;
-  2: byte a_byte;
+  2: i8 a_byte;
   3: i16 a_short;
   4: i32 a_int;
   5: i64 a_long;
