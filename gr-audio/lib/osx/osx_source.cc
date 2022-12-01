@@ -224,19 +224,13 @@ void osx_source::setup()
 
     // Open the default input unit
 
-#ifndef GR_USE_OLD_AUDIO_UNIT
     AudioComponentDescription desc;
-#else
-    ComponentDescription desc;
-#endif
 
     desc.componentType = kAudioUnitType_Output;
     desc.componentSubType = kAudioUnitSubType_HALOutput;
     desc.componentManufacturer = kAudioUnitManufacturer_Apple;
     desc.componentFlags = 0;
     desc.componentFlagsMask = 0;
-
-#ifndef GR_USE_OLD_AUDIO_UNIT
 
     AudioComponent comp = AudioComponentFindNext(NULL, &desc);
     if (!comp) {
@@ -246,18 +240,6 @@ void osx_source::setup()
     err = AudioComponentInstanceNew(comp, &d_input_au);
     check_error_and_throw(
         err, "AudioComponentInstanceNew Failed", "audio_osx_source::setup");
-
-#else
-
-    Component comp = FindNextComponent(NULL, &desc);
-    if (!comp) {
-        d_logger->fatal("FindNextComponent Failed");
-        throw std::runtime_error("audio_osx_source::setup");
-    }
-    err = OpenAComponent(comp, &d_input_au);
-    check_error_and_throw(err, "OpenAComponent Failed", "audio_osx_source::setup");
-
-#endif
 
     // must enable the AUHAL for input and disable output
     // before setting the AUHAL's current device
@@ -569,10 +551,6 @@ void osx_source::setup()
 
     // set up listeners
 
-#ifndef GR_USE_OLD_AUDIO_UNIT
-
-    // 10.4 and newer
-
     {
 
         // set up a listener if hardware changes (at all)
@@ -606,29 +584,6 @@ void osx_source::setup()
             reinterpret_cast<void*>(this));
         check_error(err, "Adding Default Input Audio Listener failed");
     }
-
-#else
-
-    // 10.5 and older
-
-    err = AudioHardwareAddPropertyListener(
-        kAudioHardwarePropertyDevices,
-        reinterpret_cast<AudioHardwarePropertyListenerProc>(
-            &osx_source::hardware_listener),
-        reinterpret_cast<void*>(this));
-    check_error(err, "Adding Audio Hardware Listener failed");
-
-    if (d_using_default_device) {
-
-        err = AudioHardwareAddPropertyListener(
-            kAudioHardwarePropertyDefaultInputDevice,
-            reinterpret_cast<AudioHardwarePropertyListenerProc>(
-                &osx_source::default_listener),
-            reinterpret_cast<void*>(this));
-        check_error(err, "Adding Default Input Audio Listener failed");
-    }
-
-#endif
 
     // initialize the AU for input, so that it is ready to be used
 
@@ -812,9 +767,6 @@ void osx_source::teardown()
 
     // remove the listeners
 
-#ifndef GR_USE_OLD_AUDIO_UNIT
-
-    // 10.4 and newer
     {
         AudioObjectPropertyAddress property = { kAudioHardwarePropertyDevices,
                                                 kAudioObjectPropertyScopeGlobal,
@@ -851,30 +803,6 @@ void osx_source::teardown()
 
         d_using_default_device = false;
     }
-#else
-
-    // 10.5 and older
-
-    err = AudioHardwareRemovePropertyListener(
-        kAudioHardwarePropertyDevices,
-        reinterpret_cast<AudioHardwarePropertyListenerProc>(
-            &osx_source::hardware_listener));
-#if _OSX_AU_DEBUG_
-    check_error(err, "AudioObjectRemovePropertyListener hardware");
-#endif
-
-    if (d_using_default_device) {
-        err = AudioHardwareRemovePropertyListener(
-            kAudioHardwarePropertyDefaultInputDevice,
-            reinterpret_cast<AudioHardwarePropertyListenerProc>(
-                &osx_source::default_listener));
-#if _OSX_AU_DEBUG_
-        check_error(err, "AudioObjectRemovePropertyListener default");
-#endif
-        d_using_default_device = false;
-    }
-
-#endif // GR_USE_OLD_AUDIO_UNIT
 
     // free pre-allocated audio buffers
     free_audio_buffer_list(&d_input_buffer);
@@ -893,16 +821,9 @@ void osx_source::teardown()
     check_error(err, "~audio_osx_source: AudioUnitUninitialize");
 #endif
 
-#ifndef GR_USE_OLD_AUDIO_UNIT
     err = AudioComponentInstanceDispose(d_input_au);
 #if _OSX_AU_DEBUG_
     check_error(err, "~audio_osx_source: AudioComponentInstanceDispose");
-#endif
-#else
-    err = CloseComponent(d_input_au);
-#if _OSX_AU_DEBUG_
-    check_error(err, "~audio_osx_source: CloseComponent");
-#endif
 #endif
 
     // empty and delete the queues
@@ -1361,38 +1282,20 @@ OSStatus osx_source::au_input_callback(void* in_ref_con,
     return (err);
 }
 
-#ifndef GR_USE_OLD_AUDIO_UNIT
-
 OSStatus osx_source::hardware_listener(AudioObjectID in_object_id,
                                        UInt32 in_num_addresses,
                                        const AudioObjectPropertyAddress in_addresses[],
                                        void* in_client_data)
-
-#else
-
-OSStatus osx_source::hardware_listener(AudioHardwarePropertyID in_property_id,
-                                       void* in_client_data)
-
-#endif
 {
     osx_source* This = reinterpret_cast<osx_source*>(in_client_data);
     This->reset(true);
     return (noErr);
 }
 
-#ifndef GR_USE_OLD_AUDIO_UNIT
-
 OSStatus osx_source::default_listener(AudioObjectID in_object_id,
                                       UInt32 in_num_addresses,
                                       const AudioObjectPropertyAddress in_addresses[],
                                       void* in_client_data)
-
-#else
-
-OSStatus osx_source::default_listener(AudioHardwarePropertyID in_property_id,
-                                      void* in_client_data)
-
-#endif
 {
     osx_source* This = reinterpret_cast<osx_source*>(in_client_data);
     This->reset(false);

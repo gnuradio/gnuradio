@@ -206,19 +206,13 @@ void osx_sink::setup()
 
     // Open the default output unit
 
-#ifndef GR_USE_OLD_AUDIO_UNIT
     AudioComponentDescription desc;
-#else
-    ComponentDescription desc;
-#endif
 
     desc.componentType = kAudioUnitType_Output;
     desc.componentSubType = kAudioUnitSubType_DefaultOutput;
     desc.componentManufacturer = kAudioUnitManufacturer_Apple;
     desc.componentFlags = 0;
     desc.componentFlagsMask = 0;
-
-#ifndef GR_USE_OLD_AUDIO_UNIT
 
     AudioComponent comp = AudioComponentFindNext(NULL, &desc);
     if (!comp) {
@@ -228,18 +222,6 @@ void osx_sink::setup()
     err = AudioComponentInstanceNew(comp, &d_output_au);
     check_error_and_throw(
         err, "AudioComponentInstanceNew Failed", "audio_osx_sink::setup");
-
-#else
-
-    Component comp = FindNextComponent(NULL, &desc);
-    if (comp == NULL) {
-        d_logger->fatal("FindNextComponent Failed");
-        throw std::runtime_error("audio_osx_sink::setup");
-    }
-    err = OpenAComponent(comp, &d_output_au);
-    check_error_and_throw(err, "OpenAComponent Failed", "audio_osx_sink::setup");
-
-#endif
 
     // set the selected device ID as the current output device
 
@@ -312,10 +294,6 @@ void osx_sink::setup()
 
     // set up listeners
 
-#ifndef GR_USE_OLD_AUDIO_UNIT
-
-    // 10.4 and newer
-
     {
 
         // set up a listener if hardware changes (at all)
@@ -354,28 +332,6 @@ void osx_sink::setup()
             check_error(err, "Adding Default Output Audio Listener failed");
         }
     }
-
-#else
-
-    // 10.5 and older
-
-    err = AudioHardwareAddPropertyListener(
-        kAudioHardwarePropertyDevices,
-        reinterpret_cast<AudioHardwarePropertyListenerProc>(&osx_sink::hardware_listener),
-        reinterpret_cast<void*>(this));
-    check_error(err, "Adding Audio Hardware Listener failed");
-
-    if (d_using_default_device) {
-
-        err = AudioHardwareAddPropertyListener(
-            kAudioHardwarePropertyDefaultOutputDevice,
-            reinterpret_cast<AudioHardwarePropertyListenerProc>(
-                &osx_sink::default_listener),
-            reinterpret_cast<void*>(this));
-        check_error(err, "Adding Default Output Audio Listener failed");
-    }
-
-#endif
 
     // initialize the AU for output, so that it is ready to be used
 
@@ -433,16 +389,9 @@ void osx_sink::teardown()
 
     // dispose / close the AudioUnit
 
-#ifndef GR_USE_OLD_AUDIO_UNIT
     err = AudioComponentInstanceDispose(d_output_au);
 #if _OSX_AU_DEBUG_
     check_error(err, "teardown: AudioComponentInstanceDispose failed");
-#endif
-#else
-    CloseComponent(d_output_au);
-#if _OSX_AU_DEBUG_
-    check_error(err, "teardown: CloseComponent failed");
-#endif
 #endif
 
     // delete buffers
@@ -933,38 +882,20 @@ OSStatus osx_sink::au_output_callback(void* in_ref_con,
     return (err);
 }
 
-#ifndef GR_USE_OLD_AUDIO_UNIT
-
 OSStatus osx_sink::hardware_listener(AudioObjectID in_object_id,
                                      UInt32 in_num_addresses,
                                      const AudioObjectPropertyAddress in_addresses[],
                                      void* in_client_data)
-
-#else
-
-OSStatus osx_sink::hardware_listener(AudioHardwarePropertyID in_property_id,
-                                     void* in_client_data)
-
-#endif
 {
     osx_sink* This = static_cast<osx_sink*>(in_client_data);
     This->reset(true);
     return (noErr);
 }
 
-#ifndef GR_USE_OLD_AUDIO_UNIT
-
 OSStatus osx_sink::default_listener(AudioObjectID in_object_id,
                                     UInt32 in_num_addresses,
                                     const AudioObjectPropertyAddress in_addresses[],
                                     void* in_client_data)
-
-#else
-
-OSStatus osx_sink::default_listener(AudioHardwarePropertyID in_property_id,
-                                    void* in_client_data)
-
-#endif
 {
     osx_sink* This = reinterpret_cast<osx_sink*>(in_client_data);
     This->reset(false);
