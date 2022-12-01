@@ -20,17 +20,6 @@
 #include <AudioToolbox/AudioToolbox.h>
 #include <AudioUnit/AudioUnit.h>
 
-// Check the version of MacOSX being used
-#ifdef __APPLE_CC__
-#include <AvailabilityMacros.h>
-#ifndef MAC_OS_X_VERSION_10_6
-#define MAC_OS_X_VERSION_10_6 1060
-#endif
-#if MAC_OS_X_VERSION_MAX_ALLOWED < MAC_OS_X_VERSION_10_6
-#define GR_USE_OLD_AUDIO_UNIT
-#endif
-#endif
-
 // helper function to print an ASBD
 
 std::ostream& GR_AUDIO_API operator<<(std::ostream& s,
