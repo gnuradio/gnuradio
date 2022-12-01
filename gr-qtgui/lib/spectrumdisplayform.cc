@@ -43,15 +43,9 @@ SpectrumDisplayForm::SpectrumDisplayForm(QWidget* parent)
     minHoldCheckBox_toggled(false);
     maxHoldCheckBox_toggled(false);
 
-#if QWT_VERSION < 0x060100
-    WaterfallMaximumIntensitySlider->setRange(-200, 0);
-    WaterfallMinimumIntensitySlider->setRange(-200, 0);
-    WaterfallMinimumIntensitySlider->setValue(-200);
-#else  /* QWT_VERSION < 0x060100 */
     WaterfallMaximumIntensitySlider->setScale(-200, 0);
     WaterfallMinimumIntensitySlider->setScale(-200, 0);
     WaterfallMinimumIntensitySlider->setValue(-200);
-#endif /* QWT_VERSION < 0x060100 */
 
     WaterfallMaximumIntensitySlider->setOrientation(Qt::Horizontal);
     WaterfallMinimumIntensitySlider->setOrientation(Qt::Horizontal);
@@ -593,15 +587,6 @@ void SpectrumDisplayForm::waterfallAutoScaleBtnCB()
     double minimumIntensity = _noiseFloorAmplitude - 5;
     double maximumIntensity = _peakAmplitude + 10;
 
-#if QWT_VERSION < 0x060100
-    if (minimumIntensity < WaterfallMinimumIntensitySlider->minValue()) {
-        minimumIntensity = WaterfallMinimumIntensitySlider->minValue();
-    }
-    WaterfallMinimumIntensitySlider->setValue(minimumIntensity);
-    if (maximumIntensity > WaterfallMaximumIntensitySlider->maxValue()) {
-        maximumIntensity = WaterfallMaximumIntensitySlider->maxValue();
-    }
-#else  /* QWT_VERSION < 0x060100 */
     if (minimumIntensity < WaterfallMinimumIntensitySlider->lowerBound()) {
         minimumIntensity = WaterfallMinimumIntensitySlider->lowerBound();
     }
@@ -609,7 +594,6 @@ void SpectrumDisplayForm::waterfallAutoScaleBtnCB()
     if (maximumIntensity > WaterfallMaximumIntensitySlider->upperBound()) {
         maximumIntensity = WaterfallMaximumIntensitySlider->upperBound();
     }
-#endif /* QWT_VERSION < 0x060100 */
 
     WaterfallMaximumIntensitySlider->setValue(maximumIntensity);
     waterfallMaximumIntensityChangedCB(maximumIntensity);

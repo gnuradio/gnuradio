@@ -20,15 +20,6 @@ TimeRasterDisplayForm::TimeRasterDisplayForm(
     int nplots, double samp_rate, double rows, double cols, double zmax, QWidget* parent)
     : DisplayForm(nplots, parent)
 {
-#if QWT_VERSION < 0x060000
-    gr::logger_ptr logger, debug_logger;
-    gr::configure_default_loggers(logger, debug_logger, "timerasterdisplayform");
-
-    logger->warn(
-        "Warning: QWT5 has been found which has serious performance issues with raster "
-        "plots. Consider updating to QWT version 6 to use the time raster GUIs.");
-#endif
-
     d_layout = new QGridLayout(this);
     d_layout->setContentsMargins(0, 0, 0, 0);
     d_display_plot = new TimeRasterDisplayPlot(nplots, samp_rate, rows, cols, this);

@@ -112,8 +112,7 @@ public slots:
     void setLowerIntensityLevel(const double);
     void setUpperIntensityLevel(const double);
 
-    void onPickerPointSelected(const QwtDoublePoint& p);
-    void onPickerPointSelected6(const QPointF& p);
+    void onPickerPointSelected(const QPointF& p);
 
     void setAutoScale(bool state);
     void setAutoScaleShot();

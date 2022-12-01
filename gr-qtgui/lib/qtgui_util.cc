@@ -35,26 +35,17 @@ QString get_qt_style_sheet(QString filename)
 }
 
 QwtPickerDblClickPointMachine::QwtPickerDblClickPointMachine()
-#if QWT_VERSION < 0x060000
-    : QwtPickerMachine()
-#else
     : QwtPickerMachine(PointSelection)
-#endif
 {
 }
 
 QwtPickerDblClickPointMachine::~QwtPickerDblClickPointMachine() {}
 
-#if QWT_VERSION < 0x060000
-#define CMDLIST_TYPE QwtPickerMachine::CommandList
-#else
-#define CMDLIST_TYPE QList<QwtPickerMachine::Command>
-#endif
-CMDLIST_TYPE
+QList<QwtPickerMachine::Command>
 QwtPickerDblClickPointMachine::transition(const QwtEventPattern& eventPattern,
                                           const QEvent* e)
 {
-    CMDLIST_TYPE cmdList;
+    QList<QwtPickerMachine::Command> cmdList;
     switch (e->type()) {
     case QEvent::MouseButtonDblClick:
         if (eventPattern.mouseMatch(QwtEventPattern::MouseSelect1,
@@ -70,17 +61,7 @@ QwtPickerDblClickPointMachine::transition(const QwtEventPattern& eventPattern,
     return cmdList;
 }
 
-#if QWT_VERSION < 0x060100
-QwtDblClickPlotPicker::QwtDblClickPlotPicker(QwtPlotCanvas* canvas)
-#else  /* QWT_VERSION < 0x060100 */
-QwtDblClickPlotPicker::QwtDblClickPlotPicker(QWidget* canvas)
-#endif /* QWT_VERSION < 0x060100 */
-    : QwtPlotPicker(canvas)
-{
-#if QWT_VERSION < 0x060000
-    setSelectionFlags(QwtPicker::PointSelection);
-#endif
-}
+QwtDblClickPlotPicker::QwtDblClickPlotPicker(QWidget* canvas) : QwtPlotPicker(canvas) {}
 
 QwtDblClickPlotPicker::~QwtDblClickPlotPicker() {}
 

@@ -23,12 +23,8 @@
 #include <cmath>
 #include <stdexcept>
 
-#if QWT_VERSION < 0x060100
-#include <qwt_legend_item.h>
-#else /* QWT_VERSION < 0x060100 */
 #include <qwt_legend_data.h>
 #include <qwt_legend_label.h>
-#endif /* QWT_VERSION < 0x060100 */
 
 #include <QDebug>
 
@@ -242,16 +238,6 @@ class TimeRasterZoomer : public QwtPlotZoomer,
                          public TimeScaleData
 {
 public:
-#if QWT_VERSION < 0x060100
-    TimeRasterZoomer(QwtPlotCanvas* canvas,
-                     double rows,
-                     double cols,
-                     const unsigned int timePrecision,
-                     double x_start_value = 0.0,
-                     double x_end_value = 0.0,
-                     double y_start_value = 0.0,
-                     double y_end_value = 0.0)
-#else  /* QWT_VERSION < 0x060100 */
     TimeRasterZoomer(QWidget* canvas,
                      double rows,
                      double cols,
@@ -260,7 +246,6 @@ public:
                      double x_end_value = 0.0,
                      double y_start_value = 0.0,
                      double y_end_value = 0.0)
-#endif /* QWT_VERSION < 0x060100 */
         : QwtPlotZoomer(canvas),
           TimePrecisionClass(timePrecision),
           TimeScaleData(),
@@ -305,7 +290,7 @@ protected:
     using QwtPlotZoomer::trackerText;
     QwtText trackerText(QPoint const& p) const override
     {
-        QwtDoublePoint dp = QwtPlotZoomer::invTransform(p);
+        QPointF dp = QwtPlotZoomer::invTransform(p);
 
         if (d_x_start_value == d_x_end_value) {
             // Original seconds in hover text
@@ -409,9 +394,6 @@ TimeRasterDisplayPlot::TimeRasterDisplayPlot(
                                     d_x_end_value,
                                     d_y_start_value,
                                     d_y_end_value);
-#if QWT_VERSION < 0x060000
-    d_zoomer->setSelectionFlags(QwtPicker::RectSelection | QwtPicker::DragSelection);
-#endif
     d_zoomer->setMousePattern(
         QwtEventPattern::MouseSelect2, Qt::RightButton, Qt::ControlModifier);
     d_zoomer->setMousePattern(QwtEventPattern::MouseSelect3, Qt::RightButton);
@@ -480,7 +462,7 @@ void TimeRasterDisplayPlot::reset()
         ((TimeRasterZoomer*)d_zoomer)->setTimePrecision(display_units);
         ((TimeRasterZoomer*)d_zoomer)->setUnitType(strunits[iunit]);
 
-        QwtDoubleRect newSize = d_zoomer->zoomBase();
+        QRectF newSize = d_zoomer->zoomBase();
         newSize.setLeft(0);
         newSize.setWidth(d_cols);
         newSize.setBottom(0);
@@ -601,11 +583,7 @@ void TimeRasterDisplayPlot::setIntensityRange(const double minIntensity,
                                               const double maxIntensity)
 {
     for (unsigned int i = 0; i < d_nplots; ++i) {
-#if QWT_VERSION < 0x060000
-        d_data[i]->setRange(QwtDoubleInterval(minIntensity, maxIntensity));
-#else
         d_data[i]->setInterval(Qt::ZAxis, QwtInterval(minIntensity, maxIntensity));
-#endif
 
         emit updatedLowerIntensityLevel(minIntensity);
         emit updatedUpperIntensityLevel(maxIntensity);
@@ -616,22 +594,14 @@ void TimeRasterDisplayPlot::setIntensityRange(const double minIntensity,
 
 double TimeRasterDisplayPlot::getMinIntensity(unsigned int which) const
 {
-#if QWT_VERSION < 0x060000
-    QwtDoubleInterval r = d_data[which]->range();
-#else
     QwtInterval r = d_data[which]->interval(Qt::ZAxis);
-#endif
 
     return r.minValue();
 }
 
 double TimeRasterDisplayPlot::getMaxIntensity(unsigned int which) const
 {
-#if QWT_VERSION < 0x060000
-    QwtDoubleInterval r = d_data[which]->range();
-#else
     QwtInterval r = d_data[which]->interval(Qt::ZAxis);
-#endif
 
     return r.maxValue();
 }
@@ -766,12 +736,6 @@ void TimeRasterDisplayPlot::_updateIntensityRangeDisplay()
     rightAxis->setColorBarEnabled(true);
 
     for (unsigned int i = 0; i < d_nplots; ++i) {
-#if QWT_VERSION < 0x060000
-        rightAxis->setColorMap(d_raster[i]->data()->range(), d_raster[i]->colorMap());
-        setAxisScale(QwtPlot::yRight,
-                     d_raster[i]->data()->range().minValue(),
-                     d_raster[i]->data()->range().maxValue());
-#else
         QwtInterval intv = d_raster[i]->interval(Qt::ZAxis);
         switch (d_color_map_type[i]) {
         case gr::qtgui::INTENSITY_COLOR_MAP_TYPE_MULTI_COLOR:
@@ -801,7 +765,6 @@ void TimeRasterDisplayPlot::_updateIntensityRangeDisplay()
             break;
         }
         setAxisScale(QwtPlot::yRight, intv.minValue(), intv.maxValue());
-#endif
 
         enableAxis(QwtPlot::yRight);
 
