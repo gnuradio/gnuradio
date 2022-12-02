@@ -136,7 +136,7 @@ int ofdm_frame_equalizer_vcvc_impl::work(int noutput_items,
 
     // Do the equalizing
     d_eq->reset();
-    d_eq->equalize(out, frame_len, d_channel_state);
+    d_eq->equalize(out, frame_len, d_channel_state, tags);
     d_eq->get_channel_state(d_channel_state);
 
     // Update the channel state regarding the frequency offset
