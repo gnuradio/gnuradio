@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Marcus Müller
+ * Copyright 2022 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(rfnoc_graph.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(859c22ff93c70b536a7dc6a1df68f256)                     */
+/* BINDTOOL_HEADER_FILE_HASH(47af41ba186763799382ccda11611448)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -36,34 +36,128 @@ void bind_rfnoc_graph(py::module& m)
     py::class_<rfnoc_graph, std::shared_ptr<rfnoc_graph>>(
         m, "rfnoc_graph", D(rfnoc_graph))
 
-        .def(py::init(&rfnoc_graph::make), D(rfnoc_graph, make))
+        .def(py::init(&rfnoc_graph::make), py::arg("dev_addr"), D(rfnoc_graph, make))
+
+
         .def("connect",
-             py::overload_cast<const std::string&,
-                               const size_t,
-                               const std::string&,
-                               const size_t,
-                               const bool>(&rfnoc_graph::connect),
-             D(rfnoc_graph, connect))
+             (void(rfnoc_graph::*)(std::string const&,
+                                   size_t const,
+                                   std::string const&,
+                                   size_t const,
+                                   bool const)) &
+                 rfnoc_graph::connect,
+             py::arg("src_block"),
+             py::arg("src_block_port"),
+             py::arg("dst_block"),
+             py::arg("dst_block_port"),
+             py::arg("skip_property_propagation") = false,
+             D(rfnoc_graph, connect, 0))
+
+
         .def("connect",
-             py::overload_cast<const std::string&, const std::string&, const bool>(
-                 &rfnoc_graph::connect),
-             D(rfnoc_graph, connect))
+             (void(rfnoc_graph::*)(std::string const&, std::string const&, bool const)) &
+                 rfnoc_graph::connect,
+             py::arg("src_block"),
+             py::arg("dst_block"),
+             py::arg("skip_property_propagation") = false,
+             D(rfnoc_graph, connect, 1))
+
+
         .def("create_rx_streamer",
              &rfnoc_graph::create_rx_streamer,
+             py::arg("num_ports"),
+             py::arg("args"),
              D(rfnoc_graph, create_rx_streamer))
+
+
         .def("create_tx_streamer",
              &rfnoc_graph::create_tx_streamer,
+             py::arg("num_ports"),
+             py::arg("args"),
              D(rfnoc_graph, create_tx_streamer))
+
+
         .def("set_streamer_adapter_id",
              &rfnoc_graph::set_streamer_adapter_id,
+             py::arg("stream_block_id"),
+             py::arg("port"),
+             py::arg("adapter_id"),
              D(rfnoc_graph, set_streamer_adapter_id))
+
+
         .def("commit", &rfnoc_graph::commit, D(rfnoc_graph, commit))
-        .def("get_block_id", &rfnoc_graph::get_block_id, D(rfnoc_graph, get_block_id))
+
+
+        .def("get_block_id",
+             &rfnoc_graph::get_block_id,
+             py::arg("block_name"),
+             py::arg("device_select"),
+             py::arg("block_select"),
+             D(rfnoc_graph, get_block_id))
+
+
         .def("set_time_source",
              &rfnoc_graph::set_time_source,
+             py::arg("source"),
+             py::arg("mb_index"),
              D(rfnoc_graph, set_time_source))
+
+
         .def("set_clock_source",
              &rfnoc_graph::set_clock_source,
+             py::arg("source"),
+             py::arg("mb_index"),
              D(rfnoc_graph, set_clock_source))
-        .def("get_block_ref", &rfnoc_graph::get_block_ref, D(rfnoc_graph, get_block_ref));
+
+
+        .def("get_block_ref",
+             &rfnoc_graph::get_block_ref,
+             py::arg("block_id"),
+             py::arg("max_ref_count"),
+             D(rfnoc_graph, get_block_ref))
+
+
+        .def("get_time_now",
+             &rfnoc_graph::get_time_now,
+             py::arg("mboard") = 0,
+             py::arg("timekeeper") = 0,
+             D(rfnoc_graph, get_time_now))
+
+
+        .def("get_time_last_pps",
+             &rfnoc_graph::get_time_last_pps,
+             py::arg("mboard") = 0,
+             py::arg("timekeeper") = 0,
+             D(rfnoc_graph, get_time_last_pps))
+
+
+        .def("set_time_now",
+             &rfnoc_graph::set_time_now,
+             py::arg("time_spec"),
+             py::arg("mboard") = 0,
+             py::arg("timekeeper") = 0,
+             D(rfnoc_graph, set_time_now))
+
+
+        .def("set_time_next_pps",
+             &rfnoc_graph::set_time_next_pps,
+             py::arg("time_spec"),
+             py::arg("mboard") = 0,
+             py::arg("timekeeper") = 0,
+             D(rfnoc_graph, set_time_next_pps))
+
+
+        .def("get_mboard_sensor_names",
+             &rfnoc_graph::get_mboard_sensor_names,
+             py::arg("mboard") = 0,
+             D(rfnoc_graph, get_mboard_sensor_names))
+
+
+        .def("get_mboard_sensor",
+             &rfnoc_graph::get_mboard_sensor,
+             py::arg("name"),
+             py::arg("mboard") = 0,
+             D(rfnoc_graph, get_mboard_sensor))
+
+        ;
 }

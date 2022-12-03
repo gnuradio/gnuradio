@@ -207,6 +207,52 @@ public:
         return block_ref;
     }
 
+    ::uhd::time_spec_t get_time_now(size_t mboard, size_t timekeeper)
+    {
+        auto keeper = _graph->get_mb_controller(mboard)->get_timekeeper(timekeeper);
+        if (keeper) {
+            return keeper->get_time_now();
+        }
+        return ::uhd::time_spec_t(0.0);
+    }
+
+    ::uhd::time_spec_t get_time_last_pps(size_t mboard, size_t timekeeper)
+    {
+        auto keeper = _graph->get_mb_controller(mboard)->get_timekeeper(timekeeper);
+        if (keeper) {
+            return keeper->get_time_last_pps();
+        }
+        return ::uhd::time_spec_t(0.0);
+    }
+
+    void
+    set_time_now(const ::uhd::time_spec_t& time_spec, size_t mboard, size_t timekeeper)
+    {
+        auto keeper = _graph->get_mb_controller(mboard)->get_timekeeper(timekeeper);
+        if (keeper) {
+            return keeper->set_time_now(time_spec);
+        }
+    }
+
+    void set_time_next_pps(const ::uhd::time_spec_t& time_spec,
+                           size_t mboard,
+                           size_t timekeeper)
+    {
+        auto keeper = _graph->get_mb_controller(mboard)->get_timekeeper(timekeeper);
+        if (keeper) {
+            return keeper->set_time_next_pps(time_spec);
+        }
+    }
+
+    std::vector<std::string> get_mboard_sensor_names(size_t mboard)
+    {
+        return _graph->get_mb_controller(mboard)->get_sensor_names();
+    }
+
+    ::uhd::sensor_value_t get_mboard_sensor(const std::string& name, size_t mboard)
+    {
+        return _graph->get_mb_controller(mboard)->get_sensor(name);
+    }
 
 private:
     size_t _get_adapter_id(const std::string& streamer_id, const size_t port)

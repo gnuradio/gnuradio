@@ -14,6 +14,7 @@
 #include <uhd/rfnoc_graph.hpp>
 #include <uhd/stream.hpp>
 #include <uhd/types/device_addr.hpp>
+#include <uhd/types/sensors.hpp>
 #include <memory>
 
 namespace gr {
@@ -148,6 +149,62 @@ public:
     //                            given out
     virtual ::uhd::rfnoc::noc_block_base::sptr
     get_block_ref(const std::string& block_id, const size_t max_ref_count) = 0;
+
+    /*!
+     * Get the current time registers.
+     *
+     * \param mboard the motherboard index 0 to M-1
+     * \param timekeeper the timekeeper index within the motherboard
+     * \return the current usrp time
+     */
+    virtual ::uhd::time_spec_t get_time_now(size_t mboard = 0, size_t timekeeper = 0) = 0;
+
+    /*!
+     * Get the time when the last pps pulse occurred.
+     * \param mboard the motherboard index 0 to M-1
+     * \param timekeeper the timekeeper index within the motherboard
+     * \return the current usrp time
+     */
+    virtual ::uhd::time_spec_t get_time_last_pps(size_t mboard = 0,
+                                                 size_t timekeeper = 0) = 0;
+
+    /*!
+     * Sets the time registers immediately.
+     * \param time_spec the new time
+     * \param mboard the motherboard index 0 to M-1
+     * \param timekeeper the timekeeper index within the motherboard
+     */
+    virtual void set_time_now(const ::uhd::time_spec_t& time_spec,
+                              size_t mboard = 0,
+                              size_t timekeeper = 0) = 0;
+
+    /*!
+     * Set the time registers at the next pps.
+     * \param time_spec the new time
+     * \param mboard the motherboard index 0 to M-1
+     * \param timekeeper the timekeeper index within the motherboard
+     */
+    virtual void set_time_next_pps(const ::uhd::time_spec_t& time_spec,
+                                   size_t mboard = 0,
+                                   size_t timekeeper = 0) = 0;
+
+    /*!
+     * Get a list of possible motherboard sensor names.
+     *
+     * \param mboard the motherboard index 0 to M-1
+     * \return a vector of sensor names
+     */
+    virtual std::vector<std::string> get_mboard_sensor_names(size_t mboard = 0) = 0;
+
+    /*!
+     * Get a motherboard sensor value.
+     *
+     * \param name the name of the sensor
+     * \param mboard the motherboard index 0 to M-1
+     * \return a sensor value object
+     */
+    virtual ::uhd::sensor_value_t get_mboard_sensor(const std::string& name,
+                                                    size_t mboard = 0) = 0;
 };
 
 } // namespace uhd
