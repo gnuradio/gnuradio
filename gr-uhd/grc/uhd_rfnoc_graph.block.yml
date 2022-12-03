@@ -5,23 +5,186 @@ flags: [ show_id, python ]
 templates:
   imports: |-
       from gnuradio import uhd
+      import time
   var_make: |
-      <%
-          import ast
-          # Sanitize
-          graph_args = ast.literal_eval(dev_addr.strip())
-          dev_args_s = ast.literal_eval(dev_args.strip())
-          clock_source_s = ast.literal_eval(clock_source.strip())
-          time_source_s = ast.literal_eval(time_source.strip())
-          # Build full dev args
-          if dev_args_s:
-              graph_args += f",{clock_source_s}"
-          if clock_source_s:
-              graph_args += f",clock_source={clock_source_s}"
-          if time_source_s:
-              graph_args += f",time_source={time_source_s}"
-      %>
-      self.rfnoc_graph = ${id} = uhd.rfnoc_graph(uhd.device_addr("${graph_args}")))
+      self.rfnoc_graph = self.${id} = ${id} = uhd.rfnoc_graph(uhd.device_addr(",".join((${dev_addr}, ${dev_args}))))
+  make: |
+      % if int(num_mboards) > 0:
+      % if clock_source_0:
+      self.${id}.set_clock_source(${clock_source_0}, 0)
+      % endif
+      % if time_source_0:
+      self.${id}.set_time_source(${time_source_0}, 0)
+      % endif
+      % if time_sync_0 == 'sync':
+      self.${id}.set_time_next_pps(uhd.time_spec(0), 0)
+      % elif time_sync_0 == 'pc_clock':
+      self.${id}.set_time_now(uhd.time_spec(time.time()), 0)
+      % elif time_sync_0 == 'pc_clock_next_pps':
+      _last_pps_time = self.${id}.get_time_last_pps(0).get_real_secs()
+      while(self.${id}.get_time_last_pps(0).get_real_secs() == _last_pps_time):
+          time.sleep(0.05)
+      self.${id}.set_time_next_pps(uhd.time_spec(int(time.time()) + 1.0), 0)
+      time.sleep(1)
+      % elif time_sync_0 == 'gps_time':
+      self.${id}.set_time_next_pps(uhd.time_spec(self.${id}.get_mboard_sensor("gps_time", 0).to_int() + 1.0), 0)
+      time.sleep(1)
+      % endif
+      % endif
+      % if int(num_mboards) > 1:
+      % if clock_source_1:
+      self.${id}.set_clock_source(${clock_source_1}, 1)
+      % endif
+      % if time_source_1:
+      self.${id}.set_time_source(${time_source_1}, 1)
+      % endif
+      % if time_sync_1 == 'sync':
+      self.${id}.set_time_next_pps(uhd.time_spec(0), 1)
+      % elif time_sync_1 == 'pc_clock':
+      self.${id}.set_time_now(uhd.time_spec(time.time()), 1)
+      % elif time_sync_1 == 'pc_clock_next_pps':
+      _last_pps_time = self.${id}.get_time_last_pps(1).get_real_secs()
+      while(self.${id}.get_time_last_pps(1).get_real_secs() == _last_pps_time):
+          time.sleep(0.05)
+      self.${id}.set_time_next_pps(uhd.time_spec(int(time.time()) + 1.0), 1)
+      time.sleep(1)
+      % elif time_sync_1 == 'gps_time':
+      self.${id}.set_time_next_pps(uhd.time_spec(self.${id}.get_mboard_sensor("gps_time", 1).to_int() + 1.0), 1)
+      time.sleep(1)
+      % endif
+      % endif
+      % if int(num_mboards) > 2:
+      % if clock_source_2:
+      self.${id}.set_clock_source(${clock_source_2}, 2)
+      % endif
+      % if time_source_2:
+      self.${id}.set_time_source(${time_source_2}, 2)
+      % endif
+      % if time_sync_2 == 'sync':
+      self.${id}.set_time_next_pps(uhd.time_spec(0), 2)
+      % elif time_sync_2 == 'pc_clock':
+      self.${id}.set_time_now(uhd.time_spec(time.time()), 2)
+      % elif time_sync_2 == 'pc_clock_next_pps':
+      _last_pps_time = self.${id}.get_time_last_pps(2).get_real_secs()
+      while(self.${id}.get_time_last_pps(2).get_real_secs() == _last_pps_time):
+          time.sleep(0.05)
+      self.${id}.set_time_next_pps(uhd.time_spec(int(time.time()) + 1.0), 2)
+      time.sleep(1)
+      % elif time_sync_2 == 'gps_time':
+      self.${id}.set_time_next_pps(uhd.time_spec(self.${id}.get_mboard_sensor("gps_time", 2).to_int() + 1.0), 2)
+      time.sleep(1)
+      % endif
+      % endif
+      % if int(num_mboards) > 3:
+      % if clock_source_3:
+      self.${id}.set_clock_source(${clock_source_3}, 3)
+      % endif
+      % if time_source_3:
+      self.${id}.set_time_source(${time_source_3}, 3)
+      % endif
+      % if time_sync_3 == 'sync':
+      self.${id}.set_time_next_pps(uhd.time_spec(0), 3)
+      % elif time_sync_3 == 'pc_clock':
+      self.${id}.set_time_now(uhd.time_spec(time.time()), 3)
+      % elif time_sync_3 == 'pc_clock_next_pps':
+      _last_pps_time = self.${id}.get_time_last_pps(3).get_real_secs()
+      while(self.${id}.get_time_last_pps(3).get_real_secs() == _last_pps_time):
+          time.sleep(0.05)
+      self.${id}.set_time_next_pps(uhd.time_spec(int(time.time()) + 1.0), 3)
+      time.sleep(1)
+      % elif time_sync_3 == 'gps_time':
+      self.${id}.set_time_next_pps(uhd.time_spec(self.${id}.get_mboard_sensor("gps_time", 3).to_int() + 1.0), 3)
+      time.sleep(1)
+      % endif
+      % endif
+      % if int(num_mboards) > 4:
+      % if clock_source_4:
+      self.${id}.set_clock_source(${clock_source_4}, 4)
+      % endif
+      % if time_source_4:
+      self.${id}.set_time_source(${time_source_4}, 4)
+      % endif
+      % if time_sync_4 == 'sync':
+      self.${id}.set_time_next_pps(uhd.time_spec(0), 4)
+      % elif time_sync_4 == 'pc_clock':
+      self.${id}.set_time_now(uhd.time_spec(time.time()), 4)
+      % elif time_sync_4 == 'pc_clock_next_pps':
+      _last_pps_time = self.${id}.get_time_last_pps(4).get_real_secs()
+      while(self.${id}.get_time_last_pps(4).get_real_secs() == _last_pps_time):
+          time.sleep(0.05)
+      self.${id}.set_time_next_pps(uhd.time_spec(int(time.time()) + 1.0), 4)
+      time.sleep(1)
+      % elif time_sync_4 == 'gps_time':
+      self.${id}.set_time_next_pps(uhd.time_spec(self.${id}.get_mboard_sensor("gps_time", 4).to_int() + 1.0), 4)
+      time.sleep(1)
+      % endif
+      % endif
+      % if int(num_mboards) > 5:
+      % if clock_source_5:
+      self.${id}.set_clock_source(${clock_source_5}, 5)
+      % endif
+      % if time_source_5:
+      self.${id}.set_time_source(${time_source_5}, 5)
+      % endif
+      % if time_sync_5 == 'sync':
+      self.${id}.set_time_next_pps(uhd.time_spec(0), 5)
+      % elif time_sync_5 == 'pc_clock':
+      self.${id}.set_time_now(uhd.time_spec(time.time()), 5)
+      % elif time_sync_5 == 'pc_clock_next_pps':
+      _last_pps_time = self.${id}.get_time_last_pps(5).get_real_secs()
+      while(self.${id}.get_time_last_pps(5).get_real_secs() == _last_pps_time):
+          time.sleep(0.05)
+      self.${id}.set_time_next_pps(uhd.time_spec(int(time.time()) + 1.0), 5)
+      time.sleep(1)
+      % elif time_sync_5 == 'gps_time':
+      self.${id}.set_time_next_pps(uhd.time_spec(self.${id}.get_mboard_sensor("gps_time", 5).to_int() + 1.0), 5)
+      time.sleep(1)
+      % endif
+      % endif
+      % if int(num_mboards) > 6:
+      % if clock_source_6:
+      self.${id}.set_clock_source(${clock_source_6}, 6)
+      % endif
+      % if time_source_6:
+      self.${id}.set_time_source(${time_source_6}, 6)
+      % endif
+      % if time_sync_6 == 'sync':
+      self.${id}.set_time_next_pps(uhd.time_spec(0), 6)
+      % elif time_sync_6 == 'pc_clock':
+      self.${id}.set_time_now(uhd.time_spec(time.time()), 6)
+      % elif time_sync_6 == 'pc_clock_next_pps':
+      _last_pps_time = self.${id}.get_time_last_pps(6).get_real_secs()
+      while(self.${id}.get_time_last_pps(6).get_real_secs() == _last_pps_time):
+          time.sleep(0.05)
+      self.${id}.set_time_next_pps(uhd.time_spec(int(time.time()) + 1.0), 6)
+      time.sleep(1)
+      % elif time_sync_6 == 'gps_time':
+      self.${id}.set_time_next_pps(uhd.time_spec(self.${id}.get_mboard_sensor("gps_time", 6).to_int() + 1.0), 6)
+      time.sleep(1)
+      % endif
+      % endif
+      % if int(num_mboards) > 7:
+      % if clock_source_7:
+      self.${id}.set_clock_source(${clock_source_7}, 7)
+      % endif
+      % if time_source_7:
+      self.${id}.set_time_source(${time_source_7}, 7)
+      % endif
+      % if time_sync_7 == 'sync':
+      self.${id}.set_time_next_pps(uhd.time_spec(0), 7)
+      % elif time_sync_7 == 'pc_clock':
+      self.${id}.set_time_now(uhd.time_spec(time.time()), 7)
+      % elif time_sync_7 == 'pc_clock_next_pps':
+      _last_pps_time = self.${id}.get_time_last_pps(7).get_real_secs()
+      while(self.${id}.get_time_last_pps(7).get_real_secs() == _last_pps_time):
+          time.sleep(0.05)
+      self.${id}.set_time_next_pps(uhd.time_spec(int(time.time()) + 1.0), 7)
+      time.sleep(1)
+      % elif time_sync_7 == 'gps_time':
+      self.${id}.set_time_next_pps(uhd.time_spec(self.${id}.get_mboard_sensor("gps_time", 7).to_int() + 1.0), 7)
+      time.sleep(1)
+      % endif
+      % endif
 
 value: ${ 'RFNoC Graph' }
 
@@ -42,17 +205,149 @@ parameters:
   default: 1
   options: [1, 2, 3, 4, 5, 6, 7, 8]
   hide: part
-- id: clock_source
-  label: Clock Source
+- id: clock_source_0
+  label: 'Mb0: Clock Source'
   dtype: string
-  options: ['', internal, external, gpsdo]
-  option_labels: [Default, Internal, External, O/B GPSDO]
-  hide: ${ 'none' if clock_source else 'part' }
-- id: time_source
-  label: Time Source
+  options: ['', internal, external, mimo, gpsdo]
+  option_labels: [Default, Internal, External, MIMO Cable, O/B GPSDO]
+  hide: ${ 'all' if not (num_mboards > 0) else ( 'none' if clock_source_0 else 'part')}
+- id: time_source_0
+  label: 'Mb0: Time Source'
   dtype: string
-  options: ['', internal, external, gpsdo]
-  option_labels: [Default, Internal, External, O/B GPSDO]
-  hide: ${ 'none' if time_source else 'part' }
+  options: ['', external, mimo, gpsdo]
+  option_labels: [Default, External, MIMO Cable, O/B GPSDO]
+  hide: ${ 'all' if not (num_mboards > 0) else ('none' if time_source_0 else 'part')}
+- id: time_sync_0
+  label: 'Mb0: Time Sync'
+  dtype: enum
+  options: ['', sync, pc_clock, pc_clock_next_pps, gps_time]
+  option_labels: [No Sync, Unknown PPS, PC Clock, PC Clock on Next PPS, GPS Time on Next PPS]
+  hide: ${ 'all' if not (num_mboards > 0) else ('none' if time_sync_0 else 'part')}
+- id: clock_source_1
+  label: 'Mb1: Clock Source'
+  dtype: string
+  options: ['', internal, external, mimo, gpsdo]
+  option_labels: [Default, Internal, External, MIMO Cable, O/B GPSDO]
+  hide: ${ 'all' if not (num_mboards > 1) else ( 'none' if clock_source_1 else 'part')}
+- id: time_source_1
+  label: 'Mb1: Time Source'
+  dtype: string
+  options: ['', external, mimo, gpsdo]
+  option_labels: [Default, External, MIMO Cable, O/B GPSDO]
+  hide: ${ 'all' if not (num_mboards > 1) else ('none' if time_source_1 else 'part')}
+- id: time_sync_1
+  label: 'Mb1: Time Sync'
+  dtype: enum
+  options: ['', sync, pc_clock, pc_clock_next_pps, gps_time]
+  option_labels: [No Sync, Unknown PPS, PC Clock, PC Clock on Next PPS, GPS Time on Next PPS]
+  hide: ${ 'all' if not (num_mboards > 1) else ('none' if time_sync_1 else 'part')}
+- id: clock_source_2
+  label: 'Mb2: Clock Source'
+  dtype: string
+  options: ['', internal, external, mimo, gpsdo]
+  option_labels: [Default, Internal, External, MIMO Cable, O/B GPSDO]
+  hide: ${ 'all' if not (num_mboards > 2) else ( 'none' if clock_source_2 else 'part')}
+- id: time_source_2
+  label: 'Mb2: Time Source'
+  dtype: string
+  options: ['', external, mimo, gpsdo]
+  option_labels: [Default, External, MIMO Cable, O/B GPSDO]
+  hide: ${ 'all' if not (num_mboards > 2) else ('none' if time_source_2 else 'part')}
+- id: time_sync_2
+  label: 'Mb2: Time Sync'
+  dtype: enum
+  options: ['', sync, pc_clock, pc_clock_next_pps, gps_time]
+  option_labels: [No Sync, Unknown PPS, PC Clock, PC Clock on Next PPS, GPS Time on Next PPS]
+  hide: ${ 'all' if not (num_mboards > 2) else ('none' if time_sync_2 else 'part')}
+- id: clock_source_3
+  label: 'Mb3: Clock Source'
+  dtype: string
+  options: ['', internal, external, mimo, gpsdo]
+  option_labels: [Default, Internal, External, MIMO Cable, O/B GPSDO]
+  hide: ${ 'all' if not (num_mboards > 3) else ( 'none' if clock_source_3 else 'part')}
+- id: time_source_3
+  label: 'Mb3: Time Source'
+  dtype: string
+  options: ['', external, mimo, gpsdo]
+  option_labels: [Default, External, MIMO Cable, O/B GPSDO]
+  hide: ${ 'all' if not (num_mboards > 3) else ('none' if time_source_3 else 'part')}
+- id: time_sync_3
+  label: 'Mb3: Time Sync'
+  dtype: enum
+  options: ['', sync, pc_clock, pc_clock_next_pps, gps_time]
+  option_labels: [No Sync, Unknown PPS, PC Clock, PC Clock on Next PPS, GPS Time on Next PPS]
+  hide: ${ 'all' if not (num_mboards > 3) else ('none' if time_sync_3 else 'part')}
+- id: clock_source_4
+  label: 'Mb4: Clock Source'
+  dtype: string
+  options: ['', internal, external, mimo, gpsdo]
+  option_labels: [Default, Internal, External, MIMO Cable, O/B GPSDO]
+  hide: ${ 'all' if not (num_mboards > 4) else ( 'none' if clock_source_4 else 'part')}
+- id: time_source_4
+  label: 'Mb4: Time Source'
+  dtype: string
+  options: ['', external, mimo, gpsdo]
+  option_labels: [Default, External, MIMO Cable, O/B GPSDO]
+  hide: ${ 'all' if not (num_mboards > 4) else ('none' if time_source_4 else 'part')}
+- id: time_sync_4
+  label: 'Mb4: Time Sync'
+  dtype: enum
+  options: ['', sync, pc_clock, pc_clock_next_pps, gps_time]
+  option_labels: [No Sync, Unknown PPS, PC Clock, PC Clock on Next PPS, GPS Time on Next PPS]
+  hide: ${ 'all' if not (num_mboards > 4) else ('none' if time_sync_4 else 'part')}
+- id: clock_source_5
+  label: 'Mb5: Clock Source'
+  dtype: string
+  options: ['', internal, external, mimo, gpsdo]
+  option_labels: [Default, Internal, External, MIMO Cable, O/B GPSDO]
+  hide: ${ 'all' if not (num_mboards > 5) else ( 'none' if clock_source_5 else 'part')}
+- id: time_source_5
+  label: 'Mb5: Time Source'
+  dtype: string
+  options: ['', external, mimo, gpsdo]
+  option_labels: [Default, External, MIMO Cable, O/B GPSDO]
+  hide: ${ 'all' if not (num_mboards > 5) else ('none' if time_source_5 else 'part')}
+- id: time_sync_5
+  label: 'Mb5: Time Sync'
+  dtype: enum
+  options: ['', sync, pc_clock, pc_clock_next_pps, gps_time]
+  option_labels: [No Sync, Unknown PPS, PC Clock, PC Clock on Next PPS, GPS Time on Next PPS]
+  hide: ${ 'all' if not (num_mboards > 5) else ('none' if time_sync_5 else 'part')}
+- id: clock_source_6
+  label: 'Mb6: Clock Source'
+  dtype: string
+  options: ['', internal, external, mimo, gpsdo]
+  option_labels: [Default, Internal, External, MIMO Cable, O/B GPSDO]
+  hide: ${ 'all' if not (num_mboards > 6) else ( 'none' if clock_source_6 else 'part')}
+- id: time_source_6
+  label: 'Mb6: Time Source'
+  dtype: string
+  options: ['', external, mimo, gpsdo]
+  option_labels: [Default, External, MIMO Cable, O/B GPSDO]
+  hide: ${ 'all' if not (num_mboards > 6) else ('none' if time_source_6 else 'part')}
+- id: time_sync_6
+  label: 'Mb6: Time Sync'
+  dtype: enum
+  options: ['', sync, pc_clock, pc_clock_next_pps, gps_time]
+  option_labels: [No Sync, Unknown PPS, PC Clock, PC Clock on Next PPS, GPS Time on Next PPS]
+  hide: ${ 'all' if not (num_mboards > 6) else ('none' if time_sync_6 else 'part')}
+- id: clock_source_7
+  label: 'Mb7: Clock Source'
+  dtype: string
+  options: ['', internal, external, mimo, gpsdo]
+  option_labels: [Default, Internal, External, MIMO Cable, O/B GPSDO]
+  hide: ${ 'all' if not (num_mboards > 7) else ( 'none' if clock_source_7 else 'part')}
+- id: time_source_7
+  label: 'Mb7: Time Source'
+  dtype: string
+  options: ['', external, mimo, gpsdo]
+  option_labels: [Default, External, MIMO Cable, O/B GPSDO]
+  hide: ${ 'all' if not (num_mboards > 7) else ('none' if time_source_7 else 'part')}
+- id: time_sync_7
+  label: 'Mb7: Time Sync'
+  dtype: enum
+  options: ['', sync, pc_clock, pc_clock_next_pps, gps_time]
+  option_labels: [No Sync, Unknown PPS, PC Clock, PC Clock on Next PPS, GPS Time on Next PPS]
+  hide: ${ 'all' if not (num_mboards > 7) else ('none' if time_sync_7 else 'part')}
 
 file_format: 1
