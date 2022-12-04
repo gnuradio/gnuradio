@@ -16,7 +16,7 @@ class test_alsa_source(gr_unittest.TestCase):
 
     def test_instantiate(self):
         # If this is a templated block, be sure to add the appropriate suffix
-        op = audio.alsa_source()
+        op = audio.alsa_source(48000,"hw:0")
 
     def test_give_descriptive_name(self):
         # Set up a flowgraph, run, validate the results
