@@ -827,6 +827,48 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         ad.setWindowTitle("Stream Types")
         ad.setText(message)
         ad.exec()
+    
+    def keys_triggered(self):
+        log.debug('keys')
+
+        message = """\
+            <b>Keyboard Shortcuts</b>
+            <br><br>
+            <u>Ctrl+N</u>: Create a new flowgraph.<br>
+            <u>Ctrl+O</u>: Open an existing flowgraph.<br>
+            <u>Ctrl+S</u>: Save the current flowgraph or save as for new.<br>
+            <u>Ctrl+W</u>: Close the current flowgraph.<br>
+            <u>Ctrl+Z</u>: Undo a change to the flowgraph.<br>
+            <u>Ctrl+Y</u>: Redo a change to the flowgraph.<br>
+            <u>Ctrl+A</u>: Selects all blocks and connections.<br>
+            <u>Ctrl+P</u>: Screen Capture of the Flowgraph.<br>
+            <u>Ctrl+Shift+P</u>: Save the console output to file.<br>
+            <u>Ctrl+L</u>: Clear the console.<br>
+            <u>Ctrl+E</u>: Show variable editor.<br>
+            <u>Ctrl+F</u>: Search for a block by name.<br>
+            <u>Ctrl+Q</u>: Quit.<br>
+            <u>F1</u>    : Help menu.<br>
+            <u>F5</u>    : Generate the Flowgraph.<br>
+            <u>F6</u>    : Execute the Flowgraph.<br>
+            <u>F7</u>    : Kill the Flowgraph.<br>
+            <u>Ctrl+Shift+S</u>: Save as the current flowgraph.<br>
+            <u>Ctrl+Shift+D</u>: Create a duplicate of current flow graph.<br>
+
+            <u>Ctrl+X/C/V</u>: Edit-cut/copy/paste.<br>
+            <u>Ctrl+D/B/R</u>: Toggle visibility of disabled blocks or
+                    connections/block tree widget/console.<br>
+            <u>Shift+T/M/B/L/C/R</u>: Vertical Align Top/Middle/Bottom and
+                    Horizontal Align Left/Center/Right respectively of the
+                    selected block.<br>
+            <u>Ctrl+0</u>: Reset the zoom level<br>
+            <u>Ctrl++/-</u>: Zoom in and out<br>
+            \
+            """
+
+        ad = QtWidgets.QMessageBox()
+        ad.setWindowTitle("Keyboard shortcuts")
+        ad.setText(message)
+        ad.exec()
 
     def preferences_triggered(self):
         log.debug('preferences')
