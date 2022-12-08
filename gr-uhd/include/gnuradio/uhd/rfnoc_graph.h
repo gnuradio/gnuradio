@@ -116,6 +116,11 @@ public:
                                      const int device_select,
                                      const int block_select) = 0;
 
+    //! Returns the underlying UHD graph object.
+    //
+    // See ::uhd::rfnoc::rfnoc_graph for more documentation.
+    virtual ::uhd::rfnoc::rfnoc_graph::sptr get_uhd_graph() = 0;
+
     //! Set time source on the specified motherboard
     //
     // Note: This is a convenience call, it directly dereferences the underlying

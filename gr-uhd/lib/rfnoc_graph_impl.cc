@@ -160,6 +160,8 @@ public:
         return block_ids.front().to_string();
     }
 
+    ::uhd::rfnoc::rfnoc_graph::sptr get_uhd_graph() override { return _graph; };
+
     void set_time_source(const std::string& source, const size_t mb_index) override
     {
         _graph->get_mb_controller(mb_index)->set_time_source(source);

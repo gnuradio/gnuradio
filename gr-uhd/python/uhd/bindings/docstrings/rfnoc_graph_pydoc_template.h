@@ -48,6 +48,9 @@ static const char* __doc_gr_uhd_rfnoc_graph_commit = R"doc()doc";
 static const char* __doc_gr_uhd_rfnoc_graph_get_block_id = R"doc()doc";
 
 
+static const char* __doc_gr_uhd_rfnoc_graph_get_uhd_graph = R"doc()doc";
+
+
 static const char* __doc_gr_uhd_rfnoc_graph_set_time_source = R"doc()doc";
 
 

@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(rfnoc_graph.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(47af41ba186763799382ccda11611448)                     */
+/* BINDTOOL_HEADER_FILE_HASH(a6cdab494fc7d1ff9f19bc379b66f492)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -94,6 +94,9 @@ void bind_rfnoc_graph(py::module& m)
              py::arg("device_select"),
              py::arg("block_select"),
              D(rfnoc_graph, get_block_id))
+
+
+        .def("get_uhd_graph", &rfnoc_graph::get_uhd_graph, D(rfnoc_graph, get_uhd_graph))
 
 
         .def("set_time_source",
