@@ -1,0 +1,48 @@
+module: audio
+block: alsa_source
+label: ALSA Source
+blocktype: sync_block
+category: '[Core]/Audio'
+
+# Example Parameters
+parameters:
+-   id: sampling_rate
+    label: Sampling Rate
+    dtype: ru32
+    settable: false
+    default: 0
+    grc:
+        hide: part
+-   id: device_name
+    label: Device Name
+    dtype: string
+    settable: false
+    grc:
+        hide: part
+-   id: num_outputs
+    label: Num Inputs
+    dtype: size
+    settable: false
+    default: 1
+    grc:
+        hide: part
+-   id: ok_to_block
+    label: OK to Block
+    dtype: bool
+    settable: false
+    default: 'true'
+    grc:
+        hide: part
+# Example Ports
+ports:
+-   domain: stream
+    id: out
+    direction: output
+    type: rf32
+    multiplicity: parameters/num_outputs
+
+implementations:
+-   id: cpu
+# -   id: cuda
+
+file_format: 1

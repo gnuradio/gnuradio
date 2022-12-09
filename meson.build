@@ -97,6 +97,7 @@ if (get_option('enable_testing'))
       join_paths( meson.build_root(),'schedulers','nbt','lib'),
       join_paths( meson.build_root(),'runtime','lib'),
       join_paths( meson.build_root(),'blocklib','analog','lib'),
+      join_paths( meson.build_root(),'blocklib','audio','lib'),
       join_paths( meson.build_root(),'blocklib','blocks','lib'),
       join_paths( meson.build_root(),'blocklib','fec','lib'),
       join_paths( meson.build_root(),'blocklib','fft','lib'),

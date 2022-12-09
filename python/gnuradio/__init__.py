@@ -62,6 +62,7 @@ if path.endswith(path_ending):
 
     ###BLOCKLIB###
     __path__.append(os.path.join(build_path, 'blocklib', 'analog', 'python', 'gnuradio'))
+    __path__.append(os.path.join(build_path, 'blocklib', 'audio', 'python', 'gnuradio'))
     __path__.append(os.path.join(build_path, 'blocklib', 'blocks', 'python', 'gnuradio'))
     __path__.append(os.path.join(build_path, 'blocklib', 'digital', 'python', 'gnuradio'))
     __path__.append(os.path.join(build_path, 'blocklib', 'fec', 'python', 'gnuradio'))    
