@@ -220,7 +220,7 @@ PMTs can represent the following:
 * Vectors (of PMTs)
 * Uniform vectors (of any standard data type)
 * Dictionaries (list of key:value pairs)
-* Any (contains a boost::any pointer to hold anything)
+* Any (contains a std::any pointer to hold anything)
 
 The PMT library also defines a set of functions that operate directly
 on PMTs such as:

@@ -92,9 +92,9 @@ void constellation_receiver_cb_impl::handle_set_constellation(
     pmt::pmt_t constellation_pmt)
 {
     if (pmt::is_any(constellation_pmt)) {
-        boost::any constellation_any = pmt::any_ref(constellation_pmt);
+        std::any constellation_any = pmt::any_ref(constellation_pmt);
         constellation_sptr constellation =
-            boost::any_cast<constellation_sptr>(constellation_any);
+            std::any_cast<constellation_sptr>(constellation_any);
         set_constellation(constellation);
     } else {
         d_logger->error("Received constellation that is not a PMT any; skipping.");
