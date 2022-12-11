@@ -36,7 +36,7 @@ from itertools import count
 from .canvas.block import Block
 from .canvas.port import Port
 from ...core.base import Element
-from .canvas.connection import Connection
+from .canvas.connection import ConnectionArrow, Connection
 from .. import base
 from ...core.FlowGraph import FlowGraph as CoreFlowgraph
 from .. import Utils
@@ -261,21 +261,28 @@ class Flowgraph(QtWidgets.QGraphicsScene, base.Component, CoreFlowgraph):
             if item.is_port:
                 if len(selected) == 1:
                     if selected[0].is_port and selected[0] != item:
-                        self.connections.add(Connection(self, selected[0], item))
-                        conn_made = True
+                        if selected[0].is_source and item.is_sink:
+                            log.debug("Created connection (click)")
+                            self.connections.add(Connection(self, selected[0], item))
+                            conn_made = True
+                        elif selected[0].is_sink and item.is_source:
+                            log.debug("Created connection (click)")
+                            self.connections.add(Connection(self, item, selected[0]))
+                            conn_made = True
                 if not conn_made:
                     self.startPort = item
-                    self.newConnection = QtWidgets.QGraphicsLineItem(QtCore.QLineF(event.scenePos(), event.scenePos()))
-                    self.newConnection.setPen(QtGui.QPen(1))
-                    self.addItem(self.newConnection)
+                    if item.is_source:
+                        self.newConnection = ConnectionArrow(self, item.connection_point, event.scenePos())
+                        self.newConnection.setPen(QtGui.QPen(1))
+                        self.addItem(self.newConnection)
         if event.button() == Qt.LeftButton:
             self.mousePressed = True
             super(Flowgraph, self).mousePressEvent(event)
 
     def mouseMoveEvent(self, event):
         if self.newConnection:
-            newConnection_ = QtCore.QLineF(self.newConnection.line().p1(), event.scenePos())
-            self.newConnection.setLine(newConnection_)
+            self.newConnection.end_point = event.scenePos()
+            self.newConnection.updateLine()
 
         if self.mousePressed and self.isPanning:
             newPos = event.pos()
@@ -297,7 +304,7 @@ class Flowgraph(QtWidgets.QGraphicsScene, base.Component, CoreFlowgraph):
             item = self.itemAt(event.scenePos(), QtGui.QTransform())
             if isinstance(item, Element):
                 if item.is_port and item != self.startPort:
-                    log.debug("Connecting two ports")
+                    log.debug("Created connection (drag)")
                     self.connections.add(Connection(self, self.startPort, item))
             self.removeItem(self.newConnection)
             self.newConnection = None
