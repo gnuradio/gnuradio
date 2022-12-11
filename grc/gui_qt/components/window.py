@@ -296,13 +296,13 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         actions['show_flowgraph_complexity'] = Action(_("show_flowgraph_complexity"), self)
         actions['show_flowgraph_complexity'].setCheckable(True)
 
-        actions['types'] = Action("Types", self)
+        actions['types'] = Action(_("&Types"), self)
 
-        actions['keys'] = Action("Keys", self)
+        actions['keys'] = Action(_("&Keys"), self)
 
         actions['parser_errors'] = Action("Parser Errors", self)
 
-        actions['get_involved'] = Action("Get Involved", self)
+        actions['get_involved'] = Action(_("&Get Involved"), self)
 
         actions['preferences'] = Action(Icons('preferences-system'), _("preferences"), self,
                                         statusTip=_("preferences-tooltip"))
