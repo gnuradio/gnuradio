@@ -174,7 +174,7 @@ class Flowgraph(QtWidgets.QGraphicsScene, base.Component, CoreFlowgraph):
                 id = self._get_unique_id(block_key)
                 
                 block = self.new_block(block_key, attrib=attrib)
-                block.states['coordinate'] = QtCore.QPointF(cursor_pos.x(), cursor_pos.y())
+                block.states['coordinate'] = (cursor_pos.x(), cursor_pos.y())
                 block.setPos(cursor_pos.x(), cursor_pos.y())
                 block.params['id'].set_value(id)
                 self.addItem(block)

@@ -219,17 +219,17 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
         self.block_label = self.key
 
         if 'coordinate' not in self.states.keys():
-            self.states['coordinate'] = QtCore.QPointF(500, 300)
-            self.setPos(self.states['coordinate'])
+            self.states['coordinate'] = (500, 300)
+            self.setPos(QtCore.QPointF(self.states['coordinate'][0], self.states['coordinate'][1]))
         if 'rotation' not in self.states.keys():
             self.states['rotation'] = 0.0
 
         self.create_shapes_and_labels()
 
         self.moving = False
-        self.oldPos = self.pos()
-        self.newPos = self.pos()
-        self.states['coordinate'] = self.pos()
+        self.oldPos = (self.x(), self.y())
+        self.newPos = (self.x(), self.y())
+        self.states['coordinate'] = (self.x(), self.y())
 
         self.setFlag(QtWidgets.QGraphicsItem.ItemIsMovable)
         self.setFlag(QtWidgets.QGraphicsItem.ItemIsSelectable)
@@ -269,7 +269,7 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
 
     def paint(self, painter, option, widget):
         x,y = (self.x(), self.y())
-        self.states['coordinate'] = self.pos()
+        self.states['coordinate'] = (self.x(), self.y())
         # Set font
         font = QtGui.QFont('Helvetica', 10)
         #font.setStretch(70) # makes it more condensed
@@ -336,7 +336,7 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
         for k, v in states.items():
             self.states[k] = v
 
-        self.setPos(self.states['coordinate'])
+        self.setPos(self.states['coordinate'][0], self.states['coordinate'][1])
         self.setRotation(self.states['rotation'])
 
     def mouseReleaseEvent(self, e):
