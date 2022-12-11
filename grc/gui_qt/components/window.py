@@ -643,6 +643,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
     def save_triggered(self):
         log.debug('save')
+        self.save_as_triggered()
 
     def save_as_triggered(self):
         log.debug('save as')
@@ -651,7 +652,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         if filename:
             try:
                 self.file_path = filename
-                self.platform.save_flow_graph(filename, self.fg_view)
+                self.platform.save_flow_graph(filename, self.currentView)
             except IOError:
                 log.error('Save failed')
 
