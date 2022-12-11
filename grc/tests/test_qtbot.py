@@ -333,12 +333,26 @@ def test_file_actions(qtbot, qapp_cls_):
     qtbot.wait(100)
     assert win.tabWidget.count() == 1, "File/Close All"
     
-    # Save
-    
     # Save As
+    def assert_and_close():
+        assert(qapp_cls_.activeWindow() != qapp_cls_.MainWindow)
+        type_text(qtbot, qapp_cls_, "test.grc")
+        qtbot.keyClick(qapp_cls_.activeWindow(), QtCore.Qt.Key_Enter)
+    
+    assert(not path.isfile('test.grc'))
+    qtbot.keyClick(qapp_cls_.focusWidget(), QtCore.Qt.Key_F, QtCore.Qt.AltModifier)
+    qtbot.wait(100)
+    QtCore.QTimer.singleShot(100, assert_and_close)
+    qtbot.keyClick(menu, QtCore.Qt.Key_A)
+    qtbot.wait(200)
+    assert(path.isfile('test.grc'))
+    remove('test.grc')
+    assert(not path.isfile('test.grc'))
+
+    # TODO:
+    # Save
 
     # Open
-    # TODO
 
 def test_file_screen_capture_pdf(qtbot, qapp_cls_):
     assert(not path.isfile('test.pdf'))
@@ -385,9 +399,6 @@ def test_file_screen_capture_svg(qtbot, qapp_cls_):
     assert path.isfile('test.svg'), "File/Screen Capture: Could not create SVG"
     remove('test.svg')
     assert(not path.isfile('test.svg'))
-
-'''    
-    # Exit is not tested
 
 def test_edit_actions(qtbot, qapp_cls_):
     pass
@@ -475,7 +486,6 @@ def test_help_actions(qtbot, qapp_cls_):
     qtbot.keyClick(menu, QtCore.Qt.Key_Q)
     qtbot.wait(100)
     assert(qapp_cls_.activeWindow() == qapp_cls_.MainWindow)
-'''
 
 def test_quit(qtbot, qapp_cls_):
     qapp_cls_.MainWindow.actions["exit"].trigger()
