@@ -218,6 +218,13 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
         actions['delete'] = Action(Icons('edit-delete'), _("delete"), self,
                                    shortcut=Keys.Delete, statusTip=_("delete-tooltip"))
+        
+        actions['undo'].setEnabled(False)
+        actions['redo'].setEnabled(False)
+        actions['cut'].setEnabled(False)
+        actions['copy'].setEnabled(False)
+        actions['paste'].setEnabled(False)
+        actions['delete'].setEnabled(False)
 
         actions['select_all'] = Action(Icons('edit-select_all'), _("select_all"), self,
                                    shortcut=Keys.SelectAll, statusTip=_("select_all-tooltip"))
@@ -229,6 +236,9 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         actions['rotate_cw'] = Action(Icons('object-rotate-right'), _("rotate_cw"), self,
                                       shortcut=Keys.MoveToNextChar,
                                       statusTip=_("rotate_cw-tooltip"))
+        
+        actions['rotate_cw'].setEnabled(False)
+        actions['rotate_ccw'].setEnabled(False)
 
         actions['enable'] = Action(_("enable"), self,
                                    shortcut="E")
@@ -236,22 +246,41 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
                                    shortcut="D")
         actions['bypass'] = Action(_("bypass"), self,
                                    shortcut="B")
+        
+        actions['enable'].setEnabled(False)
+        actions['disable'].setEnabled(False)
+        actions['bypass'].setEnabled(False)
 
         actions['vertical_align_top'] = Action(_("vertical_align_top"), self)
         actions['vertical_align_middle'] = Action(_("vertical_align_middle"), self)
         actions['vertical_align_bottom'] = Action(_("vertical_align_bottom"), self)
 
+        actions['vertical_align_top'].setEnabled(False)
+        actions['vertical_align_middle'].setEnabled(False)
+        actions['vertical_align_bottom'].setEnabled(False)
+        
+
         actions['horizontal_align_left'] = Action(_("horizontal_align_left"), self)
         actions['horizontal_align_center'] = Action(_("horizontal_align_center"), self)
         actions['horizontal_align_right'] = Action(_("horizontal_align_right"), self)
+
+        actions['horizontal_align_left'].setEnabled(False)
+        actions['horizontal_align_center'].setEnabled(False)
+        actions['horizontal_align_right'].setEnabled(False)
 
         actions['create_hier'] = Action(_("create_hier_block"), self)
         actions['open_hier'] = Action(_("open_hier_block"), self)
         actions['toggle_source_bus'] = Action(_("toggle_source_bus"), self)
         actions['toggle_sink_bus'] = Action(_("toggle_sink_bus"), self)
 
+        actions['create_hier'].setEnabled(False)
+        actions['open_hier'].setEnabled(False)
+        actions['toggle_source_bus'].setEnabled(False)
+        actions['toggle_sink_bus'].setEnabled(False)
+
         actions['properties'] = Action(Icons('document-properties'), _("flowgraph-properties"),
                                        self, statusTip=_("flowgraph-properties-tooltip"))
+        actions['properties'].setEnabled(False)
 
         # View Actions
         actions['snap_to_grid'] = Action(_("snap_to_grid"), self)
@@ -311,19 +340,11 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
                                         statusTip=_("reload-tooltip"))
 
         # Disable some actions, by default
-        actions['save'].setEnabled(False)
-        actions['undo'].setEnabled(False)
-        actions['redo'].setEnabled(False)
-        actions['cut'].setEnabled(False)
-        actions['copy'].setEnabled(False)
-        actions['paste'].setEnabled(False)
-        actions['delete'].setEnabled(False)
+        actions['save'].setEnabled(True)
         actions['errors'].setEnabled(False)
-        actions['rotate_cw'].setEnabled(False)
-        actions['rotate_ccw'].setEnabled(False)
-        actions['enable'].setEnabled(False)
-        actions['disable'].setEnabled(False)
-        actions['bypass'].setEnabled(False)
+        
+        
+        
 
     def updateDocTab(self):
         doc_txt = self._app().DocumentationTab._text
