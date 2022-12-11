@@ -12,7 +12,7 @@ import pyautogui as pag
 import logging
 
 from PyQt5 import QtTest, QtCore, Qt, QtGui
-from os import path
+from os import path, remove
 
 from gnuradio import gr
 from grc.gui_qt import properties
@@ -340,10 +340,53 @@ def test_file_actions(qtbot, qapp_cls_):
     # Open
     # TODO
 
-    # Screen Capture
+def test_file_screen_capture_pdf(qtbot, qapp_cls_):
+    assert(not path.isfile('test.pdf'))
+
+    def assert_and_close():
+        assert(qapp_cls_.activeWindow() != qapp_cls_.MainWindow)
+        type_text(qtbot, qapp_cls_, "test.pdf")
+        qtbot.keyClick(qapp_cls_.activeWindow(), QtCore.Qt.Key_Enter)
+
+    QtCore.QTimer.singleShot(100, assert_and_close)
+    qtbot.keyClick(qapp_cls_.focusWidget(), QtCore.Qt.Key_P, QtCore.Qt.ControlModifier)
+    qtbot.wait(200)
+    assert path.isfile('test.pdf'), "File/Screen Capture: Could not create PDF"
+    remove('test.pdf')
+    assert(not path.isfile('test.pdf'))
     
-    # Print
+
+def test_file_screen_capture_png(qtbot, qapp_cls_):
+    assert(not path.isfile('test.png'))
+
+    def assert_and_close():
+        assert(qapp_cls_.activeWindow() != qapp_cls_.MainWindow)
+        type_text(qtbot, qapp_cls_, "test.png")
+        qtbot.keyClick(qapp_cls_.activeWindow(), QtCore.Qt.Key_Enter)
+
+    QtCore.QTimer.singleShot(100, assert_and_close)
+    qtbot.keyClick(qapp_cls_.focusWidget(), QtCore.Qt.Key_P, QtCore.Qt.ControlModifier)
+    qtbot.wait(200)
+    assert path.isfile('test.png'), "File/Screen Capture: Could not create PNG"
+    remove('test.png')
+    assert(not path.isfile('test.png'))
+
+def test_file_screen_capture_svg(qtbot, qapp_cls_):
+    assert(not path.isfile('test.svg'))
+
+    def assert_and_close():
+        assert(qapp_cls_.activeWindow() != qapp_cls_.MainWindow)
+        type_text(qtbot, qapp_cls_, "test.svg")
+        qtbot.keyClick(qapp_cls_.activeWindow(), QtCore.Qt.Key_Enter)
     
+    QtCore.QTimer.singleShot(100, assert_and_close)
+    qtbot.keyClick(qapp_cls_.focusWidget(), QtCore.Qt.Key_P, QtCore.Qt.ControlModifier)
+    qtbot.wait(200)
+    assert path.isfile('test.svg'), "File/Screen Capture: Could not create SVG"
+    remove('test.svg')
+    assert(not path.isfile('test.svg'))
+
+'''    
     # Exit is not tested
 
 def test_edit_actions(qtbot, qapp_cls_):
@@ -432,6 +475,7 @@ def test_help_actions(qtbot, qapp_cls_):
     qtbot.keyClick(menu, QtCore.Qt.Key_Q)
     qtbot.wait(100)
     assert(qapp_cls_.activeWindow() == qapp_cls_.MainWindow)
+'''
 
 def test_quit(qtbot, qapp_cls_):
     qapp_cls_.MainWindow.actions["exit"].trigger()
