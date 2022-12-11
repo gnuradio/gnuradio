@@ -1,9 +1,13 @@
 import cairo
 
+import logging
+
 from PyQt5 import QtGui, QtCore, QtWidgets, QtSvg
 
 from . import Constants
 from .components.canvas.colors import FLOWGRAPH_BACKGROUND_COLOR
+
+log = logging.getLogger(__name__)
 
 def get_rotated_coordinate(coor, rotation):
     """
@@ -47,4 +51,5 @@ def make_screenshot(fg_view, file_path, transparent_bg=False):
         fg_view.render(painter)
         painter.end()
     elif file_path.endswith(".pdf"):
+        log.warning("PDF screen capture not implemented")
         return # TODO
