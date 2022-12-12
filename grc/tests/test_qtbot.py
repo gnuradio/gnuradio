@@ -299,7 +299,7 @@ def test_bypass(qtbot, qapp_cls_):
     qtbot.wait(100)
     assert n_src.state == 'enabled'
 
-def test_file_actions(qtbot, qapp_cls_):
+def test_file_new(qtbot, qapp_cls_):
     win = qapp_cls_.MainWindow
     menu = qapp_cls_.MainWindow.menus['file']
     items = gather_menu_items(menu)
@@ -323,6 +323,12 @@ def test_file_actions(qtbot, qapp_cls_):
     qtbot.wait(100)
     assert win.tabWidget.count() == 4, "File/New"
 
+def test_file_close(qtbot, qapp_cls_):
+    win = qapp_cls_.MainWindow
+    menu = qapp_cls_.MainWindow.menus['file']
+    items = gather_menu_items(menu)
+    qtbot.wait(100)
+
     # Close
     assert win.tabWidget.count() == 4, "File/Close"
     qtbot.keyClick(qapp_cls_.focusWidget(), QtCore.Qt.Key_F, QtCore.Qt.AltModifier)
@@ -330,6 +336,13 @@ def test_file_actions(qtbot, qapp_cls_):
     qtbot.keyClick(menu, QtCore.Qt.Key_C)
     qtbot.wait(100)
     assert win.tabWidget.count() == 3, "File/Close"
+
+def test_file_close_all(qtbot, qapp_cls_):
+    win = qapp_cls_.MainWindow
+    menu = qapp_cls_.MainWindow.menus['file']
+    items = gather_menu_items(menu)
+    qtbot.wait(100)
+
     # Close All
     assert win.tabWidget.count() == 3, "File/Close All"
     qtbot.keyClick(qapp_cls_.focusWidget(), QtCore.Qt.Key_F, QtCore.Qt.AltModifier)
@@ -337,42 +350,77 @@ def test_file_actions(qtbot, qapp_cls_):
     qtbot.keyClick(menu, QtCore.Qt.Key_L)
     qtbot.wait(100)
     assert win.tabWidget.count() == 1, "File/Close All"
+
+def test_file_save_as(qtbot, qapp_cls_):
+    win = qapp_cls_.MainWindow
+    menu = qapp_cls_.MainWindow.menus['file']
+    items = gather_menu_items(menu)
+    qtbot.wait(100)
     
-    # Save As
     def assert_and_close():
         assert(qapp_cls_.activeWindow() != qapp_cls_.MainWindow)
         type_text(qtbot, qapp_cls_, "test.grc")
         qtbot.keyClick(qapp_cls_.activeWindow(), QtCore.Qt.Key_Enter)
     
-    assert(not path.isfile('test.grc'))
+    assert (not path.isfile('test.grc')), "File/Save As (setup): File already exists"
     qtbot.keyClick(qapp_cls_.focusWidget(), QtCore.Qt.Key_F, QtCore.Qt.AltModifier)
     qtbot.wait(100)
     QtCore.QTimer.singleShot(100, assert_and_close)
     qtbot.keyClick(menu, QtCore.Qt.Key_A)
     qtbot.wait(200)
-    assert(path.isfile('test.grc'))
+    assert (path.isfile('test.grc')), "File/Save As: Could not save file"
     remove('test.grc')
-    assert(not path.isfile('test.grc'))
+    assert (not path.isfile('test.grc')), "File/Save (teardown): Could not delete file"
 
-    # TODO:
-    # Save
+def test_file_save(qtbot, qapp_cls_):
+    win = qapp_cls_.MainWindow
+    menu = qapp_cls_.MainWindow.menus['file']
+    items = gather_menu_items(menu)
+    qtbot.wait(100)
+    
+    assert (not path.isfile('test.grc')), "File/Save (setup): File already exists"
+    qtbot.keyClick(qapp_cls_.focusWidget(), QtCore.Qt.Key_S, QtCore.Qt.ControlModifier)
+    qtbot.wait(100)
+    assert (path.isfile('test.grc')), "File/Save: Could not save file"
+    remove('test.grc')
+    assert (not path.isfile('test.grc')), "File/Save (teardown): Could not delete file"
 
-    # Open
+def test_file_save_copy(qtbot, qapp_cls_):
+    win = qapp_cls_.MainWindow
+    menu = qapp_cls_.MainWindow.menus['file']
+    items = gather_menu_items(menu)
+    qtbot.wait(100)
+    
+    def assert_and_close():
+        assert (qapp_cls_.activeWindow() != qapp_cls_.MainWindow), "File/Save Copy (setup): Could not create screen capture dialog"
+        type_text(qtbot, qapp_cls_, "test_copy.grc")
+        qtbot.keyClick(qapp_cls_.activeWindow(), QtCore.Qt.Key_Enter)
+
+    assert (not path.isfile('test_copy.grc')), "File/Save Copy (setup): File already exists"
+    qtbot.keyClick(qapp_cls_.focusWidget(), QtCore.Qt.Key_F, QtCore.Qt.AltModifier)
+    qtbot.wait(100)
+    QtCore.QTimer.singleShot(100, assert_and_close)
+    qtbot.keyClick(menu, QtCore.Qt.Key_Y)
+    qtbot.wait(200)
+    assert path.isfile('test_copy.grc'), "File/Save Copy: Could not save file"
+    remove('test_copy.grc')
+    assert (not path.isfile('test_copy.grc')), "File/Save Copy (teardown): Could not delete file"
+
+# TODO: File/Open
 
 def test_file_screen_capture_pdf(qtbot, qapp_cls_):
-    assert(not path.isfile('test.pdf'))
-
     def assert_and_close():
-        assert(qapp_cls_.activeWindow() != qapp_cls_.MainWindow)
+        assert (qapp_cls_.activeWindow() != qapp_cls_.MainWindow), "File/Screen Capture (setup): Could not create screen capture dialog"
         type_text(qtbot, qapp_cls_, "test.pdf")
         qtbot.keyClick(qapp_cls_.activeWindow(), QtCore.Qt.Key_Enter)
 
+    assert (not path.isfile('test.pdf')), "File/Screen Capture (setup): PDF already exists"
     QtCore.QTimer.singleShot(100, assert_and_close)
     qtbot.keyClick(qapp_cls_.focusWidget(), QtCore.Qt.Key_P, QtCore.Qt.ControlModifier)
     qtbot.wait(200)
     assert path.isfile('test.pdf'), "File/Screen Capture: Could not create PDF"
     remove('test.pdf')
-    assert(not path.isfile('test.pdf'))
+    assert (not path.isfile('test.pdf')), "File/Screen Capture (teardown): Could not delete PDF"
     
 
 def test_file_screen_capture_png(qtbot, qapp_cls_):
@@ -417,10 +465,23 @@ def test_build_actions(qtbot, qapp_cls_):
 def test_tools_actions(qtbot, qapp_cls_):
     pass
 
+def test_tools_oot_browser(qtbot, qapp_cls_):
+    menu = qapp_cls_.MainWindow.menus['tools']
+    items = gather_menu_items(menu)
+
+    def assert_open():
+        assert(qapp_cls_.activeWindow() != qapp_cls_.MainWindow)
+
+    qtbot.keyClick(qapp_cls_.focusWidget(), QtCore.Qt.Key_T, QtCore.Qt.AltModifier)
+    qtbot.wait(100)
+    QtCore.QTimer.singleShot(100, assert_open)
+    qtbot.keyClick(menu, QtCore.Qt.Key_O)
+    qtbot.wait(100)
+
 def test_reports_actions(qtbot, qapp_cls_):
     pass
 
-def test_help_actions(qtbot, qapp_cls_):
+def test_help_help(qtbot, qapp_cls_):
     def assert_and_close():
         assert(qapp_cls_.activeWindow() != qapp_cls_.MainWindow)
         qtbot.keyClick(qapp_cls_.activeWindow(), QtCore.Qt.Key_Enter)
@@ -439,6 +500,15 @@ def test_help_actions(qtbot, qapp_cls_):
     qtbot.wait(100)
     assert(qapp_cls_.activeWindow() == qapp_cls_.MainWindow)
     
+def test_help_types(qtbot, qapp_cls_):
+    def assert_and_close():
+        assert(qapp_cls_.activeWindow() != qapp_cls_.MainWindow)
+        qtbot.keyClick(qapp_cls_.activeWindow(), QtCore.Qt.Key_Enter)
+
+    menu = qapp_cls_.MainWindow.menus['help']
+    items = gather_menu_items(menu)
+    qtbot.wait(100)
+
     # Types
     assert(qapp_cls_.activeWindow() == qapp_cls_.MainWindow)
     window_count = len(qapp_cls_.topLevelWindows())
@@ -448,6 +518,15 @@ def test_help_actions(qtbot, qapp_cls_):
     qtbot.keyClick(menu, QtCore.Qt.Key_T)
     qtbot.wait(100)
     assert(qapp_cls_.activeWindow() == qapp_cls_.MainWindow)
+
+def test_help_keys(qtbot, qapp_cls_):
+    def assert_and_close():
+        assert(qapp_cls_.activeWindow() != qapp_cls_.MainWindow)
+        qtbot.keyClick(qapp_cls_.activeWindow(), QtCore.Qt.Key_Enter)
+
+    menu = qapp_cls_.MainWindow.menus['help']
+    items = gather_menu_items(menu)
+    qtbot.wait(100)
 
     # Keys
     assert(qapp_cls_.activeWindow() == qapp_cls_.MainWindow)
@@ -462,6 +541,15 @@ def test_help_actions(qtbot, qapp_cls_):
     # TODO:
     # Parser Errors
 
+def test_help_get_involved(qtbot, qapp_cls_):
+    def assert_and_close():
+        assert(qapp_cls_.activeWindow() != qapp_cls_.MainWindow)
+        qtbot.keyClick(qapp_cls_.activeWindow(), QtCore.Qt.Key_Enter)
+
+    menu = qapp_cls_.MainWindow.menus['help']
+    items = gather_menu_items(menu)
+    qtbot.wait(100)
+
     # Get Involved
     assert(qapp_cls_.activeWindow() == qapp_cls_.MainWindow)
     window_count = len(qapp_cls_.topLevelWindows())
@@ -471,6 +559,15 @@ def test_help_actions(qtbot, qapp_cls_):
     qtbot.keyClick(menu, QtCore.Qt.Key_G)
     qtbot.wait(100)
     assert(qapp_cls_.activeWindow() == qapp_cls_.MainWindow)
+
+def test_help_about(qtbot, qapp_cls_):
+    def assert_and_close():
+        assert(qapp_cls_.activeWindow() != qapp_cls_.MainWindow)
+        qtbot.keyClick(qapp_cls_.activeWindow(), QtCore.Qt.Key_Enter)
+
+    menu = qapp_cls_.MainWindow.menus['help']
+    items = gather_menu_items(menu)
+    qtbot.wait(100)
     
     # About
     assert(qapp_cls_.activeWindow() == qapp_cls_.MainWindow)
@@ -481,6 +578,15 @@ def test_help_actions(qtbot, qapp_cls_):
     qtbot.keyClick(menu, QtCore.Qt.Key_A)
     qtbot.wait(100)
     assert(qapp_cls_.activeWindow() == qapp_cls_.MainWindow)
+
+def test_help_about_qt(qtbot, qapp_cls_):
+    def assert_and_close():
+        assert(qapp_cls_.activeWindow() != qapp_cls_.MainWindow)
+        qtbot.keyClick(qapp_cls_.activeWindow(), QtCore.Qt.Key_Enter)
+
+    menu = qapp_cls_.MainWindow.menus['help']
+    items = gather_menu_items(menu)
+    qtbot.wait(100)
     
     # About Qt
     assert(qapp_cls_.activeWindow() == qapp_cls_.MainWindow)
