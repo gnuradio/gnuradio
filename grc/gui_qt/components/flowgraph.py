@@ -66,6 +66,8 @@ class Flowgraph(QtWidgets.QGraphicsScene, base.Component, CoreFlowgraph):
         self.undoAction = self.undoStack.createUndoAction(self, "Undo")
         self.redoAction = self.undoStack.createRedoAction(self, "Redo")
 
+        self.filename = None
+
     def update(self):
         """
         Call the top level rewrite and validate.

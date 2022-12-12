@@ -316,14 +316,18 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         actions['help'] = Action(Icons('help-browser'), _("help"), self,
                                  shortcut=Keys.HelpContents, statusTip=_("help-tooltip"))
 
-        actions['filter_design_tool'] = Action(_("filter_design_tool"), self)
+        # Tools Actions
 
-        actions['set_default_qt_gui_theme'] = Action(_("set_default_qt_gui_theme"), self)
+        actions['filter_design_tool'] = Action(_("&Filter Design Tool"), self)
 
-        actions['module_browser'] = Action(_("module_browser"), self)
+        actions['set_default_qt_gui_theme'] = Action(_("Set Default &Qt GUI Theme"), self)
+
+        actions['module_browser'] = Action(_("&OOT Module Browser"), self)
 
         actions['show_flowgraph_complexity'] = Action(_("show_flowgraph_complexity"), self)
         actions['show_flowgraph_complexity'].setCheckable(True)
+
+        # Help Actions
 
         actions['types'] = Action(_("&Types"), self)
 
@@ -643,20 +647,48 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
     def save_triggered(self):
         log.debug('save')
-        self.save_as_triggered()
-
-    def save_as_triggered(self):
-        log.debug('save as')
-        filename = self.save()
-
+        filename = self.currentFlowgraph.filename
+        
         if filename:
             try:
-                self.file_path = filename
                 self.platform.save_flow_graph(filename, self.currentView)
             except IOError:
                 log.error('Save failed')
 
-        log.info(filename)
+            log.info(f'Saved {filename}')
+        else:
+            log.debug('Flowgraph does not have a filename')
+            self.save_as_triggered()
+
+
+    def save_as_triggered(self):
+        log.debug('Save As')
+        filename, filtr = QtWidgets.QFileDialog.getSaveFileName(self, self.actions['save'].statusTip(),
+                               filter='Flow Graph Files (*.grc);;All files (*.*)')
+        if filename:
+            self.currentFlowgraph.filename = filename
+            try:
+                self.platform.save_flow_graph(filename, self.currentView)
+            except IOError:
+                log.error('Save failed')
+
+            log.info(f'Saved (as) {filename}')
+        else:
+            log.debug('Cancelled Save As action')
+    
+    def save_copy_triggered(self):
+        log.debug('Save Copy')
+        filename, filtr = QtWidgets.QFileDialog.getSaveFileName(self, self.actions['save'].statusTip(),
+                               filter='Flow Graph Files (*.grc);;All files (*.*)')
+        if filename:
+            try:
+                self.platform.save_flow_graph(filename, self.currentView)
+            except IOError:
+                log.error('Save failed')
+
+            log.info(f'Saved (copy) {filename}')
+        else:
+            log.debug('Cancelled Save Copy action')
 
     def close_triggered(self, tab_index=None):
         log.debug(f'Closing a tab (index {tab_index})')
