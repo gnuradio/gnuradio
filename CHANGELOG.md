@@ -7,6 +7,23 @@ Versioning](http://semver.org/spec/v2.0.0.html), starting with version 3.7.12.0.
 
 Older Logs can be found in `docs/RELEASE-NOTES-*`.
 
+## [3.10.5.0] - 2022-12-TBD
+
+Full changelog to come ... here are some highlights:
+
+- Many CI improvements. All tests are now enabled.
+- GRC scale factor and other fixes.
+- Soapy source block may generate takes (like UHD).
+- ZMQ can drop samples (rather than block) on overflow.
+- Lots of gr-uhd/rfnoc updates.
+- Endian/portability fixes for PMT serialization, CRC32, packet header.
+- Qt code generation fixes.
+- More Boost removal (or prep).
+- UDP source/sink efficiency improvement.
+- Build system improvements.
+- Fixes for various build-time warnings.
+- Logging for Python blocks, same as for C++ blocks.
+
 ## [3.10.4.0] - 2022-09-16
 
 ### Changed
