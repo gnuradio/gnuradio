@@ -235,37 +235,47 @@ graph_executor::run_one_iteration(std::vector<block_sptr> blocks)
                     break;
                 }
                 else if (ret == work_return_t::INSUFFICIENT_INPUT_ITEMS) {
-                    // FIXME: Do for all the outputs
-                    if (b->output_multiple_set()) {
-                        wio.outputs()[0].n_items -= b->output_multiple();
-                    }
-                    else {
-                        wio.outputs()[0].n_items >>= 1;
-                    }
-                    if (wio.outputs()[0].n_items < b->output_multiple()) // min block size
-                    {
+                    if (wio.outputs().empty()) {
                         per_block_status[b->id()] = executor_iteration_status_t::BLKD_IN;
-
-                        // call the input blocked callback
-                        bool notify = false;
-                        for (auto& w : wio.inputs()) {
-                            if (w.buf().input_blkd_cb_ready(b->output_multiple())) {
-                                gr::custom_lock lock(std::ref(*w.bufp()->mutex()),
-                                                     w.buf().bufp());
-                                notify |=
-                                    w.buf().input_blocked_callback(b->output_multiple());
-                            }
-                        }
-                        if (notify) {
-                            wio.inputs()[0].port->push_message(
-                                std::make_shared<scheduler_action>(
-                                    scheduler_action_t::NOTIFY_INPUT));
-                        }
-                        per_block_status[b->id()] =
-                            executor_iteration_status_t::READY_NO_OUTPUT;
                         d_debug_logger->debug(
                             "pbs[{}]: {}", b->id(), (int)per_block_status[b->id()]);
                         break;
+                    }
+                    else {
+                        // FIXME: Do for all the outputs
+                        if (b->output_multiple_set()) {
+                            wio.outputs()[0].n_items -= b->output_multiple();
+                        }
+                        else {
+                            wio.outputs()[0].n_items >>= 1;
+                        }
+                        if (wio.outputs()[0].n_items <
+                            b->output_multiple()) // min block size
+                        {
+                            per_block_status[b->id()] =
+                                executor_iteration_status_t::BLKD_IN;
+
+                            // call the input blocked callback
+                            bool notify = false;
+                            for (auto& w : wio.inputs()) {
+                                if (w.buf().input_blkd_cb_ready(b->output_multiple())) {
+                                    gr::custom_lock lock(std::ref(*w.bufp()->mutex()),
+                                                         w.buf().bufp());
+                                    notify |= w.buf().input_blocked_callback(
+                                        b->output_multiple());
+                                }
+                            }
+                            if (notify) {
+                                wio.inputs()[0].port->push_message(
+                                    std::make_shared<scheduler_action>(
+                                        scheduler_action_t::NOTIFY_INPUT));
+                            }
+                            per_block_status[b->id()] =
+                                executor_iteration_status_t::READY_NO_OUTPUT;
+                            d_debug_logger->debug(
+                                "pbs[{}]: {}", b->id(), (int)per_block_status[b->id()]);
+                            break;
+                        }
                     }
                 }
                 else if (ret == work_return_t::INSUFFICIENT_OUTPUT_ITEMS) {
