@@ -7,22 +7,74 @@ Versioning](http://semver.org/spec/v2.0.0.html), starting with version 3.7.12.0.
 
 Older Logs can be found in `docs/RELEASE-NOTES-*`.
 
-## [3.10.5.0] - 2022-12-TBD
+## [3.10.5.0] - 2022-12-19
 
-Full changelog to come ... here are some highlights:
+### Changed
 
-- Many CI improvements. All tests are now enabled.
-- GRC scale factor and other fixes.
-- Soapy source block may generate takes (like UHD).
-- ZMQ can drop samples (rather than block) on overflow.
-- Lots of gr-uhd/rfnoc updates.
-- Endian/portability fixes for PMT serialization, CRC32, packet header.
-- Qt code generation fixes.
-- More Boost removal (or prep).
-- UDP source/sink efficiency improvement.
-- Build system improvements.
-- Fixes for various build-time warnings.
-- Logging for Python blocks, same as for C++ blocks.
+#### Runtime
+- Python block have access to the block logger, as in C++
+- Default log level changed to INFO (from OFF)
+- Memory-based logger `gr.dictionary_logger_backend()` added for log debugging
+- API Note: The Python block gateway is now completely implemented in the PyBind11 wrapper, in order to clean up Python dependencies. This is technically an API change, but should not have any external effect.
+- PMT serialization of Complex32 vectors is now `REAL | IMAG` on all platforms
+- Python IO signature replication (multiple ports specified by one signature) fixed
+
+#### GRC
+- Continue processing block connections after a connection error occurs
+- Drawing/scaling fixes that improve user experience on HiDPI and Windows machines
+
+#### Build system and packaging
+- Many deprecation warnings fixed
+- Make target link libraries PRIVATE wherever possible, removing unnecessary downstream dependencies
+- Add Fedora 37 and drop Fedora 35 CI targets
+- Conda re-rendered with more recent packages - thanks to Ryan Volz for making Conda an easy-to-use, cross-platform method of installing GNU Radio
+- Debian and Fedora packaging specs are no longer included in the code base, since they were out of date, and are maintained by downstreams
+
+#### Testing
+- Code formatting rules for clang format updated to v14
+- Removed all compiler warning suppression
+- Enable Python block testing for Conda on macOS
+- Many other improvements that make maintenance easier - thanks again to Clayton Smith. In the process of fixing tests, a number of latent bugs were fixed throughout the code.
+
+#### gr-analog
+- AGC3 performance and bug fixes
+- Python has access to `control_loop` parent class in PLL blocks
+- CTCSS detection of standard tones improved by fixing floating point comparison
+
+#### gr-blocks
+- Probe Signal cross platform reliability improved by better thread synchronization
+
+#### gr-digital
+- CRC32 and CRC16 blocks use little-endian order regardless of host order. This is a wire format change. The options were to have different endian machines unable to communicate, or older and newer versions unable to communicate. Note that there is a more general set of blocks (CRC Append and CRC Check) that are recommended for use wherever possible.
+- Packet headers use consistent bit order across machines
+- Floating point/rounding fix in constellation lookup table
+
+#### gr-fec
+- LDPC G matrix `n` and `k` can be access from Python
+- LDPC matrix output size calculation corrected
+- CCSDS/Viterbi path metrics overflow fix
+
+#### gr-network
+- Improve UDP Source/Sink efficiency by removing a layer of buffering and using the GR circular buffer instead of the Boost equivalent
+
+#### gr-qtgui
+- Fixed Python code generation for Msg CheckBox, Digital Number Control, Toggle Button, Toggle Switch
+
+#### gr-soapy
+- Sources will generate `rx_time`, `rx_freq` and `rx_rate` tags, as in UHD sources, where supported by the underlying Soapy driver
+
+#### gr-uhd
+- Re-enable `uhd.find_devices()`, in addition to `uhd.find()`
+- RFNoC: generate correct Python code when using clock/time source
+- RFNoC: allow specification of adapter IDs for streamers
+- RFNoC: enable setting of vlen and types for streamers
+- RFNoC: streamers pay attention to stream args
+- RFNoC: sync block controller with gr-ettus OOT
+- RFNoC:`set_property()` and `get_property()` added to the C++ and Python APIs
+- RFNoC: Python binds added for `rfnoc_block_generic`
+
+#### gr-zeromq
+- Sinks will optionally block on full queue, providing backpressure. Previously, overflow data was dropped.
 
 ## [3.10.4.0] - 2022-09-16
 
