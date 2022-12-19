@@ -89,7 +89,7 @@ public:
      */
     bool input_blkd_cb_ready(int items_required) override;
     bool input_blocked_callback(size_t items_required) override;
-    size_t bytes_available() override;
+    uint64_t bytes_available() override;
 };
 
 

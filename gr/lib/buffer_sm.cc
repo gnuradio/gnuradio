@@ -308,7 +308,7 @@ bool buffer_sm_reader::input_blocked_callback(size_t items_required)
     return false;
 }
 
-size_t buffer_sm_reader::bytes_available()
+uint64_t buffer_sm_reader::bytes_available()
 {
     // Can only read up to to the write_index, or the end of the buffer
     // there is no wraparound

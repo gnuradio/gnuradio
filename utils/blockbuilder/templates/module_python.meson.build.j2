@@ -26,18 +26,18 @@ d = {
 
 gen_{{module}}_pybind = custom_target('gen_{{module}}_pybind',
                         output : ['{{module}}_pybind.cc'],
-                        command : ['python3', join_paths(SCRIPTS_DIR,'process_module_pybind.py'),
+                        command : [py3_build, join_paths(SCRIPTS_DIR,'process_module_pybind.py'),
                             '--blocks', d['blocks'],
                             '--imports', d['imports'],
                             '--module', d['module'],
-                            '--output_file', '@OUTPUT@', 
+                            '--output_file', '@OUTPUT@',
                             '--build_dir', join_paths(meson.build_root())],
-                        install : false)      
+                        install : false)
 
 {{module}}_pybind_sources += gen_{{module}}_pybind
 
 gnuradio_blocklib_{{module}}_pybind = py3.extension_module('{{module}}_python',
-    {{module}}_pybind_sources, 
+    {{module}}_pybind_sources,
     include_directories: ['../../../lib', incdir_numpy],
     dependencies : [gnuradio_blocklib_{{module}}_dep, python3_dep, pybind11_dep],
     link_language : 'cpp',

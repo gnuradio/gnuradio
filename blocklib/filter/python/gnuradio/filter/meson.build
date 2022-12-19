@@ -26,7 +26,7 @@ d = {
 
 gen_filter_pybind = custom_target('gen_filter_pybind',
                         output : ['filter_pybind.cc'],
-                        command : ['python3', join_paths(SCRIPTS_DIR,'process_module_pybind.py'),
+                        command : [py3_build, join_paths(SCRIPTS_DIR,'process_module_pybind.py'),
                             '--blocks', d['blocks'],
                             '--imports', d['imports'],
                             '--module', d['module'],

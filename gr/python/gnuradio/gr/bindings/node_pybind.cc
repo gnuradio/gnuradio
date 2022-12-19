@@ -139,7 +139,7 @@ void bind_node(py::module& m)
                const gr::port_direction_t direction,
                const size_t itemsize,
                const bool optional = false,
-               const int multiplicity) {
+               const int multiplicity = 1) {
                 self.add_port(untyped_port::make(
                     name, direction, itemsize, optional, multiplicity));
             },

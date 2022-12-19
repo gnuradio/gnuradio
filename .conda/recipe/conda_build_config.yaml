@@ -1,0 +1,9 @@
+channel_targets:
+  - gnuradio main
+MACOSX_SDK_VERSION:
+  - "10.15" # [osx and x86_64]
+# temporarily override default compiler until vs2019 works on Github Actions
+c_compiler:
+  - vs2017  # [win]
+cxx_compiler:
+  - vs2017  # [win]
