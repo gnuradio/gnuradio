@@ -53,9 +53,9 @@ work_return_t keep_m_in_n_cpu::work(work_io& wio)
 
     // Grab our parameters
     auto itemsize = wio.outputs()[0].buf().item_size();
-    auto m = pmtv::cast<size_t>(*this->param_m);
-    auto n = pmtv::cast<size_t>(*this->param_n);
-    auto offset = pmtv::cast<size_t>(*this->param_offset);
+    auto m = std::get<size_t>(*this->param_m);
+    auto n = std::get<size_t>(*this->param_n);
+    auto offset = std::get<size_t>(*this->param_offset);
 
     // iterate over data blocks of size {n, input : m, output}
     int blks = std::min(noutput_items / m, ninput_items / n);
@@ -85,8 +85,8 @@ void keep_m_in_n_cpu::on_parameter_change(param_action_sptr action)
     // This will set the underlying PMT
     block::on_parameter_change(action);
 
-    auto m = pmtv::cast<size_t>(*this->param_m);
-    auto n = pmtv::cast<size_t>(*this->param_n);
+    auto m = std::get<size_t>(*this->param_m);
+    auto n = std::get<size_t>(*this->param_n);
 
     // Do more updating for certain parameters
     if (action->id() == keep_m_in_n::id_m) {

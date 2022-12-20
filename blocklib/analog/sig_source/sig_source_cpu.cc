@@ -34,9 +34,9 @@ work_return_t sig_source_cpu<T>::work(work_io& wio)
     T t;
     std::scoped_lock l(d_mutex);
 
-    auto offset = pmtv::cast<T>(*this->param_offset);
-    auto ampl = pmtv::cast<float>(*this->param_ampl);
-    auto waveform = static_cast<waveform_t>(pmtv::cast<int>(*this->param_waveform));
+    auto offset = std::get<T>(*this->param_offset);
+    auto ampl = std::get<double>(*this->param_ampl);
+    auto waveform = static_cast<waveform_t>(std::get<int>(*this->param_waveform));
 
     switch (waveform) {
     case waveform_t::CONSTANT:
@@ -114,9 +114,9 @@ work_return_t sig_source_cpu<gr_complex>::work(work_io& wio)
     gr_complex t;
     std::scoped_lock l(d_mutex);
 
-    auto offset = pmtv::cast<gr_complex>(*this->param_offset);
-    auto ampl = pmtv::cast<float>(*this->param_ampl);
-    auto waveform = static_cast<waveform_t>(pmtv::cast<int>(*this->param_waveform));
+    auto offset = std::get<gr_complex>(*this->param_offset);
+    auto ampl = std::get<double>(*this->param_ampl);
+    auto waveform = static_cast<waveform_t>(std::get<int>(*this->param_waveform));
 
     switch (waveform) {
     case waveform_t::CONSTANT:

@@ -28,7 +28,7 @@ deinterleave_cpu::deinterleave_cpu(block_args args) : INHERITED_CONSTRUCTORS
 work_return_t deinterleave_cpu::work(work_io& wio)
 
 {
-    auto blocksize = pmtv::cast<size_t>(*this->param_blocksize);
+    auto blocksize = std::get<size_t>(*this->param_blocksize);
     auto itemsize = wio.inputs()[0].buf().item_size();
 
     // Since itemsize can be set after construction
@@ -39,7 +39,7 @@ work_return_t deinterleave_cpu::work(work_io& wio)
     }
 
     // Forecasting
-    auto nstreams = pmtv::cast<size_t>(*this->param_nstreams);
+    auto nstreams = std::get<size_t>(*this->param_nstreams);
     auto noutput_items = wio.min_noutput_items();
     auto ninput_items = wio.inputs()[0].n_items;
     auto min_output = blocksize * (ninput_items / (blocksize * nstreams));

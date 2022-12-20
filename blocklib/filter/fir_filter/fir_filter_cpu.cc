@@ -33,7 +33,7 @@ void fir_filter_cpu<IN_T, OUT_T, TAP_T>::on_parameter_change(param_action_sptr a
 
     // Do more updating for certain parameters
     if (action->id() == fir_filter<IN_T, OUT_T, TAP_T>::id_taps) {
-        auto taps = pmtv::cast<std::vector<TAP_T>>(*this->param_taps);
+        auto taps = std::get<std::vector<TAP_T>>(*this->param_taps);
         d_fir.set_taps(taps);
         this->declare_noconsume(d_fir.ntaps() - 1);
     }
@@ -46,7 +46,7 @@ work_return_t fir_filter_cpu<IN_T, OUT_T, TAP_T>::enforce_constraints(work_io& w
     size_t ninput = wio.inputs()[0].n_items;
     size_t noutput = wio.outputs()[0].n_items;
 
-    auto decim = pmtv::cast<size_t>(*this->param_decimation);
+    auto decim = std::get<size_t>(*this->param_decimation);
 
     auto min_ninput =
         std::min(noutput * decim + this->noconsume(), ninput - this->noconsume());
@@ -71,7 +71,7 @@ work_return_t fir_filter_cpu<IN_T, OUT_T, TAP_T>::work(work_io& wio)
     auto in = wio.inputs()[0].items<IN_T>();
     auto out = wio.outputs()[0].items<OUT_T>();
 
-    auto decim = pmtv::cast<size_t>(*this->param_decimation);
+    auto decim = std::get<size_t>(*this->param_decimation);
 
     if (decim == 1) {
         d_fir.filterN(out, in, noutput);

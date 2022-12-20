@@ -32,7 +32,7 @@ work_return_t quadrature_demod_cpu::work(work_io& wio)
 
     // because of the history requirement, input needs to be 1 more than what we produce
     auto to_produce = std::min(ninput_items - (d_history - 1), noutput_items);
-    auto gain = pmtv::cast<float>(*this->param_gain);
+    auto gain = std::get<float>(*this->param_gain);
 
     std::vector<gr_complex> tmp(to_produce);
     volk_32fc_x2_multiply_conjugate_32fc(&tmp[0], &in[1], &in[0], to_produce);

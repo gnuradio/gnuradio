@@ -32,7 +32,7 @@ public:
         this->d_debug_logger->trace(
             "block {}: on_parameter_query param_id: {}", this->id(), action->id());
         pmtv::pmt param = d_data;
-        // auto data = pmtv::cast<std::vector<float>>(*param);
+        // auto data = std::get<std::vector<float>>(*param);
         action->set_pmt_value(param);
     }
 
