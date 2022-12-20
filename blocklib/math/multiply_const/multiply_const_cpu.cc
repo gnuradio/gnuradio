@@ -25,7 +25,7 @@ multiply_const_cpu<T>::multiply_const_cpu(
 template <>
 work_return_t multiply_const_cpu<float>::work(work_io& wio)
 {
-    auto k = pmtv::cast<float>(*this->param_k);
+    auto k = std::get<float>(*this->param_k);
 
     auto in = wio.inputs()[0].items<float>();
     auto out = wio.outputs()[0].items<float>();
@@ -40,7 +40,7 @@ work_return_t multiply_const_cpu<float>::work(work_io& wio)
 template <>
 work_return_t multiply_const_cpu<gr_complex>::work(work_io& wio)
 {
-    auto k = pmtv::cast<gr_complex>(*this->param_k);
+    auto k = std::get<gr_complex>(*this->param_k);
 
     const auto in = wio.inputs()[0].items<gr_complex>();
     auto out = wio.outputs()[0].items<gr_complex>();
@@ -55,7 +55,7 @@ work_return_t multiply_const_cpu<gr_complex>::work(work_io& wio)
 template <class T>
 work_return_t multiply_const_cpu<T>::work(work_io& wio)
 {
-    auto k = pmtv::cast<T>(*this->param_k);
+    auto k = std::get<T>(*this->param_k);
 
     // Pre-generate these from modtool, for example
     auto iptr = wio.inputs()[0].items<T>();

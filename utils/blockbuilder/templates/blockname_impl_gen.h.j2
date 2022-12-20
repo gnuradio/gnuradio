@@ -77,7 +77,7 @@ template class {{block}}<{{ opt1 | cpp_type}}, {{ opt2 | cpp_type}},  {{opt3 | c
 // Figure out a way to do this elegantly without macros or string lookups
 {% if parameters %} {% for param in parameters -%}
 {% if 'container' not in param or param['container'] == scalar %}
-#define GET_PARAM_{{param['id']|upper()}} pmtv::cast<{{param['dtype']|cpp_type}}>(*this->param_{{param['id']}})
+#define GET_PARAM_{{param['id']|upper()}} std::get<{{param['dtype']|cpp_type}}>(*this->param_{{param['id']}})
 {% elif param['container'] == 'vector' %}
 {% endif %}
 {% endfor %}

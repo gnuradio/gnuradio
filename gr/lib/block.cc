@@ -111,7 +111,7 @@ void block::handle_msg_param_update(pmtv::pmt msg)
     // the param as the "id" field, and the pmt::wrap
     // that holds the update as the "value" field
 
-    auto id = pmtv::cast<std::string>(pmtv::get_map(msg)["id"]);
+    auto id = std::get<std::string>(pmtv::get_map(msg)["id"]);
     auto value = pmtv::get_map(msg)["value"];
 
     request_parameter_change(get_param_id(id), value, false);
@@ -119,7 +119,7 @@ void block::handle_msg_param_update(pmtv::pmt msg)
 
 void block::handle_msg_system(pmtv::pmt msg)
 {
-    auto str_msg = pmtv::cast<std::string>(msg);
+    auto str_msg = std::get<std::string>(msg);
     if (str_msg == "done") {
         d_finished = true;
         p_scheduler->push_message(

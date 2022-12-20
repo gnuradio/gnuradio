@@ -30,7 +30,7 @@ protected:
         // GR_LOG_INFO(d_logger, "got msg on block {}", alias());
         // d_msg_cnt++;
 
-        size_t msg_cnt = pmtv::cast<size_t>(*param_message_count);
+        size_t msg_cnt = std::get<size_t>(*param_message_count);
         *param_message_count = ++msg_cnt;
 
         // d_debug_logger->debug( "{}", msg_cnt);

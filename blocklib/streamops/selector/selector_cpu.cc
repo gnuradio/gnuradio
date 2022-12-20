@@ -26,9 +26,9 @@ selector_cpu::selector_cpu(block_args args)
 work_return_t selector_cpu::work(work_io& wio)
 
 {
-    auto input_index = pmtv::cast<size_t>(*this->param_input_index);
-    auto output_index = pmtv::cast<size_t>(*this->param_output_index);
-    auto enabled = pmtv::cast<bool>(*this->param_enabled);
+    auto input_index = std::get<size_t>(*this->param_input_index);
+    auto output_index = std::get<size_t>(*this->param_output_index);
+    auto enabled = std::get<bool>(*this->param_enabled);
     auto in = wio.inputs()[input_index].items<uint8_t>();
     auto out = wio.outputs()[output_index].items<uint8_t>();
     auto noutput_items =
