@@ -55,7 +55,7 @@ ${indent(snip['def'])}
 % endfor
 \
 <%
-snippet_sections = ['main_after_init', 'main_after_start', 'main_after_stop']
+snippet_sections = ['main_after_init', 'main_after_start', 'main_after_stop', 'init_before_blocks']
 snippets = {}
 for section in snippet_sections:
     snippets[section] = flow_graph.get_snippets_dict(section)
@@ -205,6 +205,7 @@ gr.io_signature.makev(${len(io_sigs)}, ${len(io_sigs)}, [${', '.join(size_strs)}
         # Blocks
         ${'##################################################'}
         % endif
+        ${'snippets_init_before_blocks(self)' if snippets['init_before_blocks'] else ''}
         % for blk, blk_make in blocks:
         % if blk_make:
         ${ indent(blk_make.strip('\n')) }
