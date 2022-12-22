@@ -804,24 +804,45 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
     def enable_triggered(self):
         log.debug('enable')
-        cmd = EnableAction(self.currentFlowgraph)
-        self.currentFlowgraph.undoStack.push(cmd)
-        self.updateActions()
-        self.currentFlowgraph.update()
+        all_enabled = True
+        for block in self.currentFlowgraph.selected_blocks():
+            if not block.state == 'enabled':
+                all_enabled = False
+                break
+
+        if not all_enabled:
+            cmd = EnableAction(self.currentFlowgraph)
+            self.currentFlowgraph.undoStack.push(cmd)
+            self.updateActions()
+            self.currentFlowgraph.update()
 
     def disable_triggered(self):
         log.debug('disable')
-        cmd = DisableAction(self.currentFlowgraph)
-        self.currentFlowgraph.undoStack.push(cmd)
-        self.updateActions()
-        self.currentFlowgraph.update()
+        all_disabled = True
+        for block in self.currentFlowgraph.selected_blocks():
+            if not block.state == 'disabled':
+                all_disabled = False
+                break
+
+        if not all_disabled:
+            cmd = DisableAction(self.currentFlowgraph)
+            self.currentFlowgraph.undoStack.push(cmd)
+            self.updateActions()
+            self.currentFlowgraph.update()
 
     def bypass_triggered(self):
         log.debug('bypass')
-        cmd = BypassAction(self.currentFlowgraph)
-        self.currentFlowgraph.undoStack.push(cmd)
-        self.updateActions()
-        self.currentFlowgraph.update()
+        all_bypassed = True
+        for block in self.currentFlowgraph.selected_blocks():
+            if not block.state == 'bypassed':
+                all_bypassed = False
+                break
+
+        if not all_bypassed:
+            cmd = BypassAction(self.currentFlowgraph)
+            self.currentFlowgraph.undoStack.push(cmd)
+            self.updateActions()
+            self.currentFlowgraph.update()
 
     def generate_triggered(self):
         log.debug('generate')
