@@ -377,6 +377,101 @@ class Flowgraph(QtWidgets.QGraphicsScene, base.Component, CoreFlowgraph):
             extent = [cmp(xy, e_xy)
                       for cmp, xy, e_xy in zip(cmps, extent, sub_extent)]
         return tuple(extent)
+    
+    def copy_to_clipboard(self):
+        """
+        Copy the selected blocks and connections into the clipboard.
+
+        Returns:
+            the clipboard
+        """
+        # get selected blocks
+        blocks = list(self.selected_blocks())
+        if not blocks:
+            return None
+        # calc x and y min
+        x_min, y_min = blocks[0].states['coordinate']
+        for block in blocks:
+            x, y = block.states['coordinate']
+            x_min = min(x, x_min)
+            y_min = min(y, y_min)
+        # get connections between selected blocks
+        connections = list(filter(
+            lambda c: c.source_block in blocks and c.sink_block in blocks,
+            self.connections,
+        ))
+        clipboard = (
+            (x_min, y_min),
+            [block.export_data() for block in blocks],
+            [connection.export_data() for connection in connections],
+        )
+        return clipboard
+    
+    def paste_from_clipboard(self, clipboard):
+        """
+        Paste the blocks and connections from the clipboard.
+
+        Args:
+            clipboard: the nested data of blocks, connections
+        """
+        (x_min, y_min), blocks_n, connections_n = clipboard
+        '''
+        # recalc the position
+        scroll_pane = self.drawing_area.get_parent().get_parent()
+        h_adj = scroll_pane.get_hadjustment()
+        v_adj = scroll_pane.get_vadjustment()
+        x_off = h_adj.get_value() - x_min + h_adj.get_page_size() / 4
+        y_off = v_adj.get_value() - y_min + v_adj.get_page_size() / 4
+
+        if len(self.get_elements()) <= 1:
+            x_off, y_off = 0, 0
+        '''
+        x_off, y_off = 10, 10
+
+        # create blocks
+        pasted_blocks = {}
+        for block_n in blocks_n:
+            block_key = block_n.get('id')
+            if block_key == 'options':
+                continue
+
+            block_name = block_n.get('name')
+            # Verify whether a block with this name exists before adding it
+            if block_name in (blk.name for blk in self.blocks):
+                block_n = block_n.copy()
+                block_n['name'] = self._get_unique_id(block_name)
+
+            block = self.new_block(block_key)
+            if not block:
+                continue  # unknown block was pasted (e.g. dummy block)
+
+            block.import_data(**block_n)
+            pasted_blocks[block_name] = block  # that is before any rename
+
+            block.moveBy(x_off, y_off)
+            '''
+            while any(Utils.align_to_grid(block.states['coordinate']) == Utils.align_to_grid(other.states['coordinate'])
+                      for other in self.blocks if other is not block):
+                block.moveBy(Constants.CANVAS_GRID_SIZE,
+                           Constants.CANVAS_GRID_SIZE)
+                # shift all following blocks
+                x_off += Constants.CANVAS_GRID_SIZE
+                y_off += Constants.CANVAS_GRID_SIZE
+            '''
+
+        self.selected_elements = set(pasted_blocks.values())
+
+        self.addItem(block)
+        block.moveToTop()
+
+        # update before creating connections
+        self.update()
+        # create connections
+        for src_block, src_port, dst_block, dst_port in connections_n:
+            source = pasted_blocks[src_block].get_source(src_port)
+            sink = pasted_blocks[dst_block].get_sink(dst_port)
+            connection = self.connect(source, sink)
+            self.selected_elements.add(connection)
 
 
 class FlowgraphView(QtWidgets.QGraphicsView, base.Component): # added base.Component so it can see platform

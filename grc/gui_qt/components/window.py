@@ -153,6 +153,8 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         self.currentFlowgraph.selectionChanged.connect(self.updateDocTab)
         #self.new_tab(self.flowgraph)
 
+        self.clipboard = None
+
     '''def show(self):
         log.debug("Showing main window")
         self.show()
@@ -742,12 +744,20 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
     def cut_triggered(self):
         log.debug('cut')
+        self.copy_triggered()
+        self.delete_triggered()
 
     def copy_triggered(self):
         log.debug('copy')
+        self.clipboard = self.currentFlowgraph.copy_to_clipboard()
 
     def paste_triggered(self):
         log.debug('paste')
+        if self.clipboard:
+            self.currentFlowgraph.paste_from_clipboard(self.clipboard)
+            self.currentFlowgraph.update()
+        else:
+            log.debug('clipboard is empty')
 
     def delete_triggered(self):
         log.debug('delete')
