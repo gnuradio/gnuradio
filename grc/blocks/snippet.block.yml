@@ -6,8 +6,8 @@ parameters:
 -   id: section
     label: Section of Flowgraph
     dtype: string
-    options: ['main_after_init', 'main_after_start', 'main_after_stop' ]
-    option_labels: ['Main - After Init', 'Main - After Start', 'Main - After Stop']
+    options: ['main_after_init', 'main_after_start', 'main_after_stop', 'init_before_blocks' ]
+    option_labels: ['Main - After Init', 'Main - After Start', 'Main - After Stop', 'Init - Before Blocks']
 -   id: priority
     label: Priority
     dtype: int
