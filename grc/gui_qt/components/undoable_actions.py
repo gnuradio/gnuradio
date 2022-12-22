@@ -55,7 +55,6 @@ class MoveAction(ChangeStateAction):
             self.oldStates[i] = dict((k, v) for k, v in self.oldStates[i].items() if all(k == 'coordinate' for x in k))
             self.newStates[i] = dict((k, v) for k, v in self.newStates[i].items() if all(k == 'coordinate' for x in k))
 
-# TODO: Don't create a new enable action if the block is already enabled
 class EnableAction(ChangeStateAction):
     def __init__(self, flowgraph):
         ChangeStateAction.__init__(self, flowgraph)
