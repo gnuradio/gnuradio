@@ -476,7 +476,7 @@ def test_tools_oot_browser(qtbot, qapp_cls_):
     qtbot.wait(100)
     QtCore.QTimer.singleShot(100, assert_open)
     qtbot.keyClick(menu, QtCore.Qt.Key_O)
-    qtbot.wait(100)
+    qtbot.wait(200)
 
 def test_reports_actions(qtbot, qapp_cls_):
     pass
