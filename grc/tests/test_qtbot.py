@@ -566,7 +566,7 @@ def test_help_help(qtbot, qapp_cls_):
     qtbot.wait(100)
     QtCore.QTimer.singleShot(100, assert_and_close)
     qtbot.keyClick(menu, QtCore.Qt.Key_H)
-    qtbot.wait(100)
+    qtbot.wait(200)
     assert(qapp_cls_.activeWindow() == qapp_cls_.MainWindow)
     
 def test_help_types(qtbot, qapp_cls_):
@@ -585,7 +585,7 @@ def test_help_types(qtbot, qapp_cls_):
     qtbot.wait(100)
     QtCore.QTimer.singleShot(100, assert_and_close)
     qtbot.keyClick(menu, QtCore.Qt.Key_T)
-    qtbot.wait(100)
+    qtbot.wait(200)
     assert(qapp_cls_.activeWindow() == qapp_cls_.MainWindow)
 
 def test_help_keys(qtbot, qapp_cls_):
@@ -604,7 +604,7 @@ def test_help_keys(qtbot, qapp_cls_):
     qtbot.wait(100)
     QtCore.QTimer.singleShot(100, assert_and_close)
     qtbot.keyClick(menu, QtCore.Qt.Key_K)
-    qtbot.wait(100)
+    qtbot.wait(200)
     assert(qapp_cls_.activeWindow() == qapp_cls_.MainWindow)
 
     # TODO:
@@ -626,7 +626,7 @@ def test_help_get_involved(qtbot, qapp_cls_):
     qtbot.wait(100)
     QtCore.QTimer.singleShot(100, assert_and_close)
     qtbot.keyClick(menu, QtCore.Qt.Key_G)
-    qtbot.wait(100)
+    qtbot.wait(200)
     assert(qapp_cls_.activeWindow() == qapp_cls_.MainWindow)
 
 def test_help_about(qtbot, qapp_cls_):
@@ -645,7 +645,7 @@ def test_help_about(qtbot, qapp_cls_):
     qtbot.wait(100)
     QtCore.QTimer.singleShot(100, assert_and_close)
     qtbot.keyClick(menu, QtCore.Qt.Key_A)
-    qtbot.wait(100)
+    qtbot.wait(200)
     assert(qapp_cls_.activeWindow() == qapp_cls_.MainWindow)
 
 def test_help_about_qt(qtbot, qapp_cls_):
@@ -664,7 +664,7 @@ def test_help_about_qt(qtbot, qapp_cls_):
     qtbot.wait(100)
     QtCore.QTimer.singleShot(100, assert_and_close)
     qtbot.keyClick(menu, QtCore.Qt.Key_Q)
-    qtbot.wait(100)
+    qtbot.wait(200)
     assert(qapp_cls_.activeWindow() == qapp_cls_.MainWindow)
 
 def test_quit(qtbot, qapp_cls_):
