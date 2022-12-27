@@ -387,13 +387,15 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         self.actions['bypass'].setEnabled(False)
         self.actions['properties'].setEnabled(False)
 
+        if self.clipboard:
+            self.actions['paste'].setEnabled(True)
+
         if len(conns) > 0:
             self.actions['delete'].setEnabled(True)
 
         if len(blocks) > 0:
             self.actions['cut'].setEnabled(True)
             self.actions['copy'].setEnabled(True)
-            self.actions['paste'].setEnabled(True)
             self.actions['delete'].setEnabled(True)
             self.actions['rotate_cw'].setEnabled(True)
             self.actions['rotate_ccw'].setEnabled(True)
@@ -746,10 +748,12 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         log.debug('cut')
         self.copy_triggered()
         self.delete_triggered()
+        self.updateActions()
 
     def copy_triggered(self):
         log.debug('copy')
         self.clipboard = self.currentFlowgraph.copy_to_clipboard()
+        self.updateActions()
 
     def paste_triggered(self):
         log.debug('paste')
@@ -762,10 +766,12 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
     def delete_triggered(self):
         log.debug('delete')
         self.currentFlowgraph.delete_selected()
+        self.updateActions()
 
     def select_all_triggered(self):
         log.debug('select_all')
         self.currentFlowgraph.select_all()
+        self.updateActions()
 
     def rotate_ccw_triggered(self):
         # Pass to Undo/Redo
@@ -823,8 +829,9 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         if not all_enabled:
             cmd = EnableAction(self.currentFlowgraph)
             self.currentFlowgraph.undoStack.push(cmd)
-            self.updateActions()
-            self.currentFlowgraph.update()
+
+        self.currentFlowgraph.update()
+        self.updateActions()
 
     def disable_triggered(self):
         log.debug('disable')
@@ -837,8 +844,9 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         if not all_disabled:
             cmd = DisableAction(self.currentFlowgraph)
             self.currentFlowgraph.undoStack.push(cmd)
-            self.updateActions()
-            self.currentFlowgraph.update()
+        
+        self.currentFlowgraph.update()
+        self.updateActions()
 
     def bypass_triggered(self):
         log.debug('bypass')
@@ -851,8 +859,9 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         if not all_bypassed:
             cmd = BypassAction(self.currentFlowgraph)
             self.currentFlowgraph.undoStack.push(cmd)
-            self.updateActions()
-            self.currentFlowgraph.update()
+        
+        self.currentFlowgraph.update()
+        self.updateActions()
 
     def generate_triggered(self):
         log.debug('generate')
