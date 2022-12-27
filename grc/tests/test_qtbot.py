@@ -456,6 +456,75 @@ def test_file_screen_capture_svg(qtbot, qapp_cls_):
 def test_edit_actions(qtbot, qapp_cls_):
     pass
 
+def test_edit_cut_paste(qtbot, qapp_cls_):
+    scaling = qapp_cls_.desktop().devicePixelRatio()
+
+    fg = qapp_cls_.MainWindow.currentFlowgraph
+    view = qapp_cls_.MainWindow.currentView
+    block = None
+    for block_ in qapp_cls_.MainWindow.currentFlowgraph.blocks:
+        if block_.key == 'variable':
+            block = block_
+
+    assert block != None, "Edit/Cut and paste (setup): Could not find variable block"
+
+    click_pos = scaling * global_pos(block, view)
+    pag.click(click_pos.x(), click_pos.y(), button="left")
+    qtbot.wait(100)
+    qtbot.keyClick(qapp_cls_.focusWidget(), QtCore.Qt.Key_X, QtCore.Qt.ControlModifier)
+    qtbot.wait(100)
+
+    block = None
+    for block_ in qapp_cls_.MainWindow.currentFlowgraph.blocks:
+        if block_.key == 'variable':
+            block = block_
+    assert block not in qapp_cls_.MainWindow.currentFlowgraph.blocks, "Edit/Cut and paste: Could not cut variable block"
+
+    qtbot.keyClick(qapp_cls_.focusWidget(), QtCore.Qt.Key_V, QtCore.Qt.ControlModifier)
+    qtbot.wait(100)
+
+    block = None
+    for block_ in qapp_cls_.MainWindow.currentFlowgraph.blocks:
+        if block_.key == 'variable':
+            block = block_
+    assert block in qapp_cls_.MainWindow.currentFlowgraph.blocks, "Edit/Cut and paste: Could not paste variable block"
+
+    qtbot.wait(100)
+
+def test_edit_copy_paste(qtbot, qapp_cls_):
+    scaling = qapp_cls_.desktop().devicePixelRatio()
+
+    fg = qapp_cls_.MainWindow.currentFlowgraph
+    view = qapp_cls_.MainWindow.currentView
+    block = None
+    for block_ in qapp_cls_.MainWindow.currentFlowgraph.blocks:
+        if block_.key == 'variable':
+            block = block_
+
+    assert block != None, "Edit/Copy and paste (setup): Could not find variable block"
+
+    click_pos = scaling * global_pos(block, view)
+    pag.click(click_pos.x(), click_pos.y(), button="left")
+    qtbot.wait(100)
+    qtbot.keyClick(qapp_cls_.focusWidget(), QtCore.Qt.Key_C, QtCore.Qt.ControlModifier)
+    qtbot.wait(100)
+    qtbot.keyClick(qapp_cls_.focusWidget(), QtCore.Qt.Key_V, QtCore.Qt.ControlModifier)
+    qtbot.wait(100)
+
+    blocks = []
+    for block_ in qapp_cls_.MainWindow.currentFlowgraph.blocks:
+        if block_.key == 'variable':
+            blocks.append(block_)
+    assert len(blocks) == 2, "Edit/Copy and paste: Could not paste variable block"
+    assert blocks[0].name != blocks[1].name, "Edit/Copy and paste: Newly pasted variable block's ID is the same as the original block's ID"
+
+    click_pos = scaling * global_pos(blocks[1], view)
+    pag.click(click_pos.x(), click_pos.y(), button="left")
+    qtbot.wait(100)
+    qtbot.keyClick(qapp_cls_.focusWidget(), QtCore.Qt.Key_Delete, QtCore.Qt.NoModifier)
+    
+    assert len(blocks) == 2, "Edit/Copy and paste (teardown): Could not delete new variable block"
+    
 def test_view_actions(qtbot, qapp_cls_):
     pass
 
