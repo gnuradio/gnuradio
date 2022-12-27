@@ -13,8 +13,7 @@
 # Register component
 ########################################################################
 include(GrComponent)
-gr_register_component("gr-pdu" ENABLE_GR_PDU ENABLE_GNURADIO_RUNTIME ENABLE_GR_BLOCKS
-                      ENABLE_GR_FILTER)
+gr_register_component("gr-pdu" ENABLE_GR_PDU ENABLE_GNURADIO_RUNTIME)
 
 set(GR_PKG_PDU_EXAMPLES_DIR ${GR_PKG_DATA_DIR}/examples/pdu)
 
