@@ -414,6 +414,7 @@ class Flowgraph(QtWidgets.QGraphicsScene, base.Component, CoreFlowgraph):
         Args:
             clipboard: the nested data of blocks, connections
         """
+        self.clearSelection()
         (x_min, y_min), blocks_n, connections_n = clipboard
         '''
         # recalc the position
@@ -449,6 +450,9 @@ class Flowgraph(QtWidgets.QGraphicsScene, base.Component, CoreFlowgraph):
             pasted_blocks[block_name] = block  # that is before any rename
 
             block.moveBy(x_off, y_off)
+            self.addItem(block)
+            block.moveToTop()
+            block.setSelected(True)
             '''
             while any(Utils.align_to_grid(block.states['coordinate']) == Utils.align_to_grid(other.states['coordinate'])
                       for other in self.blocks if other is not block):
@@ -459,11 +463,6 @@ class Flowgraph(QtWidgets.QGraphicsScene, base.Component, CoreFlowgraph):
                 y_off += Constants.CANVAS_GRID_SIZE
             '''
 
-        self.selected_elements = set(pasted_blocks.values())
-
-        self.addItem(block)
-        block.moveToTop()
-
         # update before creating connections
         self.update()
         # create connections
@@ -471,7 +470,7 @@ class Flowgraph(QtWidgets.QGraphicsScene, base.Component, CoreFlowgraph):
             source = pasted_blocks[src_block].get_source(src_port)
             sink = pasted_blocks[dst_block].get_sink(dst_port)
             connection = self.connect(source, sink)
-            self.selected_elements.add(connection)
+            connection.setSelected(True)
 
 
 class FlowgraphView(QtWidgets.QGraphicsView, base.Component): # added base.Component so it can see platform
