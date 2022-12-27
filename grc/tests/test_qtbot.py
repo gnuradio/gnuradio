@@ -407,7 +407,7 @@ def test_file_save_copy(qtbot, qapp_cls_):
     assert (not path.isfile('test_copy.grc')), "File/Save Copy (teardown): Could not delete file"
 
 # TODO: File/Open
-
+@pytest.mark.xfail()
 def test_file_screen_capture_pdf(qtbot, qapp_cls_):
     def assert_and_close():
         assert (qapp_cls_.activeWindow() != qapp_cls_.MainWindow), "File/Screen Capture (setup): Could not create screen capture dialog"
@@ -534,6 +534,7 @@ def test_build_actions(qtbot, qapp_cls_):
 def test_tools_actions(qtbot, qapp_cls_):
     pass
 
+@pytest.mark.xfail()
 def test_tools_oot_browser(qtbot, qapp_cls_):
     menu = qapp_cls_.MainWindow.menus['tools']
     items = gather_menu_items(menu)
