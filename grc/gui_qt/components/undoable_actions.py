@@ -51,9 +51,34 @@ class MoveAction(ChangeStateAction):
         log.debug("init MoveAction")
         for i in range(len(self.blocks)):
             self.oldStates[i]['coordinate'] = self.blocks[i].oldPos
-            self.newStates[i]['coordinate'] = self.blocks[i].newPos
+            self.blocks[i].oldPos = self.blocks[i].pos()
+            self.newStates[i]['coordinate'] = self.blocks[i].pos()
             self.oldStates[i] = dict((k, v) for k, v in self.oldStates[i].items() if all(k == 'coordinate' for x in k))
             self.newStates[i] = dict((k, v) for k, v in self.newStates[i].items() if all(k == 'coordinate' for x in k))
+
+class MoveAction2(QUndoCommand):
+    def __init__(self, flowgraph, diff):
+        QUndoCommand.__init__(self)
+        log.debug("init MoveAction2")
+        self.blocks = flowgraph.selected_blocks()
+        self.x = diff.x()
+        self.y = diff.y()
+        self.first = True 
+        
+    # redo() is called when the MoveAction is first created.
+    # At this point, the item is already at the correct position.
+    # Therefore, do nothing.
+    def redo(self):
+        if self.first:
+            self.first = False
+            return
+        for block in self.blocks:
+            block.moveBy(self.x, self.y)
+        
+
+    def undo(self):
+        for block in self.blocks:
+            block.moveBy(-self.x, -self.y)
 
 class EnableAction(ChangeStateAction):
     def __init__(self, flowgraph):

@@ -340,15 +340,10 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
         self.setRotation(self.states['rotation'])
 
     def mouseReleaseEvent(self, e):
-        if not self.oldPos == self.pos():
-            self.newPos = self.states['coordinate']
-            self.parent.registerChangeStateAction(self)
-        self.moving = False
         super(self.__class__, self).mouseReleaseEvent(e)
 
     def mousePressEvent(self, e):
         log.debug(f"{self} clicked")
-        self.parent.registerBlockMovement(self)
         try:
             self.parent.app.DocumentationTab.setText(self.documentation[self.key])
         except KeyError:
