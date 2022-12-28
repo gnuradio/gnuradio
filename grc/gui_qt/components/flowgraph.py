@@ -531,6 +531,12 @@ class FlowgraphView(QtWidgets.QGraphicsView, base.Component): # added base.Compo
                                          shortcut=Keys.Open, statusTip=_("clear-tooltip"))
         '''
 
+    
+
+    def contextMenuEvent(self, event):
+        contextMenu = self._app().MainWindow.menus['edit']
+        contextMenu.exec_(self.mapToGlobal(event.pos()))
+
     def createMenus(self, actions, menus):
         log.debug("Creating menus")
 
