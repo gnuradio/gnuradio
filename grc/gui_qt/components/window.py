@@ -230,6 +230,9 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
         actions['select_all'] = Action(Icons('edit-select_all'), _("select_all"), self,
                                    shortcut=Keys.SelectAll, statusTip=_("select_all-tooltip"))
+        
+        actions['select_none'] = Action(_("Select None"), self,
+                                        statusTip=_("select_none-tooltip"))
 
         actions['rotate_ccw'] = Action(Icons('object-rotate-left'), _("rotate_ccw"), self,
                                        shortcut=Keys.MoveToPreviousChar,
@@ -460,6 +463,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         edit.addAction(actions['paste'])
         edit.addAction(actions['delete'])
         edit.addAction(actions['select_all'])
+        edit.addAction(actions['select_none'])
         edit.addSeparator()
         edit.addAction(actions['rotate_ccw'])
         edit.addAction(actions['rotate_cw'])
@@ -771,6 +775,11 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
     def select_all_triggered(self):
         log.debug('select_all')
         self.currentFlowgraph.select_all()
+        self.updateActions()
+    
+    def select_none_triggered(self):
+        log.debug('select_none')
+        self.currentFlowgraph.clearSelection()
         self.updateActions()
 
     def rotate_ccw_triggered(self):
