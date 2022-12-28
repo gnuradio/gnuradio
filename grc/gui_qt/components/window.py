@@ -33,7 +33,7 @@ from PyQt5.QtGui import QStandardItemModel
 # Custom modules
 from . import FlowgraphView
 from .. import base, Constants, Utils
-from .undoable_actions import ChangeStateAction, RotateAction, EnableAction, DisableAction, BypassAction
+from .undoable_actions import ChangeStateAction, RotateAction, EnableAction, DisableAction, BypassAction, MoveAction2
 from . import DocumentationTab
 
 # Logging
@@ -151,6 +151,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         self.setCentralWidget(self.tabWidget)
         self.currentFlowgraph.selectionChanged.connect(self.updateActions)
         self.currentFlowgraph.selectionChanged.connect(self.updateDocTab)
+        self.currentFlowgraph.itemMoved.connect(self.createMove)
         #self.new_tab(self.flowgraph)
 
         self.clipboard = None
@@ -168,6 +169,13 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
     def currentFlowgraph(self):
         #something is fishy here
         return self.tabWidget.currentWidget().flowgraph
+    
+    @QtCore.pyqtSlot(QtCore.QPointF)
+    def createMove(self, diff):
+        log.debug("move ja")
+        action = MoveAction2(self.currentFlowgraph, diff)
+        self.currentFlowgraph.undoStack.push(action)
+        self.updateActions()
 
     def createActions(self, actions):
         '''

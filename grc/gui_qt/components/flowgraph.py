@@ -40,7 +40,6 @@ from .canvas.connection import ConnectionArrow, Connection
 from .. import base
 from ...core.FlowGraph import FlowGraph as CoreFlowgraph
 from .. import Utils
-from .undoable_actions import MoveAction
 
 # Logging
 log = logging.getLogger(__name__)
@@ -51,6 +50,8 @@ DEFAULT_MAX_Y = 300
 
 # TODO: Combine the scene and view? Maybe the scene should be the controller?
 class Flowgraph(QtWidgets.QGraphicsScene, base.Component, CoreFlowgraph):
+    itemMoved = QtCore.pyqtSignal([QtCore.QPointF])
+
     def __init__(self, *args, **kwargs):
         super(Flowgraph, self).__init__()
         self.parent = self.platform
@@ -67,6 +68,8 @@ class Flowgraph(QtWidgets.QGraphicsScene, base.Component, CoreFlowgraph):
         self.redoAction = self.undoStack.createRedoAction(self, "Redo")
 
         self.filename = None
+
+        self.clickPos = None
 
     def update(self):
         """
@@ -243,21 +246,15 @@ class Flowgraph(QtWidgets.QGraphicsScene, base.Component, CoreFlowgraph):
             selected_block.setPos(x + ctr_x, y + ctr_y)
         return True
 
-    def registerBlockMovement(self, clicked_block):
-        # We need to pass the clicked block here because
-        # it hasn't been registered as selected yet
-        for block in self.selected_blocks() + [clicked_block]:
-            block.registerMoveStarting()
-
-    def registerChangeStateAction(self, block):
-        log.debug('move_cmd')
-        command = MoveAction(self)
-        self.undoStack.push(command)
-        self.app.MainWindow.updateActions()
 
     def mousePressEvent(self,  event):
         item = self.itemAt(event.scenePos(), QtGui.QTransform())
         selected = self.selectedItems()
+        self.movingThings = False
+        if item:
+            if item.is_block:
+                self.movingThings = True 
+        self.clickPos = event.scenePos()
         conn_made = False
         if item:
             if item.is_port:
@@ -310,6 +307,10 @@ class Flowgraph(QtWidgets.QGraphicsScene, base.Component, CoreFlowgraph):
                     self.connections.add(Connection(self, self.startPort, item))
             self.removeItem(self.newConnection)
             self.newConnection = None
+        else:
+            if self.clickPos != event.scenePos():
+                if self.movingThings:
+                    self.itemMoved.emit(event.scenePos() - self.clickPos)
         '''
         if event.button() == Qt.LeftButton:
             if event.modifiers() & Qt.ControlModifier:
