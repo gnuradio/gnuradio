@@ -499,6 +499,8 @@ class FlowgraphView(QtWidgets.QGraphicsView, base.Component): # added base.Compo
 
         self.saved = True
 
+        self.setDragMode(self.RubberBandDrag)
+
 
         '''
         QGraphicsView.__init__(self, flow_graph, parent)
