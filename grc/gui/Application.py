@@ -176,6 +176,7 @@ class Application(Gtk.Application):
                 Actions.TOGGLE_SCROLL_LOCK,
                 Actions.TOGGLE_AUTO_HIDE_PORT_LABELS,
                 Actions.TOGGLE_SNAP_TO_GRID,
+                Actions.TOGGLE_SHOW_FLOWGRAPH_GRID,
                 Actions.TOGGLE_SHOW_BLOCK_COMMENTS,
                 Actions.TOGGLE_SHOW_CODE_PREVIEW_TAB,
                 Actions.TOGGLE_SHOW_FLOWGRAPH_COMPLEXITY,
@@ -480,6 +481,7 @@ class Application(Gtk.Application):
             for page in main.get_pages():
                 page.flow_graph.create_shapes()
         elif action in (Actions.TOGGLE_SNAP_TO_GRID,
+                        Actions.TOGGLE_SHOW_FLOWGRAPH_GRID,
                         Actions.TOGGLE_SHOW_BLOCK_COMMENTS,
                         Actions.TOGGLE_SHOW_CODE_PREVIEW_TAB):
             action.set_active(not action.get_active())
