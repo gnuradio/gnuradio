@@ -4,7 +4,6 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
 #
 
-from gi.repository import Gtk
 import argparse
 import logging
 import sys
@@ -12,6 +11,7 @@ import sys
 import gi
 gi.require_version('Gtk', '3.0')
 gi.require_version('PangoCairo', '1.0')
+from gi.repository import Gtk
 
 
 VERSION_AND_DISCLAIMER_TEMPLATE = """\
