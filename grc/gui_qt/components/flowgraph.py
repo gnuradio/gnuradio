@@ -500,7 +500,7 @@ class FlowgraphView(QtWidgets.QGraphicsView, base.Component): # added base.Compo
         self.isPanning    = False
         self.mousePressed = False
 
-        self.saved = True
+        self.saved = False
 
         self.setDragMode(self.RubberBandDrag)
 

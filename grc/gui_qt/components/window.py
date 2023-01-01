@@ -380,6 +380,9 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         canUndo = undoStack.canUndo()
         canRedo = undoStack.canRedo()
         valid_fg = self.currentFlowgraph.is_valid()
+        saved_fg = self.currentView.saved
+
+        self.actions['save'].setEnabled(saved_fg)
 
         self.actions['undo'].setEnabled(canUndo)
         self.actions['redo'].setEnabled(canRedo)
@@ -670,8 +673,10 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
                 self.platform.save_flow_graph(filename, self.currentView)
             except IOError:
                 log.error('Save failed')
+                return
 
             log.info(f'Saved {filename}')
+            self.currentView.saved = True
         else:
             log.debug('Flowgraph does not have a filename')
             self.save_as_triggered()
@@ -686,9 +691,11 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
             try:
                 self.platform.save_flow_graph(filename, self.currentView)
             except IOError:
-                log.error('Save failed')
+                log.error('Save (as) failed')
+                return
 
             log.info(f'Saved (as) {filename}')
+            self.currentView.saved = True
         else:
             log.debug('Cancelled Save As action')
     
@@ -700,7 +707,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
             try:
                 self.platform.save_flow_graph(filename, self.currentView)
             except IOError:
-                log.error('Save failed')
+                log.error('Save (copy) failed')
 
             log.info(f'Saved (copy) {filename}')
         else:
@@ -712,10 +719,27 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         if tab_index is None:
             tab_index = self.tabWidget.currentIndex()
 
-        if self.tabWidget.widget(tab_index).saved:
+        if self.currentView.saved:
             self.tabWidget.removeTab(tab_index)
         else:
-            self.setCurrentIndex(tab_index)
+            message = "Save changes before closing?"
+
+            ad = QtWidgets.QMessageBox()
+            ad.setWindowTitle("Unsaved Changes")
+            ad.setText(message)
+            ad.setStandardButtons(QtWidgets.QMessageBox.Discard | QtWidgets.QMessageBox.Cancel | QtWidgets.QMessageBox.Save)
+            response = ad.exec()
+            
+            if response == QtWidgets.QMessageBox.Discard:
+                self.tabWidget.removeTab(tab_index)
+            elif response == QtWidgets.QMessageBox.Cancel:
+                return
+            else:
+                self.save_triggered()
+                if self.currentView.saved:
+                    self.tabWidget.removeTab(tab_index)
+                else:
+                    return
 
         if self.tabWidget.count() == 0:
             self.new_triggered()
@@ -882,8 +906,16 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
     def generate_triggered(self):
         log.debug('generate')
-        generator = self.platform.Generator(self.currentFlowgraph, os.path.dirname(self.file_path))
+        if not self.currentView.saved:
+            self.save_triggered()
+        if not self.currentView.saved: # The line above was cancelled
+            log.error("Cannot generate a flowgraph without saving first")
+            return
+
+        filename = self.currentFlowgraph.filename
+        generator = self.platform.Generator(self.currentFlowgraph, os.path.dirname(filename))
         generator.write()
+        log.info(f'Generated {filename}')
 
     def execute_triggered(self):
         log.debug('execute')
