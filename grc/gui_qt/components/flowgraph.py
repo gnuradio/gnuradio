@@ -263,10 +263,12 @@ class Flowgraph(QtWidgets.QGraphicsScene, base.Component, CoreFlowgraph):
                         if selected[0].is_source and item.is_sink:
                             log.debug("Created connection (click)")
                             self.connections.add(Connection(self, selected[0], item))
+                            self.update()
                             conn_made = True
                         elif selected[0].is_sink and item.is_source:
                             log.debug("Created connection (click)")
                             self.connections.add(Connection(self, item, selected[0]))
+                            self.update()
                             conn_made = True
                 if not conn_made:
                     self.startPort = item
