@@ -115,8 +115,11 @@ class FlowGraph(Element):
             d['lines'] = snip.params['code'].value.splitlines()
             d['def'] = 'def snipfcn_{}(self):'.format(snip.name)
             d['call'] = 'snipfcn_{}(tb)'.format(snip.name)
-            if not section or sect == section:
-                output.append(d)
+            if not len(d['lines']):
+                Messages.send_warning("Ignoring empty snippet from canvas")
+            else:
+                if not section or sect == section:
+                    output.append(d)
 
         # Sort by descending priority
         if section:
