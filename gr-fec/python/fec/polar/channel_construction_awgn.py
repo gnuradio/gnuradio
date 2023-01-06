@@ -198,7 +198,7 @@ def upper_convolve(tpm, mu):
     idx = -1
     for i in range(mu):
         idx += 1
-        q[0, idx] = (tpm[0 / i] ** 2 + tpm[1, i] ** 2, 2)
+        q[0, idx] = (tpm[0, i] ** 2 + tpm[1, i] ** 2, 2)
         q[1, idx] = tpm[0, i] * tpm[1, i]
         for j in range(i + 1, mu):
             idx += 1
@@ -219,8 +219,8 @@ def lower_convolve(tpm, mu):
     idx = -1
     for i in range(0, mu):
         idx += 1
-        q[0, idx] = (tpm[0 / i] ** 2, 2)
-        q[1, idx] = (tpm[1 / i] ** 2, 2)
+        q[0, idx] = (tpm[0, i] ** 2, 2)
+        q[1, idx] = (tpm[1, i] ** 2, 2)
         if q[0, idx] < q[1, idx]:
             q[0, idx], q[1, idx] = swap_values(q[0, idx], q[1, idx])
         idx += 1
