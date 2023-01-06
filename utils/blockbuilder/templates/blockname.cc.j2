@@ -84,7 +84,15 @@ void {{block}}::set_{{p['id']}}({{p['dtype']|cpp_type(vec=p['container']=='vecto
 {% if p['settable'] and not 'gettable' in p or p['gettable'] %}
 {{ p['dtype']|cpp_type(vec=p['container']=='vector')}} {{block}}::{{p['id']}}()
 {
+{% if p['is_enum'] %}
+{% if 'container' in p and p['container'] == 'vector' %}
+    return pmtv::cast<{{ 'std::vector<int>' }}>(request_parameter_query(params::id_{{p['id']}}));
+{% else %}
+    return ({{p['dtype']|cpp_type}}) pmtv::cast<int>(request_parameter_query(params::id_{{p['id']}}));
+{% endif %}
+{% else %}
     return pmtv::cast<{{ p['dtype']|cpp_type(vec=p['container']=='vector')}}>(request_parameter_query(params::id_{{p['id']}}));
+{% endif %}
 }
 {% endif %}
 {% endfor -%}
