@@ -497,7 +497,7 @@ dvbs2_modulator_bc_impl::dvbs2_modulator_bc_impl(dvb_framesize_t framesize,
         case C140_180:
             r1 = r4 / 5.6;
             r3 = r1 * 3.08;
-            r2 = r1 * 2.6;
+            r2 = r1 * 2.8;
             break;
         default:
             r1 = 0;
