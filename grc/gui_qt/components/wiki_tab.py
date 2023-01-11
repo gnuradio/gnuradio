@@ -58,6 +58,7 @@ class WikiTab(QtWidgets.QDockWidget, base.Component):
         layout.setSpacing(0)
         layout.setContentsMargins(5, 0, 5, 5)
         self._text = QWebEngineView()
+        self._text.setZoomFactor(0.5)
         layout.addWidget(self._text)
         self._layout = layout
 
