@@ -35,6 +35,7 @@ from . import FlowgraphView
 from .. import base, Constants, Utils
 from .undoable_actions import ChangeStateAction, RotateAction, EnableAction, DisableAction, BypassAction, MoveAction2
 from . import DocumentationTab
+from .preferences import PreferencesDialog
 
 # Logging
 log = logging.getLogger(__name__)
@@ -460,6 +461,8 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         file.addAction(actions['save_copy'])
         file.addSeparator()
         file.addAction(actions['screen_capture'])
+        file.addSeparator()
+        file.addAction(actions['preferences'])
         file.addSeparator()
         file.addAction(actions['exit'])
         menus['file'] = file
@@ -1015,6 +1018,8 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
     def preferences_triggered(self):
         log.debug('preferences')
+        ja = PreferencesDialog()
+        ja.exec_()
 
     def exit_triggered(self):
         log.debug('exit')
