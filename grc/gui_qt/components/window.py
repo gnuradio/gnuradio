@@ -922,7 +922,8 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
     def execute_triggered(self):
         log.debug('execute')
-        py_path = self.file_path[0:-3] + 'py'
+        filename = self.currentFlowgraph.filename
+        py_path = filename[:-3] + 'py'
         subprocess.Popen(f'/usr/bin/python {py_path}', shell=True)
 
     def kill_triggered(self):
