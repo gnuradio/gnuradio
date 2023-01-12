@@ -307,6 +307,7 @@ class Flowgraph(QtWidgets.QGraphicsScene, base.Component, CoreFlowgraph):
                 if item.is_port and item != self.startPort:
                     log.debug("Created connection (drag)")
                     self.connections.add(Connection(self, self.startPort, item))
+                    self.update()
             self.removeItem(self.newConnection)
             self.newConnection = None
         else:
