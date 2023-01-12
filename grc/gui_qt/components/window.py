@@ -36,6 +36,7 @@ from .. import base, Constants, Utils
 from .undoable_actions import ChangeStateAction, RotateAction, EnableAction, DisableAction, BypassAction, MoveAction2
 from . import DocumentationTab
 from .preferences import PreferencesDialog
+from .dialogs import ErrorsDialog
 
 # Logging
 log = logging.getLogger(__name__)
@@ -392,6 +393,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         self.actions['redo'].setEnabled(canRedo)
         self.actions['generate'].setEnabled(valid_fg)
         self.actions['execute'].setEnabled(valid_fg)
+        self.actions['errors'].setEnabled(not valid_fg)
         self.actions['kill'].setEnabled(False) # TODO: Set this properly
 
         self.actions['cut'].setEnabled(False)
@@ -836,6 +838,8 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
     def errors_triggered(self):
         log.debug('errors')
+        err = ErrorsDialog(self.currentFlowgraph)
+        err.exec()
 
     def find_triggered(self):
         log.debug('find block')
