@@ -365,12 +365,15 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         
 
     def updateDocTab(self):
+        pass
+        '''
         doc_txt = self._app().DocumentationTab._text
         blocks = self.currentFlowgraph.selected_blocks()
         if len(blocks) == 1:
             #print(blocks[0].documentation)
             doc_string = blocks[0].documentation['']
             doc_txt.setText(doc_string)
+        '''
 
     def updateActions(self):
         ''' Update the available actions based on what is selected '''
