@@ -73,7 +73,7 @@ class LibraryView(QtWidgets.QTreeView):
         label = self.model().data(self.currentIndex())
         if label in self.parent().parent()._block_tree_flat:
             block_key = self.parent().parent()._block_tree_flat[label].key
-            self.parent().parent().app.DocumentationTab.setText(self.parent().parent()._block_tree_flat[label].documentation[''])
+            #self.parent().parent().app.DocumentationTab.setText(self.parent().parent()._block_tree_flat[label].documentation[''])
             prefix = str(self.parent().parent().app.platform.config.wiki_block_docs_url_prefix)
             self.parent().parent().app.WikiTab.setURL(QUrl(prefix + label.replace(" ", "_")))
 
