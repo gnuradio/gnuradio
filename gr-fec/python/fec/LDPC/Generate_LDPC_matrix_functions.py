@@ -15,6 +15,7 @@ import sys
 import numpy as np
 from numpy.linalg import inv, det
 from numpy.random import shuffle, randint
+from numpy import zeros, array, linalg, vstack, dot, concatenate, identity, zeros_like, eye
 
 
 # 0 gives no debug output, 1 gives a little, 2 gives a lot
@@ -157,9 +158,9 @@ class LDPC_matrix(object):
             return
 
         # First submatrix first:
-        m = (n * p) / q  # number of rows in H matrix
-        submatrix1 = zeros((m / p, n))
-        for row in np.arange(m / p):
+        m = (n * p) // q  # number of rows in H matrix
+        submatrix1 = zeros((m // p, n))
+        for row in np.arange(m // p):
             range1 = row * q
             range2 = (row + 1) * q
             submatrix1[row, range1:range2] = 1
@@ -169,7 +170,7 @@ class LDPC_matrix(object):
         submatrixNum = 2
         newColumnOrder = np.arange(n)
         while submatrixNum <= p:
-            submatrix = zeros((m / p, n))
+            submatrix = zeros((m // p, n))
             shuffle(newColumnOrder)
 
             for columnNum in np.arange(n):

@@ -9,7 +9,7 @@
 #
 
 
-from .Generate_LDPC_matrix_functions import (
+from Generate_LDPC_matrix_functions import (
     LDPC_matrix,
     get_best_matrix,
     get_full_rank_H_matrix,
