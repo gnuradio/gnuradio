@@ -91,6 +91,7 @@ class Param(CoreParam):
     ##################################################
 
     def truncate(self, string, style=0):
+        string = str(string)
         max_len = max(27 - len(self.name), 3)
         if len(string) > max_len:
             if style < 0:  # Front truncate
