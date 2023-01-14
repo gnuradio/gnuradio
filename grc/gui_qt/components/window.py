@@ -582,9 +582,6 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         edit.addAction(actions['copy'])
         edit.addAction(actions['paste'])
         edit.addAction(actions['delete'])
-        edit.addSeparator()
-        edit.addAction(actions['rotate_ccw'])
-        edit.addAction(actions['rotate_cw'])
         toolbars['edit'] = edit
 
         # Run Toolbar
