@@ -18,12 +18,12 @@ class ErrorsDialog(QtWidgets.QDialog):
         self.setModal(True)
         self.resize(700, MIN_DIALOG_HEIGHT)
         self.setWindowTitle("Errors and Warnings")
-        buttons = QtWidgets.QDialogButtonBox.Ok
+        buttons = QtWidgets.QDialogButtonBox.Close
         self.buttonBox = QtWidgets.QDialogButtonBox(buttons)
+        self.buttonBox.rejected.connect(self.reject) # close
         self.treeview = QtWidgets.QTreeView()
         self.model = QtGui.QStandardItemModel()
         self.treeview.setModel(self.model)
-        
         self.layout = QtWidgets.QVBoxLayout()
         self.layout.addWidget(self.treeview)
         self.layout.addWidget(self.buttonBox)
