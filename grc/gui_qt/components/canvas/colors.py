@@ -6,7 +6,7 @@ SPDX-License-Identifier: GPL-2.0-or-later
 """
 
 
-from PyQt5 import QtGui, QtCore, QtWidgets
+from qtpy import QtGui, QtCore, QtWidgets
 
 from ... import Constants
 

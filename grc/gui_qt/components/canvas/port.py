@@ -9,8 +9,8 @@ SPDX-License-Identifier: GPL-2.0-or-later
 
 import math
 
-from PyQt5 import QtGui, QtCore, QtWidgets
-from PyQt5.QtCore import Qt
+from qtpy import QtGui, QtCore, QtWidgets
+from qtpy.QtCore import Qt
 
 from . import colors
 from ... import Constants

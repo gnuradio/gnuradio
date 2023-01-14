@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QUndoCommand
+from qtpy.QtWidgets import QUndoCommand
 
 import logging
 from copy import copy

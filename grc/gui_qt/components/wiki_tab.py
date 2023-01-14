@@ -23,9 +23,9 @@ import logging
 # Third-party  modules
 import six
 
-from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtGui import QStandardItemModel
-from PyQt5.QtWebEngineWidgets import *
+from qtpy import QtCore, QtGui, QtWidgets
+from qtpy.QtGui import QStandardItemModel
+from qtpy.QtWebEngineWidgets import *
 
 # Custom modules
 from .canvas.block import Block

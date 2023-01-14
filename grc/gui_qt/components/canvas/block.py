@@ -1,8 +1,8 @@
 import logging
 
 # third-party modules
-from PyQt5 import QtGui, QtCore, QtWidgets
-from PyQt5.QtCore import Qt, QUrl
+from qtpy import QtGui, QtCore, QtWidgets
+from qtpy.QtCore import Qt, QUrl
 
 from . import colors
 from ... import Constants

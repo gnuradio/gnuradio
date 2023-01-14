@@ -1,7 +1,7 @@
 ## How to run the Qt version of GRC 
 
 - Make sure PyQt5 (including QtSvg) is installed.
-- `pip install QDarkStyle pytest-qt pyautogui`
+- `pip install QDarkStyle qtpy`
 - `pip install pytest-qt pyautogui` (only required for testing)
 - checkout the `feature-grc-qt` branch
 - build and install like usual (see instructions on the master branch)

@@ -25,7 +25,7 @@ import textwrap
 # Third-party  modules
 import six
 
-from PyQt5 import QtCore, QtGui, QtWidgets
+from qtpy import QtCore, QtGui, QtWidgets
 
 # Custom modules
 from .. import base
