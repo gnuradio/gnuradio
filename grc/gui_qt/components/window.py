@@ -26,9 +26,9 @@ import subprocess
 # Third-party  modules
 import six
 
-from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.Qt import Qt
-from PyQt5.QtGui import QStandardItemModel
+from qtpy import QtCore, QtGui, QtWidgets
+from qtpy.QtCore import Qt
+from qtpy.QtGui import QStandardItemModel
 
 # Custom modules
 from . import FlowgraphView
@@ -172,7 +172,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         #something is fishy here
         return self.tabWidget.currentWidget().flowgraph
     
-    @QtCore.pyqtSlot(QtCore.QPointF)
+    @QtCore.Slot(QtCore.QPointF)
     def createMove(self, diff):
         log.debug("move ja")
         action = MoveAction2(self.currentFlowgraph, diff)

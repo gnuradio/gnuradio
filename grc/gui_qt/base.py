@@ -24,7 +24,7 @@ import logging
 import weakref
 
 # Third-party  modules
-from PyQt5 import QtWidgets
+from qtpy import QtWidgets
 
 # Custom modules
 from . import helpers

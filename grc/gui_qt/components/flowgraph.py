@@ -27,8 +27,8 @@ from ast import literal_eval
 # Third-party modules
 import six
 
-from PyQt5 import QtGui, QtCore, QtWidgets
-from PyQt5.QtCore import Qt
+from qtpy import QtGui, QtCore, QtWidgets
+from qtpy.QtCore import Qt
 
 from itertools import count
 
@@ -50,7 +50,7 @@ DEFAULT_MAX_Y = 300
 
 # TODO: Combine the scene and view? Maybe the scene should be the controller?
 class Flowgraph(QtWidgets.QGraphicsScene, base.Component, CoreFlowgraph):
-    itemMoved = QtCore.pyqtSignal([QtCore.QPointF])
+    itemMoved = QtCore.Signal([QtCore.QPointF])
 
     def __init__(self, *args, **kwargs):
         super(Flowgraph, self).__init__()
