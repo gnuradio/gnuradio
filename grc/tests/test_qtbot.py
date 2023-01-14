@@ -327,12 +327,20 @@ def test_file_close(qtbot, qapp_cls_):
     win = qapp_cls_.MainWindow
     menu = qapp_cls_.MainWindow.menus['file']
     items = gather_menu_items(menu)
+
+    def discard():
+        qtbot.keyClick(qapp_cls_.focusWidget(), QtCore.Qt.Key_Right, QtCore.Qt.NoModifier)
+        qtbot.wait(100)
+        qtbot.keyClick(qapp_cls_.focusWidget(), QtCore.Qt.Key_Enter, QtCore.Qt.NoModifier)
+        qtbot.wait(100)
+
     qtbot.wait(100)
 
     # Close
     assert win.tabWidget.count() == 4, "File/Close"
     qtbot.keyClick(qapp_cls_.focusWidget(), QtCore.Qt.Key_F, QtCore.Qt.AltModifier)
     qtbot.wait(100)
+    QtCore.QTimer.singleShot(100, discard)
     qtbot.keyClick(menu, QtCore.Qt.Key_C)
     qtbot.wait(100)
     assert win.tabWidget.count() == 3, "File/Close"
@@ -341,14 +349,23 @@ def test_file_close_all(qtbot, qapp_cls_):
     win = qapp_cls_.MainWindow
     menu = qapp_cls_.MainWindow.menus['file']
     items = gather_menu_items(menu)
+    def discard():
+        qtbot.keyClick(qapp_cls_.focusWidget(), QtCore.Qt.Key_Right, QtCore.Qt.NoModifier)
+        qtbot.wait(100)
+        qtbot.keyClick(qapp_cls_.focusWidget(), QtCore.Qt.Key_Enter, QtCore.Qt.NoModifier)
+        qtbot.wait(100)
+    
     qtbot.wait(100)
 
     # Close All
     assert win.tabWidget.count() == 3, "File/Close All"
     qtbot.keyClick(qapp_cls_.focusWidget(), QtCore.Qt.Key_F, QtCore.Qt.AltModifier)
     qtbot.wait(100)
+    QtCore.QTimer.singleShot(500, discard)
+    QtCore.QTimer.singleShot(1000, discard)
+    QtCore.QTimer.singleShot(1500, discard)
     qtbot.keyClick(menu, QtCore.Qt.Key_L)
-    qtbot.wait(100)
+    qtbot.wait(100)    
     assert win.tabWidget.count() == 1, "File/Close All"
 
 def test_file_save_as(qtbot, qapp_cls_):
@@ -373,6 +390,8 @@ def test_file_save_as(qtbot, qapp_cls_):
     assert (not path.isfile('test.grc')), "File/Save (teardown): Could not delete file"
 
 def test_file_save(qtbot, qapp_cls_):
+    view = qapp_cls_.MainWindow.currentView
+    scaling = qapp_cls_.desktop().devicePixelRatio()
     win = qapp_cls_.MainWindow
     menu = qapp_cls_.MainWindow.menus['file']
     items = gather_menu_items(menu)
@@ -381,7 +400,32 @@ def test_file_save(qtbot, qapp_cls_):
     assert (not path.isfile('test.grc')), "File/Save (setup): File already exists"
     qtbot.keyClick(qapp_cls_.focusWidget(), QtCore.Qt.Key_S, QtCore.Qt.ControlModifier)
     qtbot.wait(100)
+    assert (not path.isfile('test.grc')), "File/Save: Could save file (should not be able to)"
+
+    block = None
+    for block_ in qapp_cls_.MainWindow.currentFlowgraph.blocks:
+        if block_.key == 'variable':
+            block = block_
+
+    click_pos = scaling * global_pos(block, view)
+    pag.click(click_pos.x(), click_pos.y(), button="left")
+    assert block != None
+    qtbot.wait(100)
+    keystroke(qtbot, qapp_cls_, QtCore.Qt.Key_D)
+    qtbot.wait(100)
+    assert block.state == 'disabled'
+
+    qtbot.keyClick(qapp_cls_.focusWidget(), QtCore.Qt.Key_S, QtCore.Qt.ControlModifier)
+    qtbot.wait(100)
     assert (path.isfile('test.grc')), "File/Save: Could not save file"
+
+    click_pos = scaling * global_pos(block, view)
+    pag.click(click_pos.x(), click_pos.y(), button="left")
+    assert block != None
+    qtbot.wait(100)
+    keystroke(qtbot, qapp_cls_, QtCore.Qt.Key_E)
+    qtbot.wait(100)
+    assert block.state == 'enabled'
     remove('test.grc')
     assert (not path.isfile('test.grc')), "File/Save (teardown): Could not delete file"
 
