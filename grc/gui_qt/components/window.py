@@ -406,6 +406,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         self.actions['disable'].setEnabled(False)
         self.actions['bypass'].setEnabled(False)
         self.actions['properties'].setEnabled(False)
+        self.actions['create_hier'].setEnabled(False)
 
         if self.clipboard:
             self.actions['paste'].setEnabled(True)
@@ -422,6 +423,8 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
             self.actions['enable'].setEnabled(True)
             self.actions['disable'].setEnabled(True)
             self.actions['bypass'].setEnabled(True)
+            self.actions['toggle_source_bus'].setEnabled(False)
+            self.actions['toggle_sink_bus'].setEnabled(False)
 
             self.actions['vertical_align_top'].setEnabled(False)
             self.actions['vertical_align_middle'].setEnabled(False)
@@ -433,6 +436,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
             if len(blocks) == 1:
                 self.actions['properties'].setEnabled(True)
+                self.actions['create_hier'].setEnabled(True) # TODO: Other requirements for enabling this?
 
             if len(blocks) > 1:
                 self.actions['vertical_align_top'].setEnabled(True)
@@ -446,6 +450,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
             for block in blocks:
                 if not block.can_bypass():
                     self.actions['bypass'].setEnabled(False)
+                    break
 
     def createMenus(self, actions, menus):
         ''' Setup the main menubar for the application '''
