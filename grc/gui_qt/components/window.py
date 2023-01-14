@@ -530,12 +530,12 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         view.addMenu(toolbars)
         view.addSeparator()
         view.addAction(actions['toggle_grid'])
-        view.addAction(actions['errors'])
         view.addAction(actions['find'])
         menus['view'] = view
 
         # Setup the build menu
         build = Menu("&Build")
+        build.addAction(actions['errors'])
         build.addAction(actions['generate'])
         build.addAction(actions['execute'])
         build.addAction(actions['kill'])
@@ -589,6 +589,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
         # Run Toolbar
         run = Toolbar('Run')
+        run.addAction(actions['errors'])
         run.addAction(actions['generate'])
         run.addAction(actions['execute'])
         run.addAction(actions['kill'])
