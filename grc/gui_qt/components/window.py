@@ -407,6 +407,8 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         self.actions['bypass'].setEnabled(False)
         self.actions['properties'].setEnabled(False)
         self.actions['create_hier'].setEnabled(False)
+        self.actions['toggle_source_bus'].setEnabled(False)
+        self.actions['toggle_sink_bus'].setEnabled(False)
 
         if self.clipboard:
             self.actions['paste'].setEnabled(True)
@@ -423,8 +425,8 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
             self.actions['enable'].setEnabled(True)
             self.actions['disable'].setEnabled(True)
             self.actions['bypass'].setEnabled(True)
-            self.actions['toggle_source_bus'].setEnabled(False)
-            self.actions['toggle_sink_bus'].setEnabled(False)
+            self.actions['toggle_source_bus'].setEnabled(True)
+            self.actions['toggle_sink_bus'].setEnabled(True)
 
             self.actions['vertical_align_top'].setEnabled(False)
             self.actions['vertical_align_middle'].setEnabled(False)
@@ -838,6 +840,18 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         rotateCommand = RotateAction(self.currentFlowgraph, 90)
         self.currentFlowgraph.undoStack.push(rotateCommand)
         self.updateActions()
+    
+    def toggle_source_bus_triggered(self):
+        log.debug('toggle_source_bus')
+        for b in self.currentFlowgraph.selected_blocks():
+                b.bussify('source')
+        self.currentFlowgraph.update()
+
+    def toggle_sink_bus_triggered(self):
+        log.debug('toggle_source_bus')
+        for b in self.currentFlowgraph.selected_blocks():
+                b.bussify('sink')
+        self.currentFlowgraph.update()
 
     def errors_triggered(self):
         log.debug('errors')

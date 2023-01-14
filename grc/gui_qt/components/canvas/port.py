@@ -38,7 +38,7 @@ class Port(QtWidgets.QGraphicsItem, CorePort):
         #CorePort.__init__(self, parent, direction, **n)
         QtWidgets.QGraphicsItem.__init__(self)
         self.y_offset = 0
-        self.height = 15.0
+        self.height = 3*15.0 if self.dtype == 'bus' else 15.0
         self.width = 15.0
 
         if self._dir == "sink":
@@ -57,7 +57,7 @@ class Port(QtWidgets.QGraphicsItem, CorePort):
         if self._dir == "sink":
             self.connection_point = self.scenePos() + QtCore.QPointF(0.0, self.height / 2.0)
         else:
-            self.connection_point = self.scenePos() + QtCore.QPointF(15.0, self.height / 2.0)
+            self.connection_point = self.scenePos() + QtCore.QPointF(self.width, self.height / 2.0)
         for conn in self.connections():
             conn.updateLine()
         return QtWidgets.QGraphicsLineItem.itemChange(self, change, value)
@@ -106,9 +106,9 @@ class Port(QtWidgets.QGraphicsItem, CorePort):
 
     def boundingRect(self):
         if self._dir == "sink":
-            return QtCore.QRectF(-max(0, self.width - 15), 0, self.width, 15) # same as the rectangle we draw, but with a 0.5*pen width margin
+            return QtCore.QRectF(-max(0, self.width - 15), 0, self.width, self.height) # same as the rectangle we draw, but with a 0.5*pen width margin
         else:
-            return QtCore.QRectF(0, 0, self.width, 15) # same as the rectangle we draw, but with a 0.5*pen width margin
+            return QtCore.QRectF(0, 0, self.width, self.height) # same as the rectangle we draw, but with a 0.5*pen width margin
 
     def paint(self, painter, option, widget):
         """
@@ -123,18 +123,18 @@ class Port(QtWidgets.QGraphicsItem, CorePort):
         painter.setBrush(QtGui.QBrush(self._bg_color))
 
         if self._dir == "sink":
-            rect = QtCore.QRectF(-max(0, self.width - 15), 0, self.width, 15) # same as the rectangle we draw, but with a 0.5*pen width margin
+            rect = QtCore.QRectF(-max(0, self.width - 15), 0, self.width, self.height) # same as the rectangle we draw, but with a 0.5*pen width margin
         else:
-            rect = QtCore.QRectF(0, 0, self.width, 15) # same as the rectangle we draw, but with a 0.5*pen width margin
+            rect = QtCore.QRectF(0, 0, self.width, self.height) # same as the rectangle we draw, but with a 0.5*pen width margin
         painter.drawRect(rect)
 
         painter.setPen(QtGui.QPen(1))
         font = QtGui.QFont('Helvetica', 8)
         painter.setFont(font)
         if self._dir == "sink":
-            painter.drawText(QtCore.QRectF(-max(0, self.width - 15), 0, self.width, 15), Qt.AlignCenter, self.name)
+            painter.drawText(QtCore.QRectF(-max(0, self.width - 15), 0, self.width, self.height), Qt.AlignCenter, self.name)
         else:
-            painter.drawText(QtCore.QRectF(0, 0, self.width, 15), Qt.AlignCenter, self.name)
+            painter.drawText(QtCore.QRectF(0, 0, self.width, self.height), Qt.AlignCenter, self.name)
 
     def center(self):
         return QtCore.QPointF(self.x() + self.width/2, self.y() + self.height/2)

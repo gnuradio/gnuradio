@@ -173,6 +173,7 @@ class Block(Element):
                             removed_bus_ports.append(port)
                             removed_bus_connections.append(c)
                     ports.remove(port)
+                    self.parent_flowgraph.removeItem(port)
 
             if (bus_state):
                 struct = self.form_bus_structure(direc)
