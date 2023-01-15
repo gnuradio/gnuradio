@@ -52,8 +52,9 @@ DEFAULT_MAX_Y = 300
 class Flowgraph(QtWidgets.QGraphicsScene, base.Component, CoreFlowgraph):
     itemMoved = QtCore.Signal([QtCore.QPointF])
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, view, *args, **kwargs):
         super(Flowgraph, self).__init__()
+        self.setParent(view)
         self.parent = self.platform
         CoreFlowgraph.__init__(self, self.platform)
         self.isPanning    = False
@@ -63,7 +64,7 @@ class Flowgraph(QtWidgets.QGraphicsScene, base.Component, CoreFlowgraph):
         self.startPort = None
         self._elements_to_draw = []
 
-        self.undoStack = QtWidgets.QUndoStack()
+        self.undoStack = QtWidgets.QUndoStack(self)
         self.undoAction = self.undoStack.createUndoAction(self, "Undo")
         self.redoAction = self.undoStack.createRedoAction(self, "Redo")
 
@@ -483,7 +484,7 @@ class FlowgraphView(QtWidgets.QGraphicsView, base.Component): # added base.Compo
         self.setParent(parent)
         self.setAlignment(Qt.AlignLeft|Qt.AlignTop)
 
-        self.flowgraph = Flowgraph()
+        self.flowgraph = Flowgraph(self)
 
         self.scalefactor = 0.8
         self.scale(self.scalefactor, self.scalefactor)
