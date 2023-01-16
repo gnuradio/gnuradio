@@ -52,6 +52,7 @@ public:
 
     void
     set_frequency(size_t channel, const std::string& name, double frequency) override;
+    void set_frequency(size_t channel, double frequency) override;
     void set_hardware_time(long long timeNs, const std::string& what) override;
     void set_sample_rate(size_t channel, double sample_rate) override;
 
