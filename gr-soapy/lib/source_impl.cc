@@ -61,6 +61,11 @@ void source_impl::set_frequency(size_t channel, const std::string& name, double 
     block_impl::set_frequency(channel, name, frequency);
     _add_tag = true;
 }
+void source_impl::set_frequency(size_t channel, double frequency)
+{
+    block_impl::set_frequency(channel, frequency);
+    _add_tag = true;
+}
 void source_impl::set_hardware_time(long long timeNs, const std::string& what)
 {
     block_impl::set_hardware_time(timeNs, what);
