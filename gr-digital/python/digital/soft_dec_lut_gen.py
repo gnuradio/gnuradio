@@ -103,11 +103,13 @@ def soft_dec_table(constel, symbols, prec, npwr=1):
     a bit more expensive to generate the LUT, though it should be
     one-time work.
     '''
-
-    re_min = min(numpy.array(constel).real)
-    im_min = min(numpy.array(constel).imag)
-    re_max = max(numpy.array(constel).real)
-    im_max = max(numpy.array(constel).imag)
+    #maybe add something like 3*sqrt(npwr) to limits
+    #offset = 3*numpy.sqrt(npwr)
+    offset = 0
+    re_min = min(numpy.array(constel).real) - offset
+    im_min = min(numpy.array(constel).imag) - offset
+    re_max = max(numpy.array(constel).real) + offset
+    im_max = max(numpy.array(constel).imag) + offset
 
     npts = int(2.0**prec)
     yrng = numpy.linspace(im_min, im_max, npts)
@@ -196,11 +198,13 @@ def calc_soft_dec(sample, constel, symbols, npwr=1):
     for i in range(M):
         # Calculate the distance between the sample and the current
         # constellation point.
-        dist = abs(sample - constel[i])
+        dist = abs(sample - constel[i])**2
+        #dist = abs(sample - constel[i])
 
         # Calculate the probability factor from the distance and the
         # scaled noise power.
-        d = numpy.exp(-dist / npwr)
+        d = numpy.exp(-dist / (npwr))
+        #d = numpy.exp(-dist / (npwr))
 
         for j in range(k):
             # Get the bit at the jth index
