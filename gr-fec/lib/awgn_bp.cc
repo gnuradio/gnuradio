@@ -79,9 +79,7 @@ void awgn_bp::rx_lr_calc(std::vector<float> codeword)
     float y;
     for (int i = 0; i < N; i++) {
         y = codeword[i];
-        if (std::isnan(y)){std::cout << "NAN DETECTED!" << std::endl;}
-        if (std::isinf(y)){std::cout << "INF DETECTED!" << std::endl;}
-        rx_lr[i] = 1.0*double(y);//+0.1;
+        rx_lr[i] = y;//+0.1;
     }
     //valid input
     //std::cout << " codeword (LLR):" << codeword[0] << std::endl;
@@ -126,26 +124,15 @@ void awgn_bp::update_chks()
                 if (std::signbit(Q[chk][w])){sign=-1;}
                 else {sign=1;}
                 sign_prod = sign_prod * sign;
-                //clamp tanh input
                 x = std::abs(Q[chk][w])/2.0;
-                if (x > 2.5){x = 2.5;}
+                //clamp tanh input (this is some BS, FIXME)
+                if (x > 2.35){x = 2.35;}
                 //compute prod(tanh(abs(LLR))/2)
-                tanh_prod = double(tanh_prod)*std::tanh(x);
+                tanh_prod = tanh_prod*std::tanh(x);
             }
-            atanh = std::atanh(double(tanh_prod));
-            //check if the atanh us out of bounds
-            if (atanh >= std::numeric_limits<double>::infinity()){
-                //atanh = std::numeric_limits<double>::max()/2-1000;
-                atanh = 1000;
-                std::cout << "atanh inf - tanh_prod: " << tanh_prod << std::endl;
-            }
-            if (atanh <= std::numeric_limits<double>::infinity()*-1){
-                //atanh = (std::numeric_limits<double>::max()/2-1000)*-1;
-                atanh = 1000;
-                //std::cout << "atanh -inf" << std::endl;
-            }
+            atanh = std::atanh(tanh_prod);
             //compute L(m,n)=sign_prod*2tanh^-1(tanh_prod)
-            R[chk][v] = double(sign_prod)*double(2.0)*atanh;
+            R[chk][v] = sign_prod*2.0*atanh;
             //nans make it here too
             //std::cout << R[chk][v] << " ";
         }
@@ -169,8 +156,8 @@ void awgn_bp::update_vars()
             for (int iprime = 0; iprime < num_nlist[var]; iprime++){
                 d = nlist[var][iprime] - 1;
                 //save the excluded value
-                if (i==iprime){excluded=double(R[d][var]);}
-                else{_sum = _sum + double(R[d][var]);}
+                if (i==iprime){excluded=R[d][var];}
+                else{_sum = _sum + R[d][var];}
             }
             //this is fed back to node checks
             Q[c][var] = _sum;
@@ -284,15 +271,8 @@ std::vector<uint8_t> awgn_bp::decode(std::vector<float> rx_word, int* niteration
             if (is_codeword()) {
                 break;
             }
-            //loop over each N column in lr for each iteration
-            for (int var = 0; var < N; var++) {
-                if (std::isnan(lr[var])){
-                    std::cout << "iter:" << *niteration << " col:" << var << std::endl;
-                    break;
-                }
-            }
         }
-        std::cout << "niters:" << *niteration << " | R:" << R.size() << " | R[0]:" << R[0].size() << " | Q[0]:" << Q[0].size() << " | Q:" << Q.size() << " | M:" << M << " | N:" << N << std::endl;
+        std::cout << "niters:" << *niteration << std::endl;
         //input still valid
         //std::cout << "rx_lr first:" << rx_lr[0] << " rx_lr second:" << rx_lr[1] << std::endl;
         //gets nans and breaks estimate (evals as zeros) (if at 17dB or less)
