@@ -50,8 +50,11 @@ templates:
 documentation: |-
     This is a soft-decision decoder that uses belief propagation (also known as message passing) that is described at:
 
-    www.cs.toronto.edu/~radford/ftp/LDPC-2012-02-11/decoding.html
+    https://citeseerx.ist.psu.edu/document?repid=rep1&type=pdf&doi=ccb90917786903efded5a5536d67fdd1440929c0
+    Reduced-Complexity Decoding of LDPC Codes by Jinghu Chen et al.
 
-    Designed for a memoryless AWGN channel, it assumes a noise variance of the value specified for sigma.
+    This is the "tanh rule" algorithm described in equations 2. and 3.
+
+    Designed for a memoryless AWGN channel.
 
 file_format: 1
