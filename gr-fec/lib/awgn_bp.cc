@@ -1,11 +1,16 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2015 Free Software Foundation, Inc.
+ * Copyright 2023 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
  * SPDX-License-Identifier: GPL-3.0-or-later
- *
+ * 
+ * Re-written by Vlad Fomitchev and Peter Parker
+ * Caliola Engineering LLC
+ * 
+ * Based on the tanh-rule BP algorithm here: https://citeseerx.ist.psu.edu/document?repid=rep1&type=pdf&doi=ccb90917786903efded5a5536d67fdd1440929c0
+ * Reduced-Complexity Decoding of LDPC Codes by Jinghu Chen et al.
  */
 
 #include <gnuradio/fec/awgn_bp.h>
@@ -79,10 +84,8 @@ void awgn_bp::rx_lr_calc(std::vector<float> codeword)
     float y;
     for (int i = 0; i < N; i++) {
         y = codeword[i];
-        rx_lr[i] = y;//+0.1;
+        rx_lr[i] = y;
     }
-    //valid input
-    //std::cout << " codeword (LLR):" << codeword[0] << std::endl;
 }
 
 std::vector<double> awgn_bp::get_rx_lr() { return rx_lr; }
@@ -124,20 +127,21 @@ void awgn_bp::update_chks()
                 if (std::signbit(Q[chk][w])){sign=-1;}
                 else {sign=1;}
                 sign_prod = sign_prod * sign;
+                //remove divide by 2 for manual tanh
                 x = std::abs(Q[chk][w])/2.0;
+                //x = std::abs(Q[chk][w]);
                 //clamp tanh input (this is some BS, FIXME)
                 if (x > 2.35){x = 2.35;}
                 //compute prod(tanh(abs(LLR))/2)
                 tanh_prod = tanh_prod*std::tanh(x);
+                //tanh_prod = tanh_prod*(std::exp(x)-1)/(std::exp(x)+1);
             }
             atanh = std::atanh(tanh_prod);
+            //atanh = 0.5*std::log((tanh_prod+1)/(tanh_prod-1));
             //compute L(m,n)=sign_prod*2tanh^-1(tanh_prod)
             R[chk][v] = sign_prod*2.0*atanh;
-            //nans make it here too
-            //std::cout << R[chk][v] << " ";
         }
     }
-    //std::cout << std::endl;
 }
 
 void awgn_bp::update_vars()
@@ -273,10 +277,6 @@ std::vector<uint8_t> awgn_bp::decode(std::vector<float> rx_word, int* niteration
             }
         }
         std::cout << "niters:" << *niteration << std::endl;
-        //input still valid
-        //std::cout << "rx_lr first:" << rx_lr[0] << " rx_lr second:" << rx_lr[1] << std::endl;
-        //gets nans and breaks estimate (evals as zeros) (if at 17dB or less)
-        //std::cout << "lr first:" << lr[0] << " lr second:" << lr[1] << std::endl;
         return estimate;
     }
 }
