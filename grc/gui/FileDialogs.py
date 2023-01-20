@@ -58,7 +58,8 @@ class FileDialogHelper(Gtk.FileChooserDialog, object):
         set_default = True
         filters = filters or (
             [(self.filter_label, self.filter_ext)] if self.filter_label else [])
-        filters.append(('All Files', ''))
+        if ('All Files', '') not in filters:
+            filters.append(('All Files', ''))
         for label, ext in filters:
             if not label:
                 continue
