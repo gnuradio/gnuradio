@@ -251,7 +251,7 @@ int udp_source_impl::work(int noutput_items,
         }
     }
 
-    int bytes_read;
+    size_t bytes_read;
 
     // we could get here even if no data was received but there's still data in
     // the queue. however read blocks so we want to make sure we have data before
@@ -271,13 +271,13 @@ int udp_source_impl::work(int noutput_items,
             const char* read_data = asio::buffer_cast<const char*>(d_read_buffer.data());
 
             // Discard bytes if the input is longer than the buffer
-            long overrun = bytes_read - d_localqueue_writer->bufsize();
-            if (overrun > 0) {
+            if (bytes_read > d_localqueue_writer->bufsize()) {
+                size_t overrun = bytes_read - d_localqueue_writer->bufsize();
                 bytes_read -= overrun;
                 read_data += overrun;
             }
 
-            if (d_localqueue_writer->space_available() < bytes_read)
+            if ((size_t)d_localqueue_writer->space_available() < bytes_read)
                 d_localqueue_reader->update_read_pointer(
                     bytes_read - d_localqueue_writer->space_available());
             memcpy(d_localqueue_writer->write_pointer(), read_data, bytes_read);
