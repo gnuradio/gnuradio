@@ -176,6 +176,7 @@ class MessageDialogWrapper(Gtk.MessageDialog):
             self, transient_for=parent, modal=True, destroy_with_parent=True,
             message_type=message_type, buttons=buttons
         )
+        self.set_keep_above(True)
         if title:
             self.set_title(title)
         if markup:
