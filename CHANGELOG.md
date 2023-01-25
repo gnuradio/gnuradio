@@ -7,6 +7,43 @@ Versioning](http://semver.org/spec/v2.0.0.html), starting with version 3.7.12.0.
 
 Older Logs can be found in `docs/RELEASE-NOTES-*`.
 
+## [3.10.5.1] - 2023-01-25
+
+Some important blocks turned out to be broken in 3.10.5.0. This unscheduled release fixes those regressions and includes a small number of other cleanups and fixes. v3.10.5.1 is intended to be ABI compatible with v3.10.5.0. We'd still recommend rebuilding dependent packages, if possible.
+
+### Changed
+
+#### Runtime
+- Restore the ability to set a default block buffer size using the `buffer_size` parameter in the config file. This was lost during refactoring in v3.9.
+
+#### GRC
+- Add Python snipped hook point at "init before blocks", right before blocks are instantiated.
+
+#### gr-audio
+- Remove support for OSX 10.3 and earlier.
+
+#### gr-digital
+- Make tags visible to subclasses of OFDM Frame Equalizer.
+
+#### gr-dtv
+- Correct constant in DVBS2 Modulator.
+
+#### gr-fec
+- Fix errors in Channel Construction AWGN
+
+#### gr-iio
+- Fix IIO blocks, which were broken due to a build-time dependency problem.
+
+#### gr-network
+- Fix crash in UDP Source when buffer overruns.
+
+#### gr-qtgui
+- Remove support for QWT 6.0 and earlier.
+
+#### gr-uhd
+- Add async message port to USRP Source and publish overflow notifications.
+- Add bindings and example for RFNoC AddSub block.
+
 ## [3.10.5.0] - 2022-12-19
 
 ### Changed
