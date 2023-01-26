@@ -108,20 +108,22 @@ def soft_dec_table(constel, symbols, prec, npwr=1):
     constel = numpy.array(constel)
     for point in constel:
         power += numpy.abs(point)**2
-    power = numpy.sqrt(power/len(constel))
-    constel = constel/power
+    amplitude = numpy.sqrt(power/len(constel))
+    constel = constel/amplitude
     #print("Max soft constellation amp: ", max(abs(constel)), " pwr:", power)
 
-    #maybe add something like 3*sqrt(npwr) to limits
-    offset = 0
-    re_min = min(constel.real) - offset
-    im_min = min(constel.imag) - offset
-    re_max = max(constel.real) + offset
-    im_max = max(constel.imag) + offset
+    #padding will simply be 2x the largest re or imag
+    padding = 2
+    re_min = min(constel.real)*padding
+    im_min = min(constel.imag)*padding
+    re_max = max(constel.real)*padding
+    im_max = max(constel.imag)*padding
+    max_amp = max([abs(re_min), abs(im_min), re_max, im_max])
 
     npts = int(2.0**prec)
-    yrng = numpy.linspace(im_min, im_max, npts)
-    xrng = numpy.linspace(re_min, re_max, npts)
+    #grid will be generated with regular size/scale to simplify life
+    yrng = numpy.linspace(-max_amp, max_amp, npts)
+    xrng = yrng
 
     table = []
 
@@ -133,7 +135,7 @@ def soft_dec_table(constel, symbols, prec, npwr=1):
     return table
 
 
-def calc_soft_dec_from_table(sample, table, prec, Es=1.0):
+def calc_soft_dec_from_table(sample, table, prec, Es=1):
     '''
     Takes in a complex sample and converts it from the coordinates
     (-1,-1) to (1,1) into an index value. The index value points to a
@@ -206,7 +208,7 @@ def calc_soft_dec(sample, constel, symbols, npwr=1):
     for i in range(M):
         # Calculate the distance between the sample and the current
         # constellation point.
-        dist = abs(sample - constel[i])**2
+        dist = (abs(sample - constel[i])**2)
 
         # Calculate the probability factor from the distance and the
         # scaled noise power.

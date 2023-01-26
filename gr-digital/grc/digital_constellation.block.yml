@@ -40,6 +40,10 @@ parameters:
     label: Soft Decisions Precision
     dtype: int
     default: '8'
+-   id: npwr
+    label: Noise Power
+    dtype: float
+    default: '1.0'
     hide: part
 -   id: soft_dec_lut
     label: Soft Decisions LUT
@@ -60,9 +64,9 @@ templates:
         self.${id} = ${id} = digital.constellation_${type}().base()
         % endif
         % if str(soft_dec_lut).lower() == '"auto"' or str(soft_dec_lut).lower() == "'auto'":
-        self.${id}.gen_soft_dec_lut(${precision})
+        self.${id}.gen_soft_dec_lut(${precision}, ${npwr})
         % elif str(soft_dec_lut) != "None":
-        self.${id}.set_soft_dec_lut(${soft_dec_lut}, ${precision})
+        self.${id}.set_soft_dec_lut(${soft_dec_lut}, ${precision}, ${npwr})
         % endif
 
 cpp_templates:
@@ -78,9 +82,9 @@ cpp_templates:
         this->${id} = ${id} = digital::constellation_${type}().base();
         % endif
         % if str(soft_dec_lut).lower() == '"auto"' or str(soft_dec_lut).lower() == "'auto'":
-        this->${id}.gen_soft_dec_lut(${precision});
+        this->${id}.gen_soft_dec_lut(${precision}, ${npwr});
         % elif str(soft_dec_lut) != "None":
-        this->${id}.set_soft_dec_lut(${soft_dec_lut}, ${precision});
+        this->${id}.set_soft_dec_lut(${soft_dec_lut}, ${precision}, ${npwr});
         % endif
     link: ['gnuradio::gnuradio-digital']
 

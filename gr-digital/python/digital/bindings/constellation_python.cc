@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(constellation.h)                                           */
-/* BINDTOOL_HEADER_FILE_HASH(096509fbce3ab57c42e63e4c4c15c6f6)                     */
+/* BINDTOOL_HEADER_FILE_HASH(c7a61bc0b4a4cd18cb134c5cd2951fa3)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -176,6 +176,7 @@ void bind_constellation(py::module& m)
              &constellation::set_soft_dec_lut,
              py::arg("soft_dec_lut"),
              py::arg("precision"),
+             py::arg("npwr"),
              D(constellation, set_soft_dec_lut))
 
 
@@ -190,6 +191,7 @@ void bind_constellation(py::module& m)
         .def("soft_decision_maker",
              &constellation::soft_decision_maker,
              py::arg("sample"),
+             py::arg("npwr") = 1.,
              D(constellation, soft_decision_maker))
 
         ;

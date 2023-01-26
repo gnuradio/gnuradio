@@ -120,8 +120,7 @@ void awgn_bp::update_chks()
             //compute product of sign and and tanh LLR's
             for (int iprime = 0; iprime < num_mlist[chk]; iprime++){
                 //exclude iprime from the product set
-                if (iprime == i){iprime++;}
-                if (iprime >= num_mlist[chk]){break;}
+                if (iprime == i){continue;}
                 w = mlist[chk][iprime] - 1;
                 //compute prod(sign(LLR))
                 if (std::signbit(Q[chk][w])){sign=-1;}
@@ -276,7 +275,7 @@ std::vector<uint8_t> awgn_bp::decode(std::vector<float> rx_word, int* niteration
                 break;
             }
         }
-        std::cout << "niters:" << *niteration << std::endl;
+        //std::cout << "niters:" << *niteration << std::endl;
         return estimate;
     }
 }

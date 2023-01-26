@@ -22,9 +22,10 @@ private:
     constellation_sptr d_constellation;
     unsigned int d_dim;
     int d_bps;
+    float d_npwr;
 
 public:
-    constellation_soft_decoder_cf_impl(constellation_sptr constellation);
+    constellation_soft_decoder_cf_impl(constellation_sptr constellation, float npwr);
     ~constellation_soft_decoder_cf_impl() override;
 
     int work(int noutput_items,
