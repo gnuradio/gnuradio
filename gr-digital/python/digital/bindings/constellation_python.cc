@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(constellation.h)                                           */
-/* BINDTOOL_HEADER_FILE_HASH(c7a61bc0b4a4cd18cb134c5cd2951fa3)                     */
+/* BINDTOOL_HEADER_FILE_HASH(78a924da8bd344e95d4dcaf4eaa4c919)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -176,7 +176,7 @@ void bind_constellation(py::module& m)
              &constellation::set_soft_dec_lut,
              py::arg("soft_dec_lut"),
              py::arg("precision"),
-             py::arg("npwr"),
+             py::arg("npwr") = 1.,
              D(constellation, set_soft_dec_lut))
 
 

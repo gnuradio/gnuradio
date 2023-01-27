@@ -245,6 +245,9 @@ void constellation::gen_soft_dec_lut(int precision, float npwr)
 {
     d_soft_dec_lut.clear();
     d_lut_scale = powf(2.0f, static_cast<float>(precision));
+    //check if noise power is overriden. use global if not
+    if (npwr != d_npwr && npwr != 1.0){d_npwr = npwr;}
+    else {npwr = d_npwr;}
 
     // We know we've normalized the constellation, so the min/max
     // dimensions in either direction are scaled to +/-1.
@@ -274,6 +277,10 @@ std::vector<float> constellation::calc_soft_dec(gr_complex sample, float npwr)
     int k = static_cast<int>(log(static_cast<double>(M)) / log(2.0));
     std::vector<float> tmp(2 * k, 0);
     std::vector<float> s(k, 0);
+
+    //check if noise power was overriden
+    if (npwr != d_npwr && npwr != 1.0){d_npwr = npwr;}
+    else {npwr = d_npwr;}
 
     for (int i = 0; i < M; i++) {
         // Calculate the distance between the sample and the current
@@ -320,7 +327,9 @@ void constellation::set_soft_dec_lut(const std::vector<std::vector<float>>& soft
     d_soft_dec_lut = soft_dec_lut;
     d_lut_precision = precision;
     d_lut_scale = powf(2.0, static_cast<float>(precision));
-    d_npwr = npwr;
+    if (npwr != d_npwr && npwr != 1.0){
+        d_npwr = npwr;
+    }
 }
 
 bool constellation::has_soft_dec_lut() { return !d_soft_dec_lut.empty(); }
@@ -360,6 +369,9 @@ std::vector<float> constellation::soft_decision_maker(gr_complex sample, float n
 
         return d_soft_dec_lut[index];
     } else {
+        //check if noise power is modified from global/default
+        if (npwr != d_npwr && npwr != 1.0){d_npwr = npwr;}
+        else {npwr = d_npwr;}
         return calc_soft_dec(sample, npwr);
     }
 }

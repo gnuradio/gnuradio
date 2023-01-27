@@ -25,7 +25,7 @@ private:
     float d_npwr;
 
 public:
-    constellation_soft_decoder_cf_impl(constellation_sptr constellation, float npwr);
+    constellation_soft_decoder_cf_impl(constellation_sptr constellation, float npwr=1.0);
     ~constellation_soft_decoder_cf_impl() override;
 
     int work(int noutput_items,

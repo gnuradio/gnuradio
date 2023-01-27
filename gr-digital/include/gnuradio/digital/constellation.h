@@ -170,7 +170,7 @@ public:
      *        generating the LUT.
      */
     void set_soft_dec_lut(const std::vector<std::vector<float>>& soft_dec_lut,
-                          int precision, float npwr);
+                          int precision, float npwr=1.0);
 
     //! Returns True if the soft decision LUT has been defined, False otherwise.
     bool has_soft_dec_lut();

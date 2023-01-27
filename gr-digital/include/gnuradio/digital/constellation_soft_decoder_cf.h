@@ -40,7 +40,7 @@ public:
      * 'constellation'. Use base() method to get a shared pointer to
      * this base class type.
      */
-    static sptr make(constellation_sptr constellation, float npwr);
+    static sptr make(constellation_sptr constellation, float npwr=1.0);
 };
 
 } /* namespace digital */
