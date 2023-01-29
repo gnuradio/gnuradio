@@ -403,7 +403,7 @@ void constellation::max_min_axes()
     if (d_re_max == 0)
         d_re_max = d_im_max;
     
-    d_maxamp = std::max(std::max(d_im_max, d_re_max),std::abs(std::min(d_im_min, d_re_min)));
+    d_maxamp = std::max({d_re_max, -d_re_min, d_im_max, -d_im_min});
 }
 
 /********************************************************************/
