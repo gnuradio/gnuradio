@@ -15,13 +15,10 @@
 #include "vmcircbuf.h"
 #include "vmcircbuf_prefs.h"
 #include <gnuradio/sys_paths.h>
-#include <sys/stat.h>
-#include <sys/types.h>
-#include <unistd.h>
-#include <cstdio>
-#include <cstdlib>
-#include <cstring>
+#include <string_view>
 #include <filesystem>
+#include <fstream>
+#include <string>
 namespace fs = std::filesystem;
 
 namespace gr {
@@ -31,11 +28,10 @@ namespace gr {
  *  the key is the filename; the value is the file contents.
  */
 
-static std::string pathname(const char* key)
+template <typename string_type>
+static auto pathname(string_type key)
 {
-    static fs::path path;
-    path = fs::path(gr::appdata_path()) / ".gnuradio" / "prefs" / key;
-    return path.string();
+    return fs::path(gr::appdata_path()) / ".gnuradio" / "prefs" / key;
 }
 
 static void ensure_dir_path()
@@ -49,56 +45,51 @@ static void ensure_dir_path()
         fs::create_directory(path);
 }
 
-int vmcircbuf_prefs::get(const char* key, char* value, int value_size)
+template <typename stream_t>
+static void
+log_ioerror(const std::string& who, const fs::path& path, const stream_t& stream)
 {
-    gr::thread::scoped_lock guard(s_vm_mutex);
-
-    FILE* fp = fopen(pathname(key).c_str(), "r");
-
-    gr::logger_ptr logger, debug_logger;
-    gr::configure_default_loggers(logger, debug_logger, "vmcircbuf_prefs::get");
-
-    if (fp == 0) {
-        debug_logger->info("{:s}: {:s}", pathname(key), strerror(errno));
-        return 0;
-    }
-
-    const size_t ret = fread(value, 1, value_size - 1, fp);
-    value[ret] = '\0';
-    if (ret == 0 && !feof(fp)) {
-        if (ferror(fp) != 0) {
-            logger->error("{:s}: {:s}", pathname(key), strerror(errno));
-            fclose(fp);
-            return -1;
-        }
-    }
-    fclose(fp);
-    return ret;
+    gr::logger logger(std::string{ "vmcircbuf_prefs::" } + who);
+    logger.set_level(logging::singleton().default_level());
+    logger.info("{} failed to open: bad {}, fail {}, eof {}",
+                path.string(),
+                static_cast<bool>(stream.badbit),
+                static_cast<bool>(stream.failbit),
+                static_cast<bool>(stream.eofbit));
 }
 
-void vmcircbuf_prefs::set(const char* key, const char* value)
+std::string vmcircbuf_prefs::get(std::string_view key)
 {
+    auto path = pathname(key);
+    gr::thread::scoped_lock guard(s_vm_mutex);
+    std::ifstream in_file(path, std::ios::in | std::ios::binary);
+    if (!in_file.good()) {
+        log_ioerror("get", path, in_file);
+        return {};
+    }
+    // enable exceptions now, after we've gracefully return empty string for non-existent
+    // files etc
+    in_file.exceptions(std::ios_base::badbit | std::ios_base::failbit);
+    return { std::istreambuf_iterator<char>{ in_file }, {} };
+}
+
+void vmcircbuf_prefs::set(std::string_view key, std::string_view value)
+{
+    gr::logger logger("vmcircbuf_prefs::set");
+    logger.set_level(logging::singleton().default_level());
     gr::thread::scoped_lock guard(s_vm_mutex);
 
     ensure_dir_path();
-    gr::logger_ptr logger, debug_logger;
-    gr::configure_default_loggers(logger, debug_logger, "vmcircbuf_prefs::set");
+    auto path = pathname(key);
 
-    FILE* fp = fopen(pathname(key).c_str(), "w");
-    if (fp == 0) {
-        logger->error("{:s}: {:s}", pathname(key), strerror(errno));
+    std::ofstream out_file(path, std::ios::out | std::ios::binary | std::ios::trunc);
+    if (!out_file.good()) {
+        log_ioerror("set", path, out_file);
         return;
     }
 
-    size_t ret = fwrite(value, 1, strlen(value), fp);
-    if (ret == 0) {
-        if (ferror(fp) != 0) {
-            logger->error("{:s}: {:s}", pathname(key), strerror(errno));
-            fclose(fp);
-            return;
-        }
-    }
-    fclose(fp);
+    out_file.exceptions(std::ios_base::badbit | std::ios_base::failbit);
+    out_file << value;
 };
 
 } /* namespace gr */
