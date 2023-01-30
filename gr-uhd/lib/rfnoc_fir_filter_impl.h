@@ -6,8 +6,8 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-#ifndef INCLUDED_GR_UHD_RFNOC_WINDOW_IMPL_H
-#define INCLUDED_GR_UHD_RFNOC_WINDOW_IMPL_H
+#ifndef INCLUDED_GR_UHD_RFNOC_FILTER_IMPL_H
+#define INCLUDED_GR_UHD_RFNOC_FILTER_IMPL_H
 
 #include <gnuradio/uhd/rfnoc_fir_filter.h>
 #include <uhd/rfnoc/fir_filter_block_control.hpp>
