@@ -14,82 +14,78 @@
 
 #include "portaudio_impl.h"
 #include <portaudio.h>
-#include <cstring>
+#include <string_view>
+#include <tuple>
+#include <vector>
 
 namespace gr {
 namespace audio {
 
 PaDeviceIndex pa_find_device_by_name(const char* name)
 {
-    int i;
-    int numDevices;
-    const PaDeviceInfo* pdi;
-    int len = strlen(name);
-    PaDeviceIndex result = paNoDevice;
-    numDevices = Pa_GetDeviceCount();
-    for (i = 0; i < numDevices; i++) {
-        pdi = Pa_GetDeviceInfo(i);
-        if (strncmp(name, pdi->name, len) == 0) {
-            result = i;
-            break;
+    const std::string_view namesv{ name };
+    const int numDevices = Pa_GetDeviceCount();
+    for (int i = 0; i < numDevices; i++) {
+        if (namesv == Pa_GetDeviceInfo(i)->name) {
+            return i;
         }
     }
-    return result;
+    return paNoDevice;
 }
 
-void print_devices()
+void print_devices(const gr::logger_ptr& logger)
 {
-    int numDevices, defaultDisplayed;
-    const PaDeviceInfo* deviceInfo;
+    bool defaultDisplayed;
 
-    numDevices = Pa_GetDeviceCount();
+    const int numDevices = Pa_GetDeviceCount();
     if (numDevices < 0)
         return;
 
-    printf("Number of devices found = %d\n", numDevices);
+    logger->info("Number of devices found = {:d}", numDevices);
 
     for (int i = 0; i < numDevices; i++) {
-        deviceInfo = Pa_GetDeviceInfo(i);
-        printf("--------------------------------------- device #%d\n", i);
+        auto* deviceInfo = Pa_GetDeviceInfo(i);
+        logger->info("--------------------------------------- device #{:d}", i);
         /* Mark global and API specific default devices */
-        defaultDisplayed = 0;
+        defaultDisplayed = false;
         if (i == Pa_GetDefaultInputDevice()) {
-            printf("[ Default Input");
-            defaultDisplayed = 1;
+            logger->info("[ Default Input ]");
+            defaultDisplayed = true;
         } else if (i == Pa_GetHostApiInfo(deviceInfo->hostApi)->defaultInputDevice) {
             const PaHostApiInfo* hostInfo = Pa_GetHostApiInfo(deviceInfo->hostApi);
-            printf("[ Default %s Input", hostInfo->name);
-            defaultDisplayed = 1;
+            logger->info("[ Default {} Input ]", hostInfo->name);
+            defaultDisplayed = true;
         }
 
         if (i == Pa_GetDefaultOutputDevice()) {
-            printf((defaultDisplayed ? "," : "["));
-            printf(" Default Output");
-            defaultDisplayed = 1;
+            logger->info("{} Default Output {}",
+                         defaultDisplayed ? "," : "[",
+                         defaultDisplayed ? " " : "]");
+            defaultDisplayed = true;
         } else if (i == Pa_GetHostApiInfo(deviceInfo->hostApi)->defaultOutputDevice) {
             const PaHostApiInfo* hostInfo = Pa_GetHostApiInfo(deviceInfo->hostApi);
-            printf((defaultDisplayed ? "," : "["));
-            printf(" Default %s Output", hostInfo->name);
-            defaultDisplayed = 1;
+            logger->info("{} Default {} Output {}",
+                         defaultDisplayed ? "," : "[",
+                         hostInfo->name,
+                         defaultDisplayed ? " " : "]");
         }
-        if (defaultDisplayed)
-            printf(" ]\n");
+
 
         /* print device info fields */
-        printf("Name                        = %s\n", deviceInfo->name);
-        printf("Host API                    = %s\n",
-               Pa_GetHostApiInfo(deviceInfo->hostApi)->name);
-        printf("Max inputs = %d", deviceInfo->maxInputChannels);
-        printf(", Max outputs = %d\n", deviceInfo->maxOutputChannels);
+        logger->info("Name                        = {}", deviceInfo->name);
+        logger->info("Host API                    = {}",
+                     Pa_GetHostApiInfo(deviceInfo->hostApi)->name);
+        logger->info("Max inputs = {:d}", deviceInfo->maxInputChannels);
+        logger->info(", Max outputs = {:d}", deviceInfo->maxOutputChannels);
 
-        printf("Default low input latency   = %8.3f\n",
-               deviceInfo->defaultLowInputLatency);
-        printf("Default low output latency  = %8.3f\n",
-               deviceInfo->defaultLowOutputLatency);
-        printf("Default high input latency  = %8.3f\n",
-               deviceInfo->defaultHighInputLatency);
-        printf("Default high output latency = %8.3f\n",
-               deviceInfo->defaultHighOutputLatency);
+        logger->info("Default low input latency   = {:8.3f}",
+                     deviceInfo->defaultLowInputLatency);
+        logger->info("Default low output latency  = {:8.3f}",
+                     deviceInfo->defaultLowOutputLatency);
+        logger->info("Default high input latency  = {:8.3f}",
+                     deviceInfo->defaultHighInputLatency);
+        logger->info("Default high output latency = {:8.3f}",
+                     deviceInfo->defaultHighOutputLatency);
     }
 }
 
