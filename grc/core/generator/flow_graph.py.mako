@@ -25,9 +25,10 @@
 from packaging.version import Version as StrictVersion
 
 if __name__ == '__main__':
-    import ctypes
-    import sys
-    if sys.platform.startswith('linux'):
+    from sys import platform
+    from os import environ as argp
+    if platform.startswith('linux') and "WAYLAND_DISPLAY" not in argp and "DISPLAY" in argp:
+        import ctypes
         try:
             x11 = ctypes.cdll.LoadLibrary('libX11.so')
             x11.XInitThreads()
