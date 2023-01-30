@@ -12,14 +12,16 @@
 #define GR_VMCIRCBUF_PREFS_H
 
 #include <gnuradio/api.h>
+#include <string_view>
+#include <string>
 
 namespace gr {
 
 class GR_RUNTIME_API vmcircbuf_prefs
 {
 public:
-    static int get(const char* key, char* value, int value_size);
-    static void set(const char* key, const char* value);
+    static std::string get(std::string_view key);
+    static void set(std::string_view key, std::string_view value);
 };
 
 } /* namespace gr */

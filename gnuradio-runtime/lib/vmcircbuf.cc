@@ -15,7 +15,7 @@
 #include "local_sighandler.h"
 #include "vmcircbuf.h"
 #include "vmcircbuf_prefs.h"
-#include <cstring>
+#include <string_view>
 #include <stdexcept>
 #include <vector>
 
@@ -51,11 +51,11 @@ vmcircbuf_factory* vmcircbuf_sysconfig::get_default_factory()
     logger_ptr logger, debug_logger;
     gr::configure_default_loggers(logger, debug_logger, "vmcircbuf_sysconfig");
 
-    char name[1024];
-    if (gr::vmcircbuf_prefs::get(FACTORY_PREF_KEY, name, sizeof(name)) >= 0) {
-        for (unsigned int i = 0; i < all.size(); i++) {
-            if (strncmp(name, all[i]->name(), strlen(all[i]->name())) == 0) {
-                s_default_factory = all[i];
+    auto name = gr::vmcircbuf_prefs::get(FACTORY_PREF_KEY);
+    if (!name.empty()) {
+        for (auto& factory : all) {
+            if (name == factory->name()) {
+                s_default_factory = factory;
                 debug_logger->info("Using {:s}", s_default_factory->name());
                 return s_default_factory;
             }
@@ -67,9 +67,9 @@ vmcircbuf_factory* vmcircbuf_sysconfig::get_default_factory()
 
     debug_logger->info("finding a working factory...");
 
-    for (unsigned int i = 0; i < all.size(); i++) {
-        if (test_factory(all[i], verbose)) {
-            set_default_factory(all[i]);
+    for (auto& factory : all) {
+        if (test_factory(factory, verbose)) {
+            set_default_factory(factory);
             return s_default_factory;
         }
     }
@@ -245,14 +245,18 @@ bool vmcircbuf_sysconfig::test_factory(vmcircbuf_factory* f, int verbose)
 
 bool vmcircbuf_sysconfig::test_all_factories(int verbose)
 {
-    bool ok = false;
-
     std::vector<vmcircbuf_factory*> all = all_factories();
+    if (all.empty())
+        return false;
 
-    for (unsigned int i = 0; i < all.size(); i++)
-        ok |= test_factory(all[i], verbose);
-
-    return ok;
+    gr::logger log("test all factories");
+    bool any_ok = false;
+    for (auto& factory : all) {
+        bool success = test_factory(factory, verbose);
+        log.debug("testing {}: {}", factory->name(), success);
+        any_ok |= success;
+    }
+    return any_ok;
 }
 
 } /* namespace gr */
