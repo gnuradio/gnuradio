@@ -39,7 +39,7 @@ portaudio_sink_fcn(int sampling_rate, const std::string& device_name, bool ok_to
     return sink::sptr(new portaudio_sink(sampling_rate, device_name, ok_to_block));
 }
 
-//#define LOGGING 0  // define to 0 or 1
+// #define LOGGING 0  // define to 0 or 1
 
 #define SAMPLE_FORMAT paFloat32
 
@@ -196,7 +196,6 @@ portaudio_sink::portaudio_sink(int sampling_rate,
 
         if (!found) {
             bail("Failed to find specified device name", 0);
-            exit(1);
         }
     }
 
