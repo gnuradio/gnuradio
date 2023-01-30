@@ -8,8 +8,8 @@
  *
  */
 
-#ifndef INCLUDED_CHANNELS_CHANNEL_MODEL_IMPL_H
-#define INCLUDED_CHANNELS_CHANNEL_MODEL_IMPL_H
+#ifndef INCLUDED_CHANNELS_DYNAMIC_CHANNEL_MODEL_IMPL_H
+#define INCLUDED_CHANNELS_DYNAMIC_CHANNEL_MODEL_IMPL_H
 
 #include <gnuradio/analog/fastnoise_source.h>
 #include <gnuradio/analog/sig_source.h>
@@ -82,4 +82,4 @@ public:
 } /* namespace channels */
 } /* namespace gr */
 
-#endif /* INCLUDED_CHANNELS_CHANNEL_MODEL_IMPL_H */
+#endif /* INCLUDED_CHANNELS_DYNAMIC_CHANNEL_MODEL_IMPL_H */

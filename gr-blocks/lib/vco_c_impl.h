@@ -8,8 +8,8 @@
  *
  */
 
-#ifndef INCLUDED_GR_VCO_F_IMPL_H
-#define INCLUDED_GR_VCO_F_IMPL_H
+#ifndef INCLUDED_GR_VCO_C_IMPL_H
+#define INCLUDED_GR_VCO_C_IMPL_H
 
 #include <gnuradio/blocks/vco_c.h>
 #include <gnuradio/fxpt_vco.h>
@@ -38,4 +38,4 @@ public:
 } /* namespace blocks */
 } /* namespace gr */
 
-#endif /* INCLUDED_GR_VCO_C_H */
+#endif /* INCLUDED_GR_VCO_C_IMPL_H */
