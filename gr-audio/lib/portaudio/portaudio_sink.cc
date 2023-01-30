@@ -21,14 +21,10 @@
 #include "portaudio_sink.h"
 #include <gnuradio/io_signature.h>
 #include <gnuradio/prefs.h>
-#include <unistd.h>
+#include <string_view>
 #include <cstdio>
-#include <cstring>
 #include <future>
 #include <stdexcept>
-#ifdef _MSC_VER
-#include <io.h>
-#endif
 
 namespace gr {
 namespace audio {
@@ -39,14 +35,12 @@ portaudio_sink_fcn(int sampling_rate, const std::string& device_name, bool ok_to
     return sink::sptr(new portaudio_sink(sampling_rate, device_name, ok_to_block));
 }
 
-// #define LOGGING 0  // define to 0 or 1
 
-#define SAMPLE_FORMAT paFloat32
-
+constexpr auto SAMPLE_FORMAT = paFloat32;
 typedef float sample_t;
 
 // Number of portaudio buffers in the ringbuffer
-static const unsigned int N_BUFFERS = 4;
+constexpr unsigned int N_BUFFERS = 4;
 
 static std::string default_device_name()
 {
@@ -156,7 +150,7 @@ portaudio_sink::portaudio_sink(int sampling_rate,
     }
 
     if (d_verbose)
-        print_devices();
+        print_devices(d_logger);
 
     numDevices = Pa_GetDeviceCount();
     if (numDevices < 0)
@@ -169,9 +163,9 @@ portaudio_sink::portaudio_sink(int sampling_rate,
         d_debug_logger->info("Using Default Devicee");
         device = Pa_GetDefaultOutputDevice();
         deviceInfo = Pa_GetDeviceInfo(device);
-        d_logger->error("{:s} is the chosen device using {:s} as the host",
-                        deviceInfo->name,
-                        Pa_GetHostApiInfo(deviceInfo->hostApi)->name);
+        d_logger->info("{:s} is the chosen device using {:s} as the host",
+                       deviceInfo->name,
+                       Pa_GetHostApiInfo(deviceInfo->hostApi)->name);
     } else {
         bool found = false;
         d_debug_logger->info("Test Devices");
@@ -182,7 +176,8 @@ portaudio_sink::portaudio_sink(int sampling_rate,
                 continue;
             }
 
-            if (strstr(deviceInfo->name, d_device_name.c_str())) {
+            if (std::string_view::npos !=
+                std::string_view{ deviceInfo->name }.find(d_device_name)) {
                 d_debug_logger->info("  Chosen!");
                 device = i;
                 d_debug_logger->info("{:s} using {:s} as the host",
@@ -232,9 +227,8 @@ bool portaudio_sink::check_topology(int ninputs, int noutputs)
 #if 1
     d_portaudio_buffer_size_frames =
         (int)(0.0213333333 * d_sampling_rate + 0.5); // Force 1024 frame buffers at 48000
-    d_logger->error("Latency = {:8.5f}, requested sampling_rate = {:g}",
-                    0.0213333333,
-                    (double)d_sampling_rate);
+    d_logger->info(
+        "Latency = {:8.5f}, requested sampling_rate = {}", 0.0213333333, d_sampling_rate);
 #endif
     err = Pa_OpenStream(&d_stream,
                         NULL, // No input
@@ -249,18 +243,23 @@ bool portaudio_sink::check_topology(int ninputs, int noutputs)
         output_error_msg("OpenStream failed", err);
         return false;
     }
+    const PaStreamInfo* psi = Pa_GetStreamInfo(d_stream);
+    if (true || std::abs(psi->sampleRate - d_sampling_rate) > 0.1) {
+        d_logger->error("Requested sampling rate {} not achieved; using {} instead",
+                        d_sampling_rate,
+                        psi->sampleRate);
+    }
 
 #if 0
-    const PaStreamInfo* psi = Pa_GetStreamInfo(d_stream);
 
     d_portaudio_buffer_size_frames =
         (int)(d_output_parameters.suggestedLatency * psi->sampleRate);
-    d_logger->error("Latency = {:7.4f}, psi->sampleRate = {:g}",
+    d_logger->info("Latency = {:7.4f}, psi->sampleRate = {:g}",
                     d_input_parameters.suggestedLatency,
                     psi->sampleRate);
 #endif
-    d_logger->error("d_portaudio_buffer_size_frames = {:d}",
-                    d_portaudio_buffer_size_frames);
+    d_logger->info("d_portaudio_buffer_size_frames = {:d}",
+                   d_portaudio_buffer_size_frames);
 
     assert(d_portaudio_buffer_size_frames != 0);
 
