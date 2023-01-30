@@ -8,8 +8,8 @@
  *
  */
 
-#ifndef INCLUDED_CHANNELS_CHANNEL_MODEL_IMPL_H
-#define INCLUDED_CHANNELS_CHANNEL_MODEL_IMPL_H
+#ifndef INCLUDED_CHANNELS_FADING_MODEL_IMPL_H
+#define INCLUDED_CHANNELS_FADING_MODEL_IMPL_H
 
 #include "flat_fader_impl.h"
 #include <gnuradio/channels/fading_model.h>
@@ -55,4 +55,4 @@ public:
 } /* namespace channels */
 } /* namespace gr */
 
-#endif /* INCLUDED_CHANNELS_CHANNEL_MODEL_IMPL_H */
+#endif /* INCLUDED_CHANNELS_FADING_MODEL_IMPL_H */
