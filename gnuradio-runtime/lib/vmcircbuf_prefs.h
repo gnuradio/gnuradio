@@ -8,8 +8,8 @@
  *
  */
 
-#ifndef GR_PREFERENCES_H
-#define GR_PREFERENCES_H
+#ifndef GR_VMCIRCBUF_PREFS_H
+#define GR_VMCIRCBUF_PREFS_H
 
 #include <gnuradio/api.h>
 
@@ -24,4 +24,4 @@ public:
 
 } /* namespace gr */
 
-#endif /* GR_PREFERENCES_H */
+#endif /* GR_VMCIRCBUF_PREFS_H */
