@@ -1,6 +1,7 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2007,2008,2013 Free Software Foundation, Inc.
+ * Copyright 2023 Marcus Müller
  *
  * This file is part of GNU Radio
  *
@@ -20,51 +21,48 @@
 #include <gnuradio/prefs.h>
 #include <gnuradio/top_block.h>
 
-#include <unistd.h>
 #include <cstdlib>
-#include <cstring>
 #include <stdexcept>
+#include <tuple>
+#include <vector>
 
 namespace gr {
-
-#define GR_TOP_BLOCK_IMPL_DEBUG 0
 
 typedef scheduler_sptr (*scheduler_maker)(flat_flowgraph_sptr ffg,
                                           int max_noutput_items,
                                           bool catch_exceptions);
 
-static struct scheduler_table {
-    const char* name;
-    scheduler_maker f;
-} scheduler_table[] = {
-    { "TPB", scheduler_tpb::make } // first entry is default
-};
 
+static std::vector<std::tuple<std::string, scheduler_maker>> scheduler_list{
+    { "TPB", scheduler_tpb::make }
+};
 static scheduler_sptr
 make_scheduler(flat_flowgraph_sptr ffg, int max_noutput_items, bool catch_exceptions)
 {
-    static scheduler_maker factory = 0;
+    static scheduler_maker factory = nullptr;
+    gr::logger_ptr logger, debug_logger;
+    gr::configure_default_loggers(logger, debug_logger, "top_block_impl");
 
-    if (factory == 0) {
-        char* v = getenv("GR_SCHEDULER");
-        if (!v)
-            factory = scheduler_table[0].f; // use default
-        else {
-            for (size_t i = 0; i < sizeof(scheduler_table) / sizeof(scheduler_table[0]);
-                 i++) {
-                if (strcmp(v, scheduler_table[i].name) == 0) {
-                    factory = scheduler_table[i].f;
+    if (!factory) {
+        char* environment_var = std::getenv("GR_SCHEDULER");
+        if (!environment_var) {
+            const auto& [name, fac] = scheduler_list.at(0);
+            factory = fac;
+            logger->debug("Using default scheduler \"{}\"", name);
+        } else {
+            for (auto& [name, maker] : scheduler_list) {
+                if (name == environment_var) {
+                    factory = maker;
                     break;
                 }
             }
-            if (factory == 0) {
-                gr::logger_ptr logger, debug_logger;
-                gr::configure_default_loggers(logger, debug_logger, "top_block_impl");
+            if (!factory) {
+                const auto& [name, fac] = scheduler_list.at(0);
+                factory = fac;
                 logger->warn("Invalid GR_SCHEDULER environment variable value \"{:s}\".  "
                              "Using \"{:s}\"",
-                             v,
-                             scheduler_table[0].name);
-                factory = scheduler_table[0].f;
+                             environment_var,
+                             name);
             }
         }
     }
