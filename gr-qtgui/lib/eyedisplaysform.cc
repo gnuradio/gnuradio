@@ -339,6 +339,8 @@ void EyeDisplaysForm::saveFigure()
     QString filename, filetype;
     QFileDialog* filebox = new QFileDialog(0, "Save Image", "./", types);
     filebox->setViewMode(QFileDialog::Detail);
+    filebox->setAcceptMode(QFileDialog::AcceptSave);
+    filebox->setFileMode(QFileDialog::AnyFile);
     if (filebox->exec()) {
         filename = filebox->selectedFiles()[0];
         filetype = filebox->selectedNameFilter();
@@ -347,15 +349,15 @@ void EyeDisplaysForm::saveFigure()
     }
 
     if (filetype.contains(".jpg")) {
-        qpix.save(filename, "JPEG");
+        qpix.save(filename + ".jpg", "JPEG");
     } else if (filetype.contains(".png")) {
-        qpix.save(filename, "PNG");
+        qpix.save(filename + ".png", "PNG");
     } else if (filetype.contains(".bmp")) {
-        qpix.save(filename, "BMP");
+        qpix.save(filename + ".bmp", "BMP");
     } else if (filetype.contains(".tiff")) {
-        qpix.save(filename, "TIFF");
+        qpix.save(filename + ".tiff", "TIFF");
     } else {
-        qpix.save(filename, "JPEG");
+        qpix.save(filename + ".jpg", "JPEG");
     }
 
     delete filebox;
