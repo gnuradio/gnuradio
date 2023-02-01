@@ -19,13 +19,13 @@ namespace gr {
 namespace blocks {
 
 /*!
- * \brief Write stream to a Microsoft PCM (.wav) file.
+ * \brief Write samples to an audio file (uncompressed or compressed).
  * \ingroup audio_blk
  *
  * \details
  * Values must be floats within [-1;1].
- * Check gr_make_wavfile_sink() for extra info.
- */
+ * List of all supported audio containers : [ WAV, FLAC, OGG, RF64 ]
+*/
 class BLOCKS_API wavfile_sink : virtual public sync_block
 {
 public:
