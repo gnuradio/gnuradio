@@ -1,0 +1,155 @@
+id: uhd_rfnoc_fosphor
+label: RFNoC Fosphor Block
+category: '[Core]/UHD/RFNoC/Blocks'
+
+templates:
+  imports: |-
+    from gnuradio import uhd
+  make: |-
+    uhd.rfnoc_block_generic(
+        self.rfnoc_graph,
+        uhd.device_addr(""),
+        'Fosphor',
+        ${device_select},
+        ${instance_index})
+    self.${id}.set_property('enable_histogram',     True,             typename='bool')
+    self.${id}.set_property('enable_waterfall',     ${enable_wf},     typename='bool')
+    self.${id}.set_property('enable_noise',         ${enable_noise},  typename='bool')
+    self.${id}.set_property('enable_dither',        ${enable_dither}, typename='bool')
+    self.${id}.set_property('hist_decimation',      ${hist_decim}     )
+    self.${id}.set_property('offset',               ${offset}         )
+    self.${id}.set_property('scale',                ${scale}          )
+    self.${id}.set_property('trise',                ${trise}          )
+    self.${id}.set_property('tdecay',               ${tdecay}         )
+    self.${id}.set_property('alpha',                ${alpha}          )
+    self.${id}.set_property('epsilon',              ${epsilon}        )
+    self.${id}.set_property('wf_predivision_ratio', ${wf_prediv.val}  )
+    self.${id}.set_property('wf_mode',              ${wf_mode.val}    )
+    self.${id}.set_property('wf_decimation',        ${wf_decim}       )
+    self.${id}.set_property('clear_history',        True,             typename='bool')
+  callbacks:
+  - set_property('enable_waterfall', ${enable_wf}, typename='bool')
+  - set_property('enable_noise', ${enable_noise}, typename='bool')
+  - set_property('enable_dither', ${enable_dither}, typename='bool')
+  - set_property('hist_decimation', ${hist_decim})
+  - set_property('offset', ${offset})
+  - set_property('scale', ${scale})
+  - set_property('trise', ${trise})
+  - set_property('tdecay', ${tdecay})
+  - set_property('alpha', ${alpha})
+  - set_property('epsilon', ${epsilon})
+  - set_property('wf_predivision_ratio', ${wf_prediv.val})
+  - set_property('wf_mode', ${wf_mode.val})
+  - set_property('wf_decimation', ${wf_decim})
+
+parameters:
+- id: device_select
+  label: Device Select
+  dtype: int
+  default: -1
+  hide: ${ 'part' if device_select == -1 else 'none'}
+- id: instance_index
+  label: Instance Select
+  dtype: int
+  default: -1
+  hide: ${ 'part' if instance_index == -1 else 'none'}
+- id: enable_wf
+  label: Waterfall
+  dtype: enum
+  default: 'True'
+  options: ['True', 'False']
+  option_labels: [Enabled, Disabled]
+- id: enable_noise
+  label: Randomization Enable
+  dtype: enum
+  default: 'True'
+  options: ['True', 'False']
+  option_labels: [Enabled, Disabled]
+- id: enable_dither
+  label: Dither Enable
+  dtype: enum
+  default: 'True'
+  options: ['True', 'False']
+  option_labels: [Enabled, Disabled]
+- id: wf_mode
+  label: Waterfall Mode
+  dtype: enum
+  default: 'MODE_MAX_HOLD'
+  options: ['MODE_MAX_HOLD', 'MODE_AVERAGE']
+  option_labels: ['Max Hold', 'Average']
+  option_attributes:
+    val: [0, 1]
+- id: wf_prediv
+  label: Waterfall Predecimation Ratio
+  dtype: enum
+  default: 'RATIO_1_1'
+  options: ['RATIO_1_1', 'RATIO_1_8', 'RATIO_1_64', 'RATIO_1_256']
+  option_labels: ['1:1', '1:8', '1:64', '1:256']
+  option_attributes:
+    val: [0, 1, 2, 3]
+- id: wf_decim
+  label: Waterfall Decimation
+  dtype: int
+  default: '8'
+- id: hist_decim
+  label: Histogram Decimation
+  dtype: int
+  default: '2'
+  hide: part
+- id: offset
+  label: Histogram Offset
+  category: Advanced
+  dtype: int
+  default: '0'
+  hide: part
+- id: scale
+  label: Histogram Scale
+  category: Advanced
+  dtype: int
+  default: '256'
+  hide: part
+- id: trise
+  label: Histogram Rise Time
+  category: Advanced
+  dtype: int
+  default: '4096'
+  hide: part
+- id: tdecay
+  label: Histogram Decay Time
+  category: Advanced
+  dtype: int
+  default: '16384'
+  hide: part
+- id: alpha
+  label: Averaging Alpha
+  category: Advanced
+  dtype: int
+  default: '65280'
+  hide: part
+- id: epsilon
+  label: Max Hold Decay
+  category: Advanced
+  dtype: int
+  default: '1'
+  hide: part
+
+inputs:
+- domain: rfnoc
+  label: in
+  dtype: 'sc16'
+
+outputs:
+- domain: rfnoc
+  label: histo_out
+  dtype: 'byte'
+- domain: rfnoc
+  label: wf_out
+  dtype: 'byte'
+  optional: true
+
+documentation: |-
+  RFNoC Fosphor Block:
+  The fosphor block takes in complex 16-bit FFT data and produces two byte
+  streams, one stream of histogram data and one stream of waterfall data
+
+file_format: 1
