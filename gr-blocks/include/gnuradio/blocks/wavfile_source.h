@@ -38,7 +38,7 @@ public:
 
     /*!
      * \brief Return the number of bits per sample as specified in
-     * the audio file metadata. Only 8 or 16 bit are supported here.
+     * the audio file metadata.
      */
     virtual int bits_per_sample() const = 0;
 

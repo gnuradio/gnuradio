@@ -24,8 +24,8 @@ namespace blocks {
  *
  * \details
  * Values must be floats within [-1;1].
- * List of all supported audio containers : [ WAV, FLAC, OGG, RF64 ]
-*/
+ * List of all supported audio containers : [WAV, FLAC, Ogg, 64-bit WAV]
+ */
 class BLOCKS_API wavfile_sink : virtual public sync_block
 {
 public:
