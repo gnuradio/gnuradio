@@ -115,7 +115,6 @@ parameters:
     hide: part
 
 templates:
-    imports: from PyQt5 import Qt
     make: |-
         <%
             win = 'self.%s'%id

@@ -256,7 +256,6 @@ inputs:
 
 templates:
     imports: |-
-        from PyQt5 import Qt
         from gnuradio.filter import firdes
         import sip
     callbacks:
