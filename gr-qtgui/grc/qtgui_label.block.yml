@@ -34,7 +34,6 @@ value: ${ value }
 
 templates:
     imports: |-
-        from PyQt5 import Qt
         from gnuradio import eng_notation
     var_make: self.${id} = ${id} = ${value}
     callbacks:
