@@ -21,23 +21,13 @@
 # GNU Radio version: ${version}
 ##################################################
 
-% if generate_options == 'qt_gui':
-from packaging.version import Version as StrictVersion
-
-if __name__ == '__main__':
-    import ctypes
-    import sys
-    if sys.platform.startswith('linux'):
-        try:
-            x11 = ctypes.cdll.LoadLibrary('libX11.so')
-            x11.XInitThreads()
-        except:
-            print("Warning: failed to XInitThreads()")
-
-% endif
 ########################################################
 ##Create Imports
 ########################################################
+% if generate_options == 'qt_gui':
+from packaging.version import Version as StrictVersion
+from gnuradio import qtgui
+%endif
 % for imp in imports:
 ##${imp.replace("  # grc-generated hier_block", "")}
 ${imp}
@@ -82,8 +72,6 @@ def snippets_${section}(tb):
     param_str = ', '.join(['self'] + ['%s=%s'%(param.name, param.templates.render('make')) for param in parameters])
 %>\
 % if generate_options == 'qt_gui':
-from gnuradio import qtgui
-
 class ${class_name}(gr.top_block, Qt.QWidget):
 
     def __init__(${param_str}):
