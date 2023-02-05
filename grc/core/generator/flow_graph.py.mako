@@ -92,8 +92,8 @@ class ${class_name}(gr.top_block, Qt.QWidget):
         qtgui.util.check_set_qss()
         try:
             self.setWindowIcon(Qt.QIcon.fromTheme('gnuradio-grc'))
-        except:
-            pass
+        except BaseException as exc:
+            print(f"Qt GUI: Could not set Icon: {str(exc)}", file=sys.stderr)
         self.top_scroll_layout = Qt.QVBoxLayout()
         self.setLayout(self.top_scroll_layout)
         self.top_scroll = Qt.QScrollArea()
@@ -113,8 +113,8 @@ class ${class_name}(gr.top_block, Qt.QWidget):
                 self.restoreGeometry(self.settings.value("geometry").toByteArray())
             else:
                 self.restoreGeometry(self.settings.value("geometry"))
-        except:
-            pass
+        except BaseException as exc:
+            print(f"Qt GUI: Could not restore geometry: {str(exc)}", file=sys.stderr)
 % elif generate_options == 'bokeh_gui':
 
 class ${class_name}(gr.top_block):
