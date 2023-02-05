@@ -406,7 +406,6 @@ asserts:
 templates:
     imports: |-
         from PyQt5 import Qt
-        from gnuradio import qtgui
         from gnuradio.filter import firdes
         import sip
     callbacks:

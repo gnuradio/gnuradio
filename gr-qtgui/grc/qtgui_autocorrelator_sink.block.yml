@@ -57,7 +57,6 @@ inputs:
     dtype: complex
 
 templates:
-    imports: from gnuradio import qtgui
     make: |-
         <%
             win = 'self._%s_win'%id
