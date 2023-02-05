@@ -343,7 +343,7 @@ void fmcomms2_source_impl<T>::set_gain_mode(size_t chan, const std::string& mode
     iio_param_vec_t params;
 
     params.emplace_back("in_voltage" + std::to_string(chan) +
-                        "_gain_control_mode=" + d_gain_mode[chan]);
+                        "_gain_control_mode=" + mode);
 
     device_source_impl::set_params(params);
     d_gain_mode[chan] = mode;
