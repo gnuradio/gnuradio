@@ -23,7 +23,6 @@ outputs:
     id: overlay
     
 templates:
-    imports: from gnuradio import qtgui
     make: qtgui.GrGraphicOverlay(${overlayList},${listDelay},${repeat})
 
 documentation: |-
