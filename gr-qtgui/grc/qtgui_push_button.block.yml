@@ -35,7 +35,6 @@ parameters:
 value: ${ value }
 
 templates:
-    imports: from PyQt5 import Qt
     var_make: self.${id} = ${id} = ${value}
     callbacks:
     - self.set_${id}(${value})

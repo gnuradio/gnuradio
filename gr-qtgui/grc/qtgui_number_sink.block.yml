@@ -238,7 +238,6 @@ inputs:
 
 templates:
     imports: |-
-        from PyQt5 import Qt
         import sip
     callbacks:
     - set_update_time(${update_time})
