@@ -89,7 +89,6 @@ inputs:
     optional: true
 
 templates:
-    imports: from gnuradio import qtgui
     make: |-
         <%
             win = '_%s_lg_win'%id

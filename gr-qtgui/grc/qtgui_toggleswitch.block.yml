@@ -87,7 +87,6 @@ outputs:
     optional: true
 
 templates:
-    imports: from gnuradio import qtgui
     var_make: self.${id} = ${id} = ${value}
     make: |-
         <%
