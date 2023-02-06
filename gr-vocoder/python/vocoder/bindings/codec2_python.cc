@@ -45,6 +45,12 @@ void bind_codec2(py::module& m)
 #ifdef CODEC2_MODE_WB
         .value("MODE_WB", gr::vocoder::codec2::MODE_WB)
 #endif
+#ifdef CODEC2_MODE_450
+        .value("MODE_450", gr::vocoder::codec2::MODE_450)
+#endif
+#ifdef CODEC2_MODE_450PWB
+        .value("MODE_450PWB", gr::vocoder::codec2::MODE_450PWB)
+#endif
         .export_values();
 
     py::implicitly_convertible<int, gr::vocoder::codec2::bit_rate>();
