@@ -9,7 +9,6 @@
 
 import functools
 
-# from .runtime_swig import hier_block2_swig, dot_graph
 from .gr_python import hier_block2_pb
 
 import pmt
@@ -19,24 +18,25 @@ def _multiple_endpoints(func):
     @functools.wraps(func)
     def wrapped(self, *points):
         if not points:
-            raise ValueError(
-                "At least one block required for " + func.__name__)
+            raise ValueError("At least one block required for " + func.__name__)
         elif len(points) == 1:
             try:
                 block = points[0].to_basic_block()
             except AttributeError:
-                raise ValueError(
-                    "At least two endpoints required for " + func.__name__)
+                raise ValueError("At least two endpoints required for " + func.__name__)
             func(self, block)
         else:
             try:
-                endp = [(p.to_basic_block(), 0) if hasattr(p, 'to_basic_block')
-                        else (p[0].to_basic_block(), p[1]) for p in points]
+                endp = [
+                    (p.to_basic_block(), 0) if hasattr(p, "to_basic_block") else (p[0].to_basic_block(), p[1])
+                    for p in points
+                ]
             except (ValueError, TypeError, AttributeError) as err:
                 raise ValueError("Unable to coerce endpoints: " + str(err))
 
             for (src, src_port), (dst, dst_port) in zip(endp, endp[1:]):
                 func(self, src, src_port, dst, dst_port)
+
     return wrapped
 
 
@@ -49,6 +49,7 @@ def _optional_endpoints(func):
             except (ValueError, TypeError) as err:
                 raise ValueError("Unable to coerce endpoints: " + str(err))
         func(self, src.to_basic_block(), srcport, dst.to_basic_block(), dstport)
+
     return wrapped
 
 
@@ -83,7 +84,8 @@ class hier_block2(object):
         except AttributeError as exception:
             raise RuntimeError(
                 "{0}: invalid state -- did you forget to call {0}.__init__ in "
-                "a derived class?".format(object.__getattribute__(self.__class__, "__name__"))) from exception
+                "a derived class?".format(object.__getattribute__(self.__class__, "__name__"))
+            ) from exception
 
         return getattr(self._impl, name)
 
