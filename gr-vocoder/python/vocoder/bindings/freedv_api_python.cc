@@ -52,6 +52,27 @@ void bind_freedv_api(py::module& m)
         .value("SYNC_AUTO", gr::vocoder::freedv_api::SYNC_AUTO)
         .value("SYNC_MANUAL", gr::vocoder::freedv_api::SYNC_MANUAL)
 #endif
+#ifdef FREEDV_MODE_2020
+        .value("MODE_2020", gr::vocoder::freedv_api::MODE_2020)
+#endif
+#ifdef FREEDV_MODE_2020B
+        .value("MODE_2020B", gr::vocoder::freedv_api::MODE_2020B)
+#endif
+#ifdef FREEDV_MODE_700E
+        .value("MODE_700E", gr::vocoder::freedv_api::MODE_700E)
+#endif
+#ifdef FREEDV_MODE_FSK_LDPC
+        .value("MODE_FSK_LDPC", gr::vocoder::freedv_api::MODE_FSK_LDPC)
+#endif
+#ifdef FREEDV_MODE_DATAC1
+        .value("MODE_DATAC1", gr::vocoder::freedv_api::MODE_DATAC1)
+#endif
+#ifdef FREEDV_MODE_DATAC3
+        .value("MODE_DATAC3", gr::vocoder::freedv_api::MODE_DATAC3)
+#endif
+#ifdef FREEDV_MODE_DATAC0
+        .value("MODE_DATAC0", gr::vocoder::freedv_api::MODE_DATAC0)
+#endif
         .export_values();
 
     py::implicitly_convertible<int, gr::vocoder::freedv_api::freedv_modes>();
