@@ -42,6 +42,12 @@ public:
 #ifdef CODEC2_MODE_WB
         MODE_WB = CODEC2_MODE_WB,
 #endif
+#ifdef CODEC2_MODE_450
+        MODE_450 = CODEC2_MODE_450,
+#endif
+#ifdef CODEC2_MODE_450PWB
+        MODE_450PWB = CODEC2_MODE_450PWB,
+#endif
     };
 
 private:

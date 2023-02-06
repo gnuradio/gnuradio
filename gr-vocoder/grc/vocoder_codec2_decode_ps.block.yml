@@ -5,7 +5,7 @@ flags: [ python, cpp ]
 parameters:
 -   id: mode
     label: Bit rate
-    dtype: raw
+    dtype: enum
     default: codec2.MODE_2400
     options: [codec2.MODE_3200, codec2.MODE_2400, codec2.MODE_1600, codec2.MODE_1400,
         codec2.MODE_1300, codec2.MODE_1200, codec2.MODE_700, codec2.MODE_700B,

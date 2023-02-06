@@ -59,6 +59,27 @@ public:
         SYNC_AUTO = FREEDV_SYNC_AUTO,
         SYNC_MANUAL = FREEDV_SYNC_MANUAL,
 #endif
+#ifdef FREEDV_MODE_2020
+        MODE_2020 = FREEDV_MODE_2020,
+#endif
+#ifdef FREEDV_MODE_2020B
+        MODE_2020B = FREEDV_MODE_2020B,
+#endif
+#ifdef FREEDV_MODE_700E
+        MODE_700E = FREEDV_MODE_700E,
+#endif
+#ifdef FREEDV_MODE_FSK_LDPC
+        MODE_FSK_LDPC = FREEDV_MODE_FSK_LDPC,
+#endif
+#ifdef FREEDV_MODE_DATAC1
+        MODE_DATAC1 = FREEDV_MODE_DATAC1,
+#endif
+#ifdef FREEDV_MODE_DATAC3
+        MODE_DATAC3 = FREEDV_MODE_DATAC3,
+#endif
+#ifdef FREEDV_MODE_DATAC0
+        MODE_DATAC0 = FREEDV_MODE_DATAC0,
+#endif
     };
 
 private:
