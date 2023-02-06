@@ -1,5 +1,6 @@
 #
 # Copyright 2006,2007,2014 Free Software Foundation, Inc.
+# Copyright 2023 Marcus Müller
 #
 # This file is part of GNU Radio
 #
@@ -10,6 +11,7 @@
 import functools
 
 from .gr_python import hier_block2_pb
+from .gr_python import logger
 
 import pmt
 
@@ -68,26 +70,42 @@ class hier_block2(object):
     Provides convenience functions and allows proper Python subclassing.
     """
 
-    def __init__(self, name, input_signature, output_signature):
+    def __init__(self, name: str, input_signature, output_signature, underlying_impl=None):
         """
         Create a hierarchical block with a given name and I/O signatures.
-        """
-        self._impl = hier_block2_pb(name, input_signature, output_signature)
 
-    def __getattr__(self, name):
-        """
-        Pass-through member requests to the C++ object.
-        """
+        Wrap the methods of the underlying C++ `hier_block_pb` in an impl
+        object, and add the methods of that to this oject.
 
-        try:
-            object.__getattribute__(self, "_impl")
-        except AttributeError as exception:
-            raise RuntimeError(
-                "{0}: invalid state -- did you forget to call {0}.__init__ in "
-                "a derived class?".format(object.__getattribute__(self.__class__, "__name__"))
-            ) from exception
+        Add a python-side logger, to allow Python hierarchical blocks to do their own identifiable logging.
+        """
+        self._impl = underlying_impl or hier_block2_pb(name, input_signature, output_signature)
+        self.logger = logger(f"Py Hier Blk {name}")
+        self._forward_impl_members()
 
-        return getattr(self._impl, name)
+    def _forward_impl_members(self):
+        """
+        Make all public-facing function of the underlying hier block implementation available as members.
+
+        Does not take the __getattr__ route, as that doesn't permit autocompletion to work.
+        """
+        for member in dir(self._impl):
+            # can't necessarily use hasattr on an object that hasn't finished going through the __init__ chain
+            if member.startswith("_") or member in dir(self):
+                continue
+            setattr(self, member, getattr(self._impl, member))
+
+    def __repr__(self):
+        """
+        Return a representation of the block useful for debugging
+        """
+        return f"<python hier block {self.name()} wrapping GNU Radio hier_block2_pb object {id(self._impl):x}>"
+
+    def __str__(self):
+        """
+        Return a string representation useful for human-aimed printing
+        """
+        return f"Python hierarchical block {self.name()}"
 
     # FIXME: these should really be implemented
     # in the original C++ class (gr_hier_block2), then they would all be inherited here
