@@ -1,5 +1,6 @@
 #
 # Copyright 2007,2014 Free Software Foundation, Inc.
+# Copyright 2023 Marcus Müller
 #
 # This file is part of GNU Radio
 #
@@ -11,12 +12,10 @@
 from .gr_python import (top_block_pb,
                         top_block_wait_unlocked, top_block_run_unlocked,
                         top_block_start_unlocked, top_block_stop_unlocked,
-                        top_block_unlock_unlocked)  # , dot_graph_tb)
+                        top_block_unlock_unlocked, logger)  # , dot_graph_tb)
 
 from .hier_block2 import hier_block2
 import threading
-
-from .hier_block2 import hier_block2
 
 
 class _top_block_waiter(threading.Thread):
@@ -85,13 +84,30 @@ class top_block(hier_block2):
     python subclassing.
     """
 
-    def __init__(self, name="top_block", catch_exceptions=True):
+    def __init__(self, name: str = "top_block", catch_exceptions: bool = True):
         """
         Create a top block with a given name.
+
+        Wrap the methods of the underlying C++ `top_block_pb` in an impl object, and add the methods of that to this
+        object.
+
+        Add a python-side logger, to allow Python hierarchical blocks to do their own identifiable logging.
         """
-        # not calling hier_block2.__init__, we set our own _impl
-        self._impl = top_block_pb(name, catch_exceptions)
+        hier_block2.__init__(self, name, None, None, top_block_pb(name, catch_exceptions))
+        self.logger = logger(f"Python Top Blk {name}")
         self.handle_sigint = True
+
+    def __repr__(self):
+        """
+        Return a representation of the block useful for debugging
+        """
+        return f"<python top block {self.name()} wrapping GNU Radio top_block_pb object {id(self._impl):x}>"
+
+    def __str__(self):
+        """
+        Return a string representation useful for human-aimed printing
+        """
+        return f"Python top block {self.name()}"
 
     def start(self, max_noutput_items=10000000):
         """
