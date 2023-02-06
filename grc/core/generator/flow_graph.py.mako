@@ -245,7 +245,7 @@ gr.io_signature.makev(${len(io_sigs)}, ${len(io_sigs)}, [${', '.join(size_strs)}
             with open(filename) as ss:
                 self.setStyleSheet(ss.read())
         except Exception as e:
-            print(e, file=sys.stderr)
+            self.logger.error(f"setting stylesheet: {str(e)}")
     % endif
 % endif
 ##
@@ -327,7 +327,7 @@ def main(top_block_cls=${class_name}, options=None):
     % endif
     % if flow_graph.get_option('realtime_scheduling'):
     if gr.enable_realtime_scheduling() != gr.RT_OK:
-        print("Error: failed to enable real-time scheduling.")
+        gr.logger("realtime").warning("Error: failed to enable real-time scheduling.")
     % endif
     % if generate_options == 'qt_gui':
 
@@ -375,7 +375,7 @@ def main(top_block_cls=${class_name}, options=None):
         ${'snippets_main_after_start(tb)' if snippets['main_after_start'] else ''}
         bokehgui.utils.run_server(tb, sizing_mode = "${flow_graph.get_option('sizing_mode')}",  widget_placement =  ${flow_graph.get_option('placement')}, window_size =  ${flow_graph.get_option('window_size')})
     finally:
-        print("Exiting the simulation. Stopping Bokeh Server")
+        tb.logger.info("Exiting the simulation. Stopping Bokeh Server")
         tb.stop()
         tb.wait()
         ${'snippets_main_after_stop(tb)' if snippets['main_after_stop'] else ''}
