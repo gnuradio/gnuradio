@@ -998,8 +998,8 @@ inputs:
 
 templates:
     imports: |-
-        from gnuradio.filter import firdes
         import sip
+    
     callbacks:
     - set_update_time(${update_time})
     - set_y_axis(${ymin}, ${ymax})

@@ -256,8 +256,8 @@ inputs:
 
 templates:
     imports: |-
-        from gnuradio.filter import firdes
         import sip
+    
     callbacks:
     - set_time_domain_axis(${min}, ${max})
     - set_update_time(${update_time})
