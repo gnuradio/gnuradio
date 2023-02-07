@@ -270,7 +270,6 @@ class gfsk_demod(gr.hier_block2):
         print("bits per symbol = %d" % self.bits_per_symbol())
         print("Symbol Sync M&M omega = %f" % self._omega)
         print("Symbol Sync M&M gain mu = %f" % self._gain_mu)
-        print("M&M clock recovery mu (Unused) = %f" % self._mu)
         print("Symbol Sync M&M omega rel. limit = %f" %
               self._omega_relative_limit)
         print("frequency error = %f" % self._freq_error)
