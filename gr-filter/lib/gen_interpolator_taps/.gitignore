@@ -1,0 +1,5 @@
+*.o
+gen_interpolator_taps
+gen_interp_differentiator_taps
+interp_differentiator_taps.h
+interpolator_taps.h
