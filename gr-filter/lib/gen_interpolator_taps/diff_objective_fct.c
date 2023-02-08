@@ -20,7 +20,7 @@
 
 #define Ts (1.0)           /* sampling period 		*/
 #define B (1.0 / (4 * Ts)) /* one-sided signal bandwidth 	*/
-//#define	B	(1.0/(8./3*Ts))		/* one-sided signal bandwidth 	*/
+// #define	B	(1.0/(8./3*Ts))		/* one-sided signal bandwidth 	*/
 
 static unsigned global_n;
 static double* global_h;

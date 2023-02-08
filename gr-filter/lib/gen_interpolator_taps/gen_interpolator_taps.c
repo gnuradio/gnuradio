@@ -8,6 +8,7 @@
  *
  */
 
+#include <getopt.h>
 #include <gsl/gsl_integration.h>
 #include <stdio.h>
 #include <stdlib.h>
