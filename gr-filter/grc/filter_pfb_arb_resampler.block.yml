@@ -53,7 +53,8 @@ templates:
         pfb.arb_resampler_${type}(
             ${rrate},
             taps=${ taps if taps else 'None' },
-            flt_size=${nfilts})
+            flt_size=${nfilts},
+            atten=${atten})
         self.${id}.declare_sample_delay(${samp_delay})
     callbacks:
     - set_taps(${taps})
