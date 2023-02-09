@@ -137,20 +137,6 @@ asserts:
 - ${ all(i >= 0 for i in placement) }
 
 templates:
-    imports: |-
-        from gnuradio import gr
-        from gnuradio.filter import firdes
-        from gnuradio.fft import window
-        import sys
-        import signal
-        % if generate_options == 'qt_gui':
-        from PyQt5 import Qt
-        % endif
-        % if not generate_options.startswith('hb'):
-        from argparse import ArgumentParser
-        from gnuradio.eng_arg import eng_float, intx
-        from gnuradio import eng_notation
-        % endif
     callbacks:
     - 'if ${run}: self.start()
 
