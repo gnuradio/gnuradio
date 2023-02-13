@@ -24,16 +24,6 @@
 ########################################################
 ##Create Imports
 ########################################################
-import sys
-import signal
-from gnuradio import gr
-from gnuradio.filter import firdes
-from gnuradio.fft import window
-% if not generate_options.startswith('hb'):
-from argparse import ArgumentParser
-from gnuradio.eng_arg import eng_float, intx
-from gnuradio import eng_notation
-% endif
 % if generate_options == 'qt_gui':
 from packaging.version import Version as StrictVersion
 from PyQt5 import Qt
