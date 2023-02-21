@@ -33,7 +33,7 @@ from qtpy.QtGui import QStandardItemModel
 # Custom modules
 from . import FlowgraphView
 from .. import base, Constants, Utils
-from .undoable_actions import ChangeStateAction, RotateAction, EnableAction, DisableAction, BypassAction, MoveAction2
+from .undoable_actions import ChangeStateAction, RotateAction, EnableAction, DisableAction, BypassAction, MoveAction
 from . import DocumentationTab
 from .preferences import PreferencesDialog
 from .dialogs import ErrorsDialog
@@ -175,7 +175,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
     @QtCore.Slot(QtCore.QPointF)
     def createMove(self, diff):
         log.debug("move ja")
-        action = MoveAction2(self.currentFlowgraph, diff)
+        action = MoveAction(self.currentFlowgraph, diff)
         self.currentFlowgraph.undoStack.push(action)
         self.updateActions()
 
