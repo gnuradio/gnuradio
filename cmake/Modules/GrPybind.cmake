@@ -8,6 +8,12 @@ macro(GR_PYBIND_MAKE name updir filter files)
                    ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
 
     pybind11_add_module(${name}_python ${files})
+    
+    # Use normal .so suffix when crosscompiling
+    # See https://github.com/gnuradio/gnuradio/issues/5455
+    if (CMAKE_CROSSCOMPILING)
+        set_target_properties(${name}_python PROPERTIES SUFFIX ".so")
+    endif()
 
     set(MODULE_NAME ${name})
     if(${name} STREQUAL gr)
@@ -134,6 +140,12 @@ macro(GR_PYBIND_MAKE_CHECK_HASH name updir filter files)
     endforeach()
 
     pybind11_add_module(${name}_python ${files})
+
+    # Use normal .so suffix when crosscompiling
+    # See https://github.com/gnuradio/gnuradio/issues/5455
+    if (CMAKE_CROSSCOMPILING)
+        set_target_properties(${name}_python PROPERTIES SUFFIX ".so")
+    endif()
 
     set(MODULE_NAME ${name})
     if(${name} STREQUAL gr)
@@ -285,6 +297,12 @@ macro(GR_PYBIND_MAKE_OOT name updir filter files)
                    ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
 
     pybind11_add_module(${name}_python ${files})
+
+    # Use normal .so suffix when crosscompiling
+    # See https://github.com/gnuradio/gnuradio/issues/5455
+    if (CMAKE_CROSSCOMPILING)
+        set_target_properties(${name}_python PROPERTIES SUFFIX ".so")
+    endif()
 
     set(MODULE_NAME ${name})
     if(${name} STREQUAL gr)
