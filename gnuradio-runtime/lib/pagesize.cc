@@ -80,7 +80,6 @@ int pagesize()
                           default_pagesize);
             s_pagesize = default_pagesize;
         }
-        logger->info("Setting pagesize to {} B", s_pagesize);
     }
     return s_pagesize;
 }

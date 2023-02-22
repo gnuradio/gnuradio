@@ -48,7 +48,6 @@ make_scheduler(flat_flowgraph_sptr ffg, int max_noutput_items, bool catch_except
         if (!environment_var) {
             const auto& [name, fac] = scheduler_list.at(0);
             factory = fac;
-            logger->debug("Using default scheduler \"{}\"", name);
         } else {
             for (auto& [name, maker] : scheduler_list) {
                 if (name == environment_var) {
