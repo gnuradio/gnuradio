@@ -1,5 +1,5 @@
-id: blocks_trickling_throttle
-label: Throttle (limited blocking)
+id: blocks_throttle2
+label: Throttle
 flags: [ throttle, python, cpp ]
 
 parameters:
@@ -25,15 +25,15 @@ parameters:
     dtype: bool
     default: 'True'
     hide: ${ ('part' if str(ignoretag) == 'True' else 'none') }
--   id: duration_or_samples
-    label: Limited Quantity
+-   id: limit
+    label: Limit
     dtype: enum
-    options: ['time', 'items', 'neither']
-    option_labels: ["Max. Time", "Max. Items", "No Limit"]
+    options: ['auto', 'time', 'items']
+    option_labels: ["None", "Max Time (sec)", "Max Items"]
 -   id: maximum
-    label: 'Max. wait[s] or items'
+    label: 'Maximum'
     dtype: real
-    hide: ${ ('part' if duration_or_samples == 'neither' else 'none') }
+    hide: ${ ('all' if limit == 'auto' else 'none') }
     default: 0.1
 
 inputs:
@@ -50,7 +50,7 @@ outputs:
 asserts:
 - ${ vlen > 0 }
 - ${ samples_per_second > 0 }
-- ${ duration_or_samples == 'neither' or float(maximum) > 0 }
+- ${ limit == 'auto' or float(maximum) > 0 }
 
 templates:
     imports: from gnuradio import blocks
@@ -58,10 +58,10 @@ templates:
                ${type.size}*${vlen},
                ${samples_per_second},
                ${ignoretag},
-               0 if "${duration_or_samples}" == "neither" 
+               0 if "${limit}" == "auto"
                    else max(
                        int(float(${maximum}) * ${samples_per_second})
-                       if "${duration_or_samples}" == "time"
+                       if "${limit}" == "time"
                        else int(${maximum}),
                        1)
                 )'
@@ -72,7 +72,7 @@ cpp_templates:
     includes: ['#include <gnuradio/blocks/throttle.h>', '#include <string_view>', '#include <algorithm>']
     declarations: |-
       constexpr unsigned int ${id}_limit(float value) {
-        const std::string_view limited("${duration_or_samples}");
+        const std::string_view limited("${limit}");
         if(limited == "time") {
           return std::max(static_cast<unsigned int>(value * ${samples_per_second}), 1U);
         } else if (limited == "items") {

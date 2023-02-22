@@ -1,5 +1,5 @@
 id: blocks_throttle
-label: Throttle (unlimited blocking)
+label: Throttle (old)
 flags: [ throttle, python, cpp, deprecated ]
 
 parameters:
