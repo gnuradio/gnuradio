@@ -33,10 +33,11 @@ from qtpy.QtGui import QStandardItemModel
 # Custom modules
 from . import FlowgraphView
 from .. import base, Constants, Utils
-from .undoable_actions import ChangeStateAction, RotateAction, EnableAction, DisableAction, BypassAction, MoveAction
+from .undoable_actions import ChangeStateAction, RotateAction, EnableAction, DisableAction, BypassAction, MoveAction, NewElementAction, DeleteElementAction
 from . import DocumentationTab
 from .preferences import PreferencesDialog
 from .dialogs import ErrorsDialog
+from ...core.base import Element
 
 # Logging
 log = logging.getLogger(__name__)
@@ -154,6 +155,8 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         self.currentFlowgraph.selectionChanged.connect(self.updateActions)
         self.currentFlowgraph.selectionChanged.connect(self.updateDocTab)
         self.currentFlowgraph.itemMoved.connect(self.createMove)
+        self.currentFlowgraph.newElement.connect(self.registerNewElement)
+        self.currentFlowgraph.deleteElement.connect(self.registerDeleteElement)
         #self.new_tab(self.flowgraph)
 
         self.clipboard = None
@@ -174,8 +177,19 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
     
     @QtCore.Slot(QtCore.QPointF)
     def createMove(self, diff):
-        log.debug("move ja")
         action = MoveAction(self.currentFlowgraph, diff)
+        self.currentFlowgraph.undoStack.push(action)
+        self.updateActions()
+    
+    @QtCore.Slot(Element)
+    def registerNewElement(self, elem):
+        action = NewElementAction(self.currentFlowgraph, elem)
+        self.currentFlowgraph.undoStack.push(action)
+        self.updateActions()
+    
+    @QtCore.Slot(Element)
+    def registerDeleteElement(self, elem):
+        action = DeleteElementAction(self.currentFlowgraph, elem)
         self.currentFlowgraph.undoStack.push(action)
         self.updateActions()
 
@@ -796,7 +810,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
     def cut_triggered(self):
         log.debug('cut')
         self.copy_triggered()
-        self.delete_triggered()
+        self.currentFlowgraph.delete_selected()
         self.updateActions()
 
     def copy_triggered(self):
@@ -814,7 +828,8 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
     def delete_triggered(self):
         log.debug('delete')
-        self.currentFlowgraph.delete_selected()
+        action = DeleteElementAction(self.currentFlowgraph)
+        self.currentFlowgraph.undoStack.push(action)
         self.updateActions()
 
     def select_all_triggered(self):

@@ -51,6 +51,8 @@ DEFAULT_MAX_Y = 300
 # TODO: Combine the scene and view? Maybe the scene should be the controller?
 class Flowgraph(QtWidgets.QGraphicsScene, base.Component, CoreFlowgraph):
     itemMoved = QtCore.Signal([QtCore.QPointF])
+    newElement = QtCore.Signal([Element])
+    deleteElement = QtCore.Signal([Element])
 
     def __init__(self, view, *args, **kwargs):
         super(Flowgraph, self).__init__()
@@ -186,6 +188,7 @@ class Flowgraph(QtWidgets.QGraphicsScene, base.Component, CoreFlowgraph):
                 self.addItem(block)
                 block.moveToTop()
                 self.update()
+                self.newElement.emit(block)
 
                 event.setDropAction(Qt.CopyAction)
                 event.accept()
@@ -263,12 +266,16 @@ class Flowgraph(QtWidgets.QGraphicsScene, base.Component, CoreFlowgraph):
                     if selected[0].is_port and selected[0] != item:
                         if selected[0].is_source and item.is_sink:
                             log.debug("Created connection (click)")
-                            self.connections.add(Connection(self, selected[0], item))
+                            new_con = Connection(self, selected[0], item)
+                            self.add_element(new_con)
+                            self.newElement.emit(new_con)
                             self.update()
                             conn_made = True
                         elif selected[0].is_sink and item.is_source:
                             log.debug("Created connection (click)")
-                            self.connections.add(Connection(self, item, selected[0]))
+                            new_con = Connection(self, item, selected[0])
+                            self.add_element(new_con)
+                            self.newElement.emit(new_con)
                             self.update()
                             conn_made = True
                 if not conn_made:
@@ -307,7 +314,9 @@ class Flowgraph(QtWidgets.QGraphicsScene, base.Component, CoreFlowgraph):
             if isinstance(item, Element):
                 if item.is_port and item != self.startPort:
                     log.debug("Created connection (drag)")
-                    self.connections.add(Connection(self, self.startPort, item))
+                    new_con = Connection(self, self.startPort, item)
+                    self.add_element(new_con)
+                    self.newElement.emit(new_con)
                     self.update()
             self.removeItem(self.newConnection)
             self.newConnection = None
@@ -365,6 +374,10 @@ class Flowgraph(QtWidgets.QGraphicsScene, base.Component, CoreFlowgraph):
     def remove_element(self, element):
         self.removeItem(element)
         super(Flowgraph, self).remove_element(element)
+    
+    def add_element(self, element):
+        super(Flowgraph, self).add_element(element)
+        self.addItem(element)
 
     def get_extents(self):
         #show_comments = Actions.TOGGLE_SHOW_BLOCK_COMMENTS.get_active()
@@ -574,6 +587,7 @@ class FlowgraphView(QtWidgets.QGraphicsView, base.Component): # added base.Compo
 
                 new_block = Block(block_key, block.label, attrib, params)
                 self.scene.addItem(new_block)
+                self.newElement.emit(new_block)
             except:
                 log.warning("Block '{}' was not found".format(block_key))
 
