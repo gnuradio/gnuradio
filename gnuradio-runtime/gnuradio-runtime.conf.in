@@ -15,7 +15,7 @@ max_messages = 8192
 [LOG]
 # Levels can be (case insensitive):
 #       DEBUG, INFO, WARN, TRACE, ERROR, ALERT, CRIT, FATAL, EMERG
-log_level = debug
+log_level = info
 debug_level = emerg
 
 # These file names can either be 'stdout' to output to standard output
