@@ -378,6 +378,15 @@ class FlowGraph(Element):
 
         elif element in self.connections:
             self.connections.remove(element)
+        
+    def add_element(self, element):
+        """
+        Add an element (that has been created earlier)
+        """
+        if element.is_block:
+            self.blocks.append(element)
+        elif element.is_connection:
+            self.connections.add(element)
 
     ##############################################
     # Import/Export Methods

@@ -202,7 +202,7 @@ def test_move_blocks(qtbot, qapp_cls_):
     pag.mouseUp()
     assert(scaling * global_pos(n_src, view) != start)
 
-def test_create_connection(qtbot, qapp_cls_):
+def test_connection(qtbot, qapp_cls_):
     fg = qapp_cls_.MainWindow.currentFlowgraph
     view = qapp_cls_.MainWindow.currentView
     scaling = qapp_cls_.desktop().devicePixelRatio()
@@ -226,9 +226,13 @@ def test_create_connection(qtbot, qapp_cls_):
     click_pos = scaling * global_pos(n_sink.sinks[0], view)
     pag.click(click_pos.x(), click_pos.y(), button="left")
     qtbot.wait(100)
-
-    qtbot.wait(50)
-    assert len(fg.connections) > 0
+    assert len(fg.connections) == 1
+    qtbot.keyClick(qapp_cls_.focusWidget(), QtCore.Qt.Key_Z, QtCore.Qt.ControlModifier)
+    qtbot.wait(100)
+    assert len(fg.connections) == 0
+    qtbot.keyClick(qapp_cls_.focusWidget(), QtCore.Qt.Key_Z, QtCore.Qt.ControlModifier | QtCore.Qt.ShiftModifier)
+    qtbot.wait(100)
+    assert len(fg.connections) == 1
 
 def test_num_inputs(qtbot, qapp_cls_):
     fg = qapp_cls_.MainWindow.currentFlowgraph

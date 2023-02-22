@@ -13,7 +13,6 @@ class ConnectionArrow(QtWidgets.QGraphicsPathItem):
 
     def __init__(self, parent, start_point, end_point):
         QtWidgets.QGraphicsItem.__init__(self)
-        parent.addItem(self)
 
         self.start_point = start_point
         self.end_point = end_point
@@ -71,7 +70,6 @@ class Connection(CoreConnection, QtWidgets.QGraphicsPathItem):
     def __init__(self, parent, source, sink):
         CoreConnection.__init__(self, parent, source, sink)
         QtWidgets.QGraphicsItem.__init__(self)
-        parent.addItem(self)
 
         self.source = source
         self.sink = sink

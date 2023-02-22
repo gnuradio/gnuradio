@@ -44,12 +44,14 @@ class RotateAction(ChangeStateAction):
             states['rotation'] += delta_angle
             # Get rid of superfluous entries
             states = dict((k, v) for k, v in states.items() if all(k == 'rotation' for x in k))
+        self.flowgraph.update()
 
 class MoveAction(QUndoCommand):
     def __init__(self, flowgraph, diff):
         QUndoCommand.__init__(self)
         log.debug("init MoveAction")
         self.blocks = flowgraph.selected_blocks()
+        self.flowgraph = flowgraph
         self.x = diff.x()
         self.y = diff.y()
         self.first = True
@@ -63,11 +65,13 @@ class MoveAction(QUndoCommand):
             return
         for block in self.blocks:
             block.moveBy(self.x, self.y)
+        self.flowgraph.update()
         
 
     def undo(self):
         for block in self.blocks:
             block.moveBy(-self.x, -self.y)
+        self.flowgraph.update()
 
 class EnableAction(ChangeStateAction):
     def __init__(self, flowgraph):
@@ -100,13 +104,45 @@ class ToggleBusCommand(ChangeStateAction):
         pass
 
 # Blocks and connections
-class NewElementCommand(QUndoCommand):
-    def __init__(self):
-        pass
+class NewElementAction(QUndoCommand):
+    def __init__(self, flowgraph, element):
+        QUndoCommand.__init__(self)
+        log.debug("init NewElementAction")
+        self.flowgraph = flowgraph
+        self.element = element
+        self.first = True
 
-# Blocks and connections
-class DeleteElementCommand(QUndoCommand):
-    def __init__(self):
-        pass
+    def redo(self):
+        if self.first:
+            self.first = False
+            return
+        self.flowgraph.add_element(self.element)
+        self.flowgraph.update()
 
+    def undo(self):
+        self.flowgraph.remove_element(self.element)
+        self.flowgraph.update()
 
+class DeleteElementAction(QUndoCommand):
+    def __init__(self, flowgraph):
+        QUndoCommand.__init__(self)
+        log.debug("init DeleteElementAction")
+        self.flowgraph = flowgraph
+        self.connections = flowgraph.selected_connections()
+        self.blocks = flowgraph.selected_blocks()
+        for block in self.blocks:
+            self.connections = self.connections + block.connections()
+
+    def redo(self):
+        for con in self.connections:
+            self.flowgraph.remove_element(con)
+        for block in self.blocks:
+            self.flowgraph.remove_element(block)
+        self.flowgraph.update()
+
+    def undo(self):
+        for block in self.blocks:
+            self.flowgraph.add_element(block)
+        for con in self.connections:
+            self.flowgraph.add_element(con)
+        self.flowgraph.update()
