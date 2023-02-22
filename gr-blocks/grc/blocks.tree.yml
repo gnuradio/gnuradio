@@ -90,7 +90,7 @@
   - blocks_msg_meta_to_pair
 - Misc:
   - blocks_throttle
-  - blocks_trickling_throttle
+  - blocks_throttle2
   - blocks_vector_source_x
   - blocks_head
   - blocks_skiphead
