@@ -40,6 +40,7 @@ class RotateAction(ChangeStateAction):
     def __init__(self, flowgraph, delta_angle):
         ChangeStateAction.__init__(self, flowgraph)
         log.debug("init RotateAction")
+        self.setText('Rotate')
         for states in self.newStates:
             states['rotation'] += delta_angle
             # Get rid of superfluous entries
@@ -50,6 +51,7 @@ class MoveAction(QUndoCommand):
     def __init__(self, flowgraph, diff):
         QUndoCommand.__init__(self)
         log.debug("init MoveAction")
+        self.setText('Move')
         self.blocks = flowgraph.selected_blocks()
         self.flowgraph = flowgraph
         self.x = diff.x()
@@ -77,18 +79,21 @@ class EnableAction(ChangeStateAction):
     def __init__(self, flowgraph):
         ChangeStateAction.__init__(self, flowgraph)
         log.debug("init EnableAction")
+        self.setText('Enable')
         for i in range(len(self.blocks)):
             self.newStates[i]['state'] = 'enabled'
 class DisableAction(ChangeStateAction):
     def __init__(self, flowgraph):
         ChangeStateAction.__init__(self, flowgraph)
         log.debug("init DisableAction")
+        self.setText('Disable')
         for i in range(len(self.blocks)):
             self.newStates[i]['state'] = 'disabled'
 class BypassAction(ChangeStateAction):
     def __init__(self, flowgraph):
         ChangeStateAction.__init__(self, flowgraph)
         log.debug("init BypassAction")
+        self.setText('Bypass')
         for i in range(len(self.blocks)):
             self.newStates[i]['state'] = 'bypassed'
 
@@ -108,6 +113,7 @@ class NewElementAction(QUndoCommand):
     def __init__(self, flowgraph, element):
         QUndoCommand.__init__(self)
         log.debug("init NewElementAction")
+        self.setText('New')
         self.flowgraph = flowgraph
         self.element = element
         self.first = True
@@ -127,6 +133,7 @@ class DeleteElementAction(QUndoCommand):
     def __init__(self, flowgraph):
         QUndoCommand.__init__(self)
         log.debug("init DeleteElementAction")
+        self.setText('Delete')
         self.flowgraph = flowgraph
         self.connections = flowgraph.selected_connections()
         self.blocks = flowgraph.selected_blocks()
