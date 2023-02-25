@@ -160,6 +160,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         #self.new_tab(self.flowgraph)
 
         self.clipboard = None
+        self.undoView = None
 
     '''def show(self):
         log.debug("Showing main window")
@@ -232,6 +233,8 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
         actions['redo'] = Action(Icons('edit-redo'), _("redo"), self,
                                  shortcut=Keys.Redo, statusTip=_("redo-tooltip"))
+
+        actions['view_undo_stack'] = Action("View undo stack", self)
 
         actions['cut'] = Action(Icons('edit-cut'), _("cut"), self,
                                 shortcut=Keys.Cut, statusTip=_("cut-tooltip"))
@@ -497,6 +500,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         edit = Menu("&Edit")
         edit.addAction(actions['undo'])
         edit.addAction(actions['redo'])
+        edit.addAction(actions['view_undo_stack'])
         edit.addSeparator()
         edit.addAction(actions['cut'])
         edit.addAction(actions['copy'])
@@ -806,6 +810,12 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         log.debug('redo')
         self.currentFlowgraph.undoStack.redo()
         self.updateActions()
+
+    def view_undo_stack_triggered(self):
+        log.debug('view_undo_stack')
+        self.undoView = QtWidgets.QUndoView(self.currentFlowgraph.undoStack)
+        self.undoView.setWindowTitle("Undo stack")
+        self.undoView.show()
 
     def cut_triggered(self):
         log.debug('cut')
