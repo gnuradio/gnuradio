@@ -190,11 +190,11 @@ void HistogramDisplayPlot::_resetXAxisPoints(double left, double right)
         throw std::runtime_error("HistogramDisplayPlot::_resetXAxisPoints left and/or "
                                  "right values are invalid");
 
-    d_left = left * (1 - copysign(0.1, left));
-    d_right = right * (1 + copysign(0.1, right));
+    d_left = left;
+    d_right = right;
     d_width = (d_right - d_left) / (d_bins);
     for (unsigned int loc = 0; loc < d_bins; loc++) {
-        d_xdata[loc] = d_left + loc * d_width;
+        d_xdata[loc] = d_left + (loc + 0.5) * d_width; // center the value in each bin
     }
     QwtScaleDiv scalediv(d_left, d_right);
     setAxisScaleDiv(QwtPlot::xBottom, scalediv);
