@@ -1,0 +1,90 @@
+id: uhd_msg_push_button
+label: Replay Msg Push Button
+category: '[Core]/UHD/RFNoC/Blocks'
+flags: [ show_id, python ]
+
+parameters:
+-   id: label
+    label: Label
+    dtype: string
+    hide: ${ ('none' if label else 'part') }
+-   id: command
+    label: Command
+    dtype: enum
+    default: 'record'
+    options: ['record', 'play', 'stop', 'get_record_fullness', 'get_block_size']
+    option_labels: [Record, Play, Stop, Get Record Fullness, Get Block Size]
+-   id: port
+    label: Port
+    dtype: int
+    default: 0
+    hide: ${ 'all' if command == 'get_block_size' else 'none' }
+-   id: offset
+    label: Command Offset
+    dtype: int
+    default: '-1'
+    hide: ${ 'all' if command == 'get_record_fullness' or command == 'get_block_size' or command == 'stop' else ('part' if offset == -1 else 'none')}
+-   id: size
+    label: Command Size
+    dtype: int
+    default: '-1'
+    hide: ${ 'all' if command == 'get_record_fullness' or command == 'get_block_size' or command == 'stop' else ('part' if size == -1 else 'none')}
+-   id: time
+    label: Command Time
+    dtype: int
+    default: '-1'
+    hide: ${ 'all' if command == 'get_record_fullness' or command == 'get_block_size' else ('part' if time == -1 else 'none')}
+-   id: repeat
+    label: Repeat?
+    dtype: bool
+    default: false
+    hide: ${ 'none' if command == 'play' else 'all'}
+-   id: relBackgroundColor
+    label: Button Background
+    dtype: enum
+    default: 'default'
+    options: ['default', 'silver', 'gray', 'black', 'white', 'red', 'green', 'blue', 'navy', 'yellow', 'orange', 'purple', 'lime', 'aqua', 'teal']
+    option_labels: ['default', 'silver', 'gray', 'black', 'white', 'red', 'green', 'blue', 'navy', 'yellow', 'orange', 'purple', 'lime', 'aqua', 'teal']
+    hide: 'part'
+-   id: relFontColor
+    label: Button Font Color
+    dtype: enum
+    default: 'default'
+    options: ['default', 'silver', 'gray', 'black', 'white', 'red', 'green', 'blue', 'navy', 'yellow', 'orange', 'purple', 'lime', 'aqua', 'teal']
+    option_labels: ['default', 'silver', 'gray', 'black', 'white', 'red', 'green', 'blue', 'navy', 'yellow', 'orange', 'purple', 'lime', 'aqua', 'teal']
+    hide: 'part'
+-   id: gui_hint
+    label: GUI Hint
+    dtype: gui_hint
+    hide: part
+
+outputs:
+-   domain: message
+    id: pressed
+    optional: false
+
+templates:
+    var_make: self.${id} = None
+    make: |-
+        <%
+            win = '_%s_toggle_button'%id
+        %>\
+        ${win} = uhd.ReplayMsgPushButton(${(label if (len(label) - 2 > 0) else repr(id))},"${relBackgroundColor}","${relFontColor}","${command}",${port},${offset},${size},${time},${repeat})
+        self.${id} = ${win}
+
+        ${gui_hint() % win}
+    callbacks:
+       - set_command(${command})
+       - set_port(${port})
+       - set_offset(${offset})
+       - set_size(${size})
+       - set_time(${time})
+       - set_repeat(${repeat})
+documentation: |-
+    This block creates a variable push button that creates a dictionary message when pressed.
+
+    This block is intended to be used as an input to the RFNoC Replay block.
+
+    The GUI hint can be used to position the widget within the application. The hint is of the form [tab_id@tab_index]: [row, col, row_span, col_span]. Both the tab specification and the grid position are optional.
+
+file_format: 1

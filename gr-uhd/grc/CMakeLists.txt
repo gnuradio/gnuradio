@@ -29,6 +29,7 @@ GEN_BLOCK_YML(gen_rfnoc_rx_radio_block_yml.py uhd_rfnoc_rx_radio.block.yml)
 GEN_BLOCK_YML(gen_rfnoc_tx_radio_block_yml.py uhd_rfnoc_tx_radio.block.yml)
 GEN_BLOCK_YML(gen_rfnoc_duc_block_yml.py uhd_rfnoc_duc.block.yml)
 GEN_BLOCK_YML(gen_rfnoc_ddc_block_yml.py uhd_rfnoc_ddc.block.yml)
+GEN_BLOCK_YML(gen_rfnoc_replay_block_yml.py uhd_rfnoc_replay.block.yml)
 
 add_custom_target(uhd_grc_yml_blocks ALL DEPENDS ${yml_blocks})
 
@@ -50,6 +51,7 @@ if(ENABLE_UHD_RFNOC)
               uhd_fpga_radio.block.yml
               uhd_fpga_sep.block.yml
               uhd_fpga_x310.block.yml
+              uhd_msgpushbutton.block.yml
               uhd_rfnoc_addsub.block.yml
               uhd_rfnoc_fft.block.yml
               uhd_rfnoc_fosphor.block.yml
