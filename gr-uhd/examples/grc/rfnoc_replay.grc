@@ -1,0 +1,640 @@
+options:
+  parameters:
+    author: Grant Meyerhoff <grant.meyerhoff@ni.com>
+    catch_exceptions: 'True'
+    category: '[GRC Hier Blocks]'
+    cmake_opt: ''
+    comment: ''
+    copyright: Copyright 2023 Ettus Research, a National Instruments Brand
+    description: ''
+    gen_cmake: 'On'
+    gen_linking: dynamic
+    generate_options: qt_gui
+    hier_block_src_path: '.:'
+    id: rfnoc_replay
+    max_nouts: '0'
+    output_language: python
+    placement: (0,0)
+    qt_qss_theme: ''
+    realtime_scheduling: ''
+    run: 'True'
+    run_command: '{python} -u {filename}'
+    run_options: prompt
+    sizing_mode: fixed
+    thread_safe_setters: ''
+    title: RFNoC Replay Example
+    window_size: (1000,1000)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 8]
+    rotation: 0
+    state: enabled
+
+blocks:
+- name: play_offset
+  id: variable_qtgui_entry
+  parameters:
+    comment: ''
+    gui_hint: :[3,2,1,1]
+    label: Play Offset
+    type: int
+    value: '0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [824, 12.0]
+    rotation: 0
+    state: true
+- name: play_port
+  id: variable_qtgui_chooser
+  parameters:
+    comment: ''
+    gui_hint: :[2,2,1,1]
+    label: Play Port
+    label0: ''
+    label1: ''
+    label2: ''
+    label3: ''
+    label4: ''
+    labels: '[]'
+    num_opts: '2'
+    option0: '0'
+    option1: '1'
+    option2: '2'
+    option3: '3'
+    option4: '4'
+    options: '[0, 1, 2]'
+    orient: Qt.QVBoxLayout
+    type: int
+    value: '0'
+    widget: combo_box
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [704, 12.0]
+    rotation: 0
+    state: true
+- name: play_size
+  id: variable_qtgui_entry
+  parameters:
+    comment: ''
+    gui_hint: :[3,3,1,1]
+    label: Play Size
+    type: int
+    value: '80000'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [824, 92.0]
+    rotation: 0
+    state: true
+- name: record_offset
+  id: variable_qtgui_entry
+  parameters:
+    comment: ''
+    gui_hint: :[3,0,1,1]
+    label: Record Offset
+    type: int
+    value: '0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [576, 12.0]
+    rotation: 0
+    state: true
+- name: record_port
+  id: variable_qtgui_chooser
+  parameters:
+    comment: ''
+    gui_hint: :[2,1,1,1]
+    label: Record Port
+    label0: ''
+    label1: ''
+    label2: ''
+    label3: ''
+    label4: ''
+    labels: '[]'
+    num_opts: '2'
+    option0: '0'
+    option1: '1'
+    option2: '2'
+    option3: '3'
+    option4: '4'
+    options: '[0, 1, 2]'
+    orient: Qt.QVBoxLayout
+    type: int
+    value: '0'
+    widget: combo_box
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [456, 12.0]
+    rotation: 0
+    state: true
+- name: record_size
+  id: variable_qtgui_entry
+  parameters:
+    comment: ''
+    gui_hint: :[3,1,1,1]
+    label: Record Size
+    type: int
+    value: '80000'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [576, 92.0]
+    rotation: 0
+    state: true
+- name: samp_rate
+  id: variable
+  parameters:
+    comment: ''
+    value: 200e6
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [192, 12.0]
+    rotation: 0
+    state: enabled
+- name: uhd_rfnoc_graph_0
+  id: uhd_rfnoc_graph
+  parameters:
+    alias: ''
+    clock_source: ''
+    comment: ''
+    dev_addr: '"type=n3xx"'
+    dev_args: ''
+    num_mboards: '1'
+    time_source: ''
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [288, 12.0]
+    rotation: 0
+    state: true
+- name: analog_sig_source_x_0
+  id: analog_sig_source_x
+  parameters:
+    affinity: ''
+    alias: ''
+    amp: '.5'
+    comment: ''
+    freq: 1e6
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    offset: '0'
+    phase: '0'
+    samp_rate: samp_rate
+    showports: 'False'
+    type: complex
+    waveform: analog.GR_COS_WAVE
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [16, 644.0]
+    rotation: 0
+    state: true
+- name: analog_sig_source_x_0_0
+  id: analog_sig_source_x
+  parameters:
+    affinity: ''
+    alias: ''
+    amp: '.5'
+    comment: ''
+    freq: 1e6
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    offset: '0'
+    phase: '0'
+    samp_rate: samp_rate
+    showports: 'False'
+    type: complex
+    waveform: analog.GR_SQR_WAVE
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [16, 772.0]
+    rotation: 0
+    state: true
+- name: blocks_message_debug_0
+  id: blocks_message_debug
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: "This will print out the record fullness to the \nterminal when the record\
+      \ fullness button is pressed. \nThis helps indicate to the user if the block\
+      \ has \nfinished recording the requested amount."
+    en_uvec: 'True'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1040, 88.0]
+    rotation: 0
+    state: true
+- name: blocks_throttle2_0
+  id: blocks_throttle2
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    ignoretag: 'True'
+    limit: auto
+    maximum: '0.1'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    samples_per_second: samp_rate
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [232, 676.0]
+    rotation: 0
+    state: true
+- name: blocks_throttle2_0_0
+  id: blocks_throttle2
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    ignoretag: 'True'
+    limit: auto
+    maximum: '0.1'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    samples_per_second: samp_rate
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [232, 804.0]
+    rotation: 0
+    state: true
+- name: cont_play_push_button
+  id: uhd_msg_push_button
+  parameters:
+    affinity: ''
+    alias: ''
+    command: play
+    comment: ''
+    gui_hint: :[1,2,1,1]
+    label: Play Continuous
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    offset: '-1'
+    port: play_port
+    relBackgroundColor: default
+    relFontColor: default
+    repeat: 'True'
+    size: '-1'
+    time: '-1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [16, 332.0]
+    rotation: 0
+    state: true
+- name: fullness_push_button
+  id: uhd_msg_push_button
+  parameters:
+    affinity: ''
+    alias: ''
+    command: get_record_fullness
+    comment: ''
+    gui_hint: :[2,0,1,1]
+    label: Get Record Fullness
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    offset: '-1'
+    port: record_port
+    relBackgroundColor: default
+    relFontColor: default
+    repeat: 'False'
+    size: '-1'
+    time: '-1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [16, 540.0]
+    rotation: 0
+    state: true
+- name: play_push_button
+  id: uhd_msg_push_button
+  parameters:
+    affinity: ''
+    alias: ''
+    command: play
+    comment: ''
+    gui_hint: :[1,1,1,1]
+    label: Play
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    offset: '-1'
+    port: play_port
+    relBackgroundColor: default
+    relFontColor: default
+    repeat: 'False'
+    size: '-1'
+    time: '-1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [16, 220.0]
+    rotation: 0
+    state: true
+- name: qtgui_time_sink_x_0
+  id: qtgui_time_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'False'
+    axislabels: 'True'
+    color1: blue
+    color10: dark blue
+    color2: red
+    color3: green
+    color4: black
+    color5: cyan
+    color6: magenta
+    color7: yellow
+    color8: dark red
+    color9: dark green
+    comment: ''
+    ctrlpanel: 'False'
+    entags: 'False'
+    grid: 'False'
+    gui_hint: :[5,0,1,4]
+    label1: Signal 1
+    label10: Signal 10
+    label2: Signal 2
+    label3: Signal 3
+    label4: Signal 4
+    label5: Signal 5
+    label6: Signal 6
+    label7: Signal 7
+    label8: Signal 8
+    label9: Signal 9
+    legend: 'True'
+    marker1: '-1'
+    marker10: '-1'
+    marker2: '-1'
+    marker3: '-1'
+    marker4: '-1'
+    marker5: '-1'
+    marker6: '-1'
+    marker7: '-1'
+    marker8: '-1'
+    marker9: '-1'
+    name: Port 0 Output
+    nconnections: '1'
+    size: '1024'
+    srate: samp_rate
+    stemplot: 'False'
+    style1: '1'
+    style10: '1'
+    style2: '1'
+    style3: '1'
+    style4: '1'
+    style5: '1'
+    style6: '1'
+    style7: '1'
+    style8: '1'
+    style9: '1'
+    tr_chan: '0'
+    tr_delay: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_slope: qtgui.TRIG_SLOPE_POS
+    tr_tag: '""'
+    type: complex
+    update_time: '0.10'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    ylabel: Amplitude
+    ymax: '1'
+    ymin: '-1'
+    yunit: '""'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1144, 260.0]
+    rotation: 0
+    state: true
+- name: record_push_button
+  id: uhd_msg_push_button
+  parameters:
+    affinity: ''
+    alias: ''
+    command: record
+    comment: ''
+    gui_hint: :[1,0,1,1]
+    label: Record
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    offset: '-1'
+    port: record_port
+    relBackgroundColor: default
+    relFontColor: default
+    repeat: 'False'
+    size: '-1'
+    time: '-1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [16, 124.0]
+    rotation: 0
+    state: true
+- name: stop_push_button
+  id: uhd_msg_push_button
+  parameters:
+    affinity: ''
+    alias: ''
+    command: stop
+    comment: ''
+    gui_hint: :[1,3,1,1]
+    label: Stop Playback
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    offset: '-1'
+    port: play_port
+    relBackgroundColor: default
+    relFontColor: default
+    repeat: 'False'
+    size: '-1'
+    time: '-1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [16, 444.0]
+    rotation: 0
+    state: true
+- name: uhd_rfnoc_replay_0
+  id: uhd_rfnoc_replay
+  parameters:
+    affinity: ''
+    alias: ''
+    block_args: ''
+    comment: ''
+    device_select: '-1'
+    instance_index: '-1'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_in_ports: '2'
+    num_out_ports: '1'
+    play_offset0: play_offset
+    play_offset1: '0'
+    play_offset2: '0'
+    play_offset3: '0'
+    play_size0: play_size
+    play_size1: '80000'
+    play_size2: '80000'
+    play_size3: '80000'
+    play_type0: sc16
+    play_type1: s16
+    play_type2: s16
+    play_type3: s16
+    record_offset0: record_offset
+    record_offset1: record_offset
+    record_offset2: '0'
+    record_offset3: '0'
+    record_size0: record_size
+    record_size1: record_size
+    record_size2: '80000'
+    record_size3: '80000'
+    record_type0: sc16
+    record_type1: sc16
+    record_type2: s16
+    record_type3: s16
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [704, 228.0]
+    rotation: 0
+    state: true
+- name: uhd_rfnoc_rx_streamer_0
+  id: uhd_rfnoc_rx_streamer
+  parameters:
+    adapter_id_list: '[0]'
+    affinity: ''
+    alias: ''
+    args: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_chans: '1'
+    otw: sc16
+    output_type: fc32
+    use_default_adapter_id: 'True'
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [952, 288.0]
+    rotation: 0
+    state: true
+- name: uhd_rfnoc_tx_streamer_0
+  id: uhd_rfnoc_tx_streamer
+  parameters:
+    adapter_id_list: '[0]'
+    affinity: ''
+    alias: ''
+    args: ''
+    comment: ''
+    input_type: fc32
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_chans: '1'
+    otw: sc16
+    use_default_adapter_id: 'True'
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [408, 688.0]
+    rotation: 0
+    state: true
+- name: uhd_rfnoc_tx_streamer_0_0
+  id: uhd_rfnoc_tx_streamer
+  parameters:
+    adapter_id_list: '[0]'
+    affinity: ''
+    alias: ''
+    args: ''
+    comment: ''
+    input_type: fc32
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_chans: '1'
+    otw: sc16
+    use_default_adapter_id: 'True'
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [416, 816.0]
+    rotation: 0
+    state: true
+
+connections:
+- [analog_sig_source_x_0, '0', blocks_throttle2_0, '0']
+- [analog_sig_source_x_0_0, '0', blocks_throttle2_0_0, '0']
+- [blocks_throttle2_0, '0', uhd_rfnoc_tx_streamer_0, '0']
+- [blocks_throttle2_0_0, '0', uhd_rfnoc_tx_streamer_0_0, '0']
+- [cont_play_push_button, pressed, uhd_rfnoc_replay_0, command]
+- [fullness_push_button, pressed, uhd_rfnoc_replay_0, command]
+- [play_push_button, pressed, uhd_rfnoc_replay_0, command]
+- [record_push_button, pressed, uhd_rfnoc_replay_0, command]
+- [stop_push_button, pressed, uhd_rfnoc_replay_0, command]
+- [uhd_rfnoc_replay_0, '0', uhd_rfnoc_rx_streamer_0, '0']
+- [uhd_rfnoc_replay_0, debug_msgs, blocks_message_debug_0, print]
+- [uhd_rfnoc_rx_streamer_0, '0', qtgui_time_sink_x_0, '0']
+- [uhd_rfnoc_tx_streamer_0, '0', uhd_rfnoc_replay_0, '0']
+- [uhd_rfnoc_tx_streamer_0_0, '0', uhd_rfnoc_replay_0, '1']
+
+metadata:
+  file_format: 1
+  grc_version: v3.11.0.0git-429-gc59cfc56

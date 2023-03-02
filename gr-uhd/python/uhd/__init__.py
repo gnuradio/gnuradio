@@ -80,3 +80,4 @@ def _prepare_uhd_python():
 _prepare_uhd_python()
 
 from .uhd_python import *
+from .replaymsgpushbutton import ReplayMsgPushButton

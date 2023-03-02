@@ -10,7 +10,7 @@
 ########################################################################
 include(GrPython)
 
-gr_python_install(FILES __init__.py DESTINATION ${GR_PYTHON_DIR}/gnuradio/uhd)
+gr_python_install(FILES __init__.py replaymsgpushbutton.py DESTINATION ${GR_PYTHON_DIR}/gnuradio/uhd)
 
 ########################################################################
 # Handle the unit tests
