@@ -33,6 +33,7 @@ void bind_rfnoc_siggen(py::module&);
 void bind_rfnoc_window(py::module&);
 void bind_rfnoc_fir_filter(py::module&);
 void bind_rfnoc_graph(py::module&);
+void bind_rfnoc_replay(py::module&);
 void bind_rfnoc_rx_radio(py::module&);
 void bind_rfnoc_rx_streamer(py::module&);
 void bind_rfnoc_tx_radio(py::module&);
@@ -72,6 +73,7 @@ PYBIND11_MODULE(uhd_python, m)
     bind_rfnoc_window(m);
     bind_rfnoc_fir_filter(m);
     bind_rfnoc_graph(m);
+    bind_rfnoc_replay(m);
     bind_rfnoc_rx_radio(m);
     bind_rfnoc_rx_streamer(m);
     bind_rfnoc_tx_radio(m);
