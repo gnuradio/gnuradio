@@ -353,9 +353,9 @@ import numpy\
 % endif
 <%
     if blocktype == 'interpolator':
-        deciminterp = ', <+interpolation+>'
+        deciminterp = ', interp=<+interpolation+>'
     elif blocktype == 'decimator':
-        deciminterp = ', <+decimation+>'
+        deciminterp = ', decim=<+decimation+>'
     else:
         deciminterp = ''
     if arglist == '':
@@ -375,8 +375,8 @@ class ${blockname}(${parenttype}):
             gr.io_signature(${inputsig}),  # Input signature
             gr.io_signature(${outputsig})) # Output signature
 
-            # Define blocks and connect them
-            self.connect()
+        # Define blocks and connect them
+        self.connect()
 <% return %>
 % else:
             name="${blockname}",
