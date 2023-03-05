@@ -99,10 +99,34 @@ class BypassAction(ChangeStateAction):
 
 # Change properties
 # This can only be performed on one block at a time
-class ChangeBlockCommand(ChangeStateAction):
-    def __init__(self, flowgraph):
-        ChangeStateAction.__init__(self, flowgraph)
-        log.debug("init ChangeBlockCommand")
+class BlockPropsChangeAction(QUndoCommand):
+    def __init__(self, flowgraph, block):
+        QUndoCommand.__init__(self)
+        log.debug("init BlockPropsChangeAction")
+        self.setText(f'{block.name} block: Change properties')
+        self.flowgraph = flowgraph
+        self.block = block
+        self.oldData = copy(block.oldData)
+        self.newData = copy(block.export_data())
+        self.first = True
+    
+    def redo(self):
+        if self.first:
+            self.first = False
+            return
+        self.block.import_data(self.newData['name'], self.newData['states'], self.newData['parameters'])
+        self.block.rewrite()
+        self.block.validate()
+        self.block.create_shapes_and_labels()
+        self.flowgraph.update()
+
+    def undo(self):
+        self.block.import_data(self.oldData['name'], self.oldData['states'], self.oldData['parameters'])
+        self.block.rewrite()
+        self.block.validate()
+        self.block.create_shapes_and_labels()
+        self.flowgraph.update()
+
 
 class ToggleBusCommand(ChangeStateAction):
     def __init__(self):

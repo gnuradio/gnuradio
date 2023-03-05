@@ -97,6 +97,7 @@ class PropsDialog(QtWidgets.QDialog):
     # Move to Block?
     def accept(self):
         super().accept()
+        self._block.oldData = self._block.export_data()
         for par in self.edit_params:
             if isinstance(par, QtWidgets.QLineEdit):
                 par.param.set_value(par.text())
@@ -107,6 +108,7 @@ class PropsDialog(QtWidgets.QDialog):
         self._block.rewrite()
         self._block.validate()
         self._block.create_shapes_and_labels()
+        self._block.parent.blockPropsChange.emit(self._block)
 
 class Block(QtWidgets.QGraphicsItem, CoreBlock):
 
@@ -230,6 +232,7 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
         self.oldPos = (self.x(), self.y())
         self.newPos = (self.x(), self.y())
         self.states['coordinate'] = (self.x(), self.y())
+        self.oldData = None
 
         self.setFlag(QtWidgets.QGraphicsItem.ItemIsMovable)
         self.setFlag(QtWidgets.QGraphicsItem.ItemIsSelectable)

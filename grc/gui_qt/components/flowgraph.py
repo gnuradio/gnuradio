@@ -53,6 +53,7 @@ class Flowgraph(QtWidgets.QGraphicsScene, base.Component, CoreFlowgraph):
     itemMoved = QtCore.Signal([QtCore.QPointF])
     newElement = QtCore.Signal([Element])
     deleteElement = QtCore.Signal([Element])
+    blockPropsChange = QtCore.Signal([Element])
 
     def __init__(self, view, *args, **kwargs):
         super(Flowgraph, self).__init__()
