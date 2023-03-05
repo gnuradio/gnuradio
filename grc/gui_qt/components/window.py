@@ -33,7 +33,7 @@ from qtpy.QtGui import QStandardItemModel
 # Custom modules
 from . import FlowgraphView
 from .. import base, Constants, Utils
-from .undoable_actions import ChangeStateAction, RotateAction, EnableAction, DisableAction, BypassAction, MoveAction, NewElementAction, DeleteElementAction
+from .undoable_actions import ChangeStateAction, RotateAction, EnableAction, DisableAction, BypassAction, MoveAction, NewElementAction, DeleteElementAction, BlockPropsChangeAction
 from . import DocumentationTab
 from .preferences import PreferencesDialog
 from .dialogs import ErrorsDialog
@@ -157,6 +157,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         self.currentFlowgraph.itemMoved.connect(self.createMove)
         self.currentFlowgraph.newElement.connect(self.registerNewElement)
         self.currentFlowgraph.deleteElement.connect(self.registerDeleteElement)
+        self.currentFlowgraph.blockPropsChange.connect(self.registerBlockPropsChange)
         #self.new_tab(self.flowgraph)
 
         self.clipboard = None
@@ -191,6 +192,12 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
     @QtCore.Slot(Element)
     def registerDeleteElement(self, elem):
         action = DeleteElementAction(self.currentFlowgraph, elem)
+        self.currentFlowgraph.undoStack.push(action)
+        self.updateActions()
+    
+    @QtCore.Slot(Element)
+    def registerBlockPropsChange(self, elem):
+        action = BlockPropsChangeAction(self.currentFlowgraph, elem)
         self.currentFlowgraph.undoStack.push(action)
         self.updateActions()
 
