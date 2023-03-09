@@ -19,7 +19,7 @@ ICON_SIZES="16 24 32 48 64 128 256"
 if [ -n "$2" ]; then
 	SRCDIR="$2"
 else
-	SRCDIR="@SRCDIR@"
+	SRCDIR="@CMAKE_CURRENT_SOURCE_DIR@"
 fi
 
 case "$1" in
@@ -32,7 +32,8 @@ case "$1" in
 		xdg-icon-resource install --noupdate --context apps --theme gnome --size ${size} ${SRCDIR}/grc-icon-${size}.png gnuradio-grc; \
 		xdg-icon-resource install --noupdate --context apps --size ${size} ${SRCDIR}/grc-icon-${size}.png gnuradio-grc; \
 	done
-	xdg-icon-resource forceupdate
+	xdg-icon-resource forceupdate                #update for system (hicolor) theme
+	xdg-icon-resource forceupdate --theme gnome  #update for gnome theme
 	echo "Install mime type"
 	xdg-mime install ${SRCDIR}/gnuradio-grc.xml
 	echo "Install menu items"
@@ -49,7 +50,8 @@ case "$1" in
 		xdg-icon-resource uninstall --noupdate --context apps --theme gnome --size ${size} gnuradio-grc; \
 		xdg-icon-resource uninstall --noupdate --context apps --size ${size} gnuradio-grc; \
 	done
-	xdg-icon-resource forceupdate
+	xdg-icon-resource forceupdate                 #update for system (hicolor) theme
+	xdg-icon-resource forceupdate --theme gnome   #update for gnome theme
 	echo "Uninstall mime type"
 	xdg-mime uninstall ${SRCDIR}/gnuradio-grc.xml
 	echo "Uninstall menu items"
