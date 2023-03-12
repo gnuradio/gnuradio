@@ -28,8 +28,8 @@ parameters:
 -   id: showports
     label: Show Msg Ports
     dtype: bool
-    default: 'True'
-    options: ['False', 'True']
+    default: 'False'
+    options: ['True', 'False']
     option_labels: ['Yes', 'No']
     hide: part
     
@@ -41,7 +41,7 @@ inputs:
 -   domain: message
     id: dly
     optional: true
-    hide: ${ showports }
+    hide: ${ not showports }
 
 outputs:
 -   domain: stream
