@@ -69,12 +69,15 @@ int sub_source_impl::work(int noutput_items,
             /* No more space ? */
             if (done == noutput_items)
                 break;
+
+            /* Have some output to return: do not wait for more messages */
+            first = false;
         } else {
             /* Try to get the next message */
             if (!load_message(first))
                 break; /* No message, we're done for now */
 
-            /* Not the first anymore */
+            /* Not the first anymore: do not wait for more messages */
             first = false;
         }
     }

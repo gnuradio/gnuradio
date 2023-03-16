@@ -57,6 +57,9 @@ int req_source_impl::work(int noutput_items,
             /* No more space ? */
             if (done == noutput_items)
                 break;
+
+            /* Have some output to return: do not wait for more messages */
+            first = false;
         } else {
             /* Send request if needed */
             if (!d_req_pending) {
@@ -81,7 +84,7 @@ int req_source_impl::work(int noutput_items,
             /* Got response */
             d_req_pending = false;
 
-            /* Not the first anymore */
+            /* Not the first anymore: do not wait for more messages */
             first = false;
         }
     }
