@@ -1,0 +1,77 @@
+id: uhd_rfnoc_switchboard
+label: RFNoC Switchboard Block
+category: '[Core]/UHD/RFNoC/Blocks'
+
+templates:
+  imports: |-
+    from gnuradio import uhd
+  make: |-
+    uhd.rfnoc_block_generic(
+        self.rfnoc_graph,
+        uhd.device_addr(),
+        "Switchboard",
+        ${device_select},
+        ${instance_index})
+    self.${id}.set_property('input_select',  ${input_port})
+    self.${id}.set_property('output_select', ${output_port})
+  callbacks:
+    - set_property('input_select', ${input_port})
+    - set_property('output_select', ${output_port})
+
+parameters:
+- id: device_select
+  label: Device Select
+  dtype: int
+  default: -1
+  hide: ${ 'part' if device_select == -1 else 'none'}
+- id: instance_index
+  label: Instance Select
+  dtype: int
+  default: -1
+  hide: ${ 'part' if instance_index == -1 else 'none'}
+- id: num_inputs
+  label: Number of Inputs
+  dtype: int
+  default: 1
+  hide: part
+- id: num_outputs
+  label: Number of Outputs
+  dtype: int
+  default: 2
+  hide: part
+- id: input_port
+  label: Input Port
+  dtype: int
+  default: 0
+- id: output_port
+  label: Output Port
+  dtype: int
+  default: 0
+- id: type
+  label: IO Type
+  dtype: enum
+  options: ['sc16', 'u8']
+  hide: part
+
+inputs:
+- domain: rfnoc
+  dtype: ${type}
+  multiplicity: ${num_inputs}
+
+outputs:
+- domain: rfnoc
+  dtype: ${type}
+  multiplicity: ${num_outputs}
+
+documentation: |-
+  The Switchboard Block is an RFNoC block that routes any single input to any
+  single output. Routing is 1 to 1, that is, an input port can only be connected
+  to one output port, and vice versa. 
+
+  NOTE: This block is not intended to switch during the transmission of packets.
+  Data on disconnected inputs will stall.
+
+
+
+
+file_format: 1
