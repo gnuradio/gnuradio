@@ -7,6 +7,14 @@ if(NOT EXISTS "@CMAKE_CURRENT_BINARY_DIR@/install_manifest.txt")
     )
 endif(NOT EXISTS "@CMAKE_CURRENT_BINARY_DIR@/install_manifest.txt")
 
+if(NOT EXISTS "@CMAKE_CURRENT_BINARY_DIR@/grc/scripts/freedesktop/grc_setup_freedesktop")
+    message(STATUS "Cannot find freedesktop install script")
+else("@CMAKE_CURRENT_BINARY_DIR@/grc/scripts/freedesktop/grc_setup_freedesktop")
+    exec_program(
+        "@CMAKE_CURRENT_BINARY_DIR@/grc/scripts/freedesktop/grc_setup_freedesktop"
+        ARGS "uninstall"
+    )
+endif("@CMAKE_CURRENT_BINARY_DIR@/grc/scripts/freedesktop/grc_setup_freedesktop")
 file(READ "@CMAKE_CURRENT_BINARY_DIR@/install_manifest.txt" files)
 string(REGEX REPLACE "\n" ";" files "${files}")
 foreach(file ${files})
