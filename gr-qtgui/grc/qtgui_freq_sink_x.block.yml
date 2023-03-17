@@ -405,8 +405,8 @@ asserts:
 
 templates:
     imports: |-
-        from gnuradio.filter import firdes
         import sip
+
     callbacks:
     - set_frequency_range(${fc}, ${bw})
     - set_update_time(${update_time})
@@ -466,7 +466,7 @@ templates:
         ${ gui_hint() % win}
 
 cpp_templates:
-    includes: ['#include <gnuradio/qtgui/${type.fcn}.h>', '#include <gnuradio/filter/firdes.h>']
+    includes: ['#include <gnuradio/qtgui/${type.fcn}.h>']
     declarations: 'qtgui::${type.fcn}::sptr ${id};'
     callbacks:
     - set_frequency_range(${fc}, ${bw})

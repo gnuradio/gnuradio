@@ -258,8 +258,8 @@ asserts:
 
 templates:
     imports: |-
-        from gnuradio.filter import firdes
         import sip
+        
     callbacks:
     - set_frequency_range(${fc}, ${bw})
     - set_update_time(${update_time})
