@@ -13,7 +13,7 @@ parameters:
 -   id: taps
     label: Taps
     dtype: complex_vector
-    default: 1.0 + 1.0j
+    default: 1.0
 -   id: seed
     label: Seed
     dtype: int
