@@ -13,6 +13,7 @@ from gnuradio import gr, gr_unittest
 from gnuradio import fec
 
 from _qa_helper import _qa_helper
+from _qa_helper_async import _qa_helper_async
 
 
 class test_fecapi_cc(gr_unittest.TestCase):
@@ -190,6 +191,28 @@ class test_fecapi_cc(gr_unittest.TestCase):
         data_in = self.test.snk_input.data()[0:len(data_out)]
 
         self.assertEqual(data_in, data_out)
+
+    def test_async_00(self):
+        frame_size = 30
+        k = 7
+        rate = 2
+        polys = [109, 79]
+        for mode in [fec.CC_TRUNCATED, fec.CC_TERMINATED, fec.CC_TAILBITING]:
+            for packed in [True, False]:
+                for rev_pack in [True, False]:
+                    with self.subTest(mode=mode, packed=packed,
+                                      rev_pack=rev_pack):
+                        enc = fec.cc_encoder_make(
+                            frame_size * 8, k, rate, polys, mode=mode)
+                        dec = fec.cc_decoder.make(
+                            frame_size * 8, k, rate, polys, mode=mode)
+                        self.test = _qa_helper_async(
+                            frame_size, enc, dec, packed, rev_pack)
+                        self.test.run()
+
+                        data_in = self.test.snk_input.data()
+                        data_out = self.test.snk_output.data()
+                        self.assertEqual(data_in, data_out)
 
 
 if __name__ == '__main__':

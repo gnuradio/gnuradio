@@ -17,6 +17,7 @@ from gnuradio.fec import extended_encoder
 from gnuradio.fec import extended_decoder
 
 from _qa_helper import _qa_helper
+from _qa_helper_async import _qa_helper_async
 
 
 class test_fecapi_dummy(gr_unittest.TestCase):
@@ -260,6 +261,22 @@ class test_fecapi_dummy(gr_unittest.TestCase):
         self.assertSequenceEqualGR(data, r1)
         self.assertSequenceEqualGR(packed_data, r2)
         self.assertSequenceEqualGR(data, r3)
+
+    def test_async_00(self):
+        frame_size = 30
+        enc = fec.dummy_encoder_make(frame_size * 8)
+        dec = fec.dummy_decoder.make(frame_size * 8)
+        for packed in [True, False]:
+            for rev_pack in [True, False]:
+                with self.subTest(packed=packed, rev_pack=rev_pack):
+                    self.test = _qa_helper_async(
+                        frame_size, enc, dec, packed, rev_pack)
+                    self.test.run()
+
+                    data_in = self.test.snk_input.data()
+                    data_out = self.test.snk_output.data()
+
+                    self.assertSequenceEqualGR(data_in, data_out)
 
 
 if __name__ == '__main__':
