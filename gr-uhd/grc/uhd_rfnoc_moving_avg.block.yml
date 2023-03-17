@@ -1,0 +1,65 @@
+id: uhd_rfnoc_moving_avg
+label: RFNoC Moving Average Block
+category: '[Core]/UHD/RFNoC/Blocks'
+
+templates:
+  imports: |-
+    from gnuradio import uhd
+  make: |-
+    uhd.rfnoc_block_generic(
+        self.rfnoc_graph,
+        uhd.device_addr(${block_args}),
+        "MovingAverage",
+        ${device_select},
+        ${instance_index})
+    self.${id}.set_property('sum_len', ${sum_len})
+    self.${id}.set_property('divisor', ${divisor})
+  callbacks:
+    - set_property('sum_len', ${sum_len})
+    - set_property('divisor', ${divisor})
+
+parameters:
+- id: block_args
+  label: Block Args
+  dtype: string
+  default: ""
+  hide: ${ 'part' if not block_args else 'none'}
+- id: device_select
+  label: Device Select
+  dtype: int
+  default: -1
+  hide: ${ 'part' if device_select == -1 else 'none'}
+- id: instance_index
+  label: Instance Select
+  dtype: int
+  default: -1
+  hide: ${ 'part' if instance_index == -1 else 'none'}
+- id: sum_len
+  label: Sum Length
+  dtype: int
+  default: 10
+- id: divisor
+  label: Divisor
+  dtype: int
+  default: 10
+
+inputs:
+- domain: rfnoc
+  dtype: 'sc16'
+
+outputs:
+- domain: rfnoc
+  dtype: 'sc16'
+
+asserts:
+- ${1 <= sum_len <= 255}
+- ${1 <= divisor <= 2**24-1}
+
+documentation: |-
+    Computes the running average of an input data stream. That is, the output
+    of this block is the sum of the SUM_LENGTH most recent input values
+    divided by a DIVISOR value. The I and Q averages are handled separately
+    so that each output consists of the average of the I inputs in the I
+    output position and the average of the Q inputs in the Q output position.
+
+file_format: 1

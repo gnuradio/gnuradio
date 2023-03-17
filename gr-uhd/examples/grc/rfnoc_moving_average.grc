@@ -1,0 +1,365 @@
+options:
+  parameters:
+    author: Grant Meyerhoff <grant.meyerhoff@ni.com>
+    catch_exceptions: 'True'
+    category: '[GRC Hier Blocks]'
+    cmake_opt: ''
+    comment: ''
+    copyright: Copyright 2023 Ettus Research, a National Instruments Brand
+    description: This example shows how to use the RFNoC Moving Average block
+    gen_cmake: 'On'
+    gen_linking: dynamic
+    generate_options: qt_gui
+    hier_block_src_path: '.:'
+    id: rfnoc_moving_average
+    max_nouts: '0'
+    output_language: python
+    placement: (0,0)
+    qt_qss_theme: ''
+    realtime_scheduling: ''
+    run: 'True'
+    run_command: '{python} -u {filename}'
+    run_options: prompt
+    sizing_mode: fixed
+    thread_safe_setters: ''
+    title: RFNoC Moving Average Example
+    window_size: (1000,1000)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 8]
+    rotation: 0
+    state: enabled
+
+blocks:
+- name: fft_size
+  id: variable
+  parameters:
+    comment: ''
+    value: '1024'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [320, 76.0]
+    rotation: 0
+    state: enabled
+- name: freq
+  id: variable_qtgui_range
+  parameters:
+    comment: ''
+    gui_hint: ''
+    label: Frequency (Hz)
+    min_len: '200'
+    orient: QtCore.Qt.Horizontal
+    rangeType: float
+    start: 10e6
+    step: 1e6
+    stop: 6e9
+    value: 1e9
+    widget: counter_slider
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [456, 12.0]
+    rotation: 0
+    state: true
+- name: gain
+  id: variable_qtgui_range
+  parameters:
+    comment: ''
+    gui_hint: ''
+    label: Gain (dB)
+    min_len: '200'
+    orient: QtCore.Qt.Horizontal
+    rangeType: float
+    start: '0'
+    step: '1'
+    stop: '35'
+    value: '10'
+    widget: counter_slider
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [600, 12.0]
+    rotation: 0
+    state: true
+- name: radio_rate
+  id: variable
+  parameters:
+    comment: ''
+    value: 153.6e6
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [192, 76.0]
+    rotation: 0
+    state: enabled
+- name: samp_rate
+  id: variable
+  parameters:
+    comment: ''
+    value: 1e6
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [192, 12.0]
+    rotation: 0
+    state: enabled
+- name: uhd_rfnoc_graph
+  id: uhd_rfnoc_graph
+  parameters:
+    alias: ''
+    clock_source: ''
+    comment: ''
+    dev_addr: '"type=n3xx"'
+    dev_args: ''
+    num_mboards: '1'
+    time_source: ''
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [288, 12.0]
+    rotation: 0
+    state: true
+- name: blocks_complex_to_mag_squared_0
+  id: blocks_complex_to_mag_squared
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    vlen: fft_size
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [264, 332.0]
+    rotation: 180
+    state: true
+- name: blocks_nlog10_ff_0
+  id: blocks_nlog10_ff
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    k: '0'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    n: '10'
+    vlen: fft_size
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [248, 420.0]
+    rotation: 0
+    state: true
+- name: qtgui_vector_sink_f_0
+  id: qtgui_vector_sink_f
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'False'
+    average: '0.2'
+    color1: '"blue"'
+    color10: '"dark blue"'
+    color2: '"red"'
+    color3: '"green"'
+    color4: '"black"'
+    color5: '"cyan"'
+    color6: '"magenta"'
+    color7: '"yellow"'
+    color8: '"dark red"'
+    color9: '"dark green"'
+    comment: ''
+    grid: 'True'
+    gui_hint: ''
+    label1: ''
+    label10: ''
+    label2: ''
+    label3: ''
+    label4: ''
+    label5: ''
+    label6: ''
+    label7: ''
+    label8: ''
+    label9: ''
+    legend: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    name: FFT Spectrum
+    nconnections: '1'
+    ref_level: '0'
+    showports: 'False'
+    update_time: '0.10'
+    vlen: fft_size
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    x_axis_label: Frequency (Hz)
+    x_start: freq-samp_rate/2
+    x_step: samp_rate/fft_size
+    x_units: Hz
+    y_axis_label: '|FFT^2|'
+    y_units: dB
+    ymax: '10'
+    ymin: '-70'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [504, 388.0]
+    rotation: 0
+    state: true
+- name: uhd_rfnoc_ddc_0
+  id: uhd_rfnoc_ddc
+  parameters:
+    affinity: ''
+    alias: ''
+    block_args: ''
+    comment: ''
+    device_select: '-1'
+    freq: '0'
+    instance_index: '-1'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_chans: '1'
+    output_rate: samp_rate
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [256, 188.0]
+    rotation: 0
+    state: true
+- name: uhd_rfnoc_fft_0
+  id: uhd_rfnoc_fft
+  parameters:
+    affinity: ''
+    alias: ''
+    block_args: ''
+    comment: ''
+    device_select: '-1'
+    fft_direction: FORWARD
+    fft_length: fft_size
+    fft_magnitude: COMPLEX
+    fft_scaling: '1706'
+    fft_shift_config: NORMAL
+    instance_index: '-1'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_chans: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [552, 204.0]
+    rotation: 0
+    state: true
+- name: uhd_rfnoc_moving_avg_0
+  id: uhd_rfnoc_moving_avg
+  parameters:
+    affinity: ''
+    alias: ''
+    block_args: ''
+    comment: ''
+    device_select: '-1'
+    divisor: '10'
+    instance_index: '-1'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    sum_len: '10'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [688, 324.0]
+    rotation: 180
+    state: true
+- name: uhd_rfnoc_rx_radio_0
+  id: uhd_rfnoc_rx_radio
+  parameters:
+    affinity: ''
+    agc: Default
+    alias: ''
+    antenna: RX2
+    bandwidth: '0'
+    block_args: ''
+    comment: ''
+    dc_offset: 'False'
+    device_select: '-1'
+    frequency: freq
+    gain: gain
+    instance_index: '-1'
+    iq_balance: 'False'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_chans: '1'
+    rate: radio_rate
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 140.0]
+    rotation: 0
+    state: true
+- name: uhd_rfnoc_rx_streamer_0
+  id: uhd_rfnoc_rx_streamer
+  parameters:
+    adapter_id_list: '[0]'
+    affinity: ''
+    alias: ''
+    args: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_chans: '1'
+    otw: sc16
+    output_type: fc32
+    use_default_adapter_id: 'True'
+    vlen: fft_size
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [480, 336.0]
+    rotation: 180
+    state: true
+
+connections:
+- [blocks_complex_to_mag_squared_0, '0', blocks_nlog10_ff_0, '0']
+- [blocks_nlog10_ff_0, '0', qtgui_vector_sink_f_0, '0']
+- [uhd_rfnoc_ddc_0, '0', uhd_rfnoc_fft_0, '0']
+- [uhd_rfnoc_fft_0, '0', uhd_rfnoc_moving_avg_0, '0']
+- [uhd_rfnoc_moving_avg_0, '0', uhd_rfnoc_rx_streamer_0, '0']
+- [uhd_rfnoc_rx_radio_0, '0', uhd_rfnoc_ddc_0, '0']
+- [uhd_rfnoc_rx_streamer_0, '0', blocks_complex_to_mag_squared_0, '0']
+
+metadata:
+  file_format: 1
+  grc_version: v3.11.0.0git-413-gcbbb7fff
