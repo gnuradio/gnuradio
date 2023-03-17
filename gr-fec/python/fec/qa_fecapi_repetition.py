@@ -13,6 +13,7 @@ from gnuradio import gr, gr_unittest
 from gnuradio import fec
 
 from _qa_helper import _qa_helper
+from _qa_helper_async import _qa_helper_async
 
 
 class test_fecapi_repetition(gr_unittest.TestCase):
@@ -154,6 +155,23 @@ class test_fecapi_repetition(gr_unittest.TestCase):
         data_out = self.test.snk_output.data()
 
         self.assertSequenceEqualGR(data_in, data_out)
+
+    def test_async_00(self):
+        frame_size = 30
+        rep = 3
+        enc = fec.repetition_encoder_make(frame_size * 8, rep)
+        dec = fec.repetition_decoder.make(frame_size * 8, rep)
+        for packed in [True, False]:
+            for rev_pack in [True, False]:
+                with self.subTest(packed=packed, rev_pack=rev_pack):
+                    self.test = _qa_helper_async(
+                        frame_size, enc, dec, packed, rev_pack)
+                    self.test.run()
+
+                    data_in = self.test.snk_input.data()
+                    data_out = self.test.snk_output.data()
+
+                    self.assertSequenceEqualGR(data_in, data_out)
 
 
 if __name__ == '__main__':

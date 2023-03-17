@@ -17,6 +17,7 @@ from gnuradio.fec import extended_encoder
 from gnuradio.fec import extended_decoder
 
 from _qa_helper import _qa_helper
+from _qa_helper_async import _qa_helper_async
 
 
 # Get location of the alist files. If run in 'ctest' or 'make test',
@@ -307,6 +308,25 @@ class test_fecapi_ldpc(gr_unittest.TestCase):
                 dec,
                 threading=threading,
                 puncpat="11"))
+
+    def test_async_00(self):
+        filename = LDPC_ALIST_DIR + "n_0100_k_0027_gap_04.alist"
+        gap = 4
+        LDPC_matrix_object = fec.ldpc_H_matrix(filename, gap)
+        k = LDPC_matrix_object.k()
+        enc = fec.ldpc_par_mtrx_encoder.make_H(LDPC_matrix_object)
+        dec = fec.ldpc_bit_flip_decoder.make(
+            LDPC_matrix_object.get_base_sptr())
+        for packed in [True, False]:
+            for rev_pack in [True, False]:
+                with self.subTest(packed=packed, rev_pack=rev_pack):
+                    self.test = _qa_helper_async(k, enc, dec, packed, rev_pack)
+                    self.test.run()
+
+                    data_in = self.test.snk_input.data()
+                    data_out = self.test.snk_output.data()
+
+                    self.assertEqual(data_in, data_out)
 
 
 if __name__ == '__main__':

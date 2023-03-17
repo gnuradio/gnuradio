@@ -133,7 +133,7 @@ void async_decoder_impl::decode(const pmt::pmt_t& msg)
     const float shift = d_decoder->get_shift();
 
     if (std::string_view(d_decoder->get_input_conversion()) == "uchar") {
-        convert_32f_to_8u(d_tmp_u8.data(), f32in, 48.0f, shift, nitems_out);
+        convert_32f_to_8u(d_tmp_u8.data(), f32in, 48.0f, shift, nbits_in);
 
         for (size_t i = 0; i < nblocks; i++) {
             d_decoder->generic_work(
