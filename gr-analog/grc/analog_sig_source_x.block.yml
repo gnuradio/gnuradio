@@ -38,11 +38,19 @@ parameters:
     label: Initial Phase (Radians)
     dtype: real
     default: '0'
+-   id: showports
+    label: Show Msg Ports
+    dtype: bool
+    default: 'False'
+    options: ['True', 'False']
+    option_labels: ['Yes', 'No']
+    hide: part
 
 inputs:
 -   domain: message
     id: cmd
     optional: true
+    hide: ${ not showports }
 
 outputs:
 -   domain: stream
