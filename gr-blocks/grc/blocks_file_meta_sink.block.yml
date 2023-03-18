@@ -60,7 +60,9 @@ asserts:
 - ${ vlen > 0 }
 
 templates:
-    imports: from gnuradio import gr, blocks
+    imports: |-
+        from gnuradio import gr, blocks
+        import pmt
     make: |-
         blocks.file_meta_sink(${type.size}*${vlen}, ${file}, ${samp_rate}, ${rel_rate}, ${type.dtype}, ${type.cplx}, ${max_seg_size}, ${extra_dict}, ${detached})
         self.${id}.set_unbuffered(${unbuffered})
