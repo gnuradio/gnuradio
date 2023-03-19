@@ -670,7 +670,7 @@ class FlowGraph(CoreFlowgraph, Drawable):
         Returns:
             sub set of blocks in this flow graph
         """
-        return (e for e in self.selected_elements if e.is_block)
+        return (e for e in self.selected_elements.copy() if e.is_block)
 
     @property
     def selected_block(self):
