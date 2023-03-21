@@ -7,15 +7,14 @@ templates:
       from gnuradio import uhd
   var_make: |
       <%
-          import ast
           # Sanitize
-          graph_args = ast.literal_eval(dev_addr.strip())
-          dev_args_s = ast.literal_eval(dev_args.strip())
-          clock_source_s = ast.literal_eval(clock_source.strip())
-          time_source_s = ast.literal_eval(time_source.strip())
+          graph_args = str(dev_addr()).strip()
+          dev_args_s = str(dev_args()).strip()
+          clock_source_s = str(clock_source()).strip()
+          time_source_s = str(time_source()).strip()
           # Build full dev args
           if dev_args_s:
-              graph_args += f",{clock_source_s}"
+              graph_args += f",{dev_args_s}"
           if clock_source_s:
               graph_args += f",clock_source={clock_source_s}"
           if time_source_s:
