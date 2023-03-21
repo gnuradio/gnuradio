@@ -9,10 +9,25 @@ templates:
       <%
           import ast
           # Sanitize
-          graph_args = ast.literal_eval(dev_addr.strip())
-          dev_args_s = ast.literal_eval(dev_args.strip())
-          clock_source_s = ast.literal_eval(clock_source.strip())
-          time_source_s = ast.literal_eval(time_source.strip())
+          # literal_eval requires a string containing a literal (e.g. string), on drag/drop
+          # the params are just strings, so they cause an exception, call literal_eval again
+          # with params enclosed in a string
+          try:
+              graph_args = ast.literal_eval(dev_addr.strip())
+          except SyntaxError:
+              graph_args = ast.literal_eval("'{}'".format(dev_addr.strip()))
+          try:
+              dev_args_s = ast.literal_eval(dev_args.strip())
+          except SyntaxError:
+              dev_args_s = ast.literal_eval("'{}'".format(dev_args.strip()))
+          try:
+              clock_source_s = ast.literal_eval(clock_source.strip())
+          except SyntaxError:
+              clock_source_s = ast.literal_eval("'{}'".format(clock_source.strip()))
+          try:
+              time_source_s = ast.literal_eval(time_source.strip())
+          except SyntaxError:
+              time_source_s = ast.literal_eval("'{}'".format(time_source.strip()))
           # Build full dev args
           if dev_args_s:
               graph_args += f",{clock_source_s}"
