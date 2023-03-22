@@ -50,6 +50,8 @@ public:
      * \param hwm High Watermark to configure the socket to (-1 => zmq's default)
      * \param key Prepend a key/topic to the start of each message (default is none)
      * \param drop_on_hwm Optionally drop samples when high watermark is reached.
+     * \param bind If true this block will bind to the address, otherwise it will
+     * connect; the default is to bind
      */
     static sptr make(size_t itemsize,
                      size_t vlen,
@@ -58,7 +60,8 @@ public:
                      bool pass_tags = false,
                      int hwm = -1,
                      const std::string& key = "",
-                     bool drop_on_hwm = true);
+                     bool drop_on_hwm = true,
+                     bool bind = true);
 
     /*!
      * \brief Return a std::string of ZMQ_LAST_ENDPOINT from the underlying ZMQ socket.

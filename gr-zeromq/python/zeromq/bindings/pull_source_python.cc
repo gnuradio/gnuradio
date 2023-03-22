@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(pull_source.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(850f9a7d270eae47a20211408bf43d5e)                     */
+/* BINDTOOL_HEADER_FILE_HASH(0a2698efb9f937dc543d1185ffb94a66)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -46,6 +46,7 @@ void bind_pull_source(py::module& m)
              py::arg("timeout") = 100,
              py::arg("pass_tags") = false,
              py::arg("hwm") = -1,
+             py::arg("bind") = false,
              D(pull_source, make))
 
 

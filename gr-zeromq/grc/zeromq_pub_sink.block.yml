@@ -47,6 +47,13 @@ parameters:
     options: ['True', 'False']
     option_labels: ['Drop', 'Block']
     hide: 'part'
+-   id: bind
+    label: Connection
+    category: Advanced
+    dtype: enum
+    default: 'True'
+    options: ['True', 'False']
+    option_labels: ['Bind', 'Connect']
 
 inputs:
 -   domain: stream
@@ -56,20 +63,21 @@ inputs:
 templates:
     imports: from gnuradio import zeromq
     make: zeromq.pub_sink(${type.itemsize}, ${vlen}, ${address}, ${timeout}, ${pass_tags},
-        ${hwm}, ${key}, ${drop_on_hwm})
-        
+        ${hwm}, ${key}, ${drop_on_hwm}, ${bind})
+
 cpp_templates:
     includes: [ '#include <gnuradio/zeromq/pub_sink.h>' ]
     declarations: gr::zeromq::pub_sink::sptr ${id};
-    make: this->${id} = gr::zeromq::pub_sink::make(${type.itemsize}, 
-        ${vlen}, 
+    make: this->${id} = gr::zeromq::pub_sink::make(${type.itemsize},
+        ${vlen},
         const_cast<char *>(${address}${'.c_str())' if str(address)[0] not in '"\'' else ')'},
-        ${timeout}, 
-        ${pass_tags}, 
+        ${timeout},
+        ${pass_tags},
         ${hwm},
         ${key},
-        ${drop_on_hwm});
-    link: ['gnuradio::gnuradio-zeromq']      
+        ${drop_on_hwm},
+        ${bind});
+    link: ['gnuradio::gnuradio-zeromq']
     translations:
       'True': 'true'
       'False': 'false'
