@@ -39,6 +39,13 @@ parameters:
     label: Filter Key
     dtype: string
     default: ''
+-   id: bind
+    label: Connection
+    category: Advanced
+    dtype: enum
+    default: 'False'
+    options: ['True', 'False']
+    option_labels: ['Bind', 'Connect']
 
 outputs:
 -   domain: stream
@@ -48,19 +55,20 @@ outputs:
 templates:
     imports: from gnuradio import zeromq
     make: zeromq.sub_source(${type.itemsize}, ${vlen}, ${address}, ${timeout}, ${pass_tags},
-        ${hwm}, ${key})
+        ${hwm}, ${key}, ${bind})
 
 cpp_templates:
     includes: [ '#include <gnuradio/zeromq/sub_source.h>' ]
     declarations: gr::zeromq::sub_source::sptr ${id};
-    make: this->${id} = gr::zeromq::sub_source::make(${type.itemsize}, 
-        ${vlen}, 
+    make: this->${id} = gr::zeromq::sub_source::make(${type.itemsize},
+        ${vlen},
         const_cast<char *>(${address}${'.c_str())' if str(address)[0] not in '"\'' else ')'},
-        ${timeout}, 
-        ${pass_tags}, 
+        ${timeout},
+        ${pass_tags},
         ${hwm},
-        ${key});
-    link: ['gnuradio::gnuradio-zeromq']      
+        ${key},
+        ${bind});
+    link: ['gnuradio::gnuradio-zeromq']
     translations:
       'True': 'true'
       'False': 'false'
