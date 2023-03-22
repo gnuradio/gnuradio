@@ -43,13 +43,16 @@ public:
      * \param timeout  Receive timeout in milliseconds, default is 100ms, 1us increments.
      * \param pass_tags Whether sink will serialize and pass tags over the link.
      * \param hwm High Watermark to configure the socket to (-1 => zmq's default)
+     * \param bind If true this block will bind to the address, otherwise it will
+     * connect; the default is to bind
      */
     static sptr make(size_t itemsize,
                      size_t vlen,
                      char* address,
                      int timeout = 100,
                      bool pass_tags = false,
-                     int hwm = -1);
+                     int hwm = -1,
+                     bool bind = true);
 
     /*!
      * \brief Return a std::string of ZMQ_LAST_ENDPOINT from the underlying ZMQ socket.

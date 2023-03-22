@@ -19,19 +19,29 @@
 namespace gr {
 namespace zeromq {
 
-rep_sink::sptr rep_sink::make(
-    size_t itemsize, size_t vlen, char* address, int timeout, bool pass_tags, int hwm)
+rep_sink::sptr rep_sink::make(size_t itemsize,
+                              size_t vlen,
+                              char* address,
+                              int timeout,
+                              bool pass_tags,
+                              int hwm,
+                              bool bind)
 {
     return gnuradio::make_block_sptr<rep_sink_impl>(
-        itemsize, vlen, address, timeout, pass_tags, hwm);
+        itemsize, vlen, address, timeout, pass_tags, hwm, bind);
 }
 
-rep_sink_impl::rep_sink_impl(
-    size_t itemsize, size_t vlen, char* address, int timeout, bool pass_tags, int hwm)
+rep_sink_impl::rep_sink_impl(size_t itemsize,
+                             size_t vlen,
+                             char* address,
+                             int timeout,
+                             bool pass_tags,
+                             int hwm,
+                             bool bind)
     : gr::sync_block("rep_sink",
                      gr::io_signature::make(1, 1, itemsize * vlen),
                      gr::io_signature::make(0, 0, 0)),
-      base_sink_impl(ZMQ_REP, itemsize, vlen, address, timeout, pass_tags, hwm)
+      base_sink_impl(ZMQ_REP, itemsize, vlen, address, timeout, pass_tags, hwm, bind)
 {
     /* All is delegated */
 }

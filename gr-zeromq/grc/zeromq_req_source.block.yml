@@ -35,6 +35,13 @@ parameters:
     dtype: int
     default: '-1'
     hide: ${ ('part' if hwm == -1 else 'none') }
+-   id: bind
+    label: Connection
+    category: Advanced
+    dtype: enum
+    default: 'False'
+    options: ['True', 'False']
+    option_labels: ['Bind', 'Connect']
 
 outputs:
 -   domain: stream
@@ -44,18 +51,19 @@ outputs:
 templates:
     imports: from gnuradio import zeromq
     make: zeromq.req_source(${type.itemsize}, ${vlen}, ${address}, ${timeout}, ${pass_tags},
-        ${hwm})
+        ${hwm}, ${bind})
 
 cpp_templates:
     includes: [ '#include <gnuradio/zeromq/req_source.h>' ]
     declarations: gr::zeromq::req_source::sptr ${id};
-    make: this->${id} = gr::zeromq::req_source::make(${type.itemsize}, 
-        ${vlen}, 
+    make: this->${id} = gr::zeromq::req_source::make(${type.itemsize},
+        ${vlen},
         const_cast<char *>(${address}${'.c_str())' if str(address)[0] not in '"\'' else ')'},
-        ${timeout}, 
-        ${pass_tags}, 
-        ${hwm});
-    link: ['gnuradio::gnuradio-zeromq']      
+        ${timeout},
+        ${pass_tags},
+        ${hwm},
+        ${bind});
+    link: ['gnuradio::gnuradio-zeromq']
     translations:
       'True': 'true'
       'False': 'false'

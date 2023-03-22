@@ -25,10 +25,11 @@ sub_source::sptr sub_source::make(size_t itemsize,
                                   int timeout,
                                   bool pass_tags,
                                   int hwm,
-                                  const std::string& key)
+                                  const std::string& key,
+                                  bool bind)
 {
     return gnuradio::make_block_sptr<sub_source_impl>(
-        itemsize, vlen, address, timeout, pass_tags, hwm, key);
+        itemsize, vlen, address, timeout, pass_tags, hwm, key, bind);
 }
 
 sub_source_impl::sub_source_impl(size_t itemsize,
@@ -37,11 +38,13 @@ sub_source_impl::sub_source_impl(size_t itemsize,
                                  int timeout,
                                  bool pass_tags,
                                  int hwm,
-                                 const std::string& key)
+                                 const std::string& key,
+                                 bool bind)
     : gr::sync_block("sub_source",
                      gr::io_signature::make(0, 0, 0),
                      gr::io_signature::make(1, 1, itemsize * vlen)),
-      base_source_impl(ZMQ_SUB, itemsize, vlen, address, timeout, pass_tags, hwm, key)
+      base_source_impl(
+          ZMQ_SUB, itemsize, vlen, address, timeout, pass_tags, hwm, bind, key)
 {
     /* Subscribe */
 #if USE_NEW_CPPZMQ_SET_GET
