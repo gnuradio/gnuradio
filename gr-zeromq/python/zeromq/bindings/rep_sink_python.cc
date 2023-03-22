@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(rep_sink.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(057f1522bfb66253664d7853c859a43c)                     */
+/* BINDTOOL_HEADER_FILE_HASH(32a625d1a17ff458a5526e0f19a396cb)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -46,6 +46,7 @@ void bind_rep_sink(py::module& m)
              py::arg("timeout") = 100,
              py::arg("pass_tags") = false,
              py::arg("hwm") = -1,
+             py::arg("bind") = true,
              D(rep_sink, make))
 
 

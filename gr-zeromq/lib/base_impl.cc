@@ -26,8 +26,12 @@ namespace zeromq {
 base_impl::base_impl(int type,
                      size_t itemsize,
                      size_t vlen,
+                     char* address,
                      int timeout,
                      bool pass_tags,
+                     int hwm,
+                     bool sink,
+                     bool bind,
                      const std::string& key)
     : d_context(1),
       d_socket(d_context, type),
@@ -42,6 +46,42 @@ base_impl::base_impl(int type,
 
     if (major < 3) {
         d_timeout *= 1000;
+    }
+
+    /* Set ZMQ_LINGER so socket won't infinitely block during teardown */
+#if USE_NEW_CPPZMQ_SET_GET
+    d_socket.set(zmq::sockopt::linger, LINGER_DEFAULT);
+#else
+    d_socket.setsockopt(ZMQ_LINGER, &LINGER_DEFAULT, sizeof(LINGER_DEFAULT));
+#endif
+
+    /* Set high watermark */
+    if (hwm >= 0) {
+#if USE_NEW_CPPZMQ_SET_GET
+        if (sink) {
+            d_socket.set(zmq::sockopt::sndhwm, hwm);
+        } else {
+            d_socket.set(zmq::sockopt::rcvhwm, hwm);
+        }
+#else
+#ifdef ZMQ_SNDHWM
+        if (sink) {
+            d_socket.setsockopt(ZMQ_SNDHWM, &hwm, sizeof(hwm));
+        } else {
+            d_socket.setsockopt(ZMQ_RCVHWM, &hwm, sizeof(hwm));
+        }
+#else // major < 3
+        uint64_t tmp = hwm;
+        d_socket.setsockopt(ZMQ_HWM, &tmp, sizeof(tmp));
+#endif
+#endif
+    }
+
+    /* Linger and HWM apply to subsequent connections. */
+    if (bind) {
+        d_socket.bind(address);
+    } else {
+        d_socket.connect(address);
     }
 }
 
@@ -67,32 +107,10 @@ base_sink_impl::base_sink_impl(int type,
                                int timeout,
                                bool pass_tags,
                                int hwm,
+                               bool bind,
                                const std::string& key)
-    : base_impl(type, itemsize, vlen, timeout, pass_tags, key)
+    : base_impl(type, itemsize, vlen, address, timeout, pass_tags, hwm, true, bind, key)
 {
-    /* Set high watermark */
-    if (hwm >= 0) {
-#if USE_NEW_CPPZMQ_SET_GET
-        d_socket.set(zmq::sockopt::sndhwm, hwm);
-#else
-#ifdef ZMQ_SNDHWM
-        d_socket.setsockopt(ZMQ_SNDHWM, &hwm, sizeof(hwm));
-#else // major < 3
-        uint64_t tmp = hwm;
-        d_socket.setsockopt(ZMQ_HWM, &tmp, sizeof(tmp));
-#endif
-#endif
-    }
-
-    /* Set ZMQ_LINGER so socket won't infinitely block during teardown */
-#if USE_NEW_CPPZMQ_SET_GET
-    d_socket.set(zmq::sockopt::linger, LINGER_DEFAULT);
-#else
-    d_socket.setsockopt(ZMQ_LINGER, &LINGER_DEFAULT, sizeof(LINGER_DEFAULT));
-#endif
-
-    /* Bind */
-    d_socket.bind(address);
 }
 
 int base_sink_impl::send_message(const void* in_buf,
@@ -147,34 +165,12 @@ base_source_impl::base_source_impl(int type,
                                    int timeout,
                                    bool pass_tags,
                                    int hwm,
+                                   bool bind,
                                    const std::string& key)
-    : base_impl(type, itemsize, vlen, timeout, pass_tags, key),
+    : base_impl(type, itemsize, vlen, address, timeout, pass_tags, hwm, false, bind, key),
       d_consumed_bytes(0),
       d_consumed_items(0)
 {
-    /* Set high watermark */
-    if (hwm >= 0) {
-#if USE_NEW_CPPZMQ_SET_GET
-        d_socket.set(zmq::sockopt::rcvhwm, hwm);
-#else
-#ifdef ZMQ_RCVHWM
-        d_socket.setsockopt(ZMQ_RCVHWM, &hwm, sizeof(hwm));
-#else // major < 3
-        uint64_t tmp = hwm;
-        d_socket.setsockopt(ZMQ_HWM, &tmp, sizeof(tmp));
-#endif
-#endif
-    }
-
-    /* Set ZMQ_LINGER so socket won't infinitely block during teardown */
-#if USE_NEW_CPPZMQ_SET_GET
-    d_socket.set(zmq::sockopt::linger, LINGER_DEFAULT);
-#else
-    d_socket.setsockopt(ZMQ_LINGER, &LINGER_DEFAULT, sizeof(LINGER_DEFAULT));
-#endif
-
-    /* Connect */
-    d_socket.connect(address);
 }
 
 bool base_source_impl::has_pending() { return d_msg.size() > d_consumed_bytes; }

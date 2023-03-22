@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(sub_source.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(8b138ada41a770bf3626b77f711e3833)                     */
+/* BINDTOOL_HEADER_FILE_HASH(5532ff97c13c148a6c360417e2874799)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -47,6 +47,7 @@ void bind_sub_source(py::module& m)
              py::arg("pass_tags") = false,
              py::arg("hwm") = -1,
              py::arg("key") = "",
+             py::arg("bind") = false,
              D(sub_source, make))
 
 

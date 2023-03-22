@@ -23,8 +23,12 @@ public:
     base_impl(int type,
               size_t itemsize,
               size_t vlen,
+              char* address,
               int timeout,
               bool pass_tags,
+              int hwm,   // high watermark
+              bool sink, // is sink, else source
+              bool bind, // do bind, else connect
               const std::string& key = "");
     ~base_impl() override;
 
@@ -48,6 +52,7 @@ public:
                    int timeout,
                    bool pass_tags,
                    int hwm,
+                   bool bind,
                    const std::string& key = "");
 
 protected:
@@ -64,6 +69,7 @@ public:
                      int timeout,
                      bool pass_tags,
                      int hwm,
+                     bool bind,
                      const std::string& key = "");
 
 protected:
