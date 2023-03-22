@@ -25,6 +25,10 @@ GEN_BLOCK_YML(gen_uhd_usrp_blocks.py uhd_usrp_sink.block.yml)
 GEN_BLOCK_YML(gen_rfnoc_window_block_yml.py uhd_rfnoc_window.block.yml)
 GEN_BLOCK_YML(gen_rfnoc_siggen_block_yml.py uhd_rfnoc_siggen.block.yml)
 GEN_BLOCK_YML(gen_rfnoc_fir_filter_block_yml.py uhd_rfnoc_fir_filter.block.yml)
+GEN_BLOCK_YML(gen_rfnoc_rx_radio_block_yml.py uhd_rfnoc_rx_radio.block.yml)
+GEN_BLOCK_YML(gen_rfnoc_tx_radio_block_yml.py uhd_rfnoc_tx_radio.block.yml)
+GEN_BLOCK_YML(gen_rfnoc_duc_block_yml.py uhd_rfnoc_duc.block.yml)
+GEN_BLOCK_YML(gen_rfnoc_ddc_block_yml.py uhd_rfnoc_ddc.block.yml)
 
 add_custom_target(uhd_grc_yml_blocks ALL DEPENDS ${yml_blocks})
 
@@ -47,17 +51,13 @@ if(ENABLE_UHD_RFNOC)
               uhd_fpga_sep.block.yml
               uhd_fpga_x310.block.yml
               uhd_rfnoc_addsub.block.yml
-              uhd_rfnoc_ddc.block.yml
-              uhd_rfnoc_duc.block.yml
               uhd_rfnoc_fft.block.yml
               uhd_rfnoc_keep_one_in_n.block.yml
               uhd_rfnoc_split_stream.block.yml
               uhd_rfnoc_switchboard.block.yml
               uhd_rfnoc_moving_avg.block.yml
               uhd_rfnoc_graph.block.yml
-              uhd_rfnoc_rx_radio.block.yml
               uhd_rfnoc_rx_streamer.block.yml
-              uhd_rfnoc_tx_radio.block.yml
               uhd_rfnoc_tx_streamer.block.yml
         DESTINATION ${GRC_BLOCKS_DIR})
 endif(ENABLE_UHD_RFNOC)
