@@ -12,6 +12,7 @@
 
 #include "gr_uhd_common.h"
 #include "rfnoc_rx_streamer_impl.h"
+#include <gnuradio/high_res_timer.h>
 #include <gnuradio/io_signature.h>
 #include <uhd/convert.hpp>
 #include <uhd/rfnoc/node.hpp>
@@ -178,12 +179,16 @@ void rfnoc_rx_streamer_impl::flush()
     }
 
     const size_t itemsize = output_signature()->sizeof_stream_item(0);
-    while (true) {
+    // If we don't get an error, time out after 2 seconds
+    gr::high_res_timer_type end_time =
+        gr::high_res_timer_now() + gr::high_res_timer_tps() * 2;
+    while (gr::high_res_timer_now() < end_time) {
         d_streamer->recv(outputs, nbytes / itemsize / d_vlen, d_metadata, 0.0);
         if (d_metadata.error_code != ::uhd::rx_metadata_t::ERROR_CODE_NONE) {
-            break;
+            return;
         }
     }
+    d_logger->warn("Streamer timed out waiting for expected error on flush");
 }
 
 } /* namespace uhd */

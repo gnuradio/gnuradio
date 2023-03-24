@@ -50,6 +50,7 @@ if(ENABLE_UHD_RFNOC)
               uhd_rfnoc_ddc.block.yml
               uhd_rfnoc_duc.block.yml
               uhd_rfnoc_fft.block.yml
+              uhd_rfnoc_fosphor.block.yml
               uhd_rfnoc_keep_one_in_n.block.yml
               uhd_rfnoc_split_stream.block.yml
               uhd_rfnoc_switchboard.block.yml
