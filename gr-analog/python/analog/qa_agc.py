@@ -492,6 +492,43 @@ class test_agc(gr_unittest.TestCase):
             with self.assertRaises(ValueError):
                 troublemaker(-3.0)
 
+    def test_006_004_agc3(self, stride=1):
+        '''This test is performed employing an AM signal.
+        AGC should throw out the recovered carrier without any effect
+        of modulation in order to pass the test'''
+        tb = self.tb
+        samp_rate = 1e4
+        carrier_freq = 200
+        envelope_freq = 5
+        N = samp_rate / envelope_freq  # period
+        ref = 1.0
+        m = 0.99
+
+        mul = blocks.multiply_cc(1)
+        carrier_src = analog.sig_source_c(
+            samp_rate, analog.GR_COS_WAVE, carrier_freq, 1.0, 0.0, 0)
+        envelope_src = analog.sig_source_c(
+            samp_rate, analog.GR_COS_WAVE, envelope_freq, m, 1, 0)
+        agc3 = analog.agc3_cc((0.8), (0.7), ref, 1.0, stride)
+        skip = blocks.skiphead(gr.sizeof_gr_complex, int(N))
+        head = blocks.head(gr.sizeof_gr_complex, int(N))
+        dst = blocks.vector_sink_c()
+
+        tb.connect((carrier_src, 0), (mul, 0))
+        tb.connect((envelope_src, 0), (mul, 1))
+        tb.connect((mul, 0), (agc3, 0))
+        tb.connect((agc3, 0), (skip, 0))
+        tb.connect((skip, 0), (head, 0))
+        tb.connect((head, 0), (dst, 0))
+
+        tb.run()
+        dst_data = dst.data()
+        self.assertEqual(len(dst_data), N, "unexpected data length")
+        result = [abs(x) for x in dst_data]
+        for idx, x in enumerate(result):
+            self.assertAlmostEqual(x, ref, None,
+                                   f"failed at pos {idx} (stride = {stride})", 0.1)
+
     def test_100(self):
         ''' Test complex feedforward agc with constant input '''
 
