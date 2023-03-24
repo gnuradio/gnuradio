@@ -7,6 +7,78 @@ Versioning](http://semver.org/spec/v2.0.0.html), starting with version 3.7.12.0.
 
 Older Logs can be found in `docs/RELEASE-NOTES-*`.
 
+## [3.10.6.0] - 2023-03-31
+
+### Changed
+
+#### Runtime
+- Add Python loggers to top_block and hier_block2
+- Change the default log level (in the config file) to INFO instead of DEBUG
+- Logging improvements in the scheduler
+- Correctly determine native page size for Windows
+
+#### GRC
+- Fixed: opening the source of a hierachical block using the toolbar button produced an error
+- Use the logger, instead of print statements, in generated top blocks
+- Remove libX11 load from generated Python code - this was unncessary and produced warnings
+- Choose Editor dialog stays above parent
+
+#### gr-analog
+- Signal Source: option to hide the message port
+
+#### gr-blocks
+- Throttle: supports max time or number of samples per work iteration, useful for reducing latency at low sample rates
+- Delay block: option to hide the message port
+- File Meta Sink: fix missing Python import in template code
+
+#### gr-channels
+- Default taps should be 1.0, not 1.0 + j1.0
+
+#### gr-digital
+- Async Decoder: several changes to improve performance robustness (see the commit log for more details)
+
+#### gr-fec
+- Tagged Decoder: correctly calculate the frame size for terminated CC decoder
+
+#### gr-filter
+- Fixed reverse parameters in fir_filter_with_buffer and pfb_arb_resampler, which could cause crashes
+- Fixed PFB Arbitrary Resampler was ignoring attenuation parameter
+
+#### gr-iio
+- Set gain mode as specified (was always manual)
+- Use the specified gain parameter for second channel (was same as first channel)
+
+#### gr-qtgui
+- Histogram Sink: calculate range of bins correctly to avoid strange distributions
+- Save (to image) dialogs add file extensions and have a Save button (i.e., they work now)
+
+#### gr-soapy
+- Sources: add tags when the frequency changes
+
+#### gr-uhd
+- Support for more RFNoC blocks
+  - Fosphor, which produces data to drive an on-screen, OpenGL-based renderer which is expected to be in the next release
+  - Moving Average
+  - Switchboard
+  - Split Stream
+- FFT: add properties for direction, magnitude and scaling
+- RX Stream: flush after timeout
+- Fully support multi-channel TX/RX (params were available for one one channel)
+
+#### gr-vocoder
+- Add a number of new codec modes for Codec2 and FreeDV
+
+#### gr-zmq
+- Selectable bind/connect to support more flexible ZMQ patterns and NAT'd networks
+- Stream sources produce when available, instead of waiting for a buffer to fill, helping with latency
+
+#### Modtool
+- Use interp and decim keywords correctly when generating blocks
+
+#### Build system and packaging
+- Uninstall removes icons and desktop files
+
+
 ## [3.10.5.1] - 2023-01-25
 
 Some important blocks turned out to be broken in 3.10.5.0. This unscheduled release fixes those regressions and includes a small number of other cleanups and fixes. v3.10.5.1 is intended to be ABI compatible with v3.10.5.0. We'd still recommend rebuilding dependent packages, if possible.
