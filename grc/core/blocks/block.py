@@ -76,7 +76,7 @@ class Block(Element):
         self.active_sources = []  # on rewrite
         self.active_sinks = []  # on rewrite
 
-        self.states = {'state': True, 'bus_source': False,
+        self.states = {'state': 'enabled', 'bus_source': False,
                        'bus_sink': False, 'bus_structure': None}
         self.block_namespace = {}
         self.deprecated = self.is_deprecated()
