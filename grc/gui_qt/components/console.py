@@ -23,7 +23,6 @@ import logging
 import textwrap
 
 # Third-party  modules
-import six
 
 from qtpy import QtCore, QtGui, QtWidgets
 
@@ -249,14 +248,14 @@ class ReportsHandler(logging.Handler):  # Inherit from logging.Handler
             return output.format("<font color=\"Blue\"><b>", level, "</b></font>")
 
     def formatLevelShort(self, levelname):
-        return "[{0}]".format(levelname[0:1])
+        return f'[{levelname[0:1]}]'
 
     def formatLevelLong(self, levelname):
         output = "{0:<10}"
         if levelname in ["DEBUG", "INFO", "WARNING"]:
-            return output.format("[{0}]".format(levelname.capitalize()))
+            return output.format(f'[{levelname.capitalize()}]')
         else:
-            return output.format("[{0}]".format(levelname.upper()))
+            return output.format(f'[{levelname.upper()}]')
 
     def formatOutput(self):
         ''' Returns the correct output format based on internal settings '''
