@@ -95,36 +95,10 @@ class DocumentationTab(QtWidgets.QDockWidget, base.Component):
     ### Actions
 
     def createActions(self, actions):
-        log.debug("Creating actions")
-
-        '''
-        # File Actions
-        actions['save'] = Action(Icons("document-save"), _("save"), self,
-                                shortcut=Keys.New, statusTip=_("save-tooltip"))
-
-        actions['clear'] = Action(Icons("document-close"), _("clear"), self,
-                                         shortcut=Keys.Open, statusTip=_("clear-tooltip"))
-        '''
+        pass
 
     def createMenus(self, actions, menus):
-        log.debug("Creating menus")
+        pass
 
     def createToolbars(self, actions, toolbars):
-        log.debug("Creating toolbars")
-
-    '''
-
-    try:
-        _fromUtf8 = QtCore.QString.fromUtf8
-    except AttributeError:
-        def _fromUtf8(s):
-            return s
-
-    try:
-        _encoding = QtGui.QApplication.UnicodeUTF8
-        def _translate(context, text, disambig):
-            return QtGui.QApplication.translate(context, text, disambig, _encoding)
-    except AttributeError:
-        def _translate(context, text, disambig):
-            return QtGui.QApplication.translate(context, text, disambig)
-    '''
+        pass
