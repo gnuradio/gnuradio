@@ -28,7 +28,6 @@ from qtpy.QtGui import QStandardItemModel
 from qtpy.QtCore import QUrl
 
 # Custom modules
-from .canvas.block import Block
 from .. import base
 
 # Logging
@@ -72,8 +71,6 @@ class LibraryView(QtWidgets.QTreeView):
     def updateDocTab(self):
         label = self.model().data(self.currentIndex())
         if label in self.parent().parent()._block_tree_flat:
-            block_key = self.parent().parent()._block_tree_flat[label].key
-            #self.parent().parent().app.DocumentationTab.setText(self.parent().parent()._block_tree_flat[label].documentation[''])
             prefix = str(self.parent().parent().app.platform.config.wiki_block_docs_url_prefix)
             self.parent().parent().app.WikiTab.setURL(QUrl(prefix + label.replace(" ", "_")))
 
@@ -178,44 +175,15 @@ class BlockLibrary(QtWidgets.QDockWidget, base.Component):
         # Register the menus
         #self.app.registerMenu(self.menus["library"])
 
-
-    ### Actions
-
     def createActions(self, actions):
-        log.debug("Creating actions")
+        pass
 
-        '''
-        # File Actions
-        actions['save'] = Action(Icons("document-save"), _("save"), self,
-                                shortcut=Keys.New, statusTip=_("save-tooltip"))
-
-        actions['clear'] = Action(Icons("document-close"), _("clear"), self,
-                                         shortcut=Keys.Open, statusTip=_("clear-tooltip"))
-        '''
 
     def createMenus(self, actions, menus):
-        log.debug("Creating menus")
+        pass
 
     def createToolbars(self, actions, toolbars):
-        log.debug("Creating toolbars")
-
-    '''
-
-    try:
-        _fromUtf8 = QtCore.QString.fromUtf8
-    except AttributeError:
-        def _fromUtf8(s):
-            return s
-
-    try:
-        _encoding = QtGui.QApplication.UnicodeUTF8
-        def _translate(context, text, disambig):
-            return QtGui.QApplication.translate(context, text, disambig, _encoding)
-    except AttributeError:
-        def _translate(context, text, disambig):
-            return QtGui.QApplication.translate(context, text, disambig)
-    '''
-
+        pass
 
     def load_blocks(self):
         ''' Load the block tree from the platform and populate the widget. '''
