@@ -88,10 +88,10 @@ class WikiTab(QtWidgets.QDockWidget, base.Component):
     ### Actions
 
     def createActions(self, actions):
-        log.debug("Creating actions")
+        pass
 
     def createMenus(self, actions, menus):
-        log.debug("Creating menus")
+        pass
 
     def createToolbars(self, actions, toolbars):
-        log.debug("Creating toolbars")
+        pass
