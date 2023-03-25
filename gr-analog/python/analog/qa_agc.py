@@ -475,6 +475,44 @@ class test_agc(gr_unittest.TestCase):
         result = [abs(x) for x in dst_data[N - M:]]
         self.assertFloatTuplesAlmostEqual(result, M * [ref, ], 4)
 
+    def test_007(self, stride=1):
+
+        tb = self.tb
+        samp_rate = 1e4
+        freq = 5
+        N = samp_rate / freq
+        d = 5
+        ref = 0.6
+
+        multiply_const = blocks.multiply_const_cc(0.5, 1)
+        delay = blocks.delay(gr.sizeof_gr_complex, d)
+        add = blocks.add_vcc(1)
+        sig_source = analog.sig_source_f(
+            samp_rate, analog.GR_COS_WAVE, freq, 0.6, 0.6, 0)
+        frequency_modulator = analog.frequency_modulator_fc(0.5)
+        agc3 = analog.agc3_cc((0.1), (0.09), ref, 1.0, stride)
+        skip = blocks.skiphead(gr.sizeof_gr_complex, int(N))
+        head = blocks.head(gr.sizeof_gr_complex, int(N))
+        dst = blocks.vector_sink_c()
+
+        tb.connect((sig_source, 0), (frequency_modulator, 0))
+        tb.connect((frequency_modulator, 0), (multiply_const, 0))
+        tb.connect((multiply_const, 0), (add, 1))
+        tb.connect((delay, 0), (add, 0))
+        tb.connect((multiply_const, 0), (delay, 0))
+        tb.connect((add, 0), (agc3, 0))
+        tb.connect((agc3, 0), (skip, 0))
+        tb.connect((skip, 0), (head, 0))
+        tb.connect((head, 0), (dst, 0))
+
+        tb.run()
+        dst_data = dst.data()
+        self.assertEqual(len(dst_data), N, "unexpected data length")
+        result = [abs(x) for x in dst_data]
+        for idx, x in enumerate(result):
+            self.assertAlmostEqual(x, ref, 1,
+                                   f"failed at pos {idx} (stride = {stride})")
+
     def test_100(self):
         ''' Test complex feedforward agc with constant input '''
 
