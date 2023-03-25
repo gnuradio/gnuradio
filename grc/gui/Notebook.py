@@ -89,6 +89,8 @@ class Page(Gtk.HBox):
 
         self.process = None
         self.saved = True
+        if not self.file_path:
+            self.saved = False
 
         # import the file
         initial_state = flow_graph.parent_platform.parse_flow_graph(file_path)
