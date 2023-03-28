@@ -111,6 +111,7 @@ set(BLOCKS_SOURCES
     interleaved_char_to_complex_impl.cc
     keep_m_in_n_impl.cc
     keep_one_in_n_impl.cc
+    lambda_block_impl.cc
     lfsr_32k_source_s_impl.cc
     message_debug_impl.cc
     message_strobe_impl.cc
@@ -227,6 +228,7 @@ if(ENABLE_TESTING)
         qa_gr_hier_block2.cc
         qa_gr_hier_block2_derived.cc
         qa_gr_top_block.cc
+        qa_lambda_block.cc
         qa_rotator.cc
         qa_set_msg_handler.cc)
     list(APPEND GR_TEST_TARGET_DEPS gnuradio-blocks)

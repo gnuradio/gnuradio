@@ -101,6 +101,7 @@ install(
           interleaved_char_to_complex.h
           keep_m_in_n.h
           keep_one_in_n.h
+          lambda_block.h
           lfsr_32k_source_s.h
           message_debug.h
           message_strobe.h
