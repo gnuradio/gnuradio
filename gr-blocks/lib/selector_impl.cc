@@ -33,21 +33,24 @@ selector_impl::selector_impl(size_t itemsize,
             io_signature::make(1, -1, itemsize),
             io_signature::make(1, -1, itemsize)),
       d_itemsize(itemsize),
-      d_enabled(true),
       d_input_index(input_index),
       d_output_index(output_index),
       d_num_inputs(0),
-      d_num_outputs(0)
+      d_num_outputs(0),
+      d_enabled(true)
 {
     message_port_register_in(pmt::mp("en"));
-    set_msg_handler(pmt::mp("en"), [this](pmt::pmt_t msg) { this->handle_enable(msg); });
+    set_msg_handler(pmt::mp("en"),
+                    [this](const pmt::pmt_t& msg) { this->handle_enable(msg); });
 
     message_port_register_in(pmt::mp("iindex"));
     set_msg_handler(pmt::mp("iindex"),
-                    [this](pmt::pmt_t msg) { this->handle_msg_input_index(msg); });
+                    [this](const pmt::pmt_t& msg) { this->handle_msg_input_index(msg); });
+
     message_port_register_in(pmt::mp("oindex"));
-    set_msg_handler(pmt::mp("oindex"),
-                    [this](pmt::pmt_t msg) { this->handle_msg_output_index(msg); });
+    set_msg_handler(pmt::mp("oindex"), [this](const pmt::pmt_t& msg) {
+        this->handle_msg_output_index(msg);
+    });
 
     set_tag_propagation_policy(TPP_CUSTOM);
 }
@@ -74,7 +77,7 @@ void selector_impl::set_output_index(unsigned int output_index)
     }
 }
 
-void selector_impl::handle_msg_input_index(pmt::pmt_t msg)
+void selector_impl::handle_msg_input_index(const pmt::pmt_t& msg)
 {
     pmt::pmt_t data = pmt::cdr(msg);
 
@@ -95,7 +98,7 @@ void selector_impl::handle_msg_input_index(pmt::pmt_t msg)
     }
 }
 
-void selector_impl::handle_msg_output_index(pmt::pmt_t msg)
+void selector_impl::handle_msg_output_index(const pmt::pmt_t& msg)
 {
     pmt::pmt_t data = pmt::cdr(msg);
 
@@ -116,7 +119,7 @@ void selector_impl::handle_msg_output_index(pmt::pmt_t msg)
 }
 
 
-void selector_impl::handle_enable(pmt::pmt_t msg)
+void selector_impl::handle_enable(const pmt::pmt_t& msg)
 {
     if (pmt::is_bool(msg)) {
         bool en = pmt::to_bool(msg);
@@ -152,9 +155,10 @@ int selector_impl::general_work(int noutput_items,
                                 gr_vector_const_void_star& input_items,
                                 gr_vector_void_star& output_items)
 {
-    const uint8_t** in = (const uint8_t**)&input_items[0];
-    uint8_t** out = (uint8_t**)&output_items[0];
+    const auto in = reinterpret_cast<const uint8_t**>(input_items.data());
+    auto out = reinterpret_cast<uint8_t**>(output_items.data());
 
+    unsigned int to_copy = std::min(ninput_items[d_input_index], noutput_items);
 
     gr::thread::scoped_lock l(d_mutex);
     if (d_enabled) {
@@ -162,7 +166,7 @@ int selector_impl::general_work(int noutput_items,
         auto nwritten = nitems_written(d_output_index);
 
         std::vector<tag_t> tags;
-        get_tags_in_window(tags, d_input_index, 0, noutput_items);
+        get_tags_in_window(tags, d_input_index, 0, to_copy);
 
         for (auto tag : tags) {
             tag.offset -= (nread - nwritten);
@@ -170,12 +174,15 @@ int selector_impl::general_work(int noutput_items,
         }
 
         std::copy(in[d_input_index],
-                  in[d_input_index] + noutput_items * d_itemsize,
+                  in[d_input_index] + to_copy * d_itemsize,
                   out[d_output_index]);
-        produce(d_output_index, noutput_items);
+        produce(d_output_index, to_copy);
     }
 
-    consume_each(noutput_items);
+    for (unsigned int in_index = 0; in_index < ninput_items.size(); ++in_index) {
+        consume(in_index,
+                std::min(static_cast<unsigned int>(ninput_items[in_index]), to_copy));
+    }
     return WORK_CALLED_PRODUCE;
 }
 
