@@ -21,12 +21,11 @@ class selector_impl : public selector
 {
 private:
     const size_t d_itemsize;
-    bool d_enabled;
     unsigned int d_input_index, d_output_index;
     unsigned int d_num_inputs, d_num_outputs; // keep track of the topology
+    bool d_enabled;
 
     gr::thread::mutex d_mutex;
-
 
 public:
     selector_impl(size_t itemsize, unsigned int input_index, unsigned int output_index);
@@ -35,9 +34,9 @@ public:
     void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
     bool check_topology(int ninputs, int noutputs) override;
     void setup_rpc() override;
-    void handle_msg_input_index(pmt::pmt_t msg);
-    void handle_msg_output_index(pmt::pmt_t msg);
-    void handle_enable(pmt::pmt_t msg);
+    void handle_msg_input_index(const pmt::pmt_t& msg);
+    void handle_msg_output_index(const pmt::pmt_t& msg);
+    void handle_enable(const pmt::pmt_t& msg);
     void set_enabled(bool enable) override
     {
         gr::thread::scoped_lock l(d_mutex);
