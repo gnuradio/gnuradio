@@ -34,6 +34,10 @@ gr_python_install(
           "${CMAKE_CURRENT_BINARY_DIR}/util.py"
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/qtgui)
 
+if(ENABLE_GR_QTGUI_OPENGL)
+    gr_python_install(FILES fosphorgl_sink.py DESTINATION ${GR_PYTHON_DIR}/gnuradio/qtgui)
+endif(ENABLE_GR_QTGUI_OPENGL)
+
 ########################################################################
 # Handle the unit tests
 ########################################################################
