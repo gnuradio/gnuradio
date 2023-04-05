@@ -39,3 +39,5 @@
     - variable_qtgui_toggle_button_msg
     - variable_qtgui_toggle_switch
     - qtgui_fosphor_display
+    - qtgui_fosphor_formatter
+    - qtgui_fosphorgl_sink

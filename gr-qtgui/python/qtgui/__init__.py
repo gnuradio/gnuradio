@@ -49,3 +49,8 @@ from .graphicoverlay import GrGraphicOverlay
 from .auto_correlator_sink import AutoCorrelatorSink
 from .auto_correlator_sink import AutoCorrelator
 from .auto_correlator_sink import Normalize
+try:
+    # fosphorgl_sink is only installed if OpenGL is found
+    from .fosphorgl_sink import FosphorGlSink
+except ModuleNotFoundError:
+    pass
