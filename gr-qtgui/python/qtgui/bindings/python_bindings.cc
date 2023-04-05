@@ -37,6 +37,7 @@ void bind_freq_sink_c(py::module&);
 void bind_freq_sink_f(py::module&);
 void bind_freqcontrolpanel(py::module&);
 void bind_freqdisplayform(py::module&);
+void bind_rfnoc_f15_formatter(py::module&);
 #ifdef OPENGL_FOUND
 void bind_rfnoc_f15_display(py::module&);
 #endif
@@ -109,6 +110,7 @@ PYBIND11_MODULE(qtgui_python, m)
     // bind_form_menus(m);
     bind_freq_sink_c(m);
     bind_freq_sink_f(m);
+    bind_rfnoc_f15_formatter(m);
     // bind_freqcontrolpanel(m);
     // bind_freqdisplayform(m);
 #ifdef OPENGL_FOUND
