@@ -1,0 +1,101 @@
+id: qtgui_fosphorgl_sink
+label: QT GUI Fosphor GL Sink
+category: '[Core]/GUI Widgets/QT'
+
+parameters:
+-   id: center_freq
+    label: Center Frequency (Hz)
+    dtype: real
+    default: 0.0
+-   id: samp_rate
+    label: Sample Rate (Hz)
+    dtype: real
+    default: samp_rate
+-   id: input_decim
+    label: Input Decimation
+    dtype: int
+    default: 1
+-   id: wf_decim
+    label: Waterfall Decimation
+    dtype: int
+    default: 16
+-   id: wf_lines
+    label: Length of Waterfall
+    dtype: int
+    default: 512
+-   id: histo_decim
+    label: Histogram Decimation
+    dtype: int
+    default: 64
+-   id: scale
+    label: Scale Factor
+    dtype: real
+    default: 1.0
+    hide: part
+-   id: alpha
+    label: FFT Averaging (Alpha)
+    dtype: real
+    default: 0.1
+    hide: part
+-   id: epsilon
+    label: Max-Hold Decay (Epsilon)
+    dtype: real
+    default: 0.99
+    hide: part
+-   id: trise
+    label: Rise Constant
+    dtype: real
+    default: 16.0
+    hide: part
+-   id: tdecay
+    label: Decay Constant
+    dtype: real
+    default: 1024.0
+    hide: part
+-   id: grid_enabled
+    label: Grid
+    dtype: enum
+    default: 'True'
+    options: ['True', 'False']
+    option_labels: [Enabled, Disabled]
+-   id: palette
+    label: Color Palette
+    dtype: enum
+    default: 'True'
+    options: ['iron', 'cubehelix', 'sdrangelove_histogram', 'rainbow', 'prog']
+    option_labels: [Iron, Cube Helix, SDRangelove, Rainbow, Prog's]
+-   id: frame_rate
+    label: Target Frame Rate
+    dtype: int
+    default: 30
+-   id: gui_hint
+    label: GUI Hint
+    dtype: gui_hint
+    hide: part
+
+
+inputs:
+-   domain: stream
+    dtype: complex
+    optional: true
+
+templates:
+  imports: |-
+    from gnuradio import qtgui
+    import sip
+  make: |-
+    <%
+        win = 'self._%s_win' % id
+    %>\
+    qtgui.FosphorGlSink(${input_decim}, ${wf_decim}, ${wf_lines}, ${histo_decim}, ${scale}, ${alpha}, ${epsilon}, ${trise}, ${tdecay})
+    self.${id}.fosphor_sink.set_frame_rate(${frame_rate})
+    self.${id}.fosphor_sink.set_frequency_range(${center_freq}, ${samp_rate})
+    self.${id}.fosphor_sink.set_waterfall(True)
+    self.${id}.fosphor_sink.set_grid(${grid_enabled})
+    self.${id}.fosphor_sink.set_palette("${palette}")
+    self._${id}_win = self.${id}.getWidget()
+    ${gui_hint() % win}
+  callbacks:
+  - set_frequency_range(${center_freq}, ${samp_rate})
+
+file_format: 1

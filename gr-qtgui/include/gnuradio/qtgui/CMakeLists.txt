@@ -31,6 +31,7 @@ install(
           eyedisplaysform.h
           form_menus.h
           fosphor_display.h
+          fosphor_formatter.h
           freq_sink_c.h
           freq_sink_f.h
           freqcontrolpanel.h
