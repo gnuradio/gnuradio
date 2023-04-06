@@ -41,6 +41,15 @@ public:
      * this base class type.
      */
     static sptr make(constellation_sptr constellation);
+
+    /*!
+     * Set a new constellation object for decoding
+     *
+     * \param constellation A constellation derived from class
+     * 'constellation'. Use base() method to get a shared pointer to
+     * this base class type.
+     */
+    virtual void set_constellation(constellation_sptr constellation) = 0;
 };
 
 } /* namespace digital */

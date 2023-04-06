@@ -12,6 +12,7 @@
 #define INCLUDED_DIGITAL_CONSTELLATION_DECODER_CB_IMPL_H
 
 #include <gnuradio/digital/constellation_decoder_cb.h>
+#include <gnuradio/thread/thread.h>
 
 namespace gr {
 namespace digital {
@@ -20,11 +21,14 @@ class constellation_decoder_cb_impl : public constellation_decoder_cb
 {
 private:
     constellation_sptr d_constellation;
-    const unsigned int d_dim;
+    unsigned int d_dim;
+    gr::thread::mutex d_mutex;
 
 public:
     constellation_decoder_cb_impl(constellation_sptr constellation);
     ~constellation_decoder_cb_impl() override;
+
+    void set_constellation(constellation_sptr constellation);
 
     void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
 

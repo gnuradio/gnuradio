@@ -25,7 +25,9 @@ namespace digital {
  * \details
  * Decode a constellation's points from a complex space to soft
  * bits based on the map and soft decision LUT of the \p
- * consetllation object.
+ * constellation object.
+ * 
+ * Does not support constellations of dimensionality higher than 1
  */
 class DIGITAL_API constellation_soft_decoder_cf : virtual public sync_interpolator
 {
@@ -41,6 +43,15 @@ public:
      * this base class type.
      */
     static sptr make(constellation_sptr constellation);
+
+    /*!
+     * Set a new constellation object for decoding
+     *
+     * \param constellation A constellation derived from class
+     * 'constellation'. Use base() method to get a shared pointer to
+     * this base class type.
+     */
+    virtual void set_constellation(constellation_sptr constellation) = 0;
 };
 
 } /* namespace digital */
