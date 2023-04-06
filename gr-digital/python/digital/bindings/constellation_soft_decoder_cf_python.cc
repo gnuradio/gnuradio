@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Free Software Foundation, Inc.
+ * Copyright 2023 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(constellation_soft_decoder_cf.h) */
-/* BINDTOOL_HEADER_FILE_HASH(e04415a59c793a639f43e03026ee8c0e)                     */
+/* BINDTOOL_HEADER_FILE_HASH(76cdf271631feb80deec6fc17d9c60fa)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -35,9 +35,6 @@ void bind_constellation_soft_decoder_cf(py::module& m)
 
     py::class_<constellation_soft_decoder_cf,
                gr::sync_interpolator,
-               gr::sync_block,
-               gr::block,
-               gr::basic_block,
                std::shared_ptr<constellation_soft_decoder_cf>>(
         m, "constellation_soft_decoder_cf", D(constellation_soft_decoder_cf))
 
@@ -45,6 +42,11 @@ void bind_constellation_soft_decoder_cf(py::module& m)
              py::arg("constellation"),
              D(constellation_soft_decoder_cf, make))
 
+
+        .def("set_constellation",
+             &constellation_soft_decoder_cf::set_constellation,
+             py::arg("constellation"),
+             D(constellation_soft_decoder_cf, set_constellation))
 
         ;
 }

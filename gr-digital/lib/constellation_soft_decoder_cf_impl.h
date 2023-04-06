@@ -12,6 +12,7 @@
 #define INCLUDED_DIGITAL_CONSTELLATION_SOFT_DECODER_CF_IMPL_H
 
 #include <gnuradio/digital/constellation_soft_decoder_cf.h>
+#include <gnuradio/thread/thread.h>
 
 namespace gr {
 namespace digital {
@@ -22,10 +23,13 @@ private:
     constellation_sptr d_constellation;
     unsigned int d_dim;
     int d_bps;
+    gr::thread::mutex d_mutex;
 
 public:
     constellation_soft_decoder_cf_impl(constellation_sptr constellation);
     ~constellation_soft_decoder_cf_impl() override;
+    
+    void set_constellation(constellation_sptr constellation);
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,

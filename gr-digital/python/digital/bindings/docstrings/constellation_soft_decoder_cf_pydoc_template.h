@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Free Software Foundation, Inc.
+ * Copyright 2023 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -24,3 +24,7 @@ static const char*
 
 
 static const char* __doc_gr_digital_constellation_soft_decoder_cf_make = R"doc()doc";
+
+
+static const char* __doc_gr_digital_constellation_soft_decoder_cf_set_constellation =
+    R"doc()doc";

@@ -36,12 +36,23 @@ constellation_encoder_bc_impl::constellation_encoder_bc_impl(
 
 constellation_encoder_bc_impl::~constellation_encoder_bc_impl() {}
 
+void constellation_encoder_bc_impl::set_constellation(
+    constellation_sptr new_constellation)
+{
+    gr::thread::scoped_lock l(d_mutex);
+
+    d_constellation = new_constellation;
+    set_interpolation((uint64_t)d_constellation->dimensionality());
+}
+
 int constellation_encoder_bc_impl::work(int noutput_items,
                                         gr_vector_const_void_star& input_items,
                                         gr_vector_void_star& output_items)
 {
     unsigned char const* in = (const unsigned char*)input_items[0];
     gr_complex* out = (gr_complex*)output_items[0];
+
+    gr::thread::scoped_lock l(d_mutex);
 
     int ninput_items = noutput_items / d_constellation->dimensionality();
 

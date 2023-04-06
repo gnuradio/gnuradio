@@ -18,11 +18,15 @@ outputs:
 templates:
     imports: from gnuradio import digital
     make: digital.constellation_decoder_cb(${constellation})
+    callbacks:
+    - set_constellation(${constellation})
 
 cpp_templates:
     includes: ['#include <gnuradio/digital/constellation_decoder_cb.h>']
     declarations: 'digital::constellation_decoder_cb::sptr ${id};'
     make: 'this->${id} = digital::constellation_decoder_cb::make(${constellation});'
     link: ['gnuradio::gnuradio-digital']
+    callbacks:
+    - set_constellation(constellation)
 
 file_format: 1
