@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Free Software Foundation, Inc.
+ * Copyright 2023 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(constellation_decoder_cb.h) */
-/* BINDTOOL_HEADER_FILE_HASH(688ec1fa379a5cdd51c2b31886991b28)                     */
+/* BINDTOOL_HEADER_FILE_HASH(9e5f2cd8e6d2d5cc0826224e32fe2ed3)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -43,6 +43,11 @@ void bind_constellation_decoder_cb(py::module& m)
              py::arg("constellation"),
              D(constellation_decoder_cb, make))
 
+
+        .def("set_constellation",
+             &constellation_decoder_cb::set_constellation,
+             py::arg("constellation"),
+             D(constellation_decoder_cb, set_constellation))
 
         ;
 }

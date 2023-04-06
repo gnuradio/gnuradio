@@ -33,13 +33,22 @@ public:
     typedef std::shared_ptr<constellation_encoder_bc> sptr;
 
     /*!
-     * \brief Make constellation decoder block.
+     * \brief Make constellation encoder block.
      *
      * \param constellation A constellation derived from class
      * 'constellation'. Use base() method to get a shared pointer to
      * this base class type.
      */
     static sptr make(constellation_sptr constellation);
+    
+    /*!
+     * Set a new constellation object for encoding
+     *
+     * \param constellation A constellation derived from class
+     * 'constellation'. Use base() method to get a shared pointer to
+     * this base class type.
+     */
+    virtual void set_constellation(constellation_sptr constellation) = 0;
 };
 
 } /* namespace digital */

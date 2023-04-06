@@ -38,6 +38,19 @@ constellation_soft_decoder_cf_impl::constellation_soft_decoder_cf_impl(
 
 constellation_soft_decoder_cf_impl::~constellation_soft_decoder_cf_impl() {}
 
+
+void constellation_soft_decoder_cf_impl::set_constellation(
+    constellation_sptr new_constellation)
+{
+    gr::thread::scoped_lock l(d_mutex);
+
+    d_constellation = new_constellation;
+    d_dim = d_constellation->dimensionality();
+    d_bps = d_constellation->bits_per_symbol();
+    set_interpolation(d_bps);
+    // set_relative_rate((uint64_t)d_dim, (uint64_t)d_bps); // For when d_dim is properly managed
+}
+
 int constellation_soft_decoder_cf_impl::work(int noutput_items,
                                              gr_vector_const_void_star& input_items,
                                              gr_vector_void_star& output_items)
@@ -46,6 +59,8 @@ int constellation_soft_decoder_cf_impl::work(int noutput_items,
     float* out = (float*)output_items[0];
 
     std::vector<float> bits;
+
+    gr::thread::scoped_lock l(d_mutex);
 
     // FIXME: figure out how to manage d_dim
     for (int i = 0; i < noutput_items / d_bps; i++) {
