@@ -18,23 +18,21 @@
 namespace gr {
 namespace analog {
 
-agc2_ff::sptr
-agc2_ff::make(float attack_rate, float decay_rate, float reference, float gain)
+agc2_ff::sptr agc2_ff::make(
+    float attack_rate, float decay_rate, float reference, float gain, float max_gain)
 {
     return gnuradio::make_block_sptr<agc2_ff_impl>(
-        attack_rate, decay_rate, reference, gain);
+        attack_rate, decay_rate, reference, gain, max_gain);
 }
 
 agc2_ff_impl::~agc2_ff_impl() {}
 
-agc2_ff_impl::agc2_ff_impl(float attack_rate,
-                           float decay_rate,
-                           float reference,
-                           float gain)
+agc2_ff_impl::agc2_ff_impl(
+    float attack_rate, float decay_rate, float reference, float gain, float max_gain)
     : sync_block("agc2_ff",
                  io_signature::make(1, 1, sizeof(float)),
                  io_signature::make(1, 1, sizeof(float))),
-      kernel::agc2_ff(attack_rate, decay_rate, reference, gain, 65536)
+      kernel::agc2_ff(attack_rate, decay_rate, reference, gain, max_gain)
 {
 }
 
