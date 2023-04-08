@@ -38,9 +38,6 @@ void bind_prefs(py::module& m)
         .def(py::init<>(), D(prefs, prefs))
 
 
-        .def_static("singleton", &prefs::singleton, D(prefs, singleton))
-
-
         .def("add_config_file",
              &prefs::add_config_file,
              py::arg("configfile"),
