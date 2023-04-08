@@ -69,7 +69,10 @@ class channelizer_ccf(gr.hier_block2):
         while True:
             try:
                 taps = optfir.low_pass(1, numchans, bw, bw + tb, ripple, atten)
-                return taps
+                return tap
+            except ValueError as e:
+                # This shouldn't happen, unless numchans is strange
+                raise RuntimeError("couldn't design filter; this probably constitutes a bug")
             except RuntimeError:
                 ripple += 0.01
                 print("Warning: set ripple to %.4f dB. If this is a problem, adjust the attenuation or create your own filter taps." % (ripple))
@@ -133,6 +136,7 @@ class interpolator_ccf(gr.hier_block2):
                 if(ripple >= 1.0):
                     raise RuntimeError(
                         "optfir could not generate an appropriate filter.")
+            # We bubble up ValueError – probably caused by user input
 
 
 class decimator_ccf(gr.hier_block2):
@@ -195,6 +199,7 @@ class decimator_ccf(gr.hier_block2):
                 if(ripple >= 1.0):
                     raise RuntimeError(
                         "optfir could not generate an appropriate filter.")
+            # Not handling ValueError – probably a user input caused this.
 
 
 class arb_resampler_ccf(gr.hier_block2):
@@ -279,6 +284,7 @@ class arb_resampler_ccf(gr.hier_block2):
                     if(ripple >= 1.0):
                         raise RuntimeError(
                             "optfir could not generate an appropriate filter.")
+                # We intentionally don't handle ValueError here, because it's most likely caused by user input
 
 
 class arb_resampler_fff(gr.hier_block2):
@@ -362,6 +368,7 @@ class arb_resampler_fff(gr.hier_block2):
                     if(ripple >= 1.0):
                         raise RuntimeError(
                             "optfir could not generate an appropriate filter.")
+                # If a ValueError happens here, it's probably due to specific user input
 
 
 class arb_resampler_ccc(gr.hier_block2):
@@ -424,6 +431,7 @@ class arb_resampler_ccc(gr.hier_block2):
                 if(ripple >= 1.0):
                     raise RuntimeError(
                         "optfir could not generate an appropriate filter.")
+                # If a ValueError happens here, it's probably due to specific user input
 
 
 class channelizer_hier_ccf(gr.hier_block2):
