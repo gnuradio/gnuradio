@@ -13,8 +13,8 @@
 
 #include <gnuradio/filter/api.h>
 #include <gnuradio/types.h>
-#include <stdexcept>
 #include <string>
+#include <vector>
 
 namespace gr {
 namespace filter {
@@ -41,7 +41,7 @@ namespace filter {
  *
  * \returns vector of computed taps
  *
- * \throws std::runtime_error if args are invalid or calculation
+ * \throws std::invalid_argument if args are invalid and std::runtime_error if calculation
  * fails to converge.
  */
 
