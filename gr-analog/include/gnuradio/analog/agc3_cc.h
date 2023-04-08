@@ -44,12 +44,14 @@ public:
      * \param gain initial gain value.
      * \param iir_update_decim stride by this number of samples before
      *                         computing an IIR gain update
+     * \param max_gain maximum gain value (0 for unlimited).
      */
     static sptr make(float attack_rate = 1e-1,
                      float decay_rate = 1e-2,
                      float reference = 1.0,
                      float gain = 1.0,
-                     int iir_update_decim = 1);
+                     int iir_update_decim = 1,
+                     float max_gain = 0.0);
 
     virtual float attack_rate() const = 0;
     virtual float decay_rate() const = 0;
