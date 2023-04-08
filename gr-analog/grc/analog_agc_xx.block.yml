@@ -38,8 +38,7 @@ outputs:
 templates:
     imports: from gnuradio import analog
     make: |-
-        analog.agc_${type.fcn}(${rate}, ${reference}, ${gain})
-        self.${id}.set_max_gain(${max_gain})
+        analog.agc_${type.fcn}(${rate}, ${reference}, ${gain}, ${max_gain})
     callbacks:
     - set_rate(${rate})
     - set_reference(${reference})
@@ -50,8 +49,7 @@ cpp_templates:
     includes: ['#include <gnuradio/analog/agc_${type.fcn}.h>']
     declarations: 'analog::agc_${type.fcn}::sptr ${id};'
     make: |-
-        this->${id} = analog::agc_${type.fcn}::make(${rate}, ${reference}, ${gain});
-        this->${id}->set_max_gain(${max_gain});
+        this->${id} = analog::agc_${type.fcn}::make(${rate}, ${reference}, ${gain}, ${max_gain});
     callbacks:
     - set_rate(${rate})
     - set_reference(${reference})

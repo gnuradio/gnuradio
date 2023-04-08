@@ -19,7 +19,10 @@ namespace analog {
 class agc_ff_impl : public agc_ff, kernel::agc_ff
 {
 public:
-    agc_ff_impl(float rate = 1e-4, float reference = 1.0, float gain = 1.0);
+    agc_ff_impl(float rate = 1e-4,
+                float reference = 1.0,
+                float gain = 1.0,
+                float max_gain = 0.0);
     ~agc_ff_impl() override;
 
     float rate() const override { return kernel::agc_ff::rate(); }

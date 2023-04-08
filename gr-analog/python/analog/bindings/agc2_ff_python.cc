@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(agc2_ff.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(9109f8c396a1a49bea1306f6edd36ea7)                     */
+/* BINDTOOL_HEADER_FILE_HASH(5e1d2da6d6800f26f91c43aa7829628e)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -44,6 +44,7 @@ void bind_agc2_ff(py::module& m)
              py::arg("decay_rate") = 0.01,
              py::arg("reference") = 1.,
              py::arg("gain") = 1.,
+             py::arg("max_gain") = 0.,
              D(agc2_ff, make))
 
 

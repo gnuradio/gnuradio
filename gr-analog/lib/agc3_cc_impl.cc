@@ -26,7 +26,8 @@ agc3_cc::sptr agc3_cc::make(float attack_rate,
                             float decay_rate,
                             float reference,
                             float gain,
-                            int iir_update_decim)
+                            int iir_update_decim,
+                            float max_gain)
 {
     return gnuradio::make_block_sptr<agc3_cc_impl>(
         attack_rate, decay_rate, reference, gain, iir_update_decim);
@@ -36,7 +37,8 @@ agc3_cc_impl::agc3_cc_impl(float attack_rate,
                            float decay_rate,
                            float reference,
                            float gain,
-                           int iir_update_decim)
+                           int iir_update_decim,
+                           float max_gain)
     : sync_block("agc3_cc",
                  io_signature::make(1, 1, sizeof(gr_complex)),
                  io_signature::make(1, 1, sizeof(gr_complex))),
@@ -46,7 +48,7 @@ agc3_cc_impl::agc3_cc_impl(float attack_rate,
     set_attack_rate(attack_rate);
     set_decay_rate(decay_rate);
     set_gain(gain);
-    set_max_gain(65536);
+    set_max_gain(max_gain);
     test_and_log_value_domain(iir_update_decim, "input power sampling stride");
     d_iir_update_decim = iir_update_decim;
     set_output_multiple(iir_update_decim * 4);
