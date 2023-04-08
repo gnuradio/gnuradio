@@ -246,6 +246,10 @@ def design_opt_lpf(fs, gain, mainwin):
         try:
             taps = filter.optfir.low_pass(gain, fs, pb, sb,
                                           ripple, atten)
+        except ValueError as e:
+            reply = QtWidgets.QMessageBox.information(mainwin, "Invalid filter parameters",
+                                                      e.args[0], QtWidgets.QMessageBox.Ok)
+            return ([], [], False)
         except RuntimeError as e:
             reply = QtWidgets.QMessageBox.information(mainwin, "Filter did not converge",
                                                       e.args[0], QtWidgets.QMessageBox.Ok)
@@ -278,6 +282,10 @@ def design_opt_bpf(fs, gain, mainwin):
         try:
             taps = filter.optfir.band_pass(gain, fs, sb1, pb1, pb2, sb2,
                                            ripple, atten)
+        except ValueError as e:
+            reply = QtWidgets.QMessageBox.information(mainwin, "Invalid filter parameters",
+                                                      e.args[0], QtWidgets.QMessageBox.Ok)
+            return ([], [], False)
         except RuntimeError as e:
             reply = QtWidgets.QMessageBox.information(mainwin, "Filter did not converge",
                                                       e.args[0], QtWidgets.QMessageBox.Ok)
@@ -312,6 +320,10 @@ def design_opt_cbpf(fs, gain, mainwin):
         try:
             taps = filter.optfir.complex_band_pass(gain, fs, sb1, pb1, pb2, sb2,
                                                    ripple, atten)
+        except ValueError as e:
+            reply = QtWidgets.QMessageBox.information(mainwin, "Invalid filter parameters",
+                                                      e.args[0], QtWidgets.QMessageBox.Ok)
+            return ([], [], False)
         except RuntimeError as e:
             reply = QtWidgets.QMessageBox.information(mainwin, "Filter did not converge",
                                                       e.args[0], QtWidgets.QMessageBox.Ok)
@@ -345,6 +357,10 @@ def design_opt_bnf(fs, gain, mainwin):
         try:
             taps = filter.optfir.band_reject(gain, fs, pb1, sb1, sb2, pb2,
                                              ripple, atten)
+        except ValueError as e:
+            reply = QtWidgets.QMessageBox.information(mainwin, "Invalid filter parameters",
+                                                      e.args[0], QtWidgets.QMessageBox.Ok)
+            return ([], [], False)
         except RuntimeError as e:
             reply = QtWidgets.QMessageBox.information(mainwin, "Filter did not converge",
                                                       e.args[0], QtWidgets.QMessageBox.Ok)
@@ -402,6 +418,10 @@ def design_opt_hpf(fs, gain, mainwin):
         try:
             taps = filter.optfir.high_pass(gain, fs, sb, pb,
                                            atten, ripple)
+        except ValueError as e:
+            reply = QtWidgets.QMessageBox.information(mainwin, "Invalid filter parameters",
+                                                      e.args[0], QtWidgets.QMessageBox.Ok)
+            return ([], [], False)
         except RuntimeError as e:
             reply = QtWidgets.QMessageBox.information(mainwin, "Filter did not converge",
                                                       e.args[0], QtWidgets.QMessageBox.Ok)

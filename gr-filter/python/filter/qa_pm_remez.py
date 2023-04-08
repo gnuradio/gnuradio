@@ -139,7 +139,7 @@ class test_pm_remez(gr_unittest.TestCase):
     def tearDown(self):
         pass
 
-    def test_low_pass(self):
+    def test_001_low_pass(self):
         gain = 1
         Fs = 1
         freq1 = 0.1
@@ -175,6 +175,17 @@ class test_pm_remez(gr_unittest.TestCase):
                       -0.0008370135734511828)
 
         self.assertFloatTuplesAlmostEqual(known_taps, new_taps, 5)
+
+    def test_002_test_invalid_args(self):
+        with self.assertRaises(ValueError):
+            # two taps are too few
+            filter.pm_remez(2, [0, 0.1], [1, 2e-4], [1, 0.25], "bandpass")
+        with self.assertRaises(ValueError):
+            # frequencies need to be ordered
+            filter.pm_remez(200, [0.1, 0], [1, 2e-4], [1, 0.25], "bandpass")
+        with self.assertRaises(ValueError):
+            # bands, gains need to be of same length
+            filter.pm_remez(200, [0, 0.1], [1, 2e-4, 2e-6], [1, 0.25], "bandpass")
 
 
 if __name__ == '__main__':
