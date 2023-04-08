@@ -42,8 +42,7 @@ outputs:
 templates:
     imports: from gnuradio import analog
     make: |-
-        analog.agc2_${type.fcn}(${attack_rate}, ${decay_rate}, ${reference}, ${gain})
-        self.${id}.set_max_gain(${max_gain})
+        analog.agc2_${type.fcn}(${attack_rate}, ${decay_rate}, ${reference}, ${gain}, ${max_gain})
     callbacks:
     - set_attack_rate(${attack_rate})
     - set_decay_rate(${decay_rate})
@@ -55,8 +54,7 @@ cpp_templates:
     includes: ['#include <gnuradio/analog/agc2_${type.fcn}.h>']
     declarations: 'analog::agc2_${type.fcn}::sptr ${id};'
     make: |-
-        this->${id} = analog::agc2_${type.fcn}::make(${attack_rate}, ${decay_rate}, ${reference}, ${gain});
-        this->${id}->set_max_gain(${max_gain});
+        this->${id} = analog::agc2_${type.fcn}::make(${attack_rate}, ${decay_rate}, ${reference}, ${gain}, ${max_gain});
     callbacks:
     - set_attack_rate(${attack_rate})
     - set_decay_rate(${decay_rate})

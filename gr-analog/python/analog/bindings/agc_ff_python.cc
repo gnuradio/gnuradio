@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(agc_ff.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(e6b71daceff3aa1c28b2efab1e459066)                     */
+/* BINDTOOL_HEADER_FILE_HASH(a49484d20f81c4123534cb2131c8afd8)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -43,6 +43,7 @@ void bind_agc_ff(py::module& m)
              py::arg("rate") = 1.0E-4,
              py::arg("reference") = 1.,
              py::arg("gain") = 1.,
+             py::arg("max_gain") = 0.,
              D(agc_ff, make))
 
 

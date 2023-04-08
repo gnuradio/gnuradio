@@ -18,16 +18,16 @@
 namespace gr {
 namespace analog {
 
-agc_ff::sptr agc_ff::make(float rate, float reference, float gain)
+agc_ff::sptr agc_ff::make(float rate, float reference, float gain, float max_gain)
 {
-    return gnuradio::make_block_sptr<agc_ff_impl>(rate, reference, gain);
+    return gnuradio::make_block_sptr<agc_ff_impl>(rate, reference, gain, max_gain);
 }
 
-agc_ff_impl::agc_ff_impl(float rate, float reference, float gain)
+agc_ff_impl::agc_ff_impl(float rate, float reference, float gain, float max_gain)
     : sync_block("agc_ff",
                  io_signature::make(1, 1, sizeof(float)),
                  io_signature::make(1, 1, sizeof(float))),
-      kernel::agc_ff(rate, reference, gain, 65536)
+      kernel::agc_ff(rate, reference, gain, max_gain)
 {
 }
 

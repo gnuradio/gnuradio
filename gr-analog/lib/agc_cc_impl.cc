@@ -19,16 +19,16 @@
 namespace gr {
 namespace analog {
 
-agc_cc::sptr agc_cc::make(float rate, float reference, float gain)
+agc_cc::sptr agc_cc::make(float rate, float reference, float gain, float max_gain)
 {
-    return gnuradio::make_block_sptr<agc_cc_impl>(rate, reference, gain);
+    return gnuradio::make_block_sptr<agc_cc_impl>(rate, reference, gain, max_gain);
 }
 
-agc_cc_impl::agc_cc_impl(float rate, float reference, float gain)
+agc_cc_impl::agc_cc_impl(float rate, float reference, float gain, float max_gain)
     : sync_block("agc_cc",
                  io_signature::make(1, 1, sizeof(gr_complex)),
                  io_signature::make(1, 1, sizeof(gr_complex))),
-      kernel::agc_cc(rate, reference, gain, 65536)
+      kernel::agc_cc(rate, reference, gain, max_gain)
 {
     const int alignment_multiple = volk_get_alignment() / sizeof(gr_complex);
     set_alignment(std::max(1, alignment_multiple));

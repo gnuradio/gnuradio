@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(agc3_cc.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(a3249a33ccef3b89642aa41df853772e)                     */
+/* BINDTOOL_HEADER_FILE_HASH(12cadbccb30acab3c1f27d0f05454c2b)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -45,6 +45,7 @@ void bind_agc3_cc(py::module& m)
              py::arg("reference") = 1.,
              py::arg("gain") = 1.,
              py::arg("iir_update_decim") = 1,
+             py::arg("max_gain") = 0.,
              D(agc3_cc, make))
 
 
