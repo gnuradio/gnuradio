@@ -8,7 +8,7 @@
 
 import scipy
 from gnuradio import filter, fft
-from PyQt5 import QtGui
+from PyQt5 import QtGui, QtWidgets
 
 
 # Filter design functions using a window
@@ -28,8 +28,8 @@ def design_win_lpf(fs, gain, wintype, mainwin):
             taps = filter.firdes.low_pass_2(gain, fs, pb, tb,
                                             atten, wintype)
         except (RuntimeError, IndexError) as e:
-            reply = QtGui.QMessageBox.information(mainwin, "Runtime Error",
-                                                  e.args[0], QtGui.QMessageBox.Ok)
+            reply = QtWidgets.QMessageBox.information(mainwin, "Runtime Error",
+                                                      e.args[0], QtWidgets.QMessageBox.Ok)
             return ([], [], ret)
         else:
             params = {"fs": fs, "gain": gain, "wintype": wintype,
@@ -56,8 +56,8 @@ def design_win_bpf(fs, gain, wintype, mainwin):
             taps = filter.firdes.band_pass_2(gain, fs, pb1, pb2, tb,
                                              atten, wintype)
         except RuntimeError as e:
-            reply = QtGui.QMessageBox.information(mainwin, "Runtime Error",
-                                                  e.args[0], QtGui.QMessageBox.Ok)
+            reply = QtWidgets.QMessageBox.information(mainwin, "Runtime Error",
+                                                      e.args[0], QtWidgets.QMessageBox.Ok)
             return ([], [], ret)
         else:
             params = {"fs": fs, "gain": gain, "wintype": wintype,
@@ -84,8 +84,8 @@ def design_win_cbpf(fs, gain, wintype, mainwin):
             taps = filter.firdes.complex_band_pass_2(gain, fs, pb1, pb2, tb,
                                                      atten, wintype)
         except RuntimeError as e:
-            reply = QtGui.QMessageBox.information(mainwin, "Runtime Error",
-                                                  e.args[0], QtGui.QMessageBox.Ok)
+            reply = QtWidgets.QMessageBox.information(mainwin, "Runtime Error",
+                                                      e.args[0], QtWidgets.QMessageBox.Ok)
             return ([], [], ret)
         else:
             params = {"fs": fs, "gain": gain, "wintype": wintype,
@@ -112,8 +112,8 @@ def design_win_bnf(fs, gain, wintype, mainwin):
             taps = filter.firdes.band_reject_2(gain, fs, pb1, pb2, tb,
                                                atten, wintype)
         except RuntimeError as e:
-            reply = QtGui.QMessageBox.information(mainwin, "Runtime Error",
-                                                  e.args[0], QtGui.QMessageBox.Ok)
+            reply = QtWidgets.QMessageBox.information(mainwin, "Runtime Error",
+                                                      e.args[0], QtWidgets.QMessageBox.Ok)
             return ([], [], ret)
         else:
             params = {"fs": fs, "gain": gain, "wintype": wintype,
@@ -139,8 +139,8 @@ def design_win_hpf(fs, gain, wintype, mainwin):
             taps = filter.firdes.high_pass_2(gain, fs, pb, tb,
                                              atten, wintype)
         except RuntimeError as e:
-            reply = QtGui.QMessageBox.information(mainwin, "Runtime Error",
-                                                  e.args[0], QtGui.QMessageBox.Ok)
+            reply = QtWidgets.QMessageBox.information(mainwin, "Runtime Error",
+                                                      e.args[0], QtWidgets.QMessageBox.Ok)
         else:
             params = {"fs": fs, "gain": gain, "wintype": wintype,
                       "filttype": "hpf", "sbend": sb, "pbstart": pb,
@@ -164,8 +164,8 @@ def design_win_hb(fs, gain, wintype, mainwin):
                fft.window.WIN_BLACKMAN_hARRIS: 'blackmanharris'}
 
     if int(filtord) & 1:
-        reply = QtGui.QMessageBox.information(mainwin, "Filter order should be even",
-                                              "Filter order should be even", QtGui.QMessageBox.Ok)
+        reply = QtWidgets.QMessageBox.information(mainwin, "Filter order should be even",
+                                                  "Filter order should be even", QtWidgets.QMessageBox.Ok)
         return ([], [], False)
 
     if(ret):
@@ -193,8 +193,8 @@ def design_win_rrc(fs, gain, wintype, mainwin):
             taps = filter.firdes.root_raised_cosine(gain, fs, sr,
                                                     alpha, ntaps)
         except RuntimeError as e:
-            reply = QtGui.QMessageBox.information(mainwin, "Runtime Error",
-                                                  e.args[0], QtGui.QMessageBox.Ok)
+            reply = QtWidgets.QMessageBox.information(mainwin, "Runtime Error",
+                                                      e.args[0], QtWidgets.QMessageBox.Ok)
         else:
             params = {"fs": fs, "gain": gain, "wintype": wintype,
                       "filttype": "rrc", "srate": sr, "alpha": alpha,
@@ -219,8 +219,8 @@ def design_win_gaus(fs, gain, wintype, mainwin):
             taps = filter.firdes.gaussian(gain, spb, bt, ntaps)
 
         except RuntimeError as e:
-            reply = QtGui.QMessageBox.information(mainwin, "Runtime Error",
-                                                  e.args[0], QtGui.QMessageBox.Ok)
+            reply = QtWidgets.QMessageBox.information(mainwin, "Runtime Error",
+                                                      e.args[0], QtWidgets.QMessageBox.Ok)
         else:
             params = {"fs": fs, "gain": gain, "wintype": wintype,
                       "filttype": "gaus", "srate": sr, "bt": bt,
@@ -247,8 +247,8 @@ def design_opt_lpf(fs, gain, mainwin):
             taps = filter.optfir.low_pass(gain, fs, pb, sb,
                                           ripple, atten)
         except RuntimeError as e:
-            reply = QtGui.QMessageBox.information(mainwin, "Filter did not converge",
-                                                  e.args[0], QtGui.QMessageBox.Ok)
+            reply = QtWidgets.QMessageBox.information(mainwin, "Filter did not converge",
+                                                      e.args[0], QtWidgets.QMessageBox.Ok)
             return ([], [], False)
         else:
             params = {"fs": fs, "gain": gain, "wintype": mainwin.EQUIRIPPLE_FILT,
@@ -279,8 +279,8 @@ def design_opt_bpf(fs, gain, mainwin):
             taps = filter.optfir.band_pass(gain, fs, sb1, pb1, pb2, sb2,
                                            ripple, atten)
         except RuntimeError as e:
-            reply = QtGui.QMessageBox.information(mainwin, "Filter did not converge",
-                                                  e.args[0], QtGui.QMessageBox.Ok)
+            reply = QtWidgets.QMessageBox.information(mainwin, "Filter did not converge",
+                                                      e.args[0], QtWidgets.QMessageBox.Ok)
             return ([], [], False)
 
         else:
@@ -313,8 +313,8 @@ def design_opt_cbpf(fs, gain, mainwin):
             taps = filter.optfir.complex_band_pass(gain, fs, sb1, pb1, pb2, sb2,
                                                    ripple, atten)
         except RuntimeError as e:
-            reply = QtGui.QMessageBox.information(mainwin, "Filter did not converge",
-                                                  e.args[0], QtGui.QMessageBox.Ok)
+            reply = QtWidgets.QMessageBox.information(mainwin, "Filter did not converge",
+                                                      e.args[0], QtWidgets.QMessageBox.Ok)
             return ([], [], False)
         else:
             params = {"fs": fs, "gain": gain, "wintype": mainwin.EQUIRIPPLE_FILT,
@@ -346,8 +346,8 @@ def design_opt_bnf(fs, gain, mainwin):
             taps = filter.optfir.band_reject(gain, fs, pb1, sb1, sb2, pb2,
                                              ripple, atten)
         except RuntimeError as e:
-            reply = QtGui.QMessageBox.information(mainwin, "Filter did not converge",
-                                                  e.args[0], QtGui.QMessageBox.Ok)
+            reply = QtWidgets.QMessageBox.information(mainwin, "Filter did not converge",
+                                                      e.args[0], QtWidgets.QMessageBox.Ok)
             return ([], [], False)
         else:
             params = {"fs": fs, "gain": gain, "wintype": mainwin.EQUIRIPPLE_FILT,
@@ -366,8 +366,8 @@ def design_opt_hb(fs, gain, mainwin):
     trwidth, r = getfloat(mainwin.gui.firhbtrEdit.text())
     ret = r and ret
     if int(filtord) & 1:
-        reply = QtGui.QMessageBox.information(mainwin, "Filter order should be even",
-                                              "Filter order should be even", QtGui.QMessageBox.Ok)
+        reply = QtWidgets.QMessageBox.information(mainwin, "Filter order should be even",
+                                                  "Filter order should be even", QtWidgets.QMessageBox.Ok)
         return ([], [], False)
 
     if(ret):
@@ -376,8 +376,8 @@ def design_opt_hb(fs, gain, mainwin):
             taps = scipy.signal.remez(int(filtord) + 1, bands, [1, 0], [1, 1])
             taps[abs(taps) <= 1e-6] = 0.
         except RuntimeError as e:
-            reply = QtGui.QMessageBox.information(mainwin, "Filter Design Error",
-                                                  e.args[0], QtGui.QMessageBox.Ok)
+            reply = QtWidgets.QMessageBox.information(mainwin, "Filter Design Error",
+                                                      e.args[0], QtWidgets.QMessageBox.Ok)
             return ([], [], False)
         else:
             params = {"fs": fs, "gain": gain, "wintype": mainwin.EQUIRIPPLE_FILT,
@@ -403,8 +403,8 @@ def design_opt_hpf(fs, gain, mainwin):
             taps = filter.optfir.high_pass(gain, fs, sb, pb,
                                            atten, ripple)
         except RuntimeError as e:
-            reply = QtGui.QMessageBox.information(mainwin, "Filter did not converge",
-                                                  e.args[0], QtGui.QMessageBox.Ok)
+            reply = QtWidgets.QMessageBox.information(mainwin, "Filter did not converge",
+                                                      e.args[0], QtWidgets.QMessageBox.Ok)
             return ([], [], False)
         else:
             params = {"fs": fs, "gain": gain, "wintype": mainwin.EQUIRIPPLE_FILT,
