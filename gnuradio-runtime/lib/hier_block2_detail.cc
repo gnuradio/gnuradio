@@ -16,6 +16,8 @@
 #include <gnuradio/io_signature.h>
 #include <gnuradio/prefs.h>
 #include <gnuradio/top_block.h>
+#include <deque>
+#include <set>
 #include <sstream>
 #include <stdexcept>
 
@@ -889,17 +891,25 @@ void hier_block2_detail::unlock()
 
 void hier_block2_detail::set_processor_affinity(const std::vector<int>& mask)
 {
-    basic_block_vector_t tmp = d_fg->calc_used_blocks();
-    for (basic_block_viter_t p = tmp.begin(); p != tmp.end(); p++) {
-        (*p)->set_processor_affinity(mask);
+    // We formerly recursed here, can't do that: a message connection to the hier block
+    // itself leads to an infinite recursion.
+    for (auto basic_block_sptr : all_blocks()) {
+        auto block_sptr = std::dynamic_pointer_cast<block>(basic_block_sptr);
+        if (block_sptr) {
+            block_sptr->set_processor_affinity(mask);
+        }
     }
 }
 
 void hier_block2_detail::unset_processor_affinity()
 {
-    basic_block_vector_t tmp = d_fg->calc_used_blocks();
-    for (basic_block_viter_t p = tmp.begin(); p != tmp.end(); p++) {
-        (*p)->unset_processor_affinity();
+    // We formerly recursed here, can't do that: a message connection to the hier block
+    // itself leads to an infinite recursion.
+    for (auto basic_block_sptr : all_blocks()) {
+        auto block_sptr = std::dynamic_pointer_cast<block>(basic_block_sptr);
+        if (block_sptr) {
+            block_sptr->unset_processor_affinity();
+        }
     }
 }
 
@@ -911,9 +921,20 @@ std::vector<int> hier_block2_detail::processor_affinity()
 
 void hier_block2_detail::set_log_level(const std::string& level)
 {
-    basic_block_vector_t tmp = d_fg->calc_used_blocks();
-    for (basic_block_viter_t p = tmp.begin(); p != tmp.end(); p++) {
-        (*p)->set_log_level(level);
+    d_logger->set_level(level);
+    d_debug_logger->set_level(level);
+    // We formerly recursed here, can't do that: a message connection to the hier block
+    // itself leads to an infinite recursion.
+    for (auto basic_block_sptr : all_blocks()) {
+        auto hier_block_sptr = std::dynamic_pointer_cast<hier_block2>(basic_block_sptr);
+        if (hier_block_sptr) {
+            hier_block_sptr->d_logger->set_level(level);
+            hier_block_sptr->d_debug_logger->set_level(level);
+            hier_block_sptr->d_detail->d_logger->set_level(level);
+            hier_block_sptr->d_detail->d_debug_logger->set_level(level);
+        } else {
+            basic_block_sptr->set_log_level(level);
+        }
     }
 }
 
@@ -996,5 +1017,84 @@ void hier_block2_detail::reset_hier_blocks_parent()
     }
 }
 
+std::set<basic_block_sptr> hier_block2_detail::all_blocks()
+{
+    std::set<basic_block_sptr> found_blocks;
+    std::deque<hier_block2_sptr> queued_blocks;
+
+    /* This will take place in two steps:
+     * 1. Get the blocks directly "one level below" this flowgraph; detect hier blocks
+     * among these and enqueue them for inspection
+     * 2. Go to the queue of hier blocks; get the blocks directly within them, and enqueue
+     * the hier blocks among them for later inspection
+     *
+     * The reason we're not simply enqueuing this hier_block2 is that we don't hold the
+     * sptr to that, we just hold a raw pointer. Making the queue hold shared pointers has
+     * the advantage of guaranteeing that even if the user does something strange like
+     * modify the hier block's connections, blocks don't get destructed while we walk
+     * through them, so that we don't have to document things like the
+     * `set_processor_affinity` and `set_log_level` functions to not be thread-safe.
+     */
+
+    // Get the blocks from our own flow graph. These can contain hier blocks
+    auto calculated_blocks = d_fg->calc_used_blocks();
+    // Append the internal freestanding blocks
+    for (const auto& freestanding_block : d_blocks) {
+        calculated_blocks.push_back(freestanding_block);
+    }
+
+    for (const auto& block : calculated_blocks) {
+        d_logger->trace("all_blocks: Encountered block {} in calculated_blocks",
+                        block->alias());
+        // Try inserting in the blocks we've found, regardless of whether hier or not
+        if (!found_blocks.insert(block).second) {
+            d_logger->trace("all_blocks: Block {} from calculated_blocks already found",
+                            block->alias());
+            // if the insertion failed, the elemement was already found -> move on
+            continue;
+        }
+
+        // Check for hier-ness of block; if hier, enqueue for later iteration
+        auto hier_block = std::dynamic_pointer_cast<hier_block2>(block);
+        if (hier_block) {
+            d_logger->trace(
+                "all_blocks: Block {} from calculated_blocks is hier. Enqueue.",
+                block->alias());
+            queued_blocks.push_back(hier_block);
+        }
+    }
+
+    while (!queued_blocks.empty()) {
+        const auto dequeued_block = queued_blocks.front();
+        queued_blocks.pop_front();
+        d_logger->trace("all_blocks: Dequeued Block {}.", dequeued_block->alias());
+
+        auto internal_blocks = dequeued_block->d_detail->d_fg->calc_used_blocks();
+        for (const auto& freestanding_block : dequeued_block->d_detail->d_blocks) {
+            internal_blocks.push_back(freestanding_block);
+        }
+        for (const auto& block : internal_blocks) {
+            d_logger->trace("all_blocks: Block {} from dequeued {} encountered",
+                            block->alias(),
+                            dequeued_block->alias());
+            if (!found_blocks.insert(block).second) {
+                d_logger->trace("all_blocks: Block {} from dequeued {} already found",
+                                block->alias(),
+                                dequeued_block->alias());
+                // if the insertion failed, the elemement was already found -> move on
+                continue;
+            }
+            auto hier_block = std::dynamic_pointer_cast<hier_block2>(block);
+            if (hier_block) {
+                d_logger->trace("all_blocks: Block {} from dequeued {} is hier. Enqueue.",
+                                hier_block->alias(),
+                                dequeued_block->alias());
+                queued_blocks.push_back(hier_block);
+            }
+        }
+    }
+
+    return found_blocks;
+}
 
 } /* namespace gr */
