@@ -142,6 +142,8 @@ std::vector<int> hier_block2::processor_affinity()
 
 void hier_block2::set_log_level(const std::string& level)
 {
+    d_logger->set_level(level);
+    d_debug_logger->set_level(level);
     d_detail->set_log_level(level);
 }
 
