@@ -23,8 +23,7 @@ class Evaluated(object):
             value = instance.parent_block.evaluate(raw)
         except Exception as error:
             if raw:
-                instance.add_error_message(
-                    "Failed to eval '{}': {}".format(raw, error))
+                instance.add_error_message(f"Failed to eval '{raw}': ({type(error)}) {error}")
             return self.default
 
         if not isinstance(value, self.expected_type):
