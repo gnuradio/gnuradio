@@ -21,7 +21,7 @@ parameters:
 inputs:
 -   domain: stream
     dtype: byte
-    vlen: '${ { 0: 64, 1: 48, 2: 64, 3: 56, 4: 52, 5: 48, 6: 28, 7: 28, 8: 28, 9: 64, 10: 18, 11: 18 }[mode] }'
+    vlen: '${ {"codec2.MODE_3200": 64, "codec2.MODE_2400": 48, "codec2.MODE_1600": 64, "codec2.MODE_1400": 56, "codec2.MODE_1300": 52, "codec2.MODE_1200": 48, "codec2.MODE_700": 28, "codec2.MODE_700B": 28, "codec2.MODE_700C": 28, "codec2.MODE_WB": 64, "codec2.MODE_450": 18, "codec2.MODE_450PWB": 18}[mode] }'
 
 outputs:
 -   domain: stream
