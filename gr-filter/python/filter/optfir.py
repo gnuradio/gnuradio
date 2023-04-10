@@ -37,11 +37,16 @@ def low_pass(gain, Fs, freq1, freq2, passband_ripple_db, stopband_atten_db,
         stopband_atten_db: Stop band attenuation in dB (should be large, >= 60)
         nextra_taps: Extra taps to use in the filter (default=2)
     """
+    if(freq2 <= freq1):
+        raise ValueError("low pass filter must have pass band below stop band")
+
     passband_dev = passband_ripple_to_dev(passband_ripple_db)
     stopband_dev = stopband_atten_to_dev(stopband_atten_db)
     desired_ampls = (gain, 0)
     (n, fo, ao, w) = remezord([freq1, freq2], desired_ampls,
                               [passband_dev, stopband_dev], Fs)
+    if n == 0:
+        raise RuntimeError("can't determine sufficient order for filter")
     # The remezord typically under-estimates the filter order, so add 2 taps by default
     taps = filter.pm_remez(n + nextra_taps, fo, ao, w, "bandpass")
     return taps
@@ -64,6 +69,13 @@ def band_pass(gain, Fs, freq_sb1, freq_pb1, freq_pb2, freq_sb2,
         stopband_atten_db: Stop band attenuation in dB (should be large, >= 60)
         nextra_taps: Extra taps to use in the filter (default=2)
     """
+    if(freq_sb1 >= freq_pb1):
+        raise ValueError("band pass filter must have first stop band below pass band")
+    if(freq_pb1 >= freq_pb2):
+        raise ValueError("pass band corner frequencies must be ascending")
+    if(freq_pb2 >= freq_sb2):
+        raise ValueError("band pass filter must have pass band below second stop band")
+
     passband_dev = passband_ripple_to_dev(passband_ripple_db)
     stopband_dev = stopband_atten_to_dev(stopband_atten_db)
     desired_ampls = (0, gain, 0)
@@ -71,6 +83,9 @@ def band_pass(gain, Fs, freq_sb1, freq_pb1, freq_pb2, freq_sb2,
     desired_ripple = [stopband_dev, passband_dev, stopband_dev]
     (n, fo, ao, w) = remezord(desired_freqs, desired_ampls,
                               desired_ripple, Fs)
+    if n == 0:
+        raise RuntimeError("can't determine sufficient order for filter")
+
     # The remezord typically under-estimates the filter order, so add 2 taps by default
     taps = filter.pm_remez(n + nextra_taps, fo, ao, w, "bandpass")
     return taps
@@ -94,6 +109,14 @@ def complex_band_pass(gain, Fs, freq_sb1, freq_pb1, freq_pb2, freq_sb2,
         stopband_atten_db: Stop band attenuation in dB (should be large, >= 60)
         nextra_taps: Extra taps to use in the filter (default=2)
     """
+
+    if(freq_sb1 >= freq_pb1):
+        raise ValueError("band pass filter must have first stop band below pass band")
+    if(freq_pb1 >= freq_pb2):
+        raise ValueError("pass band corner frequencies must be ascending")
+    if(freq_pb2 >= freq_sb2):
+        raise ValueError("band pass filter must have pass band below second stop band")
+
     center_freq = (freq_pb2 + freq_pb1) / 2.0
     lp_pb = (freq_pb2 - center_freq) / 1.0
     lp_sb = freq_sb2 - center_freq
@@ -123,6 +146,13 @@ def complex_band_reject(gain, Fs, freq_pb1, freq_sb1, freq_sb2, freq_pb2,
         stopband_atten_db: Stop band attenuation in dB (should be large, >= 60)
         nextra_taps: Extra taps to use in the filter (default=2)
     """
+    if(freq_sb1 >= freq_pb1):
+        raise ValueError("band pass must have first stop band below pass band")
+    if(freq_pb1 >= freq_pb2):
+        raise ValueError("band pass corner frequencies must be ascending")
+    if(freq_pb2 >= freq_sb2):
+        raise ValueError("band pass must have pass band below second stop band")
+
     center_freq = (freq_sb2 + freq_sb1) / 2.0
     hp_pb = (freq_pb2 - center_freq) / 1.0
     hp_sb = freq_sb2 - center_freq
@@ -159,6 +189,8 @@ def band_reject(gain, Fs, freq_pb1, freq_sb1, freq_sb2, freq_pb2,
     desired_ripple = [passband_dev, stopband_dev, passband_dev]
     (n, fo, ao, w) = remezord(desired_freqs, desired_ampls,
                               desired_ripple, Fs)
+    if n == 0:
+        raise RuntimeError("can't determine sufficient order for filter")
     # Make sure we use an odd number of taps
     if((n + nextra_taps) % 2 == 1):
         n += 1
@@ -186,6 +218,8 @@ def high_pass(gain, Fs, freq1, freq2, passband_ripple_db, stopband_atten_db,
     desired_ampls = (0, 1)
     (n, fo, ao, w) = remezord([freq1, freq2], desired_ampls,
                               [stopband_dev, passband_dev], Fs)
+    if n == 0:
+        raise RuntimeError("can't determine sufficient order for filter")
     # For a HPF, we need to use an odd number of taps
     # In filter.remez, ntaps = n+1, so n must be even
     if((n + nextra_taps) % 2 == 1):
