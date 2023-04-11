@@ -61,7 +61,7 @@ class test_throttle(gr_unittest.TestCase):
         dst_data = dst.data()
         self.assertEqual(src_data, dst_data)
 
-    def test_limited_chunk_throttling(self):
+    def test_limited_chunk_throttling_0(self):
         src_data = [1, 2, 3]
         rate = 50
         chunksize = 10
@@ -76,14 +76,320 @@ class test_throttle(gr_unittest.TestCase):
         self.tb.connect(src, thr, dst)
 
         total_time = 0.5  # seconds
+        before = time.perf_counter()
         self.tb.start()
         time.sleep(total_time)
         self.tb.stop()
+        after = time.perf_counter()
+        duration = after - before
+        self.assertLess(duration, total_time + 2/rate)
+        self.assertGreater(duration, total_time - 2/rate)
 
         dst_data = dst.data()
         num = len(dst_data)
         # be at most one chunksize
-        self.assertLess(abs(total_time * rate - num) + 1, chunksize)
+        self.assertGreater(total_time * rate + chunksize + 1, num)
+        self.assertLess(total_time * rate - chunksize - 1, num)
+
+    def test_limited_chunk_throttling_1(self):
+        src_data = [1, 2, 3]
+        rate = 50
+        chunksize = 10
+        src = blocks.vector_source_c(src_data, repeat=True)
+
+        thr = blocks.throttle(gr.sizeof_gr_complex,
+                              rate,
+                              ignore_tags=True,
+                              maximum_items_per_chunk=chunksize)
+
+        dst = blocks.vector_sink_c()
+        self.tb.connect(src, thr, dst)
+
+        total_time = 0.5  # seconds
+        before = time.perf_counter()
+        self.tb.start()
+        time.sleep(total_time)
+        self.tb.stop()
+        after = time.perf_counter()
+        duration = after - before
+        self.assertLess(duration, total_time + 2/rate)
+        self.assertGreater(duration, total_time - 2/rate)
+
+        dst_data = dst.data()
+        num = len(dst_data)
+        # be at most one chunksize
+        self.assertGreater(total_time * rate + chunksize + 1, num)
+        self.assertLess(total_time * rate - chunksize - 1, num)
+
+    def test_limited_chunk_throttling_2(self):
+        src_data = [1, 2, 3]
+        rate = 50
+        chunksize = 10
+        src = blocks.vector_source_c(src_data, repeat=True)
+
+        thr = blocks.throttle(gr.sizeof_gr_complex,
+                              rate,
+                              ignore_tags=True,
+                              maximum_items_per_chunk=chunksize)
+
+        dst = blocks.vector_sink_c()
+        self.tb.connect(src, thr, dst)
+
+        total_time = 0.5  # seconds
+        before = time.perf_counter()
+        self.tb.start()
+        time.sleep(total_time)
+        self.tb.stop()
+        after = time.perf_counter()
+        duration = after - before
+        self.assertLess(duration, total_time + 2/rate)
+        self.assertGreater(duration, total_time - 2/rate)
+
+        dst_data = dst.data()
+        num = len(dst_data)
+        # be at most one chunksize
+        self.assertGreater(total_time * rate + chunksize + 1, num)
+        self.assertLess(total_time * rate - chunksize - 1, num)
+
+    def test_limited_chunk_throttling_3(self):
+        src_data = [1, 2, 3]
+        rate = 50
+        chunksize = 10
+        src = blocks.vector_source_c(src_data, repeat=True)
+
+        thr = blocks.throttle(gr.sizeof_gr_complex,
+                              rate,
+                              ignore_tags=True,
+                              maximum_items_per_chunk=chunksize)
+
+        dst = blocks.vector_sink_c()
+        self.tb.connect(src, thr, dst)
+
+        total_time = 0.5  # seconds
+        before = time.perf_counter()
+        self.tb.start()
+        time.sleep(total_time)
+        self.tb.stop()
+        after = time.perf_counter()
+        duration = after - before
+        self.assertLess(duration, total_time + 2/rate)
+        self.assertGreater(duration, total_time - 2/rate)
+
+        dst_data = dst.data()
+        num = len(dst_data)
+        # be at most one chunksize
+        self.assertGreater(total_time * rate + chunksize + 1, num)
+        self.assertLess(total_time * rate - chunksize - 1, num)
+
+    def test_limited_chunk_throttling_4(self):
+        src_data = [1, 2, 3]
+        rate = 50
+        chunksize = 10
+        src = blocks.vector_source_c(src_data, repeat=True)
+
+        thr = blocks.throttle(gr.sizeof_gr_complex,
+                              rate,
+                              ignore_tags=True,
+                              maximum_items_per_chunk=chunksize)
+
+        dst = blocks.vector_sink_c()
+        self.tb.connect(src, thr, dst)
+
+        total_time = 0.5  # seconds
+        before = time.perf_counter()
+        self.tb.start()
+        time.sleep(total_time)
+        self.tb.stop()
+        after = time.perf_counter()
+        duration = after - before
+        self.assertLess(duration, total_time + 2/rate)
+        self.assertGreater(duration, total_time - 2/rate)
+
+        dst_data = dst.data()
+        num = len(dst_data)
+        # be at most one chunksize
+        self.assertGreater(total_time * rate + chunksize + 1, num)
+        self.assertLess(total_time * rate - chunksize - 1, num)
+
+    def test_limited_chunk_throttling_5(self):
+        src_data = [1, 2, 3]
+        rate = 50
+        chunksize = 10
+        src = blocks.vector_source_c(src_data, repeat=True)
+
+        thr = blocks.throttle(gr.sizeof_gr_complex,
+                              rate,
+                              ignore_tags=True,
+                              maximum_items_per_chunk=chunksize)
+
+        dst = blocks.vector_sink_c()
+        self.tb.connect(src, thr, dst)
+
+        total_time = 0.5  # seconds
+        before = time.perf_counter()
+        self.tb.start()
+        time.sleep(total_time)
+        self.tb.stop()
+        after = time.perf_counter()
+        duration = after - before
+        self.assertLess(duration, total_time + 2/rate)
+        self.assertGreater(duration, total_time - 2/rate)
+
+        dst_data = dst.data()
+        num = len(dst_data)
+        # be at most one chunksize
+        self.assertGreater(total_time * rate + chunksize + 1, num)
+        self.assertLess(total_time * rate - chunksize - 1, num)
+
+    def test_limited_chunk_throttling_6(self):
+        src_data = [1, 2, 3]
+        rate = 50
+        chunksize = 10
+        src = blocks.vector_source_c(src_data, repeat=True)
+
+        thr = blocks.throttle(gr.sizeof_gr_complex,
+                              rate,
+                              ignore_tags=True,
+                              maximum_items_per_chunk=chunksize)
+
+        dst = blocks.vector_sink_c()
+        self.tb.connect(src, thr, dst)
+
+        total_time = 0.5  # seconds
+        before = time.perf_counter()
+        self.tb.start()
+        time.sleep(total_time)
+        self.tb.stop()
+        after = time.perf_counter()
+        duration = after - before
+        self.assertLess(duration, total_time + 2/rate)
+        self.assertGreater(duration, total_time - 2/rate)
+
+        dst_data = dst.data()
+        num = len(dst_data)
+        # be at most one chunksize
+        self.assertGreater(total_time * rate + chunksize + 1, num)
+        self.assertLess(total_time * rate - chunksize - 1, num)
+
+    def test_limited_chunk_throttling_7(self):
+        src_data = [1, 2, 3]
+        rate = 50
+        chunksize = 10
+        src = blocks.vector_source_c(src_data, repeat=True)
+
+        thr = blocks.throttle(gr.sizeof_gr_complex,
+                              rate,
+                              ignore_tags=True,
+                              maximum_items_per_chunk=chunksize)
+
+        dst = blocks.vector_sink_c()
+        self.tb.connect(src, thr, dst)
+
+        total_time = 0.5  # seconds
+        before = time.perf_counter()
+        self.tb.start()
+        time.sleep(total_time)
+        self.tb.stop()
+        after = time.perf_counter()
+        duration = after - before
+        self.assertLess(duration, total_time + 2/rate)
+        self.assertGreater(duration, total_time - 2/rate)
+
+        dst_data = dst.data()
+        num = len(dst_data)
+        # be at most one chunksize
+        self.assertGreater(total_time * rate + chunksize + 1, num)
+        self.assertLess(total_time * rate - chunksize - 1, num)
+
+    def test_limited_chunk_throttling_8(self):
+        src_data = [1, 2, 3]
+        rate = 50
+        chunksize = 10
+        src = blocks.vector_source_c(src_data, repeat=True)
+
+        thr = blocks.throttle(gr.sizeof_gr_complex,
+                              rate,
+                              ignore_tags=True,
+                              maximum_items_per_chunk=chunksize)
+
+        dst = blocks.vector_sink_c()
+        self.tb.connect(src, thr, dst)
+
+        total_time = 0.5  # seconds
+        before = time.perf_counter()
+        self.tb.start()
+        time.sleep(total_time)
+        self.tb.stop()
+        after = time.perf_counter()
+        duration = after - before
+        self.assertLess(duration, total_time + 2/rate)
+        self.assertGreater(duration, total_time - 2/rate)
+
+        dst_data = dst.data()
+        num = len(dst_data)
+        # be at most one chunksize
+        self.assertGreater(total_time * rate + chunksize + 1, num)
+        self.assertLess(total_time * rate - chunksize - 1, num)
+
+    def test_limited_chunk_throttling_9(self):
+        src_data = [1, 2, 3]
+        rate = 50
+        chunksize = 10
+        src = blocks.vector_source_c(src_data, repeat=True)
+
+        thr = blocks.throttle(gr.sizeof_gr_complex,
+                              rate,
+                              ignore_tags=True,
+                              maximum_items_per_chunk=chunksize)
+
+        dst = blocks.vector_sink_c()
+        self.tb.connect(src, thr, dst)
+
+        total_time = 0.5  # seconds
+        before = time.perf_counter()
+        self.tb.start()
+        time.sleep(total_time)
+        self.tb.stop()
+        after = time.perf_counter()
+        duration = after - before
+        self.assertLess(duration, total_time + 2/rate)
+        self.assertGreater(duration, total_time - 2/rate)
+
+        dst_data = dst.data()
+        num = len(dst_data)
+        # be at most one chunksize
+        self.assertGreater(total_time * rate + chunksize + 1, num)
+        self.assertLess(total_time * rate - chunksize - 1, num)
+
+    def test_limited_chunk_throttling_10(self):
+        src_data = [1, 2, 3]
+        rate = 50
+        chunksize = 10
+        src = blocks.vector_source_c(src_data, repeat=True)
+
+        thr = blocks.throttle(gr.sizeof_gr_complex,
+                              rate,
+                              ignore_tags=True,
+                              maximum_items_per_chunk=chunksize)
+
+        dst = blocks.vector_sink_c()
+        self.tb.connect(src, thr, dst)
+
+        total_time = 0.5  # seconds
+        before = time.perf_counter()
+        self.tb.start()
+        time.sleep(total_time)
+        self.tb.stop()
+        after = time.perf_counter()
+        duration = after - before
+        self.assertLess(duration, total_time + 2/rate)
+        self.assertGreater(duration, total_time - 2/rate)
+
+        dst_data = dst.data()
+        num = len(dst_data)
+        # be at most one chunksize
+        self.assertGreater(total_time * rate + chunksize + 1, num)
+        self.assertLess(total_time * rate - chunksize - 1, num)
 
 
 if __name__ == '__main__':
