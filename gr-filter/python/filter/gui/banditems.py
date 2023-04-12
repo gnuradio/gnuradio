@@ -45,7 +45,7 @@ class filtermovlineItem(QtWidgets.QGraphicsObject):
     # Allow only vertical movement and emit signals.
     def itemChange(self, change, value):
         if (change == QtWidgets.QGraphicsItem.ItemPositionChange):
-            newpos = value.toPointF()
+            newpos = QtCore.QPointF(value)
             div = 0
             if newpos.y() < self.pos().y():
                 div = 1
