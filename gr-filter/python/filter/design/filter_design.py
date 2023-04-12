@@ -15,6 +15,7 @@ import warnings
 from optparse import OptionParser
 
 from gnuradio import filter, fft
+from .CustomViewBox import CustomViewBox
 
 try:
     import numpy as np
@@ -2334,23 +2335,6 @@ class gr_plot_filter(QtWidgets.QMainWindow):
             self.update_imp_curves()
 
         self.gui.nTapsEdit.setText(str(self.taps.size))
-
-
-class CustomViewBox(pg.ViewBox):
-    def __init__(self, *args, **kwds):
-        pg.ViewBox.__init__(self, *args, **kwds)
-        self.setMouseMode(self.RectMode)
-
-    # Reimplement right-click to zoom out.
-    def mouseClickEvent(self, ev):
-        if ev.button() == QtCore.Qt.RightButton:
-            self.autoRange()
-
-    def mouseDragEvent(self, ev):
-        if ev.button() == QtCore.Qt.RightButton:
-            ev.ignore()
-        else:
-            pg.ViewBox.mouseDragEvent(self, ev)
 
 
 def setup_options():
