@@ -891,7 +891,12 @@ void hier_block2_detail::set_processor_affinity(const std::vector<int>& mask)
 {
     basic_block_vector_t tmp = d_fg->calc_used_blocks();
     for (basic_block_viter_t p = tmp.begin(); p != tmp.end(); p++) {
-        (*p)->set_processor_affinity(mask);
+        // The hier_block2 is a container for a other blocks and has no own affinity
+        // but distributes the affinity's to the dependent blocks.
+        // So check if we are the hier_block2 to avoid an endless loop calling
+        // set_processor_affinity for this block.
+        if (d_owner->unique_id() != (*p)->unique_id())
+            (*p)->set_processor_affinity(mask);
     }
 }
 
@@ -899,14 +904,9 @@ void hier_block2_detail::unset_processor_affinity()
 {
     basic_block_vector_t tmp = d_fg->calc_used_blocks();
     for (basic_block_viter_t p = tmp.begin(); p != tmp.end(); p++) {
-        (*p)->unset_processor_affinity();
+        if (d_owner->unique_id() != (*p)->unique_id())
+            (*p)->unset_processor_affinity();
     }
-}
-
-std::vector<int> hier_block2_detail::processor_affinity()
-{
-    basic_block_vector_t tmp = d_fg->calc_used_blocks();
-    return tmp[0]->processor_affinity();
 }
 
 void hier_block2_detail::set_log_level(const std::string& level)
