@@ -1,0 +1,406 @@
+options:
+  parameters:
+    author: Grant Meyerhoff <grant.meyerhoff@ni.com>
+    catch_exceptions: 'True'
+    category: '[GRC Hier Blocks]'
+    cmake_opt: ''
+    comment: ''
+    copyright: ''
+    description: ''
+    gen_cmake: 'On'
+    gen_linking: dynamic
+    generate_options: qt_gui
+    hier_block_src_path: '.:'
+    id: rfnoc_fosphor
+    max_nouts: '0'
+    output_language: python
+    placement: (0,0)
+    qt_qss_theme: ''
+    realtime_scheduling: ''
+    run: 'True'
+    run_command: '{python} -u {filename}'
+    run_options: prompt
+    sizing_mode: fixed
+    thread_safe_setters: ''
+    title: 'RFNoC: Fosphor Example'
+    window_size: (1000,1000)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 8]
+    rotation: 0
+    state: enabled
+
+blocks:
+- name: device_type
+  id: variable
+  parameters:
+    comment: ''
+    value: '"type=n3xx"'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [616, 88.0]
+    rotation: 0
+    state: disabled
+- name: device_type
+  id: variable
+  parameters:
+    comment: ''
+    value: '"type=e3xx"'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [616, 160.0]
+    rotation: 0
+    state: disabled
+- name: device_type
+  id: variable
+  parameters:
+    comment: ''
+    value: '"type=x4xx"'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [512, 160.0]
+    rotation: 0
+    state: disabled
+- name: fft_size
+  id: variable
+  parameters:
+    comment: ''
+    value: '1024'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [328, 12.0]
+    rotation: 0
+    state: enabled
+- name: fosphor_decim
+  id: variable
+  parameters:
+    comment: ''
+    value: int(samp_rate / (fft_size * pwr_bins * frame_rate))
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [368, 76.0]
+    rotation: 0
+    state: enabled
+- name: frame_rate
+  id: variable
+  parameters:
+    comment: ''
+    value: '30'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [424, 12.0]
+    rotation: 0
+    state: enabled
+- name: freq
+  id: variable_qtgui_range
+  parameters:
+    comment: ''
+    gui_hint: ''
+    label: Frequency (Hz)
+    min_len: '200'
+    orient: QtCore.Qt.Horizontal
+    rangeType: float
+    start: 1e6
+    step: 1e6
+    stop: 7.2e9
+    value: 1e9
+    widget: counter_slider
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [736, 12.0]
+    rotation: 0
+    state: true
+- name: gain
+  id: variable_qtgui_range
+  parameters:
+    comment: ''
+    gui_hint: ''
+    label: Gain (dB)
+    min_len: '200'
+    orient: QtCore.Qt.Horizontal
+    rangeType: float
+    start: '0'
+    step: '1'
+    stop: '80'
+    value: '10'
+    widget: counter_slider
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [872, 12.0]
+    rotation: 0
+    state: true
+- name: pwr_bins
+  id: variable
+  parameters:
+    comment: ''
+    value: '64'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [272, 76.0]
+    rotation: 0
+    state: enabled
+- name: samp_rate
+  id: variable
+  parameters:
+    comment: ''
+    value: int(200e6)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [232, 12.0]
+    rotation: 0
+    state: enabled
+- name: uhd_rfnoc_graph
+  id: uhd_rfnoc_graph
+  parameters:
+    alias: ''
+    clock_source: ''
+    comment: ''
+    dev_addr: '"addr=192.168.20.2"'
+    dev_args: ''
+    num_mboards: '1'
+    time_source: ''
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [544, 12.0]
+    rotation: 0
+    state: true
+- name: blocks_message_debug_0
+  id: blocks_message_debug
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    en_uvec: 'True'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [32, 424.0]
+    rotation: 180
+    state: enabled
+- name: blocks_null_sink_0
+  id: blocks_null_sink
+  parameters:
+    affinity: ''
+    alias: ''
+    bus_structure_sink: '[[0,],]'
+    comment: ''
+    num_inputs: '2'
+    type: byte
+    vlen: fft_size
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [160, 672.0]
+    rotation: 180
+    state: disabled
+- name: qtgui_fosphor_display_0
+  id: qtgui_fosphor_display
+  parameters:
+    affinity: ''
+    alias: ''
+    center_freq: '50000'
+    comment: ''
+    fftsize: fft_size
+    frame_rate: '30'
+    grid_enabled: 'True'
+    gui_hint: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    palette: iron
+    pwr_bins: pwr_bins
+    samp_rate: samp_rate
+    wf_enabled: 'True'
+    wf_lines: '512'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [288, 356.0]
+    rotation: 180
+    state: enabled
+- name: uhd_rfnoc_ddc_0
+  id: uhd_rfnoc_ddc
+  parameters:
+    affinity: ''
+    alias: ''
+    block_args: ''
+    comment: ''
+    device_select: '-1'
+    freq: '0'
+    instance_index: '-1'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_chans: '1'
+    output_rate: samp_rate
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [344, 164.0]
+    rotation: 0
+    state: true
+- name: uhd_rfnoc_fft_0
+  id: uhd_rfnoc_fft
+  parameters:
+    affinity: ''
+    alias: ''
+    block_args: ''
+    comment: ''
+    device_select: '-1'
+    fft_direction: FORWARD
+    fft_length: fft_size
+    fft_magnitude: COMPLEX
+    fft_scaling: '1706'
+    fft_shift_config: NORMAL
+    instance_index: '-1'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_chans: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [704, 180.0]
+    rotation: 0
+    state: true
+- name: uhd_rfnoc_fosphor_0
+  id: uhd_rfnoc_fosphor
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha: '65280'
+    comment: ''
+    device_select: '-1'
+    enable_dither: 'True'
+    enable_noise: 'True'
+    enable_wf: 'True'
+    epsilon: '1'
+    hist_decim: fosphor_decim
+    instance_index: '-1'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    offset: '0'
+    scale: '256'
+    tdecay: '16384'
+    trise: '4096'
+    wf_decim: fosphor_decim
+    wf_mode: MODE_MAX_HOLD
+    wf_prediv: RATIO_1_1
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [800, 380.0]
+    rotation: 180
+    state: true
+- name: uhd_rfnoc_rx_radio_0
+  id: uhd_rfnoc_rx_radio
+  parameters:
+    affinity: ''
+    agc: Default
+    alias: ''
+    antenna: RX2
+    bandwidth: '0'
+    block_args: ''
+    comment: ''
+    dc_offset: 'False'
+    device_select: '-1'
+    frequency: freq
+    gain: gain
+    instance_index: '-1'
+    iq_balance: 'False'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_chans: '1'
+    rate: samp_rate
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 116.0]
+    rotation: 0
+    state: true
+- name: uhd_rfnoc_rx_streamer_0_0
+  id: uhd_rfnoc_rx_streamer
+  parameters:
+    adapter_id_list: '[0]'
+    affinity: ''
+    alias: ''
+    args: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_chans: '1'
+    otw: s8
+    output_type: s8
+    use_default_adapter_id: 'True'
+    vlen: fft_size
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [568, 408.0]
+    rotation: 180
+    state: true
+- name: uhd_rfnoc_rx_streamer_0_0_0
+  id: uhd_rfnoc_rx_streamer
+  parameters:
+    adapter_id_list: '[0]'
+    affinity: ''
+    alias: ''
+    args: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_chans: '1'
+    otw: s8
+    output_type: s8
+    use_default_adapter_id: 'True'
+    vlen: fft_size
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [568, 440.0]
+    rotation: 180
+    state: true
+
+connections:
+- [qtgui_fosphor_display_0, cfg, blocks_message_debug_0, print]
+- [uhd_rfnoc_ddc_0, '0', uhd_rfnoc_fft_0, '0']
+- [uhd_rfnoc_fft_0, '0', uhd_rfnoc_fosphor_0, '0']
+- [uhd_rfnoc_fosphor_0, '0', uhd_rfnoc_rx_streamer_0_0, '0']
+- [uhd_rfnoc_fosphor_0, '1', uhd_rfnoc_rx_streamer_0_0_0, '0']
+- [uhd_rfnoc_rx_radio_0, '0', uhd_rfnoc_ddc_0, '0']
+- [uhd_rfnoc_rx_streamer_0_0, '0', qtgui_fosphor_display_0, '0']
+- [uhd_rfnoc_rx_streamer_0_0_0, '0', qtgui_fosphor_display_0, '1']
+
+metadata:
+  file_format: 1
+  grc_version: v3.11.0.0git-372-gb260520f
