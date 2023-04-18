@@ -24,7 +24,7 @@ options:
     run_options: prompt
     sizing_mode: fixed
     thread_safe_setters: ''
-    title: QT GUI Foshpor Display Test
+    title: QT GUI Fosphor Display Test
     window_size: (1000,1000)
   states:
     bus_sink: false
@@ -239,4 +239,4 @@ connections:
 
 metadata:
   file_format: 1
-  grc_version: v3.11.0.0git-453-g443ece78
+  grc_version: v3.11.0.0git-453-ge640aef8
