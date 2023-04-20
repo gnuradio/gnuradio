@@ -43,7 +43,7 @@ templates:
         ${win}.addWidget(Qt.QLabel("${no_quotes(label,repr(id))}" + ": "))
         self._${id}_line_edit = Qt.QLineEdit(str(self.${id}))
         self._${id}_tool_bar.addWidget(self._${id}_line_edit)
-        self._${id}_line_edit.returnPressed.connect(
+        self._${id}_line_edit.editingFinished.connect(
             lambda: self.set_${id}(${type.conv}(str(self._${id}_line_edit.text()))))
         ${gui_hint() % win}
 
@@ -68,7 +68,7 @@ cpp_templates:
         this->_${id}_tool_bar->addWidget(_${id}_label);
         this->_${id}_line_edit = new QLineEdit(QString::number(this->${id}));
         this->_${id}_tool_bar->addWidget(this->_${id}_line_edit);
-        QObject::connect(this->_${id}_line_edit, &QLineEdit::returnPressed, this, [this] () {this->set_${id}(this->_${id}_line_edit->text().toInt());});
+        QObject::connect(this->_${id}_line_edit, &QLineEdit::editingFinished, this, [this] () {this->set_${id}(this->_${id}_line_edit->text().toInt());});
 
         ${gui_hint() % win}
 documentation: |-

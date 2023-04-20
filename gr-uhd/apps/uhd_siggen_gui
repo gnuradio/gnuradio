@@ -247,7 +247,7 @@ class uhd_siggen_gui(Qt.QWidget):
         self._samp_rate_line_edit = Qt.QLineEdit(
             eng_notation.num_to_str(self._sg[uhd_siggen.SAMP_RATE_KEY]))
         self._samp_rate_tool_bar.addWidget(self._samp_rate_line_edit)
-        self._samp_rate_line_edit.returnPressed.connect(
+        self._samp_rate_line_edit.editingFinished.connect(
             lambda: self.set_samp_rate(eng_notation.str_to_num(
                 str(self._samp_rate_line_edit.text())))
         )

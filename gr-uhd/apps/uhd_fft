@@ -149,7 +149,7 @@ class uhd_fft(UHDApp, gr.top_block, Qt.QWidget):
         self._samp_rate__line_edit = Qt.QLineEdit(
             eng_notation.num_to_str(self.samp_rate))
         self._samp_rate__tool_bar.addWidget(self._samp_rate__line_edit)
-        self._samp_rate__line_edit.returnPressed.connect(
+        self._samp_rate__line_edit.editingFinished.connect(
             lambda: self.set_samp_rate(eng_notation.str_to_num(
                 str(self._samp_rate__line_edit.text()))))
         self.top_grid_layout.addWidget(self._samp_rate__tool_bar, 3, 2, 1, 2)
@@ -181,7 +181,7 @@ class uhd_fft(UHDApp, gr.top_block, Qt.QWidget):
         self._freq_tool_bar.addWidget(Qt.QLabel("RX Tune Frequency: "))
         self._freq_line_edit = Qt.QLineEdit(eng_notation.num_to_str(self.freq))
         self._freq_tool_bar.addWidget(self._freq_line_edit)
-        self._freq_line_edit.returnPressed.connect(
+        self._freq_line_edit.editingFinished.connect(
             lambda: self.set_freq_qt(
                 eng_notation.str_to_num(str(self._freq_line_edit.text()))))
         self.top_grid_layout.addWidget(self._freq_tool_bar, 3, 0, 1, 2)
