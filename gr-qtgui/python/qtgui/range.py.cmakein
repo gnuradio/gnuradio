@@ -253,7 +253,7 @@ class RangeWidget(QtWidgets.QWidget):
             self.notifyChanged = slot
 
             self.setMaximumWidth(100)
-            self.returnPressed.connect(self.changed)
+            self.editingFinished.connect(self.changed)
             self.setText(str(ranges.default))
             self.setValidator(QEngValidator(ranges.min, ranges.max, self))
             self.notifyChanged = slot
