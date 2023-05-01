@@ -54,6 +54,7 @@ throttle_impl::~throttle_impl() {}
 
 bool throttle_impl::start()
 {
+    d_total_items = 0;
     d_start = std::chrono::steady_clock::now();
     return block::start();
 }
