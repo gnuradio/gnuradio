@@ -26,7 +26,7 @@ void bind_amsg_source(py::module& m)
 
 
     py::class_<amsg_source, std::shared_ptr<amsg_source>>(
-        m, "amsg_source", D(amsg_source))
+        m, "amsg_source", D(amsg_source), py::module_local())
 
         .def(py::init(&amsg_source::make),
              py::arg("device_addr"),

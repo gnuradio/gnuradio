@@ -22,7 +22,7 @@ void bind_uhd_types(py::module& m)
 
     // using str_map = std::map<std::string, std::string>;
 
-    py::class_<::uhd::device_addr_t>(m, "device_addr_t")
+    py::class_<::uhd::device_addr_t>(m, "device_addr_t", py::module_local())
         // Constructors
         .def(py::init<>())
         .def(py::init<std::string>())
@@ -39,7 +39,7 @@ void bind_uhd_types(py::module& m)
     py::implicitly_convertible<std::string, uhd::device_addr_t>();
 
     using stream_args_t = ::uhd::stream_args_t;
-    py::class_<stream_args_t>(m, "stream_args_t")
+    py::class_<stream_args_t>(m, "stream_args_t", py::module_local())
         .def(py::init([](const std::string& cpu,
                          const std::string& otw,
                          const ::uhd::device_addr_t& args,
@@ -63,7 +63,7 @@ void bind_uhd_types(py::module& m)
     // ::uhd::time_spec_t
     using time_spec_t = ::uhd::time_spec_t;
 
-    py::class_<time_spec_t>(m, "time_spec_t")
+    py::class_<time_spec_t>(m, "time_spec_t", py::module_local())
         // Additional constructors
         .def(py::init<double>(), py::arg("secs") = 0)
         .def(py::init<int64_t, double>(), py::arg("full_secs"), py::arg("frac_secs") = 0)
@@ -92,7 +92,7 @@ void bind_uhd_types(py::module& m)
 
     // ::uhd::stream_cmd_t
     using stream_cmd_t = ::uhd::stream_cmd_t;
-    py::class_<stream_cmd_t>(m, "stream_cmd_t")
+    py::class_<stream_cmd_t>(m, "stream_cmd_t", py::module_local())
         .def(py::init<stream_cmd_t::stream_mode_t>())
         // Properties
         .def_readwrite("stream_mode", &stream_cmd_t::stream_mode)
@@ -101,7 +101,7 @@ void bind_uhd_types(py::module& m)
         .def_readwrite("stream_now", &stream_cmd_t::stream_now);
 
     // ::uhd::stream_cmd_t::stream_mode_t
-    py::enum_<stream_cmd_t::stream_mode_t>(m, "stream_mode_t")
+    py::enum_<stream_cmd_t::stream_mode_t>(m, "stream_mode_t", py::module_local())
         .value("STREAM_MODE_START_CONTINUOUS",
                stream_cmd_t::stream_mode_t::STREAM_MODE_START_CONTINUOUS)
         .value("STREAM_MODE_STOP_CONTINUOUS",
@@ -115,7 +115,7 @@ void bind_uhd_types(py::module& m)
     // ::uhd::meta_range_t
     using meta_range_t = ::uhd::meta_range_t;
 
-    py::class_<meta_range_t>(m, "meta_range_t")
+    py::class_<meta_range_t>(m, "meta_range_t", py::module_local())
         // Constructors
         .def(py::init<>())
         .def(py::init<double, double>())
@@ -130,7 +130,7 @@ void bind_uhd_types(py::module& m)
 
     // ::uhd::tune_result_t
     using tune_result_t = ::uhd::tune_result_t;
-    py::class_<tune_result_t>(m, "tune_result_t")
+    py::class_<tune_result_t>(m, "tune_result_t", py::module_local())
         .def(py::init<>())
         .def_readwrite("clipped_rf_freq", &tune_result_t::clipped_rf_freq)
         .def_readwrite("target_rf_freq", &tune_result_t::target_rf_freq)
@@ -141,7 +141,7 @@ void bind_uhd_types(py::module& m)
 
     // ::uhd::tune_request_t
     using tune_request_t = ::uhd::tune_request_t;
-    py::class_<tune_request_t> tune_request(m, "tune_request_t");
+    py::class_<tune_request_t> tune_request(m, "tune_request_t", py::module_local());
     tune_request.def(py::init<double, double>())
         .def(py::init<double>(), py::arg("target_freq") = 0.0)
         .def_readwrite("target_freq", &tune_request_t::target_freq)
@@ -153,16 +153,16 @@ void bind_uhd_types(py::module& m)
 
     // ::uhd::tune_request_t::policy_t
     using policy_t = ::uhd::tune_request_t::policy_t;
-    py::enum_<policy_t>(tune_request, "policy_t")
+    py::enum_<policy_t>(tune_request, "policy_t", py::module_local())
         .value("POLICY_NONE", policy_t::POLICY_NONE)
         .value("POLICY_AUTO", policy_t::POLICY_AUTO)
         .value("POLICY_MANUAL", policy_t::POLICY_MANUAL)
         .export_values();
 
     // ::uhd::sensor_value_t
-    using sensor_value_t = uhd::sensor_value_t;
+    using sensor_value_t = ::uhd::sensor_value_t;
 
-    py::class_<sensor_value_t>(m, "sensor_value_t")
+    py::class_<sensor_value_t>(m, "sensor_value_t", py::module_local())
         // Constructors
         .def(py::init<const std::string&, bool, const std::string&, const std::string&>())
         .def(py::init<const std::string&,
