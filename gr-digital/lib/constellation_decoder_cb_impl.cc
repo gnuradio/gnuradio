@@ -50,6 +50,13 @@ void constellation_decoder_cb_impl::forecast(int noutput_items,
 void constellation_decoder_cb_impl::set_constellation(
     constellation_sptr new_constellation)
 {
+    if (new_constellation->dimensionality() != d_dim) {
+        d_logger->warn("Attempting to change to a new dimensionality constellation (from "
+                       "{} to {}). This may cause buffering issues",
+                       d_dim,
+                       new_constellation->dimensionality());
+    }
+
     gr::thread::scoped_lock l(d_mutex);
 
     d_constellation = new_constellation;
