@@ -26,7 +26,7 @@ namespace digital {
  * Decode a constellation's points from a complex space to soft
  * bits based on the map and soft decision LUT of the \p
  * constellation object.
- * 
+ *
  * Does not support constellations of dimensionality higher than 1
  */
 class DIGITAL_API constellation_soft_decoder_cf : virtual public sync_interpolator

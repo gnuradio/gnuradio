@@ -58,7 +58,6 @@ class test_constellation_decoder(gr_unittest.TestCase):
         # print "expected result", expected_result
         self.assertFloatTuplesAlmostEqual(expected_result, actual_result)
 
-
     def test_constellation_decoder_cb_bpsk_to_qpsk(self):
         cnst = digital.constellation_bpsk()
         src_data = (0.5 + 0.5j, 0.1 - 1.2j, -0.8 - 0.1j, -0.45 + 0.8j,
@@ -74,9 +73,9 @@ class test_constellation_decoder(gr_unittest.TestCase):
         cnst = digital.constellation_qpsk()
         src_data = (0.5 + 0.5j, 0.1 - 1.2j, -0.8 - 0.1j, -0.45 + 0.8j,
                     0.8 + 1.0j, -0.5 + 0.1j, 0.1 - 1.2j)
-        expected_result = (1, 1, 0, 0, # BPSK section
+        expected_result = (1, 1, 0, 0,  # BPSK section
                            1, 0, 1,
-                           3, 1, 0, 2, # QPSK section
+                           3, 1, 0, 2,  # QPSK section
                            3, 2, 1)
         src.set_data(src_data)
         op.set_constellation(cnst.base())

@@ -28,7 +28,7 @@ private:
 public:
     constellation_soft_decoder_cf_impl(constellation_sptr constellation);
     ~constellation_soft_decoder_cf_impl() override;
-    
+
     void set_constellation(constellation_sptr constellation);
 
     int work(int noutput_items,
