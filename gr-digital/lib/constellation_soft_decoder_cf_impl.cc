@@ -48,7 +48,8 @@ void constellation_soft_decoder_cf_impl::set_constellation(
     d_dim = d_constellation->dimensionality();
     d_bps = d_constellation->bits_per_symbol();
     set_interpolation(d_bps);
-    // set_relative_rate((uint64_t)d_dim, (uint64_t)d_bps); // For when d_dim is properly managed
+    // set_relative_rate((uint64_t)d_dim, (uint64_t)d_bps); // For when d_dim is properly
+    // managed
 }
 
 int constellation_soft_decoder_cf_impl::work(int noutput_items,
