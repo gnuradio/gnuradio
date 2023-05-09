@@ -40,7 +40,7 @@ public:
      * this base class type.
      */
     static sptr make(constellation_sptr constellation);
-    
+
     /*!
      * Set a new constellation object for encoding
      *
