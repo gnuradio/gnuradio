@@ -42,6 +42,19 @@ constellation_soft_decoder_cf_impl::~constellation_soft_decoder_cf_impl() {}
 void constellation_soft_decoder_cf_impl::set_constellation(
     constellation_sptr new_constellation)
 {
+    if (new_constellation->dimensionality() != d_dim) {
+        d_logger->warn("Attempting to change to a new dimensionality constellation (from "
+                       "{} to {}). This may cause buffering issues",
+                       d_dim,
+                       new_constellation->dimensionality());
+    }
+    if (new_constellation->bits_per_symbol() != d_bps) {
+        d_logger->warn("Attempting to change to a constellation with different number of "
+                       "bits per symbol (from {} to {}). This may cause buffering issues",
+                       d_bps,
+                       new_constellation->bits_per_symbol());
+    }
+
     gr::thread::scoped_lock l(d_mutex);
 
     d_constellation = new_constellation;
