@@ -22,8 +22,10 @@ class constellation_soft_decoder_cf_impl : public constellation_soft_decoder_cf
 private:
     constellation_sptr d_constellation;
     unsigned int d_dim;
-    int d_bps;
+    unsigned int d_bps;
     gr::thread::mutex d_mutex;
+    bool d_warned_bps = false; // To record if a bps change warning has been raised, and
+                               // limit logging spam
 
 public:
     constellation_soft_decoder_cf_impl(constellation_sptr constellation);
