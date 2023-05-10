@@ -44,15 +44,20 @@ void constellation_soft_decoder_cf_impl::set_constellation(
 {
     if (new_constellation->dimensionality() != d_dim) {
         d_logger->warn("Attempting to change to a new dimensionality constellation (from "
-                       "{} to {}). This may cause buffering issues",
+                       "{} to {}). This may cause buffering issues.",
                        d_dim,
                        new_constellation->dimensionality());
     }
     if (new_constellation->bits_per_symbol() != d_bps) {
-        d_logger->warn("Attempting to change to a constellation with different number of "
-                       "bits per symbol (from {} to {}). This may cause buffering issues",
-                       d_bps,
-                       new_constellation->bits_per_symbol());
+        if (!d_warned_bps) {
+            d_logger->warn(
+                "Attempting to change to a constellation with different number of "
+                "bits per symbol (from {} to {}). This may cause buffering issues. This "
+                "warning is raised only once.",
+                d_bps,
+                new_constellation->bits_per_symbol());
+            d_warned_bps = true;
+        }
     }
 
     gr::thread::scoped_lock l(d_mutex);
@@ -77,7 +82,7 @@ int constellation_soft_decoder_cf_impl::work(int noutput_items,
     gr::thread::scoped_lock l(d_mutex);
 
     // FIXME: figure out how to manage d_dim
-    for (int i = 0; i < noutput_items / d_bps; i++) {
+    for (unsigned int i = 0; i < noutput_items / d_bps; i++) {
         bits = d_constellation->soft_decision_maker(in[i]);
         for (size_t j = 0; j < bits.size(); j++) {
             out[d_bps * i + j] = bits[j];
