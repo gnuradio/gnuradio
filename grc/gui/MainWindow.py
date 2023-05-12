@@ -334,13 +334,13 @@ class MainWindow(Gtk.ApplicationWindow):
             self._set_page(self.page_to_be_closed)
         # unsaved? ask the user
         if not self.page_to_be_closed.saved:
-            response = self._save_changes()  # return value is either OK, CLOSE, or CANCEL
+            response = self._save_changes()  # return value can be OK, CLOSE, CANCEL, DELETE_EVENT, or NONE
             if response == Gtk.ResponseType.OK:
                 Actions.FLOW_GRAPH_SAVE()  # try to save
                 if not self.page_to_be_closed.saved:  # still unsaved?
                     self.page_to_be_closed = None  # set the page to be closed back to None
                     return False
-            elif response == Gtk.ResponseType.CANCEL:
+            elif response != Gtk.ResponseType.CLOSE:
                 self.page_to_be_closed = None
                 return False
         # stop the flow graph if executing
