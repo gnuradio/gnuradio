@@ -102,9 +102,6 @@ if(ENABLE_GNURADIO_RUNTIME)
     install(FILES ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-runtime.conf
             DESTINATION ${GR_PREFSDIR})
 
-    install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/gr_log_default.conf
-            DESTINATION ${GR_PREFSDIR})
-
     set(PC_ADD_CFLAGS ${MPLIB_PC_ADD_CFLAGS})
 
     ########################################################################

@@ -13,10 +13,10 @@ max_messages = 8192
 #buffer_size = 32768
 
 [LOG]
-# Levels can be (case insensitive):
-#       DEBUG, INFO, WARN, TRACE, ERROR, ALERT, CRIT, FATAL, EMERG
+# levels, in ascending order of severity:
+# trace, debug, info, warning, error, critical, off
 log_level = info
-debug_level = emerg
+debug_level = critical
 
 # These file names can either be 'stdout' to output to standard output
 # or 'stderr' to output to standard error. Any other string will
@@ -25,9 +25,6 @@ debug_level = emerg
 # completely.
 log_file = stdout
 debug_file = stderr
-
-# Used for advanced configuration of the logger
-#log_config = @CMAKE_INSTALL_PREFIX@/etc/gnuradio/gr_log_default.xml
 
 
 [PerfCounters]
