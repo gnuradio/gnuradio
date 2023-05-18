@@ -73,11 +73,6 @@ jobs:
             cxxflags: -Werror
             ctest_args: '-E "qa_polar_..coder_(sc_)?systematic"'
             ldpath:
-          - distro: 'Fedora 36'
-            containerid: 'gnuradio/ci:fedora-36-3.9'
-            cxxflags: -Werror
-            ctest_args: '-E ""'
-            ldpath: /usr/local/lib64/
           - distro: 'Fedora 37'
             containerid: 'gnuradio/ci:fedora-37-3.9'
             cxxflags: -Werror
