@@ -1,6 +1,6 @@
 id: analog_quadrature_demod_cf
 label: Quadrature Demod
-flags: [ python ]
+flags: [ python, cpp ]
 
 parameters:
 -   id: gain
@@ -21,6 +21,14 @@ templates:
         from gnuradio import analog
         import math
     make: analog.quadrature_demod_cf(${gain})
+    callbacks:
+    - set_gain(${gain})
+
+cpp_templates:
+    includes: [ '#include <gnuradio/analog/quadrature_demod_cf.h>' ]
+    declarations: 'analog::quadrature_demod_cf::sptr ${id};'
+    make: 'this->${id} = analog::quadrature_demod_cf(${gain});'
+    link: ['gnuradio-analog']
     callbacks:
     - set_gain(${gain})
 
