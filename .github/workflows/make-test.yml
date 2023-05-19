@@ -78,6 +78,11 @@ jobs:
             cxxflags: -Werror
             ctest_args: '-E ""'
             ldpath: /usr/local/lib64/
+          - distro: 'Fedora 38'
+            containerid: 'gnuradio/ci:fedora-38-3.10'
+            cxxflags: -Werror
+            ctest_args: '-E ""'
+            ldpath: /usr/local/lib64/
           # - distro: 'CentOS 8.4'
           #   containerid: 'gnuradio/ci:centos-8.4-3.10'
           #   cxxflags: ''
