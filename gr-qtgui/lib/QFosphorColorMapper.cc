@@ -9,6 +9,8 @@
 
 #include "QFosphorColorMapper.h"
 #include <QGLContext>
+#include <memory>
+#include <sstream>
 
 namespace gr {
 namespace qtgui {
@@ -45,8 +47,8 @@ QFosphorColorMapper::QFosphorColorMapper(QObject* parent) : QObject(parent)
 
 int QFosphorColorMapper::loadFromFile(QFile& file)
 {
-    QLinearGradient* gradient = NULL;
-    char* name;
+    std::unique_ptr<QLinearGradient> gradient;
+    std::string name;
     int kp = -1;
 
     /* Make sure it's open */
@@ -54,6 +56,7 @@ int QFosphorColorMapper::loadFromFile(QFile& file)
         file.open(QFile::ReadOnly);
 
     /* Scan until the end */
+    std::stringstream ss;
     while (!file.atEnd()) {
         /* Grab a line */
         QByteArray line = file.readLine().simplified();
@@ -64,10 +67,14 @@ int QFosphorColorMapper::loadFromFile(QFile& file)
 
         /* Are we in a palette ? */
         if (kp < 0) {
-            sscanf(line.constData(), "%d %ms", &kp, &name);
+            ss.str(line.toStdString());
+            ss >> kp;
+            ss >> name;
+            ss.clear();
 
-            if (kp)
-                gradient = new QLinearGradient();
+            if (kp) {
+                gradient = std::make_unique<QLinearGradient>();
+            }
         } else if (kp == 0) {
             /* Create palette */
             QString filename = line;
@@ -76,28 +83,25 @@ int QFosphorColorMapper::loadFromFile(QFile& file)
             addPalette(name, pixmap);
 
             /* Release name & prepare for next */
-            free(name);
-            name = NULL;
+            name.clear();
 
             kp = -1;
         } else {
-            float f[4];
+            std::array<float, 4> f;
 
             /* Read data point */
-            sscanf(line.constData(), "%f %f %f %f", f, f + 1, f + 2, f + 3);
-            gradient->setColorAt(f[0], QColor::fromRgbF(f[1], f[2], f[3]));
+            ss.str(line.toStdString());
+            for (auto& val : f) {
+                ss >> val;
+            }
+            ss.clear();
 
+            // gradient should already be initialized in this else clause
+            gradient->setColorAt(f[0], QColor::fromRgbF(f[1], f[2], f[3]));
             /* Is it over ? */
             if (!--kp) {
                 /* Add the newly created palette */
                 addPalette(name, *gradient);
-
-                /* Release gradient, name & prepare for next */
-                delete gradient;
-                gradient = NULL;
-
-                free(name);
-                name = NULL;
 
                 kp = -1;
             }
