@@ -33,7 +33,7 @@ public:
               const size_t port,
               const ::uhd::time_spec_t time_spec,
               const bool repeat) override;
-    void stop(const size_t port = 0) override;
+    void stop_playback(const size_t port = 0) override;
     void set_record_type(const std::string type, const size_t port = 0) override;
     void set_play_type(const std::string type, const size_t port = 0) override;
     void issue_stream_cmd(const ::uhd::stream_cmd_t& cmd, const size_t port = 0) override;

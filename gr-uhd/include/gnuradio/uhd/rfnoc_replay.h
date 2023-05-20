@@ -104,7 +104,7 @@ public:
      *                  time to occur, rather, it will tag the first outgoing
      *                  packet with this time stamp.
      * \param repeat Determines whether the data should be played repeatedly or
-     *               just once. If set to true, stop() must be called to stop
+     *               just once. If set to true, stop_playback() must be called to stop
      *               the play back.
      * \throws uhd::value_error if offset+size exceeds the available memory.
      * \throws uhd::op_failed Too many play commands are queued.
@@ -122,7 +122,7 @@ public:
      *
      * \param port Which output port of the replay block to use
      */
-    virtual void stop(const size_t port = 0) = 0;
+    virtual void stop_playback(const size_t port = 0) = 0;
 
     /*! Sets the data type for items in the current record buffer for the given input
      * port.
