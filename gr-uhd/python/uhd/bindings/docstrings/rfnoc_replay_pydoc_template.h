@@ -28,10 +28,30 @@ static const char* __doc_gr_uhd_rfnoc_replay_record_restart = R"doc()doc";
 
 static const char* __doc_gr_uhd_rfnoc_replay_play = R"doc()doc";
 
-static const char* __doc_gr_uhd_rfnoc_replay_stop = R"doc()doc";
+static const char* __doc_gr_uhd_rfnoc_replay_stop_playback = R"doc()doc";
 
 static const char* __doc_gr_uhd_rfnoc_replay_set_record_type = R"doc()doc";
 
 static const char* __doc_gr_uhd_rfnoc_replay_set_play_type = R"doc()doc";
 
 static const char* __doc_gr_uhd_rfnoc_replay_issue_stream_cmd = R"doc()doc";
+
+static const char* __doc_gr_uhd_replay_cmd_key = R"doc()doc";
+
+static const char* __doc_gr_uhd_replay_cmd_port_key = R"doc()doc";
+
+static const char* __doc_gr_uhd_replay_cmd_offset_key = R"doc()doc";
+
+static const char* __doc_gr_uhd_replay_cmd_size_key = R"doc()doc";
+
+static const char* __doc_gr_uhd_replay_cmd_time_key = R"doc()doc";
+
+static const char* __doc_gr_uhd_replay_cmd_repeat_key = R"doc()doc";
+
+static const char* __doc_gr_uhd_replay_debug_port_key = R"doc()doc";
+
+static const char* __doc_gr_uhd_replay_mem_fullness_key = R"doc()doc";
+
+static const char* __doc_gr_uhd_replay_mem_size_key = R"doc()doc";
+
+static const char* __doc_gr_uhd_replay_word_size_key = R"doc()doc";
