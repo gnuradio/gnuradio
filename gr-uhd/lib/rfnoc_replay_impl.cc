@@ -108,7 +108,7 @@ void rfnoc_replay_impl::play(const uint64_t offset,
     d_wrapped_ref->play(offset, size, port, time_spec, repeat);
 }
 
-void rfnoc_replay_impl::stop(const size_t port) { d_wrapped_ref->stop(port); }
+void rfnoc_replay_impl::stop_playback(const size_t port) { d_wrapped_ref->stop(port); }
 
 void rfnoc_replay_impl::set_record_type(const std::string type, const size_t port)
 {
@@ -202,7 +202,7 @@ void rfnoc_replay_impl::_command_handler(pmt::pmt_t msg)
         return;
     }
     if (command == "stop") {
-        stop();
+        stop_playback();
         return;
     }
     if (command == "get_record_fullness") {

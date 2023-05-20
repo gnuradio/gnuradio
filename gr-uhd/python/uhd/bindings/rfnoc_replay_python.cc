@@ -16,7 +16,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0) */
 /* BINDTOOL_USE_PYGCCXML(0) */
 /* BINDTOOL_HEADER_FILE(rfnoc_replay.h) */
-/* BINDTOOL_HEADER_FILE_HASH(31a0a718c0a7208a4a53dbdfbec60a11) */
+/* BINDTOOL_HEADER_FILE_HASH(5fc8dd6289e5e69628d6c15d73802262) */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -68,7 +68,10 @@ void bind_rfnoc_replay(py::module& m)
              py::arg("repeat") = false,
              D(rfnoc_replay, play))
 
-        .def("stop", &rfnoc_replay::stop, py::arg("port") = 0, D(rfnoc_replay, stop))
+        .def("stop_playback",
+             &rfnoc_replay::stop_playback,
+             py::arg("port") = 0,
+             D(rfnoc_replay, stop_playback))
 
         .def("set_record_type",
              &rfnoc_replay::set_record_type,
@@ -89,4 +92,34 @@ void bind_rfnoc_replay(py::module& m)
              D(rfnoc_replay, issue_stream_cmd))
 
         ;
+
+    m.def("replay_cmd_key", &::gr::uhd::replay_cmd_key, D(replay_cmd_key));
+
+    m.def("replay_cmd_port_key", &::gr::uhd::replay_cmd_port_key, D(replay_cmd_port_key));
+
+    m.def("replay_cmd_offset_key",
+          &::gr::uhd::replay_cmd_offset_key,
+          D(replay_cmd_offset_key));
+
+    m.def("replay_cmd_size_key", &::gr::uhd::replay_cmd_size_key, D(replay_cmd_size_key));
+
+    m.def("replay_cmd_time_key", &::gr::uhd::replay_cmd_time_key, D(replay_cmd_time_key));
+
+    m.def("replay_cmd_repeat_key",
+          &::gr::uhd::replay_cmd_repeat_key,
+          D(replay_cmd_repeat_key));
+
+    m.def("replay_debug_port_key",
+          &::gr::uhd::replay_debug_port_key,
+          D(replay_debug_port_key));
+
+    m.def("replay_mem_fullness_key",
+          &::gr::uhd::replay_mem_fullness_key,
+          D(replay_mem_fullness_key));
+
+    m.def("replay_mem_size_key", &::gr::uhd::replay_mem_size_key, D(replay_mem_size_key));
+
+    m.def("replay_word_size_key",
+          &::gr::uhd::replay_word_size_key,
+          D(replay_word_size_key));
 }
