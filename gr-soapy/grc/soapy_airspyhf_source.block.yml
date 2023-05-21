@@ -20,7 +20,9 @@ parameters:
   - id: samp_rate
     label: Sample Rate
     dtype: float
-    default: 'samp_rate'
+    options: [912000, 768000, 456000, 384000, 256000, 192000]
+    option_labels: [912k, 768k, 456k, 384k, 256k, 192k]
+    default: 768000
 
   - id: center_freq
     label: 'Center Freq (Hz)'
@@ -47,7 +49,7 @@ parameters:
     category: RF Options
     dtype: real
     default: '-24'
-    hide: ${'all' if agc else 'part'}
+    hide: part
 
   - id: lna
     label: 'LNA On (+6 dB)'
