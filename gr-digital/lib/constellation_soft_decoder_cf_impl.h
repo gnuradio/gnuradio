@@ -31,7 +31,7 @@ public:
     constellation_soft_decoder_cf_impl(constellation_sptr constellation);
     ~constellation_soft_decoder_cf_impl() override;
 
-    void set_constellation(constellation_sptr constellation);
+    void set_constellation(constellation_sptr constellation) override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
