@@ -78,9 +78,10 @@ jobs:
             cxxflags: -Werror -ftrivial-auto-var-init=pattern
             ctest_args: '-E ""'
             ldpath: /usr/local/lib64/
-          - distro: 'Fedora 38 (with 0xFE memory initialization)'
+          - distro: 'Fedora 38 (clang)'
             containerid: 'gnuradio/ci:fedora-38-3.10'
-            cxxflags: -Werror -ftrivial-auto-var-init=pattern
+            cxxflags: -Werror
+            cmakeflags: -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_C_COMPILER=clang
             ctest_args: '-E ""'
             ldpath: /usr/local/lib64/
           # - distro: 'CentOS 8.4'
@@ -111,7 +112,7 @@ jobs:
     - name: CMake
       env:
         CXXFLAGS: ${{ matrix.cxxflags }}
-      run: 'cd /build && cmake ${GITHUB_WORKSPACE} -DENABLE_DOXYGEN=OFF'
+      run: 'cd /build && cmake ${{ matrix.cmakeflags }} ${GITHUB_WORKSPACE} -DENABLE_DOXYGEN=OFF'
     - name: Dump compile commands
       run: 'cd /build && cat compile_commands.json'
     - name: Make
