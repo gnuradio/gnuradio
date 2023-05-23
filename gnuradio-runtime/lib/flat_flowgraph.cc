@@ -479,7 +479,6 @@ void flat_flowgraph::replace_endpoint(const msg_endpoint& e,
                                       const msg_endpoint& r,
                                       bool is_src)
 {
-    size_t n_replr(0);
     d_debug_logger->debug("flat_flowgraph::replace_endpoint( {}, {}, {:d} )\n",
                           e.block()->identifier(),
                           r.block()->identifier(),
@@ -492,7 +491,6 @@ void flat_flowgraph::replace_endpoint(const msg_endpoint& e,
                     r.identifier(),
                     d_msg_edges[i].dst().identifier());
                 d_msg_edges.push_back(msg_edge(r, d_msg_edges[i].dst()));
-                n_replr++;
             }
         } else {
             if (d_msg_edges[i].dst() == e) {
@@ -501,7 +499,6 @@ void flat_flowgraph::replace_endpoint(const msg_endpoint& e,
                     r.identifier(),
                     d_msg_edges[i].src().identifier());
                 d_msg_edges.push_back(msg_edge(d_msg_edges[i].src(), r));
-                n_replr++;
             }
         }
     }
