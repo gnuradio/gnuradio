@@ -27,7 +27,7 @@ templates:
 cpp_templates:
     includes: [ '#include <gnuradio/analog/quadrature_demod_cf.h>' ]
     declarations: 'analog::quadrature_demod_cf::sptr ${id};'
-    make: 'this->${id} = analog::quadrature_demod_cf(${gain});'
+    make: 'this->${id} = analog::quadrature_demod_cf::make(${gain});'
     link: ['gnuradio-analog']
     callbacks:
     - set_gain(${gain})
