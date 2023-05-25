@@ -40,6 +40,7 @@ usrp_source_impl::usrp_source_impl(const ::uhd::device_addr_t& device_addr,
       _issue_stream_cmd_on_start(issue_stream_cmd_on_start),
       _last_log(std::chrono::steady_clock::now()),
       _overflow_count(0),
+      _num_overflow_retries(10),
       _overflow_log_interval(
           gr::prefs::singleton()->get_long("uhd", "logging_interval_ms", 750))
 {
@@ -495,7 +496,7 @@ void usrp_source_impl::set_recv_timeout(const double timeout, const bool one_pac
 
 bool usrp_source_impl::start(void)
 {
-    std::lock_guard<std::recursive_mutex> lock(d_mutex);
+    std::lock_guard<std::mutex> lock(d_mutex);
     if (not _rx_stream) {
         _rx_stream = _dev->get_rx_stream(_stream_args);
         _samps_per_packet = _rx_stream->get_max_num_samps();
@@ -541,7 +542,7 @@ void usrp_source_impl::flush(void)
 
 bool usrp_source_impl::stop(void)
 {
-    std::lock_guard<std::recursive_mutex> lock(d_mutex);
+    std::lock_guard<std::mutex> lock(d_mutex);
     this->issue_stream_cmd(::uhd::stream_cmd_t::STREAM_MODE_STOP_CONTINUOUS);
     this->flush();
 
@@ -601,7 +602,19 @@ int usrp_source_impl::work(int noutput_items,
                            gr_vector_const_void_star& input_items,
                            gr_vector_void_star& output_items)
 {
-    std::lock_guard<std::recursive_mutex> lock(d_mutex);
+    std::lock_guard<std::mutex> lock(d_mutex);
+    for (unsigned int i = 0; i < _num_overflow_retries; i++) {
+        int count = try_work(noutput_items, input_items, output_items);
+        if (count != -1)
+            return count;
+    }
+    return 0;
+}
+
+int usrp_source_impl::try_work(int noutput_items,
+                               gr_vector_const_void_star& input_items,
+                               gr_vector_void_star& output_items)
+{
     boost::this_thread::disable_interruption disable_interrupt;
     // In order to allow for low-latency:
     // We receive all available packets without timeout.
@@ -657,7 +670,7 @@ int usrp_source_impl::work(int noutput_items,
             _overflow_count = 0;
         }
         // ignore overflows and try work again
-        return work(noutput_items, input_items, output_items);
+        return -1;
     }
 
     default:
