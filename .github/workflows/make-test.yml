@@ -77,13 +77,13 @@ jobs:
             containerid: 'gnuradio/ci:fedora-37-3.9'
             cxxflags: -Werror -ftrivial-auto-var-init=pattern
             ctest_args: '-E ""'
-            ldpath: /usr/local/lib64/
+            ldpath: /tmp/prefix/lib64/
           - distro: 'Fedora 38 (clang)'
             containerid: 'gnuradio/ci:fedora-38-3.10'
             cxxflags: -Werror
             cmakeflags: -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_C_COMPILER=clang
             ctest_args: '-E ""'
-            ldpath: /usr/local/lib64/
+            ldpath: /tmp/prefix/lib64/
           # - distro: 'CentOS 8.4'
           #   containerid: 'gnuradio/ci:centos-8.4-3.10'
           #   cxxflags: ''
@@ -112,23 +112,84 @@ jobs:
     - name: CMake
       env:
         CXXFLAGS: ${{ matrix.cxxflags }}
-      run: 'cd /build && cmake ${{ matrix.cmakeflags }} ${GITHUB_WORKSPACE} -DENABLE_DOXYGEN=OFF'
-    - name: Dump compile commands
-      run: 'cd /build && cat compile_commands.json'
+      run: |
+        cd /build && \
+        cmake ${{ matrix.cmakeflags }} \
+        -DCMAKE_INSTALL_PREFIX=/tmp/prefix \
+        -DENABLE_DOXYGEN=OFF \
+        -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+        ${GITHUB_WORKSPACE} 
+    - name: Upload Compile Commands
+      if: ${{ ! contains(matrix.distro, '32-bit') }}
+      uses: actions/upload-artifact@v3
+      with:
+        name: compile_commands.json-${{matrix.distro}}
+        path: /build/compile_commands.json
     - name: Make
       run: 'cd /build && make -j2 -k'
     - name: Make Test
       env:
+        DISTRO: ${{matrix.distro}}
         QT_QPA_PLATFORM: offscreen
-      run: 'cd /build && ctest --output-on-failure ${{ matrix.ctest_args }}'
-    - name: Make Install
       run: |
-       cd /build
-       su -c "make install"
+        printf '### Test Summary\n' >> "${GITHUB_STEP_SUMMARY}"
+        printf '::group::ctest\n'
+        cd /build && \
+        ctest --output-on-failure ${{ matrix.ctest_args }}&& \
+        printf '::endgroup::' && \
+        printf 'Success. :rocket:\n' >> "${GITHUB_STEP_SUMMARY}" && \
+        exit 0
+        printf '::endgroup::'
+        printf '::group::List failed tests\n'
+        ctest --rerun-failed --show-only ${{ matrix.ctest_args }} -O /tmp/failed.log
+        nfailed=$(sed -n 's/^Total Tests: \([[:digit:]]*\)/\1/p' /tmp/failed.log)
+        printf '::error title=%s Test Failures::%d Failed tests\n' "${DISTRO}" "${nfailed}"
+        printf '%d Failed tests:\n\n' nfailed >> "${GITHUB_STEP_SUMMARY}"
+        sed -n 's/^[[:space:]]*Test  #\([[:digit:]]*\): \(.*\)$/- \1: `\2`/p' /tmp/failed.log >> "${GITHUB_STEP_SUMMARY}"
+        printf '::endgroup::'
+        exit -1
+    - id: make_instal
+      name: Make Install
+      run: |
+       cd /build && \
+       mkdir -p /tmp/prefix && \
+       make install && \
+       ( printf 'PYTHONPATH='
+         for dir in /tmp/prefix/lib*/python*/*-packages ; do
+           printf "$dir:" ;
+         done
+         printf '%s\n' "${PYTHONPATH}" ) | sed 's/:$//' >> "${GITHUB_ENV}"
+       ( printf 'LD_LIBRARY_PATH='
+         for dir in  /tmp/prefix/lib* ; do
+           printf "$dir:" ;
+         done
+         printf '%s\n' "${LD_LIBRARY_PATH}" ) | sed 's/:$//' >> "${GITHUB_ENV}"
        su -c "echo ${{matrix.ldpath}} >> /etc/ld.so.conf"
        su -c ldconfig
+    - name: Generate Installation Artifact
+      if: ${{ ! contains(matrix.distro, '32-bit') }}
+      env:
+        DISTRO: ${{matrix.distro}}
+      run: |
+        cd /tmp/prefix 
+        export ARCHIVE="${GITHUB_WORKSPACE}/install.tar.xz"
+        tar cf - * | xz -2 -T 2 > "${ARCHIVE}"
+        printf 'Installation Artifact %s:\n "%s" Size %sB\n' "${DISTRO}" "${ARCHIVE}" $(du -BM "${ARCHIVE}")
+    - name: Upload Installation Artifact
+      if: ${{ ! contains(matrix.distro, '32-bit') }}
+      uses: actions/upload-artifact@v3
+      with:
+        name: installation-${{matrix.distro}}
+        path: |
+          ${{github.workspace}}/install.tar.xz
+          /build/install_manifest.txt
+          /build/compile_commands.json
     - name: Test Python3
-      run: python3 -c "import gnuradio.blocks; print(gnuradio.blocks.complex_to_float())"
+      env:
+        DISTRO: ${{matrix.distro}}
+      run: |
+        printf 'PYTHONPATH %s:\n%s\n' "${DISTRO}" "${PYTHONPATH}"
+        python3 -c "import gnuradio.blocks as bs; print(bs.complex_to_float()); print(f'Python found GNU Radio version {bs.gr.version()}')"
   no-python:
   # All of these shall depend on the formatting check (needs: check-formatting)
     needs: [check-formatting, check-python-formatting]
@@ -137,9 +198,9 @@ jobs:
     # we should fail sooner. The only reason to exceed this time is if a test
     # hangs.
     timeout-minutes: 120
-    name: C++ Only Build (Ubuntu 20.04)
+    name: C++ Only Build (Fedora 38)
     container:
-      image: 'gnuradio/ci:ubuntu-20.04-3.9'
+      image: 'gnuradio/ci:fedora-38-3.10'
       volumes:
         - build_data:/build
       options: --cpus 2
@@ -149,8 +210,52 @@ jobs:
     - name: CMake
       env:
         CXXFLAGS: -Werror
-      run: 'cd /build && cmake ${GITHUB_WORKSPACE} -DENABLE_DOXYGEN=OFF -DENABLE_PYTHON=OFF'
+      run: |
+        cd /build && \
+        cmake ${GITHUB_WORKSPACE} \
+        -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+        -DENABLE_DOXYGEN=OFF \
+        -DENABLE_PYTHON=OFF \
+        -DCMAKE_INSTALL_PREFIX=/tmp/prefix \
+        -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_C_COMPILER=clang \
+        -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_C_COMPILER_LAUNCHER=ccache
     - name: Make
       run: 'cd /build && make -j2 -k'
     - name: Make Test
-      run: 'cd /build && ctest --output-on-failure'
+      env:
+        DISTRO: ${{matrix.distro}}
+      run: |
+        printf '### Test Summary\n' >> "${GITHUB_STEP_SUMMARY}"
+        printf '::group::ctest\n'
+        cd /build && \
+        ctest --output-on-failure && \
+        printf '::endgroup::' && \
+        printf 'Success. :rocket:\n' >> "${GITHUB_STEP_SUMMARY}" && \
+        exit 0
+        printf '::endgroup::'
+        printf '::group::List failed tests\n'
+        ctest --rerun-failed --show-only -O /tmp/failed.log
+        nfailed=$(sed -n 's/^Total Tests: \([[:digit:]]*\)/\1/p' /tmp/failed.log)
+        printf '::error title=%s Test Failures::%d Failed tests\n' "${DISTRO}" "${nfailed}"
+        printf '%d Failed tests:\n\n' nfailed >> "${GITHUB_STEP_SUMMARY}"
+        sed -n 's/^[[:space:]]*Test  #\([[:digit:]]*\): \(.*\)$/- \1: `\2`/p' /tmp/failed.log >> "${GITHUB_STEP_SUMMARY}"
+        printf '::endgroup::'
+        exit -1
+    - name: Generate Installation Artifact
+      run: |
+        cd /build
+        make install
+        cd /tmp/prefix
+        # TODO: replace xz -2 with zstd -12, which should be orders of magnitude faster
+        # However, zstd is currently not available in the VM
+        export ARCHIVE="${GITHUB_WORKSPACE}/install.tar.xz"
+        tar cf - * | xz -2 -T 2 > "${ARCHIVE}"
+        printf 'Installation Artifact C++-Only:\n"%s" Size %sB\n' "${ARCHIVE}" $(du -BM "${ARCHIVE}")
+    - name: Upload Installation Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: installation-nopython
+        path: |
+          ${{github.workspace}}/install.tar.xz
+          /build/install_manifest.txt
+          /build/compile_commands.json
