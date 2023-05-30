@@ -42,9 +42,16 @@ parameters:
     default: packet_len
     hide: part
 
+-   id: ch_type
+    label: Channel type
+    dtype: enum
+    options: [complex, int, short, byte]
+    default: short
+    hide: part
+
 outputs:
 -   domain: stream
-    dtype: short
+    dtype: ${ ch_type }
     multiplicity: ${ len(channels) }
 -   domain: message
     id: msg
