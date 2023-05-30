@@ -1,4 +1,4 @@
-Checks:          '-*,misc-throw-by-value-catch-by-reference,misc-static-assert,readability-container-size-empty,modernize-use-override,modernize-make-unique,modernize-deprecated-headers,misc-unused-using-decls,misc-redundant-expression'
+Checks:          '-*,misc-throw-by-value-catch-by-reference,misc-static-assert,readability-container-size-empty,modernize-use-override,modernize-deprecated-headers,misc-unused-using-decls,misc-redundant-expression,performance-no-automatic-move,performance-noexcept*,performance-inefficient-algorithm,performance-unnecessary-copy-initialization'
 # Not in here: modernize-use-emplace, since that basically broke all things it touched
 WarningsAsErrors: ''
 HeaderFilterRegex: '\.(cc|c|cpp|h|hpp)$'
