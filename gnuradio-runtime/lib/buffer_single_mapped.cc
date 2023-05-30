@@ -16,8 +16,8 @@
 #include <gnuradio/buffer_single_mapped.h>
 #include <gnuradio/math.h>
 #include <gnuradio/thread/thread.h>
-#include <assert.h>
 #include <algorithm>
+#include <cassert>
 #include <cstdlib>
 #include <cstring>
 #include <iostream>

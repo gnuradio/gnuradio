@@ -16,8 +16,8 @@
 #include <gnuradio/buffer_double_mapped.h>
 #include <gnuradio/buffer_reader.h>
 #include <gnuradio/math.h>
-#include <assert.h>
 #include <algorithm>
+#include <cassert>
 #include <iostream>
 #include <numeric>
 #include <stdexcept>
