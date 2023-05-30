@@ -1,4 +1,3 @@
-#Copyright 2020-2021 Free Software Foundation, Inc.
 #
 #This file is a part of gnuradio
 #
@@ -27,10 +26,6 @@ add_library(
     udp_source_impl.cc)
 
 target_link_libraries(gnuradio-network PUBLIC gnuradio-runtime)
-
-if(ENABLE_COMMON_PCH)
-    target_link_libraries(gnuradio-network PRIVATE common-precompiled-headers)
-endif()
 
 target_include_directories(
     gnuradio-network
