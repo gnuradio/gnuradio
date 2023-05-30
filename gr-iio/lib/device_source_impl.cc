@@ -177,6 +177,7 @@ device_source_impl::device_source_impl(iio_context* ctx,
       thread_stopped(false)
 {
     unsigned int nb_channels, i;
+    std::vector<int> signature;
 
     if (!ctx)
         throw std::runtime_error("Unable to create context");
@@ -200,6 +201,15 @@ device_source_impl::device_source_impl(iio_context* ctx,
 
             iio_channel_enable(chn);
             channel_list.push_back(chn);
+
+            const iio_data_format *data = iio_channel_get_data_format(chn);
+            // to round up a / b without moving to float, you can do (a + (b-1)) / b
+            // (31 + 7) / 8 = 4 // 31 bits - 4 bytes
+            // (32 + 7) / 8 = 4 // 32 bits - 4 bytes
+            // (33 + 7) / 8 = 5 // 33 bits - 5 bytes
+            int bit_length = (data->length + (8 - 1)) / 8;
+            signature.push_back(bit_length);
+
         }
     } else {
         for (std::vector<std::string>::const_iterator it = channels.begin();
@@ -214,11 +224,16 @@ device_source_impl::device_source_impl(iio_context* ctx,
 
             iio_channel_enable(chn);
             channel_list.push_back(chn);
+
+            const iio_data_format *data = iio_channel_get_data_format(chn);
+            int bit_length = (data->length + (8 - 1)) / 8;
+            signature.push_back(bit_length);
         }
     }
 
     set_params(params);
     set_output_multiple(0x400);
+    set_output_signature(gr::io_signature::makev(1,-1,signature));
 
     message_port_register_out(port_id);
 }

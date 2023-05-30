@@ -90,6 +90,7 @@ device_sink_impl::device_sink_impl(iio_context* ctx,
       d_len_tag_key(pmt::PMT_NIL)
 {
     unsigned int nb_channels, i;
+    std::vector<int> signature;
 
     /* Set minimum input size */
     set_output_multiple(buffer_size / (interpolation + 1));
@@ -116,6 +117,11 @@ device_sink_impl::device_sink_impl(iio_context* ctx,
 
             iio_channel_enable(chn);
             channel_list.push_back(chn);
+
+            const iio_data_format *data = iio_channel_get_data_format(chn);
+            int bit_length = (data->length + (8 - 1)) / 8;
+            signature.push_back(bit_length);
+
         }
     } else {
         for (std::vector<std::string>::const_iterator it = channels.begin();
@@ -132,10 +138,15 @@ device_sink_impl::device_sink_impl(iio_context* ctx,
             if (!iio_channel_is_enabled(chn))
                 throw std::runtime_error("Channel not enabled");
             channel_list.push_back(chn);
+
+            const iio_data_format *data = iio_channel_get_data_format(chn);
+            int bit_length = (data->length + (8 - 1)) / 8;
+            signature.push_back(bit_length);
         }
     }
 
     set_params(params);
+    set_input_signature(gr::io_signature::makev(1,-1,signature));
 
     buf = iio_device_create_buffer(dev, buffer_size, cyclic);
     if (!buf)
