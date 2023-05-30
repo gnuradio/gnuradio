@@ -13,6 +13,7 @@
 
 #include "device_sink_impl.h"
 #include "device_source_impl.h"
+#include "iio_priv.h"
 #include <gnuradio/io_signature.h>
 
 #include <string>
@@ -90,6 +91,7 @@ device_sink_impl::device_sink_impl(iio_context* ctx,
       d_len_tag_key(pmt::PMT_NIL)
 {
     unsigned int nb_channels, i;
+    std::vector<int> signature;
 
     /* Set minimum input size */
     set_output_multiple(buffer_size / (interpolation + 1));
@@ -116,6 +118,8 @@ device_sink_impl::device_sink_impl(iio_context* ctx,
 
             iio_channel_enable(chn);
             channel_list.push_back(chn);
+
+            signature.push_back(channel_size(chn));
         }
     } else {
         for (std::vector<std::string>::const_iterator it = channels.begin();
@@ -132,10 +136,13 @@ device_sink_impl::device_sink_impl(iio_context* ctx,
             if (!iio_channel_is_enabled(chn))
                 throw std::runtime_error("Channel not enabled");
             channel_list.push_back(chn);
+
+            signature.push_back(channel_size(chn));
         }
     }
 
     set_params(params);
+    set_input_signature(gr::io_signature::makev(1, -1, signature));
 
     buf = iio_device_create_buffer(dev, buffer_size, cyclic);
     if (!buf)
@@ -215,7 +222,9 @@ int device_sink_impl::work(int noutput_items,
     }
 
     for (unsigned int i = 0; i < input_items.size(); i++)
-        channel_write(channel_list[i], input_items[i], noutput_items * sizeof(short));
+        channel_write(channel_list[i],
+                      input_items[i],
+                      noutput_items * channel_size(channel_list[i]));
 
     ret = iio_buffer_push(buf);
     if (ret < 0) {
