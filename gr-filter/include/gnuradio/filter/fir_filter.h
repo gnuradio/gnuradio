@@ -33,8 +33,8 @@ public:
     // but every block that contains one.
     fir_filter(const fir_filter&) = delete;
     fir_filter& operator=(const fir_filter&) = delete;
-    fir_filter(fir_filter&&) = default;
-    fir_filter& operator=(fir_filter&&) = default;
+    fir_filter(fir_filter&&) noexcept = default;
+    fir_filter& operator=(fir_filter&&) noexcept = default;
 
     void set_taps(const std::vector<TAP_T>& taps);
     void update_tap(TAP_T t, unsigned int index);
