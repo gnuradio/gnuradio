@@ -8,7 +8,7 @@
  *
  */
 
-#include <stdio.h>
+#include <cstdio>
 #include <iostream>
 
 using std::cerr;
