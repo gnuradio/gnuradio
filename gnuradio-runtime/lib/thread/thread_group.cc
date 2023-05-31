@@ -14,7 +14,9 @@
 
 #include <gnuradio/thread/thread_group.h>
 #include <cassert>
+#include <functional>
 #include <memory>
+#include <mutex>
 
 namespace gr {
 namespace thread {
