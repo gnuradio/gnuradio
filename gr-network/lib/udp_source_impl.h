@@ -46,7 +46,7 @@ protected:
 
     asio::io_context d_io_context;
     asio::ip::udp::endpoint d_endpoint;
-    asio::ip::udp::socket* d_udpsocket;
+    asio::ip::udp::socket* d_udpsocket = nullptr;
 
     asio::streambuf d_read_buffer;
 
