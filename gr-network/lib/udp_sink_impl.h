@@ -51,7 +51,7 @@ protected:
 
     asio::io_context d_io_context;
     asio::ip::udp::endpoint d_endpoint;
-    asio::ip::udp::socket* d_udpsocket;
+    asio::ip::udp::socket* d_udpsocket = nullptr;
 
     virtual void
     build_header(); // returns header size.  Header is stored in tmpHeaderBuff
