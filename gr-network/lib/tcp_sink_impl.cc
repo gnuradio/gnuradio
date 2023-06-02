@@ -98,6 +98,7 @@ bool tcp_sink_impl::start()
         // In this mode, we're starting a local port listener and waiting
         // for inbound connections.
         d_start_new_listener = true;
+        d_is_ipv6 = false;
         d_listener_thread = new std::thread([this] { run_listener(); });
     }
 
@@ -202,9 +203,7 @@ bool tcp_sink_impl::stop()
     }
 
     if (d_listener_thread) {
-        while (d_thread_running)
-            std::this_thread::sleep_for(std::chrono::microseconds(5));
-
+        d_listener_thread->join();
         delete d_listener_thread;
         d_listener_thread = NULL;
     }
