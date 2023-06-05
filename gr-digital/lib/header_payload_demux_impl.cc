@@ -436,15 +436,11 @@ void header_payload_demux_impl::parse_header_data_msg(pmt::pmt_t header_data)
             d_curr_payload_len = 0;
             d_state = STATE_HEADER_RX_FAIL;
         }
-        if ((d_curr_payload_len * (d_output_symbols ? 1 : d_items_per_symbol)) >
-            max_output_buffer(1) / 2) {
-            d_state = STATE_HEADER_RX_FAIL;
-            d_logger->info("Detected a packet larger than max frame size ({:d} symbols)",
-                           d_curr_payload_len);
-        } else {
-            set_min_noutput_items(d_curr_payload_len *
-                                  (d_output_symbols ? 1 : d_items_per_symbol));
-        }
+        // Note: check for d_curr_payload_len too large requires a max len to
+        // be set in the block, and for the block to set its min output buffer
+        // size accordingly. There is currently no "max payload len" param.
+        set_min_noutput_items(d_curr_payload_len *
+                              (d_output_symbols ? 1 : d_items_per_symbol));
     }
 } /* parse_header_data_msg() */
 
