@@ -5,6 +5,7 @@ import logging
 import os
 import sys
 import subprocess
+import yaml
 
 # Third-party  modules
 import six
@@ -13,7 +14,7 @@ from qtpy import QtCore, QtGui, QtWidgets
 from qtpy.QtCore import Qt
 from qtpy.QtGui import QStandardItemModel
 
-from ..preferences_yml import pref_dict
+from ..properties import Paths
 
 # Logging
 log = logging.getLogger(__name__)
@@ -27,6 +28,11 @@ class PreferencesDialog(QtWidgets.QDialog):
 
         self.setWindowTitle("GRC Preferences")
         self.tabs = QtWidgets.QTabWidget()
+
+        log.debug(f'Opening available preferences YAML: {Paths.AVAILABLE_PREFS_YML}')
+        with open(Paths.AVAILABLE_PREFS_YML) as available_prefs_yml:
+            pref_dict = yaml.safe_load(available_prefs_yml)
+
         
         for cat in pref_dict['categories']:
             cat['_scrollarea'] = QtWidgets.QScrollArea()

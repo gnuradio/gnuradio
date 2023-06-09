@@ -1,9 +1,6 @@
-# User-exposed settings
+# This file specifies which settings are available
+# in the Preferences window.
 
-import yaml
-
-PREF_YML = \
-"""
 categories:
   - key: general
     name: General
@@ -37,6 +34,7 @@ categories:
         name: Generated code preview
         dtype: bool
         default: False
+
   - key: appearance
     name: Appearance
     items:
@@ -51,6 +49,8 @@ categories:
         option_labels:
           - Light
           - Dark
-"""
-
-pref_dict = yaml.safe_load(PREF_YML)
+      - key: show_units
+        name: Show units
+        tooltip: Show units in block parameters window
+        dtype: bool
+        default: False
