@@ -176,25 +176,25 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
     def currentFlowgraph(self):
         #something is fishy here
         return self.tabWidget.currentWidget().flowgraph
-    
+
     @QtCore.Slot(QtCore.QPointF)
     def createMove(self, diff):
         action = MoveAction(self.currentFlowgraph, diff)
         self.currentFlowgraph.undoStack.push(action)
         self.updateActions()
-    
+
     @QtCore.Slot(Element)
     def registerNewElement(self, elem):
         action = NewElementAction(self.currentFlowgraph, elem)
         self.currentFlowgraph.undoStack.push(action)
         self.updateActions()
-    
+
     @QtCore.Slot(Element)
     def registerDeleteElement(self, elem):
         action = DeleteElementAction(self.currentFlowgraph, elem)
         self.currentFlowgraph.undoStack.push(action)
         self.updateActions()
-    
+
     @QtCore.Slot(Element)
     def registerBlockPropsChange(self, elem):
         action = BlockPropsChangeAction(self.currentFlowgraph, elem)
@@ -254,7 +254,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
         actions['delete'] = Action(Icons('edit-delete'), _("delete"), self,
                                    shortcut=Keys.Delete, statusTip=_("delete-tooltip"))
-        
+
         actions['undo'].setEnabled(False)
         actions['redo'].setEnabled(False)
         actions['cut'].setEnabled(False)
@@ -264,7 +264,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
         actions['select_all'] = Action(Icons('edit-select_all'), _("select_all"), self,
                                    shortcut=Keys.SelectAll, statusTip=_("select_all-tooltip"))
-        
+
         actions['select_none'] = Action(_("Select None"), self,
                                         statusTip=_("select_none-tooltip"))
 
@@ -275,7 +275,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         actions['rotate_cw'] = Action(Icons('object-rotate-right'), _("rotate_cw"), self,
                                       shortcut=Keys.MoveToNextChar,
                                       statusTip=_("rotate_cw-tooltip"))
-        
+
         actions['rotate_cw'].setEnabled(False)
         actions['rotate_ccw'].setEnabled(False)
 
@@ -285,7 +285,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
                                    shortcut="D")
         actions['bypass'] = Action(_("bypass"), self,
                                    shortcut="B")
-        
+
         actions['enable'].setEnabled(False)
         actions['disable'].setEnabled(False)
         actions['bypass'].setEnabled(False)
@@ -297,7 +297,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         actions['vertical_align_top'].setEnabled(False)
         actions['vertical_align_middle'].setEnabled(False)
         actions['vertical_align_bottom'].setEnabled(False)
-        
+
 
         actions['horizontal_align_left'] = Action(_("horizontal_align_left"), self)
         actions['horizontal_align_center'] = Action(_("horizontal_align_center"), self)
@@ -378,16 +378,16 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
         actions['preferences'] = Action(Icons('preferences-system'), _("preferences"), self,
                                         statusTip=_("preferences-tooltip"))
-        
+
         actions['reload'] = Action(Icons('view-refresh'), _("reload"), self,
                                         statusTip=_("reload-tooltip"))
 
         # Disable some actions, by default
         actions['save'].setEnabled(True)
         actions['errors'].setEnabled(False)
-        
-        
-        
+
+
+
 
     def updateDocTab(self):
         pass
@@ -705,7 +705,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
     def save_triggered(self):
         log.debug('save')
         filename = self.currentFlowgraph.filename
-        
+
         if filename:
             try:
                 self.platform.save_flow_graph(filename, self.currentView)
@@ -736,7 +736,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
             self.currentView.saved = True
         else:
             log.debug('Cancelled Save As action')
-    
+
     def save_copy_triggered(self):
         log.debug('Save Copy')
         filename, filtr = QtWidgets.QFileDialog.getSaveFileName(self, self.actions['save'].statusTip(),
@@ -767,7 +767,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
             ad.setText(message)
             ad.setStandardButtons(QtWidgets.QMessageBox.Discard | QtWidgets.QMessageBox.Cancel | QtWidgets.QMessageBox.Save)
             response = ad.exec()
-            
+
             if response == QtWidgets.QMessageBox.Discard:
                 self.tabWidget.removeTab(tab_index)
             elif response == QtWidgets.QMessageBox.Cancel:
@@ -853,7 +853,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         log.debug('select_all')
         self.currentFlowgraph.select_all()
         self.updateActions()
-    
+
     def select_none_triggered(self):
         log.debug('select_none')
         self.currentFlowgraph.clearSelection()
@@ -872,7 +872,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         rotateCommand = RotateAction(self.currentFlowgraph, 90)
         self.currentFlowgraph.undoStack.push(rotateCommand)
         self.updateActions()
-    
+
     def toggle_source_bus_triggered(self):
         log.debug('toggle_source_bus')
         for b in self.currentFlowgraph.selected_blocks():
@@ -944,7 +944,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         if not all_disabled:
             cmd = DisableAction(self.currentFlowgraph)
             self.currentFlowgraph.undoStack.push(cmd)
-        
+
         self.currentFlowgraph.update()
         self.updateActions()
 
@@ -959,7 +959,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         if not all_bypassed:
             cmd = BypassAction(self.currentFlowgraph)
             self.currentFlowgraph.undoStack.push(cmd)
-        
+
         self.currentFlowgraph.update()
         self.updateActions()
 
@@ -1030,7 +1030,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         ad.setWindowTitle("Stream Types")
         ad.setText(message)
         ad.exec()
-    
+
     def keys_triggered(self):
         log.debug('keys')
 
@@ -1075,8 +1075,10 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
     def preferences_triggered(self):
         log.debug('preferences')
-        ja = PreferencesDialog()
-        ja.exec_()
+        prefs_dialog = PreferencesDialog()
+        if prefs_dialog.exec_():
+            prefs_dialog.save_all()
+
 
     def exit_triggered(self):
         log.debug('exit')
@@ -1095,7 +1097,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
     def library_toggled(self):
         log.debug('library_toggled')
-    
+
     def filter_design_tool_triggered(self):
         log.debug('filter_design_tool')
         subprocess.Popen('gr_filter_design',
