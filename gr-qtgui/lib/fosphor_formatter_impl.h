@@ -1,6 +1,7 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2023 Ettus Research, A National Instruments Brand
+ * Copyright 2023 Jeff Long
  *
  * This file is part of GNU Radio
  *
@@ -10,13 +11,7 @@
 #ifndef INCLUDED_QTGUI_FOSPHOR_FORMATTER_IMPL_H
 #define INCLUDED_QTGUI_FOSPHOR_FORMATTER_IMPL_H
 
-#include <gnuradio/blocks/complex_to_mag_squared.h>
-#include <gnuradio/blocks/float_to_uchar.h>
-#include <gnuradio/blocks/keep_one_in_n.h>
-#include <gnuradio/blocks/nlog10_ff.h>
-#include <gnuradio/blocks/stream_to_vector.h>
-#include <gnuradio/fft/fft_v.h>
-#include <gnuradio/filter/single_pole_iir_filter_ff.h>
+#include <gnuradio/fft/fft.h>
 #include <gnuradio/qtgui/fosphor_formatter.h>
 #include <volk/volk_alloc.hh>
 
@@ -26,20 +21,6 @@ namespace qtgui {
 class fosphor_formatter_impl : public fosphor_formatter
 {
 public:
-    // Helper block to convert float->uchar *with* vector length
-    class f2uchar_vfvb : virtual public gr::sync_block
-    {
-    public:
-        typedef std::shared_ptr<f2uchar_vfvb> sptr;
-    };
-
-    // Helper block to do the actual histogram processing
-    class histo_proc : virtual public gr::block
-    {
-    public:
-        typedef std::shared_ptr<histo_proc> sptr;
-    };
-
     fosphor_formatter_impl(int fft_size,
                            int num_bins,
                            int input_decim,
@@ -51,19 +32,43 @@ public:
                            double trise,
                            double tdecay);
 
-    ~fosphor_formatter_impl() override = default;
+    ~fosphor_formatter_impl() override;
+
+    int general_work(int noutput_items,
+                     gr_vector_int& ninput_items,
+                     gr_vector_const_void_star& input_items,
+                     gr_vector_void_star& output_items) final;
+
+    void forecast(int noutput_items, gr_vector_int& ninput_items_required) final;
 
 private:
-    // All the internal blocks
-    gr::blocks::stream_to_vector::sptr d_s2v;
-    gr::blocks::keep_one_in_n::sptr d_input_decim;
-    gr::fft::fft_v<gr_complex, true>::sptr d_fft;
-    gr::blocks::complex_to_mag_squared::sptr d_c2m;
-    gr::blocks::nlog10_ff::sptr d_log;
-    f2uchar_vfvb::sptr d_f2byte; // float_to_uchar does not support vectors
-    gr::filter::single_pole_iir_filter_ff::sptr d_avg;
-    histo_proc::sptr d_histo_proc;
-    gr::blocks::keep_one_in_n::sptr d_wf_decim;
+    const int d_fft_size;
+    const int d_num_bins;
+    const int d_input_decim;
+    const int d_waterfall_decim;
+    const int d_histo_decim;
+    const float d_scale;
+    const float d_alpha;
+    const float d_epsilon;
+    const float d_trise;
+    const float d_tdecay;
+
+    gr::fft::fft_complex_fwd* d_fft;
+    std::vector<float> d_window;
+
+    volk::vector<float> d_iir;
+    volk::vector<float> d_maxhold_buf;
+    volk::vector<float> d_histo_buf_f;
+    volk::vector<uint8_t> d_histo_buf_b;
+    volk::vector<int16_t> d_hit_count;
+    volk::vector<float> d_logfft;
+    volk::vector<uint8_t> d_logfft_b;
+    volk::vector<uint8_t> d_logfft_avg_b;
+
+    // Counters for decimation
+    int d_input_count;
+    int d_waterfall_count;
+    int d_histo_count;
 };
 
 } // namespace qtgui

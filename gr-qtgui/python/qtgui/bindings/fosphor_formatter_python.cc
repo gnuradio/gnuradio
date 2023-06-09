@@ -16,7 +16,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0) */
 /* BINDTOOL_USE_PYGCCXML(0) */
 /* BINDTOOL_HEADER_FILE(fosphor_formatter.h) */
-/* BINDTOOL_HEADER_FILE_HASH(2c28006e177227780f16af6897d7633b) */
+/* BINDTOOL_HEADER_FILE_HASH(356e8c2ed3cb578530530c1497b3f9ad) */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -34,7 +34,7 @@ void bind_fosphor_formatter(py::module& m)
 
     using fosphor_formatter = ::gr::qtgui::fosphor_formatter;
 
-    py::class_<fosphor_formatter, gr::hier_block2, std::shared_ptr<fosphor_formatter>>(
+    py::class_<fosphor_formatter, gr::block, std::shared_ptr<fosphor_formatter>>(
         m, "fosphor_formatter", D(fosphor_formatter))
 
         .def(py::init(&fosphor_formatter::make),

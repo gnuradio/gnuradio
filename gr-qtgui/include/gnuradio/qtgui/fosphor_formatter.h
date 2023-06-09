@@ -10,7 +10,7 @@
 #ifndef INCLUDED_QTGUI_FOSPHOR_FORMATTER_H
 #define INCLUDED_QTGUI_FOSPHOR_FORMATTER_H
 
-#include <gnuradio/hier_block2.h>
+#include <gnuradio/block.h>
 #include <gnuradio/qtgui/api.h>
 
 namespace gr {
@@ -20,7 +20,7 @@ namespace qtgui {
  * \brief Generic CPM modulator
  * \ingroup modulators_blk
  */
-class QTGUI_API fosphor_formatter : virtual public hier_block2
+class QTGUI_API fosphor_formatter : virtual public block
 {
 public:
     using sptr = std::shared_ptr<fosphor_formatter>;
