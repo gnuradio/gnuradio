@@ -68,7 +68,7 @@ class MoveAction(QUndoCommand):
         for block in self.blocks:
             block.moveBy(self.x, self.y)
         self.flowgraph.update()
-        
+
 
     def undo(self):
         for block in self.blocks:
@@ -109,19 +109,29 @@ class BlockPropsChangeAction(QUndoCommand):
         self.oldData = copy(block.oldData)
         self.newData = copy(block.export_data())
         self.first = True
-    
+
     def redo(self):
         if self.first:
             self.first = False
             return
-        self.block.import_data(self.newData['name'], self.newData['states'], self.newData['parameters'])
+        try:
+            name = self.newData['name']
+        except KeyError:
+            name = self.newData['parameters']['id']
+
+        self.block.import_data(name, self.newData['states'], self.newData['parameters'])
         self.block.rewrite()
         self.block.validate()
         self.block.create_shapes_and_labels()
         self.flowgraph.update()
 
     def undo(self):
-        self.block.import_data(self.oldData['name'], self.oldData['states'], self.oldData['parameters'])
+        try:
+            name = self.oldData['name']
+        except KeyError:
+            name = self.oldData['parameters']['id']
+
+        self.block.import_data(name, self.oldData['states'], self.oldData['parameters'])
         self.block.rewrite()
         self.block.validate()
         self.block.create_shapes_and_labels()
