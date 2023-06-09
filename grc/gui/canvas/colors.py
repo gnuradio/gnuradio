@@ -25,7 +25,6 @@ def get_color(color_code):
 # fg colors
 #################################################################################
 
-
 HIGHLIGHT_COLOR = get_color('#00FFFF')
 BORDER_COLOR = get_color('#616161')
 BORDER_COLOR_DISABLED = get_color('#888888')
@@ -72,25 +71,26 @@ PORT_TYPE_TO_COLOR.update((key, get_color(color))
 #################################################################################
 # param box colors
 #################################################################################
+
 DARK_THEME_STYLES = b"""
-                         #dtype_complex         { background-color: #3399FF; }
-                         #dtype_real            { background-color: #FF8C69; }
-                         #dtype_float           { background-color: #FF8C69; }
-                         #dtype_int             { background-color: #00FF99; }
+                         #dtype_complex         { background-color: #CC6600; }
+                         #dtype_real            { background-color: #007396; }
+                         #dtype_float           { background-color: #007396; }
+                         #dtype_int             { background-color: #FF0066; }
 
-                         #dtype_complex_vector  { background-color: #3399AA; }
-                         #dtype_real_vector     { background-color: #CC8C69; }
-                         #dtype_float_vector    { background-color: #CC8C69; }
-                         #dtype_int_vector      { background-color: #00CC99; }
+                         #dtype_complex_vector  { background-color: #CC6655; }
+                         #dtype_real_vector     { background-color: #337396; }
+                         #dtype_float_vector    { background-color: #337396; }
+                         #dtype_int_vector      { background-color: #FF3366; }
 
-                         #dtype_bool            { background-color: #00FF99; }
-                         #dtype_hex             { background-color: #00FF99; }
-                         #dtype_string          { background-color: #CC66CC; }
-                         #dtype_id              { background-color: #DDDDDD; }
-                         #dtype_stream_id       { background-color: #DDDDDD; }
-                         #dtype_raw             { background-color: #DDDDDD; }
+                         #dtype_bool            { background-color: #FF0066; }
+                         #dtype_hex             { background-color: #FF0066; }
+                         #dtype_string          { background-color: #339933; }
+                         #dtype_id              { background-color: #343434; }
+                         #dtype_stream_id       { background-color: #343434; }
+                         #dtype_raw             { background-color: #343434; }
 
-                         #enum_custom           { background-color: #EEEEEE; }
+                         #enum_custom           { background-color: #111111; }
                      """
 LIGHT_THEME_STYLES = b"""
                         #dtype_complex         { background-color: #3399FF; }
