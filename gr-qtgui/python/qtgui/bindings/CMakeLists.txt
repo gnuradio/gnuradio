@@ -31,6 +31,7 @@ list(
     freqdisplayform_python.cc
     histogram_sink_f_python.cc
     histogramdisplayform_python.cc
+    matrix_sink_python.cc
     number_sink_python.cc
     numberdisplayform_python.cc
     # plot_raster_python.cc
