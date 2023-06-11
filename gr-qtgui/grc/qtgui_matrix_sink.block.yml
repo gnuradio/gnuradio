@@ -1,0 +1,129 @@
+id: qtgui_matrix_sink
+label: QT GUI Matrix Sink
+
+templates:
+  imports: |-
+    import sip
+
+  make: |-
+    <%
+        win = 'self._%s_win'%id
+    %>\
+    qtgui.matrix_sink(
+        ${name},
+        ${num_cols},
+        ${vlen},
+        ${contour},
+        ${color_map},
+        ${interpolation},
+        ${x_start},
+        ${x_end},
+        ${y_start},
+        ${y_end},
+        ${z_max},
+        ${z_min},
+        ${x_axis_label},
+        ${y_axis_label},
+        ${z_axis_label},
+        None          
+    )
+    ${win} = sip.wrapinstance(self.${id}.qwidget(), Qt.QWidget)
+    ${gui_hint() % win}
+
+parameters:
+  - id: name
+    label: Name
+    dtype: string
+    default: '"Matrix Sink"'
+    hide: ${ ('none' if len(name) > 0 else 'part') }
+  - id: vlen
+    label: Vector Size
+    dtype: int
+    default: 100
+  - id: num_cols
+    label: Number of Columns
+    dtype: int
+    default: 10
+  - id: contour
+    label: Contour Plot
+    dtype: bool
+    default: false
+    options: [true, false]
+  - id: color_map
+    label: Color Map
+    dtype: enum
+    default: '"rgb"'
+    options: ['"rgb"', '"indexed"', '"alpha"']
+    option_labels: ["RGB", "Indexed", "Alpha"]
+  - id: interpolation
+    label: Interpolation
+    dtype: enum
+    default: '"none"'
+    options:
+      [
+        '"none"',
+        '"BilinearInterpolation"',
+        '"BicubicInterpolation"',
+        '"NearestNeighbour"',
+      ]
+    option_labels:
+      [
+        "none",
+        "Bilinear Interpolation",
+        "Bicubic Interpolation",
+        "Nearest Neighbour",
+      ]
+  - id: x_start
+    label: X-Axis Start Value
+    dtype: real
+    default: 0
+  - id: x_end
+    label: X-Axis End Value
+    dtype: real
+    default: 1
+  - id: y_start
+    label: Y-Axis Start Value
+    dtype: real
+    default: 0
+  - id: y_end
+    label: Y-Axis End Value
+    dtype: real
+    default: 1
+  - id: z_max
+    label: Z-Axis Maximum Value
+    dtype: real
+    default: 1
+  - id: z_min
+    label: Z-Axis Minimum Value
+    dtype: real
+    default: 0
+  - id: x_axis_label
+    label: X-Axis Label
+    dtype: string
+    default: '"x-Axis"'
+  - id: y_axis_label
+    label: Y-Axis Label
+    dtype: string
+    default: '"y-Axis"'
+  - id: z_axis_label
+    label: Z-Axis Label
+    dtype: string
+    default: '"z-Axis"'
+  - id: gui_hint
+    label: GUI Hint
+    dtype: gui_hint
+    hide: part
+
+inputs:
+  - domain: stream
+    dtype: float
+    vlen: ${ vlen }
+    optional: false
+
+documentation: |-
+  The matrix sink displays a 2D matrix of data as a color plot. The data is displayed in a window with a color bar on the right side. The color bar shows the mapping of data values to colors. The color bar can be used to change the range of data values that are displayed. 
+  The color map can be one of the following: RGB, indexed, or alpha. 
+  The interpolation method can be one of the following: none, bilinear, bicubic, or nearest neighbor. The matrix sink can also display contour lines. 
+  The GUI hint can be used to position the widget within the application. The hint is of the form [tab_id@tab_index]: [row, col, row_span, col_span]. Both the tab specification and the grid position are optional.
+
+file_format: 1

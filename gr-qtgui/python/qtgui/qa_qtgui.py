@@ -77,6 +77,9 @@ class test_qtgui(gr_unittest.TestCase):
 
     def test14(self):
         self.qtsnk = qtgui.eye_sink_c(1024, 1, 1, None)
+        
+    def test15(self):
+        self.qtsnk = qtgui.matrix_sink("Dopler",2,4,False,"rgb","BilinearInterpolation",0,10,0,10,10,0,"x","y","z",None)
 
 
 if __name__ == '__main__':
