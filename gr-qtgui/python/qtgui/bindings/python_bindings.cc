@@ -39,6 +39,7 @@ void bind_freqcontrolpanel(py::module&);
 void bind_freqdisplayform(py::module&);
 void bind_histogram_sink_f(py::module&);
 void bind_histogramdisplayform(py::module&);
+void bind_matrix_sink(py::module&);
 void bind_number_sink(py::module&);
 void bind_numberdisplayform(py::module&);
 // void bind_plot_raster(py::module&);
@@ -109,6 +110,7 @@ PYBIND11_MODULE(qtgui_python, m)
     // bind_freqdisplayform(m);
     bind_histogram_sink_f(m);
     // bind_histogramdisplayform(m);
+    bind_matrix_sink(m);
     bind_number_sink(m);
     // bind_numberdisplayform(m);
     // // bind_plot_raster(m);
