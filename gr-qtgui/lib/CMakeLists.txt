@@ -59,6 +59,8 @@ set(QTGUI_SOURCES
     vectordisplayform.cc
     vector_sink_f_impl.cc
     edit_box_msg_impl.cc
+    matrix_display.cc
+    matrix_sink_impl.cc
 )
 
 set(QTGUI_LIBS
@@ -138,6 +140,8 @@ qt5_wrap_cpp(
     ${qtgui_mod_includedir}/HistogramDisplayPlot.h
     ${qtgui_mod_includedir}/VectorDisplayPlot.h
     edit_box_msg_impl.h
+    matrix_display.h
+    matrix_display_signal.h
     )
 if(ENABLE_GR_QTGUI_OPENGL)
     qt5_wrap_cpp(
