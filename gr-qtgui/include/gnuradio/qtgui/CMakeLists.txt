@@ -36,6 +36,7 @@ install(
           freqdisplayform.h
           histogram_sink_f.h
           histogramdisplayform.h
+          matrix_sink.h
           number_sink.h
           numberdisplayform.h
           plot_raster.h
