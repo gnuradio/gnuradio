@@ -174,7 +174,8 @@ bool udp_sink_impl::stop()
         }
 
         d_udpsocket->close();
-        d_udpsocket = NULL;
+        delete d_udpsocket;
+        d_udpsocket = nullptr;
 
         d_io_context.reset();
         d_io_context.stop();
