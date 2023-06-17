@@ -38,7 +38,6 @@ parameters:
   - id: bias
     label: Bias Tee Power
     dtype: bool
-    default: 'False'
     hide: part
 
   - id: center_freq
@@ -112,14 +111,16 @@ templates:
       def _set_${id}_gain_mode(channel, agc):
           self.${id}.set_gain_mode(channel, agc)
           if not agc:
-              self.set_${id}_gain(channel, self.gain)
+              self.set_${id}_gain(channel, self._${id}_gain_value)
       self.set_${id}_gain_mode = _set_${id}_gain_mode
+      self._${id}_gain_value = ${gain}
 
       ## Intercept the gain callback. The soapysdrplay driver prints an
       ## error message every time gain is adjusted with agc on. Defer
       ## setting IFGR until agc is turned off. Bounds check.
       def _set_${id}_gain(channel, gain):
-          if not self.agc:
+          self._${id}_gain_value = gain
+          if not self.${id}.get_gain_mode(channel):
               self.${id}.set_gain(channel, 'IFGR', min(max(59 - gain, 20), 59))
       self.set_${id}_gain = _set_${id}_gain
 
@@ -136,7 +137,9 @@ templates:
       self.${id}.set_antenna(0, ${antenna})
       self.${id}.set_frequency(0, ${center_freq})
       self.${id}.set_frequency_correction(0, ${freq_correction})
-      self.${id}.write_setting('biasT_ctrl', ${bias})
+      # biasT_ctrl is not always available and leaving it blank avoids errors
+      if '${bias}' != '':
+          self.${id}.write_setting('biasT_ctrl', ${bias})
       self.${id}.write_setting('agc_setpoint', ${agc_setpoint})
       self.set_${id}_gain_mode(0, ${agc})
       self.set_${id}_gain(0, ${gain})
