@@ -143,7 +143,7 @@ int rfnoc_rx_streamer_impl::work(int noutput_items,
     default:
         d_logger->warn("RFNoC Streamer block received error {:s} (Code: {})",
                        d_metadata.strerror(),
-                       d_metadata.error_code);
+                       static_cast<int>(d_metadata.error_code));
     }
 
     if (d_metadata.end_of_burst) {
