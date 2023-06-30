@@ -52,6 +52,7 @@ parameters:
   - id: bias
     label: 'Bias Tee Power'
     dtype: bool
+    default: 'False'
     hide: 'part'
 
 inputs:
@@ -88,15 +89,28 @@ templates:
               self.${id}.set_gain(channel, gain)
       self.set_${id}_gain = _set_${id}_gain
 
+      ## Intercept bias tee setting and detect whether it is supported
+      def _set_${id}_bias(bias):
+          if 'biastee' in self._${id}_setting_keys:
+              self.${id}.write_setting('biastee', bias)
+      self.set_${id}_bias = _set_${id}_bias
+
       self.${id} = soapy.source(dev, "${type}", 1, ${dev_args},
                                 stream_args, tune_args, settings)
+
+      ## Get list of valid setting keys
+      self._${id}_setting_keys = [a.key for a in self.${id}.get_setting_info()]
+
+      ## Set initial values. Since Python casts pretty much anything to bool,
+      ## parameter type chaecking does not guarantee bool values here are
+      ## actually bools. Do the cast here to get the same result. Note that
+      ## non-empty strings (e.g., 'False') are cast to True!
       self.${id}.set_sample_rate(0, ${samp_rate})
       self.${id}.set_frequency(0, ${center_freq})
       self.${id}.set_frequency_correction(0, ${freq_correction})
-      if '${bias}' != '':
-          self.${id}.write_setting('biastee', ${bias})
+      self.set_${id}_bias(bool(${bias}))
       self._${id}_gain_value = ${gain}
-      self.set_${id}_gain_mode(0, ${agc})
+      self.set_${id}_gain_mode(0, bool(${agc}))
       self.set_${id}_gain(0, 'TUNER', ${gain})
 
   callbacks:
@@ -105,6 +119,6 @@ templates:
     - set_frequency_correction(0, ${freq_correction})
     - self.set_${id}_gain_mode(0, ${agc})
     - self.set_${id}_gain(0, 'TUNER', ${gain})
-    - write_setting('biastee', ${bias})
+    - self.set_${id}_bias(${bias})
 
 file_format: 1
