@@ -46,8 +46,8 @@ include(GrComponent)
 # cmake-format: off
 SET(VERSION_MAJOR 3)
 SET(VERSION_API   10)
-SET(VERSION_ABI   6)
-SET(VERSION_PATCH git)
+SET(VERSION_ABI   7)
+SET(VERSION_PATCH 0-rc1)
 include(GrVersion) #setup version info
 # cmake-format: on
 
