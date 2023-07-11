@@ -71,6 +71,7 @@ set(QTGUI_LIBS
     Volk::volk
     qwt::qwt
     Qt5::Widgets
+    Qt5::Core
 )
 
 if(ENABLE_COMMON_PCH)
@@ -91,6 +92,19 @@ if(ENABLE_GR_QTGUI_OPENGL)
     list(APPEND PRIVATE_LIBS
         Qt5::OpenGL
         OpenGL::GL
+    )
+endif()
+
+if(ENABLE_GR_QTGUI_VIDEO_DISPLAY)
+    list(APPEND QTGUI_SOURCES
+        playercontrols.cc
+        video_player.cc
+        video_display_impl.cc
+    )
+    find_package(Qt5 COMPONENTS Multimedia MultimediaWidgets REQUIRED)
+    list(APPEND PRIVATE_LIBS
+        Qt5::Multimedia
+        Qt5::MultimediaWidgets
     )
 endif()
 
@@ -148,6 +162,13 @@ if(ENABLE_GR_QTGUI_OPENGL)
         qtgui_moc_sources
         QFosphorSurface.h
         QFosphorColorMapper.h
+        )
+endif()
+if(ENABLE_GR_QTGUI_VIDEO_DISPLAY)
+    qt5_wrap_cpp(
+        qtgui_moc_sources
+        playercontrols.h
+        video_player.h
         )
 endif()
 target_sources(gnuradio-qtgui PRIVATE ${qtgui_moc_sources})

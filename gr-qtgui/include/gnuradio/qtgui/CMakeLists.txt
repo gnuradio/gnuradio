@@ -59,6 +59,7 @@ install(
           utils.h
           vector_sink_f.h
           vectordisplayform.h
+          video_display.h
           waterfallGlobalData.h
           waterfall_sink_c.h
           waterfall_sink_f.h

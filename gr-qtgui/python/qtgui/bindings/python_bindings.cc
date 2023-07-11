@@ -65,6 +65,9 @@ void bind_trigger_mode(py::module&);
 // void bind_utils(py::module&);
 void bind_vector_sink_f(py::module&);
 void bind_vectordisplayform(py::module&);
+#ifdef MULTIMEDIA_FOUND
+void bind_video_display(py::module&);
+#endif
 // void bind_waterfallGlobalData(py::module&);
 void bind_waterfall_sink_c(py::module&);
 void bind_waterfall_sink_f(py::module&);
@@ -138,6 +141,9 @@ PYBIND11_MODULE(qtgui_python, m)
     bind_trigger_mode(m);
     // // bind_utils(m);
     bind_vector_sink_f(m);
+#ifdef MULTIMEDIA_FOUND
+    bind_video_display(m);
+#endif
     // bind_vectordisplayform(m);
     // // bind_waterfallGlobalData(m);
     bind_waterfall_sink_c(m);

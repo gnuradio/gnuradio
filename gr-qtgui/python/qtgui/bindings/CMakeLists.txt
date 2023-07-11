@@ -66,6 +66,10 @@ if(ENABLE_GR_QTGUI_OPENGL)
         fosphor_formatter_python.cc)
 endif(ENABLE_GR_QTGUI_OPENGL)
 
+if(ENABLE_GR_QTGUI_VIDEO_DISPLAY)
+    list(APPEND qtgui_python_files video_display_python.cc)
+endif(ENABLE_GR_QTGUI_VIDEO_DISPLAY)
+
 list(APPEND qtgui_python_files python_bindings.cc)
 
 set(include_dirs ${Qt5Widgets_INCLUDE_DIRS})
@@ -79,6 +83,10 @@ gr_pybind_make_check_hash(qtgui ../../.. gr::qtgui "${qtgui_python_files}")
 if(ENABLE_GR_QTGUI_OPENGL)
     target_compile_definitions(qtgui_python PRIVATE OPENGL_FOUND)
 endif(ENABLE_GR_QTGUI_OPENGL)
+
+if(ENABLE_GR_QTGUI_VIDEO_DISPLAY)
+    target_compile_definitions(qtgui_python PRIVATE MULTIMEDIA_FOUND )
+endif(ENABLE_GR_QTGUI_VIDEO_DISPLAY)
 
 install(
     TARGETS qtgui_python

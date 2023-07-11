@@ -1,0 +1,40 @@
+id: qtgui_video_display_sink
+label: QT GUI Video Display
+
+templates:
+  imports: |-
+    import sip
+  make: |-
+        <%
+            win = 'self._%s_win'%id
+        %>\
+        qtgui.video_display(${type.size}*${vlen},None)
+        ${win} = sip.wrapinstance(self.${id}.qwidget(), Qt.QWidget)
+        ${gui_hint() % win}
+
+parameters:
+-   id: type
+    label: Input Type
+    dtype: enum
+    options: [complex, float, int, short, byte]
+    option_attributes:
+        size: [gr.sizeof_gr_complex, gr.sizeof_float, gr.sizeof_int, gr.sizeof_short,
+            gr.sizeof_char]
+-   id: vlen
+    label: Vector Length
+    dtype: int
+    default: '1'
+-   id: gui_hint
+    label: GUI Hint
+    dtype: gui_hint
+    hide: part
+
+inputs:
+-   domain: stream
+    dtype: ${ type }
+    vlen: ${ vlen }
+
+documentation: |-
+    The Video Display block displays a video stream in a window.
+
+file_format: 1
