@@ -36,31 +36,25 @@ The following command is for Debian, Ubuntu, and derivatives. Consult your distr
 
     sudo apt install gnuradio
 
-For other operating systems and versions, see [Installing from Binaries](https://wiki.gnuradio.org/index.php/InstallingGR#From_Binaries)
+For other operating systems and versions, see [Quick Start](https://wiki.gnuradio.org/index.php/InstallingGR#Quick_Start)
 
-### PyBOMBS
+### Ubuntu PPA Installation
 
-PyBOMBS is good at building GNU Radio, UHD, and various Out of Tree (OOT) modules from source and then installing into a specified user directory rather than in the system files. PyBOMBS detects the user's Operating System and loads all of the prerequisites in the first stage of the build.
+For Ubuntu, the latest builds (both released and pulled from master branch) are maintained as PPAs (Personal Package Archives) on [launchpad.net](https://launchpad.net/~gnuradio). **Be sure to uninstall any previously installed versions of gnuradio first.** See [UnInstallGR](https://wiki.gnuradio.org/index.php?title=UnInstallGR#From_Distribution_package_manager_or_PPA).
 
-For a quick start, open a terminal window and enter the following commands. This will install Release 3.8 with Python3.
 
-    sudo -H pip3 install PyBOMBS
-    pybombs auto-config
-    pybombs recipes add-defaults
-    pybombs prefix init ~/gnuradio -R gnuradio-default
+### Other Installation Methods
 
-<b>Wait</b>. The terminal will show the progress.
-
-To run GNU Radio Companion, enter:
-
-        pybombs run gnuradio-companion
-
-Complete PyBOMBS instructions are in the [PyBOMBS README](https://github.com/gnuradio/pybombs#pybombs).
+Platform-specific guides and Cross-platform guides are described in [Other Installation Methods](https://wiki.gnuradio.org/index.php/InstallingGR#Other_Installation_Methods).
 
 ### From Source
 
-Complete instructions for building Gnuradio from source code are detailed in 
-[Installing GR From Source](https://wiki.gnuradio.org/index.php/InstallingGR#From_Source). 
+Complete instructions for building GNU Radio from source code are detailed in 
+[Installing From Source](https://wiki.gnuradio.org/index.php?title=LinuxInstall#From_Source). 
+
+### PyBOMBS
+
+We are no longer recommending [PyBOMBS](https://github.com/gnuradio/pybombs#pybombs) to install modern versions of GNU Radio.
 
 ## Legal Matters
 
