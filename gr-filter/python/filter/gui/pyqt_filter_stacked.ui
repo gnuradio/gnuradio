@@ -2253,7 +2253,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>&amp;Phase Respone</string>
+    <string>&amp;Phase Response</string>
    </property>
   </action>
   <action name="actionGroup_Delay">

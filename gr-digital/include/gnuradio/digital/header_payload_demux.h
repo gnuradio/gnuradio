@@ -52,7 +52,7 @@ namespace digital {
  * \section hpd_item_sizes Symbols, Items and Item Sizes
  *
  * To generically and transparently handle different kinds of modulations,
- * including OFDM, this block distinguises between \b symbols and \b items.
+ * including OFDM, this block distinguishes between \b symbols and \b items.
  *
  * Items are what are consumed at the input. Anything that uses complex samples
  * will therefore use an itemsize of `sizeof(gr_complex)`. Symbols are a way of
