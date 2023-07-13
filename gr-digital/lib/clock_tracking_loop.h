@@ -537,7 +537,7 @@ public:
      *
      * \details
      * Sets the PI filter proportional gain, alpha.
-     * This gain directly mutliplies the clock phase/timing error
+     * This gain directly multiplies the clock phase/timing error
      * term in the PI filter when advancing the loop.
      * It most directly affects the instantaneous clock period estimate,
      * T_inst, and instantaneous clock phase estimate, tau.

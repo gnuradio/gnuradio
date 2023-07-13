@@ -73,7 +73,7 @@ public:
      * User specified nominal clock period in samples per symbol.
      *
      * \param loop_bw
-     * Approximate normailzed loop bandwidth of the symbol clock tracking
+     * Approximate normalized loop bandwidth of the symbol clock tracking
      * loop. It should nominally be close to 0, but greater than 0.  If
      * unsure, start with a number around 2*pi*0.040, and experiment to find
      * the value that works best for your situation.
@@ -254,7 +254,7 @@ public:
      *
      * \details
      * Sets the PI filter proportional gain, alpha.
-     * This gain directly mutliplies the clock phase/timing error
+     * This gain directly multiplies the clock phase/timing error
      * term in the PI filter when advancing the loop.
      * It most directly affects the instantaneous clock period estimate,
      * T_inst, and instantaneous clock phase estimate, tau.
