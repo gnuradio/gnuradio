@@ -13,7 +13,7 @@
 /* If manual edits are made, the following tags should be modified accordingly.    */
 /* BINDTOOL_GEN_AUTOMATIC(1)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
-/* BINDTOOL_HEADER_FILE(atsc_trellis_encoder.h)                                        */
+/* BINDTOOL_HEADER_FILE(atsc_trellis_encoder.h)                                    */
 /* BINDTOOL_HEADER_FILE_HASH(54e8ce920a8d66154e6e5c5ed15a90be)                     */
 /***********************************************************************************/
 

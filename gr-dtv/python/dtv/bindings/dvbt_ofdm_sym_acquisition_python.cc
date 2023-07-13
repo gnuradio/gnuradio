@@ -13,7 +13,7 @@
 /* If manual edits are made, the following tags should be modified accordingly.    */
 /* BINDTOOL_GEN_AUTOMATIC(1)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
-/* BINDTOOL_HEADER_FILE(dvbt_ofdm_sym_acquisition.h) */
+/* BINDTOOL_HEADER_FILE(dvbt_ofdm_sym_acquisition.h)                               */
 /* BINDTOOL_HEADER_FILE_HASH(5ca4962bf06014c90cf79fb2e80ee9ae)                     */
 /***********************************************************************************/
 
