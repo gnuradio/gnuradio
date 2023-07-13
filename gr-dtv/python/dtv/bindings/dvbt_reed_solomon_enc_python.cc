@@ -13,7 +13,7 @@
 /* If manual edits are made, the following tags should be modified accordingly.    */
 /* BINDTOOL_GEN_AUTOMATIC(1)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
-/* BINDTOOL_HEADER_FILE(dvbt_reed_solomon_enc.h)                                        */
+/* BINDTOOL_HEADER_FILE(dvbt_reed_solomon_enc.h)                                   */
 /* BINDTOOL_HEADER_FILE_HASH(e29b90f275ff77ea0b91a12a0489b693)                     */
 /***********************************************************************************/
 

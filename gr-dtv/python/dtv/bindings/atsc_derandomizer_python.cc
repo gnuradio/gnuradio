@@ -13,7 +13,7 @@
 /* If manual edits are made, the following tags should be modified accordingly.    */
 /* BINDTOOL_GEN_AUTOMATIC(1)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
-/* BINDTOOL_HEADER_FILE(atsc_derandomizer.h)                                        */
+/* BINDTOOL_HEADER_FILE(atsc_derandomizer.h)                                       */
 /* BINDTOOL_HEADER_FILE_HASH(b2794152d0b34ea575b8797f241dbe9f)                     */
 /***********************************************************************************/
 

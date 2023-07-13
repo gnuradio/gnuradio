@@ -13,7 +13,7 @@
 /* If manual edits are made, the following tags should be modified accordingly.    */
 /* BINDTOOL_GEN_AUTOMATIC(1)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
-/* BINDTOOL_HEADER_FILE(atsc_equalizer.h)                                        */
+/* BINDTOOL_HEADER_FILE(atsc_equalizer.h)                                          */
 /* BINDTOOL_HEADER_FILE_HASH(33ffb39eb30666aadee1df49711f0fe1)                     */
 /***********************************************************************************/
 

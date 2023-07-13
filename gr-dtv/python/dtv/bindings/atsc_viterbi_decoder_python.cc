@@ -13,7 +13,7 @@
 /* If manual edits are made, the following tags should be modified accordingly.    */
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
-/* BINDTOOL_HEADER_FILE(atsc_viterbi_decoder.h)                                        */
+/* BINDTOOL_HEADER_FILE(atsc_viterbi_decoder.h)                                    */
 /* BINDTOOL_HEADER_FILE_HASH(d880535937753848a53110ab890678fb)                     */
 /***********************************************************************************/
 
