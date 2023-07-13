@@ -13,7 +13,7 @@
 /* If manual edits are made, the following tags should be modified accordingly.    */
 /* BINDTOOL_GEN_AUTOMATIC(1)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
-/* BINDTOOL_HEADER_FILE(atsc_field_sync_mux.h)                                        */
+/* BINDTOOL_HEADER_FILE(atsc_field_sync_mux.h)                                     */
 /* BINDTOOL_HEADER_FILE_HASH(14a86391f54bff3694965574fffb2f46)                     */
 /***********************************************************************************/
 

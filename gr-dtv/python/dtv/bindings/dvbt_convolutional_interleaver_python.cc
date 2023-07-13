@@ -13,7 +13,7 @@
 /* If manual edits are made, the following tags should be modified accordingly.    */
 /* BINDTOOL_GEN_AUTOMATIC(1)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
-/* BINDTOOL_HEADER_FILE(dvbt_convolutional_interleaver.h) */
+/* BINDTOOL_HEADER_FILE(dvbt_convolutional_interleaver.h)                          */
 /* BINDTOOL_HEADER_FILE_HASH(47d8af60ef59f5c5844acc2947890015)                     */
 /***********************************************************************************/
 

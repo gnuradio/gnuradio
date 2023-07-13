@@ -13,7 +13,7 @@
 /* If manual edits are made, the following tags should be modified accordingly.    */
 /* BINDTOOL_GEN_AUTOMATIC(1)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
-/* BINDTOOL_HEADER_FILE(atsc_fs_checker.h)                                        */
+/* BINDTOOL_HEADER_FILE(atsc_fs_checker.h)                                         */
 /* BINDTOOL_HEADER_FILE_HASH(4e43a317cf181560a97431eb667af75f)                     */
 /***********************************************************************************/
 
