@@ -75,7 +75,7 @@ class hier_block2(object):
         Create a hierarchical block with a given name and I/O signatures.
 
         Wrap the methods of the underlying C++ `hier_block_pb` in an impl
-        object, and add the methods of that to this oject.
+        object, and add the methods of that to this object.
 
         Add a python-side logger, to allow Python hierarchical blocks to do their own identifiable logging.
         """

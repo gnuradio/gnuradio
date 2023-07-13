@@ -1,7 +1,7 @@
 /*
  * axis.h
  *
- * Logic to deal with various axises
+ * Logic to deal with various axes
  *
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
@@ -14,7 +14,7 @@
  */
 
 /*! \file axis.h
- *  \brief Logic to deal with various axises
+ *  \brief Logic to deal with various axes
  */
 
 struct freq_axis {

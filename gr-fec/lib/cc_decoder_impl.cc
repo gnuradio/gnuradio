@@ -59,7 +59,7 @@ cc_decoder_impl::cc_decoder_impl(int frame_size,
     d_max_frame_size = frame_size;
     d_frame_size = frame_size;
 
-    // set up a padding factor. If padding, the encoded frame was exteded
+    // set up a padding factor. If padding, the encoded frame was extended
     // by this many bits to fit into a full byte.
     if (padded && (mode == CC_TERMINATED)) {
         d_padding = static_cast<int>(8.0f * ceilf(d_rate * (d_k - 1) / 8.0f) -
