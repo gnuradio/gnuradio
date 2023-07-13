@@ -1669,7 +1669,7 @@ class Ui_MainWindow(object):
         self.actionMagnitude_Response.setText(
             _translate("MainWindow", "&Magnitude Response"))
         self.actionPhase_Respone.setText(
-            _translate("MainWindow", "&Phase Respone"))
+            _translate("MainWindow", "&Phase Response"))
         self.actionGroup_Delay.setText(
             _translate("MainWindow", "&Group Delay"))
         self.actionPhase_Delay.setText(

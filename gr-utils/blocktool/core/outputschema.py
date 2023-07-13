@@ -15,7 +15,7 @@ RESULT_SCHEMA = {
     "type": "object",
     "properties": {
         "namespace": {
-            "description": "List of nested namspace",
+            "description": "List of nested namespace",
             "type": "array",
             "minItems": 1,
             "uniqueItems": True,

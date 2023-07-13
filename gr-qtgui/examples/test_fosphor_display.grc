@@ -7,7 +7,7 @@ options:
     comment: ''
     copyright: ''
     description: This is a standalone test for the Fosphor GL Sink, which combines
-      the QT GUI Fosphor Formatter and the QT GUI Fosphor Diplay (Byte Vector). The
+      the QT GUI Fosphor Formatter and the QT GUI Fosphor Display (Byte Vector). The
       Fosphor Display is most often used in combination with the RFNoC foshpor block.
     gen_cmake: 'On'
     gen_linking: dynamic

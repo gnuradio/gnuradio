@@ -41,7 +41,7 @@ public:
      *
      * \param itemsize size of the input and output items
      * \param input_index the initially active input index
-     * \param output_index the initally active output index
+     * \param output_index the initially active output index
      */
     static sptr
     make(size_t itemsize, unsigned int input_index, unsigned int output_index);
