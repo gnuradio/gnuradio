@@ -13,7 +13,7 @@
 /* If manual edits are made, the following tags should be modified accordingly.    */
 /* BINDTOOL_GEN_AUTOMATIC(1)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
-/* BINDTOOL_HEADER_FILE(dvbt_energy_descramble.h) */
+/* BINDTOOL_HEADER_FILE(dvbt_energy_descramble.h)                                  */
 /* BINDTOOL_HEADER_FILE_HASH(8e900d99d1e16a6e19caad951480ff7e)                     */
 /***********************************************************************************/
 
