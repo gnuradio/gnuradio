@@ -8,6 +8,14 @@
 ########################################################################
 file(GLOB yml_files "*.yml")
 
+if(NOT ENABLE_GR_QTGUI_OPENGL)
+    list(REMOVE_ITEM yml_files 
+        "${CMAKE_CURRENT_SOURCE_DIR}/qtgui_fosphor_display.block.yml"
+        "${CMAKE_CURRENT_SOURCE_DIR}/qtgui_fosphor_formatter.block.yml"
+        "${CMAKE_CURRENT_SOURCE_DIR}/qtgui_fosphorgl_sink.block.yml"
+    )
+endif()
+
 macro(REPLACE_IN_FILE _yml_block match replace)
     set(yml_block_src "${CMAKE_CURRENT_SOURCE_DIR}/${_yml_block}")
     set(yml_block "${CMAKE_CURRENT_BINARY_DIR}/${_yml_block}")
