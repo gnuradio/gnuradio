@@ -12,7 +12,6 @@
 #define INCLUDED_GR_RUNTIME_BUFFER_SINGLE_MAPPED_H
 
 #include <cstddef>
-#include <functional>
 
 #include <gnuradio/api.h>
 #include <gnuradio/buffer.h>
