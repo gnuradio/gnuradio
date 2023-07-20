@@ -1,6 +1,7 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2004,2007,2013 Free Software Foundation, Inc.
+ * Copyright 2023 Marcus Müller
  *
  * This file is part of GNU Radio
  *
@@ -8,12 +9,11 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
 #include <gnuradio/io_signature.h>
+#include <spdlog/fmt/fmt.h>
+#include <type_traits>
 #include <algorithm>
+#include <limits>
 #include <stdexcept>
 
 namespace gr {
@@ -90,28 +90,44 @@ io_signature::io_signature(int min_streams,
       d_sizeof_stream_item(sizeof_stream_items),
       d_stream_buffer_type(buftypes)
 {
-    if (min_streams < 0 || (max_streams != IO_INFINITE && max_streams < min_streams))
-        throw std::invalid_argument("gr::io_signature(1)");
-
-    if (sizeof_stream_items.empty()) {
-        throw std::invalid_argument("gr::io_signature(2)");
+    if (min_streams < 0) {
+        throw std::invalid_argument(
+            fmt::format("Minimum number of streams must be >= 0, is {:d}", min_streams));
     }
-
-    for (size_t i = 0; i < sizeof_stream_items.size(); i++) {
-        if (max_streams != 0 && sizeof_stream_items[i] < 1)
-            throw std::invalid_argument("gr::io_signature(3)");
+    if (max_streams != IO_INFINITE && max_streams < min_streams) {
+        throw std::invalid_argument(
+            fmt::format("Maximum number of streams ({:d}) needs to be at least as "
+                        "large as minimum number of streams ({:d})",
+                        max_streams,
+                        min_streams));
+    }
+    if (sizeof_stream_items.empty()) {
+        throw std::invalid_argument("Item size vector cannot be empty");
+    }
+    if (max_streams) {
+        size_t index = 0;
+        for (const auto size : sizeof_stream_items) {
+            if (size < 1) {
+                throw std::invalid_argument(fmt::format(
+                    "No item size can be < 1, but position [{:d}] is {:d}", index, size));
+            }
+            ++index;
+        }
     }
 }
 
 io_signature::~io_signature() {}
 
-int io_signature::sizeof_stream_item(int _index) const
+int io_signature::sizeof_stream_item(int index) const
 {
-    if (_index < 0)
-        throw std::invalid_argument("gr::io_signature::sizeof_stream_item");
+    if (index < 0)
+        throw std::invalid_argument(
+            fmt::format("sizeof_stream_item: Index {:d} negative", index));
 
-    size_t index = _index;
-    return d_sizeof_stream_item[std::min(index, d_sizeof_stream_item.size() - 1)];
+    // For historical reasons, the index argument is signed. After the positivity check
+    // above, we can safely cause an implicit unsigned cast of index during comparison.
+    const auto size = d_sizeof_stream_item.size() - 1;
+    return d_sizeof_stream_item[std::min<decltype(size)>(index, size)];
 }
 
 std::vector<int> io_signature::sizeof_stream_items() const
