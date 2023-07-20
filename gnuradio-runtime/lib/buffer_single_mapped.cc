@@ -16,13 +16,10 @@
 #include <gnuradio/buffer_single_mapped.h>
 #include <gnuradio/math.h>
 #include <gnuradio/thread/thread.h>
-#include <assert.h>
 #include <algorithm>
 #include <cstdlib>
-#include <cstring>
-#include <iostream>
+#include <limits>
 #include <numeric>
-#include <stdexcept>
 
 namespace gr {
 
