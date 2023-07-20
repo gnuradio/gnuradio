@@ -12,9 +12,7 @@
 #define INCLUDED_IO_SIGNATURE_H
 
 // For testing purposes, force single mapped buffers to make all QA use them
-//#define FORCE_SINGLE_MAPPED
-
-#include <functional>
+// #define FORCE_SINGLE_MAPPED
 
 #include <gnuradio/api.h>
 #ifdef FORCE_SINGLE_MAPPED
