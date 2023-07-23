@@ -8,14 +8,11 @@
  *
  */
 
-#ifndef INCLUDED_QTGUI_FREQ_SINK_F_H
-#define INCLUDED_QTGUI_FREQ_SINK_F_H
-
-#include "freq_sink.h"
+#ifndef INCLUDED_QTGUI_WATERFALL_SINK_H
+#define INCLUDED_QTGUI_WATERFALL_SINK_H
 
 #include <gnuradio/fft/window.h>
 #include <gnuradio/qtgui/api.h>
-#include <gnuradio/qtgui/trigger_mode.h>
 #include <gnuradio/sync_block.h>
 #include <qapplication.h>
 
@@ -23,27 +20,34 @@ namespace gr {
 namespace qtgui {
 
 /*!
- * \brief A graphical sink to display multiple signals in frequency.
+ * \brief A graphical sink to display multiple signals on a
+ * waterfall (spectrogram) plot.
  * \ingroup instrumentation_blk
  * \ingroup qtgui_blk
  *
  * \details
  * This is a QT-based graphical sink the takes set of a floating
- * point streams and plots the PSD. Each signal is plotted with a
- * different color, and the \a set_title and \a set_color
- * functions can be used to change the label and color for a given
- * input number.
+ * point or complex streams and plots a waterfall (spectrogram) plot.
  *
- * The sink supports plotting streaming float data or
+ * Note that unlike the other qtgui sinks, this one does not
+ * support multiple input streams. We have yet to figure out a
+ * good way to display multiple, independent signals on this kind
+ * of a plot. If there are any suggestions or examples of this, we
+ * would love to see them. Otherwise, to display multiple signals
+ * here, it's probably best to sum the signals together and
+ * connect that here.
+ *
+ * The sink supports plotting streaming float or  data or
  * messages. The message port is named "in". The two modes cannot
  * be used simultaneously, and \p nconnections should be set to 0
  * when using the message mode. GRC handles this issue by
- * providing the "Float Message" type that removes the streaming
+ * providing the "Float or Complex Message" type that removes the streaming
  * port(s).
  *
  * This sink can plot messages that contain either uniform vectors
- * of float 32 values (pmt::is_f32vector) or PDUs where the data
- * is a uniform vector of float 32 values.
+ * of float 32 values (pmt::is_f32vector) or complex 32 values (pmt::is_c32vector)
+ * or PDUs where the data is a uniform vector of float or complex 32 values.
+ *
  *
  * Message Ports:
  *
@@ -69,23 +73,21 @@ namespace qtgui {
  *        to catch the message and update the center frequency of
  *        the display.
  */
-class QTGUI_API freq_sink_f : virtual public sync_block
+
+template <class T>
+class QTGUI_API waterfall_sink : virtual public sync_block
 {
 public:
-    // gr::qtgui::freq_sink_f::sptr
-    typedef std::shared_ptr<freq_sink_f> sptr;
+    // gr::qtgui::waterfall_sink::sptr
+    typedef std::shared_ptr<waterfall_sink<T>> sptr;
 
     /*!
-     * \brief Build a floating point PSD sink.
+     * \brief Build a floating point waterfall sink.
      *
-     * \param fftsize size of the FFT to compute and display. If using
+     * \param size size of the FFT to compute and display. If using
      *        the PDU message port to plot samples, the length of
      *        each PDU must be a multiple of the FFT size.
-     * \param wintype type of window to apply (see gr::fft::window::win_type).
-     *        By setting bit 16 to one, this block will normalize the window
-     *        before applying it. This allows switching between windows without
-     *        sacrificing signal power due to tapering, but it will also
-     *        amplify some samples. See also set_fft_window_normalized().
+     * \param wintype type of window to apply (see gr::fft::window::win_type)
      * \param fc center frequency of signal (use for x-axis labels)
      * \param bw bandwidth of signal (used to set x-axis labels)
      * \param name title for the plot
@@ -95,7 +97,7 @@ public:
      *        the PDU message port is being used.
      * \param parent a QWidget parent object, if any
      */
-    static sptr make(int fftsize,
+    static sptr make(int size,
                      int wintype,
                      double fc,
                      double bw,
@@ -106,28 +108,25 @@ public:
     virtual void exec_() = 0;
     virtual QWidget* qwidget() = 0;
 
+    virtual void clear_data() = 0;
+
     virtual void set_fft_size(const int fftsize) = 0;
     virtual int fft_size() const = 0;
+    virtual void set_time_per_fft(const double t) = 0;
     virtual void set_fft_average(const float fftavg) = 0;
     virtual float fft_average() const = 0;
     virtual void set_fft_window(const gr::fft::window::win_type win) = 0;
     virtual gr::fft::window::win_type fft_window() = 0;
-    //! If true, normalize window to unit power
-    virtual void set_fft_window_normalized(const bool enable) = 0;
 
     virtual void set_frequency_range(const double centerfreq, const double bandwidth) = 0;
-    virtual void set_y_axis(double min, double max) = 0;
+    virtual void set_intensity_range(const double min, const double max) = 0;
 
     virtual void set_update_time(double t) = 0;
-
     virtual void set_title(const std::string& title) = 0;
-    virtual void set_y_label(const std::string& label, const std::string& unit) = 0;
-    virtual void set_line_label(unsigned int which, const std::string& label) = 0;
-    virtual void set_line_color(unsigned int which, const std::string& color) = 0;
-    virtual void set_line_width(unsigned int which, int width) = 0;
-    virtual void set_line_style(unsigned int which, int style) = 0;
-    virtual void set_line_marker(unsigned int which, int marker) = 0;
+    virtual void set_time_title(const std::string& title) = 0;
+    virtual void set_line_label(unsigned int which, const std::string& line) = 0;
     virtual void set_line_alpha(unsigned int which, double alpha) = 0;
+    virtual void set_color_map(unsigned int which, const int color) = 0;
 
     /*!
      *  Pass "true" to this function to only show the positive half
@@ -136,60 +135,29 @@ public:
      */
     virtual void set_plot_pos_half(bool half) = 0;
 
-    /*!
-     * Set up a trigger for the sink to know when to start
-     * plotting. Useful to isolate events and avoid noise.
-     *
-     * The trigger modes are Free, Auto, Normal, and Tag (see
-     * gr::qtgui::trigger_mode). The first three are like a normal
-     * trigger function. Free means free running with no trigger,
-     * auto will trigger if the trigger event is seen, but will
-     * still plot otherwise, and normal will hold until the trigger
-     * event is observed. The Tag trigger mode allows us to trigger
-     * off a specific stream tag. The tag trigger is based only on
-     * the name of the tag, so when a tag of the given name is seen,
-     * the trigger is activated.
-     *
-     * In auto and normal mode, we look to see if the magnitude of
-     * the any FFT point is over the set level.
-     *
-     * \param mode The trigger_mode: free, auto, normal, or tag.
-     * \param level The magnitude of the trigger even for auto or normal modes.
-     * \param channel Which input channel to use for the trigger events.
-     * \param tag_key The name (as a string) of the tag to trigger off
-     *                of if using the tag mode.
-     */
-    virtual void set_trigger_mode(trigger_mode mode,
-                                  float level,
-                                  int channel,
-                                  const std::string& tag_key = "") = 0;
-
     virtual std::string title() = 0;
     virtual std::string line_label(unsigned int which) = 0;
-    virtual std::string line_color(unsigned int which) = 0;
-    virtual int line_width(unsigned int which) = 0;
-    virtual int line_style(unsigned int which) = 0;
-    virtual int line_marker(unsigned int which) = 0;
     virtual double line_alpha(unsigned int which) = 0;
+    virtual int color_map(unsigned int which) = 0;
 
     virtual void set_size(int width, int height) = 0;
 
+    virtual void auto_scale() = 0;
+    virtual double min_intensity(unsigned int which) = 0;
+    virtual double max_intensity(unsigned int which) = 0;
+
     virtual void enable_menu(bool en = true) = 0;
     virtual void enable_grid(bool en = true) = 0;
-    virtual void enable_autoscale(bool en = true) = 0;
-    virtual void enable_control_panel(bool en = true) = 0;
-    virtual void enable_max_hold(bool en) = 0;
-    virtual void enable_min_hold(bool en) = 0;
-    virtual void clear_max_hold() = 0;
-    virtual void clear_min_hold() = 0;
     virtual void disable_legend() = 0;
-    virtual void reset() = 0;
     virtual void enable_axis_labels(bool en = true) = 0;
 
     QApplication* d_qApplication;
 };
 
+using waterfall_sink_f = waterfall_sink<float>;
+using waterfall_sink_c = waterfall_sink<gr_complex>;
+
 } /* namespace qtgui */
 } /* namespace gr */
 
-#endif /* INCLUDED_QTGUI_FREQ_SINK_F_H */
+#endif /* INCLUDED_QTGUI_WATERFALL_SINK_H */

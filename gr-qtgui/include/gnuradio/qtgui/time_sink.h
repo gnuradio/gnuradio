@@ -1,69 +1,66 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2020 Free Software Foundation, Inc.
+ * Copyright 2011-2013,2015 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
  * SPDX-License-Identifier: GPL-3.0-or-later
+ *
  */
 
-#ifndef INCLUDED_QTGUI_EYE_SINK_F_H
-#define INCLUDED_QTGUI_EYE_SINK_F_H
-
-#include "eye_sink.h"
+#ifndef INCLUDED_QTGUI_TIME_SINK_H
+#define INCLUDED_QTGUI_TIME_SINK_H
 
 #include <gnuradio/qtgui/api.h>
 #include <gnuradio/qtgui/trigger_mode.h>
 #include <gnuradio/sync_block.h>
 #include <qapplication.h>
+
 namespace gr {
 namespace qtgui {
 
 /*!
- * \brief A graphical sink to display signals eye patterns.
- * \ingroup qtgui
+ * \brief A graphical sink to display multiple signals in time.
+ * \ingroup instrumentation_blk
+ * \ingroup qtgui_blk
  *
  * \details
- * This is a QT-based graphical sink which takes set of a float streams
- * and plots them as eye patterns. For each signal, both
- * the signal's I and Q eye patterns are plotted. Eye patterns are
- * 2 symbol's time long. Symbol rate must be an integer multiple of
- * the sample rate to obtain the eye pattern.
+ * This is a QT-based graphical sink the takes set of a float or complex streams
+ * and plots them in the time domain. Each signal is plotted with a
+ * different color, and the \a set_title and \a set_color functions
+ * can be used to change the label and color for a given input number.
  *
- * Trigger occurs at the beginning of each stream used to plot the
- * eye pattern; whilst a real eye diagram would be triggered with
- * a (recovered) symbol clock. For these reasons, triggering of
- * noisy and/or unsynchronized signals may lead to incorrect eye
- * pattern.
- *
- * The sink supports plotting streaming float data or
+ * The sink supports plotting streaming float or complex data or
  * messages. The message port is named "in". The two modes cannot
  * be used simultaneously, and \p nconnections should be set to 0
  * when using the message mode. GRC handles this issue by
- * providing the "Float Message" type that removes the streaming
+ * providing the "Float or Complex Message" type that removes the streaming
  * port(s).
  *
  * This sink can plot messages that contain either uniform vectors
- * of float 32 values (pmt::is_f32vector) or PDUs where the data
- * is a uniform vector of float 32 values.
+ * of float 32 values (pmt::is_f32vector) or complex 32 values (pmt::is_c32vector)
+ * or PDUs where the data is a uniform vector of float or complex 32 values.
  */
 
-class QTGUI_API eye_sink_f : virtual public gr::sync_block
+template <class T>
+class QTGUI_API time_sink : virtual public sync_block
 {
 public:
-    // gr::qtgui::eye_sink_f::sptr
-    typedef std::shared_ptr<eye_sink_f> sptr;
+    // gr::qtgui::time_sink::sptr
+    typedef std::shared_ptr<time_sink<T>> sptr;
 
     /*!
-     * \brief Build floating point eye sink
+     * \brief Build floating point or complex time sink
      *
      * \param size number of points to plot at once
      * \param samp_rate sample rate (used to set x-axis labels)
+     * \param name title for the plot
      * \param nconnections number of signals connected to sink
      * \param parent a QWidget parent object, if any
      */
     static sptr make(int size,
                      double samp_rate,
+                     const std::string& name,
                      unsigned int nconnections = 1,
                      QWidget* parent = NULL);
 
@@ -73,7 +70,7 @@ public:
     virtual void set_y_axis(double min, double max) = 0;
     virtual void set_y_label(const std::string& label, const std::string& unit = "") = 0;
     virtual void set_update_time(double t) = 0;
-    virtual void set_samp_per_symbol(unsigned int sps) = 0;
+    virtual void set_title(const std::string& title) = 0;
     virtual void set_line_label(unsigned int which, const std::string& line) = 0;
     virtual void set_line_color(unsigned int which, const std::string& color) = 0;
     virtual void set_line_width(unsigned int which, int width) = 0;
@@ -103,6 +100,14 @@ public:
      * given direction (x[1] > x[0] for Positive or x[1] < x[0] for
      * Negative), then the trigger is activated.
      *
+     * With the complex time sink, each input has two lines drawn
+     * for the real and imaginary parts of the signal. When
+     * selecting the \p channel value, channel 0 is the real signal
+     * and channel 1 is the imaginary signal. For more than 1 input
+     * stream, channel 2i is the real part of the ith input and
+     * channel (2i+1) is the imaginary part of the ith input
+     * channel.
+     *
      * The \p delay value is specified in time based off the sample
      * rate. If the sample rate of the block is set to 1, the delay
      * is then also the sample number offset. This is the offset
@@ -110,7 +115,7 @@ public:
      * to show the trigger event at the given delay along with some
      * portion of the signal before the event. The delay must be
      * within 0 - t_max where t_max is the maximum amount of time
-     * displayed on the eye pattern equal to 2 symbol time.
+     * displayed on the time plot.
      *
      * \param mode The trigger_mode: free, auto, normal, or tag.
      * \param slope The trigger_slope: positive or negative. Only
@@ -121,8 +126,8 @@ public:
      * \param tag_key The name (as a string) of the tag to trigger off
      *                 of if using the tag mode.
      */
-    virtual void set_trigger_mode(gr::qtgui::trigger_mode mode,
-                                  gr::qtgui::trigger_slope slope,
+    virtual void set_trigger_mode(trigger_mode mode,
+                                  trigger_slope slope,
                                   float level,
                                   float delay,
                                   int channel,
@@ -141,12 +146,9 @@ public:
     virtual void enable_menu(bool en = true) = 0;
     virtual void enable_grid(bool en = true) = 0;
     virtual void enable_autoscale(bool en = true) = 0;
-    virtual void
-    enable_stem_plot(bool en = true) = 0; // Used by parent class, do not remove
-    virtual void
-    enable_semilogx(bool en = true) = 0; // Used by parent class, do not remove
-    virtual void
-    enable_semilogy(bool en = true) = 0; // Used by parent class, do not remove
+    virtual void enable_stem_plot(bool en = true) = 0;
+    virtual void enable_semilogx(bool en = true) = 0;
+    virtual void enable_semilogy(bool en = true) = 0;
     virtual void enable_control_panel(bool en = true) = 0;
     virtual void enable_tags(unsigned int which, bool en) = 0;
     virtual void enable_tags(bool en) = 0;
@@ -158,7 +160,10 @@ public:
 
     QApplication* d_qApplication;
 };
-} // namespace qtgui
-} // namespace gr
 
-#endif /* INCLUDED_QTGUI_EYE_SINK_F_H */
+using time_sink_f = time_sink<float>;
+using time_sink_c = time_sink<gr_complex>;
+} /* namespace qtgui */
+} /* namespace gr */
+
+#endif /* INCLUDED_QTGUI_TIME_SINK_H */

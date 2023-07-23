@@ -11,6 +11,8 @@
 #ifndef INCLUDED_QTGUI_SINK_C_H
 #define INCLUDED_QTGUI_SINK_C_H
 
+#include "sink.h"
+
 #include <gnuradio/block.h>
 #include <gnuradio/qtgui/api.h>
 #include <qapplication.h>

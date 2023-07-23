@@ -11,6 +11,8 @@
 #ifndef INCLUDED_QTGUI_TIME_RASTER_SINK_F_H
 #define INCLUDED_QTGUI_TIME_RASTER_SINK_F_H
 
+#include "time_raster_sink.h"
+
 #include <gnuradio/qtgui/api.h>
 #include <gnuradio/sync_block.h>
 #include <qapplication.h>

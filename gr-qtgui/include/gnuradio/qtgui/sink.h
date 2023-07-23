@@ -8,10 +8,8 @@
  *
  */
 
-#ifndef INCLUDED_QTGUI_SINK_F_H
-#define INCLUDED_QTGUI_SINK_F_H
-
-#include "sink.h"
+#ifndef INCLUDED_QTGUI_SINK_H
+#define INCLUDED_QTGUI_SINK_H
 
 #include <gnuradio/block.h>
 #include <gnuradio/qtgui/api.h>
@@ -23,7 +21,7 @@ namespace gr {
 namespace qtgui {
 
 /*!
- * \brief A graphical sink to display freq, spec, and time.
+ * \brief A graphical sink to display freq, spec, time, and const plots.
  * \ingroup instrumentation_blk
  * \ingroup qtgui_blk
  *
@@ -53,14 +51,15 @@ namespace qtgui {
  *        to catch the message and update the center frequency of
  *        the display.
  */
-class QTGUI_API sink_f : virtual public block
+template <class T>
+class QTGUI_API sink : virtual public block
 {
 public:
-    // gr::qtgui::sink_f::sptr
-    typedef std::shared_ptr<sink_f> sptr;
+    // gr::qtgui::sink::sptr
+    typedef std::shared_ptr<sink<T>> sptr;
 
     /*!
-     * \brief Build a floating point qtgui sink.
+     * \brief Build a floating point or complex qtgui sink.
      *
      * \param fftsize size of the FFT to compute and display
      * \param wintype type of window to apply (see gnuradio/filter/firdes.h)
@@ -104,7 +103,10 @@ public:
     QApplication* d_qApplication;
 };
 
+using sink_f = sink<float>;
+using sink_c = sink<gr_complex>;
+
 } /* namespace qtgui */
 } /* namespace gr */
 
-#endif /* INCLUDED_QTGUI_SINK_F_H */
+#endif /* INCLUDED_QTGUI_SINK_H */

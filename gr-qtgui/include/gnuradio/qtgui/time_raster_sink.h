@@ -8,10 +8,8 @@
  *
  */
 
-#ifndef INCLUDED_QTGUI_TIME_RASTER_SINK_B_H
-#define INCLUDED_QTGUI_TIME_RASTER_SINK_B_H
-
-#include "time_raster_sink.h"
+#ifndef INCLUDED_QTGUI_TIME_RASTER_SINK_H
+#define INCLUDED_QTGUI_TIME_RASTER_SINK_H
 
 #include <gnuradio/qtgui/api.h>
 #include <gnuradio/sync_block.h>
@@ -28,14 +26,14 @@ namespace qtgui {
  * \ingroup qtgui_blk
  *
  * \details
- * This is a QT-based graphical sink that takes in byte
- * streams and plots a time_raster (spectrogram) plot.
+ * This is a QT-based graphical sink that takes set of a floating
+ * point or byte streams and plots a time_raster (spectrogram) plot.
  *
- * Input stream: This expects a bit stream (0, 1 in the LSB of a
+ * * Input Byte stream: This expects a bit stream (0, 1 in the LSB of a
  * byte). It will display packed bytes but the display will have
  * to be autoscaled.
  *
- * The sink supports plotting streaming byte/char data or
+ * The sink supports plotting streaming float or byte/char data or
  * messages. The message port is named "in". The two modes cannot
  * be used simultaneously, and \p nconnections should be set to 0
  * when using the message mode. GRC handles this issue by
@@ -43,17 +41,18 @@ namespace qtgui {
  * port(s).
  *
  * This sink can plot messages that contain either uniform vectors
- * of byte/char values (pmt::is_{u,s}32vector) or PDUs where the
- * data is a uniform vector of byte/char values.
+ * of float 32 values (pmt::is_f32vector) or byte/char values (pmt::is_{u,s}32vector)
+ * or PDUs where the data is a uniform vector of float 32 or byte/char values.
  */
-class QTGUI_API time_raster_sink_b : virtual public sync_block
+template <class T>
+class QTGUI_API time_raster_sink : virtual public sync_block
 {
 public:
-    // gr::qtgui::time_raster_sink_b::sptr
-    typedef std::shared_ptr<time_raster_sink_b> sptr;
+    // gr::qtgui::time_raster_sink::sptr
+    typedef std::shared_ptr<time_raster_sink<T>> sptr;
 
     /*!
-     * \brief Build a bit time raster sink.
+     * \brief Build a floating point or bit time raster sink.
      *
      * \param samp_rate sample rate of signal
      * \param cols number of cols to plot
@@ -122,7 +121,10 @@ public:
     QApplication* d_qApplication;
 };
 
+using time_raster_sink_f = time_raster_sink<float>;
+using time_raster_sink_b = time_raster_sink<char>;
+
 } /* namespace qtgui */
 } /* namespace gr */
 
-#endif /* INCLUDED_QTGUI_TIME_RASTER_SINK_B_H */
+#endif /* INCLUDED_QTGUI_TIME_RASTER_SINK_H */

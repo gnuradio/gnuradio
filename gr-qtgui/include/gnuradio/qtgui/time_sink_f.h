@@ -11,6 +11,8 @@
 #ifndef INCLUDED_QTGUI_TIME_SINK_F_H
 #define INCLUDED_QTGUI_TIME_SINK_F_H
 
+#include "time_sink.h"
+
 #include <gnuradio/qtgui/api.h>
 #include <gnuradio/qtgui/trigger_mode.h>
 #include <gnuradio/sync_block.h>

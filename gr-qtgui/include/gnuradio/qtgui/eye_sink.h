@@ -7,10 +7,8 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-#ifndef INCLUDED_QTGUI_EYE_SINK_F_H
-#define INCLUDED_QTGUI_EYE_SINK_F_H
-
-#include "eye_sink.h"
+#ifndef INCLUDED_QTGUI_EYE_SINK_H
+#define INCLUDED_QTGUI_EYE_SINK_H
 
 #include <gnuradio/qtgui/api.h>
 #include <gnuradio/qtgui/trigger_mode.h>
@@ -24,7 +22,7 @@ namespace qtgui {
  * \ingroup qtgui
  *
  * \details
- * This is a QT-based graphical sink which takes set of a float streams
+ * This is a QT-based graphical sink which takes set of a float or complex streams
  * and plots them as eye patterns. For each signal, both
  * the signal's I and Q eye patterns are plotted. Eye patterns are
  * 2 symbol's time long. Symbol rate must be an integer multiple of
@@ -36,26 +34,27 @@ namespace qtgui {
  * noisy and/or unsynchronized signals may lead to incorrect eye
  * pattern.
  *
- * The sink supports plotting streaming float data or
+ * The sink supports plotting streaming float or complex data or
  * messages. The message port is named "in". The two modes cannot
  * be used simultaneously, and \p nconnections should be set to 0
  * when using the message mode. GRC handles this issue by
- * providing the "Float Message" type that removes the streaming
+ * providing the "Float or Complex Message" type that removes the streaming
  * port(s).
  *
  * This sink can plot messages that contain either uniform vectors
- * of float 32 values (pmt::is_f32vector) or PDUs where the data
- * is a uniform vector of float 32 values.
+ * of float 32 values (pmt::is_f32vector) or of complex 32 values (pmt::is_c32vector) or
+ * PDUs where the data is a uniform vector of float 32 values.
  */
 
-class QTGUI_API eye_sink_f : virtual public gr::sync_block
+template <class T>
+class QTGUI_API eye_sink : virtual public gr::sync_block
 {
 public:
-    // gr::qtgui::eye_sink_f::sptr
-    typedef std::shared_ptr<eye_sink_f> sptr;
+    // gr::qtgui::eye_sink::sptr
+    typedef std::shared_ptr<eye_sink> sptr;
 
     /*!
-     * \brief Build floating point eye sink
+     * \brief Build floating point or complex eye sink
      *
      * \param size number of points to plot at once
      * \param samp_rate sample rate (used to set x-axis labels)
@@ -102,6 +101,14 @@ public:
      * or Negative, if the value between two samples moves in the
      * given direction (x[1] > x[0] for Positive or x[1] < x[0] for
      * Negative), then the trigger is activated.
+     *
+     * With the complex eye sink, each input has two eye patterns
+     * drawn for the real and imaginary parts of the signal. When
+     * selecting the \p channel value, channel 0 is the real signal
+     * and channel 1 is the imaginary signal. For more than 1 input
+     * stream, channel 2i is the real part of the ith input and
+     * channel (2i+1) is the imaginary part of the ith input
+     * channel.
      *
      * The \p delay value is specified in time based off the sample
      * rate. If the sample rate of the block is set to 1, the delay
@@ -158,7 +165,11 @@ public:
 
     QApplication* d_qApplication;
 };
+
+using eye_sink_f = eye_sink<float>;
+using eye_sink_c = eye_sink<gr_complex>;
+
 } // namespace qtgui
 } // namespace gr
 
-#endif /* INCLUDED_QTGUI_EYE_SINK_F_H */
+#endif /* INCLUDED_QTGUI_EYE_SINK_H */

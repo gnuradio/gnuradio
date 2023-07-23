@@ -30,11 +30,10 @@ void bind_const_sink_c(py::module&);
 void bind_constellationdisplayform(py::module&);
 void bind_displayform(py::module&);
 void bind_edit_box_msg(py::module&);
-void bind_eye_sink_c(py::module&);
-void bind_eye_sink_f(py::module&);
+void bind_eye_sink(py::module&);
 void bind_form_menus(py::module&);
-void bind_freq_sink_c(py::module&);
-void bind_freq_sink_f(py::module&);
+// void bind_freq_sink_c(py::module&);
+void bind_freq_sink(py::module&);
 void bind_freqcontrolpanel(py::module&);
 void bind_freqdisplayform(py::module&);
 #ifdef OPENGL_FOUND
@@ -48,15 +47,12 @@ void bind_numberdisplayform(py::module&);
 // void bind_plot_raster(py::module&);
 // void bind_plot_waterfall(py::module&);
 void bind_qtgui_types(py::module&);
-void bind_sink_c(py::module&);
-void bind_sink_f(py::module&);
+void bind_sink(py::module&);
 // void bind_spectrumUpdateEvents(py::module&);
 // void bind_spectrumdisplayform(py::module&);
 // void bind_timeRasterGlobalData(py::module&);
-void bind_time_raster_sink_b(py::module&);
-void bind_time_raster_sink_f(py::module&);
-void bind_time_sink_c(py::module&);
-void bind_time_sink_f(py::module&);
+void bind_time_raster_sink(py::module&);
+void bind_time_sink(py::module&);
 void bind_timecontrolpanel(py::module&);
 void bind_timedisplayform(py::module&);
 void bind_timerasterdisplayform(py::module&);
@@ -65,8 +61,7 @@ void bind_trigger_mode(py::module&);
 void bind_vector_sink_f(py::module&);
 void bind_vectordisplayform(py::module&);
 // void bind_waterfallGlobalData(py::module&);
-void bind_waterfall_sink_c(py::module&);
-void bind_waterfall_sink_f(py::module&);
+void bind_waterfall_sink(py::module&);
 void bind_waterfalldisplayform(py::module&);
 
 // We need this hack because import_array() returns NULL
@@ -104,11 +99,9 @@ PYBIND11_MODULE(qtgui_python, m)
     // bind_constellationdisplayform(m);
     // bind_displayform(m);
     bind_edit_box_msg(m);
-    bind_eye_sink_c(m);
-    bind_eye_sink_f(m);
+    bind_eye_sink(m);
     // bind_form_menus(m);
-    bind_freq_sink_c(m);
-    bind_freq_sink_f(m);
+    bind_freq_sink(m);
     // bind_freqcontrolpanel(m);
     // bind_freqdisplayform(m);
 #ifdef OPENGL_FOUND
@@ -121,15 +114,12 @@ PYBIND11_MODULE(qtgui_python, m)
     // bind_numberdisplayform(m);
     // // bind_plot_raster(m);
     // // bind_plot_waterfall(m);
-    bind_sink_c(m);
-    bind_sink_f(m);
+    bind_sink(m);
     // // bind_spectrumUpdateEvents(m);
     // // bind_spectrumdisplayform(m);
     // // bind_timeRasterGlobalData(m);
-    bind_time_raster_sink_b(m);
-    bind_time_raster_sink_f(m);
-    bind_time_sink_c(m);
-    bind_time_sink_f(m);
+    bind_time_raster_sink(m);
+    bind_time_sink(m);
     // bind_timecontrolpanel(m);
     // bind_timedisplayform(m);
     // bind_timerasterdisplayform(m);
@@ -138,7 +128,6 @@ PYBIND11_MODULE(qtgui_python, m)
     bind_vector_sink_f(m);
     // bind_vectordisplayform(m);
     // // bind_waterfallGlobalData(m);
-    bind_waterfall_sink_c(m);
-    bind_waterfall_sink_f(m);
+    bind_waterfall_sink(m);
     // bind_waterfalldisplayform(m);
 }

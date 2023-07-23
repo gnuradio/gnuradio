@@ -11,6 +11,8 @@
 #ifndef INCLUDED_QTGUI_WATERFALL_SINK_C_H
 #define INCLUDED_QTGUI_WATERFALL_SINK_C_H
 
+#include "waterfall_sink.h"
+
 #include <gnuradio/fft/window.h>
 #include <gnuradio/qtgui/api.h>
 #include <gnuradio/sync_block.h>

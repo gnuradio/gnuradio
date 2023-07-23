@@ -139,7 +139,7 @@ templates:
 
 
 cpp_templates:
-  includes: ['#include <gnuradio/qtgui/${type.fcn}.h>']
+  includes: ['#include <gnuradio/qtgui/sink.h>','#include <gnuradio/qtgui/${type.fcn}.h>']
   declarations: gr::qtgui::${type.fcn}::sptr ${id};
   make: |-
     <%

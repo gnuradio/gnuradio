@@ -8,10 +8,8 @@
  *
  */
 
-#ifndef INCLUDED_QTGUI_FREQ_SINK_C_H
-#define INCLUDED_QTGUI_FREQ_SINK_C_H
-
-#include "freq_sink.h"
+#ifndef INCLUDED_QTGUI_FREQ_SINK_H
+#define INCLUDED_QTGUI_FREQ_SINK_H
 
 #include <gnuradio/fft/window.h>
 #include <gnuradio/qtgui/api.h>
@@ -28,22 +26,22 @@ namespace qtgui {
  * \ingroup qtgui_blk
  *
  * \details
- * This is a QT-based graphical sink the takes set of a complex
- * streams and plots the PSD. Each signal is plotted with a
+ * This is a QT-based graphical sink the takes set of a floating or complex
+ * point streams and plots the PSD. Each signal is plotted with a
  * different color, and the \a set_title and \a set_color
  * functions can be used to change the label and color for a given
  * input number.
  *
- * The sink supports plotting streaming complex data or
+ * The sink supports plotting streaming float or complex data or
  * messages. The message port is named "in". The two modes cannot
  * be used simultaneously, and \p nconnections should be set to 0
  * when using the message mode. GRC handles this issue by
- * providing the "Complex Message" type that removes the streaming
+ * providing the "Float or Complex Message" type that removes the streaming
  * port(s).
  *
  * This sink can plot messages that contain either uniform vectors
- * of complex 32 values (pmt::is_c32vector) or PDUs where the data
- * is a uniform vector of complex 32 values.
+ * of float 32 values (pmt::is_f32vector) or complex 32 values (pmt::is_c32vector) or PDUs
+ * where the data is a uniform vector of float or complex 32 values.
  *
  * Message Ports:
  *
@@ -69,14 +67,16 @@ namespace qtgui {
  *        to catch the message and update the center frequency of
  *        the display.
  */
-class QTGUI_API freq_sink_c : virtual public sync_block
+
+template <class T>
+class QTGUI_API freq_sink : virtual public sync_block
 {
 public:
-    // gr::qtgui::freq_sink_c::sptr
-    typedef std::shared_ptr<freq_sink_c> sptr;
+    // gr::qtgui::freq_sink::sptr
+    typedef std::shared_ptr<freq_sink<T>> sptr;
 
     /*!
-     * \brief Build a complex PSD sink.
+     * \brief Build a floating point or complex PSD sink.
      *
      * \param fftsize size of the FFT to compute and display. If using
      *        the PDU message port to plot samples, the length of
@@ -128,6 +128,13 @@ public:
     virtual void set_line_style(unsigned int which, int style) = 0;
     virtual void set_line_marker(unsigned int which, int marker) = 0;
     virtual void set_line_alpha(unsigned int which, double alpha) = 0;
+
+    /*!
+     *  Pass "true" to this function to only show the positive half
+     *  of the spectrum. By default, this plotter shows the full
+     *  spectrum (positive and negative halves).
+     */
+    virtual void set_plot_pos_half(bool half) = 0;
 
     /*!
      * Set up a trigger for the sink to know when to start
@@ -182,7 +189,10 @@ public:
     QApplication* d_qApplication;
 };
 
+using freq_sink_f = freq_sink<float>;
+using freq_sink_c = freq_sink<gr_complex>;
+
 } /* namespace qtgui */
 } /* namespace gr */
 
-#endif /* INCLUDED_QTGUI_FREQ_SINK_C_H */
+#endif /* INCLUDED_QTGUI_FREQ_SINK_H */

@@ -14,10 +14,10 @@
 #include <gnuradio/blocks/add_blk.h>
 #include <gnuradio/blocks/throttle.h>
 #include <gnuradio/fft/window.h>
-#include <gnuradio/qtgui/freq_sink_f.h>
+#include <gnuradio/qtgui/freq_sink.h>
 #include <gnuradio/qtgui/histogram_sink_f.h>
-#include <gnuradio/qtgui/time_sink_f.h>
-#include <gnuradio/qtgui/waterfall_sink_f.h>
+#include <gnuradio/qtgui/time_sink.h>
+#include <gnuradio/qtgui/waterfall_sink.h>
 #include <gnuradio/top_block.h>
 #endif
 

@@ -39,19 +39,13 @@ set(QTGUI_SOURCES
     spectrumUpdateEvents.cc
     plot_waterfall.cc
     plot_raster.cc
-    sink_c_impl.cc
-    sink_f_impl.cc
-    eye_sink_c_impl.cc
-    eye_sink_f_impl.cc
-    time_sink_c_impl.cc
-    time_sink_f_impl.cc
-    time_raster_sink_b_impl.cc
-    time_raster_sink_f_impl.cc
-    freq_sink_c_impl.cc
-    freq_sink_f_impl.cc
+    sink_impl.cc
+    eye_sink_impl.cc
+    time_sink_impl.cc
+    time_raster_sink_impl.cc
+    freq_sink_impl.cc
     const_sink_c_impl.cc
-    waterfall_sink_c_impl.cc
-    waterfall_sink_f_impl.cc
+    waterfall_sink_impl.cc
     histogram_sink_f_impl.cc
     number_sink_impl.cc
     qtgui_util.cc

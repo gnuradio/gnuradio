@@ -22,11 +22,9 @@ list(
     constellationdisplayform_python.cc
     displayform_python.cc
     edit_box_msg_python.cc
-    eye_sink_c_python.cc
-    eye_sink_f_python.cc
+    eye_sink_python.cc
     form_menus_python.cc
-    freq_sink_c_python.cc
-    freq_sink_f_python.cc
+    freq_sink_python.cc
     freqcontrolpanel_python.cc
     freqdisplayform_python.cc
     histogram_sink_f_python.cc
@@ -36,15 +34,12 @@ list(
     # plot_raster_python.cc
     # plot_waterfall_python.cc
     qtgui_types_python.cc
-    sink_c_python.cc
-    sink_f_python.cc
+    sink_python.cc
     # spectrumUpdateEvents_python.cc
     # spectrumdisplayform_python.cc
     # timeRasterGlobalData_python.cc
-    time_raster_sink_b_python.cc
-    time_raster_sink_f_python.cc
-    time_sink_c_python.cc
-    time_sink_f_python.cc
+    time_raster_sink_python.cc
+    time_sink_python.cc
     timecontrolpanel_python.cc
     timedisplayform_python.cc
     timerasterdisplayform_python.cc
@@ -53,8 +48,7 @@ list(
     vector_sink_f_python.cc
     vectordisplayform_python.cc
     # waterfallGlobalData_python.cc
-    waterfall_sink_c_python.cc
-    waterfall_sink_f_python.cc
+    waterfall_sink_python.cc
     waterfalldisplayform_python.cc)
 
 if(ENABLE_GR_QTGUI_OPENGL)
