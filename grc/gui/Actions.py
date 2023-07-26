@@ -626,6 +626,20 @@ KEYBOARD_SHORTCUTS_WINDOW_DISPLAY = actions.register(
     icon_name='dialog-information',
     keypresses=["<Ctrl>K"],
 )
+UI_FILE_GEN = actions.register(
+    "app.ui_file_generate",
+    label='_Generate_UI',
+    tooltip='Generate the UI file',
+    icon_name='system-software-update',
+    keypresses=["F4"],
+)
+UI_FILE_OPEN = actions.register(
+    "app.ui_file_open",
+    label='_Open_UI',
+    tooltip='Open UI Designer',
+    icon_name='applications-accessories',
+    keypresses=["F3"],
+)
 FLOW_GRAPH_GEN = actions.register(
     "app.flowgraph.generate",
     label='_Generate',

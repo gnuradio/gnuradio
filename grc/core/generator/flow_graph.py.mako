@@ -28,6 +28,10 @@
 from packaging.version import Version as StrictVersion
 from PyQt5 import Qt
 from gnuradio import qtgui
+from PyQt5 import  uic
+from PyQt5.QtCore import QFile
+import os
+from pathlib import Path
 %endif
 % for imp in imports:
 ##${imp.replace("  # grc-generated hier_block", "")}
@@ -78,23 +82,31 @@ class ${class_name}(gr.top_block, Qt.QWidget):
     def __init__(${param_str}):
         gr.top_block.__init__(self, "${title}", catch_exceptions=${catch_exceptions})
         Qt.QWidget.__init__(self)
-        self.setWindowTitle("${title}")
-        qtgui.util.check_set_qss()
-        try:
-            self.setWindowIcon(Qt.QIcon.fromTheme('gnuradio-grc'))
-        except BaseException as exc:
-            print(f"Qt GUI: Could not set Icon: {str(exc)}", file=sys.stderr)
-        self.top_scroll_layout = Qt.QVBoxLayout()
-        self.setLayout(self.top_scroll_layout)
-        self.top_scroll = Qt.QScrollArea()
-        self.top_scroll.setFrameStyle(Qt.QFrame.NoFrame)
-        self.top_scroll_layout.addWidget(self.top_scroll)
-        self.top_scroll.setWidgetResizable(True)
-        self.top_widget = Qt.QWidget()
-        self.top_scroll.setWidget(self.top_widget)
-        self.top_layout = Qt.QVBoxLayout(self.top_widget)
-        self.top_grid_layout = Qt.QGridLayout()
-        self.top_layout.addLayout(self.top_grid_layout)
+        file_path = os.fspath(Path(__file__).resolve().parent / "${class_name}.ui")
+
+        if os.path.exists(file_path):
+            ui_file = QFile(file_path)
+            ui_file.open(QFile.ReadOnly)
+            uic.loadUi(ui_file,self)
+            ui_file.close()
+        else:
+            self.setWindowTitle("${title}")
+            qtgui.util.check_set_qss()
+            try:
+                self.setWindowIcon(Qt.QIcon.fromTheme('gnuradio-grc'))
+            except BaseException as exc:
+                print(f"Qt GUI: Could not set Icon: {str(exc)}", file=sys.stderr)
+            self.top_scroll_layout = Qt.QVBoxLayout()
+            self.setLayout(self.top_scroll_layout)
+            self.top_scroll = Qt.QScrollArea()
+            self.top_scroll.setFrameStyle(Qt.QFrame.NoFrame)
+            self.top_scroll_layout.addWidget(self.top_scroll)
+            self.top_scroll.setWidgetResizable(True)
+            self.top_widget = Qt.QWidget()
+            self.top_scroll.setWidget(self.top_widget)
+            self.top_layout = Qt.QVBoxLayout(self.top_widget)
+            self.top_grid_layout = Qt.QGridLayout()
+            self.top_layout.addLayout(self.top_grid_layout)
 
         self.settings = Qt.QSettings("GNU Radio", "${class_name}")
 
