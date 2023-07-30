@@ -47,6 +47,8 @@ class FEC_API tpc_decoder : public generic_decoder
     int get_output_size() override;
     int get_input_size() override;
 
+	// Variables are denoted in Channel coding for IEEE 802.16e mobile WiMAX
+	// https://community.wvu.edu/~mcvalenti/documents/ICC2009.pdf
     std::vector<int> d_rowpolys;
     std::vector<int> d_colpolys;
 
