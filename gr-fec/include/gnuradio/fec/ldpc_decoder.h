@@ -33,7 +33,7 @@ class FEC_API ldpc_decoder : public generic_decoder
 {
 private:
     // private constructor
-    ldpc_decoder(std::string alist_file, float sigma, int max_iterations);
+    ldpc_decoder(std::string alist_file, int max_iterations);
 
     // plug into the generic fec api
     int get_history() override;
@@ -54,8 +54,7 @@ public:
     double rate() override;
     bool set_frame_size(unsigned int frame_size) override;
 
-    static generic_decoder::sptr
-    make(std::string alist_file, float sigma = 0.5, int max_iterations = 50);
+    static generic_decoder::sptr make(std::string alist_file, int max_iterations = 50);
 
     int get_output_size() override;
     int get_input_size() override;

@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(constellation_soft_decoder_cf.h) */
-/* BINDTOOL_HEADER_FILE_HASH(5e1edc928133f857ec3f0d475f671a92)                     */
+/* BINDTOOL_HEADER_FILE_HASH(f754810c2395e75e38f6feb7ef558c36)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -40,7 +40,12 @@ void bind_constellation_soft_decoder_cf(py::module& m)
 
         .def(py::init(&constellation_soft_decoder_cf::make),
              py::arg("constellation"),
+             py::arg("npwr") = -1,
              D(constellation_soft_decoder_cf, make))
+        .def("set_npwr",
+             &constellation_soft_decoder_cf::set_npwr,
+             py::arg("npwr"),
+             D(constellation_soft_decoder_cf, set_npwr))
 
 
         .def("set_constellation",
