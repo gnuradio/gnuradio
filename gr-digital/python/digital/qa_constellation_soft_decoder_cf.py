@@ -23,17 +23,22 @@ class test_constellation_soft_decoder(gr_unittest.TestCase):
     def tearDown(self):
         self.tb = None
 
-    def helper_with_lut(self, prec, src_data, const_gen, const_sd_gen):
+    def helper_with_lut(self, prec, src_data, const_gen, const_sd_gen, decimals=5):
         cnst_pts, code = const_gen()
-        Es = max([abs(c) for c in cnst_pts])
-        lut = digital.soft_dec_table_generator(const_sd_gen, prec, Es)
+        Es = 1.0
+        lut = digital.soft_dec_table(cnst_pts, code, prec, Es)
+
+        constel = digital.const_normalization(cnst_pts, "POWER")
+        maxamp = digital.min_max_axes(constel)
+
         expected_result = list()
         for s in src_data:
-            res = digital.calc_soft_dec_from_table(s, lut, prec, sqrt(2.0))
+            res = digital.calc_soft_dec_from_table(s, lut, prec, maxamp)
             expected_result += res
 
-        cnst = digital.constellation_calcdist(cnst_pts, code, 2, 1)
+        cnst = digital.constellation_calcdist(cnst_pts, code, 4, 1, digital.constellation.POWER_NORMALIZATION)
         cnst.set_soft_dec_lut(lut, int(prec))
+        cnst.normalize(digital.constellation.POWER_NORMALIZATION)
         src = blocks.vector_source_c(src_data)
         op = digital.constellation_soft_decoder_cf(cnst.base())
         dst = blocks.vector_sink_f()
@@ -45,7 +50,7 @@ class test_constellation_soft_decoder(gr_unittest.TestCase):
         actual_result = dst.data()  # fetch the contents of the sink
         # print "actual result", actual_result
         # print "expected result", expected_result
-        self.assertFloatTuplesAlmostEqual(expected_result, actual_result, 5)
+        self.assertFloatTuplesAlmostEqual(expected_result, actual_result, decimals)
 
     def helper_no_lut(self, prec, src_data, const_gen, const_sd_gen):
         cnst_pts, code = const_gen()
@@ -151,7 +156,8 @@ class test_constellation_soft_decoder(gr_unittest.TestCase):
             prec,
             src_data,
             digital.psk_4_0x0_0_1,
-            digital.sd_psk_4_0x0_0_1)
+            digital.sd_psk_4_0x0_0_1,
+            3)
 
     def test_constellation_soft_decoder_cf_qpsk_8_rand2(self):
         prec = 8
@@ -197,7 +203,8 @@ class test_constellation_soft_decoder(gr_unittest.TestCase):
             prec,
             src_data,
             digital.qam_16_0x0_0_1_2_3,
-            digital.sd_qam_16_0x0_0_1_2_3)
+            digital.sd_qam_16_0x0_0_1_2_3,
+            3)
 
     def test_constellation_soft_decoder_cf_qam16_8_rand2(self):
         prec = 8

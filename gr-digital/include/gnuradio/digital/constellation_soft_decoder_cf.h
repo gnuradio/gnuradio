@@ -27,7 +27,15 @@ namespace digital {
  * bits based on the map and soft decision LUT of the \p
  * constellation object.
  *
- * Does not support constellations of dimensionality higher than 1
+ * Does not support constellations of dimensionality higher than 1 \p
+ *
+ * npwr sets the noise power to use for soft decoding.
+ * this is equivalent to 10**(-SNR/10) if the constellation is
+ * received at unit average power. defaults to -1 allowing npwr
+ * and LUT in the constellation object to be used as-is.
+ * values above 0 will recalculate LUT and set the constellation object.
+ * noise powers in the range of 0.01-1 are common.
+ *
  */
 class DIGITAL_API constellation_soft_decoder_cf : virtual public sync_interpolator
 {
@@ -41,9 +49,15 @@ public:
      * \param constellation A constellation derived from class
      * 'constellation'. Use base() method to get a shared pointer to
      * this base class type.
+     * \param npwr sets expected noise power, default -1 set unused.
      */
-    static sptr make(constellation_sptr constellation);
-
+    static sptr make(constellation_sptr constellation, float npwr = -1);
+    /*!
+     * set constellation noise power for soft decision calculation
+     *
+     * \param d_npwr sets expected noise power.
+     */
+    virtual void set_npwr(float d_npwr) = 0;
     /*!
      * Set a new constellation object for decoding
      *

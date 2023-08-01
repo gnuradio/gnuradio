@@ -482,6 +482,7 @@ to internally generate a soft decision LUT.
 decisions for a given sample from the full constellation/symbol map.
 \li gr::digital::constellation::set_soft_dec_lut: Set the soft
 decision LUT from an externally-calculated LUT.
+\li gr::digital::constellation::set_npwr: Set the noise power to use for calculating soft decisions
 \li gr::digital::constellation::has_soft_dec_lut: has the LUT been
 set/generated or not.
 \li gr::digital::constellation::soft_decision_maker: Used by
