@@ -232,19 +232,19 @@ class test_constellation(gr_unittest.TestCase):
 
     def test_soft_qpsk_gen(self):
         prec = 8
-        constel, code = digital.psk_4_0()
 
-        rot_sym = 1
-        side = 2
-        width = 2
-        c = digital.constellation_rect(constel, code, rot_sym,
-                                       side, side, width, width)
+        c = digital.constellation_qpsk().base()
 
-        # Get max energy/symbol in constellation
         constel = c.points()
-        Es = max([abs(constel_i) for constel_i in constel])
+        code = [0, 1, 2, 3]
+        Es = 1.0
 
-        table = digital.soft_dec_table_generator(digital.sd_psk_4_0, prec, Es)
+        c.set_npwr(Es)
+        c.normalize(digital.constellation.POWER_NORMALIZATION)
+        table = digital.soft_dec_table(constel, code, prec, Es)
+        constel = digital.const_normalization(constel, "POWER")
+        maxamp = digital.min_max_axes(constel)
+
         c.set_soft_dec_lut(table, prec)
 
         x = sqrt(2.0) / 2.0
@@ -272,15 +272,15 @@ class test_constellation(gr_unittest.TestCase):
             y_python_gen_calc += slicer(digital.sd_psk_4_0(sample, Es))
             y_python_table += slicer(
                 digital.calc_soft_dec_from_table(
-                    sample, table, prec, Es))
+                    sample, table, prec, maxamp))
 
             y_cpp_raw_calc += c.calc_soft_dec(sample)
             y_cpp_table += c.soft_decision_maker(sample)
 
         self.assertFloatTuplesAlmostEqual(
-            y_python_raw_calc, y_python_gen_calc, 0)
-        self.assertFloatTuplesAlmostEqual(y_python_gen_calc, y_python_table, 0)
-        self.assertFloatTuplesAlmostEqual(y_cpp_raw_calc, y_cpp_table, 0)
+            y_python_raw_calc, y_python_gen_calc, 3)
+        self.assertFloatTuplesAlmostEqual(y_python_gen_calc, y_python_table, 1)
+        self.assertFloatTuplesAlmostEqual(y_cpp_raw_calc, y_cpp_table, 1)
 
     def test_soft_qpsk_calc(self):
         prec = 8
@@ -342,7 +342,8 @@ class test_constellation(gr_unittest.TestCase):
 
         # Get max energy/symbol in constellation
         constel = c.points()
-        Es = max([abs(constel_i) for constel_i in constel])
+        Es = 1.0
+        padding = 2
 
         table = digital.soft_dec_table(constel, code, prec)
         c.gen_soft_dec_lut(prec)
@@ -375,8 +376,8 @@ class test_constellation(gr_unittest.TestCase):
             y_cpp_raw_calc += slicer(c.calc_soft_dec(sample))
             y_cpp_table += slicer(c.soft_decision_maker(sample))
 
-        self.assertFloatTuplesAlmostEqual(y_python_raw_calc, y_python_table, 0)
-        self.assertFloatTuplesAlmostEqual(y_cpp_raw_calc, y_cpp_table, 0)
+        self.assertFloatTuplesAlmostEqual(y_python_raw_calc, y_python_table, 3)
+        self.assertFloatTuplesAlmostEqual(y_cpp_raw_calc, y_cpp_table, 3)
 
 
 class mod_demod(gr.hier_block2):

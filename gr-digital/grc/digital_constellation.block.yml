@@ -40,6 +40,10 @@ parameters:
     label: Soft Decisions Precision
     dtype: int
     default: '8'
+-   id: npwr
+    label: Noise Power
+    dtype: float
+    default: '1.0'
     hide: part
 -   id: soft_dec_lut
     label: Soft Decisions LUT
@@ -59,6 +63,7 @@ templates:
         % else:
         self.${id} = ${id} = digital.constellation_${type}().base()
         % endif
+        self.${id}.set_npwr(${npwr})
         % if str(soft_dec_lut).lower() == '"auto"' or str(soft_dec_lut).lower() == "'auto'":
         self.${id}.gen_soft_dec_lut(${precision})
         % elif str(soft_dec_lut) != "None":
@@ -77,6 +82,7 @@ cpp_templates:
         % else:
         this->${id} = ${id} = digital::constellation_${type}().base();
         % endif
+        this->${id}.set_npwr(${npwr});
         % if str(soft_dec_lut).lower() == '"auto"' or str(soft_dec_lut).lower() == "'auto'":
         this->${id}.gen_soft_dec_lut(${precision});
         % elif str(soft_dec_lut) != "None":

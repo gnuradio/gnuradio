@@ -6,6 +6,10 @@ parameters:
 -   id: constellation
     label: Constellation Object
     dtype: raw
+-   id: npwr
+    label: Noise Power
+    dtype: float
+    default: '-1'
 
 inputs:
 -   domain: stream
@@ -17,17 +21,19 @@ outputs:
 
 templates:
     imports: from gnuradio import digital
-    make: digital.constellation_soft_decoder_cf(${constellation})
+    make: digital.constellation_soft_decoder_cf(${constellation}, ${npwr})
     callbacks:
+    - set_npwr(${npwr})
     - set_constellation(${constellation})
 
 cpp_templates:
     includes: ['#include <gnuradio/digital/constellation_soft_decoder_cf.h>']
     declarations: 'digital::constellation_soft_decoder_cf::sptr ${id};'
     make: |-
-        this->${id} = digital::constellation_soft_decoder_cf::make(${constellation});
+        this->${id} = digital::constellation_soft_decoder_cf::make(${constellation}, ${npwr});
     link: ['gnuradio::gnuradio-digital']
     callbacks:
+    - set_npwr(${npwr})
     - set_constellation(constellation)
 
 file_format: 1

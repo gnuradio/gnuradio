@@ -85,6 +85,31 @@ def soft_dec_table_generator(soft_dec_gen, prec, Es=1):
     return table
 
 
+def const_normalization(constel, method="POWER"):
+    constel = numpy.array(constel)
+
+    # normalize constellation to unit power
+    if method == "POWER":
+        power = 0
+        for point in constel:
+            power += numpy.abs(point)**2
+        amplitude = numpy.sqrt(power / len(constel))
+        constel = constel / amplitude
+
+    return constel
+
+
+def min_max_axes(constel):
+    constel = numpy.array(constel)
+    re_min = min(constel.real)
+    im_min = min(constel.imag)
+    re_max = max(constel.real)
+    im_max = max(constel.imag)
+    max_amp = numpy.float32(max([abs(re_min), abs(im_min), re_max, im_max]))
+
+    return max_amp
+
+
 def soft_dec_table(constel, symbols, prec, npwr=1):
     '''
     Similar in nature to soft_dec_table_generator above. Instead, this
@@ -103,27 +128,56 @@ def soft_dec_table(constel, symbols, prec, npwr=1):
     a bit more expensive to generate the LUT, though it should be
     one-time work.
     '''
+    # padding will simply be 2x the largest re or imag
+    padding = numpy.float32(2.0)
+    constel = const_normalization(constel, "POWER")
+    max_amp = min_max_axes(constel)
 
-    re_min = min(numpy.array(constel).real)
-    im_min = min(numpy.array(constel).imag)
-    re_max = max(numpy.array(constel).real)
-    im_max = max(numpy.array(constel).imag)
-
-    npts = int(2.0**prec)
-    yrng = numpy.linspace(im_min, im_max, npts)
-    xrng = numpy.linspace(re_min, re_max, npts)
+    d_lut_scale = numpy.float32(2.0**int(prec))
+    border = numpy.float32(1.0 / d_lut_scale)
+    maxd = numpy.float32((max_amp * padding) - border)
+    step = numpy.float32((2.0 * maxd) / (d_lut_scale - 2.0))
 
     table = []
 
-    for y in yrng:
-        for x in xrng:
-            pt = complex(x, y)
-            decs = calc_soft_dec(pt, constel, symbols, npwr)
-            table.append(decs)
+    # produce a LUT with single index padding around the border
+    endstop = int(d_lut_scale - 2)
+    # center the grid
+    start = -maxd + step / 2
+    y = 0
+    while y < endstop:
+        x = 0
+        if y == 0:
+            while x < endstop:
+                if x == 0 or x == endstop - 1:
+                    pt = complex(start + (x * step), start + (y * step))
+                    table.append(calc_soft_dec(pt, constel, symbols, npwr))
+                pt = complex(start + (x * step), start + (y * step))
+                table.append(calc_soft_dec(pt, constel, symbols, npwr))
+                x += 1
+            x = 0
+        while x < endstop:
+            if x == 0 or x == endstop - 1:
+                pt = complex(start + (x * step), start + (y * step))
+                table.append(calc_soft_dec(pt, constel, symbols, npwr))
+            pt = complex(start + (x * step), start + (y * step))
+            table.append(calc_soft_dec(pt, constel, symbols, npwr))
+            x += 1
+        x = 0
+        if y == endstop - 1:
+            while x < endstop:
+                if x == 0 or x == endstop - 1:
+                    pt = complex(start + (x * step), start + (y * step))
+                    table.append(calc_soft_dec(pt, constel, symbols, npwr))
+                pt = complex(start + (x * step), start + (y * step))
+                table.append(calc_soft_dec(pt, constel, symbols, npwr))
+                x += 1
+        y += 1
+
     return table
 
 
-def calc_soft_dec_from_table(sample, table, prec, Es=1.0):
+def calc_soft_dec_from_table(sample, table, prec: numpy.float32, d_maxamp=1):
     '''
     Takes in a complex sample and converts it from the coordinates
     (-1,-1) to (1,1) into an index value. The index value points to a
@@ -146,25 +200,45 @@ def calc_soft_dec_from_table(sample, table, prec, Es=1.0):
     calculate the soft decisions as we would given the full
     constellation.
     '''
-    lut_scale = 2.0**prec
-    maxd = Es * numpy.sqrt(2.0) / 2.0
-    scale = (lut_scale) / (2.0 * maxd)
+    d_lut_scale = int(2**prec)
+    d_padding = 2.0
+    border = numpy.float32(1.0 / d_lut_scale)
+    maxd = numpy.float32(d_padding * d_maxamp)
+    limit = numpy.float32(maxd - border)
 
-    alpha = 0.99  # to keep index within bounds
-    xre = sample.real
-    xim = sample.imag
-    xre = ((maxd + min(alpha * maxd, max(-alpha * maxd, xre))) * scale)
-    xim = ((maxd + min(alpha * maxd, max(-alpha * maxd, xim))) * scale)
-    index = int(xre) + lut_scale * int(xim)
+    xre = numpy.float32(branchless_clip(
+        numpy.float32(sample.real), limit) / maxd)
+    xim = numpy.float32(branchless_clip(
+        numpy.float32(sample.imag), limit) / maxd)
 
-    max_index = lut_scale**2
+    # We normalize the constellation in the ctor, so we know that
+    # the maximum dimensions go from -1 to +1. We can infer the x
+    # and y scale directly.
+    scale = numpy.float32((d_lut_scale - 2.0) / 2.0)
+    # Convert the clipped x and y samples to nearest index offset
 
-    while(index >= max_index):
-        index -= lut_scale
-    while(index < 0):
-        index += lut_scale
+    xre = numpy.floor(numpy.float32((1.0 + xre) * scale)) + 1
+    xim = numpy.floor(numpy.float32((1.0 + xim) * scale)) + 1
 
-    return table[int(index)]
+    point = table_lookup(xre, xim, d_lut_scale, table)
+
+    return point
+
+
+def table_lookup(xre, xim, d_lut_scale, table):
+    index = int(numpy.float32(d_lut_scale * xim + xre))
+    max_index = d_lut_scale * d_lut_scale
+    # Make sure we are in bounds of the index
+    while index >= max_index:
+        index -= d_lut_scale
+    while index < 0:
+        index += d_lut_scale
+    return table[index]
+
+
+def branchless_clip(x, clip):
+
+    return numpy.float32(0.5 * (abs(x + clip) - abs(x - clip)))
 
 
 def calc_soft_dec(sample, constel, symbols, npwr=1):
@@ -196,11 +270,26 @@ def calc_soft_dec(sample, constel, symbols, npwr=1):
     for i in range(M):
         # Calculate the distance between the sample and the current
         # constellation point.
-        dist = abs(sample - constel[i])
+        dist = (abs(sample - constel[i])**2)
+        # distance scaled by noise power
+        arg = -dist / (npwr * 1.0)
 
-        # Calculate the probability factor from the distance and the
-        # scaled noise power.
-        d = numpy.exp(-dist / npwr)
+        # smallest argument to expf that evaluates > C++ FLT_MIN
+        argmin = -86
+
+        # The following check allows graceful failure of LLR
+        # if expf evals below FLT_MIN, probability information is lost
+        # and can become uniform regardless of distance. bad.
+        # going to a linear scale allows extended range where at least the
+        # sign of the bit will still be evaluated correctly (i.e. hard decisions will be correct)
+        # this should only happen with very high SNR or extremely large inputs relative to constellation scale.
+        # scalar set to: expf(argmin)*argmin
+        if arg < argmin:
+            d = (3.84745e-36) / -arg
+        else:
+            # Calculate the probability factor from the distance and the
+            # scaled noise power.
+            d = numpy.exp(arg)
 
         for j in range(k):
             # Get the bit at the jth index
@@ -208,7 +297,7 @@ def calc_soft_dec(sample, constel, symbols, npwr=1):
             bit = (symbols[i] & mask) >> j
 
             # If the bit is a 0, add to the probability of a zero
-            if(bit == 0):
+            if (bit == 0):
                 tmp[2 * j + 0] += d
             # else, add to the probability of a one
             else:
@@ -218,7 +307,14 @@ def calc_soft_dec(sample, constel, symbols, npwr=1):
     # probability of ones (tmp[2*i+1]) over the probability of a zero
     # (tmp[2*i+0]).
     for i in range(k):
-        s[k - 1 - i] = (numpy.log(tmp[2 * i + 1]) - numpy.log(tmp[2 * i + 0]))
+        one = tmp[2 * i + 1]
+        zero = tmp[2 * i + 0]
+        # clamp input to log to prevent Inf.
+        if one < 1e-45:
+            one = 1e-45
+        if zero < 1e-45:
+            zero = 1e-45
+        s[k - 1 - i] = (numpy.log(one) - numpy.log(zero))
 
     return s
 
@@ -230,12 +326,12 @@ def show_table(table):
     subi = 1
     subj = 0
     for i in reversed(list(range(prec + 1))):
-        if(i == prec // 2):
+        if (i == prec // 2):
             pp += "-----" + prec * ((nbits * 8) + 3) * "-" + "\n"
             subi = 0
             continue
         for j in range(prec + 1):
-            if(j == prec // 2):
+            if (j == prec // 2):
                 pp += "| "
                 subj = 1
             else:

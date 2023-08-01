@@ -24,13 +24,12 @@
 namespace gr {
 namespace fec {
 
-generic_decoder::sptr
-ldpc_decoder::make(std::string alist_file, float sigma, int max_iterations)
+generic_decoder::sptr ldpc_decoder::make(std::string alist_file, int max_iterations)
 {
-    return generic_decoder::sptr(new ldpc_decoder(alist_file, sigma, max_iterations));
+    return generic_decoder::sptr(new ldpc_decoder(alist_file, max_iterations));
 }
 
-ldpc_decoder::ldpc_decoder(std::string alist_file, float sigma, int max_iterations)
+ldpc_decoder::ldpc_decoder(std::string alist_file, int max_iterations)
     : generic_decoder("ldpc_decoder")
 {
     if (!std::filesystem::exists(alist_file))
@@ -38,7 +37,7 @@ ldpc_decoder::ldpc_decoder(std::string alist_file, float sigma, int max_iteratio
 
     d_list.read(alist_file.c_str());
     d_code.set_alist(d_list);
-    d_spa.set_alist_sigma(d_list, sigma);
+    d_spa.set_alist(d_list);
 
     d_rate =
         static_cast<double>(d_code.dimension()) / static_cast<double>(d_code.get_N());
