@@ -59,9 +59,13 @@ public:
                   std::vector<int> pre_diff_code,
                   unsigned int rotational_symmetry,
                   unsigned int dimensionality,
-                  normalization_t normalization = AMPLITUDE_NORMALIZATION);
+                  normalization_t normalization = AMPLITUDE_NORMALIZATION,
+                  float npwr = 1.0);
     constellation();
     virtual ~constellation();
+
+    //! Normalizes the constellation
+    void normalize(normalization_t normalization);
 
     //! Returns the constellation points for a symbol value
     void map_to_points(unsigned int value, gr_complex* points);
@@ -123,11 +127,12 @@ public:
      * the noise power in the channel as \p npwr.
      *
      * \param precision Number of bits of precision on each axis.
-     * \param npwr Estimate of the noise power (if known).
+     * \param npwr Estimate of the noise power (if known), defaults to -1 which will use
+     * class member.
      *
      * This is expensive to compute.
      */
-    void gen_soft_dec_lut(int precision, float npwr = 1.0);
+    void gen_soft_dec_lut(int precision, float npwr = -1);
 
     /*! \brief Calculate soft decisions for the given \p sample.
      *
@@ -146,9 +151,10 @@ public:
      * answer from the LUT.
      *
      * \param sample The complex sample to get the soft decisions.
-     * \param npwr Estimate of the noise power (if known).
+     * \param npwr estimate of the noise power, defaults to -1 which will use class
+     * member.
      */
-    virtual std::vector<float> calc_soft_dec(gr_complex sample, float npwr = 1.0);
+    virtual std::vector<float> calc_soft_dec(gr_complex sample, float npwr = -1);
 
     /*! \brief Define a soft decision look-up table.
      *
@@ -170,6 +176,18 @@ public:
      */
     void set_soft_dec_lut(const std::vector<std::vector<float>>& soft_dec_lut,
                           int precision);
+
+    /*! \brief Sets the constellation noise power and recalculates LUT given \p npwr.
+     *
+     * \details Sets the constellation noise power and recalculates LUT given \p
+     * npwr. If a LUT was defined via manual entry of a table,
+     * it will be a left alone. Otherwise, the LUT will be
+     * recalculated with the new noise power.
+     * This member is used by calc_soft_dec primarily.
+     *
+     * \param npwr The noise power to use for soft decisions
+     */
+    void set_npwr(float npwr);
 
     //! Returns True if the soft decision LUT has been defined, False otherwise.
     bool has_soft_dec_lut();
@@ -199,12 +217,15 @@ protected:
     unsigned int d_arity;
     //! The factor by which the user given constellation points were
     //! scaled by to achieve an average amplitude of 1.
-    float d_scalefactor;
+    float d_scalefactor, d_maxamp;
     float d_re_min, d_re_max, d_im_min, d_im_max;
 
     std::vector<std::vector<float>> d_soft_dec_lut;
     int d_lut_precision;
     float d_lut_scale;
+    float d_npwr;
+    float d_padding;
+    bool d_use_external_lut;
 
     float get_distance(unsigned int index, const gr_complex* sample);
     unsigned int get_closest_point(const gr_complex* sample);

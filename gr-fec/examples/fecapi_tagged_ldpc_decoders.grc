@@ -98,7 +98,6 @@ blocks:
     file: gr.prefix() + "/share/gnuradio/fec/ldpc/" + "n_0100_k_0042_gap_02.alist"
     max_iter: '50'
     ndim: '0'
-    sigma: '0.5'
     value: '"ok"'
   states:
     coordinate: [1056, 3]

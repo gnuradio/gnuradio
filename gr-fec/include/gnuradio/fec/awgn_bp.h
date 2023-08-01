@@ -36,14 +36,14 @@ public:
     //! Default constructor
     awgn_bp(){};
 
-    //! A constructor for given GF2Mat and sigma
-    awgn_bp(const GF2Mat X, float sgma);
+    //! A constructor for given GF2Mat
+    awgn_bp(const GF2Mat X);
 
-    //! A constructor for given alist and sigma
-    awgn_bp(alist _list, float sgma);
+    //! A constructor for given alist
+    awgn_bp(alist _list);
 
-    //! Initializes the class using given alist and sigma
-    void set_alist_sigma(alist _list, float sgma);
+    //! Initializes the class using given alist
+    void set_alist(alist _list);
 
     //! Returns the variable Q
     std::vector<std::vector<double>> get_Q();
@@ -129,9 +129,6 @@ private:
 
     //! The parity check matrix of the LDPC code
     GF2Mat H;
-
-    //! The standard-deviation of the AWGN channel
-    float sigma;
 
     //! Matrix holding messages from check nodes to variable nodes
     std::vector<std::vector<double>> R;

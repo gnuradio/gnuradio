@@ -152,7 +152,6 @@ blocks:
     file: gr.prefix() + "/share/gnuradio/fec/ldpc/271.127.3.112"
     max_iter: '50'
     ndim: '2'
-    sigma: '0.5'
     value: '"ok"'
   states:
     bus_sink: false

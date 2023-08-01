@@ -96,6 +96,12 @@ static const char* __doc_gr_digital_constellation_calc_soft_dec = R"doc()doc";
 static const char* __doc_gr_digital_constellation_set_soft_dec_lut = R"doc()doc";
 
 
+static const char* __doc_gr_digital_constellation_set_npwr = R"doc()doc";
+
+
+static const char* __doc_gr_digital_constellation_normalize = R"doc()doc";
+
+
 static const char* __doc_gr_digital_constellation_has_soft_dec_lut = R"doc()doc";
 
 
