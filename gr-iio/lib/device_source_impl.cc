@@ -173,7 +173,8 @@ device_source_impl::device_source_impl(iio_context* ctx,
       buf(NULL),
       buffer_size(buffer_size),
       decimation(decimation),
-      destroy_ctx(destroy_ctx)
+      destroy_ctx(destroy_ctx),
+      thread_stopped(false)
 {
     unsigned int nb_channels, i;
 
