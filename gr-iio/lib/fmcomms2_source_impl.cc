@@ -87,7 +87,6 @@ fmcomms2_source_impl<int16_t>::fmcomms2_source_impl(iio_context* ctx,
                          buffer_size,
                          0)
 {
-    overflow_thd = std::thread(&fmcomms2_source_impl<int16_t>::check_overflow, this);
 }
 
 template <typename T>
@@ -106,8 +105,6 @@ fmcomms2_source_impl<T>::fmcomms2_source_impl(iio_context* ctx,
                          buffer_size,
                          0)
 {
-    overflow_thd = std::thread(&fmcomms2_source_impl<T>::check_overflow, this);
-
     // Device Buffers are always presented as short from device_sink
     d_device_bufs.resize(get_channels_vector(ch_en).size());
     for (size_t i = 0; i < d_device_bufs.size(); i++) {
@@ -123,7 +120,6 @@ fmcomms2_source_impl<T>::fmcomms2_source_impl(iio_context* ctx,
 template <typename T>
 fmcomms2_source_impl<T>::~fmcomms2_source_impl()
 {
-    overflow_thd.join();
 }
 
 template <typename T>
@@ -131,19 +127,6 @@ void fmcomms2_source_impl<T>::check_overflow(void)
 {
     uint32_t status;
     int ret;
-
-    // Wait for stream startup
-#ifdef _WIN32
-    while (thread_stopped) {
-        Sleep(OVERFLOW_CHECK_PERIOD_MS);
-    }
-    Sleep(OVERFLOW_CHECK_PERIOD_MS);
-#else
-    while (thread_stopped) {
-        usleep(OVERFLOW_CHECK_PERIOD_MS * 1000);
-    }
-    usleep(OVERFLOW_CHECK_PERIOD_MS * 1000);
-#endif
 
     // Clear status registers
     iio_device_reg_write(dev, 0x80000088, 0x6);
@@ -154,7 +137,8 @@ void fmcomms2_source_impl<T>::check_overflow(void)
             throw std::runtime_error("Failed to read overflow status register");
         }
         if (status & 4) {
-            printf("O");
+            // stderr is unbuffered by default
+            fprintf(stderr, "O");
             // Clear status registers
             iio_device_reg_write(dev, 0x80000088, 4);
         }
@@ -405,6 +389,26 @@ void fmcomms2_source_impl<T>::set_filter_params(const std::string& filter_source
     d_fstop = fstop;
 
     update_dependent_params();
+}
+
+template <typename T>
+bool fmcomms2_source_impl<T>::start()
+{
+    bool result = device_source_impl::start();
+    if (result) {
+        overflow_thd = std::thread(&fmcomms2_source_impl<T>::check_overflow, this);
+    }
+    return result;
+}
+
+template <typename T>
+bool fmcomms2_source_impl<T>::stop()
+{
+    bool result = device_source_impl::stop();
+    if (result) {
+        overflow_thd.join();
+    }
+    return result;
 }
 
 template class fmcomms2_source<int16_t>;
