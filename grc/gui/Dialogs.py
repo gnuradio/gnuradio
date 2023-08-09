@@ -9,7 +9,7 @@ import sys
 import textwrap
 from shutil import which as find_executable
 
-from gi.repository import Gtk, GLib, Gdk
+from gi.repository import Gtk, GLib, Gdk, Gio
 
 from . import Utils, Actions, Constants
 from ..core import Messages
@@ -407,53 +407,26 @@ def choose_editor(parent, config):
     """
     Give the option to either choose an editor or use the default.
     """
-    buttons = (
-        'Choose Editor', Gtk.ResponseType.YES,
-        'Use Default', Gtk.ResponseType.NO,
-        Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL
+    content_type = Gio.content_type_from_mime_type("text/x-python")
+    if content_type == "*":
+        # fallback to plain text on Windows if no useful x-python association
+        content_type = Gio.content_type_from_mime_type("text/plain")
+    dialog = Gtk.AppChooserDialog.new_for_content_type(
+        parent,
+        Gtk.DialogFlags.MODAL,
+        content_type,
     )
-    response = MessageDialogWrapper(
-        parent, message_type=Gtk.MessageType.QUESTION, buttons=Gtk.ButtonsType.NONE,
-        title='Choose Editor', markup='Would you like to choose the editor to use?',
-        default_response=Gtk.ResponseType.YES, extra_buttons=buttons
-    ).run_and_destroy()
+    dialog.set_heading("Choose an editor below")
+    widget = dialog.get_widget()
+    widget.set_default_text("Choose an editor")
+    widget.set_show_default(True)
+    widget.set_show_recommended(True)
+    widget.set_show_fallback(True)
 
-    # Handle the initial default/choose/cancel response
-    # User wants to choose the editor to use
-    editor = ''
-    if response == Gtk.ResponseType.YES:
-        file_dialog = Gtk.FileChooserDialog(
-            'Select an Editor...', None,
-            Gtk.FileChooserAction.OPEN,
-            ('gtk-cancel', Gtk.ResponseType.CANCEL,
-             'gtk-open', Gtk.ResponseType.OK),
-            transient_for=parent
-        )
-        file_dialog.set_select_multiple(False)
-        file_dialog.set_local_only(True)
-        file_dialog.set_current_folder('/usr/bin')
-        try:
-            if file_dialog.run() == Gtk.ResponseType.OK:
-                editor = config.editor = file_dialog.get_filename()
-        finally:
-            file_dialog.hide()
-
-    # Go with the default editor
-    elif response == Gtk.ResponseType.NO:
-        try:
-            process = None
-            if sys.platform.startswith('linux'):
-                process = find_executable('xdg-open')
-            elif sys.platform.startswith('darwin'):
-                process = find_executable('open')
-            if process is None:
-                raise ValueError("Can't find default editor executable")
-            # Save
-            editor = config.editor = process
-        except Exception:
-            Messages.send(
-                '>>> Unable to load the default editor. Please choose an editor.\n')
-
-    if editor == '':
-        Messages.send('>>> No editor selected.\n')
+    editor = None
+    response = dialog.run()
+    if response == Gtk.ResponseType.OK:
+        appinfo = dialog.get_app_info()
+        editor = config.editor = appinfo.get_executable()
+    dialog.destroy()
     return editor
