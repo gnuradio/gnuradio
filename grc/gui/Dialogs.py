@@ -407,9 +407,6 @@ def choose_editor(parent, config):
     """
     Give the option to either choose an editor or use the default.
     """
-    if config.editor and find_executable(config.editor):
-        return config.editor
-
     buttons = (
         'Choose Editor', Gtk.ResponseType.YES,
         'Use Default', Gtk.ResponseType.NO,

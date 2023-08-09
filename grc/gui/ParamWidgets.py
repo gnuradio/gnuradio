@@ -11,6 +11,7 @@ import subprocess
 from gi.repository import Gtk, Gdk
 
 from . import Constants
+from . import Dialogs
 from . import Utils
 from .canvas.colors import LIGHT_THEME_STYLES, DARK_THEME_STYLES
 
@@ -204,13 +205,23 @@ class PythonEditorParam(InputParam):
 
     def __init__(self, *args, **kwargs):
         InputParam.__init__(self, *args, **kwargs)
-        button = self._button = Gtk.Button(label='Open in Editor')
-        button.connect('clicked', self.open_editor)
-        self.pack_start(button, True, True, True)
+        open_button = self._open_button = Gtk.Button(label='Open in Editor')
+        open_button.connect('clicked', self.open_editor)
+        self.pack_start(open_button, True, True, True)
+        chooser_button = self._chooser_button = Gtk.Button(label='Choose Editor')
+        chooser_button.connect('clicked', self.open_chooser)
+        self.pack_start(chooser_button, True, True, True)
 
     def open_editor(self, widget=None):
         self.param.parent_flowgraph.install_external_editor(
             self.param, parent=self._transient_for)
+
+    def open_chooser(self, widget=None):
+        self.param.parent_flowgraph.remove_external_editor(param=self.param)
+        editor = Dialogs.choose_editor(
+            parent=self._transient_for,
+            config=self.param.parent_flowgraph.parent_platform.config,
+        )
 
     def get_text(self):
         pass  # we never update the value from here
