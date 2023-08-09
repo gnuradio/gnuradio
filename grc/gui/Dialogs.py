@@ -437,7 +437,7 @@ def choose_editor(parent, config):
         file_dialog.set_current_folder('/usr/bin')
         try:
             if file_dialog.run() == Gtk.ResponseType.OK:
-                editor = file_dialog.get_filename()
+                editor = config.editor = file_dialog.get_filename()
         finally:
             file_dialog.hide()
 
