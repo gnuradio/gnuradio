@@ -76,7 +76,7 @@ class Config(CoreConfig):
 
     @editor.setter
     def editor(self, value):
-        self._gr_prefs.get_string('grc', 'editor', value)
+        self._gr_prefs.set_string('grc', 'editor', value)
         self._gr_prefs.save()
 
     @property
