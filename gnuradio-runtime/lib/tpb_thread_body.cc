@@ -26,14 +26,13 @@ tpb_thread_body::tpb_thread_body(block_sptr block,
     : d_exec(block, max_noutput_items)
 {
     // std::cerr << "tpb_thread_body: " << block << std::endl;
+    std::string unique_name = block->name() + std::to_string(block->unique_id())
 
 #if defined(_MSC_VER) || defined(__MINGW32__)
 #include <windows.h>
-    thread::set_thread_name(GetCurrentThread(),
-                            block->name() + std::to_string(block->unique_id()));
+    thread::set_thread_name(GetCurrentThread(), unique_name);
 #else
-    thread::set_thread_name(pthread_self(),
-                            block->name() + std::to_string(block->unique_id()));
+    thread::set_thread_name(pthread_self(), unique_name);
 #endif
 
     block_detail* d = block->detail().get();
@@ -82,8 +81,8 @@ tpb_thread_body::tpb_thread_body(block_sptr block,
                 // If we don't have a handler but are building up messages,
                 // prune the queue from the front to keep memory in check.
                 if (block->nmsgs(i.first) > max_nmsgs) {
-                    logger.warn(
-                        "asynchronous message buffer overflowing, dropping message");
+                    logger.warn(unique_name +
+                        ": asynchronous message buffer overflowing, dropping message");
                     msg = block->delete_head_nowait(i.first);
                 }
             }
