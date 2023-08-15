@@ -506,6 +506,12 @@ void freq_sink_f_impl::_test_trigger_norm(int nitems,
     }
 }
 
+bool freq_sink_f_impl::start()
+{
+    set_output_multiple(d_fftsize);
+    return true;
+}
+
 int freq_sink_f_impl::work(int noutput_items,
                            gr_vector_const_void_star& input_items,
                            gr_vector_void_star& output_items)
