@@ -55,6 +55,15 @@ parameters:
     default: 'False'
     hide: 'part'
 
+  - id: bufflen
+    label: 'USB Buffer Size'
+    dtype: int
+    default: 16384
+    hide: 'part'
+
+asserts:
+  - ${ bufflen % 512 == 0 }
+
 inputs:
   - domain: message
     id: cmd
@@ -70,7 +79,7 @@ templates:
   make: |
       None
       dev = 'driver=rtlsdr'
-      stream_args = ''
+      stream_args = 'bufflen=${bufflen}'
       tune_args = ['']
       settings = ['']
 
