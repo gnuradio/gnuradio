@@ -99,10 +99,11 @@ class ${class_name}(gr.top_block, Qt.QWidget):
         self.settings = Qt.QSettings("GNU Radio", "${class_name}")
 
         try:
-            if StrictVersion(Qt.qVersion()) < StrictVersion("5.0.0"):
-                self.restoreGeometry(self.settings.value("geometry").toByteArray())
-            else:
-                self.restoreGeometry(self.settings.value("geometry"))
+            if self.settings.value("geometry"):
+                if StrictVersion(Qt.qVersion()) < StrictVersion("5.0.0"):
+                    self.restoreGeometry(self.settings.value("geometry").toByteArray())
+                else:
+                    self.restoreGeometry(self.settings.value("geometry"))
         except BaseException as exc:
             print(f"Qt GUI: Could not restore geometry: {str(exc)}", file=sys.stderr)
 % elif generate_options == 'bokeh_gui':
