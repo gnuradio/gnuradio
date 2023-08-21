@@ -9,7 +9,7 @@ on:
 jobs:
   build:
 
-    runs-on: android
+    runs-on: ubuntu
 
     steps:
     - uses: actions/checkout@v3
