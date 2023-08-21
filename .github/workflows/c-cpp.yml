@@ -2,14 +2,14 @@ name: C/C++ CI
 
 on:
   push:
-    branches: [ "android" ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ "android" ]
+    branches: [ "main" ]
 
 jobs:
   build:
 
-    runs-on: ubuntu
+    runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v3
