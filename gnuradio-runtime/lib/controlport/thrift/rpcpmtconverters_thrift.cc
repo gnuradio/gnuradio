@@ -255,7 +255,8 @@ pmt::pmt_t rpcpmtconverter::to_pmt_f::operator()(const GNURadio::Knob& knob)
     // FIXME: Don't get loggers every time we need to log something.
     gr::logger_ptr logger, debug_logger;
     gr::configure_default_loggers(logger, debug_logger, "rpcpmtconverter");
-    debug_logger->error("ERROR Don't know how to handle Knob Type (from): {}", knob.type);
+    debug_logger->error("ERROR Don't know how to handle Knob Type (from): {}",
+                        to_string(knob.type));
     assert(0);
     return pmt::pmt_t();
 }
