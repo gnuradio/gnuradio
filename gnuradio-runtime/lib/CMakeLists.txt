@@ -71,6 +71,7 @@ add_library(
     msg_queue.cc
     pagesize.cc
     pdu.cc
+    pmt_fmt.cc
     prefs.cc
     realtime.cc
     realtime_impl.cc
