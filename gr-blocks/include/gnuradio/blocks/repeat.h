@@ -26,7 +26,7 @@ namespace blocks {
  *      Takes a pmt_pair(pmt::mp("interpolation"), pmt_long interp), setting the
  * interpolation to interp.
  */
-class BLOCKS_API repeat : virtual public sync_interpolator
+class BLOCKS_API repeat : virtual public block
 {
 public:
     // gr::blocks::repeat::sptr
