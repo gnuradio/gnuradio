@@ -227,7 +227,7 @@ blocks:
     alias: ''
     align_output: 'False'
     comment: ''
-    endianness: gr.GR_MSB_FIRST
+    endianness: gr.GR_LSB_FIRST
     k: '8'
     l: '1'
     len_tag_key: len_key
@@ -247,7 +247,7 @@ blocks:
     alias: ''
     align_output: 'False'
     comment: ''
-    endianness: gr.GR_MSB_FIRST
+    endianness: gr.GR_LSB_FIRST
     k: '8'
     l: '1'
     len_tag_key: len_key

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Free Software Foundation, Inc.
+ * Copyright 2023 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(header_buffer.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(22afb7f4d4128f03a2a8f67f1e6ea6e0)                     */
+/* BINDTOOL_HEADER_FILE_HASH(c8ccc58a0efc5332b29a6fa9c2f0e828)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -93,6 +93,7 @@ void bind_header_buffer(py::module& m)
              py::arg("pos"),
              py::arg("len") = 8,
              py::arg("bs") = false,
+             py::arg("lsb_first") = false,
              D(header_buffer, extract_field8))
 
 
@@ -101,6 +102,7 @@ void bind_header_buffer(py::module& m)
              py::arg("pos"),
              py::arg("len") = 16,
              py::arg("bs") = false,
+             py::arg("lsb_first") = false,
              D(header_buffer, extract_field16))
 
 
@@ -109,6 +111,7 @@ void bind_header_buffer(py::module& m)
              py::arg("pos"),
              py::arg("len") = 32,
              py::arg("bs") = false,
+             py::arg("lsb_first") = false,
              D(header_buffer, extract_field32))
 
 
@@ -117,6 +120,7 @@ void bind_header_buffer(py::module& m)
              py::arg("pos"),
              py::arg("len") = 64,
              py::arg("bs") = false,
+             py::arg("lsb_first") = false,
              D(header_buffer, extract_field64))
 
         ;

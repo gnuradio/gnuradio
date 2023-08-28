@@ -161,7 +161,7 @@ blocks:
     alias: ''
     align_output: 'False'
     comment: ''
-    endianness: gr.GR_MSB_FIRST
+    endianness: gr.GR_LSB_FIRST
     k: '8'
     l: '1'
     len_tag_key: len_key
@@ -181,7 +181,7 @@ blocks:
     alias: ''
     align_output: 'False'
     comment: ''
-    endianness: gr.GR_MSB_FIRST
+    endianness: gr.GR_LSB_FIRST
     k: '1'
     l: '8'
     len_tag_key: '"packet_len"'
@@ -682,3 +682,4 @@ connections:
 
 metadata:
   file_format: 1
+  grc_version: 3.10.7.0
