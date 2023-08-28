@@ -136,7 +136,7 @@ parameters:
     category: Config
     dtype: enum
     options: ['"blue"', '"red"', '"green"', '"black"', '"cyan"', '"magenta"', '"yellow"',
-        '"dark red"', '"dark green"', '"Dark Blue"']
+        '"dark red"', '"dark green"', '"dark blue"']
     option_labels: [Blue, Red, Green, Black, Cyan, Magenta, Yellow, Dark Red, Dark
             Green, Dark Blue]
     hide: ${ ('part' if int(nconnections) >= 1 else 'all') }
@@ -197,7 +197,7 @@ parameters:
 -   id: color3
     label: Line 3 Color
     base_key: color1
-    default: '"red"'
+    default: '"green"'
     hide: ${ ('part' if int(nconnections) >= 3 else 'all') }
 -   id: style3
     label: Line 3 Style
@@ -222,7 +222,7 @@ parameters:
 -   id: color4
     label: Line 4 Color
     base_key: color1
-    default: '"red"'
+    default: '"black"'
     hide: ${ ('part' if int(nconnections) >= 4 else 'all') }
 -   id: style4
     label: Line 4 Style
@@ -247,7 +247,7 @@ parameters:
 -   id: color5
     label: Line 5 Color
     base_key: color1
-    default: '"red"'
+    default: '"cyan"'
     hide: ${ ('part' if int(nconnections) >= 5 else 'all') }
 -   id: style5
     label: Line 5 Style
@@ -272,7 +272,7 @@ parameters:
 -   id: color6
     label: Line 6 Color
     base_key: color1
-    default: '"red"'
+    default: '"magenta"'
     hide: ${ ('part' if int(nconnections) >= 6 else 'all') }
 -   id: style6
     label: Line 6 Style
@@ -297,7 +297,7 @@ parameters:
 -   id: color7
     label: Line 7 Color
     base_key: color1
-    default: '"red"'
+    default: '"yellow"'
     hide: ${ ('part' if int(nconnections) >= 7 else 'all') }
 -   id: style7
     label: Line 7 Style
@@ -322,7 +322,7 @@ parameters:
 -   id: color8
     label: Line 8 Color
     base_key: color1
-    default: '"red"'
+    default: '"dark red"'
     hide: ${ ('part' if int(nconnections) >= 8 else 'all') }
 -   id: style8
     label: Line 8 Style
@@ -347,7 +347,7 @@ parameters:
 -   id: color9
     label: Line 9 Color
     base_key: color1
-    default: '"red"'
+    default: '"dark green"'
     hide: ${ ('part' if int(nconnections) >= 9 else 'all') }
 -   id: style9
     label: Line 9 Style
@@ -372,7 +372,7 @@ parameters:
 -   id: color10
     label: Line 10 Color
     base_key: color1
-    default: '"red"'
+    default: '"dark blue"'
     hide: ${ ('part' if int(nconnections) >= 10 else 'all') }
 -   id: style10
     label: Line 10 Style
