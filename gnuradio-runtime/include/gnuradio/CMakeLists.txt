@@ -45,6 +45,7 @@ install(
           msg_handler.h
           msg_queue.h
           nco.h
+          pmt_fmt.h
           pdu.h
           prefs.h
           pycallback_object.h
