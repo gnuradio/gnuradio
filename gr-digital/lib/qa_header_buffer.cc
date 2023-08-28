@@ -227,11 +227,13 @@ BOOST_AUTO_TEST_CASE(test_extract8)
     uint8_t x0 = header.extract_field8(0);
     uint8_t x1 = header.extract_field8(12, 8);
     uint8_t x2 = header.extract_field8(12, 4);
+    uint8_t x3 = header.extract_field8(8, 8, false, true);
 
     BOOST_REQUIRE_EQUAL((size_t)64, header.length());
     BOOST_REQUIRE_EQUAL((uint8_t)0x80, x0);
     BOOST_REQUIRE_EQUAL((uint8_t)0x4A, x1);
     BOOST_REQUIRE_EQUAL((uint8_t)0x04, x2);
+    BOOST_REQUIRE_EQUAL((uint8_t)0x23, x3);
 }
 
 BOOST_AUTO_TEST_CASE(test_extract16)
@@ -250,11 +252,13 @@ BOOST_AUTO_TEST_CASE(test_extract16)
     uint16_t x0 = header.extract_field16(0);
     uint16_t x1 = header.extract_field16(12, 16);
     uint16_t x2 = header.extract_field16(12, 12);
+    uint16_t x3 = header.extract_field16(16, 16, false, true);
 
     BOOST_REQUIRE_EQUAL((size_t)64, header.length());
     BOOST_REQUIRE_EQUAL((uint16_t)0x80C4, x0);
     BOOST_REQUIRE_EQUAL((uint16_t)0x4A2E, x1);
     BOOST_REQUIRE_EQUAL((uint16_t)0x04A2, x2);
+    BOOST_REQUIRE_EQUAL((uint16_t)0x6745, x3);
 }
 
 BOOST_AUTO_TEST_CASE(test_extract32)
@@ -273,11 +277,13 @@ BOOST_AUTO_TEST_CASE(test_extract32)
     uint32_t x0 = header.extract_field32(0);
     uint32_t x1 = header.extract_field32(12, 32);
     uint32_t x2 = header.extract_field32(12, 24);
+    uint32_t x3 = header.extract_field32(16, 16, false, true);
 
     BOOST_REQUIRE_EQUAL((size_t)64, header.length());
     BOOST_REQUIRE_EQUAL((uint32_t)0x80C4A2E6, x0);
     BOOST_REQUIRE_EQUAL((uint32_t)0x4A2E680C, x1);
     BOOST_REQUIRE_EQUAL((uint32_t)0x004A2E68, x2);
+    BOOST_REQUIRE_EQUAL((uint32_t)0x00006745, x3);
 }
 
 BOOST_AUTO_TEST_CASE(test_extract64)
@@ -296,11 +302,20 @@ BOOST_AUTO_TEST_CASE(test_extract64)
     uint64_t x0 = header.extract_field64(0);
     uint64_t x1 = header.extract_field64(0, 32);
     uint64_t x2 = header.extract_field64(0, 44);
+    uint64_t x3 = header.extract_field32(16, 16, false, true);
 
     BOOST_REQUIRE_EQUAL((size_t)64, header.length());
     BOOST_REQUIRE_EQUAL((uint64_t)0x80C4A2E680C4A2E6, x0);
     BOOST_REQUIRE_EQUAL((uint64_t)0x0000000080C4A2E6, x1);
     BOOST_REQUIRE_EQUAL((uint64_t)0x0000080C4A2E680C, x2);
+    BOOST_REQUIRE_EQUAL((uint64_t)0x0000000000006745, x3);
+}
+
+bool check_error_msg(const std::runtime_error& ex)
+{
+    BOOST_CHECK_EQUAL(
+        ex.what(), std::string("header_buffer::extract_field for length must be <= 16"));
+    return true;
 }
 
 BOOST_AUTO_TEST_CASE(test_extract_many)
@@ -321,6 +336,11 @@ BOOST_AUTO_TEST_CASE(test_extract_many)
     uint32_t x2 = header.extract_field32(40, 21);
     uint16_t x3 = header.extract_field16(1, 12);
     uint8_t x4 = header.extract_field8(7, 5);
+    uint8_t x5 = header.extract_field8(7, 5, false, true);
+    uint8_t x6 = header.extract_field<uint8_t>(7, 5, false, true);
+    BOOST_CHECK_EXCEPTION(header.extract_field<uint16_t>(7, 20, false, true),
+                          std::runtime_error,
+                          check_error_msg);
 
     BOOST_REQUIRE_EQUAL((size_t)64, header.length());
     BOOST_REQUIRE_EQUAL((uint64_t)0x80C4A2E680C4A2E6, x0);
@@ -328,4 +348,6 @@ BOOST_AUTO_TEST_CASE(test_extract_many)
     BOOST_REQUIRE_EQUAL((uint32_t)0x0018945C, x2);
     BOOST_REQUIRE_EQUAL((uint16_t)0x0018, x3);
     BOOST_REQUIRE_EQUAL((uint8_t)0x0C, x4);
+    BOOST_REQUIRE_EQUAL((uint8_t)0x06, x5);
+    BOOST_REQUIRE_EQUAL((uint8_t)0x06, x6);
 }
