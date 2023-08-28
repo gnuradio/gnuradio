@@ -18,22 +18,25 @@ namespace blocks {
 
 class BLOCKS_API repeat_impl : public repeat
 {
-    const size_t d_itemsize;
-    int d_interp;
-
 public:
     repeat_impl(size_t itemsize, int d_interp);
 
     int interpolation() const override { return d_interp; }
     void set_interpolation(int interp) override;
 
-
-    int work(int noutput_items,
-             gr_vector_const_void_star& input_items,
-             gr_vector_void_star& output_items) override;
+    void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
+    int general_work(int noutput_items,
+                     gr_vector_int& ninput_items,
+                     gr_vector_const_void_star& input_items,
+                     gr_vector_void_star& output_items) override;
 
 private:
-    void msg_set_interpolation(pmt::pmt_t msg);
+    const size_t d_itemsize;
+    size_t d_interp;
+    size_t d_left_to_copy;
+
+    void msg_set_interpolation(const pmt::pmt_t& msg);
+    const pmt::pmt_t c_msg_port;
 };
 
 } /* namespace blocks */

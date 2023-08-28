@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(repeat.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(e09b086b5c70662b6d397af93cdeb2e5)                     */
+/* BINDTOOL_HEADER_FILE_HASH(3bc3b9639597273078d551360a012379)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -33,12 +33,8 @@ void bind_repeat(py::module& m)
     using repeat = ::gr::blocks::repeat;
 
 
-    py::class_<repeat,
-               gr::sync_interpolator,
-               gr::sync_block,
-               gr::block,
-               gr::basic_block,
-               std::shared_ptr<repeat>>(m, "repeat", D(repeat))
+    py::class_<repeat, gr::block, gr::basic_block, std::shared_ptr<repeat>>(
+        m, "repeat", D(repeat))
 
         .def(py::init(&repeat::make),
              py::arg("itemsize"),
