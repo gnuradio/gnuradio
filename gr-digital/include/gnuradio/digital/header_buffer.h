@@ -252,23 +252,47 @@ public:
      */
     void insert_bit(int bit);
 
+
+    /*!
+     * Returns a field in the packet header.
+     *
+     * \param pos Bit position of the start of the field.
+     * \param len The number of bits in the field.
+     * \param bs Set to 'true' to byte swap the data.
+     * \param lsb_first Set to 'true' to read field encoded as least significant bit first
+     */
+    template <class T>
+    T extract_field(int pos,
+                    int len = 8 * sizeof(T),
+                    bool bs = false,
+                    bool lsb_first = false);
+
     /*!
      * Returns up to an 8-bit field in the packet header.
      *
      * \param pos Bit position of the start of the field.
      * \param len The number of bits in the field.
      * \param bs Set to 'true' to byte swap the data.
+     * \param lsb_first Set to 'true' to read field encoded as least significant bit first
      */
-    uint8_t extract_field8(int pos, int len = 8, bool bs = false);
-
+    uint8_t extract_field8(int pos, int len = 8, bool bs = false, bool lsb_first = false)
+    {
+        return extract_field<uint8_t>(pos, len, bs, lsb_first);
+    };
+    // constexpr auto& extract_field8 = extract_field<uint8_t>;
     /*!
      * Returns up to a 16-bit field in the packet header.
      *
      * \param pos Bit position of the start of the field.
      * \param len The number of bits in the field.
      * \param bs Set to 'true' to byte swap the data.
+     * \param lsb_first Set to 'true' to read field encoded as least significant bit first
      */
-    uint16_t extract_field16(int pos, int len = 16, bool bs = false);
+    uint16_t
+    extract_field16(int pos, int len = 16, bool bs = false, bool lsb_first = false)
+    {
+        return extract_field<uint16_t>(pos, len, bs, lsb_first);
+    };
 
     /*!
      * Returns up to a 32-bit field in the packet header.
@@ -276,8 +300,13 @@ public:
      * \param pos Bit position of the start of the field.
      * \param len The number of bits in the field.
      * \param bs Set to 'true' to byte swap the data.
+     * \param lsb_first Set to 'true' to read field encoded as least significant bit first
      */
-    uint32_t extract_field32(int pos, int len = 32, bool bs = false);
+    uint32_t
+    extract_field32(int pos, int len = 32, bool bs = false, bool lsb_first = false)
+    {
+        return extract_field<uint32_t>(pos, len, bs, lsb_first);
+    };
 
     /*!
      * Returns up to a 64-bit field in the packet header.
@@ -285,8 +314,13 @@ public:
      * \param pos Bit position of the start of the field.
      * \param len The number of bits in the field.
      * \param bs Set to 'true' to byte swap the data.
+     * \param lsb_first Set to 'true' to read field encoded as least significant bit first
      */
-    uint64_t extract_field64(int pos, int len = 64, bool bs = false);
+    uint64_t
+    extract_field64(int pos, int len = 64, bool bs = false, bool lsb_first = false)
+    {
+        return extract_field<uint64_t>(pos, len, bs, lsb_first);
+    };
 };
 
 } // namespace digital

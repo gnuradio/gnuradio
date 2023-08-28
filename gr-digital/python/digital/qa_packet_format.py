@@ -166,6 +166,120 @@ class test_packet_format_fb(gr_unittest.TestCase):
         self.assertEqual(length, len(payload))
         self.assertEqual(send_str, payload[0:length])
 
+    def test_packet_format_ofdm(self):
+        """
+        Test the header_format_ofdm object with scrambling
+        """
+        bphs = 8  # Header bps
+        bpps = 8  # Payload bps
+        scrambling = True
+        occupied_carriers = [list(range(0, 40))]
+        len_key_name = "packet_len"
+        frame_key_name = "frame_len"
+        num_key_name = "packet_num"
+        hdr_format = digital.header_format_ofdm(
+            occupied_carriers,
+            1,
+            len_key_name,
+            frame_key_name,
+            num_key_name,
+            bphs,
+            bpps,
+            scrambling,
+        )
+
+        formatter = digital.protocol_formatter_bb(hdr_format, len_key_name)
+        parser = digital.protocol_parser_b(hdr_format)
+
+        send_str = b"Hello World" + 100 * b"xxx"
+        send_bits = list(send_str)
+        src = blocks.vector_source_b(
+            send_bits + send_bits,
+            repeat=False,
+            tags=[
+                gr.python_to_tag(
+                    [
+                        0,
+                        pmt.intern(len_key_name),
+                        pmt.to_pmt(len(send_bits)),
+                        pmt.intern("vector_source"),
+                    ]
+                ),
+                gr.python_to_tag(
+                    [
+                        len(send_bits),
+                        pmt.intern(len_key_name),
+                        pmt.to_pmt(len(send_bits)),
+                        pmt.intern("vector_source"),
+                    ]
+                ),
+            ],
+        )
+
+        repack = blocks.repack_bits_bb(8, 1, len_key_name, False, gr.GR_LSB_FIRST)
+        snk_hdr = blocks.message_debug()
+
+        self.tb.connect(src, formatter)
+        self.tb.connect(formatter, repack)
+        self.tb.connect(repack, parser)
+
+        self.tb.msg_connect(parser, "info", snk_hdr, "store")
+        self.tb.msg_connect(parser, "info", snk_hdr, "print")
+
+        self.tb.start()
+        while snk_hdr.num_messages() < 2:
+            time.sleep(0.1)
+        self.tb.stop()
+        self.tb.wait()
+
+        result_hdr_pmt = snk_hdr.get_message(0)
+
+        self.assertTrue(pmt.dict_has_key(result_hdr_pmt, pmt.intern(frame_key_name)))
+        self.assertEqual(
+            pmt.to_long(
+                pmt.dict_ref(result_hdr_pmt, pmt.intern(frame_key_name), pmt.PMT_F)
+            ),
+            len(send_str) // len(occupied_carriers[0]) + 1,
+        )
+        self.assertTrue(pmt.dict_has_key(result_hdr_pmt, pmt.intern(len_key_name)))
+        self.assertEqual(
+            pmt.to_long(
+                pmt.dict_ref(result_hdr_pmt, pmt.intern(len_key_name), pmt.PMT_F)
+            ),
+            len(send_str),
+        )
+        self.assertTrue(pmt.dict_has_key(result_hdr_pmt, pmt.intern(num_key_name)))
+        self.assertEqual(
+            pmt.to_long(
+                pmt.dict_ref(result_hdr_pmt, pmt.intern(num_key_name), pmt.PMT_F)
+            ),
+            0,
+        )
+
+        result_hdr_pmt = snk_hdr.get_message(1)
+
+        self.assertTrue(pmt.dict_has_key(result_hdr_pmt, pmt.intern(frame_key_name)))
+        self.assertEqual(
+            pmt.to_long(
+                pmt.dict_ref(result_hdr_pmt, pmt.intern(frame_key_name), pmt.PMT_F)
+            ),
+            len(send_str) // len(occupied_carriers[0]) + 1,
+        )
+        self.assertTrue(pmt.dict_has_key(result_hdr_pmt, pmt.intern(len_key_name)))
+        self.assertEqual(
+            pmt.to_long(
+                pmt.dict_ref(result_hdr_pmt, pmt.intern(len_key_name), pmt.PMT_F)
+            ),
+            len(send_str),
+        )
+        self.assertTrue(pmt.dict_has_key(result_hdr_pmt, pmt.intern(num_key_name)))
+        self.assertEqual(
+            pmt.to_long(
+                pmt.dict_ref(result_hdr_pmt, pmt.intern(num_key_name), pmt.PMT_F)
+            ),
+            1,
+        )
+
 
 if __name__ == '__main__':
     gr_unittest.run(test_packet_format_fb)

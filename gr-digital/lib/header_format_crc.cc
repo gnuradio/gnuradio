@@ -102,11 +102,9 @@ size_t header_format_crc::header_nbits() const { return 32; }
 
 bool header_format_crc::header_ok()
 {
-    uint32_t pkt = d_hdr_reg.extract_field32(0, 24, true);
-    uint16_t pktlen = static_cast<uint16_t>((pkt >> 8) & 0x0fff);
-    uint16_t pktnum = static_cast<uint16_t>((pkt >> 20) & 0x0fff);
-    uint8_t crc_rcvd = d_hdr_reg.extract_field8(24);
-
+    uint16_t pktlen = d_hdr_reg.extract_field16(0, 12, false, true);
+    uint16_t pktnum = d_hdr_reg.extract_field16(12, 12, false, true);
+    uint8_t crc_rcvd = d_hdr_reg.extract_field8(24, 8, false, true);
     // Check CRC8
     unsigned char buffer[] = { (unsigned char)(pktlen & 0xFF),
                                (unsigned char)(pktlen >> 8),
@@ -119,9 +117,8 @@ bool header_format_crc::header_ok()
 
 int header_format_crc::header_payload()
 {
-    uint32_t pkt = d_hdr_reg.extract_field32(0, 24, true);
-    uint16_t pktlen = static_cast<uint16_t>((pkt >> 8) & 0x0fff);
-    uint16_t pktnum = static_cast<uint16_t>((pkt >> 20) & 0x0fff);
+    uint16_t pktlen = d_hdr_reg.extract_field16(0, 12, false, true);
+    uint16_t pktnum = d_hdr_reg.extract_field16(12, 12, false, true);
 
     d_info = pmt::make_dict();
     d_info = pmt::dict_add(d_info, d_len_key_name, pmt::from_long(8 * pktlen));

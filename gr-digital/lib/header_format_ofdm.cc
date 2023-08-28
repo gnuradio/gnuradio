@@ -86,11 +86,11 @@ bool header_format_ofdm::format(int nbytes_in,
 {
     bool ret_val = header_format_crc::format(nbytes_in, input, output, info);
 
-    // size_t len;
-    // uint8_t *out = pmt::u8vector_writable_elements(output, len);
-    // for(size_t i = 0; i < len; i++) {
-    //	out[i] ^= d_scramble_mask[i];
-    //}
+    size_t len;
+    uint8_t* out = pmt::u8vector_writable_elements(output, len);
+    for (size_t i = 0; i < len; i++) {
+        out[i] ^= d_scramble_mask[i];
+    }
 
     return ret_val;
 }
@@ -100,9 +100,13 @@ bool header_format_ofdm::parse(int nbits_in,
                                std::vector<pmt::pmt_t>& info,
                                int& nbits_processed)
 {
-    int index = 0;
     while (nbits_processed <= nbits_in) {
-        d_hdr_reg.insert_bit(input[nbits_processed++] ^ d_scramble_mask[index++]);
+        // Remove scrambing and fill up header buffer. Scramble mask has 8 significant
+        // bits per byte, while input has only one
+        d_hdr_reg.insert_bit(
+            ((d_scramble_mask[nbits_processed / 8] >> nbits_processed % 8) & 0x01) ^
+            input[nbits_processed]);
+        nbits_processed++;
         if (d_hdr_reg.length() == header_nbits()) {
             if (header_ok()) {
                 int payload_len = header_payload();
@@ -125,9 +129,8 @@ size_t header_format_ofdm::header_nbits() const { return d_header_len; }
 
 int header_format_ofdm::header_payload()
 {
-    uint32_t pkt = d_hdr_reg.extract_field32(0, 24, true);
-    uint16_t pktlen = static_cast<uint16_t>((pkt >> 8) & 0x0fff);
-    uint16_t pktnum = static_cast<uint16_t>((pkt >> 20) & 0x0fff);
+    uint16_t pktlen = d_hdr_reg.extract_field16(0, 12, false, true);
+    uint16_t pktnum = d_hdr_reg.extract_field16(12, 12, false, true);
 
     // Convert num bytes to num complex symbols in payload
     pktlen *= 8;
