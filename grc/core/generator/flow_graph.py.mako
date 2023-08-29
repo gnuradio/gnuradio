@@ -24,7 +24,7 @@
 ########################################################
 ##Create Imports
 ########################################################
-% if generate_options == 'qt_gui':
+% if generate_options in ['qt_gui','hb_qt_gui']:
 from PyQt5 import Qt
 from gnuradio import qtgui
 %endif
