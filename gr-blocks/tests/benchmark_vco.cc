@@ -1,118 +1,35 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2002,2004,2005,2013,2018 Free Software Foundation, Inc.
+ * Copyright 2023 Marcus Müller
  *
  * This file is part of GNU Radio
  *
  * SPDX-License-Identifier: GPL-3.0-or-later
  *
  */
-
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
+#include "benchmark_common.h"
 #include <gnuradio/fxpt_vco.h>
 #include <gnuradio/math.h>
-#include <gnuradio/vco.h>
+#include <spdlog/fmt/fmt.h>
+#include <algorithm>
+#include <cstdint>
+#include <map>
+#include <vector>
 
-
-#ifdef HAVE_SYS_RESOURCE_H
-/* from man gtrusage
- "including <sys/time.h> is not required these days"
- So, we don't */
-#include <sys/resource.h>
-#endif
-
-#include <sys/time.h>
-#include <cstdio>
-#include <cstdlib>
-#include <cstring>
-#include <ctime>
-
-#define ITERATIONS 5000000
-#define BLOCK_SIZE (10 * 1000) // fits in cache
-
-#define FREQ 5003.123
-#define K 4.9999999
-#define AMPLITUDE 2.444444444
-
-
-static double timeval_to_double(const struct timeval* tv)
-{
-    return (double)tv->tv_sec + (double)tv->tv_usec * 1e-6;
-}
-
-
-static void benchmark(void test(float* x, const float* y),
-                      const char* implementation_name)
-{
-#ifdef HAVE_SYS_RESOURCE_H
-    struct rusage rusage_start;
-    struct rusage rusage_stop;
-#else
-    double clock_start;
-    double clock_end;
-#endif
-    float output[BLOCK_SIZE];
-    float input[BLOCK_SIZE];
-
-    // touch memory
-    memset(output, 0, BLOCK_SIZE * sizeof(float));
-    for (int i = 0; i < BLOCK_SIZE; i++)
-        input[i] = sin(double(i));
-
-        // get starting CPU usage
-#ifdef HAVE_SYS_RESOURCE_H
-    if (getrusage(RUSAGE_SELF, &rusage_start) < 0) {
-        perror("getrusage");
-        exit(1);
-    }
-#else
-    clock_start = (double)std::clock() * (1000000. / CLOCKS_PER_SEC);
-#endif
-    // do the actual work
-
-    test(output, input);
-
-    // get ending CPU usage
-
-#ifdef HAVE_SYS_RESOURCE_H
-    if (getrusage(RUSAGE_SELF, &rusage_stop) < 0) {
-        perror("getrusage");
-        exit(1);
-    }
-
-    // compute results
-
-    double user = timeval_to_double(&rusage_stop.ru_utime) -
-                  timeval_to_double(&rusage_start.ru_utime);
-
-    double sys = timeval_to_double(&rusage_stop.ru_stime) -
-                 timeval_to_double(&rusage_start.ru_stime);
-
-    double total = user + sys;
-#else
-    clock_end = (double)std::clock() * (1000000. / CLOCKS_PER_SEC);
-    double total = clock_end - clock_start;
-#endif
-
-    printf("%18s:  cpu: %6.3f  steps/sec: %10.3e\n",
-           implementation_name,
-           total,
-           ITERATIONS / total);
-}
-
-// ----------------------------------------------------------------
+constexpr uint64_t iterations = 5'000'000;
+constexpr uint64_t block_size = 10'000; // fits in cache
+constexpr double k = 4.9999999;
+constexpr double amplitude = 2.444444444;
 
 void basic_vco(float* output, const float* input)
 {
     double phase = 0;
 
-    for (int j = 0; j < ITERATIONS / BLOCK_SIZE; j++) {
-        for (int i = 0; i < BLOCK_SIZE; i++) {
-            output[i] = cos(phase) * AMPLITUDE;
-            phase += input[i] * K;
+    for (auto j = iterations / block_size; j; --j) {
+        for (uint64_t i = 0; i < block_size; i++) {
+            output[i] = cos(phase) * amplitude;
+            phase += input[i] * k;
 
             while (phase > 2 * GR_M_PI)
                 phase -= 2 * GR_M_PI;
@@ -123,12 +40,60 @@ void basic_vco(float* output, const float* input)
     }
 }
 
-void native_vco(float* output, const float* input)
+template <typename real>
+inline real polynomial_approx_sin(real value)
 {
-    gr::vco<float, float> vco;
+    /* The polynomial
+     * f(x) = 0.98553 x + 0.14258 x³
+     * approximates sin(x) on [-π,+π] to an absolute error below 0.004,
+     * f(x) = 0.99999944 x + -0.16665925 x³ + 0.0083165284 x⁵ + -0.0001862801 x^⁷
+     * achieves better than 3.5·10⁻⁶ error
+     */
+    constexpr real a_1 = 0.99999944;
+    constexpr real a_3 = -0.16665925;
+    constexpr real a_5 = 0.0083165284;
+    constexpr real a_7 = -0.0001862801;
 
-    for (int j = 0; j < ITERATIONS / BLOCK_SIZE; j++) {
-        vco.cos(output, input, BLOCK_SIZE, K, AMPLITUDE);
+    real x_sq = value * value;
+    real x_quad = x_sq * x_sq;
+    return value * (a_1 + a_3 * x_sq + a_5 * x_quad + a_7 * x_sq * x_quad);
+}
+void polynomial_vco(float* output, const float* input)
+{
+    // sin(x) = cos(x + 1.5π) = cos(x - 0.5π)
+    for (auto j = iterations / block_size; j; --j) {
+        double phase = -GR_M_PI / 2;
+        for (uint64_t i = 0; i < block_size; i++) {
+            output[i] = polynomial_approx_sin(phase) * amplitude;
+            phase += input[i] * k;
+
+            /* we split the handling a bit, because the most common case should be that
+             * we're within +-pi; followed by the case where we just positively ran out of
+             * that range.
+             *
+             * The problem with while(too large){make smaller}; while(too small){make
+             * larger}; is that at least one float comparison happens without need. The
+             * compiler has a hard time noticing that. So, we split into
+             *
+             * if(too large) { while(too large){make smaller} }
+             * else {while(too small) {embiggen}}
+             *
+             * And because there's then still one initial redundant comparison, we go for
+             *
+             * if(too large) { do{make smaller} while(still to large); }
+             * else {while(too small) {embiggen}}
+             *
+             */
+            if (phase > GR_M_PI) {
+                do {
+                    phase -= 2 * GR_M_PI;
+                } while (phase > GR_M_PI);
+            } else {
+                while (phase < GR_M_PI) {
+                    phase += 2 * GR_M_PI;
+                }
+            }
+        }
     }
 }
 
@@ -136,8 +101,8 @@ void fxpt_vco(float* output, const float* input)
 {
     gr::fxpt_vco vco;
 
-    for (int j = 0; j < ITERATIONS / BLOCK_SIZE; j++) {
-        vco.cos(output, input, BLOCK_SIZE, K, AMPLITUDE);
+    for (auto j = iterations / block_size; j; --j) {
+        vco.cos(output, input, block_size, k, amplitude);
     }
 }
 
@@ -147,15 +112,38 @@ void nop_fct(float* x, const float* y) {}
 
 void nop_loop(float* x, const float* y)
 {
-    for (int i = 0; i < ITERATIONS; i++) {
+    for (auto i = iterations; i; --i) {
         nop_fct(x, y);
     }
 }
 
 int main(int argc, char** argv)
 {
-    benchmark(nop_loop, "nop loop");
-    benchmark(basic_vco, "basic vco");
-    benchmark(native_vco, "native vco");
-    benchmark(fxpt_vco, "fxpt vco");
+    auto bench = [](decltype(basic_vco) func) { return benchmark(func, block_size); };
+    using duration_t = decltype(bench(nop_loop));
+
+    std::map<std::string, decltype(&basic_vco)> funcs{
+        //{ "nop loop", nop_loop },
+        { "basic VCO", basic_vco },
+        { "polynomial VCO", polynomial_vco },
+        { "fxpt VCO", fxpt_vco }
+    };
+
+    std::vector<std::pair<duration_t, std::string>> times;
+    for (auto& [name, func] : funcs) {
+        times.emplace_back(bench(func), name);
+    }
+
+    std::sort(times.begin(), times.end());
+    std::vector<std::string> lines;
+    size_t maxlen = 0;
+    for (const auto& [time, name] : times) {
+        lines.emplace_back(format_duration(name, time, iterations, block_size));
+        maxlen = std::max(lines.back().size(), maxlen);
+    }
+    fmt::print("+{1:—^{0}}+\n", maxlen + 2, "");
+    for (const auto& line : lines) {
+        fmt::print("|{1:^{0}}|\n", maxlen + 2, line);
+    }
+    fmt::print("+{1:—^{0}}+\n", maxlen + 2, "");
 }
