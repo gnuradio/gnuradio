@@ -27,7 +27,8 @@ private:
     volk::vector<gr_complex> d_corr;
     volk::vector<gr_complex> d_gamma;
     volk::vector<float> d_lambda;
-
+    std::vector<int> d_ml_sync_peak_pos;
+    std::vector<float> d_ml_sync_phi;
     // For peak detector
     float d_threshold_factor_rise;
     float d_avg_alpha;
