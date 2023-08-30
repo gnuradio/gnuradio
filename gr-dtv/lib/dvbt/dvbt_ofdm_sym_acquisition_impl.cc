@@ -102,9 +102,21 @@ int dvbt_ofdm_sym_acquisition_impl::ml_sync(const gr_complex* in,
 
     int low, size;
 
-    // Array to store peak positions
-    __GR_VLA(int, peak_pos, d_fft_length);
-    __GR_VLA(float, d_phi, d_fft_length);
+    /* Array to store peak positions
+     * These used to be VLAs, reallocated every call to this function. VLAs are not a C++
+     * feature (supported by compiler goodwill – they are incompatible with the strict C++
+     * type system, as they are runtime-changing types.) VLAs in C are uninitialized, so
+     * the previous values are as valid as any other. Thus, we're not zeroing them. Should
+     * this unearth bugs that were hidden by luck before, we can still do:
+     */
+#if 0
+    for (auto& val : d_ml_sync_peak_pos) {
+        val = 0;
+    }
+    for (auto& val : d_ml_sync_phi) {
+        val = 0;
+    }
+#endif
 
     // Calculate norm
     low = lookup_stop - (d_cp_length + d_fft_length - 1);
@@ -125,7 +137,7 @@ int dvbt_ofdm_sym_acquisition_impl::ml_sync(const gr_complex* in,
     for (int i = lookup_start - 1; i >= lookup_stop; i--) {
         int k = i - lookup_stop;
 
-        d_phi[k] = 0.0;
+        d_ml_sync_phi[k] = 0.0;
         d_gamma[k] = 0.0;
 
         // Moving sum for calculating gamma and phi
@@ -133,7 +145,7 @@ int dvbt_ofdm_sym_acquisition_impl::ml_sync(const gr_complex* in,
             // Calculate gamma and store it
             d_gamma[k] += d_corr[i - j - d_fft_length];
             // Calculate phi and store it
-            d_phi[k] += d_norm[i - j] + d_norm[i - j - d_fft_length];
+            d_ml_sync_phi[k] += d_norm[i - j] + d_norm[i - j - d_fft_length];
         }
     }
 
@@ -147,19 +159,23 @@ int dvbt_ofdm_sym_acquisition_impl::ml_sync(const gr_complex* in,
     low = 0;
     size = lookup_start - lookup_stop;
 
-    volk_32f_s32f_multiply_32f(&d_phi[low], &d_phi[low], d_rho / 2.0, size);
-    volk_32f_x2_subtract_32f(&d_lambda[low], &d_lambda[low], &d_phi[low], size);
+    volk_32f_s32f_multiply_32f(
+        &d_ml_sync_phi[low], &d_ml_sync_phi[low], d_rho / 2.0, size);
+    volk_32f_x2_subtract_32f(&d_lambda[low], &d_lambda[low], &d_ml_sync_phi[low], size);
 
-    int peak_length, peak, peak_max;
+    int peak_length, peak, peak_detect_peak_max;
     // Find peaks of lambda
     // We have found an end of symbol at peak_pos[0] + CP + FFT
-    if ((peak_length = peak_detect_process(
-             &d_lambda[0], (lookup_start - lookup_stop), &peak_pos[0], &peak_max))) {
-        peak = peak_pos[peak_max] + lookup_stop;
+    if ((peak_length = peak_detect_process(&d_lambda[0],
+                                           (lookup_start - lookup_stop),
+                                           &d_ml_sync_peak_pos[0],
+                                           &peak_detect_peak_max))) {
+        peak = d_ml_sync_peak_pos[peak_detect_peak_max] + lookup_stop;
         *cp_pos = peak;
 
         // Calculate frequency correction
-        float peak_epsilon = fast_atan2f(d_gamma[peak_pos[peak_max]]);
+        float peak_epsilon =
+            fast_atan2f(d_gamma[d_ml_sync_peak_pos[peak_detect_peak_max]]);
         double sensitivity = (double)(-1) / (double)d_fft_length;
 
         // Store phases for derotating the signal
@@ -244,6 +260,8 @@ dvbt_ofdm_sym_acquisition_impl::dvbt_ofdm_sym_acquisition_impl(
       d_corr(2 * d_fft_length + d_cp_length),
       d_gamma(d_fft_length),
       d_lambda(d_fft_length),
+      d_ml_sync_peak_pos(d_fft_length),
+      d_ml_sync_phi(d_fft_length),
       d_derot(d_fft_length + d_cp_length)
 {
     set_relative_rate(1, (uint64_t)(d_cp_length + d_fft_length));
