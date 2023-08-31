@@ -210,6 +210,9 @@ void FreqDisplayForm::setupControlPanel()
     d_controlpanel->toggleMaxHold(d_maxhold_act->isChecked());
     d_controlpanel->toggleMinHold(d_minhold_act->isChecked());
     d_controlpanel->setFFTAverage(getFFTAverage());
+    if (d_stop_state) {
+        d_controlpanel->toggleStopButton();
+    }
 
     emit signalFFTSize(getFFTSize());
     emit signalFFTWindow(getFFTWindowType());
