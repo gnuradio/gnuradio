@@ -207,6 +207,9 @@ void TimeDisplayForm::setupControlPanel()
     d_controlpanel->toggleGrid(d_grid_act->isChecked());
     d_controlpanel->toggleTriggerMode(getTriggerMode());
     d_controlpanel->toggleTriggerSlope(getTriggerSlope());
+    if (d_stop_state) {
+        d_controlpanel->toggleStopButton();
+    }
 
     d_controlpanelmenu->setChecked(true);
 }
