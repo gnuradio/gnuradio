@@ -92,7 +92,7 @@ jobs:
           - distro: 'Debian 12'
             containerid: 'gnuradio/ci:debian-12-3.10'
             cxxflags: -Werror
-            ctest_args: '-E "qa_polar_..coder_(sc_)?systematic"'
+            ctest_args: '-E ""'
             # ldpath: 
           - distro: 'Debian 11 (32-bit)'
             containerid: 'gnuradio/ci:debian-i386-11-3.10'
