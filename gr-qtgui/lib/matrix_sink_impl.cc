@@ -117,7 +117,7 @@ int matrix_sink_impl::work(int noutput_items,
 
     for (int k = 0; k < noutput_items; k++) {
         std::vector<input_type> a(in + k * d_vlen, in + (k + 1) * d_vlen);
-        QVector<double> qvec(a.begin(), a.end());
+        QVector<double> qvec = QVector<double>::fromStdVector(a);
         emit d_signal->data_ready(qvec);
     }
 
