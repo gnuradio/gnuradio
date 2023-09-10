@@ -10,8 +10,6 @@
   - 'FMComms':
     - iio_fmcomms2_source
     - iio_fmcomms2_sink
-    # - iio_fmcomms5_source
-    # - iio_fmcomms5_sink
   - 'PlutoSDR':
     - iio_pluto_source
     - iio_pluto_sink
