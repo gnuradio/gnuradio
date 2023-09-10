@@ -22,10 +22,6 @@ if(${libad9361_FOUND})
         iio_python_files
         fmcomms2_sink_python.cc
         fmcomms2_source_python.cc
-        # fmcomms5_sink_f32c_python.cc
-        # fmcomms5_sink_python.cc
-        # fmcomms5_source_f32c_python.cc
-        # fmcomms5_source_python.cc
         pluto_utils_python.cc)
 endif(${libad9361_FOUND})
 
