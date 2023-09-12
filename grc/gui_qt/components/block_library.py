@@ -38,25 +38,17 @@ class BlockSearchBar(QtWidgets.QLineEdit):
         QtWidgets.QLineEdit.__init__(self)
         self.parent = parent
         self.setObjectName('block_library::search_bar')
-        self.returnPressed.connect(self.add_block)
+        self.returnPressed.connect(self.on_return_pressed)
 
-    def add_block(self):
+    def on_return_pressed(self):
         label = self.text()
         if label in self.parent._block_tree_flat:
-            fg = self.parent.app.MainWindow.currentFlowgraph
             block_key = self.parent._block_tree_flat[label].key
-            id = fg._get_unique_id(block_key)
 
-            block = fg.new_block(block_key)
-            block.params['id'].set_value(id)
-            fg.addItem(block)
-            block.moveToTop()
-            fg.update()
-            # TODO: Move it to the middle of the view
-            self.setText('')
-            self.parent.populate_tree(self.parent._block_tree)
+            self.parent.add_block(block_key)
+            self.setText("")
         else:
-            log.info(f'No block named {label}')
+            log.info(f"No block named {label}")
 
 def get_items(model):
     items = []
@@ -120,6 +112,9 @@ class BlockLibrary(QtWidgets.QDockWidget, base.Component):
         library.clicked.connect(library.handle_clicked)
         library.selectionModel().selectionChanged.connect(library.updateDocTab)
         #library.headerItem().setText(0, "Blocks")
+        library.doubleClicked.connect(
+            lambda block: self.add_block(block.data(QtCore.Qt.UserRole))
+        )
         self._library = library
 
         search_bar = BlockSearchBar(self)
@@ -218,6 +213,14 @@ class BlockLibrary(QtWidgets.QDockWidget, base.Component):
                 self._block_tree_flat[block.label] = block
         # Save a reference to the block tree in case it is needed later
         self._block_tree = block_tree
+
+    def add_block(self, block_key):
+        """Add a block by its key."""
+        if block_key is None:
+            return
+
+        fg = self.app.MainWindow.currentFlowgraph
+        fg.add_block(block_key)
 
     def populate_tree(self, block_tree, v_blocks=None):
         ''' Populate the item model and tree view with the hierarchical block tree. '''

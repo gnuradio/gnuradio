@@ -761,12 +761,16 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
             self.tabWidget.removeTab(tab_index)
         else:
             message = "Save changes before closing?"
-
-            ad = QtWidgets.QMessageBox()
-            ad.setWindowTitle("Unsaved Changes")
-            ad.setText(message)
-            ad.setStandardButtons(QtWidgets.QMessageBox.Discard | QtWidgets.QMessageBox.Cancel | QtWidgets.QMessageBox.Save)
-            response = ad.exec()
+            response = QtWidgets.QMessageBox.question(
+                None,
+                "Unsaved Changes",
+                message,
+                QtWidgets.QMessageBox.StandardButtons(
+                    QtWidgets.QMessageBox.Discard
+                    | QtWidgets.QMessageBox.Cancel
+                    | QtWidgets.QMessageBox.Save
+                )
+            )
 
             if response == QtWidgets.QMessageBox.Discard:
                 self.tabWidget.removeTab(tab_index)

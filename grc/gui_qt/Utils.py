@@ -1,6 +1,7 @@
 import cairo
 
 import logging
+from pathlib import Path
 
 from qtpy import QtGui, QtCore, QtWidgets, QtSvg
 
@@ -32,24 +33,25 @@ def get_rotated_coordinate(coor, rotation):
 def make_screenshot(fg_view, file_path, transparent_bg=False):
     if not file_path:
         return
-    if file_path.endswith(".png"):
+    file_path = Path(file_path)
+    if file_path.suffix == ".png":
         rect = fg_view.viewport().rect()
 
         pixmap = QtGui.QPixmap(rect.size())
         painter = QtGui.QPainter(pixmap)
 
         fg_view.render(painter, QtCore.QRectF(pixmap.rect()), rect)
-        pixmap.save(file_path,"PNG")
+        pixmap.save(str(file_path),"PNG")
         painter.end()
-    elif file_path.endswith(".svg"):
+    elif file_path.suffix == ".svg":
         rect = fg_view.viewport().rect()
 
         generator = QtSvg.QSvgGenerator()
-        generator.setFileName(file_path)
+        generator.setFileName(str(file_path))
         generator.setSize(rect.size())
         painter = QtGui.QPainter(generator)
         fg_view.render(painter)
         painter.end()
-    elif file_path.endswith(".pdf"):
+    elif file_path.suffix == ".pdf":
         log.warning("PDF screen capture not implemented")
         return # TODO

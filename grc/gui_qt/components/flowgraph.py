@@ -164,32 +164,12 @@ class Flowgraph(QtWidgets.QGraphicsScene, base.Component, CoreFlowgraph):
 
                 # Find block in tree so that we can pull out label
                 block_key = data_items[0][QtCore.Qt.UserRole].value()
-                block = self.platform.blocks[block_key]
 
                 # Add block of this key at the cursor position
                 cursor_pos = event.scenePos()
+                pos = (cursor_pos.x(), cursor_pos.y())
 
-                # Pull out its params (keep in mind we still havent added the dialog box that lets you change param values so this is more for show)
-                params = []
-                for p in block.parameters_data: # block.parameters_data is a list of dicts, one per param
-                    if 'label' in p: # for now let's just show it as long as it has a label
-                        key = p['label']
-                        value = p.get('default', '') # just show default value for now
-                        params.append((key, value))
-
-                # Tell the block where to show up on the canvas
-                attrib = {'_coordinate':(cursor_pos.x(), cursor_pos.y())}
-
-                id = self._get_unique_id(block_key)
-                
-                block = self.new_block(block_key, attrib=attrib)
-                block.states['coordinate'] = (cursor_pos.x(), cursor_pos.y())
-                block.setPos(cursor_pos.x(), cursor_pos.y())
-                block.params['id'].set_value(id)
-                self.addItem(block)
-                block.moveToTop()
-                self.update()
-                self.newElement.emit(block)
+                self.add_block(block_key, pos)
 
                 event.setDropAction(Qt.CopyAction)
                 event.accept()
@@ -197,6 +177,30 @@ class Flowgraph(QtWidgets.QGraphicsScene, base.Component, CoreFlowgraph):
                 return QtGui.QStandardItemModel.dropMimeData(self, data, action, row, column, parent)
         else:
             event.ignore()
+
+    def add_block(self, block_key, pos=(0, 0)):
+        block = self.platform.blocks[block_key]
+        # Pull out its params (keep in mind we still havent added the dialog box that lets you change param values so this is more for show)
+        params = []
+        for p in block.parameters_data: # block.parameters_data is a list of dicts, one per param
+            if 'label' in p: # for now let's just show it as long as it has a label
+                key = p['label']
+                value = p.get('default', '') # just show default value for now
+                params.append((key, value))
+
+        id = self._get_unique_id(block_key)
+
+        # Tell the block where to show up on the canvas
+        attrib = {'_coordinate': pos}
+        
+        block = self.new_block(block_key, attrib=attrib)
+        block.states['coordinate'] = pos
+        block.setPos(*pos)
+        block.params['id'].set_value(id)
+        self.addItem(block)
+        block.moveToTop()
+        self.update()
+        self.newElement.emit(block)
 
     def selected_blocks(self):
         blocks = []

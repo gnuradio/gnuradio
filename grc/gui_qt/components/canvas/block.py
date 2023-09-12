@@ -233,6 +233,7 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
         self.newPos = (self.x(), self.y())
         self.states['coordinate'] = (self.x(), self.y())
         self.oldData = None
+        self.props_dialog = None
 
         self.setFlag(QtWidgets.QGraphicsItem.ItemIsMovable)
         self.setFlag(QtWidgets.QGraphicsItem.ItemIsSelectable)
