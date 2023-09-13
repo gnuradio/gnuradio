@@ -2,6 +2,7 @@
 /*
  * Copyright 2012 Free Software Foundation, Inc.
  * Copyright 2023 Marcus Müller
+ * Copyright 2023 Daniel Estevez <daniel@destevez.net>
  *
  * This file is part of GNU Radio
  *
@@ -15,6 +16,7 @@
 #include <algorithm>
 #include <cstddef>
 #include <stdexcept>
+#include <vector>
 
 namespace gr {
 namespace blocks {
@@ -39,6 +41,8 @@ repeat_impl::repeat_impl(size_t itemsize, int interp)
                 "Trying to set interpolation to {}, but must be a positive integer."),
             interp));
     }
+    // tags are propagated manually using the copy_tags() helper function
+    set_tag_propagation_policy(TPP_DONT);
     message_port_register_in(c_msg_port);
     set_msg_handler(c_msg_port,
                     [this](const pmt::pmt_t& msg) { this->msg_set_interpolation(msg); });
@@ -128,7 +132,8 @@ int repeat_impl::general_work(int noutput_items,
     auto nout = static_cast<size_t>(noutput_items);
     size_t consumed = 0;
 
-    // copy what is left to copy
+    // copy what is left to copy; here we do not need to copy any tags, since
+    // the tags were copied in a previous work() call
     if (d_left_to_copy) {
         auto copy_from_buffer = std::min(d_left_to_copy, nout);
         copy_and_advance_output(out, in, d_itemsize, copy_from_buffer);
@@ -146,6 +151,10 @@ int repeat_impl::general_work(int noutput_items,
     // copy the full multiples of d_interp from in to out
     size_t full_items = std::min<size_t>(nout / d_interp, ninput_items[0] - consumed);
 
+    // copy tags for these items: each tag is copied to the first item of the
+    // d_interp repetitions
+    copy_tags(consumed, noutput_items - nout, full_items);
+
     for (auto in_counter = full_items; in_counter; --in_counter) {
         copy_and_advance_output(out, in, d_itemsize, d_interp);
         in += d_itemsize;
@@ -155,6 +164,7 @@ int repeat_impl::general_work(int noutput_items,
 
     if (nout && static_cast<size_t>(ninput_items[0]) > consumed) {
         // nout now only contains at most d_interp - 1
+        copy_tags(consumed, noutput_items - nout, 1); // copy tags for only one item
         copy_and_advance_output(out, in, d_itemsize, nout);
         d_left_to_copy = d_interp - nout;
         nout -= nout;
