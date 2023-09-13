@@ -69,7 +69,7 @@ class channelizer_ccf(gr.hier_block2):
         while True:
             try:
                 taps = optfir.low_pass(1, numchans, bw, bw + tb, ripple, atten)
-                return tap
+                return taps
             except ValueError as e:
                 # This shouldn't happen, unless numchans is strange
                 raise RuntimeError("couldn't design filter; this probably constitutes a bug")
