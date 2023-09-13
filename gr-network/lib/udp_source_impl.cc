@@ -99,10 +99,17 @@ udp_source_impl::udp_source_impl(size_t itemsize,
             "least 8 bytes once header/trailer adjustments are made.");
     }
 
-    d_precomp_data_size = d_payloadsize - d_header_size;
-    d_precomp_data_over_item_size = d_precomp_data_size / d_itemsize;
+    if (d_payloadsize % d_block_size) {
+        d_logger->error("Payload size must be a multiple of item size * vector length.");
 
-    int out_multiple = (d_payloadsize - d_header_size) / d_block_size;
+        throw std::invalid_argument(
+            "Payload size must be a multiple of item size * vector length.");
+    }
+
+    d_precomp_data_size = d_payloadsize - d_header_size;
+    d_precomp_data_over_item_size = d_precomp_data_size / d_block_size;
+
+    int out_multiple = d_precomp_data_over_item_size;
 
     if (out_multiple == 1)
         out_multiple = 2; // Ensure we get pairs, for instance complex -> ichar pairs
