@@ -54,7 +54,7 @@ Complete instructions for building GNU Radio from source code are detailed in
 
 ### PyBOMBS
 
-We are no longer recommending [PyBOMBS](https://github.com/gnuradio/pybombs#pybombs) to install modern versions of GNU Radio.
+**We are no longer recommending** [PyBOMBS](https://github.com/gnuradio/pybombs#pybombs) **to install modern versions of GNU Radio.**
 
 ## Legal Matters
 
