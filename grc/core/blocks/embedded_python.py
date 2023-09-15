@@ -67,24 +67,26 @@ Block Documentation:
 
 @register_build_in
 class EPyBlock(Block):
-
-    key = 'epy_block'
-    label = 'Python Block'
+    key = "epy_block"
+    label = "Python Block"
     exempt_from_id_validation = True  # Exempt epy block from blacklist id validation
-    documentation = {'': DOC}
+    documentation = {"": DOC}
 
     parameters_data = build_params(
         params_raw=[
-            dict(label='Code', id='_source_code', dtype='_multiline_python_external',
-                 default=DEFAULT_CODE, hide='part')
-        ], have_inputs=True, have_outputs=True, flags=Block.flags, block_id=key
+            dict(label="Code", id="_source_code", dtype="_multiline_python_external", default=DEFAULT_CODE, hide="part")
+        ],
+        have_inputs=True,
+        have_outputs=True,
+        flags=Block.flags,
+        block_id=key,
     )
     inputs_data = []
     outputs_data = []
 
     def __init__(self, flow_graph, **kwargs):
         super(EPyBlock, self).__init__(flow_graph, **kwargs)
-        self.states['_io_cache'] = ''
+        self.states["_io_cache"] = ""
 
         self.module_name = self.name
         self._epy_source_hash = -1
@@ -93,7 +95,7 @@ class EPyBlock(Block):
     def rewrite(self):
         Element.rewrite(self)
 
-        param_src = self.params['_source_code']
+        param_src = self.params["_source_code"]
 
         src = param_src.get_value()
         src_hash = hash((self.name, src))
@@ -106,7 +108,7 @@ class EPyBlock(Block):
         except Exception as e:
             self._epy_reload_error = ValueError(str(e))
             try:  # Load last working block io
-                blk_io_args = literal_eval(self.states['_io_cache'])
+                blk_io_args = literal_eval(self.states["_io_cache"])
                 if len(blk_io_args) == 6:
                     blk_io_args += ([],)  # add empty callbacks
                 blk_io = utils.epy_block_io.BlockIO(*blk_io_args)
@@ -114,29 +116,24 @@ class EPyBlock(Block):
                 return
         else:
             self._epy_reload_error = None  # Clear previous errors
-            self.states['_io_cache'] = repr(tuple(blk_io))
+            self.states["_io_cache"] = repr(tuple(blk_io))
 
         # print "Rewriting embedded python block {!r}".format(self.name)
         self._epy_source_hash = src_hash
 
         self.label = blk_io.name or blk_io.cls
-        self.documentation = {'': blk_io.doc}
+        self.documentation = {"": blk_io.doc}
 
-        self.module_name = "{}_{}".format(
-            self.parent_flowgraph.get_option("id"), self.name)
-        self.templates['imports'] = 'import {} as {}  # embedded python block'.format(
-            self.module_name, self.name)
-        self.templates['make'] = '{mod}.{cls}({args})'.format(
-            mod=self.name,
-            cls=blk_io.cls,
-            args=', '.join('{0}=${{ {0} }}'.format(key) for key, _ in blk_io.params))
-        self.templates['callbacks'] = [
-            '{0} = ${{ {0} }}'.format(attr) for attr in blk_io.callbacks
-        ]
+        self.module_name = "{}_{}".format(self.parent_flowgraph.get_option("id"), self.name)
+        self.templates["imports"] = "import {} as {}  # embedded python block".format(self.module_name, self.name)
+        self.templates["make"] = "{mod}.{cls}({args})".format(
+            mod=self.name, cls=blk_io.cls, args=", ".join("{0}=${{ {0} }}".format(key) for key, _ in blk_io.params)
+        )
+        self.templates["callbacks"] = ["{0} = ${{ {0} }}".format(attr) for attr in blk_io.callbacks]
 
         self._update_params(blk_io.params)
-        self._update_ports('in', self.sinks, blk_io.sinks, 'sink')
-        self._update_ports('out', self.sources, blk_io.sources, 'source')
+        self._update_ports("in", self.sinks, blk_io.sinks, "sink")
+        self._update_ports("out", self.sources, blk_io.sources, "source")
 
         super(EPyBlock, self).rewrite()
 
@@ -144,7 +141,7 @@ class EPyBlock(Block):
         param_factory = self.parent_platform.make_param
         params = {}
         for key, value in self.params.copy().items():
-            if hasattr(value, '__epy_param__'):
+            if hasattr(value, "__epy_param__"):
                 params[key] = value
                 del self.params[key]
 
@@ -156,10 +153,13 @@ class EPyBlock(Block):
                 param.default = str(value)
             except KeyError:  # need to make a new param
                 param = param_factory(
-                    parent=self, id=id_, dtype='raw', value=value,
-                    name=id_.replace('_', ' ').title(),
+                    parent=self,
+                    id=id_,
+                    dtype="raw",
+                    value=value,
+                    name=id_.replace("_", " ").title(),
                 )
-                setattr(param, '__epy_param__', True)
+                setattr(param, "__epy_param__", True)
             self.params[id_] = param
 
     def _update_ports(self, label, ports, port_specs, direction):
@@ -170,21 +170,21 @@ class EPyBlock(Block):
         port_current = next(iter_ports, None)
         for key, port_type, vlen in port_specs:
             reuse_port = (
-                port_current is not None and
-                port_current.dtype == port_type and
-                port_current.vlen == vlen and
-                (key.isdigit() or port_current.key == key)
+                port_current is not None
+                and port_current.dtype == port_type
+                and port_current.vlen == vlen
+                and (key.isdigit() or port_current.key == key)
             )
             if reuse_port:
                 ports_to_remove.remove(port_current)
                 port, port_current = port_current, next(iter_ports, None)
             else:
                 n = dict(name=label + str(key), dtype=port_type, id=key)
-                if port_type == 'message':
-                    n['name'] = key
-                    n['optional'] = '1'
+                if port_type == "message":
+                    n["name"] = key
+                    n["optional"] = "1"
                 if vlen > 1:
-                    n['vlen'] = str(vlen)
+                    n["vlen"] = str(vlen)
                 port = port_factory(self, direction=direction, **n)
             ports_new.append(port)
         # replace old port list with new one
@@ -196,16 +196,17 @@ class EPyBlock(Block):
     def validate(self):
         super(EPyBlock, self).validate()
         if self._epy_reload_error:
-            self.params['_source_code'].add_error_message(
-                str(self._epy_reload_error))
+            self.params["_source_code"].add_error_message(str(self._epy_reload_error))
 
 
 @register_build_in
 class EPyModule(Block):
-    key = 'epy_module'
-    label = 'Python Module'
+    key = "epy_module"
+    label = "Python Module"
     exempt_from_id_validation = True  # Exempt epy module from blacklist id validation
-    documentation = {'': dedent("""
+    documentation = {
+        "": dedent(
+            """
         This block lets you embed a python module in your flowgraph.
 
         Code you put in this module is accessible in other blocks using the ID of this
@@ -224,16 +225,26 @@ class EPyModule(Block):
             stuff.double(3)  # evals to 6
 
         to set parameters of other blocks in your flowgraph.
-    """)}
+    """
+        )
+    }
 
     flags = Flags(Flags.SHOW_ID)
 
     parameters_data = build_params(
         params_raw=[
-            dict(label='Code', id='source_code', dtype='_multiline_python_external',
-                 default='# this module will be imported in the into your flowgraph',
-                 hide='part')
-        ], have_inputs=False, have_outputs=False, flags=flags, block_id=key
+            dict(
+                label="Code",
+                id="source_code",
+                dtype="_multiline_python_external",
+                default="# this module will be imported in the into your flowgraph",
+                hide="part",
+            )
+        ],
+        have_inputs=False,
+        have_outputs=False,
+        flags=flags,
+        block_id=key,
     )
 
     def __init__(self, flow_graph, **kwargs):
@@ -242,7 +253,5 @@ class EPyModule(Block):
 
     def rewrite(self):
         super(EPyModule, self).rewrite()
-        self.module_name = "{}_{}".format(
-            self.parent_flowgraph.get_option("id"), self.name)
-        self.templates['imports'] = 'import {} as {}  # embedded python module'.format(
-            self.module_name, self.name)
+        self.module_name = "{}_{}".format(self.parent_flowgraph.get_option("id"), self.name)
+        self.templates["imports"] = "import {} as {}  # embedded python module".format(self.module_name, self.name)

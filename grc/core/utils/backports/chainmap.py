@@ -4,7 +4,7 @@ from collections import MutableMapping
 
 
 class ChainMap(MutableMapping):
-    """ A ChainMap groups multiple dicts (or other mappings) together
+    """A ChainMap groups multiple dicts (or other mappings) together
     to create a single, updateable view.
 
     The underlying mappings are stored in a list.  That list is public and can
@@ -22,7 +22,7 @@ class ChainMap(MutableMapping):
         If no mappings are provided, a single empty dictionary is used.
 
         """
-        self.maps = list(maps) or [{}]          # always at least one map
+        self.maps = list(maps) or [{}]  # always at least one map
 
     def __missing__(self, key):
         raise KeyError(key)
@@ -54,8 +54,7 @@ class ChainMap(MutableMapping):
         return any(self.maps)
 
     def __repr__(self):
-        return '{0.__class__.__name__}({1})'.format(
-            self, ', '.join(map(repr, self.maps)))
+        return "{0.__class__.__name__}({1})".format(self, ", ".join(map(repr, self.maps)))
 
     @classmethod
     def fromkeys(cls, iterable, *args):
@@ -68,7 +67,7 @@ class ChainMap(MutableMapping):
 
     __copy__ = copy
 
-    def new_child(self, m=None):                # like Django's Context.push()
+    def new_child(self, m=None):  # like Django's Context.push()
         """New ChainMap with a new map followed by all previous maps.
         If no map is provided, an empty dict is used.
         """
@@ -77,7 +76,7 @@ class ChainMap(MutableMapping):
         return self.__class__(m, *self.maps)
 
     @property
-    def parents(self):                          # like Django's Context.pop()
+    def parents(self):  # like Django's Context.pop()
         """New ChainMap from maps[1:]."""
         return self.__class__(*self.maps[1:])
 
@@ -88,23 +87,21 @@ class ChainMap(MutableMapping):
         try:
             del self.maps[0][key]
         except KeyError:
-            raise KeyError(
-                'Key not found in the first mapping: {!r}'.format(key))
+            raise KeyError("Key not found in the first mapping: {!r}".format(key))
 
     def popitem(self):
         """Remove and return an item pair from maps[0]. Raise KeyError is maps[0] is empty."""
         try:
             return self.maps[0].popitem()
         except KeyError:
-            raise KeyError('No keys found in the first mapping.')
+            raise KeyError("No keys found in the first mapping.")
 
     def pop(self, key, *args):
         """Remove *key* from maps[0] and return its value. Raise KeyError if *key* not in maps[0]."""
         try:
             return self.maps[0].pop(key, *args)
         except KeyError:
-            raise KeyError(
-                'Key not found in the first mapping: {!r}'.format(key))
+            raise KeyError("Key not found in the first mapping: {!r}".format(key))
 
     def clear(self):
         """Clear maps[0], leaving maps[1:] intact."""

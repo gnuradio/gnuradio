@@ -9,8 +9,9 @@ import logging
 import sys
 
 import gi
-gi.require_version('Gtk', '3.0')
-gi.require_version('PangoCairo', '1.0')
+
+gi.require_version("Gtk", "3.0")
+gi.require_version("PangoCairo", "1.0")
 from gi.repository import Gtk
 
 
@@ -23,21 +24,20 @@ This is free software, and you are welcome to redistribute it.
 """
 
 LOG_LEVELS = {
-    'debug': logging.DEBUG,
-    'info': logging.INFO,
-    'warning': logging.WARNING,
-    'error': logging.ERROR,
-    'critical': logging.CRITICAL,
+    "debug": logging.DEBUG,
+    "info": logging.INFO,
+    "warning": logging.WARNING,
+    "error": logging.ERROR,
+    "critical": logging.CRITICAL,
 }
 
 
 def main():
     from gnuradio import gr
-    parser = argparse.ArgumentParser(
-        description=VERSION_AND_DISCLAIMER_TEMPLATE % gr.version())
-    parser.add_argument('flow_graphs', nargs='*')
-    parser.add_argument(
-        '--log', choices=['debug', 'info', 'warning', 'error', 'critical'], default='warning')
+
+    parser = argparse.ArgumentParser(description=VERSION_AND_DISCLAIMER_TEMPLATE % gr.version())
+    parser.add_argument("flow_graphs", nargs="*")
+    parser.add_argument("--log", choices=["debug", "info", "warning", "error", "critical"], default="warning")
     args = parser.parse_args()
 
     # Enable logging
@@ -47,7 +47,7 @@ def main():
     # gnuradio-companion once installed or python -m grc). The prefix for main.py
     # should be the same as other modules, so use that dynamically.
     # Strip '.main' from the module name to get the prefix
-    logger_prefix = __name__[0:__name__.rindex('.')]
+    logger_prefix = __name__[0 : __name__.rindex(".")]
     log = logging.getLogger(logger_prefix)
 
     # NOTE: This sets the log level to what was requested for the logger on the
@@ -64,12 +64,12 @@ def main():
     console = logging.StreamHandler()
     console.setLevel(LOG_LEVELS[args.log])
 
-    #msg_format = '[%(asctime)s - %(levelname)8s] --- %(message)s (%(filename)s:%(lineno)s)'
-    msg_format = '[%(levelname)s] %(message)s (%(filename)s:%(lineno)s)'
-    date_format = '%I:%M'
+    # msg_format = '[%(asctime)s - %(levelname)8s] --- %(message)s (%(filename)s:%(lineno)s)'
+    msg_format = "[%(levelname)s] %(message)s (%(filename)s:%(lineno)s)"
+    date_format = "%I:%M"
     formatter = logging.Formatter(msg_format, datefmt=date_format)
 
-    #formatter = utils.log.ConsoleFormatter()
+    # formatter = utils.log.ConsoleFormatter()
     console.setFormatter(formatter)
     log.addHandler(console)
 
@@ -83,10 +83,9 @@ def main():
     log.debug("Loading platform")
     platform = Platform(
         version=gr.version(),
-        version_parts=(gr.major_version(), gr.api_version(),
-                       gr.minor_version()),
+        version_parts=(gr.major_version(), gr.api_version(), gr.minor_version()),
         prefs=gr.prefs(),
-        install_prefix=gr.prefix()
+        install_prefix=gr.prefix(),
     )
     platform.build_library()
 

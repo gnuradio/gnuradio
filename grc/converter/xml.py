@@ -11,9 +11,11 @@ from os import path
 try:
     # raise ImportError()
     from lxml import etree
+
     HAVE_LXML = True
 except ImportError:
     import xml.etree.ElementTree as etree
+
     HAVE_LXML = False
 
 
@@ -40,8 +42,8 @@ def load_lxml(filename, document_type_def=None):
         raise ValueError("Failed to parse or validate {}".format(filename))
 
     version_info = {}
-    for inst in xml_tree.xpath('/processing-instruction()'):
-        if inst.target == 'grc':
+    for inst in xml_tree.xpath("/processing-instruction()"):
+        if inst.target == "grc":
             version_info.update(inst.attrib)
 
     return element, version_info
@@ -51,10 +53,10 @@ def load_stdlib(filename, document_type_def=None):
     """Load block description from xml file"""
 
     if isinstance(filename, str):
-        with open(filename, 'rb') as xml_file:
-            data = xml_file.read().decode('utf-8')
+        with open(filename, "rb") as xml_file:
+            data = xml_file.read().decode("utf-8")
     else:  # Already opened
-        data = filename.read().decode('utf-8')
+        data = filename.read().decode("utf-8")
 
     try:
         element = etree.fromstring(data)
@@ -62,9 +64,9 @@ def load_stdlib(filename, document_type_def=None):
         raise ValueError("Failed to parse {}".format(filename))
 
     version_info = {}
-    for body in re.findall(r'<\?(.*?)\?>', data):
-        inst = etree.fromstring('<' + body + '/>')
-        if inst.tag == 'grc':
+    for body in re.findall(r"<\?(.*?)\?>", data):
+        inst = etree.fromstring("<" + body + "/>")
+        if inst.tag == "grc":
             version_info.update(inst.attrib)
 
     return element, version_info

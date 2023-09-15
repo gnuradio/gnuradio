@@ -83,19 +83,23 @@ file_format: 1
 
 
 def make_yml(num_fields):
-    return ''.join((
-        HEADER.format(num_fields),
-        FIELD0, ''.join(FIELDS.format(i) for i in range(1, num_fields)),
-        ''.join(VALUES.format(i) for i in range(num_fields)),
-        'value: ${value}\n\nasserts:\n',
-        ''.join(ASSERTS.format(i) for i in range(num_fields)),
-        ''.join(TEMPLATES.format(num_fields)),
-        FOOTER
-    ))
+    return "".join(
+        (
+            HEADER.format(num_fields),
+            FIELD0,
+            "".join(FIELDS.format(i) for i in range(1, num_fields)),
+            "".join(VALUES.format(i) for i in range(num_fields)),
+            "value: ${value}\n\nasserts:\n",
+            "".join(ASSERTS.format(i) for i in range(num_fields)),
+            "".join(TEMPLATES.format(num_fields)),
+            FOOTER,
+        )
+    )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     import sys
+
     try:
         filename = sys.argv[1]
     except IndexError:
@@ -103,5 +107,5 @@ if __name__ == '__main__':
 
     data = make_yml(MAX_NUM_FIELDS)
 
-    with open(filename, 'wb') as fp:
+    with open(filename, "wb") as fp:
         fp.write(data.encode())

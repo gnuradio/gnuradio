@@ -13,11 +13,11 @@ from ..core.Constants import *
 
 
 # default path for the open/save dialogs
-DEFAULT_FILE_PATH = os.getcwd() if os.name != 'nt' else os.path.expanduser("~/Documents")
-FILE_EXTENSION = '.grc'
+DEFAULT_FILE_PATH = os.getcwd() if os.name != "nt" else os.path.expanduser("~/Documents")
+FILE_EXTENSION = ".grc"
 
 # name for new/unsaved flow graphs
-NEW_FLOGRAPH_TITLE = 'untitled'
+NEW_FLOGRAPH_TITLE = "untitled"
 
 # main window constraints
 MIN_WINDOW_WIDTH = 600
@@ -38,8 +38,10 @@ PARAM_FONT = "Sans 7.5"
 STATE_CACHE_SIZE = 42
 
 # Shared targets for drag and drop of blocks
-DND_TARGETS = [Gtk.TargetEntry.new('STRING', Gtk.TargetFlags.SAME_APP, 0),
-               Gtk.TargetEntry.new('UTF8_STRING', Gtk.TargetFlags.SAME_APP, 1)]
+DND_TARGETS = [
+    Gtk.TargetEntry.new("STRING", Gtk.TargetFlags.SAME_APP, 0),
+    Gtk.TargetEntry.new("UTF8_STRING", Gtk.TargetFlags.SAME_APP, 1),
+]
 
 # label constraint dimensions
 LABEL_SEPARATION = 3
@@ -96,14 +98,14 @@ DPI_SCALING = 1.0
 
 # Gtk-themes classified as dark
 GTK_DARK_THEMES = [
-    'Adwaita-dark',
-    'HighContrastInverse',
+    "Adwaita-dark",
+    "HighContrastInverse",
 ]
 
-GTK_SETTINGS_INI_PATH = '~/.config/gtk-3.0/settings.ini'
+GTK_SETTINGS_INI_PATH = "~/.config/gtk-3.0/settings.ini"
 
-GTK_INI_PREFER_DARK_KEY = 'gtk-application-prefer-dark-theme'
-GTK_INI_THEME_NAME_KEY = 'gtk-theme-name'
+GTK_INI_PREFER_DARK_KEY = "gtk-application-prefer-dark-theme"
+GTK_INI_THEME_NAME_KEY = "gtk-theme-name"
 
 
 def update_font_size(font_size):
@@ -114,10 +116,8 @@ def update_font_size(font_size):
     PORT_FONT = BLOCK_FONT
     PARAM_FONT = "%s %f" % (FONT_FAMILY, font_size - 0.5)
 
-    PORT_SEPARATION = PORT_SPACING + 2 * \
-        PORT_LABEL_PADDING + int(1.5 * font_size)
-    PORT_SEPARATION += - \
-        PORT_SEPARATION % (2 * CANVAS_GRID_SIZE)  # even multiple
+    PORT_SEPARATION = PORT_SPACING + 2 * PORT_LABEL_PADDING + int(1.5 * font_size)
+    PORT_SEPARATION += -PORT_SEPARATION % (2 * CANVAS_GRID_SIZE)  # even multiple
 
 
 update_font_size(DEFAULT_FONT_SIZE)

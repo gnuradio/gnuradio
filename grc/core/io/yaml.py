@@ -18,12 +18,12 @@ class GRCDumper(yaml.SafeDumper):
         def decorator(func):
             cls.add_representer(data_type, func)
             return func
+
         return decorator
 
     def represent_ordered_mapping(self, data):
         value = []
-        node = yaml.MappingNode(u'tag:yaml.org,2002:map',
-                                value, flow_style=False)
+        node = yaml.MappingNode("tag:yaml.org,2002:map", value, flow_style=False)
 
         if self.alias_key is not None:
             self.represented_objects[self.alias_key] = node
@@ -47,7 +47,7 @@ class GRCDumper(yaml.SafeDumper):
 
     def represent_ml_string(self, data):
         node = self.represent_str(data)
-        node.style = '|'
+        node.style = "|"
         return node
 
 
@@ -64,8 +64,7 @@ class MultiLineString(str):
 
 
 GRCDumper.add_representer(OrderedDict, GRCDumper.represent_ordered_mapping)
-GRCDumper.add_representer(
-    OrderedDictFlowing, GRCDumper.represent_ordered_mapping_flowing)
+GRCDumper.add_representer(OrderedDictFlowing, GRCDumper.represent_ordered_mapping_flowing)
 GRCDumper.add_representer(ListFlowing, GRCDumper.represent_list_flowing)
 GRCDumper.add_representer(tuple, GRCDumper.represent_list)
 GRCDumper.add_representer(MultiLineString, GRCDumper.represent_ml_string)
@@ -74,8 +73,7 @@ GRCDumper.add_representer(attributed_str, GRCDumper.represent_str)
 
 
 def dump(data, stream=None, **kwargs):
-    config = dict(stream=stream, default_flow_style=False,
-                  indent=4, Dumper=GRCDumper)
+    config = dict(stream=stream, default_flow_style=False, indent=4, Dumper=GRCDumper)
     config.update(kwargs)
     return yaml.dump_all([data], **config)
 

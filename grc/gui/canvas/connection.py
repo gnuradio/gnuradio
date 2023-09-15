@@ -83,8 +83,7 @@ class Connection(CoreConnection, Drawable):
             rotate((50, 0), source.rotation),  # bezier curve control point 1
             rotate((-50, 0), sink.rotation),  # bezier curve control point 2
             rotate((-15, 0), sink.rotation),  # bezier curve end
-            rotate((-CONNECTOR_ARROW_HEIGHT, 0),
-                   sink.rotation),  # line to arrow head
+            rotate((-CONNECTOR_ARROW_HEIGHT, 0), sink.rotation),  # line to arrow head
         ]
         self._current_coordinates = None  # triggers _make_path()
 
@@ -117,8 +116,7 @@ class Connection(CoreConnection, Drawable):
 
         # make rel_point all relative to source connector
         p0 = 0, 0  # x_start - x_pos, y_start - y_pos
-        p1, p2, (dx_e1, dy_e1), (dx_e2, dy_e2), (dx_e3,
-                                                 dy_e3) = self._rel_points
+        p1, p2, (dx_e1, dy_e1), (dx_e2, dy_e2), (dx_e3, dy_e3) = self._rel_points
         p3 = x_e + dx_e1, y_e + dy_e1
         p4 = x_e + dx_e2, y_e + dy_e2
         p5 = x_e + dx_e3, y_e + dy_e3
@@ -146,18 +144,21 @@ class Connection(CoreConnection, Drawable):
             self.create_shapes()  # triggers _make_path() call below
             self._current_port_rotations = port_rotations
 
-        new_coordinates = (source.parent_block.coordinate,
-                           sink.parent_block.coordinate)
+        new_coordinates = (source.parent_block.coordinate, sink.parent_block.coordinate)
         if self._current_coordinates != new_coordinates:
             self._make_path(cr)
             self._current_coordinates = new_coordinates
 
         color1, color2 = (
-            None if color is None else
-            colors.HIGHLIGHT_COLOR if self.highlighted else
-            colors.CONNECTION_DISABLED_COLOR if not self.enabled else
-            colors.CONNECTION_ERROR_COLOR if not self.is_valid() else
-            color
+            None
+            if color is None
+            else colors.HIGHLIGHT_COLOR
+            if self.highlighted
+            else colors.CONNECTION_DISABLED_COLOR
+            if not self.enabled
+            else colors.CONNECTION_ERROR_COLOR
+            if not self.is_valid()
+            else color
             for color in (self._color1, self._color2)
         )
 
@@ -222,7 +223,7 @@ class DummyCoreConnection(object):
         )
 
         self.enabled = True
-        self.highlighted = False,
+        self.highlighted = (False,)
         self.is_valid = lambda: True
         self.update(**kwargs)
 

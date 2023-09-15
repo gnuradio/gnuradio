@@ -12,6 +12,5 @@ DOMAIN_SCHEME = expand(
     color=str,
     multiple_connections_per_input=bool,
     multiple_connections_per_output=bool,
-
-    templates=Spec(types=list, required=False, item_scheme=DOMAIN_CONNECTION)
+    templates=Spec(types=list, required=False, item_scheme=DOMAIN_CONNECTION),
 )

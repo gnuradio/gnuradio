@@ -8,7 +8,6 @@ import functools
 
 
 class lazy_property(object):
-
     def __init__(self, func):
         self.func = func
         functools.update_wrapper(self, func)
@@ -26,4 +25,5 @@ def nop_write(prop):
 
     def nop(self, value):
         pass
+
     return prop.setter(nop)

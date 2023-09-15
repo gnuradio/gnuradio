@@ -11,7 +11,7 @@ import shlex
 
 # back port from python3
 
-_find_unsafe = re.compile(r'[^\w@%+=:,./-]').search
+_find_unsafe = re.compile(r"[^\w@%+=:,./-]").search
 
 
 def _shlex_quote(s):
@@ -26,7 +26,7 @@ def _shlex_quote(s):
     return "'" + s.replace("'", "'\"'\"'") + "'"
 
 
-if not hasattr(shlex, 'quote'):
+if not hasattr(shlex, "quote"):
     quote = _shlex_quote
 else:
     quote = shlex.quote

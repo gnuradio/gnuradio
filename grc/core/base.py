@@ -10,7 +10,6 @@ from .utils.descriptors import lazy_property
 
 
 class Element(object):
-
     def __init__(self, parent=None):
         self._parent = weakref.ref(parent) if parent else lambda: None
         self._error_messages = []
@@ -55,8 +54,10 @@ class Element(object):
         Returns:
             a list of error message strings
         """
-        return [msg if elem is self else "{}:\n\t{}".format(elem, msg.replace("\n", "\n\t"))
-                for elem, msg in self.iter_error_messages()]
+        return [
+            msg if elem is self else "{}:\n\t{}".format(elem, msg.replace("\n", "\n\t"))
+            for elem, msg in self.iter_error_messages()
+        ]
 
     def iter_error_messages(self):
         """
@@ -105,16 +106,19 @@ class Element(object):
     @lazy_property
     def parent_platform(self):
         from .platform import Platform
+
         return self.get_parent_by_type(Platform)
 
     @lazy_property
     def parent_flowgraph(self):
         from .FlowGraph import FlowGraph
+
         return self.get_parent_by_type(FlowGraph)
 
     @lazy_property
     def parent_block(self):
         from .blocks import Block
+
         return self.get_parent_by_type(Block)
 
     def reset_parents_by_type(self):

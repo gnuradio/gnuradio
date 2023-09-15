@@ -22,11 +22,11 @@ def expr_replace(expr, replace_dict):
     Returns:
         a new expression with the prepend
     """
-    expr_splits = _expr_split(expr, var_chars=VAR_CHARS + '.')
+    expr_splits = _expr_split(expr, var_chars=VAR_CHARS + ".")
     for i, es in enumerate(expr_splits):
         if es in list(replace_dict.keys()):
             expr_splits[i] = replace_dict[es]
-    return ''.join(expr_splits)
+    return "".join(expr_splits)
 
 
 def get_variable_dependencies(expr, vars):
@@ -66,9 +66,8 @@ def sort_objects(objects, get_id, get_expr):
 
 
 def dependencies(expr, names=None):
-    node = ast.parse(expr, mode='eval')
-    used_ids = frozenset(
-        [n.id for n in ast.walk(node) if isinstance(n, ast.Name)])
+    node = ast.parse(expr, mode="eval")
+    used_ids = frozenset([n.id for n in ast.walk(node) if isinstance(n, ast.Name)])
     return used_ids & names if names else used_ids
 
 
@@ -77,7 +76,7 @@ def sort_objects2(objects, id_getter, expr_getter, check_circular=True):
 
     def dependent_ids(obj):
         deps = dependencies(expr_getter(obj))
-        return [id_ if id_ in deps else '' for id_ in known_ids]
+        return [id_ if id_ in deps else "" for id_ in known_ids]
 
     objects = sorted(objects, key=dependent_ids)
 
@@ -92,7 +91,7 @@ def sort_objects2(objects, id_getter, expr_getter, check_circular=True):
     return objects
 
 
-VAR_CHARS = string.ascii_letters + string.digits + '_'
+VAR_CHARS = string.ascii_letters + string.digits + "_"
 
 
 class _graph(object):
@@ -145,12 +144,12 @@ def _expr_split(expr, var_chars=VAR_CHARS):
         a list of string tokens that form expr
     """
     toks = list()
-    tok = ''
-    quote = ''
+    tok = ""
+    quote = ""
     for char in expr:
         if quote or char in var_chars:
             if char == quote:
-                quote = ''
+                quote = ""
             tok += char
         elif char in ("'", '"'):
             toks.append(tok)
@@ -159,7 +158,7 @@ def _expr_split(expr, var_chars=VAR_CHARS):
         else:
             toks.append(tok)
             toks.append(char)
-            tok = ''
+            tok = ""
     toks.append(tok)
     return [t for t in toks if t]
 
@@ -202,10 +201,9 @@ def _sort_variables(exprs):
     # Determine dependency order
     while var_graph.get_nodes():
         # Get a list of nodes with no edges
-        indep_vars = [var for var in var_graph.get_nodes()
-                      if not var_graph.get_edges(var)]
+        indep_vars = [var for var in var_graph.get_nodes() if not var_graph.get_edges(var)]
         if not indep_vars:
-            raise Exception('circular dependency caught in sort_variables')
+            raise Exception("circular dependency caught in sort_variables")
         # Add the indep vars to the end of the list
         sorted_vars.extend(sorted(indep_vars))
         # Remove each edge-less node from the graph

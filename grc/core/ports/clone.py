@@ -8,7 +8,6 @@ from .port import Port, Element
 
 
 class PortClone(Port):
-
     def __init__(self, parent, direction, master, name, key):
         Element.__init__(self, parent)
         self.master_port = master

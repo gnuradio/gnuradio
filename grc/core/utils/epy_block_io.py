@@ -1,19 +1,21 @@
-
-
 import inspect
 import collections
 
 
 TYPE_MAP = {
-    'complex64': 'complex', 'complex': 'complex',
-    'float32': 'float', 'float': 'float',
-    'int32': 'int', 'uint32': 'int',
-    'int16': 'short', 'uint16': 'short',
-    'int8': 'byte', 'uint8': 'byte',
+    "complex64": "complex",
+    "complex": "complex",
+    "float32": "float",
+    "float": "float",
+    "int32": "int",
+    "uint32": "int",
+    "int16": "short",
+    "uint16": "short",
+    "int8": "byte",
+    "uint8": "byte",
 }
 
-BlockIO = collections.namedtuple(
-    'BlockIO', 'name cls params sinks sources doc callbacks')
+BlockIO = collections.namedtuple("BlockIO", "name cls params sinks sources doc callbacks")
 
 
 def _ports(sigs, msgs):
@@ -25,9 +27,9 @@ def _ports(sigs, msgs):
         vlen = dtype.shape[0] if len(dtype.shape) > 0 else 1
         ports.append((str(i), port_type, vlen))
     for msg_key in msgs:
-        if msg_key == 'system':
+        if msg_key == "system":
             continue
-        ports.append((msg_key, 'message', 1))
+        ports.append((msg_key, "message", 1))
     return ports
 
 
@@ -40,7 +42,7 @@ def _find_block_class(source_code, cls):
     for var in ns.values():
         if inspect.isclass(var) and issubclass(var, cls):
             return var
-    raise ValueError('No python block class found in code')
+    raise ValueError("No python block class found in code")
 
 
 def extract(cls):
@@ -56,7 +58,7 @@ def extract(cls):
     spec = inspect.getfullargspec(cls.__init__)
     init_args = spec.args[1:]
     defaults = [repr(arg) for arg in (spec.defaults or ())]
-    doc = cls.__doc__ or cls.__init__.__doc__ or ''
+    doc = cls.__doc__ or cls.__init__.__doc__ or ""
     cls_name = cls.__name__
 
     if len(defaults) + 1 != len(spec.args):
@@ -78,18 +80,15 @@ def extract(cls):
         except AttributeError:
             return attr in instance.__dict__  # not dir() - only the instance attribs
 
-    callbacks = [attr for attr in dir(
-        instance) if attr in init_args and settable(attr)]
+    callbacks = [attr for attr in dir(instance) if attr in init_args and settable(attr)]
 
-    sinks = _ports(instance.in_sig(),
-                   pmt.to_python(instance.message_ports_in()))
-    sources = _ports(instance.out_sig(),
-                     pmt.to_python(instance.message_ports_out()))
+    sinks = _ports(instance.in_sig(), pmt.to_python(instance.message_ports_in()))
+    sources = _ports(instance.out_sig(), pmt.to_python(instance.message_ports_out()))
 
     return BlockIO(name, cls_name, params, sinks, sources, doc, callbacks)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     blk_code = """
 import numpy as np
 from gnuradio import gr
@@ -126,4 +125,5 @@ class blk(gr.sync_block):
         return 10
     """
     from pprint import pprint
+
     pprint(dict(extract(blk_code)._asdict()))

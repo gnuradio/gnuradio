@@ -13,7 +13,6 @@ from .utils.descriptors import lazy_property
 
 
 class Connection(Element):
-
     is_connection = True
 
     def __init__(self, parent, source, sink):
@@ -34,16 +33,19 @@ class Connection(Element):
         if not source.is_source:
             source, sink = sink, source
         if not source.is_source:
-            raise ValueError('Connection could not isolate source')
+            raise ValueError("Connection could not isolate source")
         if not sink.is_sink:
-            raise ValueError('Connection could not isolate sink')
+            raise ValueError("Connection could not isolate sink")
 
         self.source_port = source
         self.sink_port = sink
 
     def __str__(self):
-        return 'Connection (\n\t{}\n\t\t{}\n\t{}\n\t\t{}\n)'.format(
-            self.source_block, self.source_port, self.sink_block, self.sink_port,
+        return "Connection (\n\t{}\n\t\t{}\n\t{}\n\t\t{}\n)".format(
+            self.source_block,
+            self.source_port,
+            self.sink_block,
+            self.sink_port,
         )
 
     def __eq__(self, other):
@@ -88,22 +90,21 @@ class Connection(Element):
         platform = self.parent_platform
 
         if self.type not in platform.connection_templates:
-            self.add_error_message('No connection known between domains "{}" and "{}"'
-                                   ''.format(*self.type))
+            self.add_error_message('No connection known between domains "{}" and "{}"' "".format(*self.type))
 
         source_dtype = self.source_port.dtype
         sink_dtype = self.sink_port.dtype
-        if source_dtype != sink_dtype and source_dtype not in ALIASES_OF.get(
-            sink_dtype, set()
-        ):
-            self.add_error_message('Source IO type "{}" does not match sink IO type "{}".'.format(
-                source_dtype, sink_dtype))
+        if source_dtype != sink_dtype and source_dtype not in ALIASES_OF.get(sink_dtype, set()):
+            self.add_error_message(
+                'Source IO type "{}" does not match sink IO type "{}".'.format(source_dtype, sink_dtype)
+            )
 
         source_size = self.source_port.item_size
         sink_size = self.sink_port.item_size
         if source_size != sink_size:
             self.add_error_message(
-                'Source IO size "{}" does not match sink IO size "{}".'.format(source_size, sink_size))
+                'Source IO size "{}" does not match sink IO size "{}".'.format(source_size, sink_size)
+            )
 
     ##############################################
     # Import/Export Methods
@@ -115,7 +116,4 @@ class Connection(Element):
         Returns:
             a nested data odict
         """
-        return (
-            self.source_block.name, self.source_port.key,
-            self.sink_block.name, self.sink_port.key
-        )
+        return (self.source_block.name, self.source_port.key, self.sink_block.name, self.sink_port.key)

@@ -51,15 +51,14 @@ file_format: 1
 
 def test_min():
     checker = Validator(BLOCK_SCHEME)
-    assert checker.run({'id': 'test', 'file_format': 1}), checker.messages
-    assert not checker.run({'name': 'test', 'file_format': 1})
+    assert checker.run({"id": "test", "file_format": 1}), checker.messages
+    assert not checker.run({"name": "test", "file_format": 1})
 
 
 def test_extra_keys():
     checker = Validator(BLOCK_SCHEME)
-    assert checker.run({'id': 'test', 'abcdefg': 'nonsense', 'file_format': 1})
-    assert checker.messages == [
-        ('block', 'warn', "Ignoring extra key 'abcdefg'")]
+    assert checker.run({"id": "test", "abcdefg": "nonsense", "file_format": 1})
+    assert checker.messages == [("block", "warn", "Ignoring extra key 'abcdefg'")]
 
 
 def test_checker():

@@ -35,7 +35,10 @@ def get_rotated_coordinate(coor, rotation):
         raise ValueError('unusable rotation angle "%s"' % str(rotation))
     # determine the number of degrees to rotate
     cos_r, sin_r = {
-        0: (1, 0), 90: (0, 1), 180: (-1, 0), 270: (0, -1),
+        0: (1, 0),
+        90: (0, 1),
+        180: (-1, 0),
+        270: (0, -1),
     }[rotation]
     x, y = coor
     return x * cos_r + y * sin_r, -x * sin_r + y * cos_r
@@ -63,6 +66,7 @@ def get_angle_from_coordinates(p1, p2):
 def align_to_grid(coor, mode=round):
     def align(value):
         return int(mode(value / (1.0 * Constants.CANVAS_GRID_SIZE)) * Constants.CANVAS_GRID_SIZE)
+
     try:
         return [align(c) for c in coor]
     except TypeError:
@@ -71,24 +75,24 @@ def align_to_grid(coor, mode=round):
 
 
 def num_to_str(num):
-    """ Display logic for numbers """
-    def eng_notation(value, fmt='g'):
+    """Display logic for numbers"""
+
+    def eng_notation(value, fmt="g"):
         """Convert a number to a string in engineering notation.  E.g., 5e-9 -> 5n"""
-        template = '{:' + fmt + '}{}'
+        template = "{:" + fmt + "}{}"
         magnitude = abs(value)
-        for exp, symbol in zip(range(9, -15 - 1, -3), 'GMk munpf'):
-            factor = 10 ** exp
+        for exp, symbol in zip(range(9, -15 - 1, -3), "GMk munpf"):
+            factor = 10**exp
             if magnitude >= factor:
                 return template.format(value / factor, symbol.strip())
-        return template.format(value, '')
+        return template.format(value, "")
 
     if isinstance(num, numbers.Complex):
         num = complex(num)  # Cast to python complex
         if num == 0:
-            return '0'
-        output = eng_notation(num.real) if num.real else ''
-        output += eng_notation(num.imag, '+g' if output else 'g') + \
-            'j' if num.imag else ''
+            return "0"
+        output = eng_notation(num.real) if num.real else ""
+        output += eng_notation(num.imag, "+g" if output else "g") + "j" if num.imag else ""
         return output
     else:
         return str(num)
@@ -107,20 +111,18 @@ def make_screenshot(flow_graph, file_path, transparent_bg=False):
     width = x_max - x_min + 2 * padding
     height = y_max - y_min + 2 * padding
 
-    if file_path.endswith('.png'):
+    if file_path.endswith(".png"):
         # ImageSurface is pixel-based, so dimensions need to be integers
         # We don't round up here, because our padding should allow for up
         # to half a pixel size in loss of image area without optically bad
         # effects
-        psurf = cairo.ImageSurface(cairo.FORMAT_ARGB32,
-                                   round(width),
-                                   round(height))
-    elif file_path.endswith('.pdf'):
+        psurf = cairo.ImageSurface(cairo.FORMAT_ARGB32, round(width), round(height))
+    elif file_path.endswith(".pdf"):
         psurf = cairo.PDFSurface(file_path, width, height)
-    elif file_path.endswith('.svg'):
+    elif file_path.endswith(".svg"):
         psurf = cairo.SVGSurface(file_path, width, height)
     else:
-        raise ValueError('Unknown file format')
+        raise ValueError("Unknown file format")
 
     cr = cairo.Context(psurf)
 
@@ -135,9 +137,9 @@ def make_screenshot(flow_graph, file_path, transparent_bg=False):
     flow_graph.create_shapes()
     flow_graph.draw(cr)
 
-    if file_path.endswith('.png'):
+    if file_path.endswith(".png"):
         psurf.write_to_png(file_path)
-    if file_path.endswith('.pdf') or file_path.endswith('.svg'):
+    if file_path.endswith(".pdf") or file_path.endswith(".svg"):
         cr.show_page()
     psurf.finish()
 
@@ -178,7 +180,7 @@ _nproc = None
 
 
 def get_cmake_nproc():
-    """ Get number of cmake processes for C++ flowgraphs """
+    """Get number of cmake processes for C++ flowgraphs"""
     global _nproc  # Cached result
     if _nproc:
         return _nproc

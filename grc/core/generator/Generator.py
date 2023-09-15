@@ -23,23 +23,21 @@ class Generator(object):
             flow_graph: the flow graph object
             output_dir: the output path for generated files
         """
-        self.generate_options = flow_graph.get_option('generate_options')
-        self.output_language = flow_graph.get_option('output_language')
+        self.generate_options = flow_graph.get_option("generate_options")
+        self.output_language = flow_graph.get_option("output_language")
 
-        if self.output_language == 'python':
-
-            if self.generate_options == 'hb':
+        if self.output_language == "python":
+            if self.generate_options == "hb":
                 generator_cls = HierBlockGenerator
-            elif self.generate_options == 'hb_qt_gui':
+            elif self.generate_options == "hb_qt_gui":
                 generator_cls = QtHierBlockGenerator
             else:
                 generator_cls = TopBlockGenerator
 
-        elif self.output_language == 'cpp':
-
-            if self.generate_options == 'hb':
+        elif self.output_language == "cpp":
+            if self.generate_options == "hb":
                 generator_cls = CppHierBlockGenerator
-            elif self.generate_options == 'hb_qt_gui':
+            elif self.generate_options == "hb_qt_gui":
                 pass
             else:
                 generator_cls = CppTopBlockGenerator

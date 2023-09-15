@@ -25,11 +25,10 @@ def no_quotes(string, fallback=None):
     return str(fallback if fallback else string)
 
 
-utils = {'no_quotes': no_quotes}
+utils = {"no_quotes": no_quotes}
 
 
 class MakoTemplates(dict):
-
     _template_cache = {}
 
     def __init__(self, _bind_to=None, *args, **kwargs):
@@ -40,8 +39,8 @@ class MakoTemplates(dict):
         if instance is None or self.instance is not None:
             return self
         copy = self.__class__(_bind_to=instance, **self)
-        if getattr(instance.__class__, 'templates', None) is self:
-            setattr(instance, 'templates', copy)
+        if getattr(instance.__class__, "templates", None) is self:
+            setattr(instance, "templates", copy)
         return copy
 
     @classmethod
@@ -64,7 +63,7 @@ class MakoTemplates(dict):
     def render(self, item):
         text = self.get(item)
         if not text:
-            return ''
+            return ""
         namespace = self.instance.namespace_templates
         namespace = {**namespace, **utils}
 

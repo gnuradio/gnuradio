@@ -10,12 +10,12 @@ class Evaluated(object):
         self.expected_type = expected_type
         self.default = default
 
-        self.name = name or 'evaled_property_{}'.format(id(self))
+        self.name = name or "evaled_property_{}".format(id(self))
         self.eval_function = self.default_eval_func
 
     @property
     def name_raw(self):
-        return '_' + self.name
+        return "_" + self.name
 
     def default_eval_func(self, instance):
         raw = getattr(instance, self.name_raw)
@@ -27,8 +27,9 @@ class Evaluated(object):
             return self.default
 
         if not isinstance(value, self.expected_type):
-            instance.add_error_message("Can not cast evaluated value '{}' to type {}"
-                                       "".format(value, self.expected_type))
+            instance.add_error_message(
+                "Can not cast evaluated value '{}' to type {}" "".format(value, self.expected_type)
+            )
             return self.default
         # print(instance, self.name, raw, value)
         return value
@@ -51,7 +52,7 @@ class Evaluated(object):
     def __set__(self, instance, value):
         attribs = instance.__dict__
         value = value or self.default
-        if isinstance(value, str) and value.startswith('${') and value.endswith('}'):
+        if isinstance(value, str) and value.startswith("${") and value.endswith("}"):
             attribs[self.name_raw] = value[2:-1].strip()
             attribs.pop(self.name, None)  # reset previous eval result
         else:
@@ -68,15 +69,13 @@ class EvaluatedEnum(Evaluated):
         if isinstance(allowed_values, str):
             allowed_values = set(allowed_values.split())
         self.allowed_values = allowed_values
-        default = default if default is not None else next(
-            iter(self.allowed_values))
+        default = default if default is not None else next(iter(self.allowed_values))
         super(EvaluatedEnum, self).__init__(str, default, name)
 
     def default_eval_func(self, instance):
         value = super(EvaluatedEnum, self).default_eval_func(instance)
         if value not in self.allowed_values:
-            instance.add_error_message(
-                "Value '{}' not in allowed values".format(value))
+            instance.add_error_message("Value '{}' not in allowed values".format(value))
             return self.default
         return value
 

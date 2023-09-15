@@ -21,6 +21,7 @@ import queue
 # The docstring extraction
 ###############################################################################
 
+
 def docstring_guess_from_key(key):
     """
     Extract the documentation from the python __doc__ strings
@@ -34,15 +35,10 @@ def docstring_guess_from_key(key):
     """
     doc_strings = dict()
 
-    in_tree = [key.partition('_')[::2] + (
-        lambda package: getattr(__import__('gnuradio.' + package), package),
-    )]
+    in_tree = [key.partition("_")[::2] + (lambda package: getattr(__import__("gnuradio." + package), package),)]
 
-    key_parts = key.split('_')
-    oot = [
-        ('_'.join(key_parts[:i]), '_'.join(key_parts[i:]), __import__)
-        for i in range(1, len(key_parts))
-    ]
+    key_parts = key.split("_")
+    oot = [("_".join(key_parts[:i]), "_".join(key_parts[i:]), __import__) for i in range(1, len(key_parts))]
 
     for module_name, init_name, importer in itertools.chain(in_tree, oot):
         if not module_name or not init_name:
@@ -55,8 +51,7 @@ def docstring_guess_from_key(key):
     else:
         return doc_strings
 
-    pattern = re.compile(
-        '^' + init_name.replace('_', '_*').replace('x', r'\w') + r'\w*$')
+    pattern = re.compile("^" + init_name.replace("_", "_*").replace("x", r"\w") + r"\w*$")
     for match in filter(pattern.match, dir(module)):
         try:
             doc_strings[match] = getattr(module, match).__doc__
@@ -81,9 +76,9 @@ def docstring_from_make(key, imports, make):
     """
 
     try:
-        blk_cls = make.partition('(')[0].strip()
-        if '$' in blk_cls:
-            raise ValueError('Not an identifier')
+        blk_cls = make.partition("(")[0].strip()
+        if "$" in blk_cls:
+            raise ValueError("Not an identifier")
         ns = dict()
         exec(imports.strip(), ns)
         blk = eval(blk_cls, ns)
@@ -98,6 +93,7 @@ def docstring_from_make(key, imports, make):
 ###############################################################################
 # Manage docstring extraction in separate process
 ###############################################################################
+
 
 class SubprocessLoader(object):
     """
@@ -121,7 +117,7 @@ class SubprocessLoader(object):
         self._last_cmd = None
 
     def start(self):
-        """ Start the worker process handler thread """
+        """Start the worker process handler thread"""
         if self._thread is not None:
             return
         self._shutdown.clear()
@@ -130,23 +126,23 @@ class SubprocessLoader(object):
         thread.start()
 
     def run_worker(self):
-        """ Read docstring back from worker stdout and execute callback. """
+        """Read docstring back from worker stdout and execute callback."""
         for _ in range(self.RESTART):
             if self._shutdown.is_set():
                 break
             try:
                 self._worker = subprocess.Popen(
-                    args=(sys.executable, '-uc',
-                          self.BOOTSTRAP.format(__file__)),
-                    stdin=subprocess.PIPE, stdout=subprocess.PIPE,
-                    stderr=subprocess.PIPE
+                    args=(sys.executable, "-uc", self.BOOTSTRAP.format(__file__)),
+                    stdin=subprocess.PIPE,
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.PIPE,
                 )
                 self._handle_worker()
 
             except (OSError, IOError):
                 msg = "Warning: restarting the docstring loader"
                 cmd, args = self._last_cmd
-                if cmd == 'query':
+                if cmd == "query":
                     msg += " (crashed while loading {0!r})".format(args[0])
                 print(msg, file=sys.stderr)
                 continue  # restart
@@ -166,8 +162,8 @@ class SubprocessLoader(object):
         self.callback_finished()
 
     def _handle_worker(self):
-        """ Send commands and responses back from worker. """
-        assert '1' == self._worker.stdout.read(1).decode('utf-8')
+        """Send commands and responses back from worker."""
+        assert "1" == self._worker.stdout.read(1).decode("utf-8")
         for cmd, args in iter(self._queue.get, self.DONE):
             self._last_cmd = cmd, args
             self._send(cmd, args)
@@ -175,20 +171,20 @@ class SubprocessLoader(object):
             self._handle_response(cmd, args)
 
     def _send(self, cmd, args):
-        """ Send a command to worker's stdin """
+        """Send a command to worker's stdin"""
         fd = self._worker.stdin
         query = json.dumps((self.AUTH_CODE, cmd, args))
-        fd.write(query.encode('utf-8'))
-        fd.write(b'\n')
+        fd.write(query.encode("utf-8"))
+        fd.write(b"\n")
         fd.flush()
 
     def _receive(self):
-        """ Receive response from worker's stdout """
-        for line in iter(self._worker.stdout.readline, ''):
+        """Receive response from worker's stdout"""
+        for line in iter(self._worker.stdout.readline, ""):
             try:
-                key, cmd, args = json.loads(line.decode('utf-8'))
+                key, cmd, args = json.loads(line.decode("utf-8"))
                 if key != self.AUTH_CODE:
-                    raise ValueError('Got wrong auth code')
+                    raise ValueError("Got wrong auth code")
                 return cmd, args
             except ValueError:
                 if self._worker.poll():
@@ -199,35 +195,35 @@ class SubprocessLoader(object):
             raise IOError("Can't read worker response")
 
     def _handle_response(self, cmd, args):
-        """ Handle response from worker, call the callback """
-        if cmd == 'result':
+        """Handle response from worker, call the callback"""
+        if cmd == "result":
             key, docs = args
             self.callback_query_result(key, docs)
-        elif cmd == 'error':
+        elif cmd == "error":
             print(args)
         else:
             print("Unknown response:", cmd, args, file=sys.stderr)
 
     def query(self, key, imports=None, make=None):
-        """ Request docstring extraction for a certain key """
+        """Request docstring extraction for a certain key"""
         if self._thread is None:
             self.start()
         if imports and make:
-            self._queue.put(('query', (key, imports, make)))
+            self._queue.put(("query", (key, imports, make)))
         else:
-            self._queue.put(('query_key_only', (key,)))
+            self._queue.put(("query_key_only", (key,)))
 
     def finish(self):
-        """ Signal end of requests """
+        """Signal end of requests"""
         self._queue.put(self.DONE)
 
     def wait(self):
-        """ Wait for the handler thread to die """
+        """Wait for the handler thread to die"""
         if self._thread:
             self._thread.join()
 
     def terminate(self):
-        """ Terminate the worker and wait """
+        """Terminate the worker and wait"""
         self._shutdown.set()
         try:
             self._worker.terminate()
@@ -240,44 +236,47 @@ class SubprocessLoader(object):
 # Main worker entry point
 ###############################################################################
 
+
 def worker_main():
     """
     Main entry point for the docstring extraction process.
     Manages RPC with main process through stdin/stdout.
     Runs a docstring extraction for each key it read on stdin.
     """
+
     def send(code, cmd, args):
         json.dump((code, cmd, args), sys.stdout)
-        sys.stdout.write('\n')
+        sys.stdout.write("\n")
         # fluh out to get new commands from the queue into stdin
         sys.stdout.flush()
 
-    sys.stdout.write('1')
+    sys.stdout.write("1")
     # flush out to signal the main process we are ready for new commands
     sys.stdout.flush()
-    for line in iter(sys.stdin.readline, ''):
+    for line in iter(sys.stdin.readline, ""):
         code, cmd, args = json.loads(line)
         try:
-            if cmd == 'query':
+            if cmd == "query":
                 key, imports, make = args
-                send(code, 'result', (key, docstring_from_make(key, imports, make)))
-            elif cmd == 'query_key_only':
-                key, = args
-                send(code, 'result', (key, docstring_guess_from_key(key)))
-            elif cmd == 'exit':
+                send(code, "result", (key, docstring_from_make(key, imports, make)))
+            elif cmd == "query_key_only":
+                (key,) = args
+                send(code, "result", (key, docstring_guess_from_key(key)))
+            elif cmd == "exit":
                 break
         except Exception as e:
-            send(code, 'error', repr(e))
+            send(code, "error", repr(e))
 
 
-if __name__ == '__worker__':
+if __name__ == "__worker__":
     worker_main()
 
-elif __name__ == '__main__':
+elif __name__ == "__main__":
+
     def callback(key, docs):
         print(key)
         for match, doc in docs.items():
-            print('-->', match)
+            print("-->", match)
             print(str(doc).strip())
             print()
         print()
@@ -286,10 +285,9 @@ elif __name__ == '__main__':
 
     # r.query('analog_feedforward_agc_cc')
     # r.query('uhd_source')
-    r.query('expr_utils_graph')
-    r.query('blocks_add_cc')
-    r.query('blocks_add_cc', ['import gnuradio.blocks'],
-            'gnuradio.blocks.add_cc(')
+    r.query("expr_utils_graph")
+    r.query("blocks_add_cc")
+    r.query("blocks_add_cc", ["import gnuradio.blocks"], "gnuradio.blocks.add_cc(")
     # r.query('analog_feedforward_agc_cc')
     # r.query('uhd_source')
     # r.query('uhd_source')

@@ -16,7 +16,6 @@ import subprocess
 
 
 class ExternalEditor(threading.Thread):
-
     def __init__(self, editor, name, value, callback):
         threading.Thread.__init__(self)
         self.daemon = True
@@ -28,9 +27,12 @@ class ExternalEditor(threading.Thread):
 
     def _create_tempfile(self, name, value):
         with tempfile.NamedTemporaryFile(
-                mode='wb', prefix=name + '_', suffix='.py', delete=False,
+            mode="wb",
+            prefix=name + "_",
+            suffix=".py",
+            delete=False,
         ) as fp:
-            fp.write(value.encode('utf-8'))
+            fp.write(value.encode("utf-8"))
             return fp.name
 
     def open_editor(self):
@@ -51,8 +53,8 @@ class ExternalEditor(threading.Thread):
                 if mtime > last_change:
                     # print "file monitor: reload trigger for", filename
                     last_change = mtime
-                    with open(filename, 'rb') as fp:
-                        data = fp.read().decode('utf-8')
+                    with open(filename, "rb") as fp:
+                        data = fp.read().decode("utf-8")
                     self.callback(data)
                 time.sleep(1)
 
@@ -65,8 +67,8 @@ class ExternalEditor(threading.Thread):
                 pass
 
 
-if __name__ == '__main__':
-    e = ExternalEditor('/usr/bin/gedit', "test", "content", print)
+if __name__ == "__main__":
+    e = ExternalEditor("/usr/bin/gedit", "test", "content", print)
     e.open_editor()
     e.start()
     time.sleep(15)

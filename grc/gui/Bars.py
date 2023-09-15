@@ -17,7 +17,7 @@ from . import Actions
 log = logging.getLogger(__name__)
 
 
-'''
+"""
 # Menu/Toolbar Lists:
 #
 # Sub items can be 1 of 3 types
@@ -33,90 +33,116 @@ LIST_NAME = [
     ("Label", [Action6, Action7]), # Submenu with string as parent
     ("Label2", "helper") # Submenu with helper function. Calls 'create_helper()'
 ]
-'''
+"""
 
 
 # The list of actions for the toolbar.
 TOOLBAR_LIST = [
-    [(Actions.FLOW_GRAPH_NEW, 'flow_graph_new_type'),
-     (Actions.FLOW_GRAPH_OPEN, 'flow_graph_recent'),
-     Actions.FLOW_GRAPH_SAVE, Actions.FLOW_GRAPH_CLOSE],
+    [
+        (Actions.FLOW_GRAPH_NEW, "flow_graph_new_type"),
+        (Actions.FLOW_GRAPH_OPEN, "flow_graph_recent"),
+        Actions.FLOW_GRAPH_SAVE,
+        Actions.FLOW_GRAPH_CLOSE,
+    ],
     [Actions.TOGGLE_FLOW_GRAPH_VAR_EDITOR, Actions.FLOW_GRAPH_SCREEN_CAPTURE],
-    [Actions.BLOCK_CUT, Actions.BLOCK_COPY,
-        Actions.BLOCK_PASTE, Actions.ELEMENT_DELETE],
+    [Actions.BLOCK_CUT, Actions.BLOCK_COPY, Actions.BLOCK_PASTE, Actions.ELEMENT_DELETE],
     [Actions.FLOW_GRAPH_UNDO, Actions.FLOW_GRAPH_REDO],
-    [Actions.ERRORS_WINDOW_DISPLAY, Actions.FLOW_GRAPH_GEN,
-        Actions.FLOW_GRAPH_EXEC, Actions.FLOW_GRAPH_KILL],
+    [Actions.ERRORS_WINDOW_DISPLAY, Actions.FLOW_GRAPH_GEN, Actions.FLOW_GRAPH_EXEC, Actions.FLOW_GRAPH_KILL],
     [Actions.BLOCK_ROTATE_CCW, Actions.BLOCK_ROTATE_CW],
-    [Actions.BLOCK_ENABLE, Actions.BLOCK_DISABLE,
-        Actions.BLOCK_BYPASS, Actions.TOGGLE_HIDE_DISABLED_BLOCKS],
-    [Actions.FIND_BLOCKS, Actions.RELOAD_BLOCKS, Actions.OPEN_HIER]
+    [Actions.BLOCK_ENABLE, Actions.BLOCK_DISABLE, Actions.BLOCK_BYPASS, Actions.TOGGLE_HIDE_DISABLED_BLOCKS],
+    [Actions.FIND_BLOCKS, Actions.RELOAD_BLOCKS, Actions.OPEN_HIER],
 ]
 
 
 # The list of actions and categories for the menu bar.
 MENU_BAR_LIST = [
-    ('_File', [
-        [(Actions.FLOW_GRAPH_NEW, 'flow_graph_new_type'), Actions.FLOW_GRAPH_DUPLICATE,
-         Actions.FLOW_GRAPH_OPEN, (Actions.FLOW_GRAPH_OPEN_RECENT, 'flow_graph_recent')],
-        [Actions.FLOW_GRAPH_SAVE, Actions.FLOW_GRAPH_SAVE_AS,
-            Actions.FLOW_GRAPH_SAVE_COPY],
-        [Actions.FLOW_GRAPH_SCREEN_CAPTURE],
-        [Actions.FLOW_GRAPH_CLOSE, Actions.APPLICATION_QUIT]
-    ]),
-    ('_Edit', [
-        [Actions.FLOW_GRAPH_UNDO, Actions.FLOW_GRAPH_REDO],
-        [Actions.BLOCK_CUT, Actions.BLOCK_COPY, Actions.BLOCK_PASTE,
-            Actions.ELEMENT_DELETE, Actions.SELECT_ALL],
-        [Actions.BLOCK_ROTATE_CCW, Actions.BLOCK_ROTATE_CW,
-            ('_Align', Actions.BLOCK_ALIGNMENTS)],
-        [Actions.BLOCK_ENABLE, Actions.BLOCK_DISABLE, Actions.BLOCK_BYPASS],
-        [Actions.BLOCK_PARAM_MODIFY]
-    ]),
-    ('_View', [
-        [Actions.TOGGLE_BLOCKS_WINDOW],
-        [Actions.TOGGLE_CONSOLE_WINDOW, Actions.TOGGLE_SCROLL_LOCK,
-            Actions.SAVE_CONSOLE, Actions.CLEAR_CONSOLE],
-        [Actions.TOGGLE_HIDE_VARIABLES, Actions.TOGGLE_FLOW_GRAPH_VAR_EDITOR, Actions.TOGGLE_FLOW_GRAPH_VAR_EDITOR_SIDEBAR,
-            Actions.TOGGLE_SHOW_PARAMETER_EXPRESSION, Actions.TOGGLE_SHOW_PARAMETER_EVALUATION],
-        [Actions.TOGGLE_HIDE_DISABLED_BLOCKS, Actions.TOGGLE_AUTO_HIDE_PORT_LABELS,
-            Actions.TOGGLE_SNAP_TO_GRID, Actions.TOGGLE_SHOW_BLOCK_COMMENTS, Actions.TOGGLE_SHOW_BLOCK_IDS, ],
-        [Actions.TOGGLE_SHOW_CODE_PREVIEW_TAB],
-        [Actions.ZOOM_IN],
-        [Actions.ZOOM_OUT],
-        [Actions.ZOOM_RESET],
-        [Actions.ERRORS_WINDOW_DISPLAY, Actions.FIND_BLOCKS],
-    ]),
-    ('_Run', [
-        Actions.FLOW_GRAPH_GEN, Actions.FLOW_GRAPH_EXEC, Actions.FLOW_GRAPH_KILL
-    ]),
-    ('_Tools', [
-        [Actions.TOOLS_RUN_FDESIGN, Actions.FLOW_GRAPH_OPEN_QSS_THEME],
-        [Actions.TOGGLE_SHOW_FLOWGRAPH_COMPLEXITY]
-    ]),
-    ('_Help', [
-        [Actions.HELP_WINDOW_DISPLAY, Actions.TYPES_WINDOW_DISPLAY,
-            Actions.KEYBOARD_SHORTCUTS_WINDOW_DISPLAY, Actions.XML_PARSER_ERRORS_DISPLAY],
-        [Actions.GET_INVOLVED_WINDOW_DISPLAY, Actions.ABOUT_WINDOW_DISPLAY]
-    ])]
+    (
+        "_File",
+        [
+            [
+                (Actions.FLOW_GRAPH_NEW, "flow_graph_new_type"),
+                Actions.FLOW_GRAPH_DUPLICATE,
+                Actions.FLOW_GRAPH_OPEN,
+                (Actions.FLOW_GRAPH_OPEN_RECENT, "flow_graph_recent"),
+            ],
+            [Actions.FLOW_GRAPH_SAVE, Actions.FLOW_GRAPH_SAVE_AS, Actions.FLOW_GRAPH_SAVE_COPY],
+            [Actions.FLOW_GRAPH_SCREEN_CAPTURE],
+            [Actions.FLOW_GRAPH_CLOSE, Actions.APPLICATION_QUIT],
+        ],
+    ),
+    (
+        "_Edit",
+        [
+            [Actions.FLOW_GRAPH_UNDO, Actions.FLOW_GRAPH_REDO],
+            [Actions.BLOCK_CUT, Actions.BLOCK_COPY, Actions.BLOCK_PASTE, Actions.ELEMENT_DELETE, Actions.SELECT_ALL],
+            [Actions.BLOCK_ROTATE_CCW, Actions.BLOCK_ROTATE_CW, ("_Align", Actions.BLOCK_ALIGNMENTS)],
+            [Actions.BLOCK_ENABLE, Actions.BLOCK_DISABLE, Actions.BLOCK_BYPASS],
+            [Actions.BLOCK_PARAM_MODIFY],
+        ],
+    ),
+    (
+        "_View",
+        [
+            [Actions.TOGGLE_BLOCKS_WINDOW],
+            [Actions.TOGGLE_CONSOLE_WINDOW, Actions.TOGGLE_SCROLL_LOCK, Actions.SAVE_CONSOLE, Actions.CLEAR_CONSOLE],
+            [
+                Actions.TOGGLE_HIDE_VARIABLES,
+                Actions.TOGGLE_FLOW_GRAPH_VAR_EDITOR,
+                Actions.TOGGLE_FLOW_GRAPH_VAR_EDITOR_SIDEBAR,
+                Actions.TOGGLE_SHOW_PARAMETER_EXPRESSION,
+                Actions.TOGGLE_SHOW_PARAMETER_EVALUATION,
+            ],
+            [
+                Actions.TOGGLE_HIDE_DISABLED_BLOCKS,
+                Actions.TOGGLE_AUTO_HIDE_PORT_LABELS,
+                Actions.TOGGLE_SNAP_TO_GRID,
+                Actions.TOGGLE_SHOW_BLOCK_COMMENTS,
+                Actions.TOGGLE_SHOW_BLOCK_IDS,
+            ],
+            [Actions.TOGGLE_SHOW_CODE_PREVIEW_TAB],
+            [Actions.ZOOM_IN],
+            [Actions.ZOOM_OUT],
+            [Actions.ZOOM_RESET],
+            [Actions.ERRORS_WINDOW_DISPLAY, Actions.FIND_BLOCKS],
+        ],
+    ),
+    ("_Run", [Actions.FLOW_GRAPH_GEN, Actions.FLOW_GRAPH_EXEC, Actions.FLOW_GRAPH_KILL]),
+    (
+        "_Tools",
+        [[Actions.TOOLS_RUN_FDESIGN, Actions.FLOW_GRAPH_OPEN_QSS_THEME], [Actions.TOGGLE_SHOW_FLOWGRAPH_COMPLEXITY]],
+    ),
+    (
+        "_Help",
+        [
+            [
+                Actions.HELP_WINDOW_DISPLAY,
+                Actions.TYPES_WINDOW_DISPLAY,
+                Actions.KEYBOARD_SHORTCUTS_WINDOW_DISPLAY,
+                Actions.XML_PARSER_ERRORS_DISPLAY,
+            ],
+            [Actions.GET_INVOLVED_WINDOW_DISPLAY, Actions.ABOUT_WINDOW_DISPLAY],
+        ],
+    ),
+]
 
 
 # The list of actions for the context menu.
 CONTEXT_MENU_LIST = [
-    [Actions.BLOCK_CUT, Actions.BLOCK_COPY,
-        Actions.BLOCK_PASTE, Actions.ELEMENT_DELETE],
-    [Actions.BLOCK_ROTATE_CCW, Actions.BLOCK_ROTATE_CW,
-        Actions.BLOCK_ENABLE, Actions.BLOCK_DISABLE, Actions.BLOCK_BYPASS],
-    [("_More", [
-        [Actions.BLOCK_CREATE_HIER, Actions.OPEN_HIER],
-        [Actions.BUSSIFY_SOURCES, Actions.BUSSIFY_SINKS]
-    ])],
+    [Actions.BLOCK_CUT, Actions.BLOCK_COPY, Actions.BLOCK_PASTE, Actions.ELEMENT_DELETE],
+    [
+        Actions.BLOCK_ROTATE_CCW,
+        Actions.BLOCK_ROTATE_CW,
+        Actions.BLOCK_ENABLE,
+        Actions.BLOCK_DISABLE,
+        Actions.BLOCK_BYPASS,
+    ],
+    [("_More", [[Actions.BLOCK_CREATE_HIER, Actions.OPEN_HIER], [Actions.BUSSIFY_SOURCES, Actions.BUSSIFY_SINKS]])],
     [Actions.BLOCK_PARAM_MODIFY],
 ]
 
 
 class SubMenuHelper(object):
-    ''' Generates custom submenus for the main menu or toolbar. '''
+    """Generates custom submenus for the main menu or toolbar."""
 
     def __init__(self):
         self.submenus = {}
@@ -130,7 +156,7 @@ class SubMenuHelper(object):
         set_func(obj, create_func())
 
     def create_flow_graph_new_type(self):
-        """ Different flowgraph types """
+        """Different flowgraph types"""
         menu = Gio.Menu()
         platform = Gtk.Application.get_default().platform
         generate_modes = platform.get_generate_options()
@@ -140,7 +166,7 @@ class SubMenuHelper(object):
         return menu
 
     def create_flow_graph_recent(self):
-        """ Recent flow graphs """
+        """Recent flow graphs"""
 
         config = Gtk.Application.get_default().config
         recent_files = config.get_recent_files()
@@ -151,9 +177,9 @@ class SubMenuHelper(object):
                 target = "app.flowgraph.open_recent::{}".format(file_name)
                 files.append(file_name.replace("_", "__"), target)
             menu.append_section(None, files)
-            #clear = Gio.Menu()
-            #clear.append("Clear recent files", "app.flowgraph.clear_recent")
-            #menu.append_section(None, clear)
+            # clear = Gio.Menu()
+            # clear.append("Clear recent files", "app.flowgraph.clear_recent")
+            # menu.append_section(None, clear)
         else:
             # Show an empty menu
             menuitem = Gio.MenuItem.new("No items found", "app.none")
@@ -192,8 +218,7 @@ class MenuHelper(SubMenuHelper):
                     target = "{}.{}".format(parent.prefix, parent.name)
                 menuitem = Gio.MenuItem.new(label, None)
                 if hasattr(parent, "icon_name"):
-                    menuitem.set_icon(
-                        Gio.Icon.new_for_string(parent.icon_name))
+                    menuitem.set_icon(Gio.Icon.new_for_string(parent.icon_name))
 
                 # Create the new submenu
                 if isinstance(child, list):
@@ -204,6 +229,7 @@ class MenuHelper(SubMenuHelper):
                     # Child is the name of the submenu to create
                     def set_func(obj, menu):
                         obj.set_submenu(menu)
+
                     self.build_submenu(child, menu, idx, menuitem, set_func)
                 menu.append_item(menuitem)
 
@@ -290,7 +316,7 @@ class ToolbarHelper(SubMenuHelper):
 
 
 class Menu(Gio.Menu, MenuHelper):
-    """ Main Menu """
+    """Main Menu"""
 
     def __init__(self):
         GObject.GObject.__init__(self)
@@ -301,7 +327,7 @@ class Menu(Gio.Menu, MenuHelper):
 
 
 class ContextMenu(Gio.Menu, MenuHelper):
-    """ Context menu for the drawing area """
+    """Context menu for the drawing area"""
 
     def __init__(self):
         GObject.GObject.__init__(self)
@@ -311,7 +337,7 @@ class ContextMenu(Gio.Menu, MenuHelper):
 
 
 class Toolbar(Gtk.Toolbar, ToolbarHelper):
-    """ The gtk toolbar with actions added from the toolbar list. """
+    """The gtk toolbar with actions added from the toolbar list."""
 
     def __init__(self):
         """
