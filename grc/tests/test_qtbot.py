@@ -580,10 +580,10 @@ def test_help_windows(qtbot, qapp_cls_):
 
     def test_help_window(menu_key):
         qtbot.keyClick(qapp_cls_.focusWidget(), QtCore.Qt.Key_H, QtCore.Qt.AltModifier)
-        qtbot.wait(100)
+        qtbot.wait(300)
         QtCore.QTimer.singleShot(100, assert_and_close)
         qtbot.keyClick(menu, menu_key)
-        qtbot.wait(200)
+        qtbot.wait(600)
         assert qapp_cls_.activeWindow() == qapp_cls_.MainWindow
         qtbot.wait(100)
 

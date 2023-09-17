@@ -182,7 +182,6 @@ class Flowgraph(QtWidgets.QGraphicsScene, base.Component, CoreFlowgraph):
 
     def add_block(self, block_key, pos=(0, 0)):
         block = self.platform.blocks[block_key]
-
         # Pull out its params (keep in mind we still havent added the dialog box that lets you change param values so this is more for show)
         params = []
         for (

@@ -118,10 +118,10 @@ class BlockLibrary(QtWidgets.QDockWidget, base.Component):
         # Expand categories with a single click
         library.clicked.connect(library.handle_clicked)
         library.selectionModel().selectionChanged.connect(library.updateDocTab)
+        # library.headerItem().setText(0, "Blocks")
         library.doubleClicked.connect(
             lambda block: self.add_block(block.data(QtCore.Qt.UserRole))
         )
-        # library.headerItem().setText(0, "Blocks")
         self._library = library
 
         search_bar = BlockSearchBar(self)
