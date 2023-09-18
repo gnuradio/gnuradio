@@ -1,6 +1,7 @@
 /* -*- c++ -*- */
 /*
  * Copyright (C) 2017 Free Software Foundation, Inc.
+ * Copyright (C) 2023 Daniel Estevez <daniel@destevez.net>
  *
  * This file is part of GNU Radio
  *
@@ -72,6 +73,8 @@ symbol_sync_cc_impl::symbol_sync_cc_impl(enum ted_type detector_type,
       d_inst_output_period(sps / static_cast<float>(osps)),
       d_inst_clock_period(sps),
       d_avg_clock_period(sps),
+      d_sps(sps),
+      d_max_deviation(max_deviation),
       d_osps(static_cast<float>(osps)),
       d_osps_n(osps),
       d_time_est_key(pmt::intern("time_est")),
@@ -110,13 +113,7 @@ symbol_sync_cc_impl::symbol_sync_cc_impl(enum ted_type detector_type,
     sync_reset_internal_clocks();
     d_inst_interp_period = d_inst_clock_period / d_interps_per_symbol;
 
-    if (d_interps_per_symbol > sps)
-        d_logger->warn("block performing more interpolations per "
-                       "symbol ({:g}) than input samples per symbol "
-                       "({:g}). Consider reducing osps or "
-                       "increasing sps",
-                       d_interps_per_symbol,
-                       sps);
+    check_interps();
 
     // Timing Error Detector
     d_ted->sync_reset();
@@ -130,6 +127,48 @@ symbol_sync_cc_impl::symbol_sync_cc_impl(enum ted_type detector_type,
     d_filter_delay = (d_interp->ntaps() + 1) / 2;
 
     set_output_multiple(d_osps_n);
+}
+
+void symbol_sync_cc_impl::set_sps(float sps)
+{
+    gr::thread::scoped_lock l(d_setlock);
+
+    d_sps = sps;
+
+    const auto max_period = sps + d_max_deviation;
+    const auto min_period = sps - d_max_deviation;
+    d_clock.set_max_avg_period(max_period);
+    d_clock.set_min_avg_period(min_period);
+    d_clock.set_nom_avg_period(sps);
+    d_clock.set_avg_period(sps);
+    d_clock.set_inst_period(sps);
+    d_clock.set_phase(0.0f);
+
+    d_inst_output_period = sps / d_osps;
+    d_inst_clock_period = sps;
+    d_avg_clock_period = sps;
+
+    sync_reset_internal_clocks();
+
+    d_inst_interp_period = d_inst_clock_period / d_interps_per_symbol;
+
+    check_interps();
+
+    d_ted->sync_reset();
+    d_interp->sync_reset(sps);
+    set_relative_rate(d_osps / sps);
+}
+
+void symbol_sync_cc_impl::check_interps()
+{
+    if (d_interps_per_symbol > d_sps) {
+        d_logger->warn("block performing more interpolations per "
+                       "symbol ({:g}) than input samples per symbol "
+                       "({:g}). Consider reducing osps or "
+                       "increasing sps",
+                       d_interps_per_symbol,
+                       d_sps);
+    }
 }
 
 //
@@ -385,6 +424,8 @@ int symbol_sync_cc_impl::general_work(int noutput_items,
                                       gr_vector_const_void_star& input_items,
                                       gr_vector_void_star& output_items)
 {
+    gr::thread::scoped_lock l(d_setlock);
+
     // max input to consume
     const int ni = ninput_items[0] - static_cast<int>(d_interp->ntaps());
     if (ni <= 0)

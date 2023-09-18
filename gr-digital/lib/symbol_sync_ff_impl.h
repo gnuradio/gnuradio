@@ -1,6 +1,7 @@
 /* -*- c++ -*- */
 /*
  * Copyright (C) 2017 Free Software Foundation, Inc.
+ * Copyright (C) 2023 Daniel Estevez <daniel@destevez.net>
  *
  * This file is part of GNU Radio
  *
@@ -47,6 +48,7 @@ public:
     float ted_gain() const override { return d_clock.get_ted_gain(); }
     float alpha() const override { return d_clock.get_alpha(); }
     float beta() const override { return d_clock.get_beta(); }
+    float sps() const override { return d_sps; }
 
     void set_loop_bandwidth(float omega_n_norm) override
     {
@@ -56,6 +58,7 @@ public:
     void set_ted_gain(float ted_gain) override { d_clock.set_ted_gain(ted_gain); }
     void set_alpha(float alpha) override { d_clock.set_alpha(alpha); }
     void set_beta(float beta) override { d_clock.set_beta(beta); }
+    void set_sps(float sps) override;
 
 private:
     // Timing Error Detector
@@ -89,6 +92,9 @@ private:
     bool d_symbol_clock;
     float d_inst_clock_period;
     float d_avg_clock_period;
+
+    float d_sps;
+    float d_max_deviation;
 
     // Block output
     const float d_osps;
@@ -131,6 +137,8 @@ private:
                         uint64_t nitems_wr,
                         int oidx);
     void save_expiring_tags(uint64_t nitems_rd, int consumed);
+
+    void check_interps();
 
     // Optional Diagnostic Outputs
     void setup_optional_outputs(gr_vector_void_star& output_items);

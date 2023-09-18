@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(symbol_sync_cc.h)                                          */
-/* BINDTOOL_HEADER_FILE_HASH(2cd8cd8dbe6deaf22c1afe62c9e6eb07)                     */
+/* BINDTOOL_HEADER_FILE_HASH(3e6c61bd68602374f7606400df601db5)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -72,6 +72,9 @@ void bind_symbol_sync_cc(py::module& m)
         .def("beta", &symbol_sync_cc::beta, D(symbol_sync_cc, beta))
 
 
+        .def("sps", &symbol_sync_cc::sps, D(symbol_sync_cc, sps))
+
+
         .def("set_loop_bandwidth",
              &symbol_sync_cc::set_loop_bandwidth,
              py::arg("omega_n_norm"),
@@ -100,6 +103,12 @@ void bind_symbol_sync_cc(py::module& m)
              &symbol_sync_cc::set_beta,
              py::arg("beta"),
              D(symbol_sync_cc, set_beta))
+
+
+        .def("set_sps",
+             &symbol_sync_cc::set_sps,
+             py::arg("sps"),
+             D(symbol_sync_cc, set_sps))
 
         ;
 }

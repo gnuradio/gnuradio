@@ -42,6 +42,9 @@ static const char* __doc_gr_digital_symbol_sync_cc_alpha = R"doc()doc";
 static const char* __doc_gr_digital_symbol_sync_cc_beta = R"doc()doc";
 
 
+static const char* __doc_gr_digital_symbol_sync_cc_sps = R"doc()doc";
+
+
 static const char* __doc_gr_digital_symbol_sync_cc_set_loop_bandwidth = R"doc()doc";
 
 
@@ -55,3 +58,6 @@ static const char* __doc_gr_digital_symbol_sync_cc_set_alpha = R"doc()doc";
 
 
 static const char* __doc_gr_digital_symbol_sync_cc_set_beta = R"doc()doc";
+
+
+static const char* __doc_gr_digital_symbol_sync_cc_set_sps = R"doc()doc";

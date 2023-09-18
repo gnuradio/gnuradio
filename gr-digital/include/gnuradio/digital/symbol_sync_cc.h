@@ -1,6 +1,7 @@
 /* -*- c++ -*- */
 /*
  * Copyright (C) 2017 Free Software Foundation, Inc.
+ * Copyright (C) 2023 Daniel Estevez <daniel@destevez.net>
  *
  * This file is part of GNU Radio
  *
@@ -180,6 +181,14 @@ public:
     virtual float beta() const = 0;
 
     /*!
+     * \brief Returns the nominal clock period in samples per symbol.
+     *
+     * \details
+     * See the doecumentation for set_sps() for more details.
+     */
+    virtual float sps() const = 0;
+
+    /*!
      * \brief Set the normalized approximate loop bandwidth.
      *
      * \details
@@ -296,6 +305,17 @@ public:
      * \param beta    PI filter integral gain
      */
     virtual void set_beta(float beta) = 0;
+
+    /*!
+     * \brief Set the nominal clock period in samples per symbol.
+     *
+     * \details
+     * Sets the nominal clock period, resetting some of the tracking
+     * loop variables to adjust to the new clock period.
+     *
+     * \param sps     User specified nominal clock period in samples per symbol.
+     */
+    virtual void set_sps(float sps) = 0;
 };
 
 } /* namespace digital */
