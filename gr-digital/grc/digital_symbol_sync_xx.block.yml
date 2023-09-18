@@ -115,6 +115,7 @@ templates:
     - set_loop_bandwidth(${loop_bw})
     - set_damping_factor(${damping})
     - set_ted_gain(${ted_gain})
+    - set_sps(${sps})
 
 cpp_templates:
     includes: ['#include <gnuradio/digital/symbol_sync_${type}.h>']
@@ -138,6 +139,7 @@ cpp_templates:
     - set_loop_bandwidth(${loop_bw})
     - set_damping_factor(${damping})
     - set_ted_gain(${ted_gain})
+    - set_sps(${sps})
     translations:
         digital\.: 'digital::'
 
