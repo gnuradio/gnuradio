@@ -33,7 +33,17 @@ from qtpy.QtGui import QStandardItemModel
 # Custom modules
 from . import FlowgraphView
 from .. import base, Constants, Utils
-from .undoable_actions import ChangeStateAction, RotateAction, EnableAction, DisableAction, BypassAction, MoveAction, NewElementAction, DeleteElementAction, BlockPropsChangeAction
+from .undoable_actions import (
+    ChangeStateAction,
+    RotateAction,
+    EnableAction,
+    DisableAction,
+    BypassAction,
+    MoveAction,
+    NewElementAction,
+    DeleteElementAction,
+    BlockPropsChangeAction,
+)
 from . import DocumentationTab
 from .preferences import PreferencesDialog
 from .dialogs import ErrorsDialog
@@ -52,17 +62,18 @@ QStyle = QtWidgets.QStyle
 
 
 class MainWindow(QtWidgets.QMainWindow, base.Component):
-
     def __init__(self):
         QtWidgets.QMainWindow.__init__(self)
         base.Component.__init__(self)
 
         log.debug("Setting the main window")
-        self.setObjectName('main')
-        self.setWindowTitle(_('window-title'))
-        self.setDockOptions(QtWidgets.QMainWindow.AllowNestedDocks |
-                            QtWidgets.QMainWindow.AllowTabbedDocks |
-                            QtWidgets.QMainWindow.AnimatedDocks)
+        self.setObjectName("main")
+        self.setWindowTitle(_("window-title"))
+        self.setDockOptions(
+            QtWidgets.QMainWindow.AllowNestedDocks
+            | QtWidgets.QMainWindow.AllowTabbedDocks
+            | QtWidgets.QMainWindow.AnimatedDocks
+        )
         self.progress_bar = QtWidgets.QProgressBar()
         self.statusBar().addPermanentWidget(self.progress_bar)
         self.progress_bar.hide()
@@ -73,7 +84,9 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         self.setWindowIcon(icon)
 
         screen = QtWidgets.QDesktopWidget().availableGeometry()
-        log.debug("Setting window size - ({}, {})".format(screen.width(), screen.height()))
+        log.debug(
+            "Setting window size - ({}, {})".format(screen.width(), screen.height())
+        )
         self.resize(int(screen.width() * 0.50), screen.height())
 
         self.setCorner(Qt.BottomLeftCorner, Qt.LeftDockWidgetArea)
@@ -81,23 +94,20 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         self.menuBar().setNativeMenuBar(self.settings.window.NATIVE_MENUBAR)
 
         # TODO: Not sure about document mode
-        #self.setDocumentMode(True)
+        # self.setDocumentMode(True)
 
         # Generate the rest of the window
         self.createStatusBar()
 
-        #actions['Quit.triggered.connect(self.close)
-        #actions['Report.triggered.connect(self.reportDock.show)
-        #QtCore.QMetaObject.connectSlotsByName(self)
+        # actions['Quit.triggered.connect(self.close)
+        # actions['Report.triggered.connect(self.reportDock.show)
+        # QtCore.QMetaObject.connectSlotsByName(self)
 
+        # Translation support
 
-
-
-        ### Translation support
-
-        #self.setWindowTitle(_translate("blockLibraryDock", "Library", None))
-        #library.headerItem().setText(0, _translate("blockLibraryDock", "Blocks", None))
-        #QtCore.QMetaObject.connectSlotsByName(blockLibraryDock)
+        # self.setWindowTitle(_translate("blockLibraryDock", "Library", None))
+        # library.headerItem().setText(0, _translate("blockLibraryDock", "Blocks", None))
+        # QtCore.QMetaObject.connectSlotsByName(blockLibraryDock)
 
         # TODO: Move to the base controller and set actions as class attributes
         # Automatically create the actions, menus and toolbars.
@@ -110,8 +120,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         self.createToolbars(self.actions, self.toolbars)
         self.connectSlots()
 
-
-        ### Rest of the GUI widgets
+        # Rest of the GUI widgets
 
         # Map some of the view's functions to the controller class
         self.registerDockWidget = self.addDockWidget
@@ -148,8 +157,10 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
         self.tabWidget = QtWidgets.QTabWidget()
         self.tabWidget.setTabsClosable(True)
-        #TODO: Don't close if the tab has not been saved
-        self.tabWidget.tabCloseRequested.connect(lambda index: self.close_triggered(index))
+        # TODO: Don't close if the tab has not been saved
+        self.tabWidget.tabCloseRequested.connect(
+            lambda index: self.close_triggered(index)
+        )
         self.tabWidget.addTab(fg_view, "Untitled")
         self.setCentralWidget(self.tabWidget)
         self.currentFlowgraph.selectionChanged.connect(self.updateActions)
@@ -158,15 +169,15 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         self.currentFlowgraph.newElement.connect(self.registerNewElement)
         self.currentFlowgraph.deleteElement.connect(self.registerDeleteElement)
         self.currentFlowgraph.blockPropsChange.connect(self.registerBlockPropsChange)
-        #self.new_tab(self.flowgraph)
+        # self.new_tab(self.flowgraph)
 
         self.clipboard = None
         self.undoView = None
 
-    '''def show(self):
+    """def show(self):
         log.debug("Showing main window")
         self.show()
-    '''
+    """
 
     @property
     def currentView(self):
@@ -174,7 +185,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
     @property
     def currentFlowgraph(self):
-        #something is fishy here
+        # something is fishy here
         return self.tabWidget.currentWidget().flowgraph
 
     @QtCore.Slot(QtCore.QPointF)
@@ -202,206 +213,325 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         self.updateActions()
 
     def createActions(self, actions):
-        '''
+        """
         Defines all actions for this view.
         Controller manages connecting signals to slots implemented in the controller
-        '''
+        """
         log.debug("Creating actions")
 
         # File Actions
-        actions['new'] = Action(Icons("document-new"), _("new"), self,
-                                shortcut=Keys.New, statusTip=_("new-tooltip"))
+        actions["new"] = Action(
+            Icons("document-new"),
+            _("new"),
+            self,
+            shortcut=Keys.New,
+            statusTip=_("new-tooltip"),
+        )
 
-        actions['open'] = Action(Icons("document-open"), _("open"), self,
-                                 shortcut=Keys.Open, statusTip=_("open-tooltip"))
+        actions["open"] = Action(
+            Icons("document-open"),
+            _("open"),
+            self,
+            shortcut=Keys.Open,
+            statusTip=_("open-tooltip"),
+        )
 
-        actions['close'] = Action(Icons("window-close"), _("close"), self,
-                                  shortcut=Keys.Close, statusTip=_("close-tooltip"))
+        actions["close"] = Action(
+            Icons("window-close"),
+            _("close"),
+            self,
+            shortcut=Keys.Close,
+            statusTip=_("close-tooltip"),
+        )
 
-        actions['close_all'] = Action(Icons("window-close"), _("close_all"), self,
-                                      statusTip=_("close_all-tooltip"))
-        actions['save'] = Action(Icons("document-save"), _("save"), self,
-                                 shortcut=Keys.Save, statusTip=_("save-tooltip"))
+        actions["close_all"] = Action(
+            Icons("window-close"),
+            _("close_all"),
+            self,
+            statusTip=_("close_all-tooltip"),
+        )
+        actions["save"] = Action(
+            Icons("document-save"),
+            _("save"),
+            self,
+            shortcut=Keys.Save,
+            statusTip=_("save-tooltip"),
+        )
 
-        actions['save_as'] = Action(Icons("document-save-as"), _("save_as"), self,
-                                    shortcut=Keys.SaveAs, statusTip=_("save_as-tooltip"))
+        actions["save_as"] = Action(
+            Icons("document-save-as"),
+            _("save_as"),
+            self,
+            shortcut=Keys.SaveAs,
+            statusTip=_("save_as-tooltip"),
+        )
 
-        actions['save_copy'] = Action(_("save_copy"), self)
+        actions["save_copy"] = Action(_("save_copy"), self)
 
-        actions['screen_capture'] = Action(Icons('camera-photo'), _("screen_capture"), self,
-                                           shortcut=Keys.Print, statusTip=_("screen_capture-tooltip"))
+        actions["screen_capture"] = Action(
+            Icons("camera-photo"),
+            _("screen_capture"),
+            self,
+            shortcut=Keys.Print,
+            statusTip=_("screen_capture-tooltip"),
+        )
 
-        actions['exit'] = Action(Icons("application-exit"), _("exit"), self,
-                                 shortcut=Keys.Quit, statusTip=_("exit-tooltip"))
+        actions["exit"] = Action(
+            Icons("application-exit"),
+            _("exit"),
+            self,
+            shortcut=Keys.Quit,
+            statusTip=_("exit-tooltip"),
+        )
 
         # Edit Actions
-        actions['undo'] = Action(Icons('edit-undo'), _("undo"), self,
-                                 shortcut=Keys.Undo, statusTip=_("undo-tooltip"))
+        actions["undo"] = Action(
+            Icons("edit-undo"),
+            _("undo"),
+            self,
+            shortcut=Keys.Undo,
+            statusTip=_("undo-tooltip"),
+        )
 
-        actions['redo'] = Action(Icons('edit-redo'), _("redo"), self,
-                                 shortcut=Keys.Redo, statusTip=_("redo-tooltip"))
+        actions["redo"] = Action(
+            Icons("edit-redo"),
+            _("redo"),
+            self,
+            shortcut=Keys.Redo,
+            statusTip=_("redo-tooltip"),
+        )
 
-        actions['view_undo_stack'] = Action("View undo stack", self)
+        actions["view_undo_stack"] = Action("View undo stack", self)
 
-        actions['cut'] = Action(Icons('edit-cut'), _("cut"), self,
-                                shortcut=Keys.Cut, statusTip=_("cut-tooltip"))
+        actions["cut"] = Action(
+            Icons("edit-cut"),
+            _("cut"),
+            self,
+            shortcut=Keys.Cut,
+            statusTip=_("cut-tooltip"),
+        )
 
-        actions['copy'] = Action(Icons('edit-copy'), _("copy"), self,
-                                 shortcut=Keys.Copy, statusTip=_("copy-tooltip"))
+        actions["copy"] = Action(
+            Icons("edit-copy"),
+            _("copy"),
+            self,
+            shortcut=Keys.Copy,
+            statusTip=_("copy-tooltip"),
+        )
 
-        actions['paste'] = Action(Icons('edit-paste'), _("paste"), self,
-                                  shortcut=Keys.Paste, statusTip=_("paste-tooltip"))
+        actions["paste"] = Action(
+            Icons("edit-paste"),
+            _("paste"),
+            self,
+            shortcut=Keys.Paste,
+            statusTip=_("paste-tooltip"),
+        )
 
-        actions['delete'] = Action(Icons('edit-delete'), _("delete"), self,
-                                   shortcut=Keys.Delete, statusTip=_("delete-tooltip"))
+        actions["delete"] = Action(
+            Icons("edit-delete"),
+            _("delete"),
+            self,
+            shortcut=Keys.Delete,
+            statusTip=_("delete-tooltip"),
+        )
 
-        actions['undo'].setEnabled(False)
-        actions['redo'].setEnabled(False)
-        actions['cut'].setEnabled(False)
-        actions['copy'].setEnabled(False)
-        actions['paste'].setEnabled(False)
-        actions['delete'].setEnabled(False)
+        actions["undo"].setEnabled(False)
+        actions["redo"].setEnabled(False)
+        actions["cut"].setEnabled(False)
+        actions["copy"].setEnabled(False)
+        actions["paste"].setEnabled(False)
+        actions["delete"].setEnabled(False)
 
-        actions['select_all'] = Action(Icons('edit-select_all'), _("select_all"), self,
-                                   shortcut=Keys.SelectAll, statusTip=_("select_all-tooltip"))
+        actions["select_all"] = Action(
+            Icons("edit-select_all"),
+            _("select_all"),
+            self,
+            shortcut=Keys.SelectAll,
+            statusTip=_("select_all-tooltip"),
+        )
 
-        actions['select_none'] = Action(_("Select None"), self,
-                                        statusTip=_("select_none-tooltip"))
+        actions["select_none"] = Action(
+            _("Select None"), self, statusTip=_("select_none-tooltip")
+        )
 
-        actions['rotate_ccw'] = Action(Icons('object-rotate-left'), _("rotate_ccw"), self,
-                                       shortcut=Keys.MoveToPreviousChar,
-                                       statusTip=_("rotate_ccw-tooltip"))
+        actions["rotate_ccw"] = Action(
+            Icons("object-rotate-left"),
+            _("rotate_ccw"),
+            self,
+            shortcut=Keys.MoveToPreviousChar,
+            statusTip=_("rotate_ccw-tooltip"),
+        )
 
-        actions['rotate_cw'] = Action(Icons('object-rotate-right'), _("rotate_cw"), self,
-                                      shortcut=Keys.MoveToNextChar,
-                                      statusTip=_("rotate_cw-tooltip"))
+        actions["rotate_cw"] = Action(
+            Icons("object-rotate-right"),
+            _("rotate_cw"),
+            self,
+            shortcut=Keys.MoveToNextChar,
+            statusTip=_("rotate_cw-tooltip"),
+        )
 
-        actions['rotate_cw'].setEnabled(False)
-        actions['rotate_ccw'].setEnabled(False)
+        actions["rotate_cw"].setEnabled(False)
+        actions["rotate_ccw"].setEnabled(False)
 
-        actions['enable'] = Action(_("enable"), self,
-                                   shortcut="E")
-        actions['disable'] = Action(_("disable"), self,
-                                   shortcut="D")
-        actions['bypass'] = Action(_("bypass"), self,
-                                   shortcut="B")
+        actions["enable"] = Action(_("enable"), self, shortcut="E")
+        actions["disable"] = Action(_("disable"), self, shortcut="D")
+        actions["bypass"] = Action(_("bypass"), self, shortcut="B")
 
-        actions['enable'].setEnabled(False)
-        actions['disable'].setEnabled(False)
-        actions['bypass'].setEnabled(False)
+        actions["enable"].setEnabled(False)
+        actions["disable"].setEnabled(False)
+        actions["bypass"].setEnabled(False)
 
-        actions['vertical_align_top'] = Action(_("vertical_align_top"), self)
-        actions['vertical_align_middle'] = Action(_("vertical_align_middle"), self)
-        actions['vertical_align_bottom'] = Action(_("vertical_align_bottom"), self)
+        actions["vertical_align_top"] = Action(_("vertical_align_top"), self)
+        actions["vertical_align_middle"] = Action(_("vertical_align_middle"), self)
+        actions["vertical_align_bottom"] = Action(_("vertical_align_bottom"), self)
 
-        actions['vertical_align_top'].setEnabled(False)
-        actions['vertical_align_middle'].setEnabled(False)
-        actions['vertical_align_bottom'].setEnabled(False)
+        actions["vertical_align_top"].setEnabled(False)
+        actions["vertical_align_middle"].setEnabled(False)
+        actions["vertical_align_bottom"].setEnabled(False)
 
+        actions["horizontal_align_left"] = Action(_("horizontal_align_left"), self)
+        actions["horizontal_align_center"] = Action(_("horizontal_align_center"), self)
+        actions["horizontal_align_right"] = Action(_("horizontal_align_right"), self)
 
-        actions['horizontal_align_left'] = Action(_("horizontal_align_left"), self)
-        actions['horizontal_align_center'] = Action(_("horizontal_align_center"), self)
-        actions['horizontal_align_right'] = Action(_("horizontal_align_right"), self)
+        actions["horizontal_align_left"].setEnabled(False)
+        actions["horizontal_align_center"].setEnabled(False)
+        actions["horizontal_align_right"].setEnabled(False)
 
-        actions['horizontal_align_left'].setEnabled(False)
-        actions['horizontal_align_center'].setEnabled(False)
-        actions['horizontal_align_right'].setEnabled(False)
+        actions["create_hier"] = Action(_("create_hier_block"), self)
+        actions["open_hier"] = Action(_("open_hier_block"), self)
+        actions["toggle_source_bus"] = Action(_("toggle_source_bus"), self)
+        actions["toggle_sink_bus"] = Action(_("toggle_sink_bus"), self)
 
-        actions['create_hier'] = Action(_("create_hier_block"), self)
-        actions['open_hier'] = Action(_("open_hier_block"), self)
-        actions['toggle_source_bus'] = Action(_("toggle_source_bus"), self)
-        actions['toggle_sink_bus'] = Action(_("toggle_sink_bus"), self)
+        actions["create_hier"].setEnabled(False)
+        actions["open_hier"].setEnabled(False)
+        actions["toggle_source_bus"].setEnabled(False)
+        actions["toggle_sink_bus"].setEnabled(False)
 
-        actions['create_hier'].setEnabled(False)
-        actions['open_hier'].setEnabled(False)
-        actions['toggle_source_bus'].setEnabled(False)
-        actions['toggle_sink_bus'].setEnabled(False)
-
-        actions['properties'] = Action(Icons('document-properties'), _("flowgraph-properties"),
-                                       self, statusTip=_("flowgraph-properties-tooltip"))
-        actions['properties'].setEnabled(False)
+        actions["properties"] = Action(
+            Icons("document-properties"),
+            _("flowgraph-properties"),
+            self,
+            statusTip=_("flowgraph-properties-tooltip"),
+        )
+        actions["properties"].setEnabled(False)
 
         # View Actions
-        actions['snap_to_grid'] = Action(_("snap_to_grid"), self)
-        actions['snap_to_grid'].setCheckable(True)
+        actions["snap_to_grid"] = Action(_("snap_to_grid"), self)
+        actions["snap_to_grid"].setCheckable(True)
 
-        actions['toggle_grid'] = Action(_("toggle_grid"), self, shortcut='G',
-                                   statusTip=_("toggle_grid-tooltip"))
+        actions["toggle_grid"] = Action(
+            _("toggle_grid"), self, shortcut="G", statusTip=_("toggle_grid-tooltip")
+        )
 
-        actions['errors'] = Action(Icons('dialog-error'), _("errors"), self,
-                                   statusTip=_("errors-tooltip"))
+        actions["errors"] = Action(
+            Icons("dialog-error"), _("errors"), self, statusTip=_("errors-tooltip")
+        )
 
-        actions['find'] = Action(Icons('edit-find'), _("find"), self,
-                                 shortcut=Keys.Find,
-                                 statusTip=_("find-tooltip"))
+        actions["find"] = Action(
+            Icons("edit-find"),
+            _("find"),
+            self,
+            shortcut=Keys.Find,
+            statusTip=_("find-tooltip"),
+        )
 
         # Help Actions
-        actions['about'] = Action(Icons('help-about'), _("about"), self,
-                                  statusTip=_("about-tooltip"))
+        actions["about"] = Action(
+            Icons("help-about"), _("about"), self, statusTip=_("about-tooltip")
+        )
 
-        actions['about_qt'] = Action(self.style().standardIcon(QStyle.SP_TitleBarMenuButton), _("about-qt"), self,
-                                     statusTip=_("about-tooltip"))
+        actions["about_qt"] = Action(
+            self.style().standardIcon(QStyle.SP_TitleBarMenuButton),
+            _("about-qt"),
+            self,
+            statusTip=_("about-tooltip"),
+        )
 
-        actions['generate'] = Action(Icons('system-run'), _("process-generate"), self,
-                                     shortcut='F5', statusTip=_("process-generate-tooltip"))
+        actions["generate"] = Action(
+            Icons("system-run"),
+            _("process-generate"),
+            self,
+            shortcut="F5",
+            statusTip=_("process-generate-tooltip"),
+        )
 
-        actions['execute'] = Action(Icons('media-playback-start'), _("process-execute"),
-                                    self, shortcut='F6',
-                                    statusTip=_("process-execute-tooltip"))
+        actions["execute"] = Action(
+            Icons("media-playback-start"),
+            _("process-execute"),
+            self,
+            shortcut="F6",
+            statusTip=_("process-execute-tooltip"),
+        )
 
-        actions['kill'] = Action(Icons('process-stop'), _("process-kill"), self,
-                                 shortcut='F7', statusTip=_("process-kill-tooltip"))
+        actions["kill"] = Action(
+            Icons("process-stop"),
+            _("process-kill"),
+            self,
+            shortcut="F7",
+            statusTip=_("process-kill-tooltip"),
+        )
 
-        actions['help'] = Action(Icons('help-browser'), _("help"), self,
-                                 shortcut=Keys.HelpContents, statusTip=_("help-tooltip"))
+        actions["help"] = Action(
+            Icons("help-browser"),
+            _("help"),
+            self,
+            shortcut=Keys.HelpContents,
+            statusTip=_("help-tooltip"),
+        )
 
         # Tools Actions
 
-        actions['filter_design_tool'] = Action(_("&Filter Design Tool"), self)
+        actions["filter_design_tool"] = Action(_("&Filter Design Tool"), self)
 
-        actions['set_default_qt_gui_theme'] = Action(_("Set Default &Qt GUI Theme"), self)
+        actions["set_default_qt_gui_theme"] = Action(
+            _("Set Default &Qt GUI Theme"), self
+        )
 
-        actions['module_browser'] = Action(_("&OOT Module Browser"), self)
+        actions["module_browser"] = Action(_("&OOT Module Browser"), self)
 
-        actions['show_flowgraph_complexity'] = Action(_("show_flowgraph_complexity"), self)
-        actions['show_flowgraph_complexity'].setCheckable(True)
+        actions["show_flowgraph_complexity"] = Action(
+            _("show_flowgraph_complexity"), self
+        )
+        actions["show_flowgraph_complexity"].setCheckable(True)
 
         # Help Actions
 
-        actions['types'] = Action(_("&Types"), self)
+        actions["types"] = Action(_("&Types"), self)
 
-        actions['keys'] = Action(_("&Keys"), self)
+        actions["keys"] = Action(_("&Keys"), self)
 
-        actions['parser_errors'] = Action("Parser Errors", self)
+        actions["parser_errors"] = Action("Parser Errors", self)
 
-        actions['get_involved'] = Action(_("&Get Involved"), self)
+        actions["get_involved"] = Action(_("&Get Involved"), self)
 
-        actions['preferences'] = Action(Icons('preferences-system'), _("preferences"), self,
-                                        statusTip=_("preferences-tooltip"))
+        actions["preferences"] = Action(
+            Icons("preferences-system"),
+            _("preferences"),
+            self,
+            statusTip=_("preferences-tooltip"),
+        )
 
-        actions['reload'] = Action(Icons('view-refresh'), _("reload"), self,
-                                        statusTip=_("reload-tooltip"))
+        actions["reload"] = Action(
+            Icons("view-refresh"), _("reload"), self, statusTip=_("reload-tooltip")
+        )
 
         # Disable some actions, by default
-        actions['save'].setEnabled(True)
-        actions['errors'].setEnabled(False)
-
-
-
+        actions["save"].setEnabled(True)
+        actions["errors"].setEnabled(False)
 
     def updateDocTab(self):
         pass
-        '''
+        """
         doc_txt = self._app().DocumentationTab._text
         blocks = self.currentFlowgraph.selected_blocks()
         if len(blocks) == 1:
             #print(blocks[0].documentation)
             doc_string = blocks[0].documentation['']
             doc_txt.setText(doc_string)
-        '''
+        """
 
     def updateActions(self):
-        ''' Update the available actions based on what is selected '''
+        """Update the available actions based on what is selected"""
 
         blocks = self.currentFlowgraph.selected_blocks()
         conns = self.currentFlowgraph.selected_connections()
@@ -411,75 +541,77 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         valid_fg = self.currentFlowgraph.is_valid()
         saved_fg = self.currentView.saved
 
-        self.actions['save'].setEnabled(saved_fg)
+        self.actions["save"].setEnabled(saved_fg)
 
-        self.actions['undo'].setEnabled(canUndo)
-        self.actions['redo'].setEnabled(canRedo)
-        self.actions['generate'].setEnabled(valid_fg)
-        self.actions['execute'].setEnabled(valid_fg)
-        self.actions['errors'].setEnabled(not valid_fg)
-        self.actions['kill'].setEnabled(False) # TODO: Set this properly
+        self.actions["undo"].setEnabled(canUndo)
+        self.actions["redo"].setEnabled(canRedo)
+        self.actions["generate"].setEnabled(valid_fg)
+        self.actions["execute"].setEnabled(valid_fg)
+        self.actions["errors"].setEnabled(not valid_fg)
+        self.actions["kill"].setEnabled(False)  # TODO: Set this properly
 
-        self.actions['cut'].setEnabled(False)
-        self.actions['copy'].setEnabled(False)
-        self.actions['paste'].setEnabled(False)
-        self.actions['delete'].setEnabled(False)
-        self.actions['rotate_cw'].setEnabled(False)
-        self.actions['rotate_ccw'].setEnabled(False)
-        self.actions['enable'].setEnabled(False)
-        self.actions['disable'].setEnabled(False)
-        self.actions['bypass'].setEnabled(False)
-        self.actions['properties'].setEnabled(False)
-        self.actions['create_hier'].setEnabled(False)
-        self.actions['toggle_source_bus'].setEnabled(False)
-        self.actions['toggle_sink_bus'].setEnabled(False)
+        self.actions["cut"].setEnabled(False)
+        self.actions["copy"].setEnabled(False)
+        self.actions["paste"].setEnabled(False)
+        self.actions["delete"].setEnabled(False)
+        self.actions["rotate_cw"].setEnabled(False)
+        self.actions["rotate_ccw"].setEnabled(False)
+        self.actions["enable"].setEnabled(False)
+        self.actions["disable"].setEnabled(False)
+        self.actions["bypass"].setEnabled(False)
+        self.actions["properties"].setEnabled(False)
+        self.actions["create_hier"].setEnabled(False)
+        self.actions["toggle_source_bus"].setEnabled(False)
+        self.actions["toggle_sink_bus"].setEnabled(False)
 
         if self.clipboard:
-            self.actions['paste'].setEnabled(True)
+            self.actions["paste"].setEnabled(True)
 
         if len(conns) > 0:
-            self.actions['delete'].setEnabled(True)
+            self.actions["delete"].setEnabled(True)
 
         if len(blocks) > 0:
-            self.actions['cut'].setEnabled(True)
-            self.actions['copy'].setEnabled(True)
-            self.actions['delete'].setEnabled(True)
-            self.actions['rotate_cw'].setEnabled(True)
-            self.actions['rotate_ccw'].setEnabled(True)
-            self.actions['enable'].setEnabled(True)
-            self.actions['disable'].setEnabled(True)
-            self.actions['bypass'].setEnabled(True)
-            self.actions['toggle_source_bus'].setEnabled(True)
-            self.actions['toggle_sink_bus'].setEnabled(True)
+            self.actions["cut"].setEnabled(True)
+            self.actions["copy"].setEnabled(True)
+            self.actions["delete"].setEnabled(True)
+            self.actions["rotate_cw"].setEnabled(True)
+            self.actions["rotate_ccw"].setEnabled(True)
+            self.actions["enable"].setEnabled(True)
+            self.actions["disable"].setEnabled(True)
+            self.actions["bypass"].setEnabled(True)
+            self.actions["toggle_source_bus"].setEnabled(True)
+            self.actions["toggle_sink_bus"].setEnabled(True)
 
-            self.actions['vertical_align_top'].setEnabled(False)
-            self.actions['vertical_align_middle'].setEnabled(False)
-            self.actions['vertical_align_bottom'].setEnabled(False)
+            self.actions["vertical_align_top"].setEnabled(False)
+            self.actions["vertical_align_middle"].setEnabled(False)
+            self.actions["vertical_align_bottom"].setEnabled(False)
 
-            self.actions['horizontal_align_left'].setEnabled(False)
-            self.actions['horizontal_align_center'].setEnabled(False)
-            self.actions['horizontal_align_right'].setEnabled(False)
+            self.actions["horizontal_align_left"].setEnabled(False)
+            self.actions["horizontal_align_center"].setEnabled(False)
+            self.actions["horizontal_align_right"].setEnabled(False)
 
             if len(blocks) == 1:
-                self.actions['properties'].setEnabled(True)
-                self.actions['create_hier'].setEnabled(True) # TODO: Other requirements for enabling this?
+                self.actions["properties"].setEnabled(True)
+                self.actions["create_hier"].setEnabled(
+                    True
+                )  # TODO: Other requirements for enabling this?
 
             if len(blocks) > 1:
-                self.actions['vertical_align_top'].setEnabled(True)
-                self.actions['vertical_align_middle'].setEnabled(True)
-                self.actions['vertical_align_bottom'].setEnabled(True)
+                self.actions["vertical_align_top"].setEnabled(True)
+                self.actions["vertical_align_middle"].setEnabled(True)
+                self.actions["vertical_align_bottom"].setEnabled(True)
 
-                self.actions['horizontal_align_left'].setEnabled(True)
-                self.actions['horizontal_align_center'].setEnabled(True)
-                self.actions['horizontal_align_right'].setEnabled(True)
+                self.actions["horizontal_align_left"].setEnabled(True)
+                self.actions["horizontal_align_center"].setEnabled(True)
+                self.actions["horizontal_align_right"].setEnabled(True)
 
             for block in blocks:
                 if not block.can_bypass():
-                    self.actions['bypass'].setEnabled(False)
+                    self.actions["bypass"].setEnabled(False)
                     break
 
     def createMenus(self, actions, menus):
-        ''' Setup the main menubar for the application '''
+        """Setup the main menubar for the application"""
         log.debug("Creating menus")
 
         # Global menu options
@@ -487,73 +619,73 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
         # Setup the file menu
         file = Menu("&File")
-        file.addAction(actions['new'])
-        file.addAction(actions['open'])
-        file.addAction(actions['close'])
-        file.addAction(actions['close_all'])
+        file.addAction(actions["new"])
+        file.addAction(actions["open"])
+        file.addAction(actions["close"])
+        file.addAction(actions["close_all"])
         file.addSeparator()
-        file.addAction(actions['save'])
-        file.addAction(actions['save_as'])
-        file.addAction(actions['save_copy'])
+        file.addAction(actions["save"])
+        file.addAction(actions["save_as"])
+        file.addAction(actions["save_copy"])
         file.addSeparator()
-        file.addAction(actions['screen_capture'])
+        file.addAction(actions["screen_capture"])
         file.addSeparator()
-        file.addAction(actions['preferences'])
+        file.addAction(actions["preferences"])
         file.addSeparator()
-        file.addAction(actions['exit'])
-        menus['file'] = file
+        file.addAction(actions["exit"])
+        menus["file"] = file
 
         # Setup the edit menu
         edit = Menu("&Edit")
-        edit.addAction(actions['undo'])
-        edit.addAction(actions['redo'])
-        edit.addAction(actions['view_undo_stack'])
+        edit.addAction(actions["undo"])
+        edit.addAction(actions["redo"])
+        edit.addAction(actions["view_undo_stack"])
         edit.addSeparator()
-        edit.addAction(actions['cut'])
-        edit.addAction(actions['copy'])
-        edit.addAction(actions['paste'])
-        edit.addAction(actions['delete'])
-        edit.addAction(actions['select_all'])
-        edit.addAction(actions['select_none'])
+        edit.addAction(actions["cut"])
+        edit.addAction(actions["copy"])
+        edit.addAction(actions["paste"])
+        edit.addAction(actions["delete"])
+        edit.addAction(actions["select_all"])
+        edit.addAction(actions["select_none"])
         edit.addSeparator()
-        edit.addAction(actions['rotate_ccw'])
-        edit.addAction(actions['rotate_cw'])
+        edit.addAction(actions["rotate_ccw"])
+        edit.addAction(actions["rotate_cw"])
 
         align = Menu("&Align")
-        menus['align'] = align
-        align.addAction(actions['vertical_align_top'])
-        align.addAction(actions['vertical_align_middle'])
-        align.addAction(actions['vertical_align_bottom'])
+        menus["align"] = align
+        align.addAction(actions["vertical_align_top"])
+        align.addAction(actions["vertical_align_middle"])
+        align.addAction(actions["vertical_align_bottom"])
         align.addSeparator()
-        align.addAction(actions['horizontal_align_left'])
-        align.addAction(actions['horizontal_align_center'])
-        align.addAction(actions['horizontal_align_right'])
+        align.addAction(actions["horizontal_align_left"])
+        align.addAction(actions["horizontal_align_center"])
+        align.addAction(actions["horizontal_align_right"])
 
         edit.addMenu(align)
         edit.addSeparator()
-        edit.addAction(actions['enable'])
-        edit.addAction(actions['disable'])
-        edit.addAction(actions['bypass'])
+        edit.addAction(actions["enable"])
+        edit.addAction(actions["disable"])
+        edit.addAction(actions["bypass"])
         edit.addSeparator()
 
         more = Menu("&More")
-        menus['more'] = more
-        more.addAction(actions['create_hier'])
-        more.addAction(actions['open_hier'])
-        more.addAction(actions['toggle_source_bus'])
-        more.addAction(actions['toggle_sink_bus'])
+        menus["more"] = more
+        more.addAction(actions["create_hier"])
+        more.addAction(actions["open_hier"])
+        more.addAction(actions["toggle_source_bus"])
+        more.addAction(actions["toggle_sink_bus"])
 
         edit.addMenu(more)
-        edit.addAction(actions['properties'])
-        menus['edit'] = edit
+        edit.addAction(actions["properties"])
+        menus["edit"] = edit
 
         # Setup submenu
         panels = Menu("&Panels")
-        menus['panels'] = panels
+        menus["panels"] = panels
         panels.setEnabled(False)
 
         toolbars = Menu("&Toolbars")
-        menus['toolbars'] = toolbars
+        menus["toolbars"] = toolbars
         toolbars.setEnabled(False)
 
         # Setup the view menu
@@ -561,73 +693,73 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         view.addMenu(panels)
         view.addMenu(toolbars)
         view.addSeparator()
-        view.addAction(actions['toggle_grid'])
-        view.addAction(actions['find'])
-        menus['view'] = view
+        view.addAction(actions["toggle_grid"])
+        view.addAction(actions["find"])
+        menus["view"] = view
 
         # Setup the build menu
         build = Menu("&Build")
-        build.addAction(actions['errors'])
-        build.addAction(actions['generate'])
-        build.addAction(actions['execute'])
-        build.addAction(actions['kill'])
-        menus['build'] = build
+        build.addAction(actions["errors"])
+        build.addAction(actions["generate"])
+        build.addAction(actions["execute"])
+        build.addAction(actions["kill"])
+        menus["build"] = build
 
         # Setup the tools menu
         tools = Menu("&Tools")
-        tools.addAction(actions['filter_design_tool'])
-        tools.addAction(actions['set_default_qt_gui_theme'])
-        tools.addAction(actions['module_browser'])
+        tools.addAction(actions["filter_design_tool"])
+        tools.addAction(actions["set_default_qt_gui_theme"])
+        tools.addAction(actions["module_browser"])
         tools.addSeparator()
-        tools.addAction(actions['show_flowgraph_complexity'])
-        menus['tools'] = tools
+        tools.addAction(actions["show_flowgraph_complexity"])
+        menus["tools"] = tools
 
         # Setup the help menu
         help = Menu("&Help")
-        help.addAction(actions['help'])
-        help.addAction(actions['types'])
-        help.addAction(actions['keys'])
-        help.addAction(actions['parser_errors'])
+        help.addAction(actions["help"])
+        help.addAction(actions["types"])
+        help.addAction(actions["keys"])
+        help.addAction(actions["parser_errors"])
         help.addSeparator()
-        help.addAction(actions['get_involved'])
-        help.addAction(actions['about'])
-        help.addAction(actions['about_qt'])
-        menus['help'] = help
+        help.addAction(actions["get_involved"])
+        help.addAction(actions["about"])
+        help.addAction(actions["about_qt"])
+        menus["help"] = help
 
     def createToolbars(self, actions, toolbars):
         log.debug("Creating toolbars")
 
         # Main toolbar
         file = Toolbar("File")
-        file.addAction(actions['new'])
-        file.addAction(actions['open'])
-        file.addAction(actions['save'])
-        file.addAction(actions['close'])
-        toolbars['file'] = file
+        file.addAction(actions["new"])
+        file.addAction(actions["open"])
+        file.addAction(actions["save"])
+        file.addAction(actions["close"])
+        toolbars["file"] = file
 
         # Edit toolbar
         edit = Toolbar("Edit")
-        edit.addAction(actions['undo'])
-        edit.addAction(actions['redo'])
+        edit.addAction(actions["undo"])
+        edit.addAction(actions["redo"])
         edit.addSeparator()
-        edit.addAction(actions['cut'])
-        edit.addAction(actions['copy'])
-        edit.addAction(actions['paste'])
-        edit.addAction(actions['delete'])
-        toolbars['edit'] = edit
+        edit.addAction(actions["cut"])
+        edit.addAction(actions["copy"])
+        edit.addAction(actions["paste"])
+        edit.addAction(actions["delete"])
+        toolbars["edit"] = edit
 
         # Run Toolbar
-        run = Toolbar('Run')
-        run.addAction(actions['errors'])
-        run.addAction(actions['generate'])
-        run.addAction(actions['execute'])
-        run.addAction(actions['kill'])
-        toolbars['run'] = run
+        run = Toolbar("Run")
+        run.addAction(actions["errors"])
+        run.addAction(actions["generate"])
+        run.addAction(actions["execute"])
+        run.addAction(actions["kill"])
+        toolbars["run"] = run
 
         # Misc Toolbar
-        misc = Toolbar('Misc')
-        misc.addAction(actions['reload'])
-        toolbars['misc'] = misc
+        misc = Toolbar("Misc")
+        misc.addAction(actions["reload"])
+        toolbars["misc"] = misc
 
     def createStatusBar(self):
         log.debug("Creating status bar")
@@ -635,19 +767,25 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
     def open(self):
         Open = QtWidgets.QFileDialog.getOpenFileName
-        filename, filtr = Open(self, self.actions['open'].statusTip(),
-                               filter='Flow Graph Files (*.grc);;All files (*.*)')
+        filename, filtr = Open(
+            self,
+            self.actions["open"].statusTip(),
+            filter="Flow Graph Files (*.grc);;All files (*.*)",
+        )
         return filename
 
     def save(self):
         Save = QtWidgets.QFileDialog.getSaveFileName
-        filename, filtr = Save(self, self.actions['save'].statusTip(),
-                               filter='Flow Graph Files (*.grc);;All files (*.*)')
+        filename, filtr = Save(
+            self,
+            self.actions["save"].statusTip(),
+            filter="Flow Graph Files (*.grc);;All files (*.*)",
+        )
         return filename
 
     # Overridden methods
     def addDockWidget(self, location, widget):
-        ''' Adds a dock widget to the view. '''
+        """Adds a dock widget to the view."""
         # This overrides QT's addDockWidget so that a 'show' menu auto can automatically be
         # generated for this action.
         super().addDockWidget(location, widget)
@@ -658,10 +796,10 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
         # Create the new action and wire it to the show/hide for the widget
         self.menus["panels"].addAction(widget.toggleViewAction())
-        self.menus['panels'].setEnabled(True)
+        self.menus["panels"].setEnabled(True)
 
     def addToolBar(self, toolbar):
-        ''' Adds a toolbar to the main window '''
+        """Adds a toolbar to the main window"""
         # This is also overridden so a show menu item can automatically be added
         super().addToolBar(toolbar)
         name = toolbar.windowTitle()
@@ -669,16 +807,16 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
         # Create the new action and wire it to the show/hide for the widget
         self.menus["toolbars"].addAction(toolbar.toggleViewAction())
-        self.menus['toolbars'].setEnabled(True)
+        self.menus["toolbars"].setEnabled(True)
 
     def addMenu(self, menu):
-        ''' Adds a menu to the main window '''
+        """Adds a menu to the main window"""
         help = self.menus["help"].menuAction()
         self.menuBar().insertMenu(help, menu)
 
     # Action Handlers
     def new_triggered(self):
-        log.debug('New')
+        log.debug("New")
         log.debug("Loading flowgraph model")
         fg_view = FlowgraphView(self)
         fg_view.centerOn(0, 0)
@@ -688,9 +826,8 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
         self.tabWidget.addTab(fg_view, "Untitled")
 
-
     def open_triggered(self):
-        log.debug('open')
+        log.debug("open")
         filename = self.open()
 
         if filename:
@@ -703,56 +840,61 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
             self.currentFlowgraph.selectionChanged.connect(self.updateActions)
 
     def save_triggered(self):
-        log.debug('save')
+        log.debug("save")
         filename = self.currentFlowgraph.filename
 
         if filename:
             try:
                 self.platform.save_flow_graph(filename, self.currentView)
             except IOError:
-                log.error('Save failed')
+                log.error("Save failed")
                 return
 
-            log.info(f'Saved {filename}')
+            log.info(f"Saved {filename}")
             self.currentView.saved = True
         else:
-            log.debug('Flowgraph does not have a filename')
+            log.debug("Flowgraph does not have a filename")
             self.save_as_triggered()
 
-
     def save_as_triggered(self):
-        log.debug('Save As')
-        filename, filtr = QtWidgets.QFileDialog.getSaveFileName(self, self.actions['save'].statusTip(),
-                               filter='Flow Graph Files (*.grc);;All files (*.*)')
+        log.debug("Save As")
+        filename, filtr = QtWidgets.QFileDialog.getSaveFileName(
+            self,
+            self.actions["save"].statusTip(),
+            filter="Flow Graph Files (*.grc);;All files (*.*)",
+        )
         if filename:
             self.currentFlowgraph.filename = filename
             try:
                 self.platform.save_flow_graph(filename, self.currentView)
             except IOError:
-                log.error('Save (as) failed')
+                log.error("Save (as) failed")
                 return
 
-            log.info(f'Saved (as) {filename}')
+            log.info(f"Saved (as) {filename}")
             self.currentView.saved = True
         else:
-            log.debug('Cancelled Save As action')
+            log.debug("Cancelled Save As action")
 
     def save_copy_triggered(self):
-        log.debug('Save Copy')
-        filename, filtr = QtWidgets.QFileDialog.getSaveFileName(self, self.actions['save'].statusTip(),
-                               filter='Flow Graph Files (*.grc);;All files (*.*)')
+        log.debug("Save Copy")
+        filename, filtr = QtWidgets.QFileDialog.getSaveFileName(
+            self,
+            self.actions["save"].statusTip(),
+            filter="Flow Graph Files (*.grc);;All files (*.*)",
+        )
         if filename:
             try:
                 self.platform.save_flow_graph(filename, self.currentView)
             except IOError:
-                log.error('Save (copy) failed')
+                log.error("Save (copy) failed")
 
-            log.info(f'Saved (copy) {filename}')
+            log.info(f"Saved (copy) {filename}")
         else:
-            log.debug('Cancelled Save Copy action')
+            log.debug("Cancelled Save Copy action")
 
     def close_triggered(self, tab_index=None):
-        log.debug(f'Closing a tab (index {tab_index})')
+        log.debug(f"Closing a tab (index {tab_index})")
 
         if tab_index is None:
             tab_index = self.tabWidget.currentIndex()
@@ -761,12 +903,16 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
             self.tabWidget.removeTab(tab_index)
         else:
             message = "Save changes before closing?"
-
-            ad = QtWidgets.QMessageBox()
-            ad.setWindowTitle("Unsaved Changes")
-            ad.setText(message)
-            ad.setStandardButtons(QtWidgets.QMessageBox.Discard | QtWidgets.QMessageBox.Cancel | QtWidgets.QMessageBox.Save)
-            response = ad.exec()
+            response = QtWidgets.QMessageBox.question(
+                None,
+                "Unsaved Changes",
+                message,
+                QtWidgets.QMessageBox.StandardButtons(
+                    QtWidgets.QMessageBox.Discard
+                    | QtWidgets.QMessageBox.Cancel
+                    | QtWidgets.QMessageBox.Save
+                ),
+            )
 
             if response == QtWidgets.QMessageBox.Discard:
                 self.tabWidget.removeTab(tab_index)
@@ -783,7 +929,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
             self.new_triggered()
 
     def close_all_triggered(self):
-        log.debug('close')
+        log.debug("close")
 
         while self.tabWidget.count() > 1:
             self.close_triggered()
@@ -791,138 +937,146 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         self.close_triggered()
 
     def print_triggered(self):
-        log.debug('print')
+        log.debug("print")
 
     def screen_capture_triggered(self):
-        log.debug('screen capture')
+        log.debug("screen capture")
         # TODO: Should be user-set somehow
         background_transparent = True
 
         Save = QtWidgets.QFileDialog.getSaveFileName
-        file_path, filtr = Save(self, self.actions['save'].statusTip(),
-                               filter='PDF files (*.pdf);;PNG files (*.png);;SVG files (*.svg)')
+        file_path, filtr = Save(
+            self,
+            self.actions["save"].statusTip(),
+            filter="PDF files (*.pdf);;PNG files (*.png);;SVG files (*.svg)",
+        )
         if file_path is not None:
             try:
                 Utils.make_screenshot(
-                    self.currentView, file_path, background_transparent)
+                    self.currentView, file_path, background_transparent
+                )
             except ValueError:
-                Messages.send('Failed to generate screenshot\n')
+                Messages.send("Failed to generate screenshot\n")
 
     def undo_triggered(self):
-        log.debug('undo')
+        log.debug("undo")
         self.currentFlowgraph.undoStack.undo()
         self.updateActions()
 
     def redo_triggered(self):
-        log.debug('redo')
+        log.debug("redo")
         self.currentFlowgraph.undoStack.redo()
         self.updateActions()
 
     def view_undo_stack_triggered(self):
-        log.debug('view_undo_stack')
+        log.debug("view_undo_stack")
         self.undoView = QtWidgets.QUndoView(self.currentFlowgraph.undoStack)
         self.undoView.setWindowTitle("Undo stack")
         self.undoView.show()
 
     def cut_triggered(self):
-        log.debug('cut')
+        log.debug("cut")
         self.copy_triggered()
         self.currentFlowgraph.delete_selected()
         self.updateActions()
 
     def copy_triggered(self):
-        log.debug('copy')
+        log.debug("copy")
         self.clipboard = self.currentFlowgraph.copy_to_clipboard()
         self.updateActions()
 
     def paste_triggered(self):
-        log.debug('paste')
+        log.debug("paste")
         if self.clipboard:
             self.currentFlowgraph.paste_from_clipboard(self.clipboard)
             self.currentFlowgraph.update()
         else:
-            log.debug('clipboard is empty')
+            log.debug("clipboard is empty")
 
     def delete_triggered(self):
-        log.debug('delete')
+        log.debug("delete")
         action = DeleteElementAction(self.currentFlowgraph)
         self.currentFlowgraph.undoStack.push(action)
         self.updateActions()
 
     def select_all_triggered(self):
-        log.debug('select_all')
+        log.debug("select_all")
         self.currentFlowgraph.select_all()
         self.updateActions()
 
     def select_none_triggered(self):
-        log.debug('select_none')
+        log.debug("select_none")
         self.currentFlowgraph.clearSelection()
         self.updateActions()
 
     def rotate_ccw_triggered(self):
         # Pass to Undo/Redo
-        log.debug('rotate_ccw')
+        log.debug("rotate_ccw")
         rotateCommand = RotateAction(self.currentFlowgraph, -90)
         self.currentFlowgraph.undoStack.push(rotateCommand)
         self.updateActions()
 
     def rotate_cw_triggered(self):
         # Pass to Undo/Redo
-        log.debug('rotate_cw')
+        log.debug("rotate_cw")
         rotateCommand = RotateAction(self.currentFlowgraph, 90)
         self.currentFlowgraph.undoStack.push(rotateCommand)
         self.updateActions()
 
     def toggle_source_bus_triggered(self):
-        log.debug('toggle_source_bus')
+        log.debug("toggle_source_bus")
         for b in self.currentFlowgraph.selected_blocks():
-                b.bussify('source')
+            b.bussify("source")
         self.currentFlowgraph.update()
 
     def toggle_sink_bus_triggered(self):
-        log.debug('toggle_source_bus')
+        log.debug("toggle_source_bus")
         for b in self.currentFlowgraph.selected_blocks():
-                b.bussify('sink')
+            b.bussify("sink")
         self.currentFlowgraph.update()
 
     def errors_triggered(self):
-        log.debug('errors')
+        log.debug("errors")
         err = ErrorsDialog(self.currentFlowgraph)
         err.exec()
 
     def find_triggered(self):
-        log.debug('find block')
+        log.debug("find block")
         self._app().BlockLibrary._search_bar.setFocus()
 
     def get_involved_triggered(self):
-        log.debug('get involved')
+        log.debug("get involved")
         ad = QtWidgets.QMessageBox()
         ad.setWindowTitle("Get Involved Instructions")
-        ad.setText("""\
+        ad.setText(
+            """\
             <b>Welcome to the GNU Radio Community!</b><br/><br/>
             For more details on contributing to GNU Radio and getting engaged with our great community visit <a href="https://wiki.gnuradio.org/index.php/HowToGetInvolved">here</a>.<br/><br/>
             You can also join our <a href="https://chat.gnuradio.org/">Matrix chat server</a>, IRC Channel (#gnuradio) or contact through our <a href="https://lists.gnu.org/mailman/listinfo/discuss-gnuradio">mailing list (discuss-gnuradio)</a>.
-        """)
+        """
+        )
         ad.exec()
 
     def about_triggered(self):
-        log.debug('about')
+        log.debug("about")
         config = self.platform.config
         py_version = sys.version.split()[0]
-        ad = QtWidgets.QMessageBox.about(self, "About GNU Radio", f"GNU Radio {config.version} (Python {py_version})")
+        ad = QtWidgets.QMessageBox.about(
+            self, "About GNU Radio", f"GNU Radio {config.version} (Python {py_version})"
+        )
 
     def about_qt_triggered(self):
-        log.debug('about_qt')
+        log.debug("about_qt")
         QtWidgets.QApplication.instance().aboutQt()
 
     def properties_triggered(self):
-        log.debug('properties')
+        log.debug("properties")
 
     def enable_triggered(self):
-        log.debug('enable')
+        log.debug("enable")
         all_enabled = True
         for block in self.currentFlowgraph.selected_blocks():
-            if not block.state == 'enabled':
+            if not block.state == "enabled":
                 all_enabled = False
                 break
 
@@ -934,10 +1088,10 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         self.updateActions()
 
     def disable_triggered(self):
-        log.debug('disable')
+        log.debug("disable")
         all_disabled = True
         for block in self.currentFlowgraph.selected_blocks():
-            if not block.state == 'disabled':
+            if not block.state == "disabled":
                 all_disabled = False
                 break
 
@@ -949,10 +1103,10 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         self.updateActions()
 
     def bypass_triggered(self):
-        log.debug('bypass')
+        log.debug("bypass")
         all_bypassed = True
         for block in self.currentFlowgraph.selected_blocks():
-            if not block.state == 'bypassed':
+            if not block.state == "bypassed":
                 all_bypassed = False
                 break
 
@@ -964,29 +1118,31 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         self.updateActions()
 
     def generate_triggered(self):
-        log.debug('generate')
+        log.debug("generate")
         if not self.currentView.saved:
             self.save_triggered()
-        if not self.currentView.saved: # The line above was cancelled
+        if not self.currentView.saved:  # The line above was cancelled
             log.error("Cannot generate a flowgraph without saving first")
             return
 
         filename = self.currentFlowgraph.filename
-        generator = self.platform.Generator(self.currentFlowgraph, os.path.dirname(filename))
+        generator = self.platform.Generator(
+            self.currentFlowgraph, os.path.dirname(filename)
+        )
         generator.write()
-        log.info(f'Generated {filename}')
+        log.info(f"Generated {filename}")
 
     def execute_triggered(self):
-        log.debug('execute')
+        log.debug("execute")
         filename = self.currentFlowgraph.filename
-        py_path = filename[:-3] + 'py'
-        subprocess.Popen(f'/usr/bin/python {py_path}', shell=True)
+        py_path = filename[:-3] + "py"
+        subprocess.Popen(f"/usr/bin/python {py_path}", shell=True)
 
     def kill_triggered(self):
-        log.debug('kill')
+        log.debug("kill")
 
     def show_help(parent):
-        """ Display basic usage tips. """
+        """Display basic usage tips."""
         message = """\
             <b>Usage Tips</b>
             \n\
@@ -1010,9 +1166,8 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         ad.exec()
 
     def types_triggered(self):
-        log.debug('types')
-        colors = [(name, color)
-              for name, key, sizeof, color in Constants.CORE_TYPES]
+        log.debug("types")
+        colors = [(name, color) for name, key, sizeof, color in Constants.CORE_TYPES]
         max_len = 10 + max(len(name) for name, code in colors)
 
         message = """
@@ -1020,9 +1175,9 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         <tbody>
         """
 
-        message += '\n'.join(
+        message += "\n".join(
             '<tr bgcolor="{color}"><td><tt>{name}</tt></td></tr>'
-            ''.format(color=color, name=name)
+            "".format(color=color, name=name)
             for name, color in colors
         )
         message += "</tbody></table>"
@@ -1032,7 +1187,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         ad.exec()
 
     def keys_triggered(self):
-        log.debug('keys')
+        log.debug("keys")
 
         message = """\
             <b>Keyboard Shortcuts</b>
@@ -1074,31 +1229,34 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         ad.exec()
 
     def preferences_triggered(self):
-        log.debug('preferences')
+        log.debug("preferences")
         prefs_dialog = PreferencesDialog()
         if prefs_dialog.exec_():
             prefs_dialog.save_all()
 
-
     def exit_triggered(self):
-        log.debug('exit')
+        log.debug("exit")
         # TODO: Make sure all flowgraphs have been saved
         self.app.exit()
 
     def help_triggered(self):
-        log.debug('help')
+        log.debug("help")
         self.show_help()
 
     def report_triggered(self):
-        log.debug('report')
+        log.debug("report")
 
     def library_triggered(self):
-        log.debug('library_triggered')
+        log.debug("library_triggered")
 
     def library_toggled(self):
-        log.debug('library_toggled')
+        log.debug("library_toggled")
 
     def filter_design_tool_triggered(self):
-        log.debug('filter_design_tool')
-        subprocess.Popen('gr_filter_design',
-                             shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        log.debug("filter_design_tool")
+        subprocess.Popen(
+            "gr_filter_design",
+            shell=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+        )

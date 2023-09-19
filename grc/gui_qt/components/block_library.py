@@ -33,30 +33,24 @@ from .. import base
 # Logging
 log = logging.getLogger(__name__)
 
+
 class BlockSearchBar(QtWidgets.QLineEdit):
     def __init__(self, parent):
         QtWidgets.QLineEdit.__init__(self)
         self.parent = parent
-        self.setObjectName('block_library::search_bar')
-        self.returnPressed.connect(self.add_block)
+        self.setObjectName("block_library::search_bar")
+        self.returnPressed.connect(self.on_return_pressed)
 
-    def add_block(self):
+    def on_return_pressed(self):
         label = self.text()
         if label in self.parent._block_tree_flat:
-            fg = self.parent.app.MainWindow.currentFlowgraph
             block_key = self.parent._block_tree_flat[label].key
-            id = fg._get_unique_id(block_key)
-
-            block = fg.new_block(block_key)
-            block.params['id'].set_value(id)
-            fg.addItem(block)
-            block.moveToTop()
-            fg.update()
-            # TODO: Move it to the middle of the view
-            self.setText('')
+            self.parent.add_block(block_key)
+            self.setText("")
             self.parent.populate_tree(self.parent._block_tree)
         else:
-            log.info(f'No block named {label}')
+            log.info(f"No block named {label}")
+
 
 def get_items(model):
     items = []
@@ -65,14 +59,19 @@ def get_items(model):
         items.append(model.data(index))
     return items
 
+
 class LibraryView(QtWidgets.QTreeView):
     # TODO: Use selectionChanged() or something instead
     # so we can use arrow keys too
     def updateDocTab(self):
         label = self.model().data(self.currentIndex())
         if label in self.parent().parent()._block_tree_flat:
-            prefix = str(self.parent().parent().app.platform.config.wiki_block_docs_url_prefix)
-            self.parent().parent().app.WikiTab.setURL(QUrl(prefix + label.replace(" ", "_")))
+            prefix = str(
+                self.parent().parent().app.platform.config.wiki_block_docs_url_prefix
+            )
+            self.parent().parent().app.WikiTab.setURL(
+                QUrl(prefix + label.replace(" ", "_"))
+            )
 
     def handle_clicked(self):
         if self.isExpanded(self.currentIndex()):
@@ -80,14 +79,14 @@ class LibraryView(QtWidgets.QTreeView):
         else:
             self.expand(self.currentIndex())
 
-class BlockLibrary(QtWidgets.QDockWidget, base.Component):
 
+class BlockLibrary(QtWidgets.QDockWidget, base.Component):
     def __init__(self):
         QtWidgets.QDockWidget.__init__(self)
         base.Component.__init__(self)
 
-        self.setObjectName('block_library')
-        self.setWindowTitle('Block Library')
+        self.setObjectName("block_library")
+        self.setWindowTitle("Block Library")
 
         # TODO: Pull from preferences and revert to default if not found?
         self.resize(400, 300)
@@ -97,11 +96,11 @@ class BlockLibrary(QtWidgets.QDockWidget, base.Component):
 
         # Create the layout widget
         container = QtWidgets.QWidget(self)
-        container.setObjectName('block_library::container')
+        container.setObjectName("block_library::container")
         self._container = container
 
         layout = QtWidgets.QVBoxLayout(container)
-        layout.setObjectName('block_library::layout')
+        layout.setObjectName("block_library::layout")
         layout.setSpacing(0)
         layout.setContentsMargins(5, 0, 5, 5)
         self._layout = layout
@@ -110,23 +109,24 @@ class BlockLibrary(QtWidgets.QDockWidget, base.Component):
         self._model = QtGui.QStandardItemModel()
 
         library = LibraryView(container)
-        library.setObjectName('block_library::library')
+        library.setObjectName("block_library::library")
         library.setModel(self._model)
         library.setDragEnabled(True)
         library.setDragDropMode(QtWidgets.QAbstractItemView.DragOnly)
-        #library.setColumnCount(1)
+        # library.setColumnCount(1)
         library.setHeaderHidden(True)
         # Expand categories with a single click
         library.clicked.connect(library.handle_clicked)
         library.selectionModel().selectionChanged.connect(library.updateDocTab)
-        #library.headerItem().setText(0, "Blocks")
+        # library.headerItem().setText(0, "Blocks")
+        library.doubleClicked.connect(
+            lambda block: self.add_block(block.data(QtCore.Qt.UserRole))
+        )
         self._library = library
 
         search_bar = BlockSearchBar(self)
         search_bar.setPlaceholderText("Find a block")
         self._search_bar = search_bar
-
-
 
         # Add widgets to the component
         layout.addWidget(search_bar)
@@ -137,9 +137,9 @@ class BlockLibrary(QtWidgets.QDockWidget, base.Component):
 
         ### Translation support
 
-        #self.setWindowTitle(_translate("blockLibraryDock", "Library", None))
-        #library.headerItem().setText(0, _translate("blockLibraryDock", "Blocks", None))
-        #QtCore.QMetaObject.connectSlotsByName(blockLibraryDock)
+        # self.setWindowTitle(_translate("blockLibraryDock", "Library", None))
+        # library.headerItem().setText(0, _translate("blockLibraryDock", "Blocks", None))
+        # QtCore.QMetaObject.connectSlotsByName(blockLibraryDock)
 
         ### Loading blocks
 
@@ -154,7 +154,11 @@ class BlockLibrary(QtWidgets.QDockWidget, base.Component):
         completer.setFilterMode(QtCore.Qt.MatchContains)
         self._search_bar.setCompleter(completer)
 
-        self._search_bar.textChanged.connect(lambda x: self.populate_tree(self._block_tree, get_items(completer.completionModel())))
+        self._search_bar.textChanged.connect(
+            lambda x: self.populate_tree(
+                self._block_tree, get_items(completer.completionModel())
+            )
+        )
 
         # TODO: Move to the base controller and set actions as class attributes
         # Automatically create the actions, menus and toolbars.
@@ -170,14 +174,15 @@ class BlockLibrary(QtWidgets.QDockWidget, base.Component):
         # Register the dock widget through the AppController.
         # The AppController then tries to find a saved dock location from the preferences
         # before calling the MainWindow Controller to add the widget.
-        self.app.registerDockWidget(self, location=self.settings.window.BLOCK_LIBRARY_DOCK_LOCATION)
+        self.app.registerDockWidget(
+            self, location=self.settings.window.BLOCK_LIBRARY_DOCK_LOCATION
+        )
 
         # Register the menus
-        #self.app.registerMenu(self.menus["library"])
+        # self.app.registerMenu(self.menus["library"])
 
     def createActions(self, actions):
         pass
-
 
     def createMenus(self, actions, menus):
         pass
@@ -186,7 +191,7 @@ class BlockLibrary(QtWidgets.QDockWidget, base.Component):
         pass
 
     def load_blocks(self):
-        ''' Load the block tree from the platform and populate the widget. '''
+        """Load the block tree from the platform and populate the widget."""
         # Loop through all of the blocks and create the nested hierarchy (this can be unlimited nesting)
         # This takes advantage of Python's use of references to move through the nested layers
 
@@ -195,9 +200,9 @@ class BlockLibrary(QtWidgets.QDockWidget, base.Component):
         for block in six.itervalues(self.app.platform.blocks):
             if block.category:
                 # Blocks with None category should be left out for whatever reason (e.g. not installed)
-                #print(block.category) # in list form, e.g. ['Core', 'Digital Television', 'ATSC']
-                #print(block.label) # label GRC uses to name block
-                #print(block.key) # actual block name (i.e. class name)
+                # print(block.category) # in list form, e.g. ['Core', 'Digital Television', 'ATSC']
+                # print(block.label) # label GRC uses to name block
+                # print(block.key) # actual block name (i.e. class name)
 
                 # Create a copy of the category list so things can be removed without changing the original list
                 category = block.category[:]
@@ -219,8 +224,16 @@ class BlockLibrary(QtWidgets.QDockWidget, base.Component):
         # Save a reference to the block tree in case it is needed later
         self._block_tree = block_tree
 
+    def add_block(self, block_key):
+        """Add a block by its key."""
+        if block_key is None:
+            return
+
+        fg = self.app.MainWindow.currentFlowgraph
+        fg.add_block(block_key)
+
     def populate_tree(self, block_tree, v_blocks=None):
-        ''' Populate the item model and tree view with the hierarchical block tree. '''
+        """Populate the item model and tree view with the hierarchical block tree."""
         # Recursive method of populating the QStandardItemModel
         # Since the _model.invisibleRootItem is the initial parent, this will populate
         # the model which is used for the TreeView.
@@ -231,14 +244,16 @@ class BlockLibrary(QtWidgets.QDockWidget, base.Component):
             for name, obj in sorted(blocks.items()):
                 child_item = QtGui.QStandardItem()
                 child_item.setEditable(False)
-                if type(obj) is dict: # It's a category
+                if type(obj) is dict:  # It's a category
                     child_item.setText(name)
-                    child_item.setDragEnabled(False) # categories should not be draggable
+                    child_item.setDragEnabled(
+                        False
+                    )  # categories should not be draggable
                     if not _populate(obj, child_item):
                         continue
                     else:
                         found = True
-                else: # It's a block
+                else:  # It's a block
                     if v_blocks and not name in v_blocks:
                         continue
                     else:
@@ -246,13 +261,18 @@ class BlockLibrary(QtWidgets.QDockWidget, base.Component):
                     child_item.setText(obj.label)
                     child_item.setDragEnabled(True)
                     child_item.setSelectable(True)
-                    child_item.setData(QtCore.QVariant(obj.key), role=QtCore.Qt.UserRole,)
+                    child_item.setData(
+                        QtCore.QVariant(obj.key),
+                        role=QtCore.Qt.UserRole,
+                    )
                 parent.appendRow(child_item)
             return found
 
         # Call the nested function recursively to populate the block tree
         log.debug("Populating the treeview")
         _populate(block_tree, self._model.invisibleRootItem())
-        self._library.expand(self._model.item(0,0).index()) # TODO: Should be togglable in prefs
+        self._library.expand(
+            self._model.item(0, 0).index()
+        )  # TODO: Should be togglable in prefs
         if v_blocks:
             self._library.expandAll()

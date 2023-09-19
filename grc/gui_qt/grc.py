@@ -34,14 +34,14 @@ from .helpers.profiling import StopWatch
 
 # Logging
 # Setup the logger to use a different name than the file name
-log = logging.getLogger('grc.application')
+log = logging.getLogger("grc.application")
 
 
 class Application(QtWidgets.QApplication):
-    '''
+    """
     This is the main QT application for GRC.
     It handles setting up the application components and actions and handles communication between different components in the system.
-    '''
+    """
 
     def __init__(self, settings, platform):
         # Note. Logger must have the correct naming convention to share handlers
@@ -53,9 +53,9 @@ class Application(QtWidgets.QApplication):
         QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_UseHighDpiPixmaps, True)
         QtWidgets.QApplication.__init__(self, settings.argv)
 
-
         try:
             import qdarkstyle
+
             self.setStyleSheet(qdarkstyle.load_stylesheet())
         except ImportError:
             log.warning("Did not find QDarkstyle. Dark mode disabled")
@@ -63,7 +63,6 @@ class Application(QtWidgets.QApplication):
         # Save references to the global settings and gnuradio platform
         self.settings = settings
         self.platform = platform
-
 
         # Load the main view class and initialize QMainWindow
         log.debug("ARGV - {0}".format(settings.argv))
@@ -76,26 +75,36 @@ class Application(QtWidgets.QApplication):
         log.debug("Creating main application window")
         stopwatch = StopWatch()
         self.MainWindow = components.MainWindow()
-        stopwatch.lap('mainwindow')
+        stopwatch.lap("mainwindow")
         self.Console = components.Console()
-        stopwatch.lap('console')
+        stopwatch.lap("console")
         self.BlockLibrary = components.BlockLibrary()
-        stopwatch.lap('blocklibrary')
-        #self.DocumentationTab = components.DocumentationTab()
-        #stopwatch.lap('documentationtab')
+        stopwatch.lap("blocklibrary")
+        # self.DocumentationTab = components.DocumentationTab()
+        # stopwatch.lap('documentationtab')
         self.WikiTab = components.WikiTab()
-        stopwatch.lap('wikitab')
+        stopwatch.lap("wikitab")
 
         # Debug times
-        log.debug("Loaded MainWindow controller - {:.4f}s".format(stopwatch.elapsed("mainwindow")))
-        log.debug("Loaded Console component - {:.4f}s".format(stopwatch.elapsed("console")))
-        log.debug("Loaded BlockLibrary component - {:.4}s".format(stopwatch.elapsed("blocklibrary")))
-        #log.debug("Loaded DocumentationTab component - {:.4}s".format(stopwatch.elapsed("documentationtab")))
+        log.debug(
+            "Loaded MainWindow controller - {:.4f}s".format(
+                stopwatch.elapsed("mainwindow")
+            )
+        )
+        log.debug(
+            "Loaded Console component - {:.4f}s".format(stopwatch.elapsed("console"))
+        )
+        log.debug(
+            "Loaded BlockLibrary component - {:.4}s".format(
+                stopwatch.elapsed("blocklibrary")
+            )
+        )
+        # log.debug("Loaded DocumentationTab component - {:.4}s".format(stopwatch.elapsed("documentationtab")))
 
         # Print Startup information once everything has loaded
         log.critical("TODO: Change welcome message.")
 
-        welcome = '''
+        welcome = """
         linux; GNU C++ version 4.8.2; Boost_105400; UHD_003.007.002-94-ge56809a0
 
         <<< Welcome to GNU Radio Companion 3.7.6git-1-g01deede >>>
@@ -105,15 +114,16 @@ class Application(QtWidgets.QApplication):
           /home/seth/Dev/gnuradio/target/share/gnuradio/grc/blocks
           /home/seth/.grc_gnuradio
         Loading: \"/home/seth/Dev/persistent-ew/gnuradio/target/flex_rx.grc\"
-        '''
+        """
 
         config = platform.config
-        paths="\n\t".join(platform.config.block_paths)
-        welcome = f"<<< Welcome to {config.name} {config.version} >>>\n\n" \
-                  f"Preferences file: {config.gui_prefs_file}\n" \
-                  f"Block paths:\n\t{paths}\n"
+        paths = "\n\t".join(platform.config.block_paths)
+        welcome = (
+            f"<<< Welcome to {config.name} {config.version} >>>\n\n"
+            f"Preferences file: {config.gui_prefs_file}\n"
+            f"Block paths:\n\t{paths}\n"
+        )
         log.info(textwrap.dedent(welcome))
-
 
     # Global registration functions
     #  - Handles the majority of child controller interaciton
@@ -122,14 +132,16 @@ class Application(QtWidgets.QApplication):
         pass
 
     def registerDockWidget(self, widget, location=0):
-        ''' Allows child controllers to register a widget that can be docked in the main window '''
+        """Allows child controllers to register a widget that can be docked in the main window"""
         # TODO: Setup the system to automatically add new "Show <View Name>" menu items when a new
         # dock widget is added.
-        log.debug("Registering widget ({0}, {1})".format(widget.__class__.__name__, location))
+        log.debug(
+            "Registering widget ({0}, {1})".format(widget.__class__.__name__, location)
+        )
         self.MainWindow.registerDockWidget(location, widget)
 
     def registerMenu(self, menu):
-        ''' Allows child controllers to register an a menu rather than just a single action '''
+        """Allows child controllers to register an a menu rather than just a single action"""
         # TODO: Need to have several capabilities:
         #  - Menu's need the ability to have a priority for ordering
         #  - When registering, the controller needs to specific target menu
@@ -142,11 +154,11 @@ class Application(QtWidgets.QApplication):
         self.MainWindow.registerMenu(menu)
 
     def registerAction(self, action, menu):
-        ''' Allows child controllers to register a global action shown in the main window '''
+        """Allows child controllers to register a global action shown in the main window"""
         pass
 
     def run(self):
-        ''' Launches the main QT event loop '''
+        """Launches the main QT event loop"""
         # Show the main window after everything is initialized.
         self.MainWindow.show()
-        return (self.exec_())
+        return self.exec_()
