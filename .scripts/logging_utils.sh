@@ -12,7 +12,7 @@ function startgroup {
             echo "##[group]$1";;
         travis )
             echo "$1"
-            echo -en 'travis_fold:start:'"${1// /}"'\\r';;
+            echo -en 'travis_fold:start:'"${1// /}"'\r';;
         github_actions )
             echo "::group::$1";;
         * )
@@ -28,7 +28,7 @@ function endgroup {
         azure )
             echo "##[endgroup]";;
         travis )
-            echo -en 'travis_fold:end:'"${1// /}"'\\r';;
+            echo -en 'travis_fold:end:'"${1// /}"'\r';;
         github_actions )
             echo "::endgroup::";;
     esac

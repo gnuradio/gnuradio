@@ -1,11 +1,11 @@
 alsa_lib:
-- 1.2.7
+- 1.2.9
 boost_cpp:
 - 1.78.0
 c_compiler:
 - gcc
 c_compiler_version:
-- '10'
+- '12'
 cdt_name:
 - cos7
 channel_sources:
@@ -15,7 +15,7 @@ channel_targets:
 cxx_compiler:
 - gxx
 cxx_compiler_version:
-- '10'
+- '12'
 docker_image:
 - quay.io/condaforge/linux-anvil-cos7-x86_64
 fftw:
@@ -27,11 +27,11 @@ gsl:
 libiio:
 - '0'
 libsndfile:
-- '1.1'
+- '1.2'
 libthrift:
-- 0.16.0
+- 0.18.1
 numpy:
-- '1.21'
+- '1.22'
 pin_run_as_build:
   boost-cpp:
     max_pin: x.x.x
@@ -40,6 +40,8 @@ pin_run_as_build:
     max_pin: x.x
 pybind11_abi:
 - '4'
+pyqt:
+- '5.15'
 python:
 - 3.10.* *_cpython
 qt_main:
@@ -47,13 +49,13 @@ qt_main:
 soapysdr:
 - '0.8'
 spdlog:
-- '1.10'
+- '1.11'
 target_platform:
 - linux-64
 uhd:
-- 4.3.0
+- 4.5.0
 volk:
-- '2.5'
+- '3.0'
 zeromq:
 - 4.3.4
 zip_keys:
