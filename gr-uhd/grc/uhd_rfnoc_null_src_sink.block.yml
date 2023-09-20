@@ -1,0 +1,54 @@
+id: uhd_rfnoc_null_src_sink
+label: RFNoC Null Source Sink Block
+category: '[Core]/UHD/RFNoC/Blocks'
+
+parameters:
+- id: btype
+  label: Block Type
+  dtype: enum
+  options: ['sink', 'source']
+  option_labels: ['Sink', 'Source']
+  default: 'sink'
+  hide: part
+- id: block_args
+  label: Block Args
+  dtype: string
+  default: ""
+  hide: ${ ( 'part' if not block_args else 'none' ) }
+- id: device_select
+  label: Device Select
+  dtype: int
+  default: -1
+  hide: ${ ( 'part' if device_select == -1 else 'none' ) }
+- id: instance_index
+  label: Instance Select
+  dtype: int
+  default: -1
+  hide: ${ ( 'part' if instance_index == -1 else 'none' ) }
+
+inputs:
+- domain: rfnoc
+  dtype: 'sc16'
+  hide: ${ ( True if str(btype) == 'source' else False ) }
+
+outputs:
+- domain: rfnoc
+  dtype: 'sc16'
+  hide: ${ ( True if str(btype) == 'sink' else False ) }
+
+templates:
+  imports: |-
+    from gnuradio import uhd
+  make: |-
+    uhd.rfnoc_block_generic(
+        self.rfnoc_graph,
+        uhd.device_addr(${block_args}),
+        "NullSrcSink",
+        ${device_select},
+        ${instance_index})
+
+documentation: |-
+  RFNoC Null Source Sink Block:
+  Send data to a "bit bucket" sink or receive data from a source.
+
+file_format: 1

@@ -13,6 +13,7 @@ install(
           rfnoc_keep1.grc
           rfnoc_logpwr_split.grc
           rfnoc_moving_average.grc
+          rfnoc_null_source_sink.grc
           rfnoc_radio_ddc.grc
           rfnoc_radio_ddc_multichan.grc
           rfnoc_replay.grc
