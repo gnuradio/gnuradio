@@ -236,6 +236,12 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
             statusTip=_("open-tooltip"),
         )
 
+        actions["example-browser"] = Action(
+            _("example-browser"),
+            self,
+            statusTip=_("examples-browser-tooltip"),
+        )
+
         actions["close"] = Action(
             Icons("window-close"),
             _("close"),
@@ -413,6 +419,13 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
             self,
             statusTip=_("flowgraph-properties-tooltip"),
         )
+
+        actions["search-in-examples"] = Action(
+            _("search-in-examples"),
+            self,
+            statusTip=_("search-in-examples-tooltip"),
+        )
+
         actions["properties"].setEnabled(False)
 
         # View Actions
@@ -621,6 +634,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         file = Menu("&File")
         file.addAction(actions["new"])
         file.addAction(actions["open"])
+        file.addAction(actions["example-browser"])
         file.addAction(actions["close"])
         file.addAction(actions["close_all"])
         file.addSeparator()
