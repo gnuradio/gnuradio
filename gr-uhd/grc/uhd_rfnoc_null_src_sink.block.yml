@@ -6,7 +6,7 @@ parameters:
 - id: btype
   label: Block Type
   dtype: enum
-  options: ['sink', 'source']
+  options: ['sink', 'source', 'both']
   option_labels: ['Sink', 'Source']
   default: 'sink'
   hide: part
