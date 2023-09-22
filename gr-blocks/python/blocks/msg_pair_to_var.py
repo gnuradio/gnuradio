@@ -39,7 +39,7 @@ class msg_pair_to_var(gr.sync_block):
         try:
             self.callback(new_val)
         except Exception as e:
-            gr.log.error("Error when calling " + repr(self.callback.name()) + " with " +
+            gr.log.error("Error when calling " + repr(self.callback) + " with " +
                          repr(new_val) + " (reason: %s)" % repr(e))
 
     def stop(self):
