@@ -1,0 +1,41 @@
+id: blocks_probe_signal_vx
+label: Probe Signal Vector
+flags: [ show_id, python, cpp ]
+
+parameters:
+-   id: type
+    label: Input Type
+    dtype: enum
+    options: [complex, float, int, short, byte]
+    option_attributes:
+        fcn: [c, f, i, s, b]
+    hide: part
+-   id: vlen
+    label: Vector Length
+    dtype: int
+    default: '1'
+    hide: ${ 'part' if vlen == 1 else 'none' }
+
+inputs:
+-   domain: stream
+    dtype: ${ type }
+    vlen: ${ vlen }
+
+asserts:
+- ${ vlen > 0 }
+
+templates:
+    imports: from gnuradio import blocks
+    make: blocks.probe_signal_v${type.fcn}(${vlen})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/probe_signal_v.h>']
+    declarations: 'blocks::probe_signal_v${type.fcn}::sptr ${id};'
+    make: 'this->${id} = blocks::probe_signal_v${type.fcn}::make(${vlen});'
+
+documentation: |-
+    Available functions to probe: level()
+
+    Use with the function probe block.
+
+file_format: 1

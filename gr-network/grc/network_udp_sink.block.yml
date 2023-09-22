@@ -1,0 +1,82 @@
+id: network_udp_sink
+label: UDP Sink
+category: '[Core]/Networking Tools'
+
+parameters:
+-   id: type
+    label: Input Type
+    dtype: enum
+    options: [complex, float, int, short, byte]
+    option_attributes:
+        size: [gr.sizeof_gr_complex, gr.sizeof_float, gr.sizeof_int, gr.sizeof_short,
+            gr.sizeof_char]
+    hide: part
+-   id: addr
+    label: Address
+    dtype: string
+    default: 127.0.0.1
+-   id: port
+    label: Destination Port
+    dtype: int
+    default: '2000'
+-   id: header
+    label: Header
+    dtype: enum
+    options: ['0', '1', '2', '4']
+    option_labels: [None, 64-bit Sequence Number, Sequence + 16-bit data size, CHDR
+            (64-bit)]
+-   id: payloadsize
+    label: UDP Packet Data Size
+    dtype: int
+    default: '1472'
+-   id: send_eof
+    label: Send Null Packet as EOF
+    dtype: enum
+    options: ['False', 'True']
+    option_labels: ['No', 'Yes']
+-   id: vlen
+    label: Vector Length
+    dtype: int
+    default: '1'
+    hide: ${ 'part' if vlen == 1 else 'none' }
+
+inputs:
+-   domain: stream
+    dtype: ${ type }
+    vlen: ${ vlen }
+    
+asserts:
+- ${ port > 0 }
+- ${ payloadsize > 0 }
+- ${ vlen > 0 }
+
+templates:
+    imports: from gnuradio import network
+    make: network.udp_sink(${type.size}, ${vlen}, ${addr}, ${port}, ${header}, ${payloadsize}, ${send_eof})
+
+documentation: "This block provides basic UDP data transmission capabilities with\
+    \ a few additional features for processing in custom receiving applications. \
+    \ \nA header can be added in various formats for tracking.  For instance all headers\
+    \ also provide a sequence number that can be used to identify gaps in packets.\
+    \  \nNote that payload size impacts the overall size of a single UDP packet. \
+    \ For a normal network, a payload size of 1472 (1500-28 for UDP headers) represents\
+    \ the max size for a standard UDP packet. For jumbo frames, 8972 can be used\
+    \ (9000-28).  Be careful adjusting this parameter as you could inadvertently cause\
+    \ unnecessary packet fragmentation and reconstruction.\n\n\
+    \ NOTES:\n\
+    \ This block does support connecting to IPv6 addresses.  If an IPv6 address\
+    \ is detected as the destination IP address, the block will automatically\
+    \ adjust for proper connection.  Just make sure your IPv6 stack is enabled.\n\n\
+    \ For best performance and to ensure UDP packets are not dropped, add the following\
+    \ lines to your /etc/sysctl.conf and reboot (the reboot is required).\n\n\
+    \ net.core.rmem_default=26214400\n\
+    \ net.core.rmem_max=104857600\n\
+    \ net.core.wmem_default=65536\n\
+    \ net.core.wmem_max=104857600\n\n\
+    \ IT IS HIGHLY RECOMMENDED that the example test_udp_source/sink flowgraphs be\
+    \ tested with the sequence number header enabled (the default in those flowgraphs)\
+    \ as a validation that no network or IP stack bottlenecks may cause dropped packets\
+    \ at the rates planned in your environment before using in production, especially if\
+    \ headers will not be used in your environment to track dropped packets."
+
+file_format: 1

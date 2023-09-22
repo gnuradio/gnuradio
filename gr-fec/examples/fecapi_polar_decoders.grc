@@ -1,0 +1,534 @@
+options:
+  parameters:
+    category: Custom
+    gen_cmake: 'On'
+    gen_linking: dynamic
+    generate_options: qt_gui
+    hier_block_src_path: '.:'
+    id: fecapi_polar_decoders
+    max_nouts: '0'
+    output_language: python
+    placement: (0,0)
+    run: 'True'
+    run_command: '{python} -u {filename}'
+    run_options: prompt
+    sizing_mode: fixed
+    title: Polar Decoders Example
+    window_size: 1920, 1080
+  states:
+    coordinate: [8, 8]
+    rotation: 0
+    state: enabled
+
+blocks:
+- name: block_size
+  id: variable
+  parameters:
+    comment: 'codeword size of polar codes.
+
+
+      MUST be a power of 2!
+
+      MUST be greater than ''frame_size''.'
+    value: '512'
+  states:
+    coordinate: [1320, 547]
+    rotation: 0
+    state: enabled
+- name: dec_dummy
+  id: variable_dummy_decoder_def
+  parameters:
+    dim1: '1'
+    dim2: '1'
+    framebits: frame_size*8
+    ndim: '0'
+    value: '"ok"'
+  states:
+    coordinate: [152, 643]
+    rotation: 0
+    state: enabled
+- name: enc_dummy
+  id: variable_dummy_encoder_def
+  parameters:
+    dim1: '1'
+    dim2: '4'
+    framebits: frame_size*8
+    ndim: '0'
+  states:
+    coordinate: [152, 563]
+    rotation: 0
+    state: enabled
+- name: polar_config
+  id: variable_polar_code_configurator
+  parameters:
+    block_size: block_size
+    channel: polar.CHANNEL_TYPE_BEC
+    comment: 'Block is used to configure polar encoders and decoders.
+
+
+      returns dictionary with requested configuration.
+
+
+      most important dict values: ''values'' and ''positions'''
+    design_snr: '0.0'
+    mu: '32'
+    num_info_bits: frame_size * 8
+  states:
+    coordinate: [1144, 547]
+    rotation: 0
+    state: enabled
+- name: polar_decoder_sc
+  id: variable_polar_decoder_sc_def
+  parameters:
+    block_size: block_size
+    comment: 'Standard ''Successive Cancellation'' decoder.
+
+
+      performs better with greater block size.
+
+      This is due to stronger polarization at higher block sizes.'
+    dim1: '1'
+    dim2: '1'
+    frozen_bit_positions: polar_config['positions']
+    frozen_bit_values: polar_config['values']
+    ndim: '0'
+    num_info_bits: frame_size * 8
+  states:
+    coordinate: [408, 691]
+    rotation: 0
+    state: enabled
+- name: polar_decoder_scl
+  id: variable_polar_decoder_sc_list_def
+  parameters:
+    block_size: block_size
+    comment: 'Advanced ''Successive Cancellation List'' decoder
+
+
+      Greater list size usually results in better decoding performance.
+
+      But it is computationally more heavy.'
+    dim1: '1'
+    dim2: '1'
+    frozen_bit_positions: polar_config['positions']
+    frozen_bit_values: polar_config['values']
+    max_list_size: '8'
+    ndim: '0'
+    num_info_bits: frame_size * 8
+  states:
+    coordinate: [776, 691]
+    rotation: 0
+    state: enabled
+- name: polar_encoder_sc
+  id: variable_polar_encoder_def
+  parameters:
+    block_size: block_size
+    dim1: '1'
+    dim2: '1'
+    frozen_bit_positions: polar_config['positions']
+    frozen_bit_values: polar_config['values']
+    is_packed: 'False'
+    ndim: '0'
+    num_info_bits: frame_size * 8
+  states:
+    coordinate: [408, 547]
+    rotation: 0
+    state: enabled
+- name: polar_encoder_scl
+  id: variable_polar_encoder_def
+  parameters:
+    block_size: block_size
+    dim1: '1'
+    dim2: '1'
+    frozen_bit_positions: polar_config['positions']
+    frozen_bit_values: polar_config['values']
+    is_packed: 'False'
+    ndim: '0'
+    num_info_bits: frame_size * 8
+  states:
+    coordinate: [776, 547]
+    rotation: 0
+    state: enabled
+- name: samp_rate
+  id: variable
+  parameters:
+    value: '50000'
+  states:
+    coordinate: [8, 107]
+    rotation: 0
+    state: enabled
+- name: analog_random_source_x_0
+  id: analog_random_source_x
+  parameters:
+    max: '256'
+    maxoutbuf: '0'
+    min: '0'
+    minoutbuf: '0'
+    num_samps: '1000'
+    repeat: 'True'
+    type: byte
+  states:
+    coordinate: [160, 459]
+    rotation: 180
+    state: disabled
+- name: blocks_char_to_float_0
+  id: blocks_char_to_float
+  parameters:
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    scale: '1'
+    vlen: '1'
+  states:
+    coordinate: [768, 427]
+    rotation: 0
+    state: enabled
+- name: blocks_char_to_float_0_0
+  id: blocks_char_to_float
+  parameters:
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    scale: '1'
+    vlen: '1'
+  states:
+    coordinate: [1136, 427]
+    rotation: 0
+    state: enabled
+- name: blocks_char_to_float_0_0_0
+  id: blocks_char_to_float
+  parameters:
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    scale: '1'
+    vlen: '1'
+  states:
+    coordinate: [1136, 331]
+    rotation: 0
+    state: enabled
+- name: blocks_char_to_float_0_0_0_0
+  id: blocks_char_to_float
+  parameters:
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    scale: '1'
+    vlen: '1'
+  states:
+    coordinate: [1136, 235]
+    rotation: 0
+    state: enabled
+- name: blocks_char_to_float_0_1
+  id: blocks_char_to_float
+  parameters:
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    scale: '1'
+    vlen: '1'
+  states:
+    coordinate: [432, 147]
+    rotation: 0
+    state: enabled
+- name: blocks_char_to_float_0_2
+  id: blocks_char_to_float
+  parameters:
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    scale: '1'
+    vlen: '1'
+  states:
+    coordinate: [768, 331]
+    rotation: 0
+    state: enabled
+- name: blocks_char_to_float_0_2_0
+  id: blocks_char_to_float
+  parameters:
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    scale: '1'
+    vlen: '1'
+  states:
+    coordinate: [768, 235]
+    rotation: 0
+    state: enabled
+- name: blocks_ctrlport_monitor_performance_0
+  id: blocks_ctrlport_monitor_performance
+  parameters:
+    en: 'True'
+  states:
+    coordinate: [392, 11]
+    rotation: 0
+    state: disabled
+- name: blocks_throttle_0
+  id: blocks_throttle
+  parameters:
+    ignoretag: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    samples_per_second: samp_rate
+    type: byte
+    vlen: '1'
+  states:
+    coordinate: [208, 267]
+    rotation: 0
+    state: enabled
+- name: blocks_unpack_k_bits_bb_0
+  id: blocks_unpack_k_bits_bb
+  parameters:
+    k: '8'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    coordinate: [224, 371]
+    rotation: 0
+    state: enabled
+- name: blocks_vector_source_x_0_1_0
+  id: blocks_vector_source_x
+  parameters:
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    repeat: 'True'
+    tags: '[]'
+    type: byte
+    vector: (frame_size//15)*[0, 0, 1, 0, 3, 0, 7, 0, 15, 0, 31, 0, 63, 0, 127]
+    vlen: '1'
+  states:
+    coordinate: [168, 139]
+    rotation: 180
+    state: enabled
+- name: digital_map_bb_0_0
+  id: digital_map_bb
+  parameters:
+    map: '[-1, 1]'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    coordinate: [656, 427]
+    rotation: 0
+    state: enabled
+- name: digital_map_bb_0_0_0
+  id: digital_map_bb
+  parameters:
+    map: '[-1, 1]'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    coordinate: [656, 331]
+    rotation: 0
+    state: enabled
+- name: digital_map_bb_0_0_0_0
+  id: digital_map_bb
+  parameters:
+    map: '[-1, 1]'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    coordinate: [656, 235]
+    rotation: 0
+    state: enabled
+- name: fec_extended_decoder_0
+  id: fec_extended_decoder
+  parameters:
+    ann: None
+    decoder_list: polar_decoder_scl
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    puncpat: puncpat
+    threadtype: none
+    value: fec_extended_decoder
+  states:
+    coordinate: [912, 403]
+    rotation: 0
+    state: enabled
+- name: fec_extended_decoder_0_1
+  id: fec_extended_decoder
+  parameters:
+    ann: None
+    decoder_list: polar_decoder_sc
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    puncpat: puncpat
+    threadtype: none
+    value: fec_extended_decoder
+  states:
+    coordinate: [912, 307]
+    rotation: 0
+    state: enabled
+- name: fec_extended_decoder_0_1_0
+  id: fec_extended_decoder
+  parameters:
+    ann: None
+    decoder_list: dec_dummy
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    puncpat: puncpat
+    threadtype: none
+    value: fec_extended_decoder
+  states:
+    coordinate: [912, 211]
+    rotation: 0
+    state: enabled
+- name: fec_extended_encoder_1
+  id: fec_extended_encoder
+  parameters:
+    encoder_list: polar_encoder_scl
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    puncpat: puncpat
+    threadtype: capillary
+  states:
+    coordinate: [432, 411]
+    rotation: 0
+    state: enabled
+- name: fec_extended_encoder_1_0
+  id: fec_extended_encoder
+  parameters:
+    encoder_list: polar_encoder_sc
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    puncpat: puncpat
+    threadtype: capillary
+  states:
+    coordinate: [432, 315]
+    rotation: 0
+    state: enabled
+- name: fec_extended_encoder_1_0_0
+  id: fec_extended_encoder
+  parameters:
+    encoder_list: enc_dummy
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    puncpat: puncpat
+    threadtype: capillary
+  states:
+    coordinate: [432, 219]
+    rotation: 0
+    state: enabled
+- name: frame_size
+  id: parameter
+  parameters:
+    hide: none
+    label: Frame Size
+    type: intx
+    value: '30'
+  states:
+    coordinate: [200, 11]
+    rotation: 0
+    state: enabled
+- name: puncpat
+  id: parameter
+  parameters:
+    hide: none
+    value: '''11'''
+  states:
+    coordinate: [312, 11]
+    rotation: 0
+    state: enabled
+- name: qtgui_time_sink_x_0
+  id: qtgui_time_sink_x
+  parameters:
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '0.6'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'False'
+    axislabels: 'True'
+    color1: '"blue"'
+    color10: '"blue"'
+    color2: '"red"'
+    color3: '"green"'
+    color4: '"black"'
+    color5: '"cyan"'
+    color6: '"magenta"'
+    color7: '"yellow"'
+    color8: '"dark red"'
+    color9: '"dark green"'
+    ctrlpanel: 'False'
+    entags: 'True'
+    grid: 'False'
+    label1: Input
+    label2: Dummy
+    label3: Polar with SC decoder
+    label4: Polar with SC list decoder
+    label5: CCSDS
+    legend: 'True'
+    marker1: '-1'
+    marker10: '-1'
+    marker2: '-1'
+    marker3: '-1'
+    marker4: '-1'
+    marker5: '-1'
+    marker6: '-1'
+    marker7: '-1'
+    marker8: '-1'
+    marker9: '-1'
+    nconnections: '4'
+    size: '2048'
+    srate: samp_rate
+    stemplot: 'False'
+    style1: '1'
+    style10: '1'
+    style2: '1'
+    style3: '1'
+    style4: '1'
+    style5: '1'
+    style6: '1'
+    style7: '1'
+    style8: '1'
+    style9: '1'
+    tr_chan: '0'
+    tr_delay: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_slope: qtgui.TRIG_SLOPE_POS
+    tr_tag: '""'
+    type: float
+    update_time: '0.01'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    ylabel: Amplitude
+    ymax: '1.5'
+    ymin: '-0.5'
+    yunit: '""'
+  states:
+    coordinate: [1408, 153]
+    rotation: 0
+    state: enabled
+
+connections:
+- [analog_random_source_x_0, '0', blocks_throttle_0, '0']
+- [blocks_char_to_float_0, '0', fec_extended_decoder_0, '0']
+- [blocks_char_to_float_0_0, '0', qtgui_time_sink_x_0, '3']
+- [blocks_char_to_float_0_0_0, '0', qtgui_time_sink_x_0, '2']
+- [blocks_char_to_float_0_0_0_0, '0', qtgui_time_sink_x_0, '1']
+- [blocks_char_to_float_0_1, '0', qtgui_time_sink_x_0, '0']
+- [blocks_char_to_float_0_2, '0', fec_extended_decoder_0_1, '0']
+- [blocks_char_to_float_0_2_0, '0', fec_extended_decoder_0_1_0, '0']
+- [blocks_throttle_0, '0', blocks_unpack_k_bits_bb_0, '0']
+- [blocks_unpack_k_bits_bb_0, '0', blocks_char_to_float_0_1, '0']
+- [blocks_unpack_k_bits_bb_0, '0', fec_extended_encoder_1, '0']
+- [blocks_unpack_k_bits_bb_0, '0', fec_extended_encoder_1_0, '0']
+- [blocks_unpack_k_bits_bb_0, '0', fec_extended_encoder_1_0_0, '0']
+- [blocks_vector_source_x_0_1_0, '0', blocks_throttle_0, '0']
+- [digital_map_bb_0_0, '0', blocks_char_to_float_0, '0']
+- [digital_map_bb_0_0_0, '0', blocks_char_to_float_0_2, '0']
+- [digital_map_bb_0_0_0_0, '0', blocks_char_to_float_0_2_0, '0']
+- [fec_extended_decoder_0, '0', blocks_char_to_float_0_0, '0']
+- [fec_extended_decoder_0_1, '0', blocks_char_to_float_0_0_0, '0']
+- [fec_extended_decoder_0_1_0, '0', blocks_char_to_float_0_0_0_0, '0']
+- [fec_extended_encoder_1, '0', digital_map_bb_0_0, '0']
+- [fec_extended_encoder_1_0, '0', digital_map_bb_0_0_0, '0']
+- [fec_extended_encoder_1_0_0, '0', digital_map_bb_0_0_0_0, '0']
+
+metadata:
+  file_format: 1

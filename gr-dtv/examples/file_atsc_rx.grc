@@ -1,0 +1,173 @@
+options:
+  parameters:
+    author: ''
+    category: Custom
+    cmake_opt: ''
+    comment: ''
+    copyright: ''
+    description: ''
+    gen_cmake: 'On'
+    gen_linking: dynamic
+    generate_options: no_gui
+    hier_block_src_path: '.:'
+    id: file_atsc_rx
+    max_nouts: '0'
+    output_language: python
+    placement: (0,0)
+    qt_qss_theme: ''
+    realtime_scheduling: ''
+    run: 'True'
+    run_command: '{python} -u {filename}'
+    run_options: run
+    sizing_mode: fixed
+    thread_safe_setters: ''
+    title: Receive ATSC from UHD
+    window_size: 4000, 4000
+  states:
+    coordinate: [11, 10]
+    rotation: 0
+    state: enabled
+
+blocks:
+- name: antenna
+  id: variable
+  parameters:
+    comment: ''
+    value: '"TX/RX"'
+  states:
+    coordinate: [24, 188.0]
+    rotation: 0
+    state: enabled
+- name: atsc_sym_rate
+  id: variable
+  parameters:
+    comment: ''
+    value: 4.5e6/286*684
+  states:
+    coordinate: [128, 124.0]
+    rotation: 0
+    state: enabled
+- name: duration
+  id: variable
+  parameters:
+    comment: ''
+    value: '30'
+  states:
+    coordinate: [456, 188.0]
+    rotation: 0
+    state: enabled
+- name: freq
+  id: variable
+  parameters:
+    comment: ''
+    value: 605e6
+  states:
+    coordinate: [128, 188.0]
+    rotation: 0
+    state: enabled
+- name: gain
+  id: variable
+  parameters:
+    comment: ''
+    value: '18'
+  states:
+    coordinate: [248, 188.0]
+    rotation: 0
+    state: enabled
+- name: oversampled_rate
+  id: variable
+  parameters:
+    comment: ''
+    value: atsc_sym_rate*sps
+  states:
+    coordinate: [248, 124.0]
+    rotation: 0
+    state: enabled
+- name: sample_rate
+  id: variable
+  parameters:
+    comment: ''
+    value: 6.25e6
+  states:
+    coordinate: [344, 188.0]
+    rotation: 0
+    state: enabled
+- name: sps
+  id: variable
+  parameters:
+    comment: ''
+    value: '1.1'
+  states:
+    coordinate: [24, 124.0]
+    rotation: 0
+    state: enabled
+- name: blocks_file_sink_0
+  id: blocks_file_sink
+  parameters:
+    affinity: ''
+    alias: ''
+    append: 'False'
+    comment: ''
+    file: mpeg.ts
+    type: byte
+    unbuffered: 'False'
+    vlen: '1'
+  states:
+    coordinate: [888, 292.0]
+    rotation: 0
+    state: enabled
+- name: blocks_file_source_0
+  id: blocks_file_source
+  parameters:
+    affinity: ''
+    alias: ''
+    begin_tag: pmt.PMT_NIL
+    comment: ''
+    file: atsc_iq.sc16
+    length: '0'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    offset: '0'
+    repeat: 'False'
+    type: short
+    vlen: '1'
+  states:
+    coordinate: [40, 276.0]
+    rotation: 0
+    state: enabled
+- name: blocks_interleaved_short_to_complex_0
+  id: blocks_interleaved_short_to_complex
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    swap: 'False'
+    vector_input: 'False'
+  states:
+    coordinate: [296, 308.0]
+    rotation: 0
+    state: enabled
+- name: dtv_atsc_rx_0
+  id: dtv_atsc_rx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    rate: sample_rate
+    sps: '1.5'
+  states:
+    coordinate: [576, 300.0]
+    rotation: 0
+    state: enabled
+
+connections:
+- [blocks_file_source_0, '0', blocks_interleaved_short_to_complex_0, '0']
+- [blocks_interleaved_short_to_complex_0, '0', dtv_atsc_rx_0, '0']
+- [dtv_atsc_rx_0, '0', blocks_file_sink_0, '0']
+
+metadata:
+  file_format: 1

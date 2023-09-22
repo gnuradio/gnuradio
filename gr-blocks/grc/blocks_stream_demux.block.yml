@@ -1,0 +1,54 @@
+id: blocks_stream_demux
+label: Stream Demux
+flags: [ python, cpp ]
+
+parameters:
+-   id: type
+    label: Type
+    dtype: enum
+    options: [complex, float, int, short, byte]
+    option_attributes:
+        size: [gr.sizeof_gr_complex, gr.sizeof_float, gr.sizeof_int, gr.sizeof_short,
+            gr.sizeof_char]
+    hide: part
+-   id: lengths
+    label: Lengths
+    dtype: int_vector
+    default: (1, 1)
+-   id: num_outputs
+    label: Num Outputs
+    dtype: int
+    default: '2'
+    hide: part
+-   id: vlen
+    label: Vector Length
+    dtype: int
+    default: '1'
+    hide: ${ 'part' if vlen == 1 else 'none' }
+
+inputs:
+-   domain: stream
+    dtype: ${ type }
+    vlen: ${ vlen }
+
+outputs:
+-   domain: stream
+    dtype: ${ type }
+    vlen: ${ vlen }
+    multiplicity: ${ num_outputs }
+
+asserts:
+- ${ num_outputs > 0 }
+- ${ num_outputs == len(lengths) }
+- ${ vlen > 0 }
+
+templates:
+    imports: from gnuradio import blocks
+    make: blocks.stream_demux(${type.size}*${vlen}, ${lengths})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/stream_demux.h>']
+    declarations: 'blocks::stream_demux::sptr ${id};'
+    make: 'this->${id} = blocks::stream_demux::make(${type.size}*${vlen}, ${lengths});'
+
+file_format: 1

@@ -1,0 +1,194 @@
+id: variable_qtgui_chooser
+label: QT GUI Chooser
+flags: [ show_id, python ]
+
+parameters:
+-   id: label
+    label: Label
+    dtype: string
+    hide: ${ ('none' if label else 'part') }
+-   id: type
+    label: Type
+    dtype: enum
+    default: int
+    options: [real, int, string, raw]
+    option_labels: [Float, Integer, String, Any]
+    hide: part
+-   id: num_opts
+    label: Num Options
+    dtype: enum
+    default: '3'
+    options: ['0', '1', '2', '3', '4', '5']
+    option_labels: [List, '1', '2', '3', '4', '5']
+-   id: options
+    label: Options
+    dtype: raw
+    default: '[0, 1, 2]'
+    hide: ${ ('all' if int(num_opts) else 'none') }
+-   id: labels
+    label: Labels
+    dtype: raw
+    default: '[]'
+    hide: ${ ('all' if int(num_opts) else 'none') }
+-   id: value
+    label: Default option
+    dtype: ${type}
+    default: '0'
+-   id: option0    
+    label: Option 0
+    dtype: ${ type }
+    default: '0'
+    hide: ${ ('none' if int(num_opts) > 0 else 'all') }
+-   id: label0
+    label: Label 0
+    dtype: string
+    hide: ${ (int(num_opts) > 0) and (label0 and 'none' or 'part') or 'all' }
+-   id: option1
+    label: Option 1
+    dtype: ${ type }
+    default: '1'
+    hide: ${ ('none' if int(num_opts) > 1 else 'all') }
+-   id: label1
+    label: Label 1
+    dtype: string
+    hide: ${ (int(num_opts) > 1) and (label1 and 'none' or 'part') or 'all' }
+-   id: option2
+    label: Option 2
+    dtype: ${ type }
+    default: '2'
+    hide: ${ ('none' if int(num_opts) > 2 else 'all') }
+-   id: label2
+    label: Label 2
+    dtype: string
+    hide: ${ (int(num_opts) > 2) and (label2 and 'none' or 'part') or 'all' }
+-   id: option3
+    label: Option 3
+    dtype: ${ type }
+    default: '3'
+    hide: ${ ('none' if int(num_opts) > 3 else 'all') }
+-   id: label3
+    label: Label 3
+    dtype: string
+    hide: ${ (int(num_opts) > 3) and (label3 and 'none' or 'part') or 'all' }
+-   id: option4
+    label: Option 4
+    dtype: ${ type }
+    default: '4'
+    hide: ${ ('none' if int(num_opts) > 4 else 'all') }
+-   id: label4
+    label: Label 4
+    dtype: string
+    hide: ${ (int(num_opts) > 4) and (label4 and 'none' or 'part') or 'all' }
+-   id: widget
+    label: Widget
+    dtype: enum
+    default: combo_box
+    options: [combo_box, radio_buttons]
+    option_labels: [Combo Box, Radio Buttons]
+    hide: part
+-   id: orient
+    label: Orientation
+    dtype: enum
+    default: Qt.QVBoxLayout
+    options: [Qt.QHBoxLayout, Qt.QVBoxLayout]
+    option_labels: [Horizontal, Vertical]
+    hide: ${ ('part' if widget == 'radio_buttons' else 'all') }
+-   id: gui_hint
+    label: GUI Hint
+    dtype: gui_hint
+    hide: part
+value: ${ value }
+
+asserts:
+- ${ (int(num_opts) != 0) or (labels == [] or len(labels) == len(options)) }
+- ${ int(num_opts) != 0 or (value in options) }
+- ${ int(num_opts) == 0 or (value in [option0, option1, option2, option3, option4 ]) }
+
+templates:
+    imports: |-
+        from PyQt5.QtCore import QObject, pyqtSlot
+    var_make: self.${id} = ${id} = ${value}
+    callbacks:
+    - self.set_${id}(${value})
+    - self._${id}_callback(${id})
+    make: |-
+        <%
+            if int(num_opts) > 0:
+                all_options = [ option0(), option1(), option2(), option3(), option4() ][:int(num_opts)]
+                all_labels = [ label0(), label1(), label2(), label3(), label4() ][:int(num_opts)]
+            else:
+                all_options = options()
+                all_labels = labels()
+
+            # Make sure these are lists
+            if not isinstance(all_options, list):
+                all_options = [all_options]
+            if not isinstance(all_labels, list):
+                all_labels = [all_labels]
+
+            use_labels = True
+            if len(all_labels) == 0:
+                use_labels = False
+            else:
+                # replace blank labels with their respective options
+                for i, label_ in enumerate(all_labels):
+                    if label_ == "''" or label_ == "":
+                        all_labels[i] = str(all_options[i])
+        %>\
+        # Create the options list
+        self._${id}_options = ${all_options}
+        # Create the labels list
+        % if use_labels:
+        self._${id}_labels = ${all_labels}
+        % else:
+        self._${id}_labels = map(str, self._${id}_options)
+        % endif
+        # Create the combo box
+        % if widget == 'combo_box':
+        <%
+            win = 'self._%s_tool_bar'%id
+        %>\
+        ${win} = Qt.QToolBar(self)
+        ${win}.addWidget(Qt.QLabel("${no_quotes(label,repr(id))}" + ": "))
+        self._${id}_combo_box = Qt.QComboBox()
+        ${win}.addWidget(self._${id}_combo_box)
+        for _label in self._${id}_labels: self._${id}_combo_box.addItem(_label)
+        self._${id}_callback = lambda i: Qt.QMetaObject.invokeMethod(self._${id}_combo_box, "setCurrentIndex", Qt.Q_ARG("int", self._${id}_options.index(i)))
+        self._${id}_callback(self.${id})
+        self._${id}_combo_box.currentIndexChanged.connect(
+            lambda i: self.set_${id}(self._${id}_options[i]))
+        % endif
+        # Create the radio buttons
+        % if widget == 'radio_buttons':
+        <%
+            win = 'self._%s_group_box'%id
+        %>\
+        ${win} = Qt.QGroupBox("${no_quotes(label,repr(id))}" + ": ")
+        self._${id}_box = ${orient}()
+        class variable_chooser_button_group(Qt.QButtonGroup):
+            def __init__(self, parent=None):
+                Qt.QButtonGroup.__init__(self, parent)
+            @pyqtSlot(int)
+            def updateButtonChecked(self, button_id):
+                self.button(button_id).setChecked(True)
+        self._${id}_button_group = variable_chooser_button_group()
+        ${win}.setLayout(self._${id}_box)
+        for i, _label in enumerate(self._${id}_labels):
+            radio_button = Qt.QRadioButton(_label)
+            self._${id}_box.addWidget(radio_button)
+            self._${id}_button_group.addButton(radio_button, i)
+        self._${id}_callback = lambda i: Qt.QMetaObject.invokeMethod(self._${id}_button_group, "updateButtonChecked", Qt.Q_ARG("int", self._${id}_options.index(i)))
+        self._${id}_callback(self.${id})
+        self._${id}_button_group.buttonClicked[int].connect(
+            lambda i: self.set_${id}(self._${id}_options[i]))
+        % endif
+        ${gui_hint() % win}
+
+documentation: |-
+    This block creates a variable with enumerated options. The gui widget is implemented as a combo box or radio button group. Leave the label blank to use the variable id as the label.
+
+    Choose the number of options available to your chooser. When the label is left blank, the option will be used as the label. Set the number of options to "list" to enter a single list of options and labels. When the labels is an empty list, the options will be used as the label.
+
+    The GUI hint can be used to position the widget within the application. The hint is of the form [tab_id@tab_index]: [row, col, row_span, col_span]. Both the tab specification and the grid position are optional.
+
+file_format: 1

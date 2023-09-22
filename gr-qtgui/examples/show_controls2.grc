@@ -1,0 +1,178 @@
+options:
+  parameters:
+    author: ''
+    category: '[GRC Hier Blocks]'
+    cmake_opt: ''
+    comment: ''
+    copyright: ''
+    description: ''
+    gen_cmake: 'On'
+    gen_linking: dynamic
+    generate_options: qt_gui
+    hier_block_src_path: '.:'
+    id: show_controls2
+    max_nouts: '0'
+    output_language: python
+    placement: (0,0)
+    qt_qss_theme: ''
+    realtime_scheduling: ''
+    run: 'True'
+    run_command: '{python} -u {filename}'
+    run_options: prompt
+    sizing_mode: fixed
+    thread_safe_setters: ''
+    title: gr-guiextra
+    window_size: ''
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 8]
+    rotation: 0
+    state: enabled
+
+blocks:
+- name: qtgui_dialgauge_0
+  id: qtgui_dialgauge
+  parameters:
+    affinity: ''
+    alias: ''
+    backgroundColor: white
+    barColor: red
+    comment: ''
+    fontColor: black
+    gui_hint: 0,2,1,1
+    label: ''
+    maximum: '360.0'
+    minimum: '0.0'
+    msize: '160'
+    position: '1'
+    showValue: 'True'
+    type: real
+    value: '0.0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [632, 20.0]
+    rotation: 0
+    state: true
+- name: samp_rate
+  id: variable
+  parameters:
+    comment: ''
+    value: '32000'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [184, 12]
+    rotation: 0
+    state: enabled
+- name: setval
+  id: variable_qtgui_dial_control
+  parameters:
+    comment: ''
+    gui_hint: 0,0,1,1
+    label: Dial
+    maximum: '3600.0'
+    minimum: '0.0'
+    minsize: '100'
+    relBackgroundColor: default
+    scaleFactor: 1/10
+    showvalue: 'False'
+    type: real
+    value: '1200.0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [368, 4.0]
+    rotation: 0
+    state: true
+- name: toggleswitch
+  id: variable_qtgui_toggle_switch
+  parameters:
+    cellalignment: '1'
+    comment: ''
+    gui_hint: 1,0,1,1
+    initPressed: 'False'
+    label: Toggle Switch
+    position: '4'
+    pressed: '1'
+    released: '0'
+    switchOffBackground: blue
+    switchOnBackground: green
+    type: int
+    value: '0'
+    verticalalignment: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [576, 184.0]
+    rotation: 0
+    state: true
+- name: blocks_null_sink_0
+  id: blocks_null_sink
+  parameters:
+    affinity: ''
+    alias: ''
+    bus_structure_sink: '[[0,],]'
+    comment: ''
+    num_inputs: '1'
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [696, 448.0]
+    rotation: 0
+    state: true
+- name: blocks_null_source_0
+  id: blocks_null_source
+  parameters:
+    affinity: ''
+    alias: ''
+    bus_structure_source: '[[0,],]'
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_outputs: '1'
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [312, 448.0]
+    rotation: 0
+    state: true
+- name: blocks_throttle_0
+  id: blocks_throttle
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    ignoretag: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    samples_per_second: samp_rate
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [520, 444.0]
+    rotation: 0
+    state: true
+
+connections:
+- [blocks_null_source_0, '0', blocks_throttle_0, '0']
+- [blocks_throttle_0, '0', blocks_null_sink_0, '0']
+- [setval, value, qtgui_dialgauge_0, value]
+
+metadata:
+  file_format: 1

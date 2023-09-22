@@ -1,0 +1,79 @@
+# Copyright (C) 2017 Free Software Foundation, Inc.
+#
+# Permission is granted to copy, distribute and/or modify this document
+# under the terms of the GNU Free Documentation License, Version 1.3
+# or any later version published by the Free Software Foundation;
+# with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.
+# A copy of the license is included in the section entitled "GNU
+# Free Documentation License".
+
+/*!
+ * \defgroup block GNU Radio C++ Signal Processing Blocks
+ * \brief All C++ blocks that can be used in GR graphs are listed here or in
+ * the subcategories below.
+ *
+ * Sorry, at this time the Python hierarchical blocks are not included
+ * in this index.
+ * @{
+ */
+
+/*! \defgroup container_blk Top Block and Hierarchical Block Base Classes	 */
+/*! \defgroup audio_blk Audio Signals */
+/*! \defgroup boolean_operators_blk Boolean Operators */
+/*! \defgroup byte_operators_blk Byte Operators */
+/*! \defgroup channel_models_blk Channel Models */
+/*! \defgroup channelizers_blk Channelizers */
+/*! \defgroup coding_blk Information Coding and Decoding */
+/*! \defgroup controlport_blk ControlPort */
+/*! \defgroup debug_tools_blk Debug Tools */
+/*! \defgroup deprecated_blk Deprecated */
+/*! \defgroup equalizers_blk Equalizers */
+/*! \defgroup error_coding_blk Error Coding and Decoding */
+/*! \defgroup file_operators_blk File Operators */
+/*! \defgroup filter_blk Filters */
+/*! \defgroup fourier_analysis_blk Fourier Analysis */
+/*! \defgroup instrumentation_blk Instrumentation Tools  */
+/*! \defgroup level_controllers_blk Level Controllers */
+/*! \defgroup math_operators_blk Math Operators */
+/*! \defgroup measurement_tools_blk Measurement Tools */
+/*! \defgroup message_tools_blk Message Tools */
+/*! \defgroup misc_blk Miscellaneous */
+/*! \defgroup modulators_blk Modulators and Demodulators */
+/*! \defgroup networking_tools_blk Networking Tools */
+/*! \defgroup ofdm_blk OFDM Blocks */
+/*! \defgroup packet_operators_blk Packet/Frame Operators */
+/*! \defgroup peak_detectors_blk Peak Detectors */
+/*! \defgroup pdu_blk PDU Operators */
+/*! \defgroup qtgui_blk QT Graphical Interfaces */
+/*! \defgroup resamplers_blk Resamplers */
+/*! \defgroup stream_operators_blk Streams Operators */
+/*! \defgroup stream_tag_tools_blk Stream Tag Tools */
+/*! \defgroup symbol_coding_blk Symbol Coding */
+/*! \defgroup synchronizers_blk Synchronizers */
+/*! \defgroup trellis_coding_blk Trellis Coding */
+/*! \defgroup type_converters_blk Data Type Converters */
+/*! \defgroup uhd_blk UHD Interface */
+/*! \defgroup waveform_generators_blk Waveform Generators */
+/*! \defgroup wavelet_blk Wavelet Transforms */
+
+/*!
+ * \defgroup base_blk Base classes for GR Blocks
+ * \brief All C++ blocks are derived from these base classes
+ */
+
+
+/*! @} */
+
+/*! \defgroup filter_design Digital Filter Design	*/
+/*! \defgroup misc Miscellaneous			*/
+/*! \defgroup internal Implementation Details		*/
+
+/*!
+ * \defgroup applications Applications
+ * These are some applications build using gnuradio...
+ * @{
+ */
+
+/*! @} */
+
+/*! \defgroup hardware Misc Hardware Control		*/

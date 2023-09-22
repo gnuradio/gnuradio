@@ -1,0 +1,76 @@
+name: 'Package-Fedora'
+on:
+  workflow_dispatch:
+    inputs:
+      build_branch:
+        description: 'Branch to build from'
+        required: true
+        default: 'main'
+      rev:
+        description: 'Package revision'
+        required: true
+        default: '1'
+jobs:
+  linux-docker:
+    runs-on: ubuntu-20.04
+    # The GH default is 360 minutes (it's also the max as of Feb-2021). However
+    # we should fail sooner. The only reason to exceed this time is if a test
+    # hangs.
+    timeout-minutes: 240
+    strategy:
+      # Enabling fail-fast would kill all Dockers if one of them fails. We want
+      # maximum output.
+      fail-fast: false
+      matrix:
+        # For every distro we want to test here, add one key 'distro' with a
+        # descriptive name, and one key 'containerid' with the name of the
+        # container (i.e., what you want to docker-pull)
+        include:
+          - distro: 'Fedora 34'
+            containerid: 'ghcr.io/gnuradio/ci:fedora-34-3.9'
+            cxxflags: -Werror
+    name: ${{ matrix.distro }}
+    container:
+      image: ${{ matrix.containerid }}
+      volumes:
+        - build_data:/build
+      options: --cpus 2
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+        ref: ${{ github.event.inputs.build_branch }}
+    - uses: actions/setup-python@v1
+      with:
+        python-version: "3.x"
+    - run: dnf install -y fedora-packager copr-cli
+    - name: Import GPG key
+      id: import_gpg
+      uses: crazy-max/ghaction-import-gpg@v3
+      with:
+        gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
+        passphrase: ${{ secrets.PASSPHRASE }}
+    - name: GPG user IDs
+      run: |
+        echo "fingerprint: ${{ steps.import_gpg.outputs.fingerprint }}"
+        echo "keyid:       ${{ steps.import_gpg.outputs.keyid }}"
+        echo "name:        ${{ steps.import_gpg.outputs.name }}"
+        echo "email:       ${{ steps.import_gpg.outputs.email }}"
+    - name: Run Packaging Script
+      run: |
+        export DISTRIBUTION="fedora"
+        export GITBRANCH="main"
+        export REV="${{ github.event.inputs.rev }}"
+        cd /build && sh $GITHUB_WORKSPACE/.packaging/scripts/pkg-fedora.sh
+    - name: Archive SRPM
+      uses: actions/upload-artifact@v2
+      with:
+        name: srpm
+        path: /build/rpmbuild/SRPMS
+    - name: Save COPR Token
+      run: cd /build && echo "$COPR_TOKEN" > copr
+      shell: bash
+      env:
+        COPR_TOKEN: ${{secrets.COPR_TOKEN}}
+    - name: Submit to COPR
+      run: cd /build && copr-cli --config copr build gnuradio $(ls rpmbuild/SRPMS/*.src.rpm)

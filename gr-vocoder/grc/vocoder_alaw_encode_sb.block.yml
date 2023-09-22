@@ -1,0 +1,23 @@
+id: vocoder_alaw_encode_sb
+label: g711 Alaw Audio Encoder
+flags: [ python, cpp ]
+
+inputs:
+-   domain: stream
+    dtype: short
+
+outputs:
+-   domain: stream
+    dtype: byte
+
+templates:
+    imports: from gnuradio import vocoder
+    make: vocoder.alaw_encode_sb()
+
+cpp_templates:
+    includes: [ '#include <gnuradio/vocoder/alaw_encode_sb.h>' ]
+    declarations: 'vocoder::alaw_encode_sb::sptr ${id};'
+    make: 'this->${id} = vocoder::alaw_encode_sb::make();'
+    link: ['gnuradio-vocoder']
+
+file_format: 1

@@ -1,0 +1,76 @@
+id: trellis_viterbi_combined_xx
+label: Viterbi Combo
+category: '[Core]/Trellis Coding'
+
+parameters:
+-   id: type
+    label: Input Type
+    dtype: enum
+    options: [c, f, i, s]
+    option_labels: [Complex, Float, Int, Short]
+    option_attributes:
+        io: [complex, float, int, short]
+        table: [complex_vector, real_vector, int_vector, int_vector]
+    hide: part
+-   id: out_type
+    label: Output Type
+    dtype: enum
+    options: [i, s, b]
+    option_labels: [Int, Short, Byte]
+    option_attributes:
+        io: [int, short, byte]
+    hide: part
+-   id: fsm_args
+    label: FSM Args
+    dtype: raw
+-   id: block_size
+    label: Block Size
+    dtype: int
+-   id: init_state
+    label: Initial State
+    dtype: int
+    default: '0'
+-   id: final_state
+    label: Final State
+    dtype: int
+    default: '-1'
+-   id: dim
+    label: Dimensionality
+    dtype: int
+-   id: table
+    label: Constellation
+    dtype: ${ type.table }
+-   id: metric_type
+    label: Metric Type
+    dtype: enum
+    options: [digital.TRELLIS_EUCLIDEAN, digital.TRELLIS_HARD_SYMBOL, digital.TRELLIS_HARD_BIT]
+    option_labels: [Euclidean, Hard Symbol, Hard Bit]
+
+inputs:
+-   domain: stream
+    dtype: ${ type.io }
+
+outputs:
+-   domain: stream
+    dtype: ${ out_type.io }
+
+asserts:
+- ${ (isinstance(eval(""" fsm_args """[1:-1], locals(),globals()), str) and open(fsm_args).close()) or True }
+
+templates:
+    imports: from gnuradio import trellis, digital
+    make: trellis.viterbi_combined_${type}${out_type}(trellis.fsm(${fsm_args}), ${block_size},
+        ${init_state}, ${final_state}, ${dim}, ${table}, ${metric_type})
+    callbacks:
+    - set_FSM(trellis.fsm(${fsm_args}))
+    - set_K(${block_size})
+    - set_S0(${init_state})
+    - set_SK(${final_state})
+    - set_D(${dim})
+    - set_TABLE(${table})
+    - set_TYPE(${metric_type})
+
+documentation: |-
+    Viterbi Decoder combined with metric calculation. The fsm arguments are passed directly to the trellis.fsm() constructor.
+
+file_format: 1

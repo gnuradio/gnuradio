@@ -1,0 +1,69 @@
+id: blocks_delay
+label: Delay
+flags: [ python, cpp ]
+
+parameters:
+-   id: type
+    label: Type
+    dtype: enum
+    options: [complex, float, int, short, byte]
+    option_attributes:
+        size: [gr.sizeof_gr_complex, gr.sizeof_float, gr.sizeof_int, gr.sizeof_short,
+            gr.sizeof_char]
+    hide: part
+-   id: delay
+    label: Delay
+    dtype: int
+    default: '0'
+-   id: num_ports
+    label: Num Ports
+    dtype: int
+    default: '1'
+    hide: part
+-   id: vlen
+    label: Vector Length
+    dtype: int
+    default: '1'
+    hide: ${ 'part' if vlen == 1 else 'none' }
+-   id: showports
+    label: Show Msg Ports
+    dtype: bool
+    default: 'False'
+    options: ['True', 'False']
+    option_labels: ['Yes', 'No']
+    hide: part
+    
+inputs:
+-   domain: stream
+    dtype: ${ type }
+    vlen: ${ vlen }
+    multiplicity: ${ num_ports }
+-   domain: message
+    id: dly
+    optional: true
+    hide: ${ not showports }
+
+outputs:
+-   domain: stream
+    dtype: ${ type }
+    vlen: ${ vlen }
+    multiplicity: ${ num_ports }
+
+asserts:
+- ${ num_ports > 0 }
+- ${ vlen > 0 }
+
+templates:
+    imports: from gnuradio import blocks
+    make: blocks.delay(${type.size}*${vlen}, ${delay})
+    callbacks:
+    - set_dly(int(${delay}))
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/delay.h>']
+    declarations: 'blocks::delay::sptr ${id};'
+    make: 'this->${id} = blocks::delay::make(${type.size}*${vlen}, ${delay});'
+    callbacks:
+    - set_dly(${delay})
+
+file_format: 1

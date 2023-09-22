@@ -1,0 +1,177 @@
+options:
+  parameters:
+    author: ''
+    category: '[GRC Hier Blocks]'
+    cmake_opt: ''
+    comment: ''
+    copyright: ''
+    description: ''
+    gen_cmake: 'On'
+    gen_linking: dynamic
+    generate_options: qt_gui
+    hier_block_src_path: '.:'
+    id: test_distanceradar
+    max_nouts: '0'
+    output_language: python
+    placement: (0,0)
+    qt_qss_theme: ''
+    realtime_scheduling: ''
+    run: 'True'
+    run_command: '{python} -u {filename}'
+    run_options: prompt
+    sizing_mode: fixed
+    thread_safe_setters: ''
+    title: Test Distance Radar
+    window_size: ''
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 8]
+    rotation: 0
+    state: enabled
+
+blocks:
+- name: samp_rate
+  id: variable
+  parameters:
+    comment: ''
+    value: '32000'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [184, 12]
+    rotation: 0
+    state: enabled
+- name: blocks_null_sink_0
+  id: blocks_null_sink
+  parameters:
+    affinity: ''
+    alias: ''
+    bus_structure_sink: '[[0,],]'
+    comment: ''
+    num_inputs: '1'
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [744, 424.0]
+    rotation: 0
+    state: true
+- name: blocks_null_source_0
+  id: blocks_null_source
+  parameters:
+    affinity: ''
+    alias: ''
+    bus_structure_source: '[[0,],]'
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_outputs: '1'
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [312, 424.0]
+    rotation: 0
+    state: true
+- name: blocks_throttle_0
+  id: blocks_throttle
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    ignoretag: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    samples_per_second: samp_rate
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [520, 420.0]
+    rotation: 0
+    state: true
+- name: variable_qtgui_distanceradar_0
+  id: variable_qtgui_distanceradar
+  parameters:
+    backgroundColor: black
+    comment: ''
+    fontColor: white
+    gui_hint: ''
+    label: Radius
+    ringColor: red
+    ticklabels: '[''20'', ''40'', ''60'', ''80'', ''100'']'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [880, 208.0]
+    rotation: 0
+    state: true
+- name: variable_qtgui_msg_push_button_0
+  id: variable_qtgui_msg_push_button
+  parameters:
+    comment: ''
+    gui_hint: 0,0,1,1
+    label: 25%
+    msgName: radius
+    type: int
+    value: '25'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [304, 36.0]
+    rotation: 0
+    state: true
+- name: variable_qtgui_msg_push_button_0_0
+  id: variable_qtgui_msg_push_button
+  parameters:
+    comment: ''
+    gui_hint: 1,0,1,1
+    label: 50%
+    msgName: radius
+    type: int
+    value: '50'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [536, 28.0]
+    rotation: 0
+    state: true
+- name: variable_qtgui_msg_push_button_0_0_0
+  id: variable_qtgui_msg_push_button
+  parameters:
+    comment: ''
+    gui_hint: 2,0,1,1
+    label: 75%
+    msgName: radius
+    type: int
+    value: '75'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [504, 204.0]
+    rotation: 0
+    state: true
+
+connections:
+- [blocks_null_source_0, '0', blocks_throttle_0, '0']
+- [blocks_throttle_0, '0', blocks_null_sink_0, '0']
+- [variable_qtgui_msg_push_button_0, pressed, variable_qtgui_distanceradar_0, radius]
+- [variable_qtgui_msg_push_button_0_0, pressed, variable_qtgui_distanceradar_0, radius]
+- [variable_qtgui_msg_push_button_0_0_0, pressed, variable_qtgui_distanceradar_0,
+  radius]
+
+metadata:
+  file_format: 1

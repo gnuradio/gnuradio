@@ -1,0 +1,26 @@
+4 4 8
+
+0	0	1	1
+2	2	3	3
+0	0	1	1
+2	2	3	3
+
+
+0	4	2	6
+1	5	3	7
+2	6	0	4
+3	7	1	5
+
+
+
+This is the Ungerboeck code for 8-PSK (natural mapping).
+The states are defined in Ungerboeck's way. 
+
+d_free^2=4 Es -> 3.0 dB over uncoded QPSK 
+
+Parity check matrix in octal: [0 2 5]
+
+Generator matrix:
+
+[1	0	0
+ 0	1+D^2	D]

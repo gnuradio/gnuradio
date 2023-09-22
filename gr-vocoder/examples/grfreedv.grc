@@ -1,0 +1,240 @@
+options:
+  parameters:
+    author: A. Maitland Bottoms
+    catch_exceptions: 'True'
+    category: Custom
+    cmake_opt: ''
+    comment: ''
+    copyright: 2016,2019 Free Software Foundation, Inc.
+    description: A FreeDV Modulator
+    gen_cmake: 'On'
+    gen_linking: dynamic
+    generate_options: qt_gui
+    hier_block_src_path: '.:'
+    id: grfreedv
+    max_nouts: '0'
+    output_language: python
+    placement: (0,0)
+    qt_qss_theme: ''
+    realtime_scheduling: ''
+    run: 'True'
+    run_command: '{python} -u {filename}'
+    run_options: prompt
+    sizing_mode: fixed
+    thread_safe_setters: ''
+    title: GNU Radio FreeDV
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 4.0]
+    rotation: 0
+    state: enabled
+
+blocks:
+- name: samp_rate
+  id: variable
+  parameters:
+    comment: ''
+    value: '8000'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 164.0]
+    rotation: 0
+    state: enabled
+- name: squelch
+  id: variable_qtgui_range
+  parameters:
+    comment: ''
+    gui_hint: ''
+    label: squelch slider
+    min_len: '256'
+    orient: QtCore.Qt.Horizontal
+    rangeType: float
+    start: '-127'
+    step: '1'
+    stop: '128'
+    value: '-120'
+    widget: counter_slider
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [184, 4.0]
+    rotation: 0
+    state: enabled
+- name: audio_sink_0
+  id: audio_sink
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    device_name: ''
+    num_inputs: '1'
+    ok_to_block: 'True'
+    samp_rate: samp_rate
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1192, 204.0]
+    rotation: 0
+    state: enabled
+- name: audio_source_0
+  id: audio_source
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    device_name: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_outputs: '1'
+    ok_to_block: 'True'
+    samp_rate: '48000'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 300.0]
+    rotation: 0
+    state: enabled
+- name: blocks_float_to_short_0
+  id: blocks_float_to_short
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    scale: '32768'
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [416, 220.0]
+    rotation: 0
+    state: enabled
+- name: blocks_message_debug_0
+  id: blocks_message_debug
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1104, 288.0]
+    rotation: 0
+    state: true
+- name: blocks_short_to_float_0
+  id: blocks_short_to_float
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    scale: '32768'
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1024, 204.0]
+    rotation: 0
+    state: enabled
+- name: blocks_wavfile_source_0
+  id: blocks_wavfile_source
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    file: /usr/share/codec2/wav/all.wav
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    nchan: '1'
+    repeat: 'True'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [176, 164.0]
+    rotation: 0
+    state: disabled
+- name: rational_resampler_xxx_0
+  id: rational_resampler_xxx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    decim: '6'
+    fbw: '0'
+    interp: '1'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    taps: ''
+    type: fff
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [200, 276.0]
+    rotation: 0
+    state: enabled
+- name: vocoder_freedv_rx_ss_0
+  id: vocoder_freedv_rx_ss
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    interleave_frames: '1'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    mode: freedv_api.MODE_1600
+    squelch_enable: 'True'
+    squelch_thresh: squelch
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [808, 196.0]
+    rotation: 0
+    state: enabled
+- name: vocoder_freedv_tx_ss_0
+  id: vocoder_freedv_tx_ss
+  parameters:
+    affinity: ''
+    alias: ''
+    clip_val: 'False'
+    comment: ''
+    interleave_frames: '1'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    mode: freedv_api.MODE_1600
+    tx_bpf_val: 'True'
+    txt_msg: '''GNU Radio'''
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [584, 188.0]
+    rotation: 0
+    state: enabled
+
+connections:
+- [audio_source_0, '0', rational_resampler_xxx_0, '0']
+- [blocks_float_to_short_0, '0', vocoder_freedv_tx_ss_0, '0']
+- [blocks_short_to_float_0, '0', audio_sink_0, '0']
+- [blocks_wavfile_source_0, '0', blocks_float_to_short_0, '0']
+- [rational_resampler_xxx_0, '0', blocks_float_to_short_0, '0']
+- [vocoder_freedv_rx_ss_0, '0', blocks_short_to_float_0, '0']
+- [vocoder_freedv_rx_ss_0, text, blocks_message_debug_0, print]
+- [vocoder_freedv_tx_ss_0, '0', vocoder_freedv_rx_ss_0, '0']
+
+metadata:
+  file_format: 1

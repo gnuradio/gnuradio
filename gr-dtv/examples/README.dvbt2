@@ -1,0 +1,47 @@
+Test streams are available here:
+
+http://www.w6rz.net/vv001-cr35.ts 478,864,952 bytes md5sum = 34db2abd4f9745b7d241745d81604016
+http://www.w6rz.net/vv003-cr23.ts 532,843,888 bytes md5sum = ced15bedb60d02a96256072c8c1ae1c4
+http://www.w6rz.net/vv004-8kfft.ts 401,796,420 bytes md5sum = 39bfc2a3ded7fb4639e8fd4b4743188b
+http://www.w6rz.net/vv005-8kfft.ts 441,103,648 bytes md5sum = 520fe0fd8a9cf5d5f101f33cb491230d
+http://www.w6rz.net/vv007-16kfft.ts 231,303,732 bytes md5sum = 37bb0cde4ae5f3f8ead6d0037e945e4d
+http://www.w6rz.net/vv008-16kfft.ts 614,272,704 bytes md5sum = f165d96060e5d6b0148493d0f655fdca
+http://www.w6rz.net/vv009-4kfft.ts 365,549,644 bytes md5sum = 2883c89b9deba44486405b87147f15b3
+http://www.w6rz.net/vv010-2kfft.ts 190,332,328 bytes md5sum = a11b62bd349882c0345eee7939530812
+http://www.w6rz.net/vv011-1kfft.ts 232,390,560 bytes md5sum = 00066052e69661d6501c6bf715cbec69
+http://www.w6rz.net/vv012-64qam45.ts 459,617,136 bytes md5sum = ab9569f46a2d08a51b3145c63d979653
+http://www.w6rz.net/vv013-64qam56.ts 479,154,096 bytes md5sum = aedc4529fd7fbbbe3bf83df368bc4b96
+http://www.w6rz.net/vv014-64qam34.ts 430,739,584 bytes md5sum = 481cb73003703867c1ff6e141af3fcff
+http://www.w6rz.net/vv015-8kfft.ts 463,359,088 bytes md5sum = d10c005a4bbf794da1bd01d26f024949
+http://www.w6rz.net/vv016-256qam34.ts 593,489,680 bytes md5sum = 3a054cfdcc04b85ad5459a330937ea11
+http://www.w6rz.net/vv017-paprtr.ts 592,947,676 bytes md5sum = 10cebd26cd55695be08d294fadcbf1f3
+http://www.w6rz.net/vv018-miso.ts 571,898,256 bytes md5sum = b432c64e40a2724eba2051a820733c76
+http://www.w6rz.net/vv019-norot.ts 478,864,952 bytes md5sum = 34db2abd4f9745b7d241745d81604016
+http://www.w6rz.net/vv034-dtg016.ts 397,372,592 bytes md5sum = 4550dffe45a5d31d8b91508aed1a9c35
+http://www.w6rz.net/vv035-dtg052.ts 373,828,224 bytes md5sum = 8f31539a752fff44efcabedf5903b333
+http://www.w6rz.net/vv036-dtg091.ts 334,481,140 bytes md5sum = 4d16c6fd3d929bb85e60eed76a7226a5
+http://www.w6rz.net/germany-g1.ts 242,683,936 bytes md5sum = f6fc96bd2abed49f375285d45af31e3f
+http://www.w6rz.net/germany-g2.ts 291,631,616 bytes md5sum = defa11f02511254e96fc8fbf59d47ff2
+http://www.w6rz.net/germany-g3.ts 316,245,704 bytes md5sum = 2494f7b77eb1f11dad2e1c903ba6b389
+http://www.w6rz.net/germany-g4.ts 345,044,672 bytes md5sum = da256d6828d97c458ffef27931c626ff
+http://www.w6rz.net/germany-g5.ts 347,665,204 bytes md5sum = 48f72cef940f294b26247da91abb9f25
+http://www.w6rz.net/germany-g6.ts 444,296,264 bytes md5sum = 605a76d12cce7d7009a08c87e97c70bc
+http://www.w6rz.net/germany-g7.ts 351,893,888 bytes md5sum = 3ca71e2a35ab7be27ebd13ad97f00e85
+http://www.w6rz.net/germany-g8.ts 365,656,052 bytes md5sum = 8cbd41ea1a6f6405f6662300f17a9104
+http://www.w6rz.net/germany-g9.ts 260,004,376 bytes md5sum = a83d60366bca873cf30d18db1d9e9f9f
+http://www.w6rz.net/germany-g10.ts 229,421,288 bytes md5sum = 641a7e4c8a9db92f3020e19ec8d0b8a7
+
+Note: The vv012-64qam45 profile may not run in real-time due
+to the large number of PAPR iterations.
+
+IMPORTANT: Because some of the blocks have to process entire
+T2 frames, the shared memory requirement will be greater than
+the Linux default on older kernels. The size of shared memory
+can be increased with the following shell command:
+
+sudo sysctl kernel.shmmax=1073741824
+
+or:
+
+sudo echo $(( 1024 * 1024 * 1024 )) > /proc/sys/kernel/shmmax
+

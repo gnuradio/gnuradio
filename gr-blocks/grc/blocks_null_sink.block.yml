@@ -1,0 +1,49 @@
+id: blocks_null_sink
+label: Null Sink
+flags: [ python, cpp ]
+
+parameters:
+-   id: type
+    label: Input Type
+    dtype: enum
+    options: [complex, float, int, short, byte]
+    option_attributes:
+        size: [gr.sizeof_gr_complex, gr.sizeof_float, gr.sizeof_int, gr.sizeof_short,
+            gr.sizeof_char]
+    hide: part
+-   id: vlen
+    label: Vector Length
+    dtype: int
+    default: '1'
+    hide: ${ 'part' if vlen == 1 else 'none' }
+-   id: num_inputs
+    label: Num Inputs
+    dtype: int
+    default: '1'
+    hide: part
+-   id: bus_structure_sink
+    label: Bus Connections
+    dtype: raw
+    default: '[[0,],]'
+    hide: part
+
+inputs:
+-   domain: stream
+    dtype: ${ type }
+    vlen: ${ vlen }
+    multiplicity: ${ num_inputs }
+
+asserts:
+- ${ num_inputs >= 1 }
+- ${ vlen > 0 }
+
+templates:
+    imports: from gnuradio import blocks
+    make: blocks.null_sink(${type.size}*${vlen})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/null_sink.h>']
+    declarations: 'blocks::null_sink::sptr ${id};'
+    make: 'this->${id} = blocks::null_sink::make(${type.size}*${vlen});'
+
+file_format: 1

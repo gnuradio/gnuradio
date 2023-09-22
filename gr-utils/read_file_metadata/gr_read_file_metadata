@@ -1,0 +1,76 @@
+#!/usr/bin/env python
+#
+# Copyright 2012 Free Software Foundation, Inc.
+#
+# This file is part of GNU Radio
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+#
+
+import sys
+from argparse import ArgumentParser
+
+import pmt
+from gnuradio.blocks import parse_file_metadata
+
+
+def main(filename, detached=False):
+    handle = open(filename, "rb")
+
+    nheaders = 0
+    nread = 0
+    while(True):
+        # read out next header bytes
+        hdr_start = handle.tell()
+        header_str = handle.read(parse_file_metadata.HEADER_LENGTH)
+        if(len(header_str) == 0):
+            break
+
+        # Convert from string to PMT (should be a dictionary)
+        try:
+            header = pmt.deserialize_str(header_str)
+        except RuntimeError:
+            sys.stderr.write(
+                "Could not deserialize header: invalid or corrupt data file.\n")
+            sys.exit(1)
+
+        print("HEADER {0}".format(nheaders))
+        info = parse_file_metadata.parse_header(header, True)
+
+        if(info["extra_len"] > 0):
+            extra_str = handle.read(info["extra_len"])
+            if(len(extra_str) == 0):
+                break
+
+            try:
+                extra = pmt.deserialize_str(extra_str)
+            except RuntimeError:
+                sys.stderr.write(
+                    "Could not deserialize extras: invalid or corrupt data file.\n")
+                sys.exit(1)
+
+            print("\nExtra Header:")
+            extra_info = parse_file_metadata.parse_extra_dict(
+                extra, info, True)
+
+        nheaders += 1
+        nread += parse_file_metadata.HEADER_LENGTH + info["extra_len"]
+        if(not detached):
+            nread += info['nbytes']
+        handle.seek(nread, 0)
+        print("\n\n")
+
+
+if __name__ == "__main__":
+    description = "Read in a GNU Radio file with meta data, extracts the header and prints it."
+
+    parser = ArgumentParser(conflict_handler="resolve",
+                            description=description)
+    parser.add_argument("-D", "--detached", action="store_true",
+                        help="Used if header is detached.")
+    parser.add_argument("file", metavar="FILE",
+                        help="Input file")
+    args = parser.parse_args()
+
+    main(args.file, args.detached)

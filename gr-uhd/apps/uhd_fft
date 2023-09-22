@@ -1,0 +1,627 @@
+#!/usr/bin/env python3
+#
+# Copyright 2015-2016,2018 Free Software Foundation, Inc.
+#
+# This file is part of GNU Radio
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+#
+"""
+UHD FFT: Simple Spectrum Analyzer for UHD.
+"""
+
+# Original GRC header:
+##################################################
+# GNU Radio Python Flow Graph
+# Title: UHD FFT
+# Author: Example
+# Description: UHD FFT Waveform Plotter
+# Generated: Thu Jun 18 13:57:09 2015
+##################################################
+# Note this is a heavily modified version of a
+# the uhd_fft.grc example.
+
+# I prefer grouping the imports myself in this case, due to all the special cases
+# pylint: disable=wrong-import-order
+# pylint: disable=wrong-import-position
+# pylint: disable=ungrouped-imports
+
+import sys
+if __name__ == '__main__':
+    import ctypes
+    if sys.platform.startswith('linux'):
+        try:
+            X11 = ctypes.cdll.LoadLibrary('libX11.so')
+            X11.XInitThreads()
+        except:
+            print("Warning: failed to XInitThreads()")
+
+import threading
+import time
+import math
+import signal
+from PyQt5 import Qt
+import sip  # Needs to be imported after PyQt5, could fail otherwise
+from gnuradio import eng_notation
+from gnuradio import eng_arg
+from gnuradio import gr
+from gnuradio import qtgui
+from gnuradio import uhd
+from gnuradio import fft
+from gnuradio import blocks
+from gnuradio.qtgui import Range, RangeWidget
+try:
+    from uhd_app import UHDApp
+except ImportError:
+    from gnuradio.uhd.uhd_app import UHDApp
+
+# Pylint sometimes has issues detecting the GNU Radio wrapped Python
+# pylint: disable=c-extension-no-member
+# pylint: disable=no-member
+
+
+class uhd_fft(UHDApp, gr.top_block, Qt.QWidget):
+    """
+    Simple UHD Spectrum Analyzer / Scope App.
+    """
+
+    def __init__(self, args):
+        UHDApp.__init__(self, args=args, prefix="UHD FFT")
+        gr.top_block.__init__(self, "UHD FFT")
+        Qt.QWidget.__init__(self)
+        ##################################################
+        # Init QT App
+        ##################################################
+        self.setWindowTitle("UHD FFT")
+        try:
+            self.setWindowIcon(Qt.QIcon.fromTheme('gnuradio-grc'))
+        except:
+            pass
+        self.top_scroll_layout = Qt.QVBoxLayout()
+        self.setLayout(self.top_scroll_layout)
+        self.top_scroll = Qt.QScrollArea()
+        self.top_scroll.setFrameStyle(Qt.QFrame.NoFrame)
+        self.top_scroll_layout.addWidget(self.top_scroll)
+        self.top_scroll.setWidgetResizable(True)
+        self.top_widget = Qt.QWidget()
+        self.top_scroll.setWidget(self.top_widget)
+        self.top_layout = Qt.QVBoxLayout(self.top_widget)
+        self.top_grid_layout = Qt.QGridLayout()
+        self.top_layout.addLayout(self.top_grid_layout)
+        self.settings = Qt.QSettings("GNU Radio", "uhd_fft")
+        geo_settings = self.settings.value("geometry")
+        if geo_settings:
+            self.restoreGeometry(self.settings.value("geometry"))
+
+        ##################################################
+        # Parameters
+        ##################################################
+        self.antenna = args.antenna
+        self.args = args
+        self.fft_size = args.fft_size
+        self.freq = args.freq
+        self.gain = args.gain
+        self.samp_rate = args.samp_rate
+        self.spec = args.spec
+        self.stream_args = args.stream_args
+        self.update_rate = args.update_rate
+        self.wire_format = args.otw_format
+        self.lo_offset = args.lo_offset
+
+        ##################################################
+        # Variables
+        ##################################################
+        self.chan0_lo_locked = uhd.sensor_value("", False, "", "")
+        self.usrp_device_info = "[No USRP Device Info Found!]"
+        self.uhd_version_info = uhd.get_version_string()
+        self.lo_locked_probe = self.chan0_lo_locked.to_bool()
+        self.fft_average = 1.0
+        if args.avg_alpha is not None:
+            if args.avg_alpha < 0.0 or args.avg_alpha > 1.0:
+                print("[UHD FFT] [ERROR] Alpha must be in [0.0, 1.0]!")
+                sys.exit(1)
+            self.fft_average = args.avg_alpha
+        else:
+            fft_average_values = {
+                'off': 1.0,
+                'low': 0.2,
+                'medium': 0.1,
+                'high': 0.05
+            }
+            if args.fft_average in fft_average_values.keys():
+                self.fft_average = fft_average_values[args.fft_average]
+
+        ##################################################
+        # Blocks
+        ##################################################
+        self.setup_usrp(uhd.usrp_source, args)
+        self._ant_options = self.usrp.get_antennas(0)
+        for c in range(len(self.channels)):
+            self.usrp.set_bandwidth(self.samp_rate + abs(self.lo_offset), c)
+        self.usrp_device_info = self.get_usrp_info_string(
+            compact=True, tx_or_rx='rx')
+
+        ### Now set up the GUI widgets: #####################################
+        # Sampling rate:
+        self._samp_rate__tool_bar = Qt.QToolBar(self)
+        self._samp_rate__tool_bar.addWidget(Qt.QLabel("Sampling Rate: "))
+        self._samp_rate__line_edit = Qt.QLineEdit(
+            eng_notation.num_to_str(self.samp_rate))
+        self._samp_rate__tool_bar.addWidget(self._samp_rate__line_edit)
+        self._samp_rate__line_edit.editingFinished.connect(
+            lambda: self.set_samp_rate(eng_notation.str_to_num(
+                str(self._samp_rate__line_edit.text()))))
+        self.top_grid_layout.addWidget(self._samp_rate__tool_bar, 3, 2, 1, 2)
+        # Gain or Power:
+        self._gain_range = Range(
+            math.floor(self.gain_range.start()),
+            math.ceil(self.gain_range.stop()),
+            max(self.gain_range.step(), 1.0),
+            self.gain if self.gain_type == self.GAIN_TYPE_GAIN
+            else self.get_gain_or_power(),
+            200.,
+        )
+        self._gain__win = RangeWidget(
+            self._gain_range,
+            self.set_gain_or_power,
+            "RX Gain (dB)" if self.gain_type == self.GAIN_TYPE_GAIN
+            else "RX Power Reference (dBm)",
+            "counter_slider",
+            float
+        )
+        self.top_grid_layout.addWidget(self._gain__win, 2, 0, 1, 4)
+        if self.gain_type == self.GAIN_TYPE_POWER:
+            self.power_scalers = [
+                blocks.multiply_const_cc(self.get_power_scaler())
+                for _ in range(len(self.channels))
+            ]
+        # Center frequency:
+        self._freq_tool_bar = Qt.QToolBar(self)
+        self._freq_tool_bar.addWidget(Qt.QLabel("RX Tune Frequency: "))
+        self._freq_line_edit = Qt.QLineEdit(eng_notation.num_to_str(self.freq))
+        self._freq_tool_bar.addWidget(self._freq_line_edit)
+        self._freq_line_edit.editingFinished.connect(
+            lambda: self.set_freq_qt(
+                eng_notation.str_to_num(str(self._freq_line_edit.text()))))
+        self.top_grid_layout.addWidget(self._freq_tool_bar, 3, 0, 1, 2)
+        # Antenna Selection:
+        self._ant_labels = self._ant_options
+        self._ant_tool_bar = Qt.QToolBar(self)
+        self._ant_tool_bar.addWidget(Qt.QLabel("Antenna: "))
+        self._ant_combo_box = Qt.QComboBox()
+        self._ant_tool_bar.addWidget(self._ant_combo_box)
+        for label in self._ant_labels:
+            self._ant_combo_box.addItem(label)
+        self._ant_callback = \
+            lambda i: Qt.QMetaObject.invokeMethod(
+                self._ant_combo_box,
+                "setCurrentIndex",
+                Qt.Q_ARG("int", self._ant_options.index(i)))
+        self._ant_callback(self.antenna)
+        self._ant_combo_box.currentIndexChanged.connect(
+            lambda i: self.set_ant(self._ant_options[i]))
+        self.top_grid_layout.addWidget(self._ant_tool_bar, 4, 2, 1, 2)
+        # Device + UHD info:
+        self._usrp_device_info_tool_bar = Qt.QToolBar(self)
+        self._usrp_device_info_formatter = lambda x: x
+        self._usrp_device_info_tool_bar.addWidget(
+            Qt.QLabel("Device Information: "))
+        self._usrp_device_info_label = Qt.QLabel(
+            str(self._usrp_device_info_formatter(self.usrp_device_info)))
+        self._usrp_device_info_tool_bar.addWidget(self._usrp_device_info_label)
+        self.top_grid_layout.addWidget(
+            self._usrp_device_info_tool_bar, 1, 2, 1, 2)
+        self._uhd_version_info_tool_bar = Qt.QToolBar(self)
+        self._uhd_version_info_formatter = lambda x: x
+        self._uhd_version_info_tool_bar.addWidget(Qt.QLabel("UHD Version: "))
+        self._uhd_version_info_label = Qt.QLabel(
+            str(self._uhd_version_info_formatter(self.uhd_version_info)))
+        self._uhd_version_info_tool_bar.addWidget(self._uhd_version_info_label)
+        self.top_grid_layout.addWidget(
+            self._uhd_version_info_tool_bar, 1, 0, 1, 2)
+        ### Plot GUIs #######################################################
+        widths = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+        colors = ["blue", "red", "green", "cyan", "magenta", "black", "yellow",
+                  "dark red", "dark green", "dark blue"]
+        styles = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+        markers = [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1]
+        alphas = [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+        self.display = Qt.QTabWidget()
+        self.display_widget_0 = Qt.QWidget()
+        self.display_layout_0 = Qt.QBoxLayout(
+            Qt.QBoxLayout.TopToBottom, self.display_widget_0)
+        self.display_grid_layout_0 = Qt.QGridLayout()
+        self.display_layout_0.addLayout(self.display_grid_layout_0)
+        self.display.addTab(self.display_widget_0, "Spectrum")
+        self.display_widget_1 = Qt.QWidget()
+        self.display_layout_1 = Qt.QBoxLayout(
+            Qt.QBoxLayout.TopToBottom, self.display_widget_1)
+        self.display_grid_layout_1 = Qt.QGridLayout()
+        self.display_layout_1.addLayout(self.display_grid_layout_1)
+        self.display.addTab(self.display_widget_1, "Waterfall")
+        self.display_widget_2 = Qt.QWidget()
+        self.display_layout_2 = Qt.QBoxLayout(
+            Qt.QBoxLayout.TopToBottom, self.display_widget_2)
+        self.display_grid_layout_2 = Qt.QGridLayout()
+        self.display_layout_2.addLayout(self.display_grid_layout_2)
+        self.display.addTab(self.display_widget_2, "Scope")
+        self.top_grid_layout.addWidget(self.display, 0, 0, 1, 4)
+        self.qtgui_waterfall_sink_x_0 = qtgui.waterfall_sink_c(
+            self.fft_size,  # size
+            fft.window.WIN_BLACKMAN_hARRIS,  # wintype
+            self.freq,  # fc
+            self.samp_rate,  # bw
+            "",  # name
+            len(self.channels),  # number of inputs
+            None  # parent
+        )
+        self.qtgui_waterfall_sink_x_0.set_update_time(self.update_rate)
+        self.qtgui_waterfall_sink_x_0.enable_grid(False)
+        self.qtgui_waterfall_sink_x_0.disable_legend()
+        alpha = 10.**(len(self.channels) - 1)
+        for i in range(len(self.channels)):
+            self.qtgui_waterfall_sink_x_0.set_line_label(
+                i, "Channel {0}".format(i))
+            self.qtgui_waterfall_sink_x_0.set_color_map(i, 0)
+            self.qtgui_waterfall_sink_x_0.set_line_alpha(i, alpha)
+        self.qtgui_waterfall_sink_x_0.set_intensity_range(-90, 10)
+        self._qtgui_waterfall_sink_x_0_win = sip.wrapinstance(
+            self.qtgui_waterfall_sink_x_0.qwidget(), Qt.QWidget)
+        self.display_grid_layout_1.addWidget(
+            self._qtgui_waterfall_sink_x_0_win, 0, 0, 1, 4)
+        self.qtgui_time_sink_x_0 = qtgui.time_sink_c(
+            1024,  # size
+            self.samp_rate,  # samp_rate
+            "",  # name
+            len(self.channels),  # number of inputs
+            None  # parent
+        )
+        self.qtgui_time_sink_x_0.set_update_time(self.update_rate)
+        self.qtgui_time_sink_x_0.set_y_axis(-1, 1)
+        self.qtgui_time_sink_x_0.set_y_label("Amplitude", "")
+        self.qtgui_time_sink_x_0.enable_tags(0, True)
+        self.qtgui_time_sink_x_0.set_trigger_mode(
+            qtgui.TRIG_MODE_FREE, qtgui.TRIG_SLOPE_POS, 0.0, 0, 0, "")
+        self.qtgui_time_sink_x_0.enable_autoscale(True)
+        self.qtgui_time_sink_x_0.enable_grid(False)
+        self.qtgui_time_sink_x_0.enable_control_panel(True)
+        self.qtgui_time_sink_x_0.disable_legend()
+        for i in range(2 * len(self.channels)):
+            if i % 2 == 0:
+                self.qtgui_time_sink_x_0.set_line_label(
+                    i, "Re{{Channel {0}}}".format(i // 2))
+            else:
+                self.qtgui_time_sink_x_0.set_line_label(
+                    i, "Im{{Channel {0}}}".format(i // 2))
+            self.qtgui_time_sink_x_0.set_line_width(i, widths[i])
+            self.qtgui_time_sink_x_0.set_line_color(i, colors[i])
+            self.qtgui_time_sink_x_0.set_line_style(i, styles[i])
+            self.qtgui_time_sink_x_0.set_line_marker(i, markers[i])
+            self.qtgui_time_sink_x_0.set_line_alpha(i, alphas[i])
+        self._qtgui_time_sink_x_0_win = sip.wrapinstance(
+            self.qtgui_time_sink_x_0.qwidget(), Qt.QWidget)
+        self.display_grid_layout_2.addWidget(
+            self._qtgui_time_sink_x_0_win, 0, 0, 1, 4)
+        self.qtgui_freq_sink_x_0 = qtgui.freq_sink_c(
+            self.fft_size,  # size
+            fft.window.WIN_BLACKMAN_hARRIS,  # wintype
+            self.freq,  # fc
+            self.samp_rate,  # bw
+            "",  # name
+            len(self.channels),  # number of inputs
+            None  # parent
+        )
+        self.qtgui_freq_sink_x_0.set_update_time(self.update_rate)
+        self.qtgui_freq_sink_x_0.set_y_axis(-100, 10)
+        if self.gain_type == self.GAIN_TYPE_GAIN:
+            self.qtgui_freq_sink_x_0.set_y_label("Relative Gain", "dB")
+        else:
+            self.qtgui_freq_sink_x_0.set_y_label("Received Power", "dBm")
+        self.qtgui_freq_sink_x_0.set_trigger_mode(
+            qtgui.TRIG_MODE_FREE, 0.0, 0, "")
+        self.qtgui_freq_sink_x_0.enable_autoscale(True)
+        self.qtgui_freq_sink_x_0.enable_grid(True)
+        self.qtgui_freq_sink_x_0.set_fft_average(self.fft_average)
+        self.qtgui_freq_sink_x_0.enable_control_panel(True)
+        self.qtgui_freq_sink_x_0.disable_legend()
+        # Normalize windows so we can switch between windows live without losing
+        # power to the window itself
+        self.qtgui_freq_sink_x_0.set_fft_window_normalized(True)
+        for i in range(len(self.channels)):
+            self.qtgui_freq_sink_x_0.set_line_label(i, "Channel {0}".format(i))
+            self.qtgui_freq_sink_x_0.set_line_width(i, widths[i])
+            self.qtgui_freq_sink_x_0.set_line_color(i, colors[i])
+            self.qtgui_freq_sink_x_0.set_line_alpha(i, alphas[i])
+        self._qtgui_freq_sink_x_0_win = sip.wrapinstance(
+            self.qtgui_freq_sink_x_0.qwidget(), Qt.QWidget)
+        self.display_grid_layout_0.addWidget(
+            self._qtgui_freq_sink_x_0_win, 0, 0, 1, 4)
+
+        def _freeze_scaling(widget, sleep_time):
+            time.sleep(sleep_time)
+            widget.enable_autoscale(False)
+        _freeze_fft_thread = threading.Thread(
+            target=lambda: _freeze_scaling(self.qtgui_freq_sink_x_0, .5 / self.fft_average))
+        _freeze_fft_thread.daemon = True
+        _freeze_fft_thread.start()
+        _freeze_scope_thread = threading.Thread(
+            target=lambda: _freeze_scaling(self.qtgui_time_sink_x_0, 2.0))
+        _freeze_scope_thread.daemon = True
+        _freeze_scope_thread.start()
+        if args.phase_relations and len(self.channels) > 1:
+            self.display_widget_phase = Qt.QWidget()
+            self.display_layout_phase = Qt.QBoxLayout(
+                Qt.QBoxLayout.TopToBottom, self.display_widget_phase)
+            self.display_grid_layout_phase = Qt.QGridLayout()
+            self.display_layout_phase.addLayout(self.display_grid_layout_phase)
+            self.display.addTab(self.display_widget_phase, "Rel. Phase")
+            self.qtgui_phase_plot = qtgui.time_sink_f(
+                1024,  # size
+                self.samp_rate,  # samp_rate
+                "",  # name
+                len(self.channels) - 1,
+                None  # parent
+            )
+            self.qtgui_phase_plot.set_update_time(self.update_rate)
+            self.qtgui_phase_plot.set_y_axis(-3.5, 3.5)
+            self.qtgui_phase_plot.set_y_label("Relative Phase", "")
+            self.qtgui_phase_plot.enable_tags(0, True)
+            self.qtgui_phase_plot.set_trigger_mode(
+                qtgui.TRIG_MODE_FREE, qtgui.TRIG_SLOPE_POS, 0.0, 0, 0, "")
+            self.qtgui_phase_plot.enable_autoscale(False)
+            self.qtgui_phase_plot.enable_grid(True)
+            self.qtgui_phase_plot.enable_control_panel(True)
+            self.qtgui_phase_plot.disable_legend()
+            for i in range(len(self.channels) - 1):
+                self.qtgui_phase_plot.set_line_label(
+                    i, "Phase Delta Channels {0}/{1}".format(i, i + 1))
+                self.qtgui_phase_plot.set_line_width(i, widths[i])
+                self.qtgui_phase_plot.set_line_color(i, colors[i])
+                self.qtgui_phase_plot.set_line_style(i, styles[i])
+                self.qtgui_phase_plot.set_line_marker(i, markers[i])
+                self.qtgui_phase_plot.set_line_alpha(i, alphas[i])
+            self._qtgui_phase_plot_win = sip.wrapinstance(
+                self.qtgui_phase_plot.qwidget(), Qt.QWidget)
+            self.display_grid_layout_phase.addWidget(
+                self._qtgui_phase_plot_win, 0, 0, 1, 4)
+        ### Other widgets ###################################################
+        self._lo_locked_probe_tool_bar = Qt.QToolBar(self)
+        self._lo_locked_probe_formatter = lambda x: {
+            True: 'Yes', False: 'No'}[x]
+        if self.has_lo_sensor:
+            self._lo_locked_probe_tool_bar.addWidget(Qt.QLabel("LO locked: "))
+            self._lo_locked_probe_label = Qt.QLabel(
+                str(self._lo_locked_probe_formatter(self.lo_locked_probe)))
+
+            def _chan0_lo_locked_probe():
+                while self.has_lo_sensor:
+                    self.chan0_lo_locked = self.usrp.get_sensor('lo_locked')
+                    try:
+                        self.set_lo_locked_probe(
+                            self._lo_locked_probe_formatter(
+                                self.chan0_lo_locked.to_bool()))
+                    except AttributeError:
+                        pass
+                    time.sleep(1.0 / (10))
+            _chan0_lo_locked_thread = threading.Thread(
+                target=_chan0_lo_locked_probe)
+            _chan0_lo_locked_thread.daemon = True
+            _chan0_lo_locked_thread.start()
+        else:
+            self._lo_locked_probe_tool_bar.addWidget(
+                Qt.QLabel("No LO lock sensor available."))
+            self._lo_locked_probe_label = Qt.QLabel("")
+        self._lo_locked_probe_tool_bar.addWidget(self._lo_locked_probe_label)
+        self.top_grid_layout.addWidget(
+            self._lo_locked_probe_tool_bar, 4, 0, 1, 2)
+
+        def _current_freq_probe():
+            while True:
+                val = self.usrp.get_center_freq(0)
+                try:
+                    if val != self.freq:
+                        self.set_freq_qt(val, tune_source='freqsink_msg')
+                except AttributeError:
+                    pass
+                time.sleep(1.0 / (10))
+        _current_freq_thread = threading.Thread(target=_current_freq_probe)
+        _current_freq_thread.daemon = True
+        _current_freq_thread.start()
+
+        ##################################################
+        # Connections
+        ##################################################
+        # allows double clicking in the freq plot
+        self.msg_connect(
+            (self.qtgui_freq_sink_x_0, 'freq'),
+            (self.qtgui_freq_sink_x_0, 'freq'))
+        self.msg_connect(
+            (self.qtgui_freq_sink_x_0, 'freq'),
+            (self.qtgui_waterfall_sink_x_0, 'freq'))
+        self.msg_connect(
+            (self.qtgui_freq_sink_x_0, 'freq'),
+            (self.usrp, 'command'))
+        # allows double clicking in the waterfall plot
+        self.msg_connect(
+            (self.qtgui_waterfall_sink_x_0, 'freq'),
+            (self.qtgui_waterfall_sink_x_0, 'freq'))
+        self.msg_connect(
+            (self.qtgui_waterfall_sink_x_0, 'freq'),
+            (self.qtgui_freq_sink_x_0, 'freq'))
+        self.msg_connect(
+            (self.qtgui_waterfall_sink_x_0, 'freq'),
+            (self.usrp, 'command'))
+        for idx in range(len(self.channels)):
+            if self.gain_type == self.GAIN_TYPE_POWER:
+                # If we're in power mode, we have to scale the signal before it
+                # goes into the FFT block such that the power levels match
+                self.connect(
+                    (self.usrp, idx),
+                    self.power_scalers[idx],
+                    (self.qtgui_freq_sink_x_0, idx))
+            else:
+                self.connect((self.usrp, idx), (self.qtgui_freq_sink_x_0, idx))
+            self.connect((self.usrp, idx), (self.qtgui_time_sink_x_0, idx))
+            self.connect((self.usrp, idx),
+                         (self.qtgui_waterfall_sink_x_0, idx))
+        if args.phase_relations and len(self.channels) > 1:
+            for idx in range(len(self.channels[:-1])):
+                self.connect_phase_plot(
+                    (self.usrp, idx),
+                    (self.usrp, idx + 1),
+                    (self.qtgui_phase_plot, idx)
+                )
+
+    def connect_phase_plot(self, src_port1, src_port2, dst_port):
+        " Calculate relative phase between two src ports and send it dst_port "
+        multiplier = blocks.multiply_cc()
+        self.connect(src_port1, (multiplier, 0),
+                     blocks.complex_to_arg(), dst_port)
+        self.connect(src_port2, blocks.conjugate_cc(), (multiplier, 1))
+
+    # This is a Qt name:
+    # pylint: disable=invalid-name
+    def closeEvent(self, event):
+        """ Execute when window closes """
+        self.settings = Qt.QSettings("GNU Radio", "uhd_fft")
+        self.settings.setValue("geometry", self.saveGeometry())
+        self.stop()
+        self.wait()
+        event.accept()
+    # pylint: enable=invalid-name
+
+    def set_antenna(self, antenna):
+        """ Execute when antenna changes """
+        self.antenna = antenna
+        self.set_ant(self.antenna)
+
+    def set_freq_qt(self, freq, tune_source='textbox'):
+        """ Trigger when the frequency is changed """
+        if freq == self.freq:
+            return
+        if tune_source == 'textbox':
+            # This sets self.freq:
+            self.set_freq(freq, skip_sync=False)
+        elif tune_source == 'freqsink_msg':
+            self.freq = freq
+        else:
+            raise RuntimeError(
+                "Invalid tune source: {}".format(tune_source))
+        Qt.QMetaObject.invokeMethod(
+            self._freq_line_edit, "setText",
+            Qt.Q_ARG("QString", eng_notation.num_to_str(self.freq))
+        )
+        self.qtgui_waterfall_sink_x_0.set_frequency_range(
+            self.freq, self.samp_rate)
+        if tune_source != 'freqsink_msg':
+            self.qtgui_freq_sink_x_0.set_frequency_range(
+                self.freq, self.samp_rate)
+        if self.gain_type == self.GAIN_TYPE_POWER:
+            self.gain = self.get_gain_or_power()
+            self._gain__win.d_widget.setValue(self.gain)
+
+    def set_samp_rate(self, samp_rate):
+        """ Execute when the sampling rate is changed """
+        self.vprint("Setting sampling rate to: {} MHz".format(samp_rate / 1e6))
+        self.samp_rate = samp_rate
+        Qt.QMetaObject.invokeMethod(
+            self._samp_rate__line_edit, "setText",
+            Qt.Q_ARG("QString", eng_notation.num_to_str(self.samp_rate))
+        )
+        self.qtgui_freq_sink_x_0.set_frequency_range(self.freq, self.samp_rate)
+        self.qtgui_time_sink_x_0.set_samp_rate(self.samp_rate)
+        self.qtgui_waterfall_sink_x_0.set_frequency_range(
+            self.freq, self.samp_rate)
+        self.usrp.set_samp_rate(self.samp_rate)
+        for c in range(len(self.channels)):
+            self.usrp.set_bandwidth(self.samp_rate + abs(self.lo_offset), c)
+
+    def set_lo_locked_probe(self, lo_locked_probe):
+        """ Execute when lock status update needs to be displayed """
+        self.lo_locked_probe = lo_locked_probe
+        Qt.QMetaObject.invokeMethod(
+            self._lo_locked_probe_label,
+            "setText",
+            Qt.Q_ARG("QString", str(self.lo_locked_probe)))
+
+    def set_ant(self, ant):
+        """ Execute when antenna is modified """
+        self.antenna = ant
+        self._ant_callback(self.antenna)
+        for c in range(len(self.channels)):
+            self.usrp.set_antenna(self.antenna, c)
+
+    def set_gain_or_power(self, gain_or_power):
+        """ Execute when gain/power input has changed """
+        if self.gain_type == self.GAIN_TYPE_GAIN:
+            self.set_gain(gain_or_power)
+        else:
+            self.set_power_reference(gain_or_power)
+            for scaler in self.power_scalers:
+                scaler.set_k(self.get_power_scaler())
+
+    def get_gain_or_power(self):
+        """ Read back either gain or ref power based on mode """
+        if self.gain_type == self.GAIN_TYPE_GAIN:
+            return self.usrp.get_gain(0)
+        return self.usrp.get_power_reference(0)
+
+    def get_power_scaler(self):
+        """
+        Return the input to the power scaler as a function of the current power
+        reference level.
+        """
+        return 10**(self.gain / 20)
+
+
+def setup_argparser():
+    """
+    Create argument parser for UHD FFT.
+    """
+    parser = UHDApp.setup_argparser(
+        description="UHD FFT",
+        tx_or_rx="Rx",
+    )
+    group = parser.add_argument_group('UHD FFT Arguments')
+    group.add_argument("--fft-size", type=eng_arg.intx, default=1024,
+                       help="Set number of FFT bins")
+    group.add_argument("--fft-average", default='medium', choices=('off', 'low', 'medium', 'high'),
+                       help="Set FFT averaging")
+    group.add_argument("--avg-alpha", type=float, default=None,
+                       help="Specify FFT average alpha (overrides --fft-average)")
+    group.add_argument("--update-rate", dest="update_rate",
+                       type=eng_arg.eng_float, default=eng_notation.num_to_str(
+                           .1),
+                       help="Set GUI widget update period in seconds")
+    group.add_argument("--phase-relations", action="store_true",
+                       help="Plot relative phases between multiple channels")
+    return parser
+
+
+def main():
+    """
+    Go, go, go!
+    """
+    args = setup_argparser().parse_args()
+    qapp = Qt.QApplication(sys.argv)
+    top_block = uhd_fft(args)
+    top_block.start()
+    top_block.show()
+    # Make sure SIGINT/SIGTERM handling is enabled
+    # pylint: disable=unused-argument
+
+    def sig_handler(sig=None, frame=None):
+        top_block.stop()
+        top_block.wait()
+        Qt.QApplication.quit()
+    signal.signal(signal.SIGINT, sig_handler)
+    signal.signal(signal.SIGTERM, sig_handler)
+    timer = Qt.QTimer()
+    timer.start(500)
+    timer.timeout.connect(lambda: None)
+    qapp.exec_()
+
+
+if __name__ == '__main__':
+    main()

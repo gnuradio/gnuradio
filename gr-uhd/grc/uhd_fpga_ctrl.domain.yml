@@ -1,0 +1,9 @@
+id: rfnoc.ctrl
+label: Control
+color: "#F50057"
+
+multiple_connections_per_input: false
+multiple_connections_per_output: true
+
+templates:
+-   type: [rfnoc.ctrl, rfnoc.ctrl]

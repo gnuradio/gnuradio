@@ -1,0 +1,89 @@
+<page>
+    <title>Configuration Files</title>
+    <ns>0</ns>
+    <id>3490</id>
+    <revision>
+      <id>4874</id>
+      <parentid>4228</parentid>
+      <timestamp>2019-03-12T22:43:56Z</timestamp>
+      <contributor>
+        <username>777arc</username>
+        <id>632</id>
+      </contributor>
+      <model>wikitext</model>
+      <format>text/x-wiki</format>
+      <text xml:space="preserve" bytes="2737">[[Category:Usage Manual]]
+== Configuration / Preference Files ==
+
+GNU Radio defines some of its basic behavior through a set of
+configuration files located in
+${prefix}/etc/gnuradio/conf.d. Different components have different
+files listed in here for the various properties. These will be read
+once when starting a GNU Radio application, so updates during runtime
+will not affect them.
+
+The configuration files use the following format:
+
+ # Stuff from section 1
+ [section1]
+ var1 = value1
+ var2 = value2 # value of 2
+ 
+ # Stuff from section 2
+ [section2]
+ var3 = value3
+
+In this file, the hash mark ('#') indicates a comment and blank lines
+are ignored. Section labels are defined inside square brackets as a
+group distinguisher. All options must be associated with a section
+name. The options are listed one per line with the option name is
+given followed by an equals ('=') sign and then the value.
+
+All section and option names must not have white spaces. If a value
+must have white space, the it MUST be put inside quotes. Any quoted
+value will have its white space preserved and the quotes internally
+will be stripped. As an example, on Apple desktops, an output device
+of "Display Audio" is a possible output device and can be set as:
+
+ [audio_osx]
+ default_output_device = "Display Audio"
+
+The result will pass Display Audio to the audio setup.
+
+The value of an option can be a string or number and retrieved through
+a few different interfaces. There is a single preference object
+created when GNU Radio is launched. In Python, you can get this by
+making a new variable:
+
+ p = gr.prefs()
+
+Similarly, in C++, we get a reference to the object by explicitly
+calling for the singleton of the object:
+
+ prefs *p = prefs::singleton();
+
+The methods associated with this preferences object are (from class gr::prefs):
+
+  bool has_section(string section)
+  bool has_option(string section, string option)
+  string get_string(string section, string option, string default_val)
+  bool get_bool(string section, string option, bool default_val)
+  long get_long(string section, string option, long default_val)
+  double get_double(string section, string option, double default_val)
+
+When setting a Boolean value, we can use 0, 1, "True", "true", "False", "false", "On", "on", "Off", and "off".
+
+All configuration preferences in these files can also be overloaded by
+an environmental variable. The environmental variable is named based
+on the section and option name from the configuration file as:
+
+ GR_CONF_<SECTION>_<OPTION> = <value>
+
+The "GR_CONF_" is a prefix to identify this as a GNU Radio
+configuration variable and the section and option names are in
+uppercase. The value is the same format that would be used in the
+config file itself.</text>
+      <sha1>e8qpaipnj5q10iyngqrtnz8btlg3xm9</sha1>
+    </revision>
+  </page>
+</mediawiki>

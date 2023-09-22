@@ -1,0 +1,38 @@
+id: blocks_test_tag_variable_rate_ff
+label: Test Tag Variable Rate
+flags: [ python, cpp ]
+
+parameters:
+-   id: once
+    label: Update Once
+    dtype: enum
+    default: 'False'
+    options: ['True', 'False']
+-   id: step
+    label: Update Step
+    dtype: float
+    default: '0.001'
+
+inputs:
+-   domain: stream
+    dtype: float
+    multiplicity: '1'
+
+outputs:
+-   domain: stream
+    dtype: float
+    multiplicity: '1'
+
+templates:
+    imports: from gnuradio import blocks
+    make: blocks.test_tag_variable_rate_ff(${once}, ${step})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/test_tag_variable_rate_ff.h>']
+    declarations: 'blocks::test_tag_variable_rate_ff::sptr ${id};'
+    make: 'this->${id} = blocks::test_tag_variable_rate_ff::make(${once}, ${step});'
+    translations:
+        'True': 'true'
+        'False': 'false'
+
+file_format: 1

@@ -1,0 +1,24 @@
+id: dtv_atsc_depad
+label: ATSC Depad
+flags: [ python, cpp ]
+
+inputs:
+-   domain: stream
+    dtype: byte
+    vlen: 188
+
+outputs:
+-   domain: stream
+    dtype: byte
+
+templates:
+    imports: from gnuradio import dtv
+    make: dtv.atsc_depad()
+
+cpp_templates:
+    includes: ['#include <gnuradio/dtv/atsc_depad.h>']
+    declarations: 'dtv::atsc_depad::sptr ${id};'
+    make: 'this->${id} = dtv::atsc_depad::make();'
+    link: ['gnuradio::gnuradio-dtv']
+
+file_format: 1

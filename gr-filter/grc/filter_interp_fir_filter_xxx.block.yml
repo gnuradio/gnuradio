@@ -1,0 +1,63 @@
+id: interp_fir_filter_xxx
+label: Interpolating FIR Filter
+flags: [ python, cpp ]
+
+parameters:
+-   id: type
+    label: Type
+    dtype: enum
+    options: [ccc, ccf, fcc, fff, fsf, scc]
+    option_labels: [Complex->Complex (Complex Taps), Complex->Complex (Real Taps),
+        Float->Complex (Complex Taps), Float->Float (Real Taps), Float->Short (Real
+            Taps), Short->Complex (Complex Taps)]
+    option_attributes:
+        input: [complex, complex, float, float, float, short]
+        output: [complex, complex, complex, float, short, complex]
+        taps: [complex_vector, real_vector, complex_vector, real_vector, real_vector,
+            complex_vector]
+    hide: part
+-   id: interp
+    label: Interpolation
+    dtype: int
+    default: '1'
+-   id: taps
+    label: Taps
+    dtype: ${ type.taps }
+-   id: samp_delay
+    label: Sample Delay
+    dtype: int
+    default: '0'
+    hide: part
+
+inputs:
+-   domain: stream
+    dtype: ${ type.input }
+
+outputs:
+-   domain: stream
+    dtype: ${ type.output }
+
+templates:
+    imports: |-
+        from gnuradio import filter
+        from gnuradio.filter import firdes
+    make: |-
+        filter.interp_fir_filter_${type}(${interp}, ${taps})
+        self.${id}.declare_sample_delay(${samp_delay})
+    callbacks:
+    - set_taps(${taps})
+cpp_templates:
+  includes : ['#include <gnuradio/filter/interp_fir_filter.h>']
+  declarations: 'filter::interp_fir_filter_${type}::sptr ${id};'
+  make: |-
+        % if str(type.taps) == "complex_vector":
+        std::vector<gr_complex> taps = {${str(taps)[1:-1]}};
+        % else:
+        std::vector<int> taps = {${str(taps)[1:-1]}};
+        % endif
+        this->${id} = filter::interp_fir_filter_${type}::make(${interp}, taps);
+  link: ['gnuradio::gnuradio-filter']
+  callbacks:
+    - set_taps(${taps})
+
+file_format: 1

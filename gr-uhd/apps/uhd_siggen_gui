@@ -1,0 +1,538 @@
+#!/usr/bin/env python3
+#
+# Copyright 2015-2016,2018 Free Software Foundation, Inc.
+#
+# This file is part of GNU Radio
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+#
+"""
+Signal Generator App
+"""
+
+# Started off with this flow graph:
+##################################################
+# GNU Radio Python Flow Graph
+# Title: UHD Signal Generator
+# Author: Ettus Research
+# Description: Signal Generator for use with USRP Devices
+# Generated: Sun Jun 28 17:21:28 2015
+##################################################
+
+# I prefer grouping the imports myself in this case, due to all the special cases
+# pylint: disable=wrong-import-order
+# pylint: disable=wrong-import-position
+# pylint: disable=ungrouped-imports
+import sys
+if __name__ == '__main__':
+    import ctypes
+    if sys.platform.startswith('linux'):
+        try:
+            X11 = ctypes.cdll.LoadLibrary('libX11.so')
+            X11.XInitThreads()
+        except:
+            print("Warning: failed to XInitThreads()")
+import threading
+import signal
+import time
+import math
+from PyQt5 import Qt
+from PyQt5.QtCore import pyqtSlot
+import sip  # Needs to be imported after PyQt5, could fail otherwise
+from gnuradio import analog
+from gnuradio import eng_notation
+from gnuradio import qtgui
+from gnuradio import uhd
+from gnuradio import fft
+from gnuradio.qtgui import Range, RangeWidget
+try:
+    import uhd_siggen_base as uhd_siggen
+except ImportError:
+    from gnuradio.uhd import uhd_siggen_base as uhd_siggen
+
+
+# The Qt stuff will throw PyLint warnings like crazy, so let's disable them
+# pylint: disable=c-extension-no-member
+
+class uhd_siggen_gui(Qt.QWidget):
+    """
+    Signal Generator Flowgraph
+    """
+
+    def __init__(self, args):
+        ##################################################
+        # Set up the siggen app
+        ##################################################
+        self._sg = uhd_siggen.USRPSiggen(args)
+        self.usrp = self._sg.usrp
+
+        ##################################################
+        # GUI Setup
+        ##################################################
+        Qt.QWidget.__init__(self)
+        self.setWindowTitle("UHD Signal Generator")
+        try:
+            self.setWindowIcon(Qt.QIcon.fromTheme('gnuradio-grc'))
+        except:
+            pass
+        self.top_scroll_layout = Qt.QVBoxLayout()
+        self.setLayout(self.top_scroll_layout)
+        self.top_scroll = Qt.QScrollArea()
+        self.top_scroll.setFrameStyle(Qt.QFrame.NoFrame)
+        self.top_scroll_layout.addWidget(self.top_scroll)
+        self.top_scroll.setWidgetResizable(True)
+        self.top_widget = Qt.QWidget()
+        self.top_scroll.setWidget(self.top_widget)
+        self.top_layout = Qt.QVBoxLayout(self.top_widget)
+        self.top_grid_layout = Qt.QGridLayout()
+        self.top_layout.addLayout(self.top_grid_layout)
+        self.settings = Qt.QSettings("GNU Radio", "uhd_siggen_gui")
+        geo_settings = self.settings.value("geometry")
+        if geo_settings:
+            self.restoreGeometry(self.settings.value("geometry"))
+
+        ##################################################
+        # Widgets + Controls
+        ##################################################
+        # Waveform Selector
+        self._waveform_options = list(uhd_siggen.WAVEFORMS.keys())
+        self._waveform_labels = list(uhd_siggen.WAVEFORMS.values())
+        self._waveform_group_box = Qt.QGroupBox("Waveform")
+        self._waveform_box = Qt.QHBoxLayout()
+
+        class variable_chooser_button_group(Qt.QButtonGroup):
+            def __init__(self, parent=None):
+                Qt.QButtonGroup.__init__(self, parent)
+
+            @pyqtSlot(int)
+            def updateButtonChecked(self, button_id):
+                self.button(button_id).setChecked(True)
+        self._waveform_button_group = variable_chooser_button_group()
+        self._waveform_group_box.setLayout(self._waveform_box)
+        for i, label in enumerate(self._waveform_labels):
+            radio_button = Qt.QRadioButton(label)
+            self._waveform_box.addWidget(radio_button)
+            self._waveform_button_group.addButton(radio_button, i)
+        self._waveform_callback = lambda i: Qt.QMetaObject.invokeMethod(
+            self._waveform_button_group,
+            "updateButtonChecked",
+            Qt.Q_ARG("int", self._waveform_options.index(i))
+        )
+        self._waveform_callback(self._sg[uhd_siggen.TYPE_KEY])
+        self._waveform_button_group.buttonClicked[int].connect(
+            lambda i: self.set_waveform(self._waveform_options[i])
+        )
+        self.top_grid_layout.addWidget(self._waveform_group_box, 0, 0, 1, 5)
+        # Center Frequency Sliders
+        self.freq_coarse = self._sg.usrp.get_center_freq(self._sg.channels[0])
+        self._freq_coarse_range = Range(
+            self.usrp.get_freq_range(self._sg.channels[0]).start(),
+            self.usrp.get_freq_range(self._sg.channels[0]).stop(),
+            1e3,  # Step
+            self.freq_coarse,
+            200,  # Min Width
+        )
+        self._freq_coarse_win = RangeWidget(
+            self._freq_coarse_range,
+            self.set_freq_coarse,
+            "Center Frequency",
+            "counter_slider",
+            float
+        )
+        self.top_grid_layout.addWidget(self._freq_coarse_win, 1, 0, 1, 5)
+        self.freq_fine = 0.0
+        self._freq_fine_range = Range(
+            -1e6, 1e6, 1e3,
+            self.freq_fine,
+            200
+        )
+        self._freq_fine_win = RangeWidget(
+            self._freq_fine_range,
+            self.set_freq_fine,
+            "Fine Tuning",
+            "counter_slider",
+            float
+        )
+        self.top_grid_layout.addWidget(self._freq_fine_win, 2, 0, 1, 5)
+        self.lo_offset = self._sg.args.lo_offset
+        self._lo_offset_range = Range(
+            -self._sg[uhd_siggen.SAMP_RATE_KEY] / 2,
+            self._sg[uhd_siggen.SAMP_RATE_KEY] / 2,
+            1e3,
+            self.lo_offset,
+            200
+        )
+        self._lo_offset_win = RangeWidget(
+            self._lo_offset_range,
+            self.set_lo_offset,
+            "LO Offset",
+            "counter_slider",
+            float
+        )
+        self.top_grid_layout.addWidget(self._lo_offset_win, 3, 0, 1, 5)
+        # Signal frequencies
+        self._freq1_enable_on = (analog.GR_SIN_WAVE, "2tone", "sweep")
+        self._freq1_offset_range = Range(
+            -self._sg[uhd_siggen.SAMP_RATE_KEY] / 2,
+            self._sg[uhd_siggen.SAMP_RATE_KEY] / 2,
+            100,
+            self._sg.args.waveform_freq,
+            200
+        )
+        self._freq1_offset_win = RangeWidget(
+            self._freq1_offset_range,
+            self.set_freq1_offset,
+            "Frequency Offset: Signal 1",
+            "counter_slider",
+            float
+        )
+        self._freq1_offset_win.setEnabled(
+            self._sg[uhd_siggen.TYPE_KEY] in self._freq1_enable_on)
+        self.top_grid_layout.addWidget(self._freq1_offset_win, 4, 0, 1, 3)
+        self._freq2_enable_on = ("2tone", "sweep")
+        self._freq2_offset_range = Range(
+            -self._sg[uhd_siggen.SAMP_RATE_KEY] / 2,
+            self._sg[uhd_siggen.SAMP_RATE_KEY] / 2,
+            100,
+            self._sg.args.waveform2_freq,
+            200
+        )
+        self._freq2_offset_win = RangeWidget(
+            self._freq2_offset_range,
+            self.set_freq2_offset,
+            "Signal 2 ",
+            "counter_slider",
+            float
+        )
+        self._freq2_offset_win.setEnabled(
+            self._sg[uhd_siggen.TYPE_KEY] in self._freq2_enable_on)
+        self.top_grid_layout.addWidget(self._freq2_offset_win, 4, 3, 1, 2)
+        # Amplitude
+        min_ampl = \
+            self._sg.MIN_AMP_POWER_MODE \
+            if self._sg.gain_type == self._sg.GAIN_TYPE_POWER else 0
+        self._amplitude_range = \
+            Range(min_ampl, 1, .001, self._sg[uhd_siggen.AMPLITUDE_KEY], 200)
+        self._amplitude_win = RangeWidget(
+            self._amplitude_range,
+            self.set_amplitude,
+            "Signal Amplitude",
+            "counter_slider",
+            float
+        )
+        self.top_grid_layout.addWidget(self._amplitude_win, 5, 0, 1, 5)
+        ### Gain or power
+        self._gain_range = Range(
+            math.floor(self._sg.gain_range.start()),
+            math.ceil(self._sg.gain_range.stop()),
+            .5,
+            self._sg.get_gain_or_power(),
+            200.,
+        )
+        self._gain_win = RangeWidget(
+            self._gain_range,
+            self.set_gain_or_power,
+            "TX Gain (dB)"
+            if self._sg.gain_type == self._sg.GAIN_TYPE_GAIN
+            else "TX Power (dBm)",
+            "counter_slider",
+            float
+        )
+        self.top_grid_layout.addWidget(self._gain_win, 6, 0, 1, 5)
+        # Samp rate, LO sync, Antenna Select
+        self.samp_rate = self._sg[uhd_siggen.SAMP_RATE_KEY]
+        self._samp_rate_tool_bar = Qt.QToolBar(self)
+        self._samp_rate_tool_bar.addWidget(Qt.QLabel("Sampling Rate: "))
+        self._samp_rate_line_edit = Qt.QLineEdit(
+            eng_notation.num_to_str(self._sg[uhd_siggen.SAMP_RATE_KEY]))
+        self._samp_rate_tool_bar.addWidget(self._samp_rate_line_edit)
+        self._samp_rate_line_edit.editingFinished.connect(
+            lambda: self.set_samp_rate(eng_notation.str_to_num(
+                str(self._samp_rate_line_edit.text())))
+        )
+        self.top_grid_layout.addWidget(self._samp_rate_tool_bar, 7, 0, 1, 2)
+        _sync_phases_push_button = Qt.QPushButton("Sync LOs")
+        _sync_phases_push_button.pressed.connect(
+            lambda: self.set_sync_phases(True))
+        _sync_phases_push_button.setEnabled(bool(len(self._sg.channels) > 1))
+        self.top_grid_layout.addWidget(_sync_phases_push_button, 7, 2, 1, 1)
+        # Antenna Select
+        self._ant_tool_bar = Qt.QToolBar(self)
+        self._ant_tool_bar.addWidget(Qt.QLabel("Antenna: "))
+        self._ant_combo_box = Qt.QComboBox()
+        self._ant_tool_bar.addWidget(self._ant_combo_box)
+        self._ant_options = self.usrp.get_antennas(self._sg.channels[0])
+        for label in self._ant_options:
+            self._ant_combo_box.addItem(label)
+        self._ant_callback = lambda i: Qt.QMetaObject.invokeMethod(
+            self._ant_combo_box, "setCurrentIndex",
+            Qt.Q_ARG("int", self._ant_options.index(i))
+        )
+        self._ant_callback(self.usrp.get_antenna(self._sg.channels[0]))
+        self._ant_combo_box.currentIndexChanged.connect(
+            lambda i: self.set_ant(self._ant_options[i]))
+        self.top_grid_layout.addWidget(self._ant_tool_bar, 7, 4, 1, 1)
+        # Labels + Lock Sensors
+        self._lo_locked_probe_0_tool_bar = Qt.QToolBar(self)
+        self._lo_locked_probe_0_formatter = lambda x: x
+        self._lo_locked_probe_0_tool_bar.addWidget(Qt.QLabel("LO locked: "))
+        self._lo_locked_probe_0_label = Qt.QLabel(str(False))
+        self._lo_locked_probe_0_tool_bar.addWidget(
+            self._lo_locked_probe_0_label)
+        self.top_grid_layout.addWidget(
+            self._lo_locked_probe_0_tool_bar, 8, 0, 1, 1)
+
+        def _chan0_lo_locked_probe():
+            " Monitor lock status of LO on channel 0 "
+            while True:
+                try:
+                    val = all([
+                        self.usrp.get_sensor('lo_locked', c).to_bool()
+                        for c in range(len(self._sg.channels))])
+                    self.set_chan0_lo_locked(val)
+                except:
+                    self.set_chan0_lo_locked("Lock Detect Failed!")
+                time.sleep(.1)
+        _chan0_lo_locked_thread = threading.Thread(
+            target=_chan0_lo_locked_probe)
+        _chan0_lo_locked_thread.daemon = True
+        _chan0_lo_locked_thread.start()
+        self.label_rf_freq = self._sg.tr.actual_rf_freq
+        self._label_rf_freq_tool_bar = Qt.QToolBar(self)
+        self._label_rf_freq_formatter = lambda x: x
+        self._label_rf_freq_tool_bar.addWidget(Qt.QLabel("LO freq: "))
+        self._label_rf_freq_label = \
+            Qt.QLabel(str(self._label_rf_freq_formatter(self.label_rf_freq)))
+        self._label_rf_freq_tool_bar.addWidget(self._label_rf_freq_label)
+        self.top_grid_layout.addWidget(
+            self._label_rf_freq_tool_bar, 8, 1, 1, 1)
+        self.label_dsp_freq = self._sg.tr.actual_dsp_freq
+        self._label_dsp_freq_tool_bar = Qt.QToolBar(self)
+        self._label_dsp_freq_formatter = lambda x: x
+        self._label_dsp_freq_tool_bar.addWidget(Qt.QLabel("DSP Freq: "))
+        self._label_dsp_freq_label = \
+            Qt.QLabel(str(self._label_dsp_freq_formatter(self.label_dsp_freq)))
+        self._label_dsp_freq_tool_bar.addWidget(self._label_dsp_freq_label)
+        self.top_grid_layout.addWidget(
+            self._label_dsp_freq_tool_bar, 8, 2, 1, 1)
+        ##################################################
+        # Freq Sink
+        ##################################################
+        if self._sg.args.show_freq_sink:
+            self.qtgui_freq_sink_x_0 = qtgui.freq_sink_c(
+                1024,  # size
+                fft.window.WIN_BLACKMAN_hARRIS,  # wintype
+                self.freq_coarse + self.freq_fine,  # fc
+                self.samp_rate,  # bw
+                "",  # name
+                1  # number of inputs
+            )
+            self.qtgui_freq_sink_x_0.set_update_time(0.10)
+            self.qtgui_freq_sink_x_0.set_y_axis(-100, 10)
+            self.qtgui_freq_sink_x_0.set_trigger_mode(
+                qtgui.TRIG_MODE_FREE, 0.0, 0, "")
+            self.qtgui_freq_sink_x_0.enable_autoscale(False)
+            self.qtgui_freq_sink_x_0.enable_grid(False)
+            self.qtgui_freq_sink_x_0.set_fft_average(1.0)
+            self.qtgui_freq_sink_x_0.enable_control_panel(False)
+            self.qtgui_freq_sink_x_0.set_line_label(0, "Siggen Spectrum")
+            self.qtgui_freq_sink_x_0.set_line_width(0, 1)
+            self.qtgui_freq_sink_x_0.set_line_color(0, "blue")
+            self.qtgui_freq_sink_x_0.set_line_alpha(0, 1.0)
+            self._qtgui_freq_sink_x_0_win = sip.wrapinstance(
+                self.qtgui_freq_sink_x_0.qwidget(), Qt.QWidget)
+            self.top_grid_layout.addWidget(
+                self._qtgui_freq_sink_x_0_win, 9, 0, 2, 5)
+            # Reconnect:
+            self._sg.extra_sink = self.qtgui_freq_sink_x_0
+            self._sg[uhd_siggen.TYPE_KEY] = self._sg[uhd_siggen.TYPE_KEY]
+        ##################################################
+        # Start transmitting
+        ##################################################
+        self._sg.start()
+
+    ##################################################
+    # QT + Flowgraph stuff
+    ##################################################
+    def closeEvent(self, event):
+        """ Qt closeEvent() """
+        self.settings = Qt.QSettings("GNU Radio", "uhd_siggen_gui")
+        self.settings.setValue("geometry", self.saveGeometry())
+        self._sg.stop()
+        self._sg.wait()
+        event.accept()
+
+    def stop(self):
+        """
+        Stop flow graph, tear down blocks
+        """
+        self._sg.stop()
+        self._sg.wait()
+        self._sg = None
+
+    ##################################################
+    # Setters
+    ##################################################
+    def set_waveform(self, waveform):
+        """ Execute when the set-waveform button is clicked """
+        self._freq1_offset_win.setEnabled(waveform in self._freq1_enable_on)
+        self._freq2_offset_win.setEnabled(waveform in self._freq2_enable_on)
+        self._sg[uhd_siggen.TYPE_KEY] = waveform
+        self._waveform_callback(waveform)
+
+    def set_freq_coarse(self, freq_coarse):
+        """ Execute when the coarse freq slider is moved """
+        self.freq_coarse = freq_coarse
+        self.update_center_freq()
+
+    def set_freq_fine(self, freq_fine):
+        """ Execute when the fine freq slider is moved """
+        self.freq_fine = freq_fine
+        self.update_center_freq()
+
+    def set_lo_offset(self, lo_offset):
+        """ Execute when the LO offset slider is moved """
+        self.lo_offset = lo_offset
+        self.update_center_freq()
+
+    def update_center_freq(self):
+        """
+        Call this when a widget changes the frequency.
+        Will update both spectrum widget and USRP.
+        """
+        if hasattr(self, "qtgui_freq_sink_x_0"):
+            self.qtgui_freq_sink_x_0.set_frequency_range(
+                self.freq_coarse + self.freq_fine, self.samp_rate)
+        self.tune()
+
+    def tune(self):
+        """
+        Multi-channel tune
+        """
+        tune_req = uhd.tune_request(
+            self.freq_fine + self.freq_coarse,
+            self.lo_offset
+        )
+        for idx, chan in enumerate(self._sg.channels):
+            tune_res = self.usrp.set_center_freq(tune_req, chan)
+            if idx == 0:
+                self.set_label_dsp_freq(tune_res.actual_dsp_freq)
+                self.set_label_rf_freq(tune_res.actual_rf_freq)
+        if self._sg.gain_type == self._sg.GAIN_TYPE_POWER:
+            self._sg[uhd_siggen.RF_FREQ_KEY] = self._sg[uhd_siggen.RF_FREQ_KEY]
+
+    def set_freq1_offset(self, freq1_offset):
+        """ Execute when the freq1 slider is moved """
+        self._sg[uhd_siggen.WAVEFORM_FREQ_KEY] = freq1_offset
+
+    def set_freq2_offset(self, freq2_offset):
+        """ Execute when the freq2 slider is moved """
+        self._sg[uhd_siggen.WAVEFORM2_FREQ_KEY] = freq2_offset
+
+    def set_amplitude(self, amplitude):
+        """ Execute when the amplitude slider is moved """
+        # Here's a catch-22: The current power is calculated using the amplitude
+        # so we need to stash it before the amplitude changes, then reapply
+        # later.
+        power = self._sg[uhd_siggen.GAIN_KEY]
+        self._sg[uhd_siggen.AMPLITUDE_KEY] = amplitude
+        if self._sg.gain_type == self._sg.GAIN_TYPE_POWER:
+            self._sg[uhd_siggen.GAIN_KEY] = power
+
+    def set_gain_or_power(self, gain_or_power):
+        """
+        Execute when the gain/power slider is moved
+        """
+        self._sg.set_gain_or_power(gain_or_power)
+        self._gain_win.d_widget.setValue(self._sg.get_gain_or_power())
+
+    def set_sync_phases(self, sync):
+        """ Execute when the sync-phases button is pushed """
+        if sync:
+            self._sg.vprint(
+                "Attempting to sync LO phases. This does not work with all boards.")
+            self._sg.set_freq(self.freq_coarse + self.freq_fine, False)
+
+    def set_ant(self, ant):
+        """ Execute when the antenna selection is changed """
+        self.ant = ant
+        self._ant_callback(self.ant)
+
+    def set_samp_rate(self, samp_rate):
+        """ Execute when the sampling rate is changed """
+        self.samp_rate = samp_rate
+        Qt.QMetaObject.invokeMethod(
+            self._samp_rate_line_edit, "setText",
+            Qt.Q_ARG("QString", eng_notation.num_to_str(self.samp_rate))
+        )
+        self._sg[uhd_siggen.SAMP_RATE_KEY] = samp_rate
+        self.update_center_freq()
+
+    def set_label_rf_freq(self, label_rf_freq):
+        """  Update the RF frequency label """
+        self.label_rf_freq = label_rf_freq
+        Qt.QMetaObject.invokeMethod(
+            self._label_rf_freq_label, "setText",
+            Qt.Q_ARG(
+                "QString",
+                eng_notation.num_to_str(self.label_rf_freq)
+            )
+        )
+
+    def set_label_dsp_freq(self, label_dsp_freq):
+        """  Update the DSP frequency label """
+        self.label_dsp_freq = label_dsp_freq
+        Qt.QMetaObject.invokeMethod(
+            self._label_dsp_freq_label, "setText",
+            Qt.Q_ARG(
+                "QString",
+                eng_notation.num_to_str(self.label_dsp_freq)
+            )
+        )
+
+    def set_chan0_lo_locked(self, chan0_lo_locked):
+        """
+        Update the LO locked label
+        """
+        Qt.QMetaObject.invokeMethod(
+            self._lo_locked_probe_0_label, "setText",
+            Qt.Q_ARG("QString", str(chan0_lo_locked))
+        )
+
+
+def setup_parser():
+    """
+    Argument parser for siggen_gui
+    """
+    parser = uhd_siggen.setup_argparser()
+    group = parser.add_argument_group('GUI Arguments')
+    group.add_argument(
+        "-q", "--show-freq-sink", action="store_true",
+        help="Show QT Frequency Widget"
+    )
+    return parser
+
+
+def main():
+    """ Go, go, go! """
+    parser = setup_parser()
+    args = parser.parse_args()
+    qapp = Qt.QApplication(sys.argv)
+    siggen_gui = uhd_siggen_gui(args)
+    siggen_gui.show()
+    # pylint: disable=unused-argument
+
+    def sig_handler(sig=None, frame=None):
+        siggen_gui.stop()
+        Qt.QApplication.quit()
+    signal.signal(signal.SIGINT, sig_handler)
+    signal.signal(signal.SIGTERM, sig_handler)
+    timer = Qt.QTimer()
+    timer.start(500)
+    timer.timeout.connect(lambda: None)
+    qapp.exec_()
+
+
+if __name__ == '__main__':
+    main()

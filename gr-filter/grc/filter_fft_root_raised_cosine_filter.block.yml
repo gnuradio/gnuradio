@@ -1,0 +1,68 @@
+id: filter_fft_rrc_filter
+label: FFT Root Raised Cosine Filter
+category: '[Core]/Filters'
+
+parameters:
+-   id: type
+    label: Type
+    dtype: enum
+    options: [ccc, ccf, fff]
+    option_labels: [Complex->Complex (Complex Taps), Complex->Complex (Real Taps),
+        Float->Float (Real Taps)]
+    option_attributes:
+        input: [complex, complex, float]
+        output: [complex, complex, float]
+        taps: [complex_vector, float_vector, float_vector]
+    hide: part
+-   id: decim
+    label: Decimation
+    dtype: int
+    default: '1'
+-   id: gain
+    label: Gain
+    dtype: real
+    default: '1'
+-   id: samp_rate
+    label: Sample Rate
+    dtype: real
+    default: samp_rate
+-   id: sym_rate
+    label: Symbol Rate
+    dtype: real
+    default: '1.0'
+-   id: alpha
+    label: Alpha
+    dtype: real
+    default: '0.35'
+-   id: ntaps
+    label: Num Taps
+    dtype: int
+    default: 11*samp_rate
+-   id: nthreads
+    label: Num. Threads
+    dtype: int
+    default: '1'
+
+inputs:
+-   domain: stream
+    dtype: ${ type.input }
+
+outputs:
+-   domain: stream
+    dtype: ${ type.output }
+
+templates:
+    imports: |-
+        from gnuradio import filter
+        from gnuradio.filter import firdes
+    make: filter.fft_filter_${type}(${decim}, firdes.root_raised_cosine(${gain}, ${samp_rate},
+        ${sym_rate}, ${alpha}, ${ntaps}), ${nthreads})
+    callbacks:
+    - set_taps(firdes.root_raised_cosine(${gain}, ${samp_rate}, ${sym_rate}, ${alpha},
+        ${ntaps}))
+    - set_nthreads(${nthreads})
+
+documentation: |-
+    This filter is a convenience wrapper for an FFT-based Root Raised Cosine filter and a firdes taps generating function.
+
+file_format: 1

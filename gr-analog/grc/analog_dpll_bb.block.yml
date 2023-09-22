@@ -1,0 +1,34 @@
+id: analog_dpll_bb
+label: Detect Peak
+flags: [ python, cpp ]
+
+parameters:
+-   id: period
+    label: Period
+    dtype: real
+-   id: gain
+    label: Gain
+    dtype: real
+
+inputs:
+-   domain: stream
+    dtype: byte
+
+outputs:
+-   domain: stream
+    dtype: byte
+
+templates:
+    imports: from gnuradio import analog
+    make: analog.dpll_bb(${period}, ${gain})
+    callbacks:
+    - set_gain(${gain})
+
+cpp_templates:
+    includes: ['#include <gnuradio/analog/dpll_bb.h>']
+    make: 'this->${id} = analog::dpll_bb::make(${period}, ${gain});'
+    callbacks:
+    - set_gain(${gain})
+    link: ['gnuradio::gnuradio-analog']
+
+file_format: 1

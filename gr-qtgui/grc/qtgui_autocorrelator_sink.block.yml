@@ -1,0 +1,84 @@
+id: qtgui_auto_correlator_sink
+label: QT GUI Fast Auto-Correlator Sink
+category: '[Core]/GUI Widgets/QT'
+
+parameters:
+-   id: sampRate
+    label: Sample Rate
+    dtype: float
+    default: samp_rate
+-   id: fac_size
+    label: FAC Size
+    dtype: int
+    default: '512'
+-   id: fac_decimation
+    label: FAC Decimation
+    dtype: int
+    default: '10'
+-   id: useDB
+    label: Output
+    dtype: enum
+    options: ['True', 'False']
+    option_labels: [dB, Normalized]
+-   id: title
+    label: Title
+    dtype: string
+    default: '""'
+    hide: part
+-   id: grid
+    label: Show Grid
+    dtype: enum
+    options: ['True', 'False']
+    option_labels: ['Yes', 'No']
+    hide: part
+-   id: autoScale
+    label: Auto-Scale
+    dtype: enum
+    options: ['True', 'False']
+    option_labels: ['Yes', 'No']
+    hide: part
+-   id: yMin
+    label: Y Min
+    dtype: float
+    default: '0'
+    hide: part
+-   id: yMax
+    label: Y Max
+    dtype: float
+    default: '1'
+    hide: part
+-   id: gui_hint
+    label: GUI Hint
+    dtype: gui_hint
+    hide: part
+
+inputs:
+-   domain: stream
+    dtype: complex
+
+templates:
+    make: |-
+        <%
+            win = 'self._%s_win'%id
+        %>\
+        qtgui.AutoCorrelatorSink(${sampRate}, 
+            ${fac_size}, 
+            ${fac_decimation}, 
+            ${title}, 
+            ${autoScale}, 
+            ${grid}, 
+            ${yMin}, 
+            ${yMax}, 
+            ${useDB}
+        )
+        self._${id}_win = self.${id}.getWidget()
+        ${gui_hint() % win}
+
+documentation: |-
+    This block uses the Wiener Khinchin theorem that the FFT of a signal's power spectrum is its auto-correlation function. 
+         
+    FAC Size controls the FFT size and therefore the length of time (samp_rate/fac_size) the auto-correlation runs over.
+
+    The GUI hint can be used to position the widget within the application. The hint is of the form [tab_id@tab_index]: [row, col, row_span, col_span]. Both the tab specification and the grid position are optional.
+
+file_format: 1

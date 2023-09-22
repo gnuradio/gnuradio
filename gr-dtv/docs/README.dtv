@@ -1,0 +1,13 @@
+This is the GNU Radio DTV package. It contains the blocks that
+implement various digital television standards.
+
+To use the DTV blocks, the Python namespaces is in gnuradio.dtv, which
+would be normally imported as:
+
+    from gnuradio import dtv
+
+See the Doxygen documentation for details about the blocks available
+in this package. A quick listing of the details can be found in Python
+after importing by using:
+
+    help(dtv)

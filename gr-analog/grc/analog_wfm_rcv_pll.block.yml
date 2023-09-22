@@ -1,0 +1,34 @@
+id: analog_wfm_rcv_pll
+label: WBFM Receive PLL
+flags: [ python ]
+
+parameters:
+-   id: quad_rate
+    label: Quadrature Rate
+    dtype: real
+-   id: audio_decimation
+    label: Audio Decimation
+    dtype: int
+-   id: deemph_tau
+    label: Deemphasis Tau
+    dtype: real
+    default: 75e-6
+
+inputs:
+-   domain: stream
+    dtype: complex
+
+outputs:
+-   label: Lout
+    domain: stream
+    dtype: float
+-   label: Rout
+    domain: stream
+    dtype: float
+
+templates:
+    imports: from gnuradio import analog
+    make: "analog.wfm_rcv_pll(\n\tdemod_rate=${quad_rate},\n\taudio_decimation=${audio_decimation},\n\tdeemph_tau=${deemph_tau},\n\
+        )"
+
+file_format: 1

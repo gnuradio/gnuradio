@@ -1,0 +1,34 @@
+id: blocks_complex_to_mag_squared
+label: Complex to Mag^2
+flags: [ python, cpp ]
+
+parameters:
+-   id: vlen
+    label: Vector Length
+    dtype: int
+    default: '1'
+    hide: ${ 'part' if vlen == 1 else 'none' }
+
+inputs:
+-   domain: stream
+    dtype: complex
+    vlen: ${ vlen }
+
+outputs:
+-   domain: stream
+    dtype: float
+    vlen: ${ vlen }
+
+asserts:
+- ${ vlen > 0 }
+
+templates:
+    imports: from gnuradio import blocks
+    make: blocks.complex_to_mag_squared(${vlen})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/complex_to_mag_squared.h>']
+    declarations: 'blocks::complex_to_mag_squared::sptr ${id};'
+    make: 'this->${id} = blocks::complex_to_mag_squared::make(${vlen});'
+
+file_format: 1

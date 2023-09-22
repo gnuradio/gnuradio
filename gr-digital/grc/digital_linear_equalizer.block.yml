@@ -1,0 +1,54 @@
+id: digital_linear_equalizer
+label: Linear Equalizer
+category: '[Equalizers]'
+flags: [ python ]
+
+parameters:
+-   id: num_taps
+    label: Num. Taps
+    dtype: int
+-   id: sps
+    label: Input Samples per Symbol
+    dtype: int
+-   id: alg
+    label: Adaptive Algorithm Object
+    dtype: raw
+    hide: 'part'
+-   id: adapt_after_training
+    label: Adapt After Training
+    dtype: bool
+    default: 'True'
+    hide: 'part'
+-   id: training_sequence
+    label: Training Sequence
+    dtype: complex_vector
+    default: '[ ]'
+    hide: 'part'
+-   id: training_start_tag
+    label: Training Start Tag
+    dtype: string
+    default: 'corr_est'
+    hide: 'part'
+
+inputs:
+-   domain: stream
+    dtype: complex
+
+outputs:
+-   domain: stream
+    dtype: complex
+-   label: taps
+    domain: stream
+    dtype: complex
+    vlen: ${num_taps}
+    optional: true
+-   label: state
+    domain: stream
+    dtype: short
+    optional: true
+
+templates:
+    imports: from gnuradio import digital
+    make: digital.linear_equalizer(${num_taps}, ${sps}, ${alg}, ${adapt_after_training}, ${training_sequence}, ${training_start_tag})
+
+file_format: 1

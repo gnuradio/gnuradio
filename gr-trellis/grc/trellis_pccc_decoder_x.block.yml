@@ -1,0 +1,75 @@
+id: trellis_pccc_decoder_x
+label: PCCC Decoder
+category: '[Core]/Trellis Coding'
+
+parameters:
+-   id: out_type
+    label: Output Type
+    dtype: enum
+    options: [i, s, b]
+    option_labels: [Int, Short, Byte]
+    option_attributes:
+        io: [int, short, byte]
+    hide: part
+-   id: o_fsm_args
+    label: FSM 1
+    dtype: raw
+-   id: o_init_state
+    label: Initial State 1
+    dtype: int
+    default: '0'
+-   id: o_final_state
+    label: Final State 1
+    dtype: int
+    default: '-1'
+-   id: i_fsm_args
+    label: FSM 2
+    dtype: raw
+-   id: i_init_state
+    label: Initial State 2
+    dtype: int
+    default: '0'
+-   id: i_final_state
+    label: Final State 2
+    dtype: int
+    default: '-1'
+-   id: interleaver
+    label: Interleaver
+    dtype: raw
+-   id: block_size
+    label: Block Size
+    dtype: int
+-   id: iterations
+    label: Iterations
+    dtype: int
+    default: '10'
+-   id: siso_type
+    label: SISO Type
+    dtype: enum
+    options: [trellis.TRELLIS_MIN_SUM, trellis.TRELLIS_SUM_PRODUCT]
+    option_labels: [Min Sum, Sum Product]
+
+inputs:
+-   domain: stream
+    dtype: float
+
+outputs:
+-   domain: stream
+    dtype: ${ out_type.io }
+
+asserts:
+- ${ (isinstance(eval(""" o_fsm_args """[1:-1], locals(),globals()), str) and open(o_fsm_args).close()) or True }
+- ${ (isinstance(eval(""" i_fsm_args """[1:-1], locals(),globals()), str) and open(i_fsm_args).close()) or True }
+
+templates:
+    imports: from gnuradio import trellis
+    make: "trellis.pccc_decoder_${out_type}(\n    trellis.fsm(${o_fsm_args}), ${o_init_state},\
+        \ ${o_final_state},\n    trellis.fsm(${i_fsm_args}), ${i_init_state}, ${i_final_state},\n\
+        \    trellis.interleaver(${interleaver}),\n    ${block_size},\n    ${iterations},\n\
+        \                ${siso_type})\n  "
+
+documentation: |-
+    PCCC turbo Decoder.
+    The fsm and interleaver arguments are passed directly to the trellis.fsm() and trellis.interleaver() constructors.
+
+file_format: 1

@@ -1,0 +1,94 @@
+id: root_raised_cosine_filter
+label: Root Raised Cosine Filter
+flags: [ python, cpp ]
+
+parameters:
+-   id: type
+    label: FIR Type
+    dtype: enum
+    options: [fir_filter_ccf, interp_fir_filter_ccf, fir_filter_fff, interp_fir_filter_fff]
+    option_labels: [Complex->Complex (Decimating), Complex->Complex (Interpolating),
+        Float->Float (Decimating), Float->Float (Interpolating)]
+    option_attributes:
+        input: [complex, complex, float, float]
+        output: [complex, complex, float, float]
+    hide: part
+-   id: decim
+    label: Decimation
+    dtype: int
+    default: '1'
+    hide: ${ ('all' if str(type).startswith('interp') else 'none') }
+-   id: interp
+    label: Interpolation
+    dtype: int
+    default: '1'
+    hide: ${ ('none' if str(type).startswith('interp') else 'all') }
+-   id: gain
+    label: Gain
+    dtype: real
+    default: '1'
+-   id: samp_rate
+    label: Sample Rate
+    dtype: real
+    default: samp_rate
+-   id: sym_rate
+    label: Symbol Rate
+    dtype: real
+    default: '1.0'
+-   id: alpha
+    label: Alpha
+    dtype: real
+    default: '0.35'
+-   id: ntaps
+    label: Num Taps
+    dtype: int
+    default: 11*samp_rate
+
+inputs:
+-   domain: stream
+    dtype: ${ type.input }
+
+outputs:
+-   domain: stream
+    dtype: ${ type.output }
+
+templates:
+    imports: |-
+        from gnuradio import filter
+        from gnuradio.filter import firdes
+    make: |-
+        filter.${type}(
+            ${ interp if str(type).startswith('interp') else decim },
+            firdes.root_raised_cosine(
+                ${gain},
+                ${samp_rate},
+                ${sym_rate},
+                ${alpha},
+                ${ntaps}))
+    callbacks:
+    - set_taps(firdes.root_raised_cosine(${gain}, ${samp_rate}, ${sym_rate}, ${alpha},
+        ${ntaps}))
+
+cpp_templates:
+    includes: ['#include <gnuradio/filter/firdes.h>']
+    declarations: 'filter::firdes::sptr ${id};'
+    make: |-
+        this->${id} = filter::${type}::make(
+            ${ interp if str(type).startswith('interp') else decim },
+            firdes::root_raised_cosine(
+                ${gain},
+                ${samp_rate},
+                ${sym_rate},
+                ${alpha},
+                ${ntaps}));
+    link: ['gnuradio::gnuradio-filter']
+    callbacks:
+    - set_taps(firdes::root_raised_cosine(${gain}, ${samp_rate}, ${sym_rate}, ${alpha},
+        ${ntaps}))
+
+documentation: |-
+    This filter is a convenience wrapper for an fir filter and a firdes taps generating function.
+
+    Sample rate in Hertz.
+
+file_format: 1

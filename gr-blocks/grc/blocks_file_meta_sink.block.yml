@@ -1,0 +1,73 @@
+id: blocks_file_meta_sink
+label: File Meta Sink
+flags: [ python ]
+
+parameters:
+-   id: file
+    label: File
+    dtype: file_save
+-   id: type
+    label: Input Type
+    dtype: enum
+    options: [complex, float, int, short, byte]
+    option_attributes:
+        cplx: ['True', 'False', 'False', 'False', 'False']
+        dtype: [blocks.GR_FILE_FLOAT, blocks.GR_FILE_FLOAT, blocks.GR_FILE_INT, blocks.GR_FILE_SHORT,
+            blocks.GR_FILE_BYTE]
+        size: [gr.sizeof_gr_complex, gr.sizeof_float, gr.sizeof_int, gr.sizeof_short,
+            gr.sizeof_char]
+    hide: part
+-   id: samp_rate
+    label: Sample Rate
+    dtype: real
+    default: samp_rate
+-   id: rel_rate
+    label: Relative Rate Change
+    dtype: real
+    default: '1'
+-   id: vlen
+    label: Vector Length
+    dtype: int
+    default: '1'
+    hide: ${ 'part' if vlen == 1 else 'none' }
+-   id: max_seg_size
+    label: Max Seg. Size
+    dtype: int
+    default: '1000000'
+-   id: extra_dict
+    label: Extra Dict.
+    dtype: raw
+    default: pmt.make_dict()
+-   id: detached
+    label: Detached
+    dtype: bool
+    default: 'False'
+    options: ['False', 'True']
+    option_labels: ['Off', 'On']
+-   id: unbuffered
+    label: Unbuffered
+    dtype: bool
+    default: 'False'
+    options: ['False', 'True']
+    option_labels: ['Off', 'On']
+
+inputs:
+-   domain: stream
+    dtype: ${ type }
+    vlen: ${ vlen }
+
+asserts:
+- ${ vlen > 0 }
+
+templates:
+    imports: |-
+        from gnuradio import gr, blocks
+        import pmt
+    make: |-
+        blocks.file_meta_sink(${type.size}*${vlen}, ${file}, ${samp_rate}, ${rel_rate}, ${type.dtype}, ${type.cplx}, ${max_seg_size}, ${extra_dict}, ${detached})
+        self.${id}.set_unbuffered(${unbuffered})
+    callbacks:
+    - set_unbuffered(${unbuffered})
+    - open(${file})
+
+file_format: 1

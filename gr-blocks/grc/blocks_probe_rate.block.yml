@@ -1,0 +1,57 @@
+id: blocks_probe_rate
+label: Probe Rate
+flags: [ python, cpp ]
+
+parameters:
+-   id: type
+    label: Input Type
+    dtype: enum
+    options: [complex, float, int, short, byte]
+    option_attributes:
+        size: [gr.sizeof_gr_complex, gr.sizeof_float, gr.sizeof_int, gr.sizeof_short,
+            gr.sizeof_char]
+    hide: part
+-   id: vlen
+    label: Vector Length
+    dtype: int
+    default: '1'
+    hide: ${ 'part' if vlen == 1 else 'none' }
+-   id: mintime
+    label: Min Update Time (ms)
+    dtype: real
+    default: '500.0'
+-   id: alpha
+    label: Update Alpha
+    dtype: real
+    default: '0.15'
+-   id: name
+    label: Name
+    dtype: string
+
+inputs:
+-   domain: stream
+    dtype: ${ type }
+    vlen: ${ vlen }
+
+outputs:
+-   domain: message
+    id: rate
+    optional: true
+
+asserts:
+- ${ vlen >= 1 }
+
+templates:
+    imports: from gnuradio import blocks
+    make: blocks.probe_rate(${type.size}*${vlen}, ${mintime}, ${alpha}, ${name})
+    callbacks:
+    - set_alpha(${alpha})
+    - set_name(${name})
+
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/probe_rate.h>']
+    declarations: 'blocks::probe_rate::sptr ${id};'
+    make: 'this->${id} = blocks::probe_rate::make(${type.size}*${vlen}, ${mintime}, ${alpha}, ${name});'
+
+file_format: 1

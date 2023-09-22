@@ -1,0 +1,53 @@
+id: blocks_min_xx
+label: Min
+flags: [ python, cpp ]
+
+parameters:
+-   id: type
+    label: IO Type
+    dtype: enum
+    options: [float, int, short]
+    option_attributes:
+        fcn: [ff, ii, ss]
+    hide: part
+-   id: num_inputs
+    label: Num Inputs
+    dtype: int
+    default: '1'
+    hide: part
+-   id: vlen
+    label: Input Vector Length
+    dtype: int
+    default: '1'
+    hide: ${ 'part' if vlen == 1 else 'none' }
+-   id: vlen_out
+    label: Output Vector Length
+    dtype: int
+    default: '1'
+    hide: ${ 'part' if vlen == 1 else 'none' }
+
+inputs:
+-   domain: stream
+    dtype: ${ type }
+    vlen: ${ vlen }
+    multiplicity: ${ num_inputs }
+
+outputs:
+-   domain: stream
+    dtype: ${ type }
+    vlen: ${ vlen_out }
+
+asserts:
+- ${ num_inputs >= 1 }
+- ${ vlen >= 1 }
+
+templates:
+    imports: from gnuradio import blocks
+    make: blocks.min_${type.fcn}(${vlen},${vlen_out})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/min_blk.h>']
+    declarations: 'blocks::min_${type.fcn}::sptr ${id};'
+    make: 'this->${id} = blocks::min_${type.fcn}::make(${vlen},${vlen_out});'
+
+file_format: 1

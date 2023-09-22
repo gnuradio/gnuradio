@@ -1,0 +1,47 @@
+id: analog_fm_demod_cf
+label: FM Demod
+flags: [ python ]
+
+parameters:
+-   id: chan_rate
+    label: Channel Rate
+    dtype: real
+-   id: audio_decim
+    label: Audio Decimation
+    dtype: int
+-   id: deviation
+    label: Deviation
+    dtype: real
+    default: '75000'
+-   id: audio_pass
+    label: Audio Pass
+    dtype: real
+    default: '15000'
+-   id: audio_stop
+    label: Audio Stop
+    dtype: real
+    default: '16000'
+-   id: gain
+    label: Gain
+    dtype: real
+    default: '1.0'
+-   id: tau
+    label: Tau
+    dtype: real
+    default: 75e-6
+
+inputs:
+-   domain: stream
+    dtype: complex
+
+outputs:
+-   domain: stream
+    dtype: float
+
+templates:
+    imports: from gnuradio import analog
+    make: "analog.fm_demod_cf(\n\tchannel_rate=${chan_rate},\n\taudio_decim=${audio_decim},\n\
+        \tdeviation=${deviation},\n\taudio_pass=${audio_pass},\n\taudio_stop=${audio_stop},\n\
+        \tgain=${gain},\n\ttau=${tau},\n)"
+
+file_format: 1

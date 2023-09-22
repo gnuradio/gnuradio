@@ -1,0 +1,373 @@
+options:
+  parameters:
+    author: ''
+    category: Custom
+    cmake_opt: ''
+    comment: ''
+    copyright: ''
+    description: ''
+    gen_cmake: 'On'
+    gen_linking: dynamic
+    generate_options: qt_gui
+    hier_block_src_path: '.:'
+    id: filter_taps
+    max_nouts: '0'
+    output_language: python
+    placement: (0,0)
+    qt_qss_theme: ''
+    realtime_scheduling: ''
+    run: 'True'
+    run_command: '{python} -u {filename}'
+    run_options: prompt
+    sizing_mode: fixed
+    thread_safe_setters: ''
+    title: ''
+    window_size: 1280, 1024
+  states:
+    coordinate: [10, 10]
+    rotation: 0
+    state: enabled
+
+blocks:
+- name: bp_high
+  id: variable
+  parameters:
+    comment: ''
+    value: '10000'
+  states:
+    coordinate: [120, 211]
+    rotation: 0
+    state: enabled
+- name: bp_low
+  id: variable
+  parameters:
+    comment: ''
+    value: '6000'
+  states:
+    coordinate: [120, 139]
+    rotation: 0
+    state: enabled
+- name: bp_taps
+  id: variable_band_pass_filter_taps
+  parameters:
+    beta: '6.76'
+    comment: ''
+    gain: '1.0'
+    high_cutoff_freq: bp_high
+    low_cutoff_freq: bp_low
+    samp_rate: samp_rate
+    type: band_pass
+    width: transition
+    win: window.WIN_HAMMING
+  states:
+    coordinate: [696, 35]
+    rotation: 0
+    state: enabled
+- name: br_taps
+  id: variable_band_reject_filter_taps
+  parameters:
+    beta: '6.76'
+    comment: ''
+    gain: '1.0'
+    high_cutoff_freq: bp_high
+    low_cutoff_freq: bp_low
+    samp_rate: samp_rate
+    width: transition
+    win: window.WIN_HAMMING
+  states:
+    coordinate: [872, 36.0]
+    rotation: 0
+    state: enabled
+- name: cutoff_high
+  id: variable
+  parameters:
+    comment: ''
+    value: '14000'
+  states:
+    coordinate: [8, 211]
+    rotation: 0
+    state: enabled
+- name: cutoff_low
+  id: variable
+  parameters:
+    comment: ''
+    value: '2000'
+  states:
+    coordinate: [8, 147]
+    rotation: 0
+    state: enabled
+- name: hp_taps
+  id: variable_high_pass_filter_taps
+  parameters:
+    beta: '6.76'
+    comment: ''
+    cutoff_freq: cutoff_low
+    gain: '1.0'
+    samp_rate: samp_rate
+    width: transition
+    win: window.WIN_HAMMING
+  states:
+    coordinate: [536, 35]
+    rotation: 0
+    state: enabled
+- name: len_taps
+  id: variable
+  parameters:
+    comment: ''
+    value: len(lp_taps)
+  states:
+    coordinate: [288, 35]
+    rotation: 0
+    state: enabled
+- name: lp_taps
+  id: variable_low_pass_filter_taps
+  parameters:
+    beta: '6.76'
+    comment: ''
+    cutoff_freq: cutoff_high
+    gain: '1.0'
+    samp_rate: samp_rate
+    width: transition
+    win: window.WIN_HAMMING
+  states:
+    coordinate: [376, 35]
+    rotation: 0
+    state: enabled
+- name: rrc_taps
+  id: variable_rrc_filter_taps
+  parameters:
+    alpha: '0.35'
+    comment: ''
+    gain: '1.0'
+    ntaps: 11*sps
+    samp_rate: samp_rate
+    sym_rate: sym_rate
+  states:
+    coordinate: [1032, 36.0]
+    rotation: 0
+    state: enabled
+- name: samp_rate
+  id: variable
+  parameters:
+    comment: ''
+    value: '32000'
+  states:
+    coordinate: [8, 83]
+    rotation: 0
+    state: enabled
+- name: sps
+  id: variable
+  parameters:
+    comment: ''
+    value: '2'
+  states:
+    coordinate: [1032, 172.0]
+    rotation: 0
+    state: enabled
+- name: sym_rate
+  id: variable
+  parameters:
+    comment: ''
+    value: samp_rate/sps
+  states:
+    coordinate: [1096, 172.0]
+    rotation: 0
+    state: enabled
+- name: transition
+  id: variable
+  parameters:
+    comment: ''
+    value: '1000'
+  states:
+    coordinate: [8, 283]
+    rotation: 0
+    state: enabled
+- name: analog_fastnoise_source_x_0
+  id: analog_fastnoise_source_x
+  parameters:
+    affinity: ''
+    alias: ''
+    amp: '1'
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    noise_type: analog.GR_GAUSSIAN
+    samples: '8192'
+    seed: '0'
+    type: float
+  states:
+    coordinate: [176, 387]
+    rotation: 0
+    state: enabled
+- name: bp_filter
+  id: fir_filter_xxx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: Band-pass filter
+    decim: '1'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    samp_delay: '0'
+    taps: bp_taps
+    type: fff
+  states:
+    coordinate: [392, 403]
+    rotation: 0
+    state: enabled
+- name: br_filter
+  id: fir_filter_xxx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: Band-reject filter
+    decim: '1'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    samp_delay: '0'
+    taps: br_taps
+    type: fff
+  states:
+    coordinate: [392, 499]
+    rotation: 0
+    state: enabled
+- name: hp_filter
+  id: fir_filter_xxx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: High-pass filter
+    decim: '1'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    samp_delay: '0'
+    taps: hp_taps
+    type: fff
+  states:
+    coordinate: [392, 307]
+    rotation: 0
+    state: enabled
+- name: lp_filter
+  id: fir_filter_xxx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: Low-pass filter
+    decim: '1'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    samp_delay: '0'
+    taps: lp_taps
+    type: fff
+  states:
+    coordinate: [392, 203]
+    rotation: 0
+    state: enabled
+- name: qtgui_freq_sink_x_0
+  id: qtgui_freq_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '0.9'
+    alpha10: '1.0'
+    alpha2: '0.9'
+    alpha3: '0.9'
+    alpha4: '0.9'
+    alpha5: '0.9'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'False'
+    average: '0.2'
+    axislabels: 'True'
+    bw: samp_rate
+    color1: '"blue"'
+    color10: '"dark blue"'
+    color2: '"red"'
+    color3: '"green"'
+    color4: '"cyan"'
+    color5: '"magenta"'
+    color6: '"magenta"'
+    color7: '"yellow"'
+    color8: '"dark red"'
+    color9: '"dark green"'
+    comment: ''
+    ctrlpanel: 'True'
+    fc: '0'
+    fftsize: '4096'
+    freqhalf: 'False'
+    grid: 'True'
+    gui_hint: ''
+    label: Relative Gain
+    label1: Low-pass
+    label10: ''
+    label2: High-pass
+    label3: Band-pass
+    label4: Band-reject
+    label5: RRC
+    label6: ''
+    label7: ''
+    label8: ''
+    label9: ''
+    legend: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    name: '""'
+    nconnections: '5'
+    showports: 'True'
+    tr_chan: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_tag: '""'
+    type: float
+    units: dB
+    update_time: '0.10'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    wintype: window.WIN_BLACKMAN_hARRIS
+    ymax: '10'
+    ymin: '-140'
+  states:
+    coordinate: [728, 416]
+    rotation: 0
+    state: enabled
+- name: rrc_filter
+  id: fir_filter_xxx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: RRC filter
+    decim: '1'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    samp_delay: '0'
+    taps: rrc_taps
+    type: fff
+  states:
+    coordinate: [392, 587]
+    rotation: 0
+    state: enabled
+
+connections:
+- [analog_fastnoise_source_x_0, '0', bp_filter, '0']
+- [analog_fastnoise_source_x_0, '0', br_filter, '0']
+- [analog_fastnoise_source_x_0, '0', hp_filter, '0']
+- [analog_fastnoise_source_x_0, '0', lp_filter, '0']
+- [analog_fastnoise_source_x_0, '0', rrc_filter, '0']
+- [bp_filter, '0', qtgui_freq_sink_x_0, '2']
+- [br_filter, '0', qtgui_freq_sink_x_0, '3']
+- [hp_filter, '0', qtgui_freq_sink_x_0, '1']
+- [lp_filter, '0', qtgui_freq_sink_x_0, '0']
+- [rrc_filter, '0', qtgui_freq_sink_x_0, '4']
+
+metadata:
+  file_format: 1

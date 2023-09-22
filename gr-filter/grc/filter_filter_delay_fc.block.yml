@@ -1,0 +1,36 @@
+id: filter_delay_fc
+label: Filter Delay
+flags: [ python, cpp ]
+
+parameters:
+-   id: taps
+    label: Taps
+    dtype: real_vector
+
+inputs:
+-   domain: stream
+    dtype: float
+-   domain: stream
+    dtype: float
+    optional: true
+
+outputs:
+-   domain: stream
+    dtype: complex
+
+templates:
+    imports: |-
+        from gnuradio import filter
+        from gnuradio.filter import firdes
+    make: filter.filter_delay_fc(${taps})
+
+cpp_templates:
+    includes: ['#include <gnuradio/filter/filter_delay_fc.h>']
+    declarations: 'filter::filter_delay_fc::sptr ${id};'
+    make: |-
+        std::vector<float> taps = {${str(taps)[1:-1]}};
+        this->${id} = filter::fft_filter_${type}::make(
+            taps);
+    link: ['gnuradio::gnuradio-filter']
+
+file_format: 1

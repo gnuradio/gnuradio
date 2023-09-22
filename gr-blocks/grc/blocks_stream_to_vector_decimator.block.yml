@@ -1,0 +1,52 @@
+id: blocks_stream_to_vector_decimator
+label: Stream to Vec Decim
+flags: [ python ]
+
+parameters:
+-   id: type
+    label: IO Type
+    dtype: enum
+    options: [complex, float, int, short, byte]
+    option_attributes:
+        size: [gr.sizeof_gr_complex, gr.sizeof_float, gr.sizeof_int, gr.sizeof_short,
+            gr.sizeof_char]
+    hide: part
+-   id: sample_rate
+    label: Sample Rate
+    dtype: real
+    default: samp_rate
+-   id: vec_rate
+    label: Vector Rate
+    dtype: real
+    default: '30'
+-   id: vlen
+    label: Vector Length
+    dtype: int
+    default: '1024'
+    hide: ${ 'part' if vlen == 1 else 'none' }
+
+inputs:
+-   domain: stream
+    dtype: ${ type }
+
+outputs:
+-   domain: stream
+    dtype: ${ type }
+    vlen: ${ vlen }
+
+asserts:
+- ${ vlen >= 1 }
+
+templates:
+    imports: from gnuradio import blocks
+    make: |-
+        blocks.stream_to_vector_decimator(
+            item_size=${type.size},
+            sample_rate=${sample_rate},
+            vec_rate=${vec_rate},
+            vec_len=${vlen})
+    callbacks:
+    - set_sample_rate(${sample_rate})
+    - set_vec_rate(${vec_rate})
+
+file_format: 1

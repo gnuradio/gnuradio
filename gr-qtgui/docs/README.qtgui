@@ -1,0 +1,12 @@
+This is the gr-qtgui package. It contains various QT-based graphical
+user interface blocks that add graphical sinks to a GNU Radio
+flowgraph. The Python namespaces is in gnuradio.qtgui, which would be normally
+imported as:
+
+    from gnuradio import qtgui
+
+See the Doxygen documentation for details about the blocks available
+in this package. A quick listing of the details can be found in Python
+after importing by using:
+
+    help(qtgui)

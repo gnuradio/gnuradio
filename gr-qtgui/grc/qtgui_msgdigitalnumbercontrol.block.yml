@@ -1,0 +1,88 @@
+id: qtgui_msgdigitalnumbercontrol
+label: QT GUI Digital Number Control
+category: '[Core]/GUI Widgets/QT'
+flags: [ show_id, python ]
+
+parameters:
+-   id: lbl
+    label: Label
+    dtype: string
+    hide: ${ ('none' if lbl else 'part') }
+-   id: minFreqHz
+    label: Min Freq (Hz)
+    dtype: float
+    default: '30e6'
+-   id: maxFreqHz
+    label: Max Freq (Hz)
+    dtype: float
+    default: '1700e6'
+-   id: value
+    label: Value
+    dtype: real
+    default: '100e6'
+-   id: ThousandsSeparator
+    label: Thousands Separator
+    dtype: enum
+    default: ','
+    options: [',', '.', '',]
+    option_labels: ['Comma', 'Period', 'None']
+    hide: 'part'
+-   id: outputmsgname
+    label: Message Property Name
+    dtype: string
+    default: 'freq'
+    hide: 'part'
+-   id: relBackgroundColor
+    label: Background
+    dtype: enum
+    default: 'black'
+    options: ['silver', 'gray', 'black', 'white', 'red', 'green', 'blue', 'navy', 'yellow', 'orange', 'purple', 'lime', 'aqua', 'teal']
+    option_labels: ['silver', 'gray', 'black', 'white', 'red', 'green', 'blue', 'navy', 'yellow', 'orange', 'purple', 'lime', 'aqua', 'teal']
+    hide: 'part'
+-   id: relFontColor
+    label: Font Color
+    dtype: enum
+    default: 'white'
+    options: ['silver', 'gray', 'black', 'white', 'red', 'green', 'blue', 'navy', 'yellow', 'orange', 'purple', 'lime', 'aqua', 'teal']
+    option_labels: ['silver', 'gray', 'black', 'white', 'red', 'green', 'blue', 'navy', 'yellow', 'orange', 'purple', 'lime', 'aqua', 'teal']
+    hide: 'part'
+-   id: readOnly
+    label: Read Only
+    dtype: bool
+    default: 'False'
+    hide: 'part'
+-   id: gui_hint
+    label: GUI Hint
+    dtype: gui_hint
+    hide: part
+value: ${ value }
+
+inputs:
+-   domain: message
+    id: valuein
+    optional: true
+
+outputs:
+-   domain: message
+    id: valueout
+    optional: true
+
+templates:
+    var_make: self.${id} = ${id} = ${value}
+    make: |-
+        <%
+            win = 'self._%s_msgdigctl_win'%id
+        %>\
+        ${win} = qtgui.MsgDigitalNumberControl(lbl=${lbl}, min_freq_hz=${minFreqHz}, max_freq_hz=${maxFreqHz}, parent=self, thousands_separator="${ThousandsSeparator}", background_color="${relBackgroundColor}", fontColor="${relFontColor}", var_callback=self.set_${id}, outputmsgname=${outputmsgname})
+        ${win}.setValue(${value})
+        ${win}.setReadOnly(${readOnly})
+        self.${id} = ${win}
+
+        ${gui_hint() % win}
+    callbacks:
+    - self._${id}_msgdigctl_win.setValue(${value})
+
+documentation: |-
+    While it can be used for anything, this block replicates the frequency control found in many SDR receiver software.
+
+file_format: 1

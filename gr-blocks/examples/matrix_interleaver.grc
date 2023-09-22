@@ -1,0 +1,341 @@
+options:
+  parameters:
+    author: Jared Dulmage
+    category: '[GRC Hier Blocks]'
+    cmake_opt: ''
+    comment: ''
+    copyright: 2020 Caliola Engineering, LLC
+    description: Matrix interleaver, inputs along rows, outputs along columns
+    gen_cmake: 'On'
+    gen_linking: dynamic
+    generate_options: qt_gui
+    hier_block_src_path: '.:'
+    id: matrix_interleaver_example
+    max_nouts: '0'
+    output_language: python
+    placement: (0,0)
+    qt_qss_theme: ''
+    realtime_scheduling: ''
+    run: 'True'
+    run_command: '{python} -u {filename}'
+    run_options: prompt
+    sizing_mode: fixed
+    thread_safe_setters: ''
+    title: Block Interleaver Test
+    window_size: ''
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 8]
+    rotation: 0
+    state: enabled
+
+blocks:
+- name: cols
+  id: variable
+  parameters:
+    comment: ''
+    value: '8'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 215]
+    rotation: 0
+    state: enabled
+- name: rows
+  id: variable
+  parameters:
+    comment: ''
+    value: '4'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 152]
+    rotation: 0
+    state: enabled
+- name: samp_rate
+  id: variable
+  parameters:
+    comment: ''
+    value: '32000'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [184, 12]
+    rotation: 0
+    state: enabled
+- name: blocks_add_const_vxx_0
+  id: blocks_add_const_vxx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: Offset for visual
+    const: '1'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: float
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [640, 215]
+    rotation: 0
+    state: true
+- name: blocks_add_const_vxx_0_0
+  id: blocks_add_const_vxx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: Offset for visual
+    const: '1'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: float
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [640, 318]
+    rotation: 0
+    state: true
+- name: blocks_matrix_interleaver_0
+  id: blocks_matrix_interleaver
+  parameters:
+    affinity: ''
+    alias: ''
+    cols: cols
+    comment: ''
+    deint: 'False'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    rows: rows
+    type: float
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [447, 199]
+    rotation: 0
+    state: true
+- name: blocks_matrix_interleaver_0_0
+  id: blocks_matrix_interleaver
+  parameters:
+    affinity: ''
+    alias: ''
+    cols: cols
+    comment: ''
+    deint: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    rows: rows
+    type: float
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [448, 302]
+    rotation: 0
+    state: true
+- name: blocks_stream_to_vector_0
+  id: blocks_stream_to_vector
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_items: rows * cols
+    type: float
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [824, 219]
+    rotation: 0
+    state: true
+- name: blocks_stream_to_vector_0_0
+  id: blocks_stream_to_vector
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_items: rows * cols
+    type: float
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [824, 152]
+    rotation: 0
+    state: true
+- name: blocks_stream_to_vector_0_1
+  id: blocks_stream_to_vector
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_items: rows * cols
+    type: float
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [824, 283]
+    rotation: 0
+    state: true
+- name: blocks_throttle_0
+  id: blocks_throttle
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    ignoretag: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    samples_per_second: samp_rate
+    type: float
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [452, 148]
+    rotation: 0
+    state: true
+- name: blocks_vector_source_x_0
+  id: blocks_vector_source_x
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    repeat: 'True'
+    tags: '[]'
+    type: float
+    vector: np.kron(np.ones(cols), np.arange(rows))
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [115, 199]
+    rotation: 0
+    state: true
+- name: import_0
+  id: import
+  parameters:
+    alias: ''
+    comment: ''
+    imports: import numpy as np
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [300, 15]
+    rotation: 0
+    state: true
+- name: qtgui_vector_sink_f_0
+  id: qtgui_vector_sink_f
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '0.4'
+    alpha10: '1.0'
+    alpha2: '0.4'
+    alpha3: '0.4'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'False'
+    average: '1.0'
+    color1: '"blue"'
+    color10: '"dark blue"'
+    color2: '"red"'
+    color3: '"green"'
+    color4: '"black"'
+    color5: '"cyan"'
+    color6: '"magenta"'
+    color7: '"yellow"'
+    color8: '"dark red"'
+    color9: '"dark green"'
+    comment: ''
+    grid: 'True'
+    gui_hint: ''
+    label1: Input
+    label10: ''
+    label2: Interleaved
+    label3: Deinterleaved
+    label4: ''
+    label5: ''
+    label6: ''
+    label7: ''
+    label8: ''
+    label9: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    name: '""'
+    nconnections: '3'
+    ref_level: '0'
+    showports: 'False'
+    update_time: '0.10'
+    vlen: rows * cols
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    x_axis_label: index
+    x_start: '0'
+    x_step: '1.0'
+    x_units: '""'
+    y_axis_label: value
+    y_units: '""'
+    ymax: max(rows, cols) + 1
+    ymin: '-1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1040, 159]
+    rotation: 0
+    state: true
+
+connections:
+- [blocks_add_const_vxx_0, '0', blocks_matrix_interleaver_0_0, '0']
+- [blocks_add_const_vxx_0, '0', blocks_stream_to_vector_0, '0']
+- [blocks_add_const_vxx_0_0, '0', blocks_stream_to_vector_0_1, '0']
+- [blocks_matrix_interleaver_0, '0', blocks_add_const_vxx_0, '0']
+- [blocks_matrix_interleaver_0_0, '0', blocks_add_const_vxx_0_0, '0']
+- [blocks_stream_to_vector_0, '0', qtgui_vector_sink_f_0, '1']
+- [blocks_stream_to_vector_0_0, '0', qtgui_vector_sink_f_0, '0']
+- [blocks_stream_to_vector_0_1, '0', qtgui_vector_sink_f_0, '2']
+- [blocks_throttle_0, '0', blocks_stream_to_vector_0_0, '0']
+- [blocks_vector_source_x_0, '0', blocks_matrix_interleaver_0, '0']
+- [blocks_vector_source_x_0, '0', blocks_throttle_0, '0']
+
+metadata:
+  file_format: 1

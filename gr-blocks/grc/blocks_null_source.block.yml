@@ -1,0 +1,45 @@
+id: blocks_null_source
+label: Null Source
+flags: [ python, cpp ]
+
+parameters:
+-   id: type
+    label: Output Type
+    dtype: enum
+    options: [complex, float, int, short, byte]
+    option_attributes:
+        size: [gr.sizeof_gr_complex, gr.sizeof_float, gr.sizeof_int, gr.sizeof_short,
+            gr.sizeof_char]
+    hide: part
+-   id: vlen
+    label: Vector Length
+    dtype: int
+    default: '1'
+    hide: ${ 'part' if vlen == 1 else 'none' }
+-   id: num_outputs
+    label: Num Outputs
+    dtype: int
+    default: '1'
+    hide: part
+-   id: bus_structure_source
+    label: Bus Connections
+    dtype: raw
+    default: '[[0,],]'
+    hide: part
+
+outputs:
+-   domain: stream
+    dtype: ${ type }
+    vlen: ${ vlen }
+    multiplicity: ${ num_outputs }
+
+templates:
+    imports: from gnuradio import blocks
+    make: blocks.null_source(${type.size}*${vlen})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/null_source.h>']
+    declarations: 'blocks::null_source::sptr ${id};'
+    make: 'this->${id} = blocks::null_source::make(${type.size}*${vlen});'
+
+file_format: 1

@@ -1,0 +1,33 @@
+id: blocks_vco_f
+label: VCO
+flags: [ python, cpp ]
+
+parameters:
+-   id: samp_rate
+    label: Sample Rate
+    dtype: real
+-   id: sensitivity
+    label: Sensitivity
+    dtype: real
+-   id: amplitude
+    label: Amplitude
+    dtype: real
+
+inputs:
+-   domain: stream
+    dtype: float
+
+outputs:
+-   domain: stream
+    dtype: float
+
+templates:
+    imports: from gnuradio import blocks
+    make: blocks.vco_f(${samp_rate}, ${sensitivity}, ${amplitude})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/vco_f.h>']
+    declarations: 'blocks::vco_f::sptr ${id};'
+    make: 'this->${id} = blocks::vco_f::make(${samp_rate}, ${sensitivity}, ${amplitude});'
+
+file_format: 1

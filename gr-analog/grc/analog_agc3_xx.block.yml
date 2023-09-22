@@ -1,0 +1,70 @@
+id: analog_agc3_xx
+label: AGC3
+flags: [ python, cpp ]
+
+parameters:
+-   id: type
+    label: Type
+    dtype: enum
+    options: [complex]
+    option_attributes:
+        fcn: [cc]
+    hide: part
+-   id: attack_rate
+    label: Attack Rate
+    dtype: real
+    default: 1e-3
+-   id: decay_rate
+    label: Decay Rate
+    dtype: real
+    default: 1e-4
+-   id: reference
+    label: Reference
+    dtype: real
+    default: '1.0'
+-   id: gain
+    label: Gain
+    dtype: real
+    default: '1.0'
+-   id: max_gain
+    label: Max Gain
+    dtype: real
+    default: '65536'
+-   id: iir_update_decim
+    label: IIR Update Decimation
+    dtype: real
+    default: '1'
+
+inputs:
+-   domain: stream
+    dtype: ${ type }
+
+outputs:
+-   domain: stream
+    dtype: ${ type }
+
+templates:
+    imports: from gnuradio import analog
+    make: |-
+        analog.agc3_${type.fcn}(${attack_rate}, ${decay_rate}, ${reference}, ${gain}, ${iir_update_decim}, ${max_gain})
+    callbacks:
+    - set_attack_rate(${attack_rate})
+    - set_decay_rate(${decay_rate})
+    - set_reference(${reference})
+    - set_gain(${gain})
+    - set_max_gain(${max_gain})
+
+cpp_templates:
+    includes: ['#include <gnuradio/analog/agc3_${type.fcn}.h>']
+    declarations: 'analog::agc3_${type.fcn}::sptr ${id};'
+    make: |-
+        this->${id} = analog::agc3_${type.fcn}::make(${attack_rate}, ${decay_rate}, ${reference}, ${gain}, ${iir_update_decim}, ${max_gain});
+    callbacks:
+    - set_attack_rate(${attack_rate})
+    - set_decay_rate(${decay_rate})
+    - set_reference(${reference})
+    - set_gain(${gain})
+    - set_max_gain(${max_gain})
+    link: ['gnuradio::gnuradio-analog']
+
+file_format: 1

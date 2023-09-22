@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    This file was tested against `appstream cli validate` v0.12.7 (Fedora 31)
+    and v0.12.5 (Debian 10) It fails to validate under v0.12.0 (Ubuntu 18.04).
+    So, this file becomes valid somewhere between v0.12.1 and v0.12.5.
+    Note that metainfo doesn't mandate (even support at this point) schema
+    version information within the file. This is bad practice for a metadata format
+    and should be discouraged.
+-->
+<component type="desktop-application">
+<id>org.gnuradio.grc</id>
+<launchable type="desktop-id">gnuradio-grc.desktop</launchable>
+<metadata_license>CC0-1.0</metadata_license>
+<project_license>GPL-3.0+</project_license>
+<name>GNU Radio Companion</name>
+<summary>Graphical Signal Processing Flow Graph Design Tool</summary>
+<description>
+  <p>
+    The GNU Radio Companion (GRC) is a tool that allows users of all levels to
+    design and modify high-rate signal processing applications. It is the GUI
+    frontend for GNU Radio application designers.
+  </p>
+  <p>
+    GNU Radio is centered around the concept of the Block, which is a
+    node in a signal processing flow graph. Since GNU Radio itself comes with a lot
+    of useful blocks already, one can start developing real-time and
+    hardware-interfacing or simulation flow graphs right away, using GRC as the tool
+    to connect and parameterize these blocks.
+  </p>
+  <p>
+    GRC itself generates a program in a target language (Python or C++), which
+    contains all the signal flow setup as defined visually.
+  </p>
+</description>
+<categories>
+  <category>Development</category>
+  <category>Engineering</category>
+  <category>IDE</category>
+  <category>GUIDesigner</category>
+  <category>HamRadio</category>
+  <category>DataVisualization</category>
+</categories>
+<screenshots>
+  <screenshot type="default">
+    <caption>GNU Radio Companion</caption>
+    <image>https://upload.wikimedia.org/wikipedia/commons/5/5d/GNU_Radio_Companion_%283.8.1.0%29_Screenshot.png</image>
+  </screenshot>
+</screenshots>
+<project_group>GNU Radio</project_group>
+<url type="homepage">https://www.gnuradio.org</url>
+<url type="help">https://wiki.gnuradio.org/</url>
+<url type="bugtracker">https://github.com/gnuradio/gnuradio/issues</url>
+<url type="contact">https://lists.gnu.org/mailman/listinfo/discuss-gnuradio</url>
+<url type="contact">https://chat.gnuradio.org</url>
+<provides>
+  <binary>gnuradio-companion</binary>
+  <binary>grcc</binary>
+</provides>
+</component>

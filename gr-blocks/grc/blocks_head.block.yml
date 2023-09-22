@@ -1,0 +1,51 @@
+id: blocks_head
+label: Head
+flags: [ python, cpp ]
+
+parameters:
+-   id: type
+    label: Type
+    dtype: enum
+    options: [complex, float, int, short, byte]
+    option_attributes:
+        size: [gr.sizeof_gr_complex, gr.sizeof_float, gr.sizeof_int, gr.sizeof_short,
+            gr.sizeof_char]
+    hide: part
+-   id: num_items
+    label: Num Items
+    dtype: int
+    default: '1024'
+-   id: vlen
+    label: Vector Length
+    dtype: int
+    default: '1'
+    hide: ${ 'part' if vlen == 1 else 'none' }
+
+inputs:
+-   domain: stream
+    dtype: ${ type }
+    vlen: ${ vlen }
+
+outputs:
+-   domain: stream
+    dtype: ${ type }
+    vlen: ${ vlen }
+    optional: true
+
+asserts:
+- ${ vlen > 0 }
+
+templates:
+    imports: from gnuradio import blocks
+    make: blocks.head(${type.size}*${vlen}, ${num_items})
+    callbacks:
+    - set_length(${num_items})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/head.h>']
+    declarations: 'blocks::head::sptr ${id};'
+    make: 'this->${id} = blocks::head::make(${type.size}*${vlen}, ${num_items});'
+    callbacks:
+    - set_length(${num_items})
+
+file_format: 1

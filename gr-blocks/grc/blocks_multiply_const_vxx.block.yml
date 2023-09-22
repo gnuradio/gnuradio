@@ -1,0 +1,52 @@
+id: blocks_multiply_const_vxx
+label: Multiply Const
+flags: [ python, cpp ]
+
+parameters:
+-   id: type
+    label: IO Type
+    dtype: enum
+    options: [complex, float, int, short]
+    option_attributes:
+        vconst_type: [complex_vector, real_vector, int_vector, int_vector]
+        const_type:  [complex, real, int, int]
+        fcn: [cc, ff, ii, ss]
+    hide: part
+-   id: const
+    label: Constant
+    dtype: ${ type.const_type if vlen == 1 else type.vconst_type }
+    default: '1'
+-   id: vlen
+    label: Vector Length
+    dtype: int
+    default: '1'
+    hide: ${ 'part' if vlen == 1 else 'none' }
+
+inputs:
+-   domain: stream
+    dtype: ${ type }
+    vlen: ${ vlen }
+
+outputs:
+-   domain: stream
+    dtype: ${ type }
+    vlen: ${ vlen }
+
+asserts:
+- ${ vlen > 0 }
+- ${ (vlen > 1 and len(const) == vlen) or (vlen == 1) }
+
+templates:
+    imports: from gnuradio import blocks
+    make: blocks.multiply_const_${ 'v' if context.get('vlen')() > 1 else '' }${type.fcn}(${const})
+    callbacks:
+    - set_k(${const})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/multiply_const${"_v" if context.get("vlen")() > 1 else "" }.h>']
+    declarations: 'blocks::multiply_const_${"v" if context.get("vlen")() > 1 else "" }${type.fcn}::sptr ${id};'
+    make: 'this->${id} = blocks::multiply_const_${"v" if context.get("vlen")() > 1 else "" }${type.fcn}::make(${const});'
+    callbacks:
+    - set_k(${const})
+
+file_format: 1

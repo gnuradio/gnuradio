@@ -1,0 +1,9 @@
+/*
+ * The Qt5 version of the 'uic' compiler generates incorrect code right now.
+ * The bug has been reported (https://bugreports.qt.io/browse/QTBUG-48492) and
+ * is pending review.
+ *
+ * This file will make sure that the build of gr-qtgui will succeed with the
+ * broken version of 'uic'.
+ */
+#include <QtGui/QRegExpValidator>

@@ -1,0 +1,48 @@
+id: analog_probe_avg_mag_sqrd_x
+label: Probe Avg Mag^2
+flags: [ python ]
+
+parameters:
+-   id: type
+    label: Type
+    dtype: enum
+    options: [c, f, cf]
+    option_labels: [Complex, Float, Complex->Float]
+    option_attributes:
+        hide: [all, all, none]
+        input: [complex, float, complex]
+        optional: ['1', '1', '0']
+    hide: part
+-   id: threshold
+    label: Threshold (dB)
+    dtype: real
+    default: '0'
+-   id: alpha
+    label: Alpha
+    dtype: real
+    default: '1'
+
+inputs:
+-   domain: stream
+    dtype: ${ type.input }
+
+outputs:
+-   domain: stream
+    dtype: float
+    optional: true
+    hide: ${ type.hide }
+
+templates:
+    imports: from gnuradio import analog
+    make: analog.probe_avg_mag_sqrd_${type}(${threshold}, ${alpha})
+    callbacks:
+    - set_alpha(${alpha})
+    - set_threshold(${threshold})
+    - reset()
+
+documentation: |-
+    Available functions to probe: level()
+
+    Use with the function probe block.
+
+file_format: 1

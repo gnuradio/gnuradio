@@ -1,0 +1,49 @@
+id: dtv_dvbt_symbol_inner_interleaver
+label: Symbol Inner Interleaver
+flags: [ python, cpp ]
+
+parameters:
+-   id: transmission_mode
+    label: Transmission Mode
+    dtype: enum
+    options: [T2k, T8k]
+    option_labels: [2K, 8K]
+    option_attributes:
+        fft_length: ['2048', '8192']
+        payload_length: [1512, 6048]
+        val: [dtv.T2k, dtv.T8k]
+-   id: direction
+    label: Direction
+    dtype: enum
+    options: [Interleave, Deinterleave]
+    option_attributes:
+        val: ['1', '0']
+
+inputs:
+-   domain: stream
+    dtype: byte
+    vlen: ${ transmission_mode.payload_length }
+
+outputs:
+-   domain: stream
+    dtype: byte
+    vlen: ${ transmission_mode.payload_length }
+
+templates:
+    imports: from gnuradio import dtv
+    make: dtv.dvbt_symbol_inner_interleaver(${transmission_mode.payload_length}, ${transmission_mode.val},
+        ${direction.val})
+
+cpp_templates:
+    includes: ['#include <gnuradio/dtv/dvbt_symbol_inner_interleaver.h>']
+    declarations: 'dtv::dvbt_symbol_inner_interleaver::sptr ${id};'
+    make: |-
+        this->${id} = dtv::dvbt_symbol_inner_interleaver::make(
+            ${transmission_mode.payload_length},
+            ${transmission_mode.val},
+            ${direction.val});
+    link: ['gnuradio::gnuradio-dtv']
+    translations:
+        dtv\.: 'dtv::'
+
+file_format: 1

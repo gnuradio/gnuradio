@@ -1,0 +1,49 @@
+id: blocks_repeat
+label: Repeat
+flags: [ python, cpp ]
+
+parameters:
+-   id: type
+    label: Type
+    dtype: enum
+    options: [complex, float, int, short, byte]
+    option_attributes:
+        size: [gr.sizeof_gr_complex, gr.sizeof_float, gr.sizeof_int, gr.sizeof_short,
+            gr.sizeof_char]
+    hide: part
+-   id: interp
+    label: Interpolation
+    dtype: int
+-   id: vlen
+    label: Vector Length
+    dtype: int
+    default: '1'
+    hide: ${ 'part' if vlen == 1 else 'none' }
+
+inputs:
+-   domain: stream
+    dtype: ${ type }
+    vlen: ${ vlen }
+
+outputs:
+-   domain: stream
+    dtype: ${ type }
+    vlen: ${ vlen }
+
+asserts:
+- ${ vlen > 0 }
+
+templates:
+    imports: from gnuradio import blocks
+    make: blocks.repeat(${type.size}*${vlen}, ${interp})
+    callbacks:
+    - set_interpolation(${interp})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/repeat.h>']
+    declarations: 'blocks::repeat::sptr ${id};'
+    make: 'this->${id} = blocks::repeat::make(${type.size}*${vlen}, ${interp});'
+    callbacks:
+    - set_interpolation(${interp})
+
+file_format: 1

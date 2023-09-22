@@ -1,0 +1,924 @@
+#!/usr/bin/env python
+#
+# Copyright 2012-2016 Free Software Foundation, Inc.
+#
+# This file is part of GNU Radio
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+#
+
+from argparse import ArgumentParser
+
+import sys
+import time
+import re
+import signal
+import random
+import math
+import operator
+import thrift
+
+from gnuradio.ctrlport.GNURadioControlPortClient import GNURadioControlPortClient
+from PyQt5 import QtCore, Qt
+
+try:
+    import networkx as nx
+    import matplotlib
+    matplotlib.use("QT5Agg")
+    import matplotlib.pyplot as plt
+    from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+
+    try:
+        from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
+    except ImportError as e:
+        print(e)
+        print(sys.argv[0], "could not load QTAgg backend.")
+        sys.exit(1)
+
+    from matplotlib.figure import Figure
+except ImportError:
+    print(sys.argv[0], "requires networkx and matplotlib.",
+          "Please check that they are installed and try again.")
+    sys.exit(1)
+
+import itertools
+
+from gnuradio import gr, ctrlport
+from gnuradio.ctrlport.GrDataPlotter import *
+
+from networkx.drawing.nx_agraph import graphviz_layout
+
+
+class MAINWindow(Qt.QMainWindow):
+    def minimumSizeHint(self):
+        return Qt.QSize(800, 600)
+
+    def __init__(self, radioclient):
+
+        super(MAINWindow, self).__init__()
+        self.plots = []
+        self.knobprops = []
+
+        self.mdiArea = Qt.QMdiArea()
+        self.mdiArea.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAsNeeded)
+        self.mdiArea.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAsNeeded)
+        self.setCentralWidget(self.mdiArea)
+
+        self.mdiArea.subWindowActivated.connect(self.updateMenus)
+        self.windowMapper = QtCore.QSignalMapper(self)
+        self.windowMapper.mapped[Qt.QWidget].connect(self.setActiveSubWindow)
+
+        self.createActions()
+        self.createMenus()
+        self.createToolBars()
+        self.createStatusBar()
+        self.updateMenus()
+
+        self.setWindowTitle("GNU Radio Performance Monitor")
+        self.setUnifiedTitleAndToolBarOnMac(True)
+
+        self.newCon(radioclient)
+
+        icon = Qt.QIcon(ctrlport.__path__[0] + "/icon.png")
+        self.setWindowIcon(icon)
+
+    def newSubWindow(self, window, title):
+        child = window
+        child.setWindowTitle(title)
+        self.mdiArea.addSubWindow(child)
+        child.show()
+        self.mdiArea.currentSubWindow().showMaximized()
+
+    def newCon(self, radioclient=None):
+        child = MForm(radioclient, self)
+        if(child.radioclient is not None):
+            child.setWindowTitle(str(child.radio))
+            self.mdiArea.addSubWindow(child)
+            child.show()
+            self.mdiArea.currentSubWindow().showMaximized()
+
+    def setActiveSubWindow(self, window):
+        if window:
+            self.mdiArea.setActiveSubWindow(window)
+
+    def createActions(self):
+        self.newConAct = Qt.QAction("&New Connection",
+                                    self, shortcut=Qt.QKeySequence.New,
+                                    statusTip="Create a new file", triggered=lambda x: self.newCon(None))
+
+        self.exitAct = Qt.QAction("E&xit", self, shortcut="Ctrl+Q",
+                                  statusTip="Exit the application",
+                                  triggered=Qt.qApp.closeAllWindows)
+
+        self.closeAct = Qt.QAction("Cl&ose", self, shortcut="Ctrl+F4",
+                                   statusTip="Close the active window",
+                                   triggered=self.mdiArea.closeActiveSubWindow)
+
+        self.closeAllAct = Qt.QAction("Close &All", self,
+                                      statusTip="Close all the windows",
+                                      triggered=self.mdiArea.closeAllSubWindows)
+
+        qks = Qt.QKeySequence(QtCore.Qt.CTRL + QtCore.Qt.Key_T)
+        self.tileAct = Qt.QAction("&Tile", self,
+                                  statusTip="Tile the windows",
+                                  triggered=self.mdiArea.tileSubWindows,
+                                  shortcut=qks)
+
+        qks = Qt.QKeySequence(QtCore.Qt.CTRL + QtCore.Qt.Key_C)
+        self.cascadeAct = Qt.QAction("&Cascade", self,
+                                     statusTip="Cascade the windows", shortcut=qks,
+                                     triggered=self.mdiArea.cascadeSubWindows)
+
+        self.nextAct = Qt.QAction("Ne&xt", self,
+                                  shortcut=Qt.QKeySequence.NextChild,
+                                  statusTip="Move the focus to the next window",
+                                  triggered=self.mdiArea.activateNextSubWindow)
+
+        self.previousAct = Qt.QAction("Pre&vious", self,
+                                      shortcut=Qt.QKeySequence.PreviousChild,
+                                      statusTip="Move the focus to the previous window",
+                                      triggered=self.mdiArea.activatePreviousSubWindow)
+
+        self.separatorAct = Qt.QAction(self)
+        self.separatorAct.setSeparator(True)
+
+        self.aboutAct = Qt.QAction("&About", self,
+                                   statusTip="Show the application's About box",
+                                   triggered=self.about)
+
+        self.aboutQtAct = Qt.QAction("About &Qt", self,
+                                     statusTip="Show the Qt library's About box",
+                                     triggered=Qt.qApp.aboutQt)
+
+    def createMenus(self):
+        self.fileMenu = self.menuBar().addMenu("&File")
+        self.fileMenu.addAction(self.newConAct)
+        self.fileMenu.addSeparator()
+        self.fileMenu.addAction(self.exitAct)
+
+        self.windowMenu = self.menuBar().addMenu("&Window")
+        self.updateWindowMenu()
+        self.windowMenu.aboutToShow.connect(self.updateWindowMenu)
+
+        self.menuBar().addSeparator()
+
+        self.helpMenu = self.menuBar().addMenu("&Help")
+        self.helpMenu.addAction(self.aboutAct)
+        self.helpMenu.addAction(self.aboutQtAct)
+
+    def createToolBars(self):
+        self.fileToolBar = self.addToolBar("File")
+        self.fileToolBar.addAction(self.newConAct)
+
+        self.fileToolBar = self.addToolBar("Window")
+        self.fileToolBar.addAction(self.tileAct)
+        self.fileToolBar.addAction(self.cascadeAct)
+
+    def createStatusBar(self):
+        self.statusBar().showMessage("Ready")
+
+    def activeMdiChild(self):
+        activeSubWindow = self.mdiArea.activeSubWindow()
+        if activeSubWindow:
+            return activeSubWindow.widget()
+        return None
+
+    def updateMenus(self):
+        hasMdiChild = (self.activeMdiChild() is not None)
+        self.closeAct.setEnabled(hasMdiChild)
+        self.closeAllAct.setEnabled(hasMdiChild)
+        self.tileAct.setEnabled(hasMdiChild)
+        self.cascadeAct.setEnabled(hasMdiChild)
+        self.nextAct.setEnabled(hasMdiChild)
+        self.previousAct.setEnabled(hasMdiChild)
+        self.separatorAct.setVisible(hasMdiChild)
+
+    def updateWindowMenu(self):
+        self.windowMenu.clear()
+        self.windowMenu.addAction(self.closeAct)
+        self.windowMenu.addAction(self.closeAllAct)
+        self.windowMenu.addSeparator()
+        self.windowMenu.addAction(self.tileAct)
+        self.windowMenu.addAction(self.cascadeAct)
+        self.windowMenu.addSeparator()
+        self.windowMenu.addAction(self.nextAct)
+        self.windowMenu.addAction(self.previousAct)
+        self.windowMenu.addAction(self.separatorAct)
+
+    def about(self):
+        about_info = \
+            '''Copyright 2012 Free Software Foundation, Inc.\n
+This program is part of GNU Radio.\n
+GNU Radio is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3, or (at your option) any later version.\n
+GNU Radio is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.\n
+You should have received a copy of the GNU General Public License along with GNU Radio; see the file COPYING. If not, write to the Free Software Foundation, Inc., 51 Franklin Street, Boston, MA 02110-1301, USA.'''
+
+        Qt.QMessageBox.about(None, "gr-perf-monitorx", about_info)
+
+
+class ConInfoDialog(Qt.QDialog):
+    def __init__(self, parent=None):
+        super(ConInfoDialog, self).__init__(parent)
+
+        self.gridLayout = Qt.QGridLayout(self)
+
+        self.host = Qt.QLineEdit(self)
+        self.port = Qt.QLineEdit(self)
+        self.host.setText("localhost")
+        self.port.setText("43243")
+
+        self.buttonBox = Qt.QDialogButtonBox(Qt.QDialogButtonBox.Ok |
+                                             Qt.QDialogButtonBox.Cancel)
+
+        self.gridLayout.addWidget(self.host)
+        self.gridLayout.addWidget(self.port)
+        self.gridLayout.addWidget(self.buttonBox)
+
+        self.buttonBox.accepted.connect(self.accept)
+        self.buttonBox.rejected.connect(self.reject)
+
+    def accept(self):
+        self.done(1)
+
+    def reject(self):
+        self.done(0)
+
+
+class DataTable(Qt.QWidget):
+    def update(self):
+        print("update")
+
+    def closeEvent(self, event):
+        self.timer = None
+
+    def __init__(self, radioclient, G):
+        Qt.QWidget.__init__(self)
+
+        self.layout = Qt.QVBoxLayout(self)
+        self.hlayout = Qt.QHBoxLayout()
+        self.layout.addLayout(self.hlayout)
+
+        self.G = G
+        self.radioclient = radioclient
+
+        self._keymap = None
+
+        self.disp = None
+
+        # Create a combobox to set the type of statistic we want.
+        self._statistic = "Instantaneous"
+        self._statistics_table = {"Instantaneous": "",
+                                  "Average": "avg ",
+                                  "Variance": "var "}
+        self.stattype = Qt.QComboBox()
+        self.stattype.addItem("Instantaneous")
+        self.stattype.addItem("Average")
+        self.stattype.addItem("Variance")
+        self.stattype.setMaximumWidth(200)
+        self.hlayout.addWidget(self.stattype)
+        self.stattype.currentIndexChanged.connect(self.stat_changed)
+
+        # Create a checkbox to toggle sorting of graphs
+        self._sort = False
+        self.checksort = Qt.QCheckBox("Sort")
+        self.checksort.setCheckState(self._sort)
+        self.hlayout.addWidget(self.checksort)
+        self.checksort.stateChanged.connect(self.checksort_changed)
+
+        # set up table
+        self.perfTable = Qt.QTableWidget()
+        self.perfTable.setColumnCount(2)
+        self.perfTable.verticalHeader().hide()
+        self.perfTable.setHorizontalHeaderLabels(
+            ["Block Name", "Percent Runtime"])
+        self.perfTable.horizontalHeader().setStretchLastSection(True)
+        self.perfTable.setSortingEnabled(True)
+        nodes = self.G.nodes(data=True)
+
+        # set up plot
+        self.f = plt.figure(figsize=(10, 8), dpi=90)
+        self.sp = self.f.add_subplot(111)
+        self.sp.autoscale_view(True, True, True)
+        self.sp.set_autoscale_on(True)
+
+        # set up tabs
+        self.tabber = Qt.QTabWidget()
+        self.layout.addWidget(self.tabber)
+        self.tabber.addTab(self.perfTable, "Table View")
+        self.tabber.addTab(self.f.canvas, "Graph View")
+
+        # set up timer
+        self.timer = QtCore.QTimer()
+        self.timer.timeout.connect(self.update)
+        self.timer.start(500)
+
+        for i, node in enumerate(nodes):
+            self.perfTable.setItem(i, 0,
+                                   Qt.QTableWidgetItem(node[0]))
+
+    def table_update(self, data):
+        for k in data.keys():
+            weight = data[k]
+            existing = self.perfTable.findItems(
+                str(k), QtCore.Qt.MatchFixedString)
+            if(len(existing) == 0):
+                i = self.perfTable.rowCount()
+                self.perfTable.setRowCount(i + 1)
+                self.perfTable.setItem(i, 0, Qt.QTableWidgetItem(str(k)))
+                self.perfTable.setItem(i, 1, Qt.QTableWidgetItem(str(weight)))
+            else:
+                self.perfTable.setItem(self.perfTable.row(
+                    existing[0]), 1, Qt.QTableWidgetItem(str(weight)))
+
+    def stat_changed(self, index):
+        self._statistic = str(self.stattype.currentText())
+
+    def checksort_changed(self, state):
+        self._sort = state > 0
+
+
+class DataTableBuffers(DataTable):
+    def __init__(self, radioclient, G):
+        super(DataTableBuffers, self).__init__(radioclient, G)
+        self.perfTable.setHorizontalHeaderLabels(
+            ["Block Name", "Percent Buffer Full"])
+
+    def update(self):
+        nodes = self.G.nodes()
+
+        # get buffer fullness for all blocks
+        kl = list(map(lambda x: "%s::%soutput %% full" %
+                      (x, self._statistics_table[self._statistic]),
+                      nodes))
+        try:
+            buf_knobs = self.radioclient.getKnobs(kl)
+        except Exception as e:
+            sys.stderr.write(
+                "gr-perf-monitorx: lost connection ({0}).\n".format(e))
+            self.parentWidget().mdiArea().removeSubWindow(self.parentWidget())
+            self.close()
+            return
+
+        # strip values out of ctrlport response
+        buffer_fullness = dict(zip(
+            map(lambda x: x.split("::")[0], buf_knobs.keys()),
+            map(lambda x: x.value, buf_knobs.values())))
+
+        blockport_fullness = {}
+        for blk in buffer_fullness:
+            bdata = buffer_fullness[blk]
+            if bdata:
+                for port in range(0, len(bdata)):
+                    blockport_fullness["%s:%d" % (blk, port)] = bdata[port]
+
+        if(self.perfTable.isVisible()):
+            self.table_update(blockport_fullness)
+
+        else:
+            if(self._sort):
+                sorted_fullness = sorted(blockport_fullness.items(),
+                                         key=operator.itemgetter(1))
+                self._keymap = list(
+                    map(operator.itemgetter(0), sorted_fullness))
+            else:
+                if self._keymap:
+                    sorted_fullness = len(self._keymap) * ['', ]
+                    for b in blockport_fullness:
+                        sorted_fullness[self._keymap.index(b)] = (
+                            b, blockport_fullness[b])
+                else:
+                    sorted_fullness = blockport_fullness.items()
+
+            if(not self.disp):
+                self.disp = self.sp.bar(range(0, len(sorted_fullness)),
+                                        list(
+                                            map(lambda x: x[1], sorted_fullness)),
+                                        alpha=0.5, align='edge')
+                self.sp.set_ylabel("% Buffers Full")
+                self.sp.set_xticks(
+                    list(map(lambda x: x + 0.5, range(0, len(sorted_fullness)))))
+                self.sp.set_xticklabels(list(map(lambda x: "  " + x, map(lambda x: x[0], sorted_fullness))),
+                                        rotation="vertical", verticalalignment="bottom")
+            else:
+                self.sp.set_xticklabels(list(map(lambda x: "  " + x, map(lambda x: x[0], sorted_fullness))),
+                                        rotation="vertical", verticalalignment="bottom")
+                for r, w in zip(self.disp, sorted_fullness):
+                    r.set_height(w[1])
+
+            self.f.canvas.draw()
+
+
+class DataTableRuntimes(DataTable):
+    def __init__(self, radioclient, G):
+        super(DataTableRuntimes, self).__init__(radioclient, G)
+
+    def update(self):
+        nodes = self.G.nodes()
+
+        # get work time for all blocks
+        kl = list(map(lambda x: "%s::%swork time" %
+                      (x, self._statistics_table[self._statistic]),
+                      nodes))
+
+        try:
+            wrk_knobs = self.radioclient.getKnobs(kl)
+
+        except Exception as e:
+            sys.stderr.write(
+                "gr-perf-monitorx: lost connection ({0}).\n".format(e))
+            self.parentWidget().mdiArea().removeSubWindow(self.parentWidget())
+            self.close()
+            return
+
+        # strip values out of ctrlport response
+        total_work = sum(map(lambda x: x.value, wrk_knobs.values()))
+        if(total_work == 0):
+            total_work = 1
+        work_times = dict(zip(
+            map(lambda x: x.split("::")[0], wrk_knobs.keys()),
+            map(lambda x: 1e-10 + x.value / total_work, wrk_knobs.values())))
+
+        # update table view
+        if(self.perfTable.isVisible()):
+            self.table_update(work_times)
+
+        else:
+            if(self._sort):
+                sorted_work = sorted(work_times.items(),
+                                     key=operator.itemgetter(1))
+                self._keymap = list(map(operator.itemgetter(0), sorted_work))
+            else:
+                if self._keymap:
+                    sorted_work = len(list(self._keymap)) * ['', ]
+                    for b in work_times:
+                        sorted_work[self._keymap.index(b)] = (b, work_times[b])
+                else:
+                    sorted_work = work_times.items()
+
+            if(not self.disp):
+                self.disp = self.sp.bar(range(0, len(sorted_work)),
+                                        list(map(lambda x: x[1], sorted_work)),
+                                        alpha=0.5, align='edge')
+                self.sp.set_ylabel("% Runtime")
+                self.sp.set_xticks(
+                    list(map(lambda x: x + 0.5, range(0, len(sorted_work)))))
+                self.sp.set_xticklabels(list(map(lambda x: "  " + x[0], sorted_work)),
+                                        rotation="vertical", verticalalignment="bottom")
+            else:
+                self.sp.set_xticklabels(list(map(lambda x: "  " + x[0], sorted_work)),
+                                        rotation="vertical", verticalalignment="bottom")
+                for r, w in zip(self.disp, sorted_work):
+                    r.set_height(w[1])
+
+            self.f.canvas.draw()
+
+
+class MForm(Qt.QWidget):
+    def update(self):
+        try:
+            try:
+                # update current clock type
+                self.prevent_clock_change = True
+                kl1 = None
+                if(self.clockKey == None):
+                    kl1 = self.radioclient.getRe([".*perfcounter_clock"])
+                else:
+                    kl1 = self.radioclient.getKnobs([self.clockKey])
+                self.clockKey = list(kl1.keys())[0]
+                self.currClock = kl1[self.clockKey].value
+                self.clockSelIdx = list(
+                    self.clocks.values()).index(self.currClock)
+                self.clockSel.setCurrentIndex(self.clockSelIdx)
+                self.prevent_clock_change = False
+            except Exception as e:
+                print(e)
+                print("WARNING: Failed to get current clock setting!")
+
+            nodes_stream = self.G_stream.nodes()
+            nodes_msg = self.G_msg.nodes()
+
+            # get current buffer depths of all output buffers
+            kl = list(map(lambda x: "%s::%soutput %% full" %
+                          (x, self._statistics_table[self._statistic]),
+                          nodes_stream))
+
+            st = time.time()
+            buf_knobs = self.radioclient.getKnobs(kl)
+            td1 = time.time() - st
+
+            # strip values out of ctrlport response
+            buf_vals = dict(zip(
+                map(lambda x: x.split("::")[0], buf_knobs.keys()),
+                map(lambda x: x.value, buf_knobs.values())))
+
+            # get work time for all blocks
+            kl = list(map(lambda x: "%s::%swork time" %
+                          (x, self._statistics_table[self._statistic]),
+                          nodes_stream))
+            st = time.time()
+            wrk_knobs = self.radioclient.getKnobs(kl)
+            td2 = time.time() - st
+
+            # strip values out of ctrlport response
+            total_work = sum(map(lambda x: x.value, wrk_knobs.values()))
+            if(total_work == 0):
+                total_work = 1
+            work_times = dict(zip(
+                map(lambda x: x.split("::")[0], wrk_knobs.keys()),
+                map(lambda x: x.value / total_work, wrk_knobs.values())))
+            work_times_padded = dict(zip(
+                self.G.nodes(),
+                [0.1] * len(self.G.nodes())))
+            work_times_padded.update(work_times)
+
+            for n in nodes_stream:
+                # ne is the list of edges away from this node!
+                ne = self.G.edges([n], True)
+                # for e in ne: # iterate over edges from this block
+                for e in ne:  # iterate over edges from this block
+                    # get the right output buffer/port weight for each edge
+                    sourceport = e[2]["sourceport"]
+                    if(e[2]["type"] == "stream"):
+                        newweight = buf_vals[n][sourceport]
+                        e[2]["weight"] = newweight
+
+            for n in nodes_msg:
+                ne = self.G.edges([n], True)
+                for e in ne:  # iterate over edges from this block
+                    sourceport = e[2]["sourceport"]
+                    if(e[2]["type"] == "msg"):
+                        newweight = 0.01
+                        e[2]["weight"] = newweight
+
+            # set updated weights
+            #self.node_weights = map(lambda x: 20+2000*work_times[x], nodes_stream)
+            self.node_weights = list(
+                map(lambda x: 20 + 2000 * work_times_padded[x], self.G.nodes()))
+            self.edge_weights = list(
+                map(lambda x: 100.0 * x[2]["weight"], self.G.edges(data=True)))
+
+            # draw graph updates
+            if(self.do_update):
+                self.drawGraph()
+            else:
+                self.updateGraph()
+
+            latency = td1 + td2
+            self.parent.statusBar().showMessage("Current GNU Radio Control Port Query Latency: %f ms" %
+                                                (latency * 1000))
+
+        except Exception as e:
+            sys.stderr.write(
+                "gr-perf-monitorx: lost connection ({0}).\n".format(e))
+            if(type(self.parent) is MAINWindow):
+                # Find window of connection
+                for p in self.parent.mdiArea.subWindowList():
+                    self.parent.mdiArea.removeSubWindow(p)
+                    break
+
+                self.close()
+            else:
+                sys.exit(1)
+            return
+
+    def rtt(self):
+        self.parent.newSubWindow(DataTableRuntimes(
+            self.radioclient, self.G_stream), "Runtime Table")
+
+    def bpt(self):
+        self.parent.newSubWindow(DataTableBuffers(
+            self.radioclient, self.G_stream), "Buffers Table")
+
+    def resetPCs(self):
+        knobs = []
+        for b in self.blocks_list:
+            knobs += [self.radioclient.Knob(b + "::reset_perf_counters"), ]
+        k = self.radioclient.setKnobs(knobs)
+
+    def toggleFlowgraph(self):
+        if self.pauseFGAct.isChecked():
+            self.pauseFlowgraph()
+        else:
+            self.unpauseFlowgraph()
+
+    def pauseFlowgraph(self):
+        knobs = [self.radioclient.Knob(self.top_block + "::lock"),
+                 self.radioclient.Knob(self.top_block + "::stop")]
+        k = self.radioclient.setKnobs(knobs)
+
+    def unpauseFlowgraph(self):
+        knobs = [self.radioclient.Knob(self.top_block + "::unlock")]
+        k = self.radioclient.setKnobs(knobs)
+
+    def stat_changed(self, index):
+        self._statistic = str(self.stattype.currentText())
+
+    def update_clock(self, clkidx):
+        if(self.prevent_clock_change):
+            return
+        idx = self.clockSel.currentIndex()
+        clk = list(self.clocks.values())[idx]
+        # print("UPDATE CLOCK!!! %d -> %d"%(idx,clk);)
+        k = self.radioclient.getKnobs([self.clockKey])
+        k[self.clockKey].value = clk
+        km = {}
+        km[self.clockKey] = k[self.clockKey]
+        self.radioclient.setKnobs(km)
+
+    def __init__(self, radioclient=None, parent=None):
+
+        super(MForm, self).__init__()
+
+        if radioclient is None:
+            askinfo = ConInfoDialog(self)
+            self.radioclient = None
+            if askinfo.exec_():
+                host = str(askinfo.host.text())
+                port = str(askinfo.port.text())
+                try:
+                    self.radioclient = GNURadioControlPortClient(
+                        host, port, 'thrift').client
+                    print("Connected to %s:%s" % (host, port))
+                except:
+                    print("Error connecting to %s:%s" % (host, port))
+        else:
+            self.radioclient = radioclient
+
+        if self.radioclient is None:
+            return
+
+        self.parent = parent
+
+        self.layoutTop = Qt.QVBoxLayout(self)
+        self.ctlBox = Qt.QHBoxLayout()
+        self.layout = Qt.QHBoxLayout()
+
+        self.layoutTop.addLayout(self.ctlBox)
+        self.layoutTop.addLayout(self.layout)
+
+        self.rttAct = Qt.QAction("Runtime Table",
+                                 self, statusTip="Runtime Table", triggered=self.rtt)
+        self.rttBut = Qt.QToolButton()
+        self.rttBut.setDefaultAction(self.rttAct)
+        self.ctlBox.addWidget(self.rttBut)
+
+        self.bptAct = Qt.QAction("Buffer Table",
+                                 self, statusTip="Buffer Table", triggered=self.bpt)
+        self.bptBut = Qt.QToolButton()
+        self.bptBut.setDefaultAction(self.bptAct)
+        self.ctlBox.addWidget(self.bptBut)
+
+        self.resetPCsAct = Qt.QAction("Reset", self,
+                                      statusTip="Reset all Performance Counters",
+                                      triggered=self.resetPCs)
+        self.resetPCsBut = Qt.QToolButton()
+        self.resetPCsBut.setDefaultAction(self.resetPCsAct)
+        self.ctlBox.addWidget(self.resetPCsBut)
+
+        self.pauseFGAct = Qt.QAction("Pause", self,
+                                     statusTip="Pause the Flowgraph",
+                                     triggered=self.toggleFlowgraph)
+        self.pauseFGAct.setCheckable(True)
+        self.pauseFGBut = Qt.QToolButton()
+        self.pauseFGBut.setDefaultAction(self.pauseFGAct)
+        self.ctlBox.addWidget(self.pauseFGBut)
+
+        self.prevent_clock_change = True
+        self.clockKey = None
+        self.clocks = {"MONOTONIC": 1, "THREAD": 3}
+        self.clockSel = Qt.QComboBox(self)
+        list(map(lambda x: self.clockSel.addItem(x), self.clocks.keys()))
+        self.ctlBox.addWidget(self.clockSel)
+        self.clockSel.currentIndexChanged.connect(self.update_clock)
+        self.prevent_clock_change = False
+
+        self._statistic = "Instantaneous"
+        self._statistics_table = {"Instantaneous": "",
+                                  "Average": "avg ",
+                                  "Variance": "var "}
+        self.stattype = Qt.QComboBox()
+        self.stattype.addItem("Instantaneous")
+        self.stattype.addItem("Average")
+        self.stattype.addItem("Variance")
+        self.stattype.setMaximumWidth(200)
+        self.ctlBox.addWidget(self.stattype)
+        self.stattype.currentIndexChanged.connect(self.stat_changed)
+
+#        self.setLayout(self.layout)
+
+        self.radio = self.radioclient
+        self.knobprops = self.radio.properties([])
+        self.parent.knobprops.append(self.knobprops)
+
+        self.timer = QtCore.QTimer()
+        self.constupdatediv = 0
+        self.tableupdatediv = 0
+        plotsize = 250
+
+        # Set up the graph of blocks
+        def input_name(x): return x + "::avg input % full"
+        def output_name(x): return x + "::avg output % full"
+        def wtime_name(x): return x + "::avg work time"
+        def nout_name(x): return x + "::avg noutput_items"
+        def nprod_name(x): return x + "::avg nproduced"
+
+        tmplist = []
+        knobs = self.radio.getKnobs([])
+        edgelist = None
+        msgedgelist = None
+        for k in knobs:
+            propname = k.split("::")
+            blockname = propname[0]
+            keyname = propname[1]
+            if(keyname == "edge list"):
+                edgelist = knobs[k].value
+                self.top_block = blockname
+            elif(keyname == "msg edges list"):
+                msgedgelist = knobs[k].value
+            elif(blockname not in tmplist):
+                # only take gr_blocks (no hier_block2)
+                if(input_name(blockname) in knobs):
+                    tmplist.append(blockname)
+
+        if not edgelist:
+            sys.stderr.write("Could not find list of edges from flowgraph. " +
+                             "Make sure the option 'edges_list' is enabled " +
+                             "in the ControlPort configuration.\n\n")
+            sys.exit(1)
+
+        self.blocks_list = tmplist
+        edges = edgelist.split("\n")[0:-1]
+        msgedges = msgedgelist.split("\n")[0:-1]
+
+        edgepairs_stream = []
+        edgepairs_msg = []
+
+        # add stream connections
+        for e in edges:
+            _e = e.split("->")
+            edgepairs_stream.append((_e[0].split(":")[0], _e[1].split(
+                ":")[0], {"type": "stream", "sourceport": int(_e[0].split(":")[1])}))
+
+        # add msg connections
+        for e in msgedges:
+            _e = e.split("->")
+            edgepairs_msg.append((_e[0].split(":")[0], _e[1].split(":")[0], {
+                                 "type": "msg", "sourceport": _e[0].split(":")[1]}))
+
+        self.G = nx.MultiDiGraph()
+        self.G_stream = nx.MultiDiGraph()
+        self.G_msg = nx.MultiDiGraph()
+
+        self.G.add_edges_from(edgepairs_stream)
+        self.G.add_edges_from(edgepairs_msg)
+
+        self.G_stream.add_edges_from(edgepairs_stream)
+        self.G_msg.add_edges_from(edgepairs_msg)
+
+        n_edges = self.G.edges(data=True)
+        for e in n_edges:
+            e[2]["weight"] = 5 + random.random() * 10
+
+        self.G = nx.MultiDiGraph()
+        self.G.add_edges_from(n_edges)
+
+        self.f = plt.figure(figsize=(10, 8), dpi=90)
+        self.sp = self.f.add_subplot(111)
+        self.sp.autoscale_view(True, True, True)
+        self.sp.set_autoscale_on(True)
+
+        self.layout.addWidget(self.f.canvas)
+
+        self.pos = graphviz_layout(self.G)
+        #self.pos = pygraphviz_layout(self.G)
+        #self.pos = nx.spectral_layout(self.G)
+        #self.pos = nx.circular_layout(self.G)
+        #self.pos = nx.shell_layout(self.G)
+        #self.pos = nx.spring_layout(self.G)
+
+        # Indicate to self.update to initialize the graph
+        self.do_update = False
+
+        # generate weights and plot
+        self.update()
+        # set up timer
+        self.timer = QtCore.QTimer()
+        self.timer.timeout.connect(self.update)
+        self.timer.start(1000)
+
+        # Set up mouse callback functions to move blocks around.
+        self._grabbed = False
+        self._current_block = ''
+        self.f.canvas.mpl_connect('button_press_event',
+                                  self.button_press)
+        self.f.canvas.mpl_connect('motion_notify_event',
+                                  self.mouse_move)
+        self.f.canvas.mpl_connect('button_release_event',
+                                  self.button_release)
+
+    def button_press(self, event):
+        x, y = event.xdata, event.ydata
+        thrsh = 100
+
+        if(x is not None and y is not None):
+            nearby = list(map(lambda z: math.sqrt(
+                math.pow(x - z[0], 2) + math.pow(y - z[1], 2)), self.pos.values()))
+            i = nearby.index(min(nearby))
+            if(abs(list(self.pos.values())[i][0] - x) < thrsh and
+               abs(list(self.pos.values())[i][1] - y) < thrsh):
+                self._current_block = list(self.pos.keys())[i]
+                # print "MOVING BLOCK: ", self._current_block
+                # print "CUR POS: ", self.pos.values()[i]
+                self._grabbed = True
+
+    def mouse_move(self, event):
+        if self._grabbed:
+            x, y = event.xdata, event.ydata
+            if(x is not None and y is not None):
+                self.pos[self._current_block] = (x, y)
+                self.updateGraph()
+
+    def button_release(self, event):
+        self._grabbed = False
+
+    def openMenu(self, pos):
+        index = self.table.treeWidget.selectedIndexes()
+        item = self.table.treeWidget.itemFromIndex(index[0])
+        itemname = str(item.text(0))
+        self.parent.propertiesMenu(itemname, self.radioclient)
+
+    def drawGraph(self):
+
+        self.do_update = True
+        self.f.canvas.updateGeometry()
+        self.sp.clear()
+        plt.figure(self.f.number)
+        plt.subplot(111)
+        nx.draw(self.G, self.pos,
+                edge_color=self.edge_weights,
+                node_color='#A0CBE2',
+                width=list(
+                    map(lambda x: 3 + math.log(x + 1e-20), self.edge_weights)),
+                node_shape="s",
+                node_size=self.node_weights,
+                edge_cmap=plt.cm.Reds,
+                ax=self.sp,
+                arrows=False
+                )
+        nx.draw_networkx_labels(self.G, self.pos,
+                                font_size=12)
+
+        self.f.canvas.show()
+
+    def updateGraph(self):
+
+        self.sp.clear()
+        nx.draw_networkx_nodes(self.G, self.pos,
+                               node_color='#A0CBE2',
+                               node_shape="s",
+                               node_size=self.node_weights,
+                               ax=self.sp)
+
+        nx.draw_networkx_edges(self.G, self.pos,
+                               edge_color=self.edge_weights,
+                               width=list(
+                                   map(lambda x: 3 + math.log(x + 1e-20), self.edge_weights)),
+                               edge_cmap=plt.cm.Reds,
+                               ax=self.sp,
+                               arrows=False)
+
+        nx.draw_networkx_labels(self.G, self.pos,
+                                ax=self.sp, font_size=12)
+
+        self.f.canvas.draw()
+
+
+class MyApp(object):
+    def __init__(self, args):
+
+        parser = ArgumentParser(description="GNU Radio Performance Monitor")
+        parser.add_argument("host", nargs="?",
+                            default="localhost", help="host name or IP")
+        parser.add_argument("port", help="port")
+        args = parser.parse_args()
+
+        signal.signal(signal.SIGINT, signal.SIG_DFL)
+        signal.signal(signal.SIGTERM, signal.SIG_DFL)
+
+        try:
+            GNURadioControlPortClient(
+                args.host, args.port, 'thrift', self.run, Qt.QApplication(sys.argv).exec_)
+        except thrift.transport.TTransport.TTransportException:
+            print("ControlPort failed to connect. Check the config of your endpoint.")
+            print("\t[ControlPort] on = True")
+            print("\t[ControlPort] edges_list = True")
+            print("\t[PerfCounters] on = True")
+            print("\t[PerfCounters] export = True")
+            sys.exit(1)
+
+    def run(self, client):
+        MAINWindow(client).show()
+
+
+MyApp(sys.argv)

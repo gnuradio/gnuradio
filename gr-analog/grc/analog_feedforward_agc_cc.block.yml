@@ -1,0 +1,32 @@
+id: analog_feedforward_agc_cc
+label: Feed Forward AGC
+flags: [ python, cpp ]
+
+parameters:
+-   id: num_samples
+    label: Num Samples
+    dtype: int
+    default: '1024'
+-   id: reference
+    label: Reference
+    dtype: real
+    default: '1.0'
+
+inputs:
+-   domain: stream
+    dtype: complex
+
+outputs:
+-   domain: stream
+    dtype: complex
+
+templates:
+    imports: from gnuradio import analog
+    make: analog.feedforward_agc_cc(${num_samples}, ${reference})
+
+cpp_templates:
+    includes: ['#include <gnuradio/analog/feedforward_agc_cc.h>']
+    make: 'this->${id} = analog::feedforward_agc_cc::make(${num_samples}, ${reference});'
+    link: ['gnuradio::gnuradio-analog']
+
+file_format: 1

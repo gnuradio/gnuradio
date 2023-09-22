@@ -1,0 +1,35 @@
+id: xmlrpc_server
+label: XMLRPC Server
+flags: [ python ]
+
+parameters:
+-   id: addr
+    label: Address
+    dtype: string
+    default: localhost
+-   id: port
+    label: Port
+    dtype: int
+    default: '8080'
+
+templates:
+    imports: |-
+        from xmlrpc.server import SimpleXMLRPCServer
+        import threading
+    make: |-
+        SimpleXMLRPCServer((${addr}, ${port}), allow_none=True)
+        self.${id}.register_instance(self)
+        self.${id}_thread = threading.Thread(target=self.${id}.serve_forever)
+        self.${id}_thread.daemon = True
+        self.${id}_thread.start()
+
+documentation: |-
+    This block will start an XMLRPC server. The server provides access to the run, start, stop, wait functions of the flow graph. The server also provides access to the variable callbacks in the flow graph. Ex: If the variable is called freq, the function provided by the server will be called set_freq(new_freq).
+
+    Example client in python:
+
+    from xmlrpc.client import ServerProxy
+    s = ServerProxy('http://localhost:8080')
+    s.set_freq(5000)
+
+file_format: 1

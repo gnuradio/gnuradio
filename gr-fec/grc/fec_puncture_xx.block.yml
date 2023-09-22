@@ -1,0 +1,35 @@
+id: fec_puncture_xx
+label: Puncture
+
+parameters:
+-   id: type
+    label: Type
+    dtype: enum
+    options: [byte, float]
+    option_attributes:
+        fcn: [bb, ff]
+    hide: part
+-   id: puncsize
+    label: Puncture Size
+    dtype: int
+-   id: puncpat
+    label: Puncture Pattern
+    dtype: int
+-   id: delay
+    label: Delay
+    dtype: int
+    default: '0'
+
+inputs:
+-   domain: stream
+    dtype: ${ type }
+
+outputs:
+-   domain: stream
+    dtype: ${ type }
+
+templates:
+    imports: from gnuradio import fec
+    make: fec.puncture_${type.fcn}(${puncsize}, ${puncpat}, ${delay})
+
+file_format: 1

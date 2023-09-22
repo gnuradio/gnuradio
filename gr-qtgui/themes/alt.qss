@@ -1,0 +1,152 @@
+QWidget
+{
+    color: white;
+    background-color: black;
+}
+
+QwtPlot
+{
+    padding: 10px;
+    font-size: 18px;
+}
+
+DisplayPlot {
+    qproperty-zoomer_color: green;
+    qproperty-line_color1: #00FF00;
+    qproperty-line_color2: magenta;
+    qproperty-line_color3: #FF6905;
+    qproperty-line_style1: SolidLine;
+    qproperty-line_style2: DashLine;
+    qproperty-line_style3: DotLine;
+    qproperty-line_width1: 1;
+    qproperty-line_width2: 1;
+    qproperty-line_width3: 1;
+    qproperty-marker_alpha1: 150;
+    qproperty-marker_alpha2: 150;
+    qproperty-marker_alpha3: 150;
+    qproperty-axes_label_font_size: 18;
+}
+
+TimeDomainDisplayPlot {
+    qproperty-tag_text_color: blue;
+    qproperty-tag_background_color: grey;
+    qproperty-tag_background_style: Dense4Pattern;
+}
+
+WaterfallDisplayPlot {
+    qproperty-intensity_color_map_type1: 5;
+    qproperty-low_intensity_color: black;
+    qproperty-high_intensity_color: green;
+}
+
+TimeRasterDisplayPlot {
+    qproperty-intensity_color_map_type1: 6;
+}
+
+FrequencyDisplayPlot {
+    qproperty-line_color1: cyan;
+    qproperty-line_color2: magenta;
+    qproperty-line_color3: purple;
+    qproperty-line_style1: SolidLine;
+    qproperty-line_style2: DashLine;
+    qproperty-line_style3: DotLine;
+    qproperty-max_fft_color: palegreen;
+    qproperty-min_fft_color: darkblue;
+    qproperty-marker_lower_intensity_color: white;
+    qproperty-marker_upper_intensity_color: red;
+    qproperty-marker_lower_intensity_visible: false;
+    qproperty-marker_upper_intensity_visible: false;
+    qproperty-marker_noise_floor_amplitude_color: red;
+    qproperty-marker_noise_floor_amplitude_visible: false;
+}
+
+VectorDisplayPlot {
+    qproperty-line_color1: cyan;
+    qproperty-line_color2: magenta;
+    qproperty-line_color3: purple;
+    qproperty-line_style1: SolidLine;
+    qproperty-line_style2: DashLine;
+    qproperty-line_style3: DotLine;
+    qproperty-max_vec_color: palegreen;
+    qproperty-min_vec_color: darkblue;
+    qproperty-marker_lower_intensity_color: white;
+    qproperty-marker_upper_intensity_color: red;
+    qproperty-marker_lower_intensity_visible: false;
+    qproperty-marker_upper_intensity_visible: false;
+    qproperty-marker_ref_level_color: red;
+    qproperty-marker_ref_level_visible: false;
+}
+
+QwtPlotCanvas
+{
+    border: 1px solid White;
+    border-radius: 10px;
+}
+
+QwtScaleWidget
+{
+    font-size: 14px;
+}
+
+QwtLegend
+{
+    padding: 3px;
+    margin: 3px;
+    font-size: 14px;
+}
+
+QwtLegendItem
+{
+    padding: 2px;
+    margin: 2px;
+}
+
+QLineEdit,
+QPlainTextEdit,
+QComboBox,
+QMenu {
+    selection-color: black;
+    selection-background-color: lightgrey;
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1, stop:0 black, stop: 1 rgb(128, 128, 128));
+    border: 1px solid gray;
+    padding: 2px;
+    border-radius: 3px;
+}
+
+QPushButton,
+QToolButton {
+    selection-color: black;
+    selection-background-color: white;
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1, stop:0 black, stop: 1 rgb(128, 128, 128));
+    border: 1px solid gray;
+    padding: 2px;
+    border-radius: 3px;
+}
+
+QTabWidget::pane {
+    border: 1px solid white;
+}
+
+QTabBar {
+    margin: 20px;
+    padding: 20px;
+}
+
+QTabBar::tab {
+    background-color: rgb(100, 100, 100);
+    border: 1px solid white;
+    padding: 5px;
+}
+
+QTabBar::tab:first {
+    border-top-left-radius: 4px;
+}
+
+QTabBar::tab:last {
+    border-top-right-radius: 4px;
+}
+
+QTabBar::tab:selected {
+    background-color: rgb(200, 200, 200);
+    color: black;
+}

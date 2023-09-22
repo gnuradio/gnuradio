@@ -1,0 +1,3 @@
+#!/bin/bash
+
+sed -i -e 's/\s\+$//g' $(find . -type f | grep -v '.git' | grep -v 'png' | grep -v 'eps')

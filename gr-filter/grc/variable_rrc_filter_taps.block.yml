@@ -1,0 +1,49 @@
+id: variable_rrc_filter_taps
+label: RRC Filter Taps
+flags: [ show_id, python, cpp ]
+
+parameters:
+-   id: gain
+    label: Gain
+    dtype: float
+    default: '1.0'
+-   id: samp_rate
+    label: Sample Rate (Hz)
+    dtype: float
+    default: samp_rate
+-   id: sym_rate
+    label: Symbol Rate (Hz)
+    dtype: float
+-   id: alpha
+    label: Excess BW
+    dtype: float
+    default: '0.35'
+-   id: ntaps
+    label: Num Taps
+    dtype: int
+    default: 11*sps
+-   id: value
+    dtype: float_vector
+    hide: all
+value: ${ firdes.root_raised_cosine(gain, samp_rate, sym_rate, alpha, ntaps) }
+
+templates:
+    imports: from gnuradio.filter import firdes
+    var_make: |-
+        self.${id} = ${id} = firdes.root_raised_cosine(${gain}, ${samp_rate},\
+        ${sym_rate}, ${alpha}, ${ntaps})
+    callbacks:
+    - self.set_${id}(firdes.root_raised_cosine(${gain}, ${samp_rate}, ${sym_rate}, ${alpha}, ${ntaps}))
+
+cpp_templates:
+    includes: ['#include <gnuradio/filter/firdes.h>']
+    declarations: 'filter::firdes::sptr ${id};'
+    var_make: |-
+        ${id} = filter::firdes::root_raised_cosine(${gain}, ${samp_rate},\
+        ${sym_rate}, ${alpha}, ${ntaps});
+    link: ['gnuradio::gnuradio-filter']
+
+documentation: |-
+    This is a convenience wrapper for calling firdes.root_raised_cosine(...).
+
+file_format: 1

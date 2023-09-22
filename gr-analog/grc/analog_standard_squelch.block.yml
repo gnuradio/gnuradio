@@ -1,0 +1,29 @@
+id: analog_standard_squelch
+label: Standard Squelch
+flags: [ python ]
+
+parameters:
+-   id: audio_rate
+    label: Audio Rate
+    dtype: real
+-   id: threshold
+    label: Threshold
+    dtype: real
+
+inputs:
+-   domain: stream
+    dtype: float
+
+outputs:
+-   domain: stream
+    dtype: float
+
+templates:
+    imports: from gnuradio import analog
+    make: |-
+        analog.standard_squelch(audio_rate=${audio_rate})
+        self.${id}.set_threshold(${threshold})
+    callbacks:
+    - set_threshold(${threshold})
+
+file_format: 1

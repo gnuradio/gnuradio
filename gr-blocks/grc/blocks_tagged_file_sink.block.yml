@@ -1,0 +1,41 @@
+id: blocks_tagged_file_sink
+label: Tagged File Sink
+flags: [ python, cpp ]
+
+parameters:
+-   id: type
+    label: Input Type
+    dtype: enum
+    options: [complex, float, int, short, byte]
+    option_attributes:
+        size: [gr.sizeof_gr_complex, gr.sizeof_float, gr.sizeof_int, gr.sizeof_short,
+            gr.sizeof_char]
+    hide: part
+-   id: samp_rate
+    label: Sample Rate
+    dtype: int
+    default: samp_rate
+-   id: vlen
+    label: Vector Length
+    dtype: int
+    default: '1'
+    hide: ${ 'part' if vlen == 1 else 'none' }
+
+inputs:
+-   domain: stream
+    dtype: ${ type }
+    vlen: ${ vlen }
+
+asserts:
+- ${ vlen > 0 }
+
+templates:
+    imports: from gnuradio import blocks
+    make: blocks.tagged_file_sink(${type.size}*${vlen}, ${samp_rate})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/tagged_file_sink.h>']
+    declarations: 'blocks::tagged_file_sink::sptr ${id};'
+    make: 'this->${id} = blocks::tagged_file_sink::make(${type.size}*${vlen}, ${samp_rate});'
+
+file_format: 1

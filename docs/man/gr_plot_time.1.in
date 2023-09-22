@@ -1,0 +1,39 @@
+.TH GR_PLOT_TIME "1" "@BUILD_DATE_SHORT@" "GNU Radio Companion @VERSION@" "User Commands"
+.SH NAME
+gr_plot_time \- gnuradio time domain plotting applications
+.SH SYNOPSIS
+.B gr_plot_time
+[\fIoptions\fR]
+.SH DESCRIPTION
+Plots a list of files on a scope plot. Files are a binary list of complex
+floats.
+.SH OPTIONS
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+show this help message and exit
+.TP
+\fB\-N\fR NSAMPLES, \fB\-\-nsamples\fR=\fINSAMPLES\fR
+Set the number of samples to display [default=1000000]
+.TP
+\fB\-S\fR START, \fB\-\-start\fR=\fISTART\fR
+Starting sample number [default=0]
+.TP
+\fB\-r\fR SAMPLE_RATE, \fB\-\-sample\-rate\fR=\fISAMPLE_RATE\fR
+Set the sample rate of the signal [default=1.0]
+.TP
+\fB\-\-no\-auto\-scale\fR
+Do not auto\-scale the plot [default=False]
+.PP
+gr_plot_time: error: no such option: \fB\-\-version\fR
+.SH "SEE ALSO"
+The full documentation for
+.B Usage:
+is maintained as a Texinfo manual.  If the
+.B info
+and
+.B Usage:
+programs are properly installed at your site, the command
+.IP
+.B info Usage:
+.PP
+should give you access to the complete manual.

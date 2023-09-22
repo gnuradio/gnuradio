@@ -1,0 +1,37 @@
+id: filterbank_vcvcf
+label: Generic Filterbank
+flags: [ python, cpp ]
+
+parameters:
+-   id: taps
+    label: Taps(list of lists)
+    dtype: raw
+    hide: ${ 'part' if vlen == 1 else 'none' }
+
+inputs:
+-   domain: stream
+    dtype: complex
+    vlen: ${ len(taps) }
+
+outputs:
+-   domain: stream
+    dtype: complex
+    vlen: ${ len(taps) }
+
+templates:
+    imports: from gnuradio import filter
+    make: filter.filterbank_vcvcf(${taps})
+    callbacks:
+    - set_taps(${taps})
+
+cpp_templates:
+    includes: ['#include <gnuradio/filter/filterbank_vcvcf.h>']
+    declarations: 'filter::filterbank_vcvcf::sptr ${id};'
+    make: |-
+        this->${id} = filter::filterbank_vcvcf::make( 
+            ${taps});
+    link: ['gnuradio::gnuradio-filter']
+    callbacks:
+    - set_taps(${taps})
+
+file_format: 1

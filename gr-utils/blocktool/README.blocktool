@@ -1,0 +1,28 @@
+gr_blocktool: Also known as the block header parsing tool, this tool
+              automatically parses any GNU Radio or OOT block header.
+
+Block header tool from the Command Line Interface
+=================================================
+
+* Parse any GNU Radio or OOT header file with just the file path as an input.
+* Parse a complete header directory with directory-path as the input.
+* Get the output in the form of a YAML or a JSON file.
+* Add blocktool comments automatically in the header file from the implementation file.
+
+
+Integration of blocktool with modtool
+=====================================
+
+* Blocktool API can also be called from modtool.
+* Modtool makeyaml subcommand along with -b flag and a
+  file path as the input can be used to create YAML files for the GRC.
+* YAML output is much better using the blocktool API. 
+
+
+Use of blocktool as an independent API
+======================================
+
+Blocktool can be also be used as an independent API which thus can be used to
+parse a block header file during runtime.
+* A single mandatory argument block header file path is required.
+

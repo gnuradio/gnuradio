@@ -1,0 +1,57 @@
+id: pfb_interpolator_ccf
+label: Polyphase Interpolator
+flags: [ python, cpp ]
+
+parameters:
+-   id: interp
+    label: Interpolation
+    dtype: int
+-   id: taps
+    label: Taps
+    dtype: real_vector
+-   id: atten
+    label: Attenuation
+    dtype: real
+    default: '100'
+-   id: samp_delay
+    label: Sample Delay
+    dtype: int
+    default: '0'
+    hide: part
+
+inputs:
+-   domain: stream
+    dtype: complex
+
+outputs:
+-   domain: stream
+    dtype: complex
+
+templates:
+    imports: |-
+        from gnuradio.filter import pfb
+        from gnuradio.filter import firdes
+    make: |-
+        pfb.interpolator_ccf(
+            ${interp},
+            ${taps},
+            ${atten})
+        self.${id}.declare_sample_delay(${samp_delay})
+    callbacks:
+    - set_taps(${taps})
+
+cpp_templates:
+    includes: ['#include <gnuradio/filter/pfb_interpolator_ccf.h>']
+    declarations: 'pfb::interpolator_ccf::sptr ${id};'
+    make: |-
+        std::vector<float> taps = {${str(taps)[1:-1]}};
+        this->${id} = pfb::interpolator_ccf::make(
+            ${interp},
+            taps,
+            ${atten});
+        this->${id}.declare_sample_delay(${samp_delay});
+    link: ['gnuradio::gnuradio-filter']
+    callbacks:
+    - set_taps(taps)
+
+file_format: 1

@@ -1,0 +1,23 @@
+id: vocoder_cvsd_encode_sb
+label: CVSD Audio Encoder (Raw Bit-Level)
+flags: [ python, cpp ]
+
+inputs:
+-   domain: stream
+    dtype: short
+
+outputs:
+-   domain: stream
+    dtype: byte
+
+templates:
+    imports: from gnuradio import vocoder
+    make: vocoder.cvsd_encode_sb()
+
+cpp_templates:
+    includes: [ '#include <gnuradio/vocoder/cvsd_encode_sb.h>' ]
+    declarations: 'vocoder::cvsd_encode_sb::sptr ${id};'
+    make: 'this->${id} = vocoder::cvsd_encode_sb::make();'
+    link: ['gnuradio-vocoder']
+
+file_format: 1

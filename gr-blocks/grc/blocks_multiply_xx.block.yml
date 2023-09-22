@@ -1,0 +1,48 @@
+id: blocks_multiply_xx
+label: Multiply
+flags: [ python, cpp ]
+
+parameters:
+-   id: type
+    label: IO Type
+    dtype: enum
+    options: [complex, float, int, short]
+    option_attributes:
+        fcn: [cc, ff, ii, ss]
+    hide: part
+-   id: num_inputs
+    label: Num Inputs
+    dtype: int
+    default: '2'
+    hide: part
+-   id: vlen
+    label: Vector Length
+    dtype: int
+    default: '1'
+    hide: ${ 'part' if vlen == 1 else 'none' }
+
+inputs:
+-   domain: stream
+    dtype: ${ type }
+    vlen: ${ vlen }
+    multiplicity: ${ num_inputs }
+
+outputs:
+-   domain: stream
+    dtype: ${ type }
+    vlen: ${ vlen }
+
+asserts:
+- ${ num_inputs > 1 }
+- ${ vlen > 0 }
+
+templates:
+    imports: from gnuradio import blocks
+    make: blocks.multiply_v${type.fcn}(${vlen})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/multiply.h>']
+    declarations: 'blocks::multiply_${type.fcn}::sptr ${id};'
+    make: 'this->${id} = blocks::multiply_${type.fcn}::make(${vlen});'
+
+file_format: 1

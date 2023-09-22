@@ -1,0 +1,40 @@
+id: blocks_complex_to_float
+label: Complex To Float
+flags: [ python, cpp ]
+
+parameters:
+-   id: vlen
+    label: Vector Length
+    dtype: int
+    default: '1'
+    hide: ${ 'part' if vlen == 1 else 'none' }
+
+inputs:
+-   domain: stream
+    dtype: complex
+    vlen: ${ vlen }
+
+outputs:
+-   label: re
+    domain: stream
+    dtype: float
+    vlen: ${ vlen }
+-   label: im
+    domain: stream
+    dtype: float
+    vlen: ${ vlen }
+    optional: true
+
+asserts:
+- ${ vlen > 0 }
+
+templates:
+    imports: from gnuradio import blocks
+    make: blocks.complex_to_float(${vlen})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/complex_to_float.h>']
+    declarations: 'blocks::complex_to_float::sptr ${id};'
+    make: 'this->${id} = blocks::complex_to_float::make(${vlen});'
+
+file_format: 1

@@ -1,0 +1,60 @@
+id: analog_agc_xx
+label: AGC
+flags: [ python, cpp ]
+
+parameters:
+-   id: type
+    label: Type
+    dtype: enum
+    options: [complex, float]
+    option_attributes:
+        fcn: [cc, ff]
+    hide: part
+-   id: rate
+    label: Rate
+    dtype: real
+    default: 1e-4
+-   id: reference
+    label: Reference
+    dtype: real
+    default: '1.0'
+-   id: gain
+    label: Gain
+    dtype: real
+    default: '1.0'
+-   id: max_gain
+    label: Max Gain
+    dtype: real
+    default: '65536'
+
+inputs:
+-   domain: stream
+    dtype: ${ type }
+
+outputs:
+-   domain: stream
+    dtype: ${ type }
+
+templates:
+    imports: from gnuradio import analog
+    make: |-
+        analog.agc_${type.fcn}(${rate}, ${reference}, ${gain}, ${max_gain})
+    callbacks:
+    - set_rate(${rate})
+    - set_reference(${reference})
+    - set_gain(${gain})
+    - set_max_gain(${max_gain})
+
+cpp_templates:
+    includes: ['#include <gnuradio/analog/agc_${type.fcn}.h>']
+    declarations: 'analog::agc_${type.fcn}::sptr ${id};'
+    make: |-
+        this->${id} = analog::agc_${type.fcn}::make(${rate}, ${reference}, ${gain}, ${max_gain});
+    callbacks:
+    - set_rate(${rate})
+    - set_reference(${reference})
+    - set_gain(${gain})
+    - set_max_gain(${max_gain})
+    link: ['gnuradio::gnuradio-analog']
+
+file_format: 1

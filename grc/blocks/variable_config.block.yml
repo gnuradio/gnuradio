@@ -1,0 +1,59 @@
+id: variable_config
+label: Variable Config
+flags: [ show_id, python ]
+
+parameters:
+-   id: value
+    label: Default Value
+    dtype: ${ type }
+    default: '0'
+-   id: type
+    label: Type
+    dtype: enum
+    default: real
+    options: [real, int, bool, string]
+    option_labels: [Float, Int, Bool, String]
+    option_attributes:
+        get: [getfloat, getint, getboolean, get]
+-   id: config_file
+    label: Config File
+    dtype: file_open
+    default: default
+-   id: section
+    label: Section
+    dtype: string
+    default: main
+-   id: option
+    label: Option
+    dtype: string
+    default: key
+-   id: writeback
+    label: WriteBack
+    dtype: raw
+    default: None
+value: ${ value }
+
+templates:
+    imports: import configparser
+    var_make: 'self._${id}_config = configparser.ConfigParser()
+
+        self._${id}_config.read(${config_file})
+
+        try: ${id} = self._${id}_config.${type.get}(${section}, ${option})
+
+        except: ${id} = ${value}
+
+        self.${id} = ${id}'
+    callbacks:
+    - self.set_${id}(${value})
+    - "self._${id}_config = configparser.ConfigParser()\nself._${id}_config.read(${config_file})\n\
+        if not self._${id}_config.has_section(${section}):\n\tself._${id}_config.add_section(${section})\n\
+        self._${id}_config.set(${section}, ${option}, str(${writeback}))\nself._${id}_config.write(open(${config_file},\
+        \ 'w'))"
+
+documentation: |-
+    This block represents a variable that can be read from a config file.
+
+    To save the value back into the config file: enter the name of another variable into the writeback param. When the other variable is changed at runtime, the config file will be re-written.
+
+file_format: 1

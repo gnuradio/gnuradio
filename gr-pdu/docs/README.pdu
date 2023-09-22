@@ -1,0 +1,12 @@
+This is the GNU Radio PDU package. It contains signal processing
+blocks that operate on Protocol Data Unit format messages. Many
+such blocks are analogs of streaming API functionality.  To use the
+pdu blocks, the Python namespace is in 'pdu', which is 
+imported as:
+
+    from gnuradio import pdu
+
+A quick listing of the details can be found in Python after 
+importing by using:
+
+    help(pdu)

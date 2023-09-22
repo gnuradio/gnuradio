@@ -1,0 +1,40 @@
+id: blocks_complex_to_magphase
+label: Complex To Mag Phase
+flags: [ python, cpp ]
+
+parameters:
+-   id: vlen
+    label: Vector Length
+    dtype: int
+    default: '1'
+    hide: ${ 'part' if vlen == 1 else 'none' }
+
+inputs:
+-   domain: stream
+    dtype: complex
+    vlen: ${ vlen }
+
+outputs:
+-   label: mag
+    domain: stream
+    dtype: float
+    vlen: ${ vlen }
+-   label: phase
+    domain: stream
+    dtype: float
+    vlen: ${ vlen }
+    optional: true
+
+asserts:
+- ${ vlen > 0 }
+
+templates:
+    imports: from gnuradio import blocks
+    make: blocks.complex_to_magphase(${vlen})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/complex_to_magphase.h>']
+    declarations: 'blocks::complex_to_magphase::sptr ${id};'
+    make: 'this->${id} = blocks::complex_to_magphase::make(${vlen});'
+
+file_format: 1

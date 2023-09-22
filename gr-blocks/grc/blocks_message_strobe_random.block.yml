@@ -1,0 +1,46 @@
+id: blocks_message_strobe_random
+label: Message Strobe Random-Delay
+flags: [ python ]
+
+parameters:
+-   id: msg
+    label: Message PMT
+    dtype: raw
+    default: pmt.intern("TEST")
+-   id: dist
+    label: Distribution
+    dtype: enum
+    options: [blocks.STROBE_EXPONENTIAL, blocks.STROBE_UNIFORM, blocks.STROBE_GAUSSIAN, blocks.STROBE_POISSON]
+    option_labels: [Exponential, Uniform, Gaussian, Poisson]
+-   id: mean
+    label: Mean (ms)
+    dtype: real
+    default: '1000'
+-   id: std
+    label: ${ 'Max. Deviation (ms)' if dist == 'blocks.STROBE_UNIFORM' else 'Std. Deviation (ms)' }
+    dtype: real
+    default: '100'
+    hide: ${ 'none' if dist in ('blocks.STROBE_UNIFORM', 'blocks.STROBE_GAUSSIAN') else 'all' }
+
+inputs:
+-   domain: message
+    id: set_msg
+    optional: true
+
+outputs:
+-   domain: message
+    id: strobe
+    optional: true
+
+templates:
+    imports: |-
+        from gnuradio import blocks
+        import pmt
+    make: blocks.message_strobe_random(${msg}, ${dist}, ${mean}, ${std})
+    callbacks:
+    - set_msg(${msg})
+    - set_dist(${dist})
+    - set_mean(${mean})
+    - set_std(${std})
+
+file_format: 1

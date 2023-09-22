@@ -1,0 +1,131 @@
+{
+    "namespace": [
+        "gr",
+        "analog"
+    ],
+    "class": "agc2_cc",
+    "io_signature": {
+        "input": {
+            "signature": "make",
+            "min_streams": "1",
+            "max_streams": "1",
+            "sizeof_stream_item": "sizeof(gr_complex)"
+        },
+        "output": {
+            "signature": "make",
+            "min_streams": "1",
+            "max_streams": "1",
+            "sizeof_stream_item": "sizeof(gr_complex)"
+        }
+    },
+    "message_port": {
+        "input": [],
+        "output": []
+    },
+    "make": {
+        "arguments": [
+            {
+                "name": "attack_rate",
+                "dtype": "float",
+                "default": "0.10000000000000001"
+            },
+            {
+                "name": "decay_rate",
+                "dtype": "float",
+                "default": "0.01"
+            },
+            {
+                "name": "reference",
+                "dtype": "float",
+                "default": "1"
+            },
+            {
+                "name": "gain",
+                "dtype": "float",
+                "default": "1"
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "set_attack_rate",
+            "arguments_type": [
+                {
+                    "name": "rate",
+                    "dtype": "float"
+                }
+            ]
+        },
+        {
+            "name": "set_decay_rate",
+            "arguments_type": [
+                {
+                    "name": "rate",
+                    "dtype": "float"
+                }
+            ]
+        },
+        {
+            "name": "set_reference",
+            "arguments_type": [
+                {
+                    "name": "reference",
+                    "dtype": "float"
+                }
+            ]
+        },
+        {
+            "name": "set_gain",
+            "arguments_type": [
+                {
+                    "name": "gain",
+                    "dtype": "float"
+                }
+            ]
+        },
+        {
+            "name": "set_max_gain",
+            "arguments_type": [
+                {
+                    "name": "max_gain",
+                    "dtype": "float"
+                }
+            ]
+        }
+    ],
+    "properties": [
+        {
+            "name": "attack_rate",
+            "dtype": "float",
+            "read_only": true
+        },
+        {
+            "name": "decay_rate",
+            "dtype": "float",
+            "read_only": true
+        },
+        {
+            "name": "reference",
+            "dtype": "float",
+            "read_only": false
+        },
+        {
+            "name": "gain",
+            "dtype": "float",
+            "read_only": false
+        },
+        {
+            "name": "max_gain",
+            "dtype": "float",
+            "read_only": false
+        }
+    ],
+    "docstring": [
+        "/*!\n     * \\brief high performance Automatic Gain Control class with\n     * attack and decay rates.\n     * \\ingroup level_controllers_blk\n     *\n     * \\details\n     * For Power the absolute value of the complex number is used.\n     */",
+        "// gr::analog::agc2_cc::sptr",
+        "/*!\n       * Build a complex value AGC loop block with attack and decay rates.\n       *\n       * \\param attack_rate the update rate of the loop when in attack mode.\n       * \\param decay_rate the update rate of the loop when in decay mode.\n       * \\param reference reference value to adjust signal power to.\n       * \\param gain initial gain value.\n       */",
+        "/* namespace analog */",
+        "/* namespace gr */",
+        "/* INCLUDED_ANALOG_AGC2_CC_H */"
+    ]
+}

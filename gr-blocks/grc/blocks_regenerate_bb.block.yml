@@ -1,0 +1,31 @@
+id: blocks_regenerate_bb
+label: Regenerate
+flags: [ python, cpp ]
+
+parameters:
+-   id: period
+    label: Period
+    dtype: int
+-   id: max_regen
+    label: Max Regen Count
+    dtype: int
+    default: '500'
+
+inputs:
+-   domain: stream
+    dtype: byte
+
+outputs:
+-   domain: stream
+    dtype: byte
+
+templates:
+    imports: from gnuradio import blocks
+    make: blocks.regenerate_bb(${period}, ${max_regen})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/regenerate_bb.h>']
+    declarations: 'blocks::regenerate_bb::sptr ${id};'
+    make: 'this->${id} = blocks::regenerate_bb::make(${period}, ${max_regen});'
+
+file_format: 1

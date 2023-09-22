@@ -1,0 +1,57 @@
+id: analog_fastnoise_source_x
+label: Fast Noise Source
+flags: [ python, cpp ]
+
+parameters:
+-   id: type
+    label: Output Type
+    dtype: enum
+    options: [complex, float, int, short]
+    option_attributes:
+        fcn: [c, f, i, s]
+    hide: part
+-   id: noise_type
+    label: Noise Type
+    dtype: raw
+    default: analog.GR_GAUSSIAN
+    options: [analog.GR_UNIFORM, analog.GR_GAUSSIAN, analog.GR_LAPLACIAN, analog.GR_IMPULSE]
+    option_labels: [Uniform, Gaussian, Laplacian, Impulse]
+-   id: amp
+    label: Amplitude
+    dtype: real
+    default: '1'
+-   id: seed
+    label: Seed
+    dtype: int
+    default: '0'
+-   id: samples
+    label: Variate Pool Size
+    dtype: int
+    default: '8192'
+
+outputs:
+-   domain: stream
+    dtype: ${ type }
+
+templates:
+    imports: from gnuradio import analog
+    make: analog.fastnoise_source_${type.fcn}(${noise_type}, ${amp}, ${seed}, ${samples})
+    callbacks:
+    - set_type(${noise_type})
+    - set_amplitude(${amp})
+
+cpp_templates:
+    includes: ['#include <gnuradio/analog/fastnoise_source.h>']
+    declarations: 'analog::fastnoise_source_${type.fcn}::sptr ${id};'
+    make: 'this->${id} = analog::fastnoise_source_${type.fcn}::make(${noise_type}, ${amp}, ${seed}, ${samples});'
+    callbacks:
+    - set_type(${noise_type})
+    - set_amplitude(${amp})
+    link: ['gnuradio::gnuradio-analog']
+    translations:
+        analog\.: 'analog::'
+
+documentation: |-
+    The fast noise source works by pre-generating a pool of random variates taken from the specified distribution.  At runtime, samples are then uniform randomly chosen from this pool which is a very fast operation.
+
+file_format: 1

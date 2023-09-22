@@ -1,0 +1,26 @@
+id: variable_file_filter_taps
+label: Filter Taps Loader
+flags: [show_id, python ]
+
+parameters:
+-   id: file
+    label: File
+    dtype: file_open
+-   id: verbose
+    label: Verbose Output
+    dtype: bool
+    default: False
+
+value: ${filter.file_taps_loader(file, verbose).get_taps()}
+
+templates:
+    imports: from gnuradio import filter
+    var_make: |-
+        self.${id} = ${id} = filter.file_taps_loader(${file}, ${verbose}).get_taps()
+
+documentation: |-
+  This block maps filter taps created with gr_filter_design to a variable.
+
+  Simply insert the ID of this block into the taps field of the block you want to import the file taps to.
+
+file_format: 1

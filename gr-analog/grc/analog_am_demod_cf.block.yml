@@ -1,0 +1,38 @@
+id: analog_am_demod_cf
+label: AM Demod
+flags: [ python ]
+
+parameters:
+-   id: chan_rate
+    label: Channel Rate
+    dtype: real
+-   id: audio_decim
+    label: Audio Decimation
+    dtype: int
+-   id: audio_pass
+    label: Audio Pass
+    dtype: real
+    default: '5000'
+-   id: audio_stop
+    label: Audio Stop
+    dtype: real
+    default: '5500'
+
+inputs:
+-   domain: stream
+    dtype: complex
+
+outputs:
+-   domain: stream
+    dtype: float
+    
+asserts:
+- ${ audio_pass > 0 }
+- ${audio_pass < audio_stop }
+
+templates:
+    imports: from gnuradio import analog
+    make: "analog.am_demod_cf(\n\tchannel_rate=${chan_rate},\n\taudio_decim=${audio_decim},\n\
+        \taudio_pass=${audio_pass},\n\taudio_stop=${audio_stop},\n)"
+
+file_format: 1

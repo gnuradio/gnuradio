@@ -1,0 +1,119 @@
+id: qtgui_levelgauge
+label: QT GUI Level Gauge
+category: '[Core]/GUI Widgets/QT'
+
+parameters:
+-   id: label
+    label: Label
+    dtype: string
+    hide: ${ ('none' if label else 'part') }
+-   id: position
+    label: Label Position
+    dtype: enum
+    default: '1'
+    options: ['1', '2']
+    option_labels: ['Above', 'Below']
+    hide: 'part'
+-   id: isVertical
+    label: Orientation
+    dtype: enum
+    default: 'True'
+    options: ['True', 'False']
+    option_labels: ['Vertical', 'Horizontal']
+    hide: 'part'
+-   id: type
+    label: Type
+    dtype: enum
+    default: int
+    options: [real, int]
+    option_labels: [Float, Integer]
+    option_attributes:
+        conv: [float, int]
+    hide: part
+-   id: value
+    label: Value
+    dtype: ${ type }
+    default: '0'
+-   id: minimum
+    label: Minimum
+    dtype: ${ type }
+    default: '0'
+-   id: maximum
+    label: Maximum
+    dtype: ${ type }
+    default: '100'
+-   id: scaleFactor
+    label: Scale Factor
+    dtype: ${ type }
+    default: '1'
+    hide: ${ ('part' if type=='real' else 'all') }
+-   id: showValue
+    label: Show Value
+    dtype: bool
+    default: 'False'
+-   id: msize
+    label: Control Size
+    dtype: int
+    default: '100'
+    hide: part
+-   id: barColor
+    label: Bar Color
+    dtype: enum
+    default: 'default'
+    options: ['default', 'silver', 'gray', 'black', 'white', 'red', 'green', 'blue', 'navy', 'yellow', 'orange', 'purple', 'lime', 'aqua', 'teal']
+    option_labels: ['default', 'silver', 'gray', 'black', 'white', 'red', 'green', 'blue', 'navy', 'yellow', 'orange', 'purple', 'lime', 'aqua', 'teal']
+    hide: 'part'
+-   id: backgroundColor
+    label: Background Color
+    dtype: enum
+    default: 'default'
+    options: ['default', 'silver', 'gray', 'black', 'white', 'red', 'green', 'blue', 'navy', 'yellow', 'orange', 'purple', 'lime', 'aqua', 'teal']
+    option_labels: ['default', 'silver', 'gray', 'black', 'white', 'red', 'green', 'blue', 'navy', 'yellow', 'orange', 'purple', 'lime', 'aqua', 'teal']
+    hide: 'part'
+-   id: fontColor
+    label: Font Color
+    dtype: enum
+    default: 'default'
+    options: ['default', 'silver', 'gray', 'black', 'white', 'red', 'green', 'blue', 'navy', 'yellow', 'orange', 'purple', 'lime', 'aqua', 'teal']
+    option_labels: ['default', 'silver', 'gray', 'black', 'white', 'red', 'green', 'blue', 'navy', 'yellow', 'orange', 'purple', 'lime', 'aqua', 'teal']
+    hide: 'part'
+-   id: gui_hint
+    label: GUI Hint
+    dtype: gui_hint
+    hide: part
+value: ${ value }
+
+inputs:
+-   domain: message
+    id: value
+    optional: true
+
+templates:
+    make: |-
+        <%
+            win = '_%s_lg_win'%id
+        %>\
+        
+        if "${type}" == "int":
+        	isFloat = False
+        	scaleFactor = 1
+        else:
+        	isFloat = True
+        	scaleFactor = ${scaleFactor}
+        	
+        ${win} = qtgui.GrLevelGauge(${label},"${barColor}","${backgroundColor}","${fontColor}",${minimum},${maximum}, ${msize}, ${isVertical},${position},isFloat,scaleFactor,${showValue},self)
+        ${win}.setValue(${value})
+        self.${id} = ${win}
+
+        ${gui_hint() % win}
+    callbacks:
+    - self.${id}.setValue(${value})
+
+documentation: |-
+    This block creates a level gauge. The value can be set either with a variable or an input message.
+    
+    NOTE: This control has some quirks due to the fact that QProgressBar only accepts integers.  If you want to work with floats, you have to use the scaleFactor to map incoming values to the specified min/max range.  For instance if the min/max are 0-100 but your incoming values are 0.0-1.0, you will need to set a scalefactor of 100.
+
+    The GUI hint can be used to position the widget within the application. The hint is of the form [tab_id@tab_index]: [row, col, row_span, col_span]. Both the tab specification and the grid position are optional.
+
+file_format: 1

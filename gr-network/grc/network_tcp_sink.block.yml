@@ -1,0 +1,59 @@
+id: network_tcp_sink
+label: TCP Sink
+category: '[Core]/Networking Tools'
+flags: [ throttle ]
+
+parameters:
+-   id: type
+    label: Input Type
+    dtype: enum
+    options: [complex, float, int, short, byte]
+    option_attributes:
+        size: [gr.sizeof_gr_complex, gr.sizeof_float, gr.sizeof_int, gr.sizeof_short,
+            gr.sizeof_char]
+    hide: part
+-   id: mode
+    label: Mode
+    dtype: enum
+    options: ['1', '2']
+    option_labels: [Client, Server]
+    option_attributes:
+        hide_specific: [none, all]
+-   id: addr
+    label: Address
+    dtype: string
+    default: '127.0.0.1'
+    hide: ${ mode.hide_specific }
+-   id: port
+    label: Port
+    dtype: int
+    default: '2000'
+-   id: vlen
+    label: Vector Length
+    dtype: int
+    default: '1'
+    hide: ${ 'part' if vlen == 1 else 'none' }
+
+inputs:
+-   domain: stream
+    dtype: ${ type }
+    vlen: ${ vlen }
+asserts:
+- ${ vlen > 0 }
+
+templates:
+    imports: from gnuradio import network
+    make: network.tcp_sink(${type.size}, ${vlen}, ${addr}, ${port},${mode})
+
+documentation: "This block supports TCP connections in both server (listening for inbound\
+    \ connections) and client mode (initiating connections to other systems as a client).\
+    \ In client mode,the block connects to a server at the given address and port. \
+    \ In server mode, the block starts a local listener on the given port and accepts \
+    \ the first client connection.\n\n\
+    \ This block does support IPv6 addresses.  If an IPv6 address\
+    \ is detected as the destination IP address, the block will automatically\
+    \ adjust for proper connection.  Just make sure your IPv6 stack is enabled.\
+    \ To listen in server mode for both IPv4 and IPv6, use :: as the address. \
+    \ To connect to IPv6 localhost use ::1 as the address."
+
+file_format: 1

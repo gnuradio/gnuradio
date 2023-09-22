@@ -1,0 +1,48 @@
+id: blocks_stream_to_vector
+label: Stream to Vector
+flags: [ python, cpp ]
+
+parameters:
+-   id: type
+    label: IO Type
+    dtype: enum
+    options: [complex, float, int, short, byte]
+    option_attributes:
+        size: [gr.sizeof_gr_complex, gr.sizeof_float, gr.sizeof_int, gr.sizeof_short,
+            gr.sizeof_char]
+    hide: part
+-   id: num_items
+    label: Num Items
+    dtype: int
+    default: '2'
+    hide: ${ 'part' if vlen == 1 else 'none' }
+-   id: vlen
+    label: Vector Length
+    dtype: int
+    default: '1'
+    hide: ${ 'part' if vlen == 1 else 'none' }
+
+inputs:
+-   domain: stream
+    dtype: ${ type }
+    vlen: ${ vlen }
+
+outputs:
+-   domain: stream
+    dtype: ${ type }
+    vlen: ${ vlen*num_items }
+
+asserts:
+- ${ num_items > 0 }
+- ${ vlen >= 1 }
+
+templates:
+    imports: from gnuradio import blocks
+    make: blocks.stream_to_vector(${type.size}*${vlen}, ${num_items})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/stream_to_vector.h>']
+    declarations: 'blocks::stream_to_vector::sptr ${id};'
+    make: 'this->${id} = blocks::stream_to_vector::make(${type.size}*${vlen}, ${num_items});'
+
+file_format: 1

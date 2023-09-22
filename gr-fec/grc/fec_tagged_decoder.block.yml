@@ -1,0 +1,47 @@
+id: fec_tagged_decoder
+label: FEC Tagged Decoder
+
+parameters:
+-   id: decoder
+    label: Constituent Decoder
+    dtype: raw
+    default: decoder_variable
+-   id: mtu
+    label: MTU (bytes)
+    dtype: int
+    default: '1500'
+-   id: itype
+    label: Input Type
+    dtype: enum
+    options: [byte, float]
+    option_attributes:
+        size: [gr.sizeof_char, gr.sizeof_float]
+    hide: part
+-   id: otype
+    label: Output Type
+    dtype: enum
+    options: [byte, float]
+    option_attributes:
+        size: [gr.sizeof_char, gr.sizeof_float]
+    hide: part
+-   id: lentagname
+    label: Length Tag Name
+    dtype: string
+    default: '"pkt_len"'
+
+inputs:
+-   domain: stream
+    dtype: ${ itype }
+
+outputs:
+-   domain: stream
+    dtype: ${ otype }
+
+templates:
+    imports: from gnuradio import fec
+    make: fec.tagged_decoder(${decoder}, ${itype.size}, ${otype.size},  ${lentagname},
+        ${mtu})
+
+documentation: ""
+
+file_format: 1

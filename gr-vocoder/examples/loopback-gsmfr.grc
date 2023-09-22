@@ -1,0 +1,514 @@
+options:
+  parameters:
+    author: Martin Braun
+    category: Custom
+    cmake_opt: ''
+    comment: ''
+    copyright: ''
+    description: An example how to use the GSM-FR Vocoder
+    gen_cmake: 'On'
+    gen_linking: dynamic
+    generate_options: qt_gui
+    hier_block_src_path: '.:'
+    id: loopback_gsmfr
+    max_nouts: '0'
+    output_language: python
+    placement: (0,0)
+    qt_qss_theme: ''
+    realtime_scheduling: ''
+    run: 'True'
+    run_command: '{python} -u {filename}'
+    run_options: prompt
+    sizing_mode: fixed
+    thread_safe_setters: ''
+    title: GSM Full-Rate 06.10 Codec Loopback Test
+    window_size: 1280, 1024
+  states:
+    coordinate: [0, -1]
+    rotation: 0
+    state: enabled
+
+blocks:
+- name: play_encoded
+  id: variable_qtgui_check_box
+  parameters:
+    comment: ''
+    'false': '0'
+    gui_hint: ''
+    label: Encode Audio
+    'true': '1'
+    type: int
+    value: 'True'
+  states:
+    coordinate: [834, 0]
+    rotation: 0
+    state: enabled
+- name: samp_rate
+  id: variable
+  parameters:
+    comment: ''
+    value: '48000'
+  states:
+    coordinate: [186, 0]
+    rotation: 0
+    state: enabled
+- name: scale
+  id: variable
+  parameters:
+    comment: ''
+    value: 4096
+  states:
+    coordinate: [301, -1]
+    rotation: 0
+    state: enabled
+- name: audio_sink_0
+  id: audio_sink
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    device_name: ''
+    num_inputs: '1'
+    ok_to_block: 'True'
+    samp_rate: '48000'
+  states:
+    coordinate: [706, 424]
+    rotation: 0
+    state: enabled
+- name: audio_source_0
+  id: audio_source
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    device_name: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_outputs: '1'
+    ok_to_block: 'True'
+    samp_rate: '48000'
+  states:
+    coordinate: [0, 117]
+    rotation: 0
+    state: enabled
+- name: blocks_float_to_short_0
+  id: blocks_float_to_short
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    scale: scale
+    vlen: '1'
+  states:
+    coordinate: [417, 119]
+    rotation: 0
+    state: enabled
+- name: blocks_selector_0
+  id: blocks_selector
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    enabled: 'True'
+    input_index: play_encoded
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_inputs: '2'
+    num_outputs: '1'
+    output_index: '0'
+    showports: 'True'
+    type: float
+    vlen: '1'
+  states:
+    coordinate: [256, 396.0]
+    rotation: 0
+    state: true
+- name: blocks_short_to_float_0
+  id: blocks_short_to_float
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    scale: scale
+    vlen: '1'
+  states:
+    coordinate: [762, 312]
+    rotation: 0
+    state: enabled
+- name: blocks_stream_to_vector_0
+  id: blocks_stream_to_vector
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_items: '33'
+    type: byte
+    vlen: '1'
+  states:
+    coordinate: [272, 312]
+    rotation: 0
+    state: enabled
+- name: blocks_vector_to_stream_0
+  id: blocks_vector_to_stream
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_items: '33'
+    type: byte
+    vlen: '1'
+  states:
+    coordinate: [857, 119]
+    rotation: 0
+    state: enabled
+- name: blocks_wavfile_source_0
+  id: blocks_wavfile_source
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    file: speech_audio_at_48_kHz.wav
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    nchan: '1'
+    repeat: 'True'
+  states:
+    coordinate: [-1, 225]
+    rotation: 0
+    state: disabled
+- name: qtgui_time_sink_x_0
+  id: qtgui_time_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'False'
+    axislabels: 'True'
+    color1: blue
+    color10: blue
+    color2: green
+    color3: black
+    color4: cyan
+    color5: magenta
+    color6: yellow
+    color7: dark red
+    color8: dark green
+    color9: Dark Blue
+    comment: ''
+    ctrlpanel: 'False'
+    entags: 'True'
+    grid: 'False'
+    gui_hint: ''
+    label1: Signal 1
+    label10: Signal 10
+    label2: Signal 2
+    label3: Signal 3
+    label4: Signal 4
+    label5: Signal 5
+    label6: Signal 6
+    label7: Signal 7
+    label8: Signal 8
+    label9: Signal 9
+    legend: 'True'
+    marker1: '1'
+    marker10: '1'
+    marker2: '1'
+    marker3: '1'
+    marker4: '1'
+    marker5: '1'
+    marker6: '1'
+    marker7: '1'
+    marker8: '1'
+    marker9: '1'
+    name: Audio Post-Encoding
+    nconnections: '1'
+    size: '1024'
+    srate: '8000'
+    stemplot: 'False'
+    style1: '1'
+    style10: '1'
+    style2: '1'
+    style3: '1'
+    style4: '1'
+    style5: '1'
+    style6: '1'
+    style7: '1'
+    style8: '1'
+    style9: '1'
+    tr_chan: '0'
+    tr_delay: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_slope: qtgui.TRIG_SLOPE_POS
+    tr_tag: '""'
+    type: float
+    update_time: '0.10'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    ylabel: Amplitude
+    ymax: '1'
+    ymin: '-1'
+    yunit: '""'
+  states:
+    coordinate: [1012, 240]
+    rotation: 0
+    state: enabled
+- name: qtgui_time_sink_x_0_0
+  id: qtgui_time_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'False'
+    axislabels: 'True'
+    color1: blue
+    color10: blue
+    color2: green
+    color3: black
+    color4: cyan
+    color5: magenta
+    color6: yellow
+    color7: dark red
+    color8: dark green
+    color9: Dark Blue
+    comment: ''
+    ctrlpanel: 'False'
+    entags: 'True'
+    grid: 'False'
+    gui_hint: ''
+    label1: Signal 1
+    label10: Signal 10
+    label2: Signal 2
+    label3: Signal 3
+    label4: Signal 4
+    label5: Signal 5
+    label6: Signal 6
+    label7: Signal 7
+    label8: Signal 8
+    label9: Signal 9
+    legend: 'True'
+    marker1: '1'
+    marker10: '1'
+    marker2: '1'
+    marker3: '1'
+    marker4: '1'
+    marker5: '1'
+    marker6: '1'
+    marker7: '1'
+    marker8: '1'
+    marker9: '1'
+    name: Audio Pre-Encoding
+    nconnections: '1'
+    size: '1024'
+    srate: '8000'
+    stemplot: 'False'
+    style1: '1'
+    style10: '1'
+    style2: '1'
+    style3: '1'
+    style4: '1'
+    style5: '1'
+    style6: '1'
+    style7: '1'
+    style8: '1'
+    style9: '1'
+    tr_chan: '0'
+    tr_delay: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_slope: qtgui.TRIG_SLOPE_POS
+    tr_tag: '""'
+    type: float
+    update_time: '0.10'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    ylabel: Amplitude
+    ymax: '1'
+    ymin: '-1'
+    yunit: '""'
+  states:
+    coordinate: [434, 202]
+    rotation: 0
+    state: enabled
+- name: rational_resampler_xxx_0
+  id: rational_resampler_xxx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    decim: '6'
+    fbw: '0'
+    interp: '1'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    taps: ''
+    type: fff
+  states:
+    coordinate: [204, 94]
+    rotation: 0
+    state: enabled
+- name: rational_resampler_xxx_1
+  id: rational_resampler_xxx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    decim: '1'
+    fbw: '0'
+    interp: '6'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    taps: ''
+    type: fff
+  states:
+    coordinate: [478, 400]
+    rotation: 0
+    state: enabled
+- name: virtual_sink_0
+  id: virtual_sink
+  parameters:
+    alias: ''
+    comment: ''
+    stream_id: Encoded Speech
+  states:
+    coordinate: [1052, 119]
+    rotation: 0
+    state: enabled
+- name: virtual_sink_1
+  id: virtual_sink
+  parameters:
+    alias: ''
+    comment: ''
+    stream_id: Unencoded Speech
+  states:
+    coordinate: [508, 25]
+    rotation: 0
+    state: enabled
+- name: virtual_sink_2
+  id: virtual_sink
+  parameters:
+    alias: ''
+    comment: ''
+    stream_id: Decoded Speech
+  states:
+    coordinate: [1012, 364]
+    rotation: 0
+    state: enabled
+- name: virtual_source_0
+  id: virtual_source
+  parameters:
+    alias: ''
+    comment: ''
+    stream_id: Encoded Speech
+  states:
+    coordinate: [-1, 312]
+    rotation: 0
+    state: enabled
+- name: virtual_source_1
+  id: virtual_source
+  parameters:
+    alias: ''
+    comment: ''
+    stream_id: Unencoded Speech
+  states:
+    coordinate: [-8, 396.0]
+    rotation: 0
+    state: enabled
+- name: virtual_source_1_0
+  id: virtual_source
+  parameters:
+    alias: ''
+    comment: ''
+    stream_id: Decoded Speech
+  states:
+    coordinate: [0, 468.0]
+    rotation: 0
+    state: enabled
+- name: vocoder_gsm_fr_decode_ps_0
+  id: vocoder_gsm_fr_decode_ps
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    coordinate: [485, 316]
+    rotation: 0
+    state: enabled
+- name: vocoder_gsm_fr_encode_sp_1
+  id: vocoder_gsm_fr_encode_sp
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    coordinate: [592, 123]
+    rotation: 0
+    state: enabled
+
+connections:
+- [audio_source_0, '0', rational_resampler_xxx_0, '0']
+- [blocks_float_to_short_0, '0', vocoder_gsm_fr_encode_sp_1, '0']
+- [blocks_selector_0, '0', rational_resampler_xxx_1, '0']
+- [blocks_short_to_float_0, '0', qtgui_time_sink_x_0, '0']
+- [blocks_short_to_float_0, '0', virtual_sink_2, '0']
+- [blocks_stream_to_vector_0, '0', vocoder_gsm_fr_decode_ps_0, '0']
+- [blocks_vector_to_stream_0, '0', virtual_sink_0, '0']
+- [blocks_wavfile_source_0, '0', rational_resampler_xxx_0, '0']
+- [rational_resampler_xxx_0, '0', blocks_float_to_short_0, '0']
+- [rational_resampler_xxx_0, '0', qtgui_time_sink_x_0_0, '0']
+- [rational_resampler_xxx_0, '0', virtual_sink_1, '0']
+- [rational_resampler_xxx_1, '0', audio_sink_0, '0']
+- [virtual_source_0, '0', blocks_stream_to_vector_0, '0']
+- [virtual_source_1, '0', blocks_selector_0, '0']
+- [virtual_source_1_0, '0', blocks_selector_0, '1']
+- [vocoder_gsm_fr_decode_ps_0, '0', blocks_short_to_float_0, '0']
+- [vocoder_gsm_fr_encode_sp_1, '0', blocks_vector_to_stream_0, '0']
+
+metadata:
+  file_format: 1

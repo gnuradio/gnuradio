@@ -1,0 +1,72 @@
+id: iio_device_sink
+label: IIO Device Sink
+flags: [ python, throttle ]
+
+parameters:
+-   id: uri
+    label: IIO context URI
+    dtype: string
+    default: 'local:'
+
+-   id: device
+    label: Device Name/ID
+    dtype: string
+
+-   id: device_phy
+    label: PHY Device Name/ID
+    dtype: string
+
+-   id: channels
+    label: Channels
+    dtype: raw
+    default: []
+
+-   id: buffer_size
+    label: Buffer size
+    dtype: int
+    default: 0x8000
+
+-   id: interpolation
+    label: Interpolation
+    dtype: int
+    default: 1
+
+-   id: cyclic
+    label: Cyclic
+    dtype: bool
+    default: 'False'
+    options: ['False', 'True']
+    option_labels: ['False', 'True']
+
+-   id: params
+    label: Parameters
+    dtype: raw
+    default: []
+
+-   id: len_tag_key
+    label: Packet Length Tag
+    dtype: string
+    hide: ${( 'part' )}
+
+-   id: ch_type
+    label: Channel type
+    dtype: enum
+    options: [complex, int, short, byte]
+    default: short
+    hide: part
+
+inputs:
+-   domain: stream
+    dtype: ${ ch_type }
+    multiplicity: ${ len(channels) }
+
+asserts:
+- ${ len(channels) > 0 }
+
+templates:
+  imports: from gnuradio import iio
+  make: |
+    iio.device_sink(${uri}, ${device}, ${channels}, ${device_phy}, ${params}, ${buffer_size}, ${interpolation} - 1, ${cyclic})
+    self.${id}.set_len_tag_key(${len_tag_key})
+
+file_format: 1

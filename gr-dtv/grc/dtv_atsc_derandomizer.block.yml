@@ -1,0 +1,29 @@
+id: dtv_atsc_derandomizer
+label: ATSC Derandomizer
+flags: [ python, cpp ]
+
+inputs:
+-   domain: stream
+    dtype: byte
+    vlen: 188
+-   domain: stream
+    label: plinfo
+    dtype: short
+    vlen: 2
+    
+outputs:
+-   domain: stream
+    dtype: byte
+    vlen: 188
+
+templates:
+    imports: from gnuradio import dtv
+    make: dtv.atsc_derandomizer()
+
+cpp_templates:
+    includes: ['#include <gnuradio/dtv/atsc_derandomizer.h>']
+    declarations: 'dtv::atsc_derandomizer::sptr ${id};'
+    make: 'this->${id} = dtv::atsc_derandomizer::make();'
+    link: ['gnuradio::gnuradio-dtv']
+
+file_format: 1

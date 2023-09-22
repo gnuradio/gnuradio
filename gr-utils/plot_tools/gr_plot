@@ -1,0 +1,24 @@
+#!/usr/bin/env python
+#
+# Copyright 2007,2008 Free Software Foundation, Inc.
+#
+# This file is part of GNU Radio
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+#
+
+from gnuradio.plot_data import plot_data
+
+
+def main():
+    parser = plot_data.setup_options()
+    args = parser.parse_args()
+    plot_data(None, args.files, args)
+
+
+if __name__ == "__main__":
+    try:
+        main()
+    except KeyboardInterrupt:
+        pass

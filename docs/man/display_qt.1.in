@@ -1,0 +1,12 @@
+.TH DISPLAY_QT "1" "@BUILD_DATE_SHORT@" "display_qt @VERSION@" "User Commands"
+.SH NAME
+display_qt \- a Gnu Radio Example gr-qtgui
+.SH DESCRIPTION
+Display a GUI using QT of a sine wave in noise.
+.PP
+Example program instantiates a GNU Radio flow graph using a sine
+wave source, a noise source, and gr-qtgui blocks. This
+new (in version 3.7.10) example shows how to build a
+C++ only QT based application.
+.SH "SEE ALSO"
+http://gnuradio.squarespace.com/examples/tag/qt

@@ -1,0 +1,134 @@
+id: pdu_tags_to_pdu_x
+label: Tags To PDU
+flags: [ python ]
+
+parameters:
+-   id: type
+    label: PDU Type
+    dtype: enum
+    options: [c, f, i, s, b]
+    option_labels: [Complex, Float, Int, Short, Byte]
+    option_attributes:
+        input: [complex, float, int, short, byte]
+        vec_type: [complex_vector, float_vector, int_vector, int_vector, int_vector]
+    hide: part
+-   id: start_tag
+    label: Start Tag
+    dtype: string
+    default: SOB
+-   id: end_tag
+    label: End Tag
+    dtype: string
+    default: EOB
+-   id: max_pdu_size
+    label: Max PDU Size
+    dtype: int
+    default: '1024'
+    hide: part
+-   id: rate
+    label: Sample Rate
+    dtype: float
+    default: samp_rate
+    hide: part
+-   id: prepend
+    label: Prepend
+    dtype: ${ type.vec_type }
+    default: '[]'
+    hide: part
+-   id: cfg_port
+    label: Config Port
+    category: Optional
+    dtype: enum
+    default: 'False'
+    options: ['True', 'False']
+    option_labels: [Enabled, Disabled]
+    option_attributes:
+        hide: ['False', 'True']
+    hide: part
+-   id: pub_det
+    label: Emit Detections
+    category: Optional
+    dtype: enum
+    default: 'False'
+    options: ['True', 'False']
+    option_labels: ['Yes', 'No']
+    option_attributes:
+        hide: ['False', 'True']
+    hide: part
+-   id: tail_size
+    label: Tail Size
+    category: Optional
+    dtype: int
+    default: '0'
+    hide: part
+-   id: eob_alignment
+    label: EOB Alignment
+    category: Optional
+    dtype: int
+    default: '1'
+    hide: part
+-   id: eob_offset
+    label: EOB Offset
+    category: Optional
+    dtype: int
+    default: '0'
+    hide: part
+-   id: start_time
+    label: Start Time (s)
+    category: Optional
+    dtype: float
+    default: '0.0'
+    hide: part
+-   id: boost_time
+    label: Boost Time
+    category: Optional
+    dtype: enum
+    default: 'False'
+    options: ['True', 'False']
+    option_labels: ['Yes', 'No']
+    hide: part
+
+inputs:
+-   domain: message
+    id: conf
+    optional: true
+    hide: ${ cfg_port.hide }
+-   domain: stream
+    dtype: ${ type.input }
+
+outputs:
+-   domain: message
+    id: detects
+    optional: true
+    hide: ${ pub_det.hide }
+-   domain: message
+    id: pdus
+    optional: true
+
+asserts:
+- ${ max_pdu_size > 0 }
+- ${ rate > 0 }
+- ${ tail_size >= 0 }
+- ${ eob_alignment > 0 }
+- ${ eob_offset >= 0 }
+- ${ eob_offset < eob_alignment }
+- ${ start_time >= 0 }
+
+templates:
+    imports: |-
+        from gnuradio import pdu
+        import pmt
+    make: |
+        pdu.tags_to_pdu_${type}(pmt.intern(${start_tag}), pmt.intern(${end_tag}), ${max_pdu_size}, ${rate}, ${prepend}, ${pub_det}, ${tail_size}, ${start_time})
+        self.${id}.set_eob_parameters(${eob_alignment}, ${eob_offset})
+        self.${id}.enable_time_debug(${boost_time})
+    callbacks:
+    - set_start_tag(pmt.intern(${start_tag}))
+    - set_end_tag(pmt.intern(${end_tag}))
+    - set_max_pdu_size(${max_pdu_size})
+    - set_rate(${rate})
+    - set_prepend(${prepend})
+    - set_tail_size(${tail_size})
+    - set_eob_parameters(${eob_alignment}, ${eob_offset})
+
+file_format: 1

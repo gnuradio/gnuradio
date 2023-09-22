@@ -1,0 +1,48 @@
+id: blocks_patterned_interleaver
+label: Patterned Interleaver
+flags: [ python, cpp ]
+
+parameters:
+-   id: type
+    label: IO Type
+    dtype: enum
+    options: [complex, float, int, short, byte]
+    option_attributes:
+        size: [gr.sizeof_gr_complex, gr.sizeof_float, gr.sizeof_int, gr.sizeof_short,
+            gr.sizeof_char]
+    hide: part
+-   id: pattern
+    label: Pattern
+    dtype: int_vector
+    default: '[0,0,1,2]'
+    hide: part
+-   id: vlen
+    label: Vector Length
+    dtype: int
+    default: '1'
+    hide: ${ 'part' if vlen == 1 else 'none' }
+
+inputs:
+-   domain: stream
+    dtype: ${ type }
+    vlen: ${ vlen }
+    multiplicity: ${ 1+max(pattern) }
+
+outputs:
+-   domain: stream
+    dtype: ${ type }
+    vlen: ${ vlen }
+
+asserts:
+- ${ vlen >= 1 }
+
+templates:
+    imports: from gnuradio import blocks
+    make: blocks.patterned_interleaver(${type.size}*${vlen}, ${pattern})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/patterned_interleaver.h>']
+    declarations: 'blocks::patterned_interleaver::sptr ${id};'
+    make: 'this->${id} = blocks::patterned_interleaver::make(${type.size}*${vlen}, ${pattern});'
+
+file_format: 1

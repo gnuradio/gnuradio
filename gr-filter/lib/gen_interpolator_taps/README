@@ -1,0 +1,35 @@
+#
+# Copyright 2002 Free Software Foundation, Inc.
+#
+# This file is part of GNU Radio
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+#
+
+
+This file contains the source for gen_interpolator_taps, a program
+which generates optimal interpolator taps for a fractional
+interpolator.
+
+The ideal interpolator requires an infinite tap FIR filter to
+realize.  We design a separate 8 tap filter for each value of mu,
+the fractional delay, that we are interested in.  The taps are
+selected such that the mean squared error between the ideal frequency
+response and the approximation is mininimized over all frequencies of
+interest.  In this implementation we define ``frequencies of
+interest'' as those from -B to +B, where B = 1/(4*Ts), where Ts is the
+sampling period.
+
+For a detailed look at what this is all about, please see Chapter 9 of
+"Digital Communication Receivers: Synchronization, Channel Estimation
+and Signal Processing" by Meyr, Moeneclaey and Fechtel, ISBN 0-471-50275-8
+
+NOTE, if you're running gen_interpolator_taps and it seg faults in
+RANDOM, you're probably using g77-2.96.  The fix is to use g77 3.0 or later
+
+	cd <top_of_build_tree>
+	rm config.cache
+	export F77=g77-3.0.4
+	./configure
+	make

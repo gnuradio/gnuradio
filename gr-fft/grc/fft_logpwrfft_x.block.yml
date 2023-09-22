@@ -1,0 +1,71 @@
+id: logpwrfft_x
+label: Log Power FFT
+flags: [ python ]
+
+parameters:
+-   id: type
+    label: Input Type
+    dtype: enum
+    options: [complex, float]
+    option_attributes:
+        fcn: [c, f]
+    hide: part
+-   id: sample_rate
+    label: Sample Rate
+    dtype: real
+    default: samp_rate
+-   id: fft_size
+    label: FFT Size
+    dtype: int
+    default: '1024'
+-   id: ref_scale
+    label: Reference Scale
+    dtype: real
+    default: '2'
+-   id: frame_rate
+    label: Frame Rate
+    dtype: real
+    default: '30'
+-   id: average
+    label: Average
+    dtype: bool
+    default: 'False'
+    options: ['True', 'False']
+    option_labels: ['On', 'Off']
+-   id: avg_alpha
+    label: Average Alpha
+    dtype: real
+    default: '1.0'
+-   id: shift
+    label: FFT Shift
+    dtype: bool
+    default: 'False'
+    options: ['True', 'False']
+    option_labels: ['On', 'Off']
+
+inputs:
+-   domain: stream
+    dtype: ${ type }
+
+outputs:
+-   domain: stream
+    dtype: float
+    vlen: ${ fft_size }
+
+templates:
+    imports: from gnuradio.fft import logpwrfft
+    make: |-
+        logpwrfft.logpwrfft_${type.fcn}(
+            sample_rate=${sample_rate},
+            fft_size=${fft_size},
+            ref_scale=${ref_scale},
+            frame_rate=${frame_rate},
+            avg_alpha=${avg_alpha},
+            average=${average},
+            shift=${shift})
+    callbacks:
+    - set_sample_rate(${sample_rate})
+    - set_avg_alpha(${avg_alpha})
+    - set_average(${average})
+
+file_format: 1

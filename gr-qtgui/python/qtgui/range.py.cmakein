@@ -1,0 +1,409 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+#
+# Copyright 2015 Free Software Foundation, Inc.
+#
+# This file is part of GNU Radio
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+#
+
+@PY_QT_IMPORT@
+from .util import check_set_qss
+import gnuradio.eng_notation as eng_notation
+import re
+
+class Range(object):
+    def __init__(self, minv, maxv, step, default, min_length):
+        self.min = float(minv)
+        self.max = float(maxv)
+        self.step = float(step)
+        self.default = float(default)
+        self.min_length = min_length
+        self.find_precision()
+        self.find_nsteps()
+        check_set_qss()
+
+    def find_precision(self):
+        # Get the decimal part of the step
+        temp = str(float(self.step) - int(self.step))[2:]
+        precision = len(temp) if temp != '0' else 0
+        precision = min(precision, 13)
+
+        if precision == 0 and self.max < 100:
+            self.precision = 1  # Always have a decimal in this case
+        else:
+            self.precision = (precision + 2) if precision > 0 else 0
+
+    def find_nsteps(self):
+        self.nsteps = (self.max + self.step - self.min) / self.step
+
+    def demap_range(self, val):
+        if val > self.max:
+            val = self.max
+        if val < self.min:
+            val = self.min
+        return ((val - self.min) / self.step)
+
+    def map_range(self, val):
+        if val > self.nsteps:
+            val = self.max
+        if val < 0:
+            val = 0
+        return (val * self.step + self.min)
+
+class QEngValidator(Qt.QValidator):
+    def __init__(self, minimum, maximum, parent):
+        Qt.QValidator.__init__(self, parent)
+        self.min = minimum
+        self.max = maximum
+        self.parent = parent
+        self.re = r'^\d*(\.\d*)?((e\d*)|[EPTGMkmunpfa])?$'
+
+    def validate(self, s, pos):
+        try:
+            val = eng_notation.str_to_num(s)
+        except (IndexError, ValueError) as e:
+            if re.match(self.re, s):
+                self.parent.setStyleSheet("background-color: yellow;"
+                                          "color: black")
+                return (Qt.QValidator.Intermediate, s, pos)
+            else:
+                return (Qt.QValidator.Invalid, s, pos)
+
+        if self.max is not None and val > self.max:
+            self.parent.setStyleSheet("background-color: yellow;"
+                                      "color: black")
+        elif self.min is not None and val < self.min:
+            self.parent.setStyleSheet("background-color: yellow;"
+                                      "color: black")
+        else:
+            self.parent.setStyleSheet("")
+
+        return (Qt.QValidator.Acceptable, s, pos)
+
+    def fixup(self, s):
+        pass
+
+
+class RangeWidget(QtWidgets.QWidget):
+    def __init__(self, ranges, slot, label, style, rangeType=float, orientation=QtCore.Qt.Horizontal):
+        """ Creates the QT Range widget """
+        QtWidgets.QWidget.__init__(self)
+
+        self.range = ranges
+        self.style = style
+
+        # rangeType tells the block how to return the value as a standard
+        self.rangeType = rangeType
+
+        # Top-block function to call when any value changes
+        # Some widgets call this directly when their value changes.
+        # Others have intermediate functions to map the value into the right range.
+        self.notifyChanged = slot
+
+        layout = Qt.QHBoxLayout()
+        layout.setContentsMargins(0, 0, 0, 0)
+        label = Qt.QLabel(label)
+        layout.addWidget(label)
+
+        if style == "dial":
+            self.d_widget = self.Dial(
+                self, self.range, self.notifyChanged, rangeType)
+        elif style == "slider":
+            self.d_widget = self.Slider(
+                self, self.range, self.notifyChanged, rangeType, orientation)
+        elif style == "counter":
+            # The counter widget can be directly wired to the notifyChanged slot
+            self.d_widget = self.Counter(
+                self, self.range, self.notifyChanged, rangeType)
+        elif style == "eng":
+            # Text input with engineering notation support
+            self.d_widget = self.Eng(
+                self, self.range, self.notifyChanged, rangeType)
+        elif style == "eng_slider":
+            self.d_widget = self.EngSlider(
+                self, self.range, self.notifyChanged, rangeType, orientation)
+        else:
+            # The CounterSlider needs its own internal handlers before calling notifyChanged
+            self.d_widget = self.CounterSlider(
+                self, self.range, self.notifyChanged, rangeType, orientation)
+
+        layout.addWidget(self.d_widget)
+        self.setLayout(layout)
+
+    class Dial(QtWidgets.QDial):
+        """ Creates the range using a dial """
+
+        def __init__(self, parent, ranges, slot, rangeType=float):
+            QtWidgets.QDial.__init__(self, parent)
+
+            self.rangeType = rangeType
+
+            # Setup the dial
+            self.setRange(0, int(ranges.nsteps - 1))
+            self.setSingleStep(1)
+            self.setNotchesVisible(True)
+            self.range = ranges
+
+            # Round the initial value to the closest tick
+            temp = int(round(ranges.demap_range(ranges.default), 0))
+            self.setValue(temp)
+
+            # Setup the slots
+            self.valueChanged.connect(self.changed)
+            self.notifyChanged = slot
+
+        def changed(self, value):
+            """ Handles mapping the value to the right range before calling the slot. """
+            val = self.range.map_range(value)
+            self.notifyChanged(self.rangeType(val))
+
+    class Slider(QtWidgets.QSlider):
+        """ Creates the range using a slider """
+
+        def __init__(self, parent, ranges, slot, rangeType=float, orientation=QtCore.Qt.Horizontal):
+            QtWidgets.QSlider.__init__(self, orientation, parent)
+
+            self.rangeType = rangeType
+
+            # Setup the slider
+            # self.setFocusPolicy(QtCore.Qt.NoFocus)
+            self.setRange(0, int(ranges.nsteps - 1))
+            self.setTickPosition(2)
+            self.setSingleStep(1)
+            self.range = ranges
+            self.orientation = orientation
+
+            # Round the initial value to the closest tick
+            temp = int(round(ranges.demap_range(ranges.default), 0))
+            self.setValue(temp)
+
+            if ranges.nsteps > ranges.min_length:
+                interval = int(ranges.nsteps / ranges.min_length)
+                self.setTickInterval(interval)
+                self.setPageStep(interval)
+            else:
+                self.setTickInterval(1)
+                self.setPageStep(1)
+
+            # Setup the handler function
+            self.valueChanged.connect(self.changed)
+            self.notifyChanged = slot
+
+        def changed(self, value):
+            """ Handle the valueChanged signal and map the value into the correct range """
+            val = self.range.map_range(value)
+            self.notifyChanged(self.rangeType(val))
+
+        def mousePressEvent(self, event):
+            if((event.button() == QtCore.Qt.LeftButton)):
+                if self.orientation == QtCore.Qt.Horizontal:
+                    new = self.minimum() + ((self.maximum() - self.minimum()) * event.x()) / self.width()
+                else:
+                    new = self.minimum() + ((self.maximum() - self.minimum()) * event.y()) / self.height()
+                self.setValue(int(new))
+                event.accept()
+            # Use repaint rather than calling the super mousePressEvent.
+            # Calling super causes issue where slider jumps to wrong value.
+            QtWidgets.QSlider.repaint(self)
+
+        def mouseMoveEvent(self, event):
+            if self.orientation == QtCore.Qt.Horizontal:
+                new = self.minimum() + ((self.maximum() - self.minimum()) * event.x()) / self.width()
+            else:
+                new = self.minimum() + ((self.maximum() - self.minimum()) * event.y()) / self.height()
+            self.setValue(int(new))
+            event.accept()
+            QtWidgets.QSlider.repaint(self)
+
+    class Counter(QtWidgets.QDoubleSpinBox):
+        """ Creates the range using a counter """
+
+        def __init__(self, parent, ranges, slot, rangeType=float):
+            QtWidgets.QDoubleSpinBox.__init__(self, parent)
+
+            self.rangeType = rangeType
+
+            # Setup the counter
+            self.setDecimals(ranges.precision)
+            self.setRange(ranges.min, ranges.max)
+            self.setValue(ranges.default)
+            self.setSingleStep(ranges.step)
+            self.setKeyboardTracking(False)
+
+            # The counter already handles floats and can be connected directly.
+            self.valueChanged.connect(self.changed)
+            self.notifyChanged = slot
+
+        def changed(self, value):
+            """ Handle the valueChanged signal by converting to the right type """
+            self.notifyChanged(self.rangeType(value))
+
+    class Eng(QtWidgets.QLineEdit):
+        """ Creates the range using a text input """
+
+        def __init__(self, parent, ranges, slot, rangeType=float):
+            QtWidgets.QLineEdit.__init__(self)
+
+            self.rangeType = rangeType
+
+            # Slot to call in the parent
+            self.notifyChanged = slot
+
+            self.setMaximumWidth(100)
+            self.editingFinished.connect(self.changed)
+            self.setText(str(ranges.default))
+            self.setValidator(QEngValidator(ranges.min, ranges.max, self))
+            self.notifyChanged = slot
+
+        def changed(self):
+            """ Handle the changed signal by grabbing the input and converting to the right type """
+            value = eng_notation.str_to_num(self.text())
+            self.notifyChanged(self.rangeType((value)))
+
+    class CounterSlider(QtWidgets.QWidget):
+        """ Creates the range using a counter and slider """
+
+        def __init__(self, parent, ranges, slot, rangeType=float, orientation=QtCore.Qt.Horizontal):
+            QtWidgets.QWidget.__init__(self, parent)
+
+            self.rangeType = rangeType
+
+            # Slot to call in the parent
+            self.notifyChanged = slot
+
+            self.slider = RangeWidget.Slider(
+                parent, ranges, self.sliderChanged, rangeType, orientation)
+            self.counter = RangeWidget.Counter(
+                parent, ranges, self.counterChanged, rangeType)
+
+            # Need another horizontal layout to wrap the other widgets.
+            layout = Qt.QHBoxLayout()
+            layout.setContentsMargins(0, 0, 0, 0)
+            layout.setSpacing(10)
+            layout.addWidget(self.slider)
+            layout.addWidget(self.counter)
+            self.setLayout(layout)
+
+            # Flags to ignore the slider event caused by a change to the counter (and vice versa).
+            self.ignoreSlider = False
+            self.ignoreCounter = False
+            self.range = ranges
+
+        def sliderChanged(self, value):
+            """ Handles changing the counter when the slider is updated """
+            # If the counter was changed, ignore any of these events
+            if not self.ignoreSlider:
+                # Value is already float. Just set the counter
+                self.ignoreCounter = True
+                self.counter.setValue(self.rangeType(value))
+                self.notifyChanged(self.rangeType(value))
+            self.ignoreSlider = False
+
+        def counterChanged(self, value):
+            """ Handles changing the slider when the counter is updated """
+            # Get the current slider value and check to see if the new value changes it
+            current = self.slider.value()
+            new = int(round(self.range.demap_range(value), 0))
+
+            # If it needs to change, ignore the slider event
+            # Otherwise, the slider will cause the counter to round to the nearest tick
+            if current != new:
+                self.ignoreSlider = True
+                self.slider.setValue(new)
+
+            if not self.ignoreCounter:
+                self.notifyChanged(self.rangeType(value))
+            self.ignoreCounter = False
+
+        def setValue(self, value):
+            """ Wrapper to handle changing the value externally """
+            self.ignoreSlider = True
+            self.counter.setValue(value)
+
+    class EngSlider(QtWidgets.QWidget):
+        """ Creates the range using a counter and slider """
+
+        def __init__(self, parent, ranges, slot, rangeType=float, orientation=QtCore.Qt.Horizontal):
+            QtWidgets.QWidget.__init__(self, parent)
+
+            self.first = True
+            self.rangeType = rangeType
+
+            # Slot to call in the parent
+            self.notifyChanged = slot
+
+            self.slider = RangeWidget.Slider(
+                parent, ranges, self.sliderChanged, rangeType, orientation)
+            self.counter = RangeWidget.Eng(
+                parent, ranges, self.counterChanged, rangeType)
+
+            # Need another horizontal layout to wrap the other widgets.
+            layout = Qt.QHBoxLayout()
+            layout.setContentsMargins(0, 0, 0, 0)
+            layout.addWidget(self.slider)
+            layout.addWidget(self.counter)
+            self.setLayout(layout)
+
+            # Flags to ignore the slider event caused by a change to the counter (and vice versa).
+            self.ignoreSlider = False
+            self.ignoreCounter = False
+            self.range = ranges
+
+        def sliderChanged(self, value):
+            """ Handles changing the counter when the slider is updated """
+            # If the counter was changed, ignore any of these events
+            if not self.ignoreSlider:
+                # convert Value to eng string
+                self.ignoreCounter = True
+                self.counter.setText(
+                    eng_notation.num_to_str(self.rangeType(value)))
+                self.notifyChanged(self.rangeType(value))
+            self.ignoreSlider = False
+
+        def counterChanged(self, value):
+            """ Handles changing the slider when the counter is updated """
+            # Get the current slider value and check to see if the new value changes it
+            current = self.slider.value()
+            print("counterChanged", value, "ign", self.ignoreCounter)
+            new = int(round(self.range.demap_range(value), 0))
+
+            # If it needs to change, ignore the slider event
+            # Otherwise, the slider will cause the counter to round to the nearest tick
+            if current != new:
+                self.ignoreSlider = True
+                self.slider.setValue(new)
+
+            if not self.ignoreCounter:
+                print("to notify", self.rangeType(value))
+                self.notifyChanged(self.rangeType(value))
+            self.ignoreCounter = False
+
+        def setValue(self, value):
+            """ Wrapper to handle changing the value externally """
+            self.counter.setText(eng_notation.num_to_str(value))
+            if self.first or True:
+                new = int(round(self.range.demap_range(value), 0))
+                self.ignoreSlider = True
+                self.slider.setValue(new)
+                self.first = False
+
+
+if __name__ == "__main__":
+    from PyQt5 import Qt
+    import sys
+
+    def valueChanged(frequency):
+        print("Value updated - " + str(frequency))
+
+    app = Qt.QApplication(sys.argv)
+    widget = RangeWidget(Range(0, 100, 10, 1, 100),
+                         valueChanged, "Test", "counter_slider", int)
+
+    widget.show()
+    widget.setWindowTitle("Test Qt Range")
+    app.exec_()
+
+    widget = None

@@ -1,0 +1,49 @@
+id: blocks_file_meta_source
+label: File Meta Source
+flags: [ python ]
+
+parameters:
+-   id: type
+    label: Output Type
+    dtype: enum
+    options: [complex, float, int, short, byte]
+    option_attributes:
+        size: [gr.sizeof_gr_complex, gr.sizeof_float, gr.sizeof_int, gr.sizeof_short,
+            gr.sizeof_char]
+    hide: part
+-   id: file
+    label: File
+    dtype: file_open
+-   id: repeat
+    label: Repeat
+    dtype: enum
+    default: 'True'
+    options: ['True', 'False']
+    option_labels: ['Yes', 'No']
+-   id: detached
+    label: Detached Header
+    dtype: enum
+    default: 'False'
+    options: ['True', 'False']
+    option_labels: ['Yes', 'No']
+-   id: hdr_file
+    label: Header File
+    dtype: file_open
+-   id: vlen
+    label: Vector Length
+    dtype: int
+    default: '1'
+    hide: ${ 'part' if vlen == 1 else 'none' }
+
+outputs:
+-   domain: stream
+    dtype: ${ type }
+    vlen: ${ vlen }
+
+templates:
+    imports: from gnuradio import gr, blocks
+    make: blocks.file_meta_source(${file}, ${repeat}, ${detached}, ${hdr_file})
+    callbacks:
+    - open(${file}, ${repeat})
+
+file_format: 1

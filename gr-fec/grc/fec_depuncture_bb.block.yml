@@ -1,0 +1,33 @@
+id: fec_depuncture_bb
+label: Depuncture
+
+parameters:
+-   id: puncsize
+    label: Puncture Size
+    dtype: int
+-   id: puncpat
+    label: Puncture Pattern
+    dtype: int
+-   id: delay
+    label: Delay
+    dtype: int
+    default: '0'
+-   id: sym
+    label: Symbol
+    dtype: int
+    default: '127'
+    hide: part
+
+inputs:
+-   domain: stream
+    dtype: byte
+
+outputs:
+-   domain: stream
+    dtype: byte
+
+templates:
+    imports: from gnuradio import fec
+    make: fec.depuncture_bb(${puncsize}, ${puncpat}, ${delay}, ${sym})
+
+file_format: 1

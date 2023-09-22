@@ -1,0 +1,154 @@
+options:
+  parameters:
+    author: ''
+    category: Custom
+    cmake_opt: ''
+    comment: ''
+    copyright: ''
+    description: ''
+    gen_cmake: 'On'
+    gen_linking: dynamic
+    generate_options: no_gui
+    hier_block_src_path: '.:'
+    id: tx_stage2
+    max_nouts: '0'
+    output_language: python
+    placement: (0,0)
+    qt_qss_theme: ''
+    realtime_scheduling: ''
+    run: 'True'
+    run_command: '{python} -u {filename}'
+    run_options: prompt
+    sizing_mode: fixed
+    thread_safe_setters: ''
+    title: ''
+    window_size: ''
+  states:
+    coordinate: [8, 11]
+    rotation: 0
+    state: enabled
+
+blocks:
+- name: enc
+  id: variable_cc_encoder_def
+  parameters:
+    comment: ''
+    dim1: '1'
+    dim2: '1'
+    framebits: 1500*8
+    k: '7'
+    mode: fec.CC_TERMINATED
+    ndim: '0'
+    padding: 'False'
+    polys: '[109,79]'
+    rate: '2'
+    state_start: '0'
+  states:
+    coordinate: [216, 211]
+    rotation: 0
+    state: disabled
+- name: enc
+  id: variable_dummy_encoder_def
+  parameters:
+    comment: ''
+    dim1: '1'
+    dim2: '1'
+    framebits: '8000'
+    ndim: '0'
+  states:
+    coordinate: [16, 211]
+    rotation: 0
+    state: disabled
+- name: enc
+  id: variable_repetition_encoder_def
+  parameters:
+    comment: ''
+    dim1: '1'
+    dim2: '1'
+    framebits: '8000'
+    ndim: '0'
+    rep: '3'
+  states:
+    coordinate: [16, 291]
+    rotation: 0
+    state: enabled
+- name: blocks_message_debug_0
+  id: blocks_message_debug
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+  states:
+    coordinate: [928, 56.0]
+    rotation: 0
+    state: enabled
+- name: blocks_message_strobe_0
+  id: blocks_message_strobe
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    msg: pmt.PMT_T
+    period: '2000'
+  states:
+    coordinate: [24, 108.0]
+    rotation: 0
+    state: enabled
+- name: pdu_random_pdu_0
+  id: pdu_random_pdu
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    length_modulo: '1'
+    mask: '0xff'
+    maxoutbuf: '0'
+    maxsize: '50'
+    minoutbuf: '0'
+    minsize: '15'
+  states:
+    coordinate: [208, 92.0]
+    rotation: 0
+    state: enabled
+- name: digital_crc32_async_bb_1
+  id: digital_crc32_async_bb
+  parameters:
+    affinity: ''
+    alias: ''
+    check: 'False'
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    coordinate: [432, 116.0]
+    rotation: 0
+    state: enabled
+- name: fec_async_encoder_0
+  id: fec_async_encoder
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    encoder: enc
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    mtu: '1500'
+    packed: 'True'
+    rev_pack: 'False'
+    rev_unpack: 'False'
+  states:
+    coordinate: [648, 172.0]
+    rotation: 0
+    state: enabled
+
+connections:
+- [blocks_message_strobe_0, strobe, pdu_random_pdu_0, generate]
+- [pdu_random_pdu_0, pdus, digital_crc32_async_bb_1, in]
+- [digital_crc32_async_bb_1, out, blocks_message_debug_0, print_pdu]
+- [digital_crc32_async_bb_1, out, fec_async_encoder_0, in]
+- [fec_async_encoder_0, out, blocks_message_debug_0, print_pdu]
+
+metadata:
+  file_format: 1

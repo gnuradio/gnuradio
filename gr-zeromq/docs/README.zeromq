@@ -1,0 +1,12 @@
+This is the gr-zeromq package. It contains all of the zeromq blocks,
+utilities, and examples. To use the zeromq blocks, the Python
+namespace is in gnuradio.zeromq, which would be normally imported as:
+
+    from gnuradio import zeromq
+
+See the Doxygen documentation for details about the blocks available
+in this package. A quick listing of the details can be found in Python
+after importing by using:
+
+    help(zeromq)
+

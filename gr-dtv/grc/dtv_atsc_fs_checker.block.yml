@@ -1,0 +1,30 @@
+id: dtv_atsc_fs_checker
+label: ATSC Field Sync Checker
+flags: [ python, cpp ]
+
+inputs:
+-   domain: stream
+    dtype: float
+    vlen: 832
+
+outputs:
+-   domain: stream
+    dtype: float
+    vlen: 832
+
+-   domain: stream
+    label: plinfo
+    dtype: short
+    vlen: 2
+
+templates:
+    imports: from gnuradio import dtv
+    make: dtv.atsc_fs_checker()
+
+cpp_templates:
+    includes: ['#include <gnuradio/dtv/atsc_fs_checker.h>']
+    declarations: 'dtv::atsc_fs_checker::sptr ${id};'
+    make: 'this->${id} = dtv::atsc_fs_checker::make();'
+    link: ['gnuradio::gnuradio-dtv']
+
+file_format: 1

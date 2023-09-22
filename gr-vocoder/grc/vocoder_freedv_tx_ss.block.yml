@@ -1,0 +1,64 @@
+id: vocoder_freedv_tx_ss
+label: FreeDV modulator
+
+parameters:
+-   id: mode
+    label: Operating Mode
+    dtype: enum
+    default: freedv_api.MODE_1600
+    options: [freedv_api.MODE_1600, freedv_api.MODE_700, freedv_api.MODE_700B,
+             freedv_api.MODE_2400A, freedv_api.MODE_2400B, freedv_api.MODE_800XA,
+             freedv_api.MODE_700C, freedv_api.MODE_700D, freedv_api.MODE_700E,
+             freedv_api.MODE_2020, freedv_api.MODE_2020B, freedv_api.MODE_FSK_LDPC,
+             freedv_api.MODE_DATAC1, freedv_api.MODE_DATAC3,
+             freedv_api.MODE_DATAC0]
+    option_labels: [1600, 700, 700B, 2400A, 2400B, 800XA, 700C, 700D, 700E,
+                   2020, 2020B, FSK_LDPC, DATAC1, DATAC3, DATAC0]
+    option_attributes:
+      cpp_options: [vocoder::freedv_api::MODE_1600, vocoder::freedv_api::MODE_700,
+        vocoder::freedv_api::MODE_700B, vocoder::freedv_api::MODE_2400A,
+        vocoder::freedv_api::MODE_2400B, vocoder::freedv_api::MODE_800XA,
+        vocoder::freedv_api::MODE_700C, vocoder::freedv_api::MODE_700D,
+        vocoder::freedv_api::MODE_700E, vocoder::freedv_api::MODE_2020,
+        vocoder::freedv_api::MODE_2020B, vocoder::freedv_api::MODE_FSK_LDPC,
+        vocoder::freedv_api::MODE_DATAC1, vocoder::freedv_api::MODE_DATAC3,
+        vocoder::freedv_api::MODE_DATAC0]
+-   id: txt_msg
+    label: Text Message
+    dtype: string
+    default: '''GNU Radio'''
+-   id: interleave_frames
+    label: Interleave Frames
+    dtype: int
+    default: 1
+-   id: clip_val
+    label: Clip
+    dtype: bool
+    default: False
+-   id: tx_bpf_val
+    label: Tx BPF
+    dtype: bool
+    default: True
+
+inputs:
+-   domain: stream
+    dtype: short
+
+outputs:
+-   domain: stream
+    dtype: short
+
+templates:
+    imports: |-
+        from gnuradio import vocoder
+        from gnuradio.vocoder import freedv_api
+    make: vocoder.freedv_tx_ss(${mode},${txt_msg},${interleave_frames})
+
+documentation: |-
+    Not all modes may be supported by the underlying codec2 library.
+    interleave_frames is an integer between 1 and 32, and is only used in the 700D mode.
+    (must be set the same on both transmitter and receiver)
+    Clip reduces the Peak/Average Power Ratio from 12dB to 8dB by clipping.
+    Tx BPF: enable a bandpass filter
+
+file_format: 1

@@ -1,0 +1,45 @@
+id: dtv_dvbt_convolutional_interleaver
+label: Convolutional Interleaver
+flags: [ python, cpp ]
+
+parameters:
+-   id: blocks
+    label: Blocks (12 Bytes)
+    dtype: int
+    default: '136'
+-   id: I
+    label: Number of Shift registers
+    dtype: int
+    default: '12'
+-   id: M
+    label: Depth of shift registers
+    dtype: int
+    default: '17'
+
+inputs:
+-   domain: stream
+    dtype: byte
+    vlen: ${ blocks*I }
+
+outputs:
+-   domain: stream
+    dtype: byte
+    vlen: 1
+
+asserts:
+- ${ blocks > 0 }
+- ${ I > 0 }
+- ${ M > 0 }
+
+templates:
+    imports: from gnuradio import dtv
+    make: dtv.dvbt_convolutional_interleaver(${blocks}, ${I}, ${M})
+
+cpp_templates:
+    includes: ['#include <gnuradio/dtv/dvbt_convolutional_interleaver.h>']
+    declarations: 'dtv::dvbt_convolutional_interleaver::sptr ${id};'
+    make: |-
+        this->${id} = dtv::dvbt_convolutional_interleaver::make(${blocks}, ${I}, ${M});
+    link: ['gnuradio::gnuradio-dtv']
+
+file_format: 1

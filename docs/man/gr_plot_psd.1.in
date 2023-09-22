@@ -1,0 +1,49 @@
+.TH GR_PLOT_PSD "1" "@BUILD_DATE_SHORT@" "gr_plot_psd @VERSION@" "User Commands"
+.SH NAME
+gr_plot_psd \- GNU Radio power spectrum plotting
+.SH SYNOPSIS
+.B gr_plot_psd:
+[\fIoptions\fR] \fIinput_filename\fR
+.SH DESCRIPTION
+Takes a GNU Radio binary file (with specified data type using \fB\-\-data\-type\fR) and
+displays the I&Q data versus time as well as the power spectral density (PSD)
+plot. The y\-axis values are plotted assuming volts as the amplitude of the I&Q
+streams and converted into dBm in the frequency domain (the 1/N power
+adjustment out of the FFT is performed internally). The script plots a certain
+block of data at a time, specified on the command line as \fB\-B\fR or \fB\-\-block\fR. The
+start position in the file can be set by specifying \fB\-s\fR or \fB\-\-start\fR and defaults
+to 0 (the start of the file). By default, the system assumes a sample rate of
+1, so in time, each sample is plotted versus the sample number. To set a true
+time and frequency axis, set the sample rate (\fB\-R\fR or \fB\-\-sample\-rate\fR) to the
+sample rate used when capturing the samples. Finally, the size of the FFT to
+use for the PSD and spectrogram plots can be set independently with \fB\-\-psd\-size\fR
+and \fB\-\-spec\-size\fR, respectively. The spectrogram plot does not display by
+default and is turned on with \fB\-S\fR or \fB\-\-enable\-spec\fR.
+.SH OPTIONS
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+show this help message and exit
+.TP
+\fB\-d\fR DATA_TYPE, \fB\-\-data\-type\fR=\fIDATA_TYPE\fR
+Specify the data type (complex64, float32, (u)int32,
+(u)int16, (u)int8) [default=complex64]
+.TP
+\fB\-B\fR BLOCK, \fB\-\-block\fR=\fIBLOCK\fR
+Specify the block size [default=8192]
+.TP
+\fB\-s\fR START, \fB\-\-start\fR=\fISTART\fR
+Specify where to start in the file [default=0]
+.TP
+\fB\-R\fR SAMPLE_RATE, \fB\-\-sample\-rate\fR=\fISAMPLE_RATE\fR
+Set the sampler rate of the data [default=1.0]
+.TP
+\fB\-\-psd\-size\fR=\fIPSD_SIZE\fR
+Set the size of the PSD FFT [default=1024]
+.TP
+\fB\-\-spec\-size\fR=\fISPEC_SIZE\fR
+Set the size of the spectrogram FFT [default=256]
+.TP
+\fB\-S\fR, \fB\-\-enable\-spec\fR
+Turn on plotting the spectrogram [default=False]
+.SH "SEE ALSO"
+gr_plot_psd_c(1) gr_plot_psd_f(1)

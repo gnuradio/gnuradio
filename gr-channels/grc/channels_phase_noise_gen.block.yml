@@ -1,0 +1,29 @@
+id: channels_phase_noise_gen
+label: Phase Noise Generator
+
+parameters:
+-   id: noise_mag
+    label: Noise Magnitude
+    dtype: float
+    default: '0'
+-   id: alpha
+    label: Alpha
+    dtype: float
+    default: '0.1'
+
+inputs:
+-   domain: stream
+    dtype: complex
+
+outputs:
+-   domain: stream
+    dtype: complex
+
+templates:
+    imports: from gnuradio import channels
+    make: channels.phase_noise_gen(${noise_mag}, ${alpha})
+    callbacks:
+    - set_noise_mag(${noise_mag})
+    - set_alpha(${alpha})
+
+file_format: 1

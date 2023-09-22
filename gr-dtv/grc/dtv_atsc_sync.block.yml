@@ -1,0 +1,29 @@
+id: dtv_atsc_sync
+label: ATSC Receiver SYNC
+flags: [ python, cpp ]
+
+parameters:
+-   id: rate
+    label: Sample Rate
+    dtype: float
+
+inputs:
+-   domain: stream
+    dtype: float
+
+outputs:
+-   domain: stream
+    dtype: float
+    vlen: 832
+
+templates:
+    imports: from gnuradio import dtv
+    make: dtv.atsc_sync(${rate})
+
+cpp_templates:
+    includes: ['#include <gnuradio/dtv/atsc_sync.h>']
+    declarations: 'dtv::atsc_sync::sptr ${id};'
+    make: 'this->{id} = dtv::atsc_sync::make(${rate});'
+    link: ['gnuradio::gnuradio-dtv']
+
+file_format: 1

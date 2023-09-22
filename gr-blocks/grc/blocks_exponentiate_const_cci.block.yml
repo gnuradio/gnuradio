@@ -1,0 +1,52 @@
+id: blocks_exponentiate_const_cci
+label: Exponentiate Const Int
+flags: [ python, cpp ]
+
+parameters:
+-   id: num_ports
+    label: Num Ports
+    dtype: int
+    default: '1'
+    hide: part
+-   id: vlen
+    label: Vector Length
+    dtype: int
+    default: '1'
+    hide: ${ 'part' if vlen == 1 else 'none' }
+-   id: exponent
+    label: Exponent
+    dtype: int
+    default: '1'
+
+inputs:
+-   domain: stream
+    dtype: complex
+    vlen: ${ vlen }
+    multiplicity: ${ num_ports }
+
+outputs:
+-   domain: stream
+    dtype: complex
+    vlen: ${ vlen }
+    multiplicity: ${ num_ports }
+
+asserts:
+- ${ num_ports > 0 }
+- ${ vlen > 0 }
+- ${ exponent > 0 }
+
+templates:
+    imports: from gnuradio import blocks
+    make: blocks.exponentiate_const_cci(${exponent}, ${vlen})
+    callbacks:
+    - set_exponent(int(${exponent}))
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/exponentiate_const_cci.h>']
+    declarations: 'blocks::exponentiate_const_cci::sptr ${id};'
+    make: 'this->${id} = blocks::exponentiate_const_cci::make(${exponent}, ${vlen});'
+    callbacks:
+    - set_exponent(${exponent})
+
+
+file_format: 1

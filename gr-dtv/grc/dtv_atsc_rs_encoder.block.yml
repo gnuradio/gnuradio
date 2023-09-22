@@ -1,0 +1,25 @@
+id: dtv_atsc_rs_encoder
+label: ATSC RS Encoder
+flags: [ python, cpp ]
+
+inputs:
+-   domain: stream
+    dtype: byte
+    vlen: 256
+
+outputs:
+-   domain: stream
+    dtype: byte
+    vlen: 256
+
+templates:
+    imports: from gnuradio import dtv
+    make: dtv.atsc_rs_encoder()
+
+cpp_templates:
+    includes: ['#include <gnuradio/dtv/atsc_rs_encoder.h>']
+    declarations: 'dtv::atsc_rs_encoder::sptr ${id};'
+    make: 'this->${id} = dtv::atsc_rs_encoder::make();'
+    link: ['gnuradio::gnuradio-dtv']
+
+file_format: 1

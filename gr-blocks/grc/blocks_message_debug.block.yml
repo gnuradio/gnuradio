@@ -1,0 +1,45 @@
+id: blocks_message_debug
+label: Message Debug
+flags: [ python, cpp ]
+
+parameters:
+-   id: en_uvec
+    label: Print PDU contents
+    dtype: enum
+    default: 'True'
+    options: ['True', 'False']
+    option_labels: ['On', 'Off']
+-   id: log_level
+    label: Log level
+    dtype: enum
+    default: 'info'
+    options: ['trace', 'debug', 'info', 'warn', 'err', 'critical']
+    option_labels: ['🔬 Trace', '🔎 Debug', '🛈 Info (default)', '⚠ Warning', '💥 Error', '☠ Critical']
+
+inputs:
+-   domain: message
+    id: 'log'
+    optional: true
+-   domain: message
+    id: print
+    optional: true
+-   domain: message
+    id: store
+    optional: true
+-   domain: message
+    id: print_pdu
+    optional: true
+
+templates:
+    imports: from gnuradio import blocks, gr
+    make: blocks.message_debug(${en_uvec}, gr.log_levels.${log_level})
+    callbacks:
+    - set_vector_print(${en_uvec})
+    - level(gr.log_levels.${log_level})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/message_debug.h>']
+    declarations: 'blocks::message_debug::sptr ${id};'
+    make: 'this->${id} = blocks::message_debug::make(${en_uvec}, spdlog::level::${log_level});'
+
+file_format: 1

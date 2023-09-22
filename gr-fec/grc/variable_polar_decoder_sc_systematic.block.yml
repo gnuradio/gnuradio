@@ -1,0 +1,47 @@
+id: variable_polar_decoder_sc_systematic_def
+label: systematic POLAR Decoder SC Definition
+flags: [ show_id ]
+
+parameters:
+-   id: ndim
+    label: Parallelism
+    dtype: enum
+    default: '0'
+    options: ['0', '1', '2']
+-   id: dim1
+    label: Dimension 1
+    dtype: int
+    default: '1'
+    hide: ${ ('none' if (int(ndim) >= 1) else 'all') }
+-   id: dim2
+    label: Dimension 2
+    dtype: int
+    default: '4'
+    hide: ${ ('none' if (int(ndim) >= 2) else 'all') }
+-   id: block_size
+    label: Block size (N)
+    dtype: int
+-   id: num_info_bits
+    label: '#Info Bits (K)'
+    dtype: int
+-   id: frozen_bit_positions
+    label: Frozen Bit Positions
+    dtype: int_vector
+value: ${ fec.polar_decoder_sc_systematic.make(block_size, num_info_bits, frozen_bit_positions)
+    }
+
+templates:
+    imports: from gnuradio import fec
+    var_make: |-
+        % if int(ndim)==0:
+        self.${id} = ${id} = fec.polar_decoder_sc_systematic.make(${block_size},\
+        ${num_info_bits}, ${frozen_bit_positions})
+        % elif int(ndim)==1:
+        self.${id} = ${id} = list(map((lambda a: fec.polar_decoder_sc_systematic.make(${block_size},\
+        \ ${num_info_bits}, ${frozen_bit_positions})), range(0, ${dim1}) ))
+        % else:
+        self.${id} = ${id} = list(map((lambda b: list(map((lambda a: fec.polar_decoder_sc_systematic.make(${block_size},\
+        \ ${num_info_bits}, ${frozen_bit_positions})), range(0, ${dim2})))), range(0, ${dim1})))
+        % endif
+
+file_format: 1

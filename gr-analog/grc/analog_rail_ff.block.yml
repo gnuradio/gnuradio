@@ -1,0 +1,36 @@
+id: analog_rail_ff
+label: Rail
+flags: [ python, cpp ]
+
+parameters:
+-   id: lo
+    label: Low clipping
+    dtype: real
+-   id: hi
+    label: Hi clipping
+    dtype: real
+
+inputs:
+-   domain: stream
+    dtype: float
+
+outputs:
+-   domain: stream
+    dtype: float
+
+templates:
+    imports: from gnuradio import analog
+    make: analog.rail_ff(${lo}, ${hi})
+    callbacks:
+    - set_lo(${lo})
+    - set_hi(${hi})
+
+cpp_templates:
+    includes: ['#include <gnuradio/analog/rail_ff.h>']
+    make: 'this->${id} = analog::rail_ff::make(${lo}, ${hi});'
+    callbacks:
+    - set_lo(${lo})
+    - set_hi(${hi})
+    link: ['gnuradio::gnuradio-analog']
+
+file_format: 1

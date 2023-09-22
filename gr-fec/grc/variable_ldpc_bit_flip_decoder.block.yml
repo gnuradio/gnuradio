@@ -1,0 +1,59 @@
+id: variable_ldpc_bit_flip_decoder_def
+label: LDPC Bit Flip Decoder Definition
+flags: [ show_id ]
+
+parameters:
+-   id: value
+    label: Ignore Me
+    dtype: raw
+    default: '"ok"'
+    hide: all
+-   id: ndim
+    label: Parallelism
+    dtype: enum
+    options: ['0', '1', '2']
+-   id: dim1
+    label: Dimension 1
+    dtype: int
+    default: '1'
+    hide: ${ ('none' if (int(ndim) >= 1) else 'all') }
+-   id: dim2
+    label: Dimension 2
+    dtype: int
+    default: '1'
+    hide: ${ ('none' if (int(ndim) >= 2) else 'all') }
+-   id: max_iterations
+    label: Max Iterations
+    dtype: int
+    default: '100'
+-   id: matrix_object
+    label: LDPC FEC Matrix ID
+    dtype: raw
+value: ${ value }
+
+templates:
+    imports: from gnuradio import fec
+    var_make: |-
+        % if int(ndim)==0:
+        self.${id} = ${id} = fec.ldpc_bit_flip_decoder.make(${matrix_object}.get_base_sptr(),\
+        ${max_iterations})
+        % elif int(ndim)==1:
+        self.${id} = ${id} = list(map((lambda \
+        a: fec.ldpc_bit_flip_decoder.make(${matrix_object}.get_base_sptr(), ${max_iterations})),\
+        range(0,${dim1})))
+        % else:
+        self.${id} = ${id} = list(map((lambda b: list(map((lambda \
+        a: fec.ldpc_bit_flip_decoder.make(${matrix_object}.get_base_sptr(), ${max_iterations})),\
+        range(0,${dim2})))), range(0,${dim1})))
+        % endif
+
+documentation: |-
+    This block creates a LDPC Bit Flip Decoder Definition variable.
+
+    The decoder requires knowledge of the matrix used to create (encode) the codewords. In the LDPC FEC Matrix ID field, input the ID of either a:
+      1) LDPC Generator Matrix variable, or
+      2) LDPC Parity Check Matrix variable
+
+    Max iterations may be increased from 100 for possibly better performance, but significantly higher number of iterations may slow things down.
+
+file_format: 1

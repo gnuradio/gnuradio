@@ -1,0 +1,41 @@
+id: blocks_vector_sink_x
+label: Vector Sink
+flags: [ python, cpp ]
+
+parameters:
+-   id: type
+    label: Input Type
+    dtype: enum
+    options: [complex, float, int, short, byte]
+    option_attributes:
+        fcn: [c, f, i, s, b]
+    hide: part
+-   id: vlen
+    label: Vector Length
+    dtype: int
+    default: '1'
+    hide: ${ 'part' if vlen == 1 else 'none' }
+-   id: reserve_items
+    label: Reserve memory for items
+    default: '1024'
+    dtype: int
+    hide: part
+
+inputs:
+-   domain: stream
+    dtype: ${ type }
+    vlen: ${ vlen }
+
+asserts:
+- ${ vlen > 0 }
+
+templates:
+    imports: from gnuradio import blocks
+    make: blocks.vector_sink_${type.fcn}(${vlen}, ${reserve_items})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/vector_sink.h>']
+    declarations: 'blocks::vector_sink_${type.fcn}::sptr ${id};'
+    make: 'this->${id} = blocks::vector_sink_${type.fcn}::make(${vlen}, ${reserve_items});'
+
+file_format: 1

@@ -1,0 +1,39 @@
+id: blocks_float_to_int
+label: Float To Int
+flags: [ python, cpp ]
+
+parameters:
+-   id: vlen
+    label: Vector Length
+    dtype: int
+    default: '1'
+    hide: ${ 'part' if vlen == 1 else 'none' }
+-   id: scale
+    label: Scale
+    dtype: real
+    default: '1'
+
+inputs:
+-   domain: stream
+    dtype: float
+    vlen: ${ vlen }
+
+outputs:
+-   domain: stream
+    dtype: int
+    vlen: ${ vlen }
+
+templates:
+    imports: from gnuradio import blocks
+    make: blocks.float_to_int(${vlen}, ${scale})
+    callbacks:
+    - set_scale(${scale})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/float_to_int.h>']
+    declarations: 'blocks::float_to_int::sptr ${id};'
+    make: 'this->${id} = blocks::float_to_int::make(${vlen}, ${scale});'
+    callbacks:
+    - set_scale(${scale})
+
+file_format: 1

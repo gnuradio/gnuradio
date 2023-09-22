@@ -1,0 +1,514 @@
+<ui version="4.0" >
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>927</width>
+    <height>718</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget" >
+   <layout class="QGridLayout" name="gridLayout" >
+    <item row="1" column="0" colspan="3" >
+     <widget class="QScrollBar" name="plotHBar" >
+      <property name="orientation" >
+       <enum>Qt::Horizontal</enum>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="0" >
+     <widget class="QGroupBox" name="filePosBox" >
+      <property name="minimumSize" >
+       <size>
+        <width>0</width>
+        <height>120</height>
+       </size>
+      </property>
+      <property name="title" >
+       <string>File Position</string>
+      </property>
+      <layout class="QGridLayout" name="gridLayout_4" >
+       <item row="0" column="0" >
+        <layout class="QFormLayout" name="filePosLayout" >
+         <item row="0" column="1" >
+          <widget class="QLineEdit" name="filePosStartLineEdit" >
+           <property name="minimumSize" >
+            <size>
+             <width>50</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="maximumSize" >
+            <size>
+             <width>100</width>
+             <height>16777215</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0" >
+          <widget class="QLabel" name="filePosStopLabel" >
+           <property name="text" >
+            <string>Stop</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1" >
+          <widget class="QLineEdit" name="filePosStopLineEdit" >
+           <property name="minimumSize" >
+            <size>
+             <width>50</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="maximumSize" >
+            <size>
+             <width>100</width>
+             <height>16777215</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0" >
+          <widget class="QLabel" name="filePosLengthLabel" >
+           <property name="text" >
+            <string>Length</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1" >
+          <widget class="QLineEdit" name="filePosLengthLineEdit" >
+           <property name="minimumSize" >
+            <size>
+             <width>50</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="maximumSize" >
+            <size>
+             <width>100</width>
+             <height>16777215</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="0" >
+          <widget class="QLabel" name="filePosStartLabel" >
+           <property name="text" >
+            <string>Start</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item row="0" column="1" >
+        <layout class="QFormLayout" name="fileTimeLayout" >
+         <item row="0" column="0" >
+          <widget class="QLabel" name="fileTimeStartLabel" >
+           <property name="text" >
+            <string>time start (sec)</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1" >
+          <widget class="QLineEdit" name="fileTimeStartLineEdit" >
+           <property name="minimumSize" >
+            <size>
+             <width>50</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="maximumSize" >
+            <size>
+             <width>100</width>
+             <height>16777215</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0" >
+          <widget class="QLabel" name="fileTimeStopLabel" >
+           <property name="text" >
+            <string>time stop (sec)</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1" >
+          <widget class="QLineEdit" name="fileTimeStopLineEdit" >
+           <property name="minimumSize" >
+            <size>
+             <width>50</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="maximumSize" >
+            <size>
+             <width>100</width>
+             <height>16777215</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0" >
+          <widget class="QLabel" name="fileTimeLengthLabel" >
+           <property name="text" >
+            <string>time length (sec)</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1" >
+          <widget class="QLineEdit" name="fileTimeLengthLineEdit" >
+           <property name="minimumSize" >
+            <size>
+             <width>50</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="maximumSize" >
+            <size>
+             <width>100</width>
+             <height>16777215</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item row="2" column="2" >
+     <widget class="QGroupBox" name="displayGroupBox" >
+      <property name="minimumSize" >
+       <size>
+        <width>170</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="title" >
+       <string>Display Properties</string>
+      </property>
+      <layout class="QGridLayout" name="gridLayout_2" >
+       <item row="0" column="0" colspan="2" >
+        <widget class="QComboBox" name="colorComboBox" />
+       </item>
+       <item row="1" column="1" >
+        <widget class="QSpinBox" name="lineWidthSpinBox" >
+         <property name="minimumSize" >
+          <size>
+           <width>100</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="maximumSize" >
+          <size>
+           <width>100</width>
+           <height>16777215</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0" >
+        <widget class="QLabel" name="lineWidthLabel" >
+         <property name="text" >
+          <string>Line Width</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0" >
+        <widget class="QLabel" name="lineStyleLabel" >
+         <property name="text" >
+          <string>Line Style</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1" >
+        <widget class="QComboBox" name="lineStyleComboBox" >
+         <property name="minimumSize" >
+          <size>
+           <width>100</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="maximumSize" >
+          <size>
+           <width>100</width>
+           <height>16777215</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="0" >
+        <widget class="QLabel" name="styleSizeLabel" >
+         <property name="text" >
+          <string>Style Size</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1" >
+        <widget class="QSpinBox" name="styleSizeSpinBox" >
+         <property name="minimumSize" >
+          <size>
+           <width>100</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="maximumSize" >
+          <size>
+           <width>100</width>
+           <height>16777215</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item row="2" column="1" >
+     <widget class="QGroupBox" name="sysGroupBox" >
+      <property name="minimumSize" >
+       <size>
+        <width>200</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="title" >
+       <string>System Properties</string>
+      </property>
+      <layout class="QFormLayout" name="formLayout" >
+       <property name="fieldGrowthPolicy" >
+        <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+       </property>
+       <item row="0" column="0" >
+        <widget class="QLabel" name="sampleRateLabel" >
+         <property name="text" >
+          <string>Sample Rate</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1" >
+        <widget class="QLineEdit" name="sampleRateLineEdit" >
+         <property name="minimumSize" >
+          <size>
+           <width>50</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="maximumSize" >
+          <size>
+           <width>100</width>
+           <height>16777215</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item row="0" column="0" colspan="3" >
+     <widget class="QFrame" name="frame" >
+      <property name="frameShape" >
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <property name="frameShadow" >
+       <enum>QFrame::Raised</enum>
+      </property>
+      <layout class="QGridLayout" name="gridLayout_3" >
+       <item row="0" column="0" >
+        <widget class="QTabWidget" name="tabGroup" >
+         <property name="minimumSize" >
+          <size>
+           <width>0</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="currentIndex" >
+          <number>0</number>
+         </property>
+         <widget class="QWidget" name="timeTab" >
+          <attribute name="title" >
+           <string>Time Domain</string>
+          </attribute>
+          <layout class="QHBoxLayout" name="horizontalLayout" >
+           <item>
+            <widget class="QwtPlot" name="timePlot" />
+           </item>
+          </layout>
+          <zorder>timePlot</zorder>
+         </widget>
+         <widget class="QWidget" name="freqTab" >
+          <attribute name="title" >
+           <string>Frequency Domain</string>
+          </attribute>
+          <layout class="QHBoxLayout" name="horizontalLayout_2" >
+           <item>
+            <widget class="QGroupBox" name="fftPropBox" >
+             <property name="minimumSize" >
+              <size>
+               <width>160</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="title" >
+              <string>FFT Properties</string>
+             </property>
+             <layout class="QFormLayout" name="formLayout_4" >
+              <property name="fieldGrowthPolicy" >
+               <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+              </property>
+              <item row="0" column="0" >
+               <widget class="QLabel" name="psdFFTSizeLabel" >
+                <property name="text" >
+                 <string>FFT Size</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1" >
+               <widget class="QComboBox" name="psdFFTComboBox" >
+                <property name="minimumSize" >
+                 <size>
+                  <width>96</width>
+                  <height>0</height>
+                 </size>
+                </property>
+                <property name="maximumSize" >
+                 <size>
+                  <width>96</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
+             </layout>
+             <zorder>psdFFTSizeLabel</zorder>
+             <zorder>psdFFTComboBox</zorder>
+            </widget>
+           </item>
+           <item>
+            <widget class="QwtPlot" name="freqPlot" />
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="specTab" >
+          <attribute name="title" >
+           <string>Spectrogram</string>
+          </attribute>
+          <layout class="QHBoxLayout" name="horizontalLayout_3" >
+           <item>
+            <widget class="QGroupBox" name="groupBox" >
+             <property name="title" >
+              <string>Spectrogram Properties</string>
+             </property>
+             <layout class="QFormLayout" name="formLayout_3" >
+              <item row="1" column="0" >
+               <widget class="QLabel" name="specFFTLabel" >
+                <property name="text" >
+                 <string>FFT Size</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1" >
+               <widget class="QComboBox" name="specFFTComboBox" >
+                <property name="minimumSize" >
+                 <size>
+                  <width>96</width>
+                  <height>0</height>
+                 </size>
+                </property>
+                <property name="maximumSize" >
+                 <size>
+                  <width>96</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <widget class="QwtPlot" name="specPlot" />
+           </item>
+          </layout>
+          <zorder>specPlot</zorder>
+          <zorder>groupBox</zorder>
+         </widget>
+        </widget>
+       </item>
+      </layout>
+      <zorder>tabGroup</zorder>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar" >
+   <property name="geometry" >
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>927</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menu_File" >
+    <property name="title" >
+     <string>&amp;File</string>
+    </property>
+    <addaction name="action_open" />
+    <addaction name="action_reload" />
+    <addaction name="action_exit" />
+   </widget>
+   <addaction name="menu_File" />
+  </widget>
+  <widget class="QStatusBar" name="statusbar" />
+  <action name="action_open" >
+   <property name="text" >
+    <string>&amp;Open</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="action_exit" >
+   <property name="text" >
+    <string>E&amp;xit</string>
+   </property>
+  </action>
+  <action name="action_reload" >
+   <property name="text" >
+    <string>&amp;Reload</string>
+   </property>
+  </action>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QwtPlot</class>
+   <extends>QFrame</extends>
+   <header>qwt_plot.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>action_exit</sender>
+   <signal>activated()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>399</x>
+     <y>347</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

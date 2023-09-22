@@ -1,0 +1,43 @@
+id: fec_async_decoder
+label: FEC Async Decoder
+
+parameters:
+-   id: decoder
+    label: Decoder Obj.
+    dtype: raw
+-   id: mtu
+    label: MTU (bytes)
+    dtype: int
+    default: '1500'
+-   id: packed
+    label: Packed
+    dtype: enum
+    default: 'False'
+    options: ['False', 'True']
+    option_labels: ['No', 'Yes']
+    hide: part
+-   id: rev_pack
+    label: Rev. Packing
+    dtype: enum
+    default: 'True'
+    options: ['True', 'False']
+    option_labels: ['Yes', 'No']
+    hide: ${ ('part' if packed == 'True' else 'all') }
+
+inputs:
+-   domain: message
+    id: in
+    optional: true
+
+outputs:
+-   domain: message
+    id: out
+    optional: true
+
+templates:
+    imports: from gnuradio import fec
+    make: fec.async_decoder(${decoder}, ${packed}, ${rev_pack}, ${mtu})
+
+documentation: ""
+
+file_format: 1

@@ -1,0 +1,22 @@
+id: blocks_uchar_to_float
+label: UChar To Float
+flags: [ python, cpp ]
+
+inputs:
+-   domain: stream
+    dtype: byte
+
+outputs:
+-   domain: stream
+    dtype: float
+
+templates:
+    imports: from gnuradio import blocks
+    make: blocks.uchar_to_float()
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/uchar_to_float.h>']
+    declarations: 'blocks::uchar_to_float::sptr ${id};'
+    make: 'this->${id} = blocks::uchar_to_float::make();'
+
+file_format: 1

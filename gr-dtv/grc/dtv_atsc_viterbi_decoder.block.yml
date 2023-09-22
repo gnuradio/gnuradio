@@ -1,0 +1,33 @@
+id: dtv_atsc_viterbi_decoder
+label: ATSC Viterbi Decoder
+flags: [ python, cpp ]
+
+inputs:
+-   domain: stream
+    dtype: float 
+    vlen: 832
+-   domain: stream
+    label: plinfo
+    dtype: short
+    vlen: 2    
+
+outputs:
+-   domain: stream
+    dtype: byte
+    vlen: 207
+-   domain: stream
+    label: plinfo
+    dtype: short
+    vlen: 2    
+
+templates:
+    imports: from gnuradio import dtv
+    make: dtv.atsc_viterbi_decoder()
+
+cpp_templates:
+    includes: ['#include <gnuradio/dtv/atsc_viterbi_decoder.h>']
+    declarations: 'dtv::atsc_viterbi_decoder::sptr ${id};'
+    make: 'this->${id} = dtv::atsc_viterbi_decoder::make();'
+    link: ['gnuradio::gnuradio-dtv']
+
+file_format: 1

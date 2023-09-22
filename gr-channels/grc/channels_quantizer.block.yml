@@ -1,0 +1,24 @@
+id: channels_quantizer
+label: Quantizer
+
+parameters:
+-   id: bits
+    label: Bits
+    dtype: int
+    default: '16'
+
+inputs:
+-   domain: stream
+    dtype: float
+
+outputs:
+-   domain: stream
+    dtype: float
+
+templates:
+    imports: from gnuradio import channels
+    make: channels.quantizer(${bits})
+    callbacks:
+    - set_bits(${bits})
+
+file_format: 1

@@ -1,0 +1,10 @@
+migrator_ts: 1653771978
+__migrator:
+  kind: version
+  migration_number: 1
+  bump_number: 1
+
+qt:
+  - 5.15
+qt_main:
+  - 5.15

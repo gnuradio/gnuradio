@@ -1,0 +1,15 @@
+.TH GR_READ_FILE_METADATA "1" "@BUILD_DATE_SHORT@" "gr_read_file_metadata @VERSION@" "User Commands"
+.SH NAME
+gr_read_file_metadata \- a Gnu Radio Utility
+.SH DESCRIPTION
+Read in a GNU Radio file with meta data, extracts the header and prints it.
+.PP
+Metadata file source and sink blocks (Tom Rondeau)
+.PP
+Two new blocks implement enhanced file source and sink blocks that
+incorporate metadata passed using the stream tags feature in GNU
+Radio. It is now possible to store things like frequency and
+sample rate into capture files, or whatever key/value pairs you
+tag onto data streams inside a flowgraph.
+.SH "SEE ALSO"
+http://www.trondeau.com/home/2012/12/15/metadata-file-format.html

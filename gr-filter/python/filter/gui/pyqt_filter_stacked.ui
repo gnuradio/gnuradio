@@ -1,0 +1,2613 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1141</width>
+    <height>590</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>GNU Radio Filter Design Tool</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="1">
+     <widget class="QStackedWidget" name="stackedWindows">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="QWidget" name="classic">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <item>
+         <widget class="QSplitter" name="splitter">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>1</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>600</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <widget class="QTabWidget" name="tabGroup">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+             <horstretch>0</horstretch>
+             <verstretch>1</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="currentIndex">
+            <number>0</number>
+           </property>
+           <property name="tabsClosable">
+            <bool>false</bool>
+           </property>
+           <property name="movable">
+            <bool>false</bool>
+           </property>
+           <widget class="QWidget" name="freqTab">
+            <attribute name="title">
+             <string>Magnitude Response</string>
+            </attribute>
+            <layout class="QHBoxLayout" name="horizontalLayout_9">
+             <item>
+              <widget class="GrFilterPlotWidget" name="freqPlot"/>
+             </item>
+            </layout>
+           </widget>
+           <widget class="QWidget" name="timeTab">
+            <attribute name="title">
+             <string>Filter Taps</string>
+            </attribute>
+            <layout class="QHBoxLayout" name="horizontalLayout_10">
+             <item>
+              <widget class="GrFilterPlotWidget" name="timePlot"/>
+             </item>
+            </layout>
+           </widget>
+           <widget class="QWidget" name="phaseTab">
+            <attribute name="title">
+             <string>Phase Response</string>
+            </attribute>
+            <layout class="QHBoxLayout" name="horizontalLayout_11">
+             <item>
+              <widget class="GrFilterPlotWidget" name="phasePlot"/>
+             </item>
+            </layout>
+           </widget>
+           <widget class="QWidget" name="groupTab">
+            <attribute name="title">
+             <string>Group Delay</string>
+            </attribute>
+            <layout class="QHBoxLayout" name="horizontalLayout_12">
+             <item>
+              <widget class="GrFilterPlotWidget" name="groupPlot"/>
+             </item>
+            </layout>
+           </widget>
+           <widget class="QWidget" name="fcTab">
+            <attribute name="title">
+             <string>Filter Coefficients</string>
+            </attribute>
+            <layout class="QHBoxLayout" name="horizontalLayout_7">
+             <item>
+              <widget class="QTextBrowser" name="filterCoeff"/>
+             </item>
+            </layout>
+           </widget>
+           <widget class="QWidget" name="impresTab">
+            <attribute name="title">
+             <string>Impulse Response</string>
+            </attribute>
+            <layout class="QHBoxLayout" name="horizontalLayout_6">
+             <item>
+              <widget class="GrFilterPlotWidget" name="impresPlot"/>
+             </item>
+            </layout>
+           </widget>
+           <widget class="QWidget" name="stepresTab">
+            <attribute name="title">
+             <string>Step Response</string>
+            </attribute>
+            <layout class="QHBoxLayout" name="horizontalLayout_8">
+             <item>
+              <widget class="GrFilterPlotWidget" name="stepresPlot"/>
+             </item>
+            </layout>
+           </widget>
+           <widget class="QWidget" name="pdelayTab">
+            <attribute name="title">
+             <string>Phase Delay</string>
+            </attribute>
+            <layout class="QHBoxLayout" name="horizontalLayout_17">
+             <item>
+              <widget class="GrFilterPlotWidget" name="pdelayPlot"/>
+             </item>
+            </layout>
+           </widget>
+          </widget>
+          <widget class="QTabWidget" name="filterspecView">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>613</width>
+             <height>250</height>
+            </size>
+           </property>
+           <property name="baseSize">
+            <size>
+             <width>0</width>
+             <height>100</height>
+            </size>
+           </property>
+           <property name="currentIndex">
+            <number>1</number>
+           </property>
+           <property name="documentMode">
+            <bool>false</bool>
+           </property>
+           <property name="tabsClosable">
+            <bool>false</bool>
+           </property>
+           <widget class="QWidget" name="bandDiagram">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <attribute name="title">
+             <string>Band Diagram</string>
+            </attribute>
+            <layout class="QHBoxLayout" name="horizontalLayout_13">
+             <item>
+              <widget class="BandGraphicsView" name="bandView">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>1</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>525</width>
+                 <height>249</height>
+                </size>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+           <widget class="QWidget" name="poleZero">
+            <property name="autoFillBackground">
+             <bool>false</bool>
+            </property>
+            <attribute name="title">
+             <string>Pole-Zero Plot</string>
+            </attribute>
+            <layout class="QGridLayout" name="gridLayout_2">
+             <item row="1" column="0" colspan="3">
+              <widget class="QStatusBar" name="pzstatusBar"/>
+             </item>
+             <item row="0" column="2">
+              <widget class="QGroupBox" name="pzgroupBox">
+               <property name="cursor">
+                <cursorShape>ArrowCursor</cursorShape>
+               </property>
+               <property name="title">
+                <string/>
+               </property>
+               <property name="flat">
+                <bool>false</bool>
+               </property>
+               <property name="checkable">
+                <bool>false</bool>
+               </property>
+               <layout class="QVBoxLayout" name="verticalLayout_3">
+                <item>
+                 <widget class="QToolButton" name="addzeroPush">
+                  <property name="toolTip">
+                   <string>Add zero</string>
+                  </property>
+                  <property name="text">
+                   <string>...</string>
+                  </property>
+                  <property name="icon">
+                   <iconset resource="icons.qrc">
+                    <normaloff>:/icons/add_zero.svg</normaloff>:/icons/add_zero.svg</iconset>
+                  </property>
+                  <property name="iconSize">
+                   <size>
+                    <width>16</width>
+                    <height>16</height>
+                   </size>
+                  </property>
+                  <property name="checkable">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QToolButton" name="addpolePush">
+                  <property name="toolTip">
+                   <string>Add pole</string>
+                  </property>
+                  <property name="text">
+                   <string>...</string>
+                  </property>
+                  <property name="icon">
+                   <iconset resource="icons.qrc">
+                    <normaloff>:/icons/add_pole.svg</normaloff>:/icons/add_pole.svg</iconset>
+                  </property>
+                  <property name="checkable">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QToolButton" name="delPush">
+                  <property name="toolTip">
+                   <string>Delete pole/zero</string>
+                  </property>
+                  <property name="text">
+                   <string>...</string>
+                  </property>
+                  <property name="icon">
+                   <iconset resource="icons.qrc">
+                    <normaloff>:/icons/remove_red.svg</normaloff>:/icons/remove_red.svg</iconset>
+                  </property>
+                  <property name="checkable">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QToolButton" name="conjPush">
+                  <property name="toolTip">
+                   <string>Conjugate</string>
+                  </property>
+                  <property name="text">
+                   <string>...</string>
+                  </property>
+                  <property name="icon">
+                   <iconset resource="icons.qrc">
+                    <normaloff>:/icons/conjugate.svg</normaloff>:/icons/conjugate.svg</iconset>
+                  </property>
+                  <property name="iconSize">
+                   <size>
+                    <width>16</width>
+                    <height>16</height>
+                   </size>
+                  </property>
+                  <property name="checkable">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="PzPlot" name="pzPlot">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="frameShape">
+                <enum>QFrame::StyledPanel</enum>
+               </property>
+               <property name="frameShadow">
+                <enum>QFrame::Sunken</enum>
+               </property>
+               <property name="lineWidth">
+                <number>1</number>
+               </property>
+               <property name="interactive">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </widget>
+         </widget>
+        </item>
+        <item>
+         <widget class="QFrame" name="quickFrame">
+          <property name="minimumSize">
+           <size>
+            <width>180</width>
+            <height>200</height>
+           </size>
+          </property>
+          <property name="frameShape">
+           <enum>QFrame::StyledPanel</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Raised</enum>
+          </property>
+          <widget class="QGroupBox" name="responseBox">
+           <property name="geometry">
+            <rect>
+             <x>10</x>
+             <y>10</y>
+             <width>161</width>
+             <height>251</height>
+            </rect>
+           </property>
+           <property name="title">
+            <string>Filter Responses</string>
+           </property>
+           <widget class="QCheckBox" name="checkMagres">
+            <property name="geometry">
+             <rect>
+              <x>10</x>
+              <y>40</y>
+              <width>151</width>
+              <height>19</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string>Magnitude Response</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+           <widget class="QCheckBox" name="checkPhase">
+            <property name="geometry">
+             <rect>
+              <x>10</x>
+              <y>60</y>
+              <width>151</width>
+              <height>19</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string>Phase Response</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+           <widget class="QCheckBox" name="checkGdelay">
+            <property name="geometry">
+             <rect>
+              <x>10</x>
+              <y>80</y>
+              <width>111</width>
+              <height>19</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string>Group Delay</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+           <widget class="QCheckBox" name="checkPdelay">
+            <property name="geometry">
+             <rect>
+              <x>10</x>
+              <y>100</y>
+              <width>111</width>
+              <height>19</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string>Phase Delay</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+           <widget class="QCheckBox" name="checkImpulse">
+            <property name="geometry">
+             <rect>
+              <x>10</x>
+              <y>120</y>
+              <width>141</width>
+              <height>19</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string>Impulse Response</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+           <widget class="QCheckBox" name="checkStep">
+            <property name="geometry">
+             <rect>
+              <x>10</x>
+              <y>140</y>
+              <width>131</width>
+              <height>19</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string>Step Response</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+           <widget class="QCheckBox" name="checkGrid">
+            <property name="geometry">
+             <rect>
+              <x>10</x>
+              <y>160</y>
+              <width>85</width>
+              <height>19</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string>Grid</string>
+            </property>
+           </widget>
+           <widget class="QCheckBox" name="checkFcoeff">
+            <property name="geometry">
+             <rect>
+              <x>10</x>
+              <y>180</y>
+              <width>131</width>
+              <height>19</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string>Filter Coefficients</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+           <widget class="QCheckBox" name="checkKeepcur">
+            <property name="geometry">
+             <rect>
+              <x>10</x>
+              <y>200</y>
+              <width>141</width>
+              <height>19</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string>Buffer current plots</string>
+            </property>
+           </widget>
+          </widget>
+          <widget class="QGroupBox" name="groupSpecs">
+           <property name="geometry">
+            <rect>
+             <x>10</x>
+             <y>280</y>
+             <width>161</width>
+             <height>91</height>
+            </rect>
+           </property>
+           <property name="title">
+            <string>Filter Specs</string>
+           </property>
+           <widget class="QCheckBox" name="checkBand">
+            <property name="geometry">
+             <rect>
+              <x>10</x>
+              <y>20</y>
+              <width>111</width>
+              <height>19</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string>Band Diagram</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+           <widget class="QCheckBox" name="checkPzplot">
+            <property name="geometry">
+             <rect>
+              <x>10</x>
+              <y>40</y>
+              <width>131</width>
+              <height>19</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string>Pole-Zero Plot</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </widget>
+          <widget class="QGroupBox" name="sysParamsBox">
+           <property name="geometry">
+            <rect>
+             <x>10</x>
+             <y>390</y>
+             <width>161</width>
+             <height>91</height>
+            </rect>
+           </property>
+           <property name="title">
+            <string>Plot Parameter</string>
+           </property>
+           <layout class="QFormLayout" name="formLayout_4">
+            <property name="fieldGrowthPolicy">
+             <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+            </property>
+            <item row="1" column="0">
+             <widget class="QLabel" name="nfftLabel">
+              <property name="minimumSize">
+               <size>
+                <width>150</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>Num FFT points</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0">
+             <widget class="QLineEdit" name="nfftEdit"/>
+            </item>
+           </layout>
+          </widget>
+          <zorder>groupSpecs</zorder>
+          <zorder>responseBox</zorder>
+          <zorder>sysParamsBox</zorder>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="modern">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <layout class="QHBoxLayout" name="horizontalLayout_5">
+        <item>
+         <widget class="QSplitter" name="splitter_3">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <widget class="QSplitter" name="splitter_2">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <widget class="QTabWidget" name="mfreqTabgroup">
+            <property name="currentIndex">
+             <number>0</number>
+            </property>
+            <property name="tabsClosable">
+             <bool>false</bool>
+            </property>
+            <widget class="QWidget" name="mfreqTab">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <attribute name="title">
+              <string>Frequency Response</string>
+             </attribute>
+             <layout class="QHBoxLayout" name="horizontalLayout_2">
+              <item>
+               <widget class="GrFilterPlotWidget" name="mfreqPlot"/>
+              </item>
+              <item>
+               <widget class="QGroupBox" name="mfgroupBox">
+                <property name="cursor">
+                 <cursorShape>ArrowCursor</cursorShape>
+                </property>
+                <property name="title">
+                 <string/>
+                </property>
+                <property name="flat">
+                 <bool>false</bool>
+                </property>
+                <property name="checkable">
+                 <bool>false</bool>
+                </property>
+                <layout class="QVBoxLayout" name="verticalLayout_2">
+                 <item>
+                  <widget class="QToolButton" name="mfmagPush">
+                   <property name="toolTip">
+                    <string>Magnitude Response</string>
+                   </property>
+                   <property name="text">
+                    <string>...</string>
+                   </property>
+                   <property name="icon">
+                    <iconset resource="icons.qrc">
+                     <normaloff>:/icons/mag_response.svg</normaloff>:/icons/mag_response.svg</iconset>
+                   </property>
+                   <property name="iconSize">
+                    <size>
+                     <width>16</width>
+                     <height>16</height>
+                    </size>
+                   </property>
+                   <property name="checkable">
+                    <bool>false</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QToolButton" name="mfphasePush">
+                   <property name="toolTip">
+                    <string>Phase Response</string>
+                   </property>
+                   <property name="text">
+                    <string>...</string>
+                   </property>
+                   <property name="icon">
+                    <iconset resource="icons.qrc">
+                     <normaloff>:/icons/phase_response.svg</normaloff>:/icons/phase_response.svg</iconset>
+                   </property>
+                   <property name="iconSize">
+                    <size>
+                     <width>16</width>
+                     <height>16</height>
+                    </size>
+                   </property>
+                   <property name="checkable">
+                    <bool>false</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QToolButton" name="mfgpdlyPush">
+                   <property name="toolTip">
+                    <string>Group Delay</string>
+                   </property>
+                   <property name="text">
+                    <string>...</string>
+                   </property>
+                   <property name="icon">
+                    <iconset resource="icons.qrc">
+                     <normaloff>:/icons/group_delay.svg</normaloff>:/icons/group_delay.svg</iconset>
+                   </property>
+                   <property name="iconSize">
+                    <size>
+                     <width>16</width>
+                     <height>16</height>
+                    </size>
+                   </property>
+                   <property name="checkable">
+                    <bool>false</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QToolButton" name="mfphdlyPush">
+                   <property name="toolTip">
+                    <string>Phase Delay</string>
+                   </property>
+                   <property name="text">
+                    <string>...</string>
+                   </property>
+                   <property name="icon">
+                    <iconset resource="icons.qrc">
+                     <normaloff>:/icons/phase_delay.svg</normaloff>:/icons/phase_delay.svg</iconset>
+                   </property>
+                   <property name="iconSize">
+                    <size>
+                     <width>16</width>
+                     <height>16</height>
+                    </size>
+                   </property>
+                   <property name="checkable">
+                    <bool>false</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QToolButton" name="mfoverlayPush">
+                   <property name="toolTip">
+                    <string>Overlay</string>
+                   </property>
+                   <property name="text">
+                    <string>...</string>
+                   </property>
+                   <property name="icon">
+                    <iconset resource="icons.qrc">
+                     <normaloff>:/icons/overlay.svg</normaloff>:/icons/overlay.svg</iconset>
+                   </property>
+                   <property name="iconSize">
+                    <size>
+                     <width>16</width>
+                     <height>16</height>
+                    </size>
+                   </property>
+                   <property name="checkable">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </widget>
+           <widget class="QTabWidget" name="mtimeTabgroup">
+            <widget class="QWidget" name="mtimeTab">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <attribute name="title">
+              <string>Time responses</string>
+             </attribute>
+             <layout class="QHBoxLayout" name="horizontalLayout_3">
+              <item>
+               <widget class="GrFilterPlotWidget" name="mtimePlot"/>
+              </item>
+              <item>
+               <widget class="QGroupBox" name="mtgroupBox">
+                <property name="cursor">
+                 <cursorShape>ArrowCursor</cursorShape>
+                </property>
+                <property name="title">
+                 <string/>
+                </property>
+                <property name="flat">
+                 <bool>false</bool>
+                </property>
+                <property name="checkable">
+                 <bool>false</bool>
+                </property>
+                <layout class="QVBoxLayout" name="verticalLayout_5">
+                 <item>
+                  <widget class="QToolButton" name="mttapsPush">
+                   <property name="toolTip">
+                    <string>Filter Taps</string>
+                   </property>
+                   <property name="text">
+                    <string>...</string>
+                   </property>
+                   <property name="icon">
+                    <iconset resource="icons.qrc">
+                     <normaloff>:/icons/filtr_taps.svg</normaloff>:/icons/filtr_taps.svg</iconset>
+                   </property>
+                   <property name="iconSize">
+                    <size>
+                     <width>16</width>
+                     <height>16</height>
+                    </size>
+                   </property>
+                   <property name="checkable">
+                    <bool>false</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QToolButton" name="mtstepPush">
+                   <property name="toolTip">
+                    <string>Step Response</string>
+                   </property>
+                   <property name="text">
+                    <string>...</string>
+                   </property>
+                   <property name="icon">
+                    <iconset resource="icons.qrc">
+                     <normaloff>:/icons/step_response.svg</normaloff>:/icons/step_response.svg</iconset>
+                   </property>
+                   <property name="iconSize">
+                    <size>
+                     <width>16</width>
+                     <height>16</height>
+                    </size>
+                   </property>
+                   <property name="checkable">
+                    <bool>false</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QToolButton" name="mtimpPush">
+                   <property name="toolTip">
+                    <string>Impulse Response</string>
+                   </property>
+                   <property name="text">
+                    <string>...</string>
+                   </property>
+                   <property name="icon">
+                    <iconset resource="icons.qrc">
+                     <normaloff>:/icons/impulse.svg</normaloff>:/icons/impulse.svg</iconset>
+                   </property>
+                   <property name="iconSize">
+                    <size>
+                     <width>16</width>
+                     <height>16</height>
+                    </size>
+                   </property>
+                   <property name="checkable">
+                    <bool>false</bool>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </widget>
+          </widget>
+          <widget class="QTabWidget" name="mfilterspecView">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>100</height>
+            </size>
+           </property>
+           <property name="baseSize">
+            <size>
+             <width>0</width>
+             <height>100</height>
+            </size>
+           </property>
+           <property name="currentIndex">
+            <number>0</number>
+           </property>
+           <property name="documentMode">
+            <bool>false</bool>
+           </property>
+           <property name="tabsClosable">
+            <bool>false</bool>
+           </property>
+           <widget class="QWidget" name="mbandDiagram">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <attribute name="title">
+             <string>Ideal Band</string>
+            </attribute>
+            <layout class="QHBoxLayout" name="horizontalLayout_15">
+             <item>
+              <widget class="BandGraphicsView" name="mbandView">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>1</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>525</width>
+                 <height>249</height>
+                </size>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+           <widget class="QWidget" name="mpoleZero">
+            <property name="autoFillBackground">
+             <bool>false</bool>
+            </property>
+            <attribute name="title">
+             <string>Pole-Zero Plot</string>
+            </attribute>
+            <layout class="QGridLayout" name="gridLayout_3">
+             <item row="0" column="2">
+              <widget class="QGroupBox" name="mpzgroupBox">
+               <property name="cursor">
+                <cursorShape>ArrowCursor</cursorShape>
+               </property>
+               <property name="title">
+                <string/>
+               </property>
+               <property name="flat">
+                <bool>false</bool>
+               </property>
+               <property name="checkable">
+                <bool>false</bool>
+               </property>
+               <layout class="QVBoxLayout" name="verticalLayout_4">
+                <item>
+                 <widget class="QToolButton" name="maddzeroPush">
+                  <property name="toolTip">
+                   <string>Add zero</string>
+                  </property>
+                  <property name="text">
+                   <string>...</string>
+                  </property>
+                  <property name="icon">
+                   <iconset resource="icons.qrc">
+                    <normaloff>:/icons/add_zero.svg</normaloff>:/icons/add_zero.svg</iconset>
+                  </property>
+                  <property name="checkable">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QToolButton" name="maddpolePush">
+                  <property name="toolTip">
+                   <string>Add pole</string>
+                  </property>
+                  <property name="text">
+                   <string>...</string>
+                  </property>
+                  <property name="icon">
+                   <iconset resource="icons.qrc">
+                    <normaloff>:/icons/add_pole.svg</normaloff>:/icons/add_pole.svg</iconset>
+                  </property>
+                  <property name="checkable">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QToolButton" name="mdelPush">
+                  <property name="toolTip">
+                   <string>Delete pole/zero</string>
+                  </property>
+                  <property name="text">
+                   <string>...</string>
+                  </property>
+                  <property name="icon">
+                   <iconset resource="icons.qrc">
+                    <normaloff>:/icons/remove_red.svg</normaloff>:/icons/remove_red.svg</iconset>
+                  </property>
+                  <property name="checkable">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QToolButton" name="mconjPush">
+                  <property name="toolTip">
+                   <string>Conjugate</string>
+                  </property>
+                  <property name="text">
+                   <string>...</string>
+                  </property>
+                  <property name="icon">
+                   <iconset resource="icons.qrc">
+                    <normaloff>:/icons/conjugate.svg</normaloff>:/icons/conjugate.svg</iconset>
+                  </property>
+                  <property name="iconSize">
+                   <size>
+                    <width>16</width>
+                    <height>16</height>
+                   </size>
+                  </property>
+                  <property name="checkable">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item row="1" column="0" colspan="3">
+              <widget class="QStatusBar" name="mpzstatusBar"/>
+             </item>
+             <item row="0" column="1">
+              <widget class="PzPlot" name="mpzPlot">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="frameShape">
+                <enum>QFrame::StyledPanel</enum>
+               </property>
+               <property name="frameShadow">
+                <enum>QFrame::Sunken</enum>
+               </property>
+               <property name="lineWidth">
+                <number>1</number>
+               </property>
+               <property name="interactive">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+           <widget class="QWidget" name="mfcTab">
+            <attribute name="title">
+             <string>Filter Coefficients</string>
+            </attribute>
+            <layout class="QHBoxLayout" name="horizontalLayout_4">
+             <item>
+              <widget class="QTextBrowser" name="mfilterCoeff"/>
+             </item>
+            </layout>
+           </widget>
+          </widget>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+    <item row="0" column="0">
+     <widget class="QFrame" name="filterFrame">
+      <property name="minimumSize">
+       <size>
+        <width>300</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>300</width>
+        <height>16777215</height>
+       </size>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <widget class="QComboBox" name="fselectComboBox">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
+         <item>
+          <property name="text">
+           <string>FIR</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>IIR(scipy)</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item>
+        <widget class="QComboBox" name="filterTypeComboBox">
+         <item>
+          <property name="text">
+           <string>Low Pass</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>High Pass</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Band Pass</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Complex Band Pass</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Band Notch</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Root Raised Cosine</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Gaussian</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Half Band</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item>
+        <widget class="QComboBox" name="iirfilterBandComboBox">
+         <item>
+          <property name="text">
+           <string>Low Pass</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Band Pass</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Band Stop</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>High Pass</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item>
+        <widget class="QComboBox" name="adComboBox">
+         <item>
+          <property name="text">
+           <string>Digital (normalized 0-1)</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Analog (rad/second)</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item>
+        <widget class="QComboBox" name="filterDesignTypeComboBox">
+         <item>
+          <property name="text">
+           <string>Hamming Window</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Hann Window</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Blackman Window</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Rectangular Window</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Kaiser Window</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Blackman-harris Window</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Equiripple</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item>
+        <widget class="QComboBox" name="iirfilterTypeComboBox">
+         <item>
+          <property name="text">
+           <string>Elliptic</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Butterworth</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Chebyshev-1</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Chebyshev-2</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Bessel</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="globalParamsBox">
+         <property name="title">
+          <string/>
+         </property>
+         <layout class="QFormLayout" name="formLayout_12">
+          <property name="fieldGrowthPolicy">
+           <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+          </property>
+          <item row="0" column="0">
+           <widget class="QLabel" name="sampleRateLabel">
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>30</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Sample Rate (sps)</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLineEdit" name="sampleRateEdit">
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>30</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>320000</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="filterGainLabel">
+            <property name="text">
+             <string>Filter Gain</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QLineEdit" name="filterGainEdit">
+            <property name="text">
+             <string>2</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QStackedWidget" name="filterTypeWidget">
+         <property name="currentIndex">
+          <number>11</number>
+         </property>
+         <widget class="QWidget" name="firlpfPage">
+          <layout class="QFormLayout" name="formLayout">
+           <property name="fieldGrowthPolicy">
+            <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+           </property>
+           <item row="0" column="0">
+            <widget class="QLabel" name="endofLpfPassBandLabel">
+             <property name="text">
+              <string>End of Pass Band (Hz)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLineEdit" name="endofLpfPassBandEdit">
+             <property name="text">
+              <string>50000</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="startofLpfStopBandLabel">
+             <property name="text">
+              <string>Start of Stop Band (Hz)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QLineEdit" name="startofLpfStopBandEdit">
+             <property name="text">
+              <string>60000</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="lpfStopBandAttenLabel">
+             <property name="text">
+              <string>Stop Band Attenuation (dB)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QLineEdit" name="lpfStopBandAttenEdit">
+             <property name="text">
+              <string>40</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QLabel" name="lpfPassBandRippleLabel">
+             <property name="text">
+              <string>Pass Band Ripple (dB)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <widget class="QLineEdit" name="lpfPassBandRippleEdit">
+             <property name="text">
+              <string>1</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="firbpfPage">
+          <layout class="QFormLayout" name="formLayout_2">
+           <item row="0" column="0">
+            <widget class="QLabel" name="startofBpfPassBandLabel">
+             <property name="text">
+              <string>Start of Pass Band (Hz)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLineEdit" name="startofBpfPassBandEdit">
+             <property name="text">
+              <string>50000</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="endofBpfPassBandLabel">
+             <property name="text">
+              <string>End of Pass Band (Hz)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QLineEdit" name="endofBpfPassBandEdit">
+             <property name="text">
+              <string>80000</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <widget class="QLineEdit" name="bpfStopBandAttenEdit">
+             <property name="text">
+              <string>40</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QLabel" name="bpfStopBandAttenLabel">
+             <property name="text">
+              <string>Stop Band Attenuation (dB)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="bpfTransitionLabel">
+             <property name="text">
+              <string>Transition Width (Hz)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QLineEdit" name="bpfTransitionEdit">
+             <property name="text">
+              <string>10000</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="1">
+            <widget class="QLineEdit" name="bpfPassBandRippleEdit">
+             <property name="text">
+              <string>1</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="0">
+            <widget class="QLabel" name="bpfPassBandRippleLabel">
+             <property name="text">
+              <string>Pass Band Ripple (dB)</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="firbnfPage">
+          <layout class="QFormLayout" name="formLayout_5">
+           <property name="fieldGrowthPolicy">
+            <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+           </property>
+           <item row="0" column="0">
+            <widget class="QLabel" name="startofBnfStopBandLabel">
+             <property name="text">
+              <string>Start of Stop Band (Hz)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLineEdit" name="startofBnfStopBandEdit">
+             <property name="text">
+              <string>50000</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="endofBnfStopBandLabel">
+             <property name="text">
+              <string>End of Stop Band (Hz)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QLineEdit" name="endofBnfStopBandEdit">
+             <property name="text">
+              <string>80000</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="bnfTransitionLabel">
+             <property name="text">
+              <string>Transition Width (Hz)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QLineEdit" name="bnfTransitionEdit">
+             <property name="text">
+              <string>10000</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QLabel" name="bnfStopBandAttenLabel">
+             <property name="text">
+              <string>Stop Band Attenuation (dB)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <widget class="QLineEdit" name="bnfStopBandAttenEdit">
+             <property name="text">
+              <string>48</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="0">
+            <widget class="QLabel" name="bnfPassBandRippleLabel">
+             <property name="text">
+              <string>Pass Band Ripple (dB)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="1">
+            <widget class="QLineEdit" name="bnfPassBandRippleEdit">
+             <property name="text">
+              <string>1</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="firhpfPage">
+          <layout class="QFormLayout" name="formLayout_3">
+           <property name="fieldGrowthPolicy">
+            <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+           </property>
+           <item row="0" column="0">
+            <widget class="QLabel" name="endofHpfStopBandLabel">
+             <property name="text">
+              <string>End of Stop Band (Hz)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLineEdit" name="endofHpfStopBandEdit">
+             <property name="text">
+              <string>50000</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="startofHpfPassBandLabel">
+             <property name="text">
+              <string>Start of Pass Band (Hz)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QLineEdit" name="startofHpfPassBandEdit">
+             <property name="text">
+              <string>55000</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="hpfStopBandAttenLabel">
+             <property name="text">
+              <string>Stop Band Attenuation (dB)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QLineEdit" name="hpfStopBandAttenEdit">
+             <property name="text">
+              <string>48</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QLabel" name="hpfPassBandRippleLabel">
+             <property name="text">
+              <string>Pass Band Ripple (dB)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <widget class="QLineEdit" name="hpfPassBandRippleEdit">
+             <property name="text">
+              <string>1</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="rrcPage">
+          <layout class="QFormLayout" name="formLayout_6">
+           <item row="0" column="0">
+            <widget class="QLabel" name="rrcSymbolRateLabel">
+             <property name="text">
+              <string>Symbol Rate (sps)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="rrcAlphaLabel">
+             <property name="text">
+              <string>Roll-off Factor</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="rrcNumTapsLabel">
+             <property name="text">
+              <string>Number of Taps</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLineEdit" name="rrcSymbolRateEdit">
+             <property name="text">
+              <string>3200</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QLineEdit" name="rrcAlphaEdit">
+             <property name="text">
+              <string>15</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QLineEdit" name="rrcNumTapsEdit">
+             <property name="text">
+              <string>50</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="gausPage">
+          <layout class="QFormLayout" name="formLayout_7">
+           <item row="0" column="0">
+            <widget class="QLabel" name="gausSymbolRateLabel">
+             <property name="text">
+              <string>Symbol Rate (sps)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLineEdit" name="gausSymbolRateEdit">
+             <property name="text">
+              <string>5000</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="gausBTLabel">
+             <property name="text">
+              <string>Roll-off Factor</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QLineEdit" name="gausBTEdit">
+             <property name="text">
+              <string>0.5</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="gausNumTapsLabel">
+             <property name="text">
+              <string>Number of Taps</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QLineEdit" name="gausNumTapsEdit">
+             <property name="text">
+              <string>30</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="iirlpfPage">
+          <layout class="QFormLayout" name="formLayout_15">
+           <item row="0" column="0">
+            <widget class="QLabel" name="iirendofLpfPassBandLabel">
+             <property name="text">
+              <string>End of Pass Band</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLineEdit" name="iirendofLpfPassBandEdit">
+             <property name="text">
+              <string>0.3</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="iirstartofLpfStopBandLabel">
+             <property name="text">
+              <string>Start of Stop Band </string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QLineEdit" name="iirstartofLpfStopBandEdit">
+             <property name="text">
+              <string>0.5</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="iirLpfPassBandAttenLabel">
+             <property name="text">
+              <string>Max loss in Pass Band (dB)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QLineEdit" name="iirLpfPassBandAttenEdit">
+             <property name="text">
+              <string>1</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QLabel" name="iirLpfStopBandRippleLabel">
+             <property name="text">
+              <string>Min atten in Stop Band (dB)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <widget class="QLineEdit" name="iirLpfStopBandRippleEdit">
+             <property name="text">
+              <string>60</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="iirhpfPage">
+          <layout class="QFormLayout" name="formLayout_9">
+           <item row="0" column="0">
+            <widget class="QLabel" name="iirendofHpfStopBandLabel">
+             <property name="text">
+              <string>End of Stop Band</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLineEdit" name="iirendofHpfStopBandEdit">
+             <property name="text">
+              <string>0.3</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="iirstartofHpfPassBandLabel">
+             <property name="text">
+              <string>Start of Pass Band </string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QLineEdit" name="iirstartofHpfPassBandEdit">
+             <property name="text">
+              <string>0.5</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="iirHpfPassBandAttenLabel">
+             <property name="text">
+              <string>Max loss in Pass Band (dB)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QLineEdit" name="iirHpfPassBandAttenEdit">
+             <property name="text">
+              <string>1</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QLabel" name="iirHpfStopBandRippleLabel">
+             <property name="text">
+              <string>Min atten in Stop Band (dB)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <widget class="QLineEdit" name="iirHpfStopBandRippleEdit">
+             <property name="text">
+              <string>60</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="iirbpfPage">
+          <layout class="QFormLayout" name="formLayout_10">
+           <item row="0" column="0">
+            <widget class="QLabel" name="iirendofBpfStopBandLabel1">
+             <property name="text">
+              <string>End of Stop Band-1</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLineEdit" name="iirendofBpfStopBandEdit1">
+             <property name="text">
+              <string>0.2</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="iirstartofBpfPassBandLabel">
+             <property name="text">
+              <string>Start of Pass Band </string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QLineEdit" name="iirstartofBpfPassBandEdit">
+             <property name="text">
+              <string>0.3</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="iirendofBpfPassBandLabel">
+             <property name="text">
+              <string>End of Pass Band </string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QLineEdit" name="iirendofBpfPassBandEdit">
+             <property name="text">
+              <string>0.5</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QLabel" name="iirstartofBpfStopBandLabel2">
+             <property name="text">
+              <string>Start of Stop Band-2</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <widget class="QLineEdit" name="iirstartofBpfStopBandEdit2">
+             <property name="text">
+              <string>0.6</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="0">
+            <widget class="QLabel" name="iirBpfPassBandAttenLabel">
+             <property name="text">
+              <string>Max loss in Pass Band (dB)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="1">
+            <widget class="QLineEdit" name="iirBpfPassBandAttenEdit">
+             <property name="text">
+              <string>1</string>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="0">
+            <widget class="QLabel" name="iirBpfStopBandRippleLabel">
+             <property name="text">
+              <string>Min atten in Stop Band (dB)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="1">
+            <widget class="QLineEdit" name="iirBpfStopBandRippleEdit">
+             <property name="text">
+              <string>60</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="iirbsfPage">
+          <layout class="QFormLayout" name="formLayout_11">
+           <item row="0" column="0">
+            <widget class="QLabel" name="iirendofBsfPassBandLabel1">
+             <property name="text">
+              <string>End of Pass Band-1</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLineEdit" name="iirendofBsfPassBandEdit1">
+             <property name="text">
+              <string>0.2</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="iirstartofBsfStopBandLabel">
+             <property name="text">
+              <string>Start of Stop Band </string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QLineEdit" name="iirstartofBsfStopBandEdit">
+             <property name="text">
+              <string>0.3</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="iirendofBsfStopBandLabel">
+             <property name="text">
+              <string>End of Stop Band </string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QLineEdit" name="iirendofBsfStopBandEdit">
+             <property name="text">
+              <string>0.6</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QLabel" name="iirstartofBsfPassBandLabel2">
+             <property name="text">
+              <string>Start of Pass Band-2</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <widget class="QLineEdit" name="iirstartofBsfPassBandEdit2">
+             <property name="text">
+              <string>0.7</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="0">
+            <widget class="QLabel" name="iirBsfPassBandAttenLabel">
+             <property name="text">
+              <string>Max loss in Pass Band (dB)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="1">
+            <widget class="QLineEdit" name="iirBsfPassBandAttenEdit">
+             <property name="text">
+              <string>1</string>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="0">
+            <widget class="QLabel" name="iirBsfStopBandRippleLabel">
+             <property name="text">
+              <string>Min atten in Stop Band (dB)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="1">
+            <widget class="QLineEdit" name="iirBsfStopBandRippleEdit">
+             <property name="text">
+              <string>60</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="iirbesselPage">
+          <layout class="QFormLayout" name="formLayout_13">
+           <property name="fieldGrowthPolicy">
+            <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+           </property>
+           <item row="0" column="0">
+            <widget class="QLabel" name="besselordLabel">
+             <property name="text">
+              <string>Filter Order</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLineEdit" name="besselordEdit">
+             <property name="text">
+              <string>10</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="iirbesselcritLabel1">
+             <property name="text">
+              <string>Critical point-1</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QLineEdit" name="iirbesselcritEdit1">
+             <property name="text">
+              <string>0.2</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QLineEdit" name="iirbesselcritEdit2">
+             <property name="text">
+              <string>0.5</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="iirbesselcritLabel2">
+             <property name="text">
+              <string>Critical point-2</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="firhbPage">
+          <layout class="QFormLayout" name="formLayout_14">
+           <property name="fieldGrowthPolicy">
+            <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+           </property>
+           <item row="0" column="0">
+            <widget class="QLabel" name="firhbordLabel">
+             <property name="text">
+              <string>Filter Order</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLineEdit" name="firhbordEdit">
+             <property name="text">
+              <string>34</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="firhbtrEditLabel2">
+             <property name="text">
+              <string>Transition width
+ (from fs/4)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QLineEdit" name="firhbtrEdit">
+             <property name="text">
+              <string>10000</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="filterPropsBox">
+         <property name="title">
+          <string>Filter Properties</string>
+         </property>
+         <layout class="QFormLayout" name="formLayout_8">
+          <property name="fieldGrowthPolicy">
+           <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+          </property>
+          <item row="1" column="0">
+           <widget class="QLabel" name="nTapsLabel">
+            <property name="minimumSize">
+             <size>
+              <width>150</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Number of Taps:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QLabel" name="nTapsEdit">
+            <property name="maximumSize">
+             <size>
+              <width>100</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::Box</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Raised</enum>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="designButton">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>200</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>Design</string>
+         </property>
+         <property name="autoDefault">
+          <bool>true</bool>
+         </property>
+         <property name="default">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1141</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menu_File">
+    <property name="title">
+     <string>&amp;File</string>
+    </property>
+    <addaction name="action_open"/>
+    <addaction name="action_save"/>
+    <addaction name="action_exit"/>
+   </widget>
+   <widget class="QMenu" name="menu_Analysis">
+    <property name="title">
+     <string>A&amp;nalysis</string>
+    </property>
+    <addaction name="separator"/>
+    <addaction name="actionMagnitude_Response"/>
+    <addaction name="actionPhase_Respone"/>
+    <addaction name="actionGroup_Delay"/>
+    <addaction name="actionPhase_Delay"/>
+    <addaction name="actionImpulse_Response"/>
+    <addaction name="actionStep_Response"/>
+    <addaction name="actionGrid_2"/>
+    <addaction name="actionFilter_Coefficients"/>
+    <addaction name="actionIdeal_Band"/>
+    <addaction name="separator"/>
+    <addaction name="actionPole_Zero_Plot_2"/>
+    <addaction name="actionBand_Diagram"/>
+    <addaction name="separator"/>
+    <addaction name="actionDesign_Widget"/>
+    <addaction name="actionQuick_Access"/>
+    <addaction name="actionSpec_Widget"/>
+    <addaction name="actionResponse_Widget"/>
+   </widget>
+   <widget class="QMenu" name="menuWidgets">
+    <property name="geometry">
+     <rect>
+      <x>2302</x>
+      <y>118</y>
+      <width>125</width>
+      <height>90</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>V&amp;iew</string>
+    </property>
+    <addaction name="actionGridview"/>
+    <addaction name="actionPlot_select"/>
+   </widget>
+   <addaction name="menu_File"/>
+   <addaction name="menu_Analysis"/>
+   <addaction name="menuWidgets"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="action_exit">
+   <property name="text">
+    <string>E&amp;xit</string>
+   </property>
+  </action>
+  <action name="action_save">
+   <property name="text">
+    <string>&amp;Save</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="action_open">
+   <property name="text">
+    <string>&amp;Open</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="actionMagnitude_Response">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Magnitude Response</string>
+   </property>
+  </action>
+  <action name="actionPhase_Respone">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Phase Response</string>
+   </property>
+  </action>
+  <action name="actionGroup_Delay">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Group Delay</string>
+   </property>
+  </action>
+  <action name="actionPhase_Delay">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>P&amp;hase Delay</string>
+   </property>
+  </action>
+  <action name="actionImpulse_Response">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Impulse Response</string>
+   </property>
+  </action>
+  <action name="actionStep_Response">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Step Response</string>
+   </property>
+  </action>
+  <action name="actionPole_Zero_Plot">
+   <property name="text">
+    <string>Pole-Zero Plot</string>
+   </property>
+  </action>
+  <action name="actionGrid">
+   <property name="text">
+    <string>Grid</string>
+   </property>
+  </action>
+  <action name="actionPole_Zero_Plot_2">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Pole &amp;Zero Plot</string>
+   </property>
+  </action>
+  <action name="actionIdeal_Band">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Id&amp;eal Band</string>
+   </property>
+  </action>
+  <action name="actionGrid_2">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Grid</string>
+   </property>
+  </action>
+  <action name="actionGrid_3">
+   <property name="text">
+    <string>Grid</string>
+   </property>
+  </action>
+  <action name="actionTabbed">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Tabbed</string>
+   </property>
+  </action>
+  <action name="actionOverlay">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Overlay</string>
+   </property>
+  </action>
+  <action name="actionResponse_widget">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Response widget</string>
+   </property>
+  </action>
+  <action name="actionSpec_widget">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Spec widget</string>
+   </property>
+  </action>
+  <action name="actionQuick_access">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Quick access</string>
+   </property>
+  </action>
+  <action name="actionFilter_Coefficients">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Filter Coefficients</string>
+   </property>
+  </action>
+  <action name="actionDesign_widget">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Design widget</string>
+   </property>
+  </action>
+  <action name="actionOverlay_2">
+   <property name="text">
+    <string>Overlay</string>
+   </property>
+  </action>
+  <action name="actionGridview">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Gridview</string>
+   </property>
+  </action>
+  <action name="actionDesign_widget_2">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Design widget</string>
+   </property>
+  </action>
+  <action name="actionQuick_access_2">
+   <property name="text">
+    <string>Quick access</string>
+   </property>
+  </action>
+  <action name="actionSpec_widget_2">
+   <property name="text">
+    <string>Spec widget</string>
+   </property>
+  </action>
+  <action name="actionResponse_widget_2">
+   <property name="text">
+    <string>Response widget</string>
+   </property>
+  </action>
+  <action name="actionDesign_Widget">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Design Widget</string>
+   </property>
+  </action>
+  <action name="actionQuick_Access">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Quick Access</string>
+   </property>
+  </action>
+  <action name="actionSpec_Widget">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Spec &amp;Widget</string>
+   </property>
+  </action>
+  <action name="actionResponse_Widget">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Response Widget</string>
+   </property>
+  </action>
+  <action name="actionTabview_2">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Tabview</string>
+   </property>
+  </action>
+  <action name="actionPlot_select">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Plot select</string>
+   </property>
+  </action>
+  <action name="actionBand_Diagram">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Band Diagram</string>
+   </property>
+  </action>
+  <action name="actionCheck">
+   <property name="text">
+    <string>check</string>
+   </property>
+  </action>
+  <action name="actionPlot_FFT_points">
+   <property name="text">
+    <string>Plot FFT points</string>
+   </property>
+  </action>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>BandGraphicsView</class>
+   <extends>QGraphicsView</extends>
+   <header>bandgraphicsview</header>
+  </customwidget>
+  <customwidget>
+   <class>PzPlot</class>
+   <extends>QGraphicsView</extends>
+   <header>polezero_plot</header>
+  </customwidget>
+  <customwidget>
+   <class>GrFilterPlotWidget</class>
+   <extends>QGraphicsView</extends>
+   <header>GrFilterPlotWidget.h</header>
+  </customwidget>
+ </customwidgets>
+ <tabstops>
+  <tabstop>filterTypeComboBox</tabstop>
+  <tabstop>filterDesignTypeComboBox</tabstop>
+  <tabstop>endofLpfPassBandEdit</tabstop>
+  <tabstop>startofLpfStopBandEdit</tabstop>
+  <tabstop>lpfStopBandAttenEdit</tabstop>
+  <tabstop>lpfPassBandRippleEdit</tabstop>
+  <tabstop>startofBpfPassBandEdit</tabstop>
+  <tabstop>endofBpfPassBandEdit</tabstop>
+  <tabstop>bpfTransitionEdit</tabstop>
+  <tabstop>bpfStopBandAttenEdit</tabstop>
+  <tabstop>bpfPassBandRippleEdit</tabstop>
+  <tabstop>startofBnfStopBandEdit</tabstop>
+  <tabstop>endofBnfStopBandEdit</tabstop>
+  <tabstop>bnfTransitionEdit</tabstop>
+  <tabstop>bnfStopBandAttenEdit</tabstop>
+  <tabstop>bnfPassBandRippleEdit</tabstop>
+  <tabstop>endofHpfStopBandEdit</tabstop>
+  <tabstop>startofHpfPassBandEdit</tabstop>
+  <tabstop>hpfStopBandAttenEdit</tabstop>
+  <tabstop>hpfPassBandRippleEdit</tabstop>
+  <tabstop>rrcSymbolRateEdit</tabstop>
+  <tabstop>rrcAlphaEdit</tabstop>
+  <tabstop>rrcNumTapsEdit</tabstop>
+  <tabstop>gausSymbolRateEdit</tabstop>
+  <tabstop>gausBTEdit</tabstop>
+  <tabstop>gausNumTapsEdit</tabstop>
+  <tabstop>designButton</tabstop>
+ </tabstops>
+ <resources>
+  <include location="icons.qrc"/>
+ </resources>
+ <connections>
+  <connection>
+   <sender>action_exit</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>347</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

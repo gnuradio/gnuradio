@@ -1,0 +1,251 @@
+<page>
+    <title>Logging</title>
+    <ns>0</ns>
+    <id>3484</id>
+    <revision>
+      <id>8632</id>
+      <parentid>8605</parentid>
+      <timestamp>2021-05-31T14:39:04Z</timestamp>
+      <contributor>
+        <ip>172.18.0.3</ip>
+      </contributor>
+      <comment>/* Logging from Python */  small typo fix</comment>
+      <model>wikitext</model>
+      <format>text/x-wiki</format>
+      <text xml:space="preserve" bytes="10203">[[Category:Usage Manual]]
+GNU Radio has a logging interface to enable various levels of logging
+information to be printed to the console or a file. The logger derives
+from [http://log4cpp.sourceforge.net log4cpp] which is readily
+available in most Linux distributions. This is an optional dependency
+and GNU Radio will work without it.
+
+When configuring GNU Radio, the -DENABLE_GR_LOG=On|Off option to cmake
+will allow the user to toggle use of the logger on and off. The logger
+defaults to "on" and will use log4cpp if it is available. If log4cpp
+is not found, the default logging will output to standard output or
+standard error, depending on the level of the log message.
+
+Logging is useful for blocks to print out certain amounts of data at
+different levels. These levels are:
+
+    DEBUG < INFO < WARN < TRACE < ERROR < ALERT < CRIT < FATAL < EMERG
+
+The order here determines the level of output. These levels are
+hierarchical in that specifying any level also includes any level
+above it. For example, when using the INFO level, all INFO and
+higher messages are logged and DEBUG is ignored.  A level NOTSET is provided
+to disable a logger.
+
+=== Logging Configuration ===
+
+The logging configuration can be found in the '''<prefix>/etc/gnuradio/conf.d/gnuradio-runtime.conf''' file
+under the '''[LOG]''' section. This allows us fairly complete control over
+the logging facilities. The main configuration functions are to set up
+the level of the loggers and set the default output behavior of the
+loggers.
+
+There are two default loggers that all gr_block's have access to:
+d_logger and d_debug_logger. The first is a standard logger meant to
+output simple information about the block while it is running. The
+debug logger is meant for debugging purposes and is added to make it
+convenient to use a secondary logger that outputs to a different
+stream or file.
+
+The four main configure options are:
+
+  log_level = debug
+  debug_level = debug
+  log_file = stdout
+  debug_file = stderr
+
+This establishes the two loggers as having access to all levels of
+logging events (DEBUG through EMERG). They are also configured not to
+use files but instead output to the console. The standard logger will
+output to standard out while the debug logger outputs to standard
+error.
+
+Changing these last two lines to another value will create files that
+are used to store the log messages. All messages are appended to the
+file.
+
+When using either standard error or standard out, the messages for the
+two different loggers will look like:
+
+  gr::log :<level>: <block alias> - <message>
+  gr::debug :<level>: <block alias> - <message>
+
+When using a file, the only difference in the format is that the
+message prefix of "gr::log" or "gr::debug" is not used. Instead, the
+time in milliseconds from the start of the program is inserted.
+
+Remember that a local "~/.gnuradio/config.conf" file can be used to
+override any parameter in the global file (see [[Configuration Files]] for more details).
+
+To use these loggers inside of a GNU Radio block, we use the protected
+data members of d_logger and d_debug_logger of gr_block and pass them
+to our pre-defined macros:
+
+  GR_LOG_<level>(<logger>, "<Message to print>");
+
+Where <level> is one of the levels as mentioned above, <logger> is
+either d_logger or d_debug_logger, and <Message to print> is the
+message we want to output. If we wanted to output an INFO level
+message to the standard logger and a WARN level message to the debug
+logger, it would look like this:
+
+  GR_LOG_INFO(d_logger, "Some info about the block");
+  GR_LOG_WARN(d_debug_logger, "Some warning about the block");
+
+When this is printed to wherever you are directing the output of the
+logger, it will look like:
+
+    gr::log :INFO: <block's alias> - Some info about the block
+    gr::debug :WARN: <block's alias> - Some warning about the block
+
+This provides us information about where the message came from, the
+level of the message, and the block that generated the message. We use
+the concept of the block's alias which by default (i.e., unless
+otherwise set by the user) includes the name of the block and a unique
+ID to distinguish it from other blocks of the same type.
+
+The various logging macros are defined in gr_logger.h. Here are some
+simple examples of using them:
+
+  GR_LOG_DEBUG(LOG, "DEBUG message");
+  GR_LOG_INFO(LOG, "INFO message");
+  GR_LOG_NOTICE(LOG, "NOTICE message");
+  GR_LOG_WARN(LOG, "WARNING message");
+  GR_LOG_ERROR(LOG, "ERROR message");
+  GR_LOG_CRIT(LOG, "CRIT message");
+  GR_LOG_ALERT(LOG, "ALERT message");
+  GR_LOG_FATAL(LOG, "FATAL message");
+  GR_LOG_EMERG(LOG, "EMERG message");
+
+If the logger is not enabled, then these macros become nops and do
+nothing (and d_logger and d_debug_logger are NULL pointers). If
+logging is enabled but the log4cpp library is not found, then TRACE,
+INFO, and NOTICE levels go to stdout and the rest to stderr.
+
+=== Advanced Configuration Options ===
+
+If not using the simplified settings discussed above, where we can
+direct the logger messages to either a file or one of the standard
+outputs, we must use a more complicated configuration file. We do this
+by specifying the "log_config" option in the [LOG] section. The
+log4cpp documentation will provide more information on how
+configuration works and looks. Mostly, a default configuration script
+provided with GNU Radio can be used. After installation, the default
+configuration script is located at:
+
+    $prefix/etc/gnuradio/gr_log_default.conf
+
+For the following examples, we will assume that our local
+"~/.gnuradio/config.conf" looks like this:
+
+ [LOG]
+ log_config = /opt/gr/etc/gnuadio/gr_log_default.conf
+ log_level = debug
+ debug_level = Off
+
+Inside of the default configuration file, we define the parameters
+for the two loggers, the standard logger and the separate debug logger.
+
+If the levels of the two loggers are specified in our configuration
+file, as in the above example, these levels override any levels
+specified in the log_config file. Here, we have turned on the standard logger
+(d_logger) to all levels and turned off the debug logger
+(d_debug_logger). So even if the debug logger is used in the code, it
+will not actually output any information. Conversely, any level of
+output passed to the standard logger will output because we have
+turned this value to the lowest level "debug."
+
+If both an log_config configuration file is set and the "log_file" or
+"debug_file" options are set at the same time, both systems are
+actually used. So you can configure file access and the pattern
+through the log_config file while also still outputting to stdout or stderr.
+
+== Advanced Usage ==
+
+The description above for using the logging facilities is specific to
+GNU Radio blocks. We have put the code necessary to access the
+logger into the gr_block parent class to simplify access and make
+sure all blocks have the ability to quickly and easily use the logger.
+
+For non gr_block-based code, we have to get some information about the
+logger in order to properly access it. Each logger only exists once as
+a singleton in the system, but we need to get a pointer to the right
+logger and then set it up for our local use. The following code
+snippet shows how to do this to get access to the standard logger,
+which has a root of "gr_log." (access to the debug logger is similar
+except we would use "gr_log_debug." in the GR_LOG_GETLOGGER call):
+
+    prefs *p = prefs::singleton();
+    std::string log_file = p->get_string("LOG", "log_config", "");
+    std::string log_level = p->get_string("LOG", "log_level", "off");
+    GR_CONFIG_LOGGER(log_file);
+    GR_LOG_GETLOGGER(LOG, "gr_log." + "my_logger_name");
+    GR_LOG_SET_LEVEL(LOG, log_level);
+
+This creates a pointer called LOG (which is instantiated as a
+log4cpp:LoggerPtr in the macro) that we can now use locally as the
+input to our logging macros like 'GR_LOG_INFO(LOG, "message")'.
+
+=== Using Logging in Out of Tree Modules ===
+
+In order to use the logging interface in an out of tree module based on a
+gr_modtool template module, several CMake modifications are required.
+Without these changes, logging will be disabled.
+
+GrMiscUtils.cmake module must be included in the OOT module top level
+CMakeLists.Texts file, and the GR_LOGGING() function provided by GrMiscUtils
+must be called from the same top level CMakeLists.txt file. This will
+set the appropriate build environment and during that process, attempt
+to find the log4cpp package using the FindLog4Cpp.cmake module.
+This module is not included in the module by gr_modtool, but is part of
+the GNU Radio codebase and can be copied directly into the cmake/Modules/
+directory of the OOT module.
+
+Once these CMake changes are made, the  GR logging interface will function
+as documented on this page.
+
+
+
+==== Current GNU Radio 3.9 March 2020 ====
+With the current ''master'' branch, logging got way easier. In your OOT module, just write:
+<syntaxhighlight lang="c++">
+GR_LOG_INFO(this->d_logger, "My INFO message");
+</syntaxhighlight>
+for logging to the standard logger with level 'INFO'. More generally, we'd use:
+<syntaxhighlight lang="c++">
+GR_LOG_<LOGLEVEL>(this->d_logger, "My <LOGLEVEL> message");
+</syntaxhighlight>
+
+It is not necessary to apply any CMake changes or to include additional headers.
+Be aware that 
+<syntaxhighlight lang="c++" inline>
+this->d_logger
+</syntaxhighlight>
+implies that you call the logger within a class inherited from 
+<syntaxhighlight lang="c++" inline>gr::block</syntaxhighlight>.
+
+== Logging from Python ==
+
+The logging capability has been brought out python via swig (<=v3.8) or pybind11 (>=v3.9). The configuration
+of the logger can be manipulated via the following calls:
+
+ from gnuradio import gr
+ gr.logger_config(filename,watch_period)  # Configures the logger with conf file filename
+ names = gr.logger_get_names()  # Returns the names of all loggers
+ gr.logger_reset_config()   # Resets logger config by removing all appenders
+
+Once the logger is configured you can manipulate a logger via a wrapper class gr.logger().
+You can instantiate this by the following.  (Reference logger.h for list of methods)
+
+ from gnuradio import gr
+ log=gr.logger("nameOfLogger")
+ log.debug("Log a debug message")
+ log.set_level("INFO");</text>
+      <sha1>s1zlqhtu3momfl66ryql76uguo9567g</sha1>
+    </revision>
+  </page>
+</mediawiki>

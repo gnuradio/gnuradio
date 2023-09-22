@@ -1,0 +1,35 @@
+id: qtgui_graphicoverlay
+label: QT GUI Graphic Overlay Sample Source
+category: '[Core]/GUI Widgets/QT'
+
+parameters:
+-   id: overlayList
+    label: Overlay Dict or List(dict)
+    default: "[{'filename':'exampleoverlay.png','x':10,'y':0,'scalefactor':1},{'filename':'exampleoverlay.png','x':20,'y':20,'scalefactor':2},{'filename':'exampleoverlay.png','x':30,'y':40,'scalefactor':2},{'filename':'exampleoverlay.png','x':40,'y':60,'scalefactor':3},{'filename':'exampleoverlay.png','x':50,'y':80,'scalefactor':4}]"
+    hide: 'part'
+-   id: listDelay
+    label: If List Send With Delay (sec)
+    dtype: real
+    default: '1.0'
+    hide: 'part'
+-   id: repeat
+    label: If List Repeat
+    dtype: bool
+    default: 'True'
+    hide: 'part'
+
+outputs:
+-   domain: message
+    id: overlay
+    
+templates:
+    make: qtgui.GrGraphicOverlay(${overlayList},${listDelay},${repeat})
+
+documentation: |-
+    This block is an example of how to feed an overlay to a graphic item.  The graphic item overlay is expecting a dictionary with the following keys: 'filename','x','y', and optionally a 'scalefactor'.  A list of dictionaries can also be supplied to support multiple items.
+
+    Any file can be added to the graphic item as an overlay and the particular item indexed by its filename can be updated by passing in new x/y coordinates.  To remove an overlay, use coordinates -1,-1 for the x,y coordinates.
+
+    This sample block sends either a dictionary or list of dictionaries to the graphicitem block.  To test updating a single overlay item, you can use a list with the same file but different coordinates and use the update delay > 0.0 to animate it.
+
+file_format: 1

@@ -1,0 +1,39 @@
+id: analog_random_uniform_source_x
+label: Random Uniform Source
+flags: [ python, cpp ]
+
+parameters:
+-   id: type
+    label: Output Type
+    dtype: enum
+    options: [int, short, byte]
+    option_attributes:
+        fcn: [i, s, b]
+        offset_type: [int, int, int]
+    hide: part
+-   id: minimum
+    label: Minimum
+    dtype: int
+-   id: maximum
+    label: Maximum
+    dtype: int
+-   id: seed
+    label: Seed
+    dtype: int
+    default: '0'
+
+outputs:
+-   domain: stream
+    dtype: ${ type }
+
+templates:
+    imports: from gnuradio import analog
+    make: analog.random_uniform_source_${type.fcn}(${minimum}, ${maximum}, ${seed})
+
+cpp_templates:
+    includes: ['#include <gnuradio/analog/random_uniform_source.h>']
+    declarations: 'analog::random_uniform_source_${type.fcn}::sptr ${id};'
+    make: 'this->${id} = analog::random_uniform_source_${type.fcn}::make(${minimum}, ${maximum}, ${seed});'
+    link: ['gnuradio::gnuradio-analog']
+
+file_format: 1

@@ -1,0 +1,113 @@
+id: variable_qtgui_toggle_switch
+label: QT GUI Toggle Switch
+category: '[Core]/GUI Widgets/QT'
+flags: [ show_id, python ]
+
+parameters:
+-   id: label
+    label: Label
+    dtype: string
+    hide: ${ ('none' if label else 'part') }
+-   id: position
+    label: Label Position
+    dtype: enum
+    default: '4'
+    options: ['3', '4']
+    option_labels: ['Left', 'Right']
+    hide: 'part'
+-   id: type
+    label: Type
+    dtype: enum
+    default: int
+    options: [real, int, string, bool]
+    option_labels: [Float, Integer, String, Boolean]
+    option_attributes:
+        conv: [float, int, str, bool]
+    hide: part
+-   id: value
+    label: Default Value
+    dtype: ${ type }
+    default: '0'
+-   id: initPressed
+    label: Initial State
+    dtype: enum
+    default: 'False'
+    options: ['False', 'True']
+    option_labels: ['Released', 'Pressed']
+-   id: pressed
+    label: On Value
+    dtype: ${ type }
+    default: '1'
+-   id: released
+    label: Off Value
+    dtype: ${ type }
+    default: '0'
+-   id: outputmsgname
+    label: Message Property Name
+    dtype: string
+    default: 'value'
+    hide: 'part'
+-   id: switchOnBackground
+    label: Switch On Background
+    dtype: enum
+    default: 'green'
+    options: ['silver', 'gray', 'black', 'white', 'red', 'green', 'blue', 'navy', 'yellow', 'orange', 'purple', 'lime', 'aqua', 'teal']
+    option_labels: ['silver', 'gray', 'black', 'white', 'red', 'green', 'blue', 'navy', 'yellow', 'orange', 'purple', 'lime', 'aqua', 'teal']
+    hide: 'part'
+-   id: switchOffBackground
+    label: switchOffBackground
+    dtype: enum
+    default: 'gray'
+    options: ['silver', 'gray', 'black', 'white', 'red', 'green', 'blue', 'navy', 'yellow', 'orange', 'purple', 'lime', 'aqua', 'teal']
+    option_labels: ['silver', 'gray', 'black', 'white', 'red', 'green', 'blue', 'navy', 'yellow', 'orange', 'purple', 'lime', 'aqua', 'teal']
+    hide: 'part'
+-   id: cellalignment
+    label: Cell Alignment
+    dtype: enum
+    default: '1'
+    options: ['1','2','3']
+    option_labels: ['Center','Left','Right']
+    hide: part
+-   id: verticalalignment
+    label: Vertical Alignment
+    dtype: enum
+    default: '1'
+    options: ['1','2','3']
+    option_labels: ['Center','Top','Bottom']
+    hide: part
+-   id: gui_hint
+    label: GUI Hint
+    dtype: gui_hint
+    hide: part
+value: ${ value }
+
+outputs:
+-   domain: message
+    id: state
+    optional: true
+
+templates:
+    var_make: self.${id} = ${id} = ${value}
+    make: |-
+        <%
+            win = '_%s_toggle_switch'%id
+        %>\
+        % if type == 'bool':
+        self._${id}_choices = {'Pressed': bool(${pressed}), 'Released': bool(${released})}
+        % else:
+        self._${id}_choices = {'Pressed': ${pressed}, 'Released': ${released}}
+        % endif
+
+        ${win} = qtgui.GrToggleSwitch(${ 'self.set_' + context.get('id')() }, ${label}, self._${id}_choices, ${initPressed}, "${switchOnBackground}", "${switchOffBackground}", ${position}, 50, ${cellalignment}, ${verticalalignment}, self, ${outputmsgname})
+        self.${id} = ${win}
+
+        ${gui_hint() % win}
+
+documentation: |-
+    This block creates a modern toggle switch. The variable will take on one value or the other as set in the dialog.
+
+    This switch will also produce a state message matching the set values.
+
+    The GUI hint can be used to position the widget within the application. The hint is of the form [tab_id@tab_index]: [row, col, row_span, col_span]. Both the tab specification and the grid position are optional.
+
+file_format: 1

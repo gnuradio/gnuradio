@@ -1,0 +1,24 @@
+'[Core]':
+- Misc:
+  - options
+  - pad_source
+  - pad_sink
+  - virtual_source
+  - virtual_sink
+  - bus_sink
+  - bus_source
+  - bus_structure_sink
+  - bus_structure_source
+  - epy_block
+  - epy_module
+  - note
+  - import
+  - snippet 
+- Variables:
+  - variable
+  - variable_struct
+  - variable_config
+  - variable_function_probe
+  - json_config
+  - yaml_config
+  - parameter

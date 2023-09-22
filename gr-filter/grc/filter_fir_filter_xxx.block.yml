@@ -1,0 +1,62 @@
+id: fir_filter_xxx
+label: Decimating FIR Filter
+flags: [ python, cpp ]
+
+parameters:
+-   id: type
+    label: Type
+    dtype: enum
+    options: [ccc, ccf, fcc, fff, fsf, scc]
+    option_labels: [Complex->Complex (Complex Taps), Complex->Complex (Real Taps),
+        Float->Complex (Complex Taps), Float->Float (Real Taps), Float->Short (Real
+            Taps), Short->Complex (Complex Taps)]
+    option_attributes:
+        input: [complex, complex, float, float, float, short]
+        output: [complex, complex, complex, float, short, complex]
+        taps: [complex_vector, real_vector, complex_vector, real_vector, real_vector,
+            complex_vector]
+    hide: part
+-   id: decim
+    label: Decimation
+    dtype: int
+    default: '1'
+-   id: taps
+    label: Taps
+    dtype: ${ type.taps }
+-   id: samp_delay
+    label: Sample Delay
+    dtype: int
+    default: '0'
+    hide: part
+
+inputs:
+-   domain: stream
+    dtype: ${ type.input }
+
+outputs:
+-   domain: stream
+    dtype: ${ type.output }
+
+templates:
+    imports: |-
+        from gnuradio import filter
+        from gnuradio.filter import firdes
+    make: |-
+        filter.fir_filter_${type}(${decim}, ${taps})
+        self.${id}.declare_sample_delay(${samp_delay})
+    callbacks:
+    - set_taps(${taps})
+
+cpp_templates:
+    includes: ['#include <gnuradio/filter/fir_filter_blk.h>']
+    declarations: 'filter::fir_filter_${type}::sptr ${id};'
+    make: |-
+        this->${id} = filter::fir_filter_${type}::make(
+            ${decim}, 
+            ${taps});
+        this->${id}->declare_sample_delay(${samp_delay});
+    link: ['gnuradio::gnuradio-filter']
+    callbacks:
+    - set_taps(taps)
+
+file_format: 1

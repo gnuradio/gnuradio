@@ -1,0 +1,27 @@
+<!--
+Copyright 2008 Free Software Foundation, Inc.
+This file is part of GNU Radio
+
+SPDX-License-Identifier: GPL-2.0-or-later
+
+-->
+<!--
+    flow_graph.dtd
+    Josh Blum
+    The document type definition for flow graph xml files.
+ -->
+<!ELEMENT flow_graph (timestamp?, block*, connection*)> <!-- optional timestamp -->
+<!ELEMENT timestamp (#PCDATA)>
+<!-- Block -->
+<!ELEMENT block (key, param*, bus_sink?, bus_source?)>
+<!ELEMENT param (key, value)>
+<!ELEMENT key (#PCDATA)>
+<!ELEMENT value (#PCDATA)>
+<!ELEMENT bus_sink (#PCDATA)>
+<!ELEMENT bus_source (#PCDATA)>
+<!-- Connection -->
+<!ELEMENT connection (source_block_id, sink_block_id, source_key, sink_key)>
+<!ELEMENT source_block_id (#PCDATA)>
+<!ELEMENT sink_block_id (#PCDATA)>
+<!ELEMENT source_key (#PCDATA)>
+<!ELEMENT sink_key (#PCDATA)>

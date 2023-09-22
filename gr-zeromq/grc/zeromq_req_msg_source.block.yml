@@ -1,0 +1,36 @@
+id: zeromq_req_msg_source
+label: ZMQ REQ Message Source
+category: '[Core]/ZeroMQ Interfaces'
+flags: [python, cpp]
+
+parameters:
+-   id: address
+    label: Address
+    dtype: string
+-   id: timeout
+    label: Timeout (msec)
+    dtype: float
+    default: '100'
+-   id: bind
+    category: Advanced
+    label: Bind
+    dtype: bool
+    default: 'False'
+    hide: part
+
+outputs:
+-   domain: message
+    id: out
+    optional: true
+
+templates:
+    imports: from gnuradio import zeromq
+    make: zeromq.req_msg_source(${address}, ${timeout}, ${bind})
+
+cpp_templates:
+    includes: [ '#include <gnuradio/zeromq/req_msg_source.h>' ]
+    declarations: gr::zeromq::req_msg_source::sptr ${id};
+    make: this->${id} = gr::zeromq::req_msg_source::make(const_cast<char *>(${address}${'.c_str())' if str(address)[0] not in '"\'' else ')'}, ${timeout});
+    link: ['gnuradio::gnuradio-zeromq']      
+
+file_format: 1

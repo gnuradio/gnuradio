@@ -1,0 +1,52 @@
+id: blocks_stream_to_tagged_stream
+label: Stream to Tagged Stream
+flags: [ python, cpp ]
+
+parameters:
+-   id: type
+    label: Type
+    dtype: enum
+    options: [complex, float, int, short, byte]
+    option_attributes:
+        size: [gr.sizeof_gr_complex, gr.sizeof_float, gr.sizeof_int, gr.sizeof_short,
+            gr.sizeof_char]
+    hide: part
+-   id: vlen
+    label: Vector Length
+    dtype: int
+    default: '1'
+    hide: ${ 'part' if vlen == 1 else 'none' }
+-   id: packet_len
+    label: Packet Length
+    dtype: int
+-   id: len_tag_key
+    label: Length Tag Key
+    dtype: string
+    default: '"packet_len"'
+
+inputs:
+-   domain: stream
+    dtype: ${ type }
+    vlen: ${ vlen }
+
+outputs:
+-   domain: stream
+    dtype: ${ type }
+    vlen: ${ vlen }
+
+templates:
+    imports: from gnuradio import blocks
+    make: blocks.stream_to_tagged_stream(${type.size}, ${vlen}, ${packet_len}, ${len_tag_key})
+    callbacks:
+    - set_packet_len(${packet_len})
+    - set_packet_len_pmt(${packet_len})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/stream_to_tagged_stream.h>']
+    declarations: 'blocks::stream_to_tagged_stream::sptr ${id};'
+    make: 'this->${id} = blocks::stream_to_tagged_stream::make(${type.size}, ${vlen}, ${packet_len}, ${len_tag_key});'
+    callbacks:
+    - set_packet_len(${packet_len})
+    - set_packet_len_pmt(${packet_len})
+
+file_format: 1

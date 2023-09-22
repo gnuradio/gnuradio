@@ -1,0 +1,48 @@
+id: blocks_divide_xx
+label: Divide
+flags: [ python, cpp ]
+
+parameters:
+-   id: type
+    label: IO Type
+    dtype: enum
+    options: [complex, float, int, short]
+    option_attributes:
+        fcn: [cc, ff, ii, ss]
+    hide: part
+-   id: vlen
+    label: Vector Length
+    dtype: int
+    default: '1'
+    hide: ${ 'part' if vlen == 1 else 'none' }
+-   id: num_inputs
+    label: Num Inputs
+    dtype: int
+    default: '2'
+    hide: part
+
+inputs:
+-   domain: stream
+    dtype: ${ type }
+    vlen: ${ vlen }
+    multiplicity: ${ num_inputs }
+
+outputs:
+-   domain: stream
+    dtype: ${ type }
+    vlen: ${ vlen }
+
+asserts:
+- ${ vlen > 0 }
+- ${ num_inputs >= 2 }
+
+templates:
+    imports: from gnuradio import blocks
+    make: blocks.divide_${type.fcn}(${vlen})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/divide.h>']
+    declarations: 'blocks::divide_${type.fcn}::sptr ${id};'
+    make: 'this->${id} = blocks::divide_${type.fcn}::make(${vlen});'
+
+file_format: 1

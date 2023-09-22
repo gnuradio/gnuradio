@@ -1,0 +1,24 @@
+id: vocoder_gsm_fr_decode_ps
+label: GSM full-rate Audio Decoder
+flags: [ python, cpp ]
+
+inputs:
+-   domain: stream
+    dtype: byte
+    vlen: 33
+
+outputs:
+-   domain: stream
+    dtype: short
+
+templates:
+    imports: from gnuradio import vocoder
+    make: vocoder.gsm_fr_decode_ps()
+
+cpp_templates:
+    includes: [ '#include <gnuradio/vocoder/gsm_fr_decode_ps.h>' ]
+    declarations: 'vocoder::gsm_fr_decode_ps::sptr ${id};'
+    make: 'this->${id} = vocoder::gsm_fr_decode_ps::make();'
+    link: ['gnuradio-vocoder']
+
+file_format: 1

@@ -1,0 +1,36 @@
+id: zeromq_push_msg_sink
+label: ZMQ PUSH Message Sink
+category: '[Core]/ZeroMQ Interfaces'
+flags: [python, cpp]
+
+parameters:
+-   id: address
+    label: Address
+    dtype: string
+-   id: timeout
+    label: Timeout (msec)
+    dtype: float
+    default: '100'
+-   id: bind
+    category: Advanced
+    label: Bind
+    dtype: bool
+    default: 'True'
+    hide: part
+
+inputs:
+-   domain: message
+    id: in
+    optional: true
+
+templates:
+    imports: from gnuradio import zeromq
+    make: zeromq.push_msg_sink(${address}, ${timeout}, ${bind})
+
+cpp_templates:
+    includes: [ '#include <gnuradio/zeromq/push_msg_sink.h>' ]
+    declarations: gr::zeromq::push_msg_sink::sptr ${id};
+    make: this->${id} = gr::zeromq::push_msg_sink::make(const_cast<char *>(${address}${'.c_str())' if str(address)[0] not in '"\'' else ')'}, ${timeout});
+    link: ['gnuradio::gnuradio-zeromq']      
+
+file_format: 1

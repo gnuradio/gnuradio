@@ -1,0 +1,23 @@
+id: vocoder_g723_24_decode_bs
+label: g723_24 Audio Decoder
+flags: [ python, cpp ]
+
+inputs:
+-   domain: stream
+    dtype: byte
+
+outputs:
+-   domain: stream
+    dtype: short
+
+templates:
+    imports: from gnuradio import vocoder
+    make: vocoder.g723_24_decode_bs()
+
+cpp_templates:
+    includes: [ '#include <gnuradio/vocoder/g723_24_decode_bs.h>' ]
+    declarations: 'vocoder::g723_24_decode_bs::sptr ${id};'
+    make: 'this->${id} = vocoder::g723_24_decode_bs::make();'
+    link: ['gnuradio-vocoder']
+
+file_format: 1

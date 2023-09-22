@@ -1,0 +1,51 @@
+id: variable_qtgui_azelplot
+label: QT GUI Az-El Plot
+category: '[Core]/GUI Widgets/QT'
+flags: [ show_id, python ]
+
+parameters:
+-   id: label
+    label: Label
+    dtype: string
+    hide: ${ ('none' if label else 'part') }
+-   id: backgroundColor
+    label: Background
+    dtype: enum
+    default: 'white'
+    options: ['#efefef', 'lightgray', 'gray', 'black', 'white', 'red', 'green', 'blue', 'navy', 'yellow', 'orange', 'purple', 'lime', 'aqua', 'teal']
+    option_labels: ['background gray','light gray', 'gray', 'black', 'white', 'red', 'green', 'blue', 'navy', 'yellow', 'orange', 'purple', 'lime', 'aqua', 'teal']
+    hide: 'part'
+-   id: dotColor
+    label: Dot Color
+    dtype: enum
+    default: 'ro'
+    options: ['bo', 'go', 'ro', 'co', 'mo', 'yo', 'ko', 'wo']
+    option_labels: ['blue', 'green', 'red', 'cyan', 'magenta', 'yellow', 'black', 'white']
+    hide: 'part'
+-   id: gui_hint
+    label: GUI Hint
+    dtype: gui_hint
+    hide: part
+
+inputs:
+-   domain: message
+    id: azel
+    optional: false
+
+templates:
+    var_make: self.${id} = None
+    make: |-
+        <%
+            win = '_distance_radar_%s'%id
+        %>\
+        ${win} = qtgui.AzElPlot(${label}, "${backgroundColor}", "${dotColor}", self)
+        self.${id} = ${win}
+
+        ${gui_hint() % win}
+ 
+documentation: |-
+    This block creates a polar plot with azimuth represented as the angle clockwise around the circle, and elevation represented as the radius.  90 degrees elevation is center (directly overhead), while the horizon (0 degrees) is the outside circe.  Note that if an elevation < 0 is provided, the marker will turn to an open circle on the perimeter at the specified azimuth angle.
+
+    The GUI hint can be used to position the widget within the application. The hint is of the form [tab_id@tab_index]: [row, col, row_span, col_span]. Both the tab specification and the grid position are optional.
+
+file_format: 1

@@ -1,0 +1,274 @@
+<page>
+    <title>Types of Blocks</title>
+    <ns>0</ns>
+    <id>3495</id>
+    <revision>
+      <id>9094</id>
+      <parentid>8843</parentid>
+      <timestamp>2021-11-17T16:00:00Z</timestamp>
+      <contributor>
+        <username>777arc</username>
+        <id>632</id>
+      </contributor>
+      <comment>/* Basic Block */</comment>
+      <model>wikitext</model>
+      <format>text/x-wiki</format>
+      <text xml:space="preserve" bytes="8027">[[Category:Usage Manual]]
+== Introduction ==
+
+To take advantage of the gnuradio framework, users will create various blocks to implement the desired data processing. There are several types of blocks to choose from:
+
+* Synchronous Blocks (1:1)
+* Decimation Blocks (N:1)
+* Interpolation Blocks (1:M)
+* Basic (a.k.a. General) Blocks (N:M)
+
+== Synchronous Block ==
+
+The sync block allows users to write blocks that consume and produce an equal number of items per port. A sync block may have any number of inputs or outputs. When a sync block has zero inputs, its called a source. When a sync block has zero outputs, its called a sink.
+
+An example sync block in C++:
+
+<syntaxhighlight lang="cpp">
+#include <gr_sync_block.h> 
+
+class my_sync_block : public gr_sync_block
+{
+public:
+  my_sync_block(...):
+    gr_sync_block("my block", 
+                  gr_make_io_signature(1, 1, sizeof(int32_t)),
+                  gr_make_io_signature(1, 1, sizeof(int32_t)))
+  {
+    //constructor stuff
+  }
+
+  int work(int noutput_items,
+           gr_vector_const_void_star &input_items,
+           gr_vector_void_star &output_items)
+  {
+    //work stuff...
+    return noutput_items;
+  }
+};
+</syntaxhighlight>
+
+Some observations:
+
+* noutput_items is the length in items of all input and output buffers
+* an input signature of gr_make_io_signature(0, 0, 0) makes this a source block
+* an output signature of gr_make_io_signature(0, 0, 0) makes this a sink block
+
+An example sync block in Python:
+
+<syntaxhighlight lang="python">
+class my_sync_block(gr.sync_block):
+    def __init__(self):
+        gr.sync_block.__init__(self,
+            name = "my sync block",
+            in_sig = [numpy.float32, numpy.float32],
+            out_sig = [numpy.float32],
+        )
+    def work(self, input_items, output_items):
+        output_items[0][:] = input_items[0] + input_items[1]
+        return len(output_items[0])
+</syntaxhighlight>
+
+The input_items and output_items are lists of lists. The input_items
+contains a vector of input samples for every input stream, and the
+output_items is a vector for each output stream where we can place
+items. Then length of output_items[0] is equivalent to the
+noutput_items concept we are so familiar with from the C++ blocks.
+
+Some observations:
+* The length of all input vector and all output vectors is identical
+* in_sig=None would turn this into a source block
+* out_sig=None would turn this into a sink block.  In this case, use len(input_items [0]) since output_items is empty!
+* Unlike in C++ where we use the gr::io_signature class, here we can just create a Python list of the I/O data sizes using numpy data types, e.g.: numpy.int8, numpy.int16, numpy.float32
+
+== Decimation Block ==
+
+The decimation block is another type of fixed rate block where the number of input items is a fixed multiple of the number of output items.
+
+An example decimation block in c++
+
+<syntaxhighlight lang="cpp">
+#include <gr_sync_decimator.h>
+
+class my_decim_block : public gr_sync_decimator
+{
+public:
+  my_decim_block(...):
+    gr_sync_decimator("my decim block", 
+                      in_sig,
+                      out_sig,
+                      decimation)
+  {
+    //constructor stuff
+  }
+
+  //work function here...
+};
+</syntaxhighlight>
+
+Some observations:
+
+* The gr_sync_decimator constructor takes a 4th parameter, the decimation factor
+* The user should assume that the number of input items = noutput_items*decimation
+
+An example decimation block in Python:
+
+<syntaxhighlight lang="python">
+class my_decim_block(gr.decim_block):
+    def __init__(self, decim_rate):
+        gr.decim_block.__init__(self,
+            name="my block",
+            in_sig=[numpy.float32],
+            out_sig=[numpy.float32],
+            decim = decim_rate)
+        self.set_relative_rate(1.0/decim_rate)
+        self.decimation = decim_rate
+
+    def work(self, input_items, output_items):
+        output_items[0][:] = input_items[0][0::self.decimation]
+        return len(output_items[0])
+</syntaxhighlight>
+
+Some observations:
+
+* The set_relative_rate call configures the input/output relationship
+* To set an interpolation, use self.set_relative_rate(interpolation)
+* The following will be true len(input_items[i]) = len(output_items[j])*decimation
+
+== Interpolation Block ==
+
+The interpolation block is another type of fixed rate block where the number of output items is a fixed multiple of the number of input items.
+
+An example interpolation block in c++
+
+<syntaxhighlight lang="cpp">
+#include <gr_sync_interpolator.h>
+
+class my_interp_block : public gr_sync_interpolator
+{
+public:
+  my_interp_block(...):
+    gr_sync_interpolator("my interp block", 
+                         in_sig,
+                         out_sig,
+                         interpolation)
+  {
+    //constructor stuff
+  }
+
+  //work function here...
+};
+</syntaxhighlight>
+Some observations:
+
+* The gr_sync_interpolator constructor takes a 4th parameter, the interpolation factor
+* The user should assume that the number of input items = noutput_items/interpolation
+
+An example interpolation block in Python:
+
+<syntaxhighlight lang="python">
+class my_interp_block(gr.interp_block):
+    def __init__(self, args):
+        gr.interp_block.__init__(self,
+            name="my block",
+            in_sig=[numpy.float32],
+            out_sig=[numpy.float32])
+        self.set_relative_rate(interpolation)
+
+    #work function here...
+</syntaxhighlight>
+
+== Basic Block ==
+
+The basic block provides no relation between the number of input items and the number of output items. All other blocks are just simplifications of the basic block. Users should choose to inherit from basic block when the other blocks are not suitable.
+
+The adder revisited as a basic block in C++:
+
+<syntaxhighlight lang="cpp">
+#include <gr_block.h>
+
+class my_basic_block : public gr_block
+{
+public:
+  my_basic_adder_block(...):
+    gr_block("another adder block",
+             in_sig,
+             out_sig)
+  {
+    //constructor stuff
+  }
+
+  int general_work(int noutput_items,
+                   gr_vector_int &ninput_items,
+                   gr_vector_const_void_star &input_items,
+                   gr_vector_void_star &output_items)
+  {
+    //cast buffers
+    const float* in0 = reinterpret_cast(input_items[0]);
+    const float* in1 = reinterpret_cast(input_items[1]);
+    float* out = reinterpret_cast(output_items[0]);
+
+    //process data
+    for(size_t i = 0; i < noutput_items; i++) {
+      out[i] = in0[i] + in1[i];
+    }
+
+    //consume the inputs
+    this->consume(0, noutput_items); //consume port 0 input
+    this->consume(1, noutput_items); //consume port 1 input
+    //this->consume_each(noutput_items); //or shortcut to consume on all inputs
+
+    //return produced
+    return noutput_items;
+  }
+};
+</syntaxhighlight>
+
+Some observations:
+
+* This class overloads the general_work() method, not work()
+* The general work has a parameter: ninput_items
+** ninput_items is a vector describing the length of each input buffer
+* Before return, general_work must manually consume the used inputs
+* The number of items in the input buffers is assumed to be noutput_items
+** This behaviour can be altered by overloading the forecast() method but is not mandatory
+
+The adder revisited as a basic block in Python:
+
+<syntaxhighlight lang="python">
+import numpy as np
+from gnuradio import gr
+
+class my_basic_adder_block(gr.basic_block):
+    def __init__(self):
+        gr.basic_block.__init__(self,
+            name="another_adder_block",
+            in_sig=[np.float32, np.float32],
+            out_sig=[np.float32])
+
+    def general_work(self, input_items, output_items):
+        #buffer references
+        in0 = input_items[0][:len(output_items[0])]
+        in1 = input_items[1][:len(output_items[0])]
+        out = output_items[0]
+
+        #process data
+        out[:] = in0 + in1
+
+        #consume the inputs
+        self.consume(0, len(in0)) #consume port 0 input
+        self.consume(1, len(in1)) #consume port 1 input
+
+
+        #return produced
+        return len(out)
+</syntaxhighlight></text>
+      <sha1>jlgt0ofen1ui79z2lk7vhsyffax6jr5</sha1>
+    </revision>
+  </page>
+</mediawiki>

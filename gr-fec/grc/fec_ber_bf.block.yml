@@ -1,0 +1,37 @@
+id: fec_ber_bf
+label: BER
+
+parameters:
+-   id: test_mode
+    label: Test Mode
+    dtype: enum
+    default: 'False'
+    options: ['False', 'True']
+-   id: berminerrors
+    label: BER Min. Errors
+    dtype: int
+    default: '100'
+    hide: ${ ('part' if test_mode else 'all') }
+-   id: berlimit
+    label: BER Limit
+    dtype: float
+    default: '-7.0'
+    hide: ${ ('part' if test_mode else 'all') }
+
+inputs:
+-   label: in0
+    domain: stream
+    dtype: byte
+-   label: in1
+    domain: stream
+    dtype: byte
+
+outputs:
+-   domain: stream
+    dtype: float
+
+templates:
+    imports: from gnuradio import fec
+    make: fec.ber_bf(${test_mode}, ${berminerrors}, ${berlimit})
+
+file_format: 1

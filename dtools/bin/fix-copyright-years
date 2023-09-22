@@ -1,0 +1,65 @@
+#!/usr/bin/env python
+
+import re
+import datetime
+import subprocess
+import multiprocessing
+
+def command(*args): return subprocess.Popen(args, stdout=subprocess.PIPE).communicate()[0]
+
+def is_gnuradio_co_source(lines):
+    for line in lines[:20]:
+        if 'GNU Radio is free software' in line: return True
+    return False
+
+def get_gnuradio_co_line(lines):
+    for i, line in enumerate(lines[:5]):
+        if 'Copyright' in line and 'Free Software Foundation' in line: return line, i
+    return None
+
+def fix_co_years(files):
+    for file in files:
+        print file
+        lines = open(file).readlines()
+        if not is_gnuradio_co_source(lines): continue
+
+        #extract the years from the git history
+        years = set(map(
+            lambda l: int(l.split()[-2]),
+            filter(
+                lambda l: l.startswith('Date'),
+                command('git', 'log', file).splitlines(),
+            ),
+        ))
+
+        #extract line and line number for co line
+        try: line, num = get_gnuradio_co_line(lines)
+        except: continue
+
+        #extract years from co string
+        try:
+            co_years_str = re.match('^.*Copyright (.*) Free Software Foundation.*$', line).groups()[0]
+            co_years = set(map(int, co_years_str.split(',')))
+        except: print '    format error on line %d: "%s"'%(num, line); continue
+
+        #update the years if missing any
+        all_years = co_years.union(years)
+        if all_years != co_years:
+            print '    missing years: %s'%(', '.join(map(str, sorted(all_years - co_years))))
+            all_years.add(datetime.datetime.now().year) #add the current year
+            all_years_str = ', '.join(map(str, sorted(all_years)))
+            new_text = ''.join(lines[:num] + [line.replace(co_years_str, all_years_str)] + lines[num+1:])
+            open(file, 'w').write(new_text)
+
+if __name__ == "__main__":
+    #get recursive list of files in the repo
+    files = command('git', 'ls-tree', '--name-only', 'HEAD', '-r').splitlines()
+
+    #start n+1 processes to handle the files
+    num_procs = multiprocessing.cpu_count()
+    procs = [multiprocessing.Process(
+        target=lambda *files: fix_co_years(files),
+        args=files[num::num_procs],
+    ) for num in range(num_procs)]
+    map(multiprocessing.Process.start, procs)
+    map(multiprocessing.Process.join, procs)

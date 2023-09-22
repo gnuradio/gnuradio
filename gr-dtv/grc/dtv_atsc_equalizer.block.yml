@@ -1,0 +1,33 @@
+id: dtv_atsc_equalizer
+label: ATSC Equalizer
+flags: [ python, cpp ]
+
+inputs:
+-   domain: stream
+    dtype: float
+    vlen: 832
+-   domain: stream
+    label: plinfo
+    dtype: short
+    vlen: 2
+
+outputs:
+-   domain: stream
+    dtype: float
+    vlen: 832
+-   domain: stream
+    label: plinfo
+    dtype: short
+    vlen: 2
+
+templates:
+    imports: from gnuradio import dtv
+    make: dtv.atsc_equalizer()
+
+cpp_templates:
+    includes: ['#include <gnuradio/dtv/atsc_equalizer.h>']
+    declarations: 'dtv::atsc_equalizer::sptr ${id};'
+    make: 'this->${id} = dtv::atsc_equalizer::make();'
+    link: ['gnuradio::gnuradio-dtv']
+
+file_format: 1

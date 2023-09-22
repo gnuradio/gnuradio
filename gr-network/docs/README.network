@@ -1,0 +1,11 @@
+This is the GNU Radio network package. It contains the blocks that
+implement UDP and TCP source and sink blocks supporting both IPv4
+and IPv6. To use the network blocks, the Python namespace
+is in 'network', which is imported as:
+
+    from gnuradio import network
+
+A quick listing of the details can be found in Python after 
+importing by using:
+
+    help(network)

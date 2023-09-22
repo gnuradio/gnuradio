@@ -1,0 +1,94 @@
+options:
+  parameters:
+    author: ''
+    category: Custom
+    cmake_opt: ''
+    comment: ''
+    copyright: ''
+    description: ''
+    gen_cmake: 'On'
+    gen_linking: dynamic
+    generate_options: no_gui
+    hier_block_src_path: '.:'
+    id: tx_stage0
+    max_nouts: '0'
+    output_language: python
+    placement: (0,0)
+    qt_qss_theme: ''
+    realtime_scheduling: ''
+    run: 'True'
+    run_command: '{python} -u {filename}'
+    run_options: prompt
+    sizing_mode: fixed
+    thread_safe_setters: ''
+    title: ''
+    window_size: ''
+  states:
+    coordinate: [8, 11]
+    rotation: 0
+    state: enabled
+
+blocks:
+- name: blocks_message_debug_0
+  id: blocks_message_debug
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+  states:
+    coordinate: [544, 88.0]
+    rotation: 0
+    state: enabled
+- name: blocks_message_strobe_0
+  id: blocks_message_strobe
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    msg: pmt.PMT_T
+    period: '2000'
+  states:
+    coordinate: [48, 140.0]
+    rotation: 0
+    state: enabled
+- name: pdu_random_pdu_0
+  id: pdu_random_pdu
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    length_modulo: '1'
+    mask: '0xff'
+    maxoutbuf: '0'
+    maxsize: '150'
+    minoutbuf: '0'
+    minsize: '15'
+  states:
+    coordinate: [224, 124.0]
+    rotation: 0
+    state: enabled
+- name: network_tuntap_pdu_0
+  id: network_tuntap_pdu
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    ifn: tap0
+    istunflag: 'False'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    mtu: '10000'
+  states:
+    coordinate: [240, 236.0]
+    rotation: 0
+    state: disabled
+
+connections:
+- [blocks_message_strobe_0, strobe, pdu_random_pdu_0, generate]
+- [pdu_random_pdu_0, pdus, blocks_message_debug_0, print_pdu]
+- [network_tuntap_pdu_0, pdus, blocks_message_debug_0, print_pdu]
+
+metadata:
+  file_format: 1

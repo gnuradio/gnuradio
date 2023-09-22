@@ -1,0 +1,106 @@
+# Copyright 2013, 2019 Free Software Foundation, Inc.
+#
+# This file is part of GNU Radio
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+
+include(CMakeFindDependencyMacro)
+
+# Allows us to use all .cmake files in this directory
+list(INSERT CMAKE_MODULE_PATH 0 "${CMAKE_CURRENT_LIST_DIR}")
+
+find_dependency(spdlog)
+find_dependency(MPLIB)
+
+set(BOOST_REQUIRED_COMPONENTS date_time program_options system regex thread)
+
+if(NOT ENABLE_TESTING)
+    set(ENABLE_TESTING
+        @ENABLE_TESTING@
+        CACHE BOOL "Enable testing support")
+endif()
+
+if(ENABLE_TESTING)
+    list(APPEND BOOST_REQUIRED_COMPONENTS unit_test_framework)
+endif(ENABLE_TESTING)
+
+find_dependency(
+    Boost "@Boost_MAJOR_VERSION@.@Boost_MINOR_VERSION@.@Boost_SUBMINOR_VERSION@"
+    COMPONENTS ${BOOST_REQUIRED_COMPONENTS})
+find_dependency(Volk)
+set(ENABLE_PYTHON
+    @ENABLE_PYTHON@
+    CACHE BOOL "Enable Python & pybind11 Bindings")
+if(${ENABLE_PYTHON})
+    set(PYTHON_EXECUTABLE @PYTHON_EXECUTABLE@)
+    include(GrPython)
+endif()
+
+include("${CMAKE_CURRENT_LIST_DIR}/gnuradio-pmtConfig.cmake")
+include("${CMAKE_CURRENT_LIST_DIR}/gnuradio-runtimeConfig.cmake")
+cmake_policy(SET CMP0012 NEW)
+cmake_policy(SET CMP0057 NEW)
+
+# Propagate the enabledness of GRC:
+# Since GRC doesn't contain proper CMake targets (yet?), we need to do this
+# manually
+set(ENABLE_GRC
+    @ENABLE_GRC@
+    CACHE BOOL "Enable GRC features (export block YAML)")
+if(@ENABLE_GRC@)
+    set(GRC_BLOCKS_DIR "@GRC_BLOCKS_DIR@")
+endif()
+# Same for a few "special" features.
+set(GR_PERFORMANCE_COUNTERS @GR_PERFORMANCE_COUNTERS@)
+set(GR_CTRLPORT @GR_CTRLPORT@)
+set(GR_RPCSERVER_ENABLED @GR_RPCSERVER_ENABLED@)
+set(ENABLE_CTRLPORT_THRIFT @ENABLE_CTRLPORT_THRIFT@)
+set(GR_RPCSERVER_THRIFT @GR_RPCSERVER_THRIFT@)
+
+# Propagate global options
+set(GR_RUNTIME_DIR "@GR_RUNTIME_DIR@")
+set(GR_LIBRARY_DIR "@GR_LIBRARY_DIR@")
+set(GR_DATA_DIR "@GR_DATA_DIR@")
+set(GR_PKG_DATA_DIR "@GR_PKG_DATA_DIR@")
+set(GR_DOC_DIR "@GR_DOC_DIR@")
+set(GR_PKG_DOC_DIR "@GR_PKG_DOC_DIR@")
+set(GR_LIBEXEC_DIR "@GR_LIBEXEC_DIR@")
+set(GR_PKG_LIBEXEC_DIR "@GR_PKG_LIBEXEC_DIR@")
+set(GR_THEMES_DIR "@GR_THEMES_DIR@")
+set(GR_CONF_DIR "@GR_CONF_DIR@")
+set(SYSCONFDIR "@SYSCONFDIR@")
+set(GR_PREFSDIR "@GR_PREFSDIR@")
+
+# We check the requested components in the order given by the list below –
+# ordering matters; we have module interdependencies.
+set(GR_COMPONENTS
+    blocks
+    fec
+    fft
+    filter
+    analog
+    digital
+    dtv
+    audio
+    channels
+    pdu
+    iio
+    qtgui
+    trellis
+    uhd
+    video-sdl
+    vocoder
+    wavelet
+    zeromq
+    network
+    soapy)
+
+foreach(target ${GR_COMPONENTS})
+    set(GR_COMPONENT_INCLUDE_FILE
+        "${CMAKE_CURRENT_LIST_DIR}/gnuradio-${target}Config.cmake")
+    if(${target} IN_LIST Gnuradio_FIND_COMPONENTS
+       AND (EXISTS ${GR_COMPONENT_INCLUDE_FILE} OR "${Gnuradio_FIND_REQUIRED_${target}}"))
+        include(${GR_COMPONENT_INCLUDE_FILE})
+    endif()
+endforeach(target)

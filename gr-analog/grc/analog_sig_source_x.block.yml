@@ -1,0 +1,86 @@
+id: analog_sig_source_x
+label: Signal Source
+flags: [ python, cpp ]
+
+parameters:
+-   id: type
+    label: Output Type
+    dtype: enum
+    options: [complex, float, int, short, byte]
+    option_attributes:
+        fcn: [c, f, i, s, b]
+        offset_type: [complex, real, int, short, byte]
+    hide: part
+-   id: samp_rate
+    label: Sample Rate
+    dtype: real
+    default: samp_rate
+-   id: waveform
+    label: Waveform
+    dtype: raw
+    default: analog.GR_COS_WAVE
+    options: [analog.GR_CONST_WAVE, analog.GR_SIN_WAVE, analog.GR_COS_WAVE, analog.GR_SQR_WAVE,
+        analog.GR_TRI_WAVE, analog.GR_SAW_WAVE]
+    option_labels: [Constant, Sine, Cosine, Square, Triangle, Saw Tooth]
+-   id: freq
+    label: Frequency
+    dtype: real
+    default: '1000'
+-   id: amp
+    label: Amplitude
+    dtype: real
+    default: '1'
+-   id: offset
+    label: Offset
+    dtype: ${ type.offset_type }
+    default: '0'
+-   id: phase
+    label: Initial Phase (Radians)
+    dtype: real
+    default: '0'
+-   id: showports
+    label: Show Msg Ports
+    dtype: bool
+    default: 'False'
+    options: ['True', 'False']
+    option_labels: ['Yes', 'No']
+    hide: part
+
+inputs:
+-   domain: message
+    id: cmd
+    optional: true
+    hide: ${ not showports }
+
+outputs:
+-   domain: stream
+    dtype: ${ type }
+
+templates:
+    imports: from gnuradio import analog
+    make: analog.sig_source_${type.fcn}(${samp_rate}, ${waveform}, ${freq}, ${amp},
+        ${offset}, ${phase})
+    callbacks:
+    - set_sampling_freq(${samp_rate})
+    - set_waveform(${waveform})
+    - set_frequency(${freq})
+    - set_amplitude(${amp})
+    - set_offset(${offset})
+    - set_phase(${phase})
+
+cpp_templates:
+    includes: ['#include <gnuradio/analog/sig_source.h>']
+    declarations: 'analog::sig_source_${type.fcn}::sptr ${id};'
+    make: 'this->${id} = analog::sig_source_${type.fcn}::make(${samp_rate}, ${waveform}, ${freq}, ${amp}, ${offset},${phase});'
+    callbacks:
+    - set_sampling_freq(${samp_rate})
+    - set_waveform(${waveform})
+    - set_frequency(${freq})
+    - set_amplitude(${amp})
+    - set_offset(${offset})
+    - set_phase(${phase})
+    link: ['gnuradio::gnuradio-analog']
+    translations:
+        analog\.: 'analog::'
+
+file_format: 1

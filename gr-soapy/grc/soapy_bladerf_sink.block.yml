@@ -1,0 +1,84 @@
+id: soapy_bladerf_sink
+label: Soapy BladeRF Sink
+flags: [python, throttle]
+
+parameters:
+  - id: type
+    label: Input Type
+    dtype: enum
+    options: [fc32, sc16, sc8]
+    option_labels: [Complex Float32, Complex Int16, Complex Byte]
+    option_attributes:
+      type: [fc32, sc16, sc8]
+    hide: part
+
+  - id: dev_args
+    label: Device arguments
+    dtype: string
+    hide: ${'part' if not dev_args else 'none'}
+
+  - id: samp_rate
+    label: Sample Rate
+    dtype: float
+    default: 'samp_rate'
+
+  - id: bandwidth
+    label: Bandwidth
+    category: RF Options
+    dtype: float
+    default: '0.0'
+    hide: part
+
+  - id: center_freq
+    label: 'Center Freq (Hz)'
+    category: RF Options
+    dtype: real
+    default: 'freq'
+
+  - id: freq_correction
+    label: 'Frequency Correction (PPM)'
+    category: RF Options
+    dtype: real
+    default: '0'
+    hide: 'part'
+
+  - id: gain
+    label: 'RF Gain (17.0dB - 73dB)'
+    category: RF Options
+    dtype: real
+    default: '20.0'
+    hide: 'part'
+
+inputs:
+  - domain: stream
+    dtype: ${ type.type }
+    multiplicity: 1
+
+  - domain: message
+    id: cmd
+    optional: true
+
+templates:
+  imports: from gnuradio import soapy
+  make: |
+      None
+      dev = 'driver=bladerf'
+      stream_args = ''
+      tune_args = ['']
+      settings = ['']
+
+      self.${id} = soapy.sink(dev, "${type}", 1, ${dev_args},
+                                stream_args, tune_args, settings)
+      self.${id}.set_sample_rate(0, ${samp_rate})
+      self.${id}.set_bandwidth(0, ${bandwidth})
+      self.${id}.set_frequency(0, ${center_freq})
+      self.${id}.set_frequency_correction(0, ${freq_correction})
+      self.${id}.set_gain(0, min(max(${gain}, 17.0), 73.0))
+  callbacks:
+    - set_sample_rate(0, ${samp_rate})
+    - set_bandwidth(0, ${bandwidth})
+    - set_frequency(0, ${center_freq})
+    - set_frequency_correction(0, ${freq_correction})
+    - set_gain(0, min(max(${gain}, 17.0), 73.0))
+
+file_format: 1

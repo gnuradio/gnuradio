@@ -1,0 +1,346 @@
+<page>
+    <title>Metadata Information</title>
+    <ns>0</ns>
+    <id>3479</id>
+    <revision>
+      <id>7025</id>
+      <parentid>4867</parentid>
+      <timestamp>2020-05-11T23:07:18Z</timestamp>
+      <contributor>
+        <username>L0uisc</username>
+        <id>891</id>
+      </contributor>
+      <minor/>
+      <comment>fixed "extra_str" in call to blocks.file_meta_sink() in final code block to read "extras_str"</comment>
+      <model>wikitext</model>
+      <format>text/x-wiki</format>
+      <text xml:space="preserve" bytes="14485">[[Category:Usage Manual]]
+== Introduction ==
+
+Metadata files have extra information in the form of headers that
+carry metadata about the samples in the file. Raw, binary files carry
+no extra information and must be handled delicately. Any changes in
+the system state such as a receiver's sample rate or frequency are
+not conveyed with the data in the file itself. Headers solve this problem.
+
+We write metadata files using gr::blocks::file_meta_sink and read metadata
+files using gr::blocks::file_meta_source.
+
+Metadata files have headers that carry information about a segment of
+data within the file. The header structure is described in detail in
+the next section. A metadata file always starts with a header that
+describes the basic structure of the data. It contains information
+about the item size, data type, if it's complex, the sample rate of
+the segment, the time stamp of the first sample of the segment, and
+information regarding the header size and segment size.
+
+The first static portion of the header file contains the following
+information.
+
+* version: (char) version number (usually set to METADATA_VERSION)
+* rx_rate: (double) Stream's sample rate
+* rx_time: (pmt::pmt_t pair - (uint64_t, double)) Time stamp (format from UHD)
+* size: (int) item size in bytes - reflects vector length if any
+* type: (int) data type (enum below)
+* cplx: (bool) true if data is complex
+* strt: (uint64_t) start of data relative to current header
+* bytes: (uint64_t) size of following data segment in bytes
+
+An optional extra section of the header stores information in any
+received tags. The two main tags associated with headers are:
+
+* rx_rate: the sample rate of the stream.
+* rx_time: the time stamp of the first item in the segment.
+
+These tags were inspired by the UHD tag format.
+
+The header gives enough information to process and handle the
+data. One cautionary note, though, is that the data type should never
+change within a file. There should be very little need for this, because
+GNU Radio blocks can only set the data type of their
+IO signatures in the constructor, so changes in the data type
+afterward will not be recognized.
+
+We also have an extra header segment that is optional. This can be
+loaded up at the beginning by the user specifying some extra metadata
+that should be transmitted along with the data. It also grows whenever
+it sees a stream tag, so the dictionary will contain any key:value
+pairs out of tags from the flowgraph.
+
+=== Types of Metadata Files ===
+
+GNU Radio currently supports two types of metadata files:
+
+# inline: headers are inline with the data in the same file.
+# detached: headers are in a separate header file from the data.
+
+The inline method is the standard version. When a detached header is
+used, the headers are simply inserted back-to-back in the detached
+header file. The dat file, then, is the standard raw binary format
+with no interruptions in the data.
+
+=== Updating Headers ===
+
+While there is always a header that starts a metadata file, they are
+updated throughout as well. There are two events that trigger a new
+header. We define a segment as the unit of data associated with the
+last header.
+
+The first event that will trigger a new header is when enough samples
+have been written for the given segment. This number is defined as the
+maximum segment size and is a parameter we pass to the
+file_meta_sink. It defaults to 1 million items (items, not
+bytes). When that number of items is reached, a new header is
+generated and a new segment is started. This makes it easier for us to
+manipulate the data later and helps protect against catastrophic data
+loss.
+
+The second event to trigger a new segment is if a new tag is
+observed. If the tag is a standard tag in the header, the header value
+is updated, the header and current extras are written to file, and the
+segment begins again. If a tag from the extras is seen, the value
+associated with that tag is updated; and if a new tag is seen, a new
+key:value pair are added to the extras dictionary.
+
+When new tags are seen, we generate a new segment so that we make sure
+that all samples in that segment are defined by the header. If the
+sample rate changes, we create a new segment where all of the new
+samples are at that new rate. Also, in the case of UHD devices, if a
+segment loss is observed, it will generate a new timestamp as a tag of
+'rx_time'. We create a new file segment that reflects this change to
+keep the sample times exact.
+
+=== Implementation ===
+
+Metadata files are created using gr::blocks::file_meta_sink. The
+default behavior is to create a single file with inline headers as
+metadata. An option can be set to switch to detached header mode.
+
+Metadata files are read into a flowgraph using
+gr::blocks::file_meta_source. This source reads a metadata file,
+inline by default with a settable option to use detached headers. The
+data from the segments is converted into a standard streaming
+output. The 'rx_rate' and 'rx_time' and all key:value pairs in the
+extra header are converted into tags and added to the stream tags
+interface.
+
+== Structure ==
+
+The file metadata consists of a static mandatory header and a dynamic
+optional extras header. Each header is a separate PMT
+dictionary. Headers are created by building a PMT dictionary
+(pmt::make_dict) of key:value pairs, then the dictionary is
+serialized into a string to be written to file. The header is always
+the same length that is predetermined by the version of the header
+(this must be known already). The header will then indicate if there
+is extra data to be extracted as a separate serialized dictionary.
+
+To work with the PMTs for creating and extracting header information,
+we use PMT operators. For example, we create a simplified version of
+the header in C++ like this:
+
+<syntaxhighlight lang="cpp">
+ const char METADATA_VERSION = 0x0;
+ pmt::pmt_t header;
+ header = pmt::make_dict();
+ header = pmt::dict_add(header, pmt::mp("version"), pmt::mp(METADATA_VERSION));
+ header = pmt::dict_add(header, pmt::mp("rx_rate"), pmt::mp(samp_rate));
+ std::string hdr_str = pmt::serialize_str(header);
+</syntaxhighlight>
+
+The call to pmt::dict_add adds a new key:value pair to the
+dictionary. Notice that it both takes and returns the 'header'
+variable. This is because we are actually creating a new dictionary
+with this function, so we just assign it to the same variable.
+
+The 'mp' functions are convenience functions provided by the PMT
+library. They interpret the data type of the value being inserted and
+call the correct 'pmt::from_xxx' function. For more direct control over
+the data type, see PMT functions in pmt.h, such as
+pmt::from_uint64 or pmt::from_double.
+
+We finish this off by using pmt::serialize_str to convert the PMT
+dictionary into a specialized string format that makes it easy to
+write to a file.
+
+The header is always METADATA_HEADER_SIZE bytes long and a metadata
+file always starts with a header. So to extract the header from a
+file, we need to read in this many bytes from the beginning of the
+file and deserialize it. An important note about this is that the
+deserialize function must operate on a std::string. The serialized
+format of a dictionary contains null characters, so normal C character
+arrays (e.g., 'char *s') get confused.
+
+Assuming that 'std::string str' contains the full string as read from
+a file, we can access the dictionary in C++ like this:
+
+<syntaxhighlight lang="cpp">
+ pmt::pmt_t hdr = pmt::deserialize_str(str);
+ if(pmt::dict_has_key(hdr, pmt::string_to_symbol("strt"))) {
+   pmt::pmt_t r = pmt::dict_ref(hdr, pmt::string_to_symbol("strt"), pmt::PMT_NIL);
+   uint64_t seg_start = pmt::to_uint64(r);
+   uint64_t extra_len = seg_start - METADATA_HEADER_SIZE;
+ }
+</syntaxhighlight>
+
+This example first deserializes the string into a PMT dictionary
+again. This will throw an error if the string is malformed and cannot
+be deserialized correctly. We then want to get access to the item with
+key 'strt'. As the next subsection will show, this value indicates at
+which byte the data segment starts. We first check to make sure that
+this key exists in the dictionary. If not, our header does not contain
+the correct information and we might want to handle this as an error.
+
+Assuming the header is properly formatted, we then get the particular
+item referenced by the key 'strt'. This is a uint64_t, so we use the
+PMT function to extract and convert this value properly. We now know
+if we have an extra header in the file by looking at the difference
+between 'seg_start' and the static header size,
+METADATA_HEADER_SIZE. If the 'extra_len' is greater than 0, we know we
+have an extra header that we can process. Moreover, this also tells us
+the size of the serialized PMT dictionary in bytes, so we can easily
+read this many bytes from the file. We can then deserialize and parse
+this header just like the first.
+
+=== Header Information ===
+
+The header is a PMT dictionary with a known structure. This structure
+may change, but we version the headers, so all headers of version X
+must be the same length and structure. As of now, we only have version
+0 headers, which look like the following:
+
+* version: (char) version number (usually set to METADATA_VERSION)
+* rx_rate: (double) Stream's sample rate
+* rx_time: (pmt::pmt_t pair - (uint64_t, double)) Time stamp (format from UHD)
+* size: (int) item size in bytes - reflects vector length if any.
+* type: (int) data type (enum below)
+* cplx: (bool) true if data is complex
+* strt: (uint64_t) start of data relative to current header
+* bytes: (uint64_t) size of following data segment in bytes
+
+The data types are indicated by an integer value from the following
+enumeration type:
+
+ enum gr_file_types {
+   GR_FILE_BYTE=0,
+   GR_FILE_CHAR=0,
+   GR_FILE_SHORT=1,
+   GR_FILE_INT,
+   GR_FILE_LONG,
+   GR_FILE_LONG_LONG,
+   GR_FILE_FLOAT,
+   GR_FILE_DOUBLE,
+ };
+
+=== Extras Information ===
+
+The extras section is an optional segment of the header. If 'strt' ==
+METADATA_HEADER_SIZE, then there is no extras. Otherwise, it is simply
+a PMT dictionary of key:value pairs. The extras header can contain
+anything and can grow while a program is running.
+
+We can insert extra data into the header at the beginning if we
+wish. All we need to do is use the pmt::dict_add function to insert
+our hand-made metadata. This can be useful to add our own markers and
+information.
+
+The main role of the extras header, though, is as a container to hold
+any stream tags. When a stream tag is observed coming in, the tag's
+key and value are added to the dictionary. Like a standard dictionary,
+any time a key already exists, the value will be updated. If the key
+does not exist, a new entry is created and the new key:value pair are
+added together. So any new tags that the file metadata sink sees will
+add to the dictionary. It is therefore important to always check the
+'strt' value of the header to see if the length of the extras
+dictionary has changed at all.
+
+When reading out data from the extras, we do not necessarily know the
+data type of the PMT value. The key is always a PMT symbol, but the
+value can be any other PMT type. There are PMT functions that allow us
+to query the PMT to test if it is a particular type. We also have the
+ability to do pmt::print on any PMT object to print it to
+screen. Before converting from a PMT to its natural data type, it is
+necessary to know the data type.
+
+== Utilities ==
+
+GNU Radio comes with a couple of utilities to help in debugging and
+manipulating metadata files. There is a general parser in Python that
+will convert the PMT header and extra header into Python
+dictionaries. This utility is:
+
+* gr-blocks/python/parse_file_metadata.py
+
+This program is installed into the Python directory under the
+'gnuradio' module, so it can be accessed with:
+
+ from gnuradio.blocks import parse_file_metadata
+
+It defines HEADER_LENGTH as the static length of the metadata header
+size. It also has dictionaries that can be used to convert from the
+file type to a string (ftype_to_string) and one to convert from the
+file type to the size of the data type in bytes (ftype_to_size).
+
+The 'parse_header' takes in a PMT dictionary, parses it, and returns a
+Python dictionary. An optional 'VERBOSE' bool can be set to print the
+information to standard out.
+
+The 'parse_extra_dict' is similar in that it converts from a PMT
+dictionary to a Python dictionary. The values are kept in their PMT
+format since we do not necessarily know the native data type.
+
+A program called 'gr_read_file_metadata' is installed into the path
+and can be used to read out all header information from a metadata
+file. This program is just called with the file name as the first
+command-line argument. An option '-D' will handle detached header
+files where the file of headers is expected to be the file name of the
+data with '.hdr' appended to it.
+
+== Examples ==
+
+Examples are located in:
+
+* gr-blocks/examples/metadata
+
+Currently, there are a few GRC example programs.
+
+* file_metadata_sink: create a metadata file from UHD samples.
+* file_metadata_source: read the metadata file as input to a simple graph.
+* file_metadata_vector_sink: create a metadata file from UHD samples.
+* file_metadata_vector_source: read the metadata file as input to a simple graph.
+
+The file sink example can be switched to use a signal source instead
+of a UHD source, but no extra tagged data is used in this mode.
+
+The file source example pushes the data stream to a new raw file while
+a tag debugger block prints out any tags observed in the metadata
+file. A QT GUI time sink is used to look at the signal as well.
+
+The versions with 'vector' in the name are similar except they use
+vectors of data.
+
+The following shows a simple way of creating extra metadata for a
+metadata file. This example is just showing how we can insert a date
+into the metadata to keep track of it later. The date in this case is
+encoded as a vector of uint16 with [day, month, year].
+
+<syntaxhighlight lang="python">
+ import pmt
+ from gnuradio import blocks
+ 
+ key = pmt.intern("date")
+ val = pmt.init_u16vector(3, [13,12,2012])
+ 
+ extras = pmt.make_dict()
+ extras = pmt.dict_add(extras, key, val)
+ extras_str = pmt.serialize_str(extras)
+ self.sink = blocks.file_meta_sink(gr.sizeof_gr_complex,
+                                   "/tmp/metadat_file.out",
+                                   samp_rate, 1,
+                                   blocks.GR_FILE_FLOAT, True,
+                                   1000000, extras_str, False)
+</syntaxhighlight></text>
+      <sha1>79bbsfgjz078sumck0ea80hkoe1kuow</sha1>
+    </revision>
+  </page>
+</mediawiki>

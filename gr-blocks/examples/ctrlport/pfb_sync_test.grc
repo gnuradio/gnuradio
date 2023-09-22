@@ -1,0 +1,400 @@
+options:
+  parameters:
+    author: ''
+    category: Custom
+    cmake_opt: ''
+    comment: ''
+    copyright: ''
+    description: ''
+    gen_cmake: 'On'
+    gen_linking: dynamic
+    generate_options: qt_gui
+    hier_block_src_path: '.:'
+    id: pfb_sync_test_qt
+    max_nouts: '0'
+    output_language: python
+    placement: (0,0)
+    qt_qss_theme: ''
+    realtime_scheduling: ''
+    run: 'True'
+    run_command: '{python} -u {filename}'
+    run_options: prompt
+    sizing_mode: fixed
+    thread_safe_setters: ''
+    title: ''
+    window_size: 1280,1024
+  states:
+    coordinate: [10, 10]
+    rotation: 0
+    state: enabled
+
+blocks:
+- name: amps
+  id: variable
+  parameters:
+    comment: ''
+    value: '[1]'
+  states:
+    coordinate: [7, 390]
+    rotation: 0
+    state: enabled
+- name: graymap
+  id: variable
+  parameters:
+    comment: ''
+    value: '[[3,1,0,2]]'
+  states:
+    coordinate: [7, 326]
+    rotation: 0
+    state: enabled
+- name: nfilts
+  id: variable
+  parameters:
+    comment: ''
+    value: '32'
+  states:
+    coordinate: [74, 390]
+    rotation: 0
+    state: enabled
+- name: noise
+  id: variable_qtgui_range
+  parameters:
+    comment: ''
+    gui_hint: ''
+    label: Noise
+    min_len: '200'
+    orient: Qt.Horizontal
+    rangeType: float
+    start: '0.0001'
+    step: '0.01'
+    stop: '2'
+    value: '0.050'
+    widget: counter_slider
+  states:
+    coordinate: [416, 444.0]
+    rotation: 0
+    state: enabled
+- name: phase
+  id: variable_qtgui_range
+  parameters:
+    comment: ''
+    gui_hint: ''
+    label: Phase
+    min_len: '200'
+    orient: Qt.Horizontal
+    rangeType: float
+    start: '0'
+    step: '0.01'
+    stop: '2'
+    value: '0.5'
+    widget: counter_slider
+  states:
+    coordinate: [544, 444.0]
+    rotation: 0
+    state: enabled
+- name: samp_rate
+  id: variable
+  parameters:
+    comment: ''
+    value: '300000'
+  states:
+    coordinate: [14, 124]
+    rotation: 0
+    state: enabled
+- name: sps
+  id: variable
+  parameters:
+    comment: ''
+    value: '2'
+  states:
+    coordinate: [105, 126]
+    rotation: 0
+    state: enabled
+- name: blocks_ctrlport_monitor_0
+  id: blocks_ctrlport_monitor
+  parameters:
+    alias: ''
+    comment: ''
+    en: 'True'
+  states:
+    coordinate: [193, 7]
+    rotation: 0
+    state: enabled
+- name: blocks_packed_to_unpacked_xx_0
+  id: blocks_packed_to_unpacked_xx
+  parameters:
+    affinity: ''
+    alias: ''
+    bits_per_chunk: '8'
+    comment: ''
+    endianness: gr.GR_MSB_FIRST
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_ports: '1'
+    type: byte
+  states:
+    coordinate: [400, 132.0]
+    rotation: 0
+    state: enabled
+- name: blocks_throttle_0
+  id: blocks_throttle
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    ignoretag: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    samples_per_second: samp_rate
+    type: byte
+    vlen: '1'
+  states:
+    coordinate: [280, 236.0]
+    rotation: 180
+    state: enabled
+- name: blocks_vector_source_x_0
+  id: blocks_vector_source_x
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    repeat: 'True'
+    tags: '[]'
+    type: byte
+    vector: (0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50)
+    vlen: '1'
+  states:
+    coordinate: [200, 124.0]
+    rotation: 0
+    state: enabled
+- name: channels_channel_model_0
+  id: channels_channel_model
+  parameters:
+    affinity: ''
+    alias: ''
+    block_tags: 'False'
+    comment: ''
+    epsilon: '1.0'
+    freq_offset: '0.0'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    noise_voltage: noise
+    seed: '0'
+    taps: cmath.exp(1j*phase)
+  states:
+    coordinate: [520, 276.0]
+    rotation: 0
+    state: enabled
+- name: digital_costas_loop_cc_0
+  id: digital_costas_loop_cc
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    order: '4'
+    use_snr: 'False'
+    w: 6.28/100.0
+  states:
+    coordinate: [1048, 368.0]
+    rotation: 0
+    state: enabled
+- name: digital_pfb_clock_sync_xxx_0
+  id: digital_pfb_clock_sync_xxx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    filter_size: nfilts
+    init_phase: nfilts/2
+    loop_bw: 2*3.14/100.0
+    max_dev: '1.5'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    osps: '1'
+    sps: sps
+    taps: firdes.root_raised_cosine(nfilts, nfilts,1.0/sps, 0.35, int(22*sps*nfilts))
+    type: ccf
+  states:
+    coordinate: [776, 268.0]
+    rotation: 0
+    state: enabled
+- name: digital_psk_mod_0
+  id: digital_psk_mod
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    constellation_points: '4'
+    differential: 'True'
+    excess_bw: '0.35'
+    log: 'False'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    mod_code: '"gray"'
+    samples_per_symbol: sps
+    verbose: 'False'
+  states:
+    coordinate: [280, 284.0]
+    rotation: 0
+    state: enabled
+- name: import_0
+  id: import
+  parameters:
+    alias: ''
+    comment: ''
+    imports: import random, math, cmath
+  states:
+    coordinate: [14, 77]
+    rotation: 0
+    state: enabled
+- name: phase_probe2
+  id: blocks_ctrlport_probe2_c
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    desc: Constellation Points
+    disp_mask: gr.DISPTIME
+    len: '1024'
+    name: phase locked
+  states:
+    coordinate: [1272, 404.0]
+    rotation: 0
+    state: enabled
+- name: qtgui_const_sink_x_0
+  id: qtgui_const_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'False'
+    axislabels: 'True'
+    color1: '"blue"'
+    color10: '"red"'
+    color2: '"red"'
+    color3: '"red"'
+    color4: '"red"'
+    color5: '"red"'
+    color6: '"red"'
+    color7: '"red"'
+    color8: '"red"'
+    color9: '"red"'
+    comment: ''
+    grid: 'False'
+    gui_hint: ''
+    label1: '"received signal"'
+    label10: ''
+    label2: '"synced signal"'
+    label3: ''
+    label4: ''
+    label5: ''
+    label6: ''
+    label7: ''
+    label8: ''
+    label9: ''
+    legend: 'True'
+    marker1: '0'
+    marker10: '0'
+    marker2: '0'
+    marker3: '0'
+    marker4: '0'
+    marker5: '0'
+    marker6: '0'
+    marker7: '0'
+    marker8: '0'
+    marker9: '0'
+    name: ''
+    nconnections: '2'
+    size: '1024'
+    style1: '0'
+    style10: '0'
+    style2: '0'
+    style3: '0'
+    style4: '0'
+    style5: '0'
+    style6: '0'
+    style7: '0'
+    style8: '0'
+    style9: '0'
+    tr_chan: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_slope: qtgui.TRIG_SLOPE_POS
+    tr_tag: '""'
+    type: complex
+    update_time: '0.10'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    xmax: '2'
+    xmin: '-2'
+    ymax: '2'
+    ymin: '-2'
+  states:
+    coordinate: [1272, 336.0]
+    rotation: 0
+    state: enabled
+- name: received_probe2
+  id: blocks_ctrlport_probe2_c
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    desc: Constellation Points
+    disp_mask: gr.DISPTIME
+    len: '1024'
+    name: received
+  states:
+    coordinate: [776, 420.0]
+    rotation: 0
+    state: enabled
+- name: time_probe2
+  id: blocks_ctrlport_probe2_c
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    desc: Constellation Points
+    disp_mask: gr.DISPTIME
+    len: '1024'
+    name: time locked
+  states:
+    coordinate: [1272, 244.0]
+    rotation: 0
+    state: enabled
+
+connections:
+- [blocks_packed_to_unpacked_xx_0, '0', blocks_throttle_0, '0']
+- [blocks_throttle_0, '0', digital_psk_mod_0, '0']
+- [blocks_vector_source_x_0, '0', blocks_packed_to_unpacked_xx_0, '0']
+- [channels_channel_model_0, '0', digital_pfb_clock_sync_xxx_0, '0']
+- [channels_channel_model_0, '0', received_probe2, '0']
+- [digital_costas_loop_cc_0, '0', phase_probe2, '0']
+- [digital_costas_loop_cc_0, '0', qtgui_const_sink_x_0, '1']
+- [digital_pfb_clock_sync_xxx_0, '0', digital_costas_loop_cc_0, '0']
+- [digital_pfb_clock_sync_xxx_0, '0', qtgui_const_sink_x_0, '0']
+- [digital_pfb_clock_sync_xxx_0, '0', time_probe2, '0']
+- [digital_psk_mod_0, '0', channels_channel_model_0, '0']
+
+metadata:
+  file_format: 1

@@ -1,0 +1,54 @@
+id: qtgui_graphicitem
+label: QT GUI Graphic Item
+category: '[Core]/GUI Widgets/QT'
+
+parameters:
+-   id: file
+    label: File
+    dtype: file_open
+-   id: scaleImage
+    label: Scale Image
+    dtype: bool
+    default: 'False'
+    hide: part
+-   id: fixedsize
+    label: Fixed Size
+    dtype: bool
+    default: 'False'
+    hide: ${ 'all' if scaleImage else 'part' }
+-   id: width
+    label: Width
+    dtype: int
+    default: '0'
+    hide: ${ 'part' if fixedsize and not scaleImage else 'all' }
+-   id: height
+    label: height
+    dtype: int
+    default: '0'
+    hide: ${ 'part' if fixedsize and not scaleImage  else 'all' }
+-   id: gui_hint
+    label: GUI Hint
+    dtype: gui_hint
+    hide: part
+
+inputs:
+-   domain: message
+    id: filename
+    optional: true
+-   domain: message
+    id: overlay
+    optional: true
+    
+templates:
+    make: |-
+        <%
+            win = 'self._%s_win'%id
+        %>\
+        ${win} = qtgui.GrGraphicItem(${file},${scaleImage},${fixedsize},${width},${height})
+        self._${id}_win = ${win}
+        ${gui_hint() % win}
+
+documentation: |-
+    This block displays the selected graphic item.  You can pass a filename as a string in a message to change the image on the fly.  overlays can also be added by passing in a message with a dictionary of a list of dictionaries in the car portion of the message.  Each dictionary should have the following keys: 'filename','x','y', and an optional 'scalefactor'.  Setting the x/y attributes to -1,-1 will remove an overlay.  Otherwise items are indexed by filename and can be animated throughout the background image.
+
+file_format: 1

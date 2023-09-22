@@ -1,0 +1,43 @@
+id: pdu_take_skip_to_pdu
+label: Take/Skip To PDU
+flags: [ python ]
+
+parameters:
+-   id: type
+    label: PDU Type
+    dtype: enum
+    options: [complex, float, int, short, byte]
+    option_labels: [Complex, Float, Int, Short, Byte]
+    option_attributes:
+        t: [c, f, i, s, b]
+    hide: part
+-   id: take
+    label: Take
+    dtype: int
+    default: '1024'
+-   id: skip
+    label: Skip
+    dtype: int
+    default: '4096'
+
+inputs:
+-   domain: stream
+    dtype: ${ type }
+
+outputs:
+-   domain: message
+    id: pdus
+    optional: true
+
+asserts:
+- ${ take >= 1 }
+- ${ skip >= 0 }
+
+templates:
+    imports: from gnuradio import pdu
+    make: pdu.take_skip_to_pdu_${type.t}(${take}, ${skip})
+    callbacks:
+    - set_take(${take})
+    - set_skip(${skip})
+
+file_format: 1

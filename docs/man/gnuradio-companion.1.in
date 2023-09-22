@@ -1,0 +1,27 @@
+.TH GNURADIO-COMPANION "1" "@BUILD_DATE_SHORT@" "GNU Radio Companion @VERSION@" "User Commands"
+.\"
+.SH NAME
+gnuradio-companion \- GNU Radio Companion (GRC) is a graphical tool for creating GNU Radio signal flowgraphs.
+.\"
+.SH SYNOPSIS
+\fBgnuradio-companion\fP [\fIoptions\fP] [\fIflowgraphs\fP]
+.\"
+.SH DESCRIPTION
+.PP
+GNU Radio is a free & open-source software development toolkit that provides signal processing blocks to implement software-defined radios and signal-processing systems. The GNU Radio applications themselves are generally known as "flowgraphs", which are a series of signal processing blocks connected together, thus describing a data flow.
+.PP
+\fBgnuradio-companion\fP is effectively a Python code-generation tool. When a flowgraph is "compiled" in GRC, it generates Python code that creates the desired GUI windows and widgets, and creates and connects the blocks in the flowgraph.
+.\"
+.SH OPTIONS
+\fIflowgraphs\fP Invoke the program with one or more existing flowgraphs.
+.\"
+.TP
+\fB\-h\fP, \fB\-\-help\fP
+show a help message and exit.
+.TP
+\fB\-\-log\fP
+defines the level of logging output.
+.\"
+.SH SEE ALSO
+https://wiki.gnuradio.org/index.php/GNURadioCompanion
+

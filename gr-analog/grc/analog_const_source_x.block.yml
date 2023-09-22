@@ -1,0 +1,37 @@
+id: analog_const_source_x
+label: Constant Source
+flags: [ python, cpp ]
+
+parameters:
+-   id: type
+    label: Output Type
+    dtype: enum
+    options: [complex, float, int, short, byte]
+    option_attributes:
+        const_type: [complex, real, int, short, byte]
+        fcn: [c, f, i, s, b]
+    hide: part
+-   id: const
+    label: Constant
+    dtype: ${ type.const_type }
+    default: '0'
+
+outputs:
+-   domain: stream
+    dtype: ${ type }
+
+templates:
+    imports: from gnuradio import analog
+    make: analog.sig_source_${type.fcn}(0, analog.GR_CONST_WAVE, 0, 0, ${const})
+    callbacks:
+    - set_offset(${const})
+
+cpp_templates:
+    includes: ['#include <gnuradio/analog/sig_source.h>']
+    declarations: 'analog::sig_source_${type.fcn}::sptr ${id};'
+    make: 'this->${id} = analog::sig_source_${type.fcn}::make(0, analog::GR_CONST_WAVE, 0, 0, ${const});'
+    callbacks:
+    - set_offset(${const})
+    link: ['gnuradio::gnuradio-analog']
+
+file_format: 1

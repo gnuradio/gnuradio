@@ -1,0 +1,116 @@
+id: rational_resampler_xxx
+label: Rational Resampler
+flags: [ python, cpp ]
+
+parameters:
+-   id: type
+    label: Type
+    dtype: enum
+    options: [ccc, ccf, fcc, fff]
+    option_labels: [Complex->Complex (Complex Taps), Complex->Complex (Real Taps),
+        Float->Complex (Complex Taps), Float->Float (Real Taps)]
+    option_attributes:
+        input: [complex, complex, float, float]
+        output: [complex, complex, complex, float]
+        taps: [complex_vector, real_vector, complex_vector, real_vector]
+    hide: part
+-   id: interp
+    label: Interpolation
+    dtype: int
+    default: '1'
+-   id: decim
+    label: Decimation
+    dtype: int
+    default: '1'
+-   id: taps
+    label: Taps
+    dtype: ${ type.taps }
+    default: '[]'
+-   id: fbw
+    label: Fractional BW
+    dtype: real
+    default: '0'
+
+inputs:
+-   domain: stream
+    dtype: ${ type.input }
+
+outputs:
+-   domain: stream
+    dtype: ${ type.output }
+
+templates:
+    imports: |-
+        from gnuradio import filter
+        from gnuradio.filter import firdes
+    make: |-
+        filter.rational_resampler_${type}(
+                interpolation=${interp},
+                decimation=${decim},
+        % if taps:
+                taps=${taps},
+        % else:
+                taps=[],
+        % endif
+        % if fbw:
+                fractional_bw=${fbw})
+        % else:
+                fractional_bw=-1.0)
+        % endif
+    callbacks:
+    - set_taps(${taps})
+
+cpp_templates:
+    includes: ['#include <gnuradio/filter/rational_resampler.h>']
+    declarations: 'gr::filter::rational_resampler_${type}::sptr ${id};'
+    make: |-
+        <%
+            taps = self.context.get('taps')
+            try: taps
+            except: taps = None
+            taps = None if (len(taps) == 0) else taps
+        %>
+        % if taps == None or len(taps) == 0:
+            % if str(type.taps) == "complex_vector":
+            std::vector<gr_complex> taps;
+            % else:
+            std::vector<float> taps;
+            % endif
+        % else:
+            % if str(type.taps) == "complex_vector":
+            std::vector<gr_complex> taps = {${str(taps)[1:-1]}};
+            % else:
+            std::vector<float> taps = {${str(taps)[1:-1]}};
+            % endif
+        % endif
+
+        this->${id} = gr::filter::rational_resampler_${type}::make(
+            ${interp},
+            ${decim},
+            taps,
+            ${fbw});
+    link: ['gnuradio::gnuradio-filter']
+    callbacks:
+    - set_taps(${taps})
+
+documentation: |-
+    This is a rational resampling polyphase FIR filter.
+
+    Either taps or fractional_bw may be specified, but not both.
+
+    If neither is specified, a reasonable default, 0.4, is used as the fractional_bw.
+    
+    Parameters:
+    Interpolation
+        Interpolation factor (integer > 0)
+    
+    Decimation
+        Decimation factor (integer > 0)
+    
+    Taps (R)
+        Optional filter coefficients (sequence)
+    
+    Fractional BW
+        Fractional bandwidth in (0, 0.5), measured at final freq (use 0.4) (float)
+
+file_format: 1

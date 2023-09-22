@@ -1,0 +1,63 @@
+id: variable_qtgui_distanceradar
+label: QT GUI Distance Radar
+flags: [ show_id, python ]
+category: '[Core]/GUI Widgets/QT'
+
+parameters:
+-   id: label
+    label: Label
+    dtype: string
+    hide: ${ ('none' if label else 'part') }
+-   id: ticklabels
+    label: Ring Labels
+    default: ['20', '40', '60', '80', '100']
+-   id: backgroundColor
+    label: Background
+    dtype: enum
+    default: 'black'
+    options: ['black', 'white', 'blue', 'red', 'green', 'yellow']
+    option_labels: ['black', 'white', 'blue', 'red', 'green', 'yellow']
+    hide: 'part'
+-   id: fontColor
+    label: Font Color
+    dtype: enum
+    default: 'white'
+    options: ['white', 'black', 'blue', 'red', 'green', 'yellow']
+    option_labels: ['white', 'black', 'blue', 'red', 'green', 'yellow']
+    hide: 'part'
+-   id: ringColor
+    label: Ring Color
+    dtype: enum
+    default: 'red'
+    options: ['red', 'white', 'black', 'blue', 'green', 'yellow']
+    option_labels: ['red', 'white', 'black', 'blue', 'green', 'yellow']
+    hide: 'part'
+-   id: gui_hint
+    label: GUI Hint
+    dtype: gui_hint
+    hide: part
+
+inputs:
+-   domain: message
+    id: radius
+    optional: false
+
+templates:
+    var_make: self.${id} = None
+    make: |-
+        <%
+            win = '_distance_radar_%s'%id
+        %>\
+        ${win} = qtgui.DistanceRadar(${label}, ${ticklabels}, "${backgroundColor}", "${fontColor}", "${ringColor}", self)
+        self.${id} = ${win}
+
+        ${gui_hint() % win}
+ 
+documentation: |-
+    This block creates a radar-like screen used to represent distance or size.  This can be used in many ways such as circles closer to the center are closer, or just the opposite where closer to the center is smaller.
+
+    Note: Incoming values should range between 0 (center bullseye) and 100 (all the way out)
+
+    The GUI hint can be used to position the widget within the application. The hint is of the form [tab_id@tab_index]: [row, col, row_span, col_span]. Both the tab specification and the grid position are optional.
+
+file_format: 1

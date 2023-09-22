@@ -1,0 +1,93 @@
+id: uhd_rfnoc_fft
+label: RFNoC Fast Fourier Transform (FFT) Block
+
+templates:
+  imports: |-
+    from gnuradio import uhd
+  make: |-
+    uhd.rfnoc_block_generic(
+        self.rfnoc_graph,
+        uhd.device_addr(${block_args}),
+        "FFT",
+        ${device_select},
+        ${instance_index})
+    self.${id}.set_property('length',       ${fft_length})
+    self.${id}.set_property('direction',    ${fft_direction.val})
+    self.${id}.set_property('magnitude',    ${fft_magnitude.val})
+    self.${id}.set_property('fft_scaling',  ${fft_scaling})
+    self.${id}.set_property('shift_config', ${fft_shift_config.val})
+  callbacks:
+    - set_property('length', ${fft_length})
+    - set_property('direction', ${fft_direction.val})
+    - set_property('magnitude', ${fft_magnitude.val})
+    - set_property('fft_scaling', ${fft_scaling})
+    - set_property('shift_config', ${fft_shift_config.val})
+
+parameters:
+- id: num_chans
+  label: Number of Channels
+  dtype: int
+  default: 1
+  hide: ${ 'part' if num_chans == 1 else 'none'}
+- id: block_args
+  label: Block Args
+  dtype: string
+  default: ""
+  hide: ${ 'part' if not block_args else 'none'}
+- id: device_select
+  label: Device Select
+  dtype: int
+  default: -1
+  hide: ${ 'part' if device_select == -1 else 'none'}
+- id: instance_index
+  label: Instance Select
+  dtype: int
+  default: -1
+  hide: ${ 'part' if instance_index == -1 else 'none'}
+- id: fft_length
+  label: FFT Length
+  dtype: int
+  default: 256
+- id: fft_direction
+  label: FFT Direction
+  dtype: enum
+  default: 'FORWARD'
+  options: ['REVERSE', 'FORWARD']
+  option_labels: ['Reverse', 'Forward']
+  option_attributes:
+    val: [0, 1]
+- id: fft_magnitude
+  label: FFT Magnitude Mode
+  dtype: enum
+  default: 'COMPLEX'
+  options: ['COMPLEX', 'MAGNITUDE', 'MAGNITUDE_SQUARED']
+  option_labels: ['Complex', 'Magnitude', 'Mag Squared']
+  option_attributes:
+    val: [0, 1, 2]
+- id: fft_shift_config
+  label: FFT Shift Configuration
+  dtype: enum
+  default: 'NORMAL'
+  options: ['NORMAL', 'REVERSE', 'NATURAL']
+  option_labels: ['Normal', 'Reverse', 'Natural']
+  option_attributes:
+    val: [0, 1, 2]
+- id: fft_scaling
+  label: FFT Scaling Schedule
+  dtype: int
+  default: 1706
+  hide: part
+
+inputs:
+- domain: rfnoc
+  dtype: 'sc16'
+  vlen: 1
+  multiplicity: ${num_chans}
+
+outputs:
+- domain: rfnoc
+  dtype: 'sc16'
+  vlen: 1
+  multiplicity: ${num_chans}
+
+file_format: 1

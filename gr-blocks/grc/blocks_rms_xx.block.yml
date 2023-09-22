@@ -1,0 +1,39 @@
+id: blocks_rms_xx
+label: RMS
+flags: [ python, cpp ]
+
+parameters:
+-   id: type
+    label: Input Type
+    dtype: enum
+    options: [complex, float]
+    option_attributes:
+        fcn: [c, f]
+    hide: part
+-   id: alpha
+    label: Alpha
+    dtype: real
+    default: '0.0001'
+
+inputs:
+-   domain: stream
+    dtype: ${ type }
+
+outputs:
+-   domain: stream
+    dtype: float
+
+templates:
+    imports: from gnuradio import blocks
+    make: blocks.rms_${type.fcn}f(${alpha})
+    callbacks:
+    - set_alpha(${alpha})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/rms_${type.fcn}f.h>']
+    declarations: 'blocks::rms_${type.fcn}f::sptr ${id};'
+    make: 'this->${id} = blocks::rms_${type.fcn}f::make(${alpha});'
+    callbacks:
+    - set_alpha(${alpha})
+
+file_format: 1

@@ -1,0 +1,123 @@
+options:
+  parameters:
+    author: ''
+    category: Custom
+    cmake_opt: ''
+    comment: ''
+    copyright: ''
+    description: ''
+    gen_cmake: 'On'
+    gen_linking: dynamic
+    generate_options: no_gui
+    hier_block_src_path: '.:'
+    id: strobe
+    max_nouts: '0'
+    output_language: python
+    placement: (0,0)
+    qt_qss_theme: ''
+    realtime_scheduling: ''
+    run: 'True'
+    run_command: '{python} -u {filename}'
+    run_options: prompt
+    sizing_mode: fixed
+    thread_safe_setters: ''
+    title: ''
+    window_size: 1280, 1024
+  states:
+    coordinate: [16, 12.0]
+    rotation: 0
+    state: enabled
+
+blocks:
+- name: blocks_copy_0
+  id: blocks_copy
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    enabled: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    showports: 'True'
+    type: byte
+    vlen: '1'
+  states:
+    coordinate: [504, 188.0]
+    rotation: 0
+    state: enabled
+- name: blocks_message_debug_0
+  id: blocks_message_debug
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+  states:
+    coordinate: [952, 128.0]
+    rotation: 0
+    state: enabled
+- name: blocks_message_strobe_0
+  id: blocks_message_strobe
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    msg: pmt.intern("TEST")
+    period: '1000'
+  states:
+    coordinate: [64, 116.0]
+    rotation: 0
+    state: enabled
+- name: blocks_message_strobe_0_0
+  id: blocks_message_strobe
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    msg: pmt.cons( pmt.PMT_NIL, pmt.make_u8vector(512,0) )
+    period: '750'
+  states:
+    coordinate: [56, 180.0]
+    rotation: 0
+    state: enabled
+- name: pdu_pdu_to_tagged_stream_1
+  id: pdu_pdu_to_tagged_stream
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    tag: packet_len
+    type: byte
+  states:
+    coordinate: [272, 188.0]
+    rotation: 0
+    state: enabled
+- name: pdu_tagged_stream_to_pdu_0
+  id: pdu_tagged_stream_to_pdu
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    tag: packet_len
+    type: byte
+  states:
+    coordinate: [672, 188.0]
+    rotation: 0
+    state: enabled
+
+connections:
+- [blocks_copy_0, '0', pdu_tagged_stream_to_pdu_0, '0']
+- [blocks_message_strobe_0, strobe, blocks_message_debug_0, print]
+- [blocks_message_strobe_0_0, strobe, pdu_pdu_to_tagged_stream_1, pdus]
+- [pdu_pdu_to_tagged_stream_1, '0', blocks_copy_0, '0']
+- [pdu_tagged_stream_to_pdu_0, pdus, blocks_message_debug_0, print_pdu]
+
+metadata:
+  file_format: 1

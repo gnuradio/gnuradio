@@ -1,0 +1,23 @@
+id: vocoder_g721_encode_sb
+label: g721 Audio Encoder
+flags: [ python, cpp ]
+
+inputs:
+-   domain: stream
+    dtype: short
+
+outputs:
+-   domain: stream
+    dtype: byte
+
+templates:
+    imports: from gnuradio import vocoder
+    make: vocoder.g721_encode_sb()
+
+cpp_templates:
+    includes: [ '#include <gnuradio/vocoder/g721_encode_sb.h>' ]
+    declarations: 'vocoder::g721_encode_sb::sptr ${id};'
+    make: 'this->${id} = vocoder::g721_encode_sb::make();'
+    link: ['gnuradio-vocoder']
+
+file_format: 1

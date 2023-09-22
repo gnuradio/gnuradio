@@ -1,0 +1,244 @@
+options:
+  parameters:
+    author: jacob
+    catch_exceptions: 'True'
+    category: '[GRC Hier Blocks]'
+    cmake_opt: ''
+    comment: ''
+    copyright: ''
+    description: ''
+    gen_cmake: 'On'
+    gen_linking: dynamic
+    generate_options: qt_gui
+    hier_block_src_path: '.:'
+    id: pdu_lambda_example
+    max_nouts: '0'
+    output_language: python
+    placement: (0,0)
+    qt_qss_theme: ''
+    realtime_scheduling: ''
+    run: 'True'
+    run_command: '{python} -u {filename}'
+    run_options: prompt
+    sizing_mode: fixed
+    thread_safe_setters: ''
+    title: PDU Lambda Example
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [16, 12.0]
+    rotation: 0
+    state: enabled
+
+blocks:
+- name: k
+  id: variable_qtgui_range
+  parameters:
+    comment: ''
+    gui_hint: ''
+    label: Vector Scale
+    min_len: '200'
+    orient: QtCore.Qt.Horizontal
+    rangeType: int
+    start: '0'
+    step: '1'
+    stop: '100'
+    value: '1'
+    widget: counter_slider
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [288, 12.0]
+    rotation: 0
+    state: true
+- name: l
+  id: variable_qtgui_range
+  parameters:
+    comment: ''
+    gui_hint: ''
+    label: Metadata Scale
+    min_len: '200'
+    orient: QtCore.Qt.Horizontal
+    rangeType: float
+    start: '0'
+    step: '.01'
+    stop: '100'
+    value: '1'
+    widget: counter_slider
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [400, 12.0]
+    rotation: 0
+    state: true
+- name: samp_rate
+  id: variable
+  parameters:
+    comment: ''
+    value: '32000'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [192, 12.0]
+    rotation: 0
+    state: enabled
+- name: lambda1
+  id: pdu_pdu_lambda
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    fn: 'lambda x: pmt.cons(pmt.make_dict(), x)'
+    key: ''
+    maxoutbuf: '0'
+    metadict: Raw Message
+    minoutbuf: '0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [376, 164.0]
+    rotation: 0
+    state: true
+- name: lambda2
+  id: pdu_pdu_lambda
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    fn: 'lambda x: x*l'
+    key: pmt.intern("distance")
+    maxoutbuf: '0'
+    metadict: Metadata
+    minoutbuf: '0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [392, 324.0]
+    rotation: 0
+    state: true
+- name: lambda3
+  id: pdu_pdu_lambda
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    fn: 'lambda x: x*k'
+    key: pmt.intern("key")
+    maxoutbuf: '0'
+    metadict: Uniform Vector
+    minoutbuf: '0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [712, 196.0]
+    rotation: 0
+    state: true
+- name: msg_dbg
+  id: blocks_message_debug
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    en_uvec: 'True'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [728, 264.0]
+    rotation: 180
+    state: enabled
+- name: msg_edit
+  id: qtgui_edit_box_msg
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    gui_hint: ''
+    is_pair: 'False'
+    is_static: 'False'
+    key: pmt.dict
+    label: Uniform Vector
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: int_vec
+    value: 1,2,3,4
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [104, 244.0]
+    rotation: 180
+    state: true
+- name: msg_strobe
+  id: blocks_message_strobe
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    msg: pmt.cons(pmt.make_dict(), pmt.PMT_NIL)
+    period: '1000'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [128, 156.0]
+    rotation: 0
+    state: enabled
+- name: note
+  id: note
+  parameters:
+    alias: ''
+    comment: 'This flowgraph shows some potential uses for the PDU and
+
+      message lambda blocks. The Message lambda converts a u8vector
+
+      PMT into a PDU, which has a key added. Two PDU lambda blocks
+
+      then operate on the uniform vector part and the metadata part
+
+      respectively.'
+    note: Flowgraph Summary
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [656, 12.0]
+    rotation: 0
+    state: true
+- name: pdu_set
+  id: pdu_pdu_set
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    k: pmt.intern("distance")
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    v: pmt.from_double(123)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [432, 236.0]
+    rotation: 180
+    state: true
+
+connections:
+- [lambda1, pdu, pdu_set, pdus]
+- [lambda2, pdu, lambda3, pdu]
+- [lambda3, pdu, msg_dbg, print]
+- [msg_edit, msg, msg_strobe, set_msg]
+- [msg_strobe, strobe, lambda1, pdu]
+- [pdu_set, pdus, lambda2, pdu]
+
+metadata:
+  file_format: 1

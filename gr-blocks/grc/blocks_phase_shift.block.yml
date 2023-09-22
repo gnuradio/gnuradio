@@ -1,0 +1,40 @@
+id: blocks_phase_shift
+label: Phase Shift
+
+parameters:
+-   id: shift
+    label: Phase Shift
+    dtype: float
+    default: '0.0'
+-   id: is_radians
+    label: Units
+    dtype: enum
+    options: ['True', 'False']
+    option_labels: ['Radians', 'Degrees']
+
+inputs:
+-   domain: stream
+    dtype: complex
+-   domain: message
+    id: shift
+    optional: true
+
+outputs:
+-   domain: stream
+    dtype: complex
+
+templates:
+    imports: from gnuradio import blocks
+    make: blocks.phase_shift(${shift}, ${is_radians})
+    callbacks:
+    - set_shift(${shift})
+
+documentation: "This block will phase shift the input signal by the specified phase\
+    \ by multiplying the input times a shift value: \n\
+    \ gr_complex(cos(d_shift_in_radians),sin(d_shift_in_radians))\n\n\
+    \ Notes:\n\
+    \ If degrees are provided, the block automatically handles the conversion.\n\
+    \ This block functions like a multiply const, but with the const limited to \
+    \ abs() == 1 to provide a constant phase shift." 
+
+file_format: 1

@@ -1,0 +1,57 @@
+id: uhd_rfnoc_graph
+label: RFNoC Graph (Device)
+flags: [ show_id, python ]
+
+templates:
+  imports: |-
+      from gnuradio import uhd
+  var_make: |
+      <%
+          # Sanitize
+          graph_args = str(dev_addr()).strip()
+          dev_args_s = str(dev_args()).strip()
+          clock_source_s = str(clock_source()).strip()
+          time_source_s = str(time_source()).strip()
+          # Build full dev args
+          if dev_args_s:
+              graph_args += f",{dev_args_s}"
+          if clock_source_s:
+              graph_args += f",clock_source={clock_source_s}"
+          if time_source_s:
+              graph_args += f",time_source={time_source_s}"
+      %>
+      self.rfnoc_graph = ${id} = uhd.rfnoc_graph(uhd.device_addr("${graph_args}"))
+
+value: ${ 'RFNoC Graph' }
+
+parameters:
+- id: dev_addr
+  label: Device Address
+  dtype: string
+  default: ""
+  hide: ${ 'none' if dev_addr else 'part' }
+- id: dev_args
+  label: Device Args
+  dtype: string
+  default: ""
+  hide: ${ 'none' if dev_args else 'part' }
+- id: num_mboards
+  label: Num Mboards
+  dtype: int
+  default: 1
+  options: [1, 2, 3, 4, 5, 6, 7, 8]
+  hide: part
+- id: clock_source
+  label: Clock Source
+  dtype: string
+  options: ['', internal, external, gpsdo]
+  option_labels: [Default, Internal, External, O/B GPSDO]
+  hide: ${ 'none' if clock_source else 'part' }
+- id: time_source
+  label: Time Source
+  dtype: string
+  options: ['', internal, external, gpsdo]
+  option_labels: [Default, Internal, External, O/B GPSDO]
+  hide: ${ 'none' if time_source else 'part' }
+
+file_format: 1

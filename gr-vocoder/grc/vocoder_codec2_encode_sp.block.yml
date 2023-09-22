@@ -1,0 +1,45 @@
+id: vocoder_codec2_encode_sp
+label: CODEC2 Audio Encoder
+flags: [ python, cpp ]
+
+parameters:
+-   id: mode
+    label: Bit rate
+    dtype: enum
+    default: codec2.MODE_2400
+    options: [codec2.MODE_3200, codec2.MODE_2400, codec2.MODE_1600, codec2.MODE_1400,
+        codec2.MODE_1300, codec2.MODE_1200, codec2.MODE_700, codec2.MODE_700B,
+        codec2.MODE_700C, codec2.MODE_WB, codec2.MODE_450, codec2.MODE_450PWB]
+    option_labels: [3200 bps, 2400 bps, 1600 bps, 1400 bps, 1300 bps, 1200 bps, 700
+            bps, 700B bps, 700C bps, Wideband, 450 bps, 450PWB bps]
+    option_attributes:
+        cpp_options: [vocoder::codec2::MODE_3200, vocoder::codec2::MODE_2400, vocoder::codec2::MODE_1600, vocoder::codec2::MODE_1400,
+            vocoder::codec2::MODE_1300, vocoder::codec2::MODE_1200, vocoder::codec2::MODE_700, vocoder::codec2::MODE_700B,
+            vocoder::codec2::MODE_700C, vocoder::codec2::MODE_WB, vocoder::codec2::MODE_450, vocoder::codec2::MODE_450PWB]
+    hide: none
+
+inputs:
+-   domain: stream
+    dtype: short
+
+outputs:
+-   domain: stream
+    dtype: byte
+    vlen: '${ {"codec2.MODE_3200": 64, "codec2.MODE_2400": 48, "codec2.MODE_1600": 64, "codec2.MODE_1400": 56, "codec2.MODE_1300": 52, "codec2.MODE_1200": 48, "codec2.MODE_700": 28, "codec2.MODE_700B": 28, "codec2.MODE_700C": 28, "codec2.MODE_WB": 64, "codec2.MODE_450": 18, "codec2.MODE_450PWB": 18}[mode] }'
+
+templates:
+    imports: |-
+        from gnuradio import vocoder
+        from gnuradio.vocoder import codec2
+    make: vocoder.codec2_encode_sp(${mode})
+
+cpp_templates:
+    includes: [ '#include <gnuradio/vocoder/codec2_encode_sp.h>' ]
+    declarations: 'vocoder::codec2_encode_sp::sptr ${id};'
+    make: 'this->${id} = vocoder::codec2_encode_sp::make(${mode});'
+    link: ['gnuradio-vocoder']
+
+documentation: |-
+    Not all modes may be supported by the underlying codec2 library.
+
+file_format: 1

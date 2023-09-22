@@ -1,0 +1,85 @@
+id: uhd_rfnoc_tx_streamer
+label: RFNoC Tx Streamer
+
+templates:
+  imports: |-
+    from gnuradio import uhd
+  make: |-
+    uhd.rfnoc_tx_streamer(
+        self.rfnoc_graph,
+        ${ num_chans },
+        uhd.stream_args(
+            cpu_format="${ input_type.type }",
+            otw_format="${ otw.type }",
+            channels=[],
+            args=${ args },
+        ),
+        ${ vlen }
+    )
+    %if use_default_adapter_id == 'False':
+    for port, adapter_id in enumerate(${ adapter_id_list }):
+        self.rfnoc_graph.set_streamer_adapter_id(
+            self.${id}.get_unique_id(), port, adapter_id)
+    %endif
+
+parameters:
+- id: num_chans
+  label: Number of Channels
+  dtype: int
+  default: 1
+  hide: part
+- id: args
+  label: Args
+  dtype: string
+  hide: part
+- id: vlen
+  label: Vector Length
+  dtype: int
+  default: 1
+  hide: part
+- id: input_type
+  label: Input Type
+  dtype: enum
+  options: [fc32, sc16]
+  option_labels: [Complex float32, Complex int16]
+  option_attributes:
+    type: [fc32, sc16]
+  hide: part
+- id: otw
+  label: Wire Format
+  dtype: enum
+  options: ['', sc16]
+  option_labels: [Automatic, Complex int16]
+  option_attributes:
+    type: ['', sc16]
+  hide: part
+- id: use_default_adapter_id
+  label: Default Adapter ID
+  dtype: bool
+  default: 'True'
+  options: ['True', 'False']
+  option_labels: ['Yes', 'No']
+  hide: part
+- id: adapter_id_list
+  label: Adapter ID List
+  dtype: int_vector
+  default: [0,]
+  hide: ${ 'all' if use_default_adapter_id else 'none' }
+
+asserts:
+  - ${ num_chans > 0 }
+  - ${ vlen > 0 }
+  - ${ use_default_adapter_id or len(adapter_id_list) == num_chans }
+
+inputs:
+- domain: stream
+  dtype: ${ input_type.type }
+  multiplicity: ${ num_chans }
+  vlen: ${ vlen }
+
+outputs:
+- domain: rfnoc
+  dtype: ${ otw.type }
+  multiplicity: ${ num_chans }
+
+file_format: 1

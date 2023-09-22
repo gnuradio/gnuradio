@@ -1,0 +1,160 @@
+id: soapy_sdrplay_source
+label: Soapy SDRPlay Source
+flags: [python, throttle]
+
+parameters:
+  - id: type
+    label: Output Type
+    dtype: enum
+    options: [fc32, sc16, sc8]
+    option_labels: [Complex Float32, Complex Int16, Complex Byte]
+    option_attributes:
+      type: [fc32, sc16, sc8]
+    hide: part
+
+  - id: dev_args
+    label: Device arguments
+    dtype: string
+    hide: ${'part' if not dev_args else 'none'}
+
+  - id: samp_rate
+    label: Sample Rate
+    dtype: float
+    default: 'samp_rate'
+
+  - id: bandwidth
+    label: Bandwidth
+    category: RF Options
+    dtype: float
+    default: '0.0'
+    hide: part
+
+  - id: antenna
+    label: Antenna
+    dtype: string
+    default: 'RX'
+    hide: part
+
+  - id: bias
+    label: Bias Tee Power
+    dtype: bool
+    hide: part
+
+  - id: center_freq
+    label: 'Center Freq (Hz)'
+    category: RF Options
+    dtype: real
+    default: 'freq'
+
+  - id: freq_correction
+    label: 'Frequency Correction (PPM)'
+    category: RF Options
+    dtype: real
+    default: '0'
+    hide: part
+
+  - id: agc
+    label: 'AGC'
+    category: RF Options
+    dtype: bool
+    default: 'False'
+    hide: part
+
+  - id: agc_setpoint
+    label: AGC Setpoint (-60dB - 0dB)'
+    category: RF Options
+    dtype: int
+    default: '-30'
+    hide: part
+
+  - id: gain
+    label: 'Gain (0dB - 39dB)'
+    category: RF Options
+    dtype: int
+    default: '20'
+    hide: part
+
+  - id: lna_state
+    label: 'LNA State (atten step)'
+    category: RF Options
+    dtype: int
+    default: '3'
+    hide: part
+
+inputs:
+  - domain: message
+    id: cmd
+    optional: true
+
+outputs:
+  - domain: stream
+    dtype: ${ type.type }
+    multiplicity: 1
+
+templates:
+  imports: from gnuradio import soapy
+
+  make: |-
+      None
+      ## Negative value for agc_setpoint is placed in parens by GRC.
+      ## This code turns it into an int and bounds checks
+      _agc_setpoint = int(${agc_setpoint})
+      _agc_setpoint = max(min(_agc_setpoint, -20), -70)
+
+      dev = 'driver=sdrplay'
+      stream_args = ''
+      tune_args = ['']
+      settings = ['']
+
+      ## Intercept the agc callback and restore the gain when agc is
+      ## disabled. The driver does not do this. LNA state is preserved.
+      def _set_${id}_gain_mode(channel, agc):
+          self.${id}.set_gain_mode(channel, agc)
+          if not agc:
+              self.set_${id}_gain(channel, self._${id}_gain_value)
+      self.set_${id}_gain_mode = _set_${id}_gain_mode
+      self._${id}_gain_value = ${gain}
+
+      ## Intercept the gain callback. The soapysdrplay driver prints an
+      ## error message every time gain is adjusted with agc on. Defer
+      ## setting IFGR until agc is turned off. Bounds check.
+      def _set_${id}_gain(channel, gain):
+          self._${id}_gain_value = gain
+          if not self.${id}.get_gain_mode(channel):
+              self.${id}.set_gain(channel, 'IFGR', min(max(59 - gain, 20), 59))
+      self.set_${id}_gain = _set_${id}_gain
+
+      ## Valid values for LNA state (RFGR here) vary by model, so runtime
+      ## changes may cause errors.
+      def _set_${id}_lna_state(channel, lna_state):
+              self.${id}.set_gain(channel, 'RFGR', min(max(lna_state, 0), 9))
+      self.set_${id}_lna_state = _set_${id}_lna_state
+
+      self.${id} = soapy.source(dev, "${type}", 1, ${dev_args},
+                                stream_args, tune_args, settings)
+      self.${id}.set_sample_rate(0, ${samp_rate})
+      self.${id}.set_bandwidth(0, ${bandwidth})
+      self.${id}.set_antenna(0, ${antenna})
+      self.${id}.set_frequency(0, ${center_freq})
+      self.${id}.set_frequency_correction(0, ${freq_correction})
+      # biasT_ctrl is not always available and leaving it blank avoids errors
+      if '${bias}' != '':
+          self.${id}.write_setting('biasT_ctrl', ${bias})
+      self.${id}.write_setting('agc_setpoint', ${agc_setpoint})
+      self.set_${id}_gain_mode(0, ${agc})
+      self.set_${id}_gain(0, ${gain})
+      self.set_${id}_lna_state(0, ${lna_state})
+
+  callbacks:
+    - set_sample_rate(0, ${samp_rate})
+    - set_bandwidth(0, ${bandwidth})
+    - set_antenna(0, ${antenna})
+    - set_frequency(0, ${center_freq})
+    - set_frequency_correction(0, ${freq_correction})
+    - write_setting('biasT_ctrl', ${bias})
+    - write_setting('agc_setpoint', ${agc_setpoint})
+    - self.set_${id}_gain_mode(0, ${agc})
+    - self.set_${id}_gain(0, ${gain})
+    - self.set_${id}_lna_state(0, ${lna_state})
+
+file_format: 1

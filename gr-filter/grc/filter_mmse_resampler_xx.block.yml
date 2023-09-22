@@ -1,0 +1,52 @@
+id: mmse_resampler_xx
+label: Fractional Resampler
+flags: [ python, cpp ]
+
+parameters:
+-   id: type
+    label: Type
+    dtype: enum
+    options: [complex, float]
+    option_attributes:
+        fcn: [cc, ff]
+    hide: part
+-   id: phase_shift
+    label: Phase Shift
+    dtype: real
+-   id: resamp_ratio
+    label: Resampling Ratio
+    dtype: real
+
+inputs:
+-   domain: stream
+    dtype: ${ type }
+-   label: rate
+    domain: stream
+    dtype: float
+    optional: true
+-   domain: message
+    id: msg_in
+    optional: true
+
+outputs:
+-   domain: stream
+    dtype: ${ type }
+
+templates:
+    imports: from gnuradio import filter
+    make: filter.mmse_resampler_${type.fcn}(${phase_shift}, ${resamp_ratio})
+    callbacks:
+    - set_resamp_ratio(${resamp_ratio})
+
+cpp_templates:
+    includes: ['#include <gnuradio/filter/mmse_resampler_${type.fcn}.h>']
+    declarations: 'filter::mmse_resampler_${type.fcn}::sptr ${id};'
+    make: |-
+        this->${id} = filter::mmse_resampler_${type.fcn}::make(
+            ${phase_shift},
+            ${resamp_ratio});
+    link: ['gnuradio::gnuradio-filter']
+    callbacks:
+    - set_resamp_ratio(${resamp_ratio})
+
+file_format: 1

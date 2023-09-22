@@ -1,0 +1,31 @@
+id: iio_attr_updater
+label: IIO Attribute Updater
+category: '[Industrial IO]'
+
+parameters:
+-   id: attr
+    label: Attribute
+    dtype: string
+    default: ''
+
+-   id: value
+    label: Value
+    dtype: string
+    default: ''
+
+-   id: interval
+    label: Interval (ms)
+    dtype: int
+    default: 1000
+
+outputs:
+-   domain: message
+    id: out
+
+templates:
+    imports: from gnuradio import iio
+    make: iio.attr_updater(${attr}, ${value}, ${interval})
+    callbacks:
+    - set_value(${value})
+
+file_format: 1

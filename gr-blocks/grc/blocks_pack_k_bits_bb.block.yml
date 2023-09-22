@@ -1,0 +1,30 @@
+id: blocks_pack_k_bits_bb
+label: Pack K Bits
+flags: [ python, cpp ]
+
+parameters:
+-   id: k
+    label: K
+    dtype: int
+
+inputs:
+-   domain: stream
+    dtype: byte
+
+outputs:
+-   domain: stream
+    dtype: byte
+
+templates:
+    imports: from gnuradio import blocks
+    make: blocks.pack_k_bits_bb(${k})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/pack_k_bits_bb.h>']
+    declarations: 'blocks::pack_k_bits_bb::sptr ${id};'
+    make: 'this->${id} = blocks::pack_k_bits_bb::make(${k});'
+
+documentation: |-
+    Pack K unpacked bits (one bit per byte) into a single packed byte containing k bits and 8 - k zeros.
+
+file_format: 1

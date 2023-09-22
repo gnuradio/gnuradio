@@ -1,0 +1,26 @@
+id: blocks_var_to_msg
+label: Variable to Message
+
+parameters:
+-   id: target
+    label: Variable
+    default: freq
+-   id: msgname
+    label: Message Variable Name
+    dtype: string
+    default: 'freq'
+
+outputs:
+-   domain: message
+    id: msgout
+
+templates:
+    imports: from gnuradio import blocks
+    make: blocks.var_to_msg_pair(${msgname})
+    callbacks:
+    - variable_changed(${target})
+  
+documentation: |-
+    This block will monitor a variable, and when it changes, generate a message.
+
+file_format: 1

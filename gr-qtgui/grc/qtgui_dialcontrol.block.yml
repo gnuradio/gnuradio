@@ -1,0 +1,97 @@
+id: variable_qtgui_dial_control
+label: QT GUI Dial
+category: '[Core]/GUI Widgets/QT'
+flags: [ show_id, python ]
+
+parameters:
+-   id: label
+    label: Label
+    dtype: string
+    hide: ${ ('none' if label else 'part') }
+-   id: type
+    label: Type
+    dtype: enum
+    default: int
+    options: [real, int]
+    option_labels: [Float, Integer]
+    option_attributes:
+        conv: [float, int]
+    hide: part
+-   id: value
+    label: Default Value
+    dtype: ${ type }
+    default: '0'
+-   id: minimum
+    label: Minimum
+    dtype: ${ type }
+    default: '0'
+-   id: maximum
+    label: Maximum
+    dtype: ${ type }
+    default: '100'
+-   id: scaleFactor
+    label: Scale Factor
+    dtype: ${ type }
+    default: '1'
+    hide: ${ ('part' if type=='real' else 'all') }
+-   id: showvalue
+    label: Show Value
+    dtype: bool
+    default: 'False'
+-   id: minsize
+    label: Minimum Size
+    dtype: int
+    default: '100'
+    hide: part
+-   id: outputmsgname
+    label: Message Property Name
+    dtype: string
+    default: 'value'
+    hide: 'part'
+-   id: relBackgroundColor
+    label: Color
+    dtype: enum
+    default: 'default'
+    options: ['default', 'silver', 'gray', 'black', 'white', 'red', 'green', 'blue', 'navy', 'yellow', 'orange', 'purple', 'lime', 'aqua', 'teal']
+    option_labels: ['default', 'silver', 'gray', 'black', 'white', 'red', 'green', 'blue', 'navy', 'yellow', 'orange', 'purple', 'lime', 'aqua', 'teal']
+    hide: 'part'
+-   id: gui_hint
+    label: GUI Hint
+    dtype: gui_hint
+    hide: part
+value: ${ value }
+
+outputs:
+-   domain: message
+    id: value
+    optional: true
+
+templates:
+    var_make: self.${id} = ${id} = ${value}
+    make: |-
+        <%
+            win = '_%s_dial_control'%id
+        %>\
+        
+        if "${type}" == "int":
+        	isFloat = False
+        	scaleFactor = 1
+        else:
+        	isFloat = True
+        	scaleFactor = ${scaleFactor}
+        	
+        ${win} = qtgui.GrDialControl(${label}, self, ${minimum},${maximum},${value},"${relBackgroundColor}",self.set_${id},isFloat, scaleFactor, ${minsize}, ${showvalue}, "${outputmsgname}")
+        self.${id} = ${win}
+
+        ${gui_hint() % win}
+
+documentation: |-
+    This block creates a dial control. The control does control a variable which can be used for other items.  Leave the label blank to use the variable id as the label.
+
+    The block also creates an optional message with the control value that can be used in message-based applications.
+    
+    Note: Dials only produce integer values, so the scale factor can be used with the min/max to adjust the output value to the desired range.  Think of the min/max as the increments, and the scale factor as the adjustment to get the values you want.
+
+    The GUI hint can be used to position the widget within the application. The hint is of the form [tab_id@tab_index]: [row, col, row_span, col_span]. Both the tab specification and the grid position are optional.
+
+file_format: 1

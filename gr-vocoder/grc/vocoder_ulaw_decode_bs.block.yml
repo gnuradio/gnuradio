@@ -1,0 +1,23 @@
+id: vocoder_ulaw_decode_bs
+label: ulaw Audio Decoder
+flags: [ python, cpp ]
+
+inputs:
+-   domain: stream
+    dtype: byte
+
+outputs:
+-   domain: stream
+    dtype: short
+
+templates:
+    imports: from gnuradio import vocoder
+    make: vocoder.ulaw_decode_bs()
+
+cpp_templates:
+    includes: [ '#include <gnuradio/vocoder/ulaw_decode_bs.h>' ]
+    declarations: 'vocoder::ulaw_decode_bs::sptr ${id};'
+    make: 'this->${id} = vocoder::ulaw_decode_bs::make();'
+    link: ['gnuradio-vocoder']
+
+file_format: 1

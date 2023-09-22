@@ -1,0 +1,24 @@
+id: channels_amp_bal
+label: Amplitude Balance
+
+parameters:
+-   id: alpha
+    label: Alpha
+    dtype: float
+    default: '0'
+
+inputs:
+-   domain: stream
+    dtype: complex
+
+outputs:
+-   domain: stream
+    dtype: complex
+
+templates:
+    imports: from gnuradio import channels
+    make: channels.amp_bal(${alpha})
+    callbacks:
+    - set_alpha(${alpha})
+
+file_format: 1

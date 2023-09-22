@@ -1,0 +1,770 @@
+options:
+  parameters:
+    author: Andy Walls
+    catch_exceptions: 'True'
+    category: Custom
+    cmake_opt: ''
+    comment: ''
+    copyright: ''
+    description: ''
+    gen_cmake: 'On'
+    gen_linking: dynamic
+    generate_options: qt_gui
+    hier_block_src_path: '.:'
+    id: symbol_sync_test_float
+    max_nouts: '0'
+    output_language: python
+    placement: (0,0)
+    qt_qss_theme: ''
+    realtime_scheduling: ''
+    run: 'True'
+    run_command: '{python} -u {filename}'
+    run_options: prompt
+    sizing_mode: fixed
+    thread_safe_setters: ''
+    title: Symbol Sync Test (Float)
+    window_size: 2600, 700
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [0, 0]
+    rotation: 0
+    state: enabled
+
+blocks:
+- name: baud_rate
+  id: variable
+  parameters:
+    comment: ''
+    value: '1200.0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [552, 244]
+    rotation: 0
+    state: enabled
+- name: data_src
+  id: variable_qtgui_chooser
+  parameters:
+    comment: ''
+    gui_hint: 0,0,1,1
+    label: Data Source
+    label0: Random
+    label1: Low freq
+    label2: Dot Pattern
+    label3: Pulse
+    label4: Packets
+    labels: '[]'
+    num_opts: '5'
+    option0: (1,0,0,0,0)
+    option1: (0,1,0,0,0)
+    option2: (0,0,1,0,0)
+    option3: (0,0,0,1,0)
+    option4: (0,0,0,0,1)
+    options: '[0, 1, 2]'
+    orient: Qt.QVBoxLayout
+    type: raw
+    value: (0,0,0,0,1)
+    widget: combo_box
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [344, 0]
+    rotation: 0
+    state: enabled
+- name: integral_gain
+  id: variable
+  parameters:
+    comment: ''
+    value: 2.0/ted_gain*(1.0-math.exp(-zeta*omega_n_norm)*(math.sinh(zeta*omega_n_norm)+(math.cosh(omega_d_norm)
+      if zeta > 1.0 else math.cos(omega_d_norm))))
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1488, 556]
+    rotation: 0
+    state: enabled
+- name: integral_gain_label
+  id: variable_qtgui_label
+  parameters:
+    comment: ''
+    formatter: None
+    gui_hint: 0,2,1,1
+    label: Integral Gain
+    type: string
+    value: '"%8.6f" % integral_gain'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1984, 428]
+    rotation: 0
+    state: enabled
+- name: omega_d_norm
+  id: variable
+  parameters:
+    comment: ''
+    value: omega_n_norm*math.sqrt((zeta*zeta-1.0) if zeta > 1.0 else (1.0-zeta*zeta))
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1488, 428]
+    rotation: 0
+    state: enabled
+- name: omega_n_norm
+  id: variable_qtgui_range
+  parameters:
+    comment: ''
+    gui_hint: 1,1,1,1
+    label: Normalized Bandwidth
+    min_len: '200'
+    orient: Qt.Horizontal
+    rangeType: float
+    start: '0.0'
+    step: '0.001'
+    stop: 2.0*math.pi*0.25
+    value: '0.125'
+    widget: counter_slider
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1632, 424]
+    rotation: 0
+    state: enabled
+- name: osps
+  id: variable
+  parameters:
+    comment: ''
+    value: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1848, 196]
+    rotation: 0
+    state: enabled
+- name: packet_time_est_tag
+  id: variable_tag_object
+  parameters:
+    comment: ''
+    key: pmt.intern("test")
+    offset: '9'
+    src: pmt.intern("packet_vector_source")
+    value: pmt.from_double(0.0)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [0, 544]
+    rotation: 0
+    state: enabled
+- name: proportional_gain
+  id: variable
+  parameters:
+    comment: ''
+    value: 2.0/ted_gain*math.exp(-zeta*omega_n_norm)*math.sinh(zeta*omega_n_norm)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1488, 492]
+    rotation: 0
+    state: enabled
+- name: proportional_gain_label
+  id: variable_qtgui_label
+  parameters:
+    comment: ''
+    formatter: None
+    gui_hint: 1,2,1,1
+    label: Proportional Gain
+    type: string
+    value: '"%8.6f" % proportional_gain'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1984, 508]
+    rotation: 0
+    state: enabled
+- name: sps
+  id: variable
+  parameters:
+    comment: ''
+    value: '7'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1328, 228]
+    rotation: 0
+    state: enabled
+- name: ted_gain
+  id: variable_qtgui_range
+  parameters:
+    comment: ''
+    gui_hint: 1,0,1,1
+    label: Expected TED Gain
+    min_len: '200'
+    orient: Qt.Horizontal
+    rangeType: float
+    start: '0.05'
+    step: '0.01'
+    stop: '5.0'
+    value: '0.28365'
+    widget: counter_slider
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1808, 544]
+    rotation: 0
+    state: enabled
+- name: zeta
+  id: variable_qtgui_range
+  parameters:
+    comment: ''
+    gui_hint: 0,1,1,1
+    label: Damping Factor
+    min_len: '200'
+    orient: Qt.Horizontal
+    rangeType: float
+    start: '0.1'
+    step: '0.1'
+    stop: '5.0'
+    value: '1.0'
+    widget: counter_slider
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1632, 544]
+    rotation: 0
+    state: enabled
+- name: analog_random_source_x_0
+  id: analog_random_source_x
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    max: '2'
+    maxoutbuf: '0'
+    min: '0'
+    minoutbuf: '0'
+    num_samps: '16384'
+    repeat: 'True'
+    type: short
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [0, 128]
+    rotation: 0
+    state: enabled
+- name: blocks_multiply_matrix_xx_0
+  id: blocks_multiply_matrix_xx
+  parameters:
+    A: (data_src,)
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    tag_propagation_policy: gr.TPP_ALL_TO_ALL
+    type: float
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [360, 248]
+    rotation: 0
+    state: enabled
+- name: blocks_repeat_0
+  id: blocks_repeat
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: Pulse Shaping
+    interp: sps*2
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: float
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [928, 324]
+    rotation: 0
+    state: enabled
+- name: blocks_short_to_float_1
+  id: blocks_short_to_float
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    scale: '1'
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [192, 148]
+    rotation: 0
+    state: enabled
+- name: blocks_throttle_0
+  id: blocks_throttle
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    ignoretag: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    samples_per_second: baud_rate*10
+    type: float
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [544, 324]
+    rotation: 0
+    state: enabled
+- name: blocks_vector_source_x_0_0
+  id: blocks_vector_source_x
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    repeat: 'True'
+    tags: '[]'
+    type: float
+    vector: (0, 1, 0, 1, 0, 1, 0, 1)
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [0, 300]
+    rotation: 0
+    state: enabled
+- name: blocks_vector_source_x_0_0_0
+  id: blocks_vector_source_x
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    repeat: 'True'
+    tags: '[]'
+    type: float
+    vector: (0,0,0,0,1,1,1,1)
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [0, 220]
+    rotation: 0
+    state: enabled
+- name: blocks_vector_source_x_0_0_1
+  id: blocks_vector_source_x
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    repeat: 'True'
+    tags: '[]'
+    type: float
+    vector: '[1]+[0]*7'
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [0, 380]
+    rotation: 0
+    state: enabled
+- name: blocks_vector_source_x_0_0_1_0
+  id: blocks_vector_source_x
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    repeat: 'True'
+    tags: '[packet_time_est_tag]'
+    type: float
+    vector: '[1,0]*(4*12*0)+[1,1,0,1,0,1,0,1]*12+[1,0,1,1,1,1,1,0,0,1]+[1,1,1,1,0,1,1,0,0,1]+[1,0,1,1,1,1,1,0,0,1]+[0,1,1,1,0,1,1,0,1,0]+[0,0,0,0,0,1,0,1,0,1,1,0,0,1,1,1,0,0,0,0]+[2]*128'
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [0, 460]
+    rotation: 0
+    state: enabled
+- name: digital_symbol_sync_xx_0
+  id: digital_symbol_sync_xx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    constellation: digital.constellation_bpsk().base()
+    damping: zeta
+    loop_bw: omega_n_norm
+    max_dev: '1.5'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    nfilters: '128'
+    osps: osps
+    pfb_mf_taps: '[]'
+    resamp_type: digital.IR_MMSE_8TAP
+    sps: sps
+    ted_gain: ted_gain
+    ted_type: digital.TED_MUELLER_AND_MULLER
+    type: ff
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1600, 276]
+    rotation: 0
+    state: enabled
+- name: epy_block_0
+  id: epy_block
+  parameters:
+    _source_code: "\"\"\"\nEmbedded Python Blocks:\n\nEach time this file is saved,\
+      \ GRC will instantiate the first class it finds\nto get ports and parameters\
+      \ of your block. The arguments to __init__  will\nbe the parameters. All of\
+      \ them are required to have default values!\n\"\"\"\n\nimport numpy as np\n\
+      from gnuradio import gr\n\nclass ConstMap(gr.sync_block):\n    \"\"\"\n    Map\
+      \ 0, 1 to -1, 1\n    \"\"\"\n    def __init__(self):\n        gr.sync_block.__init__(\n\
+      \            self,\n            name='Bit -> Symbol Map',\n            in_sig=[np.float32],\n\
+      \            out_sig=[np.float32]\n        )\n\n    def work(self, input_items,\
+      \ output_items):\n        \"\"\"\n        map\n        \"\"\"\n        sym_map\
+      \ = {0.0: -1.0, 1.0: 1.0, 2.0: 0.0}\n        output_items[0][:] = [sym_map[x]\
+      \ for x in input_items[0]]\n        return len(output_items[0])\n"
+    affinity: ''
+    alias: ''
+    comment: BPSK Modulation
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    _io_cache: ('Bit -> Symbol Map', 'ConstMap', [], [('0', 'float', 1)], [('0', 'float',
+      1)], '\n    Map 0, 1 to -1, 1\n    ', [])
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [712, 328]
+    rotation: 0
+    state: enabled
+- name: fir_filter_xxx_0_1_0_0_0
+  id: fir_filter_xxx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: "Matched Filter (almost). \nBecause the input stream has 6 2/3 \nsamples\
+      \ per symbol, this incurs a slight ISI."
+    decim: '1'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    samp_delay: int((sps-1.0)/2.0)+4
+    taps: '[1.0/float(sps)]*sps'
+    type: fff
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1336, 316]
+    rotation: 0
+    state: enabled
+- name: import_0
+  id: import
+  parameters:
+    alias: ''
+    comment: ''
+    imports: import math
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [184, 4]
+    rotation: 0
+    state: enabled
+- name: import_0_0
+  id: import
+  parameters:
+    alias: ''
+    comment: ''
+    imports: from gnuradio import digital
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [184, 52]
+    rotation: 0
+    state: enabled
+- name: note_0
+  id: note
+  parameters:
+    alias: ''
+    comment: ''
+    note: Bit Pattern Generation
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [328, 452.0]
+    rotation: 0
+    state: enabled
+- name: qtgui_time_sink_x_0_0_0_0_0
+  id: qtgui_time_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'False'
+    axislabels: 'True'
+    color1: blue
+    color10: dark blue
+    color2: red
+    color3: green
+    color4: black
+    color5: cyan
+    color6: magenta
+    color7: yellow
+    color8: dark red
+    color9: dark green
+    comment: ''
+    ctrlpanel: 'False'
+    entags: 'True'
+    grid: 'False'
+    gui_hint: 3,1,1,2
+    label1: Soft Bits
+    label10: ''
+    label2: Error
+    label3: Instantaneous Period
+    label4: Average Period
+    label5: ''
+    label6: ''
+    label7: ''
+    label8: ''
+    label9: ''
+    legend: 'True'
+    marker1: '0'
+    marker10: '-1'
+    marker2: '-1'
+    marker3: '-1'
+    marker4: '-1'
+    marker5: '-1'
+    marker6: '-1'
+    marker7: '-1'
+    marker8: '-1'
+    marker9: '-1'
+    name: Symbol Synched Output and Debug
+    nconnections: '4'
+    size: 256*osps
+    srate: baud_rate*osps
+    stemplot: 'False'
+    style1: '1'
+    style10: '1'
+    style2: '1'
+    style3: '1'
+    style4: '1'
+    style5: '1'
+    style6: '1'
+    style7: '1'
+    style8: '1'
+    style9: '1'
+    tr_chan: '0'
+    tr_delay: '0.01'
+    tr_level: '0.1'
+    tr_mode: qtgui.TRIG_MODE_NORM
+    tr_slope: qtgui.TRIG_SLOPE_POS
+    tr_tag: '"time_est"'
+    type: float
+    update_time: '0.1'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    ylabel: Amplitude
+    ymax: sps+2
+    ymin: '-1.5'
+    yunit: '""'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1952, 280]
+    rotation: 0
+    state: enabled
+- name: qtgui_time_sink_x_0_1_0
+  id: qtgui_time_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'False'
+    axislabels: 'True'
+    color1: blue
+    color10: dark blue
+    color2: red
+    color3: green
+    color4: black
+    color5: cyan
+    color6: magenta
+    color7: yellow
+    color8: dark red
+    color9: dark green
+    comment: ''
+    ctrlpanel: 'False'
+    entags: 'True'
+    grid: 'True'
+    gui_hint: 3,0,1,1
+    label1: ''
+    label10: ''
+    label2: ''
+    label3: ''
+    label4: ''
+    label5: Baseband
+    label6: Abs(Corr)
+    label7: ''
+    label8: ''
+    label9: ''
+    legend: 'True'
+    marker1: '-1'
+    marker10: '-1'
+    marker2: '-1'
+    marker3: '-1'
+    marker4: '-1'
+    marker5: '-1'
+    marker6: '-1'
+    marker7: '-1'
+    marker8: '-1'
+    marker9: '-1'
+    name: '""'
+    nconnections: '1'
+    size: 1024*3
+    srate: baud_rate*sps
+    stemplot: 'False'
+    style1: '1'
+    style10: '1'
+    style2: '1'
+    style3: '1'
+    style4: '1'
+    style5: '1'
+    style6: '1'
+    style7: '1'
+    style8: '1'
+    style9: '1'
+    tr_chan: '0'
+    tr_delay: '0.01'
+    tr_level: '0.1'
+    tr_mode: qtgui.TRIG_MODE_NORM
+    tr_slope: qtgui.TRIG_SLOPE_POS
+    tr_tag: ''
+    type: float
+    update_time: '0.10'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    ylabel: Amplitude
+    ymax: '1.5'
+    ymin: '-1.5'
+    yunit: '""'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1632, 172]
+    rotation: 0
+    state: enabled
+- name: rational_resampler_xxx_0
+  id: rational_resampler_xxx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: "Resampling to 6 2/3 samples \nper symbol (\"clock desync\")"
+    decim: '21'
+    fbw: '0.45'
+    interp: '10'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    taps: ''
+    type: fff
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1120, 304]
+    rotation: 0
+    state: enabled
+
+connections:
+- [analog_random_source_x_0, '0', blocks_short_to_float_1, '0']
+- [blocks_multiply_matrix_xx_0, '0', blocks_throttle_0, '0']
+- [blocks_repeat_0, '0', rational_resampler_xxx_0, '0']
+- [blocks_short_to_float_1, '0', blocks_multiply_matrix_xx_0, '0']
+- [blocks_throttle_0, '0', epy_block_0, '0']
+- [blocks_vector_source_x_0_0, '0', blocks_multiply_matrix_xx_0, '2']
+- [blocks_vector_source_x_0_0_0, '0', blocks_multiply_matrix_xx_0, '1']
+- [blocks_vector_source_x_0_0_1, '0', blocks_multiply_matrix_xx_0, '3']
+- [blocks_vector_source_x_0_0_1_0, '0', blocks_multiply_matrix_xx_0, '4']
+- [digital_symbol_sync_xx_0, '0', qtgui_time_sink_x_0_0_0_0_0, '0']
+- [digital_symbol_sync_xx_0, '1', qtgui_time_sink_x_0_0_0_0_0, '1']
+- [digital_symbol_sync_xx_0, '2', qtgui_time_sink_x_0_0_0_0_0, '2']
+- [digital_symbol_sync_xx_0, '3', qtgui_time_sink_x_0_0_0_0_0, '3']
+- [epy_block_0, '0', blocks_repeat_0, '0']
+- [fir_filter_xxx_0_1_0_0_0, '0', digital_symbol_sync_xx_0, '0']
+- [fir_filter_xxx_0_1_0_0_0, '0', qtgui_time_sink_x_0_1_0, '0']
+- [rational_resampler_xxx_0, '0', fir_filter_xxx_0_1_0_0_0, '0']
+
+metadata:
+  file_format: 1

@@ -1,0 +1,68 @@
+id: fec_bercurve_generator
+label: BER Curve Gen.
+
+parameters:
+-   id: esno
+    label: Es/N0
+    dtype: raw
+    default: numpy.arange(0.0, 4.0, .5)
+    hide: part
+-   id: samp_rate
+    label: Sample Rate
+    dtype: float
+    default: '3200000'
+-   id: encoder_list
+    label: Encoder list
+    dtype: raw
+    default: '0'
+-   id: decoder_list
+    label: Decoder list
+    dtype: raw
+    default: '0'
+-   id: puncpat
+    label: Puncture Pat.
+    dtype: string
+    default: '''11'''
+-   id: threadtype
+    label: Threading Type
+    dtype: enum
+    options: ['"capillary"', '"ordinary"', '"none"']
+    option_labels: [Capillary, Ordinary, None]
+    hide: part
+-   id: seed
+    label: Noise Seed
+    dtype: int
+    default: '0'
+    hide: part
+
+outputs:
+-   domain: stream
+    dtype: byte
+    multiplicity: ${ len(esno)*2 }
+
+templates:
+    imports: |-
+        from gnuradio import fec
+        import numpy
+    make: |-
+        fec.bercurve_generator(
+            ${encoder_list}, #size
+            ${decoder_list}, #name
+            ${esno}, #range of esnos
+            ${samp_rate}, #throttle
+            ${threadtype}, #threading mode
+            ${puncpat}, #puncture pattern
+            ${seed}) # noise gen. seed
+
+documentation: |-
+    Note that this block tries to launch many parallel codes to run simultaneously. Thus, it requires that the definitions for each encoder and decoder (specified in the "Encoder list" and "Decoder list") be configured with a parallelism > 0. If the parallelism for one of the encoder or decoder definition blocks is configured to 0, you will likely see an error like:
+
+        generic_decoder=decoder_list[i],
+        TypeError: 'generic_decoder_sptr' object does not support indexing
+
+        or
+
+        generic_encoder=encoder_list[i],
+        TypeError: 'generic_encoder_sptr' object does not support indexing
+
+file_format: 1

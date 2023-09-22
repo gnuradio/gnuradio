@@ -1,0 +1,100 @@
+id: qtgui_compass
+label: QT GUI Compass
+category: '[Core]/GUI Widgets/QT'
+
+parameters:
+-   id: name
+    label: Label
+    dtype: string
+    hide: ${ ('none' if len(name) > 0 else 'part') }
+-   id: position
+    label: Label Position
+    dtype: enum
+    default: '1'
+    options: ['1', '2']
+    option_labels: ['Above', 'Below']
+    hide: 'part'
+-   id: update_time
+    label: Update Period
+    dtype: float
+    default: '0.10'
+-   id: min_size
+    label: Min Size (px)
+    dtype: int
+    default: '250'
+-   id: fullNeedle
+    label: Needle
+    dtype: enum
+    options: ['1', '0', '2']
+    option_labels: [Full, Indicator, Ambig -Pi to Pi]
+-   id: usemsg
+    label: Input Type
+    dtype: enum
+    default: 'False'
+    options: ['False', 'True']
+    option_labels: ['Stream', 'Message']
+-   id: backgroundColor
+    label: Background Color
+    dtype: enum
+    default: 'default'
+    options: ['default', 'silver', 'gray', 'black', 'white', 'red', 'green', 'blue', 'navy', 'yellow', 'orange', 'purple', 'lime', 'aqua', 'teal']
+    option_labels: ['default', 'silver', 'gray', 'black', 'white', 'red', 'green', 'blue', 'navy', 'yellow', 'orange', 'purple', 'lime', 'aqua', 'teal']
+    hide: 'part'
+-   id: needleTipColor
+    label: Needle Tip Color
+    dtype: enum
+    default: 'red'
+    options: ['silver', 'gray', 'black', 'white', 'red', 'green', 'blue', 'navy', 'yellow', 'orange', 'purple', 'lime', 'aqua', 'teal']
+    option_labels: ['silver', 'gray', 'black', 'white', 'red', 'green', 'blue', 'navy', 'yellow', 'orange', 'purple', 'lime', 'aqua', 'teal']
+    hide: 'part'
+-   id: needleBodyColor
+    label: Needle Body Color
+    dtype: enum
+    default: 'black'
+    options: ['silver', 'gray', 'black', 'white', 'red', 'green', 'blue', 'navy', 'yellow', 'orange', 'purple', 'lime', 'aqua', 'teal']
+    option_labels: ['silver', 'gray', 'black', 'white', 'red', 'green', 'blue', 'navy', 'yellow', 'orange', 'purple', 'lime', 'aqua', 'teal']
+    hide: 'part'
+-   id: scaleColor
+    label: Scale Color
+    dtype: enum
+    default: 'black'
+    options: ['silver', 'gray', 'black', 'white', 'red', 'green', 'blue', 'navy', 'yellow', 'orange', 'purple', 'lime', 'aqua', 'teal']
+    option_labels: ['silver', 'gray', 'black', 'white', 'red', 'green', 'blue', 'navy', 'yellow', 'orange', 'purple', 'lime', 'aqua', 'teal']
+    hide: 'part'
+-   id: setDebug
+    label: Print Updates
+    dtype: enum
+    default: 'False'
+    options: ['False', 'True']
+    option_labels: ['No', 'Yes']
+    hide: 'part'
+-   id: gui_hint
+    label: GUI Hint
+    dtype: gui_hint
+    hide: part
+
+inputs:
+-   domain: stream
+    dtype: float
+    optional: true
+-   domain: message
+    id: angle
+    optional: true
+
+templates:
+    make: |-
+        <%
+            win = 'self._%s_win'%id
+        %>\
+        ${win} = qtgui.GrCompass(${name}, ${min_size}, ${update_time}, ${setDebug}, ${fullNeedle},${usemsg},${position},"${backgroundColor}")
+        ${win}.setColors("${backgroundColor}","${needleTipColor}", "${needleBodyColor}", "${scaleColor}")
+        self._${id} = ${win}
+        ${gui_hint() % win}
+
+documentation: |-
+    This block takes angle in degrees as input and displays it on a compass.
+    Args:
+    Update Period: Time-interval between GUI update.
+    Min Size (px): Min. size of the compass.
+    Input Type: Use the message instead of the stream input.
+file_format: 1

@@ -1,0 +1,78 @@
+id: uhd_rfnoc_split_stream
+label: RFNoC Split Stream Block
+category: '[Core]/UHD/RFNoC/Blocks'
+
+templates:
+  imports: |-
+    from gnuradio import uhd
+  make: |-
+    uhd.rfnoc_block_generic(
+        self.rfnoc_graph,
+        uhd.device_addr(),
+        "SplitStream",
+        ${device_select},
+        ${instance_index})
+
+parameters:
+- id: device_select
+  label: Device Select
+  dtype: int
+  default: -1
+  hide: ${ 'part' if device_select == -1 else 'none'}
+- id: instance_index
+  label: Instance Select
+  dtype: int
+  default: -1
+  hide: ${ 'part' if instance_index == -1 else 'none'}
+- id: num_inputs
+  label: Number of Inputs
+  dtype: int
+  default: 1
+  hide: ${ 'part' if num_inputs == 1 else 'none'}
+- id: num_branches
+  label: Number of Branches
+  dtype: int
+  default: 2
+- id: type
+  label: IO Type
+  dtype: enum
+  options: ['sc16', 'u8']
+  hide: part
+
+inputs:
+- domain: rfnoc
+  dtype: ${type}
+  multiplicity: ${num_inputs}
+
+outputs:
+- domain: rfnoc
+  dtype: ${type}
+  multiplicity: ${num_inputs * num_branches}
+
+documentation: |-
+    This RFNoC block takes in a single CHDR stream and duplicates it, creating
+    'Number of Branches' (num_branches) output streams for each input stream.
+    
+    The 'Number of Inputs' (num_inputs) parameter corresponds to the number of
+    inputs that you want to split. That is, the block creates num_inputs
+    instances of 1:num_branches splitters. The figure below illustrates how the
+    CHDR ports are ordered when num_inputs = 2 and num_branches = 3.
+    
+                   ┌──────────┐
+      Stream A --->│0        0│---> Stream A
+      Stream B --->│1        1│---> Stream B
+                   │         2│---> Stream A
+                   │         3│---> Stream B
+                   │         4│---> Stream A
+                   │         5│---> Stream B
+                   └──────────┘
+    Note that the number of available inputs and outputs are generated during
+    FPGA build time, and GRC doesn't have access to how many inputs and outputs
+    a particular target has. If the provided number for num_inputs or
+    num_branches exceeds what is on the target, then a runtime error will be
+    generated.
+
+
+
+
+file_format: 1

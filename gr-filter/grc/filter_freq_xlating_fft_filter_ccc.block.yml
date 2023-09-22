@@ -1,0 +1,52 @@
+id: freq_xlating_fft_filter_ccc
+label: Frequency Xlating FFT Filter
+flags: [ python ]
+
+parameters:
+-   id: decim
+    label: Decimation
+    dtype: int
+    default: '1'
+-   id: taps
+    label: Taps
+    dtype: complex_vector
+-   id: center_freq
+    label: Center Frequency
+    dtype: real
+    default: '0'
+-   id: samp_rate
+    label: Sample Rate
+    dtype: real
+    default: samp_rate
+-   id: samp_delay
+    label: Sample Delay
+    dtype: int
+    default: '0'
+    hide: part
+-   id: nthreads
+    label: Num. Threads
+    dtype: int
+    default: '1'
+
+inputs:
+-   domain: stream
+    dtype: complex
+
+outputs:
+-   domain: stream
+    dtype: complex
+
+templates:
+    imports: |-
+        from gnuradio import filter
+        from gnuradio.filter import firdes
+    make: |-
+        filter.freq_xlating_fft_filter_ccc(${decim}, ${taps}, ${center_freq}, ${samp_rate})
+        self.${id}.set_nthreads(${nthreads})
+        self.${id}.declare_sample_delay(${samp_delay})
+    callbacks:
+    - set_taps(${taps})
+    - set_center_freq(${center_freq})
+    - set_nthreads(${nthreads})
+
+file_format: 1

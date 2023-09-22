@@ -1,0 +1,41 @@
+id: analog_pll_carriertracking_cc
+label: PLL Carrier Tracking
+flags: [ python, cpp ]
+
+parameters:
+-   id: w
+    label: Loop Bandwidth
+    dtype: real
+-   id: min_freq
+    label: Min Phase/sample
+    dtype: real
+-   id: max_freq
+    label: Max Phase/sample
+    dtype: real
+
+inputs:
+-   domain: stream
+    dtype: complex
+
+outputs:
+-   domain: stream
+    dtype: complex
+
+templates:
+    imports: from gnuradio import analog
+    make: analog.pll_carriertracking_cc(${w}, ${max_freq}, ${min_freq})
+    callbacks:
+    - set_loop_bandwidth(${w})
+    - set_max_freq(${max_freq})
+    - set_min_freq(${min_freq})
+
+cpp_templates:
+    includes: ['#include <gnuradio/analog/pll_carriertracking_${type.fcn}.h>']
+    make: 'this->${id} = analog::pll_carriertracking_cc::make(${w}, ${max_freq}, ${min_freq});'
+    callbacks:
+    - set_loop_bandwidth(${w})
+    - set_max_freq(${max_freq})
+    - set_min_freq(${min_freq})
+    link: ['gnuradio::gnuradio-analog']
+
+file_format: 1

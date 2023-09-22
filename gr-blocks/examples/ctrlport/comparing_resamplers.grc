@@ -1,0 +1,173 @@
+options:
+  parameters:
+    author: ''
+    category: Custom
+    cmake_opt: ''
+    comment: ''
+    copyright: ''
+    description: ''
+    gen_cmake: 'On'
+    gen_linking: dynamic
+    generate_options: no_gui
+    hier_block_src_path: '.:'
+    id: comparing_resamplers
+    max_nouts: '0'
+    output_language: python
+    placement: (0,0)
+    qt_qss_theme: ''
+    realtime_scheduling: ''
+    run: 'True'
+    run_command: '{python} -u {filename}'
+    run_options: prompt
+    sizing_mode: fixed
+    thread_safe_setters: ''
+    title: ''
+    window_size: 570,390
+  states:
+    coordinate: [10, 10]
+    rotation: 0
+    state: enabled
+
+blocks:
+- name: resamp_rate
+  id: variable
+  parameters:
+    comment: ''
+    value: '1.25'
+  states:
+    coordinate: [272, 9]
+    rotation: 0
+    state: enabled
+- name: samp_rate
+  id: variable
+  parameters:
+    comment: ''
+    value: 30e6
+  states:
+    coordinate: [181, 10]
+    rotation: 0
+    state: enabled
+- name: analog_sig_source_x_0
+  id: analog_sig_source_x
+  parameters:
+    affinity: ''
+    alias: ''
+    amp: '1'
+    comment: ''
+    freq: samp_rate/10
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    offset: '0'
+    samp_rate: samp_rate
+    type: complex
+    waveform: analog.GR_COS_WAVE
+  states:
+    coordinate: [32, 124.0]
+    rotation: 0
+    state: enabled
+- name: blocks_throttle_0
+  id: blocks_throttle
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    ignoretag: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    samples_per_second: samp_rate
+    type: complex
+    vlen: '1'
+  states:
+    coordinate: [192, 156.0]
+    rotation: 0
+    state: enabled
+- name: channels_channel_model_0
+  id: channels_channel_model
+  parameters:
+    affinity: ''
+    alias: ''
+    block_tags: 'False'
+    comment: ''
+    epsilon: '1.0'
+    freq_offset: '0.0'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    noise_voltage: '0.1'
+    seed: '0'
+    taps: '[1,]'
+  states:
+    coordinate: [352, 116.0]
+    rotation: 0
+    state: enabled
+- name: mmse_resampler_xx_0
+  id: mmse_resampler_xx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    phase_shift: '0'
+    resamp_ratio: resamp_rate
+    type: complex
+  states:
+    coordinate: [608, 248.0]
+    rotation: 0
+    state: enabled
+- name: pfb_arb_resampler_xxx_0
+  id: pfb_arb_resampler_xxx
+  parameters:
+    affinity: ''
+    alias: ''
+    atten: '60'
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    nfilts: '32'
+    rrate: resamp_rate
+    samp_delay: '0'
+    taps: ''
+    type: ccf
+  states:
+    coordinate: [608, 132.0]
+    rotation: 0
+    state: enabled
+- name: probe_arc_resamp
+  id: blocks_ctrlport_probe2_c
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    desc: PFB Arbitrary Resampler
+    disp_mask: gr.DISPTIME
+    len: '1024'
+    name: arb_resampler
+  states:
+    coordinate: [856, 132.0]
+    rotation: 0
+    state: enabled
+- name: probe_frac_resamp
+  id: blocks_ctrlport_probe2_c
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    desc: Fractional Resampler
+    disp_mask: gr.DISPTIME
+    len: '1024'
+    name: mmse_resamp
+  states:
+    coordinate: [856, 252.0]
+    rotation: 0
+    state: enabled
+
+connections:
+- [analog_sig_source_x_0, '0', blocks_throttle_0, '0']
+- [blocks_throttle_0, '0', channels_channel_model_0, '0']
+- [channels_channel_model_0, '0', mmse_resampler_xx_0, '0']
+- [channels_channel_model_0, '0', pfb_arb_resampler_xxx_0, '0']
+- [mmse_resampler_xx_0, '0', probe_frac_resamp, '0']
+- [pfb_arb_resampler_xxx_0, '0', probe_arc_resamp, '0']
+
+metadata:
+  file_format: 1

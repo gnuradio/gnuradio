@@ -1,0 +1,43 @@
+# http://www.vtk.org/Wiki/CMake_FAQ#Can_I_do_.22make_uninstall.22_with_CMake.3F
+
+if(NOT EXISTS "@CMAKE_CURRENT_BINARY_DIR@/install_manifest.txt")
+    message(
+        FATAL_ERROR
+            "Cannot find install manifest: \"@CMAKE_CURRENT_BINARY_DIR@/install_manifest.txt\""
+    )
+endif(NOT EXISTS "@CMAKE_CURRENT_BINARY_DIR@/install_manifest.txt")
+
+if(NOT EXISTS "@CMAKE_CURRENT_BINARY_DIR@/grc/scripts/freedesktop/grc_setup_freedesktop")
+    message(STATUS "Cannot find freedesktop install script")
+else("@CMAKE_CURRENT_BINARY_DIR@/grc/scripts/freedesktop/grc_setup_freedesktop")
+    exec_program(
+        "@CMAKE_CURRENT_BINARY_DIR@/grc/scripts/freedesktop/grc_setup_freedesktop"
+        ARGS "uninstall"
+    )
+endif("@CMAKE_CURRENT_BINARY_DIR@/grc/scripts/freedesktop/grc_setup_freedesktop")
+file(READ "@CMAKE_CURRENT_BINARY_DIR@/install_manifest.txt" files)
+string(REGEX REPLACE "\n" ";" files "${files}")
+foreach(file ${files})
+    message(STATUS "Uninstalling \"$ENV{DESTDIR}${file}\"")
+    if(EXISTS "$ENV{DESTDIR}${file}")
+        exec_program(
+            "@CMAKE_COMMAND@" ARGS
+            "-E remove \"$ENV{DESTDIR}${file}\""
+            OUTPUT_VARIABLE rm_out
+            RETURN_VALUE rm_retval)
+        if(NOT "${rm_retval}" STREQUAL 0)
+            message(FATAL_ERROR "Problem when removing \"$ENV{DESTDIR}${file}\"")
+        endif(NOT "${rm_retval}" STREQUAL 0)
+    elseif(IS_SYMLINK "$ENV{DESTDIR}${file}")
+        exec_program(
+            "@CMAKE_COMMAND@" ARGS
+            "-E remove \"$ENV{DESTDIR}${file}\""
+            OUTPUT_VARIABLE rm_out
+            RETURN_VALUE rm_retval)
+        if(NOT "${rm_retval}" STREQUAL 0)
+            message(FATAL_ERROR "Problem when removing \"$ENV{DESTDIR}${file}\"")
+        endif(NOT "${rm_retval}" STREQUAL 0)
+    else(EXISTS "$ENV{DESTDIR}${file}")
+        message(STATUS "File \"$ENV{DESTDIR}${file}\" does not exist.")
+    endif(EXISTS "$ENV{DESTDIR}${file}")
+endforeach(file)

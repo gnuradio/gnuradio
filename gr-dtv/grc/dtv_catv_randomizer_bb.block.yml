@@ -1,0 +1,34 @@
+id: dtv_catv_randomizer_bb
+label: Randomizer
+flags: [ python, cpp ]
+
+parameters:
+-   id: constellation
+    label: Constellation
+    dtype: enum
+    options: [CATV_MOD_64QAM, CATV_MOD_256QAM]
+    option_labels: [64QAM, 256QAM]
+    option_attributes:
+        val: [dtv.CATV_MOD_64QAM, dtv.CATV_MOD_256QAM]
+
+inputs:
+-   domain: stream
+    dtype: byte
+
+outputs:
+-   domain: stream
+    dtype: byte
+
+templates:
+    imports: from gnuradio import dtv
+    make: dtv.catv_randomizer_bb(${constellation.val})
+
+cpp_templates:
+    includes: ['#include <gnuradio/dtv/catv_randomizer_bb.h>']
+    declarations: 'dtv::catv_randomizer_bb::sptr ${id};'
+    make: 'this->${id} = dtv::catv_randomizer_bb::make(${constellation.val});'
+    link: ['gnuradio::gnuradio-dtv']
+    translations:
+        dtv\.: "dtv::"
+
+file_format: 1

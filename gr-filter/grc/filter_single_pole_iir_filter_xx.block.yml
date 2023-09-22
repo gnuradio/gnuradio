@@ -1,0 +1,47 @@
+id: single_pole_iir_filter_xx
+label: Single Pole IIR Filter
+flags: [ python, cpp ]
+
+parameters:
+-   id: type
+    label: Type
+    dtype: enum
+    options: [complex, float]
+    option_attributes:
+        fcn: [cc, ff]
+    hide: part
+-   id: alpha
+    label: Alpha
+    dtype: real
+    default: '1.0'
+-   id: vlen
+    label: Vector Length
+    dtype: int
+    default: '1'
+    hide: ${ 'part' if vlen == 1 else 'none' }
+
+inputs:
+-   domain: stream
+    dtype: ${ type }
+    vlen: ${ vlen }
+
+outputs:
+-   domain: stream
+    dtype: ${ type }
+    vlen: ${ vlen }
+
+templates:
+    imports: from gnuradio import filter
+    make: filter.single_pole_iir_filter_${type.fcn}(${alpha}, ${vlen})
+    callbacks:
+    - set_taps(${alpha})
+
+cpp_templates:
+    includes: ['#include <gnuradio/filter/single_pole_iir_filter_${type.fcn}.h>']
+    declarations: 'filter::single_pole_iir_filter_${type.fcn}::sptr ${id};'
+    make: 'this->${id} = filter::single_pole_iir_filter_${type.fcn}::make(${alpha}, ${vlen});'
+    link: ['gnuradio::gnuradio-filter']
+    callbacks:
+    - set_taps(${alpha})
+
+file_format: 1

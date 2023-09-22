@@ -1,0 +1,103 @@
+id: qtgui_dialgauge
+label: QT GUI Dial Gauge
+category: '[Core]/GUI Widgets/QT'
+
+parameters:
+-   id: label
+    label: Label
+    dtype: string
+    hide: ${ ('none' if label else 'part') }
+-   id: position
+    label: Label Position
+    dtype: enum
+    default: '1'
+    options: ['1', '2']
+    option_labels: ['Above', 'Below']
+    hide: 'part'
+-   id: type
+    label: Type
+    dtype: enum
+    default: int
+    options: [real, int]
+    option_labels: [Float, Integer]
+    option_attributes:
+        conv: [float, int]
+    hide: 'part'
+-   id: value
+    label: Value
+    dtype: ${ type }
+    default: '0'
+-   id: minimum
+    label: Minimum
+    dtype: ${ type }
+    default: '0'
+-   id: maximum
+    label: Maximum
+    dtype: ${ type }
+    default: '100'
+-   id: showValue
+    label: Show Value
+    dtype: bool
+    default: 'False'
+-   id: msize
+    label: Control Size (px)
+    dtype: int
+    default: '100'
+    hide: part
+-   id: barColor
+    label: Filled Bar Color
+    dtype: enum
+    default: 'blue'
+    options: ['silver', 'gray', 'black', 'white', 'red', 'green', 'blue', 'navy', 'yellow', 'orange', 'purple', 'lime', 'aqua', 'teal']
+    option_labels: ['silver', 'gray', 'black', 'white', 'red', 'green', 'blue', 'navy', 'yellow', 'orange', 'purple', 'lime', 'aqua', 'teal']
+    hide: 'part'
+-   id: backgroundColor
+    label: Empty Bar Color
+    dtype: enum
+    default: 'white'
+    options: ['silver', 'gray', 'black', 'white', 'red', 'green', 'blue', 'navy', 'yellow', 'orange', 'purple', 'lime', 'aqua', 'teal']
+    option_labels: ['silver', 'gray', 'black', 'white', 'red', 'green', 'blue', 'navy', 'yellow', 'orange', 'purple', 'lime', 'aqua', 'teal']
+    hide: 'part'
+-   id: fontColor
+    label: Font Color
+    dtype: enum
+    default: 'black'
+    options: ['silver', 'gray', 'black', 'white', 'red', 'green', 'blue', 'navy', 'yellow', 'orange', 'purple', 'lime', 'aqua', 'teal']
+    option_labels: ['silver', 'gray', 'black', 'white', 'red', 'green', 'blue', 'navy', 'yellow', 'orange', 'purple', 'lime', 'aqua', 'teal']
+    hide: 'part'
+-   id: gui_hint
+    label: GUI Hint
+    dtype: gui_hint
+    hide: part
+value: ${ value }
+
+inputs:
+-   domain: message
+    id: value
+    optional: true
+
+templates:
+    make: |-
+        <%
+            win = '_%s_lg_win'%id
+        %>\
+        
+        if "${type}" == "int":
+        	isFloat = False
+        else:
+        	isFloat = True
+        	
+        ${win} = qtgui.GrDialGauge(${label},"${barColor}","${backgroundColor}","${fontColor}",${minimum},${maximum}, ${msize}, ${position},isFloat,${showValue},True,self)
+        ${win}.setValue(${value})
+        self.${id} = ${win}
+
+        ${gui_hint() % win}
+    callbacks:
+    - self.${id}.setValue(${value})
+
+documentation: |-
+    This block creates a dial-style gauge. The value can be set either with a variable or an input message.
+    
+    The GUI hint can be used to position the widget within the application. The hint is of the form [tab_id@tab_index]: [row, col, row_span, col_span]. Both the tab specification and the grid position are optional.
+
+file_format: 1

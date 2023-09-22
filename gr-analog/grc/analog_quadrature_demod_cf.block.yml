@@ -1,0 +1,56 @@
+id: analog_quadrature_demod_cf
+label: Quadrature Demod
+flags: [ python, cpp ]
+
+parameters:
+-   id: gain
+    label: Gain
+    dtype: real
+    default: samp_rate/(2*math.pi*fsk_deviation_hz)
+
+inputs:
+-   domain: stream
+    dtype: complex
+
+outputs:
+-   domain: stream
+    dtype: float
+
+templates:
+    imports: |-
+        from gnuradio import analog
+        import math
+    make: analog.quadrature_demod_cf(${gain})
+    callbacks:
+    - set_gain(${gain})
+
+cpp_templates:
+    includes: [ '#include <gnuradio/analog/quadrature_demod_cf.h>' ]
+    declarations: 'analog::quadrature_demod_cf::sptr ${id};'
+    make: 'this->${id} = analog::quadrature_demod_cf::make(${gain});'
+    link: ['gnuradio-analog']
+    callbacks:
+    - set_gain(${gain})
+
+documentation: |-
+    This can be used to demod FM, FSK, GMSK, etc.  The input is complex
+    baseband, output is the signal frequency in relation to the sample
+    rate, multiplied with the gain.
+
+    Mathematically, this block calculates the product of the one-sample
+    delayed input and the conjugate undelayed signal, and then calculates
+    the argument of the resulting complex number:
+
+    y[n] = \mathrm{arg}\left(x[n] \, \bar x [n-1]\right).
+
+    Let x be a complex sinusoid with amplitude A>0, (absolute)
+    frequency f\in\mathbb R and phase \phi_0\in[0;2\pi] sampled at
+    f_s>0 so, without loss of generality,
+
+    x[n]= A e^{j2\pi( \frac f{f_s} n + \phi_0)}\f
+
+    then
+
+    y[n] = \mathrm{arg}\left(A e^{j2\pi\left( \frac f{f_s} n + \phi_0\right)} \overline{A e^{j2\pi( \frac f{f_s} (n-1) + \phi_0)}}\right)\ = \mathrm{arg}\left(A^2 e^{j2\pi\left( \frac f{f_s} n + \phi_0\right)} e^{-j2\pi( \frac f{f_s} (n-1) + \phi_0)}\right)\ = \mathrm{arg}\left( A^2 e^{j2\pi\left( \frac f{f_s} n + \phi_0 - \frac f{f_s} (n-1) - \phi_0\right)}\right)\ = \mathrm{arg}\left( A^2 e^{j2\pi\left( \frac f{f_s} n - \frac f{f_s} (n-1)\right)}\right)\ = \mathrm{arg}\left( A^2 e^{j2\pi\left( \frac f{f_s} \left(n-(n-1)\right)\right)}\right)\ = \mathrm{arg}\left( A^2 e^{j2\pi \frac f{f_s}}\right) \intertext{$A$ is real, so is $A^2$ and hence only \textit{scales}, therefore $\mathrm{arg}(\cdot)$ is invariant:} = \mathrm{arg}\left(e^{j2\pi \frac f{f_s}}\right)\= \frac f{f_s}\\
+
+file_format: 1

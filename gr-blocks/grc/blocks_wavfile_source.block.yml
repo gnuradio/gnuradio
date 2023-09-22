@@ -1,0 +1,42 @@
+id: blocks_wavfile_source
+label: Wav File Source
+flags: [ python, cpp ]
+
+parameters:
+-   id: file
+    label: File
+    dtype: file_open
+-   id: repeat
+    label: Repeat
+    dtype: enum
+    default: 'True'
+    options: ['True', 'False']
+    option_labels: ['Yes', 'No']
+-   id: nchan
+    label: N Channels
+    dtype: int
+    default: '1'
+    hide: part
+
+outputs:
+-   domain: stream
+    dtype: float
+    multiplicity: ${ nchan }
+
+asserts:
+- ${ 1 <= nchan }
+
+templates:
+    imports: from gnuradio import blocks
+    make: blocks.wavfile_source(${file}, ${repeat})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/wavfile_source.h>']
+    declarations: 'blocks::wavfile_source::sptr ${id};'
+    make: |-
+      this->${id} = blocks::wavfile_source::make(${file}${'.c_str()' if str(file)[0] != "'" and str(file)[0] != "\"" else ''}, ${repeat});
+    translations:
+        'True': 'true'
+        'False': 'false'
+
+file_format: 1

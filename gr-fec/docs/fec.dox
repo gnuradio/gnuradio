@@ -1,0 +1,628 @@
+/*! \page page_fec Forward Error Correction
+
+\section fec_introduction Introduction
+
+This is the gr-fec package. It contains all of the forward error
+correction (FEC) blocks, utilities, and examples. To use the FEC
+blocks, the Python namespaces is in gnuradio.fec, which would be
+normally imported as:
+
+\code
+    from gnuradio import fec
+\endcode
+
+See the Doxygen documentation for details about the blocks available
+in this package.
+
+A quick listing of the details can be found in Python after importing
+by using:
+
+\code
+    help(fec)
+\endcode
+
+
+\section fec_using Using the FEC API
+
+FEC is a complex issue to implement in a generic, generally usable
+way. To help with these issues, the FEC API operates on two levels:
+the coder variables and the coder deployments. The variables implement
+the encoding and decoding methods whereas the deployments set up the
+variables, make sure the input data is formatted properly, run the
+coder variable, and then pass on the data for follow-on processing.
+
+In a GNU Radio flowgraph, the deployments are GNU Radio blocks that we
+insert into the flowgraph. The deployments use the API of the coder
+variables to interact with the scheduler and set up the input/output
+item buffers that move data between blocks. The intent of the API is
+to be able to build the coding variables that are general enough for
+easy use in multiple situations. We then construct deployments to
+control the interaction between the data and the variable. GNU Radio
+provides deployments for a number of situations, but these should not
+be considered the only ways to deploy the decoders.
+
+
+\subsection fec_deployments Deployments
+
+Generally speaking, encoder deployments take in bits and produce
+bits (i.e., unpacked bytes with 1 bit per byte). Decoder deployments
+take in floats and produce bits. The floats are generally meant to
+represent soft decisions. If the demodulator does not produce soft
+decisions, an easy alternative is to convert the hard decision 0's and
+1's to -1 and +1 floats. The main departure from this model is when
+using a PDU-based modulator or demodulator, for which we can look at
+using the asynchronous message passing system. In this instance,
+passing bits is not natural, so we need to create a deployment that
+can handle packed bytes. GNU Radio has the gr::fec::asycn_encoder and
+gr::fec::async_decoder deployments that work in this mode.
+
+Some coding variables handle inputs and outputs differently than the
+described deployments. Using the FEC API provides concepts of input
+and output conversion properties that help us create deployments to
+convert the data streams to the required format of the variable.
+
+\subsubsection fec_deploy_simple Streaming Deployments
+
+For the encoder deployments, the gr::fec::encoder block is a
+relatively simple deployment for the encoding variables. It uses the
+encoding object information about the input/output sizes and
+input/output item sizes to set up the interaction with the
+scheduler. Typically, a coder will add redundancy to the stream making
+the output longer by some amount than the input stream. This block
+simply takes in an encoder object, specifically an object that derives
+from gr::fec::generic_encoder. It also takes in the input and output
+items sizes that the encoder will expect, which we can just ask the
+encoder for. Typically, the encodes expect unpacked bytes in and
+unpacked bytes out.
+
+The gr::fec::decoder block is a similarly simple deployment for the
+decoding variables. It uses the decoding variable information about
+the input/output sizes and input/output item sizes to set up the
+interaction with the scheduler. Since a decoder typically uses the
+redundancy from the input stream to correct for errors, the input
+stream will be longer than the output stream by the rate of the
+code. This block simply takes in an decoder object, specifically an
+object that derives from gr::fec::generic_decoder. It also takes in
+the input and output items sizes that the decoder will expect, which
+we can just ask the encoder for. The deployment expects a floating
+point stream input, though the decoder variables may take a float
+input or a byte. If using a byte format, it could be a hard decision
+or a quantized soft decision, depending on how the decoder object
+behaves.
+
+Normally, though, we don't work directly with these simple encoder()
+or decoder() deployments but a wrapper around those blocks. GNU
+Radio's gr-fec package comes with two Python deployments to make
+things easier: fec.extended_encoder and fec.extended_decoder. For one
+thing, these extended hier_block2 blocks take care of the puncturing
+and depuncturing operations often found in FEC codes. The other thing
+that these blocks do for us is read the API of the encoder/decoder
+variables to properly convert the data in or out, depending on how the
+coding object works.
+
+For instance, a generic_decoder takes in floating point values (which
+should be soft decisions). However, a decoder might instead want to
+work on 8-bit quantized soft decisions and so expects unsigned
+chars. Specifying 'uchar' as the
+gr::fec::generic_decoder::get_input_conversion() of the decoder block tells the
+fec.extended_decoder to convert the float to a byte.
+
+In GRC, we would add an "FEC Extended Encoder" to our transmitter or
+an "FEC Extended Decoder" to the receiver. We would then use one of
+the encoder or decoder FEC variable blocks to define the parameters of
+the particular code we want to use. We can find these codes under the
+[Error Coding] category in GRC. The encoders are found under
+[Encoders] and similarly the decoders under the [Decoders]
+categories. Putting these onto the canvas creates a variable that we
+can then pass to the extended encoder or decoder deployment blocks.
+
+Most of the parameters of the encoder and decoder definitions should
+be fairly obvious based on the type of code. See the documentation for
+each coding object for more details. In the following section \ref
+fec_parallelism, we explain the Parallelism and Dimension properties.
+
+See fec/fecapi_encoders.grc and fec/fecapi_decoders.grc in the
+installed examples for an example of how to work with these
+deployments given the three initial FEC coders available.
+
+\subsubsection fec_deploy_tag_stream Tagged Stream Deployments
+
+GNU Radio's gr-fec also comes with simple deployments for
+<a href="https://wiki.gnuradio.org/index.php/Tagged_Stream_Blocks" target="_blank">Tagged Stream Blocks</a>
+blocks. These deployments work similarly to
+the normal streaming deployments but fit into a tagged stream system
+by setting a tagged stream tag to control the frame size. Like all
+tagged stream blocks, they expect the tag to be located in the stream
+in order to properly function.
+
+The simplest form of the tagged stream deployments are just the C++
+blocks gr::fec::tagged_encoder and gr::fec::tagged_decoder. These do
+not handle any input or output conversion. They expect the inputs to
+be already properly formatted for the encoding/decoding variables, and
+the outputs will be whatever the variable naturally produce.
+
+In the tagged stream deployments, the frame size set for a variable is
+no longer the static frame size like we expected in the streaming data
+implementations. Instead, we look at the frame size of the
+encoder/decoder variable during construction of the deployment as the
+maximum frame size, or a maximum transmission unit (MTU). This allows
+us to set up some internal memory to handle up to the required maximum
+length. When a tagged stream comes into this block, the frame size is
+then set based on that tagged stream information. If the frame is
+larger than the established MTU, a warning is sent out and the
+deployment only handles up to the MTU of the given frame.
+
+The extended Python tagged deployments, fec.extended_tagged_encoder
+and fec.extended_tagged_decoder, offer additional handling of the FEC
+API like we saw with the fec.extended_encoder and
+fec.extended_decoder. These extended deployments wrap up the
+puncturing and depuncturing as well as use the FEC API to do any input
+and output translation for the formatting of data streams. The
+fec.extended_tagged_encoder expects unpacked bits in and produces
+unpacked bits out. The fec.extended_tagged_decoder takes in floats
+(generally soft decisions from -1 to 1) and produces unpacked bits.
+
+See fec/fecapi_tagged_encoders.grc and fec/fecapi_tagged_decoders.grc
+in the installed examples for an example of how to work with these
+deployments given the three initial FEC coders available.
+
+
+
+\subsubsection fec_deploy_async Asynchronous Deployments
+
+The final standard deployment shipped with GNU Radio is for
+asynchronous <a href="https://wiki.gnuradio.org/index.php/Message_Passing" target="_blank">Message Passing</a>
+and handling PDUs: gr::fec::async_encoder and gr::fec::async_decoder.
+
+Unlike the other deployments, these C++ deployments do not also have
+an extended Python deployment. Because this deployment uses message
+passing, we cannot easily build up a hierarchical block of message
+passing blocks to satisfy the input/output translations like we've
+done with the other forms of deployment. Instead, the input/output
+formatting is taken care of inside this deployment itself. Further,
+because this form of moving data anticipates data being moved in
+packets, these deployments cannot work with any FEC code that requires
+a history (see generic_decoder::get_history). Right now, this means
+that the async message passing deployments cannot work with
+convolutional codes (gr::fec::code::cc_encoder and
+gr::fec::code::cc_decoder) in streaming mode because it would require
+data from the next frame to finish off decoding the current frame.
+
+These deployments also work in two distinct modes. They can work in
+unpacked mode where inputs are messages of bits, or they may work in
+packed mode where messages are PDUs. The distinction is that the
+packed mode PDU's are the standard protocol data units (PDUs) that
+encompass full packets of data. This allows these async deployments to
+be used easily within PDU-based applications, such as encoding a
+packet with a CRC attached.
+
+When in packed or PDU mode, the encoder deployment has the option of
+reversing the bits during unpacking and packing. Like the extended
+deployments for the other data modes, these deployments manipulate the
+input data to the format expected by the encoding or decoding
+variables using calls to the FEC API. Because most of the coders work
+off unpacked bits, the incoming PDUs must first be unpacked into bits
+and the repacked again into the original PDU. The
+gr::blocks::kernel::pack_k_bits and gr::blocks::kernel::unpack_k_bits
+kernels are used here, and they can change the direction on how to
+pack and unpack. Because different data processing blocks, framing,
+deframing, and other operations may arbitrarily set the format of the
+bits and the ordering, we provide the options of unpacking and packing
+directions in the deployments. However, the gr::fec::async_decoder
+still expects the input to be soft decisions with one decision per
+item, so we only say whether this deployment outputs packed PDUs or
+not and the packing direction.
+
+For an example of using the asynchronous in PDU mode, see
+fec/fecapi_async_packed_decoders.grc. See
+fec/fecapi_async_to_stream.grc for an example of mixing the packed PDU
+mode encoder with a tagged stream decoder. This example shows the PDU
+input having a CRC32 appended to the uncoded stream that is then
+checked after the packet is decoded.
+
+For an example of the async deployment using unpacked bits, see
+fec/fecapi_async_encoders.grc and fec/fecapi_async_decoders.grc.
+
+
+\subsection fec_coding_vars Encoding/Decoding Variables
+
+GNU Radio currently has a minor subset of coders available:
+
+
+Coders:
+
+\li gr::fec::code::dummy_encoder
+\li gr::fec::code::repetition_encoder
+\li gr::fec::code::cc_encoder
+\li gr::fec::code::ccsds_encoder
+\li gr::fec::code::polar_encoder
+\li gr::fec::code::ldpc_par_mtrx_encoder
+\li gr::fec::code::ldpc_gen_mtrx_encoder
+
+Decoders:
+\li gr::fec::code::dummy_decoder
+\li gr::fec::code::repetition_decoder
+\li gr::fec::code::cc_decoder
+\li gr::fec::code::polar_decoder_sc
+\li gr::fec::code::polar_decoder_sc_list
+\li gr::fec::ldpc_decoder
+\li gr::fec::code::ldpc_bit_flip_decoder
+
+
+\subsubsection fec_dummy Dummy Encoder/Decoder
+
+When building a new FECAPI encoder or decoder variable, the
+gr::fec::code::dummy_encoder / gr::fec::code::dummy_decoder blocks are a good
+place to start. This coding set does no processing on the data. For
+the encoder, each bit is simply passed through directly. For the dummy
+decoder, the input data are floats, so -1's become 0 and 1's stay as
+1, but nothing else is done to the data. Mainly, these blocks are used
+for references and to make it easy to compare implementations with and
+without codes by easily dropping in these objects instead of
+restructuring the entire flowgraph. The ber_curve_gen.grc example file
+uses the dummy codes to show the curve to compare against the actual
+codes.
+
+
+\subsubsection fec_repetition Repetition Encoder/Decoder
+
+The simplest example of FEC is the repetition code in
+gr::fec::code::repetition_encoder and
+gr::fec::code::repetition_decoder. The basic idea is to repeat the
+information several times so that even if parts of the received
+message are corrupted, the majority of the data is received correctly
+and the original message can be discerned. The repetition decoder is
+not particularly sophisticated and other coders offer better
+performance, but it is useful for comparison.
+
+
+\subsubsection fec_cc Convolutional Encoder/Decoder
+
+Although mentioned in the convolutional coder and decoder classes, it
+is worth another mention. The gr::fec::code::cc_encoder is a generic
+convolutional encoder that can take any value of K, rate, and
+polynomials to encode a data stream. However, the
+gr::fec::code::cc_decoder is not as general, even though it is
+technically parameterized as such. The gr::fec::code::cc_decoder block
+currently <i>only</i> uses K=7, rate=2, and two polynomials (because
+the rate is two). We can, in fact, alter the polynomials, but a
+default of [109, 79] is typically. Eventually, we will make this block
+more generic for different rates and constraint lengths and take this
+particular code implementation as the set CCSDS decoder, much like we
+have the gr::fec::code::ccsds_encoder class.
+
+
+
+
+
+\subsection fec_parallelism Parallelism
+
+The code variables in GNU Radio Companion have the ability to create
+multiple encoder/decoder variables by selecting the level of
+parallelism. It is up the encoder to understand how to handle the
+parallelism. The following discussion explains the difference between
+the two levels and how and when to use. Generally, normal applications
+will just use a single level of parallelism.
+
+The GRC variable declarations for the different coders has a setting
+for <i>Parallelism</i>, which can be either 1 or 2. If set to 1, then
+the resulting variable is a list of coder blocks with the same
+settings. If set to 2, then the resulting variable is a list of lists
+of coder blocks. The code that accepts these variables must understand
+how to handle the parallelism. Most applications would set this to 1.
+
+The standard fec.extended_encoder ("FEC Extended Encoder" in GRC) and
+fec.extended_decoder ("FEC Extended Decoder" in GRC) can handle a
+Parallelism of 1. They accept a list of coder variables as defined by
+Dimension 1 and can multithread the application based on the
+"Threading Type" setting:
+
+\li <b>None</b>: does no parallel threading of the coders. Even if
+Dimension 1 is > 1, the encoder/decoder will ignore this setting and
+only use the first object in the list.
+
+\li <b>Ordinary</b>: all "Dimension 1" number (N) of encoder/decoder
+blocks will be used in parallel. The hier_block2 will block
+deinterleave the packets into N streams (using
+gr::blocks::deinterleave with a value of blocksize as the frame length
+and no relative rate changes) and pass these to each of the N coders
+to process the frames in parallel. The output of each coder is then
+interleaved back together to make a single output stream.
+
+\li <b>Capillary</b>: all "Dimension 1" number (N) of encoder/decoder
+blocks will be used in parallel, much like in the <b>Ordinary</b>
+mode. In this mode, however, the frames get split up in a tree-like
+fashion, where each branch launches 2 more branches. This means that N
+must be a factor of 2 for this mode to work. It tends to handle the
+load of the encoders/decoders better than the <b>Ordinary</b> mode.
+
+Note that the threading modes only work when using constant-length
+frames. If using the coders in tagged stream mode where the frame
+lengths may change, the <b>Ordinary</b> and <b>Capillary</b> modes are
+not available.
+
+The GRC example "ber_curve_gen.grc" uses a Parallelism of 2. This
+creates a list of lists of coders. The first dimension of the list
+corresponds to the number of Es/N0 values being used in the BER
+simulation. This allows the application to process all values of Es/N0
+simultaneously. Dimension 2 in this case allows the same concept of
+parallelism discussed above with the <b>None</b>, <b>Ordinary</b>, and
+<b>Capillary</b> models of threading.
+
+
+
+\section fec_api The API of the FECAPI
+
+The FECAPI defined by the parent generic_encoder and generic_decoder
+classes defines a set of virtual functions, some pure virtual, to
+allow the encoders/decoders to interact with the GNU Radio blocks. See
+the associated documentation of the generic_encoder and
+generic_decoder classes to know more about each of the API functions,
+some of which a child class is <i>required</i> to implement.
+
+The functions of the encoder and decoder are:
+
+\li double gr::fec::generic_encoder::rate()
+\li int gr::fec::generic_encoder::get_input_size()
+\li int gr::fec::generic_encoder::get_output_size()
+\li int gr::fec::generic_encoder::get_history()
+\li float gr::fec::generic_encoder::get_shift()
+\li const char* gr::fec::generic_encoder::get_input_conversion()
+\li const char* gr::fec::generic_encoder::get_output_conversion()
+\li bool gr::fec::generic_encoder::set_frame_size(unsigned int frame_size)
+
+Note: there is no get_input_item_size (or output) as the encoders
+always expect to work on bits.
+
+\li double gr::fec::generic_decoder::rate()
+\li int gr::fec::generic_decoder::get_input_size()
+\li int gr::fec::generic_decoder::get_output_size()
+\li int gr::fec::generic_decoder::get_history()
+\li float gr::fec::generic_decoder::get_shift()
+\li int gr::fec::generic_decoder::get_input_item_size()
+\li int gr::fec::generic_decoder::get_output_item_size()
+\li const char* gr::fec::generic_decoder::get_input_conversion()
+\li const char* gr::fec::generic_decoder::get_output_conversion()
+\li bool gr::fec::generic_decoder::set_frame_size(unsigned int frame_size)
+
+Whenever an FECAPI object refers to the frame size, it always means
+the number of bits in the uncoded frame. This means the number of bits
+going into an encoder and the number of bits coming out of a decoder.
+
+\section fec_examples FEC Examples
+
+\li ber_curve_gen.grc
+\li ber_curve_gen_ldpc.grc
+\li ber_test.grc
+\li fecapi_decoders.grc
+\li fecapi_encoders.grc
+\li fecapi_tagged_decoders.grc
+\li fecapi_tagged_encoders.grc
+\li fecapi_async_decoders.grc
+\li fecapi_async_encoders.grc
+\li fecapi_async_to_stream.grc
+
+
+
+\section fec_ldpc LDPC Codes
+
+GNU Radio supports a few different ways of handling LDPC codes. There
+are many types of encoders and decoders available, and defining the
+code can come in many different flavors. GNU Radio has two encoders
+and two decoders.
+
+\subsection fec_alist Describing the alist Files
+
+We use an alist file format for storing the matrices in files. The
+alist format looks like:
+
+\verbatim
+ncolumns nrows
+max_col_weight max_row_weight
+list_col_weights
+list_row_weights
+column_1_indices
+row_1_indices
+\endverbatim
+
+The ncolumns is the number of column in the matrix and nrows is the
+number of rows, so this would define a (nrows x ncolumns) matrix. The
+column and row weights are how many 1's are in each column or row,
+respectively. The alist format tracks the maximum weight for all
+columns and all rows as well as lists all of the weights for each
+column one one line and each row on another. Then, the alist format
+lists the indices of all 1's in the columns followed by a list of the
+indices of all 1's in the rows. The matrix can be constructed using
+either the column or row indices lists, and a check would be to make
+sure they create the same matrix. Because LDPC deals with sparse
+matrices, the weights should be small relative to the number of
+columns/rows. All of the indices are 1 based, not 0.
+
+And example is the simple_g_matrix.alist file that comes with GNU
+Radio as a sample generator matrix. The generator matrix is in the
+form [I | P] where I is the (k x k) identity matrix and P is a (k x
+(n-k)) matrix representing the parity information. Together, G is a
+(k x n) matrix. The alist file looks like:
+
+\verbatim
+8 4
+3 4
+1 1 1 1 3 3 3 3
+4 4 4 4
+1
+2
+3
+4
+2 3 4
+1 3 4
+1 2 4
+1 2 3
+1 6 7 8
+2 5 7 8
+3 5 6 8
+4 5 6 7
+\endverbatim
+
+So it has 8 columns and 4 rows. The maximum number of 1's in any
+column is 3 and the maximum number of 1's in any row is 4. The next
+two lines are the weights for each column and each row. Then we have 8
+lines that are the indices of the 1's in the columns followed by
+4 lines that are the indices of the 1's in the rows. Note that the
+number of items in any of these rows matches up with the numbers in
+the column and matrix weight lists. Let's use the either the column or
+rows to construct the matrix.
+
+\verbatim
+1 0 0 0 0 1 1 1
+0 1 0 0 1 0 1 1
+0 0 1 0 1 1 0 1
+0 0 0 1 1 1 1 0
+\endverbatim
+
+Now go back and do it with the other set of of indices to
+verify. We can also count up the 1's along the columns and rows to
+verify the top few lines for even more check.
+
+Some info on the alist files online can be found here:
+
+\li http://www.inference.phy.cam.ac.uk/mackay/codes/alist.html
+\li http://www.inference.phy.cam.ac.uk/mackay/codes/
+
+
+
+
+\subsection fec_ldpc_encoders LDPC Encoders
+
+There are two LDPC encoder variables but a few ways to set them up. They are:
+
+\li gr::fec::code::ldpc_par_mtrx_encoder
+\li gr::fec::code::ldpc_gen_mtrx_encoder
+
+Both encoders take in a matrix, but there are two different forms of
+the matrix that they work with. The gr::fec::code::ldpc_par_mtrx_encoder takes a
+parity check matrix, H, which is in upper triangular form. The
+gr::fec::code::ldpc_gen_mtrx_encoder takes in a generator matrix, G.
+
+A third coder exists, gr::fec::ldpc_encoder, but this is deprecated
+and should not be used. It's functionally equivalent to
+gr::fec::code::ldpc_par_mtrx_encoder and still exists for
+compatibility reasons.
+
+There are two constructors for
+gr::fec::code::ldpc_par_mtrx_encoder. The first one, 'make', takes in
+an alist file that represents the parity matrix in the alist format
+described above. The 'make_H' function makes an LDPC encoder using a
+prebuilt gr::fec::code::ldpc_H_matrix object. When using the alist
+file, we also need to tell it the gap size in the matrix, which is not
+represented in the alist file format, but it should be known or part
+of the file name itself.
+
+The format of the parity check matrix, H, in upper triangular form is
+described as:
+
+\verbatim
+[ T A B ]
+[ E C D ]
+
+T: (n - k - g) x (n - k - g)
+A: (n - k - g) x g
+B: (n - k - g) x k
+E: g x (n - k - g)
+C: g x g
+D: g x k
+\endverbatim
+
+Where n is the size of the codeword, k is the size of the information
+word, and g is the size of the gap. See "Open-source Forward Error
+Correction using GNU Radio" for more description about this matrix:
+
+\li http://arc.aiaa.org/doi/abs/10.2514/6.2015-4655
+
+
+The other encoder is gr::fec::code::ldpc_gen_mtrx_encoder. This takes
+a generator matrix in systematic form G=[I P] which is (k x n). The
+codeword x is generated from the information word s via simple matrix
+multiplication: \f$ x=G^T s \f$.
+
+Unlike the encoder using the H matrix, the
+gr::fec::code::ldpc_gen_mtrx_encoder only has a single make function
+that takes in a prebuilt generator matrix object from the class
+gr::fec::code::ldpc_G_matrix.
+
+In GRC, we have a handful of blocks for manipulating the LDPC encoders
+and matrices:
+
+\li LDPC Encoder Definition: creates a
+gr::fec::code::ldpc_par_mtrx_encoder FEC variable using a provided
+alist file and specified matrix gap.
+\li LDPC Encoder Definition (via Parity Check): receives a prebuilt H
+matrix from the "LDPC Parity Check Matrix".
+\li LDPC Encoder Definition (via Generator): receives a prebuilt G
+matrix from the "LDPC Generator Matrix".
+\li LDPC Parity Check Matrix: constructs a parity check matrix, H,
+from a given alist file and matrix gap.
+\li LDPC Generator Matrix: constructs a generator matrix, G, from a
+given alist file.
+
+The gr::fec::code::ldpc_par_mtrx_encoder uses a reduced complexity
+algorithm. Compared to the gr::fec::code::ldpc_gen_mtrx_encoder, this
+requires orders of magnitude fewer operations at each encoding
+step. This is accomplished by completing a significant amount of the
+complex matrix manipulation (including inverse, multiplication, and
+Gaussian elimination operations) during preprocessing. The
+disadvantage of this encoder is that it requires a specially formatted
+matrix. There are some Python tools available from GNU Radio to format
+a standard parity check matrix appropriately for this encoder, as well
+as a small library of encoding-ready matrices for use.
+
+NOTE: we need to document these tools better.
+
+For uses of these codes, see the FEC examples:
+
+\li fecapi_ldpc_encoders.grc
+\li fecapi_tagged_ldpc_encoders.grc
+\li fecapi_async_ldpc_encoders.grc
+
+Prebuilt alist files are also distributed and installed with GNU
+Radio. They can be found in $prefix/share/gnuradio/fec/ldpc. The files
+generally represent the H matrix and are specified with the number of
+rows and columns (n and k) and gap of the matrix. The files named
+"gen_matrix" or similar are the generator, G, matrices.
+
+
+
+\subsection fec_ldpc_decoder LDPC Decoders
+
+The simplest LDPC decoder is probably the
+gr::fec::code::ldpc_bit_flip_decoder, a hard decision decoding
+scheme. The decoder seeks to find the codeword that was most likely
+sent, which must satisfy Hx'= 0.  If the received codeword does not
+satisfy this parity check, then the decoder computes the parity checks
+on all of the bits. The bit(s) associated with the most failed parity
+checks are flipped. The process repeats until a valid codeword is
+found, or a maximum number of iterations is reached, whichever comes
+first.
+
+The gr::fec::ldpc_decoder is a soft-decision decoder that uses belief
+propagation (also known as message passing). Designed for a memoryless
+AWGN channel, it assumes a noise variance entered in as 'Sigma' in the
+block. This is a suboptimal, yet efficient method of decoding LDPC
+codes.
+
+In GRC, we have the following blocks for doing LDPC decoding:
+
+\li LDPC Decoder Definition: constructs a gr::fec::ldpc_decoder
+variable given the alist file name of the H matrix.
+\li LDPC Bit Flip Decoder Definition: constructs a
+gr::fec::code::ldpc_bit_flip_decoder. This does not take in an alist file
+name but instead a predefined matrix object. This decoder is useful in
+that it can take either an H or a G matrix constructed by either the
+"LDPC Parity Check Matrix" or "LDPC Generator Matrix," respectively.
+
+For uses of these codes, see the FEC examples:
+
+\li fecapi_ldpc_decoders.grc
+\li fecapi_tagged_ldpc_decoders.grc
+\li fecapi_async_ldpc_decoders.grc
+
+*/

@@ -1,0 +1,31 @@
+id: blocks_char_to_short
+label: Char To Short
+flags: [ python, cpp ]
+
+parameters:
+-   id: vlen
+    label: Vector Length
+    dtype: int
+    default: '1'
+    hide: ${ 'part' if vlen == 1 else 'none' }
+
+inputs:
+-   domain: stream
+    dtype: byte
+    vlen: ${ vlen }
+
+outputs:
+-   domain: stream
+    dtype: short
+    vlen: ${ vlen }
+
+templates:
+    imports: from gnuradio import blocks
+    make: blocks.char_to_short(${vlen})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/char_to_short.h>']
+    declarations: 'blocks::char_to_short::sptr ${id};'
+    make: 'this->${id} = blocks::char_to_short::make(${vlen});'
+
+file_format: 1

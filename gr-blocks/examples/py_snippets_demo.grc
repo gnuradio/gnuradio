@@ -1,0 +1,290 @@
+options:
+  parameters:
+    author: Josh Morman
+    catch_exceptions: 'True'
+    category: '[GRC Hier Blocks]'
+    cmake_opt: ''
+    comment: ''
+    copyright: Copyright 2020
+    description: Show simple examples of Python Snippets inserted into flowgraph
+    gen_cmake: 'On'
+    gen_linking: dynamic
+    generate_options: qt_gui
+    hier_block_src_path: '.:'
+    id: snippets_demo
+    max_nouts: '0'
+    output_language: python
+    placement: (0,0)
+    qt_qss_theme: ''
+    realtime_scheduling: ''
+    run: 'True'
+    run_command: '{python} -u {filename}'
+    run_options: prompt
+    sizing_mode: fixed
+    thread_safe_setters: ''
+    title: Python Snippets Example Flowgraph
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 8]
+    rotation: 0
+    state: enabled
+
+blocks:
+- name: samp_rate
+  id: variable
+  parameters:
+    comment: ''
+    value: '32000'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [184, 12]
+    rotation: 0
+    state: enabled
+- name: foo_mod
+  id: epy_module
+  parameters:
+    alias: ''
+    comment: ''
+    source_code: "# this module will be imported in the into your flowgraph\n\ndef\
+      \ add(a,b):\n    return a+b\n"
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [850, 264]
+    rotation: 0
+    state: true
+- name: head_block
+  id: blocks_head
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_items: '12'
+    type: float
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [937, 351]
+    rotation: 0
+    state: true
+- name: s0
+  id: snippet
+  parameters:
+    alias: ''
+    code: 's = ''After start - 500 priority''
+
+      print(s)'
+    comment: ''
+    priority: '500'
+    section: main_after_start
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [263, 115]
+    rotation: 0
+    state: true
+- name: s1
+  id: snippet
+  parameters:
+    alias: ''
+    code: 's = ''After start - 200 priority''
+
+      print(s)'
+    comment: ''
+    priority: '200'
+    section: main_after_start
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [264, 208]
+    rotation: 0
+    state: true
+- name: s2
+  id: snippet
+  parameters:
+    alias: ''
+    code: 's = ''After start - negative priority''
+
+      print(s)'
+    comment: ''
+    priority: '-400'
+    section: main_after_start
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [267, 298]
+    rotation: 0
+    state: true
+- name: s3
+  id: snippet
+  parameters:
+    alias: ''
+    code: 's = ''After start - 0 priority''
+
+      print(s)'
+    comment: ''
+    priority: '0'
+    section: main_after_start
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [270, 371]
+    rotation: 0
+    state: true
+- name: s4
+  id: snippet
+  parameters:
+    alias: ''
+    code: 's = ''After Init - 100 priority''
+
+      print(s)'
+    comment: ''
+    priority: '100'
+    section: main_after_init
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [549, 88]
+    rotation: 0
+    state: true
+- name: s5
+  id: snippet
+  parameters:
+    alias: ''
+    code: 'x = 4
+
+      y = foo_mod.add(x,x)
+
+      print(y)
+
+      s = ''After init - 200 priority''
+
+      print(s)'
+    comment: "This snippet shows how to call a \nmethod from an embedded python \n\
+      module"
+    priority: '200'
+    section: main_after_init
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [550, 209]
+    rotation: 0
+    state: true
+- name: s6
+  id: snippet
+  parameters:
+    alias: ''
+    code: 's = ''After Stop - 500 priority''
+
+      print(s)'
+    comment: ''
+    priority: '500'
+    section: main_after_stop
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [865, 52]
+    rotation: 0
+    state: true
+- name: s7
+  id: snippet
+  parameters:
+    alias: ''
+    code: 's = ''After Stop - 200 priority''
+
+      print(s)
+
+      print(self.vsink.data())'
+    comment: 'This snippet shows an example of calling
+
+      a method on another block from within the
+
+      flowgraph - (use at your own risk)'
+    priority: '200'
+    section: main_after_stop
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1120, 55]
+    rotation: 0
+    state: true
+- name: throttle_block
+  id: blocks_throttle
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    ignoretag: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    samples_per_second: samp_rate
+    type: float
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [752, 384]
+    rotation: 0
+    state: enabled
+- name: vsink
+  id: blocks_vector_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    reserve_items: '1024'
+    type: float
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1118, 337]
+    rotation: 0
+    state: true
+- name: vsrc
+  id: blocks_vector_source_x
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    repeat: 'True'
+    tags: '[]'
+    type: float
+    vector: list(range(10))
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [531, 390]
+    rotation: 0
+    state: true
+
+connections:
+- [head_block, '0', vsink, '0']
+- [throttle_block, '0', head_block, '0']
+- [vsrc, '0', throttle_block, '0']
+
+metadata:
+  file_format: 1

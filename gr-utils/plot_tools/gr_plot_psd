@@ -1,0 +1,28 @@
+#!/usr/bin/env python
+#
+# Copyright 2012 Free Software Foundation, Inc.
+#
+# This file is part of GNU Radio
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+#
+
+from gnuradio.plot_psd_base import plot_psd_base
+
+# This is a wrapper program for plot_psd_base. It handles any data
+# type and defaults to complex64.
+
+
+def main():
+    parser = plot_psd_base.setup_options()
+    args = parser.parse_args()
+
+    plot_psd_base(None, args.file, args)
+
+
+if __name__ == "__main__":
+    try:
+        main()
+    except KeyboardInterrupt:
+        pass

@@ -1,0 +1,48 @@
+id: qtgui_grbackground
+label: QT GUI App Background
+category: '[Core]/GUI Widgets/QT'
+flags: [ python ]
+
+parameters:
+-   id: file
+    label: File
+    dtype: file_open
+-   id: alignment
+    label: Image Alignment
+    dtype: enum
+    default: 'center'
+    options: ['center', 'Top Left']
+    option_labels: ['center','top left']
+    hide: 'part'
+-   id: relBackgroundColor
+    label: Background
+    dtype: enum
+    default: 'default'
+    options: ['default', 'silver', 'gray', 'black', 'white', 'red', 'green', 'blue', 'navy', 'yellow', 'orange', 'purple', 'lime', 'aqua', 'teal']
+    option_labels: ['default','silver', 'gray', 'black', 'white', 'red', 'green', 'blue', 'navy', 'yellow', 'orange', 'purple', 'lime', 'aqua', 'teal']
+    hide: 'part'
+
+templates:
+    imports: import PyQt5
+    make: |-
+        None
+        if "${relBackgroundColor}" != 'default':
+            bkcolor="background-color: ${relBackgroundColor};"
+        else:
+            bkcolor=""
+
+        styleSht = self.styleSheet()
+
+        if len(${file}) > 0:                    
+            bkgnd="background-image: url(" + ${file} + "); background-repeat: repeat_n; background-position: " + "${alignment}" + ";"
+        else:
+            bkgnd = ''
+        	
+        styleSht += "QWidget{" + bkgnd + bkcolor + "}"
+        
+        self.setStyleSheet(styleSht)
+
+documentation: |-
+    This block sets the application window background to the specified graphic and/or color.  A standard color name (see background-color style sheet options) can also be provided.
+
+file_format: 1

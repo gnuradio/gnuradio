@@ -1,0 +1,79 @@
+id: trellis_siso_combined_f
+label: SISO Combo
+category: '[Core]/Trellis Coding'
+
+parameters:
+-   id: fsm_args
+    label: FSM Args
+    dtype: raw
+-   id: block_size
+    label: Block Size
+    dtype: int
+-   id: init_state
+    label: Initial State
+    dtype: int
+    default: '0'
+-   id: final_state
+    label: Final State
+    dtype: int
+    default: '-1'
+-   id: a_post_in
+    label: A-posteriori In
+    dtype: enum
+    options: ['True', 'False']
+    option_labels: ['Yes', 'No']
+-   id: a_post_out
+    label: A-posteriori Out
+    dtype: enum
+    options: ['True', 'False']
+    option_labels: ['Yes', 'No']
+-   id: siso_type
+    label: SISO Type
+    dtype: enum
+    options: [trellis.TRELLIS_MIN_SUM, trellis.TRELLIS_SUM_PRODUCT]
+    option_labels: [Min Sum, Sum Product]
+-   id: dim
+    label: Dimensionality
+    dtype: int
+-   id: table
+    label: Constellation
+    dtype: real_vector
+-   id: metric_type
+    label: Metric Type
+    dtype: enum
+    options: [trellis.TRELLIS_EUCLIDEAN, trellis.TRELLIS_HARD_SYMBOL, trellis.TRELLIS_HARD_BIT]
+    option_labels: [Euclidean, Hard Symbol, Hard Bit]
+
+inputs:
+-   label: in_i
+    domain: stream
+    dtype: float
+-   label: in_o
+    domain: stream
+    dtype: float
+
+outputs:
+-   domain: stream
+    dtype: float
+
+templates:
+    imports: from gnuradio import trellis
+    make: trellis.siso_combined_f(trellis.fsm(${fsm_args}), ${block_size}, ${init_state},
+        ${final_state}, ${a_post_in}, ${a_post_out}, ${siso_type}, ${dim}, ${table},
+        ${metric_type})
+    callbacks:
+    - set_FSM(trellis.fsm(${fsm_args}))
+    - set_K(${block_size})
+    - set_S0(${init_state})
+    - set_SK(${final_state})
+    - set_POSTI(${a_post_in})
+    - set_POSTO(${a_post_out})
+    - set_SISO_TYPE(${siso_type})
+    - set_D(${dim})
+    - set_TABLE(${table})
+    - set_TYPE(${metric_type})
+
+documentation: |-
+    BCJR Algorithm combined with metric calculation. The fsm arguments are passed directly to the trellis.fsm() constructor.
+
+file_format: 1

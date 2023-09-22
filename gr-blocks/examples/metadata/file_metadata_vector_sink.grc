@@ -1,0 +1,108 @@
+options:
+  parameters:
+    author: ''
+    category: Custom
+    cmake_opt: ''
+    comment: ''
+    copyright: ''
+    description: ''
+    gen_cmake: 'On'
+    gen_linking: dynamic
+    generate_options: no_gui
+    hier_block_src_path: '.:'
+    id: file_metadata_vector_sink
+    max_nouts: '0'
+    output_language: python
+    placement: (0,0)
+    qt_qss_theme: ''
+    realtime_scheduling: ''
+    run: 'True'
+    run_command: '{python} -u {filename}'
+    run_options: run
+    sizing_mode: fixed
+    thread_safe_setters: ''
+    title: ''
+    window_size: 1280, 1024
+  states:
+    coordinate: [10, 10]
+    rotation: 0
+    state: enabled
+
+blocks:
+- name: samp_rate
+  id: variable
+  parameters:
+    comment: ''
+    value: '200000'
+  states:
+    coordinate: [208, 11]
+    rotation: 0
+    state: enabled
+- name: blocks_file_meta_sink_0
+  id: blocks_file_meta_sink
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    detached: 'True'
+    extra_dict: pmt.make_dict()
+    file: /tmp/metadat_vector.out
+    max_seg_size: '1000000'
+    rel_rate: '1'
+    samp_rate: samp_rate
+    type: complex
+    unbuffered: 'False'
+    vlen: '10'
+  states:
+    coordinate: [544, 84.0]
+    rotation: 0
+    state: enabled
+- name: blocks_head_0
+  id: blocks_head
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_items: '10010000'
+    type: complex
+    vlen: '10'
+  states:
+    coordinate: [328, 132.0]
+    rotation: 0
+    state: enabled
+- name: blocks_vector_source_x_0
+  id: blocks_vector_source_x
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    repeat: 'True'
+    tags: '[]'
+    type: complex
+    vector: 10*[0,1,2,3,4,5,6,7,8,9]
+    vlen: '10'
+  states:
+    coordinate: [72, 116.0]
+    rotation: 0
+    state: enabled
+- name: import_0
+  id: import
+  parameters:
+    alias: ''
+    comment: ''
+    imports: import pmt
+  states:
+    coordinate: [312, 12.0]
+    rotation: 0
+    state: true
+
+connections:
+- [blocks_head_0, '0', blocks_file_meta_sink_0, '0']
+- [blocks_vector_source_x_0, '0', blocks_head_0, '0']
+
+metadata:
+  file_format: 1

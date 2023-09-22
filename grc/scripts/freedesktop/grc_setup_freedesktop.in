@@ -1,0 +1,65 @@
+#!/bin/bash
+#
+# Copyright 2008-2011 Free Software Foundation, Inc.
+#
+# This file is part of GNU Radio
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+#
+##################################################
+# setup grc on a freedesktop platform
+# $1 should be install or uninstall
+# $2 is the optional path to the files
+# when $2 is unspecified, the path is:
+# @SRCDIR@
+##################################################
+
+ICON_SIZES="16 24 32 48 64 128 256"
+if [ -n "$2" ]; then
+	SRCDIR="$2"
+else
+	SRCDIR="@CMAKE_CURRENT_SOURCE_DIR@"
+fi
+
+case "$1" in
+'install')
+	echo "Begin freedesktop install..."
+	for size in ${ICON_SIZES}; do \
+		echo "Install icon: ${size}x${size}"
+		xdg-icon-resource install --noupdate --context mimetypes --theme gnome --size ${size} ${SRCDIR}/grc-icon-${size}.png application-gnuradio-grc; \
+		xdg-icon-resource install --noupdate --context mimetypes --size ${size} ${SRCDIR}/grc-icon-${size}.png application-gnuradio-grc; \
+		xdg-icon-resource install --noupdate --context apps --theme gnome --size ${size} ${SRCDIR}/grc-icon-${size}.png gnuradio-grc; \
+		xdg-icon-resource install --noupdate --context apps --size ${size} ${SRCDIR}/grc-icon-${size}.png gnuradio-grc; \
+	done
+	xdg-icon-resource forceupdate                #update for system (hicolor) theme
+	xdg-icon-resource forceupdate --theme gnome  #update for gnome theme
+	echo "Install mime type"
+	xdg-mime install ${SRCDIR}/gnuradio-grc.xml
+	echo "Install menu items"
+	xdg-desktop-menu install ${SRCDIR}/*.desktop
+	echo "Done!"
+	echo ""
+	;;
+'uninstall')
+	echo "Begin freedesktop uninstall..."
+	for size in ${ICON_SIZES}; do \
+		echo "Uninstall icon: ${size}x${size}"
+		xdg-icon-resource uninstall --noupdate --context mimetypes --theme gnome --size ${size} application-gnuradio-grc; \
+		xdg-icon-resource uninstall --noupdate --context mimetypes --size ${size} application-gnuradio-grc; \
+		xdg-icon-resource uninstall --noupdate --context apps --theme gnome --size ${size} gnuradio-grc; \
+		xdg-icon-resource uninstall --noupdate --context apps --size ${size} gnuradio-grc; \
+	done
+	xdg-icon-resource forceupdate                 #update for system (hicolor) theme
+	xdg-icon-resource forceupdate --theme gnome   #update for gnome theme
+	echo "Uninstall mime type"
+	xdg-mime uninstall ${SRCDIR}/gnuradio-grc.xml
+	echo "Uninstall menu items"
+	xdg-desktop-menu uninstall `ls ${SRCDIR}/*.desktop | xargs -n1 basename`
+	echo "Done!"
+	echo ""
+	;;
+*)
+	echo "Usage: $0 [install|uninstall]"
+	;;
+esac

@@ -1,0 +1,37 @@
+id: fec_extended_tagged_encoder
+label: FEC Extended Tagged Encoder
+
+parameters:
+-   id: encoder_list
+    label: Encoder Objects
+    dtype: raw
+    default: encoder_variable
+-   id: mtu
+    label: MTU (bytes)
+    dtype: int
+    default: '1500'
+-   id: puncpat
+    label: Puncture Pattern
+    dtype: string
+    default: '''11'''
+-   id: lentagname
+    label: Length Tag Name
+    dtype: string
+    default: None
+
+inputs:
+-   domain: stream
+    dtype: byte
+
+outputs:
+-   domain: stream
+    dtype: byte
+
+templates:
+    imports: from gnuradio import fec
+    make: fec.extended_tagged_encoder(encoder_obj_list=${encoder_list}, puncpat=${puncpat},
+        lentagname=${lentagname}, mtu=${mtu})
+
+documentation: ""
+
+file_format: 1

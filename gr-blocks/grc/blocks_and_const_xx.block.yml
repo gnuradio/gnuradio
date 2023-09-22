@@ -1,0 +1,39 @@
+id: blocks_and_const_xx
+label: And Const
+flags: [ python, cpp ]
+
+parameters:
+-   id: type
+    label: IO Type
+    dtype: enum
+    options: [int, short, byte]
+    option_attributes:
+        fcn: [ii, ss, bb]
+    hide: part
+-   id: const
+    label: Constant
+    dtype: int
+    default: '0'
+
+inputs:
+-   domain: stream
+    dtype: ${ type }
+
+outputs:
+-   domain: stream
+    dtype: ${ type }
+
+templates:
+    imports: from gnuradio import blocks
+    make: blocks.and_const_${type.fcn}(${const})
+    callbacks:
+    - set_k(${const})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/and_const.h>']
+    declarations: 'blocks::and_const_${type.fcn}::sptr ${id};'
+    make: 'this->${id} = blocks::and_const_${type.fcn}::make(${const});'
+    callbacks:
+    - set_k(${const})
+
+file_format: 1

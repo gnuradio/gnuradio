@@ -1,0 +1,52 @@
+id: blocks_ctrlport_probe2_c
+label: Ctrlport Probe
+flags: [ python, cpp ]
+
+parameters:
+-   id: name
+    label: Name
+    dtype: string
+    default: samples
+-   id: desc
+    label: Description
+    dtype: string
+    default: Sample Points
+-   id: len
+    label: Length
+    dtype: int
+    default: '1024'
+-   id: disp_mask
+    label: Display Mask
+    dtype: raw
+    default: gr.DISPTIME
+    options: [gr.DISPXY | gr.DISPOPTSCATTER, gr.DISPTIME, gr.DISPPSD, gr.DISPSPEC,
+        gr.DISPRAST]
+    option_labels: [Constellation, Time, PSD, Spectrogram, Raster]
+
+inputs:
+-   domain: stream
+    dtype: complex
+
+templates:
+    imports: from gnuradio import blocks
+    make: blocks.ctrlport_probe2_c(${name}, ${desc}, ${len}, ${disp_mask})
+    callbacks:
+    - set_length(${len})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/ctrlport_probe2_c.h>']
+    declarations: 'blocks::ctrlport_probe2_c::sptr ${id};'
+    make: 'this->${id} = blocks::ctrlport_probe2_c::make(${name}, ${desc}, ${len}, ${disp_mask});'
+    callbacks:
+    - set_length(${len})
+    translations:
+        gr\.: ''
+
+
+documentation: |-
+    Place this in a graph to export vectors of samples to a GRCP port probe.
+
+        * Specify the number of samples to transmit at once and the type
+        of default display to use.
+
+file_format: 1

@@ -1,0 +1,20 @@
+'[Core]':
+- Soapy:
+  - Source:
+    - soapy_rtlsdr_source
+    - soapy_airspyhf_source
+    - soapy_hackrf_source
+    - soapy_plutosdr_source
+    - soapy_limesdr_source
+    - soapy_bladerf_source
+    - soapy_sdrplay_source
+    - soapy_custom_source
+  - Sink:
+    - soapy_hackrf_sink
+    - soapy_plutosdr_sink
+    - soapy_limesdr_sink
+    - soapy_bladerf_sink
+    - soapy_custom_sink
+  - Deprecated:
+    - soapy_source
+    - soapy_sink

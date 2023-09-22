@@ -1,0 +1,12 @@
+.TH GR_FILTER_DESIGN "1" "@BUILD_DATE_SHORT@" "gr_filter_design @VERSION@" "User Commands"
+.SH NAME
+gr_filter_design \- GUI for creating filters for GNU Radio
+.SH SYNOPSIS
+.B gr_filter_design:
+[\fIoptions\fR] \fI(input_filename)\fR
+.SH OPTIONS
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+show this help message and exit
+.SH "SEE ALSO"
+gnuradio-companion(1)

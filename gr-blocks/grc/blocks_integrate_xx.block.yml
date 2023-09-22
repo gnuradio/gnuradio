@@ -1,0 +1,41 @@
+id: blocks_integrate_xx
+label: Integrate
+flags: [ python, cpp ]
+
+parameters:
+-   id: type
+    label: IO Type
+    dtype: enum
+    options: [complex, float, int, short]
+    option_attributes:
+        fcn: [cc, ff, ii, ss]
+    hide: part
+-   id: decim
+    label: Decimation
+    dtype: int
+-   id: vlen
+    label: Vector Length
+    dtype: int
+    default: '1'
+    hide: ${ 'part' if vlen == 1 else 'none' }
+
+inputs:
+-   domain: stream
+    dtype: ${ type }
+    vlen: ${ vlen }
+
+outputs:
+-   domain: stream
+    dtype: ${ type }
+    vlen: ${ vlen }
+
+templates:
+    imports: from gnuradio import blocks
+    make: blocks.integrate_${type.fcn}(${decim}, ${vlen})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/integrate.h>']
+    declarations: 'blocks::integrate_${type.fcn}::sptr ${id};'
+    make: 'this->${id} = blocks::integrate_${type.fcn}::make(${decim}, ${vlen});'
+
+file_format: 1

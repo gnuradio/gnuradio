@@ -1,0 +1,10 @@
+.TH GRCC "1" "@BUILD_DATE_SHORT@" "grcc @VERSION@" "User Commands"
+.SH NAME
+grcc \- Gnu Radio Companion Compiler
+.SH DESCRIPTION
+Just compile a gnuradio companion flowgraph without invoking the gui.
+.PP
+Given an input GRC file and an output directory, create a runnable
+application in the output directory.
+.SH "SEE ALSO"
+gnuradio-companion(1)

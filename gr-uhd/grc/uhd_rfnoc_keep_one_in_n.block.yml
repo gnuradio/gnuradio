@@ -1,0 +1,52 @@
+id: uhd_rfnoc_keep_one_in_n
+label: RFNoC Keep One in N Block
+
+templates:
+  imports: |-
+    from gnuradio import uhd
+  make: |-
+    uhd.rfnoc_block_generic(
+        self.rfnoc_graph,
+        uhd.device_addr(""),
+        "KeepOneInN",
+        ${device_select},
+        ${instance_index})
+    self.${id}.set_property('n', ${n})
+    self.${id}.set_property('mode', ${mode.val})
+  callbacks:
+    - set_property('n', ${n})
+    - set_property('mode', ${mode.val})
+
+parameters:
+- id: device_select
+  label: Device Select
+  dtype: int
+  default: -1
+  hide: ${ 'part' if device_select == -1 else 'none'}
+- id: instance_index
+  label: Instance Select
+  dtype: int
+  default: -1
+  hide: ${ 'part' if instance_index == -1 else 'none'}
+- id: n
+  label: N
+  dtype: int
+  default: 1
+- id: mode
+  label: Mode
+  dtype: enum
+  default: 'SAMPLE'
+  options: ['SAMPLE', 'PACKET']
+  option_labels: ['Drop Samples', 'Drop Packets']
+  option_attributes:
+    val: [0, 1]
+
+inputs:
+- domain: rfnoc
+  dtype: 'sc16'
+
+outputs:
+- domain: rfnoc
+  dtype: 'sc16'
+
+file_format: 1

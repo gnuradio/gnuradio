@@ -1,0 +1,146 @@
+options:
+  parameters:
+    author: "Marcus M\xFCller"
+    catch_exceptions: 'True'
+    category: '[GRC Hier Blocks]'
+    cmake_opt: ''
+    comment: 'Run as
+
+      mic_to_OPUS.py -o myrecording.ogg'
+    copyright: '2022'
+    description: This non-GUI flowgraph illustrates how to save a recording from a
+      microphone to a compressed audio file (.ogg containing OPUS-compressed audio)
+    gen_cmake: 'On'
+    gen_linking: dynamic
+    generate_options: no_gui
+    hier_block_src_path: '.:'
+    id: mic_to_OPUS
+    max_nouts: '0'
+    output_language: python
+    placement: (0,0)
+    qt_qss_theme: ''
+    realtime_scheduling: ''
+    run: 'True'
+    run_command: '{python} -u {filename}'
+    run_options: prompt
+    sizing_mode: fixed
+    thread_safe_setters: ''
+    title: Microphone To OPUS
+    window_size: (1000,1000)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 12.0]
+    rotation: 0
+    state: enabled
+
+blocks:
+- name: audio_source_0
+  id: audio_source
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    device_name: device
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_outputs: '1'
+    ok_to_block: 'True'
+    samp_rate: samp_rate
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [136, 300.0]
+    rotation: 0
+    state: true
+- name: blocks_wavfile_sink_0
+  id: blocks_wavfile_sink
+  parameters:
+    affinity: ''
+    alias: ''
+    append: 'False'
+    bits_per_sample1: FORMAT_PCM_16
+    bits_per_sample2: FORMAT_PCM_16
+    bits_per_sample3: FORMAT_OPUS
+    bits_per_sample4: FORMAT_PCM_16
+    comment: ''
+    file: out_file
+    format: FORMAT_OGG
+    nchan: '1'
+    samp_rate: samp_rate
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [400, 276.0]
+    rotation: 0
+    state: true
+- name: device
+  id: parameter
+  parameters:
+    alias: ''
+    comment: 'Leaving this empty
+
+      will use the default
+
+      audio device.
+
+      (so, if in doubt, don''t
+
+      specify -d)'
+    hide: none
+    label: Audio Device
+    short_id: d
+    type: str
+    value: ''
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [576, 12.0]
+    rotation: 0
+    state: true
+- name: out_file
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: none
+    label: Output File
+    short_id: o
+    type: str
+    value: outfile.ogg
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [424, 12.0]
+    rotation: 0
+    state: true
+- name: samp_rate
+  id: parameter
+  parameters:
+    alias: ''
+    comment: "48000 (Hz) is a \nsupported by most\nsystems. It's also one\nof the\
+      \ rates that OPUS\nsupports.\nRecommendation: leave\nat the default."
+    hide: none
+    label: Sampling Rate
+    short_id: r
+    type: intx
+    value: '48000'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [264, 12.0]
+    rotation: 0
+    state: true
+
+connections:
+- [audio_source_0, '0', blocks_wavfile_sink_0, '0']
+
+metadata:
+  file_format: 1
+  grc_version: v3.11.0.0git-157-gcf1b4cad

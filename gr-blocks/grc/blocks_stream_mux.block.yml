@@ -1,0 +1,54 @@
+id: blocks_stream_mux
+label: Stream Mux
+flags: [ python, cpp ]
+
+parameters:
+-   id: type
+    label: Type
+    dtype: enum
+    options: [complex, float, int, short, byte]
+    option_attributes:
+        size: [gr.sizeof_gr_complex, gr.sizeof_float, gr.sizeof_int, gr.sizeof_short,
+            gr.sizeof_char]
+    hide: part
+-   id: lengths
+    label: Lengths
+    dtype: int_vector
+    default: (1, 1)
+-   id: num_inputs
+    label: Num Inputs
+    dtype: int
+    default: '2'
+    hide: part
+-   id: vlen
+    label: Vector Length
+    dtype: int
+    default: '1'
+    hide: ${ 'part' if vlen == 1 else 'none' }
+
+inputs:
+-   domain: stream
+    dtype: ${ type }
+    vlen: ${ vlen }
+    multiplicity: ${ num_inputs }
+
+outputs:
+-   domain: stream
+    dtype: ${ type }
+    vlen: ${ vlen }
+
+asserts:
+- ${ num_inputs > 0 }
+- ${ num_inputs == len(lengths) }
+- ${ vlen > 0 }
+
+templates:
+    imports: from gnuradio import blocks
+    make: blocks.stream_mux(${type.size}*${vlen}, ${lengths})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/stream_mux.h>']
+    declarations: 'blocks::stream_mux::sptr ${id};'
+    make: 'this->${id} = blocks::stream_mux::make(${type.size}*${vlen}, ${lengths});'
+
+file_format: 1

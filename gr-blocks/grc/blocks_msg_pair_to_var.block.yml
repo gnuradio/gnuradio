@@ -1,0 +1,21 @@
+id: blocks_msgpair_to_var
+label: Message Pair to Var
+
+parameters:
+-   id: target
+    label: Variable
+    dtype: string
+    default: 'freq'
+
+inputs:
+-   domain: message
+    id: inpair
+
+templates:
+    imports: from gnuradio import blocks
+    make: blocks.msg_pair_to_var(${ 'self.set_' + context.get('target')() })
+  
+documentation: |-
+    This block will take an input message pair and allow you to set a gnuradio variable.
+
+file_format: 1

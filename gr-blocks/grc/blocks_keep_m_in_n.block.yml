@@ -1,0 +1,61 @@
+id: blocks_keep_m_in_n
+label: Keep M in N
+flags: [ python, cpp ]
+
+parameters:
+-   id: type
+    label: Type
+    dtype: enum
+    options: [complex, float, int, short, byte]
+    option_attributes:
+        size: [gr.sizeof_gr_complex, gr.sizeof_float, gr.sizeof_int, gr.sizeof_short,
+            gr.sizeof_char]
+    hide: part
+-   id: m
+    label: M
+    dtype: int
+    default: '1'
+-   id: n
+    label: N
+    dtype: int
+    default: '2'
+-   id: offset
+    label: initial offset
+    dtype: int
+    default: '0'
+
+inputs:
+-   domain: stream
+    dtype: ${ type }
+    vlen: 1
+
+outputs:
+-   domain: stream
+    dtype: ${ type }
+    vlen: 1
+
+asserts:
+- ${ n > 0 }
+- ${ m > 0 }
+- ${ m <= n }
+- ${ offset >= 0 }
+- ${ offset < n }
+
+templates:
+    imports: from gnuradio import blocks
+    make: blocks.keep_m_in_n(${type.size}, ${m}, ${n}, ${offset})
+    callbacks:
+    - set_offset(${offset})
+    - set_m(${m})
+    - set_n(${n})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/keep_m_in_n.h>']
+    declarations: 'blocks::keep_m_in_n::sptr ${id};'
+    make: 'this->${id} = blocks::keep_m_in_n::make(${type.size}, ${m}, ${n}, ${offset});'
+    callbacks:
+    - set_offset(${offset})
+    - set_m(${m})
+    - set_n(${n})
+
+file_format: 1

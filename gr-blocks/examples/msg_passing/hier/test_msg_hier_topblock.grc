@@ -1,0 +1,91 @@
+options:
+  parameters:
+    author: ''
+    category: Custom
+    cmake_opt: ''
+    comment: ''
+    copyright: ''
+    description: ''
+    gen_cmake: 'On'
+    gen_linking: dynamic
+    generate_options: no_gui
+    hier_block_src_path: '.:'
+    id: test_msg_hier_topblock
+    max_nouts: '0'
+    output_language: python
+    placement: (0,0)
+    qt_qss_theme: ''
+    realtime_scheduling: ''
+    run: 'True'
+    run_command: '{python} -u {filename}'
+    run_options: prompt
+    sizing_mode: fixed
+    thread_safe_setters: ''
+    title: ''
+    window_size: 1280, 1024
+  states:
+    coordinate: [10, 10]
+    rotation: 0
+    state: enabled
+
+blocks:
+- name: blocks_message_debug_0
+  id: blocks_message_debug
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+  states:
+    coordinate: [672, 200.0]
+    rotation: 0
+    state: enabled
+- name: blocks_message_strobe_0
+  id: blocks_message_strobe
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    msg: pmt.intern("UPDATED")
+    period: '2000'
+  states:
+    coordinate: [152, 188.0]
+    rotation: 0
+    state: enabled
+- name: blocks_message_strobe_0_0
+  id: blocks_message_strobe
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    msg: pmt.intern("UPDATED2")
+    period: '3000'
+  states:
+    coordinate: [144, 252.0]
+    rotation: 0
+    state: enabled
+- name: test_msg_hier_0
+  id: test_msg_hier
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    coordinate: [400, 200.0]
+    rotation: 0
+    state: enabled
+
+connections:
+- [blocks_message_strobe_0, strobe, test_msg_hier_0, TEST_PORT2]
+- [blocks_message_strobe_0_0, strobe, test_msg_hier_0, TEST_PORT1]
+- [test_msg_hier_0, TEST_PORT0, blocks_message_debug_0, print]
+- [test_msg_hier_0, TEST_PORT0, blocks_message_debug_0, store]
+- [test_msg_hier_0, TEST_PORT3, blocks_message_debug_0, print]
+
+metadata:
+  file_format: 1

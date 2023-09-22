@@ -1,0 +1,954 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
+          "docbookx.dtd" [
+  <!ENTITY test_tcm_listing SYSTEM "test_tcm.py.xml">
+  <!ENTITY test_viterbi_equalization1_listing SYSTEM "test_viterbi_equalization1.py.xml">
+]>
+
+<article>
+
+<articleinfo>
+  <title>Trellis-based algorithms for GNU Radio</title>
+  <author>
+     <firstname>Achilleas</firstname>
+     <surname>Anastasopoulos</surname>
+     <affiliation>
+        <address>
+           <email>anastas@umich.edu</email>
+        </address>
+     </affiliation>
+  </author>
+
+<!--
+<revhistory>
+  <revision>
+  <revnumber>v0.0</revnumber>
+  <date>2006-08-03</date>
+  <revremark>
+    First cut.
+  </revremark>
+  </revision>
+</revhistory>
+-->
+
+<abstract><para>This document provides a description of the
+Finite State Machine (FSM) implementation and the related
+trellis-based encoding and decoding algorithms
+for GNU Radio.
+</para></abstract>
+
+</articleinfo>
+
+
+
+
+<!--=====================================================-->
+<sect1 id="intro"><title>Introduction</title>
+
+<para>
+The basic goal of the implementation is to have a generic way of
+describing an FSM that is decoupled from whether it describes a
+convolutional
+code (CC), a trellis code (TC), an inter-symbol interference (ISI)
+channel, or any
+other communication system that can be modeled with an FSM.
+To achieve this goal, we need to separate the pure FSM description from the
+rest of the model details. For instance, in the case of a rate 2/3 TC,
+the FSM should not involve details about the modulation used (it can
+be an 8-ary PAM, or 8-PSK, etc). Similarly, when attempting maximum likelihood
+sequence detection (MLSD)--using for instance the Viterbi algorithm (VA)--
+the VA implementation should not be concerned with the channel details
+(such as modulations, channel type, hard or soft inputs, etc).
+Clearly, having generality as the primary goal implies some penalty
+on the code efficiency, as compared to fully custom implementations.
+</para>
+
+<para>
+We will now describe the implementation of the basic ingedient, the FSM.
+</para>
+
+</sect1>
+
+
+<!--=====================================================-->
+<sect1 id="fsm"><title>The FSM class</title>
+
+<para>An FSM describes the evolution of a system with inputs
+x<subscript>k</subscript>, states s<subscript>k</subscript> and outputs y<subscript>k</subscript>. At time k the FSM state is s<subscript>k</subscript>.
+Upon reception of a new input symbol x<subscript>k</subscript>, it outputs an output symbol
+y<subscript>k</subscript> which is a function of both x<subscript>k</subscript> and s<subscript>k</subscript>.
+It will then move to a next state s<subscript>k+1</subscript>.
+An FSM has a finite number of states, input and output symbols.
+All these are formally described as follows:
+</para>
+
+<itemizedlist>
+<listitem><para>The input alphabet A<subscript>I</subscript>={0,1,2,...,I-1}, with cardinality I, so that x<subscript>k</subscript> takes values in A<subscript>I</subscript>.</para></listitem>
+<listitem><para>The state alphabet A<subscript>S</subscript>={0,1,2,...,S-1}, with cardinality S, so that s<subscript>k</subscript> takes values in A<subscript>S</subscript>.</para></listitem>
+<listitem><para>The output alphabet A<subscript>O</subscript>={0,1,2,...,O-1}, with cardinality O, so that y<subscript>k</subscript> takes values in A<subscript>O</subscript></para></listitem>
+<listitem><para>The "next-state" function NS: A<subscript>S</subscript> x A<subscript>I</subscript> --> A<subscript>S</subscript>,
+with the meaning
+s<subscript>k+1</subscript> = NS(s<subscript>k</subscript>, x<subscript>k</subscript>)</para></listitem>
+<listitem><para>The "output-symbol" function OS: A<subscript>S</subscript> x A<subscript>I</subscript> --> A<subscript>S</subscript>,
+with the meaning
+y<subscript>k</subscript> = OS(s<subscript>k</subscript>, x<subscript>k</subscript>)</para></listitem>
+</itemizedlist>
+
+<para>
+Thus, a complete description of the FSM is given by the
+the five-tuple (I,S,O,NS,OS).
+Observe that implementation details are hidden
+in how the outside world interprets these input and output
+integer symbols.
+Here is an example of an FSM describing the (2,1) CC
+with constraint length 3 and generator polynomial matrix
+(1+D+D<superscript>2</superscript> ,  1+D<superscript>2</superscript>)
+from Proakis-Salehi pg. 779.
+</para>
+
+
+<example id="cc_ex"><title>(2,1) CC with generator polynomials (1+D+D<superscript>2</superscript> , 1+D<superscript>2</superscript>)</title>
+
+<para>
+This CC accepts 1 bit at a time, and outputs 2 bits at a time.
+It has a shift register storing the last two input bits.
+In particular,
+b<subscript>k</subscript>(0)=x<subscript>k</subscript>+
+x<subscript>k-1</subscript>+x<subscript>k-2</subscript>, and
+b<subscript>k</subscript>(1)=x<subscript>k</subscript>+
+x<subscript>k-2</subscript>, where addition is mod-2.
+We can represent the state of this system
+as s<subscript>k</subscript> = (x<subscript>k-1</subscript> x<subscript>k-2</subscript>)<subscript>10</subscript>. In addition we can represent its
+output symbol as y<subscript>k</subscript> = (b<subscript>k</subscript>(1) b<subscript>k</subscript>(0))<subscript>10</subscript>.
+Based on the above assumptions, the input alphabet A<subscript>I</subscript>={0,1}, so I=2;
+the state alphabet A<subscript>S</subscript>={0,1,2,3}, so S=4; and
+the output alphabet A<subscript>O</subscript>={0,1,2,3}, so O=4.
+The "next-state" function NS(,) is given by
+<programlisting>
+s<subscript>k</subscript>	x<subscript>k</subscript>	s<subscript>k+1</subscript>
+0	0	0
+0	1	2
+1	0	0
+1	1	2
+2	0	1
+2	1	3
+3	0	1
+3	1	3
+</programlisting>
+The "output-symbol" function OS(,) can be given by
+<programlisting>
+s<subscript>k</subscript>	x<subscript>k</subscript>	y<subscript>k</subscript>
+0	0	0
+0	1	3
+1	0	3
+1	1	0
+2	0	1
+2	1	2
+3	0	2
+3	1	1
+</programlisting>
+</para>
+
+<para>
+Note that although the CC outputs 2 bits per time period, following
+our approach, there is only one (quaternary) output symbol per
+time period (for instance, here we use the decimal representation
+of the 2-bits). Also note that the modulation used is not part of
+the FSM description: it can be BPSK, OOK, BFSK, QPSK with or without Gray mapping, etc;
+it is up to the rest of the program to interpret the meaning of
+the symbol y<subscript>k</subscript>.
+</para>
+
+</example>
+
+
+<para>
+The C++ implementation of the FSM class keeps private information about
+I,S,O,NS,OS and public methods to read and write them. The NS
+and OS matrices are implemented as STL 1-dimensional vectors.
+</para>
+
+<programlisting>
+class fsm {
+private:
+  int d_I;
+  int d_S;
+  int d_O;
+  std::vector&lt;int&gt; d_NS;
+  std::vector&lt;int&gt; d_OS;
+  std::vector&lt; std::vector&lt; int&gt; &gt; d_PS;
+  std::vector&lt; std::vector&lt; int&gt; &gt; d_PI;
+  std::vector&lt;int&gt; d_TMi;
+  std::vector&lt;int&gt; d_TMl;
+  void generate_PS_PI ();
+  void generate_TM ();
+  bool find_es(int es);
+public:
+  fsm();
+  fsm(const fsm &amp;FSM);
+  fsm(int I, int S, int O, const std::vector&lt;int&gt; &amp;NS, const std::vector&lt;int&gt; &amp;OS);
+  fsm(const char *name);
+  fsm(int k, int n, const std::vector&lt;int&gt; &amp;G);
+  fsm(int mod_size, int ch_length);
+  int I () const { return d_I; }
+  int S () const { return d_S; }
+  int O () const { return d_O; }
+  const std::vector&lt;int&gt; &amp; NS () const { return d_NS; }
+  const std::vector&lt;int&gt; &amp; OS () const { return d_OS; }
+  const std::vector&lt; std::vector&lt; int&gt; &gt; &amp; PS () const { return d_PS; }
+  const std::vector&lt; std::vector&lt; int&gt; &gt; &amp; PI () const { return d_PI; }
+  const std::vector&lt;int&gt; &amp; TMi () const { return d_TMi; }
+  const std::vector&lt;int&gt; &amp; TMl () const { return d_TMl; }
+};
+</programlisting>
+
+<para>
+As can be seen, other than the trivial and the copy constructor,
+there are three additional
+ways to construct an FSM.
+</para>
+
+<itemizedlist>
+<listitem>
+<para>Supplying the parameters I,S,O,NS,OS:</para>
+<programlisting>
+  fsm(const int I, const int S, const int O, const std::vector&lt;int&gt; &amp;NS, const std::vector&lt;int&gt; &amp;OS);
+</programlisting>
+</listitem>
+
+<listitem>
+<para>Giving a filename containing all the FSM information:</para>
+<programlisting>
+  fsm(const char *name);
+</programlisting>
+<para>
+This information has to be in the following format:
+<programlisting>
+I S O
+
+NS(0,0)   NS(0,1)   ...  NS(0,I-1)
+NS(1,0)   NS(1,1)   ...  NS(1,I-1)
+...
+NS(S-1,0) NS(S-1,1) ...  NS(S-1,I-1)
+
+OS(0,0)   OS(0,1)   ...  OS(0,I-1)
+OS(1,0)   OS(1,1)   ...  OS(1,I-1)
+...
+OS(S-1,0) OS(S-1,1) ... OS(S-1,I-1)
+</programlisting>
+</para>
+<para>
+For instance, the file containing the information for the example mentioned above is of the form:
+<programlisting>
+2 4 4
+
+0 2
+0 2
+1 3
+1 3
+
+0 3
+3 0
+1 2
+2 1
+</programlisting>
+</para>
+</listitem>
+
+
+<listitem>
+<para>
+The third way is specific to FSMs representing binary (n,k) conolutional codes. These FSMs are specified by the number of input bits k, the number of output bits n, and the generator matrix, which is a k x n matrix of integers
+G = [g<subscript>i,j</subscript>]<subscript>i=1:k, j=1:n</subscript>, given as an one-dimensional STL vector.
+Each integer g<subscript>i,j</subscript> is the decimal representation of the
+polynomial g<subscript>i,j</subscript>(D) (e.g., g<subscript>i,j</subscript>= 6 = 110<subscript>2</subscript> is interpreted as g<subscript>i,j</subscript>(D)=1+D) describing the connections from  the sequence x<subscript>i</subscript> to
+y<subscript>j</subscript> (e.g., in the above example y<subscript>j</subscript>(k) = x<subscript>i</subscript>(k) + x<subscript>i</subscript>(k-1)).
+</para>
+<programlisting>
+  fsm(int k, int n, const std::vector&lt;int&gt; &amp;G);
+</programlisting>
+</listitem>
+
+
+<listitem>
+<para>
+The fourth way is specific to FSMs resulting from shift registers, and the output symbol being the entire transition (ie, current_state and current_input). These FSMs are useful when describing ISI channels. In particular the state is comprised of the input symbols x(k-1), x(k-2),...,x(k-L), where L = ch_length-1 and each x(i) belongs to an alphabet of size mod_size. The output is taken to be x(k), x(k-1), x(k-2),...,x(k-L) (in decimal format)
+</para>
+<programlisting>
+  fsm(const int mod_size, const int ch_length);
+</programlisting>
+</listitem>
+
+<listitem>
+<para>
+I have added other constructors as well, eg, one that constructs an FSM appropriate for modeling an arbitrary CPM scheme; one that constructs the radix-n version of a given FSM; one that constructs the "concatenation" of two FSMs, etc.
+</para>
+</listitem>
+
+
+
+
+</itemizedlist>
+
+
+<para>
+As can be seen from the above description, there are
+two more variables included in the FSM class implementation,
+the PS and the PI matrices. These are computed internally
+when an FSM is instantiated and their meaning is as follows.
+Sometimes (eg, in the traceback operation of the VA) we need
+to trace the history of the state or the input sequence.
+To do this we would like to know for a given state s<subscript>k</subscript>, what are the possible previous states s<subscript>k-1</subscript>
+and what input symbols x<subscript>k-1</subscript> will get us from
+s<subscript>k-1</subscript> to s<subscript>k</subscript>. This information can be derived from NS; however we want to have it ready in a
+convenient format.
+In the following we assume that for any state,
+the number of incoming transitions is the same as the number of
+outgoing transitions, ie, equal to I. All applications of interest
+have FSMs satisfying this requirement.
+
+If we arbitrarily index the incoming transitions to the current state
+by "i", then  as i goes from 0 to I-1, PS(s<subscript>k</subscript>,i)
+gives all previous states s<subscript>k-1</subscript>,
+and PI(s<subscript>k</subscript>,i) gives all previous inputs x<subscript>k-1</subscript>.
+In other words, for any given s<subscript>k</subscript> and any index i=0,1,...I-1, starting from
+s<subscript>k-1</subscript>=PS(s<subscript>k</subscript>,i)
+with input
+x<subscript>k-1</subscript>=PI(s<subscript>k</subscript>,i)
+will get us to the state s<subscript>k</subscript>.
+More formally, for any i=0,1,...I-1 we have
+s<subscript>k</subscript> = NS(PS(s<subscript>k</subscript>,i),PI(s<subscript>k</subscript>,i)).
+
+</para>
+
+
+<para>
+Finally, there are
+two more variables included in the FSM class implementation,
+the TMl and the TMi matrices. These are both S x S matrices (represented as STL vectors) computed internally
+when an FSM is instantiated and their meaning is as follows.
+TMl(i,j) is the minimum number of trellis steps required to go from state i to state j.
+Similarly, TMi(i,j) is the initial input required to get you from state i to state j in the minimum number of steps. As an example, if TMl(1,4)=2, it means that you need 2 steps in the trellis to get from state 1 to state 4. Further,
+if TMi(1,4)=0 it means that the first such step will be followed if when at state 1 the input is 0. Furthermore, suppose that NS(1,0)=2. Then, TMl(2,4) should be 1 (ie, one more step is needed when starting from state 2 and having state 4 as the final destination). Finally, TMi(2,4) will give us the second input required to complete the path from 1 to 4.
+These matrices are useful when we want to implement an encoder with proper state termination. For instance, based on these matrices we can evaluate how many
+additional input symbols (and which particular inputs) are required to be appended at the end of an input sequence so that the final state is always 0.
+
+</para>
+
+
+</sect1>
+
+
+
+<!--=====================================================-->
+<sect1 id="blocks"><title>Blocks Using the FSM structure</title>
+
+<para>
+In this section we give a brief description of the basic blocks implemented that make use of the previously described FSM structure.
+</para>
+
+
+<!-- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% -->
+<sect2 id="encoder"><title>Trellis Encoder</title>
+<para>
+The <methodname>trellis.encoder_XX(FSM, ST)</methodname> block instantiates an FSM encoder corresponding to the fsm FSM and having initial state ST. The input and output is a sequence of bytes, shorts or integers.
+</para>
+</sect2>
+
+<!-- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% -->
+<sect2 id="decoder"><title>Viterbi Decoder</title>
+<para>
+The <methodname>trellis.viterbi_X(FSM, K, S0, SK)</methodname> block instantiates a Viterbi decoder
+for a sequence of K trellis steps generated by the given FSM and with initial and final states set to S0 and SK, respectively (S0 and/or SK are set to -1
+if the corresponding states are not fixed/known at the receiver side).
+The output of this block is a sequence of K bytes, shorts or integers representing the estimated input (i.e., uncoded) sequence.
+The input is a sequence of K x FSM.O( ) floats, where the k x K + i
+float represents the cost associated with the k-th
+step in the trellis and the i-th FSM output.
+Observe that these inputs are generated externally and thus the Viterbi block is not informed of their meaning (they can be generated as soft or hard inputs, etc); the only requirement is that they represent additive costs.
+</para>
+</sect2>
+
+<!-- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% -->
+<sect2 id="metrics"><title>Metrics Calculator</title>
+<para>
+The <methodname>trellis.metrics_X(O,D,TABLE,TYPE)</methodname> block is responsible for
+transforming the channel output to the stream of metrics appropriate as
+inputs to the Viterbi block described above. For each D input bytes/shorts/integers/floats/complexes it produces O output floats
+
+</para>
+
+<para>
+
+The parameter TYPE dictates how these metrics are generated:
+
+<itemizedlist>
+<listitem><para>
+TRELLIS_EUCLIDEAN: for each D-dimensional vector
+r<subscript>k</subscript>=
+(r<subscript>k,1</subscript>,r<subscript>k,2</subscript>,...,r<subscript>k,D</subscript>)
+evaluates
+</para>
+<para>
+||r<subscript>k</subscript>-c<subscript>i</subscript>||<superscript>2</superscript> = sum<subscript>j=1</subscript><superscript>D</superscript> |r<subscript>k,j</subscript>-c<subscript>i,j</subscript>|<superscript>2</superscript>
+</para>
+<para>
+for each of the O hypothesized output
+symbols c<subscript>i</subscript> = (c<subscript>i,1</subscript>,c<subscript>i,2</subscript>,...,c<subscript>i,D</subscript>) defined in the vector TABLE,
+where TABLE[i * D + j] = c<subscript>i,j</subscript>.
+</para></listitem>
+
+
+<listitem><para>
+TRELLIS_HARD_SYMBOL: for each D-dimensional vector
+r<subscript>k</subscript>=
+(r<subscript>k,1</subscript>,r<subscript>k,2</subscript>,...,r<subscript>k,D</subscript>)
+evaluates
+</para>
+<para>
+i<subscript>0</subscript>= argmin<subscript>i</subscript> ||r<subscript>k</subscript>-c<subscript>i</subscript>||<superscript>2</superscript> =
+argmin<subscript>i</subscript> sum<subscript>j=1</subscript><superscript>D</superscript> |r<subscript>k,j</subscript>-c<subscript>i,j</subscript>|<superscript>2</superscript>
+</para>
+<para>
+and outputs a sequence of O floats of the form (0,...,0,1,0,...,0), where the
+i<subscript>0</subscript> position is set to 1. This corresponds to generating hard inputs (based on the symbol-wise Hamming distance) to the Viterbi algorithm.
+</para></listitem>
+
+
+<listitem><para>
+TRELLIS_HARD_BIT (not yet implemented): for each D-dimensional vector
+r<subscript>k</subscript>=
+(r<subscript>k,1</subscript>,r<subscript>k,2</subscript>,...,r<subscript>k,D</subscript>)
+evaluates
+</para>
+<para>
+i<subscript>0</subscript>= argmin<subscript>i</subscript> ||r<subscript>k</subscript>-c<subscript>i</subscript>||<superscript>2</superscript> =
+argmin<subscript>i</subscript> sum<subscript>j=1</subscript><superscript>D</superscript> (r<subscript>k,j</subscript>-c<subscript>i,j</subscript>)<superscript>2</superscript>
+</para>
+<para>
+and outputs a sequence of O floats of the form (d<subscript>1</subscript>,d<subscript>2</subscript>,...,d<subscript>O</subscript>), where the
+d<subscript>i</subscript> is the bitwise Hamming distance between i and  i<subscript>0</subscript>. This corresponds to generating hard inputs (based on the bit-wise Hamming distance) to the Viterbi algorithm.
+</para></listitem>
+
+
+</itemizedlist>
+
+
+</para>
+</sect2>
+
+
+
+
+<!-- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% -->
+<sect2 id="viterbi_combined"><title>Combined Metrics Calculator and Viterbi Decoder</title>
+<para>
+Although the separation of metric calculation and Viterbi algorithm blocks
+is consistent with our goal of providing general blocks that can be easily
+reused, this separation might result in large input/output buffer sizes
+between blocks. Indeed for an FSM with a large output alphabet, the
+output of the metric block/input of the Viterbi block is FSM.O( ) floats for
+each trellis step. Sometimes this results in buffer overflow even for
+moderate sequence lengths.
+To overcome this problem we provide a block that incorporates the metric calculation and Viterbi algorithm into a single GNU Radio block, namely
+<methodname>trellis.viterbi_combined_X( FSM, K, S0, SK, D, TABLE, TYPE)</methodname> where the arguments are exactly those used in the aforementioned two blocks.
+</para>
+</sect2>
+
+
+
+
+
+</sect1>
+
+
+<!--=====================================================-->
+<sect1 id="tcm"><title>A Complete Example: Trellis Coded Modulation (TCM)</title>
+
+<para>
+We now discuss through a concrete example how
+the above FSM model can be used in GNU Radio.
+
+The communication system that we want to simulate
+consists of a source generating the
+input information in packets, a CC encoding each packet separately,
+a memoryless modulator,
+an additive white Gaussian noise (AWGN) channel, and
+the VA performing MLSD.
+The program source is as follows.
+</para>
+
+&test_tcm_listing;
+
+<para>
+The program is called by
+<literallayout>
+./test_tcm.py fsm_fname Es/No_db repetitions
+</literallayout>
+where "fsm_fname" is the file containing the FSM specification of the
+tested TCM code, "Es/No_db" is the SNR in dB, and "repetitions"
+are the number of packets to be transmitted and received in order to
+collect sufficient number of errors for an accurate estimate of the
+error rate.
+</para>
+
+<para>
+The FSM is first intantiated in "main" by
+</para>
+<programlisting>
+ 62      f=trellis.fsm(fname) # get the FSM specification from a file
+</programlisting>
+
+
+
+
+
+
+
+<para>
+Each packet has size Kb bits
+(we choose Kb to be a multiple of 16 so that all bits fit nicely into shorts and can be generated by the lfsr GNU Radio).
+Assuming that the FSM input has cardinality I, each input symbol consists
+of bitspersymbol=log<subscript>2</subscript>( I ). The Kb/16 shorts are now
+unpacked to K=Kb/bitspersymbol input
+symbols that will drive the FSM encoder.
+</para>
+<programlisting>
+ 63      Kb=1024*16  # packet size in bits (make it multiple of 16 so it can be packed in a short)
+ 64      bitspersymbol = int(round(math.log(f.I())/math.log(2))) # bits per FSM input symbol
+ 65      K=Kb/bitspersymbol # packet size in trellis steps
+</programlisting>
+
+
+
+<para>
+The FSM will produce K output symbols (remember the FSM produces always one output symbol for each input symbol). Each of these symbols needs to be modulated. Since we are simulating the communication system, we need not simulate the actual waveforms. An M-ary, D-dimensional
+modulation is completely specified by a set of M, D-dimensional real vectors. In "fsm_utils.py" file we give a number of useful modulations with the following format: modulation = (D,constellation), where
+constellation=[c11,c12,...,c1D,c21,c22,...,c2D,...,cM1,cM2,...cMD].
+The meaning of the above is that every constellation point c_i
+is an D-dimnsional vector c_i=(ci1,ci2,...,ciD)
+For instance, 4-ary PAM is represented as
+(1,[-3, -1, 1, 3]), while QPSK is represented as
+(2,[1, 0, 0, 1, 0, -1, -1, 0]). In our example we choose QPSK modulation.
+Clearly, M should be equal to the cardinality of the FSM output, O.
+Finally the average symbol energy and noise variance are calculated.
+</para>
+<programlisting>
+ 66      modulation = fsm_utils.psk4 # see fsm_utlis.py for available predefined modulations
+ 67      dimensionality = modulation[0]
+ 68      constellation = modulation[1]
+ 69      if len(constellation)/dimensionality != f.O():
+ 70          sys.stderr.write (&apos;Incompatible FSM output cardinality and modulation size.\n&apos;)
+ 71          sys.exit (1)
+ 72      # calculate average symbol energy
+ 73      Es = 0
+ 74      for i in range(len(constellation)):
+ 75          Es = Es + constellation[i]**2
+ 76      Es = Es / (len(constellation)/dimensionality)
+ 77      N0=Es/pow(10.0,esn0_db/10.0); # noise variance
+</programlisting>
+
+
+
+<para>
+Then, "run_test" is called with a different "seed" so that we get
+different noise realizations.
+</para>
+<programlisting>
+ 82          (s,e)=run_test(f,Kb,bitspersymbol,K,dimensionality,constellation,N0,-long(666+i)) # run experiment with different seed to get different noise realizations
+</programlisting>
+
+
+
+<para>
+Let us examine now the "run_test" function.
+First we set up the transmitter blocks.
+The Kb/16 shorts are first unpacked to
+symbols consistent with the FSM input alphabet.
+The FSm encoder requires the FSM specification,
+and an initial state (which is set to 0 in this example).
+</para>
+<programlisting>
+ 15      # TX
+ 16      src = blocks.lfsr_32k_source_s()
+ 17      src_head = blocks.head (gr.sizeof_short,Kb/16) # packet size in shorts
+ 18      s2fsmi = blocks.packed_to_unpacked_ss(bitspersymbol,gr.GR_MSB_FIRST) # unpack shorts to symbols compatible with the FSM input cardinality
+ 19      enc = trellis.encoder_ss(f,0) # initial state = 0
+</programlisting>
+
+
+
+
+<para>
+We now need to modulate the FSM output symbols.
+The "chunks_to_symbols_sf" is essentially a memoryless mapper which
+for each input symbol y_k
+outputs a sequence of D numbers ci1,ci2,...,ciD  representing the
+coordianates of the constellation symbol c_i with i=y_k.
+</para>
+<programlisting>
+ 20      mod = digital.chunks_to_symbols_sf(constellation,dimensionality)
+</programlisting>
+
+<para>
+The channel is AWGN with appropriate noise variance.
+For each transmitted symbol c_k=(ck1,ck2,...,ckD) we receive a noisy version
+r_k=(rk1,rk2,...,rkD).
+</para>
+<programlisting>
+ 22      # CHANNEL
+ 23      add = blocks.add_ff()
+ 24      noise = analog.noise_source_f(analog.GR_GAUSSIAN,math.sqrt(N0/2),seed)
+</programlisting>
+
+
+
+<para>
+Part of the design methodology was to decouple the FSM and VA from
+the details of the modulation, channel, receiver front-end etc.
+In order for the VA to run, we only need to provide it with
+a number representing a cost associated with each transition
+in the trellis. Then the VA will find the sequence with
+the smallest total cost through the trellis.
+The cost associated with a transition (s_k,x_k) is only a function
+of the output y_k = OS(s_k,x_k), and the observation
+vector r_k. Thus, for each time period, k,
+we need to label each of the SxI transitions with such a cost.
+This means that for each time period we need to evaluate
+O such numbers (one for each possible output symbol y_k).
+This is done
+in "metrics_f". In particular, metrics_f is a memoryless device
+taking D inputs at a time and producing O outputs. The D inputs are
+rk1,rk2,...,rkD.
+The O outputs
+are the costs associated with observations rk1,rk2,...,rkD and
+hypothesized output symbols c_1,c_2,...,c_M. For instance,
+if we choose to perform soft-input VA, we need to evaluate
+the Euclidean distance between r_k and each of c_1,c_2,...,c_M,
+for each of the K transmitted symbols.
+Other options are available as well; for instance, we can
+do hard decision demodulation and feed the VA with
+symbol Hamming distances, or even bit Hamming distances, etc.
+These are all implemented in "metrics_f".
+</para>
+<programlisting>
+ 26      # RX
+ 27      metrics = trellis.metrics_f(f.O(),dimensionality,constellation,trellis.TRELLIS_EUCLIDEAN) # data preprocessing to generate metrics for Viterbi
+</programlisting>
+
+<para>
+Now the VA can run once it is supplied by the initial and final states.
+The initial state is known to be 0; the final state is usually
+forced to some value by padding the information sequence appropriately.
+In this example, we always send the the same info sequence (we only randomize noise) so we can evaluate off line the final state and then provide it to the VA (a value of -1 signifies that there is no fixed initial
+or final state). The VA outputs the estimates of the symbols x_k which
+are then packed to shorts and compared with the transmitted sequence.
+</para>
+<programlisting>
+ 28      va = trellis.viterbi_s(f,K,0,-1) # Put -1 if the Initial/Final states are not set.
+ 29      fsmi2s = blocks.unpacked_to_packed_ss(bitspersymbol,gr.GR_MSB_FIRST) # pack FSM input symbols to shorts
+ 30      dst = blocks.check_lfsr_32k_s();
+</programlisting>
+
+
+
+
+<para>
+The function returns the number of shorts and the number of shorts in error. Observe that this way the estimated error rate refers to
+16-bit-symbol error rate.
+</para>
+<programlisting>
+ 48      return (ntotal,ntotal-nright)
+</programlisting>
+
+</sect1>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--=====================================================-->
+<sect1 id="isi"><title>Another Complete Example: Viterbi Equalization</title>
+
+<para>
+We now discuss through another concrete example how
+the above FSM model can be used in GNU Radio.
+
+The communication system that we want to simulate
+consists of a source generating the
+input information in packets, an ISI channel with
+additive white Gaussian noise (AWGN), and
+the VA performing MLSD.
+The program source is as follows.
+</para>
+
+&test_viterbi_equalization1_listing;
+
+<para>
+The program is called by
+<literallayout>
+./test_viterbi_equalization1.py Es/No_db repetitions
+</literallayout>
+where
+"Es/No_db" is the SNR in dB, and "repetitions"
+are the number of packets to be transmitted and received in order to
+collect sufficient number of errors for an accurate estimate of the
+error rate.
+</para>
+
+
+<para>
+Each packet has size Kb bits.
+The modulation is chosen to be 4-PAM in this example and the channel is chosen
+to be one of the test channels  defined in fsm_utils.py
+</para>
+<programlisting>
+ 71      Kb=2048  # packet size in bits
+ 72      modulation = fsm_utils.pam4 # see fsm_utlis.py for available predefined modulations
+ 73      channel = fsm_utils.c_channel # see fsm_utlis.py for available predefined test channels
+</programlisting>
+
+<para>
+The FSM is instantiated in
+</para>
+<programlisting>
+ 74      f=trellis.fsm(len(modulation[1]),len(channel)) # generate the FSM automatically
+</programlisting>
+<para>
+and generated automatically given the channel length and the modulation size.
+Since in this example the channel has length 5 and the modulation is 4-ary, the corresponding FSM has 4<superscript>5-1</superscript>=256 states and
+4<superscript>5</superscript>=1024 outputs (see the documentation on FSM for more explanation).
+</para>
+
+<para>
+Assuming that the FSM input has cardinality I, each input symbol consists
+of bitspersymbol=log<subscript>2</subscript>( I ) bits, and thus correspond to K = Kb/bitspersymbol symbols.
+</para>
+<programlisting>
+ 75      bitspersymbol = int(round(math.log(f.I())/math.log(2))) # bits per FSM input symbol
+ 76      K=Kb/bitspersymbol # packet size in trellis steps
+</programlisting>
+
+
+
+<para>
+The overall system with input the 4-ary input symbols
+x<subscript>k</subscript>, modulated to the
+4-PAM symbols s<subscript>k</subscript> and passed through the ISI channel to produce the
+noise-free observations
+z<subscript>k</subscript> =
+sum<subscript>j=0</subscript><superscript>L-1</superscript> c<subscript>j</subscript> s<subscript>k-j</subscript> (where L is the channel length)
+can be modeled as a FSM followed by a memoryless modulation.
+In particular, the FSM input is the sequence
+x<subscript>k</subscript>
+and its output is the "combined" symbol
+y<subscript>k</subscript>=
+(x<subscript>k</subscript>,x<subscript>k-1</subscript>,...,x<subscript>k-L+1</subscript>) (actually its decimal representation).
+The memoryless modulator maps every "combined" symbol
+y<subscript>k</subscript> to
+z<subscript>k</subscript> =
+sum<subscript>j=0</subscript><superscript>L-1</superscript> c<subscript>j</subscript> s<subscript>k-j</subscript>
+Clearly this modulation is memoryless since
+each z<subscript>k</subscript> depends only on y<subscript>k</subscript>; the memory inherent in the ISI is hidden in the FSM structure.
+This memoryless modulator is automatically generated by a helper function in
+fsm_utils.py given the channel and modulation as in line 78, and has the
+familiar format tot_channel=(dimensionality,tot_constellation) as described in the TCM example.
+This is exactly what the metrics block (or the viterbi_combined block) require in order to evaluate the VA metrics from the noisy observations.
+</para>
+<programlisting>
+ 78      tot_channel = fsm_utils.make_isi_lookup(modulation,channel,True) # generate the lookup table (normalize energy to 1)
+ 79      dimensionality = tot_channel[0]
+ 80      tot_constellation = tot_channel[1]
+ 81      N0=pow(10.0,-esn0_db/10.0); # noise variance
+ 82      if len(tot_constellation)/dimensionality != f.O():
+ 83          sys.stderr.write (&apos;Incompatible FSM output cardinality and lookup table size.\n&apos;)
+ 84          sys.exit (1)
+</programlisting>
+
+
+
+<para>
+Then, "run_test" is called with a different "seed" so that we get
+different data and noise realizations.
+</para>
+<programlisting>
+ 91          (s,e)=run_test(f,Kb,bitspersymbol,K,channel,modulation,dimensionality,tot_constellation,N0,-long(666+i)) # run experiment with different seed to get different data and noise realizations
+</programlisting>
+
+
+
+<para>
+Let us examine now the "run_test" function.
+First we set up the transmitter blocks.
+We generate a packet of K random symbols and add a head and a tail of L zeros,
+L being the channel length. This is sufficient to drive the initial and final states to 0.
+</para>
+<programlisting>
+ 14      L = len(channel)
+ 15
+ 16      # TX
+ 17      # this for loop is TOO slow in python!!!
+ 18      packet = [0]*(K+2*L)
+ 19      random.seed(seed)
+ 20      for i in range(len(packet)):
+ 21          packet[i] = random.randint(0, 2**bitspersymbol - 1) # random symbols
+ 22      for i in range(L): # first/last L symbols set to 0
+ 23          packet[i] = 0
+ 24          packet[len(packet)-i-1] = 0
+ 25      src = blocks.vector_source_s(packet,False)
+ 26      mod = digital.chunks_to_symbols_sf(modulation[1],modulation[0])
+</programlisting>
+
+
+<para>
+The modulated symbols are filtered by the ISI channel and AWGN with appropriate noise variance is added.
+</para>
+<programlisting>
+ 28      # CHANNEL
+ 29      isi = filter.fir_filter_fff(1,channel)
+ 30      add = blocks.add_ff()
+ 31      noise = analog.noise_source_f(analog.GR_GAUSSIAN,math.sqrt(N0/2),seed)
+</programlisting>
+
+
+
+<para>
+Since the output alphabet of the equivalent FSM is quite large (1024) we chose to utilize the combined metrics calculator and Viterbi algorithm block.
+Also note that the first L observations are irrelevant and thus can be skipped.
+</para>
+<programlisting>
+ 33      # RX
+ 34      skip = blocks.skiphead(gr.sizeof_float, L) # skip the first L samples since you know they are coming from the L zero symbols
+ 35      #metrics = trellis.metrics_f(f.O(),dimensionality,tot_constellation,trellis.TRELLIS_EUCLIDEAN) # data preprocessing to generate metrics for Viterbi
+ 36      #va = trellis.viterbi_s(f,K+L,0,0) # Put -1 if the Initial/Final states are not set.
+ 37      va = trellis.viterbi_combined_s(f,K+L,0,0,dimensionality,tot_constellation,trellis.TRELLIS_EUCLIDEAN) # using viterbi_combined_s instead of metrics_f/viterbi_s allows larger packet lengths because metrics_f is complaining for not being able to allocate large buffers. This is due to the large f.O() in this application...
+ 38      dst = blocks.vector_sink_s()
+</programlisting>
+
+<para>
+Now the VA can run once it is supplied by the initial and final states.
+In this example both the initial and final states are set to 0.
+The VA outputs the estimates of the input symbols which
+are then compared with the transmitted sequence.
+</para>
+<programlisting>
+ 49      data = dst.data()
+ 50      ntotal = len(data) - L
+ 51      nright=0
+ 52      for i in range(ntotal):
+ 53          if packet[i+L]==data[i]:
+ 54              nright=nright+1
+ 55          #else:
+ 56              #print &quot;Error in &quot;, i
+</programlisting>
+
+
+<para>
+The function returns the number of symbols and the number of symbols in error. Observe that this way the estimated error rate refers to
+2-bit-symbol error rate.
+</para>
+<programlisting>
+ 58      return (ntotal,ntotal-nright)
+</programlisting>
+
+
+
+</sect1>
+
+
+
+
+
+
+<!--=====================================================-->
+<sect1 id="turbo"><title>Support for Concatenated Coding and Turbo Decoding</title>
+
+<para>
+Soft versions of the algorithms have been implemented.
+Also examples of turbo equalization/decoding and of sccc can
+be found in the examples directory.
+
+Recently we added gnuradio blocks for sccc and pccc encoders and
+turbo decoders.
+Although these can be generated by existing gr-trellis blocks (in particular,
+the SISO blocks, as done in some of the python examples) there is an advantage
+in having this functionality as a single block. To see why, think of a turbo decoder with 10 iterations. Previously we needed to concatenate 10 x 2 SISO blocks
+(for a sccc decoder) to emulate the passing of soft information between SISOs over 10 iterartions. With the new block however, only a single such block is needed that internally loops through 10 iterations; this results in space savings
+and possibly time saving as well (since queueing at the input/output of the gr-blocks is avoided).
+
+
+Still need to document them...
+</para>
+
+
+
+
+</sect1>
+
+
+
+
+
+
+
+
+<!--====================n================================-->
+<sect1 id="future"><title>Future Work</title>
+
+
+
+<itemizedlist>
+
+<listitem>
+<para>
+Improve the documentation :-)
+</para>
+</listitem>
+
+<listitem>
+<para>
+automate fsm generation from rational functions
+(feedback form).
+</para>
+</listitem>
+
+<listitem>
+<para>
+Optimize the VA code if possible.
+</para>
+</listitem>
+
+<listitem>
+<para>
+A host of suboptimal
+decoders, eg, sphere decoding, M- and T- algorithms, sequential decoding, etc.
+can be implemented.
+</para>
+</listitem>
+
+
+<listitem>
+<para>
+Although turbo decoding is rediculously slow in software,
+we can design it in principle. One question is, whether we should
+use the encoder, and SISO blocks and connect them
+through GNU radio or we should implement turbo-decoding
+as a single block (issues with buffering between blocks).
+So far the former has been implemented.
+</para>
+</listitem>
+
+</itemizedlist>
+
+</sect1>
+
+
+</article>

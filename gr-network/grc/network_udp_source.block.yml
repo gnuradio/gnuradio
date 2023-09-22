@@ -1,0 +1,86 @@
+id: network_udp_source
+label: UDP Source
+category: '[Core]/Networking Tools'
+
+parameters:
+-   id: type
+    label: Input Type
+    dtype: enum
+    options: [complex, float, int, short, byte]
+    option_attributes:
+        size: [gr.sizeof_gr_complex, gr.sizeof_float, gr.sizeof_int, gr.sizeof_short,
+            gr.sizeof_char]
+    hide: part
+-   id: port
+    label: Port
+    dtype: int
+    default: '1234'
+-   id: header
+    label: Header
+    dtype: enum
+    options: ['0', '1', '2', '5']
+    option_labels: [None, 64-bit Sequence Number, Sequence + 16-bit data size, ATA Header]
+-   id: payloadsize
+    label: UDP Packet Data Size
+    dtype: int
+    default: '1472'
+    hide: part
+-   id: notify_missed
+    label: Notify Missed Frames
+    dtype: enum
+    options: ['False', 'True']
+    option_labels: ['No', 'Yes']
+-   id: src_zeros
+    label: Src 0s If No Data
+    dtype: enum
+    options: ['False', 'True']
+    option_labels: ['No', 'Yes']
+-   id: ipv6
+    label: Enable IPv6 Support
+    dtype: enum
+    options: ['False', 'True']
+    option_labels: ['No', 'Yes']
+-   id: vlen
+    label: Vector Length
+    dtype: int
+    default: '1'
+    hide: ${ 'part' if vlen == 1 else 'none' }
+
+outputs:
+-   domain: stream
+    dtype: ${ type }
+    vlen: ${ vlen }
+
+asserts:
+- ${ vlen > 0 }
+
+templates:
+    imports: from gnuradio import network
+    make: network.udp_source(${type.size}, ${vlen}, ${port}, ${header}, ${payloadsize}, ${notify_missed}, ${src_zeros}, ${ipv6})
+
+documentation: "This block listens for traffic on the specified UDP port and outputs\
+    \ the specified data type.  Note that the header setting and payload size should\
+    \ match on both the sender and receiver.  For a normal network, a payload size\
+    \ of 1472 (1500-28 for UDP headers) represents the max size for a standard UDP\
+    \ packet.  For jumbo frames, 8972 can be used (9000-28).  Be careful adjusting\
+    \ this parameter as you could inadvertently cause unnecessary packet fragmentation\
+    \ and reconstruction.\n\nIf you need the block to generate 0s when there is\
+    \ no UDP data, you can turn on the 'Src 0s If No Data' flag, however this is best\
+    \ paired with the grnet UDP sink block.  If using a separate application, problems\
+    \ can arise if the sending application is not calling its send function with blocks\
+    \ matching payload size (the logic here can get a 'partial' packet after starting\
+    \ and not continue to produce zeros).\n\n\
+    \ NOTE:\n\
+    \ For best performance and to ensure UDP packets are not dropped, add the following\
+    \ lines to your /etc/sysctl.conf and reboot (the reboot is required).\n\n\
+    \ net.core.rmem_default=26214400\n\
+    \ net.core.rmem_max=104857600\n\
+    \ net.core.wmem_default=65536\n\
+    \ net.core.wmem_max=104857600\n\n\
+    \ IT IS HIGHLY RECOMMENDED that the example test_udp_source/sink flowgraphs be\
+    \ tested with the sequence number header enabled (the default in those flowgraphs)\
+    \ as a validation that no network or IP stack bottlenecks may cause dropped packets\
+    \ at the rates planned in your environment before using in production, especially if\
+    \ headers will not be used in your environment to track dropped packets."
+
+file_format: 1

@@ -1,0 +1,50 @@
+id: blocks_tags_strobe
+label: Tags Strobe
+flags: [ python ]
+
+parameters:
+-   id: type
+    label: Output Type
+    dtype: enum
+    options: [complex, float, int, short, byte]
+    option_attributes:
+        size: [gr.sizeof_gr_complex, gr.sizeof_float, gr.sizeof_int, gr.sizeof_short,
+            gr.sizeof_char]
+    hide: part
+-   id: value
+    label: Value (PMT)
+    dtype: raw
+    default: pmt.intern("TEST")
+-   id: key
+    label: Key (PMT)
+    dtype: raw
+    default: pmt.intern("strobe")
+-   id: nsamps
+    label: Num. Samples
+    dtype: int
+    default: '1000'
+-   id: vlen
+    label: Vector Length
+    dtype: int
+    default: '1'
+    hide: ${ 'part' if vlen == 1 else 'none' }
+
+outputs:
+-   domain: stream
+    dtype: ${ type }
+    vlen: ${ vlen }
+
+asserts:
+- ${ vlen > 0 }
+
+templates:
+    imports: |-
+        from gnuradio import blocks
+        import pmt
+    make: blocks.tags_strobe(${type.size}*${vlen}, ${value}, ${nsamps}, ${key})
+    callbacks:
+    - set_value(${value})
+    - set_key(${key})
+    - set_nsamps(${nsamps})
+
+file_format: 1

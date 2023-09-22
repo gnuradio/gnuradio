@@ -1,0 +1,33 @@
+id: blocks_plateau_detector_fb
+label: Plateau Detector
+flags: [ python, cpp ]
+
+parameters:
+-   id: max_len
+    label: Max. plateau length
+    dtype: int
+-   id: threshold
+    label: Threshold
+    dtype: real
+    default: '0.9'
+
+inputs:
+-   domain: stream
+    dtype: float
+
+outputs:
+-   domain: stream
+    dtype: byte
+
+templates:
+    imports: from gnuradio import blocks
+    make: blocks.plateau_detector_fb(${max_len}, ${threshold})
+    callbacks:
+      - set_threshold(${threshold})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/plateau_detector_fb.h>']
+    declarations: 'blocks::plateau_detector_fb::sptr ${id};'
+    make: 'this->${id} = blocks::plateau_detector_fb::make(${max_len}, ${threshold});'
+
+file_format: 1

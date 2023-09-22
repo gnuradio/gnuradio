@@ -1,0 +1,92 @@
+id: variable_qtgui_msgcheckbox
+label: QT GUI Msg CheckBox
+category: '[Core]/GUI Widgets/QT'
+flags: [ show_id, python ]
+
+parameters:
+-   id: label
+    label: Label
+    dtype: string
+    hide: ${ ('none' if label else 'part') }
+-   id: type
+    label: Type
+    dtype: enum
+    default: int
+    options: [real, int, string, bool]
+    option_labels: [Float, Integer, String, Boolean]
+    hide: part
+-   id: value
+    label: Default Value
+    dtype: ${ type }
+    default: '0'
+-   id: initPressed
+    label: Initial State
+    dtype: enum
+    default: 'False'
+    options: ['False', 'True']
+    option_labels: ['Unchecked', 'Checked']
+-   id: pressed
+    label: Checked
+    dtype: ${ type }
+    default: '1'
+-   id: released
+    label: Unchecked
+    dtype: ${ type }
+    default: '0'
+-   id: cellalignment
+    label: Cell Alignment
+    dtype: enum
+    default: '1'
+    options: ['1','2','3']
+    option_labels: ['Center','Left','Right']
+    hide: part
+-   id: verticalalignment
+    label: Vertical Alignment
+    dtype: enum
+    default: '1'
+    options: ['1','2','3']
+    option_labels: ['Center','Top','Bottom']
+    hide: part
+-   id: outputmsgname
+    label: Message Property Name
+    dtype: string
+    default: 'value'
+    hide: 'part'
+-   id: gui_hint
+    label: GUI Hint
+    dtype: gui_hint
+    hide: part
+value: ${ value }
+
+outputs:
+-   domain: message
+    id: state
+    optional: true
+
+templates:
+    var_make: self.${id} = ${id} = ${value}
+    make: |-
+        <%
+            win = '_%s_msgcheckbox_win'%id
+        %>\
+        % if type == 'bool':
+        self._${id}_choices = {'Pressed': bool(${pressed}), 'Released': bool(${released})}
+        % else:
+        self._${id}_choices = {'Pressed': ${pressed}, 'Released': ${released}}
+        % endif
+
+        ${win} = qtgui.MsgCheckBox(${ 'self.set_' + context.get('id')() }, "${no_quotes(label,repr(id))}", self._${id}_choices, ${initPressed}, ${cellalignment}, ${verticalalignment}, ${outputmsgname})
+        self.${id} = ${win}
+
+        ${gui_hint() % win}
+
+documentation: |-
+    This block creates a variable checkbox. Leave the label blank to use the variable id as the label.
+
+    A checkbox selects between two values of similar type, but will stay depressed until clicked again. The variable will take on one value or the other depending on whether the button is pressed or released.
+
+    This control will also produce a state message matching the set values.
+
+    The GUI hint can be used to position the widget within the application. The hint is of the form [tab_id@tab_index]: [row, col, row_span, col_span]. Both the tab specification and the grid position are optional.
+
+file_format: 1

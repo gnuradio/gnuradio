@@ -1,0 +1,50 @@
+id: blocks_nop
+label: Nop
+flags: [ python, cpp ]
+
+parameters:
+-   id: type
+    label: Type
+    dtype: enum
+    options: [complex, float, int, short, byte]
+    option_attributes:
+        size: [gr.sizeof_gr_complex, gr.sizeof_float, gr.sizeof_int, gr.sizeof_short,
+            gr.sizeof_char]
+    hide: part
+-   id: num_ports
+    label: Num Ports
+    dtype: int
+    default: '1'
+    hide: part
+-   id: vlen
+    label: Vector Length
+    dtype: int
+    default: '1'
+    hide: ${ 'part' if vlen == 1 else 'none' }
+
+inputs:
+-   domain: stream
+    dtype: ${ type }
+    vlen: ${ vlen }
+    multiplicity: ${ num_ports }
+
+outputs:
+-   domain: stream
+    dtype: ${ type }
+    vlen: ${ vlen }
+    multiplicity: ${ num_ports }
+
+asserts:
+- ${ num_ports > 0 }
+- ${ vlen > 0 }
+
+templates:
+    imports: from gnuradio import blocks
+    make: blocks.nop(${type.size}*${vlen})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/nop.h>']
+    declarations: 'blocks::nop::sptr ${id};'
+    make: 'this->${id} = blocks::nop::make(${type.size}*${vlen});'
+
+file_format: 1

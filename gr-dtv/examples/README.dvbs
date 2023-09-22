@@ -1,0 +1,18 @@
+A test Transport Stream for the example flow graph
+(8 Msyms/s and 7/8 code rate) is available here:
+
+http://www.w6rz.net/advdvbs78.ts
+
+It is 170,950,844 bytes.
+
+This stream can also be used at:
+
+14 Msyms/s 1/2 code rate
+10.5 MSyms/s 2/3 code rate
+9.333333 MSyms/s 3/4 code rate
+8.4 Msyms/s 5/6 code rate
+
+The equation for calculating the correct Transport Stream bit-rate is:
+
+TS bit-rate = symbol rate * 2 * code rate * (188 / 204)
+

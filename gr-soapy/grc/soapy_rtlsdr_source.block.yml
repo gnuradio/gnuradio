@@ -1,0 +1,133 @@
+id: soapy_rtlsdr_source
+label: Soapy RTLSDR Source
+flags: [python, throttle]
+
+parameters:
+  - id: type
+    label: Output Type
+    dtype: enum
+    options: [fc32, sc16, sc8]
+    option_labels: [Complex Float32, Complex Int16, Complex Byte]
+    option_attributes:
+      type: [fc32, sc16, sc8]
+    hide: part
+
+  - id: dev_args
+    label: Device arguments
+    dtype: string
+    hide: ${'part' if not dev_args else 'none'}
+
+  - id: samp_rate
+    label: Sample Rate
+    dtype: float
+    default: 'samp_rate'
+
+  - id: center_freq
+    label: 'Center Freq (Hz)'
+    category: RF Options
+    dtype: real
+    default: 'freq'
+
+  - id: freq_correction
+    label: 'Frequency Correction (PPM)'
+    category: RF Options
+    dtype: real
+    default: '0'
+    hide: 'part'
+
+  - id: agc
+    label: 'AGC'
+    category: RF Options
+    dtype: bool
+    default: 'False'
+    hide: 'part'
+
+  - id: gain
+    label: 'RF Gain'
+    category: RF Options
+    dtype: real
+    default: '20'
+    hide: 'part'
+
+  - id: bias
+    label: 'Bias Tee Power'
+    dtype: bool
+    default: 'False'
+    hide: 'part'
+
+  - id: bufflen
+    label: 'USB Buffer Size'
+    dtype: int
+    default: 16384
+    hide: 'part'
+
+asserts:
+  - ${ bufflen % 512 == 0 }
+
+inputs:
+  - domain: message
+    id: cmd
+    optional: true
+
+outputs:
+  - domain: stream
+    dtype: ${ type.type }
+    multiplicity: 1
+
+templates:
+  imports: from gnuradio import soapy
+  make: |
+      None
+      dev = 'driver=rtlsdr'
+      stream_args = 'bufflen=${bufflen}'
+      tune_args = ['']
+      settings = ['']
+
+      ## Intercept the agc callback and restore the gain when agc is
+      ## disabled. The driver does not do this. LNA state is preserved.
+      def _set_${id}_gain_mode(channel, agc):
+          self.${id}.set_gain_mode(channel, agc)
+          if not agc:
+                self.${id}.set_gain(channel, self._${id}_gain_value)
+      self.set_${id}_gain_mode = _set_${id}_gain_mode
+
+      ## Intercept set_gain to keep it from turning off agc mode
+      def _set_${id}_gain(channel, name, gain):
+          self._${id}_gain_value = gain
+          if not self.${id}.get_gain_mode(channel):
+              self.${id}.set_gain(channel, gain)
+      self.set_${id}_gain = _set_${id}_gain
+
+      ## Intercept bias tee setting and detect whether it is supported
+      def _set_${id}_bias(bias):
+          if 'biastee' in self._${id}_setting_keys:
+              self.${id}.write_setting('biastee', bias)
+      self.set_${id}_bias = _set_${id}_bias
+
+      self.${id} = soapy.source(dev, "${type}", 1, ${dev_args},
+                                stream_args, tune_args, settings)
+
+      ## Get list of valid setting keys
+      self._${id}_setting_keys = [a.key for a in self.${id}.get_setting_info()]
+
+      ## Set initial values. Since Python casts pretty much anything to bool,
+      ## parameter type checking does not guarantee bool values here are
+      ## actually bools. Do the cast here to get the same result. Note that
+      ## non-empty strings (e.g., 'False') are cast to True!
+      self.${id}.set_sample_rate(0, ${samp_rate})
+      self.${id}.set_frequency(0, ${center_freq})
+      self.${id}.set_frequency_correction(0, ${freq_correction})
+      self.set_${id}_bias(bool(${bias}))
+      self._${id}_gain_value = ${gain}
+      self.set_${id}_gain_mode(0, bool(${agc}))
+      self.set_${id}_gain(0, 'TUNER', ${gain})
+
+  callbacks:
+    - set_sample_rate(0, ${samp_rate})
+    - set_frequency(0, ${center_freq})
+    - set_frequency_correction(0, ${freq_correction})
+    - self.set_${id}_gain_mode(0, ${agc})
+    - self.set_${id}_gain(0, 'TUNER', ${gain})
+    - self.set_${id}_bias(${bias})
+
+file_format: 1

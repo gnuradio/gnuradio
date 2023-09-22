@@ -1,0 +1,62 @@
+id: blocks_matrix_interleaver
+label: Matrix Interleaver
+flags: [ python ]
+
+templates:
+    imports: from gnuradio import blocks
+    make: |-
+        blocks.matrix_interleaver(
+            itemsize=${ type.size } * ${ vlen }, rows=${ rows }, cols=${ cols }, deint=${ deint }
+        )
+    callbacks:
+    - set_rowsandcols(${ rows }, ${ cols }, ${ deint })
+
+parameters:
+-   id: type
+    label: IO Type
+    dtype: enum
+    options: [complex, float, int, short, byte]
+    option_attributes:
+        size: [gr.sizeof_gr_complex, gr.sizeof_float, gr.sizeof_int, gr.sizeof_short, gr.sizeof_char]
+    hide: part
+-   id: vlen
+    label: Vec Length
+    dtype: int
+    default: '1'
+    hide: ${ 'part' if vlen == 1 else 'none' }
+-   id: rows
+    label: Rows
+    dtype: int
+    default: '1'
+    hide: none
+-   id: cols
+    label: Columns
+    dtype: int
+    default: '1'
+    hide: none
+-   id: deint
+    label: Deinterleave
+    dtype: bool
+    options: [True, False]
+    default: False
+    hide: none
+
+inputs:
+-   label: in
+    dtype: ${ type }
+    vlen: ${ vlen }
+
+outputs:
+-   label: out
+    dtype: ${ type }
+    vlen: ${ vlen }
+
+asserts:
+- ${ vlen > 0 }
+
+documentation: '|-
+    Block interleaver reads inputs into rows and writes outputs by cols
+
+    python/matrix_interleaver.py'
+
+file_format: 1

@@ -1,0 +1,30 @@
+id: blocks_swapiq
+label: Swap IQ
+category: '[Core]/IQ Correction'
+
+templates:
+  imports: from gnuradio import blocks
+  make: blocks.swap_iq(${datatype.datatype}, ${datatype.datasize})
+
+parameters:
+-   id: datatype
+    label: Input Type
+    dtype: enum
+    options: [complex, short, byte]
+    option_attributes:
+        datasize: [gr.sizeof_gr_complex, gr.sizeof_short, gr.sizeof_char]
+        datatype: ['1', '2', '3']
+    hide: part
+
+inputs:
+-   domain: stream
+    dtype: ${ type }
+
+outputs:
+-   domain: stream
+    dtype: ${ type }
+
+documentation: |-
+    This block will transpose the I and Q channels (Swap IQ) to correct for spectrally inverted inputs.
+
+file_format: 1

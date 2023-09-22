@@ -1,0 +1,493 @@
+/*! \page page_digital Digital Modulation
+
+\section digtial_introduction Introduction
+This is the gr-digital package. It contains all of the digital
+modulation blocks, utilities, and examples. To use the digital blocks,
+the Python namespaces is in gnuradio.digital, which would be normally
+imported as:
+
+\code
+    from gnuradio import digital
+\endcode
+
+See the Doxygen documentation for details about the blocks available
+in this package.
+
+A quick listing of the details can be found in Python after importing
+by using:
+
+\code
+    help(digital)
+\endcode
+
+\section digital_constellations Constellation Objects
+
+GNU Radio supports the creation and use of Constellation objects for
+many of its digital communications needs. We define these
+constellations with a set of constellation points in complex space and
+the symbol mappings to those points. For a constellation that has 4
+symbols, it then has log2(4) = 2 bits/symbol. We define this
+constellation with:
+
+<pre>
+    constel_points = [c0, c1, c2, c3]
+    symbols = [s0, s1, s2, s3]
+</pre>
+
+In this case: \f$c_i \in C\f$ and \f$s_i \in [00, 01, 10,
+11]\f$. Also, the mapping is a 1-to-1 for the items in both lists, so
+the symbol \f$s_0\f$ is positioned in complex space at the point
+\f$c_0\f$.
+
+In the code itself, the symbols are referred to as the
+'pre_diff_code' since this is the mapping before the application of
+differential modulation, if used.
+
+The constellation object classes are defined in constellation.h. There
+is a hierarchy of classes for different purposes and which represent
+special classes of constellations. The all derive from the virtual
+class gr::digital::constellation. All constellations we will make are
+based on classes derived from this base:
+
+<pre>
+gr::digital::constellation
+    --> gr::digital::constellation_calcdist
+    --> gr::digital::constellation_sector
+        --> gr::digital::constellation_rect
+            --> gr::digital::constellation_expl_rect
+        --> gr::digital::constellation_psk
+    --> gr::digital::constellation_bpsk
+    --> gr::digital::constellation_qpsk
+    --> gr::digital::constellation_dqpsk
+    --> gr::digital::constellation_8psk
+</pre>
+
+Each constellation class has a set of attributes and functions useful
+for manipulating the constellations and for converting symbols to and
+from complex points. One of the more important functions is the
+gr::digital::constellation::decision_maker function that takes in a
+sample in complex space and returns the symbol that it maps to. How
+this calculation is performed generally distinguishes the
+constellation classes from each other.
+
+The gr::digital::constellation_calcdist is the most generic
+constellation class we can create. This takes in the constellation
+points, symbol mapping, a rotational symmetry, and the number of
+dimensions. The decision_maker function takes in a complex sample x
+and calculates the Euclidean distance between x and each point in the
+constellation map of the object. The constellation point that has the
+minimum Euclidean distance to x is selected as the best match. The
+decision_maker will then return the symbol value that matches to this
+selected constellation point.
+
+We then have a concept of a constellation with a well-defined concept
+of sectors in the gr::digital::constellation_sector. This is farther
+refined if we know that the constellation is rectangular and can use
+the gr::digital::constellation_rect class. These classes have an
+overloaded decision_maker function that is specific to how the sectors
+are defined in the constructor. Essentially, the decision making math
+for this class is less costly than calculating the Euclidean distance
+for each point in the space. So if we can sectorize our constellation,
+using this class will be computationally cheaper.
+
+Finally, we have a set of pre-defined, hard-coded constellations for
+BPSK (gr::digital::constellation_bpsk), QPSK
+(gr::digital::constellation_qpsk), DQPSK
+(gr::digital::constellation_dqpsk), and 8PSK
+(gr::digital::constellation_8psk). These derive directly from
+gr::digital::constellation and specifically overload the decision_maker
+function. We have very simple metrics for calculating decisions for
+each of these constellations. For BPSK, we simply slice on the real
+axis. Samples are based solely on whether the real part of the complex
+symbol x is greater than or less than 0. Similar, simple, decision
+makers are defined for the others.
+
+Note that these specific constellations for the PSK modulations are
+defined for only one mapping of the constellation points to the
+symbols. Each is Gray coded, but for a specific Gray coding that is
+hard-coded into the class.
+
+
+\subsection digital_grc_constellations Constellation Objects in GRC
+
+GRC provides two constellation representations that we can use to more
+easily define and interact with constellation objects. These are
+located in the 'Modulators' category as 'Constellation Object' and
+'Constellation Rect. Object'. These allow us to easily specify the
+constellation points, symbol list, and other properties of the
+constellation objects. They return the base() of the object, so the
+variable's ID can be used directly with blocks that accept
+constellation objects.
+
+These constellation blocks also allow us to specify the soft decision
+LUT if using the constellation object for soft decision outputs. The
+input can either be 'None' (default), a list of the soft bits that
+were generated externally or by another function, or 'auto' where the
+block will automatically calculate the soft decisions based on the
+constellation points and symbol map.
+
+
+\section digital_python_helpers Python Constellation Helper Functions
+
+A series of helper functions are defined in Python to create
+different, common constellations. There are various functions that
+have various levels of complexity in their definitions.
+
+\subsection digital_python_helpers_psk PSK Python Helpers
+
+There are two modules imported directly into gnuradio.digital. The
+first is gr-digital/python/digital/psk.py and the second is
+gr-digital/python/digital/psk_constellations.py. The
+gr-digital/python/digital/psk.py module defines the following
+constellations:
+
+<pre>
+    psk_constellation(m, mod_code, differential)
+</pre>
+
+This function defines a PSK modulation of order 'm' (that is, there
+are m number of constellation points / symbols). The 'mod_code' is
+either mod_codes.GRAY_CODE or mode_codes.NO_CODE to set the symbol
+mapping up as either Gray coded or not. The 'differential' argument is
+either True to use differential coding or False for non-differential
+coding.
+
+This function creates and returns a constellation object that can then
+be used by any block that takes a constellation
+(gr::digital::constellation_decoder_cb,
+gr::digital::constellation_receiver_cb,
+gr::digital::constellation_soft_decoder_cf, or
+gr::digital::lms_dd_equalizer_cc).
+
+The gr-digital/python/digital/psk.py module  holds functions
+similar to digital.psk_constellation.
+
+
+There is another Python file full of helper functions to create
+different constellations. This is found in the
+gr-digital/python/digital/psk_constellation.py file. This file
+provides functions that build the vectors of constellation points and
+symbol mappings that can be used to create a constellation
+object. These are particularly helpful when using the Constellation
+Obj. and Constellation Rect. GUI elements in GRC.
+
+The gr-digital/python/digital/psk_constellation.py file has extensive
+documentation that describes the naming scheme used for the different
+constellations that will not be repeated here. The main thing to
+understand is that these functions define constellations of the same
+order with different Gray code mappings. The function names are:
+
+<pre>
+    (const_points, symbol_map) = psk_M_0xk_<permutation>()
+</pre>
+
+Where M is the order of the modulation (2 for BPSK, 4 for QPSK,
+etc.), and k and \<permutation\> define a particular encoding for the
+Gray code mapping used. The documentation in the file explains how
+these two concepts define the Gray code mapping.
+
+These functions are also simply named "psk_M_n" when n is an integer
+from 0 to N-1 for however many mappings are defined for that
+modulation. Not all modulations are fully defined, and the value
+for n has no other meaning except as a counter.
+
+The functions return a tuple of lists. The first list in the tuple is
+the list of complex constellation points and the second list contains
+the symbols mapped to those points. These lists can then be passed to
+a constellation class directly to create a constellation of any Gray
+code mapping needed.
+
+While not all Gray code mappings of the modulations are defined, there
+is a generator function to automatically build any rotation of a basis
+constellation:
+
+<pre>
+    (const_points, symbol_map) = \
+        constellation_map_generator(basis_cpoints, basis_symbols, k, pi)
+</pre>
+
+We provide a basis constellation map and symbol map as the fundamental
+rotation of the constellation points. This function uses the k and pi
+inputs (see the discussion in psk_constellation.py for what these
+mean) to return a new rotation of the constellation's symbols. If the
+basis symbols are Gray coded than the output symbols will also be Gray
+coded. Note that this algorithm specifically depends on the
+constellation in complex space to be square to preserve the Gray code
+property.
+
+
+\subsection digital_python_helpers_qam QAM Python Helpers
+
+Similar to defining PSK modulations, GNU Radio also has helpers for
+some QAM modulations, found in gr-digital/python/digital/qam.py and
+gr-digital/python/digital/qam_constellations.py. Similar functions to
+what has been described for PSK exist here:
+
+<pre>
+    qam_constellation(constellation_points, differential, mod_code,
+                      large_ampls_to_corners)
+</pre>
+
+The parameters to these functions is the same as for the PSK
+equivalents. The new argument 'large_ampls_to_corner' is defined in
+the documentation as:
+
+<pre>
+    large_ampls_to_corners:  If this is set to True then when the
+        constellation is making decisions, points that are far outside
+        the constellation are mapped to the closest corner rather than
+        the closet constellation point.  This can help with phase
+        locking.
+</pre>
+
+Similarly, gr-digital/python/digital/qam_constellations.py defines a of
+QAM constellation functions that return a tuple containing the
+constellation points and the symbol mappings. The naming scheme is
+defined in depth in the module itself and is similar to the equivalent
+set of PSK functions.
+
+Currently, only a subset of 16QAM symbol mappings are defined, but we
+can use of the constellation_map_generator function described in the
+previous section to define more mapping rotations for and square QAM
+modulation.
+
+
+\section digital_generic_mod_demod The Generic Modulator/Demodulator
+Hierarchical Blocks
+
+This module is deprecated and will be removed in GNU Radio 3.9.
+
+Since digital modulation and demodulation are complex functions, the
+different parts can be done by different existing GNU Radio blocks. We
+have combined these into a generic modulator and generic demodulator
+hierarchical blocks to make access and use much easier. This file can
+be found as gr-digital/python/digital/generic_mod_demod.py.
+
+\subsection digital_generic_mod Generic Modulator
+
+The modulator constructor looks like:
+
+<pre>
+    digital.generic_mod(constellation, differential, samples_per_symbol,
+                        pre_diff_code, excess_bw, verbose, log)
+</pre>
+
+The 'constellation' arg is a constellation object as defined above in
+\ref digital_constellations and can represent any constellation
+mapping. The 'differential' arg is a bool to turn differential coding
+on/off. The block also performs pulse shaping and interpolates the
+pulse-shaped filter to some number of 'samples_per_symbol'. The pulse
+shaping is a root raised cosine filter defined by the excess
+bandwidth (or alpha) parameter called 'excess_bw.'
+
+We can also turn on a verbose mode to output information to the
+user. The 'log' parameter toggles logging data on/off. When logging is
+turned on, it stores every stage of the modulation to a different file
+so that each stage can be independently analyzed.
+
+
+\subsection digital_generic_demod Generic Demodulator
+
+The demodulator looks like:
+
+<pre>
+    digital.generic_demod(constellation, differential, samples_per_symbol,
+                          pre_diff_code, excess_bw, freq_bw, timing_bw,
+                          phase_bw, verbose, log)
+</pre>
+
+The additional parameters to the demodulator are the loop bandwidths
+for the different signal recovery loops used internally. There are
+separate loops for frequency acquisition, timing acquisition, and fine
+frequency / phase acquisition, controlled in tern by each of the
+three 'X_bw' arguments. Otherwise, the arguments are the same as the
+modulator.
+
+
+\subsection digital_generic_guts Guts of the Modulator and Demodulator
+
+The generic modulator looks like the following:
+
+<pre>
+    blocks.packed_to_unpacked_bb: takes in packed bytes
+    digital.map_bb: maps baseband symbols to the pre-differential encoding
+    digital.diff_encoder_bb: differentially encode symbols
+    digital.chunks_to_symbols_bc: convert symbols to complex samples
+    filter.pfb_arb_resampler_ccf: perform upsampling to samps/symbol and pulse shape
+</pre>
+
+The mapping and chunks-to-symbols stages are done using the
+information provided by the constellation object.
+
+Note that the modulator takes in packed bytes, which means that all 8
+bits per byte are used and unpacked into k bits per symbol.
+
+The generic demodulator looks like the following:
+
+<pre>
+    digital.fll_band_edge_cc: Performs coarse frequency correction
+    digital.pfb_clock_sync_ccf: Matched filtering and timing recovery
+    digital.constellation_receiver_cb: Phase tracking and decision making (hard bits)
+    digital.diff_decoder_bb: Differential decoding
+    digital.map_bb: Map to pre-differential symbols
+    blocks.unpack_k_bits_bb: Unpack k bits/symbol to a stream of bits
+</pre>
+
+This block outputs unpacked bits, so each output item represents a
+single bit of data. A block like 'pack_k_bits' can be used following
+this to convert the data back into bytes.
+
+
+\section digital_constellation_modulator Constellation Modulator
+
+The Constellation Modulator, Constellation Receiver, and Constellation
+Decoder can all take Constellation Objects to define what they are
+meant to transmit and receive.
+
+The gr::digital::constellation_modulator block takes as a parameter
+the reference to the constellation object. The block is very generic
+in that the mapping from bits to symbols is done based on the
+constellation object passed to it. The modulator block requires packed
+bits as the input stream (that is, all 8 bits of the stream contain
+information).
+
+The other parameters of this block include a setting as to whether or
+not to differentially encode the symbols, the number of samples per
+symbols, and the excess bandwidth of the transmitted pulse-shaped
+signal.
+
+We can set up the transmitter using the constellation modulator block
+and use the same constellation object at the receiver so we know the
+same constellation settings are being used.
+
+\section digital_softbits Support for Soft Decisions
+
+To support soft decisions of the receivers instead of the current hard
+decisions, the constellation objects also accept a soft decision
+look-up table (LUT) or can be told to generate a LUT based on the
+constellation points and symbol map.
+
+All constellation objects can accept a new LUT using the
+gr::digital::constellation::set_soft_dec_lut function. This function
+takes in a LUT, which is a vector of floating point tuples (in C++ it
+is just a vector\<vector\<float\>\>) and a precision value that
+specifies how accurate the LUT is to a given number of bits.
+
+The constellation objects also have two functions to calculate the
+soft decisions from their constellation and symbol map. The
+gr::digital::constellation::calc_soft_dec takes a complex number (and
+optional noise power) and returns the soft decisions as a list of
+floats. This function is used internally in the
+gr::digital::constellation::gen_soft_dec_lut, which takes in the LUT's
+precision (as a number of bits) and an optional noise power estimate,
+if known. This function calculates the soft decisions itself. These
+functions are very expensive because each constellation point is taken
+into account during the calculation. We provide the
+gr::digital::constellation::set_soft_dec_lut in order to allow users
+to use one of the many known approximations to more quickly generate
+the soft decision LUT.
+
+The gr::digital::constellation::calc_soft_dec function could be used
+instead of drawing directly from a LUT, which is probably only
+important if the noise floor or channel estimates are likely to change
+and we want to account for this in the decisions. The basic
+implementation of the soft decision calculation is the full
+calculation based on the distance between the sample and all points in
+the constellation space. If using this function for real-time
+decisions, a new object should inherit from the
+gr::digital::constellation class (or whichever child class is being
+used) and redefine this function with a faster approximation
+calculation.
+
+Note: If no soft decision LUT is defined but
+gr::digital::constellation::soft_decision_maker is called then the
+full calculation from gr::digital::constellation::calc_soft_dec is
+used by default.
+
+The LUT is a list of tuples, where each index of the list is some
+quantized (to some number of bits of precision) point in the
+constellation space. At each index, there is a tuple of \e k soft
+bit values for a constellation with \e k bits/symbol.
+
+To help with this, the file
+gr-digital/python/digital/soft_dec_lut_gen.py can be used to create
+these tables. The function digital.soft_dec_table_generator(generator,
+precision) function generates a LUT based on some generator function
+and the number of bits of precision required. This file contains
+documentation explaining the system better. Or the
+digital.soft_dec_table(constel, symbols, prec, npwr=1) can be used
+which takes in the constellation map and symbols to do the full raw
+calculation of the softbits as opposed to a generator function.
+
+To further aid the LUT creation, the digital module also defines a
+number of functions that can be used as soft decision generators for
+the soft_dec_table function. These functions are found in
+psk_constellations.py and qam_constellations.py. These files were
+already mentioned as they contain a set of functions that return
+tuples of constellation points and Gray-mapped symbols for different
+modulations. But these files contain a second set of functions
+prefixed by 'sd_' which are soft decision LUT generator functions Each
+LUT generator takes in a complex value and returns the tuple of soft
+decisions for that point in complex space. To aid with this,
+soft_dec_lut_gen.py defines a 'calc_from_table' function that takes in
+a complex sample, the precision of the table, and the LUT itself and
+returns the tuple of soft decisions in the LUT that is closest to the
+given symbol. Each of these functions can be found directly from the
+'digital' Python module.
+
+The LUTs are defined from min to max constellation points in both the
+real and imaginary axes. That means that signals coming in outside of
+these bounds are clipped to 1. So there is no added certainty for
+values beyond these bounds.
+
+The gr::digital::constellation_soft_decoder_cf block takes in a
+constellation object where a soft decision LUT is defined. It takes in
+complex samples and produces a stream of floats of soft decisions. The
+soft decision outputs are not grouped together, it is just a stream of
+floats. So this block acts as an interpolator that takes in 1 complex
+sample and return \e k float for \e k bits per symbol.
+
+
+\subsection soft_dec_api Review of the Soft Decision API/Functions
+
+Files of interest:
+\li psk_constellations.py: PSK constellations and soft decision generators
+\li qam_constellations.py: QAM constellations and soft decision generators
+\li soft_dec_lut_gen.py: Functions to build soft decision LUTs and test them
+\li test_soft_decisions.py: A script that generates a random complex
+sample and calculates the soft decisions using various methods. Plots
+the sample against the full constellation. Requires matplotlib installed.
+
+Functions:
+\li digital.sd_psk_2_*: Returns (constellation, symbol_map) lists for
+different rotations for BPSK.
+\li digital.sd_psk_4_*: Returns (constellation, symbol_map) lists for
+different rotations for QPSK.
+\li digital.sd_qam_16_*: Returns (constellation, symbol_map) lists for
+different rotations for 16QAM.
+\li digital.soft_dec_table_generator: Takes in a generator function
+(like the digital.sd_XXX above) and creates a LUT to a specific precision.
+\li digital.soft_dec_table: Takes in a constellation/symbol map and
+uses digital.calc_soft_dec to generate a LUT to a specific precision.
+\li digital.calc_soft_dec: Takes a complex sample and calculates the
+soft decisions for a given constellation/symbol mapping.
+\li digital.calc_soft_dec_from_table: Given a sample and a LUT,
+returns the soft decisions of the LUT for the nearest point to the
+sample.
+
+C++ Interface:
+\li gr::digital::constellation::gen_soft_dec_lut: uses calc_soft_dec
+to internally generate a soft decision LUT.
+\li gr::digital::constellation::calc_soft_dec: calculates the soft
+decisions for a given sample from the full constellation/symbol map.
+\li gr::digital::constellation::set_soft_dec_lut: Set the soft
+decision LUT from an externally-calculated LUT.
+\li gr::digital::constellation::set_npwr: Set the noise power to use for calculating soft decisions
+\li gr::digital::constellation::has_soft_dec_lut: has the LUT been
+set/generated or not.
+\li gr::digital::constellation::soft_decision_maker: Used by
+gr::digital::constellation_soft_decoder to convert samples to soft
+decisions. If a LUT is defined, uses it; else, uses calc_soft_dec.
+
+
+*/

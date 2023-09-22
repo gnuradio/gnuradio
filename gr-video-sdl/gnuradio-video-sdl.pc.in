@@ -1,0 +1,11 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@
+
+Name: gnuradio-video-sdl
+Description: GNU Radio blocks for the SDL library
+Requires: gnuradio-runtime sdl
+Version: @LIBVER@
+Libs: -L${libdir} -lgnuradio-video-sdl
+Cflags: -I${includedir}

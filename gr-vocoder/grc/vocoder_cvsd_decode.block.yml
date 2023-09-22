@@ -1,0 +1,27 @@
+id: vocoder_cvsd_decode_bf
+label: CVSD Decoder
+flags: [ python ]
+
+parameters:
+-   id: resample
+    label: Resample
+    dtype: int
+    default: '8'
+-   id: bw
+    label: Frac. Bandwidth
+    dtype: real
+    default: '0.5'
+
+inputs:
+-   domain: stream
+    dtype: byte
+
+outputs:
+-   domain: stream
+    dtype: float
+
+templates:
+    imports: from gnuradio import vocoder
+    make: vocoder.cvsd_decode_bf(${resample},${bw})
+
+file_format: 1

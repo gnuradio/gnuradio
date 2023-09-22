@@ -1,0 +1,18 @@
+id: blocks_ctrlport_monitor_performance
+label: CtrlPort Performance Monitor
+flags: [ python ]
+
+parameters:
+-   id: en
+    label: Enabled
+    dtype: bool
+    default: 'True'
+
+templates:
+    imports: from gnuradio.ctrlport.monitor import *
+    make: not ${en} or monitor("gr-perf-monitorx")
+
+documentation: |-
+    Place this in a graph to launch a QtPy GR CtrlPort Performance Monitor app.
+
+file_format: 1

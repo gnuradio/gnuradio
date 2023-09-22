@@ -1,0 +1,60 @@
+id: parameter
+label: Parameter
+flags: [ show_id, python, cpp ]
+
+parameters:
+-   id: label
+    label: Label
+    dtype: string
+    hide: ${ ('none' if label else 'part') }
+-   id: type
+    label: Type
+    dtype: enum
+    options: ['', complex, eng_float, intx, long, str]
+    option_labels: [None, Complex, Float, Int, Long, String]
+    option_attributes:
+        type: [raw, complex, real, int, int, string]
+    hide: ${ ('none' if type else 'part') }
+-   id: value
+    label: Value
+    dtype: ${ type.type }
+    default: '0'
+-   id: short_id
+    label: Short ID
+    dtype: string
+    hide: ${ 'all' if not type else ('none' if short_id else 'part') }
+-   id: hide
+    label: Show
+    dtype: enum
+    options: [none, part]
+    option_labels: [Always, Only in Properties]
+    hide: part
+
+asserts:
+- ${ len(short_id) in (0, 1) }
+- ${ short_id == '' or short_id.isalpha() }
+
+templates:
+    var_make: self.${id} = ${id}
+    make: ${value}
+
+cpp_templates:
+    var_make: ${id} = ${value};
+    make: ${value}
+
+documentation: |-
+    This block represents a parameter to the flow graph. A parameter can be used to pass command line arguments into a top block. Or, parameters can pass arguments into an instantiated hierarchical block.
+
+    The parameter value cannot depend on any variables.
+
+    Leave the label blank to use the parameter id as the label.
+
+    When type is not None, this parameter also becomes a command line option of the form:
+
+    -[short_id] --[id] [value]
+
+    The Short ID field may be left blank.
+
+    To disable showing the parameter on the hierarchical block in GRC, use Only in Properties option in the Show field.
+
+file_format: 1

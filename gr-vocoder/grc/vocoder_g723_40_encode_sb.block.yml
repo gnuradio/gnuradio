@@ -1,0 +1,23 @@
+id: vocoder_g723_40_encode_sb
+label: g723_40 Audio Encoder
+flags: [ python, cpp ]
+
+inputs:
+-   domain: stream
+    dtype: short
+
+outputs:
+-   domain: stream
+    dtype: byte
+
+templates:
+    imports: from gnuradio import vocoder
+    make: vocoder.g723_40_encode_sb()
+
+cpp_templates:
+    includes: [ '#include <gnuradio/vocoder/g723_40_encode_sb.h>' ]
+    declarations: 'vocoder::g723_40_encode_sb::sptr ${id};'
+    make: 'this->${id} = vocoder::g723_40_encode_sb::make();'
+    link: ['gnuradio-vocoder']
+
+file_format: 1

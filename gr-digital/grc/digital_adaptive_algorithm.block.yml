@@ -1,0 +1,51 @@
+id: variable_adaptive_algorithm
+label: Adaptive Algorithm
+flags: [ show_id, python ]
+
+
+parameters:
+-   id: type
+    label: Algorithm Type
+    dtype: enum
+    options: [lms, nlms, cma]
+    option_labels: [LMS, NLMS, CMA]
+-   id: cons
+    label: Digital Constellation Object
+    dtype: raw
+    hide: 'part'
+-   id: step_size
+    label: Step Size
+    dtype: float
+    default: '.0001'
+    hide: 'none'
+-   id: modulus
+    label: Modulus
+    dtype: int
+    default: 2
+    hide: ${ ( 'none' if str(type) == "cma" else 'all') }
+-   id: ffactor
+    label: Forgetting Factor
+    dtype: float
+    default: .99
+    hide: ${ ( 'none' if str(type) == "rls" else 'all') }
+-   id: delta
+    label: Delta
+    dtype: float
+    default: 10.0
+    hide: ${ ( 'none' if str(type) == "rls" else 'all') }
+
+value: |- 
+    ${ (digital.adaptive_algorithm_lms(cons.base(), step_size))  }
+
+templates:
+    imports: from gnuradio import digital
+    var_make: |-
+        % if str(type) == "lms" or str(type) == "nlms":
+        self.${id} = ${id} = digital.adaptive_algorithm_${type}( ${cons}, ${step_size}).base()
+        % elif str(type) == "cma":
+        self.${id} = ${id} = digital.adaptive_algorithm_${type}( ${cons}, ${step_size}, ${modulus}).base()
+        % elif str(type) == "rls":
+        self.${id} = ${id} = digital.adaptive_algorithm_${type}( ${cons}, ${ffactor}, ${delta}).base()
+        % endif
+
+file_format: 1

@@ -1,0 +1,43 @@
+id: goertzel_fc
+label: Goertzel
+flags: [ python, cpp ]
+
+parameters:
+-   id: rate
+    label: Rate
+    dtype: int
+    default: '0'
+-   id: len
+    label: Length
+    dtype: int
+    default: '0'
+-   id: freq
+    label: Frequency
+    dtype: real
+    default: '0'
+
+inputs:
+-   domain: stream
+    dtype: float
+
+outputs:
+-   domain: stream
+    dtype: complex
+
+templates:
+    imports: from gnuradio import fft
+    make: fft.goertzel_fc(${rate}, ${len}, ${freq})
+    callbacks:
+    - set_freq(${freq})
+    - set_rate(${rate})
+
+cpp_templates:
+    includes: [ '#include <gnuradio/fft/goertzel_fc.h>' ]
+    declarations: 'fft::goertzel_fc::sptr ${id};'
+    make: 'this->${id} = fft::goertzel_fc::make(${rate}, ${len}, ${freq});'
+    link: ['gnuradio::gnuradio-fft']
+    callbacks:
+    - set_freq(${freq})
+    - set_rate(${rate})
+
+file_format: 1

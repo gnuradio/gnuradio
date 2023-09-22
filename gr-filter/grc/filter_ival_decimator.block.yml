@@ -1,0 +1,34 @@
+id: ival_decimator
+label: Interleaved Stream Decimator
+
+parameters:
+-   id: datatype
+    label: Input Type
+    dtype: enum
+    options: [byte, short]
+    option_attributes:
+        datasize: [gr.sizeof_char, gr.sizeof_short]
+    hide: part
+-   id: decimation
+    label: Decimation
+    dtype: int
+    default: '1'
+
+inputs:
+-   domain: stream
+    dtype: ${ type }
+
+outputs:
+-   domain: stream
+    dtype: ${ type }
+    
+templates:
+    imports: from gnuradio import filter
+    make: filter.ival_decimator(${decimation}, ${datatype.datasize})
+
+documentation: |-
+    This block will directly decimate an incoming stream made up of the specified complex samples.  
+    One example would be if you have a source streaming 8-bit complex at high speeds and you want to 
+    decimate directly from a high-speed source, or before writing to a file or network sink.
+    
+file_format: 1

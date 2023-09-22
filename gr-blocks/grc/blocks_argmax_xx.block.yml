@@ -1,0 +1,51 @@
+id: blocks_argmax_xx
+label: Argmax
+flags: [ python, cpp ]
+
+parameters:
+-   id: type
+    label: IO Type
+    dtype: enum
+    options: [float, int, short]
+    option_attributes:
+        fcn: [fs, is, dd]
+    hide: part
+-   id: num_inputs
+    label: Num Inputs
+    dtype: int
+    default: '2'
+    hide: part
+-   id: vlen
+    label: Vector Length
+    dtype: int
+    default: '1'
+    hide: ${ 'part' if vlen == 1 else 'none' }
+
+inputs:
+-   domain: stream
+    dtype: ${ type }
+    vlen: ${ vlen }
+    multiplicity: ${ num_inputs }
+
+outputs:
+-   label: max_vec
+    domain: stream
+    dtype: short
+-   label: max_inp
+    domain: stream
+    dtype: short
+
+asserts:
+- ${ num_inputs >= 1 }
+- ${ vlen >= 1 }
+
+templates:
+    imports: from gnuradio import blocks
+    make: blocks.argmax_${type.fcn}(${vlen})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/argmax.h>']
+    declarations: 'blocks::argmax_${type.fcn}::sptr ${id};'
+    make: 'this->${id} = blocks::argmax_${type.fcn}::make(${vlen});'
+
+file_format: 1
