@@ -29,7 +29,7 @@ def qapp_cls_():
 
     """ Translation Support """
     # Try to get the current locale. Always add English
-    lc, encoding = locale.getdefaultlocale()
+    lc, encoding = locale.getlocale()
     if lc:
         languages = [lc]
     languages += settings.DEFAULT_LANGUAGE
