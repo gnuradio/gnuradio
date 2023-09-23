@@ -22,6 +22,7 @@ import logging
 import os
 import sys
 import subprocess
+import yaml
 
 # Third-party  modules
 import six
@@ -32,6 +33,7 @@ from qtpy.QtGui import QStandardItemModel
 
 # Custom modules
 from . import FlowgraphView
+from .example_browser import ExampleBrowser, Worker
 from .. import base, Constants, Utils
 from .undoable_actions import (
     ChangeStateAction,
@@ -46,6 +48,7 @@ from .undoable_actions import (
 )
 from . import DocumentationTab
 from .preferences import PreferencesDialog
+from .example_browser import ExampleBrowser
 from .dialogs import ErrorsDialog
 from ...core.base import Element
 
@@ -174,6 +177,20 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         self.clipboard = None
         self.undoView = None
 
+        self.examples_found = False
+        self.ExampleBrowser = ExampleBrowser()
+        self.ExampleBrowser.file_to_open.connect(self.open_example)
+
+
+        self.threadpool = QtCore.QThreadPool()
+        self.threadpool.setMaxThreadCount(1)
+        ExampleFinder = Worker(self.find_examples)
+        ExampleFinder.signals.result.connect(self.populate_example_library)
+        ExampleFinder.signals.progress.connect(self.progress_callback)
+        self.threadpool.start(ExampleFinder)
+        
+        
+
     """def show(self):
         log.debug("Showing main window")
         self.show()
@@ -211,6 +228,45 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         action = BlockPropsChangeAction(self.currentFlowgraph, elem)
         self.currentFlowgraph.undoStack.push(action)
         self.updateActions()
+    
+    def find_examples(self, progress_callback):
+        examples = list(self._iter_files_in_example_path(progress_callback))
+        return examples
+
+    def _iter_files_in_example_path(self, progress_callback, path=None, ext='grc'):
+        """Iterator for example descriptions and category trees"""
+        for entry in (path or self.platform.config.example_paths):
+            if os.path.isdir(entry):
+                subdirs = 0
+                current_subdir = 0
+                for dirpath, dirnames, filenames in os.walk(entry):
+                        subdirs += 1
+                for dirpath, dirnames, filenames in os.walk(entry):
+                    current_subdir += 1
+                    progress_callback.emit(int(100*current_subdir/subdirs))
+                    for filename in sorted(filter(lambda f: f.endswith('.' + ext), filenames)):
+                        file_path = os.path.join(dirpath, filename)
+                        with open(file_path, encoding='utf-8') as fp:
+                            data = yaml.safe_load(fp)
+                            try:
+                                title = data["options"]["parameters"]["title"] or "TITLE"
+                                desc = data["options"]["parameters"]["description"] or "DESCRIPTION"
+                                author = data["options"]["parameters"]["author"] or "AUTHOR"
+                                yield (dirpath.split("/")[-1], title, desc, author, file_path)
+                            except (KeyError, TypeError):
+                                continue
+            else:
+                log.debug('Ignoring invalid path entry %r', entry)
+
+    def populate_example_library(self, examples):
+        self.ExampleBrowser.populate(examples)
+        self.progress_bar.reset()
+        self.progress_bar.hide()
+        self.examples_found = True
+
+    def progress_callback(self, progress):
+        self.progress_bar.show()
+        self.progress_bar.setValue(progress)
 
     def createActions(self, actions):
         """
@@ -236,10 +292,10 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
             statusTip=_("open-tooltip"),
         )
 
-        actions["example-browser"] = Action(
-            _("example-browser"),
+        actions["example_browser"] = Action(
+            _("example_browser"),
             self,
-            statusTip=_("examples-browser-tooltip"),
+            statusTip=_("example_browser-tooltip"),
         )
 
         actions["close"] = Action(
@@ -634,7 +690,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         file = Menu("&File")
         file.addAction(actions["new"])
         file.addAction(actions["open"])
-        file.addAction(actions["example-browser"])
+        file.addAction(actions["example_browser"])
         file.addAction(actions["close"])
         file.addAction(actions["close_all"])
         file.addSeparator()
@@ -849,6 +905,17 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
             new_flowgraph = FlowgraphView(self)
             initial_state = self.platform.parse_flow_graph(filename)
             self.tabWidget.addTab(new_flowgraph, os.path.basename(filename))
+            self.tabWidget.setCurrentIndex(self.tabWidget.count() - 1)
+            self.currentFlowgraph.import_data(initial_state)
+            self.currentFlowgraph.selectionChanged.connect(self.updateActions)
+    
+    def open_example(self, example_path):
+        log.debug("open example")
+        if example_path:
+            log.info("Opening flowgraph ({0})".format(example_path))
+            new_flowgraph = FlowgraphView(self)
+            initial_state = self.platform.parse_flow_graph(example_path)
+            self.tabWidget.addTab(new_flowgraph, os.path.basename(example_path))
             self.tabWidget.setCurrentIndex(self.tabWidget.count() - 1)
             self.currentFlowgraph.import_data(initial_state)
             self.currentFlowgraph.selectionChanged.connect(self.updateActions)
@@ -1247,6 +1314,18 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         prefs_dialog = PreferencesDialog()
         if prefs_dialog.exec_():
             prefs_dialog.save_all()
+    
+    def example_browser_triggered(self):
+        log.debug("example-browser")
+        if self.examples_found:
+            ex_dialog = self.ExampleBrowser
+            if ex_dialog.exec_():
+                return
+        else:
+            ad = QtWidgets.QMessageBox()
+            ad.setWindowTitle("Still indexing examples")
+            ad.setText("GRC is still indexing examples, please try again shortly.")
+            ad.exec()
 
     def exit_triggered(self):
         log.debug("exit")

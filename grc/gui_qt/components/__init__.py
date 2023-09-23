@@ -1,5 +1,6 @@
 
 from .block_library import BlockLibrary
+from .example_browser import ExampleBrowser, Worker
 from .documentation_tab import DocumentationTab
 from .wiki_tab import WikiTab
 from .console import Console
