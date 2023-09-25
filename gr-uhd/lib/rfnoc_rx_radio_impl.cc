@@ -18,6 +18,8 @@ namespace uhd {
 
 constexpr size_t MAX_RADIO_REFS = 2; // One for RX, one for TX
 
+const size_t rfnoc_rx_radio::ALL_CHANS = ::uhd::rfnoc::radio_control::ALL_CHANS;
+
 rfnoc_rx_radio::sptr rfnoc_rx_radio::make(rfnoc_graph::sptr graph,
                                           const ::uhd::device_addr_t& block_args,
                                           const int device_select,
@@ -127,6 +129,18 @@ void rfnoc_rx_radio_impl::set_iq_balance(const std::complex<double>& correction,
                                          const size_t chan)
 {
     return d_radio_ref->set_rx_iq_balance(correction, chan);
+}
+
+void rfnoc_rx_radio_impl::issue_stream_cmd(const ::uhd::stream_cmd_t& cmd,
+                                           const size_t chan)
+{
+    if (chan == ALL_CHANS) {
+        for (size_t ch = 0; ch < d_radio_ref->get_num_output_ports(); ch++) {
+            d_radio_ref->issue_stream_cmd(cmd, ch);
+        }
+        return;
+    }
+    d_radio_ref->issue_stream_cmd(cmd, chan);
 }
 
 void rfnoc_rx_radio_impl::enable_rx_timestamps(const bool enable, const size_t chan)
