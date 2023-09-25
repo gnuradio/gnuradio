@@ -38,7 +38,7 @@ public:
                  const size_t src_block_port,
                  const std::string& dst_block_id,
                  const size_t dst_block_port,
-                 const bool skip_property_propagation) override
+                 const bool is_back_edge) override
     {
         d_logger->debug("Connecting {:s}:{:d} -> {:s}:{:d}",
                         src_block_id,
@@ -73,22 +73,22 @@ public:
 
     void connect(const std::string& block1,
                  const std::string& block2,
-                 bool skip_property_propagation) override
+                 bool is_back_edge) override
     {
-        connect(block1, 0, block2, 0, skip_property_propagation);
+        connect(block1, 0, block2, 0, is_back_edge);
     }
 
     void connect(rfnoc_block::sptr src_block,
                  const size_t src_block_port,
                  rfnoc_block::sptr dst_block,
                  const size_t dst_block_port,
-                 const bool skip_property_propagation)
+                 const bool is_back_edge)
     {
         connect(src_block->get_unique_id(),
                 src_block_port,
                 dst_block->get_unique_id(),
                 dst_block_port,
-                skip_property_propagation);
+                is_back_edge);
     }
 
 
