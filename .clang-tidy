@@ -5,6 +5,4 @@ WarningsAsErrors: ''
 HeaderFilterRegex: '\.(cc|c|cpp|h|hpp)$'
 AnalyzeTemporaryDtors: false
 FormatStyle:     file
-CheckOptions:
-...
 
