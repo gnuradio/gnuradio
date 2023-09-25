@@ -75,4 +75,7 @@ static const char* __doc_gr_uhd_rfnoc_rx_radio_set_iq_balance_0 = R"doc()doc";
 static const char* __doc_gr_uhd_rfnoc_rx_radio_set_iq_balance_1 = R"doc()doc";
 
 
+static const char* __doc_gr_uhd_rfnoc_rx_radio_issue_stream_cmd = R"doc()doc";
+
+
 static const char* __doc_gr_uhd_rfnoc_rx_radio_enable_rx_timestamps = R"doc()doc";

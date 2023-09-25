@@ -27,6 +27,8 @@ namespace uhd {
 class GR_UHD_API rfnoc_rx_radio : virtual public rfnoc_block
 {
 public:
+    const static size_t ALL_CHANS;
+
     typedef std::shared_ptr<rfnoc_rx_radio> sptr;
 
     /*!
@@ -40,6 +42,9 @@ public:
                      const int device_select,
                      const int instance);
 
+    /**************************************************************************
+     * Radio control
+     *************************************************************************/
     //! Set the output sampling rate of the radio block
     //
     // Note: The actual rate of the radio will be coerced to whatever it is
@@ -160,6 +165,23 @@ public:
     // \param chan The channel for which this setting is for
     virtual void set_iq_balance(const std::complex<double>& correction,
                                 const size_t chan) = 0;
+
+    /**************************************************************************
+     * Streaming control
+     *************************************************************************/
+    /*! Issue a stream command to specific channels
+     *
+     * This behaves differently from usrp_source::issue_stream_cmd() in two ways:
+     * - This block will never start streaming automatically after being started,
+     *   so starting the stream explicitly needs to happen somehow. Use this API
+     *   to directly issue a start stream command through the C++ or Python API.
+     * - Stream commands are submitted on a per-channel basis, not for all
+     *   channels. However, unlike UHD's radio control, it will honor the ALL_CHANS
+     *   value for \p \chan.
+     *
+     * \param cmd the stream command to issue to all source channels
+     */
+    virtual void issue_stream_cmd(const ::uhd::stream_cmd_t& cmd, const size_t chan) = 0;
 
     //! Enable/disable timestamp generation on a radio channel
     //
