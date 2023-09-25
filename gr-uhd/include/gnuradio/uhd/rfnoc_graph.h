@@ -44,23 +44,23 @@ public:
     // \param src_block_port The port on the source block to connect to
     // \param dst_block The block ID of the destination block (e.g., "0/DDC#0)
     // \param dst_block_port The port on the destination block to connect to
-    // \param skip_property_propagation Disable property propagation on this
+    // \param is_back_edge Disable property propagation on this
     //                                  connection (see the UHD documentation)
     virtual void connect(const std::string& src_block,
                          const size_t src_block_port,
                          const std::string& dst_block,
                          const size_t dst_block_port,
-                         const bool skip_property_propagation = false) = 0;
+                         const bool is_back_edge = false) = 0;
 
     //! Convenience overload: Defaults to port 0 on both blocks
     //
     // \param src_block The block ID of the source block (e.g., "0/Radio#0)
     // \param dst_block The block ID of the destination block (e.g., "0/DDC#0)
-    // \param skip_property_propagation Disable property propagation on this
+    // \param is_back_edge Disable property propagation on this
     //                                  connection (see the UHD documentation)
     virtual void connect(const std::string& src_block,
                          const std::string& dst_block,
-                         const bool skip_property_propagation = false) = 0;
+                         const bool is_back_edge = false) = 0;
 
     //! Create an RX streamer
     //
