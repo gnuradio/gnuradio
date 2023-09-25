@@ -45,6 +45,7 @@ public:
     void set_iq_balance(const bool enable, const size_t chan) override;
     void set_iq_balance(const std::complex<double>& correction,
                         const size_t chan) override;
+    void issue_stream_cmd(const ::uhd::stream_cmd_t& cmd, const size_t chan) override;
     void enable_rx_timestamps(const bool enable, const size_t chan) override;
 
 private:
