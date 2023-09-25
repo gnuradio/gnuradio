@@ -21,6 +21,13 @@ parameters:
     label: Default Value
     dtype: ${ type }
     default: '0'
+-   id: entry_signal
+    label: Update Trigger
+    dtype: enum
+    default: editingFinished
+    options: [returnPressed, editingFinished]
+    option_labels: ["'Enter'", "'Enter' or focus lost"]
+    hide: part
 -   id: gui_hint
     label: GUI Hint
     dtype: gui_hint
@@ -43,7 +50,7 @@ templates:
         ${win}.addWidget(Qt.QLabel("${no_quotes(label,repr(id))}" + ": "))
         self._${id}_line_edit = Qt.QLineEdit(str(self.${id}))
         self._${id}_tool_bar.addWidget(self._${id}_line_edit)
-        self._${id}_line_edit.editingFinished.connect(
+        self._${id}_line_edit.${entry_signal}.connect(
             lambda: self.set_${id}(${type.conv}(str(self._${id}_line_edit.text()))))
         ${gui_hint() % win}
 
@@ -68,7 +75,7 @@ cpp_templates:
         this->_${id}_tool_bar->addWidget(_${id}_label);
         this->_${id}_line_edit = new QLineEdit(QString::number(this->${id}));
         this->_${id}_tool_bar->addWidget(this->_${id}_line_edit);
-        QObject::connect(this->_${id}_line_edit, &QLineEdit::editingFinished, this, [this] () {this->set_${id}(this->_${id}_line_edit->text().toInt());});
+        QObject::connect(this->_${id}_line_edit, &QLineEdit::${entry_signal}, this, [this] () {this->set_${id}(this->_${id}_line_edit->text().toInt());});
 
         ${gui_hint() % win}
 documentation: |-
