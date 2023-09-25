@@ -13,33 +13,12 @@
 
 #include <gnuradio/sync_block.h>
 #include <gnuradio/uhd/api.h>
+#include <gnuradio/uhd/cmd_keys.h>
 #include <uhd/usrp/multi_usrp.hpp>
 #include <cstdint>
 
 namespace gr {
 namespace uhd {
-
-GR_UHD_API const pmt::pmt_t cmd_chan_key();
-GR_UHD_API const pmt::pmt_t cmd_gain_key();
-GR_UHD_API const pmt::pmt_t cmd_power_key();
-GR_UHD_API const pmt::pmt_t cmd_freq_key();
-GR_UHD_API const pmt::pmt_t cmd_lo_offset_key();
-GR_UHD_API const pmt::pmt_t cmd_tune_key();
-GR_UHD_API const pmt::pmt_t cmd_mtune_key();
-GR_UHD_API const pmt::pmt_t cmd_lo_freq_key();
-GR_UHD_API const pmt::pmt_t cmd_dsp_freq_key();
-GR_UHD_API const pmt::pmt_t cmd_rate_key();
-GR_UHD_API const pmt::pmt_t cmd_bandwidth_key();
-GR_UHD_API const pmt::pmt_t cmd_time_key();
-GR_UHD_API const pmt::pmt_t cmd_mboard_key();
-GR_UHD_API const pmt::pmt_t cmd_antenna_key();
-GR_UHD_API const pmt::pmt_t cmd_direction_key();
-GR_UHD_API const pmt::pmt_t cmd_tag_key();
-GR_UHD_API const pmt::pmt_t cmd_gpio_key();
-GR_UHD_API const pmt::pmt_t cmd_pc_clock_resync_key();
-
-GR_UHD_API const pmt::pmt_t direction_rx();
-GR_UHD_API const pmt::pmt_t direction_tx();
 
 /*! Base class for USRP blocks.
  * \ingroup uhd_blk
