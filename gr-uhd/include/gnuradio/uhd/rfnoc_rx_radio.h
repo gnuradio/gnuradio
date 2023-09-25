@@ -160,6 +160,12 @@ public:
     // \param chan The channel for which this setting is for
     virtual void set_iq_balance(const std::complex<double>& correction,
                                 const size_t chan) = 0;
+
+    //! Enable/disable timestamp generation on a radio channel
+    //
+    // If set to false, packets produced by the radio will not contain timestamps.
+    // This can be useful when operation a loopback (radio to radio).
+    virtual void enable_rx_timestamps(const bool enable, const size_t chan) = 0;
 };
 
 } // namespace uhd
