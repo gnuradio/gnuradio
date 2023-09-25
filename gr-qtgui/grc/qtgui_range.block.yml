@@ -35,8 +35,8 @@ parameters:
     label: Widget
     dtype: enum
     default: counter_slider
-    options: [counter_slider, counter, slider, dial]
-    option_labels: [Counter + Slider, Counter, Slider, Knob]
+    options: [counter_slider, counter, slider, dial, eng_slider, eng]
+    option_labels: [Counter + Slider, Counter, Slider, Knob, Entry + Slider, Entry]
     hide: part
 -   id: orient
     label: Orientation
