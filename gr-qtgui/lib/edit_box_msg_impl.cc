@@ -134,7 +134,8 @@ edit_box_msg_impl::edit_box_msg_impl(data_type_t type,
     d_vlayout->addItem(d_hlayout);
     d_group->setLayout(d_vlayout);
 
-    QObject::connect(d_val, SIGNAL(editingFinished()), this, SLOT(edit_finished()));
+    // use returnPressed signal specifically to not trigger when focus is lost
+    QObject::connect(d_val, SIGNAL(returnPressed()), this, SLOT(edit_finished()));
 
     d_msg = pmt::PMT_NIL;
 
