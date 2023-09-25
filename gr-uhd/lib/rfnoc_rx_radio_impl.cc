@@ -129,5 +129,10 @@ void rfnoc_rx_radio_impl::set_iq_balance(const std::complex<double>& correction,
     return d_radio_ref->set_rx_iq_balance(correction, chan);
 }
 
+void rfnoc_rx_radio_impl::enable_rx_timestamps(const bool enable, const size_t chan)
+{
+    return d_radio_ref->enable_rx_timestamps(enable, chan);
+}
+
 } /* namespace uhd */
 } /* namespace gr */

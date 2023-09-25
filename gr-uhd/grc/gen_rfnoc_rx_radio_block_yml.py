@@ -97,6 +97,12 @@ COEFFS_PARAM = """- id: antenna${n}
   options: ['True', 'False']
   default: 'False'
   hide: ${'$'}{ 'none' if num_chans > ${n} else 'all' }
+- id: enable_timestamps${n}
+  label: 'Ch${n}: Enable Timestamps'
+  dtype: bool
+  options: ['True', 'False']
+  default: 'True'
+  hide: ${'$'}{ 'all' if ${n} >= num_chans else 'part' if enable_timestamps${n} else 'none' }
 """
 
 INIT_PARAM = """    ${'%'} if context.get('num_chans')() > ${n}:
@@ -106,6 +112,7 @@ INIT_PARAM = """    ${'%'} if context.get('num_chans')() > ${n}:
     self.${'$'}{id}.set_frequency(${'$'}{frequency${n}}, ${n})
     self.${'$'}{id}.set_dc_offset(${'$'}{dc_offset${n}}, ${n})
     self.${'$'}{id}.set_iq_balance(${'$'}{iq_balance${n}}, ${n})
+    self.${'$'}{id}.enable_rx_timestamps(${'$'}{enable_timestamps${n}}, ${n})
     ${'%'} endif
 """
 
