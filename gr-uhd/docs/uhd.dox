@@ -33,13 +33,6 @@ http://files.ettus.com/manual/annotated.html
 The UHD sink and source can be controlled by a message port. These message ports
 take commands, which are PMTs formatted as described in <a href="https://wiki.gnuradio.org/index.php/Message_Passing" target="_blank">Using messages as commands</a>.
 
-There is a legacy format, which will be deprecated in the future, where commands may
-be tuples, formatted as:
-
-    (command, value, [channel])
-
-See older versions of this manual for documentation on this deprecated command format.
-
 In general, every command consists of one or more key/value pairs (either stored as a
 PMT pair, or a dictionary). A full list of keys is listed below.
 
