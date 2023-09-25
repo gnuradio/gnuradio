@@ -8,7 +8,12 @@
 ########################################################################
 # Install header files
 ########################################################################
-install(FILES amsg_source.h api.h usrp_block.h usrp_sink.h usrp_source.h
+install(FILES amsg_source.h
+              api.h
+              cmd_keys.h
+              usrp_block.h
+              usrp_sink.h
+              usrp_source.h
         DESTINATION ${GR_INCLUDE_DIR}/gnuradio/uhd)
 
 if(ENABLE_UHD_RFNOC)
