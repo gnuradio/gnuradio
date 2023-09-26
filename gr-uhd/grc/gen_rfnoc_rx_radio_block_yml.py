@@ -46,6 +46,11 @@ outputs:
   vlen: 1
   multiplicity: ${'$'}{num_chans}
 
+inputs:
+- domain: message
+  id: command
+  optional: true
+
 templates:
   imports: |-
     from gnuradio import uhd
