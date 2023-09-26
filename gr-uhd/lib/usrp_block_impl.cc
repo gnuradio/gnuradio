@@ -122,6 +122,12 @@ const pmt::pmt_t gr::uhd::cmd_gpio_key()
     return val;
 }
 
+const pmt::pmt_t gr::uhd::cmd_stream_cmd_key()
+{
+    static const pmt::pmt_t val = pmt::mp("stream_cmd");
+    return val;
+}
+
 const pmt::pmt_t gr::uhd::direction_rx()
 {
     static const pmt::pmt_t val = pmt::mp("RX");
