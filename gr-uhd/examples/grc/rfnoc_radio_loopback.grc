@@ -1,0 +1,541 @@
+options:
+  parameters:
+    author: Martin Braun <martin.braun@ettus.com>
+    catch_exceptions: 'True'
+    category: '[GRC Hier Blocks]'
+    cmake_opt: ''
+    comment: ''
+    copyright: (C) 2023 Ettus Research, a National Instruments Brand
+    description: This flowgraph demonstrated RFNoC loopback capabilities on a single
+      device. It assumes a default FPGA bitfile, which includes DDC and DUC blocks.
+      It allows receiving on one frequency, and re-transmitting on another (bent-pipe).
+    gen_cmake: 'On'
+    gen_linking: dynamic
+    generate_options: qt_gui
+    hier_block_src_path: '.:'
+    id: rfnoc_radio_loopback
+    max_nouts: '0'
+    output_language: python
+    placement: (0,0)
+    qt_qss_theme: ''
+    realtime_scheduling: ''
+    run: 'True'
+    run_command: '{python} -u {filename}'
+    run_options: prompt
+    sizing_mode: fixed
+    thread_safe_setters: ''
+    title: 'RFNoC: Radio Loopback Example'
+    window_size: (1000,1000)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 8]
+    rotation: 0
+    state: enabled
+
+blocks:
+- name: dev_addr
+  id: variable
+  parameters:
+    comment: ''
+    value: '''type=x300'''
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [352, 8.0]
+    rotation: 0
+    state: enabled
+- name: master_clock_rate
+  id: variable
+  parameters:
+    comment: ''
+    value: 200e6
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [456, 8.0]
+    rotation: 0
+    state: enabled
+- name: rx_ant
+  id: variable_qtgui_entry
+  parameters:
+    comment: ''
+    entry_signal: editingFinished
+    gui_hint: ''
+    label: RX Antenna
+    type: string
+    value: '"RX2"'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1232, 16.0]
+    rotation: 0
+    state: enabled
+- name: rx_freq
+  id: variable_qtgui_range
+  parameters:
+    comment: 'Note: None of these are probed from the hardware, so the available
+
+      gain and frequency ranges may not be actually available.'
+    gui_hint: ''
+    label: RX Frequency (Hz)
+    min_len: '200'
+    orient: QtCore.Qt.Horizontal
+    rangeType: float
+    start: '0'
+    step: 1e6
+    stop: 7.2e9
+    value: 1e9
+    widget: counter_slider
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [736, 16.0]
+    rotation: 0
+    state: enabled
+- name: rx_gain
+  id: variable_qtgui_range
+  parameters:
+    comment: ''
+    gui_hint: ''
+    label: RX Gain (dB)
+    min_len: '200'
+    orient: QtCore.Qt.Horizontal
+    rangeType: float
+    start: '0'
+    step: '1'
+    stop: '80'
+    value: '30'
+    widget: counter_slider
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1008, 16.0]
+    rotation: 0
+    state: enabled
+- name: rx_slot
+  id: variable
+  parameters:
+    comment: 'These ''slot'' variables are used for the ''instance'' parameter of
+      the various blocks.
+
+      If you want to receive on 0/Radio#0, and transmit on 0/Radio#1, set rx_slot
+      and tx_slot to 0 and 1, respectively.'
+    value: '0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [752, 224.0]
+    rotation: 0
+    state: enabled
+- name: stream_cmd_dict
+  id: variable
+  parameters:
+    comment: ''
+    value: '{''stream_now'': True, ''stream_mode'': ''start_cont'' if stream_on else
+      ''stop_cont''}'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [112, 424.0]
+    rotation: 0
+    state: enabled
+- name: stream_on
+  id: variable_qtgui_toggle_button_msg
+  parameters:
+    comment: 'All of this is simply to provide a toggle switch to turn loopback on
+      and off.
+
+      By default, the RFNoC RX Radio does not stream, it waits for a stream command.
+
+      In this flow graph, we provide that stream command manually, through the
+
+      command message port.'
+    gui_hint: ''
+    initPressed: 'False'
+    label: Enable Stream
+    outputmsgname: value
+    pressBackgroundColor: default
+    pressFontColor: default
+    pressed: '1'
+    relBackgroundColor: default
+    relFontColor: default
+    released: '0'
+    type: int
+    value: '0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [112, 496.0]
+    rotation: 0
+    state: enabled
+- name: tx_ant
+  id: variable_qtgui_entry
+  parameters:
+    comment: ''
+    entry_signal: editingFinished
+    gui_hint: ''
+    label: TX Antenna
+    type: string
+    value: '"TX/RX"'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1232, 104.0]
+    rotation: 0
+    state: enabled
+- name: tx_freq
+  id: variable_qtgui_range
+  parameters:
+    comment: ''
+    gui_hint: ''
+    label: TX Frequency (Hz)
+    min_len: '200'
+    orient: QtCore.Qt.Horizontal
+    rangeType: float
+    start: '0'
+    step: 1e6
+    stop: 7.2e9
+    value: 2e9
+    widget: counter_slider
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [872, 16.0]
+    rotation: 0
+    state: enabled
+- name: tx_gain
+  id: variable_qtgui_range
+  parameters:
+    comment: ''
+    gui_hint: ''
+    label: TX Gain (dB)
+    min_len: '200'
+    orient: QtCore.Qt.Horizontal
+    rangeType: float
+    start: '0'
+    step: '1'
+    stop: '80'
+    value: '30'
+    widget: counter_slider
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1120, 16.0]
+    rotation: 0
+    state: enabled
+- name: tx_slot
+  id: variable
+  parameters:
+    comment: ''
+    value: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [824, 224.0]
+    rotation: 0
+    state: enabled
+- name: uhd_rfnoc_graph_0
+  id: uhd_rfnoc_graph
+  parameters:
+    alias: ''
+    clock_source: ''
+    comment: 'To select a specific device, change the dev_addr variable (e.g., ''addr=192.168.30.2'',
+      ''type=x4xx'', etc.)
+
+      We set the master clock rate separately, because we also use that variable as
+      the sampling rate in the
+
+      radio and resampler blocks.'
+    dev_addr: dev_addr
+    dev_args: '"master_clock_rate=" + str(master_clock_rate)'
+    num_mboards: '1'
+    time_source: ''
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [184, 8.0]
+    rotation: 0
+    state: enabled
+- name: blocks_null_sink_0
+  id: blocks_null_sink
+  parameters:
+    affinity: ''
+    alias: ''
+    bus_structure_sink: '[[0,],]'
+    comment: ''
+    num_inputs: '1'
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1208, 584.0]
+    rotation: 0
+    state: enabled
+- name: blocks_null_source_0
+  id: blocks_null_source
+  parameters:
+    affinity: ''
+    alias: ''
+    bus_structure_source: '[[0,],]'
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_outputs: '1'
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [920, 584.0]
+    rotation: 0
+    state: enabled
+- name: blocks_throttle2_0
+  id: blocks_throttle2
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: 'This mini-flowgraph is simply here to keep the flow graph alive from
+      a
+
+      GNU Radio perspective, as none of the other blocks do anything from
+
+      GNU Radio''s point of view.'
+    ignoretag: 'True'
+    limit: auto
+    maximum: '0.1'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    samples_per_second: 1e5
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1048, 568.0]
+    rotation: 0
+    state: enabled
+- name: blocks_var_to_msg_0
+  id: blocks_var_to_msg
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    msgname: stream_cmd
+    target: stream_cmd_dict
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [112, 352.0]
+    rotation: 0
+    state: enabled
+- name: import_0
+  id: import
+  parameters:
+    alias: ''
+    comment: ''
+    imports: import pmt
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [272, 424.0]
+    rotation: 0
+    state: enabled
+- name: snippet_0
+  id: snippet
+  parameters:
+    alias: ''
+    code: self.rfnoc_graph.commit()
+    comment: 'This code will commit the RFNoC graph before the application starts.
+
+      The RFNoC streamers will handle the comitting of a flow graph, but
+
+      in abscence of streamers, this snippet is a good substitute.'
+    priority: '0'
+    section: main_after_init
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [120, 176.0]
+    rotation: 0
+    state: enabled
+- name: uhd_rfnoc_ddc_0
+  id: uhd_rfnoc_ddc
+  parameters:
+    affinity: ''
+    alias: ''
+    block_args: ''
+    comment: 'The DDC and DUC blocks do nothing in this application. However, they
+      happen to be
+
+      instantiated in most default bitfiles, so we need to include them here as well.'
+    device_select: '-1'
+    freq0: '0'
+    freq1: '0'
+    freq2: '0'
+    freq3: '0'
+    instance_index: rx_slot
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_chans: '1'
+    output_rate0: master_clock_rate
+    output_rate1: '0'
+    output_rate2: '0'
+    output_rate3: '0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [776, 376.0]
+    rotation: 0
+    state: enabled
+- name: uhd_rfnoc_duc_0
+  id: uhd_rfnoc_duc
+  parameters:
+    affinity: ''
+    alias: ''
+    block_args: ''
+    comment: ''
+    device_select: '-1'
+    freq0: '0'
+    freq1: '0'
+    freq2: '0'
+    freq3: '0'
+    input_rate0: master_clock_rate
+    input_rate1: '0'
+    input_rate2: '0'
+    input_rate3: '0'
+    instance_index: tx_slot
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_chans: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1048, 376.0]
+    rotation: 0
+    state: enabled
+- name: uhd_rfnoc_rx_radio_0
+  id: uhd_rfnoc_rx_radio
+  parameters:
+    affinity: ''
+    alias: ''
+    antenna0: rx_ant
+    antenna1: RX2
+    antenna2: RX2
+    antenna3: RX2
+    bandwidth0: '0'
+    bandwidth1: '0'
+    bandwidth2: '0'
+    bandwidth3: '0'
+    block_args: ''
+    comment: 'It is important to disable timestamps for this RX radio.
+
+      The TX radio will interpret timestamps as when to transmit, which
+
+      means all packets would be considered late if timestamps were
+
+      enabled.'
+    dc_offset0: 'False'
+    dc_offset1: 'False'
+    dc_offset2: 'False'
+    dc_offset3: 'False'
+    device_select: '-1'
+    enable_timestamps0: 'False'
+    enable_timestamps1: 'True'
+    enable_timestamps2: 'True'
+    enable_timestamps3: 'True'
+    frequency0: rx_freq
+    frequency1: 1e9
+    frequency2: 1e9
+    frequency3: 1e9
+    gain0: rx_gain
+    gain1: '0'
+    gain2: '0'
+    gain3: '0'
+    instance_index: rx_slot
+    iq_balance0: 'False'
+    iq_balance1: 'False'
+    iq_balance2: 'False'
+    iq_balance3: 'False'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_chans: '1'
+    rate: master_clock_rate
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [520, 324.0]
+    rotation: 0
+    state: enabled
+- name: uhd_rfnoc_tx_radio_0
+  id: uhd_rfnoc_tx_radio
+  parameters:
+    affinity: ''
+    alias: ''
+    antenna0: tx_ant
+    antenna1: RX2
+    antenna2: RX2
+    antenna3: RX2
+    bandwidth0: '0'
+    bandwidth1: '0'
+    bandwidth2: '0'
+    bandwidth3: '0'
+    block_args: ''
+    comment: ''
+    device_select: '-1'
+    frequency0: tx_freq
+    frequency1: 1e9
+    frequency2: 1e9
+    frequency3: 1e9
+    gain0: tx_gain
+    gain1: '0'
+    gain2: '0'
+    gain3: '0'
+    instance_index: tx_slot
+    num_chans: '1'
+    rate: master_clock_rate
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1304, 352.0]
+    rotation: 0
+    state: enabled
+
+connections:
+- [blocks_null_source_0, '0', blocks_throttle2_0, '0']
+- [blocks_throttle2_0, '0', blocks_null_sink_0, '0']
+- [blocks_var_to_msg_0, msgout, uhd_rfnoc_rx_radio_0, command]
+- [uhd_rfnoc_ddc_0, '0', uhd_rfnoc_duc_0, '0']
+- [uhd_rfnoc_duc_0, '0', uhd_rfnoc_tx_radio_0, '0']
+- [uhd_rfnoc_rx_radio_0, '0', uhd_rfnoc_ddc_0, '0']
+
+metadata:
+  file_format: 1
+  grc_version: v3.11.0.0git-549-g9a9a82e3
