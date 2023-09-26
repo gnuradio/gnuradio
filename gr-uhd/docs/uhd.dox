@@ -95,6 +95,7 @@ Command name | Value Type   | Description
 `mboard`     | int          | Specify mboard index, where applicable.
 `antenna`    | string       | See usrp_block::set_antenna(). Defaults to all channels.
 `gpio`       | gpio         | PMT dictionary including bank, attr, value, mask for GPIO. See notes.
+`stream_cmd` | dict (stream command) | PMT dictionary mirroring UHD's stream_cmd_t. Supported by RFNoC RX Radio. See below for details.
 
 Special types:
 
@@ -103,6 +104,7 @@ Special types:
   It supports fully customized tunings with all policies and integer-N tuning. The policies are strings A, N, M for automatic, none and manual tuning.
 - timestamp: A pair composed of (long full_secs, double frac_secs). Similar to uhd::time_spec_t
 - gpio: This is a PMT dictionary with four key/value pairs: bank (string), attr (string), value (double) and mask (double). The `gpio` command calls `set_gpio_attr` with the elements from the dictionary as arguments. Can optionally contain `mboard` to specify the mainboard. Defaults to `0` (first mboard).
+- Stream command dictionaryA dictionary with keys `stream_mode`, `num_samps`, `time_spec`, and `stream_now`.
 
 Further notes on command `mtune`:
 
@@ -113,6 +115,14 @@ The object is of type pmt::dict and has the same fields as uhd::tune_request_t:
 - `rf_freq_policy`: policy for RF tuning. Should be a string "A" (automatic), "M" (manual) or "N" (none). If not set, defaults to "A".
 - `target_freq`: target frequency (for automatic running) as pmt double type
 - `args`: string containing additional arguments, for example for integer N tuning.
+
+Further notes on command `stream_cmd`:
+
+The object is of type pmt::dict and has the same fields as uhd::stream_cmd_t:
+- `stream_mode`: This is a string (not an enum or int) and takes the same values as the UHD Python API uses for stream modes (`start_cont`, `stop_cont`, `num_done`, and `num_more`).
+- `stream_now`: Boolean
+- `time_spec`: When `stream_now` is false, this is the absolute time when the stream command is executed.
+- `num_samps`: When `stream_mode` is `num_done`, this is the number of samples that will be received.
 
 Example:
 
