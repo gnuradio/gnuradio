@@ -11,7 +11,10 @@
 
 #include <gnuradio/block.h>
 #include <gnuradio/uhd/rfnoc_graph.h>
+#include <pmt/pmt.h>
 #include <uhd/rfnoc/noc_block_base.hpp>
+#include <unordered_map>
+#include <functional>
 #include <string>
 
 namespace gr {
@@ -149,7 +152,30 @@ public:
 
     std::vector<std::string> get_property_ids();
 
+
+protected:
+    using cmd_handler_t = std::function<void(const pmt::pmt_t&, int, const pmt::pmt_t&)>;
+
+    //! Register a new handler for command key \p cmd
+    void register_msg_cmd_handler(const std::string& cmd, cmd_handler_t handler);
+
 private:
+    /**********************************************************************
+     * Command Interface
+     **********************************************************************/
+    //! Receives commands and handles them
+    void _msg_handler_command(pmt::pmt_t msg);
+
+    //! For a given argument, call the associated handler, or if none exists,
+    // show a warning through the logging interface.
+    void _dispatch_msg_cmd_handler(const std::string& cmd,
+                                   const pmt::pmt_t& val,
+                                   int chan,
+                                   pmt::pmt_t& msg);
+
+    //! Stores the individual command handlers
+    std::unordered_map<std::string, cmd_handler_t> _msg_cmd_handlers;
+
     //! Reference to the underlying RFNoC block
     ::uhd::rfnoc::noc_block_base::sptr d_block_ref;
 };
