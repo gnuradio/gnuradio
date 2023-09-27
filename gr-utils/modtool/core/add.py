@@ -272,7 +272,7 @@ class ModToolAdd(ModTool):
                         'bind_' + self.info['blockname'] + '(m);')
         ed.write()
 
-        self.scm.mark_files_updated((self._file['ccpybind']))
+        self.scm.mark_files_updated((self._file['ccpybind'],))
 
         if self.info['version'] in ['310']:
             prefix_include_root = '/'.join(('gnuradio', self.info['modname']))
@@ -352,7 +352,7 @@ class ModToolAdd(ModTool):
             ed.append_value('list', fname_cc, to_ignore_start=cmake_list_var,
                             to_ignore_end='python_bindings.cc')
             ed.write()
-            self.scm.mark_files_updated((self._file['cmpybind']))
+            self.scm.mark_files_updated((self._file['cmpybind'],))
 
     def _run_python_qa(self):
         """ Do everything that needs doing in the subdir 'python' to add
