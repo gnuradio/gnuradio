@@ -2,6 +2,14 @@
 <img src="https://github.com/gnuradio/gnuradio/blob/main/docs/gnuradio.png" width="75%" />
 </p>
 
+**NOTE: the dev-4.0 branch currently represents inactive development**  
+
+The codebase that will become GR 4.0 is being developed by Facility for Antiproton & Ion Research, Darmstadt, Germany and maintained here: https://github.com/fair-acc/graph-prototype
+
+The plan is that this `graph-prototype` codebase will be soon migrated to a branch here in the `gnuradio` repository
+
+## Legacy information about dev-4.0
+
 The `dev-4.0` branch is where GR 4.0 development will be taking place.  
 It is expected that API and functionality will change rapidly until 4.0 is released
 
