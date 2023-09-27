@@ -208,8 +208,8 @@ class SCMRepoFactory(object):
                 if issubclass(glbl, SCMRepository):
                     the_scm = glbl(self.path_to_repo)
                     if the_scm.is_active():
-                        logger.info('Found SCM of type:',
-                                    the_scm.handles_scm_type)
+                        logger.info(
+                            f"Found SCM of type: {the_scm.handles_scm_type}")
                         return the_scm
             except (TypeError, AttributeError, InvalidSCMError):
                 pass
