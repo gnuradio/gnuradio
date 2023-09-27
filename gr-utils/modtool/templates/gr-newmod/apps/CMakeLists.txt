@@ -8,7 +8,4 @@
 
 include(GrPython)
 
-GR_PYTHON_INSTALL(
-    PROGRAMS
-    DESTINATION bin
-)
+gr_python_install(PROGRAMS DESTINATION bin)
