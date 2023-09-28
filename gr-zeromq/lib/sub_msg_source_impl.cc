@@ -58,7 +58,12 @@ sub_msg_source_impl::sub_msg_source_impl(char* address, int timeout, bool bind)
     message_port_register_out(d_port);
 }
 
-sub_msg_source_impl::~sub_msg_source_impl() {}
+sub_msg_source_impl::~sub_msg_source_impl()
+{
+    d_context.shutdown();
+    d_socket.close();
+    d_context.close();
+}
 
 bool sub_msg_source_impl::start()
 {
