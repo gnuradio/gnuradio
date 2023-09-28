@@ -56,7 +56,12 @@ push_msg_sink_impl::push_msg_sink_impl(char* address, int timeout, bool bind)
     set_msg_handler(pmt::mp("in"), [this](pmt::pmt_t msg) { this->handler(msg); });
 }
 
-push_msg_sink_impl::~push_msg_sink_impl() {}
+push_msg_sink_impl::~push_msg_sink_impl()
+{
+    d_context.shutdown();
+    d_socket.close();
+    d_context.close();
+}
 
 void push_msg_sink_impl::handler(pmt::pmt_t msg)
 {

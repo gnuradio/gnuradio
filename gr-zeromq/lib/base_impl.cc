@@ -85,7 +85,12 @@ base_impl::base_impl(int type,
     }
 }
 
-base_impl::~base_impl() {}
+base_impl::~base_impl()
+{
+    d_context.shutdown();
+    d_socket.close();
+    d_context.close();
+}
 
 std::string base_impl::last_endpoint()
 {

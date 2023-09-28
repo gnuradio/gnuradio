@@ -58,7 +58,12 @@ rep_msg_sink_impl::rep_msg_sink_impl(char* address, int timeout, bool bind)
     message_port_register_in(d_port);
 }
 
-rep_msg_sink_impl::~rep_msg_sink_impl() {}
+rep_msg_sink_impl::~rep_msg_sink_impl()
+{
+    d_context.shutdown();
+    d_socket.close();
+    d_context.close();
+}
 
 bool rep_msg_sink_impl::start()
 {
@@ -79,7 +84,7 @@ void rep_msg_sink_impl::readloop()
     while (!d_finished) {
 
         // while we have data, wait for query...
-        while (!empty_p(d_port)) {
+        while (!empty_p(d_port) && !d_finished) {
 
             // wait for query...
             zmq::pollitem_t items[] = {
