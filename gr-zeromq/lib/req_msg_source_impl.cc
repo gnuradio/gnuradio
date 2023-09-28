@@ -59,7 +59,12 @@ req_msg_source_impl::req_msg_source_impl(char* address, int timeout, bool bind)
     message_port_register_out(d_port);
 }
 
-req_msg_source_impl::~req_msg_source_impl() {}
+req_msg_source_impl::~req_msg_source_impl()
+{
+    d_context.shutdown();
+    d_socket.close();
+    d_context.close();
+}
 
 bool req_msg_source_impl::start()
 {
@@ -131,6 +136,9 @@ void req_msg_source_impl::readloop()
             std::this_thread::sleep_for(100us);
         }
     }
+    d_context.shutdown();
+    d_socket.close();
+    d_context.close();
 }
 
 } /* namespace zeromq */

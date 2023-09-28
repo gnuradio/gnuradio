@@ -59,7 +59,12 @@ pull_msg_source_impl::pull_msg_source_impl(char* address, int timeout, bool bind
     message_port_register_out(d_port);
 }
 
-pull_msg_source_impl::~pull_msg_source_impl() {}
+pull_msg_source_impl::~pull_msg_source_impl()
+{
+    d_context.shutdown();
+    d_socket.close();
+    d_context.close();
+}
 
 bool pull_msg_source_impl::start()
 {
