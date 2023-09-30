@@ -14,6 +14,7 @@ install(
           adaptive_algorithm_lms.h
           adaptive_algorithm_nlms.h
           additive_scrambler_bb.h
+          afsk_mod_bf.h
           api.h
           binary_slicer_fb.h
           burst_shaper.h

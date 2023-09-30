@@ -1,0 +1,60 @@
+id: digital_afsk_mod_bf
+label: AFSK Modulator
+
+templates:
+  imports: from gnuradio import digital
+  make: digital.afsk_mod_bf(${samp_rate}, ${freq_zero}, ${freq_one}, ${bit_rate}, ${bits}, ${endianness})
+
+parameters:
+- id: samp_rate
+  label: Sample Rate
+  dtype: int
+  default: samp_rate
+- id: freq_zero
+  label: Space Freq (0)
+  dtype: float
+  default: 1200
+- id: freq_one
+  label: Mark Freq (1)
+  dtype: float
+  default: 2200
+- id: bit_rate
+  label: Bit Rate
+  dtype: int
+  default: 1200
+- id: bits
+  label: Input is Bits
+  dtype: bool
+  options: ['True', 'False']
+  default: 'True'
+- id: endianness
+  label: Endianness
+  options: [gr.GR_MSB_FIRST, gr.GR_LSB_FIRST]
+  option_labels: [MSB, LSB]
+
+inputs:
+- label: in
+  dtype: byte
+
+outputs:
+- label: out
+  dtype: float
+
+documentation: |-
+    This block generates an AFSK signal. It's implemented using a CPFSK mechanism for continuous signal.
+
+    Input:
+      A stream of bytes. The bytes can be either unpacked already or the block can slice them into bits by itself. When the block should slice by itself, pay attention to the byte order, please. If the input is bits already, the byte order option will have no effect.
+
+    Output:
+      A stream of floating point numbers representing the modulated audio signal.
+
+    Parameters:
+      Sample Rate:     Give the output sample rate in samples per second
+      Space Freq (0):  Audio frequency for logical zero in Hz
+      Mark Freq (1):   Audio frquency for logical one in Hz
+      Bit Rate:        The amount of Bits transmitted per second for output signal
+      Input is Bits:   Is the input unpacked, so that there is one bit per byte already?
+      Endianness:      Whether input is in LSB or MSB. Has no effect if 'Input is Bits' is True.
+
+file_format: 1
