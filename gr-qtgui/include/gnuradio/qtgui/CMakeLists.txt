@@ -32,6 +32,7 @@ install(
           form_menus.h
           fosphor_display.h
           fosphor_formatter.h
+          freq_sink.h
           freq_sink_c.h
           freq_sink_f.h
           freqcontrolpanel.h
@@ -43,12 +44,14 @@ install(
           plot_raster.h
           plot_waterfall.h
           qtgui_types.h
+          sink.h
           sink_c.h
           sink_f.h
           spectrumUpdateEvents.h
           timeRasterGlobalData.h
           time_raster_sink_b.h
           time_raster_sink_f.h
+          time_sink.h
           time_sink_c.h
           time_sink_f.h
           timecontrolpanel.h
@@ -59,6 +62,7 @@ install(
           vector_sink_f.h
           vectordisplayform.h
           waterfallGlobalData.h
+          waterfall_sink.h
           waterfall_sink_c.h
           waterfall_sink_f.h
           waterfalldisplayform.h
