@@ -139,7 +139,7 @@ templates:
 
 
 cpp_templates:
-  includes: ['#include <gnuradio/qtgui/sink.h>','#include <gnuradio/qtgui/${type.fcn}.h>']
+  includes: ['#include <gnuradio/qtgui/sink.h>']
   declarations: gr::qtgui::${type.fcn}::sptr ${id};
   make: |-
     <%
@@ -156,12 +156,12 @@ cpp_templates:
             ${plottime}, //plottime
             ${plotconst} //plotconst
         );
-    ${id}->set_update_time(1.0/${rate});   
+    ${id}->set_update_time(1.0/${rate});
     ${id}->enable_rf_freq(${showrf});
     QWidget* _${id}_win;
     _${id}_win = this->${id}->qwidget();
     ${gui_hint() % win}
-    
+
   link: ['gnuradio::gnuradio-qtgui']
   translations:
     'True': 'true'
