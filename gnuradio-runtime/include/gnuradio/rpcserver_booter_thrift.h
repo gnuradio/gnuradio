@@ -13,10 +13,9 @@
 
 #include "thrift/ControlPort.h"
 #include <gnuradio/rpcserver_booter_base.h>
+#include <gnuradio/rpcserver_thrift.h>
 #include <gnuradio/thrift_server_template.h>
 
-class rpcserver_base;
-class rpcserver_thrift;
 
 class rpcserver_booter_thrift
     : public virtual rpcserver_booter_base,
@@ -26,11 +25,11 @@ class rpcserver_booter_thrift
 {
 public:
     rpcserver_booter_thrift();
-    ~rpcserver_booter_thrift();
+    ~rpcserver_booter_thrift() override;
 
-    rpcserver_base* i();
-    const std::string& type() { return d_type; }
-    const std::vector<std::string> endpoints();
+    rpcserver_base* i() override;
+    const std::string& type() override { return d_type; }
+    const std::vector<std::string> endpoints() override;
 
 private:
     std::string d_type;

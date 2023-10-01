@@ -30,21 +30,12 @@ jobs:
         with:
           repository: ${{ fromJSON(steps.get-pr.outputs.result).head.repo.full_name }}
           ref: ${{ fromJSON(steps.get-pr.outputs.result).head.ref }}
-      - name: Create environment file
-        uses: DamianReeves/write-file-action@v1.0
-        with:
-          path: rerender-env.yml
-          write-mode: overwrite
-          contents: |
-            name: rerender-env
-            channels:
-              - conda-forge
-            dependencies:
-              - conda-smithy
       - name: Install conda-smithy
-        uses: mamba-org/provision-with-micromamba@main
+        uses: mamba-org/setup-micromamba@v1
         with:
-          environment-file: rerender-env.yml
+          environment-name: rerender-env
+          create-args: >-
+            conda-smithy
       - name: Re-render
         shell: bash -l {0}
         run: |

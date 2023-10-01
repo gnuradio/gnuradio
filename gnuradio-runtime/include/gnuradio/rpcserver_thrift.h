@@ -29,22 +29,24 @@ class rpcserver_thrift : public virtual rpcserver_base, public GNURadio::Control
 {
 public:
     rpcserver_thrift();
-    virtual ~rpcserver_thrift();
+    ~rpcserver_thrift() override;
 
     void registerConfigureCallback(const std::string& id,
-                                   const configureCallback_t callback);
-    void unregisterConfigureCallback(const std::string& id);
+                                   const configureCallback_t callback) override;
+    void unregisterConfigureCallback(const std::string& id) override;
 
-    void registerQueryCallback(const std::string& id, const queryCallback_t callback);
-    void unregisterQueryCallback(const std::string& id);
+    void registerQueryCallback(const std::string& id,
+                               const queryCallback_t callback) override;
+    void unregisterQueryCallback(const std::string& id) override;
 
-    void registerHandlerCallback(const std::string& id, const handlerCallback_t callback);
-    void unregisterHandlerCallback(const std::string& id);
+    void registerHandlerCallback(const std::string& id,
+                                 const handlerCallback_t callback) override;
+    void unregisterHandlerCallback(const std::string& id) override;
 
-    void setKnobs(const GNURadio::KnobMap&);
-    void getKnobs(GNURadio::KnobMap&, const GNURadio::KnobIDList&);
-    void getRe(GNURadio::KnobMap&, const GNURadio::KnobIDList&);
-    void properties(GNURadio::KnobPropMap&, const GNURadio::KnobIDList& knobs);
+    void setKnobs(const GNURadio::KnobMap&) override;
+    void getKnobs(GNURadio::KnobMap&, const GNURadio::KnobIDList&) override;
+    void getRe(GNURadio::KnobMap&, const GNURadio::KnobIDList&) override;
+    void properties(GNURadio::KnobPropMap&, const GNURadio::KnobIDList& knobs) override;
 
     /*!
      *  \brief Call this to post a message to the \p port for the block
@@ -72,9 +74,9 @@ public:
      */
     void postMessage(const std::string& alias,
                      const std::string& port,
-                     const std::string& msg);
+                     const std::string& msg) override;
 
-    virtual void shutdown();
+    void shutdown() override;
 
 private:
     static gr::logger_ptr d_logger;

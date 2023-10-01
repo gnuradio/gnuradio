@@ -11,10 +11,9 @@
 #ifndef RPCSERVER_BOOTER_BASE
 #define RPCSERVER_BOOTER_BASE
 
+#include <gnuradio/rpcserver_base.h>
 #include <string>
 #include <vector>
-
-class rpcserver_base;
 
 class rpcserver_booter_base
 {
