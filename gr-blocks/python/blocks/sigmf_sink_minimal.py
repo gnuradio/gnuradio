@@ -86,3 +86,4 @@ class sigmf_sink_minimal(gr.hier_block2):
 
         with open(filename + '.sigmf-meta', 'w') as f_meta:
             json.dump(meta_dict, f_meta, indent=2)
+            f_meta.write('\n')
