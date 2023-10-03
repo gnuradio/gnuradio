@@ -4,27 +4,27 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
 #
 
-import os
 import configparser
+import os
 import subprocess
 
-from gi.repository import Gtk, Gdk
+from gi.repository import Gdk, Gtk
 
-from . import Constants
-from . import Dialogs
-from . import Utils
-from .canvas.colors import LIGHT_THEME_STYLES, DARK_THEME_STYLES
+from . import Constants, Dialogs, Utils
+from .canvas.colors import DARK_THEME_STYLES, LIGHT_THEME_STYLES
 
 
 def have_dark_theme():
     """
     Returns true if the currently selected theme is a dark one.
     """
+
     def is_dark_theme(theme_name):
         """
         Check if a theme is dark based on its name.
         """
         return theme_name and (theme_name in Constants.GTK_DARK_THEMES or "dark" in theme_name.lower())
+
     # GoGoGo
     config = configparser.ConfigParser()
     config.read(os.path.expanduser(Constants.GTK_SETTINGS_INI_PATH))
@@ -64,6 +64,7 @@ add_style_provider()
 
 class InputParam(Gtk.HBox):
     """The base class for an input parameter inside the input parameters dialog."""
+
     expand = False
 
     def __init__(self, param, changed_callback=None, editing_callback=None, transient_for=None):
@@ -79,13 +80,28 @@ class InputParam(Gtk.HBox):
         self.label.show()
         self.pack_start(self.label, False, False, 0)
 
+        self.dtype_label = None
+        ignore_dtype_labels = [
+            "dir_select",
+            "enum",
+            "file_open",
+            "file_save",
+            "gui_hint",
+            "id",
+            "_multiline",
+            "_multiline_python_external",
+            "raw"
+        ]
+        if self.param.dtype not in ignore_dtype_labels:
+            self.dtype_label = Gtk.Label()
+            self.dtype_label.set_size_request(Utils.scale_scalar(50), -1)
+            self.dtype_label.show()
+            self.pack_end(self.dtype_label, False, False, 10)
+
         self.tp = None
         self._have_pending_changes = False
 
         self.connect('show', self._update_gui)
-
-    def set_color(self, css_name):
-        pass
 
     def set_tooltip_text(self, text):
         pass
@@ -99,7 +115,8 @@ class InputParam(Gtk.HBox):
         """
         self.label.set_markup(
             self.param.format_label_markup(self._have_pending_changes))
-        self.set_color('dtype_' + self.param.dtype)
+        if self.dtype_label is not None:
+            self.dtype_label.set_markup(self.param.format_dtype_markup())
 
         self.set_tooltip_text(self.param.format_tooltip_text())
 
@@ -159,15 +176,13 @@ class EntryParam(InputParam):
     def get_text(self):
         return self._input.get_text()
 
-    def set_color(self, css_name):
-        self._input.set_name(css_name)
-
     def set_tooltip_text(self, text):
         self._input.set_tooltip_text(text)
 
 
 class MultiLineEntryParam(InputParam):
     """Provide an multi-line box for strings."""
+
     expand = True
 
     def __init__(self, *args, **kwargs):
@@ -194,15 +209,11 @@ class MultiLineEntryParam(InputParam):
                             include_hidden_chars=False)
         return text.strip()
 
-    def set_color(self, css_name):
-        self._view.set_name(css_name)
-
     def set_tooltip_text(self, text):
         self._view.set_tooltip_text(text)
 
 
 class PythonEditorParam(InputParam):
-
     def __init__(self, *args, **kwargs):
         InputParam.__init__(self, *args, **kwargs)
         open_button = self._open_button = Gtk.Button(label='Open in Editor')
@@ -290,11 +301,6 @@ class EnumEntryParam(InputParam):
             self._input.get_child().set_tooltip_text(text)
         else:
             self._input.set_tooltip_text(text)
-
-    def set_color(self, css_name):
-        self._input.get_child().set_name(
-            css_name if not self.has_custom_value else 'enum_custom'
-        )
 
 
 class FileParam(EntryParam):
