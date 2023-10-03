@@ -65,6 +65,9 @@ class Param(CoreParam):
             label=Utils.encode(self.name)
         )
 
+    def format_dtype_markup(self):
+        return f'<span font_desc="Sans 9">[{Utils.encode(self.dtype)}]</span>'
+
     def format_tooltip_text(self):
         errors = self.get_error_messages()
         tooltip_lines = ['Key: ' + self.key, 'Type: ' + self.dtype]
