@@ -23,6 +23,7 @@ options:
     sizing_mode: fixed
     thread_safe_setters: ''
     title: Showcasing the PLL Freq Det
+    window_size: (1000,1000)
   states:
     bus_sink: false
     bus_source: false
@@ -82,7 +83,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [456, 188.0]
+    coordinate: [336, 188.0]
     rotation: 0
     state: true
 - name: analog_sig_source_x_0
@@ -100,6 +101,7 @@ blocks:
     offset: '0'
     phase: '0'
     samp_rate: samp_rate
+    showports: 'False'
     type: complex
     waveform: analog.GR_COS_WAVE
   states:
@@ -125,7 +127,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [696, 204.0]
+    coordinate: [640, 204.0]
     rotation: 0
     state: true
 - name: blocks_multiply_const_vxx_1
@@ -147,25 +149,27 @@ blocks:
     coordinate: [888, 204.0]
     rotation: 0
     state: true
-- name: blocks_throttle_0
-  id: blocks_throttle
+- name: blocks_throttle2_0
+  id: blocks_throttle2
   parameters:
     affinity: ''
     alias: ''
     comment: "Only slows down\nprocessing of \nsamples (for easier\nvisualization)"
     ignoretag: 'True'
+    limit: items
+    maximum: '100'
     maxoutbuf: '0'
     minoutbuf: '0'
     samples_per_second: samp_rate
-    type: complex
+    type: float
     vlen: '1'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [248, 204.0]
+    coordinate: [640, 324.0]
     rotation: 0
-    state: true
+    state: enabled
 - name: import_0
   id: import
   parameters:
@@ -176,7 +180,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [296, 20.0]
+    coordinate: [304, 20.0]
     rotation: 0
     state: true
 - name: qtgui_number_sink_0
@@ -239,7 +243,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [696, 60.0]
+    coordinate: [640, 60.0]
     rotation: 0
     state: true
 - name: qtgui_time_sink_x_0
@@ -336,17 +340,18 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1048, 188.0]
+    coordinate: [1136, 188.0]
     rotation: 0
     state: true
 
 connections:
 - [analog_pll_freqdet_cf_0, '0', blocks_multiply_const_vxx_0, '0']
+- [analog_pll_freqdet_cf_0, '0', blocks_throttle2_0, '0']
 - [analog_pll_freqdet_cf_0, '0', qtgui_number_sink_0, '0']
-- [analog_sig_source_x_0, '0', blocks_throttle_0, '0']
+- [analog_sig_source_x_0, '0', analog_pll_freqdet_cf_0, '0']
 - [blocks_multiply_const_vxx_0, '0', blocks_multiply_const_vxx_1, '0']
 - [blocks_multiply_const_vxx_1, '0', qtgui_time_sink_x_0, '0']
-- [blocks_throttle_0, '0', analog_pll_freqdet_cf_0, '0']
 
 metadata:
   file_format: 1
+  grc_version: v3.11.0.0git-554-g12f02467
