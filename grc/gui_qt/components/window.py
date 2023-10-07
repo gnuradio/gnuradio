@@ -188,6 +188,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         ExampleFinder.signals.result.connect(self.populate_libraries_w_examples)
         ExampleFinder.signals.progress.connect(self.progress_callback)
         self.threadpool.start(ExampleFinder)
+        self.setStatusTip("Indexing examples")
         
         
 
