@@ -48,9 +48,7 @@ fosphor_display_impl::fosphor_display_impl(const int fft_bins,
     if (qApp != NULL) {
         d_qApplication = qApp;
     } else {
-        int argc = 0;
-        char** argv = NULL;
-        d_qApplication = new QApplication(argc, argv);
+        d_qApplication = new QApplication(d_argc, &d_argv);
     }
 
     d_gui = new QFosphorSurface(fft_bins, pwr_bins, wf_lines, parent);

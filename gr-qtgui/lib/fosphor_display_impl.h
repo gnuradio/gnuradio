@@ -68,6 +68,13 @@ private:
     //! Store the number of subframes per histogram frame
     const int d_subframe_num = 0;
     uint8_t* d_frame;
+    // Required now for Qt; argc must be greater than 0 and argv
+    // must have at least one valid character. Must be valid through
+    // life of the qApplication:
+    // http://harmattan-dev.nokia.com/docs/library/html/qt4/qapplication.html
+    char d_zero = 0;
+    int d_argc = 1;
+    char* d_argv = &d_zero;
 };
 
 } // namespace qtgui
