@@ -53,9 +53,6 @@ Older Logs can be found in `docs/RELEASE-NOTES-*`.
   from the decoder and an optional noise power `npwr` parameter was added to the
   constellation.
 
-#### gr-iio
-- IIO devices can now have selectable types (where supported by the device).
-
 #### gr-network
 - Better support for vectorized output from UDP source. The payload size must still
   be a multiple of `item size * vector size` for this to work.
