@@ -7,7 +7,7 @@ parameters:
     label: Input Type
     dtype: enum
     options: [fc32, sc16]
-    option_labels: [int16, Complex float32, Complex int16]
+    option_labels: [Complex float32, Complex int16]
     option_attributes:
         type: [fc32, sc16]
     hide: part
