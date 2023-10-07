@@ -44,7 +44,7 @@ class Worker(QtCore.QRunnable):
         try:
             result = self.fn(*self.args, **self.kwargs)
         except:
-            print("err")
+            print("Error in background task:")
             traceback.print_exc()
         else:
             self.signals.result.emit(result)

@@ -181,6 +181,9 @@ class BlockLibrary(QtWidgets.QDockWidget, base.Component):
         # Register the menus
         # self.app.registerMenu(self.menus["library"])
 
+        # Dict representing which examples contain various blocks
+        self.examples_w_block = {}
+
     def createActions(self, actions):
         pass
 
