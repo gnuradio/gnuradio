@@ -23,72 +23,31 @@ from ..properties import Paths
 log = logging.getLogger(__name__)
 
 class WorkerSignals(QtCore.QObject):
-    '''
-    Defines the signals available from a running worker thread.
-
-    Supported signals are:
-
-    finished
-        No data
-
-    error
-        tuple (exctype, value, traceback.format_exc() )
-
-    result
-        object data returned from processing, anything
-
-    progress
-        int indicating % progress
-
-    '''
-    finished = QtCore.Signal()
     error = QtCore.Signal(tuple)
     result = QtCore.Signal(object)
     progress = QtCore.Signal(int)
 
 
 class Worker(QtCore.QRunnable):
-    '''
-    Worker thread
-
-    Inherits from QRunnable to handler worker thread setup, signals and wrap-up.
-
-    :param callback: The function callback to run on this worker thread. Supplied args and
-                     kwargs will be passed through to the runner.
-    :type callback: function
-    :param args: Arguments to pass to the callback function
-    :param kwargs: Keywords to pass to the callback function
-
-    '''
-
     def __init__(self, fn, *args, **kwargs):
         super(Worker, self).__init__()
 
-        # Store constructor arguments (re-used for processing)
         self.fn = fn
         self.args = args
         self.kwargs = kwargs
         self.signals = WorkerSignals()
 
-        # Add the callback to our kwargs
         self.kwargs['progress_callback'] = self.signals.progress
 
     @QtCore.Slot()
     def run(self):
-        '''
-        Initialise the runner function with passed args, kwargs.
-        '''
-
-        # Retrieve args/kwargs here; and fire processing using them
         try:
             result = self.fn(*self.args, **self.kwargs)
         except:
             print("err")
             traceback.print_exc()
         else:
-            self.signals.result.emit(result)  # Return the result of the processing
-        finally:
-            self.signals.finished.emit()  # Done
+            self.signals.result.emit(result)
 
 
 
@@ -127,16 +86,16 @@ class ExampleBrowser(QtWidgets.QDialog, base.Component):
 
     def populate_left_list(self):
         for ex in self.examples:
-            if ex[0] not in self.modules:
-                self.left_list.addItem(ex[0])
-                self.modules.append(ex[0])
+            if ex["module"] not in self.modules:
+                self.left_list.addItem(ex["module"])
+                self.modules.append(ex["module"])
 
     def populate_mid_list(self):
         self.current_files = []
         self.mid_list.clear() # This triggers populate_preview, unfortunately
         for ex in self.examples:
-            if ex[0] == self.left_list.currentItem().text():
-                self.mid_list.addItem(ex[-1].split("/")[-1])
+            if ex["module"] == self.left_list.currentItem().text():
+                self.mid_list.addItem(ex["path"].split("/")[-1])
                 self.current_files.append(ex)
         self.mid_list.setCurrentRow(0)
     
@@ -146,16 +105,16 @@ class ExampleBrowser(QtWidgets.QDialog, base.Component):
             
         current_example = None
         for ex in self.examples:
-            if self.mid_list.currentItem().text() == ex[-1].split("/")[-1]:
+            if self.mid_list.currentItem().text() == ex["path"].split("/")[-1]:
                 current_example = ex
                 break
-        self.title_label.setText(current_example[1])
-        self.desc_label.setText(current_example[2])
-        self.author_label.setText(current_example[3])
+        self.title_label.setText(current_example["title"])
+        self.desc_label.setText(current_example["desc"])
+        self.author_label.setText(current_example["author"])
 
     def open_file(self):
         for ex in self.examples:
-            if self.mid_list.currentItem().text() == ex[-1].split("/")[-1]:
-                self.file_to_open.emit(ex[-1])
+            if self.mid_list.currentItem().text() == ex["path"].split("/")[-1]:
+                self.file_to_open.emit(ex["path"])
         self.done(0)
         

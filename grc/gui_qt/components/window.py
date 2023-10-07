@@ -185,7 +185,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         self.threadpool = QtCore.QThreadPool()
         self.threadpool.setMaxThreadCount(1)
         ExampleFinder = Worker(self.find_examples)
-        ExampleFinder.signals.result.connect(self.populate_example_library)
+        ExampleFinder.signals.result.connect(self.populate_libraries_w_examples)
         ExampleFinder.signals.progress.connect(self.progress_callback)
         self.threadpool.start(ExampleFinder)
         
@@ -231,7 +231,15 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
     
     def find_examples(self, progress_callback):
         examples = list(self._iter_files_in_example_path(progress_callback))
-        return examples
+        examples_w_block = {} # str: set()
+        for example in examples:
+            for block in example["blocks"]:
+                try:
+                    examples_w_block[block].add(example["name"])
+                except KeyError:
+                    examples_w_block[block] = set()
+                    examples_w_block[block].add(example["name"])
+        return (examples, examples_w_block)
 
     def _iter_files_in_example_path(self, progress_callback, path=None, ext='grc'):
         """Iterator for example descriptions and category trees"""
@@ -249,17 +257,26 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
                         with open(file_path, encoding='utf-8') as fp:
                             data = yaml.safe_load(fp)
                             try:
-                                title = data["options"]["parameters"]["title"] or "TITLE"
-                                desc = data["options"]["parameters"]["description"] or "DESCRIPTION"
-                                author = data["options"]["parameters"]["author"] or "AUTHOR"
-                                yield (dirpath.split("/")[-1], title, desc, author, file_path)
+                                example = {}
+                                example["name"] = filename
+                                example["module"] = dirpath.split("/")[-1]
+                                example["title"] = data["options"]["parameters"]["title"] or "TITLE"
+                                example["desc"] = data["options"]["parameters"]["description"] or "DESCRIPTION"
+                                example["author"] = data["options"]["parameters"]["author"] or "AUTHOR"
+                                example["path"] = file_path
+                                example["blocks"] = set()
+                                for block in data["blocks"]:
+                                    example["blocks"].add(block["id"])
+                                yield example
                             except (KeyError, TypeError):
                                 continue
             else:
                 log.debug('Ignoring invalid path entry %r', entry)
 
-    def populate_example_library(self, examples):
+    def populate_libraries_w_examples(self, example_tuple):
+        examples, examples_w_block = example_tuple
         self.ExampleBrowser.populate(examples)
+        self.app.BlockLibrary.examples_w_block = examples_w_block
         self.progress_bar.reset()
         self.progress_bar.hide()
         self.examples_found = True

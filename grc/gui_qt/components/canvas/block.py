@@ -92,6 +92,22 @@ class PropsDialog(QtWidgets.QDialog):
             tab.setLayout(qvb)
             self.tabs.addTab(tab, cat)
 
+        # Add example tab
+        ex_amount = 0
+        self.example_tab = QtWidgets.QWidget()
+        self.example_layout = QtWidgets.QVBoxLayout()
+        self.example_tab.setLayout(self.example_layout)
+        self.example_list = QtWidgets.QListWidget()
+        try:
+            examples = self._block.parent.app.BlockLibrary.examples_w_block[self._block.key]
+            ex_amount = len(examples)
+            self.example_list.addItems(examples)
+            self.example_layout.addWidget(self.example_list)
+        except KeyError:
+            self.example_layout.addWidget(QtWidgets.QLabel("No examples use this block"))
+
+        self.tabs.addTab(self.example_tab, f"Examples ({ex_amount})")
+
         buttons = QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel
         self.buttonBox = QtWidgets.QDialogButtonBox(buttons)
         self.buttonBox.accepted.connect(self.accept)
