@@ -379,6 +379,8 @@ class Flowgraph(QtWidgets.QGraphicsScene, base.Component, CoreFlowgraph):
 
     def import_data(self, data):
         super(Flowgraph, self).import_data(data)
+        for conn in self.connections:
+            self.addItem(conn)
         for block in self.blocks:
             self.addItem(block)
 
