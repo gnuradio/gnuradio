@@ -12,7 +12,6 @@
 #endif
 
 #include "device_source_impl.h"
-#include "iio_priv.h"
 #include <gnuradio/io_signature.h>
 #include <gnuradio/thread/thread.h>
 
@@ -178,7 +177,6 @@ device_source_impl::device_source_impl(iio_context* ctx,
       thread_stopped(false)
 {
     unsigned int nb_channels, i;
-    std::vector<int> signature;
 
     if (!ctx)
         throw std::runtime_error("Unable to create context");
@@ -202,8 +200,6 @@ device_source_impl::device_source_impl(iio_context* ctx,
 
             iio_channel_enable(chn);
             channel_list.push_back(chn);
-
-            signature.push_back(channel_size(chn));
         }
     } else {
         for (std::vector<std::string>::const_iterator it = channels.begin();
@@ -218,14 +214,11 @@ device_source_impl::device_source_impl(iio_context* ctx,
 
             iio_channel_enable(chn);
             channel_list.push_back(chn);
-
-            signature.push_back(channel_size(chn));
         }
     }
 
     set_params(params);
     set_output_multiple(0x400);
-    set_output_signature(gr::io_signature::makev(1, -1, signature));
 
     message_port_register_out(port_id);
 }
@@ -318,8 +311,7 @@ int device_source_impl::work(int noutput_items,
     unsigned long items = std::min(items_in_buffer, (unsigned long)noutput_items);
 
     for (size_t i = 0; i < output_items.size(); i++)
-        channel_read(
-            channel_list[i], output_items[i], items * channel_size(channel_list[i]));
+        channel_read(channel_list[i], output_items[i], items * sizeof(short));
 
     items_in_buffer -= items;
     byte_offset += items * iio_buffer_step(buf);
