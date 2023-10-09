@@ -143,6 +143,8 @@ STRIP_FROM_PATH        =
 
 STRIP_FROM_INC_PATH    = @PROJECT_SOURCE_DIR@/gnuradio-runtime/include \
                          @PROJECT_BINARY_DIR@/gnuradio-runtime/include \
+                         @PROJECT_SOURCE_DIR@/gnuradio-runtime/ \
+                         @PROJECT_BINARY_DIR@/gnuradio-runtime/ \
                          @PROJECT_SOURCE_DIR@/gr-analog/include \
                          @PROJECT_BINARY_DIR@/gr-analog/include \
                          @PROJECT_SOURCE_DIR@/gr-audio/include \
