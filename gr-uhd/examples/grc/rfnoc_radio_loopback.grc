@@ -126,7 +126,9 @@ blocks:
       the various blocks.
 
       If you want to receive on 0/Radio#0, and transmit on 0/Radio#1, set rx_slot
-      and tx_slot to 0 and 1, respectively.'
+      and tx_slot to 0 and 1, respectively.
+
+      If both are the same, also read the comment under the TX Radio block.'
     value: '0'
   states:
     bus_sink: false
@@ -285,7 +287,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1208, 584.0]
+    coordinate: [1176, 632.0]
     rotation: 0
     state: enabled
 - name: blocks_null_source_0
@@ -304,7 +306,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [920, 584.0]
+    coordinate: [888, 632.0]
     rotation: 0
     state: enabled
 - name: blocks_throttle2_0
@@ -330,7 +332,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1048, 568.0]
+    coordinate: [1016, 616.0]
     rotation: 0
     state: enabled
 - name: blocks_var_to_msg_0
@@ -507,7 +509,10 @@ blocks:
     bandwidth2: '0'
     bandwidth3: '0'
     block_args: ''
-    comment: ''
+    comment: "NOTE! If the TX Radio and the RX Radio\nare the same, then we have a\
+      \ loop in the \nRFNoC graph. This is allowed, but we have\nto declare one of\
+      \ these edges a back-edge.\n\nTo do so, simply right-click the green arrow \n\
+      going into this TX Radio, and set the back-edge\nproperty to 'True'."
     device_select: '-1'
     frequency0: tx_freq
     frequency1: 1e9
@@ -532,10 +537,25 @@ connections:
 - [blocks_null_source_0, '0', blocks_throttle2_0, '0']
 - [blocks_throttle2_0, '0', blocks_null_sink_0, '0']
 - [blocks_var_to_msg_0, msgout, uhd_rfnoc_rx_radio_0, command]
-- [uhd_rfnoc_ddc_0, '0', uhd_rfnoc_duc_0, '0']
-- [uhd_rfnoc_duc_0, '0', uhd_rfnoc_tx_radio_0, '0']
-- [uhd_rfnoc_rx_radio_0, '0', uhd_rfnoc_ddc_0, '0']
+- params:
+    is_back_edge: 'False'
+  snk_blk_id: uhd_rfnoc_duc_0
+  snk_port_id: '0'
+  src_blk_id: uhd_rfnoc_ddc_0
+  src_port_id: '0'
+- params:
+    is_back_edge: rx_slot == tx_slot
+  snk_blk_id: uhd_rfnoc_tx_radio_0
+  snk_port_id: '0'
+  src_blk_id: uhd_rfnoc_duc_0
+  src_port_id: '0'
+- params:
+    is_back_edge: 'False'
+  snk_blk_id: uhd_rfnoc_ddc_0
+  snk_port_id: '0'
+  src_blk_id: uhd_rfnoc_rx_radio_0
+  src_port_id: '0'
 
 metadata:
-  file_format: 1
-  grc_version: v3.11.0.0git-549-g9a9a82e3
+  file_format: 2
+  grc_version: v3.11.0.0git-587-gf73f8f07
