@@ -184,6 +184,13 @@ class TopBlockGenerator(object):
         return output
 
     def _blocks(self):
+        """
+        Returns a list of tuples: (block, block_make)
+
+        'block' contains a reference to the block object.
+        'block_make' contains the pre-rendered string for the 'make' part of the
+        block.
+        """
         fg = self._flow_graph
         parameters = fg.get_parameters()
 
@@ -319,7 +326,10 @@ class TopBlockGenerator(object):
             template = templates[con.type]
             if con.source_port.dtype != 'bus':
                 code = template.render(
-                    make_port_sig=make_port_sig, source=con.source_port, sink=con.sink_port)
+                    make_port_sig=make_port_sig,
+                    source=con.source_port,
+                    sink=con.sink_port,
+                    **con.namespace_templates)
                 rendered.append(code)
             else:
                 # Bus ports need to iterate over the underlying connections and then render
@@ -337,7 +347,10 @@ class TopBlockGenerator(object):
                             connection = fg.parent_platform.Connection(
                                 parent=self, source=hidden_porta, sink=hidden_portb)
                             code = template.render(
-                                make_port_sig=make_port_sig, source=hidden_porta, sink=hidden_portb)
+                                make_port_sig=make_port_sig,
+                                source=hidden_porta,
+                                sink=hidden_portb,
+                                **con.namespace_templates)
                             rendered.append(code)
 
         return rendered

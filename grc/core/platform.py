@@ -47,6 +47,7 @@ class Platform(Element):
         self.domains = {}
         self.connection_templates = {}
         self.cpp_connection_templates = {}
+        self.connection_params = {}
 
         self._block_categories = {}
         self._auto_hier_block_generate_chain = set()
@@ -279,6 +280,7 @@ class Platform(Element):
                 'connect', '')
             self.cpp_connection_templates[connection_id] = connection.get(
                 'cpp_connect', '')
+            self.connection_params[connection_id] = connection.get('parameters', {})
 
     def load_category_tree_description(self, data, file_path):
         """Parse category tree file and add it to list"""
@@ -358,8 +360,10 @@ class Platform(Element):
         data = flow_graph.export_data()
 
         try:
-            data['connections'] = [yaml.ListFlowing(
-                i) for i in data['connections']]
+            data['connections'] = [
+                yaml.ListFlowing(conn) if isinstance(conn, (list, tuple)) else conn
+                for conn in data['connections']
+            ]
         except KeyError:
             pass
 

@@ -6,6 +6,7 @@ SPDX-License-Identifier: GPL-2.0-or-later
 
 """
 
+import collections
 
 from .base import Element
 from .Constants import ALIASES_OF
@@ -13,15 +14,23 @@ from .utils.descriptors import lazy_property
 
 
 class Connection(Element):
+    """
+    Stores information about a connection between two block ports. This class
+    knows:
+    - Where the source and sink ports are (on which blocks)
+    - The domain (message, stream, ...)
+    - Which parameters are associated with this connection
+    """
 
     is_connection = True
+    documentation = {'': ''}
 
     def __init__(self, parent, source, sink):
         """
         Make a new connection given the parent and 2 ports.
 
         Args:
-            flow_graph: the parent of this element
+            parent: the parent of this element (a flow graph)
             source: a port (any direction)
             sink: a port (any direction)
         @throws Error cannot make connection
@@ -41,6 +50,16 @@ class Connection(Element):
         self.source_port = source
         self.sink_port = sink
 
+        # Unlike the blocks, connection parameters are defined in the connection
+        # domain definition files, as all connections within the same domain
+        # share the same properties.
+        param_factory = self.parent_platform.make_param
+        conn_parameters = self.parent_platform.connection_params.get(self.type, {})
+        self.params = collections.OrderedDict(
+            (data['id'], param_factory(parent=self, **data))
+            for data in conn_parameters
+        )
+
     def __str__(self):
         return 'Connection (\n\t{}\n\t\t{}\n\t{}\n\t\t{}\n)'.format(
             self.source_block, self.source_port, self.sink_block, self.sink_port,
@@ -56,6 +75,10 @@ class Connection(Element):
 
     def __iter__(self):
         return iter((self.source_port, self.sink_port))
+
+    def children(self):
+        """ This includes the connection parameters """
+        return self.params.values()
 
     @lazy_property
     def source_block(self):
@@ -78,6 +101,18 @@ class Connection(Element):
             true if source and sink blocks are enabled
         """
         return self.source_block.enabled and self.sink_block.enabled
+
+    @property
+    def label(self):
+        """ Returns a label for dialogs """
+        src_domain, sink_domain = [
+            self.parent_platform.domains[d].name for d in self.type]
+        return f'Connection ({src_domain} → {sink_domain})'
+
+    @property
+    def namespace_templates(self):
+        """Returns everything we want to have available in the template rendering"""
+        return {key: param.template_arg for key, param in self.params.items()}
 
     def validate(self):
         """
@@ -113,9 +148,33 @@ class Connection(Element):
         Export this connection's info.
 
         Returns:
-            a nested data odict
+            A tuple with connection info, and parameters.
         """
-        return (
+        # See if we need to use file format version 2:
+        if self.params:
+            return {
+                'src_blk_id': self.source_block.name,
+                'src_port_id': self.source_port.key,
+                'snk_blk_id': self.sink_block.name,
+                'snk_port_id': self.sink_port.key,
+                'params': collections.OrderedDict(sorted(
+                    (param_id, param.value)
+                    for param_id, param in self.params.items())),
+            }
+
+        # If there's no reason to do otherwise, we can export info as
+        # FLOW_GRAPH_FILE_FORMAT_VERSION 1 format:
+        return [
             self.source_block.name, self.source_port.key,
-            self.sink_block.name, self.sink_port.key
-        )
+            self.sink_block.name, self.sink_port.key,
+        ]
+
+    def import_data(self, params):
+        """
+        Import connection parameters.
+        """
+        for key, value in params.items():
+            try:
+                self.params[key].set_value(value)
+            except KeyError:
+                continue

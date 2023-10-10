@@ -42,6 +42,8 @@ class PropsDialog(Gtk.Dialog):
             (Constants.MIN_DIALOG_WIDTH, Constants.MIN_DIALOG_HEIGHT)
         ))
 
+        # Careful: 'block' can also be a connection! The naming is because
+        # property dialogs for connections were added much later.
         self._block = block
         self._hash = 0
         self._config = parent.config
@@ -212,7 +214,9 @@ class PropsDialog(Gtk.Dialog):
         pos = buf.get_end_iter()
 
         # Add link to wiki page for this block, at the top, as long as it's not an OOT block
-        if self._block.category and self._block.category[0] == "Core":
+        if self._block.is_connection:
+            self._docs_link.set_markup('Connection')
+        elif self._block.category and self._block.category[0] == "Core":
             note = "Wiki Page for this Block: "
             prefix = self._config.wiki_block_docs_url_prefix
             suffix = self._block.label.replace(" ", "_")
@@ -236,11 +240,13 @@ class PropsDialog(Gtk.Dialog):
             buf.insert(pos, '\n')
 
         # if given the current parameters an exact match can be made
-        block_constructor = self._block.templates.render(
-            'make').rsplit('.', 2)[-1]
-        block_class = block_constructor.partition('(')[0].strip()
-        if block_class in docstrings:
-            docstrings = {block_class: docstrings[block_class]}
+        block_templates = getattr(self._block, 'templates', None)
+        if block_templates:
+            block_constructor = block_templates.render(
+                'make').rsplit('.', 2)[-1]
+            block_class = block_constructor.partition('(')[0].strip()
+            if block_class in docstrings:
+                docstrings = {block_class: docstrings[block_class]}
 
         # show docstring(s) extracted from python sources
         for cls_name, docstring in docstrings.items():

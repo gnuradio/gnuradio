@@ -679,6 +679,15 @@ class FlowGraph(CoreFlowgraph, Drawable):
         """
         return (e for e in self.selected_elements.copy() if e.is_block)
 
+    def selected_connections(self):
+        """
+        Get a group of selected connections.
+
+        Returns:
+            sub set of connections in this flow graph
+        """
+        return (e for e in self.selected_elements.copy() if e.is_connection)
+
     @property
     def selected_block(self):
         """
@@ -688,6 +697,16 @@ class FlowGraph(CoreFlowgraph, Drawable):
             a block or None
         """
         return next(self.selected_blocks(), None)
+
+    @property
+    def selected_connection(self):
+        """
+        Get the selected connection
+
+        Returns:
+            a connection or None
+        """
+        return next(self.selected_connections(), None)
 
     def get_selected_elements(self):
         """
