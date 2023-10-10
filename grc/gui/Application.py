@@ -21,6 +21,8 @@ from .MainWindow import MainWindow
 from .PropsDialog import PropsDialog
 
 from ..core import Messages
+from ..core.Connection import Connection
+from ..core.blocks import Block
 
 
 log = logging.getLogger(__name__)
@@ -551,7 +553,8 @@ class Application(Gtk.Application):
         ##################################################
         elif action == Actions.BLOCK_PARAM_MODIFY:
             selected_block = args[0] if args[0] else flow_graph.selected_block
-            if selected_block:
+            selected_conn = args[0] if args[0] else flow_graph.selected_connection
+            if selected_block and isinstance(selected_block, Block):
                 self.dialog = PropsDialog(self.main_window, selected_block)
                 response = Gtk.ResponseType.APPLY
                 while response == Gtk.ResponseType.APPLY:  # rerun the dialog if Apply was hit
@@ -565,6 +568,26 @@ class Application(Gtk.Application):
                     if response in (Gtk.ResponseType.REJECT, Gtk.ResponseType.ACCEPT):
                         n = page.state_cache.get_current_state()
                         flow_graph.import_data(n)
+                        flow_graph_update()
+                    if response == Gtk.ResponseType.APPLY:
+                        # null action, that updates the main window
+                        Actions.ELEMENT_SELECT()
+                self.dialog.destroy()
+                self.dialog = None
+            elif selected_conn and isinstance(selected_conn, Connection):
+                self.dialog = PropsDialog(self.main_window, selected_conn)
+                response = Gtk.ResponseType.APPLY
+                while response == Gtk.ResponseType.APPLY:  # rerun the dialog if Apply was hit
+                    response = self.dialog.run()
+                    if response in (Gtk.ResponseType.APPLY, Gtk.ResponseType.ACCEPT):
+                        page.state_cache.save_new_state(
+                            flow_graph.export_data())
+                        # Following line forces a complete update of io ports
+                        flow_graph_update()
+                        page.saved = False
+                    if response in (Gtk.ResponseType.REJECT, Gtk.ResponseType.ACCEPT):
+                        curr_state = page.state_cache.get_current_state()
+                        flow_graph.import_data(curr_state)
                         flow_graph_update()
                     if response == Gtk.ResponseType.APPLY:
                         # null action, that updates the main window
@@ -809,11 +832,18 @@ class Application(Gtk.Application):
 
         selected_blocks = list(flow_graph.selected_blocks())
         selected_block = selected_blocks[0] if selected_blocks else None
+        # See if a connection has modifiable parameters or grey out the entry
+        # in the menu
+        selected_connections = list(flow_graph.selected_connections())
+        selected_connection = selected_connections[0] \
+            if len(selected_connections) == 1 \
+            else None
+        selected_conn_has_params = selected_connection and bool(len(selected_connection.params))
 
         # update general buttons
         Actions.ERRORS_WINDOW_DISPLAY.set_enabled(not flow_graph.is_valid())
         Actions.ELEMENT_DELETE.set_enabled(bool(flow_graph.selected_elements))
-        Actions.BLOCK_PARAM_MODIFY.set_enabled(bool(selected_block))
+        Actions.BLOCK_PARAM_MODIFY.set_enabled(bool(selected_block) or bool(selected_conn_has_params))
         Actions.BLOCK_ROTATE_CCW.set_enabled(bool(selected_blocks))
         Actions.BLOCK_ROTATE_CW.set_enabled(bool(selected_blocks))
         # update alignment options

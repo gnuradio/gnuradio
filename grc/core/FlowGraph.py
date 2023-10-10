@@ -334,7 +334,7 @@ class FlowGraph(Element):
             block = None
         return block
 
-    def connect(self, porta, portb):
+    def connect(self, porta, portb, params=None):
         """
         Create a connection between porta and portb.
 
@@ -348,6 +348,8 @@ class FlowGraph(Element):
         """
         connection = self.parent_platform.Connection(
             parent=self, source=porta, sink=portb)
+        if params:
+            connection.import_data(params)
         self.connections.add(connection)
 
         return connection
@@ -393,13 +395,31 @@ class FlowGraph(Element):
         def block_order(b):
             return not b.is_variable, b.name  # todo: vars still first ?!?
 
+        def get_file_format_version(data):
+            """Determine file format version based on available data"""
+            if any(isinstance(c, dict) for c in data['connections']):
+                return 2
+            return 1
+
+        def sort_connection_key(connection_info):
+            if isinstance(connection_info, dict):
+                return [
+                    connection_info.get('src_blk_id'),
+                    connection_info.get('src_port_id'),
+                    connection_info.get('snk_blk_id'),
+                    connection_info.get('snk_port_id'),
+                ]
+            return connection_info
         data = collections.OrderedDict()
         data['options'] = self.options_block.export_data()
         data['blocks'] = [b.export_data() for b in sorted(self.blocks, key=block_order)
                           if b is not self.options_block]
-        data['connections'] = sorted(c.export_data() for c in self.connections)
+        data['connections'] = sorted(
+            (c.export_data() for c in self.connections),
+            key=sort_connection_key)
+
         data['metadata'] = {
-            'file_format': FLOW_GRAPH_FILE_FORMAT_VERSION,
+            'file_format': get_file_format_version(data),
             'grc_version': self.parent_platform.config.version
         }
         return data
@@ -470,7 +490,23 @@ class FlowGraph(Element):
         _blocks = {block.name: block for block in self.blocks}
 
         # TODO: Add better error handling if no connections exist in the flowgraph file.
-        for src_blk_id, src_port_id, snk_blk_id, snk_port_id in data.get('connections', []):
+        for connection_info in data.get('connections', []):
+            # First unpack the connection info, which can be in different formats.
+            # FLOW_GRAPH_FILE_FORMAT_VERSION 1: Connection info is a 4-tuple
+            if isinstance(connection_info, (list, tuple)) and len(connection_info) == 4:
+                src_blk_id, src_port_id, snk_blk_id, snk_port_id = connection_info
+                conn_params = {}
+            # FLOW_GRAPH_FILE_FORMAT_VERSION 2: Connection info is a dictionary
+            elif isinstance(connection_info, dict):
+                src_blk_id = connection_info.get('src_blk_id')
+                src_port_id = connection_info.get('src_port_id')
+                snk_blk_id = connection_info.get('snk_blk_id')
+                snk_port_id = connection_info.get('snk_port_id')
+                conn_params = connection_info.get('params', {})
+            else:
+                Messages.send_error_load(f'Invalid connection format detected!')
+                had_connect_errors = True
+                continue
             try:
                 source_block = _blocks[src_blk_id]
                 sink_block = _blocks[snk_blk_id]
@@ -486,7 +522,7 @@ class FlowGraph(Element):
                 sink_port = verify_and_get_port(
                     snk_port_id, sink_block, 'sink')
 
-                self.connect(source_port, sink_port)
+                self.connect(source_port, sink_port, conn_params)
 
             except (KeyError, LookupError) as e:
                 Messages.send_error_load(
