@@ -26,11 +26,12 @@ CACHE_FILE = os.path.expanduser('~/.cache/grc_gnuradio/cache_v2.json')
 
 BLOCK_DESCRIPTION_FILE_FORMAT_VERSION = 1
 # File format versions:
-#  0: undefined / legacy
-#  1: non-numeric message port keys (label is used instead)
 #  This constant is the max known version. If a version higher than this shows
 #  up, we assume we can't handle it.
-FLOW_GRAPH_FILE_FORMAT_VERSION = 1
+#  0: undefined / legacy
+#  1: non-numeric message port keys (label is used instead)
+#  2: connection info is stored as dictionary
+FLOW_GRAPH_FILE_FORMAT_VERSION = 2
 
 # Param tabs
 DEFAULT_PARAM_TAB = "General"
