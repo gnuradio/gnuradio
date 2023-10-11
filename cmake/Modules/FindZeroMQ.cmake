@@ -22,4 +22,16 @@ if(ZEROMQ_FOUND AND NOT TARGET ZEROMQ::ZEROMQ)
     set_target_properties(
         ZeroMQ::ZeroMQ PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${ZEROMQ_INCLUDE_DIRS}"
                                   INTERFACE_LINK_LIBRARIES "${ZEROMQ_LIBRARIES}")
+
+    # Check for context_t.shutdown() function, not present in some
+    # older versions of cppzmq.
+    set(CMAKE_REQUIRED_INCLUDES ${ZEROMQ_INCLUDE_DIRS})
+    check_cxx_source_compiles("
+#include <zmq.hpp>
+using _ = decltype(zmq::context_t().shutdown());
+int main() { return 0; }
+"
+      CPPZMQ_HAS_SHUTDOWN
+    )
+    set(CMAKE_REQUIRED_INCLUDES "")
 endif()
