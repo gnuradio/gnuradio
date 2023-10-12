@@ -4,16 +4,14 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
 #
 
-import os
 import configparser
+import os
 import subprocess
 
-from gi.repository import Gtk, Gdk
+from gi.repository import Gdk, Gtk
 
-from . import Constants
-from . import Dialogs
-from . import Utils
-from .canvas.colors import LIGHT_THEME_STYLES, DARK_THEME_STYLES
+from . import Constants, Dialogs, Utils
+from .canvas.colors import DARK_THEME_STYLES, LIGHT_THEME_STYLES
 
 
 def have_dark_theme():
@@ -83,7 +81,17 @@ class InputParam(Gtk.HBox):
         self.pack_start(self.label, False, False, 0)
 
         self.dtype_label = None
-        ignore_dtype_labels = ["_multiline"]
+        ignore_dtype_labels = [
+            "dir_select",
+            "enum",
+            "file_open",
+            "file_save",
+            "gui_hint",
+            "id",
+            "_multiline",
+            "_multiline_python_external",
+            "raw"
+        ]
         if self.param.dtype not in ignore_dtype_labels:
             self.dtype_label = Gtk.Label()
             self.dtype_label.set_size_request(Utils.scale_scalar(50), -1)
