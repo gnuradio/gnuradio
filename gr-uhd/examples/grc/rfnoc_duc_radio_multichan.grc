@@ -37,6 +37,7 @@ blocks:
   id: variable_qtgui_entry
   parameters:
     comment: ''
+    entry_signal: editingFinished
     gui_hint: :[0,0,1,1]
     label: 'Ch0: Frequency (Hz)'
     type: real
@@ -52,6 +53,7 @@ blocks:
   id: variable_qtgui_entry
   parameters:
     comment: ''
+    entry_signal: editingFinished
     gui_hint: :[0,1,1,1]
     label: 'Ch1: Frequency (Hz)'
     type: raw
@@ -67,6 +69,7 @@ blocks:
   id: variable_qtgui_entry
   parameters:
     comment: ''
+    entry_signal: editingFinished
     gui_hint: :[2,0,1,1]
     label: 'Ch0: Gain (dB)'
     type: int
@@ -82,6 +85,7 @@ blocks:
   id: variable_qtgui_entry
   parameters:
     comment: ''
+    entry_signal: editingFinished
     gui_hint: :[2,1,1,1]
     label: 'Ch1: Gain (dB)'
     type: int
@@ -159,6 +163,7 @@ blocks:
     offset: '0'
     phase: '0'
     samp_rate: samp_rate0
+    showports: 'False'
     type: complex
     waveform: analog.GR_COS_WAVE
   states:
@@ -181,6 +186,7 @@ blocks:
     offset: '0'
     phase: '0'
     samp_rate: samp_rate0
+    showports: 'False'
     type: complex
     waveform: analog.GR_COS_WAVE
   states:
@@ -188,60 +194,6 @@ blocks:
     bus_source: false
     bus_structure: null
     coordinate: [32, 252.0]
-    rotation: 0
-    state: true
-- name: ettus_rfnoc_graph
-  id: ettus_rfnoc_graph
-  parameters:
-    alias: ''
-    clock_source_0: ''
-    clock_source_1: ''
-    clock_source_2: ''
-    clock_source_3: ''
-    clock_source_4: ''
-    clock_source_5: ''
-    clock_source_6: ''
-    clock_source_7: ''
-    comment: ''
-    dev_addr: addr=192.168.30.2
-    dev_args: ''
-    num_mboards: '1'
-    time_source_0: ''
-    time_source_1: ''
-    time_source_2: ''
-    time_source_3: ''
-    time_source_4: ''
-    time_source_5: ''
-    time_source_6: ''
-    time_source_7: ''
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [184, 8.0]
-    rotation: 0
-    state: true
-- name: ettus_rfnoc_tx_radio_0
-  id: ettus_rfnoc_tx_radio
-  parameters:
-    affinity: ''
-    agc: Default
-    alias: ''
-    antenna: TX/RX
-    bandwidth: '0'
-    block_args: ''
-    comment: ''
-    device_select: '-1'
-    frequency: freq
-    gain: gain
-    instance_index: '-1'
-    num_chans: '1'
-    rate: master_clock_rate
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [800, 84.0]
     rotation: 0
     state: true
 - name: uhd_rfnoc_duc_0
@@ -360,4 +312,4 @@ connections:
 
 metadata:
   file_format: 1
-  grc_version: v3.11.0.0git-377-g42fa0be7
+  grc_version: v3.11.0.0git-559-gbfa461dc
