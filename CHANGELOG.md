@@ -75,6 +75,8 @@ Older Logs can be found in `docs/RELEASE-NOTES-*`.
 
 #### gr-zeromq
 - Explicitly shutdown and close source/sinks to prevent hangs in some cases.
+- Require `zmq.hpp` (cppzmq) version with `context_t.shutdown()` defined.
+  If `shutdown` is not defined, the `gr-zeromq` is disabled.
 
 #### Modtool
 - Add `cmake-format` support for generated modules
