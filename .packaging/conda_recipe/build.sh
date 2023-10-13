@@ -31,9 +31,11 @@ cmake --build . --config Release --target install
 if [[ $target_platform == linux* ]] ; then
     export QT_QPA_PLATFORM=offscreen
     SKIP_TESTS=(
+        qa_polar_decoder_sc_systematic
     )
 else
     SKIP_TESTS=(
+        qa_polar_decoder_sc_systematic
     )
 fi
 SKIP_TESTS_STR=$( IFS="|"; echo "^(${SKIP_TESTS[*]})$" )

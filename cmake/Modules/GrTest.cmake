@@ -67,7 +67,7 @@ function(GR_ADD_TEST test_name)
     # We add it to the beginning of the list to use locally-built modules before installed ones.
     list(INSERT pypath 0 "${PROJECT_BINARY_DIR}/test_modules")
 
-    set(environs "VOLK_GENERIC=1" "GR_DONT_LOAD_PREFS=1" "srcdir=${srcdir}"
+    set(environs "GR_DONT_LOAD_PREFS=1" "srcdir=${srcdir}"
                  "GR_CONF_CONTROLPORT_ON=False")
     list(APPEND environs ${GR_TEST_ENVIRONS})
 
