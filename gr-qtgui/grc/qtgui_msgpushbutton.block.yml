@@ -60,6 +60,8 @@ templates:
 
         ${gui_hint() % win}
 
+    callbacks:
+    - set_new_msg(${value})
 documentation: |-
     This block creates a variable push button that creates a message when clicked. Leave the label blank to use the variable id as the label.
 

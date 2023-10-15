@@ -57,3 +57,6 @@ class MsgPushButton(gr.sync_block, Qt.QPushButton):
         elif type(self.msgValue) == bool:
             self.message_port_pub(pmt.intern("pressed"),
                                   pmt.cons(pmt.intern(self.msgName), pmt.from_bool(self.msgValue)))
+
+    def set_new_msg(self, msg):
+        self.msgValue = msg
