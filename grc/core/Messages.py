@@ -88,11 +88,11 @@ def send_fail_load(error):
 
 
 def send_start_gen(file_path):
-    send('\nGenerating: %r\n' % file_path)
+    send('\nGenerating: "%s"\n' % file_path)
 
 
 def send_auto_gen(file_path):
-    send('>>> Generating: %r\n' % file_path)
+    send('>>> Generating: "%s"\n' % file_path)
 
 
 def send_fail_gen(error):
