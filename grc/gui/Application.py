@@ -610,16 +610,14 @@ class Application(Gtk.Application):
             main.new_page()
             args = (GLib.Variant('s', 'qt_gui'),)
             flow_graph = main.current_page.flow_graph
-            flow_graph.options_block.params['generate_options'].set_value(str(args[0])[
-                                                                          1:-1])
+            flow_graph.options_block.params['generate_options'].set_value(args[0].get_string())
             flow_graph.options_block.params['author'].set_value(getuser())
             flow_graph_update(flow_graph)
         elif action == Actions.FLOW_GRAPH_NEW_TYPE:
             main.new_page()
             if args:
                 flow_graph = main.current_page.flow_graph
-                flow_graph.options_block.params['generate_options'].set_value(str(args[0])[
-                                                                              1:-1])
+                flow_graph.options_block.params['generate_options'].set_value(args[0].get_string())
                 flow_graph_update(flow_graph)
         elif action == Actions.FLOW_GRAPH_OPEN:
             file_paths = args[0] if args[0] else FileDialogs.OpenFlowGraph(
@@ -638,7 +636,7 @@ class Application(Gtk.Application):
         elif action == Actions.FLOW_GRAPH_CLOSE:
             main.close_page()
         elif action == Actions.FLOW_GRAPH_OPEN_RECENT:
-            file_path = str(args[0])[1:-1]
+            file_path = args[0].get_string()
             main.new_page(file_path, show=True)
             self.config.add_recent_file(file_path)
             main.tool_bar.refresh_submenus()
