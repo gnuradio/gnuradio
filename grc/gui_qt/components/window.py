@@ -51,6 +51,7 @@ from .preferences import PreferencesDialog
 from .example_browser import ExampleBrowser
 from .dialogs import ErrorsDialog
 from ...core.base import Element
+from ...core.cache import Cache
 
 # Logging
 log = logging.getLogger(__name__)
@@ -230,37 +231,26 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         self.currentFlowgraph.undoStack.push(action)
         self.updateActions()
     
-    def find_examples(self, progress_callback):
-        examples = list(self._iter_files_in_example_path(progress_callback))
-        examples_w_block = {} # str: set()
-        for example in examples:
-            for block in example["blocks"]:
-                try:
-                    examples_w_block[block].add(example["name"])
-                except KeyError:
-                    examples_w_block[block] = set()
-                    examples_w_block[block].add(example["name"])
-        return (examples, examples_w_block)
-
-    def _iter_files_in_example_path(self, progress_callback, path=None, ext='grc'):
-        """Iterator for example descriptions and category trees"""
-        for entry in (path or self.platform.config.example_paths):
-            if os.path.isdir(entry):
-                subdirs = 0
-                current_subdir = 0
-                for dirpath, dirnames, filenames in os.walk(entry):
-                        subdirs += 1
-                for dirpath, dirnames, filenames in os.walk(entry):
-                    current_subdir += 1
-                    progress_callback.emit(int(100*current_subdir/subdirs))
-                    for filename in sorted(filter(lambda f: f.endswith('.' + ext), filenames)):
-                        file_path = os.path.join(dirpath, filename)
-                        with open(file_path, encoding='utf-8') as fp:
-                            data = yaml.safe_load(fp)
+    def find_examples(self, progress_callback, ext="grc"):
+        examples = []
+        with Cache(Constants.EXAMPLE_CACHE_FILE, log=False) as cache:
+            """Iterator for example descri5ptions and category trees"""
+            for entry in ("/usr/local/share/gnuradio/examples",):
+                if os.path.isdir(entry):
+                    subdirs = 0
+                    current_subdir = 0
+                    for dirpath, dirnames, filenames in os.walk(entry):
+                            subdirs += 1
+                    for dirpath, dirnames, filenames in os.walk(entry):
+                        current_subdir += 1
+                        progress_callback.emit(int(100*current_subdir/subdirs))
+                        for filename in sorted(filter(lambda f: f.endswith('.' + ext), filenames)):
+                            file_path = os.path.join(dirpath, filename)
                             try:
+                                data = cache.get_or_load(file_path)
                                 example = {}
-                                example["name"] = filename
-                                example["module"] = dirpath.split("/")[-1]
+                                example["name"] = os.path.basename(file_path)
+                                example["module"] = os.path.basename(os.path.dirname(file_path))
                                 example["title"] = data["options"]["parameters"]["title"] or "TITLE"
                                 example["desc"] = data["options"]["parameters"]["description"] or "DESCRIPTION"
                                 example["author"] = data["options"]["parameters"]["author"] or "AUTHOR"
@@ -268,11 +258,20 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
                                 example["blocks"] = set()
                                 for block in data["blocks"]:
                                     example["blocks"].add(block["id"])
-                                yield example
-                            except (KeyError, TypeError):
+                                examples.append(example)
+                            except Exception:
                                 continue
-            else:
-                log.debug('Ignoring invalid path entry %r', entry)
+
+        examples_w_block = {} # str: set()
+        for example in examples:
+            for block in example["blocks"]:
+                try:
+                    examples_w_block[block].add(example["path"])
+                except KeyError:
+                    examples_w_block[block] = set()
+                    examples_w_block[block].add(example["path"])
+        
+        return (examples, examples_w_block)
 
     def populate_libraries_w_examples(self, example_tuple):
         examples, examples_w_block = example_tuple

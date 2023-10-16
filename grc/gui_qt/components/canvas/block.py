@@ -98,11 +98,18 @@ class PropsDialog(QtWidgets.QDialog):
         self.example_layout = QtWidgets.QVBoxLayout()
         self.example_tab.setLayout(self.example_layout)
         self.example_list = QtWidgets.QListWidget()
+        self.example_list.itemDoubleClicked.connect(lambda ex: self.open_example(ex))
         try:
             examples = self._block.parent.app.BlockLibrary.examples_w_block[self._block.key]
             ex_amount = len(examples)
             self.example_list.addItems(examples)
             self.example_layout.addWidget(self.example_list)
+            self.open_ex_button = QtWidgets.QPushButton("Open example")
+            self.open_ex_button.clicked.connect(lambda: self.open_example())
+            #policy = QtWidgets.QSizePolicy()
+            #policy.setHorizontalPolicy(QtWidgets.QSizePolicy.Preferred)
+            #self.open_ex_button.setSizePolicy(policy)
+            self.example_layout.addWidget(self.open_ex_button, alignment=QtCore.Qt.AlignRight)
         except KeyError:
             self.example_layout.addWidget(QtWidgets.QLabel("No examples use this block"))
 
@@ -133,6 +140,13 @@ class PropsDialog(QtWidgets.QDialog):
         self._block.validate()
         self._block.create_shapes_and_labels()
         self._block.parent.blockPropsChange.emit(self._block)
+    
+    def open_example(self, ex=None):
+        # example is None if the "Open examples" button was pushed
+        if ex is None:
+            ex = self.example_list.currentItem()
+        self._block.parent.app.MainWindow.open_example(ex.text())
+        self.close()
 
 
 class Block(QtWidgets.QGraphicsItem, CoreBlock):
