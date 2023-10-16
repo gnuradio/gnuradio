@@ -57,15 +57,12 @@ class ExampleBrowser(QtWidgets.QDialog, base.Component):
 
     def __init__(self):
         super().__init__()
-        uic.loadUi("grc/gui_qt/components/example_browser.ui", self)
-
+        uic.loadUi(Paths.RESOURCES + "/example_browser.ui", self)
 
         self.setMinimumSize(600, 400)
         self.setModal(True)
 
         self.setWindowTitle("GRC Examples")
-
-        
 
         self.examples = self.app.platform.examples
         self.modules = []
