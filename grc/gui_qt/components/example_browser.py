@@ -73,7 +73,7 @@ class ExampleBrowser(QtWidgets.QDialog, base.Component):
         self.mid_list.currentItemChanged.connect(self.populate_preview)
 
         self.open_button.clicked.connect(self.open_file)
-        self.close_button.clicked.connect(self.reject)
+        self.cancel_button.clicked.connect(self.reject)
     
     def populate(self, examples):
         self.examples = examples
