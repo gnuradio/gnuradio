@@ -54,6 +54,7 @@ class Worker(QtCore.QRunnable):
 class ExampleBrowser(QtWidgets.QDialog, base.Component):
     # TODO: Use a model and modelitems
     file_to_open = QtCore.Signal(str)
+    data_role = QtCore.Qt.UserRole
 
     def __init__(self):
         super().__init__()
@@ -66,52 +67,53 @@ class ExampleBrowser(QtWidgets.QDialog, base.Component):
 
         self.examples = self.app.platform.examples
         self.modules = []
-        self.current_files = []
         self.current_module = ""
 
-        self.left_list.currentItemChanged.connect(self.populate_mid_list)
+        self.left_list.currentItemChanged.connect(self.update_mid_list)
         self.mid_list.currentItemChanged.connect(self.populate_preview)
+        self.mid_list.itemDoubleClicked.connect(self.open_file)
 
         self.open_button.clicked.connect(self.open_file)
         self.cancel_button.clicked.connect(self.reject)
-    
+
     def populate(self, examples):
         self.examples = examples
-        self.populate_left_list()
-        self.left_list.setCurrentRow(0)
-        self.mid_list.setCurrentRow(0)
 
-    def populate_left_list(self):
         for ex in self.examples:
             if ex["module"] not in self.modules:
-                self.left_list.addItem(ex["module"])
                 self.modules.append(ex["module"])
+                self.left_list.addItem(ex["module"])
+            item = QtWidgets.QListWidgetItem()
+            item.setText(ex["name"])
+            item.setData(self.data_role, QtCore.QVariant(ex))
+            self.mid_list.addItem(item)
 
-    def populate_mid_list(self):
-        self.current_files = []
-        self.mid_list.clear() # This triggers populate_preview, unfortunately
-        for ex in self.examples:
-            if ex["module"] == self.left_list.currentItem().text():
-                self.mid_list.addItem(ex["path"].split("/")[-1])
-                self.current_files.append(ex)
-        self.mid_list.setCurrentRow(0)
-    
+        self.left_list.setCurrentRow(0)
+        self.update_mid_list()
+
+    def update_mid_list(self):
+        first = False
+        for i in range(self.mid_list.count()):
+            item = self.mid_list.item(i)
+
+            if item.data(self.data_role)["module"] == self.left_list.currentItem().text():
+                if not first:
+                    self.mid_list.setCurrentRow(i)
+                    first = True
+                item.setHidden(False)
+            else:
+                item.setHidden(True)
+
+
     def populate_preview(self):
-        if self.mid_list.currentRow() == -1:
-            return # we are currently clearing mid_list, wait
-            
-        current_example = None
-        for ex in self.examples:
-            if self.mid_list.currentItem().text() == ex["path"].split("/")[-1]:
-                current_example = ex
-                break
-        self.title_label.setText(current_example["title"])
-        self.desc_label.setText(current_example["desc"])
-        self.author_label.setText(current_example["author"])
+        ex = self.mid_list.currentItem().data(self.data_role)
+
+        self.title_label.setText(ex["title"])
+        self.desc_label.setText(ex["desc"])
+        self.author_label.setText(ex["author"])
 
     def open_file(self):
-        for ex in self.examples:
-            if self.mid_list.currentItem().text() == ex["path"].split("/")[-1]:
-                self.file_to_open.emit(ex["path"])
+        ex = self.mid_list.currentItem().data(self.data_role)
+
+        self.file_to_open.emit(ex["path"])
         self.done(0)
-        

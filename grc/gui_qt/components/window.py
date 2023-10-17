@@ -189,7 +189,6 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         ExampleFinder.signals.result.connect(self.populate_libraries_w_examples)
         ExampleFinder.signals.progress.connect(self.progress_callback)
         self.threadpool.start(ExampleFinder)
-        self.setStatusTip("Indexing examples")
         
         
 
@@ -234,7 +233,6 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
     def find_examples(self, progress_callback, ext="grc"):
         examples = []
         with Cache(Constants.EXAMPLE_CACHE_FILE, log=False) as cache:
-            """Iterator for example descri5ptions and category trees"""
             for entry in ("/usr/local/share/gnuradio/examples",):
                 if os.path.isdir(entry):
                     subdirs = 0
