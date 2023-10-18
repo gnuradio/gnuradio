@@ -46,6 +46,8 @@ void bind_rfnoc_rx_streamer(py::module& m)
              py::arg("stream_args"),
              py::arg("vlen") = 1,
              py::arg("issue_stream_cmd_on_start") = true,
+             py::arg("start_time_set") = false,
+             py::arg("start_time") = 0,
              D(rfnoc_rx_streamer, make))
 
 

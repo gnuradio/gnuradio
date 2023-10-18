@@ -15,7 +15,9 @@ templates:
             args=${ args },
         ),
         ${ vlen },
-        True
+        ${ issue_stream_cmd },
+        ${ start_time_set },
+        uhd.time_spec(${start_time}),
     )
     %if use_default_adapter_id == 'False':
     for port, adapter_id in enumerate(${ adapter_id_list }):
@@ -66,6 +68,25 @@ parameters:
   dtype: int_vector
   default: [0,]
   hide: ${ 'all' if use_default_adapter_id else 'none' }
+- id: issue_stream_cmd
+  label: Start stream
+  dtype: bool
+  default: 'True'
+  options: ['True', 'False']
+  option_labels: ["Yes", "No"]
+- id: start_time_set
+  label: Start time
+  dtype: bool
+  default: 'False'
+  options: ['True', 'False']
+  option_labels: ["Time spec", "Now"]
+  hide: ${ "part" if issue_stream_cmd else "all" }
+- id: start_time
+  label: "Start time spec [s]"
+  dtype: float
+  default: 0
+  hide: ${ "part" if issue_stream_cmd and start_time_set else "all" }
+  
 
 asserts:
   - ${ num_chans > 0 }
