@@ -52,7 +52,6 @@ class Worker(QtCore.QRunnable):
 
 
 class ExampleBrowser(QtWidgets.QDialog, base.Component):
-    # TODO: Use a model and modelitems
     file_to_open = QtCore.Signal(str)
     data_role = QtCore.Qt.UserRole
 

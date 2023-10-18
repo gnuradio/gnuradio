@@ -49,6 +49,7 @@ from .undoable_actions import (
 from . import DocumentationTab
 from .preferences import PreferencesDialog
 from .example_browser import ExampleBrowser
+from .oot_browser import OOTBrowser
 from .dialogs import ErrorsDialog
 from ...core.base import Element
 from ...core.cache import Cache
@@ -181,6 +182,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         self.examples_found = False
         self.ExampleBrowser = ExampleBrowser()
         self.ExampleBrowser.file_to_open.connect(self.open_example)
+        self.OOTBrowser = OOTBrowser()
 
 
         self.threadpool = QtCore.QThreadPool()
@@ -189,8 +191,8 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         ExampleFinder.signals.result.connect(self.populate_libraries_w_examples)
         ExampleFinder.signals.progress.connect(self.progress_callback)
         self.threadpool.start(ExampleFinder)
-        
-        
+
+
 
     """def show(self):
         log.debug("Showing main window")
@@ -229,7 +231,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         action = BlockPropsChangeAction(self.currentFlowgraph, elem)
         self.currentFlowgraph.undoStack.push(action)
         self.updateActions()
-    
+
     def find_examples(self, progress_callback, ext="grc"):
         examples = []
         with Cache(Constants.EXAMPLE_CACHE_FILE, log=False) as cache:
@@ -268,7 +270,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
                 except KeyError:
                     examples_w_block[block] = set()
                     examples_w_block[block].add(example["path"])
-        
+
         return (examples, examples_w_block)
 
     def populate_libraries_w_examples(self, example_tuple):
@@ -923,7 +925,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
             self.tabWidget.setCurrentIndex(self.tabWidget.count() - 1)
             self.currentFlowgraph.import_data(initial_state)
             self.currentFlowgraph.selectionChanged.connect(self.updateActions)
-    
+
     def open_example(self, example_path):
         log.debug("open example")
         if example_path:
@@ -1136,6 +1138,10 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         err = ErrorsDialog(self.currentFlowgraph)
         err.exec()
 
+    def module_browser_triggered(self):
+        log.debug("oot browser")
+        self.OOTBrowser.show()
+
     def find_triggered(self):
         log.debug("find block")
         self._app().BlockLibrary._search_bar.setFocus()
@@ -1329,7 +1335,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         prefs_dialog = PreferencesDialog()
         if prefs_dialog.exec_():
             prefs_dialog.save_all()
-    
+
     def example_browser_triggered(self):
         log.debug("example-browser")
         if self.examples_found:
