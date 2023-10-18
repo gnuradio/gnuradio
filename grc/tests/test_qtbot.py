@@ -554,7 +554,6 @@ def test_tools_actions(qtbot, qapp_cls_):
     pass
 
 
-@pytest.mark.xfail()
 def test_tools_oot_browser(qtbot, qapp_cls_):
     menu = qapp_cls_.MainWindow.menus["tools"]
     items = gather_menu_items(menu)
@@ -566,6 +565,8 @@ def test_tools_oot_browser(qtbot, qapp_cls_):
     qtbot.wait(100)
     QtCore.QTimer.singleShot(100, assert_open)
     qtbot.keyClick(menu, QtCore.Qt.Key_O)
+    qtbot.wait(200)
+    qtbot.keyClick(qapp_cls_.activeWindow(), QtCore.Qt.Key_Escape)
     qtbot.wait(200)
 
 
