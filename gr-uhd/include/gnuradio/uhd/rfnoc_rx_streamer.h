@@ -45,12 +45,16 @@ public:
      * \param vlen Vector length
      * \param issue_stream_cmd_on_start If true, the streamer sends a stream
      *                                  command upstream.
+     * \param start_time_set If true, set start time spec to the stream command
+     * \param start_time The time spec for the stream command if start_time_set is true
      */
     static sptr make(rfnoc_graph::sptr graph,
                      const size_t num_chans,
                      const ::uhd::stream_args_t& stream_args,
                      const size_t vlen = 1,
-                     const bool issue_stream_cmd_on_start = true);
+                     const bool issue_stream_cmd_on_start = true,
+                     const bool start_time_set = false,
+                     const ::uhd::time_spec_t& start_time = ::uhd::time_spec_t(0.0));
 
     //! Return the unique ID associated with the underlying RFNoC streamer
     virtual std::string get_unique_id() const = 0;
