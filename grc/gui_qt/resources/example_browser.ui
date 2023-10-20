@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>600</width>
+    <width>665</width>
     <height>400</height>
    </rect>
   </property>
@@ -24,9 +24,15 @@
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
+       <property name="minimumSize">
+        <size>
+         <width>150</width>
+         <height>0</height>
+        </size>
+       </property>
        <property name="maximumSize">
         <size>
-         <width>100</width>
+         <width>150</width>
          <height>16777215</height>
         </size>
        </property>
@@ -64,12 +70,33 @@
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_2">
         <item>
-         <widget class="QWidget" name="image_widget" native="true">
+         <widget class="QLabel" name="image_label">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
             <horstretch>0</horstretch>
-            <verstretch>5</verstretch>
+            <verstretch>0</verstretch>
            </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>200</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>200</width>
+            <height>200</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>Image</string>
+          </property>
+          <property name="scaledContents">
+           <bool>true</bool>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
           </property>
          </widget>
         </item>
@@ -78,12 +105,18 @@
           <property name="text">
            <string>Title</string>
           </property>
+          <property name="wordWrap">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item>
          <widget class="QLabel" name="author_label">
           <property name="text">
            <string>Author</string>
+          </property>
+          <property name="wordWrap">
+           <bool>true</bool>
           </property>
          </widget>
         </item>

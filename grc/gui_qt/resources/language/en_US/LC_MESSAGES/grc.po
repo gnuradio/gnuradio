@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: GNU Radio Companion\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-19 06:02+0200\n"
-"PO-Revision-Date: 2023-10-20 14:41+0200\n"
+"PO-Revision-Date: 2023-10-20 19:24+0200\n"
 "Last-Translator: Håkon Vågsether <hakon.vagsether@gmail.com>\n"
 "Language-Team: US English <sdhitefield@gmail.com>\n"
 "Language: grc\n"
@@ -59,7 +59,7 @@ msgstr "Open an existing flow graph"
 
 #: grc/gui_qt/components/window.py:313
 msgid "example_browser"
-msgstr "&Examples"
+msgstr "&Examples..."
 
 #: grc/gui_qt/components/window.py:315
 msgid "example_browser-tooltip"

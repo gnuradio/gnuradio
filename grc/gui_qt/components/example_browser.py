@@ -60,6 +60,11 @@ class ExampleBrowser(QtWidgets.QDialog, base.Component):
         super().__init__()
         uic.loadUi(Paths.RESOURCES + "/example_browser.ui", self)
 
+        self.cpp_qt_fg = QtGui.QPixmap(Paths.RESOURCES + "/cpp_qt_fg.png")
+        self.cpp_cmd_fg = QtGui.QPixmap(Paths.RESOURCES + "/cpp_cmd_fg.png")
+        self.py_qt_fg = QtGui.QPixmap(Paths.RESOURCES + "/py_qt_fg.png")
+        self.py_cmd_fg = QtGui.QPixmap(Paths.RESOURCES + "/py_cmd_fg.png")
+
         self.setMinimumSize(600, 400)
         self.setModal(True)
 
@@ -108,9 +113,20 @@ class ExampleBrowser(QtWidgets.QDialog, base.Component):
     def populate_preview(self):
         ex = self.mid_list.currentItem().data(self.data_role)
 
-        self.title_label.setText(ex["title"])
+        self.title_label.setText(f"<b>Title:</b> {ex['title']}")
+        self.author_label.setText(f"<b>Author:</b> {ex['author']}")
         self.desc_label.setText(ex["desc"])
-        self.author_label.setText(ex["author"])
+
+        if ex["output_language"] == "python":
+            if ex["generate_options"] == "qt_gui":
+                self.image_label.setPixmap(self.py_qt_fg)
+            else:
+                self.image_label.setPixmap(self.py_cmd_fg)
+        else:
+            if ex["generate_options"] == "qt_gui":
+                self.image_label.setPixmap(self.cpp_qt_fg)
+            else:
+                self.image_label.setPixmap(self.cpp_cmd_fg)
 
     def open_file(self):
         ex = self.mid_list.currentItem().data(self.data_role)
@@ -136,6 +152,8 @@ class ExampleBrowser(QtWidgets.QDialog, base.Component):
                                 data = cache.get_or_load(file_path)
                                 example = {}
                                 example["name"] = os.path.basename(file_path)
+                                example["generate_options"] = data["options"]["parameters"].get("generate_options") or "no_gui"
+                                example["output_language"] = data["options"]["parameters"].get("output_language") or "python"
                                 example["module"] = os.path.basename(os.path.dirname(file_path))
                                 example["title"] = data["options"]["parameters"]["title"] or "TITLE"
                                 example["desc"] = data["options"]["parameters"]["description"] or "DESCRIPTION"
@@ -147,6 +165,7 @@ class ExampleBrowser(QtWidgets.QDialog, base.Component):
                                 examples.append(example)
                             except Exception:
                                 continue
+
 
         examples_w_block = {} # str: set()
         for example in examples:
