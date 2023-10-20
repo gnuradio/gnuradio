@@ -33,7 +33,7 @@ from qtpy.QtGui import QStandardItemModel
 
 # Custom modules
 from . import FlowgraphView
-from .example_browser import ExampleBrowser, Worker
+from .example_browser import ExampleBrowser, Worker, WorkerSignals
 from .. import base, Constants, Utils
 from .undoable_actions import (
     ChangeStateAction,
@@ -187,9 +187,9 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
         self.threadpool = QtCore.QThreadPool()
         self.threadpool.setMaxThreadCount(1)
-        ExampleFinder = Worker(self.find_examples)
+        ExampleFinder = Worker(self.ExampleBrowser.find_examples)
         ExampleFinder.signals.result.connect(self.populate_libraries_w_examples)
-        ExampleFinder.signals.progress.connect(self.progress_callback)
+        ExampleFinder.signals.progress.connect(self.update_progress_bar)
         self.threadpool.start(ExampleFinder)
 
 
@@ -231,59 +231,6 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         action = BlockPropsChangeAction(self.currentFlowgraph, elem)
         self.currentFlowgraph.undoStack.push(action)
         self.updateActions()
-
-    def find_examples(self, progress_callback, ext="grc"):
-        examples = []
-        with Cache(Constants.EXAMPLE_CACHE_FILE, log=False) as cache:
-            for entry in ("/usr/local/share/gnuradio/examples",):
-                if os.path.isdir(entry):
-                    subdirs = 0
-                    current_subdir = 0
-                    for dirpath, dirnames, filenames in os.walk(entry):
-                            subdirs += 1
-                    for dirpath, dirnames, filenames in os.walk(entry):
-                        current_subdir += 1
-                        progress_callback.emit(int(100*current_subdir/subdirs))
-                        for filename in sorted(filter(lambda f: f.endswith('.' + ext), filenames)):
-                            file_path = os.path.join(dirpath, filename)
-                            try:
-                                data = cache.get_or_load(file_path)
-                                example = {}
-                                example["name"] = os.path.basename(file_path)
-                                example["module"] = os.path.basename(os.path.dirname(file_path))
-                                example["title"] = data["options"]["parameters"]["title"] or "TITLE"
-                                example["desc"] = data["options"]["parameters"]["description"] or "DESCRIPTION"
-                                example["author"] = data["options"]["parameters"]["author"] or "AUTHOR"
-                                example["path"] = file_path
-                                example["blocks"] = set()
-                                for block in data["blocks"]:
-                                    example["blocks"].add(block["id"])
-                                examples.append(example)
-                            except Exception:
-                                continue
-
-        examples_w_block = {} # str: set()
-        for example in examples:
-            for block in example["blocks"]:
-                try:
-                    examples_w_block[block].add(example["path"])
-                except KeyError:
-                    examples_w_block[block] = set()
-                    examples_w_block[block].add(example["path"])
-
-        return (examples, examples_w_block)
-
-    def populate_libraries_w_examples(self, example_tuple):
-        examples, examples_w_block = example_tuple
-        self.ExampleBrowser.populate(examples)
-        self.app.BlockLibrary.examples_w_block = examples_w_block
-        self.progress_bar.reset()
-        self.progress_bar.hide()
-        self.examples_found = True
-
-    def progress_callback(self, progress):
-        self.progress_bar.show()
-        self.progress_bar.setValue(progress)
 
     def createActions(self, actions):
         """
@@ -901,6 +848,23 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         help = self.menus["help"].menuAction()
         self.menuBar().insertMenu(help, menu)
 
+
+    def populate_libraries_w_examples(self, example_tuple):
+        examples, examples_w_block = example_tuple
+        self.ExampleBrowser.populate(examples)
+        self.app.BlockLibrary.examples_w_block = examples_w_block
+        self.progress_bar.reset()
+        self.progress_bar.hide()
+        self.examples_found = True
+
+    @QtCore.Slot(tuple)
+    def update_progress_bar(self, progress_tuple):
+        progress, msg = progress_tuple
+        self.progress_bar.show()
+        self.progress_bar.setValue(progress)
+        self.progress_bar.setTextVisible(True)
+        self.progress_bar.setFormat(msg)
+
     # Action Handlers
     def new_triggered(self):
         log.debug("New")
@@ -1344,7 +1308,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
                 return
         else:
             ad = QtWidgets.QMessageBox()
-            ad.setWindowTitle("Still indexing examples")
+            ad.setWindowTitle("GRC still indexing examples")
             ad.setText("GRC is still indexing examples, please try again shortly.")
             ad.exec()
 

@@ -15,7 +15,8 @@ from qtpy import QtCore, QtGui, QtWidgets, uic
 from qtpy.QtCore import Qt, QSettings
 from qtpy.QtGui import QStandardItemModel
 
-from .. import base
+from ...core.cache import Cache
+from .. import base, Constants
 from ..properties import Paths
 
 
@@ -25,7 +26,7 @@ log = logging.getLogger(__name__)
 class WorkerSignals(QtCore.QObject):
     error = QtCore.Signal(tuple)
     result = QtCore.Signal(object)
-    progress = QtCore.Signal(int)
+    progress = QtCore.Signal(tuple)
 
 
 class Worker(QtCore.QRunnable):
@@ -116,3 +117,46 @@ class ExampleBrowser(QtWidgets.QDialog, base.Component):
 
         self.file_to_open.emit(ex["path"])
         self.done(0)
+
+    def find_examples(self, progress_callback, ext="grc"):
+        examples = []
+        with Cache(Constants.EXAMPLE_CACHE_FILE, log=False) as cache:
+            for entry in ("/usr/local/share/gnuradio/examples",):
+                if os.path.isdir(entry):
+                    subdirs = 0
+                    current_subdir = 0
+                    for dirpath, dirnames, filenames in os.walk(entry):
+                            subdirs += 1 # Loop through once to see how many there are
+                    for dirpath, dirnames, filenames in os.walk(entry):
+                        current_subdir += 1
+                        progress_callback.emit((int(100*current_subdir/subdirs), "Indexing examples"))
+                        for filename in sorted(filter(lambda f: f.endswith('.' + ext), filenames)):
+                            file_path = os.path.join(dirpath, filename)
+                            try:
+                                data = cache.get_or_load(file_path)
+                                example = {}
+                                example["name"] = os.path.basename(file_path)
+                                example["module"] = os.path.basename(os.path.dirname(file_path))
+                                example["title"] = data["options"]["parameters"]["title"] or "TITLE"
+                                example["desc"] = data["options"]["parameters"]["description"] or "DESCRIPTION"
+                                example["author"] = data["options"]["parameters"]["author"] or "AUTHOR"
+                                example["path"] = file_path
+                                example["blocks"] = set()
+                                for block in data["blocks"]:
+                                    example["blocks"].add(block["id"])
+                                examples.append(example)
+                            except Exception:
+                                continue
+
+        examples_w_block = {} # str: set()
+        for example in examples:
+            for block in example["blocks"]:
+                try:
+                    examples_w_block[block].add(example["path"])
+                except KeyError:
+                    examples_w_block[block] = set()
+                    examples_w_block[block].add(example["path"])
+
+        return (examples, examples_w_block)
+
+
