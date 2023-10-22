@@ -325,7 +325,7 @@ def main(top_block_cls=${class_name}, options=None):
     % endif
     % if flow_graph.get_option('realtime_scheduling'):
     if gr.enable_realtime_scheduling() != gr.RT_OK:
-        gr.logger("realtime").warning("Error: failed to enable real-time scheduling.")
+        gr.logger("realtime").warn("Error: failed to enable real-time scheduling.")
     % endif
     % if generate_options == 'qt_gui':
 
