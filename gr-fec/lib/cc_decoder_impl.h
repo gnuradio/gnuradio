@@ -13,6 +13,7 @@
 
 #include <gnuradio/fec/cc_decoder.h>
 #include <volk/volk_alloc.hh>
+#include <array>
 #include <map>
 #include <string>
 
@@ -23,6 +24,15 @@ namespace code {
 class FEC_API cc_decoder_impl : public cc_decoder
 {
 private:
+    // constants
+    static constexpr unsigned int s_k = 7;
+    static constexpr unsigned int s_rate = 2;
+    static constexpr unsigned int s_numstates = 1 << (s_k - 1);
+    static constexpr unsigned int s_decision_t_size = s_numstates / 8;
+    static constexpr int s_ADDSHIFT = 8 - (s_k - 1);
+    static constexpr int s_SUBSHIFT = 0;
+    // initial parity table factory
+    static constexpr std::array<unsigned char, 256> initial_parity_table();
     // plug into the generic fec api
     int get_output_size() override;
     int get_input_size() override;
@@ -34,8 +44,8 @@ private:
 
     // everything else...
     void create_viterbi();
-    int init_viterbi(struct v* vp, int starting_state);
-    int init_viterbi_unbiased(struct v* vp);
+    int init_viterbi(v* vp, int starting_state);
+    int init_viterbi_unbiased(v* vp);
     int update_viterbi_blk(unsigned char* syms, int nbits);
     int chainback_viterbi(unsigned char* data,
                           unsigned int nbits,
@@ -43,25 +53,24 @@ private:
                           unsigned int tailsize);
     int find_endstate();
 
-    volk::vector<unsigned char> d_branchtab;
-    unsigned char Partab[256];
+    /* Originally a volk::vector of length
+     * s_numstates / 2 * s_rate = 1 <<(7-1) / 2 * 2 = 1 << 6 = 64
+     *
+     * We're using unaligned kernels, anyways, so this is really not because we actually
+     * know what we're doing, and copying 64 bytes would not be a relevant workload
+     * anyways, but avoiding any "reduction of aligment" complaint:
+     */
+    alignas(64) std::array<unsigned char, s_numstates / 2 * s_rate> d_branchtab;
+    alignas(64) std::array<unsigned char, 256> d_parity_table;
 
-
-    int d_ADDSHIFT;
-    int d_SUBSHIFT;
-    conv_kernel d_kernel;
-    unsigned int d_max_frame_size;
+    const unsigned int d_max_frame_size;
     unsigned int d_frame_size;
-    unsigned int d_k;
-    unsigned int d_rate;
     std::vector<int> d_polys;
-    cc_mode_t d_mode;
+    const cc_mode_t d_mode;
     int d_padding;
 
-    struct v d_vp;
+    v d_vp;
     volk::vector<unsigned char> d_managed_in;
-    int d_numstates;
-    int d_decision_t_size;
     int* d_start_state;
     int d_start_state_chaining;
     int d_start_state_nonchaining;
@@ -71,8 +80,6 @@ private:
     unsigned int d_veclen;
 
     int parity(int x);
-    int parityb(unsigned char x);
-    void partab_init(void);
 
 public:
     cc_decoder_impl(int frame_size,
