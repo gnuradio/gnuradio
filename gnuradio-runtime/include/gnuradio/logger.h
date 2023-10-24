@@ -33,7 +33,8 @@ using logger_ptr = std::shared_ptr<void>;
 // keeps as short as possible; if anything is needed only by the implementation in
 // buffer.cc, then only include it there
 #include <gnuradio/api.h>
-#include <spdlog/common.h>
+#include <spdlog/common.h> /* important to include before spdlog/fmt/anything.h,
+                            * see https://github.com/gabime/spdlog/issues/2922 */
 #include <spdlog/fmt/fmt.h>
 #include <spdlog/fmt/ostr.h>
 #include <spdlog/version.h>

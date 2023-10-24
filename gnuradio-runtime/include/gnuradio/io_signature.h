@@ -11,6 +11,9 @@
 
 #ifndef INCLUDED_IO_SIGNATURE_H
 #define INCLUDED_IO_SIGNATURE_H
+/* ensure that tweakme.h is included before the bundled spdlog/fmt header, see
+ * https://github.com/gabime/spdlog/issues/2922 */
+#include <spdlog/tweakme.h>
 
 #include <gnuradio/api.h>
 #include <spdlog/fmt/fmt.h>

@@ -10,6 +10,10 @@
  */
 #ifndef INCLUDED_BENCHMARK_COMMON
 #define INCLUDED_BENCHMARK_COMMON
+/* ensure that tweakme.h is included before the bundled spdlog/fmt header, see
+ * https://github.com/gabime/spdlog/issues/2922 */
+#include <spdlog/tweakme.h>
+
 #include <spdlog/fmt/fmt.h>
 #include <string_view>
 #include <chrono>

@@ -9,6 +9,10 @@
  */
 #ifndef INCLUDED_GNURADIO_PMT_FMT_H
 #define INCLUDED_GNURADIO_PMT_FMT_H
+/* ensure that tweakme.h is included before the bundled spdlog/fmt header, see
+ * https://github.com/gabime/spdlog/issues/2922 */
+#include <spdlog/tweakme.h>
+
 #include <gnuradio/api.h>
 #include <pmt/pmt.h>
 #include <spdlog/fmt/fmt.h>
