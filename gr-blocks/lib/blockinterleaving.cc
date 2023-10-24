@@ -9,6 +9,11 @@
  */
 
 #include <gnuradio/blocks/blockinterleaving.h>
+
+/* ensure that tweakme.h is included before the bundled spdlog/fmt header, see
+ * https://github.com/gabime/spdlog/issues/2922 */
+#include <spdlog/tweakme.h>
+
 #include <spdlog/fmt/fmt.h>
 #include <algorithm>
 #include <numeric>

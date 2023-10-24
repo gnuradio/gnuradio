@@ -11,6 +11,11 @@
 
 #include "message_debug_impl.h"
 #include <gnuradio/io_signature.h>
+
+/* ensure that tweakme.h is included before the bundled spdlog/fmt header, see
+ * https://github.com/gabime/spdlog/issues/2922 */
+#include <spdlog/tweakme.h>
+
 #include <pmt/pmt.h>
 #include <spdlog/common.h>
 #include <spdlog/fmt/fmt.h>
