@@ -11,6 +11,8 @@ from gi.repository import Gtk, Gdk, GObject, Pango
 from . import Actions, Utils, Constants
 from .Dialogs import SimpleTextDisplay
 
+from urllib.parse import urljoin, urlparse
+
 
 class PropsDialog(Gtk.Dialog):
     """
@@ -69,6 +71,7 @@ class PropsDialog(Gtk.Dialog):
         self._docs_box.set_policy(
             Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
         self._docs_vbox = Gtk.VBox(homogeneous=False, spacing=0)
+        # TODO: left align
         self._docs_box.add(self._docs_vbox)
         self._docs_link = Gtk.Label(use_markup=True)
         self._docs_vbox.pack_start(self._docs_link, False, False, 0)
@@ -213,17 +216,31 @@ class PropsDialog(Gtk.Dialog):
         buf.delete(buf.get_start_iter(), buf.get_end_iter())
         pos = buf.get_end_iter()
 
+        in_tree = self._block.category and self._block.category[0] == "Core"
+
         # Add link to wiki page for this block, at the top, as long as it's not an OOT block
         if self._block.is_connection:
             self._docs_link.set_markup('Connection')
-        elif self._block.category and self._block.category[0] == "Core":
-            note = "Wiki Page for this Block: "
+        elif in_tree:
+            # For in-tree modules, use prefix as configured
             prefix = self._config.wiki_block_docs_url_prefix
-            suffix = self._block.label.replace(" ", "_")
-            href = f'<a href="{prefix+suffix}">Visit Wiki Page</a>'
-            self._docs_link.set_markup(href)
         else:
-            self._docs_link.set_markup('Out of Tree Block')
+            prefix = ""
+
+        suffix = None
+        if self._block.doc_url:
+            suffix = self._block.doc_url
+        elif in_tree:
+            suffix = self._block.label.replace(" ", "_")
+
+        if suffix:
+            url = urljoin(prefix, suffix)
+            icon = "🗗 "
+            if urlparse(url).scheme not in ("", "file"):
+                icon += "🌐"
+            self._docs_link.set_markup(f'<a href="{url}">{icon} Visit Documentation Page</a>')
+        else:
+            self._docs_link.set_markup('Out of Tree Block, No documentation URL specified')
 
         docstrings = self._block.documentation.copy()
         if not docstrings:
