@@ -9,4 +9,5 @@ outputs:
 -   domain: stream
     id: port0
 
+doc_url: UHD_FPGA_FFT
 file_format: 1
