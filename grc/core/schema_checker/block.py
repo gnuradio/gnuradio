@@ -64,6 +64,7 @@ BLOCK_SCHEME = expand(
                        item_scheme=CPP_TEMPLATES_SCHEME),
 
     documentation=str,
+    doc_url=str,
     grc_source=str,
 
     file_format=Spec(types=int, required=True, item_scheme=None),
