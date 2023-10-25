@@ -43,6 +43,7 @@ class Block(Element):
     vtype = ''  # This is only used for variables when we want C++ output
     flags = Flags('')
     documentation = {'': ''}
+    doc_url = ''
 
     value = None
     asserts = []
