@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-#include "QFosphorColorMapper.h"
+#include "QRfnocF15ColorMapper.h"
 #include <QGLContext>
 #include <memory>
 #include <sstream>
@@ -15,7 +15,7 @@
 namespace gr {
 namespace qtgui {
 
-QFosphorColorMapper::QFosphorColorMapper(QObject* parent) : QObject(parent)
+QRfnocF15ColorMapper::QRfnocF15ColorMapper(QObject* parent) : QObject(parent)
 {
     /* Shader init */
     d_shader = new QGLShaderProgram(this);
@@ -40,12 +40,12 @@ QFosphorColorMapper::QFosphorColorMapper(QObject* parent) : QObject(parent)
     d_u_range = d_shader->uniformLocation("range");
 
     /* Load default set */
-    QFile f(":/fosphor/palettes.txt");
+    QFile f(":/rfnoc_f15/palettes.txt");
     loadFromFile(f);
     initializeGLFunctions();
 }
 
-int QFosphorColorMapper::loadFromFile(QFile& file)
+int QRfnocF15ColorMapper::loadFromFile(QFile& file)
 {
     std::unique_ptr<QLinearGradient> gradient;
     std::string name;
@@ -111,7 +111,7 @@ int QFosphorColorMapper::loadFromFile(QFile& file)
     return 0;
 }
 
-bool QFosphorColorMapper::addPalette(std::string name, QLinearGradient& gradient)
+bool QRfnocF15ColorMapper::addPalette(std::string name, QLinearGradient& gradient)
 {
     /* Configure the gradient */
     gradient.setStart(0, 0);
@@ -129,7 +129,7 @@ bool QFosphorColorMapper::addPalette(std::string name, QLinearGradient& gradient
     return addPalette(name, pixmap);
 }
 
-bool QFosphorColorMapper::addPalette(std::string name, QPixmap& pixmap)
+bool QRfnocF15ColorMapper::addPalette(std::string name, QPixmap& pixmap)
 {
     /* Convert to an OpenGL texture */
     /* Note: We use TEXTURE_2D because 1D isn't really supported by Qt
@@ -152,7 +152,7 @@ bool QFosphorColorMapper::addPalette(std::string name, QPixmap& pixmap)
     return true;
 }
 
-void QFosphorColorMapper::drawScale(
+void QRfnocF15ColorMapper::drawScale(
     std::string name, float x0, float y0, float x1, float y1)
 {
     /* Enable texture-2D */
@@ -178,7 +178,7 @@ void QFosphorColorMapper::drawScale(
     glDisable(GL_TEXTURE_2D);
 }
 
-void QFosphorColorMapper::enable(std::string name, GLuint tex_id)
+void QRfnocF15ColorMapper::enable(std::string name, GLuint tex_id)
 {
     /* Enable shader */
     d_shader->bind();
@@ -201,7 +201,7 @@ void QFosphorColorMapper::enable(std::string name, GLuint tex_id)
     d_shader->setUniformValue(d_u_range, 1.0f, 0.00f);
 }
 
-void QFosphorColorMapper::disable()
+void QRfnocF15ColorMapper::disable()
 {
     glActiveTexture(GL_TEXTURE0);
     d_shader->release();

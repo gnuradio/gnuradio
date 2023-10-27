@@ -7,8 +7,8 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-#ifndef INCLUDED_QTGUI_QFOSPHORCOLORMAPPER_H
-#define INCLUDED_QTGUI_QFOSPHORCOLORMAPPER_H
+#ifndef INCLUDED_QTGUI_QRFNOCF15COLORMAPPER_H
+#define INCLUDED_QTGUI_QRFNOCF15COLORMAPPER_H
 
 #include <QFile>
 #include <QGLFunctions>
@@ -23,12 +23,12 @@
 namespace gr {
 namespace qtgui {
 
-class QFosphorColorMapper : public ::QObject, protected ::QGLFunctions
+class QRfnocF15ColorMapper : public ::QObject, protected ::QGLFunctions
 {
     Q_OBJECT
 
 public:
-    QFosphorColorMapper(QObject* parent = NULL);
+    QRfnocF15ColorMapper(QObject* parent = NULL);
 
     int loadFromFile(QFile& file);
     bool addPalette(std::string name, QLinearGradient& gradient);
@@ -52,4 +52,4 @@ private:
 } // namespace qtgui
 } // namespace gr
 
-#endif /* INCLUDED_QTGUI_QFOSPHORCOLORMAPPER_H */
+#endif /* INCLUDED_QTGUI_QRFNOCF15COLORMAPPER_H */

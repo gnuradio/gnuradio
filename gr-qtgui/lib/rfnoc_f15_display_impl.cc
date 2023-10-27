@@ -9,29 +9,29 @@
 #include "config.h"
 #endif
 
-#include "fosphor_display_impl.h"
+#include "rfnoc_f15_display_impl.h"
 
-#include "QFosphorSurface.h"
+#include "QRfnocF15Surface.h"
 #include <QApplication>
 #include <QWidget>
 
 namespace gr {
 namespace qtgui {
 
-fosphor_display::sptr fosphor_display::make(const int fft_bins,
-                                            const int pwr_bins,
-                                            const int wf_lines,
-                                            QWidget* parent)
+rfnoc_f15_display::sptr rfnoc_f15_display::make(const int fft_bins,
+                                                const int pwr_bins,
+                                                const int wf_lines,
+                                                QWidget* parent)
 {
-    return gnuradio::make_block_sptr<fosphor_display_impl>(
+    return gnuradio::make_block_sptr<rfnoc_f15_display_impl>(
         fft_bins, pwr_bins, wf_lines, parent);
 }
 
-fosphor_display_impl::fosphor_display_impl(const int fft_bins,
-                                           const int pwr_bins,
-                                           const int wf_lines,
-                                           QWidget* parent)
-    : gr::block("fosphor_display",
+rfnoc_f15_display_impl::rfnoc_f15_display_impl(const int fft_bins,
+                                               const int pwr_bins,
+                                               const int wf_lines,
+                                               QWidget* parent)
+    : gr::block("rfnoc_f15_display",
                 gr::io_signature::make(1, 2, fft_bins * sizeof(uint8_t)),
                 gr::io_signature::make(0, 0, 0)),
       d_fft_bins(fft_bins),
@@ -51,16 +51,16 @@ fosphor_display_impl::fosphor_display_impl(const int fft_bins,
         d_qApplication = new QApplication(d_argc, &d_argv);
     }
 
-    d_gui = new QFosphorSurface(fft_bins, pwr_bins, wf_lines, parent);
+    d_gui = new QRfnocF15Surface(fft_bins, pwr_bins, wf_lines, parent);
     d_gui->setFocusPolicy(Qt::StrongFocus);
     d_gui->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 }
 
-fosphor_display_impl::~fosphor_display_impl() { delete d_frame; }
+rfnoc_f15_display_impl::~rfnoc_f15_display_impl() { delete d_frame; }
 
 
-void fosphor_display_impl::set_frequency_range(const double center_freq,
-                                               const double samp_rate)
+void rfnoc_f15_display_impl::set_frequency_range(const double center_freq,
+                                                 const double samp_rate)
 {
     pmt::pmt_t msg = pmt::make_dict();
 
@@ -87,19 +87,19 @@ void fosphor_display_impl::set_frequency_range(const double center_freq,
     message_port_pub(pmt::mp("cfg"), msg);
 }
 
-void fosphor_display_impl::set_waterfall(bool enabled) { d_gui->setWaterfall(enabled); }
+void rfnoc_f15_display_impl::set_waterfall(bool enabled) { d_gui->setWaterfall(enabled); }
 
-void fosphor_display_impl::set_grid(bool enabled) { d_gui->setGrid(enabled); }
+void rfnoc_f15_display_impl::set_grid(bool enabled) { d_gui->setGrid(enabled); }
 
-void fosphor_display_impl::set_palette(const std::string& name)
+void rfnoc_f15_display_impl::set_palette(const std::string& name)
 {
     d_gui->setPalette(name);
 }
 
-void fosphor_display_impl::set_frame_rate(int fps) { d_frame_rate = fps; }
+void rfnoc_f15_display_impl::set_frame_rate(int fps) { d_frame_rate = fps; }
 
 
-bool fosphor_display_impl::start()
+bool rfnoc_f15_display_impl::start()
 {
     pmt::pmt_t msg = pmt::make_dict();
 
@@ -119,8 +119,8 @@ bool fosphor_display_impl::start()
     return true;
 }
 
-void fosphor_display_impl::forecast(int noutput_items,
-                                    gr_vector_int& ninput_items_required)
+void rfnoc_f15_display_impl::forecast(int noutput_items,
+                                      gr_vector_int& ninput_items_required)
 {
     /* Need at least one item */
     ninput_items_required[0] = 1;
@@ -130,10 +130,10 @@ void fosphor_display_impl::forecast(int noutput_items,
         ninput_items_required[1] = 0;
 }
 
-int fosphor_display_impl::general_work(int noutput_items,
-                                       gr_vector_int& ninput_items,
-                                       gr_vector_const_void_star& input_items,
-                                       gr_vector_void_star& output_items)
+int rfnoc_f15_display_impl::general_work(int noutput_items,
+                                         gr_vector_int& ninput_items,
+                                         gr_vector_const_void_star& input_items,
+                                         gr_vector_void_star& output_items)
 {
     int rv;
 
@@ -155,7 +155,7 @@ int fosphor_display_impl::general_work(int noutput_items,
     return 0;
 }
 
-int fosphor_display_impl::_work_hist(const uint8_t* input, int n_items, int port)
+int rfnoc_f15_display_impl::_work_hist(const uint8_t* input, int n_items, int port)
 {
     static const pmt::pmt_t EOB_KEY = pmt::string_to_symbol("rx_eob");
     std::vector<tag_t> v;
@@ -221,7 +221,7 @@ int fosphor_display_impl::_work_hist(const uint8_t* input, int n_items, int port
     return n_items;
 }
 
-int fosphor_display_impl::_work_wf(const uint8_t* input, int n_items, int port)
+int rfnoc_f15_display_impl::_work_wf(const uint8_t* input, int n_items, int port)
 {
     /* Anything to do ? */
     if (n_items < 1)
@@ -234,9 +234,9 @@ int fosphor_display_impl::_work_wf(const uint8_t* input, int n_items, int port)
 }
 
 
-void fosphor_display_impl::exec_() { d_qApplication->exec(); }
+void rfnoc_f15_display_impl::exec_() { d_qApplication->exec(); }
 
-QWidget* fosphor_display_impl::qwidget() { return dynamic_cast<QWidget*>(d_gui); }
+QWidget* rfnoc_f15_display_impl::qwidget() { return dynamic_cast<QWidget*>(d_gui); }
 
 } // namespace qtgui
 } // namespace gr
