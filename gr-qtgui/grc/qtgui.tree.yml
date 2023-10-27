@@ -38,4 +38,4 @@
     - variable_qtgui_msg_push_button
     - variable_qtgui_toggle_button_msg
     - variable_qtgui_toggle_switch
-    - qtgui_fosphor_display
+    - qtgui_rfnoc_f15_display

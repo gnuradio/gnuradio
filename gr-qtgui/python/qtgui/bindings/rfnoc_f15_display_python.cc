@@ -13,8 +13,8 @@
 /* If manual edits are made, the following tags should be modified accordingly.    */
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
-/* BINDTOOL_HEADER_FILE(fosphor_display.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(4dc2bbbd99e8a39ab634a441c4246fad)                     */
+/* BINDTOOL_HEADER_FILE(rfnoc_f15_display.h)                                        */
+/* BINDTOOL_HEADER_FILE_HASH(9ba8d496dc1abb2f76017bf7ee0f40ce)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -37,69 +37,70 @@ namespace py = pybind11;
 #include <qwt_scale_widget.h>
 #include <qwt_symbol.h>
 
-#include <gnuradio/qtgui/fosphor_display.h>
+#include <gnuradio/qtgui/rfnoc_f15_display.h>
 // pydoc.h is automatically generated in the build directory
-#include <fosphor_display_pydoc.h>
+#include <rfnoc_f15_display_pydoc.h>
 
-void bind_fosphor_display(py::module& m)
+void bind_rfnoc_f15_display(py::module& m)
 {
 
-    using fosphor_display = ::gr::qtgui::fosphor_display;
+    using rfnoc_f15_display = ::gr::qtgui::rfnoc_f15_display;
 
 
-    py::class_<fosphor_display,
+    py::class_<rfnoc_f15_display,
                gr::block,
                gr::basic_block,
-               std::shared_ptr<fosphor_display>>(m, "fosphor_display", D(fosphor_display))
+               std::shared_ptr<rfnoc_f15_display>>(
+        m, "rfnoc_f15_display", D(rfnoc_f15_display))
 
-        .def(py::init(&fosphor_display::make),
+        .def(py::init(&rfnoc_f15_display::make),
              py::arg("fft_bins") = 256,
              py::arg("pwr_bins") = 64,
              py::arg("wf_lines") = 512,
              py::arg("parent") = nullptr,
-             D(fosphor_display, make))
+             D(rfnoc_f15_display, make))
 
 
         .def("set_frequency_range",
-             &fosphor_display::set_frequency_range,
+             &rfnoc_f15_display::set_frequency_range,
              py::arg("center_freq"),
              py::arg("samp_rate"),
-             D(fosphor_display, set_frequency_range))
+             D(rfnoc_f15_display, set_frequency_range))
 
 
         .def("set_waterfall",
-             &fosphor_display::set_waterfall,
+             &rfnoc_f15_display::set_waterfall,
              py::arg("enabled"),
-             D(fosphor_display, set_waterfall))
+             D(rfnoc_f15_display, set_waterfall))
 
 
         .def("set_grid",
-             &fosphor_display::set_grid,
+             &rfnoc_f15_display::set_grid,
              py::arg("enabled"),
-             D(fosphor_display, set_grid))
+             D(rfnoc_f15_display, set_grid))
 
 
         .def("set_palette",
-             &fosphor_display::set_palette,
+             &rfnoc_f15_display::set_palette,
              py::arg("name"),
-             D(fosphor_display, set_palette))
+             D(rfnoc_f15_display, set_palette))
 
 
         .def("set_frame_rate",
-             &fosphor_display::set_frame_rate,
+             &rfnoc_f15_display::set_frame_rate,
              py::arg("fps"),
-             D(fosphor_display, set_frame_rate))
+             D(rfnoc_f15_display, set_frame_rate))
 
 
-        .def("exec_", &fosphor_display::exec_, D(fosphor_display, exec_))
+        .def("exec_", &rfnoc_f15_display::exec_, D(rfnoc_f15_display, exec_))
 
 
         .def(
             "qwidget",
-            [](fosphor_display& self) {
+            [](rfnoc_f15_display& self) {
                 return reinterpret_cast<uintptr_t>(self.qwidget());
             },
-            D(fosphor_display, qwidget))
+            D(rfnoc_f15_display, qwidget))
 
         ;
 }
