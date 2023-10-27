@@ -80,5 +80,10 @@ def dump(data, stream=None, **kwargs):
     return yaml.dump_all([data], **config)
 
 
-safe_load = yaml.safe_load
-__with_libyaml__ = yaml.__with_libyaml__
+if yaml.__with_libyaml__:
+    loader = yaml.CSafeLoader
+else:
+    loader = yaml.SafeLoader
+
+
+def safe_load(stream): return yaml.load(stream, Loader=loader)
