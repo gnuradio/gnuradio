@@ -52,9 +52,6 @@ class Platform(Element):
         self._block_categories = {}
         self._auto_hier_block_generate_chain = set()
 
-        if not yaml.__with_libyaml__:
-            logger.warning("Slow YAML loading (libyaml not available)")
-
     def __str__(self):
         return 'Platform - {}'.format(self.config.name)
 
