@@ -1,0 +1,9 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource>
+<file>rfnoc_f15/palettes.txt</file>
+<file>rfnoc_f15/pal_test.png</file>
+<file>rfnoc_f15/pal_iron.png</file>
+<file>rfnoc_f15/pal_rainbow.png</file>
+<file>rfnoc_f15/pal_cubehelix.png</file>
+</qresource>
+</RCC>

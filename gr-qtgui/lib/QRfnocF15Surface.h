@@ -6,8 +6,8 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-#ifndef INCLUDED_QTGUI_QFOSPHORSURFACE_H
-#define INCLUDED_QTGUI_QFOSPHORSURFACE_H
+#ifndef INCLUDED_QTGUI_QRFNOCF15SURFACE_H
+#define INCLUDED_QTGUI_QRFNOCF15SURFACE_H
 
 #include <QGLFunctions>
 #include <QGLWidget>
@@ -21,9 +21,9 @@ extern "C" {
 namespace gr {
 namespace qtgui {
 
-class QFosphorColorMapper;
+class QRfnocF15ColorMapper;
 
-class QFosphorSurface : public ::QGLWidget, protected ::QGLFunctions
+class QRfnocF15Surface : public ::QGLWidget, protected ::QGLFunctions
 {
     Q_OBJECT
 
@@ -33,8 +33,8 @@ protected:
     void paintGL() override;
 
 public:
-    QFosphorSurface(int fft_bins, int pwr_bins, int wf_lines, QWidget* parent);
-    ~QFosphorSurface() override;
+    QRfnocF15Surface(int fft_bins, int pwr_bins, int wf_lines, QWidget* parent);
+    ~QRfnocF15Surface() override;
 
     void setFrequencyRange(const double center_freq, const double span);
     void setWaterfall(bool enabled);
@@ -95,7 +95,7 @@ private:
         GLuint freq_tex;
     } d_layout;
 
-    QFosphorColorMapper* d_cmap;
+    QRfnocF15ColorMapper* d_cmap;
 
     struct freq_axis d_freq_axis;
 };
@@ -103,4 +103,4 @@ private:
 } // namespace qtgui
 } // namespace gr
 
-#endif /* INCLUDED_QTGUI_QFOSPHORSURFACE_H */
+#endif /* INCLUDED_QTGUI_QRFNOCF15SURFACE_H */

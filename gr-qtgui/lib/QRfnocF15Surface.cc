@@ -7,8 +7,8 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-#include "QFosphorColorMapper.h"
-#include "QFosphorSurface.h"
+#include "QRfnocF15ColorMapper.h"
+#include "QRfnocF15Surface.h"
 
 #include <cstdio>
 #include <cstring>
@@ -21,10 +21,10 @@
 namespace gr {
 namespace qtgui {
 
-QFosphorSurface::QFosphorSurface(int fft_bins,
-                                 int pwr_bins,
-                                 int wf_lines,
-                                 QWidget* parent)
+QRfnocF15Surface::QRfnocF15Surface(int fft_bins,
+                                   int pwr_bins,
+                                   int wf_lines,
+                                   QWidget* parent)
     : QGLWidget(parent),
       d_fft_bins(fft_bins),
       d_pwr_bins(pwr_bins),
@@ -45,7 +45,7 @@ QFosphorSurface::QFosphorSurface(int fft_bins,
     setFrequencyRange(0.0, 0.0);
 }
 
-QFosphorSurface::~QFosphorSurface()
+QRfnocF15Surface::~QRfnocF15Surface()
 {
     delete[] d_frame.vbo_buf;
     delete[] d_wf.data_buf;
@@ -56,7 +56,7 @@ QFosphorSurface::~QFosphorSurface()
 /* Overloaded GL functions                                              */
 /* -------------------------------------------------------------------- */
 
-void QFosphorSurface::initializeGL()
+void QRfnocF15Surface::initializeGL()
 {
     initializeGLFunctions();
 
@@ -109,10 +109,10 @@ void QFosphorSurface::initializeGL()
                  NULL);
 
     /* Color map */
-    d_cmap = new QFosphorColorMapper(this);
+    d_cmap = new QRfnocF15ColorMapper(this);
 }
 
-void QFosphorSurface::resizeGL(int width, int height)
+void QRfnocF15Surface::resizeGL(int width, int height)
 {
     /* Setup matrix to map GL coord to exact pixels */
     glMatrixMode(GL_MODELVIEW);
@@ -131,7 +131,7 @@ void QFosphorSurface::resizeGL(int width, int height)
     d_layout.dirty = true;
 }
 
-void QFosphorSurface::paintGL()
+void QRfnocF15Surface::paintGL()
 {
     /* If no data, abort early */
     if (!d_frame.data)
@@ -174,30 +174,30 @@ void QFosphorSurface::paintGL()
 /* Public API                                                           */
 /* -------------------------------------------------------------------- */
 
-void QFosphorSurface::setFrequencyRange(const double center_freq, const double span)
+void QRfnocF15Surface::setFrequencyRange(const double center_freq, const double span)
 {
     freq_axis_build(&d_freq_axis, center_freq, span, 10);
     d_layout.dirty = true; // FIXME more fine grain refresh
 }
 
-void QFosphorSurface::setWaterfall(bool enabled)
+void QRfnocF15Surface::setWaterfall(bool enabled)
 {
     d_layout.wf_enabled = enabled;
     d_layout.dirty = true;
 }
 
-void QFosphorSurface::setGrid(bool enabled) { d_grid_enabled = enabled; }
+void QRfnocF15Surface::setGrid(bool enabled) { d_grid_enabled = enabled; }
 
-void QFosphorSurface::setPalette(std::string name) { d_palette = name; }
+void QRfnocF15Surface::setPalette(std::string name) { d_palette = name; }
 
-void QFosphorSurface::sendFrame(void* frame, int frame_len)
+void QRfnocF15Surface::sendFrame(void* frame, int frame_len)
 {
     d_frame.data = frame;
     d_frame.dirty = true;
     QMetaObject::invokeMethod(this, "updateGL");
 }
 
-void QFosphorSurface::sendWaterfall(const uint8_t* wf, int n)
+void QRfnocF15Surface::sendWaterfall(const uint8_t* wf, int n)
 {
     int m;
 
@@ -225,7 +225,7 @@ void QFosphorSurface::sendWaterfall(const uint8_t* wf, int n)
 /* Private helpers                                                      */
 /* -------------------------------------------------------------------- */
 
-void QFosphorSurface::drawHistogram()
+void QRfnocF15Surface::drawHistogram()
 {
     float x[2], y[2];
     float e = 0.5f / d_fft_bins;
@@ -252,7 +252,7 @@ void QFosphorSurface::drawHistogram()
     d_cmap->disable();
 }
 
-void QFosphorSurface::drawHistogramIntensityScale()
+void QRfnocF15Surface::drawHistogramIntensityScale()
 {
     d_cmap->drawScale(d_palette,
                       d_layout.x[2] + 2.0f,
@@ -261,7 +261,7 @@ void QFosphorSurface::drawHistogramIntensityScale()
                       d_layout.y[4]);
 }
 
-void QFosphorSurface::drawSpectrum()
+void QRfnocF15Surface::drawSpectrum()
 {
     /* Setup the 2D transform */
     glPushMatrix();
@@ -306,7 +306,7 @@ void QFosphorSurface::drawSpectrum()
     glPopMatrix();
 }
 
-void QFosphorSurface::drawGrid()
+void QRfnocF15Surface::drawGrid()
 {
     float x[2], y[2];
     int i;
@@ -345,7 +345,7 @@ void QFosphorSurface::drawGrid()
     glDisable(GL_BLEND);
 }
 
-void QFosphorSurface::drawWaterfall()
+void QRfnocF15Surface::drawWaterfall()
 {
     float x[2], y[2];
     float e = 0.5f / d_fft_bins;
@@ -376,7 +376,7 @@ void QFosphorSurface::drawWaterfall()
     d_cmap->disable();
 }
 
-void QFosphorSurface::drawWaterfallIntensityScale()
+void QRfnocF15Surface::drawWaterfallIntensityScale()
 {
     d_cmap->drawScale(d_palette,
                       d_layout.x[2] + 2.0f,
@@ -385,7 +385,7 @@ void QFosphorSurface::drawWaterfallIntensityScale()
                       d_layout.y[2]);
 }
 
-void QFosphorSurface::drawMargins()
+void QRfnocF15Surface::drawMargins()
 {
     float x[2], y[2];
 
@@ -433,7 +433,7 @@ void QFosphorSurface::drawMargins()
     glDisable(GL_TEXTURE_2D);
 }
 
-void QFosphorSurface::uploadFrameData()
+void QRfnocF15Surface::uploadFrameData()
 {
     int i;
 
@@ -475,7 +475,7 @@ void QFosphorSurface::uploadFrameData()
     d_frame.dirty = false;
 }
 
-void QFosphorSurface::uploadWaterfallData()
+void QRfnocF15Surface::uploadWaterfallData()
 {
     glBindTexture(GL_TEXTURE_2D, d_wf.tex);
 
@@ -490,7 +490,7 @@ void QFosphorSurface::uploadWaterfallData()
                     d_wf.data_buf);
 }
 
-void QFosphorSurface::refreshPowerAxis()
+void QRfnocF15Surface::refreshPowerAxis()
 {
     char buf[32];
     int i;
@@ -530,7 +530,7 @@ void QFosphorSurface::refreshPowerAxis()
     d_layout.pwr_tex = bindTexture(pixmap);
 }
 
-void QFosphorSurface::refreshFrequencyAxis()
+void QRfnocF15Surface::refreshFrequencyAxis()
 {
     char buf[32];
     int n_div, i;
@@ -583,7 +583,7 @@ void QFosphorSurface::refreshFrequencyAxis()
     d_layout.freq_tex = bindTexture(pixmap);
 }
 
-void QFosphorSurface::refreshLayout()
+void QRfnocF15Surface::refreshLayout()
 {
     int rsvd_pos[3], rsvd, avail, n_div, div, over, over_pos[3];
 
