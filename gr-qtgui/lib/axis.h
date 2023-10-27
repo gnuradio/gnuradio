@@ -6,10 +6,10 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-#ifndef __FOSPHOR_AXIS_H__
-#define __FOSPHOR_AXIS_H__
+#ifndef __RFNOC_F15_AXIS_H__
+#define __RFNOC_F15_AXIS_H__
 
-/*! \defgroup axis Fosphor axis-related functions
+/*! \defgroup axis RFNoC Fosphor axis-related functions
  *  @{
  */
 
@@ -33,4 +33,4 @@ void freq_axis_render(struct freq_axis* fx, char* str, int step);
 
 /*! @} */
 
-#endif /* __FOSPHOR_AXIS_H__ */
+#endif /* __RFNOC_F15_AXIS_H__ */

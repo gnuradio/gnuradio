@@ -30,7 +30,6 @@ install(
           eyedisplayform.h
           eyedisplaysform.h
           form_menus.h
-          fosphor_display.h
           freq_sink_c.h
           freq_sink_f.h
           freqcontrolpanel.h
@@ -42,6 +41,7 @@ install(
           plot_raster.h
           plot_waterfall.h
           qtgui_types.h
+          rfnoc_f15_display.h
           sink_c.h
           sink_f.h
           spectrumUpdateEvents.h

@@ -6,8 +6,8 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-#ifndef INCLUDED_QTGUI_FOSPHOR_DISPLAY_H
-#define INCLUDED_QTGUI_FOSPHOR_DISPLAY_H
+#ifndef INCLUDED_QTGUI_RFNOC_F15_DISPLAY_H
+#define INCLUDED_QTGUI_RFNOC_F15_DISPLAY_H
 
 #ifdef ENABLE_PYTHON
 #include <Python.h>
@@ -21,7 +21,7 @@
 namespace gr {
 namespace qtgui {
 
-/*! FFT Histogram/Waterfall display widget for fosphor display
+/*! FFT Histogram/Waterfall display widget for RFNoC fosphor display
  *
  * This block can consume one or two inputs, each vectors of unsigned 8-bit
  * numbers. The vector length is \p fft_bins for both inputs.
@@ -46,15 +46,14 @@ namespace qtgui {
  * The second input contains FFT data for a waterfall display. It is simply a
  * concatenation of FFT magnitude vectors (8-bit integers).
  *
- *
  * \ingroup qtgui_blk
  */
-class QTGUI_API fosphor_display : virtual public gr::block
+class QTGUI_API rfnoc_f15_display : virtual public gr::block
 {
 public:
-    typedef std::shared_ptr<fosphor_display> sptr;
+    typedef std::shared_ptr<rfnoc_f15_display> sptr;
 
-    /*! Create an instance of a fosphor display
+    /*! Create an instance of an RFNoC fosphor display
      *
      * \param fft_bins Number of FFT bins. This is also the vector length of the
      *                 inputs, and the x-axis dimension on both the histogram
@@ -66,7 +65,7 @@ public:
      *                 dimension of waterfall plot).
      * \param parent The QWidget parent, if any.
      *
-     * \brief Return a shared_ptr to a new instance of ettus::fosphor_display
+     * \brief Return a shared_ptr to a new instance of ettus::rfnoc_f15_display
      */
     static sptr make(const int fft_bins = 256,
                      const int pwr_bins = 64,
@@ -91,4 +90,4 @@ public:
 } // namespace qtgui
 } // namespace gr
 
-#endif /* INCLUDED_QTGUI_FOSPHOR_DISPLAY_H */
+#endif /* INCLUDED_QTGUI_RFNOC_F15_DISPLAY_H */

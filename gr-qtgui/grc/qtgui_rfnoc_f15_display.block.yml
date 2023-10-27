@@ -1,5 +1,5 @@
-id: qtgui_fosphor_display
-label: QT GUI Fosphor Display (Byte Vector)
+id: qtgui_rfnoc_f15_display
+label: QT GUI RFNoC Fosphor Display (Byte Vector)
 flags: [ python ]
 
 parameters:
@@ -76,7 +76,7 @@ templates:
     <%
         win = 'self._%s_win' % id
     %>\
-    qtgui.fosphor_display(${fftsize}, ${pwr_bins}, ${wf_lines})
+    qtgui.rfnoc_f15_display(${fftsize}, ${pwr_bins}, ${wf_lines})
     self.${id}.set_frame_rate(${frame_rate})
     self.${id}.set_frequency_range(${center_freq}, ${samp_rate})
     self.${id}.set_waterfall(${wf_enabled})

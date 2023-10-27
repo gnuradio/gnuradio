@@ -5,29 +5,29 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-#ifndef INCLUDED_QTGUI_FOSPHOR_DISPLAY_IMPL_H
-#define INCLUDED_QTGUI_FOSPHOR_DISPLAY_IMPL_H
+#ifndef INCLUDED_QTGUI_rfnoc_f15_DISPLAY_IMPL_H
+#define INCLUDED_QTGUI_rfnoc_f15_DISPLAY_IMPL_H
 
-#include <gnuradio/qtgui/fosphor_display.h>
+#include <gnuradio/qtgui/rfnoc_f15_display.h>
 #include <cstdint>
 
 namespace gr {
 namespace qtgui {
 
-class QFosphorSurface;
+class QRfnocF15Surface;
 
 /*!
  * \brief QT GUI Display block for RFNoC fosphor (implementation)
  * \ingroup ettus
  */
-class QTGUI_API fosphor_display_impl : public fosphor_display
+class QTGUI_API rfnoc_f15_display_impl : public rfnoc_f15_display
 {
 public:
-    fosphor_display_impl(const int fft_bins = 256,
-                         const int pwr_bins = 64,
-                         const int wf_lines = 512,
-                         QWidget* parent = NULL);
-    ~fosphor_display_impl() override;
+    rfnoc_f15_display_impl(const int fft_bins = 256,
+                           const int pwr_bins = 64,
+                           const int wf_lines = 512,
+                           QWidget* parent = NULL);
+    ~rfnoc_f15_display_impl() override;
 
     /* Block API */
     void set_frequency_range(const double center_freq, const double samp_rate) override;
@@ -54,7 +54,7 @@ private:
     int _work_hist(const uint8_t* input, int n_items, int port);
     int _work_wf(const uint8_t* input, int n_items, int port);
 
-    QFosphorSurface* d_gui;
+    QRfnocF15Surface* d_gui;
 
     int d_fft_bins;
     int d_pwr_bins;
@@ -81,4 +81,4 @@ private:
 } // namespace qtgui
 } // namespace gr
 
-#endif /* INCLUDED_QTGUI_FOSPHOR_DISPLAY_IMPL_H */
+#endif /* INCLUDED_QTGUI_rfnoc_f15_DISPLAY_IMPL_H */

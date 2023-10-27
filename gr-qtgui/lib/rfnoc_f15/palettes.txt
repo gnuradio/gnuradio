@@ -36,16 +36,16 @@
 
 # Test
 0 test
-:/fosphor/pal_test.png
+:/rfnoc_f15/pal_test.png
 
 # FLIR Iron
 0 iron
-:/fosphor/pal_iron.png
+:/rfnoc_f15/pal_iron.png
 
 # FLIR Rainbow
 0 rainbow
-:/fosphor/pal_rainbow.png
+:/rfnoc_f15/pal_rainbow.png
 
 # CubeHelix ( https://www.mrao.cam.ac.uk/~dag/CUBEHELIX/ )
 0 cubehelix
-:/fosphor/pal_cubehelix.png
+:/rfnoc_f15/pal_cubehelix.png
