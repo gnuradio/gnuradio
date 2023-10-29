@@ -155,11 +155,14 @@ class ExampleBrowser(QtWidgets.QDialog, base.Component):
                                 example["name"] = os.path.basename(file_path)
                                 example["generate_options"] = data["options"]["parameters"].get("generate_options") or "no_gui"
                                 example["output_language"] = data["options"]["parameters"].get("output_language") or "python"
-                                example["module"] = os.path.basename(os.path.dirname(file_path))
                                 example["title"] = data["options"]["parameters"]["title"] or "TITLE"
                                 example["desc"] = data["options"]["parameters"]["description"] or "DESCRIPTION"
                                 example["author"] = data["options"]["parameters"]["author"] or "AUTHOR"
                                 example["path"] = file_path
+                                example["module"] = os.path.dirname(file_path).replace(entry, "")
+                                if example["module"].startswith("/"):
+                                    example["module"] = example["module"][1:]
+
                                 example["blocks"] = set()
                                 for block in data["blocks"]:
                                     example["blocks"].add(block["id"])
