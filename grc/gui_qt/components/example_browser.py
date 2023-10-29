@@ -93,6 +93,7 @@ class ExampleBrowser(QtWidgets.QDialog, base.Component):
             item.setData(self.data_role, QtCore.QVariant(ex))
             self.mid_list.addItem(item)
 
+        self.left_list.sortItems()
         self.left_list.setCurrentRow(0)
         self.update_mid_list()
 
