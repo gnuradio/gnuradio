@@ -48,6 +48,7 @@ buffer_add_reader(buffer_sptr buf, int nzero_preload, block_sptr link, int delay
     }
 
     buf->d_readers.push_back(r.get());
+    buf->d_readers_done.push_back(false);
 
 #ifdef BUFFER_DEBUG
     gr::logger_ptr logger;
@@ -66,6 +67,7 @@ buffer_add_reader(buffer_sptr buf, int nzero_preload, block_sptr link, int delay
 
 buffer_reader::buffer_reader(buffer_sptr buffer, unsigned int read_index, block_sptr link)
     : d_buffer(buffer),
+      d_done(false),
       d_read_index(read_index),
       d_abs_read_offset(0),
       d_link(link),

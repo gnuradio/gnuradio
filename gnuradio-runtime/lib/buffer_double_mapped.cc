@@ -126,17 +126,22 @@ bool buffer_double_mapped::allocate_buffer(int nitems)
 
 int buffer_double_mapped::space_available()
 {
-    if (d_readers.empty())
+    if (d_readers.empty() || d_done)
         return d_bufsize - 1; // See comment below
 
     else {
 
-        // Find out the maximum amount of data available to our readers
-        int most_data = d_readers[0]->items_available();
-        uint64_t min_items_read = d_readers[0]->nitems_read();
-        for (size_t i = 1; i < d_readers.size(); i++) {
-            most_data = std::max(most_data, d_readers[i]->items_available());
-            min_items_read = std::min(min_items_read, d_readers[i]->nitems_read());
+        // Find out the maximum amount of data available to our readers.
+        // d_done is false, so we know at least one reader is not done,
+        // so we know at least one reader is not done and values will be
+        // updated.
+        int most_data = std::numeric_limits<int>::min();
+        uint64_t min_items_read = std::numeric_limits<uint64_t>::max();
+        for (size_t i = 0; i < d_readers.size(); i++) {
+            if (!d_readers_done[i]) {
+                most_data = std::max(most_data, d_readers[i]->items_available());
+                min_items_read = std::min(min_items_read, d_readers[i]->nitems_read());
+            }
         }
 
         if (min_items_read != d_last_min_items_read) {

@@ -149,6 +149,35 @@ void buffer::set_done(bool done)
     d_done = done;
 }
 
+void buffer::notify_reader_done(bool done, buffer_reader* reader)
+{
+    gr::thread::scoped_lock guard(*mutex());
+
+    std::vector<buffer_reader*>::iterator result =
+        std::find(d_readers.begin(), d_readers.end(), reader);
+
+    if (result == d_readers.end())
+        throw std::invalid_argument("buffer::notify_reader_done"); // we didn't find it...
+
+    size_t index = result - d_readers.begin();
+    d_readers_done[index] = done;
+
+    std::vector<bool>::iterator first_not_done =
+        std::find(d_readers_done.begin(), d_readers_done.end(), false);
+    if (first_not_done == d_readers_done.end())
+        d_done = true;
+}
+
+bool buffer::one_reader_done()
+{
+    std::vector<bool>::iterator first_not_done =
+        std::find(d_readers_done.begin(), d_readers_done.end(), true);
+    if (first_not_done == d_readers_done.end())
+        return false;
+    else
+        return true;
+}
+
 void buffer::drop_reader(buffer_reader* reader)
 {
     std::vector<buffer_reader*>::iterator result =
@@ -156,8 +185,10 @@ void buffer::drop_reader(buffer_reader* reader)
 
     if (result == d_readers.end())
         throw std::invalid_argument("buffer::drop_reader"); // we didn't find it...
+    size_t index = result - d_readers.begin();
 
     d_readers.erase(result);
+    d_readers_done.erase(d_readers_done.begin() + index);
 }
 
 void buffer::add_item_tag(const tag_t& tag)

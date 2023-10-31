@@ -99,8 +99,12 @@ public:
      */
     void update_read_pointer(int nitems);
 
-    void set_done(bool done) { d_buffer->set_done(done); }
-    bool done() const { return d_buffer->done(); }
+    void set_done(bool done)
+    {
+        d_done = done;
+        d_buffer->notify_reader_done(done, this);
+    }
+    bool done() const { return d_buffer->d_done | d_done; }
 
     gr::thread::mutex* mutex() { return d_buffer->mutex(); }
 
@@ -173,6 +177,7 @@ protected:
                                                                int delay);
 
     buffer_sptr d_buffer;
+    bool d_done;
     unsigned int d_read_index;   // in items [0,d->buffer.d_bufsize) ** see NB
     uint64_t d_abs_read_offset;  // num items seen since the start   ** see NB
     std::weak_ptr<block> d_link; // block that reads via this buffer reader

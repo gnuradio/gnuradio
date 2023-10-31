@@ -112,7 +112,9 @@ public:
     void update_write_pointer(int nitems);
 
     void set_done(bool done);
+    void notify_reader_done(bool done, buffer_reader* reader);
     bool done() const { return d_done; }
+    bool one_reader_done();
 
     /*!
      * \brief Return the block that writes to this buffer.
@@ -307,6 +309,7 @@ protected:
 
     size_t d_sizeof_item; // in bytes
     std::vector<buffer_reader*> d_readers;
+    std::vector<bool> d_readers_done;
     std::weak_ptr<block> d_link; // block that writes to this buffer
 
     //
