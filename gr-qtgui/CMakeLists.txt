@@ -14,7 +14,9 @@ include(GrPython)
 
 find_package(Qt5 QUIET
     COMPONENTS Widgets
-    OPTIONAL_COMPONENTS OpenGL
+    Core
+    OPTIONAL_COMPONENTS OpenGL Multimedia 
+    MultimediaWidgets
 )
 set(QT_FOUND ${Qt5Widgets_FOUND})
 
@@ -50,6 +52,13 @@ if(ENABLE_GR_QTGUI)
     if (Qt5OpenGL_FOUND)
         set(ENABLE_GR_QTGUI_OPENGL TRUE)
         set(OpenGL_GL_PREFERENCE GLVND)
+    endif()
+    # Check for Qt Multimedia and MultimediaWidgets
+    if(Qt5Multimedia_FOUND AND Qt5MultimediaWidgets_FOUND)
+        set(ENABLE_GR_QTGUI_VIDEO_DISPLAY TRUE)
+    else()
+        message(WARNING "Qt Multimedia and/or MultimediaWidgets not found. Video display block will not be installed.")
+        set(ENABLE_GR_QTGUI_VIDEO_DISPLAY FALSE)
     endif()
     ########################################################################
     # Add subdirectories

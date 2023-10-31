@@ -28,4 +28,20 @@ macro(REPLACE_IN_FILE _yml_block match replace)
     list(APPEND generated_yml_files "${yml_block}")
 endmacro()
 
+if(NOT ENABLE_GR_QTGUI_VIDEO_DISPLAY)
+    # Find and remove video_display_sink.block.yml from yml_files and generated_yml_files
+    list(FILTER yml_files EXCLUDE REGEX "${CMAKE_CURRENT_SOURCE_DIR}/qtgui_video_display_sink.block.yml")
+    list(FILTER generated_yml_files EXCLUDE REGEX "${CMAKE_CURRENT_SOURCE_DIR}/qtgui_video_display_sink.block.yml")
+endif()
+
+if (NOT ENABLE_GR_QTGUI_OPENGL)
+    list(FILTER yml_files EXCLUDE REGEX "${CMAKE_CURRENT_SOURCE_DIR}/qtgui_fosphor_display.block.yml")
+    list(FILTER generated_yml_files EXCLUDE REGEX "${CMAKE_CURRENT_SOURCE_DIR}/qtgui_fosphor_display.block.yml")
+    list(FILTER yml_files EXCLUDE REGEX "${CMAKE_CURRENT_SOURCE_DIR}/qtgui_fosphor_formatter.block.yml")
+    list(FILTER generated_yml_files EXCLUDE REGEX "${CMAKE_CURRENT_SOURCE_DIR}/qtgui_fosphor_formatter.block.yml")
+    list(FILTER yml_files EXCLUDE REGEX "${CMAKE_CURRENT_SOURCE_DIR}/qtgui_fosphorgl_sink.block.yml")
+    list(FILTER generated_yml_files EXCLUDE REGEX "${CMAKE_CURRENT_SOURCE_DIR}/qtgui_fosphorgl_sink.block.yml")
+endif()
+
+
 install(FILES ${yml_files} ${generated_yml_files} DESTINATION "${GRC_BLOCKS_DIR}")

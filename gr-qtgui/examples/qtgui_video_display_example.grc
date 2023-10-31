@@ -1,0 +1,351 @@
+options:
+  parameters:
+    author: ''
+    catch_exceptions: 'True'
+    category: '[GRC Hier Blocks]'
+    cmake_opt: ''
+    comment: ''
+    copyright: ''
+    description: ''
+    gen_cmake: 'On'
+    gen_linking: dynamic
+    generate_options: qt_gui
+    hier_block_src_path: '.:'
+    id: qtgui_video_display_example
+    max_nouts: '0'
+    output_language: python
+    placement: (0,0)
+    qt_qss_theme: ''
+    realtime_scheduling: ''
+    run: 'True'
+    run_command: '{python} -u {filename}'
+    run_options: prompt
+    sizing_mode: fixed
+    thread_safe_setters: ''
+    title: Not titled yet
+    window_size: (1000,1000)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 8]
+    rotation: 0
+    state: enabled
+
+blocks:
+- name: center_freq
+  id: variable
+  parameters:
+    comment: ''
+    value: 429e6
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [168, 8.0]
+    rotation: 0
+    state: enabled
+- name: samp_rate
+  id: variable
+  parameters:
+    comment: ''
+    value: (8000000.0 * 8) / 7
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 104.0]
+    rotation: 0
+    state: enabled
+- name: blocks_file_source_0_0
+  id: blocks_file_source
+  parameters:
+    affinity: ''
+    alias: ''
+    begin_tag: pmt.PMT_NIL
+    comment: ''
+    file: adv16.cfile
+    length: '0'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    offset: '0'
+    repeat: 'False'
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [112, 144.0]
+    rotation: 180
+    state: enabled
+- name: blocks_throttle2_0
+  id: blocks_throttle2
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    ignoretag: 'True'
+    limit: auto
+    maximum: '0.1'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    samples_per_second: samp_rate
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [120, 280.0]
+    rotation: 0
+    state: enabled
+- name: blocks_vector_to_stream_1
+  id: blocks_vector_to_stream
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_items: '6048'
+    type: byte
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 424.0]
+    rotation: 180
+    state: enabled
+- name: dtv_dvbt_bit_inner_deinterleaver_0
+  id: dtv_dvbt_bit_inner_deinterleaver
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    constellation: 16qam
+    hierarchy: nh
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    transmission_mode: T8k
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [272, 416.0]
+    rotation: 180
+    state: enabled
+- name: dtv_dvbt_convolutional_deinterleaver_0
+  id: dtv_dvbt_convolutional_deinterleaver
+  parameters:
+    I: '12'
+    M: '17'
+    affinity: ''
+    alias: ''
+    blocks: '136'
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [288, 528.0]
+    rotation: 0
+    state: enabled
+- name: dtv_dvbt_demap_0
+  id: dtv_dvbt_demap
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    constellation: 16qam
+    gain: '1'
+    hierarchy: nh
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    transmission_mode: T8k
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [856, 392.0]
+    rotation: 180
+    state: enabled
+- name: dtv_dvbt_demod_reference_signals_0
+  id: dtv_dvbt_demod_reference_signals
+  parameters:
+    affinity: ''
+    alias: ''
+    cell_id: '0'
+    code_rate_hp: C2_3
+    code_rate_lp: C2_3
+    comment: ''
+    constellation: 16qam
+    guard_interval: GI_1_32
+    hierarchy: nh
+    include_cell_id: call_id_yes
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    transmission_mode: T8k
+    type: complex
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [824, 68.0]
+    rotation: 0
+    state: enabled
+- name: dtv_dvbt_energy_descramble_0
+  id: dtv_dvbt_energy_descramble
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    nsize: '8'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [808, 544.0]
+    rotation: 0
+    state: enabled
+- name: dtv_dvbt_ofdm_sym_acquisition_0
+  id: dtv_dvbt_ofdm_sym_acquisition
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    cp_length: '256'
+    fft_length: '8192'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    occupied_tones: '6817'
+    snr: '30'
+    type: complex
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [312, 104.0]
+    rotation: 0
+    state: enabled
+- name: dtv_dvbt_reed_solomon_dec_0
+  id: dtv_dvbt_reed_solomon_dec
+  parameters:
+    affinity: ''
+    alias: ''
+    blocks: '8'
+    comment: ''
+    gfpoly: '0x11d'
+    k: '239'
+    m: '8'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    n: '255'
+    p: '2'
+    s: '51'
+    t: '8'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [576, 492.0]
+    rotation: 0
+    state: enabled
+- name: dtv_dvbt_symbol_inner_interleaver_0
+  id: dtv_dvbt_symbol_inner_interleaver
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    direction: Deinterleave
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    transmission_mode: T8k
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [600, 408.0]
+    rotation: 180
+    state: enabled
+- name: dtv_dvbt_viterbi_decoder_0
+  id: dtv_dvbt_viterbi_decoder
+  parameters:
+    affinity: ''
+    alias: ''
+    block_size: '768'
+    code_rate: C2_3
+    comment: ''
+    constellation: 16qam
+    hierarchy: nh
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: b
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 520.0]
+    rotation: 0
+    state: enabled
+- name: fft_vxx_0
+  id: fft_vxx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    fft_size: '8192'
+    forward: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    nthreads: '1'
+    shift: 'True'
+    type: complex
+    window: window.rectangular(8192)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [560, 96.0]
+    rotation: 0
+    state: enabled
+- name: qtgui_video_display_sink_0
+  id: qtgui_video_display_sink
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    gui_hint: ''
+    type: byte
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [960, 616.0]
+    rotation: 0
+    state: enabled
+
+connections:
+- [blocks_file_source_0_0, '0', blocks_throttle2_0, '0']
+- [blocks_throttle2_0, '0', dtv_dvbt_ofdm_sym_acquisition_0, '0']
+- [blocks_vector_to_stream_1, '0', dtv_dvbt_viterbi_decoder_0, '0']
+- [dtv_dvbt_bit_inner_deinterleaver_0, '0', blocks_vector_to_stream_1, '0']
+- [dtv_dvbt_convolutional_deinterleaver_0, '0', dtv_dvbt_reed_solomon_dec_0, '0']
+- [dtv_dvbt_demap_0, '0', dtv_dvbt_symbol_inner_interleaver_0, '0']
+- [dtv_dvbt_demod_reference_signals_0, '0', dtv_dvbt_demap_0, '0']
+- [dtv_dvbt_energy_descramble_0, '0', qtgui_video_display_sink_0, '0']
+- [dtv_dvbt_ofdm_sym_acquisition_0, '0', fft_vxx_0, '0']
+- [dtv_dvbt_reed_solomon_dec_0, '0', dtv_dvbt_energy_descramble_0, '0']
+- [dtv_dvbt_symbol_inner_interleaver_0, '0', dtv_dvbt_bit_inner_deinterleaver_0, '0']
+- [dtv_dvbt_viterbi_decoder_0, '0', dtv_dvbt_convolutional_deinterleaver_0, '0']
+- [fft_vxx_0, '0', dtv_dvbt_demod_reference_signals_0, '0']
+
+metadata:
+  file_format: 1
+  grc_version: g768312451
