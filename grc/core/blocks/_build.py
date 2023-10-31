@@ -111,6 +111,8 @@ def build_params(params_raw, have_inputs, have_outputs, flags, block_id):
                       hide='part', default='0', category=ADVANCED_PARAM_TAB)
             add_param(id='maxoutbuf', name='Max Output Buffer', dtype='int',
                       hide='part', default='0', category=ADVANCED_PARAM_TAB)
+            add_param(id='needalloutputs', name='Does need all outputs', dtype='bool',
+                      hide='part', default='True', category=ADVANCED_PARAM_TAB)
 
     base_params_n = {}
     for param_data in params_raw:
