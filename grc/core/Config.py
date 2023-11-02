@@ -52,8 +52,7 @@ class Config(object):
 
     @property
     def example_paths(self):
-        # TODO: Remove hard coded path
-        return ["/usr/local/share/gnuradio/examples"]
+        return [self._gr_prefs.get_string('grc', 'examples_path', '')]
 
     @property
     def default_flow_graph(self):

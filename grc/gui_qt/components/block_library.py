@@ -279,3 +279,13 @@ class BlockLibrary(QtWidgets.QDockWidget, base.Component):
         )  # TODO: Should be togglable in prefs
         if v_blocks:
             self._library.expandAll()
+
+    def populate_w_examples(self, examples_w_block, designated_examples_w_block):
+        self.examples_w_block = examples_w_block
+        self.designated_examples_w_block = designated_examples_w_block
+
+    def get_examples(self, block_key):
+        try:
+            return self.designated_examples_w_block[block_key]
+        except:
+            return self.examples_w_block[block_key]

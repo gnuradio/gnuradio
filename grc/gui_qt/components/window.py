@@ -850,9 +850,9 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
 
     def populate_libraries_w_examples(self, example_tuple):
-        examples, examples_w_block = example_tuple
+        examples, examples_w_block, designated_examples_w_block = example_tuple
         self.ExampleBrowser.populate(examples)
-        self.app.BlockLibrary.examples_w_block = examples_w_block
+        self.app.BlockLibrary.populate_w_examples(examples_w_block, designated_examples_w_block)
         self.progress_bar.reset()
         self.progress_bar.hide()
         self.examples_found = True

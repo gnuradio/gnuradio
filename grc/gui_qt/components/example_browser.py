@@ -138,7 +138,7 @@ class ExampleBrowser(QtWidgets.QDialog, base.Component):
     def find_examples(self, progress_callback, ext="grc"):
         examples = []
         with Cache(Constants.EXAMPLE_CACHE_FILE, log=False) as cache:
-            for entry in ("/usr/local/share/gnuradio/examples",):
+            for entry in self.app.platform.config.example_paths:
                 if os.path.isdir(entry):
                     subdirs = 0
                     current_subdir = 0
@@ -155,6 +155,7 @@ class ExampleBrowser(QtWidgets.QDialog, base.Component):
                                 example["name"] = os.path.basename(file_path)
                                 example["generate_options"] = data["options"]["parameters"].get("generate_options") or "no_gui"
                                 example["output_language"] = data["options"]["parameters"].get("output_language") or "python"
+                                example["example_filter"] = data["metadata"].get("example_filter") or []
                                 example["title"] = data["options"]["parameters"]["title"] or "TITLE"
                                 example["desc"] = data["options"]["parameters"]["description"] or "DESCRIPTION"
                                 example["author"] = data["options"]["parameters"]["author"] or "AUTHOR"
@@ -172,14 +173,22 @@ class ExampleBrowser(QtWidgets.QDialog, base.Component):
 
 
         examples_w_block = {} # str: set()
+        designated_examples_w_block = {} # str: set()
         for example in examples:
-            for block in example["blocks"]:
-                try:
-                    examples_w_block[block].add(example["path"])
-                except KeyError:
-                    examples_w_block[block] = set()
-                    examples_w_block[block].add(example["path"])
+            if example["example_filter"]:
+                for block in example["example_filter"]:
+                    try:
+                        designated_examples_w_block[block].append(example["path"])
+                    except KeyError:
+                        designated_examples_w_block[block] = [example["path"]]
+                continue
+            else:
+                for block in example["blocks"]:
+                    try:
+                        examples_w_block[block].append(example["path"])
+                    except KeyError:
+                        examples_w_block[block] = [example["path"]]
 
-        return (examples, examples_w_block)
+        return (examples, examples_w_block, designated_examples_w_block)
 
 

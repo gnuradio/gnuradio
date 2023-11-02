@@ -100,7 +100,7 @@ class PropsDialog(QtWidgets.QDialog):
         self.example_list = QtWidgets.QListWidget()
         self.example_list.itemDoubleClicked.connect(lambda ex: self.open_example(ex))
         try:
-            examples = self._block.parent.app.BlockLibrary.examples_w_block[self._block.key]
+            examples = self._block.parent.app.BlockLibrary.get_examples(self._block.key)
             ex_amount = len(examples)
             self.example_list.addItems(examples)
             self.example_layout.addWidget(self.example_list)
