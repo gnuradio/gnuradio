@@ -1300,12 +1300,23 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         if prefs_dialog.exec_():
             prefs_dialog.save_all()
 
-    def example_browser_triggered(self):
+    def example_browser_triggered(self, filter=None):
         log.debug("example-browser")
         if self.examples_found:
             ex_dialog = self.ExampleBrowser
-            if ex_dialog.exec_():
-                return
+            if isinstance(filter, list):
+                if len(filter):
+                    ex_dialog.filter(filter)
+                else: # filter is an empty list
+                    ad = QtWidgets.QMessageBox()
+                    ad.setWindowTitle("GRC: No examples")
+                    ad.setText("There are no examples for this block.")
+                    ad.exec()
+                    return
+            else:
+                ex_dialog.remove_filter()
+
+            ex_dialog.exec_()
         else:
             ad = QtWidgets.QMessageBox()
             ad.setWindowTitle("GRC still indexing examples")

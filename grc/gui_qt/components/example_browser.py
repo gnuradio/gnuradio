@@ -135,6 +135,34 @@ class ExampleBrowser(QtWidgets.QDialog, base.Component):
         self.file_to_open.emit(ex["path"])
         self.done(0)
 
+    def remove_filter(self):
+        for i in range(self.left_list.count()):
+            self.left_list.item(i).setHidden(False)
+        for i in range(self.mid_list.count()):
+            self.mid_list.item(i).setHidden(False)
+
+        self.left_list.sortItems()
+        self.left_list.setCurrentRow(0)
+        self.update_mid_list()
+
+    def filter(self, filter):
+        for i in range(self.left_list.count()):
+            self.left_list.item(i).setHidden(True)
+
+        for i in range(self.mid_list.count()):
+            m_item = self.mid_list.item(i)
+            if m_item.data(self.data_role)["path"] in filter:
+                m_item.setHidden(False)
+                for j in range(self.left_list.count()):
+                    l_item = self.left_list.item(j)
+                    if l_item.text() == m_item.data(self.data_role)["module"]:
+                        l_item.setHidden(False)
+            m_item.setHidden(True)
+
+        self.left_list.sortItems()
+        self.left_list.setCurrentRow(0)
+        self.update_mid_list()
+
     def find_examples(self, progress_callback, ext="grc"):
         examples = []
         with Cache(Constants.EXAMPLE_CACHE_FILE, log=False) as cache:

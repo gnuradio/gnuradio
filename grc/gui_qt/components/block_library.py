@@ -61,6 +61,14 @@ def get_items(model):
 
 
 class LibraryView(QtWidgets.QTreeView):
+    def __init__(self, parent):
+        QtWidgets.QTreeView.__init__(self, parent)
+        self.library = parent.parent()
+        self.contextMenu = QtWidgets.QMenu()
+        self.example_action = QtGui.QAction("Examples...")
+        self.contextMenu.addAction(self.example_action)
+        self.example_action.triggered.connect(self.view_examples)
+
     # TODO: Use selectionChanged() or something instead
     # so we can use arrow keys too
     def updateDocTab(self):
@@ -79,6 +87,15 @@ class LibraryView(QtWidgets.QTreeView):
         else:
             self.expand(self.currentIndex())
 
+    def contextMenuEvent(self, event):
+        key = self.model().data(self.currentIndex(), QtCore.Qt.UserRole)
+        if key: # Modules and categories don't have UserRole data
+            self.contextMenu.exec_(self.mapToGlobal(event.pos()))
+
+    def view_examples(self):
+        key = self.model().data(self.currentIndex(), QtCore.Qt.UserRole)
+        label = self.model().data(self.currentIndex(), QtCore.Qt.DisplayRole)
+        self.library.app.MainWindow.example_browser_triggered(filter=self.library.get_examples(key))
 
 class BlockLibrary(QtWidgets.QDockWidget, base.Component):
     def __init__(self):
@@ -288,4 +305,7 @@ class BlockLibrary(QtWidgets.QDockWidget, base.Component):
         try:
             return self.designated_examples_w_block[block_key]
         except:
-            return self.examples_w_block[block_key]
+            if block_key in self.examples_w_block:
+                return self.examples_w_block[block_key]
+            else:
+                return []
