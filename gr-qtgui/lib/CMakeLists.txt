@@ -65,7 +65,6 @@ set(QTGUI_SOURCES
 
 set(QTGUI_LIBS
     gnuradio-runtime
-    gnuradio-blocks
     gnuradio-fft
     gnuradio-filter
     Volk::volk
@@ -82,7 +81,6 @@ if(ENABLE_GR_QTGUI_OPENGL)
     list(APPEND QTGUI_SOURCES
         axis.c
         fosphor_display_impl.cc
-        fosphor_formatter_impl.cc
         QFosphorColorMapper.cc
         QFosphorSurface.cc
         ${FOSPHOR_RC_SRCS}
