@@ -23,9 +23,6 @@ class test_qtgui_opengl(gr_unittest.TestCase):
     def test01(self):
         self.qtsnk = qtgui.fosphor_display(1024, 64, 512)
 
-    def test02(self):
-        self.qtsnk = qtgui.FosphorGlSink(1, 16, 512, 64, 1.0, 0.1, 0.99, 16.0, 1024.0)
-
 
 if __name__ == '__main__':
     gr_unittest.run(test_qtgui_opengl)

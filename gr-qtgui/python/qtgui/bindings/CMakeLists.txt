@@ -58,11 +58,7 @@ list(
     waterfalldisplayform_python.cc)
 
 if(ENABLE_GR_QTGUI_OPENGL)
-    list(
-        APPEND
-        qtgui_python_files
-        fosphor_display_python.cc
-        fosphor_formatter_python.cc)
+    list(APPEND qtgui_python_files fosphor_display_python.cc)
 endif(ENABLE_GR_QTGUI_OPENGL)
 
 list(APPEND qtgui_python_files python_bindings.cc)
