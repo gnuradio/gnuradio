@@ -493,6 +493,23 @@ def test_file_screen_capture_svg(qtbot, qapp_cls_, monkeypatch, tmp_path):
     assert fg_path.exists(), "File/Screen Capture: Could not create SVG"
 
 
+def test_file_preferences(qtbot, qapp_cls_):
+    menu = qapp_cls_.MainWindow.menus["file"]
+    items = gather_menu_items(menu)
+
+    def assert_and_close():
+        assert qapp_cls_.activeWindow() != qapp_cls_.MainWindow
+        qtbot.keyClick(qapp_cls_.activeWindow(), QtCore.Qt.Key_Escape)
+
+    qtbot.keyClick(qapp_cls_.focusWidget(), QtCore.Qt.Key_F, QtCore.Qt.AltModifier)
+    qtbot.wait(100)
+    QtCore.QTimer.singleShot(200, assert_and_close)
+    qtbot.keyClick(menu, QtCore.Qt.Key_F)
+    qtbot.wait(600)
+    assert qapp_cls_.activeWindow() == qapp_cls_.MainWindow
+    qtbot.wait(100)
+
+
 def test_edit_actions(qtbot, qapp_cls_):
     pass
 

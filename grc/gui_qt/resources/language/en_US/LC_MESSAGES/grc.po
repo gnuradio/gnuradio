@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: GNU Radio Companion\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-19 06:02+0200\n"
-"PO-Revision-Date: 2023-10-20 19:24+0200\n"
+"PO-Revision-Date: 2023-11-07 19:00+0100\n"
 "Last-Translator: Håkon Vågsether <hakon.vagsether@gmail.com>\n"
 "Language-Team: US English <sdhitefield@gmail.com>\n"
 "Language: grc\n"
@@ -367,7 +367,7 @@ msgstr ""
 
 #: grc/gui_qt/components/window.py:595
 msgid "preferences"
-msgstr "Preferences"
+msgstr "Pre&ferences"
 
 #: grc/gui_qt/components/window.py:597
 msgid "preferences-tooltip"
