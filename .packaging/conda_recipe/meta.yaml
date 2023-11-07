@@ -18,7 +18,7 @@ source:
 
 build:
   number: 0
-  skip: true  # [py!=310]
+  skip: true  # [py!=311]
   entry_points:
     - gnuradio-companion = gnuradio.grc.main:main  # [win]
     - gr_filter_design = gnuradio.filter.filter_design:main  # [win]
@@ -44,28 +44,16 @@ requirements:
     - pybind11                            # [build_platform != target_platform]
     - numpy                               # [build_platform != target_platform]
    # below are needed to link with Qt for qtgui
-    - {{ cdt('libice') }}  # [linux]
-    - {{ cdt('libselinux') }}  # [linux]
-    - {{ cdt('libsm') }}  # [linux]
-    - {{ cdt('libx11') }}  # [linux]
-    - {{ cdt('libxau') }}  # [linux]
-    - {{ cdt('libxcb') }}  # [linux]
-    - {{ cdt('libxdamage') }}  # [linux]
-    - {{ cdt('libxext') }}  # [linux]
-    - {{ cdt('libxfixes') }}  # [linux]
-    - {{ cdt('libxrender') }}  # [linux]
-    - {{ cdt('libxxf86vm') }}  # [linux]
-    - {{ cdt('libuuid') }}  # [linux]
     - {{ cdt('mesa-dri-drivers') }}  # [linux]
     - {{ cdt('mesa-libgl-devel') }}  # [linux]
   host:
-    - boost-cpp
     - click
     - click-plugins
     - codec2
     - fftw
     - gmp  # [not win]
     - gsl
+    - libboost-devel
     - libsndfile
     - libthrift  # [not win]
     - mako
@@ -110,7 +98,6 @@ requirements:
     - pyzmq
   run:
     - alsa-plugins  # [linux]
-    - boost-cpp
     - click
     - click-plugins
     - fftw
