@@ -64,7 +64,10 @@ class OOTBrowser(QtWidgets.QDialog, base.Component):
         else:
             self.dep_label.setText(f"<b>Dependencies:</b> None")
         self.repo_label.setText(f"<b>Repository:</b> {module.get('repo')}")
-        self.copyright_label.setText(f"<b>Copyright Owner:</b> {module['copyright_owner']}")
+        if module.get("copyright_owner"):
+            self.copyright_label.setText(f"<b>Copyright Owner:</b> {'; '.join(module['copyright_owner'])}")
+        else:
+            self.copyright_label.setText(f"<b>Copyright Owner:</b> None")
         self.supp_ver_label.setText(f"<b>Supported GNU Radio Versions:</b> {'; '.join(module['gr_supported_version'])}")
         self.tags_label.setText(f"<b>Tags:</b> {'; '.join(module['tags'])}")
         self.license_label.setText(f"<b>License:</b> {module['license']}")

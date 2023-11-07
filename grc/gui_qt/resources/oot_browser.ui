@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>600</width>
-    <height>450</height>
+    <height>456</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -231,37 +231,15 @@
         </layout>
        </item>
        <item>
-        <widget class="Line" name="line">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="desc_label">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>16777215</width>
-           <height>200</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>Description</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignCenter</set>
-         </property>
-         <property name="wordWrap">
+        <widget class="QTextBrowser" name="desc_label">
+         <property name="enabled">
           <bool>true</bool>
          </property>
-         <property name="textInteractionFlags">
-          <set>Qt::TextBrowserInteraction</set>
+         <property name="openExternalLinks">
+          <bool>true</bool>
+         </property>
+         <property name="openLinks">
+          <bool>true</bool>
          </property>
         </widget>
        </item>
