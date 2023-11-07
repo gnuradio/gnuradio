@@ -1,0 +1,32 @@
+# This file defines the configuration for building conda packages with CI.
+# The actual files for running the CI are created/updated by "conda-smithy".
+# You should edit only this file and the recipe files (in recipe_dir, below)
+# and not any of the automatically-generated files in e.g. .ci_support,
+# .scripts, or .github/workflows/conda-build.yml.
+
+# See https://conda-forge.org/docs/maintainer/conda_forge_yml.html for
+# documentation on possible keys and values.
+
+clone_depth: 0
+github_actions:
+  cancel_in_progress: false
+  store_build_artifacts: true
+os_version:
+  linux_64: cos7
+provider:
+  linux: github_actions
+  osx: github_actions
+  win: github_actions
+recipe_dir: .conda/recipe
+# skip unnecessary files since this is not a full-fledged conda-forge feedstock
+skip_render:
+  - README.md
+  - LICENSE.txt
+  - .gitattributes
+  - .gitignore
+  - build-locally.py
+  - LICENSE
+test: native_and_emulated
+# enable uploads to Anaconda Cloud from specified branches only
+# ***** UPDATE THIS FOR MAINTENANCE BRANCHES ********************************
+upload_on_branch: main
