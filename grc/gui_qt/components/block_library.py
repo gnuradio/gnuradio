@@ -65,7 +65,7 @@ class LibraryView(QtWidgets.QTreeView):
         QtWidgets.QTreeView.__init__(self, parent)
         self.library = parent.parent()
         self.contextMenu = QtWidgets.QMenu()
-        self.example_action = QtGui.QAction("Examples...")
+        self.example_action = QtWidgets.QAction("Examples...")
         self.contextMenu.addAction(self.example_action)
         self.example_action.triggered.connect(self.view_examples)
 
