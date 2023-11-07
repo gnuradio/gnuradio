@@ -40,6 +40,7 @@ requirements:
     # the following two entries are for generating builds against specific GR versions
     - gnuradio-core  # [not gnuradio_extra_pin]
     - gnuradio-core {{ gnuradio_extra_pin }}.*  # [gnuradio_extra_pin]
+    - libboost-headers
     - pip  # [win]
     - pybind11
     - python
@@ -59,7 +60,7 @@ test:
     ## verify that commands run
     #- COMMAND --help
 
-    # verify that (some) headers get installed
+    ## verify that (some) headers get installed
     - test -f $PREFIX/include/gnuradio/{{ oot_name }}/api.h  # [not win]
     - if not exist %PREFIX%\\Library\\include\\gnuradio\\{{ oot_name }}\\api.h exit 1  # [win]
 
@@ -86,7 +87,7 @@ about:
   # of the license text file within the source directory, e.g. "LICENSE".
   # See https://docs.conda.io/projects/conda-build/en/latest/resources/define-metadata.html#license-file
 
-  #home: https://github.com/<username>/gr-howto
+  #home: https://github.com/<FIXME>/gr-howto
   #license: GPL-3.0-or-later
   #license_file: LICENSE
   #summary: GNU Radio howto module
