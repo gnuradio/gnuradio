@@ -9,11 +9,11 @@ if errorlevel 1 exit 1
 
 :: configure
 cmake -G "Ninja" ^
-    -DCMAKE_BUILD_TYPE:STRING=Release ^
-    -DCMAKE_INSTALL_PREFIX:PATH="%LIBRARY_PREFIX%" ^
-    -DCMAKE_PREFIX_PATH:PATH="%LIBRARY_PREFIX%" ^
-    -DPYTHON_EXECUTABLE:PATH="%PYTHON%" ^
-    -DGR_PYTHON_DIR:PATH="%SP_DIR%" ^
+    -DCMAKE_BUILD_TYPE=Release ^
+    -DCMAKE_INSTALL_PREFIX="%LIBRARY_PREFIX%" ^
+    -DCMAKE_PREFIX_PATH="%LIBRARY_PREFIX%" ^
+    -DPYTHON_EXECUTABLE="%PYTHON%" ^
+    -DGR_PYTHON_DIR="%SP_DIR%" ^
     ..
 if errorlevel 1 exit 1
 
