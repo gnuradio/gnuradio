@@ -32,6 +32,7 @@
 
 clone_depth: 0
 github_actions:
+  cancel_in_progress: false
   store_build_artifacts: true
 os_version:
   linux_64: cos7
