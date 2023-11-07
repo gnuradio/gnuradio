@@ -1,0 +1,20 @@
+migrator_ts: 1695775149
+__migrator:
+  kind: version
+  migration_number: 1
+  bump_number: 1
+  commit_message: "Rebuild for libboost 1.82"
+  # limit the number of prs for ramp-up
+  pr_limit: 10
+libboost_devel:
+  - 1.82
+# This migration is matched with a piggy-back migrator
+# (see https://github.com/regro/cf-scripts/pull/1668)
+# that will replace boost-cpp with libboost-devel
+boost_cpp:
+  - 1.82
+# same for boost -> libboost-python-devel
+libboost_python_devel:
+  - 1.82
+boost:
+  - 1.82

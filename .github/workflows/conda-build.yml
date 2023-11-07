@@ -3,30 +3,35 @@
 # -*- mode: yaml -*-
 
 name: Build conda package
-on: [push, pull_request]
+on: ['push', 'pull_request']
 
 jobs:
   build:
     name: ${{ matrix.CONFIG }}
-    runs-on: ${{ matrix.os }}-latest
+    runs-on: ${{ matrix.runs_on }}
+    timeout-minutes: 360
     strategy:
       fail-fast: false
       matrix:
         include:
-          - CONFIG: linux_64_numpy1.21python3.10.____cpython
-            SHORT_CONFIG: linux_64_numpy1.21python3.10.____cpython
+          - CONFIG: linux_64_numpy1.23python3.11.____cpython
+            SHORT_CONFIG: linux_64_numpy1.23python3.11.____cpython
             UPLOAD_PACKAGES: True
-            DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
             os: ubuntu
-          - CONFIG: win_64_numpy1.21python3.10.____cpython
-            SHORT_CONFIG: win_64_numpy1.21python3.10.____cpython
+            runs_on: ['ubuntu-latest']
+            DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
+          - CONFIG: win_64_numpy1.23python3.11.____cpython
+            SHORT_CONFIG: win_64_numpy1.23python3.11.____cpython
             UPLOAD_PACKAGES: True
             os: windows
-          - CONFIG: osx_64_numpy1.21python3.10.____cpython
-            SHORT_CONFIG: osx_64_numpy1.21python3.10.____cpython
+            runs_on: ['windows-latest']
+          - CONFIG: osx_64_numpy1.23python3.11.____cpython
+            SHORT_CONFIG: osx_64_numpy1.23python3.11.____cpython
             UPLOAD_PACKAGES: True
             os: macos
+            runs_on: ['macos-latest']
     steps:
+
     - name: Checkout code
       uses: actions/checkout@v3
       with:
@@ -40,11 +45,15 @@ jobs:
         DOCKER_IMAGE: ${{ matrix.DOCKER_IMAGE }}
         CI: github_actions
         UPLOAD_ON_BRANCH: main
+        CONDA_FORGE_DOCKER_RUN_ARGS: "${{ matrix.CONDA_FORGE_DOCKER_RUN_ARGS }}"
         BINSTAR_TOKEN: ${{ secrets.BINSTAR_TOKEN }}
       shell: bash
       run: |
         echo "::group::Configure binfmt_misc"
         docker run --rm --privileged multiarch/qemu-user-static:register --reset --credential yes
+        export flow_run_id="github_$GITHUB_RUN_ID"
+        export remote_url="https://github.com/$GITHUB_REPOSITORY"
+        export sha="$GITHUB_SHA"
         export FEEDSTOCK_NAME="$(basename $GITHUB_REPOSITORY)"
         export GIT_BRANCH="$(basename $GITHUB_REF)"
         if [[ "${GITHUB_EVENT_NAME}" == "pull_request" ]]; then
@@ -65,6 +74,9 @@ jobs:
         BINSTAR_TOKEN: ${{ secrets.BINSTAR_TOKEN }}
       shell: bash
       run: |
+        export flow_run_id="github_$GITHUB_RUN_ID"
+        export remote_url="https://github.com/$GITHUB_REPOSITORY"
+        export sha="$GITHUB_SHA"
         export FEEDSTOCK_NAME="$(basename $GITHUB_REPOSITORY)"
         export GIT_BRANCH="$(basename $GITHUB_REF)"
         if [[ "${GITHUB_EVENT_NAME}" == "pull_request" ]]; then
@@ -80,33 +92,14 @@ jobs:
         miniforge-version: latest
         miniforge-variant: Mambaforge
       if: matrix.os == 'windows'
+
     - name: Build on windows
       shell: cmd
       run: |
-        call activate base
-        mamba.exe install -c conda-forge 'python=3.9' conda-build conda pip boa conda-forge-ci-setup=3 "py-lief<0.12"
-        if errorlevel 1 exit 1
-        setup_conda_rc .\ ".\.packaging/conda_recipe" .\.ci_support\%CONFIG%.yaml
-        if errorlevel 1 exit 1
-        
-
-        if EXIST LICENSE.txt (
-          copy LICENSE.txt ".packaging/conda_recipe\\recipe-scripts-license.txt"
-        )
-        conda.exe mambabuild ".packaging/conda_recipe" -m .ci_support\%CONFIG%.yaml
-        if errorlevel 1 exit 1
-        set "FEEDSTOCK_NAME=%GITHUB_REPOSITORY:*/=%"
-        set "GIT_BRANCH=%GITHUB_REF:refs/heads/=%"
-        if /i "%GITHUB_EVENT_NAME%" == "pull_request" (
-          set "IS_PR_BUILD=True"
-        ) else (
-          set "IS_PR_BUILD=False"
-        )
-        if /i "%UPLOAD_PACKAGES%" == "true" (
-          if /i "%IS_PR_BUILD%" == "false" (
-            upload_package  .\ ".\.packaging/conda_recipe" .ci_support\%CONFIG%.yaml
-          )
-        )
+        set "flow_run_id=github_%GITHUB_RUN_ID%"
+        set "remote_url=https://github.com/%GITHUB_REPOSITORY%"
+        set "sha=%GITHUB_SHA%"
+        call ".scripts\run_win_build.bat"
       env:
         PYTHONUNBUFFERED: 1
         CONFIG: ${{ matrix.CONFIG }}
