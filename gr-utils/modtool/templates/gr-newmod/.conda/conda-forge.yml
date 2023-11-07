@@ -1,11 +1,14 @@
 # See https://conda-forge.org/docs/maintainer/conda_forge_yml.html for
 # documentation on possible keys and values.
 
-# uncomment to enable cross-compiled osx-arm64 builds
+# uncomment to enable cross-compiled builds
 #build_platform:
+#  linux_aarch64: linux_64
+#  linux_ppc64le: linux_64
 #  osx_arm64: osx_64
 clone_depth: 0
 github_actions:
+  cancel_in_progress: false
   store_build_artifacts: true
 os_version:
   linux_64: cos7
@@ -13,7 +16,7 @@ provider:
   linux: github_actions
   osx: github_actions
   win: github_actions
-  # uncomment to enable additional linux platforms
+  # uncomment to enable emulated builds for additional linux platforms
   #linux_aarch64: github_actions
   #linux_ppc64le: github_actions
 recipe_dir: .conda/recipe
