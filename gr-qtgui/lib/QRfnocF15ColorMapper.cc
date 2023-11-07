@@ -9,6 +9,7 @@
 
 #include "QRfnocF15ColorMapper.h"
 #include <QGLContext>
+#include <array>
 #include <memory>
 #include <sstream>
 
