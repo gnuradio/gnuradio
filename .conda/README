@@ -1,0 +1,30 @@
+Users
+*****
+
+This recipe is primarily used for CI builds, although it is possible to use it
+locally from a checked-out git repository with "conda-build".
+
+Developers
+**********
+
+CI builds use this recipe and the settings in .conda/conda-forge.yml. Any changes
+to the recipe should be accompanied by running
+
+    conda-smithy rerender --feedstock_config .conda/conda-forge.yml -c auto
+    git rm -f .github/workflows/automerge.yml .github/workflows/webservices.yml .circleci/config.yml
+    git commit --amend -s
+
+so that the generated build scripts are updated when necessary.
+***** RUN THE ABOVE TO CHECK FOR UPDATES WHENEVER EDITS ARE MADE in .conda *****
+
+You can also re-render from a pull request by starting a comment with "/rerender", which will trigger a Github workflow to perform the above steps.
+
+The CI will build conda packages for commits and pull requests, and it will
+upload the packages to Anaconda Cloud on commits to the branch specified
+in the configuration below. The channel and label that the packages are
+uploaded to are set in the recipe directory in conda_build_config.yaml.
+Uploads to Anaconda Cloud also require an API token to be set to the
+BINSTAR_TOKEN environment variable. Documentation for token generation:
+https://docs.anaconda.com/anacondaorg/user-guide/tasks/work-with-accounts/#creating-access-tokens
+To populate BINSTAR_TOKEN for CI jobs, add the token as a secret, e.g.:
+https://docs.github.com/en/actions/reference/encrypted-secrets
