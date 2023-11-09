@@ -36,7 +36,6 @@ rfnoc_f15_display_impl::rfnoc_f15_display_impl(const int fft_bins,
                 gr::io_signature::make(0, 0, 0)),
       d_fft_bins(fft_bins),
       d_pwr_bins(pwr_bins),
-      d_wf_lines(wf_lines),
       d_subframe_num(pwr_bins + 2)
 {
     /* Message Port output */
