@@ -58,7 +58,6 @@ private:
 
     int d_fft_bins;
     int d_pwr_bins;
-    int d_wf_lines;
 
     double d_center_freq = 0.0;
     double d_samp_rate = 0.0;
