@@ -205,13 +205,13 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
         for key, item in self.params.items():
             name = item.name
             value = item.value
-            value_label = item.options[value] if value in item.options else value
             if value is not None and item.hide == "none":
-                full_line = name + ": " + value_label
-                """
                 if len(value) > LONG_VALUE:
                     value = value[:LONG_VALUE-3] + '...'
-                """
+
+                value_label = item.options[value] if value in item.options else value
+                full_line = name + ": " + value_label
+
                 if fm.width(full_line) > largest_width:
                     largest_width = fm.width(full_line)
         self.width = largest_width + 15
@@ -381,6 +381,8 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
         for key, item in self.params.items():
             name = item.name
             value = item.value
+            if len(value) > LONG_VALUE:
+                value = value[:LONG_VALUE-3] + '...'
             value_label = item.options[value] if value in item.options else value
             if value is not None and item.hide == "none":
                 if item.is_valid():
