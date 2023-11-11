@@ -58,6 +58,7 @@ class Flowgraph(QtWidgets.QGraphicsScene, base.Component, CoreFlowgraph):
     def __init__(self, view, *args, **kwargs):
         super(Flowgraph, self).__init__()
         self.setParent(view)
+        self.view = view
         self.parent = self.platform
         CoreFlowgraph.__init__(self, self.platform)
         self.isPanning = False
@@ -301,6 +302,7 @@ class Flowgraph(QtWidgets.QGraphicsScene, base.Component, CoreFlowgraph):
             super(Flowgraph, self).mousePressEvent(event)
 
     def mouseMoveEvent(self, event):
+        self.view.setSceneRect(self.itemsBoundingRect())
         if self.newConnection:
             self.newConnection.end_point = event.scenePos()
             self.newConnection.updateLine()
@@ -309,12 +311,6 @@ class Flowgraph(QtWidgets.QGraphicsScene, base.Component, CoreFlowgraph):
             newPos = event.pos()
             diff = newPos - self.dragPos
             self.dragPos = newPos
-            self.horizontalScrollBar().setValue(
-                self.horizontalScrollBar().value() - diff.x()
-            )
-            self.verticalScrollBar().setValue(
-                self.verticalScrollBar().value() - diff.y()
-            )
             event.accept()
         else:
             itemUnderMouse = self.itemAt(
@@ -509,6 +505,10 @@ class Flowgraph(QtWidgets.QGraphicsScene, base.Component, CoreFlowgraph):
             sink = pasted_blocks[dst_block].get_sink(dst_port)
             connection = self.connect(source, sink)
             connection.setSelected(True)
+
+    def itemsBoundingRect(self):
+        rect = QtWidgets.QGraphicsScene.itemsBoundingRect(self)
+        return QtCore.QRectF(0.0, 0.0, rect.right(), rect.bottom())
 
 
 class FlowgraphView(
