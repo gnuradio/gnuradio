@@ -639,6 +639,9 @@ class FlowgraphView(
 
                 delta = newPos - oldPos
                 self.translate(delta.x(), delta.y())
+        elif event.modifiers() == Qt.ShiftModifier:
+            self.horizontalScrollBar().setValue(
+                self.horizontalScrollBar().value() - event.angleDelta().y())
         else:
             QtWidgets.QGraphicsView.wheelEvent(self, event)
 
