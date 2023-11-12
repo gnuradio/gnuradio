@@ -168,12 +168,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         )
         self.tabWidget.addTab(fg_view, "Untitled")
         self.setCentralWidget(self.tabWidget)
-        self.currentFlowgraph.selectionChanged.connect(self.updateActions)
-        self.currentFlowgraph.selectionChanged.connect(self.updateDocTab)
-        self.currentFlowgraph.itemMoved.connect(self.createMove)
-        self.currentFlowgraph.newElement.connect(self.registerNewElement)
-        self.currentFlowgraph.deleteElement.connect(self.registerDeleteElement)
-        self.currentFlowgraph.blockPropsChange.connect(self.registerBlockPropsChange)
+        self.connect_fg_signals(self.currentFlowgraph)
         # self.new_tab(self.flowgraph)
 
         self.clipboard = None
@@ -865,6 +860,14 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         self.progress_bar.setTextVisible(True)
         self.progress_bar.setFormat(msg)
 
+    def connect_fg_signals(self, fg):
+        fg.selectionChanged.connect(self.updateActions)
+        fg.selectionChanged.connect(self.updateDocTab)
+        fg.itemMoved.connect(self.createMove)
+        fg.newElement.connect(self.registerNewElement)
+        fg.deleteElement.connect(self.registerDeleteElement)
+        fg.blockPropsChange.connect(self.registerBlockPropsChange)
+
     # Action Handlers
     def new_triggered(self):
         log.debug("New")
@@ -873,6 +876,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         fg_view.centerOn(0, 0)
         initial_state = self.platform.parse_flow_graph("")
         fg_view.flowgraph.import_data(initial_state)
+        self.connect_fg_signals(fg_view.flowgraph)
         log.debug("Adding flowgraph view")
 
         self.tabWidget.addTab(fg_view, "Untitled")
@@ -888,7 +892,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
             self.tabWidget.addTab(new_flowgraph, os.path.basename(filename))
             self.tabWidget.setCurrentIndex(self.tabWidget.count() - 1)
             self.currentFlowgraph.import_data(initial_state)
-            self.currentFlowgraph.selectionChanged.connect(self.updateActions)
+            self.connect_fg_signals(self.currentFlowgraph)
 
     def open_example(self, example_path):
         log.debug("open example")
@@ -899,7 +903,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
             self.tabWidget.addTab(new_flowgraph, os.path.basename(example_path))
             self.tabWidget.setCurrentIndex(self.tabWidget.count() - 1)
             self.currentFlowgraph.import_data(initial_state)
-            self.currentFlowgraph.selectionChanged.connect(self.updateActions)
+            self.connect_fg_signals(self.currentFlowgraph)
 
     def save_triggered(self):
         log.debug("save")
