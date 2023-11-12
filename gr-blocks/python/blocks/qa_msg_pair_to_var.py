@@ -35,7 +35,7 @@ class test_msg_pair_to_var(gr_unittest.TestCase):
             self.test_val = value
 
         dut = blocks.msg_pair_to_var(test_f)
-        test_msg = pmt.cons(pmt.intern("foo"), pmt.from_long(canary))
+        test_msg = pmt.cons(pmt.intern("foo"), pmt.from_uint64(canary))
         src = blocks.message_strobe(test_msg, 10)
         self.tb.msg_connect(*(src, pmt.intern("strobe")),
                             *(dut, blocks.msg_pair_to_var.IN_PORT))
@@ -57,7 +57,7 @@ class test_msg_pair_to_var(gr_unittest.TestCase):
                 raise Exception("It was the nightingale, and not the lark")
 
         dut = blocks.msg_pair_to_var(test_f)
-        test_msg = pmt.cons(pmt.intern("birb"), pmt.from_long(nightingale))
+        test_msg = pmt.cons(pmt.intern("birb"), pmt.from_uint64(nightingale))
         src = blocks.message_strobe(test_msg, 10)
         self.tb.msg_connect(*(src, pmt.intern("strobe")),
                             *(dut, blocks.msg_pair_to_var.IN_PORT))
