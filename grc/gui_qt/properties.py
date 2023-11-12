@@ -105,6 +105,7 @@ class Window(object):
     BLOCK_LIBRARY_DOCK_LOCATION = 1
     DOCUMENTATION_TAB_DOCK_LOCATION = 2
     WIKI_TAB_DOCK_LOCATION = 2
+    VARIABLE_EDITOR_DOCK_LOCATION = 8
 
     # Define the top level menus.
     # This does not actually define the menus; it simply defines a list of constants that

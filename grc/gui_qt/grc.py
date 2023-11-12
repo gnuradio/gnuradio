@@ -84,6 +84,8 @@ class Application(QtWidgets.QApplication):
         # stopwatch.lap('documentationtab')
         self.WikiTab = components.WikiTab()
         stopwatch.lap("wikitab")
+        self.VariableEditor = components.VariableEditor()
+        stopwatch.lap("variable_editor")
 
 
         # Debug times
