@@ -668,6 +668,48 @@ def test_file_close_all(qtbot, qapp_cls_, monkeypatch):
     assert win.tabWidget.count() == 1, "File/Close All"
 
 
+def test_generate(qtbot, qapp_cls_, monkeypatch, tmp_path):
+    fg = qapp_cls_.MainWindow.currentFlowgraph
+    view = qapp_cls_.MainWindow.currentView
+    scaling = qapp_cls_.desktop().devicePixelRatio()
+    fg_path = tmp_path / "test_generate.grc"
+    py_path = tmp_path / "default.py"
+    monkeypatch.setattr(
+        QtWidgets.QFileDialog, "getSaveFileName", lambda *args, **kargs: (fg_path, "")
+    )
+
+    qtbot.wait(100)
+    for block in ["null sou", "null sin"]:
+        add_block_from_query(qtbot, qapp_cls_, block)
+
+    n_src = find_blocks(fg, "blocks_null_source")
+    n_sink = find_blocks(fg, "blocks_null_sink")
+
+    assert len(fg.connections) == 0
+
+    start = scaling * global_pos(n_sink, view)
+    pag.moveTo(start.x(), start.y())
+    pag.mouseDown()
+
+    def drag():
+        for i in range(20):
+            pag.move(10, 0)
+
+    drag_t = threading.Thread(target=drag)
+    drag_t.start()
+    while drag_t.is_alive():
+        qtbot.wait(50)
+    pag.mouseUp()
+
+    click_on(qtbot, qapp_cls_, n_src.sources[0])
+    click_on(qtbot, qapp_cls_, n_sink.sinks[0])
+    assert not fg_path.exists(), "File/Save (setup): .grc file already exists"
+    assert not py_path.exists(), "File/Save (setup): Python file already exists"
+    menu_shortcut(qtbot, qapp_cls_, "build", QtCore.Qt.Key_B, QtCore.Qt.Key_G)
+    qtbot.wait(500)
+    assert fg_path.exists(), "File/Save: Could not save .grc file"
+    assert py_path.exists(), "File/Save: Could not save Python file"
+
 def test_quit(qtbot, qapp_cls_):
     qapp_cls_.MainWindow.actions["exit"].trigger()
     assert True
