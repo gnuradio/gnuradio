@@ -20,27 +20,29 @@ class msg_pair_to_var(gr.sync_block):
     unpredictable.
     """
 
+    IN_PORT = pmt.intern("inpair")
+
     def __init__(self, callback):
         gr.sync_block.__init__(
             self, name="msg_pair_to_var", in_sig=None, out_sig=None)
 
         self.callback = callback
 
-        self.message_port_register_in(pmt.intern("inpair"))
-        self.set_msg_handler(pmt.intern("inpair"), self.msg_handler)
+        self.message_port_register_in(self.IN_PORT)
+        self.set_msg_handler(self.IN_PORT, self.msg_handler)
 
     def msg_handler(self, msg):
         if not pmt.is_pair(msg) or pmt.is_dict(msg) or pmt.is_pdu(msg):
-            gr.log.warn(
-                "Input message %s is not a simple pair, dropping" % repr(msg))
+            self.logger.warn(
+                f"Input message {msg} is not a simple pair, dropping")
             return
 
         new_val = pmt.to_python(pmt.cdr(msg))
         try:
             self.callback(new_val)
         except Exception as e:
-            gr.log.error("Error when calling " + repr(self.callback) + " with " +
-                         repr(new_val) + " (reason: %s)" % repr(e))
+            self.logger.error(
+                f"Error when calling {self.callback} with {new_val} (reason: {e})")
 
     def stop(self):
         return True
