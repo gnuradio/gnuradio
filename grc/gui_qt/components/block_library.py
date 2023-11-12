@@ -250,7 +250,9 @@ class BlockLibrary(QtWidgets.QDockWidget, base.Component):
             return
 
         fg = self.app.MainWindow.currentFlowgraph
-        fg.add_block(block_key)
+        view = self.app.MainWindow.currentView
+        pos_ = view.mapToScene(view.viewport().rect().center())
+        fg.add_block(block_key, pos=(pos_.x(), pos_.y()))
 
     def populate_tree(self, block_tree, v_blocks=None):
         """Populate the item model and tree view with the hierarchical block tree."""
