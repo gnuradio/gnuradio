@@ -574,7 +574,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         valid_fg = self.currentFlowgraph.is_valid()
         saved_fg = self.currentView.saved
 
-        self.actions["save"].setEnabled(saved_fg)
+        self.actions["save"].setEnabled(not saved_fg)
 
         self.actions["undo"].setEnabled(canUndo)
         self.actions["redo"].setEnabled(canRedo)
@@ -913,7 +913,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
                 return
 
             log.info(f"Saved {filename}")
-            self.currentView.saved = True
+            self.currentView.set_saved(True)
         else:
             log.debug("Flowgraph does not have a filename")
             self.save_as_triggered()
@@ -934,7 +934,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
                 return
 
             log.info(f"Saved (as) {filename}")
-            self.currentView.saved = True
+            self.currentView.set_saved(True)
         else:
             log.debug("Cancelled Save As action")
 

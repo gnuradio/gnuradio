@@ -581,6 +581,9 @@ class FlowgraphView(
     def createToolbars(self, actions, toolbars):
         log.debug("Creating toolbars")
 
+    def set_saved(self, saved):
+        self.saved = saved
+
     def readFile(self, filename):
         tree = ET.parse(filename)
         root = tree.getroot()

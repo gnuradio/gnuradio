@@ -415,6 +415,15 @@ def test_bypass(qtbot, qapp_cls_):
     for block in [throttle, n_src]:
         delete_block(qtbot, qapp_cls_, block)
 
+def test_file_save(qtbot, qapp_cls_, monkeypatch, tmp_path):
+    fg_path = tmp_path / "test_save.grc"
+    monkeypatch.setattr(
+        QtWidgets.QFileDialog, "getSaveFileName", lambda *args, **kargs: (fg_path, "")
+    )
+
+    assert not fg_path.exists(), "File/Save (setup): File already exists"
+    ctrl_keystroke(qtbot, qapp_cls_, QtCore.Qt.Key_S)
+    assert fg_path.exists(), "File/Save: Could not save file"
 
 def test_file_save_as(qtbot, qapp_cls_, monkeypatch, tmp_path):
     fg_path = tmp_path / "test.grc"
@@ -426,20 +435,6 @@ def test_file_save_as(qtbot, qapp_cls_, monkeypatch, tmp_path):
 
     menu_shortcut(qtbot, qapp_cls_, "file", QtCore.Qt.Key_F, QtCore.Qt.Key_A)
     assert fg_path.exists()
-
-
-# This test fails if run as part of the whole test suite, but succeeds if run individually :(
-@pytest.mark.skip()
-def test_file_save(qtbot, qapp_cls_, monkeypatch, tmp_path):
-    fg_path = tmp_path / "test_save.grc"
-    monkeypatch.setattr(
-        QtWidgets.QFileDialog, "getSaveFileName", lambda *args, **kargs: (fg_path, "")
-    )
-
-    assert not fg_path.exists(), "File/Save (setup): File already exists"
-    ctrl_keystroke(qtbot, qapp_cls_, QtCore.Qt.Key_S)
-    assert fg_path.exists(), "File/Save: Could not save file"
-
 
 def test_file_save_copy(qtbot, qapp_cls_, monkeypatch, tmp_path):
     fg_path = tmp_path / "test_copy.grc"
