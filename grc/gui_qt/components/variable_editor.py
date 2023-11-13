@@ -26,14 +26,16 @@ class VariableEditor(QtWidgets.QDockWidget, base.Component):
 
         ### GUI Widgets
         self._tree = QtWidgets.QTreeWidget()
-        self._tree.setHeaderLabels(["ID", "Value"])
+        self._tree.setHeaderLabels(["ID", "Value", ""])
         self.setWidget(self._tree)
 
         # TODO: Add non-hardcoded data
         imports = QtWidgets.QTreeWidgetItem(self._tree)
         imports.setText(0, "Imports")
+        imports.setIcon(2, QtGui.QIcon.fromTheme("list-add"))
         variables = QtWidgets.QTreeWidgetItem(self._tree)
         variables.setText(0, "Variables")
+        variables.setIcon(2, QtGui.QIcon.fromTheme("list-add"))
         samp_rate = QtWidgets.QTreeWidgetItem(variables)
         samp_rate.setText(0, "samp_rate")
         samp_rate.setText(1, "32000")
