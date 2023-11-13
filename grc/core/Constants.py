@@ -28,6 +28,8 @@ BLOCK_DESCRIPTION_FILE_FORMAT_VERSION = 1
 # File format versions:
 #  0: undefined / legacy
 #  1: non-numeric message port keys (label is used instead)
+#  This constant is the max known version. If a version higher than this shows
+#  up, we assume we can't handle it.
 FLOW_GRAPH_FILE_FORMAT_VERSION = 1
 
 # Param tabs
