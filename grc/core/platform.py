@@ -340,6 +340,18 @@ class Platform(Element):
             from ..converter.flow_graph import from_xml
             data = from_xml(filename)
 
+        file_format = data.get('metadata', {}).get('file_format')
+        if file_format is None:
+            Messages.send(
+                '>>> WARNING: Flow graph does not contain a file format version!\n')
+        elif file_format == 0:
+            Messages.send(
+                '>>> WARNING: Flow graph format is version 0 (legacy) and will'
+                ' be converted to version 1 or higher upon saving!\n')
+        elif file_format > Constants.FLOW_GRAPH_FILE_FORMAT_VERSION:
+            raise RuntimeError(
+                f"Flow graph {filename} has unknown flow graph version!")
+
         return data
 
     def save_flow_graph(self, filename, flow_graph):
