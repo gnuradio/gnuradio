@@ -10,7 +10,6 @@ from collections import namedtuple
 import os
 import logging
 from itertools import chain
-import re
 
 from . import (
     Messages, Constants,
