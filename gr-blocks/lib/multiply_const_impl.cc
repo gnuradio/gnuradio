@@ -73,7 +73,11 @@ int multiply_const_impl<gr_complex>::work(int noutput_items,
     gr_complex* out = (gr_complex*)output_items[0];
     int noi = noutput_items * d_vlen;
 
+#if VOLK_VERSION >= 030100
+    volk_32fc_s32fc_multiply2_32fc(out, in, &d_k, noi);
+#else
     volk_32fc_s32fc_multiply_32fc(out, in, d_k, noi);
+#endif
 
     return noutput_items;
 }
