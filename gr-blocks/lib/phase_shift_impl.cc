@@ -84,7 +84,11 @@ int phase_shift_impl::work(int noutput_items,
     gr::thread::scoped_lock guard(d_setlock);
 
     if (d_shift != 0.0f) {
+#if VOLK_VERSION >= 030100
+        volk_32fc_s32fc_multiply2_32fc(out, in, &d_shift_cc, noutput_items);
+#else
         volk_32fc_s32fc_multiply_32fc(out, in, d_shift_cc, noutput_items);
+#endif
     } else {
         memcpy(out, in, sizeof(gr_complex) * noutput_items);
     }
