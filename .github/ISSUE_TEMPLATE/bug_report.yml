@@ -40,6 +40,7 @@ body:
       options:
         - 4.0-git (dev-4.0)
         - 3.11-git (main)
+        - QT-based Companion branch (feature-grc-qt)
         - 3.10 (maint-3.10)
         - 3.9  (maint-3.9)
         - 3.8  (maint-3.8)
