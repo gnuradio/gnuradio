@@ -671,8 +671,10 @@ int dvbt2_paprtr_cc_impl::work(int noutput_items,
                     memcpy(ones_time.data(),
                            papr_fft.get_outbuf(),
                            sizeof(gr_complex) * papr_fft_size);
-                    volk_32fc_s32fc_multiply_32fc(
-                        ones_time.data(), ones_time.data(), normalization, papr_fft_size);
+                    volk_32f_s32f_multiply_32f(reinterpret_cast<float*>(ones_time.data()),
+                                               reinterpret_cast<float*>(ones_time.data()),
+                                               normalization,
+                                               papr_fft_size * 2);
                     std::fill_n(&r[0], N_TR, 0);
                     std::fill_n(&c[0], papr_fft_size, 0);
                     for (int k = 1; k <= num_iterations; k++) {
@@ -706,7 +708,11 @@ int dvbt2_paprtr_cc_impl::work(int noutput_items,
                                 papr_fft_size;
                             ctemp[n] = std::exp(gr_complexd(0.0, vtemp));
                         }
+#if VOLK_VERSION >= 030100
+                        volk_32fc_s32fc_multiply2_32fc(v.data(), ctemp.data(), &u, N_TR);
+#else
                         volk_32fc_s32fc_multiply_32fc(v.data(), ctemp.data(), u, N_TR);
+#endif
                         volk_32f_s32f_multiply_32f(
                             (float*)rNew.data(), (float*)v.data(), alpha, N_TR * 2);
                         volk_32f_x2_subtract_32f((float*)rNew.data(),
@@ -746,8 +752,13 @@ int dvbt2_paprtr_cc_impl::work(int noutput_items,
                             ones_freq[(n + m) % papr_fft_size] = ones_time[n];
                         }
                         result = u * alpha;
+#if VOLK_VERSION >= 030100
+                        volk_32fc_s32fc_multiply2_32fc(
+                            ctemp.data(), ones_freq.data(), &result, papr_fft_size);
+#else
                         volk_32fc_s32fc_multiply_32fc(
                             ctemp.data(), ones_freq.data(), result, papr_fft_size);
+#endif
                         volk_32f_x2_subtract_32f((float*)c.data(),
                                                  (float*)c.data(),
                                                  (float*)ctemp.data(),
