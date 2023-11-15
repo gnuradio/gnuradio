@@ -49,7 +49,11 @@ public:
 
     void rotateN(gr_complex* out, const gr_complex* in, int n)
     {
+#if VOLK_VERSION >= 030100
+        volk_32fc_s32fc_x2_rotator2_32fc(out, in, &d_phase_incr, &d_phase, n);
+#else
         volk_32fc_s32fc_x2_rotator_32fc(out, in, d_phase_incr, &d_phase, n);
+#endif
     }
 };
 

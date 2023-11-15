@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(rotator.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(5d52f019c659d77040b16ad7541e4fd2)                     */
+/* BINDTOOL_HEADER_FILE_HASH(3af403c5adb7af31a51113901293189d)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
