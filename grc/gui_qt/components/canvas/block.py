@@ -441,19 +441,11 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
             pass
 
         self.moveToTop()
-        super(self.__class__, self).mousePressEvent(e)
+
 
     def mouseDoubleClickEvent(self, e):
-        log.debug(f"Detected double click on block {self.name}, opening PropsDialog")
+        self.open_properties()
         super(self.__class__, self).mouseDoubleClickEvent(e)
-        self.props_dialog = PropsDialog(self)
-        self.props_dialog.show()
-        """
-        if props.exec():
-            log.debug(f"Pressed Ok on block {self.name}'s PropsDialog")
-        else:
-            log.debug(f"Pressed Cancel on block {self.name}'s PropsDialog")
-        """
 
     def import_data(self, name, states, parameters, **_):
         CoreBlock.import_data(self, name, states, parameters, **_)
@@ -474,3 +466,8 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
 
     def center(self):
         return QtCore.QPointF(self.x() + self.width / 2, self.y() + self.height / 2)
+
+    def open_properties(self):
+        self.props_dialog = PropsDialog(self)
+        self.props_dialog.show()
+
