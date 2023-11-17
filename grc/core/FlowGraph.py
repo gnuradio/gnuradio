@@ -17,8 +17,8 @@ from typing import (List, Set, Optional, Iterator, Iterable, Tuple, Union, Order
 from . import Messages
 from .base import Element
 from .blocks import Block
-from .utils import expr_utils
 from .params import Param
+from .utils import expr_utils
 
 log = logging.getLogger(__name__)
 
@@ -50,7 +50,7 @@ class FlowGraph(Element):
         self.grc_file_path = ''
 
     def __str__(self) -> str:
-        return 'FlowGraph - {}({})'.format(self.get_option('title'), self.get_option('id'))
+        return f"FlowGraph - {self.get_option('title')}({self.get_option('id')})"
 
     def imports(self) -> List[str]:
         """
@@ -196,8 +196,7 @@ class FlowGraph(Element):
                 filename=shlex.quote(file_path))
             return shlex.split(run_command) if split else run_command
         except Exception as e:
-            raise ValueError(
-                "Can't parse run command {!r}: {}".format(run_command, e))
+            raise ValueError(f"Can't parse run command {repr(run_command)}: {e}")
 
     def get_imported_names(self) -> Set[str]:
         """
@@ -216,7 +215,7 @@ class FlowGraph(Element):
         for block in self.blocks:
             if block.name == name:
                 return block
-        raise KeyError('No block with name {!r}'.format(name))
+        raise KeyError(f'No block with name {repr(name)}')
 
     def get_elements(self) -> List[Element]:
         elements = list(self.blocks)
@@ -257,8 +256,7 @@ class FlowGraph(Element):
                 exec(expr, module.__dict__)
                 namespace[id] = module
             except Exception:
-                log.exception(
-                    'Failed to evaluate expression in module {0}'.format(id), exc_info=True)
+                log.exception(f'Failed to evaluate expression in module {id}', exc_info=True)
                 pass
         return namespace
 
@@ -273,8 +271,7 @@ class FlowGraph(Element):
                     parameter_block.params['value'].to_code(), namespace)
                 np[parameter_block.name] = value
             except Exception:
-                log.exception('Failed to evaluate parameter block {0}'.format(
-                    parameter_block.name), exc_info=True)
+                log.exception(f'Failed to evaluate parameter block {parameter_block.name}', exc_info=True)
                 pass
         namespace.update(np)  # Merge param namespace
         return namespace
@@ -294,9 +291,7 @@ class FlowGraph(Element):
             except TypeError:  # Type Errors may happen, but that doesn't matter as they are displayed in the gui
                 pass
             except Exception:
-                log.exception('Failed to evaluate variable block {0}'.format(
-                    variable_block.name), exc_info=True)
-                pass
+                log.exception(f'Failed to evaluate variable block {variable_block.name}', exc_info=True)
         return namespace
 
     def _renew_namespace(self) -> None:
@@ -421,12 +416,7 @@ class FlowGraph(Element):
 
         def sort_connection_key(connection_info) -> List[str]:
             if isinstance(connection_info, dict):
-                return [
-                    connection_info.get('src_blk_id'),
-                    connection_info.get('src_port_id'),
-                    connection_info.get('snk_blk_id'),
-                    connection_info.get('snk_port_id'),
-                ]
+                return [connection_info.get(key) for key in ('src_blk_id', 'src_port_id', 'snk_blk_id', 'snk_port_id')]
             return connection_info
         data = collections.OrderedDict()
         data['options'] = self.options_block.export_data()
@@ -503,8 +493,7 @@ class FlowGraph(Element):
                 if block.is_dummy_block:
                     port = block.add_missing_port(key, dir)
                 else:
-                    raise LookupError(
-                        '%s key %r not in %s block keys' % (dir, key, dir))
+                    raise LookupError(f"{dir} key {key} not in {dir} blcock keys")
             return port
 
         had_connect_errors = False
@@ -525,7 +514,7 @@ class FlowGraph(Element):
                 snk_port_id = connection_info.get('snk_port_id')
                 conn_params = connection_info.get('params', {})
             else:
-                Messages.send_error_load(f'Invalid connection format detected!')
+                Messages.send_error_load('Invalid connection format detected!')
                 had_connect_errors = True
                 continue
             try:
@@ -547,8 +536,8 @@ class FlowGraph(Element):
 
             except (KeyError, LookupError) as e:
                 Messages.send_error_load(
-                    'Connection between {}({}) and {}({}) could not be made.\n\t{}'.format(
-                        src_blk_id, src_port_id, snk_blk_id, snk_port_id, e))
+                    f"""Connection between {src_blk_id}({src_port_id}) and {snk_blk_id}({snk_port_id}) could not be made
+                    \t{e}""")
                 had_connect_errors = True
 
         for block in self.blocks:
@@ -557,8 +546,7 @@ class FlowGraph(Element):
                 # Flowgraph errors depending on disabled blocks are not displayed
                 # in the error dialog box
                 # So put a message into the Property window of the dummy block
-                block.add_error_message(
-                    'Block id "{}" not found.'.format(block.key))
+                block.add_error_message(f'Block id "{block.key}" not found.')
 
         self.rewrite()  # global rewrite
         return had_connect_errors
