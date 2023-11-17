@@ -228,16 +228,13 @@ class FlowGraph(Element):
         """
         Flag the namespace to be renewed.
         """
-        self.renew_namespace()
+        self._renew_namespace()
         Element.rewrite(self)
 
-    def renew_namespace(self):
-        namespace = {}
-        # Before renewing the namespace, clear it
-        # to get rid of entries of blocks that
-        # are no longer valid ( deleted, disabled, ...)
-        self.namespace.clear()
-        # Load imports
+    def _reload_imports(self, namespace: dict) -> dict:
+        """
+        Load imports; be tolerant about import errors
+        """
         for expr in self.imports():
             try:
                 exec(expr, namespace)
@@ -247,12 +244,11 @@ class FlowGraph(Element):
                 # this is ok behavior, unfortunately we could be hiding other import bugs
                 pass
             except Exception:
-                log.exception('Failed to evaluate import expression "{0}"'.format(
-                    expr), exc_info=True)
+                log.exception(f"Failed to evaluate import expression \"{expr}\"", exc_info=True)
                 pass
+        return namespace
 
-        self.imported_names = list(namespace.keys())
-
+    def _reload_modules(self, namespace: dict) -> dict:
         for id, expr in self.get_python_modules():
             try:
                 module = types.ModuleType(id)
@@ -262,8 +258,12 @@ class FlowGraph(Element):
                 log.exception(
                     'Failed to evaluate expression in module {0}'.format(id), exc_info=True)
                 pass
+        return namespace
 
-        # Load parameters
+    def _reload_parameters(self, namespace: dict) -> dict:
+        """
+        Load parameters. Be tolerant of evaluation failures.
+        """
         np = {}  # params don't know each other
         for parameter_block in self.get_parameters():
             try:
@@ -275,11 +275,12 @@ class FlowGraph(Element):
                     parameter_block.name), exc_info=True)
                 pass
         namespace.update(np)  # Merge param namespace
+        return namespace
 
-        # We need the updated namespace to evaluate the variable blocks
-        # otherwise sometimes variable_block rewrite / eval fails
-        self.namespace.update(namespace)
-        # Load variables
+    def _reload_variables(self, namespace: dict) -> dict:
+        """
+        Load variables. Be tolerant of evaluation failures.
+        """
         for variable_block in self.get_variables():
             try:
                 variable_block.rewrite()
@@ -294,7 +295,23 @@ class FlowGraph(Element):
                 log.exception('Failed to evaluate variable block {0}'.format(
                     variable_block.name), exc_info=True)
                 pass
+        return namespace
 
+    def _renew_namespace(self) -> None:
+        # Before renewing the namespace, clear it
+        # to get rid of entries of blocks that
+        # are no longer valid ( deleted, disabled, ...)
+        self.namespace.clear()
+
+        namespace = self._reload_imports({})
+        self.imported_names = set(namespace.keys())
+        namespace = self._reload_modules(namespace)
+        namespace = self._reload_parameters(namespace)
+
+        # We need the updated namespace to evaluate the variable blocks
+        # otherwise sometimes variable_block rewrite / eval fails
+        self.namespace.update(namespace)
+        namespace = self._reload_variables(namespace)
         self._eval_cache.clear()
 
     def evaluate(self, expr, namespace=None, local_namespace=None):
