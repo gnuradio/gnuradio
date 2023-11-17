@@ -7,6 +7,7 @@
 
 from codecs import open
 from collections import namedtuple
+from collections import ChainMap
 import os
 import logging
 from itertools import chain
@@ -418,7 +419,7 @@ class Platform(Element):
 
     block_classes_build_in = blocks.build_ins
     # separates build-in from loaded blocks)
-    block_classes = utils.backports.ChainMap({}, block_classes_build_in)
+    block_classes = ChainMap({}, block_classes_build_in)
 
     port_classes = {
         None: ports.Port,  # default
