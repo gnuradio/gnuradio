@@ -171,7 +171,7 @@ class Param(Element):
     def get_evaluated(self) -> EvaluationType:
         return self._evaluated
 
-    def is_float(self, num):
+    def _is_float(self, num: str) -> bool:
         """
         Check if string can be converted to float.
 
@@ -214,7 +214,7 @@ class Param(Element):
         elif dtype in ('raw', 'complex', 'real', 'float', 'int', 'short', 'byte', 'hex', 'bool'):
             if expr:
                 try:
-                    if isinstance(expr, str) and self.is_float(expr[:-1]):
+                    if isinstance(expr, str) and self._is_float(expr[:-1]):
                         scale_factor = expr[-1:]
                         if scale_factor in self.scale:
                             expr = str(float(expr[:-1]) *
@@ -394,7 +394,7 @@ class Param(Element):
                 for c in range(col, col + col_span):
                     self.hostage_cells.add((my_parent, (r, c)))
 
-            for other in self.get_all_params('gui_hint'):
+            for other in self._get_all_params('gui_hint'):
                 if other is self:
                     continue
                 collision = next(
@@ -463,7 +463,7 @@ class Param(Element):
 
         return widget_str
 
-    def get_all_params(self, dtype, key=None):
+    def _get_all_params(self, dtype, key=None) -> List[Element]:
         """
         Get all the params from the flowgraph that have the given type and
         optionally a given key
