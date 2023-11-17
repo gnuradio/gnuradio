@@ -15,6 +15,7 @@ import copy
 import re
 
 import ast
+import typing
 
 from ._templates import MakoTemplates
 from ._flags import Flags
@@ -442,49 +443,33 @@ class Block(Element):
         self.cpp_templates = copy.copy(self.orig_cpp_templates)
 
         # Determine the lvalue type
-        def get_type(element, _vtype):
+        def get_type(element: str, _vtype: typing.Optional[type] = None) -> str:
             evaluated = None
             try:
                 evaluated = ast.literal_eval(element)
-                if _vtype == None:
+                if _vtype is None:
                     _vtype = type(evaluated)
             except ValueError or SyntaxError as excp:
-                if _vtype == None:
+                if _vtype is None:
                     print(excp)
+            simple_types = {int: "int", float: "double", bool: "bool", complex: "gr_complex", str: "std::string"}
+            if _vtype in simple_types:
+                return simple_types[_vtype]
+            if _vtype == list:
+                try:
+                    # For container types we must also determine the type of the template parameter(s)
+                    return f"std::vector<{get_type(str(evaluated[0]), type(evaluated[0]))}>"
+                except IndexError:  # empty list
+                    return 'std::vector<std::string>'
 
-            if _vtype in [int, float, bool, list, dict, str, complex]:
-                if _vtype == (int or long):
-                    return 'int'
-
-                if _vtype == float:
-                    return 'double'
-
-                if _vtype == bool:
-                    return 'bool'
-
-                if _vtype == complex:
-                    return 'gr_complex'
-
-                if _vtype == list:
-                    try:
-                        # For container types we must also determine the type of the template parameter(s)
-                        return 'std::vector<' + get_type(str(evaluated[0]), type(evaluated[0])) + '>'
-
-                    except IndexError:  # empty list
-                        return 'std::vector<std::string>'
-
-                if _vtype == dict:
-                    try:
-                        # For container types we must also determine the type of the template parameter(s)
-                        key = list(evaluated)[0]
-                        val = list(evaluated.values())[0]
-                        return 'std::map<' + get_type(str(key), type(key)) + ', ' + get_type(str(val), type(val)) + '>'
-
-                    except IndexError:  # empty dict
-                        return 'std::map<std::string, std::string>'
-
-                else:
-                    return 'std::string'
+            if _vtype == dict:
+                try:
+                    # For container types we must also determine the type of the template parameter(s)
+                    key = list(evaluated)[0]
+                    val = list(evaluated.values())[0]
+                    return f"std::map<{get_type(str(key), type(key))}, {get_type(str(val), type(val))}>"
+                except IndexError:  # empty dict
+                    return 'std::map<std::string, std::string>'
 
         # Get the lvalue type
         self.vtype = get_type(value, py_type)
