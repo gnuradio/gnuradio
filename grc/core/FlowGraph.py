@@ -12,10 +12,13 @@ import types
 import logging
 import shlex
 from operator import methodcaller, attrgetter
+from typing import (List, Set, Optional, Iterator, Iterable, Tuple, Union, OrderedDict)
 
 from . import Messages
 from .base import Element
+from .blocks import Block
 from .utils import expr_utils
+from .params import Param
 
 log = logging.getLogger(__name__)
 
@@ -24,7 +27,7 @@ class FlowGraph(Element):
 
     is_flow_graph = True
 
-    def __init__(self, parent):
+    def __init__(self, parent: Element):
         """
         Make a flow graph from the arguments.
 
@@ -35,7 +38,7 @@ class FlowGraph(Element):
             the flow graph object
         """
         Element.__init__(self, parent)
-        self.options_block = self.parent_platform.make_block(self, 'options')
+        self.options_block: Block = self.parent_platform.make_block(self, 'options')
 
         self.blocks = [self.options_block]
         self.connections = set()
@@ -46,10 +49,10 @@ class FlowGraph(Element):
 
         self.grc_file_path = ''
 
-    def __str__(self):
+    def __str__(self) -> str:
         return 'FlowGraph - {}({})'.format(self.get_option('title'), self.get_option('id'))
 
-    def imports(self):
+    def imports(self) -> List[str]:
         """
         Get a set of all import statements (Python) in this flow graph namespace.
 
@@ -58,7 +61,7 @@ class FlowGraph(Element):
         """
         return [block.templates.render('imports') for block in self.iter_enabled_blocks()]
 
-    def get_variables(self):
+    def get_variables(self) -> List[str]:
         """
         Get a list of all variables (Python) in this flow graph namespace.
         Exclude parameterized variables.
@@ -70,7 +73,7 @@ class FlowGraph(Element):
                      if block.is_variable]
         return expr_utils.sort_objects(variables, attrgetter('name'), methodcaller('get_var_make'))
 
-    def get_parameters(self):
+    def get_parameters(self) -> List[Element]:
         """
         Get a list of all parameterized variables in this flow graph namespace.
 
@@ -81,7 +84,7 @@ class FlowGraph(Element):
                       if b.key == 'parameter']
         return parameters
 
-    def get_snippets(self):
+    def _get_snippets(self) -> List[Element]:
         """
         Get a set of all code snippets (Python) in this flow graph namespace.
 
@@ -90,7 +93,7 @@ class FlowGraph(Element):
         """
         return [b for b in self.iter_enabled_blocks() if b.key == 'snippet']
 
-    def get_snippets_dict(self, section=None):
+    def get_snippets_dict(self, section=None) -> List[dict]:
         """
         Get a dictionary of code snippet information for a particular section.
 
@@ -100,7 +103,7 @@ class FlowGraph(Element):
         Returns:
             a list of code snippets dicts
         """
-        snippets = self.get_snippets()
+        snippets = self._get_snippets()
         if not snippets:
             return []
 
@@ -125,7 +128,7 @@ class FlowGraph(Element):
 
         return output
 
-    def get_monitors(self):
+    def get_monitors(self) -> List[Element]:
         """
         Get a list of all ControlPort monitors
         """
@@ -133,19 +136,19 @@ class FlowGraph(Element):
                     if 'ctrlport_monitor' in b.key]
         return monitors
 
-    def get_python_modules(self):
+    def get_python_modules(self) -> Iterator[Tuple[str, str]]:
         """Iterate over custom code block ID and Source"""
         for block in self.iter_enabled_blocks():
             if block.key == 'epy_module':
                 yield block.name, block.params['source_code'].get_value()
 
-    def iter_enabled_blocks(self):
+    def iter_enabled_blocks(self) -> Iterator[Element]:
         """
         Get an iterator of all blocks that are enabled and not bypassed.
         """
         return (block for block in self.blocks if block.enabled)
 
-    def get_enabled_blocks(self):
+    def get_enabled_blocks(self) -> List[Element]:
         """
         Get a list of all blocks that are enabled and not bypassed.
 
@@ -154,7 +157,7 @@ class FlowGraph(Element):
         """
         return list(self.iter_enabled_blocks())
 
-    def get_bypassed_blocks(self):
+    def get_bypassed_blocks(self) -> List[Element]:
         """
         Get a list of all blocks that are bypassed.
 
@@ -163,7 +166,7 @@ class FlowGraph(Element):
         """
         return [block for block in self.blocks if block.get_bypassed()]
 
-    def get_enabled_connections(self):
+    def get_enabled_connections(self) -> List[Element]:
         """
         Get a list of all connections that are enabled.
 
@@ -172,7 +175,7 @@ class FlowGraph(Element):
         """
         return [connection for connection in self.connections if connection.enabled]
 
-    def get_option(self, key):
+    def get_option(self, key) -> Param.EvaluationType:
         """
         Get the option for a given key.
         The option comes from the special options block.
@@ -185,7 +188,7 @@ class FlowGraph(Element):
         """
         return self.options_block.params[key].get_evaluated()
 
-    def get_run_command(self, file_path, split=False):
+    def get_run_command(self, file_path, split=False) -> Union[str, List[str]]:
         run_command = self.get_option('run_command')
         try:
             run_command = run_command.format(
@@ -196,9 +199,9 @@ class FlowGraph(Element):
             raise ValueError(
                 "Can't parse run command {!r}: {}".format(run_command, e))
 
-    def get_imported_names(self):
+    def get_imported_names(self) -> Set[str]:
         """
-        Get a lis of imported names.
+        Get a list of imported names.
         These names may not be used as id's
 
         Returns:
@@ -209,18 +212,18 @@ class FlowGraph(Element):
     ##############################################
     # Access Elements
     ##############################################
-    def get_block(self, name):
+    def get_block(self, name) -> Block:
         for block in self.blocks:
             if block.name == name:
                 return block
         raise KeyError('No block with name {!r}'.format(name))
 
-    def get_elements(self):
+    def get_elements(self) -> List[Element]:
         elements = list(self.blocks)
         elements.extend(self.connections)
         return elements
 
-    def children(self):
+    def children(self) -> Iterable[Element]:
         return itertools.chain(self.blocks, self.connections)
 
     def rewrite(self):
@@ -313,9 +316,9 @@ class FlowGraph(Element):
         namespace = self._reload_variables(namespace)
         self._eval_cache.clear()
 
-    def evaluate(self, expr, namespace=None, local_namespace=None):
+    def evaluate(self, expr: str, namespace: Optional[dict] = None, local_namespace: Optional[dict] = None):
         """
-        Evaluate the expression.
+        Evaluate the expression within the specified global and local namespaces
         """
         # Evaluate
         if not expr:
@@ -329,7 +332,7 @@ class FlowGraph(Element):
     # Add/remove stuff
     ##############################################
 
-    def new_block(self, block_id, **kwargs):
+    def new_block(self, block_id, **kwargs) -> Block:
         """
         Get a new block of the specified key.
         Add the block to the list of elements.
@@ -369,13 +372,13 @@ class FlowGraph(Element):
 
         return connection
 
-    def disconnect(self, *ports):
+    def disconnect(self, *ports) -> None:
         to_be_removed = [con for con in self.connections
                          if any(port in con for port in ports)]
         for con in to_be_removed:
             self.remove_element(con)
 
-    def remove_element(self, element):
+    def remove_element(self, element) -> None:
         """
         Remove the element from the list of elements.
         If the element is a port, remove the whole block.
@@ -399,7 +402,7 @@ class FlowGraph(Element):
     ##############################################
     # Import/Export Methods
     ##############################################
-    def export_data(self):
+    def export_data(self) -> OrderedDict[str, str]:
         """
         Export this flow graph to nested data.
         Export all block and connection data.
@@ -410,13 +413,13 @@ class FlowGraph(Element):
         def block_order(b):
             return not b.is_variable, b.name  # todo: vars still first ?!?
 
-        def get_file_format_version(data):
+        def get_file_format_version(data) -> int:
             """Determine file format version based on available data"""
             if any(isinstance(c, dict) for c in data['connections']):
                 return 2
             return 1
 
-        def sort_connection_key(connection_info):
+        def sort_connection_key(connection_info) -> List[str]:
             if isinstance(connection_info, dict):
                 return [
                     connection_info.get('src_blk_id'),
@@ -439,7 +442,7 @@ class FlowGraph(Element):
         }
         return data
 
-    def _build_depending_hier_block(self, block_id):
+    def _build_depending_hier_block(self, block_id) -> Optional[Block]:
         # we're before the initial fg update(), so no evaluated values!
         # --> use raw value instead
         path_param = self.options_block.params['hier_block_src_path']
@@ -453,7 +456,7 @@ class FlowGraph(Element):
                 file_path, hier_only=True)
             return self.new_block(block_id)  # can be None
 
-    def import_data(self, data):
+    def import_data(self, data) -> bool:
         """
         Import blocks and connections into this flow graph.
         Clear this flow graph of all previous blocks and connections.
@@ -461,6 +464,9 @@ class FlowGraph(Element):
 
         Args:
             data: the nested data odict
+
+        Returns:
+            connection_error bool signifying whether a connection error happened.
         """
         # Remove previous elements
         del self.blocks[:]
@@ -558,7 +564,7 @@ class FlowGraph(Element):
         return had_connect_errors
 
 
-def _update_old_message_port_keys(source_key, sink_key, source_block, sink_block):
+def _update_old_message_port_keys(source_key, sink_key, source_block, sink_block) -> Tuple[str, str]:
     """
     Backward compatibility for message port keys
 
