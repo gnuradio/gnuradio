@@ -44,7 +44,7 @@ def get_variable_dependencies(expr, vars):
     return set(v for v in vars if v in expr_toks)
 
 
-def sort_objects(objects, get_id, get_expr):
+def sort_objects(objects, get_id, get_expr) -> list:
     """
     Sort a list of objects according to their expressions.
 
