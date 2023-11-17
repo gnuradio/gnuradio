@@ -11,11 +11,13 @@ from collections import ChainMap
 import os
 import logging
 from itertools import chain
+from typing import Type
 
 from . import (
     Messages, Constants,
     blocks, params, ports, errors, utils, schema_checker
 )
+from .blocks import Block
 
 from .Config import Config
 from .cache import Cache
@@ -437,10 +439,10 @@ class Platform(Element):
             fg.import_data(data)
         return fg
 
-    def new_block_class(self, **data):
+    def new_block_class(self, **data) -> Type[Block]:
         return blocks.build(**data)
 
-    def make_block(self, parent, block_id, **kwargs):
+    def make_block(self, parent, block_id, **kwargs) -> Block:
         cls = self.block_classes[block_id]
         return cls(parent, **kwargs)
 
