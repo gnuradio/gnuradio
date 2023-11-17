@@ -15,11 +15,15 @@ from .. import Constants
 
 
 # Blacklist certain ids, its not complete, but should help
-ID_BLACKLIST = ['self', 'gnuradio'] + dir(builtins)
+ID_BLACKLIST = {'self', 'gnuradio'} | set(dir(builtins)) | set(keyword.kwlist)
+# Python >= 3.10 has soft keywords in a list, i.e. words that are reserved in
+# specific contexts, e.g. `match` isn't generally a keyword, but in `case` it is.
+ID_BLACKLIST |= set(getattr(keyword, 'softkwlist', set()))
+
 try:
     from gnuradio import gr
-    ID_BLACKLIST.extend(attr for attr in dir(
-        gr.top_block()) if not attr.startswith('_'))
+    ID_BLACKLIST |= {attr for attr in dir(
+        gr.top_block()) if not attr.startswith('_')}
 except (ImportError, AttributeError):
     pass
 
@@ -50,8 +54,8 @@ def validate_block_id(param, black_listed_ids: List[str]) -> None:
     if not re.match(r'^[a-z|A-Z]\w*$', value):
         raise ValidateError('ID "{}" must begin with a letter and may contain letters, numbers, '
                             'and underscores.'.format(value))
-    if value in (black_listed_ids + ID_BLACKLIST) and \
-            not getattr(param.parent_block, 'exempt_from_id_validation', False):
+    if (value in ID_BLACKLIST or value in black_listed_ids) \
+            and not getattr(param.parent_block, 'exempt_from_id_validation', False):
         # Grant blacklist exemption to epy blocks and modules
         raise ValidateError('ID "{}" is blacklisted.'.format(value))
     block_names = [
