@@ -13,8 +13,7 @@ import logging
 import shlex
 from operator import methodcaller, attrgetter
 
-from . import Messages, blocks
-from .Constants import FLOW_GRAPH_FILE_FORMAT_VERSION
+from . import Messages
 from .base import Element
 from .utils import expr_utils
 
