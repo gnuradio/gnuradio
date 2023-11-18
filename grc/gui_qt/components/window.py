@@ -205,24 +205,28 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
     @QtCore.Slot(QtCore.QPointF)
     def createMove(self, diff):
+        self.currentFlowgraph.set_saved(False)
         action = MoveAction(self.currentFlowgraph, diff)
         self.currentFlowgraph.undoStack.push(action)
         self.updateActions()
 
     @QtCore.Slot(Element)
     def registerNewElement(self, elem):
+        self.currentFlowgraph.set_saved(False)
         action = NewElementAction(self.currentFlowgraph, elem)
         self.currentFlowgraph.undoStack.push(action)
         self.updateActions()
 
     @QtCore.Slot(Element)
     def registerDeleteElement(self, elem):
+        self.currentFlowgraph.set_saved(False)
         action = DeleteElementAction(self.currentFlowgraph, elem)
         self.currentFlowgraph.undoStack.push(action)
         self.updateActions()
 
     @QtCore.Slot(Element)
     def registerBlockPropsChange(self, elem):
+        self.currentFlowgraph.set_saved(False)
         action = BlockPropsChangeAction(self.currentFlowgraph, elem)
         self.currentFlowgraph.undoStack.push(action)
         self.updateActions()
@@ -567,7 +571,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         canUndo = undoStack.canUndo()
         canRedo = undoStack.canRedo()
         valid_fg = self.currentFlowgraph.is_valid()
-        saved_fg = self.currentView.saved
+        saved_fg = self.currentFlowgraph.saved
 
         self.actions["save"].setEnabled(not saved_fg)
 
@@ -917,7 +921,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
                 return
 
             log.info(f"Saved {filename}")
-            self.currentView.set_saved(True)
+            self.currentFlowgraph.set_saved(True)
         else:
             log.debug("Flowgraph does not have a filename")
             self.save_as_triggered()
@@ -938,7 +942,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
                 return
 
             log.info(f"Saved (as) {filename}")
-            self.currentView.set_saved(True)
+            self.currentFlowgraph.set_saved(True)
         else:
             log.debug("Cancelled Save As action")
 
@@ -965,7 +969,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         if tab_index is None:
             tab_index = self.tabWidget.currentIndex()
 
-        if self.currentView.saved:
+        if self.currentFlowgraph.saved:
             self.tabWidget.removeTab(tab_index)
         else:
             message = "Save changes before closing?"
@@ -986,7 +990,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
                 return
             else:
                 self.save_triggered()
-                if self.currentView.saved:
+                if self.currentFlowgraph.saved:
                     self.tabWidget.removeTab(tab_index)
                 else:
                     return
@@ -1192,9 +1196,9 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
     def generate_triggered(self):
         log.debug("generate")
-        if not self.currentView.saved:
+        if not self.currentFlowgraph.saved:
             self.save_triggered()
-        if not self.currentView.saved:  # The line above was cancelled
+        if not self.currentFlowgraph.saved:  # The line above was cancelled
             log.error("Cannot generate a flowgraph without saving first")
             return
 

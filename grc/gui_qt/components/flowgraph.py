@@ -76,6 +76,12 @@ class Flowgraph(QtWidgets.QGraphicsScene, base.Component, CoreFlowgraph):
 
         self.clickPos = None
 
+        self.saved = True
+
+
+    def set_saved(self, saved):
+        self.saved = saved
+
     def update(self):
         """
         Call the top level rewrite and validate.
@@ -537,7 +543,6 @@ class FlowgraphView(
         self.isPanning = False
         self.mousePressed = False
 
-        self.saved = False
 
         self.setDragMode(self.RubberBandDrag)
 
@@ -580,9 +585,6 @@ class FlowgraphView(
 
     def createToolbars(self, actions, toolbars):
         log.debug("Creating toolbars")
-
-    def set_saved(self, saved):
-        self.saved = saved
 
     def readFile(self, filename):
         tree = ET.parse(filename)
