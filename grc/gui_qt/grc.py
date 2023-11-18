@@ -51,6 +51,7 @@ class Application(QtWidgets.QApplication):
         os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
         QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling, True)
         QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_UseHighDpiPixmaps, True)
+        QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_ShareOpenGLContexts, True)
         QtWidgets.QApplication.__init__(self, settings.argv)
 
         try:

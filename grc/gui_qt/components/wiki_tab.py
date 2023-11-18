@@ -25,7 +25,6 @@ import six
 
 from qtpy import QtCore, QtGui, QtWidgets
 from qtpy.QtGui import QStandardItemModel
-from qtpy.QtWebEngineWidgets import *
 
 # Custom modules
 from .canvas.block import Block
@@ -45,6 +44,13 @@ class WikiTab(QtWidgets.QDockWidget, base.Component):
 
         # TODO: Pull from preferences and revert to default if not found?
         self.setFloating(False)
+
+        try:
+            from qtpy.QtWebEngineWidgets import QWebEngineView
+        except ImportError:
+            log.error("PyQt QWebEngine missing!")
+            self.hide()
+            return
 
         ### GUI Widgets
 
