@@ -189,7 +189,7 @@ def run_qt(args, log):
     sys.exit(app.run())
 
 
-def main(qt=False):
+def main():
 
     ### Argument parsing
     parser = argparse.ArgumentParser(

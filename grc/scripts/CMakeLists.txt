@@ -7,7 +7,7 @@
 
 ########################################################################
 GR_PYTHON_INSTALL(
-    PROGRAMS gnuradio-companion grcc gnuradio-companion-qt
+    PROGRAMS gnuradio-companion grcc
     DESTINATION ${GR_RUNTIME_DIR}
 )
 
