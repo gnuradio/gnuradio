@@ -279,7 +279,7 @@ def test_move_blocks(qtbot, qapp_cls_):
 
     def drag():
         for i in range(20):
-            pag.move(0, 10)
+            pag.move(0, scaling * 10)
 
     drag_t = threading.Thread(target=drag)
     drag_t.start()
@@ -312,7 +312,7 @@ def test_connection(qtbot, qapp_cls_):
 
     def drag():
         for i in range(20):
-            pag.move(10, 0)
+            pag.move(scaling * 10, 0)
 
     drag_t = threading.Thread(target=drag)
     drag_t.start()
@@ -354,7 +354,7 @@ def test_num_inputs(qtbot, qapp_cls_):
 
     def drag():
         for i in range(20):
-            pag.move(10, 0)
+            pag.move(scaling * 10, 0)
 
     drag_t = threading.Thread(target=drag)
     drag_t.start()
@@ -699,7 +699,7 @@ def test_generate(qtbot, qapp_cls_, monkeypatch, tmp_path):
 
     def drag():
         for i in range(20):
-            pag.move(10, 0)
+            pag.move(scaling * 10, 0)
 
     drag_t = threading.Thread(target=drag)
     drag_t.start()
