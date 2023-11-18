@@ -266,10 +266,15 @@ def test_move_blocks(qtbot, qapp_cls_):
     add_block_from_query(qtbot, qapp_cls_, "throttle")
 
     throttle = find_blocks(fg, "blocks_throttle")
+    variable = find_blocks(fg, "variable")
     assert throttle is not None
 
-    start = scaling * global_pos(throttle, view)
-    pag.moveTo(start.x(), start.y())
+    click_on(qtbot, qapp_cls_, variable)
+    qtbot.wait(100)
+
+    start_throttle = scaling * global_pos(throttle, view)
+    start_variable = scaling * global_pos(variable, view)
+    pag.moveTo(start_throttle.x(), start_throttle.y())
     pag.mouseDown()
 
     def drag():
@@ -281,8 +286,9 @@ def test_move_blocks(qtbot, qapp_cls_):
     while drag_t.is_alive():
         qtbot.wait(50)
     pag.mouseUp()
-    assert scaling * global_pos(throttle, view) != start
-
+    assert scaling * global_pos(throttle, view) != start_throttle
+    # Variable shouldn't move
+    assert scaling * global_pos(variable, view) == start_variable
     delete_block(qtbot, qapp_cls_, throttle)
 
 
