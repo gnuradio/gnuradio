@@ -321,25 +321,30 @@ int windows_source::open_wavein_device(void)
     return 0;
 }
 
-static void CALLBACK read_wavein(
+void CALLBACK windows_source::read_wavein(
     HWAVEIN hwi, UINT uMsg, DWORD_PTR dwInstance, DWORD_PTR dwParam1, DWORD_PTR dwParam2)
 {
-    // Ignore WIM_OPEN and WIM_CLOSE messages
     if (uMsg == WIM_DATA) {
-        if (!dwInstance) {
+        windows_source* source = reinterpret_cast<windows_source*>(dwInstance);
+        if (!source) {
             gr::logger_ptr logger;
             logger->error("callback function missing buffer queue: {:s}",
                           strerror(errno));
+            return;
         }
-        LPWAVEHDR lp_wave_hdr = (LPWAVEHDR)dwParam1; // The new audio data
-        windows_source* source = (windows_source*)dwInstance;
+
+        LPWAVEHDR lp_wave_hdr =
+            reinterpret_cast<LPWAVEHDR>(dwParam1); // The new audio data
+
         {
-            std::lock_guard<std::mutex> lock(source->buffer_queue_mutex);
-            if (source->buffer_queue.size() < MAX_QUEUE_SIZE) {
-                source->buffer_queue.push(lp_wave_hdr); // Add the buffer to the queue
+            std::lock_guard<std::mutex> lock(source->get_buffer_queue_mutex());
+            auto& buffer_queue = source->get_buffer_queue();
+            if (buffer_queue.size() < MAX_QUEUE_SIZE) {
+                buffer_queue.push(lp_wave_hdr); // Add the buffer to the queue
             }
         }
     }
 }
+
 } /* namespace audio */
 } /* namespace gr */
