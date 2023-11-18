@@ -321,7 +321,7 @@ int windows_source::open_wavein_device(void)
     return 0;
 }
 
-static void CALLBACK read_wavein(
+void CALLBACK read_wavein(
     HWAVEIN hwi, UINT uMsg, DWORD_PTR dwInstance, DWORD_PTR dwParam1, DWORD_PTR dwParam2)
 {
     // Ignore WIM_OPEN and WIM_CLOSE messages

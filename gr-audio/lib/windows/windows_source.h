@@ -51,7 +51,7 @@ protected:
     UINT find_device(std::string szDeviceName);
     std::queue<LPWAVEHDR> buffer_queue;
     std::mutex buffer_queue_mutex;
-    friend static void CALLBACK read_wavein(HWAVEIN hwi,
+    friend void CALLBACK read_wavein(HWAVEIN hwi,
                                             UINT uMsg,
                                             DWORD_PTR dwInstance,
                                             DWORD_PTR dwParam1,
@@ -66,7 +66,7 @@ public:
              gr_vector_void_star& output_items);
 };
 
-static void CALLBACK read_wavein(
+void CALLBACK read_wavein(
     HWAVEIN hwi, UINT uMsg, DWORD_PTR dwInstance, DWORD_PTR dwParam1, DWORD_PTR dwParam2);
 
 } /* namespace audio */
