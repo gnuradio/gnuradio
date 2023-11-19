@@ -183,22 +183,22 @@ void bind_pmt(py::module& m)
     m.def("get_PMT_EOF", &::pmt::get_PMT_EOF, D(get_PMT_EOF));
 
 
-    m.def("is_bool", &::pmt::is_bool, py::arg("obj"), D(is_bool));
+    m.def("is_bool", &::pmt::is_bool, py::arg("obj").none(false), D(is_bool));
 
 
-    m.def("is_true", &::pmt::is_true, py::arg("obj"), D(is_true));
+    m.def("is_true", &::pmt::is_true, py::arg("obj").none(false), D(is_true));
 
 
-    m.def("is_false", &::pmt::is_false, py::arg("obj"), D(is_false));
+    m.def("is_false", &::pmt::is_false, py::arg("obj").none(false), D(is_false));
 
 
     m.def("from_bool", &::pmt::from_bool, py::arg("val"), D(from_bool));
 
 
-    m.def("to_bool", &::pmt::to_bool, py::arg("val"), D(to_bool));
+    m.def("to_bool", &::pmt::to_bool, py::arg("val").none(false), D(to_bool));
 
 
-    m.def("is_symbol", &::pmt::is_symbol, py::arg("obj"), D(is_symbol));
+    m.def("is_symbol", &::pmt::is_symbol, py::arg("obj").none(false), D(is_symbol));
 
 
     m.def(
@@ -210,32 +210,32 @@ void bind_pmt(py::module& m)
 
     m.def("symbol_to_string",
           &::pmt::symbol_to_string,
-          py::arg("sym"),
+          py::arg("sym").none(false),
           D(symbol_to_string));
 
 
-    m.def("is_number", &::pmt::is_number, py::arg("obj"), D(is_number));
+    m.def("is_number", &::pmt::is_number, py::arg("obj").none(false), D(is_number));
 
 
-    m.def("is_integer", &::pmt::is_integer, py::arg("x"), D(is_integer));
+    m.def("is_integer", &::pmt::is_integer, py::arg("x").none(false), D(is_integer));
 
 
     m.def("from_long", &::pmt::from_long, py::arg("x"), D(from_long));
 
 
-    m.def("to_long", &::pmt::to_long, py::arg("x"), D(to_long));
+    m.def("to_long", &::pmt::to_long, py::arg("x").none(false), D(to_long));
 
 
-    m.def("is_uint64", &::pmt::is_uint64, py::arg("x"), D(is_uint64));
+    m.def("is_uint64", &::pmt::is_uint64, py::arg("x").none(false), D(is_uint64));
 
 
     m.def("from_uint64", &::pmt::from_uint64, py::arg("x"), D(from_uint64));
 
 
-    m.def("to_uint64", &::pmt::to_uint64, py::arg("x"), D(to_uint64));
+    m.def("to_uint64", &::pmt::to_uint64, py::arg("x").none(false), D(to_uint64));
 
 
-    m.def("is_real", &::pmt::is_real, py::arg("obj"), D(is_real));
+    m.def("is_real", &::pmt::is_real, py::arg("obj").none(false), D(is_real));
 
 
     m.def("from_double", &::pmt::from_double, py::arg("x"), D(from_double));
@@ -244,13 +244,13 @@ void bind_pmt(py::module& m)
     m.def("from_float", &::pmt::from_float, py::arg("x"), D(from_float));
 
 
-    m.def("to_double", &::pmt::to_double, py::arg("x"), D(to_double));
+    m.def("to_double", &::pmt::to_double, py::arg("x").none(false), D(to_double));
 
 
-    m.def("to_float", &::pmt::to_float, py::arg("x"), D(to_float));
+    m.def("to_float", &::pmt::to_float, py::arg("x").none(false), D(to_float));
 
 
-    m.def("is_complex", &::pmt::is_complex, py::arg("obj"), D(is_complex));
+    m.def("is_complex", &::pmt::is_complex, py::arg("obj").none(false), D(is_complex));
 
 
     m.def("make_rectangular",
@@ -286,52 +286,68 @@ void bind_pmt(py::module& m)
           D(pmt_from_complex, 1));
 
 
-    m.def("to_complex", &::pmt::to_complex, py::arg("z"), D(to_complex));
+    m.def("to_complex", &::pmt::to_complex, py::arg("z").none(false), D(to_complex));
 
 
-    m.def("is_null", &::pmt::is_null, py::arg("x"), D(is_null));
+    m.def("is_null", &::pmt::is_null, py::arg("x").none(false), D(is_null));
 
 
-    m.def("is_pair", &::pmt::is_pair, py::arg("obj"), D(is_pair));
+    m.def("is_pair", &::pmt::is_pair, py::arg("obj").none(false), D(is_pair));
 
 
-    m.def("cons", &::pmt::cons, py::arg("x"), py::arg("y"), D(cons));
+    m.def("cons",
+          &::pmt::cons,
+          py::arg("x").none(false),
+          py::arg("y").none(false),
+          D(cons));
 
 
-    m.def("dcons", &::pmt::dcons, py::arg("x"), py::arg("y"), D(dcons));
+    m.def("dcons",
+          &::pmt::dcons,
+          py::arg("x").none(false),
+          py::arg("y").none(false),
+          D(dcons));
 
 
-    m.def("car", &::pmt::car, py::arg("pair"), D(car));
+    m.def("car", &::pmt::car, py::arg("pair").none(false), D(car));
 
 
-    m.def("cdr", &::pmt::cdr, py::arg("pair"), D(cdr));
+    m.def("cdr", &::pmt::cdr, py::arg("pair").none(false), D(cdr));
 
 
-    m.def("set_car", &::pmt::set_car, py::arg("pair"), py::arg("value"), D(set_car));
+    m.def("set_car",
+          &::pmt::set_car,
+          py::arg("pair").none(false),
+          py::arg("value").none(false),
+          D(set_car));
 
 
-    m.def("set_cdr", &::pmt::set_cdr, py::arg("pair"), py::arg("value"), D(set_cdr));
+    m.def("set_cdr",
+          &::pmt::set_cdr,
+          py::arg("pair").none(false),
+          py::arg("value").none(false),
+          D(set_cdr));
 
 
-    m.def("caar", &::pmt::caar, py::arg("pair"), D(caar));
+    m.def("caar", &::pmt::caar, py::arg("pair").none(false), D(caar));
 
 
-    m.def("cadr", &::pmt::cadr, py::arg("pair"), D(cadr));
+    m.def("cadr", &::pmt::cadr, py::arg("pair").none(false), D(cadr));
 
 
-    m.def("cdar", &::pmt::cdar, py::arg("pair"), D(cdar));
+    m.def("cdar", &::pmt::cdar, py::arg("pair").none(false), D(cdar));
 
 
-    m.def("cddr", &::pmt::cddr, py::arg("pair"), D(cddr));
+    m.def("cddr", &::pmt::cddr, py::arg("pair").none(false), D(cddr));
 
 
-    m.def("caddr", &::pmt::caddr, py::arg("pair"), D(caddr));
+    m.def("caddr", &::pmt::caddr, py::arg("pair").none(false), D(caddr));
 
 
-    m.def("cadddr", &::pmt::cadddr, py::arg("pair"), D(cadddr));
+    m.def("cadddr", &::pmt::cadddr, py::arg("pair").none(false), D(cadddr));
 
 
-    m.def("is_tuple", &::pmt::is_tuple, py::arg("x"), D(is_tuple));
+    m.def("is_tuple", &::pmt::is_tuple, py::arg("x").none(false), D(is_tuple));
 
 
     m.def("make_tuple", (pmt::pmt_t(*)()) & ::pmt::make_tuple, D(make_tuple, 0));
@@ -339,23 +355,23 @@ void bind_pmt(py::module& m)
 
     m.def("make_tuple",
           (pmt::pmt_t(*)(pmt::pmt_t const&)) & ::pmt::make_tuple,
-          py::arg("e0"),
+          py::arg("e0").none(false),
           D(make_tuple, 1));
 
 
     m.def("make_tuple",
           (pmt::pmt_t(*)(pmt::pmt_t const&, pmt::pmt_t const&)) & ::pmt::make_tuple,
-          py::arg("e0"),
-          py::arg("e1"),
+          py::arg("e0").none(false),
+          py::arg("e1").none(false),
           D(make_tuple, 2));
 
 
     m.def("make_tuple",
           (pmt::pmt_t(*)(pmt::pmt_t const&, pmt::pmt_t const&, pmt::pmt_t const&)) &
               ::pmt::make_tuple,
-          py::arg("e0"),
-          py::arg("e1"),
-          py::arg("e2"),
+          py::arg("e0").none(false),
+          py::arg("e1").none(false),
+          py::arg("e2").none(false),
           D(make_tuple, 3));
 
 
@@ -364,10 +380,10 @@ void bind_pmt(py::module& m)
         (pmt::pmt_t(*)(
             pmt::pmt_t const&, pmt::pmt_t const&, pmt::pmt_t const&, pmt::pmt_t const&)) &
             ::pmt::make_tuple,
-        py::arg("e0"),
-        py::arg("e1"),
-        py::arg("e2"),
-        py::arg("e3"),
+        py::arg("e0").none(false),
+        py::arg("e1").none(false),
+        py::arg("e2").none(false),
+        py::arg("e3").none(false),
         D(make_tuple, 4));
 
 
@@ -378,11 +394,11 @@ void bind_pmt(py::module& m)
                          pmt::pmt_t const&,
                          pmt::pmt_t const&)) &
               ::pmt::make_tuple,
-          py::arg("e0"),
-          py::arg("e1"),
-          py::arg("e2"),
-          py::arg("e3"),
-          py::arg("e4"),
+          py::arg("e0").none(false),
+          py::arg("e1").none(false),
+          py::arg("e2").none(false),
+          py::arg("e3").none(false),
+          py::arg("e4").none(false),
           D(make_tuple, 5));
 
 
@@ -394,12 +410,12 @@ void bind_pmt(py::module& m)
                          pmt::pmt_t const&,
                          pmt::pmt_t const&)) &
               ::pmt::make_tuple,
-          py::arg("e0"),
-          py::arg("e1"),
-          py::arg("e2"),
-          py::arg("e3"),
-          py::arg("e4"),
-          py::arg("e5"),
+          py::arg("e0").none(false),
+          py::arg("e1").none(false),
+          py::arg("e2").none(false),
+          py::arg("e3").none(false),
+          py::arg("e4").none(false),
+          py::arg("e5").none(false),
           D(make_tuple, 6));
 
 
@@ -412,13 +428,13 @@ void bind_pmt(py::module& m)
                          pmt::pmt_t const&,
                          pmt::pmt_t const&)) &
               ::pmt::make_tuple,
-          py::arg("e0"),
-          py::arg("e1"),
-          py::arg("e2"),
-          py::arg("e3"),
-          py::arg("e4"),
-          py::arg("e5"),
-          py::arg("e6"),
+          py::arg("e0").none(false),
+          py::arg("e1").none(false),
+          py::arg("e2").none(false),
+          py::arg("e3").none(false),
+          py::arg("e4").none(false),
+          py::arg("e5").none(false),
+          py::arg("e6").none(false),
           D(make_tuple, 7));
 
 
@@ -432,14 +448,14 @@ void bind_pmt(py::module& m)
                          pmt::pmt_t const&,
                          pmt::pmt_t const&)) &
               ::pmt::make_tuple,
-          py::arg("e0"),
-          py::arg("e1"),
-          py::arg("e2"),
-          py::arg("e3"),
-          py::arg("e4"),
-          py::arg("e5"),
-          py::arg("e6"),
-          py::arg("e7"),
+          py::arg("e0").none(false),
+          py::arg("e1").none(false),
+          py::arg("e2").none(false),
+          py::arg("e3").none(false),
+          py::arg("e4").none(false),
+          py::arg("e5").none(false),
+          py::arg("e6").none(false),
+          py::arg("e7").none(false),
           D(make_tuple, 8));
 
 
@@ -454,15 +470,15 @@ void bind_pmt(py::module& m)
                          pmt::pmt_t const&,
                          pmt::pmt_t const&)) &
               ::pmt::make_tuple,
-          py::arg("e0"),
-          py::arg("e1"),
-          py::arg("e2"),
-          py::arg("e3"),
-          py::arg("e4"),
-          py::arg("e5"),
-          py::arg("e6"),
-          py::arg("e7"),
-          py::arg("e8"),
+          py::arg("e0").none(false),
+          py::arg("e1").none(false),
+          py::arg("e2").none(false),
+          py::arg("e3").none(false),
+          py::arg("e4").none(false),
+          py::arg("e5").none(false),
+          py::arg("e6").none(false),
+          py::arg("e7").none(false),
+          py::arg("e8").none(false),
           D(make_tuple, 9));
 
 
@@ -478,111 +494,129 @@ void bind_pmt(py::module& m)
                          pmt::pmt_t const&,
                          pmt::pmt_t const&)) &
               ::pmt::make_tuple,
-          py::arg("e0"),
-          py::arg("e1"),
-          py::arg("e2"),
-          py::arg("e3"),
-          py::arg("e4"),
-          py::arg("e5"),
-          py::arg("e6"),
-          py::arg("e7"),
-          py::arg("e8"),
-          py::arg("e9"),
+          py::arg("e0").none(false),
+          py::arg("e1").none(false),
+          py::arg("e2").none(false),
+          py::arg("e3").none(false),
+          py::arg("e4").none(false),
+          py::arg("e5").none(false),
+          py::arg("e6").none(false),
+          py::arg("e7").none(false),
+          py::arg("e8").none(false),
+          py::arg("e9").none(false),
           D(make_tuple, 10));
 
 
-    m.def("to_tuple", &::pmt::to_tuple, py::arg("x"), D(to_tuple));
+    m.def("to_tuple", &::pmt::to_tuple, py::arg("x").none(false), D(to_tuple));
 
 
-    m.def("tuple_ref", &::pmt::tuple_ref, py::arg("tuple"), py::arg("k"), D(tuple_ref));
+    m.def("tuple_ref",
+          &::pmt::tuple_ref,
+          py::arg("tuple").none(false),
+          py::arg("k"),
+          D(tuple_ref));
 
 
-    m.def("is_vector", &::pmt::is_vector, py::arg("x"), D(is_vector));
+    m.def("is_vector", &::pmt::is_vector, py::arg("x").none(false), D(is_vector));
 
 
     m.def("make_vector",
           &::pmt::make_vector,
           py::arg("k"),
-          py::arg("fill"),
+          py::arg("fill").none(false),
           D(make_vector));
 
 
-    m.def(
-        "vector_ref", &::pmt::vector_ref, py::arg("vector"), py::arg("k"), D(vector_ref));
+    m.def("vector_ref",
+          &::pmt::vector_ref,
+          py::arg("vector").none(false),
+          py::arg("k"),
+          D(vector_ref));
 
 
     m.def("vector_set",
           &::pmt::vector_set,
-          py::arg("vector"),
+          py::arg("vector").none(false),
           py::arg("k"),
-          py::arg("obj"),
+          py::arg("obj").none(false),
           D(vector_set));
 
 
     m.def("vector_fill",
           &::pmt::vector_fill,
-          py::arg("vector"),
-          py::arg("fill"),
+          py::arg("vector").none(false),
+          py::arg("fill").none(false),
           D(vector_fill));
 
 
-    m.def("is_blob", &::pmt::is_blob, py::arg("x"), D(is_blob));
+    m.def("is_blob", &::pmt::is_blob, py::arg("x").none(false), D(is_blob));
 
 
     m.def("make_blob", &::pmt::make_blob, py::arg("buf"), py::arg("len"), D(make_blob));
 
 
-    m.def("blob_data", &::pmt::blob_data, py::arg("blob"), D(blob_data));
+    m.def("blob_data", &::pmt::blob_data, py::arg("blob").none(false), D(blob_data));
 
 
-    m.def("blob_length", &::pmt::blob_length, py::arg("blob"), D(blob_length));
+    m.def(
+        "blob_length", &::pmt::blob_length, py::arg("blob").none(false), D(blob_length));
 
 
     m.def("is_uniform_vector",
           &::pmt::is_uniform_vector,
-          py::arg("x"),
+          py::arg("x").none(false),
           D(is_uniform_vector));
 
 
-    m.def("is_u8vector", &::pmt::is_u8vector, py::arg("x"), D(is_u8vector));
+    m.def("is_u8vector", &::pmt::is_u8vector, py::arg("x").none(false), D(is_u8vector));
 
 
-    m.def("is_s8vector", &::pmt::is_s8vector, py::arg("x"), D(is_s8vector));
+    m.def("is_s8vector", &::pmt::is_s8vector, py::arg("x").none(false), D(is_s8vector));
 
 
-    m.def("is_u16vector", &::pmt::is_u16vector, py::arg("x"), D(is_u16vector));
+    m.def(
+        "is_u16vector", &::pmt::is_u16vector, py::arg("x").none(false), D(is_u16vector));
 
 
-    m.def("is_s16vector", &::pmt::is_s16vector, py::arg("x"), D(is_s16vector));
+    m.def(
+        "is_s16vector", &::pmt::is_s16vector, py::arg("x").none(false), D(is_s16vector));
 
 
-    m.def("is_u32vector", &::pmt::is_u32vector, py::arg("x"), D(is_u32vector));
+    m.def(
+        "is_u32vector", &::pmt::is_u32vector, py::arg("x").none(false), D(is_u32vector));
 
 
-    m.def("is_s32vector", &::pmt::is_s32vector, py::arg("x"), D(is_s32vector));
+    m.def(
+        "is_s32vector", &::pmt::is_s32vector, py::arg("x").none(false), D(is_s32vector));
 
 
-    m.def("is_u64vector", &::pmt::is_u64vector, py::arg("x"), D(is_u64vector));
+    m.def(
+        "is_u64vector", &::pmt::is_u64vector, py::arg("x").none(false), D(is_u64vector));
 
 
-    m.def("is_s64vector", &::pmt::is_s64vector, py::arg("x"), D(is_s64vector));
+    m.def(
+        "is_s64vector", &::pmt::is_s64vector, py::arg("x").none(false), D(is_s64vector));
 
 
-    m.def("is_f32vector", &::pmt::is_f32vector, py::arg("x"), D(is_f32vector));
+    m.def(
+        "is_f32vector", &::pmt::is_f32vector, py::arg("x").none(false), D(is_f32vector));
 
 
-    m.def("is_f64vector", &::pmt::is_f64vector, py::arg("x"), D(is_f64vector));
+    m.def(
+        "is_f64vector", &::pmt::is_f64vector, py::arg("x").none(false), D(is_f64vector));
 
 
-    m.def("is_c32vector", &::pmt::is_c32vector, py::arg("x"), D(is_c32vector));
+    m.def(
+        "is_c32vector", &::pmt::is_c32vector, py::arg("x").none(false), D(is_c32vector));
 
 
-    m.def("is_c64vector", &::pmt::is_c64vector, py::arg("x"), D(is_c64vector));
+    m.def(
+        "is_c64vector", &::pmt::is_c64vector, py::arg("x").none(false), D(is_c64vector));
 
 
     m.def("uniform_vector_itemsize",
           &::pmt::uniform_vector_itemsize,
-          py::arg("x"),
+          py::arg("x").none(false),
           D(uniform_vector_itemsize));
 
 
@@ -862,91 +896,91 @@ void bind_pmt(py::module& m)
 
     m.def("u8vector_ref",
           &::pmt::u8vector_ref,
-          py::arg("v"),
+          py::arg("v").none(false),
           py::arg("k"),
           D(u8vector_ref));
 
 
     m.def("s8vector_ref",
           &::pmt::s8vector_ref,
-          py::arg("v"),
+          py::arg("v").none(false),
           py::arg("k"),
           D(s8vector_ref));
 
 
     m.def("u16vector_ref",
           &::pmt::u16vector_ref,
-          py::arg("v"),
+          py::arg("v").none(false),
           py::arg("k"),
           D(u16vector_ref));
 
 
     m.def("s16vector_ref",
           &::pmt::s16vector_ref,
-          py::arg("v"),
+          py::arg("v").none(false),
           py::arg("k"),
           D(s16vector_ref));
 
 
     m.def("u32vector_ref",
           &::pmt::u32vector_ref,
-          py::arg("v"),
+          py::arg("v").none(false),
           py::arg("k"),
           D(u32vector_ref));
 
 
     m.def("s32vector_ref",
           &::pmt::s32vector_ref,
-          py::arg("v"),
+          py::arg("v").none(false),
           py::arg("k"),
           D(s32vector_ref));
 
 
     m.def("u64vector_ref",
           &::pmt::u64vector_ref,
-          py::arg("v"),
+          py::arg("v").none(false),
           py::arg("k"),
           D(u64vector_ref));
 
 
     m.def("s64vector_ref",
           &::pmt::s64vector_ref,
-          py::arg("v"),
+          py::arg("v").none(false),
           py::arg("k"),
           D(s64vector_ref));
 
 
     m.def("f32vector_ref",
           &::pmt::f32vector_ref,
-          py::arg("v"),
+          py::arg("v").none(false),
           py::arg("k"),
           D(f32vector_ref));
 
 
     m.def("f64vector_ref",
           &::pmt::f64vector_ref,
-          py::arg("v"),
+          py::arg("v").none(false),
           py::arg("k"),
           D(f64vector_ref));
 
 
     m.def("c32vector_ref",
           &::pmt::c32vector_ref,
-          py::arg("v"),
+          py::arg("v").none(false),
           py::arg("k"),
           D(c32vector_ref));
 
 
     m.def("c64vector_ref",
           &::pmt::c64vector_ref,
-          py::arg("v"),
+          py::arg("v").none(false),
           py::arg("k"),
           D(c64vector_ref));
 
 
     m.def("u8vector_set",
           &::pmt::u8vector_set,
-          py::arg("v"),
+          py::arg("v").none(false),
           py::arg("k"),
           py::arg("x"),
           D(u8vector_set));
@@ -954,7 +988,7 @@ void bind_pmt(py::module& m)
 
     m.def("s8vector_set",
           &::pmt::s8vector_set,
-          py::arg("v"),
+          py::arg("v").none(false),
           py::arg("k"),
           py::arg("x"),
           D(s8vector_set));
@@ -962,7 +996,7 @@ void bind_pmt(py::module& m)
 
     m.def("u16vector_set",
           &::pmt::u16vector_set,
-          py::arg("v"),
+          py::arg("v").none(false),
           py::arg("k"),
           py::arg("x"),
           D(u16vector_set));
@@ -970,7 +1004,7 @@ void bind_pmt(py::module& m)
 
     m.def("s16vector_set",
           &::pmt::s16vector_set,
-          py::arg("v"),
+          py::arg("v").none(false),
           py::arg("k"),
           py::arg("x"),
           D(s16vector_set));
@@ -978,7 +1012,7 @@ void bind_pmt(py::module& m)
 
     m.def("u32vector_set",
           &::pmt::u32vector_set,
-          py::arg("v"),
+          py::arg("v").none(false),
           py::arg("k"),
           py::arg("x"),
           D(u32vector_set));
@@ -986,7 +1020,7 @@ void bind_pmt(py::module& m)
 
     m.def("s32vector_set",
           &::pmt::s32vector_set,
-          py::arg("v"),
+          py::arg("v").none(false),
           py::arg("k"),
           py::arg("x"),
           D(s32vector_set));
@@ -994,7 +1028,7 @@ void bind_pmt(py::module& m)
 
     m.def("u64vector_set",
           &::pmt::u64vector_set,
-          py::arg("v"),
+          py::arg("v").none(false),
           py::arg("k"),
           py::arg("x"),
           D(u64vector_set));
@@ -1002,7 +1036,7 @@ void bind_pmt(py::module& m)
 
     m.def("s64vector_set",
           &::pmt::s64vector_set,
-          py::arg("v"),
+          py::arg("v").none(false),
           py::arg("k"),
           py::arg("x"),
           D(s64vector_set));
@@ -1010,7 +1044,7 @@ void bind_pmt(py::module& m)
 
     m.def("f32vector_set",
           &::pmt::f32vector_set,
-          py::arg("v"),
+          py::arg("v").none(false),
           py::arg("k"),
           py::arg("x"),
           D(f32vector_set));
@@ -1018,7 +1052,7 @@ void bind_pmt(py::module& m)
 
     m.def("f64vector_set",
           &::pmt::f64vector_set,
-          py::arg("v"),
+          py::arg("v").none(false),
           py::arg("k"),
           py::arg("x"),
           D(f64vector_set));
@@ -1026,7 +1060,7 @@ void bind_pmt(py::module& m)
 
     m.def("c32vector_set",
           &::pmt::c32vector_set,
-          py::arg("v"),
+          py::arg("v").none(false),
           py::arg("k"),
           py::arg("x"),
           D(c32vector_set));
@@ -1034,7 +1068,7 @@ void bind_pmt(py::module& m)
 
     m.def("c64vector_set",
           &::pmt::c64vector_set,
-          py::arg("v"),
+          py::arg("v").none(false),
           py::arg("k"),
           py::arg("x"),
           D(c64vector_set));
@@ -1042,77 +1076,77 @@ void bind_pmt(py::module& m)
 
     m.def("uniform_vector_elements",
           &::pmt::uniform_vector_elements,
-          py::arg("v"),
+          py::arg("v").none(false),
           py::arg("len"),
           D(uniform_vector_elements));
 
 
     m.def("u8vector_elements",
           (uint8_t const* (*)(pmt::pmt_t, size_t&)) & ::pmt::u8vector_elements,
-          py::arg("v"),
+          py::arg("v").none(false),
           py::arg("len"),
           D(u8vector_elements, 0));
 
 
     m.def("s8vector_elements",
           (int8_t const* (*)(pmt::pmt_t, size_t&)) & ::pmt::s8vector_elements,
-          py::arg("v"),
+          py::arg("v").none(false),
           py::arg("len"),
           D(s8vector_elements, 0));
 
 
     m.def("u16vector_elements",
           (uint16_t const* (*)(pmt::pmt_t, size_t&)) & ::pmt::u16vector_elements,
-          py::arg("v"),
+          py::arg("v").none(false),
           py::arg("len"),
           D(u16vector_elements, 0));
 
 
     m.def("s16vector_elements",
           (int16_t const* (*)(pmt::pmt_t, size_t&)) & ::pmt::s16vector_elements,
-          py::arg("v"),
+          py::arg("v").none(false),
           py::arg("len"),
           D(s16vector_elements, 0));
 
 
     m.def("u32vector_elements",
           (uint32_t const* (*)(pmt::pmt_t, size_t&)) & ::pmt::u32vector_elements,
-          py::arg("v"),
+          py::arg("v").none(false),
           py::arg("len"),
           D(u32vector_elements, 0));
 
 
     m.def("s32vector_elements",
           (int32_t const* (*)(pmt::pmt_t, size_t&)) & ::pmt::s32vector_elements,
-          py::arg("v"),
+          py::arg("v").none(false),
           py::arg("len"),
           D(s32vector_elements, 0));
 
 
     m.def("u64vector_elements",
           (uint64_t const* (*)(pmt::pmt_t, size_t&)) & ::pmt::u64vector_elements,
-          py::arg("v"),
+          py::arg("v").none(false),
           py::arg("len"),
           D(u64vector_elements, 0));
 
 
     m.def("s64vector_elements",
           (int64_t const* (*)(pmt::pmt_t, size_t&)) & ::pmt::s64vector_elements,
-          py::arg("v"),
+          py::arg("v").none(false),
           py::arg("len"),
           D(s64vector_elements, 0));
 
 
     m.def("f32vector_elements",
           (float const* (*)(pmt::pmt_t, size_t&)) & ::pmt::f32vector_elements,
-          py::arg("v"),
+          py::arg("v").none(false),
           py::arg("len"),
           D(f32vector_elements, 0));
 
 
     m.def("f64vector_elements",
           (double const* (*)(pmt::pmt_t, size_t&)) & ::pmt::f64vector_elements,
-          py::arg("v"),
+          py::arg("v").none(false),
           py::arg("len"),
           D(f64vector_elements, 0));
 
@@ -1120,7 +1154,7 @@ void bind_pmt(py::module& m)
     m.def("c32vector_elements",
           (std::complex<float> const* (*)(pmt::pmt_t, size_t&)) &
               ::pmt::c32vector_elements,
-          py::arg("v"),
+          py::arg("v").none(false),
           py::arg("len"),
           D(c32vector_elements, 0));
 
@@ -1128,7 +1162,7 @@ void bind_pmt(py::module& m)
     m.def("c64vector_elements",
           (std::complex<double> const* (*)(pmt::pmt_t, size_t&)) &
               ::pmt::c64vector_elements,
-          py::arg("v"),
+          py::arg("v").none(false),
           py::arg("len"),
           D(c64vector_elements, 0));
 
@@ -1136,14 +1170,14 @@ void bind_pmt(py::module& m)
           (std::vector<unsigned char, std::allocator<unsigned char>> const (*)(
               pmt::pmt_t)) &
               ::pmt::u8vector_elements,
-          py::arg("v"),
+          py::arg("v").none(false),
           D(u8vector_elements, 1));
 
 
     m.def("s8vector_elements",
           (std::vector<signed char, std::allocator<signed char>> const (*)(pmt::pmt_t)) &
               ::pmt::s8vector_elements,
-          py::arg("v"),
+          py::arg("v").none(false),
           D(s8vector_elements, 1));
 
 
@@ -1151,14 +1185,14 @@ void bind_pmt(py::module& m)
           (std::vector<unsigned short, std::allocator<unsigned short>> const (*)(
               pmt::pmt_t)) &
               ::pmt::u16vector_elements,
-          py::arg("v"),
+          py::arg("v").none(false),
           D(u16vector_elements, 1));
 
 
     m.def("s16vector_elements",
           (std::vector<short, std::allocator<short>> const (*)(pmt::pmt_t)) &
               ::pmt::s16vector_elements,
-          py::arg("v"),
+          py::arg("v").none(false),
           D(s16vector_elements, 1));
 
 
@@ -1166,42 +1200,42 @@ void bind_pmt(py::module& m)
         "u32vector_elements",
         (std::vector<unsigned int, std::allocator<unsigned int>> const (*)(pmt::pmt_t)) &
             ::pmt::u32vector_elements,
-        py::arg("v"),
+        py::arg("v").none(false),
         D(u32vector_elements, 1));
 
 
     m.def("s32vector_elements",
           (std::vector<int, std::allocator<int>> const (*)(pmt::pmt_t)) &
               ::pmt::s32vector_elements,
-          py::arg("v"),
+          py::arg("v").none(false),
           D(s32vector_elements, 1));
 
 
     m.def("u64vector_elements",
           (std::vector<uint64_t, std::allocator<uint64_t>> const (*)(pmt::pmt_t)) &
               ::pmt::u64vector_elements,
-          py::arg("v"),
+          py::arg("v").none(false),
           D(u64vector_elements, 1));
 
 
     m.def("s64vector_elements",
           (std::vector<int64_t, std::allocator<int64_t>> const (*)(pmt::pmt_t)) &
               ::pmt::s64vector_elements,
-          py::arg("v"),
+          py::arg("v").none(false),
           D(s64vector_elements, 1));
 
 
     m.def("f32vector_elements",
           (std::vector<float, std::allocator<float>> const (*)(pmt::pmt_t)) &
               ::pmt::f32vector_elements,
-          py::arg("v"),
+          py::arg("v").none(false),
           D(f32vector_elements, 1));
 
 
     m.def("f64vector_elements",
           (std::vector<double, std::allocator<double>> const (*)(pmt::pmt_t)) &
               ::pmt::f64vector_elements,
-          py::arg("v"),
+          py::arg("v").none(false),
           D(f64vector_elements, 1));
 
 
@@ -1210,7 +1244,7 @@ void bind_pmt(py::module& m)
         (std::vector<std::complex<float>, std::allocator<std::complex<float>>> const (*)(
             pmt::pmt_t)) &
             ::pmt::c32vector_elements,
-        py::arg("v"),
+        py::arg("v").none(false),
         D(c32vector_elements, 1));
 
 
@@ -1218,101 +1252,101 @@ void bind_pmt(py::module& m)
           (std::vector<std::complex<double>,
                        std::allocator<std::complex<double>>> const (*)(pmt::pmt_t)) &
               ::pmt::c64vector_elements,
-          py::arg("v"),
+          py::arg("v").none(false),
           D(c64vector_elements, 1));
 
     m.def("uniform_vector_writable_elements",
           &::pmt::uniform_vector_writable_elements,
-          py::arg("v"),
+          py::arg("v").none(false),
           py::arg("len"),
           D(uniform_vector_writable_elements));
 
 
     m.def("u8vector_writable_elements",
           &::pmt::u8vector_writable_elements,
-          py::arg("v"),
+          py::arg("v").none(false),
           py::arg("len"),
           D(u8vector_writable_elements));
 
 
     m.def("s8vector_writable_elements",
           &::pmt::s8vector_writable_elements,
-          py::arg("v"),
+          py::arg("v").none(false),
           py::arg("len"),
           D(s8vector_writable_elements));
 
 
     m.def("u16vector_writable_elements",
           &::pmt::u16vector_writable_elements,
-          py::arg("v"),
+          py::arg("v").none(false),
           py::arg("len"),
           D(u16vector_writable_elements));
 
 
     m.def("s16vector_writable_elements",
           &::pmt::s16vector_writable_elements,
-          py::arg("v"),
+          py::arg("v").none(false),
           py::arg("len"),
           D(s16vector_writable_elements));
 
 
     m.def("u32vector_writable_elements",
           &::pmt::u32vector_writable_elements,
-          py::arg("v"),
+          py::arg("v").none(false),
           py::arg("len"),
           D(u32vector_writable_elements));
 
 
     m.def("s32vector_writable_elements",
           &::pmt::s32vector_writable_elements,
-          py::arg("v"),
+          py::arg("v").none(false),
           py::arg("len"),
           D(s32vector_writable_elements));
 
 
     m.def("u64vector_writable_elements",
           &::pmt::u64vector_writable_elements,
-          py::arg("v"),
+          py::arg("v").none(false),
           py::arg("len"),
           D(u64vector_writable_elements));
 
 
     m.def("s64vector_writable_elements",
           &::pmt::s64vector_writable_elements,
-          py::arg("v"),
+          py::arg("v").none(false),
           py::arg("len"),
           D(s64vector_writable_elements));
 
 
     m.def("f32vector_writable_elements",
           &::pmt::f32vector_writable_elements,
-          py::arg("v"),
+          py::arg("v").none(false),
           py::arg("len"),
           D(f32vector_writable_elements));
 
 
     m.def("f64vector_writable_elements",
           &::pmt::f64vector_writable_elements,
-          py::arg("v"),
+          py::arg("v").none(false),
           py::arg("len"),
           D(f64vector_writable_elements));
 
 
     m.def("c32vector_writable_elements",
           &::pmt::c32vector_writable_elements,
-          py::arg("v"),
+          py::arg("v").none(false),
           py::arg("len"),
           D(c32vector_writable_elements));
 
 
     m.def("c64vector_writable_elements",
           &::pmt::c64vector_writable_elements,
-          py::arg("v"),
+          py::arg("v").none(false),
           py::arg("len"),
           D(c64vector_writable_elements));
 
 
-    m.def("is_dict", &::pmt::is_dict, py::arg("obj"), D(is_dict));
+    m.def("is_dict", &::pmt::is_dict, py::arg("obj").none(false), D(is_dict));
 
 
     m.def("make_dict", &::pmt::make_dict, D(make_dict));
@@ -1320,60 +1354,65 @@ void bind_pmt(py::module& m)
 
     m.def("dict_add",
           &::pmt::dict_add,
-          py::arg("dict"),
-          py::arg("key"),
-          py::arg("value"),
+          py::arg("dict").none(false),
+          py::arg("key").none(false),
+          py::arg("value").none(false),
           D(dict_add));
 
 
     m.def("dict_delete",
           &::pmt::dict_delete,
-          py::arg("dict"),
-          py::arg("key"),
+          py::arg("dict").none(false),
+          py::arg("key").none(false),
           D(dict_delete));
 
 
     m.def("dict_has_key",
           &::pmt::dict_has_key,
-          py::arg("dict"),
-          py::arg("key"),
+          py::arg("dict").none(false),
+          py::arg("key").none(false),
           D(dict_has_key));
 
 
     m.def("dict_ref",
           &::pmt::dict_ref,
-          py::arg("dict"),
-          py::arg("key"),
-          py::arg("not_found"),
+          py::arg("dict").none(false),
+          py::arg("key").none(false),
+          py::arg("not_found").none(false),
           D(dict_ref));
 
 
-    m.def("dict_items", &::pmt::dict_items, py::arg("dict"), D(dict_items));
+    m.def("dict_items", &::pmt::dict_items, py::arg("dict").none(false), D(dict_items));
 
 
-    m.def("dict_keys", &::pmt::dict_keys, py::arg("dict"), D(dict_keys));
+    m.def("dict_keys", &::pmt::dict_keys, py::arg("dict").none(false), D(dict_keys));
 
 
     m.def("dict_update",
           &::pmt::dict_update,
-          py::arg("dict1"),
-          py::arg("dict2"),
+          py::arg("dict1").none(false),
+          py::arg("dict2").none(false),
           D(dict_update));
 
 
-    m.def("dict_values", &::pmt::dict_values, py::arg("dict"), D(dict_values));
+    m.def(
+        "dict_values", &::pmt::dict_values, py::arg("dict").none(false), D(dict_values));
 
 
-    m.def("is_any", &::pmt::is_any, py::arg("obj"), D(is_any));
+    m.def("is_any", &::pmt::is_any, py::arg("obj").none(false), D(is_any));
 
 
     m.def("make_any", &::pmt::make_any, py::arg("any"), D(make_any));
 
 
-    m.def("any_ref", &::pmt::any_ref, py::arg("obj"), D(any_ref));
+    m.def("any_ref", &::pmt::any_ref, py::arg("obj").none(false), D(any_ref));
 
 
-    m.def("any_set", &::pmt::any_set, py::arg("obj"), py::arg("any"), D(any_set));
+    m.def("any_set",
+          &::pmt::any_set,
+          py::arg("obj").none(false),
+          py::arg("any"),
+          D(any_set));
 
     // m.def("is_msg_accepter",&pmt::is_msg_accepter,
     //     py::arg("obj")
@@ -1384,121 +1423,189 @@ void bind_pmt(py::module& m)
     // m.def("msg_accepter_ref",&pmt::msg_accepter_ref,
     //     py::arg("obj")
     // );
-    m.def("is_pdu", &::pmt::is_pdu, py::arg("obj"), D(is_pdu));
+    m.def("is_pdu", &::pmt::is_pdu, py::arg("obj").none(false), D(is_pdu));
 
 
-    m.def("eq", &::pmt::eq, py::arg("x"), py::arg("y"), D(eq));
+    m.def("eq", &::pmt::eq, py::arg("x").none(false), py::arg("y").none(false), D(eq));
 
 
-    m.def("eqv", &::pmt::eqv, py::arg("x"), py::arg("y"), D(eqv));
+    m.def("eqv", &::pmt::eqv, py::arg("x").none(false), py::arg("y").none(false), D(eqv));
 
 
-    m.def("equal", &::pmt::equal, py::arg("x"), py::arg("y"), D(equal));
+    m.def("equal",
+          &::pmt::equal,
+          py::arg("x").none(false),
+          py::arg("y").none(false),
+          D(equal));
 
 
-    m.def("assq", &::pmt::assq, py::arg("obj"), py::arg("alist"), D(assq));
+    m.def("assq",
+          &::pmt::assq,
+          py::arg("obj").none(false),
+          py::arg("alist").none(false),
+          D(assq));
 
 
-    m.def("assv", &::pmt::assv, py::arg("obj"), py::arg("alist"), D(assv));
+    m.def("assv",
+          &::pmt::assv,
+          py::arg("obj").none(false),
+          py::arg("alist").none(false),
+          D(assv));
 
 
-    m.def("assoc", &::pmt::assoc, py::arg("obj"), py::arg("alist"), D(assoc));
+    m.def("assoc",
+          &::pmt::assoc,
+          py::arg("obj").none(false),
+          py::arg("alist").none(false),
+          D(assoc));
 
 
-    m.def("map", &::pmt::map, py::arg("proc"), py::arg("list"), D(map));
+    m.def("map", &::pmt::map, py::arg("proc"), py::arg("list").none(false), D(map));
 
 
-    m.def("reverse", &::pmt::reverse, py::arg("list"), D(reverse));
+    m.def("reverse", &::pmt::reverse, py::arg("list").none(false), D(reverse));
 
 
-    m.def("reverse_x", &::pmt::reverse_x, py::arg("list"), D(reverse_x));
+    m.def("reverse_x", &::pmt::reverse_x, py::arg("list").none(false), D(reverse_x));
 
 
-    m.def("acons", &::pmt::acons, py::arg("x"), py::arg("y"), py::arg("a"), D(acons));
+    m.def("acons",
+          &::pmt::acons,
+          py::arg("x").none(false),
+          py::arg("y").none(false),
+          py::arg("a").none(false),
+          D(acons));
 
 
-    m.def("nth", &::pmt::nth, py::arg("n"), py::arg("list"), D(nth));
+    m.def("nth", &::pmt::nth, py::arg("n"), py::arg("list").none(false), D(nth));
 
 
-    m.def("nthcdr", &::pmt::nthcdr, py::arg("n"), py::arg("list"), D(nthcdr));
+    m.def("nthcdr", &::pmt::nthcdr, py::arg("n"), py::arg("list").none(false), D(nthcdr));
 
 
-    m.def("memq", &::pmt::memq, py::arg("obj"), py::arg("list"), D(memq));
+    m.def("memq",
+          &::pmt::memq,
+          py::arg("obj").none(false),
+          py::arg("list").none(false),
+          D(memq));
 
 
-    m.def("memv", &::pmt::memv, py::arg("obj"), py::arg("list"), D(memv));
+    m.def("memv",
+          &::pmt::memv,
+          py::arg("obj").none(false),
+          py::arg("list").none(false),
+          D(memv));
 
 
-    m.def("member", &::pmt::member, py::arg("obj"), py::arg("list"), D(member));
+    m.def("member",
+          &::pmt::member,
+          py::arg("obj").none(false),
+          py::arg("list").none(false),
+          D(member));
 
 
-    m.def("subsetp", &::pmt::subsetp, py::arg("list1"), py::arg("list2"), D(subsetp));
+    m.def("subsetp",
+          &::pmt::subsetp,
+          py::arg("list1").none(false),
+          py::arg("list2").none(false),
+          D(subsetp));
 
 
-    m.def("list1", &::pmt::list1, py::arg("x1"), D(list1));
+    m.def("list1", &::pmt::list1, py::arg("x1").none(false), D(list1));
 
 
-    m.def("list2", &::pmt::list2, py::arg("x1"), py::arg("x2"), D(list2));
+    m.def("list2",
+          &::pmt::list2,
+          py::arg("x1").none(false),
+          py::arg("x2").none(false),
+          D(list2));
 
 
-    m.def("list3", &::pmt::list3, py::arg("x1"), py::arg("x2"), py::arg("x3"), D(list3));
+    m.def("list3",
+          &::pmt::list3,
+          py::arg("x1").none(false),
+          py::arg("x2").none(false),
+          py::arg("x3").none(false),
+          D(list3));
 
 
     m.def("list4",
           &::pmt::list4,
-          py::arg("x1"),
-          py::arg("x2"),
-          py::arg("x3"),
-          py::arg("x4"),
+          py::arg("x1").none(false),
+          py::arg("x2").none(false),
+          py::arg("x3").none(false),
+          py::arg("x4").none(false),
           D(list4));
 
 
     m.def("list5",
           &::pmt::list5,
-          py::arg("x1"),
-          py::arg("x2"),
-          py::arg("x3"),
-          py::arg("x4"),
-          py::arg("x5"),
+          py::arg("x1").none(false),
+          py::arg("x2").none(false),
+          py::arg("x3").none(false),
+          py::arg("x4").none(false),
+          py::arg("x5").none(false),
           D(list5));
 
 
     m.def("list6",
           &::pmt::list6,
-          py::arg("x1"),
-          py::arg("x2"),
-          py::arg("x3"),
-          py::arg("x4"),
-          py::arg("x5"),
-          py::arg("x6"),
+          py::arg("x1").none(false),
+          py::arg("x2").none(false),
+          py::arg("x3").none(false),
+          py::arg("x4").none(false),
+          py::arg("x5").none(false),
+          py::arg("x6").none(false),
           D(list6));
 
 
-    m.def("list_add", &::pmt::list_add, py::arg("list"), py::arg("item"), D(list_add));
+    m.def("list_add",
+          &::pmt::list_add,
+          py::arg("list").none(false),
+          py::arg("item").none(false),
+          D(list_add));
 
 
-    m.def("list_rm", &::pmt::list_rm, py::arg("list"), py::arg("item"), D(list_rm));
+    m.def("list_rm",
+          &::pmt::list_rm,
+          py::arg("list").none(false),
+          py::arg("item").none(false),
+          D(list_rm));
 
 
-    m.def("list_has", &::pmt::list_has, py::arg("list"), py::arg("item"), D(list_has));
+    m.def("list_has",
+          &::pmt::list_has,
+          py::arg("list").none(false),
+          py::arg("item").none(false),
+          D(list_has));
 
 
-    m.def("is_eof_object", &::pmt::is_eof_object, py::arg("obj"), D(is_eof_object));
+    m.def("is_eof_object",
+          &::pmt::is_eof_object,
+          py::arg("obj").none(false),
+          D(is_eof_object));
 
 
     m.def("read", &::pmt::read, py::arg("port"), D(read));
 
 
-    m.def("write", &::pmt::write, py::arg("obj"), py::arg("port"), D(write));
+    m.def("write", &::pmt::write, py::arg("obj").none(false), py::arg("port"), D(write));
 
 
-    m.def("write_string", &::pmt::write_string, py::arg("obj"), D(write_string));
+    m.def("write_string",
+          &::pmt::write_string,
+          py::arg("obj").none(false),
+          D(write_string));
 
 
-    m.def("print", &::pmt::print, py::arg("v"), D(print));
+    m.def("print", &::pmt::print, py::arg("v").none(false), D(print));
 
 
-    m.def("serialize", &::pmt::serialize, py::arg("obj"), py::arg("sink"), D(serialize));
+    m.def("serialize",
+          &::pmt::serialize,
+          py::arg("obj").none(false),
+          py::arg("sink"),
+          D(serialize));
 
 
     m.def("deserialize", &::pmt::deserialize, py::arg("source"), D(deserialize));
@@ -1506,7 +1613,7 @@ void bind_pmt(py::module& m)
 
     m.def("dump_sizeof", &::pmt::dump_sizeof, D(dump_sizeof));
 
-    m.def("length", &pmt::length, py::arg("v"));
+    m.def("length", &pmt::length, py::arg("v").none(false));
 
     // pybind11 needs explicit conversion to handle non-utf8 strings
     m.def(
@@ -1515,7 +1622,7 @@ void bind_pmt(py::module& m)
             std::string s = serialize_str(obj);
             return py::bytes(s); // Return the data without transcoding
         },
-        py::arg("obj"),
+        py::arg("obj").none(false),
         D(serialize_str));
 
     m.def("deserialize_str", &pmt::deserialize_str, py::arg("str"), D(deserialize_str));
