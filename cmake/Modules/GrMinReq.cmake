@@ -13,7 +13,7 @@ set(__INCLUDED_GR_MIN_REQ_CMAKE TRUE)
 set(GR_BOOST_MIN_VERSION "1.69") ## Version in CentOS 8 (EPEL)
 set(GR_CMAKE_MIN_VERSION "3.16.3") ## Version in Ubuntu 20.04LTS
 set(GR_MAKO_MIN_VERSION "1.1.0") ## Version in Ubuntu 20.04LTS
-set(GR_PYTHON_MIN_VERSION "3.6.5") ## Version in Ubuntu 18.04LTS
+set(GR_PYTHON_MIN_VERSION "3.7.2") ## 3.7 is already EOL, but was 3.6.5
 set(GR_PYGCCXML_MIN_VERSION "2.0.0") ## Version to support c++17 (in pip)
 set(GR_NUMPY_MIN_VERSION "1.17.4") ## Version in Ubuntu 20.04LTS
 set(GCC_MIN_VERSION "9.3.0") ## Version in Ubuntu 20.04LTS
