@@ -69,9 +69,7 @@ outputs:
 
 
 templates:
-  imports: |-
-    from gnuradio import qtgui
-    import sip
+  imports: import sip
   make: |-
     <%
         win = 'self._%s_win' % id

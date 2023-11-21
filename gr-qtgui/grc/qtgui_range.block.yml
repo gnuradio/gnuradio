@@ -64,9 +64,7 @@ asserts:
 - ${start <= stop}
 
 templates:
-    imports: |- 
-        from gnuradio.qtgui import Range, RangeWidget
-        from PyQt5 import QtCore
+    imports: from PyQt5 import QtCore
     var_make: self.${id} = ${id} = ${value}
     callbacks:
     - self.set_${id}(${value})
@@ -75,8 +73,8 @@ templates:
             win = 'self._%s_win'%id
             range = 'self._%s_range'%id
         %>\
-        ${range} = Range(${start}, ${stop}, ${step}, ${value}, ${min_len})
-        ${win} = RangeWidget(${range}, self.set_${id}, "${no_quotes(label,repr(id))}", "${widget}", ${rangeType}, ${orient})
+        ${range} = qtgui.Range(${start}, ${stop}, ${step}, ${value}, ${min_len})
+        ${win} = qtgui.RangeWidget(${range}, self.set_${id}, "${no_quotes(label,repr(id))}", "${widget}", ${rangeType}, ${orient})
         ${gui_hint() % win}
 
 documentation: |-
