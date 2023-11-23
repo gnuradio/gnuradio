@@ -67,7 +67,7 @@ cc_decoder_impl::cc_decoder_impl(int frame_size,
     if (k != 7 || rate != 2) {
         // used to throw std::runtime_error("cc_decoder: parameters not supported");
         throw std::invalid_argument(
-            "cc_decoder: Only k=2, rate=2 convolutional codes are supported");
+            "cc_decoder: Only k=7, rate=2 convolutional codes are supported");
     }
 
     switch (d_mode) {
