@@ -40,6 +40,8 @@ class TopBlockGenerator(object):
             output_dir = tempfile.gettempdir()
         filename = self._flow_graph.get_option('id') + '.py'
         self.file_path = os.path.join(output_dir, filename)
+        ui_filename = self._flow_graph.get_option('id') + '.ui'
+        self.ui_file_path = os.path.join(output_dir, ui_filename)
         self.output_dir = output_dir
 
     def _warnings(self):
@@ -88,6 +90,70 @@ class TopBlockGenerator(object):
                 fp.write(data)
             if filename == self.file_path:
                 os.chmod(filename, self._mode)
+
+    def write_ui(self, rewrite=False):
+        """Write the default form.ui file."""
+        default_ui_xml = f"""<?xml version="1.0" encoding="UTF-8"?>
+    <ui version="4.0">
+    <class>Widget</class>
+    <widget class="QWidget" name="Widget">
+    <property name="geometry">
+    <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>420</width>
+        <height>280</height>
+    </rect>
+    </property>
+    <property name="windowTitle">
+    <string>Widget</string>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout">
+    </layout>
+    </widget>
+    <resources/>
+    <connections/>
+    </ui>
+    """
+
+        fg = self._flow_graph
+        gui_blocks = []
+        blocks = self._blocks()
+
+        for block, block_code in blocks:
+            block_name = block.name
+            if block_name.startswith('qtgui'):
+                gui_blocks.append(block_name)
+
+        additional_widgets_xml = ""
+
+        for widget_name in gui_blocks:
+            widget_name = widget_name + "_widget"
+            widget_xml = f"""
+    <item>
+        <widget class="QLabel" name="{widget_name}">
+            <property name="text">
+            <string>{widget_name}</string>
+            </property>
+            <property name="alignment">
+            <set>Qt::AlignCenter</set>
+            </property>
+        </widget>
+    </item>
+            """
+            additional_widgets_xml += widget_xml
+
+        index = default_ui_xml.find('<layout class="QVBoxLayout" name="verticalLayout">')
+        index = default_ui_xml.find('>', index) + 1
+        default_ui_xml = default_ui_xml[:index] + additional_widgets_xml + default_ui_xml[index:]
+
+        # Write the default XML code to the form.ui file
+        if not os.path.exists(self.ui_file_path):
+            with codecs.open(self.ui_file_path, 'w', encoding='utf-8') as fp:
+                fp.write(default_ui_xml)
+        elif os.path.exists(self.ui_file_path) and rewrite:
+            with codecs.open(self.ui_file_path, 'w', encoding='utf-8') as fp:
+                fp.write(default_ui_xml)
 
     def _build_python_code_from_template(self):
         """
@@ -218,6 +284,24 @@ class TopBlockGenerator(object):
             if make:
                 if not (block.is_variable or block.is_virtual_or_pad):
                     make = 'self.' + block.name + ' = ' + make
+                    if block.name.startswith('qtgui'):
+                        widget_container = f"""
+if os.path.exists(file_path):
+    widget_container = self.findChild(Qt.QWidget, '{block.name}_widget')
+    if widget_container:
+        parent_widget = widget_container.parent()
+
+        if parent_widget.layout():
+            parent_layout = parent_widget.layout()
+            if hasattr(self, "_{block.name}_win"):
+                parent_layout.replaceWidget(widget_container, self._{block.name}_win)
+
+        else:
+            print("No layout found for {block.name}_widget")
+
+        widget_container.deleteLater()
+                        """
+                        make = make + widget_container
                 blocks_make.append((block, make))
         return blocks_make
 

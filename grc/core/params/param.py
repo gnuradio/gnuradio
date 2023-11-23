@@ -8,6 +8,8 @@
 import ast
 import collections
 import textwrap
+import os
+from pathlib import Path
 
 from .. import Constants
 from ..base import Element
@@ -329,7 +331,6 @@ class Param(Element):
             string of python code for positioning GUI elements in pyQT
         """
         self.hostage_cells.clear()
-
         # Parsing
         if ':' in expr:
             tab, pos = expr.split(':')
@@ -423,11 +424,12 @@ class Param(Element):
 
             if self.parent_flowgraph.get_option('output_language') == 'python':
                 widget_str = textwrap.dedent("""
-                    self.{layout}.addWidget({widget}, {row}, {col}, {row_span}, {col_span})
-                    for r in range({row}, {row_end}):
-                        self.{layout}.setRowStretch(r, 1)
-                    for c in range({col}, {col_end}):
-                        self.{layout}.setColumnStretch(c, 1)
+                    if not os.path.exists(file_path):
+                        self.{layout}.addWidget({widget}, {row}, {col}, {row_span}, {col_span})
+                        for r in range({row}, {row_end}):
+                            self.{layout}.setRowStretch(r, 1)
+                        for c in range({col}, {col_end}):
+                            self.{layout}.setColumnStretch(c, 1)
                 """.strip('\n')).format(
                     layout=layout, widget=widget,
                     row=row, row_span=row_span, row_end=row + row_span,
@@ -450,8 +452,12 @@ class Param(Element):
 
         else:
             if self.parent_flowgraph.get_option('output_language') == 'python':
-                widget_str = 'self.{layout}.addWidget({widget})'.format(
-                    layout=layout, widget=widget)
+                widget_str = textwrap.dedent("""
+                    if not os.path.exists(file_path):
+                        self.{layout}.addWidget({widget})
+                """.strip('\n')).format(
+                    layout=layout, widget=widget
+                )
             elif self.parent_flowgraph.get_option('output_language') == 'cpp':
                 widget_str = '{layout}->addWidget({widget});'.format(
                     layout=layout, widget=widget)

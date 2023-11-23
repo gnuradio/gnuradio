@@ -746,6 +746,33 @@ class Application(Gtk.Application):
         ##################################################
         # Gen/Exec/Stop
         ##################################################
+        elif action == Actions.UI_FILE_GEN:
+            self.generator = None
+            if not page.process:
+                if not page.saved or not page.file_path:
+                    Actions.FLOW_GRAPH_SAVE()  # only save if file path missing or not saved
+                if page.saved and page.file_path:
+                    generator = page.get_generator()
+                    try:
+                        Messages.send_start_gen(generator.ui_file_path)
+                        generator.write_ui(True)
+                        self.generator = generator
+                    except Exception as e:
+                        Messages.send_fail_gen(e)
+        elif action == Actions.UI_FILE_OPEN:
+            self.generator = None
+            if not page.process:
+                if not page.saved or not page.file_path:
+                    Actions.FLOW_GRAPH_SAVE()  # only save if file path missing or not saved
+                if page.saved and page.file_path:
+                    generator = page.get_generator()
+                    try:
+                        Messages.send_start_gen(generator.ui_file_path)
+                        generator.write_ui(False)
+                        subprocess.Popen(["designer", generator.ui_file_path])
+                        self.generator = generator
+                    except Exception as e:
+                        Messages.send_fail_gen(e)
         elif action == Actions.FLOW_GRAPH_GEN:
             self.generator = None
             if not page.process:
