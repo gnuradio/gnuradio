@@ -78,7 +78,6 @@ class Flowgraph(QtWidgets.QGraphicsScene, base.Component, CoreFlowgraph):
 
         self.saved = True
 
-
     def set_saved(self, saved):
         self.saved = saved
 
@@ -546,7 +545,6 @@ class FlowgraphView(
         self.isPanning = False
         self.mousePressed = False
 
-
         self.setDragMode(self.RubberBandDrag)
 
         """
@@ -625,28 +623,38 @@ class FlowgraphView(
     def initEmpty(self):
         self.setSceneRect(0, 0, DEFAULT_MAX_X, DEFAULT_MAX_Y)
 
+    def zoom(self, factor: float, anchor=QtWidgets.QGraphicsView.AnchorViewCenter):
+        new_scalefactor = self.scalefactor * factor
+
+        if new_scalefactor > 0.25 and new_scalefactor < 2.5:
+            self.scalefactor = new_scalefactor
+            self.setTransformationAnchor(anchor)
+            self.setResizeAnchor(anchor)
+            self.scale(factor, factor)
+
+    def zoomOriginal(self):
+        # TODO: Original scale factor as a constant?
+        self.zoom(0.8 / self.scalefactor)
+
     def wheelEvent(self, event):
         # TODO: Support multi touch drag and drop for scrolling through the view
         if event.modifiers() == Qt.ControlModifier:
-            factor = 1.1
+            factor = 1.1 if event.angleDelta().y() > 0 else (1.0 / 1.1)
+            self.zoom(factor, anchor=QtWidgets.QGraphicsView.AnchorUnderMouse)
 
-            if event.angleDelta().y() < 0:
-                factor = 1.0 / factor
+            # if new_scalefactor > 0.25 and new_scalefactor < 2.5:
+            #     self.scalefactor = new_scalefactor
+            #     self.setTransformationAnchor(QtWidgets.QGraphicsView.NoAnchor)
+            #     self.setResizeAnchor(QtWidgets.QGraphicsView.NoAnchor)
 
-            new_scalefactor = self.scalefactor * factor
+            #     oldPos = self.mapToScene(event.pos())
 
-            if new_scalefactor > 0.25 and new_scalefactor < 2.5:
-                self.scalefactor = new_scalefactor
-                self.setTransformationAnchor(QtWidgets.QGraphicsView.NoAnchor)
-                self.setResizeAnchor(QtWidgets.QGraphicsView.NoAnchor)
+            #     self.scale(factor, factor)
+            #     newPos = self.mapToScene(event.pos())
 
-                oldPos = self.mapToScene(event.pos())
+            #     delta = newPos - oldPos
+            #     self.translate(delta.x(), delta.y())
 
-                self.scale(factor, factor)
-                newPos = self.mapToScene(event.pos())
-
-                delta = newPos - oldPos
-                self.translate(delta.x(), delta.y())
         elif event.modifiers() == Qt.ShiftModifier:
             self.horizontalScrollBar().setValue(
                 self.horizontalScrollBar().value() - event.angleDelta().y())

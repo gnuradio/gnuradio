@@ -75,9 +75,9 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         self.setObjectName("main")
         self.setWindowTitle(_("window-title"))
         self.setDockOptions(
-            QtWidgets.QMainWindow.AllowNestedDocks
-            | QtWidgets.QMainWindow.AllowTabbedDocks
-            | QtWidgets.QMainWindow.AnimatedDocks
+            QtWidgets.QMainWindow.AllowNestedDocks |
+            QtWidgets.QMainWindow.AllowTabbedDocks |
+            QtWidgets.QMainWindow.AnimatedDocks
         )
         self.progress_bar = QtWidgets.QProgressBar()
         self.statusBar().addPermanentWidget(self.progress_bar)
@@ -179,15 +179,12 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         self.ExampleBrowser.file_to_open.connect(self.open_example)
         self.OOTBrowser = OOTBrowser()
 
-
         self.threadpool = QtCore.QThreadPool()
         self.threadpool.setMaxThreadCount(1)
         ExampleFinder = Worker(self.ExampleBrowser.find_examples)
         ExampleFinder.signals.result.connect(self.populate_libraries_w_examples)
         ExampleFinder.signals.progress.connect(self.update_progress_bar)
         self.threadpool.start(ExampleFinder)
-
-
 
     """def show(self):
         log.debug("Showing main window")
@@ -448,6 +445,25 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         actions["properties"].setEnabled(False)
 
         # View Actions
+        actions["zoom_in"] = Action(
+            Icons("zoom-in"),
+            _("Zoom &in"),
+            self,
+            shortcut=Keys.ZoomIn,
+        )
+        actions["zoom_out"] = Action(
+            Icons("zoom-out"),
+            _("Zoom &out"),
+            self,
+            shortcut=Keys.ZoomOut,
+        )
+        actions["zoom_original"] = Action(
+            Icons("zoom-original"),
+            _("O&riginal size"),
+            self,
+            shortcut="Ctrl+0",
+        )
+
         actions["snap_to_grid"] = Action(_("snap_to_grid"), self)
         actions["snap_to_grid"].setCheckable(True)
 
@@ -726,6 +742,10 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         view.addMenu(panels)
         view.addMenu(toolbars)
         view.addSeparator()
+        view.addAction(actions["zoom_in"])
+        view.addAction(actions["zoom_out"])
+        view.addAction(actions["zoom_original"])
+        view.addSeparator()
         view.addAction(actions["toggle_grid"])
         view.addAction(actions["find"])
         menus["view"] = view
@@ -846,7 +866,6 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         """Adds a menu to the main window"""
         help = self.menus["help"].menuAction()
         self.menuBar().insertMenu(help, menu)
-
 
     def populate_libraries_w_examples(self, example_tuple):
         examples, examples_w_block, designated_examples_w_block = example_tuple
@@ -978,9 +997,9 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
                 "Unsaved Changes",
                 message,
                 QtWidgets.QMessageBox.StandardButtons(
-                    QtWidgets.QMessageBox.Discard
-                    | QtWidgets.QMessageBox.Cancel
-                    | QtWidgets.QMessageBox.Save
+                    QtWidgets.QMessageBox.Discard |
+                    QtWidgets.QMessageBox.Cancel |
+                    QtWidgets.QMessageBox.Save
                 ),
             )
 
@@ -1113,6 +1132,18 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
     def module_browser_triggered(self):
         log.debug("oot browser")
         self.OOTBrowser.show()
+
+    def zoom_in_triggered(self):
+        log.debug("zoom in")
+        self.currentView.zoom(1.1)
+
+    def zoom_out_triggered(self):
+        log.debug("zoom out")
+        self.currentView.zoom(1.0 / 1.1)
+
+    def zoom_original_triggered(self):
+        log.debug("zoom to original size")
+        self.currentView.zoomOriginal()
 
     def find_triggered(self):
         log.debug("find block")
@@ -1318,7 +1349,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
             if isinstance(filter, list):
                 if len(filter):
                     ex_dialog.filter(filter)
-                else: # filter is an empty list
+                else:  # filter is an empty list
                     ad = QtWidgets.QMessageBox()
                     ad.setWindowTitle("GRC: No examples")
                     ad.setText("There are no examples for this block.")
