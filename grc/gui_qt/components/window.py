@@ -915,6 +915,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
             self.tabWidget.addTab(new_flowgraph, os.path.basename(filename))
             self.tabWidget.setCurrentIndex(self.tabWidget.count() - 1)
             self.currentFlowgraph.import_data(initial_state)
+            self.currentFlowgraph.filename = filename
             self.connect_fg_signals(self.currentFlowgraph)
 
     def open_example(self, example_path):
