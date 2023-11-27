@@ -578,8 +578,7 @@ class FlowgraphView(
         """
 
     def contextMenuEvent(self, event):
-        contextMenu = self._app().MainWindow.menus["edit"]
-        contextMenu.exec_(self.mapToGlobal(event.pos()))
+        super(FlowgraphView, self).contextMenuEvent(event)
 
     def createMenus(self, actions, menus):
         log.debug("Creating menus")

@@ -443,6 +443,14 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
 
         self.moveToTop()
 
+    def contextMenuEvent(self, e):
+        if not self.isSelected():
+            self.parent.clearSelection()
+            self.setSelected(True)
+
+        view = self.parent.view
+        contextMenu = view._app().MainWindow.menus["edit"]
+        contextMenu.exec_(e.screenPos())
 
     def mouseDoubleClickEvent(self, e):
         self.open_properties()
