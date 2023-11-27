@@ -54,6 +54,9 @@ class Application(QtWidgets.QApplication):
         QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_ShareOpenGLContexts, True)
         QtWidgets.QApplication.__init__(self, settings.argv)
 
+        self.qsettings = QtCore.QSettings('GNU Radio', 'GRC')
+        log.debug(f"Using QSettings from {self.qsettings.fileName()}")
+
         try:
             import qdarkstyle
 
