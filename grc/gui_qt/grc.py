@@ -57,12 +57,13 @@ class Application(QtWidgets.QApplication):
         self.qsettings = QtCore.QSettings('GNU Radio', 'GRC')
         log.debug(f"Using QSettings from {self.qsettings.fileName()}")
 
-        try:
-            import qdarkstyle
+        if self.qsettings.value("appearance/theme") == "dark":
+            try:
+                import qdarkstyle
 
-            self.setStyleSheet(qdarkstyle.load_stylesheet())
-        except ImportError:
-            log.warning("Did not find QDarkstyle. Dark mode disabled")
+                self.setStyleSheet(qdarkstyle.load_stylesheet())
+            except ImportError:
+                log.warning("Did not find QDarkstyle. Dark mode disabled")
 
         # Save references to the global settings and gnuradio platform
         self.settings = settings
