@@ -11,8 +11,12 @@
 #ifndef INCLUDED_AUDIO_WINDOWS_SOURCE_H
 #define INCLUDED_AUDIO_WINDOWS_SOURCE_H
 
+#ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN
+#endif
+#ifndef NOMINMAX
 #define NOMINMAX // stops windef.h defining max/min under cygwin
+#endif
 
 #include <mmsystem.h>
 #include <windows.h>
@@ -51,11 +55,11 @@ protected:
     UINT find_device(std::string szDeviceName);
     std::queue<LPWAVEHDR> buffer_queue;
     std::mutex buffer_queue_mutex;
-    friend static void CALLBACK read_wavein(HWAVEIN hwi,
-                                            UINT uMsg,
-                                            DWORD_PTR dwInstance,
-                                            DWORD_PTR dwParam1,
-                                            DWORD_PTR dwParam2);
+    static void CALLBACK read_wavein(HWAVEIN hwi,
+                                     UINT uMsg,
+                                     DWORD_PTR dwInstance,
+                                     DWORD_PTR dwParam1,
+                                     DWORD_PTR dwParam2);
 
 public:
     windows_source(int sampling_freq, const std::string device_name = "");
@@ -64,9 +68,13 @@ public:
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
              gr_vector_void_star& output_items);
+
+    std::mutex& get_buffer_queue_mutex() { return buffer_queue_mutex; }
+
+    std::queue<LPWAVEHDR>& get_buffer_queue() { return buffer_queue; }
 };
 
-static void CALLBACK read_wavein(
+void CALLBACK read_wavein(
     HWAVEIN hwi, UINT uMsg, DWORD_PTR dwInstance, DWORD_PTR dwParam1, DWORD_PTR dwParam2);
 
 } /* namespace audio */
