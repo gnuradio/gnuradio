@@ -140,7 +140,7 @@ class PropsDialog(QtWidgets.QDialog):
         self._block.validate()
         self._block.create_shapes_and_labels()
         self._block.parent.blockPropsChange.emit(self._block)
-    
+
     def open_example(self, ex=None):
         # example is None if the "Open examples" button was pushed
         if ex is None:

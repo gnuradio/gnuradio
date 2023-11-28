@@ -6,7 +6,6 @@ from pathlib import Path
 from qtpy import QtGui, QtCore, QtWidgets, QtSvg
 
 from . import Constants
-from .components.canvas.colors import FLOWGRAPH_BACKGROUND_COLOR
 
 log = logging.getLogger(__name__)
 

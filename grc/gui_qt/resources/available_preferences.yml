@@ -2,7 +2,7 @@
 # in the Preferences window.
 
 categories:
-  - key: general
+  - key: general_
     name: General
     items:
       - key: editor
@@ -10,28 +10,44 @@ categories:
         tooltip: Choose the editor
         dtype: str
         default: gedit
+      - key: hide_variables
+        name: Hide variables
+        dtype: bool
+        default: False
+      - key: show_param_expr
+        name: Show parameter expressions in block
+        dtype: bool
+        default: False
+      - key: show_param_val
+        name: Show parameter value in block
+        dtype: bool
+        default: False
       - key: hide_disabled_blocks
         name: Hide disabled blocks
         dtype: bool
         default: False
-      - key: show_complexity
-        name: Show flowgraph complexity
-        dtype: bool
-        default: False
-      - key: show_port_labels
-        name: Show port labels
-        dtype: bool
-        default: True
-      - key: show_grid
-        name: Show grid
+      - key: auto_hide_port_labels
+        name: Auto-hide port labels
         dtype: bool
         default: False
       - key: snap_to_grid
         name: Snap to grid
         dtype: bool
         default: False
+      - key: show_block_comments
+        name: Show block comments
+        dtype: bool
+        default: False
+      - key: show_block_ids
+        name: Show all block IDs
+        dtype: bool
+        default: False
       - key: generated_code_preview
         name: Generated code preview
+        dtype: bool
+        default: False
+      - key: show_complexity
+        name: Show flowgraph complexity
         dtype: bool
         default: False
 

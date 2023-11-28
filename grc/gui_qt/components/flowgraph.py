@@ -538,7 +538,10 @@ class FlowgraphView(
 
         self.setScene(self.flowgraph)
         self.fitInView(self.flowgraph.sceneRect(), QtCore.Qt.KeepAspectRatio)
-        self.setBackgroundBrush(QtGui.QBrush(QtGui.QColor(25, 35, 45)))
+        if self.app.qsettings.value("appearance/theme") == "dark":
+            self.setBackgroundBrush(QtGui.QBrush(QtGui.QColor(25, 35, 45)))
+        else:
+            self.setBackgroundBrush(QtGui.QBrush(QtGui.QColor(255, 255, 255)))
 
         self.isPanning = False
         self.mousePressed = False

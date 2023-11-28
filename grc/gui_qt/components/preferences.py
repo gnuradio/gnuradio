@@ -19,12 +19,12 @@ from ..properties import Paths
 # Logging
 log = logging.getLogger(__name__)
 
-#TODO: Move this to a separate file
 class PreferencesDialog(QtWidgets.QDialog):
     pref_dict = {}
 
-    def __init__(self):
+    def __init__(self, qsettings):
         super().__init__()
+        self.qsettings = qsettings
 
         self.setMinimumSize(600, 400)
         self.setModal(True)
@@ -32,8 +32,6 @@ class PreferencesDialog(QtWidgets.QDialog):
         self.setWindowTitle("GRC Preferences")
         self.tabs = QtWidgets.QTabWidget()
 
-        self.prefs = QSettings('GNU_Radio', 'GNU_Radio_Companion')
-        log.info(f'Opening settings file: {self.prefs.fileName()}')
 
         log.debug(f'Opening available preferences YAML: {Paths.AVAILABLE_PREFS_YML}')
 
@@ -45,33 +43,33 @@ class PreferencesDialog(QtWidgets.QDialog):
             cat['_layout'] = QtWidgets.QVBoxLayout()
             cat['_layout'].setAlignment(Qt.AlignTop)
             for item in cat['items']:
-                key = item['key']
+                full_key = cat['key'] + '/' + item['key']
 
                 item['_label'] = QtWidgets.QLabel(item['name'])
 
                 if item['dtype'] == 'bool':
                     item['_edit'] = QtWidgets.QCheckBox()
 
-                    if self.prefs.contains(key):
-                        value = self.prefs.value(key)
-                        if value == 'True':
+                    if self.qsettings.contains(full_key):
+                        value = self.qsettings.value(full_key)
+                        if value == 'true':
                             item['_edit'].setChecked(True)
-                        elif value == 'False':
+                        elif value == 'false':
                             item['_edit'].setChecked(False)
                         else:
-                            log.warn(f'Invalid preferences value for {key}: {value}. Ignoring')
+                            log.warn(f'Invalid preferences value for {full_key}: {value}. Ignoring')
                             continue
                     else:
                         item['_edit'].setChecked(item['default'])
-                        self.prefs.setValue(item['key'], item['default'])
+                        self.qsettings.setValue(full_key, item['default'])
 
                 else: # TODO: Dropdowns
 
-                    if self.prefs.contains(item['key']):
-                        item['_edit'] = QtWidgets.QLineEdit(self.prefs.value(item['key']))
+                    if self.qsettings.contains(full_key):
+                        item['_edit'] = QtWidgets.QLineEdit(self.qsettings.value(full_key))
                     else:
                         item['_edit'] = QtWidgets.QLineEdit(str(item['default']))
-                        self.prefs.setValue(item['key'], item['default'])
+                        self.qsettings.setValue(full_key, item['default'])
 
                 item['_line'] = QtWidgets.QHBoxLayout()
 
@@ -96,16 +94,18 @@ class PreferencesDialog(QtWidgets.QDialog):
         self.setLayout(self.layout)
 
     def save_all(self):
-        log.debug(f'Writing changes to {self.prefs.fileName()}')
+        log.debug(f'Writing changes to {self.qsettings.fileName()}')
 
         for cat in self.pref_dict['categories']:
             cat['_scrollarea'] = QtWidgets.QScrollArea()
             cat['_layout'] = QtWidgets.QVBoxLayout()
             cat['_layout'].setAlignment(Qt.AlignTop)
             for item in cat['items']:
-                if item['dtype'] == 'bool':
-                    self.prefs.setValue(item['key'], str(item['_edit'].isChecked()))
-                else:
-                    self.prefs.setValue(item['key'], item['_edit'].text())
+                full_key = cat['key'] + '/' + item['key']
 
-        self.prefs.sync()
+                if item['dtype'] == 'bool':
+                    self.qsettings.setValue(full_key, item['_edit'].isChecked())
+                else:
+                    self.qsettings.setValue(full_key, item['_edit'].text())
+
+        self.qsettings.sync()

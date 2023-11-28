@@ -1307,7 +1307,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
     def preferences_triggered(self):
         log.debug("preferences")
-        prefs_dialog = PreferencesDialog()
+        prefs_dialog = PreferencesDialog(self.app.qsettings)
         if prefs_dialog.exec_():
             prefs_dialog.save_all()
 
