@@ -14,11 +14,14 @@
  * https://github.com/gabime/spdlog/issues/2922 */
 #include <spdlog/tweakme.h>
 
+#include <gnuradio/random.h>
 #include <spdlog/fmt/fmt.h>
 #include <string_view>
 #include <chrono>
 #include <cstddef>
 #include <cstdlib>
+#include <limits>
+#include <numeric>
 #include <vector>
 
 template <typename functor>
@@ -29,8 +32,11 @@ template <typename functor>
     float* output = outp.data();
     float *x = &output[0], *y = &output[block_size];
 
-    // touch memory
-    memset(output, 0, 2 * block_size * sizeof(float));
+    // generate input in the first half, and also in the second half to touch the memory
+    gr::xoroshiro128p_prng rng(42);
+    for (auto& value : outp) {
+        value = rng() / static_cast<double>(1ULL << 32) - (1ULL << 32);
+    }
 
     auto before = high_resolution_clock::now();
     // do the actual work
@@ -40,6 +46,14 @@ template <typename functor>
     auto after = high_resolution_clock::now();
     // get ending CPU usage
     auto dur = duration_cast<duration<double, std::ratio<1, 1>>>(after - before);
+
+    // prevent the compiler from discarding the output, not doing the calculations.
+    volatile auto sum = std::accumulate(outp.cbegin(), outp.cend(), 0.0f);
+    if (sum == std::numeric_limits<decltype(sum)>::min()) {
+        // should never be hit
+        return decltype(dur){};
+    }
+
     return dur;
 }
 template <typename dur_t>
