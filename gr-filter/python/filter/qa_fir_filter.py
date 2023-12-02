@@ -162,7 +162,7 @@ class test_filter(gr_unittest.TestCase):
         taps = 20 * [0.5, 0.5]
         src_data = 40 * [1, 2, 3, 4]
         expected_data = fir_filter(src_data, taps, decim)
-        expected_data = [int(e) for e in expected_data]
+        expected_data = [round(e) for e in expected_data]
 
         src = blocks.vector_source_f(src_data)
         op = filter.fir_filter_fsf(decim, taps)
@@ -170,14 +170,20 @@ class test_filter(gr_unittest.TestCase):
         self.tb.connect(src, op, dst)
         self.tb.run()
         result_data = dst.data()
-        self.assertComplexTuplesAlmostEqual(expected_data, result_data, 5)
+
+        # TODO: Remove fallback once GNU Radio's required VOLK_VERSION is >= 3.1.0
+        try:
+            self.assertEqual(expected_data, result_data)
+        except AssertionError:
+            expected_data_distorted = [int(e) for e in fir_filter(src_data, taps, decim)]
+            self.assertEqual(expected_data_distorted, result_data)
 
     def test_fir_filter_fsf_002(self):
         decim = 4
         taps = 20 * [0.5, 0.5]
         src_data = 40 * [1, 2, 3, 4]
         expected_data = fir_filter(src_data, taps, decim)
-        expected_data = [int(e) for e in expected_data]
+        expected_data = [round(e) for e in expected_data]
 
         src = blocks.vector_source_f(src_data)
         op = filter.fir_filter_fsf(decim, taps)
@@ -185,7 +191,13 @@ class test_filter(gr_unittest.TestCase):
         self.tb.connect(src, op, dst)
         self.tb.run()
         result_data = dst.data()
-        self.assertComplexTuplesAlmostEqual(expected_data, result_data, 5)
+
+        # TODO: Remove fallback once GNU Radio's required VOLK_VERSION is >= 3.1.0
+        try:
+            self.assertEqual(expected_data, result_data)
+        except AssertionError:
+            expected_data_distorted = [int(e) for e in fir_filter(src_data, taps, decim)]
+            self.assertEqual(expected_data_distorted, result_data)
 
 
 if __name__ == '__main__':
