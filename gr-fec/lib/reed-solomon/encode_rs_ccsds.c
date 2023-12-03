@@ -5,6 +5,7 @@
  * May be used under the terms of the GNU General Public License (GPL)
  */
 #define FIXED
+#include <gnuradio/fec/rs.h>
 #include "ccsds.h"
 #include "fixed.h"
 

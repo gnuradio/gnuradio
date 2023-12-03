@@ -6,7 +6,7 @@
 
 #define DTYPE unsigned char
 
-#include <gnuradio/fec/api.h>
+#include <gnuradio/fec/rs.h>
 
 /* Reed-Solomon codec control block */
 struct rs {
@@ -47,12 +47,3 @@ static inline unsigned int modnn(struct rs* rs, unsigned int x)
 #define DECODE_RS decode_rs_char
 #define INIT_RS init_rs_char
 #define FREE_RS free_rs_char
-
-FEC_API void ENCODE_RS(void* p, DTYPE* data, DTYPE* parity);
-FEC_API int DECODE_RS(void* p, DTYPE* data, int* eras_pos, int no_eras);
-FEC_API void* INIT_RS(unsigned int symsize,
-                      unsigned int gfpoly,
-                      unsigned int fcr,
-                      unsigned int prim,
-                      unsigned int nroots);
-FEC_API void FREE_RS(void* p);
