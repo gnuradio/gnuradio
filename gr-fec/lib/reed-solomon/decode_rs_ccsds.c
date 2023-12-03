@@ -4,6 +4,7 @@
  * Copyright 2002, Phil Karn, KA9Q
  * May be used under the terms of the GNU General Public License (GPL)
  */
+#include <gnuradio/fec/rs.h>
 #define FIXED 1
 #include "ccsds.h"
 #include "fixed.h"

@@ -7,7 +7,7 @@
  */
 #define DTYPE unsigned char
 
-#include <gnuradio/fec/api.h>
+#include <gnuradio/fec/rs.h>
 
 static inline int mod255(int x)
 {
@@ -36,6 +36,3 @@ extern unsigned char CCSDS_poly[];
 
 #define ENCODE_RS encode_rs_8
 #define DECODE_RS decode_rs_8
-
-FEC_API void ENCODE_RS(DTYPE* data, DTYPE* parity);
-FEC_API int DECODE_RS(DTYPE* data, int* eras_pos, int no_eras);
