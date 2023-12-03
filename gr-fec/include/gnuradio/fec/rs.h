@@ -1,8 +1,11 @@
-#include <gnuradio/fec/api.h>
 /* User include file for the Reed-Solomon codec
  * Copyright 2002, Phil Karn KA9Q
  * May be used under the terms of the GNU General Public License (GPL)
  */
+
+#ifndef INCLUDED_RS_H
+#define INCLUDED_RS_H
+#include <gnuradio/fec/api.h>
 
 /* General purpose RS codec, 8-bit symbols */
 FEC_API void encode_rs_char(void* rs, unsigned char* data, unsigned char* parity);
@@ -35,7 +38,4 @@ FEC_API int decode_rs_8(unsigned char* data, int* eras_pos, int no_eras);
 FEC_API void encode_rs_ccsds(unsigned char* data, unsigned char* parity);
 FEC_API int decode_rs_ccsds(unsigned char* data, int* eras_pos, int no_eras);
 
-/* Tables to map from conventional->dual (Taltab) and
- * dual->conventional (Tal1tab) bases
- */
-extern unsigned char Taltab[], Tal1tab[];
+#endif /* INCLUDED_RS_H */
