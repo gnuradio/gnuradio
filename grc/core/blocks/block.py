@@ -59,7 +59,7 @@ class Block(Element):
         """Make a new block from nested data."""
         super(Block, self).__init__(parent)
         param_factory = self.parent_platform.make_param
-        port_factory = self.parent.platform.make_port
+        port_factory = self.parent_platform.make_port
 
         self.params = collections.OrderedDict(
             (data['id'], param_factory(parent=self, **data))
