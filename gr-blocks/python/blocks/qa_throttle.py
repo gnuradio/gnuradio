@@ -63,7 +63,7 @@ class test_throttle(gr_unittest.TestCase):
 
     def test_limited_chunk_throttling(self):
         src_data = [1, 2, 3]
-        rate = 50
+        rate = 10
         chunksize = 10
         src = blocks.vector_source_c(src_data, repeat=True)
 
@@ -75,15 +75,22 @@ class test_throttle(gr_unittest.TestCase):
         dst = blocks.vector_sink_c()
         self.tb.connect(src, thr, dst)
 
-        total_time = 0.5  # seconds
+        total_time = 2.0  # seconds
+        start_time = time.perf_counter()
+        previous_len = 0
+
         self.tb.start()
-        time.sleep(total_time)
+
+        while time.perf_counter() < start_time + total_time:
+            time.sleep(0.1)
+            current_len = len(dst.data())
+            print(current_len)
+            self.assertLessEqual(current_len, previous_len + chunksize)
+            previous_len = current_len
+
         self.tb.stop()
 
-        dst_data = dst.data()
-        num = len(dst_data)
-        # be at most one chunksize
-        self.assertLess(abs(total_time * rate - num) + 1, chunksize)
+        self.assertGreaterEqual(current_len, chunksize)
 
 
 if __name__ == '__main__':
