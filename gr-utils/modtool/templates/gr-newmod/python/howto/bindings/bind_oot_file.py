@@ -34,7 +34,7 @@ args = parser.parse_args()
 
 prefix = args.prefix
 output_dir = args.output_dir
-defines = tuple(','.join(args.defines).split(','))
+defines = tuple([d for d in ','.join(args.defines).split(',') if d])
 includes = ','.join(args.include)
 name = args.module
 
