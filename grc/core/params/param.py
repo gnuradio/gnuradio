@@ -121,9 +121,9 @@ class Param(Element):
 
     def get_value(self):
         value = self.value
-        if self.is_enum() and value not in self.options:
-            value = self.default
-            self.set_value(value)
+        # if self.is_enum() and value not in self.options:
+        #     value = self.default
+        #     self.set_value(value)
         return value
 
     def set_value(self, value):
@@ -199,14 +199,35 @@ class Param(Element):
         scale_factor = self.scale_factor
 
         #########################
-        # ID and Enum types (not evaled)
+        # ID types (not evaled)
         #########################
-        if dtype in ('id', 'stream_id', 'name') or self.is_enum():
+        if dtype in ('id', 'stream_id', 'name'):
             if self.options.attributes:
                 expr = attributed_str(expr)
                 for key, value in self.options.attributes[expr].items():
                     setattr(expr, key, value)
             return expr
+        
+        #########################
+        # Enum (evaled and attributed)
+        #########################
+        elif self.is_enum():
+            try:
+                if expr in self.options:
+                    value = expr
+                else:
+                    value = self.parent_flowgraph.evaluate(expr)
+                if not isinstance(value, str):
+                    value = value.name
+                #     raise Exception(f'{value} is not a string')
+            except Exception as e:
+                raise Exception(f'Value "{expr}" cannot be evaluated:\n{e}')
+            if self.options.attributes:
+                avalue = attributed_str(value)
+                for k, v in self.options.attributes[value].items():
+                    setattr(avalue, k, v)
+                return avalue
+            return value
 
         #########################
         # Numeric Types
@@ -316,7 +337,7 @@ class Param(Element):
             return value
 
     def get_opt(self, item):
-        return self.options.attributes[self.get_value()][item]
+        return self.options.attributes[self.get_evaluated()][item]
 
     ##############################################
     # GUI Hint
