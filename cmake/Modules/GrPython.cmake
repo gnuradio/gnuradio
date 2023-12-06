@@ -369,7 +369,7 @@ function(GR_PYTHON_INSTALL)
                 DEPENDS ${pyfile}
                 COMMAND
                     ${PYTHON_EXECUTABLE} -c
-                    "import re; R=re.compile('^\#!.*$\\n',flags=re.MULTILINE); open(r'${pyexefile}','w').write(r'\#!${pyexe_native}'+'\\n'+R.sub('',open(r'${pyfile}','r').read()))"
+                    "import re; R=re.compile('^\#!.*$\\n',flags=re.MULTILINE); open(r'${pyexefile}','w',encoding='utf-8').write(r'\#!${pyexe_native}'+'\\n'+R.sub('',open(r'${pyfile}','r',encoding='utf-8').read()))"
                 COMMENT "Shebangin ${pyfile_name}"
                 VERBATIM)
 
