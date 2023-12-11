@@ -12,6 +12,7 @@
 add_library(
     gnuradio-digital
     additive_scrambler_bb_impl.cc
+    afsk_mod_bf_impl.cc
     binary_slicer_fb_impl.cc
     burst_shaper_impl.cc
     chunks_to_symbols_impl.cc
