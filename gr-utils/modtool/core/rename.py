@@ -131,6 +131,9 @@ class ModToolRename(ModTool):
         hasher = hashlib.md5()
         # note this requires _run_pybind to be called after _run_include
         header_filename = os.path.join(self.info['includedir'], new + '.h')
+        if not os.path.isfile(header_filename):
+            logger.info("Not a C++ block, nothing to do here...")
+            return
         with open(header_filename, 'rb') as file_in:
             buf = file_in.read()
             hasher.update(buf)
