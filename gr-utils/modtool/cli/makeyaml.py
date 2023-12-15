@@ -65,7 +65,8 @@ def cli(**kwargs):
 def get_pattern(self):
     """ Get the regex pattern for block(s) to be parsed """
     if self.info['pattern'] is None:
-        block_candidates = get_block_candidates()
+        block_candidates = get_block_candidates(self.info['modname'], skip_include=True,
+                                                skip_python=True, skip_grc=True)
         with SequenceCompleter(block_candidates):
             self.info['pattern'] = cli_input(
                 'Which blocks do you want to parse? (Regex): ')

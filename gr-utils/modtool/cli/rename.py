@@ -49,7 +49,7 @@ def cli(**kwargs):
 
 def get_oldname(self):
     """ Get the old block name to be replaced """
-    block_candidates = get_block_candidates()
+    block_candidates = get_block_candidates(self.info['modname'])
     if self.info['oldname'] is None:
         with SequenceCompleter(block_candidates):
             while not self.info['oldname'] or self.info['oldname'].isspace():
