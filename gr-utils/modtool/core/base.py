@@ -22,21 +22,22 @@ from ..tools import get_modname, SCMRepoFactory
 logger = logging.getLogger('gnuradio.modtool')
 
 
-def get_block_candidates():
+def get_block_candidates(modname: str = None):
     """ Returns a list of all possible blocknames """
-    block_candidates = []
     cpp_filters = ["*.cc", "*.cpp"]
     cpp_blocks = []
     for ftr in cpp_filters:
-        cpp_blocks += [x for x in glob.glob1("lib", ftr) if not (x.startswith('qa_') or
-                       x.startswith('test_'))]
-    python_blocks = [x for x in glob.glob1("python", "*.py") if not (x.startswith('qa_') or
-                     x.startswith('build') or x.startswith('__init__'))]
-    for block in itertools.chain(cpp_blocks, python_blocks):
-        block = os.path.splitext(block)[0]
-        block = block.split('_impl')[0]
-        block_candidates.append(block)
-    return block_candidates
+        cpp_blocks.append(os.path.splitext(x)[0].split("_impl")[0]
+                          for x in glob.glob1("lib", ftr)
+                          if not (x.startswith("qa_") or x.startswith("test_")))
+    python_glob = (glob.glob("python/*/*.py") if modname is None
+                   else glob.glob1(f"python/{modname}", "*.py"))
+    python_blocks = (os.path.splitext(os.path.split(x)[-1])[0]
+                     for x in python_glob
+                     if not (x.startswith("qa_") or
+                             x.startswith("build") or
+                             x == "__init__.py"))
+    return set(itertools.chain(*cpp_blocks, python_blocks))
 
 
 class ModToolException(Exception):
