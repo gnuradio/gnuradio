@@ -74,21 +74,6 @@ if(ENABLE_COMMON_PCH)
     set(PRIVATE_LIBS common-precompiled-headers)
 endif()
 
-if(ENABLE_GR_QTGUI_OPENGL)
-    qt5_add_resources(RFNOC_F15_RC_SRCS rfnoc_f15.qrc)
-    list(APPEND QTGUI_SOURCES
-        axis.c
-        rfnoc_f15_display_impl.cc
-        QRfnocF15ColorMapper.cc
-        QRfnocF15Surface.cc
-        ${RFNOC_F15_RC_SRCS}
-    )
-    find_package(OpenGL)
-    list(APPEND PRIVATE_LIBS
-        Qt5::OpenGL
-        OpenGL::GL
-    )
-endif()
 
 add_library(
     gnuradio-qtgui
@@ -135,15 +120,7 @@ qt5_wrap_cpp(
     ${qtgui_mod_includedir}/ConstellationDisplayPlot.h
     ${qtgui_mod_includedir}/HistogramDisplayPlot.h
     ${qtgui_mod_includedir}/VectorDisplayPlot.h
-    edit_box_msg_impl.h
-    )
-if(ENABLE_GR_QTGUI_OPENGL)
-    qt5_wrap_cpp(
-        qtgui_moc_sources
-        QRfnocF15Surface.h
-        QRfnocF15ColorMapper.h
-        )
-endif()
+    edit_box_msg_impl.h)
 target_sources(gnuradio-qtgui PRIVATE ${qtgui_moc_sources})
 qt5_wrap_ui(qtgui_ui_hdrs spectrumdisplayform.ui)
 target_sources(gnuradio-qtgui PRIVATE ${qtgui_ui_hdrs})
