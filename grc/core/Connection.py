@@ -88,7 +88,7 @@ class Connection(Element):
     def sink_block(self):
         return self.sink_port.parent_block
 
-    @lazy_property
+    @property
     def type(self):
         return self.source_port.domain, self.sink_port.domain
 
