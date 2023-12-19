@@ -41,7 +41,6 @@ install(
           plot_raster.h
           plot_waterfall.h
           qtgui_types.h
-          rfnoc_f15_display.h
           sink_c.h
           sink_f.h
           spectrumUpdateEvents.h

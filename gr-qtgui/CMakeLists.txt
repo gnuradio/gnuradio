@@ -14,7 +14,6 @@ include(GrPython)
 
 find_package(Qt5 QUIET
     COMPONENTS Widgets
-    OPTIONAL_COMPONENTS OpenGL
 )
 set(QT_FOUND ${Qt5Widgets_FOUND})
 
@@ -47,10 +46,7 @@ set(GR_PKG_QTGUI_EXAMPLES_DIR ${GR_PKG_DATA_DIR}/examples/qt-gui)
 # Begin conditional configuration
 ########################################################################
 if(ENABLE_GR_QTGUI)
-    if (Qt5OpenGL_FOUND)
-        set(ENABLE_GR_QTGUI_OPENGL TRUE)
-        set(OpenGL_GL_PREFERENCE GLVND)
-    endif()
+
     ########################################################################
     # Add subdirectories
     ########################################################################
