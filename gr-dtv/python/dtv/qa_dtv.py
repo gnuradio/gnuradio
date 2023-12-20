@@ -166,7 +166,7 @@ class test_dtv(gr_unittest.TestCase):
         self.assertEqual(getsize(self.outfile), getsize(testfile))
 
         out_data = np.fromfile(self.outfile, dtype=np.float32)
-        expected_data = np.fromfile(testfile, dtype=np.float32)
+        expected_data = np.fromfile(testfile, dtype=np.dtype("<f"))
 
         self.assertFloatTuplesAlmostEqual(out_data, expected_data, 5)
 
