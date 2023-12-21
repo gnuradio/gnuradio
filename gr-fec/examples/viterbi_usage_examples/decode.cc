@@ -35,7 +35,7 @@ int main()
     float RATE = 0.5;
     float ebn0 = 12.0;
     float esn0 = RATE * pow(10.0, ebn0 / 10);
-    gen_met(mettab, amp, esn0, 0.0, 4);
+    gr::fec::gen_met(mettab, amp, esn0, 0.0, 4);
 
     // Initialize decoder state
     struct gr::fec::viterbi_state state0[64];
