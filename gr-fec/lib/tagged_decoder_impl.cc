@@ -14,6 +14,7 @@
 
 #include "tagged_decoder_impl.h"
 #include <gnuradio/io_signature.h>
+#include <cmath>
 #include <cstdio>
 
 namespace gr {
@@ -48,12 +49,12 @@ tagged_decoder_impl::tagged_decoder_impl(generic_decoder::sptr my_decoder,
 
 int tagged_decoder_impl::calculate_output_stream_length(const gr_vector_int& ninput_items)
 {
-    if ((ninput_items[0] * d_decoder->rate()) > (d_mtu * 8)) {
+    if (std::lround(ninput_items[0] * d_decoder->rate()) > (d_mtu * 8)) {
         throw std::runtime_error("tagged_encoder: received frame is larger than MTU.");
     }
-    int diff =
-        d_decoder->rate() * d_decoder->get_input_size() - d_decoder->get_output_size();
-    d_decoder->set_frame_size(round(ninput_items[0] * d_decoder->rate()) - diff);
+    int diff = std::lround(d_decoder->rate() * d_decoder->get_input_size()) -
+               d_decoder->get_output_size();
+    d_decoder->set_frame_size(std::lround(ninput_items[0] * d_decoder->rate()) - diff);
     return d_decoder->get_output_size();
 }
 
