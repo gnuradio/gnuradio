@@ -16,6 +16,7 @@
 #include <gnuradio/io_signature.h>
 #include <gnuradio/logger.h>
 #include <volk/volk.h>
+#include <cmath>
 
 namespace gr {
 namespace fec {
@@ -55,7 +56,7 @@ async_encoder_impl::async_encoder_impl(generic_encoder::sptr my_encoder,
     if (d_packed) {
         set_msg_handler(d_in_port, [this](pmt::pmt_t msg) { this->encode_packed(msg); });
 
-        int max_bits_out = d_encoder->rate() * d_mtu * 8;
+        int max_bits_out = std::lround(d_encoder->rate() * d_mtu * 8);
         d_bits_out.resize(max_bits_out);
     } else {
         set_msg_handler(d_in_port,
