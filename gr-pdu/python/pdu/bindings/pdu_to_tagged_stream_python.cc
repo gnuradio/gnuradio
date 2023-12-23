@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(pdu_to_tagged_stream.h)                                    */
-/* BINDTOOL_HEADER_FILE_HASH(5a0731bc34a2a12add1e9909e2b27b9f)                     */
+/* BINDTOOL_HEADER_FILE_HASH(3df3888b95529827c578e4ec095456bd)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -34,7 +34,7 @@ void bind_pdu_to_tagged_stream(py::module& m)
 
 
     py::class_<pdu_to_tagged_stream,
-               gr::tagged_stream_block,
+               gr::sync_block,
                gr::block,
                gr::basic_block,
                std::shared_ptr<pdu_to_tagged_stream>>(
