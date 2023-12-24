@@ -7,6 +7,64 @@ Versioning](http://semver.org/spec/v2.0.0.html), starting with version 3.7.12.0.
 
 Older Logs can be found in `docs/RELEASE-NOTES-*`.
 
+## [3.10.9.0] - 2023-12-24
+
+### Changed
+
+#### Project
+- Python minimum version is now 3.7.2, vs 3.6.5, to support type hints. Even
+Python 3.7 is EOL, so this is not expected to affect people using newer versions of
+GNU Radio.
+- Add tox.ini, so that editors use the same formatting as github CI.
+- Use pointers to pass s32fc arguments to VOLK in gr-blocks, gr-digital, and
+gr-dtv to avoid undefined behavior. The fix is conditional on VOLK 3.1.0, which
+add a new supporting function.
+
+#### Runtime
+- Disallow None for pmt_t arguments in Python.
+- Support spdlog installations with internal or external libfmt.
+
+#### GRC
+- Use text labels to specify types for block parameters, instead of background colors
+which were difficult to read/remember.
+- Enable setting of documentation URLs, relative or absolute in yaml. This allows
+OOTs to use the documentation link in the block parameter dialog.
+- Disallow use of block ids that are Python keywords and "gnuradio".
+- Add type annotations in some places (required bump to Python 3.7.2).
+- Use C version of YAML loader (yaml.CSafeLoader) for better performance.
+- Connections may have properties for supported connection domains. This feature
+was added for RFNoC connections. Standard stream and message connections do not
+support this feature, but they may in future versions.
+- Check grc file version. The above feature required a version bump to "2". Where
+no connection properties are used, version "1" is still emitted. Note that previous
+versions of GRC do not check for file version. RFNoC flowgraphs with connection
+properties will fail to load in previous versions as a result.
+- Fix bug where an impressive number of backslashes were added to some filenames.
+
+#### gr-dtv
+- Read expected data as little-endian
+
+#### gr-fec
+- Add FEC_API to CCSDS Reed-Solomon functions so they can be used by OOTs.
+
+#### gr-qtgui
+- QT GUI Msg Push Button: add a callback for Message Value to allow it to
+change at runtime.
+
+#### gr-uhd
+- RFNoC Rx-Streamer: Add start stream options
+- Add back-edge property to RFNoC connections
+
+#### Build system and packaging
+- Update conda build. Re-rendered with conda-build 3.27.0, conda-smithy 3.28.0,
+and conda-forge-pinning 2023.11.07.18.09.01.
+- Use utf-8 encoding when writing files in gr_python_install.
+
+#### Testing
+There has been a great effort to identify why tests fail intermittently, or only
+on certain platforms. This has lead to a number of improved test, and identification
+of a number of real bugs.
+
 ## [3.10.8.0] - 2023-10-20
 
 ### Changed
