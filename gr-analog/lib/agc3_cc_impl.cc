@@ -56,8 +56,6 @@ agc3_cc_impl::agc3_cc_impl(float attack_rate,
     test_and_log_value_domain(iir_update_decim, "input power sampling stride");
     d_iir_update_decim = iir_update_decim;
     set_output_multiple(iir_update_decim * 4);
-    const int alignment_multiple = volk_get_alignment() / sizeof(gr_complex);
-    set_alignment(std::max(1, alignment_multiple));
 }
 
 agc3_cc_impl::~agc3_cc_impl() {}
