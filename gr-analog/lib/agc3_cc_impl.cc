@@ -17,7 +17,6 @@
 #include <gnuradio/io_signature.h>
 #include <spdlog/fmt/fmt.h>
 #include <volk/volk.h>
-#include <volk/volk_alloc.hh>
 #include <algorithm>
 #include <cmath>
 #include <numeric>
