@@ -16,7 +16,7 @@ max_messages = 8192
 # levels, in ascending order of severity:
 # trace, debug, info, warning, error, critical, off
 log_level = info
-debug_level = critical
+debug_level = crit
 
 # These file names can either be 'stdout' to output to standard output
 # or 'stderr' to output to standard error. Any other string will
