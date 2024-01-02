@@ -191,7 +191,7 @@ function(GR_UNIQUE_TARGET desc)
     execute_process(
         COMMAND ${PYTHON_EXECUTABLE} -c "import re, hashlib
 unique = hashlib.md5(b'${reldir}${ARGN}').hexdigest()
-print(re.sub('\\W', '_', r'${desc} ${reldir} ' + unique))"
+print(re.sub(r'\\W', '_', r'${desc} ${reldir} ' + unique))"
         OUTPUT_VARIABLE _target
         OUTPUT_STRIP_TRAILING_WHITESPACE)
     add_custom_target(${_target} ALL DEPENDS ${ARGN})
