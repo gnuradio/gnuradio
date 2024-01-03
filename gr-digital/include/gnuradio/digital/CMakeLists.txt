@@ -13,6 +13,7 @@ install(
           adaptive_algorithm_cma.h
           adaptive_algorithm_lms.h
           adaptive_algorithm_nlms.h
+          additive_scrambler.h
           additive_scrambler_bb.h
           api.h
           binary_slicer_fb.h
