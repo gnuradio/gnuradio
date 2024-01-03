@@ -886,7 +886,7 @@ bool equal(const pmt_t& x, const pmt_t& y)
         size_t len_x, len_y;
         const void* x_m = xv->uniform_elements(len_x);
         const void* y_m = yv->uniform_elements(len_y);
-        if (memcmp(x_m, y_m, len_x) == 0)
+        if ((len_x == 0) || (memcmp(x_m, y_m, len_x) == 0))
             return true;
 
         return false;
