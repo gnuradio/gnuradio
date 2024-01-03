@@ -44,7 +44,6 @@ private:
     int d_filtnum;
     int d_osps;
     float d_error;
-    int d_out_idx;
 
     uint64_t d_old_in, d_new_in, d_last_out;
 
