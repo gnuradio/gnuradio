@@ -1,6 +1,7 @@
 '[Core]':
 - Coding:
   - digital_additive_scrambler_bb
+  - digital_additive_scrambler_xx
   - digital_descrambler_bb
   - digital_scrambler_bb
 - Equalizers:

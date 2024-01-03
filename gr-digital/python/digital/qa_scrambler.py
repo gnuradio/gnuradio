@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 #
 # Copyright 2008,2010,2012,2013 Free Software Foundation, Inc.
+# Copyright 2024 Daniel Estevez <daniel@destevez.net>
 #
 # This file is part of GNU Radio
 #
@@ -102,6 +103,18 @@ class test_scrambler(gr_unittest.TestCase):
         self.tb.connect(src, scrambler, descrambler, dst)
         self.tb.run()
         self.assertEqual(tuple(src_data), tuple(dst.data()))
+
+    def test_additive_soft_symbols_001(self):
+        _a = lfsr_args(1, 51, 3, 0)  # i p(x) = x^51+x^3+1, seed 0x1
+        src_data = np.random.randn(1000).tolist()
+        src = blocks.vector_source_f(src_data, False)
+        scrambler = digital.additive_scrambler_ff(*_a)
+        descrambler = digital.additive_scrambler_ff(*_a)
+        dst = blocks.vector_sink_f()
+        self.tb.connect(src, scrambler, descrambler, dst)
+        self.tb.run()
+        self.assertFloatTuplesAlmostEqual(tuple(src_data), tuple(dst.data()),
+                                          places=6)
 
     def test_additive_scrambler_002(self):
         _a = lfsr_args(1, 51, 3, 0)  # i p(x) = x^51+x^3+1, seed 0x1
