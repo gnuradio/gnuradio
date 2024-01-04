@@ -49,14 +49,14 @@ public:
     // angle_rate is a delta in radians / step
     void adjust_freq(float delta_angle_rate)
     {
-        d_phase_inc += gr::fxpt::float_to_fixed(delta_angle_rate);
+        d_phase_inc += (uint32_t)gr::fxpt::float_to_fixed(delta_angle_rate);
     }
 
     // increment current phase angle
 
     void step() { d_phase += d_phase_inc; }
 
-    void step(int n) { d_phase += d_phase_inc * n; }
+    void step(int n) { d_phase += (uint32_t)d_phase_inc * n; }
 
     // units are radians / step
     float get_phase() const { return gr::fxpt::fixed_to_float(d_phase); }

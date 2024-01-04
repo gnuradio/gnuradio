@@ -37,6 +37,21 @@ BOOST_AUTO_TEST_CASE(t0)
     ref_nco.set_freq((float)(2 * GR_M_PI / SIN_COS_FREQ));
     new_nco.set_freq((float)(2 * GR_M_PI / SIN_COS_FREQ));
 
+    ref_nco.adjust_freq((float)(GR_M_PI / 2));
+    new_nco.adjust_freq((float)(GR_M_PI / 2));
+
+    ref_nco.adjust_freq((float)(GR_M_PI / 2));
+    new_nco.adjust_freq((float)(GR_M_PI / 2));
+
+    ref_nco.adjust_freq((float)(-GR_M_PI / 2));
+    new_nco.adjust_freq((float)(-GR_M_PI / 2));
+
+    ref_nco.adjust_freq((float)(-GR_M_PI / 2));
+    new_nco.adjust_freq((float)(-GR_M_PI / 2));
+
+    ref_nco.step(10000);
+    new_nco.step(10000);
+
     BOOST_CHECK(std::abs(ref_nco.get_freq() - new_nco.get_freq()) <= SIN_COS_TOLERANCE);
 
     for (int i = 0; i < SIN_COS_BLOCK_SIZE; i++) {
