@@ -42,7 +42,7 @@ class qa_zeromq_sub (gr_unittest.TestCase):
 
         self.tb.start()
         time.sleep(0.05)
-        self.pub_socket.send(src_data.tostring())
+        self.pub_socket.send(src_data.tobytes())
         time.sleep(0.5)
         self.tb.stop()
         self.tb.wait()
@@ -63,7 +63,7 @@ class qa_zeromq_sub (gr_unittest.TestCase):
                     vlen),
                 'float32') *
             100]
-        src_data = [a.tostring() for a in raw_data]
+        src_data = [a.tobytes() for a in raw_data]
         zeromq_sub_source = zeromq.sub_source(
             gr.sizeof_float, vlen, self._address)
         sink = blocks.vector_sink_f(vlen)
@@ -96,7 +96,7 @@ class qa_zeromq_sub (gr_unittest.TestCase):
                     vlen),
                 'float32') *
             100]
-        src_data = [a.tostring() for a in raw_data]
+        src_data = [a.tobytes() for a in raw_data]
 
         src_data = [b"filter_key"] + src_data
 
@@ -131,7 +131,7 @@ class qa_zeromq_sub (gr_unittest.TestCase):
                     vlen),
                 'float32') *
             100]
-        src_data = [a.tostring() for a in raw_data]
+        src_data = [a.tobytes() for a in raw_data]
 
         src_data = [b"filter_key"] + src_data
 
