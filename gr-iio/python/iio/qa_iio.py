@@ -7,7 +7,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
 
-from __future__ import print_function
 import time
 from gnuradio import gr, gr_unittest, iio, blocks
 
