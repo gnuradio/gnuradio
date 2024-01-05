@@ -529,6 +529,22 @@ class test_agc(gr_unittest.TestCase):
             self.assertAlmostEqual(x, ref, None,
                                    f"failed at pos {idx} (stride = {stride})", 0.1)
 
+    def test_007_agc3_constructor_arguments(self):
+        attack_rate = 1.1e-3
+        decay_rate = 1.2e-4
+        reference = 1.3
+        gain = 1.4
+        iir_update_decim = 2
+        max_gain = 1.5e4
+
+        agc3 = analog.agc3_cc(attack_rate, decay_rate, reference, gain, iir_update_decim, max_gain)
+
+        self.assertAlmostEqual(agc3.attack_rate(), attack_rate)
+        self.assertAlmostEqual(agc3.decay_rate(), decay_rate)
+        self.assertAlmostEqual(agc3.reference(), reference)
+        self.assertAlmostEqual(agc3.gain(), gain)
+        self.assertAlmostEqual(agc3.max_gain(), max_gain)
+
     def test_100(self):
         ''' Test complex feedforward agc with constant input '''
 
