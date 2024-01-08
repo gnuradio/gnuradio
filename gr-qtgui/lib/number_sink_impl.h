@@ -42,7 +42,7 @@ private:
     int d_argc = 1;
     char* d_argv = &d_zero;
     QWidget* d_parent;
-    NumberDisplayForm* d_main_gui = nullptr;
+    QPointer<NumberDisplayForm> d_main_gui;
 
     std::vector<float> d_avg_value;
     std::vector<filter::single_pole_iir<float, float, float>> d_iir;

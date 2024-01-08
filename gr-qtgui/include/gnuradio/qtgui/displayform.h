@@ -36,7 +36,6 @@ public:
 
     virtual DisplayPlot* getPlot() = 0;
     void Reset();
-    bool isClosed() const;
 
     void enableMenu(bool en = true);
 
@@ -88,8 +87,6 @@ signals:
     void toggleGrid(bool en);
 
 protected:
-    bool d_isclosed;
-
     unsigned int d_nplots;
 
     QGridLayout* d_layout;

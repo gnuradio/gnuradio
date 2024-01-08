@@ -65,8 +65,7 @@ const_sink_c_impl::const_sink_c_impl(int size,
 
 const_sink_c_impl::~const_sink_c_impl()
 {
-    if (!d_main_gui->isClosed())
-        d_main_gui->close();
+    QMetaObject::invokeMethod(d_main_gui, "close");
 }
 
 bool const_sink_c_impl::check_topology(int ninputs, int noutputs)

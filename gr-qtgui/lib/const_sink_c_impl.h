@@ -42,7 +42,7 @@ private:
     int d_argc = 1;
     char* d_argv = &d_zero;
     QWidget* d_parent;
-    ConstellationDisplayForm* d_main_gui = nullptr;
+    QPointer<ConstellationDisplayForm> d_main_gui;
 
     gr::high_res_timer_type d_update_time;
     gr::high_res_timer_type d_last_time;

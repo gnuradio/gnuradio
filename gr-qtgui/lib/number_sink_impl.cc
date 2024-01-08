@@ -67,7 +67,7 @@ number_sink_impl::number_sink_impl(
     initialize();
 }
 
-number_sink_impl::~number_sink_impl() {}
+number_sink_impl::~number_sink_impl() { QMetaObject::invokeMethod(d_main_gui, "close"); }
 
 bool number_sink_impl::check_topology(int ninputs, int noutputs)
 {
