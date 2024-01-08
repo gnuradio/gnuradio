@@ -38,7 +38,7 @@ int null_source_impl::work(int noutput_items,
                            gr_vector_void_star& output_items)
 {
     void* optr;
-    for (size_t n = 0; n < input_items.size(); n++) {
+    for (size_t n = 0; n < output_items.size(); n++) {
         optr = (void*)output_items[n];
         memset(optr, 0, noutput_items * output_signature()->sizeof_stream_item(n));
     }
