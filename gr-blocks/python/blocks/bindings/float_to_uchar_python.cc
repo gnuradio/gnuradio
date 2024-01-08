@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(float_to_uchar.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(30cc9cfbb683f5c34d63bc65b4eb3e69)                     */
+/* BINDTOOL_HEADER_FILE_HASH(97eb3380d72dc183e496e854b46d3a95)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -39,8 +39,29 @@ void bind_float_to_uchar(py::module& m)
                gr::basic_block,
                std::shared_ptr<float_to_uchar>>(m, "float_to_uchar", D(float_to_uchar))
 
-        .def(py::init(&float_to_uchar::make), D(float_to_uchar, make))
+        .def(py::init(&float_to_uchar::make),
+             py::arg("vlen") = 1,
+             py::arg("scale") = 1.,
+             py::arg("bias") = 0.,
+             D(float_to_uchar, make))
 
+
+        .def("scale", &float_to_uchar::scale, D(float_to_uchar, scale))
+
+
+        .def("bias", &float_to_uchar::bias, D(float_to_uchar, bias))
+
+
+        .def("set_scale",
+             &float_to_uchar::set_scale,
+             py::arg("scale"),
+             D(float_to_uchar, set_scale))
+
+
+        .def("set_bias",
+             &float_to_uchar::set_bias,
+             py::arg("bias"),
+             D(float_to_uchar, set_bias))
 
         ;
 }
