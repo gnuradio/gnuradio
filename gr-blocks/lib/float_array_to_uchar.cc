@@ -19,6 +19,12 @@
 static const int MIN_UCHAR = 0;
 static const int MAX_UCHAR = 255;
 
+#if VOLK_VERSION >= 030100
+void float_array_to_uchar(const float* in, unsigned char* out, int nsamples)
+{
+    volk_32f_s32f_x2_convert_8u(out, in, 1.0, 0.0, nsamples);
+}
+#else
 void float_array_to_uchar(const float* in, unsigned char* out, int nsamples)
 {
     for (int i = 0; i < nsamples; i++) {
@@ -30,3 +36,4 @@ void float_array_to_uchar(const float* in, unsigned char* out, int nsamples)
         out[i] = r;
     }
 }
+#endif
