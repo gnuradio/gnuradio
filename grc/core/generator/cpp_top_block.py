@@ -1,9 +1,6 @@
-import codecs
 import yaml
-import operator
 import os
 import tempfile
-import textwrap
 import re
 import ast
 
@@ -13,7 +10,6 @@ from .. import Messages, blocks
 from ..Constants import TOP_BLOCK_FILE_MODE
 from .FlowGraphProxy import FlowGraphProxy
 from ..utils import expr_utils
-from .top_block import TopBlockGenerator
 
 DATA_DIR = os.path.dirname(__file__)
 
@@ -99,7 +95,7 @@ class CppTopBlockGenerator(object):
             os.makedirs(self.file_path)
 
         for filename, data in self._build_cpp_header_code_from_template():
-            with codecs.open(filename, 'w', encoding='utf-8') as fp:
+            with open(filename, 'w', encoding='utf-8') as fp:
                 fp.write(data)
 
         if not self._generate_options.startswith('hb'):
@@ -107,12 +103,12 @@ class CppTopBlockGenerator(object):
                 os.makedirs(os.path.join(self.file_path, 'build'))
 
             for filename, data in self._build_cpp_source_code_from_template():
-                with codecs.open(filename, 'w', encoding='utf-8') as fp:
+                with open(filename, 'w', encoding='utf-8') as fp:
                     fp.write(data)
 
             if fg.get_option('gen_cmake') == 'On':
                 for filename, data in self._build_cmake_code_from_template():
-                    with codecs.open(filename, 'w', encoding='utf-8') as fp:
+                    with open(filename, 'w', encoding='utf-8') as fp:
                         fp.write(data)
 
     def _build_cpp_source_code_from_template(self):
@@ -264,17 +260,21 @@ class CppTopBlockGenerator(object):
             try:
                 # Newer gui markup w/ qtgui
                 code += block.params['gui_hint'].get_value()
-            except:
-                pass
+            except Exception as e:
+                Messages.send(f'encountered {e} while sorting blocks')
             return code
 
-        blocks = [
-            b for b in fg.blocks
-            if b.enabled and not (b.get_bypassed() or b.is_import or b in parameters or b.key == 'options' or b.is_virtual_source() or b.is_virtual_sink())
-        ]
+        blocks = (b for b in fg.blocks
+                  if b.enabled and
+                  not (b.get_bypassed() or
+                       b.is_import or
+                       b in parameters or
+                       b.key == 'options' or
+                       b.is_virtual_source() or
+                       b.is_virtual_sink())
+                  )
 
-        blocks = expr_utils.sort_objects(
-            blocks, operator.attrgetter('name'), _get_block_sort_text)
+        blocks = expr_utils.sort_objects(blocks, lambda b: b.name, _get_block_sort_text)
         blocks_make = []
         for block in blocks:
             translations = block.cpp_templates.render('translations')
@@ -303,8 +303,18 @@ class CppTopBlockGenerator(object):
         fg = self._flow_graph
         variables = fg.get_cpp_variables()
 
-        type_translation = {'complex': 'gr_complex', 'real': 'double', 'float': 'float', 'int': 'int', 'complex_vector': 'std::vector<gr_complex>',
-                            'real_vector': 'std::vector<double>', 'float_vector': 'std::vector<float>', 'int_vector': 'std::vector<int>', 'string': 'std::string', 'bool': 'bool'}
+        type_translation = {
+            'bool': 'bool',
+            'complex': 'gr_complex',
+            'complex_vector': 'std::vector<gr_complex>',
+            'float': 'float',
+            'float_vector': 'std::vector<float>',
+            'int': 'int',
+            'int_vector': 'std::vector<int>',
+            'real': 'double',
+            'real_vector': 'std::vector<double>',
+            'string': 'std::string'
+        }
         # If the type is explicitly specified, translate to the corresponding C++ type
         for var in list(variables):
             if var.params['value'].dtype != 'raw':
@@ -347,8 +357,12 @@ class CppTopBlockGenerator(object):
         parameters = fg.get_parameters()
 
         for param in parameters:
-            type_translation = {'eng_float': 'double', 'intx': 'int',
-                                'str': 'std::string', 'complex': 'gr_complex'}
+            type_translation = {
+                'complex': 'gr_complex',
+                'eng_float': 'double',
+                'intx': 'int',
+                'str': 'std::string'
+            }
             param.vtype = type_translation[param.params['type'].value]
 
             if param.vtype == 'gr_complex':
@@ -495,7 +509,9 @@ class CppTopBlockGenerator(object):
                             connection = fg.parent_platform.Connection(
                                 parent=self, source=hidden_porta, sink=hidden_portb)
                             code = template.render(
-                                make_port_sig=make_port_sig, source=hidden_porta, sink=hidden_portb)
+                                make_port_sig=make_port_sig,
+                                source=hidden_porta,
+                                sink=hidden_portb)
                             if not self._generate_options.startswith('hb'):
                                 code = 'this->tb->' + code
                             rendered.append(code)
