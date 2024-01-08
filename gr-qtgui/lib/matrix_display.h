@@ -69,7 +69,6 @@ class matrix_display : public QWidget
     QMenu* d_contour_menu = nullptr;
     QMenu* d_interpolation_menu = nullptr;
     QMenu* d_color_map_menu = nullptr;
-    bool d_isclosed = false;
 
 public:
     explicit matrix_display(const std::string& name,
@@ -103,7 +102,6 @@ public:
     void set_y_axis_label(const std::string& y_axis_label);
     void set_z_axis_label(const std::string& z_axis_label);
     void initialize_mouse_actions();
-    bool isClosed() const;
 
 public slots:
     void set_data(QVector<double> data);
