@@ -65,7 +65,7 @@ std::vector<std::string> prefs::_sys_prefs_filenames()
     // Find if there is a ~/.gnuradio/config.conf file and add this to
     // the end of the file list to override any preferences in the
     // installed path config files.
-    fs::path userconf = fs::path(gr::userconf_path()) / "config.conf";
+    const auto userconf = gr::userconf_path() / "config.conf";
     if (fs::exists(userconf)) {
         fnames.push_back(userconf.string());
     }
@@ -141,7 +141,7 @@ void prefs::save()
     const std::string conf = to_string();
 
     // Write temp file.
-    const fs::path tmp = fs::path(gr::userconf_path()) / "config.conf.tmp";
+    const auto tmp = gr::userconf_path() / "config.conf.tmp";
     std::ofstream fout(tmp);
     fout << conf;
     fout.close();
@@ -158,7 +158,7 @@ void prefs::save()
     }
 
     // Atomic rename.
-    const fs::path userconf = fs::path(gr::userconf_path()) / "config.conf";
+    const auto userconf = gr::userconf_path() / "config.conf";
     fs::rename(tmp, userconf);
     // If fs::rename() fails, we'll leak the tempfile and throw. That's fine.
     // If the user wants it (it was written successfully) they can have it.

@@ -11,17 +11,18 @@
 #define GR_SYS_PATHS_H
 
 #include <gnuradio/api.h>
+#include <filesystem>
 
 namespace gr {
 
 //! directory to create temporary files
-GR_RUNTIME_API const char* tmp_path();
+GR_RUNTIME_API std::filesystem::path tmp_path();
 
 //! directory to store application data
-GR_RUNTIME_API const char* appdata_path();
+GR_RUNTIME_API std::filesystem::path appdata_path();
 
 //! directory to store user configuration
-GR_RUNTIME_API const char* userconf_path();
+GR_RUNTIME_API std::filesystem::path userconf_path();
 
 } /* namespace gr */
 
