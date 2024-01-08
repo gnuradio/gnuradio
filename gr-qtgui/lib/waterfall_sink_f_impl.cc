@@ -85,8 +85,7 @@ waterfall_sink_f_impl::waterfall_sink_f_impl(int fftsize,
 
 waterfall_sink_f_impl::~waterfall_sink_f_impl()
 {
-    if (!d_main_gui->isClosed())
-        d_main_gui->close();
+    QMetaObject::invokeMethod(d_main_gui, "close");
 }
 
 bool waterfall_sink_f_impl::check_topology(int ninputs, int noutputs)

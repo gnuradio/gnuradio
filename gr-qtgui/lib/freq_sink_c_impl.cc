@@ -94,11 +94,7 @@ freq_sink_c_impl::freq_sink_c_impl(int fftsize,
     set_trigger_mode(TRIG_MODE_FREE, 0, 0);
 }
 
-freq_sink_c_impl::~freq_sink_c_impl()
-{
-    if (!d_main_gui->isClosed())
-        d_main_gui->close();
-}
+freq_sink_c_impl::~freq_sink_c_impl() { QMetaObject::invokeMethod(d_main_gui, "close"); }
 
 bool freq_sink_c_impl::check_topology(int ninputs, int noutputs)
 {

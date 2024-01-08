@@ -16,7 +16,6 @@
 DisplayForm::DisplayForm(int nplots, QWidget* parent)
     : QWidget(parent), d_nplots(nplots), d_system_specified_flag(false)
 {
-    d_isclosed = false;
     d_axislabels = true;
 
     // Set the initial plot size
@@ -136,8 +135,6 @@ DisplayForm::DisplayForm(int nplots, QWidget* parent)
 
 DisplayForm::~DisplayForm()
 {
-    d_isclosed = true;
-
     // Qt deletes children when parent is deleted
     // Don't worry about deleting Display Plots - they are deleted when parents are
     // deleted
@@ -166,13 +163,10 @@ void DisplayForm::onPlotPointSelected(const QPointF p) { emit plotPointSelected(
 
 void DisplayForm::Reset() {}
 
-bool DisplayForm::isClosed() const { return d_isclosed; }
-
 void DisplayForm::enableMenu(bool en) { d_menu_on = en; }
 
 void DisplayForm::closeEvent(QCloseEvent* e)
 {
-    d_isclosed = true;
     qApp->processEvents();
     QWidget::closeEvent(e);
 }

@@ -105,12 +105,7 @@ ber_sink_b_impl::ber_sink_b_impl(std::vector<float> esnos,
     set_line_alpha(d_curves, 0.25); // high transparency
 }
 
-ber_sink_b_impl::~ber_sink_b_impl()
-{
-    if (!d_main_gui->isClosed()) {
-        d_main_gui->close();
-    }
-}
+ber_sink_b_impl::~ber_sink_b_impl() { QMetaObject::invokeMethod(d_main_gui, "close"); }
 
 bool ber_sink_b_impl::check_topology(int ninputs, int noutputs)
 {

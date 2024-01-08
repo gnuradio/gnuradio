@@ -80,11 +80,7 @@ eye_sink_c_impl::eye_sink_c_impl(int size,
     declare_sample_delay(1); // delay the tags for a history of 2
 }
 
-eye_sink_c_impl::~eye_sink_c_impl()
-{
-    if (!d_main_gui->isClosed())
-        d_main_gui->close();
-}
+eye_sink_c_impl::~eye_sink_c_impl() { QMetaObject::invokeMethod(d_main_gui, "close"); }
 
 bool eye_sink_c_impl::check_topology(int ninputs, int noutputs)
 {

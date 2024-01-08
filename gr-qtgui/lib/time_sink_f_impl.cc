@@ -82,12 +82,7 @@ time_sink_f_impl::time_sink_f_impl(int size,
     declare_sample_delay(1); // delay the tags for a history of 2
 }
 
-time_sink_f_impl::~time_sink_f_impl()
-{
-    if (!d_main_gui->isClosed())
-        d_main_gui->close();
-    // d_main_gui is a qwidget destroyed with its parent
-}
+time_sink_f_impl::~time_sink_f_impl() { QMetaObject::invokeMethod(d_main_gui, "close"); }
 
 bool time_sink_f_impl::check_topology(int ninputs, int noutputs)
 {
