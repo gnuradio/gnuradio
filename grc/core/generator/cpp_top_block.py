@@ -492,8 +492,6 @@ class CppTopBlockGenerator(object):
                         for port_num in porta.bus_structure:
                             hidden_porta = porta.parent.sources[port_num]
                             hidden_portb = portb.parent.sinks[port_num]
-                            connection = fg.parent_platform.Connection(
-                                parent=self, source=hidden_porta, sink=hidden_portb)
                             code = template.render(
                                 make_port_sig=make_port_sig, source=hidden_porta, sink=hidden_portb)
                             if not self._generate_options.startswith('hb'):
