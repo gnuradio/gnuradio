@@ -73,8 +73,7 @@ histogram_sink_f_impl::histogram_sink_f_impl(int size,
 
 histogram_sink_f_impl::~histogram_sink_f_impl()
 {
-    if (!d_main_gui->isClosed())
-        d_main_gui->close();
+    QMetaObject::invokeMethod(d_main_gui, "close");
 }
 
 bool histogram_sink_f_impl::check_topology(int ninputs, int noutputs)

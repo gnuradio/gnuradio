@@ -30,7 +30,7 @@ private:
     std::vector<double> d_data;
     const char* d_argv = "";
     int d_argc = 1;
-    matrix_display* d_display;
+    QPointer<matrix_display> d_display;
     matrix_display_signal* d_signal = nullptr;
 
 public:

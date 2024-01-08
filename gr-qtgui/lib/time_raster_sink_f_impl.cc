@@ -76,8 +76,7 @@ time_raster_sink_f_impl::time_raster_sink_f_impl(double samp_rate,
 
 time_raster_sink_f_impl::~time_raster_sink_f_impl()
 {
-    if (!d_main_gui->isClosed())
-        d_main_gui->close();
+    QMetaObject::invokeMethod(d_main_gui, "close");
 }
 
 bool time_raster_sink_f_impl::check_topology(int ninputs, int noutputs)

@@ -70,12 +70,7 @@ matrix_sink_impl::matrix_sink_impl(const std::string& name,
 /*
  * Our virtual destructor.
  */
-matrix_sink_impl::~matrix_sink_impl()
-{
-    if (!d_display->isClosed()) {
-        d_display->close();
-    }
-}
+matrix_sink_impl::~matrix_sink_impl() { QMetaObject::invokeMethod(d_display, "close"); }
 
 void matrix_sink_impl::exec_() { d_qApplication->exec(); }
 
