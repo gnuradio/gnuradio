@@ -22,3 +22,15 @@ static const char* __doc_gr_blocks_float_to_uchar_float_to_uchar = R"doc()doc";
 
 
 static const char* __doc_gr_blocks_float_to_uchar_make = R"doc()doc";
+
+
+static const char* __doc_gr_blocks_float_to_uchar_scale = R"doc()doc";
+
+
+static const char* __doc_gr_blocks_float_to_uchar_bias = R"doc()doc";
+
+
+static const char* __doc_gr_blocks_float_to_uchar_set_scale = R"doc()doc";
+
+
+static const char* __doc_gr_blocks_float_to_uchar_set_bias = R"doc()doc";
