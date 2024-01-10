@@ -750,14 +750,16 @@ class Block(Element):
     def bussify(self, direc):
         if direc == 'source':
             ports = self.sources
-            ports_gui = self.filter_bus_port(self.sources)
-            self.bus_structure = self.get_bus_structure('source')
-            self.bus_source = not self.bus_source
+            if ports:
+                ports_gui = self.filter_bus_port(self.sources)
+                self.bus_structure = self.get_bus_structure('source')
+                self.bus_source = not self.bus_source
         else:
             ports = self.sinks
-            ports_gui = self.filter_bus_port(self.sinks)
-            self.bus_structure = self.get_bus_structure('sink')
-            self.bus_sink = not self.bus_sink
+            if ports:
+                ports_gui = self.filter_bus_port(self.sinks)
+                self.bus_structure = self.get_bus_structure('sink')
+                self.bus_sink = not self.bus_sink
 
         # Disconnect all the connections when toggling the bus state
         for port in ports:
