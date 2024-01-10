@@ -1,4 +1,4 @@
-"""Copyright 2021 The GNU Radio Contributors
+"""Copyright 2024 The GNU Radio Contributors
 This file is part of GNU Radio
 
 SPDX-License-Identifier: GPL-2.0-or-later
