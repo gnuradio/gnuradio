@@ -150,6 +150,9 @@ ${class_name}::${class_name} (${param_str}) : hier_block2("${title}",
 ##      % if len(blk.sources) > 0 and 'maxoutbuf' in blk.params and int(blk.params['maxoutbuf'].get_evaluated()) > 0:
 ##      ${blk.name}.set_max_output_buffer(${blk.params['maxoutbuf'].get_evaluated()})
 ##      % endif
+##      % if 'needalloutputs' in blk.params and blk.params['needalloutputs'].to_code() in ['True', 'False']:
+##      ${blk.name}.set_needs_all_outputs(${blk.params['needalloutputs'].get_evaluated()})
+##      % endif
     }
 % endfor
 % endif

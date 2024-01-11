@@ -209,6 +209,9 @@ gr.io_signature.makev(${len(io_sigs)}, ${len(io_sigs)}, [${', '.join(size_strs)}
         % if len(blk.sources) > 0 and 'maxoutbuf' in blk.params and int(blk.params['maxoutbuf'].get_evaluated()) > 0:
         self.${blk.name}.set_max_output_buffer(${blk.params['maxoutbuf'].to_code()})
         % endif
+        % if 'needalloutputs' in blk.params and blk.params['needalloutputs'].to_code() in ['True', 'False']:
+        self.${blk.name}.set_needs_all_outputs(${blk.params['needalloutputs'].to_code()})
+        % endif
         % endfor
 
         % if connections:
