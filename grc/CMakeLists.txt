@@ -95,9 +95,11 @@ if(ENABLE_GRC)
 # Create and install the grc and grc-docs conf file
 ########################################################################
 file(TO_NATIVE_PATH ${CMAKE_INSTALL_PREFIX}/${GRC_BLOCKS_DIR} blocksdir)
+file(TO_NATIVE_PATH ${CMAKE_INSTALL_PREFIX}/${GRC_EXAMPLES_DIR} examplesdir)
 if(CMAKE_INSTALL_PREFIX STREQUAL "/usr")
-    # linux binary installs: append blocks dir with prefix /usr/local
+    # linux binary installs: append blocks and examples dir with prefix /usr/local
     set(blocksdir ${blocksdir}:/usr/local/${GRC_BLOCKS_DIR})
+    set(examplesdir ${examplesdir}:/usr/local/${GRC_EXAMPLES_DIR})
 endif(CMAKE_INSTALL_PREFIX STREQUAL "/usr")
 
 if(UNIX)
@@ -152,6 +154,12 @@ GR_PYTHON_INSTALL(
     DIRECTORY gui
     DESTINATION "${GR_PYTHON_DIR}/gnuradio/grc"
     FILES_MATCHING REGEX "\\.(py|dtd|grc|tmpl|png|mako)$"
+)
+
+GR_PYTHON_INSTALL(
+    DIRECTORY gui_qt
+    DESTINATION "${GR_PYTHON_DIR}/gnuradio/grc"
+    FILES_MATCHING REGEX "\\.(py|yml|grc|mo|png|ui)$"
 )
 
 GR_PYTHON_INSTALL(

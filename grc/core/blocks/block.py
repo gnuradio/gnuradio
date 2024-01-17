@@ -612,6 +612,13 @@ class Block(Element):
     def children(self):
         return itertools.chain(self.params.values(), self.ports())
 
+    def connections(self):
+        block_connections = []
+        for port in self.ports():
+            block_connections = block_connections + list(port.connections())
+        return block_connections
+
+
     ##############################################
     # Access
     ##############################################

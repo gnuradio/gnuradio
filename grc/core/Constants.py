@@ -23,6 +23,7 @@ DEFAULT_HIER_BLOCK_LIB_DIR = os.path.expanduser('~/.grc_gnuradio')
 DEFAULT_FLOW_GRAPH_ID = 'default'
 
 CACHE_FILE = os.path.expanduser('~/.cache/grc_gnuradio/cache_v2.json')
+EXAMPLE_CACHE_FILE = os.path.expanduser('~/.cache/grc_gnuradio/example_cache.json')
 
 BLOCK_DESCRIPTION_FILE_FORMAT_VERSION = 1
 # File format versions:

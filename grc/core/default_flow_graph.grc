@@ -22,7 +22,7 @@ blocks:
     value: '32000'
   states:
     coordinate:
-    - 184
+    - 200
     - 12
     rotation: 0
     state: enabled

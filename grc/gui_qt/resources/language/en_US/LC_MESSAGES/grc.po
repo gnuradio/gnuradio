@@ -1,0 +1,416 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: GNU Radio Companion\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-11-26 20:00+0300\n"
+"PO-Revision-Date: 2023-11-26 20:03+0300\n"
+"Last-Translator: Håkon Vågsether <hakon.vagsether@gmail.com>\n"
+"Language-Team: US English <sdhitefield@gmail.com>\n"
+"Language: grc\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.4.1\n"
+
+#: grc/gui_qt/components/window.py:76
+msgid "window-title"
+msgstr "GNU Radio Companion"
+
+#: grc/gui_qt/components/window.py:244
+msgid "new"
+msgstr "&New"
+
+#: grc/gui_qt/components/window.py:247
+msgid "new-tooltip"
+msgstr "Create a new flow graph"
+
+#: grc/gui_qt/components/window.py:252
+msgid "open"
+msgstr "&Open..."
+
+#: grc/gui_qt/components/window.py:255
+msgid "open-tooltip"
+msgstr "Open an existing flow graph"
+
+#: grc/gui_qt/components/window.py:259
+msgid "example_browser"
+msgstr "&Examples..."
+
+#: grc/gui_qt/components/window.py:261
+msgid "example_browser-tooltip"
+msgstr "Show example browser"
+
+#: grc/gui_qt/components/window.py:266
+msgid "close"
+msgstr "&Close"
+
+#: grc/gui_qt/components/window.py:269
+msgid "close-tooltip"
+msgstr "Close the current flow graph"
+
+#: grc/gui_qt/components/window.py:274
+msgid "close_all"
+msgstr "C&lose All"
+
+#: grc/gui_qt/components/window.py:276
+msgid "close_all-tooltip"
+msgstr "Close all open flow graphs"
+
+#: grc/gui_qt/components/window.py:280
+msgid "save"
+msgstr "&Save"
+
+#: grc/gui_qt/components/window.py:283
+msgid "save-tooltip"
+msgstr "Save the current flow graph"
+
+#: grc/gui_qt/components/window.py:288
+msgid "save_as"
+msgstr "Save &As..."
+
+#: grc/gui_qt/components/window.py:291
+msgid "save_as-tooltip"
+msgstr "Save the current flow graph under a new name"
+
+#: grc/gui_qt/components/window.py:294
+msgid "save_copy"
+msgstr "Save Cop&y"
+
+#: grc/gui_qt/components/window.py:298
+msgid "screen_capture"
+msgstr "Screen ca&pture"
+
+#: grc/gui_qt/components/window.py:301
+msgid "screen_capture-tooltip"
+msgstr "Create a screen capture of the current flow graph"
+
+#: grc/gui_qt/components/window.py:306
+msgid "exit"
+msgstr "E&xit"
+
+#: grc/gui_qt/components/window.py:309
+msgid "exit-tooltip"
+msgstr "Exit GNU Radio Companion"
+
+#: grc/gui_qt/components/window.py:315
+msgid "undo"
+msgstr "Undo"
+
+#: grc/gui_qt/components/window.py:318
+msgid "undo-tooltip"
+msgstr "Undo the last change"
+
+#: grc/gui_qt/components/window.py:323
+msgid "redo"
+msgstr "Redo"
+
+#: grc/gui_qt/components/window.py:326
+msgid "redo-tooltip"
+msgstr "Redo the last change"
+
+#: grc/gui_qt/components/window.py:333
+msgid "cut"
+msgstr "Cu&t"
+
+#: grc/gui_qt/components/window.py:336
+msgid "cut-tooltip"
+msgstr "Cut the current selection's contents to the clipboard"
+
+#: grc/gui_qt/components/window.py:341
+msgid "copy"
+msgstr "&Copy"
+
+#: grc/gui_qt/components/window.py:344
+msgid "copy-tooltip"
+msgstr "Copy the current selection's contents to the clipboard"
+
+#: grc/gui_qt/components/window.py:349
+msgid "paste"
+msgstr "&Paste"
+
+#: grc/gui_qt/components/window.py:352
+msgid "paste-tooltip"
+msgstr "Paste the clipboard's contents into the current selection"
+
+#: grc/gui_qt/components/window.py:357
+msgid "delete"
+msgstr "&Delete"
+
+#: grc/gui_qt/components/window.py:360
+msgid "delete-tooltip"
+msgstr "Delete the selected blocks"
+
+#: grc/gui_qt/components/window.py:372
+msgid "select_all"
+msgstr "Select all"
+
+#: grc/gui_qt/components/window.py:375
+msgid "select_all-tooltip"
+msgstr "Select all items in the canvas"
+
+#: grc/gui_qt/components/window.py:379
+msgid "Select None"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:379
+#, fuzzy
+#| msgid "select_all-tooltip"
+msgid "select_none-tooltip"
+msgstr "Select all items in the canvas"
+
+#: grc/gui_qt/components/window.py:384
+msgid "rotate_ccw"
+msgstr "Rotate counterclockwise"
+
+#: grc/gui_qt/components/window.py:387
+msgid "rotate_ccw-tooltip"
+msgstr "Rotate the selected block(s) 90 degrees counterclockwise"
+
+#: grc/gui_qt/components/window.py:392
+msgid "rotate_cw"
+msgstr "Rotate clockwise"
+
+#: grc/gui_qt/components/window.py:395
+msgid "rotate_cw-tooltip"
+msgstr "Rotate the selected block(s) 90 degrees clockwise"
+
+#: grc/gui_qt/components/window.py:401
+msgid "enable"
+msgstr "Enable"
+
+#: grc/gui_qt/components/window.py:402
+msgid "disable"
+msgstr "Disable"
+
+#: grc/gui_qt/components/window.py:403
+msgid "bypass"
+msgstr "Bypass"
+
+#: grc/gui_qt/components/window.py:409
+msgid "vertical_align_top"
+msgstr "Vertical align top"
+
+#: grc/gui_qt/components/window.py:410
+msgid "vertical_align_middle"
+msgstr "Vertical align middle"
+
+#: grc/gui_qt/components/window.py:411
+msgid "vertical_align_bottom"
+msgstr "Vertical align bottom"
+
+#: grc/gui_qt/components/window.py:417
+msgid "horizontal_align_left"
+msgstr "Horizontal align left"
+
+#: grc/gui_qt/components/window.py:418
+msgid "horizontal_align_center"
+msgstr "Horizontal align center"
+
+#: grc/gui_qt/components/window.py:419
+msgid "horizontal_align_right"
+msgstr "Horizontal align right"
+
+#: grc/gui_qt/components/window.py:425
+msgid "create_hier_block"
+msgstr "Create hierarchical block"
+
+#: grc/gui_qt/components/window.py:426
+msgid "open_hier_block"
+msgstr "Open hierarchical block"
+
+#: grc/gui_qt/components/window.py:427
+msgid "toggle_source_bus"
+msgstr "Toggle source bus"
+
+#: grc/gui_qt/components/window.py:428
+msgid "toggle_sink_bus"
+msgstr "Toggle sink bus"
+
+#: grc/gui_qt/components/window.py:437
+msgid "flowgraph-properties"
+msgstr "Properties"
+
+#: grc/gui_qt/components/window.py:439
+msgid "flowgraph-properties-tooltip"
+msgstr "Show the properties for a flow graph"
+
+#: grc/gui_qt/components/window.py:443
+msgid "search-in-examples"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:445
+msgid "search-in-examples-tooltip"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:453
+msgid "Zoom &in"
+msgstr "Zoom &in"
+
+#: grc/gui_qt/components/window.py:459
+msgid "Zoom &out"
+msgstr "Zoom &out"
+
+#: grc/gui_qt/components/window.py:465
+msgid "O&riginal size"
+msgstr "O&riginal size"
+
+#: grc/gui_qt/components/window.py:470
+msgid "snap_to_grid"
+msgstr "Snap to grid"
+
+#: grc/gui_qt/components/window.py:474
+msgid "toggle_grid"
+msgstr "Toggle grid"
+
+#: grc/gui_qt/components/window.py:474
+msgid "toggle_grid-tooltip"
+msgstr "Toggle the canvas grid"
+
+#: grc/gui_qt/components/window.py:478
+msgid "errors"
+msgstr "&Errors"
+
+#: grc/gui_qt/components/window.py:478
+msgid "errors-tooltip"
+msgstr "View errors in the current flow graph"
+
+#: grc/gui_qt/components/window.py:483
+msgid "find"
+msgstr "&Find Block"
+
+#: grc/gui_qt/components/window.py:486
+msgid "find-tooltip"
+msgstr "Search for a block by name (and key)"
+
+#: grc/gui_qt/components/window.py:491
+msgid "about"
+msgstr "&About"
+
+#: grc/gui_qt/components/window.py:491 grc/gui_qt/components/window.py:498
+msgid "about-tooltip"
+msgstr "Show the about window"
+
+#: grc/gui_qt/components/window.py:496
+msgid "about-qt"
+msgstr "About &Qt"
+
+#: grc/gui_qt/components/window.py:503
+msgid "process-generate"
+msgstr "&Generate"
+
+#: grc/gui_qt/components/window.py:506
+msgid "process-generate-tooltip"
+msgstr "Generate a python flow graph"
+
+#: grc/gui_qt/components/window.py:511
+msgid "process-execute"
+msgstr "&Execute"
+
+#: grc/gui_qt/components/window.py:514
+msgid "process-execute-tooltip"
+msgstr "Execute a python flow graph"
+
+#: grc/gui_qt/components/window.py:519
+msgid "process-kill"
+msgstr "&Kill"
+
+#: grc/gui_qt/components/window.py:522
+msgid "process-kill-tooltip"
+msgstr "Kill the current flow graph"
+
+#: grc/gui_qt/components/window.py:527
+msgid "help"
+msgstr "&Help"
+
+#: grc/gui_qt/components/window.py:530
+msgid "help-tooltip"
+msgstr "Show the help window"
+
+#: grc/gui_qt/components/window.py:535
+#, fuzzy
+#| msgid "filter_design_tool"
+msgid "&Filter Design Tool"
+msgstr "Filter Design Tool"
+
+#: grc/gui_qt/components/window.py:538
+msgid "Set Default &Qt GUI Theme"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:541
+#, fuzzy
+#| msgid "module_browser"
+msgid "&OOT Module Browser"
+msgstr "OOT Module Browser"
+
+#: grc/gui_qt/components/window.py:544
+msgid "show_flowgraph_complexity"
+msgstr "Show Flowgraph Complexity"
+
+#: grc/gui_qt/components/window.py:550
+msgid "&Types"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:552
+msgid "&Keys"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:556
+msgid "&Get Involved"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:560
+msgid "preferences"
+msgstr "Pre&ferences"
+
+#: grc/gui_qt/components/window.py:562
+msgid "preferences-tooltip"
+msgstr "Show GRC preferences"
+
+#: grc/gui_qt/components/window.py:566
+msgid "reload"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:566
+#, fuzzy
+#| msgid "redo-tooltip"
+msgid "reload-tooltip"
+msgstr "Redo the last change"
+
+#: grc/gui_qt/components/window.py:822
+msgid "ready-message"
+msgstr "Ready"
+
+#~ msgid "zoom_in"
+#~ msgstr "Zoom in"
+
+#~ msgid "zoom_out"
+#~ msgstr "Zoom out"
+
+#~ msgid "zoom_reset"
+#~ msgstr "Reset zoom level"
+
+#~ msgid "clear"
+#~ msgstr "Clear"
+
+#~ msgid "clear-tooltip"
+#~ msgstr "Clear the console"
+
+#~ msgid "show-level"
+#~ msgstr "Show message level"
+
+#~ msgid "set_default_qt_gui_theme"
+#~ msgstr "Set Default Qt GUI Theme"
+
+#~ msgid "print"
+#~ msgstr "&Print"
+
+#~ msgid "print-tooltip"
+#~ msgstr "Print the current flow graph"
+
+#~ msgid "block-library-tooltip"
+#~ msgstr "Show the block library "
