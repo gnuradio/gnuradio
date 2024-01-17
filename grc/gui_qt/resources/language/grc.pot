@@ -1,0 +1,378 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-11-26 20:00+0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: grc/gui_qt/components/window.py:76
+msgid "window-title"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:244
+msgid "new"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:247
+msgid "new-tooltip"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:252
+msgid "open"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:255
+msgid "open-tooltip"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:259
+msgid "example_browser"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:261
+msgid "example_browser-tooltip"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:266
+msgid "close"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:269
+msgid "close-tooltip"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:274
+msgid "close_all"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:276
+msgid "close_all-tooltip"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:280
+msgid "save"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:283
+msgid "save-tooltip"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:288
+msgid "save_as"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:291
+msgid "save_as-tooltip"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:294
+msgid "save_copy"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:298
+msgid "screen_capture"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:301
+msgid "screen_capture-tooltip"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:306
+msgid "exit"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:309
+msgid "exit-tooltip"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:315
+msgid "undo"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:318
+msgid "undo-tooltip"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:323
+msgid "redo"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:326
+msgid "redo-tooltip"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:333
+msgid "cut"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:336
+msgid "cut-tooltip"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:341
+msgid "copy"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:344
+msgid "copy-tooltip"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:349
+msgid "paste"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:352
+msgid "paste-tooltip"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:357
+msgid "delete"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:360
+msgid "delete-tooltip"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:372
+msgid "select_all"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:375
+msgid "select_all-tooltip"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:379
+msgid "Select None"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:379
+msgid "select_none-tooltip"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:384
+msgid "rotate_ccw"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:387
+msgid "rotate_ccw-tooltip"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:392
+msgid "rotate_cw"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:395
+msgid "rotate_cw-tooltip"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:401
+msgid "enable"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:402
+msgid "disable"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:403
+msgid "bypass"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:409
+msgid "vertical_align_top"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:410
+msgid "vertical_align_middle"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:411
+msgid "vertical_align_bottom"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:417
+msgid "horizontal_align_left"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:418
+msgid "horizontal_align_center"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:419
+msgid "horizontal_align_right"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:425
+msgid "create_hier_block"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:426
+msgid "open_hier_block"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:427
+msgid "toggle_source_bus"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:428
+msgid "toggle_sink_bus"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:437
+msgid "flowgraph-properties"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:439
+msgid "flowgraph-properties-tooltip"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:443
+msgid "search-in-examples"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:445
+msgid "search-in-examples-tooltip"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:453
+msgid "Zoom &in"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:459
+msgid "Zoom &out"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:465
+msgid "O&riginal size"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:470
+msgid "snap_to_grid"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:474
+msgid "toggle_grid"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:474
+msgid "toggle_grid-tooltip"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:478
+msgid "errors"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:478
+msgid "errors-tooltip"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:483
+msgid "find"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:486
+msgid "find-tooltip"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:491
+msgid "about"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:491 grc/gui_qt/components/window.py:498
+msgid "about-tooltip"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:496
+msgid "about-qt"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:503
+msgid "process-generate"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:506
+msgid "process-generate-tooltip"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:511
+msgid "process-execute"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:514
+msgid "process-execute-tooltip"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:519
+msgid "process-kill"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:522
+msgid "process-kill-tooltip"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:527
+msgid "help"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:530
+msgid "help-tooltip"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:535
+msgid "&Filter Design Tool"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:538
+msgid "Set Default &Qt GUI Theme"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:541
+msgid "&OOT Module Browser"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:544
+msgid "show_flowgraph_complexity"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:550
+msgid "&Types"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:552
+msgid "&Keys"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:556
+msgid "&Get Involved"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:560
+msgid "preferences"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:562
+msgid "preferences-tooltip"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:566
+msgid "reload"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:566
+msgid "reload-tooltip"
+msgstr ""
+
+#: grc/gui_qt/components/window.py:822
+msgid "ready-message"
+msgstr ""

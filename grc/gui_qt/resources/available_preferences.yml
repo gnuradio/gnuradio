@@ -1,0 +1,91 @@
+# This file specifies which settings are available
+# in the Preferences window.
+
+categories:
+  - key: grc
+    name: GRC
+    items:
+      - key: editor
+        name: Editor
+        tooltip: Choose the editor
+        dtype: str
+        default: /usr/bin/gedit
+      - key: hide_variables
+        name: Hide variables
+        dtype: bool
+        default: False
+      - key: show_param_expr
+        name: Show parameter expressions in block
+        dtype: bool
+        default: False
+      - key: show_param_val
+        name: Show parameter value in block
+        dtype: bool
+        default: False
+      - key: hide_disabled_blocks
+        name: Hide disabled blocks
+        dtype: bool
+        default: False
+      - key: auto_hide_port_labels
+        name: Auto-hide port labels
+        dtype: bool
+        default: False
+      - key: snap_to_grid
+        name: Snap to grid
+        dtype: bool
+        default: False
+      - key: show_block_comments
+        name: Show block comments
+        dtype: bool
+        default: True
+      - key: show_block_ids
+        name: Show all block IDs
+        dtype: bool
+        default: False
+      - key: generated_code_preview
+        name: Generated code preview
+        dtype: bool
+        default: False
+      - key: show_complexity
+        name: Show flowgraph complexity
+        dtype: bool
+        default: False
+      - key: custom_block_paths
+        name: Custom block paths
+        dtype: str
+        default: ""
+
+  - key: appearance
+    name: Appearance
+    items:
+      - key: theme
+        name: Theme (requires restart)
+        tooltip: Choose the theme
+        dtype: enum
+        default: dark
+        options:
+          - light
+          - dark
+        option_labels:
+          - Light
+          - Dark
+      - key: qt_scale_factor
+        name: Qt scale factor (experimental, requires restart)
+        tooltip: Scaling factor of Qt GUI elements. Note that the effective device pixel ratio will be a product of this value and the native device pixel ratio.
+        dtype: str
+        default: 1.0
+#      - key: show_units
+#        name: Show units (not implemented)
+#        tooltip: Show units in block parameters window
+#        dtype: bool
+#        default: False
+
+# Window settings, these are not meant to be changed by the user.
+# TODO: Is it necessary to have these in here?
+window:
+  - key: current_file
+    dtype: str
+    default: ""
+  - key: recent_files
+    dtype: list
+    default: []
