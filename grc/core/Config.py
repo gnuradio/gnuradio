@@ -51,6 +51,10 @@ class Config(object):
         return valid_paths
 
     @property
+    def example_paths(self):
+        return [self._gr_prefs.get_string('grc', 'examples_path', '')]
+
+    @property
     def default_flow_graph(self):
         user_default = (
             os.environ.get('GRC_DEFAULT_FLOW_GRAPH') or
