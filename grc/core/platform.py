@@ -48,6 +48,7 @@ class Platform(Element):
 
         self.blocks = self.block_classes
         self.domains = {}
+        self.examples_dict = {}
         self.connection_templates = {}
         self.cpp_connection_templates = {}
         self.connection_params = {}
@@ -114,6 +115,9 @@ class Platform(Element):
             return None, None
 
         return flow_graph, generator.file_path
+
+    def build_example_library(self, path=None):
+        self.examples = list(self._iter_files_in_example_path())
 
     def build_library(self, path=None):
         """load the blocks and block tree from the search paths
