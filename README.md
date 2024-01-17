@@ -1,3 +1,13 @@
+## How to run the Qt version of GRC
+
+- Make sure PyQt5 (including QtSvg and QtWebEngine) is installed.
+- `pip install QDarkStyle qtpy`
+- `pip install pytest-qt pyautogui` (only required for testing)
+- checkout the `feature-grc-qt` branch
+- build and install like usual (see instructions on the master branch)
+- Run `gnuradio-companion --qt`
+
+
 <p align="center">
 <img src="https://github.com/gnuradio/gnuradio/blob/main/docs/gnuradio.png" width="75%" />
 </p>

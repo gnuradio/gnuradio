@@ -23,7 +23,7 @@ class Element(object):
         Validate this element and call validate on all children.
         Call this base method before adding error messages in the subclass.
         """
-        for child in self.children():
+        for child in self.child_elements():
             child.validate()
 
     def is_valid(self):
@@ -64,7 +64,7 @@ class Element(object):
         """
         for msg in self._error_messages:
             yield self, msg
-        for child in self.children():
+        for child in self.child_elements():
             if not child.enabled or child.get_bypassed():
                 continue
             for element_msg in child.iter_error_messages():
@@ -76,7 +76,7 @@ class Element(object):
         Call this base method before rewriting the element.
         """
         del self._error_messages[:]
-        for child in self.children():
+        for child in self.child_elements():
             child.rewrite()
 
     @property
@@ -123,7 +123,7 @@ class Element(object):
             if isinstance(obj, lazy_property):
                 delattr(self, name)
 
-    def children(self):
+    def child_elements(self):
         return
         yield  # empty generator
 
