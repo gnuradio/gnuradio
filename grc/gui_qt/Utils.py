@@ -3,7 +3,7 @@ import numbers
 import logging
 from pathlib import Path
 
-from qtpy import QtGui, QtCore, QtWidgets
+from qtpy import QtGui, QtCore
 
 from . import Constants
 
@@ -33,6 +33,7 @@ def get_rotated_coordinate(coor, rotation):
     x, y = coor
     return x * cos_r + y * sin_r, -x * sin_r + y * cos_r
 
+
 def num_to_str(num):
     """ Display logic for numbers """
     def eng_notation(value, fmt='g'):
@@ -55,6 +56,7 @@ def num_to_str(num):
         return output
     else:
         return str(num)
+
 
 def make_screenshot(fg_view, file_path, transparent_bg=False):
     if not file_path:

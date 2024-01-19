@@ -164,10 +164,8 @@ class Console(QtWidgets.QDockWidget, base.Component):
         log.debug("Creating actions")
 
         # File Actions
-        actions['save'] = Action(Icons("document-save"), _("save"), self,
-                                statusTip=_("save-tooltip"))
-        actions['clear'] = Action(Icons("document-close"), _("clear"), self,
-                                statusTip=_("clear-tooltip"))
+        actions['save'] = Action(Icons("document-save"), _("save"), self, statusTip=_("save-tooltip"))
+        actions['clear'] = Action(Icons("document-close"), _("clear"), self, statusTip=_("clear-tooltip"))
         actions['show_level'] = Action(_("show-level"), self, statusTip=_("show-level"), checkable=True, checked=True)
 
         actions['auto_scroll'] = Action(_("auto-scroll"), self, statusTip=_("auto-scroll"), checkable=True, checked=True)
@@ -190,7 +188,6 @@ class Console(QtWidgets.QDockWidget, base.Component):
 
     def createToolbars(self, actions, toolbars):
         log.debug("Creating toolbars")
-
 
     def add_line(self, line):
         # TODO: Support multiple columns for the HTML. DO better with the spacing

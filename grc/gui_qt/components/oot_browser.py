@@ -3,17 +3,9 @@ from __future__ import absolute_import, print_function
 # Standard modules
 import logging
 import os
-import sys
-import subprocess
 import yaml
-import traceback
 
-# Third-party  modules
-import six
-
-from qtpy import QtCore, QtGui, QtWidgets, uic
-from qtpy.QtCore import Qt, QSettings
-from qtpy.QtGui import QStandardItemModel
+from qtpy import QtCore, QtWidgets, uic
 
 from .. import base
 from ..properties import Paths
@@ -62,12 +54,12 @@ class OOTBrowser(QtWidgets.QDialog, base.Component):
         if module.get("dependencies"):
             self.dep_label.setText(f"<b>Dependencies:</b> {'; '.join(module.get('dependencies'))}")
         else:
-            self.dep_label.setText(f"<b>Dependencies:</b> None")
+            self.dep_label.setText("<b>Dependencies:</b> None")
         self.repo_label.setText(f"<b>Repository:</b> {module.get('repo')}")
         if module.get("copyright_owner"):
             self.copyright_label.setText(f"<b>Copyright Owner:</b> {'; '.join(module['copyright_owner'])}")
         else:
-            self.copyright_label.setText(f"<b>Copyright Owner:</b> None")
+            self.copyright_label.setText("<b>Copyright Owner:</b> None")
         self.supp_ver_label.setText(f"<b>Supported GNU Radio Versions:</b> {'; '.join(module['gr_supported_version'])}")
         self.tags_label.setText(f"<b>Tags:</b> {'; '.join(module['tags'])}")
         self.license_label.setText(f"<b>License:</b> {module['license']}")

@@ -1,8 +1,5 @@
 from __future__ import absolute_import, print_function
 
-# Standard modules
-import logging
-
 # Third-party  modules
 
 from qtpy import QtCore, QtGui, QtWidgets
@@ -19,7 +16,7 @@ class ErrorsDialog(QtWidgets.QDialog):
         self.setWindowTitle("Errors and Warnings")
         buttons = QtWidgets.QDialogButtonBox.Close
         self.buttonBox = QtWidgets.QDialogButtonBox(buttons)
-        self.buttonBox.rejected.connect(self.reject) # close
+        self.buttonBox.rejected.connect(self.reject)  # close
         self.treeview = QtWidgets.QTreeView()
         self.model = QtGui.QStandardItemModel()
         self.treeview.setModel(self.model)
@@ -50,6 +47,7 @@ class ErrorsDialog(QtWidgets.QDialog):
                 src = aspect = QtGui.QStandardItem('')
             self.model.appendRow([src, aspect, QtGui.QStandardItem(message)])
         self.treeview.setModel(self.model)
+
 
 class PropsDialog(QtWidgets.QDialog):
     def __init__(self, parent_block, force_show_id):
@@ -83,7 +81,7 @@ class PropsDialog(QtWidgets.QDialog):
             i = 0
             for param in self._block.params.values():
                 if force_show_id and param.dtype == 'id':
-                        param.hide = 'none'
+                    param.hide = 'none'
                 if param.category == cat and param.hide != "all":
                     qvb.addWidget(QtWidgets.QLabel(param.name), i, 0)
                     if param.dtype == "enum" or param.options:
