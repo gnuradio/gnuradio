@@ -59,7 +59,7 @@ class Application(QtWidgets.QApplication):
 
         log.debug(f'devicePixelRatio {self.desktop().devicePixelRatio()}')
 
-        if self.qsettings.value("appearance/theme") == "dark":
+        if self.qsettings.value("appearance/theme", "dark") == "dark":
             try:
                 import qdarkstyle
 
