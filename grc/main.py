@@ -234,8 +234,8 @@ def main():
         file_formatter = logging.Formatter(file_msg_format)
         fileHandler.setFormatter(file_formatter)
         log.addHandler(fileHandler)
-    except PermissionError:
-        log.error(f'Cannot write to {log_file} (Permission denied)')
+    except (PermissionError, FileNotFoundError) as e:
+        log.error(f'Cannot write to {log_file} - {e}')
 
 
     ### GUI Framework
