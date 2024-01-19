@@ -1,6 +1,5 @@
 # third-party modules
 from qtpy import QtGui, QtCore, QtWidgets
-from qtpy.QtCore import Qt
 
 from ....core.Connection import Connection as CoreConnection
 from . import colors
@@ -8,6 +7,7 @@ from ...Constants import (
     CONNECTOR_ARROW_BASE,
     CONNECTOR_ARROW_HEIGHT
 )
+
 
 class ConnectionArrow(QtWidgets.QGraphicsPathItem):
 
@@ -43,8 +43,8 @@ class ConnectionArrow(QtWidgets.QGraphicsPathItem):
 
         self._arrowhead.clear()
         self._arrowhead.moveTo(self.end_point)
-        self._arrowhead.lineTo(self.end_point + QtCore.QPointF(-CONNECTOR_ARROW_HEIGHT, -CONNECTOR_ARROW_BASE/2))
-        self._arrowhead.lineTo(self.end_point + QtCore.QPointF(-CONNECTOR_ARROW_HEIGHT, CONNECTOR_ARROW_BASE/2))
+        self._arrowhead.lineTo(self.end_point + QtCore.QPointF(-CONNECTOR_ARROW_HEIGHT, - CONNECTOR_ARROW_BASE / 2))
+        self._arrowhead.lineTo(self.end_point + QtCore.QPointF(-CONNECTOR_ARROW_HEIGHT, CONNECTOR_ARROW_BASE / 2))
         self._arrowhead.lineTo(self.end_point)
 
         self._path.clear()
@@ -100,8 +100,8 @@ class Connection(CoreConnection, QtWidgets.QGraphicsPathItem):
 
         self._arrowhead.clear()
         self._arrowhead.moveTo(self.sink.connection_point)
-        self._arrowhead.lineTo(self.sink.connection_point + QtCore.QPointF(-CONNECTOR_ARROW_HEIGHT, -CONNECTOR_ARROW_BASE/2))
-        self._arrowhead.lineTo(self.sink.connection_point + QtCore.QPointF(-CONNECTOR_ARROW_HEIGHT, CONNECTOR_ARROW_BASE/2))
+        self._arrowhead.lineTo(self.sink.connection_point + QtCore.QPointF(-CONNECTOR_ARROW_HEIGHT, - CONNECTOR_ARROW_BASE / 2))
+        self._arrowhead.lineTo(self.sink.connection_point + QtCore.QPointF(-CONNECTOR_ARROW_HEIGHT, CONNECTOR_ARROW_BASE / 2))
         self._arrowhead.lineTo(self.sink.connection_point)
 
         self._path.clear()
@@ -139,4 +139,3 @@ class Connection(CoreConnection, QtWidgets.QGraphicsPathItem):
     def mouseDoubleClickEvent(self, e):
         self.parent.connections.remove(self)
         self.parent.removeItem(self)
-

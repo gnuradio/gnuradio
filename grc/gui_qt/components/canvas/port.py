@@ -6,15 +6,11 @@ SPDX-License-Identifier: GPL-2.0-or-later
 
 """
 
-
-import math
-
 from qtpy import QtGui, QtCore, QtWidgets
 from qtpy.QtCore import Qt
 
 from . import colors
 from ... import Constants
-from ....core.utils.descriptors import nop_write
 from ....core.ports import Port as CorePort
 
 
@@ -38,7 +34,7 @@ class Port(QtWidgets.QGraphicsItem, CorePort):
         #CorePort.__init__(self, parent, direction, **n)
         QtWidgets.QGraphicsItem.__init__(self)
         self.y_offset = 0
-        self.height = 3*15.0 if self.dtype == 'bus' else 15.0
+        self.height = 3 * 15.0 if self.dtype == 'bus' else 15.0
         self.width = 15.0
 
         if self._dir == "sink":
@@ -79,7 +75,6 @@ class Port(QtWidgets.QGraphicsItem, CorePort):
         """Create the labels for the socket."""
         pass
 
-
     def create_shapes_and_labels(self):
         if not self.parentItem():
             self.setParentItem(self.parent_block)
@@ -112,18 +107,15 @@ class Port(QtWidgets.QGraphicsItem, CorePort):
         else:
             #self._font_color[-1] = 1.0
             color = colors.PORT_TYPE_TO_COLOR.get(self.dtype) or colors.PORT_TYPE_TO_COLOR.get('')
-            if self.vlen > 1:
-                dark = (0, 0, 30 / 255.0, 50 / 255.0, 70 / 255.0)[min(4, self.vlen)]
-                #color = tuple(max(c - dark, 0) for c in color)
         self._bg_color = color
         self._border_color = color
         #self._border_color = tuple(max(c - 0.3, 0) for c in color)
 
     def boundingRect(self):
         if self._dir == "sink":
-            return QtCore.QRectF(-max(0, self.width - 15), 0, self.width, self.height) # same as the rectangle we draw, but with a 0.5*pen width margin
+            return QtCore.QRectF(-max(0, self.width - 15), 0, self.width, self.height)  # same as the rectangle we draw, but with a 0.5*pen width margin
         else:
-            return QtCore.QRectF(0, 0, self.width, self.height) # same as the rectangle we draw, but with a 0.5*pen width margin
+            return QtCore.QRectF(0, 0, self.width, self.height)  # same as the rectangle we draw, but with a 0.5*pen width margin
 
     def hoverEnterEvent(self, event):
         self._hovering = True
@@ -146,9 +138,9 @@ class Port(QtWidgets.QGraphicsItem, CorePort):
         painter.setBrush(QtGui.QBrush(self._bg_color))
 
         if self._dir == "sink":
-            rect = QtCore.QRectF(-max(0, self.width - 15), 0, self.width, self.height) # same as the rectangle we draw, but with a 0.5*pen width margin
+            rect = QtCore.QRectF(-max(0, self.width - 15), 0, self.width, self.height)  # same as the rectangle we draw, but with a 0.5*pen width margin
         else:
-            rect = QtCore.QRectF(0, 0, self.width, self.height) # same as the rectangle we draw, but with a 0.5*pen width margin
+            rect = QtCore.QRectF(0, 0, self.width, self.height)  # same as the rectangle we draw, but with a 0.5*pen width margin
         painter.drawRect(rect)
 
         if self._show_label:
@@ -161,4 +153,4 @@ class Port(QtWidgets.QGraphicsItem, CorePort):
                 painter.drawText(QtCore.QRectF(0, 0, self.width, self.height), Qt.AlignCenter, self.name)
 
     def center(self):
-        return QtCore.QPointF(self.x() + self.width/2, self.y() + self.height/2)
+        return QtCore.QPointF(self.x() + self.width / 2, self.y() + self.height / 2)

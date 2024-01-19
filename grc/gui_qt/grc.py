@@ -22,13 +22,9 @@ import logging
 import textwrap
 import os
 
-# Third-party  modules
-import six
-
-from qtpy import QtCore, QtGui, QtWidgets
+from qtpy import QtCore, QtWidgets
 
 # Custom modules
-from . import base
 from . import components
 from .helpers.profiling import StopWatch
 
@@ -71,7 +67,6 @@ class Application(QtWidgets.QApplication):
             except ImportError:
                 log.warning("Did not find QDarkstyle. Dark mode disabled")
 
-
         # Load the main view class and initialize QMainWindow
         log.debug("ARGV - {0}".format(settings.argv))
         log.debug("INSTALL_DIR - {0}".format(settings.path.INSTALL))
@@ -94,7 +89,6 @@ class Application(QtWidgets.QApplication):
         stopwatch.lap("wikitab")
         self.VariableEditor = components.VariableEditor()
         stopwatch.lap("variable_editor")
-
 
         # Debug times
         log.debug(

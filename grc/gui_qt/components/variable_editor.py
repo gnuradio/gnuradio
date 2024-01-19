@@ -3,18 +3,14 @@ from __future__ import absolute_import, print_function
 # Standard modules
 import logging
 
-# Third-party  modules
-import six
-
-from qtpy import QtCore, QtGui, QtWidgets
-from qtpy.QtGui import QStandardItemModel
+from qtpy import QtGui, QtWidgets
 
 # Custom modules
-from .canvas.block import Block
 from .. import base
 
 # Logging
 log = logging.getLogger(__name__)
+
 
 class VariableEditor(QtWidgets.QDockWidget, base.Component):
     def __init__(self):

@@ -17,15 +17,7 @@ log = logging.getLogger(__name__)
 
 LONG_VALUE = 20  # maximum length of a param string.
 # if exceeded, '...' will be displayed
-"""
-class ParameterEdit(QtWidgets.QWidget):
-    def __init__(self, label, value):
-        super().__init__()
-        self.layout = QtWidgets.QHBoxLayout(self)
-        self.layout.addWidget(QtWidgets.QLabel(label))
-        edit = QtWidgets.QLineEdit(value)
-        self.layout.addWidget(edit)
-"""
+
 
 class Block(QtWidgets.QGraphicsItem, CoreBlock):
     @classmethod
@@ -98,19 +90,18 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
 
         def get_min_height_for_ports(ports):
             min_height = (
-                2 * Constants.PORT_BORDER_SEPARATION
-                + len(ports) * Constants.PORT_SEPARATION
+                2 * Constants.PORT_BORDER_SEPARATION +
+                len(ports) * Constants.PORT_SEPARATION
             )
             # If any of the ports are bus ports - make the min height larger
             if any([p.dtype == "bus" for p in ports]):
                 min_height = (
-                    2 * Constants.PORT_BORDER_SEPARATION
-                    + sum(
+                    2 * Constants.PORT_BORDER_SEPARATION +
+                    sum(
                         port.height + Constants.PORT_SPACING
                         for port in ports
                         if port.dtype == "bus"
-                    )
-                    - Constants.PORT_SPACING
+                    ) - Constants.PORT_SPACING
                 )
 
             else:
@@ -131,7 +122,7 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
             value = item.value
             if (value is not None and item.hide == "none") or (item.dtype == 'id' and self.force_show_id):
                 if len(value) > LONG_VALUE:
-                    value = value[:LONG_VALUE-3] + '...'
+                    value = value[:LONG_VALUE - 3] + '...'
 
                 value_label = item.options[value] if value in item.options else value
                 full_line = name + ": " + value_label
@@ -184,13 +175,11 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
 
     def create_port_labels(self):
         for ports in (self.active_sinks, self.active_sources):
-            max_width = 0
             for port in ports:
                 port.create_shapes_and_labels()
                 # max_width = max(max_width, port.width_with_label)
             # for port in ports:
             #    port.width = max_width
-
 
     def _update_colors(self):
         def get_bg():
@@ -228,7 +217,6 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
     def paint(self, painter, option, widget):
         if (self.hide_variables and (self.is_variable or self.is_import)) or (self.hide_disabled_blocks and not self.enabled):
             return
-        x, y = (self.x(), self.y())
         self.states["coordinate"] = (self.x(), self.y())
         # Set font
         font = QtGui.QFont("Helvetica", 10)
@@ -276,11 +264,11 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
 
             # Include the value defined by the user (after evaluation)
             if not is_evaluated or self.show_param_val or not self.show_param_expr:
-                display_value += item.options[value] if value in item.options else value # TODO: pretty_print
+                display_value += item.options[value] if value in item.options else value  # TODO: pretty_print
 
             # Include the expression that was evaluated to get the value
             if is_evaluated and self.show_param_expr:
-                expr_string = value # TODO: Truncate
+                expr_string = value  # TODO: Truncate
 
                 if display_value:  # We are already displaying the value
                     display_value = expr_string + "=" + display_value
@@ -288,7 +276,7 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
                     display_value = expr_string
 
             if len(display_value) > LONG_VALUE:
-                display_value = display_value[:LONG_VALUE-3] + '...'
+                display_value = display_value[:LONG_VALUE - 3] + '...'
 
             value_label = display_value
             if (value is not None and item.hide == "none") or (item.dtype == 'id' and self.force_show_id):
@@ -323,22 +311,21 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
         if self.show_complexity and self.key == "options":
             complexity = flow_graph_complexity.calculate(self.parent)
             markups.append('Complexity: {num} bal'.format(
-                    num=Utils.num_to_str(complexity)))
+                num=Utils.num_to_str(complexity)))
 
         if self.show_block_comments and self.comment:
             markups.append(self.comment)
 
-        if markups: # TODO: Calculate comment box size
+        if markups:  # TODO: Calculate comment box size
             painter.setPen(Qt.gray)
             painter.drawText(
-                        QtCore.QRectF(0, self.height + 5, self.width, self.height),
-                        Qt.AlignLeft,
-                        "\n".join(markups),
-                    )
-
+                QtCore.QRectF(0, self.height + 5, self.width, self.height),
+                Qt.AlignLeft,
+                "\n".join(markups),
+            )
 
     def boundingRect(self):  # required to have
-        return QtCore.QRectF( # TODO: Calculate comment box size
+        return QtCore.QRectF(  # TODO: Calculate comment box size
             -2.5, -2.5, self.width + 5, self.height + (5 if not self.comment else 50)
         )  # margin to avoid artifacts
 
@@ -376,11 +363,12 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
     def itemChange(self, change, value):
         if change == QtWidgets.QGraphicsItem.ItemPositionChange and self.scene() and self.snap_to_grid:
             grid_size = 10
-            value.setX(round(value.x()/grid_size)*grid_size)
-            value.setY(round(value.y()/grid_size)*grid_size)
+            value.setX(round(value.x() / grid_size) * grid_size)
+            value.setY(round(value.y() / grid_size) * grid_size)
             return value
         else:
             return QtWidgets.QGraphicsItem.itemChange(self, change, value)
+
     def import_data(self, name, states, parameters, **_):
         CoreBlock.import_data(self, name, states, parameters, **_)
         self.states["coordinate"] = QtCore.QPointF(
@@ -413,14 +401,11 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
             if direc == 'source':
                 ports = self.sources
                 ports_gui = self.filter_bus_port(self.sources)
-                bus_state = self.bus_source
             else:
                 ports = self.sinks
                 ports_gui = self.filter_bus_port(self.sinks)
-                bus_state = self.bus_sink
             if 'bus' in map(lambda a: a.dtype, ports):
                 for port in ports_gui:
                     self.parent_flowgraph.removeItem(port)
         #super(Block, self).update_bus_logic()
         super(self.__class__, self).update_bus_logic()
-

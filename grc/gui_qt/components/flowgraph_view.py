@@ -6,23 +6,12 @@ import logging
 import xml.etree.ElementTree as ET
 
 from ast import literal_eval
-
-# Third-party modules
-import six
-
 from qtpy import QtGui, QtCore, QtWidgets
 from qtpy.QtCore import Qt
 
-from itertools import count
-
 # Custom modules
 from .canvas.block import Block
-from .canvas.port import Port
-from ...core.base import Element
-from .canvas.connection import ConnectionArrow, Connection
 from .. import base
-from ...core.FlowGraph import FlowGraph as CoreFlowgraph
-from .. import Utils
 from .flowgraph import Flowgraph
 
 # Logging
@@ -77,8 +66,6 @@ class FlowgraphView(
 
     def readFile(self, filename):
         tree = ET.parse(filename)
-        root = tree.getroot()
-        blocks = {}
 
         for xml_block in tree.findall("block"):
             attrib = {}

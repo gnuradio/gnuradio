@@ -3,25 +3,17 @@ from __future__ import absolute_import, print_function
 # Standard modules
 import logging
 import os
-import sys
-import subprocess
-import yaml
 import traceback
 
-# Third-party  modules
-import six
-
 from qtpy import QtCore, QtGui, QtWidgets, uic
-from qtpy.QtCore import Qt, QSettings
-from qtpy.QtGui import QStandardItemModel
 
 from ...core.cache import Cache
 from .. import base, Constants
 from ..properties import Paths
 
-
 # Logging
 log = logging.getLogger(__name__)
+
 
 class WorkerSignals(QtCore.QObject):
     error = QtCore.Signal(tuple)
@@ -49,7 +41,6 @@ class Worker(QtCore.QRunnable):
             traceback.print_exc()
         else:
             self.signals.result.emit(result)
-
 
 
 class ExampleBrowser(QtWidgets.QDialog, base.Component):
@@ -109,7 +100,6 @@ class ExampleBrowser(QtWidgets.QDialog, base.Component):
                 item.setHidden(False)
             else:
                 item.setHidden(True)
-
 
     def populate_preview(self):
         ex = self.mid_list.currentItem().data(self.data_role)
@@ -171,10 +161,10 @@ class ExampleBrowser(QtWidgets.QDialog, base.Component):
                     subdirs = 0
                     current_subdir = 0
                     for dirpath, dirnames, filenames in os.walk(entry):
-                            subdirs += 1 # Loop through once to see how many there are
+                        subdirs += 1  # Loop through once to see how many there are
                     for dirpath, dirnames, filenames in os.walk(entry):
                         current_subdir += 1
-                        progress_callback.emit((int(100*current_subdir/subdirs), "Indexing examples"))
+                        progress_callback.emit((int(100 * current_subdir / subdirs), "Indexing examples"))
                         for filename in sorted(filter(lambda f: f.endswith('.' + ext), filenames)):
                             file_path = os.path.join(dirpath, filename)
                             try:
@@ -199,9 +189,8 @@ class ExampleBrowser(QtWidgets.QDialog, base.Component):
                             except Exception:
                                 continue
 
-
-        examples_w_block = {} # str: set()
-        designated_examples_w_block = {} # str: set()
+        examples_w_block = {}  # str: set()
+        designated_examples_w_block = {}  # str: set()
         for example in examples:
             if example["example_filter"]:
                 for block in example["example_filter"]:
@@ -218,5 +207,3 @@ class ExampleBrowser(QtWidgets.QDialog, base.Component):
                         examples_w_block[block] = [example["path"]]
 
         return (examples, examples_w_block, designated_examples_w_block)
-
-

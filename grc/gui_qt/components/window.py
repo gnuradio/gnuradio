@@ -22,21 +22,15 @@ import logging
 import os
 import sys
 import subprocess
-import yaml
-
-# Third-party  modules
-import six
 
 from qtpy import QtCore, QtGui, QtWidgets
 from qtpy.QtCore import Qt
-from qtpy.QtGui import QStandardItemModel
 
 # Custom modules
 from .flowgraph_view import FlowgraphView
-from .example_browser import ExampleBrowser, Worker, WorkerSignals
+from .example_browser import ExampleBrowser, Worker
 from .. import base, Constants, Utils
 from .undoable_actions import (
-    ChangeStateAction,
     RotateAction,
     EnableAction,
     DisableAction,
@@ -48,11 +42,9 @@ from .undoable_actions import (
     BussifyAction
 )
 from .preferences import PreferencesDialog
-from .example_browser import ExampleBrowser
 from .oot_browser import OOTBrowser
 from .dialogs import ErrorsDialog
 from ...core.base import Element
-from ...core.cache import Cache
 
 # Logging
 log = logging.getLogger(__name__)
@@ -157,7 +149,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         fg_view = FlowgraphView(self)
         fg_view.centerOn(0, 0)
         initial_state = self.platform.parse_flow_graph(
-            self.app.qsettings.value('window/current_file',""))
+            self.app.qsettings.value('window/current_file', ""))
         fg_view.flowgraph.import_data(initial_state)
         log.debug("Adding flowgraph view")
 
@@ -1045,7 +1037,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
                     self.currentView, file_path, background_transparent
                 )
             except ValueError:
-                Messages.send("Failed to generate screenshot\n")
+                log.error("Failed to generate screenshot")
 
     def undo_triggered(self):
         log.debug("undo")
@@ -1166,7 +1158,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         log.debug("about")
         config = self.platform.config
         py_version = sys.version.split()[0]
-        ad = QtWidgets.QMessageBox.about(
+        QtWidgets.QMessageBox.about(
             self, "About GNU Radio", f"GNU Radio {config.version} (Python {py_version})"
         )
 
@@ -1276,7 +1268,6 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
     def types_triggered(self):
         log.debug("types")
         colors = [(name, color) for name, key, sizeof, color in Constants.CORE_TYPES]
-        max_len = 10 + max(len(name) for name, code in colors)
 
         message = """
         <table>

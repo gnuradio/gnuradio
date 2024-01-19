@@ -7,10 +7,8 @@ SPDX-License-Identifier: GPL-2.0-or-later
 
 """
 
-
-
+import os
 from ..core.Constants import *
-
 
 # default path for the open/save dialogs
 DEFAULT_FILE_PATH = os.getcwd() if os.name != 'nt' else os.path.expanduser("~/Documents")
@@ -107,6 +105,7 @@ GTK_INI_PREFER_DARK_KEY = 'gtk-application-prefer-dark-theme'
 GTK_INI_THEME_NAME_KEY = 'gtk-theme-name'
 '''
 
+
 def update_font_size(font_size):
     global PORT_SEPARATION, BLOCK_FONT, PORT_FONT, PARAM_FONT, FONT_SIZE
 
@@ -117,5 +116,6 @@ def update_font_size(font_size):
 
     PORT_SEPARATION = PORT_SPACING + 2 * PORT_LABEL_PADDING + int(1.5 * font_size)
     PORT_SEPARATION += -PORT_SEPARATION % (2 * CANVAS_GRID_SIZE)  # even multiple
+
 
 update_font_size(DEFAULT_FONT_SIZE)

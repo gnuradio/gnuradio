@@ -6,7 +6,7 @@ SPDX-License-Identifier: GPL-2.0-or-later
 """
 
 
-from qtpy import QtGui, QtCore, QtWidgets
+from qtpy import QtGui
 
 from ... import Constants
 
@@ -14,6 +14,7 @@ from ... import Constants
 def get_color(rgb):
     color = QtGui.QColor(rgb)
     return color
+
 
 #################################################################################
 # fg colors
@@ -64,38 +65,37 @@ PORT_TYPE_TO_COLOR.update((key, get_color(color)) for key, (_, color) in Constan
 # param box colors
 #################################################################################
 DARK_THEME_STYLES = {
-        'dtype_complex':        'background-color: #3399FF;',
-        'dtype_real':           'background-color: #FF8C69;',
-        'dtype_float':          'background-color: #FF8C69;',
-        'dtype_int':            'background-color: #00FF99;',
-        'dtype_complex_vector': 'background-color: #3399AA;',
-        'dtype_real_vector':    'background-color: #CC8C69;',
-        'dtype_float_vector':   'background-color: #CC8C69;',
-        'dtype_int_vector':     'background-color: #00CC99;',
-        'dtype_bool':           'background-color: #00FF99;',
-        'dtype_hex':            'background-color: #00FF99;',
-        'dtype_string':         'background-color: #CC66CC;',
-        'dtype_id':             'background-color: #DDDDDD;',
-        'dtype_stream_id':      'background-color: #DDDDDD;',
-        'dtype_raw':            'background-color: #DDDDDD;',
-        'enum_custom':          'background-color: #EEEEEE;',
+    'dtype_complex':        'background-color: #3399FF;',
+    'dtype_real':           'background-color: #FF8C69;',
+    'dtype_float':          'background-color: #FF8C69;',
+    'dtype_int':            'background-color: #00FF99;',
+    'dtype_complex_vector': 'background-color: #3399AA;',
+    'dtype_real_vector':    'background-color: #CC8C69;',
+    'dtype_float_vector':   'background-color: #CC8C69;',
+    'dtype_int_vector':     'background-color: #00CC99;',
+    'dtype_bool':           'background-color: #00FF99;',
+    'dtype_hex':            'background-color: #00FF99;',
+    'dtype_string':         'background-color: #CC66CC;',
+    'dtype_id':             'background-color: #DDDDDD;',
+    'dtype_stream_id':      'background-color: #DDDDDD;',
+    'dtype_raw':            'background-color: #DDDDDD;',
+    'enum_custom':          'background-color: #EEEEEE;',
 }
 
 LIGHT_THEME_STYLES = {
-        'dtype_complex':        'background-color: #3399FF;',
-        'dtype_real':           'background-color: #FF8C69;',
-        'dtype_float':          'background-color: #FF8C69;',
-        'dtype_int':            'background-color: #00FF99;',
-        'dtype_complex_vector': 'background-color: #3399AA;',
-        'dtype_real_vector':    'background-color: #CC8C69;',
-        'dtype_float_vector':   'background-color: #CC8C69;',
-        'dtype_int_vector':     'background-color: #00CC99;',
-        'dtype_bool':           'background-color: #00FF99;',
-        'dtype_hex':            'background-color: #00FF99;',
-        'dtype_string':         'background-color: #CC66CC;',
-        'dtype_id':             'background-color: #DDDDDD;',
-        'dtype_stream_id':      'background-color: #DDDDDD;',
-        'dtype_raw':            'background-color: #FFFFFF;',
-        'enum_custom':          'background-color: #EEEEEE;',
+    'dtype_complex':        'background-color: #3399FF;',
+    'dtype_real':           'background-color: #FF8C69;',
+    'dtype_float':          'background-color: #FF8C69;',
+    'dtype_int':            'background-color: #00FF99;',
+    'dtype_complex_vector': 'background-color: #3399AA;',
+    'dtype_real_vector':    'background-color: #CC8C69;',
+    'dtype_float_vector':   'background-color: #CC8C69;',
+    'dtype_int_vector':     'background-color: #00CC99;',
+    'dtype_bool':           'background-color: #00FF99;',
+    'dtype_hex':            'background-color: #00FF99;',
+    'dtype_string':         'background-color: #CC66CC;',
+    'dtype_id':             'background-color: #DDDDDD;',
+    'dtype_stream_id':      'background-color: #DDDDDD;',
+    'dtype_raw':            'background-color: #FFFFFF;',
+    'enum_custom':          'background-color: #EEEEEE;',
 }
-

@@ -2,22 +2,16 @@ from __future__ import absolute_import, print_function
 
 # Standard modules
 import logging
-import os
-import sys
-import subprocess
 import yaml
 
-# Third-party  modules
-import six
-
-from qtpy import QtCore, QtGui, QtWidgets
-from qtpy.QtCore import Qt, QSettings
-from qtpy.QtGui import QStandardItemModel
+from qtpy import QtWidgets
+from qtpy.QtCore import Qt
 
 from ..properties import Paths
 
 # Logging
 log = logging.getLogger(__name__)
+
 
 class PreferencesDialog(QtWidgets.QDialog):
     pref_dict = {}
@@ -31,7 +25,6 @@ class PreferencesDialog(QtWidgets.QDialog):
 
         self.setWindowTitle("GRC Preferences")
         self.tabs = QtWidgets.QTabWidget()
-
 
         log.debug(f'Opening available preferences YAML: {Paths.AVAILABLE_PREFS_YML}')
 
@@ -79,8 +72,8 @@ class PreferencesDialog(QtWidgets.QDialog):
                 item['_line'].addWidget(item['_label'])
                 item['_line'].addWidget(item['_edit'])
                 # This needs some work
-                item['_line'].setStretch(0,3)
-                item['_line'].setStretch(1,1)
+                item['_line'].setStretch(0, 3)
+                item['_line'].setStretch(1, 1)
                 cat['_layout'].addLayout(item['_line'])
 
             cat['_scrollarea'].setLayout(cat['_layout'])

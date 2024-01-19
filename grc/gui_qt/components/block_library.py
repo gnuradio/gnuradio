@@ -24,7 +24,6 @@ import logging
 import six
 
 from qtpy import QtCore, QtGui, QtWidgets
-from qtpy.QtGui import QStandardItemModel
 from qtpy.QtCore import QUrl
 
 # Custom modules
@@ -89,13 +88,13 @@ class LibraryView(QtWidgets.QTreeView):
 
     def contextMenuEvent(self, event):
         key = self.model().data(self.currentIndex(), QtCore.Qt.UserRole)
-        if key: # Modules and categories don't have UserRole data
+        if key:  # Modules and categories don't have UserRole data
             self.contextMenu.exec_(self.mapToGlobal(event.pos()))
 
     def view_examples(self):
         key = self.model().data(self.currentIndex(), QtCore.Qt.UserRole)
-        label = self.model().data(self.currentIndex(), QtCore.Qt.DisplayRole)
         self.library.app.MainWindow.example_browser_triggered(filter=self.library.get_examples(key))
+
 
 class BlockLibrary(QtWidgets.QDockWidget, base.Component):
     def __init__(self):

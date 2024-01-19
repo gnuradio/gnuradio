@@ -169,9 +169,9 @@ class Config(CoreConfig):
         # Figure out default
         if sidebar:
             _, h = self.main_window_size()
-            return self.entry('variable_editor_sidebar_position', pos, default=int(h*0.7))
+            return self.entry('variable_editor_sidebar_position', pos, default=int(h * 0.7))
         else:
-            return self.entry('variable_editor_position', pos, default=int(self.blocks_window_position()*0.5))
+            return self.entry('variable_editor_position', pos, default=int(self.blocks_window_position() * 0.5))
 
     def variable_editor_sidebar(self, pos=None):
         return self.entry('variable_editor_sidebar', pos, default=False)

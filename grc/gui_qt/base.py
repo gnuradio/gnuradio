@@ -19,15 +19,12 @@ from __future__ import absolute_import, print_function
 
 # Standard modules
 import abc
-import inspect
 import logging
 import weakref
 
 # Third-party  modules
 from qtpy import QtWidgets
 
-# Custom modules
-from . import helpers
 
 # Logging
 log = logging.getLogger(__name__)
@@ -130,8 +127,7 @@ class Component(object):
                     continue
                 except:
                     # Default to the triggered handler
-                    log.warning("Could not connect <{0}.toggled> to handler <{1}>".format(key,
-                                     handler))
+                    log.warning("Could not connect <{0}.toggled> to handler <{1}>".format(key, handler))
 
             # Try and bind the 'triggered' signal to a handler.
             try:
@@ -141,7 +137,7 @@ class Component(object):
             except:
                 try:
                     log.warning("Handler not implemented for <{0}.triggered> in {1}".format(
-                                     key, type(self).__name__))
+                                key, type(self).__name__))
                     actions[key].triggered.connect(getattr(self, 'notImplemented'))
                 except:
                     # This should never happen
