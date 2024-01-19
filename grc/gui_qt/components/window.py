@@ -926,7 +926,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
         if filename:
             try:
-                self.platform.save_flow_graph(filename, self.currentView)
+                self.platform.save_flow_graph(filename, self.currentFlowgraph)
             except IOError:
                 log.error("Save failed")
                 return
