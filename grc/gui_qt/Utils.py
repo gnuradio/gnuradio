@@ -3,7 +3,7 @@ import numbers
 import logging
 from pathlib import Path
 
-from qtpy import QtGui, QtCore, QtWidgets, QtSvg
+from qtpy import QtGui, QtCore, QtWidgets
 
 from . import Constants
 
@@ -70,6 +70,10 @@ def make_screenshot(fg_view, file_path, transparent_bg=False):
         pixmap.save(str(file_path), "PNG")
         painter.end()
     elif file_path.suffix == ".svg":
+        try:
+            from qtpy import QtSvg
+        except ImportError:
+            log.error("Missing (Python-)QtSvg! Please install it or export as PNG instead.")
         rect = fg_view.viewport().rect()
 
         generator = QtSvg.QSvgGenerator()
