@@ -74,6 +74,7 @@ def make_screenshot(fg_view, file_path, transparent_bg=False):
             from qtpy import QtSvg
         except ImportError:
             log.error("Missing (Python-)QtSvg! Please install it or export as PNG instead.")
+            return
         rect = fg_view.viewport().rect()
 
         generator = QtSvg.QSvgGenerator()
