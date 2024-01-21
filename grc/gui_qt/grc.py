@@ -22,7 +22,7 @@ import logging
 import textwrap
 import os
 
-from qtpy import QtCore, QtWidgets
+from qtpy import QtCore, QtWidgets, PYQT_VERSION, PYSIDE_VERSION
 
 # Custom modules
 from . import components
@@ -112,6 +112,7 @@ class Application(QtWidgets.QApplication):
         paths = "\n\t".join(config.block_paths)
         welcome = (
             f"<<< Welcome to {config.name} {config.version} >>>\n\n"
+            f"{('PyQt ' + PYQT_VERSION) if PYQT_VERSION else ('PySide ' + PYSIDE_VERSION)}\n"
             f"GUI preferences file: {self.qsettings.fileName()}\n"
             f"Block paths:\n\t{paths}\n"
         )
