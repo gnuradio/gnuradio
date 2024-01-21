@@ -895,9 +895,10 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
         self.tabWidget.addTab(fg_view, "Untitled")
 
-    def open_triggered(self):
+    def open_triggered(self, filename=None):
         log.debug("open")
-        filename = self.open()
+        if not filename:
+            filename = self.open()
 
         if filename:
             log.info("Opening flowgraph ({0})".format(filename))
@@ -908,17 +909,12 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
             self.currentFlowgraph.import_data(initial_state)
             self.currentFlowgraph.filename = filename
             self.connect_fg_signals(self.currentFlowgraph)
+            self.currentFlowgraph.saved = True
 
     def open_example(self, example_path):
         log.debug("open example")
         if example_path:
-            log.info("Opening flowgraph ({0})".format(example_path))
-            new_flowgraph = FlowgraphView(self)
-            initial_state = self.platform.parse_flow_graph(example_path)
-            self.tabWidget.addTab(new_flowgraph, os.path.basename(example_path))
-            self.tabWidget.setCurrentIndex(self.tabWidget.count() - 1)
-            self.currentFlowgraph.import_data(initial_state)
-            self.connect_fg_signals(self.currentFlowgraph)
+            self.open_triggered(example_path)
 
     def save_triggered(self):
         log.debug("save")
