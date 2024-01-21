@@ -54,8 +54,6 @@ class Application(QtWidgets.QApplication):
         QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_ShareOpenGLContexts, True)
         QtWidgets.QApplication.__init__(self, settings.argv)
 
-        log.debug(f'devicePixelRatio {self.desktop().devicePixelRatio()}')
-
         if self.qsettings.value("appearance/theme", "dark") == "dark":
             try:
                 import qdarkstyle
@@ -114,6 +112,8 @@ class Application(QtWidgets.QApplication):
             f"Block paths:\n\t{paths}\n"
         )
         log.info(textwrap.dedent(welcome))
+
+        log.debug(f'devicePixelRatio {self.MainWindow.screen().devicePixelRatio()}')
 
     # Global registration functions
     #  - Handles the majority of child controller interaciton

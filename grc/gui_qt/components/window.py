@@ -80,11 +80,11 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         log.debug("Setting window icon - ({0})".format(self.settings.path.ICON))
         self.setWindowIcon(icon)
 
-        screen = QtWidgets.QDesktopWidget().availableGeometry()
+        monitor = self.screen().availableGeometry()
         log.debug(
-            "Setting window size - ({}, {})".format(screen.width(), screen.height())
+            "Setting window size - ({}, {})".format(monitor.width(), monitor.height())
         )
-        self.resize(int(screen.width() * 0.50), screen.height())
+        self.resize(int(monitor.width() * 0.50), monitor.height())
 
         self.setCorner(Qt.BottomLeftCorner, Qt.LeftDockWidgetArea)
 
@@ -988,11 +988,9 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
                 None,
                 "Unsaved Changes",
                 message,
-                QtWidgets.QMessageBox.StandardButtons(
-                    QtWidgets.QMessageBox.Discard |
-                    QtWidgets.QMessageBox.Cancel |
-                    QtWidgets.QMessageBox.Save
-                ),
+                QtWidgets.QMessageBox.Discard |
+                QtWidgets.QMessageBox.Cancel |
+                QtWidgets.QMessageBox.Save,
             )
 
             if response == QtWidgets.QMessageBox.Discard:

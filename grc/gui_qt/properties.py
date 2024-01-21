@@ -1,6 +1,8 @@
 import os
 import stat
 
+from qtpy.QtCore import Qt
+
 
 class Properties(object):
     ''' Stores global properties for GRC. '''
@@ -101,11 +103,11 @@ class Window(object):
     DEFAULT_PARAM_TAB = 'General'
     ADVANCED_PARAM_TAB = 'Advanced'
 
-    CONSOLE_DOCK_LOCATION = 8
-    BLOCK_LIBRARY_DOCK_LOCATION = 1
-    DOCUMENTATION_TAB_DOCK_LOCATION = 2
-    WIKI_TAB_DOCK_LOCATION = 2
-    VARIABLE_EDITOR_DOCK_LOCATION = 8
+    CONSOLE_DOCK_LOCATION = Qt.BottomDockWidgetArea
+    BLOCK_LIBRARY_DOCK_LOCATION = Qt.LeftDockWidgetArea
+    DOCUMENTATION_TAB_DOCK_LOCATION = Qt.RightDockWidgetArea
+    WIKI_TAB_DOCK_LOCATION = Qt.RightDockWidgetArea
+    VARIABLE_EDITOR_DOCK_LOCATION = Qt.BottomDockWidgetArea
 
     # Define the top level menus.
     # This does not actually define the menus; it simply defines a list of constants that
