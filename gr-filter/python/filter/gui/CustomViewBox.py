@@ -1,5 +1,5 @@
-import pyqtgraph as pg
 from PyQt5 import QtCore
+import pyqtgraph as pg
 
 
 class CustomViewBox(pg.ViewBox):
