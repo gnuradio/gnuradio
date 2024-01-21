@@ -2,6 +2,7 @@ import pytest
 import gettext
 import locale
 import threading
+import sys
 
 from pytestqt.plugin import qapp
 
@@ -11,7 +12,7 @@ import pyautogui as pag
 
 import logging
 
-from qtpy import QtTest, QtCore, QtGui, QtWidgets
+from qtpy import QtTest, QtCore, QtGui, QtWidgets, QT6
 from os import path, remove
 
 from gnuradio import gr
@@ -22,10 +23,10 @@ from grc.gui_qt.Platform import Platform
 
 log = logging.getLogger("grc")
 
-
 @pytest.fixture(scope="session")
 def qapp_cls_():
     settings = properties.Properties([])
+    settings.argv =  [""]
 
     """ Translation Support """
     # Try to get the current locale. Always add English
@@ -70,7 +71,10 @@ def type_text(qtbot, app, keys):
         # Each sequence contains a single key.
         # That's why we use the first element
         keycode = QtGui.QKeySequence(key)[0]
-        qtbot.keyClick(app.focusWidget(), keycode, QtCore.Qt.NoModifier)
+        if QT6:
+            qtbot.keyClick(app.focusWidget(), keycode.key(), QtCore.Qt.NoModifier)
+        else:
+            qtbot.keyClick(app.focusWidget(), keycode, QtCore.Qt.NoModifier)
 
 
 def keystroke(qtbot, app, key):
@@ -110,7 +114,7 @@ def find_blocks(flowgraph, block_type):
 
 
 def click_on(qtbot, app, item, button="left"):
-    scaling = app.desktop().devicePixelRatio()
+    scaling = app.MainWindow.screen().devicePixelRatio()
     view = app.MainWindow.currentView
     click_pos = scaling * global_pos(item, view)
     pag.click(click_pos.x(), click_pos.y(), button=button)
@@ -133,7 +137,7 @@ def redo(qtbot, app):
 
 def delete_block(qtbot, app, block):
     view = app.MainWindow.currentView
-    scaling = app.desktop().devicePixelRatio()
+    scaling = app.MainWindow.screen().devicePixelRatio()
     click_pos = scaling * global_pos(block, view)
     pag.click(click_pos.x(), click_pos.y(), button="left")
     qtbot.wait(100)
@@ -208,7 +212,7 @@ def test_open_properties(qtbot, qapp_cls_):
         QtCore.Qt.LeftButton,
         pos=qapp_cls_.MainWindow.currentView.mapFromScene(
             qapp_cls_.MainWindow.currentFlowgraph.options_block.pos()
-            + QtCore.QPoint(15, 15)
+            + QtCore.QPointF(15.0, 15.0)
         ),
     )
     qtbot.wait(100)
@@ -225,7 +229,7 @@ def test_change_id(qtbot, qapp_cls_):
         qapp_cls_.MainWindow.currentView.viewport(),
         QtCore.Qt.LeftButton,
         pos=qapp_cls_.MainWindow.currentView.mapFromScene(
-            opts.pos() + QtCore.QPoint(15, 15)
+            opts.pos() + QtCore.QPointF(15.0, 15.0)
         ),
     )
     qtbot.wait(100)
@@ -281,7 +285,7 @@ def test_disable_enable(qtbot, qapp_cls_):
 def test_move_blocks(qtbot, qapp_cls_):
     fg = qapp_cls_.MainWindow.currentFlowgraph
     view = qapp_cls_.MainWindow.currentView
-    scaling = qapp_cls_.desktop().devicePixelRatio()
+    scaling = qapp_cls_.MainWindow.screen().devicePixelRatio()
 
     qtbot.wait(100)
     add_block_from_query(qtbot, qapp_cls_, "throttle")
@@ -316,7 +320,7 @@ def test_move_blocks(qtbot, qapp_cls_):
 def test_connection(qtbot, qapp_cls_):
     fg = qapp_cls_.MainWindow.currentFlowgraph
     view = qapp_cls_.MainWindow.currentView
-    scaling = qapp_cls_.desktop().devicePixelRatio()
+    scaling = qapp_cls_.MainWindow.screen().devicePixelRatio()
 
     qtbot.wait(100)
     for block in ["null sou", "null sin"]:
@@ -358,7 +362,7 @@ def test_connection(qtbot, qapp_cls_):
 def test_num_inputs(qtbot, qapp_cls_):
     fg = qapp_cls_.MainWindow.currentFlowgraph
     view = qapp_cls_.MainWindow.currentView
-    scaling = qapp_cls_.desktop().devicePixelRatio()
+    scaling = qapp_cls_.MainWindow.screen().devicePixelRatio()
 
     qtbot.wait(100)
     for block in ["null sou", "null sin"]:
@@ -425,7 +429,7 @@ def test_num_inputs(qtbot, qapp_cls_):
 def test_bus(qtbot, qapp_cls_):
     fg = qapp_cls_.MainWindow.currentFlowgraph
     view = qapp_cls_.MainWindow.currentView
-    scaling = qapp_cls_.desktop().devicePixelRatio()
+    scaling = qapp_cls_.MainWindow.screen().devicePixelRatio()
 
     qtbot.wait(100)
     add_block_from_query(qtbot, qapp_cls_, "null sin")
@@ -485,7 +489,7 @@ def test_bus(qtbot, qapp_cls_):
     qtbot.wait(100)
 
 def test_bypass(qtbot, qapp_cls_):
-    scaling = qapp_cls_.desktop().devicePixelRatio()
+    scaling = qapp_cls_.MainWindow.screen().devicePixelRatio()
 
     fg = qapp_cls_.MainWindow.currentFlowgraph
     view = qapp_cls_.MainWindow.currentView
@@ -750,7 +754,7 @@ def test_file_new_close(qtbot, qapp_cls_, monkeypatch):
 def test_generate(qtbot, qapp_cls_, monkeypatch, tmp_path):
     fg = qapp_cls_.MainWindow.currentFlowgraph
     view = qapp_cls_.MainWindow.currentView
-    scaling = qapp_cls_.desktop().devicePixelRatio()
+    scaling = qapp_cls_.MainWindow.screen().devicePixelRatio()
     fg_path = tmp_path / "test_generate.grc"
     py_path = tmp_path / "default.py"
     monkeypatch.setattr(

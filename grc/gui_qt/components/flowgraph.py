@@ -20,7 +20,7 @@ from __future__ import absolute_import, print_function
 # Standard modules
 import logging
 
-from qtpy import QtGui, QtCore, QtWidgets
+from qtpy import QtGui, QtCore, QtWidgets, QT6
 from qtpy.QtCore import Qt
 
 from itertools import count
@@ -59,7 +59,10 @@ class Flowgraph(QtWidgets.QGraphicsScene, base.Component, CoreFlowgraph):
         self.startPort = None
         self._elements_to_draw = []
 
-        self.undoStack = QtWidgets.QUndoStack(self)
+        if QT6:
+            self.undoStack = QtGui.QUndoStack(self)
+        else:
+            self.undoStack = QtWidgets.QUndoStack(self)
         self.undoAction = self.undoStack.createUndoAction(self, "Undo")
         self.redoAction = self.undoStack.createRedoAction(self, "Redo")
 
@@ -123,6 +126,8 @@ class Flowgraph(QtWidgets.QGraphicsScene, base.Component, CoreFlowgraph):
         item = {}
         ds = QtCore.QDataStream(bytearray)
         while not ds.atEnd():
+            row = ds.readInt32()
+            column = ds.readInt32()
             map_items = ds.readInt32()
             for i in range(map_items):
                 key = ds.readInt32()
@@ -148,6 +153,32 @@ class Flowgraph(QtWidgets.QGraphicsScene, base.Component, CoreFlowgraph):
             if block_id not in block_ids:
                 break
         return block_id
+
+    def dropEvent(self, event):
+        QtWidgets.QGraphicsScene.dropEvent(self, event)
+        if event.mimeData().hasUrls:
+            data = event.mimeData()
+            if data.hasFormat("application/x-qabstractitemmodeldatalist"):
+                bytearray = data.data("application/x-qabstractitemmodeldatalist")
+                data_items = self.decode_data(bytearray)
+
+                # Find block in tree so that we can pull out label
+                block_key = data_items[0][QtCore.Qt.UserRole].value()
+
+                # Add block of this key at the cursor position
+                cursor_pos = event.scenePos()
+                pos = (cursor_pos.x(), cursor_pos.y())
+
+                self.add_block(block_key, pos)
+
+                event.setDropAction(Qt.CopyAction)
+                event.accept()
+            else:
+                return QtGui.QStandardItemModel.dropMimeData(
+                    self, data, action, row, column, parent
+                )
+        else:
+            event.ignore()
 
     def add_block(self, block_key, pos=(0, 0)):
         block = self.platform.blocks[block_key]
