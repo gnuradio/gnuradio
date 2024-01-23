@@ -52,7 +52,8 @@ void fir_filter_with_buffer_fff::set_taps(const std::vector<float>& taps)
     for (int i = 0; i < d_naligned; i++) {
         d_aligned_taps[i].clear();
         d_aligned_taps[i].resize(d_ntaps + d_naligned - 1);
-        std::copy(std::begin(d_taps), std::end(d_taps), &d_aligned_taps[i][i]);
+        std::copy(
+            std::begin(d_taps), std::end(d_taps), std::begin(d_aligned_taps[i]) + i);
     }
 
     d_idx = 0;
@@ -157,7 +158,8 @@ void fir_filter_with_buffer_ccc::set_taps(const std::vector<gr_complex>& taps)
     for (int i = 0; i < d_naligned; i++) {
         d_aligned_taps[i].clear();
         d_aligned_taps[i].resize(d_ntaps + d_naligned - 1);
-        std::copy(std::begin(d_taps), std::end(d_taps), &d_aligned_taps[i][i]);
+        std::copy(
+            std::begin(d_taps), std::end(d_taps), std::begin(d_aligned_taps[i]) + i);
     }
 
     d_idx = 0;
@@ -261,7 +263,8 @@ void fir_filter_with_buffer_ccf::set_taps(const std::vector<float>& taps)
     for (int i = 0; i < d_naligned; i++) {
         d_aligned_taps[i].clear();
         d_aligned_taps[i].resize(d_ntaps + d_naligned - 1);
-        std::copy(std::begin(d_taps), std::end(d_taps), &d_aligned_taps[i][i]);
+        std::copy(
+            std::begin(d_taps), std::end(d_taps), std::begin(d_aligned_taps[i]) + i);
     }
 
     d_idx = 0;
