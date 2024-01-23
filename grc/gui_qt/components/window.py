@@ -61,7 +61,7 @@ QStyle = QtWidgets.QStyle
 class MainWindow(QtWidgets.QMainWindow, base.Component):
     def __init__(self):
         QtWidgets.QMainWindow.__init__(self)
-        #base.Component.__init__(self)
+        # base.Component.__init__(self)
 
         log.debug("Setting the main window")
         self.setObjectName("main")
@@ -655,7 +655,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
             pass
         else:
             open_recent.setEnabled(False)
-        #open_recent.addAction(actions["open"])
+        # open_recent.addAction(actions["open"])
         # TODO: populate recent files
 
         # Setup the file menu
@@ -775,6 +775,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
         # Main toolbar
         file = Toolbar("File")
+        file.setObjectName("_FileTb")
         file.addAction(actions["new"])
         file.addAction(actions["open"])
         file.addAction(actions["save"])
@@ -783,6 +784,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
         # Edit toolbar
         edit = Toolbar("Edit")
+        edit.setObjectName("_EditTb")
         edit.addAction(actions["undo"])
         edit.addAction(actions["redo"])
         edit.addSeparator()
@@ -794,6 +796,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
         # Run Toolbar
         run = Toolbar("Run")
+        run.setObjectName("_RunTb")
         run.addAction(actions["errors"])
         run.addAction(actions["generate"])
         run.addAction(actions["execute"])
@@ -802,6 +805,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
         # Misc Toolbar
         misc = Toolbar("Misc")
+        misc.setObjectName("_MiscTb")
         misc.addAction(actions["reload"])
         toolbars["misc"] = misc
 
@@ -1365,6 +1369,10 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
         # TODO: Make sure all flowgraphs have been saved
         self.app.exit()
+
+    def closeEvent(self, evt):
+        log.debug("Close Event")
+        self.exit_triggered()
 
     def help_triggered(self):
         log.debug("help")
