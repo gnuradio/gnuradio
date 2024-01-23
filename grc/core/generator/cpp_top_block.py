@@ -120,8 +120,8 @@ class CppTopBlockGenerator(object):
         Returns:
             a string of C++ code
         """
-        file_path = self.file_path + '/' + \
-            self._flow_graph.get_option('id') + '.cpp'
+        filename = self._flow_graph.get_option('id') + '.cpp'
+        file_path = os.path.join(self.file_path, filename)
 
         output = []
 
@@ -147,8 +147,8 @@ class CppTopBlockGenerator(object):
         Returns:
             a string of C++ code
         """
-        file_path = self.file_path + '/' + \
-            self._flow_graph.get_option('id') + '.hpp'
+        filename = self._flow_graph.get_option('id') + '.hpp'
+        file_path = os.path.join(self.file_path, filename)
 
         output = []
 
