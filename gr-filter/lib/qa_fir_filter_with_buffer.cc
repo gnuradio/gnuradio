@@ -107,7 +107,7 @@ void test_decimate(unsigned int decimate)
             }
 
             // build filter
-            vector<tap_type> f1_taps(&taps[0], &taps[n]);
+            vector<tap_type> f1_taps(taps.begin(), taps.begin() + n);
             kernel::fir_filter_with_buffer_fff f1(f1_taps);
 
             // zero the output, then do the filtering
@@ -198,7 +198,7 @@ void test_decimate(unsigned int decimate)
             }
 
             // build filter
-            vector<tap_type> f1_taps(&taps[0], &taps[n]);
+            vector<tap_type> f1_taps(taps.begin(), taps.begin() + n);
             kernel::fir_filter_with_buffer_ccc f1(f1_taps);
 
             // zero the output, then do the filtering
@@ -287,7 +287,7 @@ void test_decimate(unsigned int decimate)
             }
 
             // build filter
-            vector<tap_type> f1_taps(&taps[0], &taps[n]);
+            vector<tap_type> f1_taps(taps.begin(), taps.begin() + n);
             kernel::fir_filter_with_buffer_ccf f1(f1_taps);
 
             // zero the output, then do the filtering
