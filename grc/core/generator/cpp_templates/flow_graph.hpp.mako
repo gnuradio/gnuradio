@@ -42,12 +42,6 @@ class_name = flow_graph.get_option('id') + ('_' if flow_graph.get_option('id') =
 param_str = ", ".join((param.vtype + " " + param.name) for param in parameters)
 %>\
 
-% if generate_options.startswith('hb'):
-class ${class_name};
-typedef std::shared_ptr<${class_name}> ${class_name}_sptr;
-${class_name}_sptr make_${class_name}();
-% endif
-
 % if generate_options == 'no_gui':
 class ${class_name} {
 % elif generate_options.startswith('hb'):
@@ -89,7 +83,10 @@ ${indent(declarations)}
 % endif
 
 public:
-% if not generate_options.startswith('hb'):
+% if generate_options.startswith('hb'):
+    typedef std::shared_ptr<${class_name}> sptr;
+    static sptr make(${param_str});
+% else:
     top_block_sptr tb;
 % endif
     ${class_name}(${param_str});
@@ -183,10 +180,11 @@ void ${class_name}::set_${var.name} (${var.vtype} ${var.name}) {
 }
 
 % endfor
-${class_name}_sptr
-make_${class_name}()
+${class_name}::sptr
+${class_name}::make(${param_str})
 {
-    return gnuradio::get_initial_sptr(new ${class_name}());
+    return gnuradio::make_block_sptr<${class_name}>(
+        ${", ".join(param.name for param in parameters)});
 }
 % endif
 #endif
