@@ -14,6 +14,8 @@ from .canvas.block import Block
 from .. import base
 from .flowgraph import Flowgraph
 
+from ...core.generator import Generator
+
 # Logging
 log = logging.getLogger(__name__)
 
@@ -52,6 +54,9 @@ class FlowgraphView(
 
         self.setDragMode(self.RubberBandDrag)
 
+        self.generator = None
+        self.process = None
+
     def createActions(self, actions):
         log.debug("Creating actions")
 
@@ -63,6 +68,15 @@ class FlowgraphView(
 
     def createToolbars(self, actions, toolbars):
         log.debug("Creating toolbars")
+
+    def get_generator(self) -> Generator:
+        return self.generator
+
+    def process_is_done(self) -> bool:
+        if self.process is None:
+            return True
+        else:
+            return (False if self.process.returncode is None else True)
 
     def readFile(self, filename):
         tree = ET.parse(filename)

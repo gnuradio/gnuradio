@@ -29,6 +29,7 @@ from qtpy.QtCore import Qt
 # Custom modules
 from .flowgraph_view import FlowgraphView
 from .example_browser import ExampleBrowser, Worker
+from .executor import ExecFlowGraphThread
 from .. import base, Constants, Utils
 from .undoable_actions import (
     RotateAction,
@@ -579,7 +580,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         self.actions["generate"].setEnabled(valid_fg)
         self.actions["execute"].setEnabled(valid_fg)
         self.actions["errors"].setEnabled(not valid_fg)
-        self.actions["kill"].setEnabled(False)  # TODO: Set this properly
+        self.actions["kill"].setEnabled(self.currentView.process_is_done())
 
         self.actions["cut"].setEnabled(False)
         self.actions["copy"].setEnabled(False)
@@ -1228,13 +1229,28 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
             self.currentFlowgraph, os.path.dirname(filename)
         )
         generator.write()
-        log.info(f"Generated {filename}")
+        self.currentView.generator = generator
+        log.info(f"Generated {generator.file_path}")
 
     def execute_triggered(self):
         log.debug("execute")
-        filename = self.currentFlowgraph.filename
-        py_path = filename[:-3] + "py"
-        subprocess.Popen(f"/usr/bin/python {py_path}", shell=True)
+        if self.currentView.process_is_done():
+            self.generate_triggered()
+            if self.currentView.generator:
+                xterm = self.platform.config.xterm_executable
+                '''if self.config.xterm_missing() != xterm:
+                    if not os.path.exists(xterm):
+                        Dialogs.show_missing_xterm(main, xterm)
+                    self.config.xterm_missing(xterm)'''
+                if self.currentFlowgraph.saved and self.currentFlowgraph.filename:
+                    # Save config before execution
+                    #self.config.save()
+                    ExecFlowGraphThread(
+                        view=self.currentView,
+                        flowgraph=self.currentFlowgraph,
+                        xterm_executable=xterm,
+                        callback=self.updateActions
+                    )
 
     def kill_triggered(self):
         log.debug("kill")
