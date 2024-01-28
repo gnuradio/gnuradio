@@ -1352,6 +1352,12 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         log.debug("example-browser")
         if self.examples_found:
             ex_dialog = self.ExampleBrowser
+            if len(ex_dialog.examples) == 0:
+                ad = QtWidgets.QMessageBox()
+                ad.setWindowTitle("GRC: No examples found")
+                ad.setText("GRC did not find any examples. Please ensure that the example path in grc.conf is correct.")
+                ad.exec()
+                return
             if isinstance(filter, list):
                 if len(filter):
                     ex_dialog.filter(filter)

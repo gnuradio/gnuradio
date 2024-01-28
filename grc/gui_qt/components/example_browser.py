@@ -157,6 +157,8 @@ class ExampleBrowser(QtWidgets.QDialog, base.Component):
         examples = []
         with Cache(Constants.EXAMPLE_CACHE_FILE, log=False) as cache:
             for entry in self.app.platform.config.example_paths:
+                if entry == '':
+                    log.error("Empty example path!")
                 if os.path.isdir(entry):
                     subdirs = 0
                     current_subdir = 0
