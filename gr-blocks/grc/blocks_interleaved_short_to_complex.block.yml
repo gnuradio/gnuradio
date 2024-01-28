@@ -46,9 +46,6 @@ cpp_templates:
     callbacks:
     - set_swap(${swap})
     - set_scale_factor(${scale_factor})
-    translations:
-        'True': 'true'
-        'False': 'false'
 
 documentation: |-
     This block converts interleaved 12/16-bit IQ samples to a float complex data 

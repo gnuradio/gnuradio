@@ -39,8 +39,5 @@ cpp_templates:
     includes: ['#include <gnuradio/blocks/file_descriptor_source.h>']
     declarations: 'blocks::file_descriptor_source::sptr ${id};'
     make: 'this->${id} = blocks::file_descriptor_source::make(${type.size}*${vlen}, ${fd}, ${repeat});'
-    translations:
-        'True': 'true'
-        'False': 'false'
 
 file_format: 1

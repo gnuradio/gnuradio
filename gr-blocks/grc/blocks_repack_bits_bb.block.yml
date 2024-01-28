@@ -53,6 +53,5 @@ cpp_templates:
     - set_k_and_l(${k},${l})
     translations:
         gr\.: ''
-        'True': 'true'
-        'False': 'false'
+
 file_format: 1

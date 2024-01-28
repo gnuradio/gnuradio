@@ -93,8 +93,5 @@ cpp_templates:
     - set_enabled(${enabled})
     - set_input_index(${input_index})
     - set_output_index(${output_index})
-    translations:
-        'True': 'true'
-        'False': 'false'
 
 file_format: 1

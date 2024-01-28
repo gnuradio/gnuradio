@@ -3,9 +3,7 @@ import yaml
 import operator
 import os
 import tempfile
-import textwrap
 import re
-import ast
 
 from mako.template import Template
 
@@ -238,8 +236,8 @@ class CppTopBlockGenerator(object):
         seen = set()
         output = []
 
-        def is_duplicate(l):
-            if l.startswith('#include') and l in seen:
+        def is_duplicate(line):
+            if line.startswith('#include') and line in seen:
                 return True
             seen.add(line)
             return False
@@ -264,7 +262,7 @@ class CppTopBlockGenerator(object):
             try:
                 # Newer gui markup w/ qtgui
                 code += block.params['gui_hint'].get_value()
-            except:
+            except Exception:
                 pass
             return code
 
@@ -284,9 +282,12 @@ class CppTopBlockGenerator(object):
                 translations = yaml.safe_load(translations)
             else:
                 translations = {}
-            translations.update(
-                {r"gr\.sizeof_([\w_]+)": r"sizeof(\1)"}
-            )
+            translations.update({
+                r"gr\.sizeof_([\w_]+)": r"sizeof(\1)",
+                r"'([^']*)'": r'"\1"',
+                r"True": r"true",
+                r"False": r"false",
+            })
             for key in translations:
                 make = re.sub(key.replace("\\\\", "\\"),
                               translations[key], make)
@@ -303,8 +304,10 @@ class CppTopBlockGenerator(object):
         fg = self._flow_graph
         variables = fg.get_cpp_variables()
 
-        type_translation = {'complex': 'gr_complex', 'real': 'double', 'float': 'float', 'int': 'int', 'complex_vector': 'std::vector<gr_complex>',
-                            'real_vector': 'std::vector<double>', 'float_vector': 'std::vector<float>', 'int_vector': 'std::vector<int>', 'string': 'std::string', 'bool': 'bool'}
+        type_translation = {'real': 'double', 'float': 'float', 'int': 'int', 'bool': 'bool',
+                            'complex_vector': 'std::vector<gr_complex>', 'real_vector': 'std::vector<double>',
+                            'float_vector': 'std::vector<float>', 'int_vector': 'std::vector<int>',
+                            'string': 'std::string', 'complex': 'gr_complex'}
         # If the type is explicitly specified, translate to the corresponding C++ type
         for var in list(variables):
             if var.params['value'].dtype != 'raw':
@@ -347,21 +350,16 @@ class CppTopBlockGenerator(object):
         parameters = fg.get_parameters()
 
         for param in parameters:
-            type_translation = {'eng_float': 'double', 'intx': 'int',
-                                'str': 'std::string', 'complex': 'gr_complex'}
+            type_translation = {'eng_float': 'double', 'intx': 'long', 'str': 'std::string', 'complex': 'gr_complex'}
             param.vtype = type_translation[param.params['type'].value]
 
-            if param.vtype == 'gr_complex':
-                evaluated = ast.literal_eval(
-                    param.params['value'].value.strip())
-                cpp_cmplx = '{' + str(evaluated.real) + \
-                    ', ' + str(evaluated.imag) + '}'
+            cpp_value = param.get_cpp_value(param.params['value'].value)
 
-                # Update the 'var_make' entry in the cpp_templates dictionary
-                d = param.cpp_templates
-                cpp_expr = d['var_make'].replace('${value}', cpp_cmplx)
-                d.update({'var_make': cpp_expr})
-                param.cpp_templates = d
+            # Update 'make' and 'var_make' entries in the cpp_templates dictionary
+            d = param.cpp_templates
+            cpp_expr = d['var_make'].replace('${value}', cpp_value)
+            d.update({'make': cpp_value, 'var_make': cpp_expr})
+            param.cpp_templates = d
 
     def _callbacks(self):
         fg = self._flow_graph

@@ -61,8 +61,5 @@ cpp_templates:
         self->${id}.set_enabled(${enabled});
     callbacks:
     - set_enabled(${enabled})
-    translations:
-        'True': 'true'
-        'False': 'false'
 
 file_format: 1

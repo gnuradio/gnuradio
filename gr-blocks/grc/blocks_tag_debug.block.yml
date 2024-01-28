@@ -61,8 +61,5 @@ cpp_templates:
         this->${id}.set_display(${display});
     callbacks:
     - set_display(${display})
-    translations:
-        'True': 'true'
-        'False': 'false'
 
 file_format: 1

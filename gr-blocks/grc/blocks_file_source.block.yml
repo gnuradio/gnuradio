@@ -63,8 +63,5 @@ cpp_templates:
     make: 'this->${id} =blocks::file_source::make(${type.size}*${vlen}, ${file}, ${repeat}, ${offset}, ${length});'
     callbacks:
     - open(${file}, ${repeat})
-    translations:
-        'True': 'true'
-        'False': 'false'
 
 file_format: 1
