@@ -143,8 +143,5 @@ cpp_templates:
     callbacks:
     ## TODO Handle std::string type when const char* argument is needed
     - this->${id}->open(${file})
-    translations:
-        'True': 'true'
-        'False': 'false'
 
 file_format: 1

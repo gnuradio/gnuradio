@@ -74,8 +74,5 @@ cpp_templates:
     callbacks:
     - set_taps(taps)
     - set_channel_map(ch_map)
-    translations:
-        'True': 'true'
-        'False': 'false'
 
 file_format: 1

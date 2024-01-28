@@ -86,8 +86,5 @@ cpp_templates:
     callbacks:
     - 'set_sample_rate(${samples_per_second})'
     - 'set_maximum_items_per_chunk(${id}_limit(${maximum}))'
-    translations:
-        'True': 'true'
-        'False': 'false'
 
 file_format: 1

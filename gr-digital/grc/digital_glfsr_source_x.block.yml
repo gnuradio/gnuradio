@@ -45,8 +45,5 @@ cpp_templates:
             ${mask},
             ${seed});
     link: ['gnuradio::gnuradio-digital']
-    translations:
-        'True': 'true'
-        'False': 'false'
 
 file_format: 1

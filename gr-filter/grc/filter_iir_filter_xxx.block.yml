@@ -60,8 +60,5 @@ cpp_templates:
     link: ['gnuradio::gnuradio-filter']
     callbacks:
     - set_taps(fftaps, fbtaps)
-    translations:
-        'True': 'true'
-        'False': 'false'
 
 file_format: 1

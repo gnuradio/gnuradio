@@ -49,9 +49,6 @@ cpp_templates:
     - set_threshold(${threshold})
     - set_alpha(${alpha})
     link: ['gnuradio::gnuradio-analog']
-    translations:
-        True: true
-        False: false
 
 documentation: |-
     This will either pass the input unchanged or block it, depending on

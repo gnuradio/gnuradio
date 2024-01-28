@@ -62,8 +62,5 @@ cpp_templates:
             ${len_tag_key},
             ${output_is_shifted});
     link: ['gnuradio::gnuradio-digital']
-    translations:
-        'True': 'true'
-        'False': 'false'
 
 file_format: 1

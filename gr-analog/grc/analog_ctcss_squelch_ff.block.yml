@@ -50,8 +50,5 @@ cpp_templates:
     - set_level(${level})
     - set_frequency(${freq})
     link: ['gnuradio::gnuradio-analog']
-    translations:
-        'True': 'true'
-        'False': 'false'
 
 file_format: 1
