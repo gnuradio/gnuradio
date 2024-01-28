@@ -51,8 +51,5 @@ cpp_templates:
     make: 'this->${id} = blocks::vector_source_${type.fcn}::make(${vector}, ${repeat}, ${vlen}, ${tags});'
     callbacks:
     - set_data(${vector}, ${tags})
-    translations:
-        'True': 'true'
-        'False': 'false'
 
 file_format: 1

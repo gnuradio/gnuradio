@@ -78,8 +78,5 @@ cpp_templates:
         ${drop_on_hwm},
         ${bind});
     link: ['gnuradio::gnuradio-zeromq']
-    translations:
-      'True': 'true'
-      'False': 'false'
 
 file_format: 1

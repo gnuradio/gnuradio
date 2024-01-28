@@ -1095,7 +1095,7 @@ cpp_templates:
         ${id} = qtgui::${type.fcn}::make(
             ${size}, // size
             ${srate}, // samp_rate
-            "${no_quotes(name)}", // name
+            ${name}, // name
             ${0 if type.startswith('msg') else nconnections} // number of inputs
         );
 
@@ -1103,7 +1103,7 @@ cpp_templates:
         ${id}->set_update_time(${update_time});
         ${id}->set_y_axis(${ymin}, ${ymax});
 
-        ${id}->set_y_label("${no_quotes(ylabel)}", "${no_quotes(yunit)}");
+        ${id}->set_y_label(${ylabel}, ${yunit});
 
         ${id}->enable_tags(${entags});
         ${id}->set_trigger_mode(${tr_mode.replace('qtgui.','gr::qtgui::')}, ${tr_slope.replace('qtgui.','gr::qtgui::')}, ${tr_level}, ${tr_delay},${tr_chan}, ${tr_tag});
@@ -1167,10 +1167,6 @@ cpp_templates:
         _${id}_win = this->${id}->qwidget();
 
         ${gui_hint() % win}
-
-    translations:
-        'True': 'true'
-        'False': 'false'
 
 documentation: |-
     The GUI hint can be used to position the widget within the application. The hint is of the form [tab_id@tab_index]: [row, col, row_span, col_span]. Both the tab specification and the grid position are optional.

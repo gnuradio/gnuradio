@@ -60,8 +60,5 @@ cpp_templates:
     callbacks:
     - set_true_tag(${true_key},${true_value})
     - set_false_tag(${false_key},${false_value})
-    translations:
-        'True': 'true'
-        'False': 'false'
 
 file_format: 1
