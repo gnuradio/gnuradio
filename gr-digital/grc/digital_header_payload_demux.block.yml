@@ -108,8 +108,5 @@ cpp_templates:
             ${special_tags},
             ${header_padding});
     link: ['gnuradio::gnuradio-digital']
-    translations:
-        'True': 'true'
-        'False': 'false'
 
 file_format: 1

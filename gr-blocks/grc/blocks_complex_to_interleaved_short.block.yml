@@ -37,9 +37,6 @@ cpp_templates:
     make: 'this->${id} = blocks::complex_to_interleaved_short::make(${vector_output});'
     callbacks:
     - set_scale_factor(${scale_factor})
-    translations:
-        'True': 'true'
-        'False': 'false'
 
 documentation: |-
     This block converts a complex sample to interleaved IQ 16-bit values.  

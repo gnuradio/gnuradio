@@ -15,7 +15,7 @@ import re
 import ast
 import typing
 
-from ._templates import MakoTemplates
+from ._templates import MakoTemplates, no_quotes
 from ._flags import Flags
 
 from ..base import Element
@@ -101,7 +101,7 @@ class Block(Element):
         try:
             clean_bus_structure = self.evaluate(bus_structure)
             return clean_bus_structure
-        except:
+        except Exception:
             return None
 
     # region Rewrite_and_Validation
@@ -373,7 +373,7 @@ class Block(Element):
         """Gets the block's current source bus structure."""
         try:
             bus_structure = self.params['bus_structure_source'].value or None
-        except:
+        except Exception:
             bus_structure = None
         return bus_structure
 
@@ -382,7 +382,7 @@ class Block(Element):
         """Gets the block's current source bus structure."""
         try:
             bus_structure = self.params['bus_structure_sink'].value or None
-        except:
+        except Exception:
             bus_structure = None
         return bus_structure
 
@@ -441,31 +441,33 @@ class Block(Element):
         self.cpp_templates = copy.copy(self.orig_cpp_templates)
 
         # Determine the lvalue type
-        def get_type(element: str, _vtype: typing.Optional[type] = None) -> str:
+        def get_type(element: str, vtype: typing.Optional[type] = None) -> str:
             evaluated = None
             try:
                 evaluated = ast.literal_eval(element)
-                if _vtype is None:
-                    _vtype = type(evaluated)
+                if vtype is None:
+                    vtype = type(evaluated)
             except ValueError or SyntaxError as excp:
-                if _vtype is None:
+                if vtype is None:
                     print(excp)
-            simple_types = {int: "int", float: "double", bool: "bool", complex: "gr_complex", str: "std::string"}
-            if _vtype in simple_types:
-                return simple_types[_vtype]
-            if _vtype == list:
+            simple_types = {int: "long", float: "double", bool: "bool", complex: "gr_complex", str: "std::string"}
+            if vtype in simple_types:
+                return simple_types[vtype]
+
+            elif vtype == list:
                 try:
                     # For container types we must also determine the type of the template parameter(s)
                     return f"std::vector<{get_type(str(evaluated[0]), type(evaluated[0]))}>"
+
                 except IndexError:  # empty list
                     return 'std::vector<std::string>'
 
-            if _vtype == dict:
+            elif vtype == dict:
                 try:
                     # For container types we must also determine the type of the template parameter(s)
-                    key = list(evaluated)[0]
-                    val = list(evaluated.values())[0]
+                    key, val = next(iter(evaluated.entries()))
                     return f"std::map<{get_type(str(key), type(key))}, {get_type(str(val), type(val))}>"
+
                 except IndexError:  # empty dict
                     return 'std::map<std::string, std::string>'
 
@@ -481,9 +483,19 @@ class Block(Element):
         if 'string' in self.vtype:
             self.cpp_templates['includes'].append('#include <string>')
 
-    def get_cpp_value(self, pyval):
+    def get_cpp_value(self, pyval, vtype: typing.Optional[type] = None) -> str:
+        """
+        Convert an evaluated variable value from Python to C++ with a defined type.
 
-        if type(pyval) == int or type(pyval) == float:
+        Returns:
+            string representation of the C++ value
+        """
+        if vtype is None:
+            vtype = type(pyval)
+        else:
+            assert vtype == type(pyval)
+
+        if vtype == int or vtype == float:
             val_str = str(pyval)
 
             # Check for PI and replace with C++ constant
@@ -496,43 +508,40 @@ class Block(Element):
 
             return str(pyval)
 
-        elif type(pyval) == bool:
-            return str(pyval)[0].lower() + str(pyval)[1:]
+        elif vtype == bool:
+            return str(pyval).lower()
 
-        elif type(pyval) == complex:
+        elif vtype == complex:
             self.cpp_templates['includes'].append(
                 '#include <gnuradio/gr_complex.h>')
             evaluated = ast.literal_eval(str(pyval).strip())
             return '{' + str(evaluated.real) + ', ' + str(evaluated.imag) + '}'
 
-        elif type(pyval) == list:
+        elif vtype == list:
             self.cpp_templates['includes'].append('#include <vector>')
-            val_str = '{'
-            for element in pyval:
-                val_str += self.get_cpp_value(element) + ', '
+            if len(pyval) == 0:
+                return '{}'
 
-            if len(val_str) > 1:
-                # truncate to trim superfluous ', ' from the end
-                val_str = val_str[0:-2]
+            item_type = type(pyval[0])
+            elements = [str(self.get_cpp_value(element, item_type)) for element in pyval]
+            return '{' + ', '.join(elements) + '}'
 
-            return val_str + '}'
-
-        elif type(pyval) == dict:
+        elif vtype == dict:
             self.cpp_templates['includes'].append('#include <map>')
-            val_str = '{'
-            for key in pyval:
-                val_str += '{' + self.get_cpp_value(key) + \
-                    ', ' + self.get_cpp_value(pyval[key]) + '}, '
+            key_type, val_type = next(iter(pyval.entries()))
+            key_type, val_type = type(key_type), type(val_type)
+            entries = ['{' + self.get_cpp_value(key, key_type) + ', ' + self.get_cpp_value(val, val_type) + '}'
+                       for key, val in pyval.entries()]
+            return '{' + ', '.join(entries) + '}'
 
-            if len(val_str) > 1:
-                # truncate to trim superfluous ', ' from the end
-                val_str = val_str[0:-2]
-
-            return val_str + '}'
-
-        if type(self.vtype) == str:
+        elif vtype == str:
             self.cpp_templates['includes'].append('#include <string>')
-            return '"' + pyval + '"'
+            value = pyval.strip()
+            if value in ['""', "''"]:
+                return '""'
+            return f'"{no_quotes(value)}"'
+
+        raise TypeError(f"Unsupported C++ vtype: {vtype}")
 
     def is_virtual_sink(self):
         return self.key == 'virtual_sink'
@@ -553,8 +562,9 @@ class Block(Element):
             return False
 
         try:
-            return self.flags.deprecated or any("deprecated".casefold() in cat.casefold()
-                                                for cat in self.category)
+            return (self.flags.deprecated or
+                    any("deprecated".casefold() in cat.casefold()
+                        for cat in self.category))
         except Exception as exception:
             print(exception.message)
         return False
@@ -580,7 +590,9 @@ class Block(Element):
         return False
 
     def can_bypass(self):
-        """ Check the number of sinks and sources and see if this block can be bypassed """
+        """
+        Check the number of sinks and sources and see if this block can be bypassed
+        """
         # Check to make sure this is a single path block
         # Could possibly support 1 to many blocks
         if len(self.sources) != 1 or len(self.sinks) != 1:
@@ -616,8 +628,7 @@ class Block(Element):
     @property
     def namespace(self):
         # update block namespace
-        self.block_namespace.update(
-            {key: param.get_evaluated() for key, param in self.params.items()})
+        self.block_namespace.update({key: param.get_evaluated() for key, param in self.params.items()})
         return self.block_namespace
 
     @property
@@ -642,7 +653,8 @@ class Block(Element):
             data['name'] = self.name
             data['id'] = self.key
         data['parameters'] = collections.OrderedDict(sorted(
-            (param_id, param.value) for param_id, param in self.params.items()
+            (param_id, param.value)
+            for param_id, param in self.params.items()
             if (param_id != 'id' or self.key == 'options')
         ))
         data['states'] = collections.OrderedDict(sorted(self.states.items()))
@@ -694,7 +706,8 @@ class Block(Element):
         for param in filter(lambda p: p.is_enum(), self.get_params()):
             children = self.get_ports() + self.get_params()
             # Priority to the type controller
-            if param.get_key() in ' '.join(map(lambda p: p._type, children)): type_param = param
+            if param.get_key() in ' '.join(map(lambda p: p._type, children)):
+                type_param = param
             # Use param if type param is unset
             if not type_param:
                 type_param = param
@@ -706,7 +719,7 @@ class Block(Element):
                 new_index = (old_index + direction + len(keys)) % len(keys)
                 type_param.set_value(keys[new_index])
                 changed = True
-            except:
+            except Exception:
                 pass
         return changed
 

@@ -151,7 +151,7 @@ cpp_templates:
     QBoxLayout* ${id}_layout_${i} =new QBoxLayout(QBoxLayout::TopToBottom,${id}_widget_${i});
     QGridLayout* ${id}_grid_layout_${i} = new QGridLayout();
     ${id}_layout_${i}->addLayout(${id}_grid_layout_${i});
-    ${win}->addTab(${id}_widget_${i},"${no_quotes(label)}");
+    ${win}->addTab(${id}_widget_${i},${label});
     % endfor
     ${gui_hint() % win}
  

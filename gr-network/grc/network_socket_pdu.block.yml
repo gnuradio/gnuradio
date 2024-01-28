@@ -47,9 +47,6 @@ cpp_templates:
     includes: ['#include <gnuradio/network/socket_pdu.h>']
     declarations: 'network::socket_pdu::sptr ${id};'
     make: 'this->${id} = network::socket_pdu::make("${type}", ${host}, ${port}, ${mtu}, ${tcp_no_delay});'
-    translations:
-        'True': 'true'
-        'False': 'false'
 
 documentation: |-
     For server modes, leave Host blank to bind to all interfaces (equivalent to 0.0.0.0).
