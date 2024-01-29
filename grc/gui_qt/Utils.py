@@ -7,7 +7,7 @@ from qtpy import QtGui, QtCore
 
 from . import Constants
 
-log = logging.getLogger(__name__)
+log = logging.getLogger(f"grc.application.{__name__}")
 
 
 def get_rotated_coordinate(coor, rotation):

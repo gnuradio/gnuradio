@@ -13,7 +13,7 @@ from ....core.utils import flow_graph_complexity
 from ..dialogs import PropsDialog
 
 # Logging
-log = logging.getLogger(__name__)
+log = logging.getLogger(f"grc.application.{__name__}")
 
 LONG_VALUE = 20  # maximum length of a param string.
 # if exceeded, '...' will be displayed
