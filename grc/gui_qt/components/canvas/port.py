@@ -1,22 +1,13 @@
-"""
-Copyright 2007, 2008, 2009 Free Software Foundation, Inc.
-This file is part of GNU Radio
-
-SPDX-License-Identifier: GPL-2.0-or-later
-
-"""
-
-from qtpy import QtGui, QtCore, QtWidgets
-from qtpy.QtCore import Qt
+from qtpy.QtGui import QPen, QPainter, QBrush, QFont, QFontMetrics
+from qtpy.QtCore import Qt, QPointF, QRectF
+from qtpy.QtWidgets import QGraphicsItem
 
 from . import colors
 from ... import Constants
 from ....core.ports import Port as CorePort
 
 
-class Port(QtWidgets.QGraphicsItem, CorePort):
-    """The graphical port."""
-
+class Port(CorePort):
     @classmethod
     def make_cls_with_base(cls, super_cls):
         name = super_cls.__name__
@@ -25,132 +16,123 @@ class Port(QtWidgets.QGraphicsItem, CorePort):
         return type(name, bases, namespace)
 
     def __init__(self, parent, direction, **n):
-        """
-        Port constructor.
-        Create list of connector coordinates.
-        """
-        self._parent = parent
         super(self.__class__, self).__init__(parent, direction, **n)
-        #CorePort.__init__(self, parent, direction, **n)
-        QtWidgets.QGraphicsItem.__init__(self)
+        self.gui = GUIPort(self, direction)
+
+    def remove_clone(self, port):
+        self.gui.scene().removeItem(port.gui)
+        super(self.__class__, self).remove_clone(port)
+
+
+class GUIPort(QGraphicsItem):
+    """
+    The graphical port. Interfaces with its underlying Port object using self.core.
+    The GUIPort is always instantiated in the Port constructor.
+
+    Note that this constructor is called before its parent GUIBlock is instantiated,
+    which is why we call setParentItem() in create_shapes_and_labels().
+    """
+    def __init__(self, core, direction, **n):
+        self.core = core
+        QGraphicsItem.__init__(self)
+
         self.y_offset = 0
-        self.height = 3 * 15.0 if self.dtype == 'bus' else 15.0
+        self.height = 3 * 15.0 if self.core.dtype == 'bus' else 15.0
         self.width = 15.0
 
-        if self._dir == "sink":
-            self.connection_point = self.scenePos() + QtCore.QPointF(0.0, self.height / 2.0)
+        if self.core._dir == "sink":
+            self.connection_point = self.scenePos() + QPointF(0.0, self.height / 2.0)
         else:
-            self.connection_point = self.scenePos() + QtCore.QPointF(15.0, self.height / 2.0)
+            self.connection_point = self.scenePos() + QPointF(15.0, self.height / 2.0)
 
-        self.setFlag(QtWidgets.QGraphicsItem.ItemSendsScenePositionChanges)
+        self.setFlag(QGraphicsItem.ItemSendsScenePositionChanges)
 
         self._border_color = self._bg_color = colors.BLOCK_ENABLED_COLOR
-        self.parent_flowgraph.addItem(self)
-        self.setFlag(QtWidgets.QGraphicsItem.ItemStacksBehindParent)
-        self.setFlag(QtWidgets.QGraphicsItem.ItemIsSelectable)
+
+        self.setFlag(QGraphicsItem.ItemStacksBehindParent)
+        self.setFlag(QGraphicsItem.ItemIsSelectable)
         self.setAcceptHoverEvents(True)
 
         self._hovering = False
         self.auto_hide_port_labels = False
 
+        self.font = QFont('Helvetica', 8)
+        self.fm = QFontMetrics(self.font)
+
+        # TODO: Move somewhere else? Not necessarily
+        self.core.parent_flowgraph.gui.addItem(self)
+
     def itemChange(self, change, value):
-        if self._dir == "sink":
-            self.connection_point = self.scenePos() + QtCore.QPointF(0.0, self.height / 2.0)
+        if self.core._dir == "sink":
+            self.connection_point = self.scenePos() + QPointF(0.0, self.height / 2.0)
         else:
-            self.connection_point = self.scenePos() + QtCore.QPointF(self.width, self.height / 2.0)
-        for conn in self.connections():
-            conn.updateLine()
-        return QtWidgets.QGraphicsLineItem.itemChange(self, change, value)
-
-    def remove_clone(self, port):
-        self.parent_flowgraph.removeItem(port)
-        CorePort.remove_clone(self, port)
-
-    def create_shapes(self):
-        """Create new areas and labels for the port."""
-        fm = QtGui.QFontMetrics(QtGui.QFont('Helvetica', 8))
-        self.width = max(15, fm.width(self.name) * 1.5)
-
-    def create_labels(self, cr=None):
-        """Create the labels for the socket."""
-        pass
+            self.connection_point = self.scenePos() + QPointF(self.width, self.height / 2.0)
+        for conn in self.core.connections():
+            conn.gui.update()
+        return QGraphicsItem.itemChange(self, change, value)
 
     def create_shapes_and_labels(self):
+        self.auto_hide_port_labels = self.core.parent.parent.gui.app.qsettings.value('grc/auto_hide_port_labels', type=bool)
         if not self.parentItem():
-            self.setParentItem(self.parent_block)
-        self.create_shapes()
+            self.setParentItem(self.core.parent_block.gui)
+
+        self.width = max(15, self.fm.width(self.core.name) * 1.5)
         self._update_colors()
-        self.auto_hide_port_labels = self.parent.parent.app.qsettings.value('grc/auto_hide_port_labels', type=bool)
 
     @property
-    def _show_label(self):
-        """
-        Figure out if the label should be hidden
-
-        Returns:
-            true if the label should not be shown
-        """
+    def _show_label(self) -> bool:
         return self._hovering or not self.auto_hide_port_labels
 
     def _update_colors(self):
         """
         Get the color that represents this port's type.
-        Codes differ for ports where the vec length is 1 or greater than 1.
-        Returns:
-            a hex color code.
+        TODO: Codes differ for ports where the vec length is 1 or greater than 1.
         """
-        if not self.parent.enabled:
-            #self._font_color[-1] = 0.4
+        if not self.core.parent.enabled:
             color = colors.BLOCK_DISABLED_COLOR
-        elif self.domain == Constants.GR_MESSAGE_DOMAIN:
+        elif self.core.domain == Constants.GR_MESSAGE_DOMAIN:
             color = colors.PORT_TYPE_TO_COLOR.get('message')
         else:
-            #self._font_color[-1] = 1.0
-            color = colors.PORT_TYPE_TO_COLOR.get(self.dtype) or colors.PORT_TYPE_TO_COLOR.get('')
+            color = colors.PORT_TYPE_TO_COLOR.get(self.core.dtype) or colors.PORT_TYPE_TO_COLOR.get('')
         self._bg_color = color
         self._border_color = color
-        #self._border_color = tuple(max(c - 0.3, 0) for c in color)
-
-    def boundingRect(self):
-        if self._dir == "sink":
-            return QtCore.QRectF(-max(0, self.width - 15), 0, self.width, self.height)  # same as the rectangle we draw, but with a 0.5*pen width margin
-        else:
-            return QtCore.QRectF(0, 0, self.width, self.height)  # same as the rectangle we draw, but with a 0.5*pen width margin
-
-    def hoverEnterEvent(self, event):
-        self._hovering = True
-        return QtWidgets.QGraphicsItem.hoverEnterEvent(self, event)
-
-    def hoverLeaveEvent(self, event):
-        self._hovering = False
-        return QtWidgets.QGraphicsItem.hoverLeaveEvent(self, event)
 
     def paint(self, painter, option, widget):
-        """
-        Draw the socket with a label.
-        """
-        if self.hidden:
+        if self.core.hidden:
             return
-        painter.setRenderHint(QtGui.QPainter.Antialiasing)
+        painter.setRenderHint(QPainter.Antialiasing)
 
-        pen = QtGui.QPen(self._border_color)
+        pen = QPen(self._border_color)
         painter.setPen(pen)
-        painter.setBrush(QtGui.QBrush(self._bg_color))
+        painter.setBrush(QBrush(self._bg_color))
 
-        if self._dir == "sink":
-            rect = QtCore.QRectF(-max(0, self.width - 15), 0, self.width, self.height)  # same as the rectangle we draw, but with a 0.5*pen width margin
+        if self.core._dir == "sink":
+            rect = QRectF(-max(0, self.width - 15), 0, self.width, self.height)
         else:
-            rect = QtCore.QRectF(0, 0, self.width, self.height)  # same as the rectangle we draw, but with a 0.5*pen width margin
+            rect = QRectF(0, 0, self.width, self.height)
         painter.drawRect(rect)
 
         if self._show_label:
-            painter.setPen(QtGui.QPen(1))
-            font = QtGui.QFont('Helvetica', 8)
-            painter.setFont(font)
-            if self._dir == "sink":
-                painter.drawText(QtCore.QRectF(-max(0, self.width - 15), 0, self.width, self.height), Qt.AlignCenter, self.name)
+            painter.setPen(QPen(1))
+            painter.setFont(self.font)
+            if self.core._dir == "sink":
+                painter.drawText(QRectF(-max(0, self.width - 15), 0, self.width, self.height), Qt.AlignCenter, self.core.name)
             else:
-                painter.drawText(QtCore.QRectF(0, 0, self.width, self.height), Qt.AlignCenter, self.name)
+                painter.drawText(QRectF(0, 0, self.width, self.height), Qt.AlignCenter, self.core.name)
 
     def center(self):
-        return QtCore.QPointF(self.x() + self.width / 2, self.y() + self.height / 2)
+        return QPointF(self.x() + self.width / 2, self.y() + self.height / 2)
+
+    def boundingRect(self):
+        if self.core._dir == "sink":
+            return QRectF(-max(0, self.width - 15), 0, self.width, self.height)
+        else:
+            return QRectF(0, 0, self.width, self.height)
+
+    def hoverEnterEvent(self, event):
+        self._hovering = True
+        return QGraphicsItem.hoverEnterEvent(self, event)
+
+    def hoverLeaveEvent(self, event):
+        self._hovering = False
+        return QGraphicsItem.hoverLeaveEvent(self, event)

@@ -116,7 +116,7 @@ def find_blocks(flowgraph, block_type):
 def click_on(qtbot, app, item, button="left"):
     scaling = app.MainWindow.screen().devicePixelRatio()
     view = app.MainWindow.currentView
-    click_pos = scaling * global_pos(item, view)
+    click_pos = scaling * global_pos(item.gui, view)
     pag.click(click_pos.x(), click_pos.y(), button=button)
     qtbot.wait(100)
 
@@ -138,7 +138,7 @@ def redo(qtbot, app):
 def delete_block(qtbot, app, block):
     view = app.MainWindow.currentView
     scaling = app.MainWindow.screen().devicePixelRatio()
-    click_pos = scaling * global_pos(block, view)
+    click_pos = scaling * global_pos(block.gui, view)
     pag.click(click_pos.x(), click_pos.y(), button="left")
     qtbot.wait(100)
     qtbot.keyClick(app.focusWidget(), QtCore.Qt.Key_Delete)
@@ -151,6 +151,32 @@ def menu_shortcut(qtbot, app, menu_name, menu_key, shortcut_key):
     qtbot.wait(100)
     qtbot.keyClick(menu, shortcut_key)
     qtbot.wait(100)
+
+# Start by closing the flowgraph that pops up on start
+def test_file_close_init(qtbot, qapp_cls_, monkeypatch):
+    win = qapp_cls_.MainWindow
+    monkeypatch.setattr(
+        QtWidgets.QMessageBox,
+        "question",
+        lambda *args: QtWidgets.QMessageBox.Discard,
+    )
+
+    qtbot.wait(100)
+
+    assert win.tabWidget.count() == 1
+    menu_shortcut(qtbot, qapp_cls_, "file", QtCore.Qt.Key_F, QtCore.Qt.Key_L)
+    assert win.tabWidget.count() == 1
+
+def test_delete_block(qtbot, qapp_cls_):
+    qtbot.wait(100)
+    var = find_blocks(qapp_cls_.MainWindow.currentFlowgraph, "variable")
+    assert var is not None
+
+    delete_block(qtbot, qapp_cls_, var)
+    qtbot.wait(100)
+    assert len(qapp_cls_.MainWindow.currentFlowgraph.blocks) == 1
+    undo(qtbot, qapp_cls_)
+    assert len(qapp_cls_.MainWindow.currentFlowgraph.blocks) == 2
 
 
 def test_add_null_sink(qtbot, qapp_cls_):
@@ -183,6 +209,23 @@ def test_add_throttle(qtbot, qapp_cls_):
 
     delete_block(qtbot, qapp_cls_, throttle)
 
+def test_right_click(qtbot, qapp_cls_):
+    qtbot.wait(100)
+    add_block_from_query(qtbot, qapp_cls_, "throttle")
+
+    throttle = find_blocks(qapp_cls_.MainWindow.currentFlowgraph, "blocks_throttle")
+    assert throttle is not None
+    qtbot.wait(100)
+
+    def close():
+        qtbot.keyClick(throttle.gui.right_click_menu, QtCore.Qt.Key_Escape)
+
+    QtCore.QTimer.singleShot(200, close)
+    click_on(qtbot, qapp_cls_, throttle, button="right")
+    qtbot.wait(100)
+
+    delete_block(qtbot, qapp_cls_, throttle)
+
 def test_errors(qtbot, qapp_cls_):
     menu = qapp_cls_.MainWindow.menus["build"]
 
@@ -211,37 +254,42 @@ def test_open_properties(qtbot, qapp_cls_):
         qapp_cls_.MainWindow.currentView.viewport(),
         QtCore.Qt.LeftButton,
         pos=qapp_cls_.MainWindow.currentView.mapFromScene(
-            qapp_cls_.MainWindow.currentFlowgraph.options_block.pos()
+            qapp_cls_.MainWindow.currentFlowgraph.options_block.gui.pos()
             + QtCore.QPointF(15.0, 15.0)
         ),
     )
     qtbot.wait(100)
-    assert qapp_cls_.MainWindow.currentFlowgraph.options_block.props_dialog.isVisible()
+    assert qapp_cls_.MainWindow.currentFlowgraph.options_block.gui.props_dialog.isVisible()
     keystroke(qtbot, qapp_cls_, QtCore.Qt.Key_Escape)
     assert (
-        not qapp_cls_.MainWindow.currentFlowgraph.options_block.props_dialog.isVisible()
+        not qapp_cls_.MainWindow.currentFlowgraph.options_block.gui.props_dialog.isVisible()
     )
 
 
 def test_change_id(qtbot, qapp_cls_):
     opts = find_blocks(qapp_cls_.MainWindow.currentFlowgraph, "options")
+    assert opts.params["title"].value == "Not titled yet"
     qtbot.mouseDClick(
         qapp_cls_.MainWindow.currentView.viewport(),
         QtCore.Qt.LeftButton,
         pos=qapp_cls_.MainWindow.currentView.mapFromScene(
-            opts.pos() + QtCore.QPointF(15.0, 15.0)
+            opts.gui.pos() + QtCore.QPointF(15.0, 15.0)
         ),
     )
     qtbot.wait(100)
     qtbot.mouseDClick(
-        opts.props_dialog.edit_params[1],
+        opts.gui.props_dialog.edit_params[1],
         QtCore.Qt.LeftButton,
     )
     type_text(qtbot, qapp_cls_, "changed")
     qtbot.wait(100)
     keystroke(qtbot, qapp_cls_, QtCore.Qt.Key_Enter)
-    val = opts.params["title"].value
-    assert val == "Not titled changed"
+    assert opts.params["title"].value == "Not titled changed"
+    qtbot.wait(100)
+    undo(qtbot, qapp_cls_)
+    assert opts.params["title"].value == "Not titled yet"
+    redo(qtbot, qapp_cls_)
+    assert opts.params["title"].value == "Not titled changed"
 
 
 def test_rotate_block(qtbot, qapp_cls_):
@@ -262,7 +310,15 @@ def test_rotate_block(qtbot, qapp_cls_):
     new_rotation = opts.states["rotation"]
     assert new_rotation == old_rotation - 90
 
+    undo(qtbot, qapp_cls_)
+    new_rotation = opts.states["rotation"]
+    assert new_rotation == old_rotation
+
     keystroke(qtbot, qapp_cls_, QtCore.Qt.Key_Right)
+    new_rotation = opts.states["rotation"]
+    assert new_rotation == old_rotation + 90
+
+    undo(qtbot, qapp_cls_)
     new_rotation = opts.states["rotation"]
     assert new_rotation == old_rotation
 
@@ -297,8 +353,8 @@ def test_move_blocks(qtbot, qapp_cls_):
     click_on(qtbot, qapp_cls_, variable)
     qtbot.wait(100)
 
-    start_throttle = scaling * global_pos(throttle, view)
-    start_variable = scaling * global_pos(variable, view)
+    start_throttle = scaling * global_pos(throttle.gui, view)
+    start_variable = scaling * global_pos(variable.gui, view)
     pag.moveTo(start_throttle.x(), start_throttle.y())
     pag.mouseDown()
 
@@ -311,9 +367,15 @@ def test_move_blocks(qtbot, qapp_cls_):
     while drag_t.is_alive():
         qtbot.wait(50)
     pag.mouseUp()
-    assert scaling * global_pos(throttle, view) != start_throttle
+    qtbot.wait(100)
+    assert scaling * global_pos(throttle.gui, view) != start_throttle
+    undo(qtbot, qapp_cls_)
+    assert scaling * global_pos(throttle.gui, view) == start_throttle
+    redo(qtbot, qapp_cls_)
+    assert scaling * global_pos(throttle.gui, view) != start_throttle
+
     # Variable shouldn't move
-    assert scaling * global_pos(variable, view) == start_variable
+    assert scaling * global_pos(variable.gui, view) == start_variable
     delete_block(qtbot, qapp_cls_, throttle)
 
 
@@ -331,7 +393,7 @@ def test_connection(qtbot, qapp_cls_):
 
     assert len(fg.connections) == 0
 
-    start = scaling * global_pos(n_sink, view)
+    start = scaling * global_pos(n_sink.gui, view)
     pag.moveTo(start.x(), start.y())
     pag.mouseDown()
 
@@ -373,7 +435,7 @@ def test_num_inputs(qtbot, qapp_cls_):
 
     assert len(n_sink.sinks) == 1
 
-    start = scaling * global_pos(n_sink, view)
+    start = scaling * global_pos(n_sink.gui, view)
     pag.moveTo(start.x(), start.y())
     pag.mouseDown()
 
@@ -391,25 +453,25 @@ def test_num_inputs(qtbot, qapp_cls_):
     click_on(qtbot, qapp_cls_, n_sink.sinks[0])
     qtbot.wait(100)
 
-    click_pos = scaling * global_pos(n_sink, view)
+    click_pos = scaling * global_pos(n_sink.gui, view)
     pag.doubleClick(click_pos.x(), click_pos.y(), button="left")
     qtbot.wait(100)
     param_index = 0
-    for i in range(len(n_sink.props_dialog.edit_params)):
-        if n_sink.props_dialog.edit_params[i].param.key == 'num_inputs':
+    for i in range(len(n_sink.gui.props_dialog.edit_params)):
+        if n_sink.gui.props_dialog.edit_params[i].param.key == 'num_inputs':
             param_index = i
 
-    qtbot.mouseDClick(n_sink.props_dialog.edit_params[param_index], QtCore.Qt.LeftButton)
+    qtbot.mouseDClick(n_sink.gui.props_dialog.edit_params[param_index], QtCore.Qt.LeftButton)
     type_text(qtbot, qapp_cls_, "2")
     qtbot.wait(100)
     keystroke(qtbot, qapp_cls_, QtCore.Qt.Key_Enter)
     assert len(n_sink.sinks) == 2
     assert len(fg.connections) == 1
 
-    click_pos = scaling * global_pos(n_sink, view)
+    click_pos = scaling * global_pos(n_sink.gui, view)
     pag.doubleClick(click_pos.x(), click_pos.y(), button="left")
     qtbot.wait(100)
-    qtbot.mouseDClick(n_sink.props_dialog.edit_params[param_index], QtCore.Qt.LeftButton)
+    qtbot.mouseDClick(n_sink.gui.props_dialog.edit_params[param_index], QtCore.Qt.LeftButton)
     type_text(qtbot, qapp_cls_, "1")
     qtbot.wait(100)
     keystroke(qtbot, qapp_cls_, QtCore.Qt.Key_Enter)
@@ -438,15 +500,15 @@ def test_bus(qtbot, qapp_cls_):
 
     assert len(n_sink.sinks) == 1
 
-    click_pos = scaling * global_pos(n_sink, view)
+    click_pos = scaling * global_pos(n_sink.gui, view)
     pag.doubleClick(click_pos.x(), click_pos.y(), button="left")
     qtbot.wait(100)
     param_index = 0
-    for i in range(len(n_sink.props_dialog.edit_params)):
-        if n_sink.props_dialog.edit_params[i].param.key == 'num_inputs':
+    for i in range(len(n_sink.gui.props_dialog.edit_params)):
+        if n_sink.gui.props_dialog.edit_params[i].param.key == 'num_inputs':
             param_index = i
 
-    qtbot.mouseDClick(n_sink.props_dialog.edit_params[param_index], QtCore.Qt.LeftButton)
+    qtbot.mouseDClick(n_sink.gui.props_dialog.edit_params[param_index], QtCore.Qt.LeftButton)
     type_text(qtbot, qapp_cls_, "2")
     qtbot.wait(100)
     keystroke(qtbot, qapp_cls_, QtCore.Qt.Key_Enter)
@@ -504,6 +566,10 @@ def test_bypass(qtbot, qapp_cls_):
     # Bypass the throttle block
     click_on(qtbot, qapp_cls_, throttle)
     keystroke(qtbot, qapp_cls_, QtCore.Qt.Key_B)
+    assert throttle.state == "bypassed"
+    undo(qtbot, qapp_cls_)
+    assert throttle.state == "enabled"
+    redo(qtbot, qapp_cls_)
     assert throttle.state == "bypassed"
     qtbot.wait(100)
     keystroke(qtbot, qapp_cls_, QtCore.Qt.Key_E)
@@ -770,7 +836,7 @@ def test_generate(qtbot, qapp_cls_, monkeypatch, tmp_path):
 
     assert len(fg.connections) == 0
 
-    start = scaling * global_pos(n_sink, view)
+    start = scaling * global_pos(n_sink.gui, view)
     pag.moveTo(start.x(), start.y())
     pag.mouseDown()
 

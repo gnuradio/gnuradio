@@ -1,11 +1,11 @@
-from __future__ import absolute_import, print_function
-
-# Standard modules
 import logging
 import os
 import traceback
 
-from qtpy import QtCore, QtGui, QtWidgets, uic
+from qtpy import uic
+from qtpy.QtCore import QObject, Signal, Slot, QRunnable, QVariant, Qt
+from qtpy.QtGui import QPixmap
+from qtpy.QtWidgets import QDialog, QListWidgetItem
 
 from ...core.cache import Cache
 from .. import base, Constants
@@ -15,13 +15,16 @@ from ..properties import Paths
 log = logging.getLogger(__name__)
 
 
-class WorkerSignals(QtCore.QObject):
-    error = QtCore.Signal(tuple)
-    result = QtCore.Signal(object)
-    progress = QtCore.Signal(tuple)
+class WorkerSignals(QObject):
+    error = Signal(tuple)
+    result = Signal(object)
+    progress = Signal(tuple)
 
 
-class Worker(QtCore.QRunnable):
+class Worker(QRunnable):
+    """
+    This is the Worker that will gather/parse examples as a background task
+    """
     def __init__(self, fn, *args, **kwargs):
         super(Worker, self).__init__()
 
@@ -32,7 +35,7 @@ class Worker(QtCore.QRunnable):
 
         self.kwargs['progress_callback'] = self.signals.progress
 
-    @QtCore.Slot()
+    @Slot()
     def run(self):
         try:
             result = self.fn(*self.args, **self.kwargs)
@@ -43,25 +46,25 @@ class Worker(QtCore.QRunnable):
             self.signals.result.emit(result)
 
 
-class ExampleBrowser(QtWidgets.QDialog, base.Component):
-    file_to_open = QtCore.Signal(str)
-    data_role = QtCore.Qt.UserRole
+class ExampleBrowser(QDialog, base.Component):
+    file_to_open = Signal(str)
+    data_role = Qt.UserRole
 
     def __init__(self):
         super().__init__()
         uic.loadUi(Paths.RESOURCES + "/example_browser.ui", self)
 
-        self.cpp_qt_fg = QtGui.QPixmap(Paths.RESOURCES + "/cpp_qt_fg.png")
-        self.cpp_cmd_fg = QtGui.QPixmap(Paths.RESOURCES + "/cpp_cmd_fg.png")
-        self.py_qt_fg = QtGui.QPixmap(Paths.RESOURCES + "/py_qt_fg.png")
-        self.py_cmd_fg = QtGui.QPixmap(Paths.RESOURCES + "/py_cmd_fg.png")
+        self.cpp_qt_fg = QPixmap(Paths.RESOURCES + "/cpp_qt_fg.png")
+        self.cpp_cmd_fg = QPixmap(Paths.RESOURCES + "/cpp_cmd_fg.png")
+        self.py_qt_fg = QPixmap(Paths.RESOURCES + "/py_qt_fg.png")
+        self.py_cmd_fg = QPixmap(Paths.RESOURCES + "/py_cmd_fg.png")
 
         self.setMinimumSize(600, 400)
         self.setModal(True)
 
         self.setWindowTitle("GRC Examples")
 
-        self.examples = self.app.platform.examples
+        self.examples = self.platform.examples
         self.modules = []
         self.current_module = ""
 
@@ -79,9 +82,9 @@ class ExampleBrowser(QtWidgets.QDialog, base.Component):
             if ex["module"] not in self.modules:
                 self.modules.append(ex["module"])
                 self.left_list.addItem(ex["module"])
-            item = QtWidgets.QListWidgetItem()
+            item = QListWidgetItem()
             item.setText(ex["name"])
-            item.setData(self.data_role, QtCore.QVariant(ex))
+            item.setData(self.data_role, QVariant(ex))
             self.mid_list.addItem(item)
 
         self.left_list.sortItems()
@@ -125,7 +128,35 @@ class ExampleBrowser(QtWidgets.QDialog, base.Component):
         self.file_to_open.emit(ex["path"])
         self.done(0)
 
+    def filter_(self, path_filter: list[str]):
+        """
+        Only display examples that contain a specific block. (Hide the others)
+
+            Parameters:
+                path_filter: A list
+        """
+        # First, hide all the categories
+        for i in range(self.left_list.count()):
+            self.left_list.item(i).setHidden(True)
+
+        for i in range(self.mid_list.count()):
+            m_item = self.mid_list.item(i)
+            if m_item.data(self.data_role)["path"] in path_filter:
+                m_item.setHidden(False)
+                # Show the example, but also show the category (below)
+                for j in range(self.left_list.count()):
+                    l_item = self.left_list.item(j)
+                    if l_item.text() == m_item.data(self.data_role)["module"]:
+                        l_item.setHidden(False)
+
+            m_item.setHidden(True)
+
+        self.left_list.sortItems()
+        self.left_list.setCurrentRow(0)
+        self.update_mid_list()
+
     def remove_filter(self):
+        """Reset the filter."""
         for i in range(self.left_list.count()):
             self.left_list.item(i).setHidden(False)
         for i in range(self.mid_list.count()):
@@ -135,28 +166,11 @@ class ExampleBrowser(QtWidgets.QDialog, base.Component):
         self.left_list.setCurrentRow(0)
         self.update_mid_list()
 
-    def filter(self, filter):
-        for i in range(self.left_list.count()):
-            self.left_list.item(i).setHidden(True)
-
-        for i in range(self.mid_list.count()):
-            m_item = self.mid_list.item(i)
-            if m_item.data(self.data_role)["path"] in filter:
-                m_item.setHidden(False)
-                for j in range(self.left_list.count()):
-                    l_item = self.left_list.item(j)
-                    if l_item.text() == m_item.data(self.data_role)["module"]:
-                        l_item.setHidden(False)
-            m_item.setHidden(True)
-
-        self.left_list.sortItems()
-        self.left_list.setCurrentRow(0)
-        self.update_mid_list()
-
     def find_examples(self, progress_callback, ext="grc"):
+        """Iterate through the example flowgraph directories and parse them."""
         examples = []
-        with Cache(Constants.EXAMPLE_CACHE_FILE, log=False) as cache:
-            for entry in self.app.platform.config.example_paths:
+        with Cache(Constants.EXAMPLE_CACHE_FILE) as cache:
+            for entry in self.platform.config.example_paths:
                 if entry == '':
                     log.error("Empty example path!")
                 if os.path.isdir(entry):
@@ -191,8 +205,8 @@ class ExampleBrowser(QtWidgets.QDialog, base.Component):
                             except Exception:
                                 continue
 
-        examples_w_block = {}  # str: set()
-        designated_examples_w_block = {}  # str: set()
+        examples_w_block: dict[str, set[str]] = {}
+        designated_examples_w_block: dict[str, set[str]] = {}
         for example in examples:
             if example["example_filter"]:
                 for block in example["example_filter"]:

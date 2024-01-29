@@ -1,8 +1,8 @@
 import logging
 
-# third-party modules
-from qtpy import QtGui, QtCore, QtWidgets
-from qtpy.QtCore import Qt, QUrl
+from qtpy.QtGui import QPen, QPainter, QBrush, QFont, QFontMetrics
+from qtpy.QtCore import Qt, QPointF, QRectF, QUrl
+from qtpy.QtWidgets import QGraphicsItem, QApplication
 
 from . import colors
 from ... import Constants
@@ -19,7 +19,10 @@ LONG_VALUE = 20  # maximum length of a param string.
 # if exceeded, '...' will be displayed
 
 
-class Block(QtWidgets.QGraphicsItem, CoreBlock):
+class Block(CoreBlock):
+    """
+    A block. Accesses its graphical representation with self.gui.
+    """
     @classmethod
     def make_cls_with_base(cls, super_cls):
         name = super_cls.__name__
@@ -28,60 +31,81 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
         return type(name, bases, namespace)
 
     def __init__(self, parent, **n):
-        # super(self.__class__, self).__init__(parent, **n)
-        CoreBlock.__init__(self, parent)
-        QtWidgets.QGraphicsItem.__init__(self)
+        super(self.__class__, self).__init__(parent)
 
-        for sink in self.sinks:
-            sink.setParentItem(self)
-        for source in self.sources:
-            source.setParentItem(self)
-
-        self.width = 300  # default shouldnt matter, it will change immedaitely after the first paint
-        # self.block_key = block_key
-        # self.block_label = block_label
+        self.width = 50  # will change immediately after the first paint
         self.block_label = self.key
 
-        if "coordinate" not in self.states.keys():
-            self.states["coordinate"] = (500, 300)
-            self.setPos(
-                QtCore.QPointF(
-                    self.states["coordinate"][0], self.states["coordinate"][1]
-                )
-            )
         if "rotation" not in self.states.keys():
             self.states["rotation"] = 0.0
 
+        self.gui = GUIBlock(self, parent)
+
+    def import_data(self, name, states, parameters, **_):
+        super(self.__class__, self).import_data(name, states, parameters, **_)
+        self.gui.setPos(*self.states["coordinate"])
+        self.rewrite()
+        self.gui.create_shapes_and_labels()
+
+    def update_bus_logic(self):
+        for direc in {'source', 'sink'}:
+            if direc == 'source':
+                ports = self.sources
+                ports_gui = self.filter_bus_port(self.sources)
+            else:
+                ports = self.sinks
+                ports_gui = self.filter_bus_port(self.sinks)
+            if 'bus' in map(lambda a: a.dtype, ports):
+                for port in ports_gui:
+                    self.parent_flowgraph.gui.removeItem(port.gui)
+        super(self.__class__, self).update_bus_logic()
+
+
+class GUIBlock(QGraphicsItem):
+    """
+    The graphical representation of a block. Accesses the actual block with self.core.
+    """
+    def __init__(self, core, parent, **n):
+        super(GUIBlock, self).__init__()
+        self.core = core
+        self.parent = self.scene()
+        self.font = QFont("Helvetica", 10)
+
         self.create_shapes_and_labels()
 
-        self.moving = False
-        self.oldPos = (self.x(), self.y())
-        self.newPos = (self.x(), self.y())
-        self.states["coordinate"] = (self.x(), self.y())
-        self.oldData = None
-        self.props_dialog = None
+        if "coordinate" not in self.core.states.keys():
+            self.core.states["coordinate"] = (500, 300)
+            self.setPos(*self.core.states["coordinate"])
 
-        self.setFlag(QtWidgets.QGraphicsItem.ItemIsMovable)
-        self.setFlag(QtWidgets.QGraphicsItem.ItemIsSelectable)
-        self.setFlag(QtWidgets.QGraphicsItem.ItemSendsScenePositionChanges)
+        self.old_pos = (self.x(), self.y())
+        self.new_pos = (self.x(), self.y())
+        self.moving = False
+        self.old_data = None
+        self.props_dialog = None
+        self.right_click_menu = None
+
+        self.setFlag(QGraphicsItem.ItemIsMovable)
+        self.setFlag(QGraphicsItem.ItemIsSelectable)
+        self.setFlag(QGraphicsItem.ItemSendsScenePositionChanges)
 
     def create_shapes_and_labels(self):
-        self.force_show_id = self.parent.app.qsettings.value('grc/show_block_ids', type=bool)
-        self.hide_variables = self.parent.app.qsettings.value('grc/hide_variables', type=bool)
-        self.hide_disabled_blocks = self.parent.app.qsettings.value('grc/hide_disabled_blocks', type=bool)
-        self.snap_to_grid = self.parent.app.qsettings.value('grc/snap_to_grid', type=bool)
-        self.show_complexity = self.parent.app.qsettings.value('grc/show_complexity', type=bool)
-        self.show_block_comments = self.parent.app.qsettings.value('grc/show_block_comments', type=bool)
-        self.show_param_expr = self.parent.app.qsettings.value('grc/show_param_expr', type=bool)
-        self.show_param_val = self.parent.app.qsettings.value('grc/show_param_val', type=bool)
+        qsettings = QApplication.instance().qsettings
+        self.force_show_id = qsettings.value('grc/show_block_ids', type=bool)
+        self.hide_variables = qsettings.value('grc/hide_variables', type=bool)
+        self.hide_disabled_blocks = qsettings.value('grc/hide_disabled_blocks', type=bool)
+        self.snap_to_grid = qsettings.value('grc/snap_to_grid', type=bool)
+        self.show_complexity = qsettings.value('grc/show_complexity', type=bool)
+        self.show_block_comments = qsettings.value('grc/show_block_comments', type=bool)
+        self.show_param_expr = qsettings.value('grc/show_param_expr', type=bool)
+        self.show_param_val = qsettings.value('grc/show_param_val', type=bool)
         self.prepareGeometryChange()
-        font = QtGui.QFont("Helvetica", 10)
-        font.setBold(True)
+        self.font.setBold(True)
 
         # figure out height of block based on how many params there are
         i = 30
 
-        for key, item in self.params.items():
+        # Check if we need to increase the height to fit all the ports
+        for key, item in self.core.params.items():
             value = item.value
             if (value is not None and item.hide == "none") or (item.dtype == 'id' and self.force_show_id):
                 i += 20
@@ -98,7 +122,7 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
                 min_height = (
                     2 * Constants.PORT_BORDER_SEPARATION +
                     sum(
-                        port.height + Constants.PORT_SPACING
+                        port.gui.height + Constants.PORT_SPACING
                         for port in ports
                         if port.dtype == "bus"
                     ) - Constants.PORT_SPACING
@@ -106,18 +130,19 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
 
             else:
                 if ports:
-                    min_height -= ports[-1].height
+                    min_height -= ports[-1].gui.height
             return min_height
 
         self.height = max(
             self.height,
-            get_min_height_for_ports(self.active_sinks),
-            get_min_height_for_ports(self.active_sources),
+            get_min_height_for_ports(self.core.active_sinks),
+            get_min_height_for_ports(self.core.active_sources),
         )
-        # figure out width of block based on widest line of text
-        fm = QtGui.QFontMetrics(font)
-        largest_width = fm.width(self.label)
-        for key, item in self.params.items():
+
+        # Figure out width of block based on widest line of text
+        fm = QFontMetrics(self.font)
+        largest_width = fm.width(self.core.label)
+        for key, item in self.core.params.items():
             name = item.name
             value = item.value
             if (value is not None and item.hide == "none") or (item.dtype == 'id' and self.force_show_id):
@@ -131,42 +156,35 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
                     largest_width = fm.width(full_line)
         self.width = largest_width + 15
 
+        # Update the position and size of all the ports
         bussified = (
-            self.current_bus_structure["source"],
-            self.current_bus_structure["sink"],
+            self.core.current_bus_structure["source"],
+            self.core.current_bus_structure["sink"],
         )
         for ports, has_busses in zip(
-            (self.active_sources, self.active_sinks), bussified
+            (self.core.active_sources, self.core.active_sinks), bussified
         ):
             if not ports:
                 continue
             port_separation = (
                 Constants.PORT_SEPARATION
                 if not has_busses
-                else ports[0].height + Constants.PORT_SPACING
+                else ports[0].gui.height + Constants.PORT_SPACING
             )
             offset = (
-                self.height - (len(ports) - 1) * port_separation - ports[0].height
+                self.height - (len(ports) - 1) * port_separation - ports[0].gui.height
             ) / 2
             for port in ports:
                 if port._dir == "sink":
-                    port.setPos(-15, offset)
+                    port.gui.setPos(-15, offset)
                 else:
-                    port.setPos(self.width, offset)
-                port.create_shapes_and_labels()
-                """
-                port.coordinate = {
-                    0: (+self.width, offset),
-                    90: (offset, -port.width),
-                    180: (-port.width, offset),
-                    270: (offset, +self.width),
-                }[port.connector_direction]
-                """
+                    port.gui.setPos(self.width, offset)
+                port.gui.create_shapes_and_labels()
 
                 offset += (
                     Constants.PORT_SEPARATION
                     if not has_busses
-                    else port.height + Constants.PORT_SPACING
+                    else port.gui.height + Constants.PORT_SPACING
                 )
 
         self._update_colors()
@@ -174,12 +192,9 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
         self.setTransformOriginPoint(self.width / 2, self.height / 2)
 
     def create_port_labels(self):
-        for ports in (self.active_sinks, self.active_sources):
+        for ports in (self.core.active_sinks, self.core.active_sources):
             for port in ports:
-                port.create_shapes_and_labels()
-                # max_width = max(max_width, port.width_with_label)
-            # for port in ports:
-            #    port.width = max_width
+                port.gui.create_shapes_and_labels()
 
     def _update_colors(self):
         def get_bg():
@@ -188,12 +203,12 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
             Explicit is better than a chain of if/else expressions,
             so this was extracted into a nested function.
             """
-            if self.is_dummy_block:
+            if self.core.is_dummy_block:
                 return colors.MISSING_BLOCK_BACKGROUND_COLOR
-            if self.state == "bypassed":
+            if self.core.state == "bypassed":
                 return colors.BLOCK_BYPASSED_COLOR
-            if self.state == "enabled":
-                if self.deprecated:
+            if self.core.state == "enabled":
+                if self.core.deprecated:
                     return colors.BLOCK_DEPRECATED_BACKGROUND_COLOR
                 return colors.BLOCK_ENABLED_COLOR
             return colors.BLOCK_DISABLED_COLOR
@@ -202,60 +217,52 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
             """
             Get the border color for this block
             """
-            if self.is_dummy_block:
+            if self.isSelected():
+                return colors.HIGHLIGHT_COLOR
+            if self.core.is_dummy_block:
                 return colors.MISSING_BLOCK_BORDER_COLOR
-            if self.deprecated:
+            if self.core.deprecated:
                 return colors.BLOCK_DEPRECATED_BORDER_COLOR
-            if self.state == "enabled":
+            if self.core.state == "enabled":
                 return colors.BORDER_COLOR
             return colors.BORDER_COLOR_DISABLED
 
         self._bg_color = get_bg()
-        # self._font_color[-1] = 1.0 if self.state == 'enabled' else 0.4
         self._border_color = get_border()
 
     def paint(self, painter, option, widget):
         if (self.hide_variables and (self.is_variable or self.is_import)) or (self.hide_disabled_blocks and not self.enabled):
             return
-        self.states["coordinate"] = (self.x(), self.y())
-        # Set font
-        font = QtGui.QFont("Helvetica", 10)
-        # font.setStretch(70) # makes it more condensed
-        font.setBold(True)
 
-        painter.setRenderHint(QtGui.QPainter.Antialiasing)
+        painter.setRenderHint(QPainter.Antialiasing)
+        self.font.setBold(True)
 
-        # Draw main rectangle
-        pen = QtGui.QPen(1)
-        if self.isSelected():
-            pen = QtGui.QPen(colors.HIGHLIGHT_COLOR)
-        else:
-            pen = QtGui.QPen(self._border_color)
+        pen = QPen(1)
+        pen = QPen(self._border_color)
 
         pen.setWidth(3)
         painter.setPen(pen)
+        painter.setBrush(QBrush(self._bg_color))
+        rect = QRectF(0, 0, self.width, self.height)
 
-        painter.setBrush(QtGui.QBrush(self._bg_color))
-
-        rect = QtCore.QRectF(0, 0, self.width, self.height)
         painter.drawRect(rect)
-        painter.setPen(QtGui.QPen(1))
+        painter.setPen(QPen(1))
 
         # Draw block label text
-        painter.setFont(font)
-        if self.is_valid():
+        painter.setFont(self.font)
+        if self.core.is_valid():
             painter.setPen(Qt.black)
         else:
             painter.setPen(Qt.red)
         painter.drawText(
-            QtCore.QRectF(0, 0 - self.height / 2 + 15, self.width, self.height),
+            QRectF(0, 0 - self.height / 2 + 15, self.width, self.height),
             Qt.AlignCenter,
-            self.label,
-        )  # NOTE the 3rd/4th arg in  QRectF seems to set the bounding box of the text, so if there is ever any clipping, thats why
+            self.core.label,
+        )
 
         # Draw param text
         y_offset = 30  # params start 30 down from the top of the box
-        for key, item in self.params.items():
+        for key, item in self.core.params.items():
             name = item.name
             value = item.value
             is_evaluated = item.value != str(item.get_evaluated())
@@ -281,22 +288,22 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
             value_label = display_value
             if (value is not None and item.hide == "none") or (item.dtype == 'id' and self.force_show_id):
                 if item.is_valid():
-                    painter.setPen(QtGui.QPen(1))
+                    painter.setPen(QPen(1))
                 else:
                     painter.setPen(Qt.red)
 
-                font.setBold(True)
-                painter.setFont(font)
+                self.font.setBold(True)
+                painter.setFont(self.font)
                 painter.drawText(
-                    QtCore.QRectF(7.5, 0 + y_offset, self.width, self.height),
+                    QRectF(7.5, 0 + y_offset, self.width, self.height),
                     Qt.AlignLeft,
                     name + ": ",
                 )
-                fm = QtGui.QFontMetrics(font)
-                font.setBold(False)
-                painter.setFont(font)
+                fm = QFontMetrics(self.font)
+                self.font.setBold(False)
+                painter.setFont(self.font)
                 painter.drawText(
-                    QtCore.QRectF(
+                    QRectF(
                         7.5 + fm.width(name + ": "),
                         0 + y_offset,
                         self.width,
@@ -313,70 +320,57 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
             markups.append('Complexity: {num} bal'.format(
                 num=Utils.num_to_str(complexity)))
 
-        if self.show_block_comments and self.comment:
+        if self.show_block_comments and self.core.comment:
             markups.append(self.comment)
 
         if markups:  # TODO: Calculate comment box size
             painter.setPen(Qt.gray)
             painter.drawText(
-                QtCore.QRectF(0, self.height + 5, self.width, self.height),
+                QRectF(0, self.height + 5, self.width, self.height),
                 Qt.AlignLeft,
                 "\n".join(markups),
             )
 
-    def boundingRect(self):  # required to have
-        return QtCore.QRectF(  # TODO: Calculate comment box size
-            -2.5, -2.5, self.width + 5, self.height + (5 if not self.comment else 50)
-        )  # margin to avoid artifacts
+    def boundingRect(self):
+        return QRectF(  # TODO: Calculate comment box size properly
+            -2.5, -2.5, self.width + 5, self.height + (5 if not self.core.comment else 50)
+        )
 
     def setStates(self, states):
         for k, v in states.items():
-            self.states[k] = v
+            self.core.states[k] = v
 
-        self.setPos(self.states["coordinate"][0], self.states["coordinate"][1])
-        self.setRotation(self.states["rotation"])
-
-    def mouseReleaseEvent(self, e):
-        super(self.__class__, self).mouseReleaseEvent(e)
+        self.setPos(*self.core.states["coordinate"])
+        self.setRotation(self.core.states["rotation"])
 
     def mousePressEvent(self, e):
         super(self.__class__, self).mousePressEvent(e)
         log.debug(f"{self} clicked")
-        url_prefix = str(self.parent.app.platform.config.wiki_block_docs_url_prefix)
-        self.parent.app.WikiTab.setURL(QUrl(url_prefix + self.label.replace(" ", "_")))
+        url_prefix = str(self.core.parent_platform.config.wiki_block_docs_url_prefix)
+        QApplication.instance().WikiTab.setURL(QUrl(url_prefix + self.core.label.replace(" ", "_")))
 
         self.moveToTop()
 
     def contextMenuEvent(self, e):
         if not self.isSelected():
-            self.parent.clearSelection()
+            self.scene().clearSelection()
             self.setSelected(True)
 
-        view = self.parent.view
-        contextMenu = view._app().MainWindow.menus["edit"]
-        contextMenu.exec_(e.screenPos())
+        self.right_click_menu = self.scene()._app().MainWindow.menus["edit"]
+        self.right_click_menu.exec_(e.screenPos())
 
     def mouseDoubleClickEvent(self, e):
         self.open_properties()
         super(self.__class__, self).mouseDoubleClickEvent(e)
 
     def itemChange(self, change, value):
-        if change == QtWidgets.QGraphicsItem.ItemPositionChange and self.scene() and self.snap_to_grid:
+        if change == QGraphicsItem.ItemPositionChange and self.scene() and self.snap_to_grid:
             grid_size = 10
             value.setX(round(value.x() / grid_size) * grid_size)
             value.setY(round(value.y() / grid_size) * grid_size)
             return value
         else:
-            return QtWidgets.QGraphicsItem.itemChange(self, change, value)
-
-    def import_data(self, name, states, parameters, **_):
-        CoreBlock.import_data(self, name, states, parameters, **_)
-        self.states["coordinate"] = QtCore.QPointF(
-            states["coordinate"][0], states["coordinate"][1]
-        )
-        self.setPos(self.states["coordinate"])
-        self.rewrite()
-        self.create_shapes_and_labels()
+            return QGraphicsItem.itemChange(self, change, value)
 
     def rotate(self, rotation):
         log.debug(f"Rotating {self.name}")
@@ -384,28 +378,11 @@ class Block(QtWidgets.QGraphicsItem, CoreBlock):
 
     def moveToTop(self):
         # TODO: Is there a simpler way to do this?
-        self.setZValue(self.parent.getMaxZValue() + 1)
+        self.setZValue(self.scene().getMaxZValue() + 1)
 
     def center(self):
-        return QtCore.QPointF(self.x() + self.width / 2, self.y() + self.height / 2)
+        return QPointF(self.x() + self.width / 2, self.y() + self.height / 2)
 
     def open_properties(self):
-        self.props_dialog = PropsDialog(self, self.force_show_id)
+        self.props_dialog = PropsDialog(self.core, self.force_show_id)
         self.props_dialog.show()
-
-    def update_bus_logic(self):
-        ###############################
-        # Bus Logic
-        ###############################
-        for direc in {'source', 'sink'}:
-            if direc == 'source':
-                ports = self.sources
-                ports_gui = self.filter_bus_port(self.sources)
-            else:
-                ports = self.sinks
-                ports_gui = self.filter_bus_port(self.sinks)
-            if 'bus' in map(lambda a: a.dtype, ports):
-                for port in ports_gui:
-                    self.parent_flowgraph.removeItem(port)
-        #super(Block, self).update_bus_logic()
-        super(self.__class__, self).update_bus_logic()

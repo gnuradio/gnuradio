@@ -26,11 +26,13 @@ from qtpy.QtCore import Qt
 from itertools import count
 
 # Custom modules
-from ...core.base import Element
-from .canvas.connection import ConnectionArrow, Connection
-from .. import base
-from ...core.FlowGraph import FlowGraph as CoreFlowgraph
-from .. import Utils
+from ....core.base import Element
+from .connection import DummyConnection, GUIConnection
+from ... import base
+from ....core.FlowGraph import FlowGraph as CoreFlowgraph
+from ... import Utils
+
+from .block import GUIBlock
 
 # Logging
 log = logging.getLogger(__name__)
@@ -39,24 +41,27 @@ DEFAULT_MAX_X = 400
 DEFAULT_MAX_Y = 300
 
 
-# TODO: Combine the scene and view? Maybe the scene should be the controller?
-class Flowgraph(QtWidgets.QGraphicsScene, base.Component, CoreFlowgraph):
+class Flowgraph(CoreFlowgraph):
+    def __init__(self, gui, platform, *args, **kwargs):
+        self.gui = gui
+        CoreFlowgraph.__init__(self, platform)
+
+class FlowgraphScene(QtWidgets.QGraphicsScene, base.Component):
     itemMoved = QtCore.Signal([QtCore.QPointF])
     newElement = QtCore.Signal([Element])
     deleteElement = QtCore.Signal([Element])
     blockPropsChange = QtCore.Signal([Element])
 
-    def __init__(self, view, *args, **kwargs):
-        super(Flowgraph, self).__init__()
+    def __init__(self, view, platform, *args, **kwargs):
+        self.core = Flowgraph(self, platform)
+        super(FlowgraphScene, self).__init__()
         self.setParent(view)
         self.view = view
-        self.parent = self.platform
-        CoreFlowgraph.__init__(self, self.platform)
         self.isPanning = False
         self.mousePressed = False
 
-        self.newConnection = None
-        self.startPort = None
+        self.dummy_arrow = None
+        self.start_port = None
         self._elements_to_draw = []
 
         if QT6:
@@ -80,13 +85,11 @@ class Flowgraph(QtWidgets.QGraphicsScene, base.Component, CoreFlowgraph):
         Call the top level rewrite and validate.
         Call the top level create labels and shapes.
         """
-        self.rewrite()
-        self.validate()
-        for block in self.blocks:
-            block.create_shapes_and_labels()
+        self.core.rewrite()
+        self.core.validate()
+        for block in self.core.blocks:
+            block.gui.create_shapes_and_labels()
         self.update_elements_to_draw()
-        # self.create_labels()
-        # self.create_shapes()
 
     def update_elements_to_draw(self):
         # hide_disabled_blocks = Actions.TOGGLE_HIDE_DISABLED_BLOCKS.get_active()
@@ -95,9 +98,9 @@ class Flowgraph(QtWidgets.QGraphicsScene, base.Component, CoreFlowgraph):
         hide_variables = False
 
         def draw_order(elem):
-            return elem.isSelected(), elem.is_block, elem.enabled
+            return elem.gui.isSelected(), elem.is_block, elem.enabled
 
-        elements = sorted(self.get_elements(), key=draw_order)
+        elements = sorted(self.core.get_elements(), key=draw_order)
         del self._elements_to_draw[:]
 
         for element in elements:
@@ -147,7 +150,7 @@ class Flowgraph(QtWidgets.QGraphicsScene, base.Component, CoreFlowgraph):
         Returns:
             a unique id
         """
-        block_ids = set(b.name for b in self.blocks)
+        block_ids = set(b.name for b in self.core.blocks)
         for index in count():
             block_id = "{}_{}".format(base_id, index)
             if block_id not in block_ids:
@@ -199,26 +202,27 @@ class Flowgraph(QtWidgets.QGraphicsScene, base.Component, CoreFlowgraph):
         # Tell the block where to show up on the canvas
         attrib = {"_coordinate": pos}
 
-        block = self.new_block(block_key, attrib=attrib)
-        block.states["coordinate"] = pos
-        block.setPos(*pos)
-        block.params["id"].set_value(id)
-        self.addItem(block)
-        block.moveToTop()
+        c_block = self.core.new_block(block_key, attrib=attrib)
+        g_block = c_block.gui
+        c_block.states["coordinate"] = pos
+        g_block.setPos(*pos)
+        c_block.params["id"].set_value(id)
+        self.addItem(g_block)
+        g_block.moveToTop()
         self.update()
-        self.newElement.emit(block)
+        self.newElement.emit(c_block)
 
-    def selected_blocks(self):
+    def selected_blocks(self) -> list[GUIBlock]:
         blocks = []
         for item in self.selectedItems():
-            if item.is_block:
+            if item.core.is_block:
                 blocks.append(item)
         return blocks
 
     def selected_connections(self):
         conns = []
         for item in self.selectedItems():
-            if item.is_connection:
+            if item.core.is_connection:
                 conns.append(item)
         return conns
 
@@ -262,96 +266,65 @@ class Flowgraph(QtWidgets.QGraphicsScene, base.Component, CoreFlowgraph):
         return True
 
     def mousePressEvent(self, event):
-        item = self.itemAt(event.scenePos(), QtGui.QTransform())
+        g_item = self.itemAt(event.scenePos(), QtGui.QTransform())
+        self.clickPos = event.scenePos()
         selected = self.selectedItems()
         self.moving_blocks = False
-        if item:
-            if item.is_block:
+
+        if g_item:
+            c_item = g_item.core
+            if c_item.is_block:
                 self.moving_blocks = True
-        self.clickPos = event.scenePos()
-        conn_made = False
-        if item:
-            if item.is_port:
+            elif c_item.is_port:
+                new_con = None
                 if len(selected) == 1:
-                    if selected[0].is_port and selected[0] != item:
-                        if selected[0].is_source and item.is_sink:
-                            log.debug("Created connection (click)")
-                            new_con = Connection(self, selected[0], item)
-                            self.add_element(new_con)
-                            self.newElement.emit(new_con)
-                            self.update()
-                            conn_made = True
-                        elif selected[0].is_sink and item.is_source:
-                            log.debug("Created connection (click)")
-                            new_con = Connection(self, item, selected[0])
-                            self.add_element(new_con)
-                            self.newElement.emit(new_con)
-                            self.update()
-                            conn_made = True
-                if not conn_made:
-                    self.startPort = item
-                    if item.is_source:
-                        self.newConnection = ConnectionArrow(
-                            self, item.connection_point, event.scenePos()
-                        )
-                        self.newConnection.setPen(QtGui.QPen(1))
-                        self.addItem(self.newConnection)
+                    if selected[0].core.is_port and selected[0] != g_item:
+                        if selected[0].core.is_source and c_item.is_sink:
+                            new_con = GUIConnection(self, selected[0], g_item)
+                        elif selected[0].is_sink and c_item.is_source:
+                            new_con = GUIConnection(self, g_item, selected[0])
+                if new_con:
+                    log.debug("Created connection (click)")
+                    self.addItem(new_con)
+                    self.newElement.emit(new_con.core)
+                    self.update()
+                else:
+                    self.start_port = g_item
+                    if c_item.is_source:
+                        self.dummy_arrow = DummyConnection(self, g_item.connection_point, event.scenePos())
+                        self.dummy_arrow.setPen(QtGui.QPen(1))
+                        self.addItem(self.dummy_arrow)
         if event.button() == Qt.LeftButton:
             self.mousePressed = True
-            super(Flowgraph, self).mousePressEvent(event)
+            super(FlowgraphScene, self).mousePressEvent(event)
 
     def mouseMoveEvent(self, event):
         self.view.setSceneRect(self.itemsBoundingRect())
-        if self.newConnection:
-            self.newConnection.end_point = event.scenePos()
-            self.newConnection.updateLine()
+        if self.dummy_arrow:
+            self.dummy_arrow.update(event.scenePos())
 
         if self.mousePressed and self.isPanning:
-            newPos = event.pos()
-            self.dragPos = newPos
+            new_pos = event.pos()
+            self.dragPos = new_pos
             event.accept()
         else:
-            itemUnderMouse = self.itemAt(
-                event.pos(), QtGui.QTransform()
-            )  # the 2nd arg lets you transform some items and ignore others
-            if itemUnderMouse is not None:
-                # ~ print itemUnderMouse
-                pass
-
-            super(Flowgraph, self).mouseMoveEvent(event)
+            super(FlowgraphScene, self).mouseMoveEvent(event)
 
     def mouseReleaseEvent(self, event):
-        if self.newConnection:
-            item = self.itemAt(event.scenePos(), QtGui.QTransform())
-            if isinstance(item, Element):
-                if item.is_port and item != self.startPort:
-                    log.debug("Created connection (drag)")
-                    new_con = Connection(self, self.startPort, item)
-                    self.add_element(new_con)
-                    self.newElement.emit(new_con)
-                    self.update()
-            self.removeItem(self.newConnection)
-            self.newConnection = None
+        if self.dummy_arrow:  # We are currently dragging a DummyConnection
+            g_item = self.itemAt(event.scenePos(), QtGui.QTransform())
+            c_item = g_item.core if g_item else None
+            if c_item.is_port and g_item != self.start_port:
+                log.debug("Created connection (drag)")
+                new_con = GUIConnection(self, self.start_port, g_item)
+                self.newElement.emit(new_con.core)
+                self.update()
+            self.removeItem(self.dummy_arrow)
+            self.dummy_arrow = None
         else:
-            if self.clickPos != event.scenePos():
-                if self.moving_blocks:
-                    self.itemMoved.emit(event.scenePos() - self.clickPos)
-        """
-        if event.button() == Qt.LeftButton:
-            if event.modifiers() & Qt.ControlModifier:
-                #self.setCursor(Qt.OpenHandCursor)
-                pass
-            else:
-                self.isPanning = False
-                #self.setCursor(Qt.ArrowCursor)
-            self.mousePressed = False
-        """
-        super(Flowgraph, self).mouseReleaseEvent(event)
-
-    def mouseDoubleClickEvent(
-        self, event
-    ):  # Will be used to open up dialog box of a block
-        super(Flowgraph, self).mouseDoubleClickEvent(event)
+            if self.clickPos != event.scenePos() and self.moving_blocks:
+                self.itemMoved.emit(event.scenePos() - self.clickPos)
+        super(FlowgraphScene, self).mouseReleaseEvent(event)
 
     def createActions(self, actions):
         log.debug("Creating actions")
@@ -372,25 +345,21 @@ class Flowgraph(QtWidgets.QGraphicsScene, base.Component, CoreFlowgraph):
         log.debug("Creating toolbars")
 
     def import_data(self, data):
-        super(Flowgraph, self).import_data(data)
-        for conn in self.connections:
-            self.addItem(conn)
-        for block in self.blocks:
-            self.addItem(block)
+        self.core.import_data(data)
+        for conn in self.core.connections:
+            self.addItem(conn.gui)
+        for block in self.core.blocks:
+            self.addItem(block.gui)
 
     def getMaxZValue(self):
         z_values = []
-        for block in self.blocks:
-            z_values.append(block.zValue())
+        for block in self.core.blocks:
+            z_values.append(block.gui.zValue())
         return max(z_values)
 
-    def remove_element(self, element):
+    def remove_element(self, element: GUIBlock):
         self.removeItem(element)
-        super(Flowgraph, self).remove_element(element)
-
-    def add_element(self, element):
-        super(Flowgraph, self).add_element(element)
-        self.addItem(element)
+        self.core.remove_element(element.core)
 
     def get_extents(self):
         # show_comments = Actions.TOGGLE_SHOW_BLOCK_COMMENTS.get_active()
@@ -416,26 +385,26 @@ class Flowgraph(QtWidgets.QGraphicsScene, base.Component, CoreFlowgraph):
             the clipboard
         """
         # get selected blocks
-        blocks = list(self.selected_blocks())
-        if not blocks:
+        g_blocks = list(self.selected_blocks())
+        if not g_blocks:
             return None
         # calc x and y min
-        x_min, y_min = blocks[0].states["coordinate"]
-        for block in blocks:
-            x, y = block.states["coordinate"]
+        x_min, y_min = g_blocks[0].core.states["coordinate"]
+        for g_block in g_blocks:
+            x, y = g_block.core.states["coordinate"]
             x_min = min(x, x_min)
             y_min = min(y, y_min)
         # get connections between selected blocks
         connections = list(
             filter(
-                lambda c: c.source_block in blocks and c.sink_block in blocks,
-                self.connections,
+                lambda c: c.source_block in g_blocks and c.sink_block in g_blocks,
+                self.core.connections,
             )
         )
         clipboard = (
             (x_min, y_min),
-            [block.export_data() for block in blocks],
-            [connection.export_data() for connection in connections],
+            [g_block.core.export_data() for g_block in g_blocks],
+            [connection.core.export_data() for connection in connections],
         )
         return clipboard
 
@@ -470,21 +439,21 @@ class Flowgraph(QtWidgets.QGraphicsScene, base.Component, CoreFlowgraph):
 
             block_name = block_n.get("name")
             # Verify whether a block with this name exists before adding it
-            if block_name in (blk.name for blk in self.blocks):
+            if block_name in (blk.name for blk in self.core.blocks):
                 block_n = block_n.copy()
                 block_n["name"] = self._get_unique_id(block_name)
 
-            block = self.new_block(block_key)
+            block = self.core.new_block(block_key)
             if not block:
                 continue  # unknown block was pasted (e.g. dummy block)
 
             block.import_data(**block_n)
             pasted_blocks[block_name] = block  # that is before any rename
 
-            block.moveBy(x_off, y_off)
-            self.addItem(block)
-            block.moveToTop()
-            block.setSelected(True)
+            block.gui.moveBy(x_off, y_off)
+            self.addItem(block.gui)
+            block.gui.moveToTop()
+            block.gui.setSelected(True)
             """
             while any(Utils.align_to_grid(block.states['coordinate']) == Utils.align_to_grid(other.states['coordinate'])
                       for other in self.blocks if other is not block):

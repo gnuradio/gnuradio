@@ -4,8 +4,11 @@ from __future__ import absolute_import, print_function
 import logging
 import yaml
 
-from qtpy import QtWidgets
 from qtpy.QtCore import Qt
+from qtpy.QtWidgets import (QLineEdit, QTabWidget, QDialog,
+                            QScrollArea, QVBoxLayout, QCheckBox,
+                            QComboBox, QHBoxLayout, QDialogButtonBox,
+                            QLabel)
 
 from ..properties import Paths
 
@@ -13,7 +16,7 @@ from ..properties import Paths
 log = logging.getLogger(__name__)
 
 
-class PreferencesDialog(QtWidgets.QDialog):
+class PreferencesDialog(QDialog):
     pref_dict = {}
 
     def __init__(self, qsettings):
@@ -24,7 +27,7 @@ class PreferencesDialog(QtWidgets.QDialog):
         self.setModal(True)
 
         self.setWindowTitle("GRC Preferences")
-        self.tabs = QtWidgets.QTabWidget()
+        self.tabs = QTabWidget()
 
         log.debug(f'Opening available preferences YAML: {Paths.AVAILABLE_PREFS_YML}')
 
@@ -32,16 +35,16 @@ class PreferencesDialog(QtWidgets.QDialog):
             self.pref_dict = yaml.safe_load(available_prefs_yml)
 
         for cat in self.pref_dict['categories']:
-            cat['_scrollarea'] = QtWidgets.QScrollArea()
-            cat['_layout'] = QtWidgets.QVBoxLayout()
+            cat['_scrollarea'] = QScrollArea()
+            cat['_layout'] = QVBoxLayout()
             cat['_layout'].setAlignment(Qt.AlignTop)
             for item in cat['items']:
                 full_key = cat['key'] + '/' + item['key']
 
-                item['_label'] = QtWidgets.QLabel(item['name'])
+                item['_label'] = QLabel(item['name'])
 
                 if item['dtype'] == 'bool':
-                    item['_edit'] = QtWidgets.QCheckBox()
+                    item['_edit'] = QCheckBox()
 
                     if self.qsettings.contains(full_key):
                         value = self.qsettings.value(full_key, False, type=bool)
@@ -51,19 +54,19 @@ class PreferencesDialog(QtWidgets.QDialog):
                         self.qsettings.setValue(full_key, item['default'])
 
                 elif item['dtype'] == 'enum':
-                    item['_edit'] = QtWidgets.QComboBox()
+                    item['_edit'] = QComboBox()
                     for opt in item['option_labels']:
                         item['_edit'].addItem(opt)
                     index = item['options'].index(self.qsettings.value(full_key, item['default'], type=str))
                     item['_edit'].setCurrentIndex(index)
                 else:
                     if self.qsettings.contains(full_key):
-                        item['_edit'] = QtWidgets.QLineEdit(self.qsettings.value(full_key))
+                        item['_edit'] = QLineEdit(self.qsettings.value(full_key))
                     else:
-                        item['_edit'] = QtWidgets.QLineEdit(str(item['default']))
+                        item['_edit'] = QLineEdit(str(item['default']))
                         self.qsettings.setValue(full_key, item['default'])
 
-                item['_line'] = QtWidgets.QHBoxLayout()
+                item['_line'] = QHBoxLayout()
 
                 if 'tooltip' in item.keys():
                     item['_label'].setToolTip(item['tooltip'])
@@ -79,11 +82,11 @@ class PreferencesDialog(QtWidgets.QDialog):
             cat['_scrollarea'].setLayout(cat['_layout'])
             self.tabs.addTab(cat['_scrollarea'], cat['name'])
 
-        buttons = QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel
-        self.buttonBox = QtWidgets.QDialogButtonBox(buttons)
+        buttons = QDialogButtonBox.Ok | QDialogButtonBox.Cancel
+        self.buttonBox = QDialogButtonBox(buttons)
         self.buttonBox.accepted.connect(self.accept)
         self.buttonBox.rejected.connect(self.reject)
-        self.layout = QtWidgets.QVBoxLayout()
+        self.layout = QVBoxLayout()
         self.layout.addWidget(self.tabs)
         self.layout.addWidget(self.buttonBox)
 
@@ -93,8 +96,8 @@ class PreferencesDialog(QtWidgets.QDialog):
         log.debug(f'Writing changes to {self.qsettings.fileName()}')
 
         for cat in self.pref_dict['categories']:
-            cat['_scrollarea'] = QtWidgets.QScrollArea()
-            cat['_layout'] = QtWidgets.QVBoxLayout()
+            cat['_scrollarea'] = QScrollArea()
+            cat['_layout'] = QVBoxLayout()
             cat['_layout'].setAlignment(Qt.AlignTop)
             for item in cat['items']:
                 full_key = cat['key'] + '/' + item['key']
