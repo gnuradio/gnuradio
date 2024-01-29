@@ -37,7 +37,7 @@ Icons = QtGui.QIcon.fromTheme
 Keys = QtGui.QKeySequence
 
 # Logging
-log = logging.getLogger(__name__)
+log = logging.getLogger(f"grc.application.{__name__}")
 
 
 HTML = '''

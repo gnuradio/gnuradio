@@ -13,7 +13,7 @@ from qtpy.QtWidgets import (QLineEdit, QTabWidget, QDialog,
 from ..properties import Paths
 
 # Logging
-log = logging.getLogger(__name__)
+log = logging.getLogger(f"grc.application.{__name__}")
 
 
 class PreferencesDialog(QDialog):

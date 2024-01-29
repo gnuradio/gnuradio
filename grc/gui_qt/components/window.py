@@ -51,7 +51,7 @@ from .dialogs import ErrorsDialog
 from ...core.base import Element
 
 # Logging
-log = logging.getLogger(__name__)
+log = logging.getLogger(f"grc.application.{__name__}")
 
 # Shortcuts
 Action = QtWidgets.QAction

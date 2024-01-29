@@ -36,7 +36,7 @@ from ... import Utils
 from .block import GUIBlock
 
 # Logging
-log = logging.getLogger(__name__)
+log = logging.getLogger(f"grc.application.{__name__}")
 
 DEFAULT_MAX_X = 400
 DEFAULT_MAX_Y = 300
