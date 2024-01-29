@@ -11,33 +11,15 @@
 
 \image html gnuradio-logo.svg
 
-<H1> Welcome to GNU Radio! </H1>
+<H1>Welcome to GNU Radio!</H1>
 
-For details about GNU Radio and using it, please see the
-<a href="https://www.gnuradio.org/" target="_blank"><b>main project page</b></a>.
+GNU Radio is a free and open-source software development toolkit that provides signal processing blocks to implement software radios. It can be used with readily-available low-cost external RF hardware to create software-defined radios, or without hardware in a simulation-like environment. It is widely used in hobbyist, academic and commercial environments to support both wireless communications research and real-world radio systems.
 
-Other information about the project and discussion about GNU Radio,
-software radio, and communication theory in general can be found at
-the <a href="https://www.gnuradio.org/blog/" target="_blank"><b>GNU Radio blog</b></a>.
+The main GNU Radio organization website is located 
+<a href="https://www.gnuradio.org/" target="_blank"><b>here</b></a>.
 
-This manual is split into two parts: A usage manual and a reference. The usage manual
-deals with concepts of GNU Radio, introductions, how to build GNU Radio etc.
-The reference contains a list of all GNU Radio components, sorted by in-tree components,
-modules, files, namespaces and classes.
+The <a href="https://wiki.gnuradio.org/index.php/Main_Page" target="_blank"><b>GNU Radio Wiki</b></a> contains all of the information to get started, find documentation, develop GNU Radio software, and to get involved in the community.
 
-To access these parts, follow these links or use the tree browser in the left sidebar.
-A search function is also available at the top right.
-
-\li \subpage page_usage "Part I - GNU Radio Usage"
-\li \subpage page_components "Part II - Reference"
-
-<H3> Documentation License </H3>
-
-The Free Software Foundation gives permission to use and distribute
-the program source documentation strings, after processing them
-through Doxygen or some comparable program, under the GNU Free
-Documentation License, version 1.3 or later.  However, we do not grant
-such permission for the program code in our release (aside from the
-documentation strings).
+This C++ API Reference contains a list of all GNU Radio Components, Modules, Namespaces, Classes, and Files. To access these parts, use the tree browser in the left sidebar. A search function is also available at the top right.
 
 */
