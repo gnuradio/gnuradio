@@ -15,27 +15,26 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
-from __future__ import absolute_import, print_function
 
 # Standard modules
 import logging
 
-# Third-party  modules
-import six
-
-from qtpy import QtCore, QtGui, QtWidgets
-from qtpy.QtCore import QUrl
+from qtpy.QtCore import QUrl, Qt, QVariant
+from qtpy.QtWidgets import (QLineEdit, QTreeView, QMenu, QDockWidget, QWidget,
+                            QAction, QVBoxLayout, QAbstractItemView, QCompleter)
+from qtpy.QtGui import QStandardItem, QStandardItemModel
 
 # Custom modules
 from .. import base
+from .canvas.block import Block
 
 # Logging
 log = logging.getLogger(__name__)
 
 
-class BlockSearchBar(QtWidgets.QLineEdit):
+class BlockSearchBar(QLineEdit):
     def __init__(self, parent):
-        QtWidgets.QLineEdit.__init__(self)
+        QLineEdit.__init__(self)
         self.parent = parent
         self.setObjectName("block_library::search_bar")
         self.returnPressed.connect(self.on_return_pressed)
@@ -59,12 +58,12 @@ def get_items(model):
     return items
 
 
-class LibraryView(QtWidgets.QTreeView):
+class LibraryView(QTreeView):
     def __init__(self, parent):
-        QtWidgets.QTreeView.__init__(self, parent)
+        QTreeView.__init__(self, parent)
         self.library = parent.parent()
-        self.contextMenu = QtWidgets.QMenu()
-        self.example_action = QtWidgets.QAction("Examples...")
+        self.contextMenu = QMenu()
+        self.example_action = QAction("Examples...")
         self.contextMenu.addAction(self.example_action)
         self.example_action.triggered.connect(self.view_examples)
 
@@ -74,7 +73,7 @@ class LibraryView(QtWidgets.QTreeView):
         label = self.model().data(self.currentIndex())
         if label in self.parent().parent()._block_tree_flat:
             prefix = str(
-                self.parent().parent().app.platform.config.wiki_block_docs_url_prefix
+                self.parent().parent().platform.config.wiki_block_docs_url_prefix
             )
             self.parent().parent().app.WikiTab.setURL(
                 QUrl(prefix + label.replace(" ", "_"))
@@ -87,16 +86,16 @@ class LibraryView(QtWidgets.QTreeView):
             self.expand(self.currentIndex())
 
     def contextMenuEvent(self, event):
-        key = self.model().data(self.currentIndex(), QtCore.Qt.UserRole)
+        key = self.model().data(self.currentIndex(), Qt.UserRole)
         if key:  # Modules and categories don't have UserRole data
             self.contextMenu.exec_(self.mapToGlobal(event.pos()))
 
     def view_examples(self):
-        key = self.model().data(self.currentIndex(), QtCore.Qt.UserRole)
-        self.library.app.MainWindow.example_browser_triggered(filter=self.library.get_examples(key))
+        key = self.model().data(self.currentIndex(), Qt.UserRole)
+        self.library.app.MainWindow.example_browser_triggered(path_filter=self.library.get_examples(key))
 
 
-class BlockLibrary(QtWidgets.QDockWidget, base.Component):
+class BlockLibrary(QDockWidget, base.Component):
     def __init__(self):
         super(BlockLibrary, self).__init__()
 
@@ -110,24 +109,24 @@ class BlockLibrary(QtWidgets.QDockWidget, base.Component):
         ### GUI Widgets
 
         # Create the layout widget
-        container = QtWidgets.QWidget(self)
+        container = QWidget(self)
         container.setObjectName("block_library::container")
         self._container = container
 
-        layout = QtWidgets.QVBoxLayout(container)
+        layout = QVBoxLayout(container)
         layout.setObjectName("block_library::layout")
         layout.setSpacing(0)
         layout.setContentsMargins(5, 0, 5, 5)
         self._layout = layout
 
         # Setup the model for holding block data
-        self._model = QtGui.QStandardItemModel()
+        self._model = QStandardItemModel()
 
         library = LibraryView(container)
         library.setObjectName("block_library::library")
         library.setModel(self._model)
         library.setDragEnabled(True)
-        library.setDragDropMode(QtWidgets.QAbstractItemView.DragOnly)
+        library.setDragDropMode(QAbstractItemView.DragOnly)
         # library.setColumnCount(1)
         library.setHeaderHidden(True)
         # Expand categories with a single click
@@ -135,7 +134,7 @@ class BlockLibrary(QtWidgets.QDockWidget, base.Component):
         library.selectionModel().selectionChanged.connect(library.updateDocTab)
         # library.headerItem().setText(0, "Blocks")
         library.doubleClicked.connect(
-            lambda block: self.add_block(block.data(QtCore.Qt.UserRole))
+            lambda block: self.add_block(block.data(Qt.UserRole))
         )
         self._library = library
 
@@ -154,7 +153,7 @@ class BlockLibrary(QtWidgets.QDockWidget, base.Component):
 
         # self.setWindowTitle(_translate("blockLibraryDock", "Library", None))
         # library.headerItem().setText(0, _translate("blockLibraryDock", "Blocks", None))
-        # QtCore.QMetaObject.connectSlotsByName(blockLibraryDock)
+        # QMetaObject.connectSlotsByName(blockLibraryDock)
 
         ### Loading blocks
 
@@ -163,10 +162,10 @@ class BlockLibrary(QtWidgets.QDockWidget, base.Component):
         self.load_blocks()
         self.populate_tree(self._block_tree)
 
-        completer = QtWidgets.QCompleter(self._block_tree_flat.keys())
-        completer.setCompletionMode(QtWidgets.QCompleter.InlineCompletion)
-        completer.setCaseSensitivity(QtCore.Qt.CaseInsensitive)
-        completer.setFilterMode(QtCore.Qt.MatchContains)
+        completer = QCompleter(self._block_tree_flat.keys())
+        completer.setCompletionMode(QCompleter.InlineCompletion)
+        completer.setCaseSensitivity(Qt.CaseInsensitive)
+        completer.setFilterMode(Qt.MatchContains)
         self._search_bar.setCompleter(completer)
 
         self._search_bar.textChanged.connect(
@@ -215,7 +214,7 @@ class BlockLibrary(QtWidgets.QDockWidget, base.Component):
 
         log.info("Loading blocks")
         block_tree = {}
-        for block in six.itervalues(self.app.platform.blocks):
+        for block in self.platform.blocks.values():
             if block.category:
                 # Blocks with None category should be left out for whatever reason (e.g. not installed)
                 # print(block.category) # in list form, e.g. ['Core', 'Digital Television', 'ATSC']
@@ -242,15 +241,15 @@ class BlockLibrary(QtWidgets.QDockWidget, base.Component):
         # Save a reference to the block tree in case it is needed later
         self._block_tree = block_tree
 
-    def add_block(self, block_key):
+    def add_block(self, block_key: str):
         """Add a block by its key."""
         if block_key is None:
             return
 
-        fg = self.app.MainWindow.currentFlowgraph
+        scene = self.app.MainWindow.currentFlowgraphScene
         view = self.app.MainWindow.currentView
         pos_ = view.mapToScene(view.viewport().rect().center())
-        fg.add_block(block_key, pos=(pos_.x(), pos_.y()))
+        scene.add_block(block_key, pos=(pos_.x(), pos_.y()))
 
     def populate_tree(self, block_tree, v_blocks=None):
         """Populate the item model and tree view with the hierarchical block tree."""
@@ -262,7 +261,7 @@ class BlockLibrary(QtWidgets.QDockWidget, base.Component):
         def _populate(blocks, parent):
             found = False
             for name, obj in sorted(blocks.items()):
-                child_item = QtGui.QStandardItem()
+                child_item = QStandardItem()
                 child_item.setEditable(False)
                 if type(obj) is dict:  # It's a category
                     child_item.setText(name)
@@ -282,8 +281,8 @@ class BlockLibrary(QtWidgets.QDockWidget, base.Component):
                     child_item.setDragEnabled(True)
                     child_item.setSelectable(True)
                     child_item.setData(
-                        QtCore.QVariant(obj.key),
-                        role=QtCore.Qt.UserRole,
+                        QVariant(obj.key),
+                        role=Qt.UserRole,
                     )
                 parent.appendRow(child_item)
             return found
@@ -297,11 +296,16 @@ class BlockLibrary(QtWidgets.QDockWidget, base.Component):
         if v_blocks:
             self._library.expandAll()
 
-    def populate_w_examples(self, examples_w_block, designated_examples_w_block):
+    def populate_w_examples(self, examples_w_block: dict[str, set[str]], designated_examples_w_block: dict[str, set[str]]):
+        """
+        Store the examples in the block library.
+        See the ExampleBrowser for more info.
+        """
         self.examples_w_block = examples_w_block
         self.designated_examples_w_block = designated_examples_w_block
 
-    def get_examples(self, block_key):
+    def get_examples(self, block_key: str) -> list[Block]:
+        """Get the example flowgraphs that contain a certain block"""
         try:
             return self.designated_examples_w_block[block_key]
         except:

@@ -13,7 +13,7 @@ import os
 from collections import ChainMap
 
 from .Config import Config
-from .components.flowgraph import Flowgraph
+from .components.canvas.flowgraph import Flowgraph
 from .components.canvas.block import Block
 from .components.canvas.port import Port
 from .components.canvas.connection import Connection

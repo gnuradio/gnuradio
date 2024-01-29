@@ -12,7 +12,7 @@ from qtpy.QtCore import Qt
 # Custom modules
 from .canvas.block import Block
 from .. import base
-from .flowgraph import Flowgraph
+from .canvas.flowgraph import FlowgraphScene, Flowgraph
 
 from ...core.generator import Generator
 
@@ -26,12 +26,12 @@ DEFAULT_MAX_Y = 300
 class FlowgraphView(
     QtWidgets.QGraphicsView, base.Component
 ):  # added base.Component so it can see platform
-    def __init__(self, parent, filename=None):
+    def __init__(self, parent, platform, filename=None):
         super(FlowgraphView, self).__init__()
         self.setParent(parent)
         self.setAlignment(Qt.AlignLeft | Qt.AlignTop)
 
-        self.flowgraph = Flowgraph(self)
+        self.setScene(FlowgraphScene(self, platform))
 
         self.scalefactor = 0.8
         self.scale(self.scalefactor, self.scalefactor)
@@ -42,8 +42,7 @@ class FlowgraphView(
         else:
             self.initEmpty()
 
-        self.setScene(self.flowgraph)
-        self.fitInView(self.flowgraph.sceneRect(), QtCore.Qt.KeepAspectRatio)
+        self.fitInView(self.scene().sceneRect(), QtCore.Qt.KeepAspectRatio)
         if self.app.qsettings.value("appearance/theme", "dark") == "dark":
             self.setBackgroundBrush(QtGui.QBrush(QtGui.QColor(25, 35, 45)))
         else:
@@ -136,12 +135,12 @@ class FlowgraphView(
             #     self.setTransformationAnchor(QtWidgets.QGraphicsView.NoAnchor)
             #     self.setResizeAnchor(QtWidgets.QGraphicsView.NoAnchor)
 
-            #     oldPos = self.mapToScene(event.pos())
+            #     old_pos = self.mapToScene(event.pos())
 
             #     self.scale(factor, factor)
-            #     newPos = self.mapToScene(event.pos())
+            #     new_pos = self.mapToScene(event.pos())
 
-            #     delta = newPos - oldPos
+            #     delta = new_pos - old_pos
             #     self.translate(delta.x(), delta.y())
 
         elif event.modifiers() == Qt.ShiftModifier:
@@ -158,9 +157,9 @@ class FlowgraphView(
 
     def mouseMoveEvent(self, event):
         if self.mousePressed and self.isPanning:
-            newPos = event.pos()
-            diff = newPos - self.dragPos
-            self.dragPos = newPos
+            new_pos = event.pos()
+            diff = new_pos - self.dragPos
+            self.dragPos = new_pos
             self.horizontalScrollBar().setValue(
                 self.horizontalScrollBar().value() - diff.x()
             )

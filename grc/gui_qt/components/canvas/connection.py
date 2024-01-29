@@ -1,5 +1,6 @@
-# third-party modules
-from qtpy import QtGui, QtCore, QtWidgets
+from qtpy.QtGui import QPainterPath, QPainter, QPen, QColor
+from qtpy.QtWidgets import QGraphicsPathItem
+from qtpy.QtCore import QPointF
 
 from ....core.Connection import Connection as CoreConnection
 from . import colors
@@ -9,42 +10,34 @@ from ...Constants import (
 )
 
 
-class ConnectionArrow(QtWidgets.QGraphicsPathItem):
-
+class DummyConnection(QGraphicsPathItem):
+    """
+    Dummy connection used for when the user drags a connection
+    between two ports.
+    """
     def __init__(self, parent, start_point, end_point):
-        QtWidgets.QGraphicsItem.__init__(self)
-
+        super(DummyConnection, self).__init__()
         self.start_point = start_point
-        self.end_point = end_point
-
-        #self._line = QtCore.QLineF(source.scenePos(), sink.scenePos())
-        self._line = QtGui.QPainterPath()
-        self._arrowhead = QtGui.QPainterPath()
-        self._path = QtGui.QPainterPath()
-        self.updateLine()
-
-        self._line_width_factor = 1.0
-        self._color1 = self._color2 = None
-
+        self._line = QPainterPath()
+        self._arrowhead = QPainterPath()
+        self._path = QPainterPath()
         self._current_port_rotations = self._current_coordinates = None
+        self._arrow_rotation = 0.0  # TODO: rotation of the arrow in radians
+        self.update(end_point)
 
-        self._rel_points = None  # connection coordinates relative to sink/source
-        self._arrow_rotation = 0.0  # rotation of the arrow in radians
-        self._current_cr = None  # for what_is_selected() of curved line
-        self._line_path = None
-
-    def updateLine(self):
+    def update(self, end_point):
+        """User moved the mouse, redraw with new end point"""
         self._line.clear()
         self._line.moveTo(self.start_point)
-        c1 = self.start_point + QtCore.QPointF(200, 0)
-        c2 = self.end_point - QtCore.QPointF(200, 0)
-        self._line.cubicTo(c1, c2, self.end_point)
+        c1 = self.start_point + QPointF(200, 0)
+        c2 = end_point - QPointF(200, 0)
+        self._line.cubicTo(c1, c2, end_point)
 
         self._arrowhead.clear()
-        self._arrowhead.moveTo(self.end_point)
-        self._arrowhead.lineTo(self.end_point + QtCore.QPointF(-CONNECTOR_ARROW_HEIGHT, - CONNECTOR_ARROW_BASE / 2))
-        self._arrowhead.lineTo(self.end_point + QtCore.QPointF(-CONNECTOR_ARROW_HEIGHT, CONNECTOR_ARROW_BASE / 2))
-        self._arrowhead.lineTo(self.end_point)
+        self._arrowhead.moveTo(end_point)
+        self._arrowhead.lineTo(end_point + QPointF(-CONNECTOR_ARROW_HEIGHT, - CONNECTOR_ARROW_BASE / 2))
+        self._arrowhead.lineTo(end_point + QPointF(-CONNECTOR_ARROW_HEIGHT, CONNECTOR_ARROW_BASE / 2))
+        self._arrowhead.lineTo(end_point)
 
         self._path.clear()
         self._path.addPath(self._line)
@@ -52,32 +45,33 @@ class ConnectionArrow(QtWidgets.QGraphicsPathItem):
         self.setPath(self._path)
 
     def paint(self, painter, option, widget):
-        painter.setRenderHint(QtGui.QPainter.Antialiasing)
-        pen = QtGui.QPen(QtGui.QColor(0x61, 0x61, 0x61))
-
+        painter.setRenderHint(QPainter.Antialiasing)
+        pen = QPen(QColor(0x61, 0x61, 0x61))
+        painter.setBrush(QColor(0x61, 0x61, 0x61))
         pen.setWidth(2)
         painter.setPen(pen)
         painter.drawPath(self._line)
-
-        painter.setBrush(QtGui.QColor(0x61, 0x61, 0x61))
-
         painter.drawPath(self._arrowhead)
 
 
-class Connection(CoreConnection, QtWidgets.QGraphicsPathItem):
-
+class Connection(CoreConnection):
     def __init__(self, parent, source, sink):
-        CoreConnection.__init__(self, parent, source, sink)
-        QtWidgets.QGraphicsItem.__init__(self)
+        super(Connection, self).__init__(parent, source, sink)
+
+
+class GUIConnection(QGraphicsPathItem):
+    def __init__(self, parent, source, sink):
+        self.core = parent.core.connect(source.core, sink.core)
+        self.core.gui = self
+        super(GUIConnection, self).__init__()
 
         self.source = source
         self.sink = sink
 
-        #self._line = QtCore.QLineF(source.scenePos(), sink.scenePos())
-        self._line = QtGui.QPainterPath()
-        self._arrowhead = QtGui.QPainterPath()
-        self._path = QtGui.QPainterPath()
-        self.updateLine()
+        self._line = QPainterPath()
+        self._arrowhead = QPainterPath()
+        self._path = QPainterPath()
+        self.update()
 
         self._line_width_factor = 1.0
         self._color1 = self._color2 = None
@@ -88,19 +82,22 @@ class Connection(CoreConnection, QtWidgets.QGraphicsPathItem):
         self._arrow_rotation = 0.0  # rotation of the arrow in radians
         self._current_cr = None  # for what_is_selected() of curved line
         self._line_path = None
-        self.setFlag(QtWidgets.QGraphicsItem.ItemIsSelectable)
+        self.setFlag(QGraphicsPathItem.ItemIsSelectable)
 
-    def updateLine(self):
+    def update(self):
+        """
+        Source and sink moved in relation to each other, redraw with new end points
+        """
         self._line.clear()
         self._line.moveTo(self.source.connection_point)
-        c1 = self.source.connection_point + QtCore.QPointF(200, 0)
-        c2 = self.sink.connection_point - QtCore.QPointF(200, 0)
+        c1 = self.source.connection_point + QPointF(200, 0)
+        c2 = self.sink.connection_point - QPointF(200, 0)
         self._line.cubicTo(c1, c2, self.sink.connection_point)
 
         self._arrowhead.clear()
         self._arrowhead.moveTo(self.sink.connection_point)
-        self._arrowhead.lineTo(self.sink.connection_point + QtCore.QPointF(-CONNECTOR_ARROW_HEIGHT, - CONNECTOR_ARROW_BASE / 2))
-        self._arrowhead.lineTo(self.sink.connection_point + QtCore.QPointF(-CONNECTOR_ARROW_HEIGHT, CONNECTOR_ARROW_BASE / 2))
+        self._arrowhead.lineTo(self.sink.connection_point + QPointF(-CONNECTOR_ARROW_HEIGHT, - CONNECTOR_ARROW_BASE / 2))
+        self._arrowhead.lineTo(self.sink.connection_point + QPointF(-CONNECTOR_ARROW_HEIGHT, CONNECTOR_ARROW_BASE / 2))
         self._arrowhead.lineTo(self.sink.connection_point)
 
         self._path.clear()
@@ -109,30 +106,22 @@ class Connection(CoreConnection, QtWidgets.QGraphicsPathItem):
         self.setPath(self._path)
 
     def paint(self, painter, option, widget):
-        painter.setRenderHint(QtGui.QPainter.Antialiasing)
+        painter.setRenderHint(QPainter.Antialiasing)
 
+        color = QColor(0x61, 0x61, 0x61)
         if self.isSelected():
-            pen = QtGui.QPen(colors.HIGHLIGHT_COLOR)
-        elif not self.enabled:
-            pen = QtGui.QPen(colors.CONNECTION_DISABLED_COLOR)
-        elif not self.is_valid():
-            pen = QtGui.QPen(colors.CONNECTION_ERROR_COLOR)
-        else:
-            pen = QtGui.QPen(QtGui.QColor(0x61, 0x61, 0x61))
+            color = colors.HIGHLIGHT_COLOR
+        elif not self.core.enabled:
+            color = colors.CONNECTION_DISABLED_COLOR
+        elif not self.core.is_valid():
+            color = colors.CONNECTION_ERROR_COLOR
+
+        pen = QPen(color)
 
         pen.setWidth(2)
         painter.setPen(pen)
         painter.drawPath(self._line)
-
-        if self.isSelected():
-            painter.setBrush(colors.HIGHLIGHT_COLOR)
-        elif not self.enabled:
-            painter.setBrush(colors.CONNECTION_DISABLED_COLOR)
-        elif not self.is_valid():
-            painter.setBrush(colors.CONNECTION_ERROR_COLOR)
-        else:
-            painter.setBrush(QtGui.QColor(0x61, 0x61, 0x61))
-
+        painter.setBrush(color)
         painter.drawPath(self._arrowhead)
 
     def mouseDoubleClickEvent(self, e):
