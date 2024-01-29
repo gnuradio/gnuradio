@@ -8,7 +8,7 @@ from .canvas.flowgraph import FlowgraphScene
 from .canvas.block import Block
 from ...core.base import Element
 
-log = logging.getLogger(__name__)
+log = logging.getLogger(f"grc.application.{__name__}")
 
 
 # Movement, rotation, enable/disable/bypass, bus ports,

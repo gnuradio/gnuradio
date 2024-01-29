@@ -18,7 +18,7 @@ from .canvas.colors import LIGHT_FLOWGRAPH_BACKGROUND_COLOR, DARK_FLOWGRAPH_BACK
 from ...core.generator import Generator
 
 # Logging
-log = logging.getLogger(__name__)
+log = logging.getLogger(f"grc.application.{__name__}")
 
 DEFAULT_MAX_X = 400
 DEFAULT_MAX_Y = 300
