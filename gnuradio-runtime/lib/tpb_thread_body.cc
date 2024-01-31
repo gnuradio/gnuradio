@@ -13,6 +13,7 @@
 #endif
 
 #include "tpb_thread_body.h"
+#include <gnuradio/pmt_fmt.h>
 #include <gnuradio/prefs.h>
 #include <pmt/pmt.h>
 #include <boost/thread.hpp>
@@ -82,8 +83,10 @@ tpb_thread_body::tpb_thread_body(block_sptr block,
                 // If we don't have a handler but are building up messages,
                 // prune the queue from the front to keep memory in check.
                 if (block->nmsgs(i.first) > max_nmsgs) {
-                    logger.warn(
-                        "asynchronous message buffer overflowing, dropping message");
+                    logger.warn("{} received a message to port {} which has no handler "
+                                "registered. Message discarded.",
+                                block->identifier(),
+                                i.first);
                     msg = block->delete_head_nowait(i.first);
                 }
             }
