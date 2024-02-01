@@ -8,6 +8,7 @@
  *
  */
 
+#include <algorithm>
 #include <cstring>
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -84,8 +85,10 @@ wavfile_source_impl::wavfile_source_impl(const char* filename, bool repeat)
         throw std::runtime_error("WAV file does not contain any samples.");
     }
 
-    set_output_multiple(s_items_size);
-    d_buffer.resize(s_items_size * d_h.nchans);
+    // can't set_output_multiple, because we don't know whether the file is actually a
+    // multiple of that in length!
+    // set_output_multiple(s_items_size);
+    d_buffer.resize(s_samps_per_read * d_h.nchans);
 
     // Re-set the output signature
     set_output_signature(io_signature::make(1, d_h.nchans, sizeof(float)));
@@ -98,17 +101,13 @@ int wavfile_source_impl::work(int noutput_items,
                               gr_vector_void_star& output_items)
 {
     auto out = (float**)&output_items[0];
-    int n_out_chans = output_items.size();
-    int items = 0;
+    auto n_out_chans = output_items.size();
     int produced = 0;
-    int errnum;
-    sf_count_t samples;
 
-    for (int i = 0; i < noutput_items; i += s_items_size) {
+    for (int i = 0; i < noutput_items; i += s_samps_per_read) {
         if (d_sample_idx >= d_h.samples_per_chan) {
             if (!d_repeat) {
-                // if nothing was read at all, say we're done.
-                return items ? produced : -1;
+                return produced ? produced : -1;
             }
 
             if (sf_seek(d_fp, 0, SEEK_SET) == -1) {
@@ -119,11 +118,14 @@ int wavfile_source_impl::work(int noutput_items,
             d_sample_idx = 0;
         }
 
-        samples = sf_read_float(d_fp, &d_buffer[0], d_h.nchans * s_items_size);
-        items = (int)samples / d_h.nchans;
+        const auto requested_samples =
+            std::min(d_h.nchans * s_samps_per_read,
+                     d_h.nchans * static_cast<decltype(s_samps_per_read)>(noutput_items));
+        const auto read_samples = sf_read_float(d_fp, d_buffer.data(), requested_samples);
+        const auto items = read_samples / d_h.nchans;
         for (int n = 0; n < items; n++) {
             for (int chan = 0; chan < d_h.nchans; chan++) {
-                if (chan < n_out_chans) {
+                if (static_cast<size_t>(chan) < n_out_chans) {
                     out[chan][n + produced] = d_buffer[chan + (n * d_h.nchans)];
                 }
             }
@@ -136,18 +138,24 @@ int wavfile_source_impl::work(int noutput_items,
         // so if they give us any trouble they won't be processed.
         // Serves them bloody right.
 
-        errnum = sf_error(d_fp);
+        auto errnum = sf_error(d_fp);
         if (errnum) {
             if (items == 0) {
                 d_logger->error("WAV file has corrupted header or I/O error, {:s}",
                                 sf_error_number(errnum));
                 return -1;
             }
+            d_logger->error(
+                "Encountered libsndfile error {:d} ({:s}), trying to continue");
             return produced;
+        }
+        if (read_samples < requested_samples) {
+            // this was the end of the file!
+            break;
         }
     }
 
-    return produced;
+    return produced ? produced : -1;
 }
 
 } /* namespace blocks */

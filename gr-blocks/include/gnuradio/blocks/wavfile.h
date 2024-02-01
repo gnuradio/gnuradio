@@ -29,10 +29,10 @@ struct wav_header_info {
     int nchans;
 
     //! Bytes per sample
-    int bytes_per_sample;
+    size_t bytes_per_sample;
 
     //! Number of samples per channel
-    long long samples_per_chan;
+    size_t samples_per_chan;
 
     //! sndfile format
     int format;

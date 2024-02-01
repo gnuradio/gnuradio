@@ -25,11 +25,11 @@ private:
     bool d_repeat;
 
     wav_header_info d_h;
-    long long d_sample_idx;
+    size_t d_sample_idx;
     std::vector<float> d_buffer;
 
-    static constexpr int s_items_size = 1024;
-    static constexpr int s_max_channels = 24;
+    static constexpr decltype(SF_INFO::frames) s_samps_per_read = 1024;
+    static constexpr decltype(SF_INFO::channels) s_max_channels = 24;
 
 public:
     wavfile_source_impl(const char* filename, bool repeat);
