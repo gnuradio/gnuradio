@@ -321,7 +321,7 @@ class GUIBlock(QGraphicsItem):
                 num=Utils.num_to_str(complexity)))
 
         if self.show_block_comments and self.core.comment:
-            markups.append(self.comment)
+            markups.append(self.core.comment)
 
         if markups:  # TODO: Calculate comment box size
             painter.setPen(Qt.gray)

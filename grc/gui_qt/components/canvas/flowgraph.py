@@ -28,6 +28,7 @@ from itertools import count
 # Custom modules
 from ....core.base import Element
 from .connection import DummyConnection, GUIConnection
+from .port import GUIPort
 from ... import base
 from ....core.FlowGraph import FlowGraph as CoreFlowgraph
 from ... import Utils
@@ -271,7 +272,7 @@ class FlowgraphScene(QtWidgets.QGraphicsScene, base.Component):
         selected = self.selectedItems()
         self.moving_blocks = False
 
-        if g_item:
+        if g_item and not isinstance(g_item, DummyConnection):
             c_item = g_item.core
             if c_item.is_block:
                 self.moving_blocks = True
@@ -280,19 +281,18 @@ class FlowgraphScene(QtWidgets.QGraphicsScene, base.Component):
                 if len(selected) == 1:
                     if selected[0].core.is_port and selected[0] != g_item:
                         if selected[0].core.is_source and c_item.is_sink:
-                            new_con = GUIConnection(self, selected[0], g_item)
+                            new_con = self.core.connect(selected[0].core, c_item)
                         elif selected[0].is_sink and c_item.is_source:
-                            new_con = GUIConnection(self, g_item, selected[0])
+                            new_con = self.core.connect(c_item, selected[0].core)
                 if new_con:
                     log.debug("Created connection (click)")
-                    self.addItem(new_con)
-                    self.newElement.emit(new_con.core)
+                    self.addItem(new_con.gui)
+                    self.newElement.emit(new_con)
                     self.update()
                 else:
                     self.start_port = g_item
                     if c_item.is_source:
                         self.dummy_arrow = DummyConnection(self, g_item.connection_point, event.scenePos())
-                        self.dummy_arrow.setPen(QtGui.QPen(1))
                         self.addItem(self.dummy_arrow)
         if event.button() == Qt.LeftButton:
             self.mousePressed = True
@@ -313,12 +313,14 @@ class FlowgraphScene(QtWidgets.QGraphicsScene, base.Component):
     def mouseReleaseEvent(self, event):
         if self.dummy_arrow:  # We are currently dragging a DummyConnection
             g_item = self.itemAt(event.scenePos(), QtGui.QTransform())
-            c_item = g_item.core if g_item else None
-            if c_item.is_port and g_item != self.start_port:
-                log.debug("Created connection (drag)")
-                new_con = GUIConnection(self, self.start_port, g_item)
-                self.newElement.emit(new_con.core)
-                self.update()
+            if isinstance(g_item, GUIPort):
+                c_item = g_item.core
+                if g_item != self.start_port:
+                    log.debug("Created connection (drag)")
+                    new_con = self.core.connect(self.start_port.core, c_item)
+                    self.addItem(new_con.gui)
+                    self.newElement.emit(new_con)
+                    self.update()
             self.removeItem(self.dummy_arrow)
             self.dummy_arrow = None
         else:

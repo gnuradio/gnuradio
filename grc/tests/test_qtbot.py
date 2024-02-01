@@ -662,7 +662,7 @@ def test_file_preferences(qtbot, qapp_cls_):
 
     def assert_and_close():
         assert qapp_cls_.activeWindow() != qapp_cls_.MainWindow
-        qtbot.keyClick(qapp_cls_.activeWindow(), QtCore.Qt.Key_Escape)
+        qtbot.keyClick(qapp_cls_.activeWindow(), QtCore.Qt.Key_Enter)
 
     qtbot.keyClick(qapp_cls_.focusWidget(), QtCore.Qt.Key_F, QtCore.Qt.AltModifier)
     qtbot.wait(100)
