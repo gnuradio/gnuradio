@@ -1256,7 +1256,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
                     #self.config.save()
                     ExecFlowGraphThread(
                         view=self.currentView,
-                        flowgraph=self.currentFlowgraphScene,
+                        flowgraph=self.currentFlowgraph,
                         xterm_executable=xterm,
                         callback=self.updateActions
                     )
