@@ -18,37 +18,37 @@ class ChangeStateAction(QUndoCommand):
     def __init__(self, scene: FlowgraphScene):
         QUndoCommand.__init__(self)
         log.debug("init ChangeState")
-        self.oldStates = []
-        self.oldParams = []
-        self.newStates = []
+        self.old_states = []
+        self.old_params = []
+        self.new_states = []
         self.newParams = []
         self.scene = scene
         self.g_blocks = scene.selected_blocks()
         for g_block in self.g_blocks:
-            self.oldStates.append(copy(g_block.core.states))
-            self.newStates.append(copy(g_block.core.states))
-            self.oldParams.append(copy(g_block.core.params))
+            self.old_states.append(copy(g_block.core.states))
+            self.new_states.append(copy(g_block.core.states))
+            self.old_params.append(copy(g_block.core.params))
             self.newParams.append(copy(g_block.core.params))
 
     def redo(self):
         for i in range(len(self.g_blocks)):
-            self.g_blocks[i].setStates(self.newStates[i])
+            self.g_blocks[i].setStates(self.new_states[i])
             self.g_blocks[i].core.params = (self.newParams[i])
         self.scene.update()
 
     def undo(self):
         for i in range(len(self.g_blocks)):
-            self.g_blocks[i].setStates(self.oldStates[i])
-            self.g_blocks[i].params = (self.oldParams[i])
+            self.g_blocks[i].setStates(self.old_states[i])
+            self.g_blocks[i].params = (self.old_params[i])
         self.scene.update()
 
 
 class RotateAction(ChangeStateAction):
-    def __init__(self, scene, delta_angle):
+    def __init__(self, scene: FlowgraphScene, delta_angle: int):
         ChangeStateAction.__init__(self, scene)
         log.debug("init RotateAction")
         self.setText('Rotate')
-        for states in self.newStates:
+        for states in self.new_states:
             states['rotation'] += delta_angle
             # Get rid of superfluous entries
             states = dict((k, v) for k, v in states.items() if all(k == 'rotation' for x in k))
@@ -89,7 +89,7 @@ class EnableAction(ChangeStateAction):
         log.debug("init EnableAction")
         self.setText('Enable')
         for i in range(len(self.g_blocks)):
-            self.newStates[i]['state'] = 'enabled'
+            self.new_states[i]['state'] = 'enabled'
 
 
 class DisableAction(ChangeStateAction):
@@ -98,7 +98,7 @@ class DisableAction(ChangeStateAction):
         log.debug("init DisableAction")
         self.setText('Disable')
         for i in range(len(self.g_blocks)):
-            self.newStates[i]['state'] = 'disabled'
+            self.new_states[i]['state'] = 'disabled'
 
 
 class BypassAction(ChangeStateAction):
@@ -107,7 +107,7 @@ class BypassAction(ChangeStateAction):
         log.debug("init BypassAction")
         self.setText('Bypass')
         for i in range(len(self.g_blocks)):
-            self.newStates[i]['state'] = 'bypassed'
+            self.new_states[i]['state'] = 'bypassed'
 
 
 # Change properties
@@ -152,7 +152,7 @@ class BlockPropsChangeAction(QUndoCommand):
 
 
 class BussifyAction(QUndoCommand):
-    def __init__(self, scene, direction):
+    def __init__(self, scene: FlowgraphScene, direction: str):  # direction is either "sink" or "source"
         QUndoCommand.__init__(self)
         log.debug("init BussifyAction")
         self.setText(f'Toggle bus {direction}')

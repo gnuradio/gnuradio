@@ -27,7 +27,7 @@ from itertools import count
 
 # Custom modules
 from ....core.base import Element
-from .connection import DummyConnection, GUIConnection
+from .connection import DummyConnection
 from .port import GUIPort
 from ... import base
 from ....core.FlowGraph import FlowGraph as CoreFlowgraph
@@ -46,6 +46,7 @@ class Flowgraph(CoreFlowgraph):
     def __init__(self, gui, platform, *args, **kwargs):
         self.gui = gui
         CoreFlowgraph.__init__(self, platform)
+
 
 class FlowgraphScene(QtWidgets.QGraphicsScene, base.Component):
     itemMoved = QtCore.Signal([QtCore.QPointF])

@@ -1,4 +1,4 @@
-from qtpy.QtGui import QPainterPath, QPainter, QPen, QColor
+from qtpy.QtGui import QPainterPath, QPainter, QPen
 from qtpy.QtWidgets import QGraphicsPathItem
 from qtpy.QtCore import QPointF
 
@@ -60,7 +60,7 @@ class DummyConnection(QGraphicsPathItem):
     def paint(self, painter, option, widget):
         painter.setRenderHint(QPainter.Antialiasing)
 
-        color = QColor(0x61, 0x61, 0x61)
+        color = colors.BORDER_COLOR
 
         pen = QPen(color)
 
@@ -125,7 +125,7 @@ class GUIConnection(QGraphicsPathItem):
     def paint(self, painter, option, widget):
         painter.setRenderHint(QPainter.Antialiasing)
 
-        color = QColor(0x61, 0x61, 0x61)
+        color = colors.BORDER_COLOR
         if self.isSelected():
             color = colors.HIGHLIGHT_COLOR
         elif not self.core.enabled:
