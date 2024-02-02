@@ -130,7 +130,7 @@ class VariableEditor(QDockWidget, base.Component):
         variables = QTreeWidgetItem(self._tree)
         variables.setText(0, "Variables")
         variables.setIcon(2, QtGui.QIcon.fromTheme("list-add"))
-        for block in self._variables:
+        for block in sorted(self._variables, key=lambda v: v.name):
             variable_ = QTreeWidgetItem(variables)
             variable_.setText(0, block.name)
             variable_.setData(0, Qt.UserRole, block)
@@ -138,13 +138,7 @@ class VariableEditor(QDockWidget, base.Component):
             variable_.setData(1, Qt.UserRole, block)
             variable_.setIcon(2, QtGui.QIcon.fromTheme("list-remove"))
             variable_.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEditable | (Qt.ItemIsEnabled if block.enabled else 0))
-        '''
-            self._treestore.append(
-                imports, [block, block.params['id'].get_value()])
-        for block in sorted(self._variables, key=lambda v: v.name):
-            self._treestore.append(
-                variables, [block, block.params['id'].get_value()])
-        '''
+
         self.currently_rebuilding = False
 
     def update_gui(self, blocks):
