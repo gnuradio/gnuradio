@@ -127,7 +127,7 @@ class VariableEditor(QDockWidget, base.Component):
             import_.setData(1, Qt.UserRole, block)
             import_.setIcon(2, QtGui.QIcon.fromTheme("list-remove"))
             if block.enabled:
-                import_.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEditable | (Qt.ItemIsEnabled if block.enabled else 0))
+                import_.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEditable | Qt.ItemIsEnabled)
             else:
                 import_.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEditable)
         variables = QTreeWidgetItem(self._tree)
@@ -142,7 +142,7 @@ class VariableEditor(QDockWidget, base.Component):
             variable_.setIcon(2, QtGui.QIcon.fromTheme("list-remove"))
             variable_.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEditable)
             if block.enabled:
-                variable_.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEditable | (Qt.ItemIsEnabled if block.enabled else 0))
+                variable_.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEditable | Qt.ItemIsEnabled)
             else:
                 variable_.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEditable)
 
