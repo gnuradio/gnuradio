@@ -36,6 +36,8 @@ class Block(CoreBlock):
         self.width = 50  # will change immediately after the first paint
         self.block_label = self.key
 
+        self.old_data = None
+
         if "rotation" not in self.states.keys():
             self.states["rotation"] = 0.0
 
@@ -80,7 +82,7 @@ class GUIBlock(QGraphicsItem):
         self.old_pos = (self.x(), self.y())
         self.new_pos = (self.x(), self.y())
         self.moving = False
-        self.old_data = None
+
         self.props_dialog = None
         self.right_click_menu = None
 

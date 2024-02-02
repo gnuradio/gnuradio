@@ -85,6 +85,7 @@ class Application(QtWidgets.QApplication):
             stopwatch.lap("wikitab")
         self.VariableEditor = components.VariableEditor()
         stopwatch.lap("variable_editor")
+        self.VariableEditor.set_scene(self.MainWindow.currentFlowgraphScene)
 
         # Debug times
         log.debug(
