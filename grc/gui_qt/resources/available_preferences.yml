@@ -2,7 +2,7 @@
 # in the Preferences window.
 
 categories:
-  - key: grc
+  - key: qt_grc
     name: GRC
     items:
       - key: editor
@@ -55,7 +55,7 @@ categories:
         dtype: str
         default: ""
 
-  - key: appearance
+  - key: qt_appearance
     name: Appearance
     items:
       - key: theme
