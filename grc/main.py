@@ -201,6 +201,7 @@ def main():
 
     # Logging support
     parser.add_argument('--log', choices=['debug', 'info', 'warning', 'error', 'critical'], default='info')
+    parser.add_argument('--nowiki', action='store_true')
     # TODO: parser.add_argument('--log-output')
 
     # Graphics framework (QT or GTK)
