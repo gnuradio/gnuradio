@@ -126,7 +126,10 @@ class VariableEditor(QDockWidget, base.Component):
             import_.setText(1, block.params['imports'].get_value())
             import_.setData(1, Qt.UserRole, block)
             import_.setIcon(2, QtGui.QIcon.fromTheme("list-remove"))
-            import_.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEditable | (Qt.ItemIsEnabled if block.enabled else 0))
+            if block.enabled:
+                import_.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEditable | (Qt.ItemIsEnabled if block.enabled else 0))
+            else:
+                import_.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEditable)
         variables = QTreeWidgetItem(self._tree)
         variables.setText(0, "Variables")
         variables.setIcon(2, QtGui.QIcon.fromTheme("list-add"))
@@ -137,7 +140,11 @@ class VariableEditor(QDockWidget, base.Component):
             variable_.setText(1, block.params['value'].get_value())
             variable_.setData(1, Qt.UserRole, block)
             variable_.setIcon(2, QtGui.QIcon.fromTheme("list-remove"))
-            variable_.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEditable | (Qt.ItemIsEnabled if block.enabled else 0))
+            variable_.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEditable)
+            if block.enabled:
+                variable_.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEditable | (Qt.ItemIsEnabled if block.enabled else 0))
+            else:
+                variable_.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEditable)
 
         self.currently_rebuilding = False
 
