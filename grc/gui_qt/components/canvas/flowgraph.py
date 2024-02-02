@@ -92,6 +92,7 @@ class FlowgraphScene(QtWidgets.QGraphicsScene, base.Component):
         for block in self.core.blocks:
             block.gui.create_shapes_and_labels()
         self.update_elements_to_draw()
+        self.app.VariableEditor.update_gui(self.core.blocks)
 
     def update_elements_to_draw(self):
         # hide_disabled_blocks = Actions.TOGGLE_HIDE_DISABLED_BLOCKS.get_active()

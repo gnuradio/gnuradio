@@ -197,6 +197,13 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         self.show()
     """
 
+    def update_variable_editor(self, var_edit):
+        var_edit.new_block.connect(self.var_edit_new_block)
+
+    @QtCore.Slot(str)
+    def var_edit_new_block(self, block_key):
+        self.currentFlowgraphScene.add_block(block_key)
+
     @property
     def currentView(self):
         return self.tabWidget.currentWidget()
@@ -215,6 +222,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         action = MoveAction(self.currentFlowgraphScene, diff)
         self.currentFlowgraphScene.undoStack.push(action)
         self.updateActions()
+        self.currentFlowgraphScene.update()
 
     @QtCore.Slot(Element)
     def registerNewElement(self, elem):
@@ -222,6 +230,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         action = NewElementAction(self.currentFlowgraphScene, elem)
         self.currentFlowgraphScene.undoStack.push(action)
         self.updateActions()
+        self.currentFlowgraphScene.update()
 
     @QtCore.Slot(Element)
     def registerDeleteElement(self, elem):
@@ -229,6 +238,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         action = DeleteElementAction(self.currentFlowgraphScene, elem)
         self.currentFlowgraphScene.undoStack.push(action)
         self.updateActions()
+        self.currentFlowgraphScene.update()
 
     @QtCore.Slot(Element)
     def registerBlockPropsChange(self, elem):
@@ -236,6 +246,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         action = BlockPropsChangeAction(self.currentFlowgraphScene, elem)
         self.currentFlowgraphScene.undoStack.push(action)
         self.updateActions()
+        self.currentFlowgraphScene.update()
 
     def createActions(self, actions):
         """
@@ -573,6 +584,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
     def updateActions(self):
         """Update the available actions based on what is selected"""
+        self.update_variable_editor(self.app.VariableEditor)
 
         blocks = self.currentFlowgraphScene.selected_blocks()
         conns = self.currentFlowgraphScene.selected_connections()
@@ -894,6 +906,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         scene.itemMoved.connect(self.registerMove)
         scene.newElement.connect(self.registerNewElement)
         scene.deleteElement.connect(self.registerDeleteElement)
+        scene.blockPropsChange.connect(self.registerBlockPropsChange)
         scene.blockPropsChange.connect(self.registerBlockPropsChange)
 
     # Action Handlers
