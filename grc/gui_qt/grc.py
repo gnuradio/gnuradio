@@ -80,8 +80,9 @@ class Application(QtWidgets.QApplication):
         stopwatch.lap("blocklibrary")
         # self.DocumentationTab = components.DocumentationTab()
         # stopwatch.lap('documentationtab')
-        self.WikiTab = components.WikiTab()
-        stopwatch.lap("wikitab")
+        if not "--nowiki" in settings.argv:
+            self.WikiTab = components.WikiTab()
+            stopwatch.lap("wikitab")
         self.VariableEditor = components.VariableEditor()
         stopwatch.lap("variable_editor")
 
