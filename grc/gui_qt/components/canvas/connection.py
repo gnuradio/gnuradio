@@ -125,7 +125,7 @@ class GUIConnection(QGraphicsPathItem):
     def paint(self, painter, option, widget):
         painter.setRenderHint(QPainter.Antialiasing)
 
-        color = colors.BORDER_COLOR
+        color = colors.CONNECTION_ENABLED_COLOR
         if self.isSelected():
             color = colors.HIGHLIGHT_COLOR
         elif not self.core.enabled:

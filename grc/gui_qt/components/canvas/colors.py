@@ -35,6 +35,10 @@ BLOCK_ENABLED_COLOR = get_color('#F1ECFF')
 BLOCK_DISABLED_COLOR = get_color('#CCCCCC')
 BLOCK_BYPASSED_COLOR = get_color('#F4FF81')
 
+CONNECTION_ENABLED_COLOR = get_color('#616161')
+CONNECTION_DISABLED_COLOR = get_color('#BBBBBB')
+CONNECTION_ERROR_COLOR = get_color('#FF0000')
+
 #################################################################################
 # port colors
 #################################################################################
