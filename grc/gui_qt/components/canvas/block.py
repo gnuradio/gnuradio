@@ -46,6 +46,7 @@ class Block(CoreBlock):
     def import_data(self, name, states, parameters, **_):
         super(self.__class__, self).import_data(name, states, parameters, **_)
         self.gui.setPos(*self.states["coordinate"])
+        self.gui.setRotation(self.states["rotation"])
         self.rewrite()
         self.gui.create_shapes_and_labels()
 
@@ -215,22 +216,11 @@ class GUIBlock(QGraphicsItem):
                 return colors.BLOCK_ENABLED_COLOR
             return colors.BLOCK_DISABLED_COLOR
 
-        def get_border():
-            """
-            Get the border color for this block
-            """
-            if self.isSelected():
-                return colors.HIGHLIGHT_COLOR
-            if self.core.is_dummy_block:
-                return colors.MISSING_BLOCK_BORDER_COLOR
-            if self.core.deprecated:
-                return colors.BLOCK_DEPRECATED_BORDER_COLOR
-            if self.core.state == "enabled":
-                return colors.BORDER_COLOR
-            return colors.BORDER_COLOR_DISABLED
-
         self._bg_color = get_bg()
-        self._border_color = get_border()
+
+    def move(self, x, y):
+        self.moveBy(x, y)
+        self.core.states["coordinate"] = (self.x(), self.y())
 
     def paint(self, painter, option, widget):
         if (self.hide_variables and (self.is_variable or self.is_import)) or (self.hide_disabled_blocks and not self.enabled):
@@ -239,8 +229,21 @@ class GUIBlock(QGraphicsItem):
         painter.setRenderHint(QPainter.Antialiasing)
         self.font.setBold(True)
 
+        # TODO: Make sure this is correct
+        border_color = colors.BORDER_COLOR
+
+        if self.isSelected():
+            border_color = colors.HIGHLIGHT_COLOR
+        else:
+            if self.core.is_dummy_block:
+                border_color = colors.MISSING_BLOCK_BORDER_COLOR
+            elif self.core.deprecated:
+                border_color = colors.BLOCK_DEPRECATED_BORDER_COLOR
+            elif self.core.state == "disabled":
+                border_color = colors.BORDER_COLOR_DISABLED
+
         pen = QPen(1)
-        pen = QPen(self._border_color)
+        pen = QPen(border_color)
 
         pen.setWidth(3)
         painter.setPen(pen)
@@ -338,7 +341,7 @@ class GUIBlock(QGraphicsItem):
             -2.5, -2.5, self.width + 5, self.height + (5 if not self.core.comment else 50)
         )
 
-    def setStates(self, states):
+    def set_states(self, states):
         for k, v in states.items():
             self.core.states[k] = v
 
@@ -375,8 +378,10 @@ class GUIBlock(QGraphicsItem):
             return QGraphicsItem.itemChange(self, change, value)
 
     def rotate(self, rotation):
-        log.debug(f"Rotating {self.name}")
-        self.setRotation(self.rotation() + rotation)
+        log.debug(f"Rotating {self.core.name}")
+        new_rotation = self.rotation() + rotation
+        self.setRotation(new_rotation)
+        self.core.states["rotation"] = new_rotation
 
     def moveToTop(self):
         # TODO: Is there a simpler way to do this?

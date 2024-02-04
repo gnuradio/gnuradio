@@ -21,37 +21,74 @@ class ChangeStateAction(QUndoCommand):
         self.old_states = []
         self.old_params = []
         self.new_states = []
-        self.newParams = []
+        self.new_params = []
         self.scene = scene
         self.g_blocks = scene.selected_blocks()
         for g_block in self.g_blocks:
             self.old_states.append(copy(g_block.core.states))
             self.new_states.append(copy(g_block.core.states))
             self.old_params.append(copy(g_block.core.params))
-            self.newParams.append(copy(g_block.core.params))
+            self.new_params.append(copy(g_block.core.params))
 
     def redo(self):
         for i in range(len(self.g_blocks)):
-            self.g_blocks[i].setStates(self.new_states[i])
-            self.g_blocks[i].core.params = (self.newParams[i])
+            self.g_blocks[i].set_states(self.new_states[i])
+            self.g_blocks[i].core.params = (self.new_params[i])
         self.scene.update()
 
     def undo(self):
         for i in range(len(self.g_blocks)):
-            self.g_blocks[i].setStates(self.old_states[i])
+            self.g_blocks[i].set_states(self.old_states[i])
             self.g_blocks[i].params = (self.old_params[i])
         self.scene.update()
 
 
-class RotateAction(ChangeStateAction):
+class RotateAction(QUndoCommand):
     def __init__(self, scene: FlowgraphScene, delta_angle: int):
-        ChangeStateAction.__init__(self, scene)
+        QUndoCommand.__init__(self)
         log.debug("init RotateAction")
         self.setText('Rotate')
-        for states in self.new_states:
-            states['rotation'] += delta_angle
-            # Get rid of superfluous entries
-            states = dict((k, v) for k, v in states.items() if all(k == 'rotation' for x in k))
+        self.g_blocks = scene.selected_blocks()
+        self.scene = scene
+        self.delta_angle = delta_angle
+
+    def redo(self):
+        for block in self.g_blocks:
+            block.rotate(self.delta_angle)
+        self.scene.update()
+
+    def undo(self):
+        for block in self.g_blocks:
+            block.rotate(-self.delta_angle)
+        self.scene.update()
+
+class MoveAction(QUndoCommand):
+    def __init__(self, scene: FlowgraphScene, diff: QPointF):
+        QUndoCommand.__init__(self)
+        log.debug("init MoveAction")
+        self.setText('Move')
+        self.g_blocks = scene.selected_blocks()
+        self.scene = scene
+        self.x = diff.x()
+        self.y = diff.y()
+        for block in self.g_blocks:
+            block.core.states["coordinate"] = (block.x(), block.y())
+        self.first = True
+
+    # redo() is called when the MoveAction is first created.
+    # At this point, the item is already at the correct position.
+    # Therefore, do nothing.
+    def redo(self):
+        if self.first:
+            self.first = False
+            return
+        for g_block in self.g_blocks:
+            g_block.move(self.x, self.y)
+        self.scene.update()
+
+    def undo(self):
+        for g_block in self.g_blocks:
+            g_block.move(-self.x, -self.y)
         self.scene.update()
 
 
@@ -64,6 +101,8 @@ class MoveAction(QUndoCommand):
         self.scene = scene
         self.x = diff.x()
         self.y = diff.y()
+        for block in self.g_blocks:
+            block.core.states["coordinate"] = (block.x(), block.y())
         self.first = True
 
     # redo() is called when the MoveAction is first created.
@@ -74,14 +113,13 @@ class MoveAction(QUndoCommand):
             self.first = False
             return
         for g_block in self.g_blocks:
-            g_block.moveBy(self.x, self.y)
+            g_block.move(self.x, self.y)
         self.scene.update()
 
     def undo(self):
         for g_block in self.g_blocks:
-            g_block.moveBy(-self.x, -self.y)
+            g_block.move(-self.x, -self.y)
         self.scene.update()
-
 
 class EnableAction(ChangeStateAction):
     def __init__(self, scene: FlowgraphScene):

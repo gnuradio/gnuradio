@@ -147,29 +147,18 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         self.registerToolBar(toolbars["run"])
         self.registerToolBar(toolbars["misc"])
 
-        log.debug("Loading flowgraph model")
-        view = FlowgraphView(self, self.platform)
-        view.centerOn(0, 0)
-        last_file = self.app.qsettings.value('window/current_file', "")
-        try:
-            initial_state = self.platform.parse_flow_graph(last_file)
-        except FileNotFoundError:
-            log.warning(f"Last file {last_file} not found")
-            initial_state = self.platform.parse_flow_graph("")
-
-        view.scene().import_data(initial_state)
-        log.debug("Adding flowgraph view")
-
         self.tabWidget = QtWidgets.QTabWidget()
         self.tabWidget.setTabsClosable(True)
-        # TODO: Don't close if the tab has not been saved
         self.tabWidget.tabCloseRequested.connect(
             lambda index: self.close_triggered(index)
         )
-        self.tabWidget.addTab(view, "Untitled")
         self.setCentralWidget(self.tabWidget)
-        self.connect_fg_signals(self.currentFlowgraphScene)
-        # self.new_tab(self.flowgraph)
+
+        last_file = self.app.qsettings.value('window/current_file', "")
+        if last_file:
+            self.open_triggered(last_file)
+        else:
+            self.new_triggered()
 
         self.clipboard = None
         self.undoView = None
@@ -959,6 +948,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         else:
             log.debug("Flowgraph does not have a filename")
             self.save_as_triggered()
+        self.updateActions()
 
     def save_as_triggered(self):
         log.debug("Save As")
@@ -979,6 +969,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
             self.currentFlowgraphScene.set_saved(True)
         else:
             log.debug("Cancelled Save As action")
+        self.updateActions()
 
     def save_copy_triggered(self):
         log.debug("Save Copy")
