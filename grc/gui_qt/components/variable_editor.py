@@ -137,14 +137,18 @@ class VariableEditor(QDockWidget, base.Component):
             variable_ = QTreeWidgetItem(variables)
             variable_.setText(0, block.name)
             variable_.setData(0, Qt.UserRole, block)
-            variable_.setText(1, block.params['value'].get_value())
-            variable_.setData(1, Qt.UserRole, block)
-            variable_.setIcon(2, QtGui.QIcon.fromTheme("list-remove"))
-            variable_.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEditable)
-            if block.enabled:
-                variable_.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEditable | Qt.ItemIsEnabled)
+            if block.key == 'variable':
+                variable_.setText(1, block.params['value'].get_value())
+                variable_.setData(1, Qt.UserRole, block)
+                if block.enabled:
+                    variable_.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEditable | Qt.ItemIsEnabled)
+                else:
+                    variable_.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEditable)
             else:
-                variable_.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEditable)
+                variable_.setText(1, '<Open Properties>')
+                variable_.setFlags(Qt.ItemIsSelectable)
+            variable_.setIcon(2, QtGui.QIcon.fromTheme("list-remove"))
+
 
         self.currently_rebuilding = False
 
