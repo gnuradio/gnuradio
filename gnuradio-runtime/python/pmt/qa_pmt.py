@@ -909,16 +909,10 @@ class test_pmt(unittest.TestCase):
             pmt.is_eof_object(None)
 
         with self.assertRaises(TypeError):
-            pmt.write(None, None)
-
-        with self.assertRaises(TypeError):
             pmt.write_string(None)
 
         with self.assertRaises(TypeError):
             pmt.print(None)
-
-        with self.assertRaises(TypeError):
-            pmt.serialize(None, None)
 
         with self.assertRaises(TypeError):
             pmt.length(None)

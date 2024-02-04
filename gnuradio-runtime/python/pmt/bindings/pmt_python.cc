@@ -1570,12 +1570,6 @@ void bind_pmt(py::module& m)
           D(is_eof_object));
 
 
-    m.def("read", &::pmt::read, py::arg("port"), D(read));
-
-
-    m.def("write", &::pmt::write, py::arg("obj").none(false), py::arg("port"), D(write));
-
-
     m.def("write_string",
           &::pmt::write_string,
           py::arg("obj").none(false),
@@ -1583,17 +1577,6 @@ void bind_pmt(py::module& m)
 
 
     m.def("print", &::pmt::print, py::arg("v").none(false), D(print));
-
-
-    m.def("serialize",
-          &::pmt::serialize,
-          py::arg("obj").none(false),
-          py::arg("sink"),
-          D(serialize));
-
-
-    m.def("deserialize", &::pmt::deserialize, py::arg("source"), D(deserialize));
-
 
     m.def("dump_sizeof", &::pmt::dump_sizeof, D(dump_sizeof));
 
