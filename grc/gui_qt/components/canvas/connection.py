@@ -107,15 +107,15 @@ class GUIConnection(QGraphicsPathItem):
         """
         self._line.clear()
         self._line.moveTo(self.source.gui.connection_point)
-        c1 = self.source.gui.connection_point + QPointF(200, 0)
-        c2 = self.sink.gui.connection_point - QPointF(200, 0)
+        c1 = self.source.gui.ctrl_point
+        c2 = self.sink.gui.ctrl_point
         self._line.cubicTo(c1, c2, self.sink.gui.connection_point)
 
         self._arrowhead.clear()
-        self._arrowhead.moveTo(self.sink.gui.connection_point)
-        self._arrowhead.lineTo(self.sink.gui.connection_point + QPointF(-CONNECTOR_ARROW_HEIGHT, - CONNECTOR_ARROW_BASE / 2))
-        self._arrowhead.lineTo(self.sink.gui.connection_point + QPointF(-CONNECTOR_ARROW_HEIGHT, CONNECTOR_ARROW_BASE / 2))
-        self._arrowhead.lineTo(self.sink.gui.connection_point)
+        self._arrowhead.moveTo(self.sink.gui.connection_point + QPointF(10.0, 0))
+        self._arrowhead.lineTo(self.sink.gui.connection_point + QPointF(10.0, 0) + QPointF(-CONNECTOR_ARROW_HEIGHT, - CONNECTOR_ARROW_BASE / 2))
+        self._arrowhead.lineTo(self.sink.gui.connection_point + QPointF(10.0, 0) + QPointF(-CONNECTOR_ARROW_HEIGHT, CONNECTOR_ARROW_BASE / 2))
+        self._arrowhead.lineTo(self.sink.gui.connection_point + QPointF(10.0, 0))
 
         self._path.clear()
         self._path.addPath(self._line)
@@ -143,4 +143,4 @@ class GUIConnection(QGraphicsPathItem):
 
     def mouseDoubleClickEvent(self, e):
         self.parent.connections.remove(self)
-        self.parent.removeItem(self)
+        self.scene().removeItem(self)

@@ -41,9 +41,11 @@ class GUIPort(QGraphicsItem):
         self.width = 15.0
 
         if self.core._dir == "sink":
-            self.connection_point = self.scenePos() + QPointF(0.0, self.height / 2.0)
+            self.connection_point = self.mapToScene(QPointF(0.0, self.height / 2.0))
+            self.ctrl_point = self.mapToScene(QPointF(0.0, self.height / 2.0) - QPointF(5.0, 0.0))
         else:
-            self.connection_point = self.scenePos() + QPointF(15.0, self.height / 2.0)
+            self.connection_point = self.mapToScene(QPointF(self.width, self.height / 2.0))
+            self.ctrl_point = self.mapToScene(QPointF(self.width, self.height / 2.0) + QPointF(5.0, 0.0))
 
         self.setFlag(QGraphicsItem.ItemSendsScenePositionChanges)
 
@@ -62,13 +64,19 @@ class GUIPort(QGraphicsItem):
         # TODO: Move somewhere else? Not necessarily
         self.core.parent_flowgraph.gui.addItem(self)
 
-    def itemChange(self, change, value):
+    def update_connections(self):
         if self.core._dir == "sink":
-            self.connection_point = self.scenePos() + QPointF(0.0, self.height / 2.0)
+            self.connection_point = self.mapToScene(QPointF(-10.0, self.height / 2.0))
+            self.ctrl_point = self.mapToScene(QPointF(-10.0, self.height / 2.0) - QPointF(100.0, 0.0))
         else:
-            self.connection_point = self.scenePos() + QPointF(self.width, self.height / 2.0)
+            self.connection_point = self.mapToScene(QPointF(self.width, self.height / 2.0))
+            self.ctrl_point = self.mapToScene(QPointF(self.width, self.height / 2.0) + QPointF(100.0, 0.0))
+
         for conn in self.core.connections():
             conn.gui.update()
+
+    def itemChange(self, change, value):
+        self.update_connections()
         return QGraphicsItem.itemChange(self, change, value)
 
     def create_shapes_and_labels(self):
@@ -78,6 +86,7 @@ class GUIPort(QGraphicsItem):
 
         self.width = max(15, self.fm.width(self.core.name) * 1.5)
         self._update_colors()
+        self.update_connections()
 
     @property
     def _show_label(self) -> bool:
