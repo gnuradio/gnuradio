@@ -918,6 +918,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         log.debug("Adding flowgraph view")
 
         self.tabWidget.addTab(fg_view, "Untitled")
+        self.tabWidget.setCurrentIndex(self.tabWidget.count() - 1)
 
     def open_triggered(self, filename=None, save_allowed=True):
         log.debug("open")
@@ -981,6 +982,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
             log.info(f"Saved (as) {filename}")
             self.tabWidget.tabBar().setTabTextColor(self.tabWidget.currentIndex(), Qt.white)  # TODO: Not quite the right hue
             self.currentFlowgraphScene.set_saved(True)
+            self.tabWidget.setTabText(self.tabWidget.currentIndex(), os.path.basename(filename))
         else:
             log.debug("Cancelled Save As action")
         self.updateActions()
