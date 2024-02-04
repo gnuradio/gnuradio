@@ -1401,19 +1401,6 @@ void bind_pmt(py::module& m)
 
     m.def("is_any", &::pmt::is_any, py::arg("obj").none(false), D(is_any));
 
-
-    m.def("make_any", &::pmt::make_any, py::arg("any"), D(make_any));
-
-
-    m.def("any_ref", &::pmt::any_ref, py::arg("obj").none(false), D(any_ref));
-
-
-    m.def("any_set",
-          &::pmt::any_set,
-          py::arg("obj").none(false),
-          py::arg("any"),
-          D(any_set));
-
     // m.def("is_msg_accepter",&pmt::is_msg_accepter,
     //     py::arg("obj")
     // );
