@@ -1447,9 +1447,6 @@ void bind_pmt(py::module& m)
           D(assoc));
 
 
-    m.def("map", &::pmt::map, py::arg("proc"), py::arg("list").none(false), D(map));
-
-
     m.def("reverse", &::pmt::reverse, py::arg("list").none(false), D(reverse));
 
 

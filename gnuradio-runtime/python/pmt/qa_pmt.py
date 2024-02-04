@@ -836,9 +836,6 @@ class test_pmt(unittest.TestCase):
             pmt.assoc(pmt.PMT_NIL, None)
 
         with self.assertRaises(TypeError):
-            pmt.map(None, None)
-
-        with self.assertRaises(TypeError):
             pmt.reverse(None)
 
         with self.assertRaises(TypeError):
