@@ -260,7 +260,6 @@ int fft_filter_ccc::filter(int nitems, const gr_complex* input, gr_complex* outp
         d_invfft->execute(); // compute inv xform
 
         // add in the overlapping tail
-
         for (j = 0; j < tailsize(); j++)
             d_invfft->get_outbuf()[j] += d_tail[j];
 
@@ -394,7 +393,6 @@ int fft_filter_ccf::filter(int nitems, const gr_complex* input, gr_complex* outp
         d_invfft->execute(); // compute inv xform
 
         // add in the overlapping tail
-
         for (j = 0; j < tailsize(); j++)
             d_invfft->get_outbuf()[j] += d_tail[j];
 
