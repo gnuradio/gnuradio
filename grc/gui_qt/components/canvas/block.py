@@ -91,6 +91,11 @@ class GUIBlock(QGraphicsItem):
         self.setFlag(QGraphicsItem.ItemIsSelectable)
         self.setFlag(QGraphicsItem.ItemSendsScenePositionChanges)
 
+        self.markups_height = 0.0
+        self.markups_width = 0.0
+        self.markups = []
+        self.markup_text = ""
+
     def create_shapes_and_labels(self):
         qsettings = QApplication.instance().qsettings
         self.force_show_id = qsettings.value('grc/show_block_ids', type=bool)
@@ -158,6 +163,25 @@ class GUIBlock(QGraphicsItem):
                 if fm.width(full_line) > largest_width:
                     largest_width = fm.width(full_line)
         self.width = largest_width + 15
+
+        self.markups = []
+        self.markup_text = ""
+        self.markups_width = 0.0
+
+        if self.show_complexity and self.key == "options":
+            complexity = flow_graph_complexity.calculate(self.parent)
+            self.markups.append('Complexity: {num} bal'.format(
+                num=Utils.num_to_str(complexity)))
+
+        if self.show_block_comments and self.core.comment:
+            self.markups.append(self.core.comment)
+
+        self.markup_text = "\n".join(self.markups).strip()
+
+        self.markups_height = fm.height() * (self.markup_text.count("\n") + 1)
+        for line in self.markup_text.split("\n"):
+            if fm.width(line) > self.markups_width:
+                self.markups_width = fm.width(line)
 
         # Update the position and size of all the ports
         bussified = (
@@ -319,26 +343,18 @@ class GUIBlock(QGraphicsItem):
                 )
                 y_offset += 20
 
-        markups = []
-        if self.show_complexity and self.key == "options":
-            complexity = flow_graph_complexity.calculate(self.parent)
-            markups.append('Complexity: {num} bal'.format(
-                num=Utils.num_to_str(complexity)))
-
-        if self.show_block_comments and self.core.comment:
-            markups.append(self.core.comment)
-
-        if markups:  # TODO: Calculate comment box size
+        if self.markup_text:
             painter.setPen(Qt.gray)
             painter.drawText(
-                QRectF(0, self.height + 5, self.width, self.height),
+                QRectF(0, self.height + 5, self.markups_width, self.markups_height),
                 Qt.AlignLeft,
-                "\n".join(markups),
+                self.markup_text,
             )
 
     def boundingRect(self):
-        return QRectF(  # TODO: Calculate comment box size properly
-            -2.5, -2.5, self.width + 5, self.height + (5 if not self.core.comment else 50)
+        # TODO: Comments should be a separate QGraphicsItem
+        return QRectF(
+            -2.5, -2.5, self.width + 5 + self.markups_width, self.height + 5 + self.markups_height
         )
 
     def set_states(self, states):

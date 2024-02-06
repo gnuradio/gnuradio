@@ -62,35 +62,6 @@ class RotateAction(QUndoCommand):
             block.rotate(-self.delta_angle)
         self.scene.update()
 
-class MoveAction(QUndoCommand):
-    def __init__(self, scene: FlowgraphScene, diff: QPointF):
-        QUndoCommand.__init__(self)
-        log.debug("init MoveAction")
-        self.setText('Move')
-        self.g_blocks = scene.selected_blocks()
-        self.scene = scene
-        self.x = diff.x()
-        self.y = diff.y()
-        for block in self.g_blocks:
-            block.core.states["coordinate"] = (block.x(), block.y())
-        self.first = True
-
-    # redo() is called when the MoveAction is first created.
-    # At this point, the item is already at the correct position.
-    # Therefore, do nothing.
-    def redo(self):
-        if self.first:
-            self.first = False
-            return
-        for g_block in self.g_blocks:
-            g_block.move(self.x, self.y)
-        self.scene.update()
-
-    def undo(self):
-        for g_block in self.g_blocks:
-            g_block.move(-self.x, -self.y)
-        self.scene.update()
-
 
 class MoveAction(QUndoCommand):
     def __init__(self, scene: FlowgraphScene, diff: QPointF):
