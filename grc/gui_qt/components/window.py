@@ -209,6 +209,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
     @QtCore.Slot(QtCore.QPointF)
     def registerMove(self, diff):
         self.currentFlowgraphScene.set_saved(False)
+        self.tabWidget.tabBar().setTabTextColor(self.tabWidget.currentIndex(), Qt.red)
         action = MoveAction(self.currentFlowgraphScene, diff)
         self.currentFlowgraphScene.undoStack.push(action)
         self.updateActions()
@@ -217,6 +218,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
     @QtCore.Slot(Element)
     def registerNewElement(self, elem):
         self.currentFlowgraphScene.set_saved(False)
+        self.tabWidget.tabBar().setTabTextColor(self.tabWidget.currentIndex(), Qt.red)
         action = NewElementAction(self.currentFlowgraphScene, elem)
         self.currentFlowgraphScene.undoStack.push(action)
         self.updateActions()
@@ -225,6 +227,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
     @QtCore.Slot(Element)
     def registerDeleteElement(self, elem):
         self.currentFlowgraphScene.set_saved(False)
+        self.tabWidget.tabBar().setTabTextColor(self.tabWidget.currentIndex(), Qt.red)
         action = DeleteElementAction(self.currentFlowgraphScene, elem)
         self.currentFlowgraphScene.undoStack.push(action)
         self.updateActions()
@@ -233,6 +236,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
     @QtCore.Slot(Element)
     def registerBlockPropsChange(self, elem):
         self.currentFlowgraphScene.set_saved(False)
+        self.tabWidget.tabBar().setTabTextColor(self.tabWidget.currentIndex(), Qt.red)
         action = BlockPropsChangeAction(self.currentFlowgraphScene, elem)
         self.currentFlowgraphScene.undoStack.push(action)
         self.updateActions()
@@ -945,6 +949,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
                 return
 
             log.info(f"Saved {filename}")
+            self.tabWidget.tabBar().setTabTextColor(self.tabWidget.currentIndex(), Qt.white)  # TODO: Not quite the right hue
             self.currentFlowgraphScene.set_saved(True)
         else:
             log.debug("Flowgraph does not have a filename")
@@ -967,6 +972,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
                 return
 
             log.info(f"Saved (as) {filename}")
+            self.tabWidget.tabBar().setTabTextColor(self.tabWidget.currentIndex(), Qt.white)  # TODO: Not quite the right hue
             self.currentFlowgraphScene.set_saved(True)
         else:
             log.debug("Cancelled Save As action")
