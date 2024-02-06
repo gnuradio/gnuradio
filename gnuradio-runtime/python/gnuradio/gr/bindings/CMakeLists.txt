@@ -52,7 +52,7 @@ list(
     random_python.cc
     realtime_python.cc
     # rpcbufferedget_python.cc
-    # rpccallbackregister_base_python.cc
+    rpccallbackregister_base_python.cc
     # rpcmanager_python.cc
     # rpcmanager_base_python.cc
     # rpcpmtconverters_thrift_python.cc
