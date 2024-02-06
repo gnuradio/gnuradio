@@ -154,9 +154,10 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         )
         self.setCentralWidget(self.tabWidget)
 
-        last_file = self.app.qsettings.value('window/current_file', "")
-        if last_file:
-            self.open_triggered(last_file)
+        files_open = self.app.qsettings.value('window/files_open', [])
+        if files_open:
+            for file in files_open:
+                self.open_triggered(file)
         else:
             self.new_triggered()
 
@@ -988,13 +989,16 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         else:
             log.debug("Cancelled Save Copy action")
 
-    def close_triggered(self, tab_index=None):
+    def close_triggered(self, tab_index=None) -> str:
+        """Closes a tab. Returns the file path (emptry string if aborting)."""
         log.debug(f"Closing a tab (index {tab_index})")
 
+        file_path = ""
         if tab_index is None:
             tab_index = self.tabWidget.currentIndex()
 
         if self.currentFlowgraphScene.saved:
+            file_path = self.currentFlowgraphScene.filename
             self.tabWidget.removeTab(tab_index)
         else:
             message = "Save changes before closing?"
@@ -1008,18 +1012,17 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
             )
 
             if response == QtWidgets.QMessageBox.Discard:
+                file_path = self.currentFlowgraphScene.filename
                 self.tabWidget.removeTab(tab_index)
-            elif response == QtWidgets.QMessageBox.Cancel:
-                return
-            else:
+            elif response == QtWidgets.QMessageBox.Save:
                 self.save_triggered()
                 if self.currentFlowgraphScene.saved:
+                    file_path = self.currentFlowgraphScene.filename
                     self.tabWidget.removeTab(tab_index)
-                else:
-                    return
 
         if self.tabWidget.count() == 0:
             self.new_triggered()
+        return file_path
 
     def close_all_triggered(self):
         log.debug("close")
@@ -1393,13 +1396,21 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
     def exit_triggered(self):
         log.debug("exit")
 
+        files_open = []
+        range_ = reversed(range(self.tabWidget.count()))
+        for idx in range_:  # Close the rightmost first
+            tab = self.tabWidget.widget(idx)
+            file_path = self.currentFlowgraphScene.filename
+            if file_path:
+                files_open.append(file_path)
+            closed = self.close_triggered()
+            if not closed:
+                return
+
+        # Write the leftmost tab to file first
+        self.app.qsettings.setValue('window/files_open', reversed(files_open))
         self.app.qsettings.setValue('window/windowState', self.saveState())
         self.app.qsettings.setValue('window/geometry', self.saveGeometry())
-        file_path = self.currentFlowgraphScene.filename
-        if file_path:
-            self.app.qsettings.setValue('window/current_file', file_path)
-        else:
-            self.app.qsettings.setValue('window/current_file', "")
         self.app.qsettings.sync()
 
         # TODO: Make sure all flowgraphs have been saved
