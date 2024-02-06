@@ -169,5 +169,5 @@ class PropsDialog(QDialog):
         # example is None if the "Open examples" button was pushed
         if ex is None:
             ex = self.example_list.currentItem()
-        self._block.parent.app.MainWindow.open_example(ex.text())
+        self._block.parent.gui.app.MainWindow.open_example(ex.text())
         self.close()
