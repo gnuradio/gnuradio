@@ -5,7 +5,7 @@ from qtpy.QtCore import Qt
 from qtpy.QtGui import QStandardItem, QStandardItemModel
 from qtpy.QtWidgets import (QLineEdit, QDialog, QDialogButtonBox, QTreeView,
                             QVBoxLayout, QTabWidget, QGridLayout, QWidget, QLabel,
-                            QPushButton, QListWidget, QComboBox)
+                            QPushButton, QListWidget, QComboBox, QPlainTextEdit)
 
 
 class ErrorsDialog(QDialog):
@@ -106,6 +106,11 @@ class PropsDialog(QDialog):
                                 else param.value
                             )
                             dropdown.setCurrentText(value_label)
+                    elif param.dtype == "_multiline":
+                        line_edit = QPlainTextEdit(param.value)
+                        line_edit.param = param
+                        qvb.addWidget(line_edit, i, 1)
+                        self.edit_params.append(line_edit)
                     else:
                         line_edit = QLineEdit(param.value)
                         line_edit.param = param
