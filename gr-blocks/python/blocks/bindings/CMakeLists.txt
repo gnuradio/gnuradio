@@ -49,12 +49,12 @@ list(
     correctiq_man_python.cc
     correctiq_swapiq_python.cc
     count_bits_python.cc
-    # ctrlport_probe2_b_python.cc
-    # ctrlport_probe2_c_python.cc
-    # ctrlport_probe2_f_python.cc
-    # ctrlport_probe2_i_python.cc
-    # ctrlport_probe2_s_python.cc
-    # ctrlport_probe_c_python.cc
+    ctrlport_probe2_b_python.cc
+    ctrlport_probe2_c_python.cc
+    ctrlport_probe2_f_python.cc
+    ctrlport_probe2_i_python.cc
+    ctrlport_probe2_s_python.cc
+    ctrlport_probe_c_python.cc
     deinterleave_python.cc
     delay_python.cc
     divide_python.cc
