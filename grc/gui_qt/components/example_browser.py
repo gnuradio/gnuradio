@@ -190,9 +190,9 @@ class ExampleBrowser(QDialog, base.Component):
                                 example["generate_options"] = data["options"]["parameters"].get("generate_options") or "no_gui"
                                 example["output_language"] = data["options"]["parameters"].get("output_language") or "python"
                                 example["example_filter"] = data["metadata"].get("example_filter") or []
-                                example["title"] = data["options"]["parameters"]["title"] or "TITLE"
-                                example["desc"] = data["options"]["parameters"]["description"] or "DESCRIPTION"
-                                example["author"] = data["options"]["parameters"]["author"] or "AUTHOR"
+                                example["title"] = data["options"]["parameters"]["title"] or ""
+                                example["desc"] = data["options"]["parameters"]["description"] or ""
+                                example["author"] = data["options"]["parameters"]["author"] or ""
                                 example["path"] = file_path
                                 example["module"] = os.path.dirname(file_path).replace(entry, "")
                                 if example["module"].startswith("/"):
