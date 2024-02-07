@@ -73,7 +73,7 @@ class ExampleBrowser(QDialog, base.Component):
         self.mid_list.itemDoubleClicked.connect(self.open_file)
 
         self.open_button.clicked.connect(self.open_file)
-        self.cancel_button.clicked.connect(self.reject)
+        self.close_button.clicked.connect(self.reject)
 
     def populate(self, examples):
         self.examples = examples
