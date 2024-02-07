@@ -1114,28 +1114,40 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
     def rotate_ccw_triggered(self):
         # Pass to Undo/Redo
         log.debug("rotate_ccw")
+        self.currentFlowgraphScene.set_saved(False)
+        self.tabWidget.tabBar().setTabTextColor(self.tabWidget.currentIndex(), Qt.red)
         rotateCommand = RotateAction(self.currentFlowgraphScene, -90)
         self.currentFlowgraphScene.undoStack.push(rotateCommand)
         self.updateActions()
+        self.currentFlowgraphScene.update()
 
     def rotate_cw_triggered(self):
         # Pass to Undo/Redo
         log.debug("rotate_cw")
+        self.currentFlowgraphScene.set_saved(False)
+        self.tabWidget.tabBar().setTabTextColor(self.tabWidget.currentIndex(), Qt.red)
         rotateCommand = RotateAction(self.currentFlowgraphScene, 90)
         self.currentFlowgraphScene.undoStack.push(rotateCommand)
         self.updateActions()
+        self.currentFlowgraphScene.update()
 
     def toggle_source_bus_triggered(self):
         log.debug("toggle_source_bus")
+        self.currentFlowgraphScene.set_saved(False)
+        self.tabWidget.tabBar().setTabTextColor(self.tabWidget.currentIndex(), Qt.red)
         bussifyCommand = BussifyAction(self.currentFlowgraphScene, 'source')
         self.currentFlowgraphScene.undoStack.push(bussifyCommand)
         self.updateActions()
+        self.currentFlowgraphScene.update()
 
     def toggle_sink_bus_triggered(self):
         log.debug("toggle_sink_bus")
+        self.currentFlowgraphScene.set_saved(False)
+        self.tabWidget.tabBar().setTabTextColor(self.tabWidget.currentIndex(), Qt.red)
         bussifyCommand = BussifyAction(self.currentFlowgraphScene, 'sink')
         self.currentFlowgraphScene.undoStack.push(bussifyCommand)
         self.updateActions()
+        self.currentFlowgraphScene.update()
 
     def errors_triggered(self):
         log.debug("errors")
