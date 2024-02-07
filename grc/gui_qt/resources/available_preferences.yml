@@ -62,7 +62,7 @@ categories:
         name: Theme (requires restart)
         tooltip: Choose the theme
         dtype: enum
-        default: light
+        default: dark
         options:
           - light
           - dark
