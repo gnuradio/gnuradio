@@ -119,6 +119,9 @@ class Application(QtWidgets.QApplication):
 
         log.debug(f'devicePixelRatio {self.MainWindow.screen().devicePixelRatio()}')
 
+        if (self.qsettings.value("appearance/theme", "dark") == "dark") and (self.theme == "light"):
+            log.warning("Could not apply dark theme. Is QDarkStyle installed?")
+
     # Global registration functions
     #  - Handles the majority of child controller interaciton
 
