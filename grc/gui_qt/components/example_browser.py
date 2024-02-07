@@ -96,7 +96,7 @@ class ExampleBrowser(QDialog, base.Component):
                 self.modules.append(ex["module"])
                 self.left_list.addItem(ex["module"])
             item = QListWidgetItem()
-            item.setText(ex["name"])
+            item.setText(ex["title"] if ex["title"] else ex["name"])
             item.setData(self.data_role, QVariant(ex))
             self.mid_list.addItem(item)
 
