@@ -39,6 +39,10 @@ CONNECTION_ENABLED_COLOR = get_color('#616161')
 CONNECTION_DISABLED_COLOR = get_color('#BBBBBB')
 CONNECTION_ERROR_COLOR = get_color('#FF0000')
 
+DARK_FLOWGRAPH_BACKGROUND_COLOR = get_color('#19232D')
+LIGHT_FLOWGRAPH_BACKGROUND_COLOR = get_color('#FFFFFF')
+
+
 #################################################################################
 # port colors
 #################################################################################
