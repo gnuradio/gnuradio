@@ -80,13 +80,13 @@
           <property name="minimumSize">
            <size>
             <width>0</width>
-            <height>200</height>
+            <height>150</height>
            </size>
           </property>
           <property name="maximumSize">
            <size>
-            <width>200</width>
-            <height>200</height>
+            <width>150</width>
+            <height>150</height>
            </size>
           </property>
           <property name="text">
@@ -121,6 +121,20 @@
          </widget>
         </item>
         <item>
+         <widget class="QLabel" name="gen_opts_label">
+          <property name="text">
+           <string>Generate options</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="language_label">
+          <property name="text">
+           <string>Language</string>
+          </property>
+         </widget>
+        </item>
+        <item>
          <widget class="QLabel" name="desc_label">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -130,6 +144,9 @@
           </property>
           <property name="text">
            <string>Description</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
           </property>
           <property name="wordWrap">
            <bool>true</bool>

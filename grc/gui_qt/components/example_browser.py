@@ -50,6 +50,19 @@ class ExampleBrowser(QDialog, base.Component):
     file_to_open = Signal(str)
     data_role = Qt.UserRole
 
+    lang_dict = {
+        'python': 'Python',
+        'cpp': 'C++',
+    }
+
+    gen_opts_dict = {
+        'no_gui': 'No GUI',
+        'qt_gui': 'Qt GUI',
+        'bokeh_gui': 'Bokeh GUI',
+        'hb': 'Hier block ',
+        'hb_qt_gui': 'Hier block (Qt GUI)'
+    }
+
     def __init__(self):
         super().__init__()
         uic.loadUi(Paths.RESOURCES + "/example_browser.ui", self)
@@ -109,6 +122,12 @@ class ExampleBrowser(QDialog, base.Component):
 
         self.title_label.setText(f"<b>Title:</b> {ex['title']}")
         self.author_label.setText(f"<b>Author:</b> {ex['author']}")
+        try:
+            self.language_label.setText(f"<b>Output language:</b> {self.lang_dict[ex['output_language']]}")
+            self.gen_opts_label.setText(f"<b>Type:</b> {self.gen_opts_dict[ex['generate_options']]}")
+        except KeyError:
+            self.language_label.setText(f"<b>Output language:</b> N/A")
+            self.gen_opts_label.setText(f"<b>Type:</b> N/A")
         self.desc_label.setText(ex["desc"])
 
         if ex["output_language"] == "python":
