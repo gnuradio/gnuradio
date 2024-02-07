@@ -54,11 +54,13 @@ class Application(QtWidgets.QApplication):
         QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_ShareOpenGLContexts, True)
         QtWidgets.QApplication.__init__(self, settings.argv)
 
+        self.theme = "light"
         if self.qsettings.value("appearance/theme", "dark") == "dark":
             try:
                 import qdarkstyle
 
                 self.setStyleSheet(qdarkstyle.load_stylesheet())
+                self.theme = "dark"
             except ImportError:
                 log.warning("Did not find QDarkstyle. Dark mode disabled")
 

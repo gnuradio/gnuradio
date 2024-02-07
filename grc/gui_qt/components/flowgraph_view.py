@@ -13,6 +13,7 @@ from qtpy.QtCore import Qt
 from .canvas.block import Block
 from .. import base
 from .canvas.flowgraph import FlowgraphScene, Flowgraph
+from .canvas.colors import LIGHT_FLOWGRAPH_BACKGROUND_COLOR, DARK_FLOWGRAPH_BACKGROUND_COLOR
 
 from ...core.generator import Generator
 
@@ -43,10 +44,10 @@ class FlowgraphView(
             self.initEmpty()
 
         self.fitInView(self.scene().sceneRect(), QtCore.Qt.KeepAspectRatio)
-        if self.app.qsettings.value("appearance/theme", "dark") == "dark":
-            self.setBackgroundBrush(QtGui.QBrush(QtGui.QColor(25, 35, 45)))
+        if self.app.theme == "dark":
+            self.setBackgroundBrush(QtGui.QBrush(DARK_FLOWGRAPH_BACKGROUND_COLOR))
         else:
-            self.setBackgroundBrush(QtGui.QBrush(QtGui.QColor(255, 255, 255)))
+            self.setBackgroundBrush(QtGui.QBrush(LIGHT_FLOWGRAPH_BACKGROUND_COLOR))
 
         self.isPanning = False
         self.mousePressed = False
