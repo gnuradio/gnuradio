@@ -164,7 +164,10 @@ class GrDataPlotParent(gr.top_block, Qt.QWidget):
 
                 else:  # single value update
                     if(self._iscomplex):
-                        data[n] = complex(data[n][0], data[n][1])
+                        if isinstance(data[n], ControlPort.complex):
+                            data[n] = complex(data[n].re, data[n].im)
+                        else:
+                            data[n] = complex(data[n])
                     if(self._data_len[n] < self._npts):
                         self._last_data[n][self._data_len[n]] = data[n]
                         self._data_len[n] += 1
