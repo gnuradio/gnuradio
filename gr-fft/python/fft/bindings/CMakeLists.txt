@@ -7,7 +7,7 @@ include(GrPybind)
 list(
     APPEND
     fft_python_files
-    #ctrlport_probe_psd_python.cc
+    ctrlport_probe_psd_python.cc
     fft_shift_python.cc
     fft_v_python.cc
     goertzel_python.cc
