@@ -54,6 +54,32 @@ categories:
         name: Custom block paths
         dtype: str
         default: ""
+      - key: default_grc
+        name: Default GRC version
+        dtype: enum
+        default: grc_gtk
+        options:
+          - grc_gtk
+          - grc_qt
+        option_labels:
+          - GRC Gtk
+          - GRC Qt
+      - key: log_level
+        name: Log level
+        dtype: enum
+        default: info
+        options:
+          - warning
+          - info
+          - debug
+        option_labels:
+          - Warning
+          - Info
+          - Debug
+      - key: config_file_path
+        name: Config file path
+        dtype: str
+        default: ""
 
   - key: appearance
     name: Appearance
@@ -74,6 +100,14 @@ categories:
         tooltip: Scaling factor of Qt GUI elements. Note that the effective device pixel ratio will be a product of this value and the native device pixel ratio.
         dtype: str
         default: 1.0
+      - key: default_qt_gui_theme
+        name: Default Qt GUI theme
+        dtype: str
+        default: ""
+      - key: display_wiki
+        name: Display Wiki tab
+        dtype: bool
+        default: True
 #      - key: show_units
 #        name: Show units (not implemented)
 #        tooltip: Show units in block parameters window
