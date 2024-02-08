@@ -75,6 +75,8 @@ class PropsDialog(QDialog):
         self.edit_params = []
 
         self.tabs = QTabWidget()
+        ignore_dtype_labels = ["_multiline"]
+
         for cat in unique_categories():
             qvb = QGridLayout()
             qvb.setAlignment(Qt.AlignTop)
@@ -85,6 +87,9 @@ class PropsDialog(QDialog):
                 if force_show_id and param.dtype == 'id':
                     param.hide = 'none'
                 if param.category == cat and param.hide != "all":
+                    dtype_label = None
+                    if param.dtype not in ignore_dtype_labels:
+                        dtype_label = QLabel(f"[{param.dtype}]")
                     qvb.addWidget(QLabel(param.name), i, 0)
                     if param.dtype == "enum" or param.options:
                         dropdown = QComboBox()
@@ -116,7 +121,8 @@ class PropsDialog(QDialog):
                         line_edit.param = param
                         qvb.addWidget(line_edit, i, 1)
                         self.edit_params.append(line_edit)
-                    qvb.addWidget(QLabel("TYPE"), i, 2)
+                    if dtype_label:
+                        qvb.addWidget(dtype_label, i, 2)
                 i += 1
             tab = QWidget()
             tab.setLayout(qvb)
