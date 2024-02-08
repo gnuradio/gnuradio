@@ -23,6 +23,8 @@ import os
 import sys
 import subprocess
 
+from typing import Union
+
 from qtpy import QtCore, QtGui, QtWidgets
 from qtpy.QtCore import Qt
 
@@ -154,7 +156,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         )
         self.setCentralWidget(self.tabWidget)
 
-        files_open = self.app.qsettings.value('window/files_open', [])
+        files_open = list(self.app.qsettings.value('window/files_open', []))
         if files_open:
             for file in files_open:
                 self.open_triggered(file)
@@ -911,6 +913,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         fg_view.centerOn(0, 0)
         initial_state = self.platform.parse_flow_graph("")
         fg_view.scene().import_data(initial_state)
+        fg_view.scene().saved = True
         self.connect_fg_signals(fg_view.scene())
         log.debug("Adding flowgraph view")
 
@@ -995,8 +998,16 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         else:
             log.debug("Cancelled Save Copy action")
 
-    def close_triggered(self, tab_index=None) -> str:
-        """Closes a tab. Returns the file path (emptry string if aborting)."""
+    def close_triggered(self, tab_index=None) -> Union[str, bool]:
+        """
+        Closes a tab.
+
+        Parameters:
+            tab_index: specifies which tab to close. If none, close the open tab
+
+        Returns:
+            the file path OR True if a tab was closed (False otherwise)
+        """
         log.debug(f"Closing a tab (index {tab_index})")
 
         file_path = ""
@@ -1025,10 +1036,16 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
                 if self.currentFlowgraphScene.saved:
                     file_path = self.currentFlowgraphScene.filename
                     self.tabWidget.removeTab(tab_index)
+                else:
+                    return False
+            else:  # Cancel
+                return False
 
-        if self.tabWidget.count() == 0:
+        if self.tabWidget.count() == 0:  # No tabs left
             self.new_triggered()
-        return file_path
+            return True
+        else:
+            return file_path
 
     def close_all_triggered(self):
         log.debug("close")
@@ -1416,13 +1433,14 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
         files_open = []
         range_ = reversed(range(self.tabWidget.count()))
-        for idx in range_:  # Close the rightmost first
+        for idx in range_:  # Close the rightmost first. It'll be the first element in files_open
             tab = self.tabWidget.widget(idx)
             file_path = self.currentFlowgraphScene.filename
             if file_path:
                 files_open.append(file_path)
             closed = self.close_triggered()
-            if not closed:
+            if closed == False:
+                # We cancelled closing a tab. We don't want to close the application
                 return
 
         # Write the leftmost tab to file first
