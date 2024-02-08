@@ -415,10 +415,15 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         actions["disable"] = Action(_("disable"), self, shortcut="D")
         actions["bypass"] = Action(_("bypass"), self, shortcut="B")
 
+        # TODO
+        actions["block_inc_type"] = Action(_("block_inc_type"), self)
+        actions["block_dec_type"] = Action(_("block_dec_type"), self)
+
         actions["enable"].setEnabled(False)
         actions["disable"].setEnabled(False)
         actions["bypass"].setEnabled(False)
 
+        # TODO
         actions["vertical_align_top"] = Action(_("vertical_align_top"), self)
         actions["vertical_align_middle"] = Action(_("vertical_align_middle"), self)
         actions["vertical_align_bottom"] = Action(_("vertical_align_bottom"), self)
@@ -1266,6 +1271,12 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
         self.currentFlowgraphScene.update()
         self.updateActions()
+
+    def block_inc_type_triggered(self):
+        log.debug("block_inc_type")
+
+    def block_dec_type_triggered(self):
+        log.debug("block_dec_type")
 
     def generate_triggered(self):
         log.debug("generate")
