@@ -53,14 +53,14 @@ list(
     realtime_python.cc
     # rpcbufferedget_python.cc
     rpccallbackregister_base_python.cc
-    # rpcmanager_python.cc
+    rpcmanager_python.cc
     # rpcmanager_base_python.cc
     # rpcpmtconverters_thrift_python.cc
     # rpcregisterhelpers_python.cc
     # rpcserver_aggregator_python.cc
     # rpcserver_base_python.cc
     # rpcserver_booter_aggregator_python.cc
-    # rpcserver_booter_base_python.cc
+    rpcserver_booter_base_python.cc
     # rpcserver_booter_thrift_python.cc
     # rpcserver_selector_python.cc
     # rpcserver_thrift_python.cc
