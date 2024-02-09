@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Free Software Foundation, Inc.
+ * Copyright 2024 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -13,8 +13,8 @@
 /* If manual edits are made, the following tags should be modified accordingly.    */
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
-/* BINDTOOL_HEADER_FILE(rpcmanager.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(d6d7ea32b0beaf9b65d6301831351152)                     */
+/* BINDTOOL_HEADER_FILE(rpcserver_booter_base.h) */
+/* BINDTOOL_HEADER_FILE_HASH(c50c14280bc1f2a66d7b9b2143de2680)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -23,12 +23,14 @@
 
 namespace py = pybind11;
 
-#include <gnuradio/rpcmanager.h>
+#include <gnuradio/rpcserver_booter_base.h>
 
-void bind_rpcmanager(py::module& m)
+void bind_rpcserver_booter_base(py::module& m)
 {
-    py::class_<rpcmanager>(m, "rpcmanager")
-        .def(py::init())
-        .def("get", &rpcmanager::get)
-        .def("register_booter", &rpcmanager::register_booter);
+
+    py::class_<rpcserver_booter_base>(m, "rpcserver_booter_base")
+        // .def(py::init())
+        // .def("i", &rpcserver_booter_base::i)
+        .def("endpoints", &rpcserver_booter_base::endpoints)
+        .def("type", &rpcserver_booter_base::type);
 }
