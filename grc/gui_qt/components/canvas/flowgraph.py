@@ -61,6 +61,7 @@ class FlowgraphScene(QtWidgets.QGraphicsScene, base.Component):
         self.view = view
         self.isPanning = False
         self.mousePressed = False
+        self.moving_blocks = False
 
         self.dummy_arrow = None
         self.start_port = None

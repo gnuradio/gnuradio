@@ -2,7 +2,7 @@ import logging
 
 from qtpy.QtGui import QPen, QPainter, QBrush, QFont, QFontMetrics
 from qtpy.QtCore import Qt, QPointF, QRectF, QUrl
-from qtpy.QtWidgets import QGraphicsItem, QApplication
+from qtpy.QtWidgets import QGraphicsItem, QApplication, QAction
 
 from . import colors
 from ... import Constants
@@ -378,7 +378,13 @@ class GUIBlock(QGraphicsItem):
             self.setSelected(True)
 
         self.right_click_menu = self.scene()._app().MainWindow.menus["edit"]
+        example_action = QAction("Examples...")
+        example_action.triggered.connect(self.view_examples)
+        self.right_click_menu.addAction(example_action)
         self.right_click_menu.exec_(e.screenPos())
+
+    def view_examples(self):
+        self.scene().app.MainWindow.example_browser_triggered(path_filter=self.core.key)
 
     def mouseDoubleClickEvent(self, e):
         self.open_properties()

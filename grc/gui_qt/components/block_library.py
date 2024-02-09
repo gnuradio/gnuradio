@@ -92,7 +92,7 @@ class LibraryView(QTreeView):
 
     def view_examples(self):
         key = self.model().data(self.currentIndex(), Qt.UserRole)
-        self.library.app.MainWindow.example_browser_triggered(path_filter=self.library.get_examples(key))
+        self.library.app.MainWindow.example_browser_triggered(path_filter=key)
 
 
 class BlockLibrary(QDockWidget, base.Component):

@@ -31,7 +31,7 @@ from qtpy.QtCore import Qt
 # Custom modules
 from .flowgraph_view import FlowgraphView
 from .canvas.flowgraph import FlowgraphScene
-from .example_browser import ExampleBrowser, Worker
+from .example_browser import ExampleBrowser, ExampleBrowserDialog, Worker
 from .executor import ExecFlowGraphThread
 from .. import base, Constants, Utils
 from .undoable_actions import (
@@ -1410,19 +1410,20 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
             prefs_dialog.save_all()
             self.currentFlowgraphScene.update()
 
-    def example_browser_triggered(self, path_filter: list[str] = None):
+    def example_browser_triggered(self, path_filter: Union[str, None] = None):
         log.debug("example-browser")
         if self.examples_found:
-            ex_dialog = self.ExampleBrowser
-            if len(ex_dialog.examples) == 0:
+            ex_dialog = ExampleBrowserDialog(self.ExampleBrowser)
+            if len(ex_dialog.browser.examples) == 0:
                 ad = QtWidgets.QMessageBox()
                 ad.setWindowTitle("GRC: No examples found")
                 ad.setText("GRC did not find any examples. Please ensure that the example path in grc.conf is correct.")
                 ad.exec()
                 return
-            if isinstance(path_filter, list):
+
+            if isinstance(path_filter, str):
                 if len(path_filter):
-                    ex_dialog.filter_(path_filter)
+                    ex_dialog.browser.filter_(path_filter)
                 else:  # filter is an empty list
                     ad = QtWidgets.QMessageBox()
                     ad.setWindowTitle("GRC: No examples")
@@ -1430,7 +1431,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
                     ad.exec()
                     return
             else:
-                ex_dialog.remove_filter()
+                ex_dialog.browser.reset()
 
             ex_dialog.exec_()
         else:
