@@ -4,8 +4,9 @@ import traceback
 
 from qtpy import uic
 from qtpy.QtCore import QObject, Signal, Slot, QRunnable, QVariant, Qt
-from qtpy.QtGui import QPixmap
-from qtpy.QtWidgets import QDialog, QListWidgetItem
+from qtpy.QtGui import QPixmap, QStandardItem, QStandardItemModel
+from qtpy.QtWidgets import QDialog, QListWidgetItem, QTreeWidgetItem, QWidget, QVBoxLayout
+
 
 from ...core.cache import Cache
 from .. import base, Constants
@@ -46,7 +47,22 @@ class Worker(QRunnable):
             self.signals.result.emit(result)
 
 
-class ExampleBrowser(QDialog, base.Component):
+class ExampleBrowserDialog(QDialog):
+    def __init__(self, browser):
+        super(ExampleBrowserDialog, self).__init__()
+
+        self.setMinimumSize(600, 400)
+        self.setModal(True)
+
+        self.setWindowTitle("GRC Examples")
+        self.browser = browser
+        self.layout = QVBoxLayout()
+        self.setLayout(self.layout)
+        self.layout.addWidget(browser)
+        self.browser.connect_dialog(self)
+
+
+class ExampleBrowser(QWidget, base.Component):
     file_to_open = Signal(str)
     data_role = Qt.UserRole
 
@@ -64,126 +80,125 @@ class ExampleBrowser(QDialog, base.Component):
     }
 
     def __init__(self):
-        super().__init__()
-        uic.loadUi(Paths.RESOURCES + "/example_browser.ui", self)
+        super(ExampleBrowser, self).__init__()
+        uic.loadUi(Paths.RESOURCES + "/example_browser_widget.ui", self)
+        self.library = None
+        self.dialog = None
+
+        self.tree_widget.setHeaderHidden(True)
+        self.tree_widget.clicked.connect(self.handle_clicked)
 
         self.cpp_qt_fg = QPixmap(Paths.RESOURCES + "/cpp_qt_fg.png")
         self.cpp_cmd_fg = QPixmap(Paths.RESOURCES + "/cpp_cmd_fg.png")
         self.py_qt_fg = QPixmap(Paths.RESOURCES + "/py_qt_fg.png")
         self.py_cmd_fg = QPixmap(Paths.RESOURCES + "/py_cmd_fg.png")
 
-        self.setMinimumSize(600, 400)
-        self.setModal(True)
-
-        self.setWindowTitle("GRC Examples")
-
         self.examples = self.platform.examples
-        self.modules = []
+        self.modules = {}
         self.current_module = ""
 
-        self.left_list.currentItemChanged.connect(self.update_mid_list)
-        self.mid_list.currentItemChanged.connect(self.populate_preview)
-        self.mid_list.itemDoubleClicked.connect(self.open_file)
-
+        self.tree_widget.currentItemChanged.connect(self.populate_preview)
+        self.tree_widget.itemDoubleClicked.connect(self.open_file)
         self.open_button.clicked.connect(self.open_file)
-        self.close_button.clicked.connect(self.reject)
+        self.open_button.clicked.connect(self.reset)
+
+    def set_library(self, library):
+        self.library = library
+
+    def handle_clicked(self):
+        if self.tree_widget.isExpanded(self.tree_widget.currentIndex()):
+            self.tree_widget.collapse(self.tree_widget.currentIndex())
+        else:
+            self.tree_widget.expand(self.tree_widget.currentIndex())
+
+    def connect_dialog(self, dialog: QDialog):
+        if self.dialog:
+            pass # disconnect?
+
+        self.dialog = dialog
+        if isinstance(dialog, ExampleBrowserDialog):
+            self.close_button.setHidden(False)
+            self.close_button.clicked.connect(dialog.reject)
+            self.open_button.clicked.connect(dialog.done)
+            self.tree_widget.itemDoubleClicked.connect(dialog.done)
+        else:
+            raise Exception
 
     def populate(self, examples):
         self.examples = examples
+        self.tree_widget.clear()
 
         for ex in self.examples:
             if ex["module"] not in self.modules:
-                self.modules.append(ex["module"])
-                self.left_list.addItem(ex["module"])
-            item = QListWidgetItem()
-            item.setText(ex["title"] if ex["title"] else ex["name"])
-            item.setData(self.data_role, QVariant(ex))
-            self.mid_list.addItem(item)
+                self.modules[ex["module"]] = QTreeWidgetItem(self.tree_widget)
+                self.modules[ex["module"]].setText(0, ex["module"])
+            item = QTreeWidgetItem(self.modules[ex["module"]])
+            item.setText(0, ex["title"] if ex["title"] else ex["name"])
+            item.setData(0, self.data_role, QVariant(ex))
+            self.modules[ex["module"]].addChild(item)
 
-        self.left_list.sortItems()
-        self.left_list.setCurrentRow(0)
-        self.update_mid_list()
-
-    def update_mid_list(self):
-        first = False
-        for i in range(self.mid_list.count()):
-            item = self.mid_list.item(i)
-
-            if item.data(self.data_role)["module"] == self.left_list.currentItem().text():
-                if not first:
-                    self.mid_list.setCurrentRow(i)
-                    first = True
-                item.setHidden(False)
-            else:
-                item.setHidden(True)
+        self.tree_widget.setSortingEnabled(True)
+        self.tree_widget.sortByColumn(0, Qt.AscendingOrder)
 
     def populate_preview(self):
-        ex = self.mid_list.currentItem().data(self.data_role)
+        ex = self.tree_widget.currentItem().data(0, self.data_role)
 
-        self.title_label.setText(f"<b>Title:</b> {ex['title']}")
-        self.author_label.setText(f"<b>Author:</b> {ex['author']}")
+        self.title_label.setText(f"<b>Title:</b> {ex['title'] if ex else ''}")
+        self.author_label.setText(f"<b>Author:</b> {ex['author'] if ex else ''}")
         try:
-            self.language_label.setText(f"<b>Output language:</b> {self.lang_dict[ex['output_language']]}")
-            self.gen_opts_label.setText(f"<b>Type:</b> {self.gen_opts_dict[ex['generate_options']]}")
+            self.language_label.setText(f"<b>Output language:</b> {self.lang_dict[ex['output_language']] if ex else ''}")
+            self.gen_opts_label.setText(f"<b>Type:</b> {self.gen_opts_dict[ex['generate_options']] if ex else ''}")
         except KeyError:
             self.language_label.setText(f"<b>Output language:</b> N/A")
             self.gen_opts_label.setText(f"<b>Type:</b> N/A")
-        self.desc_label.setText(ex["desc"])
+        self.desc_label.setText(ex["desc"] if ex else '')
 
-        if ex["output_language"] == "python":
-            if ex["generate_options"] == "qt_gui":
-                self.image_label.setPixmap(self.py_qt_fg)
+        if ex:
+            if ex["output_language"] == "python":
+                if ex["generate_options"] == "qt_gui":
+                    self.image_label.setPixmap(self.py_qt_fg)
+                else:
+                    self.image_label.setPixmap(self.py_cmd_fg)
             else:
-                self.image_label.setPixmap(self.py_cmd_fg)
+                if ex["generate_options"] == "qt_gui":
+                    self.image_label.setPixmap(self.cpp_qt_fg)
+                else:
+                    self.image_label.setPixmap(self.cpp_cmd_fg)
         else:
-            if ex["generate_options"] == "qt_gui":
-                self.image_label.setPixmap(self.cpp_qt_fg)
-            else:
-                self.image_label.setPixmap(self.cpp_cmd_fg)
+            self.image_label.setPixmap(QPixmap())
+
 
     def open_file(self):
-        ex = self.mid_list.currentItem().data(self.data_role)
-
+        ex = self.tree_widget.currentItem().data(0, self.data_role)
         self.file_to_open.emit(ex["path"])
-        self.done(0)
 
-    def filter_(self, path_filter: list[str]):
+    def filter_(self, key: str):
         """
         Only display examples that contain a specific block. (Hide the others)
 
             Parameters:
-                path_filter: A list
+                key: The key of the block to search for
         """
-        # First, hide all the categories
-        for i in range(self.left_list.count()):
-            self.left_list.item(i).setHidden(True)
+        ex_paths = self.library.get_examples(key)
+        for mod_name, mod_val in self.modules.items():
+            found = False
+            for i in range(mod_val.childCount()):
+                child = mod_val.child(i)
+                if child.data(0, self.data_role)['path'] in ex_paths:
+                    found = True
+                    child.setHidden(False)
+                else:
+                    child.setHidden(True)
 
-        for i in range(self.mid_list.count()):
-            m_item = self.mid_list.item(i)
-            if m_item.data(self.data_role)["path"] in path_filter:
-                m_item.setHidden(False)
-                # Show the example, but also show the category (below)
-                for j in range(self.left_list.count()):
-                    l_item = self.left_list.item(j)
-                    if l_item.text() == m_item.data(self.data_role)["module"]:
-                        l_item.setHidden(False)
+            mod_val.setHidden(not found)
 
-            m_item.setHidden(True)
-
-        self.left_list.sortItems()
-        self.left_list.setCurrentRow(0)
-        self.update_mid_list()
-
-    def remove_filter(self):
-        """Reset the filter."""
-        for i in range(self.left_list.count()):
-            self.left_list.item(i).setHidden(False)
-        for i in range(self.mid_list.count()):
-            self.mid_list.item(i).setHidden(False)
-
-        self.left_list.sortItems()
-        self.left_list.setCurrentRow(0)
-        self.update_mid_list()
+    def reset(self):
+        """Reset the filter, collapse all."""
+        for mod_name, mod_val in self.modules.items():
+            mod_val.setHidden(False)
+            for i in range(mod_val.childCount()):
+                child = mod_val.child(i)
+                child.setHidden(False)
 
     def find_examples(self, progress_callback, ext="grc"):
         """Iterate through the example flowgraph directories and parse them."""

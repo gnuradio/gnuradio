@@ -19,7 +19,7 @@
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
-     <widget class="QListWidget" name="left_list">
+     <widget class="QTreeWidget" name="tree_widget">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
         <horstretch>0</horstretch>
@@ -38,26 +38,11 @@
         <height>16777215</height>
        </size>
       </property>
-     </widget>
-     <widget class="QListWidget" name="mid_list">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="minimumSize">
-       <size>
-        <width>200</width>
-        <height>0</height>
-       </size>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>400</width>
-        <height>16777215</height>
-       </size>
-      </property>
+      <column>
+       <property name="text">
+        <string>example_flowgraph.grc</string>
+       </property>
+      </column>
      </widget>
      <widget class="QWidget" name="right_widget" native="true">
       <property name="sizePolicy">

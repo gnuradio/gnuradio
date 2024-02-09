@@ -88,6 +88,7 @@ class Application(QtWidgets.QApplication):
         self.VariableEditor = components.VariableEditor()
         stopwatch.lap("variable_editor")
         self.VariableEditor.set_scene(self.MainWindow.currentFlowgraphScene)
+        self.MainWindow.ExampleBrowser.set_library(self.BlockLibrary)
 
         # Debug times
         log.debug(
