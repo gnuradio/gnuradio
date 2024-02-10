@@ -543,10 +543,6 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
         actions["filter_design_tool"] = Action(_("&Filter Design Tool"), self)
 
-        actions["set_default_qt_gui_theme"] = Action(
-            _("Set Default &Qt GUI Theme"), self
-        )
-
         actions["module_browser"] = Action(_("&OOT Module Browser"), self)
 
         # Help Actions
@@ -778,7 +774,6 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         # Setup the tools menu
         tools = Menu("&Tools")
         tools.addAction(actions["filter_design_tool"])
-        tools.addAction(actions["set_default_qt_gui_theme"])
         tools.addAction(actions["module_browser"])
         menus["tools"] = tools
 
