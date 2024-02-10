@@ -110,7 +110,7 @@ class GUIBlock(QGraphicsItem):
         self.font.setBold(True)
 
         # figure out height of block based on how many params there are
-        i = 30
+        i = 35
 
         # Check if we need to increase the height to fit all the ports
         for key, item in self.core.params.items():
