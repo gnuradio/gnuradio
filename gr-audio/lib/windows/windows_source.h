@@ -18,8 +18,9 @@
 #define NOMINMAX // stops windef.h defining max/min under cygwin
 #endif
 
-#include <mmsystem.h>
 #include <windows.h>
+
+#include <mmsystem.h>
 
 #include <gnuradio/audio/source.h>
 #include <mutex>

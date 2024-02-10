@@ -9,6 +9,8 @@
 #
 """ A tool for editing GNU Radio out-of-tree modules. """
 
+import os
+@DLL_IMPORT_GTK@
 
 from gnuradio.modtool.cli.base import cli
 

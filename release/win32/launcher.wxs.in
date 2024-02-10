@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+<Fragment>
+  <Icon Id="icon.ico" SourceFile="@GR_WIX_PRODUCT_ICON@"/>
+  <Property Id="ARPPRODUCTICON" Value="icon.ico" />
+</Fragment>
+<Fragment>
+  <DirectoryRef Id="TARGETDIR">
+    <Component Id="GNURadioRegistry">
+        <RegistryKey Root="HKLM" Key="Software\GNURadio\GNURadio">
+          <RegistryValue Type="string" Name="OOTModules"
+              Value="[INSTALL_ROOT]" KeyPath="yes"/>
+        </RegistryKey>
+    </Component>
+    <Directory Id="DesktopFolder" Name="Desktop" >
+      <Component Id="GRCDesktopShortCut" Guid="*">
+        <Shortcut Id="GRCDesktopShortCut"
+          Name="GNU Radio Companion"
+          Description="GNU Radio Companion"
+          Target="[INSTALL_ROOT]\bin\gnuradio-companion.bat"
+          Icon="icon1.ico">
+          <Icon Id="icon1.ico" SourceFile="@GR_WIX_PRODUCT_ICON@" />
+        </Shortcut>
+        <RegistryValue Root="HKCU" Key="Software\GNURadio\Modules"
+          Type="integer" Value="1" Name="GRCDesktopShortCut" KeyPath="yes" />
+      </Component>
+    </Directory>
+    <Directory Id="ProgramMenuFolder" Name="Programs">
+      <Directory Id="ApplicationProgramsFolder" Name="GNU Radio">
+        <Component Id="GRCStartShortCut" Guid="*">
+          <Shortcut Id="GRCStartMenuShortCut"
+            Name="GNU Radio Companion"
+            Description="GNU Radio Companion"
+            Target="[INSTALL_ROOT]\bin\gnuradio-companion.bat"
+            WorkingDirectory="APPLICATIONROOTDIRECTORY">
+            <Icon Id="icon2" SourceFile="@GR_WIX_PRODUCT_ICON@"></Icon>
+          </Shortcut>
+          <RemoveFolder Id="ApplicationProgramsFolder" On="uninstall"/>
+          <RegistryValue Root="HKCU" Key="Software\GNURadio\Modules"
+            Type="integer" Value="1" Name="GRCStartMenuShortCut" KeyPath="yes" />
+        </Component>
+        <Component Id="GrStartMenuShortcut" Guid="{FF7C6576-97A3-4CCC-AC94-AD33BF323B19}">
+          <Shortcut Id="GrShortcut"
+            Name="GNU Radio Python Terminal"
+            Description="GNU Radio Python Terminal"
+            Target="[INSTALL_ROOT]\bin\gnuradio.bat"
+            WorkingDirectory="APPLICATIONROOTDIRECTORY">
+            <Icon Id="icon3" SourceFile="@GR_WIX_PRODUCT_ICON@"></Icon>
+          </Shortcut>
+          <RegistryValue Root="HKCU" Key="Software\GNURadio\Modules"
+            Type="integer" Value="1" Name="GRCStartMenuShortCut" KeyPath="yes" />
+        </Component>
+        <Component Id="GrPyStartMenuShortcut" Guid="{C734D262-E1CD-4829-AEC0-F4F1CC0DB09C}">
+          <Shortcut Id="GrPyShortcut"
+            Name="GNU Radio Python Library"
+            Description="GNU Radio Python Library"
+            Target="[CM_FP_gnuradio_runtime.lib.gnuradio_runtime.dll]">
+            <Icon Id="icon4" SourceFile="@GR_WIX_PRODUCT_ICON@"></Icon>
+          </Shortcut>
+          <RegistryValue Root="HKCU" Key="Software\GNURadio\Modules"
+            Type="integer" Value="1" Name="GRCStartMenuShortCut" KeyPath="yes" />
+        </Component>
+      </Directory>
+    </Directory>
+  </DirectoryRef>
+</Fragment>
+<Fragment>
+  <ComponentGroup Id="ProductComponents">
+    <ComponentRef Id="GRCStartShortCut"/>
+    <ComponentRef Id="GRCDesktopShortCut"/>
+  </ComponentGroup>
+  <ComponentGroup Id="Gr">
+    <ComponentRef Id="GrStartMenuShortcut"/>
+  </ComponentGroup>
+  <ComponentGroup Id="GrPy">
+    <ComponentRef Id="GrPyStartMenuShortcut"/>
+  </ComponentGroup>
+</Fragment>
+</Wix>

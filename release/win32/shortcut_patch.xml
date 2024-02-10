@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CPackWiXPatch>
+	<CPackWiXFragment Id ="#PRODUCTFEATURE">
+		<ComponentGroupRef Id="ProductComponents" />
+		<ComponentGroupRef Id="Gr" />
+		<ComponentGroupRef Id="GrPy" />
+		<ComponentRef Id="GNURadioRegistry" />
+	</CPackWiXFragment>
+</CPackWiXPatch>

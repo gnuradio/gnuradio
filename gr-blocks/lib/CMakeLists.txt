@@ -176,15 +176,19 @@ add_library(gnuradio-blocks ${BLOCKS_SOURCES})
 target_link_libraries(gnuradio-blocks PUBLIC gnuradio-runtime Volk::volk)
 
 if(SNDFILE_FOUND)
-    target_link_libraries(gnuradio-blocks PRIVATE sndfile::sndfile)
+    if(TARGET sndfile::sndfile)
+        set(SND_TARGET sndfile::sndfile)
+    else()
+        set(SND_TARGET SndFile::sndfile)
+    endif()
+    target_link_libraries(gnuradio-blocks PRIVATE ${SND_TARGET})
 endif()
 
 target_include_directories(
     gnuradio-blocks PUBLIC $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
                            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>)
 
-set_source_files_properties(file_source_impl.cc PROPERTIES SKIP_PRECOMPILE_HEADERS ON
-                                                           COMPILE_FLAGS
+set_source_files_properties(file_source_impl.cc PROPERTIES COMPILE_FLAGS
                                                            -D_FILE_OFFSET_BITS=64)
 
 if(ENABLE_GR_CTRLPORT)
