@@ -10,15 +10,29 @@
 ########################################################################
 include(GrBoost)
 
-find_package(FFTW3f)
+if(WIN32)
+    # Name on Windows does not include datatype
+    set(fftw_name FFTW3)
+else()
+    set(fftw_name FFTW3F)
+endif()
+gr_find_package(${fftw_name})
 
 ########################################################################
 # Register component
 ########################################################################
 include(GrComponent)
 
-gr_register_component("gr-fft" ENABLE_GR_FFT Boost_FOUND ENABLE_GNURADIO_RUNTIME
-                      ENABLE_GR_BLOCKS FFTW3f_FOUND)
+gr_register_component(
+    NAME "gr-fft"
+    VAR ENABLE_GR_FFT
+    REQUIRED_COMPONENTS
+        gnuradio-runtime
+        gr-blocks
+    REQUIRED_TPLS
+        Boost_FOUND
+        ${fftw_name}_FOUND
+)
 
 ########################################################################
 # Begin conditional configuration

@@ -10,6 +10,8 @@
 """ A tool for POLAR code channel construction."""
 
 from argparse import ArgumentParser
+import os
+@DLL_IMPORT_GTK@
 import gnuradio.fec.polar as cc
 
 

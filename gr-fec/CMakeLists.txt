@@ -14,9 +14,13 @@
 ########################################################################
 include(GrComponent)
 
-find_package(GSL)
+gr_find_package(GSL)
 
-gr_register_component("gr-fec" ENABLE_GR_FEC ENABLE_GNURADIO_RUNTIME ENABLE_GR_BLOCKS)
+gr_register_component(
+    NAME "gr-fec"
+    VAR ENABLE_GR_FEC
+    REQUIRED_COMPONENTS gr-blocks gnuradio-runtime
+)
 
 set(GR_PKG_FEC_EXAMPLES_DIR ${GR_PKG_DATA_DIR}/examples/fec)
 

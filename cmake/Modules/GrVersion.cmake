@@ -24,7 +24,8 @@ set(MAINT_VERSION "${VERSION_PATCH}")
 ########################################################################
 # Extract the version string from git describe.
 ########################################################################
-find_package(Git)
+include(CMakeOverloads)
+gr_find_package(Git)
 
 macro(create_manual_git_describe)
     if(NOT GR_GIT_COUNT)
