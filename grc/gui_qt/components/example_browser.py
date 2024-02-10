@@ -93,9 +93,8 @@ class ExampleBrowser(QWidget, base.Component):
         self.py_qt_fg = QPixmap(Paths.RESOURCES + "/py_qt_fg.png")
         self.py_cmd_fg = QPixmap(Paths.RESOURCES + "/py_cmd_fg.png")
 
-        self.examples = self.platform.examples
-        self.modules = {}
-        self.current_module = ""
+        self.examples_dict = self.platform.examples_dict
+        self.dir_items = {}
 
         self.tree_widget.currentItemChanged.connect(self.populate_preview)
         self.tree_widget.itemDoubleClicked.connect(self.open_file)
@@ -126,18 +125,26 @@ class ExampleBrowser(QWidget, base.Component):
     def done(self, _=None):
         self.dialog.done(0)
 
-    def populate(self, examples):
-        self.examples = examples
+    def populate(self, examples_dict):
+        self.examples_dict = examples_dict
         self.tree_widget.clear()
 
-        for ex in self.examples:
-            if ex["module"] not in self.modules:
-                self.modules[ex["module"]] = QTreeWidgetItem(self.tree_widget)
-                self.modules[ex["module"]].setText(0, ex["module"])
-            item = QTreeWidgetItem(self.modules[ex["module"]])
-            item.setText(0, ex["title"] if ex["title"] else ex["name"])
-            item.setData(0, self.data_role, QVariant(ex))
-            self.modules[ex["module"]].addChild(item)
+        for path, examples in examples_dict.items():
+            for ex in examples:
+                rel_path = os.path.relpath(os.path.dirname(ex['path']), path)
+                split_rel_path = os.path.normpath(rel_path).split(os.path.sep)
+                parent_path = "/".join(split_rel_path[0:-1])
+                if rel_path not in self.dir_items:
+                    dir_ = None
+                    if parent_path:
+                        dir_ = QTreeWidgetItem(self.dir_items[parent_path])
+                    else:
+                        dir_ = QTreeWidgetItem(self.tree_widget)
+                    dir_.setText(0, split_rel_path[-1])
+                    self.dir_items[rel_path] = dir_
+                item = QTreeWidgetItem(self.dir_items[rel_path])
+                item.setText(0, ex["title"] if ex["title"] else ex["name"])
+                item.setData(0, self.data_role, QVariant(ex))
 
         self.tree_widget.setSortingEnabled(True)
         self.tree_widget.sortByColumn(0, Qt.AscendingOrder)
@@ -189,36 +196,54 @@ class ExampleBrowser(QWidget, base.Component):
             Parameters:
                 key: The key of the block to search for
         """
+        found = False
         ex_paths = self.library.get_examples(key)
-        for mod_name, mod_val in self.modules.items():
-            found = False
-            for i in range(mod_val.childCount()):
-                child = mod_val.child(i)
-                if child.data(0, self.data_role)['path'] in ex_paths:
-                    found = True
-                    child.setHidden(False)
-                else:
-                    child.setHidden(True)
+        for i in range(self.tree_widget.topLevelItemCount()):
+            top = self.tree_widget.topLevelItem(i)
+            if self.show_selective(top, ex_paths):
+                found = True
+        return found
 
-            mod_val.setHidden(not found)
+
+    def show_selective(self, item, path):
+        item.setHidden(True)
+        if item.childCount():  # is a directory
+            for i in range(item.childCount()):
+                if self.show_selective(item.child(i), path):
+                    item.setHidden(False)
+            return not item.isHidden()
+        else:  # is an example
+            ex = item.data(0, self.data_role)
+            if ex['path'] in path:
+                item.setHidden(False)
+                return True
+            else:
+                return False
+
+    def show_all(self, item):
+        item.setHidden(False)
+        for i in range(item.childCount()):
+            self.show_all(item.child(i))
 
     def reset(self):
         """Reset the filter, collapse all."""
         self.tree_widget.collapseAll()
         self.reset_preview()
-        for mod_name, mod_val in self.modules.items():
-            mod_val.setHidden(False)
-            for i in range(mod_val.childCount()):
-                child = mod_val.child(i)
-                child.setHidden(False)
+
+        for i in range(self.tree_widget.topLevelItemCount()):
+            top = self.tree_widget.topLevelItem(i)
+            self.show_all(top)
+
 
     def find_examples(self, progress_callback, ext="grc"):
         """Iterate through the example flowgraph directories and parse them."""
-        examples = []
+        examples_dict = {}
         with Cache(Constants.EXAMPLE_CACHE_FILE) as cache:
             for entry in self.platform.config.example_paths:
                 if entry == '':
                     log.error("Empty example path!")
+                    break
+                examples_dict[entry] = []
                 if os.path.isdir(entry):
                     subdirs = 0
                     current_subdir = 0
@@ -247,25 +272,26 @@ class ExampleBrowser(QWidget, base.Component):
                                 example["blocks"] = set()
                                 for block in data["blocks"]:
                                     example["blocks"].add(block["id"])
-                                examples.append(example)
+                                examples_dict[entry].append(example)
                             except Exception:
                                 continue
 
         examples_w_block: dict[str, set[str]] = {}
         designated_examples_w_block: dict[str, set[str]] = {}
-        for example in examples:
-            if example["example_filter"]:
-                for block in example["example_filter"]:
-                    try:
-                        designated_examples_w_block[block].append(example["path"])
-                    except KeyError:
-                        designated_examples_w_block[block] = [example["path"]]
-                continue
-            else:
-                for block in example["blocks"]:
-                    try:
-                        examples_w_block[block].append(example["path"])
-                    except KeyError:
-                        examples_w_block[block] = [example["path"]]
+        for path, examples in examples_dict.items():
+            for example in examples:
+                if example["example_filter"]:
+                    for block in example["example_filter"]:
+                        try:
+                            designated_examples_w_block[block].append(example["path"])
+                        except KeyError:
+                            designated_examples_w_block[block] = [example["path"]]
+                    continue
+                else:
+                    for block in example["blocks"]:
+                        try:
+                            examples_w_block[block].append(example["path"])
+                        except KeyError:
+                            examples_w_block[block] = [example["path"]]
 
-        return (examples, examples_w_block, designated_examples_w_block)
+        return (examples_dict, examples_w_block, designated_examples_w_block)

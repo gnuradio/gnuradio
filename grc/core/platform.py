@@ -48,7 +48,7 @@ class Platform(Element):
 
         self.blocks = self.block_classes
         self.domains = {}
-        self.examples = []
+        self.examples_dict = {}
         self.connection_templates = {}
         self.cpp_connection_templates = {}
         self.connection_params = {}

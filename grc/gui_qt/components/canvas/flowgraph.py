@@ -204,10 +204,7 @@ class FlowgraphScene(QtWidgets.QGraphicsScene, base.Component):
 
         id = self._get_unique_id(block_key)
 
-        # Tell the block where to show up on the canvas
-        attrib = {"_coordinate": pos}
-
-        c_block = self.core.new_block(block_key, attrib=attrib)
+        c_block = self.core.new_block(block_key)
         g_block = c_block.gui
         c_block.states["coordinate"] = pos
         g_block.setPos(*pos)

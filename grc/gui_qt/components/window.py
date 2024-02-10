@@ -1414,22 +1414,20 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
             prefs_dialog.save_all()
             self.currentFlowgraphScene.update()
 
-    def example_browser_triggered(self, path_filter: Union[str, None] = None):
+    def example_browser_triggered(self, key_filter: Union[str, None] = None):
         log.debug("example-browser")
         if self.examples_found:
             self.ExampleBrowser.reset()
             ex_dialog = ExampleBrowserDialog(self.ExampleBrowser)
-            if len(ex_dialog.browser.examples) == 0:
+            if len(ex_dialog.browser.examples_dict) == 0:
                 ad = QtWidgets.QMessageBox()
                 ad.setWindowTitle("GRC: No examples found")
                 ad.setText("GRC did not find any examples. Please ensure that the example path in grc.conf is correct.")
                 ad.exec()
                 return
 
-            if isinstance(path_filter, str):
-                if len(path_filter):
-                    ex_dialog.browser.filter_(path_filter)
-                else:  # filter is an empty list
+            if isinstance(key_filter, str):
+                if not ex_dialog.browser.filter_(key_filter):
                     ad = QtWidgets.QMessageBox()
                     ad.setWindowTitle("GRC: No examples")
                     ad.setText("There are no examples for this block.")

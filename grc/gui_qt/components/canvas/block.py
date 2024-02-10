@@ -384,7 +384,7 @@ class GUIBlock(QGraphicsItem):
         self.right_click_menu.exec_(e.screenPos())
 
     def view_examples(self):
-        self.scene().app.MainWindow.example_browser_triggered(path_filter=self.core.key)
+        self.scene().app.MainWindow.example_browser_triggered(key_filter=self.core.key)
 
     def mouseDoubleClickEvent(self, e):
         self.open_properties()
