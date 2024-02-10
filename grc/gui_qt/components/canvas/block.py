@@ -31,7 +31,7 @@ class Block(CoreBlock):
         return type(name, bases, namespace)
 
     def __init__(self, parent, **n):
-        super(self.__class__, self).__init__(parent)
+        super(self.__class__, self).__init__(parent, **n)
 
         self.width = 50  # will change immediately after the first paint
         self.block_label = self.key
