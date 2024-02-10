@@ -33,17 +33,22 @@ class WikiTab(QtWidgets.QDockWidget, base.Component):
     def __init__(self):
         super(WikiTab, self).__init__()
 
+        self.qsettings = self.app.qsettings
+
         self.setObjectName('wiki_tab')
         self.setWindowTitle('Wiki')
 
-        # TODO: Pull from preferences and revert to default if not found?
         self.setFloating(False)
-
-        try:
-            from qtpy.QtWebEngineWidgets import QWebEngineView
-            self.hidden = False
-        except ImportError:
-            log.error("PyQt QWebEngine missing!")
+        if self.qsettings.value("appearance/display_wiki", True, type=bool) == True:
+            try:
+                from qtpy.QtWebEngineWidgets import QWebEngineView
+                self.hidden = False
+            except ImportError:
+                log.error("PyQt QWebEngine missing!")
+                self.hide()
+                self.hidden = True
+                return
+        else:
             self.hide()
             self.hidden = True
             return
