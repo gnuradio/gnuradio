@@ -1,0 +1,40 @@
+include(InstallRequiredSystemLibraries)
+
+set(CPACK_PACKAGE_NAME "GNU Radio")
+set(CPACK_PACKAGE_VERSION_MAJOR ${GNURadio_VERSION_MAJOR})
+set(CPACK_PACKAGE_VERSION_MINOR ${GNURadio_VERSION_MINOR})
+set(CPACK_PACKAGE_VERSION_PATCH ${GNURadio_VERSION_PATCH})
+set(CPACK_PACKAGE_VERSION ${GNURadio_VERSION})
+set(CPACK_PACKAGE_INSTALL_DIRECTORY "GNURadio")
+set(CPACK_PACKAGE_VENDOR "https://https://www.gnuradio.org/")
+set(CPACK_PACKAGE_DESCRIPTION
+  "the Free and Open Software Radio Ecosystem")
+
+if(APPLE)
+  configure_file("${GNURadio_SOURCE_DIR}/LICENSE"
+    "${GNURadio_BINARY_DIR}/COPYING.txt" @ONLY)
+  set(CPACK_RESOURCE_FILE_LICENSE "${GNURadio_BINARY_DIR}/COPYING.txt")
+  set(CPACK_PACKAGE_ICON
+    "${GNURadio_SOURCE_DIR}/GNURadio/icons/GNURadio.icns")
+  set(CPACK_BUNDLE_ICON "${CPACK_PACKAGE_ICON}")
+
+else()
+  set(CPACK_RESOURCE_FILE_LICENSE "${GNURadio_SOURCE_DIR}/LICENSE")
+endif()
+
+set(CPACK_PACKAGE_EXECUTABLES "GNURadio2" "GNURadio2")
+set(CPACK_CREATE_DESKTOP_LINKS "GNURadio2")
+
+set(CPACK_WIX_UPGRADE_GUID  "4EE94E3E-1960-4446-B0F8-7F0A3D8CA001")
+set(CPACK_WIX_SHORTCUT_GUID )
+
+configure_file("${CMAKE_CURRENT_LIST_DIR}/GNuRadioCPackOptions.cmake.in"
+  "${GNURadio_BINARY_DIR}/GNURadioCPackOptions.cmake" @ONLY)
+set(CPACK_PROJECT_CONFIG_FILE
+  "${GNURadio_BINARY_DIR}/GNURadioCPackOptions.cmake")
+
+include(BundleInstallPythonDeps.cmake)
+
+
+
+include(CPack)

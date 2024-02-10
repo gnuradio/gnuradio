@@ -335,6 +335,11 @@ if(UNIX)
 endif(UNIX)
 
 ########################################################################
+# Setup Installer Build and Options
+########################################################################
+option(GR_BUILD_INSTALLER "Build native GNURadio installer" OFF)
+
+########################################################################
 # Disable complex math NaN/INFO range checking for performance
 ########################################################################
 check_cxx_compiler_flag(-fcx-limited-range HAVE_CX_LIMITED_RANGE)
