@@ -9,7 +9,8 @@
 """
 Command-line siggen app
 """
-
+import os
+@DLL_IMPORT_GTK@
 try:
     import uhd_siggen_base as uhd_siggen
 except ImportError:

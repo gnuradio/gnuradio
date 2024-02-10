@@ -15,13 +15,13 @@ libfind_pkg_check_modules(libunwind_PKGCONF libunwind)
 find_path(
     libunwind_INCLUDE_DIR
     NAMES libunwind.h
-    HINTS ${libunwind_PKGCONF_INCLUDE_DIRS})
+    HINTS ${libunwind_PKGCONF_INCLUDE_DIRS} ${LIBUNWIND_INCLUDE_DIRS})
 
 # Finally the library itself
 find_library(
     libunwind_LIBRARY
     NAMES unwind
-    HINTS ${libunwind_PKGCONF_LIBRARY_DIRS})
+    HINTS ${libunwind_PKGCONF_LIBRARY_DIRS} ${LIBUNWIND_LIB_DIRS})
 
 # Set the include dir variables and the libraries and let libfind_process do the rest.
 # NOTE: Singular variables for this library, plural for libraries this this lib depends on.

@@ -54,7 +54,7 @@ if(MSVC)
         "${BOOST_ALL_DYN_LINK}"
         CACHE BOOL "boost enable dynamic linking")
     if(BOOST_ALL_DYN_LINK)
-        add_definitions(-DBOOST_ALL_DYN_LINK) #setup boost auto-linking in msvc
+        # add_definitions(-DBOOST_ALL_DYN_LINK) #setup boost auto-linking in msvc
     else(BOOST_ALL_DYN_LINK)
         unset(BOOST_REQUIRED_COMPONENTS) #empty components list for static link
     endif(BOOST_ALL_DYN_LINK)
@@ -115,7 +115,7 @@ else()
     set(GR_BOOST_REQUIRED "")
 endif()
 
-find_package(
+gr_find_package(
     Boost ${GR_BOOST_MIN_VERSION} ${GR_BOOST_REQUIRED}
     COMPONENTS ${BOOST_REQUIRED_COMPONENTS}
     OPTIONAL_COMPONENTS unit_test_framework)
