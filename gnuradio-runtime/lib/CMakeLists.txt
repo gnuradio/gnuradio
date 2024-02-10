@@ -11,7 +11,7 @@ gr_check_hdr_n_def(sys/resource.h HAVE_SYS_RESOURCE_H)
 ########################################################################
 # Look for libunwind
 ########################################################################
-find_package(libunwind)
+gr_find_package(libunwind)
 
 ########################################################################
 # Handle the generated constants

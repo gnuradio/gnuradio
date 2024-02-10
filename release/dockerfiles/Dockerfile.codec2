@@ -1,0 +1,20 @@
+FROM mingw64-w64:latest
+
+RUN mkdir -p /sources/tarballs /opt/cmake /opt/codec2
+
+ADD cmake/mingw64-w64-toolchain.cmake /opt/cmake/mingw-w64-toolchain.cmake
+WORKDIR /sources/tarballs
+# Fetch sources
+RUN curl -L --remote-name-all\
+    https://github.com/drowe67/codec2/archive/refs/tags/1.2.0.tar.gz
+
+WORKDIR /sources/source
+# Extract sources
+RUN tar -oxf /sources/tarballs/1.2.0.tar.gz
+
+# install npth
+RUN cd codec2-1.2.0 && \
+    mkdir build && \
+    cd build && \
+    cmake .. -DCMAKE_TOOLCHAIN_FILE=/opt/cmake/mingw64-w64-toolchain.cmake -DCMAKE_INSTALL_PREFIX=/opt/codec2 && \
+    make install

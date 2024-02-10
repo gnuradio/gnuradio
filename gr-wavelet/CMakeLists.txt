@@ -8,18 +8,22 @@
 ########################################################################
 # Setup dependencies
 ########################################################################
-find_package(GSL)
+gr_find_package(GSL)
 
 ########################################################################
 # Register component
 ########################################################################
 include(GrComponent)
 
-GR_REGISTER_COMPONENT("gr-wavelet" ENABLE_GR_WAVELET
-    ENABLE_GNURADIO_RUNTIME
-    ENABLE_GR_BLOCKS
-    ENABLE_GR_ANALOG
-    GSL_FOUND
+gr_register_component(
+    NAME "gr-wavelet"
+    VAR ENABLE_GR_WAVELET
+    REQUIRED_COMPONENTS
+        gnuradio-runtime
+        gr-blocks
+        gr-analog
+    REQUIRED_TPLS
+        GSL_FOUND
 )
 
 ########################################################################

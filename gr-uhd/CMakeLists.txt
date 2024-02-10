@@ -10,7 +10,14 @@
 ########################################################################
 include(GrBoost)
 
-find_package(UHD "3.15")
+gr_find_package(UHD "3.15")
+if(UHD_FOUND AND NOT TARGET UHD::UHD)
+    add_library(UHD::UHD INTERFACE IMPORTED GLOBAL)
+    set_target_properties(
+        UHD::UHD PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${UHD_INCLUDE_DIRS}"
+                            INTERFACE_LINK_LIBRARIES "${UHD_LIBRARIES}")
+endif()
+
 if("${UHD_VERSION}" VERSION_GREATER_EQUAL "4")
     set(UHD_FOUR_POINT_OH_RFNOC TRUE)
 else()
@@ -24,18 +31,26 @@ gr_python_check_module("PyQt5" PyQt5 True PYQT5_FOUND)
 ########################################################################
 include(GrComponent)
 gr_register_component(
-    "gr-uhd"
-    ENABLE_GR_UHD
-    Boost_FOUND
-    UHD_FOUND
-    ENABLE_GNURADIO_RUNTIME
-    ENABLE_GR_FILTER
-    ENABLE_GR_BLOCKS
-    ENABLE_GR_ANALOG)
+    NAME "gr-uhd"
+    VAR ENABLE_GR_UHD
+    REQUIRED_TPLS
+        Boost_FOUND
+        UHD_FOUND
+    REQUIRED_COMPONENTS
+        gnuradio-runtime
+        gr-filter
+        gr-blocks
+        gr-analog
+)
 set(GR_PKG_UHD_EXAMPLES_DIR ${GR_PKG_DATA_DIR}/examples/uhd)
 
-gr_register_component("gr-uhd UHD 4.0 RFNoC" ENABLE_UHD_RFNOC ENABLE_GR_UHD
-                      UHD_FOUR_POINT_OH_RFNOC)
+gr_register_component(
+    NAME "gr-uhd UHD 4.0 RFNoC"
+    VAR ENABLE_UHD_RFNOC
+    NO_INSTALL
+    REQUIRED_COMPONENTS ENABLE_GR_UHD
+    REQUIRED_TPLS UHD_FOUR_POINT_OH_RFNOC
+)
 
 ########################################################################
 # Begin conditional configuration

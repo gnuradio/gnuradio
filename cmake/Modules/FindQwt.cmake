@@ -11,7 +11,7 @@ set(QWT_QT_VERSION qt5)
 find_path(
     QWT_INCLUDE_DIRS
     NAMES qwt_global.h
-    HINTS ${PC_QWT_INCLUDEDIR} ${CMAKE_INSTALL_PREFIX}/include /include
+    HINTS  /opt/local/libexec/qt5/lib/qwt.framework/Versions/6/Headers ${PC_QWT_INCLUDEDIR} ${CMAKE_INSTALL_PREFIX}/include /include
     PATHS /usr/local/include /usr/include /opt/local/include /sw/include
           /usr/local/lib/qwt.framework/Headers
     PATH_SUFFIXES qwt-${QWT_QT_VERSION} qwt qwt6 qwt5 ${QWT_QT_VERSION}/qwt)
@@ -19,7 +19,7 @@ find_path(
 find_library(
     QWT_LIBRARIES
     NAMES ${PC_QWT_LIBRARIES} qwt6-${QWT_QT_VERSION} qwt-${QWT_QT_VERSION} qwt
-    HINTS ${PC_QWT_LIBDIR} ${CMAKE_INSTALL_PREFIX}/lib ${CMAKE_INSTALL_PREFIX}/lib64 /lib
+    HINTS /opt/local/libexec/qt5/lib/qwt.framework/Versions/6 ${PC_QWT_LIBDIR} ${CMAKE_INSTALL_PREFIX}/lib ${CMAKE_INSTALL_PREFIX}/lib64 /lib
     PATHS /usr/local/lib /usr/lib /opt/local/lib /sw/lib /usr/local/lib/qwt.framework)
 
 set(QWT_FOUND FALSE)

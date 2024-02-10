@@ -25,8 +25,20 @@ configure_file(
 
 install(
     FILES ${CMAKE_CURRENT_BINARY_DIR}/modtool.conf
-    DESTINATION ${GR_PREFSDIR}
+    DESTINATION ${GR_PREFSDIR_relative_to_prefix}
 )
+
+configure_file(gr_modtool ${CMAKE_BINARY_DIR}/gr_modtool @ONLY)
+if(WIN32)
+    gen_py_launcher(
+        MODULES gr_modtool
+        PYTHON ${GR_BUNDLE_PYTHON}
+    )
+elseif(APPLE)
+    gen_py_program_launcher(
+        PROGRAMS gr_modtool
+    )
+endif()
 
 
 ########################################################################
@@ -58,7 +70,7 @@ endif(ENABLE_FISH_COMPLETIONS)
 
 
 GR_PYTHON_INSTALL(
-    PROGRAMS    gr_modtool
+    PROGRAMS    ${CMAKE_BINARY_DIR}/gr_modtool
     DESTINATION ${GR_RUNTIME_DIR}
 )
 
