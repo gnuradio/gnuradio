@@ -100,7 +100,6 @@ class ExampleBrowser(QWidget, base.Component):
         self.tree_widget.currentItemChanged.connect(self.populate_preview)
         self.tree_widget.itemDoubleClicked.connect(self.open_file)
         self.open_button.clicked.connect(self.open_file)
-        self.open_button.clicked.connect(self.reset)
 
     def set_library(self, library):
         self.library = library

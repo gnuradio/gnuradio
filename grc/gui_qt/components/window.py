@@ -1417,6 +1417,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
     def example_browser_triggered(self, path_filter: Union[str, None] = None):
         log.debug("example-browser")
         if self.examples_found:
+            self.ExampleBrowser.reset()
             ex_dialog = ExampleBrowserDialog(self.ExampleBrowser)
             if len(ex_dialog.browser.examples) == 0:
                 ad = QtWidgets.QMessageBox()
