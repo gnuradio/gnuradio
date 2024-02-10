@@ -238,7 +238,7 @@ class ExampleBrowser(QWidget, base.Component):
     def find_examples(self, progress_callback, ext="grc"):
         """Iterate through the example flowgraph directories and parse them."""
         examples_dict = {}
-        with Cache(Constants.EXAMPLE_CACHE_FILE) as cache:
+        with Cache(Constants.EXAMPLE_CACHE_FILE, log=False) as cache:
             for entry in self.platform.config.example_paths:
                 if entry == '':
                     log.error("Empty example path!")
