@@ -146,9 +146,6 @@ class ExampleBrowser(QWidget, base.Component):
                 item.setText(0, ex["title"] if ex["title"] else ex["name"])
                 item.setData(0, self.data_role, QVariant(ex))
 
-        self.tree_widget.setSortingEnabled(True)
-        self.tree_widget.sortByColumn(0, Qt.AscendingOrder)
-
     def reset_preview(self):
         self.title_label.setText(f"<b>Title:</b> ")
         self.author_label.setText(f"<b>Author:</b> ")
@@ -250,6 +247,7 @@ class ExampleBrowser(QWidget, base.Component):
                     for dirpath, dirnames, filenames in os.walk(entry):
                         subdirs += 1  # Loop through once to see how many there are
                     for dirpath, dirnames, filenames in os.walk(entry):
+                        dirnames.sort()
                         current_subdir += 1
                         progress_callback.emit((int(100 * current_subdir / subdirs), "Indexing examples"))
                         for filename in sorted(filter(lambda f: f.endswith('.' + ext), filenames)):
