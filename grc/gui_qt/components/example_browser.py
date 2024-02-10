@@ -119,10 +119,13 @@ class ExampleBrowser(QWidget, base.Component):
         if isinstance(dialog, ExampleBrowserDialog):
             self.close_button.setHidden(False)
             self.close_button.clicked.connect(dialog.reject)
-            self.open_button.clicked.connect(dialog.done)
-            self.tree_widget.itemDoubleClicked.connect(dialog.done)
+            self.open_button.clicked.connect(self.done)
+            self.tree_widget.itemDoubleClicked.connect(self.done)
         else:
             raise Exception
+
+    def done(self, _=None):
+        self.dialog.done(0)
 
     def populate(self, examples):
         self.examples = examples
