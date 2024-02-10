@@ -79,6 +79,7 @@ class FlowgraphScene(QtWidgets.QGraphicsScene, base.Component):
         self.clickPos = None
 
         self.saved = False
+        self.save_allowed = True
 
     def set_saved(self, saved):
         self.saved = saved
