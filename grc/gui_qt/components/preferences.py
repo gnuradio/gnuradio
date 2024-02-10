@@ -8,7 +8,7 @@ from qtpy.QtCore import Qt
 from qtpy.QtWidgets import (QLineEdit, QTabWidget, QDialog,
                             QScrollArea, QVBoxLayout, QCheckBox,
                             QComboBox, QHBoxLayout, QDialogButtonBox,
-                            QLabel)
+                            QLabel, QWidget, QFormLayout)
 
 from ..properties import Paths
 
@@ -20,24 +20,49 @@ class PreferencesDialog(QDialog):
     pref_dict = {}
 
     def __init__(self, qsettings):
-        super().__init__()
+        super(QDialog, self).__init__()
         self.qsettings = qsettings
 
         self.setMinimumSize(600, 400)
         self.setModal(True)
 
         self.setWindowTitle("GRC Preferences")
-        self.tabs = QTabWidget()
-
-        log.debug(f'Opening available preferences YAML: {Paths.AVAILABLE_PREFS_YML}')
+        self.tab_widget = QTabWidget()
 
         with open(Paths.AVAILABLE_PREFS_YML) as available_prefs_yml:
             self.pref_dict = yaml.safe_load(available_prefs_yml)
 
+        self.populate_tabs()
+
+        buttons = QDialogButtonBox.Save | QDialogButtonBox.Cancel
+        self.buttonBox = QDialogButtonBox(buttons)
+        self.buttonBox.accepted.connect(self.accept)
+        self.buttonBox.rejected.connect(self.reject)
+        self.layout = QVBoxLayout()
+        self.layout.addWidget(self.tab_widget)
+        self.layout.addWidget(self.buttonBox)
+
+        self.setLayout(self.layout)
+
+    def new_tab_widget(self) -> QWidget:
+        widget = QWidget()
+        vbox = QVBoxLayout()
+        scroll = QScrollArea()
+        scroll.setWidgetResizable(True)
+        content = QWidget()
+        widget.form = QFormLayout(content)
+
+        widget.setLayout(vbox)
+        vbox.addWidget(scroll)
+        scroll.setWidget(content)
+
+        return widget
+
+    def populate_tabs(self) -> None:
         for cat in self.pref_dict['categories']:
-            cat['_scrollarea'] = QScrollArea()
-            cat['_layout'] = QVBoxLayout()
-            cat['_layout'].setAlignment(Qt.AlignTop)
+            tab = cat['tab'] = self.new_tab_widget()
+            self.tab_widget.addTab(tab, cat['name'])
+
             for item in cat['items']:
                 full_key = cat['key'] + '/' + item['key']
 
@@ -72,33 +97,12 @@ class PreferencesDialog(QDialog):
                     item['_label'].setToolTip(item['tooltip'])
                     item['_edit'].setToolTip(item['tooltip'])
 
-                item['_line'].addWidget(item['_label'])
-                item['_line'].addWidget(item['_edit'])
-                # This needs some work
-                item['_line'].setStretch(0, 3)
-                item['_line'].setStretch(1, 1)
-                cat['_layout'].addLayout(item['_line'])
-
-            cat['_scrollarea'].setLayout(cat['_layout'])
-            self.tabs.addTab(cat['_scrollarea'], cat['name'])
-
-        buttons = QDialogButtonBox.Ok | QDialogButtonBox.Cancel
-        self.buttonBox = QDialogButtonBox(buttons)
-        self.buttonBox.accepted.connect(self.accept)
-        self.buttonBox.rejected.connect(self.reject)
-        self.layout = QVBoxLayout()
-        self.layout.addWidget(self.tabs)
-        self.layout.addWidget(self.buttonBox)
-
-        self.setLayout(self.layout)
+                tab.form.addRow(item['_label'], item['_edit'])
 
     def save_all(self):
         log.debug(f'Writing changes to {self.qsettings.fileName()}')
 
         for cat in self.pref_dict['categories']:
-            cat['_scrollarea'] = QScrollArea()
-            cat['_layout'] = QVBoxLayout()
-            cat['_layout'].setAlignment(Qt.AlignTop)
             for item in cat['items']:
                 full_key = cat['key'] + '/' + item['key']
 

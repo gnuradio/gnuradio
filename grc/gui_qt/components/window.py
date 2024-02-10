@@ -1410,7 +1410,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
     def preferences_triggered(self):
         log.debug("preferences")
         prefs_dialog = PreferencesDialog(self.app.qsettings)
-        if prefs_dialog.exec_():
+        if prefs_dialog.exec_():  # User pressed Save
             prefs_dialog.save_all()
             self.currentFlowgraphScene.update()
 
