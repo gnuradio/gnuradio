@@ -247,7 +247,7 @@ class GUIBlock(QGraphicsItem):
         self.core.states["coordinate"] = (self.x(), self.y())
 
     def paint(self, painter, option, widget):
-        if (self.hide_variables and (self.is_variable or self.is_import)) or (self.hide_disabled_blocks and not self.enabled):
+        if (self.hide_variables and (self.core.is_variable or self.core.is_import)) or (self.hide_disabled_blocks and not self.core.enabled):
             return
 
         painter.setRenderHint(QPainter.Antialiasing)
