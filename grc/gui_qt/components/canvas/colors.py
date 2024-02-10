@@ -30,6 +30,10 @@ BLOCK_DEPRECATED_BACKGROUND_COLOR = get_color('#FED86B')
 # orange
 BLOCK_DEPRECATED_BORDER_COLOR = get_color('#FF540B')
 
+# Missing blocks
+MISSING_BLOCK_BACKGROUND_COLOR = get_color('#FFF2F2')
+MISSING_BLOCK_BORDER_COLOR = get_color('#FF0000')
+
 # Block color constants
 BLOCK_ENABLED_COLOR = get_color('#F1ECFF')
 BLOCK_DISABLED_COLOR = get_color('#CCCCCC')
