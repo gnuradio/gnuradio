@@ -137,7 +137,23 @@ class ExampleBrowser(QWidget, base.Component):
                 if rel_path not in self.dir_items:
                     dir_ = None
                     if parent_path:
-                        dir_ = QTreeWidgetItem(self.dir_items[parent_path])
+                        try:
+                            dir_ = QTreeWidgetItem(self.dir_items[parent_path])
+                        except KeyError:
+                            i = 0
+                            while i <= len(split_rel_path):
+                                partial_path = "/".join(split_rel_path[0:i+1])
+                                split_partial_path = os.path.normpath(partial_path).split(os.path.sep)
+                                if not partial_path in self.dir_items:
+                                    if i == 0:  # Top level
+                                        dir_ = QTreeWidgetItem(self.tree_widget)
+                                        dir_.setText(0, partial_path)
+                                        self.dir_items[partial_path] = dir_
+                                    else:
+                                        dir_ = QTreeWidgetItem(self.dir_items["/".join(split_partial_path[:-1])])
+                                        dir_.setText(0, split_partial_path[-1])
+                                        self.dir_items[partial_path] = dir_
+                                i += 1
                     else:
                         dir_ = QTreeWidgetItem(self.tree_widget)
                     dir_.setText(0, split_rel_path[-1])
