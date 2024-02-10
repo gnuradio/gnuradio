@@ -1014,23 +1014,28 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         """
         log.debug(f"Closing a tab (index {tab_index})")
 
-        file_path = ""
+        file_path = self.currentFlowgraphScene.filename
         if not tab_index:
             tab_index = self.tabWidget.currentIndex()
 
         if self.currentFlowgraphScene.saved:
-            file_path = self.currentFlowgraphScene.filename
             self.tabWidget.removeTab(tab_index)
         else:
-            message = "Save changes before closing?"
+            message = None
+            if file_path:
+                message = f"Save changes to {os.path.basename(file_path)} before closing? Your changes will be lost otherwise."
+            else:
+                message = "This flowgraph has not been saved"  # TODO: Revise text
+
             response = QtWidgets.QMessageBox.question(
                 None,
-                "Unsaved Changes",
+                "Save flowgraph?",
                 message,
                 QtWidgets.QMessageBox.Discard |
                 QtWidgets.QMessageBox.Cancel |
                 QtWidgets.QMessageBox.Save,
             )
+
 
             if response == QtWidgets.QMessageBox.Discard:
                 file_path = self.currentFlowgraphScene.filename
