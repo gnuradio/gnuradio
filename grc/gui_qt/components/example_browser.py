@@ -143,6 +143,14 @@ class ExampleBrowser(QWidget, base.Component):
         self.tree_widget.setSortingEnabled(True)
         self.tree_widget.sortByColumn(0, Qt.AscendingOrder)
 
+    def reset_preview(self):
+        self.title_label.setText(f"<b>Title:</b> ")
+        self.author_label.setText(f"<b>Author:</b> ")
+        self.language_label.setText(f"<b>Output language:</b> ")
+        self.gen_opts_label.setText(f"<b>Type:</b> ")
+        self.desc_label.setText('')
+        self.image_label.setPixmap(QPixmap())
+
     def populate_preview(self):
         ex = self.tree_widget.currentItem().data(0, self.data_role)
 
@@ -152,8 +160,8 @@ class ExampleBrowser(QWidget, base.Component):
             self.language_label.setText(f"<b>Output language:</b> {self.lang_dict[ex['output_language']] if ex else ''}")
             self.gen_opts_label.setText(f"<b>Type:</b> {self.gen_opts_dict[ex['generate_options']] if ex else ''}")
         except KeyError:
-            self.language_label.setText(f"<b>Output language:</b> N/A")
-            self.gen_opts_label.setText(f"<b>Type:</b> N/A")
+            self.language_label.setText(f"<b>Output language:</b> ")
+            self.gen_opts_label.setText(f"<b>Type:</b> ")
         self.desc_label.setText(ex["desc"] if ex else '')
 
         if ex:
@@ -197,6 +205,8 @@ class ExampleBrowser(QWidget, base.Component):
 
     def reset(self):
         """Reset the filter, collapse all."""
+        self.tree_widget.collapseAll()
+        self.reset_preview()
         for mod_name, mod_val in self.modules.items():
             mod_val.setHidden(False)
             for i in range(mod_val.childCount()):
