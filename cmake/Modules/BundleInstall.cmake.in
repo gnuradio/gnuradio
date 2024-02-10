@@ -1,0 +1,11 @@
+include(BundleUtilities)
+
+
+# Set dirs to a list of directories where prerequisite libraries
+# may be found:
+set(bundle_dirs
+   "@CMAKE_RUNTIME_OUTPUT_DIRECTORY@"
+   "@CMAKE_LIBRARY_OUTPUT_DIRECTORY@"
+   )
+
+fixup_bundle(@tgt@ "@tgt_dependencies@" "${bundle_dirs}")

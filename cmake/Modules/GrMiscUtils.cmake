@@ -10,6 +10,18 @@ if(DEFINED __INCLUDED_GR_MISC_UTILS_CMAKE)
 endif()
 set(__INCLUDED_GR_MISC_UTILS_CMAKE TRUE)
 
+set(__GR_BUNDLED_DEPS)
+########################################################################
+# Installs third party runtime dependencies alongside their appropriate
+# targets so they can be bundled and redistributed by installers
+########################################################################
+function(GR_BUNDLE_INSTALL tgt target_dependencies)
+    configure_file(${CMAKE_CURRENT_LIST_DIR}/BundleInstall.cmake.in
+    ${CMAKE_CURRENT_BINARY_DIR}/BundleInstall${tgt}.cmake
+    @ONLY)
+    install(SCRIPT ${CMAKE_CURRENT_BINARY_DIR}/BundleInstall${tgt}.cmake)
+endfunction(GR_BUNDLE_INSTALL)
+
 ########################################################################
 # Set the pre-processor definition if the condition is true.
 #  - def the pre-processor definition to set and condition name
@@ -78,6 +90,9 @@ function(GR_LIBRARY_FOO target)
     include(CMakePackageConfigHelpers)
     set(TARGET ${target})
     set(TARGET_DEPENDENCIES ${ARGN})
+    if(GR_BUILD_INSTALLER AND TARGET_DEPENDENCIES)
+        GR_BUNDLE_INSTALL(${TARGET} ${TARGET_DEPENDENCIES})
+    endif()
 
     configure_package_config_file(
         ${PROJECT_SOURCE_DIR}/cmake/Modules/targetConfig.cmake.in
