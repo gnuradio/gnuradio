@@ -8,15 +8,17 @@
 ########################################################################
 # Setup dependencies
 ########################################################################
-find_package(SDL)
+gr_find_package(SDL)
 
 ########################################################################
 # Register component
 ########################################################################
 include(GrComponent)
-GR_REGISTER_COMPONENT("gr-video-sdl" ENABLE_GR_VIDEO_SDL
-    SDL_FOUND
-    ENABLE_GNURADIO_RUNTIME
+gr_register_component(
+    NAME "gr-video-sdl"
+    VAR ENABLE_GR_VIDEO_SDL
+    REQUIRED_TPLS SDL_FOUND
+    REQUIRED_COMPONENTS gnuradio-runtime
 )
 
 ########################################################################

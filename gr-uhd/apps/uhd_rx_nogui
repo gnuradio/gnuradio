@@ -51,6 +51,8 @@ blocks.
 import math
 import sys
 from argparse import ArgumentParser
+import os
+@DLL_IMPORT_GTK@
 from gnuradio import gr, uhd, audio
 from gnuradio import filter
 from gnuradio import analog

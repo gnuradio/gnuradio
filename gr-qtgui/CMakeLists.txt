@@ -11,16 +11,27 @@
 include(GrPython)
 
 # Note: gr-qtgui requires Qt5.
-
-find_package(Qt5 QUIET
+gr_find_package(Qt5
     COMPONENTS Widgets
     OPTIONAL_COMPONENTS OpenGL
+    GLOBAL
 )
-set(QT_FOUND ${Qt5Widgets_FOUND})
 
-gr_python_check_module("PyQt5" PyQt5 True PYQT5_FOUND)
+if(TARGET Qt5::Widgets)
+    set(QT_FOUND TRUE)
+else()
+    set(QT_FOUND FALSE)
+endif()
 
-find_package(Qwt)
+gr_python_check_module(
+    DESC "PyQt5"
+    MODULE PyQt5
+    VAR PYQT5_FOUND
+)
+gr_find_package(qwt GLOBAL)
+if(qwt_FOUND)
+    set(QWT_FOUND TRUE)
+endif()
 
 ########################################################################
 # Register component
@@ -31,15 +42,18 @@ if(NOT CMAKE_CROSSCOMPILING)
 endif(NOT CMAKE_CROSSCOMPILING)
 
 gr_register_component(
-    "gr-qtgui"
-    ENABLE_GR_QTGUI
-    QT_FOUND
-    QWT_FOUND
-    ENABLE_GNURADIO_RUNTIME
-    ENABLE_GR_FFT
-    ENABLE_GR_FILTER
-    PYTHONLIBS_FOUND
-    ${qt_gui_python_deps})
+    NAME "gr-qtgui"
+    VAR ENABLE_GR_QTGUI
+    REQUIRED_TPLS
+        QT_FOUND
+        QWT_FOUND
+        PYTHONLIBS_FOUND
+        ${qt_gui_python_deps}
+    REQUIRED_COMPONENTS
+        gnuradio-runtime
+        gr-fft
+        gr-filter
+)
 
 set(GR_PKG_QTGUI_EXAMPLES_DIR ${GR_PKG_DATA_DIR}/examples/qt-gui)
 
@@ -85,7 +99,7 @@ if(ENABLE_GR_QTGUI)
     ########################################################################
     # Install the conf file
     ########################################################################
-    install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/gr-qtgui.conf DESTINATION ${GR_PREFSDIR})
+    install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/gr-qtgui.conf DESTINATION ${GR_PREFSDIR_relative_to_prefix})
 
     ########################################################################
     # Install the themes (QSS) files
@@ -97,5 +111,14 @@ if(ENABLE_GR_QTGUI)
             themes/plain.qss
             themes/projector.qss
             DESTINATION ${GR_THEMES_DIR})
+
+    if(GR_BUILD_INSTALLER)
+        if(WIN32)
+            install(DIRECTORY ${qt_Qt5_QWindowsIntegrationPlugin_LIB_DIRS_RELEASE}
+                    DESTINATION ${REL_PYTHON_INSTALL_PATH})
+        elseif(APPLE)
+            install(DIRECTORY ${Qt5_DIR}/plugins/platforms DESTINATION ${REL_PYTHON_INSTALL_PATH}/python.framework/)
+        endif()
+    endif(GR_BUILD_INSTALLER)
 
 endif(ENABLE_GR_QTGUI)

@@ -3,6 +3,8 @@
 
 # Find single-precision (float) version of FFTW3
 
+# TODO: johnwparent ensure these work w/o Config from conan
+
 find_package(PkgConfig)
 pkg_check_modules(PC_FFTW3f "fftw3f >= 3.0")
 
