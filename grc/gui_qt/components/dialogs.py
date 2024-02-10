@@ -135,21 +135,6 @@ class PropsDialog(QDialog):
         self.example_tab.setLayout(self.example_layout)
         self.example_list = QListWidget()
         self.example_list.itemDoubleClicked.connect(lambda ex: self.open_example(ex))
-        try:
-            examples = self._block.parent.gui.app.BlockLibrary.get_examples(self._block.key)
-            ex_amount = len(examples)
-            self.example_list.addItems(examples)
-            self.example_layout.addWidget(self.example_list)
-            self.open_ex_button = QPushButton("Open example")
-            self.open_ex_button.clicked.connect(lambda: self.open_example())
-            #policy = QSizePolicy()
-            #policy.setHorizontalPolicy(QSizePolicy.Preferred)
-            #self.open_ex_button.setSizePolicy(policy)
-            self.example_layout.addWidget(self.open_ex_button, alignment=Qt.AlignRight)
-        except KeyError:
-            self.example_layout.addWidget(QLabel("No examples use this block"))
-
-        self.tabs.addTab(self.example_tab, f"Examples ({ex_amount})")
 
         buttons = QDialogButtonBox.Ok | QDialogButtonBox.Cancel
         self.buttonBox = QDialogButtonBox(buttons)
