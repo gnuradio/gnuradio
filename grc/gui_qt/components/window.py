@@ -924,7 +924,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
         self.tabWidget.addTab(fg_view, "Untitled")
 
-    def open_triggered(self, filename=None):
+    def open_triggered(self, filename=None, save_allowed=True):
         log.debug("open")
         if not filename:
             filename = self.open()
@@ -939,13 +939,17 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
             self.currentFlowgraphScene.filename = filename
             self.connect_fg_signals(self.currentFlowgraphScene)
             self.currentFlowgraphScene.saved = True
+            self.currentFlowgraphScene.save_allowed = save_allowed
 
     def open_example(self, example_path):
         log.debug("open example")
         if example_path:
-            self.open_triggered(example_path)
+            self.open_triggered(example_path, False)
 
     def save_triggered(self):
+        if not self.currentFlowgraphScene.save_allowed:
+            self.save_as_triggered()
+            return
         log.debug("save")
         filename = self.currentFlowgraphScene.filename
 
