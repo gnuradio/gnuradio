@@ -463,9 +463,9 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         actions["zoom_in"] = Action(
             Icons("zoom-in"),
             _("Zoom &in"),
-            self,
-            shortcut=Keys.ZoomIn,
+            self
         )
+        actions["zoom_in"].setShortcuts([Keys.ZoomIn, "Ctrl+="])
         actions["zoom_out"] = Action(
             Icons("zoom-out"),
             _("Zoom &out"),
