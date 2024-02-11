@@ -53,15 +53,10 @@ class RotateAction(QUndoCommand):
         self.delta_angle = delta_angle
 
     def redo(self):
-        for block in self.g_blocks:
-            block.rotate(self.delta_angle)
-        self.scene.update()
+        self.scene.rotate_selected(self.delta_angle)
 
     def undo(self):
-        for block in self.g_blocks:
-            block.rotate(-self.delta_angle)
-        self.scene.update()
-
+        self.scene.rotate_selected(-self.delta_angle)
 
 class MoveAction(QUndoCommand):
     def __init__(self, scene: FlowgraphScene, diff: QPointF):
