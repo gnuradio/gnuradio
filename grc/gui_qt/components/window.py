@@ -22,6 +22,8 @@ import logging
 import os
 import sys
 import subprocess
+import cProfile, pstats
+
 
 from typing import Union
 
@@ -99,6 +101,8 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
         # Generate the rest of the window
         self.createStatusBar()
+
+        self.profiler = cProfile.Profile()
 
         # actions['Quit.triggered.connect(self.close)
         # actions['Report.triggered.connect(self.reportDock.show)
@@ -545,6 +549,9 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
         actions["module_browser"] = Action(_("&OOT Module Browser"), self)
 
+        actions["start_profiler"] = Action(_("Start profiler"), self)
+        actions["stop_profiler"] = Action(_("Stop profiler"), self)
+
         # Help Actions
 
         actions["types"] = Action(_("&Types"), self)
@@ -775,6 +782,9 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         tools = Menu("&Tools")
         tools.addAction(actions["filter_design_tool"])
         tools.addAction(actions["module_browser"])
+        tools.addSeparator()
+        tools.addAction(actions["start_profiler"])
+        tools.addAction(actions["stop_profiler"])
         menus["tools"] = tools
 
         # Setup the help menu
@@ -1494,3 +1504,14 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
             stdout=subprocess.PIPE,
             stderr=subprocess.STDOUT,
         )
+
+    def start_profiler_triggered(self):
+        log.info("Starting profiler")
+        self.profiler.enable()
+
+    def stop_profiler_triggered(self):
+        self.profiler.disable()
+        log.info("Stopping profiler")
+        stats = pstats.Stats(self.profiler)
+        stats.dump_stats('stats.prof')
+
