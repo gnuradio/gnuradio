@@ -219,7 +219,6 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         action = MoveAction(self.currentFlowgraphScene, diff)
         self.currentFlowgraphScene.undoStack.push(action)
         self.updateActions()
-        self.currentFlowgraphScene.update()
 
     @QtCore.Slot(Element)
     def registerNewElement(self, elem):
