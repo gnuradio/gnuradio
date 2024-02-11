@@ -233,10 +233,10 @@ class FlowgraphScene(QtWidgets.QGraphicsScene, base.Component):
             self.remove_element(item)
 
     def select_all(self):
-        for block in self.blocks:
-            block.setSelected(True)
-        for conn in self.connections:
-            conn.setSelected(True)
+        for block in self.core.blocks:
+            block.gui.setSelected(True)
+        for conn in self.core.connections:
+            conn.gui.setSelected(True)
 
     def rotate_selected(self, rotation):
         """
