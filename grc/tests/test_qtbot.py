@@ -876,7 +876,12 @@ def test_file_close_all(qtbot, qapp_cls_, monkeypatch):
     menu_shortcut(qtbot, qapp_cls_, "file", QtCore.Qt.Key_F, QtCore.Qt.Key_L)
     assert win.tabWidget.count() == 1, "File/Close All"
 
-def test_quit(qtbot, qapp_cls_):
+def test_quit(qtbot, qapp_cls_, monkeypatch):
+    monkeypatch.setattr(
+        QtWidgets.QMessageBox,
+        "question",
+        lambda *args: QtWidgets.QMessageBox.Discard,
+    )
     qapp_cls_.MainWindow.actions["exit"].trigger()
     assert True
     time.sleep(1)

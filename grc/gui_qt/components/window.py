@@ -908,12 +908,12 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
     # Action Handlers
     def new_triggered(self):
         log.debug("New")
-        log.debug("Loading flowgraph model")
         fg_view = FlowgraphView(self, self.platform)
         fg_view.centerOn(0, 0)
         initial_state = self.platform.parse_flow_graph("")
         fg_view.scene().import_data(initial_state)
-        fg_view.scene().saved = True
+        fg_view.scene().saved = False
+        self.tabWidget.tabBar().setTabTextColor(self.tabWidget.currentIndex(), Qt.red)
         self.connect_fg_signals(fg_view.scene())
         log.debug("Adding flowgraph view")
 
