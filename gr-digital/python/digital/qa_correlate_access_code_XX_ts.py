@@ -11,6 +11,7 @@
 
 from gnuradio import gr, gr_unittest, digital, blocks
 import pmt
+import numpy
 
 default_access_code = '\xAC\xDD\xA4\xE2\xF2\x8C\x20\xFC'
 
@@ -58,6 +59,50 @@ class test_correlate_access_code_XX_ts(gr_unittest.TestCase):
         self.assertEqual(pmt.to_long(result_tags[0].value), len(payload) * 8)
         self.assertEqual(result_data, expected)
 
+    def _variable_payload_t(self, payload_len=2**15 + 3):
+        # Constants for this test
+        SEED = 42
+        PRECEDING_NOISE_LEN = 2**10 + 1
+        PREAMBLE_LEN = 31
+        PADDING_LEN = 64
+
+        numpy.random.seed(SEED)
+        noise_pre = numpy.random.randint(0, 2, size=PRECEDING_NOISE_LEN, dtype=numpy.uint8)
+        access_code = numpy.random.randint(0, 2, size=PREAMBLE_LEN, dtype=numpy.uint8)
+        payload = numpy.random.randint(0, 256, size=payload_len, dtype=numpy.uint8)
+
+        # header contains packet length, twice (bit-swapped)
+        header = numpy.array([(payload_len & 0xFF00) >> 8, payload_len & 0xFF] * 2, dtype=numpy.uint8)
+        # make sure we've built the length header correctly
+        self.assertEqual(header[0] * 256 + header[1], header[2] * 256 + header[3])
+        self.assertEqual(header[0] * 256 + header[1], len(payload))
+
+        packet = numpy.concatenate((header, payload))
+        pad = (0,) * PADDING_LEN
+        src_data = numpy.concatenate((
+            noise_pre,
+            access_code,
+            numpy.unpackbits(packet),
+            numpy.array(pad, dtype=numpy.uint8)
+        ))
+
+        expected = list(src_data[len(noise_pre) + len(access_code) + 32:-len(pad)])
+        src = blocks.vector_source_b(src_data)
+        op = digital.correlate_access_code_bb_ts("".join((str(b) for b in access_code)), 0, "sync")
+        dst = blocks.vector_sink_b()
+        self.tb.connect(src, op, dst)
+        self.tb.run()
+        result_data = dst.data()
+        result_tags = dst.tags()
+        self.assertEqual(len(result_data), len(payload) * 8)
+        self.assertEqual(result_tags[0].offset, 0)
+        self.assertEqual(pmt.to_long(result_tags[0].value), len(payload) * 8)
+        self.assertEqual(result_data, expected)
+
+    def test_payload_lengths(self):
+        for length in (2**15 + 3, 1, 10, 100, 300, 301, 400, 2**12, 2**16 - 1):
+            self._variable_payload_t(length)
+
     def test_bb_prefix(self):
         payload = "test packet"     # payload length is 11 bytes
         # header contains packet length, twice (bit-swapped)
@@ -95,9 +140,9 @@ class test_correlate_access_code_XX_ts(gr_unittest.TestCase):
         self.tb.run()
         result_data = dst.data()
         result_tags = dst.tags()
-        #self.assertEqual(len(result_data), len(packet)*8)
+        # self.assertEqual(len(result_data), len(packet)*8)
         self.assertEqual(result_tags[0].offset, 0)
-        #self.assertEqual(pmt.to_long(result_tags[0].value), len(payload)*8)
+        # self.assertEqual(pmt.to_long(result_tags[0].value), len(payload)*8)
         self.assertEqual(result_data, expected)
 
     def test_002(self):
