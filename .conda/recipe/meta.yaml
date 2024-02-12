@@ -96,6 +96,7 @@ requirements:
   # below needed only to run tests in host environment
     - pytest
     - pyzmq
+    - setuptools
   run:
     - alsa-plugins  # [linux]
     - click
