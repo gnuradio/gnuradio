@@ -981,7 +981,7 @@ protected:
      *
      * Used by calling gr::thread::scoped_lock l(d_setlock);
      */
-    gr::thread::mutex d_setlock;
+    mutable gr::thread::mutex d_setlock;
 
     // These are really only for internal use, but leaving them public avoids
     // having to work up an ever-varying list of friend GR_RUNTIME_APIs
