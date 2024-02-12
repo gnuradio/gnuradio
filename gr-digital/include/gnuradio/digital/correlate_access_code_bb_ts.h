@@ -28,7 +28,7 @@ namespace digital {
  * the access code and header.
  *
  * This block searches for the given access code by reading in the
- * input bits. Once found, it expects the following 32 samples to
+ * input bits. Once found, it expects the following 32 bits (items) to
  * contain a header that includes the frame length (16 bits for
  * the length, repeated). It decodes the header to get the frame
  * length in order to set up the the tagged stream key
