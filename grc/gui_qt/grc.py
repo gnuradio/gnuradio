@@ -76,7 +76,11 @@ class Application(QtWidgets.QApplication):
         stopwatch = StopWatch()
         self.MainWindow = components.MainWindow()
         stopwatch.lap("mainwindow")
-        self.Console = components.Console()
+        level_str = self.qsettings.value('grc/console_log_level', "info", type=str)
+        if level_str == "info":
+            self.Console = components.Console(logging.INFO)
+        else:  # level_str == "debug"
+            self.Console = components.Console(logging.DEBUG)
         stopwatch.lap("console")
         self.BlockLibrary = components.BlockLibrary()
         stopwatch.lap("blocklibrary")

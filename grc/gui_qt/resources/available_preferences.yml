@@ -64,16 +64,14 @@ categories:
         option_labels:
           - GRC Gtk
           - GRC Qt
-      - key: log_level
-        name: Log level
+      - key: console_log_level
+        name: Console log level (Requires restart)
         dtype: enum
         default: info
         options:
-          - warning
           - info
           - debug
         option_labels:
-          - Warning
           - Info
           - Debug
       - key: config_file_path
@@ -108,11 +106,6 @@ categories:
         name: Display Wiki tab
         dtype: bool
         default: True
-#      - key: show_units
-#        name: Show units (not implemented)
-#        tooltip: Show units in block parameters window
-#        dtype: bool
-#        default: False
 
 # Window settings, these are not meant to be changed by the user.
 # TODO: Is it necessary to have these in here?

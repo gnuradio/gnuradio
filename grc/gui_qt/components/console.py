@@ -79,11 +79,12 @@ HTML = '''
 
 
 class Console(QtWidgets.QDockWidget, base.Component):
-    def __init__(self):
+    def __init__(self, level):
         super(Console, self).__init__()
 
         self.setObjectName('console')
         self.setWindowTitle('Console')
+        self.level = level
 
         ### GUI Widgets
 
@@ -143,7 +144,7 @@ class Console(QtWidgets.QDockWidget, base.Component):
         # Register a new handler for the root logger that outputs messages of
         #  INFO and HIGHER to the reports view
         handler = ReportsHandler(self.add_line)
-        handler.setLevel(logging.DEBUG)
+        handler.setLevel(self.level)
 
         # Need to add this handler to the parent of the controller's logger
         log.parent.addHandler(handler)
