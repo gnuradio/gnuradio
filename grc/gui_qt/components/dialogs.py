@@ -5,7 +5,7 @@ from qtpy.QtCore import Qt
 from qtpy.QtGui import QStandardItem, QStandardItemModel
 from qtpy.QtWidgets import (QLineEdit, QDialog, QDialogButtonBox, QTreeView,
                             QVBoxLayout, QTabWidget, QGridLayout, QWidget, QLabel,
-                            QPushButton, QListWidget, QComboBox, QPlainTextEdit)
+                            QPushButton, QListWidget, QComboBox, QPlainTextEdit, QHBoxLayout)
 
 
 class ErrorsDialog(QDialog):
@@ -75,7 +75,7 @@ class PropsDialog(QDialog):
         self.edit_params = []
 
         self.tabs = QTabWidget()
-        ignore_dtype_labels = ["_multiline"]
+        ignore_dtype_labels = ["_multiline", "_multiline_python_external"]
 
         for cat in unique_categories():
             qvb = QGridLayout()
@@ -116,6 +116,15 @@ class PropsDialog(QDialog):
                         line_edit.param = param
                         qvb.addWidget(line_edit, i, 1)
                         self.edit_params.append(line_edit)
+                    elif param.dtype == "_multiline_python_external":
+                        editor_widget = QWidget()
+                        editor_widget.setLayout(QHBoxLayout())
+                        editor_widget.layout().addWidget(QPushButton("Open in Editor"))
+                        editor_widget.layout().addWidget(QPushButton("Choose Editor"))
+                        line_edit = QPlainTextEdit(param.value)
+                        line_edit.param = param
+                        qvb.addWidget(editor_widget, i, 1)
+                        #self.edit_params.append(line_edit)
                     else:
                         line_edit = QLineEdit(param.value)
                         line_edit.param = param
@@ -129,7 +138,6 @@ class PropsDialog(QDialog):
             self.tabs.addTab(tab, cat)
 
         # Add example tab
-        ex_amount = 0
         self.example_tab = QWidget()
         self.example_layout = QVBoxLayout()
         self.example_tab.setLayout(self.example_layout)
