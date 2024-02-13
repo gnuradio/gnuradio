@@ -168,7 +168,7 @@ class GUIBlock(QGraphicsItem):
         self.markup_text = ""
         self.markups_width = 0.0
 
-        if self.show_complexity and self.key == "options":
+        if self.show_complexity and self.core.key == "options":
             complexity = flow_graph_complexity.calculate(self.parent)
             self.markups.append('Complexity: {num} bal'.format(
                 num=Utils.num_to_str(complexity)))
