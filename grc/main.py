@@ -190,6 +190,18 @@ def run_qt(args, log):
 
 
 def main():
+    grc_version_from_config = ""
+    grc_qt_config_file = os.path.expanduser('~/.gnuradio/grc_qt.conf')
+    if os.path.isfile(grc_qt_config_file):
+        try:
+            from qtpy.QtCore import QSettings
+            qsettings = QSettings(grc_qt_config_file, QSettings.IniFormat)
+            grc_version_from_config = qsettings.value('grc/default_grc', "", type=str)
+        except Exception as e:
+            log.warning("main.py could not read grc_qt.conf")
+            log.warning(e)
+
+
 
     ### Argument parsing
     parser = argparse.ArgumentParser(
@@ -213,7 +225,6 @@ def main():
                                      help="GNU Radio Companion (GTK)")
 
     # Default options if not already set with add_argument()
-    parser.set_defaults(framework='gtk')
     args = parser.parse_args()
 
     # Print the startup message
@@ -242,5 +253,10 @@ def main():
     ### GUI Framework
     if args.framework == 'qt':
         run_qt(args, log)
-    else:
+    elif args.framework == 'gtk':
         run_gtk(args, log)
+    else:  # args.framework == None
+        if grc_version_from_config == 'grc_qt':
+            run_qt(args, log)
+        else:
+            run_gtk(args, log)
