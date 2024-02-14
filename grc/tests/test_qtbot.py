@@ -691,6 +691,10 @@ def test_file_examples(qtbot, qapp_cls_):
 def test_edit_actions(qtbot, qapp_cls_):
     pass
 
+def test_edit_select_all(qtbot, qapp_cls_):
+    qtbot.keyClick(qapp_cls_.focusWidget(), QtCore.Qt.Key_A, QtCore.Qt.ControlModifier)
+    qtbot.wait(100)
+
 
 def test_edit_cut_paste(qtbot, qapp_cls_):
     fg = qapp_cls_.MainWindow.currentFlowgraph
