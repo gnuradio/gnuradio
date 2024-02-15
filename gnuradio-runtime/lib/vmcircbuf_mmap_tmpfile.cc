@@ -25,6 +25,7 @@
 #include "pagesize.h"
 #include <gnuradio/sys_paths.h>
 #include <fcntl.h>
+#include <spdlog/fmt/fmt.h>
 #include <cerrno>
 #include <cstring>
 
@@ -44,14 +45,14 @@ vmcircbuf_mmap_tmpfile::vmcircbuf_mmap_tmpfile(size_t size) : gr::vmcircbuf(size
     }
 
     int seg_fd = -1;
-    std::string seg_name;
 
     static int s_seg_counter = 0;
 
+    std::filesystem::path seg_name;
     // open a temporary file that we'll map in a bit later
     while (1) {
-        seg_name = std::string(gr::tmp_path()) + "/gnuradio-" + std::to_string(getpid()) +
-                   "-" + std::to_string(s_seg_counter) + "-XXXXXX";
+        seg_name = gr::paths::tmp() /
+                   fmt::format("gnuradio-{}-{}-XXXXXX", getpid(), s_seg_counter);
 
         s_seg_counter++;
 
@@ -60,7 +61,7 @@ vmcircbuf_mmap_tmpfile::vmcircbuf_mmap_tmpfile(size_t size) : gr::vmcircbuf(size
             if (errno == EEXIST) // File already exists (shouldn't happen).  Try again
                 continue;
 
-            d_logger->error("open [{:s}]", seg_name);
+            d_logger->error("open [{:s}]", seg_name.string());
             throw std::runtime_error("gr::vmcircbuf_mmap_tmpfile");
         }
         break;
