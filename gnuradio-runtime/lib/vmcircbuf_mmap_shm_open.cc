@@ -24,6 +24,7 @@
 #endif
 #include "pagesize.h"
 #include <gnuradio/sys_paths.h>
+#include <spdlog/fmt/fmt.h>
 #include <cerrno>
 #include <cstdio>
 
@@ -45,7 +46,7 @@ vmcircbuf_mmap_shm_open::vmcircbuf_mmap_shm_open(size_t size) : gr::vmcircbuf(si
     }
 
     int shm_fd = -1;
-    std::string seg_name;
+    std::filesystem::path seg_name;
     static bool portable_format = true;
 
     // open a new named shared memory segment
@@ -54,15 +55,14 @@ vmcircbuf_mmap_shm_open::vmcircbuf_mmap_shm_open(size_t size) : gr::vmcircbuf(si
 
             // This is the POSIX recommended "portable format".
             // Of course the "portable format" doesn't work on some systems...
-            seg_name = "/gnuradio-" + std::to_string(getpid()) + "-" +
-                       std::to_string(s_seg_counter);
+            seg_name = { fmt::format("/gnuradio-{}-{}", getpid(), s_seg_counter) };
         } else {
 
             // Where the "portable format" doesn't work, we try building
             // a full filesystem pathname pointing into a suitable temporary directory.
 
-            seg_name = std::string(gr::tmp_path()) + "/gnuradio-" +
-                       std::to_string(getpid()) + "-" + std::to_string(s_seg_counter);
+            seg_name = gr::paths::tmp() /
+                       fmt::format("/gnuradio-{}-{}", getpid(), s_seg_counter);
         }
 
         shm_fd = shm_open(seg_name.c_str(), O_RDWR | O_CREAT | O_EXCL, 0600);
@@ -78,7 +78,7 @@ vmcircbuf_mmap_shm_open::vmcircbuf_mmap_shm_open(size_t size) : gr::vmcircbuf(si
                 EEXIST) // Named segment already exists (shouldn't happen).  Try again
                 continue;
 
-            d_logger->error("shm_open [{:s}] failed", seg_name);
+            d_logger->error("shm_open [{:s}] failed", seg_name.string());
             throw std::runtime_error("gr::vmcircbuf_mmap_shm_open");
         }
         break;
