@@ -40,6 +40,9 @@ namespace fs = std::filesystem;
 
 namespace gr {
 namespace fft {
+
+constexpr const char* WISDOM_FILENAME = "fftw_wisdom";
+
 static std::mutex wisdom_thread_mutex;
 boost::interprocess::file_lock wisdom_lock;
 static bool wisdom_lock_init_done = false; // Modify while holding 'wisdom_thread_mutex'
@@ -51,25 +54,32 @@ std::mutex& planner::mutex()
     return s_planning_mutex;
 }
 
-static std::string wisdom_filename()
-{
-    static fs::path path;
-    path = fs::path(gr::appdata_path()) / ".gr_fftw_wisdom";
-    return path.string();
-}
 
 static void wisdom_lock_init()
 {
     if (wisdom_lock_init_done)
         return;
 
-    const std::string wisdom_lock_file = wisdom_filename() + ".lock";
-    // std::cerr << "Creating FFTW wisdom lockfile: " << wisdom_lock_file << std::endl;
+    // recursively make sure the directory exists
+    fs::path path;
+    for (const auto& path_component : gr::paths::cache()) {
+        path /= path_component;
+        if (!fs::exists(path)) {
+            fs::create_directory(path);
+        }
+    }
+    const auto wisdom_lock_file = path / (std::string(WISDOM_FILENAME) + ".lock");
+#ifdef _MSC_VER
+    int fd = open(wisdom_lock_file.string().c_str(),
+                  O_WRONLY | O_CREAT | O_NOCTTY | O_NONBLOCK,
+                  0666);
+#else
     int fd =
         open(wisdom_lock_file.c_str(), O_WRONLY | O_CREAT | O_NOCTTY | O_NONBLOCK, 0666);
+#endif
     if (fd < 0) {
         throw std::runtime_error("Failed to create FFTW wisdom lockfile: " +
-                                 wisdom_lock_file);
+                                 wisdom_lock_file.string());
     }
     close(fd);
     wisdom_lock = boost::interprocess::file_lock(wisdom_lock_file.c_str());
@@ -92,14 +102,18 @@ static void unlock_wisdom()
 
 static void import_wisdom()
 {
-    const std::string filename = wisdom_filename();
-    FILE* fp = fopen(filename.c_str(), "r");
+    auto wisdom_path = gr::paths::cache() / WISDOM_FILENAME;
+#ifdef _MSC_VER
+    FILE* fp = fopen(wisdom_path.string().c_str(), "r");
+#else
+    FILE* fp = fopen(wisdom_path.c_str(), "r");
+#endif
     if (fp != 0) {
         int r = fftwf_import_wisdom_from_file(fp);
         fclose(fp);
         if (!r) {
             auto logger = gr::logger("fft::import_wisdom");
-            logger.error("can't import wisdom from {:s}", filename.c_str());
+            logger.error("can't import wisdom from {:s}", wisdom_path.string());
         }
     }
 }
@@ -120,14 +134,18 @@ static void config_threading(int nthreads)
 
 static void export_wisdom()
 {
-    const std::string filename = wisdom_filename();
-    FILE* fp = fopen(filename.c_str(), "w");
+    auto wisdom_path = gr::paths::cache() / WISDOM_FILENAME;
+#ifdef _MSC_VER
+    FILE* fp = fopen(wisdom_path.string().c_str(), "w");
+#else
+    FILE* fp = fopen(wisdom_path.c_str(), "w");
+#endif
     if (fp != 0) {
         fftwf_export_wisdom_to_file(fp);
         fclose(fp);
     } else {
         auto logger = gr::logger("fft::export_wisdom");
-        logger.error("{:s}: {:s}", filename.c_str(), strerror(errno));
+        logger.error("{:s}: {:s}", wisdom_path.string(), strerror(errno));
     }
 }
 

@@ -13,8 +13,6 @@
 /* If manual edits are made, the following tags should be modified accordingly.    */
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
-/* BINDTOOL_HEADER_FILE(sys_paths.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(d612f4abb40047c64395b4177ff3ae1f)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -29,13 +27,33 @@ namespace py = pybind11;
 
 void bind_sys_paths(py::module& m)
 {
+    auto paths = m.def_submodule("paths", "GNU Radio default paths");
+    /* would have loved to #include <pybind11/stl/filesystem.h> and return the paths
+     * directly, but that requires a pybind11 too modern for Ubuntu20.04, so for now, just
+     * return the string representation. Let's not return different types depending on the
+     * version of a dependency.
+     *
+     * TODO: revisit 3.11
 
+    paths.def("tmp", &::gr::paths::tmp);
+    paths.def("appdata", &::gr::paths::appdata);
+    paths.def("userconf", &::gr::paths::userconf);
+    paths.def("cache", &::gr::paths::cache);
+    */
+    paths.def("tmp", []() { return gr::paths::tmp().u8string(); });
+    paths.def("appdata", []() { return gr::paths::appdata().u8string(); });
+    paths.def("userconf", []() { return gr::paths::userconf().u8string(); });
+    paths.def("cache", []() { return gr::paths::cache().u8string(); });
 
-    m.def("tmp_path", &::gr::tmp_path, D(tmp_path));
-
-
-    m.def("appdata_path", &::gr::appdata_path, D(appdata_path));
-
-
-    m.def("userconf_path", &::gr::userconf_path, D(userconf_path));
+    // Legacy interfaces, deprecated
+    m.def(
+        "tmp_path", []() { return ::gr::paths::tmp().string(); }, D(tmp_path));
+    m.def(
+        "appdata_path",
+        []() { return ::gr::paths::appdata().string(); },
+        D(appdata_path));
+    m.def(
+        "userconf_path",
+        []() { return ::gr::paths::userconf().string(); },
+        D(userconf_path));
 }
