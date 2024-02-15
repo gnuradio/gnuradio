@@ -1,6 +1,7 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2006,2013,2015 Free Software Foundation, Inc.
+ * Copyright 2024 mboersch, Marcus Müller
  *
  * This file is part of GNU Radio
  *
@@ -65,7 +66,8 @@ std::vector<std::string> prefs::_sys_prefs_filenames()
     // Find if there is a ~/.gnuradio/config.conf file and add this to
     // the end of the file list to override any preferences in the
     // installed path config files.
-    fs::path userconf = fs::path(gr::userconf_path()) / "config.conf";
+    auto userconf =
+        gr::paths::userconf() / "config.conf"; // TODO move filename to constants
     if (fs::exists(userconf)) {
         fnames.push_back(userconf.string());
     }
@@ -141,7 +143,8 @@ void prefs::save()
     const std::string conf = to_string();
 
     // Write temp file.
-    const fs::path tmp = fs::path(gr::userconf_path()) / "config.conf.tmp";
+    const auto tmp =
+        gr::paths::userconf() / "config.conf.tmp"; // TODO move filename to constants
     std::ofstream fout(tmp);
     fout << conf;
     fout.close();
@@ -158,7 +161,7 @@ void prefs::save()
     }
 
     // Atomic rename.
-    const fs::path userconf = fs::path(gr::userconf_path()) / "config.conf";
+    const fs::path userconf = gr::paths::userconf() / "config.conf";
     fs::rename(tmp, userconf);
     // If fs::rename() fails, we'll leak the tempfile and throw. That's fine.
     // If the user wants it (it was written successfully) they can have it.

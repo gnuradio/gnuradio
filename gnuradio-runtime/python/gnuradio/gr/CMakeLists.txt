@@ -31,7 +31,7 @@ if(ENABLE_TESTING)
     include(GrTest)
     file(GLOB py_qa_test_files "qa_*.py")
     set(py_qa_test_files qa_flowgraph.py qa_prefs.py qa_python_logging.py qa_random.py
-                         qa_tag_utils.py)
+                         qa_sys_paths.py qa_tag_utils.py)
     # This is a check for whether gr-blocks is enabled
     if(ENABLE_DEFAULT OR ENABLE_GR_BLOCKS)
         list(APPEND py_qa_test_files qa_hier_block2.py qa_uncaught_exception.py)
