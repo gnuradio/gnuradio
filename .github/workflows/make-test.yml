@@ -75,14 +75,19 @@ jobs:
             containerid: 'gnuradio/ci:ubuntu-22.04-3.9'
             cxxflags: -Werror
             ctest_args: '-E "qa_polar_..coder_(sc_)?systematic"'
-          - distro: 'Fedora 37'
             # ldpath:
-            containerid: 'gnuradio/ci:fedora-37-3.9'
+          - distro: 'Fedora 38'
+            containerid: 'gnuradio/ci:fedora-38-3.10'
             cxxflags: -Werror
             ctest_args: '-E ""'
             ldpath: /usr/local/lib64/
-          - distro: 'Fedora 38 (clang)'
-            containerid: 'gnuradio/ci:fedora-38-3.10'
+          - distro: 'Fedora 39 (with 0xFE memory initialization, GLIBCXX_ASSERTIONS)'
+            containerid: 'gnuradio/ci:fedora-39-3.10'
+            cxxflags: -Werror -ftrivial-auto-var-init=pattern -Wp,-D_GLIBCXX_ASSERTIONS
+            ctest_args: '-E ""'
+            ldpath: /usr/local/lib64/
+          - distro: 'Fedora 40 (clang)'
+            containerid: 'gnuradio/ci:fedora-40-3.10'
             cxxflags: -Werror
             cmakeflags: -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_C_COMPILER=clang
             ctest_args: '-E ""'
