@@ -30,7 +30,7 @@ log = logging.getLogger(f"grc.application.{__name__}")
 
 
 class WikiTab(QtWidgets.QDockWidget, base.Component):
-    def __init__(self):
+    def __init__(self, argv_enabled=False):
         super(WikiTab, self).__init__()
 
         self.qsettings = self.app.qsettings
@@ -39,7 +39,17 @@ class WikiTab(QtWidgets.QDockWidget, base.Component):
         self.setWindowTitle('Wiki')
 
         self.setFloating(False)
-        if self.qsettings.value("appearance/display_wiki", True, type=bool) == True:
+
+        active = None
+        if argv_enabled:
+            active = True
+        else:
+            if self.qsettings.value("appearance/display_wiki", False, type=bool) == True:
+                active = True
+            else:
+                active = False
+
+        if active:
             try:
                 from qtpy.QtWebEngineWidgets import QWebEngineView
                 self.hidden = False

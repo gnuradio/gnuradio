@@ -105,7 +105,7 @@ categories:
       - key: display_wiki
         name: Display Wiki tab
         dtype: bool
-        default: True
+        default: False
 
 # Window settings, these are not meant to be changed by the user.
 # TODO: Is it necessary to have these in here?

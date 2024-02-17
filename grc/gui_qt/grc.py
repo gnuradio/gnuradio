@@ -86,9 +86,8 @@ class Application(QtWidgets.QApplication):
         stopwatch.lap("blocklibrary")
         # self.DocumentationTab = components.DocumentationTab()
         # stopwatch.lap('documentationtab')
-        if not "--nowiki" in settings.argv:
-            self.WikiTab = components.WikiTab()
-            stopwatch.lap("wikitab")
+        self.WikiTab = components.WikiTab("--wiki" in settings.argv)
+        stopwatch.lap("wikitab")
         self.VariableEditor = components.VariableEditor()
         stopwatch.lap("variable_editor")
         self.VariableEditor.set_scene(self.MainWindow.currentFlowgraphScene)
