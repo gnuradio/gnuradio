@@ -44,10 +44,6 @@ cpp_templates:
     declarations: 'audio::sink::sptr ${id};'
     make: 'this->${id} = audio::sink::make(${samp_rate}, ${device_name}, ${ok_to_block});'
     link: ['gnuradio::gnuradio-audio']
-    translations:
-        "'": '"'
-        'True': 'true'
-        'False': 'false'
 
 documentation: |-
     Not all sampling rates will be supported by your hardware.

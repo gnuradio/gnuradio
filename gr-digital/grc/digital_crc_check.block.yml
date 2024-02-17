@@ -73,8 +73,5 @@ cpp_templates:
             ${input_reflected}, ${result_reflected}, ${swap_endianness},
             ${discard_crc}, ${skip_header_bytes});
     link: ['gnuradio-digital']
-    translations:
-        'True': 'true'
-        'False': 'false'
 
 file_format: 1

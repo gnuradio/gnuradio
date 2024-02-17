@@ -70,8 +70,9 @@ async_decoder_impl::async_decoder_impl(generic_decoder::sptr my_decoder,
 
 async_decoder_impl::~async_decoder_impl() {}
 
-// TODO: replace this function by volk_32f_s32f_x2_convert_8u when it gets into
-// a stable volk release
+// The volk_32f_s32f_x2_convert_8u kernel is only available since Volk 3.1.
+// In earlier versions we use this ad-hoc function.
+#if !(VOLK_VERSION >= 030100)
 inline void async_decoder_impl::convert_32f_to_8u(uint8_t* output_vector,
                                                   const float* input_vector,
                                                   const float scale,
@@ -88,6 +89,7 @@ inline void async_decoder_impl::convert_32f_to_8u(uint8_t* output_vector,
         output_vector[n] = std::clamp<float>(d_tmp_f32[n], 0.0f, UINT8_MAX);
     }
 }
+#endif
 
 void async_decoder_impl::decode(const pmt::pmt_t& msg)
 {
@@ -134,7 +136,11 @@ void async_decoder_impl::decode(const pmt::pmt_t& msg)
     const float shift = d_decoder->get_shift();
 
     if (std::string_view(d_decoder->get_input_conversion()) == "uchar") {
+#if VOLK_VERSION >= 030100
+        volk_32f_s32f_x2_convert_8u(d_tmp_u8.data(), f32in, 48.0f, shift, nbits_in);
+#else
         convert_32f_to_8u(d_tmp_u8.data(), f32in, 48.0f, shift, nbits_in);
+#endif
 
         for (size_t i = 0; i < nblocks; i++) {
             d_decoder->generic_work(

@@ -69,8 +69,6 @@ cpp_templates:
     callbacks:
     - set_nthreads(${nthreads})
     translations:
-        'True': 'true'
-        'False': 'false'
         'window\.': 'fft::window::'
 
 file_format: 1

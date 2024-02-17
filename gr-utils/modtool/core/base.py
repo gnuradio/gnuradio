@@ -22,21 +22,35 @@ from ..tools import get_modname, SCMRepoFactory
 logger = logging.getLogger('gnuradio.modtool')
 
 
-def get_block_candidates():
+def get_block_candidates(modname: str = None,
+                         skip_lib: bool = False, skip_include: bool = False,
+                         skip_python: bool = False, skip_grc: bool = False):
     """ Returns a list of all possible blocknames """
     block_candidates = []
-    cpp_filters = ["*.cc", "*.cpp"]
-    cpp_blocks = []
-    for ftr in cpp_filters:
-        cpp_blocks += [x for x in glob.glob1("lib", ftr) if not (x.startswith('qa_') or
-                       x.startswith('test_'))]
-    python_blocks = [x for x in glob.glob1("python", "*.py") if not (x.startswith('qa_') or
-                     x.startswith('build') or x.startswith('__init__'))]
-    for block in itertools.chain(cpp_blocks, python_blocks):
-        block = os.path.splitext(block)[0]
-        block = block.split('_impl')[0]
-        block_candidates.append(block)
-    return block_candidates
+    if not skip_lib:
+        cpp_filters = ["*.cc", "*.cpp"]
+        for ftr in cpp_filters:
+            block_candidates.append(os.path.splitext(x)[0].split("_impl")[0]
+                                    for x in glob.glob1("lib", ftr)
+                                    if not (x.startswith("qa_") or x.startswith("test_")))
+    if not skip_include:
+        cpp_header_glob = (glob.glob("include/gnuradio/*/*.h") if modname is None
+                           else glob.glob1(f"include/gnuradio/{modname}", "*.h"))
+        block_candidates.append(os.path.splitext(os.path.split(x)[-1])[0]
+                                for x in cpp_header_glob
+                                if x != "api.h")
+    if not skip_python:
+        python_glob = (glob.glob("python/*/*.py") if modname is None
+                       else glob.glob1(f"python/{modname}", "*.py"))
+        block_candidates.append(os.path.splitext(os.path.split(x)[-1])[0]
+                                for x in python_glob
+                                if not (x.startswith("qa_") or
+                                        x.startswith("build") or
+                                        x == "__init__.py"))
+    if not (skip_grc or modname is None):
+        block_candidates.append(x.split(".block.yml")[0].split(f"{modname}_")[-1]
+                                for x in glob.glob1("grc", "*.block.yml"))
+    return set(itertools.chain(*block_candidates))
 
 
 class ModToolException(Exception):

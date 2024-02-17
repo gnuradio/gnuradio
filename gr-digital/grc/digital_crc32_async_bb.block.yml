@@ -30,8 +30,5 @@ cpp_templates:
         this->${id} = digital::crc32_async_bb::make(
             ${check});
     link: ['gnuradio::gnuradio-digital']
-    translations:
-        'True': 'true'
-        'False': 'false'
 
 file_format: 1

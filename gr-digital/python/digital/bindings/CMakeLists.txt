@@ -11,7 +11,7 @@ list(
     adaptive_algorithm_cma_python.cc
     adaptive_algorithm_lms_python.cc
     adaptive_algorithm_nlms_python.cc
-    additive_scrambler_bb_python.cc
+    additive_scrambler_python.cc
     binary_slicer_fb_python.cc
     burst_shaper_python.cc
     chunks_to_symbols_python.cc

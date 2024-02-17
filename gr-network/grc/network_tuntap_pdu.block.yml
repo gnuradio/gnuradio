@@ -37,8 +37,5 @@ cpp_templates:
     includes: ['#include <gnuradio/network/tuntap_pdu.h>']
     declarations: 'network::tuntap_pdu::sptr ${id};'
     make: 'this->${id} = network::tuntap_pdu::make(${ifn}, ${mtu}, ${istunflag});'
-    translations:
-        'True': 'true'
-        'False': 'false'
 
 file_format: 1

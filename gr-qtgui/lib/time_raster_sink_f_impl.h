@@ -44,7 +44,7 @@ private:
     int d_argc = 1;
     char* d_argv = &d_zero;
     QWidget* d_parent;
-    TimeRasterDisplayForm* d_main_gui = nullptr;
+    QPointer<TimeRasterDisplayForm> d_main_gui;
 
     std::vector<float> d_mult;
     std::vector<float> d_offset;

@@ -19,7 +19,7 @@ void bind_adaptive_algorithm(py::module&);
 void bind_adaptive_algorithm_cma(py::module&);
 void bind_adaptive_algorithm_lms(py::module&);
 void bind_adaptive_algorithm_nlms(py::module&);
-void bind_additive_scrambler_bb(py::module&);
+void bind_additive_scrambler(py::module&);
 void bind_binary_slicer_fb(py::module&);
 void bind_burst_shaper(py::module&);
 void bind_chunks_to_symbols(py::module&);
@@ -125,7 +125,7 @@ PYBIND11_MODULE(digital_python, m)
     bind_adaptive_algorithm_cma(m);
     bind_adaptive_algorithm_lms(m);
     bind_adaptive_algorithm_nlms(m);
-    bind_additive_scrambler_bb(m);
+    bind_additive_scrambler(m);
     bind_binary_slicer_fb(m);
     bind_burst_shaper(m);
     bind_chunks_to_symbols(m);

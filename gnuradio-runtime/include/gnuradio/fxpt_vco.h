@@ -33,7 +33,10 @@ public:
     // radians
     void set_phase(float angle) { d_phase = fxpt::float_to_fixed(angle); }
 
-    void adjust_phase(float delta_phase) { d_phase += fxpt::float_to_fixed(delta_phase); }
+    void adjust_phase(float delta_phase)
+    {
+        d_phase += (uint32_t)fxpt::float_to_fixed(delta_phase);
+    }
 
     float get_phase() const { return fxpt::fixed_to_float(d_phase); }
 

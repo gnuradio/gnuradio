@@ -51,8 +51,7 @@ pfb_clock_sync_ccf_impl::pfb_clock_sync_ccf_impl(double sps,
       d_nfilters(filter_size),
       d_max_dev(max_rate_deviation),
       d_osps(osps),
-      d_error(0),
-      d_out_idx(0)
+      d_error(0)
 {
     if (taps.empty())
         throw std::runtime_error("pfb_clock_sync_ccf: please specify a filter.");
@@ -369,8 +368,7 @@ int pfb_clock_sync_ccf_impl::general_work(int noutput_items,
             }
         }
 
-        while (d_out_idx < d_osps) {
-
+        for (int out_idx = 0; out_idx < d_osps; out_idx++) {
             d_filtnum = (int)floor(d_k);
 
             // Keep the current filter number in [0, d_nfilters]
@@ -387,13 +385,13 @@ int pfb_clock_sync_ccf_impl::general_work(int noutput_items,
                 count -= 1;
             }
 
-            out[i + d_out_idx] = d_filters[d_filtnum].filter(&in[count + d_out_idx]);
+            out[i + out_idx] = d_filters[d_filtnum].filter(&in[count + out_idx]);
             d_k = d_k + d_rate_i + d_rate_f; // update phase
 
 
             // Manage Tags
             std::vector<tag_t> xtags;
-            d_new_in = nitems_read(0) + count + d_out_idx + d_sps;
+            d_new_in = nitems_read(0) + count + out_idx + d_sps;
             get_tags_in_range(xtags, 0, d_old_in, d_new_in);
             for (const auto& tag : xtags) {
                 tag_t new_tag = tag;
@@ -402,26 +400,14 @@ int pfb_clock_sync_ccf_impl::general_work(int noutput_items,
                 add_item_tag(0, new_tag);
             }
             d_old_in = d_new_in;
-            d_last_out = nitems_written(0) + i + d_out_idx;
-
-            d_out_idx++;
+            d_last_out = nitems_written(0) + i + out_idx;
 
             if (output_items.size() == 4) {
                 err[i] = d_error;
                 outrate[i] = d_rate_f;
                 outk[i] = d_k;
             }
-
-            // We've run out of output items we can create; return now.
-            if (i + d_out_idx >= noutput_items) {
-                consume_each(count);
-                return i;
-            }
         }
-
-        // reset here; if we didn't complete a full osps samples last time,
-        // the early return would take care of it.
-        d_out_idx = 0;
 
         // Update the phase and rate estimates for this symbol
         gr_complex diff = d_diff_filters[d_filtnum].filter(&in[count]);

@@ -55,8 +55,5 @@ cpp_templates:
         this->${id}.set_single_key(${single_key});
     callbacks:
     - self.${id}.set_single_key(${single_key})
-    translations:
-        'True': 'true'
-        'False': 'false'
 
 file_format: 1

@@ -52,11 +52,8 @@ templates:
 cpp_templates:
     includes: ['#include <gnuradio/blocks/file_sink.h>']
     declarations: 'blocks::file_sink::sptr ${id};'
-    make: 'this->${id} = blocks::file_sink::make(${type.size}*${vlen}, "${no_quotes(file)}", ${append});'
+    make: 'this->${id} = blocks::file_sink::make(${type.size}*${vlen}, ${file}, ${append});'
     callbacks:
     - open(${file})
-    translations:
-        'True': 'true'
-        'False': 'false'
 
 file_format: 1

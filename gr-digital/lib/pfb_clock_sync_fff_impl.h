@@ -44,7 +44,6 @@ private:
     int d_filtnum;
     int d_osps;
     float d_error;
-    int d_out_idx;
 
     void create_diff_taps(const std::vector<float>& newtaps,
                           std::vector<float>& difftaps);

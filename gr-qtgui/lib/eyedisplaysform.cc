@@ -15,7 +15,6 @@
 EyeDisplaysForm::EyeDisplaysForm(int nplots, QWidget* parent)
     : QWidget(parent), d_nplots(nplots), d_system_specified_flag(false)
 {
-    d_isclosed = false;
     d_axislabels = true;
 
     // Set the initial plot size
@@ -139,8 +138,6 @@ EyeDisplaysForm::EyeDisplaysForm(int nplots, QWidget* parent)
 
 EyeDisplaysForm::~EyeDisplaysForm()
 {
-    d_isclosed = true;
-
     // Qt deletes children when parent is deleted
     // Don't worry about deleting Display Plots - they are deleted when parents are
     // deleted
@@ -177,13 +174,10 @@ void EyeDisplaysForm::onPlotPointSelected(const QPointF p)
 
 void EyeDisplaysForm::Reset() {}
 
-bool EyeDisplaysForm::isClosed() const { return d_isclosed; }
-
 void EyeDisplaysForm::enableMenu(bool en) { d_menu_on = en; }
 
 void EyeDisplaysForm::closeEvent(QCloseEvent* e)
 {
-    d_isclosed = true;
     qApp->processEvents();
     QWidget::closeEvent(e);
 }

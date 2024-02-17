@@ -100,25 +100,23 @@ class extended_decoder(gr.hier_block2):
         message_collector_connected = False
 
         # anything going through the annihilator needs shifted, uchar vals
-        if (
+        needs_float_to_uchar = (
             fec.get_decoder_input_conversion(decoder_obj_list[0]) == "uchar" or
             fec.get_decoder_input_conversion(
                 decoder_obj_list[0]) == "packed_bits"
-        ):
-            self.blocks.append(blocks.multiply_const_ff(48.0))
+        )
 
+        bias = 0.0
         if fec.get_shift(decoder_obj_list[0]) != 0.0:
-            self.blocks.append(blocks.add_const_ff(
-                fec.get_shift(decoder_obj_list[0])))
+            bias = fec.get_shift(decoder_obj_list[0])
         elif fec.get_decoder_input_conversion(decoder_obj_list[0]) == "packed_bits":
-            self.blocks.append(blocks.add_const_ff(128.0))
+            bias = 128.0
 
-        if (
-            fec.get_decoder_input_conversion(decoder_obj_list[0]) == "uchar" or
-            fec.get_decoder_input_conversion(
-                decoder_obj_list[0]) == "packed_bits"
-        ):
-            self.blocks.append(blocks.float_to_uchar())
+        if bias != 0.0 and not needs_float_to_uchar:
+            self.blocks.append(blocks.add_const_ff(bias))
+
+        if needs_float_to_uchar:
+            self.blocks.append(blocks.float_to_uchar(scale=48.0, bias=bias))
 
         const_index = 0  # index that corresponds to mod order for specinvert purposes
 

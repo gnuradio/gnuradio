@@ -84,8 +84,6 @@ int peak_detector2_fb_impl::work(int noutput_items,
     if (d_found == false) {
         for (int i = 0; i < noutput_items; i++) {
             d_avg = d_alpha * iptr[i] + (1.0f - d_alpha) * d_avg;
-            if (output_items.size() == 2)
-                sigout[i] = d_avg;
             if (iptr[i] > d_avg * (1.0f + d_threshold_factor_rise)) {
                 d_found = true;
                 set_output_multiple(d_look_ahead);
@@ -100,6 +98,8 @@ int peak_detector2_fb_impl::work(int noutput_items,
                  */
                 return i;
             }
+            if (output_items.size() == 2)
+                sigout[i] = d_avg;
         }
         return noutput_items;
     } // end d_found==false
@@ -108,6 +108,8 @@ int peak_detector2_fb_impl::work(int noutput_items,
     else if (noutput_items >= d_look_ahead) {
         float peak_val = iptr[0];
         int peak_ind = 0;
+        if (output_items.size() == 2)
+            sigout[0] = d_avg;
         /*
          * Loop starts at the second sample because the first one has already been
          * filtered (see above). Result of the maximum search is correct due
