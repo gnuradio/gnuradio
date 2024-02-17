@@ -19,7 +19,7 @@ from ._templates import MakoTemplates, no_quotes
 from ._flags import Flags
 
 from ..base import Element
-from ..utils import attributed_str
+from ..params import Param
 from ..utils.descriptors import lazy_property
 
 
@@ -67,8 +67,10 @@ class Block(Element):
         if self.key == 'options':
             self.params['id'].hide = 'part'
 
-        self.sinks = [port_factory(parent=self, **params) for params in self.inputs_data]
-        self.sources = [port_factory(parent=self, **params) for params in self.outputs_data]
+        self.sinks = [port_factory(parent=self, **params)
+                      for params in self.inputs_data]
+        self.sources = [port_factory(parent=self, **params)
+                        for params in self.outputs_data]
 
         self.active_sources = []  # on rewrite
         self.active_sinks = []  # on rewrite

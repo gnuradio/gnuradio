@@ -12,11 +12,12 @@ from typing import Union, List
 
 from .. import Constants
 from ..base import Element
-from ..utils import attributed_str
 from ..utils.descriptors import Evaluated, EvaluatedEnum, setup_names
 
 from . import dtypes
 from .template_arg import TemplateArg
+
+attributed_str = type('attributed_str', (str,), {})
 
 
 @setup_names
