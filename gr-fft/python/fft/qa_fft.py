@@ -133,7 +133,7 @@ class test_fft(gr_unittest.TestCase):
         self.assertComplexTuplesAlmostEqual2(expected_result, result_data,
                                              abs_eps=1e-9, rel_eps=4e-4)
 
-    def test_forward(self):
+    def test_101_forward(self):
         src_data = tuple([complex(primes[2 * i], primes[2 * i + 1])
                           for i in range(self.fft_size)])
         expected_result = primes_transformed
@@ -148,7 +148,7 @@ class test_fft(gr_unittest.TestCase):
         result_data = dst.data()
         self.assert_fft_ok2(expected_result, result_data)
 
-    def test_reverse(self):
+    def test_102_reverse(self):
         src_data = tuple([x / self.fft_size for x in primes_transformed])
         expected_result = tuple(
             [complex(primes[2 * i], primes[2 * i + 1]) for i in range(self.fft_size)])
@@ -163,7 +163,7 @@ class test_fft(gr_unittest.TestCase):
         result_data = dst.data()
         self.assert_fft_ok2(expected_result, result_data)
 
-    def test_multithreaded(self):
+    def test_201_multithreaded(self):
         # Same test as above, only use 2 threads
         src_data = tuple([x / self.fft_size for x in primes_transformed])
         expected_result = tuple(
@@ -180,7 +180,7 @@ class test_fft(gr_unittest.TestCase):
         result_data = dst.data()
         self.assert_fft_ok2(expected_result, result_data)
 
-    def test_window(self):
+    def test_301_window(self):
         src_data = tuple([complex(primes[2 * i], primes[2 * i + 1])
                           for i in range(self.fft_size)])
         expected_result = ((2238.9174 + 2310.4750j),
@@ -227,7 +227,7 @@ class test_fft(gr_unittest.TestCase):
         result_data = dst.data()
         self.assert_fft_ok2(expected_result, result_data)
 
-    def test_reverse_window_shift(self):
+    def test_302_reverse_window_shift(self):
         src_data = tuple([x / self.fft_size for x in primes_transformed])
         expected_result = ((-74.8629 - 63.2502j),
                            (-3.5446 - 2.0365j),
@@ -272,6 +272,20 @@ class test_fft(gr_unittest.TestCase):
         self.tb.run()
         result_data = dst.data()
         self.assert_fft_ok2(expected_result, result_data)
+
+    def _set_length_and_test(self, fftlength: int, windowlength: int) -> bool:
+        win = [1.0] * windowlength
+        for shift in (True, False):
+            fft_block = fft.fft_vcc(fftlength, forward=True, window=[], shift=shift)
+            return fft_block.set_window(win)
+
+    def test_303_test_window_setter(self):
+        """
+        Test whether the window setter correctly returns False for lengths != FFT length.
+        """
+        for fftlength in [1, 2, 3] + [2**i for i in range(2, 10)] + list(primes):
+            self.assertTrue(self._set_length_and_test(fftlength, fftlength))
+            self.assertFalse(self._set_length_and_test(fftlength, fftlength + 2))
 
 
 if __name__ == '__main__':
