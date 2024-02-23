@@ -10,7 +10,7 @@ import subprocess
 
 from gi.repository import Gdk, Gtk
 
-from . import Constants, Dialogs, Utils
+from . import Actions, Constants, Dialogs, Utils
 from .canvas.colors import DARK_THEME_STYLES, LIGHT_THEME_STYLES
 
 
@@ -103,6 +103,9 @@ class InputParam(Gtk.HBox):
 
         self.connect('show', self._update_gui)
 
+    def set_color(self, css_name):
+        pass
+
     def set_tooltip_text(self, text):
         pass
 
@@ -115,6 +118,8 @@ class InputParam(Gtk.HBox):
         """
         self.label.set_markup(
             self.param.format_label_markup(self._have_pending_changes))
+        if Actions.TOGGLE_SHOW_FIELD_COLORS.get_active():
+            self.set_color('dtype_' + self.param.dtype)
         if self.dtype_label is not None:
             self.dtype_label.set_markup(self.param.format_dtype_markup())
 
@@ -176,6 +181,9 @@ class EntryParam(InputParam):
     def get_text(self):
         return self._input.get_text()
 
+    def set_color(self, css_name):
+        self._input.set_name(css_name)
+
     def set_tooltip_text(self, text):
         self._input.set_tooltip_text(text)
 
@@ -208,6 +216,9 @@ class MultiLineEntryParam(InputParam):
         text = buf.get_text(buf.get_start_iter(), buf.get_end_iter(),
                             include_hidden_chars=False)
         return text.strip()
+
+    def set_color(self, css_name):
+        self._view.set_name(css_name)
 
     def set_tooltip_text(self, text):
         self._view.set_tooltip_text(text)
@@ -301,6 +312,11 @@ class EnumEntryParam(InputParam):
             self._input.get_child().set_tooltip_text(text)
         else:
             self._input.set_tooltip_text(text)
+
+    def set_color(self, css_name):
+        self._input.get_child().set_name(
+            css_name if not self.has_custom_value else 'enum_custom'
+        )
 
 
 class FileParam(EntryParam):
