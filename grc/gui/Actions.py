@@ -491,6 +491,13 @@ TOGGLE_SHOW_BLOCK_IDS = actions.register(
     preference_name='show_block_ids',
     default=False,
 )
+TOGGLE_SHOW_FIELD_COLORS = actions.register(
+    "win.show_field_colors",
+    label='Show properties fields colors',
+    tooltip='Use colors to indicate the type of each field in the block properties',
+    preference_name='show_field_colors',
+    default=False,
+)
 TOGGLE_FLOW_GRAPH_VAR_EDITOR = actions.register(
     "win.toggle_variable_editor",
     label='Show _Variable Editor',
