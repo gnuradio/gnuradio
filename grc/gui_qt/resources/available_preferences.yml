@@ -10,6 +10,11 @@ categories:
         tooltip: Choose the editor
         dtype: str
         default: /usr/bin/gedit
+      - key: xterm_executable
+        name: Terminal
+        tooltip: Choose the Terminal app
+        dtype: str
+        default: /usr/bin/xterm
       - key: hide_variables
         name: Hide variables
         dtype: bool

@@ -1314,7 +1314,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         if self.currentView.process_is_done():
             self.generate_triggered()
             if self.currentView.generator:
-                xterm = self.platform.config.xterm_executable
+                xterm = self.app.qsettings.value("grc/xterm_executable","")
                 '''if self.config.xterm_missing() != xterm:
                     if not os.path.exists(xterm):
                         Dialogs.show_missing_xterm(main, xterm)
