@@ -188,7 +188,7 @@ class BlockHeaderParser(BlockTool):
             if make_func:
                 for arg in make_func[0].arguments:
                     make_arguments = None
-                    '''
+                    r'''
                     for _arg in _make_fun:
                         if str(arg.name) in _arg:
                             make_arguments = {
