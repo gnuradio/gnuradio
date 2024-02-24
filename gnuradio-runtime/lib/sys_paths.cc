@@ -13,44 +13,42 @@
 
 namespace gr {
 
-const char* tmp_path()
+std::filesystem::path tmp_path()
 {
     const char* path;
 
     // first case, try TMP environment variable
     path = getenv("TMP");
     if (path)
-        return path;
+        return { path };
 
 // second case, try P_tmpdir when its defined
 #ifdef P_tmpdir
     if (P_tmpdir)
-        return P_tmpdir;
+        return { P_tmpdir };
 #endif /*P_tmpdir*/
 
     // fall-through case, nothing worked
-    return "/tmp";
+    return { "/tmp" };
 }
 
-const char* appdata_path()
+std::filesystem::path appdata_path()
 {
-    const char* path;
-
     // first case, try HOME environment variable (unix)
-    path = getenv("HOME");
+    auto path = getenv("HOME");
     if (path)
-        return path;
+        return { path };
 
     // second case, try APPDATA environment variable (windows)
     path = getenv("APPDATA");
     if (path)
-        return path;
+        return { path };
 
     // fall-through case, nothing worked
     return tmp_path();
 }
 
-std::string __userconf_path()
+std::filesystem::path userconf_path()
 {
     const char* path;
 
@@ -58,19 +56,21 @@ std::string __userconf_path()
     path = getenv("GR_PREFS_PATH");
     std::filesystem::path p;
     if (path) {
-        p = path;
-    } else {
-        p = appdata_path();
-        p = p / ".gnuradio";
+        return { path };
     }
 
-    return p.string();
-}
+    // Second, adhere to the XDG spec instead of ~/.gnuradio
+    path = getenv("XDG_CONFIG_HOME");
+    if (path) {
+        p = path;
+    } else {
+        // we should default to $HOME/.config, for portability we use the
+        // appdata_path
+        p = appdata_path() / ".config";
+    }
+    p = p / "gnuradio";
 
-const char* userconf_path()
-{
-    static std::string p(__userconf_path());
-    return p.c_str();
+    return p;
 }
 
 } /* namespace gr */
