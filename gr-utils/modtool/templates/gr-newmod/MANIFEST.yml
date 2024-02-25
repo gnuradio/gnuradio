@@ -1,0 +1,20 @@
+title: The HOWTO OOT Module
+version: 1.0
+brief: Short description of gr-howto
+tags: # Tags are arbitrary, but look at CGRAN what other authors are using
+  - sdr
+author:
+  - Author Name <authors@email.address>
+copyright_owner:
+  - Copyright Owner 1
+license:
+gr_supported_version:
+  - 3.X
+repo: # Put the URL of the repository here
+website: # If you have a separate project website, put it here
+#icon: # Put a URL to a square image here that will be used as an icon
+description: |-
+  A longer, multi-line description of gr-howto.
+  You may use some *basic* Markdown here.
+  If left empty, it will try to find a README file instead.
+file_format: 1
