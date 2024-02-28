@@ -57,7 +57,7 @@ public:
      *
      * \param d_npwr sets expected noise power.
      */
-    virtual void set_npwr(float d_npwr) = 0;
+    virtual void set_npwr(float npwr) = 0;
     /*!
      * Set a new constellation object for decoding
      *
