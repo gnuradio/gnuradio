@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Free Software Foundation, Inc.
+ * Copyright 2024 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -14,17 +14,17 @@
   and will be overwritten during the build process
  */
 
-
 static const char* __doc_gr_digital_constellation_soft_decoder_cf = R"doc()doc";
 
-
 static const char*
-    __doc_gr_digital_constellation_soft_decoder_cf_constellation_soft_decoder_cf =
+    __doc_gr_digital_constellation_soft_decoder_cf_constellation_soft_decoder_cf_0 =
         R"doc()doc";
 
+static const char*
+    __doc_gr_digital_constellation_soft_decoder_cf_constellation_soft_decoder_cf_1 =
+        R"doc()doc";
 
 static const char* __doc_gr_digital_constellation_soft_decoder_cf_make = R"doc()doc";
-
 
 static const char* __doc_gr_digital_constellation_soft_decoder_cf_set_npwr = R"doc()doc";
 

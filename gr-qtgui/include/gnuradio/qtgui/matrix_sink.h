@@ -49,15 +49,6 @@ public:
      * \param contour Whether or not to display the matrix as a contour plot.
      * \param color_map The color map to use for the contour plot.
      * \param interpolation The interpolation method to use for the contour plot.
-     * \param x_start The starting value of the x axis.
-     * \param x_end The ending value of the x axis.
-     * \param y_start The starting value of the y axis.
-     * \param y_end The ending value of the y axis.
-     * \param z_max The maximum value of the z axis.
-     * \param z_min The minimum value of the z axis.
-     * \param x_axis_label The label for the x axis.
-     * \param y_axis_label The label for the y axis.
-     * \param z_axis_label The label for the z axis.
      * \param parent The parent QWidget.
      */
     static sptr make(const std::string& name,

@@ -644,7 +644,7 @@ PMT_API pmt_t make_dict();
  * The constraint for this to work is the ability for the map_t to iterate over [key,
  * value] pairs, that is, to be able to be used in a
  *
- * <pre>for(const auto& [key, val] : prototype)<pre>
+ * <pre>for(const auto& [key, val] : prototype)</pre>
  *
  * loop.
  */

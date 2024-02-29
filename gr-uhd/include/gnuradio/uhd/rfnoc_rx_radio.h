@@ -177,9 +177,10 @@ public:
      *   to directly issue a start stream command through the C++ or Python API.
      * - Stream commands are submitted on a per-channel basis, not for all
      *   channels. However, unlike UHD's radio control, it will honor the ALL_CHANS
-     *   value for \p \chan.
+     *   value for \p chan.
      *
      * \param cmd the stream command to issue to all source channels
+     * \param chan The channel for which this setting is for
      */
     virtual void issue_stream_cmd(const ::uhd::stream_cmd_t& cmd, const size_t chan) = 0;
 
