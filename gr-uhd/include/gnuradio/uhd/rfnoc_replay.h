@@ -151,7 +151,7 @@ public:
      * STREAM_MODE_STOP_CONTINUOUS command will halt all playback and purge all commands
      * in the queue for a given output port.
      *
-     * \param stream_cmd The command to execute
+     * \param cmd The command to execute
      * \param port Which output port of the replay block to use
      * \throws uhd::op_failed Too many commands are queued.
      */
