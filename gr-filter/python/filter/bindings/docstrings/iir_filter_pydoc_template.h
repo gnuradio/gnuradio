@@ -18,12 +18,6 @@
 static const char* __doc_gr_filter_kernel_iir_filter<std::complex<float>,
                                                      std::complex<float>,
                                                      float,
-                                                     std::complex<float>> = R"doc()doc";
-
-
-static const char* __doc_gr_filter_kernel_iir_filter<std::complex<float>,
-                                                     std::complex<float>,
-                                                     float,
                                                      std::complex<float>>
     _filter = R"doc()doc";
 
@@ -59,12 +53,6 @@ static const char* __doc_gr_filter_kernel_iir_filter<std::complex<float>,
 static const char* __doc_gr_filter_kernel_iir_filter<std::complex<float>,
                                                      std::complex<float>,
                                                      double,
-                                                     std::complex<double>> = R"doc()doc";
-
-
-static const char* __doc_gr_filter_kernel_iir_filter<std::complex<float>,
-                                                     std::complex<float>,
-                                                     double,
                                                      std::complex<double>>
     _filter = R"doc()doc";
 
@@ -95,12 +83,6 @@ static const char* __doc_gr_filter_kernel_iir_filter<std::complex<float>,
                                                      double,
                                                      std::complex<double>>
     _set_taps = R"doc()doc";
-
-
-static const char* __doc_gr_filter_kernel_iir_filter<std::complex<float>,
-                                                     std::complex<float>,
-                                                     std::complex<double>,
-                                                     std::complex<double>> = R"doc()doc";
 
 
 static const char* __doc_gr_filter_kernel_iir_filter<std::complex<float>,

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Free Software Foundation, Inc.
+ * Copyright 2024 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -14,68 +14,46 @@
   and will be overwritten during the build process
  */
 
-
 static const char* __doc_gr_uhd_rfnoc_rx_radio = R"doc()doc";
-
 
 static const char* __doc_gr_uhd_rfnoc_rx_radio_rfnoc_rx_radio_0 = R"doc()doc";
 
-
 static const char* __doc_gr_uhd_rfnoc_rx_radio_rfnoc_rx_radio_1 = R"doc()doc";
-
 
 static const char* __doc_gr_uhd_rfnoc_rx_radio_make = R"doc()doc";
 
-
 static const char* __doc_gr_uhd_rfnoc_rx_radio_set_rate = R"doc()doc";
-
 
 static const char* __doc_gr_uhd_rfnoc_rx_radio_set_antenna = R"doc()doc";
 
-
 static const char* __doc_gr_uhd_rfnoc_rx_radio_set_frequency = R"doc()doc";
-
 
 static const char* __doc_gr_uhd_rfnoc_rx_radio_set_tune_args = R"doc()doc";
 
-
 static const char* __doc_gr_uhd_rfnoc_rx_radio_set_gain_0 = R"doc()doc";
-
 
 static const char* __doc_gr_uhd_rfnoc_rx_radio_set_gain_1 = R"doc()doc";
 
-
 static const char* __doc_gr_uhd_rfnoc_rx_radio_set_agc = R"doc()doc";
-
 
 static const char* __doc_gr_uhd_rfnoc_rx_radio_set_gain_profile = R"doc()doc";
 
-
 static const char* __doc_gr_uhd_rfnoc_rx_radio_set_bandwidth = R"doc()doc";
-
 
 static const char* __doc_gr_uhd_rfnoc_rx_radio_set_lo_source = R"doc()doc";
 
-
 static const char* __doc_gr_uhd_rfnoc_rx_radio_set_lo_export_enabled = R"doc()doc";
-
 
 static const char* __doc_gr_uhd_rfnoc_rx_radio_set_lo_freq = R"doc()doc";
 
-
 static const char* __doc_gr_uhd_rfnoc_rx_radio_set_dc_offset_0 = R"doc()doc";
-
 
 static const char* __doc_gr_uhd_rfnoc_rx_radio_set_dc_offset_1 = R"doc()doc";
 
-
 static const char* __doc_gr_uhd_rfnoc_rx_radio_set_iq_balance_0 = R"doc()doc";
-
 
 static const char* __doc_gr_uhd_rfnoc_rx_radio_set_iq_balance_1 = R"doc()doc";
 
-
 static const char* __doc_gr_uhd_rfnoc_rx_radio_issue_stream_cmd = R"doc()doc";
-
 
 static const char* __doc_gr_uhd_rfnoc_rx_radio_enable_rx_timestamps = R"doc()doc";
