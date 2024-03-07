@@ -55,7 +55,7 @@ public:
     /*!
      * set constellation noise power for soft decision calculation
      *
-     * \param d_npwr sets expected noise power.
+     * \param npwr sets expected noise power.
      */
     virtual void set_npwr(float npwr) = 0;
     /*!

@@ -35,7 +35,7 @@ namespace soapy {
  * Antenna and clock source can be left empty and default values
  * will be used.
  * This block has a message port, which consumes PMT messages.
- * For a description of the command syntax, see \ref cmd_handler_t.
+ * For a description of the command syntax, see \ref uhd_command_syntax.
  */
 class SOAPY_API source : virtual public block
 {
