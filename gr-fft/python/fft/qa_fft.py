@@ -281,7 +281,7 @@ class test_fft(gr_unittest.TestCase):
 
     def test_303_test_window_setter(self):
         """
-        Teqt whether the window setter correctly returns False for lenghts != FFT length.
+        Test whether the window setter correctly returns False for lengths != FFT length.
         """
         for fftlength in [1, 2, 3] + [2**i for i in range(2, 10)] + list(primes):
             self.assertTrue(self._set_length_and_test(fftlength, fftlength))
