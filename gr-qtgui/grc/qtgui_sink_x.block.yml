@@ -93,7 +93,6 @@ parameters:
 inputs:
 -   domain: stream
     dtype: ${ type }
-    multiplicity: ${ num_inputs }
 -   domain: message
     id: freq
     optional: true
