@@ -11,6 +11,7 @@
 
 import re
 import sys
+import os
 try:
     import readline
     have_readline = True
@@ -132,17 +133,14 @@ def get_modname():
 
 
 def get_block_names(pattern, modname):
-    """ Return a list of block names belonging to modname that matches the regex pattern. """
+    """ Return a list of cpp block names matches the regex pattern. """
     blocknames = []
     reg = re.compile(pattern)
-    fname_re = re.compile(r'[a-zA-Z]\w+\.\w{1,5}$')
-    with open(f'include/gnuradio/{modname}/CMakeLists.txt', 'r') as f:
-        for line in f.read().splitlines():
-            if len(line.strip()) == 0 or line.strip()[0] == '#':
-                continue
-            for word in re.split('[ /)(\t\n\r\f\v]', line):
-                if fname_re.match(word) and reg.search(word):
-                    blocknames.append(word.strip('.h'))
+    filename_re = re.compile(r'^(?!api)[a-zA-Z]\w+\.h$')
+    for _, _, filenames in os.walk('include/'):
+        for filename in filenames:
+            if filename_re.search(filename) and reg.search(filename):
+                blocknames.append(re.sub(r'.h$', '', filename))
     return blocknames
 
 
