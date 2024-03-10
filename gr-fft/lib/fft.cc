@@ -42,6 +42,7 @@ namespace gr {
 namespace fft {
 
 constexpr const char* WISDOM_FILENAME = "fftw_wisdom";
+constexpr const char* WISDOM_LOCKFILE = "fftw_wisdom.lock";
 
 static std::mutex wisdom_thread_mutex;
 boost::interprocess::file_lock wisdom_lock;
@@ -68,7 +69,7 @@ static void wisdom_lock_init()
             fs::create_directory(path);
         }
     }
-    const auto wisdom_lock_file = path / (std::string(WISDOM_FILENAME) + ".lock");
+    const auto wisdom_lock_file = path / WISDOM_LOCKFILE;
 #ifdef _MSC_VER
     int fd = open(wisdom_lock_file.string().c_str(),
                   O_WRONLY | O_CREAT | O_NOCTTY | O_NONBLOCK,
