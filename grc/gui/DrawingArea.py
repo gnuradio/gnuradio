@@ -39,6 +39,9 @@ class DrawingArea(Gtk.DrawingArea):
         self.mod1_mask = False
         self.button_state = [False] * 10
 
+        # mouse centered zoom in/out
+        self._old_zoom_factor = self.zoom_factor
+        
         # self.set_size_request(MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT)
         self.connect('realize', self._handle_window_realize)
         self.connect('draw', self.draw)
@@ -90,6 +93,28 @@ class DrawingArea(Gtk.DrawingArea):
         coords = x / self.zoom_factor, y / self.zoom_factor
         self._flow_graph.add_new_block(selection_data.get_text(), coords)
 
+    def zoom_centered(self, event):
+        """
+        Zoom in/out on a mouse centered area of the graph.
+        """
+        if (self._update_after_zoom == False):
+            return
+        
+        x,y = event.x, event.y
+
+        scrollbar = self.get_parent().get_parent()
+
+        def scroll(pos, adj):
+            adj_val = adj.get_value()
+            old_pos = pos / self._old_zoom_factor
+            new_pos = old_pos * self.zoom_factor            
+            
+            adj.set_value(adj_val + (new_pos - pos))
+            adj.emit('changed')
+            
+        scroll(x, scrollbar.get_hadjustment())
+        scroll(y, scrollbar.get_vadjustment())
+
     def zoom_in(self):
         change = 1.2
         zoom_factor = min(self.zoom_factor * change, 5.0)
@@ -105,6 +130,7 @@ class DrawingArea(Gtk.DrawingArea):
 
     def _set_zoom_factor(self, zoom_factor):
         if zoom_factor != self.zoom_factor:
+            self._old_zoom_factor = self.zoom_factor
             self.zoom_factor = zoom_factor
             self._update_after_zoom = True
             self.queue_draw()
@@ -115,6 +141,9 @@ class DrawingArea(Gtk.DrawingArea):
                 self.zoom_in()
             else:
                 self.zoom_out()
+
+            self.zoom_centered(event)
+
             return True
         return False
 

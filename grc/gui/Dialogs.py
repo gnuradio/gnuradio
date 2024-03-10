@@ -347,6 +347,7 @@ def show_keyboard_shortcuts(parent):
             selected block.
     <u>Ctrl+0</u>: Reset the zoom level
     <u>Ctrl++/-</u>: Zoom in and out
+    <u>Ctrl+MouseScroll</u>: Mouse Centered Zoom in and out
     \
     """)
     markup = markup.replace("Ctrl", Utils.get_modifier_key())
