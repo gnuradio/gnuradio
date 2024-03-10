@@ -39,6 +39,9 @@ class DrawingArea(Gtk.DrawingArea):
         self.mod1_mask = False
         self.button_state = [False] * 10
 
+        # middle mouse panning
+        self._old_mouse_coodinates = (0, 0)
+
         # self.set_size_request(MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT)
         self.connect('realize', self._handle_window_realize)
         self.connect('draw', self.draw)
@@ -109,6 +112,27 @@ class DrawingArea(Gtk.DrawingArea):
             self._update_after_zoom = True
             self.queue_draw()
 
+    def _middle_mouse_pan(self, event):
+        """
+        Pan the canvas with the middle mouse button.
+        """
+        x, y = event.x, event.y
+        old_x, old_y = self._old_mouse_coodinates
+
+        scrollbox = self.get_parent().get_parent()
+
+        def scroll(dpos, adj):
+            adj_val = adj.get_value()
+            if abs(dpos) >= Constants.SCROLL_DISTANCE:
+                adj.set_value(adj_val - dpos)
+                adj.emit('changed')
+
+        dx = x - old_x
+        dy = y - old_y
+
+        scroll(dx, scrollbox.get_hadjustment())
+        scroll(dy, scrollbox.get_vadjustment())
+
     def _handle_mouse_scroll(self, widget, event):
         if event.get_state() & Gdk.ModifierType.CONTROL_MASK:
             if event.direction == Gdk.ScrollDirection.UP:
@@ -140,6 +164,9 @@ class DrawingArea(Gtk.DrawingArea):
                 coordinate=self._translate_event_coords(event),
                 event=event,
             )
+        elif event.button == 2:
+            # middle mouse panning
+            self._old_mouse_coodinates = (event.x, event.y)
 
     def _handle_mouse_button_release(self, widget, event):
         """
@@ -162,6 +189,8 @@ class DrawingArea(Gtk.DrawingArea):
 
         if self.button_state[1]:
             self._auto_scroll(event)
+        elif self.button_state[2]:
+            self._middle_mouse_pan(event)
 
         self._flow_graph.handle_mouse_motion(
             coordinate=self._translate_event_coords(event),
