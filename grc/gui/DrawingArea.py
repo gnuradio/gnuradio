@@ -100,7 +100,8 @@ class DrawingArea(Gtk.DrawingArea):
         if (self._update_after_zoom == False):
             return
         
-        x, y = event.x, event.y
+        x = event.x
+        y = event.y
 
         scrollbar = self.get_parent().get_parent()
 
