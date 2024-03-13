@@ -95,6 +95,8 @@ requirements:
     - zeromq
   # below needed only to run tests in host environment
     - pytest
+    - pytest-qt
+    - pyautogui
     - pyzmq
     - setuptools
   run:
