@@ -618,7 +618,6 @@ class Block(Element):
             block_connections = block_connections + list(port.connections())
         return block_connections
 
-
     ##############################################
     # Access
     ##############################################

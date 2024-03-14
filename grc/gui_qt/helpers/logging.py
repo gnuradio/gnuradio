@@ -84,6 +84,7 @@ class ConsoleFormatter(logging.Formatter):
         return output.format(level, message, record.name, record.filename, record.lineno)
 
     ''' Verbose formatter '''
+
     def verbose(self, record):
         # TODO: Still need to implement this
         pass

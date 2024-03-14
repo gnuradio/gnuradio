@@ -15,6 +15,7 @@ class DummyConnection(QGraphicsPathItem):
     Dummy connection used for when the user drags a connection
     between two ports.
     """
+
     def __init__(self, parent, start_point, end_point):
         super(DummyConnection, self).__init__()
 
@@ -113,8 +114,10 @@ class GUIConnection(QGraphicsPathItem):
 
         self._arrowhead.clear()
         self._arrowhead.moveTo(self.sink.gui.connection_point + QPointF(10.0, 0))
-        self._arrowhead.lineTo(self.sink.gui.connection_point + QPointF(10.0, 0) + QPointF(-CONNECTOR_ARROW_HEIGHT, - CONNECTOR_ARROW_BASE / 2))
-        self._arrowhead.lineTo(self.sink.gui.connection_point + QPointF(10.0, 0) + QPointF(-CONNECTOR_ARROW_HEIGHT, CONNECTOR_ARROW_BASE / 2))
+        self._arrowhead.lineTo(self.sink.gui.connection_point + QPointF(10.0, 0) +
+                               QPointF(-CONNECTOR_ARROW_HEIGHT, - CONNECTOR_ARROW_BASE / 2))
+        self._arrowhead.lineTo(self.sink.gui.connection_point + QPointF(10.0, 0) +
+                               QPointF(-CONNECTOR_ARROW_HEIGHT, CONNECTOR_ARROW_BASE / 2))
         self._arrowhead.lineTo(self.sink.gui.connection_point + QPointF(10.0, 0))
 
         self._path.clear()

@@ -58,6 +58,7 @@ class RotateAction(QUndoCommand):
     def undo(self):
         self.scene.rotate_selected(-self.delta_angle)
 
+
 class MoveAction(QUndoCommand):
     def __init__(self, scene: FlowgraphScene, diff: QPointF):
         QUndoCommand.__init__(self)
@@ -86,6 +87,7 @@ class MoveAction(QUndoCommand):
         for g_block in self.g_blocks:
             g_block.move(-self.x, -self.y)
         self.scene.update()
+
 
 class EnableAction(ChangeStateAction):
     def __init__(self, scene: FlowgraphScene):

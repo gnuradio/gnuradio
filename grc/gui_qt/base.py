@@ -60,7 +60,7 @@ class Component(object):
         log.debug("Connecting signals")
         self.connectSlots()
 
-    ### Properties
+    # Properties
 
     @property
     def app(self):
@@ -74,7 +74,7 @@ class Component(object):
     def platform(self):
         return self._app().platform
 
-    ### Required methods
+    # Required methods
 
     @abc.abstractmethod
     def createActions(self, actions):
@@ -91,7 +91,7 @@ class Component(object):
         ''' Add toolbars to the component. '''
         raise NotImplementedError()
 
-    ### Base methods
+    # Base methods
 
     def connectSlots(self, useToggled=True, toggledHandler='_toggled',
                      triggeredHandler="_triggered"):

@@ -32,6 +32,7 @@ class GUIPort(QGraphicsItem):
     Note that this constructor is called before its parent GUIBlock is instantiated,
     which is why we call setParentItem() in create_shapes_and_labels().
     """
+
     def __init__(self, core, direction, **n):
         self.core = core
         QGraphicsItem.__init__(self)
@@ -80,7 +81,8 @@ class GUIPort(QGraphicsItem):
         return QGraphicsItem.itemChange(self, change, value)
 
     def create_shapes_and_labels(self):
-        self.auto_hide_port_labels = self.core.parent.parent.gui.app.qsettings.value('grc/auto_hide_port_labels', type=bool)
+        self.auto_hide_port_labels = self.core.parent.parent.gui.app.qsettings.value(
+            'grc/auto_hide_port_labels', type=bool)
         if not self.parentItem():
             self.setParentItem(self.core.parent_block.gui)
 
@@ -125,7 +127,8 @@ class GUIPort(QGraphicsItem):
             painter.setPen(QPen(1))
             painter.setFont(self.font)
             if self.core._dir == "sink":
-                painter.drawText(QRectF(-max(0, self.width - 15), 0, self.width, self.height), Qt.AlignCenter, self.core.name)
+                painter.drawText(QRectF(-max(0, self.width - 15), 0, self.width,
+                                 self.height), Qt.AlignCenter, self.core.name)
             else:
                 painter.drawText(QRectF(0, 0, self.width, self.height), Qt.AlignCenter, self.core.name)
 
