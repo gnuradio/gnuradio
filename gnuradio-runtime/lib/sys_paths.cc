@@ -102,9 +102,31 @@ bool ensure_directory(const std::filesystem::path& path)
     }
 
     bool existed = true;
+
+#if defined(__MINGW32__) || defined(__MINGW64__)
+    // See MinGW workaround below
+    bool first = true;
+#endif
+
     fs::path partial_path;
     for (const auto& path_component : path) {
         partial_path /= path_component;
+#if defined(__MINGW32__) || defined(__MINGW64__)
+        if (first) {
+            const auto str = partial_path.string();
+            /* MinGW is buggy in that it splits paths differently than MSVC, namely
+             * C:\Users becomes "C:", "\", "Users". And then it says "C:" doesn't exist,
+             * but when you then try to mkdir("C:"), that fails, because of course "C:"
+             * exists.
+             */
+            if (str.size() == 2     // right length for a drive name
+                && str.at(1) == ':' // colon of C:
+                && !fs::exists(partial_path)) {
+                continue;
+            }
+            first = false;
+        }
+#endif
         if (!(existed && fs::exists(partial_path))) {
             fs::create_directory(partial_path);
             existed = false;
@@ -122,8 +144,8 @@ bool ensure_directory(const std::filesystem::path& path)
  */
 template <typename path_type, bool sane>
 struct converter {
-    /* we have to make this a template type, since partial function templates are
-     * impossible */
+    /* we have to make this a template type, since partial function
+     * templates are impossible */
     static const char* c_str(const path_type& path);
 };
 template <typename path_type>
@@ -142,14 +164,15 @@ struct converter<path_type, false> {
 };
 const char* convert_path_to_C_string(const std::filesystem::path& path)
 {
-    /* Yes. This is a memory leak. The only alternative would have been to return the data
-     * from a temporary string, which would have been a use-after-free. Notice that the
-     * const char*-returning API was broken from the start: the original tmpdir_path()
-     * used a static local variable to work around returning data from temporary objects;
-     * which is a very bad idea, becausea suddenly the value of some C string changes
-     * because someone somewhere else changed the environ. Like we need to do in unit
-     * tests to avoid messing up system configuration, in our highly multi-threaded
-     * framework.
+    /* Yes. This is a memory leak. The only alternative would have been to
+     * return the data from a temporary string, which would have been a
+     * use-after-free. Notice that the const char*-returning API was
+     * broken from the start: the original tmpdir_path() used a static
+     * local variable to work around returning data from temporary
+     * objects; which is a very bad idea, becausea suddenly the value of
+     * some C string changes because someone somewhere else changed the
+     * environ. Like we need to do in unit tests to avoid messing up
+     * system configuration, in our highly multi-threaded framework.
      */
     return converter<
         std::filesystem::path,
