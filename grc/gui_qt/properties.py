@@ -226,30 +226,30 @@ class Types(object):
     ''' Setup types then map them to the conversion dictionaries '''
 
     CORE_TYPES = {  # Key: (Size, Color, Name)
-        'fc64':    (16, Colors.COMPLEX_FLOAT_64,   'Complex Float 64'),
-        'fc32':    (8,  Colors.COMPLEX_FLOAT_32,   'Complex Float 32'),
-        'sc64':    (16, Colors.COMPLEX_INTEGER_64, 'Complex Integer 64'),
-        'sc32':    (8,  Colors.COMPLEX_INTEGER_32, 'Complex Integer 32'),
-        'sc16':    (4,  Colors.COMPLEX_INTEGER_16, 'Complex Integer 16'),
-        'sc8':     (2,  Colors.COMPLEX_INTEGER_8,  'Complex Integer 8',),
-        'f64':     (8,  Colors.FLOAT_64,           'Float 64'),
-        'f32':     (4,  Colors.FLOAT_32,           'Float 32'),
-        's64':     (8,  Colors.INTEGER_64,         'Integer 64'),
-        's32':     (4,  Colors.INTEGER_32,         'Integer 32'),
-        's16':     (2,  Colors.INTEGER_16,         'Integer 16'),
-        's8':      (1,  Colors.INTEGER_8,          'Integer 8'),
-        'msg':     (0,  Colors.MESSAGE_QUEUE,      'Message Queue'),
-        'message': (0,  Colors.ASYNC_MESSAGE,      'Async Message'),
-        'bus':     (0,  Colors.BUS_CONNECTION,     'Bus Connection'),
-        '':        (0,  Colors.WILDCARD,           'Wildcard')
+        'fc64': (16, Colors.COMPLEX_FLOAT_64, 'Complex Float 64'),
+        'fc32': (8, Colors.COMPLEX_FLOAT_32, 'Complex Float 32'),
+        'sc64': (16, Colors.COMPLEX_INTEGER_64, 'Complex Integer 64'),
+        'sc32': (8, Colors.COMPLEX_INTEGER_32, 'Complex Integer 32'),
+        'sc16': (4, Colors.COMPLEX_INTEGER_16, 'Complex Integer 16'),
+        'sc8': (2, Colors.COMPLEX_INTEGER_8, 'Complex Integer 8',),
+        'f64': (8, Colors.FLOAT_64, 'Float 64'),
+        'f32': (4, Colors.FLOAT_32, 'Float 32'),
+        's64': (8, Colors.INTEGER_64, 'Integer 64'),
+        's32': (4, Colors.INTEGER_32, 'Integer 32'),
+        's16': (2, Colors.INTEGER_16, 'Integer 16'),
+        's8': (1, Colors.INTEGER_8, 'Integer 8'),
+        'msg': (0, Colors.MESSAGE_QUEUE, 'Message Queue'),
+        'message': (0, Colors.ASYNC_MESSAGE, 'Async Message'),
+        'bus': (0, Colors.BUS_CONNECTION, 'Bus Connection'),
+        '': (0, Colors.WILDCARD, 'Wildcard')
     }
 
     ALIAS_TYPES = {
         'complex': (8, Colors.COMPLEX),
-        'float':   (4, Colors.FLOAT),
-        'int':     (4, Colors.INT),
-        'short':   (2, Colors.SHORT),
-        'byte':    (1, Colors.BYTE),
+        'float': (4, Colors.FLOAT),
+        'int': (4, Colors.INT),
+        'short': (2, Colors.SHORT),
+        'byte': (1, Colors.BYTE),
     }
 
     # Setup conversion dictionaries
