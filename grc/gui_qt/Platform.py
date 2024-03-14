@@ -1,4 +1,4 @@
-#TODO: This file is a modified copy of the old gui/Platform.py
+# TODO: This file is a modified copy of the old gui/Platform.py
 """
 Copyright 2008, 2009 Free Software Foundation, Inc.
 This file is part of GNU Radio
@@ -65,5 +65,5 @@ class Platform(CorePlatform):
 
     port_classes = {key: Port.make_cls_with_base(cls)
                     for key, cls in CorePlatform.port_classes.items()}
-    #param_classes = {key: Param.make_cls_with_base(cls)
+    # param_classes = {key: Param.make_cls_with_base(cls)
     #                 for key, cls in CorePlatform.param_classes.items()}

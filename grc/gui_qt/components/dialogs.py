@@ -122,6 +122,7 @@ class PropsDialog(QDialog):
                         self.edit_params.append(line_edit)
                     elif param.dtype == "_multiline_python_external":
                         ext_param = copy(param)
+
                         def open_editor(widget=None):
                             self._block.parent_flowgraph.gui.install_external_editor(
                                 ext_param)
@@ -143,7 +144,7 @@ class PropsDialog(QDialog):
                         line_edit = QPlainTextEdit(param.value)
                         line_edit.param = param
                         qvb.addWidget(editor_widget, i, 1)
-                        #self.edit_params.append(line_edit)
+                        # self.edit_params.append(line_edit)
                     else:
                         line_edit = QLineEdit(param.value)
                         line_edit.param = param

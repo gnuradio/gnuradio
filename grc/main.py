@@ -31,13 +31,13 @@ LOG_LEVELS = {
     'critical': logging.CRITICAL,
 }
 
-### Load GNU Radio
+# Load GNU Radio
 # Do this globally so it is available for both run_gtk() and run_qt()
 try:
     from gnuradio import gr
 except ImportError as ex:
     # Throw a new exception with more information
-    print ("Cannot find GNU Radio! (Have you sourced the environment file?)", file=sys.stderr)
+    print("Cannot find GNU Radio! (Have you sourced the environment file?)", file=sys.stderr)
 
     # If this is a background session (not launched through a script), show a Tkinter error dialog.
     # Tkinter should already be installed default with Python, so this shouldn't add new dependencies
@@ -55,7 +55,7 @@ except ImportError as ex:
     raise Exception("Cannot find GNU Radio!") from None
 
 
-### Enable Logging
+# Enable Logging
 # Do this globally so it is available for both run_gtk() and run_qt()
 # TODO: Advanced logging - https://docs.python.org/3/howto/logging-cookbook.html#formatting-styles
 # Note: All other modules need to use the 'grc.<module>' convention
@@ -137,7 +137,6 @@ def run_qt(args, log):
     # Still need to install null translation to let the system handle calls to _()
     language.install()
 
-
     ''' OS Platform '''
     # Figure out system specific properties and setup defaults.
     # Some properties can be overridden by preferences
@@ -167,7 +166,6 @@ def run_qt(args, log):
         settings.system.OS = "Windows"
     else:
         log.warning("Unknown operating system")
-
 
     ''' Preferences '''
     # TODO: Move earlier? Need to load user preferences and override the default properties/settings
@@ -201,9 +199,7 @@ def main():
             log.warning("main.py could not read grc_qt.conf")
             log.warning(e)
 
-
-
-    ### Argument parsing
+    # Argument parsing
     parser = argparse.ArgumentParser(
         description=VERSION_AND_DISCLAIMER_TEMPLATE % gr.version())
     parser.add_argument('flow_graphs', nargs='*')
@@ -249,8 +245,7 @@ def main():
     except (PermissionError, FileNotFoundError) as e:
         log.error(f'Cannot write to {log_file} - {e}')
 
-
-    ### GUI Framework
+    # GUI Framework
     if args.framework == 'qt':
         run_qt(args, log)
     elif args.framework == 'gtk':

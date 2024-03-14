@@ -41,7 +41,7 @@ class VariableEditor(QDockWidget, base.Component):
         self.right_click_menu = VariableEditorContextMenu(self)
         self.scene = None
 
-        ### GUI Widgets
+        # GUI Widgets
         self._tree = QTreeWidget()
         self._model = self._tree.model()
         self._tree.setObjectName('variable_editor::tree_widget')
@@ -75,7 +75,7 @@ class VariableEditor(QDockWidget, base.Component):
         self.app.registerDockWidget(self, location=self.settings.window.VARIABLE_EDITOR_DOCK_LOCATION)
         self.currently_rebuilding = False
 
-    ### Actions
+    # Actions
 
     def createActions(self, actions):
         log.debug("Creating actions")
@@ -149,7 +149,6 @@ class VariableEditor(QDockWidget, base.Component):
                 variable_.setFlags(Qt.ItemIsSelectable)
             variable_.setIcon(2, QtGui.QIcon.fromTheme("list-remove"))
 
-
         self.currently_rebuilding = False
 
     def update_gui(self, blocks):
@@ -159,6 +158,7 @@ class VariableEditor(QDockWidget, base.Component):
         self._tree.expandAll()
 
     Slot(VariableEditorAction)
+
     def handle_action(self, action):
         log.debug(f"{action} triggered!")
         """
@@ -180,7 +180,7 @@ class VariableEditor(QDockWidget, base.Component):
             self._block.state = 'enabled'
         elif action == VariableEditorAction.DISABLE_BLOCK:
             self._block.state = 'disabled'
-        #Actions.VARIABLE_EDITOR_UPDATE()  # TODO: Fix this
+        # Actions.VARIABLE_EDITOR_UPDATE()  # TODO: Fix this
 
 
 class VariableEditorContextMenu(QMenu):

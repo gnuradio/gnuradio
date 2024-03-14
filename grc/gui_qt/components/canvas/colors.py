@@ -1,4 +1,4 @@
-#TODO: This file is a modified copy of the old gui/Platform.py
+# TODO: This file is a modified copy of the old gui/Platform.py
 """
 Copyright 2008,2013 Free Software Foundation, Inc.
 This file is part of GNU Radio

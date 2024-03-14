@@ -86,7 +86,7 @@ class Console(QtWidgets.QDockWidget, base.Component):
         self.setWindowTitle('Console')
         self.level = level
 
-        ### GUI Widgets
+        # GUI Widgets
 
         # Create the layout widget
         container = QtWidgets.QWidget(self)
@@ -114,13 +114,13 @@ class Console(QtWidgets.QDockWidget, base.Component):
         container.setLayout(layout)
         self.setWidget(container)
 
-        ### Translation support
+        # Translation support
 
         #self.setWindowTitle(_translate("", "Library", None))
         #library.headerItem().setText(0, _translate("", "Blocks", None))
-        #QtCore.QMetaObject.connectSlotsByName(blockLibraryDock)
+        # QtCore.QMetaObject.connectSlotsByName(blockLibraryDock)
 
-        ### Setup actions
+        # Setup actions
 
         # TODO: Move to the base controller and set actions as class attributes
         # Automatically create the actions, menus and toolbars.
@@ -157,7 +157,7 @@ class Console(QtWidgets.QDockWidget, base.Component):
     def enable(self):
         self.enabled = True
 
-    ### Actions
+    # Actions
 
     def createActions(self, actions):
         ''' Defines all actions for this view. '''
@@ -169,7 +169,8 @@ class Console(QtWidgets.QDockWidget, base.Component):
         actions['clear'] = Action(Icons("document-close"), _("clear"), self, statusTip=_("clear-tooltip"))
         actions['show_level'] = Action(_("show-level"), self, statusTip=_("show-level"), checkable=True, checked=True)
 
-        actions['auto_scroll'] = Action(_("auto-scroll"), self, statusTip=_("auto-scroll"), checkable=True, checked=True)
+        actions['auto_scroll'] = Action(
+            _("auto-scroll"), self, statusTip=_("auto-scroll"), checkable=True, checked=True)
 
     def createMenus(self, actions, menus):
         ''' Setup the view's menus '''
@@ -180,7 +181,7 @@ class Console(QtWidgets.QDockWidget, base.Component):
         console_menu.setObjectName("console::menu")
 
         # Not needed, we have FileHandler logging in main.py
-        #console_menu.addAction(actions["save"])
+        # console_menu.addAction(actions["save"])
 
         console_menu.addAction(actions["clear"])
         console_menu.addAction(actions["show_level"])
