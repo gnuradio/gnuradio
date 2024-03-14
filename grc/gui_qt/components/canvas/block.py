@@ -68,6 +68,7 @@ class GUIBlock(QGraphicsItem):
     """
     The graphical representation of a block. Accesses the actual block with self.core.
     """
+
     def __init__(self, core, parent, **n):
         super(GUIBlock, self).__init__()
         self.core = core

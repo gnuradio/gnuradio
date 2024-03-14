@@ -23,10 +23,11 @@ from grc.gui_qt.Platform import Platform
 
 log = logging.getLogger("grc")
 
+
 @pytest.fixture(scope="session")
 def qapp_cls_():
     settings = properties.Properties([])
-    settings.argv =  [""]
+    settings.argv = [""]
 
     """ Translation Support """
     # Try to get the current locale. Always add English
@@ -153,6 +154,8 @@ def menu_shortcut(qtbot, app, menu_name, menu_key, shortcut_key):
     qtbot.wait(100)
 
 # Start by closing the flowgraph that pops up on start
+
+
 def test_file_close_init(qtbot, qapp_cls_, monkeypatch):
     win = qapp_cls_.MainWindow
     monkeypatch.setattr(
@@ -166,6 +169,7 @@ def test_file_close_init(qtbot, qapp_cls_, monkeypatch):
     assert win.tabWidget.count() == 1
     menu_shortcut(qtbot, qapp_cls_, "file", QtCore.Qt.Key_F, QtCore.Qt.Key_L)
     assert win.tabWidget.count() == 1
+
 
 def test_delete_block(qtbot, qapp_cls_):
     qtbot.wait(100)
@@ -209,6 +213,7 @@ def test_add_throttle(qtbot, qapp_cls_):
 
     delete_block(qtbot, qapp_cls_, throttle)
 
+
 def test_right_click(qtbot, qapp_cls_):
     qtbot.wait(100)
     add_block_from_query(qtbot, qapp_cls_, "throttle")
@@ -226,6 +231,7 @@ def test_right_click(qtbot, qapp_cls_):
 
     delete_block(qtbot, qapp_cls_, throttle)
 
+
 def test_errors(qtbot, qapp_cls_):
     menu = qapp_cls_.MainWindow.menus["build"]
 
@@ -239,7 +245,7 @@ def test_errors(qtbot, qapp_cls_):
     qtbot.keyClick(qapp_cls_.focusWidget(), QtCore.Qt.Key_B, QtCore.Qt.AltModifier)
     qtbot.wait(100)
     QtCore.QTimer.singleShot(200, assert_and_close)
-    #qtbot.keyClick(menu, QtCore.Qt.Key_E) # Not necessary since it's already selected (it's the first item)
+    # qtbot.keyClick(menu, QtCore.Qt.Key_E) # Not necessary since it's already selected (it's the first item)
     qtbot.keyClick(menu, QtCore.Qt.Key_Enter)
     qtbot.wait(300)
 
@@ -248,14 +254,15 @@ def test_errors(qtbot, qapp_cls_):
 
     delete_block(qtbot, qapp_cls_, throttle)
 
+
 def test_open_properties(qtbot, qapp_cls_):
     qtbot.wait(100)
     qtbot.mouseDClick(
         qapp_cls_.MainWindow.currentView.viewport(),
         QtCore.Qt.LeftButton,
         pos=qapp_cls_.MainWindow.currentView.mapFromScene(
-            qapp_cls_.MainWindow.currentFlowgraph.options_block.gui.pos()
-            + QtCore.QPointF(15.0, 15.0)
+            qapp_cls_.MainWindow.currentFlowgraph.options_block.gui.pos() +
+            QtCore.QPointF(15.0, 15.0)
         ),
     )
     qtbot.wait(100)
@@ -481,12 +488,13 @@ def test_num_inputs(qtbot, qapp_cls_):
 
     # I think loses focus makes delete_fail the first time. This makes it work, but is a hack
     #click_on(qtbot, qapp_cls_, n_src)
-    pag.click(click_pos.x()+50, click_pos.y()+50, button="left")
+    pag.click(click_pos.x() + 50, click_pos.y() + 50, button="left")
 
     for block in [n_src, n_sink]:
         delete_block(qtbot, qapp_cls_, block)
     qtbot.wait(100)
     assert len(fg.blocks) == 2
+
 
 def test_bus(qtbot, qapp_cls_):
     fg = qapp_cls_.MainWindow.currentFlowgraph
@@ -550,6 +558,7 @@ def test_bus(qtbot, qapp_cls_):
     delete_block(qtbot, qapp_cls_, n_sink)
     qtbot.wait(100)
 
+
 def test_bypass(qtbot, qapp_cls_):
     scaling = qapp_cls_.MainWindow.screen().devicePixelRatio()
 
@@ -583,6 +592,7 @@ def test_bypass(qtbot, qapp_cls_):
     for block in [throttle, n_src]:
         delete_block(qtbot, qapp_cls_, block)
 
+
 def test_file_save(qtbot, qapp_cls_, monkeypatch, tmp_path):
     fg_path = tmp_path / "test_save.grc"
     monkeypatch.setattr(
@@ -592,6 +602,7 @@ def test_file_save(qtbot, qapp_cls_, monkeypatch, tmp_path):
     assert not fg_path.exists(), "File/Save (setup): File already exists"
     ctrl_keystroke(qtbot, qapp_cls_, QtCore.Qt.Key_S)
     assert fg_path.exists(), "File/Save: Could not save file"
+
 
 def test_file_save_as(qtbot, qapp_cls_, monkeypatch, tmp_path):
     fg_path = tmp_path / "test.grc"
@@ -603,6 +614,7 @@ def test_file_save_as(qtbot, qapp_cls_, monkeypatch, tmp_path):
 
     menu_shortcut(qtbot, qapp_cls_, "file", QtCore.Qt.Key_F, QtCore.Qt.Key_A)
     assert fg_path.exists()
+
 
 def test_file_save_copy(qtbot, qapp_cls_, monkeypatch, tmp_path):
     fg_path = tmp_path / "test_copy.grc"
@@ -672,6 +684,7 @@ def test_file_preferences(qtbot, qapp_cls_):
     assert qapp_cls_.activeWindow() == qapp_cls_.MainWindow
     qtbot.wait(100)
 
+
 def test_file_examples(qtbot, qapp_cls_):
     menu = qapp_cls_.MainWindow.menus["file"]
     items = gather_menu_items(menu)
@@ -688,8 +701,10 @@ def test_file_examples(qtbot, qapp_cls_):
     assert qapp_cls_.activeWindow() == qapp_cls_.MainWindow
     qtbot.wait(100)
 
+
 def test_edit_actions(qtbot, qapp_cls_):
     pass
+
 
 def test_edit_select_all(qtbot, qapp_cls_):
     qtbot.keyClick(qapp_cls_.focusWidget(), QtCore.Qt.Key_A, QtCore.Qt.ControlModifier)
@@ -821,6 +836,7 @@ def test_file_new_close(qtbot, qapp_cls_, monkeypatch):
         ctrl_keystroke(qtbot, qapp_cls_, QtCore.Qt.Key_W)
         assert win.tabWidget.count() == 4 - i, "File/Close"
 
+
 def test_generate(qtbot, qapp_cls_, monkeypatch, tmp_path):
     fg = qapp_cls_.MainWindow.currentFlowgraph
     view = qapp_cls_.MainWindow.currentView
@@ -863,6 +879,7 @@ def test_generate(qtbot, qapp_cls_, monkeypatch, tmp_path):
     assert fg_path.exists(), "File/Save: Could not save .grc file"
     assert py_path.exists(), "File/Save: Could not save Python file"
 
+
 def test_file_close_all(qtbot, qapp_cls_, monkeypatch):
     win = qapp_cls_.MainWindow
     monkeypatch.setattr(
@@ -879,6 +896,7 @@ def test_file_close_all(qtbot, qapp_cls_, monkeypatch):
     assert win.tabWidget.count() == 4, "File/Close All"
     menu_shortcut(qtbot, qapp_cls_, "file", QtCore.Qt.Key_F, QtCore.Qt.Key_L)
     assert win.tabWidget.count() == 1, "File/Close All"
+
 
 def test_quit(qtbot, qapp_cls_, monkeypatch):
     monkeypatch.setattr(

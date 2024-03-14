@@ -113,7 +113,7 @@ class BlockLibrary(QDockWidget, base.Component):
         self.resize(400, 300)
         self.setFloating(False)
 
-        ### GUI Widgets
+        # GUI Widgets
 
         # Create the layout widget
         container = QWidget(self)
@@ -156,13 +156,13 @@ class BlockLibrary(QDockWidget, base.Component):
         container.setLayout(layout)
         self.setWidget(container)
 
-        ### Translation support
+        # Translation support
 
         # self.setWindowTitle(_translate("blockLibraryDock", "Library", None))
         # library.headerItem().setText(0, _translate("blockLibraryDock", "Blocks", None))
         # QMetaObject.connectSlotsByName(blockLibraryDock)
 
-        ### Loading blocks
+        # Loading blocks
 
         # Keep as a separate function so it can be called at a later point (Reloading blocks)
         self._block_tree_flat = {}

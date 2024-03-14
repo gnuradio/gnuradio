@@ -63,7 +63,7 @@ class WikiTab(QtWidgets.QDockWidget, base.Component):
             self.hidden = True
             return
 
-        ### GUI Widgets
+        # GUI Widgets
 
         # Create the layout widget
         container = QtWidgets.QWidget(self)
@@ -103,7 +103,7 @@ class WikiTab(QtWidgets.QDockWidget, base.Component):
             self._text.load(url)
             self._text.show()
 
-    ### Actions
+    # Actions
 
     def createActions(self, actions):
         pass

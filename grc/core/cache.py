@@ -51,7 +51,7 @@ class Cache(object):
             else:
                 if self.log:
                     logger.info(f"Outdated cache {self.cache_file} found, "
-                            "will be overwritten.")
+                                "will be overwritten.")
                 raise ValueError()
         except (IOError, ValueError):
             self.need_cache_write = True

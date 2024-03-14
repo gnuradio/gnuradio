@@ -26,6 +26,7 @@ class Worker(QRunnable):
     """
     This is the Worker that will gather/parse examples as a background task
     """
+
     def __init__(self, fn, *args, **kwargs):
         super(Worker, self).__init__()
 
@@ -111,7 +112,7 @@ class ExampleBrowser(QWidget, base.Component):
 
     def connect_dialog(self, dialog: QDialog):
         if self.dialog:
-            pass # disconnect?
+            pass  # disconnect?
 
         self.dialog = dialog
         if isinstance(dialog, ExampleBrowserDialog):
@@ -142,7 +143,7 @@ class ExampleBrowser(QWidget, base.Component):
                         except KeyError:
                             i = 0
                             while i <= len(split_rel_path):
-                                partial_path = "/".join(split_rel_path[0:i+1])
+                                partial_path = "/".join(split_rel_path[0:i + 1])
                                 split_partial_path = os.path.normpath(partial_path).split(os.path.sep)
                                 if not partial_path in self.dir_items:
                                     if i == 0:  # Top level
@@ -176,7 +177,8 @@ class ExampleBrowser(QWidget, base.Component):
         self.title_label.setText(f"<b>Title:</b> {ex['title'] if ex else ''}")
         self.author_label.setText(f"<b>Author:</b> {ex['author'] if ex else ''}")
         try:
-            self.language_label.setText(f"<b>Output language:</b> {self.lang_dict[ex['output_language']] if ex else ''}")
+            self.language_label.setText(
+                f"<b>Output language:</b> {self.lang_dict[ex['output_language']] if ex else ''}")
             self.gen_opts_label.setText(f"<b>Type:</b> {self.gen_opts_dict[ex['generate_options']] if ex else ''}")
         except KeyError:
             self.language_label.setText(f"<b>Output language:</b> ")
@@ -197,7 +199,6 @@ class ExampleBrowser(QWidget, base.Component):
         else:
             self.image_label.setPixmap(QPixmap())
 
-
     def open_file(self):
         ex = self.tree_widget.currentItem().data(0, self.data_role)
         self.file_to_open.emit(ex["path"])
@@ -216,7 +217,6 @@ class ExampleBrowser(QWidget, base.Component):
             if self.show_selective(top, ex_paths):
                 found = True
         return found
-
 
     def show_selective(self, item, path):
         item.setHidden(True)
@@ -247,7 +247,6 @@ class ExampleBrowser(QWidget, base.Component):
             top = self.tree_widget.topLevelItem(i)
             self.show_all(top)
 
-
     def find_examples(self, progress_callback, ext="grc"):
         """Iterate through the example flowgraph directories and parse them."""
         examples_dict = {}
@@ -272,8 +271,10 @@ class ExampleBrowser(QWidget, base.Component):
                                 data = cache.get_or_load(file_path)
                                 example = {}
                                 example["name"] = os.path.basename(file_path)
-                                example["generate_options"] = data["options"]["parameters"].get("generate_options") or "no_gui"
-                                example["output_language"] = data["options"]["parameters"].get("output_language") or "python"
+                                example["generate_options"] = data["options"]["parameters"].get(
+                                    "generate_options") or "no_gui"
+                                example["output_language"] = data["options"]["parameters"].get(
+                                    "output_language") or "python"
                                 example["example_filter"] = data["metadata"].get("example_filter") or []
                                 example["title"] = data["options"]["parameters"]["title"] or ""
                                 example["desc"] = data["options"]["parameters"]["description"] or ""

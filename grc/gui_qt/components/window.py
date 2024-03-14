@@ -22,7 +22,8 @@ import logging
 import os
 import sys
 import subprocess
-import cProfile, pstats
+import cProfile
+import pstats
 
 
 from typing import Union
@@ -1050,7 +1051,6 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
                 QtWidgets.QMessageBox.Save,
             )
 
-
             if response == QtWidgets.QMessageBox.Discard:
                 file_path = self.currentFlowgraphScene.filename
                 self.tabWidget.removeTab(tab_index)
@@ -1320,14 +1320,14 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         if self.currentView.process_is_done():
             self.generate_triggered()
             if self.currentView.generator:
-                xterm = self.app.qsettings.value("grc/xterm_executable","")
+                xterm = self.app.qsettings.value("grc/xterm_executable", "")
                 '''if self.config.xterm_missing() != xterm:
                     if not os.path.exists(xterm):
                         Dialogs.show_missing_xterm(main, xterm)
                     self.config.xterm_missing(xterm)'''
                 if self.currentFlowgraphScene.saved and self.currentFlowgraphScene.filename:
                     # Save config before execution
-                    #self.config.save()
+                    # self.config.save()
                     ExecFlowGraphThread(
                         view=self.currentView,
                         flowgraph=self.currentFlowgraph,
@@ -1519,4 +1519,3 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         log.info("Stopping profiler")
         stats = pstats.Stats(self.profiler)
         stats.dump_stats('stats.prof')
-
