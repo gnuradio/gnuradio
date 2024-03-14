@@ -70,7 +70,7 @@ static void wisdom_lock_init()
         }
     }
     const auto wisdom_lock_file = path / WISDOM_LOCKFILE;
-#ifdef _MSC_VER
+#if defined(_MSC_VER) || defined(_WIN32)
     int fd = open(wisdom_lock_file.string().c_str(),
                   O_WRONLY | O_CREAT | O_NOCTTY | O_NONBLOCK,
                   0666);
@@ -104,7 +104,7 @@ static void unlock_wisdom()
 static void import_wisdom()
 {
     auto wisdom_path = gr::paths::cache() / WISDOM_FILENAME;
-#ifdef _MSC_VER
+#if defined(_MSC_VER) || defined(_WIN32)
     FILE* fp = fopen(wisdom_path.string().c_str(), "r");
 #else
     FILE* fp = fopen(wisdom_path.c_str(), "r");
@@ -136,7 +136,7 @@ static void config_threading(int nthreads)
 static void export_wisdom()
 {
     auto wisdom_path = gr::paths::cache() / WISDOM_FILENAME;
-#ifdef _MSC_VER
+#if defined(_MSC_VER) || defined(_WIN32)
     FILE* fp = fopen(wisdom_path.string().c_str(), "w");
 #else
     FILE* fp = fopen(wisdom_path.c_str(), "w");
