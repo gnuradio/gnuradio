@@ -454,6 +454,12 @@ TOGGLE_SNAP_TO_GRID = actions.register("win.snap_to_grid",
                                        preference_name='snap_to_grid',
                                        default=True,
                                        )
+TOGGLE_SHOW_FLOWGRAPH_GRID = actions.register("win.show_flowgraph_grid",
+                                       label='Show flowgraph _grid',
+                                       tooltip='Select how to display the flowgraph grid',
+                                       preference_name='show_flowgraph_grid',
+                                       default=False,
+                                       )
 TOGGLE_HIDE_DISABLED_BLOCKS = actions.register(
     "win.hide_disabled",
     label='Hide _Disabled Blocks',

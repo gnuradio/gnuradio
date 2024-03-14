@@ -6,10 +6,12 @@ SPDX-License-Identifier: GPL-2.0-or-later
 
 """
 
+import math
+import itertools
 
 from gi.repository import Gtk, Gdk
 
-from .canvas.colors import FLOWGRAPH_BACKGROUND_COLOR
+from .canvas.colors import FLOWGRAPH_BACKGROUND_COLOR, FLOWGRAPH_GRID_COLOR
 from . import Constants
 from . import Actions
 
@@ -209,6 +211,54 @@ class DrawingArea(Gtk.DrawingArea):
         cr.set_source_rgba(*FLOWGRAPH_BACKGROUND_COLOR)
         cr.rectangle(0, 0, width, height)
         cr.fill()
+
+        # Probably not the most efficient
+        if Actions.TOGGLE_SHOW_FLOWGRAPH_GRID.get_active():
+            grid_mode = Gtk.Application.get_default().config.flowgraph_grid_mode()
+            cr.set_source_rgba(*FLOWGRAPH_GRID_COLOR)
+
+            # TODO: Could optimize this. These only need to be recalculated if adjusting the canvas size
+            grid_size = Constants.CANVAS_GRID_SIZE
+            points_w = range(0, int(width), grid_size)
+
+            grid_offset = int(grid_size/2)
+            points_h = range(grid_offset, int(height)+grid_offset, grid_size)
+
+            if grid_mode == "lines":
+                cr.set_line_width(1.0)
+            
+                for w_i in points_w:
+                    cr.move_to(w_i, 0)
+                    cr.line_to(w_i, height)
+                for h_i in points_h:
+                    cr.move_to(0, h_i)
+                    cr.line_to(width, h_i)
+                    cr.stroke()
+            # elif grid_mode == "dots":
+            #     # Default to showing only dots
+            #     # Calculate how many points need to go across the drawing area
+            #     grid_points = itertools.product(points_w, points_h)
+            #     for w_i, h_i in grid_points:
+            #         cr.arc(w_i, h_i, 1, 0, 2*math.pi)
+            #         cr.fill()
+            # elif grid_mode == "hybrid":
+
+            #     # Default to showing only dots
+            #     # Calculate how many points need to go across the drawing area
+            #     grid_points = itertools.product(points_w, points_h)
+            #     for w_i, h_i in grid_points:
+            #         cr.arc(w_i, h_i, 1, 0, 2*math.pi)
+            #         cr.fill()
+
+            #     cr.set_line_width(1.0)
+
+            #     for w_i in points_w[::5]:
+            #         cr.move_to(w_i, 0)
+            #         cr.line_to(w_i, height)
+            #     for h_i in points_h[::5]:
+            #         cr.move_to(0, h_i)
+            #         cr.line_to(width, h_i)
+            #         cr.stroke()            
 
         cr.scale(self.zoom_factor, self.zoom_factor)
         cr.set_line_width(2.0 / self.zoom_factor)
