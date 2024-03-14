@@ -61,15 +61,8 @@ static void wisdom_lock_init()
     if (wisdom_lock_init_done)
         return;
 
-    // recursively make sure the directory exists
-    fs::path path;
-    for (const auto& path_component : gr::paths::cache()) {
-        path /= path_component;
-        if (!fs::exists(path)) {
-            fs::create_directory(path);
-        }
-    }
-    const auto wisdom_lock_file = path / WISDOM_LOCKFILE;
+    gr::paths::utilities::ensure_directory(gr::paths::cache());
+    const auto wisdom_lock_file = gr::paths::cache() / WISDOM_LOCKFILE;
 #if defined(_MSC_VER) || defined(_WIN32)
     int fd = open(wisdom_lock_file.string().c_str(),
                   O_WRONLY | O_CREAT | O_NOCTTY | O_NONBLOCK,

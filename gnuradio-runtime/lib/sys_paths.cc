@@ -90,6 +90,29 @@ std::filesystem::path cache()
     path = getenv("XDG_CACHE_HOME");
     return (path ? fs::path{ path } : appdata() / ".cache") / "gnuradio";
 }
+
+namespace utilities {
+bool ensure_directory(const std::filesystem::path& path)
+{
+    namespace fs = std::filesystem;
+
+    // short-circuit for the common case that the path exists
+    if (fs::is_directory(path)) {
+        return true;
+    }
+
+    bool existed = true;
+    fs::path partial_path;
+    for (const auto& path_component : path) {
+        partial_path /= path_component;
+        if (!(existed && fs::exists(partial_path))) {
+            fs::create_directory(partial_path);
+            existed = false;
+        }
+    }
+    return existed;
+}
+} // namespace utilities
 } // namespace paths
 
 /* windows is peculiar: a path is typically a wstring with a not standard-specified

@@ -11,13 +11,12 @@
 
 from gnuradio import gr, gr_unittest
 import os
+import tempfile
 
 
-class test_prefs (gr_unittest.TestCase):
+class test_prefs(gr_unittest.TestCase):
 
     def _test_env(self, env: str, subdir: [str, None] = None):
-        print(gr.paths.userconf())
-        import tempfile
         oldenv = os.getenv(env, "")
         tmpdir = tempfile.mkdtemp()
         targetdir = tmpdir
@@ -42,6 +41,26 @@ class test_prefs (gr_unittest.TestCase):
     def test_002_react_to_GR_PREFS_PATH(self):
         self._test_env("GR_PREFS_PATH")
 
+    def test_003_ensure_directory(self):
+        import shutil
 
-if __name__ == '__main__':
+        cwd = os.getcwd()
+        self.assertTrue(gr.paths.utilities.ensure_directory(cwd))
+        tmpdir = tempfile.mkdtemp()
+        self.assertTrue(gr.paths.utilities.ensure_directory(tmpdir))
+        components = (
+            tmpdir,
+            "in the jungle the mighty jungle",
+            "the lion sleeps tonight",
+        )
+        target = os.path.join(*components)
+        self.assertFalse(os.path.exists(target))
+        self.assertFalse(gr.paths.utilities.ensure_directory(target))
+        self.assertTrue(gr.paths.utilities.ensure_directory(target))
+        self.assertTrue(os.path.exists(target))
+        shutil.rmtree(tmpdir)
+        self.assertFalse(os.path.exists(target))
+
+
+if __name__ == "__main__":
     gr_unittest.run(test_prefs)

@@ -46,6 +46,17 @@ GR_RUNTIME_API std::filesystem::path cache();
 /*
 GR_RUNTIME_API std::filesystem::path persistent();
 */
+
+namespace utilities {
+/*
+ * \brief Make sure the specified path exists; create directories recursively if
+ * necessary.
+ *
+ * \return true if the directory existed, false if the directory had to be created
+ *
+ */
+GR_RUNTIME_API bool ensure_directory(const std::filesystem::path& path);
+} // namespace utilities
 } /* namespace  paths */
 
 //! directory to create temporary files

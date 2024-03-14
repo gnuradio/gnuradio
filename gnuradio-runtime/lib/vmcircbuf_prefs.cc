@@ -34,22 +34,6 @@ static auto pathname(string_type key)
     return gr::paths::userconf() / "prefs" / key;
 }
 
-static void ensure_dir_path()
-{
-    // recursively make sure the directory exists
-    fs::path path;
-    for (const auto& path_component : gr::paths::userconf()) {
-        path /= path_component;
-        if (!fs::exists(path)) {
-            fs::create_directory(path);
-        }
-    }
-
-    path = path / "prefs";
-    if (!fs::exists(path))
-        fs::create_directory(path);
-}
-
 template <typename stream_t>
 static void
 log_ioerror(const std::string& who, const fs::path& path, const stream_t& stream)
@@ -84,7 +68,8 @@ void vmcircbuf_prefs::set(std::string_view key, std::string_view value)
     logger.set_level(logging::singleton().default_level());
     gr::thread::scoped_lock guard(s_vm_mutex);
 
-    ensure_dir_path();
+    // recursively make sure the directory exists
+    gr::paths::utilities::ensure_directory(gr::paths::userconf() / "prefs");
     auto path = pathname(key);
 
     std::ofstream out_file(path, std::ios::out | std::ios::binary | std::ios::trunc);

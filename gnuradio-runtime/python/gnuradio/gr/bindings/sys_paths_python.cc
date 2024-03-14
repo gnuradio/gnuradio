@@ -56,4 +56,13 @@ void bind_sys_paths(py::module& m)
         "userconf_path",
         []() { return ::gr::paths::userconf().string(); },
         D(userconf_path));
+
+    // wrap the utilities
+    auto utilities = paths.def_submodule("utilities", "GNU Radio File System Utilities");
+    utilities.def(
+        "ensure_directory",
+        [](const std::string& p) {
+            return gr::paths::utilities::ensure_directory({ p });
+        },
+        py::arg("path"));
 }
