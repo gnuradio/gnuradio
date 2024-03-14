@@ -161,10 +161,13 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         self.setCentralWidget(self.tabWidget)
 
         files_open = list(self.app.qsettings.value('window/files_open', []))
+        grc_file_found = False
         if files_open:
             for file in files_open:
-                self.open_triggered(file)
-        else:
+                if os.path.isfile(file):
+                    self.open_triggered(file)
+                    grc_file_found = True
+        if not grc_file_found:
             self.new_triggered()
 
         self.clipboard = None
