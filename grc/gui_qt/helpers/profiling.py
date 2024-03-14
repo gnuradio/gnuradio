@@ -23,4 +23,3 @@ class StopWatch(object):
         # Don't worry about catching it here
         start, stop = self._laps[name]
         return stop - start
-
