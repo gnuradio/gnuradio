@@ -157,7 +157,7 @@ class FlowgraphView(
             super(FlowgraphView, self).mousePressEvent(event)
 
         elif event.button() == Qt.MiddleButton:
-            self.isPanning = True            
+            self.isPanning = True
             self.dragPos = event.pos()
             event.accept()
 
@@ -182,7 +182,7 @@ class FlowgraphView(
             self.mousePressed = False
 
         elif event.button() == Qt.MiddleButton:
-            self.isPanning = False            
+            self.isPanning = False
 
         super(FlowgraphView, self).mouseReleaseEvent(event)
 
