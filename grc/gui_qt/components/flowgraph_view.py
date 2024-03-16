@@ -156,8 +156,14 @@ class FlowgraphView(
             # This will pass the mouse move event to the scene
             super(FlowgraphView, self).mousePressEvent(event)
 
+        elif event.button() == Qt.MiddleButton:
+            self.isPanning = True
+            self.dragPos = event.pos()
+            self.setCursor(Qt.ClosedHandCursor)
+            event.accept()
+
     def mouseMoveEvent(self, event):
-        if self.mousePressed and self.isPanning:
+        if self.isPanning:
             new_pos = event.pos()
             diff = new_pos - self.dragPos
             self.dragPos = new_pos
@@ -175,6 +181,12 @@ class FlowgraphView(
     def mouseReleaseEvent(self, event):
         if event.button() == Qt.LeftButton:
             self.mousePressed = False
+
+        elif event.button() == Qt.MiddleButton:
+            self.isPanning = False
+            self.setCursor(Qt.ArrowCursor)
+            event.accept()
+
         super(FlowgraphView, self).mouseReleaseEvent(event)
 
     def keyPressEvent(self, event):
