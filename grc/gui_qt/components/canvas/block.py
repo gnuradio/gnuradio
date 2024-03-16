@@ -402,7 +402,7 @@ class GUIBlock(QGraphicsItem):
 
     def rotate(self, rotation):
         log.debug(f"Rotating {self.core.name}")
-        new_rotation = self.rotation() + rotation
+        new_rotation = (self.rotation() + rotation) % 360
         self.setRotation(new_rotation)
         self.core.states["rotation"] = new_rotation
         self.create_shapes_and_labels()
