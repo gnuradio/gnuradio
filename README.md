@@ -3,8 +3,7 @@
 - Make sure PyQt5 (including QtSvg and QtWebEngine) is installed.
 - `pip install QDarkStyle qtpy`
 - `pip install pytest-qt pyautogui` (only required for testing)
-- checkout the `feature-grc-qt` branch
-- build and install like usual (see instructions on the master branch)
+- build and install as usual
 - Run `gnuradio-companion --qt`
 
 
