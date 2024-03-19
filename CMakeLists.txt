@@ -75,6 +75,13 @@ if(NOT DEFINED BOOST_ROOT)
     set(BOOST_ROOT "${CMAKE_INSTALL_PREFIX}")
 endif()
 
+find_program(CCACHE "ccache")
+if(CCACHE)
+    set(CMAKE_C_COMPILER_LAUNCHER ${CCACHE})
+    set(CMAKE_CXX_COMPILER_LAUNCHER ${CCACHE})
+    set(ENV{CCACHE_SLOPPINESS} pch_defines,time_macros)
+endif(CCACHE)
+
 ########################################################################
 # Import executables from a native build (for cross compiling)
 # http://www.vtk.org/Wiki/CMake_Cross_Compiling#Using_executables_in_the_build_created_during_the_build
