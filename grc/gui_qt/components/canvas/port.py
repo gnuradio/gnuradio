@@ -126,6 +126,13 @@ class GUIPort(QGraphicsItem):
         if self._show_label:
             painter.setPen(QPen(1))
             painter.setFont(self.font)
+
+            # Adjust the painter if parent block is 180 degrees rotated
+            if self.parentItem().rotation() == 180:
+                painter.translate(self.width / 2, self.height / 2)
+                painter.rotate(180)
+                painter.translate(-self.width / 2, -self.height / 2)
+
             if self.core._dir == "sink":
                 painter.drawText(QRectF(-max(0, self.width - 15), 0, self.width,
                                  self.height), Qt.AlignCenter, self.core.name)
