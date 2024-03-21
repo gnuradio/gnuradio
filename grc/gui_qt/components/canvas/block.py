@@ -414,6 +414,7 @@ class GUIBlock(QGraphicsItem):
         self.core.states["rotation"] = new_rotation
         self.create_shapes_and_labels()
         for con in self.core.connections():
+            con.gui.set_rotation(new_rotation)
             con.gui.update()
 
     def moveToTop(self):
