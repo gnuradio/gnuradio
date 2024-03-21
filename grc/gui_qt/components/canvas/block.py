@@ -284,6 +284,13 @@ class GUIBlock(QGraphicsItem):
             painter.setPen(Qt.black)
         else:
             painter.setPen(Qt.red)
+
+        # Adjust the painter if parent block is 180 degrees rotated
+        if self.rotation() == 180:
+            painter.translate(self.width / 2, self.height / 2)
+            painter.rotate(180)
+            painter.translate(-self.width / 2, -self.height / 2)
+
         painter.drawText(
             QRectF(0, 0 - self.height / 2 + 15, self.width, self.height),
             Qt.AlignCenter,
