@@ -8,6 +8,7 @@ SPDX-License-Identifier: GPL-2.0-or-later
 import os
 from os.path import expanduser, normpath, expandvars, exists
 from collections import OrderedDict
+from qtpy import QtCore
 
 from . import Constants
 
@@ -30,6 +31,8 @@ class Config(object):
         if name:
             self.name = name
 
+        self.qsettings = QtCore.QSettings(self.gui_prefs_file, QtCore.QSettings.IniFormat)
+
     @property
     def block_paths(self):
         paths_sources = (
@@ -37,6 +40,7 @@ class Config(object):
             os.environ.get('GRC_BLOCKS_PATH', ''),
             self._gr_prefs.get_string('grc', 'local_blocks_path', ''),
             self._gr_prefs.get_string('grc', 'global_blocks_path', ''),
+            self.qsettings.value('grc/custom_block_paths', ''),
         )
 
         collected_paths = sum((paths.split(os.pathsep)
