@@ -74,6 +74,7 @@ class GUIPort(QGraphicsItem):
             self.ctrl_point = self.mapToScene(QPointF(self.width, self.height / 2.0) + QPointF(100.0, 0.0))
 
         for conn in self.core.connections():
+            conn.gui.set_rotation(self.parentItem().rotation())
             conn.gui.update()
 
     def itemChange(self, change, value):
