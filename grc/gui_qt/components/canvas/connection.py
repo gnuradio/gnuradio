@@ -1,4 +1,4 @@
-from qtpy.QtGui import QPainterPath, QPainter, QPen
+from qtpy.QtGui import QPainterPath, QPainter, QPen, QTransform
 from qtpy.QtWidgets import QGraphicsPathItem
 from qtpy.QtCore import QPointF
 
@@ -89,7 +89,6 @@ class GUIConnection(QGraphicsPathItem):
         self._line = QPainterPath()
         self._arrowhead = QPainterPath()
         self._path = QPainterPath()
-        self.update()
 
         self._line_width_factor = 1.0
         self._color1 = self._color2 = None
@@ -101,6 +100,7 @@ class GUIConnection(QGraphicsPathItem):
         self._current_cr = None  # for what_is_selected() of curved line
         self._line_path = None
         self.setFlag(QGraphicsPathItem.ItemIsSelectable)
+        self.update()
 
     def update(self):
         """
@@ -112,18 +112,32 @@ class GUIConnection(QGraphicsPathItem):
         c2 = self.sink.gui.ctrl_point
         self._line.cubicTo(c1, c2, self.sink.gui.connection_point)
 
-        self._arrowhead.clear()
-        self._arrowhead.moveTo(self.sink.gui.connection_point + QPointF(10.0, 0))
-        self._arrowhead.lineTo(self.sink.gui.connection_point + QPointF(10.0, 0) +
-                               QPointF(-CONNECTOR_ARROW_HEIGHT, - CONNECTOR_ARROW_BASE / 2))
-        self._arrowhead.lineTo(self.sink.gui.connection_point + QPointF(10.0, 0) +
-                               QPointF(-CONNECTOR_ARROW_HEIGHT, CONNECTOR_ARROW_BASE / 2))
-        self._arrowhead.lineTo(self.sink.gui.connection_point + QPointF(10.0, 0))
+        self._create_arrowhead()
 
         self._path.clear()
         self._path.addPath(self._line)
         self._path.addPath(self._arrowhead)
         self.setPath(self._path)
+
+    def set_rotation(self, angle):
+        self._arrow_rotation = angle
+
+    def _create_arrowhead(self):
+        self._arrowhead.clear()
+        end_point = self.sink.gui.connection_point
+
+        # Create a default arrow head path
+        default_arrowhead = QPainterPath()
+        default_arrowhead.moveTo(QPointF(10.0, 0))
+        default_arrowhead.lineTo(QPointF(10.0, 0) + QPointF(-CONNECTOR_ARROW_HEIGHT, -CONNECTOR_ARROW_BASE / 2))
+        default_arrowhead.lineTo(QPointF(10.0, 0) + QPointF(-CONNECTOR_ARROW_HEIGHT, CONNECTOR_ARROW_BASE / 2))
+        default_arrowhead.lineTo(QPointF(10.0, 0))
+
+        # Rotate the default arrow head path based on _arrow_rotation
+        transform = QTransform()
+        transform.translate(end_point.x(), end_point.y())
+        transform.rotate(self._arrow_rotation)
+        self._arrowhead = transform.map(default_arrowhead)
 
     def paint(self, painter, option, widget):
         painter.setRenderHint(QPainter.Antialiasing)
