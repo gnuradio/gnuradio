@@ -118,25 +118,32 @@ class GUIPort(QGraphicsItem):
         painter.setPen(pen)
         painter.setBrush(QBrush(self._bg_color))
 
+        # TODO: should boundingRect() be used here ?
         if self.core._dir == "sink":
             rect = QRectF(-max(0, self.width - 15), 0, self.width, self.height)
         else:
             rect = QRectF(0, 0, self.width, self.height)
         painter.drawRect(rect)
 
+        # TODO: Adjustments for finer rotation values if required (eg. 15, 30)
+        block_rotation = self.parentItem().rotation()
+
         if self._show_label:
             painter.setPen(QPen(1))
             painter.setFont(self.font)
 
             # Adjust the painter if parent block is 180 degrees rotated
-            if self.parentItem().rotation() == 180:
-                painter.translate(self.width / 2, self.height / 2)
+            if block_rotation == 180:
+                painter.translate(self.width, self.height)
                 painter.rotate(180)
-                painter.translate(-self.width / 2, -self.height / 2)
 
             if self.core._dir == "sink":
-                painter.drawText(QRectF(-max(0, self.width - 15), 0, self.width,
-                                 self.height), Qt.AlignCenter, self.core.name)
+                if block_rotation == 180:
+                    painter.drawText(QRectF(max(0, self.width - 15), 0, self.width,
+                                     self.height), Qt.AlignCenter, self.core.name)
+                else:
+                    painter.drawText(QRectF(-max(0, self.width - 15), 0, self.width,
+                                     self.height), Qt.AlignCenter, self.core.name)
             else:
                 painter.drawText(QRectF(0, 0, self.width, self.height), Qt.AlignCenter, self.core.name)
 
