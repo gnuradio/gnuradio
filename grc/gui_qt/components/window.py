@@ -25,7 +25,6 @@ import subprocess
 import cProfile
 import pstats
 
-
 from typing import Union
 
 from qtpy import QtCore, QtGui, QtWidgets
@@ -502,6 +501,14 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
             statusTip=_("find-tooltip"),
         )
 
+        actions["flowgraph_find"] = Action(
+            Icons("edit-find"),
+            _("flowgraph_find"),
+            self,
+            shortcut="Ctrl+g",
+            statusTip=_("flowgraph-find"),
+        )
+
         # Help Actions
         actions["about"] = Action(
             Icons("help-about"), _("about"), self, statusTip=_("about-tooltip")
@@ -771,6 +778,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         view.addSeparator()
         view.addAction(actions["toggle_grid"])
         view.addAction(actions["find"])
+        view.addAction(actions["flowgraph_find"])
         menus["view"] = view
 
         # Setup the build menu
@@ -1038,7 +1046,8 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         else:
             message = None
             if file_path:
-                message = f"Save changes to {os.path.basename(file_path)} before closing? Your changes will be lost otherwise."
+                message = (f"Save changes to {os.path.basename(file_path)}"
+                           f"before closing? Your changes will be lost otherwise.")
             else:
                 message = "This flowgraph has not been saved"  # TODO: Revise text
 
@@ -1216,6 +1225,16 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
     def find_triggered(self):
         log.debug("find block")
         self._app().BlockLibrary._search_bar.setFocus()
+
+    def flowgraph_find_triggered(self):
+        log.debug("find block in flowgraph")
+        searched_block, ok = QtWidgets.QInputDialog.getText(self, "Search block in flow graph", "Block to find: ")
+        if ok and searched_block:
+            for block in self.currentFlowgraph.blocks:
+                # since block name using snake_case format
+                # replace whitespace with underscore and convert every letter to lowercase
+                if searched_block.lower().replace(' ', '_') in block.name:
+                    block.gui.setSelected(True)
 
     def get_involved_triggered(self):
         log.debug("get involved")

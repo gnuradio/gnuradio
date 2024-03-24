@@ -803,6 +803,17 @@ class Application(Gtk.Application):
             main.update_panel_visibility(main.BLOCKS, True)
             main.btwin.search_entry.show()
             main.btwin.search_entry.grab_focus()
+        elif action == Actions.FLOW_GRAPH_FIND_BLOCKS:
+            messagedialog = Dialogs.EntryDialog(parent=None, title="Search block in flow graph", modal=True)
+            searched_block = messagedialog.run()
+
+            if searched_block:
+                for block in flow_graph.blocks:
+                    # since block name using snake_case format
+                    # replace whitespace with underscore and convert every letter to lowercase
+                    if searched_block.lower().replace(' ', '_') in block.name:
+                        flow_graph.selected_elements.add(block)
+
         elif action == Actions.OPEN_HIER:
             for b in flow_graph.selected_blocks():
                 grc_source = b.extra_data.get('grc_source', '')
