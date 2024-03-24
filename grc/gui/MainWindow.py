@@ -22,6 +22,7 @@ from .Dialogs import TextDisplay, MessageDialogWrapper
 from .Notebook import Notebook, Page
 
 from ..core import Messages
+from ..core.utils import expr_utils
 
 
 log = logging.getLogger(__name__)
@@ -263,7 +264,17 @@ class MainWindow(Gtk.ApplicationWindow):
                 flow_graph=flow_graph,
                 file_path=file_path,
             )
-            page.check_grc_version()
+
+            # make sure grc file exist
+            if file_path:
+                grc_version = page.initial_state['metadata'].get('grc_version')
+                if grc_version:
+                    current_gr_version = self._platform.config.version
+                    err = expr_utils.check_grc_version(grc_version, current_gr_version)
+                    if err:
+                        msg = "Your GRC file from GNU Radio version {} (current GNU Radio version: {})\n".format(
+                            grc_version, current_gr_version)
+                        Messages.send(msg)
 
             if getattr(Messages, 'flowgraph_error') is not None:
                 Messages.send(
