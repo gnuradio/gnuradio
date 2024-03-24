@@ -8,7 +8,7 @@ from qtpy.QtGui import QStandardItem, QStandardItemModel
 from qtpy.QtWidgets import (QLineEdit, QDialog, QDialogButtonBox, QTreeView,
                             QVBoxLayout, QTabWidget, QGridLayout, QWidget, QLabel,
                             QPushButton, QListWidget, QComboBox, QPlainTextEdit, QHBoxLayout,
-                            QFileDialog, QApplication)
+                            QMessageBox, QFileDialog, QApplication)
 
 
 class ErrorsDialog(QDialog):
@@ -195,3 +195,12 @@ class PropsDialog(QDialog):
             ex = self.example_list.currentItem()
         self._block.parent.gui.app.MainWindow.open_example(ex.text())
         self.close()
+
+
+class MessageDialog(QMessageBox):
+    def __init__(self, parent, title, message):
+        super().__init__(parent)
+        self.setIcon(QMessageBox.Warning)
+        self.setWindowTitle(title)
+        self.setText(message)
+        self.setStandardButtons(QMessageBox.Close)

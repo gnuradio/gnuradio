@@ -50,7 +50,7 @@ from .undoable_actions import (
 )
 from .preferences import PreferencesDialog
 from .oot_browser import OOTBrowser
-from .dialogs import ErrorsDialog
+from .dialogs import ErrorsDialog, MessageDialog
 from ...core.base import Element
 
 # Logging
@@ -950,6 +950,8 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
             self.currentFlowgraphScene.saved = True
             self.currentFlowgraphScene.save_allowed = save_allowed
 
+        self.check_grc_version(initial_state, filename)
+
     def open_example(self, example_path):
         log.debug("open example")
         if example_path:
@@ -1038,7 +1040,8 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         else:
             message = None
             if file_path:
-                message = f"Save changes to {os.path.basename(file_path)} before closing? Your changes will be lost otherwise."
+                message = (f"Save changes to {os.path.basename(file_path)}"
+                           f"before closing? Your changes will be lost otherwise.")
             else:
                 message = "This flowgraph has not been saved"  # TODO: Revise text
 
@@ -1519,3 +1522,50 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         log.info("Stopping profiler")
         stats = pstats.Stats(self.profiler)
         stats.dump_stats('stats.prof')
+
+    def check_grc_version(self, initial_state, filename):
+        """
+        comparing current gr version from grc file metadata with current gr version,
+        then show message dialog popup to notify if the current grc file use older GNU Radio version
+        """
+        # if the filepath is empty, check nothing
+        if filename == '':
+            return
+
+        grc_version = initial_state['metadata'].get('grc_version')
+        if grc_version:
+            a, b, c, d = grc_version.split('.')
+            # to handle version number like v3.11.0.0git-684-g2dc3320d
+            # we need read until first alphabet to get version number d
+            tmp = ''
+            for i in d:
+                if i.isnumeric():
+                    tmp += i
+                else:
+                    break
+
+            a = int(a[1:])
+            b = int(b)
+            c = int(c)
+            d = int(tmp)
+
+            current_version = self.platform.config.version
+            platform_a, platform_b, platform_c, platform_d = current_version.split('.')
+            tmp = ''
+            for i in platform_d:
+                if i.isnumeric():
+                    tmp += i
+                else:
+                    break
+
+            platform_a = int(platform_a[1:])
+            platform_b = int(platform_b)
+            platform_c = int(platform_c)
+            platform_d = int(tmp)
+            if a < platform_a or b < platform_b or c < platform_c or d < platform_d:
+                title = "Old GR Version Detected"
+                msg = "Your GRC file from GNU Radio version {} (current GNU Radio version: {})\n".format(
+                    grc_version, current_version)
+
+                popup_dialogue = MessageDialog(parent=None, title=title, message=msg)
+                popup_dialogue.exec()
