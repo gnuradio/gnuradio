@@ -20,6 +20,8 @@ class Config(object):
 
     hier_block_lib_dir = os.environ.get(
         'GRC_HIER_PATH', Constants.DEFAULT_HIER_BLOCK_LIB_DIR)
+    gui_prefs_file = os.environ.get(
+        'GRC_QT_PREFS_PATH', os.path.expanduser('~/.gnuradio/grc_qt.conf'))
 
     def __init__(self, version, version_parts=None, name=None, prefs=None):
         self._gr_prefs = prefs if prefs else DummyPrefs()
