@@ -8,7 +8,7 @@ SPDX-License-Identifier: GPL-2.0-or-later
 import os
 from os.path import expanduser, normpath, expandvars, exists
 from collections import OrderedDict
-from qtpy import QtCore
+from PyQt5 import QtCore
 
 from . import Constants
 
