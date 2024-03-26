@@ -37,17 +37,8 @@ static auto pathname(string_type key)
 static void ensure_dir_path()
 {
     // recursively make sure the directory exists
-    fs::path path;
-    for (const auto& path_component : gr::paths::userconf()) {
-        path /= path_component;
-        if (!fs::exists(path)) {
-            fs::create_directory(path);
-        }
-    }
-
-    path = path / "prefs";
-    if (!fs::exists(path))
-        fs::create_directory(path);
+    fs::path path = gr::paths::userconf() / "prefs";
+    fs::create_directories(path);
 }
 
 template <typename stream_t>
