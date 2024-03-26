@@ -27,7 +27,8 @@
 #include <cstring>
 
 
-#if defined(HAVE_PTHREAD_SETSCHEDPARAM) || defined(HAVE_SCHED_SETSCHEDULER)
+#if !(defined(_WIN32) || defined(__WIN32__) || defined(WIN32)) && \
+    (defined(HAVE_PTHREAD_SETSCHEDPARAM) || defined(HAVE_SCHED_SETSCHEDULER))
 #include <pthread.h>
 
 namespace gr {
