@@ -16,7 +16,6 @@ from .StateCache import StateCache
 from .Constants import MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT
 from .DrawingArea import DrawingArea
 
-
 log = logging.getLogger(__name__)
 
 
@@ -89,13 +88,14 @@ class Page(Gtk.HBox):
 
         self.process = None
         self.saved = True
+
         if not self.file_path:
             self.saved = False
 
         # import the file
-        initial_state = flow_graph.parent_platform.parse_flow_graph(file_path)
-        flow_graph.import_data(initial_state)
-        self.state_cache = StateCache(initial_state)
+        self.initial_state = flow_graph.parent_platform.parse_flow_graph(file_path)
+        flow_graph.import_data(self.initial_state)
+        self.state_cache = StateCache(self.initial_state)
 
         # tab box to hold label and close button
         self.label = Gtk.Label()

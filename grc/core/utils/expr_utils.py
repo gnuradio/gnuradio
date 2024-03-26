@@ -212,3 +212,44 @@ def _sort_variables(exprs):
         for var in indep_vars:
             var_graph.remove_node(var)
     return reversed(sorted_vars)
+
+
+def check_grc_version(grc_version, current_gr_version):
+    """
+    comparing current gr version from grc file metadata with current gr version,
+    then show message dialog popup to notify if the current grc file use older GNU Radio version
+    """
+
+    if grc_version:
+        a, b, c, d = grc_version.split('.')
+        # to handle version number like v3.11.0.0git-684-g2dc3320d
+        # we need read until first alphabet to get version number d
+        tmp = ''
+        for i in d:
+            if i.isnumeric():
+                tmp += i
+            else:
+                break
+
+        a = int(a[1:])
+        b = int(b)
+        c = int(c)
+        d = int(tmp)
+
+        current_version = current_gr_version
+        platform_a, platform_b, platform_c, platform_d = current_version.split('.')
+        tmp = ''
+        for i in platform_d:
+            if i.isnumeric():
+                tmp += i
+            else:
+                break
+
+        platform_a = int(platform_a[1:])
+        platform_b = int(platform_b)
+        platform_c = int(platform_c)
+        platform_d = int(tmp)
+        if a < platform_a or b < platform_b or c < platform_c or d < platform_d:
+            return 1
+
+        return 0
