@@ -62,22 +62,12 @@ static void wisdom_lock_init()
         return;
 
     // recursively make sure the directory exists
-    fs::path path;
-    for (const auto& path_component : gr::paths::cache()) {
-        path /= path_component;
-        if (!fs::exists(path)) {
-            fs::create_directory(path);
-        }
-    }
+    fs::path path = gr::paths::cache();
+    fs::create_directories(path);
     const auto wisdom_lock_file = path / WISDOM_LOCKFILE;
-#ifdef _MSC_VER
     int fd = open(wisdom_lock_file.string().c_str(),
                   O_WRONLY | O_CREAT | O_NOCTTY | O_NONBLOCK,
                   0666);
-#else
-    int fd =
-        open(wisdom_lock_file.c_str(), O_WRONLY | O_CREAT | O_NOCTTY | O_NONBLOCK, 0666);
-#endif
     if (fd < 0) {
         throw std::runtime_error("Failed to create FFTW wisdom lockfile: " +
                                  wisdom_lock_file.string());
@@ -104,11 +94,7 @@ static void unlock_wisdom()
 static void import_wisdom()
 {
     auto wisdom_path = gr::paths::cache() / WISDOM_FILENAME;
-#ifdef _MSC_VER
     FILE* fp = fopen(wisdom_path.string().c_str(), "r");
-#else
-    FILE* fp = fopen(wisdom_path.c_str(), "r");
-#endif
     if (fp != 0) {
         int r = fftwf_import_wisdom_from_file(fp);
         fclose(fp);
@@ -136,11 +122,7 @@ static void config_threading(int nthreads)
 static void export_wisdom()
 {
     auto wisdom_path = gr::paths::cache() / WISDOM_FILENAME;
-#ifdef _MSC_VER
     FILE* fp = fopen(wisdom_path.string().c_str(), "w");
-#else
-    FILE* fp = fopen(wisdom_path.c_str(), "w");
-#endif
     if (fp != 0) {
         fftwf_export_wisdom_to_file(fp);
         fclose(fp);
