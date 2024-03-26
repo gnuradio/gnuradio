@@ -11,8 +11,12 @@
 #ifndef INCLUDED_AUDIO_WINDOWS_SINK_H
 #define INCLUDED_AUDIO_WINDOWS_SINK_H
 
+#ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN
+#endif
+#ifndef NOMINMAX
 #define NOMINMAX // stops windef.h defining max/min under cygwin
+#endif
 
 #include <mmsystem.h>
 #include <windows.h>

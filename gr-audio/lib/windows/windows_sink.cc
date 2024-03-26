@@ -189,7 +189,7 @@ int windows_sink::work(int noutput_items,
         }
 
         short* d_buffer = (short*)chosen_header->lpData;
-        samples_tosend = noutput_items - samples_sent >= d_chunk_size
+        samples_tosend = noutput_items - samples_sent >= (int)d_chunk_size
                              ? d_chunk_size
                              : noutput_items - samples_sent;
 
@@ -231,8 +231,8 @@ MMRESULT windows_sink::is_format_supported(LPWAVEFORMATEX pwfx, UINT uDeviceID)
     return (waveOutOpen(NULL,                // ptr can be NULL for query
                         uDeviceID,           // the device identifier
                         pwfx,                // defines requested format
-                        NULL,                // no callback
-                        NULL,                // no instance data
+                        0,                   // no callback
+                        0,                   // no instance data
                         WAVE_FORMAT_QUERY)); // query only, do not open device
 }
 
@@ -279,7 +279,7 @@ UINT windows_sink::find_device(std::string szDeviceName)
                     d_debug_logger->info("WaveOut Device {:d}: {:s}", i, woc.szPname);
                 }
             }
-            if (result == -1) {
+            if (result == (UINT)-1) {
                 d_logger->warn("waveOut device '{:s}' was not found, "
                                "defaulting to WAVE_MAPPER",
                                szDeviceName);
