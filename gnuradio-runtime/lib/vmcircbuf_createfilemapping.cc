@@ -28,7 +28,7 @@ namespace gr {
 
 #ifdef HAVE_CREATEFILEMAPPING
 // Print Windows error (could/should be global?)
-static void werror(char* where, DWORD last_error)
+static void werror(const char* where, DWORD last_error)
 {
     char buf[1024];
 
