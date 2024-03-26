@@ -145,6 +145,44 @@ class TextDisplay(SimpleTextDisplay):
         return False
 
 
+class EntryDialog(Gtk.Dialog):
+    def __init__(self, *args, **kwargs):
+        '''
+        Creates a new EntryDialog. Takes all the arguments of the usual
+        MessageDialog constructor plus one optional named argument
+        "default_value" to specify the initial contents of the entry.
+        '''
+        super(EntryDialog, self).__init__(*args, **kwargs)
+
+        entry = Gtk.Entry()
+        entry.connect("activate",
+                      self.enter_ditekan)
+
+        ok_btn = Gtk.Button(label="ok")
+        ok_btn.connect('clicked', self.ok_button_cliked)
+
+        self.vbox.pack_end(ok_btn, True, True, 0)
+        self.vbox.pack_end(entry, True, True, 0)
+
+        self.vbox.show_all()
+        self.entry = entry
+
+        self.response = None
+
+    def ok_button_cliked(self, widget):
+        self.response = self.entry.get_text()
+        self.destroy()
+
+    def enter_ditekan(self, widget):
+        self.response = self.entry.get_text()
+        self.destroy()
+
+    def run(self):
+        super().run()
+        self.destroy()
+        return self.response
+
+
 class MessageDialogWrapper(Gtk.MessageDialog):
     """ Run a message dialog. """
 

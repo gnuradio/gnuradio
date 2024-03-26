@@ -29,7 +29,7 @@ class Namespace(object):
         self._actions[key] = action
 
     def connect(self, name, handler):
-        #log.debug("Connecting action <{}> to handler <{}>".format(name, handler.__name__))
+        # log.debug("Connecting action <{}> to handler <{}>".format(name, handler.__name__))
         self._actions[name].connect('activate', handler)
 
     def register(self,
@@ -90,7 +90,7 @@ class Namespace(object):
                 pass
                 # self.win.add_action(action)
 
-        #log.debug("Registering action as '{}'".format(key))
+        # log.debug("Registering action as '{}'".format(key))
         self._actions[key] = action
         return action
 
@@ -687,6 +687,13 @@ FIND_BLOCKS = actions.register(
     tooltip='Search for a block by name (and key)',
     icon_name='edit-find',
     keypresses=["<Ctrl>f", "slash"],
+)
+FLOW_GRAPH_FIND_BLOCKS = actions.register(
+    "win.flow_graph_find_blocks",
+    label="_Find Blocks in Flow Graph ",
+    tooltip="Find Blocks in Flow Graph",
+    icon_name="edit-find",
+    keypresses=["<Ctrl>g"],
 )
 CLEAR_CONSOLE = actions.register(
     "win.console.clear",
