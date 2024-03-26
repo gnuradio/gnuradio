@@ -167,7 +167,7 @@ int windows_source::work(int noutput_items,
             case 1: // mono output
                 f0 = (float*)output_items[0];
 
-                for (int j = 0; j < buffer_length; j++) {
+                for (DWORD j = 0; j < buffer_length; j++) {
                     f0[dw_items + j] = (float)(lp_buffer[j]) / 32767.0;
                 }
                 dw_items += buffer_length;
@@ -176,7 +176,7 @@ int windows_source::work(int noutput_items,
                 f0 = (float*)output_items[0];
                 f1 = (float*)output_items[1];
 
-                for (int j = 0; j < buffer_length / 2; j++) {
+                for (DWORD j = 0; j < buffer_length / 2; j++) {
                     f0[dw_items + j] = (float)(lp_buffer[2 * j + 0]) / 32767.0;
                     f1[dw_items + j] = (float)(lp_buffer[2 * j + 1]) / 32767.0;
                 }
@@ -208,8 +208,8 @@ MMRESULT windows_source::is_format_supported(LPWAVEFORMATEX pwfx, UINT uDeviceID
     return (waveInOpen(NULL,                // ptr can be NULL for query
                        uDeviceID,           // the device identifier
                        pwfx,                // defines requested format
-                       NULL,                // no callback
-                       NULL,                // no instance data
+                       0,                   // no callback
+                       0,                   // no instance data
                        WAVE_FORMAT_QUERY)); // query only, do not open device
 }
 
@@ -257,7 +257,7 @@ UINT windows_source::find_device(std::string szDeviceName)
                 if (verbose)
                     d_debug_logger->info("WaveIn Device {:d}: {:s}", i, woc.szPname);
             }
-            if (result == -1) {
+            if (result == (UINT)-1) {
                 d_debug_logger->info("Warning: waveIn device '{:s}' was not found, "
                                      "defaulting to WAVE_MAPPER",
                                      szDeviceName);
