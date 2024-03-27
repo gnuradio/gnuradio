@@ -21,9 +21,6 @@
 #include "ccsds.h"
 #include "fixed.h"
 #define EXERCISE exercise_ccsds
-#elif defined(BIGSYM)
-#include "int.h"
-#define EXERCISE exercise_int
 #else
 #include "char.h"
 #define EXERCISE exercise_char
