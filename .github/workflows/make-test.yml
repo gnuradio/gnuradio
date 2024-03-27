@@ -155,3 +155,69 @@ jobs:
       run: 'cd /build && make -j2 -k'
     - name: Make Test
       run: 'cd /build && ctest --output-on-failure'
+  mingw64:
+  # All of these shall depend on the formatting check (needs: check-formatting)
+    needs: [check-formatting, check-python-formatting]
+    runs-on: windows-latest
+    name: MinGW-w64
+    defaults:
+      run:
+        shell: msys2 {0}
+    steps:
+    - name: Setup MSYS2
+      uses: msys2/setup-msys2@v2
+      with:
+        msystem: MINGW64
+        update: true
+        install: >-
+          git
+          make
+        pacboy: >-
+          toolchain:p
+          cmake:p
+          ninja:p
+          boost:p
+          cppzmq:p
+          fftw:p
+          gsl:p
+          gsm:p
+          gtk3:p
+          jack2:p
+          libsndfile:p
+          libunwind:p
+          pango:p
+          portaudio:p
+          pybind11:p
+          python:p
+          python-click:p
+          python-gobject:p
+          python-jsonschema:p
+          python-mako:p
+          python-numpy:p
+          python-pip:p
+          python-pyqt5:p
+          python-pyzmq:p
+          python-yaml:p
+          qt5-base:p
+          qwt-qt5:p
+          SDL:p
+          soapysdr:p
+          spdlog:p
+          thrift:p
+          volk:p
+    - name: PIP Install
+      run: pip install click-plugins
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: CMake
+      run: |
+        cmake -S . -B build \
+          -DCMAKE_INSTALL_PREFIX=${RUNNER_TEMP}/msys64/mingw64 \
+          -DENABLE_DOXYGEN=OFF
+    - name: Make
+      run: cmake --build build
+    - name: Make Install
+      run: cmake --install build
+    - name: Make Test
+      working-directory: ./build
+      run: ctest --output-on-failure
