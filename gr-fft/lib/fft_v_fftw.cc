@@ -1,6 +1,7 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2004,2007,2008,2010,2012,2020 Free Software Foundation, Inc.
+ * Copyright 2024 Marcus Müller
  *
  * This file is part of GNU Radio
  *
@@ -8,13 +9,9 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "fft_v_fftw.h"
+#include <gnuradio/thread/thread.h>
 #include <volk/volk.h>
-#include <cmath>
 #include <cstring>
 
 namespace gr {
@@ -61,6 +58,7 @@ int fft_v_fftw<T, forward>::nthreads() const
 template <class T, bool forward>
 bool fft_v_fftw<T, forward>::set_window(const std::vector<float>& window)
 {
+    gr::thread::scoped_lock window_lock(this->d_setlock);
     if (window.empty() || window.size() == d_fft_size) {
         d_window = window;
         return true;
@@ -71,20 +69,23 @@ bool fft_v_fftw<T, forward>::set_window(const std::vector<float>& window)
 template <>
 void fft_v_fftw<gr_complex, true>::fft_and_shift(const gr_complex* in, gr_complex* out)
 {
+    gr::thread::scoped_lock window_lock(d_setlock);
     if (!d_window.empty()) {
         gr_complex* dst = d_fft.get_inbuf();
         volk_32fc_32f_multiply_32fc(&dst[0], in, &d_window[0], d_fft_size);
+        window_lock.unlock();
     } else {
+        window_lock.unlock();
         memcpy(d_fft.get_inbuf(), in, sizeof(gr_complex) * d_fft_size);
     }
     d_fft.execute();
     if (d_shift) {
-        unsigned int len = (unsigned int)(ceil(d_fft_size / 2.0));
+        // round up
+        unsigned int len = (d_fft_size + 1) / 2;
         memcpy(
             &out[0], &d_fft.get_outbuf()[len], sizeof(gr_complex) * (d_fft_size - len));
         memcpy(&out[d_fft_size - len], &d_fft.get_outbuf()[0], sizeof(gr_complex) * len);
     } else {
-
         memcpy(out, d_fft.get_outbuf(), sizeof(gr_complex) * d_fft_size);
     }
 }
@@ -92,6 +93,7 @@ void fft_v_fftw<gr_complex, true>::fft_and_shift(const gr_complex* in, gr_comple
 template <>
 void fft_v_fftw<gr_complex, false>::fft_and_shift(const gr_complex* in, gr_complex* out)
 {
+    gr::thread::scoped_lock window_lock(d_setlock);
     if (!d_window.empty()) {
         gr_complex* dst = d_fft.get_inbuf();
         if (d_shift) {
@@ -103,17 +105,20 @@ void fft_v_fftw<gr_complex, false>::fft_and_shift(const gr_complex* in, gr_compl
         } else {
             volk_32fc_32f_multiply_32fc(&dst[0], in, &d_window[0], d_fft_size);
         }
+        window_lock.unlock();
     } else {
+        window_lock.unlock();
         if (d_shift) { // apply an ifft shift on the data
             gr_complex* dst = d_fft.get_inbuf();
-            unsigned int len =
-                (unsigned int)(floor(d_fft_size / 2.0)); // half length of complex array
+            // round down
+            unsigned int len = d_fft_size / 2; // half length of complex array
             memcpy(&dst[0], &in[len], sizeof(gr_complex) * (d_fft_size - len));
             memcpy(&dst[d_fft_size - len], &in[0], sizeof(gr_complex) * len);
         } else {
             memcpy(d_fft.get_inbuf(), in, sizeof(gr_complex) * d_fft_size);
         }
     }
+
     d_fft.execute();
     memcpy(out, d_fft.get_outbuf(), sizeof(gr_complex) * d_fft_size);
 }
@@ -121,12 +126,15 @@ void fft_v_fftw<gr_complex, false>::fft_and_shift(const gr_complex* in, gr_compl
 template <>
 void fft_v_fftw<float, true>::fft_and_shift(const float* in, gr_complex* out)
 {
+    gr::thread::scoped_lock window_lock(d_setlock);
     // copy input into optimally aligned buffer
     if (!d_window.empty()) {
         gr_complex* dst = d_fft.get_inbuf();
         for (unsigned int i = 0; i < d_fft_size; i++) // apply window
             dst[i] = in[i] * d_window[i];
+        window_lock.unlock();
     } else {
+        window_lock.unlock();
         gr_complex* dst = d_fft.get_inbuf();
         for (unsigned int i = 0; i < d_fft_size; i++) // float to complex conversion
             dst[i] = in[i];
@@ -134,7 +142,8 @@ void fft_v_fftw<float, true>::fft_and_shift(const float* in, gr_complex* out)
 
     d_fft.execute();
     if (d_shift) {
-        unsigned int len = (unsigned int)(ceil(d_fft_size / 2.0));
+        // round up
+        unsigned int len = (d_fft_size + 1) / 2;
         memcpy(
             &out[0], &d_fft.get_outbuf()[len], sizeof(gr_complex) * (d_fft_size - len));
         memcpy(&out[d_fft_size - len], &d_fft.get_outbuf()[0], sizeof(gr_complex) * len);
@@ -147,12 +156,13 @@ void fft_v_fftw<float, true>::fft_and_shift(const float* in, gr_complex* out)
 template <>
 void fft_v_fftw<float, false>::fft_and_shift(const float* in, gr_complex* out)
 {
+    gr::thread::scoped_lock window_lock(d_setlock);
     // copy input into optimally aligned buffer
     if (!d_window.empty()) {
         gr_complex* dst = d_fft.get_inbuf();
         if (d_shift) {
-            unsigned int len =
-                (unsigned int)(floor(d_fft_size / 2.0)); // half length of complex array
+            // round down
+            unsigned int len = d_fft_size / 2; // half length of complex array
             for (unsigned int i = 0; i < len; i++) {
                 dst[i] = in[len + i] * d_window[len + i];
             }
@@ -163,12 +173,13 @@ void fft_v_fftw<float, false>::fft_and_shift(const float* in, gr_complex* out)
             for (unsigned int i = 0; i < d_fft_size; i++) // apply window
                 dst[i] = in[i] * d_window[i];
         }
-
+        window_lock.unlock();
     } else {
+        window_lock.unlock();
         gr_complex* dst = d_fft.get_inbuf();
         if (d_shift) {
-            unsigned int len =
-                (unsigned int)(floor(d_fft_size / 2.0)); // half length of complex array
+            // round down
+            unsigned int len = d_fft_size / 2; // half length of complex array
             for (unsigned int i = 0; i < len; i++) {
                 dst[i] = in[len + i];
             }
