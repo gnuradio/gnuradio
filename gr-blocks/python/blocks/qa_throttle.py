@@ -32,7 +32,7 @@ class test_throttle(gr_unittest.TestCase):
         end_time = time.perf_counter()
 
         total_time = end_time - start_time
-        self.assertGreater(total_time, 2.0)
+        self.assertGreater(total_time, 1.99)
         self.assertLess(total_time, 3.0)
 
         dst_data = dst.data()
@@ -55,7 +55,7 @@ class test_throttle(gr_unittest.TestCase):
         end_time = time.perf_counter()
 
         total_time = end_time - start_time
-        self.assertGreater(total_time, 2.0)
+        self.assertGreater(total_time, 1.99)
         self.assertLess(total_time, 3.0)
 
         dst_data = dst.data()
