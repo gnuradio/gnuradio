@@ -84,7 +84,6 @@ class test_throttle(gr_unittest.TestCase):
         while time.perf_counter() < start_time + total_time:
             time.sleep(0.1)
             current_len = len(dst.data())
-            print(current_len)
             self.assertLessEqual(current_len, previous_len + chunksize)
             previous_len = current_len
 
