@@ -24,7 +24,7 @@ class test_pmt_to_python(unittest.TestCase):
     def test_numpy_to_uvector_and_reverse(self):
         import numpy as np
         N = 100
-        narr = np.ndarray(N, dtype=np.complex128)
+        narr = np.ndarray(N, dtype=np.cdouble)
         narr.real[:] = np.random.uniform(size=N)
         narr.imag[:] = np.random.uniform(size=N)
         uvector = pmt2py.numpy_to_uvector(narr)
