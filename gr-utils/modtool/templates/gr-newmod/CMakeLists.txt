@@ -152,6 +152,6 @@ configure_package_config_file(
     ${CMAKE_CURRENT_BINARY_DIR}/cmake/Modules/${target}Config.cmake
     INSTALL_DESTINATION ${GR_CMAKE_DIR})
 
-install(FILES MANIFEST.md
-    RENAME MANIFEST-${VERSION_MAJOR}.${VERSION_API}.${VERSION_ABI}${VERSION_PATCH}.md
+install(FILES MANIFEST.yml
+    RENAME MANIFEST-${VERSION_MAJOR}.${VERSION_API}.${VERSION_ABI}${VERSION_PATCH}.yml
     DESTINATION share/gnuradio/manifests/howto)
