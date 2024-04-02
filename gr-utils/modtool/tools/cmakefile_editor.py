@@ -28,7 +28,7 @@ class CMakeFileEditor(object):
     def append_value(self, entry, value, to_ignore_start='', to_ignore_end=''):
         """ Add a value to an entry. """
         regexp = re.compile(fr'({entry}\({to_ignore_start}[^()]*?)\s*?(\s?{to_ignore_end})\)',
-                            re.MULTILINE)
+                            re.MULTILINE | re.IGNORECASE)
         substi = r'\1' + self.separator + value + r'\2)'
         (self.cfile, nsubs) = regexp.subn(substi, self.cfile, count=1)
         return nsubs
@@ -66,7 +66,7 @@ class CMakeFileEditor(object):
             value=value,
             to_ignore_end=to_ignore_end,
         )
-        regexp = re.compile(regexp, re.MULTILINE)
+        regexp = re.compile(regexp, re.MULTILINE | re.IGNORECASE)
         (self.cfile, nsubs) = re.subn(regexp, r'\1\2', self.cfile, count=1)
         return nsubs
 
