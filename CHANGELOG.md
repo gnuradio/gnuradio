@@ -7,6 +7,61 @@ Versioning](http://semver.org/spec/v2.0.0.html), starting with version 3.7.12.0.
 
 Older Logs can be found in `docs/RELEASE-NOTES-*`.
 
+## [3.10.10.0] - 2024-04-06
+
+### Changed
+
+#### Runtime
+
+- Modernize location of config files. `XDG_CONFIG_HOME` will be used if set
+(often `$HOME/.config`). This change attempts to be backward compatible with
+existing config file locations, but be aware that config files may show up
+in the old (`$HOME/.gnuradio/`) and new (`$XDG_CONFIG_HOME/gnuradio`)
+locations depending on GNU Radio version. Files are not automatically moved,
+since some users run multiple versions of GNU Radio.
+- Ctrlport Probe, Ctrlport Probe PSD and gr-ctrlport-monitor. Ctrlport Monitor blocks
+are still broken.
+
+#### GRC
+
+- NEW Qt-based front end! Run `gnuradio-companion --qt` to try it out. This feature is
+still in testing, so the Gtk front end runs by default. In a future release, Qt will
+become the default, removing Gtk as a manditory dependency. Maintenance will focus on
+the Qt front end at that point.
+- Restore property field background colors (as a View option, off by default) for the Gtk
+front end. Background colors were previously replaced with textual type string.
+- The canvas can be panned using the middle mouse button
+- C++ code generation improvements related to parameters and strings
+- C++ code generation fixed for Add Const
+
+#### gr-audio
+
+- Added 96 kHz and 192 kHz selections to ALSA source/sink
+
+#### gr-blocks
+
+- Float To UChar block adds vector support, and also scale and bias params
+
+#### gr-digital
+
+- Additive Scrambler adds soft symbol handling
+
+#### modtool
+
+- Improvements to handling of Python blocks (add, rm, and rename work reliably)
+- New parseable manifest format (yaml instead of md) to better support the OOT ecosystem
+- Manifest and examples are installed by "make install"
+
+#### Build system and packaging
+
+- Python byte-compiled (pyc) files are no longer installed, as they are
+deprecated by Python
+
+#### Testing
+
+- Added MinGW test runner and fixed various MinGW compilation failures
+- Update Fedora to test 38, 39 and 40
+
 ## [3.10.9.0] - 2023-12-24
 
 ### Changed
