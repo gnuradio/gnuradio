@@ -23,7 +23,7 @@ class LabeledDialControl(QFrame):
                  minsize=100, isFloat=False, scaleFactor=1, showvalue=False,
                  outputmsgname='value'):
         QFrame.__init__(self, parent)
-        self.numberControl = DialControl(minimum, maximum, defaultvalue, backgroundColor,
+        self.numberControl = DialControl(minimum, maximum, defaultvalue / scaleFactor, backgroundColor,
                                          self.valChanged, changedCallback, minsize)
 
         layout = QVBoxLayout()
@@ -37,7 +37,7 @@ class LabeledDialControl(QFrame):
         self.lblcontrol.setAlignment(Qtc.AlignCenter)
 
         if self.showvalue:
-            textstr = self.buildTextStr(defaultvalue * self.scaleFactor)
+            textstr = self.buildTextStr(defaultvalue)
             self.lblcontrol.setText(textstr)
 
         if len or self.showvalue:
