@@ -107,10 +107,6 @@ categories:
         name: Default Qt GUI theme
         dtype: str
         default: ""
-      - key: display_wiki
-        name: Display Wiki tab
-        dtype: bool
-        default: False
 
 # Runtime preferences typically end up in config.conf. They are grouped in a single tab.
 runtime:

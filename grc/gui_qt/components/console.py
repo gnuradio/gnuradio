@@ -82,6 +82,8 @@ class Console(QtWidgets.QDockWidget, base.Component):
     def __init__(self, level):
         super(Console, self).__init__()
 
+        self.qsettings = self.app.qsettings
+
         self.setObjectName('console')
         self.setWindowTitle('Console')
         self.level = level
@@ -116,8 +118,8 @@ class Console(QtWidgets.QDockWidget, base.Component):
 
         # Translation support
 
-        #self.setWindowTitle(_translate("", "Library", None))
-        #library.headerItem().setText(0, _translate("", "Blocks", None))
+        # self.setWindowTitle(_translate("", "Library", None))
+        # library.headerItem().setText(0, _translate("", "Blocks", None))
         # QtCore.QMetaObject.connectSlotsByName(blockLibraryDock)
 
         # Setup actions
@@ -153,6 +155,9 @@ class Console(QtWidgets.QDockWidget, base.Component):
         self.actions['show_level'].setChecked = True
         self.handler.show_level = True
         self.enabled = False
+
+        if not self.qsettings.value("appearance/display_console", True, type=bool):
+            self.hide()
 
     def enable(self):
         self.enabled = True
