@@ -106,6 +106,8 @@ class BlockLibrary(QDockWidget, base.Component):
     def __init__(self):
         super(BlockLibrary, self).__init__()
 
+        self.qsettings = self.app.qsettings
+
         self.setObjectName("block_library")
         self.setWindowTitle("Block Library")
 
@@ -204,6 +206,9 @@ class BlockLibrary(QDockWidget, base.Component):
 
         # Dict representing which examples contain various blocks
         self.examples_w_block = {}
+
+        if not self.qsettings.value("appearance/display_blocklibrary", True, type=bool):
+            self.hide()
 
     def createActions(self, actions):
         pass
