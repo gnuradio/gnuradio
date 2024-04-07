@@ -35,6 +35,8 @@ class VariableEditor(QDockWidget, base.Component):
     def __init__(self):
         super(VariableEditor, self).__init__()
 
+        self.qsettings = self.app.qsettings
+
         self.setObjectName('variable_editor')
         self.setWindowTitle('Variable Editor')
 
@@ -74,7 +76,8 @@ class VariableEditor(QDockWidget, base.Component):
         # before calling the MainWindow Controller to add the widget.
         self.app.registerDockWidget(self, location=self.settings.window.VARIABLE_EDITOR_DOCK_LOCATION)
         self.currently_rebuilding = False
-
+        if not self.qsettings.value("appearance/display_variable_editor", True, type=bool):
+            self.hide()
     # Actions
 
     def createActions(self, actions):

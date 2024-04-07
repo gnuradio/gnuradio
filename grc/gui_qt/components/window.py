@@ -1475,6 +1475,16 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
                 # We cancelled closing a tab. We don't want to close the application
                 return
 
+        # Save the panel settings
+        # Console
+        self.app.qsettings.setValue('appearance/display_console', not self.app.Console.isHidden())
+        # Block Library
+        self.app.qsettings.setValue('appearance/display_blocklibrary', not self.app.BlockLibrary.isHidden())
+        # Wiki
+        self.app.qsettings.setValue('appearance/display_wiki', not self.app.WikiTab.isHidden())
+        # Variable Editor
+        self.app.qsettings.setValue('appearance/display_variable_editor', not self.app.VariableEditor.isHidden())
+
         # Write the leftmost tab to file first
         self.app.qsettings.setValue('window/files_open', reversed(files_open))
         self.app.qsettings.setValue('window/windowState', self.saveState())
