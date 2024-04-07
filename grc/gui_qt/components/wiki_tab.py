@@ -30,7 +30,7 @@ log = logging.getLogger(f"grc.application.{__name__}")
 
 
 class WikiTab(QtWidgets.QDockWidget, base.Component):
-    def __init__(self, argv_enabled=False):
+    def __init__(self):
         super(WikiTab, self).__init__()
 
         self.qsettings = self.app.qsettings
@@ -40,27 +40,11 @@ class WikiTab(QtWidgets.QDockWidget, base.Component):
 
         self.setFloating(False)
 
-        active = None
-        if argv_enabled:
-            active = True
-        else:
-            if self.qsettings.value("appearance/display_wiki", False, type=bool) == True:
-                active = True
-            else:
-                active = False
-
-        if active:
-            try:
-                from qtpy.QtWebEngineWidgets import QWebEngineView
-                self.hidden = False
-            except ImportError:
-                log.error("PyQt QWebEngine missing!")
-                self.hide()
-                self.hidden = True
-                return
-        else:
+        try:
+            from qtpy.QtWebEngineWidgets import QWebEngineView
+        except ImportError:
+            log.error("PyQt QWebEngine missing!")
             self.hide()
-            self.hidden = True
             return
 
         # GUI Widgets
@@ -97,9 +81,11 @@ class WikiTab(QtWidgets.QDockWidget, base.Component):
         # The AppController then tries to find a saved dock location from the preferences
         # before calling the MainWindow Controller to add the widget.
         self.app.registerDockWidget(self, location=self.settings.window.WIKI_TAB_DOCK_LOCATION)
+        if not self.qsettings.value("appearance/display_wiki", False, type=bool):
+            self.hide()
 
     def setURL(self, url):
-        if not self.hidden:
+        if not self.isHidden():
             self._text.load(url)
             self._text.show()
 
