@@ -290,7 +290,7 @@ class FlowgraphScene(QtWidgets.QGraphicsScene, base.Component):
                     if selected[0].core.is_port and selected[0] != g_item:
                         if selected[0].core.is_source and c_item.is_sink:
                             new_con = self.core.connect(selected[0].core, c_item)
-                        elif selected[0].is_sink and c_item.is_source:
+                        elif selected[0].core.is_sink and c_item.is_source:
                             new_con = self.core.connect(c_item, selected[0].core)
                 if new_con:
                     log.debug("Created connection (click)")
