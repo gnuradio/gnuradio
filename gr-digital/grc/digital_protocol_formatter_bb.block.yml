@@ -22,6 +22,8 @@ outputs:
 templates:
     imports: from gnuradio import digital
     make: digital.protocol_formatter_bb(${format}, ${len_tag_key})
+    callbacks:
+    - set_header_format(${format})
 
 cpp_templates:
     includes: ['#include <gnuradio/digital/protocol_formatter_bb.h>']
