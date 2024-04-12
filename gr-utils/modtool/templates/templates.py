@@ -566,7 +566,7 @@ templates:
 #     * default
 parameters:
 - id: parametername_replace_me
-  label: FIX ME:
+  label: FIX ME
   dtype: string
   default: You need to fill in your grc/${modname}_${blockname}.block.yaml
 #- id: ...
