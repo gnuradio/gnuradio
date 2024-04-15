@@ -2,13 +2,29 @@ from __future__ import absolute_import, print_function
 
 from copy import copy
 
-from ..Constants import MIN_DIALOG_HEIGHT, DEFAULT_PARAM_TAB
+from ..Constants import MIN_DIALOG_HEIGHT, DEFAULT_PARAM_TAB, DOCUMENTATION_PARAM_TAB
 from qtpy.QtCore import Qt
 from qtpy.QtGui import QStandardItem, QStandardItemModel
-from qtpy.QtWidgets import (QLineEdit, QDialog, QDialogButtonBox, QTreeView,
-                            QVBoxLayout, QTabWidget, QGridLayout, QWidget, QLabel,
-                            QPushButton, QListWidget, QComboBox, QPlainTextEdit, QHBoxLayout,
-                            QFileDialog, QApplication, QScrollArea)
+from qtpy.QtWidgets import (
+    QLineEdit,
+    QDialog,
+    QDialogButtonBox,
+    QTreeView,
+    QVBoxLayout,
+    QTabWidget,
+    QGridLayout,
+    QWidget,
+    QLabel,
+    QPushButton,
+    QListWidget,
+    QComboBox,
+    QPlainTextEdit,
+    QHBoxLayout,
+    QFileDialog,
+    QApplication,
+    QScrollArea,
+    QTextEdit,
+)
 
 
 class ErrorsDialog(QDialog):
@@ -90,6 +106,48 @@ class PropsDialog(QDialog):
             self.tabs.addTab(scrollarea, cat)
 
         self.scroll_error = QScrollArea()
+
+        docstrings = self._block.documentation.copy()
+        from_yaml = docstrings.pop('', '')
+        text = QTextEdit()
+
+        for line in from_yaml.splitlines():
+            if line.lstrip() == line and line.endswith(':'):
+                text.append('<html><b>' + line + '</b></html>')
+            else:
+                text.append(line)
+
+        if from_yaml:
+            text.append('')
+
+        # if given the current parameters an exact match can be made
+        block_templates = getattr(self._block, 'templates', None)
+        if block_templates:
+            block_constructor = block_templates.render(
+                'make').rsplit('.', 2)[-1]
+            block_class = block_constructor.partition('(')[0].strip()
+            if block_class in docstrings:
+                docstrings = {block_class: docstrings[block_class]}
+
+        # show docstring(s) extracted from python sources
+        for cls_name, docstring in docstrings.items():
+            # remove number at the end of self._block.name
+            last_underscore = self._block.name.rfind('_')
+
+            # make sure the docs is from this block
+            if cls_name == self._block.name[:last_underscore]:
+                text.append('')  # insert new line
+                docs_py = '<html><b>' + cls_name + '</b></html>'
+                text.append(docs_py)
+                text.append(docstring)
+
+        text.setReadOnly(True)
+        layout = QVBoxLayout()
+        layout.addWidget(text)
+
+        tab = QWidget()
+        tab.setLayout(layout)
+        self.tabs.addTab(tab, DOCUMENTATION_PARAM_TAB)
 
         # Add example tab
         self.example_tab = QWidget()

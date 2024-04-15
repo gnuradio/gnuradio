@@ -41,6 +41,7 @@ FLOW_GRAPH_FILE_FORMAT_VERSION = 2
 # Param tabs
 DEFAULT_PARAM_TAB = "General"
 ADVANCED_PARAM_TAB = "Advanced"
+DOCUMENTATION_PARAM_TAB = "Documentation"
 DEFAULT_BLOCK_MODULE_NAME = '(no module specified)'
 
 # Port domains
