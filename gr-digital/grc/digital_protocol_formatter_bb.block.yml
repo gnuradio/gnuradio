@@ -30,5 +30,7 @@ cpp_templates:
     declarations: 'digital::protocol_formatter_bb::sptr ${id};'
     make: 'this->${id} = digital::protocol_formatter_bb::make(${format}, ${len_tag_key});'
     link: ['gnuradio::gnuradio-digital']
+    callbacks:
+    - set_header_format(${format})
 
 file_format: 1
