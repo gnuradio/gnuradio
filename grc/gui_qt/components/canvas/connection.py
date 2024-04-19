@@ -159,5 +159,6 @@ class GUIConnection(QGraphicsPathItem):
         painter.drawPath(self._arrowhead)
 
     def mouseDoubleClickEvent(self, e):
-        self.parent.connections.remove(self)
+        connection = self.core
+        connection.parent.connections.remove(connection)
         self.scene().removeItem(self)
