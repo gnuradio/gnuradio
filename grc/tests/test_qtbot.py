@@ -424,6 +424,22 @@ def test_connection(qtbot, qapp_cls_):
     redo(qtbot, qapp_cls_)
     assert len(fg.connections) == 1
 
+    connection = next(iter(fg.connections))  # get a connection without removing it
+
+    # delete connection with delete key press event
+    assert len(fg.connections) == 1
+    click_on(qtbot, qapp_cls_, connection)
+    keystroke(qtbot, qapp_cls_, QtCore.Qt.Key_Delete)
+    assert len(fg.connections) == 0
+    qtbot.wait(100)
+    undo(qtbot, qapp_cls_)
+
+    # delete connection with double click
+    click_on(qtbot, qapp_cls_, connection)
+    click_on(qtbot, qapp_cls_, connection)
+    assert len(fg.connections) == 0
+    qtbot.wait(100)
+
     for block in [n_src, n_sink]:
         delete_block(qtbot, qapp_cls_, block)
 
@@ -487,7 +503,7 @@ def test_num_inputs(qtbot, qapp_cls_):
     assert len(fg.connections) == 1
 
     # I think loses focus makes delete_fail the first time. This makes it work, but is a hack
-    #click_on(qtbot, qapp_cls_, n_src)
+    # click_on(qtbot, qapp_cls_, n_src)
     pag.click(click_pos.x() + 50, click_pos.y() + 50, button="left")
 
     for block in [n_src, n_sink]:
