@@ -315,7 +315,7 @@ def test_rotate_block(qtbot, qapp_cls_):
 
     keystroke(qtbot, qapp_cls_, QtCore.Qt.Key_Left)
     new_rotation = opts.states["rotation"]
-    assert new_rotation == old_rotation - 90
+    assert new_rotation == (old_rotation - 90) % 360
 
     undo(qtbot, qapp_cls_)
     new_rotation = opts.states["rotation"]
