@@ -68,7 +68,7 @@ int main(int argc, char** argv)
         std::cout << gr::prefsdir() << std::endl;
 
     if (vm.count("userprefsdir") || print_all)
-        std::cout << gr::paths::userconf() << std::endl;
+        std::cout << gr::paths::userconf().string() << std::endl;
 
     // Not included in print all due to verbosity
     if (vm.count("prefs"))
