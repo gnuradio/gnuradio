@@ -15,7 +15,9 @@
 
 namespace py = pybind11;
 
+#ifdef GR_HAVE_CTRLPORT
 void bind_ctrlport_probe_psd(py::module&);
+#endif
 void bind_fft_shift(py::module&);
 void bind_fft_v(py::module&);
 void bind_goertzel(py::module&);
@@ -41,7 +43,9 @@ PYBIND11_MODULE(fft_python, m)
     // Allow access to base block methods
     py::module::import("gnuradio.gr");
 
+#ifdef GR_HAVE_CTRLPORT
     bind_ctrlport_probe_psd(m);
+#endif
     bind_fft_shift(m);
     bind_fft_v(m);
     bind_goertzel(m);
