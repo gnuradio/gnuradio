@@ -59,7 +59,7 @@ class ExecFlowGraphThread(threading.Thread):
             if ('gnome-terminal' in xterm_executable):
                 run_command_args = [xterm_executable, '--'] + run_command_args
             else:
-                run_command_args = [xterm_executable, '-e', run_command]
+                run_command_args = [xterm_executable, '-e'] + run_command_args
 
         # this does not reproduce a shell executable command string, if a graphical
         # terminal is used. Passing run_command though shlex_quote would do it but
