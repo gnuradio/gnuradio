@@ -199,5 +199,6 @@ class GUIConnection(QGraphicsPathItem, StyledConnection):
 
     def mouseDoubleClickEvent(self, e):
         connection = self.core
+        self.core.parent.gui.set_saved(False)
         connection.parent.connections.remove(connection)
         self.scene().removeItem(self)
