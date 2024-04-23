@@ -35,7 +35,7 @@ energy particle physics, astrophysics, radio astronomy and more!
 
 * [GNU Radio Website](https://gnuradio.org)
 * [GNU Radio Wiki](https://wiki.gnuradio.org/)
-* [Github issue tracker for bug reports and feature requests](https://github.com/fair-acc/graph-prototype/issues)
+* [Github issue tracker for bug reports and feature requests](https://github.com/gnuradio/gnuradio/issues)
 * [View the GNU Radio Mailing List Archive](https://lists.gnu.org/archive/html/discuss-gnuradio/)
 * [Subscribe to the GNU Radio Mailing List](https://lists.gnu.org/mailman/listinfo/discuss-gnuradio)
 * [GNU Radio Chatroom on Matrix](https://chat.gnuradio.org/)
