@@ -159,7 +159,13 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         self.tabWidget.tabCloseRequested.connect(
             lambda index: self.close_triggered(index)
         )
+        self.tabWidget.tabBarClicked.connect(
+            lambda index: self.tab_triggered(index)
+        )
         self.setCentralWidget(self.tabWidget)
+
+        self.clipboard = None
+        self.undoView = None
 
         files_open = list(self.app.qsettings.value('window/files_open', [])) + file_path
         grc_file_found = False
@@ -170,9 +176,6 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
                     grc_file_found = True
         if not grc_file_found:
             self.new_triggered()
-
-        self.clipboard = None
-        self.undoView = None
 
         try:
             self.restoreGeometry(self.app.qsettings.value("window/geometry"))
@@ -591,13 +594,15 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
     def updateActions(self):
         """Update the available actions based on what is selected"""
-        self.update_variable_editor(self.app.VariableEditor)
+        if hasattr(self.app, 'VariableEditor'):
+            self.update_variable_editor(self.app.VariableEditor)
 
         blocks = self.currentFlowgraphScene.selected_blocks()
         conns = self.currentFlowgraphScene.selected_connections()
         undoStack = self.currentFlowgraphScene.undoStack
         canUndo = undoStack.canUndo()
         canRedo = undoStack.canRedo()
+        self.currentFlowgraph.validate()
         valid_fg = self.currentFlowgraph.is_valid()
         saved_fg = self.currentFlowgraphScene.saved
 
@@ -1032,6 +1037,17 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
             log.info(f"Saved (copy) {filename}")
         else:
             log.debug("Cancelled Save Copy action")
+
+    def tab_triggered(self, tab_index=None):
+        """
+        Switches to a tab.
+
+        Parameters:
+            tab_index: switches to tab(tab_index)
+        """
+        log.debug(f"Switching to tab (index {tab_index})")
+        self.tabWidget.setCurrentIndex(tab_index)
+        self.updateActions()
 
     def close_triggered(self, tab_index=None) -> Union[str, bool]:
         """
