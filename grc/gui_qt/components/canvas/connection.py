@@ -1,6 +1,8 @@
 from qtpy.QtGui import QPainterPath, QPainter, QPen, QTransform
-from qtpy.QtWidgets import QGraphicsPathItem
+from qtpy.QtWidgets import QGraphicsPathItem, QApplication
 from qtpy.QtCore import QPointF
+
+from enum import Enum
 
 from ....core.Connection import Connection as CoreConnection
 from . import colors
@@ -10,7 +12,23 @@ from ...Constants import (
 )
 
 
-class DummyConnection(QGraphicsPathItem):
+class StyledConnection():
+    """
+    Styled connection; current styles:
+    - CURVED: cubic spline
+    - ANGLED: rectangular connection, one step in the horizontal middle
+    """
+    class ConnectionStyle(Enum):
+        CURVED = 0
+        ANGLED = 1
+
+    def __init__(self):
+        self._qsettings = QApplication.instance().qsettings
+        self._conn_style_str = self._qsettings.value("appearance/connection_style", "CURVED", type=str)
+        self._conn_style = self.ConnectionStyle[self._conn_style_str]
+
+
+class DummyConnection(QGraphicsPathItem, StyledConnection):
     """
     Dummy connection used for when the user drags a connection
     between two ports.
@@ -18,6 +36,7 @@ class DummyConnection(QGraphicsPathItem):
 
     def __init__(self, parent, start_point, end_point):
         super(DummyConnection, self).__init__()
+        super(StyledConnection, self).__init__()
 
         self.start_point = start_point
         self.end_point = end_point
@@ -43,9 +62,18 @@ class DummyConnection(QGraphicsPathItem):
         self.end_point = end_point
         self._line.clear()
         self._line.moveTo(self.start_point)
-        c1 = self.start_point + QPointF(200, 0)
-        c2 = self.end_point - QPointF(200, 0)
-        self._line.cubicTo(c1, c2, self.end_point)
+        if self._conn_style == StyledConnection.ConnectionStyle.CURVED:
+            c1 = self.start_point + QPointF(200, 0)
+            c2 = self.end_point - QPointF(200, 0)
+            self._line.cubicTo(c1, c2, self.end_point)
+        elif self._conn_style == StyledConnection.ConnectionStyle.ANGLED:
+            y_start = self.start_point.y()
+            y_end = self.end_point.y()
+            delta_x = self.end_point.y() - self.start_point.x()
+            x_step = self.start_point.x() + delta_x / 2
+            self._line.lineTo(QPointF(x_step, y_start))
+            self._line.lineTo(QPointF(x_step, y_end))
+            self._line.lineTo(self.end_point)
 
         self._arrowhead.clear()
         self._arrowhead.moveTo(self.end_point)
@@ -78,10 +106,11 @@ class Connection(CoreConnection):
         self.gui = GUIConnection(self, parent, source, sink)
 
 
-class GUIConnection(QGraphicsPathItem):
+class GUIConnection(QGraphicsPathItem, StyledConnection):
     def __init__(self, core, parent, source, sink):
+        super(StyledConnection, self).__init__()
         self.core = core
-        super(GUIConnection, self).__init__()
+        super(QGraphicsPathItem, self).__init__()
 
         self.source = source
         self.sink = sink
@@ -108,10 +137,21 @@ class GUIConnection(QGraphicsPathItem):
         """
         self._line.clear()
         self._line.moveTo(self.source.gui.connection_point)
-        c1 = self.source.gui.ctrl_point
-        c2 = self.sink.gui.ctrl_point
-        self._line.cubicTo(c1, c2, self.sink.gui.connection_point)
 
+        if self._conn_style == StyledConnection.ConnectionStyle.CURVED:
+            c1 = self.source.gui.ctrl_point
+            c2 = self.sink.gui.ctrl_point
+            self._line.cubicTo(c1, c2, self.sink.gui.connection_point)
+        elif self._conn_style == StyledConnection.ConnectionStyle.ANGLED:
+            start = self.source.gui.connection_point
+            end = self.sink.gui.connection_point
+            y_start = start.y()
+            y_end = end.y()
+            delta_x = end.x() - start.x()
+            x_step = start.x() + (delta_x / 2)
+            self._line.lineTo(QPointF(x_step, y_start))
+            self._line.lineTo(QPointF(x_step, y_end))
+            self._line.lineTo(end)
         self._create_arrowhead()
 
         self._path.clear()
