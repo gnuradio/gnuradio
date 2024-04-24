@@ -15,6 +15,7 @@ import numpy as np
 class test_blockinterleaver_xx(gr_unittest.TestCase):
     def setUp(self):
         self.tb = gr.top_block()
+        np.random.seed(0x13375eed)
 
     def tearDown(self):
         self.tb = None
