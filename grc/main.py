@@ -146,7 +146,7 @@ def run_qt(args, log):
         settings.system.OS = "Linux"
         # Determine if Unity is running....
         try:
-            #current_desktop = os.environ['DESKTOP_SESSION']
+            # current_desktop = os.environ['DESKTOP_SESSION']
             current_desktop = os.environ['XDG_CURRENT_DESKTOP']
             log.debug("Desktop Session - %s" % current_desktop)
             if current_desktop == "Unity":
@@ -183,7 +183,7 @@ def run_qt(args, log):
     model.build_library()
 
     # Launch GRC
-    app = grc.Application(settings, model)
+    app = grc.Application(settings, model, args.flow_graphs)
     sys.exit(app.run())
 
 

@@ -39,7 +39,7 @@ class Application(QtWidgets.QApplication):
     It handles setting up the application components and actions and handles communication between different components in the system.
     """
 
-    def __init__(self, settings, platform):
+    def __init__(self, settings, platform, file_path):
         # Note. Logger must have the correct naming convention to share handlers
         log.debug("__init__")
         self.settings = settings
@@ -74,7 +74,7 @@ class Application(QtWidgets.QApplication):
         # Setup the main application window
         log.debug("Creating main application window")
         stopwatch = StopWatch()
-        self.MainWindow = components.MainWindow()
+        self.MainWindow = components.MainWindow(file_path)
         stopwatch.lap("mainwindow")
         level_str = self.qsettings.value('grc/console_log_level', "info", type=str)
         if level_str == "info":
