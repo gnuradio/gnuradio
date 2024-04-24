@@ -98,6 +98,16 @@ categories:
         option_labels:
           - Light
           - Dark
+      - key: connection_style
+        name: Connection style
+        dtype: enum
+        default: CURVED
+        options:
+          - CURVED
+          - ANGLED
+        option_labels:
+          - Curved
+          - Angular
       - key: qt_scale_factor
         name: Qt scale factor (experimental, requires restart)
         tooltip: Scaling factor of Qt GUI elements. Note that the effective device pixel ratio will be a product of this value and the native device pixel ratio.
