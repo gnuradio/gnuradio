@@ -26,6 +26,7 @@ class StyledConnection():
         self._qsettings = QApplication.instance().qsettings
         self._conn_style_str = self._qsettings.value("appearance/connection_style", "CURVED", type=str)
         self._conn_style = self.ConnectionStyle[self._conn_style_str]
+        self._line_width_factor = self._qsettings.value("appearance/line_width_factor", 1.0, type=float)
 
 
 class DummyConnection(QGraphicsPathItem, StyledConnection):
@@ -46,7 +47,6 @@ class DummyConnection(QGraphicsPathItem, StyledConnection):
         self._path = QPainterPath()
         self.update(end_point)
 
-        self._line_width_factor = 1.0
         self._color1 = self._color2 = None
 
         self._current_port_rotations = self._current_coordinates = None
@@ -93,7 +93,7 @@ class DummyConnection(QGraphicsPathItem, StyledConnection):
 
         pen = QPen(color)
 
-        pen.setWidth(2)
+        pen.setWidthF(2 * self._line_width_factor)
         painter.setPen(pen)
         painter.drawPath(self._line)
         painter.setBrush(color)
@@ -119,7 +119,6 @@ class GUIConnection(QGraphicsPathItem, StyledConnection):
         self._arrowhead = QPainterPath()
         self._path = QPainterPath()
 
-        self._line_width_factor = 1.0
         self._color1 = self._color2 = None
 
         self._current_port_rotations = self._current_coordinates = None
@@ -192,7 +191,7 @@ class GUIConnection(QGraphicsPathItem, StyledConnection):
 
         pen = QPen(color)
 
-        pen.setWidth(2)
+        pen.setWidthF(2 * self._line_width_factor)
         painter.setPen(pen)
         painter.drawPath(self._line)
         painter.setBrush(color)
