@@ -66,7 +66,7 @@ QStyle = QtWidgets.QStyle
 
 
 class MainWindow(QtWidgets.QMainWindow, base.Component):
-    def __init__(self):
+    def __init__(self, file_path=[]):
         QtWidgets.QMainWindow.__init__(self)
         # base.Component.__init__(self)
 
@@ -161,7 +161,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         )
         self.setCentralWidget(self.tabWidget)
 
-        files_open = list(self.app.qsettings.value('window/files_open', []))
+        files_open = list(self.app.qsettings.value('window/files_open', [])) + file_path
         grc_file_found = False
         if files_open:
             for file in files_open:
