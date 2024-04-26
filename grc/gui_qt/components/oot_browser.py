@@ -31,6 +31,9 @@ class OOTBrowser(QtWidgets.QDialog, base.Component):
 
         self.manifest_dir = os.path.join(Paths.RESOURCES, "manifests")
 
+        if not os.path.exists(self.manifest_dir):
+            return
+
         for f in os.listdir(self.manifest_dir):
             with open(os.path.join(self.manifest_dir, f), 'r', encoding='utf8') as manifest:
                 text = manifest.read()
