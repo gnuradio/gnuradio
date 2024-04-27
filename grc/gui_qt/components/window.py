@@ -939,16 +939,20 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
             filename = self.open()
 
         if filename:
-            log.info("Opening flowgraph ({0})".format(filename))
-            new_flowgraph = FlowgraphView(self, self.platform)
-            initial_state = self.platform.parse_flow_graph(filename)
-            self.tabWidget.addTab(new_flowgraph, os.path.basename(filename))
-            self.tabWidget.setCurrentIndex(self.tabWidget.count() - 1)
-            self.currentFlowgraphScene.import_data(initial_state)
-            self.currentFlowgraphScene.filename = filename
-            self.connect_fg_signals(self.currentFlowgraphScene)
-            self.currentFlowgraphScene.saved = True
-            self.currentFlowgraphScene.save_allowed = save_allowed
+            open_fgs = self.get_open_flowgraphs()
+            if filename not in open_fgs:
+                log.info("Opening flowgraph ({0})".format(filename))
+                new_flowgraph = FlowgraphView(self, self.platform)
+                initial_state = self.platform.parse_flow_graph(filename)
+                self.tabWidget.addTab(new_flowgraph, os.path.basename(filename))
+                self.tabWidget.setCurrentIndex(self.tabWidget.count() - 1)
+                self.currentFlowgraphScene.import_data(initial_state)
+                self.currentFlowgraphScene.filename = filename
+                self.connect_fg_signals(self.currentFlowgraphScene)
+                self.currentFlowgraphScene.saved = True
+                self.currentFlowgraphScene.save_allowed = save_allowed
+            else:
+                self.tabWidget.setCurrentIndex(open_fgs.index(filename))
 
     def open_example(self, example_path):
         log.debug("open example")
@@ -1529,3 +1533,14 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         log.info("Stopping profiler")
         stats = pstats.Stats(self.profiler)
         stats.dump_stats('stats.prof')
+
+    def get_open_flowgraphs(self):
+        index = self.tabWidget.count()
+        if index == 0:
+            return []
+        result = []
+        range_ = range(index)
+        for fg_nr in range_:
+            self.tabWidget.setCurrentIndex(fg_nr)
+            result.append(self.currentFlowgraphScene.filename)
+        return result
