@@ -42,7 +42,7 @@ void bind_attr_updater(py::module& m)
              py::arg("interval_ms"),
              D(attr_updater, make))
 
-        .def("set_params",
+        .def("set_value",
              &attr_updater::set_value,
              py::arg("value"),
              D(attr_updater, make))
