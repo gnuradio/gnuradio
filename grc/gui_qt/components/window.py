@@ -1047,6 +1047,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         """
         log.debug(f"Switching to tab (index {tab_index})")
         self.tabWidget.setCurrentIndex(tab_index)
+        self.app.VariableEditor.set_scene(self.currentFlowgraphScene)
         self.updateActions()
 
     def close_triggered(self, tab_index=None) -> Union[str, bool]:
