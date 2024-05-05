@@ -983,11 +983,14 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
     def save_as_triggered(self):
         log.debug("Save As")
-        filename, filtr = QtWidgets.QFileDialog.getSaveFileName(
-            self,
-            self.actions["save"].statusTip(),
-            filter="Flow Graph Files (*.grc);;All files (*.*)",
-        )
+        file_dialog = QtWidgets.QFileDialog()
+        file_dialog.setWindowTitle(self.actions["save"].statusTip())
+        file_dialog.setNameFilter('Flow Graph Files (*.grc)')
+        file_dialog.setDefaultSuffix('grc')
+        filename = None
+        if file_dialog.exec_() == QtWidgets.QFileDialog.Accepted:
+            filename = file_dialog.selectedFiles()[0]
+
         if filename:
             self.currentFlowgraphScene.filename = filename
             try:
@@ -1006,11 +1009,15 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
     def save_copy_triggered(self):
         log.debug("Save Copy")
-        filename, filtr = QtWidgets.QFileDialog.getSaveFileName(
-            self,
-            self.actions["save"].statusTip(),
-            filter="Flow Graph Files (*.grc);;All files (*.*)",
-        )
+        file_dialog = QtWidgets.QFileDialog()
+        file_dialog.setWindowTitle(self.actions["save"].statusTip())
+        file_dialog.setNameFilter('Flow Graph Files (*.grc)')
+        file_dialog.setDefaultSuffix('grc')
+
+        filename = None
+        if file_dialog.exec_() == QtWidgets.QFileDialog.Accepted:
+            filename = file_dialog.selectedFiles()[0]
+
         if filename:
             try:
                 self.platform.save_flow_graph(filename, self.currentFlowgraph)
