@@ -219,6 +219,10 @@ class BlockLibrary(QDockWidget, base.Component):
     def createToolbars(self, actions, toolbars):
         pass
 
+    def reset(self):
+        """Reset the filter (show all blocks in the tree view)"""
+        self.populate_tree(self._block_tree)
+
     def load_blocks(self):
         """Load the block tree from the platform and populate the widget."""
         # Loop through all of the blocks and create the nested hierarchy (this can be unlimited nesting)
