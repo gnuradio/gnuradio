@@ -1510,6 +1510,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
     def closeEvent(self, evt):
         log.debug("Close Event")
         self.exit_triggered()
+        evt.ignore()
 
     def help_triggered(self):
         log.debug("help")
