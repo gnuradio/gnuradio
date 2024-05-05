@@ -1219,7 +1219,9 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
     def find_triggered(self):
         log.debug("find block")
+        self._app().BlockLibrary._search_bar.clear()
         self._app().BlockLibrary._search_bar.setFocus()
+        self._app().BlockLibrary.reset()
 
     def get_involved_triggered(self):
         log.debug("get involved")
