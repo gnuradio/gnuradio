@@ -14,8 +14,15 @@ import sys
 import logging
 import functools
 from importlib import import_module
-from pkg_resources import iter_entry_points
-from logging import Formatter, StreamHandler
+try:
+    from importlib.metadata import entry_points
+
+    def entries(group: str):
+        return entry_points().select(group=group)
+except ImportError:
+    from pkg_resources import iter_entry_points as entries
+
+from logging import StreamHandler
 
 import click
 from click import ClickException
@@ -140,10 +147,10 @@ block_name = click.argument(
     'blockname', nargs=1, required=False, metavar="BLOCK_NAME")
 
 
-@with_plugins(iter_entry_points('gnuradio.modtool.cli.plugins'))
+@with_plugins(entries('gnuradio.modtool.cli.plugins'))
 @click.command(cls=CommandCLI,
-               epilog='Manipulate with GNU Radio modules source code tree. ' +
-               'Call it without options to run specified command interactively')
+               epilog='Manipulate the source code tree of a GNU Radio module. ' +
+               'Call without options to run specified command interactively')
 def cli():
     """A tool for editing GNU Radio out-of-tree modules."""
     pass
