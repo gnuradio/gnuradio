@@ -155,7 +155,7 @@ TimeDomainDisplayPlot::~TimeDomainDisplayPlot()
 
 void TimeDomainDisplayPlot::replot() { QwtPlot::replot(); }
 
-void TimeDomainDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
+void TimeDomainDisplayPlot::plotNewData(const std::vector<const double*> dataPoints,
                                         const int64_t numDataPoints,
                                         const double timeInterval,
                                         const std::vector<std::vector<gr::tag_t>>& tags)

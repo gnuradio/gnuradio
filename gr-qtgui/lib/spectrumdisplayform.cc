@@ -194,12 +194,12 @@ void SpectrumDisplayForm::newFrequencyData(const SpectrumUpdateEvent* spectrumUp
         spectrumUpdateEvent->getLastOfMultipleUpdateFlag();
     const gr::high_res_timer_type generatedTimestamp =
         spectrumUpdateEvent->getEventGeneratedTimestamp();
-    double* realTimeDomainDataPoints =
-        (double*)spectrumUpdateEvent->getRealTimeDomainPoints();
-    double* imagTimeDomainDataPoints =
-        (double*)spectrumUpdateEvent->getImagTimeDomainPoints();
+    const double* realTimeDomainDataPoints =
+        spectrumUpdateEvent->getRealTimeDomainPoints();
+    const double* imagTimeDomainDataPoints =
+        spectrumUpdateEvent->getImagTimeDomainPoints();
 
-    std::vector<double*> timeDomainDataPoints;
+    std::vector<const double*> timeDomainDataPoints;
     timeDomainDataPoints.push_back(realTimeDomainDataPoints);
     timeDomainDataPoints.push_back(imagTimeDomainDataPoints);
 

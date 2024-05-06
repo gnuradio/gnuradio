@@ -175,7 +175,7 @@ EyeDisplayPlot::~EyeDisplayPlot()
 
 void EyeDisplayPlot::replot() { QwtPlot::replot(); }
 
-void EyeDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
+void EyeDisplayPlot::plotNewData(const std::vector<const double*> dataPoints,
                                  const int64_t numDataPoints,
                                  int sps,
                                  const double timeInterval,
