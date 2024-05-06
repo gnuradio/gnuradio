@@ -217,8 +217,8 @@ int jack_sink::work(int noutput_items,
             write_space -= write_space % (d_jack_buffer_size * sizeof(sample_t));
             write_size = std::min(write_space, (unsigned int)work_size);
 
-            if (jack_ringbuffer_write(d_ringbuffer[i], (char*)&(in[i][k]), write_size) <
-                write_size) {
+            if (jack_ringbuffer_write(
+                    d_ringbuffer[i], (const char*)&(in[i][k]), write_size) < write_size) {
                 bail("jack_ringbuffer_write failed", 0);
             }
             work_size -= write_size;

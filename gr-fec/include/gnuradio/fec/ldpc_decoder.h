@@ -39,7 +39,7 @@ private:
     int get_history() override;
     float get_shift() override;
     const char* get_conversion();
-    void generic_work(void* inBuffer, void* outbuffer) override;
+    void generic_work(const void* inBuffer, void* outbuffer) override;
     float d_iterations;
     int d_input_size, d_output_size;
     double d_rate;

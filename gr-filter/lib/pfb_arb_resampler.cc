@@ -177,7 +177,7 @@ float pfb_arb_resampler_ccf::phase_offset(float freq, float fs)
 }
 
 int pfb_arb_resampler_ccf::filter(gr_complex* output,
-                                  gr_complex* input,
+                                  const gr_complex* input,
                                   int n_to_read,
                                   int& n_read)
 {
@@ -370,7 +370,7 @@ float pfb_arb_resampler_ccc::phase_offset(float freq, float fs)
 }
 
 int pfb_arb_resampler_ccc::filter(gr_complex* output,
-                                  gr_complex* input,
+                                  const gr_complex* input,
                                   int n_to_read,
                                   int& n_read)
 {
@@ -559,7 +559,10 @@ float pfb_arb_resampler_fff::phase_offset(float freq, float fs)
     return -adj * d_est_phase_change;
 }
 
-int pfb_arb_resampler_fff::filter(float* output, float* input, int n_to_read, int& n_read)
+int pfb_arb_resampler_fff::filter(float* output,
+                                  const float* input,
+                                  int n_to_read,
+                                  int& n_read)
 {
     int i_out = 0, i_in = 0;
     unsigned int j = d_last_filter;

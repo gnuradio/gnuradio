@@ -23,7 +23,7 @@ class FEC_API dummy_decoder_impl : public dummy_decoder
 {
 private:
     // plug into the generic fec api
-    void generic_work(void* inbuffer, void* outbuffer) override;
+    void generic_work(const void* inbuffer, void* outbuffer) override;
     int get_output_size() override;
     int get_input_size() override;
     int get_input_item_size() override;

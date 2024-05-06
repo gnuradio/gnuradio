@@ -361,7 +361,7 @@ void flat_flowgraph::setup_buffer_alignment(block_sptr block)
 {
     const int alignment = volk_get_alignment();
     for (int i = 0; i < block->detail()->ninputs(); i++) {
-        void* r = (void*)block->detail()->input(i)->read_pointer();
+        const void* r = (const void*)block->detail()->input(i)->read_pointer();
         uintptr_t ri = (uintptr_t)r % alignment;
         // std::cerr << "reader: " << r << "  alignment: " << ri << std::endl;
         if (ri != 0) {

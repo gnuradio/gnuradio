@@ -68,11 +68,11 @@ int encoder_impl::general_work(int noutput_items,
                                gr_vector_const_void_star& input_items,
                                gr_vector_void_star& output_items)
 {
-    char* inbuffer = (char*)input_items[0];
+    const char* inbuffer = (const char*)input_items[0];
     char* outbuffer = (char*)output_items[0];
 
     for (int i = 0; i < noutput_items / output_multiple(); i++) {
-        d_encoder->generic_work((void*)(inbuffer + (i * d_input_size)),
+        d_encoder->generic_work((const void*)(inbuffer + (i * d_input_size)),
                                 (void*)(outbuffer + (i * d_output_size)));
     }
 

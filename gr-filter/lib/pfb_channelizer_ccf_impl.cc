@@ -130,7 +130,7 @@ int pfb_channelizer_ccf_impl::general_work(int noutput_items,
 {
     gr::thread::scoped_lock guard(d_mutex);
 
-    gr_complex* in = (gr_complex*)input_items[0];
+    const gr_complex* in = (const gr_complex*)input_items[0];
     gr_complex* out = (gr_complex*)output_items[0];
 
     if (d_updated) {
@@ -159,7 +159,7 @@ int pfb_channelizer_ccf_impl::general_work(int noutput_items,
         i = (i + d_rate_ratio) % d_nfilts;
         last = i;
         while (i >= 0) {
-            in = (gr_complex*)input_items[j];
+            in = (const gr_complex*)input_items[j];
             d_fft.get_inbuf()[d_idxlut[j]] = d_fir_filters[i].filter(&in[n]);
             j++;
             i--;
@@ -167,7 +167,7 @@ int pfb_channelizer_ccf_impl::general_work(int noutput_items,
 
         i = d_nfilts - 1;
         while (i > last) {
-            in = (gr_complex*)input_items[j];
+            in = (const gr_complex*)input_items[j];
             d_fft.get_inbuf()[d_idxlut[j]] = d_fir_filters[i].filter(&in[n - 1]);
             j++;
             i--;

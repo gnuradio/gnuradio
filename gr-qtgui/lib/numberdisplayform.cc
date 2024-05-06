@@ -213,7 +213,7 @@ void NumberDisplayForm::saveFigure()
 void NumberDisplayForm::newData(const QEvent* updateEvent)
 {
     if (!d_stop_state) {
-        NumberUpdateEvent* tevent = (NumberUpdateEvent*)updateEvent;
+        const NumberUpdateEvent* tevent = (const NumberUpdateEvent*)updateEvent;
         const std::vector<float> samples = tevent->getSamples();
 
         for (unsigned int i = 0; i < d_nplots; ++i) {

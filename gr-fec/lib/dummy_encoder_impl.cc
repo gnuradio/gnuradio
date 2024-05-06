@@ -69,7 +69,7 @@ bool dummy_encoder_impl::set_frame_size(unsigned int frame_size)
 
 double dummy_encoder_impl::rate() { return 1.0; }
 
-void dummy_encoder_impl::generic_work(void* inbuffer, void* outbuffer)
+void dummy_encoder_impl::generic_work(const void* inbuffer, void* outbuffer)
 {
     const unsigned char* in = (const unsigned char*)inbuffer;
     unsigned char* out = (unsigned char*)outbuffer;

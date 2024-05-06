@@ -803,7 +803,7 @@ int tpc_decoder::sgn(T val)
     return (T(0) < val) - (val < T(0));
 }
 
-void tpc_decoder::generic_work(void* inBuffer, void* outBuffer)
+void tpc_decoder::generic_work(const void* inBuffer, void* outBuffer)
 {
     const float* inPtr = (const float*)inBuffer;
     unsigned char* out = (unsigned char*)outBuffer;

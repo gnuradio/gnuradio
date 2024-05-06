@@ -226,8 +226,8 @@ int tcp_sink_impl::work(int noutput_items,
 
     ec.clear();
 
-    char* p_buff;
-    p_buff = (char*)input_items[0];
+    const char* p_buff;
+    p_buff = (const char*)input_items[0];
 
     while ((bytes_remaining > 0) && (!ec)) {
         bytes_written = asio::write(

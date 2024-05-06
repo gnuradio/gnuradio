@@ -38,7 +38,7 @@ polar_encoder_systematic::polar_encoder_systematic(int block_size,
 
 polar_encoder_systematic::~polar_encoder_systematic() {}
 
-void polar_encoder_systematic::generic_work(void* in_buffer, void* out_buffer)
+void polar_encoder_systematic::generic_work(const void* in_buffer, void* out_buffer)
 {
     const unsigned char* in = (const unsigned char*)in_buffer;
     unsigned char* out = (unsigned char*)out_buffer;

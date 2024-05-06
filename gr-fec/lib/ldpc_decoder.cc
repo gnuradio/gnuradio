@@ -70,7 +70,7 @@ bool ldpc_decoder::set_frame_size(unsigned int frame_size)
     return true;
 }
 
-void ldpc_decoder::generic_work(void* inBuffer, void* outBuffer)
+void ldpc_decoder::generic_work(const void* inBuffer, void* outBuffer)
 {
     const float* in = (const float*)inBuffer;
     unsigned char* out = (unsigned char*)outBuffer;

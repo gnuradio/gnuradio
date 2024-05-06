@@ -458,14 +458,14 @@ void header_payload_demux_impl::copy_n_symbols(const unsigned char* in,
         // because all padding items will be part of n_symbols
         for (int i = 0; i < n_symbols; i++) {
             memcpy((void*)out,
-                   (void*)(in + d_gi * d_itemsize),
+                   (const void*)(in + d_gi * d_itemsize),
                    d_items_per_symbol * d_itemsize);
             in += d_itemsize * (d_items_per_symbol + d_gi);
             out += d_itemsize * d_items_per_symbol;
         }
     } else {
         memcpy((void*)out,
-               (void*)in,
+               (const void*)in,
                (n_symbols * d_items_per_symbol + n_padding_items) * d_itemsize);
     }
     // Copy tags

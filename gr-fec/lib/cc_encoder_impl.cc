@@ -162,7 +162,7 @@ void cc_encoder_impl::partab_init(void)
     }
 }
 
-void cc_encoder_impl::generic_work(void* in_buffer, void* out_buffer)
+void cc_encoder_impl::generic_work(const void* in_buffer, void* out_buffer)
 {
     const unsigned char* in = (const unsigned char*)in_buffer;
     unsigned char* out = (unsigned char*)out_buffer;

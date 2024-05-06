@@ -65,13 +65,13 @@ int tagged_decoder_impl::work(int noutput_items,
                               gr_vector_const_void_star& input_items,
                               gr_vector_void_star& output_items)
 {
-    const unsigned char* in = (unsigned char*)input_items[0];
+    const unsigned char* in = (const unsigned char*)input_items[0];
     unsigned char* out = (unsigned char*)output_items[0];
 
     d_debug_logger->debug(
         "{:d}, {:d}, {:d}", noutput_items, ninput_items[0], d_decoder->get_output_size());
 
-    d_decoder->generic_work((void*)in, (void*)out);
+    d_decoder->generic_work((const void*)in, (void*)out);
 
     return d_decoder->get_output_size();
 }

@@ -43,7 +43,7 @@ class FEC_API tpc_decoder : public generic_decoder
     int get_input_item_size() override;
     int get_output_item_size() override;
     const char* get_conversion();
-    void generic_work(void* inBuffer, void* outbuffer) override;
+    void generic_work(const void* inBuffer, void* outbuffer) override;
     int get_output_size() override;
     int get_input_size() override;
 

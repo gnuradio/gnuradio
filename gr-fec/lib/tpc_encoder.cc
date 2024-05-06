@@ -168,7 +168,7 @@ void tpc_encoder::block_conv_encode(std::vector<uint8_t>& output,
     }
 }
 
-void tpc_encoder::generic_work(void* inBuffer, void* outBuffer)
+void tpc_encoder::generic_work(const void* inBuffer, void* outBuffer)
 {
     const uint8_t* in = (const uint8_t*)inBuffer;
     uint8_t* out = (uint8_t*)outBuffer;

@@ -114,8 +114,9 @@ void async_encoder_impl::encode_unpacked(pmt::pmt_t msg)
         d_encoder->generic_work((void*)d_bits_in.data(), (void*)bits_out);
     } else {
         for (int i = 0; i < nblocks; i++) {
-            d_encoder->generic_work((void*)&bits_in[i * d_encoder->get_input_size()],
-                                    (void*)&bits_out[i * d_encoder->get_output_size()]);
+            d_encoder->generic_work(
+                (const void*)&bits_in[i * d_encoder->get_input_size()],
+                (void*)&bits_out[i * d_encoder->get_output_size()]);
         }
     }
 

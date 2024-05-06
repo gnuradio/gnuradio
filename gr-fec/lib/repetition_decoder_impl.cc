@@ -81,7 +81,7 @@ bool repetition_decoder_impl::set_frame_size(unsigned int frame_size)
 
 double repetition_decoder_impl::rate() { return 1.0 / static_cast<double>(d_rep); }
 
-void repetition_decoder_impl::generic_work(void* inbuffer, void* outbuffer)
+void repetition_decoder_impl::generic_work(const void* inbuffer, void* outbuffer)
 {
     const float* in = (const float*)inbuffer;
     unsigned char* out = (unsigned char*)outbuffer;

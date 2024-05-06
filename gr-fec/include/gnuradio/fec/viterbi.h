@@ -33,7 +33,7 @@ void gen_met(int mettab[2][256], /* Metric table */
              int scale);         /* Scale factor */
 
 FEC_API unsigned char encode(unsigned char* symbols,
-                             unsigned char* data,
+                             const unsigned char* data,
                              unsigned int nbytes,
                              unsigned char encstate);
 
