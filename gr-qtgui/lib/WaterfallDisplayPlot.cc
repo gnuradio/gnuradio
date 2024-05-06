@@ -223,7 +223,7 @@ double WaterfallDisplayPlot::getStartFrequency() const { return d_start_frequenc
 
 double WaterfallDisplayPlot::getStopFrequency() const { return d_stop_frequency; }
 
-void WaterfallDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
+void WaterfallDisplayPlot::plotNewData(const std::vector<const double*> dataPoints,
                                        const int64_t numDataPoints,
                                        const double timePerFFT,
                                        const gr::high_res_timer_type timestamp,
@@ -318,8 +318,8 @@ void WaterfallDisplayPlot::plotNewData(const double* dataPoints,
                                        const gr::high_res_timer_type timestamp,
                                        const int droppedFrames)
 {
-    std::vector<double*> vecDataPoints;
-    vecDataPoints.push_back((double*)dataPoints);
+    std::vector<const double*> vecDataPoints;
+    vecDataPoints.push_back(dataPoints);
     plotNewData(vecDataPoints, numDataPoints, timePerFFT, timestamp, droppedFrames);
 }
 

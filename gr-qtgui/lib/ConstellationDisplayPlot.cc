@@ -131,10 +131,11 @@ void ConstellationDisplayPlot::set_pen_size(int size)
 void ConstellationDisplayPlot::replot() { QwtPlot::replot(); }
 
 
-void ConstellationDisplayPlot::plotNewData(const std::vector<double*> realDataPoints,
-                                           const std::vector<double*> imagDataPoints,
-                                           const int64_t numDataPoints,
-                                           const double timeInterval)
+void ConstellationDisplayPlot::plotNewData(
+    const std::vector<const double*> realDataPoints,
+    const std::vector<const double*> imagDataPoints,
+    const int64_t numDataPoints,
+    const double timeInterval)
 {
     if (!d_stop) {
         if ((numDataPoints > 0)) {
@@ -188,10 +189,10 @@ void ConstellationDisplayPlot::plotNewData(const double* realDataPoints,
                                            const int64_t numDataPoints,
                                            const double timeInterval)
 {
-    std::vector<double*> vecRealDataPoints;
-    std::vector<double*> vecImagDataPoints;
-    vecRealDataPoints.push_back((double*)realDataPoints);
-    vecImagDataPoints.push_back((double*)imagDataPoints);
+    std::vector<const double*> vecRealDataPoints;
+    std::vector<const double*> vecImagDataPoints;
+    vecRealDataPoints.push_back(realDataPoints);
+    vecImagDataPoints.push_back(imagDataPoints);
     plotNewData(vecRealDataPoints, vecImagDataPoints, numDataPoints, timeInterval);
 }
 

@@ -115,7 +115,7 @@ public:
     ~TimeUpdateEvent() override;
 
     int which() const;
-    const std::vector<double*> getTimeDomainPoints() const;
+    const std::vector<const double*> getTimeDomainPoints() const;
     uint64_t getNumTimeDomainDataPoints() const;
     bool getRepeatDataFlag() const;
 
@@ -126,7 +126,7 @@ public:
 protected:
 private:
     size_t _nplots;
-    std::vector<double*> _dataTimeDomainPoints;
+    std::vector<const double*> _dataTimeDomainPoints;
     uint64_t _numTimeDomainDataPoints;
     std::vector<std::vector<gr::tag_t>> _tags;
 };
@@ -144,7 +144,7 @@ public:
     ~FreqUpdateEvent() override;
 
     int which() const;
-    const std::vector<double*> getPoints() const;
+    const std::vector<const double*> getPoints() const;
     uint64_t getNumDataPoints() const;
     bool getRepeatDataFlag() const;
 
@@ -153,7 +153,7 @@ public:
 protected:
 private:
     size_t _nplots;
-    std::vector<double*> _dataPoints;
+    std::vector<const double*> _dataPoints;
     uint64_t _numDataPoints;
 };
 
@@ -185,8 +185,8 @@ public:
     ~ConstUpdateEvent() override;
 
     int which() const;
-    const std::vector<double*> getRealPoints() const;
-    const std::vector<double*> getImagPoints() const;
+    const std::vector<const double*> getRealPoints() const;
+    const std::vector<const double*> getImagPoints() const;
     uint64_t getNumDataPoints() const;
     bool getRepeatDataFlag() const;
 
@@ -195,8 +195,8 @@ public:
 protected:
 private:
     size_t _nplots;
-    std::vector<double*> _realDataPoints;
-    std::vector<double*> _imagDataPoints;
+    std::vector<const double*> _realDataPoints;
+    std::vector<const double*> _imagDataPoints;
     uint64_t _numDataPoints;
 };
 
@@ -214,7 +214,7 @@ public:
     ~WaterfallUpdateEvent() override;
 
     int which() const;
-    const std::vector<double*> getPoints() const;
+    const std::vector<const double*> getPoints() const;
     uint64_t getNumDataPoints() const;
     bool getRepeatDataFlag() const;
 
@@ -225,7 +225,7 @@ public:
 protected:
 private:
     size_t _nplots;
-    std::vector<double*> _dataPoints;
+    std::vector<const double*> _dataPoints;
     uint64_t _numDataPoints;
 
     gr::high_res_timer_type _dataTimestamp;
@@ -243,7 +243,7 @@ public:
     ~TimeRasterUpdateEvent() override;
 
     int which() const;
-    const std::vector<double*> getPoints() const;
+    const std::vector<const double*> getPoints() const;
     uint64_t getNumDataPoints() const;
     bool getRepeatDataFlag() const;
 
@@ -252,7 +252,7 @@ public:
 protected:
 private:
     size_t _nplots;
-    std::vector<double*> _dataPoints;
+    std::vector<const double*> _dataPoints;
     uint64_t _numDataPoints;
 };
 
@@ -286,7 +286,7 @@ public:
     ~HistogramUpdateEvent() override;
 
     int which() const;
-    const std::vector<double*> getDataPoints() const;
+    const std::vector<const double*> getDataPoints() const;
     uint64_t getNumDataPoints() const;
     bool getRepeatDataFlag() const;
 
@@ -295,7 +295,7 @@ public:
 protected:
 private:
     size_t _nplots;
-    std::vector<double*> _points;
+    std::vector<const double*> _points;
     uint64_t _npoints;
 };
 

@@ -53,7 +53,7 @@ public:
 
     void setXAxisValues(const double start, const double step = 1.0);
 
-    void plotNewData(const std::vector<double*> dataPoints,
+    void plotNewData(const std::vector<const double*> dataPoints,
                      const int64_t numDataPoints,
                      const double refLevel,
                      const double timeInterval);

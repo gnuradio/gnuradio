@@ -555,7 +555,7 @@ void TimeRasterDisplayPlot::setPlotDimensions(const double rows,
     }
 }
 
-void TimeRasterDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
+void TimeRasterDisplayPlot::plotNewData(const std::vector<const double*> dataPoints,
                                         const uint64_t numDataPoints)
 {
     if (!d_stop) {
@@ -574,8 +574,8 @@ void TimeRasterDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
 void TimeRasterDisplayPlot::plotNewData(const double* dataPoints,
                                         const uint64_t numDataPoints)
 {
-    std::vector<double*> vecDataPoints;
-    vecDataPoints.push_back((double*)dataPoints);
+    std::vector<const double*> vecDataPoints;
+    vecDataPoints.push_back(dataPoints);
     plotNewData(vecDataPoints, numDataPoints);
 }
 

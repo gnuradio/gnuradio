@@ -40,7 +40,7 @@ public:
     EyeDisplayPlot& operator=(const EyeDisplayPlot&) = delete;
     EyeDisplayPlot& operator=(EyeDisplayPlot&&) = delete;
 
-    void plotNewData(const std::vector<double*> dataPoints,
+    void plotNewData(const std::vector<const double*> dataPoints,
                      const int64_t numDataPoints,
                      int d_sps,
                      const double timeInterval,
