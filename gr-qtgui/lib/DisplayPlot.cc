@@ -288,7 +288,7 @@ void DisplayPlot::setLineMarker(unsigned int which, QwtSymbol::Style marker)
 QwtSymbol::Style DisplayPlot::getLineMarker(unsigned int which) const
 {
     if (which < d_nplots) {
-        QwtSymbol* sym = (QwtSymbol*)d_plot_curve[which]->symbol();
+        const QwtSymbol* sym = d_plot_curve[which]->symbol();
         return sym->style();
     } else {
         return QwtSymbol::NoSymbol;

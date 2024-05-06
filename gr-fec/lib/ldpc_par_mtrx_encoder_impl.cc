@@ -82,7 +82,7 @@ bool ldpc_par_mtrx_encoder_impl::set_frame_size(unsigned int frame_size)
 
 double ldpc_par_mtrx_encoder_impl::rate() { return d_rate; }
 
-void ldpc_par_mtrx_encoder_impl::generic_work(void* inbuffer, void* outbuffer)
+void ldpc_par_mtrx_encoder_impl::generic_work(const void* inbuffer, void* outbuffer)
 {
     // Populate the information word
     const unsigned char* in = (const unsigned char*)inbuffer;

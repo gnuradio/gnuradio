@@ -47,7 +47,7 @@ private:
     void create_viterbi();
     int init_viterbi(v* vp, int starting_state);
     int init_viterbi_unbiased(v* vp);
-    int update_viterbi_blk(unsigned char* syms, int nbits);
+    int update_viterbi_blk(const unsigned char* syms, int nbits);
     int chainback_viterbi(unsigned char* data,
                           unsigned int nbits,
                           unsigned int endstate,
@@ -97,7 +97,7 @@ public:
     cc_decoder_impl(const cc_decoder_impl&) = delete;
     cc_decoder_impl& operator=(const cc_decoder_impl&) = delete;
 
-    void generic_work(void* inbuffer, void* outbuffer) override;
+    void generic_work(const void* inbuffer, void* outbuffer) override;
     bool set_frame_size(unsigned int frame_size) override;
     double rate() override;
 };

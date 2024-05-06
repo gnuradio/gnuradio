@@ -68,7 +68,7 @@ bool dummy_decoder_impl::set_frame_size(unsigned int frame_size)
 
 double dummy_decoder_impl::rate() { return 1.0; }
 
-void dummy_decoder_impl::generic_work(void* inbuffer, void* outbuffer)
+void dummy_decoder_impl::generic_work(const void* inbuffer, void* outbuffer)
 {
     const float* in = (const float*)inbuffer;
     int8_t* out = (int8_t*)outbuffer;

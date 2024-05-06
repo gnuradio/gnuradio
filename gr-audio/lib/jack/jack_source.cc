@@ -181,7 +181,7 @@ int jack_source::work(int noutput_items,
                       gr_vector_void_star& output_items)
 {
 
-    const float** out = (const float**)&output_items[0];
+    float** out = (float**)&output_items[0];
 
     // Minimize latency
     noutput_items = std::min(noutput_items, (int)d_jack_buffer_size);

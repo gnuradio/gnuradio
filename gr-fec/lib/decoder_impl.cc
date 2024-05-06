@@ -69,7 +69,7 @@ int decoder_impl::general_work(int noutput_items,
                                gr_vector_const_void_star& input_items,
                                gr_vector_void_star& output_items)
 {
-    const unsigned char* in = (unsigned char*)input_items[0];
+    const unsigned char* in = (const unsigned char*)input_items[0];
     unsigned char* out = (unsigned char*)output_items[0];
 
     int outnum = std::lround((1.0 / relative_rate()) * noutput_items);
@@ -83,7 +83,7 @@ int decoder_impl::general_work(int noutput_items,
 
     for (int i = 0; i < items; ++i) {
         d_decoder->generic_work(
-            (void*)(in + (i * d_decoder->get_input_size() * d_input_item_size)),
+            (const void*)(in + (i * d_decoder->get_input_size() * d_input_item_size)),
             (void*)(out + (i * d_decoder->get_output_size() * d_output_item_size)));
 
         add_item_tag(0,

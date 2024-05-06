@@ -80,7 +80,7 @@ namespace fec {
 
 /* Convolutionally encode data into binary symbols */
 unsigned char encode(unsigned char* symbols,
-                     unsigned char* data,
+                     const unsigned char* data,
                      unsigned int nbytes,
                      unsigned char encstate)
 {

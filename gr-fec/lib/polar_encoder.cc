@@ -61,7 +61,7 @@ polar_encoder::polar_encoder(int block_size,
 
 polar_encoder::~polar_encoder() {}
 
-void polar_encoder::generic_work(void* in_buffer, void* out_buffer)
+void polar_encoder::generic_work(const void* in_buffer, void* out_buffer)
 {
     const unsigned char* in = (const unsigned char*)in_buffer;
     unsigned char* out = (unsigned char*)out_buffer;

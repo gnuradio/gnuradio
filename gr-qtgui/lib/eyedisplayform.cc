@@ -222,7 +222,7 @@ EyeDisplayPlot* EyeDisplayForm::getSinglePlot(unsigned int i)
 
 void EyeDisplayForm::newData(const QEvent* updateEvent)
 {
-    TimeUpdateEvent* tevent = (TimeUpdateEvent*)updateEvent;
+    const TimeUpdateEvent* tevent = (const TimeUpdateEvent*)updateEvent;
     const std::vector<double*> dataPoints = tevent->getTimeDomainPoints();
     const uint64_t numDataPoints = tevent->getNumTimeDomainDataPoints();
     const std::vector<std::vector<gr::tag_t>> tags = tevent->getTags();

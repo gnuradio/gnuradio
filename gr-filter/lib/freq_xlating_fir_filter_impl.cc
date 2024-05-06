@@ -145,7 +145,7 @@ int freq_xlating_fir_filter_impl<IN_T, OUT_T, TAP_T>::work(
     gr_vector_const_void_star& input_items,
     gr_vector_void_star& output_items)
 {
-    IN_T* in = (IN_T*)input_items[0];
+    const IN_T* in = (const IN_T*)input_items[0];
     OUT_T* out = (OUT_T*)output_items[0];
 
     // rebuild composite FIR if the center freq has changed

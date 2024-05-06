@@ -51,7 +51,7 @@ public:
     ~polar_decoder_sc_systematic() override;
 
     // FECAPI
-    void generic_work(void* in_buffer, void* out_buffer) override;
+    void generic_work(const void* in_buffer, void* out_buffer) override;
 
 private:
     polar_decoder_sc_systematic(int block_size,

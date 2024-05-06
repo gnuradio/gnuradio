@@ -89,7 +89,7 @@ int unpacked_to_packed_impl<T>::general_work(int noutput_items,
     const int nstreams = input_items.size();
 
     for (int m = 0; m < nstreams; m++) {
-        const T* in = (T*)input_items[m];
+        const T* in = (const T*)input_items[m];
         T* out = (T*)output_items[m];
         index_tmp = d_index;
 

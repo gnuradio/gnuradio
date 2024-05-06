@@ -224,7 +224,7 @@ int sink_uc_impl::work(int noutput_items,
                        gr_vector_const_void_star& input_items,
                        gr_vector_void_star& output_items)
 {
-    unsigned char *src_pixels_0, *src_pixels_1, *src_pixels_2;
+    const unsigned char *src_pixels_0, *src_pixels_1, *src_pixels_2;
     int noutput_items_produced = 0;
     int plane;
     int delay = (int)d_avg_delay;
@@ -241,9 +241,9 @@ int sink_uc_impl::work(int noutput_items,
 
     switch (input_items.size()) {
     case 3: // first channel=Y, second channel is  U , third channel is V
-        src_pixels_0 = (unsigned char*)input_items[0];
-        src_pixels_1 = (unsigned char*)input_items[1];
-        src_pixels_2 = (unsigned char*)input_items[2];
+        src_pixels_0 = (const unsigned char*)input_items[0];
+        src_pixels_1 = (const unsigned char*)input_items[1];
+        src_pixels_2 = (const unsigned char*)input_items[2];
         for (int i = 0; i < noutput_items; i += d_chunk_size) {
             copy_plane_to_surface(1, d_chunk_size, src_pixels_1);
             copy_plane_to_surface(2, d_chunk_size, src_pixels_2);
@@ -256,8 +256,8 @@ int sink_uc_impl::work(int noutput_items,
         break;
     case 2:
         // first channel=Y, second channel is alternating pixels U and V
-        src_pixels_0 = (unsigned char*)input_items[0];
-        src_pixels_1 = (unsigned char*)input_items[1];
+        src_pixels_0 = (const unsigned char*)input_items[0];
+        src_pixels_1 = (const unsigned char*)input_items[1];
         for (int i = 0; i < noutput_items; i += d_chunk_size) {
             copy_plane_to_surface(12, d_chunk_size / 2, src_pixels_1);
             noutput_items_produced +=
@@ -269,7 +269,7 @@ int sink_uc_impl::work(int noutput_items,
     case 1: // grey (Y) input
         /* Y component */
         plane = 0;
-        src_pixels_0 = (unsigned char*)input_items[plane];
+        src_pixels_0 = (const unsigned char*)input_items[plane];
         for (int i = 0; i < noutput_items; i += d_chunk_size) {
             noutput_items_produced +=
                 copy_plane_to_surface(plane, d_chunk_size, src_pixels_0);

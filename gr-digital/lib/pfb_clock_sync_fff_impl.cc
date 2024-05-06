@@ -320,7 +320,7 @@ int pfb_clock_sync_fff_impl::general_work(int noutput_items,
                                           gr_vector_const_void_star& input_items,
                                           gr_vector_void_star& output_items)
 {
-    float* in = (float*)input_items[0];
+    const float* in = (const float*)input_items[0];
     float* out = (float*)output_items[0];
 
     if (d_updated) {

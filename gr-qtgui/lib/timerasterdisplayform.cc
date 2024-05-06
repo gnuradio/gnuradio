@@ -136,7 +136,7 @@ double TimeRasterDisplayForm::getMaxIntensity(unsigned int which)
 
 void TimeRasterDisplayForm::newData(const QEvent* updateEvent)
 {
-    TimeRasterUpdateEvent* event = (TimeRasterUpdateEvent*)updateEvent;
+    const TimeRasterUpdateEvent* event = (const TimeRasterUpdateEvent*)updateEvent;
     const std::vector<double*> dataPoints = event->getPoints();
     const uint64_t numDataPoints = event->getNumDataPoints();
 

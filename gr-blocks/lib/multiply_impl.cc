@@ -47,7 +47,7 @@ int multiply_impl<float>::work(int noutput_items,
 
     memcpy(out, input_items[0], noi * sizeof(float));
     for (size_t i = 1; i < input_items.size(); i++)
-        volk_32f_x2_multiply_32f(out, out, (float*)input_items[i], noi);
+        volk_32f_x2_multiply_32f(out, out, (const float*)input_items[i], noi);
 
     return noutput_items;
 }
@@ -73,7 +73,7 @@ int multiply_impl<gr_complex>::work(int noutput_items,
 
     memcpy(out, input_items[0], noi * sizeof(gr_complex));
     for (size_t i = 1; i < input_items.size(); i++)
-        volk_32fc_x2_multiply_32fc(out, out, (gr_complex*)input_items[i], noi);
+        volk_32fc_x2_multiply_32fc(out, out, (const gr_complex*)input_items[i], noi);
 
     return noutput_items;
 }
@@ -97,9 +97,9 @@ int multiply_impl<T>::work(int noutput_items,
     int ninputs = input_items.size();
 
     for (size_t i = 0; i < noutput_items * d_vlen; i++) {
-        T acc = ((T*)input_items[0])[i];
+        T acc = ((const T*)input_items[0])[i];
         for (int j = 1; j < ninputs; j++)
-            acc *= ((T*)input_items[j])[i];
+            acc *= ((const T*)input_items[j])[i];
 
         *optr++ = (T)acc;
     }

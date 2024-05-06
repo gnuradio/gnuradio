@@ -264,7 +264,7 @@ int wavfile_sink_impl::work(int noutput_items,
                             gr_vector_const_void_star& input_items,
                             gr_vector_void_star& output_items)
 {
-    auto in = (float**)&input_items[0];
+    auto in = (const float**)&input_items[0];
     int n_in_chans = input_items.size();
     int nwritten;
     int errnum;
