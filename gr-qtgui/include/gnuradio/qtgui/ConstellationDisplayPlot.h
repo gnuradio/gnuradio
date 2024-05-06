@@ -28,8 +28,8 @@ public:
     ConstellationDisplayPlot(int nplots, QWidget*);
     ~ConstellationDisplayPlot() override;
 
-    void plotNewData(const std::vector<double*> realDataPoints,
-                     const std::vector<double*> imagDataPoints,
+    void plotNewData(const std::vector<const double*> realDataPoints,
+                     const std::vector<const double*> imagDataPoints,
                      const int64_t numDataPoints,
                      const double timeInterval);
 

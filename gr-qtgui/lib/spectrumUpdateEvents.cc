@@ -142,12 +142,13 @@ TimeUpdateEvent::TimeUpdateEvent(const std::vector<volk::vector<double>> timeDom
     // TODO: make this whole thing a vector copy.
     _nplots = timeDomainPoints.size();
     for (size_t i = 0; i < _nplots; i++) {
-        _dataTimeDomainPoints.push_back(new double[_numTimeDomainDataPoints]);
+        double* newDataTimeDomainPoints = new double[_numTimeDomainDataPoints];
         if (numTimeDomainDataPoints > 0) {
-            memcpy(_dataTimeDomainPoints[i],
+            memcpy(newDataTimeDomainPoints,
                    timeDomainPoints[i].data(),
                    _numTimeDomainDataPoints * sizeof(double));
         }
+        _dataTimeDomainPoints.push_back(newDataTimeDomainPoints);
     }
 
     _tags = tags;
@@ -160,7 +161,7 @@ TimeUpdateEvent::~TimeUpdateEvent()
     }
 }
 
-const std::vector<double*> TimeUpdateEvent::getTimeDomainPoints() const
+const std::vector<const double*> TimeUpdateEvent::getTimeDomainPoints() const
 {
     return _dataTimeDomainPoints;
 }
@@ -191,10 +192,11 @@ FreqUpdateEvent::FreqUpdateEvent(const std::vector<volk::vector<double>> dataPoi
     _nplots = dataPoints.size();
     // TODO: do a vector copy.
     for (size_t i = 0; i < _nplots; i++) {
-        _dataPoints.push_back(new double[_numDataPoints]);
+        double* newDataPoints = new double[_numDataPoints];
         if (numDataPoints > 0) {
-            memcpy(_dataPoints[i], dataPoints[i].data(), _numDataPoints * sizeof(double));
+            memcpy(newDataPoints, dataPoints[i].data(), _numDataPoints * sizeof(double));
         }
+        _dataPoints.push_back(newDataPoints);
     }
 }
 
@@ -205,7 +207,10 @@ FreqUpdateEvent::~FreqUpdateEvent()
     }
 }
 
-const std::vector<double*> FreqUpdateEvent::getPoints() const { return _dataPoints; }
+const std::vector<const double*> FreqUpdateEvent::getPoints() const
+{
+    return _dataPoints;
+}
 
 uint64_t FreqUpdateEvent::getNumDataPoints() const { return _numDataPoints; }
 
@@ -241,16 +246,18 @@ ConstUpdateEvent::ConstUpdateEvent(const std::vector<volk::vector<double>> realD
     // Todo: do vector copies.
     _nplots = realDataPoints.size();
     for (size_t i = 0; i < _nplots; i++) {
-        _realDataPoints.push_back(new double[_numDataPoints]);
-        _imagDataPoints.push_back(new double[_numDataPoints]);
+        double* newRealDataPoints = new double[_numDataPoints];
+        double* newImagDataPoints = new double[_numDataPoints];
         if (numDataPoints > 0) {
-            memcpy(_realDataPoints[i],
+            memcpy(newRealDataPoints,
                    realDataPoints[i].data(),
                    _numDataPoints * sizeof(double));
-            memcpy(_imagDataPoints[i],
+            memcpy(newImagDataPoints,
                    imagDataPoints[i].data(),
                    _numDataPoints * sizeof(double));
         }
+        _realDataPoints.push_back(newRealDataPoints);
+        _imagDataPoints.push_back(newImagDataPoints);
     }
 }
 
@@ -262,12 +269,12 @@ ConstUpdateEvent::~ConstUpdateEvent()
     }
 }
 
-const std::vector<double*> ConstUpdateEvent::getRealPoints() const
+const std::vector<const double*> ConstUpdateEvent::getRealPoints() const
 {
     return _realDataPoints;
 }
 
-const std::vector<double*> ConstUpdateEvent::getImagPoints() const
+const std::vector<const double*> ConstUpdateEvent::getImagPoints() const
 {
     return _imagDataPoints;
 }
@@ -292,10 +299,11 @@ WaterfallUpdateEvent::WaterfallUpdateEvent(
 
     _nplots = dataPoints.size();
     for (size_t i = 0; i < _nplots; i++) {
-        _dataPoints.push_back(new double[_numDataPoints]);
+        double* newDataPoints = new double[_numDataPoints];
         if (numDataPoints > 0) {
-            memcpy(_dataPoints[i], dataPoints[i].data(), _numDataPoints * sizeof(double));
+            memcpy(newDataPoints, dataPoints[i].data(), _numDataPoints * sizeof(double));
         }
+        _dataPoints.push_back(newDataPoints);
     }
 
     _dataTimestamp = dataTimestamp;
@@ -308,7 +316,10 @@ WaterfallUpdateEvent::~WaterfallUpdateEvent()
     }
 }
 
-const std::vector<double*> WaterfallUpdateEvent::getPoints() const { return _dataPoints; }
+const std::vector<const double*> WaterfallUpdateEvent::getPoints() const
+{
+    return _dataPoints;
+}
 
 uint64_t WaterfallUpdateEvent::getNumDataPoints() const { return _numDataPoints; }
 
@@ -333,10 +344,11 @@ TimeRasterUpdateEvent::TimeRasterUpdateEvent(
 
     _nplots = dataPoints.size();
     for (size_t i = 0; i < _nplots; i++) {
-        _dataPoints.push_back(new double[_numDataPoints]);
+        double* newDataPoints = new double[_numDataPoints];
         if (numDataPoints > 0) {
-            memcpy(_dataPoints[i], dataPoints[i].data(), _numDataPoints * sizeof(double));
+            memcpy(newDataPoints, dataPoints[i].data(), _numDataPoints * sizeof(double));
         }
+        _dataPoints.push_back(newDataPoints);
     }
 }
 
@@ -347,7 +359,7 @@ TimeRasterUpdateEvent::~TimeRasterUpdateEvent()
     }
 }
 
-const std::vector<double*> TimeRasterUpdateEvent::getPoints() const
+const std::vector<const double*> TimeRasterUpdateEvent::getPoints() const
 {
     return _dataPoints;
 }
@@ -381,10 +393,11 @@ HistogramUpdateEvent::HistogramUpdateEvent(const std::vector<volk::vector<double
 
     _nplots = points.size();
     for (size_t i = 0; i < _nplots; i++) {
-        _points.push_back(new double[_npoints]);
+        double* newPoints = new double[_npoints];
         if (npoints > 0) {
-            memcpy(_points[i], points[i].data(), _npoints * sizeof(double));
+            memcpy(newPoints, points[i].data(), _npoints * sizeof(double));
         }
+        _points.push_back(newPoints);
     }
 }
 
@@ -395,7 +408,10 @@ HistogramUpdateEvent::~HistogramUpdateEvent()
     }
 }
 
-const std::vector<double*> HistogramUpdateEvent::getDataPoints() const { return _points; }
+const std::vector<const double*> HistogramUpdateEvent::getDataPoints() const
+{
+    return _points;
+}
 
 uint64_t HistogramUpdateEvent::getNumDataPoints() const { return _npoints; }
 
