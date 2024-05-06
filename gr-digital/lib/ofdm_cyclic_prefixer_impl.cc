@@ -140,7 +140,7 @@ int ofdm_cyclic_prefixer_impl::work(int noutput_items,
                                     gr_vector_const_void_star& input_items,
                                     gr_vector_void_star& output_items)
 {
-    gr_complex* in = (gr_complex*)input_items[0];
+    const gr_complex* in = (const gr_complex*)input_items[0];
     gr_complex* out = (gr_complex*)output_items[0];
     int symbols_to_read = 0;
     // 1) Figure out if we're in freewheeling or packet mode.
@@ -154,10 +154,10 @@ int ofdm_cyclic_prefixer_impl::work(int noutput_items,
     // 2) Do the cyclic prefixing and, optionally, the pulse shaping.
     for (int sym_idx = 0; sym_idx < symbols_to_read; sym_idx++) {
         memcpy(static_cast<void*>(out + d_cp_lengths[d_state]),
-               static_cast<void*>(in),
+               static_cast<const void*>(in),
                d_fft_len * sizeof(gr_complex));
         memcpy(static_cast<void*>(out),
-               static_cast<void*>(in + d_fft_len - d_cp_lengths[d_state]),
+               static_cast<const void*>(in + d_fft_len - d_cp_lengths[d_state]),
                d_cp_lengths[d_state] * sizeof(gr_complex));
         if (d_rolloff_len) {
             for (int i = 0; i < d_rolloff_len - 1; i++) {

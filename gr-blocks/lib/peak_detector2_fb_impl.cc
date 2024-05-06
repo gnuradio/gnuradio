@@ -69,7 +69,7 @@ int peak_detector2_fb_impl::work(int noutput_items,
                                  gr_vector_const_void_star& input_items,
                                  gr_vector_void_star& output_items)
 {
-    float* iptr = (float*)input_items[0];
+    const float* iptr = (const float*)input_items[0];
     char* optr = (char*)output_items[0];
     float* sigout;
 

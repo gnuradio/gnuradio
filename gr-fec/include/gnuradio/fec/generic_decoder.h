@@ -51,7 +51,7 @@ protected:
 
 public:
     friend class decoder;
-    virtual void generic_work(void* inbuffer, void* outbuffer) = 0;
+    virtual void generic_work(const void* inbuffer, void* outbuffer) = 0;
     static int base_unique_id;
     int my_id;
     int unique_id();

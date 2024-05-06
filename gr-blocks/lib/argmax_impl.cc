@@ -49,14 +49,14 @@ int argmax_impl<T>::work(int noutput_items,
     std::int16_t* y_optr = (std::int16_t*)output_items[1];
 
     for (int i = 0; i < noutput_items; i++) {
-        T max = ((T*)input_items[0])[i * d_vlen];
+        T max = ((const T*)input_items[0])[i * d_vlen];
         int x = 0;
         int y = 0;
 
         for (int j = 0; j < (int)d_vlen; j++) {
             for (int k = 0; k < ninputs; k++) {
-                if (((T*)input_items[k])[i * d_vlen + j] > max) {
-                    max = ((T*)input_items[k])[i * d_vlen + j];
+                if (((const T*)input_items[k])[i * d_vlen + j] > max) {
+                    max = ((const T*)input_items[k])[i * d_vlen + j];
                     x = j;
                     y = k;
                 }

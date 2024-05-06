@@ -45,7 +45,7 @@ polar_decoder_sc::polar_decoder_sc(int block_size,
 
 polar_decoder_sc::~polar_decoder_sc() {}
 
-void polar_decoder_sc::generic_work(void* in_buffer, void* out_buffer)
+void polar_decoder_sc::generic_work(const void* in_buffer, void* out_buffer)
 {
     const float* in = (const float*)in_buffer;
     unsigned char* out = (unsigned char*)out_buffer;

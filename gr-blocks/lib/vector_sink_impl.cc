@@ -72,7 +72,7 @@ int vector_sink_impl<T>::work(int noutput_items,
                               gr_vector_const_void_star& input_items,
                               gr_vector_void_star& output_items)
 {
-    T* iptr = (T*)input_items[0];
+    const T* iptr = (const T*)input_items[0];
 
     // can't touch this (as long as work() is working, the accessors shall not
     // read the data

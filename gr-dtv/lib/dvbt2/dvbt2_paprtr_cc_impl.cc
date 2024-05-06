@@ -680,7 +680,7 @@ int dvbt2_paprtr_cc_impl::work(int noutput_items,
                     for (int k = 1; k <= num_iterations; k++) {
                         y = 0.0;
                         volk_32f_x2_add_32f((float*)ctemp.data(),
-                                            (float*)in,
+                                            (const float*)in,
                                             (float*)c.data(),
                                             papr_fft_size * 2);
                         volk_32fc_magnitude_32f(
@@ -765,8 +765,10 @@ int dvbt2_paprtr_cc_impl::work(int noutput_items,
                                                  papr_fft_size * 2);
                         std::copy(std::begin(rNew), std::end(rNew), std::begin(r));
                     }
-                    volk_32f_x2_add_32f(
-                        (float*)out, (float*)in, (float*)c.data(), papr_fft_size * 2);
+                    volk_32f_x2_add_32f((float*)out,
+                                        (const float*)in,
+                                        (float*)c.data(),
+                                        papr_fft_size * 2);
                     in = in + papr_fft_size;
                     out = out + papr_fft_size;
                 } else {

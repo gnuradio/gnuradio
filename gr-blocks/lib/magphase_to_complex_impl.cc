@@ -38,8 +38,8 @@ int magphase_to_complex_impl::work(int noutput_items,
                                    gr_vector_const_void_star& input_items,
                                    gr_vector_void_star& output_items)
 {
-    float* mag = (float*)input_items[0];
-    float* phase = (float*)input_items[1];
+    const float* mag = (const float*)input_items[0];
+    const float* phase = (const float*)input_items[1];
     gr_complex* out = (gr_complex*)output_items[0];
 
     for (size_t j = 0; j < noutput_items * d_vlen; j++)

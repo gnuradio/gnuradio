@@ -62,7 +62,7 @@ int constellation_metrics_cf_impl::general_work(int noutput_items,
     unsigned int nstreams = input_items.size();
 
     for (unsigned int m = 0; m < nstreams; m++) {
-        const gr_complex* in = (gr_complex*)input_items[m];
+        const gr_complex* in = (const gr_complex*)input_items[m];
         float* out = (float*)output_items[m];
 
         for (unsigned int i = 0; i < noutput_items / d_O; i++) {

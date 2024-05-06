@@ -25,7 +25,7 @@ class ldpc_encoder_impl : public ldpc_encoder
 {
 private:
     // plug into the generic fec api
-    void generic_work(void* inBuffer, void* outbuffer) override;
+    void generic_work(const void* inBuffer, void* outbuffer) override;
 
     // memory allocated for processing
     int outputSize;

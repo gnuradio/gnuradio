@@ -89,7 +89,7 @@ int add_blk_impl<T>::work(int noutput_items,
 
     memcpy(out, input_items[0], noi * sizeof(T));
     for (size_t i = 1; i < input_items.size(); i++) {
-        volk_add(out, (T*)input_items[i], noi);
+        volk_add(out, (const T*)input_items[i], noi);
     }
 
     return noutput_items;

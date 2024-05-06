@@ -123,7 +123,7 @@ int pfb_decimator_ccf_impl::work_fir_exp(int noutput_items,
                                          gr_vector_const_void_star& input_items,
                                          gr_vector_void_star& output_items)
 {
-    gr_complex* in;
+    const gr_complex* in;
     gr_complex* out = (gr_complex*)output_items[0];
 
     int i;
@@ -132,7 +132,7 @@ int pfb_decimator_ccf_impl::work_fir_exp(int noutput_items,
         out[i] = 0;
         for (int j = d_rate - 1; j >= 0; j--) {
             // Take items from M-1 to 0; filter and rotate
-            in = (gr_complex*)input_items[d_rate - 1 - j];
+            in = (const gr_complex*)input_items[d_rate - 1 - j];
             out[i] += d_fir_filters[j].filter(&in[i]) * d_rotator[j];
         }
     }
@@ -144,7 +144,7 @@ int pfb_decimator_ccf_impl::work_fir_fft(int noutput_items,
                                          gr_vector_const_void_star& input_items,
                                          gr_vector_void_star& output_items)
 {
-    gr_complex* in;
+    const gr_complex* in;
     gr_complex* out = (gr_complex*)output_items[0];
 
     int i;
@@ -153,7 +153,7 @@ int pfb_decimator_ccf_impl::work_fir_fft(int noutput_items,
         out[i] = 0;
         for (unsigned int j = 0; j < d_rate; j++) {
             // Take in the items from the first input stream to d_rate
-            in = (gr_complex*)input_items[d_rate - 1 - j];
+            in = (const gr_complex*)input_items[d_rate - 1 - j];
             d_fft.get_inbuf()[j] = d_fir_filters[j].filter(&in[i]);
         }
 
@@ -171,7 +171,7 @@ int pfb_decimator_ccf_impl::work_fft_exp(int noutput_items,
                                          gr_vector_const_void_star& input_items,
                                          gr_vector_void_star& output_items)
 {
-    gr_complex* in;
+    const gr_complex* in;
     gr_complex* out = (gr_complex*)output_items[0];
 
     int i;
@@ -180,7 +180,7 @@ int pfb_decimator_ccf_impl::work_fft_exp(int noutput_items,
     // noutput_items at once to avoid repeated calls to the FFT
     // setup and operation.
     for (unsigned int j = 0; j < d_rate; j++) {
-        in = (gr_complex*)input_items[d_rate - j - 1];
+        in = (const gr_complex*)input_items[d_rate - j - 1];
         d_fft_filters[j].filter(noutput_items, in, &(d_tmp[j * noutput_items]));
     }
 
@@ -201,13 +201,13 @@ int pfb_decimator_ccf_impl::work_fft_fft(int noutput_items,
                                          gr_vector_const_void_star& input_items,
                                          gr_vector_void_star& output_items)
 {
-    gr_complex* in;
+    const gr_complex* in;
     gr_complex* out = (gr_complex*)output_items[0];
 
     int i;
 
     for (unsigned int j = 0; j < d_rate; j++) {
-        in = (gr_complex*)input_items[d_rate - j - 1];
+        in = (const gr_complex*)input_items[d_rate - j - 1];
         d_fft_filters[j].filter(noutput_items, in, &d_tmp[j * noutput_items]);
     }
 

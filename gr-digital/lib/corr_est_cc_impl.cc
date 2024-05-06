@@ -187,7 +187,7 @@ int corr_est_cc_impl::work(int noutput_items,
 {
     gr::thread::scoped_lock lock(d_setlock);
 
-    const gr_complex* in = (gr_complex*)input_items[0];
+    const gr_complex* in = (const gr_complex*)input_items[0];
     gr_complex* out = (gr_complex*)output_items[0];
     gr_complex* corr;
     if (output_items.size() > 1)
@@ -282,7 +282,8 @@ int corr_est_cc_impl::work(int noutput_items,
         // Estimated scaling factor for the input stream to normalize
         // the output to +/-1.
         uint32_t maxi;
-        volk_32fc_index_max_32u_manual(&maxi, (gr_complex*)in, noutput_items, "generic");
+        volk_32fc_index_max_32u_manual(
+            &maxi, const_cast<gr_complex*>(in), noutput_items, "generic");
         d_scale = 1 / std::abs(in[maxi]);
 
         // Calculate the phase offset of the incoming signal.

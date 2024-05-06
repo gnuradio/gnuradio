@@ -239,7 +239,7 @@ int cc_decoder_impl::find_endstate()
     return state;
 }
 
-int cc_decoder_impl::update_viterbi_blk(unsigned char* syms, int nbits)
+int cc_decoder_impl::update_viterbi_blk(const unsigned char* syms, int nbits)
 {
     unsigned char* d = d_vp.decisions.data();
 
@@ -247,7 +247,7 @@ int cc_decoder_impl::update_viterbi_blk(unsigned char* syms, int nbits)
 
     volk_8u_x4_conv_k7_r2_8u(d_vp.new_metrics.t,
                              d_vp.old_metrics.t,
-                             syms,
+                             const_cast<unsigned char*>(syms),
                              d,
                              nbits - (s_k - 1),
                              s_k - 1,
@@ -350,7 +350,7 @@ bool cc_decoder_impl::set_frame_size(unsigned int frame_size)
 
 double cc_decoder_impl::rate() { return 1.0 / static_cast<double>(s_rate); }
 
-void cc_decoder_impl::generic_work(void* inbuffer, void* outbuffer)
+void cc_decoder_impl::generic_work(const void* inbuffer, void* outbuffer)
 {
     const unsigned char* in = (const unsigned char*)inbuffer;
     unsigned char* out = (unsigned char*)outbuffer;
@@ -370,7 +370,7 @@ void cc_decoder_impl::generic_work(void* inbuffer, void* outbuffer)
 
 
     case (CC_TRUNCATED):
-        update_viterbi_blk((unsigned char*)(&in[0]), d_veclen);
+        update_viterbi_blk((const unsigned char*)(&in[0]), d_veclen);
         d_end_state_chaining = find_endstate();
         for (unsigned int i = 0; i < s_k - 1; ++i) {
             out[d_veclen - 1 - i] = ((*d_end_state) >> i) & 1;
@@ -382,7 +382,7 @@ void cc_decoder_impl::generic_work(void* inbuffer, void* outbuffer)
 
     case (CC_STREAMING):
     case (CC_TERMINATED):
-        update_viterbi_blk((unsigned char*)(&in[0]), d_veclen);
+        update_viterbi_blk((const unsigned char*)(&in[0]), d_veclen);
         d_end_state_chaining = find_endstate();
         d_start_state_chaining = chainback_viterbi(
             &out[0], d_frame_size, *d_end_state, d_veclen - d_frame_size);

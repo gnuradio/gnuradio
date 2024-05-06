@@ -65,7 +65,7 @@ int tagged_file_sink_impl::work(int noutput_items,
                                 gr_vector_const_void_star& input_items,
                                 gr_vector_void_star& output_items)
 {
-    char* inbuf = (char*)input_items[0];
+    const char* inbuf = (const char*)input_items[0];
 
     uint64_t start_N = nitems_read(0);
     uint64_t end_N = start_N + (uint64_t)(noutput_items);
