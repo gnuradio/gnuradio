@@ -10,7 +10,6 @@
 
 
 import os
-import re
 import logging
 import subprocess
 
@@ -29,11 +28,11 @@ def clang_format(s):
             ["clang-format"], stdin=subprocess.PIPE, stdout=subprocess.PIPE)
         out, err = p.communicate(s.encode('utf-8'))
         if p.returncode != 0:
-            print("Failed to run clang-format: %s", err)
+            print(f"Failed to run clang-format: {err}")
             return s
         return out.decode('utf-8')
     except (RuntimeError, FileNotFoundError) as e:
-        print("Failed to run clang-format: %s", e)
+        print(f"Failed to run clang-format: {e}")
         return s
 
 
@@ -128,11 +127,12 @@ class ModToolAdd(ModTool):
         """ Shorthand for writing a substituted template to a file"""
         path_to_file = os.path.join(path, fname)
         logger.info(f"Adding file '{path_to_file}'...")
-        def formatter(x): return x
-        if fname.endswith('.cc') or fname.endswith('.h'):
-            formatter = clang_format
         with open(path_to_file, 'w') as f:
-            f.write(formatter(render_template(tpl, **self.info)))
+            if fname.endswith('.cc') or fname.endswith('.h'):
+                f.write(clang_format(render_template(tpl, **self.info)))
+            else:
+                f.write(render_template(tpl, **self.info))
+
         self.scm.add_files((path_to_file,))
 
     def run(self):
@@ -211,7 +211,7 @@ class ModToolAdd(ModTool):
         """
         fname_cc = None
         fname_h = None
-        if self.info['version'] in ('37', '38', '310'):
+        if self.info['version'] in ('38', '310'):
             fname_h = self.info['blockname'] + '.h'
             fname_cc = self.info['blockname'] + '.cc'
             if self.info['blocktype'] in ('source', 'sink', 'sync', 'decimator',
@@ -221,22 +221,10 @@ class ModToolAdd(ModTool):
                                 self.info['blockname'] + '_impl.h')
             self._write_tpl('block_impl_cpp', 'lib', fname_cc)
             self._write_tpl('block_def_h', self.info['includedir'], fname_h)
-        else:  # Pre-3.7 or autotools
-            fname_h = self.info['fullblockname'] + '.h'
-            fname_cc = self.info['fullblockname'] + '.cc'
-            self._write_tpl('block_h36', self.info['includedir'], fname_h)
-            self._write_tpl('block_cpp36', 'lib', fname_cc)
+        else:  # Pre-3.8 or autotools
+            raise RuntimeError(f"Unsupported version {self.info['version']}")
         if self.add_cc_qa:
-            if self.info['version'] in ['38', '310']:
-                self._run_cc_qa_boostutf()
-            elif self.info['version'] == '37':
-                self._run_cc_qa()
-            elif self.info['version'] == '36':
-                logger.warning(
-                    "Warning: C++ QA files not supported for 3.6-style OOTs.")
-            elif self.info['version'] == 'autofoo':
-                logger.warning(
-                    "Warning: C++ QA files not supported for autotools.")
+            self._run_cc_qa_boostutf()
         if not self.skip_cmakefiles:
             ed = CMakeFileEditor(self._file['cmlib'])
             cmake_list_var = '[a-z]*_?' + self.info['modname'] + '_sources'
@@ -256,6 +244,7 @@ class ModToolAdd(ModTool):
         - add reference and call to bind_blockname()
         - include them into CMakeLists.txt
         """
+        import hashlib
 
         bindings_dir = os.path.join(self.info['pydir'], 'bindings')
 
@@ -285,7 +274,6 @@ class ModToolAdd(ModTool):
                               flag_automatic=(blktype != 'noblock'))
         block_base = code_generator.GRTYPELIST.get(blktype, '')
 
-        import hashlib
         header_file = self.info['blockname'] + '.h'
         hasher = hashlib.md5()
         with open(os.path.join(self.info['includedir'], header_file), 'rb') as file_in:
