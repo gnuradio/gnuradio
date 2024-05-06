@@ -100,6 +100,7 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "GNU"
     gr_add_cxx_compiler_flag_if_available(-Wall HAVE_WARN_ALL)
     gr_add_cxx_compiler_flag_if_available(-Wno-uninitialized HAVE_WARN_NO_UNINITIALIZED)
     gr_add_cxx_compiler_flag_if_available(-Wignored-qualifiers HAVE_WARN_IGNORED_QUALIFIERS)
+    gr_add_cxx_compiler_flag_if_available(-Wcast-qual HAVE_WARN_CAST_QUAL)
 endif(CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
 
 if(MSVC)
