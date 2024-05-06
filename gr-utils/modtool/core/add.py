@@ -278,13 +278,12 @@ class ModToolAdd(ModTool):
             prefix_include_root = '/'.join(('gnuradio', self.info['modname']))
         else:
             prefix_include_root = self.info['modname']
+        blktype = self.info['blocktype']
 
         bg = BindingGenerator(prefix=gr.prefix(), namespace=[
-                              'gr', self.info['modname']], prefix_include_root=prefix_include_root)
-        block_base = ""
-        if self.info['blocktype'] in ('source', 'sink', 'sync', 'decimator',
-                                      'interpolator', 'general', 'hier', 'tagged_stream'):
-            block_base = code_generator.GRTYPELIST[self.info['blocktype']]
+                              'gr', self.info['modname']], prefix_include_root=prefix_include_root,
+                              flag_automatic=(blktype != 'noblock'))
+        block_base = code_generator.GRTYPELIST.get(blktype, '')
 
         import hashlib
         header_file = self.info['blockname'] + '.h'
@@ -305,19 +304,6 @@ class ModToolAdd(ModTool):
                 "classes": [
                     {
                         "name": self.info['blockname'],
-                        "member_functions": [
-                            {
-                                "name": "make",
-                                "return_type": "::".join(("gr", self.info['modname'], self.info['blockname'], "sptr")),
-                                "has_static": "1",
-                                "arguments": []
-                            }
-                        ],
-                        "bases": [
-                            "::",
-                            "gr",
-                            block_base
-                        ],
                         "constructors": [
                             {
                                 "name": self.info['blockname'],
@@ -330,6 +316,21 @@ class ModToolAdd(ModTool):
                 "namespaces": []
             }
         }
+
+        if block_base:
+            header_info['namespace']['classes'][0]['bases'] = ["::", "gr", block_base]
+
+        if blktype != 'noblock':
+            # Only blocks have make
+            header_info['namespace']['classes'][0]['member_functions'] = [
+                {
+                    "name": "make",
+                    "return_type": f"gr::{self.info['modname']}::{self.info['blockname']}::sptr",
+                    "has_static": "1",
+                    "arguments": []
+                }
+            ]
+
         # def gen_pybind_cc(self, header_info, base_name):
         pydoc_txt = bg.gen_pydoc_h(header_info, self.info['blockname'])
         path_to_file = os.path.join(bindings_dir, fname_pydoc_h)
