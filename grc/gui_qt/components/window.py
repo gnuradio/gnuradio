@@ -159,7 +159,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         self.tabWidget.tabCloseRequested.connect(
             lambda index: self.close_triggered(index)
         )
-        self.tabWidget.tabBarClicked.connect(
+        self.tabWidget.currentChanged.connect(
             lambda index: self.tab_triggered(index)
         )
         self.setCentralWidget(self.tabWidget)
@@ -961,6 +961,9 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
                 for block in self.currentFlowgraphScene.core.blocks:
                     block.gui.create_shapes_and_labels()
                 self.currentFlowgraphScene.update_elements_to_draw()
+                if hasattr(self.app, 'VariableEditor'):
+                    self.app.VariableEditor.set_scene(self.currentFlowgraphScene)
+                #self.updateActions()
             else:
                 self.tabWidget.setCurrentIndex(open_fgs.index(filename))
 
@@ -1046,8 +1049,11 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
             tab_index: switches to tab(tab_index)
         """
         log.debug(f"Switching to tab (index {tab_index})")
+        if tab_index < 0:
+            return
         self.tabWidget.setCurrentIndex(tab_index)
-        self.app.VariableEditor.set_scene(self.currentFlowgraphScene)
+        if hasattr(self.app, 'VariableEditor'):
+            self.app.VariableEditor.set_scene(self.currentFlowgraphScene)
         self.updateActions()
 
     def close_triggered(self, tab_index=None) -> Union[str, bool]:
