@@ -123,7 +123,7 @@ HistogramDisplayPlot::~HistogramDisplayPlot()
 
 void HistogramDisplayPlot::replot() { QwtPlot::replot(); }
 
-void HistogramDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
+void HistogramDisplayPlot::plotNewData(const std::vector<const double*> dataPoints,
                                        const uint64_t numDataPoints,
                                        const double timeInterval)
 {

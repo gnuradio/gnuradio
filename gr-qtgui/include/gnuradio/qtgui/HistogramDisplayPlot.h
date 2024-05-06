@@ -35,7 +35,7 @@ public:
     HistogramDisplayPlot& operator=(const HistogramDisplayPlot&) = delete;
     HistogramDisplayPlot& operator=(HistogramDisplayPlot&&) = delete;
 
-    void plotNewData(const std::vector<double*> dataPoints,
+    void plotNewData(const std::vector<const double*> dataPoints,
                      const uint64_t numDataPoints,
                      const double timeInterval);
 

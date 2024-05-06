@@ -275,7 +275,7 @@ void FrequencyDisplayPlot::replot()
     QwtPlot::replot();
 }
 
-void FrequencyDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
+void FrequencyDisplayPlot::plotNewData(const std::vector<const double*> dataPoints,
                                        const int64_t numDataPoints,
                                        const double noiseFloorAmplitude,
                                        const double peakFrequency,
@@ -361,8 +361,8 @@ void FrequencyDisplayPlot::plotNewData(const double* dataPoints,
                                        const double peakAmplitude,
                                        const double timeInterval)
 {
-    std::vector<double*> vecDataPoints;
-    vecDataPoints.push_back((double*)dataPoints);
+    std::vector<const double*> vecDataPoints;
+    vecDataPoints.push_back(dataPoints);
     plotNewData(vecDataPoints,
                 numDataPoints,
                 noiseFloorAmplitude,

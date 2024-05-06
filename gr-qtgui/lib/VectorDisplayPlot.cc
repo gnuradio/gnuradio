@@ -245,7 +245,7 @@ void VectorDisplayPlot::replot()
     QwtPlot::replot();
 }
 
-void VectorDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
+void VectorDisplayPlot::plotNewData(const std::vector<const double*> dataPoints,
                                     const int64_t numDataPoints,
                                     const double refLevel,
                                     const double timeInterval)
