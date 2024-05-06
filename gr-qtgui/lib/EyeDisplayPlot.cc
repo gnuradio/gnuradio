@@ -519,7 +519,7 @@ void EyeDisplayPlot::setLineColor(unsigned int which, QColor color)
         pen.setColor(color);
         d_plot_curve[i]->setPen(pen);
         // And set the color of the markers
-        QwtSymbol* sym = (QwtSymbol*)d_plot_curve[i]->symbol();
+        QwtSymbol* sym = const_cast<QwtSymbol*>(d_plot_curve[i]->symbol());
         if (sym) {
             sym->setColor(color);
             sym->setPen(pen);
@@ -538,7 +538,7 @@ void EyeDisplayPlot::setLineWidth(unsigned int which, int width)
         d_plot_curve[i]->setPen(pen);
 
         // Scale the marker size proportionally
-        QwtSymbol* sym = (QwtSymbol*)d_plot_curve[i]->symbol();
+        QwtSymbol* sym = const_cast<QwtSymbol*>(d_plot_curve[i]->symbol());
         if (sym) {
             sym->setSize(7 + 10 * log10(1.0 * i), 7 + 10 * log10(1.0 * i));
             d_plot_curve[i]->setSymbol(sym);
@@ -550,7 +550,7 @@ void EyeDisplayPlot::setLineWidth(unsigned int which, int width)
 void EyeDisplayPlot::setLineMarker(unsigned int which, QwtSymbol::Style marker)
 {
     for (unsigned int i = 0; i < d_plot_curve.size(); ++i) {
-        QwtSymbol* sym = (QwtSymbol*)d_plot_curve[i]->symbol();
+        QwtSymbol* sym = const_cast<QwtSymbol*>(d_plot_curve[i]->symbol());
         if (sym) {
             sym->setStyle(marker);
             d_plot_curve[i]->setSymbol(sym);
@@ -582,7 +582,7 @@ void EyeDisplayPlot::setMarkerAlpha(unsigned int which, int alpha)
         d_plot_curve[i]->setPen(pen);
 
         // And set the new color for the markers
-        QwtSymbol* sym = (QwtSymbol*)d_plot_curve[i]->symbol();
+        QwtSymbol* sym = const_cast<QwtSymbol*>(d_plot_curve[i]->symbol());
         if (sym) {
             sym->setColor(color);
             sym->setPen(pen);

@@ -135,7 +135,7 @@ bool QRfnocF15ColorMapper::addPalette(std::string name, QPixmap& pixmap)
     /* Convert to an OpenGL texture */
     /* Note: We use TEXTURE_2D because 1D isn't really supported by Qt
      * and it's also not in OpenGL ES */
-    QGLContext* ctx = (QGLContext*)QGLContext::currentContext();
+    QGLContext* ctx = const_cast<QGLContext*>(QGLContext::currentContext());
     GLuint tex_id = ctx->bindTexture(pixmap, GL_TEXTURE_2D);
 
     /* Configure behavior */
