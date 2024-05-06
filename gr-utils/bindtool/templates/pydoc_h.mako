@@ -22,14 +22,14 @@ ${license}
  */
 ${render_namespace(namespace=namespace, modname=[modname])} \
 \
-<%def name='render_docstring_const(modname,names,info,docstring="",info_all=None)'>
+<%def name='render_docstring_const(modname,names,info,docstring="",info_all=None,max_unambiguous=1)'>
 <% 
   names = list(filter(None, names))
   suffix = ''
   if info_all:
     matcher = lambda x,name: x['name'] == name
     matched_list = [f for f in info_all if matcher(f,info['name'])]
-    overloaded = len(matched_list) > 1
+    overloaded = len(matched_list) > max_unambiguous
     suffix = ''
     if overloaded:
       index_into_list = matched_list.index(info)
@@ -56,7 +56,7 @@ static const char *__doc_${'_'.join(names)}${suffix} = R"doc(${docstring})doc";
 ${render_docstring_const(modname,namespace['name'].split('::')+[cls['name']],cls,cls['docstring'] if 'docstring' in cls else "")}
 \
 % for cotr in constructors:
-${render_docstring_const(modname,namespace['name'].split('::')+[cls['name'],cotr['name']],cotr,cotr['docstring'] if 'docstring' in cotr else "",constructors)}
+${render_docstring_const(modname,namespace['name'].split('::')+[cls['name'],cotr['name']],cotr,cotr['docstring'] if 'docstring' in cotr else "",constructors,0)}
 % endfor ## constructors
 \
 % for fcn in member_functions:
