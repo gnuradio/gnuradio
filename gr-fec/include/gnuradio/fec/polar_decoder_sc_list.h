@@ -60,7 +60,7 @@ public:
     ~polar_decoder_sc_list() override;
 
     // FECAPI
-    void generic_work(void* in_buffer, void* out_buffer) override;
+    void generic_work(const void* in_buffer, void* out_buffer) override;
 
 private:
     polar_decoder_sc_list(int max_list_size,

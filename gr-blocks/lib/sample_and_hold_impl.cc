@@ -44,7 +44,7 @@ int sample_and_hold_impl<T>::work(int noutput_items,
                                   gr_vector_const_void_star& input_items,
                                   gr_vector_void_star& output_items)
 {
-    T* iptr = (T*)input_items[0];
+    const T* iptr = (const T*)input_items[0];
     const char* ctrl = (const char*)input_items[1];
     T* optr = (T*)output_items[0];
 

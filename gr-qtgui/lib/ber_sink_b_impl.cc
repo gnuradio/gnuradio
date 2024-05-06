@@ -276,8 +276,8 @@ int ber_sink_b_impl::general_work(int noutput_items,
             int items = ninput_items[i] <= ninput_items[i + 1] ? ninput_items[i]
                                                                : ninput_items[i + 1];
 
-            unsigned char* inbuffer0 = (unsigned char*)input_items[i];
-            unsigned char* inbuffer1 = (unsigned char*)input_items[i + 1];
+            const unsigned char* inbuffer0 = (const unsigned char*)input_items[i];
+            const unsigned char* inbuffer1 = (const unsigned char*)input_items[i + 1];
 
             if (items > 0) {
                 uint32_t ret;

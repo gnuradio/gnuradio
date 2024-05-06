@@ -137,7 +137,7 @@ int dvbt_symbol_inner_interleaver_impl::general_work(
     gr_vector_const_void_star& input_items,
     gr_vector_void_star& output_items)
 {
-    const unsigned char* in = (unsigned char*)input_items[0];
+    const unsigned char* in = (const unsigned char*)input_items[0];
     unsigned char* out = (unsigned char*)output_items[0];
 
     // Demod reference signals sends a tag per OFDM frame

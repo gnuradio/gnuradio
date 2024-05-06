@@ -50,7 +50,7 @@ polar_decoder_sc_list::polar_decoder_sc_list(int max_list_size,
 
 polar_decoder_sc_list::~polar_decoder_sc_list() {}
 
-void polar_decoder_sc_list::generic_work(void* in_buffer, void* out_buffer)
+void polar_decoder_sc_list::generic_work(const void* in_buffer, void* out_buffer)
 {
     const float* in = (const float*)in_buffer;
     unsigned char* out = (unsigned char*)out_buffer;

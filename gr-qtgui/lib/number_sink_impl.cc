@@ -233,21 +233,21 @@ void number_sink_impl::_gui_update_trigger()
 
 float number_sink_impl::get_item(const void* input_items, int n)
 {
-    char* inc;
-    short* ins;
-    float* inf;
+    const char* inc;
+    const short* ins;
+    const float* inf;
 
     switch (d_itemsize) {
     case (1):
-        inc = (char*)input_items;
+        inc = (const char*)input_items;
         return static_cast<float>(inc[n]);
         break;
     case (2):
-        ins = (short*)input_items;
+        ins = (const short*)input_items;
         return static_cast<float>(ins[n]);
         break;
     case (4):
-        inf = (float*)input_items;
+        inf = (const float*)input_items;
         return static_cast<float>(inf[n]);
         break;
     default:

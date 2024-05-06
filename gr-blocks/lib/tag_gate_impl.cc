@@ -78,7 +78,7 @@ int tag_gate_impl::work(int noutput_items,
     unsigned char* out = (unsigned char*)output_items[0];
     std::vector<tag_t> tags;
 
-    memcpy((void*)out, (void*)in, d_item_size * noutput_items);
+    memcpy((void*)out, (const void*)in, d_item_size * noutput_items);
 
     if (d_single_key_set && (!d_propagate_tags)) {
         get_tags_in_range(tags, 0, nitems_read(0), nitems_read(0) + noutput_items);

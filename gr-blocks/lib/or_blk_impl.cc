@@ -43,9 +43,9 @@ int or_blk_impl<T>::work(int noutput_items,
     int ninputs = input_items.size();
 
     for (size_t i = 0; i < noutput_items * d_vlen; i++) {
-        T acc = ((T*)input_items[0])[i];
+        T acc = ((const T*)input_items[0])[i];
         for (int j = 1; j < ninputs; j++)
-            acc |= ((T*)input_items[j])[i];
+            acc |= ((const T*)input_items[j])[i];
 
         *optr++ = (T)acc;
     }

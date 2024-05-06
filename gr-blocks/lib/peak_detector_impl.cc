@@ -79,7 +79,7 @@ int peak_detector_impl<T>::work(int noutput_items,
                                 gr_vector_const_void_star& input_items,
                                 gr_vector_void_star& output_items)
 {
-    T* iptr = (T*)input_items[0];
+    const T* iptr = (const T*)input_items[0];
     char* optr = (char*)output_items[0];
 
     memset(optr, 0, noutput_items * sizeof(char));

@@ -69,7 +69,7 @@ bool ldpc_bit_flip_decoder_impl::set_frame_size(unsigned int frame_size)
 double ldpc_bit_flip_decoder_impl::rate() { return d_rate; }
 
 
-void ldpc_bit_flip_decoder_impl::generic_work(void* inbuffer, void* outbuffer)
+void ldpc_bit_flip_decoder_impl::generic_work(const void* inbuffer, void* outbuffer)
 {
     // Populate the information word
     const float* in = (const float*)inbuffer;

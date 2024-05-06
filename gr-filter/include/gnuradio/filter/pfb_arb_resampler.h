@@ -202,7 +202,7 @@ public:
      * \param n_read (out) Number of samples actually read from \p input.
      * \return Number of samples put into \p output.
      */
-    int filter(gr_complex* output, gr_complex* input, int n_to_read, int& n_read);
+    int filter(gr_complex* output, const gr_complex* input, int n_to_read, int& n_read);
 };
 
 
@@ -332,7 +332,7 @@ public:
      * \param n_read (out) Number of samples actually read from \p input.
      * \return Number of samples put into \p output.
      */
-    int filter(gr_complex* output, gr_complex* input, int n_to_read, int& n_read);
+    int filter(gr_complex* output, const gr_complex* input, int n_to_read, int& n_read);
 };
 
 
@@ -524,7 +524,7 @@ public:
      * \param n_read (out) Number of samples actually read from \p input.
      * \return Number of samples put into \p output.
      */
-    int filter(float* output, float* input, int n_to_read, int& n_read);
+    int filter(float* output, const float* input, int n_to_read, int& n_read);
 };
 
 } /* namespace kernel */

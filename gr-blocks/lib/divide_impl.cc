@@ -42,10 +42,10 @@ int divide_impl<float>::work(int noutput_items,
 {
     float* optr = (float*)output_items[0];
     size_t ninputs = input_items.size();
-    float* numerator = (float*)input_items[0];
+    const float* numerator = (const float*)input_items[0];
     for (size_t inp = 1; inp < ninputs; ++inp) {
         volk_32f_x2_divide_32f(
-            optr, numerator, (float*)input_items[inp], noutput_items * d_vlen);
+            optr, numerator, (const float*)input_items[inp], noutput_items * d_vlen);
         numerator = optr;
     }
 
@@ -68,10 +68,10 @@ int divide_impl<gr_complex>::work(int noutput_items,
 {
     gr_complex* optr = (gr_complex*)output_items[0];
     size_t ninputs = input_items.size();
-    gr_complex* numerator = (gr_complex*)input_items[0];
+    const gr_complex* numerator = (const gr_complex*)input_items[0];
     for (size_t inp = 1; inp < ninputs; ++inp) {
         volk_32fc_x2_divide_32fc(
-            optr, numerator, (gr_complex*)input_items[inp], noutput_items * d_vlen);
+            optr, numerator, (const gr_complex*)input_items[inp], noutput_items * d_vlen);
         numerator = optr;
     }
 
@@ -97,9 +97,9 @@ int divide_impl<T>::work(int noutput_items,
     int ninputs = input_items.size();
 
     for (size_t i = 0; i < noutput_items * d_vlen; i++) {
-        T acc = ((T*)input_items[0])[i];
+        T acc = ((const T*)input_items[0])[i];
         for (int j = 1; j < ninputs; j++)
-            acc /= ((T*)input_items[j])[i];
+            acc /= ((const T*)input_items[j])[i];
 
         *optr++ = (T)acc;
     }
