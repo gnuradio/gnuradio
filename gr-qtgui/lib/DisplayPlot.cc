@@ -116,7 +116,7 @@ void DisplayPlot::setLineColor(unsigned int which, QColor color)
         pen.setColor(color);
         d_plot_curve[which]->setPen(pen);
         // And set the color of the markers
-        QwtSymbol* sym = (QwtSymbol*)d_plot_curve[which]->symbol();
+        QwtSymbol* sym = const_cast<QwtSymbol*>(d_plot_curve[which]->symbol());
         if (sym) {
             sym->setColor(color);
             sym->setPen(pen);
@@ -239,7 +239,7 @@ void DisplayPlot::setLineWidth(unsigned int which, int width)
         d_plot_curve[which]->setPen(pen);
 
         // Scale the marker size proportionally
-        QwtSymbol* sym = (QwtSymbol*)d_plot_curve[which]->symbol();
+        QwtSymbol* sym = const_cast<QwtSymbol*>(d_plot_curve[which]->symbol());
         if (sym) {
             sym->setSize(7 + 10 * log10(1.0 * width), 7 + 10 * log10(1.0 * width));
             d_plot_curve[which]->setSymbol(sym);
@@ -277,7 +277,7 @@ Qt::PenStyle DisplayPlot::getLineStyle(unsigned int which) const
 void DisplayPlot::setLineMarker(unsigned int which, QwtSymbol::Style marker)
 {
     if (which < d_nplots) {
-        QwtSymbol* sym = (QwtSymbol*)d_plot_curve[which]->symbol();
+        QwtSymbol* sym = const_cast<QwtSymbol*>(d_plot_curve[which]->symbol());
         if (sym) {
             sym->setStyle(marker);
             d_plot_curve[which]->setSymbol(sym);
@@ -308,7 +308,7 @@ void DisplayPlot::setMarkerAlpha(unsigned int which, int alpha)
         d_plot_curve[which]->setPen(pen);
 
         // And set the new color for the markers
-        QwtSymbol* sym = (QwtSymbol*)d_plot_curve[which]->symbol();
+        QwtSymbol* sym = const_cast<QwtSymbol*>(d_plot_curve[which]->symbol());
         if (sym) {
             sym->setColor(color);
             sym->setPen(pen);
