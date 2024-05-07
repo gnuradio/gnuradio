@@ -1,5 +1,5 @@
 MACOSX_DEPLOYMENT_TARGET:
-- '10.9'
+- '10.13'
 c_compiler:
 - clang
 c_compiler_version:
@@ -25,7 +25,7 @@ libiio:
 libsndfile:
 - '1.2'
 libthrift:
-- 0.19.0
+- 0.20.0
 macos_machine:
 - x86_64-apple-darwin13.4.0
 numpy:
@@ -49,9 +49,9 @@ spdlog:
 target_platform:
 - osx-64
 uhd:
-- 4.5.0
+- 4.6.0
 volk:
-- '3.0'
+- '3.1'
 zeromq:
 - 4.3.5
 zip_keys:
