@@ -82,16 +82,16 @@ public:
     void setBGColour(QColor c);
     void showCFMarker(const bool);
 
-    const bool getMaxFFTVisible() const;
-    const bool getMinFFTVisible() const;
+    bool getMaxFFTVisible() const;
+    bool getMinFFTVisible() const;
     const QColor getMinFFTColor() const;
     const QColor getMaxFFTColor() const;
     const QColor getMarkerLowerIntensityColor() const;
-    const bool getMarkerLowerIntensityVisible() const;
+    bool getMarkerLowerIntensityVisible() const;
     const QColor getMarkerUpperIntensityColor() const;
-    const bool getMarkerUpperIntensityVisible() const;
+    bool getMarkerUpperIntensityVisible() const;
     const QColor getMarkerPeakAmplitudeColor() const;
-    const bool getMarkerNoiseFloorAmplitudeVisible() const;
+    bool getMarkerNoiseFloorAmplitudeVisible() const;
     const QColor getMarkerNoiseFloorAmplitudeColor() const;
     const QColor getMarkerCFColor() const;
 

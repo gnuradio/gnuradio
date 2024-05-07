@@ -53,9 +53,9 @@ public:
 
     double sampleRate() const;
 
-    const QColor getTagTextColor();
-    const QColor getTagBackgroundColor();
-    const Qt::BrushStyle getTagBackgroundStyle();
+    const QColor getTagTextColor() const;
+    const QColor getTagBackgroundColor() const;
+    Qt::BrushStyle getTagBackgroundStyle() const;
 
 public slots:
     void setSampleRate(double sr, double units, const std::string& strunits);

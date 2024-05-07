@@ -19,17 +19,17 @@ public:
             d_cos[i] = ::cos(2 * GR_M_PI * i / tbl_size);
         }
     }
-    const float sin(float x)
+    float sin(float x) const
     {
         int idx = (((int)(x * d_scale)) + d_sz - d_sz / 4) % d_sz;
         return d_cos[idx];
     }
-    const float cos(float x)
+    float cos(float x) const
     {
         int idx = (((int)(x * d_scale)) + d_sz) % d_sz;
         return d_cos[idx];
     }
-    const float sinc(float x) { return x == 0 ? 1 : sin(x) / x; }
+    float sinc(float x) const { return x == 0 ? 1 : sin(x) / x; }
 };
 
 #endif

@@ -488,14 +488,14 @@ void TimeDomainDisplayPlot::enableTagMarker(unsigned int which, bool en)
             "TimeDomainDisplayPlot: enabled tag marker does not exist.");
 }
 
-const QColor TimeDomainDisplayPlot::getTagTextColor() { return d_tag_text_color; }
+const QColor TimeDomainDisplayPlot::getTagTextColor() const { return d_tag_text_color; }
 
-const QColor TimeDomainDisplayPlot::getTagBackgroundColor()
+const QColor TimeDomainDisplayPlot::getTagBackgroundColor() const
 {
     return d_tag_background_color;
 }
 
-const Qt::BrushStyle TimeDomainDisplayPlot::getTagBackgroundStyle()
+Qt::BrushStyle TimeDomainDisplayPlot::getTagBackgroundStyle() const
 {
     return d_tag_background_style;
 }
