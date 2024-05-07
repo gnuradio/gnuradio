@@ -62,7 +62,7 @@ public:
     typedef std::shared_ptr<ofdm_carrier_allocator_cvc> sptr;
 
     virtual std::string len_tag_key() = 0;
-    virtual const int fft_len() = 0;
+    virtual int fft_len() const = 0;
     virtual std::vector<std::vector<int>> occupied_carriers() = 0;
 
     /*

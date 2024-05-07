@@ -48,7 +48,7 @@ public:
 
     std::string len_tag_key() override { return d_length_tag_key_str; };
 
-    const int fft_len() override { return d_fft_len; };
+    int fft_len() const override { return d_fft_len; };
     std::vector<std::vector<int>> occupied_carriers() override
     {
         return d_occupied_carriers;

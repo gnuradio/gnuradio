@@ -53,9 +53,9 @@ public:
 
     double sampleRate() const;
 
-    const QColor getTagTextColor();
-    const QColor getTagBackgroundColor();
-    const Qt::BrushStyle getTagBackgroundStyle();
+    const QColor getTagTextColor() const;
+    const QColor getTagBackgroundColor() const;
+    Qt::BrushStyle getTagBackgroundStyle() const;
     void setLineColor(unsigned int which, QColor color) override;
     void setLineWidth(unsigned int which, int width) override;
     void setLineMarker(unsigned int which, QwtSymbol::Style marker) override;

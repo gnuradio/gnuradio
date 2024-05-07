@@ -130,25 +130,25 @@ public:
     int getLineWidth8() const;
     int getLineWidth9() const;
 
-    const Qt::PenStyle getLineStyle1() const;
-    const Qt::PenStyle getLineStyle2() const;
-    const Qt::PenStyle getLineStyle3() const;
-    const Qt::PenStyle getLineStyle4() const;
-    const Qt::PenStyle getLineStyle5() const;
-    const Qt::PenStyle getLineStyle6() const;
-    const Qt::PenStyle getLineStyle7() const;
-    const Qt::PenStyle getLineStyle8() const;
-    const Qt::PenStyle getLineStyle9() const;
+    Qt::PenStyle getLineStyle1() const;
+    Qt::PenStyle getLineStyle2() const;
+    Qt::PenStyle getLineStyle3() const;
+    Qt::PenStyle getLineStyle4() const;
+    Qt::PenStyle getLineStyle5() const;
+    Qt::PenStyle getLineStyle6() const;
+    Qt::PenStyle getLineStyle7() const;
+    Qt::PenStyle getLineStyle8() const;
+    Qt::PenStyle getLineStyle9() const;
 
-    const QwtSymbol::Style getLineMarker1() const;
-    const QwtSymbol::Style getLineMarker2() const;
-    const QwtSymbol::Style getLineMarker3() const;
-    const QwtSymbol::Style getLineMarker4() const;
-    const QwtSymbol::Style getLineMarker5() const;
-    const QwtSymbol::Style getLineMarker6() const;
-    const QwtSymbol::Style getLineMarker7() const;
-    const QwtSymbol::Style getLineMarker8() const;
-    const QwtSymbol::Style getLineMarker9() const;
+    QwtSymbol::Style getLineMarker1() const;
+    QwtSymbol::Style getLineMarker2() const;
+    QwtSymbol::Style getLineMarker3() const;
+    QwtSymbol::Style getLineMarker4() const;
+    QwtSymbol::Style getLineMarker5() const;
+    QwtSymbol::Style getLineMarker6() const;
+    QwtSymbol::Style getLineMarker7() const;
+    QwtSymbol::Style getLineMarker8() const;
+    QwtSymbol::Style getLineMarker9() const;
 
     int getMarkerAlpha1() const;
     int getMarkerAlpha2() const;
@@ -183,9 +183,9 @@ public slots:
     virtual void setLineWidth(unsigned int which, int width);
     virtual int getLineWidth(unsigned int which) const;
     virtual void setLineStyle(unsigned int which, Qt::PenStyle style);
-    virtual const Qt::PenStyle getLineStyle(unsigned int which) const;
+    virtual Qt::PenStyle getLineStyle(unsigned int which) const;
     virtual void setLineMarker(unsigned int which, QwtSymbol::Style marker);
-    virtual const QwtSymbol::Style getLineMarker(unsigned int which) const;
+    virtual QwtSymbol::Style getLineMarker(unsigned int which) const;
     virtual void setMarkerAlpha(unsigned int which, int alpha);
     virtual int getMarkerAlpha(unsigned int which) const;
 

@@ -141,12 +141,9 @@ QColor DisplayPlot::getLineColor(unsigned int which) const
     void DisplayPlot::setLineWidth##i(int width) { setLineWidth(im1, width); }          \
     int DisplayPlot::getLineWidth##i() const { return getLineWidth(im1); }              \
     void DisplayPlot::setLineStyle##i(Qt::PenStyle ps) { setLineStyle(im1, ps); }       \
-    const Qt::PenStyle DisplayPlot::getLineStyle##i() const                             \
-    {                                                                                   \
-        return getLineStyle(im1);                                                       \
-    }                                                                                   \
+    Qt::PenStyle DisplayPlot::getLineStyle##i() const { return getLineStyle(im1); }     \
     void DisplayPlot::setLineMarker##i(QwtSymbol::Style ms) { setLineMarker(im1, ms); } \
-    const QwtSymbol::Style DisplayPlot::getLineMarker##i() const                        \
+    QwtSymbol::Style DisplayPlot::getLineMarker##i() const                              \
     {                                                                                   \
         return getLineMarker(im1);                                                      \
     }                                                                                   \
@@ -268,7 +265,7 @@ void DisplayPlot::setLineStyle(unsigned int which, Qt::PenStyle style)
     }
 }
 
-const Qt::PenStyle DisplayPlot::getLineStyle(unsigned int which) const
+Qt::PenStyle DisplayPlot::getLineStyle(unsigned int which) const
 {
     if (which < d_nplots) {
         return d_plot_curve[which]->pen().style();
@@ -288,7 +285,7 @@ void DisplayPlot::setLineMarker(unsigned int which, QwtSymbol::Style marker)
     }
 }
 
-const QwtSymbol::Style DisplayPlot::getLineMarker(unsigned int which) const
+QwtSymbol::Style DisplayPlot::getLineMarker(unsigned int which) const
 {
     if (which < d_nplots) {
         QwtSymbol* sym = (QwtSymbol*)d_plot_curve[which]->symbol();

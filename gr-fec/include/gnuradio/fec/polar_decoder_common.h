@@ -66,8 +66,8 @@ protected:
     };
 
     // control retrieval of frozen bits.
-    const bool is_frozen_bit(const int u_num) const;
-    const unsigned char next_frozen_bit();
+    bool is_frozen_bit(const int u_num) const;
+    unsigned char next_frozen_bit();
 
     // preparation for decoding
     void initialize_decoder(unsigned char* u, float* llrs, const float* input);
