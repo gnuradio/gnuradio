@@ -13,9 +13,14 @@ if(UNIX AND HAVE_XDG_UTILS AND ENABLE_POSTINSTALL)
     configure_file(
         ${CMAKE_CURRENT_SOURCE_DIR}/grc_setup_freedesktop.in
         ${CMAKE_CURRENT_BINARY_DIR}/grc_setup_freedesktop
+        @ONLY
+    )
+    file(
+        COPY ${CMAKE_CURRENT_SOURCE_DIR}/grc_setup_freedesktop.in
+        DESTINATION ${CMAKE_CURRENT_BINARY_DIR}
         FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
-    @ONLY)
-   install (
+    )
+    install (
         CODE "execute_process(COMMAND ${CMAKE_CURRENT_BINARY_DIR}/grc_setup_freedesktop install)"
     )
 endif(UNIX AND HAVE_XDG_UTILS AND ENABLE_POSTINSTALL)
@@ -25,4 +30,4 @@ if(UNIX AND ENABLE_TESTING)
     if(APPSTREAMCLI)
         GR_ADD_TEST(metainfo_test "${APPSTREAMCLI}" validate-relax "${CMAKE_CURRENT_SOURCE_DIR}/org.gnuradio.grc.metainfo.xml")
     endif(APPSTREAMCLI)
-endif(UNIX AND ENABLE_TESTING)   
+endif(UNIX AND ENABLE_TESTING)
