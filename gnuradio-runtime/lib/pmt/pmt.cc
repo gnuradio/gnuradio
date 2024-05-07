@@ -134,15 +134,11 @@ bool to_bool(pmt_t val)
 //                             Symbols
 ////////////////////////////////////////////////////////////////////////////
 
-static const unsigned int get_symbol_hash_table_size()
-{
-    static const unsigned int SYMBOL_HASH_TABLE_SIZE = 8192;
-    return SYMBOL_HASH_TABLE_SIZE;
-}
+constexpr size_t SYMBOL_HASH_TABLE_SIZE = 8192;
 
 static std::vector<pmt_t>* get_symbol_hash_table()
 {
-    static std::vector<pmt_t> s_symbol_hash_table(get_symbol_hash_table_size());
+    static std::vector<pmt_t> s_symbol_hash_table(SYMBOL_HASH_TABLE_SIZE);
     return &s_symbol_hash_table;
 }
 
@@ -153,7 +149,7 @@ bool is_symbol(const pmt_t& obj) { return obj->is_symbol(); }
 
 pmt_t string_to_symbol(std::string_view name)
 {
-    unsigned hash = std::hash<std::string_view>{}(name) % get_symbol_hash_table_size();
+    unsigned hash = std::hash<std::string_view>{}(name) % SYMBOL_HASH_TABLE_SIZE;
 
     // Does a symbol with this name already exist?
     for (pmt_t sym = (*get_symbol_hash_table())[hash]; sym; sym = _symbol(sym)->next()) {

@@ -76,15 +76,15 @@ public:
     void setTraceColour(QColor);
     void setBGColour(QColor c);
 
-    const bool getMaxVecVisible() const;
-    const bool getMinVecVisible() const;
+    bool getMaxVecVisible() const;
+    bool getMinVecVisible() const;
     const QColor getMinVecColor() const;
     const QColor getMaxVecColor() const;
     const QColor getMarkerLowerIntensityColor() const;
-    const bool getMarkerLowerIntensityVisible() const;
+    bool getMarkerLowerIntensityVisible() const;
     const QColor getMarkerUpperIntensityColor() const;
-    const bool getMarkerUpperIntensityVisible() const;
-    const bool getMarkerRefLevelAmplitudeVisible() const;
+    bool getMarkerUpperIntensityVisible() const;
+    bool getMarkerRefLevelAmplitudeVisible() const;
     const QColor getMarkerRefLevelAmplitudeColor() const;
 
 public slots:

@@ -411,7 +411,7 @@ void FrequencyDisplayPlot::setMaxFFTVisible(const bool visibleFlag)
     d_max_fft_plot_curve->setVisible(visibleFlag);
 }
 
-const bool FrequencyDisplayPlot::getMaxFFTVisible() const { return d_max_fft_visible; }
+bool FrequencyDisplayPlot::getMaxFFTVisible() const { return d_max_fft_visible; }
 
 void FrequencyDisplayPlot::setMinFFTVisible(const bool visibleFlag)
 {
@@ -419,7 +419,7 @@ void FrequencyDisplayPlot::setMinFFTVisible(const bool visibleFlag)
     d_min_fft_plot_curve->setVisible(visibleFlag);
 }
 
-const bool FrequencyDisplayPlot::getMinFFTVisible() const { return d_min_fft_visible; }
+bool FrequencyDisplayPlot::getMinFFTVisible() const { return d_min_fft_visible; }
 
 void FrequencyDisplayPlot::_resetXAxisPoints()
 {
@@ -520,7 +520,7 @@ void FrequencyDisplayPlot::setMarkerLowerIntensityVisible(bool visible)
     else
         d_lower_intensity_marker->setLineStyle(QwtPlotMarker::NoLine);
 }
-const bool FrequencyDisplayPlot::getMarkerLowerIntensityVisible() const
+bool FrequencyDisplayPlot::getMarkerLowerIntensityVisible() const
 {
     return d_marker_lower_intensity_visible;
 }
@@ -545,7 +545,7 @@ void FrequencyDisplayPlot::setMarkerUpperIntensityVisible(bool visible)
         d_upper_intensity_marker->setLineStyle(QwtPlotMarker::NoLine);
 }
 
-const bool FrequencyDisplayPlot::getMarkerUpperIntensityVisible() const
+bool FrequencyDisplayPlot::getMarkerUpperIntensityVisible() const
 {
     return d_marker_upper_intensity_visible;
 }
@@ -586,7 +586,7 @@ void FrequencyDisplayPlot::setMarkerNoiseFloorAmplitudeVisible(bool visible)
         d_marker_noise_floor_amplitude->setLineStyle(QwtPlotMarker::NoLine);
 }
 
-const bool FrequencyDisplayPlot::getMarkerNoiseFloorAmplitudeVisible() const
+bool FrequencyDisplayPlot::getMarkerNoiseFloorAmplitudeVisible() const
 {
     return d_marker_noise_floor_amplitude_visible;
 }
