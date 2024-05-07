@@ -37,9 +37,9 @@ spdlog:
 target_platform:
 - win-64
 uhd:
-- 4.5.0
+- 4.6.0
 volk:
-- '3.0'
+- '3.1'
 zeromq:
 - 4.3.5
 zip_keys:
