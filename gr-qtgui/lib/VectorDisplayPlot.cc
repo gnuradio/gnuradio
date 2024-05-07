@@ -339,7 +339,7 @@ void VectorDisplayPlot::setMaxVecVisible(const bool visibleFlag)
     d_max_vec_plot_curve->setVisible(visibleFlag);
 }
 
-const bool VectorDisplayPlot::getMaxVecVisible() const { return d_max_vec_visible; }
+bool VectorDisplayPlot::getMaxVecVisible() const { return d_max_vec_visible; }
 
 void VectorDisplayPlot::setMinVecVisible(const bool visibleFlag)
 {
@@ -347,7 +347,7 @@ void VectorDisplayPlot::setMinVecVisible(const bool visibleFlag)
     d_min_vec_plot_curve->setVisible(visibleFlag);
 }
 
-const bool VectorDisplayPlot::getMinVecVisible() const { return d_min_vec_visible; }
+bool VectorDisplayPlot::getMinVecVisible() const { return d_min_vec_visible; }
 
 void VectorDisplayPlot::_resetXAxisPoints()
 {
@@ -428,7 +428,7 @@ void VectorDisplayPlot::setMarkerLowerIntensityVisible(bool visible)
     else
         d_lower_intensity_marker->setLineStyle(QwtPlotMarker::NoLine);
 }
-const bool VectorDisplayPlot::getMarkerLowerIntensityVisible() const
+bool VectorDisplayPlot::getMarkerLowerIntensityVisible() const
 {
     return d_marker_lower_intensity_visible;
 }
@@ -453,7 +453,7 @@ void VectorDisplayPlot::setMarkerUpperIntensityVisible(bool visible)
         d_upper_intensity_marker->setLineStyle(QwtPlotMarker::NoLine);
 }
 
-const bool VectorDisplayPlot::getMarkerUpperIntensityVisible() const
+bool VectorDisplayPlot::getMarkerUpperIntensityVisible() const
 {
     return d_marker_upper_intensity_visible;
 }
@@ -478,7 +478,7 @@ void VectorDisplayPlot::setMarkerRefLevelAmplitudeVisible(bool visible)
         d_marker_ref_level->setLineStyle(QwtPlotMarker::NoLine);
 }
 
-const bool VectorDisplayPlot::getMarkerRefLevelAmplitudeVisible() const
+bool VectorDisplayPlot::getMarkerRefLevelAmplitudeVisible() const
 {
     return d_marker_ref_level_visible;
 }

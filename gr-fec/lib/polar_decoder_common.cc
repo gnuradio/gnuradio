@@ -136,14 +136,14 @@ void polar_decoder_common::odd_xor_even_values(unsigned char* u_xor,
     }
 }
 
-const bool polar_decoder_common::is_frozen_bit(const int u_num) const
+bool polar_decoder_common::is_frozen_bit(const int u_num) const
 {
     return d_frozen_bit_counter < d_frozen_bit_positions.size() &&
            u_num == d_frozen_bit_positions.at(d_frozen_bit_counter);
 }
 
 
-const unsigned char polar_decoder_common::next_frozen_bit()
+unsigned char polar_decoder_common::next_frozen_bit()
 {
     return d_frozen_bit_values[d_frozen_bit_counter++];
 }

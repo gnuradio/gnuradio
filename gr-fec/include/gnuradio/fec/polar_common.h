@@ -69,9 +69,9 @@ public:
     ~polar_common();
 
 protected:
-    const int block_size() const { return d_block_size; };
-    const int block_power() const { return d_block_power; };
-    const int num_info_bits() const { return d_num_info_bits; };
+    int block_size() const { return d_block_size; };
+    int block_power() const { return d_block_power; };
+    int num_info_bits() const { return d_num_info_bits; };
 
     // helper functions
     long bit_reverse(long value, int active_bits) const;
