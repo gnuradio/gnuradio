@@ -65,6 +65,10 @@ class GUIPort(QGraphicsItem):
         # TODO: Move somewhere else? Not necessarily
         self.core.parent_flowgraph.gui.addItem(self)
 
+        """ Dummy blocks instantiate ports only when a connection to them is created. """
+        if self.core.parent_block.is_dummy_block:
+            self.setParentItem(self.core.parent_block.gui)
+
     def update_connections(self):
         if self.core._dir == "sink":
             self.connection_point = self.mapToScene(QPointF(-10.0, self.height / 2.0))
@@ -84,6 +88,10 @@ class GUIPort(QGraphicsItem):
     def create_shapes_and_labels(self):
         self.auto_hide_port_labels = self.core.parent.parent.gui.app.qsettings.value(
             'grc/auto_hide_port_labels', type=bool)
+        """
+        The GUI port is instantiated before its parent block. Therefore we set the parent here,
+        not in the constructor. Exception: dummy block ports, see __init__() above
+        """
         if not self.parentItem():
             self.setParentItem(self.core.parent_block.gui)
 

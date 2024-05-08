@@ -951,6 +951,11 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
                 self.connect_fg_signals(self.currentFlowgraphScene)
                 self.currentFlowgraphScene.saved = True
                 self.currentFlowgraphScene.save_allowed = save_allowed
+                self.currentFlowgraphScene.core.rewrite()
+                self.currentFlowgraphScene.core.validate()
+                for block in self.currentFlowgraphScene.core.blocks:
+                    block.gui.create_shapes_and_labels()
+                self.currentFlowgraphScene.update_elements_to_draw()
             else:
                 self.tabWidget.setCurrentIndex(open_fgs.index(filename))
 
