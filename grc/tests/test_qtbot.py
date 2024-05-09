@@ -612,7 +612,10 @@ def test_bypass(qtbot, qapp_cls_):
 def test_file_save(qtbot, qapp_cls_, monkeypatch, tmp_path):
     fg_path = tmp_path / "test_save.grc"
     monkeypatch.setattr(
-        QtWidgets.QFileDialog, "getSaveFileName", lambda *args, **kargs: (fg_path, "")
+        QtWidgets.QFileDialog, "selectedFiles", lambda *args, **kargs: (fg_path, "")
+    )
+    monkeypatch.setattr(
+        QtWidgets.QFileDialog, "exec_", lambda *args: QtWidgets.QFileDialog.Accepted
     )
 
     assert not fg_path.exists(), "File/Save (setup): File already exists"
@@ -623,7 +626,10 @@ def test_file_save(qtbot, qapp_cls_, monkeypatch, tmp_path):
 def test_file_save_as(qtbot, qapp_cls_, monkeypatch, tmp_path):
     fg_path = tmp_path / "test.grc"
     monkeypatch.setattr(
-        QtWidgets.QFileDialog, "getSaveFileName", lambda *args, **kargs: (fg_path, "")
+        QtWidgets.QFileDialog, "selectedFiles", lambda *args, **kargs: (fg_path, "")
+    )
+    monkeypatch.setattr(
+        QtWidgets.QFileDialog, "exec_", lambda *args: QtWidgets.QFileDialog.Accepted
     )
 
     qtbot.wait(100)
@@ -635,7 +641,10 @@ def test_file_save_as(qtbot, qapp_cls_, monkeypatch, tmp_path):
 def test_file_save_copy(qtbot, qapp_cls_, monkeypatch, tmp_path):
     fg_path = tmp_path / "test_copy.grc"
     monkeypatch.setattr(
-        QtWidgets.QFileDialog, "getSaveFileName", lambda *args, **kargs: (fg_path, "")
+        QtWidgets.QFileDialog, "selectedFiles", lambda *args, **kargs: (fg_path, "")
+    )
+    monkeypatch.setattr(
+        QtWidgets.QFileDialog, "exec_", lambda *args: QtWidgets.QFileDialog.Accepted
     )
     qtbot.wait(100)
 
@@ -860,7 +869,10 @@ def test_generate(qtbot, qapp_cls_, monkeypatch, tmp_path):
     fg_path = tmp_path / "test_generate.grc"
     py_path = tmp_path / "default.py"
     monkeypatch.setattr(
-        QtWidgets.QFileDialog, "getSaveFileName", lambda *args, **kargs: (fg_path, "")
+        QtWidgets.QFileDialog, "selectedFiles", lambda *args, **kargs: (fg_path, "")
+    )
+    monkeypatch.setattr(
+        QtWidgets.QFileDialog, "exec_", lambda *args: QtWidgets.QFileDialog.Accepted
     )
 
     qtbot.wait(100)
