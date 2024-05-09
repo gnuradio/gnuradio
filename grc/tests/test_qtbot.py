@@ -56,7 +56,7 @@ def qapp_cls_():
         install_prefix=gr.prefix(),
     )
     model.build_library()
-    app = Application(settings, model)
+    app = Application(settings, model, [])
     app.MainWindow.showMaximized()
     return app
 
