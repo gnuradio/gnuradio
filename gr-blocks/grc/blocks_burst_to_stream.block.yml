@@ -1,0 +1,52 @@
+id: blocks_burst_to_stream
+label: Burst to Stream
+flags: [ python, cpp ]
+
+parameters:
+-   id: type
+    label: Item Type
+    dtype: enum
+    options: [complex, float, int, short, byte]
+    option_attributes:
+        size: [gr.sizeof_gr_complex, gr.sizeof_float, gr.sizeof_int,
+            gr.sizeof_short, gr.sizeof_char]
+    hide: part
+-   id: len_tag_key
+    label: Length Tag Key
+    dtype: string
+    default: '"packet_len"'
+-   id: propagate_tags
+    label: Propagate tags
+    dtype: enum
+    default: 'False'
+    options: ['True', 'False']
+    option_labels: ['Yes', 'No']
+    hide: part
+-   id: vlen
+    label: Vector Length
+    dtype: int
+    default: '1'
+    hide: ${ 'part' if vlen == 1 else 'none' }
+
+inputs:
+-   domain: stream
+    dtype: ${ type }
+    vlen: ${ vlen }
+
+outputs:
+-   domain: stream
+    dtype: ${ type }
+    vlen: ${ vlen }
+
+asserts:
+- ${ vlen > 0 }
+
+templates:
+    imports: from gnuradio import blocks
+    make: blocks.burst_to_stream(${type.size}*${vlen}, ${len_tag_key}, ${propagate_tags})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/burst_to_stream.h>']
+    make: this->${id} = blocks::burst_to_stream::make(${type.size}*${vlen}, ${len_tag_key}, ${propagate_tags});
+
+file_format: 1
