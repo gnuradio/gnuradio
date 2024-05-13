@@ -29,6 +29,7 @@ list(
     argmax_python.cc
     blockinterleaver_xx_python.cc
     burst_tagger_python.cc
+    burst_to_stream_python.cc
     char_to_float_python.cc
     char_to_short_python.cc
     check_lfsr_32k_s_python.cc

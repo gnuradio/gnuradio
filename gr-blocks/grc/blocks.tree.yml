@@ -135,6 +135,7 @@
   - blocks_stretch_ff
   - blocks_blockinterleaver_xx
 - Stream Tag Tools:
+  - blocks_burst_to_stream
   - blocks_tag_debug
   - blocks_tag_gate
   - blocks_tag_share
