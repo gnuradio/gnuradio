@@ -31,6 +31,7 @@ void bind_annotator_raw(py::module&);
 void bind_argmax(py::module&);
 void bind_blockinterleaver_xx(py::module& m);
 void bind_burst_tagger(py::module&);
+void bind_burst_to_stream(py::module&);
 void bind_char_to_float(py::module&);
 void bind_char_to_short(py::module&);
 void bind_check_lfsr_32k_s(py::module&);
@@ -207,6 +208,7 @@ PYBIND11_MODULE(blocks_python, m)
     bind_argmax(m);
     bind_blockinterleaver_xx(m);
     bind_burst_tagger(m);
+    bind_burst_to_stream(m);
     bind_char_to_float(m);
     bind_char_to_short(m);
     bind_check_lfsr_32k_s(m);

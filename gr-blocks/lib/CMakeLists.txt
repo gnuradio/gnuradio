@@ -29,6 +29,7 @@ set(BLOCKS_SOURCES
     argmax_impl.cc
     blockinterleaver_xx_impl.cc
     blockinterleaving.cc
+    burst_to_stream_impl.cc
     correctiq_auto_impl.cc
     correctiq_impl.cc
     correctiq_man_impl.cc
