@@ -18,6 +18,7 @@ install(
           argmax.h
           blockinterleaver_xx.h
           blockinterleaving.h
+          burst_to_stream.h
           control_loop.h
           correctiq.h
           correctiq_auto.h
