@@ -38,6 +38,7 @@ class test_prefs (gr_unittest.TestCase):
         self.assertTrue(gr.paths.tmp())
         self.assertTrue(gr.paths.appdata())
         self.assertTrue(gr.paths.userconf())
+        self.assertTrue(gr.paths.persistent())
 
     def test_002_react_to_GR_PREFS_PATH(self):
         self._test_env("GR_PREFS_PATH")
