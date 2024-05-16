@@ -50,6 +50,18 @@ set(GR_PKG_IIO_EXAMPLES_DIR ${GR_PKG_DATA_DIR}/examples/iio)
 # Begin conditional configuration
 ########################################################################
 if(ENABLE_GR_IIO)
+    ########################################################################
+    # Setup libiio version
+    ########################################################################
+    if(libiio_FOUND)
+        if(${libiio_VERSION} VERSION_LESS "1.0")
+            message(STATUS "Using libiio v0 (old version) " ${libiio_VERSION})
+        else()
+            set(LIBIIO_V1 TRUE)
+            add_compile_definitions( LIBIIO_V1 )
+            message(STATUS "Using libiio v1 (new version) " ${libiio_VERSION})
+        endif()
+    endif(libiio_FOUND)
 
     ########################################################################
     # Add subdirectories

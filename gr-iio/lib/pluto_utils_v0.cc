@@ -9,10 +9,14 @@
 
 #include <gnuradio/iio/pluto_utils.h>
 #include <gnuradio/logger.h>
-
-#include <iio.h>
-
 #include <stdexcept>
+
+#ifdef LIBIIO_V1
+#include <iio/iio.h>
+#else
+#include <iio.h>
+#endif
+
 
 namespace gr {
 namespace iio {
