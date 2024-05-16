@@ -1,6 +1,7 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2009 Free Software Foundation, Inc.
+ * Copyright 2024 Marcus Müller
  *
  * This file is part of GNU Radio
  *
@@ -33,6 +34,7 @@ int main(int argc, char** argv)
         "sysconfdir", "print GNU Radio system configuration directory")(
         "prefsdir", "print GNU Radio preferences directory")(
         "userprefsdir", "print GNU Radio user preferences directory")(
+        "persistentdir", "print GNU Radio persistent state directory")(
         "prefs", "print GNU Radio preferences")(
         "builddate", "print GNU Radio build date (RFC2822 format)")(
         "enabled-components", "print GNU Radio build time enabled components")(
@@ -69,6 +71,9 @@ int main(int argc, char** argv)
 
     if (vm.count("userprefsdir") || print_all)
         std::cout << gr::paths::userconf().string() << std::endl;
+
+    if (vm.count("persistentdir") || print_all)
+        std::cout << gr::paths::persistent().string() << std::endl;
 
     // Not included in print all due to verbosity
     if (vm.count("prefs"))
