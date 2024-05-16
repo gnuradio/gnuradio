@@ -44,6 +44,7 @@ void bind_sys_paths(py::module& m)
     paths.def("appdata", []() { return gr::paths::appdata().u8string(); });
     paths.def("userconf", []() { return gr::paths::userconf().u8string(); });
     paths.def("cache", []() { return gr::paths::cache().u8string(); });
+    paths.def("persistent", []() { return gr::paths::persistent().u8string(); });
 
     // Legacy interfaces, deprecated
     m.def(

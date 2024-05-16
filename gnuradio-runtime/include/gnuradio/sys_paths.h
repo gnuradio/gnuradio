@@ -43,9 +43,8 @@ GR_RUNTIME_API std::filesystem::path cache();
 /*! \brief directory to store persistent application state (e.g. window layouts, generated
  *          GRC hier blocks)
  */
-/*
+
 GR_RUNTIME_API std::filesystem::path persistent();
-*/
 } /* namespace  paths */
 
 //! directory to create temporary files
