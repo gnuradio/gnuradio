@@ -18,7 +18,14 @@ try:
     from importlib.metadata import entry_points
 
     def entries(group: str):
-        return entry_points().select(group=group)
+        eps = entry_points()
+        # entry_points() in older versions returns a dict-alike, in
+        # newer it returns a special object without dict interface.
+        # I don't know why – I think the old API was nice.
+        # Anyways, here's what should work for both.
+        if hasattr(eps, "select"):
+            return eps.select(group=group)
+        return eps.get(group, [])
 except ImportError:
     from pkg_resources import iter_entry_points as entries
 
