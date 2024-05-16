@@ -10,7 +10,6 @@
 
 #include <gnuradio/sys_paths.h>
 #include <type_traits>
-#include <algorithm>
 #include <cstdlib> //getenv
 #include <filesystem>
 
@@ -89,6 +88,18 @@ std::filesystem::path cache()
     }
     path = getenv("XDG_CACHE_HOME");
     return (path ? fs::path{ path } : appdata() / ".cache") / "gnuradio";
+}
+
+std::filesystem::path persistent()
+{
+    namespace fs = std::filesystem;
+    // explicit env variable always wins
+    const char* path = getenv("GR_STATE_PATH");
+    if (path) {
+        return { path };
+    }
+    path = getenv("XDG_STATE_HOME");
+    return (path ? fs::path{ path } : appdata() / ".local" / "state") / "gnuradio";
 }
 } // namespace paths
 
