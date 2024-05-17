@@ -95,7 +95,7 @@ class ${class_name}(gr.top_block, Qt.QWidget):
         self.top_grid_layout = Qt.QGridLayout()
         self.top_layout.addLayout(self.top_grid_layout)
 
-        self.settings = Qt.QSettings("GNU Radio", "${class_name}")
+        self.settings = Qt.QSettings("gnuradio/flowgraphs", "${class_name}")
 
         try:
             geometry = self.settings.value("geometry")
