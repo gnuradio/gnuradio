@@ -53,6 +53,7 @@ class Paths(object):
     TOP_BLOCK_FILE_MODE = HIER_BLOCK_FILE_MODE | stat.S_IXUSR | stat.S_IXGRP
 
     # Setup paths
+    # FIXME: this should use ..main.get_config_directory() and get_state_directory(), probably.
     '''
     HIER_BLOCKS_LIB_DIR = os.environ.get('GRC_HIER_PATH',
                                          os.path.expanduser('~/.grc_gnuradio'))
