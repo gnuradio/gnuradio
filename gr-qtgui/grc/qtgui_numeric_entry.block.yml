@@ -1,0 +1,103 @@
+id: variable_qtgui_numeric_entry
+label: QT GUI Numeric Entry
+flags: [ show_id, python ]
+
+documentation: |-
+    This block creates a variable with a text entry box to accept numeric data in any common format.
+    It handles units, numeric expressions and lower/upper bounds.
+    
+    Examples (unit Hz):
+    "0.1" -> 0.1 Hz
+    "1e3" -> 1000 Hz
+    "5*2-3" -> 7 Hz
+    "8 kHz" -> 8000 Hz
+    "30m" -> 0.03 Hz
+    
+    When the entry is focussed, the user can use the UP/DOWN keys to in-/decrement the value by the specified increment, and the PageUp/PageDown for ten times the increment.
+    
+    The label color is used to indicate the status:
+    blue = editing but value not yet applied
+    red = invalid input
+    black = value applied
+    
+    If one of the boundaries (min/max value) changes, or if the variable is changed from some other place in the flowgraph via the top block's "set_xxx()" callback (e.g. Message Pair to Var block), this is reflected on the UI
+    
+    The precision defines the maximum decimal places to consider.
+    
+    The widget can be en-/disabled dynamically if required to prevent the user from changing the values (programatic limit and value updates are still applied).
+    
+    The GUI hint can be used to position the widget within the application. The hint is of the form [tab_id@tab_index]: [row, col, row_span, col_span]. Both the tab specification and the grid position are optional.
+
+
+parameters:
+- id: label
+  label: Label
+  dtype: string
+  hide: ${ ('none' if label else 'part') }
+- id: unit
+  label: Unit
+  dtype: string
+  default: ''
+  hide: part
+- id: value
+  label: Default value
+  dtype: float
+  default: '0'
+- id: value_min
+  label: Minimum value
+  dtype: float
+  default: '-1e999'
+  hide: part
+- id: value_max
+  label: Maximum value
+  dtype: float
+  default: 'float("inf")'
+  hide: part
+- id: increment
+  label: Increment
+  dtype: float
+  default: '0.1'
+  hide: part
+- id: precision
+  label: Precision
+  dtype: int
+  default: 10
+  hide: part
+- id: description
+  label: Tooltip
+  dtype: string
+  default: ''
+  hide: part
+- id: enabled
+  label: Enabled
+  dtype: bool
+  default: True
+  hide: part
+- id: gui_hint
+  label: GUI Hint
+  dtype: gui_hint
+  hide: part
+
+value: ${ value }
+
+
+templates:
+  var_make: self.${id} = ${id} = ${value}
+  make: |-
+    <%
+        win = 'self._%s_tool_bar'%id
+        callback = 'self.set_%s'%id
+    %>        
+    ${win} = qtgui.NumericEntry(${callback}, ${label}, ${value}, ${increment}, ${unit}, ${description}, ${precision}, ${enabled})
+    ${win}.set_limits(${value_min}, ${value_max})
+    ${gui_hint() % win}
+  callbacks:
+    - self.set_${id}(${value})
+    - self._${id}_tool_bar.set_value(${id})
+    - self._${id}_tool_bar.set_limits(${value_min}, ${value_max})
+    - self._${id}_tool_bar.set_enabled(${enabled})
+
+
+#  'file_format' specifies the version of the GRC yml format used in the file
+#  and should usually not be changed.
+file_format: 1
