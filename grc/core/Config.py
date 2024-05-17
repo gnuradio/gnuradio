@@ -9,6 +9,7 @@ import os
 from os.path import expanduser, normpath, expandvars, exists
 from collections import OrderedDict
 
+from ..main import get_state_directory, get_config_file_path
 from . import Constants
 
 
@@ -17,8 +18,7 @@ class Config(object):
     license = __doc__.strip()
     website = 'https://www.gnuradio.org/'
 
-    hier_block_lib_dir = os.environ.get(
-        'GRC_HIER_PATH', Constants.DEFAULT_HIER_BLOCK_LIB_DIR)
+    hier_block_lib_dir = os.environ.get('GRC_HIER_PATH', get_state_directory())
 
     def __init__(self, version, version_parts=None, name=None, prefs=None):
         self._gr_prefs = prefs if prefs else DummyPrefs()

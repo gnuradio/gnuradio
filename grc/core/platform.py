@@ -133,7 +133,12 @@ class Platform(Element):
         self.cpp_connection_templates.clear()
         self._block_categories.clear()
 
-        with Cache(Constants.CACHE_FILE, version=self.config.version) as cache:
+        try:
+            from gnuradio.gr import paths
+            cache_file = os.path.join(paths.cache(), Constants.GRC_SUBDIR, Constants.CACHE_FILE_NAME)
+        except ImportError:
+            cache_file = Constants.FALLBACK_CACHE_FILE
+        with Cache(cache_file, version=self.config.version) as cache:
             for file_path in self._iter_files_in_block_path(path):
 
                 if file_path.endswith('.block.yml'):

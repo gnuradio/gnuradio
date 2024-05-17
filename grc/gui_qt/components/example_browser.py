@@ -250,7 +250,12 @@ class ExampleBrowser(QWidget, base.Component):
     def find_examples(self, progress_callback, ext="grc"):
         """Iterate through the example flowgraph directories and parse them."""
         examples_dict = {}
-        with Cache(Constants.EXAMPLE_CACHE_FILE, log=False) as cache:
+        try:
+            from gnuradio.gr import paths
+            cache_file = os.path.join(paths.cache(), Constants.GRC_SUBDIR, Constants.EXAMPLE_CACHE_FILE_NAME)
+        except ImportError:
+            cache_file = Constants.FALLBACK_EXAMPLE_CACHE_FILE
+        with Cache(cache_file, log=False) as cache:
             for entry in self.platform.config.example_paths:
                 if entry == '':
                     log.info("Empty example path!")

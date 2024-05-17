@@ -3,6 +3,7 @@ from os.path import expanduser, normpath, expandvars, exists
 from collections import OrderedDict
 
 from ..core.Config import Config as CoreConfig
+from ..main import get_config_file_path
 from qtpy import QtCore
 
 
@@ -11,7 +12,7 @@ class Config(CoreConfig):
     name = 'GNU Radio Companion'
 
     gui_prefs_file = os.environ.get(
-        'GRC_QT_PREFS_PATH', os.path.expanduser('~/.gnuradio/grc_qt.conf'))
+        'GRC_QT_PREFS_PATH', os.path.join(get_config_file_path(), 'grc_qt.conf'))
 
     def __init__(self, install_prefix, *args, **kwargs):
         CoreConfig.__init__(self, *args, **kwargs)
