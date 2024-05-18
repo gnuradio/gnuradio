@@ -33,7 +33,6 @@ from logging import StreamHandler
 
 import click
 from click import ClickException
-from click_plugins import with_plugins
 
 from gnuradio import gr
 
@@ -154,7 +153,6 @@ block_name = click.argument(
     'blockname', nargs=1, required=False, metavar="BLOCK_NAME")
 
 
-@with_plugins(entries('gnuradio.modtool.cli.plugins'))
 @click.command(cls=CommandCLI,
                epilog='Manipulate the source code tree of a GNU Radio module. ' +
                'Call without options to run specified command interactively')
