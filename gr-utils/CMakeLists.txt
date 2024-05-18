@@ -16,8 +16,6 @@ gr_python_check_module(
 
 gr_python_check_module_raw("click" "import click" CLICK_FOUND)
 
-gr_python_check_module_raw("click-plugins" "import click_plugins" CLICK_PLUGINS_FOUND)
-
 ########################################################################
 # Register component
 ########################################################################
@@ -25,7 +23,7 @@ include(GrComponent)
 if(NOT CMAKE_CROSSCOMPILING)
     set(utils_python_deps MAKO_FOUND)
 
-    set(utils_modtool_deps CLICK_FOUND CLICK_PLUGINS_FOUND)
+    set(utils_modtool_deps CLICK_FOUND)
 
 endif(NOT CMAKE_CROSSCOMPILING)
 
