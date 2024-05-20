@@ -37,6 +37,7 @@ from .canvas.flowgraph import FlowgraphScene
 from .example_browser import ExampleBrowser, ExampleBrowserDialog, Worker
 from .executor import ExecFlowGraphThread
 from .. import base, Constants, Utils
+from .variable_editor import VariableEditorAction
 from .undoable_actions import (
     RotateAction,
     EnableAction,
@@ -200,12 +201,27 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         self.show()
     """
 
-    def update_variable_editor(self, var_edit):
-        var_edit.new_block.connect(self.var_edit_new_block)
+    def handle_all_actions(self, var_edit):
+        var_edit.all_editor_actions.connect(self.handle_editor_action)
 
-    @QtCore.Slot(str)
-    def var_edit_new_block(self, block_key):
-        self.currentFlowgraphScene.add_block(block_key)
+    @QtCore.Slot(VariableEditorAction)
+    def handle_editor_action(self, key):
+        # Calculate the position to insert a new block
+        # Perhaps we should add a random component, as we may add several blocks
+        pos = (self.currentFlowgraphScene.sceneRect().width() / 2, self.currentFlowgraphScene.sceneRect().height() / 2)
+        if key == VariableEditorAction.DELETE_BLOCK:
+            self.delete_triggered()
+        elif key == VariableEditorAction.DISABLE_BLOCK:
+            self.disable_triggered()
+        elif key == VariableEditorAction.ENABLE_BLOCK:
+            self.enable_triggered()
+        elif key == VariableEditorAction.ADD_VARIABLE:
+            self.currentFlowgraphScene.add_block('variable', pos)
+        elif key == VariableEditorAction.ADD_IMPORT:
+            self.currentFlowgraphScene.add_block('import', pos)
+        else:
+            log.debug(f"{key} not implemented yet")
+        self.currentFlowgraphScene.clearSelection()
 
     @property
     def currentView(self):
@@ -594,8 +610,6 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
     def updateActions(self):
         """Update the available actions based on what is selected"""
-        if hasattr(self.app, 'VariableEditor'):
-            self.update_variable_editor(self.app.VariableEditor)
 
         blocks = self.currentFlowgraphScene.selected_blocks()
         conns = self.currentFlowgraphScene.selected_connections()
@@ -921,7 +935,6 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         scene.newElement.connect(self.registerNewElement)
         scene.deleteElement.connect(self.registerDeleteElement)
         scene.blockPropsChange.connect(self.registerBlockPropsChange)
-        scene.blockPropsChange.connect(self.registerBlockPropsChange)
 
     # Action Handlers
     def new_triggered(self):
@@ -963,7 +976,6 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
                 self.currentFlowgraphScene.update_elements_to_draw()
                 if hasattr(self.app, 'VariableEditor'):
                     self.app.VariableEditor.set_scene(self.currentFlowgraphScene)
-                #self.updateActions()
             else:
                 self.tabWidget.setCurrentIndex(open_fgs.index(filename))
 
