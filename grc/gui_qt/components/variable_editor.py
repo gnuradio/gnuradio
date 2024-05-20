@@ -12,6 +12,7 @@ from qtpy.QtCore import Slot, Signal, QPointF, Qt, QVariant
 from .. import base
 from ...core.base import Element
 from .canvas.flowgraph import FlowgraphScene
+from .canvas import colors
 
 # Logging
 log = logging.getLogger(f"grc.application.{__name__}")
@@ -29,8 +30,7 @@ class VariableEditorAction(Enum):
 
 
 class VariableEditor(QDockWidget, base.Component):
-    new_block = Signal([str])
-    delete_block = Signal([str])
+    all_editor_actions = Signal([VariableEditorAction])
 
     def __init__(self):
         super(VariableEditor, self).__init__()
@@ -98,58 +98,73 @@ class VariableEditor(QDockWidget, base.Component):
     def set_scene(self, scene: FlowgraphScene):
         self.scene = scene
         self.update_gui(self.scene.core.blocks)
+        self._tree.resizeColumnToContents(0)
+        self._tree.resizeColumnToContents(1)
 
     def handle_change(self, tl, br):  # TODO: Why are there two arguments?
         if self.currently_rebuilding:
             return
 
         c_block = self._tree.model().data(tl, role=Qt.UserRole)
+        if not c_block:
+            return
+
         new_text = self._tree.model().data(tl)
         c_block.old_data = c_block.export_data()
         if tl.column() == 0:  # The name (id) changed
             c_block.params['id'].set_value(new_text)
         else:  # column == 1, i.e. the value changed
             if c_block.is_import:
-                c_block.params['import'].set_value(new_text)
+                c_block.params['imports'].set_value(new_text)
             else:
                 c_block.params['value'].set_value(new_text)
         self.scene.blockPropsChange.emit(c_block)
+        self._tree.resizeColumnToContents(0)
+        self._tree.resizeColumnToContents(1)
 
     def _rebuild(self):
         # TODO: The way we update block params here seems suboptimal
         self.currently_rebuilding = True
         self._tree.clear()
-        imports = QTreeWidgetItem(self._tree)
+        imports = QTreeWidgetItem(self._tree, 0)
         imports.setText(0, "Imports")
         imports.setIcon(2, QtGui.QIcon.fromTheme("list-add"))
         for block in self._imports:
-            import_ = QTreeWidgetItem(imports)
+            import_ = QTreeWidgetItem(imports, 0)
             import_.setText(0, block.name)
             import_.setData(0, Qt.UserRole, block)
             import_.setText(1, block.params['imports'].get_value())
             import_.setData(1, Qt.UserRole, block)
             import_.setIcon(2, QtGui.QIcon.fromTheme("list-remove"))
+            import_.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEditable | Qt.ItemIsEnabled)
             if block.enabled:
-                import_.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEditable | Qt.ItemIsEnabled)
+                import_.setForeground(0, colors.BLOCK_ENABLED_COLOR)
+                import_.setForeground(1, colors.BLOCK_ENABLED_COLOR)
             else:
-                import_.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEditable)
-        variables = QTreeWidgetItem(self._tree)
+                import_.setForeground(0, colors.BLOCK_DISABLED_COLOR)
+                import_.setForeground(1, colors.BLOCK_DISABLED_COLOR)
+
+        variables = QTreeWidgetItem(self._tree, 1)
         variables.setText(0, "Variables")
         variables.setIcon(2, QtGui.QIcon.fromTheme("list-add"))
         for block in sorted(self._variables, key=lambda v: v.name):
-            variable_ = QTreeWidgetItem(variables)
+            variable_ = QTreeWidgetItem(variables, 1)
             variable_.setText(0, block.name)
             variable_.setData(0, Qt.UserRole, block)
             if block.key == 'variable':
                 variable_.setText(1, block.params['value'].get_value())
                 variable_.setData(1, Qt.UserRole, block)
+                variable_.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEditable | Qt.ItemIsEnabled)
                 if block.enabled:
-                    variable_.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEditable | Qt.ItemIsEnabled)
+                    variable_.setForeground(0, colors.BLOCK_ENABLED_COLOR)
+                    variable_.setForeground(1, colors.BLOCK_ENABLED_COLOR)
                 else:
-                    variable_.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEditable)
+                    variable_.setForeground(0, colors.BLOCK_DISABLED_COLOR)
+                    variable_.setForeground(1, colors.BLOCK_DISABLED_COLOR)
             else:
-                variable_.setText(1, '<Open Properties>')
-                variable_.setFlags(Qt.ItemIsSelectable)
+                variable_.setText(1, block.params['value'].get_value())
+                # variable_.setText(1, '<Open Properties>')
+                variable_.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEnabled)
             variable_.setIcon(2, QtGui.QIcon.fromTheme("list-remove"))
 
         self.currently_rebuilding = False
@@ -168,22 +183,24 @@ class VariableEditor(QDockWidget, base.Component):
         Single handler for the different actions that can be triggered by the context menu,
         key presses or mouse clicks. Also triggers an update of the flow graph and editor.
         """
+
         if action == VariableEditorAction.ADD_IMPORT:
-            self.new_block.emit("import")
+            self.all_editor_actions.emit(action)
+            return
         elif action == VariableEditorAction.ADD_VARIABLE:
-            self.new_block.emit("variable")
+            self.all_editor_actions.emit(action)
+            return
         elif action == VariableEditorAction.OPEN_PROPERTIES:
             # TODO: Disabled in GRC Gtk. Enable?
-            pass
-        elif action == VariableEditorAction.DELETE_BLOCK:
-            self.delete_block.emit(self._block.name)
-        elif action == VariableEditorAction.DELETE_CONFIRM:
-            pass  # TODO: Handle this
-        elif action == VariableEditorAction.ENABLE_BLOCK:
-            self._block.state = 'enabled'
-        elif action == VariableEditorAction.DISABLE_BLOCK:
-            self._block.state = 'disabled'
-        # Actions.VARIABLE_EDITOR_UPDATE()  # TODO: Fix this
+            self.all_editor_actions.emit(action)
+            return
+        self.scene.clearSelection()
+        if self._tree.currentItem().type() == 0:
+            to_handle = self.scene.core.blocks.index(self._imports[self._tree.currentIndex().row()])
+        else:
+            to_handle = self.scene.core.blocks.index(self._variables[self._tree.currentIndex().row()])
+        self.scene.core.blocks[to_handle].gui.setSelected(True)
+        self.all_editor_actions.emit(action)
 
 
 class VariableEditorContextMenu(QMenu):
