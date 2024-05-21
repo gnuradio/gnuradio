@@ -221,6 +221,8 @@ gr.io_signature.makev(${len(io_sigs)}, ${len(io_sigs)}, [${', '.join(size_strs)}
         % endfor
         % endif
 
+        self.initialized = True
+
 ########################################################
 ## QT sink close method reimplementation
 ########################################################

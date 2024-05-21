@@ -34,6 +34,8 @@ templates:
     make: |+
         def _${id}_probe():
           while True:
+            if self.initialized != True:
+              continue
             <% obj = 'self' + ('.' + block_id if block_id else '') %>
             val = ${obj}.${function_name}(${function_args})
             try:
