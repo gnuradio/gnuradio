@@ -33,6 +33,7 @@ templates:
     var_make: self.${id} = ${id} = ${value}
     make: |+
         def _${id}_probe():
+          self.flowgraph_started.wait()
           while True:
             <% obj = 'self' + ('.' + block_id if block_id else '') %>
             val = ${obj}.${function_name}(${function_args})
