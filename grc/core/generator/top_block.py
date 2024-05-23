@@ -163,8 +163,8 @@ class TopBlockGenerator(object):
             imports.append('import os')
             imports.append('import sys')
 
-        if fg.get_option('thread_safe_setters'):
-            imports.append('import threading')
+        # Used by thread_safe_setters and startup Event
+        imports.append('import threading')
 
         def is_duplicate(l):
             if (l.startswith('import') or l.startswith('from')) and l in seen:
