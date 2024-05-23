@@ -1,11 +1,11 @@
 c_compiler:
-- vs2019
+- vs2022
 channel_sources:
 - conda-forge
 channel_targets:
 - gnuradio main
 cxx_compiler:
-- vs2019
+- vs2022
 fftw:
 - '3'
 gsl:
