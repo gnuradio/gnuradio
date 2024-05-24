@@ -1012,6 +1012,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         file_dialog.setWindowTitle(self.actions["save"].statusTip())
         file_dialog.setNameFilter('Flow Graph Files (*.grc)')
         file_dialog.setDefaultSuffix('grc')
+        file_dialog.setAcceptMode(QtWidgets.QFileDialog.AcceptSave)
         filename = None
         if file_dialog.exec_() == QtWidgets.QFileDialog.Accepted:
             filename = file_dialog.selectedFiles()[0]
@@ -1038,6 +1039,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         file_dialog.setWindowTitle(self.actions["save"].statusTip())
         file_dialog.setNameFilter('Flow Graph Files (*.grc)')
         file_dialog.setDefaultSuffix('grc')
+        file_dialog.setAcceptMode(QtWidgets.QFileDialog.AcceptSave)
 
         filename = None
         if file_dialog.exec_() == QtWidgets.QFileDialog.Accepted:
