@@ -138,7 +138,13 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         # actions dynamically connected to class functions. Also, the log
         # functionality should be also allocated
         log.debug("__init__")
-        QtGui.QIcon.setThemeName("Papirus-Dark")
+        icon_theme = self.app.qsettings.value("appearance/default_qt_gui_theme", "Papirus-Dark")
+        available_themes = QtWidgets.QStyleFactory().keys()
+        if icon_theme in available_themes:
+            self.app.setStyle(QtWidgets.QStyleFactory().create(icon_theme))
+        else:
+            log.info(f"{icon_theme} not available. Falling back to default theme")
+            log.info(f"Available themes are {available_themes}")
 
         # Add the menus from the view
         menus = self.menus
