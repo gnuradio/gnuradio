@@ -162,9 +162,15 @@ class VariableEditor(QDockWidget, base.Component):
                     variable_.setForeground(0, colors.BLOCK_DISABLED_COLOR)
                     variable_.setForeground(1, colors.BLOCK_DISABLED_COLOR)
             else:
-                variable_.setText(1, block.params['value'].get_value())
-                # variable_.setText(1, '<Open Properties>')
                 variable_.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEnabled)
+                if block.enabled:
+                    variable_.setText(1, str(block.evaluate(block.value)))
+                    variable_.setForeground(0, colors.BLOCK_ENABLED_COLOR)
+                    variable_.setForeground(1, colors.BLOCK_ENABLED_COLOR)
+                else:
+                    variable_.setText(1, '<Open Properties>')
+                    variable_.setForeground(0, colors.BLOCK_DISABLED_COLOR)
+                    variable_.setForeground(1, colors.BLOCK_DISABLED_COLOR)
             variable_.setIcon(2, QtGui.QIcon.fromTheme("list-remove"))
 
         self.currently_rebuilding = False
