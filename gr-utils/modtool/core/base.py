@@ -1,6 +1,7 @@
 #
 # Copyright 2013, 2018 Free Software Foundation, Inc.
-#
+# Copyright 2024 Marcus Müller
+# 
 # This file is part of GNU Radio
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
@@ -18,6 +19,7 @@ import itertools
 from types import SimpleNamespace
 from gnuradio import gr
 from ..tools import get_modname, SCMRepoFactory
+from .toolconfig import ToolConfig
 
 logger = logging.getLogger('gnuradio.modtool')
 
@@ -75,13 +77,13 @@ class ModTool(object):
         self._subdirs = ['lib', 'include', 'python', 'grc']
         self.has_subdirs = {}
         self.skip_subdirs = {}
-        self.info = {}
+        self.info = ToolConfig()
         self._file = {}
         for subdir in self._subdirs:
             self.has_subdirs[subdir] = False
             self.skip_subdirs[subdir] = False
-        self.info['blockname'] = blockname
-        self.info['modname'] = module_name
+        self.info.blockname = blockname
+        self.info.modname = module_name
         self.cli = kwargs.get('cli', False)
         self.dir = kwargs.get('directory', '.')
         self.skip_subdirs['lib'] = kwargs.get('skip_lib', False)
@@ -92,9 +94,9 @@ class ModTool(object):
                                gr.prefs().get_string('modtool', 'scm_mode', 'no'))
         if not self.cli:
             logging.basicConfig(level=logging.ERROR, format='%(message)s')
-            self.info['yes'] = False
+            self.info.yes = False
         else:
-            self.info['yes'] = kwargs.get('yes', False)
+            self.info.yes = kwargs.get('yes', False)
             from ..cli import setup_cli_logger
             setup_cli_logger(logger)
 
@@ -118,21 +120,21 @@ class ModTool(object):
         if not self._check_directory(self.dir):
             raise ModToolException(
                 'No GNU Radio module found in the given directory.')
-        if self.info['modname'] is None:
-            self.info['modname'] = get_modname()
-        if self.info['modname'] is None:
+        if self.info.modname is None:
+            self.info.modname = get_modname()
+        if self.info.modname is None:
             raise ModToolException(
                 'No GNU Radio module found in the given directory.')
-        if self.info['version'] == '36' and (
-                os.path.isdir(os.path.join('include', self.info['modname'])) or
+        if self.info.version == '36' and (
+                os.path.isdir(os.path.join('include', self.info.modname)) or
                 os.path.isdir(os.path.join(
-                    'include', 'gnuradio', self.info['modname']))
+                    'include', 'gnuradio', self.info.modname))
         ):
-            self.info['version'] = '37'
+            self.info.version = '37'
         if not os.path.isfile(os.path.join('cmake', 'Modules', 'FindCppUnit.cmake')):
-            self.info['version'] = '38'
-            if os.path.isdir(os.path.join('include', 'gnuradio', self.info['modname'])):
-                self.info['version'] = '310'
+            self.info.version = '38'
+            if os.path.isdir(os.path.join('include', 'gnuradio', self.info.modname)):
+                self.info.version = '310'
         if self.skip_subdirs['lib'] or not self.has_subdirs['lib']:
             self.skip_subdirs['lib'] = True
         if not self.has_subdirs['python']:
@@ -147,33 +149,33 @@ class ModTool(object):
 
     def _setup_files(self):
         """ Initialise the self._file[] dictionary """
-        self.info['pydir'] = 'python'
-        if os.path.isdir(os.path.join('python', self.info['modname'])):
-            self.info['pydir'] = os.path.join('python', self.info['modname'])
+        self.info.pydir = 'python'
+        if os.path.isdir(os.path.join('python', self.info.modname)):
+            self.info.pydir = os.path.join('python', self.info.modname)
         self._file['qalib'] = os.path.join(
-            'lib', f'qa_{self.info["modname"]}.cc')
-        self._file['pyinit'] = os.path.join(self.info['pydir'], '__init__.py')
+            'lib', f'qa_{self.info.modname}.cc')
+        self._file['pyinit'] = os.path.join(self.info.pydir, '__init__.py')
         self._file['cmlib'] = os.path.join('lib', 'CMakeLists.txt')
         self._file['cmgrc'] = os.path.join('grc', 'CMakeLists.txt')
         self._file['cmpython'] = os.path.join(
-            self.info['pydir'], 'CMakeLists.txt')
+            self.info.pydir, 'CMakeLists.txt')
         self._file['cmpybind'] = os.path.join(
-            self.info['pydir'], 'bindings', 'CMakeLists.txt')
+            self.info.pydir, 'bindings', 'CMakeLists.txt')
         self._file['ccpybind'] = os.path.join(
-            self.info['pydir'], 'bindings', 'python_bindings.cc')
-        if self.info['is_component']:
-            self.info['includedir'] = os.path.join(
-                'include', 'gnuradio', self.info['modname'])
-        elif self.info['version'] in ('37', '38'):
-            self.info['includedir'] = os.path.join(
-                'include', self.info['modname'])
-        elif self.info['version'] in ('310'):
-            self.info['includedir'] = os.path.join(
-                'include', 'gnuradio', self.info['modname'])
+            self.info.pydir, 'bindings', 'python_bindings.cc')
+        if self.info.is_component:
+            self.info.includedir = os.path.join(
+                'include', 'gnuradio', self.info.modname)
+        elif self.info.version in ('37', '38'):
+            self.info.includedir = os.path.join(
+                'include', self.info.modname)
+        elif self.info.version in ('310'):
+            self.info.includedir = os.path.join(
+                'include', 'gnuradio', self.info.modname)
         else:
-            self.info['includedir'] = 'include'
+            self.info.includedir = 'include'
         self._file['cminclude'] = os.path.join(
-            self.info['includedir'], 'CMakeLists.txt')
+            self.info.includedir, 'CMakeLists.txt')
 
     def _setup_scm(self, mode='active'):
         """ Initialize source control management. """
@@ -199,18 +201,18 @@ class ModTool(object):
         except OSError:
             logger.error(f"Can't read or chdir to directory {directory}.")
             return False
-        self.info['is_component'] = False
+        self.info.is_component = False
         for f in files:
             if os.path.isfile(f) and f == 'CMakeLists.txt':
                 with open(f) as filetext:
                     if re.search(r'find_package\(Gnuradio', filetext.read()) is not None:
                         # Might be 37, check that later
-                        self.info['version'] = '36'
+                        self.info.version = '36'
                         has_makefile = True
                     elif re.search('GR_REGISTER_COMPONENT', filetext.read()) is not None:
                         # Might be 37, check that later
-                        self.info['version'] = '36'
-                        self.info['is_component'] = True
+                        self.info.version = '36'
+                        self.info.is_component = True
                         has_makefile = True
             # TODO search for autofoo
             elif os.path.isdir(f):

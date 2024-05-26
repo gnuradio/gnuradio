@@ -15,3 +15,4 @@ from .grc_yaml_generator import GRCYAMLGenerator
 from .parser_cc_block import ParserCCBlock
 from .scm import SCMRepoFactory
 from .util_functions import *
+from .strenum import StrEnum

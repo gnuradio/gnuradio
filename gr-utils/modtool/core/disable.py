@@ -27,12 +27,12 @@ class ModToolDisable(ModTool):
 
     def __init__(self, blockname=None, **kwargs):
         ModTool.__init__(self, blockname, **kwargs)
-        self.info['pattern'] = blockname
+        self.info.pattern = blockname
 
     def validate(self):
         """ Validates the arguments """
         ModTool._validate(self)
-        if not self.info['pattern'] or self.info['pattern'].isspace():
+        if not self.info.pattern or self.info.pattern.isspace():
             raise ModToolException("Invalid pattern!")
 
     def run(self):
@@ -62,7 +62,7 @@ class ModToolDisable(ModTool):
 
         def _handle_cc_qa(cmake, fname):
             """ Do stuff for cc qa """
-            if self.info['version'] == '37':
+            if self.info.version == '37':
                 cmake.comment_out_lines(
                     r'\$\{CMAKE_CURRENT_SOURCE_DIR\}/' + fname)
                 fname_base = os.path.splitext(fname)[0]
@@ -74,10 +74,10 @@ class ModToolDisable(ModTool):
                     fr'{fname_base}::suite\(\)', comment_str='//')
                 ed.write()
                 self.scm.mark_file_updated(self._file['qalib'])
-            elif self.info['version'] in ['38', '310']:
-                fname_qa_cc = f'qa_{self.info["blockname"]}.cc'
+            elif self.info.version in ['38', '310']:
+                fname_qa_cc = f'qa_{self.info.blockname}.cc'
                 cmake.comment_out_lines(fname_qa_cc)
-            elif self.info['version'] == '36':
+            elif self.info.version == '36':
                 cmake.comment_out_lines('add_executable.*' + fname)
                 cmake.comment_out_lines(
                     'target_link_libraries.*' + os.path.splitext(fname)[0])
@@ -100,43 +100,45 @@ class ModToolDisable(ModTool):
         for subdir in self._subdirs:
             if self.skip_subdirs[subdir]:
                 continue
-            if self.info['version'] in ('37', '38') and subdir == 'include':
-                subdir = f'include/{self.info["modname"]}'
+            if self.info.version in ('37', '38') and subdir == 'include':
+                subdir = f'include/{self.info.modname}'
             try:
                 cmake = CMakeFileEditor(os.path.join(subdir, 'CMakeLists.txt'))
             except IOError:
                 continue
             logger.info(f"Traversing {subdir}...")
             filenames = []
-            if self.info['blockname']:
+            if self.info.blockname:
                 if subdir == 'python':
-                    blockname_pattern = f"^(qa_)?{self.info['blockname']}.py$"
+                    blockname_pattern = f"^(qa_)?{self.info.blockname}.py$"
                 elif subdir == 'python/bindings':
-                    blockname_pattern = f"^{self.info['blockname']}_python.cc$"
+                    blockname_pattern = f"^{self.info.blockname}_python.cc$"
                 elif subdir == 'python/bindings/docstrings':
-                    blockname_pattern = f"^{self.info['blockname']}_pydoc_template.h$"
+                    blockname_pattern = f"^{self.info.blockname}_pydoc_template.h$"
                 elif subdir == 'lib':
-                    blockname_pattern = f"^{self.info['blockname']}_impl(\\.h|\\.cc)$"
-                elif subdir == self.info['includedir']:
-                    blockname_pattern = f"^{self.info['blockname']}.h$"
+                    blockname_pattern = f"^{self.info.blockname}_impl(\\.h|\\.cc)$"
+                elif subdir == self.info.includedir:
+                    blockname_pattern = f"^{self.info.blockname}.h$"
                 elif subdir == 'grc':
-                    blockname_pattern = f"^{self.info['modname']}_{self.info['blockname']}.block.yml$"
+                    blockname_pattern = f"^{self.info.modname}_{self.info.blockname}.block.yml$"
                 if blockname_pattern:
                     filenames = cmake.find_filenames_match(blockname_pattern)
-            elif self.info['pattern']:
-                filenames = cmake.find_filenames_match(self.info['pattern'])
-            yes = self.info['yes']
+            elif self.info.pattern:
+                filenames = cmake.find_filenames_match(self.info.pattern)
+            yes = (not self.info.no) and self.info.yes
             for fname in filenames:
                 file_disabled = False
                 if not yes:
-                    ans = cli_input(
-                        f"Really disable {fname}? [Y/n/a/q]: ").lower().strip()
-                    if ans == 'a':
-                        yes = True
-                    if ans == 'q':
-                        sys.exit(0)
-                    if ans == 'n':
-                        continue
+                    if (self.cli) and not (self.info.no or self.info.batch):
+                        ans = cli_input(f"Really disable {fname}? [Y/n/a/q]: ").lower().strip()
+                        if ans == 'a':
+                            yes = True
+                        if ans == 'q':
+                            sys.exit(0)
+                        if ans == 'n':
+                            continue
+                    else:
+                        yes = False
                 for special_treatment in special_treatments:
                     if special_treatment[0] == subdir and re.match(special_treatment[1], fname):
                         file_disabled = special_treatment[2](cmake, fname)

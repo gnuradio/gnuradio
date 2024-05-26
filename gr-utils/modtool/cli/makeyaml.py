@@ -57,18 +57,18 @@ def cli(**kwargs):
     else:
         self = ModToolMakeYAML(**kwargs)
         click.secho("GNU Radio module name identified: " +
-                    self.info['modname'], fg='green')
+                    self.info.modname, fg='green')
         get_pattern(self)
         run(self)
 
 
 def get_pattern(self):
     """ Get the regex pattern for block(s) to be parsed """
-    if self.info['pattern'] is None:
-        block_candidates = get_block_candidates(self.info['modname'], skip_include=True,
+    if self.info.pattern is None:
+        block_candidates = get_block_candidates(self.info.modname, skip_include=True,
                                                 skip_python=True, skip_grc=True)
         with SequenceCompleter(block_candidates):
-            self.info['pattern'] = cli_input(
+            self.info.pattern = cli_input(
                 'Which blocks do you want to parse? (Regex): ')
-    if not self.info['pattern'] or self.info['pattern'].isspace():
-        self.info['pattern'] = '.'
+    if not self.info.pattern or self.info.pattern.isspace():
+        self.info.pattern = '.'

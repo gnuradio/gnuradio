@@ -23,18 +23,17 @@ def cli(**kwargs):
     """Disable a block (comments out CMake entries for files)"""
     kwargs['cli'] = True
     self = ModToolDisable(**kwargs)
-    click.secho("GNU Radio module name identified: " +
-                self.info['modname'], fg='green')
+    click.secho(f"GNU Radio module name identified: {self.info.modname}", fg='green')
     get_pattern(self)
     run(self)
 
 
 def get_pattern(self):
     """ Get the regex pattern for block(s) to be disabled """
-    if self.info['pattern'] is None:
-        block_candidates = get_block_candidates(self.info['modname'])
+    if self.info.pattern is None:
+        block_candidates = get_block_candidates(self.info.modname)
         with SequenceCompleter(block_candidates):
-            self.info['pattern'] = cli_input(
+            self.info.pattern = cli_input(
                 'Which blocks do you want to disable? (Regex): ')
-    if not self.info['pattern'] or self.info['pattern'].isspace():
-        self.info['pattern'] = '.'
+    if not self.info.pattern or self.info.pattern.isspace():
+        self.info.pattern = '.'

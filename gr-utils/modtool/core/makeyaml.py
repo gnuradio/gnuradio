@@ -60,12 +60,12 @@ class ModToolMakeYAML(ModTool):
 
     def __init__(self, blockname=None, **kwargs):
         ModTool.__init__(self, blockname, **kwargs)
-        self.info['pattern'] = blockname
+        self.info.pattern = blockname
 
     def validate(self):
         """ Validates the arguments """
         ModTool._validate(self)
-        if not self.info['pattern'] or self.info['pattern'].isspace():
+        if not self.info.pattern or self.info.pattern.isspace():
             raise ModToolException("Incorrect blockname (Regex)!")
 
     def run(self):
@@ -77,7 +77,7 @@ class ModToolMakeYAML(ModTool):
             "Warning: This is an experimental feature. Don't expect any magic.")
         # 1) Go through lib/
         if not self.skip_subdirs['lib']:
-            if self.info['version'] in ('37', '38', '310'):
+            if self.info.version in ('37', '38', '310'):
                 files = self._search_files('lib', '*_impl.cc')
             else:
                 files = self._search_files('lib', '*.cc')
@@ -94,28 +94,28 @@ class ModToolMakeYAML(ModTool):
         files = sorted(glob.glob(f"{path}/{path_glob}"))
         files_filt = []
         logger.info(f"Searching for matching files in {path}/:")
-        if self.info['blockname']:
+        if self.info.blockname:
             # ensure the blockname given is not confused with similarly named blocks
             blockname_pattern = ''
             if path == 'python':
-                blockname_pattern = f"^(qa_)?{self.info['blockname']}.py$"
+                blockname_pattern = f"^(qa_)?{self.info.blockname}.py$"
             elif path == 'python/bindings':
-                blockname_pattern = f"^{self.info['blockname']}_python.cc$"
+                blockname_pattern = f"^{self.info.blockname}_python.cc$"
             elif path == 'python/bindings/docstrings':
-                blockname_pattern = f"^{self.info['blockname']}_pydoc_template.h$"
+                blockname_pattern = f"^{self.info.blockname}_pydoc_template.h$"
             elif path == 'lib':
-                blockname_pattern = f"^{self.info['blockname']}_impl(\\.h|\\.cc)$"
-            elif path == self.info['includedir']:
-                blockname_pattern = f"^{self.info['blockname']}.h$"
+                blockname_pattern = f"^{self.info.blockname}_impl(\\.h|\\.cc)$"
+            elif path == self.info.includedir:
+                blockname_pattern = f"^{self.info.blockname}.h$"
             elif path == 'grc':
-                blockname_pattern = f"^{self.info['modname']}_{self.info['blockname']}.block.yml$"
+                blockname_pattern = f"^{self.info.modname}_{self.info.blockname}.block.yml$"
             for f in files:
                 if re.search(blockname_pattern, os.path.basename(f)) is not None:
                     files_filt.append(f)
-        elif self.info['pattern']:
+        elif self.info.pattern:
             # search for block names matching a given regex pattern
             for f in files:
-                if re.search(self.info['pattern'], os.path.basename(f)) is not None:
+                if re.search(self.info.pattern, os.path.basename(f)) is not None:
                     files_filt.append(f)
         if len(files_filt) == 0:
             logger.info("None found.")
@@ -125,7 +125,7 @@ class ModToolMakeYAML(ModTool):
         """ Take the return values from the parser and call the YAML
         generator. Also, check the makefile if the .yml file is in there.
         If necessary, add. """
-        fname_yml = f'{self.info["modname"]}_{blockname}.block.yml'
+        fname_yml = f'{self.info.modname}_{blockname}.block.yml'
         path_to_yml = os.path.join('grc', fname_yml)
         # Some adaptions for the GRC
         for inout in ('in', 'out'):
@@ -138,14 +138,14 @@ class ModToolMakeYAML(ModTool):
                                'in_constructor': False})
         file_exists = False
         if os.path.isfile(path_to_yml):
-            if not self.info['yes']:
+            if not self.info.yes:
                 if not ask_yes_no('Overwrite existing GRC file?', False):
                     return
             else:
                 file_exists = True
                 logger.warning("Warning: Overwriting existing GRC file.")
         grc_generator = GRCYAMLGenerator(
-            modname=self.info['modname'],
+            modname=self.info.modname,
             blockname=blockname,
             params=params,
             iosig=iosig
@@ -192,8 +192,8 @@ class ModToolMakeYAML(ModTool):
                 fname_cc.replace('_impl.', '.')))[0]
             fname_h = (blockname + '.h').replace('_impl.', '.')
             contains_modulename = blockname.startswith(
-                self.info['modname'] + '_')
-            blockname = blockname.replace(self.info['modname'] + '_', '', 1)
+                self.info.modname + '_')
+            blockname = blockname.replace(self.info.modname + '_', '', 1)
             return (blockname, fname_h, contains_modulename)
         # Go, go, go
         logger.info(f"Making GRC bindings for {fname_cc}...")
@@ -201,9 +201,9 @@ class ModToolMakeYAML(ModTool):
         try:
             parser = ParserCCBlock(fname_cc,
                                    os.path.join(
-                                       self.info['includedir'], fname_h),
+                                       self.info.includedir, fname_h),
                                    blockname,
-                                   self.info['version'],
+                                   self.info.version,
                                    _type_translate
                                    )
         except IOError:
@@ -211,7 +211,7 @@ class ModToolMakeYAML(ModTool):
                 f"Can't open some of the files necessary to parse {fname_cc}.")
 
         if contains_modulename:
-            return (parser.read_params(), parser.read_io_signature(), self.info['modname'] + '_' + blockname)
+            return (parser.read_params(), parser.read_io_signature(), self.info.modname + '_' + blockname)
         else:
             return (parser.read_params(), parser.read_io_signature(), blockname)
 
@@ -225,17 +225,23 @@ def yaml_generator(self, **kwargs):
     label = header.split('_')
     del label[-1]
     yml_file = os.path.join('.', block + '_' + header + '.block.yml')
-    _header = (('id', f'{block}_{ header}'),
-               ('label', ' '.join(label).upper()),
-               ('category', f'[{block.capitalize()}]'),
-               ('flags', '[python, cpp]')
-               )
+    _header = (
+        ("id", f"{block}_{header}"),
+        ("label", " ".join(label).upper()),
+        ("category", f"[{block.capitalize()}]"),
+        ("flags", "[python, cpp]"),
+    )
     params_list = [
-        '${' + s['name'] + '}' for s in self.parsed_data['properties'] if self.parsed_data['properties']]
+        "${" + s["name"] + "}"
+        for s in self.parsed_data["properties"]
+        if self.parsed_data["properties"]
+    ]
     str_ = ', '.join(params_list)
-    _templates = [('imports', f'from gnuradio import {block}'),
-                  ('make', f'{block}.{ header}({str_})')
-                  ]
+    # TODO: make this the dict it becomes later on, right from the start, using the {a:b,…} syntax
+    _templates = [
+        ("imports", f"from gnuradio import {block}"),
+        ("make", f"{block}.{header}({str_})"),
+    ]
 
     if self.parsed_data['methods']:
         list_callbacks = []

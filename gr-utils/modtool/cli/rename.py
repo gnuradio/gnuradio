@@ -32,41 +32,41 @@ def cli(**kwargs):
     kwargs['cli'] = True
     self = ModToolRename(**kwargs)
     click.secho("GNU Radio module name identified: " +
-                self.info['modname'], fg='green')
+                self.info.modname, fg='green')
     # first make sure the old block name is provided
     get_oldname(self)
     click.secho("Block/code to rename identifier: " +
-                self.info['oldname'], fg='green')
-    self.info['fulloldname'] = self.info['modname'] + \
-        '_' + self.info['oldname']
+                self.info.oldname, fg='green')
+    self.info.fulloldname = self.info.modname + \
+        '_' + self.info.oldname
     # now get the new block name
     get_newname(self)
-    click.secho("Block/code identifier: " + self.info['newname'], fg='green')
-    self.info['fullnewname'] = self.info['modname'] + \
-        '_' + self.info['newname']
+    click.secho("Block/code identifier: " + self.info.newname, fg='green')
+    self.info.fullnewname = self.info.modname + \
+        '_' + self.info.newname
     run(self)
 
 
 def get_oldname(self):
     """ Get the old block name to be replaced """
-    block_candidates = get_block_candidates(self.info['modname'])
-    if self.info['oldname'] is None:
+    block_candidates = get_block_candidates(self.info.modname)
+    if self.info.oldname is None:
         with SequenceCompleter(block_candidates):
-            while not self.info['oldname'] or self.info['oldname'].isspace():
-                self.info['oldname'] = cli_input("Enter name of block/code to rename " +
+            while not self.info.oldname or self.info.oldname.isspace():
+                self.info.oldname = cli_input("Enter name of block/code to rename " +
                                                  "(without module name prefix): ")
-    if self.info['oldname'] not in block_candidates:
-        choices = [x for x in block_candidates if self.info['oldname'] in x]
+    if self.info.oldname not in block_candidates:
+        choices = [x for x in block_candidates if self.info.oldname in x]
         if len(choices) > 0:
             click.secho("Suggested alternatives: " + str(choices), fg='yellow')
         raise ModToolException("Blockname for renaming does not exists!")
-    validate_name('block', self.info['oldname'])
+    validate_name('block', self.info.oldname)
 
 
 def get_newname(self):
     """ Get the new block name """
-    if self.info['newname'] is None:
-        while not self.info['newname'] or self.info['newname'].isspace():
-            self.info['newname'] = cli_input("Enter name of block/code " +
+    if self.info.newname is None:
+        while not self.info.newname or self.info.newname.isspace():
+            self.info.newname = cli_input("Enter name of block/code " +
                                              "(without module name prefix): ")
-    validate_name('block', self.info['newname'])
+    validate_name('block', self.info.newname)

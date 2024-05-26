@@ -34,7 +34,7 @@ def cli(**kwargs):
     kwargs['cli'] = True
     self = ModToolNewModule(**kwargs)
     get_modname(self)
-    self.dir = os.path.join(self.dir, f'gr-{self.info["modname"]}')
+    self.dir = os.path.join(self.dir, f'gr-{self.info.modname}')
     try:
         os.stat(self.dir)
     except OSError:
@@ -51,7 +51,7 @@ def cli(**kwargs):
 
 def get_modname(self):
     """ Get the name of the new module to be added """
-    if self.info['modname'] is None:
-        while not self.info['modname'] or self.info['modname'].isspace():
-            self.info['modname'] = cli_input('Name of the new module: ')
-    validate_name('module', self.info['modname'])
+    if self.info.modname is None:
+        while not self.info.modname or self.info.modname.isspace():
+            self.info.modname = cli_input('Name of the new module: ')
+    validate_name('module', self.info.modname)

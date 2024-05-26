@@ -44,23 +44,23 @@ def cli(**kwargs):
     kwargs['cli'] = True
     self = ModToolAdd(**kwargs)
     click.secho("GNU Radio module name identified: " +
-                self.info['modname'], fg='green')
+                self.info.modname, fg='green')
     get_blockname(self)
     get_blocktype(self)
     get_lang(self)
-    info_lang = {'cpp': 'C++', 'python': 'Python'}[self.info['lang']]
+    info_lang = {'cpp': 'C++', 'python': 'Python'}[self.info.lang]
     click.secho(f"Language: {info_lang}", fg='green')
-    if ((self.skip_subdirs['lib'] and self.info['lang'] == 'cpp') or
-            (self.skip_subdirs['python'] and self.info['lang'] == 'python')):
+    if ((self.skip_subdirs['lib'] and self.info.lang == 'cpp') or
+            (self.skip_subdirs['python'] and self.info.lang == 'python')):
         raise ModToolException('Missing or skipping relevant subdir.')
-    click.secho("Block/code identifier: " + self.info['blockname'], fg='green')
+    click.secho("Block/code identifier: " + self.info.blockname, fg='green')
     if not self.license_file:
         get_copyrightholder(self)
-    self.info['license'] = self.setup_choose_license()
+    self.info.license = self.setup_choose_license()
     get_arglist(self)
     get_py_qa(self)
     get_cpp_qa(self)
-    if self.info['version'] == 'autofoo' and not self.skip_cmakefiles:
+    if self.info.version == 'autofoo' and not self.skip_cmakefiles:
         click.secho("Warning: Autotools modules are not supported. " +
                     "Files will be created, but Makefiles will not be edited.",
                     fg='yellow')
@@ -70,36 +70,36 @@ def cli(**kwargs):
 
 def get_blocktype(self):
     """ Get the blocktype of the block to be added """
-    if self.info['blocktype'] is None:
+    if self.info.blocktype is None:
         click.secho(str(self.block_types), fg='yellow')
         with SequenceCompleter(self.block_types):
-            while self.info['blocktype'] not in self.block_types:
-                self.info['blocktype'] = cli_input("Enter block type: ")
-                if self.info['blocktype'] not in self.block_types:
+            while self.info.blocktype not in self.block_types:
+                self.info.blocktype = cli_input("Enter block type: ")
+                if self.info.blocktype not in self.block_types:
                     click.secho('Must be one of ' +
                                 str(self.block_types), fg='yellow')
 
 
 def get_lang(self):
     """ Get the Programming Language of the block to be added """
-    if self.info['lang'] is None:
+    if self.info.lang is None:
         with SequenceCompleter(self.language_candidates):
-            while self.info['lang'] not in self.language_candidates:
-                self.info['lang'] = cli_input("Language (python/cpp): ")
-    if self.info['lang'] == 'c++':
-        self.info['lang'] = 'cpp'
+            while self.info.lang not in self.language_candidates:
+                self.info.lang = cli_input("Language (python/cpp): ")
+    if self.info.lang == 'c++':
+        self.info.lang = 'cpp'
 
 
 def get_blockname(self):
     """ Get the blockname"""
-    if not self.info['blockname'] or self.info['blockname'].isspace():
-        while not self.info['blockname'] or self.info['blockname'].isspace():
-            self.info['blockname'] = cli_input(
+    if not self.info.blockname or self.info.blockname.isspace():
+        while not self.info.blockname or self.info.blockname.isspace():
+            self.info.blockname = cli_input(
                 "Enter name of block/code (without module name prefix): ")
-    validate_name('block', self.info['blockname'])
-    self.info['fullblockname'] = self.info['modname'] + \
-        '_' + self.info['blockname']
-    fname_grc = self.info['fullblockname'] + '.block.yml'
+    validate_name('block', self.info.blockname)
+    self.info.fullblockname = self.info.modname + \
+        '_' + self.info.blockname
+    fname_grc = self.info.fullblockname + '.block.yml'
     for block in os.scandir('./grc/'):
         if block.is_file():
             s = block.name
@@ -109,7 +109,7 @@ def get_blockname(self):
 
 def get_copyrightholder(self):
     """ Get the copyrightholder of the block to be added """
-    if not self.info['copyrightholder'] or self.info['copyrightholder'].isspace():
+    if not self.info.copyrightholder or self.info.copyrightholder.isspace():
         user = getpass.getuser()
         git_user = self.scm.get_gituser()
         if git_user:
@@ -117,19 +117,19 @@ def get_copyrightholder(self):
         else:
             copyright_candidates = (user, 'GNU Radio')
         with SequenceCompleter(copyright_candidates):
-            self.info['copyrightholder'] = cli_input(
+            self.info.copyrightholder = cli_input(
                 "Please specify the copyright holder: ")
-            if not self.info['copyrightholder'] or self.info['copyrightholder'].isspace():
-                self.info['copyrightholder'] = f'gr-{self.info["modname"]} author'
-    elif self.info['is_component']:
+            if not self.info.copyrightholder or self.info.copyrightholder.isspace():
+                self.info.copyrightholder = f'gr-{self.info.modname} author'
+    elif self.info.is_component:
         click.secho("For GNU Radio components the FSF is added as copyright holder",
                     fg='cyan')
 
 
 def get_arglist(self):
     """ Get the argument list of the block to be added """
-    if self.info['arglist'] is None:
-        self.info['arglist'] = click.prompt(click.style(
+    if self.info.arglist is None:
+        self.info.arglist = click.prompt(click.style(
             'Enter valid argument list, including default arguments: \n',
             fg='cyan'),
             prompt_suffix='',
@@ -140,7 +140,7 @@ def get_arglist(self):
 def get_py_qa(self):
     """ Get a boolean value for addition of py_qa """
     if self.add_py_qa is None:
-        if not (self.info['blocktype'] in ('noblock') or self.skip_subdirs['python']):
+        if not (self.info.blocktype in ('noblock') or self.skip_subdirs['python']):
             self.add_py_qa = ask_yes_no(click.style(
                 'Add Python QA code?', fg='cyan'), True)
         else:
@@ -150,7 +150,7 @@ def get_py_qa(self):
 def get_cpp_qa(self):
     """ Get a boolean value for addition of cpp_qa """
     if self.add_cc_qa is None:
-        if self.info['lang'] == 'cpp':
+        if self.info.lang == 'cpp':
             self.add_cc_qa = ask_yes_no(click.style('Add C++ QA code?', fg='cyan'),
                                         not self.add_py_qa)
         else:

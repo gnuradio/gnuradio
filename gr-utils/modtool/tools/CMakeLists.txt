@@ -16,5 +16,6 @@ GR_PYTHON_INSTALL(FILES
     parser_cc_block.py
     scm.py
     util_functions.py
+    strenum.py
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/modtool/tools
 )
