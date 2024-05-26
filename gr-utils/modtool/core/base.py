@@ -92,7 +92,7 @@ class ModTool(object):
                                gr.prefs().get_string('modtool', 'scm_mode', 'no'))
         if not self.cli:
             logging.basicConfig(level=logging.ERROR, format='%(message)s')
-            self.info['yes'] = True
+            self.info['yes'] = False
         else:
             self.info['yes'] = kwargs.get('yes', False)
             from ..cli import setup_cli_logger
