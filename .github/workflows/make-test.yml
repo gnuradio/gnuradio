@@ -76,11 +76,6 @@ jobs:
             cxxflags: -Werror
             ctest_args: '-E "qa_polar_..coder_(sc_)?systematic"'
             # ldpath:
-          - distro: 'Fedora 38'
-            containerid: 'gnuradio/ci:fedora-38-3.10'
-            cxxflags: -Werror
-            ctest_args: '-E ""'
-            ldpath: /usr/local/lib64/
           - distro: 'Fedora 39 (with 0xFE memory initialization, GLIBCXX_ASSERTIONS)'
             containerid: 'gnuradio/ci:fedora-39-3.10'
             cxxflags: -Werror -ftrivial-auto-var-init=pattern -Wp,-D_GLIBCXX_ASSERTIONS
@@ -92,11 +87,6 @@ jobs:
             cmakeflags: -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_C_COMPILER=clang
             ctest_args: '-E ""'
             ldpath: /usr/local/lib64 
-          # - distro: 'CentOS 8.4'
-          #   containerid: 'gnuradio/ci:centos-8.4-3.10'
-          #   cxxflags: ''
-          #   ctest_args: '-E ""'
-          #   ldpath: /usr/local/lib64/
           - distro: 'Debian 12'
             containerid: 'gnuradio/ci:debian-12-3.10'
             cxxflags: -Werror
