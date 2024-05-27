@@ -76,6 +76,9 @@ jobs:
             cxxflags: -Werror
             ctest_args: '-E "qa_polar_..coder_(sc_)?systematic"'
             # ldpath:
+          - distro: 'Ubuntu 24.04'
+            containerid: 'gnuradio/ci:ubuntu-24.04-3.10'
+            cxxflags: -Werror
           - distro: 'Fedora 39 (with 0xFE memory initialization, GLIBCXX_ASSERTIONS)'
             containerid: 'gnuradio/ci:fedora-39-3.10'
             cxxflags: -Werror -ftrivial-auto-var-init=pattern -Wp,-D_GLIBCXX_ASSERTIONS
