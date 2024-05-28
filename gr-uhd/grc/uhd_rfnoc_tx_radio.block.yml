@@ -1,0 +1,77 @@
+id: uhd_rfnoc_tx_radio
+label: RFNoC TX Radio
+flags: [python, throttle]
+
+templates:
+  imports: |-
+    from gnuradio import uhd
+  make: |-
+    uhd.rfnoc_tx_radio(
+        self.rfnoc_graph,
+        uhd.device_addr(${block_args}),
+        ${device_select},
+        ${instance_index})
+    self.${id}.set_rate(${rate})
+    self.${id}.set_antenna(${antenna}, 0)
+    self.${id}.set_frequency(${frequency}, 0)
+    self.${id}.set_gain(${gain}, 0)
+    self.${id}.set_bandwidth(${bandwidth}, 0)
+  callbacks:
+  - set_rate(${rate})
+  - set_antenna(${antenna}, 0)
+  - set_frequency(${frequency}, 0)
+  - set_gain(${gain}, 0)
+  - set_bandwidth(${bandwidth}, 0)
+
+
+parameters:
+- id: num_chans
+  label: Number of Channels
+  dtype: int
+  default: 1
+- id: block_args
+  label: Block Args
+  dtype: string
+  default: ""
+- id: device_select
+  label: Device Select
+  dtype: int
+  default: -1
+- id: instance_index
+  label: Instance Select
+  dtype: int
+  default: -1
+- id: rate
+  label: Sample Rate (Hz)
+  dtype: real
+- id: antenna
+  label: Antenna Select
+  dtype: string
+  options: [TX/RX, RX2, RX1]
+  option_labels: [TX/RX, RX2, RX1]
+  default: TX/RX
+- id: frequency
+  label: Center Frequency (Hz)
+  dtype: real
+- id: gain
+  label: Gain
+  dtype: real
+- id: agc
+  label: Automatic Gain Control
+  dtype: string
+  default: 'Default'
+  options: ['Default', 'Enabled', 'Disabled']
+  option_labels: [Default, Disabled, Enabled]
+- id: bandwidth
+  label: Bandwidth (Hz)
+  dtype: real
+  default: 0
+
+
+inputs:
+- domain: rfnoc
+  dtype: 'sc16'
+  vlen: 1
+  multiplicity: ${num_chans}
+
+file_format: 1

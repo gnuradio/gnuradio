@@ -1,0 +1,190 @@
+:root {
+	--primary-color: #007bff;
+	--text-color: #333;
+	--background-color: #fff;
+	--link-hover-color: #0056b3;
+	--border-color: #999;
+}
+
+body {
+	margin: 0;
+	padding: 0 1rem;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+	font-size: 1rem;
+	font-weight: 400;
+	line-height: 1.5;
+	color: var(--text-color);
+	background-color: var(--background-color);
+}
+
+@media (min-width: 768px) {
+	body {
+		max-width: 750px;
+		margin: auto;
+	}
+}
+
+@media (min-width: 992px) {
+	body {
+		max-width: 970px;
+	}
+}
+
+header {
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-end;
+	border-bottom: 1px solid var(--border-color);
+}
+
+header nav a {
+	margin: 0 15px;
+}
+
+@media (max-width: 600px) {
+	header {
+		flex-direction: column;
+		align-items: flex-start;
+	}
+
+	nav a {
+		margin-left: 0;
+		margin-top: 5px;
+	}
+}
+
+footer {
+	padding: 1rem 0;
+	text-align: center;
+	border-top: 1px solid var(--border-color);
+	margin-top: 20px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	color: var(--primary-color);
+}
+
+a {
+	color: var(--primary-color);
+	text-decoration: none;
+}
+
+a:hover {
+	color: var(--link-hover-color);
+	text-decoration: underline;
+}
+
+table {
+	width: 100%;
+	margin-top: 20px;
+	border-collapse: collapse;
+	font-size: 0.85rem;
+}
+
+th,
+td {
+	text-align: left;
+	padding: 8px;
+	border: 1px solid var(--border-color);
+}
+
+pre code {
+	padding: 10px;
+	border: 1px solid var(--border-color);
+	display: block;
+	margin-top: 10px;
+	font-size: 0.85rem;
+}
+
+code {
+	display: inline-block;
+}
+
+.meta {
+	padding: 0 20px;
+	color: #666;
+}
+
+.tag {
+	display: inline-block;
+	margin-right: 10px;
+}
+
+.content {
+	margin-top: 20px;
+}
+
+.article-list li .article-date {
+	display: inline-block;
+	margin-right: 10px;
+}
+
+.article-list li .article-title {
+	display: inline-block;
+}
+
+ul.pagination {
+	list-style-type: none;
+	text-align: center
+}
+
+ul.pagination li.page-item {
+	display: inline;
+	padding: 5px
+}
+
+ul.pagination li.active a {
+	text-decoration: none;
+	font-weight: bold;
+	color: var(--text-color);
+}
+
+ul.pagination li.disabled a {
+	text-decoration: none;
+	color: var(--text-color);
+}
+
+nav#TableOfContents {
+	float: right;
+	width: 200px;
+	overflow: auto;
+	margin: 0;
+	padding: 0 10px;
+	vertical-align: top;
+}
+
+nav#TableOfContents:before {
+	content: 'Content';
+	font-weight: bold;
+}
+
+nav#TableOfContents:lang(*-Hans)::before {
+	content: '目录';
+	font-weight: bold;
+}
+
+nav#TableOfContents ul {
+	margin: 0;
+	padding-inline-start: 24px;
+}
+
+.content-with-toc {
+	width: calc(100% - 220px);
+	margin: 0;
+}
+
+@media (max-width:500px) {
+	nav#TableOfContents {
+		float: none;
+		width: 100%;
+	}
+
+	.content-with-toc {
+		width: 100%;
+	}
+}

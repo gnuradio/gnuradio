@@ -1,0 +1,41 @@
+For info on ControlPort and Thrift, see the wiki page:
+
+https://wiki.gnuradio.org/index.php/ControlPort
+
+This readme is to address the patch file in the repo for Thrift. We
+believe that there is a bug in Thrift itself that occasionally causes
+a segfault when shutting down the server. If you run into a problem
+when shutting down an application running ControlPort, this might be
+the cause. If so, we have included a patch with the source code in
+this directory that should be applied to Thrift before rebuilding the
+Thrift library:
+
+thrift-codebase-shutdown-patch.diff
+
+Note that we are working off Thrift version 0.9.2, so this patch may
+not be relevant or even cleanly apply in later versions of Thrift.
+
+We are also still trying to track down another shutdown problem with
+Thrift that again appears to be related to their code. If a segfault
+persists after the above patch is applied to Thrift, do a backtrace in
+GDB to see what the error looks like. If it is different than the
+following backtrace, definitely report it to the Discuss GNU Radio
+Mailing List as a known bug. If you see the same backtrace as here,
+this is a known bug that occurs very irregularly, but help in tracing
+down the cause is appreciated.
+
+#0  0x00007f07b5b478c2 in ?? () from /lib/x86_64-linux-gnu/libc.so.6
+(gdb) bt
+#0  0x00007f07b5b478c2 in ?? () from /lib/x86_64-linux-gnu/libc.so.6
+#1  0x00007f07b5b4856d in ?? () from /lib/x86_64-linux-gnu/libc.so.6
+#2  0x00007f07afc924c5 in std::locale::_Impl::~_Impl() () from /usr/lib/x86_64-linux-gnu/libstdc++.so.6
+#3  0x00007f07afc925fd in std::locale::~locale() () from /usr/lib/x86_64-linux-gnu/libstdc++.so.6
+#4  0x00007f07b5b05259 in ?? () from /lib/x86_64-linux-gnu/libc.so.6
+#5  0x00007f07b5b052a5 in exit () from /lib/x86_64-linux-gnu/libc.so.6
+#6  0x000000000042fb83 in Py_Exit ()
+#7  0x000000000042fcb9 in ?? ()
+#8  0x000000000042ec32 in PyErr_PrintEx ()
+#9  0x0000000000469f2f in PyRun_SimpleFileExFlags ()
+#10 0x000000000046ab81 in Py_Main ()
+#11 0x00007f07b5aeaec5 in __libc_start_main () from /lib/x86_64-linux-gnu/libc.so.6
+#12 0x000000000057497e in _start ()

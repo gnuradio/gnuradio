@@ -1,0 +1,34 @@
+name: Feature Request
+description: Request a GNU Radio Feature
+labels: ["Feature Request"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This is the place to request new features or enhancements to the GNU Radio codebase
+  - type: textarea
+    id: feature-description
+    attributes:
+      label: Feature Description
+    validations:
+      required: true
+  - type: dropdown
+    id: urgency
+    attributes:
+      label: Feature Urgency
+      description: How urgent is this to get into the codebase?
+      options:
+        - high (impacts broad portion of ecosystem)
+        - medium (would be nice to have in the near future)
+        - low (just an idea)
+    validations:
+      required: true
+  - type: textarea
+    id: more-info
+    attributes:
+      label: More Information
+    validations:
+      required: false
+  - type: markdown
+    attributes:
+      value: By submitting this issue, you agree to follow our [Code of Conduct](https://github.com/gnuradio/gr-governance/blob/main/CODE_OF_CONDUCT.md)

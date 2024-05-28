@@ -1,0 +1,58 @@
+id: yaml_config
+label: YAML Config
+flags: [ show_id, python ]
+
+parameters:
+-   id: config_file
+    label: Config File
+    dtype: file_open
+    default: ""
+-   id: schema_file
+    label: Config Schema
+    dtype: file_open
+    default: ""
+# Not my favorite thing because it doesn't explicitly close the file, but
+# it should be okay.  The garbage collector will take care of it.
+value: "${ yaml.safe_load(open(config_file)) }"
+
+asserts:
+- ${ schema_file == "" or validate(yaml.safe_load(open(config_file)), json.load(open(schema_file))) is None }
+
+templates:
+    imports: |-
+        import json
+        import yaml
+        from jsonschema import validate
+    var_make: "with open(${config_file}) as fid:\n\
+              \    self.${id} = ${id} = yaml.safe_load(fid)\n\
+              self.${id}_schema = ${id}_schema = ${schema_file}\n\
+              if ${id}_schema:\n\
+              \    with open(${id}_schema) as fid:\n\
+              \        validate(${id}, json.load(fid))"
+
+documentation: |-
+    This block represents a yaml config file that is read in as a dictionary.
+
+    The values can be used directly when instantiating blocks.  For example,
+    Sample Rate: yaml_config["samp_rate"]
+
+    Optionally, a json schema can be specified to validate the configuration.
+    It may sound odd to use a json schema for a yaml file, but it works and 
+    jsonschema is a rich specification.
+
+    For example, you could have a yaml file that contains:
+    samp_rate: 1e6
+
+    And a schema that contains
+    {
+      "type": "object",
+      "properties": {
+        "samp_rate": {"type": "number", "exclusiveMinimum": 0}
+      }
+    }
+
+    If the id of this block is yaml_config_0, then you can access the samp rate
+    in other blocks as yaml_config_0["samp_rate"]
+
+
+file_format: 1

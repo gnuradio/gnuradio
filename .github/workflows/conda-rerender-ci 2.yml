@@ -1,0 +1,70 @@
+name: 'Update conda CI via /rerender PR comment'
+on:
+  issue_comment:
+    types: [created, edited]
+jobs:
+  rerender:
+    name: Re-render conda CI
+    runs-on: ubuntu-latest
+    if: ${{ github.event.issue.pull_request && startsWith(github.event.comment.body, '/rerender') }}
+    steps:
+      - name: Get triggering PR info
+        uses: actions/github-script@v5
+        id: get-pr
+        with:
+          script: |
+            const request = {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number
+            }
+            core.info(`Getting PR #${request.pull_number} from ${request.owner}/${request.repo}`)
+            try {
+              const result = await github.rest.pulls.get(request)
+              return result.data
+            } catch (err) {
+              core.setFailed(`Request failed with error ${err}`)
+            }
+      - name: Checkout PR
+        uses: actions/checkout@v2
+        with:
+          repository: ${{ fromJSON(steps.get-pr.outputs.result).head.repo.full_name }}
+          ref: ${{ fromJSON(steps.get-pr.outputs.result).head.ref }}
+      - name: Create environment file
+        uses: DamianReeves/write-file-action@v1.0
+        with:
+          path: rerender-env.yml
+          write-mode: overwrite
+          contents: |
+            name: rerender-env
+            channels:
+              - conda-forge
+            dependencies:
+              - conda-smithy
+      - name: Install conda-smithy
+        uses: mamba-org/provision-with-micromamba@main
+        with:
+          environment-file: rerender-env.yml
+      - name: Re-render
+        shell: bash -l {0}
+        run: |
+          conda smithy rerender --feedstock_config .conda/conda-forge.yml
+      - name: Commit and push
+        uses: EndBug/add-and-commit@v7
+        with:
+          add: ''
+          branch: ${{ fromJSON(steps.get-pr.outputs.result).head.ref }}
+          default_author: github_actions
+          message: 'CI: Re-rendered conda CI scripts via Github Action'
+          remove: '.github/workflows/automerge.yml .github/workflows/webservices.yml .circleci/config.yml'
+          signoff: true
+      - name: React to /rerender comment
+        uses: actions/github-script@v5
+        with:
+          script: |
+            github.rest.reactions.createForIssueComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              comment_id: context.payload.comment.id,
+              content: 'rocket'
+            })
