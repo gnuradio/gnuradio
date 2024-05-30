@@ -7,9 +7,6 @@
 #
 #
 """ Create a whole new out-of-tree module """
-
-
-import re
 import os
 
 import click
@@ -51,7 +48,7 @@ def cli(**kwargs):
 
 def get_modname(self):
     """ Get the name of the new module to be added """
-    if self.info.modname is None:
-        while not self.info.modname or self.info.modname.isspace():
-            self.info.modname = cli_input('Name of the new module: ')
+    self._check_batch_mandatory_argument(self.info.modname, "module name")
+    while not self.info.modname or self.info.modname.isspace():
+        self.info.modname = cli_input('Name of the new module: ')
     validate_name('module', self.info.modname)

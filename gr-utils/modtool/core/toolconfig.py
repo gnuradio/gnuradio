@@ -28,7 +28,7 @@ class _Prefs:
         self.prefs = prefs()
 
     # implement only the getters we need for now
-    def string(self, key: str, default: str):
+    def string(self, key: str, default: str = None):
         if default is None:
             if not self.prefs.has_option("modtool", key):
                 return None
@@ -57,6 +57,12 @@ class Blocktype(StrEnum):
     tagged_stream = auto()
     hier = auto()
     noblock = auto()
+
+
+class SCMMode(StrEnum):
+    yes = auto()
+    no = auto()
+    auto = auto()
 
 
 # The main act:
@@ -89,7 +95,59 @@ class ToolConfig:
     oldname: str = None
     pattern: str = None
     pydir: str = None
+    scm_mode: SCMMode = None
     update_hash_only: bool = None  # False
     # todo: version should really be something else than a string
-    version: str = _f(None)
-    yes: bool = _f(None)
+    version: str = None
+    yes: bool = None
+
+    def _load_prefs(self):
+        if self.lang is None:
+            self.lang = _prefs.string("lang")
+            if self.lang:
+                self.lang = Lang(self.lang)
+        if self.scm_mode is None:
+            self.scm_mode = _prefs.string("scm_mode")
+            if self.scm_mode:
+                self.scm_mode = SCMMode(self.scm_mode)
+        if self.copyrightholder is None:
+            config_copyright = _prefs.string("copyrightholder")
+            self.copyrightholder = config_copyright
+
+    def __post_init__(self):
+        """
+        This function is run at the end of the automatic __init__.
+        Set all the things that we can set to defaults based on "yes" or "no" or "batch" here.
+        Load settigs that have configuration variables.
+        """
+        if self.batch is None:
+            self.batch = False
+        elif self.batch:
+            self.no = not self.yes
+            if self.arglist is None:
+                self.arglist = ""
+
+        if self.no and self.yes:
+            raise ValueError("Can't enforce both 'yes' and 'no' at the same time")
+
+        if self.no:
+            if self.complete is None:
+                self.complete = False
+            if self.is_component is None:
+                self.is_component = False
+            if self.scm_mode is None:
+                self.scm_mode = SCMMode.no
+            if self.update_hash_only is None:
+                self.update_hash_only = False
+
+        if self.yes:
+            if self.complete is None:
+                self.complete = True
+            if self.is_component is None:
+                self.is_component = True
+            if self.scm_mode is None:
+                self.scm_mode = SCMMode.yes
+            if self.update_hash_only is None:
+                self.update_hash_only = True
+
+        self._load_prefs()

@@ -138,7 +138,7 @@ class ModToolMakeYAML(ModTool):
                                'in_constructor': False})
         file_exists = False
         if os.path.isfile(path_to_yml):
-            if not self.info.yes:
+            if not (self.info.yes or self.info.batch):
                 if not ask_yes_no('Overwrite existing GRC file?', False):
                     return
             else:

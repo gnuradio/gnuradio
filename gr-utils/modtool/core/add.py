@@ -15,6 +15,7 @@ import subprocess
 from dataclasses import asdict
 
 from ..tools import render_template, append_re_line_sequence, CMakeFileEditor, CPPFileEditor, code_generator
+from .toolconfig import Blocktype
 from ..templates import Templates
 from .base import ModTool, ModToolException, validate_name
 from gnuradio.bindtool import BindingGenerator
@@ -41,8 +42,6 @@ class ModToolAdd(ModTool):
     """ Add block to the out-of-tree module. """
     name = 'add'
     description = 'Add new block into a module.'
-    block_types = ('sink', 'source', 'sync', 'decimator', 'interpolator',
-                   'general', 'tagged_stream', 'hier', 'noblock')
     language_candidates = ('cpp', 'python', 'c++')
 
     def __init__(self, blockname=None, block_type=None, lang=None, copyright=None,
@@ -50,10 +49,13 @@ class ModToolAdd(ModTool):
                  add_cpp_qa=False, skip_cmakefiles=False, **kwargs):
         ModTool.__init__(self, blockname, **kwargs)
         self.info.blocktype = block_type
-        self.info.lang = lang
+        if lang:
+            self.info.lang = lang
         self.license_file = license_file
-        self.info.copyrightholder = copyright
-        self.info.arglist = argument_list
+        if copyright:
+            self.info.copyrightholder = copyright
+        if argument_list:
+            self.info.arglist = argument_list
         self.add_py_qa = add_python_qa
         self.add_cc_qa = add_cpp_qa
         self.skip_cmakefiles = skip_cmakefiles
@@ -63,7 +65,9 @@ class ModToolAdd(ModTool):
         ModTool._validate(self)
         if self.info.blocktype is None:
             raise ModToolException('Blocktype not specified.')
-        if self.info.blocktype not in self.block_types:
+        try:
+            Blocktype(self.info.blocktype)
+        except ValueError:
             raise ModToolException('Invalid blocktype')
         if self.info.lang is None:
             raise ModToolException('Programming language not specified.')
@@ -122,13 +126,16 @@ class ModToolAdd(ModTool):
         elif self.info.is_component:
             return Templates['grlicense']
         else:
-            print(asdict(self.info))
             return Templates["defaultlicense"].format(copyrightholder=self.info.copyrightholder)
 
     def _write_tpl(self, tpl, path, fname):
         """ Shorthand for writing a substituted template to a file"""
         path_to_file = os.path.join(path, fname)
         logger.info(f"Adding file '{path_to_file}'...")
+        if fname.endswith('.cc') or fname.endswith('.h'):
+            formatter = clang_format
+        else:
+            def formatter(x): return x
         with open(path_to_file, 'w') as f:
             if fname.endswith('.cc') or fname.endswith('.h'):
                 f.write(clang_format(render_template(tpl, **asdict(self.info))))
@@ -216,11 +223,10 @@ class ModToolAdd(ModTool):
         if self.info.version in ('37', '38', '310'):
             fname_h = self.info.blockname + '.h'
             fname_cc = self.info.blockname + '.cc'
-            if self.info.blocktype in ('source', 'sink', 'sync', 'decimator',
-                                       'interpolator', 'general', 'hier', 'tagged_stream'):
-                fname_cc = self.info.blockname + '_impl.cc'
+            if self.info.blocktype != "noblock":
+                fname_cc = f'{self.info.blockname}_impl.cc'
                 self._write_tpl('block_impl_h', 'lib',
-                                self.info.blockname + '_impl.h')
+                                f'{self.info.blockname}_impl.h')
             self._write_tpl('block_impl_cpp', 'lib', fname_cc)
             self._write_tpl('block_def_h', self.info.includedir, fname_h)
         else:  # Pre-3.7 or autotools
@@ -285,8 +291,7 @@ class ModToolAdd(ModTool):
         bg = BindingGenerator(prefix=gr.prefix(), namespace=[
                               'gr', self.info.modname], prefix_include_root=prefix_include_root)
         block_base = ""
-        if self.info.blocktype in ('source', 'sink', 'sync', 'decimator',
-                                   'interpolator', 'general', 'hier', 'tagged_stream'):
+        if self.info.blocktype != "noblock":
             block_base = code_generator.GRTYPELIST[self.info.blocktype]
 
         header_file = self.info.blockname + '.h'

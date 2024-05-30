@@ -64,6 +64,7 @@ def cli(**kwargs):
 
 def get_pattern(self):
     """ Get the regex pattern for block(s) to be parsed """
+    self._check_batch_mandatory_argument(self.info.pattern, "block regex")
     if self.info.pattern is None:
         block_candidates = get_block_candidates(self.info.modname, skip_include=True,
                                                 skip_python=True, skip_grc=True)

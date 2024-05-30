@@ -31,6 +31,7 @@ def cli(**kwargs):
 
 def get_pattern(self):
     """ Returns the regex pattern for block(s) to be removed """
+    self._check_batch_mandatory_argument(self.info.pattern, "regex of block(s) to be removed")
     if self.info.pattern is None:
         block_candidates = get_block_candidates(self.info.modname)
         with SequenceCompleter(block_candidates):

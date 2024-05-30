@@ -1,7 +1,7 @@
 #
 # Copyright 2013, 2018 Free Software Foundation, Inc.
 # Copyright 2024 Marcus Müller
-# 
+#
 # This file is part of GNU Radio
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
@@ -77,28 +77,35 @@ class ModTool(object):
         self._subdirs = ['lib', 'include', 'python', 'grc']
         self.has_subdirs = {}
         self.skip_subdirs = {}
-        self.info = ToolConfig()
+        self.cli = kwargs.get('cli', False)
+        autoyes = kwargs.get('yes', False)
+        autono = kwargs.get('no', False)
+        if (not self.cli) or (kwargs.get('batch'), False):
+            logging.basicConfig(level=logging.ERROR, format='%(message)s')
+            batch = kwargs.get('batch', True)
+        else:
+            batch = kwargs.get('batch', False)
+            from ..cli import setup_cli_logger
+            setup_cli_logger(logger)
+        self.info = ToolConfig(
+            batch=batch,
+            yes=autoyes,
+            no=autono,
+            blockname=blockname,
+            modname=module_name,
+            arglist=kwargs.get('arglist', None)
+        )
         self._file = {}
         for subdir in self._subdirs:
             self.has_subdirs[subdir] = False
             self.skip_subdirs[subdir] = False
-        self.info.blockname = blockname
-        self.info.modname = module_name
-        self.cli = kwargs.get('cli', False)
-        self.dir = kwargs.get('directory', '.')
+        self.dir = kwargs.get('directory', os.getcwd())
         self.skip_subdirs['lib'] = kwargs.get('skip_lib', False)
         self.skip_subdirs['python'] = kwargs.get('skip_python', False)
         self.skip_subdirs['pybind'] = kwargs.get('skip_pybind', False)
         self.skip_subdirs['grc'] = kwargs.get('skip_grc', False)
         self._scm = kwargs.get('scm_mode',
                                gr.prefs().get_string('modtool', 'scm_mode', 'no'))
-        if not self.cli:
-            logging.basicConfig(level=logging.ERROR, format='%(message)s')
-            self.info.yes = False
-        else:
-            self.info.yes = kwargs.get('yes', False)
-            from ..cli import setup_cli_logger
-            setup_cli_logger(logger)
 
         if not type(self).__name__ in ['ModToolInfo', 'ModToolNewModule']:
             if self.cli:
@@ -221,6 +228,10 @@ class ModTool(object):
                 else:
                     self.skip_subdirs[f] = True
         return bool(has_makefile and (list(self.has_subdirs.values())))
+
+    def _check_batch_mandatory_argument(self, argument, what: str, exception: Exception = ModToolException) -> None:
+        if self.info.batch and argument is None:
+            raise exception(f"Non-interactive mode, but {what} not specified")
 
     def run(self):
         """ Override this. """

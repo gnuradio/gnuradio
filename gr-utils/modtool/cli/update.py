@@ -35,6 +35,7 @@ def get_blockname(self):
     """ Returns the blockname for block to be updated """
     if self.info.complete:
         return
+    self._check_batch_mandatory_argument(self.info.blockname, "name of block to be updated")
     block_candidates = get_xml_candidates()
     if self.info.blockname is None:
         with SequenceCompleter(block_candidates):

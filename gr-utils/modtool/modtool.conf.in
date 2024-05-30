@@ -4,8 +4,8 @@
 #
 [modtool]
 newmod_path = @newmoddir@
-license = GPLv3
-scm_mode = auto
-## copyrightholder = My Name
-## lang = Choice of cpp or python
+# license = GPLv3
+# scm_mode = auto
+# copyrightholder = My Name
+# lang = Choice of cpp or python
 

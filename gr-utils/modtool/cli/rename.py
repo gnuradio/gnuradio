@@ -7,10 +7,6 @@
 #
 #
 """ Module to rename blocks """
-
-
-import re
-
 import click
 
 from ..core import get_block_candidates, ModToolRename, validate_name
@@ -49,12 +45,14 @@ def cli(**kwargs):
 
 def get_oldname(self):
     """ Get the old block name to be replaced """
+    self._check_batch_mandatory_argument(self.info.oldname, "current name of the block")
     block_candidates = get_block_candidates(self.info.modname)
     if self.info.oldname is None:
         with SequenceCompleter(block_candidates):
             while not self.info.oldname or self.info.oldname.isspace():
-                self.info.oldname = cli_input("Enter name of block/code to rename " +
-                                                 "(without module name prefix): ")
+                self.info.oldname = cli_input(
+                    "Enter name of block/code to rename (without module name prefix): "
+                )
     if self.info.oldname not in block_candidates:
         choices = [x for x in block_candidates if self.info.oldname in x]
         if len(choices) > 0:
@@ -65,8 +63,10 @@ def get_oldname(self):
 
 def get_newname(self):
     """ Get the new block name """
+    self._check_batch_mandatory_argument(self.info.newname, "new name of the block")
     if self.info.newname is None:
         while not self.info.newname or self.info.newname.isspace():
-            self.info.newname = cli_input("Enter name of block/code " +
-                                             "(without module name prefix): ")
+            self.info.newname = cli_input(
+                "Enter name of block/code (without module name prefix): "
+            )
     validate_name('block', self.info.newname)

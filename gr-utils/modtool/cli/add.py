@@ -10,23 +10,23 @@
 
 
 import os
-import re
 import getpass
 
 import click
 
 from ..core import ModToolAdd, validate_name
+from ..core.toolconfig import Lang, Blocktype
 from ..tools import SequenceCompleter, ask_yes_no
 from .base import common_params, block_name, run, cli_input, ModToolException
 
 
 @click.command('add')
-@click.option('-t', '--block-type', type=click.Choice(ModToolAdd.block_types),
-              help=f"One of {', '.join(ModToolAdd.block_types)}.")
+@click.option('-t', '--block-type', type=click.Choice(Blocktype),
+              help=f"One of {', '.join(Blocktype)}.")
 @click.option('--license-file',
               help="File containing the license header for every source code file.")
 @click.option('--copyright',
-              help="Name of the copyright holder (you or your company) MUST be a quoted string.")
+              help="Name of the copyright holder; quote on command line if containing spaces")
 @click.option('--argument-list', default=None,
               help="The argument list for the constructor and make functions.")
 @click.option('--add-python-qa', is_flag=True, default=None,
@@ -35,7 +35,7 @@ from .base import common_params, block_name, run, cli_input, ModToolException
               help="If given, C++ QA code is automatically added if possible.")
 @click.option('--skip-cmakefiles', is_flag=True,
               help="If given, only source files are written, but CMakeLists.txt files are left unchanged.")
-@click.option('-l', '--lang', type=click.Choice(ModToolAdd.language_candidates),
+@click.option('-l', '--lang', type=click.Choice(Lang),
               help="Programming Language")
 @common_params
 @block_name
@@ -70,28 +70,38 @@ def cli(**kwargs):
 
 def get_blocktype(self):
     """ Get the blocktype of the block to be added """
+    self._check_batch_mandatory_argument(self.info.blocktype, "block type")
     if self.info.blocktype is None:
-        click.secho(str(self.block_types), fg='yellow')
-        with SequenceCompleter(self.block_types):
-            while self.info.blocktype not in self.block_types:
-                self.info.blocktype = cli_input("Enter block type: ")
-                if self.info.blocktype not in self.block_types:
-                    click.secho('Must be one of ' +
-                                str(self.block_types), fg='yellow')
+        def try_blocktype(typestr: str) -> bool:
+            try:
+                Blocktype(typestr)
+            except ValueError:
+                return False
+            return True
+        click.secho(', '.join(Blocktype), fg='yellow')
+        blocktype = ""
+        with SequenceCompleter(Blocktype):
+            blocktype = cli_input("Enter block type: ")
+            while not try_blocktype(blocktype):
+                click.secho(f'Must be one of {", ".join(Blocktype)}', fg='yellow')
+                blocktype = cli_input("Enter block type: ")
+        self.info.blocktype = Blocktype(blocktype)
 
 
 def get_lang(self):
     """ Get the Programming Language of the block to be added """
+    self._check_batch_mandatory_argument(self.info.lang, "programming language")
     if self.info.lang is None:
+        language = ""
         with SequenceCompleter(self.language_candidates):
-            while self.info.lang not in self.language_candidates:
-                self.info.lang = cli_input("Language (python/cpp): ")
-    if self.info.lang == 'c++':
-        self.info.lang = 'cpp'
+            while language not in self.language_candidates:
+                language = cli_input("Language (python/cpp): ")
+        self.info.lang = Lang("cpp" if language == "c++" else language)
 
 
 def get_blockname(self):
     """ Get the blockname"""
+    self._check_batch_mandatory_argument(self.info.blockname, "block name")
     if not self.info.blockname or self.info.blockname.isspace():
         while not self.info.blockname or self.info.blockname.isspace():
             self.info.blockname = cli_input(
@@ -109,6 +119,7 @@ def get_blockname(self):
 
 def get_copyrightholder(self):
     """ Get the copyrightholder of the block to be added """
+    self._check_batch_mandatory_argument(self.info.copyrightholder, "copyright holder")
     if not self.info.copyrightholder or self.info.copyrightholder.isspace():
         user = getpass.getuser()
         git_user = self.scm.get_gituser()
@@ -121,9 +132,6 @@ def get_copyrightholder(self):
                 "Please specify the copyright holder: ")
             if not self.info.copyrightholder or self.info.copyrightholder.isspace():
                 self.info.copyrightholder = f'gr-{self.info.modname} author'
-    elif self.info.is_component:
-        click.secho("For GNU Radio components the FSF is added as copyright holder",
-                    fg='cyan')
 
 
 def get_arglist(self):
@@ -140,17 +148,17 @@ def get_arglist(self):
 def get_py_qa(self):
     """ Get a boolean value for addition of py_qa """
     if self.add_py_qa is None:
-        if not (self.info.blocktype in ('noblock') or self.skip_subdirs['python']):
+        if not (self.info.no or self.info.blocktype in ('noblock') or self.skip_subdirs['python']):
             self.add_py_qa = ask_yes_no(click.style(
                 'Add Python QA code?', fg='cyan'), True)
         else:
-            self.add_py_qa = False
+            self.add_py_qa = bool(self.info.yes)
 
 
 def get_cpp_qa(self):
     """ Get a boolean value for addition of cpp_qa """
     if self.add_cc_qa is None:
-        if self.info.lang == 'cpp':
+        if not self.info.no and self.info.lang == 'cpp':
             self.add_cc_qa = ask_yes_no(click.style('Add C++ QA code?', fg='cyan'),
                                         not self.add_py_qa)
         else:

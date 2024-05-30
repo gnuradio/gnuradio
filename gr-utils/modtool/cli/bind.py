@@ -7,14 +7,12 @@
 #
 #
 """ Create Python bindings for GR block """
-
-
-import os
 import click
 
 try:
     from gnuradio.blocktool import BlockHeaderParser
     from gnuradio.blocktool.core.base import BlockToolException
+    BlockHeaderParser, BlockToolException  # Make linters happy: does nothing
 except ImportError:
     have_blocktool = False
 else:
@@ -51,6 +49,7 @@ def cli(**kwargs):
 
 def get_pattern(self):
     """ Get the regex pattern for block(s) to be parsed """
+    self._check_batch_mandatory_argument(self.info.pattern, "block regex")
     if self.info.pattern is None:
         block_candidates = get_block_candidates(self.info.modname, skip_grc=True, skip_python=True)
         with SequenceCompleter(block_candidates):
