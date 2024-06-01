@@ -943,12 +943,11 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         initial_state = self.platform.parse_flow_graph("")
         fg_view.scene().import_data(initial_state)
         fg_view.scene().saved = False
-        self.tabWidget.tabBar().setTabTextColor(self.tabWidget.currentIndex(), Qt.red)
         self.connect_fg_signals(fg_view.scene())
         log.debug("Adding flowgraph view")
-
         self.tabWidget.addTab(fg_view, "Untitled")
         self.tabWidget.setCurrentIndex(self.tabWidget.count() - 1)
+        self.tabWidget.tabBar().setTabTextColor(self.tabWidget.currentIndex(), Qt.red)
 
     def open_triggered(self, filename=None, save_allowed=True):
         log.debug("open")
@@ -975,6 +974,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
                 self.currentFlowgraphScene.update_elements_to_draw()
                 if hasattr(self.app, 'VariableEditor'):
                     self.app.VariableEditor.set_scene(self.currentFlowgraphScene)
+                self.updateActions()
             else:
                 self.tabWidget.setCurrentIndex(open_fgs.index(filename))
 
@@ -998,7 +998,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
                 return
 
             log.info(f"Saved {filename}")
-            self.tabWidget.tabBar().setTabTextColor(self.tabWidget.currentIndex(), Qt.white)  # TODO: Not quite the right hue
+            self.tabWidget.tabBar().setTabTextColor(self.tabWidget.currentIndex(), self.palette().color(self.palette().WindowText))
             self.currentFlowgraphScene.set_saved(True)
         else:
             log.debug("Flowgraph does not have a filename")
@@ -1025,7 +1025,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
                 return
 
             log.info(f"Saved (as) {filename}")
-            self.tabWidget.tabBar().setTabTextColor(self.tabWidget.currentIndex(), Qt.white)  # TODO: Not quite the right hue
+            self.tabWidget.tabBar().setTabTextColor(self.tabWidget.currentIndex(), self.palette().color(self.palette().WindowText))
             self.currentFlowgraphScene.set_saved(True)
             self.tabWidget.setTabText(self.tabWidget.currentIndex(), os.path.basename(filename))
         else:
@@ -1304,6 +1304,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
     def enable_triggered(self):
         log.debug("enable")
+        self.currentFlowgraphScene.set_saved(False)
         all_enabled = True
         for block in self.currentFlowgraphScene.selected_blocks():
             if not block.core.state == "enabled":
@@ -1319,6 +1320,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
     def disable_triggered(self):
         log.debug("disable")
+        self.currentFlowgraphScene.set_saved(False)
         all_disabled = True
         for g_block in self.currentFlowgraphScene.selected_blocks():
             if not g_block.core.state == "disabled":
