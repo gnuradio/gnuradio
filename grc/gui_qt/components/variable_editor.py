@@ -78,6 +78,7 @@ class VariableEditor(QDockWidget, base.Component):
         self.currently_rebuilding = False
         if not self.qsettings.value("appearance/display_variable_editor", True, type=bool):
             self.hide()
+
     # Actions
 
     def createActions(self, actions):
@@ -126,8 +127,9 @@ class VariableEditor(QDockWidget, base.Component):
         # TODO: The way we update block params here seems suboptimal
         self.currently_rebuilding = True
         self._tree.clear()
-        imports = QTreeWidgetItem(self._tree, 0)
+        imports = QTreeWidgetItem(self._tree, 2)
         imports.setText(0, "Imports")
+        imports.setForeground(0, self._tree.palette().color(self.palette().WindowText))
         imports.setIcon(2, QtGui.QIcon.fromTheme("list-add"))
         for block in self._imports:
             import_ = QTreeWidgetItem(imports, 0)
@@ -136,16 +138,18 @@ class VariableEditor(QDockWidget, base.Component):
             import_.setText(1, block.params['imports'].get_value())
             import_.setData(1, Qt.UserRole, block)
             import_.setIcon(2, QtGui.QIcon.fromTheme("list-remove"))
-            import_.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEditable | Qt.ItemIsEnabled)
             if block.enabled:
-                import_.setForeground(0, colors.BLOCK_ENABLED_COLOR)
-                import_.setForeground(1, colors.BLOCK_ENABLED_COLOR)
+                import_.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEditable | Qt.ItemIsEnabled)
+                import_.setForeground(0, self._tree.palette().color(self.palette().WindowText))
+                import_.setForeground(1, self._tree.palette().color(self.palette().WindowText))
             else:
-                import_.setForeground(0, colors.BLOCK_DISABLED_COLOR)
-                import_.setForeground(1, colors.BLOCK_DISABLED_COLOR)
+                import_.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEnabled)
+                import_.setForeground(0, self._tree.palette().color(self.palette().Disabled, self.palette().WindowText))
+                import_.setForeground(1, self._tree.palette().color(self.palette().Disabled, self.palette().WindowText))
 
-        variables = QTreeWidgetItem(self._tree, 1)
+        variables = QTreeWidgetItem(self._tree, 2)
         variables.setText(0, "Variables")
+        variables.setForeground(0, self._tree.palette().color(self.palette().WindowText))
         variables.setIcon(2, QtGui.QIcon.fromTheme("list-add"))
         for block in sorted(self._variables, key=lambda v: v.name):
             variable_ = QTreeWidgetItem(variables, 1)
@@ -156,21 +160,21 @@ class VariableEditor(QDockWidget, base.Component):
                 variable_.setData(1, Qt.UserRole, block)
                 variable_.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEditable | Qt.ItemIsEnabled)
                 if block.enabled:
-                    variable_.setForeground(0, colors.BLOCK_ENABLED_COLOR)
-                    variable_.setForeground(1, colors.BLOCK_ENABLED_COLOR)
+                    variable_.setForeground(0, self._tree.palette().color(self.palette().WindowText))
+                    variable_.setForeground(1, self._tree.palette().color(self.palette().WindowText))
                 else:
-                    variable_.setForeground(0, colors.BLOCK_DISABLED_COLOR)
-                    variable_.setForeground(1, colors.BLOCK_DISABLED_COLOR)
+                    variable_.setForeground(0, self._tree.palette().color(self.palette().Disabled, self.palette().WindowText))
+                    variable_.setForeground(1, self._tree.palette().color(self.palette().Disabled, self.palette().WindowText))
             else:
                 variable_.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEnabled)
                 if block.enabled:
                     variable_.setText(1, str(block.evaluate(block.value)))
-                    variable_.setForeground(0, colors.BLOCK_ENABLED_COLOR)
-                    variable_.setForeground(1, colors.BLOCK_ENABLED_COLOR)
+                    variable_.setForeground(0, self._tree.palette().color(self.palette().WindowText))
+                    variable_.setForeground(1, self._tree.palette().color(self.palette().WindowText))
                 else:
                     variable_.setText(1, '<Open Properties>')
-                    variable_.setForeground(0, colors.BLOCK_DISABLED_COLOR)
-                    variable_.setForeground(1, colors.BLOCK_DISABLED_COLOR)
+                    variable_.setForeground(0, self._tree.palette().color(self.palette().Disabled, self.palette().WindowText))
+                    variable_.setForeground(1, self._tree.palette().color(self.palette().Disabled, self.palette().WindowText))
             variable_.setIcon(2, QtGui.QIcon.fromTheme("list-remove"))
 
         self.currently_rebuilding = False
@@ -189,7 +193,6 @@ class VariableEditor(QDockWidget, base.Component):
         Single handler for the different actions that can be triggered by the context menu,
         key presses or mouse clicks. Also triggers an update of the flow graph and editor.
         """
-
         if action == VariableEditorAction.ADD_IMPORT:
             self.all_editor_actions.emit(action)
             return
@@ -200,6 +203,10 @@ class VariableEditor(QDockWidget, base.Component):
             # TODO: Disabled in GRC Gtk. Enable?
             self.all_editor_actions.emit(action)
             return
+
+        if self._tree.currentItem().type() == 2:  # Import or Variable header line was selected
+            return
+
         self.scene.clearSelection()
         if self._tree.currentItem().type() == 0:
             to_handle = self.scene.core.blocks.index(self._imports[self._tree.currentIndex().row()])
