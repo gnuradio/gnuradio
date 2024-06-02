@@ -46,6 +46,7 @@ fft_v_fftw<T, forward>::fft_v_fftw(int fft_size,
 template <class T, bool forward>
 void fft_v_fftw<T, forward>::set_nthreads(int n)
 {
+    gr::thread::scoped_lock window_lock(this->d_setlock);
     d_fft.set_nthreads(n);
 }
 
@@ -69,13 +70,10 @@ bool fft_v_fftw<T, forward>::set_window(const std::vector<float>& window)
 template <>
 void fft_v_fftw<gr_complex, true>::fft_and_shift(const gr_complex* in, gr_complex* out)
 {
-    gr::thread::scoped_lock window_lock(d_setlock);
     if (!d_window.empty()) {
         gr_complex* dst = d_fft.get_inbuf();
         volk_32fc_32f_multiply_32fc(&dst[0], in, &d_window[0], d_fft_size);
-        window_lock.unlock();
     } else {
-        window_lock.unlock();
         memcpy(d_fft.get_inbuf(), in, sizeof(gr_complex) * d_fft_size);
     }
     d_fft.execute();
@@ -93,7 +91,6 @@ void fft_v_fftw<gr_complex, true>::fft_and_shift(const gr_complex* in, gr_comple
 template <>
 void fft_v_fftw<gr_complex, false>::fft_and_shift(const gr_complex* in, gr_complex* out)
 {
-    gr::thread::scoped_lock window_lock(d_setlock);
     if (!d_window.empty()) {
         gr_complex* dst = d_fft.get_inbuf();
         if (d_shift) {
@@ -105,9 +102,7 @@ void fft_v_fftw<gr_complex, false>::fft_and_shift(const gr_complex* in, gr_compl
         } else {
             volk_32fc_32f_multiply_32fc(&dst[0], in, &d_window[0], d_fft_size);
         }
-        window_lock.unlock();
     } else {
-        window_lock.unlock();
         if (d_shift) { // apply an ifft shift on the data
             gr_complex* dst = d_fft.get_inbuf();
             // round down
@@ -126,15 +121,12 @@ void fft_v_fftw<gr_complex, false>::fft_and_shift(const gr_complex* in, gr_compl
 template <>
 void fft_v_fftw<float, true>::fft_and_shift(const float* in, gr_complex* out)
 {
-    gr::thread::scoped_lock window_lock(d_setlock);
     // copy input into optimally aligned buffer
     if (!d_window.empty()) {
         gr_complex* dst = d_fft.get_inbuf();
         for (unsigned int i = 0; i < d_fft_size; i++) // apply window
             dst[i] = in[i] * d_window[i];
-        window_lock.unlock();
     } else {
-        window_lock.unlock();
         gr_complex* dst = d_fft.get_inbuf();
         for (unsigned int i = 0; i < d_fft_size; i++) // float to complex conversion
             dst[i] = in[i];
@@ -156,7 +148,6 @@ void fft_v_fftw<float, true>::fft_and_shift(const float* in, gr_complex* out)
 template <>
 void fft_v_fftw<float, false>::fft_and_shift(const float* in, gr_complex* out)
 {
-    gr::thread::scoped_lock window_lock(d_setlock);
     // copy input into optimally aligned buffer
     if (!d_window.empty()) {
         gr_complex* dst = d_fft.get_inbuf();
@@ -173,9 +164,7 @@ void fft_v_fftw<float, false>::fft_and_shift(const float* in, gr_complex* out)
             for (unsigned int i = 0; i < d_fft_size; i++) // apply window
                 dst[i] = in[i] * d_window[i];
         }
-        window_lock.unlock();
     } else {
-        window_lock.unlock();
         gr_complex* dst = d_fft.get_inbuf();
         if (d_shift) {
             // round down
@@ -209,6 +198,7 @@ int fft_v_fftw<T, forward>::work(int noutput_items,
 
     int count = 0;
 
+    gr::thread::scoped_lock window_lock(this->d_setlock);
     while (count++ < noutput_items) {
 
         fft_and_shift(in, out);
