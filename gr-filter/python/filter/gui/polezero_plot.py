@@ -11,7 +11,7 @@ from PyQt5 import Qt, QtCore
 from math import sin, cos, pi
 import pyqtgraph as pg
 from numpy import zeros
-from numpy import float_ as Float
+from numpy import float64 as Float
 from numpy import vectorize
 from numpy import delete
 
