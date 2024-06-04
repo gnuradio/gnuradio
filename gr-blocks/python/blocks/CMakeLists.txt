@@ -17,6 +17,7 @@ gr_python_install(
           msg_pair_to_var.py
           msg_meta_to_pair.py
           var_to_msg.py
+          variable_save_restore.py
           pdu_compatibility.py # REMOVE IN 3.11
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/blocks)
 
