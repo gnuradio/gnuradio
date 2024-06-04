@@ -11,6 +11,35 @@ from PyQt5 import Qt, QtCore, QtWidgets
 from gnuradio import gr
 import math
 import re
+import ast
+
+
+def numeric_eval(expression):
+    """Securely evaluates the numeric expression with simple arithmetics"""
+    save_operations = {
+        ast.UAdd: lambda a: a,
+        ast.USub: lambda a: -a,
+        ast.Add: lambda a, b: a + b,
+        ast.Sub: lambda a, b: a - b,
+        ast.Mult: lambda a, b: a * b,
+        ast.Div: lambda a, b: a / b,
+        ast.Pow: lambda a, b: a**b,
+    }
+
+    def evaluate(node):
+        if isinstance(node, ast.Expr):
+            return evaluate(node.value)
+        if isinstance(node, ast.Constant):
+            return node.value
+        if isinstance(node, ast.UnaryOp):
+            if op := save_operations.get(node.op.__class__, None):
+                return op(evaluate(node.operand))
+        if isinstance(node, ast.BinOp):
+            if op := save_operations.get(node.op.__class__, None):
+                return op(evaluate(node.left), evaluate(node.right))
+        raise TypeError("Unsupported operation: %s" % node.__class__.__name__)
+
+    return float(evaluate(ast.parse(expression).body[-1]))
 
 
 class NumericEntry(Qt.QToolBar):
@@ -114,7 +143,7 @@ class NumericEntry(Qt.QToolBar):
             string = string.replace(self.unit, '')
             if match := re.search(r'[^0-9.e+\-*/() ]', string):
                 raise ValueError("Characters not allowed: " + match.group())
-            value = float(eval(string))
+            value = float(numeric_eval(string))
 
         return scale * value
 
