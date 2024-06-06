@@ -16,7 +16,6 @@ install(
           rfnoc_null_source_sink.grc
           rfnoc_radio_ddc.grc
           rfnoc_radio_ddc_multichan.grc
-          rfnoc_replay.grc
           rfnoc_siggen.grc
           rfnoc_split_stream.grc
           rfnoc_switchboard.grc
@@ -30,3 +29,7 @@ install(
           uhd_two_tone_loopback.grc
           uhd_wbfm_receive.grc
     DESTINATION ${GR_PKG_UHD_EXAMPLES_DIR})
+
+if(PYQT5_FOUND)
+      install(FILES rfnoc_replay.grc DESTINATION ${GR_PKG_UHD_EXAMPLES_DIR})
+endif(PYQT5_FOUND)
