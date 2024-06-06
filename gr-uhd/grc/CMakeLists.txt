@@ -51,7 +51,6 @@ if(ENABLE_UHD_RFNOC)
               uhd_fpga_radio.block.yml
               uhd_fpga_sep.block.yml
               uhd_fpga_x310.block.yml
-              uhd_msgpushbutton.block.yml
               uhd_rfnoc_addsub.block.yml
               uhd_rfnoc_fft.block.yml
               uhd_rfnoc_fosphor.block.yml
@@ -66,4 +65,7 @@ if(ENABLE_UHD_RFNOC)
               uhd_rfnoc_tx_streamer.block.yml
               uhd_rfnoc_vector_iir.block.yml
         DESTINATION ${GRC_BLOCKS_DIR})
+    if(PYQT5_FOUND)
+        install (FILES uhd_msgpushbutton.block.yml DESTINATION ${GRC_BLOCKS_DIR})
+    endif(PYQT5_FOUND)
 endif(ENABLE_UHD_RFNOC)
