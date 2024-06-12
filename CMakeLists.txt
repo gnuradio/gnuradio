@@ -22,7 +22,7 @@ set(CMAKE_BUILD_TYPE
 ########################################################################
 # Make sure this version matches ${GR_CMAKE_MIN_VERSION} (a variable can't be
 # used here).
-cmake_minimum_required(VERSION 3.8)
+cmake_minimum_required(VERSION 3.16)
 project(gnuradio CXX C)
 enable_testing()
 option(BUILD_SHARED_LIBS "Build shared libraries" ON)
