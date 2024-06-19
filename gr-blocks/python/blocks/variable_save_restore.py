@@ -9,9 +9,25 @@
 
 import numpy
 from gnuradio import gr
-import pickle
+import yaml
 import pmt
 import os
+
+
+class SafeDumper(yaml.SafeDumper):
+    """A safe yaml dumper with support for additional datatypes"""
+    pass
+
+
+class SafeLoader(yaml.SafeLoader):
+    """A safe yaml loader with support for additional datatypes"""
+    pass
+
+
+SafeDumper.add_representer(complex, yaml.representer.Representer.represent_complex)
+SafeDumper.add_representer(tuple, yaml.representer.Representer.represent_tuple)
+SafeLoader.add_constructor(u"tag:yaml.org,2002:python/complex", yaml.constructor.Constructor.construct_python_complex)
+SafeLoader.add_constructor(u"tag:yaml.org,2002:python/tuple", yaml.constructor.Constructor.construct_python_tuple)
 
 
 class variable_save_restore(gr.sync_block):
@@ -26,7 +42,7 @@ class variable_save_restore(gr.sync_block):
         self.message_port_register_in(pmt.intern("restore"))
         self.set_msg_handler(pmt.intern("restore"), self.handle_msg_restore)
 
-        self.filename = f"~/.config/gnuradio/{top_block.__class__.__name__}.variables.sav"
+        self.filename = os.path.join(gr.paths.userconf(), "saverestore", f"{top_block.__class__.__name__}.yml")
         self.filename = os.path.expanduser(self.filename)
         print(f"[VariableSaveRestore] Config file: {self.filename}")
         os.makedirs(os.path.dirname(self.filename), exist_ok=True)
@@ -128,16 +144,12 @@ class variable_save_restore(gr.sync_block):
     def load_storage(self):
         """Load from disk into memory"""
         if os.path.exists(self.filename):
-            with open(self.filename, 'rb') as handle:
-                self.storage = pickle.load(handle)
+            with open(self.filename, 'r') as handle:
+                self.storage = yaml.load(handle, SafeLoader)
         else:
             self.storage = {}
 
     def save_storage(self):
         """Save from memory to disk"""
-        with open(self.filename, 'wb') as handle:
-            pickle.dump(self.storage, handle)
-
-    def work(self, input_items, output_items):
-        print("You shall not work!")
-        return 0
+        with open(self.filename, 'w') as handle:
+            yaml.dump(self.storage, handle, SafeDumper)
