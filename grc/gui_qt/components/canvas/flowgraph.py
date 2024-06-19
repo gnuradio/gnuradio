@@ -276,6 +276,10 @@ class FlowgraphScene(QtWidgets.QGraphicsScene, base.Component):
 
     def mousePressEvent(self, event):
         g_item = self.itemAt(event.scenePos(), QtGui.QTransform())
+        if not g_item:  # Nothing selected
+            event.ignore()
+            return
+
         self.clickPos = event.scenePos()
         selected = self.selectedItems()
         self.moving_blocks = False
@@ -284,35 +288,33 @@ class FlowgraphScene(QtWidgets.QGraphicsScene, base.Component):
             c_item = g_item.core
             if c_item.is_block:
                 self.moving_blocks = True
-                if event.button() == Qt.LeftButton:
-                    self.mousePressed = True
-                    super(FlowgraphScene, self).mousePressEvent(event)
-                    return
             elif c_item.is_port:
                 new_con = None
+                self.start_port = None
                 if len(selected) == 1:
                     if selected[0].core.is_port and selected[0] != g_item:
                         if selected[0].core.is_source and c_item.is_sink:
                             new_con = self.core.connect(selected[0].core, c_item)
-                            selected[0].core.gui.setSelected(False)
                         elif selected[0].core.is_sink and c_item.is_source:
                             new_con = self.core.connect(c_item, selected[0].core)
-                            selected[0].core.gui.setSelected(False)
-                elif len(selected) == 0:
-                    c_item.gui.setSelected(True)
                 if new_con:
                     log.debug("Created connection (click)")
                     self.addItem(new_con.gui)
                     self.newElement.emit(new_con)
                     self.update()
                 else:
-                    self.start_port = g_item
                     if c_item.is_source:
-                        self.dummy_arrow = DummyConnection(self, g_item.connection_point, event.scenePos())
-                        self.addItem(self.dummy_arrow)
-        event.accept()
+                        self.start_port = g_item
+
+        if event.button() == Qt.LeftButton:
+            self.mousePressed = True
+            super(FlowgraphScene, self).mousePressEvent(event)
 
     def mouseMoveEvent(self, event):
+        if self.mousePressed:
+            if not self.dummy_arrow and not self.moving_blocks and self.start_port:
+                self.dummy_arrow = DummyConnection(self, self.start_port.connection_point, self.clickPos)
+                self.addItem(self.dummy_arrow)
         self.view.setSceneRect(self.itemsBoundingRect())
         if self.dummy_arrow:
             self.dummy_arrow.update(event.scenePos())
@@ -326,6 +328,7 @@ class FlowgraphScene(QtWidgets.QGraphicsScene, base.Component):
 
     def mouseReleaseEvent(self, event):
         if self.dummy_arrow:  # We are currently dragging a DummyConnection
+            self.removeItem(self.dummy_arrow)
             g_item = self.itemAt(event.scenePos(), QtGui.QTransform())
             if isinstance(g_item, GUIPort):
                 c_item = g_item.core
@@ -335,11 +338,11 @@ class FlowgraphScene(QtWidgets.QGraphicsScene, base.Component):
                     self.addItem(new_con.gui)
                     self.newElement.emit(new_con)
                     self.update()
-            self.removeItem(self.dummy_arrow)
             self.dummy_arrow = None
         else:
             if self.clickPos != event.scenePos() and self.moving_blocks:
                 self.itemMoved.emit(event.scenePos() - self.clickPos)
+        self.mousePressed = False
         super(FlowgraphScene, self).mouseReleaseEvent(event)
 
     def createActions(self, actions):
