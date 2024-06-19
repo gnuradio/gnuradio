@@ -82,12 +82,6 @@ class LibraryView(QTreeView):
                 QUrl(prefix + label.replace(" ", "_"))
             )
 
-    def handle_clicked(self):
-        if self.isExpanded(self.currentIndex()):
-            self.collapse(self.currentIndex())
-        else:
-            self.expand(self.currentIndex())
-
     def contextMenuEvent(self, event):
         key = self.model().data(self.currentIndex(), Qt.UserRole)
         if key:  # Modules and categories don't have UserRole data
@@ -138,8 +132,7 @@ class BlockLibrary(QDockWidget, base.Component):
         library.setDragDropMode(QAbstractItemView.DragOnly)
         # library.setColumnCount(1)
         library.setHeaderHidden(True)
-        # Expand categories with a single click
-        library.clicked.connect(library.handle_clicked)
+        # Expand categories with a single click is build in
         library.selectionModel().selectionChanged.connect(library.updateDocTab)
         # library.headerItem().setText(0, "Blocks")
         library.doubleClicked.connect(
