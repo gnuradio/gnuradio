@@ -10,6 +10,9 @@ if(DEFINED __INCLUDED_GR_PYTHON_CMAKE)
 endif()
 set(__INCLUDED_GR_PYTHON_CMAKE TRUE)
 
+
+define_property(GLOBAL PROPERTY GR_PYTHON_VENDOR_DEPS)
+
 ########################################################################
 # Setup the python interpreter:
 # This allows the user to specify a specific interpreter,
@@ -18,13 +21,13 @@ set(__INCLUDED_GR_PYTHON_CMAKE TRUE)
 
 if(PYTHON_EXECUTABLE)
     message(STATUS "User set python executable ${PYTHON_EXECUTABLE}")
-    find_package(PythonInterp ${GR_PYTHON_MIN_VERSION} REQUIRED)
+    gr_find_package(PythonInterp ${GR_PYTHON_MIN_VERSION} REQUIRED)
 else(PYTHON_EXECUTABLE)
     message(STATUS "PYTHON_EXECUTABLE not set - using default python3")
-    find_package(PythonInterp ${GR_PYTHON_MIN_VERSION} REQUIRED)
+    gr_find_package(PythonInterp ${GR_PYTHON_MIN_VERSION} REQUIRED)
 endif(PYTHON_EXECUTABLE)
 
-find_package(PythonLibs ${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR} EXACT)
+gr_find_package(PythonLibs ${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR} EXACT)
 
 if(CMAKE_CROSSCOMPILING)
     set(QA_PYTHON_EXECUTABLE "/usr/bin/python3")
@@ -130,20 +133,45 @@ macro(GR_PYTHON_CHECK_MODULE_RAW desc python_code have)
     endif()
 endmacro(GR_PYTHON_CHECK_MODULE_RAW)
 
-macro(GR_PYTHON_CHECK_MODULE desc mod cmd have)
+macro(GR_PYTHON_CHECK_MODULE)
+    set(singleValueArgs DESC MODULE CHECK VAR)
+    cmake_parse_arguments(CHECK_MODULE "" "${singleValueArgs}" "" ${ARGN})
+    # If no check is supplied, we're doing a basic
+    # import check, so assert the module name as
+    # an import sanity check
+    # with just an import a dangling folder
+    # in a site-packages directory can result in a
+    # false positive import but an assert on the module
+    # returns false
+    if(NOT CHECK_MODULE_CHECK)
+        set(CHECK_MODULE_CHECK ${CHECK_MODULE_MODULE})
+    endif()
     gr_python_check_module_raw(
-        "${desc}"
+        "${CHECK_MODULE_DESC}"
         "
 #########################################
 from packaging.version import Version as LooseVersion
 try:
-    import ${mod}
-    assert ${cmd}
+    import ${CHECK_MODULE_MODULE}
+    assert ${CHECK_MODULE_CHECK}
 except (ImportError, AssertionError): exit(-1)
 except: pass
 #########################################"
-        "${have}")
+        "${CHECK_MODULE_VAR}")
+    if(${CHECK_MODULE_VAR})
+        REGISTER_EXTERNAL_PYTHON_COMPONENT(${CHECK_MODULE_MODULE})
+    endif()
 endmacro(GR_PYTHON_CHECK_MODULE)
+
+function(REGISTER_EXTERNAL_PYTHON_COMPONENT module)
+    get_property(GR_PYTHON_EXTERNALS_SET GLOBAL PROPERTY GR_PYTHON_VENDOR_DEPS SET)
+    if(GR_PYTHON_EXTERNALS_SET)
+        get_property(GR_PYTHON_EXTERNALS GLOBAL PROPERTY GR_PYTHON_VENDOR_DEPS)
+        set_property(GLOBAL PROPERTY GR_PYTHON_VENDOR_DEPS ${module} ${GR_PYTHON_EXTERNALS})
+    else()
+        set_property(GLOBAL PROPERTY GR_PYTHON_VENDOR_DEPS ${module})
+    endif()
+endfunction()
 
 ########################################################################
 # Sets the python installation directory GR_PYTHON_DIR

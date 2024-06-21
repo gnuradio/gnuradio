@@ -12,15 +12,19 @@ include(GrPython)
 
 # Note: gr-qtgui requires Qt5.
 
-find_package(Qt5 QUIET
+gr_find_package(Qt5
     COMPONENTS Widgets
     OPTIONAL_COMPONENTS OpenGL
 )
 set(QT_FOUND ${Qt5Widgets_FOUND})
 
-gr_python_check_module("PyQt5" PyQt5 True PYQT5_FOUND)
+gr_python_check_module(
+    DESC "PyQt5"
+    MODULE PyQt5
+    VAR PYQT5_FOUND
+)
 
-find_package(Qwt)
+gr_find_package(qwt)
 
 ########################################################################
 # Register component
@@ -31,15 +35,18 @@ if(NOT CMAKE_CROSSCOMPILING)
 endif(NOT CMAKE_CROSSCOMPILING)
 
 gr_register_component(
-    "gr-qtgui"
-    ENABLE_GR_QTGUI
-    QT_FOUND
-    QWT_FOUND
-    ENABLE_GNURADIO_RUNTIME
-    ENABLE_GR_FFT
-    ENABLE_GR_FILTER
-    PYTHONLIBS_FOUND
-    ${qt_gui_python_deps})
+    NAME "gr-qtgui"
+    VAR ENABLE_GR_QTGUI
+    REQUIRED_TPLS
+        QT_FOUND
+        QWT_FOUND
+        PYTHONLIBS_FOUND
+        ${qt_gui_python_deps}
+    REQUIRED_COMPONENTS
+        gnuradio-runtime
+        gr-fft
+        gr-filter
+)
 
 set(GR_PKG_QTGUI_EXAMPLES_DIR ${GR_PKG_DATA_DIR}/examples/qt-gui)
 

@@ -11,7 +11,7 @@ gr_check_hdr_n_def(sys/resource.h HAVE_SYS_RESOURCE_H)
 ########################################################################
 # Look for libunwind
 ########################################################################
-find_package(libunwind)
+gr_find_package(libunwind)
 
 ########################################################################
 # Handle the generated constants
@@ -137,6 +137,8 @@ target_link_libraries(
         MPLib::mplib
     PRIVATE
         Boost::program_options
+        Boost::system
+        Boost::filesystem
         libunwind::libunwind)
 
 # Address linker issues with std::filesystem on Centos 8 and Debian
@@ -164,6 +166,9 @@ target_compile_definitions(gnuradio-runtime PRIVATE BOOST_DLL_USE_STD_FS)
 # Add controlport stuff to gnuradio-runtime
 ########################################################################
 # Controlport
+
+# TODO: johnwparent - this is a linker error if not enabled on Windows
+# due to headers
 if(ENABLE_GR_CTRLPORT)
 
     # Keep track of the number of backends ControlPort supports
@@ -214,7 +219,7 @@ if(ENABLE_GR_CTRLPORT)
                 ${CMAKE_CURRENT_SOURCE_DIR}/controlport/thrift/thrift_application_base.cc
                 # add files built by compiling gnuradio.thrift
                 ${gnuradio_thrift_generated_sources})
-        target_link_libraries(gnuradio-runtime PRIVATE Thrift::thrift)
+        target_link_libraries(gnuradio-runtime PRIVATE thrift::thrift)
 
         target_compile_definitions(gnuradio-runtime PUBLIC GR_CTRLPORT)
 

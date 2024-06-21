@@ -81,7 +81,7 @@ if(ENABLE_GR_QTGUI_OPENGL)
         QRfnocF15Surface.cc
         ${RFNOC_F15_RC_SRCS}
     )
-    find_package(OpenGL)
+    gr_find_package(OpenGL)
     list(APPEND PRIVATE_LIBS
         Qt5::OpenGL
         OpenGL::GL

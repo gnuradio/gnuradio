@@ -13,7 +13,7 @@ add_library(gnuradio-fft fft.cc fft_v_fftw.cc goertzel_fc_impl.cc goertzel.cc wi
 target_link_libraries(
     gnuradio-fft
     PUBLIC gnuradio-runtime Volk::volk
-    PRIVATE fftw3f::fftw3f)
+    PRIVATE FFTW3::fftw3f)
 
 # Address linker issues with std::filesystem on Centos 8 and Debian
 target_link_libraries(

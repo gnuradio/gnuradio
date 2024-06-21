@@ -1,6 +1,6 @@
 include(GrPython)
 
-find_package(pybind11 REQUIRED)
+gr_find_package(pybind11 REQUIRED)
 
 macro(GR_PYBIND_MAKE name updir filter files)
 
@@ -113,7 +113,7 @@ macro(GR_PYBIND_MAKE_CHECK_HASH name updir filter files)
                     file(REMOVE ${CMAKE_CURRENT_BINARY_DIR}/${file}.regen_status)
                     # Automatically regenerate the bindings
                     add_custom_command(
-                        OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}}/${file}
+                        OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/${file}
                         COMMAND
                             "${PYTHON_EXECUTABLE}"
                             ${PROJECT_SOURCE_DIR}/gr-utils/bindtool/scripts/bind_intree_file.py
@@ -127,7 +127,7 @@ macro(GR_PYBIND_MAKE_CHECK_HASH name updir filter files)
                         COMMENT "Automatic generation of pybind11 bindings for "
                                 ${header_full_path})
                     add_custom_target(${file}_regen_bindings ALL
-                                      DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}}/${file})
+                                      DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/${file})
                     list(APPEND regen_targets ${file}_regen_bindings)
                 endif()
 
@@ -174,6 +174,19 @@ macro(GR_PYBIND_MAKE_CHECK_HASH name updir filter files)
         ${name}_python
         PRIVATE ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/${updir}/lib
                 ${CMAKE_CURRENT_SOURCE_DIR}/${updir}/include)
+
+    # Precompile the pybind11 header
+    # This should speed up building of the python bindings at least in larger modules
+    # This functionality is only available in CMake >= 3.16
+    # if(${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.16.0")
+    #     target_precompile_headers(
+    #         ${name}_python
+    #         PRIVATE
+    #         ${pybind11_INCLUDE_DIR}/pybind11/pybind11.h
+    #         ${pybind11_INCLUDE_DIR}/pybind11/complex.h
+    #         ${pybind11_INCLUDE_DIR}/pybind11/operators.h
+    #         ${pybind11_INCLUDE_DIR}/pybind11/stl.h)
+    # endif()
 
     target_link_libraries(
         ${name}_python PRIVATE ${Boost_LIBRARIES} pybind11::pybind11 Python::Module
@@ -248,7 +261,7 @@ macro(GR_PYBIND_MAKE_OOT name updir filter files)
                     string(REPLACE ";" "," defines "${define_symbols}"
                     )#Convert ';' separated define_symbols to ',' separated list format
                     add_custom_command(
-                        OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}}/${file}
+                        OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/${file}
                         COMMAND
                             "${PYTHON_EXECUTABLE}"
                             ${CMAKE_CURRENT_SOURCE_DIR}/bind_oot_file.py "--output_dir"
@@ -264,7 +277,7 @@ macro(GR_PYBIND_MAKE_OOT name updir filter files)
                         COMMENT "Automatic generation of pybind11 bindings for "
                                 ${header_full_path})
                     add_custom_target(${file}_regen_bindings ALL
-                                      DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}}/${file})
+                                      DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/${file})
                     list(APPEND regen_targets ${file}_regen_bindings)
                 endif()
 

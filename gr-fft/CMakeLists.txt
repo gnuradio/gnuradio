@@ -10,15 +10,23 @@
 ########################################################################
 include(GrBoost)
 
-find_package(FFTW3f)
+gr_find_package(FFTW3)
 
 ########################################################################
 # Register component
 ########################################################################
 include(GrComponent)
 
-gr_register_component("gr-fft" ENABLE_GR_FFT Boost_FOUND ENABLE_GNURADIO_RUNTIME
-                      ENABLE_GR_BLOCKS FFTW3f_FOUND)
+gr_register_component(
+    NAME "gr-fft"
+    VAR ENABLE_GR_FFT
+    REQUIRED_COMPONENTS
+        gnuradio-runtime
+        gr-blocks
+    REQUIRED_TPLS
+        Boost_FOUND
+        FFTW3_FOUND
+)
 
 ########################################################################
 # Begin conditional configuration
