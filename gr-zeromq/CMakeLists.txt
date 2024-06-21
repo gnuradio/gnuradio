@@ -9,17 +9,25 @@
 ########################################################################
 # Setup dependencies
 ########################################################################
-find_package(ZeroMQ)
-
+gr_find_package(ZeroMQ)
+add_library(ZeroMQ::ZeroMQ INTERFACE IMPORTED)
+set_target_properties(
+    ZeroMQ::ZeroMQ PROPERTIES INTERFACE_INCLUDE_DIRECTORIES ${ZeroMQ_INCLUDE_DIRS}
+                                INTERFACE_LINK_LIBRARIES ${ZeroMQ_LIBRARIES})
 ########################################################################
 # Register component
 ########################################################################
 include(GrComponent)
 
-GR_REGISTER_COMPONENT("gr-zeromq" ENABLE_GR_ZEROMQ
-    ENABLE_GNURADIO_RUNTIME
-    ZEROMQ_FOUND
-    CPPZMQ_HAS_SHUTDOWN
+gr_register_component(
+    NAME "gr-zeromq"
+    VAR ENABLE_GR_ZEROMQ
+    REQUIRED_COMPONENTS
+        gnuradio-runtime
+    REQUIRED_TPLS
+        # ZEROMQ_FOUND
+        ZeroMQ_FOUND
+        CPPZMQ_HAS_SHUTDOWN
 )
 
 SET(GR_PKG_ZEROMQ_EXAMPLES_DIR ${GR_PKG_DATA_DIR}/examples/zeromq)

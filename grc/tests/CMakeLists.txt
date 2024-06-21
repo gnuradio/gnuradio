@@ -8,10 +8,10 @@
 include(GrPython)
 
 if(ENABLE_TESTING)
-    GR_PYTHON_CHECK_MODULE_RAW(
-        "pytest"
-        "import pytest"
-        PYTEST_FOUND
+    GR_PYTHON_CHECK_MODULE(
+        DESC "pytest"
+        MODULE pytest
+        VAR PYTEST_FOUND
     )
 
     if(PYTEST_FOUND)

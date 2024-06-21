@@ -14,8 +14,9 @@
 #define WIN32_LEAN_AND_MEAN
 #define NOMINMAX // stops windef.h defining max/min under cygwin
 
-#include <mmsystem.h>
 #include <windows.h>
+
+#include <mmsystem.h>
 
 #include <gnuradio/audio/sink.h>
 #include <gnuradio/logger.h>

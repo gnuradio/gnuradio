@@ -30,6 +30,10 @@ option(BUILD_SHARED_LIBS "Build shared libraries" ON)
 # Make sure our local CMake Modules path comes first
 list(INSERT CMAKE_MODULE_PATH 0 ${PROJECT_SOURCE_DIR}/cmake/Modules)
 
+
+# Incorporate CMake function/macros overloading.
+include(CMakeOverloads)
+
 # Add more build types and check that requested build type is valid
 include(GrBuildTypes)
 gr_check_build_type(${CMAKE_BUILD_TYPE})
@@ -48,10 +52,10 @@ SET(VERSION_MAJOR 3)
 SET(VERSION_API   11)
 SET(VERSION_ABI   0)
 SET(VERSION_PATCH git)
-include(GrVersion) #setup version info
+include(GrVersion) # setup version info
 # cmake-format: on
 
-#Set minimum version requirements
+# Set minimum version requirements
 include(GrMinReq)
 
 ########################################################################
@@ -60,7 +64,11 @@ include(GrMinReq)
 # on unit_test_framework
 ########################################################################
 include(GrBoost)
-gr_register_component("testing-support" ENABLE_TESTING Boost_UNIT_TEST_FRAMEWORK_FOUND)
+gr_register_component(
+    NAME "testing-support"
+    VAR ENABLE_TESTING
+    REQUIRED_TPLS Boost_UNIT_TEST_FRAMEWORK_FOUND
+)
 
 # Enable generation of compile_commands.json for code completion engines
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
@@ -83,15 +91,9 @@ if(IMPORT_EXECUTABLES)
     include(${IMPORT_EXECUTABLES})
 endif(IMPORT_EXECUTABLES)
 
-#set file that the native build will fill with exports
+# set file that the native build will fill with exports
 set(EXPORT_FILE ${PROJECT_BINARY_DIR}/ImportExecutables.cmake)
-file(WRITE ${EXPORT_FILE} ) #blank the file (subdirs will append)
-
-########################################################################
-# Incorporate CMake function/macros overloading.
-########################################################################
-
-include(CMakeOverloads)
+file(WRITE ${EXPORT_FILE} ) # blank the file (subdirs will append)
 
 ########################################################################
 # Compiler settings
@@ -131,7 +133,7 @@ string(REPLACE "\n" " \\n" COMPILER_INFO ${COMPILER_INFO})
 ########################################################################
 # Install directories
 ########################################################################
-include(GrPlatform) #define LIB_SUFFIX
+include(GrPlatform) # define LIB_SUFFIX
 
 # Install our Cmake modules into $prefix/lib/cmake/gnuradio
 # See "Package Configuration Files" on page:
@@ -243,7 +245,10 @@ add_custom_target(uninstall ${CMAKE_COMMAND} -P
 # Enable python component
 ########################################################################
 include(GrPython)
-gr_python_check_module_raw("packaging" "import packaging" PACKAGING_FOUND)
+gr_python_check_module(
+    DESC "packaging"
+    MODULE packaging
+    VAR PACKAGING_FOUND)
 if(NOT PACKAGING_FOUND)
     message(STATUS "")
     message(STATUS "***************************** WARNING!!! *******")
@@ -254,14 +259,16 @@ if(NOT PACKAGING_FOUND)
     message(STATUS "************************************************")
 endif()
 gr_python_check_module(
-    "numpy" numpy
-    "LooseVersion(numpy.__version__) >= LooseVersion('${GR_NUMPY_MIN_VERSION}')"
-    NUMPY_FOUND)
+    DESC "numpy"
+    MODULE numpy
+    CHECK "LooseVersion(numpy.__version__) >= LooseVersion('${GR_NUMPY_MIN_VERSION}')"
+    VAR NUMPY_FOUND)
 # Needed for automatic regeneration of some bindings
 gr_python_check_module(
-    "pygccxml" pygccxml
-    "LooseVersion(pygccxml.__version__) >= LooseVersion('${GR_PYGCCXML_MIN_VERSION}')"
-    PYGCCXML_FOUND)
+    DESC "pygccxml"
+    MODULE pygccxml
+    CHECK "LooseVersion(pygccxml.__version__) >= LooseVersion('${GR_PYGCCXML_MIN_VERSION}')"
+    VAR PYGCCXML_FOUND)
 if(NOT PYGCCXML_FOUND)
     message(STATUS "")
     message(STATUS "***************************** WARNING!!! *************************")
@@ -272,7 +279,7 @@ if(NOT PYGCCXML_FOUND)
     message(STATUS "******************************************************************")
 endif()
 
-find_package(pybind11)
+gr_find_package(pybind11)
 if(pybind11_FOUND)
     if(${pybind11_VERSION} VERSION_LESS ${PYBIND11_MIN_VERSION})
         message(WARNING "pybind11 version ${pybind11_VERSION} < ${PYBIND11_MIN_VERSION}")
@@ -280,9 +287,11 @@ if(pybind11_FOUND)
     endif()
 endif()
 
-include(GrComponent)
-gr_register_component("python-support" ENABLE_PYTHON PYTHONLIBS_FOUND PACKAGING_FOUND
-                      pybind11_FOUND NUMPY_FOUND)
+gr_register_component(
+    NAME "python-support"
+    VAR ENABLE_PYTHON
+    REQUIRED_TPLS PYTHONLIBS_FOUND PACKAGING_FOUND pybind11_FOUND NUMPY_FOUND
+)
 
 if(${CMAKE_BUILD_TYPE} STREQUAL "Coverage")
     include(CodeCoverage)
@@ -299,7 +308,11 @@ option(ENABLE_EXAMPLES "Enable examples" ON)
 ########################################################################
 message(STATUS "")
 message(STATUS "Configuring VOLK support...")
-find_package(Volk)
+# If not using conan/vcpkg to find deps, this is a no-op
+# this suppresses the conan/vcpkg from volk's underlying find_package
+# call to gmp
+set(gmp_FIND_QUIETLY)
+gr_find_package(Volk)
 if(Volk_FOUND)
     message(STATUS "  Found VOLK:")
     message(STATUS "  * Version: ${Volk_VERSION}")
@@ -372,13 +385,18 @@ list(APPEND GR_TEST_PYTHON_DIRS ${PROJECT_BINARY_DIR}/gnuradio-runtime/python
 
 # gnuradio-runtime/include/gnuradio/block.h needs a define to tell it which
 # multiprecision arithmetic library header to include
-find_package(MPLIB)
+gr_find_package(MPLIB)
 
 ########################################################################
 # Post-Install tasks are tasks that are usually not executed during
 # install, but for source builds, that's actually more convenient.
 ########################################################################
-gr_register_component("post-install" ENABLE_POSTINSTALL)
+gr_register_component(
+    NAME "post-install"
+    VAR ENABLE_POSTINSTALL
+)
+
+set(GTK_BIN_DIR C:/dev/gnu-radio/deps/gtk/bin)
 
 ########################################################################
 # Add subdirectories (in order of deps)
@@ -465,3 +483,8 @@ configure_file(
 # Install config.h in include/gnuradio
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-runtime/include/gnuradio/config.h
         DESTINATION ${GR_INCLUDE_DIR}/gnuradio)
+
+if(GR_BUILD_INSTALLER)
+    GR_GENERATE_INSTALL()
+    include(cmake/Modules/GrCPack.cmake)
+endif(GR_BUILD_INSTALLER)

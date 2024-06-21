@@ -19,7 +19,7 @@
 namespace gr {
 
 #if defined(_WIN32)
-
+#include <windows.h>
 #include <Sysinfoapi.h>
 
 int native_pagesize(const gr::logger_ptr logger)

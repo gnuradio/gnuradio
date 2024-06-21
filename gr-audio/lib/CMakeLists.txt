@@ -21,7 +21,7 @@ list(APPEND gr_audio_confs ${CMAKE_CURRENT_SOURCE_DIR}/gr-audio.conf)
 ########################################################################
 ## ALSA Support
 ########################################################################
-find_package(ALSA)
+gr_find_package(ALSA)
 
 if((ALSA_FOUND)
    AND NOT (CMAKE_SYSTEM_NAME STREQUAL "kFreeBSD")
@@ -41,7 +41,7 @@ endif()
 ########################################################################
 ## OSS Support
 ########################################################################
-find_package(OSS)
+gr_find_package(OSS)
 
 if(OSS_FOUND)
     target_compile_definitions(gnuradio-audio PRIVATE -DOSS_FOUND)
@@ -56,7 +56,7 @@ endif(OSS_FOUND)
 ########################################################################
 ## Jack Support
 ########################################################################
-find_package(JACK)
+gr_find_package(JACK)
 
 if(JACK_FOUND)
     target_compile_definitions(gnuradio-audio PRIVATE -DJACK_FOUND)
@@ -102,7 +102,7 @@ endif()
 ########################################################################
 ## PortAudio Support
 ########################################################################
-find_package(PORTAUDIO)
+gr_find_package(PORTAUDIO)
 
 if(PORTAUDIO2_FOUND)
     target_compile_definitions(gnuradio-audio PRIVATE -DPORTAUDIO_FOUND)
@@ -144,4 +144,4 @@ if(ENABLE_COMMON_PCH)
 endif()
 
 gr_library_foo(gnuradio-audio)
-install(FILES ${gr_audio_confs} DESTINATION ${GR_PREFSDIR})
+install(FILES ${gr_audio_confs} DESTINATION ${GR_PREFSDIR_relative_to_prefix})

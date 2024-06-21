@@ -25,7 +25,7 @@ configure_file(
 
 install(
     FILES ${CMAKE_CURRENT_BINARY_DIR}/modtool.conf
-    DESTINATION ${GR_PREFSDIR}
+    DESTINATION ${GR_PREFSDIR_relative_to_prefix}
 )
 
 GR_PYTHON_INSTALL(

@@ -33,5 +33,5 @@ if(MSVC)
 endif(MSVC)
 
 if(BUILD_SHARED_LIBS)
-    gr_library_foo(gnuradio-pmt)
+    gr_library_foo(gnuradio-pmt Volk::volk)
 endif()

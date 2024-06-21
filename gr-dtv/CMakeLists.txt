@@ -14,8 +14,12 @@
 ########################################################################
 include(GrComponent)
 
-gr_register_component("gr-dtv" ENABLE_GR_DTV ENABLE_GNURADIO_RUNTIME ENABLE_GR_ANALOG
-                      ENABLE_GR_FILTER ENABLE_GR_FEC)
+gr_register_component(
+    NAME "gr-dtv"
+    VAR ENABLE_GR_DTV
+    REQUIRED_COMPONENTS gnuradio-runtime gr-analog
+                      gr-filter gr-fec
+)
 
 set(GR_PKG_DTV_EXAMPLES_DIR ${GR_PKG_DATA_DIR}/examples/dtv)
 

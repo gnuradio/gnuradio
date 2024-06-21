@@ -11,12 +11,22 @@
 include(GrPython)
 
 gr_python_check_module(
-    "Mako >= ${GR_MAKO_MIN_VERSION}" mako
-    "LooseVersion(mako.__version__) >= LooseVersion('${GR_MAKO_MIN_VERSION}')" MAKO_FOUND)
+    DESC "Mako >= ${GR_MAKO_MIN_VERSION}"
+    MODULE mako
+    CHECK "LooseVersion(mako.__version__) >= LooseVersion('${GR_MAKO_MIN_VERSION}')"
+    VAR MAKO_FOUND)
 
-gr_python_check_module_raw("click" "import click" CLICK_FOUND)
+gr_python_check_module(
+    DESC "click"
+    MODULE click
+    VAR CLICK_FOUND
+)
 
-gr_python_check_module_raw("click-plugins" "import click_plugins" CLICK_PLUGINS_FOUND)
+gr_python_check_module(
+    DESC "click-plugins"
+    MODULE click_plugins
+    VAR CLICK_PLUGINS_FOUND
+)
 
 ########################################################################
 # Register component
@@ -29,14 +39,34 @@ if(NOT CMAKE_CROSSCOMPILING)
 
 endif(NOT CMAKE_CROSSCOMPILING)
 
-gr_register_component("gr-utils" ENABLE_GR_UTILS ENABLE_GNURADIO_RUNTIME ENABLE_PYTHON
-                      ${utils_python_deps})
+gr_register_component(
+    NAME "gr-utils"
+    VAR ENABLE_GR_UTILS
+    REQUIRED_COMPONENTS
+        gnuradio-runtime
+    REQUIRED_TPLS
+        ENABLE_PYTHON
+        ${utils_python_deps}
+)
 
-gr_register_component("gr_modtool" ENABLE_GR_MODTOOL ENABLE_GNURADIO_RUNTIME
-                      ENABLE_PYTHON ${utils_modtool_deps})
+gr_register_component(
+    NAME "gr_modtool"
+    VAR ENABLE_GR_MODTOOL
+    REQUIRED_COMPONENTS
+        gnuradio-runtime
+    REQUIRED_TPLS
+        ENABLE_PYTHON
+        ${utils_modtool_deps}
+)
 
-gr_register_component("gr_blocktool" ENABLE_GR_BLOCKTOOL ENABLE_GNURADIO_RUNTIME
-                      ENABLE_PYTHON)
+gr_register_component(
+    NAME "gr_blocktool"
+    VAR ENABLE_GR_BLOCKTOOL
+    REQUIRED_COMPONENTS
+        gnuradio-runtime
+    REQUIRED_TPLS
+        ENABLE_PYTHON
+)
 
 ########################################################################
 # Begin conditional configuration

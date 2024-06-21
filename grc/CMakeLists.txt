@@ -12,56 +12,64 @@ include(GrPython)
 
 message(STATUS "")
 
-GR_PYTHON_CHECK_MODULE_RAW(
-    "PyYAML >= 3.11"
-    "import yaml; assert yaml.__version__ >= '3.11'"
-    PYYAML_FOUND
+
+GR_PYTHON_CHECK_MODULE(
+    DESC "PyYAML >= 3.11"
+    MODULE yaml
+    CHECK "yaml.__version__ >= '3.11'"
+    VAR PYYAML_FOUND
 )
 
 GR_PYTHON_CHECK_MODULE(
-    "mako >= ${GR_MAKO_MIN_VERSION}"
-    mako
-    "LooseVersion(mako.__version__) >= LooseVersion('${GR_MAKO_MIN_VERSION}')"
-    MAKO_FOUND
+    DESC "mako >= ${GR_MAKO_MIN_VERSION}"
+    MODULE mako
+    CHECK "LooseVersion(mako.__version__) >= LooseVersion('${GR_MAKO_MIN_VERSION}')"
+    VAR MAKO_FOUND
 )
 
 GR_PYTHON_CHECK_MODULE_RAW(
     "pygobject >= 2.28.6"
-    "import gi; assert gi.version_info >= (2, 28, 6)"
+    "import os; os.add_dll_directory('${GTK_BIN_DIR}'); \
+    import gi; assert gi.version_info >= (2, 28, 6)"
     PYGI_FOUND
 )
 
 GR_PYTHON_CHECK_MODULE_RAW(
     "Gtk (GI) >= 3.10.8"
-    "import gi; gi.require_version('Gtk', '3.0'); \
-     from gi.repository import Gtk; Gtk.check_version(3, 10, 8)"
+    "import os; os.add_dll_directory('${GTK_BIN_DIR}'); \
+     import gi; gi.require_version('Gtk', '4.0');"
     GTK_GI_FOUND
 )
 
 GR_PYTHON_CHECK_MODULE_RAW(
     "Cairo (GI) >= 1.0"
-    "import gi; gi.require_foreign('cairo', 'Context')"  # Cairo 1.13.0
+    "import os; os.add_dll_directory('${GTK_BIN_DIR}'); \
+    import gi; gi.require_foreign('cairo', 'Context')"  # Cairo 1.13.0
     CAIRO_GI_FOUND
 )
 
 GR_PYTHON_CHECK_MODULE_RAW(
     "PangoCairo (GI) >= 1.0"
-    "import gi; gi.require_version('PangoCairo', '1.0')"  # pangocairo 1.36.3
+    "import os; os.add_dll_directory('${GTK_BIN_DIR}'); \
+    import gi; gi.require_version('PangoCairo', '1.0')"  # pangocairo 1.36.3
     PANGOCAIRO_GI_FOUND
 )
 
-GR_PYTHON_CHECK_MODULE_RAW(
-    "numpy"
-    "import numpy"
-    NUMPY_FOUND
+GR_PYTHON_CHECK_MODULE(
+    DESC "numpy"
+    MODULE numpy
+    VAR NUMPY_FOUND
 )
 
-GR_PYTHON_CHECK_MODULE_RAW(
-  "jsonschema"
-  "import jsonschema"
-  JSONSCHEMA_FOUND
+GR_PYTHON_CHECK_MODULE(
+  DESC "jsonschema"
+  MODULE jsonschema
+  VAR JSONSCHEMA_FOUND
 )
 
+if(PYGI_FOUND)
+    REGISTER_EXTERNAL_PYTHON_COMPONENT(gi)
+endif()
 ########################################################################
 # Register component
 ########################################################################
@@ -78,17 +86,23 @@ if(NOT CMAKE_CROSSCOMPILING)
     )
 endif(NOT CMAKE_CROSSCOMPILING)
 
-GR_REGISTER_COMPONENT("gnuradio-companion" ENABLE_GRC
-    ENABLE_GNURADIO_RUNTIME
-    ENABLE_PYTHON
-    ${grc_python_deps}
+GR_REGISTER_COMPONENT(
+    NAME "gnuradio-companion"
+    VAR  ENABLE_GRC
+    REQUIRED_COMPONNETS
+        gnuradio-runtime
+    REQUIRED_TPLS
+        ENABLE_PYTHON
+        ${grc_python_deps}
 )
 
 if(ENABLE_GRC)
 
-  GR_REGISTER_COMPONENT("JSON/YAML config blocks" ENABLE_JSONYAML_BLOCKS
-    ENABLE_GRC
-    JSONSCHEMA_FOUND
+  GR_REGISTER_COMPONENT(
+    NAME "JSON/YAML config blocks"
+    VAR ENABLE_JSONYAML_BLOCKS
+    REQUIRED_COMPONENTS gnuradio-companion
+    REQUIRED_TPLS       JSONSCHEMA_FOUND
     )
 
 ########################################################################
@@ -120,7 +134,7 @@ configure_file(
 
 install(
     FILES ${CMAKE_CURRENT_BINARY_DIR}/grc.conf
-    DESTINATION ${GR_PREFSDIR}
+    DESTINATION ${GR_PREFSDIR_relative_to_prefix}
 )
 
 configure_file(
@@ -130,7 +144,7 @@ configure_file(
 
 install(
     FILES ${CMAKE_CURRENT_BINARY_DIR}/00-grc-docs.conf
-    DESTINATION ${GR_PREFSDIR}
+    DESTINATION ${GR_PREFSDIR_relative_to_prefix}
 )
 
 ########################################################################

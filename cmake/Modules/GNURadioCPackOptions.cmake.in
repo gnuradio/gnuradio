@@ -1,13 +1,16 @@
 # This file is configured at cmake time, loaded at cpack time.
 
+set(CPACK_COMPONENT_UNSPECIFIED_HIDDEN TRUE)
+set(CPACK_COMPONENT_UNSPECIFIED_REQUIRED TRUE)
+
 # NSIS specific settings - should use Wix but why not give the option
 if(CPACK_GENERATOR MATCHES "NSIS")
-  set(CPACK_NSIS_MUI_ICON "@CMAKE_SOURCE_DIR@/<PLACEHOLDER>")
+  set(CPACK_NSIS_MUI_ICON "@CMAKE_SOURCE_DIR@/release/resources/icons/gnuradio_logo_icon-square.ico")
   set(CPACK_NSIS_HELP_LINK "https://wiki.gnuradio.org/")
   set(CPACK_NSIS_URL_INFO_ABOUT "https://gnuradio.org")
   set(CPACK_NSIS_INSTALLED_ICON_NAME "bin\\\\grc.exe")
   set(CPACK_NSIS_MENU_LINKS
-    https://gnuradio.org" "GNU Radio")
+    "https://gnuradio.org" "GNU Radio")
   set(CPACK_NSIS_MODIFY_PATH ON)
 endif()
 
@@ -22,7 +25,7 @@ if(CPACK_GENERATOR MATCHES "WIX")
   )
 
   set(CPACK_WIX_PRODUCT_ICON
-    "@CMake_SOURCE_DIR@/Utilities/Release/CMakeLogo.ico"
+    "@CMAKE_SOURCE_DIR@/release/resources/icons/gnuradio_logo_icon-square.ico"
   )
 
   set_property(INSTALL "https://wiki.gnuradio.org/" PROPERTY
@@ -35,9 +38,9 @@ if(CPACK_GENERATOR MATCHES "WIX")
 
   set(CPACK_WIX_LIGHT_EXTRA_FLAGS "-dcl:high")
 
-  if(@GRBuildReleaseValidation@)
-    list(APPEND CPACK_WIX_LIGHT_EXTRA_FLAGS "-sval")
-  endif()
+  # if(@GRBuildReleaseValidation@)
+  #   list(APPEND CPACK_WIX_LIGHT_EXTRA_FLAGS "-sval")
+  # endif()
 
   # set(CPACK_WIX_UI_BANNER
   #   "@CMAKE_SOURCE_DIR@/Release/win32/ui_banner.jpg"
@@ -47,12 +50,13 @@ if(CPACK_GENERATOR MATCHES "WIX")
   #   "@CMAKE_SOURCE_DIR@/Release/win32/ui_dialog.jpg"
   # )
 
-  set(CPACK_WIX_EXTRA_SOURCES
-    "@CMAKE_SOURCE_DIR@/Release/win32/install_dir.wxs"
-    "@CMAKE_SOURCE_DIR@/Release/win32/cmake_extra_dialog.wxs"
-  )
-  set(CPACK_WIX_PATCH_FILE "@CMAKE_SOURCE_DIR@/Release/win32/wix_patch.xml")
-  set(CPACK_WIX_TEMPLATE "@CMAKE_SOURCE_DIR@/Release/win32/WIX.template")
+  # set(CPACK_WIX_EXTRA_SOURCES
+  #   "@CMAKE_SOURCE_DIR@/Release/win32/install_dir.wxs"
+  #   "@CMAKE_SOURCE_DIR@/Release/win32/cmake_extra_dialog.wxs"
+  # )
+  set(CPACK_WIX_PATCH_FILE "@CMAKE_SOURCE_DIR@/release/win32/post_install_patch.xml")
+  # set(CPACK_WIX_PATCH_FILE "@CMAKE_SOURCE_DIR@/Release/win32/wix_patch.xml")
+  # set(CPACK_WIX_TEMPLATE "@CMAKE_SOURCE_DIR@/Release/win32/WIX.template")
 endif()
 
 # Mac DMG specific settings
