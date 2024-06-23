@@ -69,6 +69,7 @@ class FlowgraphScene(QtWidgets.QGraphicsScene, base.Component):
 
         self.dummy_arrow = None
         self.start_port = None
+        self.end_port = None
         self._elements_to_draw = []
         self._external_updaters = {}
 
@@ -281,7 +282,6 @@ class FlowgraphScene(QtWidgets.QGraphicsScene, base.Component):
             return
 
         self.clickPos = event.scenePos()
-        selected = self.selectedItems()
         self.moving_blocks = False
 
         if g_item and not isinstance(g_item, DummyConnection):
@@ -289,23 +289,10 @@ class FlowgraphScene(QtWidgets.QGraphicsScene, base.Component):
             if c_item.is_block:
                 self.moving_blocks = True
             elif c_item.is_port:
-                new_con = None
-                self.start_port = None
-                if len(selected) == 1:
-                    if selected[0].core.is_port and selected[0] != g_item:
-                        if selected[0].core.is_source and c_item.is_sink:
-                            new_con = self.core.connect(selected[0].core, c_item)
-                        elif selected[0].core.is_sink and c_item.is_source:
-                            new_con = self.core.connect(c_item, selected[0].core)
-                if new_con:
-                    log.debug("Created connection (click)")
-                    self.addItem(new_con.gui)
-                    self.newElement.emit(new_con)
-                    self.update()
-                else:
-                    if c_item.is_source:
-                        self.start_port = g_item
-
+                if c_item.is_source:
+                    self.start_port = g_item
+                elif c_item.is_sink:
+                    self.end_port = g_item
         if event.button() == Qt.LeftButton:
             self.mousePressed = True
             super(FlowgraphScene, self).mousePressEvent(event)
@@ -338,10 +325,20 @@ class FlowgraphScene(QtWidgets.QGraphicsScene, base.Component):
                     self.addItem(new_con.gui)
                     self.newElement.emit(new_con)
                     self.update()
+                    self.start_port = None
+                    self.end_port = None
             self.dummy_arrow = None
         else:
             if self.clickPos != event.scenePos() and self.moving_blocks:
                 self.itemMoved.emit(event.scenePos() - self.clickPos)
+            elif (self.start_port != None) and (self.end_port != None):
+                log.debug("Created connection (click)")
+                new_con = self.core.connect(self.start_port.core, self.end_port.core)
+                self.addItem(new_con.gui)
+                self.newElement.emit(new_con)
+                self.update()
+                self.start_port = None
+                self.end_port = None
         self.mousePressed = False
         super(FlowgraphScene, self).mouseReleaseEvent(event)
 
