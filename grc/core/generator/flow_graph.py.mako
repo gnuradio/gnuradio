@@ -227,7 +227,7 @@ gr.io_signature.makev(${len(io_sigs)}, ${len(io_sigs)}, [${', '.join(size_strs)}
 % if generate_options == 'qt_gui':
 
     def closeEvent(self, event):
-        self.settings = Qt.QSettings("GNU Radio", "${class_name}")
+        self.settings = Qt.QSettings("gnuradio/flowgraphs", "${class_name}")
         self.settings.setValue("geometry", self.saveGeometry())
         self.stop()
         self.wait()
