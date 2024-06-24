@@ -9,49 +9,42 @@
 # fail on any unhandled error
 set -e
 
-# Check we can find gr_modtool; else, exit
-command -v gr_modtool || exit 0
+PY="$1"
+SRCDIR="$2"
+MODNAME="$3"
+BLOCKNAME="$4"
+NEWNAME="$5"
+WORKDIR="$6"
 
-tmpdir="$(mktemp -d)"
-cd "${tmpdir}"
+MODTOOL="$1 $2/gr_modtool"
 
-function cleanup(){
-  cd ..
-  rm -rf -- "${tmpdir}"
-  exit $1
-}
-# No interference from user config
-export GR_PREFS_PATH="${tmpdir}/doesnotexist"
+echo "using '$1'\n$MODTOOL" >&2
 
-echo Check that we fail if make a new module in batch mode w/o name
-gr_modtool newmod --batch && cleanup 1
+cd "${WORKDIR}"
 
-echo Make new module
-modn="testmod"
-gr_modtool newmod --batch ${modn}
+echo "Check that we fail if make a new module in batch mode w/o name"
+$MODTOOL newmod --batch && exit 1
+
+echo "Make new module"
+$MODTOOL newmod --batch ${MODNAME}
 
 # Change into directory
-cd gr-${modn} 
+cd gr-${MODNAME} 
 
-echo Check we fail on incomplete add commands
-blockn="tunnelpy"
-gr_modtool add --batch && cleanup 2
-gr_modtool add --batch ${blockn} && cleanup 3
-gr_modtool add --batch --lang python ${blockn} && cleanup 4
-gr_modtool add --batch --block-type sink ${blockn} && cleanup 5
+echo "Check we fail on incomplete add commands"
+$MODTOOL add --batch && exit 2
+$MODTOOL add --batch ${BLOCKNAME} && exit 3
+$MODTOOL add --batch --lang python ${BLOCKNAME} && exit 4
+$MODTOOL add --batch --block-type sink ${BLOCKNAME} && exit 5
 
-echo Make new block
-gr_modtool add --batch --lang python --block-type sink --copyright "GNU Radio QA" ${blockn}
+echo "Make new block"
+$MODTOOL add --batch --lang python --block-type sink --copyright "GNU Radio QA" ${BLOCKNAME}
 
-echo Rename block
-newname="domythesis"
-gr_modtool rename --batch && cleanup 6
-gr_modtool rename --batch ${blockn} ${newname}
-echo ... and back
-gr_modtool rename --batch ${newname} ${blockn}
+echo "Rename block"
+$MODTOOL rename --batch && exit 6
+$MODTOOL rename --batch ${BLOCKNAME} ${NEWNAME}
+echo "... and back"
+$MODTOOL rename --batch ${NEWNAME} ${BLOCKNAME}
 
 # Can't test XML update, no XML
 
-
-# Finally, everything having happened:
-cleanup 0
