@@ -48,7 +48,7 @@ class GenericHeaderParser(BlockTool):
         self.parsed_data = {}
         self.addcomments = blocktool_comments
         self.define_symbols = ('BOOST_ATOMIC_DETAIL_EXTRA_BACKEND_GENERIC', 'DISABLE_LOGGER_H')
-        if(define_symbols):
+        if (define_symbols):
             self.define_symbols += define_symbols
         self.include_paths = None
         if (include_paths):
@@ -318,10 +318,17 @@ class GenericHeaderParser(BlockTool):
                 xml_generator_path=generator_path,
                 xml_generator=generator_name,
                 include_paths=self.include_paths,
-                compiler='gcc',
+                compiler='g++',
                 undefine_symbols=['__PIE__'],
                 define_symbols=self.define_symbols,
-                cflags='-std=c++17 -fPIC')
+                # There seems to be a bug where on some platforms, GCC fails because it finds the
+                # _GLIBCXX_OPERATOR_DELETE and considers it a "non-usual deallocation function".
+                # Even if that is inherent to C++17. Anyways, in
+                # https://github.com/gnuradio/gnuradio/issues/6477 user boatbod convinces us that
+                # adding -fsized_deallocations helps this. Neither we nor the GCC mailing lists
+                # are perfectly sure why that is, but it does help. Since this is just for binding,
+                # none of the thus-generated code ends up anywhere, so here we go:
+                cflags='-std=c++17 -fPIC -fsized-deallocation')
             decls = parser.parse(
                 [self.target_file], xml_generator_config,
                 compilation_mode=parser.COMPILATION_MODE.ALL_AT_ONCE)
