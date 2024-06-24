@@ -14,6 +14,7 @@ import logging.handlers
 import os
 import platform
 import sys
+from pathlib import Path
 
 
 VERSION_AND_DISCLAIMER_TEMPLATE = """\
@@ -201,7 +202,9 @@ def get_config_file_path(config_file: str = "grc.conf") -> str:
             return oldpath
         # Default to the correct path if both are configured.
         # neither old, nor new path exist: create new path, return that
-        os.makedirs(newpath, exist_ok=True)
+        path_parts = Path(newpath).parts[:-1]
+        pathdir = os.path.join(*path_parts)
+        os.makedirs(pathdir, exist_ok=True)
         return newpath
     except ImportError:
         log.warn("Could not retrieve GNU Radio configuration directory from GNU Radio. Trying defaults.")
@@ -214,7 +217,9 @@ def get_config_file_path(config_file: str = "grc.conf") -> str:
                      f"files to '{newpath}'.")
             return oldpath
         # neither old, nor new path exist: create new path, return that
-        os.makedirs(xdgcand, exist_ok=True)
+        path_parts = Path(xdgcand).parts[:-1]
+        pathdir = os.path.join(*path_parts)
+        os.makedirs(pathdir, exist_ok=True)
         return xdgcand
 
 
