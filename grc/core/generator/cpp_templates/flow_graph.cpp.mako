@@ -56,7 +56,8 @@ ${class_name}::${class_name} (${param_str}) ${initializer_str} {
     this->top_grid_layout = new QGridLayout();
     this->top_layout->addLayout(this->top_grid_layout);
 
-    this->settings = new QSettings("GNU Radio", "${class_name}");
+    this->settings = new QSettings("gnuradio/flowgraphs", "${class_name}");
+    this->restoreGeometry(this->settings->value("geometry").toByteArray());
 % endif
 
 % if flow_graph.get_option('thread_safe_setters'):
@@ -99,6 +100,11 @@ ${class_name}::~${class_name} () {
 % for var in parameters + variables:
 ${var.vtype} ${class_name}::get_${var.name} () const {
     return this->${var.name};
+}
+
+void ${class_name}::closeEvent(QCloseEvent *event) {
+this->settings->setValue("geometry",this->saveGeometry());
+event->accept();
 }
 
 void ${class_name}::set_${var.name} (${var.vtype} ${var.name}) {
