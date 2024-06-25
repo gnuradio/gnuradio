@@ -29,6 +29,7 @@ ${inc}
 #include <QGridLayout>
 #include <QSettings>
 #include <QApplication>
+#include <QCloseEvent>
 % endif
 
 % if parameters:
@@ -59,6 +60,7 @@ private:
     QVBoxLayout *top_layout;
     QGridLayout *top_grid_layout;
     QSettings *settings;
+    void closeEvent(QCloseEvent *event);
 % endif
 
 
