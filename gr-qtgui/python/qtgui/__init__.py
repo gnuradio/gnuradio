@@ -36,6 +36,7 @@ from . import util
 
 from .compass import GrCompass
 from .togglebutton import ToggleButton
+from .numeric_entry import NumericEntry
 from .msgpushbutton import MsgPushButton
 from .msgcheckbox import MsgCheckBox
 from .digitalnumbercontrol import MsgDigitalNumberControl
