@@ -18,6 +18,7 @@
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
+#include <pybind11/numpy.h>
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 
@@ -107,6 +108,25 @@ void bind_generic_decoder(py::module& m)
         .def("get_iterations",
              &generic_decoder::get_iterations,
              D(generic_decoder, get_iterations))
+
+        .def("decode",
+             [](generic_decoder& self,
+                const py::array_t<float, py::array::c_style | py::array::forcecast>&
+                    array) {
+                 py::buffer_info inb = array.request();
+                 if (inb.ndim != 1) {
+                     throw std::runtime_error("Only ONE-dimensional vectors allowed!");
+                 }
+                 if (inb.size != self.get_input_size()) {
+                     throw std::runtime_error("Input vector size != input_size!");
+                 }
+                 auto result = py::array_t<unsigned char>(self.get_output_size());
+                 py::buffer_info resb = result.request();
+
+                 self.generic_work((const unsigned char*)inb.ptr,
+                                   (unsigned char*)resb.ptr);
+                 return result;
+             })
 
         ;
 
