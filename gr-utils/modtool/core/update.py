@@ -39,20 +39,20 @@ class ModToolUpdate(ModTool):
 
     def __init__(self, blockname=None, complete=False, include_blacklisted=False, **kwargs):
         ModTool.__init__(self, blockname, **kwargs)
-        self.info['complete'] = complete
-        self.info['include_blacklisted'] = include_blacklisted
+        self.info.complete = complete
+        self.info.include_blacklisted = include_blacklisted
 
     def validate(self):
         """ Validates the arguments """
         ModTool._validate(self)
-        if self.info['complete']:
+        if self.info.complete:
             return
-        if not self.info['blockname'] or self.info['blockname'].isspace():
+        if not self.info.blockname or self.info.blockname.isspace():
             raise ModToolException('Block name not specified!')
         block_candidates = get_xml_candidates()
-        if self.info['blockname'] not in block_candidates:
+        if self.info.blockname not in block_candidates:
             choices = [
-                x for x in block_candidates if self.info['blockname'] in x]
+                x for x in block_candidates if self.info.blockname in x]
             if len(choices) > 0:
                 print("Suggested alternatives: " + str(choices))
             raise ModToolException("The XML bindings does not exists!")
@@ -63,17 +63,17 @@ class ModToolUpdate(ModTool):
             self.validate()
         logger.warning(
             "Warning: This is an experimental feature. Please verify the bindings.")
-        module_name = self.info['modname']
+        module_name = self.info.modname
         path = './grc/'
         conv = Converter(path, path)
-        if self.info['complete']:
+        if self.info.complete:
             blocks = get_xml_candidates()
         else:
-            blocks = [self.info['blockname']]
+            blocks = [self.info.blockname]
         for blockname in blocks:
             xml_file = f"{module_name}_{blockname}.xml"
             yml_file = f"{module_name}_{blockname}.block.yml"
-            if not conv.load_block_xml(path + xml_file, self.info["include_blacklisted"]):
+            if not conv.load_block_xml(path + xml_file, self.info.include_blacklisted):
                 continue
             logger.info(f"Converted {xml_file} to {yml_file}")
             os.remove(path + xml_file)

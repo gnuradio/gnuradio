@@ -18,7 +18,7 @@ from os import path
 try:
     from pylint.epylint import py_run
     skip_pylint_test = False
-except:
+except ImportError:
     skip_pylint_test = True
 
 try:  # for debugging, full path must be given
@@ -29,7 +29,9 @@ try:  # for debugging, full path must be given
     from gnuradio.modtool.core import ModToolMakeYAML
     from gnuradio.modtool.core import ModToolRename
     from gnuradio.modtool.core import ModToolRemove
-except:
+    from gnuradio.modtool.core import Blocktype
+    from gnuradio.modtool.core import Lang
+except ImportError:
     from modtool.core import ModToolNewModule
     from modtool.core import ModToolAdd
     from modtool.core import ModToolDisable
@@ -37,6 +39,8 @@ except:
     from modtool.core import ModToolMakeYAML
     from modtool.core import ModToolRename
     from modtool.core import ModToolRemove
+    from modtool.core import Blocktype
+    from modtool.core import Lang
 
 
 class TestModToolCore(unittest.TestCase):
@@ -73,9 +77,12 @@ class TestModToolCore(unittest.TestCase):
             self.f_newmod = True
         else:
             try:
-                args = {'blockname': 'square_ff', 'block_type': 'general',
-                        'lang': 'cpp', 'directory': self.test_dir + '/gr-howto',
-                        'add_python_qa': True}
+                args = {'blockname': 'square_ff',
+                        'block_type': 'general',
+                        'lang': 'cpp',
+                        'directory': self.test_dir + '/gr-howto',
+                        'add_python_qa': True,
+                        'batch': True}
                 ModToolAdd(**args).run()
             except (TypeError, ModToolException):
                 self.f_add = True
@@ -121,11 +128,11 @@ class TestModToolCore(unittest.TestCase):
         # module name not specified
         with self.assertRaises(ModToolException) as context_manager:
             test_obj.run()
-        test_obj.info['modname'] = 'howto'
+        test_obj.info.modname = 'howto'
         test_obj.directory = self.test_dir
         # directory already exists
         self.assertRaises(ModToolException, test_obj.run)
-        test_obj.info['modname'] = 'test1'
+        test_obj.info.modname = 'test1'
         test_obj.run()
         self.assertTrue(path.isdir(self.test_dir + '/gr-test1'))
         self.assertTrue(path.isdir(self.test_dir + '/gr-test1/lib'))
@@ -200,11 +207,11 @@ class TestModToolCore(unittest.TestCase):
         test_obj.dir = module_dir
         # missing blocktype, lang, blockname
         self.assertRaises(ModToolException, test_obj.run)
-        test_obj.info['blocktype'] = 'general'
+        test_obj.info.blocktype = Blocktype('general')
         # missing lang, blockname
         self.assertRaises(ModToolException, test_obj.run)
-        test_obj.info['lang'] = 'python'
-        test_obj.info['blockname'] = 'mul_ff'
+        test_obj.info.lang = Lang('python')
+        test_obj.info.blockname = 'mul_ff'
         test_obj.add_py_qa = True
         test_obj.run()
         self.assertTrue(path.exists(
@@ -227,11 +234,11 @@ class TestModToolCore(unittest.TestCase):
         test_obj.dir = module_dir
         # missing blocktype, lang, blockname
         self.assertRaises(ModToolException, test_obj.run)
-        test_obj.info['blocktype'] = 'general'
+        test_obj.info.blocktype = Blocktype('general')
         # missing lang, blockname
         self.assertRaises(ModToolException, test_obj.run)
-        test_obj.info['lang'] = 'python'
-        test_obj.info['blockname'] = 'mul_ff'
+        test_obj.info.lang = Lang('python')
+        test_obj.info.blockname = 'mul_ff'
         test_obj.add_py_qa = True
         test_obj.run()
         self.assertTrue(path.exists(
@@ -293,8 +300,8 @@ class TestModToolCore(unittest.TestCase):
 
         ## The check for object instantiation ##
         test_obj = ModToolRename()
-        test_obj.info['oldname'] = 'div_ff'
-        test_obj.info['newname'] = 'sub_ff'
+        test_obj.info.oldname = 'div_ff'
+        test_obj.info.newname = 'sub_ff'
         test_obj.run()
         self.assertTrue(path.exists(
             path.join(module_dir, 'lib', 'sub_ff_impl.h')))
