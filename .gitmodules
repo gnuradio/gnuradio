@@ -1,0 +1,3 @@
+[submodule "grc"]
+	path = grc
+	url = git@github.com:ZakyHermawan/grc.git
