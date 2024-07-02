@@ -1,0 +1,3 @@
+[submodule "grc"]
+	path = grc
+	url = https://github.com/gnuradio/gnuradio-companion.git

@@ -38,6 +38,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
       with:
+        submodules: recursive
         fetch-depth: 0
         ref: ${{ github.event.inputs.build_branch }}
     - uses: actions/setup-python@v1

@@ -44,9 +44,11 @@ jobs:
       with:
         fetch-depth: 0
         ref: ${{ github.event.inputs.build_branch }}
+        submodules: recursive
     - uses: actions/setup-python@v1
       with:
         python-version: "3.x"
+        submodules: recursive
     - run: apt-get update && apt-get install -yq devscripts debhelper dh-python
     - name: Import GPG key
       id: import_gpg
