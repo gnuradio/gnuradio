@@ -10,6 +10,10 @@ flags: [ show_id ]
 parameters:
 """
 
+FUNCTIONCALL = """\
+field{0}:value{0},\
+"""
+
 TEMPLATES = """\
 
 templates:
@@ -23,17 +27,6 @@ templates:
             %>
             % if len(str(field)) > 2:
             ${{field}}: ${{value}},
-            % endif
-            % endfor
-        }})
-    var_value: |-
-        struct({{
-            % for i in range({0}):
-            <%
-                field = context.get('field' + str(i))
-            %>
-            % if len(str(field)) > 2:
-            ${{field}}: ${{field}},
             % endif
             % endfor
         }})
@@ -86,8 +79,8 @@ def make_yml(num_fields):
     return ''.join((
         HEADER.format(num_fields),
         FIELD0, ''.join(FIELDS.format(i) for i in range(1, num_fields)),
-        ''.join(VALUES.format(i) for i in range(num_fields)),
-        'value: ${value}\n\nasserts:\n',
+        ''.join(VALUES.format(i) for i in range(num_fields)),'value: ${struct({',
+        ''.join(FUNCTIONCALL.format(i) for i in range(num_fields)),'})}\n\nasserts:\n',
         ''.join(ASSERTS.format(i) for i in range(num_fields)),
         ''.join(TEMPLATES.format(num_fields)),
         FOOTER
