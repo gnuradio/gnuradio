@@ -11,8 +11,7 @@ class Config(CoreConfig):
 
     name = 'GNU Radio Companion'
 
-    gui_prefs_file = os.environ.get(
-        'GRC_QT_PREFS_PATH', os.path.join(get_config_file_path(), 'grc_qt.conf'))
+    gui_prefs_file = os.environ.get('GRC_QT_PREFS_PATH', get_config_file_path('grc_qt.conf'))
 
     def __init__(self, install_prefix, *args, **kwargs):
         CoreConfig.__init__(self, *args, **kwargs)
