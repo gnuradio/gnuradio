@@ -7,6 +7,57 @@ Versioning](http://semver.org/spec/v2.0.0.html), starting with version 3.7.12.0.
 
 Older Logs can be found in `docs/RELEASE-NOTES-*`.
 
+## [3.10.11.0] - 2024-07-10
+
+### Changed
+
+#### Project
+- Const (keyword) cleanup in a large number of files. QtGUI code uses const in many more places.
+
+#### Runtime
+- Add `persistent()` function to gr paths module. This function returns either the value of the `XDG_CACHE_HOME` environment variable, or `appdata()/.local/state`.
+
+#### GRC
+- Work continues on the Qt version of GRC (`gnuradio-companion --qt`). While the Gtk version is still the default, we're getting close to the point where the Qt version can be the default.
+- Generated Python code now includes a startup event (`flowgraph_started`) to the top level class. This was added specifically to avoid a race in the Variable Function Probe block, and may be useful elsewhere.
+- Struct variables have not been usable since around v3.8. Fixed!
+- Paths are now based on gr paths, where they were previous hardcoded to the user's home directory.
+- C++ hier block code paths fixed (so hier blocks work again).
+- Block connection line shape and width are now preferences.
+
+#### gr-blocks
+- New Burst To Stream block transforms a bursty tagged stream into a continuous stream by inserting zeros in the output between input packets whenever no packets are available at the input.
+
+#### gr-digital
+- FLL Band Edge power calculations fixed, along with thread safety issues.
+
+#### gr-fec
+- Unused RS code removed - unlikely anyone will notice.
+
+#### gr-filter
+- Numpy `float_` changed to `float64` for Numpy 2.0 compatibility.
+
+#### gr-fft
+- Vector version of FFT `fft_v` library function (calls fftw) thread safety improved.
+
+#### gr-uhd
+- Do not require PyQt5 for non-graphical configurations.
+
+#### modtool
+- Many bug fixes and cleanups, resulting in more reliable operation. That sounds really good, right?
+- Remove dependency on the "click" package.
+- Appending new blocks to CMake files respects closing parens.
+
+#### Build system and packaging
+- CMake minimum versions were out of sync in different places - fixed.
+- Incorrect Qwt maximum version removed.
+- Conda re-rendered.
+
+#### Testing
+- Add Ubuntu 24.04 LTS to CI
+- Remove Fedora 38 from CI
+- Conda: build with VS2022 for Windows
+
 ## [3.10.10.0] - 2024-04-06
 
 ### Changed
