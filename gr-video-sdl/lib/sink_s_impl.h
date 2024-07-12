@@ -46,17 +46,17 @@ protected:
     int copy_plane_to_surface(int plane, int noutput_items, const short* src_pixels);
 
     float d_framerate;
-    int d_wanted_frametime_ms;
+    int d_wanted_frametime_ms = 0;
     int d_width;
     int d_height;
     int d_dst_width;
     int d_dst_height;
-    int d_current_line;
-    SDL_Surface* d_screen;
-    SDL_Overlay* d_image;
+    int d_current_line = 0;
+    SDL_Surface* d_screen = nullptr;
+    SDL_Overlay* d_image = nullptr;
     SDL_Rect d_dst_rect;
-    float d_avg_delay;
-    unsigned int d_wanted_ticks;
+    float d_avg_delay = 0.0f;
+    unsigned int d_wanted_ticks = 0;
 
 public:
     sink_s_impl(double framerate, int width, int height, int dst_width, int dst_height);

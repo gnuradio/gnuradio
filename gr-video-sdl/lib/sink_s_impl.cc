@@ -40,16 +40,10 @@ sink_s_impl::sink_s_impl(
                  io_signature::make(0, 0, 0)),
       d_chunk_size(width * height),
       d_framerate(framerate),
-      d_wanted_frametime_ms(0),
       d_width(width),
       d_height(height),
       d_dst_width(dst_width),
-      d_dst_height(dst_height),
-      d_current_line(0),
-      d_screen(NULL),
-      d_image(NULL),
-      d_avg_delay(0.0),
-      d_wanted_ticks(0)
+      d_dst_height(dst_height)
 {
     if (framerate <= 0.0)
         d_wanted_frametime_ms = 0; // Go as fast as possible
