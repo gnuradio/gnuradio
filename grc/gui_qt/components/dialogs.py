@@ -23,6 +23,7 @@ class ErrorsDialog(QDialog):
         self.buttonBox = QDialogButtonBox(buttons)
         self.buttonBox.rejected.connect(self.reject)  # close
         self.treeview = QTreeView()
+        self.treeview.setEditTriggers(QTreeView.NoEditTriggers)
         self.model = QStandardItemModel()
         self.treeview.setModel(self.model)
         self.layout = QVBoxLayout()
@@ -33,7 +34,7 @@ class ErrorsDialog(QDialog):
 
     def update(self):
         # TODO: Make sure the columns are wide enough
-        self.model = QStandardItemModel()
+        self.model.clear()
         self.model.setHorizontalHeaderLabels(['Source', 'Aspect', 'Message'])
         for element, message in self.flowgraph.iter_error_messages():
             if element.is_block:
@@ -51,7 +52,6 @@ class ErrorsDialog(QDialog):
             else:
                 src = aspect = QStandardItem('')
             self.model.appendRow([src, aspect, QStandardItem(message)])
-        self.treeview.setModel(self.model)
 
 
 class PropsDialog(QDialog):
