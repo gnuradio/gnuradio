@@ -365,6 +365,19 @@ blocks:
     coordinate: [904, 11]
     rotation: 0
     state: enabled
+- name: import_0
+  id: import
+  parameters:
+    alias: ''
+    comment: ''
+    imports: from gnuradio.fft import window
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1384, 12.0]
+    rotation: 0
+    state: enabled
 - name: mod_header
   id: virtual_sink
   parameters:
