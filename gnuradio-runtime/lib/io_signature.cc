@@ -16,6 +16,11 @@
 #include <spdlog/tweakme.h>
 
 #include <spdlog/fmt/fmt.h>
+#if __has_include(<spdlog/fmt/ranges.h>)
+#include <spdlog/fmt/ranges.h>
+#elif __has_include(<spdlog/fmt/bundled/ranges.h>)
+#include <spdlog/fmt/bundled/ranges.h>
+#endif
 #include <string_view>
 #include <algorithm>
 #include <memory>
