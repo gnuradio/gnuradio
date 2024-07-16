@@ -239,6 +239,8 @@ class PropsDialog(Gtk.Dialog):
             if urlparse(url).scheme not in ("", "file"):
                 icon += "🌐"
             self._docs_link.set_markup(f'<a href="{url}">{icon} Visit Documentation Page</a>')
+        elif self._block.is_connection:
+            self._docs_link.set_markup('Connection Properties')
         else:
             self._docs_link.set_markup('Out of Tree Block, No documentation URL specified')
 
