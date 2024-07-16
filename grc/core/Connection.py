@@ -23,7 +23,9 @@ class Connection(Element):
     """
 
     is_connection = True
+    category = []
     documentation = {'': ''}
+    doc_url = ''
 
     def __init__(self, parent, source, sink):
         """
