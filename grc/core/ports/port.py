@@ -163,7 +163,7 @@ class Port(Element):
             self.set_evaluated('vlen', port.vlen)
             self.domain = port.domain
         except AttributeError:
-            self.domain = Constants.DEFAULT_DOMAIN
+            pass
 
     def add_clone(self):
         """
