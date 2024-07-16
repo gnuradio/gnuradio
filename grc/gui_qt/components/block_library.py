@@ -48,6 +48,7 @@ class BlockSearchBar(QLineEdit):
             self.parent.populate_tree(self.parent._block_tree)
         else:
             log.info(f"No block named {label}")
+            self.parent.reset()
 
 
 def get_items(model):
@@ -165,7 +166,7 @@ class BlockLibrary(QDockWidget, base.Component):
         self.populate_tree(self._block_tree)
 
         completer = QCompleter(self._block_tree_flat.keys())
-        completer.setCompletionMode(QCompleter.InlineCompletion)
+        completer.setCompletionMode(QCompleter.PopupCompletion)
         completer.setCaseSensitivity(Qt.CaseInsensitive)
         completer.setFilterMode(Qt.MatchContains)
         self._search_bar.setCompleter(completer)
