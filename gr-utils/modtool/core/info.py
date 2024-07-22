@@ -39,18 +39,18 @@ class ModToolInfo(ModTool):
         if mod_info['modname'] is None:
             raise ModToolException(
                 '{}' if self._python_readable else "No module found.")
-        if self.info['version'] == '36' and (
+        if self.info.version == '36' and (
                 os.path.isdir(os.path.join('include', mod_info['modname'])) or
                 os.path.isdir(os.path.join(
                     'include', 'gnuradio', mod_info['modname']))
         ):
-            self.info['version'] = '37'
+            self.info.version = '37'
         if not os.path.isfile(os.path.join('cmake', 'Modules', 'FindCppUnit.cmake')):
-            self.info['version'] = '38'
+            self.info.version = '38'
             if os.path.isdir(os.path.join('include', 'gnuradio', mod_info['modname'])):
-                self.info['version'] = '310'
-        mod_info['version'] = self.info['version']
-        if 'is_component' in list(self.info.keys()) and self.info['is_component']:
+                self.info.version = '310'
+        mod_info['version'] = self.info.version
+        if 'is_component' in list(self.info.keys()) and self.info.is_component:
             mod_info['is_component'] = True
         mod_info['incdirs'] = []
         mod_incl_dir = os.path.join(mod_info['base_dir'], 'include')

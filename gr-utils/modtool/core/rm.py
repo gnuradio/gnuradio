@@ -28,12 +28,12 @@ class ModToolRemove(ModTool):
 
     def __init__(self, blockname=None, **kwargs):
         ModTool.__init__(self, blockname, **kwargs)
-        self.info['pattern'] = blockname
+        self.info.pattern = blockname
 
     def validate(self):
         """ Validates the arguments """
         ModTool._validate(self)
-        if not self.info['pattern'] or self.info['pattern'].isspace():
+        if not self.info.pattern or self.info.pattern.isspace():
             raise ModToolException("Incorrect blockname (Regex)!")
 
     def run(self):
@@ -47,10 +47,10 @@ class ModToolRemove(ModTool):
         def _remove_cc_test_case(filename=None, ed=None):
             """ Special function that removes the occurrences of a qa*.cc file
             from the CMakeLists.txt. """
-            modname_ = self.info['modname']
+            modname_ = self.info.modname
             if filename[:2] != 'qa':
                 return
-            if self.info['version'] == '37':
+            if self.info.version == '37':
                 (base, ext) = os.path.splitext(filename)
                 if ext == '.h':
                     remove_pattern_from_file(self._file['qalib'],
@@ -64,7 +64,7 @@ class ModToolRemove(ModTool):
                                     r'\$\{CMAKE_CURRENT_SOURCE_DIR\}/%s' % filename,
                                     to_ignore_start=f'APPEND test_{modname_}_sources')
                     self.scm.mark_file_updated(ed.filename)
-            elif self.info['version'] in ['38', '310']:
+            elif self.info.version in ['38', '310']:
                 (base, ext) = os.path.splitext(filename)
                 if ext == '.cc':
                     ed.remove_value(
@@ -90,7 +90,7 @@ class ModToolRemove(ModTool):
 
         # Go, go, go!
         if not self.skip_subdirs['python']:
-            py_files_deleted = self._run_subdir(self.info['pydir'], ('*.py',), ('GR_PYTHON_INSTALL',),
+            py_files_deleted = self._run_subdir(self.info.pydir, ('*.py',), ('GR_PYTHON_INSTALL',),
                                                 cmakeedit_func=_remove_py_test_case)
             for f in py_files_deleted:
                 remove_pattern_from_file(
@@ -99,20 +99,20 @@ class ModToolRemove(ModTool):
                     self._file['pyinit'], fr'.*from\s+{f[:-3]}\s+import.*\n')
 
             pb_files_deleted = self._run_subdir(os.path.join(
-                self.info['pydir'], 'bindings'), ('*.cc',), ('list',))
+                self.info.pydir, 'bindings'), ('*.cc',), ('list',))
 
             pbdoc_files_deleted = self._run_subdir(os.path.join(
-                self.info['pydir'], 'bindings', 'docstrings'), ('*.h',), ('',))
+                self.info.pydir, 'bindings', 'docstrings'), ('*.h',), ('',))
 
             # Update python_bindings.cc
             blocknames_to_delete = []
-            if self.info['blockname']:
+            if self.info.blockname:
                 # A complete block name was given
-                blocknames_to_delete.append(self.info['blockname'])
-            elif self.info['pattern']:
+                blocknames_to_delete.append(self.info.blockname)
+            elif self.info.pattern:
                 # A regex resembling one or several blocks were given
                 blocknames_to_delete = get_block_names(
-                    self.info['pattern'], self.info['modname'])
+                    self.info.pattern, self.info.modname)
             else:
                 raise ModToolException("No block name or regex was specified!")
             for blockname in blocknames_to_delete:
@@ -128,7 +128,7 @@ class ModToolRemove(ModTool):
                              cmakeedit_func=_remove_cc_test_case)
         if not self.skip_subdirs['include']:
             incl_files_deleted = self._run_subdir(
-                self.info['includedir'], ('*.h',), ('install',))
+                self.info.includedir, ('*.h',), ('install',))
         if not self.skip_subdirs['grc']:
             self._run_subdir('grc', ('*.yml',), ('install',))
 
@@ -148,35 +148,35 @@ class ModToolRemove(ModTool):
             files = files + sorted(glob.glob(f"{path}/{g}"))
         files_filt = []
         logger.info(f"Searching for matching files in {path}/:")
-        if self.info['blockname']:
+        if self.info.blockname:
             # Ensure the blockname given is not confused with similarly named blocks
             blockname_pattern = ''
-            if path == self.info['pydir']:
-                blockname_pattern = f"^(qa_)?{self.info['blockname']}.py$"
-            elif path == os.path.join(self.info['pydir'], 'bindings'):
-                blockname_pattern = f"^{self.info['blockname']}_python.cc$"
-            elif path == os.path.join(self.info['pydir'], 'bindings', 'docstrings'):
-                blockname_pattern = f"^{self.info['blockname']}_pydoc_template.h$"
+            if path == self.info.pydir:
+                blockname_pattern = f"^(qa_)?{self.info.blockname}.py$"
+            elif path == os.path.join(self.info.pydir, 'bindings'):
+                blockname_pattern = f"^{self.info.blockname}_python.cc$"
+            elif path == os.path.join(self.info.pydir, 'bindings', 'docstrings'):
+                blockname_pattern = f"^{self.info.blockname}_pydoc_template.h$"
             elif path == 'lib':
-                blockname_pattern = f"^{self.info['blockname']}_impl(\\.h|\\.cc)$"
-            elif path == self.info['includedir']:
-                blockname_pattern = f"^{self.info['blockname']}.h$"
+                blockname_pattern = f"^{self.info.blockname}_impl(\\.h|\\.cc)$"
+            elif path == self.info.includedir:
+                blockname_pattern = f"^{self.info.blockname}.h$"
             elif path == 'grc':
-                blockname_pattern = f"^{self.info['modname']}_{self.info['blockname']}.block.yml$"
+                blockname_pattern = f"^{self.info.modname}_{self.info.blockname}.block.yml$"
             for f in files:
                 if re.search(blockname_pattern, os.path.basename(f)) is not None:
                     files_filt.append(f)
-        elif self.info['pattern']:
+        elif self.info.pattern:
             # A regex resembling one or several blocks were given as stdin
             for f in files:
-                if re.search(self.info['pattern'], os.path.basename(f)) is not None:
+                if re.search(self.info.pattern, os.path.basename(f)) is not None:
                     files_filt.append(f)
         if len(files_filt) == 0:
             logger.info("None found.")
             return []
         # 2. Delete files, Makefile entries and other occurrences
         files_deleted = []
-        yes = self.info['yes']
+        yes = self.info.yes
         for f in files_filt:
             b = os.path.basename(f)
             if not yes and self.cli:
