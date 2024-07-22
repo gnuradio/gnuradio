@@ -168,9 +168,15 @@ class VariableEditor(QDockWidget, base.Component):
             else:
                 variable_.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEnabled)
                 if block.enabled:
-                    variable_.setText(1, str(block.evaluate(block.value)))
-                    variable_.setForeground(0, self._tree.palette().color(self.palette().WindowText))
-                    variable_.setForeground(1, self._tree.palette().color(self.palette().WindowText))
+                    try:
+                        variable_.setText(1, str(block.evaluate(block.value)))
+                        variable_.setForeground(0, self._tree.palette().color(self.palette().WindowText))
+                        variable_.setForeground(1, self._tree.palette().color(self.palette().WindowText))
+                    except Exception:
+                        log.exception(f'Failed to evaluate variable block {block.name}', exc_info=True)
+                        variable_.setText(1, '<Open Properties>')
+                        variable_.setForeground(0, self._tree.palette().color(self.palette().Disabled, self.palette().WindowText))
+                        variable_.setForeground(1, self._tree.palette().color(self.palette().Disabled, self.palette().WindowText))
                 else:
                     variable_.setText(1, '<Open Properties>')
                     variable_.setForeground(0, self._tree.palette().color(self.palette().Disabled, self.palette().WindowText))
