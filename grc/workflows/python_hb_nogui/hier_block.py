@@ -1,18 +1,23 @@
+"""Python code generator for no-GUI hier blocks.
+
+SPDX-License-Identifier: GPL-3.0-or-later
+"""
+
+import codecs
 import collections
 import os
 
-import codecs
+from ..common import HierBlockGeneratorMixin
+from ..common import get_hier_block_io
+from ..python_nogui.top_block import PythonNoGuiGenerator
+from ...core import Constants
+from ...core.io import yaml
 
-from .top_block import TopBlockGenerator
 
-from .. import Constants
-from ..io import yaml
-
-
-class HierBlockGenerator(TopBlockGenerator):
+class PythonHierBlockNoGuiGenerator(HierBlockGeneratorMixin, PythonNoGuiGenerator):
     """Extends the top block generator to also generate a block YML file"""
 
-    def __init__(self, flow_graph, _):
+    def __init__(self, flow_graph, output_dir, py_template=None):
         """
         Initialize the hier block generator object.
 
@@ -20,18 +25,22 @@ class HierBlockGenerator(TopBlockGenerator):
             flow_graph: the flow graph object
             output_dir: the path for written files
         """
-        platform = flow_graph.parent
-        output_dir = platform.config.hier_block_lib_dir
-        if not os.path.exists(output_dir):
-            os.mkdir(output_dir)
+        py_template = py_template or os.path.join(
+            os.path.dirname(__file__), "flow_graph_hb_nogui.py.mako"
+        )
+        super().__init__(flow_graph, self.get_output_dir_for_hier_block(flow_graph), py_template=py_template)
+        # self.set_output_dir_for_hier_block()
+        # platform = flow_graph.parent
+        # output_dir = platform.config.hier_block_lib_dir
+        # if not os.path.exists(output_dir):
+        # os.mkdir(output_dir)
 
-        TopBlockGenerator.__init__(self, flow_graph, output_dir)
         self._mode = Constants.HIER_BLOCK_FILE_MODE
-        self.file_path_yml = self.file_path[:-3] + '.block.yml'
+        self.file_path_yml = os.path.splitext(self.file_path)[0] + '.block.yml'
 
     def write(self, _=None):
         """generate output and write it to files"""
-        TopBlockGenerator.write(self)
+        super().write(self)
 
         data = yaml.dump(self._build_block_n_from_flow_graph_io())
 
@@ -138,49 +147,3 @@ class HierBlockGenerator(TopBlockGenerator):
         data['file_format'] = 1
 
         return data
-
-
-class QtHierBlockGenerator(HierBlockGenerator):
-
-    def _build_block_n_from_flow_graph_io(self):
-        n = HierBlockGenerator._build_block_n_from_flow_graph_io(self)
-        block_n = collections.OrderedDict()
-
-        # insert flags after category
-        for key, value in n.items():
-            block_n[key] = value
-            if key == 'category':
-                block_n['flags'] = 'need_qt_gui'
-
-        if not block_n['label'].upper().startswith('QT GUI'):
-            block_n['label'] = 'QT GUI ' + block_n['label']
-
-        gui_hint_param = collections.OrderedDict()
-        gui_hint_param['id'] = 'gui_hint'
-        gui_hint_param['label'] = 'GUI Hint'
-        gui_hint_param['dtype'] = 'gui_hint'
-        gui_hint_param['hide'] = 'part'
-        block_n['parameters'].append(gui_hint_param)
-
-        block_n['templates']['make'] += (
-            "\n<% win = 'self.%s'%id %>"
-            "\n${ gui_hint() % win }"
-        )
-
-        return block_n
-
-
-def get_hier_block_io(flow_graph, direction, domain=None):
-    """
-    Get a list of io ports for this flow graph.
-
-    Returns a list of blocks
-    """
-    pads = flow_graph.get_pad_sources(
-    ) if direction == 'inputs' else flow_graph.get_pad_sinks()
-
-    for pad in pads:
-        for port in (pad.sources if direction == 'inputs' else pad.sinks):
-            if domain and port.domain != domain:
-                continue
-            yield port

@@ -24,6 +24,7 @@ def register_build_in(cls):
 
 # fmt: off
 # These need to come after register_build_in
+from .options import Options
 from .dummy import DummyBlock
 from .embedded_python import EPyBlock, EPyModule
 from .virtual import VirtualSink, VirtualSource
