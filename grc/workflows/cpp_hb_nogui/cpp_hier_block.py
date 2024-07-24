@@ -5,8 +5,8 @@ import codecs
 
 from .cpp_top_block import CppTopBlockGenerator
 
-from .. import Constants
-from ..io import yaml
+from ...core import Constants
+from ...core.io import yaml
 
 
 class CppHierBlockGenerator(CppTopBlockGenerator):
@@ -168,37 +168,6 @@ class CppHierBlockGenerator(CppTopBlockGenerator):
         data['file_format'] = 1
 
         return data
-
-
-class CppQtHierBlockGenerator(CppHierBlockGenerator):
-
-    def _build_block_n_from_flow_graph_io(self):
-        n = CppHierBlockGenerator._build_block_n_from_flow_graph_io(self)
-        block_n = collections.OrderedDict()
-
-        # insert flags after category
-        for key, value in n['block'].items():
-            block_n[key] = value
-            if key == 'category':
-                block_n['flags'] = 'need_qt_gui'
-
-        if not block_n['name'].upper().startswith('QT GUI'):
-            block_n['name'] = 'QT GUI ' + block_n['name']
-
-        gui_hint_param = collections.OrderedDict()
-        gui_hint_param['name'] = 'GUI Hint'
-        gui_hint_param['key'] = 'gui_hint'
-        gui_hint_param['value'] = ''
-        gui_hint_param['type'] = 'gui_hint'
-        gui_hint_param['hide'] = 'part'
-        block_n['param'].append(gui_hint_param)
-
-        block_n['make'] += (
-            "\n#set $win = 'self.%s' % $id"
-            "\n${gui_hint()($win)}"
-        )
-
-        return {'block': block_n}
 
 
 def get_hier_block_io(flow_graph, direction, domain=None):

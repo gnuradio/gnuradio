@@ -5,10 +5,8 @@
 #
 
 
-from .hier_block import HierBlockGenerator, QtHierBlockGenerator
-from .top_block import TopBlockGenerator
-from .cpp_top_block import CppTopBlockGenerator
-from .cpp_hier_block import CppHierBlockGenerator
+import importlib
+import sys
 
 
 class Generator(object):
@@ -23,26 +21,11 @@ class Generator(object):
             flow_graph: the flow graph object
             output_dir: the output path for generated files
         """
-        self.generate_options = flow_graph.get_option('generate_options')
-        self.output_language = flow_graph.get_option('output_language')
+        self.generator_class_name = flow_graph.get_option('generator_class_name')
+        self.generator_module = flow_graph.get_option('generator_module')
 
-        if self.output_language == 'python':
-
-            if self.generate_options == 'hb':
-                generator_cls = HierBlockGenerator
-            elif self.generate_options == 'hb_qt_gui':
-                generator_cls = QtHierBlockGenerator
-            else:
-                generator_cls = TopBlockGenerator
-
-        elif self.output_language == 'cpp':
-
-            if self.generate_options == 'hb':
-                generator_cls = CppHierBlockGenerator
-            elif self.generate_options == 'hb_qt_gui':
-                pass
-            else:
-                generator_cls = CppTopBlockGenerator
+        generator_module = importlib.import_module(self.generator_module)
+        generator_cls = getattr(generator_module, self.generator_class_name)
 
         self._generator = generator_cls(flow_graph, output_dir)
 

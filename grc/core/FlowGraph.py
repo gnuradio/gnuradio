@@ -185,8 +185,13 @@ class FlowGraph(Element):
 
         Returns:
             the value held by that param
+            will return None if the key param key doesn't exist
         """
-        return self.options_block.params[key].get_evaluated()
+        param = self.options_block.params.get(key)
+        if param:
+            return param.get_evaluated()
+        else:
+            return None
 
     def get_run_command(self, file_path, split=False) -> Union[str, List[str]]:
         run_command = self.get_option('run_command')
@@ -466,6 +471,7 @@ class FlowGraph(Element):
 
         # build the blocks
         self.options_block.import_data(name='', **data.get('options', {}))
+        self.options_block.insert_grc_parameters(data['options']['parameters'])
         self.blocks.append(self.options_block)
 
         for block_data in data.get('blocks', []):

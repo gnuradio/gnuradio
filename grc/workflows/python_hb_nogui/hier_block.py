@@ -5,8 +5,8 @@ import codecs
 
 from .top_block import TopBlockGenerator
 
-from .. import Constants
-from ..io import yaml
+from ...core import Constants
+from ...core.io import yaml
 
 
 class HierBlockGenerator(TopBlockGenerator):
@@ -138,36 +138,6 @@ class HierBlockGenerator(TopBlockGenerator):
         data['file_format'] = 1
 
         return data
-
-
-class QtHierBlockGenerator(HierBlockGenerator):
-
-    def _build_block_n_from_flow_graph_io(self):
-        n = HierBlockGenerator._build_block_n_from_flow_graph_io(self)
-        block_n = collections.OrderedDict()
-
-        # insert flags after category
-        for key, value in n.items():
-            block_n[key] = value
-            if key == 'category':
-                block_n['flags'] = 'need_qt_gui'
-
-        if not block_n['label'].upper().startswith('QT GUI'):
-            block_n['label'] = 'QT GUI ' + block_n['label']
-
-        gui_hint_param = collections.OrderedDict()
-        gui_hint_param['id'] = 'gui_hint'
-        gui_hint_param['label'] = 'GUI Hint'
-        gui_hint_param['dtype'] = 'gui_hint'
-        gui_hint_param['hide'] = 'part'
-        block_n['parameters'].append(gui_hint_param)
-
-        block_n['templates']['make'] += (
-            "\n<% win = 'self.%s'%id %>"
-            "\n${ gui_hint() % win }"
-        )
-
-        return block_n
 
 
 def get_hier_block_io(flow_graph, direction, domain=None):

@@ -72,7 +72,7 @@ class System(object):
     ''' System specific properties '''
 
     OS = 'Unknown'
-    #XTERM_EXECUTABLE = _gr_prefs.get_string('grc', 'xterm_executable', 'xterm')
+    # XTERM_EXECUTABLE = _gr_prefs.get_string('grc', 'xterm_executable', 'xterm')
 
 
 class Window(object):
@@ -119,7 +119,7 @@ class Window(object):
         VIEW = "view"
         BUILD = "build"
         TOOLS = "tools"
-        #PLUGINS = "plugins"
+        # PLUGINS = "plugins"
         HELP = "help"
 
 
@@ -140,7 +140,7 @@ class Flowgraph(object):
     STATE_CACHE_SIZE = 42
 
     # Shared targets for drag and drop of blocks
-    #DND_TARGETS = [('STRING', gtk.TARGET_SAME_APP, 0)]
+    # DND_TARGETS = [('STRING', gtk.TARGET_SAME_APP, 0)]
 
     # Label constraints
     LABEL_SEPARATION = 3

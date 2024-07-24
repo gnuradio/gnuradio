@@ -29,7 +29,7 @@ class Namespace(object):
         self._actions[key] = action
 
     def connect(self, name, handler):
-        #log.debug("Connecting action <{}> to handler <{}>".format(name, handler.__name__))
+        # log.debug("Connecting action <{}> to handler <{}>".format(name, handler.__name__))
         self._actions[name].connect('activate', handler)
 
     def register(self,
@@ -90,7 +90,7 @@ class Namespace(object):
                 pass
                 # self.win.add_action(action)
 
-        #log.debug("Registering action as '{}'".format(key))
+        # log.debug("Registering action as '{}'".format(key))
         self._actions[key] = action
         return action
 

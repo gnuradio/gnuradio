@@ -1,7 +1,7 @@
 """"""
 
 import functools
-import grc.converter.cheetah_converter as parser
+import gnuradio.grc.converter.cheetah_converter as parser
 
 
 def test_basic():

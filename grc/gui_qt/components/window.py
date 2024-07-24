@@ -1299,7 +1299,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
     def properties_triggered(self):
         log.debug("properties")
         if len(self.currentFlowgraphScene.selected_blocks()) != 1:
-            log.warn("Opening Properties even though selected_blocks() != 1 ")
+            log.warning("Opening Properties even though selected_blocks() != 1 ")
         self.currentFlowgraphScene.selected_blocks()[0].open_properties()
 
     def enable_triggered(self):

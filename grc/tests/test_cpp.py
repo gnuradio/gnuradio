@@ -11,7 +11,7 @@ from argparse import Namespace
 from os import path
 import tempfile
 
-from grc.compiler import main
+from gnuradio.grc.compiler import main
 
 
 def test_cpp(capsys):

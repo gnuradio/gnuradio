@@ -6,14 +6,14 @@ import textwrap
 
 from mako.template import Template
 
-from .. import Messages, blocks
-from ..Constants import TOP_BLOCK_FILE_MODE
-from .FlowGraphProxy import FlowGraphProxy
-from ..utils import expr_utils
+from ...core import Messages, blocks
+from ...core.Constants import TOP_BLOCK_FILE_MODE
+from ...core.generator.FlowGraphProxy import FlowGraphProxy
+from ...core.utils import expr_utils
 
 DATA_DIR = os.path.dirname(__file__)
 
-PYTHON_TEMPLATE = os.path.join(DATA_DIR, 'flow_graph.py.mako')
+PYTHON_TEMPLATE = os.path.join(DATA_DIR, 'flow_graph_bokeh_gui.py.mako')
 
 python_template = Template(filename=PYTHON_TEMPLATE)
 
@@ -30,7 +30,7 @@ class TopBlockGenerator(object):
         """
 
         self._flow_graph = FlowGraphProxy(flow_graph)
-        self._generate_options = self._flow_graph.get_option(
+        self.generate_options = self._flow_graph.get_option(
             'generate_options')
 
         self._mode = TOP_BLOCK_FILE_MODE
@@ -45,7 +45,7 @@ class TopBlockGenerator(object):
     def _warnings(self):
         throttling_blocks = [b for b in self._flow_graph.get_enabled_blocks()
                              if b.flags.throttle]
-        if not throttling_blocks and not self._generate_options.startswith('hb'):
+        if not throttling_blocks and not self.generate_options.startswith('hb'):
             Messages.send_warning("This flow graph may not have flow control: "
                                   "no audio or RF hardware blocks found. "
                                   "Add a Misc->Throttle block to your flow "
@@ -80,7 +80,7 @@ class TopBlockGenerator(object):
             'variables': variables,
             'parameters': parameters,
             'monitors': monitors,
-            'generate_options': self._generate_options,
+            'generate_options': self.generate_options,
         }
 
         for filename, data in self._build_python_code_from_template():
@@ -123,7 +123,7 @@ class TopBlockGenerator(object):
             'variables': variables,
             'parameters': parameters,
             'monitors': monitors,
-            'generate_options': self._generate_options,
+            'generate_options': self.generate_options,
             'version': platform.config.version,
             'catch_exceptions': fg.get_option('catch_exceptions')
         }
@@ -163,8 +163,8 @@ class TopBlockGenerator(object):
             imports.append('import os')
             imports.append('import sys')
 
-        # Used by thread_safe_setters and startup Event
-        imports.append('import threading')
+        if fg.get_option('thread_safe_setters'):
+            imports.append('import threading')
 
         def is_duplicate(l):
             if (l.startswith('import') or l.startswith('from')) and l in seen:
