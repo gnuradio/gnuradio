@@ -785,7 +785,7 @@ class Application(Gtk.Application):
                         Executor.ExecFlowGraphThread(
                             flow_graph_page=page,
                             xterm_executable=xterm,
-                            callback=self.update_exec_stop
+                            update_gui_callback=self.update_exec_stop
                         )
         elif action == Actions.FLOW_GRAPH_KILL:
             if page.process:

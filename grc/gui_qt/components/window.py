@@ -1414,7 +1414,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
                         view=self.currentView,
                         flowgraph=self.currentFlowgraph,
                         xterm_executable=xterm,
-                        callback=self.updateActions
+                        update_gui_callback=self.updateActions
                     )
 
     def kill_triggered(self):
