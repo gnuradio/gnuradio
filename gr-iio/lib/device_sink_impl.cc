@@ -107,14 +107,30 @@ device_sink_impl::device_sink_impl(iio_context* ctx,
 
     /* First disable all channels */
     nb_channels = iio_device_get_channels_count(dev);
-    for (i = 0; i < nb_channels; i++)
+#ifdef LIBIIO_V1
+    mask = iio_create_channels_mask(nb_channels);
+
+    if (!mask)
+        throw std::runtime_error("Unable to create channel mask.");
+#endif
+
+    for (i = 0; i < nb_channels; i++) {
+#ifdef LIBIIO_V1
+        iio_channel_disable(iio_device_get_channel(dev, i), mask);
+#else
         iio_channel_disable(iio_device_get_channel(dev, i));
+#endif
+    }
 
     if (channels.empty()) {
         for (i = 0; i < nb_channels; i++) {
             iio_channel* chn = iio_device_get_channel(dev, i);
 
+#ifdef LIBIIO_V1
+            iio_channel_enable(chn, mask);
+#else
             iio_channel_enable(chn);
+#endif
             channel_list.push_back(chn);
         }
     } else {
@@ -128,18 +144,43 @@ device_sink_impl::device_sink_impl(iio_context* ctx,
                 throw std::runtime_error("Channel not found");
             }
 
+#ifdef LIBIIO_V1
+            iio_channel_enable(chn, mask);
+            if (!iio_channel_is_enabled(chn, mask))
+                throw std::runtime_error("Channel not enabled");
+#else
             iio_channel_enable(chn);
             if (!iio_channel_is_enabled(chn))
                 throw std::runtime_error("Channel not enabled");
+#endif
             channel_list.push_back(chn);
         }
     }
 
     set_params(params);
 
+#ifdef LIBIIO_V1
+    buf = iio_device_create_buffer(dev, 0, mask);
+    int err_code = iio_err(buf);
+    if (err_code)
+        throw std::runtime_error("Unable to create buffer: " + std::to_string(-err_code));
+
+    stream = iio_buffer_create_stream(buf, 4, buffer_size / sizeof(short));
+    err_code = iio_err(stream);
+    if (err_code)
+        throw std::runtime_error("Unable to create stream: " + std::to_string(-err_code));
+
+    // get first block so we can copy the data to it
+    iioblock = iio_stream_get_next_block(stream);
+    err_code = iio_err(iioblock);
+    if (err_code)
+        throw std::runtime_error("Unable to create first stream block: " +
+                                 std::to_string(-err_code));
+#else
     buf = iio_device_create_buffer(dev, buffer_size, cyclic);
     if (!buf)
         throw std::runtime_error("Unable to create buffer: " + std::to_string(-errno));
+#endif
 }
 
 /*
@@ -147,12 +188,30 @@ device_sink_impl::device_sink_impl(iio_context* ctx,
  */
 device_sink_impl::~device_sink_impl()
 {
+#ifdef LIBIIO_V1
+    iio_stream_destroy(stream);
     iio_buffer_destroy(buf);
+    iio_channels_mask_destroy(mask);
+#else
+    iio_buffer_destroy(buf);
+#endif
     device_source_impl::remove_ctx_history(ctx, destroy_ctx);
 }
 
 void device_sink_impl::channel_write(const iio_channel* chn, const void* src, size_t len)
 {
+#ifdef LIBIIO_V1
+    const iio_channels_mask* hw_mask = iio_buffer_get_channels_mask(buf);
+    uintptr_t dst_ptr, src_ptr = (uintptr_t)src, end = src_ptr + len;
+    unsigned int length = iio_channel_get_data_format(chn)->length / 8;
+    uintptr_t buf_end = (uintptr_t)iio_block_end(iioblock);
+    ptrdiff_t buf_step = iio_device_get_sample_size(dev, hw_mask) * (interpolation + 1);
+
+    for (dst_ptr = (uintptr_t)iio_block_first(iioblock, chn);
+         dst_ptr < buf_end && src_ptr + length <= end;
+         dst_ptr += buf_step, src_ptr += length)
+        iio_channel_convert_inverse(chn, (void*)dst_ptr, (const void*)src_ptr);
+#else
     uintptr_t dst_ptr, src_ptr = (uintptr_t)src, end = src_ptr + len;
     unsigned int length = iio_channel_get_data_format(chn)->length / 8;
     uintptr_t buf_end = (uintptr_t)iio_buffer_end(buf);
@@ -162,6 +221,7 @@ void device_sink_impl::channel_write(const iio_channel* chn, const void* src, si
          dst_ptr < buf_end && src_ptr + length <= end;
          dst_ptr += buf_step, src_ptr += length)
         iio_channel_convert_inverse(chn, (void*)dst_ptr, (const void*)src_ptr);
+#endif
 }
 
 void device_sink_impl::set_len_tag_key(const std::string& len_tag_key)
@@ -210,14 +270,25 @@ int device_sink_impl::work(int noutput_items,
     }
 
     if (interpolation >= 1) {
+#ifdef LIBIIO_V1
+        ptrdiff_t len =
+            (intptr_t)iio_block_end(iioblock) - (intptr_t)iio_block_start(iioblock);
+        memset(iio_block_start(iioblock), 0, len);
+#else
         ptrdiff_t len = (intptr_t)iio_buffer_end(buf) - (intptr_t)iio_buffer_start(buf);
         memset(iio_buffer_start(buf), 0, len);
+#endif
     }
 
     for (unsigned int i = 0; i < input_items.size(); i++)
         channel_write(channel_list[i], input_items[i], noutput_items * sizeof(short));
 
+#ifdef LIBIIO_V1
+    iioblock = iio_stream_get_next_block(stream);
+    ret = -iio_err(iioblock);
+#else
     ret = iio_buffer_push(buf);
+#endif
     if (ret < 0) {
         char buf[256];
         iio_strerror(-ret, buf, sizeof(buf));

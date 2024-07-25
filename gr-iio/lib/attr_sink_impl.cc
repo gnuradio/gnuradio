@@ -91,6 +91,38 @@ void attr_sink_impl::write_attribute(pmt::pmt_t pdu)
         value =
             pmt::symbol_to_string(pmt::dict_ref(pdu, pmt::nth(k, keys), pmt::PMT_NIL));
 
+#ifdef LIBIIO_V1
+        const iio_attr* iio_attribute = nullptr;
+        switch (type) {
+        case attr_type_t::CHANNEL:
+            iio_attribute = iio_channel_find_attr(chan, attribute.c_str());
+            if (!iio_attribute)
+                ret = -EINVAL;
+            else
+                ret = iio_attr_write_string(iio_attribute, value.c_str());
+            break;
+        case attr_type_t::DEVICE:
+            iio_attribute = iio_device_find_attr(dev, attribute.c_str());
+            if (!iio_attribute)
+                ret = -EINVAL;
+            else
+                ret = iio_attr_write_string(iio_attribute, value.c_str());
+            break;
+        case attr_type_t::DEVICE_BUFFER:
+            iio_attribute = iio_device_find_attr(dev, attribute.c_str());
+            if (!iio_attribute)
+                ret = -EINVAL;
+            else
+                ret = iio_attr_write_string(iio_attribute, value.c_str());
+            break;
+        case attr_type_t::DEVICE_DEBUG:
+            iio_attribute = iio_device_find_debug_attr(dev, attribute.c_str());
+            if (!iio_attribute)
+                ret = -EINVAL;
+            else
+                ret = iio_attr_write_string(iio_attribute, value.c_str());
+            break;
+#else
         switch (type) {
         case attr_type_t::CHANNEL:
             ret = iio_channel_attr_write(chan, attribute.c_str(), value.c_str());
@@ -104,6 +136,7 @@ void attr_sink_impl::write_attribute(pmt::pmt_t pdu)
         case attr_type_t::DEVICE_DEBUG:
             ret = iio_device_debug_attr_write(dev, attribute.c_str(), value.c_str());
             break;
+#endif
         default: // case 4:
             uint32_t address, value32;
 
