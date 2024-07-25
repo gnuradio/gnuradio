@@ -7,10 +7,6 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "attr_sink_impl.h"
 #include <gnuradio/io_signature.h>
 
@@ -91,7 +87,8 @@ void attr_sink_impl::write_attribute(pmt::pmt_t pdu)
         value =
             pmt::symbol_to_string(pmt::dict_ref(pdu, pmt::nth(k, keys), pmt::PMT_NIL));
 
-        const struct iio_attr* iio_attribute = nullptr;
+#ifdef LIBIIO_V1
+        const iio_attr* iio_attribute = nullptr;
         switch (type) {
         case attr_type_t::CHANNEL:
             iio_attribute = iio_channel_find_attr(chan, attribute.c_str());
@@ -121,6 +118,21 @@ void attr_sink_impl::write_attribute(pmt::pmt_t pdu)
             else
                 ret = iio_attr_write_string(iio_attribute, value.c_str());
             break;
+#else
+        switch (type) {
+        case attr_type_t::CHANNEL:
+            ret = iio_channel_attr_write(chan, attribute.c_str(), value.c_str());
+            break;
+        case attr_type_t::DEVICE:
+            ret = iio_device_attr_write(dev, attribute.c_str(), value.c_str());
+            break;
+        case attr_type_t::DEVICE_BUFFER:
+            ret = iio_device_buffer_attr_write(dev, attribute.c_str(), value.c_str());
+            break;
+        case attr_type_t::DEVICE_DEBUG:
+            ret = iio_device_debug_attr_write(dev, attribute.c_str(), value.c_str());
+            break;
+#endif
         default: // case 4:
             uint32_t address, value32;
 
