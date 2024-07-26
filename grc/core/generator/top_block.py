@@ -17,6 +17,10 @@ PYTHON_TEMPLATE = os.path.join(DATA_DIR, 'flow_graph.py.mako')
 
 python_template = Template(filename=PYTHON_TEMPLATE)
 
+from jinja2 import Environment, FileSystemLoader
+env = Environment(loader = FileSystemLoader('templates'))
+template = env.get_template('flow_graph.py.jinja')
+output = template.render()
 
 class TopBlockGenerator(object):
 

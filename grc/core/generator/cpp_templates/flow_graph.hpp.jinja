@@ -1,0 +1,194 @@
+{% macro indent(code) -%}
+{{ '    ' + code | replace('\n', '\n    ') }}
+{% endmacro %}
+
+{% macro doubleindent(code) -%}
+{{ code | replace('\n', '\n        ') }}
+{% endmacro %}
+
+#ifndef {{ flow_graph.get_option('id').upper() }}_HPP
+#define {{ flow_graph.get_option('id').upper() }}_HPP
+/********************
+GNU Radio C++ Flow Graph Header File
+
+Title: {{ title }}
+{% if flow_graph.get_option('author') %}
+Author: {{ flow_graph.get_option('author') }}
+{% endif %}
+{% if flow_graph.get_option('description') %}
+Description: {{ flow_graph.get_option('description') }}
+{% endif %}
+GNU Radio version: {{ config.version }}
+********************/
+
+/********************
+** Create includes
+********************/
+{% for inc in includes %}
+{{ inc }}
+{% endfor %}
+
+{% if generate_options == 'qt_gui' %}
+#include <QVBoxLayout>
+#include <QScrollArea>
+#include <QWidget>
+#include <QGridLayout>
+#include <QSettings>
+#include <QApplication>
+#include <QCloseEvent>
+{% endif %}
+
+{% if parameters %}
+#include <boost/program_options.hpp>
+{% endif %}
+
+using namespace gr;
+
+{% set class_name = flow_graph.get_option('id') + ('_' if flow_graph.get_option('id') == 'top_block' else '') %}
+{% set param_str = parameters | map(attribute='vtype') | zip(parameters | map(attribute='name')) | map('join', ' ') | join(', ') %}
+
+{% if generate_options == 'no_gui' %}
+class {{ class_name }} {
+{% elif generate_options.startswith('hb') %}
+class {{ class_name }} : public hier_block2 {
+{% elif generate_options == 'qt_gui' %}
+class {{ class_name }} : public QWidget {
+    Q_OBJECT
+{% endif %}
+
+private:
+{% if generate_options == 'qt_gui' %}
+    QVBoxLayout *top_scroll_layout;
+    QScrollArea *top_scroll;
+    QWidget *top_widget;
+    QVBoxLayout *top_layout;
+    QGridLayout *top_grid_layout;
+    QSettings *settings;
+    void closeEvent(QCloseEvent *event);
+{% endif %}
+
+{% for block, make, declarations in blocks %}
+{% if declarations %}
+{{ indent(declarations) }}
+{% endif %}
+{% endfor %}
+
+{% if parameters %}
+// Parameters:
+{% for param in parameters %}
+    {{ param.vtype }} {{ param.cpp_templates.render('var_make') }}
+{% endfor %}
+{% endif %}
+
+{% if variables %}
+// Variables:
+{% for var in variables %}
+    {{ var.vtype }} {{ var.cpp_templates.render('var_make') }}
+{% endfor %}
+{% endif %}
+
+public:
+{% if generate_options.startswith('hb') %}
+    typedef std::shared_ptr<{{ class_name }}> sptr;
+    static sptr make({{ param_str }});
+{% else %}
+    top_block_sptr tb;
+{% endif %}
+    {{ class_name }}({{ param_str }});
+    ~{{ class_name }}();
+
+{% for var in parameters + variables %}
+    {{ var.vtype }} get_{{ var.name }} () const;
+    void set_{{ var.name }}({{ var.vtype }} {{ var.name }});
+{% endfor %}
+
+};
+
+{% if generate_options.startswith('hb') %}
+{% set in_sigs = flow_graph.get_hier_block_stream_io('in') %}
+{% set out_sigs = flow_graph.get_hier_block_stream_io('out') %}
+
+{% macro make_io_sig(io_sigs) -%}
+{% set size_strs = io_sigs | map(attribute='cpp_size') | zip(io_sigs | map(attribute='vlen')) | map('join', '*') %}
+{% if io_sigs | length == 0 %}
+    gr::io_signature::make(0, 0, 0)
+{% elif io_sigs | length == 1 %}
+    gr::io_signature::make(1, 1, {{ size_strs[0] }})
+{% else %}
+    gr::io_signaturev({{ io_sigs | length }}, {{ io_sigs | length }}, [{{ size_strs | join(', ') }}])
+{% endif %}
+{% endmacro %}
+
+{{ class_name }}::{{ class_name }} ({{ param_str }}) : hier_block2("{{ title }}",
+        {{ make_io_sig(in_sigs) }},
+        {{ make_io_sig(out_sigs) }}
+        ) {
+{% for pad in flow_graph.get_hier_block_message_io('in') %}
+    message_port_register_hier_in("{{ pad['label'] }}")
+{% endfor %}
+{% for pad in flow_graph.get_hier_block_message_io('out') %}
+    message_port_register_hier_out("{{ pad['label'] }}")
+{% endfor %}
+
+{% if flow_graph.get_option('thread_safe_setters') %}
+## self._lock = threading.RLock()
+{% endif %}
+
+{% if blocks %}
+// Blocks:
+{% for blk, blk_make, declarations in blocks %}
+    {
+        {{ doubleindent(blk_make) }}
+##      {% if 'alias' in blk.params and blk.params['alias'].get_evaluated() %}
+##      {{ blk.name }}.set_block_alias("{{ blk.params['alias'].get_evaluated() }}")
+##      {% endif %}
+##      {% if 'affinity' in blk.params and blk.params['affinity'].get_evaluated() %}
+##      {{ blk.name }}.set_processor_affinity("{{ blk.params['affinity'].get_evaluated() }}")
+##      {% endif %}
+##      {% if blk.sources | length > 0 and 'minoutbuf' in blk.params and blk.params['minoutbuf'].get_evaluated() | int > 0 %}
+##      {{ blk.name }}.set_min_output_buffer({{ blk.params['minoutbuf'].get_evaluated() }})
+##      {% endif %}
+##      {% if blk.sources | length > 0 and 'maxoutbuf' in blk.params and blk.params['maxoutbuf'].get_evaluated() | int > 0 %}
+##      {{ blk.name }}.set_max_output_buffer({{ blk.params['maxoutbuf'].get_evaluated() }})
+##      {% endif %}
+    }
+{% endfor %}
+{% endif %}
+
+{% if connections %}
+// Connections:
+{% for connection in connections %}
+    {{ connection.rstrip() }};
+{% endfor %}
+{% endif %}
+}
+{{ class_name }}::~{{ class_name }} () {
+}
+
+// Callbacks:
+{% for var in parameters + variables %}
+{{ var.vtype }} {{ class_name }}::get_{{ var.name }} () const {
+    return this->{{ var.name }};
+}
+
+void {{ class_name }}::set_{{ var.name }} ({{ var.vtype }} {{ var.name }}) {
+{% if flow_graph.get_option('thread_safe_setters') %}
+    ## with self._lock:
+    return;
+{% else %}
+    this->{{ var.name }} = {{ var.name }};
+    {% for callback in callbacks[var.name] %}
+    {{ callback }};
+    {% endfor %}
+{% endif %}
+}
+
+{% endfor %}
+{{ class_name }}::sptr
+{{ class_name }}::make({{ param_str }})
+{
+    return gnuradio::make_block_sptr<{{ class_name }}>(
+        {{ parameters | map(attribute='name') | join(', ') }});
+}
+{% endif %}
+#endif
