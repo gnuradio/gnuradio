@@ -20,7 +20,7 @@ python_template = Template(filename=PYTHON_TEMPLATE)
 from jinja2 import Environment, FileSystemLoader
 env = Environment(loader = FileSystemLoader('templates'))
 template = env.get_template('flow_graph.py.jinja')
-output = template.render()
+output = template.render() # insert arguments here
 
 class TopBlockGenerator(object):
 
