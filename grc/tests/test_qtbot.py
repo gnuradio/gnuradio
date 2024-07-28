@@ -98,7 +98,11 @@ def gather_menu_items(menu):
 def add_block_from_query(qtbot, app, query):
     qtbot.keyClick(app.focusWidget(), QtCore.Qt.Key_F, QtCore.Qt.ControlModifier)
     type_text(qtbot, app, query)
-    keystroke(qtbot, app, QtCore.Qt.Key_Enter)
+    qtbot.wait(10)
+    pag.press('down')
+    qtbot.wait(10)
+    pag.press('enter')
+    qtbot.wait(10)
 
 
 def find_blocks(flowgraph, block_type):
@@ -186,7 +190,6 @@ def test_delete_block(qtbot, qapp_cls_):
 def test_add_null_sink(qtbot, qapp_cls_):
     qtbot.wait(100)
     add_block_from_query(qtbot, qapp_cls_, "null sin")
-    qtbot.wait(100)
 
     n_sink = find_blocks(qapp_cls_.MainWindow.currentFlowgraph, "blocks_null_sink")
     assert n_sink is not None
