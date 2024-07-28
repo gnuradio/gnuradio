@@ -224,7 +224,7 @@ def get_config_file_path(config_file: str = "grc.conf") -> str:
 
 
 def get_state_directory() -> str:
-    oldpath = os.path.expanduser("~/.gnuradio")
+    oldpath = os.path.expanduser("~/.grc_gnuradio")
     try:
         from gnuradio.gr import paths
         newpath = paths.persistent()
