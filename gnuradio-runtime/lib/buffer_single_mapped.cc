@@ -145,20 +145,24 @@ bool buffer_single_mapped::output_blkd_cb_ready(int output_multiple)
 
 int buffer_single_mapped::space_available()
 {
-    if (d_readers.empty())
+    if (d_readers.empty() || d_done)
         return d_bufsize;
 
     else {
 
+        // d_done is false, so we know at least one reader is not done
+        // and values will be updated
         size_t min_items_read_idx = 0;
-        uint64_t min_items_read = d_readers[0]->nitems_read();
-        for (size_t idx = 1; idx < d_readers.size(); ++idx) {
-            // Record index of reader with minimum nitems read
-            if (d_readers[idx]->nitems_read() <
-                d_readers[min_items_read_idx]->nitems_read()) {
-                min_items_read_idx = idx;
+        uint64_t min_items_read = std::numeric_limits<uint64_t>::max();
+        for (size_t idx = 0; idx < d_readers.size(); ++idx) {
+            if (!d_readers_done[idx]) {
+                // Record index of reader with minimum nitems read
+                if (d_readers[idx]->nitems_read() <
+                    d_readers[min_items_read_idx]->nitems_read()) {
+                    min_items_read_idx = idx;
+                }
+                min_items_read = std::min(min_items_read, d_readers[idx]->nitems_read());
             }
-            min_items_read = std::min(min_items_read, d_readers[idx]->nitems_read());
         }
 
         buffer_reader* min_idx_reader = d_readers[min_items_read_idx];
@@ -299,16 +303,20 @@ bool buffer_single_mapped::input_blocked_callback_logic(int items_required,
     if (((d_bufsize - read_index) < (uint32_t)items_required) &&
         (d_write_index < read_index)) {
 
-        // Find reader with the smallest read index that is greater than the
-        // write index
+        // Find reader with the smallest read index that is greater than
+        // the write index. At least the calling reader is not done, so
+        // we know at least one reader is not done and values will be
+        // updated
         uint32_t min_reader_index = std::numeric_limits<uint32_t>::max();
         uint32_t min_read_idx = std::numeric_limits<uint32_t>::max();
         for (size_t idx = 0; idx < d_readers.size(); ++idx) {
-            if (d_readers[idx]->d_read_index > d_write_index) {
-                // Record index of reader with minimum read-index
-                if (d_readers[idx]->d_read_index < min_read_idx) {
-                    min_read_idx = d_readers[idx]->d_read_index;
-                    min_reader_index = idx;
+            if (!d_readers_done[idx]) {
+                if (d_readers[idx]->d_read_index > d_write_index) {
+                    // Record index of reader with minimum read-index
+                    if (d_readers[idx]->d_read_index < min_read_idx) {
+                        min_read_idx = d_readers[idx]->d_read_index;
+                        min_reader_index = idx;
+                    }
                 }
             }
         }
@@ -327,8 +335,10 @@ bool buffer_single_mapped::input_blocked_callback_logic(int items_required,
             << " -- WR items: " << nitems_written() << " -- BUFSIZE: " << d_bufsize
             << " -- RD_idx: " << min_read_idx;
         for (size_t idx = 0; idx < d_readers.size(); ++idx) {
-            if (idx != min_reader_index) {
-                msg << " -- OTHER_RDR: " << d_readers[idx]->d_read_index;
+            if (!d_readers_done[idx]) {
+                if (idx != min_reader_index) {
+                    msg << " -- OTHER_RDR: " << d_readers[idx]->d_read_index;
+                }
             }
         }
 
@@ -352,11 +362,13 @@ bool buffer_single_mapped::input_blocked_callback_logic(int items_required,
 
         // Finally adjust all reader pointers
         for (size_t idx = 0; idx < d_readers.size(); ++idx) {
-            if (idx == min_reader_index) {
-                d_readers[idx]->d_read_index = 0;
-            } else {
-                d_readers[idx]->d_read_index += items_avail;
-                d_readers[idx]->d_read_index %= d_bufsize;
+            if (!d_readers_done[idx]) {
+                if (idx == min_reader_index) {
+                    d_readers[idx]->d_read_index = 0;
+                } else {
+                    d_readers[idx]->d_read_index += items_avail;
+                    d_readers[idx]->d_read_index %= d_bufsize;
+                }
             }
         }
 
@@ -387,13 +399,15 @@ bool buffer_single_mapped::output_blocked_callback_logic(int output_multiple,
          ((space_avail / output_multiple) * output_multiple == 0)) ||
         force) {
         // Find reader with the smallest read index
-        uint32_t min_read_idx = d_readers[0]->d_read_index;
-        uint64_t min_read_idx_nitems = d_readers[0]->nitems_read();
-        for (size_t idx = 1; idx < d_readers.size(); ++idx) {
-            // Record index of reader with minimum read-index
-            if (d_readers[idx]->d_read_index < min_read_idx) {
-                min_read_idx = d_readers[idx]->d_read_index;
-                min_read_idx_nitems = d_readers[idx]->nitems_read();
+        uint32_t min_read_idx = std::numeric_limits<uint32_t>::max();
+        uint64_t min_read_idx_nitems = std::numeric_limits<uint64_t>::max();
+        for (size_t idx = 0; idx < d_readers.size(); ++idx) {
+            if (!d_readers_done[idx]) {
+                // Record index of reader with minimum read-index
+                if (d_readers[idx]->d_read_index < min_read_idx) {
+                    min_read_idx = d_readers[idx]->d_read_index;
+                    min_read_idx_nitems = d_readers[idx]->nitems_read();
+                }
             }
         }
 
@@ -431,7 +445,9 @@ bool buffer_single_mapped::output_blocked_callback_logic(int output_multiple,
         d_write_index -= min_read_idx;
 
         for (size_t idx = 0; idx < d_readers.size(); ++idx) {
-            d_readers[idx]->d_read_index -= min_read_idx;
+            if (!d_readers_done[idx]) {
+                d_readers[idx]->d_read_index -= min_read_idx;
+            }
         }
 
         return true;

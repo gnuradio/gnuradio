@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(basic_block.h)                                             */
-/* BINDTOOL_HEADER_FILE_HASH(97ef3f809e58b459c57d41bab36bb97d)                     */
+/* BINDTOOL_HEADER_FILE_HASH(6eaed72c2e7b4d010d3aebf74f8da735)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -87,6 +87,14 @@ void bind_basic_block(py::module& m)
              py::arg("name"),
              D(basic_block, set_block_alias))
 
+        .def("does_need_all_outputs",
+             &basic_block::does_need_all_outputs,
+             D(basic_block, does_need_all_outputs))
+
+        .def("set_needs_all_outputs",
+             &basic_block::set_needs_all_outputs,
+             py::arg("needs_all_outputs"),
+             D(basic_block, set_needs_all_outputs))
 
         .def("message_port_register_in",
              &basic_block::message_port_register_in,
