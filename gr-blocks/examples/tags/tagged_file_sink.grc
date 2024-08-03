@@ -109,6 +109,7 @@ blocks:
     offset: '0'
     phase: '0'
     samp_rate: samp_rate
+    showports: 'False'
     type: complex
     waveform: analog.GR_COS_WAVE
   states:
@@ -190,13 +191,15 @@ blocks:
     coordinate: [1040, 252.0]
     rotation: 0
     state: enabled
-- name: blocks_throttle_0
-  id: blocks_throttle
+- name: blocks_throttle2_0
+  id: blocks_throttle2
   parameters:
     affinity: ''
     alias: ''
     comment: ''
     ignoretag: 'True'
+    limit: auto
+    maximum: '0.1'
     maxoutbuf: '0'
     minoutbuf: '0'
     samples_per_second: samp_rate
@@ -206,15 +209,16 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [504, 252.0]
+    coordinate: [520, 244.0]
     rotation: 0
-    state: true
+    state: enabled
 
 connections:
-- [analog_sig_source_x_0, '0', blocks_throttle_0, '0']
+- [analog_sig_source_x_0, '0', blocks_throttle2_0, '0']
 - [block_test_bursts, '0', blocks_tag_debug_0, '0']
 - [block_test_bursts, '0', blocks_tagged_file_sink_0, '0']
-- [blocks_throttle_0, '0', block_test_bursts, '0']
+- [blocks_throttle2_0, '0', block_test_bursts, '0']
 
 metadata:
   file_format: 1
+  grc_version: 3.10.10.0

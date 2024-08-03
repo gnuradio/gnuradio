@@ -1,6 +1,7 @@
 options:
   parameters:
     author: ''
+    catch_exceptions: 'True'
     category: '[GRC Hier Blocks]'
     cmake_opt: ''
     comment: ''
@@ -40,6 +41,7 @@ blocks:
     gui_hint: 0,0,1,1
     initPressed: 'False'
     label: State
+    outputmsgname: value
     position: '3'
     pressed: '1'
     released: '0'
@@ -54,7 +56,7 @@ blocks:
     bus_structure: null
     coordinate: [312, 60.0]
     rotation: 0
-    state: true
+    state: enabled
 - name: samp_rate
   id: variable
   parameters:
@@ -103,13 +105,15 @@ blocks:
     coordinate: [304, 304.0]
     rotation: 0
     state: true
-- name: blocks_throttle_0
-  id: blocks_throttle
+- name: blocks_throttle2_0
+  id: blocks_throttle2
   parameters:
     affinity: ''
     alias: ''
     comment: ''
     ignoretag: 'True'
+    limit: auto
+    maximum: '0.1'
     maxoutbuf: '0'
     minoutbuf: '0'
     samples_per_second: samp_rate
@@ -119,9 +123,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [504, 300.0]
+    coordinate: [472, 292.0]
     rotation: 0
-    state: true
+    state: enabled
 - name: qtgui_ledindicator_0
   id: qtgui_ledindicator
   parameters:
@@ -143,11 +147,13 @@ blocks:
     bus_structure: null
     coordinate: [624, 52.0]
     rotation: 0
-    state: true
+    state: enabled
 
 connections:
-- [blocks_null_source_0, '0', blocks_throttle_0, '0']
-- [blocks_throttle_0, '0', blocks_null_sink_0, '0']
+- [blocks_null_source_0, '0', blocks_throttle2_0, '0']
+- [blocks_throttle2_0, '0', blocks_null_sink_0, '0']
+- [ledstate, state, qtgui_ledindicator_0, state]
 
 metadata:
   file_format: 1
+  grc_version: 3.10.10.0

@@ -1,6 +1,7 @@
 options:
   parameters:
     author: ''
+    catch_exceptions: 'True'
     category: Custom
     cmake_opt: ''
     comment: ''
@@ -24,6 +25,9 @@ options:
     title: ''
     window_size: ''
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [8, 11]
     rotation: 0
     state: enabled
@@ -35,6 +39,9 @@ blocks:
     comment: ''
     value: '32000'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [176, 12.0]
     rotation: 0
     state: enabled
@@ -51,23 +58,31 @@ blocks:
     type: complex
     vlen: '1'
   states:
-    coordinate: [432, 99]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [432, 108.0]
     rotation: 0
     state: enabled
-- name: blocks_throttle_0
-  id: blocks_throttle
+- name: blocks_throttle2_0
+  id: blocks_throttle2
   parameters:
     affinity: ''
     alias: ''
     comment: ''
     ignoretag: 'True'
+    limit: auto
+    maximum: '0.1'
     maxoutbuf: '0'
     minoutbuf: '0'
     samples_per_second: samp_rate
     type: complex
     vlen: '1'
   states:
-    coordinate: [248, 107]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [240, 108.0]
     rotation: 0
     state: enabled
 - name: blocks_vector_source_x_0
@@ -84,7 +99,10 @@ blocks:
     vector: '[1,1,1,1,1,1,1,1,-1,-1,-1,-1,-1,-1,-1,-1]'
     vlen: '1'
   states:
-    coordinate: [16, 91]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [16, 100.0]
     rotation: 0
     state: enabled
 - name: digital_burst_shaper_xx_0
@@ -102,7 +120,10 @@ blocks:
     type: complex
     window: firdes.window(window.WIN_HANN, 50, 0)
   states:
-    coordinate: [696, 75]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [696, 84.0]
     rotation: 0
     state: enabled
 - name: digital_burst_shaper_xx_0_0
@@ -120,7 +141,10 @@ blocks:
     type: complex
     window: firdes.window(window.WIN_HANN, 50, 0)
   states:
-    coordinate: [696, 203]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [696, 212.0]
     rotation: 0
     state: enabled
 - name: qtgui_time_sink_x_0
@@ -140,16 +164,16 @@ blocks:
     alpha9: '1.0'
     autoscale: 'False'
     axislabels: 'True'
-    color1: '"blue"'
-    color10: '"blue"'
-    color2: '"red"'
-    color3: '"green"'
-    color4: '"black"'
-    color5: '"cyan"'
-    color6: '"magenta"'
-    color7: '"yellow"'
-    color8: '"dark red"'
-    color9: '"dark green"'
+    color1: blue
+    color10: dark blue
+    color2: red
+    color3: green
+    color4: black
+    color5: cyan
+    color6: magenta
+    color7: yellow
+    color8: dark red
+    color9: dark green
     comment: ''
     ctrlpanel: 'False'
     entags: 'True'
@@ -214,7 +238,10 @@ blocks:
     ymin: '-1.5'
     yunit: '""'
   states:
-    coordinate: [968, 83]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [968, 92.0]
     rotation: 0
     state: enabled
 - name: qtgui_time_sink_x_0_0
@@ -234,16 +261,16 @@ blocks:
     alpha9: '1.0'
     autoscale: 'False'
     axislabels: 'True'
-    color1: '"blue"'
-    color10: '"blue"'
-    color2: '"red"'
-    color3: '"green"'
-    color4: '"black"'
-    color5: '"cyan"'
-    color6: '"magenta"'
-    color7: '"yellow"'
-    color8: '"dark red"'
-    color9: '"dark green"'
+    color1: blue
+    color10: dark blue
+    color2: red
+    color3: green
+    color4: black
+    color5: cyan
+    color6: magenta
+    color7: yellow
+    color8: dark red
+    color9: dark green
     comment: ''
     ctrlpanel: 'False'
     entags: 'True'
@@ -308,17 +335,21 @@ blocks:
     ymin: '-1.5'
     yunit: '""'
   states:
-    coordinate: [968, 211]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [968, 220.0]
     rotation: 0
     state: enabled
 
 connections:
 - [blocks_stream_to_tagged_stream_0, '0', digital_burst_shaper_xx_0, '0']
 - [blocks_stream_to_tagged_stream_0, '0', digital_burst_shaper_xx_0_0, '0']
-- [blocks_throttle_0, '0', blocks_stream_to_tagged_stream_0, '0']
-- [blocks_vector_source_x_0, '0', blocks_throttle_0, '0']
+- [blocks_throttle2_0, '0', blocks_stream_to_tagged_stream_0, '0']
+- [blocks_vector_source_x_0, '0', blocks_throttle2_0, '0']
 - [digital_burst_shaper_xx_0, '0', qtgui_time_sink_x_0, '0']
 - [digital_burst_shaper_xx_0_0, '0', qtgui_time_sink_x_0_0, '0']
 
 metadata:
   file_format: 1
+  grc_version: 3.10.10.0

@@ -23,6 +23,7 @@ options:
     sizing_mode: fixed
     thread_safe_setters: ''
     title: mpsk_stage6.grc
+    window_size: (1000,1000)
   states:
     bus_sink: false
     bus_source: false
@@ -56,7 +57,7 @@ blocks:
     start: '0'
     step: '1'
     stop: '200'
-    value: '50'
+    value: '58'
     widget: counter_slider
   states:
     bus_sink: false
@@ -381,6 +382,7 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
     num_ports: '1'
+    showports: 'False'
     type: float
     vlen: '1'
   states:
@@ -390,13 +392,15 @@ blocks:
     coordinate: [640, 440.0]
     rotation: 0
     state: enabled
-- name: blocks_throttle_0
-  id: blocks_throttle
+- name: blocks_throttle2_0
+  id: blocks_throttle2
   parameters:
     affinity: ''
     alias: ''
     comment: ''
     ignoretag: 'True'
+    limit: auto
+    maximum: '0.1'
     maxoutbuf: '0'
     minoutbuf: '0'
     samples_per_second: samp_rate
@@ -406,7 +410,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [424, 140.0]
+    coordinate: [424, 116.0]
     rotation: 0
     state: enabled
 - name: blocks_unpack_k_bits_bb_0
@@ -557,6 +561,7 @@ blocks:
   parameters:
     affinity: ''
     alias: ''
+    coding: digital.DIFF_DIFFERENTIAL
     comment: ''
     maxoutbuf: '0'
     minoutbuf: '0'
@@ -975,13 +980,13 @@ connections:
 - [blocks_char_to_float_0_0, '0', qtgui_time_sink_x_0_0, '0']
 - [blocks_char_to_float_0_0_0, '0', blocks_delay_0, '0']
 - [blocks_delay_0, '0', qtgui_time_sink_x_0_0, '1']
-- [blocks_throttle_0, '0', channels_channel_model_0, '0']
+- [blocks_throttle2_0, '0', channels_channel_model_0, '0']
 - [blocks_unpack_k_bits_bb_0, '0', blocks_char_to_float_0_0, '0']
 - [blocks_unpack_k_bits_bb_0_0, '0', blocks_char_to_float_0_0_0, '0']
 - [channels_channel_model_0, '0', digital_pfb_clock_sync_xxx_0, '0']
 - [digital_constellation_decoder_cb_0, '0', blocks_char_to_float_0, '0']
 - [digital_constellation_decoder_cb_0, '0', digital_diff_decoder_bb_0, '0']
-- [digital_constellation_modulator_0, '0', blocks_throttle_0, '0']
+- [digital_constellation_modulator_0, '0', blocks_throttle2_0, '0']
 - [digital_costas_loop_cc_0, '0', digital_constellation_decoder_cb_0, '0']
 - [digital_costas_loop_cc_0, '0', qtgui_const_sink_x_0, '0']
 - [digital_diff_decoder_bb_0, '0', digital_map_bb_0, '0']
@@ -991,3 +996,4 @@ connections:
 
 metadata:
   file_format: 1
+  grc_version: 3.10.10.0

@@ -23,6 +23,7 @@ options:
     sizing_mode: fixed
     thread_safe_setters: ''
     title: 'Demonstration: Signal Source Message Ports'
+    window_size: (1000,1000)
   states:
     bus_sink: false
     bus_source: false
@@ -45,13 +46,14 @@ blocks:
     offset: '0'
     phase: '0'
     samp_rate: samp_rate
+    showports: 'True'
     type: complex
     waveform: analog.GR_COS_WAVE
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [296, 188.0]
+    coordinate: [664, 116.0]
     rotation: 0
     state: true
 - name: blocks_message_strobe_0
@@ -95,16 +97,18 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [24, 292.0]
+    coordinate: [336, 132.0]
     rotation: 0
-    state: true
-- name: blocks_throttle_0
-  id: blocks_throttle
+    state: enabled
+- name: blocks_throttle2_0
+  id: blocks_throttle2
   parameters:
     affinity: ''
     alias: ''
     comment: ''
     ignoretag: 'True'
+    limit: auto
+    maximum: '0.1'
     maxoutbuf: '0'
     minoutbuf: '0'
     samples_per_second: samp_rate
@@ -114,9 +118,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [496, 228.0]
+    coordinate: [872, 148.0]
     rotation: 0
-    state: true
+    state: enabled
 - name: qtgui_time_sink_x_0
   id: qtgui_time_sink_x
   parameters:
@@ -211,7 +215,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [656, 212.0]
+    coordinate: [1064, 140.0]
     rotation: 0
     state: true
 - name: samp_rate
@@ -233,10 +237,11 @@ blocks:
     state: true
 
 connections:
-- [analog_sig_source_x_0, '0', blocks_throttle_0, '0']
-- [blocks_message_strobe_0, strobe, analog_sig_source_x_0, cmd]
+- [analog_sig_source_x_0, '0', blocks_throttle2_0, '0']
+- [blocks_message_strobe_0, strobe, blocks_message_strobe_random_0, set_msg]
 - [blocks_message_strobe_random_0, strobe, analog_sig_source_x_0, cmd]
-- [blocks_throttle_0, '0', qtgui_time_sink_x_0, '0']
+- [blocks_throttle2_0, '0', qtgui_time_sink_x_0, '0']
 
 metadata:
   file_format: 1
+  grc_version: 3.10.10.0
