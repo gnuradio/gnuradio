@@ -288,7 +288,8 @@ class FlowGraph(Element):
                 namespace[variable_block.name] = value
                 # rewrite on subsequent blocks depends on an updated self.namespace
                 self.namespace.update(namespace)
-            except (TypeError, FileNotFoundError):  # Type Errors or FileNotFoundError may happen, but that doesn't matter as they are displayed in the gui
+            # The following Errors may happen, but that doesn't matter as they are displayed in the gui
+            except (TypeError, FileNotFoundError, AttributeError):
                 pass
             except Exception:
                 log.exception(f'Failed to evaluate variable block {variable_block.name}', exc_info=True)
