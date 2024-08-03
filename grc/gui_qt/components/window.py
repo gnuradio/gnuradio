@@ -1155,6 +1155,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
     def undo_triggered(self):
         log.debug("undo")
         self.currentFlowgraphScene.undoStack.undo()
+        self.currentFlowgraphScene.update()
         self.updateActions()
 
     def redo_triggered(self):
