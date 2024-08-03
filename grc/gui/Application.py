@@ -236,6 +236,7 @@ class Application(Gtk.Application):
             }[action])
             if changed:
                 flow_graph_update()
+                page.flow_graph.update()
                 page.state_cache.save_new_state(flow_graph.export_data())
                 page.saved = False
         ##################################################
