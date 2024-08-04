@@ -11,6 +11,7 @@ import sys
 import types
 import logging
 import shlex
+import yaml
 from operator import methodcaller, attrgetter
 from typing import (List, Set, Optional, Iterator, Iterable, Tuple, Union, OrderedDict)
 
@@ -289,7 +290,7 @@ class FlowGraph(Element):
                 # rewrite on subsequent blocks depends on an updated self.namespace
                 self.namespace.update(namespace)
             # The following Errors may happen, but that doesn't matter as they are displayed in the gui
-            except (TypeError, FileNotFoundError, AttributeError):
+            except (TypeError, FileNotFoundError, AttributeError, yaml.YAMLError):
                 pass
             except Exception:
                 log.exception(f'Failed to evaluate variable block {variable_block.name}', exc_info=True)

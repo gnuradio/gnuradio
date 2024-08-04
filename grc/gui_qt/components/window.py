@@ -200,9 +200,6 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         self.show()
     """
 
-    def handle_all_actions(self, var_edit):
-        var_edit.all_editor_actions.connect(self.handle_editor_action)
-
     @QtCore.Slot(VariableEditorAction)
     def handle_editor_action(self, key):
         # Calculate the position to insert a new block
