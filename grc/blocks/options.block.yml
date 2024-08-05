@@ -31,6 +31,12 @@ parameters:
     default: qt_gui
     options: [qt_gui, bokeh_gui, no_gui, hb, hb_qt_gui]
     option_labels: [QT GUI, Bokeh GUI, No GUI, Hier Block, Hier Block (QT GUI)]
+-   id: template_engine
+    label: Template Engine
+    dtype: enum
+    default: mako
+    options: [mako, jinja]
+    option_labels: [Mako, Jinja]
 -   id: gen_linking
     label: Linking
     dtype: enum
