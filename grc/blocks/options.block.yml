@@ -35,8 +35,8 @@ parameters:
     label: Template Engine
     dtype: enum
     default: mako
-    options: [mako, jinja2]
-    option_labels: [Mako, Jinja2]
+    options: [mako, jinja]
+    option_labels: [Mako, Jinja]
 -   id: gen_linking
     label: Linking
     dtype: enum

@@ -1,6 +1,6 @@
-<% macro doubleindent(code) -%>
+{% macro doubleindent(code) %}
 {{ code | replace('\n', '\n        ') }}
-{%- endmacro %}
+{% endmacro %}
 
 /********************
 GNU Radio C++ Flow Graph Source File
@@ -26,7 +26,12 @@ namespace po = boost::program_options;
 using namespace gr;
 
 {% set class_name = flow_graph.get_option('id') + ('_' if flow_graph.get_option('id') == 'top_block' else '') %}
-{% set param_str = parameters | map(attribute='vtype') | zip(parameters | map(attribute='name')) | map('join', ' ') | join(', ') %}
+{% set parts = [] %}
+{% for param in parameters %}
+    {% set _ = parts.append('{} {}'.format(param.vtype, param.name)) %}
+{% endfor %}
+{% set param_str = ', '.join(parts) %}
+
 {% set param_str_without_types = parameters | map(attribute='name') | join(', ') %}
 {% set initializer_str = parameters | map('join', '(', ')') | join(',\n  ') %}
 

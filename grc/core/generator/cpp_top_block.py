@@ -6,6 +6,7 @@ import tempfile
 import re
 
 from mako.template import Template
+from jinja2 import Environment, FileSystemLoader
 
 from .. import Messages, blocks
 from ..Constants import TOP_BLOCK_FILE_MODE
@@ -38,6 +39,7 @@ class CppTopBlockGenerator(object):
         self._flow_graph = FlowGraphProxy(flow_graph)
         self._generate_options = self._flow_graph.get_option(
             'generate_options')
+        self._template_engine = self._flow_graph.get_option('template_engine')
 
         self._mode = TOP_BLOCK_FILE_MODE
         # Handle the case where the directory is read-only
@@ -47,6 +49,14 @@ class CppTopBlockGenerator(object):
         filename = self._flow_graph.get_option('id')
         self.file_path = os.path.join(output_dir, filename)
         self.output_dir = output_dir
+        self.env = Environment(
+            loader=FileSystemLoader(searchpath=os.path.join(DATA_DIR, 'jinja_templates')),
+            trim_blocks=True,
+            lstrip_blocks=True
+        )
+        self.header_template_jinja = self.env.get_template('flow_graph.hpp.jinja')
+        self.source_template_jinja = self.env.get_template('flow_graph.cpp.jinja')
+        self.cmake_template_jinja = self.env.get_template('CMakeLists.txt.jinja')
 
     def _warnings(self):
         throttling_blocks = [b for b in self._flow_graph.get_enabled_blocks()
@@ -124,15 +134,25 @@ class CppTopBlockGenerator(object):
         file_path = os.path.join(self.file_path, filename)
 
         output = []
+        if self._template_engine == 'jinja':
+            flow_graph_code = self.source_template_jinja.render(
+                title=self.title,
+                includes=self._includes(),
+                blocks=self._blocks(),
+                callbacks=self._callbacks(),
+                connections=self._connections(),
+                **self.namespace
+            )
+        else:
+            flow_graph_code = source_template.render(
+                title=self.title,
+                includes=self._includes(),
+                blocks=self._blocks(),
+                callbacks=self._callbacks(),
+                connections=self._connections(),
+                **self.namespace
+            )
 
-        flow_graph_code = source_template.render(
-            title=self.title,
-            includes=self._includes(),
-            blocks=self._blocks(),
-            callbacks=self._callbacks(),
-            connections=self._connections(),
-            **self.namespace
-        )
         # strip trailing white-space
         flow_graph_code = "\n".join(line.rstrip()
                                     for line in flow_graph_code.split("\n"))
@@ -151,15 +171,25 @@ class CppTopBlockGenerator(object):
         file_path = os.path.join(self.file_path, filename)
 
         output = []
+        if self._template_engine == 'jinja':
+            flow_graph_code = self.header_template_jinja.render(
+                title=self.title,
+                includes=self._includes(),
+                blocks=self._blocks(),
+                callbacks=self._callbacks(),
+                connections=self._connections(),
+                **self.namespace
+            )
+        else:
+            flow_graph_code = header_template.render(
+                title=self.title,
+                includes=self._includes(),
+                blocks=self._blocks(),
+                callbacks=self._callbacks(),
+                connections=self._connections(),
+                **self.namespace
+            )
 
-        flow_graph_code = header_template.render(
-            title=self.title,
-            includes=self._includes(),
-            blocks=self._blocks(),
-            callbacks=self._callbacks(),
-            connections=self._connections(),
-            **self.namespace
-        )
         # strip trailing white-space
         flow_graph_code = "\n".join(line.rstrip()
                                     for line in flow_graph_code.split("\n"))
@@ -187,18 +217,31 @@ class CppTopBlockGenerator(object):
                 cmake_tuples.append(tuple(opt_string.split("=")))
 
         output = []
+        if self._template_engine == 'jinja':
+            flow_graph_code = self.cmake_template_jinja.render(
+                title=self.title,
+                includes=self._includes(),
+                blocks=self._blocks(),
+                callbacks=self._callbacks(),
+                connections=self._connections(),
+                links=self._links(),
+                cmake_tuples=cmake_tuples,
+                packages=self._packages(),
+                **self.namespace
+            )
+        else:
+            flow_graph_code = cmake_template.render(
+                title=self.title,
+                includes=self._includes(),
+                blocks=self._blocks(),
+                callbacks=self._callbacks(),
+                connections=self._connections(),
+                links=self._links(),
+                cmake_tuples=cmake_tuples,
+                packages=self._packages(),
+                **self.namespace
+            )
 
-        flow_graph_code = cmake_template.render(
-            title=self.title,
-            includes=self._includes(),
-            blocks=self._blocks(),
-            callbacks=self._callbacks(),
-            connections=self._connections(),
-            links=self._links(),
-            cmake_tuples=cmake_tuples,
-            packages=self._packages(),
-            **self.namespace
-        )
         # strip trailing white-space
         flow_graph_code = "\n".join(line.rstrip()
                                     for line in flow_graph_code.split("\n"))

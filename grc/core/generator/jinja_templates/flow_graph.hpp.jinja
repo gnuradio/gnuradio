@@ -1,11 +1,9 @@
-{% macro indent(code) -%}
+{% macro indent(code) %}
 {{ '    ' + code | replace('\n', '\n    ') }}
 {% endmacro %}
-
-{% macro doubleindent(code) -%}
+{% macro doubleindent(code) %}
 {{ code | replace('\n', '\n        ') }}
 {% endmacro %}
-
 #ifndef {{ flow_graph.get_option('id').upper() }}_HPP
 #define {{ flow_graph.get_option('id').upper() }}_HPP
 /********************
@@ -45,7 +43,11 @@ GNU Radio version: {{ config.version }}
 using namespace gr;
 
 {% set class_name = flow_graph.get_option('id') + ('_' if flow_graph.get_option('id') == 'top_block' else '') %}
-{% set param_str = parameters | map(attribute='vtype') | zip(parameters | map(attribute='name')) | map('join', ' ') | join(', ') %}
+{% set parts = [] %}
+{% for param in parameters %}
+    {% set _ = parts.append('{} {}'.format(param.vtype, param.name)) %}
+{% endfor %}
+{% set param_str = ', '.join(parts) %}
 
 {% if generate_options == 'no_gui' %}
 class {{ class_name }} {
@@ -108,8 +110,11 @@ public:
 {% set in_sigs = flow_graph.get_hier_block_stream_io('in') %}
 {% set out_sigs = flow_graph.get_hier_block_stream_io('out') %}
 
-{% macro make_io_sig(io_sigs) -%}
-{% set size_strs = io_sigs | map(attribute='cpp_size') | zip(io_sigs | map(attribute='vlen')) | map('join', '*') %}
+{% macro make_io_sig(io_sigs) %}
+{% set size_strs = [] %}
+{% for io_sig in io_sigs %}
+    {% set _ = size_strs.append('{}*{}'.format(io_sig['cpp_size'], io_sig['vlen'])) %}
+{% endfor %}
 {% if io_sigs | length == 0 %}
     gr::io_signature::make(0, 0, 0)
 {% elif io_sigs | length == 1 %}
@@ -131,7 +136,7 @@ public:
 {% endfor %}
 
 {% if flow_graph.get_option('thread_safe_setters') %}
-## self._lock = threading.RLock()
+{# self._lock = threading.RLock() #}
 {% endif %}
 
 {% if blocks %}
@@ -139,6 +144,7 @@ public:
 {% for blk, blk_make, declarations in blocks %}
     {
         {{ doubleindent(blk_make) }}
+{#
 ##      {% if 'alias' in blk.params and blk.params['alias'].get_evaluated() %}
 ##      {{ blk.name }}.set_block_alias("{{ blk.params['alias'].get_evaluated() }}")
 ##      {% endif %}
@@ -151,6 +157,7 @@ public:
 ##      {% if blk.sources | length > 0 and 'maxoutbuf' in blk.params and blk.params['maxoutbuf'].get_evaluated() | int > 0 %}
 ##      {{ blk.name }}.set_max_output_buffer({{ blk.params['maxoutbuf'].get_evaluated() }})
 ##      {% endif %}
+#}
     }
 {% endfor %}
 {% endif %}

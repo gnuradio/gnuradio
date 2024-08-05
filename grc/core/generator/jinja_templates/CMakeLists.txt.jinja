@@ -2,10 +2,10 @@
 # GNU Radio C++ Flow Graph CMakeLists.txt
 #
 # Title: {{ title }}
-{% if flow_graph.get_option('author') %}
+{% if flow_graph.get_option('author') -%}
 # Author: {{ flow_graph.get_option('author') }}
 {% endif %}
-{% if flow_graph.get_option('description') %}
+{% if flow_graph.get_option('description') -%}
 # Description: {{ flow_graph.get_option('description') }}
 {% endif %}
 # GNU Radio version: {{ config.version }}
@@ -13,7 +13,7 @@
 
 {% set class_name = flow_graph.get_option('id') %}
 {% set version_list = config.version_parts %}
-{% set short_version = version_list[0:2] | join('.') %}
+{% set short_version = '.'.join(version_list[0:2]) %}
 
 cmake_minimum_required(VERSION 3.16)
 set(CMAKE_CXX_STANDARD 14)
