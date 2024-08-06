@@ -19,7 +19,7 @@
 
 /*!
  * \brief DisplayForm child for managing number sink plots.
- * \ingroup qtgui_blk
+ * \ingroup block_qtgui_numberdisplayform
  */
 class NumberDisplayForm : public QWidget
 {

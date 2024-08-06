@@ -19,7 +19,7 @@ namespace digital {
 
 /*!
  * \brief Galois LFSR pseudo-random source
- * \ingroup waveform_generators_blk
+ * \ingroup block_digital_glfsr_source
  */
 class DIGITAL_API glfsr_source_b : virtual public sync_block
 {

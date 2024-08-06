@@ -19,7 +19,7 @@ namespace zeromq {
 
 /*!
  * \brief Sink the contents of a stream to a ZMQ REP socket
- * \ingroup zeromq
+ * \ingroup block_zeromq_rep_sink
  *
  * \details
  * This block acts a a streaming sink for a GNU Radio flowgraph

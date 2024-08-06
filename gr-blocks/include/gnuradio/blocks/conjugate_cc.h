@@ -19,7 +19,7 @@ namespace blocks {
 
 /*!
  * \brief output = complex conjugate of input
- * \ingroup math_operators_blk
+ * \ingroup block_blocks_conjugate
  */
 class BLOCKS_API conjugate_cc : virtual public sync_block
 {

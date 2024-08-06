@@ -23,7 +23,7 @@
 
 /*!
  * \brief QWidget for displaying waterfall (spectrogram) plots.
- * \ingroup qtgui_blk
+ * \ingroup block_qtgui_WaterfallDisplayPlot
  */
 class WaterfallDisplayPlot : public DisplayPlot
 {

@@ -21,7 +21,7 @@ namespace blocks {
 
 /*!
  * \brief output = input * constant
- * \ingroup math_operators_blk
+ * \ingroup block_blocks_multiply_const
  */
 template <class T>
 class BLOCKS_API multiply_const : virtual public sync_block

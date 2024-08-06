@@ -22,7 +22,7 @@ namespace digital {
 
 /*!
  * \brief Calculates a CRC
- * \ingroup packet_operators_blk
+ * \ingroup block_digital_crc
  *
  * \details
  * This class calculates a CRC with configurable parameters.

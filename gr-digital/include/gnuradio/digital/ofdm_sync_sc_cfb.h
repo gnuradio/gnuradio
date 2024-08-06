@@ -20,8 +20,8 @@ namespace digital {
 
 /*!
  * \brief Schmidl & Cox synchronisation for OFDM
- * \ingroup ofdm_blk
- * \ingroup synchronizers_blk
+ * \ingroup block_digital_ofdm_sync_sc_cfb
+ * \ingroup block_digital_ofdm_sync_sc_cfb
  *
  * \details
  * Input: complex samples.

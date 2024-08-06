@@ -19,7 +19,7 @@ namespace digital {
 
 /*!
  * \brief Post header metadata as a PMT
- * \ingroup packet_operators_blk
+ * \ingroup block_digital_packet_headerparser
  *
  * \details
  * In a sense, this is the inverse block to packet_headergenerator_bb.

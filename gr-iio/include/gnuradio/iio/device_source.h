@@ -27,7 +27,7 @@ namespace iio {
 
 /*!
  * \brief Generic source for IIO drivers with buffered output channels
- * \ingroup iio
+ * \ingroup block_iio_device_source
  *
  * \details
  * This block allows for streaming data from any IIO driver which has output

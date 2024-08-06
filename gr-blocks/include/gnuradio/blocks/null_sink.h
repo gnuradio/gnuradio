@@ -21,7 +21,7 @@ namespace blocks {
 /*!
  * \brief Bit bucket. Use as a termination point when a sink is
  * required and we don't want to do anything real.
- * \ingroup misc_blk
+ * \ingroup block_blocks_null_sink
  */
 class BLOCKS_API null_sink : virtual public sync_block
 {

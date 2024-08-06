@@ -32,7 +32,7 @@ namespace blocks {
 
 /*!
  * \brief Stream demuxing block to demultiplex one stream into N output streams
- * \ingroup stream_operators_blk
+ * \ingroup block_blocks_stream_demux
  *
  * \details
  * Demuxes a stream producing N outputs streams that contains n_0 items in

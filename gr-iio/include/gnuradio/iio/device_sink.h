@@ -28,7 +28,7 @@ namespace iio {
 
 /*!
  * \brief Generic sink for IIO drivers with buffered input channels
- * \ingroup iio
+ * \ingroup block_iio_device_sink
  *
  * \details
  * This block allows for streaming data to any IIO driver which has input

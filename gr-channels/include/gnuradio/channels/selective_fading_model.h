@@ -23,7 +23,7 @@ constexpr float default_mags[] = { 1.0, 0.8, 0.3 };
 
 /*!
  * \brief fading simulator
- * \ingroup channel_models_blk
+ * \ingroup block_channels_selective_fading_model
  *
  * \details
  * This block implements a basic fading model simulator that can

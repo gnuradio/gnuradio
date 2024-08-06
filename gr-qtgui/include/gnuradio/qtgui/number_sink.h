@@ -22,8 +22,8 @@ namespace qtgui {
 
 /*!
  * \brief A graphical sink to display numerical values of input streams.
- * \ingroup instrumentation_blk
- * \ingroup qtgui_blk
+ * \ingroup block_qtgui_number_sink
+ * \ingroup block_qtgui_number_sink
  *
  * \details
  *

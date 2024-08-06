@@ -21,7 +21,7 @@ namespace blocks {
 
 /*!
  * \brief output = input[0] / input[1] / ... / input[M-1]
- * \ingroup math_operators_blk
+ * \ingroup block_blocks_divide
  *
  * \details
  * Divide across all input streams.

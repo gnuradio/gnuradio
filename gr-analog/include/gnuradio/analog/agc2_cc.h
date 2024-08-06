@@ -21,7 +21,7 @@ namespace analog {
 /*!
  * \brief high performance Automatic Gain Control class with
  * attack and decay rates.
- * \ingroup level_controllers_blk
+ * \ingroup block_analog_agc2
  *
  * \details
  * For Power the absolute value of the complex number is used.

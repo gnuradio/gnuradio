@@ -22,7 +22,7 @@ namespace filter {
  * \brief FIR filter combined with frequency translation with
  * IN_T input, OUT_T output and TAP_T taps
  *
- * \ingroup channelizers_blk
+ * \ingroup block_filter_freq_xlating_fir_filter
  *
  * This class efficiently combines a frequency translation
  * (typically "down conversion") with a FIR filter (typically

@@ -2,3 +2,4 @@
 *.pyc
 *.pyo
 build*/
+docs/sphinx/blocks

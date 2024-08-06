@@ -20,7 +20,7 @@ namespace digital {
 
 /*!
  * \brief A probe for computing SNR of a PSK signal.
- * \ingroup measurement_tools_blk
+ * \ingroup block_digital_probe_mpsk_snr_est
  *
  * \details
  * This is a probe block (a sink) that can be used to monitor and

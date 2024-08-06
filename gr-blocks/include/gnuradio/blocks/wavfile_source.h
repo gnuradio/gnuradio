@@ -19,7 +19,7 @@ namespace blocks {
 
 /*!
  * \brief Read stream from a Microsoft PCM (.wav) file, output floats
- * \ingroup audio_blk
+ * \ingroup block_blocks_wavfile_source
  *
  * \details
  * Unless otherwise called, values are within [-1;1].

@@ -19,7 +19,7 @@ namespace blocks {
 
 /*!
  * \brief Control tag propagation.
- * \ingroup blocks
+ * \ingroup block_blocks_tag_gate
  *
  * Use this block to stop tags from propagating.
  */

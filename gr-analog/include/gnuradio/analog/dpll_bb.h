@@ -19,7 +19,7 @@ namespace analog {
 
 /*!
  * \brief Detect the peak of a signal
- * \ingroup peak_detectors_blk
+ * \ingroup block_analog_dpll
  *
  * \details
  * If a peak is detected, this block outputs a 1,

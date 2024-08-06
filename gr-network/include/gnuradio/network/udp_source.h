@@ -20,7 +20,7 @@ namespace network {
 /*!
  * \brief This block provides a UDP source block that starts a
  * listener on the specified port and waits for inbound UDP packets.
- * \ingroup networking_tools
+ * \ingroup block_network_udp_source
  *
  * \details
  * This block provides a UDP source that supports receiving data over

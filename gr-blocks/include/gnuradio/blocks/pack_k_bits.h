@@ -30,7 +30,7 @@ namespace kernel {
  * k = 8
  * in = [1,1,1,1, 0,1,0,1, 0,0,0,0, 1,0,0,0]
  * out = [0xf5, 0x08]
- * \ingroup byte_operators_blk
+ * \ingroup block_blocks_pack_k_bits
  */
 class BLOCKS_API pack_k_bits
 {

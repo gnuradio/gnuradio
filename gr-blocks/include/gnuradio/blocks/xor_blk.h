@@ -21,7 +21,7 @@ namespace blocks {
 
 /*!
  * \brief output = input_0 ^ input_1 ^ , ... ^ input_N)
- * \ingroup boolean_operators_blk
+ * \ingroup block_blocks_xor
  *
  * Bitwise boolean xor across all input streams.
  */

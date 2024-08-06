@@ -20,7 +20,7 @@ namespace digital {
 
 /*!
  * \brief Generic CPM modulator
- * \ingroup modulators_blk
+ * \ingroup block_digital_cpmmod
  *
  * \details
  * Examples:

@@ -19,7 +19,7 @@ namespace blocks {
 
 /*!
  * \brief convert a stream of items into a N streams of items
- * \ingroup stream_operators_blk
+ * \ingroup block_blocks_stream_to_streams
  *
  * \details
  * Converts a stream of N items into N streams of 1 item.

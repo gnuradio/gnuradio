@@ -19,7 +19,7 @@ namespace fec {
 
 /*!
  * \brief Puncture a stream of unpacked bits.
- * \ingroup error_coding_blk
+ * \ingroup block_fec_puncture
  *
  * \details
  * Puncture a given block of input samples of \p puncsize. The

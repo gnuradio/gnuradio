@@ -20,7 +20,7 @@ namespace channels {
 
 /*!
  * \brief Sample Rate Offset Model
- * \ingroup channel_models_blk
+ * \ingroup block_channels_sro_model
  *
  * \details
  * This block implements a model that varies sample rate offset

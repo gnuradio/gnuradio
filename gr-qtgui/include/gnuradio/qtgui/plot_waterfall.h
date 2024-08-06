@@ -22,7 +22,7 @@ class QwtColorMap;
 
 /*!
  * \brief A plot item, which displays a waterfall spectrogram
- * \ingroup qtgui_blk
+ * \ingroup block_qtgui_plot_waterfall
  *
  * \details
  * A waterfall displays three-dimensional data, where the 3rd dimension

@@ -19,7 +19,7 @@ namespace blocks {
 
 /*!
  * \brief Convert stream of complex to a stream of interleaved shorts.
- * \ingroup type_converters_blk
+ * \ingroup block_blocks_complex_to_interleaved_short
  *
  * \details
  * The output stream contains shorts with twice as many output

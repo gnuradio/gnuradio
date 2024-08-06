@@ -23,7 +23,7 @@ namespace code {
 
 /*!
  * \brief Convolutional Code Encoding class.
- * \ingroup error_coding_blk
+ * \ingroup block_fec_cc_encoder
  *
  * \details
  * This class performs convolutional encoding for unpacked bits

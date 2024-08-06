@@ -19,7 +19,7 @@ namespace filter {
 
 /*!
  * \brief a computationally efficient controllable DC blocker
- * \ingroup filter_blk
+ * \ingroup block_filter_dc_blocker
  *
  * \details
  * This block implements a computationally efficient DC blocker

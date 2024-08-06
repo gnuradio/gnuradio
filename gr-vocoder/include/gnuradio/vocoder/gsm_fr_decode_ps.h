@@ -19,7 +19,7 @@ namespace vocoder {
 
 /*!
  * \brief GSM 06.10 Full Rate Vocoder Decoder
- * \ingroup audio_blk
+ * \ingroup block_vocoder_gsm_fr_decode
  *
  * Input: Vector of 33 bytes per 160 input samples
  * Output: 16-bit shorts representing speech samples

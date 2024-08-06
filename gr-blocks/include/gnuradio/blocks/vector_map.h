@@ -20,7 +20,7 @@ namespace blocks {
 
 /*!
  * \brief Maps elements from a set of input vectors to a set of output vectors.
- * \ingroup stream_operators_blk
+ * \ingroup block_blocks_vector_map
  *
  * \details
  * If in[i] is the input vector in the i'th stream then the output

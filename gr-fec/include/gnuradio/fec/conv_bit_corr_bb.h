@@ -20,7 +20,7 @@ namespace fec {
 
 /*!
  * \brief Correlate block in FECAPI
- * \ingroup error_coding_blk
+ * \ingroup block_fec_conv_bit_corr
  *
  * \details
  *

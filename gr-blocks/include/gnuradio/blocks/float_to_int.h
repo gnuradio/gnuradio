@@ -19,7 +19,7 @@ namespace blocks {
 
 /*!
  * \brief Convert stream of floats to a stream of ints.
- * \ingroup type_converters_blk
+ * \ingroup block_blocks_float_to_int
  */
 class BLOCKS_API float_to_int : virtual public sync_block
 {

@@ -19,9 +19,9 @@ namespace blocks {
 
 /*!
  * \brief Used for testing tag propagation.
- * \ingroup measurement_tools_blk
- * \ingroup stream_tag_tools_blk
- * \ingroup debug_tools_blk
+ * \ingroup block_blocks_test_tag_variable_rate
+ * \ingroup block_blocks_test_tag_variable_rate
+ * \ingroup block_blocks_test_tag_variable_rate
  *
  * This block resamples the stream by a factor that starts at 0.5
  * but varies around by some random walk. The relative rate of the

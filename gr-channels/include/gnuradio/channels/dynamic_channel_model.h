@@ -20,7 +20,7 @@ namespace channels {
 
 /*!
  * \brief dynamic channel simulator
- * \ingroup dynamic_channel_models_blk
+ * \ingroup block_channels_dynamic_channel_model
  *
  * \details
  * This block implements a dynamic channel model simulator that can

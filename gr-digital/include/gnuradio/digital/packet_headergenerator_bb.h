@@ -19,7 +19,7 @@ namespace digital {
 
 /*!
  * \brief Generates a header for a tagged, streamed packet.
- * \ingroup packet_operators_blk
+ * \ingroup block_digital_packet_headergenerator
  *
  * \details
  * Input: A tagged stream. This is consumed entirely, it is not appended

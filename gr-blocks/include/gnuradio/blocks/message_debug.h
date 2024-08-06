@@ -21,9 +21,9 @@ namespace blocks {
 
 /*!
  * \brief Debug block for the message passing system.
- * \ingroup message_tools_blk
- * \ingroup measurement_tools_blk
- * \ingroup debug_tools_blk
+ * \ingroup block_blocks_message_debug
+ * \ingroup block_blocks_message_debug
+ * \ingroup block_blocks_message_debug
  *
  * \details
  * The message debug block is used to capture and print or store

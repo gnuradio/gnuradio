@@ -22,8 +22,8 @@ namespace qtgui {
 /*!
  * \brief A graphical sink to display multiple signals on a
  * waterfall (spectrogram) plot.
- * \ingroup instrumentation_blk
- * \ingroup qtgui_blk
+ * \ingroup block_qtgui_waterfall_sink
+ * \ingroup block_qtgui_waterfall_sink
  *
  * \details
  * This is a QT-based graphical sink the takes set of a floating

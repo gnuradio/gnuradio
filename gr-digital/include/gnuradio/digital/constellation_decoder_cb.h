@@ -20,7 +20,7 @@ namespace digital {
 
 /*!
  * \brief Constellation Decoder
- * \ingroup symbol_coding_blk
+ * \ingroup block_digital_constellation_decoder_cb
  *
  * \details
  * Decode a constellation's points from a complex space to

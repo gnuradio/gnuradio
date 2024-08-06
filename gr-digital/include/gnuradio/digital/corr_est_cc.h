@@ -19,7 +19,7 @@ namespace digital {
 
 /*!
  * \brief Correlate stream with a pre-defined sequence and estimate peak
- * \ingroup synchronizers_blk
+ * \ingroup block_digital_corr_est
  *
  * \details
  * Input:

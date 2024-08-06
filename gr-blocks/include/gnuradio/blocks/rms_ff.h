@@ -19,7 +19,7 @@ namespace blocks {
 
 /*!
  * \brief RMS average power
- * \ingroup math_operators_blk
+ * \ingroup block_blocks_rms
  */
 class BLOCKS_API rms_ff : virtual public sync_block
 {

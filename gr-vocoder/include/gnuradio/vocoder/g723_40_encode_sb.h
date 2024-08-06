@@ -19,7 +19,7 @@ namespace vocoder {
 
 /*!
  * \brief This block performs g723_40 audio encoding.
- * \ingroup audio_blk
+ * \ingroup block_vocoder_g723_40_encode
  */
 class VOCODER_API g723_40_encode_sb : virtual public sync_block
 {

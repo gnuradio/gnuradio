@@ -20,7 +20,7 @@
 
 /*!
  * \brief DisplayForm child for managing vector plots.
- * \ingroup qtgui_blk
+ * \ingroup block_qtgui_vectordisplayform
  */
 class VectorDisplayForm : public DisplayForm
 {

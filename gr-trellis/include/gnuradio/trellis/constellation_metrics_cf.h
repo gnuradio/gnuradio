@@ -21,7 +21,7 @@ namespace trellis {
 
 /*!
  * \brief Evaluate metrics for use by the Viterbi algorithm.
- * \ingroup trellis_coding_blk
+ * \ingroup block_trellis_constellation_metrics_cf
  */
 class TRELLIS_API constellation_metrics_cf : virtual public block
 {

@@ -29,7 +29,7 @@ GR_UHD_API const pmt::pmt_t replay_word_size_key();
  *
  * This wraps a replay block into GNU Radio.
  *
- * \ingroup uhd_blk
+ * \ingroup block_uhd_rfnoc_replay
  */
 class GR_UHD_API rfnoc_replay : virtual public rfnoc_block
 {

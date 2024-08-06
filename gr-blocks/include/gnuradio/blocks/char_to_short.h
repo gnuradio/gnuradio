@@ -19,7 +19,7 @@ namespace blocks {
 
 /*!
  * \brief Convert stream of chars to a stream of shorts.
- * \ingroup type_converters_blk
+ * \ingroup block_blocks_char_to_short
  *
  * \details
  * Converts \p vlen length vectors of input char samples to shorts,

@@ -20,7 +20,7 @@ namespace filter {
 
 /*!
  * \brief Compute intermediate samples between signal samples x(k*Ts)
- * \ingroup filter_primitive
+ * \ingroup block_filter_mmse_fir_interpolator
  *
  * \details
  * This implements a Minimum Mean Squared Error interpolator with

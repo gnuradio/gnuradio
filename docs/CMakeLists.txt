@@ -9,6 +9,7 @@
 # Setup dependencies
 ########################################################################
 find_package(Doxygen)
+find_package(Sphinx)
 find_package(MathJax2)
 
 ########################################################################
@@ -16,6 +17,7 @@ find_package(MathJax2)
 ########################################################################
 include(GrComponent)
 gr_register_component("doxygen" ENABLE_DOXYGEN DOXYGEN_FOUND)
+gr_register_component("sphinx" ENABLE_DOXYGEN)
 gr_register_component("man-pages" ENABLE_MANPAGES)
 
 ########################################################################
@@ -23,6 +25,7 @@ gr_register_component("man-pages" ENABLE_MANPAGES)
 ########################################################################
 if(ENABLE_DOXYGEN)
     add_subdirectory(doxygen)
+    add_subdirectory(sphinx)
 endif(ENABLE_DOXYGEN)
 
 if(ENABLE_MANPAGES)

@@ -1,0 +1,18 @@
+[tool.basedpyright]
+include = ["."]
+exclude = [
+    "_extensions",
+    "_static",
+    "_templates",
+    "blocks",
+]
+
+typeCheckingMode = "standard"
+reportMissingImports = true
+reportMissingTypeStubs = false
+
+pythonVersion = "3.10"
+pythonPlatform = "Linux"
+
+[tool.ruff.lint]
+select = ["ALL"]

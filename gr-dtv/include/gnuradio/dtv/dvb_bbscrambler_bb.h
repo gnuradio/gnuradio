@@ -18,7 +18,7 @@ namespace dtv {
 
 /*!
  * \brief Scrambles FEC baseband frames with a PRBS encoder.
- * \ingroup dtv
+ * \ingroup block_dtv_dvb_bbscrambler
  *
  * \details
  * Input: Variable length FEC baseband frames (BBFRAME). \n

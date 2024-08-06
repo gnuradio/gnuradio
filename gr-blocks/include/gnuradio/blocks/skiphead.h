@@ -20,7 +20,7 @@ namespace blocks {
 
 /*!
  * \brief skips the first N items, from then on copies items to the output
- * \ingroup misc_blk
+ * \ingroup block_blocks_skiphead
  *
  * \details
  * Useful for building test cases and sources which have metadata

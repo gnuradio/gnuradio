@@ -20,7 +20,7 @@ namespace dtv {
 /*!
  * \brief ATSC Viterbi Decoder
  *
- * \ingroup dtv_atsc
+ * \ingroup block_dtv_atsc_viterbi_decoder
  */
 class DTV_API atsc_viterbi_decoder : virtual public gr::sync_block
 {

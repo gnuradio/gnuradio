@@ -24,7 +24,7 @@ namespace code {
 /*!
  * \brief CCSDS Encoding class for convolutional encoding with
  * rate 1/2, K=7, and polynomials [109, 79].
- * \ingroup error_coding_blk
+ * \ingroup block_fec_ccsds_encoder
  *
  * \details
  *

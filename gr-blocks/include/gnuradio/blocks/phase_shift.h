@@ -24,7 +24,7 @@ namespace blocks {
  *
  * This block functions like a multiply const, but with the const limited to
  * abs() == 1 to provide a constant phase shift.
- * \ingroup misc_blk
+ * \ingroup block_blocks_phase_shift
  *
  */
 class BLOCKS_API phase_shift : virtual public gr::sync_block

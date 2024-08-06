@@ -109,7 +109,7 @@ FEC_API void print_matrix(const matrix_sptr M, bool numpy = false);
 /*!
  * \brief Base class for FEC matrix objects.
  *
- * \ingroup error_coding_blk
+ * \ingroup block_fec_fec_mtrx
  *
  * \details
  *

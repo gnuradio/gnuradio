@@ -20,7 +20,7 @@ namespace code {
 
 /*!
  * \brief LDPC bit flip decoding class
- * \ingroup error_coding_blk
+ * \ingroup block_fec_ldpc_bit_flip_decoder
  *
  * \details
  * A hard decision bit flip decoder class for decoding low

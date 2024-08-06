@@ -19,7 +19,7 @@ namespace blocks {
 
 /*!
  * \brief A source of zeros used mainly for testing.
- * \ingroup misc_blk
+ * \ingroup block_blocks_null_source
  */
 class BLOCKS_API null_source : virtual public sync_block
 {

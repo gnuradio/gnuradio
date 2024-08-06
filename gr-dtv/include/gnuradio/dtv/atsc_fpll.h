@@ -35,7 +35,7 @@ namespace dtv {
  * The 8-level symbol stream still has a DC offset, and still
  * requires symbol timing recovery.
  *
- * \ingroup dtv_atsc
+ * \ingroup block_dtv_atsc_fpll
  */
 class DTV_API atsc_fpll : virtual public gr::sync_block
 {

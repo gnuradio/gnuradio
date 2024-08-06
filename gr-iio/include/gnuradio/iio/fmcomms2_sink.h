@@ -22,7 +22,7 @@ namespace iio {
 
 /*!
  * \brief Device specific sink for FMComms evaluation cards
- * \ingroup iio
+ * \ingroup block_iio_fmcomms2_sink
  *
  * \details
  * This block is a sink specifically designed for FMComms2/3/4 evaluation

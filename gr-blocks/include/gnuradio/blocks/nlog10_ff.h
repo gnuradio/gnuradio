@@ -19,7 +19,7 @@ namespace blocks {
 
 /*!
  * \brief output = n*log10(input) + k
- * \ingroup math_operators_blk
+ * \ingroup block_blocks_nlog10
  */
 class BLOCKS_API nlog10_ff : virtual public sync_block
 {

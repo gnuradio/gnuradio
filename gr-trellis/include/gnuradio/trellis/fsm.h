@@ -21,7 +21,7 @@ namespace trellis {
 
 /*!
  * \brief  Finite State Machine Specification class.
- * \ingroup trellis_coding_blk
+ * \ingroup block_trellis_fsm
  *
  * \details
  * An instance of this class represents a finite state machine

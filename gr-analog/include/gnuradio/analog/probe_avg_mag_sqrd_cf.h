@@ -19,7 +19,7 @@ namespace analog {
 
 /*!
  * \brief compute avg magnitude squared.
- * \ingroup measurement_tools_blk
+ * \ingroup block_analog_probe_avg_mag_sqrd_cf
  *
  * \details
  * Input stream 0: complex

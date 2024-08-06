@@ -19,7 +19,7 @@ namespace digital {
 
 /*!
  * \brief Serializes complex modulations symbols from OFDM sub-carriers
- * \ingroup ofdm_blk
+ * \ingroup block_digital_ofdm_serializer_vcc
  *
  * \details
  * This is the inverse block to the carrier_allocator_cvc. It outputs the

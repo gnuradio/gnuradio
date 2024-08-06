@@ -22,7 +22,7 @@ namespace soapy {
 /*!
  * \addtogroup block
  * \brief <b>Source</b> block implements SoapySDR functionality for RX.
- * \ingroup soapy
+ * \ingroup block_soapy_source
  * \section source Soapy Source
  * The soapy source block receives samples and writes to a stream.
  * The source block also provides Soapy API calls for receiver settings.

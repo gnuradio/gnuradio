@@ -18,8 +18,8 @@ namespace analog {
 /*!
  * \brief Perform continuous phase 2-level frequency shift keying modulation
  * on an input stream of unpacked bits.
- * \ingroup modulators_blk
- * \ingroup deprecated_blk
+ * \ingroup block_analog_cpfsk
+ * \ingroup block_analog_cpfsk
  */
 class ANALOG_API cpfsk_bc : virtual public sync_interpolator
 {

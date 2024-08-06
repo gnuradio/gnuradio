@@ -19,7 +19,7 @@ namespace blocks {
 
 /*!
  * \brief deinterleave an input block of samples into N outputs.
- * \ingroup stream_operators_blk
+ * \ingroup block_blocks_deinterleave
  *
  * \details
  * This block deinterleaves blocks of samples. For each output

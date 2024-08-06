@@ -21,7 +21,7 @@ namespace blocks {
 
 /*!
  * \brief T sink that writes to a vector
- * \ingroup debug_tools_blk
+ * \ingroup block_blocks_vector_sink
  */
 template <class T>
 class BLOCKS_API vector_sink : virtual public sync_block

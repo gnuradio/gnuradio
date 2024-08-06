@@ -21,7 +21,7 @@ namespace kernel {
 /*!
  * \brief Polyphase filterbank arbitrary resampler with
  *        gr_complex input, gr_complex output and float taps
- * \ingroup resamplers_blk
+ * \ingroup block_filter_pfb_arb_resampler
  *
  * \details
  * This  takes in a signal stream and performs arbitrary
@@ -342,7 +342,7 @@ public:
 /*!
  * \brief Polyphase filterbank arbitrary resampler with
  *        float input, float output and float taps
- * \ingroup resamplers_blk
+ * \ingroup block_filter_pfb_arb_resampler
  *
  * \details
  * This  takes in a signal stream and performs arbitrary

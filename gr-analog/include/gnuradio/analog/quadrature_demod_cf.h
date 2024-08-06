@@ -19,7 +19,7 @@ namespace analog {
 
 /*!
  * \brief quadrature demodulator: complex in, float out
- * \ingroup modulators_blk
+ * \ingroup block_analog_quadrature_demod_cf
  *
  * \details
  * This can be used to demod FM, FSK, GMSK, etc.  The input is complex

@@ -18,8 +18,8 @@ namespace gr {
 namespace digital {
 
 /*! Estimate channel and coarse frequency offset for OFDM from preambles
- * \ingroup ofdm_blk
- * \ingroup synchronizers_blk
+ * \ingroup block_digital_ofdm_chanest_vcvc
+ * \ingroup block_digital_ofdm_chanest_vcvc
  *
  * Input: OFDM symbols (in frequency domain). The first one (or two) symbols are expected
  *        to be synchronisation symbols, which are used to estimate the coarse freq offset

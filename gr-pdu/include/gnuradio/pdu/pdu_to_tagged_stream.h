@@ -20,7 +20,7 @@ namespace pdu {
 
 /*!
  * \brief Turns received PDUs into a tagged stream of items
- * \ingroup message_tools_blk
+ * \ingroup block_pdu_pdu_to_tagged_stream
  */
 class PDU_API pdu_to_tagged_stream : virtual public tagged_stream_block
 {

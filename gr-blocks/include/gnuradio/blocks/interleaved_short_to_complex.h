@@ -19,7 +19,7 @@ namespace blocks {
 
 /*!
  * \brief Convert stream of interleaved shorts to a stream of complex
- * \ingroup type_converters_blk
+ * \ingroup block_blocks_interleaved_short_to_complex
  */
 class BLOCKS_API interleaved_short_to_complex : virtual public sync_decimator
 {

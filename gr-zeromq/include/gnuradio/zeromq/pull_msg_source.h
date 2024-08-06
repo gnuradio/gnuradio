@@ -19,7 +19,7 @@ namespace zeromq {
 
 /*!
  * \brief Receive messages on ZMQ PULL socket and output async messages
- * \ingroup zeromq
+ * \ingroup block_zeromq_pull_msg_source
  *
  * \details
  * This block will connect to a ZMQ PUSH socket, then convert

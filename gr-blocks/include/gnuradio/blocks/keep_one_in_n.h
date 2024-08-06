@@ -19,7 +19,7 @@ namespace blocks {
 
 /*!
  * \brief decimate a stream, keeping the last item out of every \p n.
- * \ingroup stream_operators_blk
+ * \ingroup block_blocks_keep_one_in_n
  */
 class BLOCKS_API keep_one_in_n : virtual public block
 {

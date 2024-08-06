@@ -21,7 +21,7 @@ namespace blocks {
 
 /*!
  * \brief stop after processing the first N items
- * \ingroup misc_blk
+ * \ingroup block_blocks_head
  *
  * \details
  * Useful for building test cases, this block consumes only N items from its input, and

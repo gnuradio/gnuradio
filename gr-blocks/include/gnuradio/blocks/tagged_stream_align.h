@@ -18,7 +18,7 @@ namespace blocks {
 
 /*!
  * \brief Align a stream to a tagged stream item
- * \ingroup stream_operators_blk
+ * \ingroup block_blocks_tagged_stream_align
  *
  * \details
  * Takes an unaligned stream of tagged stream items and aligns to the first item

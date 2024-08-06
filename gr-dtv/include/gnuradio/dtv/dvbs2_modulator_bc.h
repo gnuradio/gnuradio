@@ -19,7 +19,7 @@ namespace dtv {
 
 /*!
  * \brief Modulates DVB-S2 frames.
- * \ingroup dtv
+ * \ingroup block_dtv_dvbs2_modulator
  *
  * Input: Bit interleaved baseband frames. \n
  * Output: QPSK, 8PSK, 16APSK or 32APSK modulated complex IQ values (XFECFRAME).

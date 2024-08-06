@@ -24,7 +24,7 @@ namespace digital {
  * format object class. Designed to accept hard bits and produce
  * PDUs with packed bytes (pmt::u8vector).
  *
- * \ingroup packet_operators_blk
+ * \ingroup block_digital_protocol_parser
  *
  * \details
  *

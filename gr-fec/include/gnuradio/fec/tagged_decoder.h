@@ -24,7 +24,7 @@ namespace fec {
  * variable object (derived from gr::fec::general_decoder) for use
  * in a flowgraph.
  *
- * \ingroup error_coding_blk
+ * \ingroup block_fec_tagged_decoder
  *
  * \details
  * This block uses a decoder variable object (derived from

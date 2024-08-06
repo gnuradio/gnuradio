@@ -19,7 +19,7 @@ namespace wavelet {
 
 /*!
  * \brief Compute wavelet transform using gsl routines.
- * \ingroup wavelet_blk
+ * \ingroup block_wavelet_wavelet
  */
 class WAVELET_API wavelet_ff : virtual public sync_block
 {

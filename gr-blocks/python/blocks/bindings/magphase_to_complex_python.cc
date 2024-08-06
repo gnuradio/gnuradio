@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(magphase_to_complex.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(9784aabc763faf927f5045c8b11dfa1b)                     */
+/* BINDTOOL_HEADER_FILE_HASH(419f011888e2e61eb50a7f8e08a262e6)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>

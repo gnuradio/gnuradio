@@ -19,8 +19,8 @@ namespace pdu {
 
 /*!
  * \brief Set k=>v in pdu's meta field and pass on
- * \ingroup message_tools_blk
- * \ingroup debug_tools_blk
+ * \ingroup block_pdu_pdu_set
+ * \ingroup block_pdu_pdu_set
  */
 class PDU_API pdu_set : virtual public block
 {

@@ -21,7 +21,7 @@ namespace filter {
 /*!
  * \brief Polyphase filterbank arbitrary resampler with
  *        gr_complex input, gr_complex output and gr_complex taps
- * \ingroup resamplers_blk
+ * \ingroup block_filter_pfb_arb_resampler
  *
  * \details
 

@@ -19,7 +19,7 @@ namespace dtv {
 
 /*!
  * \brief Maps T2 frames.
- * \ingroup dtv
+ * \ingroup block_dtv_dvbt2_framemapper
  *
  * Input: Cell and time interleaved QPSK, 16QAM, 64QAM or 256QAM modulated cells. \n
  * Output: T2 frame.

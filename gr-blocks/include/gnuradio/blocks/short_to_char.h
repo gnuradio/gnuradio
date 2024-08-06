@@ -25,7 +25,7 @@ namespace blocks {
  *
  * [0x00ff, 0x0ff0, 0xff00] => [0x00, 0x0f, 0xff]
  *
- * \ingroup type_converters_blk
+ * \ingroup block_blocks_short_to_char
  *
  * \details
  * Converts \p vlen length vectors of input short samples to chars,

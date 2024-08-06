@@ -18,7 +18,7 @@ namespace dtv {
 
 /*!
  * \brief Trellis Encoder. 14/15 (64QAM) or 19/20 (256QAM) code rate.
- * \ingroup dtv
+ * \ingroup block_dtv_catv_trellis_enc
  *
  * Input: Scrambled FEC Frame packets of 60 * 128 (64QAM) or 88 * 128 (256QAM) 7-bit
  * symbols with 42-bit (64QAM) or 40-bit (256QAM) FSYNC word.\n Output: Four 7-bit symbols

@@ -21,7 +21,7 @@ namespace pdu {
 /*!
  * \brief Turns received stream data and tags into PDUs and sends
  * them through a message port.
- * \ingroup message_tools_blk
+ * \ingroup block_pdu_tagged_stream_to_pdu
  *
  * The sent message is a PMT-pair (created by pmt::cons()). The
  * first element is a dictionary containing all the tags. The

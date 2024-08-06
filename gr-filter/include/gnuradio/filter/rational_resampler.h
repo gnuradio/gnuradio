@@ -21,7 +21,7 @@ namespace filter {
 /*!
  * \brief Rational Resampling Polyphase FIR filter with IN_T
  * input, OUT_T output and TAP_T taps.
- * \ingroup resamplers_blk
+ * \ingroup block_filter_rational_resampler
  *
  * Make a rational resampling FIR filter. If the input signal is
  * at rate fs, then the output signal will be at a rate of \p

@@ -20,7 +20,7 @@ namespace digital {
 
 /*!
  * \brief A block for computing SNR of a signal.
- * \ingroup measurement_tools_blk
+ * \ingroup block_digital_mpsk_snr_est
  *
  * \details
  * This block can be used to monitor and retrieve estimations of
