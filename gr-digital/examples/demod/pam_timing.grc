@@ -1,6 +1,7 @@
 options:
   parameters:
     author: ''
+    catch_exceptions: 'True'
     category: Custom
     cmake_opt: ''
     comment: ''
@@ -24,6 +25,9 @@ options:
     title: ''
     window_size: 1280, 1024
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [8, 12.0]
     rotation: 0
     state: enabled
@@ -35,7 +39,10 @@ blocks:
     comment: ''
     value: digital.qpsk_constellation()
   states:
-    coordinate: [184, 108.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [264, 100.0]
     rotation: 0
     state: enabled
 - name: freq_offset
@@ -45,7 +52,7 @@ blocks:
     gui_hint: 4,2,1,1
     label: Frequency Offset
     min_len: '200'
-    orient: Qt.Horizontal
+    orient: QtCore.Qt.Horizontal
     rangeType: float
     start: -.5
     step: '.01'
@@ -53,7 +60,10 @@ blocks:
     value: '0'
     widget: counter_slider
   states:
-    coordinate: [384, 276.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [464, 276.0]
     rotation: 0
     state: enabled
 - name: interpratio
@@ -63,7 +73,7 @@ blocks:
     gui_hint: 2,2,1,1
     label: Timing Offset
     min_len: '200'
-    orient: Qt.Horizontal
+    orient: QtCore.Qt.Horizontal
     rangeType: float
     start: '.99'
     step: '0.0001'
@@ -71,7 +81,10 @@ blocks:
     value: '1'
     widget: counter_slider
   states:
-    coordinate: [128, 276.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [208, 276.0]
     rotation: 0
     state: enabled
 - name: nfilts
@@ -80,7 +93,10 @@ blocks:
     comment: ''
     value: '32'
   states:
-    coordinate: [440, 12.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [520, 12.0]
     rotation: 0
     state: enabled
 - name: noise_amp
@@ -90,7 +106,7 @@ blocks:
     gui_hint: 3,2,1,1
     label: Channel Noise
     min_len: '200'
-    orient: Qt.Horizontal
+    orient: QtCore.Qt.Horizontal
     rangeType: float
     start: '0'
     step: '.001'
@@ -98,7 +114,10 @@ blocks:
     value: '0'
     widget: counter_slider
   states:
-    coordinate: [256, 276.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [336, 276.0]
     rotation: 0
     state: enabled
 - name: rolloff
@@ -107,7 +126,10 @@ blocks:
     comment: ''
     value: '.35'
   states:
-    coordinate: [504, 12.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [584, 12.0]
     rotation: 0
     state: enabled
 - name: samp_rate
@@ -116,16 +138,10 @@ blocks:
     comment: ''
     value: '32000'
   states:
-    coordinate: [600, 388.0]
-    rotation: 0
-    state: enabled
-- name: sig_amp
-  id: variable
-  parameters:
-    comment: ''
-    value: '1'
-  states:
-    coordinate: [656, 108.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [680, 388.0]
     rotation: 0
     state: enabled
 - name: spb
@@ -134,7 +150,10 @@ blocks:
     comment: ''
     value: '4.2563'
   states:
-    coordinate: [312, 12.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [392, 12.0]
     rotation: 0
     state: enabled
 - name: time_bw
@@ -144,7 +163,7 @@ blocks:
     gui_hint: 1,2,1,1
     label: Timing Loop BW
     min_len: '200'
-    orient: Qt.Horizontal
+    orient: QtCore.Qt.Horizontal
     rangeType: float
     start: '0'
     step: '.001'
@@ -152,7 +171,10 @@ blocks:
     value: '0'
     widget: counter_slider
   states:
-    coordinate: [744, 532.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [824, 532.0]
     rotation: 0
     state: enabled
 - name: analog_random_source_x
@@ -169,38 +191,31 @@ blocks:
     repeat: 'True'
     type: byte
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [8, 132.0]
     rotation: 0
     state: enabled
-- name: blocks_multiply_const_vxx_0
-  id: blocks_multiply_const_vxx
-  parameters:
-    affinity: ''
-    alias: ''
-    comment: ''
-    const: sig_amp
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    type: complex
-    vlen: '1'
-  states:
-    coordinate: [656, 156.0]
-    rotation: 0
-    state: enabled
-- name: blocks_throttle_0
-  id: blocks_throttle
+- name: blocks_throttle2_0
+  id: blocks_throttle2
   parameters:
     affinity: ''
     alias: ''
     comment: ''
     ignoretag: 'True'
+    limit: auto
+    maximum: '0.1'
     maxoutbuf: '0'
     minoutbuf: '0'
     samples_per_second: samp_rate
     type: complex
     vlen: '1'
   states:
-    coordinate: [584, 436.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [656, 468.0]
     rotation: 0
     state: enabled
 - name: channels_channel_model_0
@@ -218,7 +233,10 @@ blocks:
     seed: '42'
     taps: '1.0'
   states:
-    coordinate: [592, 252.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [672, 252.0]
     rotation: 180
     state: enabled
 - name: digital_chunks_to_symbols_xx
@@ -235,7 +253,10 @@ blocks:
     out_type: complex
     symbol_table: const.points()
   states:
-    coordinate: [184, 160.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [264, 160.0]
     rotation: 0
     state: enabled
 - name: digital_pfb_clock_sync_xxx_0
@@ -255,7 +276,10 @@ blocks:
     taps: firdes.root_raised_cosine(nfilts, nfilts*spb, 1.0, rolloff, 44*nfilts)
     type: ccf
   states:
-    coordinate: [744, 388.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [824, 388.0]
     rotation: 0
     state: enabled
 - name: import_0
@@ -265,6 +289,9 @@ blocks:
     comment: ''
     imports: from gnuradio import digital
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [8, 76.0]
     rotation: 0
     state: enabled
@@ -296,7 +323,10 @@ blocks:
     label9: Tab 9
     num_tabs: '4'
   states:
-    coordinate: [1032, 20.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1112, 4.0]
     rotation: 0
     state: enabled
 - name: pfb_arb_resampler_xxx_0
@@ -314,7 +344,10 @@ blocks:
     taps: firdes.root_raised_cosine(nfilts, nfilts, 1.0, rolloff, 44*nfilts)
     type: ccf
   states:
-    coordinate: [408, 132.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [488, 132.0]
     rotation: 0
     state: enabled
 - name: qtgui_time_sink_x_0
@@ -332,18 +365,18 @@ blocks:
     alpha7: '1.0'
     alpha8: '1.0'
     alpha9: '1.0'
-    autoscale: 'False'
+    autoscale: 'True'
     axislabels: 'True'
-    color1: '"blue"'
-    color10: '"blue"'
-    color2: '"red"'
-    color3: '"green"'
-    color4: '"black"'
-    color5: '"cyan"'
-    color6: '"magenta"'
-    color7: '"yellow"'
-    color8: '"dark red"'
-    color9: '"dark green"'
+    color1: blue
+    color10: dark blue
+    color2: red
+    color3: green
+    color4: black
+    color5: cyan
+    color6: magenta
+    color7: yellow
+    color8: dark red
+    color9: dark green
     comment: ''
     ctrlpanel: 'False'
     entags: 'True'
@@ -370,7 +403,7 @@ blocks:
     marker7: '-1'
     marker8: '-1'
     marker9: '-1'
-    name: Error
+    name: Resampled Signal
     nconnections: '1'
     size: '1024'
     srate: samp_rate
@@ -408,7 +441,10 @@ blocks:
     ymin: '-1'
     yunit: '""'
   states:
-    coordinate: [1032, 132.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1112, 132.0]
     rotation: 0
     state: enabled
 - name: qtgui_time_sink_x_0_0
@@ -426,18 +462,18 @@ blocks:
     alpha7: '1.0'
     alpha8: '1.0'
     alpha9: '1.0'
-    autoscale: 'False'
+    autoscale: 'True'
     axislabels: 'True'
-    color1: '"blue"'
-    color10: '"blue"'
-    color2: '"red"'
-    color3: '"green"'
-    color4: '"black"'
-    color5: '"cyan"'
-    color6: '"magenta"'
-    color7: '"yellow"'
-    color8: '"dark red"'
-    color9: '"dark green"'
+    color1: blue
+    color10: dark blue
+    color2: red
+    color3: green
+    color4: black
+    color5: cyan
+    color6: magenta
+    color7: yellow
+    color8: dark red
+    color9: dark green
     comment: ''
     ctrlpanel: 'False'
     entags: 'True'
@@ -502,7 +538,10 @@ blocks:
     ymin: '-1'
     yunit: '""'
   states:
-    coordinate: [1032, 236.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1112, 236.0]
     rotation: 0
     state: enabled
 - name: qtgui_time_sink_x_1
@@ -522,16 +561,16 @@ blocks:
     alpha9: '1.0'
     autoscale: 'True'
     axislabels: 'True'
-    color1: '"blue"'
-    color10: '"blue"'
-    color2: '"red"'
-    color3: '"green"'
-    color4: '"black"'
-    color5: '"cyan"'
-    color6: '"magenta"'
-    color7: '"yellow"'
-    color8: '"dark red"'
-    color9: '"dark green"'
+    color1: blue
+    color10: dark blue
+    color2: red
+    color3: green
+    color4: black
+    color5: cyan
+    color6: magenta
+    color7: yellow
+    color8: dark red
+    color9: dark green
     comment: ''
     ctrlpanel: 'False'
     entags: 'True'
@@ -596,7 +635,10 @@ blocks:
     ymin: '-1'
     yunit: '""'
   states:
-    coordinate: [1032, 332.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1112, 332.0]
     rotation: 0
     state: enabled
 - name: qtgui_time_sink_x_1_0
@@ -616,16 +658,16 @@ blocks:
     alpha9: '1.0'
     autoscale: 'True'
     axislabels: 'True'
-    color1: '"blue"'
-    color10: '"blue"'
-    color2: '"red"'
-    color3: '"green"'
-    color4: '"black"'
-    color5: '"cyan"'
-    color6: '"magenta"'
-    color7: '"yellow"'
-    color8: '"dark red"'
-    color9: '"dark green"'
+    color1: blue
+    color10: dark blue
+    color2: red
+    color3: green
+    color4: black
+    color5: cyan
+    color6: magenta
+    color7: yellow
+    color8: dark red
+    color9: dark green
     comment: ''
     ctrlpanel: 'False'
     entags: 'True'
@@ -690,7 +732,10 @@ blocks:
     ymin: '-1'
     yunit: '""'
   states:
-    coordinate: [1032, 428.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1112, 428.0]
     rotation: 0
     state: enabled
 - name: qtgui_time_sink_x_1_1
@@ -710,16 +755,16 @@ blocks:
     alpha9: '1.0'
     autoscale: 'True'
     axislabels: 'True'
-    color1: '"blue"'
-    color10: '"blue"'
-    color2: '"red"'
-    color3: '"green"'
-    color4: '"black"'
-    color5: '"cyan"'
-    color6: '"magenta"'
-    color7: '"yellow"'
-    color8: '"dark red"'
-    color9: '"dark green"'
+    color1: blue
+    color10: dark blue
+    color2: red
+    color3: green
+    color4: black
+    color5: cyan
+    color6: magenta
+    color7: yellow
+    color8: dark red
+    color9: dark green
     comment: ''
     ctrlpanel: 'False'
     entags: 'True'
@@ -784,22 +829,25 @@ blocks:
     ymin: '-1'
     yunit: '""'
   states:
-    coordinate: [1032, 524.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1112, 524.0]
     rotation: 0
     state: enabled
 
 connections:
 - [analog_random_source_x, '0', digital_chunks_to_symbols_xx, '0']
-- [blocks_multiply_const_vxx_0, '0', channels_channel_model_0, '0']
-- [blocks_multiply_const_vxx_0, '0', qtgui_time_sink_x_0, '0']
-- [blocks_throttle_0, '0', digital_pfb_clock_sync_xxx_0, '0']
-- [channels_channel_model_0, '0', blocks_throttle_0, '0']
+- [blocks_throttle2_0, '0', digital_pfb_clock_sync_xxx_0, '0']
+- [channels_channel_model_0, '0', blocks_throttle2_0, '0']
 - [digital_chunks_to_symbols_xx, '0', pfb_arb_resampler_xxx_0, '0']
 - [digital_pfb_clock_sync_xxx_0, '0', qtgui_time_sink_x_0_0, '0']
 - [digital_pfb_clock_sync_xxx_0, '1', qtgui_time_sink_x_1, '0']
 - [digital_pfb_clock_sync_xxx_0, '2', qtgui_time_sink_x_1_0, '0']
 - [digital_pfb_clock_sync_xxx_0, '3', qtgui_time_sink_x_1_1, '0']
-- [pfb_arb_resampler_xxx_0, '0', blocks_multiply_const_vxx_0, '0']
+- [pfb_arb_resampler_xxx_0, '0', channels_channel_model_0, '0']
+- [pfb_arb_resampler_xxx_0, '0', qtgui_time_sink_x_0, '0']
 
 metadata:
   file_format: 1
+  grc_version: 3.10.10.0

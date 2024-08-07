@@ -23,6 +23,7 @@ options:
     sizing_mode: fixed
     thread_safe_setters: ''
     title: Python Snippets Example Flowgraph
+    window_size: (1000,1000)
   states:
     bus_sink: false
     bus_source: false
@@ -42,6 +43,27 @@ blocks:
     bus_source: false
     bus_structure: null
     coordinate: [184, 12]
+    rotation: 0
+    state: enabled
+- name: blocks_throttle2_0
+  id: blocks_throttle2
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    ignoretag: 'True'
+    limit: auto
+    maximum: '0.1'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    samples_per_second: samp_rate
+    type: float
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [744, 388.0]
     rotation: 0
     state: enabled
 - name: foo_mod
@@ -225,25 +247,6 @@ blocks:
     coordinate: [1120, 55]
     rotation: 0
     state: true
-- name: throttle_block
-  id: blocks_throttle
-  parameters:
-    affinity: ''
-    alias: ''
-    comment: ''
-    ignoretag: 'True'
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    samples_per_second: samp_rate
-    type: float
-    vlen: '1'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [752, 384]
-    rotation: 0
-    state: enabled
 - name: vsink
   id: blocks_vector_sink_x
   parameters:
@@ -277,14 +280,15 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [531, 390]
+    coordinate: [528, 380.0]
     rotation: 0
     state: true
 
 connections:
+- [blocks_throttle2_0, '0', head_block, '0']
 - [head_block, '0', vsink, '0']
-- [throttle_block, '0', head_block, '0']
-- [vsrc, '0', throttle_block, '0']
+- [vsrc, '0', blocks_throttle2_0, '0']
 
 metadata:
   file_format: 1
+  grc_version: 3.10.10.0

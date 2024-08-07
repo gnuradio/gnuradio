@@ -1,6 +1,7 @@
 options:
   parameters:
     author: ''
+    catch_exceptions: 'True'
     category: Custom
     cmake_opt: ''
     comment: ''
@@ -24,6 +25,9 @@ options:
     title: ''
     window_size: ''
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [8, 11]
     rotation: 0
     state: enabled
@@ -35,6 +39,9 @@ blocks:
     comment: ''
     value: '8000'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [176, 11]
     rotation: 0
     state: enabled
@@ -47,6 +54,9 @@ blocks:
     src: pmt.intern("src")
     value: pmt.PMT_T
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [176, 316.0]
     rotation: 0
     state: enabled
@@ -61,23 +71,31 @@ blocks:
     once: 'False'
     step: '0.001'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [624, 140.0]
     rotation: 0
     state: enabled
-- name: blocks_throttle_0
-  id: blocks_throttle
+- name: blocks_throttle2_0
+  id: blocks_throttle2
   parameters:
     affinity: ''
     alias: ''
     comment: ''
     ignoretag: 'True'
+    limit: auto
+    maximum: '0.1'
     maxoutbuf: '0'
     minoutbuf: '0'
     samples_per_second: samp_rate
     type: float
     vlen: '1'
   states:
-    coordinate: [432, 148.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [432, 140.0]
     rotation: 0
     state: enabled
 - name: blocks_vector_source_x_0_0
@@ -94,6 +112,9 @@ blocks:
     vector: numpy.arange(-1, 1, 0.01)
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [176, 132.0]
     rotation: 0
     state: disabled
@@ -111,6 +132,9 @@ blocks:
     vector: numpy.arange(-1, 1, 0.1)
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [176, 212.0]
     rotation: 0
     state: enabled
@@ -121,6 +145,9 @@ blocks:
     comment: ''
     imports: import numpy
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [272, 11]
     rotation: 0
     state: enabled
@@ -141,16 +168,16 @@ blocks:
     alpha9: '1.0'
     autoscale: 'False'
     axislabels: 'True'
-    color1: '"blue"'
-    color10: '"blue"'
-    color2: '"red"'
-    color3: '"green"'
-    color4: '"black"'
-    color5: '"cyan"'
-    color6: '"magenta"'
-    color7: '"yellow"'
-    color8: '"dark red"'
-    color9: '"dark green"'
+    color1: blue
+    color10: dark blue
+    color2: red
+    color3: green
+    color4: black
+    color5: cyan
+    color6: magenta
+    color7: yellow
+    color8: dark red
+    color9: dark green
     comment: ''
     ctrlpanel: 'False'
     entags: 'True'
@@ -215,6 +242,9 @@ blocks:
     ymin: '-1.5'
     yunit: '""'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [832, 132.0]
     rotation: 0
     state: enabled
@@ -235,16 +265,16 @@ blocks:
     alpha9: '1.0'
     autoscale: 'False'
     axislabels: 'True'
-    color1: '"blue"'
-    color10: '"blue"'
-    color2: '"red"'
-    color3: '"green"'
-    color4: '"black"'
-    color5: '"cyan"'
-    color6: '"magenta"'
-    color7: '"yellow"'
-    color8: '"dark red"'
-    color9: '"dark green"'
+    color1: blue
+    color10: dark blue
+    color2: red
+    color3: green
+    color4: black
+    color5: cyan
+    color6: magenta
+    color7: yellow
+    color8: dark red
+    color9: dark green
     comment: ''
     ctrlpanel: 'False'
     entags: 'True'
@@ -309,16 +339,20 @@ blocks:
     ymin: '-1.5'
     yunit: '""'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [624, 220.0]
     rotation: 0
     state: enabled
 
 connections:
 - [blocks_test_tag_variable_rate_ff_0, '0', qtgui_time_sink_x_0, '0']
-- [blocks_throttle_0, '0', blocks_test_tag_variable_rate_ff_0, '0']
-- [blocks_throttle_0, '0', qtgui_time_sink_x_0_0, '0']
-- [blocks_vector_source_x_0_0, '0', blocks_throttle_0, '0']
-- [blocks_vector_source_x_0_0_0, '0', blocks_throttle_0, '0']
+- [blocks_throttle2_0, '0', blocks_test_tag_variable_rate_ff_0, '0']
+- [blocks_throttle2_0, '0', qtgui_time_sink_x_0_0, '0']
+- [blocks_vector_source_x_0_0, '0', blocks_throttle2_0, '0']
+- [blocks_vector_source_x_0_0_0, '0', blocks_throttle2_0, '0']
 
 metadata:
   file_format: 1
+  grc_version: 3.10.10.0

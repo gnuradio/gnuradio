@@ -23,6 +23,7 @@ options:
     sizing_mode: fixed
     thread_safe_setters: ''
     title: Test Digital Number Control
+    window_size: (1000,1000)
   states:
     bus_sink: false
     bus_source: false
@@ -64,7 +65,7 @@ blocks:
     gui_hint: 0,0,1,1
     label: ''
     min_len: '200'
-    orient: Qt.Horizontal
+    orient: QtCore.Qt.Horizontal
     rangeType: float
     start: 90e6
     step: 1e3
@@ -96,6 +97,8 @@ blocks:
     affinity: ''
     alias: ''
     comment: ''
+    en_uvec: 'True'
+    log_level: info
   states:
     bus_sink: false
     bus_source: false
@@ -139,13 +142,15 @@ blocks:
     coordinate: [304, 304.0]
     rotation: 0
     state: true
-- name: blocks_throttle_0
-  id: blocks_throttle
+- name: blocks_throttle2_0
+  id: blocks_throttle2
   parameters:
     affinity: ''
     alias: ''
     comment: ''
     ignoretag: 'True'
+    limit: auto
+    maximum: '0.1'
     maxoutbuf: '0'
     minoutbuf: '0'
     samples_per_second: samp_rate
@@ -155,14 +160,15 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [504, 300.0]
+    coordinate: [472, 292.0]
     rotation: 0
-    state: true
+    state: enabled
 
 connections:
-- [blocks_null_source_0, '0', blocks_throttle_0, '0']
-- [blocks_throttle_0, '0', blocks_null_sink_0, '0']
+- [blocks_null_source_0, '0', blocks_throttle2_0, '0']
+- [blocks_throttle2_0, '0', blocks_null_sink_0, '0']
 - [freq, valueout, blocks_message_debug_0, print]
 
 metadata:
   file_format: 1
+  grc_version: 3.10.10.0

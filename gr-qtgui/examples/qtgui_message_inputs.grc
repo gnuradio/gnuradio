@@ -1,6 +1,7 @@
 options:
   parameters:
     author: ''
+    catch_exceptions: 'True'
     category: Custom
     cmake_opt: ''
     comment: ''
@@ -24,6 +25,9 @@ options:
     title: ''
     window_size: ''
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [8, 3]
     rotation: 0
     state: enabled
@@ -35,6 +39,9 @@ blocks:
     comment: ''
     value: '256'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [376, 3]
     rotation: 0
     state: enabled
@@ -44,6 +51,9 @@ blocks:
     comment: ''
     value: '1000'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [280, 3]
     rotation: 0
     state: enabled
@@ -53,6 +63,9 @@ blocks:
     comment: ''
     value: '32000'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [184, 3]
     rotation: 0
     state: enabled
@@ -69,6 +82,9 @@ blocks:
     seed: '0'
     type: complex
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [16, 100.0]
     rotation: 0
     state: enabled
@@ -85,6 +101,9 @@ blocks:
     seed: '0'
     type: float
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [16, 364.0]
     rotation: 0
     state: enabled
@@ -101,9 +120,13 @@ blocks:
     offset: '0'
     phase: '0'
     samp_rate: samp_rate
+    showports: 'False'
     type: complex
     waveform: analog.GR_COS_WAVE
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [15, 213]
     rotation: 0
     state: enabled
@@ -120,9 +143,13 @@ blocks:
     offset: '0'
     phase: '0'
     samp_rate: samp_rate
+    showports: 'False'
     type: float
     waveform: analog.GR_COS_WAVE
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [21, 504]
     rotation: 0
     state: enabled
@@ -138,6 +165,9 @@ blocks:
     type: complex
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [208, 120.0]
     rotation: 0
     state: enabled
@@ -153,6 +183,9 @@ blocks:
     type: float
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [208, 384.0]
     rotation: 0
     state: enabled
@@ -169,6 +202,9 @@ blocks:
     type: complex
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [464, 124.0]
     rotation: 0
     state: enabled
@@ -185,7 +221,52 @@ blocks:
     type: float
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [456, 388.0]
+    rotation: 0
+    state: enabled
+- name: blocks_throttle2_0
+  id: blocks_throttle2
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    ignoretag: 'True'
+    limit: auto
+    maximum: '0.1'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    samples_per_second: samp_rate
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [304, 124.0]
+    rotation: 0
+    state: enabled
+- name: blocks_throttle2_0_0
+  id: blocks_throttle2
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    ignoretag: 'True'
+    limit: auto
+    maximum: '0.1'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    samples_per_second: samp_rate
+    type: float
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [296, 388.0]
     rotation: 0
     state: enabled
 - name: pdu_tagged_stream_to_pdu_0
@@ -199,6 +280,9 @@ blocks:
     tag: packet_len
     type: complex
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [688, 132.0]
     rotation: 0
     state: enabled
@@ -213,39 +297,10 @@ blocks:
     tag: packet_len
     type: float
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [680, 396.0]
-    rotation: 0
-    state: enabled
-- name: blocks_throttle_0
-  id: blocks_throttle
-  parameters:
-    affinity: ''
-    alias: ''
-    comment: ''
-    ignoretag: 'True'
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    samples_per_second: samp_rate
-    type: complex
-    vlen: '1'
-  states:
-    coordinate: [296, 132.0]
-    rotation: 0
-    state: enabled
-- name: blocks_throttle_1
-  id: blocks_throttle
-  parameters:
-    affinity: ''
-    alias: ''
-    comment: ''
-    ignoretag: 'True'
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    samples_per_second: samp_rate
-    type: float
-    vlen: '1'
-  states:
-    coordinate: [296, 396.0]
     rotation: 0
     state: enabled
 - name: qtgui_const_sink_x_0
@@ -334,6 +389,9 @@ blocks:
     ymax: '2'
     ymin: '-2'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [991, 87]
     rotation: 0
     state: enabled
@@ -389,6 +447,7 @@ blocks:
     minoutbuf: '0'
     name: '""'
     nconnections: '2'
+    norm_window: 'False'
     showports: 'True'
     tr_chan: '0'
     tr_level: '0.0'
@@ -411,6 +470,9 @@ blocks:
     ymax: '10'
     ymin: '-140'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [991, 246]
     rotation: 0
     state: enabled
@@ -466,6 +528,7 @@ blocks:
     minoutbuf: '0'
     name: '""'
     nconnections: '2'
+    norm_window: 'False'
     showports: 'True'
     tr_chan: '0'
     tr_level: '0.0'
@@ -488,6 +551,9 @@ blocks:
     ymax: '10'
     ymin: '-140'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [968, 540]
     rotation: 0
     state: enabled
@@ -572,6 +638,9 @@ blocks:
     xmax: '1'
     xmin: '-1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [968, 715]
     rotation: 0
     state: enabled
@@ -623,9 +692,18 @@ blocks:
     samp_rate: samp_rate
     type: msg_float
     update_time: '0.50'
+    x_end_value: '0.0'
+    x_label: '""'
+    x_start_value: '0.0'
+    y_end_value: '0.0'
+    y_label: '""'
+    y_start_value: '0.0'
     zmax: '1'
     zmin: '-1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [968, 644]
     rotation: 0
     state: enabled
@@ -646,16 +724,16 @@ blocks:
     alpha9: '1.0'
     autoscale: 'False'
     axislabels: 'True'
-    color1: '"magenta"'
-    color10: '"blue"'
-    color2: '"red"'
-    color3: '"green"'
-    color4: '"black"'
-    color5: '"cyan"'
-    color6: '"magenta"'
-    color7: '"yellow"'
-    color8: '"dark red"'
-    color9: '"dark green"'
+    color1: blue
+    color10: dark blue
+    color2: red
+    color3: green
+    color4: black
+    color5: cyan
+    color6: magenta
+    color7: yellow
+    color8: dark red
+    color9: dark green
     comment: ''
     ctrlpanel: 'False'
     entags: 'True'
@@ -720,6 +798,9 @@ blocks:
     ymin: '-1'
     yunit: '""'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [991, 27]
     rotation: 0
     state: enabled
@@ -740,16 +821,16 @@ blocks:
     alpha9: '1.0'
     autoscale: 'False'
     axislabels: 'True'
-    color1: '"blue"'
-    color10: '"blue"'
-    color2: '"red"'
-    color3: '"green"'
-    color4: '"black"'
-    color5: '"cyan"'
-    color6: '"magenta"'
-    color7: '"yellow"'
-    color8: '"dark red"'
-    color9: '"dark green"'
+    color1: blue
+    color10: dark blue
+    color2: red
+    color3: green
+    color4: black
+    color5: cyan
+    color6: magenta
+    color7: yellow
+    color8: dark red
+    color9: dark green
     comment: ''
     ctrlpanel: 'False'
     entags: 'True'
@@ -814,6 +895,9 @@ blocks:
     ymin: '-1'
     yunit: '""'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [968, 371]
     rotation: 0
     state: enabled
@@ -872,6 +956,9 @@ blocks:
     update_time: '0.50'
     wintype: window.WIN_BLACKMAN_hARRIS
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [991, 138]
     rotation: 0
     state: enabled
@@ -930,6 +1017,9 @@ blocks:
     update_time: '0.50'
     wintype: window.WIN_BLACKMAN_hARRIS
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [968, 435]
     rotation: 0
     state: enabled
@@ -961,6 +1051,9 @@ blocks:
     label9: Tab 9
     num_tabs: '3'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [464, 3]
     rotation: 0
     state: enabled
@@ -970,10 +1063,12 @@ connections:
 - [analog_noise_source_x_1, '0', blocks_add_xx_1, '0']
 - [analog_sig_source_x_0, '0', blocks_add_xx_0, '1']
 - [analog_sig_source_x_1, '0', blocks_add_xx_1, '1']
-- [blocks_add_xx_0, '0', blocks_throttle_0, '0']
-- [blocks_add_xx_1, '0', blocks_throttle_1, '0']
+- [blocks_add_xx_0, '0', blocks_throttle2_0, '0']
+- [blocks_add_xx_1, '0', blocks_throttle2_0_0, '0']
 - [blocks_stream_to_tagged_stream_0, '0', pdu_tagged_stream_to_pdu_0, '0']
 - [blocks_stream_to_tagged_stream_1, '0', pdu_tagged_stream_to_pdu_1, '0']
+- [blocks_throttle2_0, '0', blocks_stream_to_tagged_stream_0, '0']
+- [blocks_throttle2_0_0, '0', blocks_stream_to_tagged_stream_1, '0']
 - [pdu_tagged_stream_to_pdu_0, pdus, qtgui_const_sink_x_0, in]
 - [pdu_tagged_stream_to_pdu_0, pdus, qtgui_freq_sink_x_0, in]
 - [pdu_tagged_stream_to_pdu_0, pdus, qtgui_time_sink_x_0, in]
@@ -983,8 +1078,7 @@ connections:
 - [pdu_tagged_stream_to_pdu_1, pdus, qtgui_time_raster_sink_x_0, in]
 - [pdu_tagged_stream_to_pdu_1, pdus, qtgui_time_sink_x_0_0, in]
 - [pdu_tagged_stream_to_pdu_1, pdus, qtgui_waterfall_sink_x_1, in]
-- [blocks_throttle_0, '0', blocks_stream_to_tagged_stream_0, '0']
-- [blocks_throttle_1, '0', blocks_stream_to_tagged_stream_1, '0']
 
 metadata:
   file_format: 1
+  grc_version: 3.10.10.0

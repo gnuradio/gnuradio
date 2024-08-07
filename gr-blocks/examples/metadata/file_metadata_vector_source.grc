@@ -1,6 +1,7 @@
 options:
   parameters:
     author: ''
+    catch_exceptions: 'True'
     category: Custom
     cmake_opt: ''
     comment: ''
@@ -24,6 +25,9 @@ options:
     title: ''
     window_size: 1280, 1024
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [10, 10]
     rotation: 0
     state: enabled
@@ -35,6 +39,9 @@ blocks:
     comment: ''
     value: '200000'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [208, 11]
     rotation: 0
     state: enabled
@@ -53,6 +60,9 @@ blocks:
     type: complex
     vlen: '10'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [40, 188.0]
     rotation: 0
     state: enabled
@@ -68,6 +78,9 @@ blocks:
     unbuffered: 'False'
     vlen: '10'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [544, 196.0]
     rotation: 0
     state: enabled
@@ -84,23 +97,31 @@ blocks:
     type: complex
     vlen: '10'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [544, 300.0]
     rotation: 0
     state: enabled
-- name: blocks_throttle_0
-  id: blocks_throttle
+- name: blocks_throttle2_0
+  id: blocks_throttle2
   parameters:
     affinity: ''
     alias: ''
     comment: ''
     ignoretag: 'True'
+    limit: auto
+    maximum: '0.1'
     maxoutbuf: '0'
     minoutbuf: '0'
     samples_per_second: samp_rate
     type: complex
     vlen: '10'
   states:
-    coordinate: [320, 212.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [304, 204.0]
     rotation: 0
     state: enabled
 - name: blocks_vector_to_stream_0
@@ -115,6 +136,9 @@ blocks:
     type: complex
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [544, 120.0]
     rotation: 0
     state: enabled
@@ -133,7 +157,7 @@ blocks:
     alpha7: '1.0'
     alpha8: '1.0'
     alpha9: '1.0'
-    autoscale: 'False'
+    autoscale: 'True'
     axislabels: 'True'
     color1: blue
     color10: blue
@@ -144,7 +168,7 @@ blocks:
     color6: yellow
     color7: dark red
     color8: dark green
-    color9: Dark Blue
+    color9: dark green
     comment: ''
     ctrlpanel: 'False'
     entags: 'True'
@@ -209,16 +233,20 @@ blocks:
     ymin: '-1'
     yunit: '""'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [744, 92.0]
     rotation: 0
     state: enabled
 
 connections:
-- [blocks_file_meta_source_0, '0', blocks_throttle_0, '0']
-- [blocks_throttle_0, '0', blocks_file_sink_1, '0']
-- [blocks_throttle_0, '0', blocks_tag_debug_0, '0']
-- [blocks_throttle_0, '0', blocks_vector_to_stream_0, '0']
+- [blocks_file_meta_source_0, '0', blocks_throttle2_0, '0']
+- [blocks_throttle2_0, '0', blocks_file_sink_1, '0']
+- [blocks_throttle2_0, '0', blocks_tag_debug_0, '0']
+- [blocks_throttle2_0, '0', blocks_vector_to_stream_0, '0']
 - [blocks_vector_to_stream_0, '0', qtgui_time_sink_x_0, '0']
 
 metadata:
   file_format: 1
+  grc_version: 3.10.10.0

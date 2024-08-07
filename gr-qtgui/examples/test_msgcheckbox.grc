@@ -1,6 +1,7 @@
 options:
   parameters:
     author: ''
+    catch_exceptions: 'True'
     category: '[GRC Hier Blocks]'
     cmake_opt: ''
     comment: ''
@@ -52,10 +53,12 @@ blocks:
     gui_hint: 1,0,1,1
     initPressed: 'False'
     label: State
+    outputmsgname: value
     pressed: '1'
     released: '0'
     type: int
     value: '0'
+    verticalalignment: '1'
   states:
     bus_sink: false
     bus_source: false
@@ -85,6 +88,8 @@ blocks:
     affinity: ''
     alias: ''
     comment: ''
+    en_uvec: 'True'
+    log_level: info
   states:
     bus_sink: false
     bus_source: false
@@ -106,7 +111,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [736, 216.0]
+    coordinate: [736, 232.0]
     rotation: 0
     state: true
 - name: blocks_null_source_0
@@ -125,16 +130,18 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [304, 208.0]
+    coordinate: [304, 232.0]
     rotation: 0
     state: true
-- name: blocks_throttle_0
-  id: blocks_throttle
+- name: blocks_throttle2_0
+  id: blocks_throttle2
   parameters:
     affinity: ''
     alias: ''
     comment: ''
     ignoretag: 'True'
+    limit: auto
+    maximum: '0.1'
     maxoutbuf: '0'
     minoutbuf: '0'
     samples_per_second: samp_rate
@@ -144,14 +151,15 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [512, 212.0]
+    coordinate: [496, 220.0]
     rotation: 0
-    state: true
+    state: enabled
 
 connections:
-- [blocks_null_source_0, '0', blocks_throttle_0, '0']
-- [blocks_throttle_0, '0', blocks_null_sink_0, '0']
+- [blocks_null_source_0, '0', blocks_throttle2_0, '0']
+- [blocks_throttle2_0, '0', blocks_null_sink_0, '0']
 - [state, state, blocks_message_debug_0, print]
 
 metadata:
   file_format: 1
+  grc_version: 3.10.10.0

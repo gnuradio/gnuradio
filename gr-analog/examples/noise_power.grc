@@ -23,6 +23,7 @@ options:
     sizing_mode: fixed
     thread_safe_setters: ''
     title: ''
+    window_size: (1000,1000)
   states:
     bus_sink: false
     bus_source: false
@@ -39,7 +40,7 @@ blocks:
     gui_hint: ''
     label: Noise Amplitude
     min_len: '200'
-    orient: Qt.Horizontal
+    orient: QtCore.Qt.Horizontal
     rangeType: float
     start: '0'
     step: '0.1'
@@ -317,13 +318,15 @@ blocks:
     coordinate: [808, 364.0]
     rotation: 0
     state: enabled
-- name: blocks_throttle_0
-  id: blocks_throttle
+- name: blocks_throttle2_0
+  id: blocks_throttle2
   parameters:
     affinity: ''
     alias: ''
     comment: ''
     ignoretag: 'True'
+    limit: auto
+    maximum: '0.1'
     maxoutbuf: '0'
     minoutbuf: '0'
     samples_per_second: samp_rate
@@ -333,35 +336,18 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [216, 100.0]
+    coordinate: [216, 92.0]
     rotation: 0
     state: enabled
-- name: blocks_throttle_0_0
-  id: blocks_throttle
+- name: blocks_throttle2_0_0
+  id: blocks_throttle2
   parameters:
     affinity: ''
     alias: ''
     comment: ''
     ignoretag: 'True'
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    samples_per_second: samp_rate
-    type: float
-    vlen: '1'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [216, 196.0]
-    rotation: 0
-    state: enabled
-- name: blocks_throttle_0_1
-  id: blocks_throttle
-  parameters:
-    affinity: ''
-    alias: ''
-    comment: ''
-    ignoretag: 'True'
+    limit: auto
+    maximum: '0.1'
     maxoutbuf: '0'
     minoutbuf: '0'
     samples_per_second: samp_rate
@@ -371,16 +357,18 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [216, 284.0]
+    coordinate: [216, 276.0]
     rotation: 0
     state: enabled
-- name: blocks_throttle_0_2
-  id: blocks_throttle
+- name: blocks_throttle2_0_0_0
+  id: blocks_throttle2
   parameters:
     affinity: ''
     alias: ''
     comment: ''
     ignoretag: 'True'
+    limit: auto
+    maximum: '0.1'
     maxoutbuf: '0'
     minoutbuf: '0'
     samples_per_second: samp_rate
@@ -390,7 +378,28 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [216, 364.0]
+    coordinate: [216, 188.0]
+    rotation: 0
+    state: enabled
+- name: blocks_throttle2_0_0_1
+  id: blocks_throttle2
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    ignoretag: 'True'
+    limit: auto
+    maximum: '0.1'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    samples_per_second: samp_rate
+    type: float
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [216, 356.0]
     rotation: 0
     state: enabled
 - name: qtgui_number_sink_0
@@ -530,10 +539,10 @@ blocks:
     state: enabled
 
 connections:
-- [analog_fastnoise_source_x_0, '0', blocks_throttle_0, '0']
-- [analog_fastnoise_source_x_1, '0', blocks_throttle_0_0, '0']
-- [analog_noise_source_x_0, '0', blocks_throttle_0_1, '0']
-- [analog_noise_source_x_1, '0', blocks_throttle_0_2, '0']
+- [analog_fastnoise_source_x_0, '0', blocks_throttle2_0, '0']
+- [analog_fastnoise_source_x_1, '0', blocks_throttle2_0_0_0, '0']
+- [analog_noise_source_x_0, '0', blocks_throttle2_0_0, '0']
+- [analog_noise_source_x_1, '0', blocks_throttle2_0_0_1, '0']
 - [blocks_abs_xx_0, '0', blocks_multiply_xx_0, '0']
 - [blocks_abs_xx_0, '0', blocks_multiply_xx_0, '1']
 - [blocks_abs_xx_0_0, '0', blocks_multiply_xx_0_0, '0']
@@ -546,10 +555,10 @@ connections:
 - [blocks_nlog10_ff_0_0, '0', qtgui_number_sink_0, '1']
 - [blocks_nlog10_ff_0_1, '0', qtgui_number_sink_0, '2']
 - [blocks_nlog10_ff_0_2, '0', qtgui_number_sink_0, '3']
-- [blocks_throttle_0, '0', blocks_complex_to_mag_squared_2, '0']
-- [blocks_throttle_0_0, '0', blocks_abs_xx_0_0, '0']
-- [blocks_throttle_0_1, '0', blocks_complex_to_mag_squared_1, '0']
-- [blocks_throttle_0_2, '0', blocks_abs_xx_0, '0']
+- [blocks_throttle2_0, '0', blocks_complex_to_mag_squared_2, '0']
+- [blocks_throttle2_0_0, '0', blocks_complex_to_mag_squared_1, '0']
+- [blocks_throttle2_0_0_0, '0', blocks_abs_xx_0_0, '0']
+- [blocks_throttle2_0_0_1, '0', blocks_abs_xx_0, '0']
 - [single_pole_iir_filter_xx_0, '0', blocks_nlog10_ff_0, '0']
 - [single_pole_iir_filter_xx_0_0, '0', blocks_nlog10_ff_0_0, '0']
 - [single_pole_iir_filter_xx_0_1, '0', blocks_nlog10_ff_0_1, '0']
@@ -557,3 +566,4 @@ connections:
 
 metadata:
   file_format: 1
+  grc_version: 3.10.10.0

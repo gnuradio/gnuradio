@@ -23,6 +23,7 @@ options:
     sizing_mode: fixed
     thread_safe_setters: ''
     title: Test Msg to Var Conversion
+    window_size: (1000,1000)
   states:
     bus_sink: false
     bus_source: false
@@ -48,6 +49,7 @@ blocks:
   id: variable_qtgui_entry
   parameters:
     comment: ''
+    entry_signal: editingFinished
     gui_hint: 0,1,1,1
     label: Msg Output
     type: int
@@ -87,7 +89,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [661, 220]
+    coordinate: [664, 224.0]
     rotation: 0
     state: true
 - name: blocks_null_source_0
@@ -106,16 +108,18 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [305, 213]
+    coordinate: [304, 224.0]
     rotation: 0
     state: true
-- name: blocks_throttle_0
-  id: blocks_throttle
+- name: blocks_throttle2_0
+  id: blocks_throttle2
   parameters:
     affinity: ''
     alias: ''
     comment: ''
     ignoretag: 'True'
+    limit: auto
+    maximum: '0.1'
     maxoutbuf: '0'
     minoutbuf: '0'
     samples_per_second: samp_rate
@@ -125,9 +129,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [458, 211]
+    coordinate: [464, 212.0]
     rotation: 0
-    state: true
+    state: enabled
 - name: qtgui_edit_box_msg_0
   id: qtgui_edit_box_msg
   parameters:
@@ -152,9 +156,10 @@ blocks:
     state: true
 
 connections:
-- [blocks_null_source_0, '0', blocks_throttle_0, '0']
-- [blocks_throttle_0, '0', blocks_null_sink_0, '0']
+- [blocks_null_source_0, '0', blocks_throttle2_0, '0']
+- [blocks_throttle2_0, '0', blocks_null_sink_0, '0']
 - [qtgui_edit_box_msg_0, msg, blocks_msgpair_to_var_0, inpair]
 
 metadata:
   file_format: 1
+  grc_version: 3.10.10.0

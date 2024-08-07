@@ -23,6 +23,7 @@ options:
     sizing_mode: fixed
     thread_safe_setters: ''
     title: OFDM Tx
+    window_size: (1000,1000)
   states:
     bus_sink: false
     bus_source: false
@@ -233,7 +234,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [274, 696]
+    coordinate: [272, 692.0]
     rotation: 0
     state: enabled
 - name: blocks_repack_bits_bb_0
@@ -281,7 +282,7 @@ blocks:
     affinity: ''
     alias: ''
     comment: ''
-    display: 'False'
+    display: 'True'
     filter: '""'
     name: Rx'd Packets
     num_inputs: '1'
@@ -310,7 +311,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [434, 688]
+    coordinate: [432, 684.0]
     rotation: 0
     state: enabled
 - name: blocks_tagged_stream_mux_0
@@ -333,13 +334,15 @@ blocks:
     coordinate: [586, 364]
     rotation: 0
     state: enabled
-- name: blocks_throttle_0
-  id: blocks_throttle
+- name: blocks_throttle2_0
+  id: blocks_throttle2
   parameters:
     affinity: ''
     alias: ''
     comment: ''
     ignoretag: 'True'
+    limit: auto
+    maximum: '0.1'
     maxoutbuf: '0'
     minoutbuf: '0'
     samples_per_second: samp_rate
@@ -349,7 +352,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [626, 696]
+    coordinate: [648, 684.0]
     rotation: 0
     state: enabled
 - name: channels_channel_model_0
@@ -602,6 +605,7 @@ blocks:
     minoutbuf: '0'
     name: FFT Plot
     nconnections: '1'
+    norm_window: 'False'
     showports: 'True'
     tr_chan: '0'
     tr_level: '0.0'
@@ -828,7 +832,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [82, 696]
+    coordinate: [80, 692.0]
     rotation: 0
     state: enabled
 - name: virtual_source_1
@@ -850,11 +854,11 @@ connections:
 - [blocks_multiply_const_vxx_0, '0', blocks_tag_gate_0, '0']
 - [blocks_repack_bits_bb_0, '0', virtual_sink_0_0, '0']
 - [blocks_stream_to_tagged_stream_0, '0', digital_crc32_bb_0, '0']
-- [blocks_tag_gate_0, '0', blocks_throttle_0, '0']
+- [blocks_tag_gate_0, '0', blocks_throttle2_0, '0']
 - [blocks_tagged_stream_mux_0, '0', virtual_sink_0_0_0, '0']
-- [blocks_throttle_0, '0', qtgui_freq_sink_x_0, '0']
-- [blocks_throttle_0, '0', qtgui_time_sink_x_0, '0']
-- [blocks_throttle_0, '0', virtual_sink_1, '0']
+- [blocks_throttle2_0, '0', qtgui_freq_sink_x_0, '0']
+- [blocks_throttle2_0, '0', qtgui_time_sink_x_0, '0']
+- [blocks_throttle2_0, '0', virtual_sink_1, '0']
 - [channels_channel_model_0, '0', digital_ofdm_rx_0, '0']
 - [digital_chunks_to_symbols_xx_0, '0', blocks_tagged_stream_mux_0, '0']
 - [digital_chunks_to_symbols_xx_0_0, '0', blocks_tagged_stream_mux_0, '1']
@@ -873,3 +877,4 @@ connections:
 
 metadata:
   file_format: 1
+  grc_version: 3.10.10.0

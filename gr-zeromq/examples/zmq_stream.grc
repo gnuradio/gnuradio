@@ -1,6 +1,7 @@
 options:
   parameters:
     author: ''
+    catch_exceptions: 'True'
     category: Custom
     cmake_opt: ''
     comment: ''
@@ -24,6 +25,9 @@ options:
     title: ''
     window_size: 1280, 1024
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [16, 11]
     rotation: 0
     state: enabled
@@ -35,6 +39,9 @@ blocks:
     comment: ''
     value: 100e3
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [16, 84.0]
     rotation: 0
     state: enabled
@@ -49,11 +56,16 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
     offset: '0'
+    phase: '0'
     samp_rate: samp_rate
+    showports: 'False'
     type: float
     waveform: analog.GR_COS_WAVE
   states:
-    coordinate: [40, 204.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [40, 212.0]
     rotation: 0
     state: enabled
 - name: blocks_stream_to_tagged_stream_0
@@ -69,23 +81,31 @@ blocks:
     type: float
     vlen: '1'
   states:
-    coordinate: [360, 228.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [440, 244.0]
     rotation: 0
     state: enabled
-- name: blocks_throttle_0
-  id: blocks_throttle
+- name: blocks_throttle2_0
+  id: blocks_throttle2
   parameters:
     affinity: ''
     alias: ''
     comment: ''
     ignoretag: 'True'
+    limit: auto
+    maximum: '0.1'
     maxoutbuf: '0'
     minoutbuf: '0'
     samples_per_second: samp_rate
     type: float
     vlen: '1'
   states:
-    coordinate: [200, 236.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [256, 244.0]
     rotation: 0
     state: enabled
 - name: qtgui_freq_sink_x_0
@@ -140,6 +160,7 @@ blocks:
     minoutbuf: '0'
     name: '""'
     nconnections: '1'
+    norm_window: 'False'
     showports: 'True'
     tr_chan: '0'
     tr_level: '0.0'
@@ -162,7 +183,10 @@ blocks:
     ymax: '10'
     ymin: '-140'
   states:
-    coordinate: [1048, 132.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1128, 144.0]
     rotation: 0
     state: enabled
 - name: qtgui_time_sink_x_0
@@ -182,16 +206,16 @@ blocks:
     alpha9: '1.0'
     autoscale: 'False'
     axislabels: 'True'
-    color1: '"blue"'
-    color10: '"blue"'
-    color2: '"red"'
-    color3: '"green"'
-    color4: '"black"'
-    color5: '"cyan"'
-    color6: '"magenta"'
-    color7: '"yellow"'
-    color8: '"dark red"'
-    color9: '"dark green"'
+    color1: blue
+    color10: dark blue
+    color2: red
+    color3: green
+    color4: black
+    color5: cyan
+    color6: magenta
+    color7: yellow
+    color8: dark red
+    color9: dark green
     comment: ''
     ctrlpanel: 'False'
     entags: 'True'
@@ -256,7 +280,10 @@ blocks:
     ymin: '-1'
     yunit: '""'
   states:
-    coordinate: [1048, 212.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1128, 228.0]
     rotation: 0
     state: enabled
 - name: qtgui_time_sink_x_0_0
@@ -276,16 +303,16 @@ blocks:
     alpha9: '1.0'
     autoscale: 'False'
     axislabels: 'True'
-    color1: '"blue"'
-    color10: '"blue"'
-    color2: '"red"'
-    color3: '"green"'
-    color4: '"black"'
-    color5: '"cyan"'
-    color6: '"magenta"'
-    color7: '"yellow"'
-    color8: '"dark red"'
-    color9: '"dark green"'
+    color1: blue
+    color10: dark blue
+    color2: red
+    color3: green
+    color4: black
+    color5: cyan
+    color6: magenta
+    color7: yellow
+    color8: dark red
+    color9: dark green
     comment: ''
     ctrlpanel: 'False'
     entags: 'True'
@@ -350,7 +377,10 @@ blocks:
     ymin: '-1'
     yunit: '""'
   states:
-    coordinate: [1048, 36.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1128, 52.0]
     rotation: 0
     state: enabled
 - name: qtgui_time_sink_x_0_1
@@ -370,16 +400,16 @@ blocks:
     alpha9: '1.0'
     autoscale: 'False'
     axislabels: 'True'
-    color1: '"blue"'
-    color10: '"blue"'
-    color2: '"red"'
-    color3: '"green"'
-    color4: '"black"'
-    color5: '"cyan"'
-    color6: '"magenta"'
-    color7: '"yellow"'
-    color8: '"dark red"'
-    color9: '"dark green"'
+    color1: blue
+    color10: dark blue
+    color2: red
+    color3: green
+    color4: black
+    color5: cyan
+    color6: magenta
+    color7: yellow
+    color8: dark red
+    color9: dark green
     comment: ''
     ctrlpanel: 'False'
     entags: 'True'
@@ -444,7 +474,10 @@ blocks:
     ymin: '-1'
     yunit: '""'
   states:
-    coordinate: [1048, 308.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1128, 324.0]
     rotation: 0
     state: enabled
 - name: zeromq_pub_sink_0
@@ -453,14 +486,20 @@ blocks:
     address: tcp://127.0.0.1:5555
     affinity: ''
     alias: ''
+    bind: 'True'
     comment: ''
+    drop_on_hwm: 'True'
     hwm: '-1'
+    key: ''
     pass_tags: 'True'
     timeout: '100'
     type: float
     vlen: '1'
   states:
-    coordinate: [608, 44.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [688, 60.0]
     rotation: 0
     state: enabled
 - name: zeromq_pull_source_0
@@ -469,6 +508,7 @@ blocks:
     address: tcp://127.0.0.1:5556
     affinity: ''
     alias: ''
+    bind: 'False'
     comment: ''
     hwm: '-1'
     maxoutbuf: '0'
@@ -478,7 +518,10 @@ blocks:
     type: float
     vlen: '1'
   states:
-    coordinate: [792, 220.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [872, 236.0]
     rotation: 0
     state: enabled
 - name: zeromq_push_sink_0
@@ -487,6 +530,7 @@ blocks:
     address: tcp://127.0.0.1:5556
     affinity: ''
     alias: ''
+    bind: 'True'
     comment: ''
     hwm: '-1'
     pass_tags: 'True'
@@ -494,7 +538,10 @@ blocks:
     type: float
     vlen: '1'
   states:
-    coordinate: [608, 220.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [688, 236.0]
     rotation: 0
     state: enabled
 - name: zeromq_rep_sink_0
@@ -503,6 +550,7 @@ blocks:
     address: tcp://127.0.0.1:5557
     affinity: ''
     alias: ''
+    bind: 'True'
     comment: ''
     hwm: '-1'
     pass_tags: 'True'
@@ -510,7 +558,10 @@ blocks:
     type: float
     vlen: '1'
   states:
-    coordinate: [608, 316.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [688, 332.0]
     rotation: 0
     state: enabled
 - name: zeromq_req_source_0
@@ -519,6 +570,7 @@ blocks:
     address: tcp://127.0.0.1:5557
     affinity: ''
     alias: ''
+    bind: 'False'
     comment: ''
     hwm: '-1'
     maxoutbuf: '0'
@@ -528,7 +580,10 @@ blocks:
     type: float
     vlen: '1'
   states:
-    coordinate: [792, 316.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [872, 332.0]
     rotation: 0
     state: enabled
 - name: zeromq_sub_source_0
@@ -537,8 +592,10 @@ blocks:
     address: tcp://127.0.0.1:5555
     affinity: ''
     alias: ''
+    bind: 'False'
     comment: ''
     hwm: '-1'
+    key: ''
     maxoutbuf: '0'
     minoutbuf: '0'
     pass_tags: 'True'
@@ -546,16 +603,19 @@ blocks:
     type: float
     vlen: '1'
   states:
-    coordinate: [792, 44.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [872, 60.0]
     rotation: 0
     state: enabled
 
 connections:
-- [analog_sig_source_x_0, '0', blocks_throttle_0, '0']
+- [analog_sig_source_x_0, '0', blocks_throttle2_0, '0']
 - [blocks_stream_to_tagged_stream_0, '0', zeromq_pub_sink_0, '0']
 - [blocks_stream_to_tagged_stream_0, '0', zeromq_push_sink_0, '0']
 - [blocks_stream_to_tagged_stream_0, '0', zeromq_rep_sink_0, '0']
-- [blocks_throttle_0, '0', blocks_stream_to_tagged_stream_0, '0']
+- [blocks_throttle2_0, '0', blocks_stream_to_tagged_stream_0, '0']
 - [zeromq_pull_source_0, '0', qtgui_freq_sink_x_0, '0']
 - [zeromq_pull_source_0, '0', qtgui_time_sink_x_0, '0']
 - [zeromq_req_source_0, '0', qtgui_time_sink_x_0_1, '0']
@@ -563,3 +623,4 @@ connections:
 
 metadata:
   file_format: 1
+  grc_version: 3.10.10.0

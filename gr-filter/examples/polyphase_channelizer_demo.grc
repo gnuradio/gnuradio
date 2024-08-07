@@ -1,6 +1,7 @@
 options:
   parameters:
     author: ''
+    catch_exceptions: 'True'
     category: Custom
     cmake_opt: ''
     comment: ''
@@ -76,6 +77,7 @@ blocks:
     offset: '0'
     phase: '0'
     samp_rate: samp_rate
+    showports: 'False'
     type: complex
     waveform: analog.GR_COS_WAVE
   states:
@@ -98,6 +100,7 @@ blocks:
     offset: '0'
     phase: '0'
     samp_rate: samp_rate
+    showports: 'False'
     type: complex
     waveform: analog.GR_COS_WAVE
   states:
@@ -120,6 +123,7 @@ blocks:
     offset: '0'
     phase: '0'
     samp_rate: samp_rate
+    showports: 'False'
     type: complex
     waveform: analog.GR_COS_WAVE
   states:
@@ -147,13 +151,15 @@ blocks:
     coordinate: [304, 224.0]
     rotation: 0
     state: enabled
-- name: blocks_throttle_0
-  id: blocks_throttle
+- name: blocks_throttle2_0
+  id: blocks_throttle2
   parameters:
     affinity: ''
     alias: ''
     comment: ''
     ignoretag: 'True'
+    limit: auto
+    maximum: '0.1'
     maxoutbuf: '0'
     minoutbuf: '0'
     samples_per_second: samp_rate
@@ -163,9 +169,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [248, 508.0]
+    coordinate: [264, 500.0]
     rotation: 0
-    state: true
+    state: enabled
 - name: pfb_channelizer_hier_ccf_0
   id: pfb_channelizer_hier_ccf
   parameters:
@@ -241,6 +247,7 @@ blocks:
     minoutbuf: '0'
     name: '"Spectrum"'
     nconnections: '1'
+    norm_window: 'False'
     showports: 'True'
     tr_chan: '0'
     tr_level: '0.0'
@@ -321,6 +328,7 @@ blocks:
     minoutbuf: '0'
     name: '"Ch2"'
     nconnections: '1'
+    norm_window: 'False'
     showports: 'True'
     tr_chan: '0'
     tr_level: '0.0'
@@ -401,6 +409,7 @@ blocks:
     minoutbuf: '0'
     name: '"Ch1"'
     nconnections: '1'
+    norm_window: 'False'
     showports: 'True'
     tr_chan: '0'
     tr_level: '0.0'
@@ -481,6 +490,7 @@ blocks:
     minoutbuf: '0'
     name: '"Ch0"'
     nconnections: '1'
+    norm_window: 'False'
     showports: 'True'
     tr_chan: '0'
     tr_level: '0.0'
@@ -511,16 +521,17 @@ blocks:
     state: enabled
 
 connections:
-- [analog_noise_source_x_0, '0', blocks_throttle_0, '0']
+- [analog_noise_source_x_0, '0', blocks_throttle2_0, '0']
 - [analog_sig_source_x_0, '0', blocks_add_xx_0, '0']
 - [analog_sig_source_x_1, '0', blocks_add_xx_0, '1']
 - [analog_sig_source_x_2, '0', blocks_add_xx_0, '2']
 - [blocks_add_xx_0, '0', pfb_channelizer_hier_ccf_0, '0']
 - [blocks_add_xx_0, '0', qtgui_freq_sink_x_0, '0']
-- [blocks_throttle_0, '0', blocks_add_xx_0, '3']
+- [blocks_throttle2_0, '0', blocks_add_xx_0, '3']
 - [pfb_channelizer_hier_ccf_0, '0', qtgui_freq_sink_x_0_2, '0']
 - [pfb_channelizer_hier_ccf_0, '1', qtgui_freq_sink_x_0_1, '0']
 - [pfb_channelizer_hier_ccf_0, '2', qtgui_freq_sink_x_0_0, '0']
 
 metadata:
   file_format: 1
+  grc_version: 3.10.10.0

@@ -1,6 +1,7 @@
 options:
   parameters:
     author: ''
+    catch_exceptions: 'True'
     category: '[GRC Hier Blocks]'
     cmake_opt: ''
     comment: ''
@@ -39,7 +40,7 @@ blocks:
     gui_hint: 0,0,1,1
     label: AZ
     min_len: '200'
-    orient: Qt.Horizontal
+    orient: QtCore.Qt.Horizontal
     rangeType: float
     start: '0'
     step: '1'
@@ -82,13 +83,15 @@ blocks:
     coordinate: [88, 220.0]
     rotation: 0
     state: true
-- name: blocks_throttle_0_0
-  id: blocks_throttle
+- name: blocks_throttle2_0
+  id: blocks_throttle2
   parameters:
     affinity: ''
     alias: ''
     comment: ''
     ignoretag: 'True'
+    limit: auto
+    maximum: '0.1'
     maxoutbuf: '0'
     minoutbuf: '0'
     samples_per_second: samp_rate
@@ -98,9 +101,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [304, 220.0]
+    coordinate: [288, 212.0]
     rotation: 0
-    state: true
+    state: enabled
 - name: qtgui_compass_0
   id: qtgui_compass
   parameters:
@@ -128,8 +131,9 @@ blocks:
     state: true
 
 connections:
-- [analog_const_source_x_0, '0', blocks_throttle_0_0, '0']
-- [blocks_throttle_0_0, '0', qtgui_compass_0, '0']
+- [analog_const_source_x_0, '0', blocks_throttle2_0, '0']
+- [blocks_throttle2_0, '0', qtgui_compass_0, '0']
 
 metadata:
   file_format: 1
+  grc_version: 3.10.10.0

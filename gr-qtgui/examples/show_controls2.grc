@@ -1,6 +1,7 @@
 options:
   parameters:
     author: ''
+    catch_exceptions: 'True'
     category: '[GRC Hier Blocks]'
     cmake_opt: ''
     comment: ''
@@ -78,6 +79,7 @@ blocks:
     maximum: '3600.0'
     minimum: '0.0'
     minsize: '100'
+    outputmsgname: value
     relBackgroundColor: default
     scaleFactor: 1/10
     showvalue: 'False'
@@ -98,6 +100,7 @@ blocks:
     gui_hint: 1,0,1,1
     initPressed: 'False'
     label: Toggle Switch
+    outputmsgname: value
     position: '4'
     pressed: '1'
     released: '0'
@@ -149,13 +152,15 @@ blocks:
     coordinate: [312, 448.0]
     rotation: 0
     state: true
-- name: blocks_throttle_0
-  id: blocks_throttle
+- name: blocks_throttle2_0
+  id: blocks_throttle2
   parameters:
     affinity: ''
     alias: ''
     comment: ''
     ignoretag: 'True'
+    limit: auto
+    maximum: '0.1'
     maxoutbuf: '0'
     minoutbuf: '0'
     samples_per_second: samp_rate
@@ -165,14 +170,15 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [520, 444.0]
+    coordinate: [496, 436.0]
     rotation: 0
-    state: true
+    state: enabled
 
 connections:
-- [blocks_null_source_0, '0', blocks_throttle_0, '0']
-- [blocks_throttle_0, '0', blocks_null_sink_0, '0']
+- [blocks_null_source_0, '0', blocks_throttle2_0, '0']
+- [blocks_throttle2_0, '0', blocks_null_sink_0, '0']
 - [setval, value, qtgui_dialgauge_0, value]
 
 metadata:
   file_format: 1
+  grc_version: 3.10.10.0

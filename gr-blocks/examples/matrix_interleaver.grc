@@ -1,6 +1,7 @@
 options:
   parameters:
     author: Jared Dulmage
+    catch_exceptions: 'True'
     category: '[GRC Hier Blocks]'
     cmake_opt: ''
     comment: ''
@@ -177,7 +178,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [824, 152]
+    coordinate: [824, 144.0]
     rotation: 0
     state: true
 - name: blocks_stream_to_vector_0_1
@@ -198,13 +199,15 @@ blocks:
     coordinate: [824, 283]
     rotation: 0
     state: true
-- name: blocks_throttle_0
-  id: blocks_throttle
+- name: blocks_throttle2_0
+  id: blocks_throttle2
   parameters:
     affinity: ''
     alias: ''
     comment: ''
     ignoretag: 'True'
+    limit: auto
+    maximum: '0.1'
     maxoutbuf: '0'
     minoutbuf: '0'
     samples_per_second: samp_rate
@@ -214,9 +217,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [452, 148]
+    coordinate: [448, 132.0]
     rotation: 0
-    state: true
+    state: enabled
 - name: blocks_vector_source_x_0
   id: blocks_vector_source_x
   parameters:
@@ -290,6 +293,7 @@ blocks:
     label7: ''
     label8: ''
     label9: ''
+    legend: 'True'
     maxoutbuf: '0'
     minoutbuf: '0'
     name: '""'
@@ -333,9 +337,10 @@ connections:
 - [blocks_stream_to_vector_0, '0', qtgui_vector_sink_f_0, '1']
 - [blocks_stream_to_vector_0_0, '0', qtgui_vector_sink_f_0, '0']
 - [blocks_stream_to_vector_0_1, '0', qtgui_vector_sink_f_0, '2']
-- [blocks_throttle_0, '0', blocks_stream_to_vector_0_0, '0']
+- [blocks_throttle2_0, '0', blocks_stream_to_vector_0_0, '0']
 - [blocks_vector_source_x_0, '0', blocks_matrix_interleaver_0, '0']
-- [blocks_vector_source_x_0, '0', blocks_throttle_0, '0']
+- [blocks_vector_source_x_0, '0', blocks_throttle2_0, '0']
 
 metadata:
   file_format: 1
+  grc_version: 3.10.10.0

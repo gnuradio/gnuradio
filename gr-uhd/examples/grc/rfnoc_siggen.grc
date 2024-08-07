@@ -41,9 +41,7 @@ blocks:
     label: amp
     min_len: '200'
     orient: QtCore.Qt.Horizontal
-    outputmsgname: value
     rangeType: float
-    showports: 'False'
     start: '0'
     step: '0.01'
     stop: '1'
@@ -145,9 +143,7 @@ blocks:
     label: tone_freq
     min_len: '200'
     orient: QtCore.Qt.Horizontal
-    outputmsgname: value
     rangeType: float
-    showports: 'False'
     start: -fs/2
     step: '1'
     stop: fs/2
@@ -164,26 +160,12 @@ blocks:
   id: uhd_rfnoc_graph
   parameters:
     alias: ''
-    clock_source_0: ''
-    clock_source_1: ''
-    clock_source_2: ''
-    clock_source_3: ''
-    clock_source_4: ''
-    clock_source_5: ''
-    clock_source_6: ''
-    clock_source_7: ''
+    clock_source: ''
     comment: ''
     dev_addr: device_type
     dev_args: ''
     num_mboards: '1'
-    time_source_0: ''
-    time_source_1: ''
-    time_source_2: ''
-    time_source_3: ''
-    time_source_4: ''
-    time_source_5: ''
-    time_source_6: ''
-    time_source_7: ''
+    time_source: ''
   states:
     bus_sink: false
     bus_source: false
@@ -191,13 +173,15 @@ blocks:
     coordinate: [224, 8.0]
     rotation: 0
     state: true
-- name: blocks_throttle_0
-  id: blocks_throttle
+- name: blocks_throttle2_0
+  id: blocks_throttle2
   parameters:
     affinity: ''
     alias: ''
     comment: ''
     ignoretag: 'True'
+    limit: auto
+    maximum: '0.1'
     maxoutbuf: '0'
     minoutbuf: '0'
     samples_per_second: fs
@@ -207,7 +191,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [544, 344.0]
+    coordinate: [536, 340.0]
     rotation: 0
     state: enabled
 - name: qtgui_freq_sink_x_0
@@ -288,7 +272,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [816, 328.0]
+    coordinate: [816, 332.0]
     rotation: 0
     state: enabled
 - name: qtgui_time_sink_x_0
@@ -406,21 +390,26 @@ blocks:
 - name: uhd_rfnoc_rx_streamer_0
   id: uhd_rfnoc_rx_streamer
   parameters:
+    adapter_id_list: '[0]'
     affinity: ''
     alias: ''
     args: ''
     comment: ''
+    issue_stream_cmd: 'True'
     maxoutbuf: '0'
     minoutbuf: '0'
     num_chans: '1'
     otw: sc16
     output_type: fc32
+    start_time: '0'
+    start_time_set: 'False'
+    use_default_adapter_id: 'True'
     vlen: '1'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [312, 352.0]
+    coordinate: [312, 348.0]
     rotation: 0
     state: enabled
 - name: uhd_rfnoc_siggen_0
@@ -519,16 +508,21 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [64, 328.0]
+    coordinate: [64, 324.0]
     rotation: 0
     state: true
 
 connections:
-- [blocks_throttle_0, '0', qtgui_freq_sink_x_0, '0']
-- [blocks_throttle_0, '0', qtgui_time_sink_x_0, '0']
-- [uhd_rfnoc_rx_streamer_0, '0', blocks_throttle_0, '0']
-- [uhd_rfnoc_siggen_0, '0', uhd_rfnoc_rx_streamer_0, '0']
+- [blocks_throttle2_0, '0', qtgui_freq_sink_x_0, '0']
+- [blocks_throttle2_0, '0', qtgui_time_sink_x_0, '0']
+- [uhd_rfnoc_rx_streamer_0, '0', blocks_throttle2_0, '0']
+- params:
+    is_back_edge: 'False'
+  snk_blk_id: uhd_rfnoc_rx_streamer_0
+  snk_port_id: '0'
+  src_blk_id: uhd_rfnoc_siggen_0
+  src_port_id: '0'
 
 metadata:
-  file_format: 1
-  grc_version: v3.11.0.0git-233-g1699c828
+  file_format: 2
+  grc_version: 3.10.10.0

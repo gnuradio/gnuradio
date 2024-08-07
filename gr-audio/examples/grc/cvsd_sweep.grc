@@ -1,6 +1,7 @@
 options:
   parameters:
     author: ''
+    catch_exceptions: 'True'
     category: Custom
     cmake_opt: ''
     comment: ''
@@ -24,7 +25,10 @@ options:
     title: CVSD Vocoder Test
     window_size: 1280, 1024
   states:
-    coordinate: [-1, 0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 12.0]
     rotation: 0
     state: enabled
 
@@ -35,7 +39,10 @@ blocks:
     comment: ''
     value: '8000'
   states:
-    coordinate: [260, 0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [272, 12.0]
     rotation: 0
     state: enabled
 - name: bw
@@ -44,7 +51,10 @@ blocks:
     comment: ''
     value: '0.5'
   states:
-    coordinate: [449, 0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [456, 12.0]
     rotation: 0
     state: enabled
 - name: resample
@@ -53,7 +63,10 @@ blocks:
     comment: ''
     value: '8'
   states:
-    coordinate: [356, 0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [368, 12.0]
     rotation: 0
     state: enabled
 - name: analog_sig_source_x_0
@@ -67,11 +80,16 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
     offset: '0'
+    phase: '0'
     samp_rate: audio_rate
+    showports: 'False'
     type: float
     waveform: analog.GR_TRI_WAVE
   states:
-    coordinate: [40, 204.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [48, 220.0]
     rotation: 0
     state: enabled
 - name: audio_sink
@@ -85,7 +103,31 @@ blocks:
     ok_to_block: 'True'
     samp_rate: audio_rate
   states:
-    coordinate: [1112, 236.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1152, 260.0]
+    rotation: 0
+    state: enabled
+- name: blocks_throttle2_0
+  id: blocks_throttle2
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    ignoretag: 'True'
+    limit: auto
+    maximum: '0.1'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    samples_per_second: audio_rate
+    type: float
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [256, 252.0]
     rotation: 0
     state: enabled
 - name: c2f
@@ -99,7 +141,10 @@ blocks:
     scale: '1'
     vlen: '1'
   states:
-    coordinate: [648, 372.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [688, 404.0]
     rotation: 0
     state: enabled
 - name: displays
@@ -130,7 +175,10 @@ blocks:
     label9: Tab 9
     num_tabs: '3'
   states:
-    coordinate: [0, 89]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 100.0]
     rotation: 0
     state: enabled
 - name: enc
@@ -144,7 +192,10 @@ blocks:
     minoutbuf: '0'
     resample: resample
   states:
-    coordinate: [632, 228.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [672, 252.0]
     rotation: 0
     state: enabled
 - name: import_0
@@ -154,7 +205,10 @@ blocks:
     comment: ''
     imports: import math
   states:
-    coordinate: [168, -4.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [176, 12.0]
     rotation: 0
     state: enabled
 - name: p2u
@@ -170,7 +224,10 @@ blocks:
     num_ports: '1'
     type: byte
   states:
-    coordinate: [648, 300.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [688, 332.0]
     rotation: 180
     state: enabled
 - name: qtgui_freq_sink_x_0
@@ -225,6 +282,7 @@ blocks:
     minoutbuf: '0'
     name: Original Spectrum
     nconnections: '1'
+    norm_window: 'False'
     showports: 'True'
     tr_chan: '0'
     tr_level: '0.0'
@@ -247,7 +305,10 @@ blocks:
     ymax: '10'
     ymin: '-140'
   states:
-    coordinate: [368, 92.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [408, 120.0]
     rotation: 180
     state: enabled
 - name: qtgui_freq_sink_x_0_0
@@ -302,6 +363,7 @@ blocks:
     minoutbuf: '0'
     name: Encoded Spectrum
     nconnections: '1'
+    norm_window: 'False'
     showports: 'True'
     tr_chan: '0'
     tr_level: '0.0'
@@ -324,7 +386,10 @@ blocks:
     ymax: '10'
     ymin: '-140'
   states:
-    coordinate: [552, 444.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [592, 472.0]
     rotation: 180
     state: enabled
 - name: qtgui_freq_sink_x_0_1
@@ -379,6 +444,7 @@ blocks:
     minoutbuf: '0'
     name: Decoded Spectrum
     nconnections: '1'
+    norm_window: 'False'
     showports: 'True'
     tr_chan: '0'
     tr_level: '0.0'
@@ -401,7 +467,10 @@ blocks:
     ymax: '10'
     ymin: '-140'
   states:
-    coordinate: [1112, 132.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1152, 160.0]
     rotation: 0
     state: enabled
 - name: qtgui_time_sink_x_0
@@ -421,16 +490,16 @@ blocks:
     alpha9: '1.0'
     autoscale: 'False'
     axislabels: 'True'
-    color1: '"blue"'
-    color10: '"blue"'
-    color2: '"red"'
-    color3: '"green"'
-    color4: '"black"'
-    color5: '"cyan"'
-    color6: '"magenta"'
-    color7: '"yellow"'
-    color8: '"dark red"'
-    color9: '"dark green"'
+    color1: blue
+    color10: dark blue
+    color2: red
+    color3: green
+    color4: black
+    color5: cyan
+    color6: magenta
+    color7: yellow
+    color8: dark red
+    color9: dark green
     comment: ''
     ctrlpanel: 'False'
     entags: 'True'
@@ -495,7 +564,10 @@ blocks:
     ymin: '-1'
     yunit: '""'
   states:
-    coordinate: [384, 316.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [424, 348.0]
     rotation: 180
     state: enabled
 - name: qtgui_time_sink_x_0_0
@@ -515,16 +587,16 @@ blocks:
     alpha9: '1.0'
     autoscale: 'False'
     axislabels: 'True'
-    color1: '"blue"'
-    color10: '"blue"'
-    color2: '"red"'
-    color3: '"green"'
-    color4: '"black"'
-    color5: '"cyan"'
-    color6: '"magenta"'
-    color7: '"yellow"'
-    color8: '"dark red"'
-    color9: '"dark green"'
+    color1: blue
+    color10: dark blue
+    color2: red
+    color3: green
+    color4: black
+    color5: cyan
+    color6: magenta
+    color7: yellow
+    color8: dark red
+    color9: dark green
     comment: ''
     ctrlpanel: 'False'
     entags: 'True'
@@ -589,7 +661,10 @@ blocks:
     ymin: '-1'
     yunit: '""'
   states:
-    coordinate: [824, 444.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [864, 476.0]
     rotation: 0
     state: enabled
 - name: qtgui_time_sink_x_0_1
@@ -609,16 +684,16 @@ blocks:
     alpha9: '1.0'
     autoscale: 'False'
     axislabels: 'True'
-    color1: '"blue"'
-    color10: '"blue"'
-    color2: '"red"'
-    color3: '"green"'
-    color4: '"black"'
-    color5: '"cyan"'
-    color6: '"magenta"'
-    color7: '"yellow"'
-    color8: '"dark red"'
-    color9: '"dark green"'
+    color1: blue
+    color10: dark blue
+    color2: red
+    color3: green
+    color4: black
+    color5: cyan
+    color6: magenta
+    color7: yellow
+    color8: dark red
+    color9: dark green
     comment: ''
     ctrlpanel: 'False'
     entags: 'True'
@@ -683,23 +758,10 @@ blocks:
     ymin: '-1'
     yunit: '""'
   states:
-    coordinate: [1112, 292.0]
-    rotation: 0
-    state: enabled
-- name: throttle
-  id: blocks_throttle
-  parameters:
-    affinity: ''
-    alias: ''
-    comment: ''
-    ignoretag: 'True'
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    samples_per_second: audio_rate
-    type: float
-    vlen: '1'
-  states:
-    coordinate: [216, 236.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1152, 316.0]
     rotation: 0
     state: enabled
 - name: vco
@@ -714,7 +776,10 @@ blocks:
     samp_rate: audio_rate
     sensitivity: audio_rate*2*math.pi
   states:
-    coordinate: [384, 220.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [424, 244.0]
     rotation: 0
     state: enabled
 - name: vocoder_cvsd_decode_bf_0
@@ -728,18 +793,21 @@ blocks:
     minoutbuf: '0'
     resample: resample
   states:
-    coordinate: [864, 228.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [904, 252.0]
     rotation: 0
     state: enabled
 
 connections:
-- [analog_sig_source_x_0, '0', throttle, '0']
+- [analog_sig_source_x_0, '0', blocks_throttle2_0, '0']
+- [blocks_throttle2_0, '0', vco, '0']
 - [c2f, '0', qtgui_freq_sink_x_0_0, '0']
 - [c2f, '0', qtgui_time_sink_x_0_0, '0']
 - [enc, '0', p2u, '0']
 - [enc, '0', vocoder_cvsd_decode_bf_0, '0']
 - [p2u, '0', c2f, '0']
-- [throttle, '0', vco, '0']
 - [vco, '0', enc, '0']
 - [vco, '0', qtgui_freq_sink_x_0, '0']
 - [vco, '0', qtgui_time_sink_x_0, '0']
@@ -749,3 +817,4 @@ connections:
 
 metadata:
   file_format: 1
+  grc_version: 3.10.10.0

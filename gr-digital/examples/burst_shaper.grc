@@ -1,6 +1,7 @@
 options:
   parameters:
     author: ''
+    catch_exceptions: 'True'
     category: Custom
     cmake_opt: ''
     comment: ''
@@ -18,12 +19,15 @@ options:
     realtime_scheduling: ''
     run: 'True'
     run_command: '{python} -u {filename}'
-    run_options: run
+    run_options: prompt
     sizing_mode: fixed
     thread_safe_setters: ''
     title: ''
     window_size: 1280, 1024
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [10, 10]
     rotation: 0
     state: enabled
@@ -35,6 +39,9 @@ blocks:
     comment: ''
     value: '32000'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [392, 11]
     rotation: 0
     state: enabled
@@ -44,6 +51,9 @@ blocks:
     comment: ''
     value: fft.window.hann(10)
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [232, 11]
     rotation: 0
     state: enabled
@@ -53,7 +63,12 @@ blocks:
     affinity: ''
     alias: ''
     comment: ''
+    en_uvec: 'True'
+    log_level: info
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [960, 192.0]
     rotation: 0
     state: enabled
@@ -63,7 +78,12 @@ blocks:
     affinity: ''
     alias: ''
     comment: ''
+    en_uvec: 'True'
+    log_level: info
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [960, 344.0]
     rotation: 0
     state: enabled
@@ -80,6 +100,9 @@ blocks:
     type: float
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [704, 236.0]
     rotation: 0
     state: enabled
@@ -96,67 +119,52 @@ blocks:
     type: complex
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [704, 388.0]
     rotation: 0
     state: enabled
-- name: pdu_tagged_stream_to_pdu_0
-  id: pdu_tagged_stream_to_pdu
-  parameters:
-    affinity: ''
-    alias: ''
-    comment: ''
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    tag: packet_len
-    type: float
-  states:
-    coordinate: [704, 188.0]
-    rotation: 0
-    state: enabled
-- name: pdu_tagged_stream_to_pdu_1
-  id: pdu_tagged_stream_to_pdu
-  parameters:
-    affinity: ''
-    alias: ''
-    comment: ''
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    tag: packet_len
-    type: complex
-  states:
-    coordinate: [704, 340.0]
-    rotation: 0
-    state: enabled
-- name: blocks_throttle_0
-  id: blocks_throttle
+- name: blocks_throttle2_0
+  id: blocks_throttle2
   parameters:
     affinity: ''
     alias: ''
     comment: ''
     ignoretag: 'True'
+    limit: auto
+    maximum: '0.1'
     maxoutbuf: '0'
     minoutbuf: '0'
     samples_per_second: samp_rate
     type: float
     vlen: '1'
   states:
-    coordinate: [464, 188.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [488, 180.0]
     rotation: 0
     state: enabled
-- name: blocks_throttle_0_0
-  id: blocks_throttle
+- name: blocks_throttle2_0_0
+  id: blocks_throttle2
   parameters:
     affinity: ''
     alias: ''
     comment: ''
     ignoretag: 'True'
+    limit: auto
+    maximum: '0.1'
     maxoutbuf: '0'
     minoutbuf: '0'
     samples_per_second: samp_rate
     type: complex
     vlen: '1'
   states:
-    coordinate: [464, 340.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [488, 332.0]
     rotation: 0
     state: enabled
 - name: blocks_vector_source_x_0
@@ -168,12 +176,15 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
     repeat: 'False'
-    tags: '[gr.python_to_tag({''offset'':0, ''key'':pmt.intern(''packet_len''), ''value'':pmt.from_long(20),
+    tags: '[gr.python_to_tag({''offset'':0, ''key'':pmt.intern(''packet_len''), ''value'':pmt.from_long(30),
       ''srcid'':pmt.intern(''vector_source'')})]'
     type: complex
     vector: '[complex(1.0), complex(-1.0)]*15'
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [8, 324.0]
     rotation: 0
     state: enabled
@@ -186,12 +197,15 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
     repeat: 'False'
-    tags: '[gr.python_to_tag({''offset'':0, ''key'':pmt.intern(''packet_len''), ''value'':pmt.from_long(20),
+    tags: '[gr.python_to_tag({''offset'':0, ''key'':pmt.intern(''packet_len''), ''value'':pmt.from_long(30),
       ''srcid'':pmt.intern(''vector_source'')})]'
     type: float
     vector: '[1.0, -1.0]*15'
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [8, 172.0]
     rotation: 0
     state: enabled
@@ -210,6 +224,9 @@ blocks:
     type: float
     window: window_taps
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [240, 156.0]
     rotation: 0
     state: enabled
@@ -228,6 +245,9 @@ blocks:
     type: complex
     window: window_taps
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [240, 308.0]
     rotation: 0
     state: enabled
@@ -238,6 +258,9 @@ blocks:
     comment: ''
     imports: import pmt
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [8, 99]
     rotation: 0
     state: enabled
@@ -248,21 +271,59 @@ blocks:
     comment: ''
     imports: from gnuradio import fft
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [96, 99]
+    rotation: 0
+    state: enabled
+- name: pdu_tagged_stream_to_pdu_0
+  id: pdu_tagged_stream_to_pdu
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    tag: packet_len
+    type: float
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [704, 188.0]
+    rotation: 0
+    state: enabled
+- name: pdu_tagged_stream_to_pdu_1
+  id: pdu_tagged_stream_to_pdu
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    tag: packet_len
+    type: complex
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [704, 340.0]
     rotation: 0
     state: enabled
 
 connections:
-- [pdu_tagged_stream_to_pdu_0, pdus, blocks_message_debug_0, print]
-- [pdu_tagged_stream_to_pdu_1, pdus, blocks_message_debug_0_0, print]
-- [blocks_throttle_0, '0', blocks_tag_debug_0, '0']
-- [blocks_throttle_0, '0', pdu_tagged_stream_to_pdu_0, '0']
-- [blocks_throttle_0_0, '0', blocks_tag_debug_0_0, '0']
-- [blocks_throttle_0_0, '0', pdu_tagged_stream_to_pdu_1, '0']
+- [blocks_throttle2_0, '0', blocks_tag_debug_0, '0']
+- [blocks_throttle2_0, '0', pdu_tagged_stream_to_pdu_0, '0']
+- [blocks_throttle2_0_0, '0', blocks_tag_debug_0_0, '0']
+- [blocks_throttle2_0_0, '0', pdu_tagged_stream_to_pdu_1, '0']
 - [blocks_vector_source_x_0, '0', digital_burst_shaper_xx_0_0, '0']
 - [blocks_vector_source_x_0_0, '0', digital_burst_shaper_xx_0, '0']
-- [digital_burst_shaper_xx_0, '0', blocks_throttle_0, '0']
-- [digital_burst_shaper_xx_0_0, '0', blocks_throttle_0_0, '0']
+- [digital_burst_shaper_xx_0, '0', blocks_throttle2_0, '0']
+- [digital_burst_shaper_xx_0_0, '0', blocks_throttle2_0_0, '0']
+- [pdu_tagged_stream_to_pdu_0, pdus, blocks_message_debug_0, print]
+- [pdu_tagged_stream_to_pdu_1, pdus, blocks_message_debug_0_0, print]
 
 metadata:
   file_format: 1
+  grc_version: 3.10.10.0

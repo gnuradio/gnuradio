@@ -23,6 +23,7 @@ options:
     sizing_mode: fixed
     thread_safe_setters: ''
     title: ''
+    window_size: (1000,1000)
   states:
     bus_sink: false
     bus_source: false
@@ -32,18 +33,6 @@ options:
     state: enabled
 
 blocks:
-- name: antenna
-  id: variable
-  parameters:
-    comment: ''
-    value: '"RX"'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [240, 172.0]
-    rotation: 0
-    state: enabled
 - name: audio_rate
   id: variable
   parameters:
@@ -67,7 +56,7 @@ blocks:
     rangeType: float
     start: '0'
     step: '2'
-    stop: '60'
+    stop: '49.6'
     value: '6'
     widget: counter_slider
   states:
@@ -81,6 +70,7 @@ blocks:
   id: variable_qtgui_entry
   parameters:
     comment: ''
+    entry_signal: editingFinished
     gui_hint: 0,0,1,3
     label: Center Frequency
     type: real
@@ -96,7 +86,7 @@ blocks:
   id: variable
   parameters:
     comment: ''
-    value: 2.5e6
+    value: 2.048e6
   states:
     bus_sink: false
     bus_source: false
@@ -198,7 +188,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [496, 296.0]
+    coordinate: [496, 284.0]
     rotation: 0
     state: enabled
 - name: pfb_arb_resampler_xxx_0
@@ -300,7 +290,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [496, 492.0]
+    coordinate: [496, 480.0]
     rotation: 0
     state: enabled
 - name: qtgui_freq_sink_x_1
@@ -442,79 +432,33 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [496, 184.0]
+    coordinate: [496, 176.0]
     rotation: 0
     state: enabled
-- name: soapy_source_0
-  id: soapy_source
+- name: soapy_rtlsdr_source_0
+  id: soapy_rtlsdr_source
   parameters:
     affinity: ''
-    agc0: 'False'
-    agc1: 'False'
+    agc: 'False'
     alias: ''
-    amp_gain0: '0'
-    ant0: antenna
-    ant1: RX2
-    balance0: '0'
-    balance1: '0'
-    bw0: '0'
-    bw1: '0'
-    center_freq0: radio_freq
-    center_freq1: '0'
-    clock_rate: '0'
-    clock_source: ''
+    bias: 'False'
+    bufflen: '16384'
+    center_freq: radio_freq
     comment: ''
-    correction0: '0'
-    correction1: '0'
-    dc_offset0: '0'
-    dc_offset1: '0'
-    dc_removal0: 'False'
-    dc_removal1: 'True'
-    dev: driver=rtlsdr
     dev_args: ''
-    devname: rtlsdr
-    gain_mode0: Overall
-    gain_mode1: Overall
-    ifgr_gain: '59'
-    lna_gain0: '10'
-    lna_gain1: '10'
+    freq_correction: '0'
+    gain: gain
     maxoutbuf: '0'
     minoutbuf: '0'
-    mix_gain0: '10'
-    nchan: '1'
-    nco_freq0: '0'
-    nco_freq1: '0'
-    overall_gain0: gain
-    overall_gain1: '10'
-    pga_gain0: '24'
-    pga_gain1: '24'
-    rf_gain0: '18'
-    rfgr_gain: '9'
-    rxvga1_gain: '5'
-    rxvga2_gain: '0'
     samp_rate: samp_rate
-    sdrplay_agc_setpoint: '-30'
-    sdrplay_biastee: 'True'
-    sdrplay_dabnotch: 'False'
-    sdrplay_if_mode: Zero-IF
-    sdrplay_rfnotch: 'False'
-    settings0: ''
-    settings1: ''
-    stream_args: ''
-    tia_gain0: '0'
-    tia_gain1: '0'
-    tune_args0: ''
-    tune_args1: ''
-    tuner_gain0: '10'
     type: fc32
-    vga_gain0: '10'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [88, 312.0]
+    coordinate: [136, 324.0]
     rotation: 0
-    state: true
+    state: enabled
 
 connections:
 - [analog_wfm_rcv_0, '0', blocks_multiply_const_vxx_0, '0']
@@ -522,9 +466,10 @@ connections:
 - [blocks_multiply_const_vxx_0, '0', qtgui_freq_sink_x_1, '0']
 - [low_pass_filter_0, '0', pfb_arb_resampler_xxx_0, '0']
 - [pfb_arb_resampler_xxx_0, '0', analog_wfm_rcv_0, '0']
-- [soapy_source_0, '0', low_pass_filter_0, '0']
-- [soapy_source_0, '0', qtgui_freq_sink_x_0, '0']
-- [soapy_source_0, '0', qtgui_waterfall_sink_x_0, '0']
+- [soapy_rtlsdr_source_0, '0', low_pass_filter_0, '0']
+- [soapy_rtlsdr_source_0, '0', qtgui_freq_sink_x_0, '0']
+- [soapy_rtlsdr_source_0, '0', qtgui_waterfall_sink_x_0, '0']
 
 metadata:
   file_format: 1
+  grc_version: 3.10.10.0

@@ -40,7 +40,7 @@ blocks:
     gui_hint: 0,1,1,1
     label: Roll off
     min_len: '200'
-    orient: Qt.Horizontal
+    orient: QtCore.Qt.Horizontal
     rangeType: float
     start: '0.0001'
     step: '0.01'
@@ -93,7 +93,7 @@ blocks:
     gui_hint: 0,0,1,1
     label: Noise Voltage
     min_len: '200'
-    orient: Qt.Vertical
+    orient: QtCore.Qt.Horizontal
     rangeType: float
     start: '0'
     step: '0.01'
@@ -248,7 +248,7 @@ blocks:
     gui_hint: 0,2,1,1
     label: Timing Offset
     min_len: '200'
-    orient: Qt.Horizontal
+    orient: QtCore.Qt.Horizontal
     rangeType: float
     start: '0.999'
     step: '0.0001'
@@ -282,13 +282,15 @@ blocks:
     coordinate: [16, 116.0]
     rotation: 0
     state: enabled
-- name: blocks_throttle_0
-  id: blocks_throttle
+- name: blocks_throttle2_0
+  id: blocks_throttle2
   parameters:
     affinity: ''
     alias: ''
     comment: ''
     ignoretag: 'True'
+    limit: auto
+    maximum: '0.1'
     maxoutbuf: '0'
     minoutbuf: '0'
     samples_per_second: samp_rate
@@ -298,7 +300,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [400, 140.0]
+    coordinate: [392, 132.0]
     rotation: 0
     state: enabled
 - name: channels_channel_model_0
@@ -339,6 +341,7 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
     samples_per_symbol: sps
+    truncate: 'False'
     verbose: 'False'
   states:
     bus_sink: false
@@ -632,7 +635,6 @@ blocks:
     marker7: '-1'
     marker8: '-1'
     marker9: '-1'
-    name: '""'
     nconnections: '2'
     samp_per_symbol: sps
     size: '2048'
@@ -705,15 +707,16 @@ blocks:
 
 connections:
 - [analog_random_source_x_0, '0', digital_constellation_modulator_0, '0']
-- [blocks_throttle_0, '0', virtual_sink_0, '0']
+- [blocks_throttle2_0, '0', virtual_sink_0, '0']
 - [channels_channel_model_0, '0', digital_pfb_clock_sync_xxx_0, '0']
 - [channels_channel_model_0, '0', digital_pfb_clock_sync_xxx_0_0, '0']
 - [channels_channel_model_0, '0', qtgui_const_sink_x_0, '0']
 - [channels_channel_model_0, '0', qtgui_eye_sink_x_0, '0']
-- [digital_constellation_modulator_0, '0', blocks_throttle_0, '0']
+- [digital_constellation_modulator_0, '0', blocks_throttle2_0, '0']
 - [digital_pfb_clock_sync_xxx_0, '0', qtgui_eye_sink_x_0, '1']
 - [digital_pfb_clock_sync_xxx_0_0, '0', qtgui_const_sink_x_0_0, '0']
 - [virtual_source_0, '0', channels_channel_model_0, '0']
 
 metadata:
   file_format: 1
+  grc_version: 3.10.10.0
