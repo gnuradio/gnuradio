@@ -1,6 +1,7 @@
 options:
   parameters:
     author: ''
+    catch_exceptions: 'True'
     category: Custom
     cmake_opt: ''
     comment: ''
@@ -24,6 +25,9 @@ options:
     title: ''
     window_size: 1280, 1024
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [8, 12.0]
     rotation: 0
     state: enabled
@@ -39,6 +43,9 @@ blocks:
     type: real
     value: '.45'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [440, 12.0]
     rotation: 0
     state: enabled
@@ -52,6 +59,9 @@ blocks:
     type: real
     value: '48000'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [304, 12.0]
     rotation: 0
     state: enabled
@@ -61,6 +71,9 @@ blocks:
     comment: ''
     value: '32'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [664, 12.0]
     rotation: 0
     state: enabled
@@ -70,6 +83,9 @@ blocks:
     comment: ''
     value: firdes.low_pass(nphases, nphases, frac_bw, 0.5-frac_bw)
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [752, 12.0]
     rotation: 0
     state: enabled
@@ -83,6 +99,9 @@ blocks:
     type: real
     value: '44100'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [176, 12.0]
     rotation: 0
     state: enabled
@@ -98,6 +117,9 @@ blocks:
     type: float
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [200, 180.0]
     rotation: 0
     state: enabled
@@ -111,6 +133,9 @@ blocks:
     minoutbuf: '0'
     sensitivity: math.pi
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [504, 180.0]
     rotation: 0
     state: enabled
@@ -125,11 +150,37 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
     offset: '0'
+    phase: '0'
     samp_rate: samp_rate
+    showports: 'False'
     type: float
     waveform: analog.GR_TRI_WAVE
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [32, 148.0]
+    rotation: 0
+    state: enabled
+- name: blocks_throttle2_0
+  id: blocks_throttle2
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    ignoretag: 'True'
+    limit: auto
+    maximum: '0.1'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    samples_per_second: samp_rate
+    type: float
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [336, 172.0]
     rotation: 0
     state: enabled
 - name: import_0
@@ -139,6 +190,9 @@ blocks:
     comment: ''
     imports: import math
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [8, 92.0]
     rotation: 0
     state: enabled
@@ -157,6 +211,9 @@ blocks:
     taps: rs_taps
     type: ccf
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [712, 268.0]
     rotation: 0
     state: enabled
@@ -212,6 +269,7 @@ blocks:
     minoutbuf: '0'
     name: Original Spectrum
     nconnections: '1'
+    norm_window: 'False'
     showports: 'True'
     tr_chan: '0'
     tr_level: '0.0'
@@ -234,6 +292,9 @@ blocks:
     ymax: '10'
     ymin: '-140'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [960, 156.0]
     rotation: 0
     state: enabled
@@ -289,6 +350,7 @@ blocks:
     minoutbuf: '0'
     name: Resampled Spectrum
     nconnections: '1'
+    norm_window: 'False'
     showports: 'True'
     tr_chan: '0'
     tr_level: '0.0'
@@ -311,33 +373,21 @@ blocks:
     ymax: '10'
     ymin: '-140'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [960, 268.0]
-    rotation: 0
-    state: enabled
-- name: throttle
-  id: blocks_throttle
-  parameters:
-    affinity: ''
-    alias: ''
-    comment: ''
-    ignoretag: 'True'
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    samples_per_second: samp_rate
-    type: float
-    vlen: '1'
-  states:
-    coordinate: [328, 180.0]
     rotation: 0
     state: enabled
 
 connections:
-- [adder, '0', throttle, '0']
+- [adder, '0', blocks_throttle2_0, '0']
 - [analog_frequency_modulator_fc_0, '0', pfb_arb_resampler_xxx_0, '0']
 - [analog_frequency_modulator_fc_0, '0', qtgui_freq_sink_x_0, '0']
 - [analog_sig_source_x_0, '0', adder, '0']
+- [blocks_throttle2_0, '0', analog_frequency_modulator_fc_0, '0']
 - [pfb_arb_resampler_xxx_0, '0', qtgui_freq_sink_x_0_0, '0']
-- [throttle, '0', analog_frequency_modulator_fc_0, '0']
 
 metadata:
   file_format: 1
+  grc_version: 3.10.10.0

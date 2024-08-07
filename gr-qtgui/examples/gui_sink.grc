@@ -23,6 +23,7 @@ options:
     sizing_mode: fixed
     thread_safe_setters: ''
     title: QT GUI Sink
+    window_size: (1000,1000)
   states:
     bus_sink: false
     bus_source: false
@@ -53,6 +54,7 @@ blocks:
   id: variable_qtgui_entry
   parameters:
     comment: ''
+    entry_signal: editingFinished
     gui_hint: ''
     label: Frequency
     type: int
@@ -108,6 +110,7 @@ blocks:
     offset: '0'
     phase: '0'
     samp_rate: samp_rate
+    showports: 'False'
     type: complex
     waveform: analog.GR_COS_WAVE
   states:
@@ -135,13 +138,15 @@ blocks:
     coordinate: [496, 216.0]
     rotation: 0
     state: true
-- name: blocks_throttle_0
-  id: blocks_throttle
+- name: blocks_throttle2_0
+  id: blocks_throttle2
   parameters:
     affinity: ''
     alias: ''
     comment: ''
     ignoretag: 'True'
+    limit: auto
+    maximum: '0.1'
     maxoutbuf: '0'
     minoutbuf: '0'
     samples_per_second: samp_rate
@@ -151,9 +156,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [296, 212.0]
+    coordinate: [288, 204.0]
     rotation: 0
-    state: true
+    state: enabled
 - name: qtgui_sink_x_0
   id: qtgui_sink_x
   parameters:
@@ -186,9 +191,10 @@ blocks:
 
 connections:
 - [analog_noise_source_x_0, '0', blocks_add_xx_0, '1']
-- [analog_sig_source_x_0, '0', blocks_throttle_0, '0']
+- [analog_sig_source_x_0, '0', blocks_throttle2_0, '0']
 - [blocks_add_xx_0, '0', qtgui_sink_x_0, '0']
-- [blocks_throttle_0, '0', blocks_add_xx_0, '0']
+- [blocks_throttle2_0, '0', blocks_add_xx_0, '0']
 
 metadata:
   file_format: 1
+  grc_version: 3.10.10.0

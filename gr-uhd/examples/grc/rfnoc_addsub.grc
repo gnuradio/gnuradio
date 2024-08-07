@@ -75,6 +75,7 @@ blocks:
     offset: '0'
     phase: '0'
     samp_rate: samp_rate
+    showports: 'False'
     type: complex
     waveform: analog.GR_COS_WAVE
   states:
@@ -97,6 +98,7 @@ blocks:
     offset: '0'
     phase: '0'
     samp_rate: samp_rate
+    showports: 'False'
     type: complex
     waveform: analog.GR_COS_WAVE
   states:
@@ -106,13 +108,15 @@ blocks:
     coordinate: [32, 324.0]
     rotation: 0
     state: true
-- name: blocks_throttle_0
-  id: blocks_throttle
+- name: blocks_throttle2_0
+  id: blocks_throttle2
   parameters:
     affinity: ''
     alias: ''
     comment: ''
     ignoretag: 'True'
+    limit: auto
+    maximum: '0.1'
     maxoutbuf: '0'
     minoutbuf: '0'
     samples_per_second: samp_rate
@@ -122,16 +126,18 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [240, 228.0]
+    coordinate: [264, 356.0]
     rotation: 0
-    state: true
-- name: blocks_throttle_0_0
-  id: blocks_throttle
+    state: enabled
+- name: blocks_throttle2_0_0
+  id: blocks_throttle2
   parameters:
     affinity: ''
     alias: ''
     comment: ''
     ignoretag: 'True'
+    limit: auto
+    maximum: '0.1'
     maxoutbuf: '0'
     minoutbuf: '0'
     samples_per_second: samp_rate
@@ -141,9 +147,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [240, 364.0]
+    coordinate: [248, 220.0]
     rotation: 0
-    state: true
+    state: enabled
 - name: qtgui_time_sink_x_0_0_0
   id: qtgui_time_sink_x
   parameters:
@@ -364,11 +370,14 @@ blocks:
     alias: ''
     args: ''
     comment: ''
+    issue_stream_cmd: 'True'
     maxoutbuf: '0'
     minoutbuf: '0'
     num_chans: '1'
     otw: sc16
     output_type: fc32
+    start_time: '0'
+    start_time_set: 'False'
     use_default_adapter_id: 'True'
     vlen: '1'
   states:
@@ -386,11 +395,14 @@ blocks:
     alias: ''
     args: ''
     comment: ''
+    issue_stream_cmd: 'True'
     maxoutbuf: '0'
     minoutbuf: '0'
     num_chans: '1'
     otw: sc16
     output_type: fc32
+    start_time: '0'
+    start_time_set: 'False'
     use_default_adapter_id: 'True'
     vlen: '1'
   states:
@@ -424,21 +436,41 @@ blocks:
     state: true
 
 connections:
-- [analog_sig_source_x_0, '0', blocks_throttle_0, '0']
-- [analog_sig_source_x_0_0, '0', blocks_throttle_0_0, '0']
-- [blocks_throttle_0, '0', qtgui_time_sink_x_0_0_0, '1']
-- [blocks_throttle_0, '0', qtgui_time_sink_x_0_0_0_0, '1']
-- [blocks_throttle_0, '0', uhd_rfnoc_tx_streamer_0, '0']
-- [blocks_throttle_0_0, '0', qtgui_time_sink_x_0_0_0, '2']
-- [blocks_throttle_0_0, '0', qtgui_time_sink_x_0_0_0_0, '2']
-- [blocks_throttle_0_0, '0', uhd_rfnoc_tx_streamer_0, '1']
-- [uhd_rfnoc_addsub_0, '0', uhd_rfnoc_rx_streamer_0, '0']
-- [uhd_rfnoc_addsub_0, '1', uhd_rfnoc_rx_streamer_0_0, '0']
+- [analog_sig_source_x_0, '0', blocks_throttle2_0_0, '0']
+- [analog_sig_source_x_0_0, '0', blocks_throttle2_0, '0']
+- [blocks_throttle2_0, '0', qtgui_time_sink_x_0_0_0, '2']
+- [blocks_throttle2_0, '0', qtgui_time_sink_x_0_0_0_0, '2']
+- [blocks_throttle2_0, '0', uhd_rfnoc_tx_streamer_0, '1']
+- [blocks_throttle2_0_0, '0', qtgui_time_sink_x_0_0_0, '1']
+- [blocks_throttle2_0_0, '0', qtgui_time_sink_x_0_0_0_0, '1']
+- [blocks_throttle2_0_0, '0', uhd_rfnoc_tx_streamer_0, '0']
+- params:
+    is_back_edge: 'False'
+  snk_blk_id: uhd_rfnoc_rx_streamer_0
+  snk_port_id: '0'
+  src_blk_id: uhd_rfnoc_addsub_0
+  src_port_id: '0'
+- params:
+    is_back_edge: 'False'
+  snk_blk_id: uhd_rfnoc_rx_streamer_0_0
+  snk_port_id: '0'
+  src_blk_id: uhd_rfnoc_addsub_0
+  src_port_id: '1'
 - [uhd_rfnoc_rx_streamer_0, '0', qtgui_time_sink_x_0_0_0, '0']
 - [uhd_rfnoc_rx_streamer_0_0, '0', qtgui_time_sink_x_0_0_0_0, '0']
-- [uhd_rfnoc_tx_streamer_0, '0', uhd_rfnoc_addsub_0, '0']
-- [uhd_rfnoc_tx_streamer_0, '1', uhd_rfnoc_addsub_0, '1']
+- params:
+    is_back_edge: 'False'
+  snk_blk_id: uhd_rfnoc_addsub_0
+  snk_port_id: '0'
+  src_blk_id: uhd_rfnoc_tx_streamer_0
+  src_port_id: '0'
+- params:
+    is_back_edge: 'False'
+  snk_blk_id: uhd_rfnoc_addsub_0
+  snk_port_id: '1'
+  src_blk_id: uhd_rfnoc_tx_streamer_0
+  src_port_id: '1'
 
 metadata:
-  file_format: 1
-  grc_version: v3.11-compat-xxx-xunknown
+  file_format: 2
+  grc_version: 3.10.10.0

@@ -23,11 +23,12 @@ options:
     sizing_mode: fixed
     thread_safe_setters: ''
     title: Constellation Encoder and Decoder
+    window_size: (1000,1000)
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [8, 8]
+    coordinate: [8, 12.0]
     rotation: 0
     state: enabled
 
@@ -38,6 +39,8 @@ blocks:
     comment: ''
     const_points: '[1,-1]'
     dims: '1'
+    normalization: digital.constellation.AMPLITUDE_NORMALIZATION
+    npwr: '1.0'
     precision: '8'
     rot_sym: '2'
     soft_dec_lut: None
@@ -47,7 +50,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [569, 21]
+    coordinate: [376, 12.0]
     rotation: 0
     state: enabled
 - name: data
@@ -59,7 +62,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [175, 161]
+    coordinate: [176, 76.0]
     rotation: 0
     state: enabled
 - name: data_size
@@ -71,7 +74,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [353, 158]
+    coordinate: [176, 140.0]
     rotation: 0
     state: enabled
 - name: mod_order
@@ -83,7 +86,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [570, 84]
+    coordinate: [544, 12.0]
     rotation: 0
     state: enabled
 - name: samp_rate
@@ -95,7 +98,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [212, 23]
+    coordinate: [176, 12.0]
     rotation: 0
     state: enabled
 - name: blocks_char_to_float_0
@@ -112,7 +115,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [889, 385]
+    coordinate: [904, 348.0]
     rotation: 0
     state: true
 - name: blocks_char_to_float_0_0
@@ -129,16 +132,18 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [890, 440]
+    coordinate: [904, 396.0]
     rotation: 0
     state: true
-- name: blocks_throttle_0
-  id: blocks_throttle
+- name: blocks_throttle2_0
+  id: blocks_throttle2
   parameters:
     affinity: ''
     alias: ''
     comment: ''
     ignoretag: 'True'
+    limit: auto
+    maximum: '0.1'
     maxoutbuf: '0'
     minoutbuf: '0'
     samples_per_second: samp_rate
@@ -148,7 +153,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [217, 295]
+    coordinate: [200, 340.0]
     rotation: 0
     state: enabled
 - name: blocks_vector_source_x_0_0
@@ -168,7 +173,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [47, 280]
+    coordinate: [32, 332.0]
     rotation: 0
     state: enabled
 - name: digital_constellation_decoder_cb_0
@@ -184,7 +189,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [643, 297]
+    coordinate: [656, 396.0]
     rotation: 0
     state: true
 - name: digital_constellation_encoder_bc_0
@@ -200,7 +205,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [402, 297]
+    coordinate: [384, 396.0]
     rotation: 0
     state: true
 - name: import_0_0
@@ -213,7 +218,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [437, 23]
+    coordinate: [272, 12.0]
     rotation: 0
     state: enabled
 - name: qtgui_const_sink_x_0
@@ -305,7 +310,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [644, 216]
+    coordinate: [648, 460.0]
     rotation: 0
     state: true
 - name: qtgui_time_sink_x_0
@@ -402,19 +407,20 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1082, 394]
+    coordinate: [1096, 348.0]
     rotation: 0
     state: true
 
 connections:
 - [blocks_char_to_float_0, '0', qtgui_time_sink_x_0, '0']
 - [blocks_char_to_float_0_0, '0', qtgui_time_sink_x_0, '1']
-- [blocks_throttle_0, '0', blocks_char_to_float_0, '0']
-- [blocks_throttle_0, '0', digital_constellation_encoder_bc_0, '0']
-- [blocks_vector_source_x_0_0, '0', blocks_throttle_0, '0']
+- [blocks_throttle2_0, '0', blocks_char_to_float_0, '0']
+- [blocks_throttle2_0, '0', digital_constellation_encoder_bc_0, '0']
+- [blocks_vector_source_x_0_0, '0', blocks_throttle2_0, '0']
 - [digital_constellation_decoder_cb_0, '0', blocks_char_to_float_0_0, '0']
 - [digital_constellation_encoder_bc_0, '0', digital_constellation_decoder_cb_0, '0']
 - [digital_constellation_encoder_bc_0, '0', qtgui_const_sink_x_0, '0']
 
 metadata:
   file_format: 1
+  grc_version: 3.10.10.0
