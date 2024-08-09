@@ -1,5 +1,4 @@
-
-from grc.core.blocks._flags import Flags
+from gnuradio.grc.core.blocks._flags import Flags
 
 
 def test_simple_init():

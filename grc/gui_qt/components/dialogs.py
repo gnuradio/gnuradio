@@ -2,7 +2,7 @@ from __future__ import absolute_import, print_function
 
 from copy import copy
 
-from ..Constants import MIN_DIALOG_HEIGHT, DEFAULT_PARAM_TAB
+from ..Constants import MIN_DIALOG_HEIGHT, DEFAULT_PARAM_TAB, ADVANCED_PARAM_TAB
 from qtpy.QtCore import Qt
 from qtpy.QtGui import QStandardItem, QStandardItemModel
 from qtpy.QtWidgets import (QLineEdit, QDialog, QDialogButtonBox, QTreeView,
@@ -62,6 +62,7 @@ class PropsDialog(QDialog):
         self.qsettings = QApplication.instance().qsettings
         self.setModal(True)
         self.force_show_id = force_show_id
+        self.layout = QVBoxLayout()
 
         self.setWindowTitle(f"Properties: {self._block.label}")
 
@@ -91,9 +92,6 @@ class PropsDialog(QDialog):
                 if force_show_id and param.dtype == 'id':
                     param.hide = 'none'
                 if param.category == cat and param.hide != "all":
-                    dtype_label = None
-                    if param.dtype not in ignore_dtype_labels:
-                        dtype_label = QLabel(f"[{param.dtype}]")
                     qvb.addWidget(QLabel(param.name), i, 0)
                     if param.dtype == "enum" or param.options:
                         dropdown = QComboBox()
@@ -101,6 +99,7 @@ class PropsDialog(QDialog):
                             dropdown.addItem(opt)
                         dropdown.param_values = list(param.options)
                         dropdown.param = param
+                        dropdown.activated.connect(self.accept)
                         qvb.addWidget(dropdown, i, 1)
                         self.edit_params.append(dropdown)
                         if param.dtype == "enum":
@@ -144,13 +143,15 @@ class PropsDialog(QDialog):
                         line_edit = QPlainTextEdit(param.value)
                         line_edit.param = param
                         qvb.addWidget(editor_widget, i, 1)
-                        # self.edit_params.append(line_edit)
+                        self.edit_params.append(line_edit)
                     else:
                         line_edit = QLineEdit(param.value)
                         line_edit.param = param
                         qvb.addWidget(line_edit, i, 1)
                         self.edit_params.append(line_edit)
-                    if dtype_label:
+
+                    if param.dtype not in ignore_dtype_labels:
+                        dtype_label = QLabel(f"[{param.dtype}]")
                         qvb.addWidget(dtype_label, i, 2)
                 i += 1
             tab = QWidget()
@@ -168,7 +169,6 @@ class PropsDialog(QDialog):
         self.buttonBox = QDialogButtonBox(buttons)
         self.buttonBox.accepted.connect(self.accept)
         self.buttonBox.rejected.connect(self.reject)
-        self.layout = QVBoxLayout()
         self.layout.addWidget(self.tabs)
         self.layout.addWidget(self.buttonBox)
 

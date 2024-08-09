@@ -2,7 +2,7 @@ import operator
 
 import pytest
 
-from grc.core.utils import expr_utils
+from gnuradio.grc.core.utils import expr_utils
 
 id_getter = operator.itemgetter(0)
 expr_getter = operator.itemgetter(1)
