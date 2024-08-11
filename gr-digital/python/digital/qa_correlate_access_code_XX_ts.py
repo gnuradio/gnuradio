@@ -74,8 +74,10 @@ class test_correlate_access_code_XX_ts(gr_unittest.TestCase):
         # header contains packet length, twice (bit-swapped)
         header = numpy.array([(payload_len & 0xFF00) >> 8, payload_len & 0xFF] * 2, dtype=numpy.uint8)
         # make sure we've built the length header correctly
-        self.assertEqual(header[0] * 256 + header[1], header[2] * 256 + header[3])
-        self.assertEqual(header[0] * 256 + header[1], len(payload))
+        # (header[0] * 256 + header[1], header[2] * 256 + header[3])
+        self.assertEqual(header[0], header[2])  # upper byte
+        self.assertEqual(header[1], header[3])  # lower byte
+        self.assertEqual(int(header[0]) * 256 + int(header[1]), len(payload))
 
         packet = numpy.concatenate((header, payload))
         pad = (0,) * PADDING_LEN
