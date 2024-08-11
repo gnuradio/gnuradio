@@ -205,8 +205,6 @@ jobs:
           spdlog:p
           thrift:p
           volk:p
-    - name: PIP Install
-      run: pip install click-plugins
     - name: Checkout code
       uses: actions/checkout@v4
     - name: CMake
