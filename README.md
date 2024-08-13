@@ -92,7 +92,7 @@ Complete instructions for building GNU Radio from source code are detailed in
 
 ## Supporting GNU Radio
 
-If you find GNU Radio useful and would like to support its development, you can make a [donation](https://donorbox.org/gnuradio). Your contributions help ensure ongoing improvements and maintenance. Thank you for your support!
+If you find GNU Radio useful and would like to support its development, you can make a [donation](https://gift.idonate.com/seti/GNURadio). Your contributions help ensure ongoing improvements and maintenance. Thank you for your support!
 
 ## Legal Matters
 
