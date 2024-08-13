@@ -42,7 +42,7 @@ def append_re_line_sequence(filename: str, linepattern: str, newline: str, closi
     if closing_parentheses is not None and last_line.rstrip().endswith(closing_parentheses):
         modified_last = f'\n{last_line.rstrip()[:-len(closing_parentheses)]}\n{closing_parentheses}\n'
     else:
-        modified_last = last_line + '\n'
+        modified_last = last_line + newline + '\n'
     newfile = oldfile.replace(last_line, modified_last)
     with open(filename, 'w') as f:
         f.write(newfile)
