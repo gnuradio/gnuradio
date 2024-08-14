@@ -20,18 +20,6 @@ from ..tools import get_modname
 logger = logging.getLogger(__name__)
 
 
-def get_xml_candidates():
-    """ Returns a list of XML candidates for update """
-    xml_candidates = []
-    xml_files = [x for x in glob.glob1("grc", "*.xml")]
-    mod_name = get_modname()
-    for candidate in xml_files:
-        candidate = os.path.splitext(candidate)[0]
-        candidate = candidate.split(mod_name + "_", 1)[-1]
-        xml_candidates.append(candidate)
-    return xml_candidates
-
-
 class ModToolUpdate(ModTool):
     """ Update the grc bindings for a block """
     name = 'update'
@@ -49,7 +37,7 @@ class ModToolUpdate(ModTool):
             return
         if not self.info['blockname'] or self.info['blockname'].isspace():
             raise ModToolException('Block name not specified!')
-        block_candidates = get_xml_candidates()
+        block_candidates = self.get_xml_candidates()
         if self.info['blockname'] not in block_candidates:
             choices = [
                 x for x in block_candidates if self.info['blockname'] in x]
@@ -57,17 +45,24 @@ class ModToolUpdate(ModTool):
                 print("Suggested alternatives: " + str(choices))
             raise ModToolException("The XML bindings does not exists!")
 
+    def get_xml_candidates(self):
+        return [
+            os.path.splitext(candidate)[0].removeprefix(f"{self.info["modname"]}_")
+            for candidate in glob.glob1("grc", "*.xml")
+        ]
+
     def run(self):
         from gnuradio.grc.converter import Converter
         if not self.cli:
             self.validate()
         logger.warning(
             "Warning: This is an experimental feature. Please verify the bindings.")
-        module_name = self.info['modname']
+        module_name = self.info['modname'] or get_modname()
         path = './grc/'
         conv = Converter(path, path)
         if self.info['complete']:
-            blocks = get_xml_candidates()
+            # Get a list of XML block candidates for update
+            blocks = self.get_xml_candidates()
         else:
             blocks = [self.info['blockname']]
         for blockname in blocks:
