@@ -13,44 +13,12 @@ import os
 import re
 import glob
 import logging
-import itertools
 
 from types import SimpleNamespace
 from gnuradio import gr
 from ..tools import get_modname, SCMRepoFactory
 
 logger = logging.getLogger('gnuradio.modtool')
-
-
-def get_block_candidates(modname: str = None,
-                         skip_lib: bool = False, skip_include: bool = False,
-                         skip_python: bool = False, skip_grc: bool = False):
-    """ Returns a list of all possible blocknames """
-    block_candidates = []
-    if not skip_lib:
-        cpp_filters = ["*.cc", "*.cpp"]
-        for ftr in cpp_filters:
-            block_candidates.append(os.path.splitext(x)[0].split("_impl")[0]
-                                    for x in glob.glob1("lib", ftr)
-                                    if not (x.startswith("qa_") or x.startswith("test_")))
-    if not skip_include:
-        cpp_header_glob = (glob.glob("include/gnuradio/*/*.h") if modname is None
-                           else glob.glob1(f"include/gnuradio/{modname}", "*.h"))
-        block_candidates.append(os.path.splitext(os.path.split(x)[-1])[0]
-                                for x in cpp_header_glob
-                                if x != "api.h")
-    if not skip_python:
-        python_glob = (glob.glob("python/*/*.py") if modname is None
-                       else glob.glob1(f"python/{modname}", "*.py"))
-        block_candidates.append(os.path.splitext(os.path.split(x)[-1])[0]
-                                for x in python_glob
-                                if not (x.startswith("qa_") or
-                                        x.startswith("build") or
-                                        x == "__init__.py"))
-    if not (skip_grc or modname is None):
-        block_candidates.append(x.split(".block.yml")[0].split(f"{modname}_")[-1]
-                                for x in glob.glob1("grc", "*.block.yml"))
-    return set(itertools.chain(*block_candidates))
 
 
 class ModToolException(Exception):
@@ -135,7 +103,6 @@ class ModTool(object):
 
         if not self.skip_subdirs['lib']:
             self._file['cmlib'] = os.path.join(self.subdirs['lib'], 'CMakeLists.txt')
-            # TODO: on what version is qalib still relevant?
             self._file['qalib'] = os.path.join(self.subdirs['lib'], f"qa_{self.info['modname']}.cc")
 
         if not self.skip_subdirs['include']:
@@ -205,6 +172,38 @@ class ModTool(object):
                     self.skip_subdirs[subdir] = True
 
         return has_makefile and any(subdir is not None for subdir in self.subdirs.values())
+
+    def get_block_candidates(
+        self, skip_lib: bool = False, skip_include: bool = False, skip_python: bool = False, skip_grc: bool = False
+    ):
+        """Return a list of all possible blocknames"""
+        block_candidates = set()
+        if not (skip_lib or self.skip_subdirs["lib"]):
+            cpp_filters = ["*.cc", "*.cpp"]
+            for ftr in cpp_filters:
+                block_candidates.update(
+                    os.path.splitext(os.path.split(x)[-1])[0].removesuffix("_impl")
+                    for x in glob.glob1(self.subdirs["lib"], ftr)
+                    if not (x.startswith("qa_") or x.startswith("test_"))
+                )
+        if not (skip_include or self.skip_subdirs["include"]):
+            block_candidates.update(
+                os.path.splitext(os.path.split(x)[-1])[0]
+                for x in glob.glob1(self.subdirs["include"], "*.h")
+                if x != "api.h"
+            )
+        if not (skip_python or self.skip_subdirs["python"]):
+            block_candidates.update(
+                os.path.splitext(os.path.split(x)[-1])[0]
+                for x in glob.glob1(self.subdirs["python"], "*.py")
+                if not (x.startswith("qa_") or x.startswith("build") or x == "__init__.py")
+            )
+        if not (skip_grc or self.skip_subdirs["grc"]) or self.info["modname"] is None:
+            block_candidates.update(
+                x.removesuffix(".block.yml").removeprefix(f"{self.info["modname"]}_")
+                for x in glob.glob1("grc", "*.block.yml")
+            )
+        return block_candidates
 
     def run(self):
         """ Override this. """

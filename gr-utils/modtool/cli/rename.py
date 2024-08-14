@@ -13,7 +13,7 @@ import re
 
 import click
 
-from ..core import get_block_candidates, ModToolRename, validate_name
+from ..core import ModToolRename, validate_name
 from ..tools import SequenceCompleter
 from .base import common_params, block_name, run, cli_input, ModToolException
 
@@ -49,7 +49,7 @@ def cli(**kwargs):
 
 def get_oldname(self):
     """ Get the old block name to be replaced """
-    block_candidates = get_block_candidates(self.info['modname'])
+    block_candidates = self.get_block_candidates()
     if self.info['oldname'] is None:
         with SequenceCompleter(block_candidates):
             while not self.info['oldname'] or self.info['oldname'].isspace():
