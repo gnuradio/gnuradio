@@ -16,7 +16,7 @@ import logging
 
 from types import SimpleNamespace
 from gnuradio import gr
-from ..tools import get_modname, SCMRepoFactory
+from ..tools import SCMRepoFactory
 
 logger = logging.getLogger('gnuradio.modtool')
 
@@ -80,8 +80,6 @@ class ModTool(object):
             raise ModToolException(
                 'No GNU Radio module found in the given directory.')
         if self.info['modname'] is None:
-            self.info['modname'] = get_modname()
-        if self.info['modname'] is None:
             raise ModToolException(
                 'No GNU Radio module found in the given directory.')
         self._setup_files()
@@ -134,6 +132,15 @@ class ModTool(object):
             logger.error(f"Can't read or chdir to directory {directory}.")
             return False
 
+        if "gnuradio.project" in files:
+            # Read module name from gnuradio.project
+            try:
+                with open("gnuradio.project", "r") as f:
+                    regexp = r"projectname\s*=\s*([\w\-]+)$"
+                    self.info["modname"] = re.search(regexp, f.read(), flags=re.MULTILINE).group(1).strip()
+            except (IOError, AttributeError):
+                pass
+
         has_makefile = False
         if not "CMakeLists.txt" in files:
             # TODO search for autofoo
@@ -163,6 +170,29 @@ class ModTool(object):
                         logger.error(f"GNU Radio version {gr_version} is not supported")
                         return False
                     has_makefile = True
+
+            # Read module name from CMakeLists.txt
+            try:
+                gr_modname_re = r"gr\-(?P<modname>[\w\-]+)"
+                gr_project_re = (
+                    rf"GR_REGISTER_COMPONENT\s*\(\s*\"{gr_modname_re}\"\s+ENABLE_"
+                    if self.info["is_component"]
+                    else rf"project\s*\(\s*{gr_modname_re}\s*"
+                )
+                modname = re.search(gr_project_re, filetext, flags=re.MULTILINE).group("modname").strip()
+                # FIXME: maybe not needed?
+                modname_trans = {'howto-write-a-block': 'howto'}
+                if modname in modname_trans:
+                    modname = modname_trans[modname]
+                if self.info["modname"] is None:
+                    self.info["modname"] = modname
+                elif modname != self.info["modname"]:
+                    logger.warn(
+                        f"Project name in CMakeLists.txt (gr-{modname}) is not "
+                        + f"the same as in gnuradio.project ({self.info['modname']})"
+                    )
+            except AttributeError:
+                pass
 
             for subdir in self._subdir_names:
                 subdir_added = re.search(rf"add_subdirectory\s*\(\s*(?P<path>{subdir}(\/\w+)*)\s*\)", filetext)

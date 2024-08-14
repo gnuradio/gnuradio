@@ -11,7 +11,6 @@
 
 import os
 
-from ..tools import get_modname
 from .base import ModTool, ModToolException
 
 
@@ -35,7 +34,7 @@ class ModToolInfo(ModTool):
             raise ModToolException(
                 '{}' if self._python_readable else "No module found.")
         os.chdir(mod_info['base_dir'])
-        mod_info['modname'] = get_modname()
+        mod_info['modname'] = self.info['modname']
         if mod_info['modname'] is None:
             raise ModToolException(
                 '{}' if self._python_readable else "No module found.")

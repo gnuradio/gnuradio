@@ -15,7 +15,6 @@ import glob
 import logging
 
 from .base import ModTool, ModToolException
-from ..tools import get_modname
 
 logger = logging.getLogger(__name__)
 
@@ -57,7 +56,7 @@ class ModToolUpdate(ModTool):
             self.validate()
         logger.warning(
             "Warning: This is an experimental feature. Please verify the bindings.")
-        module_name = self.info['modname'] or get_modname()
+        module_name = self.info['modname']
         path = './grc/'
         conv = Converter(path, path)
         if self.info['complete']:
