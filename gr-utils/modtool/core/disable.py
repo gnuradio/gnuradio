@@ -97,7 +97,7 @@ class ModToolDisable(ModTool):
             ('python', r'^(?!qa).+py$', _handle_py_mod),
             ('lib', r'qa.+\.cc$', _handle_cc_qa)
         )
-        for subdir in self._subdirs:
+        for subdir in self._subdir_names:
             if self.skip_subdirs[subdir]:
                 continue
             if self.info['version'] in ('37', '38') and subdir == 'include':

@@ -48,7 +48,7 @@ class ModTool(object):
         self._file = {}
         for subdir in self._subdir_names:
             self.subdirs[subdir] = None
-            self.skip_subdirs = kwargs.get(f"skip_{subdir}", False)
+            self.skip_subdirs[subdir] = kwargs.get(f"skip_{subdir}", False)
         self.skip_pybind = kwargs.get("skip_pybind", False)
         self.info['blockname'] = blockname
         self.info['modname'] = module_name
@@ -70,7 +70,7 @@ class ModTool(object):
 
     def _validate(self):
         """ Validates the arguments """
-        for subdir in _subdir_names:
+        for subdir in self._subdir_names:
             if not isinstance(self.skip_subdirs[subdir], bool):
                 raise ModToolException(f"Expected a boolean value for skip_{subdir}")
         self._assign()
@@ -142,14 +142,15 @@ class ModTool(object):
                 pass
 
         has_makefile = False
-        if not "CMakeLists.txt" in files:
+        if "CMakeLists.txt" not in files:
             # TODO search for autofoo
             return False
 
+        self.info['is_component'] = False
         with open("CMakeLists.txt") as cmakelists:
             # TODO use cmake_parser
-            filetext = cmakelists.read()
-            if re.search("GR_REGISTER_COMPONENT", filetext) is not None:
+            cmtext = cmakelists.read()
+            if re.search("GR_REGISTER_COMPONENT", cmtext, flags=re.IGNORECASE) is not None:
                 # Components are parts of the current version of GNU Radio
                 self.info["version"] = self._supported_versions[-1]
                 self.info["is_component"] = True
@@ -157,19 +158,21 @@ class ModTool(object):
             else:
                 gr_package = re.search(
                     (
-                        r"find_package\s*\(\s*Gnuradio\s+(?P<version>(\d)(\.\d+)(\.\d+)?)"
+                        r"find_package\s*\(\s*Gnuradio\s+\"?(?P<version>(\d)(\.\d+)(\.\d+)?)\"?"
                         # + r"\s+(?P<required>REQUIRED)?\s+(?P<components>COMPONENTS(\s+\w+)*)?\s*\)"
                     ),
-                    filetext,
+                    cmtext,
+                    flags=re.IGNORECASE,
                 )
                 if gr_package is not None:
                     gr_version = gr_package.group("version")
                     gr_version_parts = gr_version.split(".")
                     self.info["version"] = f"{gr_version_parts[0]}{gr_version_parts[1]}"
-                    if self.info["version"] not in self._supported_versions:
+                    if self.info["version"] in self._supported_versions:
+                        has_makefile = True
+                    else:
                         logger.error(f"GNU Radio version {gr_version} is not supported")
-                        return False
-                    has_makefile = True
+                        has_makefile = False
 
             # Read module name from CMakeLists.txt
             try:
@@ -179,7 +182,7 @@ class ModTool(object):
                     if self.info["is_component"]
                     else rf"project\s*\(\s*{gr_modname_re}\s*"
                 )
-                modname = re.search(gr_project_re, filetext, flags=re.MULTILINE).group("modname").strip()
+                modname = re.search(gr_project_re, cmtext, flags=re.MULTILINE | re.IGNORECASE).group("modname").strip()
                 # FIXME: maybe not needed?
                 modname_trans = {'howto-write-a-block': 'howto'}
                 if modname in modname_trans:
@@ -195,7 +198,7 @@ class ModTool(object):
                 pass
 
             for subdir in self._subdir_names:
-                subdir_added = re.search(rf"add_subdirectory\s*\(\s*(?P<path>{subdir}(\/\w+)*)\s*\)", filetext)
+                subdir_added = re.search(rf"add_subdirectory\s*\(\s*(?P<path>{subdir}(\/\w+)*)\s*\)", cmtext)
                 if subdir_added is not None:
                     self.subdirs[subdir] = subdir_added.group("path")
                 else:
