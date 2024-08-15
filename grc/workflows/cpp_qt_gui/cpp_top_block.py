@@ -7,17 +7,16 @@ import re
 
 from mako.template import Template
 
-from .. import Messages, blocks
-from ..Constants import TOP_BLOCK_FILE_MODE
-from .FlowGraphProxy import FlowGraphProxy
-from ..utils import expr_utils
-from .top_block import TopBlockGenerator
+from ...core import Messages, blocks
+from ...core.Constants import TOP_BLOCK_FILE_MODE
+from ...core.generator.FlowGraphProxy import FlowGraphProxy
+from ...core.utils import expr_utils
 
 DATA_DIR = os.path.dirname(__file__)
 
-HEADER_TEMPLATE = os.path.join(DATA_DIR, 'cpp_templates/flow_graph.hpp.mako')
-SOURCE_TEMPLATE = os.path.join(DATA_DIR, 'cpp_templates/flow_graph.cpp.mako')
-CMAKE_TEMPLATE = os.path.join(DATA_DIR, 'cpp_templates/CMakeLists.txt.mako')
+HEADER_TEMPLATE = os.path.join(DATA_DIR, 'flow_graph_qt_gui.hpp.mako')
+SOURCE_TEMPLATE = os.path.join(DATA_DIR, 'flow_graph_qt_gui.cpp.mako')
+CMAKE_TEMPLATE = os.path.join(DATA_DIR, 'CMakeLists.txt.mako')
 
 header_template = Template(filename=HEADER_TEMPLATE)
 source_template = Template(filename=SOURCE_TEMPLATE)
@@ -36,7 +35,7 @@ class CppTopBlockGenerator(object):
         """
 
         self._flow_graph = FlowGraphProxy(flow_graph)
-        self._generate_options = self._flow_graph.get_option(
+        self.generate_options = self._flow_graph.get_option(
             'generate_options')
 
         self._mode = TOP_BLOCK_FILE_MODE
@@ -51,7 +50,7 @@ class CppTopBlockGenerator(object):
     def _warnings(self):
         throttling_blocks = [b for b in self._flow_graph.get_enabled_blocks()
                              if b.flags.throttle]
-        if not throttling_blocks and not self._generate_options.startswith('hb'):
+        if not throttling_blocks and not self.generate_options.startswith('hb'):
             Messages.send_warning("This flow graph may not have flow control: "
                                   "no audio or RF hardware blocks found. "
                                   "Add a Misc->Throttle block to your flow "
@@ -89,7 +88,7 @@ class CppTopBlockGenerator(object):
             'variables': variables,
             'parameters': parameters,
             'monitors': monitors,
-            'generate_options': self._generate_options,
+            'generate_options': self.generate_options,
             'config': platform.config
         }
 
@@ -100,7 +99,7 @@ class CppTopBlockGenerator(object):
             with codecs.open(filename, 'w', encoding='utf-8') as fp:
                 fp.write(data)
 
-        if not self._generate_options.startswith('hb'):
+        if not self.generate_options.startswith('hb'):
             if not os.path.exists(os.path.join(self.file_path, 'build')):
                 os.makedirs(os.path.join(self.file_path, 'build'))
 
@@ -474,7 +473,7 @@ class CppTopBlockGenerator(object):
             if con.source_port.dtype != 'bus':
                 code = template.render(
                     make_port_sig=make_port_sig, source=con.source_port, sink=con.sink_port)
-                if not self._generate_options.startswith('hb'):
+                if not self.generate_options.startswith('hb'):
                     code = 'this->tb->' + code
                 rendered.append(code)
             else:
@@ -492,7 +491,7 @@ class CppTopBlockGenerator(object):
                             hidden_portb = portb.parent.sinks[port_num]
                             code = template.render(
                                 make_port_sig=make_port_sig, source=hidden_porta, sink=hidden_portb)
-                            if not self._generate_options.startswith('hb'):
+                            if not self.generate_options.startswith('hb'):
                                 code = 'this->tb->' + code
                             rendered.append(code)
 

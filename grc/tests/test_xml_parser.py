@@ -7,7 +7,7 @@
 from os import path
 import sys
 
-from grc.converter import flow_graph
+from gnuradio.grc.converter import flow_graph
 
 
 def test_flow_graph_converter():
