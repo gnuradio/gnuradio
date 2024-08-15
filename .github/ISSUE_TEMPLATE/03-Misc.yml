@@ -1,0 +1,13 @@
+name: Other
+description: Questions, comments, or anything else
+labels: []
+body:
+  - type: textarea
+    id: more-info
+    attributes:
+      label: More Information
+    validations:
+      required: true
+  - type: markdown
+    attributes:
+      value: By submitting this issue, you agree to follow our [Code of Conduct](https://github.com/gnuradio/gr-governance/blob/main/CODE_OF_CONDUCT.md)
