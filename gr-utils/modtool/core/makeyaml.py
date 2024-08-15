@@ -77,10 +77,11 @@ class ModToolMakeYAML(ModTool):
             "Warning: This is an experimental feature. Don't expect any magic.")
         # 1) Go through lib/
         if not self.skip_subdirs['lib']:
-            files = filter(
-                lambda f: re.fullmatch(rf"^(?!qa_)({self.info['pattern']})", f) is not None,
-                glob.glob1(self.subdirs["lib"], "*.cc")
-            )
+            files = [
+                f
+                for f in glob.glob1(self.subdirs["lib"], "*.cc")
+                if re.fullmatch(rf"^(?!qa_)({self.info['pattern']})", f) is not None
+            ]
             if len(files) == 0:
                 logger.info("None found.")
             for f in files:
