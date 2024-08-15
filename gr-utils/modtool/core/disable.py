@@ -61,10 +61,12 @@ class ModToolDisable(ModTool):
             return False
 
         def _handle_cc_qa(cmake, fname):
-            """ Do stuff for cc qa """
-            if self.info['version'] == '37':
-                cmake.comment_out_lines(
-                    r'\$\{CMAKE_CURRENT_SOURCE_DIR\}/' + fname)
+            """
+            Do stuff for cc qa.
+            Expected fname to match "^qa_{blockname}.cc$"
+            """
+            cmake.comment_out_lines(fname)
+            if os.path.isfile(self._file["qalib"]):
                 fname_base = os.path.splitext(fname)[0]
                 # Abusing the CMakeFileEditor...
                 ed = CMakeFileEditor(self._file['qalib'])
@@ -74,15 +76,6 @@ class ModToolDisable(ModTool):
                     fr'{fname_base}::suite\(\)', comment_str='//')
                 ed.write()
                 self.scm.mark_file_updated(self._file['qalib'])
-            elif self.info['version'] in ['38', '310']:
-                fname_qa_cc = f'qa_{self.info["blockname"]}.cc'
-                cmake.comment_out_lines(fname_qa_cc)
-            elif self.info['version'] == '36':
-                cmake.comment_out_lines('add_executable.*' + fname)
-                cmake.comment_out_lines(
-                    'target_link_libraries.*' + os.path.splitext(fname)[0])
-                cmake.comment_out_lines(
-                    'GR_ADD_TEST.*' + os.path.splitext(fname)[0])
             self.scm.mark_file_updated(cmake.filename)
             return True
 
@@ -100,8 +93,6 @@ class ModToolDisable(ModTool):
         for subdir in self._subdir_names:
             if self.skip_subdirs[subdir]:
                 continue
-            if self.info['version'] in ('37', '38') and subdir == 'include':
-                subdir = f'include/{self.info["modname"]}'
             try:
                 cmake = CMakeFileEditor(os.path.join(subdir, 'CMakeLists.txt'))
             except IOError:

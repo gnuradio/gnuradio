@@ -38,7 +38,7 @@ class ModTool(object):
     name = 'base'
     description = None
 
-    _supported_versions = ["autofoo", "36", "37", "38", "310"]
+    _supported_versions = ["autofoo", "36", "37", "38", "39", "310"]
     _subdir_names = ["lib", "include", "python", "grc"]
 
     def __init__(self, blockname=None, module_name=None, **kwargs):
@@ -101,6 +101,7 @@ class ModTool(object):
 
         if not self.skip_subdirs['lib']:
             self._file['cmlib'] = os.path.join(self.subdirs['lib'], 'CMakeLists.txt')
+            # if self.info["version"] == "37":
             self._file['qalib'] = os.path.join(self.subdirs['lib'], f"qa_{self.info['modname']}.cc")
 
         if not self.skip_subdirs['include']:

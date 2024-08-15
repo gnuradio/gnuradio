@@ -218,20 +218,19 @@ class ModToolAdd(ModTool):
         - check if C++ QA code is req'd
         - if yes, create qa_*.{cc,h} and add them to CMakeLists.txt
         """
-        fname_cc = None
-        fname_h = None
-        if self.info['version'] in ('38', '310'):
-            fname_h = self.info['blockname'] + '.h'
-            fname_cc = self.info['blockname'] + '.cc'
-            if self.info['blocktype'] in ('source', 'sink', 'sync', 'decimator',
-                                          'interpolator', 'general', 'hier', 'tagged_stream'):
-                fname_cc = self.info['blockname'] + '_impl.cc'
-                self._write_tpl('block_impl_h', 'lib',
-                                self.info['blockname'] + '_impl.h')
-            self._write_tpl('block_impl_cpp', 'lib', fname_cc)
-            self._write_tpl('block_def_h', self.info['includedir'], fname_h)
-        else:  # Pre-3.8 or autotools
+        # FIXME: remove unnecessary version check?
+        if self.info['version'] in ('autofoo', '36', '37'):
+            # Pre-3.8 or autotools
             raise RuntimeError(f"Unsupported version {self.info['version']}")
+        fname_h = self.info['blockname'] + '.h'
+        if self.info['blocktype'] in ('noblock'):
+            fname_cc = self.info['blockname'] + '.cc'
+        else:
+            fname_cc = self.info['blockname'] + '_impl.cc'
+            self._write_tpl('block_impl_h', 'lib',
+                            self.info['blockname'] + '_impl.h')
+        self._write_tpl('block_impl_cpp', 'lib', fname_cc)
+        self._write_tpl('block_def_h', self.info['includedir'], fname_h)
         if self.add_cc_qa:
             self._run_cc_qa_boostutf()
         if not self.skip_cmakefiles:
@@ -272,10 +271,7 @@ class ModToolAdd(ModTool):
 
         self.scm.mark_files_updated((self._file['ccpybind'],))
 
-        if self.info['version'] in ['310']:
-            prefix_include_root = '/'.join(('gnuradio', self.info['modname']))
-        else:
-            prefix_include_root = self.info['modname']
+        prefix_include_root = self.info["includedir"].removeprefix("include/")
         blktype = self.info['blocktype']
 
         bg = BindingGenerator(prefix=gr.prefix(), namespace=[
