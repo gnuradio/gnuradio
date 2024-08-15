@@ -42,7 +42,7 @@ class ModToolRemove(ModTool):
         if not self.cli:
             self.validate()
         else:
-            from ..cli import cli_input
+            from ..cli import cli_input  # noqa: F401
 
         def _remove_cc_test_case(filename=None, ed=None):
             """ Special function that removes the occurrences of a qa*.cc file
@@ -52,11 +52,13 @@ class ModToolRemove(ModTool):
                 return
             (base, ext) = os.path.splitext(filename)
             if ext == '.h' and os.path.isfile(self._file["qalib"]):
-                remove_pattern_from_file(self._file['qalib'],
-                                            fr'^#include "{filename}"\s*$')
-                remove_pattern_from_file(self._file['qalib'],
-                                            fr'^\s*s->addTest\(gr::{modname_}::{base}::suite\(\)\);\s*$'
-                                            )
+                remove_pattern_from_file(
+                    self._file['qalib'], fr'^#include "{filename}"\s*$'
+                )
+                remove_pattern_from_file(
+                    self._file['qalib'],
+                    fr'^\s*s->addTest\(gr::{modname_}::{base}::suite\(\)\);\s*$'
+                )
                 self.scm.mark_file_updated(self._file['qalib'])
             if ext == '.cc':
                 ed.remove_value(
@@ -87,10 +89,10 @@ class ModToolRemove(ModTool):
                 remove_pattern_from_file(
                     self._file['pyinit'], fr'.*from\s+{f[:-3]}\s+import.*\n')
 
-            pb_files_deleted = self._run_subdir(os.path.join(
+            _pb_files_deleted = self._run_subdir(os.path.join(
                 self.info['pydir'], 'bindings'), ('*.cc',), ('list',))
 
-            pbdoc_files_deleted = self._run_subdir(os.path.join(
+            _pbdoc_files_deleted = self._run_subdir(os.path.join(
                 self.info['pydir'], 'bindings', 'docstrings'), ('*.h',), ('',))
 
             # Update python_bindings.cc
@@ -116,7 +118,7 @@ class ModToolRemove(ModTool):
             self._run_subdir('lib', ('*.cc', '*.h'), ('add_library', 'list'),
                              cmakeedit_func=_remove_cc_test_case)
         if not self.skip_subdirs['include']:
-            incl_files_deleted = self._run_subdir(
+            _incl_files_deleted = self._run_subdir(
                 self.info['includedir'], ('*.h',), ('install',))
         if not self.skip_subdirs['grc']:
             self._run_subdir('grc', ('*.yml',), ('install',))

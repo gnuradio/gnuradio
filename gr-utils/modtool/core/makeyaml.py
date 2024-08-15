@@ -19,7 +19,7 @@ from collections import OrderedDict
 
 try:
     from yaml import CLoader as Loader, CDumper as Dumper
-except:
+except ImportError:
     from yaml import Loader, Dumper
 
 try:
@@ -225,7 +225,7 @@ def yaml_generator(self, **kwargs):
     label = header.split('_')
     del label[-1]
     yml_file = os.path.join('.', block + '_' + header + '.block.yml')
-    _header = (('id', f'{block}_{ header}'),
+    _header = (('id', f'{block}_{header}'),
                ('label', ' '.join(label).upper()),
                ('category', f'[{block.capitalize()}]'),
                ('flags', '[python, cpp]')
@@ -234,7 +234,7 @@ def yaml_generator(self, **kwargs):
         '${' + s['name'] + '}' for s in self.parsed_data['properties'] if self.parsed_data['properties']]
     str_ = ', '.join(params_list)
     _templates = [('imports', f'from gnuradio import {block}'),
-                  ('make', f'{block}.{ header}({str_})')
+                  ('make', f'{block}.{header}({str_})')
                   ]
 
     if self.parsed_data['methods']:
@@ -332,7 +332,7 @@ def yaml_generator(self, **kwargs):
     if output_signature:
         data['outputs'] = output_signature
 
-    param_ = ', '.join(params_list)
+    _param = ', '.join(params_list)
     _cpp_templates = [('includes', '#include <gnuradio/{block}/{self.filename}>'),
                       ('declarations', '{block}::{ header}::sptr ${{id}}'),
                       ('make',

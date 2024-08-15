@@ -64,7 +64,7 @@ class ModTool(object):
             from ..cli import setup_cli_logger
             setup_cli_logger(logger)
 
-        if not type(self).__name__ in ['ModToolInfo', 'ModToolNewModule']:
+        if type(self).__name__ not in ['ModToolInfo', 'ModToolNewModule']:
             if self.cli:
                 self._validate()
 
@@ -160,7 +160,7 @@ class ModTool(object):
                 gr_package = re.search(
                     (
                         r"find_package\s*\(\s*Gnuradio\s+\"?(?P<version>(\d)(\.\d+)(\.\d+)?)\"?"
-                        # + r"\s+(?P<required>REQUIRED)?\s+(?P<components>COMPONENTS(\s+\w+)*)?\s*\)"
+                        # r"\s+(?P<required>REQUIRED)?\s+(?P<components>COMPONENTS(\s+\w+)*)?\s*\)"
                     ),
                     cmtext,
                     flags=re.IGNORECASE,
@@ -193,7 +193,7 @@ class ModTool(object):
                 elif modname != self.info["modname"]:
                     logger.warn(
                         f"Project name in CMakeLists.txt (gr-{modname}) is not "
-                        + f"the same as in gnuradio.project ({self.info['modname']})"
+                        f"the same as in gnuradio.project ({self.info['modname']})"
                     )
             except AttributeError:
                 pass
