@@ -10,6 +10,7 @@ parameters:
     label: Output Type
     dtype: enum
     options: [complex float (fc32_le), real float (rc32_le), complex short (sc16_le), real short (rc16_le)]
+    option_labels: [complex float (cf32_le), real float (rf32_le), complex short (ci16_le), real short (ri16_le)]
     option_attributes:
         type: [complex, float, short, short]
         size: [gr.sizeof_gr_complex, gr.sizeof_float, gr.sizeof_short, gr.sizeof_short]
