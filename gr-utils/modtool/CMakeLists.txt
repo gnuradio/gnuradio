@@ -28,6 +28,35 @@ install(
     DESTINATION ${GR_PREFSDIR}
 )
 
+
+########################################################################
+# Install shell completion scripts
+########################################################################
+if(ENABLE_BASH_COMPLETIONS)
+    install(
+        FILES complete_bash.in
+        RENAME gr_modtool
+        DESTINATION ${GR_BASH_COMPLETIONS_DIR}
+    )
+endif(ENABLE_BASH_COMPLETIONS)
+
+if(ENABLE_ZSH_COMPLETIONS)
+    install(
+        FILES complete_zsh.in
+        RENAME _gr_modtool
+        DESTINATION ${GR_ZSH_COMPLETIONS_DIR}
+    )
+endif(ENABLE_ZSH_COMPLETIONS)
+
+if(ENABLE_FISH_COMPLETIONS)
+    install(
+        FILES complete_fish.in
+        RENAME gr_modtool.fish
+        DESTINATION ${GR_FISH_COMPLETIONS_DIR}
+    )
+endif(ENABLE_FISH_COMPLETIONS)
+
+
 GR_PYTHON_INSTALL(
     PROGRAMS    gr_modtool
     DESTINATION ${GR_RUNTIME_DIR}
