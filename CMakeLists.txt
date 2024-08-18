@@ -190,6 +190,51 @@ else(ENABLE_PERFORMANCE_COUNTERS)
     message(STATUS "NO PERF COUNTERS")
 endif(ENABLE_PERFORMANCE_COUNTERS)
 
+string(COMPARE EQUAL "${CMAKE_INSTALL_PREFIX}" "/usr/local" isusrlocal)
+string(COMPARE EQUAL "${CMAKE_INSTALL_PREFIX}" "$ENV{HOME}/.local" ishomelocal)
+
+option(ENABLE_BASH_COMPLETIONS "Enable shell completions for bash" ON)
+if(ENABLE_BASH_COMPLETIONS)
+    if(NOT DEFINED GR_BASH_COMPLETIONS_DIR)
+        if(isusr OR isusrlocal OR ishomelocal)
+            set(GR_BASH_COMPLETIONS_DIR
+                share/bash-completion/completions
+                CACHE PATH "Path to install bash completions")
+        else(isusr OR isusrlocal OR ishomelocal)
+            message(WARNING "GR_BASH_COMPLETIONS_DIR is not defined")
+            set(ENABLE_BASH_COMPLETIONS OFF)
+        endif(isusr OR isusrlocal OR ishomelocal)
+    endif(NOT DEFINED GR_BASH_COMPLETIONS_DIR)
+endif(ENABLE_BASH_COMPLETIONS)
+
+option(ENABLE_ZSH_COMPLETIONS "Enable shell completions for zsh" ON)
+if(ENABLE_ZSH_COMPLETIONS)
+    if(NOT DEFINED GR_ZSH_COMPLETIONS_DIR)
+        if(isusr OR isusrlocal)
+            set(GR_ZSH_COMPLETIONS_DIR
+                share/zsh/site-functions
+                CACHE PATH "Path to install zsh completions")
+        else(isusr OR isusrlocal)
+            message(WARNING "GR_ZSH_COMPLETIONS_DIR is not defined")
+            set(ENABLE_ZSH_COMPLETIONS OFF)
+        endif(isusr OR isusrlocal)
+    endif(NOT DEFINED GR_ZSH_COMPLETIONS_DIR)
+endif(ENABLE_ZSH_COMPLETIONS)
+
+option(ENABLE_FISH_COMPLETIONS "Enable shell completions for fish" ON)
+if(ENABLE_FISH_COMPLETIONS)
+    if(NOT DEFINED GR_FISH_COMPLETIONS_DIR)
+        if(isusr OR ishomelocal)
+            set(GR_FISH_COMPLETIONS_DIR
+                share/fish/vendor_completions.d
+                CACHE PATH "Path to install fish completions")
+        else(isusr OR ishomelocal)
+            message(WARNING "GR_FISH_COMPLETIONS_DIR is not defined")
+            set(ENABLE_FISH_COMPLETIONS OFF)
+        endif(isusr OR ishomelocal)
+    endif(NOT DEFINED GR_FISH_COMPLETIONS_DIR)
+endif(ENABLE_FISH_COMPLETIONS)
+
 ########################################################################
 # Variables replaced when configuring the package config files
 ########################################################################
