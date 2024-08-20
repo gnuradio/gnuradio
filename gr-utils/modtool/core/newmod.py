@@ -33,16 +33,16 @@ class ModToolNewModule(ModTool):
         self.directory = self.dir
 
     def assign(self):
-        self.dir = os.path.join(self.directory, f'gr-{self.info["modname"]}')
+        self.dir = os.path.join(self.directory, f'gr-{self.info.modname}')
         if self.srcdir is None:
             self.srcdir = os.path.join(
                 gr.prefix(), 'share', 'gnuradio', 'modtool', 'templates', 'gr-newmod')
 
     def validate(self):
         """ Validates the arguments """
-        if not self.info['modname']:
+        if not self.info.modname:
             raise ModToolException('Module name not specified.')
-        validate_name('module', self.info['modname'])
+        validate_name('module', self.info.modname)
         try:
             os.stat(self.dir)
         except OSError:
@@ -87,8 +87,8 @@ class ModToolNewModule(ModTool):
                 f = os.path.join(root, filename)
                 with open(f, 'r') as filetext:
                     s = filetext.read()
-                s = s.replace('howto', self.info['modname'])
-                s = s.replace('HOWTO', self.info['modname'].upper())
+                s = s.replace('howto', self.info.modname)
+                s = s.replace('HOWTO', self.info.modname.upper())
                 with open(f, 'w') as filetext:
                     filetext.write(s)
 
@@ -99,10 +99,10 @@ class ModToolNewModule(ModTool):
                 f = os.path.join(root, filename)
                 if filename.find('howto') != -1:
                     os.rename(f, os.path.join(
-                        root, filename.replace('howto', self.info['modname'])))
+                        root, filename.replace('howto', self.info.modname)))
             if os.path.basename(root) == 'howto':
                 os.rename(root, os.path.join(
-                    os.path.dirname(root), self.info['modname']))
+                    os.path.dirname(root), self.info.modname))
 
         logger.info("Done.")
         if self.scm.init_repo(path_to_repo="."):

@@ -25,28 +25,28 @@ class ModToolRename(ModTool):
 
     def __init__(self, blockname=None, new_name=None, **kwargs):
         ModTool.__init__(self, blockname, **kwargs)
-        self.info['oldname'] = blockname
-        self.info['newname'] = new_name
+        self.info.oldname = blockname
+        self.info.newname = new_name
 
     def validate(self):
         """ Validates the arguments """
         ModTool._validate(self)
-        if not self.info['oldname']:
+        if not self.info.oldname:
             raise ModToolException('Old block name (blockname) not specified.')
-        validate_name('old block', self.info['oldname'])
-        block_candidates = get_block_candidates(self.info['modname'])
-        if self.info['oldname'] not in block_candidates:
-            choices = [x for x in block_candidates if self.info['oldname'] in x]
+        validate_name('old block', self.info.oldname)
+        block_candidates = get_block_candidates(self.info.modname)
+        if self.info.oldname not in block_candidates:
+            choices = [x for x in block_candidates if self.info.oldname in x]
             if len(choices) > 0:
                 print("Suggested alternatives: " + str(choices))
             raise ModToolException("Blockname for renaming does not exists!")
-        if not self.info['newname']:
+        if not self.info.newname:
             raise ModToolException('New blockname (new_name) not specified.')
-        validate_name('new block', self.info['newname'])
+        validate_name('new block', self.info.newname)
 
     def assign(self):
-        self.info['fullnewname'] = self.info['modname'] + \
-            '_' + self.info['newname']
+        self.info.fullnewname = self.info.modname + \
+            '_' + self.info.newname
 
     def run(self):
         """ Go, go, go. """
@@ -54,17 +54,17 @@ class ModToolRename(ModTool):
         if not self.cli:
             self.validate()
             self.assign()
-        module = self.info['modname']
-        oldname = self.info['oldname']
-        newname = self.info['newname']
+        module = self.info.modname
+        oldname = self.info.oldname
+        newname = self.info.newname
         logger.info(
             f"In module '{module}' rename block '{oldname}' to '{newname}'")
-        self._run_grc_rename(self.info['modname'], oldname, newname)
-        self._run_python_qa(self.info['modname'], oldname, newname)
-        self._run_python(self.info['modname'], oldname, newname)
-        self._run_lib(self.info['modname'], oldname, newname)
-        self._run_include(self.info['modname'], oldname, newname)
-        self._run_pybind(self.info['modname'], oldname, newname)
+        self._run_grc_rename(self.info.modname, oldname, newname)
+        self._run_python_qa(self.info.modname, oldname, newname)
+        self._run_python(self.info.modname, oldname, newname)
+        self._run_lib(self.info.modname, oldname, newname)
+        self._run_include(self.info.modname, oldname, newname)
+        self._run_pybind(self.info.modname, oldname, newname)
         return
 
     def _run_lib(self, module, old, new):
@@ -99,7 +99,7 @@ class ModToolRename(ModTool):
             logger.info("No C++ QA code detected, skipping...")
 
     def _run_include(self, module, old, new):
-        path = self.info['includedir']
+        path = self.info.includedir
         filename = os.path.join(path, old + '.h')
         self._run_file_replace(filename, old, new)
         # take care of include guards
@@ -108,7 +108,7 @@ class ModToolRename(ModTool):
         self._run_file_rename(path, old, new, '.h')
 
     def _run_python(self, module, old, new):
-        path = self.info['pydir']
+        path = self.info.pydir
         filename = '__init__.py'
         nsubs = self._run_file_replace(os.path.join(path, filename), old, new)
         if nsubs > 0:
@@ -121,7 +121,7 @@ class ModToolRename(ModTool):
             logger.info("Not a Python block, nothing to do here...")
 
     def _run_pybind(self, module, old, new):
-        path = os.path.join(self.info['pydir'], 'bindings')
+        path = os.path.join(self.info.pydir, 'bindings')
         filename = os.path.join(path, old + '_python.cc')
         self._run_file_replace(filename, old, new)
         self._run_file_rename(path, old, new, '_python.cc')
@@ -130,7 +130,7 @@ class ModToolRename(ModTool):
         import hashlib
         hasher = hashlib.md5()
         # note this requires _run_pybind to be called after _run_include
-        header_filename = os.path.join(self.info['includedir'], new + '.h')
+        header_filename = os.path.join(self.info.includedir, new + '.h')
         if not os.path.isfile(header_filename):
             logger.info("Not a C++ block, nothing to do here...")
             return
@@ -160,10 +160,10 @@ class ModToolRename(ModTool):
     def _run_python_qa(self, module, old, new):
         new = 'qa_' + new
         old = 'qa_' + old
-        filename = os.path.join(self.info['pydir'], old + '.py')
+        filename = os.path.join(self.info.pydir, old + '.py')
         self._run_file_replace(filename, old, new)
-        self._run_cmakelists(self.info['pydir'], old, new, '.py')
-        self._run_file_rename(self.info['pydir'], old, new, '.py')
+        self._run_cmakelists(self.info.pydir, old, new, '.py')
+        self._run_file_rename(self.info.pydir, old, new, '.py')
 
     def _run_grc_rename(self, module, old, new):
         grcfile = './grc/' + module + '_' + old + '.block.yml'
