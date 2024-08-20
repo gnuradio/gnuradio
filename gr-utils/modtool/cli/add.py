@@ -20,8 +20,25 @@ from ..tools import SequenceCompleter, ask_yes_no
 from .base import common_params, block_name, run, cli_input, ModToolException
 
 
+class BlockType(click.ParamType):
+    name = "blocktype"
+
+    def convert(self, value, param, ctx):
+        if value in ModToolAdd.block_types:
+            return value
+        else:
+            self.fail(f"Invalid blocktype: '{value}'")
+
+    def shell_complete(self, ctx, param, incomplete: str):
+        return [
+            click.shell_completion.CompletionItem(name, help=description)
+            for name, description in ModToolAdd.block_types.items()
+            if name.startswith(incomplete)
+        ]
+
+
 @click.command('add')
-@click.option('-t', '--block-type', type=click.Choice(ModToolAdd.block_types),
+@click.option('-t', '--block-type', type=BlockType(),
               help=f"One of {', '.join(ModToolAdd.block_types)}.")
 @click.option('--license-file',
               help="File containing the license header for every source code file.")
