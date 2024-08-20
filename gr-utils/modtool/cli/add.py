@@ -41,6 +41,7 @@ class BlockType(click.ParamType):
 @click.option('-t', '--block-type', type=BlockType(),
               help=f"One of {', '.join(ModToolAdd.block_types)}.")
 @click.option('--license-file',
+              type=click.Path(file_okay=True, dir_okay=False, readable=True),
               help="File containing the license header for every source code file.")
 @click.option('--copyright',
               help="Name of the copyright holder (you or your company) MUST be a quoted string.")
