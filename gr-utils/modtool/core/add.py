@@ -40,8 +40,17 @@ class ModToolAdd(ModTool):
     """ Add block to the out-of-tree module. """
     name = 'add'
     description = 'Add new block into a module.'
-    block_types = ('sink', 'source', 'sync', 'decimator', 'interpolator',
-                   'general', 'tagged_stream', 'hier', 'noblock')
+    block_types = {
+        "sink": "Source block with outputs, but no stream inputs",
+        "source": "Sink block with inputs, but no stream outputs",
+        "sync": "Block with synchronous 1:1 input-to-output",
+        "decimator": "Block with synchronous N:1 input-to-output",
+        "interpolator": "Block with synchronous 1:N input-to-output",
+        "general": "General-purpose block type",
+        "tagged_stream": "Block with input-to-output flow controlled by input stream tags (e.g. packetized streams)",
+        "hier": "Hierarchical container block for other blocks; usually can be described by a flowgraph",
+        "noblock": "C++ or Python class",
+    }
     language_candidates = ('cpp', 'python', 'c++')
 
     def __init__(self, blockname=None, block_type=None, lang=None, copyright=None,
