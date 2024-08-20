@@ -31,7 +31,7 @@ from .base import common_params, block_name, run, cli_input
 @click.option('-o', '--output', is_flag=True,
               help='If given, a file with desired output format will be generated')
 @common_params
-@block_name
+@block_name(skip_grc=True, skip_include=True, skip_python=True)  # TODO: python blocks
 def cli(**kwargs):
     """
     \b
