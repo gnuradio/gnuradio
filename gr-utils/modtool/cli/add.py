@@ -56,7 +56,7 @@ class BlockType(click.ParamType):
 @click.option('-l', '--lang', type=click.Choice(ModToolAdd.language_candidates),
               help="Programming Language")
 @common_params
-@block_name
+@click.argument("blockname", nargs=1, required=False, metavar="BLOCK_NAME")
 def cli(**kwargs):
     """Adds a block to the out-of-tree module."""
     kwargs['cli'] = True
