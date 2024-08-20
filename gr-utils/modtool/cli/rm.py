@@ -18,7 +18,7 @@ from .base import common_params, block_name, run, cli_input
 
 @click.command('remove', short_help=ModToolRemove.description)
 @common_params
-@block_name
+@block_name()
 def cli(**kwargs):
     """ Remove block (delete files and remove Makefile entries) """
     kwargs['cli'] = True

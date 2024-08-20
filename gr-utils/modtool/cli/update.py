@@ -16,12 +16,19 @@ from ..tools import SequenceCompleter
 from .base import block_name, run, cli_input, ModToolException
 
 
+def xml_blockname_complete(ctx, param, incomplete: str):
+    return sorted(
+        name for name in get_xml_candidates()
+        if name.startswith(incomplete)
+    )
+
+
 @click.command('update', short_help=ModToolUpdate.description)
 @click.option('--complete', is_flag=True, default=None,
               help="Convert all the XML bindings to YAML.")
 @click.option('-I', '--include-blacklisted', is_flag=True, default=None,
               help="Include XML files with blacklisted names in the conversion process")
-@block_name
+@click.argument("blockname", nargs=1, required=False, metavar="BLOCK_NAME", shell_complete=xml_blockname_complete)
 def cli(**kwargs):
     """ Update the XML bindings to YAML bindings """
     kwargs['cli'] = True

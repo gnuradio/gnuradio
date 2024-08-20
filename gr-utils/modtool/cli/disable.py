@@ -18,7 +18,7 @@ from .base import common_params, block_name, run, cli_input
 
 @click.command('disable', short_help=ModToolDisable.description)
 @common_params
-@block_name
+@block_name()
 def cli(**kwargs):
     """Disable a block (comments out CMake entries for files)"""
     kwargs['cli'] = True
