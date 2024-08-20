@@ -127,6 +127,7 @@ def cli_input(msg):
 def common_params(func):
     """ Common parameters for various modules"""
     @click.option('-d', '--directory', default='.',
+                  type=click.Path(file_okay=False, dir_okay=True, readable=True, writable=True),
                   help="Base directory of the module. Defaults to the cwd.")
     @click.option('--skip-lib', is_flag=True,
                   help="Don't do anything in the lib/ subdirectory.")
