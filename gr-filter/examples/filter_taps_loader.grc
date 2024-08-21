@@ -23,6 +23,7 @@ options:
     sizing_mode: fixed
     thread_safe_setters: ''
     title: Complex Taps Loaded From File
+    window_size: (1000,1000)
   states:
     bus_sink: false
     bus_source: false
@@ -74,16 +75,18 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [31, 137]
+    coordinate: [32, 148.0]
     rotation: 0
     state: enabled
-- name: blocks_throttle_0
-  id: blocks_throttle
+- name: blocks_throttle2_0
+  id: blocks_throttle2
   parameters:
     affinity: ''
     alias: ''
     comment: ''
     ignoretag: 'True'
+    limit: auto
+    maximum: '0.1'
     maxoutbuf: '0'
     minoutbuf: '0'
     samples_per_second: samp_rate
@@ -93,9 +96,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [524, 161]
+    coordinate: [520, 164.0]
     rotation: 0
-    state: true
+    state: enabled
 - name: import_0
   id: import
   parameters:
@@ -125,7 +128,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [271, 153]
+    coordinate: [272, 164.0]
     rotation: 0
     state: enabled
 - name: qtgui_freq_sink_x_0
@@ -180,6 +183,7 @@ blocks:
     minoutbuf: '0'
     name: '""'
     nconnections: '1'
+    norm_window: 'False'
     showports: 'True'
     tr_chan: '0'
     tr_level: '0.0'
@@ -211,8 +215,9 @@ blocks:
 
 connections:
 - [analog_fastnoise_source_x_0, '0', lp_filter, '0']
-- [blocks_throttle_0, '0', qtgui_freq_sink_x_0, '0']
-- [lp_filter, '0', blocks_throttle_0, '0']
+- [blocks_throttle2_0, '0', qtgui_freq_sink_x_0, '0']
+- [lp_filter, '0', blocks_throttle2_0, '0']
 
 metadata:
   file_format: 1
+  grc_version: 3.10.10.0

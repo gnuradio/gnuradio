@@ -1,6 +1,7 @@
 options:
   parameters:
     author: ''
+    catch_exceptions: 'True'
     category: Custom
     cmake_opt: ''
     comment: ''
@@ -24,7 +25,10 @@ options:
     title: ''
     window_size: 1280, 1024
   states:
-    coordinate: [10, 10]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 12.0]
     rotation: 0
     state: enabled
 
@@ -36,7 +40,7 @@ blocks:
     gui_hint: ''
     label: Delay
     min_len: '200'
-    orient: Qt.Horizontal
+    orient: QtCore.Qt.Horizontal
     rangeType: float
     start: '0'
     step: '1'
@@ -44,6 +48,9 @@ blocks:
     value: '300'
     widget: counter_slider
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [816, 436.0]
     rotation: 0
     state: enabled
@@ -54,7 +61,7 @@ blocks:
     gui_hint: ''
     label: Num Taps
     min_len: '200'
-    orient: Qt.Horizontal
+    orient: QtCore.Qt.Horizontal
     rangeType: float
     start: '1'
     step: '1'
@@ -62,6 +69,9 @@ blocks:
     value: '30'
     widget: counter_slider
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [936, 444.0]
     rotation: 0
     state: enabled
@@ -71,7 +81,10 @@ blocks:
     comment: ''
     value: '32000'
   states:
-    coordinate: [172, 10]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [176, 12.0]
     rotation: 0
     state: enabled
 - name: analog_fastnoise_source_x_0
@@ -88,6 +101,9 @@ blocks:
     seed: '0'
     type: complex
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [368, 292.0]
     rotation: 0
     state: enabled
@@ -103,6 +119,9 @@ blocks:
     type: complex
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [472, 208.0]
     rotation: 0
     state: enabled
@@ -118,6 +137,9 @@ blocks:
     type: complex
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [664, 224.0]
     rotation: 0
     state: enabled
@@ -131,9 +153,13 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
     num_ports: '1'
+    showports: 'False'
     type: complex
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [304, 236.0]
     rotation: 0
     state: enabled
@@ -147,9 +173,13 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
     num_ports: '1'
+    showports: 'False'
     type: complex
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [896, 132.0]
     rotation: 0
     state: enabled
@@ -167,39 +197,52 @@ blocks:
     value: pmt.intern("TEST")
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [104, 220.0]
     rotation: 0
     state: enabled
-- name: blocks_throttle_0
-  id: blocks_throttle
+- name: blocks_throttle2_0
+  id: blocks_throttle2
   parameters:
     affinity: ''
     alias: ''
     comment: ''
     ignoretag: 'True'
+    limit: auto
+    maximum: '0.1'
     maxoutbuf: '0'
     minoutbuf: '0'
-    samples_per_second: 50e3
+    samples_per_second: samp_rate
     type: complex
     vlen: '1'
   states:
-    coordinate: [272, 156.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [288, 148.0]
     rotation: 0
     state: enabled
-- name: blocks_throttle_0_0
-  id: blocks_throttle
+- name: blocks_throttle2_1
+  id: blocks_throttle2
   parameters:
     affinity: ''
     alias: ''
     comment: ''
     ignoretag: 'True'
+    limit: auto
+    maximum: '0.1'
     maxoutbuf: '0'
     minoutbuf: '0'
     samples_per_second: samp_rate
     type: float
     vlen: '1'
   states:
-    coordinate: [272, 460.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [272, 452.0]
     rotation: 0
     state: disabled
 - name: blocks_vector_source_x_0
@@ -216,6 +259,9 @@ blocks:
     vector: '[0.85+0.5j, 0.85, 0.85, 0.85+0.5j] + (10000-4)*[0,]'
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [48, 140.0]
     rotation: 0
     state: enabled
@@ -233,6 +279,9 @@ blocks:
     vector: 1500*[0,] + [0.25+0j,] + (10000-1500-1)*[0,]
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [48, 364.0]
     rotation: 0
     state: enabled
@@ -250,6 +299,9 @@ blocks:
     vector: 10*[0,] + [0.5,] + (100-10-1)*[0,]
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [16, 540.0]
     rotation: 0
     state: disabled
@@ -267,6 +319,9 @@ blocks:
     vector: '[-0.85,] + (100-1)*[0,]'
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [16, 444.0]
     rotation: 0
     state: disabled
@@ -283,6 +338,9 @@ blocks:
     taps: int(ntaps)*[1,]+[1,]
     type: ccc
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [664, 156.0]
     rotation: 0
     state: enabled
@@ -293,7 +351,10 @@ blocks:
     comment: ''
     imports: import numpy
   states:
-    coordinate: [9, 71]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 76.0]
     rotation: 0
     state: enabled
 - name: import_1
@@ -303,7 +364,10 @@ blocks:
     comment: ''
     imports: from gnuradio.digital.utils import tagged_streams
   states:
-    coordinate: [99, 72]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [112, 76.0]
     rotation: 0
     state: enabled
 - name: import_2
@@ -313,7 +377,10 @@ blocks:
     comment: ''
     imports: import time
   states:
-    coordinate: [253, 71]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [256, 76.0]
     rotation: 0
     state: enabled
 - name: qtgui_time_sink_x_0
@@ -333,16 +400,16 @@ blocks:
     alpha9: '1.0'
     autoscale: 'False'
     axislabels: 'True'
-    color1: '"blue"'
-    color10: '"blue"'
-    color2: '"red"'
-    color3: '"green"'
-    color4: '"black"'
-    color5: '"cyan"'
-    color6: '"magenta"'
-    color7: '"yellow"'
-    color8: '"dark red"'
-    color9: '"dark green"'
+    color1: blue
+    color10: dark blue
+    color2: red
+    color3: green
+    color4: black
+    color5: cyan
+    color6: magenta
+    color7: yellow
+    color8: dark red
+    color9: dark green
     comment: ''
     ctrlpanel: 'False'
     entags: 'True'
@@ -407,6 +474,9 @@ blocks:
     ymin: '-0.1'
     yunit: '""'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1024, 348.0]
     rotation: 0
     state: enabled
@@ -427,16 +497,16 @@ blocks:
     alpha9: '1.0'
     autoscale: 'False'
     axislabels: 'True'
-    color1: '"blue"'
-    color10: '"blue"'
-    color2: '"red"'
-    color3: '"green"'
-    color4: '"black"'
-    color5: '"cyan"'
-    color6: '"magenta"'
-    color7: '"yellow"'
-    color8: '"dark red"'
-    color9: '"dark green"'
+    color1: blue
+    color10: dark blue
+    color2: red
+    color3: green
+    color4: black
+    color5: cyan
+    color6: magenta
+    color7: yellow
+    color8: dark red
+    color9: dark green
     comment: ''
     ctrlpanel: 'False'
     entags: 'True'
@@ -501,6 +571,9 @@ blocks:
     ymin: '-1'
     yunit: '""'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [480, 492.0]
     rotation: 0
     state: disabled
@@ -521,16 +594,16 @@ blocks:
     alpha9: '1.0'
     autoscale: 'False'
     axislabels: 'True'
-    color1: '"blue"'
-    color10: '"blue"'
-    color2: '"red"'
-    color3: '"green"'
-    color4: '"black"'
-    color5: '"cyan"'
-    color6: '"magenta"'
-    color7: '"yellow"'
-    color8: '"dark red"'
-    color9: '"dark green"'
+    color1: blue
+    color10: dark blue
+    color2: red
+    color3: green
+    color4: black
+    color5: cyan
+    color6: magenta
+    color7: yellow
+    color8: dark red
+    color9: dark green
     comment: ''
     ctrlpanel: 'False'
     entags: 'True'
@@ -595,6 +668,9 @@ blocks:
     ymin: '-0.1'
     yunit: '""'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1024, 132.0]
     rotation: 0
     state: enabled
@@ -615,16 +691,16 @@ blocks:
     alpha9: '1.0'
     autoscale: 'False'
     axislabels: 'True'
-    color1: '"blue"'
-    color10: '"blue"'
-    color2: '"red"'
-    color3: '"green"'
-    color4: '"black"'
-    color5: '"cyan"'
-    color6: '"magenta"'
-    color7: '"yellow"'
-    color8: '"dark red"'
-    color9: '"dark green"'
+    color1: blue
+    color10: dark blue
+    color2: red
+    color3: green
+    color4: black
+    color5: cyan
+    color6: magenta
+    color7: yellow
+    color8: dark red
+    color9: dark green
     comment: ''
     ctrlpanel: 'False'
     entags: 'True'
@@ -689,6 +765,9 @@ blocks:
     ymin: '-0.1'
     yunit: '""'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1024, 220.0]
     rotation: 0
     state: enabled
@@ -702,14 +781,15 @@ connections:
 - [blocks_delay_0, '0', blocks_add_xx_0, '1']
 - [blocks_delay_0_0, '0', qtgui_time_sink_x_0_1, '0']
 - [blocks_tags_strobe_0, '0', blocks_delay_0, '0']
-- [blocks_throttle_0, '0', blocks_add_xx_0, '0']
-- [blocks_throttle_0_0, '0', qtgui_time_sink_x_0_0, '0']
-- [blocks_vector_source_x_0, '0', blocks_throttle_0, '0']
+- [blocks_throttle2_0, '0', blocks_add_xx_0, '0']
+- [blocks_throttle2_1, '0', qtgui_time_sink_x_0_0, '0']
+- [blocks_vector_source_x_0, '0', blocks_throttle2_0, '0']
 - [blocks_vector_source_x_0_0, '0', qtgui_time_sink_x_0, '1']
 - [blocks_vector_source_x_0_0_0, '0', qtgui_time_sink_x_0_0, '1']
-- [blocks_vector_source_x_0_1, '0', blocks_throttle_0_0, '0']
+- [blocks_vector_source_x_0_1, '0', blocks_throttle2_1, '0']
 - [fir_filter_xxx_0, '0', blocks_delay_0_0, '0']
 - [fir_filter_xxx_0, '0', qtgui_time_sink_x_0_1, '1']
 
 metadata:
   file_format: 1
+  grc_version: 3.10.10.0

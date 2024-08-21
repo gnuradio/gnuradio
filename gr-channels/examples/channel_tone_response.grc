@@ -1,6 +1,7 @@
 options:
   parameters:
     author: ''
+    catch_exceptions: 'True'
     category: Custom
     cmake_opt: ''
     comment: ''
@@ -39,7 +40,7 @@ blocks:
     gui_hint: ''
     label: K (Rician Factor)
     min_len: '200'
-    orient: Qt.Horizontal
+    orient: QtCore.Qt.Horizontal
     rangeType: float
     start: '0'
     step: '.1'
@@ -60,7 +61,7 @@ blocks:
     gui_hint: ''
     label: Sine Amplitude (dB)
     min_len: '200'
-    orient: Qt.Horizontal
+    orient: QtCore.Qt.Horizontal
     rangeType: float
     start: '-100'
     step: '1'
@@ -81,7 +82,7 @@ blocks:
     gui_hint: ''
     label: Frequency Offset
     min_len: '200'
-    orient: Qt.Horizontal
+    orient: QtCore.Qt.Horizontal
     rangeType: float
     start: -20e3
     step: '1'
@@ -102,7 +103,7 @@ blocks:
     gui_hint: ''
     label: Max Doppler Frequency (Hz)
     min_len: '200'
-    orient: Qt.Horizontal
+    orient: QtCore.Qt.Horizontal
     rangeType: float
     start: '0'
     step: '1'
@@ -123,7 +124,7 @@ blocks:
     gui_hint: ''
     label: Sampling Frequency Relative Offset
     min_len: '200'
-    orient: Qt.Horizontal
+    orient: QtCore.Qt.Horizontal
     rangeType: float
     start: '0.9'
     step: '.001'
@@ -144,7 +145,7 @@ blocks:
     gui_hint: ''
     label: Noise Level (dB)
     min_len: '200'
-    orient: Qt.Horizontal
+    orient: QtCore.Qt.Horizontal
     rangeType: float
     start: '-30'
     step: '.5'
@@ -183,22 +184,25 @@ blocks:
     offset: '0'
     phase: '0'
     samp_rate: samp_rate
+    showports: 'False'
     type: complex
     waveform: analog.GR_COS_WAVE
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [12, 106]
+    coordinate: [16, 100.0]
     rotation: 0
     state: enabled
-- name: blocks_throttle_0
-  id: blocks_throttle
+- name: blocks_throttle2_0
+  id: blocks_throttle2
   parameters:
     affinity: ''
     alias: ''
     comment: ''
     ignoretag: 'True'
+    limit: auto
+    maximum: '0.1'
     maxoutbuf: '0'
     minoutbuf: '0'
     samples_per_second: samp_rate
@@ -208,7 +212,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [218, 138]
+    coordinate: [232, 132.0]
     rotation: 0
     state: enabled
 - name: channels_channel_model_0
@@ -235,6 +239,7 @@ blocks:
 - name: channels_fading_model_0
   id: channels_fading_model
   parameters:
+    K: '4.0'
     LOS: 'False'
     N: '8'
     affinity: ''
@@ -243,7 +248,6 @@ blocks:
     fDTs: fD/samp_rate
     maxoutbuf: '0'
     minoutbuf: '0'
-    rician_factor: K
     seed: '0'
   states:
     bus_sink: false
@@ -317,6 +321,7 @@ blocks:
     minoutbuf: '0'
     name: ''
     nconnections: '1'
+    norm_window: 'False'
     showports: 'False'
     tr_chan: '0'
     tr_level: '0.0'
@@ -408,11 +413,12 @@ blocks:
     state: enabled
 
 connections:
-- [analog_sig_source_x_0, '0', blocks_throttle_0, '0']
-- [blocks_throttle_0, '0', channels_fading_model_0, '0']
+- [analog_sig_source_x_0, '0', blocks_throttle2_0, '0']
+- [blocks_throttle2_0, '0', channels_fading_model_0, '0']
 - [channels_channel_model_0, '0', qtgui_freq_sink_x_0, '0']
 - [channels_channel_model_0, '0', qtgui_waterfall_sink_x_0, '0']
 - [channels_fading_model_0, '0', channels_channel_model_0, '0']
 
 metadata:
   file_format: 1
+  grc_version: 3.10.10.0

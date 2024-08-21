@@ -1,6 +1,7 @@
 options:
   parameters:
     author: ''
+    catch_exceptions: 'True'
     category: '[GRC Hier Blocks]'
     cmake_opt: ''
     comment: ''
@@ -80,13 +81,15 @@ blocks:
     coordinate: [312, 424.0]
     rotation: 0
     state: true
-- name: blocks_throttle_0
-  id: blocks_throttle
+- name: blocks_throttle2_0
+  id: blocks_throttle2
   parameters:
     affinity: ''
     alias: ''
     comment: ''
     ignoretag: 'True'
+    limit: auto
+    maximum: '0.1'
     maxoutbuf: '0'
     minoutbuf: '0'
     samples_per_second: samp_rate
@@ -96,9 +99,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [520, 420.0]
+    coordinate: [528, 412.0]
     rotation: 0
-    state: true
+    state: enabled
 - name: variable_qtgui_distanceradar_0
   id: variable_qtgui_distanceradar
   parameters:
@@ -123,6 +126,8 @@ blocks:
     gui_hint: 0,0,1,1
     label: 25%
     msgName: radius
+    relBackgroundColor: default
+    relFontColor: default
     type: int
     value: '25'
   states:
@@ -139,6 +144,8 @@ blocks:
     gui_hint: 1,0,1,1
     label: 50%
     msgName: radius
+    relBackgroundColor: default
+    relFontColor: default
     type: int
     value: '50'
   states:
@@ -155,6 +162,8 @@ blocks:
     gui_hint: 2,0,1,1
     label: 75%
     msgName: radius
+    relBackgroundColor: default
+    relFontColor: default
     type: int
     value: '75'
   states:
@@ -166,8 +175,8 @@ blocks:
     state: true
 
 connections:
-- [blocks_null_source_0, '0', blocks_throttle_0, '0']
-- [blocks_throttle_0, '0', blocks_null_sink_0, '0']
+- [blocks_null_source_0, '0', blocks_throttle2_0, '0']
+- [blocks_throttle2_0, '0', blocks_null_sink_0, '0']
 - [variable_qtgui_msg_push_button_0, pressed, variable_qtgui_distanceradar_0, radius]
 - [variable_qtgui_msg_push_button_0_0, pressed, variable_qtgui_distanceradar_0, radius]
 - [variable_qtgui_msg_push_button_0_0_0, pressed, variable_qtgui_distanceradar_0,
@@ -175,3 +184,4 @@ connections:
 
 metadata:
   file_format: 1
+  grc_version: 3.10.10.0
