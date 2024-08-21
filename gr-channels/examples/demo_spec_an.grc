@@ -1,6 +1,7 @@
 options:
   parameters:
     author: mettus
+    catch_exceptions: 'True'
     category: Custom
     cmake_opt: ''
     comment: ''
@@ -24,6 +25,9 @@ options:
     title: ''
     window_size: 1280, 1024
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [16, 12.0]
     rotation: 0
     state: enabled
@@ -35,6 +39,9 @@ blocks:
     comment: ''
     value: '1000'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [200, 12.0]
     rotation: 0
     state: enabled
@@ -45,7 +52,7 @@ blocks:
     gui_hint: ''
     label: Frequency Offset
     min_len: '200'
-    orient: Qt.Horizontal
+    orient: QtCore.Qt.Horizontal
     rangeType: float
     start: -5*samp_rate/fft_size
     step: '1'
@@ -53,6 +60,9 @@ blocks:
     value: '0'
     widget: counter_slider
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [560, 12.0]
     rotation: 0
     state: enabled
@@ -62,6 +72,9 @@ blocks:
     comment: ''
     value: '100000'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [272, 12.0]
     rotation: 0
     state: enabled
@@ -72,7 +85,7 @@ blocks:
     gui_hint: ''
     label: Noise Level
     min_len: '200'
-    orient: Qt.Horizontal
+    orient: QtCore.Qt.Horizontal
     rangeType: float
     start: '-100'
     step: '1'
@@ -80,6 +93,9 @@ blocks:
     value: '0'
     widget: counter_slider
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [440, 12.0]
     rotation: 0
     state: enabled
@@ -96,7 +112,10 @@ blocks:
     seed: '42'
     type: complex
   states:
-    coordinate: [72, 300.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [72, 308.0]
     rotation: 0
     state: enabled
 - name: analog_sig_source_x_0
@@ -110,11 +129,16 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
     offset: '0'
+    phase: '0'
     samp_rate: samp_rate
+    showports: 'False'
     type: complex
     waveform: analog.GR_COS_WAVE
   states:
-    coordinate: [88, 172.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [64, 164.0]
     rotation: 0
     state: enabled
 - name: blocks_add_xx_0
@@ -129,7 +153,10 @@ blocks:
     type: complex
     vlen: '1'
   states:
-    coordinate: [296, 472.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [352, 480.0]
     rotation: 0
     state: enabled
 - name: blocks_divide_xx_0
@@ -144,7 +171,10 @@ blocks:
     type: float
     vlen: '1'
   states:
-    coordinate: [472, 288.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [528, 296.0]
     rotation: 0
     state: enabled
 - name: blocks_nlog10_ff_0
@@ -159,7 +189,10 @@ blocks:
     n: '20'
     vlen: '1'
   states:
-    coordinate: [584, 300.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [640, 308.0]
     rotation: 0
     state: enabled
 - name: blocks_rms_xx_0
@@ -173,7 +206,10 @@ blocks:
     minoutbuf: '0'
     type: complex
   states:
-    coordinate: [288, 316.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [344, 324.0]
     rotation: 0
     state: enabled
 - name: blocks_rms_xx_0_0
@@ -187,23 +223,31 @@ blocks:
     minoutbuf: '0'
     type: complex
   states:
-    coordinate: [288, 204.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [352, 204.0]
     rotation: 0
     state: enabled
-- name: blocks_throttle_0
-  id: blocks_throttle
+- name: blocks_throttle2_0
+  id: blocks_throttle2
   parameters:
     affinity: ''
     alias: ''
     comment: ''
     ignoretag: 'True'
+    limit: auto
+    maximum: '0.1'
     maxoutbuf: '0'
     minoutbuf: '0'
     samples_per_second: samp_rate
     type: complex
     vlen: '1'
   states:
-    coordinate: [392, 484.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [480, 484.0]
     rotation: 0
     state: enabled
 - name: imp0
@@ -213,6 +257,9 @@ blocks:
     comment: ''
     imports: import math
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [16, 92.0]
     rotation: 0
     state: enabled
@@ -268,6 +315,7 @@ blocks:
     minoutbuf: '0'
     name: FFT Plot
     nconnections: '1'
+    norm_window: 'False'
     showports: 'True'
     tr_chan: '0'
     tr_level: '0.0'
@@ -290,7 +338,10 @@ blocks:
     ymax: '10'
     ymin: '-140'
   states:
-    coordinate: [680, 460.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [736, 496.0]
     rotation: 0
     state: enabled
 - name: qtgui_number_sink_0
@@ -350,7 +401,10 @@ blocks:
     unit9: ''
     update_time: '0.10'
   states:
-    coordinate: [680, 372.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [736, 388.0]
     rotation: 0
     state: enabled
 - name: qtgui_number_sink_signal_amplitude
@@ -410,7 +464,10 @@ blocks:
     unit9: ''
     update_time: '0.10'
   states:
-    coordinate: [680, 188.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [736, 180.0]
     rotation: 0
     state: enabled
 - name: qtgui_number_sink_snr
@@ -470,7 +527,10 @@ blocks:
     unit9: ''
     update_time: '0.10'
   states:
-    coordinate: [680, 284.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [736, 284.0]
     rotation: 0
     state: enabled
 - name: qtgui_time_sink_x_0
@@ -490,16 +550,16 @@ blocks:
     alpha9: '1.0'
     autoscale: 'False'
     axislabels: 'True'
-    color1: '"blue"'
-    color10: '"blue"'
-    color2: '"red"'
-    color3: '"green"'
-    color4: '"black"'
-    color5: '"cyan"'
-    color6: '"magenta"'
-    color7: '"yellow"'
-    color8: '"dark red"'
-    color9: '"dark green"'
+    color1: blue
+    color10: dark blue
+    color2: red
+    color3: green
+    color4: black
+    color5: cyan
+    color6: magenta
+    color7: yellow
+    color8: dark red
+    color9: dark green
     comment: ''
     ctrlpanel: 'False'
     entags: 'True'
@@ -564,7 +624,10 @@ blocks:
     ymin: '-1'
     yunit: '""'
   states:
-    coordinate: [680, 572.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [736, 628.0]
     rotation: 0
     state: disabled
 
@@ -573,15 +636,15 @@ connections:
 - [analog_noise_source_x_0, '0', blocks_rms_xx_0, '0']
 - [analog_sig_source_x_0, '0', blocks_add_xx_0, '0']
 - [analog_sig_source_x_0, '0', blocks_rms_xx_0_0, '0']
-- [blocks_add_xx_0, '0', blocks_throttle_0, '0']
+- [blocks_add_xx_0, '0', blocks_throttle2_0, '0']
 - [blocks_divide_xx_0, '0', blocks_nlog10_ff_0, '0']
 - [blocks_nlog10_ff_0, '0', qtgui_number_sink_snr, '0']
 - [blocks_rms_xx_0, '0', blocks_divide_xx_0, '1']
 - [blocks_rms_xx_0, '0', qtgui_number_sink_0, '0']
 - [blocks_rms_xx_0_0, '0', blocks_divide_xx_0, '0']
 - [blocks_rms_xx_0_0, '0', qtgui_number_sink_signal_amplitude, '0']
-- [blocks_throttle_0, '0', qtgui_freq_sink_x_0, '0']
-- [blocks_throttle_0, '0', qtgui_time_sink_x_0, '0']
+- [blocks_throttle2_0, '0', qtgui_freq_sink_x_0, '0']
 
 metadata:
   file_format: 1
+  grc_version: 3.10.10.0
