@@ -251,6 +251,11 @@ class BlockLibrary(QDockWidget, base.Component):
         # Save a reference to the block tree in case it is needed later
         self._block_tree = block_tree
 
+    def reload_blocks(self):
+        self.platform.build_library()
+        self.load_blocks()
+        self.populate_tree(self._block_tree)
+
     def add_block(self, block_key: str):
         """Add a block by its key."""
         if block_key is None:

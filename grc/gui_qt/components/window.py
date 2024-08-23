@@ -1392,6 +1392,27 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
     def kill_triggered(self):
         log.debug("kill")
 
+    def reload_triggered(self):
+        log.debug("Reload hier blocks")
+        self.app.BlockLibrary.reload_blocks()
+
+        range_ = self.tabWidget.count()
+        for idx in range(range_):
+            self.rebuild_tab(idx)
+
+        self.updateActions()
+
+    def rebuild_tab(self, idx):
+        fgscene = self.tabWidget.widget(idx).scene()
+        log.info("Rebuilding flowgraph ({0})".format(fgscene.filename))
+        data = fgscene.core.export_data()
+        fgblocks = fgscene.core.blocks
+        for block in fgblocks:
+            fgscene.removeItem(block.gui)
+        for conn in fgscene.core.connections:
+            fgscene.removeItem(conn.gui)
+        fgscene.import_data(data)
+
     def show_help(parent):
         """Display basic usage tips."""
         message = """\
