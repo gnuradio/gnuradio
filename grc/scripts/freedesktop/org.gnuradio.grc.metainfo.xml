@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-    This file was tested against `appstream cli validate` v0.12.7 (Fedora 31)
+    This file was tested against `appstreamcli validate` v0.12.7 (Fedora 31)
     and v0.12.5 (Debian 10) It fails to validate under v0.12.0 (Ubuntu 18.04).
     So, this file becomes valid somewhere between v0.12.1 and v0.12.5.
     Note that metainfo doesn't mandate (even support at this point) schema
@@ -13,6 +13,7 @@
 <metadata_license>CC0-1.0</metadata_license>
 <project_license>GPL-3.0+</project_license>
 <name>GNU Radio Companion</name>
+<developer_name>Radio project</developer_name>
 <summary>Graphical Signal Processing Flow Graph Design Tool</summary>
 <description>
   <p>
