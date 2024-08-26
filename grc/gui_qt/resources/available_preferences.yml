@@ -117,6 +117,10 @@ categories:
         tooltip: Scaling factor of Qt GUI elements. Note that the effective device pixel ratio will be a product of this value and the native device pixel ratio.
         dtype: str
         default: 1.0
+      - key: max_recent_files
+        name: Maximum number of recently opened files in list
+        dtype: int
+        default: 10
 
 # Runtime preferences typically end up in config.conf. They are grouped in a single tab.
 runtime:
