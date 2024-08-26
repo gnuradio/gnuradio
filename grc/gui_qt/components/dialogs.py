@@ -181,7 +181,8 @@ class PropsDialog(QDialog):
         self.buttonBox.rejected.connect(self.reject)
         self.layout = QVBoxLayout()
         self.layout.addWidget(self.tabs)
-        error_msg.setText('\n\n'.join(self._block.get_error_messages()))
+        if self._block.enabled:
+            error_msg.setText('\n'.join(self._block.get_error_messages()))
         self.layout.addWidget(error_msg)
         self.layout.addWidget(self.buttonBox)
 
