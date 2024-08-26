@@ -96,6 +96,14 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
         self.setCorner(Qt.BottomLeftCorner, Qt.LeftDockWidgetArea)
 
+        # Get max length of recently opened files list to be displayed in the menu
+        self.max_recent_files = self.app.qsettings.value('appearance/max_recent_files', 10, type=int)
+        recent_files = list(self.app.qsettings.value('window/files_recent', []))
+        for file in recent_files:
+            if not os.path.exists(file):
+                recent_files.remove(file)
+        self.recent_files = recent_files[:self.max_recent_files]
+
         self.menuBar().setNativeMenuBar(self.settings.window.NATIVE_MENUBAR)
 
         # TODO: Not sure about document mode
@@ -289,6 +297,14 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
             shortcut=Keys.Open,
             statusTip=_("open-tooltip"),
         )
+
+        actions["open_recent"] = Action(
+            Icons("document-open"),
+            _("open_recent"),
+            self,
+            statusTip=_("open-recent-file"),
+        )
+        actions["open_recent"].setText("Open recent file")
 
         actions["example_browser"] = Action(
             _("example_browser"),
@@ -692,15 +708,26 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         # Global menu options
         self.menuBar().setNativeMenuBar(True)
 
-        open_recent = Menu("Open recent")
+        open_recent = Menu("Open recent file")
         menus["open_recent"] = open_recent
-        recent_files = None
-        if recent_files:
-            pass
+
+        act_recent_len = len(self.recent_files)
+        if act_recent_len > self.max_recent_files:
+            act_recent_len = self.max_recent_files
+
+        # Populate recent file list
+        if act_recent_len == 0:
+            for i in range(self.max_recent_files):
+                # Setup invisible dummy entries, that can be filled later, if recently opened files are available
+                action = open_recent.addAction("Dummy", self.open_recent_triggered)
+                action.setVisible(False)
         else:
-            open_recent.setEnabled(False)
-        # open_recent.addAction(actions["open"])
-        # TODO: populate recent files
+            for i in range(act_recent_len):
+                open_recent.addAction(self.recent_files[i], self.open_recent_triggered)
+            if act_recent_len < self.max_recent_files:
+                for i in range(self.max_recent_files - act_recent_len):
+                    action = open_recent.addAction("Dummy", self.open_recent_triggered)
+                    action.setVisible(False)
 
         # Setup the file menu
         file = Menu("&File")
@@ -954,6 +981,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         if filename:
             open_fgs = self.get_open_flowgraphs()
             if filename not in open_fgs:
+                self.add_recent_file(filename)
                 log.info("Opening flowgraph ({0})".format(filename))
                 new_flowgraph = FlowgraphView(self, self.platform)
                 initial_state = self.platform.parse_flow_graph(filename)
@@ -990,6 +1018,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         if filename:
             try:
                 self.platform.save_flow_graph(filename, self.currentFlowgraph)
+                self.add_recent_file(filename)
             except IOError:
                 log.error("Save failed")
                 return
@@ -1025,6 +1054,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
             self.tabWidget.tabBar().setTabTextColor(self.tabWidget.currentIndex(), self.palette().color(self.palette().WindowText))
             self.currentFlowgraphScene.set_saved(True)
             self.tabWidget.setTabText(self.tabWidget.currentIndex(), os.path.basename(filename))
+            self.add_recent_file(filename)
         else:
             log.debug("Cancelled Save As action")
         self.updateActions()
@@ -1413,6 +1443,21 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
             fgscene.removeItem(conn.gui)
         fgscene.import_data(data)
 
+    def add_recent_file(self, file_name):
+        # double check file_name
+        if os.path.exists(file_name):
+            recent_files = self.recent_files
+            if file_name in recent_files:
+                recent_files.remove(file_name)  # Attempt removal
+            recent_files.insert(0, file_name)  # Insert at start
+            self.recent_files = recent_files[:self.max_recent_files]
+
+            # Now add files to menu entries
+            actions_list = self.menus["open_recent"].actions()
+            for i in range(len(self.recent_files)):
+                actions_list[i].setText(self.recent_files[i])
+                actions_list[i].setVisible(True)
+
     def show_help(parent):
         """Display basic usage tips."""
         message = """\
@@ -1505,6 +1550,10 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         if prefs_dialog.exec_():  # User pressed Save
             prefs_dialog.save_all()
             self.currentFlowgraphScene.update()
+
+    def open_recent_triggered(self):
+        log.debug("open_recent")
+        self.open_triggered(self.sender().text())
 
     def example_browser_triggered(self, key_filter: Union[str, None] = None):
         log.debug("example-browser")
