@@ -484,7 +484,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         actions["toggle_sink_bus"] = Action(_("toggle_sink_bus"), self)
 
         actions["create_hier"].setEnabled(False)
-        actions["open_hier"].setEnabled(False)
+        actions["open_hier"].setEnabled(True)
         actions["toggle_source_bus"].setEnabled(False)
         actions["toggle_sink_bus"].setEnabled(False)
 
@@ -1431,6 +1431,13 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
             self.rebuild_tab(idx)
 
         self.updateActions()
+
+    def open_hier_triggered(self):
+        log.debug("Open hier block triggered")
+        for block in self.currentFlowgraphScene.selected_blocks():
+            grc_source = block.core.extra_data.get('grc_source', '')
+            if grc_source:
+                self.open_triggered(grc_source)
 
     def rebuild_tab(self, idx):
         fgscene = self.tabWidget.widget(idx).scene()
