@@ -44,7 +44,7 @@ inputs:
 outputs:
 -   domain: stream
     dtype: complex
-    multiplicity: ${ nchans }
+    multiplicity: ${ nchans if outchans is None else len(outchans) }
 
 templates:
     imports: from gnuradio.filter import pfb
