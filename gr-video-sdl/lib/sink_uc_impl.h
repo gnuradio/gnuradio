@@ -23,29 +23,15 @@ namespace video_sdl {
      ((unsigned)(d) << 24))
 #define IMGFMT_YV12 vid_fourcc('Y', 'V', '1', '2') /* 12  YVU 4:2:0 */
 
+int render_loop_uc(void* data);
+
 class sink_uc_impl : public sink_uc
 {
 private:
     int d_chunk_size;
+    thread::thread d_render_thread;
 
 protected:
-    void copy_line_pixel_interleaved(unsigned char* dst_pixels_u,
-                                     unsigned char* dst_pixels_v,
-                                     const unsigned char* src_pixels,
-                                     int src_width);
-    void copy_line_line_interleaved(unsigned char* dst_pixels_u,
-                                    unsigned char* dst_pixels_v,
-                                    const unsigned char* src_pixels,
-                                    int src_width);
-    void copy_line_single_plane(unsigned char* dst_pixels,
-                                const unsigned char* src_pixels,
-                                int src_width);
-    void copy_line_single_plane_dec2(unsigned char* dst_pixels,
-                                     const unsigned char* src_pixels,
-                                     int src_width);
-    int
-    copy_plane_to_surface(int plane, int noutput_items, const unsigned char* src_pixels);
-
     float d_framerate;
     int d_wanted_frametime_ms;
     int d_width;
@@ -53,11 +39,20 @@ protected:
     int d_dst_width;
     int d_dst_height;
     int d_current_line;
-    SDL_Surface* d_screen;
-    SDL_Overlay* d_image;
-    SDL_Rect d_dst_rect;
     float d_avg_delay;
     unsigned int d_wanted_ticks;
+    bool d_quit_requested;
+
+    template <typename F>
+    int copy_planes_to_buffers(F copy_func,
+                               const unsigned char* src_pixels_0,
+                               const unsigned char* src_pixels_1 = NULL,
+                               const unsigned char* src_pixels_2 = NULL);
+
+    std::vector<unsigned char> d_buf_y, d_buf_u, d_buf_v;
+
+    std::atomic_bool d_frame_pending;
+    SDL_Overlay* d_image;
 
 public:
     sink_uc_impl(double framerate, int width, int height, int dst_width, int dst_height);
@@ -66,6 +61,8 @@ public:
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
              gr_vector_void_star& output_items) override;
+
+    friend int render_loop_uc(void* data);
 };
 
 } /* namespace video_sdl */
