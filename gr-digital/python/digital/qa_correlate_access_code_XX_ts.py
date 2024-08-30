@@ -12,6 +12,7 @@
 from gnuradio import gr, gr_unittest, digital, blocks
 import pmt
 import numpy
+import struct
 
 default_access_code = '\xAC\xDD\xA4\xE2\xF2\x8C\x20\xFC'
 
@@ -74,8 +75,9 @@ class test_correlate_access_code_XX_ts(gr_unittest.TestCase):
         # header contains packet length, twice (bit-swapped)
         header = numpy.array([(payload_len & 0xFF00) >> 8, payload_len & 0xFF] * 2, dtype=numpy.uint8)
         # make sure we've built the length header correctly
-        self.assertEqual(header[0] * 256 + header[1], header[2] * 256 + header[3])
-        self.assertEqual(header[0] * 256 + header[1], len(payload))
+        length1, length2 = struct.unpack(">HH", header)
+        self.assertEqual(length1, length2)
+        self.assertEqual(length1, len(payload))
 
         packet = numpy.concatenate((header, payload))
         pad = (0,) * PADDING_LEN
