@@ -25,7 +25,6 @@ private:
     bool d_repeat;
 
     wav_header_info d_h;
-    long long d_sample_idx;
     std::vector<float> d_buffer;
 
     static constexpr int s_items_size = 1024;
