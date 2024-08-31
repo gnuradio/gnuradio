@@ -16,6 +16,7 @@ outputs single precision complex float values or complex short values
 
 import sys
 import os
+@DLL_IMPORT_GTK@
 import pmt
 import time
 from gnuradio import gr, eng_notation

@@ -11,20 +11,27 @@
 include(GrPython)
 
 # Note: gr-qtgui requires Qt5.
-
 gr_find_package(Qt5
     COMPONENTS Widgets
     OPTIONAL_COMPONENTS OpenGL
+    GLOBAL
 )
-set(QT_FOUND ${Qt5Widgets_FOUND})
+
+if(TARGET Qt5::Widgets)
+    set(QT_FOUND TRUE)
+else()
+    set(QT_FOUND FALSE)
+endif()
 
 gr_python_check_module(
     DESC "PyQt5"
     MODULE PyQt5
     VAR PYQT5_FOUND
 )
-
-gr_find_package(qwt)
+gr_find_package(qwt GLOBAL)
+if(qwt_FOUND)
+    set(QWT_FOUND TRUE)
+endif()
 
 ########################################################################
 # Register component

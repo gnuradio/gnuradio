@@ -8,6 +8,9 @@
 #
 #
 
+import os
+@DLL_IMPORT_GTK@
+
 from gnuradio.plot_data import plot_data
 
 

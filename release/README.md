@@ -14,6 +14,8 @@ This includes
 * portaudio
 * libusb
 * UHD
+* volk
+* gobject
 
 Coming soon via dockerfile: codec2
 

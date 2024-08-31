@@ -28,8 +28,14 @@ install(
     DESTINATION ${GR_PREFSDIR_relative_to_prefix}
 )
 
+configure_file(gr_modtool ${CMAKE_BINARY_DIR}/gr_modtool @ONLY)
+gen_py_launcher(
+    MODULES gr_modtool
+    PYTHON ${GR_BUNDLE_PYTHON}
+)
+
 GR_PYTHON_INSTALL(
-    PROGRAMS    gr_modtool
+    PROGRAMS    ${CMAKE_BINARY_DIR}/gr_modtool
     DESTINATION ${GR_RUNTIME_DIR}
 )
 

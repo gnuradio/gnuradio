@@ -178,6 +178,9 @@ endfunction()
 # From https://github.com/pothosware/SoapySDR/tree/master/python
 # https://github.com/pothosware/SoapySDR/blob/master/LICENSE_1_0.txt
 ########################################################################
+if(GR_BUILD_INSTALLER)
+    set(GR_PYTHON_DIR Python311/Lib/site-packages)
+endif()
 if(NOT DEFINED GR_PYTHON_DIR)
     execute_process(
         COMMAND
@@ -364,8 +367,11 @@ function(GR_PYTHON_INSTALL)
         ####################################################################
     elseif(GR_PYTHON_INSTALL_PROGRAMS)
         ####################################################################
-        file(TO_NATIVE_PATH ${PYTHON_EXECUTABLE} pyexe_native)
-
+        if(GR_BUILD_INSTALLER)
+            file(TO_NATIVE_PATH Python311/python.exe pyexe_native)
+        else()
+            file(TO_NATIVE_PATH ${PYTHON_EXECUTABLE} pyexe_native)
+        endif()
         if(CMAKE_CROSSCOMPILING)
             set(pyexe_native "/usr/bin/env python")
         endif()
@@ -420,3 +426,22 @@ srcs, gens = files[:len(files)//2], files[len(files)//2:]
 for src, gen in zip(srcs, gens):
     py_compile.compile(file=src, cfile=gen, doraise=True)
 ")
+
+
+function(gen_py_launcher)
+    set(MULTI_ARGS MODULES)
+    set(SINGLE_ARGS PYTHON)
+    cmake_parse_arguments(GEN_PY "" "${SINGLE_ARGS}" "${MULTI_ARGS}" ${ARGN})
+    foreach(mod ${GEN_PY_MODULES})
+        message(WARNING "Installing ${mod}.bat")
+        configure_file(
+            ${CMAKE_SOURCE_DIR}/release/resources/py_launcher.bat.in
+            ${CMAKE_BINARY_DIR}/${mod}.bat
+            @ONLY
+        )
+        install(PROGRAMS
+            ${CMAKE_BINARY_DIR}/${mod}.bat
+            DESTINATION ${GR_RUNTIME_DIR}
+        )
+    endforeach()
+endfunction()

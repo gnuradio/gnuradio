@@ -52,8 +52,8 @@ function(GR_BUNDLE_INSTALL)
         message(STATUS "    ${comp}")
     endforeach()
     foreach(ext_dep ${GR_BUNDLE_DEPENDENCIES})
-        message(STATUS "  Processing additional dependency: ${ext_dep}")
         if(TARGET ${ext_dep})
+            message(STATUS "  Processing additional dependency: ${ext_dep}")
             get_target_property(IS_IMPORTED ${ext_dep} IMPORTED)
             if(NOT IS_IMPORTED)
                 list(APPEND TARGET_FILES "$<TARGET_FILE:${ext_dep}>")
@@ -189,7 +189,7 @@ function(GR_INSTALL_LIBRARY)
     install(
         EXPORT ${GR_LIB_TARGET}-export
         FILE ${GR_LIB_TARGET}Targets.cmake
-        COMPONENT EXPORT_INTERFACE
+        COMPONENT CMAKE_EXPORT_CONFIG
         NAMESPACE gnuradio::
         DESTINATION ${GR_CMAKE_DIR})
 
@@ -202,7 +202,7 @@ function(GR_INSTALL_LIBRARY)
         ${CMAKE_CURRENT_BINARY_DIR}/cmake/Modules/${GR_LIB_TARGET}Config.cmake
         INSTALL_DESTINATION ${GR_CMAKE_DIR})
     install(FILES ${CMAKE_CURRENT_BINARY_DIR}/cmake/Modules/${GR_LIB_TARGET}Config.cmake
-            COMPONENT EXPORT_INTERFACE
+            COMPONENT CMAKE_EXPORT_CONFIG
             DESTINATION ${GR_CMAKE_DIR})
 
     # Setup install rule for target dependencies for installers
@@ -252,7 +252,6 @@ function(GR_CONFIGURE_INSTALLER_COMPONENT name)
     if(NEEDS_DEPS)
         cpack_add_component(${_component_safe_name}_DEPS
             HIDDEN
-            REQUIRED
         )
         list(APPEND _safe_comp_deps ${_component_safe_name}_DEPS)
     endif()
