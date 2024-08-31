@@ -10,10 +10,10 @@
 # Setup dependencies
 ########################################################################
 gr_find_package(ZeroMQ)
-add_library(ZeroMQ::ZeroMQ INTERFACE IMPORTED)
-set_target_properties(
-    ZeroMQ::ZeroMQ PROPERTIES INTERFACE_INCLUDE_DIRECTORIES ${ZeroMQ_INCLUDE_DIRS}
-                                INTERFACE_LINK_LIBRARIES ${ZeroMQ_LIBRARIES})
+# add_library(ZeroMQ::ZeroMQ INTERFACE IMPORTED)
+# set_target_properties(
+#     ZeroMQ::ZeroMQ PROPERTIES INTERFACE_INCLUDE_DIRECTORIES ${ZeroMQ_INCLUDE_DIRS}
+#                                 INTERFACE_LINK_LIBRARIES ${ZeroMQ_LIBRARIES})
 ########################################################################
 # Register component
 ########################################################################

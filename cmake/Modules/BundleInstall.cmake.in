@@ -39,6 +39,7 @@ endforeach()
 file(GET_RUNTIME_DEPENDENCIES
       RESOLVED_DEPENDENCIES_VAR @GR_BUNDLE_TARGET@_DEPS
       UNRESOLVED_DEPENDENCIES_VAR STUB
+      CONFLICTING_DEPENDENCIES_PREFIX _conf_deps
       DIRECTORIES ${extra_directories}
       PRE_EXCLUDE_REGEXES ${pre_exclude_regexes}
       POST_EXCLUDE_REGEXES ${post_exclude_regexes}

@@ -57,7 +57,6 @@ include(GrVersion) # setup version info
 
 # Set minimum version requirements
 include(GrMinReq)
-
 ########################################################################
 # Setup Boost for global use (within this build)
 # Do this before enabling testing support, as it depends
@@ -165,7 +164,12 @@ set(GR_CONF_DIR
     etc
     CACHE PATH "Path to install config files")
 string(COMPARE EQUAL "${CMAKE_INSTALL_PREFIX}" "/usr" isusr)
-if(isusr)
+if(GR_BUILD_INSTALLER)
+        set(SYSCONFDIR
+        ${GR_CONF_DIR}
+        CACHE PATH "Relative system configuration directory" FORCE
+    )
+elseif(isusr)
     set(SYSCONFDIR
         "/${GR_CONF_DIR}"
         CACHE PATH "System configuration directory")
@@ -208,27 +212,38 @@ if(WIN32)
 else(WIN32)
     file(RELATIVE_PATH prefix_relative_to_lib "${prefix}/${GR_LIBRARY_DIR}" "${prefix}")
 endif(WIN32)
-file(RELATIVE_PATH SYSCONFDIR_relative_to_prefix "${prefix}" "${SYSCONFDIR}")
-file(RELATIVE_PATH GR_PREFSDIR_relative_to_prefix "${prefix}" "${GR_PREFSDIR}")
+if(NOT GR_BUILD_INSTALLER)
+    file(RELATIVE_PATH SYSCONFDIR_relative_to_prefix "${prefix}" "${SYSCONFDIR}")
+    file(RELATIVE_PATH GR_PREFSDIR_relative_to_prefix "${prefix}" "${GR_PREFSDIR}")
+else()
+    set(SYSCONFDIR_relative_to_prefix "${SYSCONFDIR}")
+    set(GR_PREFSDIR_relative_to_prefix "${GR_PREFSDIR}")
+endif()
 
 ########################################################################
 # On Apple only, set install name and use rpath correctly, if not already set
 ########################################################################
 if(APPLE)
-    if(NOT CMAKE_INSTALL_NAME_DIR)
+    cmake_policy(SET CMP0068 NEW)
+    set(MACOSX_BUNDLE_ICON_FILE "${CMAKE_SOURCE_DIR}/release/resources/icons/gnuradio_logo_icon-square.ico")
+    if(NOT CMAKE_INSTALL_NAME_DIR AND NOT GR_BUILD_INSTALLER)
         set(CMAKE_INSTALL_NAME_DIR
             ${CMAKE_INSTALL_PREFIX}/${GR_LIBRARY_DIR}
-            CACHE PATH "Library Install Name Destination Directory" FORCE)
+            CACHE PATH "Library Install Name Destination Directory" )
     endif(NOT CMAKE_INSTALL_NAME_DIR)
     if(NOT CMAKE_INSTALL_RPATH)
         set(CMAKE_INSTALL_RPATH
-            ${CMAKE_INSTALL_PREFIX}/${GR_LIBRARY_DIR}
+            "@loader_path;@loader_path/../lib;@loader_path/../bin;@loader_path/..;@loader_path/../../../..;@loader_path/../../../../..;${CMAKE_INSTALL_PREFIX}/${GR_LIBRARY_DIR};${CMAKE_INSTALL_PREFIX}/bin"
             CACHE PATH "Library Install RPath" FORCE)
     endif(NOT CMAKE_INSTALL_RPATH)
     if(NOT CMAKE_BUILD_WITH_INSTALL_RPATH)
+        set(GR_USE_INSTALL_RPATH ON)
+        if(GR_BUILD_INSTALLER)
+            set(GR_USE_INSTALL_RPATH OFF)
+            set(CMAKE_INSTALL_RPATH_USE_LINK_PATH ON)
+        endif()
         set(CMAKE_BUILD_WITH_INSTALL_RPATH
-            ON
-            CACHE BOOL "Do Build Using Library Install RPath" FORCE)
+            ${GR_USE_INSTALL_RPATH} CACHE BOOL "Do Build Using Library Install RPath" FORCE)
     endif(NOT CMAKE_BUILD_WITH_INSTALL_RPATH)
 endif(APPLE)
 

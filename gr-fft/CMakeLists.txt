@@ -10,7 +10,7 @@
 ########################################################################
 include(GrBoost)
 
-gr_find_package(FFTW3)
+gr_find_package(FFTW3f)
 
 ########################################################################
 # Register component
@@ -25,7 +25,7 @@ gr_register_component(
         gr-blocks
     REQUIRED_TPLS
         Boost_FOUND
-        FFTW3_FOUND
+        FFTW3f_FOUND
 )
 
 ########################################################################

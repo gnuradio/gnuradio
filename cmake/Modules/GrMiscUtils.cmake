@@ -37,7 +37,7 @@ function(GR_BUNDLE_INSTALL)
     if(APPLE)
         set_target_properties(${GR_BUNDLE_TARGET} PROPERTIES BUILD_WITH_INSTALL_RPATH ON)
         # works with both bin and lib dirs
-        set_target_properties(${GR_BUNDLE_TARGET} PROPERTIES INSTALL_RPATH "$ORIGIN/../lib")
+        set_target_properties(${GR_BUNDLE_TARGET} PROPERTIES INSTALL_RPATH "@loader_path/../lib;@loader_path/bin")
     endif()
     if(WIN32)
         set(GR_BUNDLE_OUT bin)
