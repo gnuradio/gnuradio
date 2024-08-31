@@ -1,18 +1,29 @@
 
 # Download, setup and install a copy of Python
-set(PYTHON_VERSION "3.11.4")
-set(PY_DOWNLOAD_LINK "https://www.paraview.org/files/dependencies/python-for-wheels")
-set(PY_FILENAME "python-${PYTHON_VERSION}-windows-x86_64.zip")
+set(PYTHON_VERSION "3.11.4" CACHE STRING "Version of Python to build." FORCE)
+set(PY_DOWNLOAD_LINK "https://www.paraview.org/files/dependencies/python-for-wheels/")
 set(PYTHON_DIR "Python-${PYTHON_VERSION}")
-set(PYTHON_PLAT_EXT "-windows-x86_64")
+if(WIN32)
+  set(PY_FILENAME "python-${PYTHON_VERSION}-windows-x86_64.zip")
+  set(PYTHON_PLAT_EXT "-windows-x86_64")
+elseif(APPLE)
+  # This says arm64, but the bianry bundled is a macosx universal binary
+  # so this will run on x86_64 as well
+  set(PY_FILENAME "python-${PYTHON_VERSION}-macos-arm64.tar.xz")
+  set(PYTHON_PLAT_EXT "-macos-arm64")
+endif()
 
+if(APPLE)
+  set(PY_DOWNLOAD_HASH fdb882b53b18675811ca04ad6f5279a586f6f705abd6971c7732c49d214e91b9)
+elseif(WIN32)
+  set(PY_DOWNLOAD_HASH f6aeebc6d1ff77418678ed5612b64ce61be6bc9ef3ab9c291ac557abb1783420)
+endif()
 # download python
 file(DOWNLOAD "${PY_DOWNLOAD_LINK}/${PY_FILENAME}"
   "${CMAKE_CURRENT_BINARY_DIR}/${PY_FILENAME}"
   STATUS download_status
-  EXPECTED_HASH "SHA256=699df2d656c7227c3ba93d640255cd875e3d92e1a475f5c59408c6125515165f"
+  EXPECTED_HASH "SHA256=${PY_DOWNLOAD_HASH}"
 )
-
 list(GET download_status 0 res)
 if(res)
   list(GET download_status 1 err)
@@ -32,8 +43,9 @@ message(STATUS "Extracted ${PY_FILENAME}.")
 
 install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${PYTHON_DIR}${PYTHON_PLAT_EXT}/ DESTINATION Python${PYTHON_SHORT_VER} COMPONENT pythonapi)
 
-configure_file(${CMAKE_SOURCE_DIR}/release/win32/launcher.wxs.in ${CMAKE_BINARY_DIR}/launcher.wxs)
-
+if(WIN32)
+  configure_file(${PROJECT_SOURCE_DIR}/release/win32/bundle.wxs.in ${CMAKE_BINARY_DIR}/bundle.wxs)
+endif()
 # install python module dependencies
 get_property(GR_PYTHON_DEPS_SET GLOBAL PROPERTY GR_PYTHON_VENDOR_DEPS SET)
 if(GR_PYTHON_DEPS_SET AND ENABLE_PYTHON)
@@ -43,7 +55,6 @@ if(GR_PYTHON_DEPS_SET AND ENABLE_PYTHON)
                     "import importlib
 import inspect
 import os
-os.add_dll_directory('${GTK_BIN_DIR}')
 mod = importlib.import_module(\"${module}\")
 print(os.path.dirname(inspect.getfile(mod)))
 "
@@ -53,12 +64,13 @@ print(os.path.dirname(inspect.getfile(mod)))
     file(TO_CMAKE_PATH ${MODULE_DIR} MODULE_DIR)
     message(STATUS "Installing ${module} to ${GR_PYTHON_DIR}/${module}")
     install(DIRECTORY ${MODULE_DIR} DESTINATION ${GR_PYTHON_DIR} COMPONENT pythonapi)
-    if(${module} STREQUAL "gi")
+    if(${module} STREQUAL "gi" AND WIN32)
       # Gi requires the GTK c++ binaries to function, install them with the python module
       # for a self contained, relocatable Python${PYTHON_SHORT_VER} distro
       message(STATUS "Installing GTK to ${GR_PYTHON_DIR}/${module}")
       install(DIRECTORY ${GTK_ROOT} DESTINATION ${GR_PYTHON_DIR}/${module} COMPONENT pythonapi)
     endif()
+    install(DIRECTORY ${MODULE_DIR} DESTINATION ${GR_PYTHON_DIR})
   endforeach()
   # Need to install numpy.libs as well as numpy
   execute_process(COMMAND ${PYTHON_EXECUTABLE} -c

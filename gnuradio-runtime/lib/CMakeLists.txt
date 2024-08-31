@@ -138,7 +138,6 @@ target_link_libraries(
     PRIVATE
         Boost::program_options
         Boost::system
-        Boost::filesystem
         libunwind::libunwind)
 
 # Address linker issues with std::filesystem on Centos 8 and Debian
@@ -219,7 +218,7 @@ if(ENABLE_GR_CTRLPORT)
                 ${CMAKE_CURRENT_SOURCE_DIR}/controlport/thrift/thrift_application_base.cc
                 # add files built by compiling gnuradio.thrift
                 ${gnuradio_thrift_generated_sources})
-        target_link_libraries(gnuradio-runtime PRIVATE thrift::thrift)
+        target_link_libraries(gnuradio-runtime PRIVATE Thrift::thrift)
 
         target_compile_definitions(gnuradio-runtime PUBLIC GR_CTRLPORT)
 

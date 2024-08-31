@@ -104,7 +104,7 @@ set(Python_NumPy_INCLUDE_DIR
     CACHE FILEPATH "NumPy include directory")
 mark_as_advanced(Python_NumPy_INCLUDE_DIR)
 # output used by modern FindPython, duplicate the behavior
-set(Python_NumPy_INCLUDE_DIRS ${Python_NumPy_INCLUDE_DIR})
+set(Python_NumPy_INCLUDE_DIRS ${Python_NumPy_INCLUDE_DIR} /Users/john.parent/Library/Python/3.9/lib/python/site-packages/numpy/core/include)
 
 # target for building with NumPy
 add_library(Python::NumPy INTERFACE IMPORTED)
@@ -178,7 +178,7 @@ endfunction()
 # From https://github.com/pothosware/SoapySDR/tree/master/python
 # https://github.com/pothosware/SoapySDR/blob/master/LICENSE_1_0.txt
 ########################################################################
-if(GR_BUILD_INSTALLER)
+if(GR_BUILD_INSTALLER AND WIN32)
     set(GR_PYTHON_DIR Python${PYTHON_SHORT_VER}/Lib/site-packages)
 endif()
 if(NOT DEFINED GR_PYTHON_DIR)
