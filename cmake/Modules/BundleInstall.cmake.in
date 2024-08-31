@@ -16,16 +16,23 @@ LIST(APPEND post_exclude_regexes ".*WINDOWS[\\/]system32.*") # windows system dl
 
 set(extra_directories @EXT_DEP_DIRS@)
 
-foreach(tgt @TARGET_FILES@)
+foreach(tgt @TARGET_FILES@;${extra_directories})
    get_filename_component(LOC ${tgt} DIRECTORY)
    list(APPEND extra_directories ${LOC})
-
-   if(WIN32 AND ${LOC} MATCHES ".*lib$")
-      # we're resolving runtime deps, so look in the runtime dirs of linked
-      # lib dirs
-      get_filename_component(LOC_PAR ${LOC} DIRECTORY)
-      set(LOC_BIN ${LOC_PAR}/bin)
-      list(APPEND extra_directories ${LOC_BIN})
+   if(LOC)
+      if(WIN32)
+         if(${LOC} MATCHES ".*lib$")
+            # we're resolving runtime deps, so look in the runtime dirs of linked
+            # lib dirs
+            get_filename_component(LOC_PAR ${LOC} DIRECTORY)
+            set(LOC_BIN ${LOC_PAR}/bin)
+            list(APPEND extra_directories ${LOC_BIN})
+         endif()
+         if(${tgt} MATCHES ".*lib$")
+            set(LOC_BIN ${LOC}/bin)
+            list(APPEND extra_directories ${LOC_BIN})
+         endif()
+      endif()
    endif()
 endforeach()
 
@@ -39,7 +46,12 @@ file(GET_RUNTIME_DEPENDENCIES
       LIBRARIES @GR_BUNDLE_LIBS@
 )
 
-file(COPY ${@GR_BUNDLE_TARGET@_DEPS} DESTINATION ${CMAKE_INSTALL_PREFIX}/@GR_BUNDLE_OUT@/@GR_BUNDLE_TARGET@)
+foreach(dep ${@GR_BUNDLE_TARGET@_DEPS})
+   get_filename_component(DEP_FILE_NAME ${dep} NAME)
+   if(NOT EXISTS ${CMAKE_INSTALL_PREFIX}/@GR_BUNDLE_OUT@/${DEP_FILE_NAME})
+      file(COPY ${dep} DESTINATION ${CMAKE_INSTALL_PREFIX}/@GR_BUNDLE_OUT@)
+   endif()
+endforeach()
 
 # Configure binaries for redistro and third parties for installation
 # Set dirs to a list of directories where prerequisite libraries

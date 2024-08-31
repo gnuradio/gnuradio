@@ -11,7 +11,7 @@ set(CPACK_PACKAGE_VERSION_MINOR ${GNURadio_VERSION_MINOR})
 set(CPACK_PACKAGE_VERSION_PATCH ${GNURadio_VERSION_PATCH})
 set(CPACK_PACKAGE_VERSION ${GNURadio_VERSION})
 set(CPACK_PACKAGE_INSTALL_DIRECTORY "GNU Radio")
-set(CPACK_PACKAGE_VENDOR "https://https://www.gnuradio.org/")
+set(CPACK_PACKAGE_VENDOR "https://www.gnuradio.org/")
 set(CPACK_PACKAGE_DESCRIPTION
   "the Free and Open Software Radio Ecosystem")
 
@@ -25,6 +25,10 @@ if(WIN32)
   install(FILES release/win32/regenbin.bat DESTINATION ".")
   file(COPY_FILE COPYING ${CMAKE_BINARY_DIR}/COPYING.txt)
   set(COPYING_EXT .txt)
+  set(GR_WIX_PRODUCT_ICON
+    "${CMAKE_SOURCE_DIR}/release/resources/icons/gnuradio_logo_icon-square.ico"
+  )
+  set(GR_RELEASE_ICON_DIR "${CMAKE_SOURCE_DIR}/release/resources/icons")
 endif()
 
 set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_BINARY_DIR}/COPYING${COPYING_EXT}")
@@ -34,7 +38,7 @@ set(CPACK_WIX_UPGRADE_GUID  "4EE94E3E-1960-4446-B0F8-7F0A3D8CA001")
 
 set(CPACK_WIX_EXTRA_SOURCES "${CMAKE_BINARY_DIR}/launcher.wxs")
 
-configure_file("${CMAKE_CURRENT_LIST_DIR}/GNuRadioCPackOptions.cmake.in"
+configure_file("${CMAKE_CURRENT_LIST_DIR}/GNURadioCPackOptions.cmake.in"
   "${GNURadio_BINARY_DIR}/GNURadioCPackOptions.cmake" @ONLY)
 set(CPACK_PROJECT_CONFIG_FILE
   "${GNURadio_BINARY_DIR}/GNURadioCPackOptions.cmake")

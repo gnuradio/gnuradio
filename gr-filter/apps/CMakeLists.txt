@@ -10,4 +10,9 @@
 ########################################################################
 include(GrPython)
 
-gr_python_install(PROGRAMS gr_filter_design DESTINATION ${GR_RUNTIME_DIR})
+configure_file(gr_filter_design ${CMAKE_BINARY_DIR}/gr_filter_design @ONLY)
+gen_py_launcher(
+    MODULES gr_filter_design
+    PYTHON ${GR_BUNDLE_PYTHON}
+)
+gr_python_install(PROGRAMS ${CMAKE_BINARY_DIR}/gr_filter_design DESTINATION ${GR_RUNTIME_DIR})

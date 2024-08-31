@@ -10,8 +10,14 @@
 ########################################################################
 include(GrPython)
 
+configure_file(gr_read_file_metadata ${CMAKE_BINARY_DIR}/gr_read_file_metadata @ONLY)
+gen_py_launcher(
+    MODULES gr_read_file_metadata
+    PYTHON ${GR_BUNDLE_PYTHON}
+)
+
 GR_PYTHON_INSTALL(
     PROGRAMS
-    gr_read_file_metadata
+    ${CMAKE_BINARY_DIR}/gr_read_file_metadata
     DESTINATION ${GR_RUNTIME_DIR}
 )

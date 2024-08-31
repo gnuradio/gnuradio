@@ -19,9 +19,11 @@ gr_python_install(
           ${CMAKE_CURRENT_SOURCE_DIR}/RPCConnection.py
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/ctrlport/)
 
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/gr-perf-monitorx ${CMAKE_BINARY_DIR}/gr-perf-monitorx @ONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/gr-ctrlport-monitor ${CMAKE_BINARY_DIR}/gr-ctrlport-monitor @ONLY)
 gr_python_install(
-    PROGRAMS ${CMAKE_CURRENT_SOURCE_DIR}/gr-perf-monitorx
-             ${CMAKE_CURRENT_SOURCE_DIR}/gr-ctrlport-monitor
+    PROGRAMS ${CMAKE_BINARY_DIR}/gr-perf-monitorx
+             ${CMAKE_BINARY_DIR}/gr-ctrlport-monitor
     DESTINATION ${GR_RUNTIME_DIR}
                 PERMISSIONS
                 OWNER_READ
@@ -31,7 +33,10 @@ gr_python_install(
                 GROUP_EXECUTE
                 WORLD_READ
                 WORLD_EXECUTE)
-
+gen_py_launcher(
+    MODULES gr-ctrlport-monitor gr-perf-monitorx
+    PYTHON ${GR_BUNDLE_PYTHON}
+)
 if(ENABLE_CTRLPORT_THRIFT)
 
     list(

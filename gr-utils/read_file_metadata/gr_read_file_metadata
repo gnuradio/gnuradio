@@ -11,6 +11,9 @@
 import sys
 from argparse import ArgumentParser
 
+import os
+@DLL_IMPORT_GTK@
+
 import pmt
 from gnuradio.blocks import parse_file_metadata
 

@@ -440,14 +440,17 @@ gr_register_component(
     VAR ENABLE_POSTINSTALL
 )
 
-set(GTK_BIN_DIR C:/dev/gnu-radio/deps/gtk/bin)
-
 ########################################################################
 # Add subdirectories (in order of deps)
 ########################################################################
 add_subdirectory(docs)
 add_subdirectory(gnuradio-runtime)
 if(ENABLE_PYTHON)
+    if(WIN32)
+        # Gtk requires special configuration due to runtime
+        # dll loading on Windows
+        include(setup-gtk)
+    endif()
     add_subdirectory(grc)
 endif()
 add_subdirectory(gr-blocks)

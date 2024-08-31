@@ -23,10 +23,12 @@ if(CPACK_GENERATOR MATCHES "WIX")
   set(CPACK_WIX_PROPERTY_ARPCOMMENTS
     "GNU Radio – the Free and Open Software Radio Ecosystem"
   )
-
+  set(CPACK_WIX_PROGRAM_MENU_FOLDER "GNU Radio")
+  set(CPACK_WIX_UI_BANNER "@GR_RELEASE_ICON_DIR@/gr_banner_short.png")
   set(CPACK_WIX_PRODUCT_ICON
-    "@CMAKE_SOURCE_DIR@/release/resources/icons/gnuradio_logo_icon-square.ico"
+    "@GR_RELEASE_ICON_DIR@/gnuradio_logo_icon-square.ico"
   )
+  set(CPACK_WIX_UI_DIALOG "@GR_RELEASE_ICON_DIR@/gr_dialog.jpg")
 
   set_property(INSTALL "https://wiki.gnuradio.org/" PROPERTY
     CPACK_START_MENU_SHORTCUTS "GNU Radio Documentation"
@@ -42,20 +44,12 @@ if(CPACK_GENERATOR MATCHES "WIX")
   #   list(APPEND CPACK_WIX_LIGHT_EXTRA_FLAGS "-sval")
   # endif()
 
-  # set(CPACK_WIX_UI_BANNER
-  #   "@CMAKE_SOURCE_DIR@/Release/win32/ui_banner.jpg"
-  # )
-
-  # set(CPACK_WIX_UI_DIALOG
-  #   "@CMAKE_SOURCE_DIR@/Release/win32/ui_dialog.jpg"
-  # )
-
   # set(CPACK_WIX_EXTRA_SOURCES
   #   "@CMAKE_SOURCE_DIR@/Release/win32/install_dir.wxs"
   #   "@CMAKE_SOURCE_DIR@/Release/win32/cmake_extra_dialog.wxs"
   # )
   set(CPACK_WIX_PATCH_FILE "@CMAKE_SOURCE_DIR@/release/win32/post_install_patch.xml")
-  # set(CPACK_WIX_PATCH_FILE "@CMAKE_SOURCE_DIR@/Release/win32/wix_patch.xml")
+  list(APPEND CPACK_WIX_PATCH_FILE "@CMAKE_SOURCE_DIR@/release/win32/shortcut_patch.xml")
   # set(CPACK_WIX_TEMPLATE "@CMAKE_SOURCE_DIR@/Release/win32/WIX.template")
 endif()
 
