@@ -234,7 +234,7 @@ class ModTool(object):
             )
         if not (skip_grc or self.skip_subdirs["grc"]) or self.info["modname"] is None:
             block_candidates.update(
-                x.removesuffix(".block.yml").removeprefix(f"{self.info["modname"]}_")
+                x.removesuffix(".block.yml").removeprefix(f"{self.info['modname']}_")
                 for x in glob.glob1("grc", "*.block.yml")
             )
         return block_candidates

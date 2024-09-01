@@ -46,7 +46,7 @@ class ModToolUpdate(ModTool):
 
     def get_xml_candidates(self):
         return [
-            os.path.splitext(candidate)[0].removeprefix(f"{self.info["modname"]}_")
+            os.path.splitext(candidate)[0].removeprefix(f"{self.info['modname']}_")
             for candidate in glob.glob1("grc", "*.xml")
         ]
 
