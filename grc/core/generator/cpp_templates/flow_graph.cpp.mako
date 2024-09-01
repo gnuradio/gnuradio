@@ -102,10 +102,6 @@ ${var.vtype} ${class_name}::get_${var.name} () const {
     return this->${var.name};
 }
 
-void ${class_name}::closeEvent(QCloseEvent *event) {
-this->settings->setValue("geometry",this->saveGeometry());
-event->accept();
-}
 
 void ${class_name}::set_${var.name} (${var.vtype} ${var.name}) {
 % if flow_graph.get_option('thread_safe_setters'):
@@ -120,6 +116,13 @@ void ${class_name}::set_${var.name} (${var.vtype} ${var.name}) {
 }
 
 % endfor
+
+% if generate_options == 'qt_gui':
+    void ${class_name}::closeEvent(QCloseEvent *event) {
+    this->settings->setValue("geometry",this->saveGeometry());
+    event->accept();
+}
+% endif
 
 int main (int argc, char **argv) {
     % if parameters:
