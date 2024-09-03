@@ -18,7 +18,7 @@ from .base import block_name, run, cli_input, ModToolException
 
 def xml_blockname_complete(ctx, param, incomplete: str):
     return sorted(
-        name for name in get_xml_candidates()
+        name for name in ModToolUpdate(cli=True).get_xml_candidates()
         if name.startswith(incomplete)
     )
 

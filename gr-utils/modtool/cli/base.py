@@ -35,7 +35,7 @@ import click
 from click import ClickException
 
 from gnuradio import gr
-from ..core import get_block_candidates
+from ..core import ModTool
 
 
 class ModToolException(ClickException):
@@ -155,7 +155,7 @@ def block_name(**kwargs):
     """ Block name parameter with completion from candidates """
     def block_name_complete(ctx, param, incomplete: str):
         return sorted(
-            name for name in get_block_candidates(**kwargs)
+            name for name in ModTool(cli=True, **kwargs).get_block_candidates()
             if name.startswith(incomplete)
         )
     return click.argument(
