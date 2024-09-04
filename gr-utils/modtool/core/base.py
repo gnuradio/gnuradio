@@ -215,26 +215,29 @@ class ModTool(object):
         if not (skip_lib or self.skip_subdirs["lib"]):
             cpp_filters = ["*.cc", "*.cpp"]
             for ftr in cpp_filters:
+                suffix = "_impl" + ftr[1:]  # ftr.replace("*", "_impl")
                 block_candidates.update(
-                    os.path.splitext(os.path.split(x)[-1])[0].removesuffix("_impl")
+                    x[:x.endswith(suffix) and -len(suffix)]
                     for x in glob.glob1(self.subdirs["lib"], ftr)
                     if not (x.startswith("qa_") or x.startswith("test_"))
                 )
         if not (skip_include or self.skip_subdirs["include"]):
             block_candidates.update(
-                os.path.splitext(os.path.split(x)[-1])[0]
+                os.path.splitext(x)[0]
                 for x in glob.glob1(self.subdirs["include"], "*.h")
                 if x != "api.h"
             )
         if not (skip_python or self.skip_subdirs["python"]):
             block_candidates.update(
-                os.path.splitext(os.path.split(x)[-1])[0]
+                os.path.splitext(x)[0]
                 for x in glob.glob1(self.subdirs["python"], "*.py")
                 if not (x.startswith("qa_") or x.startswith("build") or x == "__init__.py")
             )
-        if not (skip_grc or self.skip_subdirs["grc"]) or self.info["modname"] is None:
+        if not (skip_grc or self.skip_subdirs["grc"] or self.info["modname"] is None):
+            prefix = self.info["modname"] + "_"
+            ext = ".block.yml"
             block_candidates.update(
-                x.removesuffix(".block.yml").removeprefix(f"{self.info['modname']}_")
+                x[x.startswith(prefix) and len(prefix):x.endswith(ext) and -len(ext)]
                 for x in glob.glob1("grc", "*.block.yml")
             )
         return block_candidates

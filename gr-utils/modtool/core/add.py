@@ -271,7 +271,7 @@ class ModToolAdd(ModTool):
 
         self.scm.mark_files_updated((self._file['ccpybind'],))
 
-        prefix_include_root = self.info["includedir"].removeprefix("include/")
+        prefix_include_root = self.info["includedir"][len("include/"):]
         blktype = self.info['blocktype']
 
         bg = BindingGenerator(prefix=gr.prefix(), namespace=[

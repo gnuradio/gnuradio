@@ -45,8 +45,10 @@ class ModToolUpdate(ModTool):
             raise ModToolException("The XML bindings does not exists!")
 
     def get_xml_candidates(self):
+        prefix = self.info["modname"] + "_"
+        ext = ".xml"
         return [
-            os.path.splitext(candidate)[0].removeprefix(f"{self.info['modname']}_")
+            candidate[candidate.startswith(prefix) and len(prefix):candidate.endswith(ext) and -len(ext)]
             for candidate in glob.glob1("grc", "*.xml")
         ]
 
