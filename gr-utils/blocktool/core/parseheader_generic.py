@@ -26,8 +26,7 @@ try:
     from pygccxml import parser, declarations, utils
     PYGCCXML_AVAILABLE = True
 except:
-    from ...modtool.tools import ParserCCBlock
-    from ...modtool.cli import ModToolException
+    from gnuradio.modtool.tools import ParserCCBlock
 
 
 class GenericHeaderParser(BlockTool):
@@ -113,7 +112,7 @@ class GenericHeaderParser(BlockTool):
                                    '39'
                                    )
         except IOError:
-            raise ModToolException(
+            raise BlockToolException(
                 "Can't open some of the files necessary to parse {}.".format(fname_cc))
 
         if contains_modulename:
