@@ -30,7 +30,7 @@ message(FATAL_ERROR "Extraction of ${PY_FILENAME} failed.")
 endif()
 message(STATUS "Extracted ${PY_FILENAME}.")
 
-install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${PYTHON_DIR}${PYTHON_PLAT_EXT}/ DESTINATION Python311 COMPONENT pythonapi)
+install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${PYTHON_DIR}${PYTHON_PLAT_EXT}/ DESTINATION Python${PYTHON_SHORT_VER} COMPONENT pythonapi)
 
 configure_file(${CMAKE_SOURCE_DIR}/release/win32/launcher.wxs.in ${CMAKE_BINARY_DIR}/launcher.wxs)
 
@@ -55,7 +55,7 @@ print(os.path.dirname(inspect.getfile(mod)))
     install(DIRECTORY ${MODULE_DIR} DESTINATION ${GR_PYTHON_DIR} COMPONENT pythonapi)
     if(${module} STREQUAL "gi")
       # Gi requires the GTK c++ binaries to function, install them with the python module
-      # for a self contained, relocatable Python311 distro
+      # for a self contained, relocatable Python${PYTHON_SHORT_VER} distro
       message(STATUS "Installing GTK to ${GR_PYTHON_DIR}/${module}")
       install(DIRECTORY ${GTK_ROOT} DESTINATION ${GR_PYTHON_DIR}/${module} COMPONENT pythonapi)
     endif()
@@ -73,11 +73,13 @@ print(os.path.join(site.getsitepackages()[1], \"numpy.libs\"))
   install(DIRECTORY ${NUMPY_LIB_DIR} DESTINATION ${GR_PYTHON_DIR} COMPONENT pythonapi)
 endif()
 
+
+configure_file(${CMAKE_SOURCE_DIR}/release/resources/make_py_link.py ${CMAKE_BINARY_DIR}/make_py_link.py)
 # We also want to install a symlink of our custom Python to the bin dir
 install(CODE [=[
 execute_process(
   COMMAND ${PYTHON_EXECUTABLE}
-    ${CMAKE_SOURCE_DIR}/release/resources/make_py_link.py
+    ${CMAKE_BINARY_DIR}/make_py_link.py
   WORKING_DIRECTORY ${CMAKE_INSTALL_PREFIX}
   )
 ]=])

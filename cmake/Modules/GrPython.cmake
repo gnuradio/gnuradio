@@ -179,7 +179,7 @@ endfunction()
 # https://github.com/pothosware/SoapySDR/blob/master/LICENSE_1_0.txt
 ########################################################################
 if(GR_BUILD_INSTALLER)
-    set(GR_PYTHON_DIR Python311/Lib/site-packages)
+    set(GR_PYTHON_DIR Python${PYTHON_SHORT_VER}/Lib/site-packages)
 endif()
 if(NOT DEFINED GR_PYTHON_DIR)
     execute_process(
@@ -368,7 +368,7 @@ function(GR_PYTHON_INSTALL)
     elseif(GR_PYTHON_INSTALL_PROGRAMS)
         ####################################################################
         if(GR_BUILD_INSTALLER)
-            file(TO_NATIVE_PATH Python311/python.exe pyexe_native)
+            file(TO_NATIVE_PATH Python${PYTHON_SHORT_VER}/python.exe pyexe_native)
         else()
             file(TO_NATIVE_PATH ${PYTHON_EXECUTABLE} pyexe_native)
         endif()

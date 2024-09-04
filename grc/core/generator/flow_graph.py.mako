@@ -25,8 +25,8 @@
 ##Create Imports
 ########################################################
 % if generate_options in ['qt_gui','hb_qt_gui']:
-from PyQt5 import Qt
 from gnuradio import qtgui
+from PyQt5 import Qt
 %endif
 % for imp in imports:
 ##${imp.replace("  # grc-generated hier_block", "")}
