@@ -125,3 +125,6 @@ Thift support is fully broken on Windows. You can build without issue, but impor
 
 Need to add numpy to include interface
 -DPython_NumPy_INCLUDE_DIR=
+
+The GTK bin directory should be set via the GTK_BIN_DIR variable on the CMake command line or in a CMake preset. If it is not set, GR will default to
+the default GVS build location on Windows.

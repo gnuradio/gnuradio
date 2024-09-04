@@ -99,7 +99,7 @@ if(ENABLE_GR_QTGUI)
     ########################################################################
     # Install the conf file
     ########################################################################
-    install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/gr-qtgui.conf DESTINATION ${GR_PREFSDIR})
+    install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/gr-qtgui.conf DESTINATION ${GR_PREFSDIR_relative_to_prefix})
 
     ########################################################################
     # Install the themes (QSS) files
