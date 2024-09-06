@@ -138,7 +138,7 @@ templates:
 
 
 cpp_templates:
-  includes: ['#include <gnuradio/qtgui/${type.fcn}.h>']
+  includes: ['#include <gnuradio/qtgui/${type.fcn}.h>', '#include <gnuradio/fft/window.h>']
   declarations: gr::qtgui::${type.fcn}::sptr ${id};
   make: |-
     <%
