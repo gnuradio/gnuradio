@@ -1,0 +1,9 @@
+id: rfnoc.io.xport
+label: Data
+color: "#FFEB3B"
+
+multiple_connections_per_input: false
+multiple_connections_per_output: false
+
+templates:
+-   type: [rfnoc.io.xport, rfnoc.io.xport]

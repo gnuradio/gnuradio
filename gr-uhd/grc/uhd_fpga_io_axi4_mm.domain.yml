@@ -1,0 +1,9 @@
+id: rfnoc.io.axi4_mm
+label: AXI4 Memory-Mapped
+color: "#F57C11"
+
+multiple_connections_per_input: false
+multiple_connections_per_output: false
+
+templates:
+-   type: [rfnoc.io.axi4_mm, rfnoc.io.axi4_mm]

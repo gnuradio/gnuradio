@@ -1,13 +1,20 @@
 id: uhd_fpga_fft
-label: FFT
+label: RFNoC FFT
 
 inputs:
 -   domain: stream
     id: port0
+    dtype: fc32
 
 outputs:
 -   domain: stream
     id: port0
+    dtype: fc32
 
 doc_url: UHD_FPGA_FFT
+
+documentation: |-
+  RFNoC FFT (FPGA Implementation).
+  Instantiates an FFT block in the FPGA bitfile.
+
 file_format: 1

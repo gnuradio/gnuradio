@@ -37,33 +37,54 @@ install(FILES ${yml_blocks} uhd_amsg_source.block.yml uhd.tree.yml
         DESTINATION ${GRC_BLOCKS_DIR})
 
 if(ENABLE_UHD_RFNOC)
-    install(
-        FILES rfnoc.domain.yml
-              uhd_fpga_clk.domain.yml
-              uhd_fpga_ctrl.domain.yml
-              uhd_fpga_data.domain.yml
-              uhd_fpga_ddc.block.yml
-              uhd_fpga_duc.block.yml
-              uhd_fpga_fft.block.yml
-              uhd_fpga_io_ctrl_port.domain.yml
-              uhd_fpga_io_radio.domain.yml
-              uhd_fpga_io_time_keeper.domain.yml
-              uhd_fpga_radio.block.yml
-              uhd_fpga_sep.block.yml
-              uhd_fpga_x310.block.yml
-              uhd_rfnoc_addsub.block.yml
-              uhd_rfnoc_fft.block.yml
-              uhd_rfnoc_fosphor.block.yml
-              uhd_rfnoc_graph.block.yml
-              uhd_rfnoc_keep_one_in_n.block.yml
-              uhd_rfnoc_logpwr.block.yml
-              uhd_rfnoc_moving_avg.block.yml
-              uhd_rfnoc_null_src_sink.block.yml
-              uhd_rfnoc_rx_streamer.block.yml
-              uhd_rfnoc_split_stream.block.yml
-              uhd_rfnoc_switchboard.block.yml
-              uhd_rfnoc_tx_streamer.block.yml
-              uhd_rfnoc_vector_iir.block.yml
+    install(FILES
+        # GRC Bindings for GNU Radio flow graphs
+        uhd_rfnoc_addsub.block.yml
+        uhd_rfnoc_fft.block.yml
+        uhd_rfnoc_fosphor.block.yml
+        uhd_rfnoc_graph.block.yml
+        uhd_rfnoc_keep_one_in_n.block.yml
+        uhd_rfnoc_logpwr.block.yml
+        uhd_rfnoc_moving_avg.block.yml
+        uhd_rfnoc_null_src_sink.block.yml
+        uhd_rfnoc_rx_streamer.block.yml
+        uhd_rfnoc_split_stream.block.yml
+        uhd_rfnoc_switchboard.block.yml
+        uhd_rfnoc_tx_streamer.block.yml
+        uhd_rfnoc_vector_iir.block.yml
+        # Domain for RFNoC block connections in GNU Radio flow graphs
+        rfnoc.domain.yml
+        # GRC Bindings for RFNoC Image Builder files (blocks)
+        uhd_fpga_addsub.block.yml
+        uhd_fpga_chdr_dma_ta.block.yml
+        uhd_fpga_ddc.block.yml
+        uhd_fpga_device_bsp.block.yml
+        uhd_fpga_device_none.block.yml
+        uhd_fpga_duc.block.yml
+        uhd_fpga_eth_ta.block.yml
+        uhd_fpga_fft.block.yml
+        uhd_fpga_fosphor.block.yml
+        uhd_fpga_keep_one_in_n.block.yml
+        uhd_fpga_null_src_sink.block.yml
+        uhd_fpga_radio.block.yml
+        uhd_fpga_replay.block.yml
+        uhd_fpga_sep.block.yml
+        uhd_fpga_siggen.block.yml
+        uhd_fpga_split_stream.block.yml
+        uhd_fpga_switchboard.block.yml
+        # GRC Bindings for RFNoC Image Builder files (domains)
+        uhd_fpga_clk.domain.yml
+        uhd_fpga_ctrl.domain.yml
+        uhd_fpga_data.domain.yml
+        uhd_fpga_io_axi4_mm.domain.yml
+        uhd_fpga_io_axi4_mm.domain.yml
+        uhd_fpga_io_ctrl_port.domain.yml
+        uhd_fpga_io_ctrl_port.domain.yml
+        uhd_fpga_io_gpio.domain.yml
+        uhd_fpga_io_radio.domain.yml
+        uhd_fpga_io_time_keeper.domain.yml
+        uhd_fpga_io_time_keeper.domain.yml
+        uhd_fpga_io_xport.domain.yml
         DESTINATION ${GRC_BLOCKS_DIR})
     if(PYQT5_FOUND)
         install (FILES uhd_msgpushbutton.block.yml DESTINATION ${GRC_BLOCKS_DIR})
