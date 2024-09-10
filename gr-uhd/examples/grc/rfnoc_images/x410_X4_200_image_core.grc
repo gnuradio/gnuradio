@@ -1,0 +1,533 @@
+options:
+  parameters:
+    author: Martin Braun <martin.braun@ettus.com>
+    catch_exceptions: 'True'
+    category: '[GRC Hier Blocks]'
+    cmake_opt: ''
+    comment: ''
+    copyright: 2024 NI/Emerson
+    description: ''
+    gen_cmake: 'On'
+    gen_linking: dynamic
+    generate_options: qt_gui
+    hier_block_src_path: '.:'
+    id: x410_X4_200_image_core
+    max_nouts: '0'
+    output_language: python
+    placement: (0,0)
+    qt_qss_theme: ''
+    realtime_scheduling: ''
+    run: 'True'
+    run_command: '{python} -u {filename}'
+    run_options: prompt
+    sizing_mode: fixed
+    thread_safe_setters: ''
+    title: X410 Image Core, 200 MHz RF BW, 4x10GbE
+    window_size: (1000,1000)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 8]
+    rotation: 0
+    state: enabled
+
+blocks:
+- name: samps_per_clock
+  id: variable
+  parameters:
+    comment: 'The X410 in the 200 MHz
+
+      configuration runs at
+
+      2 samples per cycle in
+
+      the radio block.'
+    value: '2'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [200, 12.0]
+    rotation: 0
+    state: enabled
+- name: uhd_fpga_eth_ta_qsfp0
+  id: uhd_fpga_eth_ta
+  parameters:
+    affinity: ''
+    alias: eth_qsfp0
+    comment: 'This enables 4x10GbE on SFP0.
+
+      Note that it is imperative to set
+
+      the QSFP number to the correct
+
+      SFP port, even though that is
+
+      implied by the connection.'
+    desc: x4xx_eth.yml
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    port_type0: 10GbE
+    port_type1: 10GbE
+    port_type2: 10GbE
+    port_type3: 10GbE
+    qsfp_num: '0'
+    type: transport_adapter
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [80, 260.0]
+    rotation: 0
+    state: enabled
+- name: uhd_fpga_chdr_dma_ta_0
+  id: uhd_fpga_chdr_dma_ta
+  parameters:
+    affinity: ''
+    alias: dma
+    comment: 'This enables communication from
+
+      the FPGA (PL) to the embedded Linux
+
+      (PS). It should always be provided;
+
+      leaving it out saves very few resources.'
+    desc: chdr_dma.yml
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: transport_adapter
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [552, 48.0]
+    rotation: 180
+    state: enabled
+- name: uhd_fpga_radio_0
+  id: uhd_fpga_radio
+  parameters:
+    NIPC: '2'
+    NUM_PORTS: '2'
+    affinity: ''
+    alias: radio0
+    comment: 'Note the usage of advanced clock settings,
+
+      necessary for X4xx devices.'
+    ctrl_clock: _device_.rfnoc_ctrl
+    desc: radio.yml
+    enable_adv_clk_ctrl: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    timebase_clock: _device_.radio
+    type: block
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1480, 248.0]
+    rotation: 0
+    state: enabled
+- name: uhd_fpga_radio_1
+  id: uhd_fpga_radio
+  parameters:
+    NIPC: '2'
+    NUM_PORTS: '2'
+    affinity: ''
+    alias: radio1
+    comment: ''
+    ctrl_clock: _device_.rfnoc_ctrl
+    desc: radio.yml
+    enable_adv_clk_ctrl: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    timebase_clock: _device_.radio
+    type: block
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1520, 704.0]
+    rotation: 0
+    state: enabled
+- name: uhd_fpga_duc_0
+  id: uhd_fpga_duc
+  parameters:
+    CIC_MAX_INTERP: '255'
+    NUM_HB: '3'
+    NUM_PORTS: '2'
+    affinity: ''
+    alias: duc0
+    comment: ''
+    desc: duc.yml
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: block
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1264, 328.0]
+    rotation: 0
+    state: enabled
+- name: uhd_fpga_ddc_0
+  id: uhd_fpga_ddc
+  parameters:
+    CIC_MAX_DECIM: '255'
+    NUM_HB: '3'
+    NUM_PORTS: '2'
+    affinity: ''
+    alias: ddc0
+    comment: ''
+    desc: ddc.yml
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: block
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1816, 280.0]
+    rotation: 0
+    state: enabled
+- name: uhd_fpga_duc_1
+  id: uhd_fpga_duc
+  parameters:
+    CIC_MAX_INTERP: '255'
+    NUM_HB: '3'
+    NUM_PORTS: '2'
+    affinity: ''
+    alias: duc1
+    comment: ''
+    desc: duc.yml
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: block
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1288, 784.0]
+    rotation: 0
+    state: enabled
+- name: uhd_fpga_ddc_1
+  id: uhd_fpga_ddc
+  parameters:
+    CIC_MAX_DECIM: '255'
+    NUM_HB: '3'
+    NUM_PORTS: '2'
+    affinity: ''
+    alias: ddc1
+    comment: ''
+    desc: ddc.yml
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: block
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1784, 736.0]
+    rotation: 0
+    state: enabled
+- name: uhd_fpga_device_bsp_0
+  id: uhd_fpga_device_bsp
+  parameters:
+    DRAM_WIDTH: '64'
+    ENABLE_DRAM: 'True'
+    NUM_DRAM_BANKS: '1'
+    NUM_DRAM_CHANS: '4'
+    RF_BW: '200'
+    affinity: ''
+    alias: ''
+    chdr_width: '64'
+    comment: 'The BSP configuration is set for a 200 MHz image.
+
+      This means the RF configuration is such that the
+
+      maximum master clock rate is 250 MHz.
+
+
+      This type of configuration allows to use the minimum
+
+      CHDR width of 64 bits, which in turn allows using
+
+      DDC and DUC blocks.
+
+
+      Note that unlike the X310 configuration, we must explicitly
+
+      add transports for 10 Gigabit Ethernet and even the CHDR-DMA
+
+      transport.'
+    default_target: '""'
+    device: x410
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: device
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [576, 192.0]
+    rotation: 0
+    state: enabled
+- name: uhd_fpga_replay_0
+  id: uhd_fpga_replay
+  parameters:
+    MEM_ADDR_W: '32'
+    MEM_DATA_W: '64'
+    NUM_PORTS: '4'
+    affinity: ''
+    alias: replay0
+    comment: 'The values for the memory and
+
+      data address widths depend on the
+
+      device and the CHDR configuration.
+
+
+      It is important to choose the correct
+
+      values here, arbitrary values are not
+
+      supported. Sadly, there is no GRC
+
+      mechanism as of yet to automate these
+
+      settings based on the choice of the BSP
+
+      configuration.'
+    desc: replay.yml
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    priority: '99'
+    type: block
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [544, 848.0]
+    rotation: 180
+    state: enabled
+- name: uhd_fpga_sep0
+  id: uhd_fpga_sep
+  parameters:
+    affinity: ''
+    alias: ep0
+    buff_size_bytes: '262144'
+    comment: 'All SEPs have the "Control Traffic"
+
+      setting on "Auto", which is the recommended
+
+      setting. UHD will pick the first SEP (which
+
+      is this one) and assign it a control port.'
+    ctrl: 'Auto'
+    data: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: sep
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1544, 96.0]
+    rotation: 180
+    state: enabled
+- name: uhd_fpga_sep1
+  id: uhd_fpga_sep
+  parameters:
+    affinity: ''
+    alias: ep1
+    buff_size_bytes: '262144'
+    comment: 'All four SEPs connected to radios
+
+      have a buffer size of 256kiB, which
+
+      is the largest buffer size based on
+
+      available resources to allow
+
+      best streaming performance.'
+    ctrl: 'Auto'
+    data: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: sep
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1544, 464.0]
+    rotation: 180
+    state: enabled
+- name: uhd_fpga_sep2
+  id: uhd_fpga_sep
+  parameters:
+    affinity: ''
+    alias: ep2
+    buff_size_bytes: '262144'
+    comment: ''
+    ctrl: 'Auto'
+    data: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: sep
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1544, 632.0]
+    rotation: 180
+    state: enabled
+- name: uhd_fpga_sep3
+  id: uhd_fpga_sep
+  parameters:
+    affinity: ''
+    alias: ep3
+    buff_size_bytes: '262144'
+    comment: ''
+    ctrl: 'Auto'
+    data: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: sep
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1552, 960.0]
+    rotation: 180
+    state: enabled
+- name: uhd_fpga_sep4
+  id: uhd_fpga_sep
+  parameters:
+    affinity: ''
+    alias: ep4
+    buff_size_bytes: '32768'
+    comment: ''
+    ctrl: 'Auto'
+    data: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: sep
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [600, 656.0]
+    rotation: 0
+    state: enabled
+- name: uhd_fpga_sep5
+  id: uhd_fpga_sep
+  parameters:
+    affinity: ''
+    alias: ep5
+    buff_size_bytes: '32768'
+    comment: 'Note all of these SEPs
+
+      have a buffer sizes of 32kiB,
+
+      enough to stream into DRAM,
+
+      but not as large as the other
+
+      SEPs have.'
+    ctrl: 'Auto'
+    data: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: sep
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [600, 712.0]
+    rotation: 0
+    state: enabled
+- name: uhd_fpga_sep6
+  id: uhd_fpga_sep
+  parameters:
+    affinity: ''
+    alias: ep6
+    buff_size_bytes: '32768'
+    comment: ''
+    ctrl: 'Auto'
+    data: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: sep
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [584, 1168.0]
+    rotation: 0
+    state: enabled
+- name: uhd_fpga_sep7
+  id: uhd_fpga_sep
+  parameters:
+    affinity: ''
+    alias: ep7
+    buff_size_bytes: '32768'
+    comment: ''
+    ctrl: 'Auto'
+    data: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: sep
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [584, 1224.0]
+    rotation: 0
+    state: enabled
+
+connections:
+- [uhd_fpga_sep0, out0, uhd_fpga_duc_0, in_0]
+- [uhd_fpga_duc_0, out_0, uhd_fpga_radio_0, in_0]
+- [uhd_fpga_radio_0, out_0, uhd_fpga_ddc_0, in_0]
+- [uhd_fpga_ddc_0, out_0, uhd_fpga_sep0, in0]
+- [uhd_fpga_sep1, out0, uhd_fpga_duc_0, in_1]
+- [uhd_fpga_duc_0, out_1, uhd_fpga_radio_0, in_1]
+- [uhd_fpga_radio_0, out_1, uhd_fpga_ddc_0, in_1]
+- [uhd_fpga_ddc_0, out_1, uhd_fpga_sep1, in0]
+- [uhd_fpga_sep2, out0, uhd_fpga_duc_1, in_0]
+- [uhd_fpga_duc_1, out_0, uhd_fpga_radio_1, in_0]
+- [uhd_fpga_radio_1, out_0, uhd_fpga_ddc_1, in_0]
+- [uhd_fpga_ddc_1, out_0, uhd_fpga_sep2, in0]
+- [uhd_fpga_sep3, out0, uhd_fpga_duc_1, in_1]
+- [uhd_fpga_duc_1, out_1, uhd_fpga_radio_1, in_1]
+- [uhd_fpga_radio_1, out_1, uhd_fpga_ddc_1, in_1]
+- [uhd_fpga_ddc_1, out_1, uhd_fpga_sep3, in0]
+- [uhd_fpga_sep4, out0, uhd_fpga_replay_0, in_0]
+- [uhd_fpga_replay_0, out_0, uhd_fpga_sep4, in0]
+- [uhd_fpga_sep5, out0, uhd_fpga_replay_0, in_1]
+- [uhd_fpga_replay_0, out_1, uhd_fpga_sep5, in0]
+- [uhd_fpga_sep6, out0, uhd_fpga_replay_0, in_2]
+- [uhd_fpga_replay_0, out_2, uhd_fpga_sep6, in0]
+- [uhd_fpga_sep7, out0, uhd_fpga_replay_0, in_3]
+- [uhd_fpga_replay_0, out_3, uhd_fpga_sep7, in0]
+- [uhd_fpga_eth_ta_qsfp0, qsfp, uhd_fpga_device_bsp_0, qsfp0]
+- [uhd_fpga_chdr_dma_ta_0, chdr_dma_s, uhd_fpga_device_bsp_0, chdr_dma_s]
+- [uhd_fpga_device_bsp_0, chdr_dma_m, uhd_fpga_chdr_dma_ta_0, chdr_dma_m]
+- [uhd_fpga_radio_0, ctrlport, uhd_fpga_device_bsp_0, ctrlport_radio0]
+- [uhd_fpga_radio_1, ctrlport, uhd_fpga_device_bsp_0, ctrlport_radio1]
+- [uhd_fpga_device_bsp_0, radio0, uhd_fpga_radio_0, radio]
+- [uhd_fpga_device_bsp_0, radio1, uhd_fpga_radio_1, radio]
+- [uhd_fpga_replay_0, axi_ram, uhd_fpga_device_bsp_0, dram0]
+- [uhd_fpga_device_bsp_0, radio_clk, uhd_fpga_radio_0, radio_clk]
+- [uhd_fpga_device_bsp_0, radio_clk, uhd_fpga_radio_1, radio_clk]
+- [uhd_fpga_device_bsp_0, ce_clk, uhd_fpga_duc_0, ce_clk]
+- [uhd_fpga_device_bsp_0, ce_clk, uhd_fpga_ddc_0, ce_clk]
+- [uhd_fpga_device_bsp_0, ce_clk, uhd_fpga_duc_1, ce_clk]
+- [uhd_fpga_device_bsp_0, ce_clk, uhd_fpga_ddc_1, ce_clk]
+- [uhd_fpga_device_bsp_0, dram_clk, uhd_fpga_replay_0, mem_clk]
+- [uhd_fpga_device_bsp_0, time, uhd_fpga_radio_0, time]
+- [uhd_fpga_device_bsp_0, time, uhd_fpga_radio_1, time]
+
+metadata:
+  file_format: 1
+  grc_version: v3.11.0.0git-800-g94684aaa
