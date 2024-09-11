@@ -79,7 +79,8 @@ class PropsDialog(QDialog):
         self.edit_params = []
 
         self.tabs = QTabWidget()
-        ignore_dtype_labels = ["_multiline", "_multiline_python_external"]
+        error_msg = QLabel()
+        ignore_dtype_labels = ["_multiline", "_multiline_python_external", "file_open", "file_save"]
 
         for cat in unique_categories():
             qvb = QGridLayout()
@@ -115,6 +116,17 @@ class PropsDialog(QDialog):
                                 else param.value
                             )
                             dropdown.setCurrentText(value_label)
+                    elif param.dtype in ("file_open", "file_save"):
+                        dtype_label = QPushButton("...")
+                        dtype_label.setFlat(True)
+                        file_name = QLineEdit(param.value)
+                        file_name.param = param
+                        qvb.addWidget(file_name, i, 1)
+                        self.edit_params.append(file_name)
+                        if param.dtype == "file_open":
+                            dtype_label.clicked.connect(self.open_filero)
+                        else:
+                            dtype_label.clicked.connect(self.open_filerw)
                     elif param.dtype == "_multiline":
                         line_edit = QPlainTextEdit(param.value)
                         line_edit.param = param
@@ -144,7 +156,6 @@ class PropsDialog(QDialog):
                         line_edit = QPlainTextEdit(param.value)
                         line_edit.param = param
                         qvb.addWidget(editor_widget, i, 1)
-                        # self.edit_params.append(line_edit)
                     else:
                         line_edit = QLineEdit(param.value)
                         line_edit.param = param
@@ -170,9 +181,30 @@ class PropsDialog(QDialog):
         self.buttonBox.rejected.connect(self.reject)
         self.layout = QVBoxLayout()
         self.layout.addWidget(self.tabs)
+        if self._block.enabled:
+            error_msg.setText('\n'.join(self._block.get_error_messages()))
+        self.layout.addWidget(error_msg)
         self.layout.addWidget(self.buttonBox)
 
         self.setLayout(self.layout)
+
+    def find_param_widget(self, button):
+        # Find the correct layout
+        layout = self.tabs.currentWidget().layout()
+        # Find the location in the layout of the clicked button
+        location = layout.getItemPosition(layout.indexOf(button))
+        # The required widget is at column 1
+        return layout.itemAtPosition(location[0], 1).widget()
+
+    def open_filero(self):
+        f_name, fltr = QFileDialog.getOpenFileName(self, "Open a Data File")
+        button = self.sender()
+        self.find_param_widget(button).setText(f_name)
+
+    def open_filerw(self):
+        f_name, fltr = QFileDialog.getSaveFileName(self, "Save a Data File")
+        button = self.sender()
+        self.find_param_widget(button).setText(f_name)
 
     def accept(self):
         super().accept()

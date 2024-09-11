@@ -32,8 +32,7 @@ wavfile_source_impl::wavfile_source_impl(const char* filename, bool repeat)
                  io_signature::make(1, 2, sizeof(float))),
       d_fp(NULL),
       d_repeat(repeat),
-      d_h{}, // Init with zeros
-      d_sample_idx(0)
+      d_h{} // Init with zeros
 {
     SF_INFO sfinfo;
 
@@ -105,20 +104,6 @@ int wavfile_source_impl::work(int noutput_items,
     sf_count_t samples;
 
     for (int i = 0; i < noutput_items; i += s_items_size) {
-        if (d_sample_idx >= d_h.samples_per_chan) {
-            if (!d_repeat) {
-                // if nothing was read at all, say we're done.
-                return items ? produced : -1;
-            }
-
-            if (sf_seek(d_fp, 0, SEEK_SET) == -1) {
-                d_logger->error("sf_seek failed: {:s}", strerror(errno));
-                throw std::runtime_error("Seek error.");
-            }
-
-            d_sample_idx = 0;
-        }
-
         samples = sf_read_float(d_fp, &d_buffer[0], d_h.nchans * s_items_size);
         items = (int)samples / d_h.nchans;
         for (int n = 0; n < items; n++) {
@@ -130,7 +115,6 @@ int wavfile_source_impl::work(int noutput_items,
         }
 
         produced += items;
-        d_sample_idx += items;
 
         // We're not going to deal with handling corrupt wav files,
         // so if they give us any trouble they won't be processed.
@@ -144,6 +128,18 @@ int wavfile_source_impl::work(int noutput_items,
                 return -1;
             }
             return produced;
+        }
+
+        if (items < s_items_size) {
+            if (!d_repeat) {
+                // if nothing was read at all, say we're done.
+                return produced ? produced : -1;
+            }
+
+            if (sf_seek(d_fp, 0, SEEK_SET) == -1) {
+                d_logger->error("sf_seek failed: {:s}", strerror(errno));
+                throw std::runtime_error("Seek error.");
+            }
         }
     }
 
