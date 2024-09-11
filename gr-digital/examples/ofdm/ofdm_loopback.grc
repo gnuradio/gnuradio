@@ -1,6 +1,7 @@
 options:
   parameters:
     author: ''
+    catch_exceptions: 'True'
     category: Custom
     cmake_opt: ''
     comment: ''
@@ -24,6 +25,9 @@ options:
     title: OFDM Loopback Example
     window_size: 1280, 1024
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [8, 12.0]
     rotation: 0
     state: enabled
@@ -35,6 +39,9 @@ blocks:
     comment: ''
     value: '64'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [408, 20.0]
     rotation: 0
     state: enabled
@@ -45,7 +52,7 @@ blocks:
     gui_hint: ''
     label: Frequency Offset (Multiples of Sub-carrier spacing)
     min_len: '200'
-    orient: Qt.Horizontal
+    orient: QtCore.Qt.Horizontal
     rangeType: float
     start: '-3'
     step: '.01'
@@ -53,6 +60,9 @@ blocks:
     value: '0'
     widget: counter_slider
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [528, 548.0]
     rotation: 0
     state: enabled
@@ -62,6 +72,9 @@ blocks:
     comment: ''
     value: '"packet_len"'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [288, 20.0]
     rotation: 0
     state: enabled
@@ -72,7 +85,7 @@ blocks:
     gui_hint: ''
     label: Noise Amplitude
     min_len: '200'
-    orient: Qt.Horizontal
+    orient: QtCore.Qt.Horizontal
     rangeType: float
     start: '0'
     step: '.01'
@@ -80,6 +93,9 @@ blocks:
     value: '0.1'
     widget: counter_slider
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [704, 548.0]
     rotation: 0
     state: enabled
@@ -89,6 +105,9 @@ blocks:
     comment: ''
     value: '50'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [200, 20.0]
     rotation: 0
     state: enabled
@@ -98,6 +117,9 @@ blocks:
     comment: ''
     value: '100000'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [504, 20.0]
     rotation: 0
     state: enabled
@@ -114,6 +136,9 @@ blocks:
     type: byte
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [224, 140.0]
     rotation: 0
     state: enabled
@@ -130,23 +155,31 @@ blocks:
     type: byte
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [352, 508.0]
     rotation: 0
     state: enabled
-- name: blocks_throttle_0
-  id: blocks_throttle
+- name: blocks_throttle2_0
+  id: blocks_throttle2
   parameters:
     affinity: ''
     alias: ''
     comment: ''
     ignoretag: 'True'
+    limit: auto
+    maximum: '0.1'
     maxoutbuf: '0'
     minoutbuf: '0'
     samples_per_second: samp_rate
     type: complex
     vlen: '1'
   states:
-    coordinate: [80, 300.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [80, 292.0]
     rotation: 180
     state: enabled
 - name: blocks_uchar_to_float_0
@@ -158,6 +191,9 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [352, 448.0]
     rotation: 0
     state: enabled
@@ -175,6 +211,9 @@ blocks:
     vector: range(packet_len)
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [16, 132.0]
     rotation: 0
     state: enabled
@@ -193,6 +232,9 @@ blocks:
     seed: '0'
     taps: 1.0 + 1.0j
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [528, 268.0]
     rotation: 180
     state: enabled
@@ -217,6 +259,9 @@ blocks:
     sync_word1: None
     sync_word2: None
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [80, 380.0]
     rotation: 0
     state: enabled
@@ -242,6 +287,9 @@ blocks:
     sync_word1: None
     sync_word2: None
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [480, 76.0]
     rotation: 0
     state: enabled
@@ -297,6 +345,7 @@ blocks:
     minoutbuf: '0'
     name: Rx Spectrum
     nconnections: '1'
+    norm_window: 'False'
     showports: 'True'
     tr_chan: '0'
     tr_level: '0.0'
@@ -319,6 +368,9 @@ blocks:
     ymax: '10'
     ymin: '-140'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [80, 564.0]
     rotation: 0
     state: enabled
@@ -339,16 +391,16 @@ blocks:
     alpha9: '1.0'
     autoscale: 'True'
     axislabels: 'True'
-    color1: '"blue"'
-    color10: '"blue"'
-    color2: '"red"'
-    color3: '"green"'
-    color4: '"black"'
-    color5: '"cyan"'
-    color6: '"magenta"'
-    color7: '"yellow"'
-    color8: '"dark red"'
-    color9: '"dark green"'
+    color1: blue
+    color10: dark blue
+    color2: red
+    color3: green
+    color4: black
+    color5: cyan
+    color6: magenta
+    color7: yellow
+    color8: dark red
+    color9: dark green
     comment: ''
     ctrlpanel: 'False'
     entags: 'True'
@@ -413,20 +465,24 @@ blocks:
     ymin: '-1'
     yunit: '""'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [528, 420.0]
     rotation: 0
     state: enabled
 
 connections:
 - [blocks_stream_to_tagged_stream_0, '0', digital_ofdm_tx_0, '0']
-- [blocks_throttle_0, '0', digital_ofdm_rx_0, '0']
-- [blocks_throttle_0, '0', qtgui_freq_sink_x_0, '0']
+- [blocks_throttle2_0, '0', digital_ofdm_rx_0, '0']
+- [blocks_throttle2_0, '0', qtgui_freq_sink_x_0, '0']
 - [blocks_uchar_to_float_0, '0', qtgui_time_sink_x_0, '0']
 - [blocks_vector_source_x_0, '0', blocks_stream_to_tagged_stream_0, '0']
-- [channels_channel_model_0, '0', blocks_throttle_0, '0']
+- [channels_channel_model_0, '0', blocks_throttle2_0, '0']
 - [digital_ofdm_rx_0, '0', blocks_tag_debug_0, '0']
 - [digital_ofdm_rx_0, '0', blocks_uchar_to_float_0, '0']
 - [digital_ofdm_tx_0, '0', channels_channel_model_0, '0']
 
 metadata:
   file_format: 1
+  grc_version: v3.11.0.0git-824-ga18acc39
