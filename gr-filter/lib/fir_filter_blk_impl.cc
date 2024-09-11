@@ -79,6 +79,8 @@ int fir_filter_blk_impl<IN_T, OUT_T, TAP_T>::work(int noutput_items,
     } else {
         d_fir.filterNdec(out, in, noutput_items, this->decimation());
     }
+     d_fir.set_taps(taps);
+    d_updated = true;
 
     return noutput_items;
 }
