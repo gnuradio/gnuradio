@@ -59,6 +59,7 @@ if(CPACK_GENERATOR MATCHES "DragNDrop")
   set(VERSION "${CPACK_PACKAGE_VERSION}")
   # this also sets the volume name
   set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${VERSION}")
+  # set(CPACK_INCLUDE_TOPLEVEL_DIRECTORY ON)
 endif()
 
 # JIC someone wants package maker, may as well support

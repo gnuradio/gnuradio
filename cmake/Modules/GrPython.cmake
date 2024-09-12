@@ -104,7 +104,7 @@ set(Python_NumPy_INCLUDE_DIR
     CACHE FILEPATH "NumPy include directory")
 mark_as_advanced(Python_NumPy_INCLUDE_DIR)
 # output used by modern FindPython, duplicate the behavior
-set(Python_NumPy_INCLUDE_DIRS ${Python_NumPy_INCLUDE_DIR})
+set(Python_NumPy_INCLUDE_DIRS ${Python_NumPy_INCLUDE_DIR} /Users/john.parent/Library/Python/3.9/lib/python/site-packages/numpy/core/include)
 
 # target for building with NumPy
 add_library(Python::NumPy INTERFACE IMPORTED)
