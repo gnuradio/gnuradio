@@ -60,6 +60,7 @@ if(CPACK_GENERATOR MATCHES "DragNDrop")
   # this also sets the volume name
   set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${VERSION}")
   # set(CPACK_INCLUDE_TOPLEVEL_DIRECTORY ON)
+  set(CPACK_DMG_BACKGROUND_IMAGE @CMAKE_SOURCE_DIR@/release/resources/icons/gr_dialog.jpg)
 endif()
 
 # JIC someone wants package maker, may as well support

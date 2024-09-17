@@ -81,8 +81,10 @@ print(os.path.join(site.getsitepackages()[1], \"numpy.libs\"))
   OUTPUT_STRIP_TRAILING_WHITESPACE
   OUTPUT_VARIABLE NUMPY_LIB_DIR
   )
-  file(TO_CMAKE_PATH ${NUMPY_LIB_DIR} NUMPY_LIB_DIR)
-  install(DIRECTORY ${NUMPY_LIB_DIR} DESTINATION ${GR_PYTHON_DIR} COMPONENT pythonapi)
+  if(NUMPY_LIB_DIR)
+    file(TO_CMAKE_PATH ${NUMPY_LIB_DIR} NUMPY_LIB_DIR)
+    install(DIRECTORY ${NUMPY_LIB_DIR} DESTINATION ${GR_PYTHON_DIR} COMPONENT pythonapi)
+  endif()
 endif()
 
 
