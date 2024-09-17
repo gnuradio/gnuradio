@@ -33,10 +33,16 @@ gr_python_install(
                 GROUP_EXECUTE
                 WORLD_READ
                 WORLD_EXECUTE)
-gen_py_launcher(
-    MODULES gr-ctrlport-monitor gr-perf-monitorx
-    PYTHON ${GR_BUNDLE_PYTHON}
-)
+if(WIN32)
+    gen_py_launcher(
+        MODULES gr-ctrlport-monitor gr-perf-monitorx
+        PYTHON ${GR_BUNDLE_PYTHON}
+    )
+elseif(APPLE)
+    gen_py_program_launcher(
+        PROGRAMS gr-perf-monitorx gr-ctrlport-monitor
+    )
+endif()
 if(ENABLE_CTRLPORT_THRIFT)
 
     list(

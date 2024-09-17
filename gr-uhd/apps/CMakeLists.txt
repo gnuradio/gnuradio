@@ -28,7 +28,13 @@ gr_python_install(PROGRAMS
                     ${CMAKE_BINARY_DIR}/uhd_rx_nogui
                   DESTINATION ${GR_RUNTIME_DIR})
 
+if(WIN32)
 gen_py_launcher(
     MODULES uhd_fft uhd_rx_cfile uhd_siggen uhd_siggen_gui uhd_rx_nogui
     PYTHON ${GR_BUNDLE_PYTHON}
 )
+elseif(APPLE)
+gen_py_program_launcher(
+    PROGRAMS uhd_fft uhd_rx_cfile uhd_siggen uhd_siggen_gui uhd_rx_nogui
+)
+endif()

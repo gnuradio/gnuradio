@@ -29,10 +29,16 @@ install(
 )
 
 configure_file(gr_modtool ${CMAKE_BINARY_DIR}/gr_modtool @ONLY)
-gen_py_launcher(
-    MODULES gr_modtool
-    PYTHON ${GR_BUNDLE_PYTHON}
-)
+if(WIN32)
+    gen_py_launcher(
+        MODULES gr_modtool
+        PYTHON ${GR_BUNDLE_PYTHON}
+    )
+elseif(APPLE)
+    gen_py_program_launcher(
+        PROGRAMS gr_modtool
+    )
+endif()
 
 GR_PYTHON_INSTALL(
     PROGRAMS    ${CMAKE_BINARY_DIR}/gr_modtool

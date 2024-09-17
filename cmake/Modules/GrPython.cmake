@@ -367,10 +367,16 @@ function(GR_PYTHON_INSTALL)
         ####################################################################
     elseif(GR_PYTHON_INSTALL_PROGRAMS)
         ####################################################################
+        if(WIN32)
+            set(extension ".exe")
+        endif()
         if(GR_BUILD_INSTALLER)
-            file(TO_NATIVE_PATH Python${PYTHON_SHORT_VER}/python.exe pyexe_native)
+            file(TO_NATIVE_PATH Python${PYTHON_SHORT_VER}/python${extension} pyexe_native)
         else()
             file(TO_NATIVE_PATH ${PYTHON_EXECUTABLE} pyexe_native)
+        endif()
+        if (APPLE OR UNIX)
+            set(pyexe_native "/usr/bin/env ${pyexe_native}")
         endif()
         if(CMAKE_CROSSCOMPILING)
             set(pyexe_native "/usr/bin/env python")
@@ -441,6 +447,23 @@ function(gen_py_launcher)
         )
         install(PROGRAMS
             ${CMAKE_BINARY_DIR}/${mod}.bat
+            DESTINATION ${GR_RUNTIME_DIR}
+        )
+    endforeach()
+endfunction()
+
+function(gen_py_program_launcher)
+    set(MULTI_ARGS PROGRAMS)
+    cmake_parse_arguments(GEN_PY "" "${SINGLE_ARGS}" "${MULTI_ARGS}" ${ARGN})
+    foreach(GEN_PY_PROGRAM ${GEN_PY_PROGRAMS})
+        message(STATUS "Installing ${GEN_PY_PROGRAM}.sh")
+        configure_file(
+            ${CMAKE_SOURCE_DIR}/release/resources/py_launcher.sh.in
+            ${CMAKE_BINARY_DIR}/${GEN_PY_PROGRAM}.sh
+            @ONLY
+        )
+        install(PROGRAMS
+            ${CMAKE_BINARY_DIR}/${GEN_PY_PROGRAM}.sh
             DESTINATION ${GR_RUNTIME_DIR}
         )
     endforeach()
