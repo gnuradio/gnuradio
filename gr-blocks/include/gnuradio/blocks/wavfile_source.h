@@ -18,12 +18,16 @@ namespace gr {
 namespace blocks {
 
 /*!
- * \brief Read stream from a Microsoft PCM (.wav) file, output floats
+ * Read samples from an audio file (uncompressed or compressed)
  * \ingroup audio_blk
  *
  * \details
  * Unless otherwise called, values are within [-1;1].
- * Check gr_make_wavfile_source() for extra info.
+ * Accepts audio container from gr-blocks/lib/wavfile_sink_impl.cc
+ * .wav files can use PCM-8, PCM-16, PCM-24, PCM-32, float, or double.
+ * .flac files can use PCM-S8, PCM-16, or PCM-24.
+ * .ogg files can use vorbis or opus.
+ * .rf64 files can use PCM-u8, PCM-16, PCM-24, PCM-32, float, or double
  */
 class BLOCKS_API wavfile_source : virtual public sync_block
 {

@@ -19,10 +19,15 @@ namespace gr {
 namespace blocks {
 
 /*!
- * \brief Write stream to a Microsoft PCM (.wav) file.
+ * \brief Write stream to an audio file.
  * \ingroup audio_blk
  *
  * \details
+ * Writes to audio container from gr-blocks/lib/wavfile_sink_impl.cc
+ * .wav files can use PCM-8, PCM-16, PCM-24, PCM-32, float, or double.
+ * .flac files can use PCM-S8, PCM-16, or PCM-24.
+ * .ogg files can use vorbis or opus.
+ * .rf64 files can use PCM-u8, PCM-16, PCM-24, PCM-32, float, or double
  * Values must be floats within [-1;1].
  * Check gr_make_wavfile_sink() for extra info.
  */
