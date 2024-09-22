@@ -495,7 +495,7 @@ class FlowGraph(Element):
                 if block.is_dummy_block:
                     port = block.add_missing_port(key, dir)
                 else:
-                    raise LookupError(f"{dir} key {key} not in {dir} blcock keys")
+                    raise LookupError(f"{dir} key {key} not in {dir} block keys")
             return port
 
         had_connect_errors = False
