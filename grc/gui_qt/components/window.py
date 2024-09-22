@@ -483,7 +483,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         actions["toggle_source_bus"] = Action(_("toggle_source_bus"), self)
         actions["toggle_sink_bus"] = Action(_("toggle_sink_bus"), self)
 
-        actions["create_hier"].setEnabled(False)
+        actions["create_hier"].setEnabled(True)
         actions["open_hier"].setEnabled(True)
         actions["toggle_source_bus"].setEnabled(False)
         actions["toggle_sink_bus"].setEnabled(False)
@@ -651,7 +651,6 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         self.actions["disable"].setEnabled(False)
         self.actions["bypass"].setEnabled(False)
         self.actions["properties"].setEnabled(False)
-        self.actions["create_hier"].setEnabled(False)
         self.actions["toggle_source_bus"].setEnabled(False)
         self.actions["toggle_sink_bus"].setEnabled(False)
 
@@ -683,9 +682,6 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
             if len(blocks) == 1:
                 self.actions["properties"].setEnabled(True)
-                self.actions["create_hier"].setEnabled(
-                    True
-                )  # TODO: Other requirements for enabling this?
 
             if len(blocks) > 1:
                 self.actions["vertical_align_top"].setEnabled(True)
@@ -1018,6 +1014,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         if filename:
             try:
                 self.platform.save_flow_graph(filename, self.currentFlowgraph)
+                self.currentFlowgraph.grc_file_path = filename
                 self.add_recent_file(filename)
             except IOError:
                 log.error("Save failed")
@@ -1392,6 +1389,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
             return
 
         filename = self.currentFlowgraphScene.filename
+        self.currentFlowgraph.grc_file_path = filename
         generator = self.platform.Generator(
             self.currentFlowgraph, os.path.dirname(filename)
         )
@@ -1430,6 +1428,92 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         for idx in range(range_):
             self.rebuild_tab(idx)
 
+        self.updateActions()
+
+    def create_hier_triggered(self):
+
+        selected_blocks = []
+
+        source_fg = self.currentFlowgraphScene
+        for block in source_fg.selected_blocks():
+            selected_blocks.append(block.core)
+
+        # Generate new page
+        self.new_triggered()
+        sink_fg = self.currentFlowgraphScene
+
+        # Set flow graph to heir block type
+        top_block = sink_fg.core.get_block(Constants.DEFAULT_FLOW_GRAPH_ID)
+        # Check if hb or hb_qt is required
+        gen_opts = 'hb'
+        for block in selected_blocks:
+            if block.label.upper().startswith('QT GUI'):
+                gen_opts = 'hb_qt_gui'
+                break
+        top_block.params['generate_options'].set_value(gen_opts)
+
+        # this needs to be a unique name
+        top_block.params['id'].set_value('new_hier')
+        # Remove default samp_rate
+        remove_me = sink_fg.core.get_block("samp_rate")
+        sink_fg.remove_element(remove_me.gui)
+
+        self.clipboard = source_fg.copy_to_clipboard()
+        self.paste_triggered()
+
+        # For each variable generate a possible parameter block
+        # The user has to decide if the hier block should use a variable or a paramter
+
+        for variable in sink_fg.core.get_variables():
+            id = sink_fg.add_block(
+                'parameter', (variable.states['coordinate'][0] + variable.gui.width + 50, variable.states['coordinate'][1] + 50))
+            param_block = sink_fg.core.get_block(id)
+            param_block.params['id'].set_value(variable.name)
+
+        for connection in source_fg.core.connections:
+            # Get id of connected blocks
+            source = connection.source_block
+            sink = connection.sink_block
+            if source not in selected_blocks and sink in selected_blocks:
+                # Create pad source and add to canvas
+                pad_source_key = int(connection.sink_port.key)
+                pad_id = sink_fg.add_block(
+                    'pad_source', (source.states['coordinate'][0], source.states['coordinate'][1] + pad_source_key * 50))
+                pad_block = sink_fg.core.get_block(pad_id)
+                pad_source = pad_block.sources[0]
+                sink_block = sink_fg.core.get_block(sink_fg.core.blocks[selected_blocks.index(sink) + 1].name)
+                sink = sink_block.sinks[pad_source_key]
+                # ensure the port types match
+                if pad_source.dtype != sink.dtype:
+                    if pad_source.dtype == 'complex' and sink.dtype == 'fc32':
+                        pass
+                    else:
+                        pad_block.params['type'].value = sink.dtype
+                        pad_source.dtype = sink.dtype
+                new_connection = sink_fg.core.connect(pad_source, sink)
+                sink_fg.addItem(new_connection.gui)
+
+            elif sink not in selected_blocks and source in selected_blocks:
+                # Create Pad Sink and add to canvas
+                pad_sink_key = int(connection.source_port.key)
+                pad_id = sink_fg.add_block(
+                    'pad_sink', (sink.states['coordinate'][0], sink.states['coordinate'][1] + pad_sink_key * 50))
+                pad_block = sink_fg.core.get_block(pad_id)
+                pad_sink = pad_block.sinks[0]
+                source_block = sink_fg.core.get_block(sink_fg.core.blocks[selected_blocks.index(source) + 1].name)
+                source = source_block.sources[pad_sink_key]
+                # ensure the port types match
+                if pad_sink.dtype != source.dtype:
+                    if pad_sink.dtype == 'complex' and source.dtype == 'fc32':
+                        pass
+                    else:
+                        pad_block.params['type'].value = source.dtype
+                        pad_sink.dtype = source.dtype
+                new_connection = sink_fg.core.connect(source, pad_sink)
+                sink_fg.addItem(new_connection.gui)
+
+        sink_fg.clearSelection()
+        sink_fg.update()
         self.updateActions()
 
     def open_hier_triggered(self):
