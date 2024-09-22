@@ -221,6 +221,7 @@ class FlowgraphScene(QtWidgets.QGraphicsScene, base.Component):
         g_block.moveToTop()
         self.update()
         self.newElement.emit(c_block)
+        return id
 
     def selected_blocks(self) -> list[GUIBlock]:
         blocks = []
