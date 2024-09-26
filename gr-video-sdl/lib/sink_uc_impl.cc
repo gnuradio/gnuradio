@@ -51,8 +51,8 @@ sink_uc_impl::sink_uc_impl(
       d_quit_requested(false),
       // clear the surface to grey
       d_buf_y(width * height, 128),
-      d_buf_u(width * height, 128),
-      d_buf_v(width * height, 128),
+      d_buf_u(width * height / 4, 128),
+      d_buf_v(width * height / 4, 128),
       d_frame_pending(false),
       d_image(NULL)
 {
@@ -87,8 +87,8 @@ int sink_uc_impl::copy_planes_to_buffers(F copy_func,
 {
     int noutput_items_produced = 0;
     auto dst_y = &d_buf_y[d_current_line * d_width],
-         dst_u = &d_buf_u[d_current_line * d_width],
-         dst_v = &d_buf_v[d_current_line * d_width];
+         dst_u = &d_buf_u[(d_current_line / 2) * (d_width / 2)],
+         dst_v = &d_buf_v[(d_current_line / 2) * (d_width / 2)];
     for (int i = 0; i < d_chunk_size; i += d_width) {
         copy_func(src_pixels_0, src_pixels_1, src_pixels_2, dst_y, dst_u, dst_v);
         if (src_pixels_0)
@@ -98,8 +98,8 @@ int sink_uc_impl::copy_planes_to_buffers(F copy_func,
         if (src_pixels_2)
             src_pixels_2 += d_width;
         dst_y += d_width;
-        dst_u += d_width;
-        dst_v += d_width;
+        dst_u += d_width / 2;
+        dst_v += d_width / 2;
         noutput_items_produced += d_width;
         d_current_line++;
         if (d_current_line >= d_height) {
@@ -116,6 +116,8 @@ int sink_uc_impl::copy_planes_to_buffers(F copy_func,
                     memcpy(&d_image->pixels[0][i * d_image->pitches[0]],
                            &dst_y[i * d_width],
                            d_width);
+                }
+                for (int i = 0; i < d_height / 2; i++) {
                     memcpy(&d_image->pixels[1][i * d_image->pitches[1]],
                            &dst_u[i * d_width / 2],
                            d_width / 2);
@@ -161,8 +163,10 @@ int sink_uc_impl::work(int noutput_items,
                     Uint8* dst_u,
                     Uint8* dst_v) {
                     memcpy(dst_y, src_y, d_width);
-                    memcpy(dst_u, src_u, d_width / 2);
-                    memcpy(dst_v, src_v, d_width / 2);
+                    for (int k = 0; k < d_width; k += 2) {
+                        dst_u[k / 2] = src_u[k];
+                        dst_v[k / 2] = src_v[k];
+                    }
                 },
                 src_pixels_0,
                 src_pixels_1,
