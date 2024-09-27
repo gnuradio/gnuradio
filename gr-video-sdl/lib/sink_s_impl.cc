@@ -39,6 +39,7 @@ sink_s_impl::sink_s_impl(
                  io_signature::make(1, 3, sizeof(short)),
                  io_signature::make(0, 0, 0)),
       d_chunk_size(width * height),
+      d_render_thread(&render_loop_s, this),
       d_framerate(framerate),
       d_wanted_frametime_ms(0),
       d_width(width),
@@ -46,10 +47,15 @@ sink_s_impl::sink_s_impl(
       d_dst_width(dst_width),
       d_dst_height(dst_height),
       d_current_line(0),
-      d_screen(NULL),
-      d_image(NULL),
       d_avg_delay(0.0),
-      d_wanted_ticks(0)
+      d_wanted_ticks(0),
+      d_quit_requested(false),
+      // clear the surface to grey
+      d_buf_y(width * height, 128),
+      d_buf_u(width * height / 4, 128),
+      d_buf_v(width * height / 4, 128),
+      d_frame_pending(false),
+      d_image(NULL)
 {
     if (framerate <= 0.0)
         d_wanted_frametime_ms = 0; // Go as fast as possible
@@ -61,168 +67,70 @@ sink_s_impl::sink_s_impl(
     if (dst_height < 0)
         d_dst_height = d_height;
 
-    atexit(SDL_Quit); // check if this is the way to do this
-    if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-        d_logger->error("Couldn't initialize SDL: {:s}; SDL_Init(SDL_INIT_VIDEO) failed",
-                        SDL_GetError());
-        throw std::runtime_error("video_sdl::sink_s");
-    };
-
-    /* accept any depth */
-    d_screen = SDL_SetVideoMode(
-        dst_width,
-        dst_height,
-        0,
-        SDL_SWSURFACE | SDL_RESIZABLE |
-            SDL_ANYFORMAT); // SDL_DOUBLEBUF |SDL_SWSURFACE| SDL_HWSURFACE||SDL_FULLSCREEN
-
-    if (d_screen == NULL) {
-        d_logger->error("Unable to set SDL video mode: {:s}; SDL_SetVideoMode() Failed",
-                        SDL_GetError());
-        throw std::runtime_error("video_sdl::sink_s");
-    }
-    if (d_image) {
-        SDL_FreeYUVOverlay(d_image);
-    }
-
-    /* Initialize and create the YUV Overlay used for video out */
-    if (!(d_image =
-              SDL_CreateYUVOverlay(d_width, d_height, SDL_IYUV_OVERLAY, d_screen))) {
-        d_logger->error("Couldn't create a YUV overlay: {:s}", SDL_GetError());
-        throw std::runtime_error("video_sdl::sink_s");
-    }
-
-    d_debug_logger->info("SDL screen_mode {:d} bits-per-pixel",
-                         d_screen->format->BitsPerPixel);
-    d_debug_logger->info("SDL overlay_mode {:d}", d_image->format);
-
     d_chunk_size = std::min(1, 16384 / width); // width*16;
     d_chunk_size = d_chunk_size * width;
     // d_chunk_size = (int) (width);
     set_output_multiple(d_chunk_size);
-
-    /* Set the default playback area */
-    d_dst_rect.x = 0;
-    d_dst_rect.y = 0;
-    d_dst_rect.w = d_dst_width;
-    d_dst_rect.h = d_dst_height;
-    // clear the surface to grey
-
-    if (SDL_LockYUVOverlay(d_image)) {
-        d_logger->error("Couldn't lock a YUV overlay: {:s}", SDL_GetError());
-        throw std::runtime_error("video_sdl::sink_s");
-    }
-
-    memset(d_image->pixels[0], 128, d_image->pitches[0] * d_height);
-    memset(d_image->pixels[1], 128, d_image->pitches[1] * d_height / 2);
-    memset(d_image->pixels[2], 128, d_image->pitches[2] * d_height / 2);
-    SDL_UnlockYUVOverlay(d_image);
 }
 
-sink_s_impl::~sink_s_impl() { SDL_Quit(); }
-
-void sink_s_impl::copy_line_pixel_interleaved(unsigned char* dst_pixels_u,
-                                              unsigned char* dst_pixels_v,
-                                              const short* src_pixels,
-                                              int src_width)
+sink_s_impl::~sink_s_impl()
 {
-    for (int i = 0; i < src_width; i++) {
-        dst_pixels_u[i] = (unsigned char)src_pixels[i * 2];
-        dst_pixels_v[i] = (unsigned char)src_pixels[i * 2 + 1];
-    }
+    SDL_Event quit_event{ SDL_QUIT };
+    SDL_PushEvent(&quit_event);
+    d_render_thread.detach();
 }
 
-void sink_s_impl::copy_line_line_interleaved(unsigned char* dst_pixels_u,
-                                             unsigned char* dst_pixels_v,
-                                             const short* src_pixels,
-                                             int src_width)
+template <typename F>
+int sink_s_impl::copy_planes_to_buffers(F copy_func,
+                                        const short* src_pixels_0,
+                                        const short* src_pixels_1,
+                                        const short* src_pixels_2)
 {
-    for (int i = 0; i < src_width; i++) {
-        dst_pixels_u[i] = (unsigned char)src_pixels[i];
-        dst_pixels_v[i] = (unsigned char)src_pixels[i + src_width];
-    }
-
-    for (int i = src_width; i < src_width * 2; i++) {
-        dst_pixels_v[i] = (unsigned char)src_pixels[i];
-    }
-}
-
-void sink_s_impl::copy_line_single_plane(unsigned char* dst_pixels,
-                                         const short* src_pixels,
-                                         int src_width)
-{
-    for (int i = 0; i < src_width; i++) {
-        dst_pixels[i] = (unsigned char)src_pixels[i];
-    }
-}
-
-void sink_s_impl::copy_line_single_plane_dec2(unsigned char* dst_pixels,
-                                              const short* src_pixels,
-                                              int src_width)
-{
-    for (int i = 0, j = 0; i < src_width; i += 2, j++) {
-        dst_pixels[j] = (unsigned char)src_pixels[i];
-    }
-}
-
-int sink_s_impl::copy_plane_to_surface(int plane,
-                                       int noutput_items,
-                                       const short* src_pixels)
-{
-    const int first_dst_plane = (12 == plane || 1122 == plane) ? 1 : plane;
-    const int second_dst_plane = (12 == plane || 1122 == plane) ? 2 : plane;
-    int current_line = (0 == plane) ? d_current_line : d_current_line / 2;
-
-    unsigned char* dst_pixels = (unsigned char*)d_image->pixels[first_dst_plane];
-    dst_pixels = &dst_pixels[current_line * d_image->pitches[first_dst_plane]];
-
-    unsigned char* dst_pixels_2 = (unsigned char*)d_image->pixels[second_dst_plane];
-    dst_pixels_2 = &dst_pixels_2[current_line * d_image->pitches[second_dst_plane]];
-
-    int src_width = d_width;
     int noutput_items_produced = 0;
-    int max_height = (0 == plane) ? d_height - 1 : d_height / 2 - 1;
+    auto dst_y = &d_buf_y[d_current_line * d_width],
+         dst_u = &d_buf_u[(d_current_line / 2) * (d_width / 2)],
+         dst_v = &d_buf_v[(d_current_line / 2) * (d_width / 2)];
+    for (int i = 0; i < d_chunk_size; i += d_width) {
+        copy_func(src_pixels_0, src_pixels_1, src_pixels_2, dst_y, dst_u, dst_v);
+        if (src_pixels_0)
+            src_pixels_0 += d_width;
+        if (src_pixels_1)
+            src_pixels_1 += d_width;
+        if (src_pixels_2)
+            src_pixels_2 += d_width;
+        dst_y += d_width;
+        dst_u += d_width / 2;
+        dst_v += d_width / 2;
+        noutput_items_produced += d_width;
+        d_current_line++;
+        if (d_current_line >= d_height) {
+            d_current_line = 0;
+            dst_y = d_buf_y.data();
+            dst_u = d_buf_u.data();
+            dst_v = d_buf_v.data();
 
-    for (int i = 0; i < noutput_items; i += src_width) {
-        // output one line at a time
-        if (12 == plane) {
-            copy_line_pixel_interleaved(dst_pixels, dst_pixels_2, src_pixels, src_width);
-            dst_pixels_2 += d_image->pitches[second_dst_plane];
-        } else if (1122 == plane) {
-            copy_line_line_interleaved(dst_pixels, dst_pixels_2, src_pixels, src_width);
-            dst_pixels_2 += d_image->pitches[second_dst_plane];
-            src_pixels += src_width;
-        } else if (0 == plane)
-            copy_line_single_plane(dst_pixels, src_pixels, src_width);
-        else /* 1==plane || 2==plane*/
-            copy_line_single_plane_dec2(
-                dst_pixels, src_pixels, src_width); // decimate by two horizontally
-
-        src_pixels += src_width;
-        dst_pixels += d_image->pitches[first_dst_plane];
-        noutput_items_produced += src_width;
-        current_line++;
-        if (current_line > max_height) {
-            // Start new frame
-            // TODO, do this all in a separate thread
-            current_line = 0;
-            dst_pixels = d_image->pixels[first_dst_plane];
-            dst_pixels_2 = d_image->pixels[second_dst_plane];
-            if (0 == plane) {
-                SDL_DisplayYUVOverlay(d_image, &d_dst_rect);
-                // SDL_Flip(d_screen);
-                unsigned int ticks = SDL_GetTicks(); // milliseconds
-                d_wanted_ticks += d_wanted_frametime_ms;
-                float avg_alpha = 0.1;
-                int time_diff = d_wanted_ticks - ticks;
-                d_avg_delay = time_diff * avg_alpha + d_avg_delay * (1.0 - avg_alpha);
+            if (d_image && !d_frame_pending.load()) {
+                if (SDL_LockYUVOverlay(d_image) < 0) {
+                    continue;
+                }
+                for (int i = 0; i < d_height; i++) {
+                    memcpy(&d_image->pixels[0][i * d_image->pitches[0]],
+                           &dst_y[i * d_width],
+                           d_width);
+                }
+                for (int i = 0; i < d_height / 2; i++) {
+                    memcpy(&d_image->pixels[1][i * d_image->pitches[1]],
+                           &dst_u[i * d_width / 2],
+                           d_width / 2);
+                    memcpy(&d_image->pixels[2][i * d_image->pitches[2]],
+                           &dst_v[i * d_width / 2],
+                           d_width / 2);
+                }
+                SDL_UnlockYUVOverlay(d_image);
+                d_frame_pending.store(true);
             }
         }
     }
-
-    if (0 == plane)
-        d_current_line = current_line;
-
     return noutput_items_produced;
 }
 
@@ -230,19 +138,11 @@ int sink_s_impl::work(int noutput_items,
                       gr_vector_const_void_star& input_items,
                       gr_vector_void_star& output_items)
 {
+    if (d_quit_requested)
+        return WORK_DONE;
+
     const short *src_pixels_0, *src_pixels_1, *src_pixels_2;
     int noutput_items_produced = 0;
-    int plane;
-    int delay = (int)d_avg_delay;
-
-    if (0 == d_wanted_ticks)
-        d_wanted_ticks = SDL_GetTicks();
-    if (delay > 0)
-        SDL_Delay((unsigned int)delay); // compensate if running too fast
-
-    if (SDL_LockYUVOverlay(d_image)) {
-        return 0;
-    }
 
     switch (input_items.size()) {
     case 3: // first channel=Y, second channel is  U , third channel is V
@@ -250,47 +150,145 @@ int sink_s_impl::work(int noutput_items,
         src_pixels_1 = (const short*)input_items[1];
         src_pixels_2 = (const short*)input_items[2];
         for (int i = 0; i < noutput_items; i += d_chunk_size) {
-            copy_plane_to_surface(1, d_chunk_size, src_pixels_1);
-            copy_plane_to_surface(2, d_chunk_size, src_pixels_2);
-            noutput_items_produced +=
-                copy_plane_to_surface(0, d_chunk_size, src_pixels_0);
+            noutput_items_produced += copy_planes_to_buffers(
+                [=](const short* src_y,
+                    const short* src_u,
+                    const short* src_v,
+                    Uint8* dst_y,
+                    Uint8* dst_u,
+                    Uint8* dst_v) {
+                    for (int k = 0; k < d_width; k++) {
+                        dst_y[k] = (unsigned char)src_y[k];
+                    }
+                    for (int k = 0; k < d_width; k += 2) {
+                        dst_u[k / 2] = (unsigned char)src_u[k];
+                        dst_v[k / 2] = (unsigned char)src_v[k];
+                    }
+                },
+                src_pixels_0,
+                src_pixels_1,
+                src_pixels_2);
             src_pixels_0 += d_chunk_size;
             src_pixels_1 += d_chunk_size;
             src_pixels_2 += d_chunk_size;
         }
         break;
-    case 2:
-        // first channel=Y, second channel is alternating pixels U and V
+    case 2: // first channel=Y, second channel is alternating pixels U and V
         src_pixels_0 = (const short*)input_items[0];
         src_pixels_1 = (const short*)input_items[1];
         for (int i = 0; i < noutput_items; i += d_chunk_size) {
-            copy_plane_to_surface(12, d_chunk_size / 2, src_pixels_1);
-            noutput_items_produced +=
-                copy_plane_to_surface(0, d_chunk_size, src_pixels_0);
+            noutput_items_produced += copy_planes_to_buffers(
+                [=](const short* src_y,
+                    const short* src_uv,
+                    const short* _sv,
+                    Uint8* dst_y,
+                    Uint8* dst_u,
+                    Uint8* dst_v) {
+                    for (int k = 0; k < d_width; k++) {
+                        dst_y[k] = (unsigned char)src_y[k];
+                    }
+                    for (int k = 0; k < d_width; k += 2) {
+                        dst_u[k / 2] = src_uv[k + 0];
+                        dst_v[k / 2] = src_uv[k + 1];
+                    }
+                },
+                src_pixels_0,
+                src_pixels_1,
+                NULL);
             src_pixels_0 += d_chunk_size;
             src_pixels_1 += d_chunk_size;
         }
         break;
     case 1: // grey (Y) input
-        /* Y component */
-        plane = 0;
-        src_pixels_0 = (const short*)input_items[plane];
+        src_pixels_0 = (const short*)input_items[0];
         for (int i = 0; i < noutput_items; i += d_chunk_size) {
-            noutput_items_produced +=
-                copy_plane_to_surface(plane, d_chunk_size, src_pixels_0);
+            noutput_items_produced += copy_planes_to_buffers(
+                [=](const short* src_y,
+                    const short* src_u,
+                    const short* src_v,
+                    Uint8* dst_y,
+                    Uint8* dst_u,
+                    Uint8* dst_v) {
+                    for (int k = 0; k < d_width; k++) {
+                        dst_y[k] = (unsigned char)src_y[k];
+                    }
+                },
+                src_pixels_0,
+                NULL,
+                NULL);
             src_pixels_0 += d_chunk_size;
         }
         break;
     default: // 0 or more then 3 channels
-        d_logger->error(
-            "Wrong number of channels: 1, 2 or 3 channels are supported. Requested "
-            "number of channels is {:d}",
-            input_items.size());
-        throw std::runtime_error("video_sdl::sink_s");
+        d_logger->error("Wrong number of channels: 1, 2 or 3 channels are supported. "
+                        "Requested number of channels is {:d}",
+                        input_items.size());
+        throw std::runtime_error("video_sdl2::sink_s");
     }
 
-    SDL_UnlockYUVOverlay(d_image);
     return noutput_items_produced;
+}
+
+int render_loop_s(void* data)
+{
+    auto sink = reinterpret_cast<sink_s_impl*>(data);
+
+    atexit(SDL_Quit);
+    if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+        sink->d_logger->error(
+            "Couldn't initialize SDL: {:s}; SDL_Init(SDL_INIT_VIDEO) failed",
+            SDL_GetError());
+        throw std::runtime_error("video_sdl2::sink_s::render_loop");
+    }
+
+    /* accept any depth */
+    auto display = SDL_SetVideoMode(sink->d_dst_width,
+                                    sink->d_dst_height,
+                                    0,
+                                    SDL_SWSURFACE | SDL_RESIZABLE | SDL_ANYFORMAT);
+    // SDL_DOUBLEBUF |SDL_SWSURFACE| SDL_HWSURFACE||SDL_FULLSCREEN
+    if (!display) {
+        sink->d_logger->error("Unable to set SDL video mode: {:s}", SDL_GetError());
+        throw std::runtime_error("video_sdl2::sink_s::render_loop");
+    }
+
+    if (sink->d_image) {
+        SDL_FreeYUVOverlay(sink->d_image);
+    }
+    sink->d_image =
+        SDL_CreateYUVOverlay(sink->d_width, sink->d_height, SDL_IYUV_OVERLAY, display);
+    if (!sink->d_image) {
+        sink->d_logger->error("Couldn't create a YUV overlay: {:s}", SDL_GetError());
+        throw std::runtime_error("video_sdl2::sink_s::render_loop");
+    }
+
+    SDL_Rect dstrect{ 0, 0, (Uint16)sink->d_dst_width, (Uint16)sink->d_dst_height };
+
+    while (!SDL_QuitRequested()) {
+        if (sink->d_wanted_ticks == 0)
+            sink->d_wanted_ticks = SDL_GetTicks();
+
+        if ((int)sink->d_avg_delay > 0)
+            SDL_Delay((unsigned int)sink->d_avg_delay);
+
+        if (!sink->d_frame_pending.load())
+            continue;
+        SDL_DisplayYUVOverlay(sink->d_image, &dstrect);
+        // SDL_Flip(d_screen);
+        unsigned int ticks = SDL_GetTicks(); // milliseconds
+        sink->d_wanted_ticks += sink->d_wanted_frametime_ms;
+        constexpr float avg_alpha = 0.1;
+        int time_diff = sink->d_wanted_ticks - ticks;
+        sink->d_avg_delay = time_diff * avg_alpha + sink->d_avg_delay * (1.0 - avg_alpha);
+
+        sink->d_frame_pending.store(false);
+    }
+
+    sink->d_quit_requested = true;
+    SDL_FreeYUVOverlay(sink->d_image);
+    SDL_FreeSurface(display);
+    SDL_QuitSubSystem(SDL_INIT_VIDEO);
+    return 0;
 }
 
 } /* namespace video_sdl */
