@@ -129,12 +129,6 @@ int sink_s_impl::copy_planes_to_buffers(F copy_func,
                 SDL_UnlockYUVOverlay(d_image);
                 d_frame_pending.store(true);
             }
-
-            unsigned int ticks = SDL_GetTicks(); // milliseconds
-            d_wanted_ticks += d_wanted_frametime_ms;
-            constexpr float avg_alpha = 0.1;
-            int time_diff = d_wanted_ticks - ticks;
-            d_avg_delay = time_diff * avg_alpha + d_avg_delay * (1.0 - avg_alpha);
         }
     }
     return noutput_items_produced;
@@ -274,12 +268,19 @@ int render_loop_s(void* data)
         if (sink->d_wanted_ticks == 0)
             sink->d_wanted_ticks = SDL_GetTicks();
 
-        if (sink->d_avg_delay > 0)
+        if ((int)sink->d_avg_delay > 0)
             SDL_Delay((unsigned int)sink->d_avg_delay);
 
         if (!sink->d_frame_pending.load())
             continue;
         SDL_DisplayYUVOverlay(sink->d_image, &dstrect);
+        // SDL_Flip(d_screen);
+        unsigned int ticks = SDL_GetTicks(); // milliseconds
+        sink->d_wanted_ticks += sink->d_wanted_frametime_ms;
+        constexpr float avg_alpha = 0.1;
+        int time_diff = sink->d_wanted_ticks - ticks;
+        sink->d_avg_delay = time_diff * avg_alpha + sink->d_avg_delay * (1.0 - avg_alpha);
+
         sink->d_frame_pending.store(false);
     }
 
