@@ -214,7 +214,7 @@ def get_config_file_path(config_file: str = "grc.conf") -> str:
             return xdgcand
         if os.path.exists(oldpath):
             log.warn(f"Using legacy config path '{oldpath}'. Please consider moving configuration " +
-                     f"files to '{newpath}'.")
+                     f"files to '{xdgcand}'.")
             return oldpath
         # neither old, nor new path exist: create new path, return that
         path_parts = Path(xdgcand).parts[:-1]
@@ -247,7 +247,7 @@ def get_state_directory() -> str:
             return xdgcand
         if os.path.exists(oldpath):
             log.warn(f"Using legacy state path '{oldpath}'. Please consider moving state " +
-                     f"files to '{newpath}'.")
+                     f"files to '{xdgcand}'.")
             return oldpath
         # neither old, nor new path exist: create new path, return that
         os.makedirs(xdgcand, exist_ok=True)
