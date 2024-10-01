@@ -50,15 +50,19 @@ parameters:
     default: '1'
 -   id: win
     label: Window
-    dtype: raw
+    dtype: enum
     default: window.WIN_HAMMING
     options: [window.WIN_HAMMING, window.WIN_HANN, window.WIN_BLACKMAN, window.WIN_RECTANGULAR,
         window.WIN_KAISER]
     option_labels: [Hamming, Hann, Blackman, Rectangular, Kaiser]
+    option_attributes:
+        cpp_opts: [fft::window::WIN_HAMMING, fft::window::WIN_HANN, fft::window::WIN_BLACKMAN, 
+        fft::window::WIN_RECTANGULAR, fft::window::WIN_KAISER]
 -   id: beta
     label: Beta
     dtype: real
     default: '6.76'
+    hide: ${ ('part' if (win == "window.WIN_KAISER") else 'all') }
 
 asserts:
 -   ${ low_cutoff_freq <= high_cutoff_freq }
@@ -92,23 +96,23 @@ templates:
         ${width}, ${win}, ${beta}))
 
 cpp_templates:
-    includes: ['#include <gnuradio/filter/firdes.h>']
-    declarations: 'filter::firdes::sptr ${id};'
+    includes: ['#include <gnuradio/filter/firdes.h>', '#include <gnuradio/fft/window.h>', '#include <gnuradio/filter/fir_filter_blk.h>', '#include <gnuradio/filter/interp_fir_filter.h>']
+    declarations: 'filter::${type}::sptr ${id};'
     make: |-
         this->${id} = filter::${type}::make(
             ${ interp if str(type).startswith('interp') else decim },
-            firdes.${type.fcn}(
+            filter::firdes::${type.fcn}(
                 ${gain},
                 ${samp_rate},
                 ${low_cutoff_freq},
                 ${high_cutoff_freq},
                 ${width},
-                ${win},
+                ${win.cpp_opts},
                 ${beta}));
     link: ['gnuradio::gnuradio-filter']
     callbacks:
-    - set_taps(firdes::${type.fcn}(${gain}, ${samp_rate}, ${low_cutoff_freq}, ${high_cutoff_freq},
-        ${width}, ${win}, ${beta}))
+    - set_taps(filter::firdes::${type.fcn}(${gain}, ${samp_rate}, ${low_cutoff_freq}, ${high_cutoff_freq},
+        ${width}, ${win.cpp_opts}, ${beta}))
 
 documentation: |-
     This filter is a convenience wrapper for an fir filter and a firdes taps generating function.

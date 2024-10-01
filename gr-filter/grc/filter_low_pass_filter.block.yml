@@ -39,15 +39,19 @@ parameters:
     dtype: real
 -   id: win
     label: Window
-    dtype: raw
+    dtype: enum
     default: window.WIN_HAMMING
     options: [window.WIN_HAMMING, window.WIN_HANN, window.WIN_BLACKMAN, window.WIN_RECTANGULAR,
         window.WIN_KAISER]
     option_labels: [Hamming, Hann, Blackman, Rectangular, Kaiser]
+    option_attributes:
+        cpp_opts: [fft::window::WIN_HAMMING, fft::window::WIN_HANN, fft::window::WIN_BLACKMAN,
+        fft::window::WIN_RECTANGULAR, fft::window::WIN_KAISER]
 -   id: beta
     label: Beta
     dtype: real
     default: '6.76'
+    hide: ${ ('part' if (win == "window.WIN_KAISER") else 'all') }
 
 inputs:
 -   domain: stream
@@ -86,11 +90,11 @@ cpp_templates:
                 ${samp_rate},
                 ${cutoff_freq},
                 ${width},
-                ${win.replace('firdes.', 'gr::filter::firdes::')},
+                ${win.cpp_opts},
                 ${beta}));
     link: ['gnuradio::gnuradio-filter']
     callbacks:
-    - set_taps(gr::filter::firdes::low_pass(${gain}, ${samp_rate}, ${cutoff_freq}, ${width}, ${win.replace('firdes.', 'gr::filter::firdes::')},
+    - set_taps(gr::filter::firdes::low_pass(${gain}, ${samp_rate}, ${cutoff_freq}, ${width}, ${win.cpp_opts},
         ${beta}))
 
 documentation: |-

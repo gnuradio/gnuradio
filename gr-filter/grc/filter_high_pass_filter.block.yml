@@ -39,15 +39,19 @@ parameters:
     dtype: real
 -   id: win
     label: Window
-    dtype: raw
+    dtype: enum
     default: window.WIN_HAMMING
     options: [window.WIN_HAMMING, window.WIN_HANN, window.WIN_BLACKMAN, window.WIN_RECTANGULAR,
         window.WIN_KAISER]
     option_labels: [Hamming, Hann, Blackman, Rectangular, Kaiser]
+    option_attributes:
+        cpp_opts: [fft::window::WIN_HAMMING, fft::window::WIN_HANN, fft::window::WIN_BLACKMAN, 
+        fft::window::WIN_RECTANGULAR, fft::window::WIN_KAISER]
 -   id: beta
     label: Beta
     dtype: real
     default: '6.76'
+    hide: ${ ('part' if (win == "window.WIN_KAISER") else 'all') }
 
 inputs:
 -   domain: stream
@@ -76,21 +80,21 @@ templates:
         ${beta}))
 
 cpp_templates:
-    includes: ['#include <gnuradio/filter/firdes.h>']
-    declarations: 'filter::firdes::sptr ${id};'
+    includes: ['#include <gnuradio/filter/firdes.h>', '#include <gnuradio/fft/window.h>', '#include <gnuradio/filter/fir_filter_blk.h>', '#include <gnuradio/filter/interp_fir_filter.h>']
+    declarations: 'filter::${type}::sptr ${id};'
     make: |-
         this->${id} = filter::${type}::make(
             ${ interp if str(type).startswith('interp') else decim },
-            firdes.high_pass(
+            filter::firdes::high_pass(
                 ${gain},
                 ${samp_rate},
                 ${cutoff_freq},
                 ${width},
-                ${win},
+                ${win.cpp_opts},
                 ${beta}));
     link: ['gnuradio::gnuradio-filter']
     callbacks:
-    - set_taps(firdes::high_pass(${gain}, ${samp_rate}, ${cutoff_freq}, ${width}, ${win},
+    - set_taps(filter::firdes::high_pass(${gain}, ${samp_rate}, ${cutoff_freq}, ${width}, ${win.cpp_opts},
         ${beta}))
 
 documentation: |-
