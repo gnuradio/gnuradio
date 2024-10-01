@@ -190,13 +190,14 @@ class test_wavefile(gr_unittest.TestCase):
 
     def test_read_wav_1024(self):
         for expected_len in range(1024, 32768, 1024):
-            with tempfile.NamedTemporaryFile(suffix=".wav") as tf:
+            with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as tf:
                 with wave.open(tf.name, "w") as wf:
                     wf.setnchannels(1)
                     wf.setsampwidth(2)
                     wf.setframerate(8000)
                     wf.writeframes(bytes([0, 0] * expected_len))
 
+                self.tb = gr.top_block()
                 src = blocks.wavfile_source(tf.name)
                 dst = blocks.vector_sink_f()
                 self.tb.connect(src, dst)
@@ -204,7 +205,12 @@ class test_wavefile(gr_unittest.TestCase):
 
                 result = dst.data()
 
+                del src
+                del self.tb
+
                 self.assertEqual(len(result), expected_len)
+
+            os.unlink(tf.name)
 
     @unittest.skip("skipped due to bug in libsndfile < 1.2.1")
     def test_read_mp3(self):
