@@ -8,7 +8,7 @@ from qtpy.QtGui import QStandardItem, QStandardItemModel
 from qtpy.QtWidgets import (QLineEdit, QDialog, QDialogButtonBox, QTreeView,
                             QVBoxLayout, QTabWidget, QGridLayout, QWidget, QLabel,
                             QPushButton, QListWidget, QComboBox, QPlainTextEdit, QHBoxLayout,
-                            QFileDialog, QApplication)
+                            QFileDialog, QApplication, QScrollArea)
 
 
 class ErrorsDialog(QDialog):
@@ -57,7 +57,7 @@ class ErrorsDialog(QDialog):
 class PropsDialog(QDialog):
     def __init__(self, parent_block, force_show_id):
         super().__init__()
-        self.setMinimumSize(600, 400)
+        self.setMinimumSize(700, MIN_DIALOG_HEIGHT)
         self._block = parent_block
         self.qsettings = QApplication.instance().qsettings
         self.setModal(True)
@@ -79,7 +79,6 @@ class PropsDialog(QDialog):
         self.edit_params = []
 
         self.tabs = QTabWidget()
-        error_msg = QLabel()
         ignore_dtype_labels = ["_multiline", "_multiline_python_external", "file_open", "file_save"]
 
         for cat in unique_categories():
@@ -166,7 +165,9 @@ class PropsDialog(QDialog):
                 i += 1
             tab = QWidget()
             tab.setLayout(qvb)
-            self.tabs.addTab(tab, cat)
+            scrollarea = QScrollArea()
+            scrollarea.setWidget(tab)
+            self.tabs.addTab(scrollarea, cat)
 
         # Add example tab
         self.example_tab = QWidget()
@@ -182,8 +183,11 @@ class PropsDialog(QDialog):
         self.layout = QVBoxLayout()
         self.layout.addWidget(self.tabs)
         if self._block.enabled:
+            error_msg = QLabel()
             error_msg.setText('\n'.join(self._block.get_error_messages()))
-        self.layout.addWidget(error_msg)
+            scroll_error = QScrollArea()
+            scroll_error.setWidget(error_msg)
+            self.layout.addWidget(scroll_error)
         self.layout.addWidget(self.buttonBox)
 
         self.setLayout(self.layout)
