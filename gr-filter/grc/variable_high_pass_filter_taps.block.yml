@@ -19,19 +19,23 @@ parameters:
     dtype: float
 -   id: win
     label: Window
-    dtype: raw
+    dtype: enum
     default: window.WIN_HAMMING
     options: [window.WIN_HAMMING, window.WIN_HANN, window.WIN_BLACKMAN, window.WIN_RECTANGULAR,
         window.WIN_KAISER]
     option_labels: [Hamming, Hann, Blackman, Rectangular, Kaiser]
+    option_attributes:
+        python_opts: [0, 1, 2, 3, 4]
+        cpp_opts: [fft::window::WIN_HAMMING, fft::window::WIN_HANN, fft::window::WIN_BLACKMAN, fft::window::WIN_RECTANGULAR, fft::window::WIN_KAISER]
 -   id: beta
     label: Beta
     dtype: float
     default: '6.76'
+    hide: ${ ('part' if (win == "window.WIN_KAISER") else 'all') }
 -   id: value
     dtype: float_vector
     hide: all
-value: ${ firdes.high_pass(gain, samp_rate, cutoff_freq, width, win, beta) }
+value: ${ firdes.high_pass(gain, samp_rate, cutoff_freq, width, win.python_opts, beta) }
 
 templates:
     imports: from gnuradio.filter import firdes
@@ -46,7 +50,7 @@ cpp_templates:
     declarations: 'filter::firdes::sptr ${id};'
     var_make: |-
         ${id} = filter::firdes::high_pass(${gain}, ${samp_rate}, ${cutoff_freq},\
-        ${width}, ${win.replace('window.','fft::window::')}, ${beta});
+        ${width}, ${win.cpp_opts}, ${beta});
     link: ['gnuradio::gnuradio-filter']
 
 documentation: |-
