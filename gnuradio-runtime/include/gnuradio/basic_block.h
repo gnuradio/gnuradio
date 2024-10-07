@@ -168,7 +168,7 @@ public:
     std::string name() const { return d_name; }
 
     /*!
-     * The sybolic name of the block, which is used in the
+     * The symbolic name of the block, which is used in the
      * block_registry. The name is assigned by the block's constructor
      * and never changes during the life of the block.
      */
