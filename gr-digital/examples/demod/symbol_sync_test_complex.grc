@@ -123,7 +123,7 @@ blocks:
     gui_hint: 1,1,1,1
     label: Normalized Bandwidth
     min_len: '200'
-    orient: Qt.Horizontal
+    orient: QtCore.Qt.Horizontal
     rangeType: float
     start: '0.0'
     step: '0.001'
@@ -211,7 +211,7 @@ blocks:
     gui_hint: 1,0,1,1
     label: Expected TED Gain
     min_len: '200'
-    orient: Qt.Horizontal
+    orient: QtCore.Qt.Horizontal
     rangeType: float
     start: '0.05'
     step: '0.01'
@@ -232,7 +232,7 @@ blocks:
     gui_hint: 0,1,1,1
     label: Damping Factor
     min_len: '200'
-    orient: Qt.Horizontal
+    orient: QtCore.Qt.Horizontal
     rangeType: float
     start: '0.1'
     step: '0.1'
@@ -385,13 +385,15 @@ blocks:
     coordinate: [192, 148]
     rotation: 0
     state: enabled
-- name: blocks_throttle_0
-  id: blocks_throttle
+- name: blocks_throttle2_0
+  id: blocks_throttle2
   parameters:
     affinity: ''
     alias: ''
     comment: ''
     ignoretag: 'True'
+    limit: auto
+    maximum: '0.1'
     maxoutbuf: '0'
     minoutbuf: '0'
     samples_per_second: baud_rate*10
@@ -401,7 +403,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [544, 324]
+    coordinate: [536, 316.0]
     rotation: 0
     state: enabled
 - name: blocks_vector_source_x_0_0
@@ -820,10 +822,10 @@ connections:
 - [blocks_float_to_complex_3, '0', blocks_multiply_const_vxx_1, '0']
 - [blocks_multiply_const_vxx_1, '0', digital_symbol_sync_xx_0, '0']
 - [blocks_multiply_const_vxx_1, '0', qtgui_time_sink_x_0_1_0, '0']
-- [blocks_multiply_matrix_xx_0, '0', blocks_throttle_0, '0']
+- [blocks_multiply_matrix_xx_0, '0', blocks_throttle2_0, '0']
 - [blocks_repeat_0_0, '0', rational_resampler_xxx_0_0, '0']
 - [blocks_short_to_float_1, '0', blocks_multiply_matrix_xx_0, '0']
-- [blocks_throttle_0, '0', epy_block_0_0, '0']
+- [blocks_throttle2_0, '0', epy_block_0_0, '0']
 - [blocks_vector_source_x_0_0, '0', blocks_multiply_matrix_xx_0, '2']
 - [blocks_vector_source_x_0_0_0, '0', blocks_multiply_matrix_xx_0, '1']
 - [blocks_vector_source_x_0_0_1, '0', blocks_multiply_matrix_xx_0, '3']
@@ -838,3 +840,4 @@ connections:
 
 metadata:
   file_format: 1
+  grc_version: v3.11.0.0git-811-g09b7680e
