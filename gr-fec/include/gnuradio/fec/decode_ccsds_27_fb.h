@@ -18,7 +18,7 @@ namespace gr {
 namespace fec {
 
 /*! \brief A rate 1/2, k=7 convolutional decoder for the CCSDS standard
- * \ingroup error_coding_blk
+ * \ingroup block_fec_decode_ccsds_27
  *
  * \details
  * This block performs soft-decision convolutional decoding using the Viterbi

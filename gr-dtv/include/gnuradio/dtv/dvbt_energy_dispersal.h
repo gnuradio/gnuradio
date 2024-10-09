@@ -17,7 +17,7 @@ namespace dtv {
 
 /*!
  * \brief Energy dispersal.
- * \ingroup dtv
+ * \ingroup block_dtv_dvbt_energy_dispersal
  *
  * ETSI EN 300 744 - Clause 4.3.1 \n
  * Input - MPEG-2 transport packets (including sync - 0x47). \n

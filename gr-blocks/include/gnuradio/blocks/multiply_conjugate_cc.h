@@ -19,7 +19,7 @@ namespace blocks {
 
 /*!
  * \brief Multiplies stream 0 by the complex conjugate of stream 1.
- * \ingroup math_operators_blk
+ * \ingroup block_blocks_multiply_conjugate
  */
 class BLOCKS_API multiply_conjugate_cc : virtual public sync_block
 {
@@ -30,7 +30,7 @@ public:
     /*!
      * \brief Multiplies a streams by the conjugate of a second stream
      * \param vlen Vector length
-     * \ingroup math_blk
+     * \ingroup block_blocks_multiply_conjugate
      */
     static sptr make(size_t vlen = 1);
 };

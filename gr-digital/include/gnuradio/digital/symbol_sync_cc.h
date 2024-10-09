@@ -23,7 +23,7 @@ namespace digital {
 
 /*!
  * \brief Symbol Synchronizer block with complex input, complex output.
- * \ingroup synchronizers_blk
+ * \ingroup block_digital_symbol_sync
  *
  * \details
  * This implements a discrete-time error-tracking synchronizer.

@@ -19,7 +19,7 @@ namespace dtv {
 
 /*!
  * \brief ATSC depad mpeg ts packets from 256 byte atsc_mpeg_packet to 188 byte char
- * \ingroup dtv_atsc
+ * \ingroup block_dtv_atsc_depad
  *
  * input: atsc_mpeg_packet; output: unsigned char
  */

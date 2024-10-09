@@ -20,7 +20,7 @@ namespace digital {
 
 /*!
  * \brief Base header formatter class.
- * \ingroup packet_operators_blk
+ * \ingroup block_digital_header_format_base
  *
  * \details
  *

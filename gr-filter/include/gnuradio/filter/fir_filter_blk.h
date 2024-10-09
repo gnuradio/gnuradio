@@ -20,7 +20,7 @@ namespace filter {
 
 /*!
  * \brief FIR filter with IN_T input, OUT_T output, and TAP_T taps
- * \ingroup filter_blk
+ * \ingroup block_filter_fir_filter
  *
  * \details
  * The fir_filter_blk_XXX blocks create finite impulse response

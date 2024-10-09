@@ -20,7 +20,7 @@ namespace blocks {
 
 /*!
  * \brief throughput measurement
- * \ingroup measurement_tools_blk
+ * \ingroup block_blocks_probe_rate
  */
 class BLOCKS_API probe_rate : virtual public sync_block
 {

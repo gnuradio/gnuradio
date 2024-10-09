@@ -22,7 +22,7 @@ namespace filter {
 
 /*!
  * \brief Generate Analytic Signal.
- * \ingroup filter_blk
+ * \ingroup block_filter_hilbert
  *
  * \details
  * Real part of the output is an appropriately delayed version of the input while

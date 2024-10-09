@@ -16,7 +16,7 @@ namespace analog {
 
 /*!
  * \brief Types of signal generator waveforms.
- * \ingroup waveform_generators_blk
+ * \ingroup block_analog_sig_source_waveform
  */
 typedef enum {
     GR_CONST_WAVE = 100,

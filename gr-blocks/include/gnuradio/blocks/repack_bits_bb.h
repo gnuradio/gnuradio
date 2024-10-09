@@ -20,7 +20,7 @@ namespace blocks {
 
 /*!
  * \brief Repack \p k bits from the input stream onto \p l bits of the output stream.
- * \ingroup byte_operators_blk
+ * \ingroup block_blocks_repack_bits
  *
  * \details
  * No bits are lost here; any value for k and l (within [1, 8]) is allowed.

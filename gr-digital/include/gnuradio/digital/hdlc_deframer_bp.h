@@ -21,7 +21,7 @@ namespace digital {
  * \brief HDLC deframer which takes in unpacked bits, and outputs PDU
  * binary blobs. Frames which do not pass CRC are rejected.
  *
- * \ingroup pkt_operators_blk
+ * \ingroup block_digital_hdlc_deframer_bp
  *
  */
 class DIGITAL_API hdlc_deframer_bp : virtual public gr::sync_block

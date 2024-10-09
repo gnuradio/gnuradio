@@ -19,7 +19,7 @@ namespace digital {
 
 /*!
  * \brief Default header formatter for digital packet transmission.
- * \ingroup packet_operators_blk
+ * \ingroup block_digital_packet_header_default
  *
  * \details
  * For bursty/packetized digital transmission, packets are usually prepended

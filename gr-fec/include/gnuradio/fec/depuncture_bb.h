@@ -19,7 +19,7 @@ namespace fec {
 
 /*!
  * \brief Depuncture a stream of samples.
- * \ingroup error_coding_blk
+ * \ingroup block_fec_depuncture
  *
  * \details
 

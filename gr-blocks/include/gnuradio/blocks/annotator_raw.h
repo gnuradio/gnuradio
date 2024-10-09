@@ -20,7 +20,7 @@ namespace blocks {
 
 /*!
  * \brief raw stream annotator testing block.
- * \ingroup debug_tools_blk
+ * \ingroup block_blocks_annotator_raw
  *
  * \details
  * This block creates arbitrary tags to be sent downstream gnuradio/blocks

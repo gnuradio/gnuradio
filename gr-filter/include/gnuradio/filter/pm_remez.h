@@ -20,7 +20,7 @@ namespace gr {
 namespace filter {
 /*!
  * \brief Parks-McClellan FIR filter design using Remez algorithm.
- * \ingroup filter_design
+ * \ingroup block_filter_pm_remez
  *
  * \details
  * Calculates the optimal (in the Chebyshev/minimax sense) FIR

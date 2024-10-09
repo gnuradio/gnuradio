@@ -18,7 +18,7 @@ namespace blocks {
 
 /*!
  * \brief Linear Feedback Shift Register using primitive polynomial x^15 + x + 1
- * \ingroup misc
+ * \ingroup block_blocks_lfsr_15_1_0
  *
  * \details
  * Generates a maximal length pseudo-random sequence of length

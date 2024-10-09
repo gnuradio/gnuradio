@@ -1,0 +1,1049 @@
+
+# Copyright (C) 2017 Free Software Foundation, Inc.
+#
+# Permission is granted to copy, distribute and/or modify this document
+# under the terms of the GNU Free Documentation License, Version 1.3
+# or any later version published by the Free Software Foundation;
+# with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.
+# A copy of the license is included in the section entitled "GNU
+# Free Documentation License".
+
+/*! \defgroup blocks GNU Radio Blocks
+ * \brief All blocks that can be used in GR graphs are listed here or in
+ * the subcategories below.
+ * @{ */\n
+/*! \defgroup blocks_misc Misc
+ * @{
+ */
+
+/*! \defgroup block_EPyBlock Python Block */
+/*! \defgroup block_EPyModule Python Module */
+/*! \defgroup block_VirtualSink Virtual Sink */
+/*! \defgroup block_VirtualSource Virtual Source */
+/*! \defgroup block_blocks_copy Copy */
+/*! \defgroup block_blocks_delay Delay */
+/*! \defgroup block_blocks_head Head */
+/*! \defgroup block_blocks_nop Nop */
+/*! \defgroup block_blocks_null_sink Null Sink */
+/*! \defgroup block_blocks_null_source Null Source */
+/*! \defgroup block_blocks_phase_shift Phase Shift */
+/*! \defgroup block_blocks_selector Selector */
+/*! \defgroup block_blocks_skiphead Skip Head */
+/*! \defgroup block_blocks_throttle Throttle (old) */
+/*! \defgroup block_blocks_throttle2 Throttle */
+/*! \defgroup block_blocks_vector_source Vector Source */
+/*! \defgroup block_import Import */
+/*! \defgroup block_note Note */
+/*! \defgroup block_options Options */
+/*! \defgroup block_pad_sink Pad Sink */
+/*! \defgroup block_pad_source Pad Source */
+/*! \defgroup block_snippet Python Snippet */
+/*! \defgroup block_xmlrpc_client XMLRPC Client */
+/*! \defgroup block_xmlrpc_server XMLRPC Server */
+
+/*! @} */
+
+/*! \defgroup blocks_level_controllers Level Controllers
+ * @{
+ */
+
+/*! \defgroup block_analog_agc2 AGC2 */
+/*! \defgroup block_analog_agc3 AGC3 */
+/*! \defgroup block_analog_agc AGC */
+/*! \defgroup block_analog_ctcss_squelch CTCSS Squelch */
+/*! \defgroup block_analog_feedforward_agc Feed Forward AGC */
+/*! \defgroup block_analog_pwr_squelch Power Squelch */
+/*! \defgroup block_analog_rail Rail */
+/*! \defgroup block_analog_simple_squelch Simple Squelch */
+/*! \defgroup block_analog_standard_squelch Standard Squelch */
+/*! \defgroup block_blocks_moving_average Moving Average */
+/*! \defgroup block_blocks_mute Mute */
+/*! \defgroup block_blocks_sample_and_hold Sample and Hold */
+/*! \defgroup block_blocks_threshold Threshold */
+
+/*! @} */
+
+/*! \defgroup blocks_modulators Modulators
+ * @{
+ */
+
+/*! \defgroup block_analog_am_demod_cf AM Demod */
+/*! \defgroup block_analog_fm_deemph FM Deemphasis */
+/*! \defgroup block_analog_fm_demod_cf FM Demod */
+/*! \defgroup block_analog_fm_preemph FM Preemphasis */
+/*! \defgroup block_analog_frequency_modulator Frequency Mod */
+/*! \defgroup block_analog_nbfm_rx NBFM Receive */
+/*! \defgroup block_analog_nbfm_tx NBFM Transmit */
+/*! \defgroup block_analog_phase_modulator Phase Mod */
+/*! \defgroup block_analog_quadrature_demod_cf Quadrature Demod */
+/*! \defgroup block_analog_wfm_rcv WBFM Receive */
+/*! \defgroup block_analog_wfm_rcv_pll WBFM Receive PLL */
+/*! \defgroup block_analog_wfm_tx WBFM Transmit */
+/*! \defgroup block_variable_constellation Constellation Object */
+/*! \defgroup block_digital_constellation_modulator Constellation Modulator */
+/*! \defgroup block_variable_constellation_rect Constellation Rect. Object */
+/*! \defgroup block_digital_cpmmod Continuous Phase Modulation */
+/*! \defgroup block_digital_gfsk_demod GFSK Demod */
+/*! \defgroup block_digital_gfsk_mod GFSK Mod */
+/*! \defgroup block_digital_gmsk_demod GMSK Demod */
+/*! \defgroup block_digital_gmsk_mod GMSK Mod */
+/*! \defgroup block_digital_gmskmod GMSK Modulator */
+/*! \defgroup block_variable_modulate_vector Modulate Vector */
+
+/*! @} */
+
+/*! \defgroup blocks_waveform_generators Waveform Generators
+ * @{
+ */
+
+/*! \defgroup block_analog_const_source Constant Source */
+/*! \defgroup block_analog_fastnoise_source Fast Noise Source */
+/*! \defgroup block_analog_noise_source Noise Source */
+/*! \defgroup block_analog_random_source Random Source */
+/*! \defgroup block_analog_random_uniform_source Random Uniform Source */
+/*! \defgroup block_analog_sig_source Signal Source */
+/*! \defgroup block_blocks_vco VCO (complex) */
+/*! \defgroup block_blocks_vco VCO */
+/*! \defgroup block_digital_glfsr_source GLFSR Source */
+
+/*! @} */
+
+/*! \defgroup blocks_deprecated Deprecated
+ * @{
+ */
+
+/*! \defgroup block_analog_cpfsk CPFSK */
+/*! \defgroup block_digital_clock_recovery_mm Clock Recovery MM */
+/*! \defgroup block_digital_msk_timing_recovery MSK Timing Recovery */
+/*! \defgroup block_digital_psk_demod PSK Demod */
+/*! \defgroup block_digital_psk_mod PSK Mod */
+/*! \defgroup block_digital_qam_demod QAM Demod */
+/*! \defgroup block_digital_qam_mod QAM Mod */
+
+/*! @} */
+
+/*! \defgroup blocks_peak_detectors Peak Detectors
+ * @{
+ */
+
+/*! \defgroup block_analog_dpll Detect Peak */
+/*! \defgroup block_blocks_burst_tagger Burst Tagger */
+/*! \defgroup block_blocks_peak_detector2 Peak Detector2 */
+/*! \defgroup block_blocks_peak_detector Peak Detector */
+/*! \defgroup block_blocks_plateau_detector Plateau Detector */
+
+/*! @} */
+
+/*! \defgroup blocks_synchronizers Synchronizers
+ * @{
+ */
+
+/*! \defgroup block_analog_pll_carriertracking PLL Carrier Tracking */
+/*! \defgroup block_analog_pll_freqdet_cf PLL Frequency Detector */
+/*! \defgroup block_analog_pll_refout PLL Carrier Regeneration */
+/*! \defgroup block_digital_corr_est Correlation Estimator */
+/*! \defgroup block_digital_costas_loop Costas Loop */
+/*! \defgroup block_digital_fll_band_edge FLL Band-Edge */
+/*! \defgroup block_digital_pfb_clock_sync Polyphase Clock Sync */
+/*! \defgroup block_digital_pn_correlator PN Correlator */
+/*! \defgroup block_digital_symbol_sync Symbol Sync */
+
+/*! @} */
+
+/*! \defgroup blocks_measurement_tools Measurement Tools
+ * @{
+ */
+
+/*! \defgroup block_analog_probe_avg_mag_sqrd Probe Avg Mag^2 */
+/*! \defgroup block_blocks_ctrlport_probe2 Ctrlport Probe */
+/*! \defgroup block_blocks_ctrlport_probe Ctrlport Complex Probe */
+/*! \defgroup block_blocks_probe_rate Probe Rate */
+/*! \defgroup block_blocks_probe_signal Probe Signal Vector */
+/*! \defgroup block_blocks_probe_signal Probe Signal */
+/*! \defgroup block_digital_mpsk_snr_est MPSK SNR Estimator */
+/*! \defgroup block_digital_probe_density Probe Density */
+/*! \defgroup block_digital_probe_mpsk_snr_est MPSK SNR Estimator Probe */
+
+/*! @} */
+
+/*! \defgroup blocks_audio Audio
+ * @{
+ */
+
+/*! \defgroup block_audio_sink Audio Sink */
+/*! \defgroup block_audio_source Audio Source */
+/*! \defgroup block_vocoder_alaw_decode Alaw Audio Decoder */
+/*! \defgroup block_vocoder_alaw_encode g711 Alaw Audio Encoder */
+/*! \defgroup block_vocoder_codec2_decode CODEC2 Audio Decoder */
+/*! \defgroup block_vocoder_codec2_encode CODEC2 Audio Encoder */
+/*! \defgroup block_vocoder_cvsd_decode CVSD Decoder */
+/*! \defgroup block_vocoder_cvsd_decode CVSD Audio Decoder (Raw Bit-Level) */
+/*! \defgroup block_vocoder_cvsd_encode CVSD Encoder */
+/*! \defgroup block_vocoder_cvsd_encode CVSD Audio Encoder (Raw Bit-Level) */
+/*! \defgroup block_vocoder_freedv_rx FreeDV demodulator */
+/*! \defgroup block_vocoder_freedv_tx FreeDV modulator */
+/*! \defgroup block_vocoder_g721_decode g721 Audio Decoder */
+/*! \defgroup block_vocoder_g721_encode g721 Audio Encoder */
+/*! \defgroup block_vocoder_g723_24_decode g723_24 Audio Decoder */
+/*! \defgroup block_vocoder_g723_24_encode g723_24 Audio Encoder */
+/*! \defgroup block_vocoder_g723_40_decode g723_40 Audio Decoder */
+/*! \defgroup block_vocoder_g723_40_encode g723_40 Audio Encoder */
+/*! \defgroup block_vocoder_gsm_fr_decode GSM full-rate Audio Decoder */
+/*! \defgroup block_vocoder_gsm_fr_encode GSM full-rate Audio Encoder */
+/*! \defgroup block_vocoder_ulaw_decode ulaw Audio Decoder */
+/*! \defgroup block_vocoder_ulaw_encode ulaw Audio Encoder */
+
+/*! @} */
+
+/*! \defgroup blocks_math_operators Math Operators
+ * @{
+ */
+
+/*! \defgroup block_blocks_abs Abs */
+/*! \defgroup block_blocks_add_const Add Const */
+/*! \defgroup block_blocks_add Add */
+/*! \defgroup block_blocks_argmax Argmax */
+/*! \defgroup block_blocks_conjugate Complex Conjugate */
+/*! \defgroup block_blocks_divide Divide */
+/*! \defgroup block_blocks_exponentiate_const_cci Exponentiate Const Int */
+/*! \defgroup block_blocks_freqshift Frequency Shift */
+/*! \defgroup block_blocks_integrate Integrate */
+/*! \defgroup block_blocks_max Max */
+/*! \defgroup block_blocks_min Min */
+/*! \defgroup block_blocks_multiply_by_tag_value Multiply by Tag Value */
+/*! \defgroup block_blocks_multiply_conjugate Multiply Conjugate */
+/*! \defgroup block_blocks_multiply_const Multiply Const */
+/*! \defgroup block_blocks_multiply_const Fast Multiply Const */
+/*! \defgroup block_blocks_multiply_matrix Multiply by Matrix */
+/*! \defgroup block_blocks_multiply Multiply */
+/*! \defgroup block_blocks_nlog10 Log10 */
+/*! \defgroup block_blocks_rms RMS */
+/*! \defgroup block_blocks_rotator Rotator */
+/*! \defgroup block_blocks_sub Subtract */
+/*! \defgroup block_blocks_transcendental Transcendental */
+
+/*! @} */
+
+/*! \defgroup blocks_boolean_operators Boolean Operators
+ * @{
+ */
+
+/*! \defgroup block_blocks_and_const And Const */
+/*! \defgroup block_blocks_and And */
+/*! \defgroup block_blocks_not Not */
+/*! \defgroup block_blocks_or Or */
+/*! \defgroup block_blocks_xor Xor */
+
+/*! @} */
+
+/*! \defgroup blocks_stream_operators Stream Operators
+ * @{
+ */
+
+/*! \defgroup block_blocks_blockinterleaver Block interleaver */
+/*! \defgroup block_blocks_deinterleave Deinterleave */
+/*! \defgroup block_blocks_endian_swap Endian Swap */
+/*! \defgroup block_blocks_interleave Interleave */
+/*! \defgroup block_blocks_keep_m_in_n Keep M in N */
+/*! \defgroup block_blocks_keep_one_in_n Keep 1 in N */
+/*! \defgroup block_blocks_matrix_interleaver Matrix Interleaver */
+/*! \defgroup block_blocks_patterned_interleaver Patterned Interleaver */
+/*! \defgroup block_blocks_regenerate Regenerate */
+/*! \defgroup block_blocks_repeat Repeat */
+/*! \defgroup block_blocks_stream_demux Stream Demux */
+/*! \defgroup block_blocks_stream_mux Stream Mux */
+/*! \defgroup block_blocks_stream_to_streams Stream to Streams */
+/*! \defgroup block_blocks_stream_to_vector Stream to Vector */
+/*! \defgroup block_blocks_stream_to_vector_decimator Stream to Vec Decim */
+/*! \defgroup block_blocks_streams_to_stream Streams to Stream */
+/*! \defgroup block_blocks_streams_to_vector Streams to Vector */
+/*! \defgroup block_blocks_stretch Stretch */
+/*! \defgroup block_blocks_vector_insert Vector Insert */
+/*! \defgroup block_blocks_vector_to_stream Vector to Stream */
+/*! \defgroup block_blocks_vector_to_streams Vector to Streams */
+
+/*! @} */
+
+/*! \defgroup blocks_stream_tag_tools Stream Tag Tools
+ * @{
+ */
+
+/*! \defgroup block_blocks_burst_to_stream Burst to Stream */
+/*! \defgroup block_blocks_stream_to_tagged_stream Stream to Tagged Stream */
+/*! \defgroup block_blocks_tag_debug Tag Debug */
+/*! \defgroup block_blocks_tag_gate Tag Gate */
+/*! \defgroup block_blocks_tag_share Tag Share */
+/*! \defgroup block_blocks_tagged_file_sink Tagged File Sink */
+/*! \defgroup block_blocks_tagged_stream_align Tagged Stream Align */
+/*! \defgroup block_blocks_tagged_stream_mux Tagged Stream Mux */
+/*! \defgroup block_blocks_test_tag_variable_rate Test Tag Variable Rate */
+
+/*! @} */
+
+/*! \defgroup blocks_type_converters Type Converters
+ * @{
+ */
+
+/*! \defgroup block_blocks_char_to_float Char To Float */
+/*! \defgroup block_blocks_char_to_short Char To Short */
+/*! \defgroup block_blocks_complex_to_arg Complex to Arg */
+/*! \defgroup block_blocks_complex_to_float Complex To Float */
+/*! \defgroup block_blocks_complex_to_imag Complex to Imag */
+/*! \defgroup block_blocks_complex_to_interleaved_char Complex To IChar */
+/*! \defgroup block_blocks_complex_to_interleaved_short Complex To IShort */
+/*! \defgroup block_blocks_complex_to_mag Complex to Mag */
+/*! \defgroup block_blocks_complex_to_mag_squared Complex to Mag^2 */
+/*! \defgroup block_blocks_complex_to_magphase Complex To Mag Phase */
+/*! \defgroup block_blocks_complex_to_real Complex To Real */
+/*! \defgroup block_blocks_float_to_char Float To Char */
+/*! \defgroup block_blocks_float_to_complex Float To Complex */
+/*! \defgroup block_blocks_float_to_int Float To Int */
+/*! \defgroup block_blocks_float_to_short Float To Short */
+/*! \defgroup block_blocks_float_to_uchar Float To UChar */
+/*! \defgroup block_blocks_int_to_float Int To Float */
+/*! \defgroup block_blocks_interleaved_char_to_complex IChar To Complex */
+/*! \defgroup block_blocks_interleaved_short_to_complex IShort To Complex */
+/*! \defgroup block_blocks_magphase_to_complex Magnitude and Phase To Complex */
+/*! \defgroup block_blocks_short_to_char Short To Char */
+/*! \defgroup block_blocks_short_to_float Short To Float */
+/*! \defgroup block_blocks_uchar_to_float UChar To Float */
+
+/*! @} */
+
+/*! \defgroup blocks_iq_correction IQ Correction
+ * @{
+ */
+
+/*! \defgroup block_blocks_correctiq Remove DC Spike */
+/*! \defgroup block_blocks_correctiq_auto Remove DC Spike AutoSync */
+/*! \defgroup block_blocks_correctiq_man IQ Correction Manual Offset */
+/*! \defgroup block_blocks_swapiq Swap IQ */
+
+/*! @} */
+
+/*! \defgroup blocks_control_port Control Port
+ * @{
+ */
+
+/*! \defgroup block_blocks_ctrlport_monitor_performance CtrlPort Performance Monitor */
+/*! \defgroup block_blocks_ctrlport_probe2 Ctrlport Probe */
+/*! \defgroup block_blocks_ctrlport_monitor CtrlPort Monitor */
+/*! \defgroup block_fft_ctrlport_probe_psd Ctrlport Probe PSD */
+
+/*! @} */
+
+/*! \defgroup blocks_file_operators File Operators
+ * @{
+ */
+
+/*! \defgroup block_blocks_file_descriptor_sink File Descriptor Sink */
+/*! \defgroup block_blocks_file_descriptor_source File Descriptor Source */
+/*! \defgroup block_blocks_file_meta_sink File Meta Sink */
+/*! \defgroup block_blocks_file_meta_source File Meta Source */
+/*! \defgroup block_blocks_file_sink File Sink */
+/*! \defgroup block_blocks_file_source File Source */
+/*! \defgroup block_blocks_sigmf_sink_minimal SigMF Sink (Minimal) */
+/*! \defgroup block_blocks_sigmf_source_minimal SigMF Source (Minimal) */
+/*! \defgroup block_blocks_wavfile_sink Wav File Sink */
+/*! \defgroup block_blocks_wavfile_source Wav File Source */
+
+/*! @} */
+
+/*! \defgroup blocks_message_tools Message Tools
+ * @{
+ */
+
+/*! \defgroup block_blocks_message_debug Message Debug */
+/*! \defgroup block_blocks_message_strobe Message Strobe */
+/*! \defgroup block_blocks_message_strobe_random Message Strobe Random-Delay */
+/*! \defgroup block_blocks_msg_meta_to_pair Message Meta Value to Pair */
+/*! \defgroup block_blocks_msgpair_to_var Message Pair to Var */
+/*! \defgroup block_blocks_tagged_stream_multiply_length Tagged Stream Multiply Length Tag */
+/*! \defgroup block_blocks_var_to_msg Variable to Message */
+
+/*! @} */
+
+/*! \defgroup blocks_byte_operators Byte Operators
+ * @{
+ */
+
+/*! \defgroup block_blocks_pack_k_bits Pack K Bits */
+/*! \defgroup block_blocks_packed_to_unpacked Packed to Unpacked */
+/*! \defgroup block_blocks_repack_bits Repack Bits */
+/*! \defgroup block_blocks_unpack_k_bits Unpack K Bits */
+/*! \defgroup block_blocks_unpacked_to_packed Unpacked to Packed */
+
+/*! @} */
+
+/*! \defgroup blocks_variables Variables
+ * @{
+ */
+
+/*! \defgroup block_variable_tag_object Tag Object */
+/*! \defgroup block_json_config JSON Config */
+/*! \defgroup block_parameter Parameter */
+/*! \defgroup block_variable Variable */
+/*! \defgroup block_variable_config Variable Config */
+/*! \defgroup block_variable_function_probe Function Probe */
+/*! \defgroup block_variable_struct Struct Variable */
+/*! \defgroup block_yaml_config YAML Config */
+
+/*! @} */
+
+/*! \defgroup blocks_debug_tools Debug Tools
+ * @{
+ */
+
+/*! \defgroup block_blocks_tags_strobe Tags Strobe */
+/*! \defgroup block_blocks_vector_sink Vector Sink */
+
+/*! @} */
+
+/*! \defgroup blocks_impairment_models Impairment Models
+ * @{
+ */
+
+/*! \defgroup block_channels_amp_bal Amplitude Balance */
+/*! \defgroup block_channels_cfo_model CFO Model */
+/*! \defgroup block_channels_distortion_2_gen Second Order Distortion */
+/*! \defgroup block_channels_distortion_3_gen Third Order Distortion */
+/*! \defgroup block_channels_impairments HW Impairments */
+/*! \defgroup block_channels_iqbal_gen IQ Imbalance Generator */
+/*! \defgroup block_channels_phase_bal Phase Balance */
+/*! \defgroup block_channels_phase_noise_gen Phase Noise Generator */
+/*! \defgroup block_channels_quantizer Quantizer */
+/*! \defgroup block_channels_sro_model SRO Model */
+
+/*! @} */
+
+/*! \defgroup blocks_channel_models Channel Models
+ * @{
+ */
+
+/*! \defgroup block_channels_channel_model Channel Model */
+/*! \defgroup block_channels_channel_model2 Channel Model 2 */
+/*! \defgroup block_channels_conj_fs_iqcorr Freq. Selective IQ Correction */
+/*! \defgroup block_channels_dynamic_channel_model Dynamic Channel Model */
+/*! \defgroup block_channels_fading_model Fading Model */
+/*! \defgroup block_channels_selective_fading_model Frequency Selective Fading Model */
+/*! \defgroup block_channels_selective_fading_model2 Frequency Selective Fading Model2 */
+
+/*! @} */
+
+/*! \defgroup blocks_equalizers Equalizers
+ * @{
+ */
+
+/*! \defgroup block_variable_adaptive_algorithm Adaptive Algorithm */
+/*! \defgroup block_digital_decision_feedback_equalizer Decision Feedback Equalizer */
+/*! \defgroup block_digital_linear_equalizer Linear Equalizer */
+/*! \defgroup block_digital_meas_evm EVM Measurement */
+
+/*! @} */
+
+/*! \defgroup blocks_coding Coding
+ * @{
+ */
+
+/*! \defgroup block_digital_additive_scrambler Additive Scrambler (Deprecated) */
+/*! \defgroup block_digital_additive_scrambler Additive Scrambler */
+/*! \defgroup block_digital_descrambler Descrambler */
+/*! \defgroup block_digital_scrambler Scrambler */
+
+/*! @} */
+
+/*! \defgroup blocks_symbol_coding Symbol Coding
+ * @{
+ */
+
+/*! \defgroup block_digital_binary_slicer Binary Slicer */
+/*! \defgroup block_digital_chunks_to_symbols Chunks to Symbols */
+/*! \defgroup block_digital_constellation_decoder_cb Constellation Decoder */
+/*! \defgroup block_digital_constellation_encoder Constellation Encoder */
+/*! \defgroup block_digital_constellation_receiver_cb Constellation Receiver */
+/*! \defgroup block_digital_constellation_soft_decoder_cf Constellation Soft Decoder */
+/*! \defgroup block_digital_diff_decoder Differential Decoder */
+/*! \defgroup block_digital_diff_encoder Differential Encoder */
+/*! \defgroup block_digital_diff_phasor Differential Phasor */
+/*! \defgroup block_digital_map Map */
+
+/*! @} */
+
+/*! \defgroup blocks_packet_operators Packet Operators
+ * @{
+ */
+
+/*! \defgroup block_digital_burst_shaper Burst Shaper */
+/*! \defgroup block_digital_correlate_access_code_tag Correlate Access Code - Tag */
+/*! \defgroup block_digital_correlate_access_code_xx_ts Correlate Access Code - Tag Stream */
+/*! \defgroup block_digital_crc16_async Async CRC16 */
+/*! \defgroup block_digital_crc32_async Async CRC32 */
+/*! \defgroup block_digital_crc32 Stream CRC32 */
+/*! \defgroup block_digital_crc_append CRC Append */
+/*! \defgroup block_digital_crc_check CRC Check */
+/*! \defgroup block_digital_framer_sink_1 Framer Sink 1 */
+/*! \defgroup block_digital_hdlc_deframer_bp HDLC Deframer */
+/*! \defgroup block_digital_hdlc_framer_pb HDLC Framer */
+/*! \defgroup block_digital_header_payload_demux Header/Payload Demux */
+/*! \defgroup block_digital_packet_headergenerator Packet Header Generator */
+/*! \defgroup block_digital_packet_headergenerator_bb_default Packet Header Generator (Default) */
+/*! \defgroup block_digital_packet_headerparser Packet Header Parser */
+/*! \defgroup block_digital_packet_headerparser_b_default Packet Header Parser (Default) */
+/*! \defgroup block_digital_packet_sink Packet Sink */
+/*! \defgroup block_digital_protocol_formatter_async Protocol Formatter (Async) */
+/*! \defgroup block_digital_protocol_formatter Protocol Formatter */
+/*! \defgroup block_digital_protocol_parser Protocol Parser */
+/*! \defgroup block_variable_header_format_default Default Header Format Obj. */
+
+/*! @} */
+
+/*! \defgroup blocks_ofdm OFDM
+ * @{
+ */
+
+/*! \defgroup block_digital_ofdm_carrier_allocator_cvc OFDM Carrier Allocator */
+/*! \defgroup block_digital_ofdm_chanest_vcvc OFDM Channel Estimation */
+/*! \defgroup block_digital_ofdm_cyclic_prefixer OFDM Cyclic Prefixer */
+/*! \defgroup block_digital_ofdm_frame_equalizer_vcvc OFDM Frame Equalizer */
+/*! \defgroup block_digital_ofdm_rx OFDM Receiver */
+/*! \defgroup block_digital_ofdm_serializer_vcc OFDM Serializer */
+/*! \defgroup block_digital_ofdm_tx OFDM Transmitter */
+
+/*! @} */
+
+/*! \defgroup blocks_digital_television Digital Television
+ * @{
+ */
+
+/*! \defgroup blocks_atsc ATSC
+ * @{
+ */
+
+/*! \defgroup block_dtv_atsc_deinterleaver ATSC Deinterleaver */
+/*! \defgroup block_dtv_atsc_depad ATSC Depad */
+/*! \defgroup block_dtv_atsc_derandomizer ATSC Derandomizer */
+/*! \defgroup block_dtv_atsc_equalizer ATSC Equalizer */
+/*! \defgroup block_dtv_atsc_field_sync_mux ATSC Field Sync Mux */
+/*! \defgroup block_dtv_atsc_fpll ATSC Receiver FPLL */
+/*! \defgroup block_dtv_atsc_fs_checker ATSC Field Sync Checker */
+/*! \defgroup block_dtv_atsc_interleaver ATSC Interleaver */
+/*! \defgroup block_dtv_atsc_pad ATSC Pad */
+/*! \defgroup block_dtv_atsc_randomizer ATSC Randomizer */
+/*! \defgroup block_dtv_atsc_rs_decoder ATSC Reed–Solomon Decoder */
+/*! \defgroup block_dtv_atsc_rs_encoder ATSC RS Encoder */
+/*! \defgroup block_dtv_atsc_rx ATSC Receive Pipeline */
+/*! \defgroup block_dtv_atsc_rx_filter ATSC RX Filter */
+/*! \defgroup block_dtv_atsc_sync ATSC Receiver SYNC */
+/*! \defgroup block_dtv_atsc_trellis_encoder ATSC Trellis Encoder */
+/*! \defgroup block_dtv_atsc_viterbi_decoder ATSC Viterbi Decoder */
+
+/*! @} */
+
+/*! \defgroup blocks_itu-t_j.83b ITU-T J.83B
+ * @{
+ */
+
+/*! \defgroup block_dtv_catv_frame_sync_enc Frame Sync Encoder */
+/*! \defgroup block_dtv_catv_randomizer Randomizer */
+/*! \defgroup block_dtv_catv_reed_solomon_enc Reed-Solomon Encoder */
+/*! \defgroup block_dtv_catv_transport_framing_enc Transport Framing Encoder */
+/*! \defgroup block_dtv_catv_trellis_enc Trellis Encoder */
+
+/*! @} */
+
+/*! \defgroup blocks_dvb DVB
+ * @{
+ */
+
+/*! \defgroup block_dtv_dvb_bbheader BBheader */
+/*! \defgroup block_dtv_dvb_bbscrambler BBscrambler */
+/*! \defgroup block_dtv_dvb_bch BCH Encoder */
+/*! \defgroup block_dtv_dvb_ldpc LDPC Encoder */
+
+/*! @} */
+
+/*! \defgroup blocks_dvb-s2 DVB-S2
+ * @{
+ */
+
+/*! \defgroup block_dtv_dvbs2_interleaver Interleaver */
+/*! \defgroup block_dtv_dvbs2_modulator DVB-S2X Modulator */
+/*! \defgroup block_dtv_dvbs2_physical Physical Layer Framer */
+
+/*! @} */
+
+/*! \defgroup blocks_dvb-t2 DVB-T2
+ * @{
+ */
+
+/*! \defgroup block_dtv_dvbt2_cellinterleaver Cell/Time Interleaver */
+/*! \defgroup block_dtv_dvbt2_framemapper Frame Mapper */
+/*! \defgroup block_dtv_dvbt2_freqinterleaver Frequency Interleaver */
+/*! \defgroup block_dtv_dvbt2_interleaver Bit Interleaver */
+/*! \defgroup block_dtv_dvbt2_miso MISO Processing */
+/*! \defgroup block_dtv_dvbt2_modulator DVB-T2 Modulator */
+/*! \defgroup block_dtv_dvbt2_p1insertion P1 Symbol Insertion */
+/*! \defgroup block_dtv_dvbt2_paprtr Tone Reservation PAPR */
+/*! \defgroup block_dtv_dvbt2_pilotgenerator Pilot Generator and IFFT */
+
+/*! @} */
+
+/*! \defgroup blocks_dvb-t DVB-T
+ * @{
+ */
+
+/*! \defgroup block_dtv_dvbt_bit_inner_deinterleaver Bit Inner Deinterleaver */
+/*! \defgroup block_dtv_dvbt_bit_inner_interleaver Bit Inner Interleaver */
+/*! \defgroup block_dtv_dvbt_convolutional_deinterleaver Convolutional Deinterleaver */
+/*! \defgroup block_dtv_dvbt_convolutional_interleaver Convolutional Interleaver */
+/*! \defgroup block_dtv_dvbt_demap DVB-T Demap */
+/*! \defgroup block_dtv_dvbt_demod_reference_signals Demod Reference Signals */
+/*! \defgroup block_dtv_dvbt_energy_descramble Energy Descramble */
+/*! \defgroup block_dtv_dvbt_energy_dispersal Energy Dispersal */
+/*! \defgroup block_dtv_dvbt_inner_coder Inner Coder */
+/*! \defgroup block_dtv_dvbt_map DVB-T Map */
+/*! \defgroup block_dtv_dvbt_ofdm_sym_acquisition OFDM Symbol Acquisition */
+/*! \defgroup block_dtv_dvbt_reed_solomon_dec Reed-Solomon Decoder */
+/*! \defgroup block_dtv_dvbt_reed_solomon_enc Reed-Solomon Encoder */
+/*! \defgroup block_dtv_dvbt_reference_signals Reference Signals */
+/*! \defgroup block_dtv_dvbt_symbol_inner_interleaver Symbol Inner Interleaver */
+/*! \defgroup block_dtv_dvbt_viterbi_decoder Viterbi Decoder */
+
+/*! @} */
+
+
+/*! @} */
+
+/*! \defgroup blocks_error_coding Error Coding
+ * @{
+ */
+
+/*! \defgroup block_fec_async_decoder FEC Async Decoder */
+/*! \defgroup block_fec_async_encoder FEC Async Encoder */
+/*! \defgroup block_fec_ber BER */
+/*! \defgroup block_fec_bercurve_generator BER Curve Gen. */
+/*! \defgroup block_fec_encode_ccsds_27 Encode CCSDS 27 */
+/*! \defgroup block_fec_decode_ccsds_27 Decode CCSDS 27 */
+/*! \defgroup block_fec_generic_decoder FEC Decoder */
+/*! \defgroup block_fec_depuncture Depuncture */
+/*! \defgroup block_fec_generic_encoder FEC Encoder */
+/*! \defgroup block_fec_extended_async_encoder FEC Extended Async Encoder */
+/*! \defgroup block_fec_extended_decoder FEC Extended Decoder */
+/*! \defgroup block_fec_extended_encoder FEC Extended Encoder */
+/*! \defgroup block_fec_extended_tagged_decoder FEC Extended Tagged Decoder */
+/*! \defgroup block_fec_extended_tagged_encoder FEC Extended Tagged Encoder */
+/*! \defgroup block_fec_puncture Puncture */
+/*! \defgroup block_fec_tagged_decoder FEC Tagged Decoder */
+/*! \defgroup block_fec_tagged_encoder FEC Tagged Encoder */
+/*! \defgroup blocks_decoders Decoders
+ * @{
+ */
+
+/*! \defgroup block_variable_ldpc_decoder_def LDPC Decoder Definition */
+/*! \defgroup block_variable_tpc_decoder_def TPC Decoder Definition */
+/*! \defgroup block_variable_cc_decoder_def CC Decoder Definition */
+/*! \defgroup block_variable_dummy_decoder_def Dummy Decoder Definition */
+/*! \defgroup block_variable_ldpc_bit_flip_decoder_def LDPC Bit Flip Decoder Definition */
+/*! \defgroup block_variable_polar_decoder_sc_def POLAR Decoder SC Definition */
+/*! \defgroup block_variable_polar_decoder_sc_list_def POLAR Decoder SC List Definition */
+/*! \defgroup block_variable_polar_decoder_sc_systematic_def systematic POLAR Decoder SC Definition */
+/*! \defgroup block_variable_repetition_decoder_def Repetition Decoder Definition */
+
+/*! @} */
+
+/*! \defgroup blocks_encoders Encoders
+ * @{
+ */
+
+/*! \defgroup block_variable_ldpc_encoder_def LDPC Encoder Definition */
+/*! \defgroup block_variable_tpc_encoder_def TPC Encoder Definition */
+/*! \defgroup block_variable_cc_encoder_def CC Encoder Definition */
+/*! \defgroup block_variable_ccsds_encoder_def CCSDS Encoder Definition */
+/*! \defgroup block_variable_dummy_encoder_def Dummy Encoder Definition */
+/*! \defgroup block_variable_ldpc_encoder_G_def LDPC Encoder Definition (via Generator) */
+/*! \defgroup block_variable_ldpc_encoder_H_def LDPC Encoder Definition (via Parity Check) */
+/*! \defgroup block_variable_polar_encoder_def POLAR Encoder Definition */
+/*! \defgroup block_variable_polar_encoder_systematic_def systematic POLAR Encoder Definition */
+/*! \defgroup block_variable_repetition_encoder_def Repetition Encoder Definition */
+
+/*! @} */
+
+/*! \defgroup block_variable_ldpc_G_matrix_def LDPC Generator Matrix */
+/*! \defgroup block_variable_ldpc_H_matrix_def LDPC Parity Check Matrix */
+/*! \defgroup block_variable_polar_code_configurator POLAR code Configurator */
+
+/*! @} */
+
+/*! \defgroup blocks_fourier_analysis Fourier Analysis
+ * @{
+ */
+
+/*! \defgroup block_fft FFT */
+/*! \defgroup block_goertzel Goertzel */
+/*! \defgroup block_logpwrfft Log Power FFT */
+
+/*! @} */
+
+/*! \defgroup blocks_filters Filters
+ * @{
+ */
+
+/*! \defgroup block_band_pass_filter Band Pass Filter */
+/*! \defgroup block_band_reject_filter Band Reject Filter */
+/*! \defgroup block_dc_blocker DC Blocker */
+/*! \defgroup block_fft_filter FFT Filter */
+/*! \defgroup block_filter_fft_low_pass_filter FFT Low Pass Filter */
+/*! \defgroup block_filter_fft_rrc_filter FFT Root Raised Cosine Filter */
+/*! \defgroup block_filter_delay Filter Delay */
+/*! \defgroup block_filterbank_vcvcf Generic Filterbank */
+/*! \defgroup block_fir_filter Decimating FIR Filter */
+/*! \defgroup block_high_pass_filter High Pass Filter */
+/*! \defgroup block_hilbert Hilbert */
+/*! \defgroup block_iir_filter IIR Filter */
+/*! \defgroup block_interp_fir_filter Interpolating FIR Filter */
+/*! \defgroup block_low_pass_filter Low Pass Filter */
+/*! \defgroup block_root_raised_cosine_filter Root Raised Cosine Filter */
+/*! \defgroup block_single_pole_iir_filter Single Pole IIR Filter */
+/*! \defgroup block_variable_band_pass_filter_taps Band-pass Filter Taps */
+/*! \defgroup block_variable_band_reject_filter_taps Band-reject Filter Taps */
+/*! \defgroup block_variable_file_filter_taps Filter Taps Loader */
+/*! \defgroup block_variable_high_pass_filter_taps High-pass Filter Taps */
+/*! \defgroup block_variable_low_pass_filter_taps Low-pass Filter Taps */
+/*! \defgroup block_variable_rrc_filter_taps RRC Filter Taps */
+
+/*! @} */
+
+/*! \defgroup blocks_channelizers Channelizers
+ * @{
+ */
+
+/*! \defgroup block_freq_xlating_fft_filter Frequency Xlating FFT Filter */
+/*! \defgroup block_freq_xlating_fir_filter Frequency Xlating FIR Filter */
+/*! \defgroup block_pfb_channelizer Polyphase Channelizer */
+/*! \defgroup block_pfb_channelizer_hier Hierarchical Polyphase Channelizer */
+/*! \defgroup block_pfb_decimator Polyphase Decimator */
+/*! \defgroup block_pfb_interpolator Polyphase Interpolator */
+/*! \defgroup block_pfb_synthesizer Polyphase Synthesizer */
+
+/*! @} */
+
+/*! \defgroup blocks_resamplers Resamplers
+ * @{
+ */
+
+/*! \defgroup block_ival_decimator Interleaved Stream Decimator */
+/*! \defgroup block_mmse_resampler Fractional Resampler */
+/*! \defgroup block_pfb_arb_resampler Polyphase Arbitrary Resampler */
+/*! \defgroup block_rational_resampler Rational Resampler */
+
+/*! @} */
+
+/*! \defgroup blocks_industrial_i_o Industrial I/O
+ * @{
+ */
+
+/*! \defgroup blocks_generic Generic
+ * @{
+ */
+
+/*! \defgroup block_iio_attr_sink IIO Attribute Sink */
+/*! \defgroup block_iio_attr_source IIO Attribute Source */
+/*! \defgroup block_iio_attr_updater IIO Attribute Updater */
+/*! \defgroup block_iio_dds_control DDS Control */
+/*! \defgroup block_iio_device_sink IIO Device Sink */
+/*! \defgroup block_iio_device_source IIO Device Source */
+
+/*! @} */
+
+/*! \defgroup blocks_fmcomms FMComms
+ * @{
+ */
+
+/*! \defgroup block_iio_fmcomms2_sink FMComms2/3/4 Sink */
+/*! \defgroup block_iio_fmcomms2_source FMComms2/3/4 Source */
+
+/*! @} */
+
+/*! \defgroup blocks_plutosdr PlutoSDR
+ * @{
+ */
+
+/*! \defgroup block_iio_pluto_sink PlutoSDR Sink */
+/*! \defgroup block_iio_pluto_source PlutoSDR Source */
+
+/*! @} */
+
+
+/*! @} */
+
+/*! \defgroup blocks_networking_tools Networking Tools
+ * @{
+ */
+
+/*! \defgroup block_network_socket_pdu Socket PDU */
+/*! \defgroup block_network_tcp_sink TCP Sink */
+/*! \defgroup block_network_tcp_source TCP Source */
+/*! \defgroup block_network_tuntap_pdu TUNTAP PDU */
+/*! \defgroup block_network_udp_sink UDP Sink */
+/*! \defgroup block_network_udp_source UDP Source */
+
+/*! @} */
+
+/*! \defgroup blocks_pdu_tools PDU Tools
+ * @{
+ */
+
+/*! \defgroup block_pdu_add_system_time Add System Time */
+/*! \defgroup block_pdu_pdu_filter PDU Filter */
+/*! \defgroup block_pdu_pdu_lambda PDU Lambda */
+/*! \defgroup block_pdu_pdu_remove PDU Remove */
+/*! \defgroup block_pdu_pdu_set PDU Set */
+/*! \defgroup block_pdu_pdu_split PDU Split */
+/*! \defgroup block_pdu_pdu_to_stream PDU To Stream */
+/*! \defgroup block_pdu_pdu_to_tagged_stream PDU to Tagged Stream */
+/*! \defgroup block_pdu_random_pdu Random PDU Generator */
+/*! \defgroup block_pdu_tagged_stream_to_pdu Tagged Stream to PDU */
+/*! \defgroup block_pdu_tags_to_pdu Tags To PDU */
+/*! \defgroup block_pdu_take_skip_to_pdu Take/Skip To PDU */
+/*! \defgroup block_pdu_time_delta Time Delta */
+
+/*! @} */
+
+/*! \defgroup blocks_gui_widgets GUI Widgets
+ * @{
+ */
+
+/*! \defgroup blocks_qt QT
+ * @{
+ */
+
+/*! \defgroup block_qtgui_grbackground QT GUI App Background */
+/*! \defgroup block_qtgui_auto_correlator_sink QT GUI Fast Auto-Correlator Sink */
+/*! \defgroup block_variable_qtgui_azelplot QT GUI Az-El Plot */
+/*! \defgroup block_variable_qtgui_check_box QT GUI Check Box */
+/*! \defgroup block_variable_qtgui_chooser QT GUI Chooser */
+/*! \defgroup block_qtgui_compass QT GUI Compass */
+/*! \defgroup block_variable_qtgui_dial_control QT GUI Dial */
+/*! \defgroup block_qtgui_dialgauge QT GUI Dial Gauge */
+/*! \defgroup block_variable_qtgui_distanceradar QT GUI Distance Radar */
+/*! \defgroup block_qtgui_edit_box_msg QT GUI Message Edit Box */
+/*! \defgroup block_variable_qtgui_entry QT GUI Entry */
+/*! \defgroup block_qtgui_fosphorgl_sink QT GUI Fosphor GL Sink */
+/*! \defgroup block_qtgui_graphicitem QT GUI Graphic Item */
+/*! \defgroup block_qtgui_graphicoverlay QT GUI Graphic Overlay Sample Source */
+/*! \defgroup block_variable_qtgui_label QT GUI Label */
+/*! \defgroup block_qtgui_ledindicator QT GUI LED Indicator */
+/*! \defgroup block_qtgui_levelgauge QT GUI Level Gauge */
+/*! \defgroup block_variable_qtgui_msgcheckbox QT GUI Msg CheckBox */
+/*! \defgroup block_qtgui_msgdigitalnumbercontrol QT GUI Digital Number Control */
+/*! \defgroup block_variable_qtgui_msg_push_button QT GUI Msg Push Button */
+/*! \defgroup block_variable_qtgui_push_button QT GUI Push Button */
+/*! \defgroup block_variable_qtgui_range QT GUI Range */
+/*! \defgroup block_qtgui_rfnoc_f15_display QT GUI RFNoC Fosphor Display (Byte Vector) */
+/*! \defgroup block_qtgui_tab_widget QT GUI Tab Widget */
+/*! \defgroup block_variable_qtgui_toggle_button_msg QT GUI Toggle Button */
+/*! \defgroup block_variable_qtgui_toggle_switch QT GUI Toggle Switch */
+
+/*! @} */
+
+
+/*! @} */
+
+/*! \defgroup blocks_instrumentation Instrumentation
+ * @{
+ */
+
+/*! \defgroup blocks_qt QT
+ * @{
+ */
+
+/*! \defgroup block_qtgui_bercurve_sink QT GUI Bercurve Sink */
+/*! \defgroup block_qtgui_const_sink QT GUI Constellation Sink */
+/*! \defgroup block_qtgui_eye_sink QT GUI Eye Sink */
+/*! \defgroup block_qtgui_freq_sink QT GUI Frequency Sink */
+/*! \defgroup block_qtgui_histogram_sink QT GUI Histogram Sink */
+/*! \defgroup block_qtgui_matrix_sink QT GUI Matrix Sink */
+/*! \defgroup block_qtgui_number_sink QT GUI Number Sink */
+/*! \defgroup block_qtgui_sink QT GUI Sink */
+/*! \defgroup block_qtgui_time_raster_sink QT GUI Time Raster Sink */
+/*! \defgroup block_qtgui_time_sink QT GUI Time Sink */
+/*! \defgroup block_qtgui_vector_sink QT GUI Vector Sink */
+/*! \defgroup block_qtgui_waterfall_sink QT GUI Waterfall Sink */
+
+/*! @} */
+
+
+/*! @} */
+
+/*! \defgroup blocks_soapy Soapy
+ * @{
+ */
+
+/*! \defgroup blocks_source Source
+ * @{
+ */
+
+/*! \defgroup block_soapy_airspyhf_source Soapy AirspyHF Source */
+/*! \defgroup block_soapy_bladerf_source Soapy BladeRF Source */
+/*! \defgroup block_soapy_custom_source Soapy Custom Source */
+/*! \defgroup block_soapy_hackrf_source Soapy HackRF Source */
+/*! \defgroup block_soapy_limesdr_source Soapy LimeSDR Source */
+/*! \defgroup block_soapy_plutosdr_source Soapy PLUTO Source */
+/*! \defgroup block_soapy_rtlsdr_source Soapy RTLSDR Source */
+/*! \defgroup block_soapy_sdrplay_source Soapy SDRPlay Source */
+
+/*! @} */
+
+/*! \defgroup blocks_sink Sink
+ * @{
+ */
+
+/*! \defgroup block_soapy_bladerf_sink Soapy BladeRF Sink */
+/*! \defgroup block_soapy_custom_sink Soapy Custom Sink */
+/*! \defgroup block_soapy_hackrf_sink Soapy HackRF Sink */
+/*! \defgroup block_soapy_limesdr_sink Soapy LimeSDR Sink */
+/*! \defgroup block_soapy_plutosdr_sink Soapy PLUTO Sink */
+
+/*! @} */
+
+/*! \defgroup blocks_deprecated Deprecated
+ * @{
+ */
+
+/*! \defgroup block_soapy_sink Soapy Sink */
+/*! \defgroup block_soapy_source Soapy Source */
+
+/*! @} */
+
+
+/*! @} */
+
+/*! \defgroup blocks_trellis_coding Trellis Coding
+ * @{
+ */
+
+/*! \defgroup block_trellis_encoder Trellis Encoder */
+/*! \defgroup block_trellis_metrics Trellis Metrics */
+/*! \defgroup block_trellis_pccc_decoder_combined PCCC Decoder Combo */
+/*! \defgroup block_trellis_pccc_decoder PCCC Decoder */
+/*! \defgroup block_trellis_pccc_encoder PCCC Encoder */
+/*! \defgroup block_trellis_permutation Trellis Permutation */
+/*! \defgroup block_trellis_sccc_decoder_combined SCCC Decoder Combo */
+/*! \defgroup block_trellis_sccc_decoder SCCC Decoder */
+/*! \defgroup block_trellis_sccc_encoder SCCC Encoder */
+/*! \defgroup block_trellis_siso_combined SISO Combo */
+/*! \defgroup block_trellis_siso SISO */
+/*! \defgroup block_trellis_viterbi_combined Viterbi Combo */
+/*! \defgroup block_trellis_viterbi Viterbi */
+
+/*! @} */
+
+/*! \defgroup blocks_uhd UHD
+ * @{
+ */
+
+/*! \defgroup block_uhd_amsg_source UHD: USRP Async Msg Source */
+/*! \defgroup blocks_rfnoc_image_builder RFNoC Image Builder
+ * @{
+ */
+
+/*! \defgroup blocks_blocks Blocks
+ * @{
+ */
+
+/*! \defgroup block_uhd_fpga_ddc DDC */
+/*! \defgroup block_uhd_fpga_duc DUC */
+/*! \defgroup block_uhd_fpga_fft FFT */
+
+/*! @} */
+
+/*! \defgroup blocks_core Core
+ * @{
+ */
+
+/*! \defgroup block_uhd_fpga_radio Radio */
+/*! \defgroup block_uhd_fpga_sep Stream Endpoint */
+/*! \defgroup block_uhd_fpga_x310 X310 Device */
+
+/*! @} */
+
+
+/*! @} */
+
+/*! \defgroup blocks_rfnoc RFNoC
+ * @{
+ */
+
+/*! \defgroup blocks_blocks Blocks
+ * @{
+ */
+
+/*! \defgroup block_uhd_msg_push_button Replay Msg Push Button */
+/*! \defgroup block_uhd_rfnoc_addsub RFNoC Fast Add-Subtract Block */
+/*! \defgroup block_uhd_rfnoc_ddc RFNoC Digital Downconverter Block */
+/*! \defgroup block_uhd_rfnoc_duc RFNoC Digital Upconverter Block */
+/*! \defgroup block_uhd_rfnoc_fft RFNoC Fast Fourier Transform (FFT) Block */
+/*! \defgroup block_uhd_rfnoc_fir_filter RFNoC FIR Filter Block */
+/*! \defgroup block_uhd_rfnoc_fosphor RFNoC Fosphor Block */
+/*! \defgroup block_uhd_rfnoc_keep_one_in_n RFNoC Keep One in N Block */
+/*! \defgroup block_uhd_rfnoc_logpwr RFNoC Log-Power Block */
+/*! \defgroup block_uhd_rfnoc_moving_avg RFNoC Moving Average Block */
+/*! \defgroup block_uhd_rfnoc_null_src_sink RFNoC Null Source Sink Block */
+/*! \defgroup block_uhd_rfnoc_replay RFNoC Replay Block */
+/*! \defgroup block_uhd_rfnoc_rx_radio RFNoC RX Radio */
+/*! \defgroup block_uhd_rfnoc_rx_streamer RFNoC Rx Streamer */
+/*! \defgroup block_uhd_rfnoc_siggen RFNoC SigGen Block */
+/*! \defgroup block_uhd_rfnoc_split_stream RFNoC Split Stream Block */
+/*! \defgroup block_uhd_rfnoc_switchboard RFNoC Switchboard Block */
+/*! \defgroup block_uhd_rfnoc_tx_radio RFNoC TX Radio */
+/*! \defgroup block_uhd_rfnoc_tx_streamer RFNoC Tx Streamer */
+/*! \defgroup block_uhd_rfnoc_vector_iir RFNoC Vector IIR Block */
+/*! \defgroup block_uhd_rfnoc_window RFNoC Window Block */
+
+/*! @} */
+
+/*! \defgroup blocks_device_control Device Control
+ * @{
+ */
+
+/*! \defgroup block_uhd_rfnoc_graph RFNoC Graph (Device) */
+
+/*! @} */
+
+
+/*! @} */
+
+/*! \defgroup block_uhd_usrp_sink UHD: USRP Sink */
+/*! \defgroup block_uhd_usrp_source UHD: USRP Source */
+
+/*! @} */
+
+/*! \defgroup blocks_video Video
+ * @{
+ */
+
+/*! \defgroup block_video_sdl_sink Video SDL Sink */
+
+/*! @} */
+
+/*! \defgroup blocks_zeromq_interfaces ZeroMQ Interfaces
+ * @{
+ */
+
+/*! \defgroup block_zeromq_pub_msg_sink ZMQ PUB Message Sink */
+/*! \defgroup block_zeromq_pub_sink ZMQ PUB Sink */
+/*! \defgroup block_zeromq_pull_msg_source ZMQ PULL Message Source */
+/*! \defgroup block_zeromq_pull_source ZMQ PULL Source */
+/*! \defgroup block_zeromq_push_msg_sink ZMQ PUSH Message Sink */
+/*! \defgroup block_zeromq_push_sink ZMQ PUSH Sink */
+/*! \defgroup block_zeromq_rep_msg_sink ZMQ REP Message Sink */
+/*! \defgroup block_zeromq_rep_sink ZMQ REP Sink */
+/*! \defgroup block_zeromq_req_msg_source ZMQ REQ Message Source */
+/*! \defgroup block_zeromq_req_source ZMQ REQ Source */
+/*! \defgroup block_zeromq_sub_msg_source ZMQ SUB Message Source */
+/*! \defgroup block_zeromq_sub_source ZMQ SUB Source */
+
+/*! @} */
+
+
+/*! @} */

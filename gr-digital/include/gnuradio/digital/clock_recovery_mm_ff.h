@@ -20,8 +20,8 @@ namespace digital {
 /*!
  * \brief Mueller and Müller (M&M) based clock recovery block with float input, float
  * output.
- * \ingroup synchronizers_blk
- * \ingroup deprecated_blk
+ * \ingroup block_digital_clock_recovery_mm
+ * \ingroup block_digital_clock_recovery_mm
  *
  * \details
  * This implements the Mueller and Müller (M&M) discrete-time

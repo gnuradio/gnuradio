@@ -36,7 +36,7 @@ Q_DECLARE_METATYPE(QColorList)
 
 /*!
  * \brief QWidget base plot to build QTGUI plotting tools.
- * \ingroup qtgui_blk
+ * \ingroup block_qtgui_DisplayPlot
  */
 class DisplayPlot : public QwtPlot
 {

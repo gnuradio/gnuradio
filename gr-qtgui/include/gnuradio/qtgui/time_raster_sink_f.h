@@ -22,8 +22,8 @@ namespace qtgui {
 /*!
  * \brief A graphical sink to display multiple signals on a
  * time_raster plot.
- * \ingroup instrumentation_blk
- * \ingroup qtgui_blk
+ * \ingroup block_qtgui_time_raster_sink
+ * \ingroup block_qtgui_time_raster_sink
  *
  * \details
  * This is a QT-based graphical sink that takes set of a floating

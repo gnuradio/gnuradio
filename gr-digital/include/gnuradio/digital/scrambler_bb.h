@@ -19,7 +19,7 @@ namespace digital {
 
 /*!
  * \brief Scramble an input stream using an LFSR.
- * \ingroup coding_blk
+ * \ingroup block_digital_scrambler
  *
  * \details
  * This block works on the LSB only of the input data stream,

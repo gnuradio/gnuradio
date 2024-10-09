@@ -19,7 +19,7 @@ namespace dtv {
 
 /*!
  * \brief ATSC "dewhiten" incoming mpeg transport stream packets
- * \ingroup dtv_atsc
+ * \ingroup block_dtv_atsc_derandomizer
  *
  * input: atsc_mpeg_packet_no_sync; output: atsc_mpeg_packet;
  */

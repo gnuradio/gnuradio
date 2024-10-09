@@ -19,7 +19,7 @@ namespace blocks {
 
 /*!
  * \brief Detect the peak of a signal
- * \ingroup peak_detectors_blk
+ * \ingroup block_blocks_peak_detector2
  *
  * \details
  * If a peak is detected, this block outputs a 1, or it outputs

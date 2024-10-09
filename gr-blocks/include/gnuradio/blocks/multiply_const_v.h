@@ -20,7 +20,7 @@ namespace blocks {
 
 /*!
  * \brief output = input * constant vector (element-wise)
- * \ingroup math_operators_blk
+ * \ingroup block_blocks_multiply_const_v
  */
 template <class T>
 class BLOCKS_API multiply_const_v : virtual public sync_block

@@ -19,7 +19,7 @@
 
 /*!
  * \brief QWidget for displaying time domain plots.
- * \ingroup qtgui_blk
+ * \ingroup block_qtgui_TimeDomainDisplayPlot
  */
 class TimeDomainDisplayPlot : public DisplayPlot
 {

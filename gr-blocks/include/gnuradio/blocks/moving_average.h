@@ -21,7 +21,7 @@ namespace blocks {
 
 /*!
  * \brief output is the moving sum of the last N samples, scaled by the scale factor
- * \ingroup level_controllers_blk
+ * \ingroup block_blocks_moving_average
  */
 template <class T>
 class BLOCKS_API moving_average : virtual public sync_block

@@ -18,7 +18,7 @@ namespace dtv {
 
 /*!
  * \brief <+description of block+>
- * \ingroup dtv
+ * \ingroup block_dtv_atsc_randomizer
  *
  */
 class DTV_API atsc_randomizer : virtual public gr::sync_block

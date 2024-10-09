@@ -19,7 +19,7 @@ namespace blocks {
 
 /*!
  * \brief complex in, magnitude squared out (float)
- * \ingroup type_converters_blk
+ * \ingroup block_blocks_complex_to_mag_squared
  *
  * \details
  * Calculates the magnitude squared of the complex samples:

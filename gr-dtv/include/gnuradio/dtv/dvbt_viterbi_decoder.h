@@ -19,7 +19,7 @@ namespace dtv {
 
 /*!
  * \brief DVB-T Viterbi decoder.
- * \ingroup dtv
+ * \ingroup block_dtv_dvbt_viterbi_decoder
  *
  * ETSI EN 300 744 Clause 4.3.3 \n
  * Mother convolutional code with rate 1/2. \n

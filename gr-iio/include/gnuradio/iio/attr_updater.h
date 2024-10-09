@@ -20,7 +20,7 @@ namespace iio {
 /*!
  * \brief Generic helper block to create message in a format that will be
  *        accepted by the IIO Attribute Sink Block
- * \ingroup iio
+ * \ingroup block_iio_attr_updater
  *
  * \details
  * This block is a simple but flexible message source which can be connected to

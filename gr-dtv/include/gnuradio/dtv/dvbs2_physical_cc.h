@@ -19,7 +19,7 @@ namespace dtv {
 
 /*!
  * \brief Signals DVB-S2 physical layer frames.
- * \ingroup dtv
+ * \ingroup block_dtv_dvbs2_physical
  *
  * Input: QPSK, 8PSK, 16APSK or 32APSK modulated complex IQ values (XFECFRAME). \n
  * Output: DVB-S2 PLFRAME.

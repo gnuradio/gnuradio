@@ -19,8 +19,8 @@ namespace pdu {
 
 /*!
  * \brief Propagates only pdus containing k=>v in meta
- * \ingroup message_tools_blk
- * \ingroup debug_tools_blk
+ * \ingroup block_pdu_pdu_filter
+ * \ingroup block_pdu_pdu_filter
  */
 class PDU_API pdu_filter : virtual public block
 {

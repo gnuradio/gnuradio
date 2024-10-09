@@ -18,7 +18,7 @@ namespace dtv {
 
 /*!
  * \brief Encodes a LDPC (Low-Density Parity-Check) FEC.
- * \ingroup dtv
+ * \ingroup block_dtv_dvb_ldpc
  *
  * Input: Variable length FEC baseband frames with appended BCH (BCHFEC). \n
  * Output: Normal, medium or short FEC baseband frames with appended LPDC (LDPCFEC).

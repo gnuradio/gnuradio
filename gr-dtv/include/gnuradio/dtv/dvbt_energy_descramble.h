@@ -17,7 +17,7 @@ namespace dtv {
 
 /*!
  * \brief Energy descramble
- * \ingroup dtv
+ * \ingroup block_dtv_dvbt_energy_descramble
  *
  * ETSI EN 300 744 - Clause 4.3.1. \n
  * Input - Randomized MPEG-2 transport packets. \n

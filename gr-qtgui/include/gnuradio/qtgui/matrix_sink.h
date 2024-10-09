@@ -20,8 +20,8 @@ namespace qtgui {
 
 /*!
  * \brief A graphical sink that displays a matrix.
- * \ingroup qtgui
- * \ingroup qtgui_blk
+ * \ingroup block_qtgui_matrix_sink
+ * \ingroup block_qtgui_matrix_sink
  *
  * \details
  * This block displays a matrix as a 2D plot. The matrix is

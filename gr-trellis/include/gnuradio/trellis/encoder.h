@@ -21,7 +21,7 @@ namespace trellis {
 
 /*!
  * \brief Convolutional encoder.
- * \ingroup trellis_coding_blk
+ * \ingroup block_trellis_encoder
  */
 template <class IN_T, class OUT_T>
 class TRELLIS_API encoder : virtual public sync_block

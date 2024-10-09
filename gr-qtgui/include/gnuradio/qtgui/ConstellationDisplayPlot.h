@@ -18,7 +18,7 @@
 
 /*!
  * \brief QWidget for displaying constellaton (I&Q) plots.
- * \ingroup qtgui_blk
+ * \ingroup block_qtgui_ConstellationDisplayPlot
  */
 class ConstellationDisplayPlot : public DisplayPlot
 {

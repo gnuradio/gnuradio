@@ -24,7 +24,7 @@ namespace kernel {
 
 /*!
  * \brief Fast FFT filter with float input, float output and float taps
- * \ingroup filter_blk
+ * \ingroup block_filter_fft_filter
  *
  * \details
  * This block performs fast convolution using the
@@ -137,7 +137,7 @@ public:
 
 /*!
  * \brief Fast FFT filter with gr_complex input, gr_complex output and gr_complex taps
- * \ingroup filter_blk
+ * \ingroup block_filter_fft_filter
  *
  * \details
  * This block performs fast convolution using the
@@ -250,7 +250,7 @@ public:
 
 /*!
  * \brief Fast FFT filter with gr_complex input, gr_complex output and float taps
- * \ingroup filter_blk
+ * \ingroup block_filter_fft_filter
  *
  * \details
  * This block performs fast convolution using the

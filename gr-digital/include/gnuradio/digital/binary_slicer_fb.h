@@ -19,7 +19,7 @@ namespace digital {
 
 /*!
  * \brief Slice float binary symbol producing 1 bit output
- * \ingroup symbol_coding_blk
+ * \ingroup block_digital_binary_slicer
  *
  * \details
  * \li input[0][n] < 0 --> 0

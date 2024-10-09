@@ -23,7 +23,7 @@ namespace code {
 /*!
  * \brief systematic POLAR encoder
  * for basic details see 'polar_common' class.
- * \ingroup error_coding_blk
+ * \ingroup block_fec_polar_encoder_systematic
  *
  * \details
  * expects values with MSB first. It needs a full information word and encodes it in one

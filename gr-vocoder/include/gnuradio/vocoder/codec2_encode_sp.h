@@ -20,7 +20,7 @@ namespace vocoder {
 
 /*!
  * \brief CODEC2 Vocoder Encoder
- * \ingroup audio_blk
+ * \ingroup block_vocoder_codec2_encode
  *
  * Input: Speech (audio) signal as 16-bit shorts, sampling rate 8 kHz.
  *

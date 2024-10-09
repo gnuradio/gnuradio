@@ -22,7 +22,7 @@ namespace iio {
 
 /*!
  * \brief Device specific source for FMComms evaluation cards
- * \ingroup iio
+ * \ingroup block_iio_fmcomms2_source
  *
  * \details
  * This block is a source specifically designed for FMComms2/3/4 evaluation

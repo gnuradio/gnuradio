@@ -18,7 +18,7 @@ namespace blocks {
 
 /*!
  * \brief Combines tagged streams.
- * \ingroup stream_operators_blk
+ * \ingroup block_blocks_tagged_stream_mux
  *
  * \details
  * Takes N streams as input. Each stream is tagged with packet lengths.

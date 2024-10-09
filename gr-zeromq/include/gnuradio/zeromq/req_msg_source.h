@@ -19,7 +19,7 @@ namespace zeromq {
 
 /*!
  * \brief Receive messages on ZMQ REQ socket output async messages
- * \ingroup zeromq
+ * \ingroup block_zeromq_req_msg_source
  *
  * \details
  * This block will connect to a ZMQ REP socket, then resend all

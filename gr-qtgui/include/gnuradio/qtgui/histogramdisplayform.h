@@ -20,7 +20,7 @@
 
 /*!
  * \brief DisplayForm child for managing histogram domain plots.
- * \ingroup qtgui_blk
+ * \ingroup block_qtgui_histogramdisplayform
  */
 class HistogramDisplayForm : public DisplayForm
 {

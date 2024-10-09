@@ -20,7 +20,7 @@ namespace vocoder {
 
 /*!
  * \brief CODEC2 Vocoder Decoder
- * \ingroup audio_blk
+ * \ingroup block_vocoder_codec2_decode
  *
  * Input: A vector of unpacked bits forming a Codec2 frame.
  *

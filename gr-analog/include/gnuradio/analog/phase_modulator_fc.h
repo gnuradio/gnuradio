@@ -19,7 +19,7 @@ namespace analog {
 
 /*!
  * \brief Phase modulator block
- * \ingroup modulators_blk
+ * \ingroup block_analog_phase_modulator
  *
  * \details
  * output = complex(cos(in*sensitivity), sin(in*sensitivity))

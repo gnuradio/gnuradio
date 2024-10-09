@@ -18,7 +18,7 @@ namespace dtv {
 
 /*!
  * \brief Cell and time interleaves QPSK/QAM modulated cells.
- * \ingroup dtv
+ * \ingroup block_dtv_dvbt2_cellinterleaver
  *
  * Input: QPSK, 16QAM, 64QAM or 256QAM modulated cells. \n
  * Output: Cell and time interleaved QPSK, 16QAM, 64QAM or 256QAM modulated cells.

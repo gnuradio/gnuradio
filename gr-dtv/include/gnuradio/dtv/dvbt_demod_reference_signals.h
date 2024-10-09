@@ -19,7 +19,7 @@ namespace dtv {
 
 /*!
  * \brief Reference signals demodulator.
- * \ingroup dtv
+ * \ingroup block_dtv_dvbt_demod_reference_signals
  *
  * ETSI EN 300 744 Clause 4.5 \n
  * Data input format: \n

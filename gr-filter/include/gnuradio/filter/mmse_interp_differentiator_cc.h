@@ -21,7 +21,7 @@ namespace filter {
 /*!
  * \brief Compute intermediate samples of the derivative of a signal
  * between signal samples x(k*Ts)
- * \ingroup filter_primitive
+ * \ingroup block_filter_mmse_interp_differentiator
  *
  * \details
  * This implements a Minimum Mean Squared Error interpolating

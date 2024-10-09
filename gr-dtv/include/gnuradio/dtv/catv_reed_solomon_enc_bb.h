@@ -17,7 +17,7 @@ namespace dtv {
 
 /*!
  * \brief Reed Solomon Encoder, t=3, (128,122), 7-bit symbols.
- * \ingroup dtv
+ * \ingroup block_dtv_catv_reed_solomon_enc
  *
  * Input: MPEG-2 bitstream packets of 122 7-bit symbols.\n
  * Output: MPEG-2 + RS parity bitstream packets of 128 7-bit symbols.

@@ -21,7 +21,7 @@ namespace blocks {
 
 /*!
  * \brief output[m] = input[m] & value for all M streams.
- * \ingroup boolean_operators_blk
+ * \ingroup block_blocks_and_const
  *
  * \details
  * Bitwise boolean AND of constant \p k with the data stream.

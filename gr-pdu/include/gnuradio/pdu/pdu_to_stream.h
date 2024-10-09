@@ -34,7 +34,7 @@ enum early_pdu_behavior_t {
  * style tx_time tag to the tx_sob sample causing transmission at a well
  * defined point in time.
  *
- * \ingroup pdu_utils
+ * \ingroup block_pdu_pdu_to_stream
  *
  */
 template <class T>

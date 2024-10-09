@@ -21,7 +21,7 @@ namespace blocks {
 
 /*!
  * \brief output = input or zero if muted.
- * \ingroup level_controllers_blk
+ * \ingroup block_blocks_mute
  */
 template <class T>
 class BLOCKS_API mute_blk : virtual public sync_block

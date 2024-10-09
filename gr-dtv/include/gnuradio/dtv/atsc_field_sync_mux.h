@@ -17,7 +17,7 @@ namespace dtv {
 
 /*!
  * \brief <+description of block+>
- * \ingroup dtv
+ * \ingroup block_dtv_atsc_field_sync_mux
  *
  */
 class DTV_API atsc_field_sync_mux : virtual public gr::block

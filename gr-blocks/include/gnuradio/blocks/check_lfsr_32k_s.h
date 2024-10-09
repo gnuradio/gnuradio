@@ -19,7 +19,7 @@ namespace blocks {
 
 /*!
  * \brief sink that checks if its input stream consists of a lfsr_32k sequence.
- * \ingroup misc_blk
+ * \ingroup block_blocks_check_lfsr_32k
  *
  * \details
  * This sink is typically used along with

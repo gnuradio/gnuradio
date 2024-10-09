@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(constellation_metrics_cf.h) */
-/* BINDTOOL_HEADER_FILE_HASH(d8c12ea63f1709f9a22696b10e739d94)                     */
+/* BINDTOOL_HEADER_FILE_HASH(c4a8a137677afc97d9ed78394f88b1d6)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>

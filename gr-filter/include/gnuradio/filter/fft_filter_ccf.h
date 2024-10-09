@@ -19,7 +19,7 @@ namespace filter {
 
 /*!
  * \brief Fast FFT filter with gr_complex input, gr_complex output and float taps
- * \ingroup filter_blk
+ * \ingroup block_filter_fft_filter
  *
  * \details
  * This block implements a complex decimating filter using the

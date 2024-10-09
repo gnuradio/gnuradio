@@ -20,7 +20,7 @@ namespace digital {
 
 /*!
  * \brief Measures EVM of incoming symbols relative to a constellation object
- * \ingroup equalizers
+ * \ingroup block_digital_meas_evm
  *
  */
 enum class evm_measurement_t { EVM_PERCENT = 0, EVM_DB = 1 };

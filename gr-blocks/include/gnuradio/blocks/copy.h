@@ -19,7 +19,7 @@ namespace blocks {
 
 /*!
  * \brief output[i] = input[i]
- * \ingroup misc_blk
+ * \ingroup block_blocks_copy
  *
  * \details
  * When enabled (default), this block copies its input to its

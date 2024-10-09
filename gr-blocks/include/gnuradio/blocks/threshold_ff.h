@@ -19,7 +19,7 @@ namespace blocks {
 
 /*!
  * \brief Output a 1 or zero based on a threshold value.
- * \ingroup level_controllers_blk
+ * \ingroup block_blocks_threshold
  *
  * \details
  * Test the incoming signal against a threshold. If the signal

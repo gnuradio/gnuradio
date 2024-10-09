@@ -19,7 +19,7 @@ namespace blocks {
 
 /*!
  * \brief This block to removes that center frequency IQ DC spike with an IIR filter.
- * \ingroup iq_correction
+ * \ingroup block_blocks_correctiq
  *
  */
 class BLOCKS_API correctiq : virtual public gr::sync_block

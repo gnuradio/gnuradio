@@ -19,7 +19,7 @@ namespace dtv {
 
 /*!
  * \brief Peak to Average Power Ratio (PAPR) reduction.
- * \ingroup dtv
+ * \ingroup block_dtv_dvbt2_paprtr
  *
  * Input: A T2 frame of OFDM symbols. \n
  * Output: A T2 frame of PAPR reduced OFDM symbols.

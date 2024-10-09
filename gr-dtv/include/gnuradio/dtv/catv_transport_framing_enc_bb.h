@@ -17,7 +17,7 @@ namespace dtv {
 
 /*!
  * \brief Transport Framing Encoder. Adds a parity checksum to MPEG-2 packets.
- * \ingroup dtv
+ * \ingroup block_dtv_catv_transport_framing_enc
  *
  * Input: MPEG-2 Transport Stream.\n
  * Output: MPEG-2 Transport Stream with parity checksum byte.

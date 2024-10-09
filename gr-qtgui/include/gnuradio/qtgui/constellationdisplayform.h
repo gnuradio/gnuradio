@@ -21,7 +21,7 @@
 
 /*!
  * \brief DisplayForm child for managing constellaton (I&Q) plots.
- * \ingroup qtgui_blk
+ * \ingroup block_qtgui_constellationdisplayform
  */
 class QTGUI_API ConstellationDisplayForm : public DisplayForm
 {

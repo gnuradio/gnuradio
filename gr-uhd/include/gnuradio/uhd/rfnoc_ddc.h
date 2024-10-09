@@ -17,7 +17,7 @@ namespace uhd {
 
 /*! RFNoC Digital Downconverter Block
  *
- * \ingroup uhd_blk
+ * \ingroup block_uhd_rfnoc_ddc
  */
 class GR_UHD_API rfnoc_ddc : virtual public rfnoc_block
 {

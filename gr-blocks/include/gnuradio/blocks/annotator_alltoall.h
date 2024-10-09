@@ -19,7 +19,7 @@ namespace blocks {
 
 /*!
  * \brief All-to-all stream annotator testing block. FOR TESTING PURPOSES ONLY.
- * \ingroup debug_tools_blk
+ * \ingroup block_blocks_annotator_alltoall
  *
  * \details
  * This block creates tags to be sent downstream every 10,000

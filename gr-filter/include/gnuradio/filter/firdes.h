@@ -22,7 +22,7 @@ namespace filter {
 
 /*!
  * \brief Finite Impulse Response (FIR) filter design functions.
- * \ingroup filter_design
+ * \ingroup block_filter_firdes
  */
 
 class FILTER_API firdes

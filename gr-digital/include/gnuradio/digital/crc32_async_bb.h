@@ -20,8 +20,8 @@ namespace digital {
 
 /*!
  * \brief Byte-stream CRC block for async messages
- * \ingroup packet_operators_blk
- * \ingroup deprecated_blk
+ * \ingroup block_digital_crc32_async
+ * \ingroup block_digital_crc32_async
  *
  * \details
  *

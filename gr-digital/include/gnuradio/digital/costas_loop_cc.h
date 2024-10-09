@@ -20,7 +20,7 @@ namespace digital {
 
 /*!
  * \brief A Costas loop carrier recovery module.
- * \ingroup synchronizers_blk
+ * \ingroup block_digital_costas_loop
  *
  * \details
  * The Costas loop locks to the center frequency of a signal and

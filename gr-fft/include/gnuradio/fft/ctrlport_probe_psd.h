@@ -19,8 +19,8 @@ namespace fft {
 
 /*!
  * \brief A ControlPort probe to export vectors of signals.
- * \ingroup measurement_tools_blk
- * \ingroup controlport_blk
+ * \ingroup block_fft_ctrlport_probe_psd
+ * \ingroup block_fft_ctrlport_probe_psd
  *
  * \details
  * This block acts as a sink in the flowgraph but also exports

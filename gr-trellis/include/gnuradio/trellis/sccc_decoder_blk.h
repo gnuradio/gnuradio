@@ -24,7 +24,7 @@ namespace gr {
 namespace trellis {
 
 /*!
- *  \ingroup trellis_coding_blk
+ *  \ingroup block_trellis_sccc_decoder
  */
 template <class T>
 class TRELLIS_API sccc_decoder_blk : virtual public block

@@ -23,7 +23,7 @@ namespace analog {
 
 /*!
  * \brief Random number source
- * \ingroup source_blk
+ * \ingroup block_analog_fastnoise_source
  *
  * \details
  * Generate random values from different distributions.

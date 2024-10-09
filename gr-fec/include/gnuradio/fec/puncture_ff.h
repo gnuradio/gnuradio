@@ -19,7 +19,7 @@ namespace fec {
 
 /*!
  * \brief Puncture a stream of floats.
- * \ingroup error_coding_blk
+ * \ingroup block_fec_puncture
  *
  * \details
  * For a given block of input samples of \p puncsize, the items

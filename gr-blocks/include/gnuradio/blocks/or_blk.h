@@ -20,7 +20,7 @@ namespace blocks {
 
 /*!
  * \brief output = input_0 | input_1 | , ... | input_N)
- * \ingroup boolean_operators_blk
+ * \ingroup block_blocks_or
  *
  * Bitwise boolean or across all input streams.
  */

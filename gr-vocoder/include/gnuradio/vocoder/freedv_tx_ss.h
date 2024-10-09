@@ -20,7 +20,7 @@ namespace vocoder {
 
 /*!
  * \brief FreeDV modulator
- * \ingroup audio_blk
+ * \ingroup block_vocoder_freedv_tx
  *
  * Input: Speech (audio) signal as 16-bit shorts.
  *

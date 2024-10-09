@@ -19,7 +19,7 @@ namespace dtv {
 
 /*!
  * \brief Encodes a BCH ((Bose, Chaudhuri, Hocquenghem) FEC.
- * \ingroup dtv
+ * \ingroup block_dtv_dvb_bch
  *
  * \details
  * Input: Variable length FEC baseband frames (BBFRAME). \n

@@ -21,7 +21,7 @@ namespace filter {
 
 /*!
  * \brief  single pole IIR filter with float input, float output
- * \ingroup filter_blk
+ * \ingroup block_filter_single_pole_iir_filter
  *
  * \details
  * The input and output satisfy a difference equation of the form

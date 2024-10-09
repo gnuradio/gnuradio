@@ -20,7 +20,7 @@ namespace analog {
 /*!
  * \brief high performance Automatic Gain Control class with
  * attack and decay rates.
- * \ingroup level_controllers_blk
+ * \ingroup block_analog_agc3
  *
  * \details
  * Unlike the AGC2 loop, this uses an initial linear calculation

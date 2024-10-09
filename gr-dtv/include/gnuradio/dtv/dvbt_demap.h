@@ -19,7 +19,7 @@ namespace dtv {
 
 /*!
  * \brief DVB-T demapper.
- * \ingroup dtv
+ * \ingroup block_dtv_dvbt_demap
  *
  * ETSI EN 300 744 Clause 4.3.5. \n
  * Data input format: \n

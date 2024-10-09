@@ -21,7 +21,7 @@ namespace digital {
 
 /*!
  * \brief Differential encoder: y[0] = (x[0] - x[-1]) % M
- * \ingroup symbol_coding_blk
+ * \ingroup block_digital_diff_decoder
  *
  * \details
  * Uses current and previous symbols and the alphabet modulus to

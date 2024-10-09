@@ -19,7 +19,7 @@ namespace analog {
 
 /*!
  * \brief basic squelch block; to be subclassed for other squelches.
- * \ingroup level_blk
+ * \ingroup block_analog_squelch_base
  */
 class ANALOG_API squelch_base_ff : virtual public block
 {

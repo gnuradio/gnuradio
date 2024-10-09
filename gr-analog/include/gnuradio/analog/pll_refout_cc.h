@@ -20,7 +20,7 @@ namespace analog {
 
 /*!
  * \brief Implements a PLL which locks to the input frequency and outputs a carrier
- * \ingroup synchronizers_blk
+ * \ingroup block_analog_pll_refout
  *
  * \details
  * Input stream 0: complex

@@ -20,7 +20,7 @@ namespace digital {
 
 /*!
  * \brief Decision Feedback Equalizer
- * \ingroup equalizers
+ * \ingroup block_digital_decision_feedback_equalizer
  *
  */
 class DIGITAL_API decision_feedback_equalizer : virtual public gr::sync_decimator

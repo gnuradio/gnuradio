@@ -19,6 +19,7 @@ namespace video_sdl {
 
 /*!
  * \brief video sink using SDL
+ * \ingroup block_video_sdl_sink
  *
  * input signature is one, two or three streams of signed short.
  * One stream: stream is grey (Y)

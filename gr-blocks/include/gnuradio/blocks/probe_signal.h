@@ -21,7 +21,7 @@ namespace blocks {
 
 /*!
  * \brief Sink that allows a sample to be grabbed from Python.
- * \ingroup measurement_tools_blk
+ * \ingroup block_blocks_probe_signal
  */
 template <class T>
 class BLOCKS_API probe_signal : virtual public sync_block

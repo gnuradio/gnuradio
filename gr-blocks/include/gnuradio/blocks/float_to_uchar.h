@@ -20,7 +20,7 @@ namespace blocks {
 
 /*!
  * \brief Convert stream of floats to a stream of unsigned chars
- * \ingroup type_converters_blk
+ * \ingroup block_blocks_float_to_uchar
  */
 class BLOCKS_API float_to_uchar : virtual public sync_block
 {

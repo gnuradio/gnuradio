@@ -22,7 +22,7 @@ namespace soapy {
 /*!
  * \addtogroup block
  * \brief <b>Sink</b> block implements SoapySDR functionality for RX.
- * \ingroup soapy
+ * \ingroup block_soapy_sink
  * \section sink Soapy Sink
  * The soapy sink block receives samples and writes to a stream.
  * The sink block also provides Soapy API calls for receiver settings.

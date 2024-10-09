@@ -21,7 +21,7 @@ namespace blocks {
 
 /*!
  * \brief Integrate successive samples and decimate
- * \ingroup math_operators_blk
+ * \ingroup block_blocks_integrate
  */
 template <class T>
 class BLOCKS_API integrate : virtual public sync_decimator

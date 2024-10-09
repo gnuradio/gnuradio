@@ -19,7 +19,7 @@ namespace fec {
 
 /*!
  * \brief BER block in FECAPI
- * \ingroup error_coding_blk
+ * \ingroup block_fec_ber
  *
  * \details
  *

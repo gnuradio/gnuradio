@@ -23,7 +23,7 @@
 
 /*!
  * \brief Base class for setting up and  managing QTGUI plot forms.
- * \ingroup qtgui_blk
+ * \ingroup block_qtgui_eyedisplaysform
  */
 class QTGUI_API EyeDisplaysForm : public QWidget
 {

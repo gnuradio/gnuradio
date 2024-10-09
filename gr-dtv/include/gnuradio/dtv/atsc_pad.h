@@ -17,7 +17,7 @@ namespace dtv {
 
 /*!
  * \brief <+description of block+>
- * \ingroup dtv
+ * \ingroup block_dtv_atsc_pad
  *
  */
 class DTV_API atsc_pad : virtual public gr::sync_decimator

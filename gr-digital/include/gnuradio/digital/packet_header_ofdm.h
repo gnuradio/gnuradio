@@ -19,7 +19,7 @@ namespace digital {
 
 /*!
  * \brief Header utility for OFDM signals.
- * \ingroup ofdm_blk
+ * \ingroup block_digital_packet_header_ofdm
  */
 class DIGITAL_API packet_header_ofdm : public packet_header_default
 {

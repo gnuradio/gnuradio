@@ -21,7 +21,7 @@ namespace blocks {
 
 /*!
  * \brief output = prod (input_0, input_1, ...)
- * \ingroup math_operators_blk
+ * \ingroup block_blocks_multiply
  *
  * \details
  * Multiply across all input streams.

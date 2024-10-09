@@ -19,7 +19,7 @@ namespace blocks {
 
 /*!
  * \brief two floats in (mag and phase), complex out
- * \ingroup type_converters_blk
+ * \ingroup block_blocks_magphase_to_complex
  */
 class BLOCKS_API magphase_to_complex : virtual public sync_block
 {

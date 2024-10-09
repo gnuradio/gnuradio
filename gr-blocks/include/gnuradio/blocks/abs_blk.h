@@ -21,7 +21,7 @@ namespace blocks {
 
 /*!
  * \brief output[m] = abs(input[m]) for all M streams.
- * \ingroup boolean_operators_blk
+ * \ingroup block_blocks_abs
  *
  * \details
  * absolute value of data stream (Strip sign)

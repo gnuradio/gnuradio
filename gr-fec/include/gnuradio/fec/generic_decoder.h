@@ -21,7 +21,7 @@ namespace fec {
 /*!
  * \brief Parent class for FECAPI objects.
  *
- * \ingroup error_coding_blk
+ * \ingroup block_fec_generic_decoder
  *
  * \details
  *
