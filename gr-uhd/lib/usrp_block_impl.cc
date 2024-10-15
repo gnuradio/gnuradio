@@ -9,10 +9,12 @@
  */
 
 #include "usrp_block_impl.h"
+#include "gnuradio/uhd/usrp_block.h"
 #include <chrono>
 #include <thread>
 
-using namespace gr::uhd;
+using gr::uhd::usrp_block;
+using gr::uhd::usrp_block_impl;
 using namespace std::chrono_literals;
 
 namespace {
