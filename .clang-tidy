@@ -3,6 +3,5 @@ Checks:          '-*,misc-throw-by-value-catch-by-reference,misc-static-assert,r
 # Not in here: modernize-use-emplace, since that basically broke all things it touched
 WarningsAsErrors: ''
 HeaderFilterRegex: '\.(cc|c|cpp|h|hpp)$'
-AnalyzeTemporaryDtors: false
 FormatStyle:     file
 
