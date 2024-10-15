@@ -13,7 +13,6 @@
 
 #include <gnuradio/digital/pfb_clock_sync_fff.h>
 
-using namespace gr::filter;
 
 namespace gr {
 namespace digital {
@@ -30,8 +29,8 @@ private:
 
     const int d_nfilters;
     int d_taps_per_filter;
-    std::vector<kernel::fir_filter_fff> d_filters;
-    std::vector<kernel::fir_filter_fff> d_diff_filters;
+    std::vector<filter::kernel::fir_filter_fff> d_filters;
+    std::vector<filter::kernel::fir_filter_fff> d_diff_filters;
     std::vector<std::vector<float>> d_taps;
     std::vector<std::vector<float>> d_dtaps;
     std::vector<float> d_updated_taps;
@@ -50,7 +49,7 @@ private:
 
     void set_taps(const std::vector<float>& taps,
                   std::vector<std::vector<float>>& ourtaps,
-                  std::vector<kernel::fir_filter_fff>& ourfilter);
+                  std::vector<filter::kernel::fir_filter_fff>& ourfilter);
 
 public:
     pfb_clock_sync_fff_impl(double sps,

@@ -25,8 +25,6 @@
 #include <QTabWidget>
 #include <QWidget>
 
-using namespace gr;
-
 class mywindow : public QWidget
 {
     Q_OBJECT
@@ -41,15 +39,15 @@ private:
     QWidget* qtgui_histogram_sink_win;
 
 #ifndef Q_MOC_RUN
-    top_block_sptr tb;
-    analog::sig_source_f::sptr src0;
-    analog::noise_source_f::sptr src1;
-    blocks::add_ff::sptr src;
-    blocks::throttle::sptr thr;
-    qtgui::time_sink_f::sptr tsnk;
-    qtgui::freq_sink_f::sptr fsnk;
-    qtgui::waterfall_sink_f::sptr wsnk;
-    qtgui::histogram_sink_f::sptr hsnk;
+    gr::top_block_sptr tb;
+    gr::analog::sig_source_f::sptr src0;
+    gr::analog::noise_source_f::sptr src1;
+    gr::blocks::add_ff::sptr src;
+    gr::blocks::throttle::sptr thr;
+    gr::qtgui::time_sink_f::sptr tsnk;
+    gr::qtgui::freq_sink_f::sptr fsnk;
+    gr::qtgui::waterfall_sink_f::sptr wsnk;
+    gr::qtgui::histogram_sink_f::sptr hsnk;
 #endif
 
 public slots:
