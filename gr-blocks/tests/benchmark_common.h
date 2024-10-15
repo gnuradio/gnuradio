@@ -27,7 +27,6 @@
 template <typename functor>
 [[nodiscard]] auto benchmark(functor test, size_t block_size)
 {
-    using namespace std::chrono;
     std::vector<float> outp(2 * block_size);
     float* output = outp.data();
     float *x = &output[0], *y = &output[block_size];
@@ -38,14 +37,16 @@ template <typename functor>
         value = rng() / static_cast<double>(1ULL << 32) - (1ULL << 32);
     }
 
-    auto before = high_resolution_clock::now();
+    auto before = std::chrono::high_resolution_clock::now();
     // do the actual work
 
     test(x, y);
 
-    auto after = high_resolution_clock::now();
+    auto after = std::chrono::high_resolution_clock::now();
     // get ending CPU usage
-    auto dur = duration_cast<duration<double, std::ratio<1, 1>>>(after - before);
+    auto dur =
+        std::chrono::duration_cast<std::chrono::duration<double, std::ratio<1, 1>>>(
+            after - before);
 
     // prevent the compiler from discarding the output, not doing the calculations.
     volatile auto sum = std::accumulate(outp.cbegin(), outp.cend(), 0.0f);
