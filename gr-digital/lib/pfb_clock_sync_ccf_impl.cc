@@ -12,7 +12,6 @@
 #include "config.h"
 #endif
 
-#include <algorithm>
 #include <cmath>
 #include <cstdio>
 
@@ -191,9 +190,10 @@ void pfb_clock_sync_ccf_impl::update_gains()
     d_beta = (4 * d_loop_bw * d_loop_bw) / denom;
 }
 
-void pfb_clock_sync_ccf_impl::set_taps(const std::vector<float>& newtaps,
-                                       std::vector<std::vector<float>>& ourtaps,
-                                       std::vector<kernel::fir_filter_ccf>& ourfilter)
+void pfb_clock_sync_ccf_impl::set_taps(
+    const std::vector<float>& newtaps,
+    std::vector<std::vector<float>>& ourtaps,
+    std::vector<filter::kernel::fir_filter_ccf>& ourfilter)
 {
     int i, j;
 
