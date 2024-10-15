@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - uses: DoozyX/clang-format-lint-action@v0.14
       with:
         source: '.'
@@ -26,7 +26,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - uses: quentinguidee/pep8-action@v1
       with:
         # -----------------------------------
@@ -43,7 +43,7 @@ jobs:
       volumes:
         - build_data:/build
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
       name: Checkout Project
     - name: CMake
       run: 'cd /build && cmake ${GITHUB_WORKSPACE}'
@@ -101,6 +101,7 @@ jobs:
             containeroptions: '--platform linux/i386'
             cxxflags: -Werror
             ctest_args: '-E "qa_polar_..coder_(sc_)?systematic"'
+            checkout_old: true
             # ldpath:
     name: ${{ matrix.distro }}
     container:
@@ -109,8 +110,16 @@ jobs:
         - build_data:/build
       options: --cpus 2 ${{ matrix.containeroptions }}
     steps:
-    - uses: actions/checkout@v1
-      name: Checkout Project
+    - name: Checkout Project (checkout@v4)
+      uses: actions/checkout@v4
+      if: ${{ ! matrix.checkout_old }}
+      with:
+        fetch-depth: 0 # Fetch the history. We might need to restrict that if it becomes time-consuming (probably not.)
+    - name: Checkout Project (legacy checkout@v1)
+      uses: actions/checkout@v1
+      if: ${{ matrix.checkout_old }}
+    - name: Add git repo to safe repos
+      run: git config --global --add safe.directory ${GITHUB_WORKSPACE}
     - name: CMake
       env:
         CXXFLAGS: ${{ matrix.cxxflags }}
@@ -154,7 +163,7 @@ jobs:
         - build_data:/build
       options: --cpus 2
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
       name: Checkout Project
     - name: CMake
       env:
