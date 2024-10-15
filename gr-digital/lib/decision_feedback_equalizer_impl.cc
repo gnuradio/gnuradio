@@ -19,7 +19,6 @@
 #include <algorithm>
 #include <memory>
 
-using namespace std;
 namespace gr {
 namespace digital {
 
@@ -63,8 +62,8 @@ decision_feedback_equalizer_impl::decision_feedback_equalizer_impl(
                                                                      sizeof(gr_complex)),
                                                                sizeof(unsigned short) }),
                          sps),
-      filter::kernel::fir_filter_ccc(
-          vector<gr_complex>(num_taps_forward + num_taps_feedback, gr_complex(0, 0))),
+      filter::kernel::fir_filter_ccc(std::vector<gr_complex>(
+          num_taps_forward + num_taps_feedback, gr_complex(0, 0))),
       d_num_taps_fwd(num_taps_forward),
       d_num_taps_rev(num_taps_feedback),
       d_sps(sps),
@@ -116,9 +115,9 @@ int decision_feedback_equalizer_impl::work(int noutput_items,
     }
 
     unsigned long int nread = nitems_read(0);
-    vector<tag_t> tags;
+    std::vector<tag_t> tags;
     get_tags_in_window(tags, 0, 0, noutput_items * decimation(), d_training_start_tag);
-    vector<unsigned int> training_start_samples(tags.size());
+    std::vector<unsigned int> training_start_samples(tags.size());
     unsigned int tag_index = 0;
     for (const auto& tag : tags) {
         training_start_samples[tag_index++] = tag.offset - nread;
@@ -146,14 +145,14 @@ int decision_feedback_equalizer_impl::work(int noutput_items,
                     state);
 }
 
-void decision_feedback_equalizer_impl::set_taps(const vector<gr_complex>& taps)
+void decision_feedback_equalizer_impl::set_taps(const std::vector<gr_complex>& taps)
 {
     gr::thread::scoped_lock guard(d_mutex);
     d_new_taps = taps;
     d_updated = true;
 }
 
-vector<gr_complex> decision_feedback_equalizer_impl::taps() const
+std::vector<gr_complex> decision_feedback_equalizer_impl::taps() const
 {
     gr::thread::scoped_lock guard(d_mutex);
     return d_taps;
