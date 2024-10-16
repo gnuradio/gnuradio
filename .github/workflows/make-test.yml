@@ -87,7 +87,7 @@ jobs:
           - distro: 'Fedora 40 (clang)'
             containerid: 'gnuradio/ci:fedora-40-3.10'
             cxxflags: -Werror
-            cmakeflags: -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_C_COMPILER=clang -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+            cmakeflags: -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_C_COMPILER=clang -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DENABLE_COMMON_PCH=Off
             ctest_args: '-E ""'
             ldpath: /usr/local/lib64 
             run_clang_tidy: true
