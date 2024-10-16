@@ -1,0 +1,86 @@
+id: variable_save_restore
+label: Variable Save Restore
+
+documentation: |-
+    Block to save and restore variable values
+    
+    Values are saved to ~/.config/gnuradio/FLOWGRAPH.variables.sav (replace FLOWGRAPH with actual flowgraph name).
+    
+    Slot is a string that can be used to save multiple sets of values, e.g. to quickly switch between configurations.
+    
+    Variables is a list or comma-separated string of flowgraph variable names to save and restore. Variables inside hier blocks can be addressed as "hier_block_id.variable_id".
+
+    Slot descr. var. is optionally the name of a special string variable which serves as editable label for the slot. It's value will be kept in sync with the selected slot *even before* variable values are restored. Use the name of a QT GUI Entry widget string variable here.   
+    
+    Saving and restoring can either be triggered by messages on the respective ports (message content is ignored), or by a dedicated variable on positive flank (e.g. if the value changes from 0 -> 1 or False -> True).
+    
+    For GUI values it is strongly recommended to use the following widgets, which will reflect an update of the value on the display:
+    - QT GUI Entry
+    - QT GUI Chooser
+    - QT GUI Check Box
+    
+    
+
+templates:
+  imports: from gnuradio import blocks
+  make: blocks.saveRestoreVariables(self, ${slot}, ${variables}, ${save_trigger}, ${restore_trigger}, ${description_variable})
+  callbacks:
+  - set_slot(${slot})
+  - set_variables(${variables})
+  - set_save_trigger(${save_trigger})
+  - set_restore_trigger(${restore_trigger})
+  
+
+parameters:
+- id: slot
+  label: Slot
+  dtype: string
+  default: "default"
+- id: description_variable
+  label: Slot descr. var.
+  dtype: raw
+  default: '""'
+- id: variables
+  label: Variables
+  dtype: _multiline
+  default: |
+    """
+    samp_rate,variable_1,
+    other_variable,
+    hier_block_1.my_var_0
+    """
+- id: show_msg_ports
+  label: Show msg ports
+  dtype: enum
+  default: "Yes"
+  options: ["Yes", "No"]
+  option_attributes:
+      show: [True, False]
+  hide: 'part'
+- id: save_trigger
+  label: Save trg
+  dtype: raw
+  default: '"variable_to_trigger_save"'
+  hide: ${'all' if show_msg_ports.show else 'part'}
+- id: restore_trigger
+  label: Restore trg
+  dtype: raw
+  default: '"variable_to_trigger_restore"'
+  hide: ${'all' if show_msg_ports.show else 'part'}
+
+inputs:
+- label: save
+  domain: message
+  id: save
+  optional: true
+  hide: ${not show_msg_ports.show}
+- label: restore
+  domain: message
+  id: restore
+  optional: true
+  hide: ${not show_msg_ports.show}
+
+
+#  'file_format' specifies the version of the GRC yml format used in the file
+#  and should usually not be changed.
+file_format: 1
