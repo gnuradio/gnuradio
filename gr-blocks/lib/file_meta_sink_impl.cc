@@ -41,6 +41,7 @@
 namespace gr {
 namespace blocks {
 
+using pmt::mp;
 
 file_meta_sink::sptr file_meta_sink::make(size_t itemsize,
                                           const std::string& filename,

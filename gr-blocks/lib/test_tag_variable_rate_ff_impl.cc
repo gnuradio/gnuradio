@@ -18,7 +18,6 @@
 #include <gnuradio/xoroshiro128p.h>
 #include <cstdint>
 
-using namespace pmt;
 
 namespace gr {
 namespace blocks {

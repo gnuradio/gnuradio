@@ -17,8 +17,6 @@
 #include <cstring>
 #include <stdexcept>
 
-using namespace pmt;
-
 namespace gr {
 namespace blocks {
 
@@ -39,7 +37,7 @@ annotator_raw_impl::annotator_raw_impl(size_t sizeof_stream_item)
 
 annotator_raw_impl::~annotator_raw_impl() {}
 
-void annotator_raw_impl::add_tag(uint64_t offset, pmt_t key, pmt_t val)
+void annotator_raw_impl::add_tag(uint64_t offset, pmt::pmt_t key, pmt::pmt_t val)
 {
     gr::thread::scoped_lock l(d_mutex);
 

@@ -14,8 +14,6 @@
 #include <gnuradio/digital/corr_est_cc.h>
 #include <gnuradio/filter/fft_filter.h>
 
-using namespace gr::filter;
-
 namespace gr {
 namespace digital {
 
@@ -27,7 +25,7 @@ private:
     const float d_sps;
     unsigned int d_mark_delay, d_stashed_mark_delay;
     float d_thresh, d_stashed_threshold;
-    kernel::fft_filter_ccc d_filter;
+    filter::kernel::fft_filter_ccc d_filter;
 
     volk::vector<gr_complex> d_corr;
     volk::vector<float> d_corr_mag;

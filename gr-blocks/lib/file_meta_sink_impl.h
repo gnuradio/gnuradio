@@ -14,7 +14,7 @@
 #include <gnuradio/blocks/file_meta_sink.h>
 #include <pmt/pmt.h>
 
-using namespace pmt;
+using pmt::pmt_t;
 
 namespace gr {
 namespace blocks {

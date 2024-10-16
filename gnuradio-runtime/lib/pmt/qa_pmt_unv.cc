@@ -13,7 +13,6 @@
 #include <pmt/pmt.h>
 #include <boost/test/unit_test.hpp>
 
-using namespace pmt;
 BOOST_AUTO_TEST_CASE(test_u8vector)
 {
     static const size_t N = 3;

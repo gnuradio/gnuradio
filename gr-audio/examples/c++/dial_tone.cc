@@ -29,8 +29,6 @@
 #include <gnuradio/audio/sink.h>
 #include <gnuradio/top_block.h>
 
-using namespace gr;
-
 int main(int argc, char** argv)
 {
     int rate = 48000; // Audio card sample rate
@@ -39,16 +37,16 @@ int main(int argc, char** argv)
     // Construct a top block that will contain flowgraph blocks.  Alternatively,
     // one may create a derived class from top_block and hold instantiated blocks
     // as member data for later manipulation.
-    top_block_sptr tb = make_top_block("dial_tone");
+    gr::top_block_sptr tb = gr::make_top_block("dial_tone");
 
     // Construct a real-valued signal source for each tone, at given sample rate
-    analog::sig_source_f::sptr src0 =
-        analog::sig_source_f::make(rate, analog::GR_SIN_WAVE, 350, ampl);
-    analog::sig_source_f::sptr src1 =
-        analog::sig_source_f::make(rate, analog::GR_SIN_WAVE, 440, ampl);
+    gr::analog::sig_source_f::sptr src0 =
+        gr::analog::sig_source_f::make(rate, gr::analog::GR_SIN_WAVE, 350, ampl);
+    gr::analog::sig_source_f::sptr src1 =
+        gr::analog::sig_source_f::make(rate, gr::analog::GR_SIN_WAVE, 440, ampl);
 
     // Construct an audio sink to accept audio tones
-    audio::sink::sptr sink = audio::sink::make(rate);
+    gr::audio::sink::sptr sink = gr::audio::sink::make(rate);
 
     // Connect output #0 of src0 to input #0 of sink (left channel)
     tb->connect(src0, 0, sink, 0);
