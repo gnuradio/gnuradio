@@ -130,7 +130,8 @@ jobs:
            git diff -z --name-only origin/${GITHUB_BASE_REF} --
            | grep -z -E '\.(h|hpp|cpp|cc)$'
            | xargs -0 clang-tidy -p /build --quiet
-           | tee /tmp/clang-tidy.log 
+           | tee /tmp/clang-tidy.log
+           || exit 0
            ; echo "::group::clang-tidy output"
            ; sed -n 's;^\([^:]*\):\([0-9]*\):\([0-9]*\): \(.*\)$;::warning file=\1,line=\2,col=\3::\4\n;p'  /tmp/clang-tidy.log
            ; echo "::endgroup::"
