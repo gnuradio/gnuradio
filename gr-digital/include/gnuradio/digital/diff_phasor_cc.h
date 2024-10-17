@@ -19,7 +19,7 @@ namespace digital {
 
 /*!
  * \brief Differential decoding based on phase change.
- * \ingroup symbol_coding_blk
+ * \ingroup block_digital_diff_phasor
  *
  * \details
  * Uses the phase difference between two symbols to determine the

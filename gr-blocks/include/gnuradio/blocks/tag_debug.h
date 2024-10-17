@@ -19,9 +19,9 @@ namespace blocks {
 
 /*!
  * \brief Bit bucket that prints out any tag received.
- * \ingroup measurement_tools_blk
- * \ingroup stream_tag_tools_blk
- * \ingroup debug_tools_blk
+ * \ingroup block_blocks_tag_debug
+ * \ingroup block_blocks_tag_debug
+ * \ingroup block_blocks_tag_debug
  *
  * \details
  * This block collects all tags sent to it on all input ports and

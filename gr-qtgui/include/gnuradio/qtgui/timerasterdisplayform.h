@@ -21,7 +21,7 @@
 
 /*!
  * \brief DisplayForm child for managing time raster plots.
- * \ingroup qtgui_blk
+ * \ingroup block_qtgui_timerasterdisplayform
  */
 class TimeRasterDisplayForm : public DisplayForm
 {

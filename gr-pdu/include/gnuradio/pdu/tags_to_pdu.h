@@ -19,7 +19,7 @@ namespace pdu {
 
 /*!
  * \brief Tags to PDU
- * \ingroup pdu_blk
+ * \ingroup block_pdu_tags_to_pdu
  *
  * This block will generate a PDU (of up to Max PDU Size) based on input
  * tags. No tag alignment in input buffer is necessary.

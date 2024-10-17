@@ -19,7 +19,7 @@ namespace blocks {
 
 /*!
  * \brief interleave N inputs into a single output
- * \ingroup stream_operators_blk
+ * \ingroup block_blocks_interleave
  *
  * \details
  *

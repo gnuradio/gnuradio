@@ -20,7 +20,7 @@ namespace analog {
 
 /*!
  * \brief gate or zero output when input power below threshold
- * \ingroup level_controllers_blk
+ * \ingroup block_analog_pwr_squelch
  */
 class ANALOG_API pwr_squelch_cc : public squelch_base_cc, virtual public block
 {

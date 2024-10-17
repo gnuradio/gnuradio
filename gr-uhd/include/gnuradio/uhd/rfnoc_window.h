@@ -17,7 +17,7 @@ namespace uhd {
 
 /*! RFNoC Window Block
  *
- * \ingroup uhd_blk
+ * \ingroup block_uhd_rfnoc_window
  */
 class GR_UHD_API rfnoc_window : virtual public rfnoc_block
 {

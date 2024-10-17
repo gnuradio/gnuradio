@@ -19,7 +19,7 @@ namespace blocks {
 
 /*!
  * \brief Converts a regular stream into a tagged stream.
- * \ingroup blocks
+ * \ingroup block_blocks_stream_to_tagged_stream
  *
  * All this block does is add length tags in regular intervals.
  * It can be used to connect a regular stream to a gr::tagged_stream_block.

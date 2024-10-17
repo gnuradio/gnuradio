@@ -24,7 +24,7 @@ namespace blocks {
  *
  * Unlike a gr::blocks::vector_sink_f, this only works with tagged streams.
  *
- * \ingroup blocks
+ * \ingroup block_blocks_tsb_vector_sink
  */
 template <class T>
 class BLOCKS_API tsb_vector_sink : virtual public gr::tagged_stream_block

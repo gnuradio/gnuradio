@@ -21,7 +21,7 @@ namespace filter {
 /*!
  * \brief Polyphase filterbank bandpass decimator with gr_complex
  *        input, gr_complex output and float taps
- * \ingroup channelizers_blk
+ * \ingroup block_filter_pfb_decimator
  *
  * \details
  * This block takes in a signal stream and performs integer down-

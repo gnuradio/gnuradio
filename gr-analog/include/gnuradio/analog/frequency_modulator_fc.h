@@ -19,7 +19,7 @@ namespace analog {
 
 /*!
  * \brief Frequency modulator block
- * \ingroup modulators_blk
+ * \ingroup block_analog_frequency_modulator
  *
  * \details
  * float input; complex baseband output

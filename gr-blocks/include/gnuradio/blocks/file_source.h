@@ -19,7 +19,7 @@ namespace blocks {
 
 /*!
  * \brief Read stream from file
- * \ingroup file_operators_blk
+ * \ingroup block_blocks_file_source
  */
 class BLOCKS_API file_source : virtual public sync_block
 {

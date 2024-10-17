@@ -19,7 +19,7 @@ namespace dtv {
 
 /*!
  * \brief Splits the stream for MISO (Multiple Input Single Output).
- * \ingroup dtv
+ * \ingroup block_dtv_dvbt2_miso
  *
  * Input: Frequency interleaved T2 frame. \n
  * Output1: Frequency interleaved T2 frame (copy of input). \n

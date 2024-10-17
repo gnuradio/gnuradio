@@ -17,7 +17,7 @@ namespace dtv {
 
 /*!
  * \brief Reed Solomon encoder
- * \ingroup dtv
+ * \ingroup block_dtv_dvbt_reed_solomon_enc
  *
  * ETSI EN 300 744 Clause 4.3.2 \n
  * RS(N=204,K=239,T=8).

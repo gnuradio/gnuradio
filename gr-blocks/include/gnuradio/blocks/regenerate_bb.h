@@ -19,7 +19,7 @@ namespace blocks {
 
 /*!
  * \brief Detect the peak of a signal and repeat every period samples
- * \ingroup stream_operators_blk
+ * \ingroup block_blocks_regenerate
  *
  * \details
  * If a peak is detected, this block outputs a 1 repeated every

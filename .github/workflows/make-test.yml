@@ -33,13 +33,12 @@ jobs:
         # UPDATE tox.ini when making changes!
         arguments: '--max-line-length=120 --ignore E265,E266,E275,E402,E501,E704,E712,E713,E714,E711,E721,E722,E741,W504,W605 --exclude *.yml.py'
         # -----------------------------------
-  # Doxygen gets built separately. It has a lot of output and its own weirdness.
-  doxygen:
-    name: Doxygen
+  docs:
+    name: Docs
     runs-on: ubuntu-latest # This can run on whatever
     timeout-minutes: 15
     container:
-      image: 'gnuradio/ci:ubuntu-20.04-3.9'
+      image: 'gnuradio/ci:ubuntu-22.04-3.9'
       volumes:
         - build_data:/build
     steps:
@@ -48,7 +47,7 @@ jobs:
     - name: CMake
       run: 'cd /build && cmake ${GITHUB_WORKSPACE}'
     - name: Make Docs
-      run: 'cd /build && make doxygen_target'
+      run: 'cd /build && make docs'
   linux-docker:
   # All of these shall depend on the formatting check (needs: check-formatting)
     needs: [check-formatting, check-python-formatting]

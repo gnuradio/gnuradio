@@ -19,7 +19,7 @@ namespace blocks {
 
 /*!
  * \brief Convert stream of items into their byte swapped version
- * \ingroup stream_operators_blk
+ * \ingroup block_blocks_endian_swap
  */
 class BLOCKS_API endian_swap : virtual public sync_block
 {

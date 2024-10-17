@@ -19,7 +19,7 @@ namespace digital {
 
 /*!
  * \brief Galois Linear Feedback Shift Register using specified polynomial mask
- * \ingroup waveform_generators_blk
+ * \ingroup block_digital_glfsr
  *
  * \details
  * Generates a maximal length pseudo-random sequence of length 2^degree-1

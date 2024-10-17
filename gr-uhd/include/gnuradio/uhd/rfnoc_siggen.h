@@ -17,7 +17,7 @@ namespace uhd {
 
 /*! RFNoC Signal Generator Block
  *
- * \ingroup uhd_blk
+ * \ingroup block_uhd_rfnoc_siggen
  */
 class GR_UHD_API rfnoc_siggen : virtual public rfnoc_block
 {

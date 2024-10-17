@@ -1,0 +1,14 @@
+lfsr_15_1_0
+===========
+
+C++
+---
+
+.. doxygenclass:: gr::blocks::lfsr_15_1_0
+   :members:
+
+Python
+------
+
+.. autoclass:: gnuradio.blocks.lfsr_15_1_0
+   :members:

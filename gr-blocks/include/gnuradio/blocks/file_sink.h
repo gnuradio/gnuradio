@@ -20,7 +20,7 @@ namespace blocks {
 
 /*!
  * \brief Write stream to file.
- * \ingroup file_operators_blk
+ * \ingroup block_blocks_file_sink
  */
 class BLOCKS_API file_sink : virtual public sync_block, virtual public file_sink_base
 {

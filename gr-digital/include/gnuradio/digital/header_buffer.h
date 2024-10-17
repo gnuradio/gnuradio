@@ -20,7 +20,7 @@ namespace digital {
 
 /*!
  * \brief Helper class for handling payload headers.
- * \ingroup packet_operators_blk
+ * \ingroup block_digital_header_buffer
  *
  * \details
  *

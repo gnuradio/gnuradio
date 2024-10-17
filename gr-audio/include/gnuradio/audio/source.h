@@ -19,7 +19,7 @@ namespace audio {
 
 /*!
  * \brief Creates a source from an audio device.
- * \ingroup audio_blk
+ * \ingroup block_audio_source
  */
 class GR_AUDIO_API source : virtual public sync_block
 {

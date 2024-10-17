@@ -21,7 +21,7 @@ namespace filter {
 /*!
  * \brief Filterbank with vector of gr_complex input,
  * vector of gr_complex output and float taps
- * \ingroup filter_blk
+ * \ingroup block_filter_filterbank_vcvcf
  *
  * \details
  * This block takes in complex vectors and outputs complex vectors of the same

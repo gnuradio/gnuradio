@@ -21,7 +21,7 @@ namespace wavelet {
 
 /*!
  * \brief computes the Wavelet Power Spectrum from a set of wavelet coefficients
- * \ingroup wavelet_blk
+ * \ingroup block_wavelet_wvps
  */
 class WAVELET_API wvps_ff : virtual public sync_block
 {

@@ -20,7 +20,7 @@ namespace blocks {
 
 /*!
  * \brief LFSR pseudo-random source with period of 2^15 bits (2^11 shorts)
- * \ingroup misc_blk
+ * \ingroup block_blocks_lfsr_32k_source
  *
  * \details
  * This source is typically used along with gr::blocks::check_lfsr_32k_s to

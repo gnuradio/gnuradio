@@ -20,7 +20,7 @@ namespace iio {
 
 /*!
  * \brief Generic reader for attributes of IIO devices
- * \ingroup iio
+ * \ingroup block_iio_attr_source
  *
  * \details
  * This block allow for reading of any IIO attribute that is readable. This

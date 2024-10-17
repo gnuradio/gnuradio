@@ -18,8 +18,8 @@ namespace pdu {
 
 /*!
  * \brief Compute system time differences and provide statistics upon completion.
- * \ingroup debug_tools_blk
- * \ingroup pdu_blk
+ * \ingroup block_pdu_time_delta
+ * \ingroup block_pdu_time_delta
  *
  * This block computes the difference between the current system time and a defined PDU
  * key previously added (e.g.: by by the add_system_time block). This is useful for

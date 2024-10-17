@@ -21,7 +21,7 @@ namespace analog {
 /*!
  * \brief Implements a PLL which locks to the input frequency and outputs the
  * input signal mixed with that carrier.
- * \ingroup synchronizers_blk
+ * \ingroup block_analog_pll_carriertracking
  *
  * \details
  * Input stream 0: complex

@@ -35,7 +35,7 @@ namespace code {
 
 /*!
  * \brief POLAR code common operations and attributes
- * \ingroup error_coding_blk
+ * \ingroup block_fec_polar_common
  *
  * \details
  * Polar codes are based on this paper by Erdal Arikan "Channel

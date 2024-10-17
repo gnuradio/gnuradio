@@ -18,7 +18,7 @@ namespace dtv {
 
 /*!
  * \brief <+description of block+>
- * \ingroup dtv
+ * \ingroup block_dtv_atsc_rs_encoder
  *
  */
 class DTV_API atsc_rs_encoder : virtual public gr::sync_block

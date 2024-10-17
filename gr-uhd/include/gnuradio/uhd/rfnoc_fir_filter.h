@@ -18,7 +18,7 @@ namespace uhd {
 
 /*! RFNoC FIR Filter Block
  *
- * \ingroup uhd_blk
+ * \ingroup block_uhd_rfnoc_fir_filter
  */
 class GR_UHD_API rfnoc_fir_filter : virtual public rfnoc_block
 {

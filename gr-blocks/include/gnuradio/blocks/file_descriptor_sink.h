@@ -19,7 +19,7 @@ namespace blocks {
 
 /*!
  * \brief Write stream to file descriptor.
- * \ingroup file_operators_blk
+ * \ingroup block_blocks_file_descriptor_sink
  */
 class BLOCKS_API file_descriptor_sink : virtual public sync_block
 {

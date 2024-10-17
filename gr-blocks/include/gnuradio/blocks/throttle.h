@@ -21,7 +21,7 @@ namespace blocks {
 /*!
  * \brief throttle flow of samples such that the average rate does
  * not exceed samples_per_sec.
- * \ingroup misc_blk
+ * \ingroup block_blocks_throttle
  *
  * \details
  * input: one stream of itemsize; output: one stream of itemsize

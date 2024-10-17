@@ -18,7 +18,7 @@ namespace dtv {
 
 /*!
  * \brief Symbol interleaver.
- * \ingroup dtv
+ * \ingroup block_dtv_dvbt_symbol_inner_interleaver
  *
  * ETSI EN 300 744 Clause 4.3.4.2 \n
  * One block is 12 groups x 126 datawords = 1512 datawords.

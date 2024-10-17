@@ -19,7 +19,7 @@ namespace filter {
 
 /*!
  * \brief  IIR filter with float input, float output and double taps
- * \ingroup filter_blk
+ * \ingroup block_filter_iir_filter_ffd
  *
  * \details
  * This filter uses the Direct Form I implementation, where

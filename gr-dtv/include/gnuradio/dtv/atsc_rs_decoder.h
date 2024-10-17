@@ -20,7 +20,7 @@ namespace dtv {
 /*!
  * \brief ATSC Receiver Reed-Solomon Decoder
  *
- * \ingroup dtv_atsc
+ * \ingroup block_dtv_atsc_rs_decoder
  */
 class DTV_API atsc_rs_decoder : virtual public gr::sync_block
 {

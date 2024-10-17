@@ -23,7 +23,7 @@ class FreqControlPanel;
 
 /*!
  * \brief DisplayForm child for managing frequency (PSD) plots.
- * \ingroup qtgui_blk
+ * \ingroup block_qtgui_freqdisplayform
  */
 class FreqDisplayForm : public DisplayForm
 {

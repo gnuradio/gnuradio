@@ -22,7 +22,7 @@ namespace code {
 
 /*!
  * \brief Repetition Decoding class.
- * \ingroup error_coding_blk
+ * \ingroup block_fec_repetition_decoder
  *
  * \details
  * A repetition decoder class. This takes a majority vote,

@@ -21,7 +21,7 @@ namespace blocks {
 
 /*!
  * \brief output = sum(input[0], input[1], ..., input[M-1])
- * \ingroup math_operators_blk
+ * \ingroup block_blocks_add
  *
  * \details
  * Add samples across all input streams. For all \f$n\f$ samples

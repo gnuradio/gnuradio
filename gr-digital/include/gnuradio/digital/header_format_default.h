@@ -21,7 +21,7 @@ namespace digital {
 
 /*!
  * \brief Default header formatter for PDU formatting.
- * \ingroup packet_operators_blk
+ * \ingroup block_digital_header_format_default
  *
  * \details
  * Used to handle the default packet header.

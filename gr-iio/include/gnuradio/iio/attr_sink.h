@@ -20,7 +20,7 @@ namespace iio {
 
 /*!
  * \brief Generic writer for attributes of IIO devices
- * \ingroup iio
+ * \ingroup block_iio_attr_sink
  *
  * \details
  * This block allow for updating of any IIO attribute that is writable. This

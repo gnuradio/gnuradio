@@ -21,7 +21,7 @@ namespace digital {
 
 /*!
  * \brief Calculates and appends a CRC to a PDU
- * \ingroup packet_operators_blk
+ * \ingroup block_digital_crc_append
  *
  * \details
  * The CRC append block receives a PDU, calculates the CRC of the PDU

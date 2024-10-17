@@ -19,7 +19,7 @@ namespace digital {
 
 /*!
  * \brief PN code sequential search correlator
- * \ingroup synchronizers_blk
+ * \ingroup block_digital_pn_correlator
  *
  * \details
  * Receives complex baseband signal, outputs complex correlation

@@ -29,7 +29,7 @@ class SpectrumDisplayForm;
 
 /*!
  * \brief QWidget class for controlling plotting.
- * \ingroup qtgui_blk
+ * \ingroup block_qtgui_SpectrumGUIClass
  */
 class SpectrumGUIClass
 {

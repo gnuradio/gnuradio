@@ -18,7 +18,7 @@ namespace dtv {
 
 /*!
  * \brief Bit interleaves DVB-T2 FEC baseband frames.
- * \ingroup dtv
+ * \ingroup block_dtv_dvbt2_interleaver
  *
  * Input: Normal or short FEC baseband frames with appended LPDC (LDPCFEC). \n
  * Output: Bit interleaved (with column twist and bit to cell word de-multiplexed) cells.

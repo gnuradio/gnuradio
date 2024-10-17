@@ -21,7 +21,7 @@ class TimeControlPanel;
 
 /*!
  * \brief DisplayForm child for managing time domain plots.
- * \ingroup qtgui_blk
+ * \ingroup block_qtgui_timedisplayform
  */
 class TimeDisplayForm : public DisplayForm
 {

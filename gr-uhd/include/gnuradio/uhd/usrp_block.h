@@ -21,7 +21,7 @@ namespace gr {
 namespace uhd {
 
 /*! Base class for USRP blocks.
- * \ingroup uhd_blk
+ * \ingroup block_uhd_usrp_block
  *
  * Note that many of the functions defined here differ between
  * Rx and Tx configurations. As an example, set_center_freq()

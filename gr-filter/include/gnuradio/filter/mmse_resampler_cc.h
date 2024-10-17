@@ -19,7 +19,7 @@ namespace filter {
 
 /*!
  * \brief resampling MMSE filter with complex input, complex output
- * \ingroup resamplers_blk
+ * \ingroup block_filter_mmse_resampler
  *
  * \details
  * The resampling ratio and mu parameters can be set with a pmt dict

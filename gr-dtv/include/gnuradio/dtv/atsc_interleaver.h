@@ -17,7 +17,7 @@ namespace dtv {
 
 /*!
  * \brief <+description of block+>
- * \ingroup dtv
+ * \ingroup block_dtv_atsc_interleaver
  *
  */
 class DTV_API atsc_interleaver : virtual public gr::sync_block

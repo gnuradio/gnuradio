@@ -19,7 +19,7 @@ namespace blocks {
 
 /*!
  * \brief convert N streams of items to 1 stream of vector length N
- * \ingroup stream_operators_blk
+ * \ingroup block_blocks_streams_to_vector
  */
 class BLOCKS_API streams_to_vector : virtual public sync_block
 {

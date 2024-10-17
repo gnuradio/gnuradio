@@ -19,7 +19,7 @@ namespace zeromq {
 
 /*!
  * \brief Sink the contents of a msg port to a ZMQ REP socket
- * \ingroup zeromq
+ * \ingroup block_zeromq_rep_msg_sink
  *
  * \details
  * This block acts a message port receiver and writes individual

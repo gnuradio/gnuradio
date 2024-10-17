@@ -21,7 +21,7 @@ namespace qtgui {
 
 /*!
  * \brief Create a QT Edit Box widget where the value is posted as a message.
- * \ingroup qtgui_blk
+ * \ingroup block_qtgui_edit_box_msg
  *
  * \details
  * This block creates a QT Edit Box widget that manages data

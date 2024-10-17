@@ -19,7 +19,7 @@ namespace network {
 
 /*!
  * \brief Creates socket interface and translates traffic to PDUs
- * \ingroup networking_tools_blk
+ * \ingroup block_network_socket_pdu
  */
 class NETWORK_API socket_pdu : virtual public block
 {

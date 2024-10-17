@@ -19,7 +19,7 @@ namespace digital {
 
 /*!
  * \brief A block for computing SNR of a signal.
- * \ingroup measurement_tools_blk
+ * \ingroup block_digital_mpsk_snr_est
  *
  * \details
  * Below are some ROUGH estimates of what values of SNR each of
@@ -40,7 +40,7 @@ typedef enum {
 
 /*! \brief A parent class for SNR estimators, specifically for
  *  M-PSK signals in AWGN channels.
- *  \ingroup snr_blk
+ *  \ingroup block_digital_mpsk_snr_est
  */
 class DIGITAL_API mpsk_snr_est
 {

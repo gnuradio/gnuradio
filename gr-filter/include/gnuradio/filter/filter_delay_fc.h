@@ -20,7 +20,7 @@ namespace filter {
 
 /*!
  * \brief Filter-Delay Combination Block
- * \ingroup filter_blk
+ * \ingroup block_filter_filter_delay
  *
  * \details
  * The purpose of this block is to compensate the delay that a linear-phase filter

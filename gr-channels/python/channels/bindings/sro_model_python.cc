@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(sro_model.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(b96a9b261c81e7c0ecc36ecbf7e54912)                     */
+/* BINDTOOL_HEADER_FILE_HASH(55cbd8998d778659357d3c25a0a258e7)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>

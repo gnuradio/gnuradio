@@ -18,7 +18,7 @@
 
 /*!
  * \brief QWidget for displaying frequency domain (PSD) plots.
- * \ingroup qtgui_blk
+ * \ingroup block_qtgui_FrequencyDisplayPlot
  */
 class FrequencyDisplayPlot : public DisplayPlot
 {

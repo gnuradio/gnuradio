@@ -19,7 +19,7 @@ namespace uhd {
 class uhd_usrp_sink;
 
 /*! USRP Sink -- Radio Transmitter
- * \ingroup uhd_blk
+ * \ingroup block_uhd_usrp_sink
  *
  *
  * The USRP sink block reads a stream and transmits the samples.

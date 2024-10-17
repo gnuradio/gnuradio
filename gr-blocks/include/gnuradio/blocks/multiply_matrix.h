@@ -21,7 +21,7 @@ namespace blocks {
 
 /*!
  * \brief Matrix multiplexer/multiplier: y(k) = A x(k)
- * \ingroup blocks
+ * \ingroup block_blocks_multiply_matrix
  *
  * This block is similar to gr::blocks::multiply_const_ff, the difference
  * being it can handle several inputs and outputs, and the input-to-output

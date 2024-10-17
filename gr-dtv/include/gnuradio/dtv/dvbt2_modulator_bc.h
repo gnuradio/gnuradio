@@ -19,7 +19,7 @@ namespace dtv {
 
 /*!
  * \brief Modulates DVB-T2 cells.
- * \ingroup dtv
+ * \ingroup block_dtv_dvbt2_modulator
  *
  * Input: Bit interleaved (with column twist and bit to cell word de-multiplexing) cells.
  * \n Output: QPSK, 16QAM, 64QAM or 256QAM modulated complex IQ values (cells).

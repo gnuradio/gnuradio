@@ -21,7 +21,7 @@ namespace blocks {
 
 /*!
  * \brief output = ~input
- * \ingroup boolean_operators_blk
+ * \ingroup block_blocks_not
  *
  * bitwise boolean not of input streams.
  */

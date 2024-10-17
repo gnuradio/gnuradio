@@ -19,7 +19,7 @@ namespace dtv {
 
 /*!
  * \brief Frequency interleaves a T2 frame.
- * \ingroup dtv
+ * \ingroup block_dtv_dvbt2_freqinterleaver
  *
  * Input: T2 frame. \n
  * Output: Frequency interleaved T2 frame.

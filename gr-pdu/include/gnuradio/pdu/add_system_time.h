@@ -18,8 +18,8 @@ namespace pdu {
 
 /*!
  * \brief Adds system time to a PDU's metadata
- * \ingroup debug_tools_blk
- * \ingroup pdu_blk
+ * \ingroup block_pdu_add_system_time
+ * \ingroup block_pdu_add_system_time
  *
  * Adds a user specified key to PDU dict containing the system time in seconds
  * since unix epoch.

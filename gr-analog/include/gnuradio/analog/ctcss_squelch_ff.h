@@ -20,7 +20,7 @@ namespace analog {
 
 /*!
  * \brief gate or zero output if CTCSS tone not present
- * \ingroup level_controllers_blk
+ * \ingroup block_analog_ctcss_squelch
  */
 class ANALOG_API ctcss_squelch_ff : public squelch_base_ff, virtual public block
 {

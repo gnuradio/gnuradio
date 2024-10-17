@@ -19,7 +19,7 @@ namespace blocks {
 
 /*!
  * \brief output[output_index][i] = input[input_index][i]
- * \ingroup misc_blk
+ * \ingroup block_blocks_selector
  *
  * \details
  * Connect the sink at input index to the source at output index.

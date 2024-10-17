@@ -19,7 +19,7 @@ namespace fft {
 
 /*!
  * \brief Goertzel single-bin DFT calculation.
- * \ingroup fourier_analysis_blk
+ * \ingroup block_fft_goertzel
  */
 class FFT_API goertzel_fc : virtual public sync_decimator
 {

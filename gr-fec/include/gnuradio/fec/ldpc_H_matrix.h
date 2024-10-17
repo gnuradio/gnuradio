@@ -19,7 +19,7 @@ namespace fec {
 namespace code {
 /*!
  * \brief Parity check matrix in Richardson/Urbanke format
- * \ingroup error_coding_blk
+ * \ingroup block_fec_ldpc_H_matrix
  *
  * \details
  * This class stores a matrix for use with the

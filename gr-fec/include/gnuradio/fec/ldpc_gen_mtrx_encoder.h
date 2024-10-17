@@ -19,7 +19,7 @@ namespace code {
 
 /*!
  * \brief LDPC generator matrix encoder
- * \ingroup error_coding_blk
+ * \ingroup block_fec_ldpc_gen_mtrx_encoder
  *
  * \details
  * A standard encoder class. This method is discussed in many

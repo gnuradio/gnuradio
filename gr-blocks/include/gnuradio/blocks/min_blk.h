@@ -22,7 +22,7 @@ namespace blocks {
 /*!
  * \brief Compares vectors from multiple streams and determines
  * the minimum value from each vector over all streams.
- * \ingroup math_operators_blk
+ * \ingroup block_blocks_min
  *
  * \details
  * Data is passed in as a vector of length \p vlen from multiple

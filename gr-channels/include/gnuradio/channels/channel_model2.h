@@ -21,7 +21,7 @@ namespace channels {
 /*!
  * \brief Basic channel simulator allowing time-varying frequency
  * and timing inputs.
- * \ingroup channel_models_blk
+ * \ingroup block_channels_channel_model2
  *
  * \details
  * This block implements a basic channel model simulator that can

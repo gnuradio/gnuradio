@@ -20,8 +20,8 @@ namespace qtgui {
 
 /*!
  * \brief A graphical sink to display multiple vector-based signals.
- * \ingroup instrumentation_blk
- * \ingroup qtgui_blk
+ * \ingroup block_qtgui_vector_sink
+ * \ingroup block_qtgui_vector_sink
  *
  * \details
  * This is a QT-based graphical sink that plots vectors of data as-is.

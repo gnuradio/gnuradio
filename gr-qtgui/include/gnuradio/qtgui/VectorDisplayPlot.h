@@ -18,7 +18,7 @@
 
 /*!
  * \brief QWidget for displaying 1D-vector plots.
- * \ingroup qtgui_blk
+ * \ingroup block_qtgui_VectorDisplayPlot
  */
 class VectorDisplayPlot : public DisplayPlot
 {

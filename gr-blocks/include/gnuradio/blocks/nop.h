@@ -20,7 +20,7 @@ namespace blocks {
 
 /*!
  * \brief Does nothing. Used for testing only.
- * \ingroup misc_blk
+ * \ingroup block_blocks_nop
  */
 class BLOCKS_API nop : virtual public block
 {

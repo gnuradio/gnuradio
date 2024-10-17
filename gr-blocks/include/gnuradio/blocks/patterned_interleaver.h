@@ -19,7 +19,7 @@ namespace blocks {
 
 /*!
  * \brief Interleave items based on the provided vector \p pattern.
- * \ingroup stream_operators_blk
+ * \ingroup block_blocks_patterned_interleaver
  */
 class BLOCKS_API patterned_interleaver : virtual public block
 {

@@ -20,7 +20,7 @@ namespace blocks {
 
 /*!
  * \brief Burst to Stream
- * \ingroup blocks
+ * \ingroup block_blocks_burst_to_stream
  *
  * Transforms a bursty tagged stream into a continuous stream by inserting zeros
  * in the output between input packets whenever no packets are available at the

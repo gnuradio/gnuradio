@@ -22,7 +22,7 @@ namespace kernel {
 
 /*!
  * \brief FIR with internal buffer for float input, float output and float taps.
- * \ingroup filter
+ * \ingroup block_filter_fir_filter_with_buffer
  */
 class FILTER_API fir_filter_with_buffer_fff
 {

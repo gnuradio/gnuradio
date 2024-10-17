@@ -23,7 +23,7 @@ namespace digital {
  * \brief Uses a header format object to append a header onto a
  * PDU.
  *
- * \ingroup packet_operators_blk
+ * \ingroup block_digital_protocol_formatter_async
  *
  * \details
  * This block takes in PDUs and creates a header, generally for

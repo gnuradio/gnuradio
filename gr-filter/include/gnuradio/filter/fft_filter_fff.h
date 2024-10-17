@@ -19,7 +19,7 @@ namespace filter {
 
 /*!
  * \brief Fast FFT filter with float input, float output and float taps
- * \ingroup filter_blk
+ * \ingroup block_filter_fft_filter
  *
  * \details
  * This block implements a real-value decimating filter using the

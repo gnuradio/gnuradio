@@ -20,7 +20,7 @@ namespace digital {
 
 /*!
  * \brief Byte-stream CRC block
- * \ingroup packet_operators_blk
+ * \ingroup block_digital_crc32
  *
  * \details
  * Input: stream of bytes, which form a packet. The first byte of the packet

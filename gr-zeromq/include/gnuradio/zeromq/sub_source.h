@@ -19,7 +19,7 @@ namespace zeromq {
 
 /*!
  * \brief Receive messages on ZMQ SUB socket and source stream
- * \ingroup zeromq
+ * \ingroup block_zeromq_sub_source
  *
  * \details
  * This block will connect to a ZMQ PUB socket, then produce all

@@ -21,7 +21,7 @@ namespace blocks {
 
 /*!
  * \brief sample and hold circuit
- * \ingroup level_controllers_blk
+ * \ingroup block_blocks_sample_and_hold
  *
  * \details
  * Samples the data stream (input stream 0) and holds the value if

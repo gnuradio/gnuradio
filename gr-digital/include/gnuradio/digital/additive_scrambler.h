@@ -19,7 +19,7 @@ namespace gr {
 namespace digital {
 
 /*!
- * \ingroup coding_blk
+ * \ingroup block_digital_additive_scrambler
  *
  * \brief
  * Scramble an input stream using an LFSR.

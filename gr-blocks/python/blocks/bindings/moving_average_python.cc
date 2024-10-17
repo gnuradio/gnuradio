@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(moving_average.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(6d76bcf0938271f111cd4bf9ee6803bd)                     */
+/* BINDTOOL_HEADER_FILE_HASH(7582da75064b31e0ef0683303a906e83)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>

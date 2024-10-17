@@ -19,7 +19,7 @@ namespace fft {
 
 /*!
  * \brief Implements Goertzel single-bin DFT calculation
- * \ingroup misc
+ * \ingroup block_fft_goertzel
  */
 class FFT_API goertzel
 {

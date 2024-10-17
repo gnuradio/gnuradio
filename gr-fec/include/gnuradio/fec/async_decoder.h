@@ -23,7 +23,7 @@ namespace fec {
  * \brief Creates the decoder block for use in GNU Radio
  * flowgraphs from a given FEC API object derived from the
  * generic_decoder class.
- * \ingroup error_coding_blk
+ * \ingroup block_fec_async_decoder
  *
  * \details
  *

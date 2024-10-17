@@ -20,7 +20,7 @@ namespace blocks {
 
 /*!
  * \brief Detects a plateau and marks the middle.
- * \ingroup peak_detectors_blk
+ * \ingroup block_blocks_plateau_detector
  *
  * \details
  * Detect a plateau of a-priori known height. Input is a stream of floats,

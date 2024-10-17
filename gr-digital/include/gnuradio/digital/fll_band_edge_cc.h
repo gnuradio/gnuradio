@@ -20,7 +20,7 @@ namespace digital {
 
 /*!
  * \brief Frequency Lock Loop using band-edge filters
- * \ingroup synchronizers_blk
+ * \ingroup block_digital_fll_band_edge
  *
  * \details
  * The frequency lock loop derives a band-edge filter that covers

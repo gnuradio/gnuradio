@@ -17,7 +17,7 @@ namespace dtv {
 
 /*!
  * \brief Convolutional interleaver.
- * \ingroup dtv
+ * \ingroup block_dtv_dvbt_convolutional_interleaver
  *
  * ETSI EN 300 744 Clause 4.3.1 \n
  * Forney (Ramsey type III) convolutional interleaver. \n

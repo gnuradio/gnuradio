@@ -20,7 +20,7 @@ namespace vocoder {
 
 /*!
  * \brief FreeDV demodulator
- * \ingroup audio_blk
+ * \ingroup block_vocoder_freedv_rx
  *
  * Input: 16-bit short values of an audio signal with sampling rate 8 kHz.
  *

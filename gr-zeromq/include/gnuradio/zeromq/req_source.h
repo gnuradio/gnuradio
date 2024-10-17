@@ -19,7 +19,7 @@ namespace zeromq {
 
 /*!
  * \brief Receive messages on ZMQ REQ socket and source stream
- * \ingroup zeromq
+ * \ingroup block_zeromq_req_source
  *
  * \details
  * This block will connect to a ZMQ REP socket, then produce all

@@ -21,7 +21,7 @@ namespace blocks {
 
 /*!
  * \brief Source that streams T items based on the input \p data vector.
- * \ingroup misc_blk
+ * \ingroup block_blocks_vector_source
  *
  * \details
  * This block produces a stream of samples based on an input

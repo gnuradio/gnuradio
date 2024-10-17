@@ -21,8 +21,8 @@ namespace blocks {
 
 /*!
  * \brief Sink that allows a vector of samples to be grabbed from Python.
- * \ingroup sink_blk
- * \ingroup measurement_tools_blk
+ * \ingroup block_blocks_probe_signal_v
+ * \ingroup block_blocks_probe_signal_v
  */
 template <class T>
 class BLOCKS_API probe_signal_v : virtual public sync_block

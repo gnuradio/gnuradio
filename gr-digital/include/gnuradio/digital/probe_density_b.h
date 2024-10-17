@@ -16,7 +16,7 @@ namespace gr {
 namespace digital {
 
 /*!
- * \ingroup measurement_tools_blk
+ * \ingroup block_digital_probe_density
  *
  * This block maintains a running average of the input stream and
  * makes it available as an accessor function. The input stream is

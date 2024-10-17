@@ -32,7 +32,7 @@ typedef std::shared_ptr<constellation> constellation_sptr;
 
 /*!
  * \brief An abstracted constellation object
- * \ingroup symbol_coding_blk
+ * \ingroup block_digital_constellation
  *
  * \details
  * The constellation objects hold the necessary information to pass
@@ -240,7 +240,7 @@ protected:
 /************************************************************/
 
 /*! \brief Calculate Euclidean distance for any constellation
- *  \ingroup digital
+ *  \ingroup block_digital_constellation
  *
  * \details
  * Constellation which calculates the distance to each point in the
@@ -292,7 +292,7 @@ protected:
 
 /*!
  * \brief Sectorized digital constellation
- * \ingroup digital
+ * \ingroup block_digital_constellation
  *
  * \details
  * Constellation space is divided into sectors. Each sector is
@@ -342,7 +342,7 @@ private:
 
 /*!
  * \brief Rectangular digital constellation
- * \ingroup digital
+ * \ingroup block_digital_constellation
  *
  * Only implemented for 1-(complex)dimensional constellation.
  *
@@ -413,7 +413,7 @@ private:
 
 /*!
  * \brief Rectangular digital constellation.
- * \ingroup digital
+ * \ingroup block_digital_constellation
  *
  * \details
  * Only implemented for 1-(complex)dimensional constellation.
@@ -468,7 +468,7 @@ private:
 
 /*!
  * \brief constellation_psk
- * \ingroup digital
+ * \ingroup block_digital_constellation
  *
  * Constellation space is divided into pie slices sectors.
  *
@@ -510,7 +510,7 @@ protected:
 
 /*!
  * \brief Digital constellation for BPSK .
- * \ingroup digital
+ * \ingroup block_digital_constellation
  *
  * \details
  * \verbatim
@@ -543,7 +543,7 @@ protected:
 
 /*!
  * \brief Digital constellation for QPSK
- * \ingroup digital
+ * \ingroup block_digital_constellation
  *
  * \details Constellation diagram assumes little endian format e.g. top, left means 2
  not 1.
@@ -579,7 +579,7 @@ protected:
 
 /*!
  * \brief Digital constellation for DQPSK.
- * \ingroup digital
+ * \ingroup block_digital_constellation
  *
  * \details
  * \verbatim
@@ -614,7 +614,7 @@ protected:
 
 /*!
  * \brief Digital constellation for 8PSK.
- * \ingroup digital
+ * \ingroup block_digital_constellation
  *
  * \details
  * \verbatim
@@ -650,7 +650,7 @@ protected:
 
 /*!
  * \brief Digital constellation for natually mapped 8PSK.
- * \ingroup digital
+ * \ingroup block_digital_constellation
  *
  * \details
  * \verbatim
@@ -686,7 +686,7 @@ protected:
 
 /*!
  * \brief Digital constellation for 16qam.
- * \ingroup digital
+ * \ingroup block_digital_constellation
  *
  * \details
  * \verbatim

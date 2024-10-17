@@ -33,7 +33,7 @@ enum gr_file_types {
 
 /*!
  * \brief Write stream to file with meta-data headers.
- * \ingroup file_operators_blk
+ * \ingroup block_blocks_file_meta_sink
  *
  * \details
  * These files represent data as binary information in between

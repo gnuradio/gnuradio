@@ -19,7 +19,7 @@ namespace blocks {
 
 /*!
  * \brief delay the input by a certain number of samples
- * \ingroup misc_blk
+ * \ingroup block_blocks_delay
  *
  * Positive delays insert zero items at the beginning of the stream.
  * Negative delays discard items from the stream.

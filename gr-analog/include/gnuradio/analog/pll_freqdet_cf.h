@@ -21,7 +21,7 @@ namespace analog {
 /*!
  * \brief Implements a PLL which locks to the input frequency and outputs
  * an estimate of that frequency.  Useful for FM Demod.
- * \ingroup synchronizers_blk
+ * \ingroup block_analog_pll_freqdet_cf
  *
  * \details
  * Input stream 0: complex

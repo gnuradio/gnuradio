@@ -20,7 +20,7 @@ namespace dtv {
 /*!
  * \brief ATSC Receiver SYNC
  *
- * \ingroup dtv_atsc
+ * \ingroup block_dtv_atsc_sync
  */
 class DTV_API atsc_sync : virtual public gr::block
 {

@@ -29,7 +29,7 @@ typedef enum {
 
 /*!
  * \brief Send message at defined interval
- * \ingroup message_tools_blk
+ * \ingroup block_blocks_message_strobe_random
  *
  * \details
 

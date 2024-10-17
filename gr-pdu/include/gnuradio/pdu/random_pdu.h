@@ -19,8 +19,8 @@ namespace pdu {
 
 /*!
  * \brief Sends a random PDU at intervals
- * \ingroup message_tools_blk
- * \ingroup debug_tools_blk
+ * \ingroup block_pdu_random_pdu
+ * \ingroup block_pdu_random_pdu
  */
 class PDU_API random_pdu : virtual public block
 {

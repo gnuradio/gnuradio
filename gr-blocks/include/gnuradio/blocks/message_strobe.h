@@ -19,7 +19,7 @@ namespace blocks {
 
 /*!
  * \brief Send message at defined interval
- * \ingroup message_tools_blk
+ * \ingroup block_blocks_message_strobe
  *
  * \details
  * Takes a PMT message and sends it out every \p period_ms

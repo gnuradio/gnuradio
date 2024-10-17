@@ -21,7 +21,7 @@
 
 /*!
  * \brief DisplayForm child for managing waterfall (spectrogram) plots.
- * \ingroup qtgui_blk
+ * \ingroup block_qtgui_waterfalldisplayform
  */
 class WaterfallDisplayForm : public DisplayForm
 {

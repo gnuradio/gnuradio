@@ -31,7 +31,7 @@ typedef void (*conv_kernel)(unsigned char* Y,
 
 /*!
  * \brief Convolutional Code Decoding class.
- * \ingroup error_coding_blk
+ * \ingroup block_fec_cc_decoder
  *
  * \details
  * This class performs convolutional decoding via the Viterbi

@@ -19,7 +19,7 @@ namespace dtv {
 
 /*!
  * \brief Inserts a P1 symbol.
- * \ingroup dtv
+ * \ingroup block_dtv_dvbt2_p1insertion
  *
  * Input: OFDM T2 frame. \n
  * Output: OFDM T2 frame with P1 symbol.

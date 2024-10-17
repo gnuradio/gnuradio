@@ -19,7 +19,7 @@ namespace dtv {
 
 /*!
  * \brief Bit Inner interleaver.
- * \ingroup dtv
+ * \ingroup block_dtv_dvbt_bit_inner_interleaver
  *
  * ETSI EN 300 744 Clause 4.3.4.1 \n
  * Data Input format: \n

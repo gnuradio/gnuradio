@@ -20,7 +20,7 @@ namespace blocks {
 
 /*!
  * \brief A block that performs various transcendental math operations.
- * \ingroup math_operators_blk
+ * \ingroup block_blocks_transcendental
  *
  * \details
  * Possible function names can be found in the cmath library. IO

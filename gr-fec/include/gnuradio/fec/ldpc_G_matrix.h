@@ -20,7 +20,7 @@ namespace code {
 
 /*!
  * \brief Class for storing H or G matrix
- * \ingroup error_coding_blk
+ * \ingroup block_fec_ldpc_G_matrix
  *
  * \details
  * This class stores a matrix variable, specifically

@@ -19,7 +19,7 @@ namespace blocks {
 
 /*!
  * \brief one or two floats in, complex out
- * \ingroup type_converters_blk
+ * \ingroup block_blocks_float_to_complex
  */
 class BLOCKS_API float_to_complex : virtual public sync_block
 {

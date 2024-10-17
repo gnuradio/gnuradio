@@ -20,8 +20,8 @@ namespace qtgui {
 
 /*!
  * \brief A graphical sink to display a histogram.
- * \ingroup instrumentation_blk
- * \ingroup qtgui_blk
+ * \ingroup block_qtgui_histogram_sink
+ * \ingroup block_qtgui_histogram_sink
  *
  * \details
  * This is a QT-based graphical sink the displays a histogram of

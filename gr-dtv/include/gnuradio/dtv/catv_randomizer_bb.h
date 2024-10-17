@@ -18,7 +18,7 @@ namespace dtv {
 
 /*!
  * \brief Randomizer, x^3 + x + alpha^3, 7-bit symbols.
- * \ingroup dtv
+ * \ingroup block_dtv_catv_randomizer
  *
  * Input: Interleaved MPEG-2 + RS parity bitstream packets of 128 7-bit symbols.\n
  * Output: Scrambled FEC Frame packets of 60 * 128 (64QAM) or 88 * 128 (256QAM) 7-bit

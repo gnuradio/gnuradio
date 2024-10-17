@@ -21,7 +21,7 @@ namespace blocks {
 /*!
  * \brief Stream muxing block to multiplex many streams into
  * one with a specified format.
- * \ingroup stream_operators_blk
+ * \ingroup block_blocks_stream_mux
  *
  * \details
  * Muxes N streams together producing an output stream that

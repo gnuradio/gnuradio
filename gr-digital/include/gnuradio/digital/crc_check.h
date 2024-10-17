@@ -21,7 +21,7 @@ namespace digital {
 
 /*!
  * \brief Check the CRC at the end of a PDU
- * \ingroup packet_operators_blk
+ * \ingroup block_digital_crc_check
  *
  * \details
  * The CRC check block receives a PDU containing a CRC at its end,

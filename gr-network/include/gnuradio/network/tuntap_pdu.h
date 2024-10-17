@@ -19,7 +19,7 @@ namespace network {
 
 /*!
  * \brief Creates TUNTAP interface and translates traffic to PDUs
- * \ingroup networking_tools_blk
+ * \ingroup block_network_tuntap_pdu
  */
 class NETWORK_API tuntap_pdu : virtual public block
 {

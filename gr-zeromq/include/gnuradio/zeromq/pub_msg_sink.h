@@ -19,7 +19,7 @@ namespace zeromq {
 
 /*!
  * \brief Sink the contents of a msg port to a ZMQ PUB socket
- * \ingroup zeromq
+ * \ingroup block_zeromq_pub_msg_sink
  *
  * \details
  * This block acts a message port receiver and writes individual
