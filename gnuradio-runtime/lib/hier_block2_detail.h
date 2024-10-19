@@ -16,6 +16,8 @@
 #include <gnuradio/logger.h>
 #include <flat_flowgraph.h>
 
+#include <set>
+
 namespace gr {
 
 /*!
@@ -82,6 +84,9 @@ private:
     void set_parent(hier_block2* parent);
     void reset_parent(bool force = false);
     void reset_hier_blocks_parent();
+
+    //! Traverse the internal flow graph to give a list of all blocks, hier and regular
+    std::set<basic_block_sptr> all_blocks();
 };
 
 } /* namespace gr */
