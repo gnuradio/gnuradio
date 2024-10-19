@@ -20,6 +20,8 @@ message(STATUS "Loading build date ${BUILD_DATE} into constants...")
 message(STATUS "Loading version ${VERSION} into constants...")
 
 #Generate the constants file, now that we actually know which components will be enabled.
+cmake_path(GET CMAKE_SOURCE_DIR PARENT_PATH top_build_dir)
+string(REPLACE "${top_build_dir}" "BUILD_DIR" SAFE_COMPILER_INFO "${COMPILER_INFO}")
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/constants.cc.in
                ${CMAKE_CURRENT_BINARY_DIR}/constants.cc ESCAPE_QUOTES @ONLY)
 
