@@ -294,12 +294,14 @@ def test_change_id(qtbot, qapp_cls_):
     type_text(qtbot, qapp_cls_, "changed")
     qtbot.wait(100)
     keystroke(qtbot, qapp_cls_, QtCore.Qt.Key_Enter)
-    assert opts.params["title"].value == "Not titled changed"
+    assert opts.params["title"].value == "Not changed yet"
+    qtbot.wait(100)
+    keystroke(qtbot, qapp_cls_, QtCore.Qt.Key_Enter)
     qtbot.wait(100)
     undo(qtbot, qapp_cls_)
     assert opts.params["title"].value == "Not titled yet"
     redo(qtbot, qapp_cls_)
-    assert opts.params["title"].value == "Not titled changed"
+    assert opts.params["title"].value == "Not changed yet"
 
 
 def test_rotate_block(qtbot, qapp_cls_):
@@ -502,11 +504,13 @@ def test_num_inputs(qtbot, qapp_cls_):
     qtbot.wait(100)
     keystroke(qtbot, qapp_cls_, QtCore.Qt.Key_Enter)
     qtbot.wait(100)
+    keystroke(qtbot, qapp_cls_, QtCore.Qt.Key_Enter)
+    qtbot.wait(100)
     assert len(n_sink.sinks) == 1
     assert len(fg.connections) == 1
 
     # I think loses focus makes delete_fail the first time. This makes it work, but is a hack
-    # click_on(qtbot, qapp_cls_, n_src)
+    click_on(qtbot, qapp_cls_, n_src)
     pag.click(click_pos.x() + 50, click_pos.y() + 50, button="left")
 
     for block in [n_src, n_sink]:
@@ -537,6 +541,8 @@ def test_bus(qtbot, qapp_cls_):
 
     qtbot.mouseDClick(n_sink.gui.props_dialog.edit_params[param_index], QtCore.Qt.LeftButton)
     type_text(qtbot, qapp_cls_, "2")
+    qtbot.wait(100)
+    keystroke(qtbot, qapp_cls_, QtCore.Qt.Key_Enter)
     qtbot.wait(100)
     keystroke(qtbot, qapp_cls_, QtCore.Qt.Key_Enter)
     qtbot.wait(100)
@@ -615,7 +621,7 @@ def test_bypass(qtbot, qapp_cls_):
 def test_file_save(qtbot, qapp_cls_, monkeypatch, tmp_path):
     fg_path = tmp_path / "test_save.grc"
     monkeypatch.setattr(
-        QtWidgets.QFileDialog, "selectedFiles", lambda *args, **kargs: (fg_path, "")
+        QtWidgets.QFileDialog, "selectedFiles", lambda *args, **kargs: (str(fg_path), "")
     )
     monkeypatch.setattr(
         QtWidgets.QFileDialog, "exec_", lambda *args: QtWidgets.QFileDialog.Accepted
@@ -629,7 +635,7 @@ def test_file_save(qtbot, qapp_cls_, monkeypatch, tmp_path):
 def test_file_save_as(qtbot, qapp_cls_, monkeypatch, tmp_path):
     fg_path = tmp_path / "test.grc"
     monkeypatch.setattr(
-        QtWidgets.QFileDialog, "selectedFiles", lambda *args, **kargs: (fg_path, "")
+        QtWidgets.QFileDialog, "selectedFiles", lambda *args, **kargs: (str(fg_path), "")
     )
     monkeypatch.setattr(
         QtWidgets.QFileDialog, "exec_", lambda *args: QtWidgets.QFileDialog.Accepted
@@ -644,7 +650,7 @@ def test_file_save_as(qtbot, qapp_cls_, monkeypatch, tmp_path):
 def test_file_save_copy(qtbot, qapp_cls_, monkeypatch, tmp_path):
     fg_path = tmp_path / "test_copy.grc"
     monkeypatch.setattr(
-        QtWidgets.QFileDialog, "selectedFiles", lambda *args, **kargs: (fg_path, "")
+        QtWidgets.QFileDialog, "selectedFiles", lambda *args, **kargs: (str(fg_path), "")
     )
     monkeypatch.setattr(
         QtWidgets.QFileDialog, "exec_", lambda *args: QtWidgets.QFileDialog.Accepted
@@ -661,7 +667,7 @@ def test_file_save_copy(qtbot, qapp_cls_, monkeypatch, tmp_path):
 def test_file_screen_capture_pdf(qtbot, qapp_cls_, monkeypatch, tmp_path):
     fg_path = tmp_path / "test.pdf"
     monkeypatch.setattr(
-        QtWidgets.QFileDialog, "getSaveFileName", lambda *args, **kargs: (fg_path, "")
+        QtWidgets.QFileDialog, "getSaveFileName", lambda *args, **kargs: (str(fg_path), "")
     )
     qtbot.wait(100)
 
@@ -674,7 +680,7 @@ def test_file_screen_capture_png(qtbot, qapp_cls_, monkeypatch, tmp_path):
     fg_path = tmp_path / "test.png"
     assert not fg_path.exists()
     monkeypatch.setattr(
-        QtWidgets.QFileDialog, "getSaveFileName", lambda *args, **kargs: (fg_path, "")
+        QtWidgets.QFileDialog, "getSaveFileName", lambda *args, **kargs: (str(fg_path), "")
     )
     qtbot.wait(100)
 
@@ -687,7 +693,7 @@ def test_file_screen_capture_svg(qtbot, qapp_cls_, monkeypatch, tmp_path):
     fg_path = tmp_path / "test.svg"
     assert not fg_path.exists()
     monkeypatch.setattr(
-        QtWidgets.QFileDialog, "getSaveFileName", lambda *args, **kargs: (fg_path, "")
+        QtWidgets.QFileDialog, "getSaveFileName", lambda *args, **kargs: (str(fg_path), "")
     )
     qtbot.wait(100)
 
@@ -872,7 +878,7 @@ def test_generate(qtbot, qapp_cls_, monkeypatch, tmp_path):
     fg_path = tmp_path / "test_generate.grc"
     py_path = tmp_path / "default.py"
     monkeypatch.setattr(
-        QtWidgets.QFileDialog, "selectedFiles", lambda *args, **kargs: (fg_path, "")
+        QtWidgets.QFileDialog, "selectedFiles", lambda *args, **kargs: (str(fg_path), "")
     )
     monkeypatch.setattr(
         QtWidgets.QFileDialog, "exec_", lambda *args: QtWidgets.QFileDialog.Accepted
