@@ -33,13 +33,31 @@ squelch_base_ff_impl::squelch_base_ff_impl(const char* name, int ramp, bool gate
     d_state = ST_MUTED;
     d_envelope = d_ramp ? 0.0 : 1.0;
     d_ramped = 0;
+    precalculate_window();
 }
 
 squelch_base_ff_impl::~squelch_base_ff_impl() {}
 
+void squelch_base_ff_impl::precalculate_window()
+{
+    if (d_ramp <= 0) {
+        d_window_table.clear();
+        return;
+    }
+
+    d_window_table.resize(d_ramp + 1);
+    for (int i = 0; i <= d_ramp; i++) {
+        d_window_table[i] = 0.5 - std::cos(GR_M_PI * i / d_ramp) / 2.0;
+    }
+}
+
 int squelch_base_ff_impl::ramp() const { return d_ramp; }
 
-void squelch_base_ff_impl::set_ramp(int ramp) { d_ramp = ramp; }
+void squelch_base_ff_impl::set_ramp(int ramp)
+{
+    d_ramp = ramp;
+    precalculate_window();
+}
 
 bool squelch_base_ff_impl::gate() const { return d_gate; }
 
@@ -88,8 +106,9 @@ int squelch_base_ff_impl::general_work(int noutput_items,
             break;
 
         case ST_ATTACK:
-            // FIXME: precalculate window for speed
-            d_envelope = 0.5 - std::cos(GR_M_PI * (++d_ramped) / d_ramp) / 2.0;
+            if (!d_window_table.empty()) {
+                d_envelope = d_window_table[++d_ramped];
+            }
 
             // use >= in case d_ramp is set to lower value elsewhere
             if (d_ramped >= d_ramp) {
@@ -100,8 +119,10 @@ int squelch_base_ff_impl::general_work(int noutput_items,
             break;
 
         case ST_DECAY:
-            // FIXME: precalculate window for speed
-            d_envelope = 0.5 - std::cos(GR_M_PI * (--d_ramped) / d_ramp) / 2.0;
+            if (!d_window_table.empty()) {
+                d_envelope = d_window_table[--d_ramped];
+            }
+
             if (d_ramped == 0.0) {
                 d_state = ST_MUTED;
                 add_item_tag(0, nitems_written(0) + j, d_eob_key, pmt::PMT_NIL);

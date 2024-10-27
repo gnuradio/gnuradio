@@ -27,6 +27,9 @@ private:
     enum { ST_MUTED, ST_ATTACK, ST_UNMUTED, ST_DECAY } d_state;
     const pmt::pmt_t d_sob_key, d_eob_key;
     bool d_tag_next_unmuted;
+    std::vector<float> d_window_table;
+
+    void precalculate_window();
 
 protected:
     void update_state(const float& sample) override{};
