@@ -20,7 +20,7 @@ namespace blocks {
 /*!
  * \brief This block will transpose the I and Q channels (Swap IQ) to
  * \p correct for spectrally inverted inputs.
- * \ingroup iq_correction
+ * \ingroup block_blocks_correctiq_swapiq
  *
  */
 class BLOCKS_API swap_iq : virtual public gr::sync_block

@@ -118,6 +118,7 @@ requirements:
     - pyzmq
     - {{ pin_compatible('qwt', max_pin='x.x') }}
     - scipy
+    - sphinx
     # need setuptools because modtool uses pkg_resources
     - setuptools
     - thrift  # [not win]

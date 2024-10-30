@@ -21,7 +21,7 @@ namespace filter {
 /*!
  * \brief Polyphase filterbank channelizer with
  *        gr_complex input, gr_complex output and float taps
- * \ingroup channelizers_blk
+ * \ingroup block_filter_pfb_channelizer
  *
  * \details
  * This block takes in complex inputs and channelizes it to <EM>M</EM>

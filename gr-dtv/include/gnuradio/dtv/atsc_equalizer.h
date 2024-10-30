@@ -20,7 +20,7 @@ namespace dtv {
 /*!
  * \brief ATSC Receiver Equalizer
  *
- * \ingroup dtv_atsc
+ * \ingroup block_dtv_atsc_equalizer
  */
 class DTV_API atsc_equalizer : virtual public gr::block
 {

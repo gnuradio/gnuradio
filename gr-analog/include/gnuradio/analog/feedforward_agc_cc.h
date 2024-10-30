@@ -20,7 +20,7 @@ namespace analog {
 /*!
  * \brief Non-causal AGC which computes required gain based on max
  * absolute value over nsamples
- * \ingroup level_controllers_blk
+ * \ingroup block_analog_feedforward_agc
  */
 class ANALOG_API feedforward_agc_cc : virtual public sync_block
 {

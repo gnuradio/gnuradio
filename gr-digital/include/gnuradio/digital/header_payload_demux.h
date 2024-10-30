@@ -18,7 +18,7 @@ namespace digital {
 
 /*!
  * \brief Header/Payload demuxer (HPD).
- * \ingroup packet_operators_blk
+ * \ingroup block_digital_header_payload_demux
  *
  * \details
  * This block is designed to demultiplex packets from a bursty transmission.

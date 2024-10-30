@@ -18,7 +18,7 @@
 
 /*!
  * \brief QWidget for displaying time domain plots.
- * \ingroup qtgui_blk
+ * \ingroup block_qtgui_HistogramDisplayPlot
  */
 class HistogramDisplayPlot : public DisplayPlot
 {

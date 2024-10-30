@@ -18,7 +18,7 @@ namespace blocks {
 
 /*!
  * \brief Allows scaling of a tagged stream length tag
- * \ingroup stream_operators_blk
+ * \ingroup block_blocks_tagged_stream_multiply_length
  *
  * \details
  * Searches for a specific tagged stream length tag and multiplies

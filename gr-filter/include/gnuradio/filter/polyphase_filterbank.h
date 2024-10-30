@@ -23,8 +23,8 @@ namespace kernel {
 
 /*!
  * \brief Polyphase filterbank parent class
- * \ingroup filter_blk
- * \ingroup pfb_blk
+ * \ingroup block_filter_polyphase_filterbank
+ * \ingroup block_filter_polyphase_filterbank
  *
  * \details
  * This block takes in complex inputs and channelizes it to

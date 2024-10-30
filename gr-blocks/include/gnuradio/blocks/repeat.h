@@ -19,7 +19,7 @@ namespace blocks {
 
 /*!
  * \brief repeat each input \p repeat times
- * \ingroup stream_operators_blk
+ * \ingroup block_blocks_repeat
  *
  * Message Ports:
  *   * interpolation (in):

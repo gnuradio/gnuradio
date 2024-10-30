@@ -19,8 +19,8 @@ namespace digital {
 
 /*!
  * \brief Simple decision feedback equalizer for OFDM.
- * \ingroup ofdm_blk
- * \ingroup equalizers_blk
+ * \ingroup block_digital_ofdm_equalizer_simpledfe
+ * \ingroup block_digital_ofdm_equalizer_simpledfe
  *
  * \details
  * Equalizes an OFDM signal symbol by symbol using knowledge of the

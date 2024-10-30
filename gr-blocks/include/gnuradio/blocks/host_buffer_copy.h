@@ -19,7 +19,7 @@ namespace blocks {
 
 /*!
  * \brief copy using host_buffer testing block. FOR TESTING PURPOSES ONLY.
- * \ingroup debug_tools_blk
+ * \ingroup block_blocks_host_buffer_copy
  *
  * \details
  * This block is a standard copy block that uses the host_buffer single mapped

@@ -19,7 +19,7 @@ namespace vocoder {
 
 /*!
  * \brief This block performs g.711 ulaw audio encoding.
- * \ingroup audio_blk
+ * \ingroup block_vocoder_ulaw_encode
  */
 class VOCODER_API ulaw_encode_sb : virtual public sync_block
 {

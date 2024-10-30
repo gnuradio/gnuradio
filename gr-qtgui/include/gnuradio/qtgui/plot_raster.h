@@ -22,7 +22,7 @@ class QwtColorMap;
 
 /*!
  * \brief A plot item, which displays a time raster.
- * \ingroup qtgui_blk
+ * \ingroup block_qtgui_plot_raster
  *
  * \details
  * A time raster displays three-dimensional data, where the 3rd dimension

@@ -20,7 +20,7 @@ namespace blocks {
 
 /*!
  * \brief Fully parameterizable block interleaver
- * \ingroup blocks
+ * \ingroup block_blocks_blockinterleaver
  *
  * \details
  * This block accepts item multiples of size \p interleaver_indices.size() and interleaves

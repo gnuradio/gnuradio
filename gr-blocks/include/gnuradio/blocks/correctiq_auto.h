@@ -23,7 +23,7 @@ namespace blocks {
  * \p prevent any possible IIR filtering after it's been tuned.  However, if frequency
  * \p or upstream gain is changed, it must retune, so frequency and upstream gain are
  * \p all taken as parameters and monitored for changes.
- * \ingroup iq_correction
+ * \ingroup block_blocks_correctiq_auto
  *
  */
 class BLOCKS_API correctiq_auto : virtual public gr::sync_block

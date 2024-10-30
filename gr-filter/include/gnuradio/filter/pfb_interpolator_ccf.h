@@ -21,7 +21,7 @@ namespace filter {
 /*!
  * \brief Polyphase filterbank interpolator with gr_complex input,
  * gr_complex output and float taps
- * \ingroup channelizers_blk
+ * \ingroup block_filter_pfb_interpolator
  *
  * \details
  * This block takes in a signal stream and performs integer up-

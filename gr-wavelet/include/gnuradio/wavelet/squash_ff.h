@@ -20,7 +20,7 @@ namespace wavelet {
 /*!
  * \brief Implements cheap resampling of spectrum directly from
  * spectral points, using gsl interpolation
- * \ingroup misc
+ * \ingroup block_wavelet_squash
  */
 class WAVELET_API squash_ff : virtual public sync_block
 {

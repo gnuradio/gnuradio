@@ -46,7 +46,7 @@ namespace qtgui {
  * The second input contains FFT data for a waterfall display. It is simply a
  * concatenation of FFT magnitude vectors (8-bit integers).
  *
- * \ingroup qtgui_blk
+ * \ingroup block_qtgui_rfnoc_f15_display
  */
 class QTGUI_API rfnoc_f15_display : virtual public gr::block
 {

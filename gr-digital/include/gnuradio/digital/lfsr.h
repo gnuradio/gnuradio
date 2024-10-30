@@ -25,7 +25,7 @@ namespace digital {
 /*!
  * \brief Fibonacci Linear Feedback Shift Register using specified
  * polynomial mask
- * \ingroup misc
+ * \ingroup block_digital_lfsr
  *
  * \details
  * Generates a maximal length pseudo-random sequence of length

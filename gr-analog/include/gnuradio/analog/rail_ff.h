@@ -19,7 +19,7 @@ namespace analog {
 
 /*!
  * \brief clips input values to min, max
- * \ingroup level_controllers_blk
+ * \ingroup block_analog_rail
  */
 class ANALOG_API rail_ff : virtual public sync_block
 {

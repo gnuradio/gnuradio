@@ -19,7 +19,7 @@ namespace filter {
 
 /*!
  * \brief Filter-Delay Combination Block.
- * \ingroup resamplers_blk
+ * \ingroup block_filter_ival_decimator
  *
  * \details
  * This block provides interleaved char and short decimation without

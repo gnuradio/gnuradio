@@ -20,7 +20,7 @@ namespace analog {
 
 /*!
  * \brief Uniform Random Number Generator
- * \ingroup waveform_generators_blk
+ * \ingroup block_analog_random_uniform_source
  */
 template <class T>
 class ANALOG_API random_uniform_source : virtual public sync_block

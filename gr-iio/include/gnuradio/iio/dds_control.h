@@ -20,7 +20,7 @@ namespace iio {
 /*!
  * \brief Control block for DDSs which are available in controlling FPGAs of
  *        certain IIO drivers
- * \ingroup iio
+ * \ingroup block_iio_dds_control
  *
  * \details
  * This block allow for control of multiple direct digital synthesizers (DDS)

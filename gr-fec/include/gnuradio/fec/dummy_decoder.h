@@ -22,7 +22,7 @@ namespace code {
 
 /*!
  * \brief Dummy Decoding class.
- * \ingroup error_coding_blk
+ * \ingroup block_fec_dummy_decoder
  *
  * \details
  * A dummy decoder class that simply passes the input to the

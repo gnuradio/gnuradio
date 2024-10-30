@@ -22,7 +22,7 @@ namespace trellis {
 
 /*!
  * \brief SCCC encoder.
- * \ingroup trellis_coding_blk
+ * \ingroup block_trellis_sccc_encoder
  */
 template <class IN_T, class OUT_T>
 class TRELLIS_API sccc_encoder : virtual public sync_block

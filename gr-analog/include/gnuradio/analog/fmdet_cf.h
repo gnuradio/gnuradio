@@ -19,7 +19,7 @@ namespace analog {
 
 /*!
  * \brief Implements an IQ slope detector
- * \ingroup modulators_blk
+ * \ingroup block_analog_fmdet_cf
  *
  * \details
  * input: stream of complex; output: stream of floats

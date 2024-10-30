@@ -19,7 +19,7 @@ namespace blocks {
 
 /*!
  * \brief Produces the imaginary part (as a float) of a complex stream.
- * \ingroup type_converters_blk
+ * \ingroup block_blocks_complex_to_imag
  */
 class BLOCKS_API complex_to_imag : virtual public sync_block
 {

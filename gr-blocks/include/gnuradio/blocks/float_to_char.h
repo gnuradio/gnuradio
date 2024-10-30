@@ -19,7 +19,7 @@ namespace blocks {
 
 /*!
  * \brief Convert stream of floats to a stream of char
- * \ingroup type_converters_blk
+ * \ingroup block_blocks_float_to_char
  */
 class BLOCKS_API float_to_char : virtual public sync_block
 {

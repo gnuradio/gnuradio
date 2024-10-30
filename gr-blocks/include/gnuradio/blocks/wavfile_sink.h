@@ -20,7 +20,7 @@ namespace blocks {
 
 /*!
  * \brief Write stream to a Microsoft PCM (.wav) file.
- * \ingroup audio_blk
+ * \ingroup block_blocks_wavfile_sink
  *
  * \details
  * Values must be floats within [-1;1].

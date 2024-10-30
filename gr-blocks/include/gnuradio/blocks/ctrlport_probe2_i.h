@@ -19,8 +19,8 @@ namespace blocks {
 
 /*!
  * \brief A ControlPort probe to export vectors of signals.
- * \ingroup measurement_tools_blk
- * \ingroup controlport_blk
+ * \ingroup block_blocks_ctrlport_probe2_i
+ * \ingroup block_blocks_ctrlport_probe2_i
  *
  * \details
  * This block acts as a sink in the flowgraph but also exports

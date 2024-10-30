@@ -21,7 +21,7 @@ namespace analog {
 
 /*!
  * \brief Random number source
- * \ingroup waveform_generators_blk
+ * \ingroup block_analog_noise_source
  *
  * \details
  * Generate random values from different distributions.

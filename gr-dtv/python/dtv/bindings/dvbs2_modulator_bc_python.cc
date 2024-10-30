@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(1)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(dvbs2_modulator_bc.h)                                      */
-/* BINDTOOL_HEADER_FILE_HASH(e1a9f035f4e312f3e90dc68592c9c2c9)                     */
+/* BINDTOOL_HEADER_FILE_HASH(6e030d3b0dc4cac6a9e4465854ee8aad)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>

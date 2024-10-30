@@ -21,7 +21,7 @@ namespace blocks {
 
 /*!
  * \brief source of T's that gets its data from a vector
- * \ingroup stream_operators_blk
+ * \ingroup block_blocks_vector_insert
  */
 template <class T>
 class BLOCKS_API vector_insert : virtual public block

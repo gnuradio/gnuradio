@@ -20,7 +20,7 @@ namespace blocks {
 
 /*!
  * \brief output[m] = input[m] + constant vector for all M streams.
- * \ingroup math_operators_blk
+ * \ingroup block_blocks_add_const_v
  */
 template <class T>
 class BLOCKS_API add_const_v : virtual public sync_block

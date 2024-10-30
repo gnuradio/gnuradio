@@ -19,7 +19,7 @@ namespace digital {
 
 /*!
  * \brief Descramber an input stream using an LFSR.
- * \ingroup coding_blk
+ * \ingroup block_digital_descrambler
  *
  * \details
  * Descramble an input stream using an LFSR. This block works on

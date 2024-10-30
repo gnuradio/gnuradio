@@ -19,7 +19,7 @@ namespace fft {
 
 /*!
  * \brief Compute forward or reverse FFT. complex vector in / complex vector out.
- * \ingroup fourier_analysis_blk
+ * \ingroup block_fft_fft_v
  *
  * The FFT operation is defined for a vector \f$x\f$ with \f$N\f$ uniformly
  * sampled points by

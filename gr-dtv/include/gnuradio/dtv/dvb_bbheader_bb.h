@@ -21,7 +21,7 @@ namespace dtv {
 /*!
  * \brief Formats MPEG-2 Transport Stream packets into FEC baseband frames
  * and adds a 10-byte header.
- * \ingroup dtv
+ * \ingroup block_dtv_dvb_bbheader
  *
  * \details
  * Input: 188-byte MPEG-2 Transport Stream packets. \n

@@ -19,7 +19,7 @@ namespace digital {
 
 /*!
  * \brief output[i] = map[input[i]]
- * \ingroup symbol_coding_blk
+ * \ingroup block_digital_map
  *
  * \details
  * This block maps an incoming signal to the value in the map.

@@ -22,7 +22,7 @@ namespace code {
 
 /*!
  * \brief Repetition Encoding class.
- * \ingroup error_coding_blk
+ * \ingroup block_fec_repetition_encoder
  *
  * \details
  * A repetition encoder class that repeats each input bit \p rep

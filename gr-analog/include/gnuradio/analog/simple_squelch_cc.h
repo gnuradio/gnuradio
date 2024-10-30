@@ -19,7 +19,7 @@ namespace analog {
 
 /*!
  * \brief simple squelch block based on average signal power and threshold in dB.
- * \ingroup level_controllers_blk
+ * \ingroup block_analog_simple_squelch
  */
 class ANALOG_API simple_squelch_cc : virtual public sync_block
 {

@@ -27,7 +27,7 @@ namespace uhd {
  *
  * Note: The input ports of this block can only connect to other RFNoC blocks.
  *
- * \ingroup uhd_blk
+ * \ingroup block_uhd_rfnoc_rx_streamer
  */
 class GR_UHD_API rfnoc_rx_streamer : virtual public gr::sync_block
 {

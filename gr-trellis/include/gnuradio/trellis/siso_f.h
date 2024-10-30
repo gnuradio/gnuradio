@@ -21,7 +21,7 @@ namespace gr {
 namespace trellis {
 
 /*!
- *  \ingroup trellis_coding_blk
+ *  \ingroup block_trellis_siso
  */
 class TRELLIS_API siso_f : virtual public block
 {

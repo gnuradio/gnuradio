@@ -19,8 +19,8 @@ namespace pdu {
 
 /*!
  * \brief remove key k in pdu's meta field and pass on
- * \ingroup message_tools_blk
- * \ingroup debug_tools_blk
+ * \ingroup block_pdu_pdu_remove
+ * \ingroup block_pdu_pdu_remove
  */
 class PDU_API pdu_remove : virtual public block
 {

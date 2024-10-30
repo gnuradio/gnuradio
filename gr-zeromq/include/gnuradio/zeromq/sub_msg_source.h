@@ -19,7 +19,7 @@ namespace zeromq {
 
 /*!
  * \brief Receive messages on ZMQ SUB socket and output async messages
- * \ingroup zeromq
+ * \ingroup block_zeromq_sub_msg_source
  *
  * \details
  * This block will connect to a ZMQ PUB socket, then convert them

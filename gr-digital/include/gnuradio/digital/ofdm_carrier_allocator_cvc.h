@@ -20,7 +20,7 @@ namespace digital {
 
 /*!
  * \brief Create frequency domain OFDM symbols from complex values, add pilots.
- * \ingroup ofdm_blk
+ * \ingroup block_digital_ofdm_carrier_allocator_cvc
  *
  * \details
  * This block turns a stream of complex, scalar modulation symbols into vectors

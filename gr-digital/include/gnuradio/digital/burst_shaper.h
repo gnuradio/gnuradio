@@ -19,7 +19,7 @@ namespace digital {
 
 /*!
  * \brief Burst shaper block for applying burst padding and ramping.
- * \ingroup packet_operators_blk
+ * \ingroup block_digital_burst_shaper
  *
  * \details
  *

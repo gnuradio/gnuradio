@@ -19,8 +19,8 @@ namespace digital {
 
 /*!
  * \brief Very simple static equalizer for OFDM.
- * \ingroup ofdm_blk
- * \ingroup equalizers_blk
+ * \ingroup block_digital_ofdm_equalizer_static
+ * \ingroup block_digital_ofdm_equalizer_static
  *
  * \details
  * This is an extremely simple equalizer. It will only work for

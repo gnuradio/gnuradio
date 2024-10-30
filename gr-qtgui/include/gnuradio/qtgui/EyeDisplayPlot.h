@@ -18,7 +18,7 @@
 
 /*!
  * \brief QWidget for displaying eye pattern plots.
- * \ingroup qtgui_blk
+ * \ingroup block_qtgui_EyeDisplayPlot
  */
 class EyeDisplayPlot : public DisplayPlot
 {

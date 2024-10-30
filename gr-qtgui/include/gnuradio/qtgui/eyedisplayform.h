@@ -20,7 +20,7 @@ class EyeControlPanel;
 
 /*!
  * \brief EyeDisplaysForm child for managing eye pattern plots.
- * \ingroup qtgui_blk
+ * \ingroup block_qtgui_eyedisplayform
  */
 class EyeDisplayForm : public EyeDisplaysForm
 {

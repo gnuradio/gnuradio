@@ -20,7 +20,7 @@ namespace channels {
 
 /*!
  * \brief Basic channel simulator.
- * \ingroup channel_models_blk
+ * \ingroup block_channels_channel_model
  *
  * \details
  * This block implements a basic channel model simulator that can

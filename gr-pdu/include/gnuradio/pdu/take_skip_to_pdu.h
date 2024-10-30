@@ -23,7 +23,7 @@ namespace pdu {
 
 /*!
  * \brief Extract periodic PDUs from a data stream.
- * \ingroup pdu_blk
+ * \ingroup block_pdu_take_skip_to_pdu
  *
  * This block will generate PDUs of size TAKE skipping SKIP samples between
  *

@@ -20,7 +20,7 @@ namespace digital {
 
 /*!
  * \brief Given a stream of bits and access_code flags, assemble packets.
- * \ingroup packet_operators_blk
+ * \ingroup block_digital_framer_sink_1
  *
  * \details
  * input: stream of bytes from digital_correlate_access_code_bb

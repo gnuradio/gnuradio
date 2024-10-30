@@ -20,7 +20,7 @@ namespace dtv {
 /*!
  * \brief ATSC Receiver FS_CHECKER
  *
- * \ingroup dtv_atsc
+ * \ingroup block_dtv_atsc_fs_checker
  */
 class DTV_API atsc_fs_checker : virtual public gr::block
 {

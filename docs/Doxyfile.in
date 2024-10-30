@@ -1,0 +1,147 @@
+################################################################################
+# Primary project setup.                                                       #
+################################################################################
+
+PROJECT_NAME           = "GNU Radio"
+OUTPUT_DIRECTORY       = @PROJECT_BINARY_DIR@/docs/
+
+# XML output stored in ${OUTPUT_DIRECTORY}/${XML_OUTPUT}.  Must agree
+# with what is specified to `breathe_projects` in `conf.py`.
+XML_OUTPUT             = xml
+
+# Strip the path prefix.  *MUST* agree with `exhale_args` in conf.py.
+# {repo_root}/docs/cpp/source/../../.. -> {repo_root}
+STRIP_FROM_PATH        = ../../
+
+INPUT                  = @PROJECT_SOURCE_DIR@/docs/source/group_defs.dox \
+                         @PROJECT_SOURCE_DIR@/gnuradio-runtime/include/gnuradio/ \
+                         @PROJECT_SOURCE_DIR@/gnuradio-runtime/include/pmt/ \
+                         @PROJECT_SOURCE_DIR@/gr-analog/include/gnuradio/analog/ \
+                         @PROJECT_SOURCE_DIR@/gr-audio/include/gnuradio/audio/ \
+                         @PROJECT_SOURCE_DIR@/gr-blocks/include/gnuradio/blocks/ \
+                         @PROJECT_SOURCE_DIR@/gr-channels/include/gnuradio/channels/ \
+                         @PROJECT_SOURCE_DIR@/gr-digital/include/gnuradio/digital/ \
+                         @PROJECT_SOURCE_DIR@/gr-dtv/include/gnuradio/dtv/ \
+                         @PROJECT_SOURCE_DIR@/gr-fec/include/gnuradio/fec/ \
+                         @PROJECT_SOURCE_DIR@/gr-fft/include/gnuradio/fft/ \
+                         @PROJECT_SOURCE_DIR@/gr-filter/include/gnuradio/filter/ \
+                         @PROJECT_SOURCE_DIR@/gr-iio/include/gnuradio/iio/ \
+                         @PROJECT_SOURCE_DIR@/gr-network/include/gnuradio/network/ \
+                         @PROJECT_SOURCE_DIR@/gr-pdu/include/gnuradio/pdu/ \
+                         @PROJECT_SOURCE_DIR@/gr-qtgui/include/gnuradio/qtgui/ \
+                         @PROJECT_SOURCE_DIR@/gr-soapy/include/gnuradio/soapy/ \
+                         @PROJECT_SOURCE_DIR@/gr-trellis/include/gnuradio/trellis/ \
+                         @PROJECT_SOURCE_DIR@/gr-uhd/include/gnuradio/uhd/ \
+                         @PROJECT_SOURCE_DIR@/gr-video-sdl/include/gnuradio/video_sdl/ \
+                         @PROJECT_SOURCE_DIR@/gr-vocoder/include/gnuradio/vocoder/ \
+                         @PROJECT_SOURCE_DIR@/gr-wavelet/include/gnuradio/wavelet/ \
+                         @PROJECT_SOURCE_DIR@/gr-zeromq/include/gnuradio/zeromq/ \
+#
+# Don't include .cpp files!
+FILE_PATTERNS          = *.h \
+                         *.dox 
+# If you need this to be YES, exhale will probably break.
+CREATE_SUBDIRS         = NO
+# So that Doxygen does not trim paths, which affects the file hierarchy
+FULL_PATH_NAMES        = YES
+# Nested folders will be ignored without this.
+RECURSIVE              = YES
+# Exclude certain file patterns from the INPUT section.
+EXCLUDE = 
+EXCLUDE_SYMBOLS       = @69 \
+                        apache \
+
+HAVE_DOT               = NO
+BUILTIN_STL_SUPPORT    = YES
+
+################################################################################
+# Output formats for Doxygen to create.                                        #
+################################################################################
+
+# Set to YES if you are debugging or want to compare.
+GENERATE_HTML          = NO
+# Unless you want it...
+GENERATE_LATEX         = NO
+# Both breathe and exhale need the xml.
+GENERATE_XML           = YES
+# Set to NO if you do not want the Doxygen program listing included.
+# NOTE: setting to NO may result in unrecovered file relationships
+#       (which file defined which compound)
+XML_PROGRAMLISTING     = YES
+
+################################################################################
+# Doxygen preprocessor / parser control.                                       #
+################################################################################
+
+ENABLE_PREPROCESSING   = YES
+MACRO_EXPANSION        = YES
+EXPAND_ONLY_PREDEF     = YES
+SKIP_FUNCTION_MACROS   = NO
+
+PREDEFINED             = PMT_API
+PREDEFINED            += GR_RUNTIME_API
+PREDEFINED            += ANALOG_API
+PREDEFINED            += GR_AUDIO_API
+PREDEFINED            += BLOCKS_API
+PREDEFINED            += CHANNEL_API
+PREDEFINED            += DIGITAL_API
+PREDEFINED            += DTV_API
+PREDEFINED            += FEC_API
+PREDEFINED            += FFT_API
+PREDEFINED            += FILTER_API
+PREDEFINED            += IIO_API
+PREDEFINED            += NETWORK_API
+PREDEFINED            += PDU_API
+PREDEFINED            += QTGUI_API
+PREDEFINED            += SOAPY_API
+PREDEFINED            += TRELLIS_API
+PREDEFINED            += GR_UHD_API
+PREDEFINED            += VIDEO_SDL_API
+PREDEFINED            += VOCODER_API
+PREDEFINED            += WAVELET_API
+PREDEFINED            += ZEROMQ_API
+
+PREDEFINED            += Q_OBJECT
+PREDEFINED            += Q_DECLARE_METATYPE
+PREDEFINED            += Q_ENUMS
+PREDEFINED            += Q_PROPERTY
+
+# Symbol expansion to follow for #include statements (not input)
+SEARCH_INCLUDES        = YES
+INCLUDE_PATH           = ../../
+
+################################################################################
+# Compound extraction control.                                                 #
+################################################################################
+
+EXTRACT_ALL            = YES
+EXTRACT_PACKAGE        = YES
+EXTRACT_STATIC         = YES
+CASE_SENSE_NAMES       = NO
+
+################################################################################
+# Docstring control / customization.                                           #
+################################################################################
+
+# Allow for rst directives and advanced functions e.g. grid tables
+# Example:
+#     /**
+#      * \rst
+#      * .. code-block:: cpp
+#      *
+#      *     int main() {
+#      *         return 0;
+#      *     }
+#      *
+#      * \endrst
+#      */
+# NOTE:
+#     1. \rst and \endrst must be on their own line.
+#     2. leading-asterisk required.
+ALIASES                = "rst=\verbatim embed:rst:leading-asterisk"
+ALIASES               += "endrst=\endverbatim"
+
+################################################################################
+# Warning suppression.                                                         #
+################################################################################
+WARN_IF_UNDOCUMENTED   = NO

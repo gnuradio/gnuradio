@@ -21,7 +21,7 @@ namespace kernel {
 
 /*!
  * \brief high performance Automatic Gain Control class
- * \ingroup level_controllers_blk
+ * \ingroup block_analog_agc2
  *
  * \details
  * For Power the absolute value of the complex number is used.

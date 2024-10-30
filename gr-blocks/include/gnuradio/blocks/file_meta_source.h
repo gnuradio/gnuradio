@@ -20,7 +20,7 @@ namespace blocks {
 /*!
  * \brief Reads stream from file with meta-data headers. Headers
  * are parsed into tags.
- * \ingroup file_operators_blk
+ * \ingroup block_blocks_file_meta_source
  *
  * \details
  * The information in the metadata headers includes:

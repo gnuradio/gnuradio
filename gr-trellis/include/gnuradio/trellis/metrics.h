@@ -22,7 +22,7 @@ namespace trellis {
 
 /*!
  * \brief Evaluate metrics for use by the Viterbi algorithm.
- * \ingroup trellis_coding_blk
+ * \ingroup block_trellis_metrics
  */
 template <class T>
 class TRELLIS_API metrics : virtual public block

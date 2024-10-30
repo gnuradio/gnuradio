@@ -20,7 +20,7 @@ namespace digital {
 /*!
  * \brief Header formatter that adds the payload bits/symbol
  * format and a packet number counter.
- * \ingroup packet_operators_blk
+ * \ingroup block_digital_header_format_counter
  *
  * \details
  *

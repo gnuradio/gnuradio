@@ -20,7 +20,7 @@ namespace blocks {
 
 /*!
  * \brief Exponentiates a complex stream with an integer exponent
- * \ingroup blocks
+ * \ingroup block_blocks_exponentiate_const_cci
  *
  * \details
  * This block raises a complex stream to an integer exponent. The exponent

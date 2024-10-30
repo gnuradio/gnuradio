@@ -18,7 +18,7 @@ namespace uhd {
 
 /*! RFNoC Digital Upconverter Block
  *
- * \ingroup uhd_blk
+ * \ingroup block_uhd_rfnoc_duc
  */
 class GR_UHD_API rfnoc_duc : virtual public rfnoc_block
 {

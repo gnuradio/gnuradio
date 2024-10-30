@@ -19,7 +19,7 @@ namespace blocks {
 
 /*!
  * \brief Convert stream of shorts to a stream of floats
- * \ingroup type_converters_blk
+ * \ingroup block_blocks_short_to_float
  */
 class BLOCKS_API short_to_float : virtual public sync_block
 {

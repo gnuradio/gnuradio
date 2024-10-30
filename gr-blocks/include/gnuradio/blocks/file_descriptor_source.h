@@ -20,7 +20,7 @@ namespace blocks {
 
 /*!
  * \brief Read stream from file descriptor.
- * \ingroup file_operators_blk
+ * \ingroup block_blocks_file_descriptor_source
  */
 class BLOCKS_API file_descriptor_source : virtual public sync_block
 {

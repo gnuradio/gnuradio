@@ -19,7 +19,7 @@ namespace blocks {
 
 /*!
  * \brief Convert a stream of gr_complex to 1 or 2 streams of float.
- * \ingroup type_converters_blk
+ * \ingroup block_blocks_complex_to_float
  *
  * \details
  * If a single output stream is attached, this will output the

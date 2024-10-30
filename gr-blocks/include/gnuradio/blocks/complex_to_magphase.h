@@ -19,7 +19,7 @@ namespace blocks {
 
 /*!
  * \brief Convert a stream of gr_complex to magnitude and phase (both floats)
- * \ingroup type_converters_blk
+ * \ingroup block_blocks_complex_to_magphase
  *
  * \details
  * output[0] is the magnitude

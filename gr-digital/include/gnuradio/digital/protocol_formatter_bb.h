@@ -23,7 +23,7 @@ namespace digital {
  * \brief Uses a header format object to create a header from a
  * tagged stream packet.
  *
- * \ingroup packet_operators_blk
+ * \ingroup block_digital_protocol_formatter
  *
  * \details
  * This block takes in tagged stream and creates a header,

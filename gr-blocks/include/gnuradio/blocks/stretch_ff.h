@@ -21,7 +21,7 @@ namespace blocks {
  * \brief adjust y-range of an input vector by mapping to range
  * (max-of-input, stipulated-min). Primarily for spectral
  * signature matching by normalizing spectrum dynamic ranges.
- * \ingroup stream_operators_blk
+ * \ingroup block_blocks_stretch
  */
 class BLOCKS_API stretch_ff : virtual public sync_block
 {

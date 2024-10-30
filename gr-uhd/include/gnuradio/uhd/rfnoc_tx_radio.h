@@ -22,7 +22,7 @@ namespace uhd {
  * same flow graph, simply create an rfnoc_rx_radio and an rfnoc_tx_radio with
  * the same block ID.
  *
- * \ingroup uhd_blk
+ * \ingroup block_uhd_rfnoc_tx_radio
  */
 class GR_UHD_API rfnoc_tx_radio : virtual public rfnoc_block
 {

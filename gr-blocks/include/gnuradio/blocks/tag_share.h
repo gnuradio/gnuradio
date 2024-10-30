@@ -19,7 +19,7 @@ namespace blocks {
 
 /*!
  * \brief Adds tags from Input 1 onto Input 0's stream.
- * \ingroup blocks
+ * \ingroup block_blocks_tag_share
  *
  * \details
  * This block utilizes the GNU Radio runtime's tag propagation policy

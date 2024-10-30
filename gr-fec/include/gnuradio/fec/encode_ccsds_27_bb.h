@@ -18,7 +18,7 @@ namespace gr {
 namespace fec {
 
 /*! \brief A rate 1/2, k=7 convolutional encoder for the CCSDS standard
- * \ingroup error_coding_blk
+ * \ingroup block_fec_encode_ccsds_27
  *
  * \details
  * This block performs convolutional encoding using the CCSDS standard

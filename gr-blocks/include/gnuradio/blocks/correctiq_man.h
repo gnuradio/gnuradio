@@ -21,7 +21,7 @@ namespace blocks {
  * \brief This block provides a mechanism to manually provide a real and
  * \p imaginary signal offset.  Very similar to a complex add block,
  * \p the block supports dynamic updating on the values.
- * \ingroup iq_correction
+ * \ingroup block_blocks_correctiq_man
  *
  */
 class BLOCKS_API correctiq_man : virtual public gr::sync_block

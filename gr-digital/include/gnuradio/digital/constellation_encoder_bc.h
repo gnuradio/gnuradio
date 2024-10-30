@@ -20,7 +20,7 @@ namespace digital {
 
 /*!
  * \brief Constellation Encoder
- * \ingroup symbol_coding_blk
+ * \ingroup block_digital_constellation_encoder
  *
  * \details
  * Encode index of constellation points into a constellation's complex

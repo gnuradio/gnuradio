@@ -19,8 +19,8 @@ namespace blocks {
 
 /*!
  * \brief VCO - Voltage controlled oscillator
- * \ingroup modulators_blk
- * \ingroup waveform_generators_blk
+ * \ingroup block_blocks_vco
+ * \ingroup block_blocks_vco
  *
  * \details
  * input: float stream of control voltages; output: complex oscillator output

@@ -20,8 +20,8 @@ namespace digital {
 
 /*!
  * \brief Examine input for specified access code, one bit at a time.
- * \ingroup packet_operators_blk
- * \ingroup deprecated_blk
+ * \ingroup block_digital_correlate_access_code
+ * \ingroup block_digital_correlate_access_code
  *
  * \details
  * input:  stream of bits, 1 bit per input byte (data in LSB)

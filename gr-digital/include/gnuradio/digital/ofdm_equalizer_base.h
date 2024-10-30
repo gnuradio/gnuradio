@@ -19,8 +19,8 @@ namespace digital {
 
 /*!
  * \brief Base class for implementation details of frequency-domain OFDM equalizers.
- * \ingroup ofdm_blk
- * \ingroup equalizers_blk
+ * \ingroup block_digital_ofdm_equalizer_base
+ * \ingroup block_digital_ofdm_equalizer_base
  */
 class DIGITAL_API ofdm_equalizer_base
     : public std::enable_shared_from_this<ofdm_equalizer_base>

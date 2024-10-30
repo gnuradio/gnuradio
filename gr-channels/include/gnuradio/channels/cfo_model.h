@@ -20,7 +20,7 @@ namespace channels {
 
 /*!
  * \brief channel simulator
- * \ingroup channel_models_blk
+ * \ingroup block_channels_cfo_model
  *
  * \details
  * This block implements a carrier frequency offset model that

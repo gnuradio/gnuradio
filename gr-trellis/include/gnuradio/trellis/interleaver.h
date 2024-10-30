@@ -20,7 +20,7 @@ namespace trellis {
 
 /*!
  * \brief  INTERLEAVER class
- * \ingroup trellis_coding_blk
+ * \ingroup block_trellis_interleaver
  */
 class TRELLIS_API interleaver
 {

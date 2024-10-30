@@ -20,7 +20,7 @@ namespace trellis {
 
 /*!
  * \brief Permutation.
- * \ingroup trellis_coding_blk
+ * \ingroup block_trellis_permutation
  */
 class TRELLIS_API permutation : virtual public sync_block
 {

@@ -19,8 +19,8 @@ namespace blocks {
 
 /*!
  * \brief A file sink that uses tags to save files.
- * \ingroup file_operators_blk
- * \ingroup stream_tag_tools_blk
+ * \ingroup block_blocks_tagged_file_sink
+ * \ingroup block_blocks_tagged_file_sink
  *
  * \details
  * The sink uses a tag with the key 'burst' to trigger the saving

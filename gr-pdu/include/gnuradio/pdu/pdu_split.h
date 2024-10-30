@@ -19,8 +19,8 @@ namespace pdu {
 
 /*!
  * \brief Split PDU dict and data to separate ports
- * \ingroup debug_tools_blk
- * \ingroup pdu_blk
+ * \ingroup block_pdu_pdu_split
+ * \ingroup block_pdu_pdu_split
  *
  * Splits a PDU into its metadata dictionary and vector,
  * outputs nothing if the input message is not a PDU. Useful for stripping metadata out

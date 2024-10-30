@@ -19,7 +19,7 @@ namespace blocks {
 
 /*!
  * \brief output = input * complex constant
- * \ingroup math_operators_blk
+ * \ingroup block_blocks_multiply_by_tag_value
  *
  * \details
  * The complex constant used by this block is found from a tag

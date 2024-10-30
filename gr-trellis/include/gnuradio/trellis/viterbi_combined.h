@@ -22,7 +22,7 @@ namespace gr {
 namespace trellis {
 
 /*!
- *  \ingroup trellis_coding_blk
+ *  \ingroup block_trellis_viterbi_combined
  */
 template <class IN_T, class OUT_T>
 class TRELLIS_API viterbi_combined : virtual public block

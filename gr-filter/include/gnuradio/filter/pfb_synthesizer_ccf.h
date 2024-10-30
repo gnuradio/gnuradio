@@ -21,7 +21,7 @@ namespace filter {
 /*!
  * \brief Polyphase synthesis filterbank with
  *        gr_complex input, gr_complex output and float taps
- * \ingroup channelizers_blk
+ * \ingroup block_filter_pfb_synthesizer
  *
  * \details
  *

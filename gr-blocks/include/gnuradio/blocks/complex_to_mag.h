@@ -19,7 +19,7 @@ namespace blocks {
 
 /*!
  * \brief complex in, magnitude out (float)
- * \ingroup type_converters_blk
+ * \ingroup block_blocks_complex_to_mag
  *
  * \details
  * Calculates the magnitude of the complex samples:

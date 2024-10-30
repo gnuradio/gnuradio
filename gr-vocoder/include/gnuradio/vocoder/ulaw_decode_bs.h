@@ -19,7 +19,7 @@ namespace vocoder {
 
 /*!
  * \brief This block performs ulaw audio decoding.
- * \ingroup audio_blk
+ * \ingroup block_vocoder_ulaw_decode
  */
 class VOCODER_API ulaw_decode_bs : virtual public sync_block
 {

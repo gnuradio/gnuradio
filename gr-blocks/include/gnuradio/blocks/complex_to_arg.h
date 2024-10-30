@@ -19,7 +19,7 @@ namespace blocks {
 
 /*!
  * \brief complex in, arg (arctan) out (float)
- * \ingroup type_converters_blk
+ * \ingroup block_blocks_complex_to_arg
  */
 class BLOCKS_API complex_to_arg : virtual public sync_block
 {

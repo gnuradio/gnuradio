@@ -19,7 +19,7 @@ namespace digital {
 
 /*!
  * \brief Galois LFSR pseudo-random source generating float outputs -1.0 - 1.0.
- * \ingroup waveform_generators_blk
+ * \ingroup block_digital_glfsr_source
  */
 class DIGITAL_API glfsr_source_f : virtual public sync_block
 {

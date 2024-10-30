@@ -19,7 +19,7 @@ namespace digital {
 
 /*!
  * \brief Adds a cyclic prefix and performs optional pulse shaping on OFDM symbols.
- * \ingroup ofdm_blk
+ * \ingroup block_digital_ofdm_cyclic_prefixer
  *
  * \details
  * Input: OFDM symbols (in the time domain, i.e. after the IFFT). Optionally,

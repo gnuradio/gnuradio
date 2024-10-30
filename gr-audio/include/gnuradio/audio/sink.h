@@ -19,7 +19,7 @@ namespace audio {
 
 /*!
  * \brief Creates a sink from an audio device.
- * \ingroup audio_blk
+ * \ingroup block_audio_sink
  */
 class GR_AUDIO_API sink : virtual public sync_block
 {

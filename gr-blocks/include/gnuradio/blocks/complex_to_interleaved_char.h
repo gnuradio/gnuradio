@@ -19,7 +19,7 @@ namespace blocks {
 
 /*!
  * \brief Convert stream of complex to a stream of interleaved chars.
- * \ingroup type_converters_blk
+ * \ingroup block_blocks_complex_to_interleaved_char
  *
  * \details
  * The output stream contains chars with twice as many output

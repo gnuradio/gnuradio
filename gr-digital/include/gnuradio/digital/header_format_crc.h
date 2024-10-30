@@ -21,7 +21,7 @@ namespace digital {
 /*!
  * \brief Header formatter that includes the payload length,
  * packet number, and a CRC check on the header.
- * \ingroup packet_operators_blk
+ * \ingroup block_digital_header_format_crc
  *
  * \details
  *

@@ -20,7 +20,7 @@ namespace filter {
 /*!
  * \brief IIR filter with complex input, complex output, and
  * complex taps.
- * \ingroup filter_blk
+ * \ingroup block_filter_iir_filter
  *
  * \details
  * This filter uses the Direct Form I implementation, where \p

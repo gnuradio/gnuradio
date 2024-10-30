@@ -21,7 +21,7 @@ namespace digital {
 /*!
  * \brief process received bits looking for packet sync, header,
  * and process bits into packet
- * \ingroup packet_operators_blk
+ * \ingroup block_digital_packet_sink
  *
  * \details
  * input: stream of symbols to be sliced.

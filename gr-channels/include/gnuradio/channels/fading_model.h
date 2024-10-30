@@ -20,7 +20,7 @@ namespace channels {
 
 /*!
  * \brief fading simulator
- * \ingroup channel_models_blk
+ * \ingroup block_channels_fading_model
  *
  * \details
  * This block implements a basic fading model simulator that can

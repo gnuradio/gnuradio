@@ -20,7 +20,7 @@ namespace vocoder {
  * \brief This block performs CVSD audio encoding.  Its design and
  * implementation is modeled after the CVSD encoder/decoder
  * specifications defined in the Bluetooth standard.
- * \ingroup audio_blk
+ * \ingroup block_vocoder_cvsd_encode
  *
  * \details
  * CVSD is a method for encoding speech that seeks to reduce the

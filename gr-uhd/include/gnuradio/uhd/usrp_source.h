@@ -19,7 +19,7 @@ namespace uhd {
 class uhd_usrp_source;
 
 /*! USRP Source -- Radio Receiver
- * \ingroup uhd_blk
+ * \ingroup block_uhd_usrp_source
  *
  * The USRP source block receives samples and writes to a stream.
  * The source block also provides API calls for receiver settings.

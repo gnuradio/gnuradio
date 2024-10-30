@@ -19,7 +19,7 @@ namespace digital {
 
 /*!
  * \brief OFDM frame equalizer
- * \ingroup ofdm_blk
+ * \ingroup block_digital_ofdm_frame_equalizer_vcvc
  *
  * \details
  * Performs equalization in one or two dimensions on a tagged OFDM frame.

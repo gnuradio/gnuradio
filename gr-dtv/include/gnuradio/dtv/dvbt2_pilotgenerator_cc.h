@@ -19,7 +19,7 @@ namespace dtv {
 
 /*!
  * \brief Adds pilots to T2 frames.
- * \ingroup dtv
+ * \ingroup block_dtv_dvbt2_pilotgenerator
  *
  * Input: Frequency interleaved T2 frame. \n
  * Output: T2 frame with pilots (in time domain).

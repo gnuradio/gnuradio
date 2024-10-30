@@ -21,7 +21,7 @@ namespace uhd {
  *
  * This block can represent any RFNoC block
  *
- * \ingroup uhd_blk
+ * \ingroup block_uhd_rfnoc_block_generic
  */
 class GR_UHD_API rfnoc_block_generic : virtual public rfnoc_block
 {

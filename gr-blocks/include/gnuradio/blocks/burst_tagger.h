@@ -19,8 +19,8 @@ namespace blocks {
 
 /*!
  * \brief Sets a burst on/off tag based on the value of the trigger input.
- * \ingroup peak_detectors_blk
- * \ingroup stream_tag_tools_blk
+ * \ingroup block_blocks_burst_tagger
+ * \ingroup block_blocks_burst_tagger
  *
  * \details
  * This block takes two inputs, a signal stream on the input

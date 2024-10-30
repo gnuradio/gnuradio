@@ -22,7 +22,7 @@ namespace blocks {
  * \brief Compares vectors from multiple streams and determines
  * the index in the vector and stream number where the maximum
  * value occurred.
- * \ingroup math_operators_blk
+ * \ingroup block_blocks_argmax
  *
  * \details
  * Data is passed in as a vector of length \p vlen from multiple

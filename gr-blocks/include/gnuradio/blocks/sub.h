@@ -21,7 +21,7 @@ namespace blocks {
 
 /*!
  * \brief output = input_0 -  input_1 - ...)
- * \ingroup math_operators_blk
+ * \ingroup block_blocks_sub
  *
  * \details
  * Subtract across all input streams.

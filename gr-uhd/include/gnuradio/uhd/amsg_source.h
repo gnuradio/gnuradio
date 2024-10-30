@@ -37,7 +37,7 @@ public:
 
     /*!
      * \brief Make a new USRP asynchronous message-based source block.
-     * \ingroup uhd_blk
+     * \ingroup block_uhd_amsg_source
      */
     static sptr make(const ::uhd::device_addr_t& device_addr, msg_queue::sptr msgq);
 

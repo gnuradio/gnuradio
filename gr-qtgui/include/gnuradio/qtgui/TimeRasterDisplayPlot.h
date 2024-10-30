@@ -24,7 +24,7 @@
 
 /*!
  * \brief QWidget for time raster (time vs. time) plots.
- * \ingroup qtgui_blk
+ * \ingroup block_qtgui_TimeRasterDisplayPlot
  */
 class TimeRasterDisplayPlot : public DisplayPlot
 {

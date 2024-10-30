@@ -24,7 +24,7 @@
 
 /*!
  * \brief Base class for setting up and  managing QTGUI plot forms.
- * \ingroup qtgui_blk
+ * \ingroup block_qtgui_displayform
  */
 class QTGUI_API DisplayForm : public QWidget
 {

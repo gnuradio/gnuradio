@@ -17,7 +17,7 @@ namespace dtv {
 
 /*!
  * \brief OFDM symbol acquisition.
- * \ingroup dtv
+ * \ingroup block_dtv_dvbt_ofdm_sym_acquisition
  *
  * Data input format: \n
  * complex(real(float), imag(float)). \n

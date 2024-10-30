@@ -19,7 +19,7 @@ namespace blocks {
 
 /*!
  * \brief Complex rotator
- * \ingroup math_operators_blk
+ * \ingroup block_blocks_rotator
  *
  * \details
  *

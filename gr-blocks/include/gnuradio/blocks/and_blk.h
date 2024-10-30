@@ -21,7 +21,7 @@ namespace blocks {
 
 /*!
  * \brief output = input[0] & input[1] & ... & input[M-1]
- * \ingroup boolean_operators_blk
+ * \ingroup block_blocks_and
  *
  * \details
  * bitwise boolean AND across all input streams.

@@ -19,7 +19,7 @@ namespace blocks {
 
 /*!
  * \brief output = input + constant
- * \ingroup math_operators_blk
+ * \ingroup block_blocks_add_const
  */
 class BLOCKS_API add_const_ss : virtual public sync_block
 {
