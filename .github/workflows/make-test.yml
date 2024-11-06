@@ -7,7 +7,34 @@ on:
     branches:
       - main
 jobs:
-  # We start with checking C++ formatting. No one gets free CPU cycles if they
+  # Check hashes first
+  check-hashes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    name: Check hashes
+    container:
+      image: 'gnuradio/ci:fedora-40-3.10'
+    steps:
+    - name: Checkout project
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 1
+    - name: ensure zsh availability
+      run: command -v zsh > /dev/null || (dnf --refresh install -y zsh)
+    - name: Add git repo to safe repos
+      run: git config --global --add safe.directory ${GITHUB_WORKSPACE}
+    - name: Run hash fixer on all binding files
+      run: gr-utils/bindtool/scripts/binding-hash-hotfixer.zsh gr-*/python/*/bindings/*.cc gnuradio-runtime/python/gnuradio/gr/bindings/*.cc
+    - name: get changed files
+      run: >
+          git --no-pager diff -z --name-only --
+          > /tmp/hashdiff
+          ; [[ ! -s /tmp/hashdiff ]] && exit 0
+          ; sed -z 's;.*;::error file=&::Hash mismatch in &\n;' /tmp/hashdiff
+          | tr -d '\0'
+          ; exit -1
+
+  # We continue checking C++ formatting. No one gets free CPU cycles if they
   # can't use clang-format.
   check-formatting:
     name: Check C++ Formatting
@@ -38,6 +65,7 @@ jobs:
     name: Doxygen
     runs-on: ubuntu-latest # This can run on whatever
     timeout-minutes: 15
+    needs: [check-hashes, check-formatting]
     container:
       image: 'gnuradio/ci:ubuntu-20.04-3.9'
       volumes:
@@ -51,7 +79,7 @@ jobs:
       run: 'cd /build && make doxygen_target'
   linux-docker:
   # All of these shall depend on the formatting check (needs: check-formatting)
-    needs: [check-formatting, check-python-formatting]
+    needs: [check-hashes, check-formatting, check-python-formatting]
     runs-on: ubuntu-latest
     # The GH default is 360 minutes (it's also the max as of Feb-2021). However
     # we should fail sooner. The only reason to exceed this time is if a test
@@ -132,7 +160,7 @@ jobs:
       run: python3 -c "import gnuradio.blocks; print(gnuradio.blocks.complex_to_float())"
   no-python:
   # All of these shall depend on the formatting check (needs: check-formatting)
-    needs: [check-formatting, check-python-formatting]
+    needs: [check-hashes, check-formatting, check-python-formatting]
     runs-on: ubuntu-latest
     # The GH default is 360 minutes (it's also the max as of Feb-2021). However
     # we should fail sooner. The only reason to exceed this time is if a test
@@ -157,7 +185,7 @@ jobs:
       run: 'cd /build && ctest --output-on-failure'
   mingw64:
   # All of these shall depend on the formatting check (needs: check-formatting)
-    needs: [check-formatting, check-python-formatting]
+    needs: [check-hashes, check-formatting, check-python-formatting]
     runs-on: windows-latest
     name: MinGW-w64
     defaults:
