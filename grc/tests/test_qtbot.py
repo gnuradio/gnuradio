@@ -288,7 +288,7 @@ def test_change_id(qtbot, qapp_cls_):
     )
     qtbot.wait(100)
     qtbot.mouseDClick(
-        opts.gui.props_dialog.edit_params[1],
+        opts.gui.props_dialog.edit_params[0],
         QtCore.Qt.LeftButton,
     )
     type_text(qtbot, qapp_cls_, "changed")
@@ -911,7 +911,7 @@ def test_generate(qtbot, qapp_cls_, monkeypatch, tmp_path):
     click_on(qtbot, qapp_cls_, n_sink.sinks[0])
     assert not fg_path.exists(), "File/Save (setup): .grc file already exists"
     assert not py_path.exists(), "File/Save (setup): Python file already exists"
-    menu_shortcut(qtbot, qapp_cls_, "build", QtCore.Qt.Key_B, QtCore.Qt.Key_G)
+    menu_shortcut(qtbot, qapp_cls_, "build", QtCore.Qt.Key_B, QtCore.Qt.Key_Enter)
     qtbot.wait(500)
     assert fg_path.exists(), "File/Save: Could not save .grc file"
     assert py_path.exists(), "File/Save: Could not save Python file"

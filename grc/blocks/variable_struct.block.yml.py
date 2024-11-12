@@ -79,8 +79,8 @@ def make_yml(num_fields):
     return ''.join((
         HEADER.format(num_fields),
         FIELD0, ''.join(FIELDS.format(i) for i in range(1, num_fields)),
-        ''.join(VALUES.format(i) for i in range(num_fields)),'value: ${struct({',
-        ''.join(FUNCTIONCALL.format(i) for i in range(num_fields)),'})}\n\nasserts:\n',
+        ''.join(VALUES.format(i) for i in range(num_fields)), 'value: ${struct({',
+        ''.join(FUNCTIONCALL.format(i) for i in range(num_fields)), '})}\n\nasserts:\n',
         ''.join(ASSERTS.format(i) for i in range(num_fields)),
         ''.join(TEMPLATES.format(num_fields)),
         FOOTER
