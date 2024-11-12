@@ -19,7 +19,6 @@ from ._templates import MakoTemplates, no_quotes
 from ._flags import Flags
 
 from ..base import Element
-from ..params import Param
 from ..utils.descriptors import lazy_property
 
 
@@ -62,7 +61,7 @@ class Block(Element):
         param_factory = self.parent_platform.make_param
         port_factory = self.parent_platform.make_port
 
-        self.params: typing.OrderedDict[str, Param] = collections.OrderedDict(
+        self.params = collections.OrderedDict(
             (data['id'], param_factory(parent=self, **data)) for data in self.parameters_data)
         if self.key == 'options':
             self.params['id'].hide = 'part'

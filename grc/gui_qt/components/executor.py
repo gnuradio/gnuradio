@@ -5,6 +5,7 @@ import threading
 import time
 from pathlib import Path
 from shutil import which as find_executable
+from gnuradio import gr
 
 from ...core import Messages
 from ...core.utils.system import get_cmake_nproc
@@ -21,7 +22,7 @@ class ExecFlowGraphThread(threading.Thread):
 
         self.view = view
         self.flow_graph = flowgraph
-        self.xterm_executable = xterm_executable
+        self.xterm_executable = xterm_executable or gr.prefs().get_string('grc', 'xterm_executable', 'xterm')
         self.update_callback = callback
 
         try:
@@ -57,11 +58,8 @@ class ExecFlowGraphThread(threading.Thread):
         # it looks really ugly and confusing in the console panel.
         Messages.send_start_exec(' '.join(run_command_args))
 
-        dirname = Path(generator.file_path).parent
-
         return subprocess.Popen(
             args=run_command_args,
-            cwd=dirname,
             stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
             shell=False, universal_newlines=True
         )
@@ -84,7 +82,7 @@ class ExecFlowGraphThread(threading.Thread):
 
         nproc = get_cmake_nproc()
 
-        run_command_args = f'cmake .. && cmake --build . -j{nproc} && cd ../.. && {xterm_executable} -e {run_command}'
+        run_command_args = f'cmake .. && cmake --build . -j{nproc} && {xterm_executable} -e {os.path.abspath(run_command)}'
         Messages.send_start_exec(run_command_args)
 
         return subprocess.Popen(
