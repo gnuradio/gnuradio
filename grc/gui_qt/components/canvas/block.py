@@ -73,7 +73,11 @@ class GUIBlock(QGraphicsItem):
         super(GUIBlock, self).__init__()
         self.core = core
         self.parent = self.scene()
-        self.font = QFont("Helvetica", 10)
+        # Scale font size with DPI
+        font_size = int(10 * Constants.DPI_SCALING)
+        self.font = QFont("Helvetica", font_size)
+
+
 
         self.create_shapes_and_labels()
 
@@ -109,35 +113,41 @@ class GUIBlock(QGraphicsItem):
         self.show_param_val = qsettings.value('grc/show_param_val', type=bool)
         self.prepareGeometryChange()
         self.font.setBold(True)
-
         # figure out height of block based on how many params there are
-        i = 35
+        base_height = int(35 * Constants.DPI_SCALING)
+        param_height = int(20 * Constants.DPI_SCALING)
+        i = base_height
 
         # Check if we need to increase the height to fit all the ports
         for key, item in self.core.params.items():
             value = item.value
             if (value is not None and item.hide == "none") or (item.dtype == 'id' and self.force_show_id):
-                i += 20
+                i += param_height
 
         self.height = i
 
+
         def get_min_height_for_ports(ports):
             min_height = (
-                2 * Constants.PORT_BORDER_SEPARATION +
-                len(ports) * Constants.PORT_SEPARATION
+                2 * int(Constants.PORT_BORDER_SEPARATION * Constants.DPI_SCALING) +
+                len(ports) * int(Constants.PORT_SEPARATION * Constants.DPI_SCALING)
             )
             # If any of the ports are bus ports - make the min height larger
             if any([p.dtype == "bus" for p in ports]):
                 min_height = (
-                    2 * Constants.PORT_BORDER_SEPARATION +
+                    2 * int(Constants.PORT_BORDER_SEPARATION * Constants.DPI_SCALING) +
                     sum(
-                        port.gui.height + Constants.PORT_SPACING
+                        port.gui.height + int(Constants.PORT_SPACING * Constants.DPI_SCALING)
                         for port in ports
                         if port.dtype == "bus"
-                    ) - Constants.PORT_SPACING
+                    ) - int(Constants.PORT_SPACING * Constants.DPI_SCALING)
                 )
 
             else:
+                if ports:
+                    min_height -= ports[-1].gui.height
+            return min_height
+
                 if ports:
                     min_height -= ports[-1].gui.height
             return min_height
@@ -204,16 +214,22 @@ class GUIBlock(QGraphicsItem):
             ) / 2
             for port in ports:
                 if port._dir == "sink":
-                    port.gui.setPos(-15, offset)
+                    port.gui.setPos(int(-15 * Constants.DPI_SCALING), offset)
                 else:
                     port.gui.setPos(self.width, offset)
                 port.gui.create_shapes_and_labels()
 
                 offset += (
-                    Constants.PORT_SEPARATION
+                    int(Constants.PORT_SEPARATION * Constants.DPI_SCALING)
                     if not has_busses
-                    else port.gui.height + Constants.PORT_SPACING
+
+
+                offset += (
+                    int(Constants.PORT_SEPARATION * Constants.DPI_SCALING)
+                    if not has_busses
+                    else port.gui.height + int(Constants.PORT_SPACING * Constants.DPI_SCALING)
                 )
+
 
         self._update_colors()
         self.create_port_labels()
@@ -291,14 +307,17 @@ class GUIBlock(QGraphicsItem):
             painter.rotate(180)
             painter.translate(-self.width / 2, -self.height / 2)
 
+        # Scale text position with DPI
+        label_offset = int(15 * Constants.DPI_SCALING)
         painter.drawText(
-            QRectF(0, 0 - self.height / 2 + 15, self.width, self.height),
+            QRectF(0, 0 - self.height / 2 + label_offset, self.width, self.height),
             Qt.AlignCenter,
             self.core.label,
         )
 
-        # Draw param text
-        y_offset = 30  # params start 30 down from the top of the box
+        # Draw param text with scaled offset
+        y_offset = int(30 * Constants.DPI_SCALING)  # params start down from the top of the box
+
         for key, item in self.core.params.items():
             name = item.name
             value = item.value
@@ -427,3 +446,12 @@ class GUIBlock(QGraphicsItem):
     def open_properties(self):
         self.props_dialog = PropsDialog(self.core, self.force_show_id)
         self.props_dialog.show()
+
+
+
+
+
+
+
+
+

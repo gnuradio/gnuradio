@@ -87,10 +87,17 @@ Please consider contacting OOT module maintainer for any block in here \
 and kindly ask to update their GRC Block Descriptions or Block Tree to include a module name."""
 
 
-# _SCREEN = Gdk.Screen.get_default()
-# _SCREEN_RESOLUTION = _SCREEN.get_resolution() if _SCREEN else -1
-# DPI_SCALING = _SCREEN_RESOLUTION / 96.0 if _SCREEN_RESOLUTION > 0 else 1.0
-DPI_SCALING = 1.0  # todo: figure out the GTK3 way (maybe cairo does this for us
+from qtpy.QtWidgets import QApplication
+
+def get_dpi_scaling():
+    if not QApplication.instance():
+        return 1.0
+    screen = QApplication.instance().primaryScreen()
+    if not screen:
+        return 1.0
+    return screen.logicalDotsPerInch() / 96.0
+
+DPI_SCALING = get_dpi_scaling()  # Get proper scaling factor from Qt
 
 '''
 # Gtk-themes classified as dark
@@ -119,3 +126,4 @@ def update_font_size(font_size):
 
 
 update_font_size(DEFAULT_FONT_SIZE)
+
