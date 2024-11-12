@@ -189,8 +189,10 @@ class VariableEditor(QDockWidget, base.Component):
                     variable_.setForeground(0, self._tree.palette().color(self.palette().WindowText))
                     variable_.setForeground(1, self._tree.palette().color(self.palette().WindowText))
                 else:
-                    variable_.setForeground(0, self._tree.palette().color(self.palette().Disabled, self.palette().WindowText))
-                    variable_.setForeground(1, self._tree.palette().color(self.palette().Disabled, self.palette().WindowText))
+                    variable_.setForeground(0, self._tree.palette().color(
+                        self.palette().Disabled, self.palette().WindowText))
+                    variable_.setForeground(1, self._tree.palette().color(
+                        self.palette().Disabled, self.palette().WindowText))
             else:
                 variable_.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEnabled)
                 if block.enabled:
@@ -201,12 +203,16 @@ class VariableEditor(QDockWidget, base.Component):
                     except Exception:
                         log.exception(f'Failed to evaluate variable block {block.name}', exc_info=True)
                         variable_.setText(1, '<Open Properties>')
-                        variable_.setForeground(0, self._tree.palette().color(self.palette().Disabled, self.palette().WindowText))
-                        variable_.setForeground(1, self._tree.palette().color(self.palette().Disabled, self.palette().WindowText))
+                        variable_.setForeground(0, self._tree.palette().color(
+                            self.palette().Disabled, self.palette().WindowText))
+                        variable_.setForeground(1, self._tree.palette().color(
+                            self.palette().Disabled, self.palette().WindowText))
                 else:
                     variable_.setText(1, '<Open Properties>')
-                    variable_.setForeground(0, self._tree.palette().color(self.palette().Disabled, self.palette().WindowText))
-                    variable_.setForeground(1, self._tree.palette().color(self.palette().Disabled, self.palette().WindowText))
+                    variable_.setForeground(0, self._tree.palette().color(
+                        self.palette().Disabled, self.palette().WindowText))
+                    variable_.setForeground(1, self._tree.palette().color(
+                        self.palette().Disabled, self.palette().WindowText))
             variable_.setIcon(2, QtGui.QIcon.fromTheme("list-remove"))
 
         self.currently_rebuilding = False
