@@ -78,6 +78,7 @@ class GUIBlock(QGraphicsItem):
         self.font = QFont("Helvetica", font_size)
 
 
+
         self.create_shapes_and_labels()
 
         if "coordinate" not in self.core.states.keys():
@@ -112,7 +113,6 @@ class GUIBlock(QGraphicsItem):
         self.show_param_val = qsettings.value('grc/show_param_val', type=bool)
         self.prepareGeometryChange()
         self.font.setBold(True)
-
         # figure out height of block based on how many params there are
         base_height = int(35 * Constants.DPI_SCALING)
         param_height = int(20 * Constants.DPI_SCALING)
@@ -125,6 +125,7 @@ class GUIBlock(QGraphicsItem):
                 i += param_height
 
         self.height = i
+
 
         def get_min_height_for_ports(ports):
             min_height = (
@@ -143,6 +144,10 @@ class GUIBlock(QGraphicsItem):
                 )
 
             else:
+                if ports:
+                    min_height -= ports[-1].gui.height
+            return min_height
+
                 if ports:
                     min_height -= ports[-1].gui.height
             return min_height
@@ -213,6 +218,11 @@ class GUIBlock(QGraphicsItem):
                 else:
                     port.gui.setPos(self.width, offset)
                 port.gui.create_shapes_and_labels()
+
+                offset += (
+                    int(Constants.PORT_SEPARATION * Constants.DPI_SCALING)
+                    if not has_busses
+
 
                 offset += (
                     int(Constants.PORT_SEPARATION * Constants.DPI_SCALING)
@@ -436,6 +446,11 @@ class GUIBlock(QGraphicsItem):
     def open_properties(self):
         self.props_dialog = PropsDialog(self.core, self.force_show_id)
         self.props_dialog.show()
+
+
+
+
+
 
 
 
