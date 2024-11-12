@@ -77,8 +77,6 @@ class GUIBlock(QGraphicsItem):
         font_size = int(10 * Constants.DPI_SCALING)
         self.font = QFont("Helvetica", font_size)
 
-
-
         self.create_shapes_and_labels()
 
         if "coordinate" not in self.core.states.keys():
@@ -148,9 +146,6 @@ class GUIBlock(QGraphicsItem):
                     min_height -= ports[-1].gui.height
             return min_height
 
-                if ports:
-                    min_height -= ports[-1].gui.height
-            return min_height
 
         self.height = max(
             self.height,
@@ -205,9 +200,9 @@ class GUIBlock(QGraphicsItem):
             if not ports:
                 continue
             port_separation = (
-                Constants.PORT_SEPARATION
+                int(Constants.PORT_SEPARATION * Constants.DPI_SCALING)
                 if not has_busses
-                else ports[0].gui.height + Constants.PORT_SPACING
+                else ports[0].gui.height + int(Constants.PORT_SPACING * Constants.DPI_SCALING)
             )
             offset = (
                 self.height - (len(ports) - 1) * port_separation - ports[0].gui.height
@@ -222,18 +217,15 @@ class GUIBlock(QGraphicsItem):
                 offset += (
                     int(Constants.PORT_SEPARATION * Constants.DPI_SCALING)
                     if not has_busses
-
-
-                offset += (
-                    int(Constants.PORT_SEPARATION * Constants.DPI_SCALING)
-                    if not has_busses
                     else port.gui.height + int(Constants.PORT_SPACING * Constants.DPI_SCALING)
                 )
+
 
 
         self._update_colors()
         self.create_port_labels()
         self.setTransformOriginPoint(self.width / 2, self.height / 2)
+
 
     def create_port_labels(self):
         for ports in (self.core.active_sinks, self.core.active_sources):
@@ -446,6 +438,11 @@ class GUIBlock(QGraphicsItem):
     def open_properties(self):
         self.props_dialog = PropsDialog(self.core, self.force_show_id)
         self.props_dialog.show()
+
+
+
+
+
 
 
 
