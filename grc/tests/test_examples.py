@@ -13,9 +13,10 @@ except FileExistsError:
 
 # Gather blocks
 BLOCK_PATHS = []
-ROOT = path.join(path.dirname(__file__), '../..')
+ROOT = path.join(path.dirname(__file__), '..', '..')
 BLOCK_PATHS = [path.abspath(path.join(ROOT, 'grc/blocks')),
                path.abspath(path.join(ROOT, 'build/gr-uhd/grc'))]
+
 for file_dir in os.scandir(ROOT):
     # If it is a module
     if path.isdir(file_dir) and file_dir.name.startswith("gr-"):
@@ -53,7 +54,11 @@ def gather_examples():
     example_paths = []
     for file_dir in os.scandir(ROOT):
         # If it is a module
-        if path.isdir(file_dir) and file_dir.name.startswith("gr-") and not file_dir.name.startswith('gr-trellis'):
+        if (
+            path.isdir(file_dir) and
+            file_dir.name.startswith("gr-") and not
+            file_dir.name.startswith('gr-trellis')
+        ):
             try:
                 for pos_ex in os.scandir(path.join(file_dir, "examples")):
                     if path.isfile(pos_ex) and pos_ex.name.endswith(".grc") and not path.basename(pos_ex) in BLACKLISTED:
@@ -78,8 +83,6 @@ def print_proper(element):
 @pytest.mark.parametrize("example", gather_examples())
 def test_all_examples(example):
     global BLOCK_PATHS
-
-    print(example.path)
 
     platform = Platform(
         name='GNU Radio Companion Compiler',

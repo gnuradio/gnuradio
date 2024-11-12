@@ -7,6 +7,10 @@ options:
   parameters:
     id: 'default'
     title: 'Not titled yet'
+    author: ''
+    copyright: ''
+    description: ''
+    hier_block_src_path: '.:'
   states:
     coordinate:
     - 8
