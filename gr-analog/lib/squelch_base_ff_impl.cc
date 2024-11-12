@@ -15,7 +15,7 @@
 #include "squelch_base_ff_impl.h"
 #include <gnuradio/io_signature.h>
 #include <gnuradio/math.h>
-#include <pmt/pmt.h>
+#include <stdexcept>
 
 namespace gr {
 namespace analog {
@@ -28,12 +28,15 @@ squelch_base_ff_impl::squelch_base_ff_impl(const char* name, int ramp, bool gate
       d_eob_key(pmt::intern("squelch_eob")),
       d_tag_next_unmuted(true)
 {
+    if (ramp < 0) {
+        throw std::invalid_argument("Ramp value must be non-negative");
+    }
+
     set_ramp(ramp);
     set_gate(gate);
     d_state = ST_MUTED;
-    d_envelope = d_ramp ? 0.0 : 1.0;
+    d_envelope = d_ramp ? 0.0f : 1.0f;
     d_ramped = 0;
-    precalculate_window();
 }
 
 squelch_base_ff_impl::~squelch_base_ff_impl() {}
@@ -45,9 +48,11 @@ void squelch_base_ff_impl::precalculate_window()
         return;
     }
 
+    const float increment = static_cast<float>(GR_M_PI) / d_ramp;
     d_window_table.resize(d_ramp + 1);
+
     for (int i = 0; i <= d_ramp; i++) {
-        d_window_table[i] = 0.5 - std::cos(GR_M_PI * i / d_ramp) / 2.0;
+        d_window_table[i] = 0.5f - std::cos(i * increment) / 2.0f;
     }
 }
 
@@ -55,7 +60,14 @@ int squelch_base_ff_impl::ramp() const { return d_ramp; }
 
 void squelch_base_ff_impl::set_ramp(int ramp)
 {
+    if (ramp < 0) {
+        throw std::invalid_argument("Ramp value must be non-negative");
+    }
+
     d_ramp = ramp;
+    if (d_ramp == 0) {
+        d_envelope = 1.0f;
+    }
     precalculate_window();
 }
 
@@ -73,9 +85,8 @@ int squelch_base_ff_impl::general_work(int noutput_items,
                                        gr_vector_const_void_star& input_items,
                                        gr_vector_void_star& output_items)
 {
-    const float* in = (const float*)input_items[0];
-    float* out = (float*)output_items[0];
-
+    const float* in = static_cast<const float*>(input_items[0]);
+    float* out = static_cast<float*>(output_items[0]);
     int j = 0;
 
     for (int i = 0; i < noutput_items; i++) {
@@ -109,12 +120,10 @@ int squelch_base_ff_impl::general_work(int noutput_items,
             if (!d_window_table.empty()) {
                 d_envelope = d_window_table[++d_ramped];
             }
-
-            // use >= in case d_ramp is set to lower value elsewhere
             if (d_ramped >= d_ramp) {
                 d_state = ST_UNMUTED;
                 d_tag_next_unmuted = true;
-                d_envelope = 1.0;
+                d_envelope = 1.0f;
             }
             break;
 
@@ -122,20 +131,19 @@ int squelch_base_ff_impl::general_work(int noutput_items,
             if (!d_window_table.empty()) {
                 d_envelope = d_window_table[--d_ramped];
             }
-
-            if (d_ramped == 0.0) {
+            if (d_ramped == 0) {
                 d_state = ST_MUTED;
                 add_item_tag(0, nitems_written(0) + j, d_eob_key, pmt::PMT_NIL);
             }
             break;
-        };
+        }
 
         // If unmuted, copy input times envelope to output
         // Otherwise, if not gating, copy zero to output
         if (d_state != ST_MUTED)
             out[j++] = in[i] * d_envelope;
         else if (!d_gate)
-            out[j++] = 0.0;
+            out[j++] = 0.0f;
     }
 
     consume_each(noutput_items); // Use all the inputs
