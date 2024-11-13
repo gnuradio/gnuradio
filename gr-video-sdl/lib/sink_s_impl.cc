@@ -80,9 +80,7 @@ sink_s_impl::~sink_s_impl()
     d_render_thread.detach();
 }
 
-template <typename F>
-int sink_s_impl::copy_planes_to_buffers(F copy_func,
-                                        const short* src_pixels_0,
+int sink_s_impl::copy_planes_to_buffers(const short* src_pixels_0,
                                         const short* src_pixels_1,
                                         const short* src_pixels_2)
 {
@@ -91,13 +89,31 @@ int sink_s_impl::copy_planes_to_buffers(F copy_func,
          dst_u = &d_buf_u[(d_current_line / 2) * (d_width / 2)],
          dst_v = &d_buf_v[(d_current_line / 2) * (d_width / 2)];
     for (int i = 0; i < d_chunk_size; i += d_width) {
-        copy_func(src_pixels_0, src_pixels_1, src_pixels_2, dst_y, dst_u, dst_v);
-        if (src_pixels_0)
+        if (src_pixels_0) {
+            // grey (Y) input
+            for (int k = 0; k < d_width; k++) {
+                dst_y[k] = (unsigned char)src_pixels_0[k];
+            }
             src_pixels_0 += d_width;
-        if (src_pixels_1)
-            src_pixels_1 += d_width;
-        if (src_pixels_2)
-            src_pixels_2 += d_width;
+        }
+        if (d_current_line % 2 == 0) {
+            if (src_pixels_1 && src_pixels_2) {
+                // second channel is U, third channel is V
+                for (int k = 0; k < d_width; k += 2) {
+                    dst_u[k / 2] = (unsigned char)src_pixels_1[k];
+                    dst_v[k / 2] = (unsigned char)src_pixels_2[k];
+                }
+                src_pixels_1 += d_width;
+                src_pixels_2 += d_width;
+            } else if (src_pixels_1) {
+                // second channel is alternating pixels U and V
+                for (int k = 0; k < d_width; k += 2) {
+                    dst_u[k / 2] = src_pixels_1[k + 0];
+                    dst_v[k / 2] = src_pixels_1[k + 1];
+                }
+                src_pixels_1 += d_width;
+            }
+        }
         dst_y += d_width;
         dst_u += d_width / 2;
         dst_v += d_width / 2;
@@ -145,56 +161,23 @@ int sink_s_impl::work(int noutput_items,
     int noutput_items_produced = 0;
 
     switch (input_items.size()) {
-    case 3: // first channel=Y, second channel is  U , third channel is V
+    case 3: // first channel is Y, second channel is U, third channel is V
         src_pixels_0 = (const short*)input_items[0];
         src_pixels_1 = (const short*)input_items[1];
         src_pixels_2 = (const short*)input_items[2];
         for (int i = 0; i < noutput_items; i += d_chunk_size) {
-            noutput_items_produced += copy_planes_to_buffers(
-                [=](const short* src_y,
-                    const short* src_u,
-                    const short* src_v,
-                    Uint8* dst_y,
-                    Uint8* dst_u,
-                    Uint8* dst_v) {
-                    for (int k = 0; k < d_width; k++) {
-                        dst_y[k] = (unsigned char)src_y[k];
-                    }
-                    for (int k = 0; k < d_width; k += 2) {
-                        dst_u[k / 2] = (unsigned char)src_u[k];
-                        dst_v[k / 2] = (unsigned char)src_v[k];
-                    }
-                },
-                src_pixels_0,
-                src_pixels_1,
-                src_pixels_2);
+            noutput_items_produced +=
+                copy_planes_to_buffers(src_pixels_0, src_pixels_1, src_pixels_2);
             src_pixels_0 += d_chunk_size;
             src_pixels_1 += d_chunk_size;
             src_pixels_2 += d_chunk_size;
         }
         break;
-    case 2: // first channel=Y, second channel is alternating pixels U and V
+    case 2: // first channel is Y, second channel is alternating pixels U and V
         src_pixels_0 = (const short*)input_items[0];
         src_pixels_1 = (const short*)input_items[1];
         for (int i = 0; i < noutput_items; i += d_chunk_size) {
-            noutput_items_produced += copy_planes_to_buffers(
-                [=](const short* src_y,
-                    const short* src_uv,
-                    const short* _sv,
-                    Uint8* dst_y,
-                    Uint8* dst_u,
-                    Uint8* dst_v) {
-                    for (int k = 0; k < d_width; k++) {
-                        dst_y[k] = (unsigned char)src_y[k];
-                    }
-                    for (int k = 0; k < d_width; k += 2) {
-                        dst_u[k / 2] = src_uv[k + 0];
-                        dst_v[k / 2] = src_uv[k + 1];
-                    }
-                },
-                src_pixels_0,
-                src_pixels_1,
-                NULL);
+            noutput_items_produced += copy_planes_to_buffers(src_pixels_0, src_pixels_1);
             src_pixels_0 += d_chunk_size;
             src_pixels_1 += d_chunk_size;
         }
@@ -202,20 +185,7 @@ int sink_s_impl::work(int noutput_items,
     case 1: // grey (Y) input
         src_pixels_0 = (const short*)input_items[0];
         for (int i = 0; i < noutput_items; i += d_chunk_size) {
-            noutput_items_produced += copy_planes_to_buffers(
-                [=](const short* src_y,
-                    const short* src_u,
-                    const short* src_v,
-                    Uint8* dst_y,
-                    Uint8* dst_u,
-                    Uint8* dst_v) {
-                    for (int k = 0; k < d_width; k++) {
-                        dst_y[k] = (unsigned char)src_y[k];
-                    }
-                },
-                src_pixels_0,
-                NULL,
-                NULL);
+            noutput_items_produced += copy_planes_to_buffers(src_pixels_0);
             src_pixels_0 += d_chunk_size;
         }
         break;

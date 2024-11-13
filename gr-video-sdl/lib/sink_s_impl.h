@@ -12,7 +12,7 @@
 #define INCLUDED_VIDEO_SDL_SINK_S_IMPL_H
 
 #include <gnuradio/video_sdl/sink_s.h>
-#include <SDL.h>
+#include <SDL/SDL.h>
 
 namespace gr {
 namespace video_sdl {
@@ -43,9 +43,7 @@ protected:
     unsigned int d_wanted_ticks;
     bool d_quit_requested;
 
-    template <typename F>
-    int copy_planes_to_buffers(F copy_func,
-                               const short* src_pixels_0,
+    int copy_planes_to_buffers(const short* src_pixels_0 = NULL,
                                const short* src_pixels_1 = NULL,
                                const short* src_pixels_2 = NULL);
 
