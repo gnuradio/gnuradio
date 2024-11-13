@@ -50,10 +50,10 @@ sink_s_impl::sink_s_impl(
       d_avg_delay(0.0),
       d_wanted_ticks(0),
       d_quit_requested(false),
-      // clear the surface to grey
-      d_buf_y(width * height, 128),
-      d_buf_u(width * height / 4, 128),
-      d_buf_v(width * height / 4, 128),
+      // clear the surface to black
+      d_buf_y(width * height, 0),
+      d_buf_u((width / 2) * (height / 2), 128),
+      d_buf_v((width / 2) * (height / 2), 128),
       d_frame_pending(false),
       d_image(NULL)
 {
@@ -136,10 +136,10 @@ int sink_s_impl::copy_planes_to_buffers(const short* src_pixels_0,
                 }
                 for (int i = 0; i < d_height / 2; i++) {
                     memcpy(&d_image->pixels[1][i * d_image->pitches[1]],
-                           &dst_u[i * d_width / 2],
+                           &dst_u[i * (d_width / 2)],
                            d_width / 2);
                     memcpy(&d_image->pixels[2][i * d_image->pitches[2]],
-                           &dst_v[i * d_width / 2],
+                           &dst_v[i * (d_width / 2)],
                            d_width / 2);
                 }
                 SDL_UnlockYUVOverlay(d_image);
@@ -225,14 +225,33 @@ int render_loop_s(void* data)
     if (sink->d_image) {
         SDL_FreeYUVOverlay(sink->d_image);
     }
-    sink->d_image =
-        SDL_CreateYUVOverlay(sink->d_width, sink->d_height, SDL_IYUV_OVERLAY, display);
+    // TODO: 1px borders are a workaround for SDL 1.2
+    // not supporting odd width/height in YUV overlays
+    sink->d_image = SDL_CreateYUVOverlay(sink->d_width + sink->d_width % 2,
+                                         sink->d_height + sink->d_height % 2,
+                                         SDL_IYUV_OVERLAY,
+                                         display);
     if (!sink->d_image) {
         sink->d_logger->error("Couldn't create a YUV overlay: {:s}", SDL_GetError());
         throw std::runtime_error("video_sdl2::sink_s::render_loop");
     }
 
+    // clear the surface to black
+    if (SDL_LockYUVOverlay(sink->d_image)) {
+        sink->d_logger->error("Couldn't lock a YUV overlay: {:s}", SDL_GetError());
+        throw std::runtime_error("video_sdl2::sink_s::render_loop");
+    }
+    memset(sink->d_image->pixels[0], 0, sink->d_image->pitches[0] * sink->d_image->h);
+    memset(sink->d_image->pixels[1],
+           128,
+           sink->d_image->pitches[1] * (sink->d_image->h / 2));
+    memset(sink->d_image->pixels[2],
+           128,
+           sink->d_image->pitches[2] * (sink->d_image->h / 2));
+    SDL_UnlockYUVOverlay(sink->d_image);
+
     SDL_Rect dstrect{ 0, 0, (Uint16)sink->d_dst_width, (Uint16)sink->d_dst_height };
+    SDL_DisplayYUVOverlay(sink->d_image, &dstrect);
 
     while (!SDL_QuitRequested()) {
         if (sink->d_wanted_ticks == 0)
