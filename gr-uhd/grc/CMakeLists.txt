@@ -82,6 +82,8 @@ if(ENABLE_UHD_RFNOC)
         uhd_fpga_io_radio.domain.yml
         uhd_fpga_io_time_keeper.domain.yml
         uhd_fpga_io_xport.domain.yml
+        # GRC workflow
+        rfnoc_image_builder.workflow.yml
         DESTINATION ${GRC_BLOCKS_DIR})
     if(PYQT5_FOUND)
         install (FILES uhd_msgpushbutton.block.yml DESTINATION ${GRC_BLOCKS_DIR})
