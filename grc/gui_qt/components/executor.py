@@ -13,7 +13,6 @@ from pathlib import Path
 from gnuradio import gr
 
 from ...core import Messages
-from ...core.utils.system import get_cmake_nproc
 
 
 class ExecFlowGraphThread(threading.Thread):
