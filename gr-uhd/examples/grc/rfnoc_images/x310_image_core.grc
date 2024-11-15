@@ -1,34 +1,37 @@
 options:
   parameters:
+    alias: ''
     author: Martin Braun <martin.braun@ettus.com>
+    build_dir: ''
+    build_ip_dir: ''
+    build_output_dir: ''
     catch_exceptions: 'True'
-    category: '[GRC Hier Blocks]'
-    cmake_opt: ''
+    clean_ip: 'False'
     comment: ''
     copyright: 2024 Ettus Research
     description: This is a graphical version of the X310 image core files.
-    gen_cmake: 'On'
+    fpga_dir: /home/mbr0wn/prefix/master/src/uhd/fpga
     gen_linking: dynamic
-    generate_options: qt_gui
+    generate_options: no_gui
+    generator_class_name: RfnocImageGenerator
+    generator_module: gnuradio.uhd.grc_workflows
     hier_block_src_path: '.:'
     id: x310_image_core
-    max_nouts: '0'
-    output_language: python
-    placement: (0,0)
-    qt_qss_theme: ''
-    realtime_scheduling: ''
-    run: 'True'
-    run_command: '{python} -u {filename}'
-    run_options: prompt
-    sizing_mode: fixed
+    ignore_warnings: 'False'
+    include_date: 'False'
+    include_dirs: ''
+    include_hash: 'False'
+    jobs: '1'
+    output_language: rfnoc_bitfile
+    reuse: 'False'
     thread_safe_setters: ''
     title: Not titled yet
-    window_size: (1000,1000)
+    vivado_path: ''
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [8, 8]
+    coordinate: [9.25, 9.25]
     rotation: 0
     state: enabled
 
@@ -117,7 +120,7 @@ blocks:
       setting. UHD will pick the first SEP (which
 
       is this one) and assign it a control port.'
-    ctrl: 'Auto'
+    ctrl: Auto
     data: 'True'
     maxoutbuf: '0'
     minoutbuf: '0'
@@ -144,7 +147,7 @@ blocks:
       SEP from UHD, and therefore the
 
       buffers would be a waste of resources.'
-    ctrl: 'Auto'
+    ctrl: Auto
     data: 'True'
     maxoutbuf: '0'
     minoutbuf: '0'
@@ -163,7 +166,7 @@ blocks:
     alias: ep2
     buff_size_bytes: '524288'
     comment: ''
-    ctrl: 'Auto'
+    ctrl: Auto
     data: 'True'
     maxoutbuf: '0'
     minoutbuf: '0'
@@ -182,7 +185,7 @@ blocks:
     alias: ep3
     buff_size_bytes: '0'
     comment: ''
-    ctrl: 'Auto'
+    ctrl: Auto
     data: 'True'
     maxoutbuf: '0'
     minoutbuf: '0'
@@ -201,7 +204,7 @@ blocks:
     alias: ep4
     buff_size_bytes: '32768'
     comment: ''
-    ctrl: 'Auto'
+    ctrl: Auto
     data: 'True'
     maxoutbuf: '0'
     minoutbuf: '0'
@@ -243,7 +246,7 @@ blocks:
       of the radio block, we can reduce the
 
       buffer size of these SEPs.'
-    ctrl: 'Auto'
+    ctrl: Auto
     data: 'True'
     maxoutbuf: '0'
     minoutbuf: '0'
