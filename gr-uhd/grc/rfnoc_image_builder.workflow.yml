@@ -1,0 +1,74 @@
+id: rfnoc_image_builder_workflow
+description: "RFNoC Image Builder Workflow"
+output_language: rfnoc_bitfile
+output_language_label: RFNoC Bitfile
+generator_module: gnuradio.uhd.grc_workflows
+generator_class: RfnocImageGenerator
+generate_options: no_gui
+generate_options_label: No GUI
+parameters:
+-   id: fpga_dir
+    label: FPGA Source Directory
+    dtype: string
+    default: ''
+    hide: 'part'
+-   id: build_dir
+    label: Build Artifact Directory
+    dtype: string
+    default: ''
+    hide: 'part'
+-   id: build_output_dir
+    label: Build Output Directory
+    dtype: string
+    default: ''
+    hide: 'part'
+-   id: build_ip_dir
+    label: IP Build Artifact Directory
+    dtype: string
+    default: ''
+    hide: 'part'
+-   id: include_dirs
+    label: RFNOC OOT Directories
+    dtype: string
+    default: ''
+    hide: 'part'
+-   id: reuse
+    label: Reuse Generated Files
+    dtype: bool
+    default: 'False'
+    hide: 'part'
+-   id: clean_ip
+    label: Clean IP
+    dtype: bool
+    default: 'False'
+    hide: 'part'
+    category: 'Advanced'
+-   id: ignore_warnings
+    label: Ignore Warnings
+    dtype: bool
+    default: 'False'
+    hide: 'part'
+    category: 'Advanced'
+-   id: vivado_path
+    label: Vivado Path
+    dtype: string
+    default: ''
+    hide: 'part'
+    category: 'Advanced'
+-   id: include_hash
+    label: Include Hash
+    dtype: bool
+    default: 'False'
+    hide: 'part'
+    category: 'Advanced'
+-   id: include_date
+    label: Include Date
+    dtype: bool
+    default: 'False'
+    hide: 'part'
+    category: 'Advanced'
+-   id: jobs
+    label: Parallel Build Jobs
+    dtype: int
+    default: '1'
+    hide: 'part'
