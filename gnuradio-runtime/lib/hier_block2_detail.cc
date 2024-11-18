@@ -496,9 +496,27 @@ endpoint_vector_t hier_block2_detail::resolve_port(int port, bool is_input)
     return result;
 }
 
+void hier_block2_detail::recursive_disconnect_all(const std::string& caller)
+{
+    d_debug_logger->debug("Disconnect hier_block2 recursive...");
+    std::vector<basic_block_vector_t> paths = d_fg->partition();
+    for(std::vector<basic_block_vector_t>::iterator p = paths.begin(); p != paths.end(); p++){
+        for(basic_block_viter_t bp = (*p).begin(); bp != (*p).end(); bp++){
+            if (this->d_owner->identifier() != caller){
+                hier_block2_sptr hh = std::dynamic_pointer_cast<hier_block2>((*bp));
+                if (hh != 0){
+                    hh->d_detail->recursive_disconnect_all(hh->identifier());
+                }
+            }
+        }
+    }
+    d_debug_logger->debug("Disconnect hier_block2 recursive...finished");
+}
+
 void hier_block2_detail::disconnect_all()
 {
     d_debug_logger->debug("Disconnect all...");
+    recursive_disconnect_all(this->d_owner->identifier());
     reset_hier_blocks_parent();
     d_fg->clear();
     d_blocks.clear();
