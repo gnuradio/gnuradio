@@ -6,8 +6,8 @@ import time
 from pathlib import Path
 from shutil import which as find_executable
 
-from ..Utils import get_cmake_nproc
 from ...core import Messages
+from ...core.utils.system import get_cmake_nproc
 
 
 class ExecFlowGraphThread(threading.Thread):

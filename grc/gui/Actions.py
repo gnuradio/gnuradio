@@ -11,7 +11,7 @@ import logging
 
 from gi.repository import Gtk, Gdk, Gio, GLib, GObject
 
-from . import Utils
+from ..core.utils.system import get_modifier_key
 
 log = logging.getLogger(__name__)
 
@@ -150,7 +150,7 @@ class Action(Gio.SimpleAction):
         self.icon_name = icon_name
         if keypresses:
             self.keypresses = [
-                kp.replace("<Ctrl>", Utils.get_modifier_key(True))
+                kp.replace("<Ctrl>", get_modifier_key(True))
                 for kp in keypresses
             ]
         else:
