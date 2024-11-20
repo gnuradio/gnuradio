@@ -60,26 +60,6 @@ def num_to_str(num):
         return str(num)
 
 
-_nproc = None
-
-
-def get_cmake_nproc():
-    """ Get number of cmake processes for C++ flowgraphs """
-    global _nproc  # Cached result
-    if _nproc:
-        return _nproc
-    try:
-        # See https://docs.python.org/3.8/library/os.html#os.cpu_count
-        _nproc = len(os.sched_getaffinity(0))
-    except:
-        _nproc = os.cpu_count()
-    if not _nproc:
-        _nproc = 1
-
-    _nproc = max(_nproc // 2 - 1, 1)
-    return _nproc
-
-
 def make_screenshot(fg_view, file_path, transparent_bg=False):
     if not file_path:
         return
