@@ -1397,7 +1397,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
     def block_dec_type_triggered(self):
         log.debug("block_dec_type")
 
-    def generate_triggered(self):
+    def generate_triggered(self, called_from_exec=False):
         log.debug("generate")
         if not self.currentFlowgraphScene.saved:
             self.save_triggered()
@@ -1410,14 +1410,14 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         generator = self.platform.Generator(
             self.currentFlowgraph, os.path.dirname(filename)
         )
-        generator.write()
+        generator.write(called_from_exec)
         self.currentView.generator = generator
         log.info(f"Generated {generator.file_path}")
 
     def execute_triggered(self):
         log.debug("execute")
         if self.currentView.process_is_done():
-            self.generate_triggered()
+            self.generate_triggered(called_from_exec=True)
             if self.currentView.generator:
                 xterm = self.app.qsettings.value("grc/xterm_executable", "")
                 '''if self.config.xterm_missing() != xterm:

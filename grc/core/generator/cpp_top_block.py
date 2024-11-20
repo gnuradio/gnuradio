@@ -70,7 +70,7 @@ class CppTopBlockGenerator(object):
         for key in deprecated_block_keys:
             Messages.send_warning("The block {!r} is deprecated.".format(key))
 
-    def write(self):
+    def write(self, _=None):
         """create directory, generate output and write it to files"""
         self._warnings()
 
