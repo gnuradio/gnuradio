@@ -69,6 +69,9 @@ class Application(Gtk.Application):
         self.init_file_paths = [os.path.abspath(
             file_path) for file_path in file_paths]
         self.init = False
+        # exec_called tracks if "generate" is implied by "execute", or called
+        # directly. If true, then "execute" was called previously.
+        self.exec_called = False
 
     def do_startup(self):
         Gtk.Application.do_startup(self)
@@ -760,14 +763,16 @@ class Application(Gtk.Application):
                     generator = page.get_generator()
                     try:
                         Messages.send_start_gen(generator.file_path)
-                        generator.write()
+                        generator.write(self.exec_called)
                         self.generator = generator
                     except Exception as e:
                         Messages.send_fail_gen(e)
 
         elif action == Actions.FLOW_GRAPH_EXEC:
-            if not page.process:
+            if not page.process:  # Don't execute if already running
+                self.exec_called = True
                 Actions.FLOW_GRAPH_GEN()
+                self.exec_called = False
                 if self.generator:
                     xterm = self.platform.config.xterm_executable
                     if self.config.xterm_missing() != xterm:
