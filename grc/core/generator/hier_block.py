@@ -29,7 +29,7 @@ class HierBlockGenerator(TopBlockGenerator):
         self._mode = Constants.HIER_BLOCK_FILE_MODE
         self.file_path_yml = self.file_path[:-3] + '.block.yml'
 
-    def write(self):
+    def write(self, _=None):
         """generate output and write it to files"""
         TopBlockGenerator.write(self)
 
