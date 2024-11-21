@@ -47,7 +47,7 @@ wavfile_sink_impl::wavfile_sink_impl(const char* filename,
       d_new_fp(nullptr),
       d_updated(false)
 {
-    int bits_per_sample;
+    int bits_per_sample{ 8 };
 
     if (n_channels > s_max_channels) {
         throw std::runtime_error("Number of channels greater than " +
@@ -87,8 +87,7 @@ wavfile_sink_impl::wavfile_sink_impl(const char* filename,
         bits_per_sample = 32;
         break;
     }
-    set_bits_per_sample_unlocked(bits_per_sample);
-    d_h.bytes_per_sample = d_bytes_per_sample_new;
+    d_h.bytes_per_sample = bits_per_sample / 8;
 
     set_max_noutput_items(s_items_size);
     d_buffer.resize(s_items_size * d_h.nchans);
@@ -302,13 +301,8 @@ int wavfile_sink_impl::work(int noutput_items,
 
 void wavfile_sink_impl::set_bits_per_sample(int bits_per_sample)
 {
-    gr::thread::scoped_lock guard(d_mutex);
-    set_bits_per_sample_unlocked(bits_per_sample);
-}
-
-void wavfile_sink_impl::set_bits_per_sample_unlocked(int bits_per_sample)
-{
-    d_bytes_per_sample_new = bits_per_sample / 8;
+    d_logger->warn(
+        "set_bits_per_sample() does nothing. Bit size is controlled by the subformat.");
 }
 
 void wavfile_sink_impl::set_append(bool append)
@@ -323,7 +317,7 @@ void wavfile_sink_impl::set_sample_rate(unsigned int sample_rate)
     d_h.sample_rate = sample_rate;
 }
 
-int wavfile_sink_impl::bits_per_sample() { return d_bytes_per_sample_new; }
+int wavfile_sink_impl::bits_per_sample() { return d_h.bytes_per_sample * 8; }
 
 unsigned int wavfile_sink_impl::sample_rate() { return d_h.sample_rate; }
 
@@ -339,10 +333,6 @@ void wavfile_sink_impl::do_update()
 
     d_fp = d_new_fp; // install new file pointer
     d_new_fp = nullptr;
-
-    d_h.bytes_per_sample = d_bytes_per_sample_new;
-    // Avoid deadlock.
-    set_bits_per_sample_unlocked(8 * d_bytes_per_sample_new);
     d_updated = false;
 }
 
