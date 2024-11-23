@@ -302,7 +302,7 @@ int wavfile_sink_impl::work(int noutput_items,
 void wavfile_sink_impl::set_bits_per_sample(int bits_per_sample)
 {
     d_logger->warn(
-        "set_bits_per_sample() does nothing. Bit size is controlled by the subformat.");
+        "set_bits_per_sample() does nothing. Sample size is controlled by the subformat.");
 }
 
 void wavfile_sink_impl::set_append(bool append)
