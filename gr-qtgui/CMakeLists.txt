@@ -112,4 +112,11 @@ if(ENABLE_GR_QTGUI)
             themes/projector.qss
             DESTINATION ${GR_THEMES_DIR})
 
+    if(WIN32)
+        install(DIRECTORY ${qt_Qt5_QWindowsIntegrationPlugin_LIB_DIRS_RELEASE}
+                DESTINATION Python)
+    elseif(APPLE)
+        install(DIRECTORY ${Qt5_DIR}/plugins/platforms DESTINATION python311/python.framework/)
+    endif()
+
 endif(ENABLE_GR_QTGUI)

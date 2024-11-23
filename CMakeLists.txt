@@ -184,11 +184,11 @@ elseif(isusr)
     set(SYSCONFDIR
         "/${GR_CONF_DIR}"
         CACHE PATH "System configuration directory")
-else(isusr)
+else()
     set(SYSCONFDIR
         "${CMAKE_INSTALL_PREFIX}/${GR_CONF_DIR}"
         CACHE PATH "System configuration directory" FORCE)
-endif(isusr)
+endif()
 
 set(GR_PKG_CONF_DIR
     ${SYSCONFDIR}/${CMAKE_PROJECT_NAME}/conf.d

@@ -12,7 +12,7 @@ list(APPEND pre_exclude_regexes "azure.*") # Azure
 list(APPEND pre_exclude_regexes "vcruntime.*")
 list(APPEND pre_exclude_regexes "msvc.*")
 
-LIST(APPEND post_exclude_regexes ".*WINDOWS[\\/]system32.*") # windows system dlls
+LIST(APPEND post_exclude_regexes ".*Windows[\\/]system32.*") # windows system dlls
 
 set(extra_directories @EXT_DEP_DIRS@)
 
