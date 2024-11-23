@@ -10,7 +10,13 @@
 ########################################################################
 include(GrBoost)
 
-gr_find_package(FFTW3f)
+if(WIN32)
+    # Name on Windows does not include datatype
+    set(fftw_name FFTW3)
+else()
+    set(fftw_name FFTW3F)
+endif()
+gr_find_package(${fftw_name})
 
 ########################################################################
 # Register component
@@ -25,7 +31,7 @@ gr_register_component(
         gr-blocks
     REQUIRED_TPLS
         Boost_FOUND
-        FFTW3f_FOUND
+        ${fftw_name}_FOUND
 )
 
 ########################################################################

@@ -1,6 +1,13 @@
 
 # Download, setup and install a copy of Python
-set(PYTHON_VERSION "3.11.4" CACHE STRING "Version of Python to build." FORCE)
+if(APPLE)
+  set(py_minor_patch 11.4)
+elseif(WIN32)
+  set(py_minor_patch 12.0)
+else()
+  set(py_minor_patch 12.0)
+endif()
+set(PYTHON_VERSION "3.${py_minor_patch}" CACHE STRING "Version of Python to build." FORCE)
 set(PY_DOWNLOAD_LINK "https://www.paraview.org/files/dependencies/python-for-wheels/")
 set(PYTHON_DIR "Python-${PYTHON_VERSION}")
 if(WIN32)
@@ -16,7 +23,7 @@ endif()
 if(APPLE)
   set(PY_DOWNLOAD_HASH fdb882b53b18675811ca04ad6f5279a586f6f705abd6971c7732c49d214e91b9)
 elseif(WIN32)
-  set(PY_DOWNLOAD_HASH f6aeebc6d1ff77418678ed5612b64ce61be6bc9ef3ab9c291ac557abb1783420)
+  set(PY_DOWNLOAD_HASH 782f1b9db7e8ff78c928ea94861549820c8abc70cde76a3dfb7ef9e54a06e326)
 endif()
 # download python
 file(DOWNLOAD "${PY_DOWNLOAD_LINK}/${PY_FILENAME}"
@@ -57,6 +64,7 @@ if(GR_PYTHON_DEPS_SET AND ENABLE_PYTHON)
                     "import importlib
 import inspect
 import os
+${CMAKE_IMPORT_GTK}
 mod = importlib.import_module(\"${module}\")
 print(os.path.dirname(inspect.getfile(mod)))
 "
@@ -69,10 +77,9 @@ print(os.path.dirname(inspect.getfile(mod)))
     if(${module} STREQUAL "gi" AND WIN32)
       # Gi requires the GTK c++ binaries to function, install them with the python module
       # for a self contained, relocatable Python${PYTHON_SHORT_VER} distro
-      message(STATUS "Installing GTK to ${GR_PYTHON_DIR}/${module}")
+      message(STATUS "Installing ${GTK_ROOT} to ${GR_PYTHON_DIR}/${module}")
       install(DIRECTORY ${GTK_ROOT} DESTINATION ${GR_PYTHON_DIR}/${module} COMPONENT pythonapi)
     endif()
-    install(DIRECTORY ${MODULE_DIR} DESTINATION ${GR_PYTHON_DIR})
   endforeach()
   # Need to install numpy.libs as well as numpy
   execute_process(COMMAND ${PYTHON_EXECUTABLE} -c

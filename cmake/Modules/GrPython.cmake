@@ -104,7 +104,7 @@ set(Python_NumPy_INCLUDE_DIR
     CACHE FILEPATH "NumPy include directory")
 mark_as_advanced(Python_NumPy_INCLUDE_DIR)
 # output used by modern FindPython, duplicate the behavior
-set(Python_NumPy_INCLUDE_DIRS ${Python_NumPy_INCLUDE_DIR} /Users/john.parent/Library/Python/3.9/lib/python/site-packages/numpy/core/include)
+set(Python_NumPy_INCLUDE_DIRS ${Python_NumPy_INCLUDE_DIR})
 
 # target for building with NumPy
 add_library(Python::NumPy INTERFACE IMPORTED)
@@ -439,7 +439,7 @@ function(gen_py_launcher)
     set(SINGLE_ARGS PYTHON)
     cmake_parse_arguments(GEN_PY "" "${SINGLE_ARGS}" "${MULTI_ARGS}" ${ARGN})
     foreach(mod ${GEN_PY_MODULES})
-        message(WARNING "Installing ${mod}.bat")
+        message(STATUS "Creating install rules for ${mod}.bat")
         configure_file(
             ${CMAKE_SOURCE_DIR}/release/resources/py_launcher.bat.in
             ${CMAKE_BINARY_DIR}/${mod}.bat
@@ -456,7 +456,7 @@ function(gen_py_program_launcher)
     set(MULTI_ARGS PROGRAMS)
     cmake_parse_arguments(GEN_PY "" "${SINGLE_ARGS}" "${MULTI_ARGS}" ${ARGN})
     foreach(GEN_PY_PROGRAM ${GEN_PY_PROGRAMS})
-        message(STATUS "Installing ${GEN_PY_PROGRAM}.sh")
+        message(STATUS "Creating install rules for ${GEN_PY_PROGRAM}.sh")
         configure_file(
             ${CMAKE_SOURCE_DIR}/release/resources/py_launcher.sh.in
             ${CMAKE_BINARY_DIR}/${GEN_PY_PROGRAM}.sh

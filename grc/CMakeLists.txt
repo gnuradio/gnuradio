@@ -27,27 +27,31 @@ GR_PYTHON_CHECK_MODULE(
     VAR MAKO_FOUND
 )
 
+if(MAKO_FOUND)
+    REGISTER_EXTERNAL_PYTHON_COMPONENT(markupsafe)
+endif()
+
 GR_PYTHON_CHECK_MODULE_RAW(
     "pygobject >= 2.28.6"
-    "import gi; assert gi.version_info >= (2, 28, 6)"
+    "${CMAKE_IMPORT_GTK}import gi; assert gi.version_info >= (2, 28, 6)"
     PYGI_FOUND
 )
 
 GR_PYTHON_CHECK_MODULE_RAW(
     "Gtk (GI) >= 3.10.8"
-    "import gi; gi.require_version('Gtk', '3.0');"
+    "${CMAKE_IMPORT_GTK}import gi; gi.require_version('Gtk', '3.0');"
     GTK_GI_FOUND
 )
 
 GR_PYTHON_CHECK_MODULE_RAW(
     "Cairo (GI) >= 1.0"
-    "import gi; gi.require_foreign('cairo', 'Context')"  # Cairo 1.13.0
+    "${CMAKE_IMPORT_GTK}import gi; gi.require_foreign('cairo', 'Context')"  # Cairo 1.13.0
     CAIRO_GI_FOUND
 )
 
 GR_PYTHON_CHECK_MODULE_RAW(
     "PangoCairo (GI) >= 1.0"
-    "import gi; gi.require_version('PangoCairo', '1.0')"  # pangocairo 1.36.3
+    "${CMAKE_IMPORT_GTK}import gi; gi.require_version('PangoCairo', '1.0')"  # pangocairo 1.36.3
     PANGOCAIRO_GI_FOUND
 )
 

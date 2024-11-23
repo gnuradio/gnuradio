@@ -17,6 +17,6 @@
 #   for building and running GRC
 #
 #   ``VERSION``
-function(FETCH_QT5 VERSION BUILD_DIR)
+function(FETCH_QT5_PLUGINS)
 
 endfunction(FETCH_QT5)
