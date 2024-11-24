@@ -159,6 +159,56 @@ class test_wavefile(gr_unittest.TestCase):
 
         os.remove(outfile)
 
+    def test_004_automatic_reopen_after_stop(self):
+        infile = g_in_file_normal
+        outfile = "test_out_append.wav"
+
+        # 1. Copy input to output
+        wf_in1 = blocks.wavfile_source(infile)
+        wf_out = blocks.wavfile_sink(outfile,
+                                     wf_in1.channels(),
+                                     wf_in1.sample_rate(),
+                                     blocks.FORMAT_WAV,
+                                     blocks.FORMAT_PCM_16,
+                                     False)
+        self.tb.connect(wf_in1, wf_out)
+        self.tb.run()
+
+        # 2. lock and reconfigure to append the same copy again
+        self.tb.lock()
+        self.tb.disconnect(wf_in1, wf_out)
+        wf_in2 = blocks.wavfile_source(infile)
+        self.tb.connect(wf_in2, wf_out)
+        self.tb.unlock()
+        self.tb.run()
+
+        wf_out.close()
+
+        # Test file validity and read data.
+        try:
+            # In
+            with wave.open(infile, 'rb') as w_in:
+                in_params = w_in.getparams()
+                data_in = wav_read_frames(w_in)
+            # Out
+            with wave.open(outfile, 'rb') as w_out:
+                out_params = w_out.getparams()
+                data_out = wav_read_frames(w_out)
+        except BaseException:
+            raise AssertionError('Invalid WAV file')
+
+        # Params must be equal except in size:
+        expected_params = in_params._replace(nframes=2 * in_params.nframes)
+        self.assertEqual(out_params, expected_params)
+
+        # Part 1
+        self.assertEqual(data_in, data_out[:len(data_in)])
+
+        # Part 2
+        self.assertEqual(data_in, data_out[len(data_in):2 * len(data_in)])
+
+        os.remove(outfile)
+
     def test_read_wav(self):
         expected_len = 4
 
