@@ -16,6 +16,10 @@ if(PYQT5_FOUND)
     gr_python_install(FILES replaymsgpushbutton.py DESTINATION ${GR_PYTHON_DIR}/gnuradio/uhd)
 endif(PYQT5_FOUND)
 
+if(ENABLE_UHD_RFNOC)
+    gr_python_install(FILES grc_workflows.py DESTINATION ${GR_PYTHON_DIR}/gnuradio/uhd)
+endif(ENABLE_UHD_RFNOC)
+
 ########################################################################
 # Handle the unit tests
 ########################################################################
