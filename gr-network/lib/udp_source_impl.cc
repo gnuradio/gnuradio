@@ -163,7 +163,6 @@ bool udp_source_impl::stop()
         delete d_udpsocket;
         d_udpsocket = nullptr;
 
-        d_io_context.reset();
         d_io_context.stop();
     }
 

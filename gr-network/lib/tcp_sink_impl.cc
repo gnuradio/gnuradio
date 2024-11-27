@@ -191,7 +191,6 @@ bool tcp_sink_impl::stop()
         d_tcpsocket = NULL;
     }
 
-    d_io_context.reset();
     d_io_context.stop();
 
     if (d_acceptor) {
