@@ -135,7 +135,7 @@ void set_thread_name(gr_thread_t thread, std::string name)
 
 #elif defined(macintosh) || defined(__APPLE__) || defined(__APPLE_CC__) ||     \
     defined(__FreeBSD__) || defined(__FreeBSD_kernel__) || defined(__GNU__) || \
-    defined(__NetBSD__)
+    defined(__NetBSD__) || defined(__OpenBSD__)
 
 namespace gr {
 namespace thread {
