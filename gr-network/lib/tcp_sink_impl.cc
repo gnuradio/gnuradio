@@ -63,10 +63,7 @@ bool tcp_sink_impl::start()
 
         std::string s_port = std::to_string(d_port);
         asio::ip::tcp::resolver resolver(d_io_context);
-        asio::ip::tcp::resolver::query query(
-            d_host, s_port, asio::ip::resolver_query_base::passive);
-
-        d_endpoint = *resolver.resolve(query, err);
+        d_endpoint = *(resolver.resolve(d_host, s_port, asio::ip::tcp::resolver::passive).cbegin());
 
         if (err) {
             throw std::runtime_error(
