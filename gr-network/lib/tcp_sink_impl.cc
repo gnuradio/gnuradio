@@ -156,7 +156,7 @@ void tcp_sink_impl::connect(bool initial_connection)
             d_acceptor = new asio::ip::tcp::acceptor(
                 d_io_context, asio::ip::tcp::endpoint(asio::ip::tcp::v4(), d_port));
     } else {
-        d_io_context.reset();
+        d_io_context.restart();
     }
 
     if (d_tcpsocket) {
