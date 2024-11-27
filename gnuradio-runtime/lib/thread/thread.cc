@@ -137,6 +137,10 @@ void set_thread_name(gr_thread_t thread, std::string name)
     defined(__FreeBSD__) || defined(__FreeBSD_kernel__) || defined(__GNU__) || \
     defined(__NetBSD__) || defined(__OpenBSD__)
 
+#include <pthread.h>
+#ifdef __OpenBSD__
+#include <pthread_np.h>
+#endif
 namespace gr {
 namespace thread {
 
@@ -199,6 +203,9 @@ int set_thread_priority(gr_thread_t thread, int priority)
 void set_thread_name(gr_thread_t thread, std::string name)
 {
     // Not implemented on OSX
+#ifdef __OpenBSD__
+    pthread_set_name_np(thread, name.c_str());
+#endif
 }
 
 } /* namespace thread */
