@@ -78,7 +78,7 @@ print(os.path.dirname(inspect.getfile(mod)))
       # Gi requires the GTK c++ binaries to function, install them with the python module
       # for a self contained, relocatable Python${PYTHON_SHORT_VER} distro
       message(STATUS "Installing ${GTK_ROOT} to ${GR_PYTHON_DIR}/${module}")
-      install(DIRECTORY ${GTK_ROOT} DESTINATION ${GR_PYTHON_DIR}/${module} COMPONENT pythonapi)
+      install(DIRECTORY ${GTK_ROOT}/ DESTINATION ${GR_PYTHON_DIR}/${module}/gtk/ COMPONENT pythonapi)
     endif()
   endforeach()
   # Need to install numpy.libs as well as numpy
