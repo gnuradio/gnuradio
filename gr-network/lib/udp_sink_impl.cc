@@ -125,11 +125,10 @@ bool udp_sink_impl::start()
     std::string str_port = std::to_string(d_port);
     std::string str_host = d_host.empty() ? std::string("localhost") : d_host;
     asio::ip::udp::resolver resolver(d_io_context);
-    asio::ip::udp::resolver::query query(
-        str_host, str_port, asio::ip::resolver_query_base::passive);
-
     asio::error_code err;
-    d_endpoint = *resolver.resolve(query, err);
+    d_endpoint =
+        *(resolver.resolve(str_host, str_port, asio::ip::tcp::resolver::passive, err)
+              .cbegin());
 
     if (err) {
         throw std::runtime_error(std::string("[UDP Sink] Unable to resolve host/IP: ") +
@@ -177,7 +176,6 @@ bool udp_sink_impl::stop()
         delete d_udpsocket;
         d_udpsocket = nullptr;
 
-        d_io_context.reset();
         d_io_context.stop();
     }
 
