@@ -163,7 +163,6 @@ bool udp_source_impl::stop()
         delete d_udpsocket;
         d_udpsocket = nullptr;
 
-        d_io_context.reset();
         d_io_context.stop();
     }
 
@@ -275,7 +274,7 @@ int udp_source_impl::work(int noutput_items,
             // Get the data and add it to our local queue.  We have to maintain a
             // local queue in case we read more bytes than noutput_items is asking
             // for.  In that case we'll only return noutput_items bytes
-            const char* read_data = asio::buffer_cast<const char*>(d_read_buffer.data());
+            const char* read_data = static_cast<const char*>(d_read_buffer.data().data());
 
             // Discard bytes if the input is longer than the buffer
             if (bytes_read > d_localqueue_writer->bufsize()) {
