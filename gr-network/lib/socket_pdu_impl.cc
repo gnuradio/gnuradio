@@ -54,7 +54,9 @@ socket_pdu_impl::socket_pdu_impl(std::string type,
         d_tcp_endpoint = asio::ip::tcp::endpoint(asio::ip::tcp::v4(), port_num);
     } else if ((type == "TCP_SERVER") || (type == "TCP_CLIENT")) {
         asio::ip::tcp::resolver resolver(d_io_context);
-        d_tcp_endpoint = *(resolver.resolve(addr, port, asio::ip::resolver_query_base::passive).cbegin());
+        d_tcp_endpoint =
+            *(resolver.resolve(addr, port, asio::ip::resolver_query_base::passive)
+                  .cbegin());
     } else if ((type == "UDP_SERVER") &&
                ((addr.empty()) || (addr == "0.0.0.0"))) { // Bind on all interfaces
         int port_num = atoi(port.c_str());
@@ -66,9 +68,13 @@ socket_pdu_impl::socket_pdu_impl(std::string type,
         asio::ip::udp::resolver resolver(d_io_context);
 
         if (type == "UDP_SERVER")
-            d_udp_endpoint = *(resolver.resolve(addr, port, asio::ip::resolver_query_base::passive).cbegin());
+            d_udp_endpoint =
+                *(resolver.resolve(addr, port, asio::ip::resolver_query_base::passive)
+                      .cbegin());
         else
-            d_udp_endpoint_other = *(resolver.resolve(addr, port, asio::ip::resolver_query_base::passive).cbegin());
+            d_udp_endpoint_other =
+                *(resolver.resolve(addr, port, asio::ip::resolver_query_base::passive)
+                      .cbegin());
     }
 
     if (type == "TCP_SERVER") {
