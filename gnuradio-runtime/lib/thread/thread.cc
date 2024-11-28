@@ -8,10 +8,6 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
 #include <gnuradio/thread/thread.h>
 
 #if defined(_WIN32) || defined(__WIN32__) || defined(WIN32)
