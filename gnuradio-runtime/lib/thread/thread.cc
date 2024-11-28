@@ -304,11 +304,11 @@ void set_thread_name(gr_thread_t thread, std::string name)
     if (name.empty())
         name = "thread " + std::to_string((unsigned long long)thread);
 
-    const int max_len = 16; // Maximum accepted by PR_SET_NAME
+    const int max_len = 16; // Maximum accepted by PR_SET_NAME **INCL ZERO TERMINATOR**
 
-    if ((int)name.size() > max_len) // Shorten the name if necessary by taking as many
-                                    // characters from the front
-    {                               // so that the unique_id can still fit on the end
+    if ((int)name.size() >= max_len) // Shorten the name if necessary by taking as many
+                                     // characters from the front
+    {                                // so that the unique_id can still fit on the end
         int i = name.size() - 1;
         for (; i >= 0; --i) {
             std::string s = name.substr(i, 1);
