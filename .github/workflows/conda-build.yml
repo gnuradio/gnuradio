@@ -68,7 +68,8 @@ jobs:
           export IS_PR_BUILD="False"
         fi
         echo "::endgroup::"
-        ./.scripts/run_docker_build.sh
+        # run, but convert conda log grouping to github grouping
+        ./.scripts/run_docker_build.sh | sed 's/.*##\[group\]\(.*\)/::group::\1/;s/.*##\[endgroup\].*/::endgroup::/'
 
     - name: Build on macOS
       if: matrix.os == 'macos'
@@ -90,7 +91,7 @@ jobs:
         else
           export IS_PR_BUILD="False"
         fi
-        ./.scripts/run_osx_build.sh
+        ./.scripts/run_osx_build.sh | sed 's/.*##\[group\]\(.*\)/::group::\1/;s/.*##\[endgroup\].*/::endgroup::/'
 
     - name: Build on windows
       shell: cmd
@@ -140,7 +141,8 @@ jobs:
         else
           export BLD_ARTIFACT_PREFIX="conda_pkgs"
         fi
-        ./.scripts/create_conda_build_artifacts.sh
+        ./.scripts/create_conda_build_artifacts.sh | sed 's/.*##\[group\]\(.*\)/::group::\1/;s/.*##\[endgroup\].*/::endgroup::/'
+
       continue-on-error: true
 
     - name: Store conda build artifacts
