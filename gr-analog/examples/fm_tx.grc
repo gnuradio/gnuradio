@@ -315,8 +315,8 @@ blocks:
     comment: ''
     ctrlpanel: 'False'
     fc: '0'
-    fftsize: '1024'
-    freqhalf: 'True'
+    fftsize: '4096'
+    freqhalf: 'False'
     grid: 'False'
     gui_hint: 1,0,1,1
     label: Relative Gain
