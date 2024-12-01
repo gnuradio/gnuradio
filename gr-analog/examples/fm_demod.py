@@ -25,7 +25,7 @@ class build_graph(gr.top_block):
     def __init__(self):
         gr.top_block.__init__(self)
 
-        input_rate = 200e3   # rate of a broadcast FM station
+        input_rate = 400e3   # rate of a broadcast FM station
         audio_rate = 44.1e3  # Rate we send the signal to the speaker
 
         # resample from the output of the demodulator to the rate of
@@ -38,7 +38,7 @@ class build_graph(gr.top_block):
 
         # Set the demodulator using the same deviation as the receiver.
         max_dev = 75e3
-        fm_demod_gain = input_rate / (2 * math.pi * max_dev / 8.0)
+        fm_demod_gain = input_rate / (2 * math.pi * max_dev)
         fm_demod = analog.quadrature_demod_cf(fm_demod_gain)
 
         # Create a filter for the resampler and filter the audio

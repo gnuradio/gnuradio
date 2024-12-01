@@ -143,7 +143,7 @@ blocks:
     affinity: ''
     alias: ''
     comment: ''
-    device_name: pulse
+    device_name: ''
     num_inputs: '1'
     ok_to_block: 'True'
     samp_rate: int(audio_rate)
@@ -228,7 +228,7 @@ blocks:
     autoscale: 'False'
     average: '1.0'
     axislabels: 'True'
-    bw: audio_rate
+    bw: in_rate
     color1: '"blue"'
     color10: '"dark blue"'
     color2: '"red"'
@@ -603,7 +603,7 @@ blocks:
     name: ''
     nconnections: '1'
     size: '1024'
-    srate: audio_rate
+    srate: in_rate
     stemplot: 'False'
     style1: '1'
     style10: '1'
