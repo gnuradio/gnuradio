@@ -53,6 +53,7 @@ from .preferences import PreferencesDialog
 from .oot_browser import OOTBrowser
 from .dialogs import ErrorsDialog
 from ...core.base import Element
+from ...core.utils import expr_utils
 
 # Logging
 log = logging.getLogger(f"grc.application.{__name__}")
@@ -999,6 +1000,15 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
             else:
                 self.tabWidget.setCurrentIndex(open_fgs.index(filename))
 
+            grc_version = initial_state['metadata'].get('grc_version')
+            if grc_version:
+                current_gr_version = self.platform.config.version
+                err = expr_utils.check_grc_version(grc_version, current_gr_version)
+                if err:
+                    msg = "Your GRC file from GNU Radio version {} (current GNU Radio version: {})\n".format(
+                        grc_version, current_gr_version)
+                    log.warning(msg)
+
     def open_example(self, example_path):
         log.debug("open example")
         if example_path:
@@ -1114,7 +1124,8 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         else:
             message = None
             if file_path:
-                message = f"Save changes to {os.path.basename(file_path)} before closing? Your changes will be lost otherwise."
+                message = (f"Save changes to {os.path.basename(file_path)}"
+                           f"before closing? Your changes will be lost otherwise.")
             else:
                 message = "This flowgraph has not been saved"  # TODO: Revise text
 
