@@ -36,7 +36,7 @@ parameters:
     default: 'freq'
 
   - id: amp
-    label: 'Amp On (+14 dB)'
+    label: 'Amp On (+11 dB)'
     category: RF Options
     dtype: bool
     default: 'False'
