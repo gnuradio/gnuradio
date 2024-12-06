@@ -87,7 +87,6 @@ class EPyBlock(Block):
         self.states['_io_cache'] = ''
 
         self.module_name = self.name
-        self._epy_source_hash = -1
         self._epy_reload_error = None
 
     def rewrite(self):
@@ -96,12 +95,10 @@ class EPyBlock(Block):
         param_src = self.params['_source_code']
 
         src = param_src.get_value()
-        src_hash = hash((self.name, src))
-        if src_hash == self._epy_source_hash:
-            return
-
+        # Note: we can use get_evaluated() since all params have been evaluated by Elemen.rewrite(self) above.
+        block_params = {k: param.get_evaluated() for k, param in self.params.items() if _is_epy_block_param(param)}
         try:
-            blk_io = utils.epy_block_io.extract(src)
+            blk_io = utils.epy_block_io.extract(src, block_params)
 
         except Exception as e:
             self._epy_reload_error = ValueError(str(e))
@@ -117,7 +114,6 @@ class EPyBlock(Block):
             self.states['_io_cache'] = repr(tuple(blk_io))
 
         # print "Rewriting embedded python block {!r}".format(self.name)
-        self._epy_source_hash = src_hash
 
         self.label = blk_io.name or blk_io.cls
         self.documentation = {'': blk_io.doc}
