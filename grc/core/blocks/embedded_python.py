@@ -144,7 +144,7 @@ class EPyBlock(Block):
         param_factory = self.parent_platform.make_param
         params = {}
         for key, value in self.params.copy().items():
-            if hasattr(value, '__epy_param__'):
+            if _is_epy_block_param(value):
                 params[key] = value
                 del self.params[key]
 
@@ -159,7 +159,7 @@ class EPyBlock(Block):
                     parent=self, id=id_, dtype='raw', value=value,
                     name=id_.replace('_', ' ').title(),
                 )
-                setattr(param, '__epy_param__', True)
+                _mark_as_epy_block_param(param)
             self.params[id_] = param
 
     def _update_ports(self, label, ports, port_specs, direction):
@@ -198,6 +198,14 @@ class EPyBlock(Block):
         if self._epy_reload_error:
             self.params['_source_code'].add_error_message(
                 str(self._epy_reload_error))
+
+
+def _is_epy_block_param(param):
+    return hasattr(param, '__epy_param__')
+
+
+def _mark_as_epy_block_param(param):
+    setattr(param, '__epy_param__', True)
 
 
 @register_build_in
