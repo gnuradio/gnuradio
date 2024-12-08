@@ -8,10 +8,6 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
 #include <gnuradio/logger.h>
 #include <gnuradio/thread/thread_body_wrapper.h>
 
