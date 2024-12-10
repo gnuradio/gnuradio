@@ -126,6 +126,8 @@ class Port(CorePort, Drawable):
         """
         if self.hidden:
             return
+        if not self._area:
+            return
 
         border_color = self._border_color
         cr.set_line_width(self._line_width_factor * cr.get_line_width())
