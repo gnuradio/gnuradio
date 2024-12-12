@@ -120,6 +120,8 @@ class GUIPort(QGraphicsItem):
     def paint(self, painter, option, widget):
         if self.core.hidden:
             return
+        if not self.parentItem():
+            return
         painter.setRenderHint(QPainter.Antialiasing)
 
         pen = QPen(self._border_color)
