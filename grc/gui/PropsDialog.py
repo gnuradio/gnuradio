@@ -156,6 +156,8 @@ class PropsDialog(Gtk.Dialog):
         """
         self._block.rewrite()
         self._block.validate()
+        self._block.create_labels()
+        self._block.create_shapes()
         self.update_gui()
 
     def _activate_apply(self, *args):
