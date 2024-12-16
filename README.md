@@ -11,7 +11,7 @@
 
 # GNU Radio
 
-<table>
+<table align="center">
     <tr>
         <td>
             <img src="./docs/grc_eg.png" height="200px" />
