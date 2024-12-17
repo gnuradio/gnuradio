@@ -97,7 +97,7 @@ blocks:
   parameters:
     affinity: ''
     alias: ''
-    amp: '0.25'
+    amp: '0.5'
     comment: ''
     freq: '350'
     maxoutbuf: '0'
@@ -119,7 +119,7 @@ blocks:
   parameters:
     affinity: ''
     alias: ''
-    amp: '0.25'
+    amp: '0.5'
     comment: ''
     freq: '440'
     maxoutbuf: '0'
@@ -315,8 +315,8 @@ blocks:
     comment: ''
     ctrlpanel: 'False'
     fc: '0'
-    fftsize: '1024'
-    freqhalf: 'True'
+    fftsize: '4096'
+    freqhalf: 'False'
     grid: 'False'
     gui_hint: 1,0,1,1
     label: Relative Gain
@@ -395,7 +395,7 @@ blocks:
     comment: ''
     ctrlpanel: 'False'
     fc: '0'
-    fftsize: '1024'
+    fftsize: '4096'
     freqhalf: 'True'
     grid: 'False'
     gui_hint: 1,1,1,1
