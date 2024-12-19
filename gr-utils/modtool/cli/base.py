@@ -163,6 +163,7 @@ def block_name(**kwargs):
         shell_complete=block_name_complete)
 
 
+
 @click.command(cls=CommandCLI,
                epilog='Manipulate the source code tree of a GNU Radio module. ' +
                'Call without options to run specified command interactively')
