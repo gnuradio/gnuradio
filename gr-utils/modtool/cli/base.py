@@ -164,11 +164,9 @@ def block_name(**kwargs):
 
 
 
-CONTEXT_SETTINGS = dict(help_option_names=['help', '-h', '--help'])
 @click.command(cls=CommandCLI,
                epilog='Manipulate the source code tree of a GNU Radio module. ' +
-               'Call without options to run specified command interactively',
-               context_settings=CONTEXT_SETTINGS)
+               'Call without options to run specified command interactively')
 def cli():
     """A tool for editing GNU Radio out-of-tree modules."""
     pass
