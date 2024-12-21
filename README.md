@@ -14,13 +14,13 @@
 <table align="center">
     <tr>
         <td>
-            <img src="./docs/grc_eg.png" height="300px" />
+            <img src="./docs/grc_eg.png" height="200px" />
         </td>
         <td>
-            <img src="./docs/grc_eg_code.png" height="300px" />
+            <img src="./docs/grc_eg_code.png" height="200px" />
         </td>
         <td>
-            <img src="./docs/grc_eg_out.png" height="300px" />
+            <img src="./docs/grc_eg_out.png" height="200px" />
         </td>
     </tr>
 </table>
