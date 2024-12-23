@@ -6,11 +6,11 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
 #
-""" Returns information about a module """
-
+"""Returns information about a module"""
 
 import subprocess
 import click
+
 
 @click.command(name="help")
 def cli():
