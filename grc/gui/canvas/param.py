@@ -34,17 +34,17 @@ class Param(CoreParam):
         elif dtype == 'dir_select':
             input_widget_cls = ParamWidgets.DirectoryParam
 
-        elif dtype == 'enum':
-            input_widget_cls = ParamWidgets.EnumParam
-
-        elif self.options:
-            input_widget_cls = ParamWidgets.EnumEntryParam
-
         elif dtype == '_multiline':
             input_widget_cls = ParamWidgets.MultiLineEntryParam
 
         elif dtype == '_multiline_python_external':
             input_widget_cls = ParamWidgets.PythonEditorParam
+
+        # elif dtype == '_enum_static':
+        #     input_widget_cls = ParamWidgets.EnumParam
+
+        elif self.options:
+            input_widget_cls = ParamWidgets.EnumEntryParam
 
         else:
             input_widget_cls = ParamWidgets.EntryParam
@@ -145,6 +145,8 @@ class Param(CoreParam):
         elif t in ('file_open', 'file_save'):
             dt_str = self.get_value()
             truncate = -1
+        elif t == 'enum':
+            dt_str = self.options[e]
         else:
             # Other types
             dt_str = str(e)
