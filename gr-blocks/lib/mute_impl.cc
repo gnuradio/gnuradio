@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2010,2013,2018,2019 Free Software Foundation, Inc.
+ * Copyright 2004,2010,2013,2018,2019,2024 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -9,6 +9,7 @@
  */
 
 
+#include <pmt/pmt.h>
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
@@ -36,12 +37,23 @@ mute_impl<T>::mute_impl(bool mute)
 {
     this->message_port_register_in(pmt::intern("set_mute"));
     this->set_msg_handler(pmt::intern("set_mute"),
-                          [this](pmt::pmt_t msg) { this->set_mute_pmt(msg); });
+                          [this](pmt::pmt_t msg) { this->mute_message_handler(msg); });
 }
 
 template <class T>
 mute_impl<T>::~mute_impl()
 {
+}
+
+template <class T>
+void mute_impl<T>::mute_message_handler(pmt::pmt_t msg) {
+    if (pmt::is_pair(msg)) {
+        this->set_mute(
+                pmt::to_bool(pmt::cdr(msg))
+        ); 
+    } else {
+        this->set_mute(pmt::to_bool(msg));
+    }
 }
 
 template <class T>
