@@ -1,6 +1,7 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2004,2013,2018 Free Software Foundation, Inc.
+ * Copyright 2024 Skandalis Georgios
  *
  * This file is part of GNU Radio
  *
@@ -13,6 +14,7 @@
 #define MUTE_IMPL_H
 
 #include <gnuradio/blocks/mute.h>
+#include <pmt/pmt.h>
 
 namespace gr {
 namespace blocks {
@@ -29,7 +31,7 @@ public:
 
     bool mute() const override { return d_mute; }
     void set_mute(bool mute) override { d_mute = mute; }
-    void set_mute_pmt(pmt::pmt_t msg) { set_mute(pmt::to_bool(msg)); }
+    void mute_message_handler(const pmt::pmt_t& msg);
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
