@@ -10,6 +10,7 @@
 
 
 from gnuradio import gr, gr_unittest, blocks
+import pmt
 
 
 class test_mute(gr_unittest.TestCase):
@@ -73,6 +74,19 @@ class test_mute(gr_unittest.TestCase):
         expected_result = [0 + 0j, 0 + 0j, 0 + 0j, 0 + 0j, 0 + 0j]
         op = blocks.mute_cc(True)
         self.help_cc((src_data,), expected_result, op)
+
+
+    def test_unmute_ff(self):
+        src_data = [1.5, 2.5, 3.5, 4.5, 5.5]
+        expected_result = [1.5, 2.5, 3.5, 4.5, 5.5]
+        op = blocks.mute_ff(False)
+        self.help_ff((src_data,), expected_result, op)
+
+    def test_mute_ff(self):
+        src_data = [1.5, 2.5, 3.5, 4.5, 5.5]
+        expected_result = [0.0, 0.0, 0.0, 0.0, 0.0]
+        op = blocks.mute_ff(True)
+        self.help_ff((src_data,), expected_result, op)
 
 
 if __name__ == '__main__':
