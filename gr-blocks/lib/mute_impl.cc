@@ -61,28 +61,13 @@ int mute_impl<T>::work(int noutput_items,
                        gr_vector_const_void_star& input_items,
                        gr_vector_void_star& output_items)
 {
-    const T* iptr = (const T*)input_items[0];
-    T* optr = (T*)output_items[0];
-
-    int size = noutput_items;
+    const T* in = (const T*)input_items[0];
+    T* out = (T*) output_items[0];
 
     if (d_mute) {
-        std::fill_n(optr, noutput_items, 0);
+        std::fill_n(out, noutput_items, 0);
     } else {
-        while (size >= 8) {
-            *optr++ = *iptr++;
-            *optr++ = *iptr++;
-            *optr++ = *iptr++;
-            *optr++ = *iptr++;
-            *optr++ = *iptr++;
-            *optr++ = *iptr++;
-            *optr++ = *iptr++;
-            *optr++ = *iptr++;
-            size -= 8;
-        }
-
-        while (size-- > 0)
-            *optr++ = *iptr++;
+        std::copy_n(in, noutput_items, out);
     }
 
     return noutput_items;
