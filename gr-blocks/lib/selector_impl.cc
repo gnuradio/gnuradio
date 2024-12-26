@@ -1,6 +1,7 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2019 Free Software Foundation, Inc.
+ * Copyright 2024 Skandalis Georgios
  *
  * This file is part of GNU Radio
  *
@@ -8,6 +9,7 @@
  *
  */
 
+#include "pmt/pmt.h"
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
@@ -122,11 +124,16 @@ void selector_impl::handle_msg_output_index(const pmt::pmt_t& msg)
 void selector_impl::handle_enable(const pmt::pmt_t& msg)
 {
     if (pmt::is_bool(msg)) {
-        bool en = pmt::to_bool(msg);
+        const bool en = pmt::to_bool(msg);
+        gr::thread::scoped_lock l(d_mutex);
+        d_enabled = en;
+    } else if (pmt::is_pair(msg)) {
+        const bool en = pmt::to_bool(pmt::cdr(msg));
         gr::thread::scoped_lock l(d_mutex);
         d_enabled = en;
     } else {
-        d_logger->warn("handle_enable: Non-PMT type received, expecting Boolean PMT");
+        d_logger->warn(
+            "handle_enable: Invalid message type received, expected Boolean PMT or PDU");
     }
 }
 
