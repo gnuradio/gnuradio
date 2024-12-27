@@ -127,11 +127,12 @@ void selector_impl::handle_enable(const pmt::pmt_t& msg)
         gr::thread::scoped_lock l(d_mutex);
         d_enabled = en;
     } else if (pmt::is_pair(msg)) {
-        const bool en = pmt::to_bool(pmt::cdr(msg)); 
+        const bool en = pmt::to_bool(pmt::cdr(msg));
         gr::thread::scoped_lock l(d_mutex);
         d_enabled = en;
     } else {
-        d_logger->warn("handle_enable: Non-PMT type received, expecting Boolean PMT or PDU");
+        d_logger->warn(
+            "handle_enable: Non-PMT type received, expecting Boolean PMT or PDU");
     }
 }
 

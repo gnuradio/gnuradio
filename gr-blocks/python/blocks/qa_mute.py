@@ -75,7 +75,6 @@ class test_mute(gr_unittest.TestCase):
         op = blocks.mute_cc(True)
         self.help_cc((src_data,), expected_result, op)
 
-
     def test_unmute_ff(self):
         src_data = [1.5, 2.5, 3.5, 4.5, 5.5]
         expected_result = [1.5, 2.5, 3.5, 4.5, 5.5]

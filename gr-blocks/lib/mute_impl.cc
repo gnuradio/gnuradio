@@ -46,11 +46,10 @@ mute_impl<T>::~mute_impl()
 }
 
 template <class T>
-void mute_impl<T>::mute_message_handler(pmt::pmt_t msg) {
+void mute_impl<T>::mute_message_handler(pmt::pmt_t msg)
+{
     if (pmt::is_pair(msg)) {
-        this->set_mute(
-                pmt::to_bool(pmt::cdr(msg))
-        ); 
+        this->set_mute(pmt::to_bool(pmt::cdr(msg)));
     } else {
         this->set_mute(pmt::to_bool(msg));
     }
@@ -62,7 +61,7 @@ int mute_impl<T>::work(int noutput_items,
                        gr_vector_void_star& output_items)
 {
     const T* in = (const T*)input_items[0];
-    T* out = (T*) output_items[0];
+    T* out = (T*)output_items[0];
 
     if (d_mute) {
         std::fill_n(out, noutput_items, 0);
