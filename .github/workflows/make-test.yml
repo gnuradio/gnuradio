@@ -19,8 +19,6 @@ jobs:
       uses: actions/checkout@v4
       with:
         fetch-depth: 1
-    - name: ensure zsh availability
-      run: command -v zsh > /dev/null || (dnf --refresh install -y zsh)
     - name: Add git repo to safe repos
       run: git config --global --add safe.directory ${GITHUB_WORKSPACE}
     - name: Run hash fixer on all binding files
