@@ -883,10 +883,15 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         self.statusBar().showMessage(_("ready-message"))
 
     def open(self):
+        if self.currentFlowgraphScene.filename:
+            dirname = os.path.dirname(self.currentFlowgraphScene.filename)
+        else:
+            dirname = os.getcwd()
         Open = QtWidgets.QFileDialog.getOpenFileName
         filename, filtr = Open(
             self,
             self.actions["open"].statusTip(),
+            dir=dirname,
             filter="Flow Graph Files (*.grc);;All files (*.*)",
         )
         return filename
@@ -1035,6 +1040,11 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         file_dialog.setNameFilter('Flow Graph Files (*.grc)')
         file_dialog.setDefaultSuffix('grc')
         file_dialog.setAcceptMode(QtWidgets.QFileDialog.AcceptSave)
+        if self.currentFlowgraphScene.filename:
+            dirname = os.path.dirname(self.currentFlowgraphScene.filename)
+        else:
+            dirname = os.getcwd()
+        file_dialog.setDirectory(dirname)
         filename = None
         if file_dialog.exec_() == QtWidgets.QFileDialog.Accepted:
             filename = file_dialog.selectedFiles()[0]
