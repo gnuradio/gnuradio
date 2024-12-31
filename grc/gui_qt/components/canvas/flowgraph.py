@@ -341,6 +341,7 @@ class FlowgraphScene(QtWidgets.QGraphicsScene, base.Component):
                 self.start_port = None
                 self.end_port = None
         self.mousePressed = False
+        self.moving_blocks = False
         super(FlowgraphScene, self).mouseReleaseEvent(event)
 
     def createActions(self, actions):
