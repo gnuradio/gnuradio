@@ -92,7 +92,6 @@ class MoveAction(QUndoCommand):
         self.scene.update()
 
 
-
 class EnableAction(ChangeStateAction):
     def __init__(self, scene: FlowgraphScene):
         ChangeStateAction.__init__(self, scene)
