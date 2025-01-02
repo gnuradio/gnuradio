@@ -11,7 +11,7 @@
 
 import click
 
-from ..core import get_block_candidates, ModToolRemove
+from ..core import ModToolRemove
 from ..tools import SequenceCompleter
 from .base import common_params, block_name, run, cli_input
 
@@ -32,7 +32,7 @@ def cli(**kwargs):
 def get_pattern(self):
     """ Returns the regex pattern for block(s) to be removed """
     if self.info['pattern'] is None:
-        block_candidates = get_block_candidates(self.info['modname'])
+        block_candidates = self.get_block_candidates()
         with SequenceCompleter(block_candidates):
             self.info['pattern'] = cli_input(
                 'Which blocks do you want to delete? (Regex): ')

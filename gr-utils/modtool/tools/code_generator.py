@@ -41,9 +41,10 @@ def render_template(tpl_id, **kwargs):
     kwargs['strip_arg_types'] = strip_arg_types
     kwargs['strip_arg_types_grc'] = strip_arg_types_grc
     kwargs['grblocktype'] = GRTYPELIST[kwargs['blocktype']]
-    if kwargs['is_component'] or kwargs['version'] in ['310']:
-        kwargs['include_dir_prefix'] = "gnuradio/" + kwargs['modname']
-    else:
-        kwargs['include_dir_prefix'] = kwargs['modname']
+    include_prefix = kwargs["includedir"].split("/")[1:]  # expecting "include/gnuradio/modname"
+    kwargs["include_dir_prefix"] = "/".join(include_prefix)
+    kwargs["module_import_py"] = ".".join(include_prefix)
+    kwargs["module_import_grc"] = "from " + ".".join(include_prefix[:-1]) if len(include_prefix) > 1 else ""
+    kwargs["module_import_grc"] += f"import {include_prefix[-1]}"
     # Render and return
     return tpl.render(**kwargs)
