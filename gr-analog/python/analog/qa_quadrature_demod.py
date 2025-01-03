@@ -48,6 +48,24 @@ class test_quadrature_demod(gr_unittest.TestCase):
         result_data = dst.data()
         self.assertComplexTuplesAlmostEqual(expected_result, result_data, 5)
 
+    def test_fm_end_to_end_002(self):
+        f = 1000.0
+        fs = 8000.0
+        src = analog.sig_source_f(fs, analog.gr_waveform_t.GR_COS_WAVE, f, 1.0)
+        head = blocks.head(gr.sizeof_float, 100)
+        sensitivity = cmath.pi / 4
+        fm = analog.frequency_modulator_fc(sensitivity)
+        quad_demod = analog.quadrature_demod_cf(1.0 / sensitivity)
+        sink_signal = blocks.vector_sink_f()
+        sink_demod = blocks.vector_sink_f()
+        self.tb.connect(src, head, sink_signal)
+        self.tb.connect(head, fm, quad_demod, sink_demod)
+        self.tb.run()
+        expected_result = sink_signal.data()
+        expected_result[0] = 0.0
+        result_data = sink_demod.data()
+        self.assertFloatTuplesAlmostEqual(expected_result, result_data, 5)
+
 
 if __name__ == '__main__':
     gr_unittest.run(test_quadrature_demod)
