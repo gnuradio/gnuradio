@@ -1,5 +1,6 @@
 #
 # Copyright 2011-2012, 2018, 2020 Free Software Foundation, Inc.
+# Copyright 2024 Marcus Müller
 #
 # This file is part of GNU Radio
 #
@@ -14,6 +15,18 @@ import ctypes
 from . import gr_python as gr
 from .gr_python import io_signature  # , io_signaturev
 from .gr_python import block_gateway
+
+from packaging.version import Version as _version
+if _version(numpy.version.version) >= _version('1.24.0'):
+    """
+    Numpy 2.0 changes type promotion rules: https://numpy.org/neps/nep-0050-scalar-promotion.html
+    Ensure that we're using the same type promotion rules on post-3.10 main, as far as possible.
+
+    Since this might break existing user applications (as easy as the fix is,
+    https://numpy.org/devdocs/numpy_2_0_migration_guide.html#changes-to-numpy-data-type-promotion),
+    this can't be backported to 3.10.
+    """
+    numpy._set_promotion_state('weak')
 
 
 ########################################################################
