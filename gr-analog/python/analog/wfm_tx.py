@@ -51,13 +51,10 @@ class wfm_tx(gr.hier_block2):
 
         if do_interp:
             interp_factor = quad_rate // audio_rate
-            interp_taps = filter.optfir.low_pass(interp_factor,   # gain
-                                                 quad_rate,       # Fs
-                                                 16000,           # passband cutoff
-                                                 18000,           # stopband cutoff
-                                                 0.1,             # passband ripple dB
-                                                 40)              # stopband atten dB
-
+            interp_taps = filter.firdes.low_pass(interp_factor,  # gain
+                                                 quad_rate,      # Fs
+                                                 19000,          # cutoff_freq
+                                                 4000)           # transition_width
             print("len(interp_taps) =", len(interp_taps))
             self.interpolator = filter.interp_fir_filter_fff(
                 interp_factor, interp_taps)
