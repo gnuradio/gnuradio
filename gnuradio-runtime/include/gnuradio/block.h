@@ -852,6 +852,8 @@ protected:
      *
      * Range of counts is from start to end-1.
      *
+     * The vector is sorted ascendingly by the offset of the tags.
+     *
      * Tags are tuples of:
      *      (item count, source id, key, value)
      *
@@ -870,6 +872,8 @@ protected:
      * range with a given key.
      *
      * Range of counts is from start to end-1.
+     *
+     * The vector is sorted ascendingly by the offset of the tags.
      *
      * Tags are tuples of:
      *      (item count, source id, key, value)
@@ -898,6 +902,8 @@ protected:
      *
      * Range of items counts from \p rel_start to \p rel_end-1 within
      * current window.
+     *
+     * The vector is sorted ascendingly by the offset of the tags.
      *
      * Tags are tuples of:
      *      (item count, source id, key, value)
