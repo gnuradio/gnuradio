@@ -13,7 +13,6 @@
 
 #include "eye_sink_c_impl.h"
 
-#include <gnuradio/block_detail.h>
 #include <gnuradio/fft/fft.h>
 #include <gnuradio/io_signature.h>
 #include <gnuradio/prefs.h>
