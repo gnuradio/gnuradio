@@ -14,7 +14,6 @@
 
 #include "time_sink_f_impl.h"
 
-#include <gnuradio/block_detail.h>
 #include <gnuradio/buffer.h>
 #include <gnuradio/fft/fft.h>
 #include <gnuradio/io_signature.h>
