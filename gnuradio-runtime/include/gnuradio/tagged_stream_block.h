@@ -1,6 +1,7 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2013 Free Software Foundation, Inc.
+ * Copyright 2025 Marcus Müller <mmueller@gnuradio.org>
  *
  * This file is part of GNU Radio
  *
@@ -37,6 +38,98 @@ protected:
                         gr::io_signature::sptr input_signature,
                         gr::io_signature::sptr output_signature,
                         const std::string& length_tag_key);
+
+    /*!
+     * \brief Given a [start,end), returns a vector of all tags in the range.
+     *
+     * \see block::get_tags_in_range
+     *
+     * Does the same as block::get_tags_in_range, but omits the length_tag_key-tagged
+     * tags.
+     *
+     * In context of a class derived from tagged_stream_block, `get_tags_in_range` gets
+     * resolved to this implementation. Cast to the `gr::block` base class to access the
+     * original (i.e., length tag key-including) `block::get_tags_in_range`.
+     *
+     * \param v            a vector reference to return tags into
+     * \param which_input  an integer of which input stream to pull from
+     * \param abs_start    a uint64 count of the start of the range of interest
+     * \param abs_end      a uint64 count of the end of the range of interest
+     */
+    void get_tags_in_range(std::vector<tag_t>& v,
+                           unsigned int which_input,
+                           uint64_t abs_start,
+                           uint64_t abs_end);
+    /*!
+     * \brief Given a [start,end), returns a vector of all tags in the range.
+     *
+     * \see block::get_tags_in_range
+     *
+     * Does the same as block::get_tags_in_range, but omits the length_tag_key-tagged
+     * tags.
+     *
+     * In context of a class derived from tagged_stream_block, `get_tags_in_range` gets
+     * resolved to this implementation. Cast to the `gr::block` base class to access the
+     * original (i.e., length tag key-including) `block::get_tags_in_range`.
+     *
+     * \param v            a vector reference to return tags into
+     * \param which_input  an integer of which input stream to pull from
+     * \param abs_start    a uint64 count of the start of the range of interest
+     * \param abs_end      a uint64 count of the end of the range of interest
+     * \param key          a PMT symbol key to filter only tags of this key
+     */
+    void get_tags_in_range(std::vector<tag_t>& v,
+                           unsigned int which_input,
+                           uint64_t abs_start,
+                           uint64_t abs_end,
+                           const pmt::pmt_t& key);
+    /*!
+     * \brief Gets all tags within the relative window of the current call to work.
+     *
+     * \see block::get_tags_in_window
+     *
+     * Does the same as block::get_tags_in_window, but omits the length_tag_key-tagged
+     * tags.
+     *
+     * In context of a class derived from tagged_stream_block, `get_tags_in_window` gets
+     * resolved to this implementation. Cast to the `gr::block` base class to access the
+     * original (i.e., length tag key-including) `block::get_tags_in_window`.
+     *
+     *
+     * \param v            a vector reference to return tags into
+     * \param which_input  an integer of which input stream to pull from
+     * \param rel_start    a uint64 count of the start of the range of interest
+     * \param rel_end      a uint64 count of the end of the range of interest
+     */
+    void get_tags_in_window(std::vector<tag_t>& v,
+                            unsigned int which_input,
+                            uint64_t rel_start,
+                            uint64_t rel_end);
+
+    /*!
+     * \brief Gets all tags within the relative window of the current call to work,
+     * matching \p key
+     *
+     * \see block::get_tags_in_window
+     *
+     * Does the same as block::get_tags_in_window, but omits the length_tag_key-tagged
+     * tags.
+     *
+     * In context of a class derived from tagged_stream_block, `get_tags_in_window` gets
+     * resolved to this implementation. Cast to the `gr::block` base class to access the
+     * original (i.e., length tag key-including) `block::get_tags_in_window`.
+     *
+     * \param v            a vector reference to return tags into
+     * \param which_input  an integer of which input stream to pull from
+     * \param rel_start    a uint64 count of the start of the range of interest
+     * \param rel_end      a uint64 count of the end of the range of interest
+     * \param key          a PMT symbol key to filter only tags of this key
+     */
+    void get_tags_in_window(std::vector<tag_t>& v,
+                            unsigned int which_input,
+                            uint64_t rel_start,
+                            uint64_t rel_end,
+                            const pmt::pmt_t& key);
 
     /*!
      * \brief Parse all tags on the first sample of a PDU, return the

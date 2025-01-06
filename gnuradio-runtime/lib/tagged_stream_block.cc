@@ -1,6 +1,7 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2013 Free Software Foundation, Inc.
+ * Copyright 2025 Marcus Müller <mmueller@gnuradio.org>
  *
  * This file is part of GNU Radio
  *
@@ -8,9 +9,10 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
+#include "pmt/pmt.h"
+#include "gnuradio/block.h"
+#include <gnuradio/pmt_fmt.h>
+#include <algorithm>
 
 #include <gnuradio/tagged_stream_block.h>
 
@@ -25,6 +27,7 @@ tagged_stream_block::tagged_stream_block(const std::string& name,
       d_n_input_items_reqd(input_signature->min_streams(), 0),
       d_length_tag_key_str(length_tag_key)
 {
+    set_tag_propagation_policy(TPP_TSB);
 }
 
 // This is evil hackery: We trick the scheduler into creating the right number of input
@@ -44,14 +47,74 @@ void tagged_stream_block::forecast(int noutput_items,
     }
 }
 
+void tagged_stream_block::get_tags_in_range(std::vector<tag_t>& v,
+                                            unsigned int which_input,
+                                            uint64_t abs_start,
+                                            uint64_t abs_end)
+{
+    std::vector<tag_t> tmp;
+    gr::block::get_tags_in_range(tmp, which_input, abs_start, abs_end);
+    v.clear();
+    for (const auto& tag : tmp) {
+        if (!pmt::eqv(tag.key, d_length_tag_key)) {
+            v.push_back(tag);
+        }
+    }
+}
+void tagged_stream_block::get_tags_in_range(std::vector<tag_t>& v,
+                                            unsigned int which_input,
+                                            uint64_t abs_start,
+                                            uint64_t abs_end,
+                                            const pmt::pmt_t& key)
+{
+    std::vector<tag_t> tmp;
+    gr::block::get_tags_in_range(tmp, which_input, abs_start, abs_end, key);
+    v.clear();
+    for (const auto& tag : tmp) {
+        if (!pmt::eqv(tag.key, d_length_tag_key)) {
+            v.push_back(tag);
+        }
+    }
+}
+
+void tagged_stream_block::get_tags_in_window(std::vector<tag_t>& v,
+                                             unsigned int which_input,
+                                             uint64_t start,
+                                             uint64_t end)
+{
+    std::vector<tag_t> tmp;
+    gr::block::get_tags_in_window(tmp, which_input, start, end);
+    v.clear();
+    for (const auto& tag : tmp) {
+        if (!pmt::eqv(tag.key, d_length_tag_key)) {
+            v.push_back(tag);
+        }
+    }
+}
+
+void tagged_stream_block::get_tags_in_window(std::vector<tag_t>& v,
+                                             unsigned int which_input,
+                                             uint64_t start,
+                                             uint64_t end,
+                                             const pmt::pmt_t& key)
+{
+    std::vector<tag_t> tmp;
+    gr::block::get_tags_in_window(tmp, which_input, start, end, key);
+    v.clear();
+    for (const auto& tag : tmp) {
+        if (!pmt::eqv(tag.key, d_length_tag_key)) {
+            v.push_back(tag);
+        }
+    }
+}
+
 void tagged_stream_block::parse_length_tags(const std::vector<std::vector<tag_t>>& tags,
                                             gr_vector_int& n_input_items_reqd)
 {
-    for (unsigned i = 0; i < tags.size(); i++) {
-        for (unsigned k = 0; k < tags[i].size(); k++) {
-            if (tags[i][k].key == d_length_tag_key) {
-                n_input_items_reqd[i] = pmt::to_long(tags[i][k].value);
-                remove_item_tag(i, tags[i][k]);
+    for (unsigned input_idx = 0; input_idx < tags.size(); input_idx++) {
+        for (const auto& tag : tags[input_idx]) {
+            if (tag.key == d_length_tag_key) {
+                n_input_items_reqd[input_idx] = pmt::to_long(tag.value);
             }
         }
     }
@@ -87,12 +150,12 @@ int tagged_stream_block::general_work(int noutput_items,
         return work(noutput_items, ninput_items, input_items, output_items);
     }
 
+    std::vector<std::vector<tag_t>> tags(input_items.size(), std::vector<tag_t>());
     // Read TSB tags, unless we...
     // ...don't have inputs or ...     ... we already set it in a previous run.
     if (!d_n_input_items_reqd.empty() && d_n_input_items_reqd[0] == 0) {
-        std::vector<std::vector<tag_t>> tags(input_items.size(), std::vector<tag_t>());
         for (unsigned i = 0; i < input_items.size(); i++) {
-            get_tags_in_range(tags[i], i, nitems_read(i), nitems_read(i) + 1);
+            gr::block::get_tags_in_range(tags[i], i, nitems_read(i), nitems_read(i) + 1);
         }
         d_n_input_items_reqd.assign(input_items.size(), -1);
         parse_length_tags(tags, d_n_input_items_reqd);
@@ -128,6 +191,20 @@ int tagged_stream_block::general_work(int noutput_items,
     }
     if (n_produced > 0) {
         update_length_tags(n_produced, output_items.size());
+        if (tag_propagation_policy() == TPP_TSB) {
+            d_logger->trace("TPP_TSB policy: copying all non-length tags from all inputs "
+                            "to all outputs");
+            for (const auto& tag_vector : tags) {
+                for (const auto& tag : tag_vector) {
+                    if (!(pmt::eq(tag.key, d_length_tag_key))) {
+                        for (size_t output = 0; output < output_items.size(); ++output) {
+                            d_logger->trace("Copying tag {} to output {}", tag, output);
+                            add_item_tag(output, tag);
+                        }
+                    }
+                }
+            }
+        }
     }
 
     d_n_input_items_reqd.assign(input_items.size(), 0);
