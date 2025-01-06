@@ -152,20 +152,6 @@ public:
     void add_item_tag(const tag_t& tag);
 
     /*!
-     * \brief  Removes an existing tag from the buffer.
-     *
-     * If no such tag is found, does nothing.
-     * Note: Doesn't actually physically delete the tag, but
-     * marks it as deleted. For the user, this has the same effect:
-     * Any subsequent calls to get_tags_in_range() will not return
-     * the tag.
-     *
-     * \param tag        the tag that needs to be removed
-     * \param id         the unique ID of the block calling this function
-     */
-    void remove_item_tag(const tag_t& tag, long id);
-
-    /*!
      * \brief  Removes all tags before \p max_time from buffer
      *
      * \param max_time        the time (item number) to trim up until.

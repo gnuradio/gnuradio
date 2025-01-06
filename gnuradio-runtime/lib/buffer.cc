@@ -166,19 +166,6 @@ void buffer::add_item_tag(const tag_t& tag)
     d_item_tags.insert(std::pair<uint64_t, tag_t>(tag.offset, tag));
 }
 
-void buffer::remove_item_tag(const tag_t& tag, long id)
-{
-    gr::thread::scoped_lock guard(*mutex());
-    for (std::multimap<uint64_t, tag_t>::iterator it =
-             d_item_tags.lower_bound(tag.offset);
-         it != d_item_tags.upper_bound(tag.offset);
-         ++it) {
-        if ((*it).second == tag) {
-            (*it).second.marked_deleted.push_back(id);
-        }
-    }
-}
-
 void buffer::prune_tags(uint64_t max_time)
 {
     /* NOTE: this function _should_ lock the mutex before editing
