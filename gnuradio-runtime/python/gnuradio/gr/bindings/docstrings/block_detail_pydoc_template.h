@@ -75,9 +75,6 @@ static const char* __doc_gr_block_detail_clear_tags = R"doc()doc";
 static const char* __doc_gr_block_detail_add_item_tag = R"doc()doc";
 
 
-static const char* __doc_gr_block_detail_remove_item_tag = R"doc()doc";
-
-
 static const char* __doc_gr_block_detail_get_tags_in_range_0 = R"doc()doc";
 
 

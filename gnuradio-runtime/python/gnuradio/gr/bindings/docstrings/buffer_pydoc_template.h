@@ -63,9 +63,6 @@ static const char* __doc_gr_buffer_get_sizeof_item = R"doc()doc";
 static const char* __doc_gr_buffer_add_item_tag = R"doc()doc";
 
 
-static const char* __doc_gr_buffer_remove_item_tag = R"doc()doc";
-
-
 static const char* __doc_gr_buffer_prune_tags = R"doc()doc";
 
 

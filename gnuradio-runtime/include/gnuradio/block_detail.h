@@ -110,19 +110,6 @@ public:
     void add_item_tag(unsigned int which_output, const tag_t& tag);
 
     /*!
-     * \brief  Removes a tag from the given input stream.
-     *
-     * Calls gr::buffer::remove_item_tag().
-     * The tag in question will then no longer appear on subsequent calls of
-     * get_tags_in_range().
-     *
-     * \param which_input  an integer of which input stream to remove the tag from
-     * \param tag the tag object to add
-     * \param id The unique block ID (use gr::block::unique_id())
-     */
-    void remove_item_tag(unsigned int which_input, const tag_t& tag, long id);
-
-    /*!
      * \brief Given a [start,end), returns a vector of all tags in the range.
      *
      * Pass-through function to gr::buffer_reader to get a vector of
@@ -135,13 +122,11 @@ public:
      * \param which_input  an integer of which input stream to pull from
      * \param abs_start    a uint64 count of the start of the range of interest
      * \param abs_end      a uint64 count of the end of the range of interest
-     * \param id           Block ID
      */
     void get_tags_in_range(std::vector<tag_t>& v,
                            unsigned int which_input,
                            uint64_t abs_start,
-                           uint64_t abs_end,
-                           long id);
+                           uint64_t abs_end);
 
     /*!
      * \brief Given a [start,end), returns a vector of all tags in the
@@ -160,14 +145,12 @@ public:
      * \param abs_start    a uint64 count of the start of the range of interest
      * \param abs_end      a uint64 count of the end of the range of interest
      * \param key          a PMT symbol to select only tags of this key
-     * \param id           Block ID
      */
     void get_tags_in_range(std::vector<tag_t>& v,
                            unsigned int which_input,
                            uint64_t abs_start,
                            uint64_t abs_end,
-                           const pmt::pmt_t& key,
-                           long id);
+                           const pmt::pmt_t& key);
 
     /*!
      * \brief Set core affinity of block to the cores in the vector
