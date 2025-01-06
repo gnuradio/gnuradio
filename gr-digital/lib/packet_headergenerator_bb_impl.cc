@@ -75,7 +75,12 @@ int packet_headergenerator_bb_impl::work(int noutput_items,
                         nitems_read(0));
         throw std::runtime_error("header formatter returned false.");
     }
-
+    for (auto& tag : tags) {
+        const auto new_offset = nitems_written(0);
+        d_logger->trace("Forwarding tag {} to new offset {}", tag, new_offset);
+        tag.offset = new_offset;
+        add_item_tag(0, tag);
+    }
     return d_formatter->header_len();
 }
 
