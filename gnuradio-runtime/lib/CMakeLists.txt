@@ -82,6 +82,7 @@ add_library(
     sync_decimator.cc
     sync_interpolator.cc
     sys_paths.cc
+    tag_fmt.cc
     tagged_stream_block.cc
     terminate_handler.cc
     top_block.cc
