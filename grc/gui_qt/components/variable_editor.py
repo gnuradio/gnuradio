@@ -52,11 +52,19 @@ class VariableEditor(QDockWidget, base.Component):
         self.currently_rebuilding = True
         self._model.dataChanged.connect(self.handle_change)
 
+        self.var_add = VariableEditorAction.ADD_VARIABLE
+        self.import_add = VariableEditorAction.ADD_IMPORT
+        self.del_block = VariableEditorAction.DELETE_BLOCK
+        self._tree.itemClicked.connect(self.handle_click)
+
         imports = QTreeWidgetItem(self._tree)
         imports.setText(0, "Imports")
+        imports.setData(2, Qt.UserRole, self.import_add)
         imports.setIcon(2, QtGui.QIcon.fromTheme("list-add"))
+
         variables = QTreeWidgetItem(self._tree)
         variables.setText(0, "Variables")
+        variables.setData(2, Qt.UserRole, self.var_add)
         variables.setIcon(2, QtGui.QIcon.fromTheme("list-add"))
         self._tree.expandAll()
 
@@ -96,13 +104,27 @@ class VariableEditor(QDockWidget, base.Component):
     def keyPressEvent(self, event):
         super(VariableEditor, self).keyPressEvent(event)
 
+    def handle_click(self, item, col):
+        # we only care about the add/remove icons being clicked
+        if (col != 2):
+            return
+
+        action = item.data(2, Qt.UserRole)
+
+        if action is None:
+            log.warn("Item %s does not contain any actions!!", item)
+
+        self.handle_action(action)
+
     def set_scene(self, scene: FlowgraphScene):
         self.scene = scene
         self.update_gui(self.scene.core.blocks)
         self._tree.resizeColumnToContents(0)
         self._tree.resizeColumnToContents(1)
 
-    def handle_change(self, tl, br):  # TODO: Why are there two arguments?
+    # the handler is required by the signal to take two arguments even
+    # if we only use one
+    def handle_change(self, tl, br):
         if self.currently_rebuilding:
             return
 
@@ -131,6 +153,7 @@ class VariableEditor(QDockWidget, base.Component):
         imports.setText(0, "Imports")
         imports.setForeground(0, self._tree.palette().color(self.palette().WindowText))
         imports.setIcon(2, QtGui.QIcon.fromTheme("list-add"))
+        imports.setData(2, Qt.UserRole, self.import_add)
         for block in self._imports:
             import_ = QTreeWidgetItem(imports, 0)
             import_.setText(0, block.name)
@@ -138,6 +161,7 @@ class VariableEditor(QDockWidget, base.Component):
             import_.setText(1, block.params['imports'].get_value())
             import_.setData(1, Qt.UserRole, block)
             import_.setIcon(2, QtGui.QIcon.fromTheme("list-remove"))
+            import_.setData(2, Qt.UserRole, self.del_block)
             if block.enabled:
                 import_.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEditable | Qt.ItemIsEnabled)
                 import_.setForeground(0, self._tree.palette().color(self.palette().WindowText))
@@ -151,10 +175,12 @@ class VariableEditor(QDockWidget, base.Component):
         variables.setText(0, "Variables")
         variables.setForeground(0, self._tree.palette().color(self.palette().WindowText))
         variables.setIcon(2, QtGui.QIcon.fromTheme("list-add"))
+        variables.setData(2, Qt.UserRole, self.var_add)
         for block in sorted(self._variables, key=lambda v: v.name):
             variable_ = QTreeWidgetItem(variables, 1)
             variable_.setText(0, block.name)
             variable_.setData(0, Qt.UserRole, block)
+            variable_.setData(2, Qt.UserRole, self.del_block)
             if block.key == 'variable':
                 variable_.setText(1, block.params['value'].get_value())
                 variable_.setData(1, Qt.UserRole, block)
