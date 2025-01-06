@@ -75,8 +75,11 @@ public:
                                takes care of that. */
         TPP_ONE_TO_ONE = 2, /*!< Propagate tags from n. input to n. output. Requires same
                                number of in- and outputs */
-        TPP_CUSTOM = 3      /*!< Like TPP_DONT, but signals the block it should implement
-                               application-specific forwarding behaviour. */
+        TPP_CUSTOM = 3,     /*!< Like TPP_DONT, but signals the block it should implement
+                              application-specific forwarding behaviour. */
+        TPP_TSB = 4 /*!< like TPP_ALL_TO_ALL, but specific to tagged stream blocks. If
+                       your TSB needs to control its own tag copying, use
+                       set_tag_propagation_policy(TPP_CUSTOM) or TPP_DONT. */
     };
 
     ~block() override;

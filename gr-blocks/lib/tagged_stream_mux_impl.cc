@@ -72,6 +72,7 @@ int tagged_stream_mux_impl::work(int noutput_items,
             if (i == d_tag_preserve_head_pos && tags[j].offset == nitems_read(i)) {
                 offset -= n_produced;
             }
+            d_logger->trace("adding tag {}", tags[j]);
             add_item_tag(0, offset, tags[j].key, tags[j].value);
         }
         memcpy((void*)out, (const void*)in, ninput_items[i] * d_itemsize);
