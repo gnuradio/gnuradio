@@ -27,16 +27,16 @@ namespace gr {
 
 struct GR_RUNTIME_API tag_t {
     //! the item \p tag occurred at (as a uint64_t)
-    uint64_t offset;
+    uint64_t offset = 0;
 
     //! the key of \p tag (as a PMT symbol)
-    pmt::pmt_t key;
+    pmt::pmt_t key = pmt::PMT_NIL;
 
     //! the value of \p tag (as a PMT)
-    pmt::pmt_t value;
+    pmt::pmt_t value = pmt::PMT_NIL;
 
     //! the source ID of \p tag (as a PMT)
-    pmt::pmt_t srcid;
+    pmt::pmt_t srcid = pmt::PMT_F;
 
     //! Used by gr_buffer to mark a tagged as deleted by a specific block. You can usually
     //! ignore this.
@@ -56,32 +56,6 @@ struct GR_RUNTIME_API tag_t {
         return (t.key == key) && (t.value == value) && (t.srcid == srcid) &&
                (t.offset == offset);
     }
-
-    tag_t()
-        : offset(0),
-          key(pmt::PMT_NIL),
-          value(pmt::PMT_NIL),
-          srcid(pmt::PMT_F) // consistent with default srcid value in block::add_item_tag
-    {
-    }
-
-    //! Copy constructor; constructs identical tag, but doesn't copy marked_delete
-    tag_t(const tag_t& rhs)
-        : offset(rhs.offset), key(rhs.key), value(rhs.value), srcid(rhs.srcid)
-    {
-    }
-    tag_t& operator=(const tag_t& rhs)
-    {
-        if (this != &rhs) {
-            offset = rhs.offset;
-            key = rhs.key;
-            value = rhs.value;
-            srcid = rhs.srcid;
-        }
-        return (*this);
-    }
-
-    ~tag_t() {}
 };
 
 } /* namespace gr */
