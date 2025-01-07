@@ -327,6 +327,7 @@ if(ENABLE_TESTING)
         qa_logger.cc
         qa_dictionary_logger.cc
         qa_host_buffer.cc
+        qa_tags.cc
         qa_vmcircbuf.cc)
     list(APPEND GR_TEST_TARGET_DEPS gnuradio-runtime gnuradio-pmt)
 
