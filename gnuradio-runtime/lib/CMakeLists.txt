@@ -325,6 +325,7 @@ if(ENABLE_TESTING)
         qa_buffer.cc
         qa_io_signature.cc
         qa_logger.cc
+        qa_fmt_formatters.cc
         qa_dictionary_logger.cc
         qa_host_buffer.cc
         qa_tags.cc
