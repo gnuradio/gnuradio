@@ -38,10 +38,6 @@ struct GR_RUNTIME_API tag_t {
     //! the source ID of \p tag (as a PMT)
     pmt::pmt_t srcid = pmt::PMT_F;
 
-    //! Used by gr_buffer to mark a tagged as deleted by a specific block. You can usually
-    //! ignore this.
-    std::vector<long> marked_deleted;
-
     //! Comparison function to test which tag, \p x or \p y, came first in time
     friend inline bool operator<(const tag_t& x, const tag_t& y)
     {
