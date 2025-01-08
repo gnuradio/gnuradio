@@ -21,7 +21,7 @@ import logging
 
 from qtpy.QtCore import QUrl, Qt, QVariant
 from qtpy.QtWidgets import (QLineEdit, QTreeView, QMenu, QDockWidget, QWidget,
-                            QAction, QVBoxLayout, QAbstractItemView, QCompleter)
+                            QAction, QVBoxLayout, QAbstractItemView, QCompleter, QToolButton)
 from qtpy.QtGui import QStandardItem, QStandardItemModel
 
 # Custom modules
@@ -35,20 +35,37 @@ log = logging.getLogger(f"grc.application.{__name__}")
 class BlockSearchBar(QLineEdit):
     def __init__(self, parent):
         QLineEdit.__init__(self)
+        QLineEdit.setClearButtonEnabled(self, True)
         self.parent = parent
         self.setObjectName("block_library::search_bar")
         self.returnPressed.connect(self.on_return_pressed)
+        # Find clear Button inside QLineEdit
+        clr_btn = self.findChildren(QToolButton)
+        if len(clr_btn) > 0:
+            clr_btn[0].triggered.connect(self.clr)
+
+    def clr(self):
+        self.parent.reset()
+
+    def first_block_in_results(self):
+        model = self.completer().completionModel()
+        index = model.index(0, 0)
+        return model.data(index)
 
     def on_return_pressed(self):
+        block_key = None
         label = self.text()
         if label in self.parent._block_tree_flat:
             block_key = self.parent._block_tree_flat[label].key
+        else:
+            label = self.first_block_in_results()
+            if label in self.parent._block_tree_flat:
+                block_key = self.parent._block_tree_flat[label].key
+        if block_key:
             self.parent.add_block(block_key)
-            self.setText("")
-            self.parent.populate_tree(self.parent._block_tree)
         else:
             log.info(f"No block named {label}")
-            self.parent.reset()
+        self.clr()
 
 
 def get_items(model):
@@ -102,6 +119,7 @@ class BlockLibrary(QDockWidget, base.Component):
         super(BlockLibrary, self).__init__()
 
         self.qsettings = self.app.qsettings
+        self.blocklibrary_expanded = self.qsettings.value('grc/blocklibrary_expanded', type=bool)
 
         self.setObjectName("block_library")
         self.setWindowTitle("Block Library")
@@ -167,15 +185,11 @@ class BlockLibrary(QDockWidget, base.Component):
 
         completer = QCompleter(self._block_tree_flat.keys())
         completer.setCompletionMode(QCompleter.PopupCompletion)
+        completer.setModelSorting(QCompleter.CaseInsensitivelySortedModel)
         completer.setCaseSensitivity(Qt.CaseInsensitive)
         completer.setFilterMode(Qt.MatchContains)
         self._search_bar.setCompleter(completer)
-
-        self._search_bar.textChanged.connect(
-            lambda x: self.populate_tree(
-                self._block_tree, get_items(completer.completionModel())
-            )
-        )
+        self._search_bar.textChanged.connect(self.show_search_results)
 
         # TODO: Move to the base controller and set actions as class attributes
         # Automatically create the actions, menus and toolbars.
@@ -213,8 +227,15 @@ class BlockLibrary(QDockWidget, base.Component):
     def createToolbars(self, actions, toolbars):
         pass
 
+    def show_search_results(self):
+        if self._search_bar.text() == '':
+            self.populate_tree(self._block_tree)
+        else:
+            self.populate_tree(self._block_tree, get_items(self._search_bar.completer().completionModel()))
+
     def reset(self):
         """Reset the filter (show all blocks in the tree view)"""
+        self._search_bar.clear()
         self.populate_tree(self._block_tree)
 
     def load_blocks(self):
@@ -305,9 +326,12 @@ class BlockLibrary(QDockWidget, base.Component):
         # Call the nested function recursively to populate the block tree
         log.debug("Populating the treeview")
         _populate(block_tree, self._model.invisibleRootItem())
-        self._library.expand(
-            self._model.item(0, 0).index()
-        )  # TODO: Should be togglable in prefs
+        if self.blocklibrary_expanded and self._model.item(1, 0):
+            self._library.expand(self._model.item(1, 0).index())
+        else:
+            self._library.expand(
+                self._model.item(0, 0).index()
+            )
         if v_blocks:
             self._library.expandAll()
 
