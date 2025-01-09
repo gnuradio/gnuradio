@@ -1,11 +1,13 @@
+ace:
+- 8.0.2
 alsa_lib:
 - '1.2'
 c_compiler:
 - gcc
 c_compiler_version:
-- '12'
+- '13'
 cdt_name:
-- cos7
+- conda
 channel_sources:
 - conda-forge
 channel_targets:
@@ -13,9 +15,9 @@ channel_targets:
 cxx_compiler:
 - gxx
 cxx_compiler_version:
-- '12'
+- '13'
 docker_image:
-- quay.io/condaforge/linux-anvil-cos7-x86_64
+- quay.io/condaforge/linux-anvil-x86_64:cos7
 fftw:
 - '3'
 gmp:
@@ -23,13 +25,13 @@ gmp:
 gsl:
 - '2.7'
 libboost_devel:
-- '1.82'
+- '1.84'
 libiio:
 - '0'
 libsndfile:
 - '1.2'
 libthrift:
-- 0.20.0
+- 0.21.0
 numpy:
 - '1.23'
 pin_run_as_build:
@@ -47,11 +49,11 @@ qt_main:
 soapysdr:
 - '0.8'
 spdlog:
-- '1.12'
+- '1.13'
 target_platform:
 - linux-64
 uhd:
-- 4.6.0
+- 4.7.0
 volk:
 - '3.1'
 zeromq:
