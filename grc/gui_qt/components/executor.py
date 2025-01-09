@@ -1,19 +1,24 @@
-import os
-import shlex
+"""
+Copyright 2016 Free Software Foundation, Inc.
+This file is part of GNU Radio
+
+SPDX-License-Identifier: GPL-3.0-or-later
+"""
+
 import subprocess
 import threading
 import time
 from pathlib import Path
-from shutil import which as find_executable
 
-from ..Utils import get_cmake_nproc
+from gnuradio import gr
+
 from ...core import Messages
 
 
 class ExecFlowGraphThread(threading.Thread):
     """Execute the flow graph as a new process and wait on it to finish."""
 
-    def __init__(self, view, flowgraph, xterm_executable, callback):
+    def __init__(self, view, flowgraph, xterm_executable, update_gui_callback):
         """
         ExecFlowGraphThread constructor.
         """
@@ -21,14 +26,14 @@ class ExecFlowGraphThread(threading.Thread):
 
         self.view = view
         self.flow_graph = flowgraph
-        self.xterm_executable = xterm_executable
-        self.update_callback = callback
+        self.xterm_executable = xterm_executable or gr.prefs().get_string('grc', 'xterm_executable', 'xterm')
+        self.update_callback = update_gui_callback
+        self.generator = self.view.get_generator()
 
         try:
-            if self.flow_graph.get_option('output_language') == 'python':
-                self.process = self.view.process = self._popen()
-            elif self.flow_graph.get_option('output_language') == 'cpp':
-                self.process = self.view.process = self._cpp_popen()
+            self.process = self._popen(self.generator.get_exec_args())
+            if not self.process:
+                return
 
             self.update_callback()
             self.start()
@@ -36,68 +41,41 @@ class ExecFlowGraphThread(threading.Thread):
             Messages.send_verbose_exec(str(e))
             Messages.send_end_exec()
 
-    def _popen(self):
-        """
-        Execute this python flow graph.
-        """
-        generator = self.view.get_generator()
-        run_command = self.flow_graph.get_run_command(generator.file_path)
-        run_command_args = shlex.split(run_command)
+    def _popen(self, exec_args):
+        """Execute this flow graph."""
+        if not exec_args:
+            return None
 
-        # When in no gui mode on linux, use a graphical terminal (looks nice)
-        xterm_executable = find_executable(self.xterm_executable)
-        if generator.generate_options == 'no_gui' and xterm_executable:
-            if ('gnome-terminal' in xterm_executable):
-                run_command_args = [xterm_executable, '--'] + run_command_args
-            else:
-                run_command_args = [xterm_executable, '-e'] + run_command_args
+        def sanitize_popen_args(args):
+            """Sanitize the arguments for subprocess.Popen."""
+            forbidden_args = ['stdout', 'stderr', ]
+            for a in forbidden_args:
+                args.pop(a, None)
+            if 'cwd' not in args:
+                args['cwd'] = Path(self.generator.file_path).parent
+            return args
+        cmd_args = exec_args.pop("args")
+        exec_args = sanitize_popen_args(exec_args)
 
-        # this does not reproduce a shell executable command string, if a graphical
-        # terminal is used. Passing run_command though shlex_quote would do it but
-        # it looks really ugly and confusing in the console panel.
-        Messages.send_start_exec(' '.join(run_command_args))
-
-        dirname = Path(generator.file_path).parent
-
-        return subprocess.Popen(
-            args=run_command_args,
-            cwd=dirname,
-            stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
-            shell=False, universal_newlines=True
-        )
-
-    def _cpp_popen(self):
-        """
-        Execute this C++ flow graph after generating and compiling it.
-        """
-        generator = self.view.get_generator()
-        run_command = generator.file_path + \
-            '/build/' + self.flow_graph.get_option('id')
-
-        dirname = generator.file_path
-        builddir = os.path.join(dirname, 'build')
-
-        if os.path.isfile(run_command):
-            os.remove(run_command)
-
-        xterm_executable = find_executable(self.xterm_executable)
-
-        nproc = get_cmake_nproc()
-
-        run_command_args = f'cmake .. && cmake --build . -j{nproc} && cd ../.. && {xterm_executable} -e {run_command}'
-        Messages.send_start_exec(run_command_args)
+        # this does not reproduce a shell executable command string, if
+        # a graphical terminal is used. Passing run_command though shlex_quote
+        # would do it but it looks really ugly and confusing in the console.
+        if isinstance(cmd_args, list):
+            Messages.send_start_exec(' '.join(cmd_args))
+        else:
+            Messages.send_start_exec(cmd_args)
 
         return subprocess.Popen(
-            args=run_command_args,
-            cwd=builddir,
-            stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
-            shell=True, universal_newlines=True
+            args=cmd_args,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            universal_newlines=True,
+            **exec_args
         )
 
     def run(self):
         """
         Wait on the executing process by reading from its stdout.
-        Use GObject.idle_add when calling functions that modify gtk objects.
         """
         # handle completion
         r = "\n"
