@@ -2,10 +2,12 @@ MACOSX_DEPLOYMENT_TARGET:
 - '10.13'
 MACOSX_SDK_VERSION:
 - '10.13'
+ace:
+- 8.0.2
 c_compiler:
 - clang
 c_compiler_version:
-- '16'
+- '18'
 channel_sources:
 - conda-forge
 channel_targets:
@@ -13,7 +15,7 @@ channel_targets:
 cxx_compiler:
 - clangxx
 cxx_compiler_version:
-- '16'
+- '18'
 fftw:
 - '3'
 gmp:
@@ -21,13 +23,13 @@ gmp:
 gsl:
 - '2.7'
 libboost_devel:
-- '1.82'
+- '1.84'
 libiio:
 - '0'
 libsndfile:
 - '1.2'
 libthrift:
-- 0.20.0
+- 0.21.0
 macos_machine:
 - x86_64-apple-darwin13.4.0
 numpy:
@@ -47,11 +49,11 @@ qt_main:
 soapysdr:
 - '0.8'
 spdlog:
-- '1.12'
+- '1.13'
 target_platform:
 - osx-64
 uhd:
-- 4.6.0
+- 4.7.0
 volk:
 - '3.1'
 zeromq:
