@@ -1,3 +1,5 @@
+ace:
+- 8.0.2
 c_compiler:
 - vs2022
 channel_sources:
@@ -11,7 +13,7 @@ fftw:
 gsl:
 - '2.7'
 libboost_devel:
-- '1.82'
+- '1.84'
 libiio:
 - '0'
 libsndfile:
@@ -33,11 +35,11 @@ qt_main:
 soapysdr:
 - '0.8'
 spdlog:
-- '1.12'
+- '1.13'
 target_platform:
 - win-64
 uhd:
-- 4.6.0
+- 4.7.0
 volk:
 - '3.1'
 zeromq:
