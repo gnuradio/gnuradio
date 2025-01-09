@@ -14,7 +14,6 @@ import numpy
 
 import pmt
 from gnuradio import gr, gr_unittest
-from gnuradio import digital
 from gnuradio import blocks
 from gnuradio import channels
 from gnuradio.digital.ofdm_txrx import ofdm_tx, ofdm_rx
@@ -91,7 +90,7 @@ class test_ofdm_txrx (gr_unittest.TestCase):
         timing_tag.value = pmt.to_pmt('now')
         len_tag_key = 'frame_len'
         n_bytes = 52
-        n_samples_expected = (numpy.ceil(1.0 * (n_bytes + 4) / 6) + 3) * 80
+        n_samples_expected = int(numpy.ceil(1.0 * (n_bytes + 4) / 6) + 3) * 80
         test_data = [random.randint(0, 255) for x in range(n_bytes)]
         tx_fg = ofdm_tx_fg(
             test_data,

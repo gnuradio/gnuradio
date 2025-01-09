@@ -134,10 +134,7 @@ public:
      * \param id           the unique ID of the block to make sure already deleted tags
      * are not returned
      */
-    void get_tags_in_range(std::vector<tag_t>& v,
-                           uint64_t abs_start,
-                           uint64_t abs_end,
-                           long id);
+    void get_tags_in_range(std::vector<tag_t>& v, uint64_t abs_start, uint64_t abs_end);
 
     /*!
      * \brief Returns true when the current thread is ready to call the callback,
