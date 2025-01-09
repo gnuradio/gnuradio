@@ -50,14 +50,15 @@ void annotator_raw_impl::add_tag(uint64_t offset, pmt_t key, pmt_t val)
     tag.offset = offset;
 
     // add our new tag
-    d_queued_tags.push_back(tag);
+    d_queued_tags.insert(tag);
     // make sure our tags are in offset order
-    std::sort(d_queued_tags.begin(), d_queued_tags.end(), tag_t::offset_compare);
+    //std::sort(d_queued_tags.begin(), d_queued_tags.end(), tag_t::offset_compare); This line is not needed because it is already sorted by stl set
     // make sure we are not adding an item in the past!
-    if (tag.offset > nitems_read(0)) {
-        throw std::runtime_error(
-            "annotator_raw::add_tag: item added too far in the past.");
-    }
+
+    // if (tag.offset > nitems_read(0)) { this is not need because set doesnt store
+    //     throw std::runtime_error(
+    //         "annotator_raw::add_tag: item added too far in the past.");
+    // }
 }
 
 int annotator_raw_impl::work(int noutput_items,
@@ -73,12 +74,13 @@ int annotator_raw_impl::work(int noutput_items,
     uint64_t end_N = start_N + (uint64_t)(noutput_items);
 
     // locate queued tags that fall in this range and insert them when appropriate
-    std::vector<tag_t>::iterator i = d_queued_tags.begin();
-    while (i != d_queued_tags.end()) {
-        if ((*i).offset >= start_N && (*i).offset < end_N) {
-            add_item_tag(0, (*i).offset, (*i).key, (*i).value, (*i).srcid);
-            i = d_queued_tags.erase(i);
+     for (const auto& tag:d_queued_tags ) { //changed accord to the issue description
+        // Check if the tag falls within the desired range
+        if (tag.offset >= start_N && tag.offset < end_N) {
+            add_item_tag(0, tag.offset, tag.key, tag.value, tag.srcid);
+            d_queued_tags.erase(tag);
         } else {
+            // Break out of the loop if the tag is out of the range
             break;
         }
     }

@@ -13,7 +13,8 @@
 
 #include <gnuradio/blocks/annotator_raw.h>
 #include <gnuradio/thread/thread.h>
-
+#include <gnuradio/tags.h>
+#include <set>
 namespace gr {
 namespace blocks {
 
@@ -21,7 +22,7 @@ class annotator_raw_impl : public annotator_raw
 {
 private:
     const size_t d_itemsize;
-    std::vector<tag_t> d_queued_tags;
+    std::set<tag_t> d_queued_tags;
     gr::thread::mutex d_mutex;
 
 public:
