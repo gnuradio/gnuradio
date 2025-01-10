@@ -55,8 +55,8 @@ def docstring_guess_from_key(key):
     else:
         return doc_strings
 
-    pattern = re.compile(
-        '^' + init_name.replace('_', '_*').replace('x', r'\w') + r'\w*$')
+    pattern = re.compile(get_block_regex(init_name))
+
     for match in filter(pattern.match, dir(module)):
         try:
             doc_strings[match] = getattr(module, match).__doc__
@@ -64,6 +64,24 @@ def docstring_guess_from_key(key):
             continue
 
     return doc_strings
+
+
+def get_block_regex(block_name):
+    """
+    Helper function to create regular expression for a given block name
+    Assumes variable type blocks ends with '_x', '_xx', '_xxx', '_vxx',
+    or "_xx_ts"
+    """
+
+    regex = "^" + block_name + r"\w*$"
+    variable_suffixes = ["_x", "_xx", "_xxx", "_vxx", "_xx_ts"]
+    for suffix in variable_suffixes:
+        if block_name.endswith(suffix):
+            base_name, _, _ = block_name.rpartition(suffix)
+            var_suffix = suffix.replace("x", r"\w")
+            regex = "^" + base_name + var_suffix + r"\w*$"
+            break
+    return regex
 
 
 def docstring_from_make(key, imports, make):
