@@ -15,7 +15,6 @@ list(
     # attributes_python.cc
     basic_block_python.cc
     block_python.cc
-    block_detail_python.cc
     block_gateway_python.cc
     # block_registry_python.cc
     buffer_python.cc
@@ -64,7 +63,6 @@ list(
     # thread_body_wrapper_python.cc
     # thread_group_python.cc
     top_block_python.cc
-    tpb_detail_python.cc
     # types_python.cc
     # unittests_python.cc
     # xoroshiro128p_python.cc
