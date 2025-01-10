@@ -16,9 +16,7 @@
 #include <gnuradio/buffer_reader.h>
 #include <gnuradio/buffer_reader_sm.h>
 #include <gnuradio/math.h>
-#include <assert.h>
 #include <algorithm>
-#include <iostream>
 #include <stdexcept>
 
 namespace gr {
@@ -139,18 +137,9 @@ void buffer_reader::get_tags_in_range(std::vector<tag_t>& v,
                                       uint64_t abs_start,
                                       uint64_t abs_end)
 {
-    gr::thread::scoped_lock guard(*mutex());
-
-    uint64_t lower_bound = abs_start - d_attr_delay;
-    // check for underflow and if so saturate at 0
-    if (lower_bound > abs_start)
-        lower_bound = 0;
-    uint64_t upper_bound = abs_end - d_attr_delay;
-    // check for underflow and if so saturate at 0
-    if (upper_bound > abs_end)
-        upper_bound = 0;
-
     v.clear();
+    gr::thread::scoped_lock guard(*mutex());
+    auto [lower_bound, upper_bound] = offsets_to_bounds(abs_start, abs_end);
     std::multimap<uint64_t, tag_t>::iterator itr =
         d_buffer->get_tags_lower_bound(lower_bound);
     std::multimap<uint64_t, tag_t>::iterator itr_end =
@@ -166,6 +155,20 @@ void buffer_reader::get_tags_in_range(std::vector<tag_t>& v,
         }
         itr++;
     }
+}
+
+std::tuple<uint64_t, uint64_t> buffer_reader::offsets_to_bounds(uint64_t start,
+                                                                uint64_t end) const
+{
+    uint64_t lower_bound = start - d_attr_delay;
+    uint64_t upper_bound = end - d_attr_delay;
+    // check for underflow and if so saturate at 0
+    if (lower_bound > start)
+        lower_bound = 0;
+    // check for underflow and if so saturate at 0
+    if (upper_bound > end)
+        upper_bound = 0;
+    return { lower_bound, upper_bound };
 }
 
 long buffer_reader_ncurrently_allocated() { return s_buffer_reader_count; }
