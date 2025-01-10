@@ -9,11 +9,14 @@
 
 #include "block_gateway.h"
 
-#include <pybind11/complex.h>
 #include <pybind11/pybind11.h>
+
+#include <pybind11/complex.h>
+#include <pybind11/functional.h>
 #include <pybind11/stl.h>
 
 #include <memory>
+#include <optional>
 #include <string>
 
 namespace py = pybind11;
@@ -84,6 +87,22 @@ std::vector<gr::tag_t> block_gateway::_get_tags_in_window(unsigned int which_inp
     std::vector<gr::tag_t> tags;
     gr::block::get_tags_in_window(tags, which_input, rel_start, rel_end, key);
     return tags;
+}
+
+std::optional<gr::tag_t> block_gateway::_get_first_tag_in_range(unsigned int which_input,
+                                                                uint64_t start,
+                                                                uint64_t end,
+                                                                const pmt::pmt_t& key)
+{
+    return gr::block::get_first_tag_in_range(which_input, start, end, key);
+}
+std::optional<gr::tag_t>
+block_gateway::_get_first_tag_in_range(unsigned int which_input,
+                                       uint64_t start,
+                                       uint64_t end,
+                                       std::function<bool(const gr::tag_t&)> predicate)
+{
+    return gr::block::get_first_tag_in_range(which_input, start, end, predicate);
 }
 
 void block_gateway::forecast(int noutput_items, gr_vector_int& ninput_items_required)
@@ -228,7 +247,18 @@ void bind_block_gateway(py::module& m)
 
         .def_property_readonly("logger", &block_gateway::_get_logger)
 
-        ;
+        .def("get_first_tag_in_range",
+             py::overload_cast<unsigned, uint64_t, uint64_t, const pmt::pmt_t&>(
+                 &block_gateway::_get_first_tag_in_range))
+        .def("get_first_tag_in_range",
+             py::overload_cast<unsigned,
+                               uint64_t,
+                               uint64_t,
+                               std::function<bool(const gr::tag_t&)>>(
+                 &block_gateway::_get_first_tag_in_range));
+
+
+    ;
     py::enum_<gw_block_t>(m, "gw_block_t")
         .value("GW_BLOCK_GENERAL", GW_BLOCK_GENERAL)
         .value("GW_BLOCK_SYNC", GW_BLOCK_SYNC)

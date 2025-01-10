@@ -205,7 +205,14 @@ void block_detail::get_tags_in_range(std::vector<tag_t>& v,
         }
     }
 }
-
+std::optional<gr::tag_t>
+block_detail::get_first_tag_in_range(unsigned which_input,
+                                     uint64_t start,
+                                     uint64_t end,
+                                     std::function<bool(const gr::tag_t&)> predicate)
+{
+    return d_input.at(which_input)->get_first_tag_in_range(start, end, predicate);
+}
 void block_detail::set_processor_affinity(const std::vector<int>& mask)
 {
     if (threaded) {
