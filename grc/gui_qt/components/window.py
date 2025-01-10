@@ -1172,10 +1172,15 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         # TODO: Should be user-set somehow
         background_transparent = True
 
+        if self.currentFlowgraphScene.filename:
+            filename = self.currentFlowgraphScene.filename.split('.')[0] + '.pdf'
+        else:
+            filename = 'Untitled.pdf'
         Save = QtWidgets.QFileDialog.getSaveFileName
         file_path, filtr = Save(
             self,
-            self.actions["save"].statusTip(),
+            self.actions["screen_capture"].statusTip(),
+            filename,
             filter="PDF files (*.pdf);;PNG files (*.png);;SVG files (*.svg)",
         )
         if file_path is not None:
