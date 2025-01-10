@@ -663,7 +663,7 @@ def test_file_save_copy(qtbot, qapp_cls_, monkeypatch, tmp_path):
 
 
 # TODO: File/Open
-@pytest.mark.xfail()
+
 def test_file_screen_capture_pdf(qtbot, qapp_cls_, monkeypatch, tmp_path):
     fg_path = tmp_path / "test.pdf"
     monkeypatch.setattr(
