@@ -9,7 +9,6 @@
  */
 
 #include <gnuradio/trellis/interleaver.h>
-#include <gnuradio/trellis/quicksort_index.h>
 #include <gnuradio/xoroshiro128p.h>
 #include <algorithm>
 #include <cmath>
@@ -17,7 +16,7 @@
 #include <cstdlib>
 #include <fstream>
 #include <iostream>
-#include <iterator>
+#include <numeric>
 #include <stdexcept>
 #include <string>
 
@@ -106,9 +105,6 @@ interleaver::interleaver(const char* name)
 
 interleaver::interleaver(unsigned int K, int seed)
 {
-    d_interleaver_indices.resize(K);
-    d_deinterleaver_indices.resize(K);
-
     uint64_t rng_state[2];
     xoroshiro128p_seed(rng_state, seed);
     std::vector<int> tmp(K);
@@ -124,12 +120,18 @@ interleaver::interleaver(unsigned int K, int seed)
             bytes[idx] = *valptr++;
         }
     }
-    for (unsigned int i = 0; i < K; i++) {
-        d_interleaver_indices[i] = i;
-    }
-    quicksort_index<int>(tmp, d_interleaver_indices, 0, K - 1);
 
-    // generate DEINTER table
+    d_interleaver_indices.resize(K);
+    // interleaver vector is K sized at this point
+    std::iota(d_interleaver_indices.begin(), d_interleaver_indices.end(), 0);
+    // sort d_INTER by the values in tmp
+    std::sort(
+        d_interleaver_indices.begin(),
+        d_interleaver_indices.end(),
+        [&tmp](auto idx_left, auto idx_right) { return tmp[idx_left] < tmp[idx_right]; });
+
+    // generate deinterleaver table
+    d_deinterleaver_indices.resize(K);
     for (unsigned int i = 0; i < K; i++) {
         d_deinterleaver_indices[d_interleaver_indices[i]] = i;
     }
