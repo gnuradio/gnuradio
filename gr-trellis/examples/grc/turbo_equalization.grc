@@ -758,11 +758,11 @@ blocks:
     affinity: ''
     alias: ''
     comment: ''
-    interleaver_size: interleaver.K()
+    interleaver_size: interleaver.k()
     maxoutbuf: '0'
     minoutbuf: '0'
     syms_per_block: '1'
-    table: interleaver.INTER()
+    table: interleaver.interleaver_indices()
     type: byte
     vlen: '1'
   states:
@@ -778,11 +778,11 @@ blocks:
     affinity: ''
     alias: ''
     comment: ''
-    interleaver_size: interleaver.K()
+    interleaver_size: interleaver.k()
     maxoutbuf: '0'
     minoutbuf: '0'
     syms_per_block: '1'
-    table: interleaver.DEINTER()
+    table: interleaver.deinterleaver_indices()
     type: byte
     vlen: '1'
   states:
@@ -798,11 +798,11 @@ blocks:
     affinity: ''
     alias: ''
     comment: ''
-    interleaver_size: interleaver.K()
+    interleaver_size: interleaver.k()
     maxoutbuf: '0'
     minoutbuf: '0'
     syms_per_block: fsm_o.O()
-    table: interleaver.DEINTER()
+    table: interleaver.deinterleaver_indices()
     type: float
     vlen: '1'
   states:
@@ -817,7 +817,7 @@ blocks:
   parameters:
     affinity: ''
     alias: ''
-    block_size: interleaver.K()
+    block_size: interleaver.k()
     comment: ''
     dim: tot_mod[0]
     i_final_state: '-1'
@@ -850,7 +850,7 @@ blocks:
     a_post_out: 'False'
     affinity: ''
     alias: ''
-    block_size: interleaver.K()
+    block_size: interleaver.k()
     comment: ''
     dim: tot_mod[0]
     final_state: '-1'
@@ -873,7 +873,7 @@ blocks:
   parameters:
     affinity: ''
     alias: ''
-    block_size: interleaver.K()
+    block_size: interleaver.k()
     comment: ''
     dim: tot_mod[0]
     final_state: '-1'
@@ -897,7 +897,7 @@ blocks:
   parameters:
     affinity: ''
     alias: ''
-    block_size: interleaver.K()
+    block_size: interleaver.k()
     comment: ''
     dim: '1'
     final_state: '-1'
@@ -921,7 +921,7 @@ blocks:
   parameters:
     affinity: ''
     alias: ''
-    block_size: interleaver.K()
+    block_size: interleaver.k()
     comment: ''
     final_state: '-1'
     fsm_args: fsm_o

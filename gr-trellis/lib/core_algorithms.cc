@@ -11,7 +11,6 @@
 #include <gnuradio/trellis/calc_metric.h>
 #include <gnuradio/trellis/core_algorithms.h>
 #include <cstring>
-#include <iostream>
 #include <stdexcept>
 
 namespace gr {
@@ -946,7 +945,7 @@ void sccc_decoder_combined(const fsm& FSMo,
 
         // interleave soft info inner -> outer
         for (int k = 0; k < blocklength; k++) {
-            int ki = INTERLEAVER.DEINTER()[k];
+            int ki = INTERLEAVER.deinterleaver_indices()[k];
             // for(int i=0;i<FSMi.I();i++) {
             // oprioro[k*FSMi.I()+i]=iposti[ki*FSMi.I()+i];
             //}
@@ -977,7 +976,7 @@ void sccc_decoder_combined(const fsm& FSMo,
 
             // interleave soft info outer --> inner
             for (int k = 0; k < blocklength; k++) {
-                int ki = INTERLEAVER.DEINTER()[k];
+                int ki = INTERLEAVER.deinterleaver_indices()[k];
                 // for(int i=0;i<FSMi.I();i++) {
                 // ipriori[ki*FSMi.I()+i]=oposto[k*FSMi.I()+i];
                 //}
@@ -1185,7 +1184,7 @@ void sccc_decoder(const fsm& FSMo,
 
         // interleave soft info inner -> outer
         for (int k = 0; k < blocklength; k++) {
-            int ki = INTERLEAVER.DEINTER()[k];
+            int ki = INTERLEAVER.deinterleaver_indices()[k];
             // for(int i=0;i<FSMi.I();i++) {
             // oprioro[k*FSMi.I()+i]=iposti[ki*FSMi.I()+i];
             //}
@@ -1216,7 +1215,7 @@ void sccc_decoder(const fsm& FSMo,
 
             // interleave soft info outer --> inner
             for (int k = 0; k < blocklength; k++) {
-                int ki = INTERLEAVER.DEINTER()[k];
+                int ki = INTERLEAVER.deinterleaver_indices()[k];
                 // for(int i=0;i<FSMi.I();i++) {
                 // ipriori[ki*FSMi.I()+i]=oposto[k*FSMi.I()+i];
                 //}
@@ -1380,7 +1379,7 @@ void pccc_decoder(const fsm& FSM1,
 
         // interleave soft info 1 -> 2
         for (int k = 0; k < blocklength; k++) {
-            int ki = INTERLEAVER.INTER()[k];
+            int ki = INTERLEAVER.interleaver_indices()[k];
             // for(int i=0;i<FSMi.I();i++) {
             // oprioro[k*FSMi.I()+i]=iposti[ki*FSMi.I()+i];
             //}
@@ -1409,7 +1408,7 @@ void pccc_decoder(const fsm& FSM1,
 
         // interleave soft info 2 --> 1
         for (int k = 0; k < blocklength; k++) {
-            int ki = INTERLEAVER.INTER()[k];
+            int ki = INTERLEAVER.interleaver_indices()[k];
             // for(int i=0;i<FSMi.I();i++) {
             // ipriori[ki*FSMi.I()+i]=oposto[k*FSMi.I()+i];
             //}
@@ -1566,7 +1565,7 @@ void pccc_decoder_combined(const fsm& FSM1,
 
         // interleave soft info 1 -> 2
         for (int k = 0; k < blocklength; k++) {
-            int ki = INTERLEAVER.INTER()[k];
+            int ki = INTERLEAVER.interleaver_indices()[k];
             // for(int i=0;i<FSMi.I();i++) {
             // oprioro[k*FSMi.I()+i]=iposti[ki*FSMi.I()+i];
             //}
@@ -1595,7 +1594,7 @@ void pccc_decoder_combined(const fsm& FSM1,
 
         // interleave soft info 2 --> 1
         for (int k = 0; k < blocklength; k++) {
-            int ki = INTERLEAVER.INTER()[k];
+            int ki = INTERLEAVER.interleaver_indices()[k];
             // for(int i=0;i<FSMi.I();i++) {
             // ipriori[ki*FSMi.I()+i]=oposto[k*FSMi.I()+i];
             //}
