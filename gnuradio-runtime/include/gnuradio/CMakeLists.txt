@@ -8,6 +8,12 @@
 add_subdirectory(messages)
 add_subdirectory(thread)
 
+# Create a version.h with the project version
+configure_file(version.h.in
+               version.h)
+# Install version.h in include/gnuradio
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/version.h
+        DESTINATION ${GR_INCLUDE_DIR}/gnuradio)
 ########################################################################
 # Install header files
 ########################################################################
@@ -79,4 +85,6 @@ install(
 if(ENABLE_CTRLPORT_THRIFT)
     install(FILES rpcserver_booter_thrift.h thrift_application_base.h
                   thrift_server_template.h DESTINATION ${GR_INCLUDE_DIR}/gnuradio)
+
+
 endif(ENABLE_CTRLPORT_THRIFT)
