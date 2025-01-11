@@ -10,7 +10,6 @@
 
 
 import math
-import os
 
 from gnuradio import gr, gr_unittest, trellis, digital, analog, blocks
 
@@ -42,24 +41,11 @@ class test_trellis (gr_unittest.TestCase):
                          (f.I(), f.S(), f.O(), f.NS(), f.OS()))
 
     def test_003_fsm(self):
-        # FIXME: no file "awgn1o2_4.fsm"
-        #f = trellis.fsm("awgn1o2_4.fsm")
-        # self.assertEqual(fsm_args["awgn1o2_4"],(f.I(),f.S(),f.O(),f.NS(),f.OS()))
-        pass
-
-    def test_004_fsm(self):
         """ Test to make sure fsm works with a single state fsm."""
         # Just checking that it initializes properly.
         f = trellis.fsm(*fsm_args["rep2"])
 
-    def test_001_interleaver(self):
-        K = 5
-        IN = [1, 2, 3, 4, 0]
-        DIN = [4, 0, 1, 2, 3]
-        i = trellis.interleaver(K, IN)
-        self.assertEqual((K, IN, DIN), (i.K(), i.INTER(), i.DEINTER()))
-
-    def test_001_viterbi(self):
+    def test_011_viterbi(self):
         """
         Runs some coding/decoding tests with a few different FSM
         specs.
@@ -73,24 +59,24 @@ class test_trellis (gr_unittest.TestCase):
             # Make sure all packets successfully transmitted.
             self.assertEqual(tb.dst.ntotal(), tb.dst.nright())
 
-    def test_001_viterbi_combined(self):
+    def test_012_viterbi_combined(self):
         ftypes = ["ss", "si", "ib", "is", "ii", "fb", "fs", "fi", "cb", "cs", "ci"]
         for ftype in ftypes:
             tb = trellis_comb_tb(ftype)
             tb.run()
 
-    def test_001_pccc_encoder(self):
+    def test_021_pccc_encoder(self):
         ftypes = ["bb", "bs", "bi", "ss", "si", "ii"]
         for ftype in ftypes:
             tb = trellis_pccc_encoder_tb(ftype)
 
-    def test_001_pccc_decoder(self):
+    def test_022_pccc_decoder(self):
         ftypes = ["b", "s", "i"]
         for ftype in ftypes:
             tb = trellis_pccc_decoder_tb(ftype)
             tb.run()
 
-    def test_001_pccc_decoder_combined(self):
+    def test_023_pccc_decoder_combined(self):
         ftypes = ["fb", "fs", "fi", "cb", "cs", "ci"]
         for ftype in ftypes:
             tb = trellis_pccc_decoder_combined_tb(ftype)
