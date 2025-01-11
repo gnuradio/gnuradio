@@ -16,7 +16,6 @@ add_library(
     encoder_impl.cc
     fsm.cc
     interleaver.cc
-    quicksort_index.cc
     constellation_metrics_cf_impl.cc
     metrics_impl.cc
     pccc_decoder_blk_impl.cc
