@@ -139,9 +139,5 @@ if(WIN32)
     endif()
 endif(WIN32)
 
-if(ENABLE_COMMON_PCH)
-    target_link_libraries(gnuradio-audio PRIVATE common-precompiled-headers)
-endif()
-
 gr_library_foo(gnuradio-audio)
 install(FILES ${gr_audio_confs} DESTINATION ${GR_PREFSDIR})

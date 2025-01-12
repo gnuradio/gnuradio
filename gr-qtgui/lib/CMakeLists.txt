@@ -70,11 +70,6 @@ set(QTGUI_LIBS
     Qt5::Widgets
 )
 
-if(ENABLE_COMMON_PCH)
-    set(PRIVATE_LIBS common-precompiled-headers)
-endif()
-
-
 add_library(
     gnuradio-qtgui
     ${QTGUI_SOURCES}
