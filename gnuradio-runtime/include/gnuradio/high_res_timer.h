@@ -11,10 +11,6 @@
 #ifndef INCLUDED_GNURADIO_HIGH_RES_TIMER_H
 #define INCLUDED_GNURADIO_HIGH_RES_TIMER_H
 
-#include <gnuradio/api.h>
-#include <chrono>
-#include <ratio>
-
 ////////////////////////////////////////////////////////////////////////
 // Use architecture defines to determine the implementation
 ////////////////////////////////////////////////////////////////////////
@@ -22,16 +18,21 @@
 #define GNURADIO_HRT_USE_CLOCK_GETTIME
 #include <ctime>
 #elif defined(_WIN32) || defined(__WIN32__) || defined(WIN32)
+#include <windows.h>
 #define GNURADIO_HRT_USE_QUERY_PERFORMANCE_COUNTER
 #elif defined(macintosh) || defined(__APPLE__) || defined(__APPLE_CC__)
+#include <mach/mach_time.h>
 #define GNURADIO_HRT_USE_MACH_ABSOLUTE_TIME
 #elif defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__)
 #define GNURADIO_HRT_USE_CLOCK_GETTIME
 #include <ctime>
 #else
+#include <ratio>
 #define GNURADIO_HRT_USE_GENERIC_CLOCK
 #endif
 
+#include <gnuradio/api.h>
+#include <chrono>
 
 ////////////////////////////////////////////////////////////////////////
 namespace gr {
@@ -79,7 +80,6 @@ inline gr::high_res_timer_type gr::high_res_timer_tps(void) { return 1000000000U
 
 ////////////////////////////////////////////////////////////////////////
 #ifdef GNURADIO_HRT_USE_MACH_ABSOLUTE_TIME
-#include <mach/mach_time.h>
 
 inline gr::high_res_timer_type gr::high_res_timer_now(void)
 {
@@ -101,7 +101,6 @@ inline gr::high_res_timer_type gr::high_res_timer_tps(void)
 
 ////////////////////////////////////////////////////////////////////////
 #ifdef GNURADIO_HRT_USE_QUERY_PERFORMANCE_COUNTER
-#include <windows.h>
 
 inline gr::high_res_timer_type gr::high_res_timer_now(void)
 {
