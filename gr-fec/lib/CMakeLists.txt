@@ -77,10 +77,6 @@ endif(MSVC)
 
 target_link_libraries(gnuradio-fec PUBLIC gnuradio-runtime gnuradio-blocks)
 
-if(ENABLE_COMMON_PCH)
-    target_link_libraries(gnuradio-fec PRIVATE common-precompiled-headers)
-endif()
-
 # Address linker issues with std::filesystem on Centos 8 and Debian
 target_link_libraries(
     gnuradio-fec

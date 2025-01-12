@@ -28,10 +28,6 @@ target_include_directories(
     PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>)
 target_link_libraries(gnuradio-vocoder PUBLIC gnuradio-runtime)
 
-if(ENABLE_COMMON_PCH)
-    target_link_libraries(gnuradio-vocoder PRIVATE common-precompiled-headers)
-endif()
-
 if(LIBCODEC2_FOUND)
     target_sources(gnuradio-vocoder PRIVATE codec2.cc codec2_decode_ps_impl.cc
                                             codec2_encode_sp_impl.cc)

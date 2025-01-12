@@ -15,10 +15,6 @@ target_link_libraries(
     PUBLIC gnuradio-runtime
     PRIVATE ${SDL_LIBRARY})
 
-if(ENABLE_COMMON_PCH)
-    target_link_libraries(gnuradio-video-sdl PRIVATE common-precompiled-headers)
-endif()
-
 target_include_directories(
     gnuradio-video-sdl
     PUBLIC $<INSTALL_INTERFACE:include>
