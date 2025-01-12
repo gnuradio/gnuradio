@@ -13,14 +13,20 @@
 #include "config.h"
 #endif
 
+#if defined(_WIN32)
+// always include <windows.h> first
+#include <windows.h>
+
+// Sysinfoapi.h MUST NOT BE included before windows.h
+#include <Sysinfoapi.h>
+#endif
+
 #include "pagesize.h"
 #include <gnuradio/logger.h>
 
 namespace gr {
 
 #if defined(_WIN32)
-
-#include <Sysinfoapi.h>
 
 int native_pagesize(const gr::logger_ptr logger)
 {
