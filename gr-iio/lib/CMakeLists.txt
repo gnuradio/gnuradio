@@ -34,10 +34,6 @@ if(libad9361_SUFFICIENT)
     target_compile_definitions(gnuradio-iio PUBLIC -DGR_IIO_LIBAD9361)
 endif(libad9361_SUFFICIENT)
 
-if(ENABLE_COMMON_PCH)
-    target_link_libraries(gnuradio-iio PRIVATE common-precompiled-headers)
-endif()
-
 #Add Windows DLL resource file if using MSVC
 if(MSVC)
     include(${PROJECT_SOURCE_DIR}/cmake/Modules/GrVersion.cmake)
