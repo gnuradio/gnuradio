@@ -58,10 +58,6 @@ target_link_libraries(
     PUBLIC gnuradio-runtime gnuradio-fft Volk::volk
     PRIVATE gnuradio-blocks)
 
-if(ENABLE_COMMON_PCH)
-    target_link_libraries(gnuradio-filter PRIVATE common-precompiled-headers)
-endif()
-
 target_include_directories(
     gnuradio-filter PUBLIC $<INSTALL_INTERFACE:include>
                            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>)

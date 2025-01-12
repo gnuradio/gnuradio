@@ -33,10 +33,6 @@ add_library(
 
 target_link_libraries(gnuradio-trellis PUBLIC gnuradio-runtime gnuradio-digital)
 
-if(ENABLE_COMMON_PCH)
-    target_link_libraries(gnuradio-trellis PRIVATE common-precompiled-headers)
-endif()
-
 target_include_directories(
     gnuradio-trellis PUBLIC $<INSTALL_INTERFACE:include>
                             $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>)
