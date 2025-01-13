@@ -10,7 +10,6 @@ import builtins
 import keyword
 from typing import List, Callable
 
-from .. import blocks
 from .. import Constants
 
 
@@ -80,6 +79,9 @@ def validate_name(param, _) -> None:
 
 @validates('stream_id')
 def validate_stream_id(param, _) -> None:
+    
+    from .. import blocks
+
     value = param.value
     stream_ids = [
         block.params['stream_id'].value
