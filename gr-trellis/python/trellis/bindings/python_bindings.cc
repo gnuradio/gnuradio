@@ -27,7 +27,6 @@ void bind_pccc_decoder_blk(py::module&);
 void bind_pccc_decoder_combined_blk(py::module&);
 void bind_pccc_encoder(py::module&);
 void bind_permutation(py::module&);
-void bind_quicksort_index(py::module&);
 void bind_sccc_decoder_blk(py::module&);
 void bind_sccc_decoder_combined_blk(py::module&);
 void bind_sccc_encoder(py::module&);
@@ -68,7 +67,6 @@ PYBIND11_MODULE(trellis_python, m)
     bind_pccc_decoder_combined_blk(m);
     bind_pccc_encoder(m);
     bind_permutation(m);
-    bind_quicksort_index(m);
     bind_sccc_decoder_blk(m);
     bind_sccc_decoder_combined_blk(m);
     bind_sccc_encoder(m);

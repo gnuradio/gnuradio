@@ -22,7 +22,6 @@ install(
           pccc_decoder_combined_blk.h
           pccc_encoder.h
           permutation.h
-          quicksort_index.h
           sccc_encoder.h
           sccc_decoder_blk.h
           sccc_decoder_combined_blk.h

@@ -70,7 +70,7 @@ int pccc_encoder_impl<IN_T, OUT_T>::work(int noutput_items,
         int ST1_tmp = d_ST1;
         int ST2_tmp = d_ST2;
         for (int i = 0; i < d_blocklength; i++) {
-            int k = d_INTERLEAVER.INTER()[i];
+            int k = d_INTERLEAVER.interleaver_indices()[i];
             int o1 = d_FSM1.OS()[ST1_tmp * d_FSM1.I() + in[i]];
             ST1_tmp = (int)d_FSM1.NS()[ST1_tmp * d_FSM1.I() + in[i]];
             int o2 = d_FSM2.OS()[ST2_tmp * d_FSM2.I() + in[k]];

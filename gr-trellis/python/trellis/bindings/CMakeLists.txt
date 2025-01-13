@@ -19,7 +19,6 @@ list(
     pccc_decoder_combined_blk_python.cc
     pccc_encoder_python.cc
     permutation_python.cc
-    quicksort_index_python.cc
     sccc_decoder_blk_python.cc
     sccc_decoder_combined_blk_python.cc
     sccc_encoder_python.cc
