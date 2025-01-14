@@ -61,6 +61,9 @@ class RotateAction(QUndoCommand):
 
 class MoveAction(QUndoCommand):
     def __init__(self, scene: FlowgraphScene, diff: QPointF):
+        # Prevent empty undo actions if the block hasn't moved
+        if diff.isNull():
+            return
         QUndoCommand.__init__(self)
         log.debug("init MoveAction")
         self.setText('Move')
