@@ -69,6 +69,10 @@ categories:
         option_labels:
           - GRC Gtk
           - GRC Qt
+      - key: blocklibrary_expanded
+        name: Expand blocklibrary on startup
+        dtype: bool
+        default: True
       - key: console_log_level
         name: Console log level (Requires restart)
         dtype: enum
