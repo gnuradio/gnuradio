@@ -21,7 +21,7 @@ class annotator_raw_impl : public annotator_raw
 {
 private:
     const size_t d_itemsize;
-    std::set<tag_t> d_queued_tags;
+    std::multiset<tag_t> d_queued_tags;
     gr::thread::mutex d_mutex;
 
 public:
