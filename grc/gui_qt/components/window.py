@@ -1211,7 +1211,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
     def cut_triggered(self):
         log.debug("cut")
         self.copy_triggered()
-        self.currentFlowgraphScene.delete_selected()
+        self.delete_triggered()
         self.updateActions()
 
     def copy_triggered(self):
