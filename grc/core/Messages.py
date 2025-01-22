@@ -5,8 +5,9 @@
 #
 
 
-import traceback
+import logging
 import sys
+import traceback
 
 #  A list of functions that can receive a message.
 MESSENGERS_LIST = list()
@@ -40,7 +41,11 @@ def send(message):
         message: a message string
     """
     for messenger in MESSENGERS_LIST:
-        messenger(_indent + message)
+        try:
+            messenger(_indent + message)
+        except:
+            logging.getLogger(__name__).error(
+                "Error in messenger: %s (message: %s)", messenger, message)
 
 
 # register stdout by default
