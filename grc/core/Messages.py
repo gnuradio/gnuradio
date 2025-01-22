@@ -40,7 +40,10 @@ def send(message):
         message: a message string
     """
     for messenger in MESSENGERS_LIST:
-        messenger(_indent + message)
+        try:
+            messenger(_indent + message)
+        except:
+            pass
 
 
 # register stdout by default
