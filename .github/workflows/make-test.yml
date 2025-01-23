@@ -154,7 +154,7 @@ jobs:
     - name: Make Test
       env:
         QT_QPA_PLATFORM: offscreen
-      run: 'cd /build && ctest --output-on-failure ${{ matrix.ctest_args }}'
+      run: 'cd /build && ctest --output-on-failure ${{ matrix.ctest_args }} -j2'
     - name: Make Install
       run: |
        cd /build
