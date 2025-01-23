@@ -150,7 +150,7 @@ jobs:
         path: /build/compile_commands.json
         if-no-files-found: ignore
     - name: Make
-      run: 'cd /build && make -j2 -k'
+      run: cd /build && ${{ matrix.buildtool || 'make -j2 -k '}}
     - name: Make Test
       env:
         QT_QPA_PLATFORM: offscreen
@@ -158,7 +158,7 @@ jobs:
     - name: Make Install
       run: |
        cd /build
-       su -c "make install"
+       su -c "${{ matrix.buildtool || 'make -j2 -k '}} install"
        su -c "echo ${{matrix.ldpath}} >> /etc/ld.so.conf"
        su -c ldconfig
     - name: Test Python3
