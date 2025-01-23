@@ -126,6 +126,8 @@ jobs:
             containeroptions: '--platform linux/i386'
             cxxflags: -Werror
             ctest_args: '-E "qa_polar_..coder_(sc_)?systematic"'
+            ## Skip upload, cause 32 bit node doesn't work
+            skip_upload: True
             # ldpath:
     name: ${{ matrix.distro }}
     container:
@@ -141,7 +143,12 @@ jobs:
         CXXFLAGS: ${{ matrix.cxxflags }}
       run: 'cd /build && cmake ${{ matrix.cmakeflags }} ${GITHUB_WORKSPACE} -DENABLE_DOXYGEN=OFF'
     - name: Dump compile commands
-      run: 'cd /build && cat compile_commands.json'
+      if: ${{ ! matrix.skip_upload }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: '${{ matrix.distro }}.compile_commands.json'
+        path: /build/compile_commands.json
+        if-no-files-found: ignore
     - name: Make
       run: 'cd /build && make -j2 -k'
     - name: Make Test
