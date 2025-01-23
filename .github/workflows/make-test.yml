@@ -105,15 +105,16 @@ jobs:
           - distro: 'Ubuntu 24.04'
             containerid: 'gnuradio/ci:ubuntu-24.04-3.10'
             cxxflags: -Werror
-          - distro: 'Fedora 39 (with 0xFE memory initialization, GLIBCXX_ASSERTIONS)'
-            containerid: 'gnuradio/ci:fedora-39-3.10'
+          - distro: 'Fedora 40 (with 0xFE memory initialization, GLIBCXX_ASSERTIONS)'
+            containerid: 'gnuradio/ci:fedora-40-3.10'
             cxxflags: -Werror -ftrivial-auto-var-init=pattern -Wp,-D_GLIBCXX_ASSERTIONS
             ctest_args: '-E ""'
             ldpath: /usr/local/lib64/
-          - distro: 'Fedora 40 (clang)'
-            containerid: 'gnuradio/ci:fedora-40-3.10'
-            cxxflags: -Werror
-            cmakeflags: -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_C_COMPILER=clang
+          - distro: 'Fedora 41 (clang, ninja)'
+            containerid: 'gnuradio/ci:fedora-41-3.10'
+            cxxflags: -Werror -Wno-unused-command-line-argument
+            cmakeflags: -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_C_COMPILER=clang -GNinja
+            buildtool: ninja
             ctest_args: '-E ""'
             ldpath: /usr/local/lib64 
           - distro: 'Debian 12'
