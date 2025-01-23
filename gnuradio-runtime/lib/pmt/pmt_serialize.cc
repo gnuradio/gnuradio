@@ -173,7 +173,6 @@ static bool deserialize_untagged_u16(uint16_t* ip, std::streambuf& sb)
     uint8_t buf[sizeof(uint16_t)];
     std::streambuf::traits_type::int_type t;
     t = sb.sgetn((char*)buf, sizeof(buf));
-    sb.pubseekoff(sizeof(uint16_t), std::ios_base::cur);
     *ip = big_to_native_u16(buf);
 
     return t != std::streambuf::traits_type::eof();
@@ -185,7 +184,6 @@ static bool deserialize_untagged_u32(uint32_t* ip, std::streambuf& sb)
     uint8_t buf[sizeof(uint32_t)];
     std::streambuf::traits_type::int_type t;
     t = sb.sgetn((char*)buf, sizeof(buf));
-    sb.pubseekoff(sizeof(uint32_t), std::ios_base::cur);
     *ip = big_to_native_u32(buf);
 
     return t != std::streambuf::traits_type::eof();
@@ -197,7 +195,6 @@ static bool deserialize_untagged_u64(uint64_t* ip, std::streambuf& sb)
     uint8_t buf[sizeof(uint64_t)];
     std::streambuf::traits_type::int_type t;
     t = sb.sgetn((char*)buf, sizeof(buf));
-    sb.pubseekoff(sizeof(uint64_t), std::ios_base::cur);
     *ip = big_to_native_u64(buf);
 
     return t != std::streambuf::traits_type::eof();
@@ -215,7 +212,6 @@ static bool deserialize_untagged_f64(double* ip, std::streambuf& sb)
 
     iu_t iu;
     t = sb.sgetn((char*)buf, sizeof(buf));
-    sb.pubseekoff(sizeof(uint64_t), std::ios_base::cur);
     iu.ii = big_to_native_u64(buf);
     *ip = iu.id;
 
@@ -247,7 +243,6 @@ static bool deserialize_untagged_u8_vector(std::vector<uint8_t>& data,
     std::streambuf::traits_type::int_type t;
     data.resize(nitems);
     t = sb.sgetn((char*)&data[0], nitems);
-    sb.pubseekoff(nitems, std::ios_base::cur);
 
     return t != std::streambuf::traits_type::eof();
 }
@@ -260,7 +255,6 @@ static bool deserialize_untagged_u16_vector(std::vector<uint16_t>& data,
     data.resize(nitems);
     std::vector<uint8_t> buf(nitems * sizeof(uint16_t));
     t = sb.sgetn((char*)&buf[0], nitems * sizeof(uint16_t));
-    sb.pubseekoff(sizeof(uint16_t) * nitems, std::ios_base::cur);
     for (size_t i = 0; i < nitems; i++) {
         data[i] = big_to_native_u16(&buf[sizeof(uint16_t) * i]);
     }
@@ -276,7 +270,6 @@ static bool deserialize_untagged_u32_vector(std::vector<uint32_t>& data,
     data.resize(nitems);
     std::vector<uint8_t> buf(nitems * sizeof(uint32_t));
     t = sb.sgetn((char*)&buf[0], nitems * sizeof(uint32_t));
-    sb.pubseekoff(sizeof(uint32_t) * nitems, std::ios_base::cur);
     for (size_t i = 0; i < nitems; i++) {
         data[i] = big_to_native_u32(&buf[sizeof(uint32_t) * i]);
     }
@@ -292,7 +285,6 @@ static bool deserialize_untagged_u64_vector(std::vector<uint64_t>& data,
     data.resize(nitems);
     std::vector<uint8_t> buf(nitems * sizeof(uint64_t));
     t = sb.sgetn((char*)&buf[0], nitems * sizeof(uint64_t));
-    sb.pubseekoff(sizeof(uint64_t) * nitems, std::ios_base::cur);
     for (size_t i = 0; i < nitems; i++) {
         data[i] = big_to_native_u64(&buf[sizeof(uint64_t) * i]);
     }
