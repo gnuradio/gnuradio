@@ -5,7 +5,7 @@ import logging
 from enum import Enum
 
 from qtpy import QtGui
-from qtpy.QtWidgets import QMenu, QAction, QDockWidget, QTreeWidget, QTreeWidgetItem
+from qtpy.QtWidgets import QMenu, QAction, QDockWidget, QTreeWidget, QTreeWidgetItem, QDialog, QVBoxLayout, QLabel, QLineEdit, QDialogButtonBox
 from qtpy.QtCore import Slot, Signal, QPointF, Qt, QVariant
 
 # Custom modules
@@ -106,7 +106,7 @@ class VariableEditor(QDockWidget, base.Component):
 
     def handle_click(self, item, col):
         # we only care about the add/remove icons being clicked
-        if (col != 2):
+        if col != 2:
             return
 
         action = item.data(2, Qt.UserRole)
@@ -232,8 +232,7 @@ class VariableEditor(QDockWidget, base.Component):
             self.all_editor_actions.emit(action)
             return
         elif action == VariableEditorAction.OPEN_PROPERTIES:
-            # TODO: Disabled in GRC Gtk. Enable?
-            self.all_editor_actions.emit(action)
+            self.open_properties_dialog()
             return
 
         if self._tree.currentItem().type() == 2:  # Import or Variable header line was selected
@@ -246,6 +245,21 @@ class VariableEditor(QDockWidget, base.Component):
             to_handle = self.scene.core.blocks.index(self._variables[self._tree.currentIndex().row()])
         self.scene.core.blocks[to_handle].gui.setSelected(True)
         self.all_editor_actions.emit(action)
+
+    def open_properties_dialog(self):
+        """
+        Open the properties dialog for the currently selected item.
+        """
+        selected_item = self._tree.currentItem()
+        if selected_item:
+            block = selected_item.data(0, Qt.UserRole)
+            if block:
+                # Assuming you have a method to open the properties dialog for a block
+                self.scene.open_block_properties(block)
+            else:
+                log.warn("No block associated with the selected item.")
+        else:
+            log.warn("No item selected.")
 
 
 class VariableEditorContextMenu(QMenu):
@@ -287,3 +301,31 @@ class VariableEditorContextMenu(QMenu):
         self.properties.setEnabled(selected)
         self.enable.setEnabled(selected and not enabled)
         self.disable.setEnabled(selected and enabled)
+
+
+class PropertiesDialog(QDialog):
+    def __init__(self, block, parent=None):
+        super(PropertiesDialog, self).__init__(parent)
+        self.block = block
+        self.setWindowTitle(f"Properties - {block.name}")
+        self.layout = QVBoxLayout(self)
+
+        # Example: Add fields for block properties
+        self.name_label = QLabel("Name:")
+        self.name_edit = QLineEdit(block.name)
+        self.layout.addWidget(self.name_label)
+        self.layout.addWidget(self.name_edit)
+
+        # Add more fields as needed...
+
+        # Add OK and Cancel buttons
+        self.buttons = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+        self.buttons.accepted.connect(self.accept)
+        self.buttons.rejected.connect(self.reject)
+        self.layout.addWidget(self.buttons)
+
+    def accept(self):
+        # Save changes to the block
+        self.block.name = self.name_edit.text()
+        # Save other properties as needed...
+        super(PropertiesDialog, self).accept()
