@@ -188,6 +188,7 @@ jobs:
         retention-days: 7
 
   mingw64:
+    timeout-minutes: 80
   # All of these shall depend on the formatting check (needs: check-formatting)
     needs: [check-hashes, check-formatting, check-python-formatting]
     runs-on: windows-latest
