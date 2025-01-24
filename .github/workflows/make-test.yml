@@ -142,7 +142,7 @@ jobs:
     - name: CMake
       env:
         CXXFLAGS: ${{ matrix.cxxflags }}
-      run: 'cd /build && cmake ${{ matrix.cmakeflags }} ${GITHUB_WORKSPACE} -DENABLE_DOXYGEN=OFF'
+      run: 'cd /build && cmake ${{ matrix.cmakeflags }} ${GITHUB_WORKSPACE} -DENABLE_DOXYGEN=OFF -DCMAKE_BUILD_TYPE=RelWithDebInfo'
     - name: Dump compile commands
       if: ${{ ! matrix.skip_upload }}
       uses: actions/upload-artifact@v4
@@ -164,6 +164,24 @@ jobs:
        su -c ldconfig
     - name: Test Python3
       run: python3 -c "import gnuradio.blocks; print(gnuradio.blocks.complex_to_float())"
+    - name: Install into bundling directory
+      if: ${{ ! matrix.skip_upload }}
+      run: cmake --install /build --prefix /target
+    - name: Bundle installed files
+      if: ${{ ! matrix.skip_upload }}
+      run: tools/collect_installation.bash "${{ matrix.distro }}" "/target" "/installation-archive.squash"
+    - name: Upload installation archive
+      if: ${{ ! matrix.skip_upload }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: '${{ matrix.distro }} installation archive'
+        # already much better compressed
+        compression-level: 0
+        path: /installation-archive.squash
+        if-no-files-found: warn
+        # these things are kinda large, keep them around for 7 days: we can recreate them if we want
+        retention-days: 7
+
   no-python:
   # All of these shall depend on the formatting check (needs: check-formatting)
     needs: [check-hashes, check-formatting, check-python-formatting]
