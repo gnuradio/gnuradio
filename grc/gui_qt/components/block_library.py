@@ -38,7 +38,10 @@ class BlockSearchBar(QLineEdit):
         QLineEdit.setClearButtonEnabled(self, True)
         self.parent = parent
         self.setObjectName("block_library::search_bar")
-        self.returnPressed.connect(self.on_return_pressed)
+        # We must use a queued connection here, otherwise
+        # the searchbar entry will not be deleted if we selected an item from
+        # the popup window by key_down and key_enter
+        self.returnPressed.connect(self.on_return_pressed, Qt.QueuedConnection)
         # Find clear Button inside QLineEdit
         clr_btn = self.findChildren(QToolButton)
         if len(clr_btn) > 0:
@@ -326,8 +329,9 @@ class BlockLibrary(QDockWidget, base.Component):
         # Call the nested function recursively to populate the block tree
         log.debug("Populating the treeview")
         _populate(block_tree, self._model.invisibleRootItem())
-        if self.blocklibrary_expanded and self._model.item(1, 0):
-            self._library.expand(self._model.item(1, 0).index())
+        if self.blocklibrary_expanded:
+            for row in range(0, self._model.rowCount()):
+                self._library.expand(self._model.item(row, 0).index())
         else:
             self._library.expand(
                 self._model.item(0, 0).index()
