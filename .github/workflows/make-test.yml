@@ -9,7 +9,7 @@ on:
 jobs:
   # Check hashes first
   check-hashes:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     name: Check hashes
     container:
@@ -36,7 +36,7 @@ jobs:
   # can't use clang-format.
   check-formatting:
     name: Check C++ Formatting
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
     - uses: actions/checkout@v2
@@ -47,7 +47,7 @@ jobs:
         clangFormatVersion: 14
   check-python-formatting:
     name: Check Python Formatting
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
     - uses: actions/checkout@v2
@@ -60,7 +60,7 @@ jobs:
   linux-docker:
   # All of these shall depend on the formatting check (needs: check-formatting)
     needs: [check-hashes, check-formatting, check-python-formatting]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     # The GH default is 360 minutes (it's also the max as of Feb-2021). However
     # we should fail sooner. The only reason to exceed this time is if a test
     # hangs.
