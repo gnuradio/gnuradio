@@ -58,23 +58,6 @@ jobs:
         # UPDATE tox.ini when making changes!
         arguments: '--max-line-length=120 --ignore E265,E266,E275,E402,E501,E704,E712,E713,E714,E711,E721,E722,E741,W504,W605 --exclude *.yml.py'
         # -----------------------------------
-  # Doxygen gets built separately. It has a lot of output and its own weirdness.
-  doxygen:
-    name: Doxygen
-    runs-on: ubuntu-latest # This can run on whatever
-    timeout-minutes: 15
-    needs: [check-hashes, check-formatting]
-    container:
-      image: 'gnuradio/ci:ubuntu-20.04-3.9'
-      volumes:
-        - build_data:/build
-    steps:
-    - uses: actions/checkout@v2
-      name: Checkout Project
-    - name: CMake
-      run: 'cd /build && cmake ${GITHUB_WORKSPACE}'
-    - name: Make Docs
-      run: 'cd /build && make doxygen_target'
   linux-docker:
   # All of these shall depend on the formatting check (needs: check-formatting)
     needs: [check-hashes, check-formatting, check-python-formatting]
@@ -92,6 +75,10 @@ jobs:
         # descriptive name, and one key 'containerid' with the name of the
         # container (i.e., what you want to docker-pull)
         include:
+          - distro: 'Doxygen (Fedora 41)'
+            containerid: 'gnuradio/ci:fedora-41-3.10'
+            cmakeflags: -DENABLE_DEFAULT=Off -DENABLE_PYTHON=Off
+            enable_doxygen: On
           - distro: 'No-Python Ubuntu 24.04'
             containerid: 'gnuradio/ci:ubuntu-24.04-3.10'
             cxxflags: -Werror
@@ -146,7 +133,7 @@ jobs:
     - name: CMake
       env:
         CXXFLAGS: ${{ matrix.cxxflags }}
-      run: 'cd /build && cmake ${{ matrix.cmakeflags }} ${GITHUB_WORKSPACE} -DENABLE_DOXYGEN=OFF -DCMAKE_BUILD_TYPE=RelWithDebInfo'
+      run: cd /build && cmake ${{ matrix.cmakeflags }} ${GITHUB_WORKSPACE} -DENABLE_DOXYGEN=${{ matrix.enable_doxygen || 'Off' }} -DCMAKE_BUILD_TYPE=RelWithDebInfo
     - name: Dump compile commands
       if: ${{ ! matrix.skip_upload }}
       uses: actions/upload-artifact@v4
