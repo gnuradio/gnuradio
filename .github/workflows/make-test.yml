@@ -76,50 +76,36 @@ jobs:
         include:
           - distro: 'Doxygen (Fedora 41)'
             containerid: 'gnuradio/ci:fedora-41-3.10'
-            cmakeflags: -DENABLE_DEFAULT=Off -DENABLE_PYTHON=Off
             enable_doxygen: On
+            enable_default: Off
+            enable_python: Off
           - distro: 'No-Python Ubuntu 24.04'
             containerid: 'gnuradio/ci:ubuntu-24.04-3.10'
-            cxxflags: -Werror
-            cmakeflags: -DENABLE_PYTHON=Off
+            enable_python: Off
           - distro: 'Ubuntu 20.04'
             containerid: 'gnuradio/ci:ubuntu-20.04-3.9'
-            cxxflags: -Werror
-            ctest_args: '-E ""'
-            # ldpath: 
           - distro: 'Ubuntu 22.04'
             containerid: 'gnuradio/ci:ubuntu-22.04-3.9'
-            cxxflags: -Werror
             ctest_args: '-E "qa_polar_..coder_(sc_)?systematic"'
-            # ldpath:
           - distro: 'Ubuntu 24.04'
             containerid: 'gnuradio/ci:ubuntu-24.04-3.10'
-            cxxflags: -Werror
           - distro: 'Fedora 40 (with 0xFE memory initialization, GLIBCXX_ASSERTIONS)'
             containerid: 'gnuradio/ci:fedora-40-3.10'
-            cxxflags: -Werror -ftrivial-auto-var-init=pattern -Wp,-D_GLIBCXX_ASSERTIONS
-            ctest_args: '-E ""'
-            ldpath: /usr/local/lib64/
+            cxxflags: -ftrivial-auto-var-init=pattern -Wp,-D_GLIBCXX_ASSERTIONS
+            ldpath: /usr/local/lib64
           - distro: 'Fedora 41 (clang, ninja)'
             containerid: 'gnuradio/ci:fedora-41-3.10'
-            cxxflags: -Werror -Wno-unused-command-line-argument
+            cxxflags: -Wno-unused-command-line-argument
             cmakeflags: -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_C_COMPILER=clang -GNinja
-            buildtool: ninja
-            ctest_args: '-E ""'
-            ldpath: /usr/local/lib64 
+            ldpath: /usr/local/lib64
           - distro: 'Debian 12'
             containerid: 'gnuradio/ci:debian-12-3.10'
-            cxxflags: -Werror
-            ctest_args: '-E ""'
-            # ldpath: 
           - distro: 'Debian 11 (32-bit)'
             containerid: 'gnuradio/ci:debian-i386-11-3.10'
             containeroptions: '--platform linux/i386'
-            cxxflags: -Werror
             ctest_args: '-E "qa_polar_..coder_(sc_)?systematic"'
             ## Skip upload, cause 32 bit node doesn't work
             skip_upload: True
-            # ldpath:
     name: ${{ matrix.distro }}
     container:
       image: ${{ matrix.containerid }}
@@ -131,8 +117,16 @@ jobs:
       name: Checkout Project
     - name: CMake
       env:
-        CXXFLAGS: ${{ matrix.cxxflags }}
-      run: cd /build && cmake ${{ matrix.cmakeflags }} ${GITHUB_WORKSPACE} -DENABLE_DOXYGEN=${{ matrix.enable_doxygen || 'Off' }} -DCMAKE_BUILD_TYPE=RelWithDebInfo
+        CXXFLAGS: ${{ matrix.ignore_errors || '-Werror' }} ${{ matrix.cxxflags }}
+      run: >
+        cd /build
+        && cmake
+        -DENABLE_DEFAULT=${{ matrix.enable_default || 'On' }}
+        -DENABLE_DOXYGEN=${{ matrix.enable_doxygen || 'Off' }}
+        -DENABLE_PYTHON=${{  matrix.enable_python  || 'On' }}
+        -DCMAKE_BUILD_TYPE=RelWithDebInfo
+        ${{ matrix.cmakeflags }}
+        ${GITHUB_WORKSPACE}
     - name: Dump compile commands
       if: ${{ ! matrix.skip_upload }}
       uses: actions/upload-artifact@v4
@@ -141,19 +135,20 @@ jobs:
         path: /build/compile_commands.json
         if-no-files-found: ignore
     - name: Make
-      run: cd /build && ${{ matrix.buildtool || 'make -j2 -k '}}
+      run: cmake --build /build --parallel 2
     - name: Make Test
       env:
         QT_QPA_PLATFORM: offscreen
       run: 'cd /build && ctest --output-on-failure ${{ matrix.ctest_args }} -j2'
     - name: Make Install
-      run: |
-       cd /build
-       su -c "${{ matrix.buildtool || 'make -j2 -k '}} install"
-       su -c "echo ${{matrix.ldpath}} >> /etc/ld.so.conf"
-       su -c ldconfig
+      run: cmake --install /build
+    - name: Update dynamic linker directories
+      if:  ${{ matrix.ldpath }}
+      run: echo "${{ matrix.ldpath }}" >> /etc/ld.so.conf
+    - name: ldconfig
+      run: ldconfig
     - name: Test Python3
-      if: ${{ ! contains( matrix.cmakeflags, 'ENABLE_PYTHON=Off' ) }}
+      if: ${{ matrix.enable_python != 'Off' }}
       run: python3 -c "import gnuradio.blocks; print(gnuradio.blocks.complex_to_float())"
     - name: Install into bundling directory
       if: ${{ ! matrix.skip_upload }}
