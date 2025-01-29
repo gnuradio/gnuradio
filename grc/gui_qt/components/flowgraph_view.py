@@ -14,6 +14,7 @@ from .canvas.block import Block
 from .. import base
 from .canvas.flowgraph import FlowgraphScene, Flowgraph
 from .canvas.colors import LIGHT_FLOWGRAPH_BACKGROUND_COLOR, DARK_FLOWGRAPH_BACKGROUND_COLOR
+from .canvas.block import GUIBlock
 
 from ...core.generator import Generator
 
@@ -61,7 +62,16 @@ class FlowgraphView(
         log.debug("Creating actions")
 
     def contextMenuEvent(self, event):
-        super(FlowgraphView, self).contextMenuEvent(event)
+        if self.scene().selected_blocks():
+            block = self.scene().selected_blocks()[0]
+            self.scene().clearSelection()
+            block.setSelected(True)
+            block.context_menu(event.globalPos())
+        else:
+            empty_menu = QtWidgets.QMenu()
+            no_action = QtWidgets.QAction("No block selected", enabled=False)
+            empty_menu.addAction(no_action)
+            empty_menu.exec_(event.globalPos())
 
     def createMenus(self, actions, menus):
         log.debug("Creating menus")
@@ -161,6 +171,18 @@ class FlowgraphView(
             self.dragPos = event.pos()
             self.setCursor(Qt.ClosedHandCursor)
             event.accept()
+
+        elif event.button() == Qt.RightButton:
+
+            #  Check if the right click happened on a block
+            #  then select this block and deselect all others
+            #  Otherwise contextMenuEvent will lock for a already
+            #  selected block to handle
+
+            block = self.itemAt(event.pos())
+            if block:
+                self.scene().clearSelection()
+                block.setSelected(True)
 
     def mouseMoveEvent(self, event):
         if self.isPanning:
