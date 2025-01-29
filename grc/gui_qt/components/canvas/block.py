@@ -380,16 +380,12 @@ class GUIBlock(QGraphicsItem):
 
         self.moveToTop()
 
-    def contextMenuEvent(self, e):
-        if not self.isSelected():
-            self.scene().clearSelection()
-            self.setSelected(True)
-
+    def context_menu(self, pos):
         self.right_click_menu = self.scene()._app().MainWindow.menus["edit"]
         example_action = QAction("Examples...")
         example_action.triggered.connect(self.view_examples)
         self.right_click_menu.addAction(example_action)
-        self.right_click_menu.exec_(e.screenPos())
+        self.right_click_menu.exec_(pos)
 
     def view_examples(self):
         self.scene().app.MainWindow.example_browser_triggered(key_filter=self.core.key)
