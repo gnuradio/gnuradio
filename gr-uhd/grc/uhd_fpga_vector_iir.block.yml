@@ -1,0 +1,47 @@
+id: uhd_fpga_vector_iir
+label: RFNoC Vector IIR
+
+parameters:
+-   id: type
+    label: RFNoC Block Type
+    dtype: enum
+    default: 'block'
+    options: ['block', 'sep', 'device']
+    hide: all
+-   id: desc
+    label: Block Descriptor
+    dtype: string
+    default: 'vector_iir.yml'
+    hide: all
+-   id: NUM_PORTS
+    label: Number of Ports
+    dtype: int
+    default: 1
+    hide: part
+
+inputs:
+-   domain: rfnoc.clk
+    id: ce_clk
+    dtype: message
+-   domain: rfnoc.data
+    id: in_
+    dtype: fc32
+    multiplicity: ${ NUM_PORTS }
+
+outputs:
+-   domain: rfnoc.data
+    id: out_
+    dtype: fc32
+    multiplicity: ${ NUM_PORTS }
+
+doc_url: UHD_FPGA_FFT
+
+documentation: |-
+  RFNoC Vector IIR (FPGA Implementation).
+  Instantiates a Vector IIR block in the FPGA bitfile.
+  This block calculates a running average (using IIR filters) for every element
+  of a vector. This is useful to average the output of an FFT block.
+
+
+file_format: 1
+
