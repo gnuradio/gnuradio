@@ -223,6 +223,8 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
             self.currentFlowgraphScene.add_block('variable', pos)
         elif key == VariableEditorAction.ADD_IMPORT:
             self.currentFlowgraphScene.add_block('import', pos)
+        elif key == VariableEditorAction.OPEN_PROPERTIES:
+            self.currentFlowgraphScene.selected_blocks()[0].open_properties()
         else:
             log.debug(f"{key} not implemented yet")
         self.currentFlowgraphScene.clearSelection()

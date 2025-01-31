@@ -232,7 +232,14 @@ class VariableEditor(QDockWidget, base.Component):
             self.all_editor_actions.emit(action)
             return
         elif action == VariableEditorAction.OPEN_PROPERTIES:
-            # TODO: Disabled in GRC Gtk. Enable?
+            if self._tree.currentItem().type() == 2:  # Import or Variable header line was selected
+                return
+            self.scene.clearSelection()
+            if self._tree.currentItem().type() == 0:
+                to_handle = self.scene.core.blocks.index(self._imports[self._tree.currentIndex().row()])
+            else:
+                to_handle = self.scene.core.blocks.index(self._variables[self._tree.currentIndex().row()])
+            self.scene.core.blocks[to_handle].gui.setSelected(True)
             self.all_editor_actions.emit(action)
             return
 
