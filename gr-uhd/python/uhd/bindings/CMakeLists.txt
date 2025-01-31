@@ -24,6 +24,7 @@ if(ENABLE_UHD_RFNOC)
         rfnoc_ddc_python.cc
         rfnoc_duc_python.cc
         rfnoc_fir_filter_python.cc
+        rfnoc_fft_python.cc
         rfnoc_graph_python.cc
         rfnoc_replay_python.cc
         rfnoc_rx_radio_python.cc

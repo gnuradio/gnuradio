@@ -30,7 +30,7 @@
       - uhd_fpga_siggen
       - uhd_fpga_split_stream
       - uhd_fpga_switchboard
-      - uhd_fpga_vector_iir
+      - uhd_fpga_vector
       - uhd_fpga_fir_filter
     - Core:
       - uhd_fpga_sep
