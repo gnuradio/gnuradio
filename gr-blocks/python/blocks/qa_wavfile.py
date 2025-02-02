@@ -104,6 +104,7 @@ class test_wavefile(gr_unittest.TestCase):
         wf_out.close()
 
         # 3. append halved copy
+        self.tb.disconnect_all()
         wf_in = blocks.wavfile_source(infile)
         halver = blocks.multiply_const_ff(0.5)
         wf_out = blocks.wavfile_sink(outfile,
