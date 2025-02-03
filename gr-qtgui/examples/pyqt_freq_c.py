@@ -15,10 +15,11 @@ import sys
 
 try:
     from gnuradio import qtgui
-    from PyQt5 import QtWidgets, Qt
+    from qtpy import QtWidgets, QtGui
+    from qtpy.QtCore import Qt
     import sip
 except ImportError:
-    sys.stderr.write("Error: Program requires PyQt5 and gr-qtgui.\n")
+    sys.stderr.write("Error: Program requires PyQt and gr-qtgui.\n")
     sys.exit(1)
 
 try:
@@ -53,7 +54,7 @@ class control_box(QtWidgets.QWidget):
         self.setWindowTitle('Control Panel')
 
         self.setToolTip('Control the signals')
-        QtWidgets.QToolTip.setFont(Qt.QFont('OldEnglish', 10))
+        QtWidgets.QToolTip.setFont(QtGui.QFont('OldEnglish', 10))
 
         self.layout = QtWidgets.QFormLayout(self)
 
@@ -163,7 +164,7 @@ class my_top_block(gr.top_block):
         pyQt = self.snk1.qwidget()
 
         # Wrap the pointer as a PyQt SIP object
-        # This can now be manipulated as a PyQt5.QtWidgets.QWidget
+        # This can now be manipulated as a QtWidgets.QWidget
         pyWin = sip.wrapinstance(pyQt, QtWidgets.QWidget)
 
         # pyWin.show()
