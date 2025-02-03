@@ -5,9 +5,8 @@ flags: [ python ]
 parameters:
 -   id: type
     label: RFNoC Block Type
-    dtype: enum
+    dtype: string
     default: 'sep'
-    options: ['block', 'sep', 'device']
     hide: all
 -   id: ctrl
     label: Pass Control Traffic

@@ -4,9 +4,8 @@ label: CHDR DMA Transport Adapter
 parameters:
 -   id: type
     label: RFNoC Block Type
-    dtype: enum
+    dtype: string
     default: 'transport_adapter'
-    options: ['block', 'sep', 'device', 'transport_adapter']
     hide: all
 -   id: desc
     label: Block Descriptor
