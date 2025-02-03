@@ -25,9 +25,6 @@ parameters:
     hide: part
 
 inputs:
--   domain: rfnoc.clk
-    id: ce_clk
-    dtype: message
 -   domain: rfnoc.data
     id: in_
     dtype: fc32
