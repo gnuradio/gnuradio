@@ -4,9 +4,8 @@ label: RFNoC Device BSP
 parameters:
 -   id: type
     label: RFNoC Block Type
-    dtype: enum
+    dtype: string
     default: 'device'
-    options: ['block', 'sep', 'device']
     hide: all
 -   id: chdr_width
     label: CHDR Width

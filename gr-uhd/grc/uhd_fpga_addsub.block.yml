@@ -4,9 +4,8 @@ label: RFNoC Add/Subtract
 parameters:
 -   id: type
     label: RFNoC Block Type
-    dtype: enum
+    dtype: string
     default: 'block'
-    options: ['block', 'sep', 'device']
     hide: all
 -   id: desc
     label: Block Descriptor
