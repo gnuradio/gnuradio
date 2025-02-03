@@ -5,9 +5,8 @@ flags: [ python ]
 parameters:
 -   id: type
     label: RFNoC Block Type
-    dtype: enum
+    dtype: string
     default: 'term'
-    options: ['block', 'sep', 'device', 'term']
     hide: all
 -   id: in_out
     label: Direction
