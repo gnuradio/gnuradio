@@ -257,25 +257,6 @@ void block::get_tags_in_window(std::vector<tag_t>& v,
                                 key);
 }
 
-std::optional<gr::tag_t>
-block::get_first_tag_in_range(unsigned which_input,
-                              uint64_t start,
-                              uint64_t end,
-                              std::function<bool(const gr::tag_t&)> predicate)
-{
-    return d_detail->get_first_tag_in_range(which_input, start, end, predicate);
-}
-
-std::optional<gr::tag_t> block::get_first_tag_in_range(unsigned which_input,
-                                                       uint64_t start,
-                                                       uint64_t end,
-                                                       const pmt::pmt_t& key)
-{
-    return get_first_tag_in_range(which_input, start, end, [key](const gr::tag_t& tag) {
-        return pmt::eqv(key, tag.key);
-    });
-}
-
 block::tag_propagation_policy_t block::tag_propagation_policy()
 {
     return d_tag_propagation_policy;

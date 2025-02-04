@@ -17,10 +17,8 @@
 /* BINDTOOL_HEADER_FILE_HASH(37d14d880835b3194c17dfdf513580a7)                     */
 /***********************************************************************************/
 
-#include <pybind11/pybind11.h>
-
 #include <pybind11/complex.h>
-#include <pybind11/functional.h>
+#include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 
 namespace py = pybind11;
