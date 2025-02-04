@@ -30,6 +30,6 @@ install(
           uhd_wbfm_receive.grc
     DESTINATION ${GR_PKG_UHD_EXAMPLES_DIR})
 
-if(PYQT5_FOUND)
+if(PYQT_FOUND)
       install(FILES rfnoc_replay.grc DESTINATION ${GR_PKG_UHD_EXAMPLES_DIR})
-endif(PYQT5_FOUND)
+endif(PYQT_FOUND)

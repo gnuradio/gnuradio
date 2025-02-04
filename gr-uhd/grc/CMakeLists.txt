@@ -90,7 +90,7 @@ if(ENABLE_UHD_RFNOC)
         # GRC workflow
         rfnoc_image_builder.workflow.yml
         DESTINATION ${GRC_BLOCKS_DIR})
-    if(PYQT5_FOUND)
+    if(PYQT_FOUND)
         install (FILES uhd_msgpushbutton.block.yml DESTINATION ${GRC_BLOCKS_DIR})
-    endif(PYQT5_FOUND)
+    endif(PYQT_FOUND)
 endif(ENABLE_UHD_RFNOC)
