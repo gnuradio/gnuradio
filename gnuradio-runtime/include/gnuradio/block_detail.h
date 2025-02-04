@@ -137,8 +137,6 @@ public:
      * a secondary filter to the tags to extract only tags with the
      * given 'key'.
      *
-     * The vector is sorted ascendingly by the offset of the tags.
-     *
      * Tags are tuples of:
      *      (item count, source id, key, value)
      *
