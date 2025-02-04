@@ -137,7 +137,8 @@ void buffer_reader::update_read_pointer(int nitems)
 
 void buffer_reader::get_tags_in_range(std::vector<tag_t>& v,
                                       uint64_t abs_start,
-                                      uint64_t abs_end)
+                                      uint64_t abs_end,
+                                      long id)
 {
     gr::thread::scoped_lock guard(*mutex());
 
@@ -160,9 +161,16 @@ void buffer_reader::get_tags_in_range(std::vector<tag_t>& v,
     while (itr != itr_end) {
         item_time = (*itr).second.offset + d_attr_delay;
         if ((item_time >= abs_start) && (item_time < abs_end)) {
-            tag_t t = (*itr).second;
-            t.offset += d_attr_delay;
-            v.push_back(t);
+            std::vector<long>::iterator id_itr;
+            id_itr = std::find(
+                itr->second.marked_deleted.begin(), itr->second.marked_deleted.end(), id);
+            // If id is not in the vector of marked blocks
+            if (id_itr == itr->second.marked_deleted.end()) {
+                tag_t t = (*itr).second;
+                t.offset += d_attr_delay;
+                v.push_back(t);
+                v.back().marked_deleted.clear();
+            }
         }
         itr++;
     }

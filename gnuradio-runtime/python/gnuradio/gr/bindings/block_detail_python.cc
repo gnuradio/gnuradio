@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(block_detail.h)                                            */
-/* BINDTOOL_HEADER_FILE_HASH(88f1dd946e3fce3a5663b3885a62dcda)                     */
+/* BINDTOOL_HEADER_FILE_HASH(61794baf0e727516eb0eedc08753a17a)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -133,16 +133,26 @@ void bind_block_detail(py::module& m)
              D(block_detail, add_item_tag))
 
 
+        .def("remove_item_tag",
+             &block_detail::remove_item_tag,
+             py::arg("which_input"),
+             py::arg("tag"),
+             py::arg("id"),
+             D(block_detail, remove_item_tag))
+
+
         .def("get_tags_in_range",
              (void(block_detail::*)(std::vector<gr::tag_t, std::allocator<gr::tag_t>>&,
                                     unsigned int,
                                     uint64_t,
-                                    uint64_t)) &
+                                    uint64_t,
+                                    long int)) &
                  block_detail::get_tags_in_range,
              py::arg("v"),
              py::arg("which_input"),
              py::arg("abs_start"),
              py::arg("abs_end"),
+             py::arg("id"),
              D(block_detail, get_tags_in_range, 0))
 
 
@@ -151,13 +161,15 @@ void bind_block_detail(py::module& m)
                                     unsigned int,
                                     uint64_t,
                                     uint64_t,
-                                    pmt::pmt_t const&)) &
+                                    pmt::pmt_t const&,
+                                    long int)) &
                  block_detail::get_tags_in_range,
              py::arg("v"),
              py::arg("which_input"),
              py::arg("abs_start"),
              py::arg("abs_end"),
              py::arg("key"),
+             py::arg("id"),
              D(block_detail, get_tags_in_range, 1))
 
 

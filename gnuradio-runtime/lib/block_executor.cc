@@ -138,7 +138,8 @@ static bool propagate_tags(block::tag_propagation_policy_t policy,
         std::vector<buffer_sptr> out_buf;
 
         for (int i = 0; i < d->ninputs(); i++) {
-            d->get_tags_in_range(rtags, i, start_nitems_read[i], d->nitems_read(i));
+            d->get_tags_in_range(
+                rtags, i, start_nitems_read[i], d->nitems_read(i), block_id);
 
             if (rtags.empty()) {
                 continue;
@@ -190,7 +191,8 @@ static bool propagate_tags(block::tag_propagation_policy_t policy,
             buffer_sptr out_buf;
 
             for (int i = 0; i < d->ninputs(); i++) {
-                d->get_tags_in_range(rtags, i, start_nitems_read[i], d->nitems_read(i));
+                d->get_tags_in_range(
+                    rtags, i, start_nitems_read[i], d->nitems_read(i), block_id);
 
                 if (rtags.empty()) {
                     continue;
