@@ -8,7 +8,6 @@
  *
  */
 
-#include "pmt/pmt.h"
 #include "pmt/pmt_sugar.h"
 #include "gnuradio/tags.h"
 #include <type_traits>
@@ -28,11 +27,10 @@ BOOST_AUTO_TEST_CASE(t2_moveabilitly)
 
 BOOST_AUTO_TEST_CASE(t3_comparison)
 {
-    gr::tag_t t_early{ 1234 };
-    gr::tag_t t_late{ 9999 };
-    gr::tag_t t_also_late{ 9999,
-                           pmt::get_PMT_NIL(),
-                           pmt::mp("can I still retreat from this exam?") };
+    gr::tag_t t_early{ .offset = 1234 };
+    gr::tag_t t_late{ .offset = 9999 };
+    gr::tag_t t_also_late{ .offset = 9999,
+                           .value = pmt::mp("can I still retreat from this exam?") };
     BOOST_CHECK(t_early < t_late);
     BOOST_CHECK(!(t_late < t_early));
     BOOST_CHECK(!(t_late < t_late));
