@@ -128,10 +128,6 @@ static bool propagate_tags(block::tag_propagation_policy_t policy,
     switch (policy) {
     case block::TPP_DONT:
     case block::TPP_CUSTOM:
-    case block::TPP_TSB:
-        /* Don't copy anything.
-         TPP_TSB: tagged stream blocks: tag copying handled by gr::tagged_stream_block
-         superclass */
         return true;
     case block::TPP_ALL_TO_ALL: {
         // every tag on every input propagates to everyone downstream
