@@ -14,15 +14,6 @@
 #include <gnuradio/api.h>
 #include <pmt/pmt.h>
 
-/* ensure that tweakme.h is included before the bundled spdlog/fmt header, see
- * https://github.com/gabime/spdlog/issues/2922 */
-#include <spdlog/tweakme.h>
-
-#include <gnuradio/api.h>
-#include <pmt/pmt.h>
-#include <spdlog/fmt/fmt.h>
-#include <string_view>
-
 namespace gr {
 
 struct GR_RUNTIME_API tag_t {
@@ -86,9 +77,4 @@ struct GR_RUNTIME_API tag_t {
 
 } /* namespace gr */
 
-//!\brief enables gr::tag to be formatted with fmt
-template <>
-struct GR_RUNTIME_API fmt::formatter<gr::tag_t> : formatter<std::string_view> {
-    fmt::format_context::iterator format(const gr::tag_t& tag, format_context& ctx) const;
-};
 #endif /*INCLUDED_GR_TAGS_H*/
