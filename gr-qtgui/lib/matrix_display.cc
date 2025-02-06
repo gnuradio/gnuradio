@@ -270,7 +270,7 @@ void matrix_display::mousePressEvent(QMouseEvent* e)
         else
             d_stop_act->setText(tr("Start"));
 
-        d_menu->exec(e->globalPos());
+        d_menu->exec(e->globalPosition().toPoint());
     }
 }
 
