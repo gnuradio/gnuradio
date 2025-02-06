@@ -9,17 +9,16 @@
 #
 #
 
-from PyQt5 import Qt
-from PyQt5.QtWidgets import QFrame, QVBoxLayout
-from PyQt5.QtCore import Qt as Qtc
+from qtpy import QtWidgets
+from qtpy.QtWidgets import QFrame, QVBoxLayout
 
 from gnuradio import gr
 import pmt
 
 
-class CheckBoxEx(Qt.QCheckBox):
+class CheckBoxEx(QtWidgets.QCheckBox):
     def __init__(self, lbl, callback=None):
-        Qt.QCheckBox.__init__(self)
+        QtWidgets.QCheckBox.__init__(self)
         self.setText(lbl)
         self.callback = callback
 

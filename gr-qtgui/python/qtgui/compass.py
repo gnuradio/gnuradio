@@ -14,14 +14,9 @@ import numpy
 from gnuradio import gr
 import pmt
 
-# First Qt and 2nd Qt are different.  You'll get errors if they're both not available,
-# hence the import-as to avoid name collisions
-
-from PyQt5 import Qt
-from PyQt5.QtCore import Qt as Qtc
-from PyQt5.QtCore import pyqtSignal, QPoint, pyqtProperty
-from PyQt5.QtWidgets import QFrame, QWidget, QVBoxLayout, QHBoxLayout, QLabel
-from PyQt5.QtGui import QPainter, QPalette, QFont, QFontMetricsF, QPen, QPolygon, QColor, QBrush
+from qtpy.QtCore import Signal, Property
+from qtpy.QtWidgets import QFrame, QWidget, QVBoxLayout, QHBoxLayout, QLabel
+from qtpy.QtGui import QPainter, QPalette, QFont, QFontMetricsF, QPen, QPolygon, QColor, QBrush
 
 NeedleFull = 1
 NeedleIndicator = 0
@@ -79,7 +74,7 @@ class LabeledCompass(QFrame):
 
 
 class Compass(QWidget):
-    angleChanged = pyqtSignal(float)
+    angleChanged = Signal(float)
 
     def __init__(self, min_size, update_time, setDebug=False, needleType=NeedleFull,
                  position=1, backgroundColor='default'):
@@ -237,7 +232,7 @@ class Compass(QWidget):
             self.angleChanged.emit(angle)
             self.update()
 
-    angle = pyqtProperty(float, angle, change_angle)
+    angle = Property(float, angle, change_angle)
 
 
 class GrCompass(gr.sync_block, LabeledCompass):
