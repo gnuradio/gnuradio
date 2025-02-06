@@ -15,10 +15,10 @@ import sys
 
 try:
     from gnuradio import qtgui
-    from PyQt5 import QtWidgets, Qt
-    import sip
-except ImportError:
-    sys.stderr.write("Error: Program requires PyQt5 and gr-qtgui.\n")
+    from qtpy import QtWidgets, QtGui
+    import qtpy.sip as sip
+except ImportError as e:
+    sys.stderr.write(f"Error: Program requires PyQt/PySide and gr-qtgui: {str(e)}\n")
     sys.exit(1)
 
 try:
@@ -53,7 +53,7 @@ class control_box(QtWidgets.QWidget):
         self.setWindowTitle('Control Panel')
 
         self.setToolTip('Control the signals')
-        QtWidgets.QToolTip.setFont(Qt.QFont('OldEnglish', 10))
+        QtWidgets.QToolTip.setFont(QtGui.QFont('OldEnglish', 10))
 
         self.layout = QtWidgets.QFormLayout(self)
 
@@ -83,7 +83,7 @@ class control_box(QtWidgets.QWidget):
         self.quit.setMinimumWidth(100)
         self.layout.addWidget(self.quit)
 
-        self.quit.clicked.connect(QtWidgets.qApp.quit)
+        self.quit.clicked.connect(QtWidgets.QApplication.quit)
 
     def attach_signal1(self, signal):
         self.signal1 = signal

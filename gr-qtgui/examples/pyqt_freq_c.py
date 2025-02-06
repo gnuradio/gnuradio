@@ -16,10 +16,9 @@ import sys
 try:
     from gnuradio import qtgui
     from qtpy import QtWidgets, QtGui
-    from qtpy.QtCore import Qt
-    import sip
-except ImportError:
-    sys.stderr.write("Error: Program requires PyQt and gr-qtgui.\n")
+    import qtpy.sip as sip
+except ImportError as e:
+    sys.stderr.write(f"Error: Program requires PyQt/PySide and gr-qtgui: {str(e)}\n")
     sys.exit(1)
 
 try:
@@ -84,7 +83,7 @@ class control_box(QtWidgets.QWidget):
         self.quit.setMinimumWidth(100)
         self.layout.addWidget(self.quit)
 
-        self.quit.clicked.connect(QtWidgets.qApp.quit)
+        self.quit.clicked.connect(QtWidgets.QApplication.quit)
 
     def attach_signal1(self, signal):
         self.signal1 = signal
