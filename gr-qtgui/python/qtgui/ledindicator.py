@@ -9,11 +9,8 @@
 #
 #
 
-from PyQt5.QtWidgets import QFrame, QHBoxLayout, QVBoxLayout, QLabel
-from PyQt5.QtGui import QPainter, QBrush, QColor, QPen, QFontMetricsF
-from PyQt5.QtCore import Qt as Qtc
-from PyQt5.QtCore import QPoint
-from PyQt5.QtGui import QRadialGradient
+from qtpy.QtWidgets import QFrame, QHBoxLayout, QVBoxLayout, QLabel
+from qtpy.QtGui import QPainter, QBrush, QColor, QPen, QFontMetricsF, QRadialGradient
 
 from gnuradio import gr
 import pmt

@@ -10,10 +10,8 @@
 #
 
 import sys
-from PyQt5.QtWidgets import QFrame, QHBoxLayout, QVBoxLayout, QLabel
-from PyQt5.QtGui import QPainter, QColor, QPen, QFont, QFontMetricsF
-from PyQt5 import QtCore
-from PyQt5.QtCore import Qt as Qtc
+from qtpy.QtWidgets import QFrame, QHBoxLayout, QVBoxLayout, QLabel
+from qtpy.QtGui import QPainter, QColor, QPen, QFont, QFontMetricsF
 
 from gnuradio import gr
 import pmt

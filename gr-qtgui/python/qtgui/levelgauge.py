@@ -12,11 +12,9 @@
 from threading import Lock
 import sys
 
-from PyQt5.QtWidgets import QFrame, QHBoxLayout, QVBoxLayout, QLabel, QProgressBar
-from PyQt5.QtGui import QColor
-from PyQt5.QtCore import Qt as Qtc
-from PyQt5.QtCore import pyqtSignal
-from PyQt5.QtGui import QPalette
+from qtpy.QtCore import Signal
+from qtpy.QtWidgets import QFrame, QHBoxLayout, QVBoxLayout, QLabel, QProgressBar
+from qtpy.QtGui import QColor, QPalette
 
 from gnuradio import gr
 import pmt
@@ -107,8 +105,8 @@ class LabeledLevelGauge(QFrame):
 
 class LevelGauge(QProgressBar):
     # Notifies to avoid thread conflicts on paints
-    updateInt = pyqtSignal(int)
-    updateFloat = pyqtSignal(float)
+    updateInt = Signal(int)
+    updateFloat = Signal(float)
 
     def __init__(self, barColor='blue', backgroundColor='white', minValue=0, maxValue=100,
                  maxSize=80, isVertical=True, isFloat=False, scaleFactor=1, showValue=False,
