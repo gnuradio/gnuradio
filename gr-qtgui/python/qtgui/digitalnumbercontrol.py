@@ -9,12 +9,9 @@
 #
 #
 
-from PyQt5.QtWidgets import QFrame, QVBoxLayout, QLabel
-from PyQt5.QtGui import QPainter, QPixmap, QFont, QFontMetrics, QBrush, QColor
-from PyQt5.QtCore import Qt, QSize
-from PyQt5 import QtCore
-from PyQt5.QtCore import Qt as Qtc
-from PyQt5.QtCore import pyqtSignal
+from qtpy.QtCore import Signal
+from qtpy.QtWidgets import QFrame, QVBoxLayout, QLabel
+from qtpy.QtGui import QPainter, QPixmap, QFont, QFontMetrics, QBrush, QColor
 
 from gnuradio import gr
 import pmt
@@ -77,8 +74,8 @@ class LabeledDigitalNumberControl(QFrame):
 
 class DigitalNumberControl(QFrame):
     # Notifies to avoid thread conflicts on paints
-    updateInt = pyqtSignal(int)
-    updateFloat = pyqtSignal(float)
+    updateInt = Signal(int)
+    updateFloat = Signal(float)
 
     def __init__(
         self,

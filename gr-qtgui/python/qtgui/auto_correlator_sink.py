@@ -10,15 +10,15 @@
 #
 
 import math
-import sip
+
 
 from gnuradio import gr
 from gnuradio import qtgui
 from gnuradio import blocks, fft, filter
 
-from PyQt5 import QtGui
-from PyQt5.QtWidgets import QWidget
-
+from qtpy import QtGui
+from qtpy.QtWidgets import QWidget
+import qtpy.sip as sip
 
 class Normalize(gr.hier_block2):
     def __init__(self, vecsize=1024):
