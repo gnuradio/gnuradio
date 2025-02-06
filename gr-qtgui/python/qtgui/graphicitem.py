@@ -9,10 +9,8 @@
 #
 #
 
-from PyQt5.QtWidgets import QLabel
-from PyQt5.QtGui import QPixmap, QPainter
-from PyQt5.QtCore import Qt as Qtc
-from PyQt5.QtCore import QSize
+from qtpy.QtWidgets import QLabel
+from qtpy.QtGui import QPixmap, QPainter
 
 import os
 import sys
