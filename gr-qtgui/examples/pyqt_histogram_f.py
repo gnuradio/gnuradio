@@ -14,10 +14,10 @@ import sys
 
 try:
     from gnuradio import qtgui
-    from PyQt5 import QtWidgets, Qt
-    import sip
-except ImportError:
-    sys.stderr.write("Error: Program requires PyQt5 and gr-qtgui.\n")
+    from qtpy import QtWidgets, QtGui
+    import qtpy.sip as sip
+except ImportError as e:
+    sys.stderr.write(f"Error: Program requires PyQt/PySide and gr-qtgui: {str(e)}\n")
     sys.exit(1)
 
 try:
@@ -47,7 +47,7 @@ class control_box(QtWidgets.QWidget):
         self.snk = snk
 
         self.setToolTip('Control the signals')
-        QtWidgets.QToolTip.setFont(Qt.QFont('OldEnglish', 10))
+        QtWidgets.QToolTip.setFont(QtGui.QFont('OldEnglish', 10))
 
         self.layout = QtWidgets.QFormLayout(self)
 
@@ -71,14 +71,14 @@ class control_box(QtWidgets.QWidget):
         # Control the histogram
         self.hist_npts = QtWidgets.QLineEdit(self)
         self.hist_npts.setMinimumWidth(100)
-        self.hist_npts.setValidator(Qt.QIntValidator(0, 8191))
+        self.hist_npts.setValidator(QtGui.QIntValidator(0, 8191))
         self.hist_npts.setText("{0}".format(self.snk.nsamps()))
         self.layout.addRow("Number of Points:", self.hist_npts)
         self.hist_npts.editingFinished.connect(self.set_nsamps)
 
         self.hist_bins = QtWidgets.QLineEdit(self)
         self.hist_bins.setMinimumWidth(100)
-        self.hist_bins.setValidator(Qt.QIntValidator(0, 1000))
+        self.hist_bins.setValidator(QtGui.QIntValidator(0, 1000))
         self.hist_bins.setText("{0}".format(self.snk.bins()))
         self.layout.addRow("Number of Bins:", self.hist_bins)
         self.hist_bins.editingFinished.connect(self.set_bins)
@@ -91,7 +91,7 @@ class control_box(QtWidgets.QWidget):
         self.quit.setMinimumWidth(100)
         self.layout.addWidget(self.quit)
 
-        self.quit.clicked.connect(QtWidgets.qApp.quit)
+        self.quit.clicked.connect(QtWidgets.QApplication.quit)
 
     def attach_signal1(self, signal):
         self.signal1 = signal
