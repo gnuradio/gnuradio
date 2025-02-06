@@ -12,7 +12,7 @@ from gnuradio import gr
 import pmt
 
 
-class ReplayMsgPushButton(gr.sync_block, Qt.QPushButton):
+class ReplayMsgPushButton(gr.sync_block, QtWidgets.QPushButton):
     """
     This block creates a variable push button that creates a message
     when clicked. The message will be formatted as a dictionary to pass
@@ -23,7 +23,7 @@ class ReplayMsgPushButton(gr.sync_block, Qt.QPushButton):
                  command, port, offset=-1, size=-1, time=-1, repeat=False):
         gr.sync_block.__init__(self, name="ReplayMsgPushButton",
                                in_sig=None, out_sig=None)
-        Qt.QPushButton.__init__(self, lbl)
+        QtWidgets.QPushButton.__init__(self, lbl)
 
         self.lbl = lbl
 
