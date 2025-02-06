@@ -53,9 +53,9 @@ class Range(object):
             val = 0
         return (val * self.step + self.min)
 
-class QEngValidator(Qt.QValidator):
+class QEngValidator(QtGui.QValidator):
     def __init__(self, minimum, maximum, parent):
-        Qt.QValidator.__init__(self, parent)
+        QtGui.QValidator.__init__(self, parent)
         self.min = minimum
         self.max = maximum
         self.parent = parent
@@ -68,9 +68,9 @@ class QEngValidator(Qt.QValidator):
             if re.match(self.re, s):
                 self.parent.setStyleSheet("background-color: yellow;"
                                           "color: black")
-                return (Qt.QValidator.Intermediate, s, pos)
+                return (QtGui.QValidator.Intermediate, s, pos)
             else:
-                return (Qt.QValidator.Invalid, s, pos)
+                return (QtGui.QValidator.Invalid, s, pos)
 
         if self.max is not None and val > self.max:
             self.parent.setStyleSheet("background-color: yellow;"
@@ -81,14 +81,14 @@ class QEngValidator(Qt.QValidator):
         else:
             self.parent.setStyleSheet("")
 
-        return (Qt.QValidator.Acceptable, s, pos)
+        return (QtGui.QValidator.Acceptable, s, pos)
 
     def fixup(self, s):
         pass
 
 
 class RangeWidget(QtWidgets.QWidget):
-    def __init__(self, ranges, slot, label, style, rangeType=float, orientation=QtCore.Qt.Horizontal):
+    def __init__(self, ranges, slot, label, style, rangeType=float, orientation=QtCore.Qt.Orientation.Horizontal):
         """ Creates the QT Range widget """
         QtWidgets.QWidget.__init__(self)
 
@@ -163,7 +163,7 @@ class RangeWidget(QtWidgets.QWidget):
     class Slider(QtWidgets.QSlider):
         """ Creates the range using a slider """
 
-        def __init__(self, parent, ranges, slot, rangeType=float, orientation=QtCore.Qt.Horizontal):
+        def __init__(self, parent, ranges, slot, rangeType=float, orientation=QtCore.Qt.Orientation.Horizontal):
             QtWidgets.QSlider.__init__(self, orientation, parent)
 
             self.rangeType = rangeType
@@ -199,7 +199,7 @@ class RangeWidget(QtWidgets.QWidget):
 
         def mousePressEvent(self, event):
             if((event.button() == QtCore.Qt.LeftButton)):
-                if self.orientation == QtCore.Qt.Horizontal:
+                if self.orientation == QtCore.Qt.Orientation.Horizontal:
                     new = self.minimum() + ((self.maximum() - self.minimum()) * event.x()) / self.width()
                 else:
                     new = self.minimum() + ((self.maximum() - self.minimum()) * event.y()) / self.height()
@@ -210,7 +210,7 @@ class RangeWidget(QtWidgets.QWidget):
             QtWidgets.QSlider.repaint(self)
 
         def mouseMoveEvent(self, event):
-            if self.orientation == QtCore.Qt.Horizontal:
+            if self.orientation == QtCore.Qt.Orientation.Horizontal:
                 new = self.minimum() + ((self.maximum() - self.minimum()) * event.x()) / self.width()
             else:
                 new = self.minimum() + ((self.maximum() - self.minimum()) * event.y()) / self.height()
@@ -266,7 +266,7 @@ class RangeWidget(QtWidgets.QWidget):
     class CounterSlider(QtWidgets.QWidget):
         """ Creates the range using a counter and slider """
 
-        def __init__(self, parent, ranges, slot, rangeType=float, orientation=QtCore.Qt.Horizontal):
+        def __init__(self, parent, ranges, slot, rangeType=float, orientation=QtCore.Qt.Orientation.Horizontal):
             QtWidgets.QWidget.__init__(self, parent)
 
             self.rangeType = rangeType
@@ -326,7 +326,7 @@ class RangeWidget(QtWidgets.QWidget):
     class EngSlider(QtWidgets.QWidget):
         """ Creates the range using a counter and slider """
 
-        def __init__(self, parent, ranges, slot, rangeType=float, orientation=QtCore.Qt.Horizontal):
+        def __init__(self, parent, ranges, slot, rangeType=float, orientation=QtCore.Qt.Orientation.Horizontal):
             QtWidgets.QWidget.__init__(self, parent)
 
             self.first = True
@@ -392,7 +392,7 @@ class RangeWidget(QtWidgets.QWidget):
 
 
 if __name__ == "__main__":
-    from PyQt5 import Qt
+    from qtpy import Qt
     import sys
 
     def valueChanged(frequency):
