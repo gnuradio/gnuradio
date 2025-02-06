@@ -153,7 +153,7 @@ void DisplayForm::mousePressEvent(QMouseEvent* e)
         for (unsigned int i = 0; i < d_nplots; ++i) {
             d_lines_menu[i]->setTitle(d_display_plot->getLineLabel(i));
         }
-        d_menu->exec(e->globalPos());
+        d_menu->exec(e->globalPosition().toPoint());
     }
 }
 
