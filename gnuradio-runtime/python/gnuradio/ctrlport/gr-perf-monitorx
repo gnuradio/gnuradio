@@ -281,7 +281,7 @@ class DataTable(Qt.QWidget):
 
         # Create a checkbox to toggle sorting of graphs
         self._sort = False
-        self.checksort = Qt.QCheckBox("Sort")
+        self.checksort = QtWidgets.QCheckBox("Sort")
         self.checksort.setCheckState(self._sort)
         self.hlayout.addWidget(self.checksort)
         self.checksort.stateChanged.connect(self.checksort_changed)

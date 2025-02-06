@@ -252,7 +252,7 @@ class uhd_siggen_gui(Qt.QWidget):
                 str(self._samp_rate_line_edit.text())))
         )
         self.top_grid_layout.addWidget(self._samp_rate_tool_bar, 7, 0, 1, 2)
-        _sync_phases_push_button = Qt.QPushButton("Sync LOs")
+        _sync_phases_push_button = QtWidgets.QPushButton("Sync LOs")
         _sync_phases_push_button.pressed.connect(
             lambda: self.set_sync_phases(True))
         _sync_phases_push_button.setEnabled(bool(len(self._sg.channels) > 1))
