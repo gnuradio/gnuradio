@@ -494,7 +494,7 @@ class UpdaterWindow(Qt.QDialog):
             has_set = False
 
         if(has_set is False):
-            self.cancelButton = Qt.QPushButton("Ok")
+            self.cancelButton = QtWidgets.QPushButton("Ok")
             self.cancelButton.clicked.connect(self.reject)
 
             self.buttonlayout = Qt.QHBoxLayout()
@@ -505,9 +505,9 @@ class UpdaterWindow(Qt.QDialog):
             self.textInput = Qt.QLineEdit()
             self.layout.addWidget(self.textInput)
 
-            self.applyButton = Qt.QPushButton("Apply")
-            self.setButton = Qt.QPushButton("OK")
-            self.cancelButton = Qt.QPushButton("Cancel")
+            self.applyButton = QtWidgets.QPushButton("Apply")
+            self.setButton = QtWidgets.QPushButton("OK")
+            self.cancelButton = QtWidgets.QPushButton("Cancel")
 
             rv = radio.getKnobs([key])
             val = rv[key].value
