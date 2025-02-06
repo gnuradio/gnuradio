@@ -255,6 +255,10 @@ def get_state_directory() -> str:
 
 
 def main():
+    # Prefer PyQt6, but accept other flavors
+    if os.environ.get("QT_API") is None:
+        os.environ["QT_API"] = "pyqt6"
+
     grc_version_from_config = ""
     grc_qt_config_file = get_config_file_path('grc_qt.conf')
     if os.path.isfile(grc_qt_config_file):
