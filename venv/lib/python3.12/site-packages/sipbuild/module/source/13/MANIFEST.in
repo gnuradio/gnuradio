@@ -1,0 +1,2 @@
+include *.h
+include pyproject.toml

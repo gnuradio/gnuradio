@@ -1,0 +1,23 @@
+# SPDX-License-Identifier: BSD-2-Clause
+
+# Copyright (c) 2024 Phil Thompson <phil@riverbankcomputing.com>
+
+
+import glob
+
+from setuptools import Extension, setup
+
+
+# Build the extension module.
+module_src = sorted(glob.glob('*.c'))
+
+module = Extension('@_SIP_MODULE_FQ_NAME@', module_src)
+
+# Do the setup.
+setup(
+        name='@SIP_MODULE_PROJECT_NAME@',
+        version='@SIP_MODULE_VERSION@',
+        license='SIP',
+        python_requires='>=3.@_SIP_OLDEST_SUPPORTED_MINOR@',
+        ext_modules=[module]
+     )

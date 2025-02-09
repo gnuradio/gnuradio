@@ -1,0 +1,7 @@
+[metadata]
+description = The sip module support for @SIP_MODULE_PACKAGE_NAME@
+long_description = file: README
+author = Phil Thompson
+author_email = phil@riverbankcomputing.com
+url = https://github.com/Python-SIP/sip
+platforms = X11, macOS, Windows
