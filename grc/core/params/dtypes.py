@@ -126,3 +126,9 @@ def validate_gui_hint(param, _) -> None:
         param.parse_gui_hint(param.value)
     except Exception as e:
         raise ValidateError(str(e))
+
+
+@validates('enum')
+def validate_enum(param, _):
+    if param.get_evaluated() not in param.options:
+        raise ValidateError(f'Value {param.get_evaluated()} is not in enum options: {param.options}')
