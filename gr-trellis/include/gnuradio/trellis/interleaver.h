@@ -68,7 +68,7 @@ public:
      */
     interleaver(unsigned int k, int seed);
 
-    //! \brief return lenght of interleaver
+    //! \brief return length of interleaver
     unsigned int k() const { return d_interleaver_indices.size(); }
     //! \brief return interleaver index vector reference
     const std::vector<int>& interleaver_indices() const { return d_interleaver_indices; }
@@ -79,7 +79,7 @@ public:
     }
 
     // TODO in GR 3.11, remove K, INTER and DEINTER
-    //! \brief return lenght of interleaver
+    //! \brief return length of interleaver
     [[deprecated("Will be removed in 3.11")]] unsigned int K() const
     {
         return d_interleaver_indices.size();
