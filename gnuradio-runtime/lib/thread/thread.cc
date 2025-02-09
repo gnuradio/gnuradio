@@ -148,8 +148,8 @@ void thread_unbind(gr_thread_t thread)
 
     int ret = pthread_setaffinity_np(thread, len, &set);
     if (ret != 0) {
-        auto msg = fmt::format(
-            "{}: pthread_setaffinity_np failed with errror {}", __func__, ret);
+        auto msg =
+            fmt::format("{}: pthread_setaffinity_np failed with error {}", __func__, ret);
         thread_logger().error(msg);
         throw std::runtime_error(msg);
     }
