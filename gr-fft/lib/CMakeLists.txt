@@ -15,10 +15,6 @@ target_link_libraries(
     PUBLIC gnuradio-runtime Volk::volk
     PRIVATE fftw3f::fftw3f)
 
-if(ENABLE_COMMON_PCH)
-    target_link_libraries(gnuradio-fft PRIVATE common-precompiled-headers)
-endif()
-
 # Address linker issues with std::filesystem on Centos 8 and Debian
 target_link_libraries(
     gnuradio-fft

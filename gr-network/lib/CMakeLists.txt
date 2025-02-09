@@ -28,10 +28,6 @@ add_library(
 
 target_link_libraries(gnuradio-network PUBLIC gnuradio-runtime)
 
-if(ENABLE_COMMON_PCH)
-    target_link_libraries(gnuradio-network PRIVATE common-precompiled-headers)
-endif()
-
 target_include_directories(
     gnuradio-network
     PUBLIC $<INSTALL_INTERFACE:include>

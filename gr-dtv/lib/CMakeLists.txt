@@ -74,10 +74,6 @@ target_link_libraries(
     PUBLIC gnuradio-runtime
     PRIVATE gnuradio-analog gnuradio-filter gnuradio-fec Volk::volk)
 
-if(ENABLE_COMMON_PCH)
-    target_link_libraries(gnuradio-dtv PRIVATE common-precompiled-headers)
-endif()
-
 target_include_directories(
     gnuradio-dtv PUBLIC $<INSTALL_INTERFACE:include>
                         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>)

@@ -179,10 +179,6 @@ if(SNDFILE_FOUND)
     target_link_libraries(gnuradio-blocks PRIVATE sndfile::sndfile)
 endif()
 
-if(ENABLE_COMMON_PCH)
-    target_link_libraries(gnuradio-blocks PRIVATE common-precompiled-headers)
-endif()
-
 target_include_directories(
     gnuradio-blocks PUBLIC $<INSTALL_INTERFACE:include>
                            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>)
