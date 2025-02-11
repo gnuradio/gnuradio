@@ -153,7 +153,12 @@ void DisplayForm::mousePressEvent(QMouseEvent* e)
         for (unsigned int i = 0; i < d_nplots; ++i) {
             d_lines_menu[i]->setTitle(d_display_plot->getLineLabel(i));
         }
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+
+        d_menu->exec(e->globalPos());
+#else
         d_menu->exec(e->globalPosition().toPoint());
+#endif
     }
 }
 

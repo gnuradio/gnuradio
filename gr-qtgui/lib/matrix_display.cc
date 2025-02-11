@@ -269,8 +269,12 @@ void matrix_display::mousePressEvent(QMouseEvent* e)
             d_stop_act->setText(tr("Stop"));
         else
             d_stop_act->setText(tr("Start"));
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 
+        d_menu->exec(e->globalPos());
+#else
         d_menu->exec(e->globalPosition().toPoint());
+#endif
     }
 }
 
