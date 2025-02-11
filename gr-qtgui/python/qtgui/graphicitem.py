@@ -9,6 +9,7 @@
 #
 #
 
+from qtpy.QtCore import KeepAspectRatio, QSize
 from qtpy.QtWidgets import QLabel
 from qtpy.QtGui import QPixmap, QPainter
 
@@ -87,7 +88,7 @@ class GrGraphicItem(gr.sync_block, QLabel):
 
             # Check each dict item to make sure it's valid.
             for curitem in itemlist:
-                if type(curitem) == dict:
+                if type(curitem) is dict:
                     if 'filename' not in curitem:
                         gr.log.error(
                             "Dictionary item did not contain the 'filename' key.")
@@ -146,7 +147,7 @@ class GrGraphicItem(gr.sync_block, QLabel):
                         w = newOverlay.width()
                         h = newOverlay.height()
                         newOverlay = newOverlay.scaled(int(w * scale), int(h * scale),
-                                                       Qtc.KeepAspectRatio)
+                                                       KeepAspectRatio)
                     painter.drawPixmap(
                         curOverlay['x'], curOverlay['y'], newOverlay)
                 except Exception as e:
@@ -161,7 +162,7 @@ class GrGraphicItem(gr.sync_block, QLabel):
         try:
             new_val = pmt.to_python(pmt.cdr(msg))
             image_file = new_val
-            if type(new_val) == str:
+            if type(new_val) is str:
                 if not os.path.isfile(image_file):
                     gr.log.error("ERROR: Unable to find file " + image_file)
                     return
@@ -189,9 +190,9 @@ class GrGraphicItem(gr.sync_block, QLabel):
             w = super().width()
             h = super().height()
 
-            self.pixmap = self.originalPixmap.scaled(w, h, Qtc.KeepAspectRatio)
+            self.pixmap = self.originalPixmap.scaled(w, h, KeepAspectRatio)
         elif self.fixedSize and self.setWidth > 0 and self.setHeight > 0:
             self.pixmap = self.originalPixmap.scaled(self.setWidth, self.setHeight,
-                                                     Qtc.KeepAspectRatio)
+                                                     KeepAspectRatio)
 
         self.updateGraphic()
