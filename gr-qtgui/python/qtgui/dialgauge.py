@@ -10,6 +10,7 @@
 #
 
 import sys
+from qtpy.QtCore import AlignCenter, AlignVCenter
 from qtpy.QtWidgets import QFrame, QHBoxLayout, QVBoxLayout, QLabel
 from qtpy.QtGui import QPainter, QColor, QPen, QFont, QFontMetricsF
 
@@ -36,7 +37,7 @@ class LabeledDialGauge(QFrame):
         self.isFloat = isFloat
 
         self.lblcontrol = QLabel(lbl, self)
-        self.lblcontrol.setAlignment(Qtc.AlignCenter)
+        self.lblcontrol.setAlignment(AlignCenter)
 
         # For whatever reason, the progressbar doesn't show the number in the bar if it's
         # vertical, only if it's horizontal
@@ -61,7 +62,7 @@ class LabeledDialGauge(QFrame):
             if position == 2 or position == 4:
                 layout.addWidget(self.lblcontrol)
 
-        layout.setAlignment(Qtc.AlignCenter | Qtc.AlignVCenter)
+        layout.setAlignment(AlignCenter | AlignVCenter)
         self.setLayout(layout)
 
         self.show()
@@ -199,7 +200,7 @@ class GrDialGauge(gr.sync_block, LabeledDialGauge):
         try:
             new_val = pmt.to_python(pmt.cdr(msg))
 
-            if type(new_val) == float or type(new_val) == int:
+            if type(new_val) is float or type(new_val) is int:
                 super().setValue(new_val)
             else:
                 gr.log.error("Value received was not an int or a float. "
