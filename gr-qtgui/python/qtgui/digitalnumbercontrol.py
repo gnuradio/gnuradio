@@ -9,7 +9,7 @@
 #
 #
 
-from qtpy.QtCore import Signal
+from qtpy.QtCore import Signal, QSize, QRect, AlignCenter, AlignVCenter, AlignRight, SolidPattern
 from qtpy.QtWidgets import QFrame, QVBoxLayout, QLabel
 from qtpy.QtGui import QPainter, QPixmap, QFont, QFontMetrics, QBrush, QColor
 
@@ -52,7 +52,7 @@ class LabeledDigitalNumberControl(QFrame):
             self.hasLabel = False
 
         layout.addWidget(self.numberControl)
-        layout.setAlignment(Qtc.AlignCenter | Qtc.AlignVCenter)
+        layout.setAlignment(AlignCenter | AlignVCenter)
         self.setLayout(layout)
         self.show()
 
@@ -276,7 +276,7 @@ class DigitalNumberControl(QFrame):
             self.update()
 
     def setFrequency(self, new_freq):
-        if type(new_freq) == int:
+        if type(new_freq) is int:
             self.updateInt.emit(new_freq)
         else:
             self.updateFloat.emit(new_freq)
@@ -298,8 +298,8 @@ class DigitalNumberControl(QFrame):
         size = self.size()
         brush = QBrush()
         brush.setColor(self.background_color)
-        brush.setStyle(Qt.SolidPattern)
-        rect = QtCore.QRect(2, 2, size.width() - 4, size.height() - 4)
+        brush.setStyle(SolidPattern)
+        rect = QRect(2, 2, size.width() - 4, size.height() - 4)
         painter.fillRect(rect, brush)
 
         self.numberFont.setPixelSize(int(0.9 * size.height()))
@@ -316,9 +316,9 @@ class DigitalNumberControl(QFrame):
         else:
             textstr = str(self.getFrequency())
 
-        rect = QtCore.QRect(0, 0, size.width() - 4, size.height())
+        rect = QRect(0, 0, size.width() - 4, size.height())
 
-        painter.drawText(rect, Qt.AlignRight + Qt.AlignVCenter, textstr)
+        painter.drawText(rect, AlignRight + AlignVCenter, textstr)
 
 
 class MsgDigitalNumberControl(gr.sync_block, LabeledDigitalNumberControl):
@@ -364,7 +364,7 @@ class MsgDigitalNumberControl(gr.sync_block, LabeledDigitalNumberControl):
         try:
             new_val = pmt.to_python(pmt.cdr(msg))
 
-            if type(new_val) == float or type(new_val) == int:
+            if type(new_val) is float or type(new_val) is int:
                 self.call_var_callback(new_val)
 
                 self.setValue(new_val)
