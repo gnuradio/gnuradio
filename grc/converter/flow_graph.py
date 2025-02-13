@@ -23,6 +23,10 @@ def from_xml(filename):
         file_format = _guess_file_format_1(data)
 
     data['metadata'] = {'file_format': file_format}
+    # Old XML-based flow graphs only supported Python, but didn't always declare
+    # that in the options. We'll default to Python if it's not set.
+    if 'output_language' not in data['options']:
+        data['options']['output_language'] = 'python'
 
     return data
 

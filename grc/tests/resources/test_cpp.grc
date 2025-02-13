@@ -17,7 +17,6 @@ options:
     qt_qss_theme: ''
     realtime_scheduling: ''
     run: 'True'
-    run_command: '{python} -u {filename}'
     run_options: prompt
     sizing_mode: fixed
     thread_safe_setters: ''
