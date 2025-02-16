@@ -677,7 +677,7 @@
   </connection>
   <connection>
    <sender>FFTSizeComboBox</sender>
-   <signal>activated(QString)</signal>
+   <signal>currentTextChanged(QString)</signal>
    <receiver>SpectrumDisplayForm</receiver>
    <slot>fftComboBoxSelectedCB(QString)</slot>
    <hints>
