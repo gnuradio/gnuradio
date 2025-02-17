@@ -96,7 +96,7 @@ blocks:
     npwr: '1.0'
     precision: '8'
     rot_sym: '4'
-    soft_dec_lut: digital.soft_dec_table_generator(digital.sd_psk_2, 8, 1)
+    soft_dec_lut: digital.soft_dec_table_generator(digital.sd_psk_2, 8, 1, 1)
     sym_map: digital.psk_2()[1]
     type: calcdist
   states:
@@ -116,7 +116,7 @@ blocks:
     npwr: '1.0'
     precision: '8'
     rot_sym: '4'
-    soft_dec_lut: digital.soft_dec_table_generator(digital.sd_psk_4, 8, 1)
+    soft_dec_lut: digital.soft_dec_table_generator(digital.sd_psk_4, 8, 1, 0.707)
     sym_map: digital.psk_4()[1]
     type: calcdist
   states:
@@ -130,13 +130,13 @@ blocks:
   id: variable_constellation
   parameters:
     comment: ''
-    const_points: digital.qam_16()[0]
+    const_points: '[pt/3 for pt in digital.qam_16()[0]]'
     dims: '1'
-    normalization: digital.constellation.AMPLITUDE_NORMALIZATION
+    normalization: digital.constellation.NO_NORMALIZATION
     npwr: '1.0'
     precision: '8'
     rot_sym: '4'
-    soft_dec_lut: digital.soft_dec_table_generator(digital.sd_qam_16, 8, 1)
+    soft_dec_lut: digital.soft_dec_table_generator(digital.sd_qam_16, 8, 1.414, 1)
     sym_map: digital.qam_16()[1]
     type: calcdist
   states:
@@ -803,4 +803,4 @@ connections:
 
 metadata:
   file_format: 1
-  grc_version: 3.10.10.0
+  grc_version: g25af1c736
