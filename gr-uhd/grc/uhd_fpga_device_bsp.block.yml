@@ -113,6 +113,18 @@ outputs:
 -   domain: rfnoc.clk
     id: radio_clk
     dtype: message
+    hide: ${ device not in ("x310", "x300", "n300", "n310", "n320", "e31x", "e320", "x410") }
+    optional: ${ device not in ("x310", "x300", "n300", "n310", "n320", "e31x", "e320", "x410") }
+-   domain: rfnoc.clk
+    id: radio0_clk
+    dtype: message
+    hide: ${ device not in ("x440",) }
+    optional: ${ device not in ("x440",) }
+-   domain: rfnoc.clk
+    id: radio1_clk
+    dtype: message
+    hide: ${ device not in ("x440",) }
+    optional: ${ device not in ("x440",) }
 -   domain: rfnoc.clk
     id: ce_clk
     dtype: message
