@@ -72,7 +72,7 @@ class GUIBlock(QGraphicsItem):
     def __init__(self, core, parent, **n):
         super(GUIBlock, self).__init__()
         self.core = core
-        self.parent = self.scene()
+        self.parent = parent
         self.font = QFont("Helvetica", 10)
 
         self.create_shapes_and_labels()
