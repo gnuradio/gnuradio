@@ -47,10 +47,6 @@ target_link_libraries(
     PUBLIC gnuradio-runtime gnuradio-blocks
     PRIVATE gnuradio-filter)
 
-if(ENABLE_COMMON_PCH)
-    target_link_libraries(gnuradio-analog PRIVATE common-precompiled-headers)
-endif()
-
 target_include_directories(
     gnuradio-analog PUBLIC $<INSTALL_INTERFACE:include>
                            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>)

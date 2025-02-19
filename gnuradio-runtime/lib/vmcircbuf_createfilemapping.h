@@ -11,12 +11,13 @@
 #ifndef GR_VMCIRCBUF_CREATEFILEMAPPING_H
 #define GR_VMCIRCBUF_CREATEFILEMAPPING_H
 
-#include "vmcircbuf.h"
-#include <gnuradio/api.h>
-
 #ifdef HAVE_CREATEFILEMAPPING
 #include <windows.h>
 #endif
+
+#include "vmcircbuf.h"
+#include <gnuradio/api.h>
+
 
 namespace gr {
 

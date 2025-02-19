@@ -11,6 +11,13 @@
 #ifndef INCLUDED_THREAD_H
 #define INCLUDED_THREAD_H
 
+#if defined(_WIN32) || defined(__WIN32__) || defined(WIN32)
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+#endif
+#include <windows.h>
+#endif
+
 #include <gnuradio/api.h>
 #include <boost/thread/barrier.hpp>
 #include <boost/thread/condition_variable.hpp>
@@ -19,16 +26,6 @@
 #include <boost/thread/thread.hpp>
 #include <memory>
 #include <vector>
-
-#if defined(_WIN32) || defined(__WIN32__) || defined(WIN32)
-
-#ifndef WIN32_LEAN_AND_MEAN
-#define WIN32_LEAN_AND_MEAN
-#endif
-
-#include <windows.h>
-
-#endif
 
 namespace gr {
 namespace thread {

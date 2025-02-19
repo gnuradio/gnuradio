@@ -8,11 +8,6 @@
  *
  */
 
-#include <gnuradio/logger.h>
-#include <gnuradio/thread/thread.h>
-#include <spdlog/fmt/fmt.h>
-#include <stdexcept>
-
 /* Platform detection & Platform-specific includes */
 #if defined(_WIN32) || defined(__WIN32__) || defined(WIN32)
 #define __GR_TARGET_WIN__
@@ -32,6 +27,12 @@
 #include <regex>
 #endif
 
+/* Platform-independent includes */
+
+#include <gnuradio/logger.h>
+#include <gnuradio/thread/thread.h>
+#include <spdlog/fmt/fmt.h>
+#include <stdexcept>
 
 namespace gr {
 namespace thread {
