@@ -9,6 +9,7 @@ import os
 
 from ..common import HierBlockGeneratorMixin
 from ..common import get_hier_block_io
+from ...paths import get_state_directory
 from ..cpp_nogui import CppNoGuiTopBlockGenerator
 from ...core import Constants
 from ...core.io import yaml
@@ -35,7 +36,11 @@ class CppHierBlockGenerator(HierBlockGeneratorMixin, CppNoGuiTopBlockGenerator):
         )
         # self.set_output_dir_for_hier_block()
         self._mode = Constants.HIER_BLOCK_FILE_MODE
-        self.file_path_yml = self.file_path + '.block.yml'
+
+        # get grc hier path, for example: ~/.local/state/gnuradio
+        hier_path = os.environ.get('GRC_HIER_PATH', get_state_directory())
+        # append file name after hier path, with previous example, it would be: ~/.local/state/gnuradio/<filename>
+        self.file_path_yml = os.path.join(hier_path, self.file_path + '.block.yml')
 
     def write(self, _=None):
         """generate output and write it to files"""
