@@ -9,7 +9,7 @@
 #
 #
 
-from qtpy.QtCore import KeepAspectRatio, QSize
+from qtpy.QtCore import Qt, QSize
 from qtpy.QtWidgets import QLabel
 from qtpy.QtGui import QPixmap, QPainter
 
@@ -147,7 +147,7 @@ class GrGraphicItem(gr.sync_block, QLabel):
                         w = newOverlay.width()
                         h = newOverlay.height()
                         newOverlay = newOverlay.scaled(int(w * scale), int(h * scale),
-                                                       KeepAspectRatio)
+                                                       Qt.AspectRatioMode.KeepAspectRatio)
                     painter.drawPixmap(
                         curOverlay['x'], curOverlay['y'], newOverlay)
                 except Exception as e:
@@ -190,9 +190,9 @@ class GrGraphicItem(gr.sync_block, QLabel):
             w = super().width()
             h = super().height()
 
-            self.pixmap = self.originalPixmap.scaled(w, h, KeepAspectRatio)
+            self.pixmap = self.originalPixmap.scaled(w, h,  Qt.AspectRatioMode.KeepAspectRatio)
         elif self.fixedSize and self.setWidth > 0 and self.setHeight > 0:
             self.pixmap = self.originalPixmap.scaled(self.setWidth, self.setHeight,
-                                                     KeepAspectRatio)
+                                                     Qt.AspectRatioMode.KeepAspectRatio)
 
         self.updateGraphic()

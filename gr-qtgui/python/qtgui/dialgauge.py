@@ -10,7 +10,7 @@
 #
 
 import sys
-from qtpy.QtCore import AlignCenter, AlignVCenter
+from qtpy.QtCore import Qt
 from qtpy.QtWidgets import QFrame, QHBoxLayout, QVBoxLayout, QLabel
 from qtpy.QtGui import QPainter, QColor, QPen, QFont, QFontMetricsF
 
@@ -37,7 +37,7 @@ class LabeledDialGauge(QFrame):
         self.isFloat = isFloat
 
         self.lblcontrol = QLabel(lbl, self)
-        self.lblcontrol.setAlignment(AlignCenter)
+        self.lblcontrol.setAlignment(Qt.AlignCenter)
 
         # For whatever reason, the progressbar doesn't show the number in the bar if it's
         # vertical, only if it's horizontal
@@ -62,7 +62,7 @@ class LabeledDialGauge(QFrame):
             if position == 2 or position == 4:
                 layout.addWidget(self.lblcontrol)
 
-        layout.setAlignment(AlignCenter | AlignVCenter)
+        layout.setAlignment(Qt.AlignCenter | Qt.AlignVCenter)
         self.setLayout(layout)
 
         self.show()

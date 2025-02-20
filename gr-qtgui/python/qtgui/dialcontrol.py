@@ -11,7 +11,7 @@
 
 from qtpy import QtWidgets
 from qtpy.QtWidgets import QFrame, QVBoxLayout, QLabel
-from qtpy.QtCore import AlignCenter, QSize
+from qtpy.QtCore import Qt, QSize
 from gnuradio import gr
 import pmt
 
@@ -33,7 +33,7 @@ class LabeledDialControl(QFrame):
         self.scaleFactor = scaleFactor
         self.lbl = lbl
         self.lblcontrol = QLabel(lbl, self)
-        self.lblcontrol.setAlignment(AlignCenter)
+        self.lblcontrol.setAlignment(Qt.AlignCenter)
 
         if self.showvalue:
             textstr = self.buildTextStr(defaultvalue)
@@ -47,7 +47,7 @@ class LabeledDialControl(QFrame):
 
         layout.addWidget(self.numberControl)
 
-        layout.setAlignment(AlignCenter)
+        layout.setAlignment(Qt.AlignCenter)
         self.setLayout(layout)
         self.show()
 
