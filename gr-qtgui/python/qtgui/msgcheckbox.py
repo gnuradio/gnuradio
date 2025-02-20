@@ -10,7 +10,7 @@
 #
 
 from qtpy import QtWidgets
-from qtpy.QtCore import AlignTop, AlignLeft, AlignBottom, AlignRight, AlignCenter, AlignVCenter
+from qtpy.QtCore import Qt
 from qtpy.QtWidgets import QFrame, QVBoxLayout
 
 from gnuradio import gr
@@ -56,18 +56,18 @@ class MsgCheckBox(gr.sync_block, QFrame):
         layout.addWidget(self.chkBox)
 
         if alignment == 1:
-            halign = AlignCenter
+            halign = Qt.AlignCenter
         elif alignment == 2:
-            halign = AlignLeft
+            halign = Qt.AlignLeft
         else:
-            halign = AlignRight
+            halign = Qt.AlignRight
 
         if valignment == 1:
-            valign = AlignVCenter
+            valign = Qt.AlignVCenter
         elif valignment == 2:
-            valign = AlignTop
+            valign = Qt.AlignTop
         else:
-            valign = AlignBottom
+            valign = Qt.AlignBottom
 
         layout.setAlignment(halign | valign)
         self.setLayout(layout)
