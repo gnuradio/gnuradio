@@ -9,7 +9,7 @@
 #
 #
 
-from qtpy.QtCore import Signal, QSize, QRect, AlignCenter, AlignVCenter, AlignRight, SolidPattern
+from qtpy.QtCore import Signal, QSize, QRect, Qt
 from qtpy.QtWidgets import QFrame, QVBoxLayout, QLabel
 from qtpy.QtGui import QPainter, QPixmap, QFont, QFontMetrics, QBrush, QColor
 
@@ -52,7 +52,7 @@ class LabeledDigitalNumberControl(QFrame):
             self.hasLabel = False
 
         layout.addWidget(self.numberControl)
-        layout.setAlignment(AlignCenter | AlignVCenter)
+        layout.setAlignment(Qt.AlignCenter | Qt.AlignVCenter)
         self.setLayout(layout)
         self.show()
 
@@ -298,7 +298,7 @@ class DigitalNumberControl(QFrame):
         size = self.size()
         brush = QBrush()
         brush.setColor(self.background_color)
-        brush.setStyle(SolidPattern)
+        brush.setStyle(Qt.SolidPattern)
         rect = QRect(2, 2, size.width() - 4, size.height() - 4)
         painter.fillRect(rect, brush)
 
@@ -318,7 +318,7 @@ class DigitalNumberControl(QFrame):
 
         rect = QRect(0, 0, size.width() - 4, size.height())
 
-        painter.drawText(rect, AlignRight + AlignVCenter, textstr)
+        painter.drawText(rect, Qt.AlignRight + Qt.AlignVCenter, textstr)
 
 
 class MsgDigitalNumberControl(gr.sync_block, LabeledDigitalNumberControl):

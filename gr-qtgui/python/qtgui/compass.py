@@ -14,9 +14,9 @@ import numpy
 from gnuradio import gr
 import pmt
 
-from qtpy.QtCore import Signal, Property, Qt
+from qtpy.QtCore import Signal, Property, Qt, QPoint
 from qtpy.QtWidgets import QFrame, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QSizePolicy
-from qtpy.QtGui import QPainter, QPalette, QFont, QFontMetricsF, QPen, QPolygon, QColor, QBrush, QPoint
+from qtpy.QtGui import QPainter, QPalette, QFont, QFontMetricsF, QPen, QPolygon, QColor, QBrush
 
 NeedleFull = 1
 NeedleIndicator = 0
