@@ -8,29 +8,30 @@
  *
  */
 
-#ifndef INCLUDED_MMSE_RESAMPLER_CC_IMPL_H
-#define INCLUDED_MMSE_RESAMPLER_CC_IMPL_H
+#ifndef INCLUDED_MMSE_RESAMPLER_IMPL_H
+#define INCLUDED_MMSE_RESAMPLER_IMPL_H
 
 #include <gnuradio/filter/mmse_fir_interpolator_cc.h>
-#include <gnuradio/filter/mmse_resampler_cc.h>
+#include <gnuradio/filter/mmse_resampler.h>
 #include <gnuradio/thread/thread.h>
 
 namespace gr {
 namespace filter {
 
-class FILTER_API mmse_resampler_cc_impl : public mmse_resampler_cc
+template <typename sample_t>
+class FILTER_API mmse_resampler_impl : public mmse_resampler<sample_t>
 {
 private:
     double d_mu;
     double d_delta_mu;
-    const mmse_fir_interpolator_cc d_resamp;
+    const mmse_fir_interpolator<sample_t> d_resamp;
     int d_delta_idx = 0;
     gr::thread::mutex d_setter_mutex;
 
 public:
-    mmse_resampler_cc_impl(float phase_shift, float resamp_ratio);
+    mmse_resampler_impl(float phase_shift, float resamp_ratio);
 
-    void handle_msg(pmt::pmt_t msg);
+    void handle_msg(const pmt::pmt_t& msg);
 
     void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
     int general_work(int noutput_items,
@@ -47,4 +48,4 @@ public:
 } /* namespace filter */
 } /* namespace gr */
 
-#endif /* INCLUDED_MMSE_RESAMPLER_CC_IMPL_H */
+#endif /* INCLUDED_MMSE_RESAMPLER_IMPL_H */
