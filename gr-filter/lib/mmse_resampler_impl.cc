@@ -9,23 +9,29 @@
  *
  */
 
-#include "mmse_resampler_cc_impl.h"
-#include "gnuradio/thread/thread.h"
+#include "mmse_resampler_impl.h"
+#include <gnuradio/filter/mmse_resampler.h>
+#include <gnuradio/gr_complex.h>
 #include <gnuradio/io_signature.h>
+#include <gnuradio/thread/thread.h>
 #include <stdexcept>
 
 namespace gr {
 namespace filter {
 
-mmse_resampler_cc::sptr mmse_resampler_cc::make(float phase_shift, float resamp_ratio)
+template <typename sample_t>
+typename mmse_resampler<sample_t>::sptr mmse_resampler<sample_t>::make(float phase_shift,
+                                                                       float resamp_ratio)
 {
-    return gnuradio::make_block_sptr<mmse_resampler_cc_impl>(phase_shift, resamp_ratio);
+    return gnuradio::make_block_sptr<mmse_resampler_impl<sample_t>>(phase_shift,
+                                                                    resamp_ratio);
 }
 
-mmse_resampler_cc_impl::mmse_resampler_cc_impl(float phase_shift, float resamp_ratio)
-    : block("mmse_resampler_cc",
-            io_signature::make2(1, 2, sizeof(gr_complex), sizeof(float)),
-            io_signature::make(1, 1, sizeof(gr_complex))),
+template <typename sample_t>
+mmse_resampler_impl<sample_t>::mmse_resampler_impl(float phase_shift, float resamp_ratio)
+    : block("mmse_resampler",
+            io_signature::make2(1, 2, sizeof(sample_t), sizeof(float)),
+            io_signature::make(1, 1, sizeof(sample_t))),
       d_mu(phase_shift),
       d_delta_mu(resamp_ratio)
 {
@@ -34,13 +40,14 @@ mmse_resampler_cc_impl::mmse_resampler_cc_impl(float phase_shift, float resamp_r
     if (phase_shift < 0 || phase_shift > 1)
         throw std::out_of_range("phase shift ratio must be > 0 and < 1");
 
-    set_inverse_relative_rate(d_delta_mu);
-    message_port_register_in(pmt::intern("msg_in"));
-    set_msg_handler(pmt::intern("msg_in"),
-                    [this](pmt::pmt_t msg) { this->handle_msg(msg); });
+    this->set_inverse_relative_rate(d_delta_mu);
+    this->message_port_register_in(pmt::intern("msg_in"));
+    this->set_msg_handler(pmt::intern("msg_in"),
+                          [this](pmt::pmt_t msg) { this->handle_msg(msg); });
 }
 
-void mmse_resampler_cc_impl::handle_msg(pmt::pmt_t msg)
+template <typename sample_t>
+void mmse_resampler_impl<sample_t>::handle_msg(const pmt::pmt_t& msg)
 {
     if (!pmt::is_dict(msg))
         return;
@@ -55,8 +62,9 @@ void mmse_resampler_cc_impl::handle_msg(pmt::pmt_t msg)
     }
 }
 
-void mmse_resampler_cc_impl::forecast(int noutput_items,
-                                      gr_vector_int& ninput_items_required)
+template <typename sample_t>
+void mmse_resampler_impl<sample_t>::forecast(int noutput_items,
+                                             gr_vector_int& ninput_items_required)
 {
     unsigned ninputs = ninput_items_required.size();
     for (unsigned i = 0; i < ninputs; i++) {
@@ -65,16 +73,16 @@ void mmse_resampler_cc_impl::forecast(int noutput_items,
     }
 }
 
-int mmse_resampler_cc_impl::general_work(int noutput_items,
-                                         gr_vector_int& ninput_items,
-                                         gr_vector_const_void_star& input_items,
-                                         gr_vector_void_star& output_items)
+template <typename sample_t>
+int mmse_resampler_impl<sample_t>::general_work(int noutput_items,
+                                                gr_vector_int& ninput_items,
+                                                gr_vector_const_void_star& input_items,
+                                                gr_vector_void_star& output_items)
 {
-    const gr_complex* in = (const gr_complex*)input_items[0];
-    gr_complex* out = (gr_complex*)output_items[0];
+    const sample_t* in = (const sample_t*)input_items[0];
+    sample_t* out = (sample_t*)output_items[0];
     const auto max_input_index = ninput_items[0] - d_resamp.ntaps();
 
-    add_item_tag(0, nitems_written(0), pmt::mp("work"), pmt::mp(""));
     gr::thread::scoped_lock lock(d_setter_mutex);
     int idx_in = 0;  // input index
     int idx_out = 0; // output index
@@ -91,33 +99,27 @@ int mmse_resampler_cc_impl::general_work(int noutput_items,
         const double f = floor(s);
         d_mu = s - f;
         d_delta_idx = (int)f;
-        gr::tag_t tag;
-        tag.offset = nitems_written(0) + idx_out;
-        tag.key = pmt::string_to_symbol("rsmpl");
-        tag.value = pmt::mp(fmt::format(
-            "nir {:>6}\tii {:>6}\td_mu {:2.6g}\ts {:2.6g}\tf {:2.6g}\tincr {:>6d}",
-            nitems_read(0),
-            idx_in,
-            d_mu,
-            s,
-            f,
-            d_delta_idx));
-        add_item_tag(0, tag);
     }
-    set_inverse_relative_rate(d_delta_mu);
-    consume_each(idx_in);
+    this->set_inverse_relative_rate(d_delta_mu);
+    this->consume_each(idx_in);
 
     return idx_out;
 }
 
-float mmse_resampler_cc_impl::mu() const { return static_cast<float>(d_mu); }
+template <typename sample_t>
+float mmse_resampler_impl<sample_t>::mu() const
+{
+    return static_cast<float>(d_mu);
+}
 
-float mmse_resampler_cc_impl::resamp_ratio() const
+template <typename sample_t>
+float mmse_resampler_impl<sample_t>::resamp_ratio() const
 {
     return static_cast<float>(d_delta_mu);
 }
 
-void mmse_resampler_cc_impl::set_mu(float mu)
+template <typename sample_t>
+void mmse_resampler_impl<sample_t>::set_mu(float mu)
 {
     // rescale mu increment, but not the index increment
     set_resamp_ratio(d_delta_mu * mu / d_mu);
@@ -126,12 +128,15 @@ void mmse_resampler_cc_impl::set_mu(float mu)
     d_mu = static_cast<double>(mu);
 }
 
-void mmse_resampler_cc_impl::set_resamp_ratio(float resamp_ratio)
+template <typename sample_t>
+void mmse_resampler_impl<sample_t>::set_resamp_ratio(float resamp_ratio)
 {
     gr::thread::scoped_lock lock(d_setter_mutex);
     d_delta_mu = static_cast<double>(resamp_ratio);
-    set_inverse_relative_rate(d_delta_mu);
+    this->set_inverse_relative_rate(d_delta_mu);
 }
 
+template class mmse_resampler<float>;
+template class mmse_resampler<gr_complex>;
 } /* namespace filter */
 } /* namespace gr */

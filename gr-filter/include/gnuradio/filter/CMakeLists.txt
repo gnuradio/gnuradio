@@ -35,8 +35,9 @@ install(
           fft_filter_ccf.h
           fft_filter_fff.h
           freq_xlating_fir_filter.h
-          mmse_resampler_cc.h
-          mmse_resampler_ff.h
+          mmse_resampler.h
+          mmse_resampler_cc.h # legacy for templated mmse_resampler<sample_t>
+          mmse_resampler_ff.h # legacy for templated mmse_resampler<sample_t>
           hilbert_fc.h
           iir_filter_ffd.h
           iir_filter_ccc.h
