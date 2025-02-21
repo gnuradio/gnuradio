@@ -1,6 +1,7 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2004,2007,2010,2013 Free Software Foundation, Inc.
+ * Copyright 2025 Marcus Müller
  *
  * This file is part of GNU Radio
  *
@@ -78,31 +79,36 @@ int mmse_resampler_ff_impl::general_work(int noutput_items,
 
     int ii = 0; // input index
     int oo = 0; // output index
+    const auto max_input_index = ninput_items[0] - d_resamp.ntaps();
 
     if (ninput_items.size() == 1) {
-        while (oo < noutput_items) {
+        int incr = 0;
+        while (oo < noutput_items &&
+               static_cast<unsigned int>(ii + incr) < max_input_index) {
+            ii += incr;
             out[oo++] = d_resamp.interpolate(&in[ii], static_cast<float>(d_mu));
 
             double s = d_mu + d_mu_inc;
             double f = floor(s);
-            int incr = (int)f;
+            incr = (int)f;
             d_mu = s - f;
-            ii += incr;
         }
 
         consume_each(ii);
         return noutput_items;
     } else {
+        int incr = 0;
         const float* rr = (const float*)input_items[1];
-        while (oo < noutput_items) {
+        while (oo < noutput_items &&
+               static_cast<unsigned int>(ii + incr) < max_input_index) {
+            ii += incr;
             out[oo++] = d_resamp.interpolate(&in[ii], static_cast<float>(d_mu));
             d_mu_inc = static_cast<double>(rr[ii]);
 
             double s = d_mu + d_mu_inc;
             double f = floor(s);
-            int incr = (int)f;
+            incr = (int)f;
             d_mu = s - f;
-            ii += incr;
         }
 
         set_inverse_relative_rate(d_mu_inc);
