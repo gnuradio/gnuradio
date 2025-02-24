@@ -72,10 +72,6 @@ set(QTGUI_LIBS
     Qt5::Widgets
 )
 
-if(ENABLE_COMMON_PCH)
-    set(PRIVATE_LIBS common-precompiled-headers)
-endif()
-
 if(ENABLE_GR_QTGUI_OPENGL)
     qt5_add_resources(RFNOC_F15_RC_SRCS rfnoc_f15.qrc)
     list(APPEND QTGUI_SOURCES
