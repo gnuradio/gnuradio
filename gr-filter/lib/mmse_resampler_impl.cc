@@ -14,6 +14,7 @@
 #include <gnuradio/gr_complex.h>
 #include <gnuradio/io_signature.h>
 #include <gnuradio/thread/thread.h>
+#include <cmath>
 #include <stdexcept>
 
 namespace gr {
@@ -66,10 +67,8 @@ template <typename sample_t>
 void mmse_resampler_impl<sample_t>::forecast(int noutput_items,
                                              gr_vector_int& ninput_items_required)
 {
-    unsigned ninputs = ninput_items_required.size();
-    for (unsigned i = 0; i < ninputs; i++) {
-        ninput_items_required[i] =
-            (int)ceil((noutput_items * d_delta_mu) + d_resamp.ntaps()) + d_delta_idx;
+    for (auto& req : ninput_items_required) {
+        req = std::lrint((noutput_items * d_delta_mu) + d_resamp.ntaps()) + d_delta_idx;
     }
 }
 
@@ -81,9 +80,9 @@ int mmse_resampler_impl<sample_t>::general_work(int noutput_items,
 {
     const sample_t* in = (const sample_t*)input_items[0];
     sample_t* out = (sample_t*)output_items[0];
-    const auto in_length = ninput_items.size() == 1
-                               ? ninput_items[0]
-                               : std::min(ninput_items[0], ninput_items[1]);
+    const bool rate_input = ninput_items.size() == 2;
+    const auto in_length =
+        rate_input ? std::min(ninput_items[0], ninput_items[1]) : ninput_items[0];
     const auto max_input_index = in_length - d_resamp.ntaps() + 1;
 
     gr::thread::scoped_lock lock(d_setter_mutex);
@@ -94,7 +93,7 @@ int mmse_resampler_impl<sample_t>::general_work(int noutput_items,
            static_cast<unsigned int>(idx_in + d_delta_idx) < max_input_index) {
         idx_in += d_delta_idx;
         out[idx_out++] = d_resamp.interpolate(&in[idx_in], static_cast<float>(d_mu));
-        if (ninput_items.size() == 2) {
+        if (rate_input) {
             d_delta_mu = static_cast<double>(
                 reinterpret_cast<const float*>(input_items[1])[idx_in]);
         }
@@ -103,7 +102,9 @@ int mmse_resampler_impl<sample_t>::general_work(int noutput_items,
         d_mu = s - f;
         d_delta_idx = (int)f;
     }
-    this->set_inverse_relative_rate(d_delta_mu);
+    if (rate_input) {
+        this->set_inverse_relative_rate(d_delta_mu);
+    }
     this->consume_each(idx_in);
 
     return idx_out;
