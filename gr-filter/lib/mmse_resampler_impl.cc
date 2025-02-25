@@ -81,7 +81,10 @@ int mmse_resampler_impl<sample_t>::general_work(int noutput_items,
 {
     const sample_t* in = (const sample_t*)input_items[0];
     sample_t* out = (sample_t*)output_items[0];
-    const auto max_input_index = ninput_items[0] - d_resamp.ntaps();
+    const auto in_length = ninput_items.size() == 1
+                               ? ninput_items[0]
+                               : std::min(ninput_items[0], ninput_items[1]);
+    const auto max_input_index = in_length - d_resamp.ntaps() + 1;
 
     gr::thread::scoped_lock lock(d_setter_mutex);
     int idx_in = 0;  // input index
