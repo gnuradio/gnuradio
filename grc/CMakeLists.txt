@@ -147,7 +147,7 @@ GR_PYTHON_INSTALL(
 GR_PYTHON_INSTALL(
     DIRECTORY core
     DESTINATION "${GR_PYTHON_DIR}/gnuradio/grc"
-    FILES_MATCHING REGEX "\\.(py|dtd|grc|tmpl|png|mako)$"
+    FILES_MATCHING REGEX "\\.(py|dtd|grc|tmpl|png|mako|jinja)$"
 )
 
 GR_PYTHON_INSTALL(
