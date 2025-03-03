@@ -134,17 +134,17 @@ class PropsDialog(Gtk.Dialog):
     def _params_changed(self):
         """
         Have the params in this dialog changed?
-        Ex: Added, removed, type change, hide change...
+        Ex: Added, removed, type change, hide change, and updated value
         To the props dialog, the hide setting of 'none' and 'part' are identical.
         Therefore, the props dialog only cares if the hide setting is/not 'all'.
         Make a hash that uniquely represents the params' state.
 
         Returns:
-            true if changed
+            True if changed
         """
         old_hash = self._hash
         new_hash = self._hash = hash(tuple(
-            (hash(param), param.name, param.dtype, param.hide == 'all',)
+            (hash(param), param.name, param.dtype, param.hide == 'all', param.get_value())
             for param in self._block.params.values()
         ))
         return new_hash != old_hash
