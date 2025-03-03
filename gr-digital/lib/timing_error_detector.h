@@ -348,7 +348,7 @@ public:
      * \brief Create a Early-Late timing error detector
      */
     ted_early_late()
-        : timing_error_detector(TED_EARLY_LATE, 2, 2, true, false, constellation_sptr())
+        : timing_error_detector(TED_EARLY_LATE, 2, 3, true, false, constellation_sptr())
     {
     }
     ~ted_early_late() override{};
