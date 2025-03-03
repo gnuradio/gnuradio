@@ -10,8 +10,7 @@
 
 
 import random
-import math
-from cmath import exp, pi, log, sqrt
+from cmath import exp, pi, sqrt
 import numpy
 
 from gnuradio import gr, gr_unittest, digital, blocks
@@ -237,12 +236,12 @@ class test_constellation(gr_unittest.TestCase):
 
         constel = c.points()
         code = [0, 1, 2, 3]
-        Es = 1.0
+        Es = npwr = 1.0
 
-        c.set_npwr(Es)
+        c.set_npwr(npwr)
         c.normalize(digital.constellation.POWER_NORMALIZATION)
-        table = digital.soft_dec_table(constel, code, prec, Es)
         constel = digital.const_normalization(constel, "POWER")
+        table = digital.soft_dec_table(constel, code, prec, npwr)
         maxamp = digital.min_max_axes(constel)
 
         c.set_soft_dec_lut(table, prec)
@@ -343,7 +342,6 @@ class test_constellation(gr_unittest.TestCase):
         # Get max energy/symbol in constellation
         constel = c.points()
         Es = 1.0
-        padding = 2
 
         table = digital.soft_dec_table(constel, code, prec)
         c.gen_soft_dec_lut(prec)
@@ -388,10 +386,12 @@ class mod_demod(gr.hier_block2):
             raise ValueError(
                 "Constellation cannot contain more than 256 points.")
 
-        gr.hier_block2.__init__(self, "mod_demod",
-                                gr.io_signature(
-                                    1, 1, gr.sizeof_char),       # Input signature
-                                gr.io_signature(1, 1, gr.sizeof_char))       # Output signature
+        gr.hier_block2.__init__(
+            self,
+            "mod_demod",
+            gr.io_signature(1, 1, gr.sizeof_char),  # Input signature
+            gr.io_signature(1, 1, gr.sizeof_char),  # Output signature
+        )
 
         arity = constellation.arity()
 
