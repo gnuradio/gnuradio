@@ -19,7 +19,7 @@ class matrix_display_signal : public QObject
 
 public:
     matrix_display_signal() {}
-    ~matrix_display_signal() {}
+    ~matrix_display_signal() override {}
 
 signals:
     void data_ready(QVector<double> data);

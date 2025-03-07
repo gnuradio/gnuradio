@@ -87,7 +87,7 @@ public:
                             const std::string& y_axis_label,
                             const std::string& z_axis_label,
                             QWidget* parent = nullptr);
-    ~matrix_display();
+    ~matrix_display() override;
 
     void set_contour(bool contour);
     void set_color_map(const std::string& color_map);
