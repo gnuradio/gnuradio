@@ -379,7 +379,7 @@ std::string NumberDisplayForm::title() const { return d_title->text().toStdStrin
 void NumberDisplayForm::setTitle(const std::string& title)
 {
     std::string t = title;
-    if (t.length() > 0)
+    if (!t.empty())
         t = "<b><FONT SIZE=4>" + title + "</b>";
     d_title->setText(QString(t.c_str()));
     setGraphType(d_graph_type);
