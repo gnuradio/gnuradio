@@ -31,7 +31,7 @@ public:
                         bool repeat = true,
                         uint64_t mask = 0,
                         uint64_t seed = 0x1);
-    ~glfsr_source_b_impl();
+    ~glfsr_source_b_impl() override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,

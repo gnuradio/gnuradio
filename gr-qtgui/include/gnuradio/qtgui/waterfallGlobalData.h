@@ -31,7 +31,7 @@ public:
     virtual QwtRasterData* copy() const;
 
 #if QWT_VERSION >= 0x060200
-    virtual QwtInterval interval(Qt::Axis) const override;
+    QwtInterval interval(Qt::Axis) const override;
     void setInterval(Qt::Axis, const QwtInterval&);
 #endif
 

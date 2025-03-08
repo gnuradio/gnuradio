@@ -21,25 +21,25 @@ namespace gr {
 class GR_RUNTIME_API buffer_reader_sm : public buffer_reader
 {
 public:
-    ~buffer_reader_sm();
+    ~buffer_reader_sm() override;
 
     /*!
      * \brief Return number of items available for reading.
      */
-    virtual int items_available() const;
+    int items_available() const override;
 
     /*!
      * \brief Return true if thread is ready to call input_blocked_callback,
      * false otherwise; delegate calls to buffer class's input_blkd_cb_ready()
      */
-    virtual bool input_blkd_cb_ready(int items_required) const;
+    bool input_blkd_cb_ready(int items_required) const override;
 
     /*!
      * \brief Callback function that the scheduler will call when it determines
      * that the input is blocked; delegate calls to buffer class's
      * input_blocked_callback()
      */
-    virtual bool input_blocked_callback(int items_required, int items_avail);
+    bool input_blocked_callback(int items_required, int items_avail) override;
 
 private:
     friend class buffer;

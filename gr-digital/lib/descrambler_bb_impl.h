@@ -24,7 +24,7 @@ private:
 
 public:
     descrambler_bb_impl(uint64_t mask, uint64_t seed, uint8_t len);
-    ~descrambler_bb_impl();
+    ~descrambler_bb_impl() override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
