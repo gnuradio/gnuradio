@@ -440,14 +440,14 @@ void TimeRasterDisplayPlot::reset()
 
     QwtXScaleDraw* xScale = (QwtXScaleDraw*)axisScaleDraw(QwtPlot::xBottom);
     xScale->setSecondsPerLine(sec_per_samp);
-    if (d_x_label.length() > 0) {
+    if (!d_x_label.empty()) {
         setAxisTitle(QwtPlot::xBottom, QString(d_x_label.c_str()));
     } else {
         setAxisTitle(QwtPlot::xBottom, QString("Time (%1)").arg(strunits[iunit].c_str()));
     }
     xScale->initiateUpdate();
 
-    if (d_y_label.length() > 0) {
+    if (!d_y_label.empty()) {
         setAxisTitle(QwtPlot::yLeft, d_y_label.c_str());
     }
 

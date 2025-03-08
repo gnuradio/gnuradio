@@ -516,7 +516,7 @@ void TimeDomainDisplayPlot::setTagBackgroundStyle(Qt::BrushStyle b)
 void TimeDomainDisplayPlot::setYLabel(const std::string& label, const std::string& unit)
 {
     std::string l = label;
-    if (unit.length() > 0)
+    if (!unit.empty())
         l += " (" + unit + ")";
     setAxisTitle(QwtPlot::yLeft, QString(l.c_str()));
     ((TimeDomainDisplayZoomer*)d_zoomer)->setYUnitType(unit);

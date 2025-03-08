@@ -481,7 +481,7 @@ void FrequencyDisplayPlot::onPickerPointSelected(const QPointF& p)
 void FrequencyDisplayPlot::setYLabel(const std::string& label, const std::string& unit)
 {
     std::string l = label;
-    if (unit.length() > 0)
+    if (!unit.empty())
         l += " (" + unit + ")";
     setAxisTitle(QwtPlot::yLeft, QString(l.c_str()));
     static_cast<FreqDisplayZoomer*>(d_zoomer)->setYUnit(unit);
