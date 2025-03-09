@@ -1,16 +1,13 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2012 Free Software Foundation, Inc.
+ * Copyright 2025 Marcus Müller
  *
  * This file is part of GNU Radio
  *
  * SPDX-License-Identifier: GPL-3.0-or-later
  *
  */
-
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
 
 #include "patterned_interleaver_impl.h"
 #include <gnuradio/io_signature.h>
@@ -45,20 +42,13 @@ int patterned_interleaver_impl::general_work(int noutput_items,
                                              gr_vector_const_void_star& input_items,
                                              gr_vector_void_star& output_items)
 {
-    size_t nblks = noutput_items / d_pattern.size();
-
-    std::vector<const char*> ii;
-    for (size_t i = 0; i < input_items.size(); i++) {
-        ii.push_back((const char*)input_items[i]);
-    }
-
-    char* oo = (char*)output_items[0];
+    const size_t nblks = noutput_items / d_pattern.size();
 
     for (size_t i = 0; i < nblks; i++) {
-        for (size_t j = 0; j < d_pattern.size(); j++) {
-            memcpy(oo, ii[d_pattern[j]], d_itemsize);
-            oo += d_itemsize;
-            ii[d_pattern[j]] += d_itemsize;
+        for (const auto input_idx : d_pattern) {
+            memcpy(output_items[0], input_items[input_idx], d_itemsize);
+            reinterpret_cast<const char*&>(input_items[input_idx]) += d_itemsize;
+            reinterpret_cast<char*&>(output_items[0]) += d_itemsize;
         }
     }
 
@@ -71,7 +61,7 @@ int patterned_interleaver_impl::general_work(int noutput_items,
 void patterned_interleaver_impl::forecast(int noutput_items,
                                           gr_vector_int& ninput_items_required)
 {
-    int nblks = noutput_items / d_pattern.size();
+    const int nblks = noutput_items / d_pattern.size();
     for (size_t i = 0; i < ninput_items_required.size(); i++) {
         ninput_items_required[i] = d_counts[i] * nblks;
     }
