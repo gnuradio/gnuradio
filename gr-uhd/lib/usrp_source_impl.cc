@@ -118,7 +118,7 @@ usrp_source_impl::_set_center_freq_from_internals(size_t chan, pmt::pmt_t direct
         return _dev->set_tx_freq(_curr_tx_tune_req[chan], _stream_args.channels[chan]);
     } else {
         _rx_chans_to_tune[chan] = false;
-        return _dev->set_rx_freq(_curr_rx_tune_req[chan], _stream_args.channels[chan]);
+        return set_center_freq(_curr_rx_tune_req[chan], chan);
     }
 }
 
