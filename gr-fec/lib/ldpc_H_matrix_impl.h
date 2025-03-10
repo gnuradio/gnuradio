@@ -1,6 +1,7 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2015 Free Software Foundation, Inc.
+ * Copyright 2025 Marcus Müller
  *
  * SPDX-License-Identifier: GPL-3.0-or-later
  *
@@ -23,33 +24,34 @@ private:
     unsigned int d_gap;
 
     // Submatrices found during preprocessing, used for encoding
-    gsl_matrix_view d_A_view;
-    gsl_matrix_view d_B_view;
-    gsl_matrix_view d_D_view;
-    gsl_matrix_view d_E_view;
-    gsl_matrix_view d_T_view;
-    gsl_matrix* d_phi_inverse_ptr;
+    gsl_matrix_uchar_view d_A_view;
+    gsl_matrix_uchar_view d_B_view;
+    gsl_matrix_uchar_view d_D_view;
+    gsl_matrix_uchar_view d_E_view;
+    gsl_matrix_uchar_view d_T_view;
+    gsl_matrix_uchar* d_phi_inverse_ptr;
 
     //! Sets the submatrix variables needed for encoding
     void set_parameters_for_encoding();
 
-    void
-    back_solve_mod2(gsl_matrix* result, const gsl_matrix* U, const gsl_matrix* y) const;
+    static constexpr void back_solve_mod2(gsl_matrix_uchar* result,
+                                          const gsl_matrix_uchar* U,
+                                          const gsl_matrix_uchar* y);
 
     //! Access the A submatrix, needed during encoding
-    const gsl_matrix* A() const;
+    const gsl_matrix_uchar* A() const;
 
     //! Access the B submatrix, needed during encoding
-    const gsl_matrix* B() const;
+    const gsl_matrix_uchar* B() const;
 
     //! Access the D submatrix, needed during encoding
-    const gsl_matrix* D() const;
+    const gsl_matrix_uchar* D() const;
 
     //! Access the E submatrix, needed during encoding
-    const gsl_matrix* E() const;
+    const gsl_matrix_uchar* E() const;
 
     //! Access the T submatrix, needed during encoding
-    const gsl_matrix* T() const;
+    const gsl_matrix_uchar* T() const;
 
     /*!
      * \brief Access the \f$\phi^{-1}\f$ matrix
@@ -58,7 +60,7 @@ private:
      * encoding. \f$\phi\f$ is defined as:
      * \f$\phi=C-ET^{-1}A\f$.
      */
-    const gsl_matrix* phi_inverse() const;
+    const gsl_matrix_uchar* phi_inverse() const;
 
 public:
     /*!
@@ -95,7 +97,7 @@ public:
     /*!
      * \brief Destructor
      * \details
-     * Calls the gsl_matrix_free function to free memory
+     * Calls the gsl_matrix_uchar_free function to free memory
      */
     ~ldpc_H_matrix_impl() override;
 };
