@@ -37,7 +37,7 @@ const std::string prefix()
 
 const std::string sysconfdir()
 {
-    path sysconfdir_rel_prefix = "@SYSCONFDIR_relative_to_prefix@";
+    path sysconfdir_rel_prefix = "@GR_CONF_DIR_relative_to_prefix@";
     path prefix_path = prefix();
     path sysconfdir_path = prefix_path / sysconfdir_rel_prefix;
 

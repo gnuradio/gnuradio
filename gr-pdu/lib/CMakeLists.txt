@@ -37,7 +37,7 @@ target_link_libraries(gnuradio-pdu PUBLIC gnuradio-runtime)
 
 target_include_directories(
     gnuradio-pdu
-    PUBLIC $<INSTALL_INTERFACE:include>
+    PUBLIC $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
     PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>)
 
 if(BUILD_SHARED_LIBS)

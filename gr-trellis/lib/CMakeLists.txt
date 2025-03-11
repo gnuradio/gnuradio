@@ -33,7 +33,7 @@ add_library(
 target_link_libraries(gnuradio-trellis PUBLIC gnuradio-runtime gnuradio-digital)
 
 target_include_directories(
-    gnuradio-trellis PUBLIC $<INSTALL_INTERFACE:include>
+    gnuradio-trellis PUBLIC $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
                             $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>)
 
 #Add Windows DLL resource file if using MSVC
