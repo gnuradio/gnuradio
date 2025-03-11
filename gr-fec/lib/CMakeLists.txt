@@ -54,7 +54,7 @@ add_library(
     polar_encoder_systematic.cc
     polar_decoder_sc_systematic.cc)
 target_include_directories(
-    gnuradio-fec PUBLIC $<INSTALL_INTERFACE:include>
+    gnuradio-fec PUBLIC $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
                         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>)
 
 add_subdirectory(reed-solomon)

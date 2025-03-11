@@ -97,7 +97,7 @@ add_library(
 target_compile_definitions(gnuradio-qtgui PRIVATE -DQWT_DLL)
 target_include_directories(
     gnuradio-qtgui
-    PUBLIC $<INSTALL_INTERFACE:include>
+    PUBLIC $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>
     PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
 target_link_libraries(gnuradio-qtgui

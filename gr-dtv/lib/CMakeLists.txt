@@ -75,7 +75,7 @@ target_link_libraries(
     PRIVATE gnuradio-analog gnuradio-filter gnuradio-fec Volk::volk)
 
 target_include_directories(
-    gnuradio-dtv PUBLIC $<INSTALL_INTERFACE:include>
+    gnuradio-dtv PUBLIC $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
                         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>)
 
 include(CheckCCompilerFlag)

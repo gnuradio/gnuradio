@@ -131,55 +131,42 @@ string(REPLACE "\n" " \\n" COMPILER_INFO ${COMPILER_INFO})
 ########################################################################
 # Install directories
 ########################################################################
-include(GrPlatform) #define LIB_SUFFIX
-
+include(GNUInstallDirs)
 # Install our Cmake modules into $prefix/lib/cmake/gnuradio
 # See "Package Configuration Files" on page:
 #    http://www.cmake.org/Wiki/CMake/Tutorials/Packaging
 
 if(NOT CMAKE_MODULES_DIR)
-    set(CMAKE_MODULES_DIR lib${LIB_SUFFIX}/cmake)
+    set(CMAKE_MODULES_DIR ${CMAKE_INSTALL_LIBDIR}/cmake)
 endif(NOT CMAKE_MODULES_DIR)
 
 # cmake-format: off
-SET(GR_RUNTIME_DIR     bin CACHE PATH "Path to install all binaries")
-SET(GR_LIBRARY_DIR     lib${LIB_SUFFIX} CACHE PATH "Path to install libraries")
-SET(GR_INCLUDE_DIR     include CACHE PATH "Path to install header files")
+SET(GR_RUNTIME_DIR     ${CMAKE_INSTALL_BINDIR} CACHE PATH "Path to install all binaries")
+SET(GR_LIBRARY_DIR     ${CMAKE_INSTALL_LIBDIR} CACHE PATH "Path to install libraries")
+SET(GR_INCLUDE_DIR     ${CMAKE_INSTALL_INCLUDEDIR} CACHE PATH "Path to install header files")
 SET(GR_CMAKE_DIR       ${CMAKE_MODULES_DIR}/gnuradio)
-SET(GR_DATA_DIR        share CACHE PATH "Base location for data")
+SET(GR_DATA_DIR        ${CMAKE_INSTALL_DATADIR} CACHE PATH "Base location for data")
 SET(GR_PKG_DATA_DIR    ${GR_DATA_DIR}/${CMAKE_PROJECT_NAME} CACHE PATH "Path to install package data")
 SET(GR_DOC_DIR         ${GR_DATA_DIR}/doc CACHE PATH "Path to install documentation")
 SET(GR_PKG_DOC_DIR     ${GR_DOC_DIR}/${CMAKE_PROJECT_NAME}-${DOCVER} CACHE PATH "Path to install package docs")
-SET(GR_MAN_DIR         ${GR_DATA_DIR}/man CACHE PATH "Path to install man pages")
-SET(GR_LIBEXEC_DIR     libexec CACHE PATH "Path to install libexec files")
+SET(GR_MAN_DIR         ${CMAKE_INSTALL_MANDIR} CACHE PATH "Path to install man pages")
+SET(GR_LIBEXEC_DIR     ${CMAKE_INSTALL_LIBEXECDIR} CACHE PATH "Path to install libexec files")
 SET(GR_PKG_LIBEXEC_DIR ${GR_LIBEXEC_DIR}/${CMAKE_PROJECT_NAME} CACHE PATH "Path to install package libexec files")
 SET(GRC_BLOCKS_DIR     ${GR_PKG_DATA_DIR}/grc/blocks CACHE PATH "Path to install GRC blocks")
 SET(GR_THEMES_DIR      ${GR_PKG_DATA_DIR}/themes CACHE PATH "Path to install QTGUI themes")
 SET(GRC_EXAMPLES_DIR   ${GR_PKG_DATA_DIR}/examples CACHE PATH "Path to install GRC example flowgraphs")
+set(GR_CONF_DIR        ${CMAKE_INSTALL_SYSCONFDIR} CACHE PATH "Path to install config files")
+set(GR_PKG_CONF_DIR    ${GR_CONF_DIR}/${CMAKE_PROJECT_NAME}/conf.d CACHE PATH "Path to install package configs")
+set(GR_PREFSDIR        ${GR_CONF_DIR}/${CMAKE_PROJECT_NAME}/conf.d CACHE PATH "Path to install preference files")
+
+if(DEFINED CACHE{SYSCONFDIR} AND NOT GR_IGNORE_SYSCONFDIR_SET)
+    # If you need to ignore this error, set GR_IGNORE_SYSCONFDIR_SET
+    message(FATAL_ERROR
+        "SYSCONFDIR cache variable has been removed. Use GR_CONF_DIR or CMAKE_INSTALL_SYSCONFDIR instead."
+    )
+endif()
 # cmake-format: on
 
-# Set location of config/prefs files in /etc
-# Special exception if prefix is /usr so we don't make a /usr/etc.
-set(GR_CONF_DIR
-    etc
-    CACHE PATH "Path to install config files")
-string(COMPARE EQUAL "${CMAKE_INSTALL_PREFIX}" "/usr" isusr)
-if(isusr)
-    set(SYSCONFDIR
-        "/${GR_CONF_DIR}"
-        CACHE PATH "System configuration directory")
-else(isusr)
-    set(SYSCONFDIR
-        "${CMAKE_INSTALL_PREFIX}/${GR_CONF_DIR}"
-        CACHE PATH "System configuration directory" FORCE)
-endif(isusr)
-
-set(GR_PKG_CONF_DIR
-    ${SYSCONFDIR}/${CMAKE_PROJECT_NAME}/conf.d
-    CACHE PATH "Path to install package configs")
-set(GR_PREFSDIR
-    ${SYSCONFDIR}/${CMAKE_PROJECT_NAME}/conf.d
-    CACHE PATH "Path to install preference files")
 
 option(ENABLE_PERFORMANCE_COUNTERS "Enable block performance counters" ON)
 if(ENABLE_PERFORMANCE_COUNTERS)
@@ -190,6 +177,7 @@ else(ENABLE_PERFORMANCE_COUNTERS)
     message(STATUS "NO PERF COUNTERS")
 endif(ENABLE_PERFORMANCE_COUNTERS)
 
+string(COMPARE EQUAL "${CMAKE_INSTALL_PREFIX}" "/usr" isusr)
 string(COMPARE EQUAL "${CMAKE_INSTALL_PREFIX}" "/usr/local" isusrlocal)
 string(COMPARE EQUAL "${CMAKE_INSTALL_PREFIX}" "$ENV{HOME}/.local" ishomelocal)
 
@@ -198,7 +186,7 @@ if(ENABLE_BASH_COMPLETIONS)
     if(NOT DEFINED GR_BASH_COMPLETIONS_DIR)
         if(isusr OR isusrlocal OR ishomelocal)
             set(GR_BASH_COMPLETIONS_DIR
-                share/bash-completion/completions
+                ${CMAKE_INSTALL_DATADIR}/bash-completion/completions
                 CACHE PATH "Path to install bash completions")
         else(isusr OR isusrlocal OR ishomelocal)
             message(WARNING "GR_BASH_COMPLETIONS_DIR is not defined")
@@ -212,7 +200,7 @@ if(ENABLE_ZSH_COMPLETIONS)
     if(NOT DEFINED GR_ZSH_COMPLETIONS_DIR)
         if(isusr OR isusrlocal)
             set(GR_ZSH_COMPLETIONS_DIR
-                share/zsh/site-functions
+                ${CMAKE_INSTALL_DATADIR}/zsh/site-functions
                 CACHE PATH "Path to install zsh completions")
         else(isusr OR isusrlocal)
             message(WARNING "GR_ZSH_COMPLETIONS_DIR is not defined")
@@ -226,7 +214,7 @@ if(ENABLE_FISH_COMPLETIONS)
     if(NOT DEFINED GR_FISH_COMPLETIONS_DIR)
         if(isusr OR ishomelocal)
             set(GR_FISH_COMPLETIONS_DIR
-                share/fish/vendor_completions.d
+                ${CMAKE_INSTALL_DATADIR}/fish/vendor_completions.d
                 CACHE PATH "Path to install fish completions")
         else(isusr OR ishomelocal)
             message(WARNING "GR_FISH_COMPLETIONS_DIR is not defined")
@@ -243,17 +231,21 @@ file(TO_CMAKE_PATH "${CMAKE_INSTALL_PREFIX}"           prefix)
 file(TO_CMAKE_PATH "\${prefix}"                        exec_prefix)
 file(TO_CMAKE_PATH "\${exec_prefix}/${GR_LIBRARY_DIR}" libdir)
 file(TO_CMAKE_PATH "\${prefix}/${GR_INCLUDE_DIR}"      includedir)
-file(TO_CMAKE_PATH "${SYSCONFDIR}"                     SYSCONFDIR)
-file(TO_CMAKE_PATH "${GR_PREFSDIR}"                    GR_PREFSDIR)
 # cmake-format: on
+
+if(CMAKE_VERSION VERSION_LESS 3.20)
+    set(dir SYSCONFIGDIR)
+endif()
+GNUInstallDirs_get_absolute_install_dir(GR_CONF_DIR_FULL GR_CONF_DIR SYSCONFIGDIR)
+GNUInstallDirs_get_absolute_install_dir(GR_PREFSDIR_FULL GR_PREFSDIR SYSCONFIGDIR)
 
 if(WIN32)
     file(RELATIVE_PATH prefix_relative_to_lib "${prefix}/${GR_RUNTIME_DIR}" "${prefix}")
 else(WIN32)
     file(RELATIVE_PATH prefix_relative_to_lib "${prefix}/${GR_LIBRARY_DIR}" "${prefix}")
 endif(WIN32)
-file(RELATIVE_PATH SYSCONFDIR_relative_to_prefix "${prefix}" "${SYSCONFDIR}")
-file(RELATIVE_PATH GR_PREFSDIR_relative_to_prefix "${prefix}" "${GR_PREFSDIR}")
+file(RELATIVE_PATH GR_CONF_DIR_relative_to_prefix "${prefix}" "${GR_CONF_DIR_FULL}")
+file(RELATIVE_PATH GR_PREFSDIR_relative_to_prefix "${prefix}" "${GR_PREFSDIR_FULL}")
 
 ########################################################################
 # On Apple only, set install name and use rpath correctly, if not already set

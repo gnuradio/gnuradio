@@ -30,7 +30,7 @@ target_link_libraries(gnuradio-network PUBLIC gnuradio-runtime)
 
 target_include_directories(
     gnuradio-network
-    PUBLIC $<INSTALL_INTERFACE:include>
+    PUBLIC $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
     PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/asio
 )

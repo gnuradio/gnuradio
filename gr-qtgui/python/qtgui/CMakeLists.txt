@@ -43,7 +43,7 @@ if(ENABLE_TESTING)
     set(GR_TEST_LIBRARY_DIRS "")
     set(GR_TEST_PYTHON_DIRS ${PROJECT_BINARY_DIR}/gnuradio-runtime/python)
 
-    if(LINUX AND NOT DEFINED ENV{DISPLAY})
+    if(CMAKE_SYSTEM_NAME STREQUAL "Linux" AND NOT DEFINED ENV{DISPLAY})
         find_program(XVFB_EXECUTABLE xvfb-run)
         if(XVFB_EXECUTABLE)
             set(QA_DISPLAY_SERVER "${XVFB_EXECUTABLE}")
