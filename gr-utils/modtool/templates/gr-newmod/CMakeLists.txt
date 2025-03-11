@@ -65,14 +65,13 @@ include(GrCompilerSettings)
 # Install directories
 ########################################################################
 include(GrVersion)
-
-include(GrPlatform) #define LIB_SUFFIX
+include(GNUInstallDirs)
 
 if(NOT CMAKE_MODULES_DIR)
-    set(CMAKE_MODULES_DIR lib${LIB_SUFFIX}/cmake)
+    set(CMAKE_MODULES_DIR ${CMAKE_INSTALL_LIBDIR}/cmake)
 endif(NOT CMAKE_MODULES_DIR)
 
-set(GR_INCLUDE_DIR include/gnuradio/howto)
+set(GR_INCLUDE_DIR ${CMAKE_INSTALL_INCLUDEDIR}/gnuradio/howto)
 set(GR_CMAKE_DIR ${CMAKE_MODULES_DIR}/gnuradio-howto)
 set(GR_PKG_DATA_DIR ${GR_DATA_DIR}/${CMAKE_PROJECT_NAME})
 set(GR_PKG_DOC_DIR ${GR_DOC_DIR}/${CMAKE_PROJECT_NAME})
