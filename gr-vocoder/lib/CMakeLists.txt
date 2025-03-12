@@ -24,7 +24,7 @@ add_library(
     ulaw_encode_sb_impl.cc)
 target_include_directories(
     gnuradio-vocoder
-    PUBLIC $<INSTALL_INTERFACE:include>
+    PUBLIC $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
     PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>)
 target_link_libraries(gnuradio-vocoder PUBLIC gnuradio-runtime)
 
