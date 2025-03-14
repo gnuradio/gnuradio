@@ -161,7 +161,7 @@ void EyeDisplaysForm::mousePressEvent(QMouseEvent* e)
         for (unsigned int i = 0; i < d_nplots; ++i) {
             d_lines_menu[i]->setTitle(d_displays_plot[i]->title().text());
         }
-        d_menu->exec(e->globalPos());
+        d_menu->exec(e->globalPosition().toPoint());
     }
 }
 
