@@ -11,7 +11,7 @@
 
 from qtpy.QtWidgets import QFrame, QHBoxLayout, QVBoxLayout, QLabel
 from qtpy.QtGui import QPainter, QBrush, QColor, QPen, QFontMetricsF, QRadialGradient
-from qtpy.QtCore import Qt as Qtc, QPoint
+from qtpy.QtCore import Qt as Qtc, QPointF
 
 from gnuradio import gr
 import pmt
@@ -118,7 +118,7 @@ class LEDIndicator(QFrame):
 
         center_x = int(size.width() / 2)
         center_y = int(size.height() / 2)
-        centerpoint = QPoint(center_x, center_y)
+        centerpoint = QPointF(center_x, center_y)
 
         radius = smallest_dim
 

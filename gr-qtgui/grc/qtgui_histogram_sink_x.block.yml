@@ -359,7 +359,7 @@ inputs:
 
 templates:
     imports: |-
-        import sip
+        from qtpy import sip
     callbacks:
     - set_update_time(${update_time})
     - set_bins(${bins})

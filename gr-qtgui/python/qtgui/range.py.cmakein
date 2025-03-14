@@ -68,9 +68,9 @@ class QEngValidator(QtGui.QValidator):
             if re.match(self.re, s):
                 self.parent.setStyleSheet("background-color: yellow;"
                                           "color: black")
-                return (QtGui.QValidator.Intermediate, s, pos)
+                return (QtGui.QValidator.State.Intermediate, s, pos)
             else:
-                return (QtGui.QValidator.Invalid, s, pos)
+                return (QtGui.QValidator.State.Invalid, s, pos)
 
         if self.max is not None and val > self.max:
             self.parent.setStyleSheet("background-color: yellow;"
@@ -81,7 +81,7 @@ class QEngValidator(QtGui.QValidator):
         else:
             self.parent.setStyleSheet("")
 
-        return (QtGui.QValidator.Acceptable, s, pos)
+        return (QtGui.QValidator.State.Acceptable, s, pos)
 
     def fixup(self, s):
         pass
@@ -171,7 +171,7 @@ class RangeWidget(QtWidgets.QWidget):
             # Setup the slider
             # self.setFocusPolicy(QtCore.Qt.NoFocus)
             self.setRange(0, int(ranges.nsteps - 1))
-            self.setTickPosition(2)
+            self.setTickPosition(QtWidgets.QSlider.TickPosition.TicksAbove)
             self.setSingleStep(1)
             self.range = ranges
             self.orientation = orientation
