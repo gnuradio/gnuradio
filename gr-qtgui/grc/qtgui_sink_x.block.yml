@@ -110,7 +110,7 @@ asserts:
 
 templates:
     imports: |-
-        import sip
+        from qtpy import sip
     callbacks:
     - set_frequency_range(${fc}, ${bw})
     make: |-
