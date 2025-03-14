@@ -53,7 +53,7 @@ outputs:
 
 templates:
     imports: |-
-        import sip
+        from qtpy import sip
     make: |-
         <%
             win = 'self._%s_win'%id
