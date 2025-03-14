@@ -323,7 +323,7 @@ inputs:
 
 templates:
     imports: |-
-        import sip
+        from qtpy import sip
         import numpy
     make: |-
         <%

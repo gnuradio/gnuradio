@@ -50,7 +50,7 @@ templates:
         ${win} = Qt.QCheckBox("${no_quotes(label,repr(id))}")
         self._${id}_choices = {True: ${true}, False: ${false}}
         self._${id}_choices_inv = dict((v,k) for k,v in self._${id}_choices.items())
-        self._${id}_callback = lambda i: Qt.QMetaObject.invokeMethod(${win}, "setChecked", Qt.Q_ARG("bool", self._${id}_choices_inv[i]))
+        self._${id}_callback = lambda i: QtCore.QMetaObject.invokeMethod(${win}, "setChecked", QtCore.Q_ARG("bool", self._${id}_choices_inv[i]))
         self._${id}_callback(self.${id})
         ${win}.stateChanged.connect(lambda i: self.set_${id}(self._${id}_choices[bool(i)]))
         ${gui_hint() % win}

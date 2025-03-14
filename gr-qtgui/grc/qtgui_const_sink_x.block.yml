@@ -395,7 +395,7 @@ inputs:
 
 templates:
     imports: |-
-        import sip
+        from qtpy import sip
     callbacks:
     - set_update_time(${update_time})
     - self.${id}.set_trigger_mode(${tr_mode}, ${tr_slope}, ${tr_level}, ${tr_chan},

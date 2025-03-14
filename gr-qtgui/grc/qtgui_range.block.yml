@@ -64,7 +64,7 @@ asserts:
 - ${start <= stop}
 
 templates:
-    imports: from PyQt5 import QtCore
+    imports: from qtpy import QtCore
     var_make: self.${id} = ${id} = ${value}
     callbacks:
     - self.set_${id}(${value})

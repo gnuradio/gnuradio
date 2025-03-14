@@ -14,7 +14,7 @@
 from gnuradio import gr
 
 def check_set_qss():
-    app = QtWidgets.qApp
+    app = QtWidgets.QApplication
     qssfile = gr.prefs().get_string("qtgui", "qss", "")
     if(len(qssfile) > 0):
         try:

@@ -8,7 +8,7 @@
 ########################################################################
 # Setup the QT file generations stuff
 ########################################################################
-
+message(STATUS "QT_DEFAULT_VERSION " ${QT_DEFAULT_MAJOR_VERSION})
 set(QTGUI_SOURCES
     DisplayPlot.cc
     FrequencyDisplayPlot.cc
@@ -217,5 +217,9 @@ if(MSVC)
 endif(MSVC)
 
 if(BUILD_SHARED_LIBS)
-    gr_library_foo(gnuradio-qtgui qwt::qwt Qt5::Widgets)
+    if(QT_DEFAULT_MAJOR_VERSION EQUAL 5)
+        gr_library_foo(gnuradio-qtgui qwt::qwt Qt5Widgets)
+    elseif(QT_DEFAULT_MAJOR_VERSION EQUAL 6)
+        gr_library_foo(gnuradio-qtgui qwt::qwt Qt6Widgets)
+    endif()
 endif()

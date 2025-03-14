@@ -10,7 +10,7 @@
 #
 
 import sys
-from qtpy.QtCore import Qt
+from qtpy.QtCore import Qt, QRect
 from qtpy.QtWidgets import QFrame, QHBoxLayout, QVBoxLayout, QLabel
 from qtpy.QtGui import QPainter, QColor, QPen, QFont, QFontMetricsF
 
@@ -133,7 +133,7 @@ class DialGauge(QFrame):
         startAngle = int(round(self.startAngle * self.degScaler, 0))
         endAngle = int(round(endAngle * self.degScaler, 0))
 
-        rect = QtCore.QRect(self.halfPenWidth, self.halfPenWidth, size.width() - self.penWidth,
+        rect = QRect(self.halfPenWidth, self.halfPenWidth, size.width() - self.penWidth,
                             size.height() - self.penWidth)
 
         # Set up the painting canvass

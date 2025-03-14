@@ -177,7 +177,7 @@ templates:
             radio_button = Qt.QRadioButton(_label)
             self._${id}_box.addWidget(radio_button)
             self._${id}_button_group.addButton(radio_button, i)
-        self._${id}_callback = lambda i: Qt.QMetaObject.invokeMethod(self._${id}_button_group, "updateButtonChecked", Qt.Q_ARG("int", self._${id}_options.index(i)))
+        self._${id}_callback = lambda i: QtCore.QMetaObject.invokeMethod(self._${id}_button_group, "updateButtonChecked", QtCore.Q_ARG("int", self._${id}_options.index(i)))
         self._${id}_callback(self.${id})
         self._${id}_button_group.buttonClicked[int].connect(
             lambda i: self.set_${id}(self._${id}_options[i]))
