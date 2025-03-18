@@ -73,7 +73,7 @@ cpp_templates:
           ${win}->setCheckState(Qt::Checked);
       }
 
-      QObject::connect(${win},&QCheckBox::stateChanged, this, [this] () {this->set_${id}(_${id}_values[${win}->checkState()/2]);});
+      QObject::connect(${win},&QCheckBox::checkStateChanged, this, [this] () {this->set_${id}(_${id}_values[${win}->checkState()/2]);});
 
       ${gui_hint() % win}
 documentation: |-
