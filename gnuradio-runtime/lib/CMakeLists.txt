@@ -141,7 +141,7 @@ target_link_libraries(
 
 target_include_directories(
     gnuradio-runtime
-    PUBLIC $<INSTALL_INTERFACE:include>
+    PUBLIC $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>
            $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/../include>
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
@@ -263,7 +263,7 @@ if(WIN32)
 endif(WIN32)
 
 #need to link with librt on ubuntu 11.10 and Hurd for shm_*
-if((LINUX) OR (CMAKE_SYSTEM_NAME MATCHES "^(kFreeBSD|GNU)$"))
+if(CMAKE_SYSTEM_NAME MATCHES "^(Linux|kFreeBSD|GNU)$")
     target_link_libraries(gnuradio-runtime PUBLIC rt)
 endif()
 

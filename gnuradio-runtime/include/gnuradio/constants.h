@@ -17,17 +17,17 @@
 namespace gr {
 
 /*!
- * \brief return SYSCONFDIR. Typically ${CMAKE_INSTALL_PREFIX}/etc or /etc
+ * \brief return GR_CONF_DIR. Typically ${CMAKE_INSTALL_PREFIX}/etc or /etc
  */
 GR_RUNTIME_API const std::string prefix();
 
 /*!
- * \brief return SYSCONFDIR. Typically ${CMAKE_INSTALL_PREFIX}/etc or /etc
+ * \brief return GR_CONF_DIR. Typically ${CMAKE_INSTALL_PREFIX}/etc or /etc
  */
 GR_RUNTIME_API const std::string sysconfdir();
 
 /*!
- * \brief return preferences file directory. Typically ${SYSCONFDIR}/etc/conf.d
+ * \brief return preferences file directory. Typically ${GR_CONF_DIR}/gnuradio/conf.d
  */
 GR_RUNTIME_API const std::string prefsdir();
 

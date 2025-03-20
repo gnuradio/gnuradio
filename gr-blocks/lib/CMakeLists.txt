@@ -180,7 +180,7 @@ if(SNDFILE_FOUND)
 endif()
 
 target_include_directories(
-    gnuradio-blocks PUBLIC $<INSTALL_INTERFACE:include>
+    gnuradio-blocks PUBLIC $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
                            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>)
 
 set_source_files_properties(file_source_impl.cc PROPERTIES SKIP_PRECOMPILE_HEADERS ON
