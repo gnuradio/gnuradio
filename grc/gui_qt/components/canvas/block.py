@@ -111,16 +111,16 @@ class GUIBlock(QGraphicsItem):
         self.font.setBold(True)
 
         # figure out height of block based on how many params there are
-        i = 35
+        self.height = 35
+        if self.core.is_dummy_block:
+            self.height += 20
+        else:
+            for key, item in self.core.params.items():
+                value = item.value
+                if (value is not None and item.hide == "none") or (item.dtype == 'id' and self.force_show_id):
+                    self.height += 20
 
         # Check if we need to increase the height to fit all the ports
-        for key, item in self.core.params.items():
-            value = item.value
-            if (value is not None and item.hide == "none") or (item.dtype == 'id' and self.force_show_id):
-                i += 20
-
-        self.height = i
-
         def get_min_height_for_ports(ports):
             min_height = (
                 2 * Constants.PORT_BORDER_SEPARATION +
@@ -151,18 +151,23 @@ class GUIBlock(QGraphicsItem):
         # Figure out width of block based on widest line of text
         fm = QFontMetrics(self.font)
         largest_width = fm.width(self.core.label)
-        for key, item in self.core.params.items():
-            name = item.name
-            value = item.value
-            if (value is not None and item.hide == "none") or (item.dtype == 'id' and self.force_show_id):
-                if len(value) > LONG_VALUE:
-                    value = value[:LONG_VALUE - 3] + '...'
+        if self.core.is_dummy_block:
+            full_line = "key: " + self.core.key
+            if fm.width(full_line) > largest_width:
+                largest_width = fm.width(full_line)
+        else:
+            for key, item in self.core.params.items():
+                name = item.name
+                value = item.value
+                if (value is not None and item.hide == "none") or (item.dtype == 'id' and self.force_show_id):
+                    if len(value) > LONG_VALUE:
+                        value = value[:LONG_VALUE - 3] + '...'
 
-                value_label = item.options[value] if value in item.options else value
-                full_line = name + ": " + value_label
+                    value_label = item.options[value] if value in item.options else value
+                    full_line = name + ": " + value_label
 
-                if fm.width(full_line) > largest_width:
-                    largest_width = fm.width(full_line)
+                    if fm.width(full_line) > largest_width:
+                        largest_width = fm.width(full_line)
         self.width = largest_width + 15
 
         self.markups = []
@@ -299,65 +304,90 @@ class GUIBlock(QGraphicsItem):
 
         # Draw param text
         y_offset = 30  # params start 30 down from the top of the box
-        for key, item in self.core.params.items():
-            name = item.name
-            value = item.value
-            is_evaluated = item.value != str(item.get_evaluated())
 
-            display_value = ""
-
-            # Include the value defined by the user (after evaluation)
-            if not is_evaluated or self.show_param_val or not self.show_param_expr:
-                display_value += item.options[value] if value in item.options else value  # TODO: pretty_print
-
-            # Include the expression that was evaluated to get the value
-            if is_evaluated and self.show_param_expr:
-                expr_string = value  # TODO: Truncate
-
-                if display_value:  # We are already displaying the value
-                    display_value = expr_string + "=" + display_value
-                else:
-                    display_value = expr_string
-
-            if len(display_value) > LONG_VALUE:
-                display_value = display_value[:LONG_VALUE - 3] + '...'
-
-            value_label = display_value
-            if (value is not None and item.hide == "none") or (item.dtype == 'id' and self.force_show_id):
-                if item.is_valid():
-                    painter.setPen(QPen(1))
-                else:
-                    painter.setPen(Qt.red)
-
-                self.font.setBold(True)
-                painter.setFont(self.font)
-                painter.drawText(
-                    QRectF(7.5, 0 + y_offset, self.width, self.height),
-                    Qt.AlignLeft,
-                    name + ": ",
-                )
-                fm = QFontMetrics(self.font)
-                self.font.setBold(False)
-                painter.setFont(self.font)
-                painter.drawText(
-                    QRectF(
-                        7.5 + fm.width(name + ": "),
-                        0 + y_offset,
-                        self.width,
-                        self.height,
-                    ),
-                    Qt.AlignLeft,
-                    value_label,
-                )
-                y_offset += 20
-
-        if self.markup_text:
-            painter.setPen(Qt.gray)
+        if self.core.is_dummy_block:
+            painter.setPen(QPen(1))
+            self.font.setBold(True)
+            painter.setFont(self.font)
             painter.drawText(
-                QRectF(0, self.height + 5, self.markups_width, self.markups_height),
+                QRectF(7.5, 0 + y_offset, self.width, self.height),
                 Qt.AlignLeft,
-                self.markup_text,
+                "key: ",
             )
+            fm = QFontMetrics(self.font)
+            self.font.setBold(False)
+            painter.setFont(self.font)
+            painter.drawText(
+                QRectF(
+                    7.5 + fm.width("key: "),
+                    0 + y_offset,
+                    self.width,
+                    self.height,
+                ),
+                Qt.AlignLeft,
+                self.core.key,
+            )
+            y_offset += 20
+        else:
+            for key, item in self.core.params.items():
+                name = item.name
+                value = item.value
+                is_evaluated = item.value != str(item.get_evaluated())
+
+                display_value = ""
+
+                # Include the value defined by the user (after evaluation)
+                if not is_evaluated or self.show_param_val or not self.show_param_expr:
+                    display_value += item.options[value] if value in item.options else value  # TODO: pretty_print
+
+                # Include the expression that was evaluated to get the value
+                if is_evaluated and self.show_param_expr:
+                    expr_string = value  # TODO: Truncate
+
+                    if display_value:  # We are already displaying the value
+                        display_value = expr_string + "=" + display_value
+                    else:
+                        display_value = expr_string
+
+                if len(display_value) > LONG_VALUE:
+                    display_value = display_value[:LONG_VALUE - 3] + '...'
+
+                value_label = display_value
+                if (value is not None and item.hide == "none") or (item.dtype == 'id' and self.force_show_id) or self.core.is_dummy_block:
+                    if item.is_valid():
+                        painter.setPen(QPen(1))
+                    else:
+                        painter.setPen(Qt.red)
+
+                    self.font.setBold(True)
+                    painter.setFont(self.font)
+                    painter.drawText(
+                        QRectF(7.5, 0 + y_offset, self.width, self.height),
+                        Qt.AlignLeft,
+                        name + ": ",
+                    )
+                    fm = QFontMetrics(self.font)
+                    self.font.setBold(False)
+                    painter.setFont(self.font)
+                    painter.drawText(
+                        QRectF(
+                            7.5 + fm.width(name + ": "),
+                            0 + y_offset,
+                            self.width,
+                            self.height,
+                        ),
+                        Qt.AlignLeft,
+                        value_label,
+                    )
+                    y_offset += 20
+
+            if self.markup_text:
+                painter.setPen(Qt.gray)
+                painter.drawText(
+                    QRectF(0, self.height + 5, self.markups_width, self.markups_height),
+                    Qt.AlignLeft,
+                    self.markup_text,
+                )
 
     def boundingRect(self):
         # TODO: Comments should be a separate QGraphicsItem
