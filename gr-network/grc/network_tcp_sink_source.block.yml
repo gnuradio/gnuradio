@@ -1,0 +1,58 @@
+id: network_tcp_sink_source
+label: TCP Sink Source
+category: '[Core]/Networking Tools'
+flags: [ throttle ]
+
+parameters:
+  -   id: type
+      label: IO Type
+      dtype: enum
+      options: [complex, float, int, short, byte]
+      option_attributes:
+        size: [gr.sizeof_gr_complex, gr.sizeof_float, gr.sizeof_int, gr.sizeof_short,
+               gr.sizeof_char]
+      hide: part
+  -   id: addr
+      label: Address
+      dtype: string
+      default: 127.0.0.1
+  -   id: port
+      label: Port
+      dtype: int
+      default: '2000'
+  -   id: server
+      label: Mode
+      dtype: enum
+      default: 'True'
+      options: [ 'True', 'False' ]
+      option_labels: [ Server, Client ]
+  -   id: mtu
+      label: MTU
+      dtype: int
+      default: '1024'
+  -   id: vlen
+      label: Vector Length
+      dtype: int
+      default: '1'
+      hide: ${ 'part' if vlen == 1 else 'none' }
+
+inputs:
+  -   domain: stream
+      dtype: ${ type }
+      vlen: ${ vlen }
+
+outputs:
+  -   domain: stream
+      dtype: ${ type }
+      vlen: ${ vlen }
+
+templates:
+  imports: from gnuradio import network
+  make: network.tcp_sink_source(itemsize=${type.size}*${vlen},addr=${addr},port=${port},server=${server},mtu=${mtu})
+
+asserts:
+  - ${ vlen > 0 }
+
+#  'file_format' specifies the version of the GRC yml format used in the file
+#  and should usually not be changed.
+file_format: 1

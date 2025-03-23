@@ -17,7 +17,7 @@ endif()
 ########################################################################
 # Install python sources
 ########################################################################
-gr_python_install(FILES __init__.py tcp_source.py
+gr_python_install(FILES __init__.py tcp_source.py tcp_sink_source.py
                   DESTINATION ${GR_PYTHON_DIR}/gnuradio/network)
 
 ########################################################################
