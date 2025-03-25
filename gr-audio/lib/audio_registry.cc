@@ -10,11 +10,26 @@
 #include "audio_registry.h"
 #include <gnuradio/logger.h>
 #include <gnuradio/prefs.h>
+#include <unordered_map>
 #include <stdexcept>
+#include <string>
 #include <vector>
 
 namespace gr {
 namespace audio {
+namespace details {
+static const std::unordered_map<std::string, reg_prio_type> arch_prios{
+    /* good native architectures */
+    { "alsa", REG_PRIO_HIGH },
+    { "osx", REG_PRIO_HIGH },
+    /* all-purpose cross-platform architectures */
+    { "portaudio", REG_PRIO_MED },
+    { "jack", REG_PRIO_MED },
+    /* old / little-used / bad / worse platform-specific architectures */
+    { "oss", REG_PRIO_LOW },
+    { "windows", REG_PRIO_LOW }
+};
+} // namespace details
 
 /***********************************************************************
  * Create registries
@@ -22,101 +37,64 @@ namespace audio {
 
 static std::vector<source_entry_t>& get_source_registry(void)
 {
-    static bool src_reg = false;
-    static std::vector<source_entry_t> s_registry;
-
-    if (!src_reg) {
+    static std::vector<source_entry_t> s_registry = {
 #ifdef ALSA_FOUND
-        s_registry.push_back(register_source(REG_PRIO_HIGH, "alsa", alsa_source_fcn));
+        { details::arch_prios.at("alsa"), "alsa", alsa_source_fcn },
 #endif /* ALSA_FOUND */
 
 #ifdef OSS_FOUND
-        s_registry.push_back(register_source(REG_PRIO_LOW, "oss", oss_source_fcn));
+        { details::arch_prios.at("oss"), "oss", oss_source_fcn },
 #endif /* OSS_FOUND */
 
 #ifdef PORTAUDIO_FOUND
-        s_registry.push_back(
-            register_source(REG_PRIO_MED, "portaudio", portaudio_source_fcn));
+        { details::arch_prios.at("portaudio"), "portaudio", portaudio_source_fcn },
 #endif /* PORTAUDIO_FOUND */
 
 #ifdef JACK_FOUND
-        s_registry.push_back(register_source(REG_PRIO_MED, "jack", jack_source_fcn));
+        { details::arch_prios.at("jack"), "jack", jack_source_fcn },
 #endif /* JACK_FOUND */
 
 #ifdef OSX_FOUND
-        s_registry.push_back(register_source(REG_PRIO_HIGH, "osx", osx_source_fcn));
+        { details::arch_prios.at("osx"), "osx", osx_source_fcn },
 #endif /* OSX_FOUND */
 
 #ifdef WIN32_FOUND
-        s_registry.push_back(
-            register_source(REG_PRIO_LOW, "windows", windows_source_fcn));
+        { details::arch_prios.at("windows"), "windows", windows_source_fcn },
 #endif /* WIN32_FOUND */
-
-        src_reg = true;
-    }
-
+    };
 
     return s_registry;
-}
+} // namespace audio
 
 static std::vector<sink_entry_t>& get_sink_registry(void)
 {
-    static bool snk_reg = false;
-    static std::vector<sink_entry_t> s_registry;
-
-    if (!snk_reg) {
-#if ALSA_FOUND
-        s_registry.push_back(register_sink(REG_PRIO_HIGH, "alsa", alsa_sink_fcn));
+    static std::vector<sink_entry_t> s_registry = {
+#ifdef ALSA_FOUND
+        { details::arch_prios.at("alsa"), "alsa", alsa_sink_fcn },
 #endif /* ALSA_FOUND */
 
-#if OSS_FOUND
-        s_registry.push_back(register_sink(REG_PRIO_LOW, "oss", oss_sink_fcn));
+#ifdef OSS_FOUND
+        { details::arch_prios.at("oss"), "oss", oss_sink_fcn },
 #endif /* OSS_FOUND */
 
-#if PORTAUDIO_FOUND
-        s_registry.push_back(
-            register_sink(REG_PRIO_MED, "portaudio", portaudio_sink_fcn));
+#ifdef PORTAUDIO_FOUND
+        { details::arch_prios.at("portaudio"), "portaudio", portaudio_sink_fcn },
 #endif /* PORTAUDIO_FOUND */
 
-#if JACK_FOUND
-        s_registry.push_back(register_sink(REG_PRIO_MED, "jack", jack_sink_fcn));
+#ifdef JACK_FOUND
+        { details::arch_prios.at("jack"), "jack", jack_sink_fcn },
 #endif /* JACK_FOUND */
 
 #ifdef OSX_FOUND
-        s_registry.push_back(register_sink(REG_PRIO_HIGH, "osx", osx_sink_fcn));
+        { details::arch_prios.at("osx"), "osx", osx_sink_fcn },
 #endif /* OSX_FOUND */
 
 #ifdef WIN32_FOUND
-        s_registry.push_back(register_sink(REG_PRIO_HIGH, "windows", windows_sink_fcn));
+        { details::arch_prios.at("windows"), "windows", windows_sink_fcn },
 #endif /* WIN32_FOUND */
-
-        snk_reg = true;
-    }
+    };
 
     return s_registry;
-}
-
-/***********************************************************************
- * Register functions
- **********************************************************************/
-source_entry_t
-register_source(reg_prio_type prio, const std::string& arch, source_factory_t source)
-{
-    source_entry_t entry;
-    entry.prio = prio;
-    entry.arch = arch;
-    entry.source = source;
-    return entry;
-}
-
-sink_entry_t
-register_sink(reg_prio_type prio, const std::string& arch, sink_factory_t sink)
-{
-    sink_entry_t entry;
-    entry.prio = prio;
-    entry.arch = arch;
-    entry.sink = sink;
-    return entry;
 }
 
 /***********************************************************************
@@ -189,5 +167,5 @@ sink::sptr sink::make(int sampling_rate, const std::string device_name, bool ok_
     return entry.sink(sampling_rate, device_name, ok_to_block);
 }
 
-} /* namespace audio */
+} // namespace audio
 } /* namespace gr */
