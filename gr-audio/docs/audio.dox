@@ -94,23 +94,7 @@ registration list in gr-audio/lib/audio_registry.cc and
 audio_registry.h files. Select the appropriate registry priority, HIGH
 if you want this to be the default when using 'auto'. For Linux audio
 systems, we generally want to default to ALSA, fall back on OSS, but
-have other machine interfaces defined as MED priority. For example, in
-the .cc file for ALSA, OSS, and PortAudio:
-
-\code
-    #ifdef ALSA_FOUND
-            s_registry.push_back(register_source(REG_PRIO_HIGH, "alsa", alsa_source_fcn));
-    #endif /* ALSA_FOUND */
-
-    #ifdef OSS_FOUND
-            s_registry.push_back(register_source(REG_PRIO_LOW, "oss", oss_source_fcn));
-    #endif /* OSS_FOUND */
-
-    #ifdef PORTAUDIO_FOUND
-            s_registry.push_back(register_source(REG_PRIO_MED, "portaudio", portaudio_source_fcn));
-    #endif /* PORTAUDIO_FOUND */
-\endcode
-
+have other machine interfaces defined as MED priority.
 
 5. Follow the examples in the gr-audio/lib/CMakeLists.txt file for the
 different machine types to add the new one, including the
