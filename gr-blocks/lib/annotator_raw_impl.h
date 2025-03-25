@@ -13,6 +13,9 @@
 
 #include <gnuradio/blocks/annotator_raw.h>
 #include <gnuradio/thread/thread.h>
+#include <type_traits>
+#include <set>
+#include <tuple>
 
 namespace gr {
 namespace blocks {
@@ -20,9 +23,29 @@ namespace blocks {
 class annotator_raw_impl : public annotator_raw
 {
 private:
-    const size_t d_itemsize;
-    std::vector<tag_t> d_queued_tags;
+    struct tag_comparator {
+        using is_transparent = std::true_type;
+        //!\brief comparator over all fields in a tag, not just the offset
+        constexpr bool operator()(const tag_t& l, const tag_t& r) const
+        {
+            return std::tie(l.offset, l.key, l.value, l.srcid) <
+                   std::tie(r.offset, r.key, r.value, r.srcid);
+        }
+        constexpr bool operator()(const tag_t& l,
+                                  const decltype(tag_t::offset)& r_offset) const
+        {
+            return l.offset < r_offset;
+        }
+        constexpr bool operator()(const decltype(tag_t::offset)& l_offset,
+                                  const tag_t& r) const
+        {
+            return l_offset < r.offset;
+        }
+    };
+    using tag_container = std::set<tag_t, tag_comparator>;
+    tag_container d_queued_tags;
     gr::thread::mutex d_mutex;
+    const size_t d_itemsize;
 
 public:
     annotator_raw_impl(size_t sizeof_stream_item);
