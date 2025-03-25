@@ -34,11 +34,6 @@ struct sink_entry_t {
     sink_factory_t sink;
 };
 
-source_entry_t
-register_source(reg_prio_type prio, const std::string& arch, source_factory_t source);
-sink_entry_t
-register_sink(reg_prio_type prio, const std::string& arch, sink_factory_t sink);
-
 #ifdef ALSA_FOUND
 source::sptr
 alsa_source_fcn(int sampling_rate, const std::string& device_name, bool ok_to_block);
