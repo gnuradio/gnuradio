@@ -7,6 +7,7 @@
 
 import sys
 import textwrap
+import glob
 
 from gi.repository import Gtk, GLib, Gdk, Gio
 
@@ -407,7 +408,8 @@ def choose_editor(parent, config):
     """
     Give the option to either choose an editor or use the default.
     """
-    content_type = Gio.content_type_from_mime_type("text/x-python")
+    mime = "text/x-python-script" if sys.platform == "darwin" else "text/x-python"
+    content_type = Gio.content_type_from_mime_type(mime)
     if content_type == "*":
         # fallback to plain text on Windows if no useful x-python association
         content_type = Gio.content_type_from_mime_type("text/plain")
@@ -427,6 +429,15 @@ def choose_editor(parent, config):
     response = dialog.run()
     if response == Gtk.ResponseType.OK:
         appinfo = dialog.get_app_info()
-        editor = config.editor = appinfo.get_executable()
+        editor = config.editor = execpath(appinfo.get_executable())
     dialog.destroy()
     return editor
+
+
+def execpath(fname):
+    # for macos, search the Application directory for the fullpath
+    if sys.platform == "darwin":
+        found_paths = glob.glob("/Applications/*/Contents/MacOS/" + fname)
+        if found_paths:
+            return found_paths[0]
+    return fname
