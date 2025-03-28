@@ -56,10 +56,17 @@ def main(args=None):
         os.path.exists(grc_file) or exit('Error: missing ' + grc_file)
         Messages.send('\n')
         platform.config.hier_block_lib_dir = output_dir
-        flow_graph, file_path = platform.load_and_generate_flow_graph(
+        flow_graph, generator = platform.load_and_generate_flow_graph(
             os.path.abspath(grc_file), os.path.abspath(output_dir))
-        if not file_path:
+        if flow_graph is None and generator is None:
+            exit('Error: Failed to load ' + grc_file)
+        if generator is None:
+            exit("Error: Failed to create generator")
+        if not generator.file_path:
             exit('Compilation error')
-    if file_path and args.run:
-        run_command_args = flow_graph.get_run_command(file_path, split=True)
-        subprocess.call(run_command_args)
+    if generator.file_path and args.run:
+        run_command_args = generator.get_exec_args()
+        args = run_command_args.pop("args")
+        run_command_args.pop("stdout", None)
+        run_command_args.pop("stderr", None)
+        subprocess.run(args=args, **run_command_args)

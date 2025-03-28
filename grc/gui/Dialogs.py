@@ -7,11 +7,10 @@
 
 import sys
 import textwrap
-from shutil import which as find_executable
 
 from gi.repository import Gtk, GLib, Gdk, Gio
 
-from . import Utils, Actions, Constants
+from . import Actions, Constants, Utils
 from ..core import Messages
 from ..core.utils.system import get_modifier_key
 

@@ -100,6 +100,11 @@ def send_auto_gen(file_path):
     send('>>> Generating: "%s"\n' % file_path)
 
 
+def send_verbose_gen(verbose):
+    """Send an arbitrary message during generation."""
+    send(verbose)
+
+
 def send_fail_gen(error):
     send('Generate Error: %s\n>>> Failure\n' % error)
     traceback.print_exc()
