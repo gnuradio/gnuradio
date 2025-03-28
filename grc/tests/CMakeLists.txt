@@ -15,8 +15,12 @@ if(ENABLE_TESTING)
     )
 
     if(PYTEST_FOUND)
-        set(GR_TEST_ENVIRONS "GRC_BLOCKS_PATH=\"${CMAKE_CURRENT_SOURCE_DIR}/../blocks\"")
-        GR_ADD_TEST(grc_tests ${QA_PYTHON_EXECUTABLE} -B -m pytest --ignore ${CMAKE_CURRENT_SOURCE_DIR}/test_qtbot.py ${CMAKE_CURRENT_SOURCE_DIR} -m \"not examples\")
+        execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/state)
+        set(GR_TEST_ENVIRONS
+            "GRC_PREFS_PATH=\"${CMAKE_CURRENT_SOURCE_DIR}\""
+            "GRC_BLOCKS_PATH=\"${CMAKE_CURRENT_SOURCE_DIR}/../blocks\""
+            "GRC_HIER_PATH=\"${CMAKE_CURRENT_BINARY_DIR}/state\"")
+        GR_ADD_TEST(grc_tests ${QA_PYTHON_EXECUTABLE} -B -m pytest --ignore ${CMAKE_CURRENT_SOURCE_DIR}/test_qtbot.py ${CMAKE_CURRENT_SOURCE_DIR} -m \"not examples\" --log-cli-level=DEBUG)
         # To run the grcc tests over examples manually, run
         # python3 -B -m pytest gnuradio/grc/tests -m "examples"
     endif()

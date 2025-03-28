@@ -6,9 +6,6 @@ SPDX-License-Identifier: GPL-2.0-or-later
 
 """
 
-
-from sys import platform
-import os
 import numbers
 
 from gi.repository import GLib
