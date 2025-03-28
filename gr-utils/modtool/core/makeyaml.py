@@ -19,7 +19,7 @@ from collections import OrderedDict
 
 try:
     from yaml import CLoader as Loader, CDumper as Dumper
-except:
+except ImportError:
     from yaml import Loader, Dumper
 
 try:
@@ -77,13 +77,14 @@ class ModToolMakeYAML(ModTool):
             "Warning: This is an experimental feature. Don't expect any magic.")
         # 1) Go through lib/
         if not self.skip_subdirs['lib']:
-            if self.info['version'] in ('37', '38', '310'):
-                files = self._search_files('lib', '*_impl.cc')
-            else:
-                files = self._search_files('lib', '*.cc')
+            files = [
+                f
+                for f in glob.glob1(self.subdirs["lib"], "*.cc")
+                if re.fullmatch(rf"^(?!qa_)({self.info['pattern']})", f) is not None
+            ]
+            if len(files) == 0:
+                logger.info("None found.")
             for f in files:
-                if os.path.basename(f)[0:2] == 'qa':
-                    continue
                 (params, iosig, blockname) = self._parse_cc_h(f)
                 self._make_grc_yaml_from_block_data(params, iosig, blockname)
         # 2) Go through python/
@@ -225,7 +226,7 @@ def yaml_generator(self, **kwargs):
     label = header.split('_')
     del label[-1]
     yml_file = os.path.join('.', block + '_' + header + '.block.yml')
-    _header = (('id', f'{block}_{ header}'),
+    _header = (('id', f'{block}_{header}'),
                ('label', ' '.join(label).upper()),
                ('category', f'[{block.capitalize()}]'),
                ('flags', '[python, cpp]')
@@ -234,7 +235,7 @@ def yaml_generator(self, **kwargs):
         '${' + s['name'] + '}' for s in self.parsed_data['properties'] if self.parsed_data['properties']]
     str_ = ', '.join(params_list)
     _templates = [('imports', f'from gnuradio import {block}'),
-                  ('make', f'{block}.{ header}({str_})')
+                  ('make', f'{block}.{header}({str_})')
                   ]
 
     if self.parsed_data['methods']:
@@ -332,7 +333,7 @@ def yaml_generator(self, **kwargs):
     if output_signature:
         data['outputs'] = output_signature
 
-    param_ = ', '.join(params_list)
+    _param = ', '.join(params_list)
     _cpp_templates = [('includes', '#include <gnuradio/{block}/{self.filename}>'),
                       ('declarations', '{block}::{ header}::sptr ${{id}}'),
                       ('make',
