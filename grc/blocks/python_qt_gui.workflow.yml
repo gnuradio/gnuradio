@@ -1,5 +1,5 @@
 id: python_qt_gui_workflow
-description: "python qt gui workflow"
+description: "Python Qt GUI workflow"
 output_language: python
 output_language_label: Python
 generator_module: gnuradio.grc.workflows.python_qt_gui

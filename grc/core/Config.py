@@ -8,7 +8,6 @@ SPDX-License-Identifier: GPL-2.0-or-later
 import os
 from os.path import expanduser, normpath, expandvars, exists
 from collections import OrderedDict
-from gnuradio import gr
 
 from ..main import get_state_directory, get_config_file_path
 from . import Constants

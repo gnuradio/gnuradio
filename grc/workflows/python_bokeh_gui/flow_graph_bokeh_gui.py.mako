@@ -226,7 +226,7 @@ def main(top_block_cls=${class_name}, options=None):
         ${'snippets_main_after_start(tb)' if snippets['main_after_start'] else ''}
         bokehgui.utils.run_server(tb, sizing_mode = "${flow_graph.get_option('sizing_mode')}",  widget_placement =  ${flow_graph.get_option('placement')}, window_size =  ${flow_graph.get_option('window_size')})
     finally:
-        tb.logger.info("Exiting the simulation. Stopping Bokeh Server")
+        tb.logger.info("Exiting the flow graph. Stopping Bokeh Server")
         tb.stop()
         tb.wait()
         ${'snippets_main_after_stop(tb)' if snippets['main_after_stop'] else ''}

@@ -45,7 +45,7 @@ class Options(Block):
                  hide="${ ('none' if copyright else 'part') }",
                  ),
             dict(id='description',
-                 label='description',
+                 label='Description',
                  workflow='',
                  dtype='string',
                  default='',
@@ -186,7 +186,7 @@ class Options(Block):
 
     def parse_workflows(self) -> None:
         """
-        Read all workflow yml file
+        Read all workflow yml files
         for each workflow, use pair for output_language, generate_options and their label
         then, put it on codegen_options
 
