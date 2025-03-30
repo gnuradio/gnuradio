@@ -1,5 +1,5 @@
 id: python_hb_nogui_workflow
-description: "python hier block no gui workflow"
+description: "Python hier block no GUI workflow"
 output_language: python
 output_language_label: Python
 generator_module: gnuradio.grc.workflows.python_hb_nogui

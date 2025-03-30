@@ -17,8 +17,8 @@ version_list = config.version_parts
 short_version = '.'.join(version_list[0:2])
 %>\
 
-cmake_minimum_required(VERSION 3.8)
-set(CMAKE_CXX_STANDARD 14)
+cmake_minimum_required(VERSION 3.16)
+set(CMAKE_CXX_STANDARD 17)
 
 project(${class_name})
 

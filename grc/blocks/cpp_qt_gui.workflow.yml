@@ -1,5 +1,5 @@
 id: cpp_qt_gui_workflow
-description: "c++ qt gui workflow"
+description: "C++ Qt GUI workflow"
 output_language: cpp
 output_language_label: C++
 generator_module: gnuradio.grc.workflows.cpp_qt_gui

@@ -1,5 +1,5 @@
 id: cpp_nogui_workflow
-description: "c++ no gui workflow"
+description: "C++ no GUI workflow"
 output_language: cpp
 output_language_label: C++
 generator_module: gnuradio.grc.workflows.cpp_nogui
