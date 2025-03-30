@@ -1,5 +1,5 @@
 id: python_bokeh_gui_workflow
-description: "python bokeh gui workflow"
+description: "Python Bokeh GUI workflow"
 output_language: python
 output_language_label: Python
 generator_module: gnuradio.grc.workflows.python_bokeh_gui

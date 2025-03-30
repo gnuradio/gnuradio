@@ -1,5 +1,5 @@
 id: python_nogui_workflow
-description: "python no gui workflow"
+description: "Python no GUI workflow"
 output_language: python
 output_language_label: Python
 generator_module: gnuradio.grc.workflows.python_nogui

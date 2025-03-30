@@ -1,5 +1,5 @@
 id: python_hb_qt_gui_workflow
-description: "python hier block qt gui workflow"
+description: "Python hier block Qt GUI workflow"
 output_language: python
 output_language_label: Python
 generator_module: gnuradio.grc.workflows.python_hb_qt_gui

@@ -23,17 +23,14 @@ GNU Radio version: ${config.version}
 ${inc}
 % endfor
 
-#include <QVBoxLayout>
-#include <QScrollArea>
-#include <QWidget>
-#include <QGridLayout>
-#include <QSettings>
 #include <QApplication>
 #include <QCloseEvent>
+#include <QGridLayout>
+#include <QScrollArea>
+#include <QSettings>
+#include <QVBoxLayout>
+#include <QWidget>
 
-% if parameters:
-#include <boost/program_options.hpp>
-% endif
 
 using namespace gr;
 

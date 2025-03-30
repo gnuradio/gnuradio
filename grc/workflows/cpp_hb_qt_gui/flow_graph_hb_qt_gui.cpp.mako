@@ -18,7 +18,7 @@ GNU Radio version: ${config.version}
 % endif
 
 % if parameters:
-
+#include <boost/program_options.hpp>
 namespace po = boost::program_options;
 
 % endif
