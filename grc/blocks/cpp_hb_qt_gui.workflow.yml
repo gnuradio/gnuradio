@@ -1,5 +1,5 @@
 id: cpp_hb_qt_gui_workflow
-description: "c++ hier block qt gui workflow"
+description: "C++ hier block Qt GUI workflow"
 output_language: cpp
 output_language_label: C++
 generator_module: gnuradio.grc.workflows.cpp_hb_qt_gui

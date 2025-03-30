@@ -24,10 +24,6 @@ ${inc}
 % endfor
 
 
-% if parameters:
-#include <boost/program_options.hpp>
-% endif
-
 using namespace gr;
 
 <%
