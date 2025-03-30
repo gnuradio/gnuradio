@@ -44,8 +44,8 @@ class CppTopBlockGenerator(object):
         # In this case, use the system's temp directory
         if not os.access(output_dir, os.W_OK):
             output_dir = tempfile.gettempdir()
-        filename = self._flow_graph.get_option('id')
-        self.file_path = os.path.join(output_dir, filename)
+        self._filename = self._flow_graph.get_option('id')
+        self.file_path = os.path.join(output_dir, self._filename)
         self.output_dir = output_dir
 
     def _warnings(self):

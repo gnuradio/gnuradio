@@ -7,6 +7,7 @@ from .cpp_top_block import CppTopBlockGenerator
 
 from .. import Constants
 from ..io import yaml
+from ...main import get_state_directory
 
 
 class CppHierBlockGenerator(CppTopBlockGenerator):
@@ -28,7 +29,13 @@ class CppHierBlockGenerator(CppTopBlockGenerator):
 
         CppTopBlockGenerator.__init__(self, flow_graph, output_dir)
         self._mode = Constants.HIER_BLOCK_FILE_MODE
-        self.file_path_yml = self.file_path + '.block.yml'
+
+        # get grc hier path, for example: ~/.local/state/gnuradio
+        hier_path = os.environ.get('GRC_HIER_PATH', get_state_directory())
+        # append file name after hier path, with previous example, it would be: ~/.local/state/gnuradio/<filename>
+        hier_file_path = os.path.join(hier_path, self._filename)
+
+        self.file_path_yml = hier_file_path + '.block.yml'
 
     def write(self, _=None):
         """generate output and write it to files"""
