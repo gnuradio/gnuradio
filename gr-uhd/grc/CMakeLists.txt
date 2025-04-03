@@ -77,12 +77,9 @@ if(ENABLE_UHD_RFNOC)
         uhd_fpga_ctrl.domain.yml
         uhd_fpga_data.domain.yml
         uhd_fpga_io_axi4_mm.domain.yml
-        uhd_fpga_io_axi4_mm.domain.yml
-        uhd_fpga_io_ctrl_port.domain.yml
         uhd_fpga_io_ctrl_port.domain.yml
         uhd_fpga_io_gpio.domain.yml
         uhd_fpga_io_radio.domain.yml
-        uhd_fpga_io_time_keeper.domain.yml
         uhd_fpga_io_time_keeper.domain.yml
         uhd_fpga_io_xport.domain.yml
         DESTINATION ${GRC_BLOCKS_DIR})
