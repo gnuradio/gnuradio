@@ -59,6 +59,8 @@ set(QTGUI_SOURCES
     vectordisplayform.cc
     vector_sink_f_impl.cc
     edit_box_msg_impl.cc
+    matrix_display.cc
+    matrix_sink_impl.cc
 )
 
 set(QTGUI_LIBS
@@ -115,7 +117,17 @@ qt5_wrap_cpp(
     ${qtgui_mod_includedir}/ConstellationDisplayPlot.h
     ${qtgui_mod_includedir}/HistogramDisplayPlot.h
     ${qtgui_mod_includedir}/VectorDisplayPlot.h
-    edit_box_msg_impl.h)
+    edit_box_msg_impl.h
+    matrix_display.h
+    matrix_display_signal.h
+    )
+if(ENABLE_GR_QTGUI_OPENGL)
+    qt5_wrap_cpp(
+        qtgui_moc_sources
+        QFosphorSurface.h
+        QFosphorColorMapper.h
+        )
+endif()
 target_sources(gnuradio-qtgui PRIVATE ${qtgui_moc_sources})
 qt5_wrap_ui(qtgui_ui_hdrs spectrumdisplayform.ui)
 target_sources(gnuradio-qtgui PRIVATE ${qtgui_ui_hdrs})
