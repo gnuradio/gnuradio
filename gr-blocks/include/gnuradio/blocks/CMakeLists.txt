@@ -119,6 +119,7 @@ install(
           peak_detector2_fb.h
           plateau_detector_fb.h
           probe_rate.h
+          recast.h
           regenerate_bb.h
           repack_bits_bb.h
           repeat.h

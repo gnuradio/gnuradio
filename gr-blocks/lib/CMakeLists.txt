@@ -130,6 +130,7 @@ set(BLOCKS_SOURCES
     peak_detector2_fb_impl.cc
     plateau_detector_fb_impl.cc
     probe_rate_impl.cc
+    recast_impl.cc
     regenerate_bb_impl.cc
     repack_bits_bb_impl.cc
     repeat_impl.cc

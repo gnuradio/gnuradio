@@ -1,0 +1,43 @@
+id: blocks_recast
+label: Reinterpret Cast
+flags: [ python, cpp ]
+
+parameters:
+-   id: input_type
+    label: Input type
+    dtype: enum
+    options: [complex, float, int, short, byte]
+    option_attributes:
+        size: [gr.sizeof_gr_complex, gr.sizeof_float, gr.sizeof_int, gr.sizeof_short,
+            gr.sizeof_char]
+    hide: part
+
+-   id: output_type
+    label: Output type
+    dtype: enum
+    options: [complex, float, int, short, byte]
+    option_attributes:
+        size: [gr.sizeof_gr_complex, gr.sizeof_float, gr.sizeof_int, gr.sizeof_short,
+            gr.sizeof_char]
+    hide: part
+
+inputs:
+-   domain: stream
+    dtype: ${ input_type }
+
+outputs:
+-   domain: stream
+    dtype: ${ output_type }
+
+templates:
+    imports: from gnuradio import blocks
+    make: |-
+        blocks.recast(${input_type.size}, ${output_type.size})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/recast.h>']
+    declarations: 'blocks::recast::sptr ${id};'
+    make: |-
+        this->${id} = blocks::recast::make(${input_type.size}, ${output_type.size});
+
+file_format: 1
