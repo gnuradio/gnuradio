@@ -1105,7 +1105,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
             self.app.VariableEditor.set_scene(self.currentFlowgraphScene)
         self.updateActions()
 
-    def close_triggered(self, tab_index=None) -> Union[str, bool]:
+    def close_triggered(self, tab_index=False) -> Union[str, bool]:
         """
         Closes a tab.
 
@@ -1118,7 +1118,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         log.debug(f"Closing a tab (index {tab_index})")
 
         file_path = self.currentFlowgraphScene.filename
-        if tab_index is None:
+        if tab_index == False:
             tab_index = self.tabWidget.currentIndex()
 
         if self.currentFlowgraphScene.saved:
