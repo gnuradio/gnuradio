@@ -114,6 +114,12 @@ socket_pdu_impl::socket_pdu_impl(std::string type,
     } else if (type == "UDP_SERVER") {
         d_udp_socket =
             std::make_shared<asio::ip::udp::socket>(d_io_context, d_udp_endpoint);
+        if (d_udp_endpoint.address().is_multicast()) {
+            {
+                asio::ip::multicast::join_group option(d_udp_endpoint.address());
+                d_udp_socket->set_option(option);
+            }
+        }
         d_udp_socket->async_receive_from(
             asio::buffer(d_rxbuf),
             d_udp_endpoint_other,
@@ -137,6 +143,7 @@ socket_pdu_impl::socket_pdu_impl(std::string type,
                         [this](pmt::pmt_t msg) { this->udp_send(msg); });
     } else
         throw std::runtime_error("gr::pdu:socket_pdu: unknown socket type");
+
 
     d_thread = gr::thread::thread([this] { run_io_context(); });
     d_started = true;
