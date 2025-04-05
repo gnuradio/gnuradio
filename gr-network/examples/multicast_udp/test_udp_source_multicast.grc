@@ -1,0 +1,133 @@
+options:
+  parameters:
+    author: Robin Ekman
+    catch_exceptions: 'True'
+    category: '[GRC Hier Blocks]'
+    cmake_opt: ''
+    comment: ''
+    copyright: ''
+    description: ''
+    gen_cmake: 'On'
+    gen_linking: dynamic
+    generate_options: no_gui
+    hier_block_src_path: '.:'
+    id: test_udp_source_multicast
+    max_nouts: '0'
+    output_language: python
+    placement: (0,0)
+    qt_qss_theme: ''
+    realtime_scheduling: ''
+    run: 'True'
+    run_command: '{python} -u {filename}'
+    run_options: prompt
+    sizing_mode: fixed
+    thread_safe_setters: ''
+    title: Test UDP Source Multicast
+    window_size: (1000,1000)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 8]
+    rotation: 0
+    state: enabled
+
+blocks:
+- name: address
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: none
+    label: Host address
+    short_id: ''
+    type: str
+    value: 239.0.0.10
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [272, 8.0]
+    rotation: 0
+    state: enabled
+- name: blocks_file_sink_0
+  id: blocks_file_sink
+  parameters:
+    affinity: ''
+    alias: ''
+    append: 'False'
+    comment: ''
+    file: out.bin
+    type: byte
+    unbuffered: 'False'
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [472, 136.0]
+    rotation: 0
+    state: enabled
+- name: network_socket_pdu_0
+  id: network_socket_pdu
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    host: address
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    mtu: '10000'
+    port: port
+    tcp_no_delay: 'False'
+    type: UDP_SERVER
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [56, 128.0]
+    rotation: 0
+    state: enabled
+- name: pdu_pdu_to_stream_x_0_0
+  id: pdu_pdu_to_stream_x
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    depth: '1024'
+    early_behavior: pdu.EARLY_BURST_APPEND
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: byte
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [248, 152.0]
+    rotation: 0
+    state: enabled
+- name: port
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: none
+    label: Port
+    short_id: ''
+    type: str
+    value: '50500'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [176, 8.0]
+    rotation: 0
+    state: enabled
+
+connections:
+- [network_socket_pdu_0, pdus, pdu_pdu_to_stream_x_0_0, pdus]
+- [pdu_pdu_to_stream_x_0_0, '0', blocks_file_sink_0, '0']
+
+metadata:
+  file_format: 1
+  grc_version: gc01a82d
