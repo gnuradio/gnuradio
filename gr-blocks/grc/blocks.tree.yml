@@ -165,6 +165,7 @@
   - blocks_int_to_float
   - blocks_interleaved_short_to_complex
   - blocks_interleaved_char_to_complex
+  - blocks_recast
   - blocks_short_to_char
   - blocks_short_to_float
   - blocks_uchar_to_float

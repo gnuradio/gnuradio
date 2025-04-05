@@ -110,6 +110,7 @@ list(
     probe_rate_python.cc
     probe_signal_python.cc
     probe_signal_v_python.cc
+    recast_python.cc
     regenerate_bb_python.cc
     repack_bits_bb_python.cc
     repeat_python.cc

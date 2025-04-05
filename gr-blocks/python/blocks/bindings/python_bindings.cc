@@ -120,6 +120,7 @@ void bind_plateau_detector_fb(py::module&);
 void bind_probe_rate(py::module&);
 void bind_probe_signal(py::module&);
 void bind_probe_signal_v(py::module&);
+void bind_recast(py::module&);
 void bind_regenerate_bb(py::module&);
 void bind_repack_bits_bb(py::module&);
 void bind_repeat(py::module&);
@@ -297,6 +298,7 @@ PYBIND11_MODULE(blocks_python, m)
     bind_probe_rate(m);
     bind_probe_signal(m);
     bind_probe_signal_v(m);
+    bind_recast(m);
     bind_regenerate_bb(m);
     bind_repack_bits_bb(m);
     bind_repeat(m);
