@@ -19,4 +19,6 @@ install(
           test_udp_source.grc
           test_udp_source_ipv6.grc
           test_udp_source_seq.grc
+          test_udp_server_multicast.grc
+          test_udp_source_multicast.grc
     DESTINATION ${GR_PKG_NETWORK_EXAMPLES_DIR})
