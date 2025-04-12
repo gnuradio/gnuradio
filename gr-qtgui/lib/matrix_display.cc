@@ -69,14 +69,10 @@ matrix_display::~matrix_display()
 {
     // Qt deletes children when parent is deleted
     d_spectrogram->detach();
-    d_isclosed = true;
 }
-
-bool matrix_display::isClosed() const { return d_isclosed; }
 
 void matrix_display::closeEvent(QCloseEvent* e)
 {
-    d_isclosed = true;
     qApp->processEvents();
     QWidget::closeEvent(e);
 }

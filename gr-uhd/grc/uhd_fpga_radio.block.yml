@@ -1,47 +1,89 @@
 id: uhd_fpga_radio
-label: Radio
+label: RFNoC Radio
 
 parameters:
 -   id: type
     label: RFNoC Block Type
-    dtype: enum
+    dtype: string
     default: 'block'
-    options: ['block', 'sep', 'device']
     hide: all
 -   id: desc
     label: Block Descriptor
     dtype: string
-    default: 'radio_2x64.yml'
+    default: 'radio.yml'
     hide: all
--   id: nports
+-   id: NUM_PORTS
     label: Number of Ports
     dtype: int
     default: '2'
     hide: part
+-   id: NIPC
+    label: Samples per Cycle
+    dtype: int
+    default: '1'
+    hide: part
+-   id: enable_adv_clk_ctrl
+    label: Enable Advanced Clock Control
+    dtype: bool
+    default: 'False'
+    options: ['True', 'False']
+    option_labels: ['Enable', 'Disable']
+    hide: part
+-   id: ctrl_clock
+    label: Control Clock
+    dtype: string
+    default: ''
+    options: ['', '_device_.rfnoc_ctrl']
+    hide: ${ 'part' if enable_adv_clk_ctrl else 'all' }
+-   id: timebase_clock
+    label: Timebase Clock
+    dtype: string
+    default: ''
+    options: ['', '_device_.radio', '_device_.radio0', '_device_.radio1']
+    hide: ${ 'part' if enable_adv_clk_ctrl else 'all' }
 
 inputs:
+# Clocks:
 -   domain: rfnoc.clk
-    id: radio
+    id: radio_clk
     dtype: message
+# IO Ports:
 -   domain: rfnoc.io.time_keeper
-    id: time_keeper
+    id: time
     dtype: f32
 -   domain: rfnoc.io.radio
-    id: x300_radio
+    id: radio
     dtype: sc32
-
+    vlen: ${ NIPC }
+# Data ports:
 -   domain: rfnoc.data
-    id: port
+    id: in_
     dtype: fc32
-    multiplicity: ${ nports }
+    multiplicity: ${ NUM_PORTS }
 
 outputs:
+# IO Ports:
 -   domain: rfnoc.io.ctrl_port
-    id: ctrl_port
+    id: ctrlport
     dtype: f64
+# Data ports:
 -   domain: rfnoc.data
-    id: port
+    id: out_
     dtype: fc32
-    multiplicity: ${ nports }
+    multiplicity: ${ NUM_PORTS }
+
+documentation: |-
+  RFNoC radio (FPGA Implementation).
+  This instantiates the radio block in the FPGA bitfile. Note that it is imperative
+  to choose the correct parameters based on the device BSP. For example, the
+  X310 can only operate with a NIPC (items per clock cycle, or samples per clock
+  cycle) of 1. On the X410, the value depends on the RF_BW parameter that is
+  chosen. The number of ports is also dependent on the device, but it is
+  possible to instantiate fewer ports than the device itself has to offer (e.g.,
+  to not instantiate 2 RX ports for X310, if it is certain that not TwinRX
+  board will be used).
+  The "advanced clock control" is required for USRPs that query the clock
+  configuration from the USRP (e.g., X410, X440).
+
 
 file_format: 1

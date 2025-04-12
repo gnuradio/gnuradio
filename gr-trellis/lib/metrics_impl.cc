@@ -102,7 +102,7 @@ int metrics_impl<T>::general_work(int noutput_items,
     int nstreams = input_items.size();
 
     for (int m = 0; m < nstreams; m++) {
-        const T* in = (T*)input_items[m];
+        const T* in = (const T*)input_items[m];
         float* out = (float*)output_items[m];
 
         for (int i = 0; i < noutput_items / d_O; i++) {

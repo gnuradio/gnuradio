@@ -1,0 +1,9 @@
+id: rfnoc.io.gpio
+label: General I/O
+color: "#D500F9"
+
+multiple_connections_per_input: false
+multiple_connections_per_output: true
+
+templates:
+-   type: [rfnoc.io.gpio, rfnoc.io.gpio]

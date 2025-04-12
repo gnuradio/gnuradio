@@ -1,0 +1,18 @@
+id: python_hb_qt_gui_workflow
+description: "Python hier block Qt GUI workflow"
+output_language: python
+output_language_label: Python
+generator_module: gnuradio.grc.workflows.python_hb_qt_gui
+generator_class: PythonHierBlockQtGenerator
+generate_options: hb_qt_gui
+generate_options_label: Hier Block (QT GUI)
+parameters:
+-   id: category
+    label: Category
+    dtype: string
+    default: '[GRC Hier Blocks]'
+    hide: 'none'
+-   id: qt_qss_theme
+    label: QSS Theme
+    dtype: file_open
+    hide: ${ 'none' if qt_qss_theme else 'part' }

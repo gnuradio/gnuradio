@@ -55,8 +55,5 @@ cpp_templates:
     link: ['gnuradio::gnuradio-digital']
     callbacks:
     - set_threshold(${threshold})
-    translations:
-        'True': 'true'
-        'False': 'false'
 
 file_format: 1

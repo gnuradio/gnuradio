@@ -36,7 +36,7 @@ public:
     ldpc_bit_flip_decoder_impl(const fec_mtrx_sptr mtrx_obj, unsigned int max_iter = 100);
     ~ldpc_bit_flip_decoder_impl() override;
 
-    void generic_work(void* inbuffer, void* outbuffer) override;
+    void generic_work(const void* inbuffer, void* outbuffer) override;
     bool set_frame_size(unsigned int frame_size) override;
     double rate() override;
 };

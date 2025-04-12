@@ -34,7 +34,7 @@ class ModToolRename(ModTool):
         if not self.info['oldname']:
             raise ModToolException('Old block name (blockname) not specified.')
         validate_name('old block', self.info['oldname'])
-        block_candidates = get_block_candidates()
+        block_candidates = get_block_candidates(self.info['modname'])
         if self.info['oldname'] not in block_candidates:
             choices = [x for x in block_candidates if self.info['oldname'] in x]
             if len(choices) > 0:
@@ -131,6 +131,9 @@ class ModToolRename(ModTool):
         hasher = hashlib.md5()
         # note this requires _run_pybind to be called after _run_include
         header_filename = os.path.join(self.info['includedir'], new + '.h')
+        if not os.path.isfile(header_filename):
+            logger.info("Not a C++ block, nothing to do here...")
+            return
         with open(header_filename, 'rb') as file_in:
             buf = file_in.read()
             hasher.update(buf)

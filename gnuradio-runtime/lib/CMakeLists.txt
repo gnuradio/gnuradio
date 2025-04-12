@@ -82,6 +82,7 @@ add_library(
     sync_decimator.cc
     sync_interpolator.cc
     sys_paths.cc
+    tag_fmt.cc
     tagged_stream_block.cc
     terminate_handler.cc
     top_block.cc
@@ -151,12 +152,6 @@ target_compile_definitions(gnuradio-runtime PUBLIC ${MPLIB_DEFINITIONS})
 
 # constants.cc includes boost::dll headers, force them to use std::filesystem
 target_compile_definitions(gnuradio-runtime PRIVATE BOOST_DLL_USE_STD_FS)
-
-if(${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.16.0")
-    target_precompile_headers(
-        gnuradio-runtime PRIVATE
-        ${CMAKE_CURRENT_SOURCE_DIR}/../include/gnuradio/sync_block.h)
-endif()
 
 ########################################################################
 # Add controlport stuff to gnuradio-runtime
@@ -326,6 +321,7 @@ if(ENABLE_TESTING)
         qa_logger.cc
         qa_dictionary_logger.cc
         qa_host_buffer.cc
+        qa_tags.cc
         qa_vmcircbuf.cc)
     list(APPEND GR_TEST_TARGET_DEPS gnuradio-runtime gnuradio-pmt)
 

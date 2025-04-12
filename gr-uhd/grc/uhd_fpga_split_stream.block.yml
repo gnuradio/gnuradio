@@ -1,0 +1,43 @@
+id: uhd_fpga_split_stream
+label: RFNoC Split Stream
+
+parameters:
+-   id: type
+    label: RFNoC Block Type
+    dtype: string
+    default: 'block'
+    hide: all
+-   id: desc
+    label: Block Descriptor
+    dtype: string
+    default: 'split_stream.yml'
+    hide: all
+-   id: NUM_PORTS
+    label: Number of Ports
+    dtype: int
+    default: 1
+    hide: part
+-   id: NUM_BRANCHES
+    label: Number of branches per port
+    dtype: int
+    default: 2
+    hide: part
+
+inputs:
+-   domain: rfnoc.data
+    id: in_
+    dtype: fc32
+    multiplicity: ${ NUM_PORTS }
+
+outputs:
+-   domain: rfnoc.data
+    id: out_
+    dtype: fc32
+    multiplicity: ${ NUM_PORTS * NUM_BRANCHES }
+
+documentation: |-
+  RFNoC split stream block (FPGA Implementation).
+  This instantiates the split stream block in the FPGA bitfile. This will
+  duplicate the input stream to multiple output streams.
+
+file_format: 1

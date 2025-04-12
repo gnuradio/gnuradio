@@ -23,7 +23,6 @@ class wavfile_sink_impl : public wavfile_sink
 {
 private:
     wav_header_info d_h;
-    int d_bytes_per_sample_new;
     bool d_append;
 
     std::vector<float> d_buffer;
@@ -32,6 +31,9 @@ private:
     SNDFILE* d_new_fp;
     bool d_updated;
     gr::thread::mutex d_mutex;
+
+    bool d_should_reopen = false;
+    std::string d_filename;
 
     static constexpr int s_items_size = 8192;
     static constexpr int s_max_channels = 24;
@@ -44,11 +46,6 @@ private:
     void do_update();
 
     /*!
-     * \brief Implementation of set_bits_per_sample without mutex lock.
-     */
-    void set_bits_per_sample_unlocked(int bits_per_sample);
-
-    /*!
      * \brief Writes information to the WAV header which is not available
      * a-priori (chunk size etc.) and closes the file. Not thread-safe and
      * assumes d_fp is a valid file pointer, should thus only be called by
@@ -56,8 +53,12 @@ private:
      */
     void close_wav();
 
+    bool open_file_for_append();
+    bool open_file_for_rewrite();
+
 protected:
     bool stop() override;
+    bool start() override;
 
 public:
     wavfile_sink_impl(const char* filename,

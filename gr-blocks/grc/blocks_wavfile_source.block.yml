@@ -35,8 +35,5 @@ cpp_templates:
     declarations: 'blocks::wavfile_source::sptr ${id};'
     make: |-
       this->${id} = blocks::wavfile_source::make(${file}${'.c_str()' if str(file)[0] != "'" and str(file)[0] != "\"" else ''}, ${repeat});
-    translations:
-        'True': 'true'
-        'False': 'false'
 
 file_format: 1

@@ -29,6 +29,7 @@ list(
     argmax_python.cc
     blockinterleaver_xx_python.cc
     burst_tagger_python.cc
+    burst_to_stream_python.cc
     char_to_float_python.cc
     char_to_short_python.cc
     check_lfsr_32k_s_python.cc
@@ -49,12 +50,6 @@ list(
     correctiq_man_python.cc
     correctiq_swapiq_python.cc
     count_bits_python.cc
-    # ctrlport_probe2_b_python.cc
-    # ctrlport_probe2_c_python.cc
-    # ctrlport_probe2_f_python.cc
-    # ctrlport_probe2_i_python.cc
-    # ctrlport_probe2_s_python.cc
-    # ctrlport_probe_c_python.cc
     deinterleave_python.cc
     delay_python.cc
     divide_python.cc
@@ -169,7 +164,22 @@ if(SNDFILE_FOUND)
          wavfile_source_python.cc)
 endif()
 
+if(ENABLE_GR_CTRLPORT)
+    list(APPEND blocks_python_files 
+        ctrlport_probe2_b_python.cc
+        ctrlport_probe2_c_python.cc
+        ctrlport_probe2_f_python.cc
+        ctrlport_probe2_i_python.cc
+        ctrlport_probe2_s_python.cc
+        ctrlport_probe_c_python.cc
+        )
+endif()
+
 gr_pybind_make_check_hash(blocks ../../.. gr::blocks "${blocks_python_files}")
+
+if(ENABLE_GR_CTRLPORT)
+    target_compile_definitions(blocks_python PUBLIC GR_HAVE_CTRLPORT)
+endif()
 
 install(
     TARGETS blocks_python

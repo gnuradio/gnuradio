@@ -61,7 +61,7 @@ polar_encoder::polar_encoder(int block_size,
 
 polar_encoder::~polar_encoder() {}
 
-void polar_encoder::generic_work(void* in_buffer, void* out_buffer)
+void polar_encoder::generic_work(const void* in_buffer, void* out_buffer)
 {
     const unsigned char* in = (const unsigned char*)in_buffer;
     unsigned char* out = (unsigned char*)out_buffer;
@@ -132,17 +132,17 @@ void polar_encoder::insert_packed_frozen_bits_and_reverse(
         std::begin(d_frozen_bit_prototype), std::end(d_frozen_bit_prototype), target);
     const int* info_bit_reversed_positions_ptr = &d_info_bit_positions_reversed[0];
     int bit_num = 0;
-    unsigned char byte = *input;
+    unsigned char byte;
     int bit_pos;
     while (bit_num < num_info_bits()) {
+        if (bit_num % 8 == 0) {
+            byte = *input;
+            ++input;
+        }
         bit_pos = *info_bit_reversed_positions_ptr++;
         insert_packet_bit_into_packed_array_at_position(
             target, byte, bit_pos, bit_num % 8);
         ++bit_num;
-        if (bit_num % 8 == 0) {
-            ++input;
-            byte = *input;
-        }
     }
 }
 

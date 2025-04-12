@@ -7,17 +7,23 @@
 
 import re
 import builtins
+import keyword
+from typing import List, Callable
 
 from .. import blocks
 from .. import Constants
 
 
 # Blacklist certain ids, its not complete, but should help
-ID_BLACKLIST = ['self'] + dir(builtins)
+ID_BLACKLIST = {'self', 'gnuradio'} | set(dir(builtins)) | set(keyword.kwlist)
+# Python >= 3.10 has soft keywords in a list, i.e. words that are reserved in
+# specific contexts, e.g. `match` isn't generally a keyword, but in `case` it is.
+ID_BLACKLIST |= set(getattr(keyword, 'softkwlist', set()))
+
 try:
     from gnuradio import gr
-    ID_BLACKLIST.extend(attr for attr in dir(
-        gr.top_block()) if not attr.startswith('_'))
+    ID_BLACKLIST |= {attr for attr in dir(
+        gr.top_block()) if not attr.startswith('_')}
 except (ImportError, AttributeError):
     pass
 
@@ -25,7 +31,10 @@ except (ImportError, AttributeError):
 validators = {}
 
 
-def validates(*dtypes):
+def validates(*dtypes) -> Callable:
+    """
+    Registers a function as validator for the type of element give as strings
+    """
     def decorator(func):
         for dtype in dtypes:
             assert dtype in Constants.PARAM_TYPE_NAMES
@@ -39,15 +48,14 @@ class ValidateError(Exception):
 
 
 @validates('id')
-def validate_block_id(param, black_listed_ids):
+def validate_block_id(param, black_listed_ids: List[str]) -> None:
     value = param.value
     # Can python use this as a variable?
-
     if not re.match(r'^[a-z|A-Z]\w*$', value):
         raise ValidateError('ID "{}" must begin with a letter and may contain letters, numbers, '
                             'and underscores.'.format(value))
-    if value in (black_listed_ids + ID_BLACKLIST) and \
-            not getattr(param.parent_block, 'exempt_from_id_validation', False):
+    if (value in ID_BLACKLIST or value in black_listed_ids) \
+            and not getattr(param.parent_block, 'exempt_from_id_validation', False):
         # Grant blacklist exemption to epy blocks and modules
         raise ValidateError('ID "{}" is blacklisted.'.format(value))
     block_names = [
@@ -57,24 +65,21 @@ def validate_block_id(param, black_listed_ids):
         raise ValidateError('ID "{}" is not unique.'.format(value))
     elif value not in block_names:
         raise ValidateError('ID "{}" does not exist.'.format(value))
-    return value
 
 
 @validates('name')
-def validate_name(param, black_listed_ids):
+def validate_name(param, _) -> None:
     # Name of a function or other block that will be generated literally not as a string
     value = param.value
-
     # Allow blank to pass validation
     # Can python use this as a variable?
     if not re.match(r'^([a-z|A-Z]\w*)?$', value):
         raise ValidateError('ID "{}" must begin with a letter and may contain letters, numbers, '
                             'and underscores.'.format(value))
-    return value
 
 
 @validates('stream_id')
-def validate_stream_id(param, black_listed_ids):
+def validate_stream_id(param, _) -> None:
     value = param.value
     stream_ids = [
         block.params['stream_id'].value
@@ -91,7 +96,7 @@ def validate_stream_id(param, black_listed_ids):
 
 
 @validates('complex', 'real', 'float', 'int')
-def validate_scalar(param, black_listed_ids):
+def validate_scalar(param, _) -> None:
     valid_types = Constants.PARAM_TYPE_MAP[param.dtype]
     if not isinstance(param.get_evaluated(), valid_types):
         raise ValidateError('Expression {!r} is invalid for type {!r}.'.format(
@@ -99,7 +104,7 @@ def validate_scalar(param, black_listed_ids):
 
 
 @validates('complex_vector', 'real_vector', 'float_vector', 'int_vector')
-def validate_vector(param, black_listed_ids):
+def validate_vector(param, _) -> None:
     # todo: check vector types
 
     if param.get_evaluated() is None:
@@ -113,7 +118,7 @@ def validate_vector(param, black_listed_ids):
 
 
 @validates('gui_hint')
-def validate_gui_hint(param, black_listed_ids):
+def validate_gui_hint(param, _) -> None:
     try:
         # Only parse the param if there are no errors
         if len(param.get_error_messages()) > 0:

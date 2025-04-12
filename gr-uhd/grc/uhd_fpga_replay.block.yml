@@ -1,0 +1,66 @@
+id: uhd_fpga_replay
+label: RFNoC DRAM Replay/Capture
+
+parameters:
+-   id: type
+    label: RFNoC Block Type
+    dtype: string
+    default: 'block'
+    hide: all
+-   id: priority
+    label: Priority
+    dtype: int
+    default: 99
+    hide: all
+-   id: desc
+    label: Block Descriptor
+    dtype: string
+    default: 'replay.yml'
+    hide: all
+-   id: NUM_PORTS
+    label: Number of Ports
+    dtype: int
+    default: 2
+    hide: part
+-   id: MEM_DATA_W
+    label: Memory Data Width
+    dtype: int
+    default: 64
+    hide: part
+-   id: MEM_ADDR_W
+    label: Memory Address Width
+    dtype: int
+    default: 30
+    hide: part
+
+inputs:
+-   domain: rfnoc.clk
+    id: mem_clk
+    dtype: message
+-   domain: rfnoc.data
+    id: in_
+    dtype: fc32
+    multiplicity: ${ NUM_PORTS }
+
+outputs:
+-   domain: rfnoc.io.axi4_mm
+    id: axi_ram
+    dtype: s8
+-   domain: rfnoc.data
+    id: out_
+    dtype: fc32
+    multiplicity: ${ NUM_PORTS }
+
+documentation: |-
+  RFNoC replay block (FPGA Implementation).
+  This instantiates the replay/capture block in the FPGA bitfile. This block
+  requires access to DRAM, which is provided by the BSP. The number of ports,
+  and the data and address widths are also dependent on the specific BSP
+  configuration.
+  Typically, this block is connected to its own set of streaming endpoints,
+  although there is no requirement to do this. In that case, streaming endpoints
+  may be configured with smaller buffer sizes since streaming into DRAM is less
+  latency-sensitive than streaming directly to the radio block.
+
+
+file_format: 1

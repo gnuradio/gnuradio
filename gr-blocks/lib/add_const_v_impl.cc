@@ -38,7 +38,7 @@ int add_const_v_impl<T>::work(int noutput_items,
                               gr_vector_const_void_star& input_items,
                               gr_vector_void_star& output_items)
 {
-    T* iptr = (T*)input_items[0];
+    const T* iptr = (const T*)input_items[0];
     T* optr = (T*)output_items[0];
 
     int nitems_per_block = this->output_signature()->sizeof_stream_item(0) / sizeof(T);

@@ -1,0 +1,38 @@
+id: uhd_fpga_device_none
+label: No Connect
+flags: [ python ]
+
+parameters:
+-   id: type
+    label: RFNoC Block Type
+    dtype: string
+    default: 'term'
+    hide: all
+-   id: in_out
+    label: Direction
+    dtype: enum
+    default: 'in'
+    options: ['in', 'out']
+    hide: part
+
+inputs:
+-   domain: rfnoc.data
+    id: term_in
+    dtype: fc32
+    hide: ${ in_out == 'out' }
+    optional: true
+
+outputs:
+-   domain: rfnoc.data
+    id: term_out
+    dtype: fc32
+    hide: ${ in_out == 'in' }
+    optional: true
+
+documentation: |-
+  RFNoC "No Connect" (FPGA Implementation).
+  This block has no representation in the FPGA bitfile. It is used to signal to
+  the RFNoC image builder that a connection should not be made between two blocks.
+  It is equivalent to a connection to _device_._none_ in the RFNoC image builder.
+
+file_format: 1

@@ -14,11 +14,13 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(tagged_stream_block.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(635b767c5146a5d65f0757f7fb26a904)                     */
+/* BINDTOOL_HEADER_FILE_HASH(37d14d880835b3194c17dfdf513580a7)                     */
 /***********************************************************************************/
 
-#include <pybind11/complex.h>
 #include <pybind11/pybind11.h>
+
+#include <pybind11/complex.h>
+#include <pybind11/functional.h>
 #include <pybind11/stl.h>
 
 namespace py = pybind11;

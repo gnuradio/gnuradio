@@ -117,7 +117,7 @@ class test_pmt(unittest.TestCase):
         self.assertEqual(const, pmt.to_long(deser))
 
     def test15(self):
-        if(self.sizeof_long <= 4):
+        if (self.sizeof_long <= 4):
             return
         const = self.MAXINT32 + 1
         x_pmt = pmt.from_long(const)
@@ -144,7 +144,7 @@ class test_pmt(unittest.TestCase):
         self.assertEqual(const, x_long)
 
     def test18(self):
-        if(self.sizeof_long <= 4):
+        if (self.sizeof_long <= 4):
             return
         const = self.MININT32 - 1
         x_pmt = pmt.from_long(const)
@@ -367,6 +367,558 @@ class test_pmt(unittest.TestCase):
         in_vec = [1 + 1j, .125 - 9999999j]
         out_vec = pmt.c64vector_elements(pmt.deserialize_str(in_str))
         self.assertEqual(out_vec, in_vec)
+
+    def test23_none_exception(self):
+        with self.assertRaises(TypeError):
+            pmt.is_bool(None)
+
+        with self.assertRaises(TypeError):
+            pmt.is_true(None)
+
+        with self.assertRaises(TypeError):
+            pmt.is_false(None)
+
+        with self.assertRaises(TypeError):
+            pmt.to_bool(None)
+
+        with self.assertRaises(TypeError):
+            pmt.is_symbol(None)
+
+        with self.assertRaises(TypeError):
+            pmt.symbol_to_string(None)
+
+        with self.assertRaises(TypeError):
+            pmt.is_number(None)
+
+        with self.assertRaises(TypeError):
+            pmt.is_integer(None)
+
+        with self.assertRaises(TypeError):
+            pmt.to_long(None)
+
+        with self.assertRaises(TypeError):
+            pmt.is_uint64(None)
+
+        with self.assertRaises(TypeError):
+            pmt.to_uint64(None)
+
+        with self.assertRaises(TypeError):
+            pmt.is_real(None)
+
+        with self.assertRaises(TypeError):
+            pmt.to_double(None)
+
+        with self.assertRaises(TypeError):
+            pmt.to_float(None)
+
+        with self.assertRaises(TypeError):
+            pmt.is_complex(None)
+
+        with self.assertRaises(TypeError):
+            pmt.to_complex(None)
+
+        with self.assertRaises(TypeError):
+            pmt.is_null(None)
+
+        with self.assertRaises(TypeError):
+            pmt.is_pair(None)
+
+        with self.assertRaises(TypeError):
+            pmt.cons(None, pmt.PMT_NIL)
+
+        with self.assertRaises(TypeError):
+            pmt.cons(pmt.PMT_NIL, None)
+
+        with self.assertRaises(TypeError):
+            pmt.dcons(None, pmt.PMT_NIL)
+
+        with self.assertRaises(TypeError):
+            pmt.dcons(pmt.PMT_NIL, None)
+
+        with self.assertRaises(TypeError):
+            pmt.car(None)
+
+        with self.assertRaises(TypeError):
+            pmt.cdr(None)
+
+        with self.assertRaises(TypeError):
+            pmt.set_car(None, pmt.PMT_NIL)
+
+        with self.assertRaises(TypeError):
+            pmt.set_car(pmt.PMT_NIL, None)
+
+        with self.assertRaises(TypeError):
+            pmt.set_cdr(None, pmt.PMT_NIL)
+
+        with self.assertRaises(TypeError):
+            pmt.set_cdr(pmt.PMT_NIL, None)
+
+        with self.assertRaises(TypeError):
+            pmt.caar(None)
+
+        with self.assertRaises(TypeError):
+            pmt.cadr(None)
+
+        with self.assertRaises(TypeError):
+            pmt.cdar(None)
+
+        with self.assertRaises(TypeError):
+            pmt.cddr(None)
+
+        with self.assertRaises(TypeError):
+            pmt.caddr(None)
+
+        with self.assertRaises(TypeError):
+            pmt.cadddr(None)
+
+        with self.assertRaises(TypeError):
+            pmt.is_tuple(None)
+
+        for tuple_len in range(1, 11):
+            for i in range(tuple_len):
+                args = [pmt.PMT_NIL] * tuple_len
+                args[i] = None
+                with self.assertRaises(TypeError):
+                    pmt.make_tuple(*args)
+
+        with self.assertRaises(TypeError):
+            pmt.to_tuple(None)
+
+        with self.assertRaises(TypeError):
+            pmt.tuple_ref(None, 0)
+
+        with self.assertRaises(TypeError):
+            pmt.is_vector(None)
+
+        with self.assertRaises(TypeError):
+            pmt.make_vector(0, None)
+
+        with self.assertRaises(TypeError):
+            pmt.vector_ref(None, 0)
+
+        with self.assertRaises(TypeError):
+            pmt.vector_set(None, 0, pmt.PMT_NIL)
+
+        with self.assertRaises(TypeError):
+            pmt.vector_set(pmt.PMT_NIL, 0, None)
+
+        with self.assertRaises(TypeError):
+            pmt.vector_fill(None, pmt.PMT_NIL)
+
+        with self.assertRaises(TypeError):
+            pmt.vector_fill(pmt.PMT_NIL, None)
+
+        with self.assertRaises(TypeError):
+            pmt.is_blob(None)
+
+        with self.assertRaises(TypeError):
+            pmt.blob_data(None)
+
+        with self.assertRaises(TypeError):
+            pmt.blob_length(None)
+
+        with self.assertRaises(TypeError):
+            pmt.is_uniform_vector(None)
+
+        with self.assertRaises(TypeError):
+            pmt.is_u8vector(None)
+
+        with self.assertRaises(TypeError):
+            pmt.is_s8vector(None)
+
+        with self.assertRaises(TypeError):
+            pmt.is_u16vector(None)
+
+        with self.assertRaises(TypeError):
+            pmt.is_s16vector(None)
+
+        with self.assertRaises(TypeError):
+            pmt.is_u32vector(None)
+
+        with self.assertRaises(TypeError):
+            pmt.is_s32vector(None)
+
+        with self.assertRaises(TypeError):
+            pmt.is_u64vector(None)
+
+        with self.assertRaises(TypeError):
+            pmt.is_s64vector(None)
+
+        with self.assertRaises(TypeError):
+            pmt.is_f32vector(None)
+
+        with self.assertRaises(TypeError):
+            pmt.is_f64vector(None)
+
+        with self.assertRaises(TypeError):
+            pmt.is_c32vector(None)
+
+        with self.assertRaises(TypeError):
+            pmt.is_c64vector(None)
+
+        with self.assertRaises(TypeError):
+            pmt.uniform_vector_itemsize(None)
+
+        with self.assertRaises(TypeError):
+            pmt.u8vector_ref(None, 0)
+
+        with self.assertRaises(TypeError):
+            pmt.s8vector_ref(None, 0)
+
+        with self.assertRaises(TypeError):
+            pmt.u16vector_ref(None, 0)
+
+        with self.assertRaises(TypeError):
+            pmt.s16vector_ref(None, 0)
+
+        with self.assertRaises(TypeError):
+            pmt.u32vector_ref(None, 0)
+
+        with self.assertRaises(TypeError):
+            pmt.s32vector_ref(None, 0)
+
+        with self.assertRaises(TypeError):
+            pmt.u64vector_ref(None, 0)
+
+        with self.assertRaises(TypeError):
+            pmt.s64vector_ref(None, 0)
+
+        with self.assertRaises(TypeError):
+            pmt.f32vector_ref(None, 0)
+
+        with self.assertRaises(TypeError):
+            pmt.f64vector_ref(None, 0)
+
+        with self.assertRaises(TypeError):
+            pmt.c32vector_ref(None, 0)
+
+        with self.assertRaises(TypeError):
+            pmt.c64vector_ref(None, 0)
+
+        with self.assertRaises(TypeError):
+            pmt.u8vector_set(None, 0, 0)
+
+        with self.assertRaises(TypeError):
+            pmt.s8vector_set(None, 0, 0)
+
+        with self.assertRaises(TypeError):
+            pmt.u16vector_set(None, 0, 0)
+
+        with self.assertRaises(TypeError):
+            pmt.s16vector_set(None, 0, 0)
+
+        with self.assertRaises(TypeError):
+            pmt.u32vector_set(None, 0, 0)
+
+        with self.assertRaises(TypeError):
+            pmt.s32vector_set(None, 0, 0)
+
+        with self.assertRaises(TypeError):
+            pmt.u64vector_set(None, 0, 0)
+
+        with self.assertRaises(TypeError):
+            pmt.s64vector_set(None, 0, 0)
+
+        with self.assertRaises(TypeError):
+            pmt.f32vector_set(None, 0, 0)
+
+        with self.assertRaises(TypeError):
+            pmt.f64vector_set(None, 0, 0)
+
+        with self.assertRaises(TypeError):
+            pmt.c32vector_set(None, 0, 0)
+
+        with self.assertRaises(TypeError):
+            pmt.c64vector_set(None, 0, 0)
+
+        with self.assertRaises(TypeError):
+            pmt.uniform_vector_elements(None, 0)
+
+        with self.assertRaises(TypeError):
+            pmt.u8vector_elements(None, 0)
+
+        with self.assertRaises(TypeError):
+            pmt.s8vector_elements(None, 0)
+
+        with self.assertRaises(TypeError):
+            pmt.u16vector_elements(None, 0)
+
+        with self.assertRaises(TypeError):
+            pmt.s16vector_elements(None, 0)
+
+        with self.assertRaises(TypeError):
+            pmt.u32vector_elements(None, 0)
+
+        with self.assertRaises(TypeError):
+            pmt.s32vector_elements(None, 0)
+
+        with self.assertRaises(TypeError):
+            pmt.u64vector_elements(None, 0)
+
+        with self.assertRaises(TypeError):
+            pmt.s64vector_elements(None, 0)
+
+        with self.assertRaises(TypeError):
+            pmt.f32vector_elements(None, 0)
+
+        with self.assertRaises(TypeError):
+            pmt.f64vector_elements(None, 0)
+
+        with self.assertRaises(TypeError):
+            pmt.c32vector_elements(None, 0)
+
+        with self.assertRaises(TypeError):
+            pmt.c64vector_elements(None, 0)
+
+        with self.assertRaises(TypeError):
+            pmt.u8vector_elements(None)
+
+        with self.assertRaises(TypeError):
+            pmt.s8vector_elements(None)
+
+        with self.assertRaises(TypeError):
+            pmt.u16vector_elements(None)
+
+        with self.assertRaises(TypeError):
+            pmt.s16vector_elements(None)
+
+        with self.assertRaises(TypeError):
+            pmt.u32vector_elements(None)
+
+        with self.assertRaises(TypeError):
+            pmt.s32vector_elements(None)
+
+        with self.assertRaises(TypeError):
+            pmt.u64vector_elements(None)
+
+        with self.assertRaises(TypeError):
+            pmt.s64vector_elements(None)
+
+        with self.assertRaises(TypeError):
+            pmt.f32vector_elements(None)
+
+        with self.assertRaises(TypeError):
+            pmt.f64vector_elements(None)
+
+        with self.assertRaises(TypeError):
+            pmt.c32vector_elements(None)
+
+        with self.assertRaises(TypeError):
+            pmt.c64vector_elements(None)
+
+        with self.assertRaises(TypeError):
+            pmt.uniform_vector_writable_elements(None, 0)
+
+        with self.assertRaises(TypeError):
+            pmt.u8vector_writable_elements(None, 0)
+
+        with self.assertRaises(TypeError):
+            pmt.s8vector_writable_elements(None, 0)
+
+        with self.assertRaises(TypeError):
+            pmt.u16vector_writable_elements(None, 0)
+
+        with self.assertRaises(TypeError):
+            pmt.s16vector_writable_elements(None, 0)
+
+        with self.assertRaises(TypeError):
+            pmt.u32vector_writable_elements(None, 0)
+
+        with self.assertRaises(TypeError):
+            pmt.s32vector_writable_elements(None, 0)
+
+        with self.assertRaises(TypeError):
+            pmt.u64vector_writable_elements(None, 0)
+
+        with self.assertRaises(TypeError):
+            pmt.s64vector_writable_elements(None, 0)
+
+        with self.assertRaises(TypeError):
+            pmt.f32vector_writable_elements(None, 0)
+
+        with self.assertRaises(TypeError):
+            pmt.f64vector_writable_elements(None, 0)
+
+        with self.assertRaises(TypeError):
+            pmt.c32vector_writable_elements(None, 0)
+
+        with self.assertRaises(TypeError):
+            pmt.c64vector_writable_elements(None, 0)
+
+        with self.assertRaises(TypeError):
+            pmt.is_dict(None)
+
+        with self.assertRaises(TypeError):
+            pmt.dict_add(None, pmt.PMT_NIL, pmt.PMT_NIL)
+
+        with self.assertRaises(TypeError):
+            pmt.dict_add(pmt.PMT_NIL, None, pmt.PMT_NIL)
+
+        with self.assertRaises(TypeError):
+            pmt.dict_add(pmt.PMT_NIL, pmt.PMT_NIL, None)
+
+        with self.assertRaises(TypeError):
+            pmt.dict_delete(None, pmt.PMT_NIL)
+
+        with self.assertRaises(TypeError):
+            pmt.dict_delete(pmt.PMT_NIL, None)
+
+        with self.assertRaises(TypeError):
+            pmt.dict_has_key(None, pmt.PMT_NIL)
+
+        with self.assertRaises(TypeError):
+            pmt.dict_has_key(pmt.PMT_NIL, None)
+
+        with self.assertRaises(TypeError):
+            pmt.dict_ref(None, pmt.PMT_NIL, pmt.PMT_NIL)
+
+        with self.assertRaises(TypeError):
+            pmt.dict_ref(pmt.PMT_NIL, None, pmt.PMT_NIL)
+
+        with self.assertRaises(TypeError):
+            pmt.dict_ref(pmt.PMT_NIL, pmt.PMT_NIL, None)
+
+        with self.assertRaises(TypeError):
+            pmt.dict_items(None)
+
+        with self.assertRaises(TypeError):
+            pmt.dict_keys(None)
+
+        with self.assertRaises(TypeError):
+            pmt.dict_update(None, pmt.PMT_NIL)
+
+        with self.assertRaises(TypeError):
+            pmt.dict_update(pmt.PMT_NIL, None)
+
+        with self.assertRaises(TypeError):
+            pmt.dict_values(None)
+
+        with self.assertRaises(TypeError):
+            pmt.is_any(None)
+
+        with self.assertRaises(TypeError):
+            pmt.is_pdu(None)
+
+        with self.assertRaises(TypeError):
+            pmt.eq(None, pmt.PMT_NIL)
+
+        with self.assertRaises(TypeError):
+            pmt.eq(pmt.PMT_NIL, None)
+
+        with self.assertRaises(TypeError):
+            pmt.eqv(None, pmt.PMT_NIL)
+
+        with self.assertRaises(TypeError):
+            pmt.eqv(pmt.PMT_NIL, None)
+
+        with self.assertRaises(TypeError):
+            pmt.equal(None, pmt.PMT_NIL)
+
+        with self.assertRaises(TypeError):
+            pmt.equal(pmt.PMT_NIL, None)
+
+        with self.assertRaises(TypeError):
+            pmt.assq(None, pmt.PMT_NIL)
+
+        with self.assertRaises(TypeError):
+            pmt.assq(pmt.PMT_NIL, None)
+
+        with self.assertRaises(TypeError):
+            pmt.assv(None, pmt.PMT_NIL)
+
+        with self.assertRaises(TypeError):
+            pmt.assv(pmt.PMT_NIL, None)
+
+        with self.assertRaises(TypeError):
+            pmt.assoc(None, pmt.PMT_NIL)
+
+        with self.assertRaises(TypeError):
+            pmt.assoc(pmt.PMT_NIL, None)
+
+        with self.assertRaises(TypeError):
+            pmt.reverse(None)
+
+        with self.assertRaises(TypeError):
+            pmt.reverse_x(None)
+
+        with self.assertRaises(TypeError):
+            pmt.acons(None, pmt.PMT_NIL, pmt.PMT_NIL)
+
+        with self.assertRaises(TypeError):
+            pmt.acons(pmt.PMT_NIL, None, pmt.PMT_NIL)
+
+        with self.assertRaises(TypeError):
+            pmt.acons(pmt.PMT_NIL, pmt.PMT_NIL, None)
+
+        with self.assertRaises(TypeError):
+            pmt.nth(0, None)
+
+        with self.assertRaises(TypeError):
+            pmt.nthcdr(0, None)
+
+        with self.assertRaises(TypeError):
+            pmt.memq(None, pmt.PMT_NIL)
+
+        with self.assertRaises(TypeError):
+            pmt.memq(pmt.PMT_NIL, None)
+
+        with self.assertRaises(TypeError):
+            pmt.memv(None, pmt.PMT_NIL)
+
+        with self.assertRaises(TypeError):
+            pmt.memv(pmt.PMT_NIL, None)
+
+        with self.assertRaises(TypeError):
+            pmt.member(None, pmt.PMT_NIL)
+
+        with self.assertRaises(TypeError):
+            pmt.member(pmt.PMT_NIL, None)
+
+        with self.assertRaises(TypeError):
+            pmt.subsetp(None, pmt.PMT_NIL)
+
+        with self.assertRaises(TypeError):
+            pmt.subsetp(pmt.PMT_NIL, None)
+
+        for list_len, func in enumerate((pmt.list1, pmt.list2, pmt.list3, pmt.list4, pmt.list5, pmt.list6), start=1):
+            for i in range(list_len):
+                args = [pmt.PMT_NIL] * list_len
+                args[i] = None
+                with self.assertRaises(TypeError):
+                    func(*args)
+
+        with self.assertRaises(TypeError):
+            pmt.list_add(None, pmt.PMT_NIL)
+
+        with self.assertRaises(TypeError):
+            pmt.list_add(pmt.PMT_NIL, None)
+
+        with self.assertRaises(TypeError):
+            pmt.list_rm(None, pmt.PMT_NIL)
+
+        with self.assertRaises(TypeError):
+            pmt.list_rm(pmt.PMT_NIL, None)
+
+        with self.assertRaises(TypeError):
+            pmt.list_has(None, pmt.PMT_NIL)
+
+        with self.assertRaises(TypeError):
+            pmt.list_has(pmt.PMT_NIL, None)
+
+        with self.assertRaises(TypeError):
+            pmt.is_eof_object(None)
+
+        with self.assertRaises(TypeError):
+            pmt.write_string(None)
+
+        with self.assertRaises(TypeError):
+            pmt.print(None)
+
+        with self.assertRaises(TypeError):
+            pmt.length(None)
+
+        with self.assertRaises(TypeError):
+            pmt.serialize_str(None)
 
 
 if __name__ == '__main__':

@@ -39,8 +39,5 @@ cpp_templates:
     make: 'this->${id} = blocks::mute_${type.fcn}::(bool(${mute}));'
     callbacks:
     - set_mute(bool(${mute}))
-    translations:
-        'True': 'true'
-        'False': 'false'
 
 file_format: 1

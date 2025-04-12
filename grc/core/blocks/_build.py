@@ -7,6 +7,7 @@
 
 import itertools
 import re
+from typing import Type
 
 from ..Constants import ADVANCED_PARAM_TAB
 from ..utils import to_list
@@ -17,9 +18,20 @@ from ._flags import Flags
 from ._templates import MakoTemplates
 
 
-def build(id, label='', category='', flags='', documentation='',
-          value=None, asserts=None,
-          parameters=None, inputs=None, outputs=None, templates=None, cpp_templates=None, **kwargs):
+def build(id,
+          label='',
+          category='',
+          flags='',
+          documentation='',
+          value=None,
+          asserts=None,
+          parameters=None,
+          inputs=None,
+          outputs=None,
+          templates=None,
+          cpp_templates=None,
+          doc_url=None,
+          **kwargs) -> Type[Block]:
     block_id = id
 
     cls = type(str(block_id), (Block,), {})
@@ -61,6 +73,8 @@ def build(id, label='', category='', flags='', documentation='',
         translations=cpp_templates.get('translations', []),
         declarations=cpp_templates.get('declarations', ''),
     )
+
+    cls.doc_url = doc_url if doc_url else ""
     # todo: MakoTemplates.compile() to check for errors
 
     cls.value = _single_mako_expr(value, block_id)

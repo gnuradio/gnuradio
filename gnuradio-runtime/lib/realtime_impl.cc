@@ -12,6 +12,10 @@
 #include <config.h>
 #endif
 
+#if defined(_WIN32) || defined(__WIN32__) || defined(WIN32)
+#include <windows.h>
+#endif
+
 #include "realtime_impl.h"
 #include <gnuradio/logger.h>
 #include <gnuradio/prefs.h>
@@ -27,7 +31,8 @@
 #include <cstring>
 
 
-#if defined(HAVE_PTHREAD_SETSCHEDPARAM) || defined(HAVE_SCHED_SETSCHEDULER)
+#if !(defined(_WIN32) || defined(__WIN32__) || defined(WIN32)) && \
+    (defined(HAVE_PTHREAD_SETSCHEDPARAM) || defined(HAVE_SCHED_SETSCHEDULER))
 #include <pthread.h>
 
 namespace gr {
@@ -54,9 +59,6 @@ static int rescale_virtual_pri(int virtual_pri, int min_real_pri, int max_real_p
 
 
 #if defined(_WIN32) || defined(__WIN32__) || defined(WIN32)
-
-#include <windows.h>
-
 namespace gr {
 namespace realtime {
 

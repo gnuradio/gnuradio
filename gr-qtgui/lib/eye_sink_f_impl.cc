@@ -13,7 +13,6 @@
 
 #include "eye_sink_f_impl.h"
 
-#include <gnuradio/block_detail.h>
 #include <gnuradio/buffer.h>
 #include <gnuradio/fft/fft.h>
 #include <gnuradio/io_signature.h>
@@ -75,11 +74,7 @@ eye_sink_f_impl::eye_sink_f_impl(int size,
     declare_sample_delay(1); // delay the tags for a history of 2
 }
 
-eye_sink_f_impl::~eye_sink_f_impl()
-{
-    if (!d_main_gui->isClosed())
-        d_main_gui->close();
-}
+eye_sink_f_impl::~eye_sink_f_impl() { QMetaObject::invokeMethod(d_main_gui, "close"); }
 
 bool eye_sink_f_impl::check_topology(int ninputs, int noutputs)
 {

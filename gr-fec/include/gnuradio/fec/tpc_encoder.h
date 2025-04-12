@@ -33,7 +33,7 @@ class FEC_API tpc_encoder : public generic_encoder
                 int qval);
 
     // plug into the generic fec api
-    void generic_work(void* inBuffer, void* outbuffer) override;
+    void generic_work(const void* inBuffer, void* outbuffer) override;
     int get_output_size() override;
     int get_input_size() override;
 

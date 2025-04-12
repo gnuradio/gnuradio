@@ -21,7 +21,7 @@ namespace code {
 class FEC_API ldpc_gen_mtrx_encoder_impl : public ldpc_gen_mtrx_encoder
 {
 private:
-    void generic_work(void* inbuffer, void* outbuffer) override;
+    void generic_work(const void* inbuffer, void* outbuffer) override;
     int get_output_size() override;
     int get_input_size() override;
 

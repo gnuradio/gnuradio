@@ -15,7 +15,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(tags.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(25435955fa46de2924e0b648c4f8dd43)                     */
+/* BINDTOOL_HEADER_FILE_HASH(6283d354a0e1767eb18c66e7092f6583)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -52,7 +52,6 @@ void bind_tags(py::module& m)
         .def_readwrite("key", &tag_t::key)
         .def_readwrite("value", &tag_t::value)
         .def_readwrite("srcid", &tag_t::srcid)
-        .def_readwrite("marked_deleted", &tag_t::marked_deleted)
 
         // TODO - put in operators
         ;

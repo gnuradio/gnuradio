@@ -49,6 +49,14 @@ public:
             if (_rx_streamers.count(dst_block_id)) {
                 throw std::runtime_error("Cannot connect RFNoC streamers directly!");
             }
+            if (is_back_edge) {
+                d_logger->warn("Back edge detected between streamer {:s}:{:d} and block "
+                               "{:s}:{:d}! Ignoring.",
+                               src_block_id,
+                               src_block_port,
+                               dst_block_id,
+                               dst_block_port);
+            }
             _graph->connect(_tx_streamers.at(src_block_id),
                             src_block_port,
                             block_id_t(dst_block_id),
@@ -57,6 +65,14 @@ public:
             return;
         }
         if (_rx_streamers.count(dst_block_id)) {
+            if (is_back_edge) {
+                d_logger->warn("Back edge detected between block {:s}:{:d} and streamer "
+                               "{:s}:{:d}! Ignoring.",
+                               src_block_id,
+                               src_block_port,
+                               dst_block_id,
+                               dst_block_port);
+            }
             _graph->connect(src_block_id,
                             src_block_port,
                             _rx_streamers.at(dst_block_id),
@@ -68,7 +84,8 @@ public:
         _graph->connect(block_id_t(src_block_id),
                         src_block_port,
                         block_id_t(dst_block_id),
-                        dst_block_port);
+                        dst_block_port,
+                        is_back_edge);
     }
 
     void connect(const std::string& block1,

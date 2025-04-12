@@ -213,7 +213,7 @@ void NumberDisplayForm::saveFigure()
 void NumberDisplayForm::newData(const QEvent* updateEvent)
 {
     if (!d_stop_state) {
-        NumberUpdateEvent* tevent = (NumberUpdateEvent*)updateEvent;
+        const NumberUpdateEvent* tevent = (const NumberUpdateEvent*)updateEvent;
         const std::vector<float> samples = tevent->getSamples();
 
         for (unsigned int i = 0; i < d_nplots; ++i) {
@@ -379,7 +379,7 @@ std::string NumberDisplayForm::title() const { return d_title->text().toStdStrin
 void NumberDisplayForm::setTitle(const std::string& title)
 {
     std::string t = title;
-    if (t.length() > 0)
+    if (!t.empty())
         t = "<b><FONT SIZE=4>" + title + "</b>";
     d_title->setText(QString(t.c_str()));
     setGraphType(d_graph_type);

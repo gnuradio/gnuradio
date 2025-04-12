@@ -1,0 +1,187 @@
+{% set name = "gnuradio-dev" %}
+# Set package version from cleaned up git tags if possible,
+# otherwise fall back to date-based version.
+{% set tag_version = environ.get("GIT_DESCRIBE_TAG", "")|string|replace("-","_")|replace("v","")|replace("git","") %}
+{% set post_commit = environ.get("GIT_DESCRIBE_NUMBER", 0)|string %}
+{% set hash = environ.get("GIT_DESCRIBE_HASH", "local")|string %}
+{% set fallback_version = "0.0.0.{0}.dev+g{1}".format(datetime.datetime.now().strftime("%Y%m%d"), environ.get("GIT_FULL_HASH", "local")[:9]) %}
+{% set version = (tag_version if post_commit == "0" else "{0}.post{1}+{2}".format(tag_version, post_commit, hash)) if tag_version else fallback_version %}
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+source:
+  # use local path or git repository depending on if the build is local or done on CI
+  path: "../.."  # [not os.environ.get("CI")]
+  git_url: {{ environ.get('FEEDSTOCK_ROOT', "../..") }}  # [os.environ.get("CI")]
+
+build:
+  number: 0
+  skip: true  # [py!=311]
+  entry_points:
+    - gnuradio-companion = gnuradio.grc.main:main  # [win]
+    - gr_filter_design = gnuradio.filter.filter_design:main  # [win]
+    - gr_modtool = gnuradio.modtool.cli.base:cli  # [win]
+    - grcc = gnuradio.grc.compiler:main  # [win]
+    - uhd_siggen = gnuradio.uhd.uhd_siggen_base:main  # [win]
+  run_exports:
+    - {{ pin_subpackage('gnuradio-dev', max_pin='x.x.x') }}
+
+requirements:
+  build:
+    - {{ compiler('c') }}
+    - {{ compiler('cxx') }}
+    - cmake >=3.8
+    - git
+    - ninja
+    - pkg-config  # [not win]
+    - sysroot_linux-64 2.17  # [linux64]
+    - thrift-compiler
+    # cross-compilation requirements
+    - python                              # [build_platform != target_platform]
+    - cross-python_{{ target_platform }}  # [build_platform != target_platform]
+    - pybind11                            # [build_platform != target_platform]
+    - numpy                               # [build_platform != target_platform]
+   # below are needed to link with Qt for qtgui
+    - {{ cdt('mesa-dri-drivers') }}  # [linux]
+    - {{ cdt('mesa-libgl-devel') }}  # [linux]
+  host:
+    - click
+    - click-plugins
+    - codec2
+    - fftw
+    - gmp  # [not win]
+    - gsl
+    - libboost-devel
+    - libsndfile
+    - libthrift  # [not win]
+    - mako
+    - mpir  # [win]
+    - numpy
+    - packaging
+    - pip  # [win]
+    - pybind11
+    - pybind11-abi
+    - python
+    - spdlog
+    - thrift  # [not win]
+    - volk
+  # gnuradio.audio
+    - alsa-lib  # [linux]
+    - jack  # [linux]
+    - portaudio
+  # gnuradio companion
+    - gtk3
+    - lxml
+    - pygobject
+    - pyyaml
+    - jsonschema
+  # gnuradio.iio
+    - libiio
+    - libad9361-iio
+  # gnuradio.qtgui
+    - pyqt
+    - qt-main
+    - qwt
+  # gnuradio.soapy
+    - soapysdr
+  # gnuradio.uhd
+    - uhd
+  # gnuradio.video_sdl
+    - sdl
+  # gnuradio.zeromq
+    - cppzmq
+    - zeromq
+  # below needed only to run tests in host environment
+    - pytest
+    - pyzmq
+    - setuptools
+  run:
+    - alsa-plugins  # [linux]
+    - click
+    - click-plugins
+    - fftw
+    - lxml
+    - mako
+    - matplotlib-base
+    - menuinst  # [win]
+    - numpy
+    - packaging
+    - {{ pin_compatible('portaudio') }}
+    - pygobject
+    - pyqt
+    - pyqtgraph
+    - python
+    - pyyaml
+    - jsonschema
+    - pyzmq
+    - {{ pin_compatible('qwt', max_pin='x.x') }}
+    - scipy
+    # need setuptools because modtool uses pkg_resources
+    - setuptools
+    - thrift  # [not win]
+  run_constrained:
+  # conflict with the non-dev conda-forge packages
+  # by constraining to non-existent version
+    - gnuradio-core ==9999999999
+    - gnuradio-grc ==9999999999
+    - gnuradio-qtgui ==9999999999
+    - gnuradio-soapy ==9999999999
+    - gnuradio-uhd ==9999999999
+    - gnuradio-video-sdl ==9999999999
+    - gnuradio-zeromq ==9999999999
+
+test:
+  commands:
+    - gnuradio-config-info -v --prefix --sysconfdir --prefsdir --userprefsdir --prefs --builddate --enabled-components --cc --cxx --cflags
+    - gr_modtool --help
+  imports:
+    - gnuradio.analog
+    - gnuradio.audio
+    - gnuradio.blocks
+    - gnuradio.channels
+    - gnuradio.digital
+    - gnuradio.dtv
+    - gnuradio.fec
+    - gnuradio.fft
+    - gnuradio.filter
+    - gnuradio.gr
+    - gnuradio.iio
+    - gnuradio.network
+    - gnuradio.pdu
+    - gnuradio.qtgui
+    - gnuradio.soapy
+    - gnuradio.trellis
+    - gnuradio.uhd
+    - gnuradio.video_sdl
+    - gnuradio.vocoder
+    - gnuradio.wavelet
+    - gnuradio.zeromq
+    - pmt
+
+about:
+  home: https://gnuradio.org/
+  license: GPL-3.0-or-later
+  license_file: COPYING
+  summary: The free and open software radio ecosystem
+  description: >
+    GNU Radio is a free software development toolkit that provides the signal
+    processing runtime and processing blocks to implement software radios using
+    readily-available, low-cost external RF hardware and commodity processors.
+    It is widely used in hobbyist, academic and commercial environments to
+    support wireless communications research as well as to implement real-world
+    radio systems.
+
+    GNU Radio applications are primarily written using the Python programming
+    language, while the supplied, performance-critical signal processing path
+    is implemented in C++ using processor floating point extensions where
+    available. Thus, the developer is able to implement real-time, high-
+    throughput radio systems in a simple-to-use, rapid-application-development
+    environment.
+  doc_url: https://gnuradio.org/doc/doxygen/
+  dev_url: https://github.com/gnuradio/gnuradio
+
+extra:
+  recipe-maintainers:
+    - ryanvolz

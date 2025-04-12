@@ -13,7 +13,7 @@ import os
 from .Config import Config
 from . import canvas
 from ..core.platform import Platform as CorePlatform
-from ..core.utils.backports import ChainMap
+from collections import ChainMap
 
 
 class Platform(CorePlatform):

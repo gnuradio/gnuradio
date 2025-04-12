@@ -41,7 +41,7 @@ public:
     TimeDomainDisplayPlot& operator=(const TimeDomainDisplayPlot&) = delete;
     TimeDomainDisplayPlot& operator=(TimeDomainDisplayPlot&&) = delete;
 
-    void plotNewData(const std::vector<double*> dataPoints,
+    void plotNewData(const std::vector<const double*> dataPoints,
                      const int64_t numDataPoints,
                      const double timeInterval,
                      const std::vector<std::vector<gr::tag_t>>& tags =
@@ -53,9 +53,9 @@ public:
 
     double sampleRate() const;
 
-    const QColor getTagTextColor();
-    const QColor getTagBackgroundColor();
-    const Qt::BrushStyle getTagBackgroundStyle();
+    const QColor getTagTextColor() const;
+    const QColor getTagBackgroundColor() const;
+    Qt::BrushStyle getTagBackgroundStyle() const;
 
 public slots:
     void setSampleRate(double sr, double units, const std::string& strunits);

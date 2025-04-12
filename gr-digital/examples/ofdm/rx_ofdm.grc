@@ -1,6 +1,7 @@
 options:
   parameters:
     author: ''
+    catch_exceptions: 'True'
     category: Custom
     cmake_opt: ''
     comment: ''
@@ -24,6 +25,9 @@ options:
     title: OFDM Rx
     window_size: 1280, 1024
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [8, 12.0]
     rotation: 0
     state: enabled
@@ -35,6 +39,9 @@ blocks:
     comment: ''
     value: '64'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [328, 12.0]
     rotation: 0
     state: enabled
@@ -45,6 +52,9 @@ blocks:
     value: digital.ofdm_equalizer_simpledfe(fft_len, header_mod.base(), occupied_carriers,
       pilot_carriers, pilot_symbols)
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [952, 76.0]
     rotation: 0
     state: enabled
@@ -56,6 +66,9 @@ blocks:
       frame_len_tag_key=length_tag_key, bits_per_header_sym=header_mod.bits_per_symbol(),
       bits_per_payload_sym=payload_mod.bits_per_symbol(), scramble_header=False)
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [880, 12.0]
     rotation: 0
     state: enabled
@@ -65,6 +78,9 @@ blocks:
     comment: ''
     value: digital.constellation_bpsk()
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [512, 12.0]
     rotation: 0
     state: enabled
@@ -74,6 +90,9 @@ blocks:
     comment: ''
     value: '"frame_len"'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [392, 12.0]
     rotation: 0
     state: enabled
@@ -84,6 +103,9 @@ blocks:
     value: (list(range(-26, -21)) + list(range(-20, -7)) + list(range(-6, 0)) + list(range(1,
       7)) + list(range(8, 21)) + list(range(22, 27)),)
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [568, 76.0]
     rotation: 0
     state: enabled
@@ -93,6 +115,9 @@ blocks:
     comment: ''
     value: '96'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1056, 12.0]
     rotation: 0
     state: enabled
@@ -102,6 +127,9 @@ blocks:
     comment: ''
     value: '"packet_len"'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1152, 12.0]
     rotation: 0
     state: enabled
@@ -112,6 +140,9 @@ blocks:
     value: digital.ofdm_equalizer_simpledfe(fft_len, payload_mod.base(), occupied_carriers,
       pilot_carriers, pilot_symbols, 1)
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1136, 76.0]
     rotation: 0
     state: enabled
@@ -121,6 +152,9 @@ blocks:
     comment: ''
     value: digital.constellation_qpsk()
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [688, 12.0]
     rotation: 0
     state: enabled
@@ -130,6 +164,9 @@ blocks:
     comment: ''
     value: ((-21, -7, 7, 21,),)
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [720, 76.0]
     rotation: 0
     state: enabled
@@ -139,6 +176,9 @@ blocks:
     comment: ''
     value: ((1, 1, 1, -1,),)
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [840, 76.0]
     rotation: 0
     state: enabled
@@ -148,6 +188,9 @@ blocks:
     comment: ''
     value: '10000'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [184, 76.0]
     rotation: 0
     state: enabled
@@ -162,6 +205,9 @@ blocks:
       0., -1.41421356, 0., 1.41421356, 0., 1.41421356, 0., 1.41421356, 0., -1.41421356,
       0., 1.41421356, 0., 1.41421356, 0., 1.41421356, 0., 0., 0., 0., 0., 0.]'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [272, 76.0]
     rotation: 0
     state: enabled
@@ -177,6 +223,9 @@ blocks:
       (-1+0j), (-1+0j), (1+0j), (-1+0j), (1+0j), (-1+0j), (-1+0j), (-1+0j), (-1+0j),
       0j, 0j, 0j, 0j, 0j]'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [416, 76.0]
     rotation: 0
     state: enabled
@@ -190,6 +239,9 @@ blocks:
     minoutbuf: '0'
     sensitivity: -2.0/fft_len
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [912, 292.0]
     rotation: 0
     state: enabled
@@ -207,6 +259,9 @@ blocks:
     repeat: 'True'
     type: byte
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [16, 212.0]
     rotation: 0
     state: enabled
@@ -220,9 +275,13 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
     num_ports: '1'
+    showports: 'False'
     type: complex
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [688, 436.0]
     rotation: 0
     state: enabled
@@ -238,6 +297,9 @@ blocks:
     type: complex
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [800, 408.0]
     rotation: 0
     state: enabled
@@ -255,6 +317,9 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [432, 892.0]
     rotation: 0
     state: enabled
@@ -271,6 +336,9 @@ blocks:
     type: byte
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [176, 228.0]
     rotation: 0
     state: enabled
@@ -287,23 +355,31 @@ blocks:
     type: byte
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [864, 884.0]
     rotation: 0
     state: enabled
-- name: blocks_throttle_0
-  id: blocks_throttle
+- name: blocks_throttle2_0
+  id: blocks_throttle2
   parameters:
     affinity: ''
     alias: ''
     comment: ''
     ignoretag: 'True'
+    limit: auto
+    maximum: '0.1'
     maxoutbuf: '0'
     minoutbuf: '0'
     samples_per_second: samp_rate
     type: complex
     vlen: '1'
   states:
-    coordinate: [464, 484.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [456, 492.0]
     rotation: 0
     state: enabled
 - name: channels_channel_model_0
@@ -321,6 +397,9 @@ blocks:
     seed: '0'
     taps: '1.0'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [448, 372.0]
     rotation: 180
     state: enabled
@@ -334,6 +413,9 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1072, 580.0]
     rotation: 180
     state: enabled
@@ -347,6 +429,9 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [192, 900.0]
     rotation: 0
     state: enabled
@@ -362,6 +447,9 @@ blocks:
     minoutbuf: '0'
     packed: 'True'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [640, 884.0]
     rotation: 0
     state: enabled
@@ -385,6 +473,9 @@ blocks:
     trigger_tag_key: '""'
     type: complex
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1008, 388.0]
     rotation: 0
     state: enabled
@@ -403,6 +494,9 @@ blocks:
     sync_symbol1: sync_word1
     sync_symbol2: sync_word2
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [432, 636.0]
     rotation: 0
     state: enabled
@@ -421,6 +515,9 @@ blocks:
     minoutbuf: '0'
     propagate_channel_state: 'True'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [720, 628.0]
     rotation: 0
     state: enabled
@@ -439,6 +536,9 @@ blocks:
     minoutbuf: '0'
     propagate_channel_state: 'True'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [680, 764.0]
     rotation: 0
     state: enabled
@@ -458,6 +558,9 @@ blocks:
     packet_len_tag_key: ''
     symbols_skipped: '0'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [976, 652.0]
     rotation: 0
     state: enabled
@@ -477,6 +580,9 @@ blocks:
     packet_len_tag_key: packet_length_tag_key
     symbols_skipped: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [912, 764.0]
     rotation: 0
     state: enabled
@@ -493,6 +599,9 @@ blocks:
     threshold: '0.9'
     use_even_carriers: 'False'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [688, 292.0]
     rotation: 0
     state: enabled
@@ -518,6 +627,9 @@ blocks:
     sync_word1: sync_word1
     sync_word2: sync_word2
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [400, 148.0]
     rotation: 0
     state: enabled
@@ -531,6 +643,9 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [832, 580.0]
     rotation: 180
     state: enabled
@@ -549,6 +664,9 @@ blocks:
     type: complex
     window: ()
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [224, 636.0]
     rotation: 0
     state: enabled
@@ -567,6 +685,9 @@ blocks:
     type: complex
     window: ()
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [216, 764.0]
     rotation: 0
     state: enabled
@@ -577,6 +698,9 @@ blocks:
     comment: ''
     imports: from gnuradio.digital.utils import tagged_streams
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [184, 12.0]
     rotation: 0
     state: enabled
@@ -587,6 +711,9 @@ blocks:
     comment: ''
     stream_id: Header Stream
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1328, 436.0]
     rotation: 0
     state: enabled
@@ -597,6 +724,9 @@ blocks:
     comment: ''
     stream_id: Payload Stream
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1328, 484.0]
     rotation: 0
     state: enabled
@@ -607,6 +737,9 @@ blocks:
     comment: ''
     stream_id: Payload IQ
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1152, 796.0]
     rotation: 0
     state: enabled
@@ -617,6 +750,9 @@ blocks:
     comment: ''
     stream_id: Header Stream
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [16, 668.0]
     rotation: 0
     state: enabled
@@ -627,6 +763,9 @@ blocks:
     comment: ''
     stream_id: Payload IQ
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [16, 900.0]
     rotation: 0
     state: enabled
@@ -637,6 +776,9 @@ blocks:
     comment: ''
     stream_id: Payload Stream
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [16, 796.0]
     rotation: 0
     state: enabled
@@ -648,9 +790,9 @@ connections:
 - [blocks_multiply_xx_0, '0', digital_header_payload_demux_0, '0']
 - [blocks_repack_bits_bb_0, '0', digital_crc32_bb_0, '0']
 - [blocks_stream_to_tagged_stream_0, '0', digital_ofdm_tx_0, '0']
-- [blocks_throttle_0, '0', blocks_delay_0, '0']
-- [blocks_throttle_0, '0', digital_ofdm_sync_sc_cfb_0, '0']
-- [channels_channel_model_0, '0', blocks_throttle_0, '0']
+- [blocks_throttle2_0, '0', blocks_delay_0, '0']
+- [blocks_throttle2_0, '0', digital_ofdm_sync_sc_cfb_0, '0']
+- [channels_channel_model_0, '0', blocks_throttle2_0, '0']
 - [digital_constellation_decoder_cb_0, '0', digital_packet_headerparser_b_0, '0']
 - [digital_constellation_decoder_cb_1, '0', blocks_repack_bits_bb_0, '0']
 - [digital_crc32_bb_0, '0', blocks_tag_debug_1, '0']
@@ -674,3 +816,4 @@ connections:
 
 metadata:
   file_format: 1
+  grc_version: v3.11.0.0git-824-ga18acc39

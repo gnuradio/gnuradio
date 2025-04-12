@@ -8,6 +8,7 @@
 import ast
 import collections
 import textwrap
+from typing import Union, List
 
 from .. import Constants
 from ..base import Element
@@ -21,6 +22,8 @@ attributed_str = type('attributed_str', (str,), {})
 
 @setup_names
 class Param(Element):
+
+    EvaluationType = Union[None, str, complex, float, int, bool, List[str], List[complex], List[float], List[int]]
 
     is_param = True
 
@@ -46,7 +49,7 @@ class Param(Element):
         self.hide = hide or 'none'
         # end of args ########################################################
 
-        self._evaluated = None
+        self._evaluated: Param.EvaluationType = None
         self._stringify_flag = False
         self._lisitify_flag = False
         self.hostage_cells = set()
@@ -165,10 +168,10 @@ class Param(Element):
             except dtypes.ValidateError as e:
                 self.add_error_message(str(e))
 
-    def get_evaluated(self):
+    def get_evaluated(self) -> EvaluationType:
         return self._evaluated
 
-    def is_float(self, num):
+    def _is_float(self, num: str) -> bool:
         """
         Check if string can be converted to float.
 
@@ -181,7 +184,7 @@ class Param(Element):
         except ValueError:
             return False
 
-    def evaluate(self):
+    def evaluate(self) -> EvaluationType:
         """
         Evaluate the value.
 
@@ -211,7 +214,7 @@ class Param(Element):
         elif dtype in ('raw', 'complex', 'real', 'float', 'int', 'short', 'byte', 'hex', 'bool'):
             if expr:
                 try:
-                    if isinstance(expr, str) and self.is_float(expr[:-1]):
+                    if isinstance(expr, str) and self._is_float(expr[:-1]):
                         scale_factor = expr[-1:]
                         if scale_factor in self.scale:
                             expr = str(float(expr[:-1]) *
@@ -318,7 +321,7 @@ class Param(Element):
     ##############################################
     # GUI Hint
     ##############################################
-    def parse_gui_hint(self, expr):
+    def parse_gui_hint(self, expr: str) -> str:
         """
         Parse/validate gui hint value.
 
@@ -391,7 +394,7 @@ class Param(Element):
                 for c in range(col, col + col_span):
                     self.hostage_cells.add((my_parent, (r, c)))
 
-            for other in self.get_all_params('gui_hint'):
+            for other in self._get_all_params('gui_hint'):
                 if other is self:
                     continue
                 collision = next(
@@ -460,7 +463,7 @@ class Param(Element):
 
         return widget_str
 
-    def get_all_params(self, dtype, key=None):
+    def _get_all_params(self, dtype, key=None) -> List[Element]:
         """
         Get all the params from the flowgraph that have the given type and
         optionally a given key

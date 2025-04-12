@@ -110,19 +110,6 @@ public:
     void add_item_tag(unsigned int which_output, const tag_t& tag);
 
     /*!
-     * \brief  Removes a tag from the given input stream.
-     *
-     * Calls gr::buffer::remove_item_tag().
-     * The tag in question will then no longer appear on subsequent calls of
-     * get_tags_in_range().
-     *
-     * \param which_input  an integer of which input stream to remove the tag from
-     * \param tag the tag object to add
-     * \param id The unique block ID (use gr::block::unique_id())
-     */
-    void remove_item_tag(unsigned int which_input, const tag_t& tag, long id);
-
-    /*!
      * \brief Given a [start,end), returns a vector of all tags in the range.
      *
      * Pass-through function to gr::buffer_reader to get a vector of
@@ -135,13 +122,11 @@ public:
      * \param which_input  an integer of which input stream to pull from
      * \param abs_start    a uint64 count of the start of the range of interest
      * \param abs_end      a uint64 count of the end of the range of interest
-     * \param id           Block ID
      */
     void get_tags_in_range(std::vector<tag_t>& v,
                            unsigned int which_input,
                            uint64_t abs_start,
-                           uint64_t abs_end,
-                           long id);
+                           uint64_t abs_end);
 
     /*!
      * \brief Given a [start,end), returns a vector of all tags in the
@@ -152,6 +137,8 @@ public:
      * a secondary filter to the tags to extract only tags with the
      * given 'key'.
      *
+     * The vector is sorted ascendingly by the offset of the tags.
+     *
      * Tags are tuples of:
      *      (item count, source id, key, value)
      *
@@ -160,14 +147,50 @@ public:
      * \param abs_start    a uint64 count of the start of the range of interest
      * \param abs_end      a uint64 count of the end of the range of interest
      * \param key          a PMT symbol to select only tags of this key
-     * \param id           Block ID
      */
     void get_tags_in_range(std::vector<tag_t>& v,
                            unsigned int which_input,
                            uint64_t abs_start,
                            uint64_t abs_end,
-                           const pmt::pmt_t& key,
-                           long id);
+                           const pmt::pmt_t& key);
+
+    /*!
+     * \brief Get the first tag in specified range (if any), fulfilling criterion
+     *
+     * \details
+     * This function returns the lowest-offset tag in the range for whom the predicate
+     * function returns true.
+     *
+     * The predicate function hence needs to map tags to booleans; its signature is
+     * bool function(const tag_t& tag_to check);
+     *
+     * A sensible choice is a side-effect-free lambda, e.g., you'd use this as:
+     *
+     * auto timestamp = get_first_tag_in_range(
+     *     0,                          // which input
+     *     nitems_read(0),             // start index
+     *     nitems_read(0) + something, // end
+     *     [this](const gr::tag_t& tag) {
+     *         return pmt::eqv(tag.key, d_time_tag) && !pmt::is_null(tag.value)
+     *     });
+     * if (timestamp) {
+     *     d_logger->info("got time tag {} at offset {}",
+     *                    timestamp.value.value,
+     *                    timestamp.value.offset);
+     * }
+     *
+     * \param which_input  an integer of which input stream to pull from
+     * \param start        a uint64 count of the start of the range of interest
+     * \param end          a uint64 count of the end of the range of interest
+     * \param predicate    a function of tag_t, returning a boolean
+     */
+    [[nodiscard]] std::optional<gr::tag_t> get_first_tag_in_range(
+        unsigned which_input,
+        uint64_t start,
+        uint64_t end,
+        std::function<bool(const gr::tag_t&)> predicate = [](const gr::tag_t&) {
+            return true;
+        });
 
     /*!
      * \brief Set core affinity of block to the cores in the vector

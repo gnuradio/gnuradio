@@ -27,7 +27,7 @@ namespace digital {
  * bits based on the map and soft decision LUT of the \p
  * constellation object.
  *
- * Does not support constellations of dimensionality higher than 1 \p
+ * Does not support constellations of dimensionality higher than 1
  *
  * npwr sets the noise power to use for soft decoding.
  * this is equivalent to 10**(-SNR/10) if the constellation is
@@ -55,9 +55,9 @@ public:
     /*!
      * set constellation noise power for soft decision calculation
      *
-     * \param d_npwr sets expected noise power.
+     * \param npwr sets expected noise power.
      */
-    virtual void set_npwr(float d_npwr) = 0;
+    virtual void set_npwr(float npwr) = 0;
     /*!
      * Set a new constellation object for decoding
      *

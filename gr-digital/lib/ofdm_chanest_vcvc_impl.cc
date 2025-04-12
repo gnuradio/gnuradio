@@ -246,7 +246,7 @@ int ofdm_chanest_vcvc_impl::general_work(int noutput_items,
         produce(1, 1);
     }
     memcpy((void*)out,
-           (void*)&in[d_n_sync_syms * d_fft_len],
+           (const void*)&in[d_n_sync_syms * d_fft_len],
            sizeof(gr_complex) * d_fft_len * d_n_data_syms);
 
     // Propagate tags

@@ -1,0 +1,44 @@
+id: cpp_nogui_workflow
+description: "C++ no GUI workflow"
+output_language: cpp
+output_language_label: C++
+generator_module: gnuradio.grc.workflows.cpp_nogui
+generator_class: CppNoGuiTopBlockGenerator
+generate_options: no_gui
+generate_options_label: No GUI
+parameters:
+-   id: gen_cmake
+    label: Generate CMakeLists.txt
+    dtype: enum
+    default: 'On'
+    options: ['On', 'Off']
+    hide: 'part'
+-   id: cmake_opt
+    label: CMake options
+    dtype: string
+    default: ''
+    hide: 'part'
+-   id: run_options
+    label: Run Options
+    dtype: enum
+    default: prompt
+    options: [run, prompt]
+    option_labels: [Run to Completion, Prompt for Exit]
+    hide: 'none'
+-   id: max_nouts
+    label: Max Number of Output
+    dtype: int
+    default: '0'
+    hide: ${ 'none' if max_nouts else 'part' }
+-   id: realtime_scheduling
+    label: Realtime Scheduling
+    dtype: enum
+    options: ['', '1']
+    option_labels: ['Off', 'On']
+    hide: ${ 'none' if realtime_scheduling else 'part' }
+-   id: run_command
+    label: Run Command
+    category: Advanced
+    dtype: string
+    default: '{python} -u {filename}'
+    hide: 'part'

@@ -1,0 +1,178 @@
+id: uhd_fpga_device_bsp
+label: RFNoC Device BSP
+
+parameters:
+-   id: type
+    label: RFNoC Block Type
+    dtype: string
+    default: 'device'
+    hide: all
+-   id: chdr_width
+    label: CHDR Width
+    dtype: int
+    default: 64
+    options: [64, 128, 256, 512]
+    hide: part
+-   id: device
+    label: Device Type
+    dtype: string
+    default: x310
+    options: ["x310", "x300", "n300", "n310", "n320", "e31x", "e320", "x410", "x440"]
+    option_labels: ["X310", "X300", "N300", "N310", "N320", "E31x", "E320", "X410", "X440"]
+    hide: none
+-   id: default_target
+    label: Default Target
+    dtype: string
+    default: ""
+    options: ["", "X310_XG", "X310_HG", "X300_XG", "X300_HG"]
+    hide: ${ 'all' if device in ('x410', 'x440') else 'part' }
+-   id: RF_BW
+    label: RF Bandwidth (MHz)
+    dtype: int
+    default: 200
+    options: [100, 200, 400, 1600]
+    hide: ${ 'part' if device in ('x410', 'x440') else 'all' }
+-   id: ENABLE_DRAM
+    label: Enable DRAM
+    dtype: bool
+    default: 'True'
+    options: ['True', 'False']
+    option_labels: ["Enable", "Disable"]
+    hide: ${ 'part' }
+-   id: NUM_DRAM_BANKS
+    label: Number of DRAM Banks
+    dtype: int
+    default: 1
+    options: [1, 2]
+    hide: ${ 'part' if device in ('x410', 'x440') and ENABLE_DRAM else 'all' }
+-   id: NUM_DRAM_CHANS
+    label: Number of DRAM Channels
+    dtype: int
+    default: 1
+    options: [1, 2, 3, 4, 5, 6, 7, 8]
+    hide: ${ 'part' if device in ('x410', 'x440') and ENABLE_DRAM else 'all' }
+-   id: DRAM_WIDTH
+    label: DRAM Width (bits)
+    dtype: int
+    default: 64
+    options: [64, 128, 512]
+    hide: ${ 'part' if device in ('x410', 'x440') and ENABLE_DRAM else 'all' }
+
+asserts:
+-   ${ (device in ("x310", "x300", "n300", "n310", "n320", "e31x", "e320") and chdr_width == 64) or (device == "x410" and chdr_width in (64, 128, 256, 512)) or (device == "x440" and chdr_width in (64, 128, 256, 512)) }
+-   ${ NUM_DRAM_BANKS in (1, 2) }
+-   ${ 0 <= NUM_DRAM_CHANS < 8 }
+-   ${ DRAM_WIDTH in (64, 128, 512) }
+
+inputs:
+-   domain: rfnoc.io.ctrl_port
+    id: ctrlport_radio0
+    dtype: f64
+-   domain: rfnoc.io.ctrl_port
+    id: ctrlport_radio1
+    dtype: f64
+-   domain: rfnoc.io.xport
+    id: qsfp0
+    dtype: s16
+    hide: ${ device not in ("x410", "x440") }
+    optional: true
+-   domain: rfnoc.io.xport
+    id: qsfp1
+    dtype: s16
+    hide: ${ device not in ("x410", "x440") }
+    optional: true
+-   domain: rfnoc.io.xport
+    id: chdr_dma_s
+    dtype: s16
+    hide: ${ device not in ("x410", "x440") }
+-   domain: rfnoc.io.axi4_mm
+    id: dram
+    dtype: s8
+    optional: true
+    hide: ${ not ENABLE_DRAM or device in ("x410", "x440",)}
+-   domain: rfnoc.io.axi4_mm
+    id: dram0
+    dtype: s8
+    optional: true
+    hide: ${ not ENABLE_DRAM or not device in ("x410", "x440",) }
+-   domain: rfnoc.io.axi4_mm
+    id: dram1
+    dtype: s8
+    optional: true
+    hide: ${ not ENABLE_DRAM or not device in ("x410", "x440",) }
+
+outputs:
+-   domain: rfnoc.io.radio
+    id: radio0
+    dtype: sc32
+    vlen: ${ 8 if device in ("x440",) else 4 if device in ("x410",) and RF_BW == 400  else 2 if device in ("x410",) and RF_BW == 200 else 1}
+-   domain: rfnoc.io.radio
+    id: radio1
+    dtype: sc32
+    vlen: ${ 8 if device in ("x440",) else 4 if device in ("x410",) and RF_BW == 400  else 2 if device in ("x410",) and RF_BW == 200 else 1}
+-   domain: rfnoc.clk
+    id: radio_clk
+    dtype: message
+    hide: ${ device not in ("x310", "x300", "n300", "n310", "n320", "e31x", "e320", "x410") }
+    optional: ${ device not in ("x310", "x300", "n300", "n310", "n320", "e31x", "e320", "x410") }
+-   domain: rfnoc.clk
+    id: radio0_clk
+    dtype: message
+    hide: ${ device not in ("x440",) }
+    optional: ${ device not in ("x440",) }
+-   domain: rfnoc.clk
+    id: radio1_clk
+    dtype: message
+    hide: ${ device not in ("x440",) }
+    optional: ${ device not in ("x440",) }
+-   domain: rfnoc.clk
+    id: ce_clk
+    dtype: message
+-   domain: rfnoc.clk
+    id: dram_clk
+    dtype: message
+    optional: true
+    hide: ${ not ENABLE_DRAM }
+-   domain: rfnoc.io.time_keeper
+    id: time
+    dtype: f32
+    hide: ${ device not in ("x310", "x300", "n300", "n310", "n320", "e31x", "e320", "x410") }
+    optional: ${ device not in ("x310", "x300", "n300", "n310", "n320", "e31x", "e320", "x410") }
+-   domain: rfnoc.io.time_keeper
+    id: time0
+    dtype: f32
+    hide: ${ device not in ("x440",) }
+    optional: ${ device not in ("x440",) }
+-   domain: rfnoc.io.time_keeper
+    id: time1
+    dtype: f32
+    hide: ${ device not in ("x440",) }
+    optional: ${ device not in ("x440",) }
+-   domain: rfnoc.io.gpio
+    id: pps
+    dtype: bit
+    hide: ${ device not in ("x410",) }
+    optional: true
+-   domain: rfnoc.io.gpio
+    id: pps0
+    dtype: bit
+    hide: ${ device not in ("x440",) }
+    optional: true
+-   domain: rfnoc.io.gpio
+    id: pps1
+    dtype: bit
+    hide: ${ device not in ("x440",) }
+    optional: true
+-   domain: rfnoc.io.xport
+    id: chdr_dma_m
+    dtype: s16
+    hide: ${ device not in ("x410", "x440") }
+    optional: true
+
+documentation: |-
+  RFNoC BSP Representation (FPGA Implementation).
+  This block represents the BSP for the RFNoC device. It is used to carry all
+  relevant device-specific signals and clocks. Every GRC file that generates
+  an RFNoC design should have exactly one of these blocks.
+
+file_format: 1

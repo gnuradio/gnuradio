@@ -5,16 +5,15 @@ flags: [ python ]
 parameters:
 -   id: type
     label: RFNoC Block Type
-    dtype: enum
+    dtype: string
     default: 'sep'
-    options: ['block', 'sep', 'device']
     hide: all
 -   id: ctrl
     label: Pass Control Traffic
     dtype: enum
-    default: 'True'
-    options: ['True', 'False']
-    option_labels: ['Yes', 'No']
+    default: 'Auto'
+    options: ['Auto', 'True', 'False']
+    option_labels: ['Auto', 'Yes', 'No']
     hide: part
 -   id: data
     label: Pass Data Traffic
@@ -23,10 +22,10 @@ parameters:
     options: ['True', 'False']
     option_labels: ['Yes', 'No']
     hide: part
--   id: buff_size
-    label: Buffer Size
+-   id: buff_size_bytes
+    label: Buffer Size (Bytes)
     dtype: int
-    default: '32768'
+    default: 32768
     hide: part
 
 
@@ -34,12 +33,29 @@ inputs:
 -   domain: rfnoc.data
     id: in0
     dtype: fc32
-    multiplicity: ${ nports }
+    hide: ${ data == 'False' }
+    optional: True
 
 outputs:
 -   domain: rfnoc.data
     id: out0
     dtype: fc32
-    multiplicity: ${ nports }
+    hide: ${ data == 'False' }
+    optional: True
+
+documentation: |-
+  RFNoC streaming endpoint / SEP (FPGA Implementation).
+  This instantiates a streaming endpoint (SEP) in the FPGA bitfile. SEPs are
+  ingress/egress points for data and control traffic in an RFNoC flowgraph.
+
+  There must always be one streaming endpoint that is configured to carry
+  control traffic. This is typically the first SEP in the flowgraph. For all
+  other SEPs, the data traffic option should be set to "Yes".
+
+  The buffer size should be chosen depending on the Tx (host to device) streaming
+  capabilities that are required. If no streaming to the device is required, it
+  may be set to zero to save FPGA resources. The larger the buffer size, the
+  better the streaming endpoint can cope with bursty traffic and high rates.
+  However, note that the available storage resources on the FPGA are limited.
 
 file_format: 1

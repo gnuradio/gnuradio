@@ -1,0 +1,192 @@
+# This file specifies which settings are available
+# in the Preferences window.
+
+categories:
+  - key: grc
+    name: GRC
+    items:
+      - key: editor
+        name: Editor
+        tooltip: Choose the editor
+        dtype: str
+        default: /usr/bin/gedit
+      - key: xterm_executable
+        name: Terminal
+        tooltip: Choose the Terminal app
+        dtype: str
+        default: /usr/bin/xterm
+      - key: hide_variables
+        name: Hide variables
+        dtype: bool
+        default: False
+      - key: show_param_expr
+        name: Show parameter expressions in block
+        dtype: bool
+        default: False
+      - key: show_param_val
+        name: Show parameter value in block
+        dtype: bool
+        default: False
+      - key: hide_disabled_blocks
+        name: Hide disabled blocks
+        dtype: bool
+        default: False
+      - key: auto_hide_port_labels
+        name: Auto-hide port labels
+        dtype: bool
+        default: False
+      - key: snap_to_grid
+        name: Snap to grid
+        dtype: bool
+        default: False
+      - key: show_block_comments
+        name: Show block comments
+        dtype: bool
+        default: True
+      - key: show_block_ids
+        name: Show all block IDs
+        dtype: bool
+        default: False
+      - key: generated_code_preview
+        name: Generated code preview
+        dtype: bool
+        default: False
+      - key: show_complexity
+        name: Show flowgraph complexity
+        dtype: bool
+        default: False
+      - key: custom_block_paths
+        name: Custom block paths
+        dtype: str
+        default: ""
+      - key: default_grc
+        name: Default GRC version
+        dtype: enum
+        default: grc_gtk
+        options:
+          - grc_gtk
+          - grc_qt
+        option_labels:
+          - GRC Gtk
+          - GRC Qt
+      - key: blocklibrary_expanded
+        name: Expand blocklibrary on startup
+        dtype: bool
+        default: True
+      - key: console_log_level
+        name: Console log level (Requires restart)
+        dtype: enum
+        default: info
+        options:
+          - info
+          - debug
+        option_labels:
+          - Info
+          - Debug
+      - key: config_file_path
+        name: Config file path
+        dtype: str
+        default: ""
+
+  - key: appearance
+    name: Appearance
+    items:
+      - key: theme
+        name: Theme (requires restart)
+        tooltip: Choose the theme
+        dtype: enum
+        default: dark
+        options:
+          - light
+          - dark
+        option_labels:
+          - Light
+          - Dark
+      - key: connection_style
+        name: Connection style
+        dtype: enum
+        default: CURVED
+        options:
+          - CURVED
+          - ANGLED
+        option_labels:
+          - Curved
+          - Angular
+      - key: line_width_factor
+        name: Line width factor (relative to 1)
+        dtype: float
+        default: 1.0
+      - key: qt_scale_factor
+        name: Qt scale factor (experimental, requires restart)
+        tooltip: Scaling factor of Qt GUI elements. Note that the effective device pixel ratio will be a product of this value and the native device pixel ratio.
+        dtype: str
+        default: 1.0
+      - key: max_recent_files
+        name: Maximum number of recently opened files in list
+        dtype: int
+        default: 10
+
+# Runtime preferences typically end up in config.conf. They are grouped in a single tab.
+runtime:
+  - key: log
+    items:
+      - key: debug_file
+        name: Debug file
+        dtype: str
+        default: stderr
+      - key: debug_level
+        name: Debug level
+        dtype: str
+        default: crit
+      - key: log_file
+        name: Log file
+        dtype: str
+        default: stdout
+      - key: log_level
+        name: Log level
+        dtype: str
+        default: info
+  - key: perfcounters
+    items:
+      - key: clock
+        name: Perfcounters clock
+        dtype: str
+        default: thread
+      - key: export
+        name: Perfcounters export
+        dtype: bool
+        default: False
+      - key: enabled
+        name: Perfcounters enabled
+        dtype: bool
+        default: False
+  - key: controlport
+    items:
+      - key: edges_list
+        name: Controlport edges list
+        dtype: bool
+        default: False
+      - key: enabled
+        name: Controlport enabled
+        dtype: bool
+        default: False
+  - key: default
+    items:
+      - key: max_messages
+        name: Max messages
+        dtype: int
+        default: 8192
+      - key: verbose
+        name: Verbose
+        dtype: bool
+        default: False
+
+# Window settings, these are not meant to be changed by the user.
+# TODO: Is it necessary to have these in here?
+window:
+  - key: current_file
+    dtype: str
+    default: ""
+  - key: recent_files
+    dtype: list
+    default: []

@@ -16,9 +16,10 @@ logger = logging.getLogger(__name__)
 
 class Cache(object):
 
-    def __init__(self, filename, version=None):
+    def __init__(self, filename, version=None, log=True):
         self.cache_file = filename
         self.version = version
+        self.log = log
         self.cache = {}
         self._cachetime = None
         self.need_cache_write = True
@@ -35,18 +36,22 @@ class Cache(object):
     def load(self):
         try:
             self.need_cache_write = False
-            logger.debug(f"Loading block cache from: {self.cache_file}")
+            if self.log:
+                logger.debug(f"Loading cache from: {self.cache_file}")
             with open(self.cache_file, encoding='utf-8') as cache_file:
                 cache = json.load(cache_file)
             cacheversion = cache.get("version", None)
-            logger.debug(f"Cache version {cacheversion}")
+            if self.log:
+                logger.debug(f"Cache version {cacheversion}")
             self._cachetime = cache.get("cached-at", 0)
             if cacheversion == self.version:
-                logger.debug("Loaded block cache")
+                if self.log:
+                    logger.debug("Loaded cache")
                 self.cache = cache["cache"]
             else:
-                logger.info(f"Outdated cache {self.cache_file} found, "
-                            "will be overwritten.")
+                if self.log:
+                    logger.info(f"Outdated cache {self.cache_file} found, "
+                                "will be overwritten.")
                 raise ValueError()
         except (IOError, ValueError):
             self.need_cache_write = True
@@ -59,7 +64,8 @@ class Cache(object):
                 cached = self.cache[filename]
                 if int(cached["cached-at"] + 0.5) >= modtime:
                     return cached["data"]
-                logger.info(f"Cache for {filename} outdated, loading yaml")
+                if self.log:
+                    logger.info(f"Cache for {filename} outdated, loading yaml")
             except KeyError:
                 pass
 
@@ -76,7 +82,8 @@ class Cache(object):
         if not self.need_cache_write:
             return
 
-        logger.debug('Saving %d entries to json cache', len(self.cache))
+        if self.log:
+            logger.debug('Saving %d entries to json cache', len(self.cache))
         # Dumping to binary file is only supported for Python3 >= 3.6
         with open(self.cache_file, 'w', encoding='utf8') as cache_file:
             cache_content = {

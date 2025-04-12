@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Free Software Foundation, Inc.
+ * Copyright 2024 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -14,41 +14,32 @@
   and will be overwritten during the build process
  */
 
-
 static const char* __doc_gr_qtgui_matrix_sink = R"doc()doc";
 
+static const char* __doc_gr_qtgui_matrix_sink_matrix_sink_0 = R"doc()doc";
+
+static const char* __doc_gr_qtgui_matrix_sink_matrix_sink_1 = R"doc()doc";
 
 static const char* __doc_gr_qtgui_matrix_sink_make = R"doc()doc";
 
-
 static const char* __doc_gr_qtgui_matrix_sink_exec_ = R"doc()doc";
-
 
 static const char* __doc_gr_qtgui_matrix_sink_qwidget = R"doc()doc";
 
-
 static const char* __doc_gr_qtgui_matrix_sink_set_x_start = R"doc()doc";
-
 
 static const char* __doc_gr_qtgui_matrix_sink_set_x_end = R"doc()doc";
 
-
 static const char* __doc_gr_qtgui_matrix_sink_set_y_start = R"doc()doc";
-
 
 static const char* __doc_gr_qtgui_matrix_sink_set_y_end = R"doc()doc";
 
+static const char* __doc_gr_qtgui_matrix_sink_set_z_max = R"doc()doc";
 
 static const char* __doc_gr_qtgui_matrix_sink_set_z_min = R"doc()doc";
 
-
-static const char* __doc_gr_qtgui_matrix_sink_set_z_max = R"doc()doc";
-
-
 static const char* __doc_gr_qtgui_matrix_sink_set_x_axis_label = R"doc()doc";
 
-
 static const char* __doc_gr_qtgui_matrix_sink_set_y_axis_label = R"doc()doc";
-
 
 static const char* __doc_gr_qtgui_matrix_sink_set_z_axis_label = R"doc()doc";

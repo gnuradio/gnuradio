@@ -7,15 +7,17 @@
 
 from codecs import open
 from collections import namedtuple
+from collections import ChainMap
 import os
 import logging
 from itertools import chain
-import re
+from typing import Type
 
 from . import (
     Messages, Constants,
     blocks, params, ports, errors, utils, schema_checker
 )
+from .blocks import Block
 
 from .Config import Config
 from .cache import Cache
@@ -24,6 +26,7 @@ from .io import yaml
 from .generator import Generator
 from .FlowGraph import FlowGraph
 from .Connection import Connection
+from .workflow import WorkflowManager
 
 logger = logging.getLogger(__name__)
 
@@ -44,10 +47,13 @@ class Platform(Element):
             callback_finished=lambda: self.block_docstrings_loaded_callback()
         )
 
+        self.workflow_manager = WorkflowManager()
         self.blocks = self.block_classes
         self.domains = {}
+        self.examples_dict = {}
         self.connection_templates = {}
         self.cpp_connection_templates = {}
+        self.connection_params = {}
 
         self._block_categories = {}
         self._auto_hier_block_generate_chain = set()
@@ -110,7 +116,10 @@ class Platform(Element):
                 '>>> Generate Error: {}: {}\n'.format(file_path, str(e)))
             return None, None
 
-        return flow_graph, generator.file_path
+        return flow_graph, generator
+
+    def build_example_library(self, path=None):
+        self.examples = list(self._iter_files_in_example_path())
 
     def build_library(self, path=None):
         """load the blocks and block tree from the search paths
@@ -126,9 +135,14 @@ class Platform(Element):
         self.cpp_connection_templates.clear()
         self._block_categories.clear()
 
-        with Cache(Constants.CACHE_FILE, version=self.config.version) as cache:
+        try:
+            from gnuradio.gr import paths
+            cache_file = os.path.join(paths.cache(), Constants.GRC_SUBDIR, Constants.CACHE_FILE_NAME)
+        except ImportError:
+            cache_file = Constants.FALLBACK_CACHE_FILE
+        with Cache(cache_file, version=self.config.version) as cache:
+            logger.debug("Building library from path: %s (config paths: %s)", path, self.config.block_paths)
             for file_path in self._iter_files_in_block_path(path):
-
                 if file_path.endswith('.block.yml'):
                     loader = self.load_block_description
                     scheme = schema_checker.BLOCK_SCHEME
@@ -137,6 +151,10 @@ class Platform(Element):
                     scheme = schema_checker.DOMAIN_SCHEME
                 elif file_path.endswith('.tree.yml'):
                     loader = self.load_category_tree_description
+                    scheme = None
+                elif file_path.endswith('.workflow.yml'):
+                    logger.debug("Loading workflow file: " + file_path)
+                    loader = self.workflow_manager.load_workflow
                     scheme = None
                 else:
                     continue
@@ -228,8 +246,10 @@ class Platform(Element):
         block_id = data['id'] = data['id'].rstrip('_')
 
         if block_id in self.block_classes_build_in:
-            log.warning('Not overwriting build-in block %s with %s',
-                        block_id, file_path)
+            if block_id != 'options':
+                # option block will not be overwritten because it already implemented in blocks/options.py
+                log.warning('Not overwriting build-in block %s with %s',
+                            block_id, file_path)
             return
         if block_id in self.blocks:
             log.warning('Block with id "%s" loaded from\n  %s\noverwritten by\n  %s',
@@ -280,6 +300,7 @@ class Platform(Element):
                 'connect', '')
             self.cpp_connection_templates[connection_id] = connection.get(
                 'cpp_connect', '')
+            self.connection_params[connection_id] = connection.get('parameters', {})
 
     def load_category_tree_description(self, data, file_path):
         """Parse category tree file and add it to list"""
@@ -341,14 +362,28 @@ class Platform(Element):
             from ..converter.flow_graph import from_xml
             data = from_xml(filename)
 
+        file_format = data.get('metadata', {}).get('file_format')
+        if file_format is None:
+            Messages.send(
+                '>>> WARNING: Flow graph does not contain a file format version!\n')
+        elif file_format == 0:
+            Messages.send(
+                '>>> WARNING: Flow graph format is version 0 (legacy) and will'
+                ' be converted to version 1 or higher upon saving!\n')
+        elif file_format > Constants.FLOW_GRAPH_FILE_FORMAT_VERSION:
+            raise RuntimeError(
+                f"Flow graph {filename} has unknown flow graph version!")
+
         return data
 
     def save_flow_graph(self, filename, flow_graph):
         data = flow_graph.export_data()
 
         try:
-            data['connections'] = [yaml.ListFlowing(
-                i) for i in data['connections']]
+            data['connections'] = [
+                yaml.ListFlowing(conn) if isinstance(conn, (list, tuple)) else conn
+                for conn in data['connections']
+            ]
         except KeyError:
             pass
 
@@ -403,7 +438,7 @@ class Platform(Element):
 
     block_classes_build_in = blocks.build_ins
     # separates build-in from loaded blocks)
-    block_classes = utils.backports.ChainMap({}, block_classes_build_in)
+    block_classes = ChainMap({}, block_classes_build_in)
 
     port_classes = {
         None: ports.Port,  # default
@@ -421,10 +456,10 @@ class Platform(Element):
             fg.import_data(data)
         return fg
 
-    def new_block_class(self, **data):
+    def new_block_class(self, **data) -> Type[Block]:
         return blocks.build(**data)
 
-    def make_block(self, parent, block_id, **kwargs):
+    def make_block(self, parent, block_id, **kwargs) -> Block:
         cls = self.block_classes[block_id]
         return cls(parent, **kwargs)
 

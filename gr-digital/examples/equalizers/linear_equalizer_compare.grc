@@ -23,6 +23,7 @@ options:
     sizing_mode: fixed
     thread_safe_setters: ''
     title: Compare Linear Equalizers
+    window_size: (1000,1000)
   states:
     bus_sink: false
     bus_source: false
@@ -72,6 +73,8 @@ blocks:
     comment: ''
     const_points: '[-1-1j, -1+1j, 1+1j, 1-1j]'
     dims: '1'
+    normalization: digital.constellation.AMPLITUDE_NORMALIZATION
+    npwr: '1.0'
     precision: '8'
     rot_sym: '4'
     soft_dec_lut: None
@@ -115,7 +118,7 @@ blocks:
     gui_hint: ''
     label: Absolute Corr Thresh (Mag Sq)
     min_len: '200'
-    orient: Qt.Horizontal
+    orient: QtCore.Qt.Horizontal
     rangeType: float
     start: '0.1'
     step: '1.0'
@@ -148,7 +151,7 @@ blocks:
     gui_hint: ''
     label: ''
     min_len: '200'
-    orient: Qt.Horizontal
+    orient: QtCore.Qt.Horizontal
     rangeType: float
     start: '0'
     step: '1'
@@ -257,7 +260,7 @@ blocks:
     gui_hint: ''
     label: phase
     min_len: '200'
-    orient: Qt.Horizontal
+    orient: QtCore.Qt.Horizontal
     rangeType: float
     start: '0.00'
     step: '.1'
@@ -384,13 +387,53 @@ blocks:
     coordinate: [680, 892.0]
     rotation: 180
     state: enabled
-- name: blocks_throttle_0
-  id: blocks_throttle
+- name: blocks_tag_gate_0
+  id: blocks_tag_gate
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    propagate_tags: 'False'
+    single_key: '""'
+    type: float
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [496, 820.0]
+    rotation: 180
+    state: enabled
+- name: blocks_tag_gate_0_0
+  id: blocks_tag_gate
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    propagate_tags: 'False'
+    single_key: '""'
+    type: float
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [496, 892.0]
+    rotation: 180
+    state: enabled
+- name: blocks_throttle2_0
+  id: blocks_throttle2
   parameters:
     affinity: ''
     alias: ''
     comment: ''
     ignoretag: 'True'
+    limit: auto
+    maximum: '0.1'
     maxoutbuf: '0'
     minoutbuf: '0'
     samples_per_second: samp_rate
@@ -400,7 +443,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [440, 268.0]
+    coordinate: [448, 260.0]
     rotation: 0
     state: enabled
 - name: blocks_vector_source_x_0_0
@@ -493,6 +536,7 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
     samples_per_symbol: '4'
+    truncate: 'False'
     verbose: 'False'
   states:
     bus_sink: false
@@ -571,7 +615,7 @@ blocks:
     comment: ''
     cons: cons
     maxoutbuf: '0'
-    meas_type: digital.evm_measurement_t_EVM_PERCENT
+    meas_type: digital.evm_measurement_t.EVM_PERCENT
     minoutbuf: '0'
   states:
     bus_sink: false
@@ -588,7 +632,7 @@ blocks:
     comment: ''
     cons: cons
     maxoutbuf: '0'
-    meas_type: digital.evm_measurement_t_EVM_PERCENT
+    meas_type: digital.evm_measurement_t.EVM_PERCENT
     minoutbuf: '0'
   states:
     bus_sink: false
@@ -1261,20 +1305,22 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [400, 844.0]
+    coordinate: [200, 884.0]
     rotation: 180
     state: true
 
 connections:
 - [blocks_complex_to_mag_squared_0, '0', qtgui_time_sink_x_0_0, '0']
-- [blocks_head_0, '0', qtgui_time_sink_x_2, '0']
-- [blocks_head_0_0, '0', qtgui_time_sink_x_2, '1']
-- [blocks_throttle_0, '0', channels_channel_model_0, '0']
+- [blocks_head_0, '0', blocks_tag_gate_0, '0']
+- [blocks_head_0_0, '0', blocks_tag_gate_0_0, '0']
+- [blocks_tag_gate_0, '0', qtgui_time_sink_x_2, '0']
+- [blocks_tag_gate_0_0, '0', qtgui_time_sink_x_2, '1']
+- [blocks_throttle2_0, '0', channels_channel_model_0, '0']
 - [blocks_vector_source_x_0_0, '0', digital_constellation_modulator_0, '0']
 - [blocks_vector_to_stream_0, '0', qtgui_time_sink_x_1, '0']
 - [blocks_vector_to_stream_0_1, '0', qtgui_time_sink_x_1_2, '0']
 - [channels_channel_model_0, '0', digital_corr_est_cc_0, '0']
-- [digital_constellation_modulator_0, '0', blocks_throttle_0, '0']
+- [digital_constellation_modulator_0, '0', blocks_throttle2_0, '0']
 - [digital_corr_est_cc_0, '0', digital_linear_equalizer_0, '0']
 - [digital_corr_est_cc_0, '0', digital_linear_equalizer_0_0, '0']
 - [digital_corr_est_cc_0, '0', qtgui_time_sink_x_0, '0']
@@ -1290,3 +1336,4 @@ connections:
 
 metadata:
   file_format: 1
+  grc_version: v3.11.0.0git-811-g09b7680e

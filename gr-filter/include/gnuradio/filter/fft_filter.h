@@ -28,7 +28,7 @@ namespace kernel {
  *
  * \details
  * This block performs fast convolution using the
- * overlap-and-save algorithm. The filtering is performand in
+ * overlap-and-add algorithm. The filtering is performand in
  * the frequency domain instead of the time domain (see
  * gr::filter::kernel::fir_filter_fff). For an input signal x
  * and filter coefficients (taps) t, we compute y as:
@@ -141,7 +141,7 @@ public:
  *
  * \details
  * This block performs fast convolution using the
- * overlap-and-save algorithm. The filtering is performand in
+ * overlap-and-add algorithm. The filtering is performand in
  * the frequency domain instead of the time domain (see
  * gr::filter::kernel::fir_filter_ccc). For an input signal x
  * and filter coefficients (taps) t, we compute y as:
@@ -254,7 +254,7 @@ public:
  *
  * \details
  * This block performs fast convolution using the
- * overlap-and-save algorithm. The filtering is performand in
+ * overlap-and-add algorithm. The filtering is performand in
  * the frequency domain instead of the time domain (see
  * gr::filter::kernel::fir_filter_ccf). For an input signal x
  * and filter coefficients (taps) t, we compute y as:
@@ -351,7 +351,7 @@ public:
      * \details This value could be equal to ntaps, but we often
      * build a longer filter to allow us to calculate a more
      * efficient FFT. This value is the actual size of the filters
-     * used in the calculation of the overlap-and-save operation.
+     * used in the calculation of the overlap-and-add operation.
      */
     unsigned int filtersize() const;
 

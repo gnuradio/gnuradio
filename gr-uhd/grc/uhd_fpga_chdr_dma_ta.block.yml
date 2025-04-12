@@ -1,0 +1,33 @@
+id: uhd_fpga_chdr_dma_ta
+label: CHDR DMA Transport Adapter
+
+parameters:
+-   id: type
+    label: RFNoC Block Type
+    dtype: string
+    default: 'transport_adapter'
+    hide: all
+-   id: desc
+    label: Block Descriptor
+    dtype: string
+    default: 'chdr_dma.yml'
+    hide: all
+
+inputs:
+-   domain: rfnoc.io.xport
+    id: chdr_dma_m
+    dtype: s16
+
+outputs:
+-   domain: rfnoc.io.xport
+    id: chdr_dma_s
+    dtype: s16
+
+documentation: |-
+  RFNoC CHDR DMA Transport Adapter (FPGA Implementation).
+  Instantiate this transport adapter on FPGAs where the transports are modular,
+  and there is an embedded processor (PS) built into the system (e.g., X410,
+  X440). This enables communication between FPGA and the embedded processor, as
+  which implies communication to the FPGA over the 1 GbE interface (RJ45 connector).
+
+file_format: 1

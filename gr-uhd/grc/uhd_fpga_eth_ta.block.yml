@@ -1,0 +1,67 @@
+id: uhd_fpga_eth_ta
+label: Ethernet Transport Adapter
+
+parameters:
+-   id: type
+    label: RFNoC Block Type
+    dtype: string
+    default: 'transport_adapter'
+    hide: all
+-   id: desc
+    label: Block Descriptor
+    dtype: string
+    default: 'x4xx_eth.yml'
+    hide: all
+-   id: port_type0
+    label: Port 0 Ethernet Type
+    dtype: enum
+    default: '10GbE'
+    options: ['10GbE', '100GbE', 'disable']
+    hide: none
+-   id: port_type1
+    label: Port 1 Ethernet Type
+    dtype: enum
+    default: 'disable'
+    options: ['10GbE', 'disable']
+    hide: part
+-   id: port_type2
+    label: Port 2 Ethernet Type
+    dtype: enum
+    default: 'disable'
+    options: ['10GbE', 'disable']
+    hide: part
+-   id: port_type3
+    label: Port 3 Ethernet Type
+    dtype: enum
+    default: 'disable'
+    options: ['10GbE', 'disable']
+    hide: part
+-   id: qsfp_num
+    label: QSFP Number
+    dtype: int
+    default: 0
+    options: [0, 1]
+
+asserts:
+-   ${ qsfp_num in (0, 1) }
+#-   ${ (port_type0, port_type1, port_type2, port_type3) in (('10GbE', '10GbE', '10GbE', '10GbE'), ('100GbE', 'disable', 'disable', 'disable'), ('10GbE', 'disable, 'disable', 'disable')) }
+-   ${ (port_type0, port_type1, port_type2, port_type3) in (('10GbE', 'disable', 'disable', 'disable'),('100GbE', 'disable', 'disable', 'disable'), ('10GbE', '10GbE', '10GbE', '10GbE')) }
+
+outputs:
+-   domain: rfnoc.io.xport
+    id: qsfp
+    dtype: s16
+
+documentation: |-
+  RFNoC Ethernet Transport Adapter (FPGA Implementation).
+  Instantiate this transport adapter on FPGAs where the transports are modular,
+  and there are QSFP ports built into the system (e.g., X410, X440). On such
+  systems, this block is required to enable 10 or 100 GbE functionality (without
+  such a block, the SFP ports will be not connected!).
+  Note that parameter 'qsfp_num' is used to select the QSFP port number (0 or 1),
+  and must match the SFP port number used in the RFNoC block diagram. For example,
+  if this block is used in an X410 design, and it is connected to the IO port
+  'qsfp0', then it must be set to '0'. If it is connected to the IO port 'qsfp1',
+  then it must be set to '1'.
+
+file_format: 1

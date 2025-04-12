@@ -1,6 +1,7 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2012 Free Software Foundation, Inc.
+ * Copyright 2025 Marcus Müller
  *
  * This file is part of GNU Radio
  *
@@ -12,7 +13,6 @@
 #define INCLUDED_PATTERNED_INTERLEAVER_IMPL_H
 
 #include <gnuradio/blocks/patterned_interleaver.h>
-#include <algorithm>
 
 namespace gr {
 namespace blocks {
@@ -27,19 +27,13 @@ public:
                      gr_vector_const_void_star& input_items,
                      gr_vector_void_star& output_items) override;
 
-    static int pattern_max(std::vector<int> pattern)
-    {
-        if (pattern.empty()) {
-            return 0;
-        }
-        return *std::max_element(pattern.begin(), pattern.end());
-    }
-
     void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
+    bool check_topology(int ninput, int noutputs) override;
 
-    std::vector<int> d_pattern;
-    std::vector<int> d_counts;
-    size_t d_itemsize;
+private:
+    const std::vector<int> d_pattern;
+    const std::vector<int> d_counts;
+    const size_t d_itemsize;
 };
 
 } /* namespace blocks */

@@ -7,7 +7,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
 
-from __future__ import print_function
 import time
 from gnuradio import gr, gr_unittest, iio, blocks
 
@@ -44,4 +43,4 @@ class test_iio(gr_unittest.TestCase):
 
 
 if __name__ == '__main__':
-    gr_unittest.run(test_iio, "test_iio.xml")
+    gr_unittest.run(test_iio)

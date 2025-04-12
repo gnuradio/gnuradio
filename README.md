@@ -7,24 +7,57 @@
 [![AUR](https://img.shields.io/github/license/gnuradio/gnuradio)](https://github.com/gnuradio/gnuradio/blob/main/COPYING)
 [![Docs](https://img.shields.io/badge/docs-doxygen-orange.svg)](https://www.gnuradio.org/doc/doxygen/)
 [![Packaging status](https://repology.org/badge/tiny-repos/gnuradio.svg)](https://repology.org/project/gnuradio/badges)
+[![Donate](https://img.shields.io/badge/donate-donorbox-green)](https://donorbox.org/gnuradio)
 
-GNU Radio is a free & open-source software development toolkit that 
-provides signal processing blocks to implement software radios. It can 
-be used with readily-available, low-cost external RF hardware to create 
-software-defined radios, or without hardware in a simulation-like 
-environment. It is widely used in hobbyist, academic, and commercial 
-environments to support both wireless communications research and real-world 
-radio systems.
+# GNU Radio
 
-Please visit the GNU Radio website at https://www.gnuradio.org/ and the 
-wiki at https://wiki.gnuradio.org/. Bugs and feature requests are 
-tracked on GitHub's [Issue Tracker](https://github.com/gnuradio/gnuradio/issues). 
-If you have questions about GNU Radio, please search the **discuss-gnuradio** 
-mailing list [archive](https://lists.gnu.org/archive/html/discuss-gnuradio/), 
-as many questions have already been asked and answered. Please also 
-[subscribe](https://lists.gnu.org/mailman/listinfo/discuss-gnuradio) to 
-the mailing list and post your new questions there.
+<table align="center">
+    <tr>
+        <td>
+            <img src="./docs/grc_eg.png" height="200px" />
+        </td>
+        <td>
+            <img src="./docs/grc_eg_code.png" height="200px" />
+        </td>
+        <td>
+            <img src="./docs/grc_eg_out.png" height="200px" />
+        </td>
+    </tr>
+</table>
 
+GNU Radio is a free & open-source signal processing runtime and signal processing
+software development toolkit. Originally developed for use with software-defined
+radios and for simulating wireless communications, it's robust capabilities have
+led to adoption in hobbyist, academic, and commercial environments. GNU Radio has
+found use in software-defined radio, digital communications, nuclear physics, high-
+energy particle physics, astrophysics, radio astronomy and more!
+
+## Helpful Links
+
+* [GNU Radio Website](https://gnuradio.org)
+* [GNU Radio Wiki](https://wiki.gnuradio.org/)
+* [Github issue tracker for bug reports and feature requests](https://github.com/gnuradio/gnuradio/issues)
+* [View the GNU Radio Mailing List Archive](https://lists.gnu.org/archive/html/discuss-gnuradio/)
+* [Subscribe to the GNU Radio Mailing List](https://lists.gnu.org/mailman/listinfo/discuss-gnuradio)
+* [GNU Radio Chatroom on Matrix](https://chat.gnuradio.org/)
+* [Contributors and Affiliated Organizations](https://github.com/gnuradio/gnuradio/blob/main/CONTRIBUTORS.md)
+
+## How to Run the QT Version of GNU Radio Companion
+
+```bash
+    # Ensure PyQt5 and other dependencies are installed
+    pip install QDarkStyle qtpy
+    
+    # If you want to run tests
+    pip install pytest-qt pyautogui
+
+    # Build and install as usual (described below) and then run
+    gnuradio-companion --qt
+```
+
+## GNU Radio 4.0
+
+The next major release of GNU Radio, GNU Radio 4.0, is currently under active development. The effort is being spearheaded by FAIR (The Facility for Anti-Proton and Ion Research), part of GSI in Germany. Development of that version is currently taking place under their GitHub organization, [here](https://github.com/fair-acc/gnuradio4).
 
 ## How to Install GNU Radio
 
@@ -34,14 +67,15 @@ The recommended way to install GNU Radio on most platforms is using available bi
 
 The following command is for Debian, Ubuntu, and derivatives. Consult your distribution information to obtain the version of GNU Radio which is included.
 
+```
     sudo apt install gnuradio
+```
 
 For other operating systems and versions, see [Quick Start](https://wiki.gnuradio.org/index.php/InstallingGR#Quick_Start)
 
 ### Ubuntu PPA Installation
 
-For Ubuntu, the latest builds (both released and pulled from master branch) are maintained as PPAs (Personal Package Archives) on [launchpad.net](https://launchpad.net/~gnuradio). **Be sure to uninstall any previously installed versions of gnuradio first.** See [UnInstallGR](https://wiki.gnuradio.org/index.php?title=UnInstallGR#From_Distribution_package_manager_or_PPA).
-
+For Ubuntu, the latest builds (both released and pulled from master branch) are maintained as PPAs (Personal Package Archives) on [launchpad.net](https://launchpad.net/~gnuradio). **Be sure to uninstall any previously installed versions of gnuradio first.** See [UnInstall GR](https://wiki.gnuradio.org/index.php?title=UnInstallGR#From_Distribution_package_manager_or_PPA).
 
 ### Other Installation Methods
 
@@ -55,6 +89,10 @@ Complete instructions for building GNU Radio from source code are detailed in
 ### PyBOMBS
 
 **We are no longer recommending** [PyBOMBS](https://github.com/gnuradio/pybombs#pybombs) **to install modern versions of GNU Radio.**
+
+## Supporting GNU Radio
+
+If you find GNU Radio useful and would like to support its development, you can make a [donation](https://gift.idonate.com/seti/GNURadio). Your contributions help ensure ongoing improvements and maintenance. Thank you for your support!
 
 ## Legal Matters
 

@@ -240,7 +240,7 @@ class VariableEditor(Gtk.VBox):
     def _handle_value_edited_cb(self, cell, path, new_text):
         block = self.treestore[path][BLOCK_INDEX]
         if block.is_import:
-            block.params['import'].set_value(new_text)
+            block.params['imports'].set_value(new_text)
         else:
             block.params['value'].set_value(new_text)
         Actions.VARIABLE_EDITOR_UPDATE()

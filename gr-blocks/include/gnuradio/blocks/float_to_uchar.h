@@ -1,6 +1,7 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2012 Free Software Foundation, Inc.
+ * Copyright 2024 Daniel Estevez <daniel@destevez.net>
  *
  * This file is part of GNU Radio
  *
@@ -29,8 +30,32 @@ public:
 
     /*!
      * Build a float to uchar block.
+     *
+     * \param vlen vector length of data streams.
+     * \param scale a scalar multiplier to change the output signal scale.
+     * \param bias a scalar additive value to change the output signal offset.
      */
-    static sptr make();
+    static sptr make(size_t vlen = 1, float scale = 1.0, float bias = 0.0);
+
+    /*!
+     * Get the scalar multiplier value.
+     */
+    virtual float scale() const = 0;
+
+    /*!
+     * Get the scalar bias value.
+     */
+    virtual float bias() const = 0;
+
+    /*!
+     * Set the scalar multiplier value.
+     */
+    virtual void set_scale(float scale) = 0;
+
+    /*!
+     * Set the scalar bias value.
+     */
+    virtual void set_bias(float scale) = 0;
 };
 
 } /* namespace blocks */

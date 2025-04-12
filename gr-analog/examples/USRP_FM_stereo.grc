@@ -23,6 +23,7 @@ options:
     sizing_mode: fixed
     thread_safe_setters: ''
     title: Broadcast FM stereo
+    window_size: (1000,1000)
   states:
     bus_sink: false
     bus_source: false
@@ -158,7 +159,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [552, 180.0]
+    coordinate: [576, 188.0]
     rotation: 0
     state: true
 - name: audio_sink_0
@@ -175,7 +176,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1064, 184.0]
+    coordinate: [1088, 192.0]
     rotation: 0
     state: true
 - name: blocks_multiply_const_vxx_0_0
@@ -193,7 +194,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [816, 164.0]
+    coordinate: [840, 172.0]
     rotation: 0
     state: enabled
 - name: blocks_multiply_const_vxx_0_0_0
@@ -211,7 +212,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [816, 228.0]
+    coordinate: [840, 236.0]
     rotation: 0
     state: enabled
 - name: filter_fft_low_pass_filter_0
@@ -235,7 +236,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [312, 140.0]
+    coordinate: [336, 148.0]
     rotation: 0
     state: true
 - name: qtgui_sink_x_0
@@ -264,50 +265,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [552, 292.0]
-    rotation: 0
-    state: true
-- name: soapy_custom_source_0
-  id: soapy_custom_source
-  parameters:
-    affinity: ''
-    agc0: 'False'
-    agc1: 'False'
-    alias: ''
-    antenna0: RX
-    antenna1: ''
-    bandwidth0: '0'
-    bandwidth1: '0'
-    center_freq0: center_freq
-    center_freq1: '0'
-    comment: ''
-    dc_offset0: '0'
-    dc_offset1: '0'
-    dc_removal0: 'True'
-    dc_removal1: 'True'
-    dev_args: ''
-    driver: ''
-    freq_correction0: '0'
-    freq_correction1: '0'
-    gain0: rf_gain
-    gain1: '0'
-    iq_balance0: '0'
-    iq_balance1: '0'
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    nchan: '1'
-    samp_rate: samp_rate
-    settings0: ''
-    settings1: ''
-    stream_args: ''
-    tune_args0: ''
-    tune_args1: ''
-    type: fc32
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [40, 292.0]
+    coordinate: [576, 300.0]
     rotation: 0
     state: true
 - name: uhd_usrp_source_0
@@ -743,9 +701,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [40, 156.0]
+    coordinate: [40, 180.0]
     rotation: 0
-    state: disabled
+    state: enabled
 
 connections:
 - [analog_wfm_rcv_pll_0, '0', blocks_multiply_const_vxx_0_0, '0']
@@ -754,8 +712,8 @@ connections:
 - [blocks_multiply_const_vxx_0_0_0, '0', audio_sink_0, '1']
 - [filter_fft_low_pass_filter_0, '0', analog_wfm_rcv_pll_0, '0']
 - [filter_fft_low_pass_filter_0, '0', qtgui_sink_x_0, '0']
-- [soapy_custom_source_0, '0', filter_fft_low_pass_filter_0, '0']
 - [uhd_usrp_source_0, '0', filter_fft_low_pass_filter_0, '0']
 
 metadata:
   file_format: 1
+  grc_version: 3.10.10.0

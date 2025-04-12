@@ -65,8 +65,5 @@ cpp_templates:
             ${max_carr_offset},
             ${force_one_symbol});
     link: ['gnuradio::gnuradio-digital']
-    translations:
-        'True': 'true'
-        'False': 'false'
 
 file_format: 1

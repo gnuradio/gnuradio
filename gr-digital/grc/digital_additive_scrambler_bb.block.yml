@@ -1,6 +1,6 @@
 id: digital_additive_scrambler_bb
-label: Additive Scrambler
-flags: [ python, cpp ]
+label: Additive Scrambler (Deprecated)
+flags: [ python, cpp, deprecated ]
 
 parameters:
 -   id: mask
@@ -42,7 +42,7 @@ templates:
         bits_per_byte=${bits_per_byte}, reset_tag_key=${reset_tag_key})
 
 cpp_templates:
-    includes: ['#include <gnuradio/digital/additive_scrambler_bb.h>']
+    includes: ['#include <gnuradio/digital/additive_scrambler.h>']
     declarations: 'digital::additive_scrambler_bb::sptr ${id};'
     make: |-
         this->${id} = digital::additive_scrambler_bb::make(

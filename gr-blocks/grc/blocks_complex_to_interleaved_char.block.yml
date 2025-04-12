@@ -33,9 +33,6 @@ cpp_templates:
     includes: ['#include <gnuradio/blocks/complex_to_interleaved_char.h>']
     declarations: 'blocks::complex_to_interleaved_char::sptr ${id};'
     make: 'this->${id} = blocks::complex_to_interleaved_char::make(${vector_output});'
-    translations:
-        'True': 'true'
-        'False': 'false'
 
 documentation: |-
     This block converts a complex sample to interleaved IQ bytes.  

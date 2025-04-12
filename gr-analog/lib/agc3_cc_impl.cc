@@ -10,10 +10,13 @@
 
 #include "agc3_cc_impl.h"
 
+/* ensure that tweakme.h is included before the bundled spdlog/fmt header, see
+ * https://github.com/gabime/spdlog/issues/2922 */
+#include <spdlog/tweakme.h>
+
 #include <gnuradio/io_signature.h>
 #include <spdlog/fmt/fmt.h>
 #include <volk/volk.h>
-#include <volk/volk_alloc.hh>
 #include <algorithm>
 #include <cmath>
 #include <numeric>
@@ -30,7 +33,7 @@ agc3_cc::sptr agc3_cc::make(float attack_rate,
                             float max_gain)
 {
     return gnuradio::make_block_sptr<agc3_cc_impl>(
-        attack_rate, decay_rate, reference, gain, iir_update_decim);
+        attack_rate, decay_rate, reference, gain, iir_update_decim, max_gain);
 }
 
 agc3_cc_impl::agc3_cc_impl(float attack_rate,
@@ -52,8 +55,6 @@ agc3_cc_impl::agc3_cc_impl(float attack_rate,
     test_and_log_value_domain(iir_update_decim, "input power sampling stride");
     d_iir_update_decim = iir_update_decim;
     set_output_multiple(iir_update_decim * 4);
-    const int alignment_multiple = volk_get_alignment() / sizeof(gr_complex);
-    set_alignment(std::max(1, alignment_multiple));
 }
 
 agc3_cc_impl::~agc3_cc_impl() {}

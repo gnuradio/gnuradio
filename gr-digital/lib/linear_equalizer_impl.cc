@@ -20,9 +20,6 @@
 
 #include "adaptive_algorithms.h"
 
-using namespace pmt;
-using namespace std;
-
 namespace gr {
 namespace digital {
 
@@ -54,7 +51,7 @@ linear_equalizer_impl::linear_equalizer_impl(unsigned num_taps,
                                              num_taps * sizeof(gr_complex),
                                              sizeof(unsigned short)),
                          sps),
-      filter::kernel::fir_filter_ccc(vector<gr_complex>(num_taps, gr_complex(0, 0))),
+      filter::kernel::fir_filter_ccc(std::vector<gr_complex>(num_taps, gr_complex(0, 0))),
       d_num_taps(num_taps),
       d_sps(sps),
       d_alg(alg),
@@ -76,18 +73,18 @@ linear_equalizer_impl::linear_equalizer_impl(unsigned num_taps,
     filter::kernel::fir_filter_ccc::set_taps(d_new_taps);
 
     const int alignment_multiple = volk_get_alignment() / sizeof(gr_complex);
-    set_alignment(max(1, alignment_multiple));
+    set_alignment(std::max(1, alignment_multiple));
     set_history(num_taps);
 }
 
-void linear_equalizer_impl::set_taps(const vector<gr_complex>& taps)
+void linear_equalizer_impl::set_taps(const std::vector<gr_complex>& taps)
 {
     gr::thread::scoped_lock guard(d_mutex);
     d_new_taps = taps;
     d_updated = true;
 }
 
-vector<gr_complex> linear_equalizer_impl::taps() const
+std::vector<gr_complex> linear_equalizer_impl::taps() const
 {
     gr::thread::scoped_lock guard(d_mutex);
     return d_taps;
@@ -197,9 +194,9 @@ int linear_equalizer_impl::work(int noutput_items,
     }
 
     unsigned long int nread = nitems_read(0);
-    vector<tag_t> tags;
+    std::vector<tag_t> tags;
     get_tags_in_window(tags, 0, 0, noutput_items * decimation(), d_training_start_tag);
-    vector<unsigned int> training_start_samples(tags.size());
+    std::vector<unsigned int> training_start_samples(tags.size());
     unsigned int tag_index = 0;
     for (const auto& tag : tags) {
         training_start_samples[tag_index++] = tag.offset - nread;

@@ -144,7 +144,8 @@ int ofdm_carrier_allocator_cvc_impl::work(int noutput_items,
     memset((void*)out, 0x00, sizeof(gr_complex) * d_fft_len * noutput_items);
     // Copy Sync word
     for (unsigned i = 0; i < d_sync_words.size(); i++) {
-        memcpy((void*)out, (void*)&d_sync_words[i][0], sizeof(gr_complex) * d_fft_len);
+        memcpy(
+            (void*)out, (const void*)&d_sync_words[i][0], sizeof(gr_complex) * d_fft_len);
         out += d_fft_len;
     }
 

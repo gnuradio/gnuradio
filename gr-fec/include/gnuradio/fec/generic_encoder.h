@@ -26,7 +26,7 @@ protected:
 
 public:
     friend class encoder;
-    virtual void generic_work(void* in_buffer, void* out_buffer) = 0;
+    virtual void generic_work(const void* in_buffer, void* out_buffer) = 0;
     static int base_unique_id;
     int my_id;
     int unique_id();

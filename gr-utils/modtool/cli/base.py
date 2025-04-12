@@ -14,14 +14,28 @@ import sys
 import logging
 import functools
 from importlib import import_module
-from pkg_resources import iter_entry_points
-from logging import Formatter, StreamHandler
+try:
+    from importlib.metadata import entry_points
+
+    def entries(group: str):
+        eps = entry_points()
+        # entry_points() in older versions returns a dict-alike, in
+        # newer it returns a special object without dict interface.
+        # I don't know why – I think the old API was nice.
+        # Anyways, here's what should work for both.
+        if hasattr(eps, "select"):
+            return eps.select(group=group)
+        return eps.get(group, [])
+except ImportError:
+    from pkg_resources import iter_entry_points as entries
+
+from logging import StreamHandler
 
 import click
 from click import ClickException
-from click_plugins import with_plugins
 
 from gnuradio import gr
+from ..core import get_block_candidates
 
 
 class ModToolException(ClickException):
@@ -114,6 +128,7 @@ def cli_input(msg):
 def common_params(func):
     """ Common parameters for various modules"""
     @click.option('-d', '--directory', default='.',
+                  type=click.Path(file_okay=False, dir_okay=True, readable=True, writable=True),
                   help="Base directory of the module. Defaults to the cwd.")
     @click.option('--skip-lib', is_flag=True,
                   help="Don't do anything in the lib/ subdirectory.")
@@ -136,14 +151,21 @@ def common_params(func):
     return wrapper
 
 
-block_name = click.argument(
-    'blockname', nargs=1, required=False, metavar="BLOCK_NAME")
+def block_name(**kwargs):
+    """ Block name parameter with completion from candidates """
+    def block_name_complete(ctx, param, incomplete: str):
+        return sorted(
+            name for name in get_block_candidates(**kwargs)
+            if name.startswith(incomplete)
+        )
+    return click.argument(
+        'blockname', nargs=1, required=False, metavar="BLOCK_NAME",
+        shell_complete=block_name_complete)
 
 
-@with_plugins(iter_entry_points('gnuradio.modtool.cli.plugins'))
 @click.command(cls=CommandCLI,
-               epilog='Manipulate with GNU Radio modules source code tree. ' +
-               'Call it without options to run specified command interactively')
+               epilog='Manipulate the source code tree of a GNU Radio module. ' +
+               'Call without options to run specified command interactively')
 def cli():
     """A tool for editing GNU Radio out-of-tree modules."""
     pass

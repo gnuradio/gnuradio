@@ -55,6 +55,7 @@ templates:
         % endif
     callbacks:
     - set_nthreads(${nthreads})
+    - set_window(${window})
 
 cpp_templates:
     includes: [ '#include <gnuradio/fft/fft.h>', '#include <gnuradio/fft/fft_${type.fcn}.h>', '#include <gnuradio/fft/window.h>' ]
@@ -68,9 +69,8 @@ cpp_templates:
     link: ['gnuradio::gnuradio-fft']
     callbacks:
     - set_nthreads(${nthreads})
+    - set_window(${window})
     translations:
-        'True': 'true'
-        'False': 'false'
         'window\.': 'fft::window::'
 
 file_format: 1

@@ -7,49 +7,60 @@ on:
     branches:
       - main
 jobs:
-  # We start with checking C++ formatting. No one gets free CPU cycles if they
+  # Check hashes first
+  check-hashes:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    name: Check hashes
+    container:
+      image: 'gnuradio/ci:fedora-40-3.10'
+    steps:
+    - name: Checkout project
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 1
+    - name: Add git repo to safe repos
+      run: git config --global --add safe.directory ${GITHUB_WORKSPACE}
+    - name: Run hash fixer on all binding files
+      run: gr-utils/bindtool/scripts/binding-hash-hotfixer.zsh gr-*/python/*/bindings/*.cc gnuradio-runtime/python/gnuradio/gr/bindings/*.cc
+    - name: get changed files
+      run: >
+          git --no-pager diff -z --name-only --
+          > /tmp/hashdiff
+          ; [[ ! -s /tmp/hashdiff ]] && exit 0
+          ; sed -z 's;.*;::error file=&::Hash mismatch in &\n;' /tmp/hashdiff
+          | tr -d '\0'
+          ; exit -1
+
+  # We continue checking C++ formatting. No one gets free CPU cycles if they
   # can't use clang-format.
   check-formatting:
     name: Check C++ Formatting
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
     - uses: actions/checkout@v2
     - uses: DoozyX/clang-format-lint-action@v0.14
       with:
         source: '.'
-        exclude: './volk'
         extensions: 'h,hpp,cpp,cc,cc.in'
         clangFormatVersion: 14
   check-python-formatting:
     name: Check Python Formatting
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
     - uses: actions/checkout@v2
     - uses: quentinguidee/pep8-action@v1
       with:
+        # -----------------------------------
+        # UPDATE tox.ini when making changes!
         arguments: '--max-line-length=120 --ignore E265,E266,E275,E402,E501,E704,E712,E713,E714,E711,E721,E722,E741,W504,W605 --exclude *.yml.py'
-  # Doxygen gets built separately. It has a lot of output and its own weirdness.
-  doxygen:
-    name: Doxygen
-    runs-on: ubuntu-latest # This can run on whatever
-    timeout-minutes: 15
-    container:
-      image: 'gnuradio/ci:ubuntu-20.04-3.9'
-      volumes:
-        - build_data:/build
-    steps:
-    - uses: actions/checkout@v2
-      name: Checkout Project
-    - name: CMake
-      run: 'cd /build && cmake ${GITHUB_WORKSPACE}'
-    - name: Make Docs
-      run: 'cd /build && make doxygen_target'
+        # -----------------------------------
   linux-docker:
   # All of these shall depend on the formatting check (needs: check-formatting)
-    needs: [check-formatting, check-python-formatting]
-    runs-on: ubuntu-latest
+    needs: [check-hashes, check-formatting, check-python-formatting]
+    runs-on: ubuntu-24.04
     # The GH default is 360 minutes (it's also the max as of Feb-2021). However
     # we should fail sooner. The only reason to exceed this time is if a test
     # hangs.
@@ -63,43 +74,38 @@ jobs:
         # descriptive name, and one key 'containerid' with the name of the
         # container (i.e., what you want to docker-pull)
         include:
+          - distro: 'Doxygen (Fedora 41)'
+            containerid: 'gnuradio/ci:fedora-41-3.10'
+            enable_doxygen: On
+            enable_default: Off
+            enable_python: Off
+          - distro: 'No-Python Ubuntu 24.04'
+            containerid: 'gnuradio/ci:ubuntu-24.04-3.10'
+            enable_python: Off
           - distro: 'Ubuntu 20.04'
             containerid: 'gnuradio/ci:ubuntu-20.04-3.9'
-            cxxflags: -Werror
-            ctest_args: '-E ""'
-            # ldpath: 
           - distro: 'Ubuntu 22.04'
             containerid: 'gnuradio/ci:ubuntu-22.04-3.9'
-            cxxflags: -Werror
             ctest_args: '-E "qa_polar_..coder_(sc_)?systematic"'
-            # ldpath:
-          - distro: 'Fedora 37 (with 0xFE memory initialization)'
-            containerid: 'gnuradio/ci:fedora-37-3.9'
-            cxxflags: -Werror -ftrivial-auto-var-init=pattern
-            ctest_args: '-E ""'
-            ldpath: /usr/local/lib64/
-          - distro: 'Fedora 38 (clang)'
-            containerid: 'gnuradio/ci:fedora-38-3.10'
-            cxxflags: -Werror
-            cmakeflags: -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_C_COMPILER=clang
-            ctest_args: '-E ""'
-            ldpath: /usr/local/lib64 
-          # - distro: 'CentOS 8.4'
-          #   containerid: 'gnuradio/ci:centos-8.4-3.10'
-          #   cxxflags: ''
-          #   ctest_args: '-E ""'
-          #   ldpath: /usr/local/lib64/
+          - distro: 'Ubuntu 24.04'
+            containerid: 'gnuradio/ci:ubuntu-24.04-3.10'
+          - distro: 'Fedora 40 (with 0xFE memory initialization, GLIBCXX_ASSERTIONS)'
+            containerid: 'gnuradio/ci:fedora-40-3.10'
+            cxxflags: -ftrivial-auto-var-init=pattern -Wp,-D_GLIBCXX_ASSERTIONS
+            ldpath: /usr/local/lib64
+          - distro: 'Fedora 41 (clang, ninja)'
+            containerid: 'gnuradio/ci:fedora-41-3.10'
+            cxxflags: -Wno-unused-command-line-argument
+            cmakeflags: -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_C_COMPILER=clang -GNinja
+            ldpath: /usr/local/lib64
           - distro: 'Debian 12'
             containerid: 'gnuradio/ci:debian-12-3.10'
-            cxxflags: -Werror
-            ctest_args: '-E ""'
-            # ldpath: 
           - distro: 'Debian 11 (32-bit)'
             containerid: 'gnuradio/ci:debian-i386-11-3.10'
             containeroptions: '--platform linux/i386'
-            cxxflags: -Werror
             ctest_args: '-E "qa_polar_..coder_(sc_)?systematic"'
-            # ldpath:
+            ## Skip upload, cause 32 bit node doesn't work
+            skip_upload: True
     name: ${{ matrix.distro }}
     container:
       image: ${{ matrix.containerid }}
@@ -111,46 +117,121 @@ jobs:
       name: Checkout Project
     - name: CMake
       env:
-        CXXFLAGS: ${{ matrix.cxxflags }}
-      run: 'cd /build && cmake ${{ matrix.cmakeflags }} ${GITHUB_WORKSPACE} -DENABLE_DOXYGEN=OFF'
+        CXXFLAGS: ${{ matrix.ignore_errors || '-Werror' }} ${{ matrix.cxxflags }}
+      run: >
+        cd /build
+        && cmake
+        -DENABLE_DEFAULT=${{ matrix.enable_default || 'On' }}
+        -DENABLE_DOXYGEN=${{ matrix.enable_doxygen || 'Off' }}
+        -DENABLE_PYTHON=${{  matrix.enable_python  || 'On' }}
+        -DCMAKE_BUILD_TYPE=RelWithDebInfo
+        ${{ matrix.cmakeflags }}
+        ${GITHUB_WORKSPACE}
     - name: Dump compile commands
-      run: 'cd /build && cat compile_commands.json'
+      if: ${{ ! matrix.skip_upload }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: '${{ matrix.distro }}.compile_commands.json'
+        path: /build/compile_commands.json
+        if-no-files-found: ignore
     - name: Make
-      run: 'cd /build && make -j2 -k'
+      run: cmake --build /build --parallel 2
     - name: Make Test
       env:
         QT_QPA_PLATFORM: offscreen
-      run: 'cd /build && ctest --output-on-failure ${{ matrix.ctest_args }}'
+      run: 'cd /build && ctest --output-on-failure ${{ matrix.ctest_args }} -j2'
     - name: Make Install
-      run: |
-       cd /build
-       su -c "make install"
-       su -c "echo ${{matrix.ldpath}} >> /etc/ld.so.conf"
-       su -c ldconfig
+      run: cmake --install /build
+    - name: Update dynamic linker directories
+      if:  ${{ matrix.ldpath }}
+      run: echo "${{ matrix.ldpath }}" >> /etc/ld.so.conf
+    - name: ldconfig
+      run: ldconfig
     - name: Test Python3
+      if: ${{ matrix.enable_python != 'Off' }}
       run: python3 -c "import gnuradio.blocks; print(gnuradio.blocks.complex_to_float())"
-  no-python:
+    - name: Install into bundling directory
+      if: ${{ ! matrix.skip_upload }}
+      run: cmake --install /build --prefix /target
+    - name: Bundle installed files
+      if: ${{ ! matrix.skip_upload }}
+      run: tools/collect_installation.bash "${{ matrix.distro }}" "/target" "/installation-archive.squash"
+    - name: Upload installation archive
+      if: ${{ ! matrix.skip_upload }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: '${{ matrix.distro }} installation archive'
+        # already much better compressed
+        compression-level: 0
+        path: /installation-archive.squash
+        if-no-files-found: warn
+        # these things are kinda large, keep them around for 7 days: we can recreate them if we want
+        retention-days: 7
+    - name: Check for installation duplicates
+      if: ${{ ! matrix.skip_upload }}
+      run: tools/check_installation_duplicates.bash /build/install_manifest.txt
+  mingw64:
+    timeout-minutes: 80
   # All of these shall depend on the formatting check (needs: check-formatting)
-    needs: [check-formatting, check-python-formatting]
-    runs-on: ubuntu-latest
-    # The GH default is 360 minutes (it's also the max as of Feb-2021). However
-    # we should fail sooner. The only reason to exceed this time is if a test
-    # hangs.
-    timeout-minutes: 120
-    name: C++ Only Build (Ubuntu 20.04)
-    container:
-      image: 'gnuradio/ci:ubuntu-20.04-3.9'
-      volumes:
-        - build_data:/build
-      options: --cpus 2
+    needs: [check-hashes, check-formatting, check-python-formatting]
+    runs-on: windows-latest
+    name: MinGW-w64
+    defaults:
+      run:
+        shell: msys2 {0}
     steps:
-    - uses: actions/checkout@v2
-      name: Checkout Project
+    - name: Setup MSYS2
+      uses: msys2/setup-msys2@v2
+      with:
+        msystem: MINGW64
+        update: true
+        install: >-
+          git
+          make
+        pacboy: >-
+          toolchain:p
+          cmake:p
+          ninja:p
+          boost:p
+          cppzmq:p
+          fftw:p
+          gsl:p
+          gsm:p
+          gtk3:p
+          jack2:p
+          libsndfile:p
+          libunwind:p
+          pango:p
+          portaudio:p
+          pybind11:p
+          python:p
+          python-click:p
+          python-gobject:p
+          python-jsonschema:p
+          python-mako:p
+          python-numpy:p
+          python-pip:p
+          python-pyqt5:p
+          python-pyzmq:p
+          python-yaml:p
+          qt5-base:p
+          qwt-qt5:p
+          SDL:p
+          soapysdr:p
+          spdlog:p
+          thrift:p
+          volk:p
+    - name: Checkout code
+      uses: actions/checkout@v4
     - name: CMake
-      env:
-        CXXFLAGS: -Werror
-      run: 'cd /build && cmake ${GITHUB_WORKSPACE} -DENABLE_DOXYGEN=OFF -DENABLE_PYTHON=OFF'
+      run: |
+        cmake -S . -B build \
+          -DCMAKE_INSTALL_PREFIX=${RUNNER_TEMP}/msys64/mingw64 \
+          -DENABLE_DOXYGEN=OFF
     - name: Make
-      run: 'cd /build && make -j2 -k'
+      run: cmake --build build
+    - name: Make Install
+      run: cmake --install build
     - name: Make Test
-      run: 'cd /build && ctest --output-on-failure'
+      working-directory: ./build
+      run: ctest --output-on-failure

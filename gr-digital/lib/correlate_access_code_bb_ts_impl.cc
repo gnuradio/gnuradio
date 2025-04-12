@@ -111,9 +111,9 @@ bool correlate_access_code_bb_ts_impl::header_ok()
     return ((d_hdr_reg >> 16) ^ (d_hdr_reg & 0xffff)) == 0;
 }
 
-int correlate_access_code_bb_ts_impl::header_payload()
+int correlate_access_code_bb_ts_impl::payload_length()
 {
-    return (d_hdr_reg >> 16) & 0x0fff;
+    return (d_hdr_reg >> 16) & 0xffff;
 }
 
 int correlate_access_code_bb_ts_impl::general_work(int noutput_items,
@@ -164,7 +164,7 @@ int correlate_access_code_bb_ts_impl::general_work(int noutput_items,
                     // we have a full header, check to see if it has been received
                     // properly
                     if (header_ok()) {
-                        int payload_len = header_payload();
+                        int payload_len = payload_length();
                         enter_have_header(payload_len);
                     } else {
                         enter_search(); // bad header

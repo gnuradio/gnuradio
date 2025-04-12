@@ -52,17 +52,17 @@ class test_multiply_matrix_xx (gr_unittest.TestCase):
                  ):
         """ Run the test for given input-, output- and matrix values.
         Every row from X_in is considered an input signal on a port. """
-        X_in = numpy.matrix(X_in)
-        A_matrix = numpy.matrix(A)
+        X_in = numpy.array(X_in)
+        A_matrix = numpy.array(A)
         (N, M) = A_matrix.shape
         self.assertEqual(N, X_in.shape[0])
         # Calc expected
-        Y_out_exp = numpy.matrix(numpy.zeros((M, X_in.shape[1])))
+        Y_out_exp = numpy.zeros((M, X_in.shape[1]))
         self.multiplier = BLOCK_LOOKUP[datatype]['mult'](A, tpp)
         if A2 is not None:
             self.multiplier.set_A(A2)
             A = A2
-            A_matrix = numpy.matrix(A)
+            A_matrix = numpy.array(A)
         for i in range(N):
             if tags is None:
                 these_tags = ()
@@ -70,7 +70,7 @@ class test_multiply_matrix_xx (gr_unittest.TestCase):
                 these_tags = (tags[i],)
             self.tb.connect(
                 BLOCK_LOOKUP[datatype]['src'](
-                    X_in[i].tolist()[0],
+                    X_in[i].tolist(),
                     tags=these_tags),
                 (self.multiplier,
                  i))
@@ -81,7 +81,7 @@ class test_multiply_matrix_xx (gr_unittest.TestCase):
         # Run and check
         self.tb.run()
         for i in range(X_in.shape[1]):
-            Y_out_exp[:, i] = A_matrix * X_in[:, i]
+            Y_out_exp[:, i] = numpy.matmul(A_matrix, X_in[:, i])
         Y_out = [list(x.data()) for x in sinks]
         if tags is not None:
             self.the_tags = []

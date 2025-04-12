@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(block.h)                                                   */
-/* BINDTOOL_HEADER_FILE_HASH(18c70c95c54b95bab0af13e9fb687530)                     */
+/* BINDTOOL_HEADER_FILE_HASH(35fc0a5a9d85b84b81d15db7c96c8faa)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -499,5 +499,6 @@ void bind_block(py::module& m)
         .value("TPP_ALL_TO_ALL", gr::block::TPP_ALL_TO_ALL) // 1
         .value("TPP_ONE_TO_ONE", gr::block::TPP_ONE_TO_ONE) // 2
         .value("TPP_CUSTOM", gr::block::TPP_CUSTOM)         // 3
+        .value("TPP_TSB", gr::block::TPP_TSB)               // 4
         .export_values();
 }

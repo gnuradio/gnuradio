@@ -65,7 +65,6 @@ set(QTGUI_SOURCES
 
 set(QTGUI_LIBS
     gnuradio-runtime
-    gnuradio-blocks
     gnuradio-fft
     gnuradio-filter
     Volk::volk
@@ -73,19 +72,14 @@ set(QTGUI_LIBS
     Qt5::Widgets
 )
 
-if(ENABLE_COMMON_PCH)
-    set(PRIVATE_LIBS common-precompiled-headers)
-endif()
-
 if(ENABLE_GR_QTGUI_OPENGL)
-    qt5_add_resources(FOSPHOR_RC_SRCS fosphor.qrc)
+    qt5_add_resources(RFNOC_F15_RC_SRCS rfnoc_f15.qrc)
     list(APPEND QTGUI_SOURCES
         axis.c
-        fosphor_display_impl.cc
-        fosphor_formatter_impl.cc
-        QFosphorColorMapper.cc
-        QFosphorSurface.cc
-        ${FOSPHOR_RC_SRCS}
+        rfnoc_f15_display_impl.cc
+        QRfnocF15ColorMapper.cc
+        QRfnocF15Surface.cc
+        ${RFNOC_F15_RC_SRCS}
     )
     find_package(OpenGL)
     list(APPEND PRIVATE_LIBS
@@ -146,8 +140,8 @@ qt5_wrap_cpp(
 if(ENABLE_GR_QTGUI_OPENGL)
     qt5_wrap_cpp(
         qtgui_moc_sources
-        QFosphorSurface.h
-        QFosphorColorMapper.h
+        QRfnocF15Surface.h
+        QRfnocF15ColorMapper.h
         )
 endif()
 target_sources(gnuradio-qtgui PRIVATE ${qtgui_moc_sources})

@@ -69,8 +69,5 @@ cpp_templates:
         ${key},
         ${bind});
     link: ['gnuradio::gnuradio-zeromq']
-    translations:
-      'True': 'true'
-      'False': 'false'
 
 file_format: 1

@@ -1,0 +1,88 @@
+id: qtgui_rfnoc_f15_display
+label: QT GUI RFNoC Fosphor Display (Byte Vector)
+flags: [ python ]
+
+parameters:
+- id: center_freq
+  label: Center Frequency (Hz)
+  dtype: real
+  default: 0.0
+- id: samp_rate
+  label: Sample Rate (Hz)
+  dtype: real
+  default: samp_rate
+- id: fftsize
+  label: FFT Size
+  dtype: int
+  default: 1024
+- id: pwr_bins
+  label: Power Bins
+  dtype: int
+  default: 64
+- id: wf_enabled
+  label: Waterfall Display
+  dtype: bool
+  default: 'True'
+  options: ['True', 'False']
+  option_labels: [Enabled, Disabled]
+- id: wf_lines
+  label: Waterfall History
+  dtype: int
+  default: 512
+  hide: ${'all' if str(wf_enabled) == 'False' else 'none'}
+- id: grid_enabled
+  label: Grid
+  dtype: enum
+  default: 'True'
+  options: ['True', 'False']
+  option_labels: [Enabled, Disabled]
+- id: palette
+  label: Color Palette
+  dtype: enum
+  default: 'True'
+  options: ['iron', 'cubehelix', 'sdrangelove_histogram', 'rainbow', 'prog']
+  option_labels: [Iron, Cube Helix, SDRangelove, Rainbow, Prog's]
+- id: frame_rate
+  label: Target Frame Rate
+  dtype: int
+  default: 30
+- id: gui_hint
+  label: GUI Hint
+  dtype: gui_hint
+  hide: part
+
+inputs:
+- label: in_hist
+  dtype: byte
+  vlen: ${fftsize}
+  optional: true
+- label: in_wf
+  dtype: byte
+  vlen: ${fftsize}
+  optional: true
+  hide: ${ not wf_enabled }
+
+outputs:
+- domain: message
+  id: cfg
+  optional: true
+
+
+templates:
+  imports: import sip
+  make: |-
+    <%
+        win = 'self._%s_win' % id
+    %>\
+    qtgui.rfnoc_f15_display(${fftsize}, ${pwr_bins}, ${wf_lines})
+    self.${id}.set_frame_rate(${frame_rate})
+    self.${id}.set_frequency_range(${center_freq}, ${samp_rate})
+    self.${id}.set_waterfall(${wf_enabled})
+    self.${id}.set_grid(${grid_enabled})
+    self.${id}.set_palette("${palette}")
+    self._${id}_win = sip.wrapinstance(self.${id}.qwidget(), Qt.QWidget)
+    ${gui_hint() % win}
+  callbacks:
+  - set_frequency_range(${center_freq}, ${samp_rate})
+
+file_format: 1

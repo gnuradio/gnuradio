@@ -6,7 +6,8 @@ options:
     cmake_opt: ''
     comment: ''
     copyright: ''
-    description: Signal Generator for use with USRP Devices
+    description: 'Signal Generator for use with USRP Devices. Note: The application
+      uhd_siggen_gui is a much more sophisticated version of this flowgraph!'
     gen_cmake: 'On'
     gen_linking: dynamic
     generate_options: qt_gui
@@ -40,7 +41,7 @@ blocks:
     gui_hint: 5,0,1,5
     label: Signal Amplitude
     min_len: '200'
-    orient: Qt.Horizontal
+    orient: QtCore.Qt.Horizontal
     rangeType: float
     start: '0'
     step: '.001'
@@ -51,53 +52,23 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1000, 20.0]
+    coordinate: [1000, 12.0]
     rotation: 0
     state: enabled
 - name: ant
-  id: variable_qtgui_chooser
+  id: variable_qtgui_entry
   parameters:
     comment: ''
-    gui_hint: 7,4,1,1
-    label: Antenna
-    label0: RX2
-    label1: TX/RX
-    label2: J1
-    label3: J2
-    label4: ''
-    labels: '[]'
-    num_opts: '2'
-    option0: RX2
-    option1: TX/RX
-    option2: J1
-    option3: J2
-    option4: '4'
-    options: '[0, 1, 2]'
-    orient: Qt.QVBoxLayout
+    entry_signal: editingFinished
+    gui_hint: ''
+    label: TX Antenna
     type: string
-    value: RX2
-    widget: combo_box
+    value: TX/RX
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [320, 204.0]
-    rotation: 0
-    state: enabled
-- name: chan0_lo_locked
-  id: variable_function_probe
-  parameters:
-    block_id: uhd_usrp_sink_0
-    comment: ''
-    function_args: '"''lo_locked''"'
-    function_name: get_sensor
-    poll_rate: '10'
-    value: uhd.sensor_value("", False, "", "")
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [16, 140.0]
+    coordinate: [368, 156.0]
     rotation: 0
     state: enabled
 - name: freq1_offset
@@ -107,7 +78,7 @@ blocks:
     gui_hint: 4,0,1,3
     label: 'Frequency Offset: Signal 1'
     min_len: '200'
-    orient: Qt.Horizontal
+    orient: QtCore.Qt.Horizontal
     rangeType: float
     start: -1e6
     step: '100'
@@ -118,7 +89,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [672, 20.0]
+    coordinate: [672, 12.0]
     rotation: 0
     state: enabled
 - name: freq2_offset
@@ -128,18 +99,18 @@ blocks:
     gui_hint: 4,3,1,2
     label: 'Signal 2 '
     min_len: '200'
-    orient: Qt.Horizontal
+    orient: QtCore.Qt.Horizontal
     rangeType: float
     start: -1e6
     step: '100'
     stop: 1e6
-    value: '0'
+    value: 100e3
     widget: counter_slider
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [832, 20.0]
+    coordinate: [832, 12.0]
     rotation: 0
     state: enabled
 - name: freq_coarse
@@ -149,18 +120,18 @@ blocks:
     gui_hint: 1,0,1,5
     label: Center Frequency
     min_len: '200'
-    orient: Qt.Horizontal
+    orient: QtCore.Qt.Horizontal
     rangeType: float
     start: 100e6
     step: 1e3
     stop: 2e9
-    value: 1e9
+    value: tx_freq
     widget: counter_slider
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [312, 20.0]
+    coordinate: [368, 12.0]
     rotation: 0
     state: enabled
 - name: freq_fine
@@ -170,7 +141,7 @@ blocks:
     gui_hint: 2,0,1,5
     label: Fine Tuning
     min_len: '200'
-    orient: Qt.Horizontal
+    orient: QtCore.Qt.Horizontal
     rangeType: float
     start: -1e6
     step: 1e3
@@ -181,7 +152,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [456, 20.0]
+    coordinate: [528, 12.0]
     rotation: 0
     state: enabled
 - name: gain
@@ -191,7 +162,7 @@ blocks:
     gui_hint: 6,0,1,5
     label: TX Gain
     min_len: '200'
-    orient: Qt.Horizontal
+    orient: QtCore.Qt.Horizontal
     rangeType: float
     start: '0'
     step: '.5'
@@ -202,82 +173,14 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1144, 20.0]
-    rotation: 0
-    state: enabled
-- name: label_dsp_freq
-  id: variable_qtgui_label
-  parameters:
-    comment: ''
-    formatter: None
-    gui_hint: 8,2,1,1
-    label: DSP Freq
-    type: real
-    value: 1e3
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [704, 260.0]
-    rotation: 0
-    state: enabled
-- name: label_lo_freq
-  id: variable_qtgui_label
-  parameters:
-    comment: ''
-    formatter: None
-    gui_hint: 8,1,1,1
-    label: LO freq
-    type: real
-    value: 1e9
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [592, 260.0]
-    rotation: 0
-    state: enabled
-- name: lo_locked_probe_0
-  id: variable_qtgui_label
-  parameters:
-    comment: ''
-    formatter: None
-    gui_hint: 8,0,1,1
-    label: LO locked
-    type: bool
-    value: chan0_lo_locked.to_bool()
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [464, 260.0]
-    rotation: 0
-    state: enabled
-- name: lo_offset
-  id: variable_qtgui_range
-  parameters:
-    comment: ''
-    gui_hint: 3,0,1,5
-    label: LO Offset
-    min_len: '200'
-    orient: Qt.Horizontal
-    rangeType: float
-    start: -samp_rate/2
-    step: samp_rate/2
-    stop: 1e3
-    value: '0'
-    widget: counter_slider
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [568, 20.0]
+    coordinate: [1144, 12.0]
     rotation: 0
     state: enabled
 - name: samp_rate
   id: variable_qtgui_entry
   parameters:
     comment: ''
+    entry_signal: editingFinished
     gui_hint: 7,0,1,2
     label: Sampling Rate
     type: real
@@ -286,24 +189,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [176, 284.0]
-    rotation: 0
-    state: enabled
-- name: sync_phases
-  id: variable_qtgui_push_button
-  parameters:
-    comment: ''
-    gui_hint: 7,2,1,1
-    label: Sync LOs
-    pressed: 'True'
-    released: 'False'
-    type: bool
-    value: 'False'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [912, 340.0]
+    coordinate: [520, 156.0]
     rotation: 0
     state: enabled
 - name: waveform
@@ -312,11 +198,11 @@ blocks:
     comment: ''
     gui_hint: 0,0,1,5
     label: Waveform
-    label0: Tone
-    label1: Two-Tone
-    label2: Uniform Noise
-    label3: Two Tone
-    label4: Sweep
+    label0: Constant
+    label1: Complex Sinusoid
+    label2: Gaussian Noise
+    label3: Uniform Noise
+    label4: Two-Tone
     labels: '[]'
     num_opts: '5'
     option0: '0'
@@ -333,7 +219,28 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [176, 20.0]
+    coordinate: [192, 12.0]
+    rotation: 0
+    state: enabled
+- name: analog_fastnoise_source_x_0
+  id: analog_fastnoise_source_x
+  parameters:
+    affinity: ''
+    alias: ''
+    amp: amplitude if waveform in (2,3) else 0
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    noise_type: '{0: analog.GR_GAUSSIAN, 1: analog.GR_GAUSSIAN, 2: analog.GR_GAUSSIAN,
+      3: analog.GR_UNIFORM, 4: analog.GR_GAUSSIAN}[waveform]'
+    samples: '8192'
+    seed: '0'
+    type: complex
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [64, 572.0]
     rotation: 0
     state: enabled
 - name: analog_sig_source_x_0
@@ -341,7 +248,7 @@ blocks:
   parameters:
     affinity: ''
     alias: ''
-    amp: amplitude if not sync_phases else 0
+    amp: amplitude if waveform in (0, 1, 4) else 0
     comment: ''
     freq: freq1_offset
     maxoutbuf: '0'
@@ -349,13 +256,74 @@ blocks:
     offset: '0'
     phase: '0'
     samp_rate: samp_rate
+    showports: 'False'
     type: complex
-    waveform: analog.GR_TRI_WAVE
+    waveform: '{0: analog.GR_CONST_WAVE, 1: analog.GR_COS_WAVE, 2: analog.GR_CONST_WAVE,
+      3: analog.GR_CONST_WAVE, 4: analog.GR_COS_WAVE}[waveform]'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [736, 148.0]
+    coordinate: [40, 284.0]
+    rotation: 0
+    state: enabled
+- name: analog_sig_source_x_0_0
+  id: analog_sig_source_x
+  parameters:
+    affinity: ''
+    alias: ''
+    amp: amplitude if waveform == 4 else 0
+    comment: ''
+    freq: freq2_offset
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    offset: '0'
+    phase: '0'
+    samp_rate: samp_rate
+    showports: 'False'
+    type: complex
+    waveform: '{0: analog.GR_CONST_WAVE, 1: analog.GR_COS_WAVE, 2: analog.GR_CONST_WAVE,
+      3: analog.GR_CONST_WAVE, 4: analog.GR_COS_WAVE}[waveform]'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [40, 412.0]
+    rotation: 0
+    state: enabled
+- name: blocks_add_xx_0
+  id: blocks_add_xx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_inputs: '3'
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [376, 416.0]
+    rotation: 0
+    state: enabled
+- name: dev_addr
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: none
+    label: Device Address
+    short_id: a
+    type: str
+    value: '""'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1400, 12.0]
     rotation: 0
     state: enabled
 - name: qtgui_freq_sink_x_0
@@ -410,6 +378,7 @@ blocks:
     minoutbuf: '0'
     name: '""'
     nconnections: '1'
+    norm_window: 'False'
     showports: 'True'
     tr_chan: '0'
     tr_level: '0.0'
@@ -435,7 +404,41 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [936, 248.0]
+    coordinate: [616, 424.0]
+    rotation: 0
+    state: enabled
+- name: subdev
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: none
+    label: Subdev Spec
+    short_id: s
+    type: str
+    value: A:0
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1272, 12.0]
+    rotation: 0
+    state: enabled
+- name: tx_freq
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: none
+    label: Initial TX frequency
+    short_id: f
+    type: eng_float
+    value: 1e9
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1384, 124.0]
     rotation: 0
     state: enabled
 - name: uhd_usrp_sink_0
@@ -443,7 +446,7 @@ blocks:
   parameters:
     affinity: ''
     alias: ''
-    ant0: ''
+    ant0: ant
     ant1: ''
     ant10: ''
     ant11: ''
@@ -507,7 +510,7 @@ blocks:
     bw7: '0'
     bw8: '0'
     bw9: '0'
-    center_freq0: '0'
+    center_freq0: freq_coarse + freq_fine
     center_freq1: '0'
     center_freq10: '0'
     center_freq11: '0'
@@ -549,9 +552,9 @@ blocks:
     clock_source6: ''
     clock_source7: ''
     comment: ''
-    dev_addr: '""'
+    dev_addr: dev_addr
     dev_args: '""'
-    gain0: '0'
+    gain0: gain
     gain1: '0'
     gain10: '0'
     gain11: '0'
@@ -583,6 +586,38 @@ blocks:
     gain7: '0'
     gain8: '0'
     gain9: '0'
+    gain_type0: default
+    gain_type1: default
+    gain_type10: default
+    gain_type11: default
+    gain_type12: default
+    gain_type13: default
+    gain_type14: default
+    gain_type15: default
+    gain_type16: default
+    gain_type17: default
+    gain_type18: default
+    gain_type19: default
+    gain_type2: default
+    gain_type20: default
+    gain_type21: default
+    gain_type22: default
+    gain_type23: default
+    gain_type24: default
+    gain_type25: default
+    gain_type26: default
+    gain_type27: default
+    gain_type28: default
+    gain_type29: default
+    gain_type3: default
+    gain_type30: default
+    gain_type31: default
+    gain_type4: default
+    gain_type5: default
+    gain_type6: default
+    gain_type7: default
+    gain_type8: default
+    gain_type9: default
     len_tag_name: ''
     lo_export0: 'False'
     lo_export1: 'False'
@@ -651,42 +686,10 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
     nchan: '1'
-    norm_gain0: 'False'
-    norm_gain1: 'False'
-    norm_gain10: 'False'
-    norm_gain11: 'False'
-    norm_gain12: 'False'
-    norm_gain13: 'False'
-    norm_gain14: 'False'
-    norm_gain15: 'False'
-    norm_gain16: 'False'
-    norm_gain17: 'False'
-    norm_gain18: 'False'
-    norm_gain19: 'False'
-    norm_gain2: 'False'
-    norm_gain20: 'False'
-    norm_gain21: 'False'
-    norm_gain22: 'False'
-    norm_gain23: 'False'
-    norm_gain24: 'False'
-    norm_gain25: 'False'
-    norm_gain26: 'False'
-    norm_gain27: 'False'
-    norm_gain28: 'False'
-    norm_gain29: 'False'
-    norm_gain3: 'False'
-    norm_gain30: 'False'
-    norm_gain31: 'False'
-    norm_gain4: 'False'
-    norm_gain5: 'False'
-    norm_gain6: 'False'
-    norm_gain7: 'False'
-    norm_gain8: 'False'
-    norm_gain9: 'False'
     num_mboards: '1'
     otw: ''
     samp_rate: samp_rate
-    sd_spec0: ''
+    sd_spec0: subdev
     sd_spec1: ''
     sd_spec2: ''
     sd_spec3: ''
@@ -695,6 +698,7 @@ blocks:
     sd_spec6: ''
     sd_spec7: ''
     show_lo_controls: 'False'
+    start_time: '-1.0'
     stream_args: ''
     stream_chans: '[]'
     sync: sync
@@ -711,13 +715,17 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [976, 148.0]
+    coordinate: [584, 276.0]
     rotation: 0
     state: enabled
 
 connections:
-- [analog_sig_source_x_0, '0', qtgui_freq_sink_x_0, '0']
-- [analog_sig_source_x_0, '0', uhd_usrp_sink_0, '0']
+- [analog_fastnoise_source_x_0, '0', blocks_add_xx_0, '2']
+- [analog_sig_source_x_0, '0', blocks_add_xx_0, '0']
+- [analog_sig_source_x_0_0, '0', blocks_add_xx_0, '1']
+- [blocks_add_xx_0, '0', qtgui_freq_sink_x_0, '0']
+- [blocks_add_xx_0, '0', uhd_usrp_sink_0, '0']
 
 metadata:
   file_format: 1
+  grc_version: v3.11.0.0git-892-g6406da8f

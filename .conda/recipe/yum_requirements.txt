@@ -1,0 +1,3 @@
+mesa-libGL
+mesa-dri-drivers
+xorg-x11-server-Xvfb

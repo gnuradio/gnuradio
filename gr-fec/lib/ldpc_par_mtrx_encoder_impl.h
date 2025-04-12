@@ -21,7 +21,7 @@ class ldpc_par_mtrx_encoder_impl : public ldpc_par_mtrx_encoder
 {
 private:
     // plug into the generic fec api
-    void generic_work(void* inbuffer, void* outbuffer) override;
+    void generic_work(const void* inbuffer, void* outbuffer) override;
 
     // Number of bits in the frame to be encoded
     unsigned int d_frame_size;

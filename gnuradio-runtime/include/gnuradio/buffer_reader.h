@@ -17,7 +17,11 @@
 #include <gnuradio/runtime_types.h>
 #include <gnuradio/tags.h>
 #include <gnuradio/thread/thread.h>
+#include <type_traits>
+#include <cstdint>
 #include <memory>
+#include <optional>
+#include <tuple>
 
 namespace gr {
 
@@ -47,6 +51,10 @@ GR_RUNTIME_API long buffer_ncurrently_allocated();
  */
 class GR_RUNTIME_API buffer_reader
 {
+private:
+    //! \brief converts absolute offsets to bounds for tag vectors
+    std::tuple<uint64_t, uint64_t> offsets_to_bounds(uint64_t start, uint64_t end) const;
+
 public:
 #ifdef BUFFER_DEBUG
     gr::logger_ptr d_logger;
@@ -138,10 +146,53 @@ public:
      * \param id           the unique ID of the block to make sure already deleted tags
      * are not returned
      */
-    void get_tags_in_range(std::vector<tag_t>& v,
-                           uint64_t abs_start,
-                           uint64_t abs_end,
-                           long id);
+    void get_tags_in_range(std::vector<tag_t>& v, uint64_t abs_start, uint64_t abs_end);
+
+    /*!
+     * \brief Get the first tag in specified range (if any), fulfilling criterion
+     *
+     * \see gr::block::get_first_tag_in_range
+     *
+     * \details
+     * This function returns the lowest-offset tag in the range for whom the predicate
+     * function returns true.
+     *
+     * The predicate function hence needs to map tags to booleans; its signature is
+     * bool function(const tag_t& tag_to check);
+     *
+     * We're doing this here as a template in the block detail; allows inlining of the
+     * predicate check.
+     *
+     * \param start        a uint64 count of the start of the range of interest
+     * \param end          a uint64 count of the end of the range of interest
+     * \param predicate    a function of tag_t, returning a boolean
+     */
+    template <typename predicate_t>
+    [[nodiscard]] std::optional<gr::tag_t>
+    get_first_tag_in_range(uint64_t start, uint64_t end, predicate_t predicate)
+    {
+        // SFINAE these conditions; constraints/contexts are a C++20 thing, and we're on
+        // C++17; might as well make the compiler error indicative of what's wrong.
+        static_assert(std::is_invocable_v<predicate_t, const gr::tag_t&>,
+                      "predicate is not invocable");
+        static_assert(
+            std::is_convertible_v<std::invoke_result_t<predicate_t, const gr::tag_t&>,
+                                  bool>,
+            "predicate result can't be converted to boolean");
+
+        auto [lower, upper] = offsets_to_bounds(start, end);
+
+        gr::thread::scoped_lock guard(*mutex());
+        for (auto iterator = d_buffer->get_tags_lower_bound(lower);
+             iterator != d_buffer->get_tags_end() && iterator->second.offset <= end;
+             ++iterator) {
+            const gr::tag_t& tag = iterator->second;
+            if (predicate(tag)) {
+                return { tag };
+            }
+        }
+        return std::nullopt;
+    }
 
     /*!
      * \brief Returns true when the current thread is ready to call the callback,

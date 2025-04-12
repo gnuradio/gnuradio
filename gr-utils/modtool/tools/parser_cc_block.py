@@ -21,6 +21,21 @@ def dummy_translator(the_type, default_v=None):
     return the_type
 
 
+def remove_comments(inp: str) -> str:
+    def comment_removal(match: re.match) -> str:
+        groups = match.groups()
+        if len(groups) == 1:
+            return ''
+        return inp
+    try:
+        out = re.sub(r'(/\*[^(\*/)]*\*/)', comment_removal, inp)
+        logger.debug(f"out: {out}")
+        return out
+    except Exception as e:
+        logger.error(f"error removing comments {e}")
+        return inp
+
+
 class ParserCCBlock(object):
     """ Class to read blocks written in C++ """
 
@@ -51,7 +66,7 @@ class ParserCCBlock(object):
             type_match = re.search(r'sizeof\s*\(([^)]*)\)', typestr)
             if type_match is None:
                 return self.type_trans('char')
-            return self.type_trans(type_match.group(1))
+            return self.type_trans(remove_comments(type_match.group(1)))
 
         def _typestr_to_vlen(typestr):
             """ From a type identifier, returns the vector length of the block's
@@ -78,20 +93,21 @@ class ParserCCBlock(object):
                       r'\s*(?P<outtype>(\([^\)]*\)|[^)])+)\)'
         iosig_match = re.compile(
             iosig_regex, re.MULTILINE).search(self.code_cc)
+
         try:
             iosig['in'] = _figure_out_iotype_and_vlen(iosig_match.group('incall'),
                                                       iosig_match.group('intype'))
-            iosig['in']['min_ports'] = iosig_match.group('inmin')
-            iosig['in']['max_ports'] = iosig_match.group('inmax')
-        except Exception:
-            logger.error("Error: Can't parse input signature.")
+            iosig['in']['min_ports'] = remove_comments(iosig_match.group('inmin'))
+            iosig['in']['max_ports'] = remove_comments(iosig_match.group('inmax'))
+        except Exception as e:
+            logger.error(f"Error: Can't parse input signature: {e}")
         try:
             iosig['out'] = _figure_out_iotype_and_vlen(iosig_match.group('outcall'),
                                                        iosig_match.group('outtype'))
-            iosig['out']['min_ports'] = iosig_match.group('outmin')
-            iosig['out']['max_ports'] = iosig_match.group('outmax')
-        except Exception:
-            logger.error("Error: Can't parse output signature.")
+            iosig['out']['min_ports'] = remove_comments(iosig_match.group('outmin'))
+            iosig['out']['max_ports'] = remove_comments(iosig_match.group('outmax'))
+        except Exception as e:
+            logger.error(f"Error: Can't parse output signature: {e}")
         return iosig
 
     def read_params(self):

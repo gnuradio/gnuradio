@@ -1,0 +1,33 @@
+id: python_nogui_workflow
+description: "Python no GUI workflow"
+output_language: python
+output_language_label: Python
+generator_module: gnuradio.grc.workflows.python_nogui
+generator_class: PythonNoGuiGenerator
+generate_options: no_gui
+generate_options_label: No GUI
+parameters:
+-   id: run_options
+    label: Run Options
+    dtype: enum
+    default: prompt
+    options: [run, prompt]
+    option_labels: [Run to Completion, Prompt for Exit]
+    hide: 'none'
+-   id: max_nouts
+    label: Max Number of Output
+    dtype: int
+    default: '0'
+    hide: ${ 'none' if max_nouts else 'part' }
+-   id: realtime_scheduling
+    label: Realtime Scheduling
+    dtype: enum
+    options: ['', '1']
+    option_labels: ['Off', 'On']
+    hide: ${ 'none' if realtime_scheduling else 'part' }
+-   id: run_command
+    label: Run Command
+    category: Advanced
+    dtype: string
+    default: '{python} -u {filename}'
+    hide: 'part'

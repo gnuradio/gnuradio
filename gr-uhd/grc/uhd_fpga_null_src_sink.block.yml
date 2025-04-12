@@ -1,0 +1,51 @@
+id: uhd_fpga_null_src_sink
+label: RFNoC Null Source/Sink
+
+parameters:
+-   id: type
+    label: RFNoC Block Type
+    dtype: string
+    default: 'block'
+    hide: all
+-   id: desc
+    label: Block Descriptor
+    dtype: string
+    default: 'null_src_sink.yml'
+    hide: all
+-   id: NIPC
+    label: Items per Clock Cycle
+    dtype: int
+    default: 2
+    hide: part
+-   id: ITEM_W
+    label: Item Width (Bits)
+    dtype: int
+    default: 32
+    hide: part
+
+inputs:
+-   domain: rfnoc.data
+    id: sink
+    dtype: fc32
+    multiplicity: ${ NUM_PORTS }
+-   domain: rfnoc.data
+    id: loop
+    dtype: fc32
+    multiplicity: ${ NUM_PORTS }
+
+outputs:
+-   domain: rfnoc.data
+    id: source
+    dtype: fc32
+    multiplicity: ${ NUM_PORTS }
+-   domain: rfnoc.data
+    id: loop
+    dtype: fc32
+    multiplicity: ${ NUM_PORTS }
+
+documentation: |-
+  RFNoC Null Sink/Source (FPGA Implementation).
+  This instantiates the null source/sink block in the FPGA bitfile. It can
+  generate data or act as a data path terminator / data dump.
+
+file_format: 1

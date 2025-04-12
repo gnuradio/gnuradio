@@ -235,8 +235,8 @@ FrequencyDisplayPlot* FreqDisplayForm::getPlot()
 
 void FreqDisplayForm::newData(const QEvent* updateEvent)
 {
-    FreqUpdateEvent* fevent = (FreqUpdateEvent*)updateEvent;
-    const std::vector<double*> dataPoints = fevent->getPoints();
+    const FreqUpdateEvent* fevent = (const FreqUpdateEvent*)updateEvent;
+    const std::vector<const double*> dataPoints = fevent->getPoints();
     const uint64_t numDataPoints = fevent->getNumDataPoints();
 
     getPlot()->plotNewData(dataPoints, numDataPoints, 0, 0, 0, d_update_time);

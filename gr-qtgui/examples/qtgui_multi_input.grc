@@ -1,6 +1,7 @@
 options:
   parameters:
     author: ''
+    catch_exceptions: 'True'
     category: Custom
     cmake_opt: ''
     comment: ''
@@ -24,6 +25,9 @@ options:
     title: ''
     window_size: 1280, 1024
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [8, 11]
     rotation: 0
     state: enabled
@@ -35,6 +39,9 @@ blocks:
     comment: ''
     value: '32000'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [172, 10]
     rotation: 0
     state: enabled
@@ -52,7 +59,10 @@ blocks:
     seed: '0'
     type: complex
   states:
-    coordinate: [56, 260.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [72, 364.0]
     rotation: 0
     state: enabled
 - name: analog_sig_source_x_0
@@ -66,11 +76,16 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
     offset: '0'
+    phase: '0'
     samp_rate: samp_rate
+    showports: 'False'
     type: complex
     waveform: analog.GR_COS_WAVE
   states:
-    coordinate: [56, 92.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [64, 140.0]
     rotation: 0
     state: enabled
 - name: blocks_add_xx_0
@@ -85,7 +100,10 @@ blocks:
     type: complex
     vlen: '1'
   states:
-    coordinate: [280, 256.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [552, 360.0]
     rotation: 0
     state: enabled
 - name: blocks_complex_to_real_0
@@ -98,7 +116,10 @@ blocks:
     minoutbuf: '0'
     vlen: '1'
   states:
-    coordinate: [424, 448.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [504, 560.0]
     rotation: 0
     state: enabled
 - name: blocks_complex_to_real_0_0
@@ -111,23 +132,31 @@ blocks:
     minoutbuf: '0'
     vlen: '1'
   states:
-    coordinate: [424, 528.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [504, 640.0]
     rotation: 0
     state: enabled
-- name: blocks_throttle_0
-  id: blocks_throttle
+- name: blocks_throttle2_0
+  id: blocks_throttle2
   parameters:
     affinity: ''
     alias: ''
     comment: ''
     ignoretag: 'True'
+    limit: auto
+    maximum: '0.1'
     maxoutbuf: '0'
     minoutbuf: '0'
-    samples_per_second: 50e3
+    samples_per_second: samp_rate
     type: complex
     vlen: '1'
   states:
-    coordinate: [216, 124.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [320, 172.0]
     rotation: 0
     state: enabled
 - name: qtgui_const_sink_x_0
@@ -216,7 +245,10 @@ blocks:
     ymax: '2'
     ymin: '-2'
   states:
-    coordinate: [592, 208.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [880, 256.0]
     rotation: 0
     state: enabled
 - name: qtgui_freq_sink_x_0
@@ -271,6 +303,7 @@ blocks:
     minoutbuf: '0'
     name: '""'
     nconnections: '2'
+    norm_window: 'False'
     showports: 'True'
     tr_chan: '0'
     tr_level: '0.0'
@@ -293,7 +326,10 @@ blocks:
     ymax: '10'
     ymin: '-140'
   states:
-    coordinate: [592, 124.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [880, 120.0]
     rotation: 0
     state: enabled
 - name: qtgui_histogram_sink_x_0
@@ -377,7 +413,10 @@ blocks:
     xmax: '1'
     xmin: '-1'
   states:
-    coordinate: [680, 500.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [760, 612.0]
     rotation: 0
     state: enabled
 - name: qtgui_time_raster_sink_x_0
@@ -428,10 +467,19 @@ blocks:
     samp_rate: samp_rate
     type: float
     update_time: '0.01'
+    x_end_value: '0.0'
+    x_label: '""'
+    x_start_value: '0.0'
+    y_end_value: '0.0'
+    y_label: '""'
+    y_start_value: '0.0'
     zmax: '1'
     zmin: '-1'
   states:
-    coordinate: [680, 412.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [760, 524.0]
     rotation: 0
     state: enabled
 - name: qtgui_time_sink_x_0_1
@@ -451,16 +499,16 @@ blocks:
     alpha9: '1.0'
     autoscale: 'False'
     axislabels: 'True'
-    color1: '"blue"'
-    color10: '"blue"'
-    color2: '"red"'
-    color3: '"green"'
-    color4: '"black"'
-    color5: '"cyan"'
-    color6: '"magenta"'
-    color7: '"yellow"'
-    color8: '"dark red"'
-    color9: '"dark green"'
+    color1: blue
+    color10: dark blue
+    color2: red
+    color3: green
+    color4: black
+    color5: cyan
+    color6: magenta
+    color7: yellow
+    color8: dark red
+    color9: dark green
     comment: ''
     ctrlpanel: 'False'
     entags: 'True'
@@ -525,7 +573,10 @@ blocks:
     ymin: '-2'
     yunit: '""'
   states:
-    coordinate: [592, 44.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [880, 44.0]
     rotation: 0
     state: enabled
 - name: qtgui_waterfall_sink_x_0
@@ -583,13 +634,16 @@ blocks:
     update_time: '0.10'
     wintype: window.WIN_BLACKMAN_hARRIS
   states:
-    coordinate: [592, 284.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [880, 328.0]
     rotation: 0
     state: enabled
 
 connections:
 - [analog_fastnoise_source_x_0, '0', blocks_add_xx_0, '1']
-- [analog_sig_source_x_0, '0', blocks_throttle_0, '0']
+- [analog_sig_source_x_0, '0', blocks_throttle2_0, '0']
 - [blocks_add_xx_0, '0', blocks_complex_to_real_0_0, '0']
 - [blocks_add_xx_0, '0', qtgui_const_sink_x_0, '0']
 - [blocks_add_xx_0, '0', qtgui_freq_sink_x_0, '0']
@@ -599,12 +653,13 @@ connections:
 - [blocks_complex_to_real_0, '0', qtgui_time_raster_sink_x_0, '1']
 - [blocks_complex_to_real_0_0, '0', qtgui_histogram_sink_x_0, '0']
 - [blocks_complex_to_real_0_0, '0', qtgui_time_raster_sink_x_0, '0']
-- [blocks_throttle_0, '0', blocks_add_xx_0, '0']
-- [blocks_throttle_0, '0', blocks_complex_to_real_0, '0']
-- [blocks_throttle_0, '0', qtgui_const_sink_x_0, '1']
-- [blocks_throttle_0, '0', qtgui_freq_sink_x_0, '1']
-- [blocks_throttle_0, '0', qtgui_time_sink_x_0_1, '1']
-- [blocks_throttle_0, '0', qtgui_waterfall_sink_x_0, '1']
+- [blocks_throttle2_0, '0', blocks_add_xx_0, '0']
+- [blocks_throttle2_0, '0', blocks_complex_to_real_0, '0']
+- [blocks_throttle2_0, '0', qtgui_const_sink_x_0, '1']
+- [blocks_throttle2_0, '0', qtgui_freq_sink_x_0, '1']
+- [blocks_throttle2_0, '0', qtgui_time_sink_x_0_1, '1']
+- [blocks_throttle2_0, '0', qtgui_waterfall_sink_x_0, '1']
 
 metadata:
   file_format: 1
+  grc_version: 3.10.10.0

@@ -11,7 +11,9 @@
 #ifndef INCLUDED_GR_RUNTIME_BLOCK_H
 #define INCLUDED_GR_RUNTIME_BLOCK_H
 
+#include <cstdint>
 #include <memory>
+#include <optional>
 
 #include <gnuradio/api.h>
 #include <gnuradio/basic_block.h>
@@ -75,8 +77,11 @@ public:
                                takes care of that. */
         TPP_ONE_TO_ONE = 2, /*!< Propagate tags from n. input to n. output. Requires same
                                number of in- and outputs */
-        TPP_CUSTOM = 3      /*!< Like TPP_DONT, but signals the block it should implement
-                               application-specific forwarding behaviour. */
+        TPP_CUSTOM = 3,     /*!< Like TPP_DONT, but signals the block it should implement
+                              application-specific forwarding behaviour. */
+        TPP_TSB = 4 /*!< like TPP_ALL_TO_ALL, but specific to tagged stream blocks. If
+                       your TSB needs to control its own tag copying, use
+                       set_tag_propagation_policy(TPP_CUSTOM) or TPP_DONT. */
     };
 
     ~block() override;
@@ -843,43 +848,11 @@ protected:
     void add_item_tag(unsigned int which_output, const tag_t& tag);
 
     /*!
-     * \brief DEPRECATED. Will be removed in 3.8.
-     *
-     * \param which_input an integer of which input stream to remove the tag from
-     * \param abs_offset   a uint64 number of the absolute item number
-     *                     associated with the tag. Can get from nitems_written.
-     * \param key          the tag key as a PMT symbol
-     * \param value        any PMT holding any value for the given key
-     * \param srcid        optional source ID specifier; defaults to PMT_F
-     *
-     * If no such tag is found, does nothing.
-     */
-    inline void remove_item_tag(unsigned int which_input,
-                                uint64_t abs_offset,
-                                const pmt::pmt_t& key,
-                                const pmt::pmt_t& value,
-                                const pmt::pmt_t& srcid = pmt::PMT_F)
-    {
-        tag_t tag;
-        tag.offset = abs_offset;
-        tag.key = key;
-        tag.value = value;
-        tag.srcid = srcid;
-        this->remove_item_tag(which_input, tag);
-    }
-
-    /*!
-     * \brief DEPRECATED. Will be removed in 3.8.
-     *
-     * \param which_input an integer of which input stream to remove the tag from
-     * \param tag the tag object to remove
-     */
-    void remove_item_tag(unsigned int which_input, const tag_t& tag);
-
-    /*!
      * \brief Given a [start,end), returns a vector of all tags in the range.
      *
      * Range of counts is from start to end-1.
+     *
+     * The vector is sorted ascendingly by the offset of the tags.
      *
      * Tags are tuples of:
      *      (item count, source id, key, value)
@@ -899,6 +872,8 @@ protected:
      * range with a given key.
      *
      * Range of counts is from start to end-1.
+     *
+     * The vector is sorted ascendingly by the offset of the tags.
      *
      * Tags are tuples of:
      *      (item count, source id, key, value)
@@ -927,6 +902,8 @@ protected:
      *
      * Range of items counts from \p rel_start to \p rel_end-1 within
      * current window.
+     *
+     * The vector is sorted ascendingly by the offset of the tags.
      *
      * Tags are tuples of:
      *      (item count, source id, key, value)
@@ -959,6 +936,59 @@ protected:
                             uint64_t rel_end,
                             const pmt::pmt_t& key);
 
+    /*!
+     * \brief Get the first tag in specified range (if any), fulfilling criterion
+     *
+     * \details
+     * This function returns the lowest-offset tag in the range for whom the predicate
+     * function returns true.
+     *
+     * The predicate function hence needs to map tags to booleans; its signature is
+     * bool function(const tag_t& tag_to check);
+     *
+     * A sensible choice is a side-effect-free lambda, e.g., you'd use this as:
+     *
+     * auto timestamp = get_first_tag_in_range(
+     *     0,                          // which input
+     *     nitems_read(0),             // start index
+     *     nitems_read(0) + something, // end
+     *     [this](const gr::tag_t& tag) {
+     *         return pmt::eqv(tag.key, d_time_tag) && !pmt::is_null(tag.value)
+     *     });
+     * if (timestamp) {
+     *     d_logger->info("got time tag {} at offset {}",
+     *                    timestamp.value.value,
+     *                    timestamp.value.offset);
+     * }
+     *
+     * \param which_input  an integer of which input stream to pull from
+     * \param start        a uint64 count of the start of the range of interest
+     * \param end          a uint64 count of the end of the range of interest
+     * \param predicate    a function of tag_t, returning a boolean
+     */
+    std::optional<gr::tag_t> get_first_tag_in_range(
+        unsigned which_input,
+        uint64_t start,
+        uint64_t end,
+        std::function<bool(const gr::tag_t&)> predicate = [](const gr::tag_t&) {
+            return true;
+        });
+
+    /*!
+     * \brief Get the first tag in specified range (if any) with given key
+     *
+     * \details Convenience wrapper for the predicate-accepting version.
+     *
+     * \param which_input  an integer of which input stream to pull from
+     * \param start        a uint64 count of the start of the range of interest
+     * \param end          a uint64 count of the end of the range of interest
+     * \param key          the PMT to match tag keys agains
+     */
+    [[nodiscard]] std::optional<gr::tag_t> get_first_tag_in_range(unsigned which_input,
+                                                                  uint64_t start,
+                                                                  uint64_t end,
+                                                                  const pmt::pmt_t& key);
+
     void enable_update_rate(bool en);
 
     /*!
@@ -981,7 +1011,7 @@ protected:
      *
      * Used by calling gr::thread::scoped_lock l(d_setlock);
      */
-    gr::thread::mutex d_setlock;
+    mutable gr::thread::mutex d_setlock;
 
     // These are really only for internal use, but leaving them public avoids
     // having to work up an ever-varying list of friend GR_RUNTIME_APIs

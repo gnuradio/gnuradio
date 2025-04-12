@@ -215,7 +215,7 @@ int pfb_synthesizer_ccf_impl::work(int noutput_items,
 {
     gr::thread::scoped_lock guard(d_mutex);
 
-    gr_complex* in = (gr_complex*)input_items[0];
+    const gr_complex* in = (const gr_complex*)input_items[0];
     gr_complex* out = (gr_complex*)output_items[0];
 
     if (d_updated) {
@@ -230,7 +230,7 @@ int pfb_synthesizer_ccf_impl::work(int noutput_items,
     if (d_twox == 1) {
         for (n = 0; n < noutput_items / d_numchans; n++) {
             for (i = 0; i < ninputs; i++) {
-                in = (gr_complex*)input_items[i];
+                in = (const gr_complex*)input_items[i];
                 d_fft->get_inbuf()[d_channel_map[i]] = in[n];
             }
 
@@ -249,7 +249,7 @@ int pfb_synthesizer_ccf_impl::work(int noutput_items,
         for (n = 0; n < noutput_items / d_numchans; n++) {
             for (i = 0; i < ninputs; i++) {
                 // in = (gr_complex*)input_items[ninputs-i-1];
-                in = (gr_complex*)input_items[i];
+                in = (const gr_complex*)input_items[i];
                 d_fft->get_inbuf()[d_channel_map[i]] = in[n];
             }
 

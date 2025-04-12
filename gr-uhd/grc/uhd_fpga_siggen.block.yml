@@ -1,0 +1,36 @@
+id: uhd_fpga_siggen
+label: RFNoC Signal Generator
+
+parameters:
+-   id: type
+    label: RFNoC Block Type
+    dtype: string
+    default: 'block'
+    hide: all
+-   id: desc
+    label: Block Descriptor
+    dtype: string
+    default: 'siggen.yml'
+    hide: all
+-   id: NUM_PORTS
+    label: Number of Ports
+    dtype: int
+    default: 1
+    hide: part
+
+inputs:
+-   domain: rfnoc.clk
+    id: ce_clk
+    dtype: message
+
+outputs:
+-   domain: rfnoc.data
+    id: out_
+    dtype: fc32
+    multiplicity: ${ NUM_PORTS }
+
+documentation: |-
+  RFNoC signal generator block (FPGA Implementation).
+  This instantiates the signal generator block in the FPGA bitfile.
+
+file_format: 1

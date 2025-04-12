@@ -48,7 +48,7 @@ jobs:
       - name: Re-render
         shell: bash -l {0}
         run: |
-          conda smithy rerender --feedstock_config .conda-forge.yml
+          conda smithy rerender --feedstock_config .conda/conda-forge.yml
       - name: Commit and push
         uses: EndBug/add-and-commit@v7
         with:

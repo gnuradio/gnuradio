@@ -61,7 +61,8 @@ public:
                            const double units,
                            const std::string& strunits);
 
-    void plotNewData(const std::vector<double*> dataPoints, const uint64_t numDataPoints);
+    void plotNewData(const std::vector<const double*> dataPoints,
+                     const uint64_t numDataPoints);
 
     void plotNewData(const double* dataPoints, const uint64_t numDataPoints);
 

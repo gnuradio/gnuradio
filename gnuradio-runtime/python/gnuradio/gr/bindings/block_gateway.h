@@ -18,6 +18,7 @@
 
 #include <pybind11/pybind11.h>
 
+#include <functional>
 #include <map>
 #include <memory>
 #include <string>
@@ -87,6 +88,14 @@ public:
                                                uint64_t rel_start,
                                                uint64_t rel_end,
                                                const pmt::pmt_t& key);
+
+    [[nodiscard]] std::optional<gr::tag_t> _get_first_tag_in_range(
+        unsigned int which_input, uint64_t start, uint64_t end, const pmt::pmt_t& key);
+    [[nodiscard]] std::optional<gr::tag_t>
+    _get_first_tag_in_range(unsigned int which_input,
+                            uint64_t start,
+                            uint64_t end,
+                            std::function<bool(const gr::tag_t&)>);
 
     /*******************************************************************
      * Overloads for various scheduler-called functions

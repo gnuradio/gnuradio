@@ -1,0 +1,72 @@
+name: Bug Report
+description: File a bug report
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report!  
+        Before you open an issue we suggest checking the following:
+        [The wiki](https://wiki.gnuradio.org/index.php/Main_Page)
+        [The GNU Radio Blocks documentation](https://wiki.gnuradio.org/index.php/Category:Block_Docs)
+        [The User manual](https://wiki.gnuradio.org/index.php/Usage_Manual)
+        [GNU Radio community](https://wiki.gnuradio.org/index.php/Chat)
+        [the mailing list](https://wiki.gnuradio.org/index.php/MailingLists)
+
+        **Please reserve the issue tracker for presumed bugs in the GR codebase - if this is a question about usage or an installation issue, please seek help on the [the mailing list](https://wiki.gnuradio.org/index.php/MailingLists) first**
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: Also tell us, what did you expect to happen?
+      value: "A bug happened!"
+    validations:
+      required: true
+  - type: textarea
+    id: system-information
+    attributes:
+      label: System Information
+      description: Include information about OS and GNU Radio installation method 
+      value: |
+        OS: (Linux Distro, Mac, Windows)
+        GR Installation Method: (native distro packages - apt, rpm, etc., Conda, Source
+    validations:
+      required: true
+  - type: dropdown
+    id: version
+    attributes:
+      label: GNU Radio Version
+      description: What version of GNU Radio are you running?
+      options:
+        - 4.0-git (dev-4.0)
+        - 3.11-git (main)
+        - QT-based Companion branch (feature-grc-qt)
+        - 3.10 (maint-3.10)
+        - 3.9  (maint-3.9)
+        - 3.8  (maint-3.8)
+        - 3.7  (maint-3.7)
+    validations:
+      required: true
+  - type: input
+    id: specific-version
+    attributes:
+      label: Specific Version
+      description: "Value reported with `gnuradio-config-info -v`"
+      value: "0.0.0.0"
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to Reproduce the Problem
+      description: The simplest set of steps to make the problem occur.
+      # value: ""
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant log output
+      description: Please copy and paste any relevant log output. This will be automatically formatted into code, so no need for backticks.
+      render: shell
+  - type: markdown
+    attributes:
+      value: By submitting this issue, you agree to follow our [Code of Conduct](https://github.com/gnuradio/gr-governance/blob/main/CODE_OF_CONDUCT.md)

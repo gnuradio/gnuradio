@@ -15,7 +15,6 @@ list(
     # attributes_python.cc
     basic_block_python.cc
     block_python.cc
-    block_detail_python.cc
     block_gateway_python.cc
     # block_registry_python.cc
     buffer_python.cc
@@ -51,19 +50,6 @@ list(
     # pycallback_object_python.cc
     random_python.cc
     realtime_python.cc
-    # rpcbufferedget_python.cc
-    # rpccallbackregister_base_python.cc
-    # rpcmanager_python.cc
-    # rpcmanager_base_python.cc
-    # rpcpmtconverters_thrift_python.cc
-    # rpcregisterhelpers_python.cc
-    # rpcserver_aggregator_python.cc
-    # rpcserver_base_python.cc
-    # rpcserver_booter_aggregator_python.cc
-    # rpcserver_booter_base_python.cc
-    # rpcserver_booter_thrift_python.cc
-    # rpcserver_selector_python.cc
-    # rpcserver_thrift_python.cc
     runtime_types_python.cc
     sincos_python.cc
     sptr_magic_python.cc
@@ -76,16 +62,37 @@ list(
     # thread_python.cc
     # thread_body_wrapper_python.cc
     # thread_group_python.cc
-    # thrift_application_base_python.cc
-    # thrift_server_template_python.cc
     top_block_python.cc
-    tpb_detail_python.cc
     # types_python.cc
     # unittests_python.cc
     # xoroshiro128p_python.cc
     python_bindings.cc)
 
+if(ENABLE_GR_CTRLPORT)
+    list(APPEND gr_python_files 
+        # rpcbufferedget_python.cc
+        # rpcmanager_base_python.cc
+        # rpcpmtconverters_thrift_python.cc
+        # rpcregisterhelpers_python.cc
+        # rpcserver_aggregator_python.cc
+        # rpcserver_base_python.cc
+        # rpcserver_booter_aggregator_python.cc
+        # rpcserver_booter_thrift_python.cc
+        # rpcserver_selector_python.cc
+        # rpcserver_thrift_python.cc
+        # thrift_application_base_python.cc
+        # thrift_server_template_python.cc
+        rpccallbackregister_base_python.cc
+        rpcmanager_python.cc
+        rpcserver_booter_base_python.cc
+        )
+endif()
+
 gr_pybind_make_check_hash(gr ../../../.. gr::gr "${gr_python_files}")
+
+if(ENABLE_GR_CTRLPORT)
+    target_compile_definitions(gr_python PUBLIC GR_HAVE_CTRLPORT)
+endif()
 
 install(
     TARGETS gr_python

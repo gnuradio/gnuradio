@@ -11,7 +11,7 @@ import logging
 
 from gi.repository import Gtk, Gdk, Gio, GLib, GObject
 
-from . import Utils
+from ..core.utils.system import get_modifier_key
 
 log = logging.getLogger(__name__)
 
@@ -150,7 +150,7 @@ class Action(Gio.SimpleAction):
         self.icon_name = icon_name
         if keypresses:
             self.keypresses = [
-                kp.replace("<Ctrl>", Utils.get_modifier_key(True))
+                kp.replace("<Ctrl>", get_modifier_key(True))
                 for kp in keypresses
             ]
         else:
@@ -489,6 +489,13 @@ TOGGLE_SHOW_BLOCK_IDS = actions.register(
     label='Show All Block IDs',
     tooltip='Show all the block IDs',
     preference_name='show_block_ids',
+    default=False,
+)
+TOGGLE_SHOW_FIELD_COLORS = actions.register(
+    "win.show_field_colors",
+    label='Show properties fields colors',
+    tooltip='Use colors to indicate the type of each field in the block properties',
+    preference_name='show_field_colors',
     default=False,
 )
 TOGGLE_FLOW_GRAPH_VAR_EDITOR = actions.register(

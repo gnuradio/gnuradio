@@ -65,8 +65,8 @@ public:
     scl_list& operator=(const scl_list&) = delete;
 
     virtual ~scl_list();
-    const unsigned int size() const { return d_list_size; };
-    const unsigned int active_size() const { return d_active_path_counter; };
+    unsigned int size() const { return d_list_size; };
+    unsigned int active_size() const { return d_active_path_counter; };
 
     path* initial_path() const { return d_path_list[0]; };
     path* next_active_path() { return d_path_list[d_active_pos++]; };

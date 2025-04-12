@@ -101,7 +101,9 @@ class BlockHeaderParser(BlockTool):
             include_paths=self.include_paths,
             compiler='gcc',
             define_symbols=['BOOST_ATOMIC_DETAIL_EXTRA_BACKEND_GENERIC'],
-            cflags='-std=c++11')
+            # See the comment parseheader_generic: -fsized-deallocation
+            # helps what seems to be a compiler bug (?).
+            cflags='-std=c++17 -fPIC -fsized-deallocation')
         decls = parser.parse(
             [self.target_file], xml_generator_config)
         global_namespace = declarations.get_global_namespace(decls)
@@ -188,7 +190,7 @@ class BlockHeaderParser(BlockTool):
             if make_func:
                 for arg in make_func[0].arguments:
                     make_arguments = None
-                    '''
+                    r'''
                     for _arg in _make_fun:
                         if str(arg.name) in _arg:
                             make_arguments = {

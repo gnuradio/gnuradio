@@ -21,6 +21,8 @@ from .MainWindow import MainWindow
 from .PropsDialog import PropsDialog
 
 from ..core import Messages
+from ..core.Connection import Connection
+from ..core.blocks import Block
 
 
 log = logging.getLogger(__name__)
@@ -67,6 +69,9 @@ class Application(Gtk.Application):
         self.init_file_paths = [os.path.abspath(
             file_path) for file_path in file_paths]
         self.init = False
+        # exec_called tracks if "generate" is implied by "execute", or called
+        # directly. If true, then "execute" was called previously.
+        self.exec_called = False
 
     def do_startup(self):
         Gtk.Application.do_startup(self)
@@ -185,6 +190,7 @@ class Application(Gtk.Application):
                 Actions.TOGGLE_SHOW_PARAMETER_EXPRESSION,
                 Actions.TOGGLE_SHOW_PARAMETER_EVALUATION,
                 Actions.TOGGLE_SHOW_BLOCK_IDS,
+                Actions.TOGGLE_SHOW_FIELD_COLORS,
             ):
                 action.set_enabled(True)
                 if hasattr(action, 'load_from_preferences'):
@@ -233,6 +239,7 @@ class Application(Gtk.Application):
             }[action])
             if changed:
                 flow_graph_update()
+                page.flow_graph.update()
                 page.state_cache.save_new_state(flow_graph.export_data())
                 page.saved = False
         ##################################################
@@ -522,6 +529,9 @@ class Application(Gtk.Application):
             Actions.NOTHING_SELECT()
             action.save_to_preferences()
             flow_graph_update()
+        elif action == Actions.TOGGLE_SHOW_FIELD_COLORS:
+            action.set_active(not action.get_active())
+            action.save_to_preferences()
         elif action == Actions.TOGGLE_FLOW_GRAPH_VAR_EDITOR:
             # TODO: There may be issues at startup since these aren't triggered
             # the same was as Gtk.Actions when loading preferences.
@@ -551,7 +561,8 @@ class Application(Gtk.Application):
         ##################################################
         elif action == Actions.BLOCK_PARAM_MODIFY:
             selected_block = args[0] if args[0] else flow_graph.selected_block
-            if selected_block:
+            selected_conn = args[0] if args[0] else flow_graph.selected_connection
+            if selected_block and isinstance(selected_block, Block):
                 self.dialog = PropsDialog(self.main_window, selected_block)
                 response = Gtk.ResponseType.APPLY
                 while response == Gtk.ResponseType.APPLY:  # rerun the dialog if Apply was hit
@@ -565,6 +576,26 @@ class Application(Gtk.Application):
                     if response in (Gtk.ResponseType.REJECT, Gtk.ResponseType.ACCEPT):
                         n = page.state_cache.get_current_state()
                         flow_graph.import_data(n)
+                        flow_graph_update()
+                    if response == Gtk.ResponseType.APPLY:
+                        # null action, that updates the main window
+                        Actions.ELEMENT_SELECT()
+                self.dialog.destroy()
+                self.dialog = None
+            elif selected_conn and isinstance(selected_conn, Connection):
+                self.dialog = PropsDialog(self.main_window, selected_conn)
+                response = Gtk.ResponseType.APPLY
+                while response == Gtk.ResponseType.APPLY:  # rerun the dialog if Apply was hit
+                    response = self.dialog.run()
+                    if response in (Gtk.ResponseType.APPLY, Gtk.ResponseType.ACCEPT):
+                        page.state_cache.save_new_state(
+                            flow_graph.export_data())
+                        # Following line forces a complete update of io ports
+                        flow_graph_update()
+                        page.saved = False
+                    if response in (Gtk.ResponseType.REJECT, Gtk.ResponseType.ACCEPT):
+                        curr_state = page.state_cache.get_current_state()
+                        flow_graph.import_data(curr_state)
                         flow_graph_update()
                     if response == Gtk.ResponseType.APPLY:
                         # null action, that updates the main window
@@ -732,14 +763,16 @@ class Application(Gtk.Application):
                     generator = page.get_generator()
                     try:
                         Messages.send_start_gen(generator.file_path)
-                        generator.write()
+                        generator.write(self.exec_called)
                         self.generator = generator
                     except Exception as e:
                         Messages.send_fail_gen(e)
 
         elif action == Actions.FLOW_GRAPH_EXEC:
-            if not page.process:
+            if not page.process:  # Don't execute if already running
+                self.exec_called = True
                 Actions.FLOW_GRAPH_GEN()
+                self.exec_called = False
                 if self.generator:
                     xterm = self.platform.config.xterm_executable
                     if self.config.xterm_missing() != xterm:
@@ -752,7 +785,7 @@ class Application(Gtk.Application):
                         Executor.ExecFlowGraphThread(
                             flow_graph_page=page,
                             xterm_executable=xterm,
-                            callback=self.update_exec_stop
+                            update_gui_callback=self.update_exec_stop
                         )
         elif action == Actions.FLOW_GRAPH_KILL:
             if page.process:
@@ -809,11 +842,18 @@ class Application(Gtk.Application):
 
         selected_blocks = list(flow_graph.selected_blocks())
         selected_block = selected_blocks[0] if selected_blocks else None
+        # See if a connection has modifiable parameters or grey out the entry
+        # in the menu
+        selected_connections = list(flow_graph.selected_connections())
+        selected_connection = selected_connections[0] \
+            if len(selected_connections) == 1 \
+            else None
+        selected_conn_has_params = selected_connection and bool(len(selected_connection.params))
 
         # update general buttons
         Actions.ERRORS_WINDOW_DISPLAY.set_enabled(not flow_graph.is_valid())
         Actions.ELEMENT_DELETE.set_enabled(bool(flow_graph.selected_elements))
-        Actions.BLOCK_PARAM_MODIFY.set_enabled(bool(selected_block))
+        Actions.BLOCK_PARAM_MODIFY.set_enabled(bool(selected_block) or bool(selected_conn_has_params))
         Actions.BLOCK_ROTATE_CCW.set_enabled(bool(selected_blocks))
         Actions.BLOCK_ROTATE_CW.set_enabled(bool(selected_blocks))
         # update alignment options
@@ -839,8 +879,8 @@ class Application(Gtk.Application):
 
         Actions.BLOCK_CREATE_HIER.set_enabled(bool(selected_blocks))
         Actions.OPEN_HIER.set_enabled(bool(selected_blocks))
-        Actions.BUSSIFY_SOURCES.set_enabled(bool(selected_blocks))
-        Actions.BUSSIFY_SINKS.set_enabled(bool(selected_blocks))
+        Actions.BUSSIFY_SOURCES.set_enabled(any(block.sources for block in selected_blocks))
+        Actions.BUSSIFY_SINKS.set_enabled(any(block.sinks for block in selected_blocks))
         Actions.RELOAD_BLOCKS.enable()
         Actions.FIND_BLOCKS.enable()
 

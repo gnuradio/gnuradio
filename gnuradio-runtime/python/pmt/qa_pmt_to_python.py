@@ -24,13 +24,13 @@ class test_pmt_to_python(unittest.TestCase):
     def test_numpy_to_uvector_and_reverse(self):
         import numpy as np
         N = 100
-        narr = np.ndarray(N, dtype=np.complex128)
+        narr = np.ndarray(N, dtype=np.cdouble)
         narr.real[:] = np.random.uniform(size=N)
         narr.imag[:] = np.random.uniform(size=N)
         uvector = pmt2py.numpy_to_uvector(narr)
         nparr = pmt2py.uvector_to_numpy(uvector)
         self.assertEqual(nparr.dtype, narr.dtype)
-        self.assertTrue(np.alltrue(nparr == narr))
+        self.assertTrue(np.all(nparr == narr))
 
 
 if __name__ == '__main__':

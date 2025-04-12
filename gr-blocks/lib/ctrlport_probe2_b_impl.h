@@ -35,7 +35,7 @@ public:
                            const std::string& desc,
                            int len,
                            unsigned int disp_mask);
-    ~ctrlport_probe2_b_impl();
+    ~ctrlport_probe2_b_impl() override;
 
     void setup_rpc() override;
 

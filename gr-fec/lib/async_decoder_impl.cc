@@ -15,6 +15,7 @@
 #include "async_decoder_impl.h"
 #include <gnuradio/io_signature.h>
 #include <volk/volk.h>
+#include <cmath>
 #include <cstdio>
 
 namespace gr {
@@ -54,7 +55,7 @@ async_decoder_impl::async_decoder_impl(generic_decoder::sptr my_decoder,
     set_msg_handler(d_in_port, [this](const pmt::pmt_t& msg) { this->decode(msg); });
 
     // The maximum frame size is set by the initial frame size of the decoder.
-    d_max_bits_in = d_mtu * 8 * 1.0 / d_decoder->rate();
+    d_max_bits_in = std::lround(d_mtu * 8 * 1.0 / d_decoder->rate());
     d_tmp_f32.resize(d_max_bits_in);
 
     if (strncmp(d_decoder->get_input_conversion(), "uchar", 5) == 0) {
@@ -69,8 +70,9 @@ async_decoder_impl::async_decoder_impl(generic_decoder::sptr my_decoder,
 
 async_decoder_impl::~async_decoder_impl() {}
 
-// TODO: replace this function by volk_32f_s32f_x2_convert_8u when it gets into
-// a stable volk release
+// The volk_32f_s32f_x2_convert_8u kernel is only available since Volk 3.1.
+// In earlier versions we use this ad-hoc function.
+#if !(VOLK_VERSION >= 030100)
 inline void async_decoder_impl::convert_32f_to_8u(uint8_t* output_vector,
                                                   const float* input_vector,
                                                   const float scale,
@@ -87,6 +89,7 @@ inline void async_decoder_impl::convert_32f_to_8u(uint8_t* output_vector,
         output_vector[n] = std::clamp<float>(d_tmp_f32[n], 0.0f, UINT8_MAX);
     }
 }
+#endif
 
 void async_decoder_impl::decode(const pmt::pmt_t& msg)
 {
@@ -97,14 +100,14 @@ void async_decoder_impl::decode(const pmt::pmt_t& msg)
     // Watch out for this diff. It might be over-specializing to the
     // CC decoder in terminated mode that has an extra rate(K-1)
     // bits added on to the transmitted frame.
-    int diff =
-        d_decoder->rate() * d_decoder->get_input_size() - d_decoder->get_output_size();
+    int diff = std::lround(d_decoder->rate() * d_decoder->get_input_size()) -
+               d_decoder->get_output_size();
 
     size_t nbits_in = pmt::length(bits);
     size_t nbits_out = 0;
     size_t nblocks = 1;
     bool variable_frame_size =
-        d_decoder->set_frame_size(nbits_in * d_decoder->rate() - diff);
+        d_decoder->set_frame_size(std::lround(nbits_in * d_decoder->rate()) - diff);
 
     // Check here if the frame size is larger than what we've
     // allocated for in the constructor.
@@ -115,7 +118,7 @@ void async_decoder_impl::decode(const pmt::pmt_t& msg)
 
     // set up nbits_out
     if (variable_frame_size) {
-        nbits_out = nbits_in * d_decoder->rate() - diff;
+        nbits_out = std::lround(nbits_in * d_decoder->rate()) - diff;
     } else {
         nblocks = nbits_in / d_decoder->get_input_size();
         nbits_out = nblocks * d_decoder->get_output_size();
@@ -133,7 +136,11 @@ void async_decoder_impl::decode(const pmt::pmt_t& msg)
     const float shift = d_decoder->get_shift();
 
     if (std::string_view(d_decoder->get_input_conversion()) == "uchar") {
+#if VOLK_VERSION >= 030100
+        volk_32f_s32f_x2_convert_8u(d_tmp_u8.data(), f32in, 48.0f, shift, nbits_in);
+#else
         convert_32f_to_8u(d_tmp_u8.data(), f32in, 48.0f, shift, nbits_in);
+#endif
 
         for (size_t i = 0; i < nblocks; i++) {
             d_decoder->generic_work(

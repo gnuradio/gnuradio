@@ -96,7 +96,7 @@ int PlotTimeRaster::rtti() const { return QwtPlotItem::Rtti_PlotGrid; }
 void PlotTimeRaster::setColorMap(const QwtColorMap* map)
 {
     delete d_data->colorMap;
-    d_data->colorMap = (QwtColorMap*)map;
+    d_data->colorMap = const_cast<QwtColorMap*>(map);
 
     invalidateCache();
     itemChanged();

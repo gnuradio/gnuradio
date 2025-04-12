@@ -175,7 +175,7 @@ EyeDisplayPlot::~EyeDisplayPlot()
 
 void EyeDisplayPlot::replot() { QwtPlot::replot(); }
 
-void EyeDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
+void EyeDisplayPlot::plotNewData(const std::vector<const double*> dataPoints,
                                  const int64_t numDataPoints,
                                  int sps,
                                  const double timeInterval,
@@ -450,11 +450,14 @@ void EyeDisplayPlot::enableTagMarker(unsigned int which, bool en)
             "TimeDomainDisplayPlot: enabled tag marker does not exist.");
 }
 
-const QColor EyeDisplayPlot::getTagTextColor() { return d_tag_text_color; }
+const QColor EyeDisplayPlot::getTagTextColor() const { return d_tag_text_color; }
 
-const QColor EyeDisplayPlot::getTagBackgroundColor() { return d_tag_background_color; }
+const QColor EyeDisplayPlot::getTagBackgroundColor() const
+{
+    return d_tag_background_color;
+}
 
-const Qt::BrushStyle EyeDisplayPlot::getTagBackgroundStyle()
+Qt::BrushStyle EyeDisplayPlot::getTagBackgroundStyle() const
 {
     return d_tag_background_style;
 }
@@ -471,7 +474,7 @@ void EyeDisplayPlot::setTagBackgroundStyle(Qt::BrushStyle b)
 void EyeDisplayPlot::setYLabel(const std::string& label, const std::string& unit)
 {
     std::string l = label;
-    if (unit.length() > 0)
+    if (!unit.empty())
         l += " (" + unit + ")";
     QwtText yAxisTitle(QString(l.c_str()));
     setAxisTitle(QwtPlot::yLeft, yAxisTitle);
@@ -516,7 +519,7 @@ void EyeDisplayPlot::setLineColor(unsigned int which, QColor color)
         pen.setColor(color);
         d_plot_curve[i]->setPen(pen);
         // And set the color of the markers
-        QwtSymbol* sym = (QwtSymbol*)d_plot_curve[i]->symbol();
+        QwtSymbol* sym = const_cast<QwtSymbol*>(d_plot_curve[i]->symbol());
         if (sym) {
             sym->setColor(color);
             sym->setPen(pen);
@@ -535,7 +538,7 @@ void EyeDisplayPlot::setLineWidth(unsigned int which, int width)
         d_plot_curve[i]->setPen(pen);
 
         // Scale the marker size proportionally
-        QwtSymbol* sym = (QwtSymbol*)d_plot_curve[i]->symbol();
+        QwtSymbol* sym = const_cast<QwtSymbol*>(d_plot_curve[i]->symbol());
         if (sym) {
             sym->setSize(7 + 10 * log10(1.0 * i), 7 + 10 * log10(1.0 * i));
             d_plot_curve[i]->setSymbol(sym);
@@ -547,7 +550,7 @@ void EyeDisplayPlot::setLineWidth(unsigned int which, int width)
 void EyeDisplayPlot::setLineMarker(unsigned int which, QwtSymbol::Style marker)
 {
     for (unsigned int i = 0; i < d_plot_curve.size(); ++i) {
-        QwtSymbol* sym = (QwtSymbol*)d_plot_curve[i]->symbol();
+        QwtSymbol* sym = const_cast<QwtSymbol*>(d_plot_curve[i]->symbol());
         if (sym) {
             sym->setStyle(marker);
             d_plot_curve[i]->setSymbol(sym);
@@ -579,7 +582,7 @@ void EyeDisplayPlot::setMarkerAlpha(unsigned int which, int alpha)
         d_plot_curve[i]->setPen(pen);
 
         // And set the new color for the markers
-        QwtSymbol* sym = (QwtSymbol*)d_plot_curve[i]->symbol();
+        QwtSymbol* sym = const_cast<QwtSymbol*>(d_plot_curve[i]->symbol());
         if (sym) {
             sym->setColor(color);
             sym->setPen(pen);

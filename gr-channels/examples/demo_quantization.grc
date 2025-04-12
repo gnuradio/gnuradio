@@ -1,6 +1,7 @@
 options:
   parameters:
     author: mettus
+    catch_exceptions: 'True'
     category: Custom
     cmake_opt: ''
     comment: ''
@@ -24,6 +25,9 @@ options:
     title: ''
     window_size: 1280, 1024
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [10, 10]
     rotation: 0
     state: enabled
@@ -42,6 +46,7 @@ blocks:
     label4: ''
     labels: '[''0'', ''1'', ''2'', ''4'', ''6'', ''8'', ''10'', ''12'', ''14'', ''16'']'
     num_opts: '0'
+    option0: '0'
     option1: '1'
     option2: '2'
     option3: '3'
@@ -52,6 +57,9 @@ blocks:
     value: '16'
     widget: combo_box
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [570, 10]
     rotation: 0
     state: enabled
@@ -62,7 +70,7 @@ blocks:
     gui_hint: 2,2,1,1
     label: BW
     min_len: '200'
-    orient: Qt.Horizontal
+    orient: QtCore.Qt.Horizontal
     rangeType: float
     start: samp_rate/100
     step: '100'
@@ -70,6 +78,9 @@ blocks:
     value: samp_rate/2
     widget: counter_slider
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [873, 11]
     rotation: 0
     state: enabled
@@ -80,7 +91,7 @@ blocks:
     gui_hint: 2,1,1,1
     label: Center Freq.
     min_len: '200'
-    orient: Qt.Horizontal
+    orient: QtCore.Qt.Horizontal
     rangeType: float
     start: '0'
     step: '100'
@@ -88,6 +99,9 @@ blocks:
     value: samp_rate/11.0
     widget: counter_slider
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [724, 11]
     rotation: 0
     state: enabled
@@ -98,7 +112,7 @@ blocks:
     gui_hint: 0,1,1,1
     label: Noise Power
     min_len: '200'
-    orient: Qt.Horizontal
+    orient: QtCore.Qt.Horizontal
     rangeType: float
     start: '-150'
     step: '1'
@@ -106,6 +120,9 @@ blocks:
     value: '-150'
     widget: counter_slider
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [173, 10]
     rotation: 0
     state: enabled
@@ -115,6 +132,9 @@ blocks:
     comment: ''
     value: '100000'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [11, 134]
     rotation: 0
     state: enabled
@@ -125,7 +145,7 @@ blocks:
     gui_hint: 1,1,1,1
     label: Signal Freq
     min_len: '200'
-    orient: Qt.Horizontal
+    orient: QtCore.Qt.Horizontal
     rangeType: float
     start: '0'
     step: '100'
@@ -133,6 +153,9 @@ blocks:
     value: samp_rate*1.0247385/11.0
     widget: counter_slider
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [427, 9]
     rotation: 0
     state: enabled
@@ -143,7 +166,7 @@ blocks:
     gui_hint: 0,2,1,1
     label: Signal Power
     min_len: '200'
-    orient: Qt.Horizontal
+    orient: QtCore.Qt.Horizontal
     rangeType: float
     start: '-150'
     step: '1'
@@ -151,6 +174,9 @@ blocks:
     value: '-150'
     widget: counter_slider
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [301, 9]
     rotation: 0
     state: enabled
@@ -167,6 +193,9 @@ blocks:
     seed: '42'
     type: float
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [16, 236.0]
     rotation: 0
     state: enabled
@@ -181,10 +210,15 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
     offset: '0'
+    phase: '0'
     samp_rate: samp_rate
+    showports: 'False'
     type: float
     waveform: analog.GR_COS_WAVE
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [208, 380.0]
     rotation: 0
     state: enabled
@@ -207,6 +241,9 @@ blocks:
     width: bw/5.0
     win: window.WIN_HANN
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [192, 196.0]
     rotation: 0
     state: enabled
@@ -222,6 +259,9 @@ blocks:
     type: float
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [424, 256.0]
     rotation: 0
     state: enabled
@@ -237,23 +277,31 @@ blocks:
     type: float
     vlen: '1'
   states:
-    coordinate: [832, 380.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [888, 412.0]
     rotation: 0
     state: enabled
-- name: blocks_throttle_0
-  id: blocks_throttle
+- name: blocks_throttle2_0
+  id: blocks_throttle2
   parameters:
     affinity: ''
     alias: ''
     comment: ''
     ignoretag: 'True'
+    limit: auto
+    maximum: '0.1'
     maxoutbuf: '0'
     minoutbuf: '0'
     samples_per_second: samp_rate
     type: float
     vlen: '1'
   states:
-    coordinate: [504, 268.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [536, 260.0]
     rotation: 0
     state: enabled
 - name: channels_quantizer_0
@@ -266,7 +314,10 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
   states:
-    coordinate: [664, 268.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [720, 268.0]
     rotation: 0
     state: enabled
 - name: import_0
@@ -276,6 +327,9 @@ blocks:
     comment: ''
     imports: import math
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [11, 88]
     rotation: 0
     state: enabled
@@ -331,6 +385,7 @@ blocks:
     minoutbuf: '0'
     name: ''
     nconnections: '1'
+    norm_window: 'False'
     showports: 'True'
     tr_chan: '0'
     tr_level: '0.0'
@@ -353,7 +408,10 @@ blocks:
     ymax: '10'
     ymin: '-140'
   states:
-    coordinate: [992, 252.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1048, 272.0]
     rotation: 0
     state: enabled
 - name: qtgui_histogram_sink_x_0
@@ -437,7 +495,10 @@ blocks:
     xmax: '10000'
     xmin: '-10000'
   states:
-    coordinate: [992, 340.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1048, 372.0]
     rotation: 0
     state: enabled
 
@@ -445,11 +506,12 @@ connections:
 - [analog_noise_source_x_0, '0', band_pass_filter_0, '0']
 - [analog_sig_source_x_0, '0', blocks_add_xx_0, '1']
 - [band_pass_filter_0, '0', blocks_add_xx_0, '0']
-- [blocks_add_xx_0, '0', blocks_throttle_0, '0']
+- [blocks_add_xx_0, '0', blocks_throttle2_0, '0']
 - [blocks_multiply_const_vxx_0, '0', qtgui_histogram_sink_x_0, '0']
-- [blocks_throttle_0, '0', channels_quantizer_0, '0']
+- [blocks_throttle2_0, '0', channels_quantizer_0, '0']
 - [channels_quantizer_0, '0', blocks_multiply_const_vxx_0, '0']
 - [channels_quantizer_0, '0', qtgui_freq_sink_x_0, '0']
 
 metadata:
   file_format: 1
+  grc_version: 3.10.10.0

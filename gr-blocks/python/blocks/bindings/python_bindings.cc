@@ -31,6 +31,7 @@ void bind_annotator_raw(py::module&);
 void bind_argmax(py::module&);
 void bind_blockinterleaver_xx(py::module& m);
 void bind_burst_tagger(py::module&);
+void bind_burst_to_stream(py::module&);
 void bind_char_to_float(py::module&);
 void bind_char_to_short(py::module&);
 void bind_check_lfsr_32k_s(py::module&);
@@ -51,12 +52,14 @@ void bind_correctiq_auto(py::module&);
 void bind_correctiq_man(py::module&);
 void bind_correctiq_swapiq(py::module&);
 void bind_count_bits(py::module&);
-// void bind_ctrlport_probe2_b(py::module&);
-// void bind_ctrlport_probe2_c(py::module&);
-// void bind_ctrlport_probe2_f(py::module&);
-// void bind_ctrlport_probe2_i(py::module&);
-// void bind_ctrlport_probe2_s(py::module&);
-// void bind_ctrlport_probe_c(py::module&);
+#ifdef GR_HAVE_CTRLPORT
+void bind_ctrlport_probe2_b(py::module&);
+void bind_ctrlport_probe2_c(py::module&);
+void bind_ctrlport_probe2_f(py::module&);
+void bind_ctrlport_probe2_i(py::module&);
+void bind_ctrlport_probe2_s(py::module&);
+void bind_ctrlport_probe_c(py::module&);
+#endif
 void bind_deinterleave(py::module&);
 void bind_delay(py::module&);
 void bind_divide(py::module&);
@@ -205,6 +208,7 @@ PYBIND11_MODULE(blocks_python, m)
     bind_argmax(m);
     bind_blockinterleaver_xx(m);
     bind_burst_tagger(m);
+    bind_burst_to_stream(m);
     bind_char_to_float(m);
     bind_char_to_short(m);
     bind_check_lfsr_32k_s(m);
@@ -225,12 +229,14 @@ PYBIND11_MODULE(blocks_python, m)
     bind_correctiq_man(m);
     bind_correctiq_swapiq(m);
     bind_count_bits(m);
-    // bind_ctrlport_probe2_b(m);
-    // bind_ctrlport_probe2_c(m);
-    // bind_ctrlport_probe2_f(m);
-    // bind_ctrlport_probe2_i(m);
-    // bind_ctrlport_probe2_s(m);
-    // bind_ctrlport_probe_c(m);
+#ifdef GR_HAVE_CTRLPORT
+    bind_ctrlport_probe2_b(m);
+    bind_ctrlport_probe2_c(m);
+    bind_ctrlport_probe2_f(m);
+    bind_ctrlport_probe2_i(m);
+    bind_ctrlport_probe2_s(m);
+    bind_ctrlport_probe_c(m);
+#endif
     bind_deinterleave(m);
     bind_delay(m);
     bind_divide(m);

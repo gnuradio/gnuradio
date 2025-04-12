@@ -20,7 +20,7 @@ from .base import common_params, block_name, run, cli_input, ModToolException
 
 @click.command('rename', short_help=ModToolRename.description)
 @common_params
-@block_name
+@block_name()
 @click.argument('new-name', metavar="NEW-BLOCK-NAME", nargs=1, required=False)
 def cli(**kwargs):
     """
@@ -49,7 +49,7 @@ def cli(**kwargs):
 
 def get_oldname(self):
     """ Get the old block name to be replaced """
-    block_candidates = get_block_candidates()
+    block_candidates = get_block_candidates(self.info['modname'])
     if self.info['oldname'] is None:
         with SequenceCompleter(block_candidates):
             while not self.info['oldname'] or self.info['oldname'].isspace():

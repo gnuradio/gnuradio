@@ -1,0 +1,48 @@
+id: cpp_qt_gui_workflow
+description: "C++ Qt GUI workflow"
+output_language: cpp
+output_language_label: C++
+generator_module: gnuradio.grc.workflows.cpp_qt_gui
+generator_class: CppQtGuiTopBlockGenerator
+generate_options: qt_gui
+generate_options_label: QT GUI
+parameters:
+-   id: gen_cmake
+    label: Generate CMakeLists.txt
+    dtype: enum
+    default: 'On'
+    options: ['On', 'Off']
+    hide: 'part'
+-   id: cmake_opt
+    label: CMake options
+    dtype: string
+    default: ''
+    hide: 'part'
+-   id: run
+    label: Run
+    dtype: bool
+    default: 'True'
+    options: ['True', 'False']
+    option_labels: [Autostart, 'Off']
+    hide: ${ 'part' if run else 'none' }
+-   id: max_nouts
+    label: Max Number of Output
+    dtype: int
+    default: '0'
+    hide: ${ 'none' if max_nouts else 'part' }
+-   id: realtime_scheduling
+    label: Realtime Scheduling
+    dtype: enum
+    options: ['', '1']
+    option_labels: ['Off', 'On']
+    hide: ${ 'none' if realtime_scheduling else 'part' }
+-   id: qt_qss_theme
+    label: QSS Theme
+    dtype: file_open
+    hide: ${ 'none' if qt_qss_theme else 'part' }
+-   id: run_command
+    label: Run Command
+    category: Advanced
+    dtype: string
+    default: '{python} -u {filename}'
+    hide: 'part'

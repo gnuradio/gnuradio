@@ -1,0 +1,37 @@
+id: uhd_fpga_f15
+label: RFNoC F15 (FPGA Fosphor)
+
+parameters:
+-   id: type
+    label: RFNoC Block Type
+    dtype: string
+    default: 'block'
+    hide: all
+-   id: desc
+    label: Block Descriptor
+    dtype: string
+    default: 'fosphor.yml'
+    hide: all
+
+inputs:
+-   domain: rfnoc.data
+    id: fft_in
+    dtype: fc32
+    multiplicity: ${ NUM_PORTS }
+
+outputs:
+-   domain: rfnoc.data
+    id: hist
+    dtype: fc32
+    multiplicity: ${ NUM_PORTS }
+-   domain: rfnoc.data
+    id: wf
+    dtype: fc32
+    multiplicity: ${ NUM_PORTS }
+
+documentation: |-
+  RFNoC F15 (fosphor) (FPGA Implementation).
+  This block generates histogram and waterfall data for the Fosphor display.
+  It must be connected to an FFT block on its input.
+
+file_format: 1

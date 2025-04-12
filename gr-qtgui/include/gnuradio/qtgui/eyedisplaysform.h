@@ -34,7 +34,6 @@ public:
     ~EyeDisplaysForm() override;
 
     void Reset();
-    bool isClosed() const;
 
     void enableMenu(bool en = true);
 
@@ -87,8 +86,6 @@ signals:
     void toggleGrid(bool en);
 
 protected:
-    bool d_isclosed;
-
     unsigned int d_nplots;
     int d_sps;
 

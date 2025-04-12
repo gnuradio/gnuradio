@@ -32,22 +32,23 @@ mywindow::mywindow() : QWidget()
     int rate = 48000;
 
     // Create the GNU Radio top block
-    tb = make_top_block("display_qt");
+    tb = gr::make_top_block("display_qt");
 
     // Source will be sine wave in noise
-    src0 = analog::sig_source_f::make(rate, analog::GR_SIN_WAVE, 1500, 1);
-    src1 = analog::noise_source_f::make(analog::GR_GAUSSIAN, 0.1);
+    src0 = gr::analog::sig_source_f::make(rate, gr::analog::GR_SIN_WAVE, 1500, 1);
+    src1 = gr::analog::noise_source_f::make(gr::analog::GR_GAUSSIAN, 0.1);
 
     // Combine signal and noise; add throttle
-    src = blocks::add_ff::make();
-    thr = blocks::throttle::make(sizeof(float), rate);
+    src = gr::blocks::add_ff::make();
+    thr = gr::blocks::throttle::make(sizeof(float), rate);
 
     // Create the QTGUI sinks
     // Time, Freq, Waterfall, and Histogram sinks
-    tsnk = qtgui::time_sink_f::make(1024, rate, "", 1);
-    fsnk = qtgui::freq_sink_f::make(1024, fft::window::WIN_HANN, 0, rate, "", 1);
-    wsnk = qtgui::waterfall_sink_f::make(1024, fft::window::WIN_HANN, 0, rate, "", 1);
-    hsnk = qtgui::histogram_sink_f::make(1024, 100, -2, 2, "", 1);
+    tsnk = gr::qtgui::time_sink_f::make(1024, rate, "", 1);
+    fsnk = gr::qtgui::freq_sink_f::make(1024, gr::fft::window::WIN_HANN, 0, rate, "", 1);
+    wsnk = gr::qtgui::waterfall_sink_f::make(
+        1024, gr::fft::window::WIN_HANN, 0, rate, "", 1);
+    hsnk = gr::qtgui::histogram_sink_f::make(1024, 100, -2, 2, "", 1);
 
     // Turn off the legend on these plots
     tsnk->disable_legend();

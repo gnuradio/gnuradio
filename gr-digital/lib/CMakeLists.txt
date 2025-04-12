@@ -11,7 +11,7 @@
 
 add_library(
     gnuradio-digital
-    additive_scrambler_bb_impl.cc
+    additive_scrambler_impl.cc
     binary_slicer_fb_impl.cc
     burst_shaper_impl.cc
     chunks_to_symbols_impl.cc
@@ -94,10 +94,6 @@ add_library(
 target_link_libraries(
     gnuradio-digital PUBLIC gnuradio-runtime gnuradio-filter gnuradio-blocks
                             gnuradio-analog Boost::boost Volk::volk)
-
-if(ENABLE_COMMON_PCH)
-    target_link_libraries(gnuradio-digital PRIVATE common-precompiled-headers)
-endif()
 
 target_include_directories(
     gnuradio-digital

@@ -53,7 +53,7 @@ public:
 
     void setXAxisValues(const double start, const double step = 1.0);
 
-    void plotNewData(const std::vector<double*> dataPoints,
+    void plotNewData(const std::vector<const double*> dataPoints,
                      const int64_t numDataPoints,
                      const double refLevel,
                      const double timeInterval);
@@ -76,15 +76,15 @@ public:
     void setTraceColour(QColor);
     void setBGColour(QColor c);
 
-    const bool getMaxVecVisible() const;
-    const bool getMinVecVisible() const;
+    bool getMaxVecVisible() const;
+    bool getMinVecVisible() const;
     const QColor getMinVecColor() const;
     const QColor getMaxVecColor() const;
     const QColor getMarkerLowerIntensityColor() const;
-    const bool getMarkerLowerIntensityVisible() const;
+    bool getMarkerLowerIntensityVisible() const;
     const QColor getMarkerUpperIntensityColor() const;
-    const bool getMarkerUpperIntensityVisible() const;
-    const bool getMarkerRefLevelAmplitudeVisible() const;
+    bool getMarkerUpperIntensityVisible() const;
+    bool getMarkerRefLevelAmplitudeVisible() const;
     const QColor getMarkerRefLevelAmplitudeColor() const;
 
 public slots:

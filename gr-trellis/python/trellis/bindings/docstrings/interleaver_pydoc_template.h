@@ -33,13 +33,16 @@ static const char* __doc_gr_trellis_interleaver_interleaver_3 = R"doc()doc";
 static const char* __doc_gr_trellis_interleaver_interleaver_4 = R"doc()doc";
 
 
-static const char* __doc_gr_trellis_interleaver_K = R"doc()doc";
+static const char* __doc_gr_trellis_interleaver_interleaver_5 = R"doc()doc";
 
 
-static const char* __doc_gr_trellis_interleaver_INTER = R"doc()doc";
+static const char* __doc_gr_trellis_interleaver_k = R"doc()doc";
 
 
-static const char* __doc_gr_trellis_interleaver_DEINTER = R"doc()doc";
+static const char* __doc_gr_trellis_interleaver_interleaver_indices = R"doc()doc";
+
+
+static const char* __doc_gr_trellis_interleaver_deinterleaver_indices = R"doc()doc";
 
 
 static const char* __doc_gr_trellis_interleaver_write_interleaver_txt = R"doc()doc";

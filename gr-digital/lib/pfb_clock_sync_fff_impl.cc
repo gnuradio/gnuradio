@@ -50,8 +50,7 @@ pfb_clock_sync_fff_impl::pfb_clock_sync_fff_impl(double sps,
       d_nfilters(filter_size),
       d_max_dev(max_rate_deviation),
       d_osps(osps),
-      d_error(0),
-      d_out_idx(0)
+      d_error(0)
 {
     if (taps.empty())
         throw std::runtime_error("pfb_clock_sync_fff: please specify a filter.");
@@ -181,9 +180,10 @@ void pfb_clock_sync_fff_impl::update_gains()
     d_beta = (4 * d_loop_bw * d_loop_bw) / denom;
 }
 
-void pfb_clock_sync_fff_impl::set_taps(const std::vector<float>& newtaps,
-                                       std::vector<std::vector<float>>& ourtaps,
-                                       std::vector<kernel::fir_filter_fff>& ourfilter)
+void pfb_clock_sync_fff_impl::set_taps(
+    const std::vector<float>& newtaps,
+    std::vector<std::vector<float>>& ourtaps,
+    std::vector<filter::kernel::fir_filter_fff>& ourfilter)
 {
     int i, j;
 
@@ -321,7 +321,7 @@ int pfb_clock_sync_fff_impl::general_work(int noutput_items,
                                           gr_vector_const_void_star& input_items,
                                           gr_vector_void_star& output_items)
 {
-    float* in = (float*)input_items[0];
+    const float* in = (const float*)input_items[0];
     float* out = (float*)output_items[0];
 
     if (d_updated) {
@@ -344,7 +344,7 @@ int pfb_clock_sync_fff_impl::general_work(int noutput_items,
 
     // produce output as long as we can and there are enough input samples
     while (i < noutput_items) {
-        while (d_out_idx < d_osps) {
+        for (int out_idx = 0; out_idx < d_osps; out_idx++) {
             d_filtnum = (int)floor(d_k);
 
             // Keep the current filter number in [0, d_nfilters]
@@ -361,26 +361,15 @@ int pfb_clock_sync_fff_impl::general_work(int noutput_items,
                 count -= 1;
             }
 
-            out[i + d_out_idx] = d_filters[d_filtnum].filter(&in[count + d_out_idx]);
+            out[i + out_idx] = d_filters[d_filtnum].filter(&in[count + out_idx]);
             d_k = d_k + d_rate_i + d_rate_f; // update phase
-            d_out_idx++;
 
             if (output_items.size() == 4) {
                 err[i] = d_error;
                 outrate[i] = d_rate_f;
                 outk[i] = d_k;
             }
-
-            // We've run out of output items we can create; return now.
-            if (i + d_out_idx >= noutput_items) {
-                consume_each(count);
-                return i;
-            }
         }
-
-        // reset here; if we didn't complete a full osps samples last time,
-        // the early return would take care of it.
-        d_out_idx = 0;
 
         // Update the phase and rate estimates for this symbol
         float diff = d_diff_filters[d_filtnum].filter(&in[count]);

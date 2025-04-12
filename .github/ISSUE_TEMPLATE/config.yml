@@ -1,0 +1,14 @@
+blank_issues_enabled: false
+contact_links:
+- name: "📖 Find documentation"
+  url: https://wiki.gnuradio.org
+  about: "Most documentation is on the GNU Radio wiki, including beginner tutorials, advanced guides, block documentation, installation instructions, …"
+- name: "📨 Ask a question	— Mailing List"
+  url: https://www.gnuradio.org/community/
+  about: "We've got a very active community exchanging on the discuss-gnuradio@gnu.org mailing list, which is open for sign up!"
+- name: "🗫 Ask a question	— Chat (Matrix, default)"
+  url: https://app.element.io/#/room/#gnuradio-space:gnuradio.org
+  about: "GNU Radio has a welcoming chat community, #gnuradio:gnuradio.org, which you can join with any Matrix account, like the one you can get behind this link. There's also many special-interest chat rooms, like GNU Radio in Radio Astronomy, in Amateur Radio, or for educators."
+- name: "🗪 Ask a question	— Chat (Discord bridge)"
+  url: https://discord.gg/ab5AHzy6tS
+  about: "The GNU Radio main chat room on Matrix is also bridged to Discord."

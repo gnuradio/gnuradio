@@ -21,6 +21,7 @@ from .base import common_params, run, cli_input, ModToolException
 
 @click.command('newmod', short_help=ModToolNewModule.description)
 @click.option('--srcdir',
+              type=click.Path(file_okay=False, dir_okay=True, readable=True),
               help="Source directory for the module template.")
 @common_params
 @click.argument('module_name', metavar="MODULE-NAME", nargs=1, required=False)

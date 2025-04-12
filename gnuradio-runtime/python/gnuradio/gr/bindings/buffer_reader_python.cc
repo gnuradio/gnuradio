@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(buffer_reader.h)                                           */
-/* BINDTOOL_HEADER_FILE_HASH(eacabf1add2e4935ffaff8da4fcf2866)                     */
+/* BINDTOOL_HEADER_FILE_HASH(32e9a6e70e7b8c01574768494add219b)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -105,7 +105,6 @@ void bind_buffer_reader(py::module& m)
              py::arg("v"),
              py::arg("abs_start"),
              py::arg("abs_end"),
-             py::arg("id"),
              D(buffer_reader, get_tags_in_range))
 
         ;

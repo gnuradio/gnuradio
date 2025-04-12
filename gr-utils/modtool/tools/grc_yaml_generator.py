@@ -99,15 +99,14 @@ class GRCYAMLGenerator(object):
                 if iosig[inout]['vlen'][i] != '1':
                     vlen = iosig[inout]['vlen'][i]
                     if is_number(vlen):
-                        s_obj['vlen'] = vlen
+                        s_obj['vlen'] = int(vlen)
                     else:
                         s_obj['vlen'] = '${ ' + vlen + ' }'
                 if i == len(iosig[inout]['type']) - 1:
                     if not is_number(iosig[inout]['max_ports']):
                         s_obj['multiplicity'] = iosig[inout]['max_ports']
                     elif len(iosig[inout]['type']) < int(iosig[inout]['max_ports']):
-                        s_obj['multiplicity'] = str(int(iosig[inout]['max_ports']) -
-                                                    len(iosig[inout]['type']) + 1)
+                        s_obj['multiplicity'] = int(iosig[inout]['max_ports']) - len(iosig[inout]['type']) + 1
                 if s_type == 'input':
                     inputs.append(s_obj)
                 elif s_type == 'output':

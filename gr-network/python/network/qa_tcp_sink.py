@@ -31,6 +31,7 @@ class qa_tcp_sink (gr_unittest.TestCase):
 
     def test_restart(self):
         serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        serversocket.settimeout(30.0)
         serversocket.bind(('localhost', 2000))
         serversocket.listen()
 

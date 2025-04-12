@@ -1,6 +1,7 @@
 options:
   parameters:
     author: ''
+    catch_exceptions: 'True'
     category: Custom
     cmake_opt: ''
     comment: ''
@@ -24,6 +25,9 @@ options:
     title: ''
     window_size: 1280, 1024
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [16, 11]
     rotation: 0
     state: enabled
@@ -35,6 +39,9 @@ blocks:
     comment: ''
     value: '0.001'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [456, 12.0]
     rotation: 0
     state: enabled
@@ -44,6 +51,9 @@ blocks:
     comment: ''
     value: '0.3'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [280, 12.0]
     rotation: 0
     state: enabled
@@ -53,6 +63,9 @@ blocks:
     comment: ''
     value: int(samp_rate/1e3/1.1)
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [368, 12.0]
     rotation: 0
     state: enabled
@@ -63,7 +76,7 @@ blocks:
     gui_hint: ''
     label: ''
     min_len: '200'
-    orient: Qt.Horizontal
+    orient: QtCore.Qt.Horizontal
     rangeType: float
     start: '-1.5'
     step: '0.1'
@@ -71,6 +84,9 @@ blocks:
     value: '0.1'
     widget: counter_slider
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [40, 220.0]
     rotation: 0
     state: enabled
@@ -80,6 +96,9 @@ blocks:
     comment: ''
     value: 32e3
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [192, 12.0]
     rotation: 0
     state: enabled
@@ -94,11 +113,16 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
     offset: offset
+    phase: '0'
     samp_rate: samp_rate
+    showports: 'False'
     type: float
     waveform: analog.GR_SAW_WAVE
   states:
-    coordinate: [40, 100.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [40, 92.0]
     rotation: 0
     state: enabled
 - name: blocks_char_to_float_0
@@ -112,6 +136,9 @@ blocks:
     scale: '1'
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [696, 164.0]
     rotation: 0
     state: enabled
@@ -127,6 +154,9 @@ blocks:
     unbuffered: 'False'
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [472, 260.0]
     rotation: 0
     state: disabled
@@ -142,6 +172,9 @@ blocks:
     unbuffered: 'False'
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [696, 260.0]
     rotation: 0
     state: disabled
@@ -157,6 +190,9 @@ blocks:
     unbuffered: 'False'
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [888, 260.0]
     rotation: 0
     state: disabled
@@ -172,23 +208,31 @@ blocks:
     minoutbuf: '0'
     threshold_factor_rise: factor
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [472, 164.0]
     rotation: 0
     state: enabled
-- name: blocks_throttle_0
-  id: blocks_throttle
+- name: blocks_throttle2_0
+  id: blocks_throttle2
   parameters:
     affinity: ''
     alias: ''
     comment: ''
     ignoretag: 'True'
+    limit: auto
+    maximum: '0.1'
     maxoutbuf: '0'
     minoutbuf: '0'
     samples_per_second: samp_rate
     type: float
     vlen: '1'
   states:
-    coordinate: [248, 132.0]
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [272, 124.0]
     rotation: 0
     state: enabled
 - name: qtgui_time_sink_x_0
@@ -208,16 +252,16 @@ blocks:
     alpha9: '1.0'
     autoscale: 'False'
     axislabels: 'True'
-    color1: '"blue"'
-    color10: '"blue"'
-    color2: '"red"'
-    color3: '"green"'
-    color4: '"black"'
-    color5: '"cyan"'
-    color6: '"magenta"'
-    color7: '"yellow"'
-    color8: '"dark red"'
-    color9: '"dark green"'
+    color1: blue
+    color10: dark blue
+    color2: red
+    color3: green
+    color4: black
+    color5: cyan
+    color6: magenta
+    color7: yellow
+    color8: dark red
+    color9: dark green
     comment: ''
     ctrlpanel: 'True'
     entags: 'True'
@@ -282,20 +326,23 @@ blocks:
     ymin: '-1.5'
     yunit: '""'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [888, 136.0]
     rotation: 0
     state: enabled
 
 connections:
-- [analog_sig_source_x_0, '0', blocks_throttle_0, '0']
+- [analog_sig_source_x_0, '0', blocks_throttle2_0, '0']
 - [blocks_char_to_float_0, '0', blocks_file_sink_0_1, '0']
 - [blocks_char_to_float_0, '0', qtgui_time_sink_x_0, '1']
 - [blocks_peak_detector2_fb_0, '0', blocks_char_to_float_0, '0']
 - [blocks_peak_detector2_fb_0, '1', blocks_file_sink_0_0, '0']
 - [blocks_peak_detector2_fb_0, '1', qtgui_time_sink_x_0, '2']
-- [blocks_throttle_0, '0', blocks_file_sink_0, '0']
-- [blocks_throttle_0, '0', blocks_peak_detector2_fb_0, '0']
-- [blocks_throttle_0, '0', qtgui_time_sink_x_0, '0']
+- [blocks_throttle2_0, '0', blocks_peak_detector2_fb_0, '0']
+- [blocks_throttle2_0, '0', qtgui_time_sink_x_0, '0']
 
 metadata:
   file_format: 1
+  grc_version: 3.10.10.0

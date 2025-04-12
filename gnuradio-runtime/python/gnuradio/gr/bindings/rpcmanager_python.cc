@@ -25,4 +25,10 @@ namespace py = pybind11;
 
 #include <gnuradio/rpcmanager.h>
 
-void bind_rpcmanager(py::module& m) {}
+void bind_rpcmanager(py::module& m)
+{
+    py::class_<rpcmanager>(m, "rpcmanager")
+        .def(py::init())
+        .def("get", &rpcmanager::get)
+        .def("register_booter", &rpcmanager::register_booter);
+}

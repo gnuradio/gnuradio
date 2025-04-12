@@ -95,8 +95,8 @@ HistogramDisplayPlot* HistogramDisplayForm::getPlot()
 
 void HistogramDisplayForm::newData(const QEvent* updateEvent)
 {
-    HistogramUpdateEvent* hevent = (HistogramUpdateEvent*)updateEvent;
-    const std::vector<double*> dataPoints = hevent->getDataPoints();
+    const HistogramUpdateEvent* hevent = (const HistogramUpdateEvent*)updateEvent;
+    const std::vector<const double*> dataPoints = hevent->getDataPoints();
     const uint64_t numDataPoints = hevent->getNumDataPoints();
 
     getPlot()->plotNewData(dataPoints, numDataPoints, d_update_time);

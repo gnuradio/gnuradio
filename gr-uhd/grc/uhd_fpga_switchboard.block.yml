@@ -1,0 +1,46 @@
+id: uhd_fpga_switchboard
+label: RFNoC Switchboard
+
+parameters:
+-   id: type
+    label: RFNoC Block Type
+    dtype: string
+    default: 'block'
+    hide: all
+-   id: desc
+    label: Block Descriptor
+    dtype: string
+    default: 'switchboard.yml'
+    hide: all
+-   id: NUM_INPUTS
+    label: Number of Input Ports
+    dtype: int
+    default: 1
+    hide: part
+-   id: NUM_OUTPUTS
+    label: Number of Output Ports
+    dtype: int
+    default: 1
+    hide: part
+
+inputs:
+-   domain: rfnoc.clk
+    id: ce_clk
+    dtype: message
+-   domain: rfnoc.data
+    id: in_
+    dtype: fc32
+    multiplicity: ${ NUM_INPUTS }
+
+outputs:
+-   domain: rfnoc.data
+    id: out_
+    dtype: fc32
+    multiplicity: ${ NUM_OUTPUTS }
+
+documentation: |-
+  RFNoC switchboard block (FPGA Implementation).
+  This instantiates the switchboard block in the FPGA bitfile. This block can
+  direct an input stream to any one of its output streams.
+
+file_format: 1

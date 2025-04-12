@@ -1,0 +1,49 @@
+ace:
+- 8.0.2
+c_compiler:
+- vs2022
+channel_sources:
+- conda-forge
+channel_targets:
+- gnuradio main
+cxx_compiler:
+- vs2022
+fftw:
+- '3'
+gsl:
+- '2.7'
+libboost_devel:
+- '1.84'
+libiio:
+- '0'
+libsndfile:
+- '1.2'
+numpy:
+- '1.23'
+pin_run_as_build:
+  python:
+    min_pin: x.x
+    max_pin: x.x
+pybind11_abi:
+- '4'
+pyqt:
+- '5.15'
+python:
+- 3.11.* *_cpython
+qt_main:
+- '5.15'
+soapysdr:
+- '0.8'
+spdlog:
+- '1.13'
+target_platform:
+- win-64
+uhd:
+- 4.7.0
+volk:
+- '3.1'
+zeromq:
+- 4.3.5
+zip_keys:
+- - python
+  - numpy

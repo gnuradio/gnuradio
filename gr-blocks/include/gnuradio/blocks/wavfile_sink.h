@@ -66,10 +66,8 @@ public:
     virtual void set_sample_rate(unsigned int sample_rate) = 0;
 
     /*!
-     * \brief Set bits per sample. This will not affect the WAV file
-     * currently opened (see set_sample_rate()). If the value is
-     * neither 8 nor 16, the call is ignored and the current value
-     * is kept.
+     * \brief Currently, this function does nothing. Bits per sample
+     * are controlled by the subformat.
      */
     virtual void set_bits_per_sample(int bits_per_sample) = 0;
 

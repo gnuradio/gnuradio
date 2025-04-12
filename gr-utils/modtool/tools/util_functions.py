@@ -9,8 +9,8 @@
 """ Utility functions for gr_modtool """
 
 
+import os
 import re
-import sys
 try:
     import readline
     have_readline = True
@@ -20,10 +20,17 @@ except ImportError:
 # None of these must depend on other modtool stuff!
 
 
-def append_re_line_sequence(filename, linepattern, newline):
-    """ Detects the re 'linepattern' in the file. After its last occurrence,
+def append_re_line_sequence(filename: str, linepattern: str, newline: str, closing_parentheses: str = ')') -> None:
+    """
+    Detects the re 'linepattern' in the file. After its last occurrence (and any other identical occurrences),
     paste 'newline'. If the pattern does not exist, append the new line
-    to the file. Then, write. """
+    to the file.
+
+    If 'closing_parentheses' is not None, e.g. ")", remove it from end of the matched line, paste the 'newline',
+    followed by a line containing the 'closing_parentheses'.
+
+    Finally, write the modified file.
+    """
     with open(filename, 'r') as f:
         oldfile = f.read()
     lines = re.findall(linepattern, oldfile, flags=re.MULTILINE)
@@ -32,7 +39,11 @@ def append_re_line_sequence(filename, linepattern, newline):
             f.write(newline)
         return
     last_line = lines[-1]
-    newfile = oldfile.replace(last_line, last_line + newline + '\n')
+    if closing_parentheses is not None and last_line.rstrip().endswith(closing_parentheses):
+        modified_last = f'\n{last_line.rstrip()[:-len(closing_parentheses)]}\n{closing_parentheses}\n'
+    else:
+        modified_last = last_line + newline + '\n'
+    newfile = oldfile.replace(last_line, modified_last)
     with open(filename, 'w') as f:
         f.write(newfile)
 
@@ -132,17 +143,14 @@ def get_modname():
 
 
 def get_block_names(pattern, modname):
-    """ Return a list of block names belonging to modname that matches the regex pattern. """
+    """ Return a list of cpp block names matches the regex pattern. """
     blocknames = []
     reg = re.compile(pattern)
-    fname_re = re.compile(r'[a-zA-Z]\w+\.\w{1,5}$')
-    with open(f'include/gnuradio/{modname}/CMakeLists.txt', 'r') as f:
-        for line in f.read().splitlines():
-            if len(line.strip()) == 0 or line.strip()[0] == '#':
-                continue
-            for word in re.split('[ /)(\t\n\r\f\v]', line):
-                if fname_re.match(word) and reg.search(word):
-                    blocknames.append(word.strip('.h'))
+    filename_re = re.compile(r'^(?!api)[a-zA-Z]\w+\.h$')
+    for _, _, filenames in os.walk('include/'):
+        for filename in filenames:
+            if filename_re.search(filename) and reg.search(filename):
+                blocknames.append(re.sub(r'.h$', '', filename))
     return blocknames
 
 

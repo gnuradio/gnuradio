@@ -52,12 +52,12 @@ int max_blk_impl<T>::work(int noutput_items,
 
     if (d_vlen_out == 1)
         for (int i = 0; i < noutput_items; i++) {
-            T max = ((T*)input_items[0])[i * d_vlen];
+            T max = ((const T*)input_items[0])[i * d_vlen];
 
             for (int j = 0; j < (int)d_vlen; j++) {
                 for (int k = 0; k < ninputs; k++) {
-                    if (((T*)input_items[k])[i * d_vlen + j] > max) {
-                        max = ((T*)input_items[k])[i * d_vlen + j];
+                    if (((const T*)input_items[k])[i * d_vlen + j] > max) {
+                        max = ((const T*)input_items[k])[i * d_vlen + j];
                     }
                 }
             }
@@ -67,11 +67,11 @@ int max_blk_impl<T>::work(int noutput_items,
 
     else // vector mode output
         for (size_t i = 0; i < (size_t)noutput_items * d_vlen_out; i++) {
-            T max = ((T*)input_items[0])[i];
+            T max = ((const T*)input_items[0])[i];
 
             for (int k = 1; k < ninputs; k++) {
-                if (((T*)input_items[k])[i] > max) {
-                    max = ((T*)input_items[k])[i];
+                if (((const T*)input_items[k])[i] > max) {
+                    max = ((const T*)input_items[k])[i];
                 }
             }
 

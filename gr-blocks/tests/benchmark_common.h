@@ -10,32 +10,51 @@
  */
 #ifndef INCLUDED_BENCHMARK_COMMON
 #define INCLUDED_BENCHMARK_COMMON
+/* ensure that tweakme.h is included before the bundled spdlog/fmt header, see
+ * https://github.com/gabime/spdlog/issues/2922 */
+#include <spdlog/tweakme.h>
+
+#include <gnuradio/random.h>
 #include <spdlog/fmt/fmt.h>
 #include <string_view>
 #include <chrono>
 #include <cstddef>
 #include <cstdlib>
+#include <limits>
+#include <numeric>
 #include <vector>
 
 template <typename functor>
 [[nodiscard]] auto benchmark(functor test, size_t block_size)
 {
-    using namespace std::chrono;
     std::vector<float> outp(2 * block_size);
     float* output = outp.data();
     float *x = &output[0], *y = &output[block_size];
 
-    // touch memory
-    memset(output, 0, 2 * block_size * sizeof(float));
+    // generate input in the first half, and also in the second half to touch the memory
+    gr::xoroshiro128p_prng rng(42);
+    for (auto& value : outp) {
+        value = rng() / static_cast<double>(1ULL << 32) - (1ULL << 32);
+    }
 
-    auto before = high_resolution_clock::now();
+    auto before = std::chrono::high_resolution_clock::now();
     // do the actual work
 
     test(x, y);
 
-    auto after = high_resolution_clock::now();
+    auto after = std::chrono::high_resolution_clock::now();
     // get ending CPU usage
-    auto dur = duration_cast<duration<double, std::ratio<1, 1>>>(after - before);
+    auto dur =
+        std::chrono::duration_cast<std::chrono::duration<double, std::ratio<1, 1>>>(
+            after - before);
+
+    // prevent the compiler from discarding the output, not doing the calculations.
+    volatile auto sum = std::accumulate(outp.cbegin(), outp.cend(), 0.0f);
+    if (sum == std::numeric_limits<decltype(sum)>::min()) {
+        // should never be hit
+        return decltype(dur){};
+    }
+
     return dur;
 }
 template <typename dur_t>

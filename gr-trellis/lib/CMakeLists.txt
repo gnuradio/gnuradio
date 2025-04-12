@@ -16,7 +16,6 @@ add_library(
     encoder_impl.cc
     fsm.cc
     interleaver.cc
-    quicksort_index.cc
     constellation_metrics_cf_impl.cc
     metrics_impl.cc
     pccc_decoder_blk_impl.cc
@@ -32,10 +31,6 @@ add_library(
     viterbi_combined_impl.cc)
 
 target_link_libraries(gnuradio-trellis PUBLIC gnuradio-runtime gnuradio-digital)
-
-if(ENABLE_COMMON_PCH)
-    target_link_libraries(gnuradio-trellis PRIVATE common-precompiled-headers)
-endif()
 
 target_include_directories(
     gnuradio-trellis PUBLIC $<INSTALL_INTERFACE:include>

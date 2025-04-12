@@ -29,6 +29,7 @@ set(BLOCKS_SOURCES
     argmax_impl.cc
     blockinterleaver_xx_impl.cc
     blockinterleaving.cc
+    burst_to_stream_impl.cc
     correctiq_auto_impl.cc
     correctiq_impl.cc
     correctiq_man_impl.cc
@@ -176,10 +177,6 @@ target_link_libraries(gnuradio-blocks PUBLIC gnuradio-runtime Volk::volk)
 
 if(SNDFILE_FOUND)
     target_link_libraries(gnuradio-blocks PRIVATE sndfile::sndfile)
-endif()
-
-if(ENABLE_COMMON_PCH)
-    target_link_libraries(gnuradio-blocks PRIVATE common-precompiled-headers)
 endif()
 
 target_include_directories(

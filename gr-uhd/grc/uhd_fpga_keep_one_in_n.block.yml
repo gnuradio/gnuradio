@@ -1,0 +1,40 @@
+id: uhd_fpga_keep_one_in_n
+label: RFNoC Keep One-in-N
+
+parameters:
+-   id: type
+    label: RFNoC Block Type
+    dtype: string
+    default: 'block'
+    hide: all
+-   id: desc
+    label: Block Descriptor
+    dtype: string
+    default: 'keep_one_in_n.yml'
+    hide: all
+-   id: NUM_PORTS
+    label: Number of Ports
+    dtype: int
+    default: 1
+    hide: part
+
+inputs:
+-   domain: rfnoc.clk
+    id: ce_clk
+    dtype: message
+-   domain: rfnoc.data
+    id: in_
+    dtype: fc32
+    multiplicity: ${ NUM_PORTS }
+
+outputs:
+-   domain: rfnoc.data
+    id: out_
+    dtype: fc32
+    multiplicity: ${ NUM_PORTS }
+
+documentation: |-
+  RFNoC keep-one-in-n block (FPGA Implementation).
+  This instantiates the RFNoC keep-one-in-n block in the FPGA bitfile.
+
+file_format: 1

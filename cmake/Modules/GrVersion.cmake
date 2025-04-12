@@ -64,6 +64,12 @@ endif()
 ########################################################################
 # Use the logic below to set the version constants
 ########################################################################
+## HEADER VARIABLES -- see include/gnuradio/version.h.in
+set(GR_VERSION_MAJOR "${VERSION_MAJOR}")
+set(GR_VERSION_API "${VERSION_API}")
+set(GR_VERSION_MINOR "${VERSION_ABI}")
+set(GR_VERSION_MAINT "${VERSION_PATCH}")
+## Main Variables
 if("${MINOR_VERSION}" STREQUAL "git")
     # VERSION: 3.3git-xxx-gxxxxxxxx
     # DOCVER:  3.3git
@@ -73,6 +79,7 @@ if("${MINOR_VERSION}" STREQUAL "git")
     set(LIBVER "${MAJOR_VERSION}.${API_COMPAT}${MINOR_VERSION}")
     set(RC_MINOR_VERSION "0")
     set(RC_MAINT_VERSION "0")
+    set(GR_VERSION_MINOR "1023")
 elseif("${MAINT_VERSION}" STREQUAL "git")
     # VERSION: 3.3.1git-xxx-gxxxxxxxx
     # DOCVER:  3.3.1git
@@ -82,6 +89,7 @@ elseif("${MAINT_VERSION}" STREQUAL "git")
     set(LIBVER "${MAJOR_VERSION}.${API_COMPAT}.${MINOR_VERSION}${MAINT_VERSION}")
     math(EXPR RC_MINOR_VERSION "${MINOR_VERSION} - 1")
     set(RC_MAINT_VERSION "0")
+    set(GR_VERSION_MAINT "1023")
 else()
     # This is a numbered release.
     # VERSION: 3.3.1{.x}

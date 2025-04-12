@@ -10,9 +10,7 @@ file(GLOB yml_files "*.yml")
 
 if(NOT ENABLE_GR_QTGUI_OPENGL)
     list(REMOVE_ITEM yml_files 
-        "${CMAKE_CURRENT_SOURCE_DIR}/qtgui_fosphor_display.block.yml"
-        "${CMAKE_CURRENT_SOURCE_DIR}/qtgui_fosphor_formatter.block.yml"
-        "${CMAKE_CURRENT_SOURCE_DIR}/qtgui_fosphorgl_sink.block.yml"
+        "${CMAKE_CURRENT_SOURCE_DIR}/qtgui_rfnoc_f15_display.block.yml"
     )
 endif()
 

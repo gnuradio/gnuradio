@@ -90,7 +90,12 @@ if(ENABLE_GR_QTGUI)
     ########################################################################
     # Install the themes (QSS) files
     ########################################################################
-    install(FILES themes/plain.qss themes/dark.qss themes/alt.qss themes/projector.qss
+    install(FILES
+            themes/alt.qss
+            themes/dark.qss
+            themes/nsf.qss
+            themes/plain.qss
+            themes/projector.qss
             DESTINATION ${GR_THEMES_DIR})
 
 endif(ENABLE_GR_QTGUI)

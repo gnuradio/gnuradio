@@ -1,14 +1,13 @@
 #!/usr/bin/env python
 #
 # Copyright 2007,2010 Free Software Foundation, Inc.
-# Copyright 2021 Marcus Müller
+# Copyright 2021,2025 Marcus Müller <mmueller@gnuradio.org>
 #
 # This file is part of GNU Radio
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
 #
-
 
 from gnuradio import gr, gr_unittest
 import pmt

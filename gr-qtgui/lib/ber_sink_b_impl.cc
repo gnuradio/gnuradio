@@ -78,7 +78,7 @@ ber_sink_b_impl::ber_sink_b_impl(std::vector<float> esnos,
     for (size_t i = 0; i < esnos.size(); i++) {
         double e = pow(10.0, esnos[i] / 10.0);
         d_esno_buffers[curves][i] = esnos[i];
-        d_ber_buffers[curves][i] = std::log10(0.5 * std::erf(std::sqrt(e)));
+        d_ber_buffers[curves][i] = std::log10(0.5 * std::erfc(std::sqrt(e)));
     }
 
 
@@ -105,12 +105,7 @@ ber_sink_b_impl::ber_sink_b_impl(std::vector<float> esnos,
     set_line_alpha(d_curves, 0.25); // high transparency
 }
 
-ber_sink_b_impl::~ber_sink_b_impl()
-{
-    if (!d_main_gui->isClosed()) {
-        d_main_gui->close();
-    }
-}
+ber_sink_b_impl::~ber_sink_b_impl() { QMetaObject::invokeMethod(d_main_gui, "close"); }
 
 bool ber_sink_b_impl::check_topology(int ninputs, int noutputs)
 {
@@ -281,8 +276,8 @@ int ber_sink_b_impl::general_work(int noutput_items,
             int items = ninput_items[i] <= ninput_items[i + 1] ? ninput_items[i]
                                                                : ninput_items[i + 1];
 
-            unsigned char* inbuffer0 = (unsigned char*)input_items[i];
-            unsigned char* inbuffer1 = (unsigned char*)input_items[i + 1];
+            const unsigned char* inbuffer0 = (const unsigned char*)input_items[i];
+            const unsigned char* inbuffer1 = (const unsigned char*)input_items[i + 1];
 
             if (items > 0) {
                 uint32_t ret;

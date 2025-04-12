@@ -220,7 +220,7 @@ blocks:
     rotation: 180
     state: disabled
 - name: qtgui_fosphor_display_0
-  id: qtgui_fosphor_display
+  id: qtgui_rfnoc_f15_display
   parameters:
     affinity: ''
     alias: ''

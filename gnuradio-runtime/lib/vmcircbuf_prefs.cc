@@ -31,18 +31,14 @@ namespace gr {
 template <typename string_type>
 static auto pathname(string_type key)
 {
-    return fs::path(gr::appdata_path()) / ".gnuradio" / "prefs" / key;
+    return gr::paths::userconf() / "prefs" / key;
 }
 
 static void ensure_dir_path()
 {
-    fs::path path = fs::path(gr::appdata_path()) / ".gnuradio";
-    if (!fs::is_directory(path))
-        fs::create_directory(path);
-
-    path = path / "prefs";
-    if (!fs::is_directory(path))
-        fs::create_directory(path);
+    // recursively make sure the directory exists
+    fs::path path = gr::paths::userconf() / "prefs";
+    fs::create_directories(path);
 }
 
 template <typename stream_t>

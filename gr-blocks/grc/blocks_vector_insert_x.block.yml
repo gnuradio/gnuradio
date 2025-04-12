@@ -14,7 +14,7 @@ parameters:
 -   id: vector
     label: Vector
     dtype: ${ type.vec_type }
-    default: 0, 0, 0
+    default: [0, 0, 0]
 -   id: period
     label: Periodicity
     dtype: int

@@ -59,7 +59,11 @@ int multiply_by_tag_value_cc_impl::work(int noutput_items,
         end *= d_vlen;
 
         // Multiply based on the current value of k from 'start' to 'end'
+#if VOLK_VERSION >= 030100
+        volk_32fc_s32fc_multiply2_32fc(&out[start], &in[start], &d_k, (end - start));
+#else
         volk_32fc_s32fc_multiply_32fc(&out[start], &in[start], d_k, (end - start));
+#endif
         start = end;
 
         // Extract new value of k
@@ -75,8 +79,13 @@ int multiply_by_tag_value_cc_impl::work(int noutput_items,
         }
     }
 
+#if VOLK_VERSION >= 030100
+    volk_32fc_s32fc_multiply2_32fc(
+        &out[start], &in[start], &d_k, (d_vlen * noutput_items - start));
+#else
     volk_32fc_s32fc_multiply_32fc(
         &out[start], &in[start], d_k, (d_vlen * noutput_items - start));
+#endif
 
     return noutput_items;
 }

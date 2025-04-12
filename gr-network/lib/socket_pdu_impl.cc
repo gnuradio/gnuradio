@@ -54,9 +54,12 @@ socket_pdu_impl::socket_pdu_impl(std::string type,
         d_tcp_endpoint = asio::ip::tcp::endpoint(asio::ip::tcp::v4(), port_num);
     } else if ((type == "TCP_SERVER") || (type == "TCP_CLIENT")) {
         asio::ip::tcp::resolver resolver(d_io_context);
-        asio::ip::tcp::resolver::query query(
-            asio::ip::tcp::v4(), addr, port, asio::ip::resolver_query_base::passive);
-        d_tcp_endpoint = *resolver.resolve(query);
+        d_tcp_endpoint = *(resolver
+                               .resolve(asio::ip::tcp::v4(),
+                                        addr,
+                                        port,
+                                        asio::ip::resolver_query_base::passive)
+                               .cbegin());
     } else if ((type == "UDP_SERVER") &&
                ((addr.empty()) || (addr == "0.0.0.0"))) { // Bind on all interfaces
         int port_num = atoi(port.c_str());
@@ -66,13 +69,21 @@ socket_pdu_impl::socket_pdu_impl(std::string type,
         d_udp_endpoint = asio::ip::udp::endpoint(asio::ip::udp::v4(), port_num);
     } else if ((type == "UDP_SERVER") || (type == "UDP_CLIENT")) {
         asio::ip::udp::resolver resolver(d_io_context);
-        asio::ip::udp::resolver::query query(
-            asio::ip::udp::v4(), addr, port, asio::ip::resolver_query_base::passive);
 
         if (type == "UDP_SERVER")
-            d_udp_endpoint = *resolver.resolve(query);
+            d_udp_endpoint = *(resolver
+                                   .resolve(asio::ip::udp::v4(),
+                                            addr,
+                                            port,
+                                            asio::ip::resolver_query_base::passive)
+                                   .cbegin());
         else
-            d_udp_endpoint_other = *resolver.resolve(query);
+            d_udp_endpoint_other = *(resolver
+                                         .resolve(asio::ip::udp::v4(),
+                                                  addr,
+                                                  port,
+                                                  asio::ip::resolver_query_base::passive)
+                                         .cbegin());
     }
 
     if (type == "TCP_SERVER") {

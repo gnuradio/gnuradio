@@ -7,12 +7,12 @@
 
 import sys
 import textwrap
-from shutil import which as find_executable
 
 from gi.repository import Gtk, GLib, Gdk, Gio
 
-from . import Utils, Actions, Constants
+from . import Actions, Constants, Utils
 from ..core import Messages
+from ..core.utils.system import get_modifier_key
 
 
 class SimpleTextDisplay(Gtk.TextView):
@@ -307,7 +307,7 @@ def show_help(parent):
         *Press Ctrl+K or see menu for Keyboard - Shortcuts
         \
     """)
-    markup = markup.replace("Ctrl", Utils.get_modifier_key())
+    markup = markup.replace("Ctrl", get_modifier_key())
 
     MessageDialogWrapper(
         parent, Gtk.MessageType.INFO, Gtk.ButtonsType.CLOSE, title='Help', markup=markup
@@ -349,7 +349,7 @@ def show_keyboard_shortcuts(parent):
     <u>Ctrl++/-</u>: Zoom in and out
     \
     """)
-    markup = markup.replace("Ctrl", Utils.get_modifier_key())
+    markup = markup.replace("Ctrl", get_modifier_key())
 
     MessageDialogWrapper(
         parent, Gtk.MessageType.INFO, Gtk.ButtonsType.CLOSE, title='Keyboard - Shortcuts', markup=markup

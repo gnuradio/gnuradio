@@ -18,7 +18,7 @@ from .base import common_params, block_name, run, cli_input
 
 @click.command('remove', short_help=ModToolRemove.description)
 @common_params
-@block_name
+@block_name()
 def cli(**kwargs):
     """ Remove block (delete files and remove Makefile entries) """
     kwargs['cli'] = True
@@ -32,7 +32,7 @@ def cli(**kwargs):
 def get_pattern(self):
     """ Returns the regex pattern for block(s) to be removed """
     if self.info['pattern'] is None:
-        block_candidates = get_block_candidates()
+        block_candidates = get_block_candidates(self.info['modname'])
         with SequenceCompleter(block_candidates):
             self.info['pattern'] = cli_input(
                 'Which blocks do you want to delete? (Regex): ')

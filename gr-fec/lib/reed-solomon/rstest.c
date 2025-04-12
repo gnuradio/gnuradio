@@ -17,7 +17,6 @@
 int exercise_char(void*, int);
 
 #ifdef ALL_VERSIONS
-int exercise_int(void*, int);
 int exercise_8(int);
 int exercise_ccsds(int);
 #endif
@@ -38,16 +37,6 @@ struct {
     { 7, 0x89, 1, 1, 10, 10 },
     { 8, 0x11d, 1, 1, 32, 10 },
     { 8, 0x187, 112, 11, 32, 10 }, /* Duplicates CCSDS codec */
-#ifdef ALL_VESIONS
-    { 9, 0x211, 1, 1, 32, 10 },
-    { 10, 0x409, 1, 1, 32, 10 },
-    { 11, 0x805, 1, 1, 32, 10 },
-    { 12, 0x1053, 1, 1, 32, 5 },
-    { 13, 0x201b, 1, 1, 32, 2 },
-    { 14, 0x4443, 1, 1, 32, 1 },
-    { 15, 0x8003, 1, 1, 32, 1 },
-    { 16, 0x1100b, 1, 1, 32, 1 },
-#endif
     { 0, 0, 0, 0, 0 },
 };
 
@@ -84,32 +73,15 @@ int main()
         kk = nn - Tab[i].nroots;
         printf("Testing (%d,%d) RS codec...", nn, kk);
         fflush(stdout);
-        if (Tab[i].symsize <= 8) {
-            if ((handle = init_rs_char(Tab[i].symsize,
-                                       Tab[i].genpoly,
-                                       Tab[i].fcs,
-                                       Tab[i].prim,
-                                       Tab[i].nroots)) == NULL) {
-                printf("init_rs_char failed!\n");
-                continue;
-            }
-            errs = exercise_char(handle, Tab[i].ntrials);
-        } else {
-#ifdef ALL_VERSIONS
-            if ((handle = init_rs_int(Tab[i].symsize,
-                                      Tab[i].genpoly,
-                                      Tab[i].fcs,
-                                      Tab[i].prim,
-                                      Tab[i].nroots)) == NULL) {
-                printf("init_rs_int failed!\n");
-                continue;
-            }
-            errs = exercise_int(handle, Tab[i].ntrials);
-#else
-            printf("init_rs_init support is not enabled\n");
-            exit(1);
-#endif
+        if ((handle = init_rs_char(Tab[i].symsize,
+                                    Tab[i].genpoly,
+                                    Tab[i].fcs,
+                                    Tab[i].prim,
+                                    Tab[i].nroots)) == NULL) {
+            printf("init_rs_char failed!\n");
+            continue;
         }
+        errs = exercise_char(handle, Tab[i].ntrials);
         terrs += errs;
         if (errs == 0) {
             printf("OK\n");

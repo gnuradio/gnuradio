@@ -35,7 +35,7 @@ private:
 
 public:
     ctrlport_probe_psd_impl(const std::string& id, const std::string& desc, int len);
-    ~ctrlport_probe_psd_impl();
+    ~ctrlport_probe_psd_impl() override;
 
     void setup_rpc() override;
 

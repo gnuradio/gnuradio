@@ -52,7 +52,7 @@ public:
     double getStartFrequency() const;
     double getStopFrequency() const;
 
-    void plotNewData(const std::vector<double*> dataPoints,
+    void plotNewData(const std::vector<const double*> dataPoints,
                      const int64_t numDataPoints,
                      const double timePerFFT,
                      const gr::high_res_timer_type timestamp,

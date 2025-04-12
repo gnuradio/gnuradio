@@ -1,38 +1,53 @@
 id: uhd_fpga_ddc
-label: DDC
+label: RFNoC DDC
 
 parameters:
 -   id: type
     label: RFNoC Block Type
-    dtype: enum
+    dtype: string
     default: 'block'
-    options: ['block', 'sep', 'device']
     hide: all
 -   id: desc
     label: Block Descriptor
     dtype: string
     default: 'ddc.yml'
     hide: all
--   id: nports
+-   id: NUM_PORTS
     label: Number of Ports
     dtype: int
-    default: '1'
+    default: 1
     hide: part
-
+-   id: NUM_HB
+    label: Number of Halfband Filters
+    dtype: int
+    default: 3
+    hide: part
+-   id: CIC_MAX_DECIM
+    label: Maximum CIC Decimation
+    dtype: int
+    default: 255
+    hide: part
 
 inputs:
 -   domain: rfnoc.clk
-    id: ddc
+    id: ce_clk
     dtype: message
 -   domain: rfnoc.data
-    id: port
+    id: in_
     dtype: fc32
-    multiplicity: ${ nports }
+    multiplicity: ${ NUM_PORTS }
 
 outputs:
 -   domain: rfnoc.data
-    id: port
+    id: out_
     dtype: fc32
-    multiplicity: ${ nports }
+    multiplicity: ${ NUM_PORTS }
+
+documentation: |-
+  RFNoC DDC (FPGA Implementation).
+  Instantiates a DDC block in the FPGA bitfile.
+  The parameters are maximum capabilities. E.g., reducing CIC_MAX_DECIM will
+  instantiate fewer CIC stages, which reduces the FPGA resource usage. However,
+  it is still possible to set the decimation factor to a lower value at runtime.
 
 file_format: 1

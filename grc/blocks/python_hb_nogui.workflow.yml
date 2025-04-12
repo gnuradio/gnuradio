@@ -1,0 +1,14 @@
+id: python_hb_nogui_workflow
+description: "Python hier block no GUI workflow"
+output_language: python
+output_language_label: Python
+generator_module: gnuradio.grc.workflows.python_hb_nogui
+generator_class: PythonHierBlockNoGuiGenerator
+generate_options: hb
+generate_options_label: Hier Block
+parameters:
+-   id: category
+    label: Category
+    dtype: string
+    default: '[GRC Hier Blocks]'
+    hide: 'none'

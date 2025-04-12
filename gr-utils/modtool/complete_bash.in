@@ -1,0 +1,38 @@
+# GNU Radio ModTool completion for bash                    -*- shell-script -*-
+#
+# Copyright 2014 Pallets
+# Copyright 2024 Oleg Nikitin
+#
+# This file is part of GNU Radio
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+
+_gr_modtool_completion() {
+    local IFS=$'\n'
+    local response
+
+    response=$(env COMP_WORDS="${COMP_WORDS[*]}" COMP_CWORD=$COMP_CWORD _GR_MODTOOL_COMPLETE=bash_complete $1)
+
+    for completion in $response; do
+        IFS=',' read type value <<< "$completion"
+
+        if [[ $type == 'dir' ]]; then
+            COMPREPLY=()
+            compopt -o dirnames
+        elif [[ $type == 'file' ]]; then
+            COMPREPLY=()
+            compopt -o default
+        elif [[ $type == 'plain' ]]; then
+            COMPREPLY+=($value)
+        fi
+    done
+
+    return 0
+}
+
+_gr_modtool_completion_setup() {
+    complete -o nosort -F _gr_modtool_completion gr_modtool
+}
+
+_gr_modtool_completion_setup;

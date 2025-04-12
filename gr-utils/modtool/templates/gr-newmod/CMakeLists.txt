@@ -16,7 +16,7 @@ set(CMAKE_BUILD_TYPE
 ########################################################################
 # Project setup
 ########################################################################
-cmake_minimum_required(VERSION 3.8)
+cmake_minimum_required(VERSION 3.16)
 project(gr-howto CXX C)
 enable_testing()
 
@@ -129,6 +129,7 @@ add_custom_target(uninstall ${CMAKE_COMMAND} -P
 add_subdirectory(include/gnuradio/howto)
 add_subdirectory(lib)
 add_subdirectory(apps)
+add_subdirectory(examples)
 add_subdirectory(docs)
 # NOTE: manually update below to use GRC to generate C++ flowgraphs w/o python
 if(ENABLE_PYTHON)
@@ -150,3 +151,7 @@ configure_package_config_file(
     ${PROJECT_SOURCE_DIR}/cmake/Modules/targetConfig.cmake.in
     ${CMAKE_CURRENT_BINARY_DIR}/cmake/Modules/${target}Config.cmake
     INSTALL_DESTINATION ${GR_CMAKE_DIR})
+
+install(FILES MANIFEST.yml
+    RENAME MANIFEST-${VERSION_MAJOR}.${VERSION_API}.${VERSION_ABI}${VERSION_PATCH}.yml
+    DESTINATION share/gnuradio/manifests/howto)

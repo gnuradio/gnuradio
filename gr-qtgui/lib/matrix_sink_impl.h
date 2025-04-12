@@ -30,7 +30,7 @@ private:
     std::vector<double> d_data;
     const char* d_argv = "";
     int d_argc = 1;
-    matrix_display* d_display;
+    QPointer<matrix_display> d_display;
     matrix_display_signal* d_signal = nullptr;
 
 public:
@@ -41,7 +41,7 @@ public:
                      const std::string& color_map,
                      const std::string& interpolation,
                      QWidget* parent = nullptr);
-    ~matrix_sink_impl();
+    ~matrix_sink_impl() override;
 
     void exec_() override;
     QApplication* d_qApplication;

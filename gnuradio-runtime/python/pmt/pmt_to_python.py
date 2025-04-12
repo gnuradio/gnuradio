@@ -67,7 +67,7 @@ numpy_mappings = {
     numpy.dtype(numpy.float32): (pmt.init_f32vector, float, pmt.f32vector_elements, pmt.is_f32vector),
     numpy.dtype(numpy.float64): (pmt.init_f64vector, float, pmt.f64vector_elements, pmt.is_f64vector),
     numpy.dtype(numpy.complex64): (pmt.init_c32vector, complex, pmt.c32vector_elements, pmt.is_c32vector),
-    numpy.dtype(numpy.complex128): (pmt.init_c64vector, complex, pmt.c64vector_elements, pmt.is_c64vector),
+    numpy.dtype(numpy.cdouble): (pmt.init_c64vector, complex, pmt.c64vector_elements, pmt.is_c64vector),
     numpy.dtype(numpy.int8): (pmt.init_s8vector, int, pmt.s8vector_elements, pmt.is_s8vector),
     numpy.dtype(numpy.int16): (pmt.init_s16vector, int, pmt.s16vector_elements, pmt.is_s16vector),
     numpy.dtype(numpy.int32): (pmt.init_s32vector, int, pmt.s32vector_elements, pmt.is_s32vector),

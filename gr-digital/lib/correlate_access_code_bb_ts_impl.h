@@ -44,7 +44,7 @@ private:
     void enter_have_header(int payload_len);
 
     bool header_ok();
-    int header_payload();
+    int payload_length();
 
 public:
     correlate_access_code_bb_ts_impl(const std::string& access_code,

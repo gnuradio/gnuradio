@@ -22,7 +22,7 @@ set(CMAKE_BUILD_TYPE
 ########################################################################
 # Make sure this version matches ${GR_CMAKE_MIN_VERSION} (a variable can't be
 # used here).
-cmake_minimum_required(VERSION 3.8)
+cmake_minimum_required(VERSION 3.16)
 project(gnuradio CXX C)
 enable_testing()
 option(BUILD_SHARED_LIBS "Build shared libraries" ON)
@@ -155,6 +155,7 @@ SET(GR_LIBEXEC_DIR     libexec CACHE PATH "Path to install libexec files")
 SET(GR_PKG_LIBEXEC_DIR ${GR_LIBEXEC_DIR}/${CMAKE_PROJECT_NAME} CACHE PATH "Path to install package libexec files")
 SET(GRC_BLOCKS_DIR     ${GR_PKG_DATA_DIR}/grc/blocks CACHE PATH "Path to install GRC blocks")
 SET(GR_THEMES_DIR      ${GR_PKG_DATA_DIR}/themes CACHE PATH "Path to install QTGUI themes")
+SET(GRC_EXAMPLES_DIR   ${GR_PKG_DATA_DIR}/examples CACHE PATH "Path to install GRC example flowgraphs")
 # cmake-format: on
 
 # Set location of config/prefs files in /etc
@@ -188,6 +189,51 @@ else(ENABLE_PERFORMANCE_COUNTERS)
     set(GR_PERFORMANCE_COUNTERS False)
     message(STATUS "NO PERF COUNTERS")
 endif(ENABLE_PERFORMANCE_COUNTERS)
+
+string(COMPARE EQUAL "${CMAKE_INSTALL_PREFIX}" "/usr/local" isusrlocal)
+string(COMPARE EQUAL "${CMAKE_INSTALL_PREFIX}" "$ENV{HOME}/.local" ishomelocal)
+
+option(ENABLE_BASH_COMPLETIONS "Enable shell completions for bash" ON)
+if(ENABLE_BASH_COMPLETIONS)
+    if(NOT DEFINED GR_BASH_COMPLETIONS_DIR)
+        if(isusr OR isusrlocal OR ishomelocal)
+            set(GR_BASH_COMPLETIONS_DIR
+                share/bash-completion/completions
+                CACHE PATH "Path to install bash completions")
+        else(isusr OR isusrlocal OR ishomelocal)
+            message(WARNING "GR_BASH_COMPLETIONS_DIR is not defined")
+            set(ENABLE_BASH_COMPLETIONS OFF)
+        endif(isusr OR isusrlocal OR ishomelocal)
+    endif(NOT DEFINED GR_BASH_COMPLETIONS_DIR)
+endif(ENABLE_BASH_COMPLETIONS)
+
+option(ENABLE_ZSH_COMPLETIONS "Enable shell completions for zsh" ON)
+if(ENABLE_ZSH_COMPLETIONS)
+    if(NOT DEFINED GR_ZSH_COMPLETIONS_DIR)
+        if(isusr OR isusrlocal)
+            set(GR_ZSH_COMPLETIONS_DIR
+                share/zsh/site-functions
+                CACHE PATH "Path to install zsh completions")
+        else(isusr OR isusrlocal)
+            message(WARNING "GR_ZSH_COMPLETIONS_DIR is not defined")
+            set(ENABLE_ZSH_COMPLETIONS OFF)
+        endif(isusr OR isusrlocal)
+    endif(NOT DEFINED GR_ZSH_COMPLETIONS_DIR)
+endif(ENABLE_ZSH_COMPLETIONS)
+
+option(ENABLE_FISH_COMPLETIONS "Enable shell completions for fish" ON)
+if(ENABLE_FISH_COMPLETIONS)
+    if(NOT DEFINED GR_FISH_COMPLETIONS_DIR)
+        if(isusr OR ishomelocal)
+            set(GR_FISH_COMPLETIONS_DIR
+                share/fish/vendor_completions.d
+                CACHE PATH "Path to install fish completions")
+        else(isusr OR ishomelocal)
+            message(WARNING "GR_FISH_COMPLETIONS_DIR is not defined")
+            set(ENABLE_FISH_COMPLETIONS OFF)
+        endif(isusr OR ishomelocal)
+    endif(NOT DEFINED GR_FISH_COMPLETIONS_DIR)
+endif(ENABLE_FISH_COMPLETIONS)
 
 ########################################################################
 # Variables replaced when configuring the package config files
@@ -340,6 +386,11 @@ endif(UNIX)
 check_cxx_compiler_flag(-fcx-limited-range HAVE_CX_LIMITED_RANGE)
 if(HAVE_CX_LIMITED_RANGE)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fcx-limited-range")
+    check_cxx_compiler_flag(-Wno-unused-command-line-argument
+                            HAVE_WNO_UNUSED_CMD_LINE_ARG)
+    if(HAVE_WNO_UNUSED_CMD_LINE_ARG)
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unused-command-line-argument")
+    endif(HAVE_WNO_UNUSED_CMD_LINE_ARG)
 endif(HAVE_CX_LIMITED_RANGE)
 
 ########################################################################

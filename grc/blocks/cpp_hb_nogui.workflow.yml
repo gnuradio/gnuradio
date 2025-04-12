@@ -1,0 +1,25 @@
+id: cpp_hb_nogui_workflow
+description: "C++ hier block no GUI workflow"
+output_language: cpp
+output_language_label: C++
+generator_module: gnuradio.grc.workflows.cpp_hb_nogui
+generator_class: CppHierBlockGenerator
+generate_options: hb
+generate_options_label: Hier Block
+parameters:
+-   id: gen_cmake
+    label: Generate CMakeLists.txt
+    dtype: enum
+    default: 'On'
+    options: ['On', 'Off']
+    hide: 'part'
+-   id: cmake_opt
+    label: CMake options
+    dtype: string
+    default: ''
+    hide: 'part'
+-   id: category
+    label: Category
+    dtype: string
+    default: '[GRC Hier Blocks]'
+    hide: 'none'

@@ -74,7 +74,7 @@ int sccc_encoder_impl<IN_T, OUT_T>::work(int noutput_items,
 
         int STi_tmp = d_STi;
         for (int i = 0; i < d_blocklength; i++) {
-            int k = d_INTERLEAVER.INTER()[i];
+            int k = d_INTERLEAVER.interleaver_indices()[i];
             out[i] = (OUT_T)d_FSMi.OS()[STi_tmp * d_FSMi.I() + d_buffer[k]];
             STi_tmp = (int)d_FSMi.NS()[STi_tmp * d_FSMi.I() + d_buffer[k]];
         }

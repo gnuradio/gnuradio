@@ -202,7 +202,7 @@ void rfnoc_replay_impl::_command_handler(pmt::pmt_t msg)
         return;
     }
     if (command == "stop") {
-        stop_playback();
+        stop_playback(cmd_port);
         return;
     }
     if (command == "get_record_fullness") {

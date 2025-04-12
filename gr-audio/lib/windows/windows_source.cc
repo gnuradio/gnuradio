@@ -167,7 +167,7 @@ int windows_source::work(int noutput_items,
             case 1: // mono output
                 f0 = (float*)output_items[0];
 
-                for (int j = 0; j < buffer_length; j++) {
+                for (DWORD j = 0; j < buffer_length; j++) {
                     f0[dw_items + j] = (float)(lp_buffer[j]) / 32767.0;
                 }
                 dw_items += buffer_length;
@@ -176,7 +176,7 @@ int windows_source::work(int noutput_items,
                 f0 = (float*)output_items[0];
                 f1 = (float*)output_items[1];
 
-                for (int j = 0; j < buffer_length / 2; j++) {
+                for (DWORD j = 0; j < buffer_length / 2; j++) {
                     f0[dw_items + j] = (float)(lp_buffer[2 * j + 0]) / 32767.0;
                     f1[dw_items + j] = (float)(lp_buffer[2 * j + 1]) / 32767.0;
                 }
@@ -208,8 +208,8 @@ MMRESULT windows_source::is_format_supported(LPWAVEFORMATEX pwfx, UINT uDeviceID
     return (waveInOpen(NULL,                // ptr can be NULL for query
                        uDeviceID,           // the device identifier
                        pwfx,                // defines requested format
-                       NULL,                // no callback
-                       NULL,                // no instance data
+                       0,                   // no callback
+                       0,                   // no instance data
                        WAVE_FORMAT_QUERY)); // query only, do not open device
 }
 
@@ -257,7 +257,7 @@ UINT windows_source::find_device(std::string szDeviceName)
                 if (verbose)
                     d_debug_logger->info("WaveIn Device {:d}: {:s}", i, woc.szPname);
             }
-            if (result == -1) {
+            if (result == (UINT)-1) {
                 d_debug_logger->info("Warning: waveIn device '{:s}' was not found, "
                                      "defaulting to WAVE_MAPPER",
                                      szDeviceName);
@@ -321,25 +321,30 @@ int windows_source::open_wavein_device(void)
     return 0;
 }
 
-static void CALLBACK read_wavein(
+void CALLBACK windows_source::read_wavein(
     HWAVEIN hwi, UINT uMsg, DWORD_PTR dwInstance, DWORD_PTR dwParam1, DWORD_PTR dwParam2)
 {
-    // Ignore WIM_OPEN and WIM_CLOSE messages
     if (uMsg == WIM_DATA) {
-        if (!dwInstance) {
+        windows_source* source = reinterpret_cast<windows_source*>(dwInstance);
+        if (!source) {
             gr::logger_ptr logger;
             logger->error("callback function missing buffer queue: {:s}",
                           strerror(errno));
+            return;
         }
-        LPWAVEHDR lp_wave_hdr = (LPWAVEHDR)dwParam1; // The new audio data
-        windows_source* source = (windows_source*)dwInstance;
+
+        LPWAVEHDR lp_wave_hdr =
+            reinterpret_cast<LPWAVEHDR>(dwParam1); // The new audio data
+
         {
-            std::lock_guard<std::mutex> lock(source->buffer_queue_mutex);
-            if (source->buffer_queue.size() < MAX_QUEUE_SIZE) {
-                source->buffer_queue.push(lp_wave_hdr); // Add the buffer to the queue
+            std::lock_guard<std::mutex> lock(source->get_buffer_queue_mutex());
+            auto& buffer_queue = source->get_buffer_queue();
+            if (buffer_queue.size() < MAX_QUEUE_SIZE) {
+                buffer_queue.push(lp_wave_hdr); // Add the buffer to the queue
             }
         }
     }
 }
+
 } /* namespace audio */
 } /* namespace gr */

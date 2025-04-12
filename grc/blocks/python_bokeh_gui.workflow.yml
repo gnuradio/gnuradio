@@ -1,0 +1,53 @@
+id: python_bokeh_gui_workflow
+description: "Python Bokeh GUI workflow"
+output_language: python
+output_language_label: Python
+generator_module: gnuradio.grc.workflows.python_bokeh_gui
+generator_class: TopBlockGenerator
+generate_options: bokeh_gui
+generate_options_label: Bokeh GUI
+parameters:
+-   id: placement
+    label: Widget Placement
+    dtype: int_vector
+    default: (0,0)
+    hide: 'part'
+-   id: window_size
+    label: Window size
+    dtype: int_vector
+    default: (1000,1000)
+    hide: 'part'
+-   id: sizing_mode
+    label: Sizing Mode
+    dtype: enum
+    default: fixed
+    options: [fixed, stretch_both, scale_width, scale_height, scale_both]
+    option_labels: [Fixed, Stretch Both, Scale Width, Scale Height, Scale Both]
+    hide: 'part'
+-   id: run
+    label: Run
+    dtype: bool
+    default: 'True'
+    options: ['True', 'False']
+    option_labels: [Autostart, 'Off']
+    hide: ${ 'part' if run else 'none' }
+-   id: max_nouts
+    label: Max Number of Output
+    dtype: int
+    default: '0'
+    hide: ${ 'none' if max_nouts else 'part' }
+-   id: realtime_scheduling
+    label: Realtime Scheduling
+    dtype: enum
+    options: ['', '1']
+    option_labels: ['Off', 'On']
+    hide: ${ 'none' if realtime_scheduling else 'part' }
+-   id: run_command
+    label: Run Command
+    category: Advanced
+    dtype: string
+    default: '{python} -u {filename}'
+    hide: 'part'
+asserts:
+-   len(placement) == 4 or len(placement) == 2
+-   all(i >= 0 for i in placement)
