@@ -1,6 +1,7 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2023 Free Software Foundation, Inc.
+ * Copyright 2025 Marcus Müller
  *
  * This file is part of GNU Radio
  *
@@ -111,9 +112,13 @@ int matrix_sink_impl::work(int noutput_items,
     auto in = static_cast<const input_type*>(input_items[0]);
 
     for (int k = 0; k < noutput_items; k++) {
-        QVector<double> qvec(d_vlen);
-        std::copy(in + k * d_vlen, in + (k + 1) * d_vlen, qvec.begin());
-        emit d_signal->data_ready(qvec);
+#if QT_VERSION < QT_VERSION_CHECK(5, 14, 0)
+        QVector<double> data(d_vlen);
+        std::copy_n(in + k * d_vlen, d_vlen, data.begin());
+#else
+        QVector<double> data(in + k * d_vlen, in + (k + 1) * d_vlen);
+#endif
+        emit d_signal->data_ready(data);
     }
 
     return noutput_items;
