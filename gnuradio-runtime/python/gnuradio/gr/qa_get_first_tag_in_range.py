@@ -19,7 +19,7 @@ KEY = pmt.string_to_symbol("key")
 
 class first_tag_key(gr.sync_block):
     def __init__(self, assert_function):
-        gr.sync_block.__init__(self, "test block", out_sig=[], in_sig=[numpy.float32])
+        gr.sync_block.__init__(self, "test key", out_sig=[], in_sig=[numpy.float32])
         self.assert_function = assert_function
         self.set_output_multiple(MULTIPLE)
         self.counter = 0
@@ -30,8 +30,8 @@ class first_tag_key(gr.sync_block):
         self.assert_function(tag is not None, "got no tag")
 
         self.assert_function(
-            pmt.to_long(tag.value) == MULTIPLE * self.counter,
-            f"value at {tag.offset} wrong ({tag.value})",
+            pmt.to_long(tag.value) == tag.offset - 12,
+            f"({self.counter}) value at offset {tag.offset} wrong: {tag.value}, should be {MULTIPLE * self.counter}",
         )
         self.assert_function(tag.offset % MULTIPLE == 12, f"offset {tag.offset} wrong")
         tag = self.get_first_tag_in_range(0, tag.offset + 1, read + MULTIPLE, KEY)
@@ -45,7 +45,9 @@ class first_tag_key(gr.sync_block):
 
 class first_tag_predicate(gr.sync_block):
     def __init__(self, assert_function):
-        gr.sync_block.__init__(self, "test block", out_sig=[], in_sig=[numpy.float32])
+        gr.sync_block.__init__(
+            self, "test predicated", out_sig=[], in_sig=[numpy.float32]
+        )
         self.assert_function = assert_function
         self.set_output_multiple(MULTIPLE)
 
@@ -68,13 +70,15 @@ class first_tag_predicate(gr.sync_block):
 
 
 class source_block(gr.sync_block):
+    N = 100000
+
     def __init__(self):
-        gr.sync_block.__init__(self, "test block", in_sig=[], out_sig=[numpy.float32])
+        gr.sync_block.__init__(self, "tagging src", in_sig=[], out_sig=[numpy.float32])
 
     def work(self, _, output_items):
-        if self.nitems_written(0) > 100000:
-            return -1
-        nout = len(output_items[0])
+        if self.nitems_written(0) >= self.N:
+            return int(gr.WORK_DONE)
+        nout = min(len(output_items[0]), self.N - self.nitems_written(0))
         for idx in range(self.nitems_written(0), self.nitems_written(0) + nout):
             counter = idx // MULTIPLE
             if idx % MULTIPLE == 12:
@@ -93,14 +97,14 @@ class test_first_tag_in_range(gr_unittest.TestCase):
         src = source_block()
         sink = first_tag_key(lambda truth, msg: self.assertTrue(truth, msg))
         tb.connect(src, sink)
-        tb.run(max_noutput_items=1000000)
+        tb.run()
 
     def test_002_filter_by_predicate(self):
         tb = gr.top_block(catch_exceptions=False)
         src = source_block()
         sink = first_tag_predicate(lambda truth, msg: self.assertTrue(truth, msg))
         tb.connect(src, sink)
-        tb.run(max_noutput_items=1000000)
+        tb.run()
 
 
 if __name__ == "__main__":
