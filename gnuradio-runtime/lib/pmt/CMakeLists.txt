@@ -18,7 +18,7 @@ target_link_libraries(
 
 target_include_directories(
     gnuradio-pmt
-    PUBLIC $<INSTALL_INTERFACE:include>
+    PUBLIC $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include>
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/)
 
