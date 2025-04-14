@@ -39,7 +39,7 @@ includes = ','.join(args.include)
 name = args.module
 
 namespace = ['gr', name]
-prefix_include_root = name
+prefix_include_root = "gnuradio/" + name
 
 
 with warnings.catch_warnings():
