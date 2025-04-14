@@ -37,6 +37,7 @@ basic_block::basic_block(const std::string& name,
       d_symbol_name(global_block_registry.register_symbolic_name(this)),
       d_color(WHITE),
       d_rpc_set(false),
+      d_needs_all_outputs(true),
       d_logger(std::make_shared<gr::logger>(name)),
       d_debug_logger(std::make_shared<logger_ptr::element_type>(name + " (debug)")),
       d_message_subscribers(pmt::make_dict())

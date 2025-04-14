@@ -57,6 +57,12 @@ static const char* __doc_gr_basic_block_alias_pmt = R"doc()doc";
 static const char* __doc_gr_basic_block_set_block_alias = R"doc()doc";
 
 
+static const char* __doc_gr_basic_block_does_need_all_outputs = R"doc()doc";
+
+
+static const char* __doc_gr_basic_block_set_needs_all_outputs = R"doc()doc";
+
+
 static const char* __doc_gr_basic_block_message_port_register_in = R"doc()doc";
 
 

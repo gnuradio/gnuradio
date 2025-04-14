@@ -65,6 +65,7 @@ static int min_available_space(block* m,
     gr::configure_default_loggers(logger, debug_logger, "min_available_space");
 #endif
 
+    bool all_buf_are_done = true;
     int min_space = std::numeric_limits<int>::max();
     if (min_noutput_items == 0)
         min_noutput_items = 1;
@@ -82,28 +83,46 @@ static int min_available_space(block* m,
         if (best_n < min_noutput_items)
             throw std::runtime_error("Buffer too small for min_noutput_items");
         int n = std::min(avail_n, best_n);
-        if (n < min_noutput_items) { // We're blocked on output.
+        bool out_buf_done;
+        if (m->does_need_all_outputs())
+            out_buf_done = out_buf->one_reader_done();
+        else
+            out_buf_done = out_buf->done();
+        if (!out_buf_done) {
+            all_buf_are_done = false;
+            if (n < min_noutput_items) { // We're blocked on output.
+                LOG(std::ostringstream msg;
+                    msg << m << " **[i=" << i << "] output_multiple=" << output_multiple
+                        << " min_noutput_items=" << min_noutput_items
+                        << " avail_n=" << avail_n << " best_n=" << best_n << " n=" << n
+                        << " min_space=" << min_space << " outbuf_done=" << out_buf_done;
+                    GR_LOG_INFO(debug_logger, msg.str()););
+
+                output_idx = i;
+                return 0;
+            }
+            min_space = std::min(min_space, n);
+
             LOG(std::ostringstream msg;
-                msg << m << " **[i=" << i << "] output_multiple=" << output_multiple
+                msg << m << " [i=" << i << "] output_multiple=" << output_multiple
                     << " min_noutput_items=" << min_noutput_items
                     << " avail_n=" << avail_n << " best_n=" << best_n << " n=" << n
-                    << " min_space=" << min_space << " outbuf_done=" << out_buf->done();
+                    << " min_space=" << min_space;
+                GR_LOG_INFO(debug_logger, msg.str()););
+        } else {
+            LOG(std::ostringstream msg;
+                msg << m << " [i=" << i << "] buff_done &buffer=" << out_buf.get();
                 GR_LOG_INFO(debug_logger, msg.str()););
 
-            if (out_buf->done()) { // Downstream is done, therefore we're done.
+            // One output buffer is done and we need all buffers to work,
+            // therefore we're done.
+            if (m->does_need_all_outputs()) {
                 return -1;
             }
-
-            output_idx = i;
-            return 0;
         }
-        min_space = std::min(min_space, n);
-
-        LOG(std::ostringstream msg;
-            msg << m << " [i=" << i << "] output_multiple=" << output_multiple
-                << " min_noutput_items=" << min_noutput_items << " avail_n=" << avail_n
-                << " best_n=" << best_n << " n=" << n << " min_space=" << min_space;
-            GR_LOG_INFO(debug_logger, msg.str()););
+    }
+    if (all_buf_are_done) { // All downstreams are done, therefore we're done.
+        return -1;
     }
     return min_space;
 }
