@@ -142,7 +142,7 @@ def main():
         d = fm.snk_tx.data()[Ns:Ns + Ne]
         sp1_f = fig1.add_subplot(2, 1, 1)
 
-        X, freq = sp1_f.psd(d, NFFT=fftlen, noverlap= int(fftlen / 4), Fs=fs,
+        X, freq = sp1_f.psd(d, NFFT=fftlen, noverlap=fftlen // 4, Fs=fs,
                             window=lambda d: d * winfunc(fftlen),
                             visible=False)
         X_in = 10.0 * numpy.log10(abs(numpy.fft.fftshift(X)))
