@@ -181,7 +181,7 @@ def main():
             d = fm.snks[i].data()[Ns:Ne]
 
             sp2_f = fig2.add_subplot(Nrows, Ncols, 1 + i)
-            X, freq = sp2_f.psd(d, NFFT=fftlen, noverlap= int(fftlen / 4), Fs=fs_o,
+            X, freq = sp2_f.psd(d, NFFT=fftlen, noverlap=fftlen // 4, Fs=fs_o,
                                 window=lambda d: d * winfunc(fftlen),
                                 visible=False)
             #X_o = 10.0*numpy.log10(abs(numpy.fft.fftshift(X)))
