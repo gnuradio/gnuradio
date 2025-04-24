@@ -48,7 +48,7 @@ target_link_libraries(
     PRIVATE gnuradio-filter)
 
 target_include_directories(
-    gnuradio-analog PUBLIC $<INSTALL_INTERFACE:include>
+    gnuradio-analog PUBLIC $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
                            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>)
 
 #Add Windows DLL resource file if using MSVC

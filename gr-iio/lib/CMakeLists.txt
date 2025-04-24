@@ -20,7 +20,7 @@ add_library(
     iio_types.cc)
 
 target_include_directories(
-    gnuradio-iio PUBLIC $<INSTALL_INTERFACE:include>
+    gnuradio-iio PUBLIC $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
                         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>)
 target_link_libraries(
     gnuradio-iio
