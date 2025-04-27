@@ -33,7 +33,7 @@ class Port(CorePort, Drawable):
         self._hovering = False
         self.force_show_label = False
 
-        self._area = []
+        self._area = [] # initialized by create_shapes(), must be initialized before calling draw()!
         self._bg_color = self._border_color = 0, 0, 0, 0
         self._font_color = list(colors.FONT_COLOR)
 
