@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Free Software Foundation, Inc.
+ * Copyright 2025 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(1)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(udp_source.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(e8dceb0f73955c17260a5277ff77a7bc)                     */
+/* BINDTOOL_HEADER_FILE_HASH(4d09e0a3e1ef9a8ae45ac97294a1eef0)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -42,6 +42,7 @@ void bind_udp_source(py::module& m)
         .def(py::init(&udp_source::make),
              py::arg("itemsize"),
              py::arg("vecLen"),
+             py::arg("addr"),
              py::arg("port"),
              py::arg("header_type"),
              py::arg("payloadsize"),

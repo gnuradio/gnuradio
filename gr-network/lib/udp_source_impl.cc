@@ -8,6 +8,9 @@
  *
  */
 
+#include <boost/asio/ip/address_v4.hpp>
+#include <boost/asio/ip/address_v6.hpp>
+#include <string>
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
@@ -22,6 +25,7 @@ namespace network {
 
 udp_source::sptr udp_source::make(size_t itemsize,
                                   size_t veclen,
+                                  std::string addr,
                                   int port,
                                   int header_type,
                                   int payloadsize,
@@ -31,6 +35,7 @@ udp_source::sptr udp_source::make(size_t itemsize,
 {
     return gnuradio::make_block_sptr<udp_source_impl>(itemsize,
                                                       veclen,
+                                                      addr,
                                                       port,
                                                       header_type,
                                                       payloadsize,
@@ -44,6 +49,7 @@ udp_source::sptr udp_source::make(size_t itemsize,
  */
 udp_source_impl::udp_source_impl(size_t itemsize,
                                  size_t veclen,
+                                 std::string addr,
                                  int port,
                                  int header_type,
                                  int payloadsize,
@@ -56,6 +62,7 @@ udp_source_impl::udp_source_impl(size_t itemsize,
       is_ipv6(ipv6),
       d_itemsize(itemsize),
       d_veclen(veclen),
+      d_addr(addr),
       d_port(port),
       d_notify_missed(notify_missed),
       d_source_zeros(source_zeros),
@@ -135,15 +142,21 @@ bool udp_source_impl::start()
     d_localqueue_reader = gr::buffer_add_reader(d_localqueue_writer, 0);
 
     if (is_ipv6)
-        d_endpoint = asio::ip::udp::endpoint(asio::ip::udp::v6(), d_port);
+        d_endpoint = asio::ip::udp::endpoint(asio::ip::make_address_v6(d_addr), d_port);
     else
-        d_endpoint = asio::ip::udp::endpoint(asio::ip::udp::v4(), d_port);
+        d_endpoint = asio::ip::udp::endpoint(asio::ip::make_address_v4(d_addr), d_port);
 
     try {
         d_udpsocket = new asio::ip::udp::socket(d_io_context, d_endpoint);
     } catch (const std::exception& ex) {
         throw std::runtime_error(std::string("[UDP Source] Error occurred: ") +
                                  ex.what());
+    }
+    if (d_endpoint.address().is_multicast()) {
+        {
+            asio::ip::multicast::join_group option(d_endpoint.address());
+            d_udpsocket->set_option(option);
+        }
     }
 
     d_logger->info("Listening for data on UDP port {:d}.", d_port);
@@ -353,8 +366,8 @@ int udp_source_impl::work(int noutput_items,
 
             if (d_seq_num > 0) { // d_seq_num will be 0 when this block starts
                 if (pkt_seq_num > d_seq_num) {
-                    // Ideally pkt_seq_num = d_seq_num + 1.  Therefore this should do += 0
-                    // when no packets are dropped.
+                    // Ideally pkt_seq_num = d_seq_num + 1.  Therefore this should do
+                    // += 0 when no packets are dropped.
                     skipped_packets += pkt_seq_num - d_seq_num - 1;
                 }
 
