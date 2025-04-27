@@ -1,5 +1,5 @@
 #
-# Copyright 2013, 2018 Free Software Foundation, Inc.
+# Copyright 2013, 2018, 2024 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -13,44 +13,12 @@ import os
 import re
 import glob
 import logging
-import itertools
 
 from types import SimpleNamespace
 from gnuradio import gr
-from ..tools import get_modname, SCMRepoFactory
+from ..tools import SCMRepoFactory
 
 logger = logging.getLogger('gnuradio.modtool')
-
-
-def get_block_candidates(modname: str = None,
-                         skip_lib: bool = False, skip_include: bool = False,
-                         skip_python: bool = False, skip_grc: bool = False):
-    """ Returns a list of all possible blocknames """
-    block_candidates = []
-    if not skip_lib:
-        cpp_filters = ["*.cc", "*.cpp"]
-        for ftr in cpp_filters:
-            block_candidates.append(os.path.splitext(x)[0].split("_impl")[0]
-                                    for x in glob.glob1("lib", ftr)
-                                    if not (x.startswith("qa_") or x.startswith("test_")))
-    if not skip_include:
-        cpp_header_glob = (glob.glob("include/gnuradio/*/*.h") if modname is None
-                           else glob.glob1(f"include/gnuradio/{modname}", "*.h"))
-        block_candidates.append(os.path.splitext(os.path.split(x)[-1])[0]
-                                for x in cpp_header_glob
-                                if x != "api.h")
-    if not skip_python:
-        python_glob = (glob.glob("python/*/*.py") if modname is None
-                       else glob.glob1(f"python/{modname}", "*.py"))
-        block_candidates.append(os.path.splitext(os.path.split(x)[-1])[0]
-                                for x in python_glob
-                                if not (x.startswith("qa_") or
-                                        x.startswith("build") or
-                                        x == "__init__.py"))
-    if not (skip_grc or modname is None):
-        block_candidates.append(x.split(".block.yml")[0].split(f"{modname}_")[-1]
-                                for x in glob.glob1("grc", "*.block.yml"))
-    return set(itertools.chain(*block_candidates))
 
 
 class ModToolException(Exception):
@@ -70,24 +38,22 @@ class ModTool(object):
     name = 'base'
     description = None
 
+    _supported_versions = ["autofoo", "36", "37", "38", "39", "310"]
+    _subdir_names = ["lib", "include", "python", "grc"]
+
     def __init__(self, blockname=None, module_name=None, **kwargs):
-        # List subdirs where stuff happens
-        self._subdirs = ['lib', 'include', 'python', 'grc']
-        self.has_subdirs = {}
+        self.subdirs = {}
         self.skip_subdirs = {}
         self.info = {}
         self._file = {}
-        for subdir in self._subdirs:
-            self.has_subdirs[subdir] = False
-            self.skip_subdirs[subdir] = False
+        for subdir in self._subdir_names:
+            self.subdirs[subdir] = None
+            self.skip_subdirs[subdir] = kwargs.get(f"skip_{subdir}", False)
+        self.skip_pybind = kwargs.get("skip_pybind", False)
         self.info['blockname'] = blockname
         self.info['modname'] = module_name
         self.cli = kwargs.get('cli', False)
         self.dir = kwargs.get('directory', '.')
-        self.skip_subdirs['lib'] = kwargs.get('skip_lib', False)
-        self.skip_subdirs['python'] = kwargs.get('skip_python', False)
-        self.skip_subdirs['pybind'] = kwargs.get('skip_pybind', False)
-        self.skip_subdirs['grc'] = kwargs.get('skip_grc', False)
         self._scm = kwargs.get('scm_mode',
                                gr.prefs().get_string('modtool', 'scm_mode', 'no'))
         if not self.cli:
@@ -98,20 +64,15 @@ class ModTool(object):
             from ..cli import setup_cli_logger
             setup_cli_logger(logger)
 
-        if not type(self).__name__ in ['ModToolInfo', 'ModToolNewModule']:
+        if type(self).__name__ not in ['ModToolInfo', 'ModToolNewModule']:
             if self.cli:
                 self._validate()
 
     def _validate(self):
         """ Validates the arguments """
-        if not isinstance(self.skip_subdirs['lib'], bool):
-            raise ModToolException('Expected a boolean value for skip_lib')
-        if not isinstance(self.skip_subdirs['pybind'], bool):
-            raise ModToolException('Expected a boolean value for skip_pybind')
-        if not isinstance(self.skip_subdirs['python'], bool):
-            raise ModToolException('Expected a boolean value for skip_python')
-        if not isinstance(self.skip_subdirs['grc'], bool):
-            raise ModToolException('Expected a boolean value for skip_grc')
+        for subdir in self._subdir_names:
+            if not isinstance(self.skip_subdirs[subdir], bool):
+                raise ModToolException(f"Expected a boolean value for skip_{subdir}")
         self._assign()
 
     def _assign(self):
@@ -119,61 +80,33 @@ class ModTool(object):
             raise ModToolException(
                 'No GNU Radio module found in the given directory.')
         if self.info['modname'] is None:
-            self.info['modname'] = get_modname()
-        if self.info['modname'] is None:
             raise ModToolException(
                 'No GNU Radio module found in the given directory.')
-        if self.info['version'] == '36' and (
-                os.path.isdir(os.path.join('include', self.info['modname'])) or
-                os.path.isdir(os.path.join(
-                    'include', 'gnuradio', self.info['modname']))
-        ):
-            self.info['version'] = '37'
-        if not os.path.isfile(os.path.join('cmake', 'Modules', 'FindCppUnit.cmake')):
-            self.info['version'] = '38'
-            if os.path.isdir(os.path.join('include', 'gnuradio', self.info['modname'])):
-                self.info['version'] = '310'
-        if self.skip_subdirs['lib'] or not self.has_subdirs['lib']:
-            self.skip_subdirs['lib'] = True
-        if not self.has_subdirs['python']:
-            self.skip_subdirs['python'] = True
-        # if not self.has_subdirs['pybind']:
-        #     self.skip_subdirs['pybind'] = True
-        if not self.has_subdirs['grc']:
-            self.skip_subdirs['grc'] = True
-
         self._setup_files()
         self._setup_scm()
 
     def _setup_files(self):
         """ Initialise the self._file[] dictionary """
-        self.info['pydir'] = 'python'
-        if os.path.isdir(os.path.join('python', self.info['modname'])):
-            self.info['pydir'] = os.path.join('python', self.info['modname'])
-        self._file['qalib'] = os.path.join(
-            'lib', f'qa_{self.info["modname"]}.cc')
-        self._file['pyinit'] = os.path.join(self.info['pydir'], '__init__.py')
-        self._file['cmlib'] = os.path.join('lib', 'CMakeLists.txt')
-        self._file['cmgrc'] = os.path.join('grc', 'CMakeLists.txt')
-        self._file['cmpython'] = os.path.join(
-            self.info['pydir'], 'CMakeLists.txt')
-        self._file['cmpybind'] = os.path.join(
-            self.info['pydir'], 'bindings', 'CMakeLists.txt')
-        self._file['ccpybind'] = os.path.join(
-            self.info['pydir'], 'bindings', 'python_bindings.cc')
-        if self.info['is_component']:
-            self.info['includedir'] = os.path.join(
-                'include', 'gnuradio', self.info['modname'])
-        elif self.info['version'] in ('37', '38'):
-            self.info['includedir'] = os.path.join(
-                'include', self.info['modname'])
-        elif self.info['version'] in ('310'):
-            self.info['includedir'] = os.path.join(
-                'include', 'gnuradio', self.info['modname'])
-        else:
-            self.info['includedir'] = 'include'
-        self._file['cminclude'] = os.path.join(
-            self.info['includedir'], 'CMakeLists.txt')
+        if not self.skip_subdirs['python']:
+            self.info['pydir'] = pydir = self.subdirs['python']
+            self._file['cmpython'] = os.path.join(pydir, 'CMakeLists.txt')
+            self._file['pyinit'] = os.path.join(pydir, '__init__.py')
+
+            if not self.skip_pybind:
+                self._file['cmpybind'] = os.path.join(pydir, 'bindings', 'CMakeLists.txt')
+                self._file['ccpybind'] = os.path.join(pydir, 'bindings', 'python_bindings.cc')
+
+        if not self.skip_subdirs['grc']:
+            self._file['cmgrc'] = os.path.join(self.subdirs['grc'], 'CMakeLists.txt')
+
+        if not self.skip_subdirs['lib']:
+            self._file['cmlib'] = os.path.join(self.subdirs['lib'], 'CMakeLists.txt')
+            # if self.info["version"] == "37":
+            self._file['qalib'] = os.path.join(self.subdirs['lib'], f"qa_{self.info['modname']}.cc")
+
+        if not self.skip_subdirs['include']:
+            self.info['includedir'] = self.subdirs['include']
+            self._file['cminclude'] = os.path.join(self.subdirs['include'], 'CMakeLists.txt')
 
     def _setup_scm(self, mode='active'):
         """ Initialize source control management. """
@@ -188,37 +121,126 @@ class ModTool(object):
             logger.error("Error: Can't set up SCM.")
             exit(1)
 
-    def _check_directory(self, directory):
-        """ Guesses if dir is a valid GNU Radio module directory by looking for
-        CMakeLists.txt and at least one of the subdirs lib/, and python/
-        Changes the directory, if valid. """
-        has_makefile = False
+    def _check_directory(self, directory: str):
+        """
+        Validates the module's directory structure by looking at CMakeLists.txt.
+        Changes the working directory if valid.
+        """
         try:
             files = os.listdir(directory)
             os.chdir(directory)
         except OSError:
             logger.error(f"Can't read or chdir to directory {directory}.")
             return False
-        self.info['is_component'] = False
-        for f in files:
-            if os.path.isfile(f) and f == 'CMakeLists.txt':
-                with open(f) as filetext:
-                    if re.search(r'find_package\(Gnuradio', filetext.read()) is not None:
-                        # Might be 37, check that later
-                        self.info['version'] = '36'
-                        has_makefile = True
-                    elif re.search('GR_REGISTER_COMPONENT', filetext.read()) is not None:
-                        # Might be 37, check that later
-                        self.info['version'] = '36'
-                        self.info['is_component'] = True
-                        has_makefile = True
+
+        if "gnuradio.project" in files:
+            # Read module name from gnuradio.project
+            try:
+                with open("gnuradio.project", "r") as f:
+                    regexp = r"projectname\s*=\s*([\w\-]+)$"
+                    self.info["modname"] = re.search(regexp, f.read(), flags=re.MULTILINE).group(1).strip()
+            except (IOError, AttributeError):
+                pass
+
+        has_makefile = False
+        if "CMakeLists.txt" not in files:
             # TODO search for autofoo
-            elif os.path.isdir(f):
-                if (f in list(self.has_subdirs.keys())):
-                    self.has_subdirs[f] = True
+            return False
+
+        self.info['is_component'] = False
+        with open("CMakeLists.txt") as cmakelists:
+            # TODO use cmake_parser
+            cmtext = cmakelists.read()
+            if re.search("GR_REGISTER_COMPONENT", cmtext, flags=re.IGNORECASE) is not None:
+                # Components are parts of the current version of GNU Radio
+                self.info["version"] = self._supported_versions[-1]
+                self.info["is_component"] = True
+                has_makefile = True
+            else:
+                gr_package = re.search(
+                    (
+                        r"find_package\s*\(\s*Gnuradio\s+\"?(?P<version>(\d)(\.\d+)(\.\d+)?)\"?"
+                        # r"\s+(?P<required>REQUIRED)?\s+(?P<components>COMPONENTS(\s+\w+)*)?\s*\)"
+                    ),
+                    cmtext,
+                    flags=re.IGNORECASE,
+                )
+                if gr_package is not None:
+                    gr_version = gr_package.group("version")
+                    gr_version_parts = gr_version.split(".")
+                    self.info["version"] = f"{gr_version_parts[0]}{gr_version_parts[1]}"
+                    if self.info["version"] in self._supported_versions:
+                        has_makefile = True
+                    else:
+                        logger.error(f"GNU Radio version {gr_version} is not supported")
+                        has_makefile = False
+
+            # Read module name from CMakeLists.txt
+            try:
+                gr_modname_re = r"gr\-(?P<modname>[\w\-]+)"
+                gr_project_re = (
+                    rf"GR_REGISTER_COMPONENT\s*\(\s*\"{gr_modname_re}\"\s+ENABLE_"
+                    if self.info["is_component"]
+                    else rf"project\s*\(\s*{gr_modname_re}\s*"
+                )
+                modname = re.search(gr_project_re, cmtext, flags=re.MULTILINE | re.IGNORECASE).group("modname").strip()
+                # FIXME: maybe not needed?
+                modname_trans = {'howto-write-a-block': 'howto'}
+                if modname in modname_trans:
+                    modname = modname_trans[modname]
+                if self.info["modname"] is None:
+                    self.info["modname"] = modname
+                elif modname != self.info["modname"]:
+                    logger.warn(
+                        f"Project name in CMakeLists.txt (gr-{modname}) is not "
+                        f"the same as in gnuradio.project ({self.info['modname']})"
+                    )
+            except AttributeError:
+                pass
+
+            for subdir in self._subdir_names:
+                subdir_added = re.search(rf"add_subdirectory\s*\(\s*(?P<path>{subdir}(\/\w+)*)\s*\)", cmtext)
+                if subdir_added is not None:
+                    self.subdirs[subdir] = subdir_added.group("path")
                 else:
-                    self.skip_subdirs[f] = True
-        return bool(has_makefile and (list(self.has_subdirs.values())))
+                    self.skip_subdirs[subdir] = True
+
+        return has_makefile and any(subdir is not None for subdir in self.subdirs.values())
+
+    def get_block_candidates(
+        self, skip_lib: bool = False, skip_include: bool = False, skip_python: bool = False, skip_grc: bool = False
+    ):
+        """Return a list of all possible blocknames"""
+        block_candidates = set()
+        if not (skip_lib or self.skip_subdirs["lib"]):
+            cpp_filters = ["*.cc", "*.cpp"]
+            for ftr in cpp_filters:
+                suffix = "_impl" + ftr[1:]  # ftr.replace("*", "_impl")
+                block_candidates.update(
+                    x[:x.endswith(suffix) and -len(suffix)]
+                    for x in glob.glob1(self.subdirs["lib"], ftr)
+                    if not (x.startswith("qa_") or x.startswith("test_"))
+                )
+        if not (skip_include or self.skip_subdirs["include"]):
+            block_candidates.update(
+                os.path.splitext(x)[0]
+                for x in glob.glob1(self.subdirs["include"], "*.h")
+                if x != "api.h"
+            )
+        if not (skip_python or self.skip_subdirs["python"]):
+            block_candidates.update(
+                os.path.splitext(x)[0]
+                for x in glob.glob1(self.subdirs["python"], "*.py")
+                if not (x.startswith("qa_") or x.startswith("build") or x == "__init__.py")
+            )
+        if not (skip_grc or self.skip_subdirs["grc"] or self.info["modname"] is None):
+            prefix = self.info["modname"] + "_"
+            ext = ".block.yml"
+            block_candidates.update(
+                x[x.startswith(prefix) and len(prefix):x.endswith(ext) and -len(ext)]
+                for x in glob.glob1("grc", "*.block.yml")
+            )
+        return block_candidates
 
     def run(self):
         """ Override this. """
