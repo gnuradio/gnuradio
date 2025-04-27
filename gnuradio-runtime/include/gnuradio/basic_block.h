@@ -90,6 +90,7 @@ protected:
     std::string d_symbol_alias;
     vcolor d_color;
     bool d_rpc_set;
+    bool d_needs_all_outputs;
 
     /*! Used by blocks to access the logger system.
      */
@@ -354,6 +355,25 @@ public:
      * \brief When the block is registered with the RPC, set this.
      */
     void rpc_set() { d_rpc_set = true; }
+
+    /*!
+     * \brief True if this block is done when one of its outputs is
+     * done, false if this block is done only when all its outputs are
+     * done.
+     */
+    bool does_need_all_outputs() { return d_needs_all_outputs; }
+
+    /*!
+     * \brief Set to false if this block isn't done even if one of its
+     * outputs is done. Set to true if this block is done as soon as one
+     * of its outputs is done.
+     *
+     * \param needs_all_outputs new value
+     */
+    void set_needs_all_outputs(bool needs_all_outputs)
+    {
+        d_needs_all_outputs = needs_all_outputs;
+    }
 
     /*!
      * \brief Confirm that ninputs and noutputs is an acceptable combination.
