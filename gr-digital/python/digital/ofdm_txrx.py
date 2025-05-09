@@ -319,11 +319,17 @@ class ofdm_rx(gr.hier_block2):
         if sync_word1 is None:
             self.sync_word1 = _make_sync_word1(
                 fft_len, occupied_carriers, pilot_carriers)
+            even_carriers = any(self.sync_word1[0::2])
         else:
             if len(sync_word1) != self.fft_len:
                 raise ValueError(
                     "Length of sync sequence(s) must be FFT length.")
+
+            even_carriers = any(sync_word1[0::2])
+            if even_carriers and any(sync_word1[1::2]):
+                raise ValueError("Odd and even carriers in Sync Word 1")
             self.sync_word1 = sync_word1
+
         self.sync_word2 = ()
         if sync_word2 is None:
             self.sync_word2 = _make_sync_word2(
@@ -340,7 +346,7 @@ class ofdm_rx(gr.hier_block2):
         else:
             self.scramble_seed = 0x00  # We deactivate the scrambler by init'ing it with zeros
         ### Sync ############################################################
-        sync_detect = digital.ofdm_sync_sc_cfb(fft_len, cp_len)
+        sync_detect = digital.ofdm_sync_sc_cfb(fft_len, cp_len, even_carriers)
         delay = blocks.delay(gr.sizeof_gr_complex, fft_len + cp_len)
         oscillator = analog.frequency_modulator_fc(-2.0 / fft_len)
         mixer = blocks.multiply_cc()
