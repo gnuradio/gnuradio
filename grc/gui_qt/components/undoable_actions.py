@@ -213,10 +213,13 @@ class DeleteElementAction(QUndoCommand):
         self.setText('Delete')
         self.scene = scene
         self.g_connections = scene.selected_connections()
-        self.g_blocks = scene.selected_blocks()
-        for block in self.g_blocks:
-            for conn in block.core.connections():
-                self.g_connections = self.g_connections + [conn.gui]
+        g_blocks = scene.selected_blocks()
+        self.g_blocks = []
+        for block in g_blocks:
+            if not (block.core is scene.core.options_block):
+                self.g_blocks = self.g_blocks + [block]
+                for conn in block.core.connections():
+                    self.g_connections = self.g_connections + [conn.gui]
 
     def redo(self):
         for con in self.g_connections:
