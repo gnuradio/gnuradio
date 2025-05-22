@@ -1,31 +1,27 @@
 options:
   parameters:
+    alias: ''
     author: Martin Braun <martin.braun@ettus.com>
     catch_exceptions: 'True'
-    category: '[GRC Hier Blocks]'
-    cmake_opt: ''
     comment: ''
     copyright: (C) 2023 Ettus Research, a National Instruments Brand
     description: This flowgraph demonstrated RFNoC loopback capabilities on a single
       device. It assumes a default FPGA bitfile, which includes DDC and DUC blocks.
       It allows receiving on one frequency, and re-transmitting on another (bent-pipe).
-    gen_cmake: 'On'
     gen_linking: dynamic
     generate_options: qt_gui
+    generator_class_name: PythonQtGuiGenerator
+    generator_module: gnuradio.grc.workflows.python_qt_gui
     hier_block_src_path: '.:'
     id: rfnoc_radio_loopback
     max_nouts: '0'
     output_language: python
-    placement: (0,0)
     qt_qss_theme: ''
     realtime_scheduling: ''
     run: 'True'
     run_command: '{python} -u {filename}'
-    run_options: prompt
-    sizing_mode: fixed
     thread_safe_setters: ''
     title: 'RFNoC: Radio Loopback Example'
-    window_size: (1000,1000)
   states:
     bus_sink: false
     bus_source: false
@@ -51,7 +47,7 @@ blocks:
   id: variable
   parameters:
     comment: ''
-    value: 200e6
+    value: 16e6
   states:
     bus_sink: false
     bus_source: false
@@ -411,7 +407,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [776, 376.0]
+    coordinate: [760, 376.0]
     rotation: 0
     state: enabled
 - name: uhd_rfnoc_duc_0
@@ -438,7 +434,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1048, 376.0]
+    coordinate: [1032, 376.0]
     rotation: 0
     state: enabled
 - name: uhd_rfnoc_rx_radio_0
@@ -529,7 +525,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1304, 352.0]
+    coordinate: [1288, 352.0]
     rotation: 0
     state: enabled
 
@@ -558,4 +554,4 @@ connections:
 
 metadata:
   file_format: 2
-  grc_version: v3.11.0.0git-587-gf73f8f07
+  grc_version: 3.6.1git-10498-g32ddbd1c

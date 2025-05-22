@@ -5,8 +5,8 @@ options:
     catch_exceptions: 'True'
     comment: "This scope is configured to show 2 full saw tooth\nphases, when the\
       \ decimation is set to 1.\nWhen the decimation factor (n) is adjusted, you can\
-      \ observe \nmore teeth over a longer time periode.\nAll while using the same \"\
-      Number of Points\" in the QT GUI Time sink."
+      \ observe \nmore teeth over a longer time period.\nAll while using the same\
+      \ \"Number of Points\" in the QT GUI Time sink."
     copyright: ''
     description: ''
     gen_linking: dynamic
@@ -496,4 +496,4 @@ connections:
 
 metadata:
   file_format: 2
-  grc_version: 3.6.1git-10499-g766da84e
+  grc_version: v3.11.0.0git-950-g72a09243
