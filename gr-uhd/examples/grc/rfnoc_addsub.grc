@@ -1,29 +1,31 @@
 options:
   parameters:
+    alias: ''
     author: Grant Meyerhoff <grant.meyerhoff@ni.com>
     catch_exceptions: 'True'
-    category: '[GRC Hier Blocks]'
-    cmake_opt: ''
-    comment: ''
+    comment: "The program demonstrates the functionality of the Fast Add-Subtract\
+      \ Block, which \nperforms addition and subtraction of two cosine signals. As\
+      \ a result, six signals are \ndisplayed as output:\n1. The sum of both cosine\
+      \ signals\n2. The first cosine signal\n3. The second cosine signal\n4. The result\
+      \ of subtracting the first cosine signal from the second cosine signal\n5. The\
+      \ first cosine signal (repeated for clarity)\n6. The second cosine signal (repeated\
+      \ for clarity)"
     copyright: ''
     description: ''
-    gen_cmake: 'On'
     gen_linking: dynamic
     generate_options: qt_gui
+    generator_class_name: PythonQtGuiGenerator
+    generator_module: gnuradio.grc.workflows.python_qt_gui
     hier_block_src_path: '.:'
     id: rfnoc_addsub
     max_nouts: '0'
     output_language: python
-    placement: (0,0)
     qt_qss_theme: ''
     realtime_scheduling: ''
     run: 'True'
     run_command: '{python} -u {filename}'
-    run_options: prompt
-    sizing_mode: fixed
     thread_safe_setters: ''
     title: 'RFNoC: AddSub Example'
-    window_size: (1000,1000)
   states:
     bus_sink: false
     bus_source: false
@@ -51,7 +53,7 @@ blocks:
     alias: ''
     clock_source: ''
     comment: ''
-    dev_addr: type=n3xx
+    dev_addr: '"addr=192.168.40.2"'
     dev_args: ''
     num_mboards: '1'
     time_source: ''
@@ -75,13 +77,14 @@ blocks:
     offset: '0'
     phase: '0'
     samp_rate: samp_rate
+    showports: 'False'
     type: complex
     waveform: analog.GR_COS_WAVE
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [32, 188.0]
+    coordinate: [32, 312.0]
     rotation: 0
     state: true
 - name: analog_sig_source_x_0_0
@@ -97,22 +100,25 @@ blocks:
     offset: '0'
     phase: '0'
     samp_rate: samp_rate
+    showports: 'False'
     type: complex
     waveform: analog.GR_COS_WAVE
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [32, 324.0]
+    coordinate: [32, 456.0]
     rotation: 0
     state: true
-- name: blocks_throttle_0
-  id: blocks_throttle
+- name: blocks_throttle2_0
+  id: blocks_throttle2
   parameters:
     affinity: ''
     alias: ''
     comment: ''
     ignoretag: 'True'
+    limit: auto
+    maximum: '0.1'
     maxoutbuf: '0'
     minoutbuf: '0'
     samples_per_second: samp_rate
@@ -122,16 +128,18 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [240, 228.0]
+    coordinate: [240, 488.0]
     rotation: 0
-    state: true
-- name: blocks_throttle_0_0
-  id: blocks_throttle
+    state: enabled
+- name: blocks_throttle2_1
+  id: blocks_throttle2
   parameters:
     affinity: ''
     alias: ''
     comment: ''
     ignoretag: 'True'
+    limit: auto
+    maximum: '0.1'
     maxoutbuf: '0'
     minoutbuf: '0'
     samples_per_second: samp_rate
@@ -141,9 +149,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [240, 364.0]
+    coordinate: [240, 344.0]
     rotation: 0
-    state: true
+    state: enabled
 - name: qtgui_time_sink_x_0_0_0
   id: qtgui_time_sink_x
   parameters:
@@ -238,7 +246,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1176, 200.0]
+    coordinate: [1176, 328.0]
     rotation: 0
     state: true
 - name: qtgui_time_sink_x_0_0_0_0
@@ -335,7 +343,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1176, 320.0]
+    coordinate: [1176, 448.0]
     rotation: 0
     state: true
 - name: uhd_rfnoc_addsub_0
@@ -353,10 +361,10 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [672, 128.0]
+    coordinate: [672, 256.0]
     rotation: 0
     state: true
-- name: uhd_rfnoc_rx_streamer_0
+- name: uhd_rfnoc_rx_streamer_1
   id: uhd_rfnoc_rx_streamer
   parameters:
     adapter_id_list: '[0]'
@@ -364,42 +372,23 @@ blocks:
     alias: ''
     args: ''
     comment: ''
+    issue_stream_cmd: 'True'
     maxoutbuf: '0'
     minoutbuf: '0'
-    num_chans: '1'
+    num_chans: '2'
     otw: sc16
     output_type: fc32
+    start_time: '0'
+    start_time_set: 'True'
     use_default_adapter_id: 'True'
     vlen: '1'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [936, 128.0]
+    coordinate: [928, 256.0]
     rotation: 0
-    state: true
-- name: uhd_rfnoc_rx_streamer_0_0
-  id: uhd_rfnoc_rx_streamer
-  parameters:
-    adapter_id_list: '[0]'
-    affinity: ''
-    alias: ''
-    args: ''
-    comment: ''
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    num_chans: '1'
-    otw: sc16
-    output_type: fc32
-    use_default_adapter_id: 'True'
-    vlen: '1'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [936, 160.0]
-    rotation: 0
-    state: true
+    state: enabled
 - name: uhd_rfnoc_tx_streamer_0
   id: uhd_rfnoc_tx_streamer
   parameters:
@@ -419,26 +408,46 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [472, 128.0]
+    coordinate: [480, 256.0]
     rotation: 0
-    state: true
+    state: enabled
 
 connections:
-- [analog_sig_source_x_0, '0', blocks_throttle_0, '0']
-- [analog_sig_source_x_0_0, '0', blocks_throttle_0_0, '0']
-- [blocks_throttle_0, '0', qtgui_time_sink_x_0_0_0, '1']
-- [blocks_throttle_0, '0', qtgui_time_sink_x_0_0_0_0, '1']
-- [blocks_throttle_0, '0', uhd_rfnoc_tx_streamer_0, '0']
-- [blocks_throttle_0_0, '0', qtgui_time_sink_x_0_0_0, '2']
-- [blocks_throttle_0_0, '0', qtgui_time_sink_x_0_0_0_0, '2']
-- [blocks_throttle_0_0, '0', uhd_rfnoc_tx_streamer_0, '1']
-- [uhd_rfnoc_addsub_0, '0', uhd_rfnoc_rx_streamer_0, '0']
-- [uhd_rfnoc_addsub_0, '1', uhd_rfnoc_rx_streamer_0_0, '0']
-- [uhd_rfnoc_rx_streamer_0, '0', qtgui_time_sink_x_0_0_0, '0']
-- [uhd_rfnoc_rx_streamer_0_0, '0', qtgui_time_sink_x_0_0_0_0, '0']
-- [uhd_rfnoc_tx_streamer_0, '0', uhd_rfnoc_addsub_0, '0']
-- [uhd_rfnoc_tx_streamer_0, '1', uhd_rfnoc_addsub_0, '1']
+- [analog_sig_source_x_0, '0', blocks_throttle2_1, '0']
+- [analog_sig_source_x_0_0, '0', blocks_throttle2_0, '0']
+- [blocks_throttle2_0, '0', qtgui_time_sink_x_0_0_0, '2']
+- [blocks_throttle2_0, '0', qtgui_time_sink_x_0_0_0_0, '2']
+- [blocks_throttle2_0, '0', uhd_rfnoc_tx_streamer_0, '1']
+- [blocks_throttle2_1, '0', qtgui_time_sink_x_0_0_0, '1']
+- [blocks_throttle2_1, '0', qtgui_time_sink_x_0_0_0_0, '1']
+- [blocks_throttle2_1, '0', uhd_rfnoc_tx_streamer_0, '0']
+- params:
+    is_back_edge: 'False'
+  snk_blk_id: uhd_rfnoc_rx_streamer_1
+  snk_port_id: '0'
+  src_blk_id: uhd_rfnoc_addsub_0
+  src_port_id: '0'
+- params:
+    is_back_edge: 'False'
+  snk_blk_id: uhd_rfnoc_rx_streamer_1
+  snk_port_id: '1'
+  src_blk_id: uhd_rfnoc_addsub_0
+  src_port_id: '1'
+- [uhd_rfnoc_rx_streamer_1, '0', qtgui_time_sink_x_0_0_0, '0']
+- [uhd_rfnoc_rx_streamer_1, '1', qtgui_time_sink_x_0_0_0_0, '0']
+- params:
+    is_back_edge: 'False'
+  snk_blk_id: uhd_rfnoc_addsub_0
+  snk_port_id: '0'
+  src_blk_id: uhd_rfnoc_tx_streamer_0
+  src_port_id: '0'
+- params:
+    is_back_edge: 'False'
+  snk_blk_id: uhd_rfnoc_addsub_0
+  snk_port_id: '1'
+  src_blk_id: uhd_rfnoc_tx_streamer_0
+  src_port_id: '1'
 
 metadata:
-  file_format: 1
-  grc_version: v3.11-compat-xxx-xunknown
+  file_format: 2
+  grc_version: 3.6.1git-10498-g32ddbd1c
