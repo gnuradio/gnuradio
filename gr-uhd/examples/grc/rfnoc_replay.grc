@@ -1,29 +1,30 @@
 options:
   parameters:
+    alias: ''
     author: Grant Meyerhoff <grant.meyerhoff@ni.com>
     catch_exceptions: 'True'
-    category: '[GRC Hier Blocks]'
-    cmake_opt: ''
-    comment: ''
+    comment: "The program demonstrates the use of the RFNoC Replay\nBlock along with\
+      \ the Replay Msg Push Button Block. These\nblocks are typically used together\
+      \ to manage the recording \nand replaying of data. Commands to the Replay Block,\
+      \ such \nas 'record' or 'play', are sent using dictionary keys with \n'command'\
+      \ being the required key. The Replay Msg Push \nButton simplifies sending these\
+      \ commands."
     copyright: Copyright 2023 Ettus Research, a National Instruments Brand
     description: ''
-    gen_cmake: 'On'
     gen_linking: dynamic
     generate_options: qt_gui
+    generator_class_name: PythonQtGuiGenerator
+    generator_module: gnuradio.grc.workflows.python_qt_gui
     hier_block_src_path: '.:'
     id: rfnoc_replay
     max_nouts: '0'
     output_language: python
-    placement: (0,0)
     qt_qss_theme: ''
     realtime_scheduling: ''
     run: 'True'
     run_command: '{python} -u {filename}'
-    run_options: prompt
-    sizing_mode: fixed
     thread_safe_setters: ''
     title: RFNoC Replay Example
-    window_size: (1000,1000)
   states:
     bus_sink: false
     bus_source: false
@@ -37,6 +38,7 @@ blocks:
   id: variable_qtgui_entry
   parameters:
     comment: ''
+    entry_signal: editingFinished
     gui_hint: :[3,2,1,1]
     label: Play Offset
     type: int
@@ -82,6 +84,7 @@ blocks:
   id: variable_qtgui_entry
   parameters:
     comment: ''
+    entry_signal: editingFinished
     gui_hint: :[3,3,1,1]
     label: Play Size
     type: int
@@ -97,6 +100,7 @@ blocks:
   id: variable_qtgui_entry
   parameters:
     comment: ''
+    entry_signal: editingFinished
     gui_hint: :[3,0,1,1]
     label: Record Offset
     type: int
@@ -142,6 +146,7 @@ blocks:
   id: variable_qtgui_entry
   parameters:
     comment: ''
+    entry_signal: editingFinished
     gui_hint: :[3,1,1,1]
     label: Record Size
     type: int
@@ -171,7 +176,7 @@ blocks:
     alias: ''
     clock_source: ''
     comment: ''
-    dev_addr: '"type=n3xx"'
+    dev_addr: '"addr=192.168.40.2"'
     dev_args: ''
     num_mboards: '1'
     time_source: ''
@@ -202,7 +207,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [16, 644.0]
+    coordinate: [16, 776.0]
     rotation: 0
     state: true
 - name: analog_sig_source_x_0_0
@@ -225,7 +230,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [16, 772.0]
+    coordinate: [16, 904.0]
     rotation: 0
     state: true
 - name: blocks_message_debug_0
@@ -237,11 +242,12 @@ blocks:
       \ fullness button is pressed. \nThis helps indicate to the user if the block\
       \ has \nfinished recording the requested amount."
     en_uvec: 'True'
+    log_level: info
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1040, 88.0]
+    coordinate: [1040, 224.0]
     rotation: 0
     state: true
 - name: blocks_throttle2_0
@@ -262,7 +268,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [232, 676.0]
+    coordinate: [232, 808.0]
     rotation: 0
     state: true
 - name: blocks_throttle2_0_0
@@ -283,7 +289,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [232, 804.0]
+    coordinate: [240, 936.0]
     rotation: 0
     state: true
 - name: cont_play_push_button
@@ -308,7 +314,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [16, 332.0]
+    coordinate: [16, 472.0]
     rotation: 0
     state: true
 - name: fullness_push_button
@@ -333,7 +339,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [16, 540.0]
+    coordinate: [16, 680.0]
     rotation: 0
     state: true
 - name: play_push_button
@@ -358,7 +364,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [16, 220.0]
+    coordinate: [16, 360.0]
     rotation: 0
     state: true
 - name: qtgui_time_sink_x_0
@@ -455,7 +461,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1144, 260.0]
+    coordinate: [1144, 432.0]
     rotation: 0
     state: true
 - name: record_push_button
@@ -480,7 +486,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [16, 124.0]
+    coordinate: [16, 264.0]
     rotation: 0
     state: true
 - name: stop_push_button
@@ -505,7 +511,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [16, 444.0]
+    coordinate: [16, 584.0]
     rotation: 0
     state: true
 - name: uhd_rfnoc_replay_0
@@ -549,7 +555,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [704, 228.0]
+    coordinate: [704, 368.0]
     rotation: 0
     state: true
 - name: uhd_rfnoc_rx_streamer_0
@@ -560,18 +566,21 @@ blocks:
     alias: ''
     args: ''
     comment: ''
+    issue_stream_cmd: 'True'
     maxoutbuf: '0'
     minoutbuf: '0'
     num_chans: '1'
     otw: sc16
     output_type: fc32
+    start_time: '0'
+    start_time_set: 'False'
     use_default_adapter_id: 'True'
     vlen: '1'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [952, 288.0]
+    coordinate: [952, 456.0]
     rotation: 0
     state: true
 - name: uhd_rfnoc_tx_streamer_0
@@ -593,7 +602,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [408, 688.0]
+    coordinate: [408, 824.0]
     rotation: 0
     state: true
 - name: uhd_rfnoc_tx_streamer_0_0
@@ -615,7 +624,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [416, 816.0]
+    coordinate: [416, 952.0]
     rotation: 0
     state: true
 
@@ -629,12 +638,27 @@ connections:
 - [play_push_button, pressed, uhd_rfnoc_replay_0, command]
 - [record_push_button, pressed, uhd_rfnoc_replay_0, command]
 - [stop_push_button, pressed, uhd_rfnoc_replay_0, command]
-- [uhd_rfnoc_replay_0, '0', uhd_rfnoc_rx_streamer_0, '0']
+- params:
+    is_back_edge: 'False'
+  snk_blk_id: uhd_rfnoc_rx_streamer_0
+  snk_port_id: '0'
+  src_blk_id: uhd_rfnoc_replay_0
+  src_port_id: '0'
 - [uhd_rfnoc_replay_0, debug_msgs, blocks_message_debug_0, print]
 - [uhd_rfnoc_rx_streamer_0, '0', qtgui_time_sink_x_0, '0']
-- [uhd_rfnoc_tx_streamer_0, '0', uhd_rfnoc_replay_0, '0']
-- [uhd_rfnoc_tx_streamer_0_0, '0', uhd_rfnoc_replay_0, '1']
+- params:
+    is_back_edge: 'False'
+  snk_blk_id: uhd_rfnoc_replay_0
+  snk_port_id: '0'
+  src_blk_id: uhd_rfnoc_tx_streamer_0
+  src_port_id: '0'
+- params:
+    is_back_edge: 'False'
+  snk_blk_id: uhd_rfnoc_replay_0
+  snk_port_id: '1'
+  src_blk_id: uhd_rfnoc_tx_streamer_0_0
+  src_port_id: '0'
 
 metadata:
-  file_format: 1
-  grc_version: v3.11.0.0git-429-gc59cfc56
+  file_format: 2
+  grc_version: 3.6.1git-10498-g32ddbd1c

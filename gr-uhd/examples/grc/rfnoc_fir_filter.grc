@@ -1,29 +1,30 @@
 options:
   parameters:
+    alias: ''
     author: Jonathon Pendlum
     catch_exceptions: 'True'
-    category: Custom
-    cmake_opt: ''
-    comment: ''
+    comment: "The program demonstrates the use of the RFNoC \nFIR Filter Block.\n\
+      In this program there are three modes to work with:\n- lowpass\n- highpass\n\
+      - passthru\n\nIn this examples the filter uses the pm_remez library.\npm-remez\
+      \ is a modern implementation of the Parks-\nMcClellan Remez exchange algorithm,\
+      \ available as a Python\npackage. It supports designing FIR filters with various\
+      \ \nsymmetries and tap counts."
     copyright: ''
     description: ''
-    gen_cmake: 'On'
     gen_linking: dynamic
     generate_options: qt_gui
+    generator_class_name: PythonQtGuiGenerator
+    generator_module: gnuradio.grc.workflows.python_qt_gui
     hier_block_src_path: '.:'
     id: rfnoc_radio_fir_filter
     max_nouts: '0'
     output_language: python
-    placement: (0,0)
     qt_qss_theme: ''
     realtime_scheduling: ''
     run: 'True'
     run_command: '{python} -u {filename}'
-    run_options: prompt
-    sizing_mode: fixed
     thread_safe_setters: ''
     title: 'RFNoC: FIR Filter Example'
-    window_size: ''
   states:
     bus_sink: false
     bus_source: false
@@ -42,7 +43,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [216, 80.0]
+    coordinate: [440, 80.0]
     rotation: 0
     state: enabled
 - name: device_type
@@ -54,7 +55,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [352, 80.0]
+    coordinate: [576, 80.0]
     rotation: 0
     state: disabled
 - name: device_type
@@ -66,7 +67,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [216, 152.0]
+    coordinate: [440, 152.0]
     rotation: 0
     state: disabled
 - name: device_type
@@ -78,7 +79,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [352, 152.0]
+    coordinate: [576, 152.0]
     rotation: 0
     state: disabled
 - name: highpass_coeffs
@@ -163,31 +164,17 @@ blocks:
   id: uhd_rfnoc_graph
   parameters:
     alias: ''
-    clock_source_0: ''
-    clock_source_1: ''
-    clock_source_2: ''
-    clock_source_3: ''
-    clock_source_4: ''
-    clock_source_5: ''
-    clock_source_6: ''
-    clock_source_7: ''
+    clock_source: ''
     comment: ''
     dev_addr: device_type
     dev_args: ''
     num_mboards: '1'
-    time_source_0: ''
-    time_source_1: ''
-    time_source_2: ''
-    time_source_3: ''
-    time_source_4: ''
-    time_source_5: ''
-    time_source_6: ''
-    time_source_7: ''
+    time_source: ''
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [216, 8.0]
+    coordinate: [440, 8.0]
     rotation: 0
     state: true
 - name: analog_fastnoise_source_x_0
@@ -207,7 +194,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [48, 296.0]
+    coordinate: [48, 360.0]
     rotation: 0
     state: enabled
 - name: import_0
@@ -220,7 +207,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [8, 120.0]
+    coordinate: [168, 8.0]
     rotation: 0
     state: true
 - name: qtgui_freq_sink_x_0
@@ -301,7 +288,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1008, 304.0]
+    coordinate: [1008, 368.0]
     rotation: 0
     state: enabled
 - name: uhd_rfnoc_fir_filter_0
@@ -368,32 +355,38 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [528, 320.0]
+    coordinate: [528, 384.0]
     rotation: 0
     state: enabled
 - name: uhd_rfnoc_rx_streamer_0
   id: uhd_rfnoc_rx_streamer
   parameters:
+    adapter_id_list: '[0]'
     affinity: ''
     alias: ''
     args: ''
     comment: ''
+    issue_stream_cmd: 'True'
     maxoutbuf: '0'
     minoutbuf: '0'
     num_chans: '1'
     otw: sc16
     output_type: fc32
+    start_time: '0'
+    start_time_set: 'False'
+    use_default_adapter_id: 'True'
     vlen: '1'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [808, 328.0]
+    coordinate: [808, 384.0]
     rotation: 0
     state: enabled
 - name: uhd_rfnoc_tx_streamer_0
   id: uhd_rfnoc_tx_streamer
   parameters:
+    adapter_id_list: '[0]'
     affinity: ''
     alias: ''
     args: ''
@@ -403,21 +396,32 @@ blocks:
     minoutbuf: '0'
     num_chans: '1'
     otw: sc16
+    use_default_adapter_id: 'True'
     vlen: '1'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [296, 328.0]
+    coordinate: [296, 392.0]
     rotation: 0
     state: enabled
 
 connections:
 - [analog_fastnoise_source_x_0, '0', uhd_rfnoc_tx_streamer_0, '0']
-- [uhd_rfnoc_fir_filter_0, '0', uhd_rfnoc_rx_streamer_0, '0']
+- params:
+    is_back_edge: 'False'
+  snk_blk_id: uhd_rfnoc_rx_streamer_0
+  snk_port_id: '0'
+  src_blk_id: uhd_rfnoc_fir_filter_0
+  src_port_id: '0'
 - [uhd_rfnoc_rx_streamer_0, '0', qtgui_freq_sink_x_0, '0']
-- [uhd_rfnoc_tx_streamer_0, '0', uhd_rfnoc_fir_filter_0, '0']
+- params:
+    is_back_edge: 'False'
+  snk_blk_id: uhd_rfnoc_fir_filter_0
+  snk_port_id: '0'
+  src_blk_id: uhd_rfnoc_tx_streamer_0
+  src_port_id: '0'
 
 metadata:
-  file_format: 1
-  grc_version: v3.11.0.0git-313-g3beefac2
+  file_format: 2
+  grc_version: 3.6.1git-10499-g766da84e

@@ -1,29 +1,30 @@
 options:
   parameters:
+    alias: ''
     author: Grant Meyerhoff <grant.meyerhoff@ni.com>
     catch_exceptions: 'True'
-    category: '[GRC Hier Blocks]'
-    cmake_opt: ''
-    comment: ''
+    comment: "This is a basic uplink setup using RFNoC, \r\nthat is based on the rfnoc_duc_radio.grc\
+      \ file. \r\nIt transmits two cosine waveform directly \r\nto the antenna. This\
+      \ example demonstrates \r\nthat you can utilize multiple channels with \r\n\
+      various blocks.\n\nThis program will not work with all USRP. \nIt depends on\
+      \ the daugtherboards that are \nused. Make sure that the daughterboard\nyou\
+      \ are using support two channels TX."
     copyright: ''
     description: ''
-    gen_cmake: 'On'
     gen_linking: dynamic
     generate_options: qt_gui
+    generator_class_name: PythonQtGuiGenerator
+    generator_module: gnuradio.grc.workflows.python_qt_gui
     hier_block_src_path: '.:'
     id: rfnoc_duc_radio_multichannel
     max_nouts: '0'
     output_language: python
-    placement: (0,0)
     qt_qss_theme: ''
     realtime_scheduling: ''
     run: 'True'
     run_command: '{python} -u {filename}'
-    run_options: prompt
-    sizing_mode: fixed
     thread_safe_setters: ''
     title: 'RFNoC: DUC -> Radio Multichannel Example'
-    window_size: ''
   states:
     bus_sink: false
     bus_source: false
@@ -106,7 +107,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [216, 84.0]
+    coordinate: [264, 88.0]
     rotation: 0
     state: true
 - name: samp_rate0
@@ -147,7 +148,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [216, 20.0]
+    coordinate: [248, 24.0]
     rotation: 0
     state: true
 - name: analog_sig_source_x_0
@@ -170,7 +171,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [32, 124.0]
+    coordinate: [32, 320.0]
     rotation: 0
     state: true
 - name: analog_sig_source_x_0_0
@@ -193,7 +194,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [32, 252.0]
+    coordinate: [32, 448.0]
     rotation: 0
     state: true
 - name: uhd_rfnoc_duc_0
@@ -220,7 +221,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [472, 204.0]
+    coordinate: [472, 400.0]
     rotation: 0
     state: true
 - name: uhd_rfnoc_tx_radio_0
@@ -254,7 +255,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [760, 164.0]
+    coordinate: [760, 364.0]
     rotation: 0
     state: true
 - name: uhd_rfnoc_tx_streamer_0
@@ -276,7 +277,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [272, 216.0]
+    coordinate: [272, 416.0]
     rotation: 0
     state: true
 - name: uhd_rfnoc_tx_streamer_0_0
@@ -298,18 +299,38 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [272, 248.0]
+    coordinate: [272, 448.0]
     rotation: 0
     state: true
 
 connections:
 - [analog_sig_source_x_0, '0', uhd_rfnoc_tx_streamer_0, '0']
 - [analog_sig_source_x_0_0, '0', uhd_rfnoc_tx_streamer_0_0, '0']
-- [uhd_rfnoc_duc_0, '0', uhd_rfnoc_tx_radio_0, '0']
-- [uhd_rfnoc_duc_0, '1', uhd_rfnoc_tx_radio_0, '1']
-- [uhd_rfnoc_tx_streamer_0, '0', uhd_rfnoc_duc_0, '0']
-- [uhd_rfnoc_tx_streamer_0_0, '0', uhd_rfnoc_duc_0, '1']
+- params:
+    is_back_edge: 'False'
+  snk_blk_id: uhd_rfnoc_tx_radio_0
+  snk_port_id: '0'
+  src_blk_id: uhd_rfnoc_duc_0
+  src_port_id: '0'
+- params:
+    is_back_edge: 'False'
+  snk_blk_id: uhd_rfnoc_tx_radio_0
+  snk_port_id: '1'
+  src_blk_id: uhd_rfnoc_duc_0
+  src_port_id: '1'
+- params:
+    is_back_edge: 'False'
+  snk_blk_id: uhd_rfnoc_duc_0
+  snk_port_id: '0'
+  src_blk_id: uhd_rfnoc_tx_streamer_0
+  src_port_id: '0'
+- params:
+    is_back_edge: 'False'
+  snk_blk_id: uhd_rfnoc_duc_0
+  snk_port_id: '1'
+  src_blk_id: uhd_rfnoc_tx_streamer_0_0
+  src_port_id: '0'
 
 metadata:
-  file_format: 1
-  grc_version: v3.11.0.0git-559-gbfa461dc
+  file_format: 2
+  grc_version: v3.11.0.0git-946-g79c3df96
