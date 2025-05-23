@@ -63,6 +63,7 @@ if(ENABLE_UHD_RFNOC)
         uhd_fpga_duc.block.yml
         uhd_fpga_eth_ta.block.yml
         uhd_fpga_fft.block.yml
+        uhd_fpga_fir_filter.block.yml
         uhd_fpga_fosphor.block.yml
         uhd_fpga_keep_one_in_n.block.yml
         uhd_fpga_null_src_sink.block.yml
