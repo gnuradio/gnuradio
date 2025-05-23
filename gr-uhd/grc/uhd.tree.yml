@@ -25,11 +25,13 @@
       - uhd_fpga_null_src_sink
       - uhd_fpga_replay
       - uhd_fpga_addsub
-      - uhd_fpga_fosphor
+      - uhd_fpga_f15
       - uhd_fpga_keep_one_in_n
       - uhd_fpga_siggen
       - uhd_fpga_split_stream
       - uhd_fpga_switchboard
+      - uhd_fpga_vector_iir
+      - uhd_fpga_fir_filter
     - Core:
       - uhd_fpga_sep
       - uhd_fpga_device_bsp
