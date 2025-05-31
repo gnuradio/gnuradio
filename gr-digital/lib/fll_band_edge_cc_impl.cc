@@ -167,7 +167,7 @@ void fll_band_edge_cc_impl::design_filter()
     const float half_sps_inv = 2.0f / d_sps;
     for (size_t i = 0; i < d_filter_size; i++) {
         const float k = -M + i * half_sps_inv;
-        const float position = d_rolloff * k;
+        const float position = 0.5f * d_rolloff * k;
         const float tap = sinc(position - 0.5f) + sinc(position + 0.5f);
         power += tap * tap;
 
@@ -189,7 +189,7 @@ void fll_band_edge_cc_impl::design_filter()
         const float k = (static_cast<signed_type>(i) - N) * inv_twice_sps;
 
         const size_t index = d_filter_size - i - 1;
-        d_taps_lower[index] = tap * gr_expj(-M_TWOPI * (1 + d_rolloff) * k);
+        d_taps_lower[index] = tap * gr_expj(-M_TWOPI * k);
         d_taps_upper[index] = std::conj(d_taps_lower[d_filter_size - i - 1]);
     }
 
