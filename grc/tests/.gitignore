@@ -1,5 +1,5 @@
 .pytest_cache
-resources/horn/
+resources/cpptest/
 resources/test_cpp_hb_nogui_workflow.block.yml
 resources/test_cpp_hb_nogui_workflow/
 resources/test_cpp_hb_qt_gui_workflow.block.yml
