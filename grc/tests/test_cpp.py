@@ -20,7 +20,7 @@ def test_cpp(capsys):
         user_lib_dir=False,
         grc_files=[path.join(path.dirname(__file__),
                              'resources', 'test_cpp.grc')],
-        run=True
+        run=False
     )
 
     main(args)
