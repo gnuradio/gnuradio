@@ -41,8 +41,8 @@ class ModToolAdd(ModTool):
     name = 'add'
     description = 'Add new block into a module.'
     block_types = {
-        "sink": "Source block with outputs, but no stream inputs",
-        "source": "Sink block with inputs, but no stream outputs",
+        "sink": "Sink block with inputs, but no stream outputs",
+        "source": "Source block with outputs, but no stream inputs",
         "sync": "Block with synchronous 1:1 input-to-output",
         "decimator": "Block with synchronous N:1 input-to-output",
         "interpolator": "Block with synchronous 1:N input-to-output",
