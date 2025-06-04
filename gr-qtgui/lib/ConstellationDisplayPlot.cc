@@ -14,9 +14,44 @@
 #include <gnuradio/qtgui/ConstellationDisplayPlot.h>
 
 #include <qwt_legend.h>
+#include <qwt_plot_layout.h>
 #include <qwt_scale_draw.h>
 #include <QColor>
 #include <cmath>
+
+
+class SquareCanvasLayout : public QwtPlotLayout
+{
+public:
+    SquareCanvasLayout() {}
+    SquareCanvasLayout(QwtPlotLayout* layout)
+    {
+        const int AXIS_COUNT = 4;
+        for (int axis = 0; axis < AXIS_COUNT; axis++) {
+            setCanvasMargin(layout->canvasMargin(axis), axis);
+            setAlignCanvasToScale(axis, layout->alignCanvasToScale(axis));
+        }
+        setSpacing(layout->spacing());
+        setLegendPosition(layout->legendPosition());
+        setLegendRatio(layout->legendRatio());
+    }
+    // Override to perform layout with square canvas
+    void activate(const QwtPlot* plot,
+                  const QRectF& plotRect,
+                  Options options = Options()) override
+    {
+        // Do initial layout
+        QwtPlotLayout::activate(plot, plotRect, options);
+        QRectF canvas = canvasRect();
+        if (canvas.width() > canvas.height()) {
+            QSizeF margin = plotRect.size() - canvas.size();
+            QSizeF square_canvas_size(canvas.height(), canvas.height());
+            QRectF adjusted_plot_rect(plotRect.topLeft(), square_canvas_size + margin);
+            // Redo layout
+            QwtPlotLayout::activate(plot, adjusted_plot_rect, options);
+        }
+    }
+};
 
 class ConstellationDisplayZoomer : public QwtPlotZoomer
 {
@@ -43,6 +78,8 @@ protected:
 ConstellationDisplayPlot::ConstellationDisplayPlot(int nplots, QWidget* parent)
     : DisplayPlot(nplots, parent)
 {
+    auto new_plot_layout = new SquareCanvasLayout(plotLayout());
+    setPlotLayout(new_plot_layout);
     resize(parent->width(), parent->height());
 
     d_numPoints = 1024;
