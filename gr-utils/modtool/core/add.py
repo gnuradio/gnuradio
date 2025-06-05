@@ -50,6 +50,7 @@ class ModToolAdd(ModTool):
         "tagged_stream": "Block with input-to-output flow controlled by input stream tags (e.g. packetized streams)",
         "hier": "Hierarchical container block for other blocks; usually can be described by a flowgraph",
         "noblock": "C++ or Python class",
+        "rfnoc_block": "RFNoC block, used with gr-uhd to control blocks on RFNoC-based USRPs",
     }
     language_candidates = ('cpp', 'python', 'c++')
 
@@ -80,6 +81,9 @@ class ModToolAdd(ModTool):
         if self.info['blocktype'] == 'tagged_stream' and self.info['lang'] == 'python':
             raise ModToolException(
                 'Tagged Stream Blocks for Python currently unsupported')
+        if self.info['blocktype'] == 'rfnoc_block' and self.info['lang'] == 'python':
+            raise ModToolException(
+                'RFNoC Blocks for Python currently unsupported')
         if self.info['blockname'] is None:
             raise ModToolException('Blockname not specified.')
         validate_name('block', self.info['blockname'])
@@ -88,9 +92,21 @@ class ModToolAdd(ModTool):
                 'Expected a boolean value for add_python_qa.')
         if not isinstance(self.add_cc_qa, bool):
             raise ModToolException('Expected a boolean value for add_cpp_qa.')
+        if self.info['blocktype'] == 'rfnoc_block':
+            self.add_py_qa = False
+            self.add_cc_qa = False
         if not isinstance(self.skip_cmakefiles, bool):
             raise ModToolException(
                 'Expected a boolean value for skip_cmakefiles.')
+        if self.info['blocktype'] == 'rfnoc_block' and not self.info['arglist']:
+            logger.info(f"Auto-populating argument list...")
+            self.info['arglist'] = \
+                'gr::uhd::rfnoc_graph::sptr graph, const ::uhd::device_addr_t& block_args, ' \
+                'const int device_select, const int instance'
+        elif self.info['blocktype'] == 'rfnoc_block':
+            if 'rfnoc_graph::sptr' not in self.info['arglist']:
+                raise ModToolException(
+                    'rfnoc_graph::sptr must be the first argument for RFNoC blocks.')
 
     def assign(self):
         if self.info['lang'] == 'c++':
@@ -106,7 +122,7 @@ class ModToolAdd(ModTool):
         self.info['license'] = self.setup_choose_license()
         if (self.info['blocktype'] in ('noblock') or self.skip_subdirs['python']):
             self.add_py_qa = False
-        if not self.info['lang'] == 'cpp':
+        if not self.info['lang'] == 'cpp' or self.info['blocktype'] == 'rfnoc_block':
             self.add_cc_qa = False
         if self.info['version'] == 'autofoo' and not self.skip_cmakefiles:
             self.skip_cmakefiles = True
@@ -223,8 +239,7 @@ class ModToolAdd(ModTool):
         if self.info['version'] in ('38', '310'):
             fname_h = self.info['blockname'] + '.h'
             fname_cc = self.info['blockname'] + '.cc'
-            if self.info['blocktype'] in ('source', 'sink', 'sync', 'decimator',
-                                          'interpolator', 'general', 'hier', 'tagged_stream'):
+            if self.info['blocktype'] not in ('noblock',):
                 fname_cc = self.info['blockname'] + '_impl.cc'
                 self._write_tpl('block_impl_h', 'lib',
                                 self.info['blockname'] + '_impl.h')
