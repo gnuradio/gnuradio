@@ -53,6 +53,7 @@ public:
      */
     static sptr make(size_t itemsize,
                      size_t vecLen,
+                     std::string addr,
                      int port,
                      int header_type,
                      int payloadsize,
