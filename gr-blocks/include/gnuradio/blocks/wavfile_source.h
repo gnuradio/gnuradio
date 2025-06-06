@@ -18,7 +18,7 @@ namespace gr {
 namespace blocks {
 
 /*!
- * \brief Read stream from a Microsoft PCM (.wav) file, output floats
+ * \brief Read samples from an audio file (uncompressed or compressed)
  * \ingroup audio_blk
  *
  * \details
@@ -34,19 +34,19 @@ public:
     static sptr make(const char* filename, bool repeat = false);
 
     /*!
-     * \brief Read the sample rate as specified in the wav file header
+     * \brief Read the sample rate as specified in the audio file metadata
      */
     virtual unsigned int sample_rate() const = 0;
 
     /*!
      * \brief Return the number of bits per sample as specified in
-     * the wav file header. Only 8 or 16 bit are supported here.
+     * the audio file metadata. Only 8 or 16 bit are supported here.
      */
     virtual int bits_per_sample() const = 0;
 
     /*!
-     * \brief Return the number of channels in the wav file as
-     * specified in the wav file header. This is also the max number
+     * \brief Return the number of channels in the audio file as
+     * specified in the audio file metadata. This is also the max number
      * of outputs you can have.
      */
     virtual int channels() const = 0;
