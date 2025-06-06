@@ -1,29 +1,30 @@
 options:
   parameters:
+    alias: ''
     author: Grant Meyerhoff <grant.meyerhoff@ni.com>
     catch_exceptions: 'True'
-    category: Custom
-    cmake_opt: ''
-    comment: ''
+    comment: "This is a basic downlink setup using RFNoC, \r\nthat is based on the\
+      \ rfnoc_ddc_radio.grc file. \r\nIt transmits two cosine waveforms directly \r\
+      \nto the antenna. This example demonstrates \r\nthat you can utilize multiple\
+      \ channels with \r\nvarious blocks.\n\nThis program will not work with all USRP.\
+      \ \nIt depends on the daugtherboards that are \nused. Make sure that the daughterboard\n\
+      you are using support two channels RX."
     copyright: ''
     description: ''
-    gen_cmake: 'On'
     gen_linking: dynamic
     generate_options: qt_gui
+    generator_class_name: PythonQtGuiGenerator
+    generator_module: gnuradio.grc.workflows.python_qt_gui
     hier_block_src_path: '.:'
     id: rfnoc_radio_ddc_multichannel
     max_nouts: '0'
     output_language: python
-    placement: (0,0)
     qt_qss_theme: ''
     realtime_scheduling: ''
     run: 'True'
     run_command: '{python} -u {filename}'
-    run_options: prompt
-    sizing_mode: fixed
     thread_safe_setters: ''
     title: 'RFNoC: Radio -> DDC Multichannel Example'
-    window_size: (1000,1000)
   states:
     bus_sink: false
     bus_source: false
@@ -37,6 +38,7 @@ blocks:
   id: variable_qtgui_entry
   parameters:
     comment: ''
+    entry_signal: editingFinished
     gui_hint: :[0,0,1,1]
     label: 'Ch0: Frequency (Hz)'
     type: real
@@ -52,6 +54,7 @@ blocks:
   id: variable_qtgui_entry
   parameters:
     comment: ''
+    entry_signal: editingFinished
     gui_hint: :[0,1,1,1]
     label: 'Ch1: Frequency (Hz)'
     type: raw
@@ -67,6 +70,7 @@ blocks:
   id: variable_qtgui_entry
   parameters:
     comment: ''
+    entry_signal: editingFinished
     gui_hint: :[2,0,1,1]
     label: 'Ch0: Gain (dB)'
     type: int
@@ -82,6 +86,7 @@ blocks:
   id: variable_qtgui_entry
   parameters:
     comment: ''
+    entry_signal: editingFinished
     gui_hint: :[2,1,1,1]
     label: 'Ch1: Gain (dB)'
     type: int
@@ -102,7 +107,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [192, 76.0]
+    coordinate: [264, 80.0]
     rotation: 0
     state: true
 - name: samp_rate0
@@ -224,7 +229,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [800, 220.0]
+    coordinate: [864, 368.0]
     rotation: 0
     state: true
 - name: qtgui_freq_sink_x_0_0
@@ -305,7 +310,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [800, 292.0]
+    coordinate: [864, 432.0]
     rotation: 0
     state: true
 - name: uhd_rfnoc_ddc_0
@@ -332,7 +337,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [288, 244.0]
+    coordinate: [344, 392.0]
     rotation: 0
     state: true
 - name: uhd_rfnoc_rx_radio_0
@@ -355,6 +360,10 @@ blocks:
     dc_offset2: 'False'
     dc_offset3: 'False'
     device_select: '-1'
+    enable_timestamps0: 'True'
+    enable_timestamps1: 'True'
+    enable_timestamps2: 'True'
+    enable_timestamps3: 'True'
     frequency0: freq0
     frequency1: freq1
     frequency2: 1e9
@@ -376,7 +385,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [16, 172.0]
+    coordinate: [80, 316.0]
     rotation: 0
     state: true
 - name: uhd_rfnoc_rx_streamer_0
@@ -387,18 +396,21 @@ blocks:
     alias: ''
     args: ''
     comment: ''
+    issue_stream_cmd: 'True'
     maxoutbuf: '0'
     minoutbuf: '0'
     num_chans: '1'
     otw: sc16
     output_type: fc32
+    start_time: '0'
+    start_time_set: 'False'
     use_default_adapter_id: 'True'
     vlen: '1'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [600, 256.0]
+    coordinate: [664, 400.0]
     rotation: 0
     state: true
 - name: uhd_rfnoc_rx_streamer_0_0
@@ -409,29 +421,52 @@ blocks:
     alias: ''
     args: ''
     comment: ''
+    issue_stream_cmd: 'True'
     maxoutbuf: '0'
     minoutbuf: '0'
     num_chans: '1'
     otw: sc16
     output_type: fc32
+    start_time: '0'
+    start_time_set: 'False'
     use_default_adapter_id: 'True'
     vlen: '1'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [600, 288.0]
+    coordinate: [664, 432.0]
     rotation: 0
     state: true
 
 connections:
-- [uhd_rfnoc_ddc_0, '0', uhd_rfnoc_rx_streamer_0, '0']
-- [uhd_rfnoc_ddc_0, '1', uhd_rfnoc_rx_streamer_0_0, '0']
-- [uhd_rfnoc_rx_radio_0, '0', uhd_rfnoc_ddc_0, '0']
-- [uhd_rfnoc_rx_radio_0, '1', uhd_rfnoc_ddc_0, '1']
+- params:
+    is_back_edge: 'False'
+  snk_blk_id: uhd_rfnoc_rx_streamer_0
+  snk_port_id: '0'
+  src_blk_id: uhd_rfnoc_ddc_0
+  src_port_id: '0'
+- params:
+    is_back_edge: 'False'
+  snk_blk_id: uhd_rfnoc_rx_streamer_0_0
+  snk_port_id: '0'
+  src_blk_id: uhd_rfnoc_ddc_0
+  src_port_id: '1'
+- params:
+    is_back_edge: 'False'
+  snk_blk_id: uhd_rfnoc_ddc_0
+  snk_port_id: '0'
+  src_blk_id: uhd_rfnoc_rx_radio_0
+  src_port_id: '0'
+- params:
+    is_back_edge: 'False'
+  snk_blk_id: uhd_rfnoc_ddc_0
+  snk_port_id: '1'
+  src_blk_id: uhd_rfnoc_rx_radio_0
+  src_port_id: '1'
 - [uhd_rfnoc_rx_streamer_0, '0', qtgui_freq_sink_x_0, '0']
 - [uhd_rfnoc_rx_streamer_0_0, '0', qtgui_freq_sink_x_0_0, '0']
 
 metadata:
-  file_format: 1
-  grc_version: v3.11.0.0git-377-g42fa0be7
+  file_format: 2
+  grc_version: v3.11.0.0git-950-g72a09243
