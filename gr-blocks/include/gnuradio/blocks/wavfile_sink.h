@@ -19,7 +19,7 @@ namespace gr {
 namespace blocks {
 
 /*!
- * \brief Write stream to a Microsoft PCM (.wav) file.
+ * \brief Write samples to an audio file (uncompressed or compressed)
  * \ingroup audio_blk
  *
  * \details
