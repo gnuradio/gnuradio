@@ -19,6 +19,7 @@ install(
           iir_filter.h
           interpolator_taps.h
           interp_fir_filter.h
+          mmse_fir_interpolator.h
           mmse_fir_interpolator_cc.h
           mmse_fir_interpolator_ff.h
           mmse_interp_differentiator_cc.h
