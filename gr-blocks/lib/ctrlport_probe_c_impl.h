@@ -30,7 +30,7 @@ private:
 
 public:
     ctrlport_probe_c_impl(const std::string& id, const std::string& desc);
-    ~ctrlport_probe_c_impl();
+    ~ctrlport_probe_c_impl() override;
 
     void setup_rpc() override;
 

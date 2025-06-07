@@ -62,10 +62,10 @@ private:
             ;
         }
 
-        virtual ~TBufferedTransportFactory() {}
+        ~TBufferedTransportFactory() override {}
 
-        virtual std::shared_ptr<thrift::transport::TTransport>
-        getTransport(std::shared_ptr<thrift::transport::TTransport> trans)
+        std::shared_ptr<thrift::transport::TTransport>
+        getTransport(std::shared_ptr<thrift::transport::TTransport> trans) override
         {
             return std::shared_ptr<thrift::transport::TTransport>(
                 new thrift::transport::TBufferedTransport(trans, bufferSize));

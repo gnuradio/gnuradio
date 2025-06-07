@@ -41,7 +41,7 @@ public:
                      const std::string& color_map,
                      const std::string& interpolation,
                      QWidget* parent = nullptr);
-    ~matrix_sink_impl();
+    ~matrix_sink_impl() override;
 
     void exec_() override;
     QApplication* d_qApplication;
