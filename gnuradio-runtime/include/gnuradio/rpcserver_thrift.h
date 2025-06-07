@@ -29,17 +29,19 @@ class rpcserver_thrift : public virtual rpcserver_base, public GNURadio::Control
 {
 public:
     rpcserver_thrift();
-    virtual ~rpcserver_thrift();
+    ~rpcserver_thrift() override;
 
     void registerConfigureCallback(const std::string& id,
-                                   const configureCallback_t callback);
-    void unregisterConfigureCallback(const std::string& id);
+                                   const configureCallback_t callback) override;
+    void unregisterConfigureCallback(const std::string& id) override;
 
-    void registerQueryCallback(const std::string& id, const queryCallback_t callback);
-    void unregisterQueryCallback(const std::string& id);
+    void registerQueryCallback(const std::string& id,
+                               const queryCallback_t callback) override;
+    void unregisterQueryCallback(const std::string& id) override;
 
-    void registerHandlerCallback(const std::string& id, const handlerCallback_t callback);
-    void unregisterHandlerCallback(const std::string& id);
+    void registerHandlerCallback(const std::string& id,
+                                 const handlerCallback_t callback) override;
+    void unregisterHandlerCallback(const std::string& id) override;
 
     void setKnobs(const GNURadio::KnobMap&);
     void getKnobs(GNURadio::KnobMap&, const GNURadio::KnobIDList&);

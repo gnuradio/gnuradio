@@ -65,7 +65,7 @@ protected:
     block_impl(block_impl&&) = delete;
     block_impl& operator=(const block_impl&) = delete;
     block_impl& operator=(block_impl&&) = delete;
-    virtual ~block_impl();
+    ~block_impl() override;
 
     size_t d_nchan;
     std::mutex d_device_mutex;
@@ -192,15 +192,14 @@ public:
     std::vector<unsigned>
     read_registers(const std::string& name, unsigned addr, size_t length) const override;
 
-    virtual arginfo_list_t get_setting_info() const override;
-    virtual void write_setting(const std::string& key, const std::string& value) override;
-    virtual std::string read_setting(const std::string& key) const override;
-    virtual arginfo_list_t get_setting_info(size_t channel) const override;
-    virtual void write_setting(size_t channel,
-                               const std::string& key,
-                               const std::string& value) override;
-    virtual std::string read_setting(size_t channel,
-                                     const std::string& key) const override;
+    arginfo_list_t get_setting_info() const override;
+    void write_setting(const std::string& key, const std::string& value) override;
+    std::string read_setting(const std::string& key) const override;
+    arginfo_list_t get_setting_info(size_t channel) const override;
+    void write_setting(size_t channel,
+                       const std::string& key,
+                       const std::string& value) override;
+    std::string read_setting(size_t channel, const std::string& key) const override;
 
     std::vector<std::string> list_gpio_banks() const override;
     void write_gpio(const std::string& bank, unsigned value) override;
