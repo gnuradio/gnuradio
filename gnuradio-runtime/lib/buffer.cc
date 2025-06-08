@@ -11,7 +11,6 @@
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
-#include "vmcircbuf.h"
 #include <gnuradio/block.h>
 #include <gnuradio/buffer.h>
 #include <gnuradio/buffer_double_mapped.h>
