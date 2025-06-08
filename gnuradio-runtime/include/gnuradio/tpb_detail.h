@@ -14,7 +14,6 @@
 #include <gnuradio/api.h>
 #include <gnuradio/thread/thread.h>
 #include <pmt/pmt.h>
-#include <deque>
 
 namespace gr {
 
