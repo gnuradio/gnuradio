@@ -12,7 +12,6 @@
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
-
 #include <gnuradio/blocks/file_sink_base.h>
 #include <gnuradio/logger.h>
 #include <gnuradio/thread/thread.h>
@@ -20,6 +19,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <cstdio>
+#include <filesystem>
 #include <stdexcept>
 
 // win32 (mingw/msvc) specific
@@ -42,8 +42,16 @@
 namespace gr {
 namespace blocks {
 
-file_sink_base::file_sink_base(const char* filename, bool is_binary, bool append)
-    : d_fp(0), d_new_fp(0), d_updated(false), d_is_binary(is_binary), d_append(append)
+file_sink_base::file_sink_base(const char* filename,
+                               bool is_binary,
+                               bool append,
+                               bool fail_if_exists)
+    : d_fp(0),
+      d_new_fp(0),
+      d_updated(false),
+      d_is_binary(is_binary),
+      d_append(append),
+      d_fail_if_exists(fail_if_exists)
 {
     gr::configure_default_loggers(d_base_logger, d_base_debug_logger, "file_sink_base");
     if (!open(filename))
@@ -65,6 +73,7 @@ bool file_sink_base::open(const char* filename)
     gr::thread::scoped_lock guard(d_mutex); // hold mutex for duration of this function
     d_base_debug_logger->debug("opening file {:s}", filename);
 
+
     // we use the open system call to get access to the O_LARGEFILE flag.
     int fd;
     int flags;
@@ -73,6 +82,9 @@ bool file_sink_base::open(const char* filename)
         flags = O_WRONLY | O_CREAT | O_APPEND | OUR_O_LARGEFILE | OUR_O_BINARY;
     } else {
         flags = O_WRONLY | O_CREAT | O_TRUNC | OUR_O_LARGEFILE | OUR_O_BINARY;
+    }
+    if (d_fail_if_exists) {
+        flags |= O_EXCL;
     }
     if ((fd = ::open(filename, flags, 0664)) < 0) {
         d_base_logger->error("[::open] {:s}: {:s}", filename, strerror(errno));
