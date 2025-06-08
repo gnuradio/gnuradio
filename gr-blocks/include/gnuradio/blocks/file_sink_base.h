@@ -32,11 +32,12 @@ protected:
     gr::thread::mutex d_mutex;
     bool d_unbuffered;
     bool d_append;
+    bool d_fail_if_exists;
     gr::logger_ptr d_base_logger;
     gr::logger_ptr d_base_debug_logger;
 
 protected:
-    file_sink_base(const char* filename, bool is_binary, bool append);
+    file_sink_base(const char* filename, bool is_binary, bool append, bool fail_if_exists=false);
 
 public:
     file_sink_base() {}

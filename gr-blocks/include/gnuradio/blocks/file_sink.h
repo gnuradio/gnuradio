@@ -35,7 +35,7 @@ public:
      * \param append if true, data is appended to the file instead of
      *        overwriting the initial content.
      */
-    static sptr make(size_t itemsize, const char* filename, bool append = false);
+    static sptr make(size_t itemsize, const char* filename, bool append = false, bool fail_if_exists = false);
 };
 
 } /* namespace blocks */
