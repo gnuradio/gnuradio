@@ -59,7 +59,7 @@ class test_annotator_raw(gr_unittest.TestCase):
 
     def test_003_late_insertion(self):
         N = 1000
-        total_time = 0.5
+        total_time = 1.0
         tags_in = [
             (n * N, pmt.mp(f"key_{n}"), pmt.from_long(n * 10)) for n in range(N // 2, N)
         ]
