@@ -36,7 +36,10 @@ if(ENABLE_TESTING)
                             qa_random.py
                             qa_sys_paths.py
                             qa_tag_utils.py
-                            qa_get_first_tag_in_range.py
+                            # Sadly, this still results in a deadlock due to
+                            # GIL / Buffer locking; see
+                            # https://github.com/gnuradio/gnuradio/issues/7711
+                            # qa_get_first_tag_in_range.py
     )
     # This is a check for whether gr-blocks is enabled
     if(ENABLE_DEFAULT OR ENABLE_GR_BLOCKS)
