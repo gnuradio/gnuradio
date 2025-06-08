@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(wavfile_source.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(01a042890c5fe1a8688deff99d957816)                     */
+/* BINDTOOL_HEADER_FILE_HASH(ecd21821022d470adca3a919a0f85513)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
