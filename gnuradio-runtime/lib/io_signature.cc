@@ -23,7 +23,6 @@
 #endif
 #include <string_view>
 #include <algorithm>
-#include <memory>
 #include <stdexcept>
 
 namespace gr {
