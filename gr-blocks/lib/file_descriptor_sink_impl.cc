@@ -20,7 +20,6 @@
 #include <cerrno>
 #include <cstddef>
 #include <cstdio>
-#include <stdexcept>
 
 #ifdef HAVE_IO_H
 #include <io.h>
