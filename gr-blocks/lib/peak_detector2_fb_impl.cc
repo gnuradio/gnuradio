@@ -8,14 +8,9 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "peak_detector2_fb_impl.h"
 #include <gnuradio/io_signature.h>
 #include <cstring>
-#include <limits>
 
 namespace gr {
 namespace blocks {
