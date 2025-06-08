@@ -1,5 +1,5 @@
 id: blocks_multiply_const_xx
-label: Fast Multiply Const
+label: Scalar Multiply Const
 flags: [ python, cpp, deprecated ]
 
 parameters:
