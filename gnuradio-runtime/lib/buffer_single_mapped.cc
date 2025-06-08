@@ -126,7 +126,7 @@ bool buffer_single_mapped::allocate_buffer(int nitems)
 bool buffer_single_mapped::input_blkd_cb_ready(int items_required,
                                                unsigned int read_index)
 {
-    gr::thread::scoped_lock(*this->mutex());
+    gr::thread::scoped_lock lock(*this->mutex());
 
     return (((d_bufsize - read_index) < (uint32_t)items_required) &&
             (d_write_index < read_index));
@@ -136,7 +136,7 @@ bool buffer_single_mapped::output_blkd_cb_ready(int output_multiple)
 {
     uint32_t space_avail = 0;
     {
-        gr::thread::scoped_lock(*this->mutex());
+        gr::thread::scoped_lock lock(*this->mutex());
         space_avail = space_available();
     }
     return (((space_avail > 0) || (space_avail == 0 && d_has_history)) &&
