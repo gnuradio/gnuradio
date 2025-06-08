@@ -8,15 +8,9 @@
  *
  */
 
-
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
 #include "vector_sink_impl.h"
 #include <gnuradio/io_signature.h>
 #include <gnuradio/thread/thread.h>
-#include <algorithm>
 
 namespace gr {
 namespace blocks {

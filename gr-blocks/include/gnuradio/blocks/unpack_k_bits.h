@@ -12,7 +12,6 @@
 #define INCLUDED_GR_BLOCKS_UNPACK_K_BITS_H
 
 #include <gnuradio/blocks/api.h>
-#include <vector>
 
 namespace gr {
 namespace blocks {
