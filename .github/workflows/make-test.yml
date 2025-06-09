@@ -111,7 +111,7 @@ jobs:
       image: ${{ matrix.containerid }}
       volumes:
         - build_data:/build
-      options: --cpus 2 ${{ matrix.containeroptions }}
+      options: --cpus 4 ${{ matrix.containeroptions }}
     steps:
     - uses: actions/checkout@v1
       name: Checkout Project
@@ -135,7 +135,7 @@ jobs:
         path: /build/compile_commands.json
         if-no-files-found: ignore
     - name: Make
-      run: cmake --build /build --parallel 2
+      run: cmake --build /build --parallel 4
     - name: Make Test
       env:
         QT_QPA_PLATFORM: offscreen
