@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 #
 # Copyright 2018 Free Software Foundation, Inc.
+# Copyright 2025 shivanandu
 #
 # This file is part of GNU Radio
 #
@@ -27,7 +28,7 @@ class test_file_sink(gr_unittest.TestCase):
         self.tb = None
         os.unlink(self._datafilename)
 
-    def test_file_sink(self):
+    def test_001_file_sink_data(self):
         data = range(1000)
         expected_result = data
 
@@ -48,7 +49,7 @@ class test_file_sink(gr_unittest.TestCase):
             result_data.fromfile(datafile, len(data))
         self.assertFloatTuplesAlmostEqual(expected_result, result_data)
 
-    def test_file_sink_fail_if_exists(self):
+    def test_002_file_sink_fail_if_exists(self):
         # Create file first
         data = range(10)
         src = blocks.vector_source_f(data)
@@ -73,6 +74,7 @@ class test_file_sink(gr_unittest.TestCase):
             snk3.close()
         except Exception as e:
             self.fail(f"Unexpected failure when opening with fail_if_exists=False: {e}")
+
 
 if __name__ == '__main__':
     gr_unittest.run(test_file_sink)

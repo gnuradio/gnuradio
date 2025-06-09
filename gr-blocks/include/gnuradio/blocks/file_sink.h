@@ -1,6 +1,7 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2004,2007,2013 Free Software Foundation, Inc.
+ * Copyright 2025 shivanandu
  *
  * This file is part of GNU Radio
  *
@@ -34,8 +35,12 @@ public:
      * \param filename name of the file to open and write output to.
      * \param append if true, data is appended to the file instead of
      *        overwriting the initial content.
+     * \param fail_if_exists if true, fail if filename points to an existing file
      */
-    static sptr make(size_t itemsize, const char* filename, bool append = false, bool fail_if_exists = false);
+    static sptr make(size_t itemsize,
+                     const char* filename,
+                     bool append = false,
+                     bool fail_if_exists = false);
 };
 
 } /* namespace blocks */

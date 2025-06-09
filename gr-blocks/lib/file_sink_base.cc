@@ -19,7 +19,6 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <cstdio>
-#include <filesystem>
 #include <stdexcept>
 
 // win32 (mingw/msvc) specific

@@ -1,6 +1,7 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2004,2007,2013 Free Software Foundation, Inc.
+ * Copyright 2025 shivanandu
  *
  * This file is part of GNU Radio
  *
@@ -20,11 +21,13 @@ class file_sink_impl : public file_sink
 {
 private:
     const size_t d_itemsize;
-    bool d_fail_if_exists;
 
 
 public:
-    file_sink_impl(size_t itemsize, const char* filename, bool append = false, bool fail_if_exists = false);
+    file_sink_impl(size_t itemsize,
+                   const char* filename,
+                   bool append = false,
+                   bool fail_if_exists = false);
     ~file_sink_impl() override;
 
     int work(int noutput_items,
