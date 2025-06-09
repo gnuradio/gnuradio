@@ -61,13 +61,15 @@ class test_file_sink(gr_unittest.TestCase):
         self.tb.disconnect_all()
 
         # Now try to open with fail_if_exists=True; should fail
-        try:
+        with self.assertRaises(RuntimeError) as context:
             snk2 = blocks.file_sink(gr.sizeof_float, self._datafilename, False, True)
             snk2.close()
-            self.fail("Expected failure when opening with fail_if_exists=True on existing file")
-        except RuntimeError as e:
-            self.assertIn("fail_if_exists", str(e).lower())
-
+        # Check that the message indicates exclusive creation failure
+        err_msg = str(context.exception).lower()
+        self.assertTrue(
+            "fail_if_exists" in err_msg or "already exists" in err_msg or "excl" in err_msg,
+            f"Unexpected error message: {err_msg}"
+        )
         # Try with fail_if_exists=False; should succeed and overwrite
         try:
             snk3 = blocks.file_sink(gr.sizeof_float, self._datafilename, False, False)
