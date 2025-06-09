@@ -130,7 +130,7 @@ def run_qt(args, log):
     # Still run even if the english translation isn't found
     language = gettext.translation(settings.APP_NAME, settings.path.LANGUAGE, languages=languages,
                                    fallback=True)
-    if type(language) == gettext.NullTranslations:
+    if type(language) is gettext.NullTranslations:
         log.error("Unable to find any translation")
         log.error("Default English translation missing")
     else:

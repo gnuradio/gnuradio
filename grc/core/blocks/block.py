@@ -492,7 +492,7 @@ class Block(Element):
         if vtype is None:
             vtype = type(pyval)
         else:
-            assert vtype == type(pyval)
+            assert vtype is type(pyval)
 
         if vtype == int or vtype == float:
             val_str = str(pyval)

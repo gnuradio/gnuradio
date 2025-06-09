@@ -50,7 +50,7 @@ class msgq_runner(threading.Thread):
     def run(self):
         while not self._done:
             msg = self._msgq.delete_head()
-            if msg.type() != 0:
+            if msg.type() is not 0:
                 self.stop()
             else:
                 try:

@@ -183,8 +183,8 @@ class GrLEDIndicator(gr.sync_block, LabeledLEDIndicator):
         try:
             new_val = pmt.to_python(pmt.cdr(msg))
 
-            if type(new_val) == bool or type(new_val) == int:
-                if type(new_val) == bool:
+            if type(new_val) is bool or type(new_val) is int:
+                if type(new_val) is bool:
                     super().setState(new_val)
                 else:
                     if new_val == 1:

@@ -273,7 +273,7 @@ class GrCompass(gr.sync_block, LabeledCompass):
         try:
             new_val = pmt.to_python(pmt.cdr(msg))
 
-            if type(new_val) == float or type(new_val) == int:
+            if type(new_val) is float or type(new_val) is int:
                 super().change_angle(float(new_val))
             else:
                 gr.log.error(

@@ -201,7 +201,7 @@ class GrDialGauge(gr.sync_block, LabeledDialGauge):
         try:
             new_val = pmt.to_python(pmt.cdr(msg))
 
-            if type(new_val) == float or type(new_val) == int:
+            if type(new_val) is float or type(new_val) is int:
                 super().setValue(new_val)
             else:
                 gr.log.error("Value received was not an int or a float. "

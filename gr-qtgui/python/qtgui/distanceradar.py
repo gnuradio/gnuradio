@@ -87,7 +87,7 @@ class DistanceRadar(gr.sync_block, FigureCanvas):
         try:
             new_val = pmt.to_python(pmt.cdr(msg))
 
-            if type(new_val) == float or type(new_val) == int:
+            if type(new_val) is float or type(new_val) is int:
                 self.updateData(new_val)
             else:
                 gr.log.error("Value received was not an int or a "

@@ -187,7 +187,7 @@ class CanvasPicker(Qt.QObject):
         '''
 
     def event(self, event):
-        if event.type() == Qt.QEvent.User:
+        if event.type() is Qt.QEvent.User:
             self.__showCursor(True)
             return True
         try:
@@ -214,21 +214,21 @@ class CanvasPicker(Qt.QObject):
 
     def eventFilter(self, object, event):
 
-        if event.type() == Qt.QEvent.FocusIn:
+        if event.type() is Qt.QEvent.FocusIn:
             self.__showCursor(True)
-        if event.type() == Qt.QEvent.FocusOut:
+        if event.type() is Qt.QEvent.FocusOut:
             self.__showCursor(False)
 
-        if event.type() == Qt.QEvent.Paint:
+        if event.type() is Qt.QEvent.Paint:
             Qt.QApplication.postEvent(
                 self, Qt.QEvent(Qt.QEvent.User))
-        elif event.type() == Qt.QEvent.MouseButtonPress:
+        elif event.type() is Qt.QEvent.MouseButtonPress:
             if self.enableZeroadd or self.enablePoleadd:
                 self.__drawAddedzero_pole(True, event.pos())
             else:
                 self.__select(event.pos())
             return True
-        elif event.type() == Qt.QEvent.MouseMove:
+        elif event.type() is Qt.QEvent.MouseMove:
             curve = self.__selectedCurve
             if curve:
                 tp = (self.__plot.invTransform(curve.xAxis(), event.pos().x()),
@@ -237,7 +237,7 @@ class CanvasPicker(Qt.QObject):
             self.__move(event.pos())
             return True
 
-        if event.type() == Qt.QEvent.KeyPress:
+        if event.type() is Qt.QEvent.KeyPress:
             delta = 5
             key = event.key()
             if key == Qt.Qt.Key_Up:

@@ -68,7 +68,7 @@ class OOTBrowser(QtWidgets.QDialog, base.Component):
 
         for key, val in type_dict.items():
             if key in module:
-                if not type(module.get(key)) == val:
+                if not type(module.get(key)) is val:
                     log.error(
                         f"OOT module {module.get('title')} has field {key}, but it's not the correct type. Expected {val}, got {type(module.get(key))}. Ignoring")
                     valid = False
@@ -100,7 +100,7 @@ class OOTBrowser(QtWidgets.QDialog, base.Component):
             self.copyright_label.setText(f"<b>Copyright Owner:</b> {', '.join(module.get('copyright_owner'))}")
         else:
             self.copyright_label.setText("<b>Copyright Owner:</b> None")
-        if type(module.get('gr_supported_version')) == list:
+        if type(module.get('gr_supported_version')) is list:
             self.supp_ver_label.setText(
                 f"<b>Supported GNU Radio Versions:</b> {', '.join(module.get('gr_supported_version'))}")
         else:

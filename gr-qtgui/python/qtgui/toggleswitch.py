@@ -183,15 +183,15 @@ class GrToggleSwitch(gr.sync_block, LabeledToggleSwitch):
                 self.callback(self.pressReleasedDict['Released'])
 
         if new_val:
-            if type(self.pressReleasedDict['Pressed']) == bool:
+            if type(self.pressReleasedDict['Pressed']) is bool:
                 self.message_port_pub(pmt.intern("state"),
                                       pmt.cons(pmt.intern(self.outputmsgname),
                                                pmt.from_bool(self.pressReleasedDict['Pressed'])))
-            elif type(self.pressReleasedDict['Pressed']) == int:
+            elif type(self.pressReleasedDict['Pressed']) is int:
                 self.message_port_pub(pmt.intern("state"),
                                       pmt.cons(pmt.intern(self.outputmsgname),
                                                pmt.from_long(self.pressReleasedDict['Pressed'])))
-            elif type(self.pressReleasedDict['Pressed']) == float:
+            elif type(self.pressReleasedDict['Pressed']) is float:
                 self.message_port_pub(pmt.intern("state"),
                                       pmt.cons(pmt.intern(self.outputmsgname),
                                                pmt.from_double(self.pressReleasedDict['Pressed'])))
@@ -200,15 +200,15 @@ class GrToggleSwitch(gr.sync_block, LabeledToggleSwitch):
                                       pmt.cons(pmt.intern(self.outputmsgname),
                                                pmt.intern(self.pressReleasedDict['Pressed'])))
         else:
-            if type(self.pressReleasedDict['Released']) == bool:
+            if type(self.pressReleasedDict['Released']) is bool:
                 self.message_port_pub(pmt.intern("state"),
                                       pmt.cons(pmt.intern(self.outputmsgname),
                                                pmt.from_bool(self.pressReleasedDict['Released'])))
-            elif type(self.pressReleasedDict['Released']) == int:
+            elif type(self.pressReleasedDict['Released']) is int:
                 self.message_port_pub(pmt.intern("state"),
                                       pmt.cons(pmt.intern(self.outputmsgname),
                                                pmt.from_long(self.pressReleasedDict['Released'])))
-            elif type(self.pressReleasedDict['Released']) == float:
+            elif type(self.pressReleasedDict['Released']) is float:
                 self.message_port_pub(pmt.intern("state"),
                                       pmt.cons(pmt.intern(self.outputmsgname),
                                                pmt.from_double(self.pressReleasedDict['Released'])))

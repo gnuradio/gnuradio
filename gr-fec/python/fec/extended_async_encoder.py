@@ -31,9 +31,9 @@ class extended_async_encoder(gr.hier_block2):
 
         # If it's a list of encoders, take the first one, unless it's
         # a list of lists of encoders.
-        if(type(encoder_obj_list) == list):
+        if(type(encoder_obj_list) is list):
             # This block doesn't handle parallelism of > 1
-            if(type(encoder_obj_list[0]) == list):
+            if(type(encoder_obj_list[0]) is list):
                 gr.log.info(
                     "fec.extended_encoder: Parallelism must be 0 or 1.")
                 raise AttributeError

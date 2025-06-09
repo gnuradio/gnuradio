@@ -150,7 +150,7 @@ class GrDataPlotParent(gr.top_block, Qt.QWidget):
         if(self._stripchart):
             # Update the plot data depending on type
             for n in range(self._ncons):
-                if(type(data[n]) == list):
+                if(isinstance(data[n], list)):
                     data[n] = self.data_to_complex(data[n])
                     if(len(data[n]) > self._npts):
                         self.src[n].set_data(data[n])
@@ -177,7 +177,7 @@ class GrDataPlotParent(gr.top_block, Qt.QWidget):
                     self.src[n].set_data(self._last_data[n])
         else:
             for n in range(self._ncons):
-                if(type(data[n]) != list):
+                if(type(data[n]) is not list):
                     data[n] = [data[n], ]
                 data[n] = self.data_to_complex(data[n])
                 self.src[n].set_data(data[n])
@@ -439,12 +439,12 @@ class GrDataPlotterValueTable(object):
                 units = str(knobprops[itemKey].units)
                 descr = str(knobprops[itemKey].description)
 
-                if(type(v) == ControlPort.complex):
+                if(isinstance(v, ControlPort).complex):
                     v = v.re + v.im * 1j
                 # If it's a byte stream, Python thinks it's a string.
                 # Unpack and convert to floats for plotting.
                 # Ignore the edge list knob if it's being exported
-                elif(type(v) == str and itemKey.find('probe2_b') == 0):
+                elif(isinstance(v, str) and itemKey.find('probe2_b') == 0):
                     v = struct.unpack(len(v) * 'b', v)
 
                 # Convert the final value to a string for displaying
@@ -465,12 +465,12 @@ class GrDataPlotterValueTable(object):
         for k in list(knobs.keys()):
             if k not in foundKeys:
                 v = knobs[k].value
-                if(type(v) == ControlPort.complex):
+                if(isinstance(v, ControlPort).complex):
                     v = v.re + v.im * 1j
                 # If it's a byte stream, Python thinks it's a string.
                 # Unpack and convert to floats for plotting.
                 # Ignore the edge list knob if it's being exported
-                elif(type(v) == str and k.find('probe2_b') == 0):
+                elif(isinstance(v, str) and k.find('probe2_b') == 0):
                     v = struct.unpack(len(v) * 'b', v)
 
                 item = Qt.QTreeWidgetItem([k, str(v),

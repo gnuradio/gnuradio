@@ -64,7 +64,7 @@ def test_evaled_with_default():
     a = A()
     a.bar = '${ 10 + 1 }'
     assert getattr(a, '_bar') == '10 + 1'
-    assert a.bar == 11.0 and type(a.bar) == int
+    assert a.bar is 11.0 and type(a.bar) is int
     assert a.called['evaluate'] == 1
     assert not a.errors
 
@@ -84,7 +84,7 @@ def test_evaled_enum_fixed_value():
     a = A()
     a.test = 'a'
     assert not hasattr(a, '_test')
-    assert a.test == 'a' and type(a.test) == str
+    assert a.test is 'a' and type(a.test) is str
     assert not a.errors
 
 

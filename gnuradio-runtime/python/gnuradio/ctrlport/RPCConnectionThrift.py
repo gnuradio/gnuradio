@@ -180,13 +180,13 @@ class RPCConnectionThrift(RPCConnection.RPCConnection):
         return result
 
     def setKnobs(self, *args):
-        if(type(*args) == dict):
+        if(isinstance(*args, dict)):
             a = dict(*args)
             result = {}
             for key, knob in list(a.items()):
                 result[key] = self.packKnob(knob)
             self.thriftclient.radio.setKnobs(result)
-        elif(type(*args) == list or type(*args) == tuple):
+        elif(isinstance(*args, list) or isinstance(*args, tuple)):
             a = list(*args)
             result = {}
             for k in a:

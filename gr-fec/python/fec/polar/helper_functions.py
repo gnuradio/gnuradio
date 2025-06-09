@@ -36,7 +36,7 @@ def power_of_2_int(num):
 
 
 def is_power_of_two(num):
-    if type(num) != int:
+    if type(num) is not int:
         return False  # make sure we only compute integers.
     return num != 0 and ((num & (num - 1)) == 0)
 

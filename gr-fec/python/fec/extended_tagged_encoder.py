@@ -27,10 +27,10 @@ class extended_tagged_encoder(gr.hier_block2):
 
         # If it's a list of encoders, take the first one, unless it's
         # a list of lists of encoders.
-        if(type(encoder_obj_list) == list):
+        if(type(encoder_obj_list) is list):
             # This block doesn't handle parallelism of > 1
             # We could just grab encoder [0][0], but we don't want to encourage this.
-            if(type(encoder_obj_list[0]) == list):
+            if(type(encoder_obj_list[0]) is list):
                 gr.log.info(
                     "fec.extended_tagged_encoder: Parallelism must be 0 or 1.")
                 raise AttributeError
@@ -43,7 +43,7 @@ class extended_tagged_encoder(gr.hier_block2):
 
         # If lentagname is None, fall back to using the non tagged
         # stream version
-        if type(lentagname) == str:
+        if type(lentagname) is str:
             if(lentagname.lower() == 'none'):
                 lentagname = None
 

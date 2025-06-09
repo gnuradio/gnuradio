@@ -168,7 +168,7 @@ class LevelGauge(QProgressBar):
         self.lock.release()
 
     def setValue(self, new_value):
-        if type(new_value) == int:
+        if type(new_value) is int:
             self.updateInt.emit(new_value)
         else:
             self.updateFloat.emit(new_value)
@@ -208,7 +208,7 @@ class GrLevelGauge(gr.sync_block, LabeledLevelGauge):
         try:
             new_val = pmt.to_python(pmt.cdr(msg))
 
-            if type(new_val) == float or type(new_val) == int:
+            if type(new_val) is float or type(new_val) is int:
                 super().setValue(new_val)
             else:
                 gr.log.error(

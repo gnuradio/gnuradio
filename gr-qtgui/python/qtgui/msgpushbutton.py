@@ -45,16 +45,16 @@ class MsgPushButton(gr.sync_block, Qt.QPushButton):
         self.message_port_register_out(pmt.intern("pressed"))
 
     def onBtnClicked(self, pressed):
-        if type(self.msgValue) == int:
+        if type(self.msgValue) is int:
             self.message_port_pub(pmt.intern("pressed"),
                                   pmt.cons(pmt.intern(self.msgName), pmt.from_long(self.msgValue)))
-        elif type(self.msgValue) == float:
+        elif type(self.msgValue) is float:
             self.message_port_pub(pmt.intern("pressed"),
                                   pmt.cons(pmt.intern(self.msgName), pmt.from_double(self.msgValue)))
-        elif type(self.msgValue) == str:
+        elif type(self.msgValue) is str:
             self.message_port_pub(pmt.intern("pressed"),
                                   pmt.cons(pmt.intern(self.msgName), pmt.intern(self.msgValue)))
-        elif type(self.msgValue) == bool:
+        elif type(self.msgValue) is bool:
             self.message_port_pub(pmt.intern("pressed"),
                                   pmt.cons(pmt.intern(self.msgName), pmt.from_bool(self.msgValue)))
 

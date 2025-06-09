@@ -279,7 +279,7 @@ class DigitalNumberControl(QFrame):
             self.update()
 
     def setFrequency(self, new_freq):
-        if type(new_freq) == int:
+        if type(new_freq) is int:
             self.updateInt.emit(new_freq)
         else:
             self.updateFloat.emit(new_freq)
@@ -367,7 +367,7 @@ class MsgDigitalNumberControl(gr.sync_block, LabeledDigitalNumberControl):
         try:
             new_val = pmt.to_python(pmt.cdr(msg))
 
-            if type(new_val) == float or type(new_val) == int:
+            if type(new_val) is float or type(new_val) is int:
                 self.call_var_callback(new_val)
 
                 self.setValue(new_val)

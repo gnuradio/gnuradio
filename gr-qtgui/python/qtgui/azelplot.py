@@ -90,7 +90,7 @@ class AzElPlot(gr.sync_block, FigureCanvas):
         try:
             new_val = pmt.to_python(pmt.car(msg))
             if new_val is not None:
-                if type(new_val) == dict:
+                if type(new_val) is dict:
                     if 'az' in new_val and 'el' in new_val:
                         self.updateData(
                             float(new_val['az']), float(new_val['el']))

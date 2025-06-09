@@ -65,7 +65,7 @@ class GenericHeaderParser(BlockTool):
         initialize all the required API variables
         """
 
-        if type(self.target_file) == list:
+        if type(self.target_file) is list:
             self.module = self.target_file
             for dirs in self.target_file:
                 if not os.path.basename(self.module).startswith(Constants.GR):

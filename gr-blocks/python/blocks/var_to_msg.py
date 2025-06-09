@@ -29,13 +29,13 @@ class var_to_msg_pair(gr.sync_block):
 
     def variable_changed(self, value):
         try:
-            if type(value) == float:
+            if type(value) is float:
                 p = pmt.from_double(value)
-            elif type(value) == int:
+            elif type(value) is int:
                 p = pmt.from_long(value)
-            elif type(value) == bool:
+            elif type(value) is bool:
                 p = pmt.from_bool(value)
-            elif type(value) == str:
+            elif type(value) is str:
                 p = pmt.intern(value)
             else:
                 p = pmt.to_pmt(value)

@@ -37,7 +37,7 @@ class offloadThread(threading.Thread):
         # Wait for main __init__ to finish
         time.sleep(0.5)
 
-        if (type(self.overlayList) == list and self.listDelay > 0.0):
+        if (type(self.overlayList) is list and self.listDelay > 0.0):
             while self.repeat and not self.stopThread:
                 for curItem in self.overlayList:
                     self.callback(curItem)

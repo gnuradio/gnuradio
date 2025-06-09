@@ -45,7 +45,7 @@ def python_to_tag(tag_struct):
     """
     good = False
     tag = gr.tag_t()
-    if(type(tag_struct) == dict):
+    if(isinstance(tag_struct, dict)):
         if('offset' in tag_struct):
             if(isinstance(tag_struct['offset'], int)):
                 tag.offset = tag_struct['offset']
@@ -66,7 +66,7 @@ def python_to_tag(tag_struct):
                 tag.srcid = tag_struct['srcid']
                 good = True
 
-    elif(type(tag_struct) == list or type(tag_struct) == tuple):
+    elif(isinstance(tag_struct, list) or isinstance(tag_struct, tuple)):
         if(len(tag_struct) == 4):
             if(isinstance(tag_struct[0], int)):
                 tag.offset = tag_struct[0]
