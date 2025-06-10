@@ -101,20 +101,13 @@ class GrGraphicItem(gr.sync_block, QLabel):
                         gr.log.error("Received " + str(curitem))
                         continue
 
-                    if "x" not in curitem:
-                        gr.log.error(
-                            f"The dictionary for filename {curitem['filename']}  did not contain an 'x' key."
-                        )
-                        gr.log.error("Received " + str(curitem))
-                        continue
-
-                    if "y" not in curitem:
+                    failed_keys = [key for key in "xy" if key not in curitem]
+                    if failed_keys:
                         gr.log.error(
                             "The dictionary for filename "
-                            + curitem["filename"]
-                            + " did not contain an 'y' key."
+                            f"{curitem['filename']}  did not contain '{', '.join(failed_keys)}' key.\n"
+                            f"Received {curitem:s}"
                         )
-                        gr.log.error("Received " + str(curitem))
                         continue
 
                     if not os.path.isfile(curitem["filename"]):
@@ -129,7 +122,7 @@ class GrGraphicItem(gr.sync_block, QLabel):
                         try:
                             # remove item
                             del self.overlays[curitem["filename"]]
-                        except:
+                        except KeyError:
                             pass
                     else:
                         self.overlays[curitem["filename"]] = curitem
