@@ -12,9 +12,16 @@ parameters:
         const_type:  [complex, real, int, int]
         fcn: [cc, ff, ii, ss]
     hide: part
+-   id: mode
+    label: Mode
+    dtype: enum
+    options: [scalar, vector]
+    option_labels: ['Scalar constant', 'Vector constant']
+    default: 'vector'
+    hide: ${ 'part' if vlen > 1 else 'all' }
 -   id: const
     label: Constant
-    dtype: ${ type.const_type if vlen == 1 else type.vconst_type }
+    dtype: ${ type.const_type if vlen == 1 or mode == 'scalar' else type.vconst_type }
     default: '1'
 -   id: vlen
     label: Vector Length
@@ -34,18 +41,28 @@ outputs:
 
 asserts:
 - ${ vlen > 0 }
-- ${ (vlen > 1 and len(const) == vlen) or (vlen == 1) }
+- ${ vlen == 1 or mode == 'scalar' or len(const) == vlen }
 
 templates:
     imports: from gnuradio import blocks
-    make: blocks.multiply_const_${ 'v' if context.get('vlen')() > 1 else '' }${type.fcn}(${const})
+    make: |-
+      % if context.get("vlen")() == 1 or mode == 'scalar':
+      blocks.multiply_const_${type.fcn}(${const}, ${vlen})
+      % else:
+      blocks.multiply_const_v${type.fcn}(${const})
+      % endif
     callbacks:
     - set_k(${const})
 
 cpp_templates:
-    includes: ['#include <gnuradio/blocks/multiply_const${"_v" if context.get("vlen")() > 1 else "" }.h>']
-    declarations: 'blocks::multiply_const_${"v" if context.get("vlen")() > 1 else "" }${type.fcn}::sptr ${id};'
-    make: 'this->${id} = blocks::multiply_const_${"v" if context.get("vlen")() > 1 else "" }${type.fcn}::make(${const});'
+    includes: ['#include <gnuradio/blocks/multiply_const${ "" if context.get("vlen")() == 1 or mode == "scalar" else "_v" }.h>']
+    declarations: 'blocks::multiply_const_${ "" if context.get("vlen")() == 1 or mode == "scalar" else "v" }${type.fcn}::sptr ${id};'
+    make: |-
+      % if context.get("vlen")() == 1 or mode == 'scalar':
+      this->${id} = blocks::multiply_const_${type.fcn}::make(${const}, ${vlen});
+      % else:
+      this->${id} = blocks::multiply_const_v${type.fcn}::make(${const});
+      % endif
     callbacks:
     - set_k(${const})
 
