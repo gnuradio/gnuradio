@@ -95,6 +95,7 @@ jobs:
             containerid: 'gnuradio/ci:fedora-42-3.10'
             cxxflags: -Wno-unused-command-line-argument
             cmakeflags: -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_C_COMPILER=clang -GNinja
+            build_options: --
             ldpath: /usr/local/lib64
           - distro: 'Debian 12'
             containerid: 'gnuradio/ci:debian-12-3.10'
@@ -133,7 +134,7 @@ jobs:
         path: /build/compile_commands.json
         if-no-files-found: ignore
     - name: Make
-      run: cmake --build /build --parallel 4
+      run: cmake --build /build ${{ matrix.build_options || '--parallel $(nproc)' }}
     - name: Make Test
       env:
         QT_QPA_PLATFORM: offscreen
