@@ -271,12 +271,13 @@ bool file_meta_source_impl::_open(FILE** fp, const char* filename)
         fp = 0;
     }
 
-    if ((*fp = fdopen(fd, "rb")) == NULL) {
+    if (fp == NULL || (*fp = fdopen(fd, "rb")) == NULL) {
         d_logger->error("[fdopen] {:s}: {:s}", filename, strerror(errno));
-        ::close(fd); // don't leak file descriptor if fdopen fails.
+        ::close(fd);  // don't leak file descriptor if fdopen fails.
+        return false; // return early if fp is null
     }
 
-    ret = fp != 0;
+    ret = true;
 
     return ret;
 }

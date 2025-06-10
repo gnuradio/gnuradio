@@ -159,17 +159,16 @@ bool file_meta_sink_impl::_open(FILE** fp, const char* filename)
         return false;
     }
 
-    if (*fp) { // if we've already got a new one open, close it
+    if (fp && *fp) { // if we've already got a new one open, close it
         fclose(*fp);
-        fp = 0;
+        *fp = nullptr;
     }
 
-    if ((*fp = fdopen(fd, "wb")) == NULL) {
+    if (fp && (*fp = fdopen(fd, "wb")) == NULL) {
         d_logger->error("[fdopen] {:s}: {:s}", filename, strerror(errno));
         ::close(fd); // don't leak file descriptor if fdopen fails.
+        ret = false;
     }
-
-    ret = fp != 0;
 
     return ret;
 }
