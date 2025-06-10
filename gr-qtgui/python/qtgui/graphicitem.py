@@ -103,9 +103,7 @@ class GrGraphicItem(gr.sync_block, QLabel):
 
                     if "x" not in curitem:
                         gr.log.error(
-                            "The dictionary for filename "
-                            + curitem["filename"]
-                            + " did not contain an 'x' key."
+                            f"The dictionary for filename {curitem['filename']}  did not contain an 'x' key."
                         )
                         gr.log.error("Received " + str(curitem))
                         continue
