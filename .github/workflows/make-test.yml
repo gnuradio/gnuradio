@@ -82,8 +82,6 @@ jobs:
           - distro: 'No-Python Ubuntu 24.04'
             containerid: 'gnuradio/ci:ubuntu-24.04-3.10'
             enable_python: Off
-          - distro: 'Ubuntu 20.04'
-            containerid: 'gnuradio/ci:ubuntu-20.04-3.9'
           - distro: 'Ubuntu 22.04'
             containerid: 'gnuradio/ci:ubuntu-22.04-3.9'
             ctest_args: '-E "qa_polar_..coder_(sc_)?systematic"'
