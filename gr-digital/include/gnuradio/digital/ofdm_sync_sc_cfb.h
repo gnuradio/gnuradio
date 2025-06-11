@@ -43,23 +43,27 @@ namespace digital {
  * \f[
  * R(d) = \frac{1}{2} \sum_{k=0}^{N-1} |r_{k+d}|^2,
  * \f]
- * i.e., we estimate the energy from *both* half-symbols. This avoids spurious detects
- * at the end of a burst, when the energy level suddenly drops.
+ * i.e., we estimate the energy from *both* half-symbols. This avoids spurious
+ * detections at the end of a burst, when the energy level suddenly drops.
  *
- * [1] Schmidl, T.M. and Cox, D.C., "Robust frequency and timing synchronization for
- * OFDM", Communications, IEEE Transactions on, 1997.
+ * [1] Schmidl, T.M. and Cox, D.C., "Robust frequency and timing
+ * synchronization for OFDM", Communications, IEEE Transactions on, 1997.
  */
 class DIGITAL_API ofdm_sync_sc_cfb : virtual public hier_block2
 {
 public:
     typedef std::shared_ptr<ofdm_sync_sc_cfb> sptr;
 
-    /*! \param fft_len FFT length
-     *  \param cp_len Length of the guard interval (cyclic prefix) in samples
-     *  \param use_even_carriers If true, the carriers in the sync preamble are occupied
-     * such that the even carriers are used (0, 2, 4, ...). If you use all carriers, that
-     * would include the DC carrier, so be careful. \param threshold detection threshold.
-     * Default is 0.9.
+    /*!
+     * \param fft_len FFT length
+     * \param cp_len Length of the guard interval (cyclic prefix) in samples
+     * \param use_even_carriers If true, this indicates that carriers in the
+     *                          sync preamble are occupied such that the even
+     *                          carriers are used (0, 2, 4, ...). If you use all
+     *                          carriers, that would include the DC carrier,
+     *                          so be careful. If false, it indicates the odd
+     *                          carriers are used (1, 3, 5, ...).
+     * \param threshold detection threshold. Default is 0.9.
      */
     static sptr
     make(int fft_len, int cp_len, bool use_even_carriers = false, float threshold = 0.9);
