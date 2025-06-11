@@ -14,7 +14,14 @@ include(GrBoost)
 # Register component
 ########################################################################
 include(GrComponent)
-gr_register_component("gr-network" ENABLE_GR_NETWORK Boost_FOUND ENABLE_GNURADIO_RUNTIME)
+gr_register_component(
+    NAME "gr-network"
+    VAR ENABLE_GR_NETWORK
+    REQUIRED_COMPONENTS
+        gnuradio-runtime
+    REQUIRED_TPLS
+        Boost_FOUND
+)
 
 set(GR_PKG_NETWORK_EXAMPLES_DIR ${GR_PKG_DATA_DIR}/examples/network)
 

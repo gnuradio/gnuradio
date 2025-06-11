@@ -45,5 +45,5 @@ if(MSVC)
 endif(MSVC)
 
 if(BUILD_SHARED_LIBS)
-    gr_library_foo(gnuradio-iio)
+    gr_library_foo(gnuradio-iio libiio::iio)
 endif()

@@ -55,3 +55,9 @@ macro(INCLUDE_DIRECTORIES)
         endif()
     endforeach()
 endmacro(INCLUDE_DIRECTORIES)
+
+macro(GR_FIND_PACKAGE pkg)
+    set(${pkg}_FIND_QUIETLY ON)
+    find_package(${pkg} ${ARGN})
+endmacro()
+

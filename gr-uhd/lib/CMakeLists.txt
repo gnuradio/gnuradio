@@ -32,7 +32,7 @@ endif(ENABLE_UHD_RFNOC)
 
 add_library(gnuradio-uhd ${LIB_GR_UHD_SOURCES})
 
-target_link_libraries(gnuradio-uhd PUBLIC gnuradio-runtime UHD::UHD)
+target_link_libraries(gnuradio-uhd PUBLIC gnuradio-runtime UHD::UHD Boost::boost)
 
 target_include_directories(
     gnuradio-uhd PUBLIC $<INSTALL_INTERFACE:include>
@@ -49,5 +49,5 @@ if(MSVC)
 endif(MSVC)
 
 if(BUILD_SHARED_LIBS)
-    gr_library_foo(gnuradio-uhd UHD)
+    gr_library_foo(gnuradio-uhd UHD UHD::UHD)
 endif()
