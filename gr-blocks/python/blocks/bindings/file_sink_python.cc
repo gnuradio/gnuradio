@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(file_sink.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(7d4fa47d3509d715bbf1dd940304cadf)                     */
+/* BINDTOOL_HEADER_FILE_HASH(374de4f3283b097e7dfd176665f0a9a2)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -44,6 +44,7 @@ void bind_file_sink(py::module& m)
              py::arg("itemsize"),
              py::arg("filename"),
              py::arg("append") = false,
+             py::arg("fail_if_exists") = false,
              D(file_sink, make))
 
 

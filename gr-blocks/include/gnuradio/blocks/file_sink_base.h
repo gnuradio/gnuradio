@@ -1,6 +1,7 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2004,2007,2008,2013 Free Software Foundation, Inc.
+ * Copyrigth 2025 shivanandu
  *
  * This file is part of GNU Radio
  *
@@ -32,11 +33,22 @@ protected:
     gr::thread::mutex d_mutex;
     bool d_unbuffered;
     bool d_append;
+    bool d_fail_if_exists;
     gr::logger_ptr d_base_logger;
     gr::logger_ptr d_base_debug_logger;
 
 protected:
-    file_sink_base(const char* filename, bool is_binary, bool append);
+    /*!
+     * \brief Constructor for file sink base.
+     * \param filename Name of the file to open.
+     * \param is_binary Whether to open the file in binary mode.
+     * \param append Whether to append to the file if it exists.
+     * \param fail_if_exists If true, fail to open if the file already exists.
+     */
+    file_sink_base(const char* filename,
+                   bool is_binary,
+                   bool append,
+                   bool fail_if_exists = false);
 
 public:
     file_sink_base() {}

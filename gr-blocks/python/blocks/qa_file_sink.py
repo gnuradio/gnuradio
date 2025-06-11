@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 #
 # Copyright 2018 Free Software Foundation, Inc.
+# Copyright 2025 shivanandu
 #
 # This file is part of GNU Radio
 #
@@ -27,7 +28,7 @@ class test_file_sink(gr_unittest.TestCase):
         self.tb = None
         os.unlink(self._datafilename)
 
-    def test_file_sink(self):
+    def test_001_file_sink_data(self):
         data = range(1000)
         expected_result = data
 
@@ -47,6 +48,34 @@ class test_file_sink(gr_unittest.TestCase):
         with open(self._datafilename, 'rb') as datafile:
             result_data.fromfile(datafile, len(data))
         self.assertFloatTuplesAlmostEqual(expected_result, result_data)
+
+    def test_002_file_sink_fail_if_exists(self):
+        # Create file first
+        data = range(10)
+        src = blocks.vector_source_f(data)
+        snk = blocks.file_sink(gr.sizeof_float, self._datafilename)
+        snk.set_unbuffered(True)
+        self.tb.connect(src, snk)
+        self.tb.run()
+        snk.close()
+        self.tb.disconnect_all()
+
+        # Now try to open with fail_if_exists=True; should fail
+        with self.assertRaises(RuntimeError) as context:
+            snk2 = blocks.file_sink(gr.sizeof_float, self._datafilename, False, True)
+            snk2.close()
+        # Check that the message indicates exclusive creation failure
+        err_msg = str(context.exception).lower()
+        self.assertTrue(
+            "fail_if_exists" in err_msg or "already exists" in err_msg or "excl" in err_msg,
+            f"Unexpected error message: {err_msg}"
+        )
+        # Try with fail_if_exists=False; should succeed and overwrite
+        try:
+            snk3 = blocks.file_sink(gr.sizeof_float, self._datafilename, False, False)
+            snk3.close()
+        except Exception as e:
+            self.fail(f"Unexpected failure when opening with fail_if_exists=False: {e}")
 
 
 if __name__ == '__main__':
