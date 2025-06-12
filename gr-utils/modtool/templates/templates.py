@@ -42,7 +42,12 @@ namespace gr {
     class ${blockname}_impl : public ${blockname}
     {
      private:
+% if blocktype == 'rfnoc_block':
+      // <+ replace with specific block controller type +>
+      ::uhd::rfnoc::noc_block_base::sptr d_block_ref;
+% else:
       // Nothing to declare in this block.
+% endif
 
 % if blocktype == 'tagged_stream':
      protected:
@@ -50,7 +55,11 @@ namespace gr {
 
 % endif
      public:
+% if blocktype == 'rfnoc_block':
+      ${blockname}_impl(::uhd::rfnoc::noc_block_base::sptr block_ref);
+% else:
       ${blockname}_impl(${strip_default_values(arglist)});
+% endif
       ~${blockname}_impl();
 
       // Where all the action really happens
@@ -69,7 +78,7 @@ namespace gr {
               gr_vector_const_void_star &input_items,
               gr_vector_void_star &output_items
       );
-% elif blocktype == 'hier':
+% elif blocktype == 'hier' or blocktype == 'rfnoc_block':
 % else:
       int work(
               int noutput_items,
@@ -107,19 +116,26 @@ namespace gr {
     {
     }
 % else:
-  % if blocktype != "source":
+  % if blocktype != "source" and blocktype != 'rfnoc_block':
     #pragma message("set the following appropriately and remove this warning")
     using input_type = float;
   % endif
-  % if blocktype != "sink":
+  % if blocktype != "sink" and blocktype != 'rfnoc_block':
     #pragma message("set the following appropriately and remove this warning")
     using output_type = float;
   % endif
     ${blockname}::sptr
     ${blockname}::make(${strip_default_values(arglist)})
     {
+    % if blocktype == 'rfnoc_block':
+      // Make sure that the block name is correct ("${blockname.capitalize()}")
+      // and that the other arguments exist.
+      return gnuradio::make_block_sptr<${blockname}_impl>(::gr::uhd::rfnoc_block::make_block_ref(
+        graph, block_args, "${blockname.capitalize()}", device_select, instance));
+    % else:
       return gnuradio::make_block_sptr<${blockname}_impl>(
         ${strip_arg_types(arglist)});
+    % endif
     }
 
 <%
@@ -149,10 +165,16 @@ namespace gr {
     /*
      * The private constructor
      */
+  % if blocktype == 'rfnoc_block':
+    ${blockname}_impl::${blockname}_impl(::uhd::rfnoc::noc_block_base::sptr block_ref)
+        : rfnoc_block(block_ref),
+          d_block_ref(get_block_ref<::uhd::rfnoc::noc_block_base>()) // <+ replace with specific block controller type +>
+  % else:
     ${blockname}_impl::${blockname}_impl(${strip_default_values(arglist)})
       : gr::${grblocktype}("${blockname}",
               gr::io_signature::make(${inputsig}),
               gr::io_signature::make(${outputsig})${decimation})
+  % endif
   % if blocktype == 'hier':
     {
       connect(self(), 0, d_firstblock, 0);
@@ -228,7 +250,7 @@ namespace gr {
       // Tell runtime system how many output items we produced.
       return noutput_items;
     }
-  % elif blocktype == 'hier':
+  % elif blocktype == 'hier' or blocktype == 'rfnoc_block':
   % else:
     int
     ${blockname}_impl::work(int noutput_items,
@@ -262,7 +284,9 @@ ${str_to_fancyc_comment(license)}
 #define INCLUDED_${modname.upper()}_${blockname.upper()}_H
 
 #include <${include_dir_prefix}/api.h>
-% if blocktype != 'noblock':
+% if blocktype == 'rfnoc_block':
+#include <gnuradio/uhd/rfnoc_block.h>
+% elif blocktype != 'noblock':
 #include <gnuradio/${grblocktype}.h>
 % endif
 
