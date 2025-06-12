@@ -13,7 +13,7 @@ import os
 import re
 import logging
 
-from .base import get_block_candidates, ModTool, ModToolException, validate_name
+from .base import ModTool, ModToolException, validate_name
 
 logger = logging.getLogger(__name__)
 
@@ -34,7 +34,7 @@ class ModToolRename(ModTool):
         if not self.info['oldname']:
             raise ModToolException('Old block name (blockname) not specified.')
         validate_name('old block', self.info['oldname'])
-        block_candidates = get_block_candidates(self.info['modname'])
+        block_candidates = self.get_block_candidates()
         if self.info['oldname'] not in block_candidates:
             choices = [x for x in block_candidates if self.info['oldname'] in x]
             if len(choices) > 0:

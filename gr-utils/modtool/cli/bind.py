@@ -20,7 +20,7 @@ except ImportError:
 else:
     have_blocktool = True
 
-from ..core import ModToolGenBindings, get_block_candidates
+from ..core import ModToolGenBindings
 from ..tools import SequenceCompleter
 from .base import common_params, block_name, run, cli_input
 
@@ -52,7 +52,7 @@ def cli(**kwargs):
 def get_pattern(self):
     """ Get the regex pattern for block(s) to be parsed """
     if self.info['pattern'] is None:
-        block_candidates = get_block_candidates(self.info['modname'], skip_grc=True, skip_python=True)
+        block_candidates = self.get_block_candidates(skip_grc=True, skip_python=True)
         with SequenceCompleter(block_candidates):
             self.info['pattern'] = cli_input(
                 'Which blocks do you want to parse? (Regex): ')

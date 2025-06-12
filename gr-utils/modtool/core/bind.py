@@ -70,11 +70,7 @@ class ModToolGenBindings(ModTool):
             else:
                 raise ModToolException("No block name or regex was specified!")
 
-            if self.info['version'] in ['310']:
-                prefix_include_root = '/'.join(('gnuradio',
-                                               self.info['modname']))
-            else:
-                prefix_include_root = self.info['modname']
+            prefix_include_root = self.info["includedir"][len("include/"):]
 
             files_to_process = [os.path.join(
                 self.dir, self.info['includedir'], f'{blockname}.h') for blockname in blocknames_to_process]

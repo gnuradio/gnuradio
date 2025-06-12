@@ -223,10 +223,10 @@ class ParserCCBlock(object):
                     continue
             return param_list
         # Go, go, go!
-        if self.version in ('37', '38', '39', '310'):
-            make_regex = r'static\s+sptr\s+make\s*'
-        else:
+        if self.version in ('autofoo', '36'):
             make_regex = r'(?<=_API)\s+\w+_sptr\s+\w+_make_\w+\s*'
+        else:
+            make_regex = r'static\s+sptr\s+make\s*'
         make_match = re.compile(make_regex, re.MULTILINE).search(self.code_h)
         try:
             params_list = _scan_param_list(make_match.end(0))

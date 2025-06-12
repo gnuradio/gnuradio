@@ -11,14 +11,14 @@
 
 import click
 
-from ..core import get_xml_candidates, ModToolUpdate
+from ..core import ModToolUpdate
 from ..tools import SequenceCompleter
 from .base import block_name, run, cli_input, ModToolException
 
 
 def xml_blockname_complete(ctx, param, incomplete: str):
     return sorted(
-        name for name in get_xml_candidates()
+        name for name in ModToolUpdate(cli=True).get_xml_candidates()
         if name.startswith(incomplete)
     )
 
@@ -43,7 +43,7 @@ def get_blockname(self):
     """ Returns the blockname for block to be updated """
     if self.info['complete']:
         return
-    block_candidates = get_xml_candidates()
+    block_candidates = self.get_xml_candidates()
     if self.info['blockname'] is None:
         with SequenceCompleter(block_candidates):
             self.info['blockname'] = cli_input(
