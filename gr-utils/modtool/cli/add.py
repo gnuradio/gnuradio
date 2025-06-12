@@ -152,7 +152,7 @@ def get_arglist(self):
             fg='cyan'),
             prompt_suffix='',
             default='',
-            show_default=False)
+            show_default=False) if not self.info['yes'] else ''
 
 
 def get_py_qa(self):
@@ -160,7 +160,7 @@ def get_py_qa(self):
     if self.add_py_qa is None:
         if not (self.info['blocktype'] in ('noblock') or self.skip_subdirs['python']):
             self.add_py_qa = ask_yes_no(click.style(
-                'Add Python QA code?', fg='cyan'), True)
+                'Add Python QA code?', fg='cyan'), True) if not self.info['yes'] else True
         else:
             self.add_py_qa = False
 
@@ -170,6 +170,6 @@ def get_cpp_qa(self):
     if self.add_cc_qa is None:
         if self.info['lang'] == 'cpp':
             self.add_cc_qa = ask_yes_no(click.style('Add C++ QA code?', fg='cyan'),
-                                        not self.add_py_qa)
+                                        not self.add_py_qa) if not self.info['yes'] else not self.add_py_qa
         else:
             self.add_cc_qa = False
