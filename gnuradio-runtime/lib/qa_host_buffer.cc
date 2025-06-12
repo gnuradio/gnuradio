@@ -19,7 +19,6 @@
 #include <gnuradio/transfer_type.h>
 #include <boost/test/unit_test.hpp>
 #include <cstdlib>
-#include <iostream>
 
 // This is a trivial mocked up block inspired by gr::blocks::nop that is used
 // only as a placeholder for testing host_buffer below.

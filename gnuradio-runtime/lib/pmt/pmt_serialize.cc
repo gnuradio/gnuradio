@@ -13,7 +13,6 @@
 #endif
 
 #include "pmt/pmt_serial_tags.h"
-#include "pmt_int.h"
 #include <pmt/pmt.h>
 #include <cstdint>
 #include <limits>

@@ -1,9 +1,7 @@
 #include "gnuradio/dictionary_logger_backend.h"
 #include <spdlog/details/log_msg.h>
-#include <memory>
 #include <mutex>
 #include <regex>
-#include <tuple>
 
 
 namespace gr {
@@ -24,7 +22,7 @@ void dictionary_logger_backend::sink_it_(const spdlog::details::log_msg& message
     }
 
     const auto& payload = message.payload;
-    auto lock = std::scoped_lock(map_mutex);
+    std::scoped_lock lock(map_mutex);
 
     auto& message_set =
         log_entries[std::string{ logger_name.data(), logger_name.size() }];
