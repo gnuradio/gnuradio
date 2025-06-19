@@ -114,7 +114,8 @@ jobs:
     steps:
     - uses: actions/checkout@v1
       name: Checkout Project
-    - name: Prepare sccache usage (if installed)
+    - name: Prepare sccache usage (if available)
+      if: ${{ vars.SCCACHE_S3_BUCKET && vars.SCCACHE_S3_ENDPOINT }}
       id: enable_sccache
       env:
         SCCACHE_S3_ENDPOINT: ${{ vars.SCCACHE_S3_ENDPOINT }}
