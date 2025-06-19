@@ -30,5 +30,7 @@ no_credentials = false
 region = "${SCCACHE_S3_REGION}"
 EOF
 
+add_output SCCACHE_CONF "$(realpath ~/.config/sccache/config)"
+
 bail_with_message 'enabling sccache' "Using ${SCCACHE_BIN} ($(${SCCACHE_BIN} --version)) as sccache binary."
 
