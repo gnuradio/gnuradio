@@ -327,8 +327,9 @@ class ofdm_rx(gr.hier_block2):
 
             even_carriers = any(sync_word1[0::2])
             if even_carriers and any(sync_word1[1::2]):
-                raise ValueError("Alternate carriers in Sync Word 1 "
-                    "must be zero for Schmidl & Cox synchronization")
+                raise ValueError(
+                    "Alternate carriers in Sync Word 1 must be zero for Schmidl & Cox synchronization"
+                )
             self.sync_word1 = sync_word1
 
         self.sync_word2 = ()
