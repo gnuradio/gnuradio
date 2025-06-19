@@ -184,6 +184,9 @@ jobs:
     - name: Check for installation duplicates
       if: ${{ ! matrix.skip_upload }}
       run: tools/check_installation_duplicates.bash /build/install_manifest.txt
+    - name: Sccache statistics
+      if: ${{ steps.enable_sccache.outputs.CXX_LAUNCHER }}
+      run: sccache -s
   mingw64:
     timeout-minutes: 80
   # All of these shall depend on the formatting check (needs: check-formatting)
@@ -267,3 +270,8 @@ jobs:
     - name: Make Test
       working-directory: ./build
       run: ctest --output-on-failure
+    - name: Sccache statistics
+      env: 
+        SCCACHE_CONF: ${{ steps.enable_sccache.outputs.SCCACHE_CONF }}
+      if: ${{ steps.enable_sccache.outputs.CXX_LAUNCHER }}
+      run: sccache -s
