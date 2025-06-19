@@ -99,8 +99,8 @@ jobs:
             ldpath: /usr/local/lib64
           - distro: 'Debian 12'
             containerid: 'gnuradio/ci:debian-12-3.10'
-          - distro: 'Debian 11 (32-bit)'
-            containerid: 'gnuradio/ci:debian-i386-11-3.10'
+          - distro: 'Debian 12 (32-bit)'
+            containerid: 'gnuradio/ci:debian-i386-12-3.10'
             containeroptions: '--platform linux/i386'
             ctest_args: '-E "qa_polar_..coder_(sc_)?systematic"'
             ## Skip upload, cause 32 bit node doesn't work
