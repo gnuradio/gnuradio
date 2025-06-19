@@ -235,14 +235,32 @@ jobs:
           spdlog:p
           thrift:p
           volk:p
+          sccache:p
     - name: Checkout code
       uses: actions/checkout@v4
+    - name: Prepare sccache usage (if available)
+      if: ${{ vars.SCCACHE_S3_BUCKET && vars.SCCACHE_S3_ENDPOINT }}
+      id: enable_sccache
+      env:
+        SCCACHE_S3_ENDPOINT: ${{ vars.SCCACHE_S3_ENDPOINT }}
+        SCCACHE_S3_BUCKET: ${{ vars.SCCACHE_S3_BUCKET }}
+        SCCACHE_S3_REGION: ${{ vars.SCCACHE_S3_REGION }}
+      run: tools/setup_cmake_cache_flags.bash "${{ matrix.distro }}"
     - name: CMake
+      env:
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.SCCACHE_S3_KEY }}
+        AWS_ACCESS_KEY_ID: ${{ vars.SCCACHE_S3_KEY_ID }}
       run: |
         cmake -S . -B build \
           -DCMAKE_INSTALL_PREFIX=${RUNNER_TEMP}/msys64/mingw64 \
-          -DENABLE_DOXYGEN=OFF
+          -DENABLE_DOXYGEN=OFF \
+          ${{ steps.enable_sccache.outputs.CXX_LAUNCHER }} \
+          ${{ steps.enable_sccache.outputs.C_LAUNCHER }}
     - name: Make
+      env:
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.SCCACHE_S3_KEY }}
+        AWS_ACCESS_KEY_ID: ${{ vars.SCCACHE_S3_KEY_ID }}
+        SCCACHE_CONF: ${{ steps.enable_sccache.outputs.SCCACHE_CONF }}
       run: cmake --build build
     - name: Make Install
       run: cmake --install build
