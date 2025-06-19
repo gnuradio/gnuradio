@@ -13,7 +13,7 @@ jobs:
     timeout-minutes: 10
     name: Check hashes
     container:
-      image: 'gnuradio/ci:fedora-40-3.10'
+      image: 'gnuradio/ci:fedora-42-3.10'
     steps:
     - name: Checkout project
       uses: actions/checkout@v4
