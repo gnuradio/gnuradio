@@ -114,17 +114,28 @@ jobs:
     steps:
     - uses: actions/checkout@v1
       name: Checkout Project
+    - name: Prepare sccache usage (if installed)
+      id: enable_sccache
+      env:
+        SCCACHE_S3_ENDPOINT: ${{ vars.SCCACHE_S3_ENDPOINT }}
+        SCCACHE_S3_BUCKET: ${{ vars.SCCACHE_S3_BUCKET }}
+        SCCACHE_S3_REGION: ${{ vars.SCCACHE_S3_REGION }}
+      run: tools/setup_cmake_cache_flags.bash "${{ matrix.distro }}"
     - name: CMake
       env:
         CXXFLAGS: ${{ matrix.ignore_errors || '-Werror' }} ${{ matrix.cxxflags }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.SCCACHE_S3_KEY }}
+        AWS_ACCESS_KEY_ID: ${{ vars.SCCACHE_S3_KEY_ID }}
       run: >
         cd /build
         && cmake
         -DENABLE_DEFAULT=${{ matrix.enable_default || 'On' }}
         -DENABLE_DOXYGEN=${{ matrix.enable_doxygen || 'Off' }}
         -DENABLE_PYTHON=${{  matrix.enable_python  || 'On' }}
-        -DCMAKE_BUILD_TYPE=RelWithDebInfo
+        ${{ steps.enable_sccache.outputs.CXX_LAUNCHER }}
+        ${{ steps.enable_sccache.outputs.C_LAUNCHER }}
         ${{ matrix.cmakeflags }}
+        -DCMAKE_BUILD_TYPE=RelWithDebInfo
         ${GITHUB_WORKSPACE}
     - name: Dump compile commands
       if: ${{ ! matrix.skip_upload }}
@@ -134,6 +145,9 @@ jobs:
         path: /build/compile_commands.json
         if-no-files-found: ignore
     - name: Make
+      env:
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.SCCACHE_S3_KEY }}
+        AWS_ACCESS_KEY_ID: ${{ vars.SCCACHE_S3_KEY_ID }}
       run: cmake --build /build ${{ matrix.build_options || '--parallel $(nproc)' }}
     - name: Make Test
       env:
