@@ -12,6 +12,7 @@
 #include <config.h>
 #endif
 
+#include "flat_flowgraph.h"
 #include "scheduler_tpb.h"
 #include "tpb_thread_body.h"
 #include <gnuradio/thread/thread_body_wrapper.h>

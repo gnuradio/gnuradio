@@ -8,13 +8,8 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "vco_f_impl.h"
 #include <gnuradio/io_signature.h>
-#include <cmath>
 
 namespace gr {
 namespace blocks {

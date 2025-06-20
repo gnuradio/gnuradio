@@ -16,7 +16,6 @@
 #include <gnuradio/sincos.h>
 
 #include <cmath>
-#include <vector>
 
 namespace gr {
 

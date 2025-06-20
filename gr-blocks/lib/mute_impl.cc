@@ -9,16 +9,10 @@
  *
  */
 
-
-#include <pmt/pmt.h>
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "mute_impl.h"
 #include <gnuradio/io_signature.h>
+#include <pmt/pmt.h>
 #include <algorithm>
-#include <cstring>
 
 namespace gr {
 namespace blocks {
