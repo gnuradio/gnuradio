@@ -38,7 +38,7 @@ templates:
     var_make: self.${id} = ${id} = ${value}
     callbacks:
     - self.set_${id}(${value})
-    - Qt.QMetaObject.invokeMethod(self._${id}_label, "setText", Qt.Q_ARG("QString",
+    - QtCore.QMetaObject.invokeMethod(self._${id}_label, "setText", QtCore.Q_ARG("QString",
         str(self._${id}_formatter(${id}))))
     make: |-
         <%
