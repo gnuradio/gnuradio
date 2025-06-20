@@ -40,15 +40,15 @@ templates:
     var_make: self.${id} = ${id} = ${value}
     callbacks:
     - self.set_${id}(${value})
-    - Qt.QMetaObject.invokeMethod(self._${id}_line_edit, "setText", Qt.Q_ARG("QString",
+    - QtCore.QMetaObject.invokeMethod(self._${id}_line_edit, "setText", QtCore.Q_ARG("QString",
         ${type.str}(${id})))
     make: |-
         <%
             win = 'self._%s_tool_bar'%id
         %>
-        ${win} = Qt.QToolBar(self)
-        ${win}.addWidget(Qt.QLabel("${no_quotes(label,repr(id))}" + ": "))
-        self._${id}_line_edit = Qt.QLineEdit(str(self.${id}))
+        ${win} = QtWidgets.QToolBar(self)
+        ${win}.addWidget(QtWidgets.QLabel("${no_quotes(label,repr(id))}" + ": "))
+        self._${id}_line_edit = QtWidgets.QLineEdit(str(self.${id}))
         self._${id}_tool_bar.addWidget(self._${id}_line_edit)
         self._${id}_line_edit.${entry_signal}.connect(
             lambda: self.set_${id}(${type.conv}(str(self._${id}_line_edit.text()))))

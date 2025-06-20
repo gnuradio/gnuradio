@@ -9,10 +9,9 @@
 #
 #
 
-from PyQt5.QtWidgets import QFrame, QVBoxLayout, QLabel
-from PyQt5 import Qt
-from PyQt5.QtCore import Qt as Qtc
-from PyQt5.QtCore import QSize
+from qtpy import QtWidgets
+from qtpy.QtWidgets import QFrame, QVBoxLayout, QLabel
+from qtpy.QtCore import Qt, QSize
 from gnuradio import gr
 import pmt
 
@@ -34,7 +33,7 @@ class LabeledDialControl(QFrame):
         self.scaleFactor = scaleFactor
         self.lbl = lbl
         self.lblcontrol = QLabel(lbl, self)
-        self.lblcontrol.setAlignment(Qtc.AlignCenter)
+        self.lblcontrol.setAlignment(Qt.AlignCenter)
 
         if self.showvalue:
             textstr = self.buildTextStr(defaultvalue)
@@ -48,7 +47,7 @@ class LabeledDialControl(QFrame):
 
         layout.addWidget(self.numberControl)
 
-        layout.setAlignment(Qtc.AlignCenter)
+        layout.setAlignment(Qt.AlignCenter)
         self.setLayout(layout)
         self.show()
 
@@ -75,10 +74,10 @@ class LabeledDialControl(QFrame):
         self.lblcontrol.setText(textstr)
 
 
-class DialControl(Qt.QDial):
+class DialControl(QtWidgets.QDial):
     def __init__(self, minimum=0, maximum=100, defaultvalue=0, backgroundColor='default',
                  lablelCallback=None, changedCallback=None, minsize=100):
-        Qt.QDial.__init__(self)
+        QtWidgets.QDial.__init__(self)
 
         if backgroundColor != "default":
             self.setStyleSheet("background-color: " + backgroundColor + ";")
