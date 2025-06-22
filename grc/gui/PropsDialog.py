@@ -269,8 +269,14 @@ class PropsDialog(Gtk.Dialog):
 
         # show docstring(s) extracted from python sources
         for cls_name, docstring in docstrings.items():
-            buf.insert_with_tags_by_name(pos, cls_name + '\n', 'b')
-            buf.insert(pos, docstring + '\n\n')
+            # remove number at the end of self._block.name
+            last_underscore = self._block.name.rfind('_')
+
+            # make sure the docs is from this block
+            if cls_name == self._block.name[:last_underscore]:
+                buf.insert_with_tags_by_name(pos, cls_name + '\n', 'b')
+                buf.insert(pos, docstring + '\n\n')
+
         pos.backward_chars(2)
         buf.delete(pos, buf.get_end_iter())
 
