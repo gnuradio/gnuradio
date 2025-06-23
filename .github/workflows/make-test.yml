@@ -3,9 +3,11 @@ on:
   push:
     branches:
       - main
+      - base-installer-support
   pull_request:
     branches:
       - main
+      - base-installer-support
 jobs:
   # Check hashes first
   check-hashes:
