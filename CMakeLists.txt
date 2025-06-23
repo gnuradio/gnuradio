@@ -568,7 +568,10 @@ configure_file(
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-runtime/include/gnuradio/config.h
         DESTINATION ${GR_INCLUDE_DIR}/gnuradio)
 
+# Install rules are needed for any deployment, incl. make install
+GR_GENERATE_INSTALL()
+
+# Enable rules for build binary installer (for Windows, Mac)
 if(GR_BUILD_INSTALLER)
-    GR_GENERATE_INSTALL()
     include(cmake/Modules/GrCPack.cmake)
 endif(GR_BUILD_INSTALLER)
