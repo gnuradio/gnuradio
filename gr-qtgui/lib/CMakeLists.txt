@@ -8,7 +8,7 @@
 ########################################################################
 # Setup the QT file generations stuff
 ########################################################################
-
+message(STATUS "QT_DEFAULT_VERSION " ${QT_DEFAULT_MAJOR_VERSION})
 set(QTGUI_SOURCES
     DisplayPlot.cc
     FrequencyDisplayPlot.cc
@@ -69,7 +69,6 @@ set(QTGUI_LIBS
     gnuradio-filter
     Volk::volk
     qwt::qwt
-    Qt5::Widgets
 )
 
 if(ENABLE_GR_QTGUI_OPENGL)
@@ -82,10 +81,17 @@ if(ENABLE_GR_QTGUI_OPENGL)
         ${RFNOC_F15_RC_SRCS}
     )
     find_package(OpenGL)
-    list(APPEND PRIVATE_LIBS
+    if(QT_DEFAULT_MAJOR_VERSION EQUAL 5)
+      list(APPEND PRIVATE_LIBS
         Qt5::OpenGL
         OpenGL::GL
-    )
+      )
+    elseif(QT_DEFAULT_MAJOR_VERSION EQUAL 6)
+      list(APPEND PRIVATE_LIBS
+        Qt6::OpenGL
+        OpenGL::GL
+      )
+    endif()
 endif()
 
 add_library(
@@ -106,6 +112,7 @@ target_link_libraries(gnuradio-qtgui
 )
 
 set(qtgui_mod_includedir ${CMAKE_CURRENT_SOURCE_DIR}/../include/gnuradio/qtgui)
+if(QT_DEFAULT_MAJOR_VERSION EQUAL 5)
 qt5_wrap_cpp(
     qtgui_moc_sources
     ${qtgui_mod_includedir}/spectrumdisplayform.h
@@ -144,8 +151,52 @@ if(ENABLE_GR_QTGUI_OPENGL)
         QRfnocF15ColorMapper.h
         )
 endif()
+elseif(QT_DEFAULT_MAJOR_VERSION EQUAL 6)
+qt6_wrap_cpp(
+    qtgui_moc_sources
+    ${qtgui_mod_includedir}/spectrumdisplayform.h
+    ${qtgui_mod_includedir}/displayform.h
+    ${qtgui_mod_includedir}/eyedisplaysform.h
+    ${qtgui_mod_includedir}/eyedisplayform.h
+    ${qtgui_mod_includedir}/timedisplayform.h
+    ${qtgui_mod_includedir}/eyecontrolpanel.h
+    ${qtgui_mod_includedir}/timecontrolpanel.h
+    ${qtgui_mod_includedir}/timerasterdisplayform.h
+    ${qtgui_mod_includedir}/freqdisplayform.h
+    ${qtgui_mod_includedir}/freqcontrolpanel.h
+    ${qtgui_mod_includedir}/constellationdisplayform.h
+    ${qtgui_mod_includedir}/waterfalldisplayform.h
+    ${qtgui_mod_includedir}/histogramdisplayform.h
+    ${qtgui_mod_includedir}/numberdisplayform.h
+    ${qtgui_mod_includedir}/vectordisplayform.h
+    ${qtgui_mod_includedir}/form_menus.h
+    ${qtgui_mod_includedir}/DisplayPlot.h
+    ${qtgui_mod_includedir}/EyeDisplayPlot.h
+    ${qtgui_mod_includedir}/FrequencyDisplayPlot.h
+    ${qtgui_mod_includedir}/TimeDomainDisplayPlot.h
+    ${qtgui_mod_includedir}/TimeRasterDisplayPlot.h
+    ${qtgui_mod_includedir}/WaterfallDisplayPlot.h
+    ${qtgui_mod_includedir}/ConstellationDisplayPlot.h
+    ${qtgui_mod_includedir}/HistogramDisplayPlot.h
+    ${qtgui_mod_includedir}/VectorDisplayPlot.h
+    edit_box_msg_impl.h
+    matrix_display.h
+    matrix_display_signal.h
+    )
+if(ENABLE_GR_QTGUI_OPENGL)
+    qt6_wrap_cpp(
+        qtgui_moc_sources
+        QRfnocF15Surface.h
+        QRfnocF15ColorMapper.h
+        )
+endif()
+endif()
 target_sources(gnuradio-qtgui PRIVATE ${qtgui_moc_sources})
-qt5_wrap_ui(qtgui_ui_hdrs spectrumdisplayform.ui)
+if(QT_DEFAULT_MAJOR_VERSION EQUAL 5)
+    qt5_wrap_ui(qtgui_ui_hdrs spectrumdisplayform.ui)
+elseif(QT_DEFAULT_MAJOR_VERSION EQUAL 6)
+    qt6_wrap_ui(qtgui_ui_hdrs spectrumdisplayform.ui)
+endif()
 target_sources(gnuradio-qtgui PRIVATE ${qtgui_ui_hdrs})
 
 #FIXME the sources expect <foo>.ui.h, but the macros generate ui_foo.h
@@ -166,5 +217,9 @@ if(MSVC)
 endif(MSVC)
 
 if(BUILD_SHARED_LIBS)
-    gr_library_foo(gnuradio-qtgui Qwt Qt5Widgets)
+    if(QT_DEFAULT_MAJOR_VERSION EQUAL 5)
+        gr_library_foo(gnuradio-qtgui Qwt Qt5Widgets)
+    elseif(QT_DEFAULT_MAJOR_VERSION EQUAL 6)
+        gr_library_foo(gnuradio-qtgui Qwt Qt6Widgets)
+    endif() 
 endif()

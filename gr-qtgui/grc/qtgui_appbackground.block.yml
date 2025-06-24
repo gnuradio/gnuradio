@@ -23,7 +23,6 @@ parameters:
     hide: 'part'
 
 templates:
-    imports: import PyQt5
     make: |-
         None
         if "${relBackgroundColor}" != 'default':
