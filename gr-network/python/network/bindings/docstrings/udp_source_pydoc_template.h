@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Free Software Foundation, Inc.
+ * Copyright 2025 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -18,7 +18,7 @@
 static const char* __doc_gr_network_udp_source = R"doc()doc";
 
 
-static const char* __doc_gr_network_udp_source_udp_source = R"doc()doc";
+static const char* __doc_gr_network_udp_source_udp_source_0 = R"doc()doc";
 
 
 static const char* __doc_gr_network_udp_source_make = R"doc()doc";
