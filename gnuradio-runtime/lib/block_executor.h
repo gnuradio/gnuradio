@@ -15,8 +15,6 @@
 #include <gnuradio/logger.h>
 #include <gnuradio/runtime_types.h>
 #include <gnuradio/tags.h>
-#include <fstream>
-#include <memory>
 
 namespace gr {
 

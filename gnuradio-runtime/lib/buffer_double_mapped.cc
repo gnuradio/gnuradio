@@ -16,11 +16,9 @@
 #include <gnuradio/buffer_double_mapped.h>
 #include <gnuradio/buffer_reader.h>
 #include <gnuradio/math.h>
-#include <assert.h>
 #include <algorithm>
-#include <iostream>
+#include <cassert>
 #include <numeric>
-#include <stdexcept>
 
 namespace gr {
 
@@ -56,12 +54,8 @@ buffer_double_mapped::buffer_double_mapped(int nitems,
         throw std::bad_alloc();
 
 #ifdef BUFFER_DEBUG
-    {
-        std::ostringstream msg;
-        msg << "[" << this << "] "
-            << "buffer_double_mapped constructor -- history: " << link->history();
-        d_logger->debug(msg.str());
-    }
+    d_logger->debug(
+        "[{}] buffer_double_mapped constructor -- history: {}", this, link->history());
 #endif
 }
 
@@ -145,11 +139,11 @@ int buffer_double_mapped::space_available()
         }
 
 #ifdef BUFFER_DEBUG
-        std::ostringstream msg;
-        msg << "[" << this << "] "
-            << "space_available() called  d_write_index: " << d_write_index
-            << " -- space_available: " << (d_bufsize - most_data - 1);
-        d_logger->debug(msg.str());
+        d_logger->debug(
+            "[{}] space_available() called d_write_index: {} -- space_available: {}",
+            this,
+            d_write_index,
+            d_bufsize - most_data - 1);
 #endif
 
         // The -1 ensures that the case d_write_index == d_read_index is

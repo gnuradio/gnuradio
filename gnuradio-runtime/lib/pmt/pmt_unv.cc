@@ -14,7 +14,6 @@
 #include <config.h>
 #endif
 
-#include "pmt_int.h"
 #include "pmt_unv_int.h"
 #include <pmt/pmt.h>
 #include <cstring>

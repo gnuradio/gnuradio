@@ -22,7 +22,6 @@
 #include <gnuradio/prefs.h>
 #include <volk/volk.h>
 #include <iostream>
-#include <map>
 #include <numeric>
 
 namespace gr {

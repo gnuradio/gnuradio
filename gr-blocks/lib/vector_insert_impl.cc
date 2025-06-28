@@ -9,15 +9,11 @@
  */
 
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
 #include "vector_insert_impl.h"
 #include <gnuradio/block.h>
 #include <gnuradio/io_signature.h>
+#include <spdlog/fmt/fmt.h>
 #include <algorithm>
-#include <cstdio>
 #include <stdexcept>
 
 namespace gr {
@@ -43,9 +39,24 @@ vector_insert_impl<T>::vector_insert_impl(const std::vector<T>& data,
 {
     this->set_tag_propagation_policy(gr::block::TPP_DONT); // handle tags manually
     // some sanity checks
-    assert(offset < periodicity);
-    assert(offset >= 0);
-    assert((size_t)periodicity > data.size());
+    if (offset < 0) {
+        throw std::invalid_argument(
+            fmt::format("offset {} needs to be non-negative.", offset));
+    }
+    if (periodicity <= 0) {
+        throw std::invalid_argument(
+            fmt::format("periodicy {} needs to be positive.", periodicity));
+    }
+    if (offset >= periodicity) {
+        throw std::invalid_argument(fmt::format(
+            "offset {} needs to be smaller than periodicity {}.", offset, periodicity));
+    }
+    if (static_cast<size_t>(periodicity) <= data.size()) {
+        throw std::invalid_argument(
+            fmt::format("periodicity {} needs to be larger than data size {}.",
+                        periodicity,
+                        data.size()));
+    }
 }
 
 template <class T>

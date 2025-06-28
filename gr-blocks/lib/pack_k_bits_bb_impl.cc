@@ -8,13 +8,8 @@
  *
  */
 
-#if HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "pack_k_bits_bb_impl.h"
 #include <gnuradio/io_signature.h>
-#include <stdexcept>
 
 namespace gr {
 namespace blocks {
@@ -48,12 +43,9 @@ int pack_k_bits_bb_impl::work(int noutput_items,
 
     // Propagate tags
     get_tags_in_range(wintags, 0, nitems_read(0), nitems_read(0) + (noutput_items * d_k));
-
-    std::vector<tag_t>::iterator t;
-    for (t = wintags.begin(); t != wintags.end(); t++) {
-        tag_t new_tag = *t;
-        new_tag.offset = std::floor((double)new_tag.offset / d_k);
-        add_item_tag(0, new_tag);
+    for (auto& tag : wintags) {
+        tag.offset = std::floor(static_cast<double>(tag.offset) / d_k);
+        add_item_tag(0, tag);
     }
 
     return noutput_items;

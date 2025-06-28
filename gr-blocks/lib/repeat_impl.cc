@@ -16,7 +16,6 @@
 #include <algorithm>
 #include <cstddef>
 #include <stdexcept>
-#include <vector>
 
 namespace gr {
 namespace blocks {
