@@ -69,7 +69,6 @@ set(GR_LIBEXEC_DIR "@GR_LIBEXEC_DIR@")
 set(GR_PKG_LIBEXEC_DIR "@GR_PKG_LIBEXEC_DIR@")
 set(GR_THEMES_DIR "@GR_THEMES_DIR@")
 set(GR_CONF_DIR "@GR_CONF_DIR@")
-set(SYSCONFDIR "@SYSCONFDIR@")
 set(GR_PREFSDIR "@GR_PREFSDIR@")
 
 # We check the requested components in the order given by the list below –
