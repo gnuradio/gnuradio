@@ -1,6 +1,7 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2009,2011,2012 Free Software Foundation, Inc.
+ * Copyright 2025 Daniel Estevez <daniel@destevez.net>
  *
  * This file is part of GNU Radio
  *
@@ -81,10 +82,18 @@ public:
      * \param samps_per_sym (float) number of samples per symbol
      * \param rolloff (float) Rolloff (excess bandwidth) of signal filter
      * \param filter_size (int) number of filter taps to generate
-     * \param bandwidth (float) Loop bandwidth
+     * \param bandwidth (float) Loop bandwidth. If improved_loop_filter is true, then
+     * this paramter is BL*T, where BL is the loop noise bandwidth in Hz, and
+     * T is the sampling period in seconds.
+     * \param improved_loop_filter (bool) Improved loop filter. If true, the
+     * loop filter is implemented correctly, but the loop bandwidth parameter is
+     * not backwards compatible. If false, the legacy behavior is maintained.
      */
-    static sptr
-    make(float samps_per_sym, float rolloff, int filter_size, float bandwidth);
+    static sptr make(float samps_per_sym,
+                     float rolloff,
+                     int filter_size,
+                     float bandwidth,
+                     bool improved_loop_filter = false);
 
     /*******************************************************************
      SET FUNCTIONS
