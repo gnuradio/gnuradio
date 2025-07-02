@@ -1,6 +1,7 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2009-2012,2014 Free Software Foundation, Inc.
+ * Copyright 2025 Daniel Estevez <daniel@destevez.net>
  *
  * This file is part of GNU Radio
  *
@@ -35,10 +36,11 @@ float sinc(float x)
 fll_band_edge_cc::sptr fll_band_edge_cc::make(float samps_per_sym,
                                               float rolloff,
                                               int filter_size,
-                                              float bandwidth)
+                                              float bandwidth,
+                                              bool improved_loop_filter)
 {
     return gnuradio::make_block_sptr<fll_band_edge_cc_impl>(
-        samps_per_sym, rolloff, filter_size, bandwidth);
+        samps_per_sym, rolloff, filter_size, bandwidth, improved_loop_filter);
 }
 
 static int ios[] = { sizeof(gr_complex), sizeof(float), sizeof(float), sizeof(float) };
@@ -46,7 +48,8 @@ static std::vector<int> iosig(ios, ios + sizeof(ios) / sizeof(int));
 fll_band_edge_cc_impl::fll_band_edge_cc_impl(float samps_per_sym,
                                              float rolloff,
                                              int filter_size,
-                                             float bandwidth)
+                                             float bandwidth,
+                                             bool improved_loop_filter)
     : sync_block("fll_band_edge_cc",
                  io_signature::make(1, 1, sizeof(gr_complex)),
                  io_signature::makev(1, 4, iosig)),
@@ -54,15 +57,50 @@ fll_band_edge_cc_impl::fll_band_edge_cc_impl(float samps_per_sym,
           bandwidth, M_TWOPI * (2.0 / samps_per_sym), -M_TWOPI * (2.0 / samps_per_sym)),
       d_sps(samps_per_sym),
       d_rolloff(rolloff),
-      d_filter_size(filter_size)
+      d_filter_size(filter_size),
+      d_bandwidth(bandwidth),
+      d_improved_loop_filter(improved_loop_filter)
 {
+    if (improved_loop_filter) {
+        // override control loop gains, since we need an FLL-type update of the
+        // form
+        //
+        // d_freq = d_freq + d_beta * error;
+        // d_phase = d_phase + d_freq;
+
+        set_alpha(0.0f); // do not update phase directly
+
+        // For a 1st order loop filter in the continuous update approximation,
+        // the loop constant is K1 = 4*BL*T (see Stephen & Thomas:
+        // Controlled-Root Formulation for Digital Phase-Locked Loops)
+        //
+        // bandwidth here is interpreted as BL*T, where T is the sampling
+        // period.
+        //
+        // This assumes that the error and the phase use the same units (cycles,
+        // in the case of the paper). In our case, the phase uses units of
+        // radians, but the error is in units of cycles/sample (when normalized
+        // with the discriminant gain factored in below into the loop
+        // gain). Therefore, the loop gain needs to be multiplied by 2*pi to
+        // perform unit conversion.
+        //
+        // The frequency discriminant has gain samps_per_sym. We compensate this
+        // by dividing the loop gain by samps_per_sym here.
+        set_beta(M_TWOPI * 4.0 * bandwidth / samps_per_sym);
+    } else {
+        d_logger->warn(
+            "Using legacy FLL loop filter. Consider updating to the improved loop "
+            "filter, which requires a change in the bandwidth setting. See "
+            "https://github.com/gnuradio/gnuradio/pull/7890 for more information.");
+    }
+
     // Value-check samples per symbol
-    if (samps_per_sym <= 0) {
+    if (samps_per_sym <= 0.0f) {
         throw std::out_of_range("fll_band_edge_cc: invalid number of sps. Must be > 0.");
     }
 
     // Value-check rolloff factor
-    if (rolloff < 0 || rolloff > 1.0) {
+    if (rolloff < 0.0f || rolloff > 1.0f) {
         throw std::out_of_range(
             "fll_band_edge_cc: invalid rolloff factor. Must be in [0,1].");
     }
@@ -73,7 +111,7 @@ fll_band_edge_cc_impl::fll_band_edge_cc_impl(float samps_per_sym,
     }
 
     // Value-check bandwidth
-    if (samps_per_sym <= 0) {
+    if (bandwidth <= 0.0f) {
         throw std::out_of_range("fll_band_edge_cc: invalid bandwidth. Must be > 0.");
     }
 
@@ -98,6 +136,9 @@ void fll_band_edge_cc_impl::set_samples_per_symbol(float sps)
     }
     set_max_freq(M_TWOPI * (2.0 / sps));
     set_min_freq(-M_TWOPI * (2.0 / sps));
+    if (d_improved_loop_filter) {
+        set_beta(4.0 * d_bandwidth / sps);
+    }
     design_filter();
 }
 
@@ -193,10 +234,6 @@ void fll_band_edge_cc_impl::design_filter()
         d_taps_upper[index] = std::conj(d_taps_lower[d_filter_size - i - 1]);
     }
 
-    d_updated = true;
-
-    // Set the history to ensure enough input items for each filter
-    set_history(d_filter_size + 1);
     d_filter_upper =
         std::make_unique<gr::filter::kernel::fir_filter_with_buffer_ccc>(d_taps_upper);
     d_filter_lower =
@@ -226,10 +263,6 @@ int fll_band_edge_cc_impl::work(int noutput_items,
                                 gr_vector_void_star& output_items)
 {
     gr::thread::scoped_lock lock(d_setlock);
-    if (d_updated) {
-        d_updated = false;
-        return 0; // history requirements may have changed.
-    }
 
     const auto* in = reinterpret_cast<const gr_complex*>(input_items[0]);
     auto* out = reinterpret_cast<gr_complex*>(output_items[0]);
