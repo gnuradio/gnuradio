@@ -28,7 +28,7 @@ class test_fll_band_edge_cc(gr_unittest.TestCase):
     def test01(self):
         sps = 4
         rolloff = 0.35
-        bw = 2 * math.pi / 100.0
+        bw = 2.3e-3
         ntaps = 45
 
         # Create pulse shape filter
@@ -49,7 +49,7 @@ class test_fll_band_edge_cc(gr_unittest.TestCase):
         self.mix = blocks.multiply_cc()
 
         # FLL will despin the symbols to an arbitrary phase
-        self.fll = digital.fll_band_edge_cc(sps, rolloff, ntaps, bw)
+        self.fll = digital.fll_band_edge_cc(sps, rolloff, ntaps, bw, True)
 
         # Create sinks for all outputs of the FLL
         # we will only care about the freq and error outputs
@@ -76,7 +76,7 @@ class test_fll_band_edge_cc(gr_unittest.TestCase):
     def test02_noisy(self):
         sps = 4
         rolloff = 0.35
-        bw = 2 * math.pi / 100.0
+        bw = 2.3e-3
         ntaps = 45
         noise_std = 1 / 16
         length = 2 * 10**5
@@ -101,7 +101,7 @@ class test_fll_band_edge_cc(gr_unittest.TestCase):
         self.mix = blocks.multiply_cc()
 
         # FLL will despin the symbols to an arbitrary phase
-        self.fll = digital.fll_band_edge_cc(sps, rolloff, ntaps, bw)
+        self.fll = digital.fll_band_edge_cc(sps, rolloff, ntaps, bw, True)
 
         # Create sinks for all outputs of the FLL
         # we will only care about the freq and error outputs

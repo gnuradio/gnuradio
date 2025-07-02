@@ -1,6 +1,7 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2009,2011,2012,2014 Free Software Foundation, Inc.
+ * Copyright 2025 Daniel Estevez <daniel@destevez.net>
  *
  * This file is part of GNU Radio
  *
@@ -24,10 +25,11 @@ private:
     float d_sps;
     float d_rolloff;
     size_t d_filter_size;
+    float d_bandwidth;
+    const bool d_improved_loop_filter;
 
     std::vector<gr_complex> d_taps_lower;
     std::vector<gr_complex> d_taps_upper;
-    bool d_updated = false;
     std::unique_ptr<gr::filter::kernel::fir_filter_with_buffer_ccc> d_filter_lower;
     std::unique_ptr<gr::filter::kernel::fir_filter_with_buffer_ccc> d_filter_upper;
 
@@ -41,7 +43,8 @@ public:
     fll_band_edge_cc_impl(float samps_per_sym,
                           float rolloff,
                           int filter_size,
-                          float bandwidth);
+                          float bandwidth,
+                          bool improved_loop_filter);
 
     void set_samples_per_symbol(float sps) override;
     void set_rolloff(float rolloff) override;
