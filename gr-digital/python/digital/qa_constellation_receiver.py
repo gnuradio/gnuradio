@@ -39,7 +39,7 @@ FREQUENCY_OFFSET = 0.01
 TIMING_OFFSET = 1.0
 
 # RECEIVER PARAMETERS
-FREQ_BW = 2 * math.pi / 100.0
+FREQ_BW = 2.3e-3
 PHASE_BW = 2 * math.pi / 100.0
 
 
@@ -189,10 +189,12 @@ class rec_test_tb(gr.top_block):
         if freq_offset:
             demod = generic_demod(constellation, differential=differential,
                                   freq_bw=FREQ_BW,
-                                  phase_bw=PHASE_BW)
+                                  phase_bw=PHASE_BW,
+                                  improved_fll=True)
         else:
             demod = generic_demod(constellation, differential=differential,
-                                  freq_bw=0, phase_bw=0)
+                                  freq_bw=0, phase_bw=0,
+                                  improved_fll=True)
         self.dst = blocks.vector_sink_b()
         self.connect(src, packer, mod, channel, demod, self.dst)
 

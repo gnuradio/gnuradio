@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(fll_band_edge_cc.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(51e6cbbcfdfc7f02df62d6fb1533f821)                     */
+/* BINDTOOL_HEADER_FILE_HASH(aed09b6d33792ce815856d4de93654f1)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -46,6 +46,7 @@ void bind_fll_band_edge_cc(py::module& m)
              py::arg("rolloff"),
              py::arg("filter_size"),
              py::arg("bandwidth"),
+             py::arg("improved_loop_filter") = false,
              D(fll_band_edge_cc, make))
 
 
