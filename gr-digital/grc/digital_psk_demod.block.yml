@@ -53,10 +53,6 @@ parameters:
     options: ['True', 'False']
     option_labels: ['On', 'Off']
     hide: ${ ('part' if str(log) == 'False' else 'none') }
--   id: improved_fll
-    label: Improved FLL
-    dtype: bool
-    default: False
 
 inputs:
 -   domain: stream
@@ -78,7 +74,6 @@ templates:
             timing_bw=${timing_bw},
             mod_code=${mod_code},
             verbose=${verbose},
-            log=${log},
-            improved_fll=${improved_fll})
+            log=${log})
 
 file_format: 1

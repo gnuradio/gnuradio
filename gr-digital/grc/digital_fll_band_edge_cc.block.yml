@@ -24,10 +24,6 @@ parameters:
 -   id: w
     label: Loop Bandwidth
     dtype: real
--   id: improved_loop_filter
-    label: Improved Loop Filter
-    dtype: bool
-    default: False
 
 inputs:
 -   domain: stream
@@ -51,7 +47,7 @@ outputs:
 
 templates:
     imports: from gnuradio import digital
-    make: digital.fll_band_edge_cc(${samps_per_sym}, ${rolloff}, ${filter_size}, ${w}, ${improved_loop_filter})
+    make: digital.fll_band_edge_cc(${samps_per_sym}, ${rolloff}, ${filter_size}, ${w})
     callbacks:
     - set_loop_bandwidth(${w})
 
@@ -63,8 +59,7 @@ cpp_templates:
             ${samps_per_sym},
             ${rolloff},
             ${filter_size},
-            ${w},
-            ${improved_loop_filter});
+            ${w});
     link: ['gnuradio::gnuradio-digital']
     callbacks:
     - set_loop_bandwidth(${w})
