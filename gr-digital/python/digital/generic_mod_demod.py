@@ -232,7 +232,6 @@ class generic_demod(gr.hier_block2):
         phase_bw: phase recovery loop bandwidth (float)
         verbose: Print information about modulator? (boolean)
         log: Log modulation data to files? (boolean)
-        improved_fll: Improved FLL loop filter (boolean)
     """
 
     def __init__(self, constellation,
@@ -244,8 +243,7 @@ class generic_demod(gr.hier_block2):
                  timing_bw=_def_timing_bw,
                  phase_bw=_def_phase_bw,
                  verbose=_def_verbose,
-                 log=_def_log,
-                 improved_fll=False):
+                 log=_def_log):
 
         gr.hier_block2.__init__(self, "generic_demod",
                                 # Input signature
@@ -279,7 +277,7 @@ class generic_demod(gr.hier_block2):
         # Frequency correction
         fll_ntaps = 55
         self.freq_recov = digital.fll_band_edge_cc(self._samples_per_symbol, self._excess_bw,
-                                                   fll_ntaps, self._freq_bw, improved_fll)
+                                                   fll_ntaps, self._freq_bw)
 
         # symbol timing recovery with RRC data filter
         taps = filter.firdes.root_raised_cosine(nfilts, nfilts * self._samples_per_symbol,

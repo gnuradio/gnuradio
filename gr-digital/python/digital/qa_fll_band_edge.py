@@ -49,7 +49,7 @@ class test_fll_band_edge_cc(gr_unittest.TestCase):
         self.mix = blocks.multiply_cc()
 
         # FLL will despin the symbols to an arbitrary phase
-        self.fll = digital.fll_band_edge_cc(sps, rolloff, ntaps, bw, True)
+        self.fll = digital.fll_band_edge_cc(sps, rolloff, ntaps, bw)
 
         # Create sinks for all outputs of the FLL
         # we will only care about the freq and error outputs
@@ -101,7 +101,7 @@ class test_fll_band_edge_cc(gr_unittest.TestCase):
         self.mix = blocks.multiply_cc()
 
         # FLL will despin the symbols to an arbitrary phase
-        self.fll = digital.fll_band_edge_cc(sps, rolloff, ntaps, bw, True)
+        self.fll = digital.fll_band_edge_cc(sps, rolloff, ntaps, bw)
 
         # Create sinks for all outputs of the FLL
         # we will only care about the freq and error outputs

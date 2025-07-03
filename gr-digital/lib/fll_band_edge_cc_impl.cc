@@ -36,11 +36,10 @@ float sinc(float x)
 fll_band_edge_cc::sptr fll_band_edge_cc::make(float samps_per_sym,
                                               float rolloff,
                                               int filter_size,
-                                              float bandwidth,
-                                              bool improved_loop_filter)
+                                              float bandwidth)
 {
     return gnuradio::make_block_sptr<fll_band_edge_cc_impl>(
-        samps_per_sym, rolloff, filter_size, bandwidth, improved_loop_filter);
+        samps_per_sym, rolloff, filter_size, bandwidth);
 }
 
 static int ios[] = { sizeof(gr_complex), sizeof(float), sizeof(float), sizeof(float) };
@@ -48,8 +47,7 @@ static std::vector<int> iosig(ios, ios + sizeof(ios) / sizeof(int));
 fll_band_edge_cc_impl::fll_band_edge_cc_impl(float samps_per_sym,
                                              float rolloff,
                                              int filter_size,
-                                             float bandwidth,
-                                             bool improved_loop_filter)
+                                             float bandwidth)
     : sync_block("fll_band_edge_cc",
                  io_signature::make(1, 1, sizeof(gr_complex)),
                  io_signature::makev(1, 4, iosig)),
@@ -58,41 +56,33 @@ fll_band_edge_cc_impl::fll_band_edge_cc_impl(float samps_per_sym,
       d_sps(samps_per_sym),
       d_rolloff(rolloff),
       d_filter_size(filter_size),
-      d_bandwidth(bandwidth),
-      d_improved_loop_filter(improved_loop_filter)
+      d_bandwidth(bandwidth)
 {
-    if (improved_loop_filter) {
-        // override control loop gains, since we need an FLL-type update of the
-        // form
-        //
-        // d_freq = d_freq + d_beta * error;
-        // d_phase = d_phase + d_freq;
+    // override control loop gains, since we need an FLL-type update of the
+    // form
+    //
+    // d_freq = d_freq + d_beta * error;
+    // d_phase = d_phase + d_freq;
 
-        set_alpha(0.0f); // do not update phase directly
+    set_alpha(0.0f); // do not update phase directly
 
-        // For a 1st order loop filter in the continuous update approximation,
-        // the loop constant is K1 = 4*BL*T (see Stephen & Thomas:
-        // Controlled-Root Formulation for Digital Phase-Locked Loops)
-        //
-        // bandwidth here is interpreted as BL*T, where T is the sampling
-        // period.
-        //
-        // This assumes that the error and the phase use the same units (cycles,
-        // in the case of the paper). In our case, the phase uses units of
-        // radians, but the error is in units of cycles/sample (when normalized
-        // with the discriminant gain factored in below into the loop
-        // gain). Therefore, the loop gain needs to be multiplied by 2*pi to
-        // perform unit conversion.
-        //
-        // The frequency discriminant has gain samps_per_sym. We compensate this
-        // by dividing the loop gain by samps_per_sym here.
-        set_beta(M_TWOPI * 4.0 * bandwidth / samps_per_sym);
-    } else {
-        d_logger->warn(
-            "Using legacy FLL loop filter. Consider updating to the improved loop "
-            "filter, which requires a change in the bandwidth setting. See "
-            "https://github.com/gnuradio/gnuradio/pull/7890 for more information.");
-    }
+    // For a 1st order loop filter in the continuous update approximation,
+    // the loop constant is K1 = 4*BL*T (see Stephen & Thomas:
+    // Controlled-Root Formulation for Digital Phase-Locked Loops)
+    //
+    // bandwidth here is interpreted as BL*T, where T is the sampling
+    // period.
+    //
+    // This assumes that the error and the phase use the same units (cycles,
+    // in the case of the paper). In our case, the phase uses units of
+    // radians, but the error is in units of cycles/sample (when normalized
+    // with the discriminant gain factored in below into the loop
+    // gain). Therefore, the loop gain needs to be multiplied by 2*pi to
+    // perform unit conversion.
+    //
+    // The frequency discriminant has gain samps_per_sym. We compensate this
+    // by dividing the loop gain by samps_per_sym here.
+    set_beta(M_TWOPI * 4.0 * bandwidth / samps_per_sym);
 
     // Value-check samples per symbol
     if (samps_per_sym <= 0.0f) {
@@ -136,9 +126,7 @@ void fll_band_edge_cc_impl::set_samples_per_symbol(float sps)
     }
     set_max_freq(M_TWOPI * (2.0 / sps));
     set_min_freq(-M_TWOPI * (2.0 / sps));
-    if (d_improved_loop_filter) {
-        set_beta(4.0 * d_bandwidth / sps);
-    }
+    set_beta(4.0 * d_bandwidth / sps);
     design_filter();
 }
 

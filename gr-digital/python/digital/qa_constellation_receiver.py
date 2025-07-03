@@ -189,12 +189,10 @@ class rec_test_tb(gr.top_block):
         if freq_offset:
             demod = generic_demod(constellation, differential=differential,
                                   freq_bw=FREQ_BW,
-                                  phase_bw=PHASE_BW,
-                                  improved_fll=True)
+                                  phase_bw=PHASE_BW)
         else:
             demod = generic_demod(constellation, differential=differential,
-                                  freq_bw=0, phase_bw=0,
-                                  improved_fll=True)
+                                  freq_bw=0, phase_bw=0)
         self.dst = blocks.vector_sink_b()
         self.connect(src, packer, mod, channel, demod, self.dst)
 

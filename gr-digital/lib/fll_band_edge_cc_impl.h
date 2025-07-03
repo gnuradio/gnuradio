@@ -26,7 +26,6 @@ private:
     float d_rolloff;
     size_t d_filter_size;
     float d_bandwidth;
-    const bool d_improved_loop_filter;
 
     std::vector<gr_complex> d_taps_lower;
     std::vector<gr_complex> d_taps_upper;
@@ -43,8 +42,7 @@ public:
     fll_band_edge_cc_impl(float samps_per_sym,
                           float rolloff,
                           int filter_size,
-                          float bandwidth,
-                          bool improved_loop_filter);
+                          float bandwidth);
 
     void set_samples_per_symbol(float sps) override;
     void set_rolloff(float rolloff) override;
