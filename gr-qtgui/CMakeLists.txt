@@ -10,15 +10,25 @@
 ########################################################################
 include(GrPython)
 
-# Note: gr-qtgui requires Qt5.
+# Note: gr-qtgui requires Qt5 or Qt6.
 
+if (TRY_QT6_BUILD)
+find_package(Qt6 QUIET
+    COMPONENTS Widgets
+    OPTIONAL_COMPONENTS OpenGL
+)
+set(QT_FOUND ${Qt6Widgets_FOUND})
+
+gr_python_check_module("PyQt6" PyQt6 True PYQT_FOUND)
+else()
 find_package(Qt5 QUIET
     COMPONENTS Widgets
     OPTIONAL_COMPONENTS OpenGL
 )
 set(QT_FOUND ${Qt5Widgets_FOUND})
 
-gr_python_check_module("PyQt5" PyQt5 True PYQT5_FOUND)
+gr_python_check_module("PyQt5" PyQt5 True PYQT_FOUND)
+endif()
 
 find_package(Qwt)
 
@@ -27,7 +37,7 @@ find_package(Qwt)
 ########################################################################
 include(GrComponent)
 if(NOT CMAKE_CROSSCOMPILING)
-    set(qt_gui_python_deps PYQT5_FOUND)
+    set(qt_gui_python_deps PYQT_FOUND)
 endif(NOT CMAKE_CROSSCOMPILING)
 
 gr_register_component(
