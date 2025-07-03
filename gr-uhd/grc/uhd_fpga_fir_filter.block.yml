@@ -1,0 +1,47 @@
+id: uhd_fpga_fir_filter
+label: RFNoC FIR Filter
+
+parameters:
+-   id: type
+    label: RFNoC Block Type
+    dtype: enum
+    default: 'block'
+    options: ['block', 'sep', 'device']
+    hide: all
+-   id: desc
+    label: Block Descriptor
+    dtype: string
+    default: 'fir_filter.yml'
+    hide: all
+-   id: NUM_PORTS
+    label: Number of Ports
+    dtype: int
+    default: 1
+    hide: part
+
+inputs:
+-   domain: rfnoc.clk
+    id: ce_clk
+    dtype: message
+-   domain: rfnoc.data
+    id: in_
+    dtype: fc32
+    multiplicity: ${ NUM_PORTS }
+
+outputs:
+-   domain: rfnoc.data
+    id: out_
+    dtype: fc32
+    multiplicity: ${ NUM_PORTS }
+
+doc_url: UHD_FPGA_FIR
+
+documentation: |-
+  RFNoC FIR Filter(FPGA Implementation).
+  Instantiates a FIR Filter block in the FPGA bitfile.
+  This block calculates a running average (using FIR filters) for every element
+  of a vector. This is useful to average the output of an FFT block.
+
+
+file_format: 1
+
