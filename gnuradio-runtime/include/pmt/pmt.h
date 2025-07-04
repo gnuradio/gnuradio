@@ -860,34 +860,51 @@ PMT_API pmt_t member(pmt_t obj, pmt_t list);
 PMT_API bool subsetp(pmt_t list1, pmt_t list2);
 
 /*!
- * \brief Return a list of length 1 containing \p x1
+ * \brief Return a list of length 1 containing \p x1, that is
+ * cons(x1, NIL)
+ * Note that PMT lists are nested pairs.
+ * Use pmt::make_tuple to generate a list in the common sense.
  */
 PMT_API pmt_t list1(const pmt_t& x1);
 
 /*!
- * \brief Return a list of length 2 containing \p x1, \p x2
+ * \brief Return a list of length 2 containing \p x1, \p x2, that is
+ * cons(x1, cons(x2, NIL))
+ * Note that PMT lists are nested pairs.
+ * Use pmt::make_tuple to generate a list in the common sense.
  */
 PMT_API pmt_t list2(const pmt_t& x1, const pmt_t& x2);
 
 /*!
- * \brief Return a list of length 3 containing \p x1, \p x2, \p x3
+ * \brief Return a list of length 3 containing \p x1, \p x2, \p x3, that is
+ * cons(x1, cons(x2, cons(x3, NIL)))
+ * Note that PMT lists are nested pairs.
+ * Use pmt::make_tuple to generate a list in the common sense.
  */
 PMT_API pmt_t list3(const pmt_t& x1, const pmt_t& x2, const pmt_t& x3);
 
 /*!
- * \brief Return a list of length 4 containing \p x1, \p x2, \p x3, \p x4
+ * \brief Return a list of length 4 containing \p x1, \p x2, \p x3, \p x4, that is
+ * cons(x1, cons(x2, cons(x3, cons(x4, NIL))))
+ * Note that PMT lists are nested pairs.
+ * Use pmt::make_tuple to generate a list in the common sense.
  */
 PMT_API pmt_t list4(const pmt_t& x1, const pmt_t& x2, const pmt_t& x3, const pmt_t& x4);
 
 /*!
- * \brief Return a list of length 5 containing \p x1, \p x2, \p x3, \p x4, \p x5
+ * \brief Return a list of length 5 containing \p x1, \p x2, \p x3, \p x4, \p x5,
+ * that is cons(x1, cons(x2, cons(x3, cons(x4, cons(x5, NIL)))))
+ * Note that PMT lists are nested pairs.
+ * Use pmt::make_tuple to generate a list in the common sense.
  */
 PMT_API pmt_t list5(
     const pmt_t& x1, const pmt_t& x2, const pmt_t& x3, const pmt_t& x4, const pmt_t& x5);
 
 /*!
  * \brief Return a list of length 6 containing \p x1, \p x2, \p x3, \p x4, \p
- * x5, \p x6
+ * x5, \p x6, that is cons(x1, cons(x2, cons(x3, cons(x4, cons(x5, cons(x6, NIL))))))
+ * Note that PMT lists are nested pairs.
+ * Use pmt::make_tuple to generate a list in the common sense.
  */
 PMT_API pmt_t list6(const pmt_t& x1,
                     const pmt_t& x2,
@@ -898,6 +915,8 @@ PMT_API pmt_t list6(const pmt_t& x1,
 
 /*!
  * \brief Return \p list with \p item added to it.
+ * Note that PMT lists are nested pairs, e.g. cons(x1, cons(x2, cons(x3, NIL)))
+ * Use pmt::make_tuple to generate a list in the common sense.
  */
 PMT_API pmt_t list_add(pmt_t list, const pmt_t& item);
 
