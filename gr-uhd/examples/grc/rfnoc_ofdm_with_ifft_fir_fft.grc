@@ -1,0 +1,1200 @@
+options:
+  parameters:
+    alias: ''
+    author: jreitmei
+    catch_exceptions: 'True'
+    comment: "This example demonstrates the application of the \nFast Fourier Transform\
+      \ (FFT) within an \nOrthogonal Frequency Division Multiplexing (OFDM) \nscenario.\
+      \ It highlights the integration of a \nFinite Impulse Response (FIR) filter\
+      \ for channel simulation\nwith cyclic prefix addition and removal, illustrating\
+      \ their \nroles in a standard transmission process. The example builds \nupon\
+      \ the rx_ofdm and tx_ofdm examples from the gr_digital library."
+    copyright: ''
+    description: ''
+    gen_linking: dynamic
+    generate_options: qt_gui
+    generator_class_name: PythonQtGuiGenerator
+    generator_module: gnuradio.grc.workflows.python_qt_gui
+    hier_block_src_path: '.:'
+    id: fft_full_demo
+    max_nouts: '0'
+    output_language: python
+    qt_qss_theme: ''
+    realtime_scheduling: ''
+    run: 'True'
+    run_command: '{python} -u {filename}'
+    thread_safe_setters: ''
+    title: Not titled yet
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 8]
+    rotation: 0
+    state: enabled
+
+blocks:
+- name: coeffs_distribution
+  id: variable_qtgui_range
+  parameters:
+    comment: "This graphical user interface (GUI) allows you to \nadjust a filter\
+      \ tap within the FIR filter to simulate \ndelay effects. Additionally, it enables\
+      \ adaptations \nfor simulating multipath propagation scenarios."
+    gui_hint: (0,0,1,4)
+    label: FIR Filter running coeffs
+    min_len: '200'
+    orient: QtCore.Qt.Horizontal
+    rangeType: int
+    start: '0'
+    step: '1'
+    stop: '40'
+    value: '0'
+    widget: counter_slider
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [584, 72.0]
+    rotation: 0
+    state: enabled
+- name: cp_len
+  id: variable
+  parameters:
+    comment: ''
+    value: int(fft_len/4)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1000, 72.0]
+    rotation: 0
+    state: enabled
+- name: fft_len
+  id: variable
+  parameters:
+    comment: ''
+    value: '64'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1000, 8.0]
+    rotation: 0
+    state: enabled
+- name: length_tag_key
+  id: variable
+  parameters:
+    comment: ''
+    value: '"packet_len"'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [888, 8.0]
+    rotation: 0
+    state: enabled
+- name: mult_const
+  id: variable_qtgui_range
+  parameters:
+    comment: "This is for Mulitplying a const before it is further processed on the\
+      \ \nFPGA. Can be adjusted but FFT tends to clip when used with the \nwrong parameters."
+    gui_hint: (1,0,1,4)
+    label: Power of scaling Divider FFT
+    min_len: '200'
+    orient: QtCore.Qt.Horizontal
+    rangeType: float
+    start: '0.001'
+    step: '0.001'
+    stop: '0.2'
+    value: '0.01'
+    widget: counter_slider
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1480, 8.0]
+    rotation: 0
+    state: enabled
+- name: multipath_propagation
+  id: variable
+  parameters:
+    comment: ''
+    value: (min(coeffs_distribution, num_coeffs-4))*[0.0] + [1.0, 0.8, 0.6, 0.1] +
+      max(0, num_coeffs - 4 - min(coeffs_distribution, num_coeffs-4))*[0.0]
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [728, 72.0]
+    rotation: 0
+    state: true
+- name: multipath_propagation_0
+  id: variable
+  parameters:
+    comment: ''
+    value: 1 * [1.0] + (min(coeffs_distribution, num_coeffs-5))*[0.0] + [0.8, 0.6,
+      0.4, 0.1] + max(0, num_coeffs - 5 - min(coeffs_distribution, num_coeffs-5))*[0.0]
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [728, 8.0]
+    rotation: 0
+    state: true
+- name: num_coeffs
+  id: variable
+  parameters:
+    comment: FIR Filter length
+    value: '41'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [480, 8.0]
+    rotation: 0
+    state: true
+- name: occupied_carriers
+  id: variable
+  parameters:
+    comment: ''
+    value: (list(range(-26, -21)) + list(range(-20, -7)) + list(range(-6, 0)) + list(range(1,
+      7)) + list(range(8, 21)) + list(range(22, 27)),)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [280, 288.0]
+    rotation: 0
+    state: enabled
+- name: packet_len
+  id: variable
+  parameters:
+    comment: ''
+    value: '64'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [632, 288.0]
+    rotation: 0
+    state: enabled
+- name: payload_equalizer
+  id: variable
+  parameters:
+    comment: ''
+    value: digital.ofdm_equalizer_simpledfe(fft_len, payload_mod.base(), occupied_carriers,
+      pilot_carriers, pilot_symbols, 1)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [712, 288.0]
+    rotation: 0
+    state: enabled
+- name: payload_mod
+  id: variable
+  parameters:
+    comment: ''
+    value: digital.constellation_qpsk()
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [872, 288.0]
+    rotation: 0
+    state: enabled
+- name: pilot_carriers
+  id: variable
+  parameters:
+    comment: ''
+    value: ((-21, -7, 7, 21,),)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [424, 288.0]
+    rotation: 0
+    state: enabled
+- name: pilot_symbols
+  id: variable
+  parameters:
+    comment: ''
+    value: ((1, 1, 1, -1,),)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [536, 288.0]
+    rotation: 0
+    state: enabled
+- name: running_coeffs
+  id: variable
+  parameters:
+    comment: ''
+    value: (coeffs_distribution)*[0.0] + [1.0] + (num_coeffs - 1 - coeffs_distribution)*[0.0]
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [584, 8.0]
+    rotation: 0
+    state: true
+- name: samp_rate
+  id: variable
+  parameters:
+    comment: ''
+    value: '10000'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [312, 8.0]
+    rotation: 0
+    state: enabled
+- name: scaling_divider_0
+  id: variable_qtgui_range
+  parameters:
+    comment: ''
+    gui_hint: (2,0,1,4)
+    label: Power of scaling Divider IFFT
+    min_len: '200'
+    orient: QtCore.Qt.Horizontal
+    rangeType: int
+    start: '0'
+    step: '1'
+    stop: '6'
+    value: '1'
+    widget: counter_slider
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1328, 8.0]
+    rotation: 0
+    state: enabled
+- name: scaling_divider_1
+  id: variable_qtgui_range
+  parameters:
+    comment: ''
+    gui_hint: (3,0,1,4)
+    label: Power of scaling Divider FFT
+    min_len: '200'
+    orient: QtCore.Qt.Horizontal
+    rangeType: int
+    start: '0'
+    step: '1'
+    stop: '6'
+    value: '1'
+    widget: counter_slider
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1176, 8.0]
+    rotation: 0
+    state: enabled
+- name: scaling_factor_0
+  id: variable
+  parameters:
+    comment: ''
+    value: 1/(2**scaling_divider_0)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1072, 8.0]
+    rotation: 0
+    state: enabled
+- name: scaling_factor_1
+  id: variable
+  parameters:
+    comment: "This adjusts the FFT scaling factor. Remember that the scaling \nfactor\
+      \ is defined as (1/2^scaling_divider) for better FPGA\nprocessing."
+    value: 1/(2**scaling_divider_1)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1072, 72.0]
+    rotation: 0
+    state: enabled
+- name: sync_word1
+  id: variable
+  parameters:
+    comment: ''
+    value: '[0., 0., 0., 0., 0., 0., 0., 1., 0., -1., 0., 1., 0., -1., 0., -1., 0.,
+      -1., 0., 1., 0., -1., 0., 1., 0., -1., 0., -1., 0., -1., 0., -1., 0., 1., 0.,
+      -1., 0., 1., 0., 1., 0., 1., 0., -1., 0., 1., 0., 1., 0., 1., 0., -1., 0., 1.,
+      0., 1., 0., 1., 0., 0., 0., 0., 0., 0.]'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [24, 288.0]
+    rotation: 0
+    state: enabled
+- name: sync_word2
+  id: variable
+  parameters:
+    comment: ''
+    value: '[0, 0, 0, 0, 0, 0, -1, -1, -1, -1, 1, 1, -1, -1, -1, 1, -1, 1, 1, 1, 1,
+      1, -1, -1, -1, -1, -1, 1, -1, -1, 1, -1, 0, 1, -1, 1, 1, 1, -1, 1, 1, 1, -1,
+      1, 1, 1, 1, -1, 1, -1, -1, -1, 1, -1, 1, -1, -1, -1, -1, 0, 0, 0, 0, 0] '
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [152, 288.0]
+    rotation: 0
+    state: enabled
+- name: uhd_rfnoc_graph
+  id: uhd_rfnoc_graph
+  parameters:
+    alias: ''
+    clock_source: ''
+    comment: ''
+    dev_addr: '"addr=192.168.40.2"'
+    dev_args: ''
+    num_mboards: '1'
+    time_source: ''
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [312, 72.0]
+    rotation: 0
+    state: true
+- name: analog_random_source_x_0_0
+  id: analog_random_source_x
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    max: '255'
+    maxoutbuf: '0'
+    min: '0'
+    minoutbuf: '0'
+    num_samps: '1000'
+    repeat: 'True'
+    type: byte
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [24, 360.0]
+    rotation: 0
+    state: enabled
+- name: blocks_multiply_const_vxx_0
+  id: blocks_multiply_const_vxx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    const: '[mult_const] *fft_len'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: complex
+    vlen: fft_len
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [680, 632.0]
+    rotation: 180
+    state: enabled
+- name: blocks_repack_bits_bb_0
+  id: blocks_repack_bits_bb
+  parameters:
+    affinity: ''
+    alias: ''
+    align_output: 'True'
+    comment: ''
+    endianness: gr.GR_LSB_FIRST
+    k: payload_mod.bits_per_symbol()
+    l: '8'
+    len_tag_key: packet_len
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [536, 1256.0]
+    rotation: 0
+    state: enabled
+- name: blocks_repack_bits_bb_0_0
+  id: blocks_repack_bits_bb
+  parameters:
+    affinity: ''
+    alias: ''
+    align_output: 'False'
+    comment: ''
+    endianness: gr.GR_LSB_FIRST
+    k: '8'
+    l: payload_mod.bits_per_symbol()
+    len_tag_key: length_tag_key
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [432, 376.0]
+    rotation: 0
+    state: enabled
+- name: blocks_stream_to_tagged_stream_0
+  id: blocks_stream_to_tagged_stream
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    len_tag_key: '"packet_len"'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    packet_len: '8'
+    type: complex
+    vlen: '64'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [624, 912.0]
+    rotation: 0
+    state: enabled
+- name: blocks_stream_to_tagged_stream_0_0
+  id: blocks_stream_to_tagged_stream
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    len_tag_key: length_tag_key
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    packet_len: packet_len
+    type: byte
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [208, 376.0]
+    rotation: 0
+    state: enabled
+- name: blocks_tag_debug_1
+  id: blocks_tag_debug
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    display: 'True'
+    filter: '""'
+    name: Rx Bytes
+    num_inputs: '1'
+    type: byte
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [752, 1248.0]
+    rotation: 0
+    state: enabled
+- name: blocks_throttle2_0
+  id: blocks_throttle2
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    ignoretag: 'True'
+    limit: auto
+    maximum: '0.1'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    samples_per_second: samp_rate
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [576, 488.0]
+    rotation: 0
+    state: enabled
+- name: blocks_vector_to_stream_0
+  id: blocks_vector_to_stream
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_items: fft_len
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [712, 720.0]
+    rotation: 180
+    state: enabled
+- name: digital_chunks_to_symbols_xx_0_0_0
+  id: digital_chunks_to_symbols_xx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    dimension: '1'
+    in_type: byte
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_ports: '1'
+    out_type: complex
+    symbol_table: payload_mod.points()
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [304, 488.0]
+    rotation: 0
+    state: enabled
+- name: digital_constellation_decoder_cb_1
+  id: digital_constellation_decoder_cb
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    constellation: payload_mod.base()
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [296, 1264.0]
+    rotation: 0
+    state: enabled
+- name: digital_ofdm_carrier_allocator_cvc_0_0
+  id: digital_ofdm_carrier_allocator_cvc
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    fft_len: fft_len
+    len_tag_key: length_tag_key
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    occupied_carriers: occupied_carriers
+    output_is_shifted: 'False'
+    pilot_carriers: pilot_carriers
+    pilot_symbols: pilot_symbols
+    sync_words: (sync_word1, sync_word2)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [936, 588.0]
+    rotation: 180
+    state: enabled
+- name: digital_ofdm_chanest_vcvc_0
+  id: digital_ofdm_chanest_vcvc
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    eq_noise_red_len: '0'
+    force_one_symbol: 'False'
+    max_carr_offset: '3'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    n_data_symbols: '1'
+    sync_symbol1: sync_word1
+    sync_symbol2: sync_word2
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [232, 1072.0]
+    rotation: 0
+    state: enabled
+- name: digital_ofdm_frame_equalizer_vcvc_1
+  id: digital_ofdm_frame_equalizer_vcvc
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    cp_len: cp_len
+    equalizer: payload_equalizer.base()
+    fft_len: fft_len
+    fixed_frame_len: '0'
+    len_tag_key: length_tag_key
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    propagate_channel_state: 'True'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [512, 1072.0]
+    rotation: 0
+    state: enabled
+- name: digital_ofdm_serializer_vcc_payload
+  id: digital_ofdm_serializer_vcc
+  parameters:
+    affinity: ''
+    alias: ''
+    carr_offset_key: ''
+    comment: ''
+    fft_len: fft_len
+    input_is_shifted: 'True'
+    len_tag_key: length_tag_key
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    occupied_carriers: occupied_carriers
+    packet_len_tag_key: length_tag_key
+    symbols_skipped: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [752, 1072.0]
+    rotation: 0
+    state: enabled
+- name: import_0
+  id: import
+  parameters:
+    alias: ''
+    comment: ''
+    imports: from gnuradio.filter import pm_remez
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [160, 8.0]
+    rotation: 0
+    state: true
+- name: import_1
+  id: import
+  parameters:
+    alias: ''
+    comment: ''
+    imports: from gnuradio.digital.utils import tagged_streams
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [312, 144.0]
+    rotation: 0
+    state: enabled
+- name: qtgui_const_sink_x_0_0_0_0_0_0_0
+  id: qtgui_const_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'False'
+    axislabels: 'True'
+    color1: '"blue"'
+    color10: '"dark blue"'
+    color2: '"red"'
+    color3: '"green"'
+    color4: '"black"'
+    color5: '"cyan"'
+    color6: '"magenta"'
+    color7: '"yellow"'
+    color8: '"dark red"'
+    color9: '"dark green"'
+    comment: ''
+    grid: 'True'
+    gui_hint: (4, 0, 1, 4)
+    label1: ''
+    label10: ''
+    label2: ''
+    label3: ''
+    label4: ''
+    label5: ''
+    label6: ''
+    label7: ''
+    label8: ''
+    label9: ''
+    legend: 'True'
+    marker1: '0'
+    marker10: '0'
+    marker2: '0'
+    marker3: '0'
+    marker4: '0'
+    marker5: '0'
+    marker6: '0'
+    marker7: '0'
+    marker8: '0'
+    marker9: '0'
+    name: "\"Tr\xE4gerallocation\""
+    nconnections: '1'
+    size: '400'
+    style1: '0'
+    style10: '0'
+    style2: '0'
+    style3: '0'
+    style4: '0'
+    style5: '0'
+    style6: '0'
+    style7: '0'
+    style8: '0'
+    style9: '0'
+    tr_chan: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_slope: qtgui.TRIG_SLOPE_POS
+    tr_tag: '""'
+    type: complex
+    update_time: '0.01'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    xmax: '2'
+    xmin: '-2'
+    ymax: '2'
+    ymin: '-2'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [416, 696.0]
+    rotation: 180
+    state: enabled
+- name: qtgui_const_sink_x_0_0_0_0_0_0_1
+  id: qtgui_const_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'False'
+    axislabels: 'True'
+    color1: '"blue"'
+    color10: '"dark blue"'
+    color2: '"red"'
+    color3: '"green"'
+    color4: '"black"'
+    color5: '"cyan"'
+    color6: '"magenta"'
+    color7: '"yellow"'
+    color8: '"dark red"'
+    color9: '"dark green"'
+    comment: ''
+    grid: 'True'
+    gui_hint: (5, 0, 1,4)
+    label1: ''
+    label10: ''
+    label2: ''
+    label3: ''
+    label4: ''
+    label5: ''
+    label6: ''
+    label7: ''
+    label8: ''
+    label9: ''
+    legend: 'True'
+    marker1: '0'
+    marker10: '0'
+    marker2: '0'
+    marker3: '0'
+    marker4: '0'
+    marker5: '0'
+    marker6: '0'
+    marker7: '0'
+    marker8: '0'
+    marker9: '0'
+    name: '"Endergebnis"'
+    nconnections: '1'
+    size: '100'
+    style1: '0'
+    style10: '0'
+    style2: '0'
+    style3: '0'
+    style4: '0'
+    style5: '0'
+    style6: '0'
+    style7: '0'
+    style8: '0'
+    style9: '0'
+    tr_chan: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_slope: qtgui.TRIG_SLOPE_POS
+    tr_tag: '""'
+    type: complex
+    update_time: '0.001'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    xmax: '2'
+    xmin: '-2'
+    ymax: '2'
+    ymin: '-2'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1000, 1088.0]
+    rotation: 0
+    state: enabled
+- name: uhd_rfnoc_fft_0
+  id: uhd_rfnoc_fft
+  parameters:
+    affinity: ''
+    alias: ''
+    block_args: ''
+    comment: ''
+    device_select: '0'
+    fft_bypass_mode: 'False'
+    fft_cp_insertion_list: '[cp_len]'
+    fft_cp_removal_list: '[]'
+    fft_direction: REVERSE
+    fft_length: fft_len
+    fft_magnitude: COMPLEX
+    fft_scaling: '1706'
+    fft_scaling_factor: scaling_factor_0
+    fft_shift_config: NATURAL
+    instance_index: '0'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_chans: '1'
+    scaling_version: Scaling Factor
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [128, 588.0]
+    rotation: 180
+    state: enabled
+- name: uhd_rfnoc_fft_1
+  id: uhd_rfnoc_fft
+  parameters:
+    affinity: ''
+    alias: ''
+    block_args: ''
+    comment: ''
+    device_select: '0'
+    fft_bypass_mode: 'False'
+    fft_cp_insertion_list: '[]'
+    fft_cp_removal_list: '[cp_len]'
+    fft_direction: FORWARD
+    fft_length: fft_len
+    fft_magnitude: COMPLEX
+    fft_scaling: '1706'
+    fft_scaling_factor: scaling_factor_1
+    fft_shift_config: NATURAL
+    instance_index: '1'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_chans: '1'
+    scaling_version: Scaling Factor
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [128, 876.0]
+    rotation: 0
+    state: enabled
+- name: uhd_rfnoc_fir_filter_0
+  id: uhd_rfnoc_fir_filter
+  parameters:
+    affinity: ''
+    alias: ''
+    block_args: ''
+    coeffs_float0: running_coeffs
+    coeffs_float1: '[1.0]'
+    coeffs_float10: '[1.0]'
+    coeffs_float11: '[1.0]'
+    coeffs_float12: '[1.0]'
+    coeffs_float13: '[1.0]'
+    coeffs_float14: '[1.0]'
+    coeffs_float15: '[1.0]'
+    coeffs_float2: '[1.0]'
+    coeffs_float3: '[1.0]'
+    coeffs_float4: '[1.0]'
+    coeffs_float5: '[1.0]'
+    coeffs_float6: '[1.0]'
+    coeffs_float7: '[1.0]'
+    coeffs_float8: '[1.0]'
+    coeffs_float9: '[1.0]'
+    coeffs_int0: '[32767]'
+    coeffs_int1: '[32767]'
+    coeffs_int10: '[32767]'
+    coeffs_int11: '[32767]'
+    coeffs_int12: '[32767]'
+    coeffs_int13: '[32767]'
+    coeffs_int14: '[32767]'
+    coeffs_int15: '[32767]'
+    coeffs_int2: '[32767]'
+    coeffs_int3: '[32767]'
+    coeffs_int4: '[32767]'
+    coeffs_int5: '[32767]'
+    coeffs_int6: '[32767]'
+    coeffs_int7: '[32767]'
+    coeffs_int8: '[32767]'
+    coeffs_int9: '[32767]'
+    coeffs_type0: float
+    coeffs_type1: float
+    coeffs_type10: float
+    coeffs_type11: float
+    coeffs_type12: float
+    coeffs_type13: float
+    coeffs_type14: float
+    coeffs_type15: float
+    coeffs_type2: float
+    coeffs_type3: float
+    coeffs_type4: float
+    coeffs_type5: float
+    coeffs_type6: float
+    coeffs_type7: float
+    coeffs_type8: float
+    coeffs_type9: float
+    comment: ''
+    device_select: '0'
+    instance_index: '0'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_chans: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [40.0, 736]
+    rotation: 270
+    state: enabled
+- name: uhd_rfnoc_rx_streamer_0
+  id: uhd_rfnoc_rx_streamer
+  parameters:
+    adapter_id_list: '[0]'
+    affinity: ''
+    alias: ''
+    args: ''
+    comment: ''
+    issue_stream_cmd: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_chans: '1'
+    otw: sc16
+    output_type: fc32
+    start_time: '0'
+    start_time_set: 'False'
+    use_default_adapter_id: 'True'
+    vlen: fft_len
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [432, 928.0]
+    rotation: 0
+    state: enabled
+- name: uhd_rfnoc_tx_streamer_0
+  id: uhd_rfnoc_tx_streamer
+  parameters:
+    adapter_id_list: '[0]'
+    affinity: ''
+    alias: ''
+    args: ''
+    comment: ''
+    input_type: fc32
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_chans: '1'
+    otw: sc16
+    use_default_adapter_id: 'True'
+    vlen: fft_len
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [448, 648.0]
+    rotation: 180
+    state: enabled
+- name: virtual_sink_0
+  id: virtual_sink
+  parameters:
+    alias: ''
+    comment: ''
+    stream_id: Equalisation
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [848, 928.0]
+    rotation: 0
+    state: enabled
+- name: virtual_sink_0_0_0_0
+  id: virtual_sink
+  parameters:
+    alias: ''
+    comment: ''
+    stream_id: Pre-OFDM
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [760, 496.0]
+    rotation: 0
+    state: enabled
+- name: virtual_sink_0_0_1
+  id: virtual_sink
+  parameters:
+    alias: ''
+    comment: ''
+    stream_id: Payload Bits
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [680, 384.0]
+    rotation: 0
+    state: enabled
+- name: virtual_sink_1_0
+  id: virtual_sink
+  parameters:
+    alias: ''
+    comment: ''
+    stream_id: Payload IQ
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1000, 1176.0]
+    rotation: 0
+    state: enabled
+- name: virtual_source_0
+  id: virtual_source
+  parameters:
+    alias: ''
+    comment: ''
+    stream_id: Equalisation
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [48, 1104.0]
+    rotation: 0
+    state: enabled
+- name: virtual_source_0_0_0
+  id: virtual_source
+  parameters:
+    alias: ''
+    comment: ''
+    stream_id: Pre-OFDM
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1136, 640.0]
+    rotation: 180
+    state: enabled
+- name: virtual_source_0_0_1
+  id: virtual_source
+  parameters:
+    alias: ''
+    comment: ''
+    stream_id: Payload IQ
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [120, 1264.0]
+    rotation: 0
+    state: enabled
+- name: virtual_source_0_0_2
+  id: virtual_source
+  parameters:
+    alias: ''
+    comment: ''
+    stream_id: Payload Bits
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [24, 480.0]
+    rotation: 0
+    state: enabled
+
+connections:
+- [analog_random_source_x_0_0, '0', blocks_stream_to_tagged_stream_0_0, '0']
+- [blocks_multiply_const_vxx_0, '0', uhd_rfnoc_tx_streamer_0, '0']
+- [blocks_repack_bits_bb_0, '0', blocks_tag_debug_1, '0']
+- [blocks_repack_bits_bb_0_0, '0', virtual_sink_0_0_1, '0']
+- [blocks_stream_to_tagged_stream_0, '0', virtual_sink_0, '0']
+- [blocks_stream_to_tagged_stream_0_0, '0', blocks_repack_bits_bb_0_0, '0']
+- [blocks_throttle2_0, '0', virtual_sink_0_0_0_0, '0']
+- [blocks_vector_to_stream_0, '0', qtgui_const_sink_x_0_0_0_0_0_0_0, '0']
+- [digital_chunks_to_symbols_xx_0_0_0, '0', blocks_throttle2_0, '0']
+- [digital_constellation_decoder_cb_1, '0', blocks_repack_bits_bb_0, '0']
+- [digital_ofdm_carrier_allocator_cvc_0_0, '0', blocks_multiply_const_vxx_0, '0']
+- [digital_ofdm_carrier_allocator_cvc_0_0, '0', blocks_vector_to_stream_0, '0']
+- [digital_ofdm_chanest_vcvc_0, '0', digital_ofdm_frame_equalizer_vcvc_1, '0']
+- [digital_ofdm_frame_equalizer_vcvc_1, '0', digital_ofdm_serializer_vcc_payload,
+  '0']
+- [digital_ofdm_serializer_vcc_payload, '0', qtgui_const_sink_x_0_0_0_0_0_0_1, '0']
+- [digital_ofdm_serializer_vcc_payload, '0', virtual_sink_1_0, '0']
+- params:
+    is_back_edge: 'False'
+  snk_blk_id: uhd_rfnoc_fir_filter_0
+  snk_port_id: '0'
+  src_blk_id: uhd_rfnoc_fft_0
+  src_port_id: '0'
+- params:
+    is_back_edge: 'False'
+  snk_blk_id: uhd_rfnoc_rx_streamer_0
+  snk_port_id: '0'
+  src_blk_id: uhd_rfnoc_fft_1
+  src_port_id: '0'
+- params:
+    is_back_edge: 'False'
+  snk_blk_id: uhd_rfnoc_fft_1
+  snk_port_id: '0'
+  src_blk_id: uhd_rfnoc_fir_filter_0
+  src_port_id: '0'
+- [uhd_rfnoc_rx_streamer_0, '0', blocks_stream_to_tagged_stream_0, '0']
+- params:
+    is_back_edge: 'False'
+  snk_blk_id: uhd_rfnoc_fft_0
+  snk_port_id: '0'
+  src_blk_id: uhd_rfnoc_tx_streamer_0
+  src_port_id: '0'
+- [virtual_source_0, '0', digital_ofdm_chanest_vcvc_0, '0']
+- [virtual_source_0_0_0, '0', digital_ofdm_carrier_allocator_cvc_0_0, '0']
+- [virtual_source_0_0_1, '0', digital_constellation_decoder_cb_1, '0']
+- [virtual_source_0_0_2, '0', digital_chunks_to_symbols_xx_0_0_0, '0']
+
+metadata:
+  file_format: 2
+  grc_version: v3.11.0.0git-952-g315d2021
