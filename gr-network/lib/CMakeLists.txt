@@ -22,6 +22,7 @@ add_library(
     stream_pdu_base.cc
     tcp_connection.cc
     tcp_sink_impl.cc
+    tcp_source_impl.cc
     tuntap_pdu_impl.cc
     udp_sink_impl.cc
     udp_source_impl.cc)
