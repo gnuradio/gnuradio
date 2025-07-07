@@ -10,11 +10,11 @@
 ########################################################################
 include(GrBoost)
 
-if(WIN32)
+if(WIN32 AND CONAN_TOOLCHAIN_DETECTED)
     # Name on Windows does not include datatype
     set(fftw_name FFTW3)
 else()
-    set(fftw_name FFTW3F)
+    set(fftw_name FFTW3f)
 endif()
 gr_find_package(${fftw_name})
 

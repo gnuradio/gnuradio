@@ -28,8 +28,13 @@ gr_python_check_module(
     MODULE PyQt5
     VAR PYQT5_FOUND
 )
-gr_find_package(qwt GLOBAL)
-if(qwt_FOUND)
+if(CONAN_TOOLCHAIN_DETECTED)
+    gr_find_package(qwt GLOBAL)
+else()
+    gr_find_package(Qwt GLOBAL)
+endif()
+message(STATUS "QWT_FOUND, qwt_FOUND=${qwt_FOUND}, Qwt_FOUND=${Qwt_FOUND}")
+if(qwt_FOUND OR Qwt_FOUND)
     set(QWT_FOUND TRUE)
 endif()
 
