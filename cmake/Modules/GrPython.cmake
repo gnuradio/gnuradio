@@ -174,12 +174,52 @@ function(REGISTER_EXTERNAL_PYTHON_COMPONENT module)
 endfunction()
 
 ########################################################################
+# Not sure where to put the toolchain detection
+# This location is the earliest time it is used
+########################################################################
+if (DEFINED CMAKE_PREFIX_PATH)
+    # Search each path for *toolchain.cmake
+    foreach (p ${CMAKE_PREFIX_PATH})
+       file(GLOB t LIST_DIRECTORIES false ${p}/*toolchain.cmake)
+       string(APPEND _toolchains ${t})
+    endforeach()
+endif()
+if (DEFINED _toolchains)
+   foreach (tch ${_toolchains})
+      get_filename_component(_TCH_FILE ${tch} NAME)
+      message(STATUS "tch=${tch}, _TCH_FILE=${_TCH_FILE}")
+      if(${_TCH_FILE} STREQUAL "conan_toolchain.cmake")
+         set(CONAN_TOOLCHAIN_PATH ${tch})
+         set(CONAN_TOOLCHAIN_DETECTED ON CACHE BOOL CONAN_TOOLCHAIN_DETECTED)
+      endif()
+   endforeach()
+endif()
+message(STATUS "CONAN_TOOLCHAIN_DETECTED=${CONAN_TOOLCHAIN_DETECTED}")
+
+set (PYTHON_SHORT_VER ${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR})
+message(STATUS "PYTHON_SHORT_VER=${PYTHON_SHORT_VER}")
+
+if(DEFINED CONAN_TOOLCHAIN_DETECTED)
+   set (REL_PYTHON_INSTALL_PATH python${PYTHON_SHORT_VER})
+   set (REL_PYTHON_INSTALL_LIB_PATH python${PYTHON_SHORT_VER}/Lib/site-packages)
+else() # assuming MinGW toolchain or linux
+   set (REL_PYTHON_INSTALL_PATH bin)
+   set (REL_PYTHON_INSTALL_LIB_PATH lib/python${PYTHON_SHORT_VER}/site-packages)
+endif()
+# Define variable used in gen_py_launcher scripts on Windows
+if(WIN32)
+   string(REPLACE "/" "\\" WIN32_REL_PYTHON_INSTALL_PATH ${REL_PYTHON_INSTALL_PATH})
+   set(GR_BUNDLE_PYTHON "..\\${WIN32_REL_PYTHON_INSTALL_PATH}\\python.exe")
+endif()
+
+########################################################################
 # Sets the python installation directory GR_PYTHON_DIR
 # From https://github.com/pothosware/SoapySDR/tree/master/python
 # https://github.com/pothosware/SoapySDR/blob/master/LICENSE_1_0.txt
 ########################################################################
 if(GR_BUILD_INSTALLER AND WIN32)
-    set(GR_PYTHON_DIR Python${PYTHON_SHORT_VER}/Lib/site-packages)
+    #set(GR_PYTHON_DIR Python${PYTHON_SHORT_VER}/Lib/site-packages)
+    set(GR_PYTHON_DIR ${REL_PYTHON_INSTALL_LIB_PATH} CACHE PATH "GR_PYTHON site-packages base path")
 endif()
 if(NOT DEFINED GR_PYTHON_DIR)
     execute_process(
@@ -371,7 +411,7 @@ function(GR_PYTHON_INSTALL)
             set(extension ".exe")
         endif()
         if(GR_BUILD_INSTALLER)
-            file(TO_NATIVE_PATH Python${PYTHON_SHORT_VER}/python${extension} pyexe_native)
+            file(TO_NATIVE_PATH ${REL_PYTHON_INSTALL_PATH}/python${extension} pyexe_native)
         else()
             file(TO_NATIVE_PATH ${PYTHON_EXECUTABLE} pyexe_native)
         endif()
