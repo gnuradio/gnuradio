@@ -11,7 +11,12 @@ endif()
 set(__INCLUDED_GR_PYTHON_CMAKE TRUE)
 
 
-define_property(GLOBAL PROPERTY GR_PYTHON_VENDOR_DEPS)
+define_property(
+	GLOBAL
+       	PROPERTY GR_PYTHON_VENDOR_DEPS
+	BRIEF_DOCS "GR Python module dependencies" 
+	FULL_DOCS "GR Python module dependencies"
+)
 
 ########################################################################
 # Setup the python interpreter:

@@ -146,8 +146,18 @@ function(GR_REGISTER_LIBRARY target)
         set_property(GLOBAL APPEND PROPERTY COMPONENT_${COMPONENT}_TARGETS ${target})
     endif()
     if(ARGN)
-        define_property(GLOBAL PROPERTY TARGET_${target}_DIST_DEPS)
-        define_property(GLOBAL PROPERTY TARGET_${target}_EXPORT_DEPS)
+        define_property(
+		GLOBAL
+	       	PROPERTY TARGET_${target}_DIST_DEPS
+		BRIEF_DOCS "Binary distribution dependencies"
+	        FULL_DOCS "List of binary distrution dependencies"
+	)
+        define_property(
+		GLOBAL
+	       	PROPERTY TARGET_${target}_EXPORT_DEPS
+		BRIEF_DOCS "Binary symbol dependencies"
+	        FULL_DOCS "List of binary symbol dependencies"
+	)
         set_property(GLOBAL PROPERTY COMPONENT_${COMPONENT}_NEEDS_DEPS TRUE)
         # targets included in GR_REGISTER_LIBRARY or GR_LIBRARY_FOO
         # are for including in a distribution interface
