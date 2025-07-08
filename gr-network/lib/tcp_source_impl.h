@@ -12,12 +12,21 @@
 #define NETWORK_TCP_SOURCE_IMPL_H
 
 #include "gnuradio/network/api.h"
+#include "gnuradio/network/tcp_source.h"
 #include "gnuradio/types.h"
-#include <gnuradio/network/tcp_source.h>
+
+
+#if defined(_WIN32) || defined(_WIN64)
+
+#include <Winsock2.h>
+#include <ws2tcpip.h>
+
+#else
 
 #include <arpa/inet.h>
 #include <sys/socket.h>
-#include <cstring>
+
+#endif
 
 namespace gr {
 namespace network {

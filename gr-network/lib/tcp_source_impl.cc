@@ -11,22 +11,35 @@
 #include "gnuradio/network/tcp_source.h"
 #include "gnuradio/sptr_magic.h"
 #include "gnuradio/types.h"
+#include <cerrno>
+#include <cstdlib>
+#include <cstring>
+#include <stdexcept>
+
+#if defined(_WIN32) || defined(_WIN64)
+
+#define WINDOWS_SOCKETS
+
+#pragma commend(lib, "Ws2_32.lib")
+
+#include <Winsock2.h>
+#include <ws2tcpip.h>
+
+#else
+
 #include <arpa/inet.h>
 #include <asm-generic/socket.h>
 #include <netdb.h>
 #include <netinet/in.h>
 #include <sys/socket.h>
-#include <cerrno>
-#include <cstdlib>
-#include <cstring>
-#include <stdexcept>
+
+#endif
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
 
 #include "tcp_source_impl.h"
-
 
 namespace gr {
 namespace network {
@@ -48,6 +61,24 @@ tcp_source_impl::tcp_source_impl(size_t item_size,
                                  int source_mode)
     : d_connection_mode(source_mode), d_block_size(item_size * vec_len), d_veclen(vec_len)
 {
+#ifdef WINDOWS_SOCKETS
+
+    WSADATA wsaData;
+
+    int res = WSAStartup(MAKEWORD(2, 2), &wsaData);
+
+    if (res != 0) {
+        d_logger->error("WSAStartup failed with error code {}.", res);
+        throw std::runtime_error("Error while initializing Windows sockets.");
+    }
+
+    if (LOBYTE(wsaData.wVersion) != 2 || HIBYTE(wsaData.wVersion) != 2) {
+        d_logger->error("Winsock version 2.2 not available.");
+        WSACleanup();
+        throw std::runtime_error("Error while initializing Windows sockets.");
+    }
+
+#endif
 
     struct addrinfo hints;
     struct addrinfo* host_info;
@@ -66,7 +97,11 @@ tcp_source_impl::tcp_source_impl(size_t item_size,
     }
 
     if (res != 0) {
+#ifdef WINDOWS_SOCKETS
+        d_logger->erorr("Error while initializing: {}", WSAGetLastError());
+#else
         d_logger->error("Error while initializing: {}", gai_strerror(res));
+#endif
         throw std::runtime_error("TCP Source encountered an error while initializing");
     }
 
@@ -81,7 +116,11 @@ tcp_source_impl::tcp_source_impl(size_t item_size,
             d_socket = socket(
                 host_info->ai_family, host_info->ai_socktype, host_info->ai_protocol);
             if (d_socket == -1) {
+#ifdef WINDOWS_SOCKETS
+                d_logger->warn("Failed to initialize socket: {}", WSAGetLastError());
+#else
                 d_logger->warn("Failed to initialize socket: {}", strerror(errno));
+#endif
                 failed = true;
                 continue;
             }
@@ -92,7 +131,11 @@ tcp_source_impl::tcp_source_impl(size_t item_size,
 
             int r = bind(d_socket, host_info->ai_addr, host_info->ai_addrlen);
             if (r == -1) {
+#ifdef WINDOWS_SOCKETS
+                d_logger->warn("Failed to bind socket: {}", WSAGetLastError());
+#else
                 d_logger->warn("Failed to bind socket: {}", strerror(errno));
+#endif
                 failed = true;
                 continue;
             }
@@ -101,8 +144,14 @@ tcp_source_impl::tcp_source_impl(size_t item_size,
             // single sink-source pair per tcp connection
             r = listen(d_socket, 1);
             if (r == -1) {
+#ifdef WINDOWS_SOCKETS
+                d_logger->warn("Error while attempting to listen for connections: {}.",
+                               WSAGetLastError());
+
+#else
                 d_logger->warn("Error while attempting to listen for connections: {}.",
                                strerror(errno));
+#endif
                 failed = true;
                 continue;
             }
@@ -117,7 +166,11 @@ tcp_source_impl::tcp_source_impl(size_t item_size,
             d_socket = socket(
                 host_info->ai_family, host_info->ai_socktype, host_info->ai_protocol);
             if (d_socket == -1) {
+#ifdef WINDOWS_SOCKETS
+                d_logger->warn("Failed to initialize socket: {}", WSAGetLastError());
+#else
                 d_logger->warn("Failed to initialize socket: {}", strerror(errno));
+#endif
                 failed = true;
                 continue;
             }
@@ -138,7 +191,16 @@ tcp_source_impl::tcp_source_impl(size_t item_size,
     freeaddrinfo(host_info);
 }
 
-tcp_source_impl::~tcp_source_impl() { close(d_socket); }
+tcp_source_impl::~tcp_source_impl()
+{
+
+#ifdef WINDOWS_SOCKETS
+    closesocket(d_socket);
+    WSACleanup();
+#else
+    close(d_socket);
+#endif
+}
 
 
 void tcp_source_impl::establish_connection()
@@ -147,7 +209,12 @@ void tcp_source_impl::establish_connection()
         int res = connect(d_socket, (struct sockaddr*)&d_host_addr, d_host_addr_len);
 
         if (res < 0) {
+#ifdef WINDOWS_SOCKETS
+            d_logger->error("Could not connect to specified server: {}",
+                            WSAGetLastError());
+#else
             d_logger->error("Could not connect to specified server: {}", strerror(errno));
+#endif
         } else {
             d_logger->info("Successfully connected to server.");
             d_connected = true;
@@ -157,7 +224,11 @@ void tcp_source_impl::establish_connection()
     } else {
         d_exchange_socket = accept(d_socket, NULL, NULL);
         if (d_exchange_socket < 0) {
+#ifdef WINDOWS_SOCKETS
+            d_logger->error("Could not accept connection: {}", WSAGetLastError());
+#else
             d_logger->error("Could not accept connection: {}", strerror(errno));
+#endif
             return;
         }
 
@@ -189,6 +260,23 @@ int tcp_source_impl::work(int noutput_items,
 
         // error encountered
         if (received == -1) {
+
+#ifdef WINDOWS_SOCKETS
+            d_logger->error("Error encountered while attempting to receive data: {}",
+                            WSAGetLastError());
+
+            // notify the user in case of disconnects
+            if (errno == WSAECONNRESET || errno == WSAETIMEDOUT) {
+                d_logger->warn(
+                    "Connection has been shut down, waiting for a new connection.");
+                if (d_connection_mode == TCP_SOURCE_MODE_SERVER) {
+                    closesocket(d_exchange_socket);
+                }
+
+                d_connected = false;
+            }
+
+#else
             d_logger->error("Error encountered while attempting to receive data: {}",
                             strerror(errno));
 
@@ -196,10 +284,13 @@ int tcp_source_impl::work(int noutput_items,
             if (errno == ECONNRESET || errno == ETIMEDOUT) {
                 d_logger->warn(
                     "Connection has been shut down, waiting for a new connection.");
-                if (d_connection_mode == TCP_SOURCE_MODE_SERVER)
+                if (d_connection_mode == TCP_SOURCE_MODE_SERVER) {
                     close(d_exchange_socket);
+                }
+
                 d_connected = false;
             }
+#endif
             break;                  // exit because there is not point in receiving
         } else if (received == 0) { // no data left to receive and peer shut down
             if (d_connection_mode == TCP_SOURCE_MODE_CLIENT) {
@@ -209,7 +300,12 @@ int tcp_source_impl::work(int noutput_items,
             } else {
                 d_logger->info("Client has closed the connection and no more data "
                                "remains. Waiting for new connection.");
+#ifdef WINDOWS_SOCKETS
+                closesocket(d_exchange_socket);
+#else
+
                 close(d_exchange_socket);
+#endif
                 d_connected = false;
                 break;
             }
