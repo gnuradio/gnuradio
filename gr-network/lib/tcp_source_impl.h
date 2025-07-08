@@ -28,7 +28,7 @@ class NETWORK_API tcp_source_impl : public tcp_source
 protected:
     int d_socket;
     int d_exchange_socket;
-    struct sockaddr* d_host_addr;
+    struct sockaddr_storage d_host_addr;
     size_t d_host_addr_len;
     int d_connection_mode;
     int d_block_size;
@@ -36,8 +36,7 @@ protected:
 
     bool d_connected = false;
 
-    void connection_handler();
-    std::pair<std::string, std::string> stringify_addr(struct sockaddr_storage* a);
+    void establish_connection();
 
 public:
     tcp_source_impl(size_t item_size,

@@ -12,6 +12,7 @@
 #include "gnuradio/sptr_magic.h"
 #include "gnuradio/types.h"
 #include <arpa/inet.h>
+#include <asm-generic/socket.h>
 #include <netdb.h>
 #include <netinet/in.h>
 #include <sys/socket.h>
@@ -66,34 +67,84 @@ tcp_source_impl::tcp_source_impl(size_t item_size,
 
     if (res != 0) {
         d_logger->error("Error while initializing: {}", gai_strerror(res));
-        throw std::runtime_error("TCP Source encountered an error.");
+        throw std::runtime_error("TCP Source encountered an error while initializing");
     }
 
-    // copy the host data over
-    d_host_addr_len = host_info->ai_addrlen;
-    d_host_addr = (struct sockaddr*)malloc(host_info->ai_addrlen);
-    memcpy(d_host_addr, host_info->ai_addr, host_info->ai_addrlen);
+    bool failed = false;
+    d_logger->info("Trying to find a usable address.");
+    // loop over the results given by gai and attempt to bind/connect to the first
+    // available one, if we can't throw an exception and die.
+    for (struct addrinfo* i = host_info; i != NULL; i = i->ai_next) {
 
-    // Create the socket and also bind to a a port if we're the server
-    if (d_connection_mode == TCP_SOURCE_MODE_SERVER) {
-        d_socket =
-            socket(host_info->ai_family, host_info->ai_socktype, host_info->ai_protocol);
-        bind(d_socket, host_info->ai_addr, host_info->ai_addrlen);
-    } else {
-        d_socket =
-            socket(host_info->ai_family, host_info->ai_socktype, host_info->ai_protocol);
+        // Create the socket and also bind to a a port if we're the server
+        if (d_connection_mode == TCP_SOURCE_MODE_SERVER) {
+            d_socket = socket(
+                host_info->ai_family, host_info->ai_socktype, host_info->ai_protocol);
+            if (d_socket == -1) {
+                d_logger->warn("Failed to initialize socket: {}", strerror(errno));
+                failed = true;
+                continue;
+            }
+
+            // get rid of "Address already in use" error
+            int yes = 1;
+            setsockopt(d_socket, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(yes));
+
+            int r = bind(d_socket, host_info->ai_addr, host_info->ai_addrlen);
+            if (r == -1) {
+                d_logger->warn("Failed to bind socket: {}", strerror(errno));
+                failed = true;
+                continue;
+            }
+
+            // set the listening queue to 1 because in a flowgraph we expect to be an
+            // single sink-source pair per tcp connection
+            r = listen(d_socket, 1);
+            if (r == -1) {
+                d_logger->warn("Error while attempting to listen for connections: {}.",
+                               strerror(errno));
+                failed = true;
+                continue;
+            }
+
+            // successully created socket and bound to address, copy the data over
+            // and exit loop
+            failed = false;
+            d_host_addr_len = i->ai_addrlen;
+            memcpy(&d_host_addr, i->ai_addr, d_host_addr_len);
+            break;
+        } else {
+            d_socket = socket(
+                host_info->ai_family, host_info->ai_socktype, host_info->ai_protocol);
+            if (d_socket == -1) {
+                d_logger->warn("Failed to initialize socket: {}", strerror(errno));
+                failed = true;
+                continue;
+            }
+
+            failed = false;
+            d_host_addr_len = i->ai_addrlen;
+            memcpy(&d_host_addr, i->ai_addr, d_host_addr_len);
+        }
     }
 
-    if (d_socket == -1) {
-        d_logger->error("Could not create TCP socket: {}", strerror(errno));
-        throw std::runtime_error("TCP Source encountered an error.");
+    if (failed) {
+        d_logger->error("Could not find a usable address, aborting.");
+        throw std::runtime_error(
+            "TCP Source could encountered an error while initializing socket");
     }
+
+    d_logger->info("Successfully initialized socket.");
+    freeaddrinfo(host_info);
 }
 
-void tcp_source_impl::connection_handler()
+tcp_source_impl::~tcp_source_impl() { close(d_socket); }
+
+
+void tcp_source_impl::establish_connection()
 {
     if (d_connection_mode == TCP_SOURCE_MODE_CLIENT) {
-        int res = connect(d_socket, d_host_addr, d_host_addr_len);
+        int res = connect(d_socket, (struct sockaddr*)&d_host_addr, d_host_addr_len);
 
         if (res < 0) {
             d_logger->error("Could not connect to specified server: {}", strerror(errno));
@@ -104,13 +155,6 @@ void tcp_source_impl::connection_handler()
             return;
         }
     } else {
-        int res = listen(d_socket, 5);
-        if (res < 0) {
-            d_logger->error("Error while attempting to listen for connections: {}.",
-                            strerror(errno));
-            return;
-        }
-
         d_exchange_socket = accept(d_socket, NULL, NULL);
         if (d_exchange_socket < 0) {
             d_logger->error("Could not accept connection: {}", strerror(errno));
@@ -132,7 +176,7 @@ int tcp_source_impl::work(int noutput_items,
     while (!d_connected) {
         // if we're not connected, then attempt to connect with something, also
         // block until we succeed
-        this->connection_handler();
+        this->establish_connection();
     }
 
     int* out = (int*)output_items[0];
@@ -148,11 +192,12 @@ int tcp_source_impl::work(int noutput_items,
             d_logger->error("Error encountered while attempting to receive data: {}",
                             strerror(errno));
 
-            // notify the user in case of disconnects when we are the server
-            if (d_connection_mode == TCP_SOURCE_MODE_SERVER &&
-                (errno == ECONNRESET || errno == ETIMEDOUT)) {
+            // notify the user in case of disconnects
+            if (errno == ECONNRESET || errno == ETIMEDOUT) {
                 d_logger->warn(
                     "Connection has been shut down, waiting for a new connection.");
+                if (d_connection_mode == TCP_SOURCE_MODE_SERVER)
+                    close(d_exchange_socket);
                 d_connected = false;
             }
             break;                  // exit because there is not point in receiving
@@ -164,6 +209,7 @@ int tcp_source_impl::work(int noutput_items,
             } else {
                 d_logger->info("Client has closed the connection and no more data "
                                "remains. Waiting for new connection.");
+                close(d_exchange_socket);
                 d_connected = false;
                 break;
             }
