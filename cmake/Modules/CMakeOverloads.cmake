@@ -58,6 +58,17 @@ endmacro(INCLUDE_DIRECTORIES)
 
 macro(GR_FIND_PACKAGE pkg)
     set(${pkg}_FIND_QUIETLY ON)
-    find_package(${pkg} ${ARGN})
+    if(${CMAKE_VERSION} VERSION_LESS_EQUAL 3.24)
+         if(${CMAKE_VERSION} VERSION_GREATER_EQUAL 3.0)
+	       # Remove 'GLOBAL' argument on ubuntu 22
+	       #list(REMOVE_ITEM ARGN "GLOBAL")
+	       string(REPLACE "GLOBAL" "" ARGN1 "${ARGN}")
+         endif()
+    endif()
+    if(DEFINED ARGN1)
+	find_package(${pkg} ${ARGN1})
+    else()
+        find_package(${pkg} ${ARGN})
+    endif()
 endmacro()
 

@@ -24,7 +24,12 @@ if(NOT DEFINED ENABLE_DEFAULT)
     message(STATUS "Use -DENABLE_DEFAULT=OFF to disable components by default.")
 endif()
 
-define_property(GLOBAL PROPERTY GR_ACTIVE_COMPONENT BRIEF_DOCS "Current GR Component being processed")
+define_property(
+	GLOBAL 
+	PROPERTY GR_ACTIVE_COMPONENT 
+	BRIEF_DOCS "Current GR Component being processed"
+	FULL_DOCS "Current GR Component being processed" 
+)
 
 
 ########################################################################
@@ -38,7 +43,12 @@ function(GR_REGISTER_COMPONENT)
     set(MULTI_OPT REQUIRED_COMPONENTS REQUIRED_TPLS)
     cmake_parse_arguments(GR_COMPONENT "${OPTIONS}" "${SINGLE_OPT}" "${MULTI_OPT}" ${ARGN})
     include(CMakeDependentOption)
-    define_property(GLOBAL PROPERTY COMPONENT_${GR_COMPONENT_NAME}_VAR)
+    define_property(
+	    GLOBAL 
+	    PROPERTY COMPONENT_${GR_COMPONENT_NAME}_VAR 
+	    BRIEF_DOCS "${GR_COMPONENT_NAME}"
+	    FULL_DOCS "${GR_COMPONENT_NAME}"
+    )
     set_property(GLOBAL PROPERTY COMPONENT_${GR_COMPONENT_NAME}_VAR ${GR_COMPONENT_VAR})
     foreach(dep ${GR_COMPONENT_REQUIRED_COMPONENTS})
         get_property(dep_var GLOBAL PROPERTY COMPONENT_${dep}_VAR)
@@ -123,8 +133,18 @@ function(GR_CLEAR_ACTIVE_COMPONENT)
 endfunction()
 
 function(GR_DEFINE_COMPONENT_INTERFACE name)
-    define_property(GLOBAL PROPERTY COMPONENT_${name}_DEPS)
-    define_property(GLOBAL PROPERTY COMPONENT_${name}_TARGETS)
+    define_property(
+	    GLOBAL 
+	    PROPERTY COMPONENT_${name}_DEPS
+	    BRIEF_DOCS "Component dependencies"
+	    FULL_DOCS "List of component dependencies"
+    )
+    define_property(
+	    GLOBAL
+	    PROPERTY COMPONENT_${name}_TARGETS
+	    BRIEF_DOCS "Binary dependencies"
+            FULL_DOCS "List of binary dependencies"
+    )
     set_property(GLOBAL PROPERTY COMPONENT_${name}_DEPS ${ARGN})
 endfunction()
 
