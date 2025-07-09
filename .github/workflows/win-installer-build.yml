@@ -1,10 +1,130 @@
-name: Windows Builder
+name: 'Windows Installer Builder'
 on:
-    workflow_dispatch:
+  workflow_dispatch:
 
 
 jobs:
-    build-windows:
-        runs-on: windows-latest
+  ## duplicate from make-test.yml
+  # Check hashes first
+  check-hashes:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    name: Check hashes
+    container:
+      image: 'gnuradio/ci:fedora-42-3.10'
+    steps:
+    - name: Checkout project
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 1
+    - name: Add git repo to safe repos
+      run: git config --global --add safe.directory ${GITHUB_WORKSPACE}
+    - name: Run hash fixer on all binding files
+      run: gr-utils/bindtool/scripts/binding-hash-hotfixer.zsh gr-*/python/*/bindings/*.cc gnuradio-runtime/python/gnuradio/gr/bindings/*.cc
+    - name: get changed files
+      run: >
+          git --no-pager diff -z --name-only --
+          > /tmp/hashdiff
+          ; [[ ! -s /tmp/hashdiff ]] && exit 0
+          ; sed -z 's;.*;::error file=&::Hash mismatch in &\n;' /tmp/hashdiff
+          | tr -d '\0'
+          ; exit -1
 
+  # We continue checking C++ formatting. No one gets free CPU cycles if they
+  # can't use clang-format.
+  check-formatting:
+    name: Check C++ Formatting
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+    - uses: actions/checkout@v2
+    - uses: DoozyX/clang-format-lint-action@v0.14
+      with:
+        source: '.'
+        extensions: 'h,hpp,cpp,cc,cc.in'
+        clangFormatVersion: 14
+  check-python-formatting:
+    name: Check Python Formatting
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+    - uses: actions/checkout@v2
+    - uses: quentinguidee/pep8-action@v1
+      with:
+        # -----------------------------------
+        # UPDATE tox.ini when making changes!
+        arguments: '--max-line-length=120 --ignore E265,E266,E275,E402,E501,E704,E712,E713,E714,E711,E721,E722,E741,W504,W605 --exclude *.yml.py'
+        # -----------------------------------
+  ## end duplication
+  build-windows:
+    # All of these shall depend on the formatting check (needs: check-formatting)
+    needs: [check-hashes, check-formatting, check-python-formatting]
+    runs-on: windows-latest
+    name: MSVC
+    defaults:
+      run:
+        shell: cmd
+    steps:
+    - name: Check environment
+      run: |
+        set
+        dir %SystemDrive%
+    #- name: Download and install msbuild
+    #  run: |
+    #    powershell -NoProfile -ExecutionPolicy Bypass -Command ^
+    #      Invoke-WebRequest "https://aka.ms/vs/17/release/vs_buildtools.exe" ^
+    #      -OutFile "%TEMP%\vs_buildtools.exe" -UseBasicParsing
+    #    "%TEMP%\vs_buildtools.exe"  --quiet --wait --norestart --noUpdateInstaller ^
+    #      --add Microsoft.VisualStudio.Workload.VCTools ^
+    #      --includeRecommended
+    #    REM Accept exit code 3010 as success
+    #    IF %ERRORLEVEL% EQU 3010 EXIT 0
+    - name: Install chocolatey
+      run: |
+        setx chocolateyVersion 1.4.0 /m
+        @"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" ^
+        -NoProfile -InputFormat None -ExecutionPolicy Bypass ^
+        -Command "[System.Net.ServicePointManager]::SecurityProtocol = 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))"
+        SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
+        @rem choco install -y doxygen.install --version=1.9.1
+        choco install -y NSIS --version=3.10
+        choco install -y python3 --version=3.12.10
+        echo "working path=_%CD%_"
+        @rem assumed installation location in %RUNNER_TOOL_CACHE%
+        %RUNNER_TOOL_CACHE%\Python\3.12.10\x64\python.exe -VV
+        call %RUNNER_TOOL_CACHE%\Python\3.12.10\x64\python.exe -m pip install virtualenv
+        call %RUNNER_TOOL_CACHE%\Python\3.12.10\x64\python.exe -m venv %RUNNER_WORKSPACE%\py_venv
+        call %RUNNER_WORKSPACE%\py_venv\Scripts\activate
+        python -c "import sys;print(sys.path)"
+        set
+    - name: Setup venv2
+      run: |
+        echo "working path=_%CD%_"
+        dir %RUNNER_WORKSPACE%
+        call %RUNNER_TOOL_CACHE%\Python\3.12.10\x64\python.exe -m venv %RUNNER_WORKSPACE%\py_venv2
+        call %RUNNER_WORKSPACE%\py_venv2\Scripts\activate
+        python -c "import sys;print(sys.path)"
+        call %RUNNER_WORKSPACE%\py_venv2\Scripts\activate.bat
+        python -c "import sys;print(sys.path)"
+    #- name: Clone C++ Pkg Mgr - Conan2
+    #- name: Clone GTK3 and GVSBuild
+    #- name: Clone QT5
+    - uses: msys2/setup-msys2@v2
+      id: msys2
+    - env:
+        MSYS2_LOCATION: ${{ steps.msys2.outputs.msys2-location }}
+      run: |
+        echo "%MSYS2_LOCATION%"
+        echo "MSYS2_LOCATION4=%MSYS2_LOCATION%" >> %GITHUB_ENV%
+        echo MSYS2_LOCATION5=%MSYS2_LOCATION% >> %GITHUB_ENV%
+    - name: Test
+      run: echo "MSYS2_LOCATION2=_%MSYS2_LOCATION2%_%MSYS2_LOCATION3%_%MSYS2_LOCATION4%_%MSYS2_LOCATION5%"
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: Check environment
+      run: |
+        echo "working path=_%CD%_"
+        dir %CD%
+        dir %RUNNER_WORKSPACE%
+        set
 
