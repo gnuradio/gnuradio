@@ -14,6 +14,7 @@
 #include <cerrno>
 #include <cstdlib>
 #include <cstring>
+#include <memory>
 #include <stdexcept>
 
 #if defined(_WIN32) || defined(_WIN64)
@@ -44,6 +45,8 @@
 namespace gr {
 namespace network {
 
+typedef struct addrinfo addrinfo_t;
+
 tcp_source::sptr tcp_source::make(size_t itemsize,
                                   size_t veclen,
                                   const std::string& host,
@@ -65,9 +68,9 @@ tcp_source_impl::tcp_source_impl(size_t item_size,
 
     WSADATA wsaData;
 
-    int res = WSAStartup(MAKEWORD(2, 2), &wsaData);
+    int wsa_res = WSAStartup(MAKEWORD(2, 2), &wsaData);
 
-    if (res != 0) {
+    if (wsares != 0) {
         d_logger->error("WSAStartup failed with error code {}.", res);
         throw std::runtime_error("Error while initializing Windows sockets.");
     }
@@ -81,7 +84,10 @@ tcp_source_impl::tcp_source_impl(size_t item_size,
 #endif
 
     struct addrinfo hints;
-    struct addrinfo* host_info;
+    // very ugly but its either that or make an entire class for a single pointer that
+    // gets used a single time
+    std::unique_ptr<addrinfo_t, void (*)(addrinfo_t*)> host_info(new addrinfo_t,
+                                                                 freeaddrinfo);
 
     memset(&hints, 0, sizeof(struct addrinfo));
     hints.ai_family = AF_UNSPEC;
@@ -90,11 +96,13 @@ tcp_source_impl::tcp_source_impl(size_t item_size,
 
     // Get IP version, port, e.t.c in a workable format
     int res;
+    addrinfo_t* tmp;
     if (d_connection_mode == TCP_SOURCE_MODE_CLIENT) {
-        res = getaddrinfo(host.c_str(), port.c_str(), &hints, &host_info);
+        res = getaddrinfo(host.c_str(), port.c_str(), &hints, &tmp);
     } else {
-        res = getaddrinfo(NULL, port.c_str(), &hints, &host_info);
+        res = getaddrinfo(NULL, port.c_str(), &hints, &tmp);
     }
+    host_info.reset(tmp);
 
     if (res != 0) {
 #ifdef WINDOWS_SOCKETS
@@ -109,12 +117,13 @@ tcp_source_impl::tcp_source_impl(size_t item_size,
     d_logger->info("Trying to find a usable address.");
     // loop over the results given by gai and attempt to bind/connect to the first
     // available one, if we can't throw an exception and die.
-    for (struct addrinfo* i = host_info; i != NULL; i = i->ai_next) {
+    for (struct addrinfo* i = host_info.get(); i != NULL; i = i->ai_next) {
 
         // Create the socket and also bind to a a port if we're the server
         if (d_connection_mode == TCP_SOURCE_MODE_SERVER) {
-            d_socket = socket(
-                host_info->ai_family, host_info->ai_socktype, host_info->ai_protocol);
+            d_socket = socket(host_info.get()->ai_family,
+                              host_info->ai_socktype,
+                              host_info->ai_protocol);
             if (d_socket == -1) {
 #ifdef WINDOWS_SOCKETS
                 d_logger->warn("Failed to initialize socket: {}", WSAGetLastError());
@@ -188,7 +197,6 @@ tcp_source_impl::tcp_source_impl(size_t item_size,
     }
 
     d_logger->info("Successfully initialized socket.");
-    freeaddrinfo(host_info);
 }
 
 tcp_source_impl::~tcp_source_impl()

@@ -15,7 +15,6 @@
 #include "gnuradio/network/tcp_source.h"
 #include "gnuradio/types.h"
 
-
 #if defined(_WIN32) || defined(_WIN64)
 
 #include <Winsock2.h>
@@ -60,6 +59,7 @@ public:
              gr_vector_const_void_star& input_items,
              gr_vector_void_star& output_items) override;
 };
+
 } // namespace network
 } // namespace gr
 
