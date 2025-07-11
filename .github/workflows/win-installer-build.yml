@@ -147,7 +147,7 @@ jobs:
     - name: Clone GVSBuild (to build GTK)
       uses: actions/checkout@v4
       with:
-        repository: 'https://github.com/wingtk/gvsbuild.git'
+        repository: 'wingtk/gvsbuild'
         ref: '09028ca09c3f7eef4d7fe935f79cacd2fbb4410f'
         path: gvsbuild
         fetch-depth: 2
