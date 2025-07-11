@@ -60,7 +60,7 @@ jobs:
     # All of these shall depend on the formatting check (needs: check-formatting)
     needs: [check-hashes, check-formatting, check-python-formatting]
     runs-on: windows-latest
-    name: MSVC
+    name: Windows Installer (cmake with msbuild)
     defaults:
       run:
         shell: cmd
@@ -76,74 +76,110 @@ jobs:
           -OutFile "%TEMP%\vs_buildtools.exe" -UseBasicParsing
         "%TEMP%\vs_buildtools.exe"  --quiet --wait --norestart --noUpdateInstaller ^
           --add Microsoft.VisualStudio.Workload.VCTools ^
+          --add Microsoft.VisualStudio.ComponentGroup.VC.Tools.142.x86.x64 ^
           --includeRecommended
         REM Accept exit code 3010 as success
         IF %ERRORLEVEL% EQU 3010 EXIT 0
-    - name: Add msbuild to PATH
+        set
+    - name: Add msbuild to PATH environment variable
+      if: always()
       uses: microsoft/setup-msbuild@v2
       with:
         msbuild-architecture: x64
-        vs-version: 17.0
-    - name: test
-      run: set
-    - uses: actions/checkout@v4
-    - uses: actions/setup-python@v5
+        vs-version: 16
+    - name: Export vcvars64 path for 'x64 Native Tools Command Prompt'
+      run: |
+        set
+        where msbuild
+        set msbuild_vcvars64=C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Auxiliary\Build\vcvars64.bat
+        if NOT EXIST "%msbuild_vcvars64%" (^
+           echo ERROR: Could not locate 'vcvars64' batch file at "%msbuild_vcvars64%". This script is intended to be run from a build machine & exit /B 1)
+        echo msbuild_vcvars64=%msbuild_vcvars64%>> %GITHUB_ENV%
+    #- uses: actions/checkout@v4
+    - name: Setup Python 3.12
+      uses: actions/setup-python@v5
       id: cp312
       with:
-         python-version: '3.12'
-    - run: | 
-         echo '${{ steps.cp312.outputs.python-version }}'
-         ${{ steps.cp313.outputs.python-path }} -m pip install virtualenv
-         ${{ steps.cp313.outputs.python-path }} -m venv %RUNNER_WORKSPACE%\py_venv
-         set PY_VENV_PATH=%PY_VENV_PATH%
-         call %PY_VENV_PATH%\Scripts\activate
-         python -c "import sys;print(sys.path)"
-         echo "PY_VENV_PATH=%PY_VENV_PATH%" >> %GITHUB_ENV%
-         echo "PATH=%PATH%" >> %GITHUB_ENV%
-         set GITHUB_WORKSPACE
-#    - name: Install chocolatey
+        python-version: '3.12'
+    - name: Create Python Virtual Environment
+      env:
+        PY_VENV_PATH: ${{ runner.workspace }}\py_venv
+      run: | 
+        echo '${{ steps.cp312.outputs.python-version }}'
+        ${{ steps.cp312.outputs.python-path }} -m pip install virtualenv
+        ${{ steps.cp312.outputs.python-path }} -m venv %PY_VENV_PATH%
+        call %PY_VENV_PATH%\Scripts\activate
+        python -c "import sys;print(sys.path)"
+        echo PY_VENV_PATH=%PY_VENV_PATH%>> %GITHUB_ENV%
+        @rem echo PATH=%PATH%>> %GITHUB_ENV%
+        set RUNNER_WORKSPACE
+        set GITHUB_WORKSPACE
+    - name: Install chocolatey
+      run: |
+        @rem chocolatey should be installed
+        @rem setx chocolateyVersion 1.4.0 /m
+        @rem @"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" ^
+        @rem -NoProfile -InputFormat None -ExecutionPolicy Bypass ^
+        @rem -Command "[System.Net.ServicePointManager]::SecurityProtocol = 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))"
+        @rem SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
+        choco list
+#    - name: Download and install msbuild via chocolatey
 #      run: |
-#        setx chocolateyVersion 1.4.0 /m
-#        @"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" ^
-#        -NoProfile -InputFormat None -ExecutionPolicy Bypass ^
-#        -Command "[System.Net.ServicePointManager]::SecurityProtocol = 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))"
-#        SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
-#        @rem choco install -y doxygen.install --version=1.9.1
-#        choco install -y NSIS --version=3.10
-#        choco install -y python3 --version=3.12.10
-#        echo "working path=_%CD%_"
-#        @rem assumed installation location in %RUNNER_TOOL_CACHE%
-#        %RUNNER_TOOL_CACHE%\Python\3.12.10\x64\python.exe -VV
-#        call %RUNNER_TOOL_CACHE%\Python\3.12.10\x64\python.exe -m pip install virtualenv
-#        call %RUNNER_TOOL_CACHE%\Python\3.12.10\x64\python.exe -m venv %RUNNER_WORKSPACE%\py_venv
-#        call %RUNNER_WORKSPACE%\py_venv\Scripts\activate
-#        python -c "import sys;print(sys.path)"
-#        set
+#        choco install -y choco install visualstudio2019buildtools ^
+#          --quiet --noUpdateInstaller ^
+#          --add Microsoft.VisualStudio.Workload.VCTools ^
+#          --includeRecommended
+#        type %ChocolateyInstall%\logs\chocolatey.log
+    - name: Install with chocolatey
+      run: |
+        choco list
+        @rem choco install -y doxygen.install --version=1.9.1
+        choco install -y NSIS --version=3.10
     - name: Install C++ Pkg Mgr - Conan2 via pip
       run: |
         python -c "import sys;print(sys.path)"
         set PY_VENV_PATH
-        %PY_VENV_PATH%\Scripts\activate
+        call %PY_VENV_PATH%\Scripts\activate
+        python -c "import sys;print(sys.path)"
         python -m pip install conan
         conan version
 #    - name: Clone C++ Pkg Mgr - Conan2
 #    
+    # Need to check if GHCUP_MSYS2 can be used
     - uses: msys2/setup-msys2@v2
       id: msys2
       with:
         update: true
         MSYSTEM: ucrt64
-    - run:
-        echo MSYS2_LOCATION='${{ steps.msys2.outputs.msys2-location }}'
-        echo "MSYS2_LOCATION=%MSYS2_LOCATION%" >> %GITHUB_ENV%
+    - name: Export environment variable MSYS2_LOCATION
+      env:
+        MSYS2_LOCATION: ${{ steps.msys2.outputs.msys2-location }}
+      run: |
+        set MSYS2_LOCATION
         set MSYSTEM
-        echo "MSYSTEM=ucrt64" >> %GITHUB_ENV%
+        echo MSYS2_LOCATION=%MSYS2_LOCATION%>> %GITHUB_ENV%
     #- env:
     #    MSYS2_LOCATION: ${{ steps.msys2.outputs.msys2-location }}
     #    MSYSTEM: ucrt64
     #  run: |
     #    echo Exporting environment variable MSYS2_LOCATION with value '%MSYS2_LOCATION%'
-    #    echo "MSYS2_LOCATION=%MSYS2_LOCATION%" >> %GITHUB_ENV%
+    #    echo MSYS2_LOCATION=%MSYS2_LOCATION%>> %GITHUB_ENV%
+    #- name: Clone Qt5 for Windows from git://code.qt.io/qt
+    #  env:
+    #    QT_ROOT_DIR
+    #  run: |
+    #    @echo Using instructions at https://wiki.qt.io/Building_Qt_5_from_Git#Getting_the_source_code
+    - name: Install Qt using jurplel/install-qt-action@v4
+      uses: jurplel/install-qt-action@v4
+        # uses aqt installed into default python to download prebuild qt
+        # extracts to ${{ runner.workspace }}
+        # exports the variables Qt5_DIR, QT_ROOT_DIR, QT_PLUGIN_PATH, QML2_IMPORT_PATH
+      with:
+        aqtversion: '==3.1.*'
+        version: '5.15.2'
+        host: 'windows'
+        target: 'desktop'
+        arch: 'win64_msvc2019_64'
     - name: Clone GVSBuild (to build GTK)
       uses: actions/checkout@v4
       with:
@@ -152,15 +188,29 @@ jobs:
         path: gvsbuild
         fetch-depth: 2
     - run: |
-        git checkout HEAD^
-        set
+        echo %CD%
+        @rem CD is D:\a\gnuradio\gnuradio
+        set MSYSTEM
+        set MSYS2_LOCATION
+        set Python3_ROOT_DIR
+        set 
+        dir %RUNNER_WORKSPACE%
+        dir
+        cd gvsbuild
+        echo %CD% -- Calling git
+        git checkout HEAD
+        git status
+        echo %CD% -- Done Calling git
     #
-    #- name: Clone QT5
     - name: Checkout code
       uses: actions/checkout@v4
+      with:
+        path: gnuradio
     - name: Check environment
       run: |
         echo working path=_%CD%_
+        @rem CD was D:\a\gnuradio\gnuradio
+        git status
         set MSYS2_LOCATION
         set MSYSTEM
         set PY_VENV_PATH
