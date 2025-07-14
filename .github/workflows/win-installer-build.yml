@@ -202,7 +202,7 @@ jobs:
         git status
         echo %CD% -- Done Calling git
     - name: Build GTK binaries with gvsbuild
-    - env:
+      env:
         gtk_version=gtk3
         gtk_build_dir=${{ runner.workspace }}\gtk-build
         gvsbuild_dir=${{ github.workspace }}\gvsbuild
