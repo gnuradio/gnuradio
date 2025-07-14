@@ -80,14 +80,43 @@ jobs:
           --includeRecommended
         REM Accept exit code 3010 as success
         IF %ERRORLEVEL% EQU 3010 EXIT 0
-        set
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        path: gnuradio
+    - name: Install chocolatey
+      run: |
+        @rem chocolatey should be installed
+        @rem setx chocolateyVersion 1.4.0 /m
+        @rem @"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" ^
+        @rem -NoProfile -InputFormat None -ExecutionPolicy Bypass ^
+        @rem -Command "[System.Net.ServicePointManager]::SecurityProtocol = 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))"
+        @rem SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
+        choco list
+#    - name: Download and install msbuild via chocolatey
+#      run: |
+#        choco install -y visualstudio2022buildtools ^
+#          --quiet
+#        type %ChocolateyInstall%\logs\chocolatey.log
+#        choco install -y visualstudio2022-workload-vctools ^
+#          --package-parameters "--includeRecommended" ^
+#          --quiet
+#        type %ChocolateyInstall%\logs\chocolatey.log
+#    - name: Install with chocolatey
+#      run: |
+#        choco list
+#        choco install visualstudio2019-workload-vctools
+#        @rem choco install -y doxygen.install --version=1.9.1
+#        choco install -y NSIS --version=3.10
     - name: Add msbuild to PATH environment variable
       if: always()
       uses: microsoft/setup-msbuild@v2
       with:
         msbuild-architecture: x64
-        vs-version: 16
+        #vs-version: '[16.0, 17.0)'
+        vs-version: '[17.0, 18.0)'
     - name: Export vcvars64 path for 'x64 Native Tools Command Prompt'
+      if: always()
       run: |
         set
         where msbuild
@@ -95,8 +124,22 @@ jobs:
         if NOT EXIST "%msbuild_vcvars64%" (^
            echo ERROR: Could not locate 'vcvars64' batch file at "%msbuild_vcvars64%". This script is intended to be run from a build machine & exit /B 1)
         echo msbuild_vcvars64=%msbuild_vcvars64%>> %GITHUB_ENV%
+        call "%msbuild_vcvars64%"
+        set VSINSTALLDIR
+        call set _VSINSTALLDIR=%%VSINSTALLDIR:~0,-1%%
+        set _VSINSTALLDIR
+        call set __VSINSTALLDIR=%%VSINSTALLDIR:~-1%%
+        set __VSINSTALLDIR
+        @rem This work - if "%__VSINSTALLDIR%" == "\" (set VSINSTALLDIR="%_VSINSTALLDIR%")
+        if "%__VSINSTALLDIR%" == "\" set VSINSTALLDIR=%_VSINSTALLDIR%
+        set VSINSTALLDIR
+        echo VSINSTALLDIR=%VSINSTALLDIR%>> %GITHUB_ENV%
+        echo for /f "usebackq tokens=*" %%i in (`"C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe" -version "[17.0, 18.0)" -requires Microsoft.VisualStudio.Workload.VCTools -property installationPath -products *`)
+        for /f "usebackq tokens=*" %%i in (`"C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe" -requires Microsoft.VisualStudio.Workload.VCTools -property installationPath -products *`) do (set test=%%i)
+        echo '%test%'
     #- uses: actions/checkout@v4
     - name: Setup Python 3.12
+      if: always()
       uses: actions/setup-python@v5
       id: cp312
       with:
@@ -114,37 +157,6 @@ jobs:
         @rem echo PATH=%PATH%>> %GITHUB_ENV%
         set RUNNER_WORKSPACE
         set GITHUB_WORKSPACE
-    - name: Install chocolatey
-      run: |
-        @rem chocolatey should be installed
-        @rem setx chocolateyVersion 1.4.0 /m
-        @rem @"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" ^
-        @rem -NoProfile -InputFormat None -ExecutionPolicy Bypass ^
-        @rem -Command "[System.Net.ServicePointManager]::SecurityProtocol = 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))"
-        @rem SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
-        choco list
-#    - name: Download and install msbuild via chocolatey
-#      run: |
-#        choco install -y choco install visualstudio2019buildtools ^
-#          --quiet --noUpdateInstaller ^
-#          --add Microsoft.VisualStudio.Workload.VCTools ^
-#          --includeRecommended
-#        type %ChocolateyInstall%\logs\chocolatey.log
-    - name: Install with chocolatey
-      run: |
-        choco list
-        @rem choco install -y doxygen.install --version=1.9.1
-        choco install -y NSIS --version=3.10
-    - name: Install C++ Pkg Mgr - Conan2 via pip
-      run: |
-        python -c "import sys;print(sys.path)"
-        set PY_VENV_PATH
-        call %PY_VENV_PATH%\Scripts\activate
-        python -c "import sys;print(sys.path)"
-        python -m pip install conan
-        conan version
-#    - name: Clone C++ Pkg Mgr - Conan2
-#    
     # Need to check if GHCUP_MSYS2 can be used
     - uses: msys2/setup-msys2@v2
       id: msys2
@@ -158,6 +170,89 @@ jobs:
         set MSYS2_LOCATION
         set MSYSTEM
         echo MSYS2_LOCATION=%MSYS2_LOCATION%>> %GITHUB_ENV%
+    - name: Clone GVSBuild (to build GTK)
+      uses: actions/checkout@v4
+      with:
+        repository: 'wingtk/gvsbuild'
+        ref: '09028ca09c3f7eef4d7fe935f79cacd2fbb4410f'
+        path: gvsbuild
+        fetch-depth: 2
+    - run: |
+        echo %CD%
+        @rem CD is D:\a\gnuradio\gnuradio
+        set MSYSTEM
+        set MSYS2_LOCATION
+        set Python3_ROOT_DIR
+        set 
+        dir %RUNNER_WORKSPACE%
+        dir
+        cd gvsbuild
+        echo %CD% -- Calling git
+        git checkout HEAD
+        git status
+        echo %CD% -- Done Calling git
+    - name: Debug GTK build error
+      run: |
+        set VSCMD_DEBUG=3
+        @echo DEBUG: Calling cmd /c vcvars w/ redirection
+        cmd.exe /c ""C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Auxiliary\Build\vcvars64.bat">NUL && set"
+        echo Errorlevel %errorlevel%
+        @echo DEBUG: Reading log file dd_vsdevcmd*.log
+        type C:\Users\RUNNER~1\AppData\Local\Temp\dd_vsdevcmd17_preinit_env.log
+        type C:\Users\RUNNER~1\AppData\Local\Temp\dd_vsdevcmd17_env.log
+        @echo DEBUG: Calling cmd /c vcvars w/o redirection
+        cmd.exe /c ""C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Auxiliary\Build\vcvars64.bat""
+        echo Errorlevel %errorlevel%
+        @echo DEBUG: Reading log file dd_vsdevcmd*.log
+        type C:\Users\RUNNER~1\AppData\Local\Temp\dd_vsdevcmd17_preinit_env.log
+        type C:\Users\RUNNER~1\AppData\Local\Temp\dd_vsdevcmd17_env.log
+        @echo DEBUG: Calling vcvars directly
+        call "C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Auxiliary\Build\vcvars64.bat
+        echo Errorlevel %errorlevel%
+    - name: Build GTK binaries with gvsbuild
+      env:
+        gtk_version: gtk3
+        gtk_build_dir: ${{ runner.workspace }}\gtk-build
+        gvsbuild_dir: ${{ github.workspace }}\gvsbuild
+      run: |
+        @echo Activate Python venv
+        call %PY_VENV_PATH%\Scripts\activate
+        python -c "import sys;print(sys.path)"
+        @echo Define MSYS2_LOCATION with linux path separators
+        call set fps_MSYS2_DIR=%%MSYS2_LOCATION:\=/%%
+        @echo   fps_MSYS2_DIR=%fps_MSYS2_DIR%
+        @echo Defining a number of environment variables pointing to future locations
+        mkdir %gtk_build_dir%
+        @rem set GTK_ROOT=%gtk_build_dir%\gtk\x64\release
+        @rem set INCLUDE=%GTK_ROOT%\include;%GTK_ROOT%\include\cairo;%GTK_ROOT%\include\glib-2.0;%GTK_ROOT%\include\gobject-introspection-1.0;%GTK_ROOT%\lib\glib-2.0\include;%INCLUDE%
+        @rem set LIB=%GTK_ROOT%\lib;%LIB%
+        set GTK_BIN_DIR=%GTK_ROOT%\bin
+        set PATH=%GTK_BIN_DIR%;%PATH%
+        set
+        @echo Starting to build from %gvsbuild_dir%
+        @rem Defer calling vcvars64.bat as it is called by gvsbuild itself and 
+        @rem multiple calls can lead to 'The input line is too long.' errors 
+        @rem when PATH environment variable is repeatably expanded.
+        call "%msbuild_vcvars64%" -clean_env
+        @rem cd %gvsbuild_dir%
+        @rem pip install .
+        pipx list
+        pipx install gvsbuild
+        @echo TODO specify --vs-ver 17 instead of --vs-ver 16, because gvsbuild assumes --vs-ver 16 is mapped to MSVC 2019 folder
+        @echo TODO does not seem to understand the MSVC 2022 can optionally compile with older --vs_ver
+        @rem set gvsbuild_args=build %gtk_version% --configuration release --py-wheel --enable-gi --msys-dir %fps_MSYS2_DIR% --build-dir %gtk_build_dir%  --from-scratch --ninja-opts -j1 --vs-ver 17 --platform x64 --vs-install-path "C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools"
+        set
+        set gvsbuild_args=build %gtk_version% --configuration release --py-wheel --enable-gi --msys-dir %fps_MSYS2_DIR% --build-dir %gtk_build_dir% --use-env --ninja-opts -j2 --vs-ver 17
+        @echo Calling gvsbuild with arguments '%gvsbuild_args%'
+        gvsbuild %gvsbuild_args%
+        @echo Install pygi
+        dir %%gtk_build_dir%%
+        dir %GTK_ROOT%\python
+        for %%i (%GTK_ROOT%\python\PyGObject*.whl) do (pip install --force-reinstall %%i)
+        for %%i (%GTK_ROOT%\python\pycairo*.whl) do (pip install --force-reinstall %%i)
+        @echo Verify pygi installation
+        python -c "import os;os.add_dll_directory("%GTK_BIN_DIR%");import gi;gi.require_version('Gtk', '3.0');gi.require_foreign('cairo', 'Context');gi.require_version('PangoCairo', '1.0')"
+    #
     #- env:
     #    MSYS2_LOCATION: ${{ steps.msys2.outputs.msys2-location }}
     #    MSYSTEM: ucrt64
@@ -180,68 +275,16 @@ jobs:
         host: 'windows'
         target: 'desktop'
         arch: 'win64_msvc2019_64'
-    - name: Clone GVSBuild (to build GTK)
-      uses: actions/checkout@v4
-      with:
-        repository: 'wingtk/gvsbuild'
-        ref: '09028ca09c3f7eef4d7fe935f79cacd2fbb4410f'
-        path: gvsbuild
-        fetch-depth: 2
-    - run: |
-        echo %CD%
-        @rem CD is D:\a\gnuradio\gnuradio
-        set MSYSTEM
-        set MSYS2_LOCATION
-        set Python3_ROOT_DIR
-        set 
-        dir %RUNNER_WORKSPACE%
-        dir
-        cd gvsbuild
-        echo %CD% -- Calling git
-        git checkout HEAD
-        git status
-        echo %CD% -- Done Calling git
-    - name: Build GTK binaries with gvsbuild
-      env:
-        gtk_version=gtk3
-        gtk_build_dir=${{ runner.workspace }}\gtk-build
-        gvsbuild_dir=${{ github.workspace }}\gvsbuild
+    - name: Install C++ Pkg Mgr - Conan2 via pip
       run: |
-        @echo Activate Python venv
+        python -c "import sys;print(sys.path)"
+        set PY_VENV_PATH
         call %PY_VENV_PATH%\Scripts\activate
         python -c "import sys;print(sys.path)"
-        @echo Define MSYS2_LOCATION with linux path separators
-        call set fps_MSYS2_DIR=%%MSYS2_DIR:\=/%%
-        @echo   fps_MSYS2_DIR=%fps_MSYS2_DIR%
-        @echo Defining a number of environment variables pointing to future locations
-        mkdir %gtk_build_dir%
-        echo set GTK_ROOT=%~dp0gtk\x64\release\>> %gtk_build_dir%\enable_gtk.cmd
-        echo set INCLUDE=%GTK_ROOT%include;%GTK_ROOT%include\cairo;%GTK_ROOT%include\glib-2.0;%GTK_ROOT%include\gobject-introspection-1.0;%GTK_ROOT%lib\glib-2.0\include;%INCLUDE%>> %gtk_build_dir%\enable_gtk.cmd
-        echo set LIB=%GTK_ROOT%lib;%LIB%>> %gtk_build_dir%\enable_gtk.cmd
-        echo set GTK_BIN_DIR=%GTK_ROOT%bin>> %gtk_build_dir%\enable_gtk.cmd
-        echo set PATH=%GTK_BIN_DIR%;%PATH%>> %gtk_build_dir%\enable_gtk.cmd
-        echo call set fps_GTK_BIN_DIR=%%GTK_BIN_DIR:\=/%%>> %gtk_build_dir%\enable_gtk.cmd
-        @echo   Content of dynamically generated %gtk_build_dir%\enable_gtk.cmd
-        type %gtk_build_dir%\enable_gtk.cmd
-        call %gtk_build_dir%\enable_gtk.cmd
-        @echo Starting to build from %gvsbuild_dir%
-        call %msbuild_vcvars64%
-        set VSINSTALLDIR
-        cd %gvsbuild_dir%
-        set gvsbuild_args=build %gtk_version% --configuration release --py-wheel --enable-gi --msys-dir %fps_MSYS2_DIR% --build-dir %gtk_build_dir% --vs-ver 16 --vs-install-path "%VSINSTALLDIR%"
-        @echo Calling gvsbuild with arguments '%gvsbuild_args%'
-        gvsbuild %gvsbuild_args%
-        @echo Install pygi
-        dir %GTK_ROOT%\pygobject\dist
-        for %%i (%GTK_ROOT%\pygobject\dist\PyGObject*.whl) do (pip install --force-reinstall %%i)
-        for %%i (%GTK_ROOT%\pygobject\dist\pycairo*.whl) do (pip install --force-reinstall %%i)
-        @echo Verify pygi installation
-        python -c "import os;os.add_dll_directory("%GTK_BIN_DIR%");import gi;gi.require_version('Gtk', '3.0');gi.require_foreign('cairo', 'Context');gi.require_version('PangoCairo', '1.0')"
-    #
-    - name: Checkout code
-      uses: actions/checkout@v4
-      with:
-        path: gnuradio
+        python -m pip install conan
+        conan version
+#    - name: Clone C++ Pkg Mgr - Conan2
+#    
     - name: Check environment
       run: |
         echo working path=_%CD%_
