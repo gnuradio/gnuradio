@@ -201,6 +201,42 @@ jobs:
         git checkout HEAD
         git status
         echo %CD% -- Done Calling git
+    - name: Build GTK binaries with gvsbuild
+    - env:
+        gtk_version=gtk3
+        gtk_build_dir=${{ runner.workspace }}\gtk-build
+        gvsbuild_dir=${{ github.workspace }}\gvsbuild
+      run: |
+        @echo Activate Python venv
+        call %PY_VENV_PATH%\Scripts\activate
+        python -c "import sys;print(sys.path)"
+        @echo Define MSYS2_LOCATION with linux path separators
+        call set fps_MSYS2_DIR=%%MSYS2_DIR:\=/%%
+        @echo   fps_MSYS2_DIR=%fps_MSYS2_DIR%
+        @echo Defining a number of environment variables pointing to future locations
+        mkdir %gtk_build_dir%
+        echo set GTK_ROOT=%~dp0gtk\x64\release\>> %gtk_build_dir%\enable_gtk.cmd
+        echo set INCLUDE=%GTK_ROOT%include;%GTK_ROOT%include\cairo;%GTK_ROOT%include\glib-2.0;%GTK_ROOT%include\gobject-introspection-1.0;%GTK_ROOT%lib\glib-2.0\include;%INCLUDE%>> %gtk_build_dir%\enable_gtk.cmd
+        echo set LIB=%GTK_ROOT%lib;%LIB%>> %gtk_build_dir%\enable_gtk.cmd
+        echo set GTK_BIN_DIR=%GTK_ROOT%bin>> %gtk_build_dir%\enable_gtk.cmd
+        echo set PATH=%GTK_BIN_DIR%;%PATH%>> %gtk_build_dir%\enable_gtk.cmd
+        echo call set fps_GTK_BIN_DIR=%%GTK_BIN_DIR:\=/%%>> %gtk_build_dir%\enable_gtk.cmd
+        @echo   Content of dynamically generated %gtk_build_dir%\enable_gtk.cmd
+        type %gtk_build_dir%\enable_gtk.cmd
+        call %gtk_build_dir%\enable_gtk.cmd
+        @echo Starting to build from %gvsbuild_dir%
+        call %msbuild_vcvars64%
+        set VSINSTALLDIR
+        cd %gvsbuild_dir%
+        set gvsbuild_args=build %gtk_version% --configuration release --py-wheel --enable-gi --msys-dir %fps_MSYS2_DIR% --build-dir %gtk_build_dir% --vs-ver 16 --vs-install-path "%VSINSTALLDIR%"
+        @echo Calling gvsbuild with arguments '%gvsbuild_args%'
+        gvsbuild %gvsbuild_args%
+        @echo Install pygi
+        dir %GTK_ROOT%\pygobject\dist
+        for %%i (%GTK_ROOT%\pygobject\dist\PyGObject*.whl) do (pip install --force-reinstall %%i)
+        for %%i (%GTK_ROOT%\pygobject\dist\pycairo*.whl) do (pip install --force-reinstall %%i)
+        @echo Verify pygi installation
+        python -c "import os;os.add_dll_directory("%GTK_BIN_DIR%");import gi;gi.require_version('Gtk', '3.0');gi.require_foreign('cairo', 'Context');gi.require_version('PangoCairo', '1.0')"
     #
     - name: Checkout code
       uses: actions/checkout@v4
