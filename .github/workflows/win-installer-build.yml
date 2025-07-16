@@ -69,17 +69,19 @@ jobs:
       run: |
         set
         dir %SystemDrive%
-    - name: Download and install msbuild
-      run: |
-        powershell -NoProfile -ExecutionPolicy Bypass -Command ^
-          Invoke-WebRequest "https://aka.ms/vs/17/release/vs_buildtools.exe" ^
-          -OutFile "%TEMP%\vs_buildtools.exe" -UseBasicParsing
-        "%TEMP%\vs_buildtools.exe"  --quiet --wait --norestart --noUpdateInstaller ^
-          --add Microsoft.VisualStudio.Workload.VCTools ^
-          --add Microsoft.VisualStudio.ComponentGroup.VC.Tools.142.x86.x64 ^
-          --includeRecommended
-        REM Accept exit code 3010 as success
-        IF %ERRORLEVEL% EQU 3010 EXIT 0
+# VS 2022 Enterprise with Microsoft.VisualStudio.Component.VC.Tools.x86.x64 is already included
+# https://github.com/actions/runner-images/blob/main/images/windows/Windows2022-Readme.md
+#    - name: Download and install msbuild
+#      run: |
+#        powershell -NoProfile -ExecutionPolicy Bypass -Command ^
+#          Invoke-WebRequest "https://aka.ms/vs/17/release/vs_buildtools.exe" ^
+#          -OutFile "%TEMP%\vs_buildtools.exe" -UseBasicParsing
+#        "%TEMP%\vs_buildtools.exe"  --quiet --wait --norestart --noUpdateInstaller ^
+#          --add Microsoft.VisualStudio.Workload.VCTools ^
+#          --add Microsoft.VisualStudio.ComponentGroup.VC.Tools.142.x86.x64 ^
+#          --includeRecommended
+#        REM Accept exit code 3010 as success
+#        IF %ERRORLEVEL% EQU 3010 EXIT 0
     - name: Checkout code
       uses: actions/checkout@v4
       with:
@@ -108,19 +110,20 @@ jobs:
 #        choco install visualstudio2019-workload-vctools
 #        @rem choco install -y doxygen.install --version=1.9.1
 #        choco install -y NSIS --version=3.10
-    - name: Add msbuild to PATH environment variable
-      if: always()
-      uses: microsoft/setup-msbuild@v2
-      with:
-        msbuild-architecture: x64
-        #vs-version: '[16.0, 17.0)'
-        vs-version: '[17.0, 18.0)'
+#    - name: Add msbuild to PATH environment variable
+#      if: always()
+#      uses: microsoft/setup-msbuild@v2
+#      with:
+#        msbuild-architecture: x64
+#        #vs-version: '[16.0, 17.0)'
+#        vs-version: '[17.0, 18.0)'
     - name: Export vcvars64 path for 'x64 Native Tools Command Prompt'
       if: always()
       run: |
         set
         where msbuild
-        set msbuild_vcvars64=C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Auxiliary\Build\vcvars64.bat
+        #set msbuild_vcvars64=C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Auxiliary\Build\vcvars64.bat
+        set msbuild_vcvars64=C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat
         if NOT EXIST "%msbuild_vcvars64%" (^
            echo ERROR: Could not locate 'vcvars64' batch file at "%msbuild_vcvars64%". This script is intended to be run from a build machine & exit /B 1)
         echo msbuild_vcvars64=%msbuild_vcvars64%>> %GITHUB_ENV%
@@ -133,10 +136,34 @@ jobs:
         @rem This work - if "%__VSINSTALLDIR%" == "\" (set VSINSTALLDIR="%_VSINSTALLDIR%")
         if "%__VSINSTALLDIR%" == "\" set VSINSTALLDIR=%_VSINSTALLDIR%
         set VSINSTALLDIR
-        echo VSINSTALLDIR1=%VSINSTALLDIR1%>> %GITHUB_ENV%
+        echo VSINSTALLDIR1=%VSINSTALLDIR%>> %GITHUB_ENV%
         echo for /f "usebackq tokens=*" %%i in (`"C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe" -version "[17.0, 18.0)" -requires Microsoft.VisualStudio.Workload.VCTools -property installationPath -products *`)
+        "C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe" -requires Microsoft.VisualStudio.Workload.VCTools -property installationPath -products *
         for /f "usebackq tokens=*" %%i in (`"C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe" -requires Microsoft.VisualStudio.Workload.VCTools -property installationPath -products *`) do (set test=%%i)
         echo '%test%'
+        dir c:
+        dir d:
+        "%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" ^
+            -NoProfile -InputFormat None -ExecutionPolicy Bypass ^
+            -Command "Get-CimInstance Win32_PageFileUsage | fl *"
+        "%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" ^
+            -NoProfile -InputFormat None -ExecutionPolicy Bypass ^
+            -Command "Get-ComputerInfo | Select-Object TotalPhysicalMemory, AvailablePhysicalMemory"
+    - name: configure Pagefile
+      uses: al-cheb/configure-pagefile-action@v1.2
+      with:
+        minimum-size: 16GB
+        maximum-size: 24GB
+        disk-root: "C:"
+    - name: check Pagefile
+      run: |
+        dir d:
+        "%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" ^
+            -NoProfile -InputFormat None -ExecutionPolicy Bypass ^
+            -Command "Get-CimInstance Win32_PageFileUsage | fl *"
+        "%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" ^
+            -NoProfile -InputFormat None -ExecutionPolicy Bypass ^
+            -Command "Get-ComputerInfo | Select-Object TotalPhysicalMemory, AvailablePhysicalMemory"
     #- uses: actions/checkout@v4
     - name: Setup Python 3.12
       if: always()
@@ -191,24 +218,24 @@ jobs:
         git checkout HEAD
         git status
         echo %CD% -- Done Calling git
-    - name: Debug GTK build error
-      run: |
-        set VSCMD_DEBUG=3
-        @echo DEBUG: Calling cmd /c vcvars w/ redirection
-        cmd.exe /c ""C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Auxiliary\Build\vcvars64.bat">NUL && set"
-        echo Errorlevel %errorlevel%
-        @echo DEBUG: Reading log file dd_vsdevcmd*.log
-        type C:\Users\RUNNER~1\AppData\Local\Temp\dd_vsdevcmd17_preinit_env.log
-        type C:\Users\RUNNER~1\AppData\Local\Temp\dd_vsdevcmd17_env.log
-        @echo DEBUG: Calling cmd /c vcvars w/o redirection
-        cmd.exe /c ""C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Auxiliary\Build\vcvars64.bat""
-        echo Errorlevel %errorlevel%
-        @echo DEBUG: Reading log file dd_vsdevcmd*.log
-        type C:\Users\RUNNER~1\AppData\Local\Temp\dd_vsdevcmd17_preinit_env.log
-        type C:\Users\RUNNER~1\AppData\Local\Temp\dd_vsdevcmd17_env.log
-        @echo DEBUG: Calling vcvars directly
-        call "C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Auxiliary\Build\vcvars64.bat
-        echo Errorlevel %errorlevel%
+#    - name: Debug GTK build error
+#      run: |
+#        set VSCMD_DEBUG=3
+#        @echo DEBUG: Calling cmd /c vcvars w/ redirection
+#        cmd.exe /c ""%msbuild_vcvars64%">NUL && set"
+#        echo Errorlevel %errorlevel%
+#        @echo DEBUG: Reading log file dd_vsdevcmd*.log
+#        type C:\Users\RUNNER~1\AppData\Local\Temp\dd_vsdevcmd17_preinit_env.log
+#        type C:\Users\RUNNER~1\AppData\Local\Temp\dd_vsdevcmd17_env.log
+#        @echo DEBUG: Calling cmd /c vcvars w/o redirection
+#        cmd.exe /c ""%msbuild_vcvars64%""
+#        echo Errorlevel %errorlevel%
+#        @echo DEBUG: Reading log file dd_vsdevcmd*.log
+#        type C:\Users\RUNNER~1\AppData\Local\Temp\dd_vsdevcmd17_preinit_env.log
+#        type C:\Users\RUNNER~1\AppData\Local\Temp\dd_vsdevcmd17_env.log
+#        @echo DEBUG: Calling vcvars directly
+#        call "%msbuild_vcvars64%"
+#        echo Errorlevel %errorlevel%
     - name: Build GTK binaries with gvsbuild
       env:
         gtk_version: gtk3
@@ -223,7 +250,7 @@ jobs:
         @echo   fps_MSYS2_DIR=%fps_MSYS2_DIR%
         @echo Defining a number of environment variables pointing to future locations
         mkdir %gtk_build_dir%
-        @rem set GTK_ROOT=%gtk_build_dir%\gtk\x64\release
+        set GTK_ROOT=%gtk_build_dir%\gtk\x64\release
         @rem set INCLUDE=%GTK_ROOT%\include;%GTK_ROOT%\include\cairo;%GTK_ROOT%\include\glib-2.0;%GTK_ROOT%\include\gobject-introspection-1.0;%GTK_ROOT%\lib\glib-2.0\include;%INCLUDE%
         @rem set LIB=%GTK_ROOT%\lib;%LIB%
         set GTK_BIN_DIR=%GTK_ROOT%\bin
@@ -233,20 +260,31 @@ jobs:
         @rem Defer calling vcvars64.bat as it is called by gvsbuild itself and 
         @rem multiple calls can lead to 'The input line is too long.' errors 
         @rem when PATH environment variable is repeatably expanded.
-        call "%msbuild_vcvars64%" -clean_env
+        @rem call "%msbuild_vcvars64%" -clean_env
         @rem cd %gvsbuild_dir%
         @rem pip install .
-        pipx list
-        pipx install gvsbuild
+        #python -m pip install pipx
+        #python -m pipx ensurepath
+        #pipx list
+        #pipx install gvsbuild
+        python -m pip install gvsbuild
         @echo TODO specify --vs-ver 17 instead of --vs-ver 16, because gvsbuild assumes --vs-ver 16 is mapped to MSVC 2019 folder
         @echo TODO does not seem to understand the MSVC 2022 can optionally compile with older --vs_ver
         @rem set gvsbuild_args=build %gtk_version% --configuration release --py-wheel --enable-gi --msys-dir %fps_MSYS2_DIR% --build-dir %gtk_build_dir%  --from-scratch --ninja-opts -j1 --vs-ver 17 --platform x64 --vs-install-path "C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools"
         set
-        set gvsbuild_args=build %gtk_version% --configuration release --py-wheel --enable-gi --msys-dir %fps_MSYS2_DIR% --build-dir %gtk_build_dir% --use-env --from-scratch --ninja-opts -j2 --vs-ver 17 --platform x64
+        set gvsbuild_args=build %gtk_version% --configuration release --py-wheel --enable-gi --msys-dir %fps_MSYS2_DIR% --build-dir %gtk_build_dir% --msbuild-opts /property:RunCodeAnalysis=false --ninja-opts -j1 --vs-ver 17 --platform x64
         @echo Calling gvsbuild with arguments '%gvsbuild_args%'
-        gvsbuild %gvsbuild_args%
+        gvsbuild %gvsbuild_args% --log-single --capture-out
+        type %gtk_build_dir%\logs\gvsbuild-log.txt
+        type %GTK_ROOT%\stack.props
+        type %GTK_ROOT%\gtk3\_gvsbuild-meson\meson-logs\meson-log.txt
+        dir c:
+        dir d:
+        "%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" ^
+            -NoProfile -InputFormat None -ExecutionPolicy Bypass ^
+            -Command "Get-CimInstance Win32_PageFileUsage | fl *"
         @echo Install pygi
-        dir %%gtk_build_dir%%
+        dir %gtk_build_dir%
         dir %GTK_ROOT%\python
         for %%i (%GTK_ROOT%\python\PyGObject*.whl) do (pip install --force-reinstall %%i)
         for %%i (%GTK_ROOT%\python\pycairo*.whl) do (pip install --force-reinstall %%i)
