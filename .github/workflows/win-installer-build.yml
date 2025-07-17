@@ -149,12 +149,13 @@ jobs:
         "%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" ^
             -NoProfile -InputFormat None -ExecutionPolicy Bypass ^
             -Command "Get-ComputerInfo | Select-Object TotalPhysicalMemory, AvailablePhysicalMemory"
+        wmic OS
     - name: configure Pagefile
       uses: al-cheb/configure-pagefile-action@v1.2
       with:
         minimum-size: 16GB
-        maximum-size: 24GB
-        disk-root: "C:"
+        maximum-size: 64GB
+        disk-root: "D:"
     - name: check Pagefile
       run: |
         dir d:
@@ -197,6 +198,23 @@ jobs:
         set MSYS2_LOCATION
         set MSYSTEM
         echo MSYS2_LOCATION=%MSYS2_LOCATION%>> %GITHUB_ENV%
+    - name: Download GTK3 from Github release asset
+      env:
+        url: 'https://github.com/wingtk/gvsbuild/releases/download/2024.10.0/GTK3_Gvsbuild_2024.10.0_x64.zip'
+        target_path: ${{ runner.workspace }}\gtk3-release
+        temp_file_name: gtk3_download.zip
+      run: |
+        @echo Download GTK binaries from
+        @echo     '%url%'
+        powershell -NoProfile -ExecutionPolicy Bypass ^
+            -Command Invoke-WebRequest "%url%" ^
+            -OutFile "%TEMP%\%temp_file_name%" -UseBasicParsing
+        @echo Extract downloaded archive '%temp_file_name%' to:
+        @echo    '%target_path%'
+        mkdir "%target_path%"
+        cd "%target_path%"
+        tar -xf "%TEMP%\%temp_file_name%"
+        dir
     - name: Clone GVSBuild (to build GTK)
       uses: actions/checkout@v4
       with:
