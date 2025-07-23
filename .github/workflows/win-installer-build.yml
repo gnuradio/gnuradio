@@ -218,6 +218,27 @@ jobs:
         cd "%target_path%"
         tar -xf "%TEMP%\%temp_file_name%"
         dir
+    - name: Step6 -- Download GTK3 binaries and install GTK python support
+      run: |
+        @echo Step6: Install GTK ...
+        set GTK_ROOT=%RUNNER_WORKSPACE%\gtk3-release
+        set INCLUDE=%GTK_ROOT%\include;%GTK_ROOT%\include\cairo;%GTK_ROOT%\include\glib-2.0;%GTK_ROOT%\include\gobject-introspection-1.0;%GTK_ROOT%\lib\glib-2.0\include;%INCLUDE%
+        echo INCLUDE=%INCLUDE%>> %GITHUB_ENV%
+        set LIB=%GTK_ROOT%\lib;%LIB%
+        echo LIB=%LIB%>> %GITHUB_ENV%
+        set GTK_BIN_DIR=%GTK_ROOT%\bin
+        echo GTK_BIN_DIR=%GTK_BIN_DIR%>> %GITHUB_ENV%
+        call set fps_GTK_BIN_DIR=%%GTK_BIN_DIR:\=/%%
+        echo fps_GTK_BIN_DIR=%fps_GTK_BIN_DIR%>> %GITHUB_ENV%
+        set PATH=%GTK_BIN_DIR%;%PATH%
+        dir %GTK_ROOT%\python
+        call %PY_VENV_PATH%\Scripts\activate
+        set pythonLocation=%PY_VENV_PATH%&& set Python_ROOT_DIR=%PY_VENV_PATH%&& set ^
+            Python2_ROOT_DIR=%PY_VENV_PATH%&& set Python3_ROOT_DIR=%PY_VENV_PATH%
+        for %%i in (%GTK_ROOT%\python\PyGObject*.whl) do (pip install --force-reinstall %%i)
+        for %%i in (%GTK_ROOT%\python\pycairo*.whl) do (pip install --force-reinstall %%i)
+        @echo Verify pygi installation
+        python -c "import os;os.add_dll_directory('%fps_GTK_BIN_DIR%');import gi;gi.require_version('Gtk', '3.0');gi.require_foreign('cairo', 'Context');gi.require_version('PangoCairo', '1.0')"
 #    - name: Clone GVSBuild (to build GTK)
 #      uses: actions/checkout@v4
 #      with:
@@ -308,6 +329,8 @@ jobs:
         conan version
         set
     - name: Run Conan2 and create cmake build generators
+      env:
+        DEPS_CMAKE_GENERATORS: ${{ github.workspace }}\deps
       run: |
         echo %CD%
         @echo Conan2 was installed via Python venv, therefore need to activate it before use
@@ -315,7 +338,41 @@ jobs:
         set pythonLocation=%PY_VENV_PATH%&& set Python_ROOT_DIR=%PY_VENV_PATH%&& set ^
             Python2_ROOT_DIR=%PY_VENV_PATH%&& set Python3_ROOT_DIR=%PY_VENV_PATH%
         conan profile detect --force
-        conan install gnuradio/release --output-folder=deps --build=missing
+        conan install gnuradio/release --output-folder=%DEPS_CMAKE_GENERATORS% --build=missing
+        echo DEPS_CMAKE_GENERATORS=%DEPS_CMAKE_GENERATORS%>> %GITHUB_ENV%
+    - name: Clone Volk
+      uses: actions/checkout@v4
+      # Building Volk from hand, because of unreliable python venv detection during "Build C++ dependencies"
+      with:
+        repository: 'gnuradio/volk'
+        ref: '308948abf8384bb4bf6467e14b585df708789782'
+        path: volk
+        fetch-depth: 2
+        submodules: 'true'
+    - name: Build Volk
+      env:
+        VOLK_INSTALL_DIR: ${{ runner.workspace }}\volk-installed
+      run: |
+        cd volk
+        @echo Just in case explicitly initialize submodules
+        git submodule update --init
+        call "%msbuild_vcvars64%"
+        call %PY_VENV_PATH%\Scripts\activate
+        set pythonLocation=%PY_VENV_PATH%&& set Python_ROOT_DIR=%PY_VENV_PATH%&& set ^
+            Python2_ROOT_DIR=%PY_VENV_PATH%&& set Python3_ROOT_DIR=%PY_VENV_PATH%
+        mkdir build
+        cd build
+        set CMAKE_ARGS= -DCMAKE_BUILD_TYPE=Release -LA
+        set CMAKE_ARGS=%CMAKE_ARGS% -DCMAKE_PREFIX_PATH=%DEPS_CMAKE_GENERATORS%/build/generators
+        set CMAKE_ARGS=%CMAKE_ARGS% -DCMAKE_INSTALL_PREFIX=%VOLK_INSTALL_DIR%
+        @rem volk is using FindPythonInterp, which does not reliable detect venv
+        set CMAKE_ARGS=%CMAKE_ARGS% -DPYTHON_EXECUTABLE=%PY_VENV_PATH%\Scripts\python.exe
+        @echo Calling cmake from path '%CD%' with args '%CMAKE_ARGS%'
+        cmake ..  -GNinja %CMAKE_ARGS%
+        ninja
+        @rem ninja test
+        ninja install
+        echo VOLK_INSTALL_DIR=%VOLK_INSTALL_DIR%>> %GITHUB_ENV%
     - name: Build C++ dependencies
       run: |
         echo %CD%
@@ -338,8 +395,9 @@ jobs:
         mkdir build
         cd build
         cmake .. -GNinja  ^
-            -DCMAKE_INSTALL_PREFIX=%_working%/deps -DCMAKE_PREFIX_PATH=%_working%/deps/build/generators ^
-            -DCMAKE_FIND_PACKAGE_PREFER_CONFIG=ON "-DCMAKE_CXX_FLAGS=-DBOOST_ALL_NO_LIB /EHsc" -LA
+            -DCMAKE_INSTALL_PREFIX=%DEPS_CMAKE_GENERATORS% -DCMAKE_PREFIX_PATH=%DEPS_CMAKE_GENERATORS%/build/generators ^
+            -DCMAKE_FIND_PACKAGE_PREFER_CONFIG=ON "-DCMAKE_CXX_FLAGS=-DBOOST_ALL_NO_LIB /EHsc" -LA ^
+            -DBUILD_VOLK=NO -DBUILD_UHD=NO
         ninja
     - name: Check environment
       run: |
@@ -352,25 +410,6 @@ jobs:
         dir %CD%
         dir %RUNNER_WORKSPACE%
         set
-    - name: Step6 -- Download GTK3 binaries and install GTK python support
-      run: |
-        @echo Step6: Install GTK ...
-        set GTK_ROOT=%RUNNER_WORKSPACE%\gtk3-release
-        set INCLUDE=%GTK_ROOT%\include;%GTK_ROOT%\include\cairo;%GTK_ROOT%\include\glib-2.0;%GTK_ROOT%\include\gobject-introspection-1.0;%GTK_ROOT%\lib\glib-2.0\include;%INCLUDE%
-        echo INCLUDE=%INCLUDE%>> %GITHUB_ENV%
-        set LIB=%GTK_ROOT%\lib;%LIB%
-        echo LIB=%LIB%>> %GITHUB_ENV%
-        set GTK_BIN_DIR=%GTK_ROOT%\bin
-        echo GTK_BIN_DIR=%GTK_BIN_DIR%>> %GITHUB_ENV%
-        set PATH=%GTK_BIN_DIR%;%PATH%
-        dir %GTK_ROOT%\python
-        call %PY_VENV_PATH%\Scripts\activate
-        set pythonLocation=%PY_VENV_PATH%&& set Python_ROOT_DIR=%PY_VENV_PATH%&& set ^
-            Python2_ROOT_DIR=%PY_VENV_PATH%&& set Python3_ROOT_DIR=%PY_VENV_PATH%
-        for %%i in (%GTK_ROOT%\python\PyGObject*.whl) do (pip install --force-reinstall %%i)
-        for %%i in (%GTK_ROOT%\python\pycairo*.whl) do (pip install --force-reinstall %%i)
-        @echo Verify pygi installation
-        python -c "import os;os.add_dll_directory("%GTK_BIN_DIR%");import gi;gi.require_version('Gtk', '3.0');gi.require_foreign('cairo', 'Context');gi.require_version('PangoCairo', '1.0')"
     - name: step7 -- Build and install PyQT5
       run: |
         call "%msbuild_vcvars64%"
@@ -408,6 +447,7 @@ jobs:
         cmake .. -GNinja -DGR_BUILD_INSTALLER=ON ^
             -DCMAKE_PREFIX_PATH=%_working%/deps/build/generators;%_working%/deps ^
             -DCMAKE_FIND_PACKAGE_PREFER_CONFIG=ON "-DCMAKE_CXX_FLAGS=-DBOOST_ALL_NO_LIB /EHsc" -LA ^
+            -DVolk_DIR=%VOLK_INSTALL_DIR%/lib/cmake/volk -DGTK_BIN_DIR=%fps_GTK_BIN_DIR% ^
             -DPYTHON_EXECUTABLE=%PY_VENV_PATH%\Scripts\python.exe
         Ninja install
         @echo Build installer
