@@ -1,20 +1,122 @@
 id: uhd_fpga_fft
 label: RFNoC FFT
 
+parameters:
+-   id: type
+    label: RFNoC Block Type
+    dtype: enum
+    default: 'block'
+    options: ['block', 'sep', 'device']
+    hide: all
+-   id: desc
+    label: Block Descriptor
+    dtype: string
+    default: 'fft.yml'
+    hide: all
+-   id: NUM_PORTS
+    label: Number of Ports
+    dtype: int
+    default: 1
+    hide: part
+-   id: NUM_CORES
+    label: Number of FFT Cores
+    dtype: int
+    default: 1
+    hide: part
+-   id: MAX_FFT_SIZE_LOG2
+    label: Maximum FFT Size (Log2)
+    dtype: int
+    default: 12
+    hide: part
+-   id: EN_CP_INSERTION
+    label: Enable Cyclic Prefix Insertion
+    dtype: int
+    default: 1
+    hide: part
+-   id: EN_CP_REMOVAL
+    label: Enable Cyclic Prefix Removal
+    dtype: int
+    default: 1
+    hide: part
+-   id: MAX_CP_LIST_LEN_INS_LOG2
+    label: Maximum Cyclic Prefix Insertion List Length (Log2)
+    dtype: int
+    default: 5
+    hide: part
+-   id: MAX_CP_LIST_LEN_REM_LOG2
+    label: Maximum Cyclic Prefix Removal List Length (Log2)
+    dtype: int
+    default: 5
+    hide: part
+-   id: CP_INSERTION_REPEAT
+    label: Cyclic Prefix Insertion Repeat
+    dtype: int
+    default: 1
+    hide: part
+-   id: CP_REMOVAL_REPEAT
+    label: Cyclic Prefix Removal Repeat
+    dtype: int
+    default: 1
+    hide: part
+-   id: EN_FFT_BYPASS
+    label: Enable FFT Bypass
+    dtype: int
+    default: 0
+    hide: part
+-   id: EN_FFT_ORDER
+    label: Enable FFT Ordering
+    dtype: int
+    default: 1
+    hide: part
+-   id: EN_MAGNITUDE
+    label: Enable Magnitude Output
+    dtype: int
+    default: 1
+    hide: part
+-   id: EN_MAGNITUDE_SQ
+    label: Enable Squared Magnitude Output
+    dtype: int
+    default: 1
+    hide: part
+-   id: USE_APPROX_MAG
+    label: Use Approximate Magnitude Calculation
+    dtype: int
+    default: 1
+    hide: part
+
 inputs:
--   domain: stream
-    id: port0
+-   domain: rfnoc.clk
+    id: ce_clk
+    dtype: message
+-   domain: rfnoc.data
+    id: in_
     dtype: fc32
+    multiplicity: ${ NUM_PORTS }
 
 outputs:
--   domain: stream
-    id: port0
+-   domain: rfnoc.data
+    id: out_
     dtype: fc32
+    multiplicity: ${ NUM_PORTS }
 
 doc_url: UHD_FPGA_FFT
 
 documentation: |-
   RFNoC FFT (FPGA Implementation).
   Instantiates an FFT block in the FPGA bitfile.
+  List of parameters::
+  *  NUM_PORTS                : Total number of FFT channels
+  *  NUM_CORES                : Number of individual cores to instantiate.  Setting to 1 means all ports use a shared core and therefore all ports share the same control logic and all ports must be used simultaneously.  Setting to NUM_PORTS means that each port will use its own core, and therefore each port can be configured and used independently. NUM_PORTS must be a multiple of NUM_CORES.
+  *  MAX_FFT_SIZE_LOG2        : Log2 of maximum configurable FFT size. That is, the maximum FFT size is exactly 2**fft_size_log2.
+  *  MAX_CP_LIST_LEN_INS_LOG2 : Log2 of max length of cyclic prefix insertion list. Actual maximum is 2**MAX_CP_LIST_LEN_INS_LOG2.
+  *  MAX_CP_LIST_LEN_REM_LOG2 : Log2 of max length of cyclic prefix removal list. Actual maximum is 2**MAX_CP_LIST_LEN_REM_LOG2.
+  *  CP_INSERTION_REPEAT      : Enable repeating the CP insertion list. When 1, the list repeats. When 0, CP insertion will stop when the list is finished.
+  *  CP_REMOVAL_REPEAT        : Enable repeating the CP removal list. When 1, the list repeats. When 0, CP removal will stop when the list is finished.
+  *  EN_FFT_BYPASS            : Controls whether to include the FFT bypass logic.
+  *  EN_FFT_ORDER             : Controls whether to include the FFT reorder logic.
+  *  EN_MAGNITUDE             : Controls whether to include the magnitude output calculation logic.
+  *  EN_MAGNITUDE_SQ          : Controls whether to include the magnitude-squared output calculation logic.
+  *  USE_APPROX_MAG           : Controls whether to use the low-resource approximate calculation (1) or the more exact and more resource-intensive calculation (0) for the magnitude calculation.
+
 
 file_format: 1

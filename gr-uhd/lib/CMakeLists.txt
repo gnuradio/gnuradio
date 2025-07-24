@@ -20,6 +20,7 @@ if(ENABLE_UHD_RFNOC)
         rfnoc_ddc_impl.cc
         rfnoc_duc_impl.cc
         rfnoc_fir_filter_impl.cc
+        rfnoc_fft_impl.cc
         rfnoc_graph_impl.cc
         rfnoc_replay_impl.cc
         rfnoc_rx_radio_impl.cc

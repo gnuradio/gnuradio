@@ -1,0 +1,688 @@
+options:
+  parameters:
+    author: mbr0wn
+    catch_exceptions: 'True'
+    category: '[GRC Hier Blocks]'
+    cmake_opt: ''
+    comment: 'To create an FPGA bitfile that can
+
+      run this flow graph, see
+
+      rfnoc_images/x310_image_core_fft.grc.'
+    copyright: ''
+    description: ''
+    gen_cmake: 'On'
+    gen_linking: dynamic
+    generate_options: qt_gui
+    hier_block_src_path: '.:'
+    id: rfnoc_fft_specan
+    max_nouts: '0'
+    output_language: python
+    placement: (0,0)
+    qt_qss_theme: ''
+    realtime_scheduling: ''
+    run: 'True'
+    run_command: '{python} -u {filename}'
+    run_options: prompt
+    sizing_mode: fixed
+    thread_safe_setters: ''
+    title: Not titled yet
+    window_size: (1000,1000)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [32, 4.0]
+    rotation: 0
+    state: enabled
+
+blocks:
+- name: N
+  id: variable_qtgui_entry
+  parameters:
+    comment: ''
+    entry_signal: editingFinished
+    gui_hint: ''
+    label: Drop N
+    type: int
+    value: drop_n
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [208, 484.0]
+    rotation: 0
+    state: enabled
+- name: alpha
+  id: variable_qtgui_entry
+  parameters:
+    comment: ''
+    entry_signal: editingFinished
+    gui_hint: ''
+    label: IIR Alpha
+    type: real
+    value: '0.9'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [208, 316.0]
+    rotation: 0
+    state: enabled
+- name: beta
+  id: variable_qtgui_entry
+  parameters:
+    comment: ''
+    entry_signal: editingFinished
+    gui_hint: ''
+    label: IIR Beta
+    type: real
+    value: '0.9'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [208, 396.0]
+    rotation: 0
+    state: enabled
+- name: drop_n
+  id: variable_qtgui_entry
+  parameters:
+    comment: ''
+    entry_signal: editingFinished
+    gui_hint: ''
+    label: FFT Ratio (dropped packets)
+    type: int
+    value: '100'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [32, 316.0]
+    rotation: 0
+    state: enabled
+- name: freq
+  id: variable_qtgui_range
+  parameters:
+    comment: ''
+    gui_hint: ''
+    label: Frequency
+    min_len: '200'
+    orient: QtCore.Qt.Horizontal
+    rangeType: float
+    start: '0'
+    step: 100e3
+    stop: 6e9
+    value: 1e9
+    widget: counter_slider
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [32, 188.0]
+    rotation: 0
+    state: enabled
+- name: gain
+  id: variable_qtgui_range
+  parameters:
+    comment: ''
+    gui_hint: ''
+    label: Gain (dB)
+    min_len: '200'
+    orient: QtCore.Qt.Horizontal
+    rangeType: float
+    start: '0'
+    step: '1'
+    stop: '70'
+    value: '10'
+    widget: counter_slider
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [152, 188.0]
+    rotation: 0
+    state: enabled
+- name: uhd_rfnoc_graph
+  id: uhd_rfnoc_graph
+  parameters:
+    alias: ''
+    clock_source: ''
+    comment: ''
+    dev_addr: device_args
+    dev_args: f"master_clock_rate={master_clock_rate}"
+    num_mboards: '1'
+    time_source: ''
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [480, 308.0]
+    rotation: 0
+    state: enabled
+- name: analog_fastnoise_source_x_0
+  id: analog_fastnoise_source_x
+  parameters:
+    affinity: ''
+    alias: ''
+    amp: '.05'
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    noise_type: analog.GR_GAUSSIAN
+    samples: '8192'
+    seed: '0'
+    type: complex
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [824, 260.0]
+    rotation: 0
+    state: disabled
+- name: analog_sig_source_x_0
+  id: analog_sig_source_x
+  parameters:
+    affinity: ''
+    alias: ''
+    amp: '.7'
+    comment: 'The Signal Source and the Tx Streamer
+
+      are an alternative source for the FFT,
+
+      using synthetic data. Use this if there is
+
+      no interesting data to be received, or
+
+      you want to sanity-check things.
+
+      To use this, enable this two blocks,
+
+      and disable the radio and DDC blocks.'
+    freq: '.125'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    offset: '0'
+    phase: '0'
+    samp_rate: '1'
+    showports: 'False'
+    type: complex
+    waveform: analog.GR_COS_WAVE
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [824, 12.0]
+    rotation: 0
+    state: disabled
+- name: blocks_add_xx_0
+  id: blocks_add_xx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_inputs: '2'
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1136, 136.0]
+    rotation: 0
+    state: disabled
+- name: blocks_complex_to_real_0
+  id: blocks_complex_to_real
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: 'Remember that the FFT block
+
+      will output the mag-square value
+
+      of the FFT as the real value. Here,
+
+      we discard the (unused) imaginary
+
+      value.'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    vlen: fft_len
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [288, 860.0]
+    rotation: 0
+    state: enabled
+- name: blocks_nlog10_ff_0
+  id: blocks_nlog10_ff
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: 'Note that RFNoC also has a
+
+      Log10 block, and this could
+
+      be also moved to the FPGA.'
+    k: '0'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    n: '10'
+    vlen: fft_len
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [512, 844.0]
+    rotation: 0
+    state: enabled
+- name: device_args
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: none
+    label: Device Address/Args
+    short_id: a
+    type: str
+    value: ''
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [32, 396.0]
+    rotation: 0
+    state: enabled
+- name: fft_len
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: none
+    label: FFT Length
+    short_id: l
+    type: intx
+    value: '256'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [32, 620.0]
+    rotation: 0
+    state: enabled
+- name: master_clock_rate
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: none
+    label: Master Clock Rate
+    short_id: m
+    type: eng_float
+    value: 200e6
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [32, 508.0]
+    rotation: 0
+    state: enabled
+- name: qtgui_vector_sink_f_1
+  id: qtgui_vector_sink_f
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'False'
+    average: '1.0'
+    color1: '"blue"'
+    color10: '"dark blue"'
+    color2: '"red"'
+    color3: '"green"'
+    color4: '"black"'
+    color5: '"cyan"'
+    color6: '"magenta"'
+    color7: '"yellow"'
+    color8: '"dark red"'
+    color9: '"dark green"'
+    comment: ''
+    grid: 'True'
+    gui_hint: ''
+    label1: ''
+    label10: ''
+    label2: ''
+    label3: ''
+    label4: ''
+    label5: ''
+    label6: ''
+    label7: ''
+    label8: ''
+    label9: ''
+    legend: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    name: '"FFT Spectrum"'
+    nconnections: '1'
+    ref_level: '0'
+    showports: 'False'
+    update_time: '0.10'
+    vlen: fft_len
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    x_axis_label: '"Frequency (Hz)"'
+    x_start: freq - master_clock_rate/2
+    x_step: master_clock_rate/fft_len
+    x_units: '"Hz"'
+    y_axis_label: '"10 * log10(|H(f)|^2)"'
+    y_units: '"dB"'
+    ymax: '10'
+    ymin: '-80'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [752, 812.0]
+    rotation: 0
+    state: enabled
+- name: uhd_rfnoc_ddc_0
+  id: uhd_rfnoc_ddc
+  parameters:
+    affinity: ''
+    alias: ''
+    block_args: ''
+    comment: 'If your FPGA configuration does not have
+
+      a DDC block after the radio, simply bypass
+
+      this block.
+
+      You can also change the output rate to enable
+
+      the resample, and show the spectrum of a
+
+      smaller segment of bandwidth.'
+    device_select: '-1'
+    freq0: '0'
+    freq1: '0'
+    freq2: '0'
+    freq3: '0'
+    instance_index: '-1'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_chans: '1'
+    output_rate0: master_clock_rate
+    output_rate1: '0'
+    output_rate2: '0'
+    output_rate3: '0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [768, 444.0]
+    rotation: 0
+    state: enabled
+- name: uhd_rfnoc_fft_0
+  id: uhd_rfnoc_fft
+  parameters:
+    affinity: ''
+    alias: ''
+    block_args: ''
+    comment: 'This FFT block is set to Mag-Squared Mode,
+
+      which means it will output the magnitude squared
+
+      and not the complex value.
+
+      For simplicity, the block will output the mag-square
+
+      value as the real value, and the imaginary value
+
+      becomes zero.
+
+      This flow graph has now windowing, so expect the
+
+      wide sidelobes of a rectangular window!'
+    device_select: '-1'
+    fft_direction: FORWARD
+    fft_length: '256'
+    fft_magnitude: MAGNITUDE_SQUARED
+    fft_scaling: '0'
+    fft_scaling_factor: 1.0/16
+    fft_shift_config: NORMAL
+    instance_index: '-1'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_chans: '1'
+    version: '2'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [960, 620.0]
+    rotation: 180
+    state: enabled
+- name: uhd_rfnoc_keep_one_in_n_0
+  id: uhd_rfnoc_keep_one_in_n
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: "This block throws away FFT results\nso that only every N-th packet is\n\
+      allowed through. Together with\nthe Vector-IIR block, this provides\nboth an\
+      \ averaging and reduced \ndata rate."
+    device_select: '-1'
+    instance_index: '-1'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    mode: PACKET
+    n: N
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [512, 636.0]
+    rotation: 180
+    state: enabled
+- name: uhd_rfnoc_rx_radio_0
+  id: uhd_rfnoc_rx_radio
+  parameters:
+    affinity: ''
+    alias: ''
+    antenna0: TX/RX
+    antenna1: RX2
+    antenna2: RX2
+    antenna3: RX2
+    bandwidth0: '0'
+    bandwidth1: '0'
+    bandwidth2: '0'
+    bandwidth3: '0'
+    block_args: ''
+    comment: ''
+    dc_offset0: 'False'
+    dc_offset1: 'False'
+    dc_offset2: 'False'
+    dc_offset3: 'False'
+    device_select: '-1'
+    enable_timestamps0: 'True'
+    enable_timestamps1: 'True'
+    enable_timestamps2: 'True'
+    enable_timestamps3: 'True'
+    frequency0: freq
+    frequency1: 1e9
+    frequency2: 1e9
+    frequency3: 1e9
+    gain0: gain
+    gain1: '0'
+    gain2: '0'
+    gain3: '0'
+    instance_index: '1'
+    iq_balance0: 'False'
+    iq_balance1: 'False'
+    iq_balance2: 'False'
+    iq_balance3: 'False'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_chans: '1'
+    rate: master_clock_rate
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [488, 396.0]
+    rotation: 0
+    state: enabled
+- name: uhd_rfnoc_rx_streamer_0
+  id: uhd_rfnoc_rx_streamer
+  parameters:
+    adapter_id_list: '[0]'
+    affinity: ''
+    alias: ''
+    args: ''
+    comment: 'Because the output of the FFT
+
+      effectively creates vectors, we
+
+      set the vector length to the
+
+      FFT length. That way, in GNU Radio,
+
+      we can deal with full FFT results as
+
+      vectors.'
+    issue_stream_cmd: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_chans: '1'
+    otw: sc16
+    output_type: fc32
+    start_time: '0'
+    start_time_set: 'False'
+    use_default_adapter_id: 'True'
+    vlen: fft_len
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [296, 644.0]
+    rotation: 180
+    state: enabled
+- name: uhd_rfnoc_tx_streamer_0
+  id: uhd_rfnoc_tx_streamer
+  parameters:
+    adapter_id_list: '[0]'
+    affinity: ''
+    alias: ''
+    args: ''
+    comment: ''
+    input_type: fc32
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_chans: '1'
+    otw: sc16
+    use_default_adapter_id: 'True'
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1336, 148.0]
+    rotation: 0
+    state: disabled
+- name: uhd_rfnoc_vector_iir_0
+  id: uhd_rfnoc_vector_iir
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha: alpha
+    beta: beta
+    block_args: ''
+    comment: 'This block averages the outputs
+
+      of the FFT (bin-wise).
+
+      Remember this is all fixed-point.
+
+      Too aggressive values here can
+
+      lead to really low values at the
+
+      output.'
+    delay: fft_len
+    device_select: '-1'
+    instance_index: '-1'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [752, 628.0]
+    rotation: 180
+    state: enabled
+
+connections:
+- [analog_fastnoise_source_x_0, '0', blocks_add_xx_0, '1']
+- [analog_sig_source_x_0, '0', blocks_add_xx_0, '0']
+- [blocks_add_xx_0, '0', uhd_rfnoc_tx_streamer_0, '0']
+- [blocks_complex_to_real_0, '0', blocks_nlog10_ff_0, '0']
+- [blocks_nlog10_ff_0, '0', qtgui_vector_sink_f_1, '0']
+- params:
+    is_back_edge: 'False'
+  snk_blk_id: uhd_rfnoc_fft_0
+  snk_port_id: '0'
+  src_blk_id: uhd_rfnoc_ddc_0
+  src_port_id: '0'
+- params:
+    is_back_edge: 'False'
+  snk_blk_id: uhd_rfnoc_vector_iir_0
+  snk_port_id: '0'
+  src_blk_id: uhd_rfnoc_fft_0
+  src_port_id: '0'
+- params:
+    is_back_edge: 'False'
+  snk_blk_id: uhd_rfnoc_rx_streamer_0
+  snk_port_id: '0'
+  src_blk_id: uhd_rfnoc_keep_one_in_n_0
+  src_port_id: '0'
+- params:
+    is_back_edge: 'False'
+  snk_blk_id: uhd_rfnoc_ddc_0
+  snk_port_id: '0'
+  src_blk_id: uhd_rfnoc_rx_radio_0
+  src_port_id: '0'
+- [uhd_rfnoc_rx_streamer_0, '0', blocks_complex_to_real_0, '0']
+- params:
+    is_back_edge: 'False'
+  snk_blk_id: uhd_rfnoc_fft_0
+  snk_port_id: '0'
+  src_blk_id: uhd_rfnoc_tx_streamer_0
+  src_port_id: '0'
+- params:
+    is_back_edge: 'False'
+  snk_blk_id: uhd_rfnoc_keep_one_in_n_0
+  snk_port_id: '0'
+  src_blk_id: uhd_rfnoc_vector_iir_0
+  src_port_id: '0'
+
+metadata:
+  file_format: 2
+  grc_version: v3.11.0.0git-909-g3a94e076
