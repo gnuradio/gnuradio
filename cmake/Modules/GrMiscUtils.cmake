@@ -259,22 +259,23 @@ endfunction()
 function(GR_CONFIGURE_INSTALLER_COMPONENT name)
     get_property(comp_deps GLOBAL PROPERTY COMPONENT_${name}_DEPS)
     _compute_safe_component_name(${name})
+    set(_installer_component_safe_name ${_component_safe_name})
     foreach(comp ${comp_deps})
         _compute_safe_component_name(${comp})
         list(APPEND _safe_comp_deps ${_component_safe_name})
     endforeach()
     get_property(NEEDS_DEPS GLOBAL PROPERTY COMPONENT_${name}_NEEDS_DEPS)
     if(NEEDS_DEPS)
-        cpack_add_component(${_component_safe_name}_DEPS
+        cpack_add_component(${_installer_component_safe_name}_DEPS
             HIDDEN
         )
-        list(APPEND _safe_comp_deps ${_component_safe_name}_DEPS)
+        list(APPEND _safe_comp_deps ${_installer_component_safe_name}_DEPS)
     endif()
-    cpack_add_component(${_component_safe_name}
+    cpack_add_component(${_installer_component_safe_name}
                         DISPLAY_NAME ${name}
                         DEPENDS ${_safe_comp_deps}
     )
-    message(STATUS "DEBUG STATUS - GR_CONFIGURE_INSTALLER_COMPONENT: ${name},${_compute_safe_component_name}, deps: ${comp_deps},${_safe_comp_deps}", NEEDS_DEPS: ${NEEDS_DEPS})
+    message(STATUS "DEBUG STATUS - GR_CONFIGURE_INSTALLER_COMPONENT: ${name},${_installer_component_safe_name},${_component_safe_name}, deps: ${comp_deps},${_safe_comp_deps}, NEEDS_DEPS: ${NEEDS_DEPS}")
 endfunction()
 
 ########################################################################
