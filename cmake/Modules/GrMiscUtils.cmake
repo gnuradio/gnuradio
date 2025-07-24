@@ -136,6 +136,7 @@ endfunction(GR_LIBRARY_FOO)
 # Also handle gnuradio custom naming conventions w/ extras mode.
 ########################################################################
 function(GR_REGISTER_LIBRARY target)
+    message(STATUS "DEBUG STATUS: Registering library target: ${target}, SOVERSION: ${LIBVER}, VERSION: ${VERSION}")
     #set additional target properties
     set_target_properties(${target} PROPERTIES SOVERSION ${LIBVER})
     set_target_properties(${target} PROPERTIES VERSION ${VERSION})
@@ -146,6 +147,8 @@ function(GR_REGISTER_LIBRARY target)
         set_property(GLOBAL APPEND PROPERTY COMPONENT_${COMPONENT}_TARGETS ${target})
     endif()
     if(ARGN)
+        message(STATUS "DEBUG STATUS - Registering ${target} with dependencies: '${ARGN}'")
+        message(STATUS "DEBUG STATUS -    COMPONENT: ${COMPONENT}, COMPONENT_SET: ${COMPONENT_SET}")
         define_property(
 		GLOBAL
 	       	PROPERTY TARGET_${target}_DIST_DEPS
@@ -183,6 +186,7 @@ function(GR_INSTALL_LIBRARY)
     set(singleValueArgs TARGET COMPONENT)
     set(multiValueArgs EXPORT_DEPS DISTRIBUTION_DEPS)
     cmake_parse_arguments(GR_LIB "" "${singleValueArgs}" "${multiValueArgs}" ${ARGN})
+    message(STATUS "DEBUG STATUS - Install rules for ${TARGET}, belonging to component ${COMPONENT}, args '${ARGN}', '${singleValueArgs}' '${multiValueArgs}'")
 
     # install the generated files like so...
     _compute_safe_component_name(${GR_LIB_COMPONENT})
@@ -194,6 +198,7 @@ function(GR_INSTALL_LIBRARY)
         ARCHIVE DESTINATION ${GR_LIBRARY_DIR} # .lib file
         RUNTIME DESTINATION ${GR_RUNTIME_DIR} # .dll file
     )
+    message(STATUS "DEBUG STATUS -    GR_LIB_COMPONENT: ${GR_LIB_COMPONENT}, '${_compute_safe_component_name}'")
 
     #install the exported target files
     install(
@@ -269,6 +274,7 @@ function(GR_CONFIGURE_INSTALLER_COMPONENT name)
                         DISPLAY_NAME ${name}
                         DEPENDS ${_safe_comp_deps}
     )
+    message(STATUS "DEBUG STATUS - GR_CONFIGURE_INSTALLER_COMPONENT: ${name},${_compute_safe_component_name}, deps: ${comp_deps},${_safe_comp_deps}", NEEDS_DEPS: ${NEEDS_DEPS})
 endfunction()
 
 ########################################################################
