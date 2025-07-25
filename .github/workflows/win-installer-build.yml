@@ -463,6 +463,17 @@ jobs:
         robocopy /NJH /NDL /MT /W:5 /R:4 "%GITHUB_WORKSPACE%\gnuradio\build\_CPack_Packages\win64\NSIS" .
         tar -czf gnuradio.gzip -C "%PROGRAMFILES%\GNU Radio" .
         dir
+    - name: Upload build artifact archive
+      if: success() || failure()
+      uses: actions/upload-artifact@v4
+      with:
+        name: build artifact archive'
+        # already much better compressed
+        compression-level: 0
+        path:  ${{ github.workspace }}/installation-archive.squash
+        if-no-files-found: warn
+        # these things are kinda large, keep them around for 7 days: we can recreate them if we want
+        retention-days: 7
     - name: Upload installation archive
       if: success()
       uses: actions/upload-artifact@v4
@@ -470,8 +481,8 @@ jobs:
         name: installation archive'
         # already much better compressed
         compression-level: 0
-        path: /installation-archive.squash
-        if-no-files-found: warn
+        path: ${{ github.workspace }}/gnuradio/build/*-win64.exe
+        if-no-files-found: error
         # these things are kinda large, keep them around for 7 days: we can recreate them if we want
         retention-days: 7
     # - name: Build GTK binaries with gvsbuild
