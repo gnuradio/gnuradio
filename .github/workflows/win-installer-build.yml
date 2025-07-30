@@ -290,17 +290,17 @@ jobs:
     #    QT_ROOT_DIR
     #  run: |
     #    @echo Using instructions at https://wiki.qt.io/Building_Qt_5_from_Git#Getting_the_source_code
-    - name: Install Qt using jurplel/install-qt-action@v4
-      uses: jurplel/install-qt-action@v4
-        # uses aqt installed into default python to download prebuild qt
-        # extracts to ${{ runner.workspace }}
-        # exports the variables Qt5_DIR, QT_ROOT_DIR, QT_PLUGIN_PATH, QML2_IMPORT_PATH
-      with:
-        aqtversion: '==3.1.*'
-        version: '5.15.2'
-        host: 'windows'
-        target: 'desktop'
-        arch: 'win64_msvc2019_64'
+#    - name: Install Qt using jurplel/install-qt-action@v4
+#      uses: jurplel/install-qt-action@v4
+#        # uses aqt installed into default python to download prebuild qt
+#        # extracts to ${{ runner.workspace }}
+#        # exports the variables Qt5_DIR, QT_ROOT_DIR, QT_PLUGIN_PATH, QML2_IMPORT_PATH
+#      with:
+#        aqtversion: '==3.1.*'
+#        version: '5.15.2'
+#        host: 'windows'
+#        target: 'desktop'
+#        arch: 'win64_msvc2019_64'
     - name: Download PyQT5 source from pip
       env:
         url: 'https://files.pythonhosted.org/packages/0e/07/c9ed0bd428df6f87183fca565a79fee19fa7c88c7f00a7f011ab4379e77a/PyQt5-5.15.11.tar.gz'
@@ -340,6 +340,29 @@ jobs:
         conan profile detect --force
         conan install gnuradio/release --output-folder=%DEPS_CMAKE_GENERATORS% --build=missing
         echo DEPS_CMAKE_GENERATORS=%DEPS_CMAKE_GENERATORS%>> %GITHUB_ENV%
+    - name: step7 -- Build and install PyQT5
+      run: |
+        call "%msbuild_vcvars64%"
+        @echo Step7: QT bindings ...
+        set QT_ROOT_DIR
+        set Qt5_DIR
+        @rem SET PATH=%QT_ROOT_DIR%\bin;%PATH%
+        call %PY_VENV_PATH%\Scripts\activate
+        set pythonLocation=%PY_VENV_PATH%&& set Python_ROOT_DIR=%PY_VENV_PATH%&& set ^
+            Python2_ROOT_DIR=%PY_VENV_PATH%&& set Python3_ROOT_DIR=%PY_VENV_PATH%
+        python -m pip install PyQt-builder
+        @echo Activate conan runtime environment by calling DEPS_CMAKE_GENERATORS\build\generators\conanrun.bat 
+        dir %DEPS_CMAKE_GENERATORS%\build\generators
+        call %DEPS_CMAKE_GENERATORS%\build\generators\conanrun.bat
+        cd %RUNNER_WORKSPACE%\PyQt5-5.15.11
+        dir
+        sip-install -h
+        @echo Start codegen but disable QtNfc to avoid LNK1169 when linking QtNfc.dll
+        @echo Alternativly may specifc LINK=/FORCE:MULTIPLE
+        sip-build --no-make --confirm-license --disable QtNfc
+        cd build && nmake
+        nmake install
+        python -m pip install PyQt5-sip
     - name: Clone Volk
       uses: actions/checkout@v4
       # Building Volk from hand, because of unreliable python venv detection during "Build C++ dependencies"
@@ -410,33 +433,15 @@ jobs:
         dir %CD%
         dir %RUNNER_WORKSPACE%
         set
-    - name: step7 -- Build and install PyQT5
-      run: |
-        call "%msbuild_vcvars64%"
-        @echo Step7: QT bindings ...
-        set QT_ROOT_DIR
-        set Qt5_DIR
-        SET PATH=%QT_ROOT_DIR%\bin;%PATH%
-        call %PY_VENV_PATH%\Scripts\activate
-        set pythonLocation=%PY_VENV_PATH%&& set Python_ROOT_DIR=%PY_VENV_PATH%&& set ^
-            Python2_ROOT_DIR=%PY_VENV_PATH%&& set Python3_ROOT_DIR=%PY_VENV_PATH%
-        python -m pip install PyQt-builder
-        cd %RUNNER_WORKSPACE%\PyQt5-5.15.11
-        dir
-        sip-install -h
-        @echo Start codegen but disable QtNfc to avoid LNK1169 when linking QtNfc.dll
-        @echo Alternativly may specifc LINK=/FORCE:MULTIPLE
-        sip-build --no-make --confirm-license --disable QtNfc
-        cd build && nmake
-        nmake install
-        python -m pip install PyQt5-sip
     - name: Building GRC binaries
       run: |
         call "%msbuild_vcvars64%"
         call %PY_VENV_PATH%\Scripts\activate
         set pythonLocation=%PY_VENV_PATH%&& set Python_ROOT_DIR=%PY_VENV_PATH%&& set ^
             Python2_ROOT_DIR=%PY_VENV_PATH%&& set Python3_ROOT_DIR=%PY_VENV_PATH%
-        SET PATH=%QT_ROOT_DIR%\bin;%GTK_BIN_DIR%;%PATH%
+        @rem SET PATH=%QT_ROOT_DIR%\bin;%GTK_BIN_DIR%;%PATH%
+        SET PATH=%GTK_BIN_DIR%;%PATH%
+        call %DEPS_CMAKE_GENERATORS%\build\generators\conanrun.bat
         set
         @echo Step8: Building GRC binaries ...
         dir
