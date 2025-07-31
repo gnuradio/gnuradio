@@ -26,6 +26,7 @@ from .stream_to_vector_decimator import *
 from .msg_meta_to_pair import meta_to_pair
 from .msg_pair_to_var import msg_pair_to_var
 from .var_to_msg import var_to_msg_pair
+from .variable_save_restore import variable_save_restore
 from .matrix_interleaver import *
 from .parse_file_metadata import parse_header, parse_extra_dict
 
