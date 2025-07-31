@@ -17,6 +17,7 @@ gr_python_install(
     FILES __init__.py
           compass.py
           togglebutton.py
+          numeric_entry.py
           msgpushbutton.py
           msgcheckbox.py
           distanceradar.py
