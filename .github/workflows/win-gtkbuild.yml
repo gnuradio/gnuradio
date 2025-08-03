@@ -265,6 +265,18 @@ jobs:
     - name: Build with powershell
       shell: pwsh
       run: |
+        $env:pythonLocation
+        $env:Python_ROOT_DIR
+        $env:Python2_ROOT_DIR
+        $env:Python3_ROOT_DIR
+        $env:pythonLocation = ''
+        $env:Python_ROOT_DIR = ''
+        $env:Python2_ROOT_DIR = ''
+        $env:Python3_ROOT_DIR = ''
+        $env:pythonLocation
+        $env:Python_ROOT_DIR
+        $env:Python2_ROOT_DIR
+        $env:Python3_ROOT_DIR
         $env:gvsbuild_args
         $env:PY_VENV_PATH
         & $env:PY_VENV_PATH\Scripts\Activate.ps1
@@ -273,9 +285,11 @@ jobs:
         $env:Path
         $env:Path = $env:GTK_BIN_DIR + ';' + $env:Path
         $env:Path
+        $env:MSYSTEM
         gvsbuild.exe build gtk3 --configuration release --py-wheel --enable-gi --msys-dir C:/msys64 --build-dir C:\gtkbuild --msbuild-opts /property:RunCodeAnalysis=false --ninja-opts -j1 --vs-ver 17 --platform x64 --log-single --capture-out
         Get-CimInstance Win32_PageFileUsage | fl *
-    - name: Attempt to install
+    - name: Check logs
+      if: success() || failure()
       run: |
         type %gtk_build_dir%\logs\gvsbuild-log.txt
         type %gtk_build_dir%\build\gtk\x64\release\stack.propsstack.props
@@ -285,6 +299,8 @@ jobs:
         "%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" ^
             -NoProfile -InputFormat None -ExecutionPolicy Bypass ^
             -Command "Get-CimInstance Win32_PageFileUsage | fl *"
+    - name: Attempt to install
+      run: |
         @echo Install pygi
         dir %gtk_build_dir%
         dir %GTK_ROOT%
@@ -303,6 +319,9 @@ jobs:
         @rem tar -czf cmake-backup.gzip -C "%RUNNER_WORKSPACE%\cmake-backup" .
         dir %GTK_BUILD_PATH%
         tar -czf gvsbuild-backup.gzip -C "%GTK_BUILD_PATH%" .
+        copy %GTK_BUILD_PATH%\logs\gvsbuild-log.txt .
+        copy %GTK_BUILD_PATH%\build\gtk\x64\release\stack.propsstack.props .
+        copy %GTK_BUILD_PATH%\build\gtk\x64\release\gtk3\_gvsbuild-meson\meson-logs\meson-log.txt .
         @rem robocopy /NJH /NDL /MT /W:5 /R:4 "%GITHUB_WORKSPACE%\gnuradio\build\_CPack_Packages\win64\NSIS" .
         @rem tar -czf gnuradio.gzip -C "%PROGRAMFILES%\GNU Radio" .
         @rem set GR_INSTALL_DIR
