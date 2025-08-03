@@ -221,11 +221,13 @@ jobs:
         @echo redefining gtk_build_dir from %gtk_build_dir% to C:\gtkbuild
         set gtk_build_dir=%SystemDrive%\gtkbuild
         mkdir %gtk_build_dir%
-        echo GTK_BUILD_PAYH=%gtk_build_dir%>> %GITHUB_ENV%
+        echo gtk_build_dir=%gtk_build_dir%>> %GITHUB_ENV%
+        echo GTK_BUILD_PATH=%gtk_build_dir%>> %GITHUB_ENV%
         set GTK_ROOT=%gtk_build_dir%\gtk\x64\release
         @rem set INCLUDE=%GTK_ROOT%\include;%GTK_ROOT%\include\cairo;%GTK_ROOT%\include\glib-2.0;%GTK_ROOT%\include\gobject-introspection-1.0;%GTK_ROOT%\lib\glib-2.0\include;%INCLUDE%
         @rem set LIB=%GTK_ROOT%\lib;%LIB%
         set GTK_BIN_DIR=%GTK_ROOT%\bin
+        echo GTK_BIN_DIR=%GTK_BIN_DIR%>> %GITHUB_ENV%
         call set fps_GTK_BIN_DIR=%%GTK_BIN_DIR:\=/%%
         echo fps_GTK_BIN_DIR=%fps_GTK_BIN_DIR%>> %GITHUB_ENV%
         set PATH=%GTK_BIN_DIR%;%PATH%
@@ -248,7 +250,15 @@ jobs:
         set
         set gvsbuild_args=build %gtk_version% --configuration release --py-wheel --enable-gi --msys-dir %fps_MSYS2_DIR% --build-dir %gtk_build_dir% --msbuild-opts /property:RunCodeAnalysis=false --ninja-opts -j1 --vs-ver 17 --platform x64
         @echo Calling gvsbuild with arguments '%gvsbuild_args%'
-        gvsbuild %gvsbuild_args% --log-single --capture-out --use-env
+        echo gvsbuild_args=%gvsbuild_args%>> %GITHUB_ENV%
+    - name: Build with powershell
+      shell: pwsh
+      run: |
+        $env:gvsbuild_args
+        gvsbuild.exe build gtk3 --configuration release --py-wheel --enable-gi --msys-dir C:/msys64 --build-dir C:\gtkbuild --msbuild-opts /property:RunCodeAnalysis=false --ninja-opts -j1 --vs-ver 17 --platform x64 --log-single --capture-out
+        Get-CimInstance Win32_PageFileUsage | fl *
+    - name: Attempt to install
+      run: |
         type %gtk_build_dir%\logs\gvsbuild-log.txt
         type %gtk_build_dir%\build\gtk\x64\release\stack.propsstack.props
         type %gtk_build_dir%\build\gtk\x64\release\gtk3\_gvsbuild-meson\meson-logs\meson-log.txt
@@ -272,8 +282,8 @@ jobs:
         @rem mkdir %RUNNER_WORKSPACE%\cmake-backup
         @rem robocopy /NJH /NFL /NDL /MT /W:5 /R:4 "%GITHUB_WORKSPACE%\gnuradio\build" "%RUNNER_WORKSPACE%\cmake-backup"
         @rem tar -czf cmake-backup.gzip -C "%RUNNER_WORKSPACE%\cmake-backup" .
-        dir %GTK_BUILD_PAYH%
-        tar -czf gvsbuild-backup.gzip -C "%GTK_BUILD_PAYH%" .
+        dir %GTK_BUILD_PATH%
+        tar -czf gvsbuild-backup.gzip -C "%GTK_BUILD_PATH%" .
         @rem robocopy /NJH /NDL /MT /W:5 /R:4 "%GITHUB_WORKSPACE%\gnuradio\build\_CPack_Packages\win64\NSIS" .
         @rem tar -czf gnuradio.gzip -C "%PROGRAMFILES%\GNU Radio" .
         @rem set GR_INSTALL_DIR
