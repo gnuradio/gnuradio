@@ -68,19 +68,20 @@ jobs:
     - name: Check environment
       run: |
         set
-        @echo Relying on preinstalled tools in known installation locations
-        @echo MSYS2 via GHCUP_MSYS2 environment variable
+        @echo DEBUG: Relying on preinstalled tools in known installation locations
+        @echo DEBUG: MSYS2 via GHCUP_MSYS2 environment variable
         set GHCUP_MSYS2
-        @echo PIPX via PATH environment variable
+        @echo DEBUG: PIPX via PATH environment variable
         set PIPX_HOME
         pipx list
-        @echo MSVC via PATH environment variable
+        @echo DEBUG: MSVC via PATH environment variable
         "%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe" -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64
-        @echo Chocolatey via PATH environment variable
+        @echo DEBUG: Chocolatey via PATH environment variable
         set ChocolateyInstall
         choco list
-        @echo Python 3.9 via RUNNER_TOOL_CACHE at %RUNNER_TOOL_CACHE%
+        @echo DEBUG: Python 3.9 via RUNNER_TOOL_CACHE at %RUNNER_TOOL_CACHE%
         dir %RUNNER_TOOL_CACHE%\Python
+        @echo DEBUG: NSIS via PATH environment variable
     - name: Export vcvars64 path for 'x64 Native Tools Command Prompt'
       if: always()
       run: |
@@ -129,6 +130,17 @@ jobs:
 #        "%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" ^
 #            -NoProfile -InputFormat None -ExecutionPolicy Bypass ^
 #            -Command "Get-ComputerInfo | Select-Object TotalPhysicalMemory, AvailablePhysicalMemory"
+    - name: Reduce length of environment variable
+      run: |
+        @echo DEBUG: Storing original path environment variable in _LOCAL_ORIGINAL_PATH
+        set _LOCAL_ORIGINAL_PATH=%PATH%
+        @echo DEBUG: Manually setting PATH to minimal value, incl. removal of redundant '32-bit GitHub CLI', LLVM, and some chocolatey installed tools
+        @echo DEBUG: Removing chars 190 + 252 + 189 + 135 + 123 + 279 + 54 + 54 + 59 + ... resulting in 1250 chars (from 2633)
+        set _LOCAL_MY_PATH=C:\\ghcup\bin;C:\Program Files\Git;C:\Program Files\Git\bin;C:\Program Files (x86)\pipx_bin;C:\npm\prefix;C:\Program Files\OpenSSL\bin;C:\Program Files\Microsoft SDKs\Azure\CLI2\wbin;C:\ProgramData\kind;C:\ProgramData\Chocolatey\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files\dotnet\;C:\Program Files\PowerShell\7\;C:\Program Files\Microsoft\Web Platform Installer\;C:\Program Files\TortoiseSVN\bin;C:\Program Files (x86)\Windows Kits\10\Windows Performance Toolkit\;C:\Program Files (x86)\WiX Toolset v3.14\bin;C:\Program Files\CMake\bin;C:\Program Files\Microsoft Service Fabric\bin\Fabric\Fabric.Code;C:\Program Files\Microsoft SDKs\Service Fabric\Tools\ServiceFabricLocalClusterManager;C:\Program Files\nodejs\;C:\Program Files\Git\cmd;C:\Program Files\Git\mingw64\bin;C:\Program Files\Git\usr\bin;C:\Program Files\GitHub CLI\;c:\tools\php;C:\Program Files (x86)\sbt\bin;C:\Program Files\Amazon\AWSCLIV2\;C:\Program Files\Amazon\SessionManagerPlugin\bin\;C:\Program Files\Amazon\AWSSAMCLI\bin\;C:\Program Files\LLVM\bin;C:\Users\runneradmin\.dotnet\tools;C:\Users\runneradmin\.cargo\bin;C:\Users\runneradmin\AppData\Local\Microsoft\WindowsApps
+        echo _LOCAL_ORIGINAL_PATH=%_LOCAL_ORIGINAL_PATH%>> %GITHUB_ENV%
+        set PATH=%_LOCAL_MY_PATH%
+        set PATH
+        echo PATH=%PATH%>> %GITHUB_ENV%
     - name: Setup Python 3.12
       if: always()
       uses: actions/setup-python@v5
@@ -234,7 +246,7 @@ jobs:
         set
         set gvsbuild_args=build %gtk_version% --configuration release --py-wheel --enable-gi --msys-dir %fps_MSYS2_DIR% --build-dir %gtk_build_dir% --msbuild-opts /property:RunCodeAnalysis=false --ninja-opts -j1 --vs-ver 17 --platform x64
         @echo Calling gvsbuild with arguments '%gvsbuild_args%'
-        gvsbuild %gvsbuild_args% --log-single --capture-out
+        gvsbuild %gvsbuild_args% --log-single --capture-out --use-env
         type %gtk_build_dir%\logs\gvsbuild-log.txt
         type %gtk_build_dir%\build\gtk\x64\release\stack.propsstack.props
         type %gtk_build_dir%\build\gtk\x64\release\gtk3\_gvsbuild-meson\meson-logs\meson-log.txt
