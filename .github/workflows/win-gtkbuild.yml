@@ -82,6 +82,10 @@ jobs:
         @echo DEBUG: Python 3.9 via RUNNER_TOOL_CACHE at %RUNNER_TOOL_CACHE%
         dir %RUNNER_TOOL_CACHE%\Python
         @echo DEBUG: NSIS via PATH environment variable
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        path: gnuradio
     - name: Export vcvars64 path for 'x64 Native Tools Command Prompt'
       if: always()
       run: |
