@@ -151,22 +151,22 @@ jobs:
         python-version: '3.12'
     - run: |
         set
-    #- name: Create Python Virtual Environment
-    #  env:
-    #    PY_VENV_PATH: ${{ runner.workspace }}\py_venv
-    #  run: | 
-    #    echo '${{ steps.cp312.outputs.python-version }}'
-    #    ${{ steps.cp312.outputs.python-path }} -m pip install virtualenv
-    #    ${{ steps.cp312.outputs.python-path }} -m venv %PY_VENV_PATH%
-    #    call %PY_VENV_PATH%\Scripts\activate
-    #    set pythonLocation=%PY_VENV_PATH%&& set Python_ROOT_DIR=%PY_VENV_PATH%&& set ^
-    #        Python2_ROOT_DIR=%PY_VENV_PATH%&& set Python3_ROOT_DIR=%PY_VENV_PATH%
-    #    python -c "import sys;print(sys.path)"
-    #    echo PY_VENV_PATH=%PY_VENV_PATH%>> %GITHUB_ENV%
-    #    @rem echo PATH=%PATH%>> %GITHUB_ENV%
-    #    set RUNNER_WORKSPACE
-    #    set GITHUB_WORKSPACE
-    #    pip install -r %GITHUB_WORKSPACE%\gnuradio\release\requirements.txt
+    - name: Create Python Virtual Environment
+      env:
+        PY_VENV_PATH: ${{ runner.workspace }}\py_venv
+      run: | 
+        echo '${{ steps.cp312.outputs.python-version }}'
+        ${{ steps.cp312.outputs.python-path }} -m pip install virtualenv
+        ${{ steps.cp312.outputs.python-path }} -m venv %PY_VENV_PATH%
+        call %PY_VENV_PATH%\Scripts\activate
+        set pythonLocation=%PY_VENV_PATH%&& set Python_ROOT_DIR=%PY_VENV_PATH%&& set ^
+            Python2_ROOT_DIR=%PY_VENV_PATH%&& set Python3_ROOT_DIR=%PY_VENV_PATH%
+        python -c "import sys;print(sys.path)"
+        echo PY_VENV_PATH=%PY_VENV_PATH%>> %GITHUB_ENV%
+        @rem echo PATH=%PATH%>> %GITHUB_ENV%
+        set RUNNER_WORKSPACE
+        set GITHUB_WORKSPACE
+        pip install -r %GITHUB_WORKSPACE%\gnuradio\release\requirements.txt
     # Need to check if GHCUP_MSYS2 can be used
     #- uses: msys2/setup-msys2@v2
     #  id: msys2
@@ -209,10 +209,10 @@ jobs:
         gvsbuild_dir: ${{ github.workspace }}\gvsbuild
       run: |
         @rem @echo Activate Python venv
-        @rem call %PY_VENV_PATH%\Scripts\activate
-        @rem set pythonLocation=%PY_VENV_PATH%&& set Python_ROOT_DIR=%PY_VENV_PATH%&& set ^
-        @rem     Python2_ROOT_DIR=%PY_VENV_PATH%&& set Python3_ROOT_DIR=%PY_VENV_PATH%
-        @rem python -c "import sys;print(sys.path)"
+        call %PY_VENV_PATH%\Scripts\activate
+        set pythonLocation=%PY_VENV_PATH%&& set Python_ROOT_DIR=%PY_VENV_PATH%&& set ^
+             Python2_ROOT_DIR=%PY_VENV_PATH%&& set Python3_ROOT_DIR=%PY_VENV_PATH%
+        python -c "import sys;print(sys.path)"
         @echo Define MSYS2_LOCATION with linux path separators
         call set fps_MSYS2_DIR=%%GHCUP_MSYS2:\=/%%
         set fps_MSYS2_DIR
@@ -224,6 +224,7 @@ jobs:
         echo gtk_build_dir=%gtk_build_dir%>> %GITHUB_ENV%
         echo GTK_BUILD_PATH=%gtk_build_dir%>> %GITHUB_ENV%
         set GTK_ROOT=%gtk_build_dir%\gtk\x64\release
+        echo GTK_ROOT=%GTK_ROOT%>> %GITHUB_ENV%
         @rem set INCLUDE=%GTK_ROOT%\include;%GTK_ROOT%\include\cairo;%GTK_ROOT%\include\glib-2.0;%GTK_ROOT%\include\gobject-introspection-1.0;%GTK_ROOT%\lib\glib-2.0\include;%INCLUDE%
         @rem set LIB=%GTK_ROOT%\lib;%LIB%
         set GTK_BIN_DIR=%GTK_ROOT%\bin
@@ -255,6 +256,8 @@ jobs:
       shell: pwsh
       run: |
         $env:gvsbuild_args
+        $env:PY_VENV_PATH
+        $env:PY_VENV_PATH\Scripts\Activate.ps1
         gvsbuild.exe build gtk3 --configuration release --py-wheel --enable-gi --msys-dir C:/msys64 --build-dir C:\gtkbuild --msbuild-opts /property:RunCodeAnalysis=false --ninja-opts -j1 --vs-ver 17 --platform x64 --log-single --capture-out
         Get-CimInstance Win32_PageFileUsage | fl *
     - name: Attempt to install
