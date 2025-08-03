@@ -261,7 +261,7 @@ jobs:
       run: |
         $env:gvsbuild_args
         $env:PY_VENV_PATH
-        $env:PY_VENV_PATH\Scripts\Activate.ps1
+        & $env:PY_VENV_PATH\Scripts\Activate.ps1
         gvsbuild.exe build gtk3 --configuration release --py-wheel --enable-gi --msys-dir C:/msys64 --build-dir C:\gtkbuild --msbuild-opts /property:RunCodeAnalysis=false --ninja-opts -j1 --vs-ver 17 --platform x64 --log-single --capture-out
         Get-CimInstance Win32_PageFileUsage | fl *
     - name: Attempt to install
