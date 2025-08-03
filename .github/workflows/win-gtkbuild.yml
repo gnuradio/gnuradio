@@ -218,6 +218,8 @@ jobs:
         set fps_MSYS2_DIR
         set MSYSTEM=UCRT64
         @echo Defining a number of environment variables pointing to future locations
+        @echo redefining gtk_build_dir from %gtk_build_dir% to C:\gtkbuild
+        set gtk_build_dir=%SystemDrive%\gtkbuild
         mkdir %gtk_build_dir%
         echo GTK_BUILD_PAYH=%gtk_build_dir%>> %GITHUB_ENV%
         set GTK_ROOT=%gtk_build_dir%\gtk\x64\release
