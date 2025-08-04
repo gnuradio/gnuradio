@@ -134,17 +134,17 @@ jobs:
 #        "%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" ^
 #            -NoProfile -InputFormat None -ExecutionPolicy Bypass ^
 #            -Command "Get-ComputerInfo | Select-Object TotalPhysicalMemory, AvailablePhysicalMemory"
-    - name: Reduce length of environment variable
-      run: |
-        @echo DEBUG: Storing original path environment variable in _LOCAL_ORIGINAL_PATH
-        set _LOCAL_ORIGINAL_PATH=%PATH%
-        @echo DEBUG: Manually setting PATH to minimal value, incl. removal of redundant '32-bit GitHub CLI', LLVM, and some chocolatey installed tools
-        @echo DEBUG: Removing chars 190 + 252 + 189 + 135 + 123 + 279 + 54 + 54 + 59 + ... resulting in 1250 chars (from 2633)
-        set _LOCAL_MY_PATH=C:\\ghcup\bin;C:\Program Files\Git;C:\Program Files\Git\bin;C:\Program Files (x86)\pipx_bin;C:\npm\prefix;C:\Program Files\OpenSSL\bin;C:\Program Files\Microsoft SDKs\Azure\CLI2\wbin;C:\ProgramData\kind;C:\ProgramData\Chocolatey\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files\dotnet\;C:\Program Files\PowerShell\7\;C:\Program Files\Microsoft\Web Platform Installer\;C:\Program Files\TortoiseSVN\bin;C:\Program Files (x86)\Windows Kits\10\Windows Performance Toolkit\;C:\Program Files (x86)\WiX Toolset v3.14\bin;C:\Program Files\CMake\bin;C:\Program Files\Microsoft Service Fabric\bin\Fabric\Fabric.Code;C:\Program Files\Microsoft SDKs\Service Fabric\Tools\ServiceFabricLocalClusterManager;C:\Program Files\nodejs\;C:\Program Files\Git\cmd;C:\Program Files\Git\mingw64\bin;C:\Program Files\Git\usr\bin;C:\Program Files\GitHub CLI\;c:\tools\php;C:\Program Files (x86)\sbt\bin;C:\Program Files\Amazon\AWSCLIV2\;C:\Program Files\Amazon\SessionManagerPlugin\bin\;C:\Program Files\Amazon\AWSSAMCLI\bin\;C:\Program Files\LLVM\bin;C:\Users\runneradmin\.dotnet\tools;C:\Users\runneradmin\.cargo\bin;C:\Users\runneradmin\AppData\Local\Microsoft\WindowsApps
-        echo _LOCAL_ORIGINAL_PATH=%_LOCAL_ORIGINAL_PATH%>> %GITHUB_ENV%
-        set PATH=%_LOCAL_MY_PATH%
-        set PATH
-        echo PATH=%PATH%>> %GITHUB_ENV%
+#    - name: Reduce length of environment variable
+#      run: |
+#        @echo DEBUG: Storing original path environment variable in _LOCAL_ORIGINAL_PATH
+#        set _LOCAL_ORIGINAL_PATH=%PATH%
+#        @echo DEBUG: Manually setting PATH to minimal value, incl. removal of redundant '32-bit GitHub CLI', LLVM, and some chocolatey installed tools
+#        @echo DEBUG: Removing chars 190 + 252 + 189 + 135 + 123 + 279 + 54 + 54 + 59 + ... resulting in 1250 chars (from 2633)
+#        set _LOCAL_MY_PATH=C:\\ghcup\bin;C:\Program Files\Git;C:\Program Files\Git\bin;C:\Program Files (x86)\pipx_bin;C:\npm\prefix;C:\Program Files\OpenSSL\bin;C:\Program Files\Microsoft SDKs\Azure\CLI2\wbin;C:\ProgramData\kind;C:\ProgramData\Chocolatey\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files\dotnet\;C:\Program Files\PowerShell\7\;C:\Program Files\Microsoft\Web Platform Installer\;C:\Program Files\TortoiseSVN\bin;C:\Program Files (x86)\Windows Kits\10\Windows Performance Toolkit\;C:\Program Files (x86)\WiX Toolset v3.14\bin;C:\Program Files\CMake\bin;C:\Program Files\Microsoft Service Fabric\bin\Fabric\Fabric.Code;C:\Program Files\Microsoft SDKs\Service Fabric\Tools\ServiceFabricLocalClusterManager;C:\Program Files\nodejs\;C:\Program Files\Git\cmd;C:\Program Files\Git\mingw64\bin;C:\Program Files\Git\usr\bin;C:\Program Files\GitHub CLI\;c:\tools\php;C:\Program Files (x86)\sbt\bin;C:\Program Files\Amazon\AWSCLIV2\;C:\Program Files\Amazon\SessionManagerPlugin\bin\;C:\Program Files\Amazon\AWSSAMCLI\bin\;C:\Program Files\LLVM\bin;C:\Users\runneradmin\.dotnet\tools;C:\Users\runneradmin\.cargo\bin;C:\Users\runneradmin\AppData\Local\Microsoft\WindowsApps
+#        echo _LOCAL_ORIGINAL_PATH=%_LOCAL_ORIGINAL_PATH%>> %GITHUB_ENV%
+#        set PATH=%_LOCAL_MY_PATH%
+#        set PATH
+#        echo PATH=%PATH%>> %GITHUB_ENV%
     #- name: Setup Python 3.12
     #  if: always()
     #  uses: actions/setup-python@v5
