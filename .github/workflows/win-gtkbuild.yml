@@ -169,7 +169,7 @@ jobs:
         $rem {{ steps.cp312.outputs.python-path }} -m venv %PY_VENV_PATH%
         python -m venv %PY_VENV_PATH%
         call %PY_VENV_PATH%\Scripts\activate
-        $rem set pythonLocation=%PY_VENV_PATH%&& set Python_ROOT_DIR=%PY_VENV_PATH%&& set ^
+        @rem set pythonLocation=%PY_VENV_PATH%&& set Python_ROOT_DIR=%PY_VENV_PATH%&& set ^
             Python2_ROOT_DIR=%PY_VENV_PATH%&& set Python3_ROOT_DIR=%PY_VENV_PATH%
         python -c "import sys;print(sys.path)"
         echo PY_VENV_PATH=%PY_VENV_PATH%>> %GITHUB_ENV%
