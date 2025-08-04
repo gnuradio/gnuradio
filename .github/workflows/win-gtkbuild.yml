@@ -307,6 +307,8 @@ jobs:
         dir %GTK_ROOT%\python
     - name: Attempt to install
       run: |
+        @echo Activate Python venv
+        call %PY_VENV_PATH%\Scripts\activate
         @echo Install pygi
         dir %gtk_build_dir%
         dir %GTK_ROOT%
