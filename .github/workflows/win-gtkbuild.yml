@@ -145,23 +145,26 @@ jobs:
         set PATH=%_LOCAL_MY_PATH%
         set PATH
         echo PATH=%PATH%>> %GITHUB_ENV%
-    - name: Setup Python 3.12
-      if: always()
-      uses: actions/setup-python@v5
-      # action installs into RUNNER_TOOL_CACHE and
-      # defines and exports the environment variables pythonLocation, Python_ROOT_DIR, Python2_ROOT_DIR, Python3_ROOT_DIR
-      id: cp312
-      with:
-        python-version: '3.12'
+    #- name: Setup Python 3.12
+    #  if: always()
+    #  uses: actions/setup-python@v5
+    #  # action installs into RUNNER_TOOL_CACHE and
+    #  # defines and exports the environment variables pythonLocation, Python_ROOT_DIR, Python2_ROOT_DIR, Python3_ROOT_DIR
+    #  id: cp312
+    #  with:
+    #    python-version: '3.12'
     - run: |
         set
+        py -0
     - name: Create Python Virtual Environment
       env:
         PY_VENV_PATH: ${{ runner.workspace }}\py_venv
       run: | 
         echo '${{ steps.cp312.outputs.python-version }}'
-        ${{ steps.cp312.outputs.python-path }} -m pip install virtualenv
-        ${{ steps.cp312.outputs.python-path }} -m venv %PY_VENV_PATH%
+        @rem ${{ steps.cp312.outputs.python-path }} -m pip install virtualenv
+        py -3.12 -m pip install virtualenv
+        $rem {{ steps.cp312.outputs.python-path }} -m venv %PY_VENV_PATH%
+        py -3.12 -m venv %PY_VENV_PATH%
         call %PY_VENV_PATH%\Scripts\activate
         set pythonLocation=%PY_VENV_PATH%&& set Python_ROOT_DIR=%PY_VENV_PATH%&& set ^
             Python2_ROOT_DIR=%PY_VENV_PATH%&& set Python3_ROOT_DIR=%PY_VENV_PATH%
