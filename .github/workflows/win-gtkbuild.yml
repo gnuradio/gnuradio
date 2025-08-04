@@ -266,9 +266,9 @@ jobs:
         python -m pip install gvsbuild
         @echo TODO specify --vs-ver 17 instead of --vs-ver 16, because gvsbuild assumes --vs-ver 16 is mapped to MSVC 2019 folder
         @echo TODO does not seem to understand the MSVC 2022 can optionally compile with older --vs_ver
-        @rem set gvsbuild_args=build %gtk_version% --configuration release --py-wheel --enable-gi --msys-dir %fps_MSYS2_DIR% --build-dir %gtk_build_dir%  --from-scratch --ninja-opts -j1 --vs-ver 17 --platform x64 --vs-install-path "C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools"
+        @rem set gvsbuild_args=build %gtk_version% --configuration release --py-wheel --enable-gi pygobject --msys-dir %fps_MSYS2_DIR% --build-dir %gtk_build_dir%  --from-scratch --ninja-opts -j1 --vs-ver 17 --platform x64 --vs-install-path "C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools"
         set
-        set gvsbuild_args=build %gtk_version% --configuration release --py-wheel --enable-gi --msys-dir %fps_MSYS2_DIR% --build-dir %gtk_build_dir% --msbuild-opts /property:RunCodeAnalysis=false --ninja-opts -j1 --vs-ver 17 --platform x64
+        set gvsbuild_args=build %gtk_version% --configuration release --py-wheel --enable-gi pygobject --msys-dir %fps_MSYS2_DIR% --build-dir %gtk_build_dir% --msbuild-opts /property:RunCodeAnalysis=false --ninja-opts -j1 --vs-ver 17 --platform x64
         @echo Calling gvsbuild with arguments '%gvsbuild_args%'
         echo gvsbuild_args=%gvsbuild_args%>> %GITHUB_ENV%
     - name: Build with powershell
@@ -279,19 +279,21 @@ jobs:
         & $env:PY_VENV_PATH\Scripts\Activate.ps1
         $env:VIRTUAL_ENV
         python -c "import sys;print(sys.path)"
+        pip list
         $env:Path
-        #$env:Path = $env:GTK_BIN_DIR + ';' + $env:Path
+        $env:Path = $env:GTK_BIN_DIR + ';' + $env:Path
         $env:Path
         $env:MSYSTEM
         $env:LIB = $env:GTK_ROOT + "\lib;" + $env:LIB
         $env:LIB
         $env:INCLUDE = $env:GTK_ROOT + "\include;" + $env:GTK_ROOT + "\include\cairo;" + $env:GTK_ROOT + "\include\glib-2.0;" + $env:GTK_ROOT + "\include\gobject-introspection-1.0;" + $env:GTK_ROOT + "\lib\glib-2.0\include;" + $env:INCLUDE
         $env:INCLUDE
-        gvsbuild.exe build gtk3 --configuration release --py-wheel --enable-gi --msys-dir C:/msys64 --build-dir C:\gtkbuild --msbuild-opts /property:RunCodeAnalysis=false --ninja-opts -j1 --vs-ver 17 --platform x64 --log-single --capture-out
+        gvsbuild.exe build gtk3 --configuration release --py-wheel --enable-gi pygobject --msys-dir C:/msys64 --build-dir C:\gtkbuild --msbuild-opts /property:RunCodeAnalysis=false --ninja-opts -j1 --vs-ver 17 --platform x64 --log-single --capture-out
         Get-CimInstance Win32_PageFileUsage | fl *
     - name: Check logs
       if: success() || failure()
       run: |
+        set
         type %gtk_build_dir%\logs\gvsbuild-log.txt
         type %gtk_build_dir%\build\gtk\x64\release\stack.propsstack.props
         type %gtk_build_dir%\build\gtk\x64\release\gtk3\_gvsbuild-meson\meson-logs\meson-log.txt
@@ -300,6 +302,9 @@ jobs:
         "%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" ^
             -NoProfile -InputFormat None -ExecutionPolicy Bypass ^
             -Command "Get-CimInstance Win32_PageFileUsage | fl *"
+        dir %gtk_build_dir%
+        dir %GTK_ROOT%
+        dir %GTK_ROOT%\python
     - name: Attempt to install
       run: |
         @echo Install pygi
