@@ -464,6 +464,8 @@ jobs:
             -DVolk_DIR=%VOLK_INSTALL_DIR%/lib/cmake/volk -DGTK_BIN_DIR=%fps_GTK_BIN_DIR% ^
             "-DCMAKE_INSTALL_PREFIX=%GR_INSTALL_DIR%" ^
             -DPYTHON_EXECUTABLE=%PY_VENV_PATH%\Scripts\python.exe
+        Ninja
+        Ninja test
         Ninja install
         @echo Build installer
         cpack
@@ -473,7 +475,8 @@ jobs:
         mkdir installation-archive.squash
         cd installation-archive.squash
         mkdir %RUNNER_WORKSPACE%\cmake-backup
-        robocopy /NJH /NFL /NDL /MT /W:5 /R:4 "%GITHUB_WORKSPACE%\gnuradio\build" "%RUNNER_WORKSPACE%\cmake-backup"
+        robocopy /MIR /NJH /NFL /NDL /MT /W:5 /R:4 "%GITHUB_WORKSPACE%\gnuradio\build" "%RUNNER_WORKSPACE%\cmake-backup" ^
+            /XD %GITHUB_WORKSPACE%\gnuradio\build\_CPack_Packages"
         tar -czf cmake-backup.gzip -C "%RUNNER_WORKSPACE%\cmake-backup" .
         robocopy /NJH /NDL /MT /W:5 /R:4 "%GITHUB_WORKSPACE%\gnuradio\build\_CPack_Packages\win64\NSIS" .
         tar -czf gnuradio.gzip -C "%PROGRAMFILES%\GNU Radio" .
