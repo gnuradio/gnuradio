@@ -244,8 +244,8 @@ jobs:
         echo GTK_BUILD_PATH=%gtk_build_dir%>> %GITHUB_ENV%
         set GTK_ROOT=%gtk_build_dir%\gtk\x64\release
         echo GTK_ROOT=%GTK_ROOT%>> %GITHUB_ENV%
-        @rem set INCLUDE=%GTK_ROOT%\include;%GTK_ROOT%\include\cairo;%GTK_ROOT%\include\glib-2.0;%GTK_ROOT%\include\gobject-introspection-1.0;%GTK_ROOT%\lib\glib-2.0\include;%INCLUDE%
-        @rem set LIB=%GTK_ROOT%\lib;%LIB%
+        set INCLUDE=%GTK_ROOT%\include;%GTK_ROOT%\include\cairo;%GTK_ROOT%\include\glib-2.0;%GTK_ROOT%\include\gobject-introspection-1.0;%GTK_ROOT%\lib\glib-2.0\include;%INCLUDE%
+        set LIB=%GTK_ROOT%\lib;%LIB%
         set GTK_BIN_DIR=%GTK_ROOT%\bin
         echo GTK_BIN_DIR=%GTK_BIN_DIR%>> %GITHUB_ENV%
         call set fps_GTK_BIN_DIR=%%GTK_BIN_DIR:\=/%%
@@ -271,25 +271,26 @@ jobs:
         set gvsbuild_args=build %gtk_version% --configuration release --py-wheel --enable-gi pygobject --msys-dir %fps_MSYS2_DIR% --build-dir %gtk_build_dir% --vs-ver 17 --platform x64
         @echo Calling gvsbuild with arguments '%gvsbuild_args%'
         echo gvsbuild_args=%gvsbuild_args%>> %GITHUB_ENV%
-    - name: Build with powershell
-      shell: pwsh
-      run: |
-        $env:gvsbuild_args
-        $env:PY_VENV_PATH
-        & $env:PY_VENV_PATH\Scripts\Activate.ps1
-        $env:VIRTUAL_ENV
-        python -c "import sys;print(sys.path)"
-        pip list
-        $env:Path
-        $env:Path = $env:GTK_BIN_DIR + ';' + $env:Path
-        $env:Path
-        $env:MSYSTEM
-        $env:LIB = $env:GTK_ROOT + "\lib;" + $env:LIB
-        $env:LIB
-        $env:INCLUDE = $env:GTK_ROOT + "\include;" + $env:GTK_ROOT + "\include\cairo;" + $env:GTK_ROOT + "\include\glib-2.0;" + $env:GTK_ROOT + "\include\gobject-introspection-1.0;" + $env:GTK_ROOT + "\lib\glib-2.0\include;" + $env:INCLUDE
-        $env:INCLUDE
-        gvsbuild.exe build gtk3 --configuration release --py-wheel --enable-gi pygobject --msys-dir C:/msys64 --build-dir C:\gtkbuild --vs-ver 17 --platform x64 --log-single --capture-out
-        Get-CimInstance Win32_PageFileUsage | fl *
+        gvsbuild %gvsbuild_args% --log-single --capture-out
+    # - name: Build with powershell
+      # shell: pwsh
+      # run: |
+        # $env:gvsbuild_args
+        # $env:PY_VENV_PATH
+        # & $env:PY_VENV_PATH\Scripts\Activate.ps1
+        # $env:VIRTUAL_ENV
+        # python -c "import sys;print(sys.path)"
+        # pip list
+        # $env:Path
+        # $env:Path = $env:GTK_BIN_DIR + ';' + $env:Path
+        # $env:Path
+        # $env:MSYSTEM
+        # $env:LIB = $env:GTK_ROOT + "\lib;" + $env:LIB
+        # $env:LIB
+        # $env:INCLUDE = $env:GTK_ROOT + "\include;" + $env:GTK_ROOT + "\include\cairo;" + $env:GTK_ROOT + "\include\glib-2.0;" + $env:GTK_ROOT + "\include\gobject-introspection-1.0;" + $env:GTK_ROOT + "\lib\glib-2.0\include;" + $env:INCLUDE
+        # $env:INCLUDE
+        # gvsbuild.exe build gtk3 --configuration release --py-wheel --enable-gi pygobject --msys-dir C:/msys64 --build-dir C:\gtkbuild --vs-ver 17 --platform x64 --log-single --capture-out
+        # Get-CimInstance Win32_PageFileUsage | fl *
     - name: Check logs
       if: success() || failure()
       run: |
