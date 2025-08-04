@@ -160,13 +160,16 @@ jobs:
       env:
         PY_VENV_PATH: ${{ runner.workspace }}\py_venv
       run: | 
+        set PY_PYTHON=3.12
+        py -0
+        echo PY_PYTHON=%PY_PYTHON%>> %GITHUB_ENV%
         echo '${{ steps.cp312.outputs.python-version }}'
         @rem ${{ steps.cp312.outputs.python-path }} -m pip install virtualenv
-        py -3.12 -m pip install virtualenv
+        python -m pip install virtualenv
         $rem {{ steps.cp312.outputs.python-path }} -m venv %PY_VENV_PATH%
-        py -3.12 -m venv %PY_VENV_PATH%
+        python -m venv %PY_VENV_PATH%
         call %PY_VENV_PATH%\Scripts\activate
-        set pythonLocation=%PY_VENV_PATH%&& set Python_ROOT_DIR=%PY_VENV_PATH%&& set ^
+        $rem set pythonLocation=%PY_VENV_PATH%&& set Python_ROOT_DIR=%PY_VENV_PATH%&& set ^
             Python2_ROOT_DIR=%PY_VENV_PATH%&& set Python3_ROOT_DIR=%PY_VENV_PATH%
         python -c "import sys;print(sys.path)"
         echo PY_VENV_PATH=%PY_VENV_PATH%>> %GITHUB_ENV%
@@ -215,21 +218,21 @@ jobs:
         gtk_build_dir: ${{ runner.workspace }}\gtk-build
         gvsbuild_dir: ${{ github.workspace }}\gvsbuild
       run: |
-        @rem @echo Activate Python venv
+        @echo Activate Python venv
         call %PY_VENV_PATH%\Scripts\activate
-        set pythonLocation=%PY_VENV_PATH%&& set Python_ROOT_DIR=%PY_VENV_PATH%&& set ^
+        @rem set pythonLocation=%PY_VENV_PATH%&& set Python_ROOT_DIR=%PY_VENV_PATH%&& set ^
              Python2_ROOT_DIR=%PY_VENV_PATH%&& set Python3_ROOT_DIR=%PY_VENV_PATH%
-        echo pythonLocation=%PY_VENV_PATH%>> %GITHUB_ENV%
-        echo Python_ROOT_DIR=%PY_VENV_PATH%>> %GITHUB_ENV%
-        echo Python2_ROOT_DIR=%PY_VENV_PATH%>> %GITHUB_ENV%
-        echo Python3_ROOT_DIR=%PY_VENV_PATH%>> %GITHUB_ENV%
+        @rem echo pythonLocation=%PY_VENV_PATH%>> %GITHUB_ENV%
+        @rem echo Python_ROOT_DIR=%PY_VENV_PATH%>> %GITHUB_ENV%
+        @rem echo Python2_ROOT_DIR=%PY_VENV_PATH%>> %GITHUB_ENV%
+        @rem echo Python3_ROOT_DIR=%PY_VENV_PATH%>> %GITHUB_ENV%
         python -c "import sys;print(sys.path)"
         @echo Define MSYS2_LOCATION with linux path separators
         call set fps_MSYS2_DIR=%%GHCUP_MSYS2:\=/%%
         set fps_MSYS2_DIR
         echo fps_MSYS2_DIR=%fps_MSYS2_DIR%>> %GITHUB_ENV%
-        set MSYSTEM=UCRT64
-        echo MSYSTEM=%MSYSTEM%>> %GITHUB_ENV%
+        @rem set MSYSTEM=UCRT64
+        @rem echo MSYSTEM=%MSYSTEM%>> %GITHUB_ENV%
         @echo Defining a number of environment variables pointing to future locations
         @echo redefining gtk_build_dir from %gtk_build_dir% to C:\gtkbuild
         set gtk_build_dir=%SystemDrive%\gtkbuild
@@ -268,18 +271,6 @@ jobs:
     - name: Build with powershell
       shell: pwsh
       run: |
-        $env:pythonLocation
-        $env:Python_ROOT_DIR
-        $env:Python2_ROOT_DIR
-        $env:Python3_ROOT_DIR
-        $env:pythonLocation = ''
-        $env:Python_ROOT_DIR = ''
-        $env:Python2_ROOT_DIR = ''
-        $env:Python3_ROOT_DIR = ''
-        $env:pythonLocation
-        $env:Python_ROOT_DIR
-        $env:Python2_ROOT_DIR
-        $env:Python3_ROOT_DIR
         $env:gvsbuild_args
         $env:PY_VENV_PATH
         & $env:PY_VENV_PATH\Scripts\Activate.ps1
