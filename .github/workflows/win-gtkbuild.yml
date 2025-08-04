@@ -161,8 +161,12 @@ jobs:
         PY_VENV_PATH: ${{ runner.workspace }}\py_venv
       run: | 
         set PY_PYTHON=3.12
+        set PY_PYTHON3=3.12
         py -0
+        python -V
+        python3 -V
         echo PY_PYTHON=%PY_PYTHON%>> %GITHUB_ENV%
+        echo PY_PYTHON3=%PY_PYTHON%>> %GITHUB_ENV%
         @rem echo '${{ steps.cp312.outputs.python-version }}'
         @rem ${{ steps.cp312.outputs.python-path }} -m pip install virtualenv
         python -m pip install virtualenv
@@ -170,7 +174,7 @@ jobs:
         python -m venv %PY_VENV_PATH%
         call %PY_VENV_PATH%\Scripts\activate
         @rem set pythonLocation=%PY_VENV_PATH%&& set Python_ROOT_DIR=%PY_VENV_PATH%&& set ^
-            Python2_ROOT_DIR=%PY_VENV_PATH%&& set Python3_ROOT_DIR=%PY_VENV_PATH%
+        @rem    Python2_ROOT_DIR=%PY_VENV_PATH%&& set Python3_ROOT_DIR=%PY_VENV_PATH%
         python -c "import sys;print(sys.path)"
         echo PY_VENV_PATH=%PY_VENV_PATH%>> %GITHUB_ENV%
         @rem echo PATH=%PATH%>> %GITHUB_ENV%
