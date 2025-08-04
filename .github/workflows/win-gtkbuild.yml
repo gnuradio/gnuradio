@@ -234,7 +234,7 @@ jobs:
         call set fps_MSYS2_DIR=%%GHCUP_MSYS2:\=/%%
         set fps_MSYS2_DIR
         echo fps_MSYS2_DIR=%fps_MSYS2_DIR%>> %GITHUB_ENV%
-        set MSYSTEM=UCRT64
+        @rem set MSYSTEM=UCRT64
         @rem echo MSYSTEM=%MSYSTEM%>> %GITHUB_ENV%
         @echo Defining a number of environment variables pointing to future locations
         @echo redefining gtk_build_dir from %gtk_build_dir% to C:\gtkbuild
@@ -268,7 +268,7 @@ jobs:
         @echo TODO does not seem to understand the MSVC 2022 can optionally compile with older --vs_ver
         @rem set gvsbuild_args=build %gtk_version% --configuration release --py-wheel --enable-gi pygobject --msys-dir %fps_MSYS2_DIR% --build-dir %gtk_build_dir%  --from-scratch --ninja-opts -j1 --vs-ver 17 --platform x64 --vs-install-path "C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools"
         set
-        set gvsbuild_args=build %gtk_version% --configuration release --py-wheel --enable-gi pygobject --msys-dir %fps_MSYS2_DIR% --build-dir %gtk_build_dir% --msbuild-opts /property:RunCodeAnalysis=false --ninja-opts -j1 --vs-ver 17 --platform x64
+        set gvsbuild_args=build %gtk_version% --configuration release --py-wheel --enable-gi pygobject --msys-dir %fps_MSYS2_DIR% --build-dir %gtk_build_dir% --vs-ver 17 --platform x64
         @echo Calling gvsbuild with arguments '%gvsbuild_args%'
         echo gvsbuild_args=%gvsbuild_args%>> %GITHUB_ENV%
     - name: Build with powershell
@@ -288,7 +288,7 @@ jobs:
         $env:LIB
         $env:INCLUDE = $env:GTK_ROOT + "\include;" + $env:GTK_ROOT + "\include\cairo;" + $env:GTK_ROOT + "\include\glib-2.0;" + $env:GTK_ROOT + "\include\gobject-introspection-1.0;" + $env:GTK_ROOT + "\lib\glib-2.0\include;" + $env:INCLUDE
         $env:INCLUDE
-        gvsbuild.exe build gtk3 --configuration release --py-wheel --enable-gi pygobject --msys-dir C:/msys64 --build-dir C:\gtkbuild --msbuild-opts /property:RunCodeAnalysis=false --ninja-opts -j1 --vs-ver 17 --platform x64 --log-single --capture-out
+        gvsbuild.exe build gtk3 --configuration release --py-wheel --enable-gi pygobject --msys-dir C:/msys64 --build-dir C:\gtkbuild --vs-ver 17 --platform x64 --log-single --capture-out
         Get-CimInstance Win32_PageFileUsage | fl *
     - name: Check logs
       if: success() || failure()
