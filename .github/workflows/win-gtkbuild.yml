@@ -285,7 +285,7 @@ jobs:
         $env:MSYSTEM
         $env:LIB = $env:GTK_ROOT + "\lib;" + $env:LIB
         $env:LIB
-        $env:INCLUDE $env:GTK_ROOT + "\include;" + $env:GTK_ROOT + "\include\cairo;" + $env:GTK_ROOT + "\include\glib-2.0;" + $env:GTK_ROOT + "\include\gobject-introspection-1.0;" + $env:GTK_ROOT + "\lib\glib-2.0\include;" + $env:INCLUDE
+        $env:INCLUDE = $env:GTK_ROOT + "\include;" + $env:GTK_ROOT + "\include\cairo;" + $env:GTK_ROOT + "\include\glib-2.0;" + $env:GTK_ROOT + "\include\gobject-introspection-1.0;" + $env:GTK_ROOT + "\lib\glib-2.0\include;" + $env:INCLUDE
         $env:INCLUDE
         gvsbuild.exe build gtk3 --configuration release --py-wheel --enable-gi --msys-dir C:/msys64 --build-dir C:\gtkbuild --msbuild-opts /property:RunCodeAnalysis=false --ninja-opts -j1 --vs-ver 17 --platform x64 --log-single --capture-out
         Get-CimInstance Win32_PageFileUsage | fl *
