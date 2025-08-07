@@ -2,5 +2,5 @@
 
 pushd "%~dp0"
 set PATH=%CD%;%CD%\..\Python@PYTHON_SHORT_VER@\Lib\site-packages\gi\gtk\bin;%PATH%
-@GEN_PY_PYTHON@ -i @mod@.py
+@GEN_PY_PYTHON@ @mod@.py
 popd
