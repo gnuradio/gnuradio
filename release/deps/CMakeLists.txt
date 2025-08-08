@@ -11,7 +11,7 @@ cmake_policy(SET CMP0135 NEW)
 option(BUILD_UHD "Build UHD Project" ON)
 option(BUILD_PORTAUDIO "Build PortAudio Project" ON)
 option(BUILD_VOLK "Build VOLK Project" ON)
-option(BUILD_GOBJECT "Build GObjectIntrospection Project" ON)
+option(BUILD_GOBJECT "Build GObjectIntrospection Project" OFF)
 
 include(utils/CheckPythonModule.cmake)
 
