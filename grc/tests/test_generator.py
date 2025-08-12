@@ -9,7 +9,9 @@ import logging
 import platform as sys_platform
 from os import path
 
+from gnuradio import gr
 from grc.core.platform import Platform
+from grc.core import Constants
 
 
 def test_generator():
@@ -51,6 +53,7 @@ def test_generator():
         name='GNU Radio Companion Compiler',
         prefs=None,
         version='0.0.0',
+        install_prefix=gr.prefix(),
     )
     log.info("Building library...")
     platform.build_library(block_paths)

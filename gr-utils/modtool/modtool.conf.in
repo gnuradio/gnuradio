@@ -3,4 +3,4 @@
 # ~/.gnuradio/config.conf
 
 [modtool]
-newmod_path = @newmoddir@
+newmod_path =
