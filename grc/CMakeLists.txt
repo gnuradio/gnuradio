@@ -109,14 +109,6 @@ if(ENABLE_GRC)
 ########################################################################
 # Create and install the grc and grc-docs conf file
 ########################################################################
-file(TO_NATIVE_PATH ${CMAKE_INSTALL_PREFIX}/${GRC_BLOCKS_DIR} blocksdir)
-file(TO_NATIVE_PATH ${CMAKE_INSTALL_PREFIX}/${GRC_EXAMPLES_DIR} examplesdir)
-if(CMAKE_INSTALL_PREFIX STREQUAL "/usr")
-    # linux binary installs: append blocks and examples dir with prefix /usr/local
-    set(blocksdir ${blocksdir}:/usr/local/${GRC_BLOCKS_DIR})
-    set(examplesdir ${examplesdir}:/usr/local/${GRC_EXAMPLES_DIR})
-endif(CMAKE_INSTALL_PREFIX STREQUAL "/usr")
-
 if(UNIX)
     find_program(GRC_XTERM_EXE
         NAMES x-terminal-emulator gnome-terminal konsole xfce4-terminal urxvt xterm foot
@@ -148,6 +140,30 @@ configure_file(
 install(
     FILES ${CMAKE_CURRENT_BINARY_DIR}/00-grc-docs.conf
     DESTINATION ${GR_PREFSDIR_relative_to_prefix}
+)
+
+########################################################################
+# Configure Python files that need variable substitution.
+# Copy the generated file to source directory for development/testing.
+########################################################################
+configure_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/core/Constants.py.in
+    ${CMAKE_CURRENT_BINARY_DIR}/core/Constants.py
+@ONLY)
+
+# Copy the generated file to source directory for development/testing
+add_custom_command(
+    OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/core/Constants.py
+    DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/core/Constants.py
+    COMMAND ${CMAKE_COMMAND} -E copy
+        ${CMAKE_CURRENT_BINARY_DIR}/core/Constants.py
+        ${CMAKE_CURRENT_SOURCE_DIR}/core/Constants.py
+    COMMENT "Copying generated Constants.py to source directory"
+)
+
+# Create a target to ensure the copy happens
+add_custom_target(copy_constants_to_source ALL
+    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/core/Constants.py
 )
 
 ########################################################################

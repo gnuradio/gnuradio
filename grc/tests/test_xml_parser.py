@@ -8,6 +8,7 @@ from os import path
 import sys
 
 from grc.converter import flow_graph
+from grc.core import Constants
 
 
 def test_flow_graph_converter():
