@@ -14,7 +14,7 @@ set(__INCLUDED_GR_BOOST_CMAKE TRUE)
 # Setup Boost and handle some system specific things
 ########################################################################
 
-set(BOOST_REQUIRED_COMPONENTS date_time program_options system regex thread)
+set(BOOST_REQUIRED_COMPONENTS date_time program_options regex thread)
 
 if(UNIX
    AND NOT BOOST_ROOT
