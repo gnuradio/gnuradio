@@ -109,14 +109,6 @@ if(ENABLE_GRC)
 ########################################################################
 # Create and install the grc and grc-docs conf file
 ########################################################################
-file(TO_NATIVE_PATH ${CMAKE_INSTALL_PREFIX}/${GRC_BLOCKS_DIR} blocksdir)
-file(TO_NATIVE_PATH ${CMAKE_INSTALL_PREFIX}/${GRC_EXAMPLES_DIR} examplesdir)
-if(CMAKE_INSTALL_PREFIX STREQUAL "/usr")
-    # linux binary installs: append blocks and examples dir with prefix /usr/local
-    set(blocksdir ${blocksdir}:/usr/local/${GRC_BLOCKS_DIR})
-    set(examplesdir ${examplesdir}:/usr/local/${GRC_EXAMPLES_DIR})
-endif(CMAKE_INSTALL_PREFIX STREQUAL "/usr")
-
 if(UNIX)
     find_program(GRC_XTERM_EXE
         NAMES x-terminal-emulator gnome-terminal konsole xfce4-terminal urxvt xterm foot
