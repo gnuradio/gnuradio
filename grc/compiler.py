@@ -40,7 +40,8 @@ def main(args=None):
         prefs=gr.prefs(),
         version=gr.version(),
         version_parts=(gr.major_version(),
-                       gr.api_version(), gr.minor_version())
+                       gr.api_version(), gr.minor_version()),
+        install_prefix=gr.prefix(),
     )
     platform.build_library()
 
