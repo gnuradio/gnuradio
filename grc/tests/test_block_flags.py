@@ -1,5 +1,6 @@
 
 from grc.core.blocks._flags import Flags
+from grc.core import Constants
 
 
 def test_simple_init():

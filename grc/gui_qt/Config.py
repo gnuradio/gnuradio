@@ -12,9 +12,8 @@ class Config(CoreConfig):
 
     gui_prefs_file = os.environ.get('GRC_QT_PREFS_PATH', get_config_file_path('grc_qt.conf'))
 
-    def __init__(self, install_prefix, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         CoreConfig.__init__(self, *args, **kwargs)
-        self.install_prefix = install_prefix
         self.qsettings = QtCore.QSettings(self.gui_prefs_file, QtCore.QSettings.IniFormat)
 
     @property
