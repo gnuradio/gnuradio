@@ -333,16 +333,12 @@ jobs:
         call set fps_MSYS2_DIR=%%GHCUP_MSYS2:\=/%%
         set fps_MSYS2_DIR
         echo fps_MSYS2_DIR=%fps_MSYS2_DIR%>> %GITHUB_ENV%
-        @echo Make sure variable MSYSTEM is not defined. Current value is '%MSYSTEM%
+        @echo Make sure variable MSYSTEM is not defined. Current value is '%MSYSTEM%'
         set MSYSTEM=
         @echo New value is '%MSYSTEM%'
-        @rem echo MSYSTEM=%MSYSTEM%>> %GITHUB_ENV%
-        @echo Defining a number of environment variables pointing to future locations
-        @echo redefining gtk_build_dir from %gtk_build_dir% to C:\gtkbuild
-        set gtk_build_dir=%SystemDrive%\gtkbuild
         mkdir %gtk_build_dir%
         echo gtk_build_dir=%gtk_build_dir%>> %GITHUB_ENV%
-        echo GTK_BUILD_PATH=%gtk_build_dir%>> %GITHUB_ENV%
+        @echo Defining a number of environment variables pointing to future locations
         set GTK_ROOT=%gtk_build_dir%\gtk\x64\release
         echo GTK_ROOT=%GTK_ROOT%>> %GITHUB_ENV%
         set INCLUDE=%GTK_ROOT%\include;%GTK_ROOT%\include\cairo;%GTK_ROOT%\include\glib-2.0;%GTK_ROOT%\include\gobject-introspection-1.0;%GTK_ROOT%\lib\glib-2.0\include;%INCLUDE%
