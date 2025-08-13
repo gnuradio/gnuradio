@@ -59,7 +59,7 @@ jobs:
   build-windows:
     # All of these shall depend on the formatting check (needs: check-formatting)
     needs: [check-hashes, check-formatting, check-python-formatting]
-    runs-on: windows-latest
+    runs-on: windows-2022
     name: Windows Installer (cmake with msbuild)
     defaults:
       run:
@@ -72,10 +72,12 @@ jobs:
       env:
         TEST_VAR: '%PROGRAMFILES%\GNU Radio'
       run: |
-        set TEST_VAR2=%PROGRAMFILES\GNU Radio
+        call set TEST_VAR0=%TEST_VAR%
         call set TEST_VAR1=%%TEST_VAR%%
+        call set TEST_VAR2=%TEST_VAR1%
         set
         echo TEST_VAR1=%TEST_VAR1%>> %GITHUB_ENV%
+        echo TEST_VAR0=%TEST_VAR0%>> %GITHUB_ENV%
         dir %SystemDrive%
     - name: Check environment
       run: |
@@ -88,6 +90,7 @@ jobs:
         pipx list
         @echo DEBUG: MSVC via PATH environment variable
         "%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe" -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64
+        "%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe" -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath
         @echo DEBUG: Chocolatey via PATH environment variable
         set ChocolateyInstall
         choco list
@@ -95,7 +98,6 @@ jobs:
         dir %RUNNER_TOOL_CACHE%\Python
         @echo DEBUG: Check for installed Python versions
         py -0
-        @echo DEBUG: NSIS via PATH environment variable
 # VS 2022 Enterprise with Microsoft.VisualStudio.Component.VC.Tools.x86.x64 is already included
 # https://github.com/actions/runner-images/blob/main/images/windows/Windows2022-Readme.md
 #    - name: Download and install msbuild
@@ -147,7 +149,7 @@ jobs:
       run: |
         set
         where msbuild
-        #set msbuild_vcvars64=C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Auxiliary\Build\vcvars64.bat
+        @rem set msbuild_vcvars64=C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Auxiliary\Build\vcvars64.bat
         set msbuild_vcvars64=C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat
         if NOT EXIST "%msbuild_vcvars64%" (^
            echo ERROR: Could not locate 'vcvars64' batch file at "%msbuild_vcvars64%". This script is intended to be run from a build machine & exit /B 1)
@@ -163,8 +165,21 @@ jobs:
         set VSINSTALLDIR
         echo VSINSTALLDIR1=%VSINSTALLDIR%>> %GITHUB_ENV%
         echo for /f "usebackq tokens=*" %%i in (`"C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe" -version "[17.0, 18.0)" -requires Microsoft.VisualStudio.Workload.VCTools -property installationPath -products *`)
-        call "C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe" -requires Microsoft.VisualStudio.Workload.VCTools -property installationPath -products *
-        for /f "usebackq tokens=*" %%i in (`call "C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe" -requires Microsoft.VisualStudio.Workload.VCTools -property installationPath -products *`) do (set test=%%i)
+        set vswhere_args=-requires Microsoft.VisualStudio.Workload.VCTools -property installationPath -products *
+        call "C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe" %vswhere_args%
+        for /f "usebackq tokens=*" %%i in (`call "C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe" %vswhere_args%`) do (set test=%%i)
+        echo '%test%'
+        set vswhere_args=-requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath -products *
+        call "C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe" %vswhere_args%
+        for /f "usebackq tokens=*" %%i in (`call "C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe" %vswhere_args%`) do (set test=%%i)
+        echo '%test%'
+        set vswhere_args=-requires Microsoft.VisualStudio.ComponentGroup.VC.Tools.142.x86.x64 -property installationPath -products *
+        call "C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe" %vswhere_args%
+        for /f "usebackq tokens=*" %%i in (`call "C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe" %vswhere_args%`) do (set test=%%i)
+        echo '%test%'
+        set vswhere_args=-requires Microsoft.VisualStudio.Component.VC.v141.x86.x64 -property installationPath -products *
+        call "C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe" %vswhere_args%
+        for /f "usebackq tokens=*" %%i in (`call "C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe" %vswhere_args%`) do (set test=%%i)
         echo '%test%'
         dir c:
         dir d:
@@ -203,15 +218,15 @@ jobs:
       env:
         PY_VENV_PATH: ${{ runner.workspace }}\py_venv
       run: | 
-        set PY_PYTHON=3.12
-        set PY_PYTHON3=3.12
+        @rem set PY_PYTHON=3.12
+        @rem set PY_PYTHON3=3.12
         py -0
-        echo PY_PYTHON=%PY_PYTHON%>> %GITHUB_ENV%
-        echo PY_PYTHON3=%PY_PYTHON%>> %GITHUB_ENV%
+        @rem echo PY_PYTHON=%PY_PYTHON%>> %GITHUB_ENV%
+        @rem echo PY_PYTHON3=%PY_PYTHON%>> %GITHUB_ENV%
         @rem echo '${{ steps.cp312.outputs.python-version }}'
         @rem ${{ steps.cp312.outputs.python-path }} -m pip install virtualenv
         py -3.12 -m pip install virtualenv
-        $rem {{ steps.cp312.outputs.python-path }} -m venv %PY_VENV_PATH%
+        @rem {{ steps.cp312.outputs.python-path }} -m venv %PY_VENV_PATH%
         py -3.12 -m venv %PY_VENV_PATH%
         call %PY_VENV_PATH%\Scripts\activate
         python -V
