@@ -12,7 +12,6 @@ from os import path
 import tempfile
 
 from grc.compiler import main
-from grc.core import Constants
 
 
 def test_cpp(capsys):
