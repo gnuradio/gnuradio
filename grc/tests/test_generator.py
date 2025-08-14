@@ -11,7 +11,6 @@ from os import path
 
 from gnuradio import gr
 from grc.core.platform import Platform
-from grc.core import Constants
 
 
 def test_generator():

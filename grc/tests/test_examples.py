@@ -11,7 +11,6 @@ try:
     os.mkdir(path.join(path.dirname(__file__), 'resources/tests'))
 except FileExistsError:
     pass
-from grc.core import Constants
 
 # Gather blocks
 BLOCK_PATHS = []
