@@ -430,11 +430,63 @@ function(GR_PYTHON_INSTALL)
             get_filename_component(pyfile_name ${pyfile} NAME)
             get_filename_component(pyfile ${pyfile} ABSOLUTE)
             string(REPLACE "${PROJECT_SOURCE_DIR}" "${PROJECT_BINARY_DIR}" pyexefile
-                           "${pyfile}.exe")
+                           "${pyfile}.py")
             list(APPEND python_install_gen_targets ${pyexefile})
 
             get_filename_component(pyexefile_path ${pyexefile} PATH)
             file(MAKE_DIRECTORY ${pyexefile_path})
+
+            if(WIN32)
+                # check the python file to see if we should wrap it
+                execute_process(
+                    COMMAND ${PYTHON_EXECUTABLE} -c
+                    "import sys;
+from pip._vendor.distlib.scripts import FIRST_LINE_RE;
+f = open('${pyfile}', 'rb');
+first_line = f.readline();
+f.close();
+match = FIRST_LINE_RE.match(first_line.replace(b'\\r\\n', b'\\n'));
+sys.exit(0 if match else 1)"
+                    RESULT_VARIABLE pyfile_dont_wrap
+                    OUTPUT_QUIET
+                )
+                if(NOT pyfile_dont_wrap)
+                    # pyfile_dont_wrap is a 0 if we should wrap, 1 if we shouldn't
+                    # generate script wrapper exe and install
+                    get_filename_component(pyfile_dir ${pyfile} DIRECTORY)
+                    string(REPLACE "${CMAKE_SOURCE_DIR}" "${CMAKE_BINARY_DIR}" pywrapperfile_dir ${pyfile_dir})
+                    string(REGEX REPLACE "\.py$" "" pywrapperfile_name "${pyfile_name}")
+                    set(pywrapperfile_name "${pywrapperfile_name}.exe")
+                    set(pywrapperfile "${pywrapperfile_dir}/${pywrapperfile_name}")
+                    list(APPEND python_install_gen_targets ${pywrapperfile})
+
+                    # For Windows wrappers, we need a proper relative path to the Python executable
+                    if(GR_BUILD_INSTALLER)
+                        set(wrapper_python_path "../${REL_PYTHON_INSTALL_PATH}/python.exe")
+                    else()
+                        # For development builds, calculate relative path from bin to Python executable
+                        file(RELATIVE_PATH wrapper_python_path
+                             "${CMAKE_INSTALL_PREFIX}/${GR_PYTHON_INSTALL_DESTINATION}"
+                             "${PYTHON_EXECUTABLE}")
+                        set(wrapper_python_path "${wrapper_python_path}")
+                    endif()
+
+                    add_custom_command(
+                        OUTPUT ${pywrapperfile} DEPENDS ${pyfile}
+                        COMMAND ${PYTHON_EXECUTABLE} -c
+                        "from pip._vendor.distlib.scripts import ScriptMaker;
+maker = ScriptMaker('${pyfile_dir}', '${pywrapperfile_dir}', add_launchers=True);
+maker.executable = '${wrapper_python_path}';
+maker.make('${pyfile_name}')";
+                        COMMENT "Wrapping ${pyfile_name}"
+                        VERBATIM
+                    )
+
+                    install(PROGRAMS ${pywrapperfile}
+                        DESTINATION ${GR_PYTHON_INSTALL_DESTINATION}
+                    )
+                endif()
+            endif()
 
             add_custom_command(
                 OUTPUT ${pyexefile}

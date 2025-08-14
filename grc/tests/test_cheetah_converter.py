@@ -2,7 +2,6 @@
 
 import functools
 import grc.converter.cheetah_converter as parser
-from grc.core import Constants
 
 
 def test_basic():
