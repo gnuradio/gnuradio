@@ -542,6 +542,9 @@ jobs:
         set GR_INSTALL_DIR=%PROGRAMFILES%\GNU Radio
         echo GR_INSTALL_DIR=%GR_INSTALL_DIR%>> %GITHUB_ENV%
         dir
+        set UHD_DIR=%CD%\deps\uhd
+        @echo Defining the environment variable UHD_DIR to allow UHDConfig.cmake
+        @echo to detected the local UHD prefix at %UHD_DIR%
         set _working=%CD%
         cd gnuradio
         mkdir build
