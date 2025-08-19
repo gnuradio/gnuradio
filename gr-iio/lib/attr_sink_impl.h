@@ -12,10 +12,14 @@
 
 #include "device_source_impl.h"
 #include <gnuradio/iio/attr_sink.h>
-#include <iio.h>
 #include <pmt/pmt.h>
-
 #include <string>
+
+#ifdef LIBIIO_V1
+#include <iio/iio.h>
+#else
+#include <iio.h>
+#endif
 
 namespace gr {
 namespace iio {
