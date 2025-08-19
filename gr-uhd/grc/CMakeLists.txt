@@ -74,6 +74,7 @@ if(ENABLE_UHD_RFNOC)
         uhd_fpga_split_stream.block.yml
         uhd_fpga_switchboard.block.yml
         uhd_fpga_vector_iir.block.yml
+        uhd_fpga_logpwr.block.yml
         # GRC Bindings for RFNoC Image Builder files (domains)
         uhd_fpga_clk.domain.yml
         uhd_fpga_ctrl.domain.yml
