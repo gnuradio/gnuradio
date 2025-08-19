@@ -32,6 +32,7 @@
       - uhd_fpga_switchboard
       - uhd_fpga_vector
       - uhd_fpga_fir_filter
+      - uhd_fpga_logpwr
     - Core:
       - uhd_fpga_sep
       - uhd_fpga_device_bsp
