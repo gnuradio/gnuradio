@@ -21,6 +21,7 @@
     - variable_qtgui_check_box
     - variable_qtgui_push_button
     - variable_qtgui_entry
+    - variable_qtgui_numeric_entry
     - variable_qtgui_label
     - qtgui_edit_box_msg
     - qtgui_auto_correlator_sink
