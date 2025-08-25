@@ -67,8 +67,8 @@ VIAddVersionKey /LANG=0 \\\"FileVersion\\\" \\\"${CPACK_PACKAGE_VERSION_MAJOR}.$
   #Variables starting with '$' but do not use {} are expanded by NSIS at build time.
   #Variables starting with '$' and using {} are expanded by CMAKE during generation
   #of CPackSourceConfig.cmake
-  set(CPACK_NSIS_DELETE_ICONS_EXTRA
-    "${CPACK_NSIS_DELETE_ICONS_EXTRA}
+  set(CPACK_NSIS_CREATE_ICONS_EXTRA
+    "${CPACK_NSIS_CREATE_ICONS_EXTRA}
      CreateShortCut \\\"\$SMPROGRAMS\\\\\$STARTMENU_FOLDER\\\\\$STARTMENU_FOLDER2.lnk\\\" \\\"\$INSTDIR\\\\grc.exe\\\"
      CreateShortCut \\\"\$SMPROGRAMS\\\\\$STARTMENU_FOLDER\\\\GNU Radio Documentation2.lnk\\\" \\\"https://wiki.gnuradio.org/\\\"
      CreateShortCut \\\"\$SMPROGRAMS\\\\\$STARTMENU_FOLDER\\\\GNU Radio Web Site2.lnk\\\" \\\"https://gnuradio.org\\\""
