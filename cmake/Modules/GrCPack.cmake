@@ -6,14 +6,23 @@ set(GNURadio_SOURCE_DIR ${PROJECT_SOURCE_DIR})
 set(GNURadio_BINARY_DIR ${CMAKE_BINARY_DIR})
 
 set(CPACK_PACKAGE_NAME "GNU Radio")
-set(CPACK_PACKAGE_VERSION_MAJOR ${GNURadio_VERSION_MAJOR})
-set(CPACK_PACKAGE_VERSION_MINOR ${GNURadio_VERSION_MINOR})
-set(CPACK_PACKAGE_VERSION_PATCH ${GNURadio_VERSION_PATCH})
-set(CPACK_PACKAGE_VERSION ${GNURadio_VERSION})
+# Need to define CMAKE_PROJECT_VERSION_* variables. If they are not defined, 
+# then CPACK_PACKAGE_VERSION_* will follow the CMAKE_PROJECT_VERSION_* defaults.
+set(CMAKE_PROJECT_VERSION_MAJOR ${GR_VERSION_MAJOR})
+set(CPACK_PACKAGE_VERSION_MAJOR ${CMAKE_PROJECT_VERSION_MAJOR})
+set(CMAKE_PROJECT_VERSION_MINOR ${GR_VERSION_API})
+set(CPACK_PACKAGE_VERSION_MINOR ${CMAKE_PROJECT_VERSION_MINOR})
+set(CMAKE_PROJECT_VERSION_PATCH ${GR_VERSION_MINOR})
+set(CPACK_PACKAGE_VERSION_PATCH ${CMAKE_PROJECT_VERSION_PATCH})
+#set(CPACK_PACKAGE_VERSION ${GNURadio_VERSION})
+message(STATUS "DEBUG --- GR Version ${VERSION}, Dock Version ${DOCVER}, Lib Version ${LIBVER}")
+set(CPACK_PACKAGE_VERSION ${VERSION})
 set(CPACK_PACKAGE_INSTALL_DIRECTORY "GNU Radio")
 set(CPACK_PACKAGE_VENDOR "https://www.gnuradio.org/")
 set(CPACK_PACKAGE_DESCRIPTION
   "the Free and Open Software Radio Ecosystem")
+string(TIMESTAMP CURRENT_YEAR "%Y")
+set(CPACK_PACKAGE_COPYRIGHT           "Copyright © 2009-${CURRENT_YEAR} Free Software Foundation, Inc.")
 
 if(APPLE)
   set(CPACK_PACKAGE_ICON
@@ -33,6 +42,43 @@ if(WIN32)
     "${CMAKE_SOURCE_DIR}/release/resources/icons/gnuradio_logo_icon-square.ico"
   )
   set(GR_RELEASE_ICON_DIR "${CMAKE_SOURCE_DIR}/release/resources/icons")
+
+  # settiing the CPACK_NSIS_DEFINES variable does not seem to work
+  # (is included in CPackConfig.cmake but does not make it to project.nsi)
+  set(CPACK_NSIS_DEFINES "FOOOOOOO" FORCE)
+
+  # misusing CPACK_NSIS_BRANDING_TEXT_CODE to define the version info for the installer binary.
+  #set(CPACK_NSIS_MANIFEST_DPI_AWARE_CODE
+  #"${CPACK_NSIS_MANIFEST_DPI_AWARE_CODE}
+  set(CPACK_NSIS_BRANDING_TEXT_CODE
+    "${CPACK_NSIS_BRANDING_TEXT_CODE}
+VIProductVersion ${CPACK_PACKAGE_VERSION_MAJOR}.${GR_VERSION_API}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH}
+VIFileVersion ${CPACK_PACKAGE_VERSION_MAJOR}.${GR_VERSION_API}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH}
+VIAddVersionKey /LANG=0 \\\"ProductName\\\" \\\"${CPACK_PACKAGE_NAME}\\\"
+VIAddVersionKey /LANG=0 \\\"ProductVersion\\\" \\\"${VERSION}\\\"
+VIAddVersionKey /LANG=0 \\\"Comments\\\" \\\"${CPACK_PACKAGE_DESCRIPTION}\\\"
+VIAddVersionKey /LANG=0 \\\"CompanyName\\\" \\\"${CPACK_PACKAGE_VENDOR}\\\"
+VIAddVersionKey /LANG=0 \\\"LegalCopyright\\\" \\\"${CPACK_PACKAGE_COPYRIGHT}\\\"
+VIAddVersionKey /LANG=0 \\\"FileDescription\\\" \\\"${CPACK_PACKAGE_NAME} Installer\\\"
+VIAddVersionKey /LANG=0 \\\"FileVersion\\\" \\\"${CPACK_PACKAGE_VERSION_MAJOR}.${GR_VERSION_API}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH}\\\""
+)
+
+  #CPACK_PACKAGE_INSTALL_DIRECTORY -- Variable not defined
+  #Variables starting with '$' but do not use {} are expanded by NSIS at build time.
+  #Variables starting with '$' and using {} are expanded by CMAKE during generation
+  #of CPackSourceConfig.cmake
+  set(CPACK_NSIS_DELETE_ICONS_EXTRA
+    "${CPACK_NSIS_DELETE_ICONS_EXTRA}
+     CreateShortCut \\\"\$SMPROGRAMS\\\\\$STARTMENU_FOLDER\\\\\$STARTMENU_FOLDER2.lnk\\\" \\\"\$INSTDIR\\\\grc.exe\\\"
+     CreateShortCut \\\"\$SMPROGRAMS\\\\\$STARTMENU_FOLDER\\\\GNU Radio Documentation2.lnk\\\" \\\"https://wiki.gnuradio.org/\\\"
+     CreateShortCut \\\"\$SMPROGRAMS\\\\\$STARTMENU_FOLDER\\\\GNU Radio Web Site2.lnk\\\" \\\"https://gnuradio.org\\\""
+  )
+  set(CPACK_NSIS_DELETE_ICONS_EXTRA
+    "${CPACK_NSIS_DELETE_ICONS_EXTRA}
+      Delete \\\"\$SMPROGRAMS\\\\\$STARTMENU_FOLDER\\\\\$STARTMENU_FOLDER2.lnk\\\"
+      Delete \\\"\$SMPROGRAMS\\\\\$STARTMENU_FOLDER\\\\GNU Radio Documentation2.lnk\\\""
+  )
+
 endif()
 
 file(COPY_FILE COPYING ${CMAKE_BINARY_DIR}/COPYING${COPYING_EXT})
@@ -52,6 +98,9 @@ set(CPACK_PROJECT_CONFIG_FILE
 include(${PROJECT_SOURCE_DIR}/cmake/Modules/BundlePythonDeps.cmake)
 
 include(CPack)
+
+# Test, but CPACK defines after 'include(CPack)' should be ignored anyway.
+set(CPACK_NSIS_DEFINES "${CPACK_NSIS_DEFINES} \\\"FOOOOOO2\\\"")
 
 foreach(component ${_gr_enabled_components})
   GR_CONFIGURE_INSTALLER_COMPONENT(${component})
