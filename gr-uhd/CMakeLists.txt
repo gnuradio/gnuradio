@@ -87,4 +87,36 @@ if(ENABLE_GR_UHD)
     install(FILES ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-uhd.pc
             DESTINATION ${GR_LIBRARY_DIR}/pkgconfig)
 
+    ########################################################################
+
+    if(WIN32 AND GR_BUILD_INSTALLER)
+       REGISTER_EXTERNAL_PYTHON_COMPONENT(uhd)
+       # register python dependencies of in order to run uhd_images_downloader.py
+       REGISTER_EXTERNAL_PYTHON_COMPONENT(certifi)
+       REGISTER_EXTERNAL_PYTHON_COMPONENT(charset_normalizer)
+       REGISTER_EXTERNAL_PYTHON_COMPONENT(idna)
+       REGISTER_EXTERNAL_PYTHON_COMPONENT(urllib3)
+       REGISTER_EXTERNAL_PYTHON_COMPONENT(requests)
+
+       # consider authoring a CPACK_EXTRA_INSTALL_COMMAND to define UHD_PKG_PATH environment variable
+
+        file(GLOB_RECURSE _uhd_programs "${UHD_BASE_PATH}/bin/*.exe")
+        foreach(exe ${_uhd_programs})
+            install(FILES ${exe}
+                    DESTINATION ${GR_RUNTIME_DIR}
+                    COMPONENT gr_uhd_DEPS
+            )
+        endforeach(exe)
+
+        # GR_PYTHON_INSTALL(
+        #     PROGRAMS ${UHD_BASE_PATH}/lib/uhd/utils/uhd_images_downloader.py
+        #     DESTINATION ${GR_RUNTIME_DIR}
+        # )
+        install(FILES ${UHD_BASE_PATH}/lib/uhd/utils/uhd_images_downloader.py
+                DESTINATION ${GR_RUNTIME_DIR}
+                COMPONENT gr_uhd_DEPS
+        )
+
+    endif(WIN32 AND GR_BUILD_INSTALLER)
+
 endif(ENABLE_GR_UHD)
