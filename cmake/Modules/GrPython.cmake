@@ -511,6 +511,10 @@ maker.make('${pyfile_name}')";
         endforeach(pyfile)
 
         gr_unique_target("pygen" ${python_install_gen_targets})
+        
+        if(WIN32)
+            gen_py_gr_prompt()
+        endif()
 
     endif()
 
@@ -529,6 +533,18 @@ for src, gen in zip(srcs, gens):
     py_compile.compile(file=src, cfile=gen, doraise=True)
 ")
 
+function(gen_py_gr_prompt)
+    message(STATUS "Creating install rules for gnuradio-prompt.bat")
+    configure_file(
+        ${CMAKE_SOURCE_DIR}/release/resources/py_prompt.bat.in
+        ${CMAKE_BINARY_DIR}/gnuradio-prompt.bat
+        @ONLY
+    )
+    install(PROGRAMS
+        ${CMAKE_BINARY_DIR}/gnuradio-prompt.bat
+        DESTINATION ${GR_RUNTIME_DIR}
+    )
+endfunction()
 
 function(gen_py_launcher)
     set(MULTI_ARGS MODULES)
