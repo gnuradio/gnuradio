@@ -3,17 +3,22 @@
 if(APPLE)
   set(py_minor_patch 11.4)
 elseif(WIN32)
-  set(py_minor_patch 12.0)
+  set(py_minor_patch 12.10)
 else()
-  set(py_minor_patch 12.0)
+  set(py_minor_patch 12.10)
 endif()
 set(PYTHON_VERSION "3.${py_minor_patch}" CACHE STRING "Version of Python to build." FORCE)
-set(PY_DOWNLOAD_LINK "https://www.paraview.org/files/dependencies/python-for-wheels/")
+# Use official Python.org full distribution for Windows (includes tkinter and full standard library)
+# Keep ParaView distribution for other platforms
 set(PYTHON_DIR "Python-${PYTHON_VERSION}")
 if(WIN32)
-  set(PY_FILENAME "python-${PYTHON_VERSION}-windows-x86_64.zip")
-  set(PYTHON_PLAT_EXT "-windows-x86_64")
+  # Use Python.org full distribution (includes tkinter, pip, complete standard library)
+  set(PY_DOWNLOAD_LINK "https://www.python.org/ftp/python/${PYTHON_VERSION}/")
+  set(PY_FILENAME "python-${PYTHON_VERSION}-amd64.zip")
+  set(PYTHON_PLAT_EXT "-amd64")
 elseif(APPLE)
+  # Keep using Paraview's python build
+  set(PY_DOWNLOAD_LINK "https://www.paraview.org/files/dependencies/python-for-wheels/")
   # This says arm64, but the bianry bundled is a macosx universal binary
   # so this will run on x86_64 as well
   set(PY_FILENAME "python-${PYTHON_VERSION}-macos-arm64.tar.xz")
@@ -23,7 +28,7 @@ endif()
 if(APPLE)
   set(PY_DOWNLOAD_HASH fdb882b53b18675811ca04ad6f5279a586f6f705abd6971c7732c49d214e91b9)
 elseif(WIN32)
-  set(PY_DOWNLOAD_HASH 782f1b9db7e8ff78c928ea94861549820c8abc70cde76a3dfb7ef9e54a06e326)
+  set(PY_DOWNLOAD_HASH 8649692DE846C56A7189D6DAE5C322AB20DEB1B5908B6F39426B62A36F39415D)
 endif()
 # download python
 file(DOWNLOAD "${PY_DOWNLOAD_LINK}/${PY_FILENAME}"
@@ -39,10 +44,20 @@ endif()
 message(STATUS "Successfully downloaded ${PY_FILENAME}")
 
 # extract
-execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz
-  "${CMAKE_CURRENT_BINARY_DIR}/${PY_FILENAME}"
-  WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
-  RESULT_VARIABLE res)
+if(WIN32)
+  # Python.org full distribution extracts files directly, so create target directory first
+  file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/${PYTHON_DIR}${PYTHON_PLAT_EXT}")
+  execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz
+    "${CMAKE_CURRENT_BINARY_DIR}/${PY_FILENAME}"
+    WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/${PYTHON_DIR}${PYTHON_PLAT_EXT}"
+    RESULT_VARIABLE res)
+else()
+  # ParaView distributions create their own subdirectory structure
+  execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz
+    "${CMAKE_CURRENT_BINARY_DIR}/${PY_FILENAME}"
+    WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
+    RESULT_VARIABLE res)
+endif()
 if(NOT res EQUAL 0)
 message(FATAL_ERROR "Extraction of ${PY_FILENAME} failed.")
 endif()
