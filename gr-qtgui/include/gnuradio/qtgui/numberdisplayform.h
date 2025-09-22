@@ -26,10 +26,13 @@ class NumberDisplayForm : public QWidget
     Q_OBJECT
 
 public:
+    enum DisplayFormat { FORMAT_FLOAT, FORMAT_INT };
+
     NumberDisplayForm(int nplots = 1,
                       gr::qtgui::graph_t type = gr::qtgui::NUM_GRAPH_HORIZ,
                       QWidget* parent = 0);
     ~NumberDisplayForm() override;
+    void set_display_format(DisplayFormat format);
 
     gr::qtgui::graph_t graphType() const;
     QColor colorMin(unsigned int which) const;
@@ -70,6 +73,7 @@ private slots:
     void newData(const QEvent*);
 
 private:
+    DisplayFormat d_format;
     unsigned int d_nplots;
     QGridLayout* d_layout;
     std::vector<QLabel*> d_label;
