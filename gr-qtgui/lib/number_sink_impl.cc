@@ -83,6 +83,15 @@ void number_sink_impl::initialize()
     }
 
     d_main_gui = new NumberDisplayForm(d_nconnections, d_type, d_parent);
+    switch (d_itemsize) {
+    case sizeof(char):
+    case sizeof(short):
+        d_main_gui->set_display_format(NumberDisplayForm::FORMAT_INT);
+        break;
+    default:
+        d_main_gui->set_display_format(NumberDisplayForm::FORMAT_FLOAT);
+        break;
+    }
     d_main_gui->setAverage(d_average);
 
     // initialize update time to 10 times a second
