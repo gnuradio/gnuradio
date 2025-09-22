@@ -49,10 +49,7 @@ FLOWGRAPH_EDGE_COLOR = COMMENT_BACKGROUND_COLOR
 # Block color constants
 BLOCK_ENABLED_COLOR = get_color('#F1ECFF')
 BLOCK_DISABLED_COLOR = get_color('#CCCCCC')
-# Changed from yellow to a neutral blue-gray to avoid confusion with
-# the error (red) and deprecated (orange) block states.
-# See issue #7914.
-BLOCK_BYPASSED_COLOR = get_color('#b0c4de') # Light Steel Blue
+BLOCK_BYPASSED_COLOR = get_color('#b0c4de')  # Light Steel Blue
 
 # Connection color constants
 CONNECTION_ENABLED_COLOR = get_color('#000000')
