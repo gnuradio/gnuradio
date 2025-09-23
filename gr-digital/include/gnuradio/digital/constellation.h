@@ -217,21 +217,19 @@ protected:
     unsigned int d_arity;
     //! The factor by which the user given constellation points were
     //! scaled by to achieve an average amplitude of 1.
-    float d_scalefactor, d_maxamp;
-    float d_re_min, d_re_max, d_im_min, d_im_max;
+    float d_scalefactor;
+    float d_maxamp;
 
     std::vector<std::vector<float>> d_soft_dec_lut;
     int d_lut_precision;
-    float d_lut_scale;
     float d_npwr;
-    float d_padding;
+    float d_lut_padding;
     bool d_use_external_lut;
 
     float get_distance(unsigned int index, const gr_complex* sample);
     unsigned int get_closest_point(const gr_complex* sample);
     void calc_arity();
-
-    void max_min_axes();
+    void calc_max_amp();
 };
 
 /************************************************************/
