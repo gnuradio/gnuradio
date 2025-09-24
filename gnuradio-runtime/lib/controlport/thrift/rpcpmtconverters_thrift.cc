@@ -247,7 +247,7 @@ template <typename TO_PMT_F>
 rpcpmtconverter::to_pmt_reg<TO_PMT_F>::to_pmt_reg(To_PMT& instance,
                                                   const GNURadio::BaseTypes::type type)
 {
-    instance.to_pmt_map.emplace(type, TO_PMT_F());
+    instance.to_pmt_map.emplace(type, std::make_unique<TO_PMT_F>());
 }
 
 pmt::pmt_t rpcpmtconverter::to_pmt_f::operator()(const GNURadio::Knob& knob)
@@ -263,5 +263,5 @@ pmt::pmt_t rpcpmtconverter::to_pmt_f::operator()(const GNURadio::Knob& knob)
 
 pmt::pmt_t rpcpmtconverter::To_PMT::operator()(const GNURadio::Knob& knob)
 {
-    return to_pmt_map[knob.type](knob);
+    return (*to_pmt_map[knob.type])(knob);
 }

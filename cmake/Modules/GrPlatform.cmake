@@ -41,7 +41,7 @@ endif()
 # Try to compute LIB_SUFFIX as best as possible
 ########################################################################
 get_property(enabled_languages GLOBAL PROPERTY ENABLED_LANGUAGES)
-if(C NOT IN_LIST enabled_languages OR CXX NOT IN_LIST enabled_languages)
+if(NOT (C IN_LIST enabled_languages OR CXX IN_LIST enabled_languages))
     message(WARNING "GrPlatform should be included after a project is defined")
 
     # Try best guess of LIB_SUFFIX

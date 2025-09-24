@@ -82,7 +82,7 @@ public:
     pmt::pmt_t operator()(const GNURadio::Knob& knob);
 
 protected:
-    std::map<GNURadio::BaseTypes::type, to_pmt_f> to_pmt_map;
+    std::map<GNURadio::BaseTypes::type, std::unique_ptr<to_pmt_f>> to_pmt_map;
 
 private:
     To_PMT() { ; }
