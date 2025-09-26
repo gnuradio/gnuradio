@@ -15,6 +15,38 @@ if(ENABLE_TESTING)
     )
 
     if(PYTEST_FOUND)
+        # Register pytest component and dependencies for 
+        # installer packaging as defined in METADATA file of pytest
+        REGISTER_EXTERNAL_PYTHON_COMPONENT(iniconfig)
+        REGISTER_EXTERNAL_PYTHON_COMPONENT(packaging)
+        REGISTER_EXTERNAL_PYTHON_COMPONENT(pluggy)
+        if(${PYTHON_VERSION_MAJOR} LESS 3 OR (${PYTHON_VERSION_MAJOR} EQUAL 3 AND ${PYTHON_VERSION_MINOR} LESS 11))
+            # Python version is less than 3.11, see METADATA
+            REGISTER_EXTERNAL_PYTHON_COMPONENT(exceptiongroup)
+            REGISTER_EXTERNAL_PYTHON_COMPONENT(tomli)
+        endif()
+        if (WIN32)
+            REGISTER_EXTERNAL_PYTHON_COMPONENT(colorama)
+        endif()
+        # the following packages are listed in METADATA of pytest, 
+        # but they are not required for pure pytest installation:
+        #REGISTER_EXTERNAL_PYTHON_COMPONENT(argcomplete)
+        #REGISTER_EXTERNAL_PYTHON_COMPONENT(hypothesis)
+        #REGISTER_EXTERNAL_PYTHON_COMPONENT(mock)
+        #REGISTER_EXTERNAL_PYTHON_COMPONENT(xmlschema)
+        # the following packages are listed in METADATA of pytest, 
+        # and required for pure pytest installation:
+        REGISTER_EXTERNAL_PYTHON_COMPONENT(attrs)
+        REGISTER_EXTERNAL_PYTHON_COMPONENT(pygments)
+        REGISTER_EXTERNAL_PYTHON_COMPONENT(requests)
+        REGISTER_EXTERNAL_PYTHON_COMPONENT(setuptools)
+        # these packages are not listed in METADATA of pytest, 
+        # but needed for a successful pytest installation:
+        REGISTER_EXTERNAL_PYTHON_COMPONENT(py)
+        REGISTER_EXTERNAL_PYTHON_COMPONENT(_pytest)
+        REGISTER_EXTERNAL_PYTHON_COMPONENT(pytest)
+        message(STATUS "pytest dependencies registered for installer packaging")
+
         execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/state)
         set(GR_TEST_ENVIRONS
             "GRC_PREFS_PATH=\"${CMAKE_CURRENT_SOURCE_DIR}\""
