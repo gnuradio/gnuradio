@@ -126,7 +126,11 @@ function(GR_ADD_TEST test_name)
         #replace list separator with the path separator (escaped)
         string(REPLACE ";" "\\;" libpath "${libpath}")
         string(REPLACE ";" "\\;" pypath "${pypath}")
-        list(APPEND environs "PATH=${libpath}" "PYTHONPATH=${pypath}")
+        # deactivate environment path settings for bundle installer builds,
+        # since we are using the install environment for bundle installer testing
+        if(NOT GR_BUILD_INSTALLER)
+            list(APPEND environs "PATH=${libpath}" "PYTHONPATH=${pypath}")
+        endif()
 
         #generate a bat file that sets the environment and runs the test
         set(bat_file ${CMAKE_CURRENT_BINARY_DIR}/${test_name}_test.bat)
@@ -160,7 +164,7 @@ function(GR_ADD_CPP_TEST test_name test_source)
     add_executable(${test_name} ${test_source})
     target_link_libraries(${test_name} ${GR_TEST_TARGET_DEPS} Boost::unit_test_framework)
     set_target_properties(${test_name} PROPERTIES COMPILE_DEFINITIONS
-                                                  "BOOST_TEST_DYN_LINK;BOOST_TEST_MAIN")
+                                                  "BOOST_TEST_MAIN")
     if(NOT CMAKE_CROSSCOMPILING)
         gr_add_test(${test_name} ${test_name})
     endif(NOT CMAKE_CROSSCOMPILING)
