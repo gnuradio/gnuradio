@@ -39,7 +39,13 @@ gr_find_package(PythonLibs ${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR} EXACT
 if(CMAKE_CROSSCOMPILING)
     set(QA_PYTHON_EXECUTABLE "/usr/bin/python3")
 else(CMAKE_CROSSCOMPILING)
-    set(QA_PYTHON_EXECUTABLE ${PYTHON_EXECUTABLE})
+    if(GR_BUILD_INSTALLER AND WIN32)
+        # use the python executable from the bundle installer for QA tests on Windows Installer builds
+        set(QA_PYTHON_EXECUTABLE "\"${CMAKE_INSTALL_PREFIX}/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}/python.exe\"")
+    else()
+        # use the same python executable for QA tests as for the build
+        set(QA_PYTHON_EXECUTABLE ${PYTHON_EXECUTABLE})
+    endif()
 endif(CMAKE_CROSSCOMPILING)
 
 #make the path to the executable appear in the cmake gui
