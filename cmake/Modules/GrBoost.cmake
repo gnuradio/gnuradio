@@ -101,8 +101,46 @@ set(Boost_ADDITIONAL_VERSIONS
     "1.68"
     "1.69.0"
     "1.69"
+    "1.70.0"
+    "1.70"
     "1.71.0"
-    "1.71")
+    "1.71"
+    "1.72.0"
+    "1.72"
+    "1.73.0"
+    "1.73"
+    "1.74.0"
+    "1.74"
+    "1.75.0"
+    "1.75"
+    "1.76.0"
+    "1.76"
+    "1.77.0"
+    "1.77"
+    "1.78.0"
+    "1.78"
+    "1.79.0"
+    "1.79"
+    "1.80.0"
+    "1.80"
+    "1.81.0"
+    "1.81"
+    "1.82.0"
+    "1.82"
+    "1.83.0"
+    "1.83"
+    "1.84.0"
+    "1.84"
+    "1.85.0"
+    "1.85"
+    "1.86.0"
+    "1.86"
+    "1.87.0"
+    "1.87"
+    "1.88.0"
+    "1.88"
+    "1.89.0"
+    "1.89")
 
 # check whether to set REQUIRED or not
 # if not set, default is to require Boost
@@ -121,6 +159,17 @@ gr_find_package(
     Boost ${GR_BOOST_MIN_VERSION} ${GR_BOOST_REQUIRED}
     COMPONENTS ${BOOST_REQUIRED_COMPONENTS}
     OPTIONAL_COMPONENTS unit_test_framework)
+
+# With Conan and modern CMake, component-specific FOUND variables 
+# like Boost_UNIT_TEST_FRAMEWORK_FOUND are not always set. 
+# Instead, Conan provides imported targets (e.g., Boost::unit_test_framework), 
+# and the presence of these targets means the component is available.
+if(TARGET Boost::unit_test_framework)
+    set(Boost_UNIT_TEST_FRAMEWORK_FOUND TRUE)
+else()
+    set(Boost_UNIT_TEST_FRAMEWORK_FOUND FALSE)
+endif()
+message(STATUS "Boost_UNIT_TEST_FRAMEWORK_FOUND=${Boost_UNIT_TEST_FRAMEWORK_FOUND}")
 
 # Boost 1.52 disabled, see https://svn.boost.org/trac/boost/ticket/7669
 # Similar problems with Boost 1.46 and 1.47.
