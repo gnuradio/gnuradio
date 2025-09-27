@@ -136,8 +136,13 @@ static void export_wisdom()
 
 
 template <class T, bool forward>
-fft<T, forward>::fft(int fft_size, int nthreads)
-    : d_nthreads(nthreads), d_inbuf(fft_size), d_outbuf(fft_size), d_logger("fft_complex")
+fft<T, forward>::fft(int fft_size, int nthreads, int nffts)
+    : d_fft_size(fft_size),
+      d_nthreads(nthreads),
+      d_nffts(nffts),
+      d_inbuf(fft_size * nffts),
+      d_outbuf(fft_size * nffts),
+      d_logger("fft_complex")
 {
     // Hold global mutex during plan construction and destruction.
     std::scoped_lock lock(planner::mutex());
@@ -153,7 +158,7 @@ fft<T, forward>::fft(int fft_size, int nthreads)
     lock_wisdom();
     import_wisdom(); // load prior wisdom from disk
 
-    initialize_plan(fft_size);
+    initialize_plan(fft_size, nffts);
     if (d_plan == NULL) {
         d_logger.error("creating plan failed");
         throw std::runtime_error("Creating fftw plan failed");
@@ -163,42 +168,74 @@ fft<T, forward>::fft(int fft_size, int nthreads)
 }
 
 template <>
-void fft<gr_complex, true>::initialize_plan(int fft_size)
+void fft<gr_complex, true>::initialize_plan(int fft_size, int nffts)
 {
-    d_plan = fftwf_plan_dft_1d(fft_size,
-                               reinterpret_cast<fftwf_complex*>(d_inbuf.data()),
-                               reinterpret_cast<fftwf_complex*>(d_outbuf.data()),
-                               FFTW_FORWARD,
-                               FFTW_MEASURE);
+    d_plan = fftwf_plan_many_dft(1,
+                                 &fft_size,
+                                 nffts,
+                                 reinterpret_cast<fftwf_complex*>(d_inbuf.data()),
+                                 NULL,
+                                 1,
+                                 fft_size,
+                                 reinterpret_cast<fftwf_complex*>(d_outbuf.data()),
+                                 NULL,
+                                 1,
+                                 fft_size,
+                                 FFTW_FORWARD,
+                                 FFTW_MEASURE);
 }
 
 template <>
-void fft<gr_complex, false>::initialize_plan(int fft_size)
+void fft<gr_complex, false>::initialize_plan(int fft_size, int nffts)
 {
-    d_plan = fftwf_plan_dft_1d(fft_size,
-                               reinterpret_cast<fftwf_complex*>(d_inbuf.data()),
-                               reinterpret_cast<fftwf_complex*>(d_outbuf.data()),
-                               FFTW_BACKWARD,
-                               FFTW_MEASURE);
+    d_plan = fftwf_plan_many_dft(1,
+                                 &fft_size,
+                                 nffts,
+                                 reinterpret_cast<fftwf_complex*>(d_inbuf.data()),
+                                 NULL,
+                                 1,
+                                 fft_size,
+                                 reinterpret_cast<fftwf_complex*>(d_outbuf.data()),
+                                 NULL,
+                                 1,
+                                 fft_size,
+                                 FFTW_BACKWARD,
+                                 FFTW_MEASURE);
 }
 
 
 template <>
-void fft<float, true>::initialize_plan(int fft_size)
+void fft<float, true>::initialize_plan(int fft_size, int nffts)
 {
-    d_plan = fftwf_plan_dft_r2c_1d(fft_size,
-                                   d_inbuf.data(),
-                                   reinterpret_cast<fftwf_complex*>(d_outbuf.data()),
-                                   FFTW_MEASURE);
+    d_plan = fftwf_plan_many_dft_r2c(1,
+                                     &fft_size,
+                                     nffts,
+                                     d_inbuf.data(),
+                                     NULL,
+                                     1,
+                                     fft_size,
+                                     reinterpret_cast<fftwf_complex*>(d_outbuf.data()),
+                                     NULL,
+                                     1,
+                                     fft_size,
+                                     FFTW_MEASURE);
 }
 
 template <>
-void fft<float, false>::initialize_plan(int fft_size)
+void fft<float, false>::initialize_plan(int fft_size, int nffts)
 {
-    d_plan = fftwf_plan_dft_c2r_1d(fft_size,
-                                   reinterpret_cast<fftwf_complex*>(d_inbuf.data()),
-                                   d_outbuf.data(),
-                                   FFTW_MEASURE);
+    d_plan = fftwf_plan_many_dft_c2r(1,
+                                     &fft_size,
+                                     nffts,
+                                     reinterpret_cast<fftwf_complex*>(d_inbuf.data()),
+                                     NULL,
+                                     1,
+                                     fft_size,
+                                     d_outbuf.data(),
+                                     NULL,
+                                     1,
+                                     fft_size,
+                                     FFTW_MEASURE);
 }
 
 

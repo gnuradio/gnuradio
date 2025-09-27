@@ -68,15 +68,17 @@ struct fft_outbuf<float, true> {
 template <class T, bool forward>
 class FFT_API fft
 {
+    const int d_fft_size;
     int d_nthreads;
+    const int d_nffts;
     volk::vector<typename fft_inbuf<T, forward>::type> d_inbuf;
     volk::vector<typename fft_outbuf<T, forward>::type> d_outbuf;
     void* d_plan;
     gr::logger d_logger;
-    void initialize_plan(int fft_size);
+    void initialize_plan(int fft_size, int nffts);
 
 public:
-    fft(int fft_size, int nthreads = 1);
+    fft(int fft_size, int nthreads = 1, int nffts = 1);
     // Copy disabled due to d_plan.
     fft(const fft&) = delete;
     fft& operator=(const fft&) = delete;
@@ -87,11 +89,17 @@ public:
      * into which input and output take place. It's done this way in
      * order to ensure optimal alignment for SIMD instructions.
      */
-    typename fft_inbuf<T, forward>::type* get_inbuf() { return d_inbuf.data(); }
-    typename fft_outbuf<T, forward>::type* get_outbuf() { return d_outbuf.data(); }
+    typename fft_inbuf<T, forward>::type* get_inbuf(int fft_idx = 0)
+    {
+        return &(d_inbuf.data()[d_fft_size * fft_idx]);
+    }
+    typename fft_outbuf<T, forward>::type* get_outbuf(int fft_idx = 0)
+    {
+        return &(d_outbuf.data()[d_fft_size * fft_idx]);
+    }
 
-    int inbuf_length() const { return d_inbuf.size(); }
-    int outbuf_length() const { return d_outbuf.size(); }
+    int inbuf_length() const { return d_fft_size; }
+    int outbuf_length() const { return d_fft_size; }
 
     /*!
      *  Set the number of threads to use for calculation.
