@@ -40,7 +40,8 @@ class WaterfallDisplayPlot : public DisplayPlot
 
 
 public:
-    WaterfallDisplayPlot(int nplots, QWidget*);
+    WaterfallDisplayPlot(int nplots, QWidget* parent);
+    WaterfallDisplayPlot(int nplots, int n_rows = 200, QWidget* parent = nullptr);
     ~WaterfallDisplayPlot() override;
 
     void resetAxis();

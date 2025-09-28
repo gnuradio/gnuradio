@@ -90,6 +90,7 @@ public:
                           double fc,
                           double bw,
                           const std::string& name,
+                          int n_rows,
                           int nconnections,
                           QWidget* parent = NULL);
     ~waterfall_sink_c_impl() override;

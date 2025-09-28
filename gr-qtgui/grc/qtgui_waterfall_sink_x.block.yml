@@ -24,6 +24,10 @@ parameters:
     default: '1024'
     options: ['32','64','128','256','512','1024','2048','4096','8192','16384','32768']
     hide: ${ ('all' if type.startswith('msg') else 'none') }
+-   id: n_rows
+    label: Number of Rows
+    dtype: int
+    default: '200'
 -   id: freqhalf
     label: Spectrum Width
     dtype: enum
@@ -274,6 +278,7 @@ templates:
             ${fc}, #fc
             ${bw}, #bw
             ${name}, #name
+            ${n_rows},
             ${ (0 if type.startswith('msg') else nconnections) }, #number of inputs
             None # parent
         )
