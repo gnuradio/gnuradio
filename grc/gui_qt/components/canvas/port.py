@@ -1,10 +1,15 @@
 from qtpy.QtGui import QPen, QPainter, QBrush, QFont, QFontMetrics
-from qtpy.QtCore import Qt, QPointF, QRectF
+from qtpy.QtCore import Qt, QPointF, QRectF, QVariant
 from qtpy.QtWidgets import QGraphicsItem
 
 from . import colors
 from ... import Constants
 from ....core.ports import Port as CorePort
+
+# Logging
+import logging
+import traceback
+log = logging.getLogger(f"grc.application.{__name__}")
 
 
 class Port(CorePort):
@@ -81,9 +86,29 @@ class GUIPort(QGraphicsItem):
             conn.gui.set_rotation(self.parentItem().rotation())
             conn.gui.update()
 
-    def itemChange(self, change, value):
+    def itemChange(self, change: QGraphicsItem.GraphicsItemChange, value: QVariant):
         self.update_connections()
-        return QGraphicsItem.itemChange(self, change, value)
+        try:
+            return QGraphicsItem.itemChange(self, change, value)
+        except TypeError as e:
+            # There's nothing to trace back here; messaging nature of Qt erases that.
+            namestr = (
+                f"{self.core.parent_block}: {self.core._dir} port {self.core.name}"
+            )
+            log.error(
+                namestr +
+                "TypeError! failed to process change message " +
+                f"{e} (value: {value} / change: {change})"
+            )
+        except Exception as e:
+            namestr = (
+                f"{self.core.parent_block}: {self.core._dir} port {self.core.name}"
+            )
+            log.error(f"{namestr}: failed to process change message {e}")
+            log.debug(
+                f"{namestr}: traceback:\n" +
+                "".join(traceback.format_exception(None, value=e, tb=e.__traceback__))
+            )
 
     def create_shapes_and_labels(self):
         self.auto_hide_port_labels = self.core.parent.parent.gui.app.qsettings.value(
