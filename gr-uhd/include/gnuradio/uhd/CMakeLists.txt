@@ -24,6 +24,7 @@ if(ENABLE_UHD_RFNOC)
               rfnoc_duc.h
               rfnoc_fir_filter.h
               rfnoc_graph.h
+              rfnoc_mb_controller.h
               rfnoc_replay.h
               rfnoc_rx_radio.h
               rfnoc_rx_streamer.h

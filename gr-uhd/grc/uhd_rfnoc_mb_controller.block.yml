@@ -1,0 +1,108 @@
+id: uhd_rfnoc_mb_controller
+label: RFNoC Motherboard Controller
+flags: [ python ]
+
+templates:
+  imports: |-
+    from gnuradio import uhd
+  make: |-
+    uhd.rfnoc_mb_controller(
+        self.rfnoc_graph if hasattr(self, 'rfnoc_graph') else None,
+        ${mb_index}
+    )
+  callbacks:
+    - set_mb_index(${mb_index})
+
+templates:
+  make: |-
+    self.${id} = uhd.rfnoc_mb_controller(
+        self.rfnoc_graph if hasattr(self, 'rfnoc_graph') else None,
+        ${mb_index}
+    )
+    % if time_source:
+    self.${id}.set_time_source("${time_source}")
+    % endif
+    % if clock_source:
+    self.${id}.set_clock_source("${clock_source}")
+    % endif
+    % if set_time_now != -1:
+    import gnuradio.uhd as uhd_module
+    self.${id}.set_time_now(uhd_module.time_spec(${set_time_now}), ${timekeeper_idx})
+    % endif
+
+
+parameters:
+- id: mb_index
+  label: Motherboard Index
+  dtype: int
+  default: uhd.rfnoc_mb_controller.ALL_MBOARDS
+  options: [uhd.rfnoc_mb_controller.ALL_MBOARDS, 0, 1, 2, 3, 4, 5, 6, 7]
+  option_labels: ['All Motherboards', '0', '1', '2', '3', '4', '5', '6', '7']
+- id: time_source
+  label: Time Source
+  dtype: enum
+  default: ''
+  options: ['', 'internal', 'external', 'gpsdo']
+  option_labels: ['Default', 'Internal', 'External', 'GPSDO']
+  hide: ${ 'none' if time_source else 'part' }
+- id: clock_source
+  label: Clock Source
+  dtype: enum
+  default: ''
+  options: ['', 'internal', 'external', 'gpsdo']
+  option_labels: ['Default', 'Internal', 'External', 'GPSDO']
+  hide: ${ 'none' if clock_source else 'part' }
+- id: set_time_now
+  label: Set Time Now
+  dtype: real
+  default: '-1'
+  hide: ${ 'none' if set_time_now != -1 else 'part' }
+- id: timekeeper_idx
+  label: Timekeeper Index
+  dtype: int
+  default: 0
+  hide: ${ 'none' if set_time_now != -1 else 'part' }
+
+inputs:
+- domain: rfnoc_mb_control
+  id: g
+  optional: false
+- domain: message
+  id: command
+  optional: true
+
+asserts:
+- ${ mb_index >= 0 or mb_index == uhd.rfnoc_mb_controller.ALL_MBOARDS }
+
+documentation: |-
+  This block provides control over RFNoC motherboard controller functionality,
+  including time synchronization, clock sources, and system-level settings.
+
+  The block accepts command messages on its 'command' input port. Messages should
+  be PMT dictionaries with the following supported commands:
+
+  Time and Clock Control:
+  - time_source: Set time source ("internal", "external", "gpsdo")
+  - clock_source: Set clock source ("internal", "external", "gpsdo")
+  - mb_index: Change motherboard index
+
+  Time Synchronization:
+  - time_now: Set current time (number or dict with "time" and "tk_idx")
+  - time_next_pps: Set time at next PPS (number or dict with "time" and "tk_idx") 
+  - synchronize: Synchronize devices with given time
+
+  Time values can be specified as:
+  - Simple number: 12345.67 (seconds)
+  - PMT pair: (12345, 0.67) for (int_seconds, frac_seconds)
+  - Dict: {"time": timespec, "tk_idx": timekeeper_index}
+
+  Examples:
+    # Set time source
+    pmt.dict_add(pmt.make_dict(), pmt.mp("time_source"), pmt.mp("external"))
+    
+    # Set time with timekeeper index
+    time_dict = pmt.dict_add(pmt.make_dict(), pmt.mp("time"), pmt.cons(pmt.from_long(12345), pmt.from_double(0.67)))
+    time_dict = pmt.dict_add(time_dict, pmt.mp("tk_idx"), pmt.from_long(1))
+    pmt.dict_add(pmt.make_dict(), pmt.mp("time_now"), time_dict)
+
+file_format: 1
