@@ -6,6 +6,7 @@
   - RFNoC:
     - Device Control:
       - uhd_rfnoc_graph
+      - uhd_rfnoc_mb_controller
     - Blocks:
       - uhd_rfnoc_ddc
       - uhd_rfnoc_duc
