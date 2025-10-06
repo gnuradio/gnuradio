@@ -10,7 +10,7 @@
 ########################################################################
 include(GrBoost)
 
-find_package(UHD "3.9.7")
+find_package(UHD "3.15")
 if("${UHD_VERSION}" VERSION_GREATER_EQUAL "4")
     set(UHD_FOUR_POINT_OH_RFNOC TRUE)
 else()
