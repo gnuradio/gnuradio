@@ -148,6 +148,14 @@ public:
     //                            given out
     virtual ::uhd::rfnoc::noc_block_base::sptr
     get_block_ref(const std::string& block_id, const size_t max_ref_count) = 0;
+
+
+    //! Return reference to the underlying UHD graph object
+    //
+    // Note: By accessing the underlying graph object directly, it is possible
+    // to create inconsistent configurations between the graph object and the
+    // GNU Radio flow graph.
+    virtual ::uhd::rfnoc::rfnoc_graph::sptr get_rfnoc_graph() = 0;
 };
 
 } // namespace uhd
