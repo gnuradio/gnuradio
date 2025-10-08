@@ -67,7 +67,7 @@ parameters:
   hide: ${ 'all' if use_default_adapter_id else 'none' }
 
 asserts:
-  - ${ num_chans > 0 }
+  - ${ num_chans >= 0 }
   - ${ vlen > 0 }
   - ${ use_default_adapter_id or len(adapter_id_list) == num_chans }
 
@@ -76,6 +76,11 @@ inputs:
   dtype: ${ input_type.type }
   multiplicity: ${ num_chans }
   vlen: ${ vlen }
+  optional: true
+  hide: ${ 'all' if num_chans == 0 else 'none' }
+- domain: message
+  id: in
+  optional: true
 
 outputs:
 - domain: rfnoc
