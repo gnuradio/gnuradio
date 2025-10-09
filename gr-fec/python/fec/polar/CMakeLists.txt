@@ -19,7 +19,7 @@ gr_python_install(
           common.py
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/fec/polar)
 configure_file(polar_channel_construction ${CMAKE_BINARY_DIR}/polar_channel_construction @ONLY)
-gr_python_install(PROGRAMS polar_channel_construction DESTINATION ${GR_RUNTIME_DIR})
+gr_python_install(PROGRAMS ${CMAKE_BINARY_DIR}/polar_channel_construction DESTINATION ${GR_RUNTIME_DIR})
 if(WIN32)
     gen_py_launcher(
         MODULES polar_channel_construction
