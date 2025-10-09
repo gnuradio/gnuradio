@@ -13,7 +13,7 @@ import os
 import numpy
 
 try:
-    from pylab import (
+    from matplotlib.pylab import (
         Button,
         connect,
         draw,
