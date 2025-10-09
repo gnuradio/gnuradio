@@ -17,7 +17,7 @@
 #include <cmath>
 
 NumberDisplayForm::NumberDisplayForm(int nplots, gr::qtgui::graph_t type, QWidget* parent)
-    : QWidget(parent)
+    : QWidget(parent), d_format(FORMAT_FLOAT)
 {
     d_nplots = nplots;
     d_graph_type = type;
@@ -137,6 +137,8 @@ NumberDisplayForm::NumberDisplayForm(int nplots, gr::qtgui::graph_t type, QWidge
     setLayout(d_layout);
 }
 
+void NumberDisplayForm::set_display_format(DisplayFormat format) { d_format = format; }
+
 NumberDisplayForm::~NumberDisplayForm()
 {
     // Qt deletes children when parent is deleted
@@ -210,6 +212,7 @@ void NumberDisplayForm::saveFigure()
     delete filebox;
 }
 
+
 void NumberDisplayForm::newData(const QEvent* updateEvent)
 {
     if (!d_stop_state) {
@@ -218,8 +221,18 @@ void NumberDisplayForm::newData(const QEvent* updateEvent)
 
         for (unsigned int i = 0; i < d_nplots; ++i) {
             float f = d_factor[i] * samples[i];
-            d_text_box[i]->setText(
-                QString("%1 %2").arg(f, 4, ' ').arg(QString(d_unit[i].c_str())));
+            QString s;
+            switch (d_format) {
+            case FORMAT_INT:
+                s = QString("%1 %2")
+                        .arg(static_cast<long long>(f))
+                        .arg(QString(d_unit[i].c_str()));
+                break;
+            default:
+                s = QString("%1 %2").arg(f, 4, ' ').arg(QString(d_unit[i].c_str()));
+                break;
+            }
+            d_text_box[i]->setText(s);
             d_indicator[i]->setValue(f);
             d_min[i] = std::min(d_min[i], f);
             d_max[i] = std::max(d_max[i], f);
