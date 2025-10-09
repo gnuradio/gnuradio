@@ -22,8 +22,11 @@
 ########################################################
 ##Create Imports
 ########################################################
-from PyQt5 import Qt
+from qtpy import QtWidgets
+from qtpy import QtWidgets as Qt
+from qtpy import QtGui
 from gnuradio import qtgui
+
 % for imp in imports:
 ##${imp.replace("  # grc-generated hier_block", "")}
 ${imp}
@@ -76,30 +79,30 @@ def snippets_${section}(tb):
     class_name = flow_graph.get_option('id')
     param_str = ', '.join(['self'] + ['%s=%s'%(param.name, param.templates.render('make')) for param in parameters])
 %>\
-class ${class_name}(gr.top_block, Qt.QWidget):
+class ${class_name}(gr.top_block, QtWidgets.QWidget):
 
     def __init__(${param_str}):
         gr.top_block.__init__(self, "${title}", catch_exceptions=${catch_exceptions})
-        Qt.QWidget.__init__(self)
+        QtWidgets.QWidget.__init__(self)
         self.setWindowTitle("${title}")
         qtgui.util.check_set_qss()
         try:
-            self.setWindowIcon(Qt.QIcon.fromTheme('gnuradio-grc'))
+            self.setWindowIcon(QtGui.QIcon.fromTheme('gnuradio-grc'))
         except BaseException as exc:
             print(f"Qt GUI: Could not set Icon: {str(exc)}", file=sys.stderr)
-        self.top_scroll_layout = Qt.QVBoxLayout()
+        self.top_scroll_layout = QtWidgets.QVBoxLayout()
         self.setLayout(self.top_scroll_layout)
-        self.top_scroll = Qt.QScrollArea()
-        self.top_scroll.setFrameStyle(Qt.QFrame.NoFrame)
+        self.top_scroll = QtWidgets.QScrollArea()
+        self.top_scroll.setFrameStyle(QtWidgets.QFrame.NoFrame)
         self.top_scroll_layout.addWidget(self.top_scroll)
         self.top_scroll.setWidgetResizable(True)
-        self.top_widget = Qt.QWidget()
+        self.top_widget = QtWidgets.QWidget()
         self.top_scroll.setWidget(self.top_widget)
-        self.top_layout = Qt.QVBoxLayout(self.top_widget)
-        self.top_grid_layout = Qt.QGridLayout()
+        self.top_layout = QtWidgets.QVBoxLayout(self.top_widget)
+        self.top_grid_layout = QtWidgets.QGridLayout()
         self.top_layout.addLayout(self.top_grid_layout)
 
-        self.settings = Qt.QSettings("gnuradio/flowgraphs", "${class_name}")
+        self.settings = QtCore.QSettings("gnuradio/flowgraphs", "${class_name}")
 
         try:
             geometry = self.settings.value("geometry")
@@ -177,7 +180,7 @@ class ${class_name}(gr.top_block, Qt.QWidget):
 ########################################################
 
     def closeEvent(self, event):
-        self.settings = Qt.QSettings("gnuradio/flowgraphs", "${class_name}")
+        self.settings = QtCore.QSettings("gnuradio/flowgraphs", "${class_name}")
         self.settings.setValue("geometry", self.saveGeometry())
         self.stop()
         self.wait()
@@ -276,7 +279,7 @@ def main(top_block_cls=${class_name}, options=None):
         gr.logger("realtime").warn("Error: failed to enable real-time scheduling.")
     % endif
 
-    qapp = Qt.QApplication(sys.argv)
+    qapp = QtWidgets.QApplication(sys.argv)
 
     tb = top_block_cls(${ ', '.join(params_eq_list) })
     ${'snippets_main_after_init(tb)' if snippets['main_after_init'] else ''}
@@ -294,12 +297,12 @@ def main(top_block_cls=${class_name}, options=None):
         tb.stop()
         tb.wait()
         ${'snippets_main_after_stop(tb)' if snippets['main_after_stop'] else ''}
-        Qt.QApplication.quit()
+        QtWidgets.QApplication.quit()
 
     signal.signal(signal.SIGINT, sig_handler)
     signal.signal(signal.SIGTERM, sig_handler)
 
-    timer = Qt.QTimer()
+    timer = QtCore.QTimer()
     timer.start(500)
     timer.timeout.connect(lambda: None)
 
