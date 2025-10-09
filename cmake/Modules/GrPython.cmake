@@ -477,7 +477,7 @@ sys.exit(0 if match else 1)"
                         "from pip._vendor.distlib.scripts import ScriptMaker;
 maker = ScriptMaker('${pyfile_dir}', '${pywrapperfile_dir}', add_launchers=True);
 maker.executable = '${wrapper_python_path}';
-maker.make('${pyfile_name}')";
+maker.make('${pyfile_name}')"
                         COMMENT "Wrapping ${pyfile_name}"
                         VERBATIM
                     )

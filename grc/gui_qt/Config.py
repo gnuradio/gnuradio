@@ -2,7 +2,7 @@ import os
 from os.path import expanduser, normpath, expandvars, exists, join
 from collections import OrderedDict
 
-import Constants
+from . import Constants
 from ..core.Config import Config as CoreConfig
 from ..main import get_config_file_path
 from qtpy import QtCore

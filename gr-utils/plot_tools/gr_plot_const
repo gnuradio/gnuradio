@@ -13,7 +13,7 @@ import os
 @DLL_IMPORT_GTK@
 
 try:
-    from pylab import (
+    from matplotlib.pylab import (
         Button,
         ceil,
         connect,
