@@ -26,6 +26,13 @@ endif()
 
 gr_python_check_module("PyQt5" PyQt5 True PYQT5_FOUND)
 
+# Check for plotting dependencies
+gr_python_check_module(
+    DESC "matplotlib"
+    MODULE matplotlib
+    VAR MATPLOTLIB_FOUND
+)
+
 ########################################################################
 # Register component
 ########################################################################
@@ -90,13 +97,27 @@ if(ENABLE_GR_UHD)
     ########################################################################
 
     if(WIN32 AND GR_BUILD_INSTALLER)
-       REGISTER_EXTERNAL_PYTHON_COMPONENT(uhd)
-       # register python dependencies of in order to run uhd_images_downloader.py
-       REGISTER_EXTERNAL_PYTHON_COMPONENT(certifi)
-       REGISTER_EXTERNAL_PYTHON_COMPONENT(charset_normalizer)
-       REGISTER_EXTERNAL_PYTHON_COMPONENT(idna)
-       REGISTER_EXTERNAL_PYTHON_COMPONENT(urllib3)
-       REGISTER_EXTERNAL_PYTHON_COMPONENT(requests)
+        REGISTER_EXTERNAL_PYTHON_COMPONENT(uhd)
+        # register requests and its dependencies in order to run uhd_images_downloader.py
+        REGISTER_EXTERNAL_PYTHON_COMPONENT(requests)
+        REGISTER_EXTERNAL_PYTHON_COMPONENT(certifi)
+        REGISTER_EXTERNAL_PYTHON_COMPONENT(charset_normalizer)
+        REGISTER_EXTERNAL_PYTHON_COMPONENT(idna)
+        REGISTER_EXTERNAL_PYTHON_COMPONENT(urllib3)
+
+        # register matplotlib dependencies for installer packaging
+        if(MATPLOTLIB_FOUND)
+            REGISTER_EXTERNAL_PYTHON_COMPONENT(PIL)
+            REGISTER_EXTERNAL_PYTHON_COMPONENT(pyparsing)
+            REGISTER_EXTERNAL_PYTHON_COMPONENT(dateutil)
+            REGISTER_EXTERNAL_PYTHON_COMPONENT(six)
+            REGISTER_EXTERNAL_PYTHON_COMPONENT(kiwisolver)
+            REGISTER_EXTERNAL_PYTHON_COMPONENT(cycler)
+            REGISTER_EXTERNAL_PYTHON_COMPONENT(fontTools)
+            REGISTER_EXTERNAL_PYTHON_COMPONENT(packaging)
+            REGISTER_EXTERNAL_PYTHON_COMPONENT(contourpy)
+            message(STATUS "Matplotlib dependencies registered for installer packaging")
+        endif()
 
        # consider authoring a CPACK_EXTRA_INSTALL_COMMAND to define UHD_PKG_PATH environment variable
 
