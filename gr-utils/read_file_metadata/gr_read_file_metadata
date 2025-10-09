@@ -12,6 +12,14 @@ import sys
 from argparse import ArgumentParser
 
 import os
+
+# Add GNU Radio bin directory to DLL search path for Windows
+if os.name == 'nt':  # Windows
+    @GR_PKG_DIR_SETUP@
+    gr_bin_dir = os.path.join(os.environ.get('GR_PKG_DIR', ''), 'bin')
+    if os.path.exists(gr_bin_dir):
+        os.add_dll_directory(gr_bin_dir)
+
 @DLL_IMPORT_GTK@
 
 import pmt

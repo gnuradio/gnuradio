@@ -99,12 +99,36 @@ GR_REGISTER_COMPONENT(
 
 if(ENABLE_GRC)
 
-  GR_REGISTER_COMPONENT(
+# Register QtPy for GNU Radio Companion GUI
+GR_PYTHON_CHECK_MODULE(
+    DESC "QtPy"
+    MODULE qtpy
+    VAR QTPY_FOUND
+)
+
+# Create GRC Qt dependency library to ensure Qt5PrintSupport.dll gets bundled
+find_package(Qt5 COMPONENTS PrintSupport QUIET)
+if(TARGET Qt5::PrintSupport)
+    # Create the GRC Qt dependency helper library
+    add_library(gnuradio-grc-qt-deps SHARED grc_qt_deps.cpp)
+    target_link_libraries(gnuradio-grc-qt-deps Qt5::PrintSupport)
+    
+    # Register with bundle system - this creates BundleInstall-gnuradio-grc-qt-deps.cmake
+    if(BUILD_SHARED_LIBS)
+        gr_library_foo(gnuradio-grc-qt-deps Qt5::PrintSupport)
+    endif()
+    
+    message(STATUS "Created GRC Qt dependency library for Qt5PrintSupport.dll bundling")
+else()
+    message(STATUS "Qt5::PrintSupport not found, GRC Qt DLL bundling disabled")
+endif()
+
+GR_REGISTER_COMPONENT(
     NAME "JSON/YAML config blocks"
     VAR ENABLE_JSONYAML_BLOCKS
     REQUIRED_COMPONENTS gnuradio-companion
     REQUIRED_TPLS       JSONSCHEMA_FOUND
-    )
+)
 
 ########################################################################
 # Create and install the grc and grc-docs conf file

@@ -28,6 +28,19 @@ gr_python_check_module(
     VAR CLICK_PLUGINS_FOUND
 )
 
+gr_python_check_module(
+    DESC "colorama"
+    MODULE colorama
+    VAR COLORAMA_FOUND
+)
+
+# Check for plotting dependencies
+gr_python_check_module(
+    DESC "matplotlib"
+    MODULE matplotlib
+    VAR MATPLOTLIB_FOUND
+)
+
 ########################################################################
 # Register component
 ########################################################################
@@ -38,6 +51,20 @@ if(NOT CMAKE_CROSSCOMPILING)
     set(utils_modtool_deps CLICK_FOUND)
 
 endif(NOT CMAKE_CROSSCOMPILING)
+
+# Register matplotlib and its dependencies for installer packaging
+if(MATPLOTLIB_FOUND)
+    REGISTER_EXTERNAL_PYTHON_COMPONENT(PIL)
+    REGISTER_EXTERNAL_PYTHON_COMPONENT(pyparsing)
+    REGISTER_EXTERNAL_PYTHON_COMPONENT(dateutil)
+    REGISTER_EXTERNAL_PYTHON_COMPONENT(six)
+    REGISTER_EXTERNAL_PYTHON_COMPONENT(kiwisolver)
+    REGISTER_EXTERNAL_PYTHON_COMPONENT(cycler)
+    REGISTER_EXTERNAL_PYTHON_COMPONENT(fontTools)
+    REGISTER_EXTERNAL_PYTHON_COMPONENT(packaging)
+    REGISTER_EXTERNAL_PYTHON_COMPONENT(contourpy)
+    message(STATUS "Matplotlib dependencies registered for installer packaging")
+endif()
 
 gr_register_component(
     NAME "gr-utils"
