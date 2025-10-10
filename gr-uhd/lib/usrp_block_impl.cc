@@ -129,6 +129,16 @@ const pmt::pmt_t gr::uhd::cmd_stream_cmd_key()
     static const pmt::pmt_t val = pmt::mp("stream_cmd");
     return val;
 }
+const pmt::pmt_t gr::uhd::cmd_tx_sob_key()
+{
+    static const pmt::pmt_t val = pmt::mp("tx_sob");
+    return val;
+}
+const pmt::pmt_t gr::uhd::cmd_tx_eob_key()
+{
+    static const pmt::pmt_t val = pmt::mp("tx_eob");
+    return val;
+}
 
 const pmt::pmt_t gr::uhd::direction_rx()
 {
