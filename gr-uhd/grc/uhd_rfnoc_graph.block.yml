@@ -24,6 +24,11 @@ templates:
 
 value: ${ 'RFNoC Graph' }
 
+outputs:
+- domain: rfnoc_mb_control
+  id: mbc
+  optional: true
+
 parameters:
 - id: dev_addr
   label: Device Address

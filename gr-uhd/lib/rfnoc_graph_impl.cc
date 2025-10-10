@@ -224,6 +224,8 @@ public:
         return block_ref;
     }
 
+    ::uhd::rfnoc::rfnoc_graph::sptr get_rfnoc_graph() override { return _graph; }
+
 
 private:
     size_t _get_adapter_id(const std::string& streamer_id, const size_t port)
