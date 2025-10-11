@@ -42,6 +42,9 @@ energy particle physics, astrophysics, radio astronomy and more!
 * [GNU Radio Chatroom on Matrix](https://chat.gnuradio.org/)
 * [Contributors and Affiliated Organizations](https://github.com/gnuradio/gnuradio/blob/main/CONTRIBUTORS.md)
 
+## Security and Responsible Disclosure
+If you discover a security vulnerability in GNU Radio, please report it responsibly by emailing grc@gnuradio.org. Please do not disclose security issues publicly until the maintainers have had an opportunity to address them. We appreciate your efforts to improve the security of GNU Radio and will acknowledge your contributions.
+
 ## How to Run the QT Version of GNU Radio Companion
 
 ```bash
