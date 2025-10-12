@@ -31,6 +31,7 @@ tcp_connection::tcp_connection(asio::io_context& io_context,
                                bool no_delay /*=false*/)
     : d_socket(io_context), d_buf(MTU), d_block(NULL), d_no_delay(no_delay)
 {
+    configure_default_loggers(d_logger, d_debug_logger, "tcp_connection");
     try {
         d_socket.set_option(asio::ip::tcp::no_delay(no_delay));
     } catch (...) {
@@ -91,7 +92,12 @@ void tcp_connection::handle_read(const asio::error_code& error, size_t bytes_tra
                 handle_read(error, bytes_transferred);
             });
     } else {
-        d_socket.shutdown(asio::ip::tcp::socket::shutdown_both);
+        asio::error_code ec;
+        d_socket.shutdown(asio::ip::tcp::socket::shutdown_both, ec);
+        if (ec) {
+            d_logger->info(error.message());
+            d_logger->info(ec.message());
+        }
         d_socket.close();
     }
 }
