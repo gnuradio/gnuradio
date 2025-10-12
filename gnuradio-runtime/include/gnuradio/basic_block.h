@@ -167,6 +167,9 @@ public:
     /*! The name of the block */
     std::string name() const { return d_name; }
 
+    /*! Get logger of the block */
+    gr::logger_ptr get_logger() const { return d_logger; }
+
     /*!
      * The symbolic name of the block, which is used in the
      * block_registry. The name is assigned by the block's constructor
@@ -340,7 +343,7 @@ public:
      * are created, which then get wrapped as shared pointers
      * (rpcbasic_sptr(...)) and stored using add_rpc_variable.
      */
-    virtual void setup_rpc(){};
+    virtual void setup_rpc() {};
 
     /*!
      * \brief Ask if this block has been registered to the RPC.
