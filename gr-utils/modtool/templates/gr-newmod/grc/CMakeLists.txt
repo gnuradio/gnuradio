@@ -6,4 +6,65 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
 
+# List any plain / manually created blocks ymls here
 install(FILES DESTINATION share/gnuradio/grc/blocks)
+
+# You can list any required dependencies between grc files.
+# Do not allow any circular dependencies:
+# eg;
+# set(<parent grc basename>_AUTOGRC_DEPS
+#        <depends on basename 1>
+#        <depends on basename 2>
+# )
+#
+# set(test1_AUTOGRC_DEPS
+#        test2 test3)
+#
+# set(test2_AUTOGRC_DEPS
+#        test3)
+
+# Enable AUTOGRC for any listed .grc files
+foreach (GRC_FILE ${AUTOGRC_FILES})
+    get_filename_component(GRC_BASENAME ${GRC_FILE} NAME_WE)
+    message("AUTOGRC: Will run grcc on ${GRC_FILE}")
+
+    set(GRCC_YML_OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${GRC_BASENAME}.block.yml)
+    set(GRCC_PY_OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${GRC_BASENAME}.py)
+
+    add_custom_command(
+            OUTPUT ${GRCC_YML_OUTPUT} ${GRCC_PY_OUTPUT}
+
+            COMMAND ${CMAKE_COMMAND} -E env GRC_HIER_PATH_POST=${CMAKE_CURRENT_SOURCE_DIR}\;${CMAKE_CURRENT_BINARY_DIR} grcc -o ${CMAKE_CURRENT_BINARY_DIR} ${GRC_FILE}
+
+            COMMAND ${PYTHON_EXECUTABLE} cmake_find_replace.py ${GRCC_PY_OUTPUT} "from howto_" "from gnuradio.howto.howto_"
+            COMMAND ${PYTHON_EXECUTABLE} cmake_find_replace.py ${GRCC_YML_OUTPUT} "from howto_" "from gnuradio.howto.howto_"
+
+            DEPENDS ${GRC_FILE}
+            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+            COMMENT "Generating ${GRCC_YML_OUTPUT} and ${GRCC_PY_OUTPUT} for ${GRC_FILE}"
+            VERBATIM
+    )
+
+    add_custom_target(
+            generate_${GRC_BASENAME}_grc_files ALL
+            DEPENDS ${GRCC_YML_OUTPUT} ${GRCC_PY_OUTPUT}
+    )
+
+    install(FILES ${GRCC_YML_OUTPUT} DESTINATION share/gnuradio/grc/blocks)
+    install(FILES ${GRCC_PY_OUTPUT} DESTINATION ${GR_PYTHON_DIR}/gnuradio/howto)
+endforeach ()
+
+# Bind any dependencies between grcs if needed
+foreach (GRC_FILE ${AUTOGRC_FILES})
+    get_filename_component(GRC_BASENAME ${GRC_FILE} NAME_WE)
+    set(DEPS_VAR "${GRC_BASENAME}_AUTOGRC_DEPS")
+    set(DEPS "${${DEPS_VAR}}")
+    if (DEPS)
+        message("AUTOGRC: Found grc dependencies for ${GRC_FILE}")
+        foreach (DEP ${DEPS})
+            message("AUTOGRC: Adding grc dependency ${DEP} to ${GRC_BASENAME}")
+            add_dependencies(generate_${GRC_BASENAME}_grc_files generate_${DEP}_grc_files)
+        endforeach ()
+    endif ()
+endforeach ()
+
