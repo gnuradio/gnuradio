@@ -36,8 +36,8 @@ foreach (GRC_FILE ${AUTOGRC_FILES})
 
             COMMAND ${CMAKE_COMMAND} -E env GRC_HIER_PATH_POST=${CMAKE_CURRENT_SOURCE_DIR}\;${CMAKE_CURRENT_BINARY_DIR} grcc -o ${CMAKE_CURRENT_BINARY_DIR} ${GRC_FILE}
 
-            COMMAND ${PYTHON_EXECUTABLE} cmake_find_replace.py ${GRCC_PY_OUTPUT} "from howto_" "from gnuradio.howto.howto_"
-            COMMAND ${PYTHON_EXECUTABLE} cmake_find_replace.py ${GRCC_YML_OUTPUT} "from howto_" "from gnuradio.howto.howto_"
+            COMMAND ${PYTHON_EXECUTABLE} cmake_find_replace.py ${GRCC_PY_OUTPUT} "from ${GRC_BASENAME}" "from gnuradio.howto.${GRC_BASENAME}"
+            COMMAND ${PYTHON_EXECUTABLE} cmake_find_replace.py ${GRCC_YML_OUTPUT} "from ${GRC_BASENAME}" "from gnuradio.howto.${GRC_BASENAME}"
 
             DEPENDS ${GRC_FILE}
             WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
