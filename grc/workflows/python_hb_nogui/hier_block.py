@@ -28,7 +28,11 @@ class PythonHierBlockNoGuiGenerator(HierBlockGeneratorMixin, PythonNoGuiGenerato
         py_template = py_template or os.path.join(
             os.path.dirname(__file__), "flow_graph_hb_nogui.py.mako"
         )
-        super().__init__(flow_graph, self.get_output_dir_for_hier_block(flow_graph), py_template=py_template)
+        super().__init__(
+            flow_graph,
+            self.get_output_dir_for_hier_block(output_dir),
+            py_template=py_template
+        )
 
         self._mode = Constants.HIER_BLOCK_FILE_MODE
         self.file_path_yml = os.path.splitext(self.file_path)[0] + '.block.yml'

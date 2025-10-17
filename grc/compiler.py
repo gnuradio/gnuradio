@@ -43,7 +43,7 @@ def main(args=None):
     )
     platform.build_library()
 
-    output_dir = args.output if not args.user_lib_dir else platform.config.hier_block_lib_dir
+    output_dir = args.output if not args.user_lib_dir else platform.config.hier_block_default_output_dir
     try:
         # recursive mkdir: os.makedirs doesn't work with .. paths, resolve with realpath
         os.makedirs(os.path.realpath(output_dir), exist_ok=True)
@@ -55,7 +55,6 @@ def main(args=None):
     for grc_file in args.grc_files:
         os.path.exists(grc_file) or exit('Error: missing ' + grc_file)
         Messages.send('\n')
-        platform.config.hier_block_lib_dir = output_dir
         flow_graph, generator = platform.load_and_generate_flow_graph(
             os.path.abspath(grc_file), os.path.abspath(output_dir))
         if flow_graph is None and generator is None:

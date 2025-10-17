@@ -8,7 +8,6 @@ from qtpy import QtCore
 
 
 class Config(CoreConfig):
-
     name = 'GNU Radio Companion'
 
     gui_prefs_file = os.environ.get('GRC_QT_PREFS_PATH', get_config_file_path('grc_qt.conf'))
@@ -24,13 +23,12 @@ class Config(CoreConfig):
 
     @property
     def block_paths(self):
-        paths_sources = (
-            self.hier_block_lib_dir,
+        paths_sources = self.hier_block_search_dirs + [
             os.environ.get('GRC_BLOCKS_PATH', ''),
             self._gr_prefs.get_string('grc', 'local_blocks_path', ''),
             self._gr_prefs.get_string('grc', 'global_blocks_path', ''),
             self.qsettings.value('grc/custom_block_paths', ''),
-        )
+        ]
 
         collected_paths = sum((paths.split(os.pathsep)
                                for paths in paths_sources), [])
