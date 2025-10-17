@@ -18,7 +18,6 @@ class Config(object):
     website = 'https://www.gnuradio.org/'
 
     hier_block_default_output_dir = get_state_directory()
-    hier_block_search_dirs = os.environ.get('GRC_HIER_PATH', "").split(";") + [get_state_directory()]
 
     def __init__(self, version, version_parts=None, name=None, prefs=None):
         self._gr_prefs = prefs if prefs else DummyPrefs()
@@ -32,11 +31,14 @@ class Config(object):
 
     @property
     def block_paths(self):
-        paths_sources = self.hier_block_search_dirs + [
-            os.environ.get('GRC_BLOCKS_PATH', ''),
-            self._gr_prefs.get_string('grc', 'local_blocks_path', ''),
-            self._gr_prefs.get_string('grc', 'global_blocks_path', ''),
-        ]
+        paths_sources = os.environ.get('GRC_HIER_PATH', '').split(';') \
+                        + os.environ.get('GRC_BLOCKS_PATH', '').split(';') \
+                        + [self.hier_block_default_output_dir] \
+                        + [self._gr_prefs.get_string('grc', 'local_blocks_path', '')] \
+                        + [self._gr_prefs.get_string('grc', 'global_blocks_path', '')] \
+                        + os.environ.get('GRC_HIER_PATH_POST', '').split(';') \
+                        + os.environ.get('GRC_BLOCKS_PATH_POST', '').split(';')
+
         collected_paths = sum((paths.split(os.pathsep)
                                for paths in paths_sources), [])
 
