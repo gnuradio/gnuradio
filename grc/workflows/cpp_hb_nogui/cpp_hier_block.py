@@ -29,7 +29,7 @@ class CppHierBlockGenerator(HierBlockGeneratorMixin, CppNoGuiTopBlockGenerator):
         source_template = source_template or os.path.join(os.path.dirname(__file__), 'flow_graph_hb_nogui.cpp.mako')
         super().__init__(
             flow_graph,
-            self.get_output_dir_for_hier_block(output_dir),
+            output_dir,
             header_template=header_template,
             source_template=source_template,
         )
