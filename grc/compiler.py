@@ -14,6 +14,7 @@ from gnuradio import gr
 
 from .core import Messages
 from .core.platform import Platform
+from .main import get_state_directory
 
 
 def argument_parser():
@@ -43,7 +44,7 @@ def main(args=None):
     )
     platform.build_library()
 
-    output_dir = args.output if not args.user_lib_dir else platform.config.hier_block_default_output_dir
+    output_dir = args.output if not args.user_lib_dir else get_state_directory()
     try:
         # recursive mkdir: os.makedirs doesn't work with .. paths, resolve with realpath
         os.makedirs(os.path.realpath(output_dir), exist_ok=True)

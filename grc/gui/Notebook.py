@@ -133,8 +133,8 @@ class Page(Gtk.HBox):
 
     def _handle_scroll_window_key_press(self, widget, event):
         is_ctrl_pg = (
-                event.state & Gdk.ModifierType.CONTROL_MASK and
-                event.keyval in (Gdk.KEY_Page_Up, Gdk.KEY_Page_Down)
+            event.state & Gdk.ModifierType.CONTROL_MASK and
+            event.keyval in (Gdk.KEY_Page_Up, Gdk.KEY_Page_Down)
         )
         if is_ctrl_pg:
             return self.get_parent().event(event)
