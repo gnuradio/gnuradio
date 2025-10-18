@@ -30,7 +30,7 @@ class PythonHierBlockNoGuiGenerator(HierBlockGeneratorMixin, PythonNoGuiGenerato
         )
         super().__init__(
             flow_graph,
-            self.get_output_dir_for_hier_block(output_dir),
+            output_dir,
             py_template=py_template
         )
 
