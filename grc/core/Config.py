@@ -17,8 +17,6 @@ class Config(object):
     license = __doc__.strip()
     website = 'https://www.gnuradio.org/'
 
-    hier_block_default_output_dir = get_state_directory()
-
     def __init__(self, version, version_parts=None, name=None, prefs=None):
         self._gr_prefs = prefs if prefs else DummyPrefs()
         self.version = version
@@ -33,7 +31,7 @@ class Config(object):
     def block_paths(self):
         paths_sources = os.environ.get('GRC_HIER_PATH', '').split(';') \
                         + os.environ.get('GRC_BLOCKS_PATH', '').split(';') \
-                        + [self.hier_block_default_output_dir] \
+                        + [get_state_directory()] \
                         + [self._gr_prefs.get_string('grc', 'local_blocks_path', '')] \
                         + [self._gr_prefs.get_string('grc', 'global_blocks_path', '')] \
                         + os.environ.get('GRC_HIER_PATH_POST', '').split(';') \
@@ -59,7 +57,7 @@ class Config(object):
         user_default = (
                 os.environ.get('GRC_DEFAULT_FLOW_GRAPH') or
                 self._gr_prefs.get_string('grc', 'default_flow_graph', '') or
-                os.path.join(self.hier_block_default_output_dir, 'default_flow_graph.grc')
+                os.path.join(get_state_directory(), 'default_flow_graph.grc')
         )
         return user_default if exists(user_default) else Constants.DEFAULT_FLOW_GRAPH
 
