@@ -15,7 +15,7 @@ from . import Actions
 from .StateCache import StateCache
 from .Constants import MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT
 from .DrawingArea import DrawingArea
-
+from ..main import get_state_directory
 
 log = logging.getLogger(__name__)
 
@@ -133,8 +133,8 @@ class Page(Gtk.HBox):
 
     def _handle_scroll_window_key_press(self, widget, event):
         is_ctrl_pg = (
-            event.state & Gdk.ModifierType.CONTROL_MASK and
-            event.keyval in (Gdk.KEY_Page_Up, Gdk.KEY_Page_Down)
+                event.state & Gdk.ModifierType.CONTROL_MASK and
+                event.keyval in (Gdk.KEY_Page_Up, Gdk.KEY_Page_Down)
         )
         if is_ctrl_pg:
             return self.get_parent().event(event)
@@ -147,7 +147,11 @@ class Page(Gtk.HBox):
             generator
         """
         platform = self.flow_graph.parent_platform
-        return platform.Generator(self.flow_graph, os.path.dirname(self.file_path))
+        if self.flow_graph.get_option('generate_options').startswith('hb'):
+            output_dir = get_state_directory()
+        else:
+            output_dir = os.path.dirname(self.file_path)
+        return platform.Generator(self.flow_graph, output_dir)
 
     def _handle_button(self, button):
         """
