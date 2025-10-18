@@ -25,7 +25,6 @@ import subprocess
 import cProfile
 import pstats
 
-
 from typing import Union
 
 from qtpy import QtCore, QtGui, QtWidgets
@@ -53,6 +52,7 @@ from .preferences import PreferencesDialog
 from .oot_browser import OOTBrowser
 from .dialogs import ErrorsDialog
 from ...core.base import Element
+from ...main import get_state_directory
 
 # Logging
 log = logging.getLogger(f"grc.application.{__name__}")
@@ -1029,7 +1029,8 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
                 return
 
             log.info(f"Saved {filename}")
-            self.tabWidget.tabBar().setTabTextColor(self.tabWidget.currentIndex(), self.palette().color(self.palette().WindowText))
+            self.tabWidget.tabBar().setTabTextColor(self.tabWidget.currentIndex(),
+                                                    self.palette().color(self.palette().WindowText))
             self.currentFlowgraphScene.set_saved(True)
         else:
             log.debug("Flowgraph does not have a filename")
@@ -1061,7 +1062,8 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
                 return
 
             log.info(f"Saved (as) {filename}")
-            self.tabWidget.tabBar().setTabTextColor(self.tabWidget.currentIndex(), self.palette().color(self.palette().WindowText))
+            self.tabWidget.tabBar().setTabTextColor(self.tabWidget.currentIndex(),
+                                                    self.palette().color(self.palette().WindowText))
             self.currentFlowgraphScene.set_saved(True)
             self.tabWidget.setTabText(self.tabWidget.currentIndex(), os.path.basename(filename))
             self.add_recent_file(filename)
@@ -1408,8 +1410,14 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
         filename = self.currentFlowgraphScene.filename
         self.currentFlowgraph.grc_file_path = filename
+
+        if self.currentFlowgraph.get_option('generate_options').startswith('hb'):
+            output_dir = get_state_directory()
+        else:
+            output_dir = os.path.dirname(filename)
+
         generator = self.platform.Generator(
-            self.currentFlowgraph, os.path.dirname(filename)
+            self.currentFlowgraph, output_dir
         )
         generator.write(called_from_exec)
         self.currentView.generator = generator
@@ -1484,7 +1492,8 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
         for variable in sink_fg.core.get_variables():
             id = sink_fg.add_block(
-                'parameter', (variable.states['coordinate'][0] + variable.gui.width + 50, variable.states['coordinate'][1] + 50))
+                'parameter',
+                (variable.states['coordinate'][0] + variable.gui.width + 50, variable.states['coordinate'][1] + 50))
             param_block = sink_fg.core.get_block(id)
             param_block.params['id'].set_value(variable.name)
 
@@ -1496,7 +1505,8 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
                 # Create pad source and add to canvas
                 pad_source_key = int(connection.sink_port.key)
                 pad_id = sink_fg.add_block(
-                    'pad_source', (source.states['coordinate'][0], source.states['coordinate'][1] + pad_source_key * 50))
+                    'pad_source',
+                    (source.states['coordinate'][0], source.states['coordinate'][1] + pad_source_key * 50))
                 pad_block = sink_fg.core.get_block(pad_id)
                 pad_source = pad_block.sources[0]
                 sink_block = sink_fg.core.get_block(sink_fg.core.blocks[selected_blocks.index(sink) + 1].name)
