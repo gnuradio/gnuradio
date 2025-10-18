@@ -23,6 +23,12 @@ install(FILES DESTINATION share/gnuradio/grc/blocks)
 # set(test2_AUTOGRC_DEPS
 #        test3)
 
+if (WIN32)
+    set(PATH_SEP ";")
+else ()
+    set(PATH_SEP ":")
+endif ()
+
 # Enable AUTOGRC for any listed .grc files
 foreach (GRC_FILE ${AUTOGRC_FILES})
     get_filename_component(GRC_BASENAME ${GRC_FILE} NAME_WE)
@@ -34,7 +40,7 @@ foreach (GRC_FILE ${AUTOGRC_FILES})
     add_custom_command(
             OUTPUT ${GRCC_YML_OUTPUT} ${GRCC_PY_OUTPUT}
 
-            COMMAND ${CMAKE_COMMAND} -E env GRC_HIER_PATH_POST=${CMAKE_CURRENT_SOURCE_DIR}\;${CMAKE_CURRENT_BINARY_DIR} grcc -o ${CMAKE_CURRENT_BINARY_DIR} ${GRC_FILE}
+            COMMAND ${CMAKE_COMMAND} -E env GRC_HIER_PATH_POST=${CMAKE_CURRENT_SOURCE_DIR}${PATH_SEP}${CMAKE_CURRENT_BINARY_DIR} grcc -o ${CMAKE_CURRENT_BINARY_DIR} ${GRC_FILE}
 
             COMMAND ${PYTHON_EXECUTABLE} cmake_find_replace.py ${GRCC_PY_OUTPUT} "from ${GRC_BASENAME}" "from gnuradio.howto.${GRC_BASENAME}"
             COMMAND ${PYTHON_EXECUTABLE} cmake_find_replace.py ${GRCC_YML_OUTPUT} "from ${GRC_BASENAME}" "from gnuradio.howto.${GRC_BASENAME}"
