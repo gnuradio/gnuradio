@@ -19,7 +19,7 @@ parameters:
     label: Key
     dtype: raw
     default: 'pmt.intern("key")'
-    hide: ${ 'none' if metadict.mode == 'META' else 'all' }
+    hide: ${ 'none' if metadict == 'Metadata' else 'all' }
 
 inputs:
 -   id: pdu
