@@ -142,3 +142,8 @@ def python_to_pmt(p):
         elif isinstance(p, python_type):
             return from_python(p)
     raise ValueError("can't convert %s type to pmt (%s)" % (type(p), p))
+
+
+def python_to_pair(first, second):
+    """ Constructs PMT pair from two python elements """
+    return pmt.cons(python_to_pmt(first), python_to_pmt(second))
