@@ -449,6 +449,7 @@ add_subdirectory(gr-wavelet)
 add_subdirectory(gr-zeromq)
 add_subdirectory(gr-network)
 add_subdirectory(gr-soapy)
+add_subdirectory(gr-linux-crypto)
 
 # Defining GR_CTRLPORT for gnuradio/config.h
 if(ENABLE_GR_CTRLPORT)
