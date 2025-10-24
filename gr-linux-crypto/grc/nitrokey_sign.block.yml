@@ -1,0 +1,24 @@
+id: nitrokey_sign
+label: Nitrokey Sign
+category: '[gr-linux-crypto]/Hardware'
+flags: [python, cpp]
+imports: 'from gnuradio import linux_crypto'
+templates:
+  imports: |
+    from gnuradio import linux_crypto
+  make: linux_crypto.nitrokey_interface(${auto_repeat})
+  callbacks:
+  - set_auto_repeat(${auto_repeat})
+parameters:
+- id: auto_repeat
+  label: Auto Repeat
+  dtype: bool
+  default: 'False'
+  hide: none
+inputs: []
+outputs:
+- domain: stream
+  dtype: byte
+  vlen: 1
+file_format: 1
+

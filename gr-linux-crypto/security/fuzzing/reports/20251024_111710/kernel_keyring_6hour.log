@@ -1,0 +1,363 @@
+[1;92m[+] [0mEnabled environment variable AFL_SKIP_CPUFREQ with value 1[0m
+[1;92m[+] [0mEnabled environment variable AFL_I_DONT_CARE_ABOUT_MISSING_CRASHES with value 1[0m
+[1;92m[+] [0mEnabled environment variable AFL_NO_AFFINITY with value 1[0m
+[1;92m[+] [0mEnabled environment variable AFL_FAST_CAL with value 1[0m
+[0;36mafl-fuzz++4.09c[0m based on afl by Michal Zalewski and a large online community
+[1;92m[+] [0mAFL++ is maintained by Marc "van Hauser" Heuse, Dominik Maier, Andrea Fioraldi and Heiko "hexcoder" Eißfeldt[0m
+[1;92m[+] [0mAFL++ is open source, get it at https://github.com/AFLplusplus/AFLplusplus[0m
+[1;92m[+] [0mNOTE: AFL++ >= v3 has changed defaults and behaviours - see README.md[0m
+[1;92m[+] [0mNo -M/-S set, autoconfiguring for "-S default"[0m
+[1;94m[*] [0mGetting to work...[0m
+[1;92m[+] [0mUsing exponential power schedule (FAST)[0m
+[1;92m[+] [0mEnabled testcache with 50 MB[0m
+[1;92m[+] [0mGenerating fuzz data with a length of min=1 max=1048576[0m
+[1;94m[*] [0mChecking core_pattern...[0m
+
+[1;91m[-] [0mHmm, your system is configured to send core dump notifications to an
+    external utility. This will cause issues: there will be an extended delay
+    between stumbling upon a crash and having this information relayed to the
+    fuzzer via the standard waitpid() API.
+    If you're just testing, set 'AFL_I_DONT_CARE_ABOUT_MISSING_CRASHES=1'.
+
+    To avoid having crashes misinterpreted as timeouts, please log in as root
+    and temporarily modify /proc/sys/kernel/core_pattern, like so:
+
+    echo core >/proc/sys/kernel/core_pattern
+[1;92m[+] [0mLooks like we're not running on a tty, so I'll be a bit less verbose.[0m
+[1;92m[+] [0mYou have 24 CPU cores and 3 runnable tasks (utilization: 12%).[0m
+[1;92m[+] [0mTry parallel jobs - see docs/fuzzing_in_depth.md#c-using-multiple-cores[0m
+[1;94m[*] [0mSetting up output directories...[0m
+[1;93m[!] [1;97mWARNING: [0mNot binding to a CPU core (AFL_NO_AFFINITY set).[0m
+[1;94m[*] [0mScanning 'corpus/kernel_keyring'...[0m
+[1;92m[+] [0mLoaded a total of 40 seeds.[0m
+[1;94m[*] [0mCreating hard links for all input files...[0m
+[1;94m[*] [0mValidating target binary...[0m
+[1;94m[*] [0mSpinning up the fork server...[0m
+[1;92m[+] [0mAll right - fork server is up.[0m
+[1;94m[*] [0mNo auto-generated dictionary tokens to reuse.[0m
+[1;94m[*] [0mLoading extra dictionary from '/dev/null' (level 0)...[0m
+[1;93m[!] [1;97mWARNING: [0mNo usable data in '/dev/null'[0m
+[1;94m[*] [0mAttempting dry run with 'id:000000,time:0,execs:0,orig:seed_000'...[0m
+[1;90m    len = 1, map size = 2, exec speed = 4718 us, hash = f142d898e617fe66
+[0m[1;94m[*] [0mAttempting dry run with 'id:000001,time:0,execs:0,orig:seed_001'...[0m
+[1;90m    len = 2, map size = 2, exec speed = 2137 us, hash = f142d898e617fe66
+[0m[1;93m[!] [1;97mWARNING: [0mNo new instrumentation output, test case may be useless.[0m
+[1;94m[*] [0mAttempting dry run with 'id:000002,time:0,execs:0,orig:seed_002'...[0m
+[1;90m    len = 3, map size = 2, exec speed = 2150 us, hash = f142d898e617fe66
+[0m[1;93m[!] [1;97mWARNING: [0mNo new instrumentation output, test case may be useless.[0m
+[1;94m[*] [0mAttempting dry run with 'id:000003,time:0,execs:0,orig:seed_003'...[0m
+[1;90m    len = 4, map size = 2, exec speed = 2123 us, hash = f142d898e617fe66
+[0m[1;93m[!] [1;97mWARNING: [0mNo new instrumentation output, test case may be useless.[0m
+[1;94m[*] [0mAttempting dry run with 'id:000004,time:0,execs:0,orig:seed_004'...[0m
+[1;90m    len = 1, map size = 2, exec speed = 2013 us, hash = f142d898e617fe66
+[0m[1;93m[!] [1;97mWARNING: [0mNo new instrumentation output, test case may be useless.[0m
+[1;94m[*] [0mAttempting dry run with 'id:000005,time:0,execs:0,orig:seed_005'...[0m
+[1;90m    len = 1, map size = 2, exec speed = 1969 us, hash = f142d898e617fe66
+[0m[1;93m[!] [1;97mWARNING: [0mNo new instrumentation output, test case may be useless.[0m
+[1;94m[*] [0mAttempting dry run with 'id:000006,time:0,execs:0,orig:seed_006'...[0m
+[1;90m    len = 1, map size = 2, exec speed = 2020 us, hash = f142d898e617fe66
+[0m[1;93m[!] [1;97mWARNING: [0mNo new instrumentation output, test case may be useless.[0m
+[1;94m[*] [0mAttempting dry run with 'id:000007,time:0,execs:0,orig:seed_007'...[0m
+[1;90m    len = 1, map size = 2, exec speed = 1995 us, hash = f142d898e617fe66
+[0m[1;93m[!] [1;97mWARNING: [0mNo new instrumentation output, test case may be useless.[0m
+[1;94m[*] [0mAttempting dry run with 'id:000008,time:0,execs:0,orig:seed_008'...[0m
+[1;90m    len = 2, map size = 2, exec speed = 2004 us, hash = f142d898e617fe66
+[0m[1;93m[!] [1;97mWARNING: [0mNo new instrumentation output, test case may be useless.[0m
+[1;94m[*] [0mAttempting dry run with 'id:000009,time:0,execs:0,orig:seed_009'...[0m
+[1;90m    len = 2, map size = 2, exec speed = 1984 us, hash = f142d898e617fe66
+[0m[1;93m[!] [1;97mWARNING: [0mNo new instrumentation output, test case may be useless.[0m
+[1;94m[*] [0mAttempting dry run with 'id:000010,time:0,execs:0,orig:seed_010'...[0m
+[1;90m    len = 2, map size = 2, exec speed = 1983 us, hash = f142d898e617fe66
+[0m[1;93m[!] [1;97mWARNING: [0mNo new instrumentation output, test case may be useless.[0m
+[1;94m[*] [0mAttempting dry run with 'id:000011,time:0,execs:0,orig:seed_011'...[0m
+[1;90m    len = 2, map size = 2, exec speed = 2074 us, hash = f142d898e617fe66
+[0m[1;93m[!] [1;97mWARNING: [0mNo new instrumentation output, test case may be useless.[0m
+[1;94m[*] [0mAttempting dry run with 'id:000012,time:0,execs:0,orig:seed_012'...[0m
+[1;90m    len = 4, map size = 2, exec speed = 1968 us, hash = f142d898e617fe66
+[0m[1;93m[!] [1;97mWARNING: [0mNo new instrumentation output, test case may be useless.[0m
+[1;94m[*] [0mAttempting dry run with 'id:000013,time:0,execs:0,orig:seed_013'...[0m
+[1;90m    len = 3, map size = 2, exec speed = 2108 us, hash = f142d898e617fe66
+[0m[1;93m[!] [1;97mWARNING: [0mNo new instrumentation output, test case may be useless.[0m
+[1;94m[*] [0mAttempting dry run with 'id:000014,time:0,execs:0,orig:seed_014'...[0m
+[1;90m    len = 4, map size = 2, exec speed = 1992 us, hash = f142d898e617fe66
+[0m[1;93m[!] [1;97mWARNING: [0mNo new instrumentation output, test case may be useless.[0m
+[1;94m[*] [0mAttempting dry run with 'id:000015,time:0,execs:0,orig:seed_015'...[0m
+[1;90m    len = 6, map size = 2, exec speed = 2034 us, hash = f142d898e617fe66
+[0m[1;93m[!] [1;97mWARNING: [0mNo new instrumentation output, test case may be useless.[0m
+[1;94m[*] [0mAttempting dry run with 'id:000016,time:0,execs:0,orig:seed_016'...[0m
+[1;90m    len = 8, map size = 2, exec speed = 1992 us, hash = f142d898e617fe66
+[0m[1;93m[!] [1;97mWARNING: [0mNo new instrumentation output, test case may be useless.[0m
+[1;94m[*] [0mAttempting dry run with 'id:000017,time:0,execs:0,orig:seed_017'...[0m
+[1;90m    len = 7, map size = 2, exec speed = 2051 us, hash = f142d898e617fe66
+[0m[1;93m[!] [1;97mWARNING: [0mNo new instrumentation output, test case may be useless.[0m
+[1;94m[*] [0mAttempting dry run with 'id:000018,time:0,execs:0,orig:seed_018'...[0m
+[1;90m    len = 12, map size = 2, exec speed = 1990 us, hash = f142d898e617fe66
+[0m[1;93m[!] [1;97mWARNING: [0mNo new instrumentation output, test case may be useless.[0m
+[1;94m[*] [0mAttempting dry run with 'id:000019,time:0,execs:0,orig:seed_019'...[0m
+[1;90m    len = 8, map size = 2, exec speed = 2080 us, hash = f142d898e617fe66
+[0m[1;93m[!] [1;97mWARNING: [0mNo new instrumentation output, test case may be useless.[0m
+[1;94m[*] [0mAttempting dry run with 'id:000020,time:0,execs:0,orig:seed_020'...[0m
+[1;90m    len = 10, map size = 2, exec speed = 1967 us, hash = f142d898e617fe66
+[0m[1;93m[!] [1;97mWARNING: [0mNo new instrumentation output, test case may be useless.[0m
+[1;94m[*] [0mAttempting dry run with 'id:000021,time:0,execs:0,orig:seed_021'...[0m
+[1;90m    len = 10, map size = 2, exec speed = 2005 us, hash = f142d898e617fe66
+[0m[1;93m[!] [1;97mWARNING: [0mNo new instrumentation output, test case may be useless.[0m
+[1;94m[*] [0mAttempting dry run with 'id:000022,time:0,execs:0,orig:seed_022'...[0m
+[1;90m    len = 9, map size = 2, exec speed = 2034 us, hash = f142d898e617fe66
+[0m[1;93m[!] [1;97mWARNING: [0mNo new instrumentation output, test case may be useless.[0m
+[1;94m[*] [0mAttempting dry run with 'id:000023,time:0,execs:0,orig:seed_023'...[0m
+[1;90m    len = 10, map size = 2, exec speed = 2086 us, hash = f142d898e617fe66
+[0m[1;93m[!] [1;97mWARNING: [0mNo new instrumentation output, test case may be useless.[0m
+[1;94m[*] [0mAttempting dry run with 'id:000024,time:0,execs:0,orig:seed_024'...[0m
+[1;90m    len = 13, map size = 2, exec speed = 1985 us, hash = f142d898e617fe66
+[0m[1;93m[!] [1;97mWARNING: [0mNo new instrumentation output, test case may be useless.[0m
+[1;94m[*] [0mAttempting dry run with 'id:000025,time:0,execs:0,orig:seed_025'...[0m
+[1;90m    len = 18, map size = 2, exec speed = 2119 us, hash = f142d898e617fe66
+[0m[1;93m[!] [1;97mWARNING: [0mNo new instrumentation output, test case may be useless.[0m
+[1;94m[*] [0mAttempting dry run with 'id:000026,time:0,execs:0,orig:seed_026'...[0m
+[1;90m    len = 17, map size = 2, exec speed = 2031 us, hash = f142d898e617fe66
+[0m[1;93m[!] [1;97mWARNING: [0mNo new instrumentation output, test case may be useless.[0m
+[1;94m[*] [0mAttempting dry run with 'id:000027,time:0,execs:0,orig:seed_027'...[0m
+[1;90m    len = 19, map size = 2, exec speed = 2122 us, hash = f142d898e617fe66
+[0m[1;93m[!] [1;97mWARNING: [0mNo new instrumentation output, test case may be useless.[0m
+[1;94m[*] [0mAttempting dry run with 'id:000028,time:0,execs:0,orig:seed_028'...[0m
+[1;90m    len = 5, map size = 2, exec speed = 2014 us, hash = f142d898e617fe66
+[0m[1;93m[!] [1;97mWARNING: [0mNo new instrumentation output, test case may be useless.[0m
+[1;94m[*] [0mAttempting dry run with 'id:000029,time:0,execs:0,orig:seed_029'...[0m
+[1;90m    len = 10, map size = 2, exec speed = 2031 us, hash = f142d898e617fe66
+[0m[1;93m[!] [1;97mWARNING: [0mNo new instrumentation output, test case may be useless.[0m
+[1;94m[*] [0mAttempting dry run with 'id:000030,time:0,execs:0,orig:seed_030'...[0m
+[1;90m    len = 20, map size = 2, exec speed = 2004 us, hash = f142d898e617fe66
+[0m[1;93m[!] [1;97mWARNING: [0mNo new instrumentation output, test case may be useless.[0m
+[1;94m[*] [0mAttempting dry run with 'id:000031,time:0,execs:0,orig:seed_031'...[0m
+[1;90m    len = 50, map size = 2, exec speed = 1962 us, hash = f142d898e617fe66
+[0m[1;93m[!] [1;97mWARNING: [0mNo new instrumentation output, test case may be useless.[0m
+[1;94m[*] [0mAttempting dry run with 'id:000032,time:0,execs:0,orig:seed_032'...[0m
+[1;90m    len = 100, map size = 2, exec speed = 2048 us, hash = f142d898e617fe66
+[0m[1;93m[!] [1;97mWARNING: [0mNo new instrumentation output, test case may be useless.[0m
+[1;94m[*] [0mAttempting dry run with 'id:000033,time:0,execs:0,orig:seed_033'...[0m
+[1;90m    len = 200, map size = 2, exec speed = 1932 us, hash = f142d898e617fe66
+[0m[1;93m[!] [1;97mWARNING: [0mNo new instrumentation output, test case may be useless.[0m
+[1;94m[*] [0mAttempting dry run with 'id:000034,time:0,execs:0,orig:seed_034'...[0m
+[1;90m    len = 500, map size = 2, exec speed = 2049 us, hash = f142d898e617fe66
+[0m[1;93m[!] [1;97mWARNING: [0mNo new instrumentation output, test case may be useless.[0m
+[1;94m[*] [0mAttempting dry run with 'id:000035,time:0,execs:0,orig:seed_035'...[0m
+[1;90m    len = 10, map size = 2, exec speed = 1920 us, hash = f142d898e617fe66
+[0m[1;93m[!] [1;97mWARNING: [0mNo new instrumentation output, test case may be useless.[0m
+[1;94m[*] [0mAttempting dry run with 'id:000036,time:0,execs:0,orig:seed_036'...[0m
+[1;90m    len = 10, map size = 2, exec speed = 2046 us, hash = f142d898e617fe66
+[0m[1;93m[!] [1;97mWARNING: [0mNo new instrumentation output, test case may be useless.[0m
+[1;94m[*] [0mAttempting dry run with 'id:000037,time:0,execs:0,orig:seed_037'...[0m
+[1;90m    len = 10, map size = 2, exec speed = 2025 us, hash = f142d898e617fe66
+[0m[1;93m[!] [1;97mWARNING: [0mNo new instrumentation output, test case may be useless.[0m
+[1;94m[*] [0mAttempting dry run with 'id:000038,time:0,execs:0,orig:seed_038'...[0m
+[1;90m    len = 10, map size = 2, exec speed = 2089 us, hash = f142d898e617fe66
+[0m[1;93m[!] [1;97mWARNING: [0mNo new instrumentation output, test case may be useless.[0m
+[1;94m[*] [0mAttempting dry run with 'id:000039,time:0,execs:0,orig:seed_039'...[0m
+[1;90m    len = 10, map size = 2, exec speed = 1890 us, hash = f142d898e617fe66
+[0m[1;93m[!] [1;97mWARNING: [0mNo new instrumentation output, test case may be useless.[0m
+[1;92m[+] [0mAll test cases processed.[0m
+[1;93m[!] [1;97mWARNING: [0m[1;91mSome test cases look useless. Consider using a smaller set.[0m
+[1;93m[!] [1;97mWARNING: [0mYou have lots of input files; try starting small.[0m
+[1;92m[+] [0mHere are some useful stats:
+
+[1;90m    Test case count : [0m1 favored, 0 variable, 39 ignored, 40 total
+[1;90m       Bitmap range : [0m2 to 2 bits (average: 2.00 bits)
+[1;90m        Exec timing : [0m4718 to 4718 us (average: 2093 us)
+[0m
+[1;94m[*] [0m-t option specified. We'll use an exec timeout of 5 ms.[0m
+[1;92m[+] [0mAll set and ready to roll![0m
+[1;94m[*] [0mEntering queue cycle 1.[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=50, weight=-nan, favorite=0, was_fuzzed=0, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:00)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:00)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:00)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:00)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:01)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:01)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:01)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:02)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:02)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:02)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:03)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:03)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:04)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:04)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:04)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:05)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:05)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:05)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:06)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:06)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:06)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:07)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:07)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:07)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:08)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:08)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:08)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:09)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:09)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:10)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:10)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:10)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:11)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:11)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:11)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:12)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:12)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:12)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:13)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:13)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:13)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:14)...[0m
+[1;94m[*] [0mEntering queue cycle 2.[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:14)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:14)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:15)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:15)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:16)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:16)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:16)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:17)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:17)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:17)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:18)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:18)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:18)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:19)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:19)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:19)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:20)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:20)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:20)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:21)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:21)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:21)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:22)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:22)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:23)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:23)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:23)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:24)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:24)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:24)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:25)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:25)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:25)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:26)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:26)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:27)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:27)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:27)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:28)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:28)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:28)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:29)...[0m
+[1;94m[*] [0mEntering queue cycle 3.[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:29)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:29)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:30)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:30)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:31)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:31)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:31)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:32)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:32)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:32)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:33)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:33)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:33)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:34)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:34)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:34)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:35)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:35)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:35)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:36)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:36)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:37)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:37)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:37)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:38)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:38)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:38)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:39)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:39)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:39)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:40)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:40)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:41)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:41)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:41)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:42)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:42)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:42)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:43)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:43)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:43)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:44)...[0m
+[1;94m[*] [0mEntering queue cycle 4.[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:44)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:44)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:45)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:45)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:46)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:46)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:46)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:47)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:47)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:47)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:48)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:48)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:48)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:49)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:49)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:50)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:50)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:50)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:51)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:51)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:51)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:52)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:52)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:52)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:53)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:53)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:54)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:54)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:54)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:55)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:55)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:55)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:56)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:56)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:56)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:57)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:57)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:57)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:58)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:58)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:59)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:59)...[0m
+[1;94m[*] [0mEntering queue cycle 5.[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:00:59)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:01:00)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:01:00)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:01:00)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:01:01)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:01:01)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:01:01)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:01:02)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:01:02)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:01:02)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:01:03)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:01:03)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:01:03)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:01:04)...[0m
+[1;94m[*] [0mFuzzing test case #0 (40 total, 0 crashes saved, state: started :-), mode=explore, perf_score=200, weight=-nan, favorite=0, was_fuzzed=1, exec_us=4718, hits=0, map=2, ascii=0, run_time=0:00:01:04)...[0m
+[?25h[1;91m
+
++++ Testing aborted by user +++
+[0m[1;94m[*] [0mStatistics: 0 new corpus items found, 0.00% coverage achieved, 0 crashes saved, 0 timeouts saved, total runtime 0 days, 0 hrs, 1 min, 4 sec[0m
+[1;92m[+] [0mWe're done here. Have a nice day!
+[0m

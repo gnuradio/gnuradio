@@ -1,0 +1,39 @@
+id: kernel_aes_encrypt
+label: Kernel AES Encrypt
+category: '[gr-linux-crypto]/Crypto'
+flags: [python, cpp]
+imports: 'from gnuradio import linux_crypto'
+templates:
+  imports: |
+    from gnuradio import linux_crypto
+  make: linux_crypto.kernel_crypto_aes(${key}, ${iv}, ${encrypt})
+  callbacks:
+  - set_encrypt(${encrypt})
+  - set_key(${key})
+  - set_iv(${iv})
+parameters:
+- id: key
+  label: AES Key
+  dtype: raw
+  default: '[]'
+  hide: none
+- id: iv
+  label: Initialization Vector
+  dtype: raw
+  default: '[]'
+  hide: none
+- id: encrypt
+  label: Encrypt Mode
+  dtype: bool
+  default: 'True'
+  hide: none
+inputs:
+- domain: stream
+  dtype: byte
+  vlen: 1
+outputs:
+- domain: stream
+  dtype: byte
+  vlen: 1
+file_format: 1
+

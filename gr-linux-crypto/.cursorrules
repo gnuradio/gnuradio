@@ -1,0 +1,4 @@
+- Do not add emojis to any output
+- Keep all code comments, commit messages, and documentation emoji-free
+- Use plain text only for all generated content
+- Only include emojis if the user specifically asks for them

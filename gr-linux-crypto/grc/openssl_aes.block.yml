@@ -1,0 +1,47 @@
+id: openssl_aes
+label: OpenSSL AES
+category: '[gr-linux-crypto]/Crypto'
+flags: [python, cpp]
+imports: 'from gnuradio import linux_crypto'
+templates:
+  imports: |
+    from gnuradio import linux_crypto
+  make: linux_crypto.openssl_wrapper(${key}, ${iv}, ${algorithm}, ${encrypt})
+  callbacks:
+  - set_encrypt(${encrypt})
+  - set_key(${key})
+  - set_iv(${iv})
+  - set_algorithm(${algorithm})
+parameters:
+- id: key
+  label: AES Key
+  dtype: raw
+  default: '[]'
+  hide: none
+- id: iv
+  label: Initialization Vector
+  dtype: raw
+  default: '[]'
+  hide: none
+- id: algorithm
+  label: Algorithm
+  dtype: string
+  default: '"aes-256-cbc"'
+  options: ['aes-128-cbc', 'aes-192-cbc', 'aes-256-cbc', 'aes-128-ecb', 'aes-256-ecb']
+  option_labels: ['AES-128-CBC', 'AES-192-CBC', 'AES-256-CBC', 'AES-128-ECB', 'AES-256-ECB']
+  hide: none
+- id: encrypt
+  label: Encrypt Mode
+  dtype: bool
+  default: 'True'
+  hide: none
+inputs:
+- domain: stream
+  dtype: byte
+  vlen: 1
+outputs:
+- domain: stream
+  dtype: byte
+  vlen: 1
+file_format: 1
+
