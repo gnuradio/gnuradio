@@ -1,8 +1,6 @@
 name: 'Windows Installer Builder'
 on:
   workflow_dispatch:
-
-
 jobs:
   ## duplicate from make-test.yml
   # Check hashes first
@@ -65,122 +63,29 @@ jobs:
       run:
         shell: cmd
     env:
-      _GLOBAL_VAR: 'This is a global variable'
       _VS_VERSION: '17.0'
     steps:
     - name: Check environment
-      env:
-        TEST_VAR: '%PROGRAMFILES%\GNU Radio'
       run: |
-        call set TEST_VAR0=%TEST_VAR%
-        call set TEST_VAR1=%%TEST_VAR%%
-        call set TEST_VAR2=%TEST_VAR1%
-        set
-        echo TEST_VAR1=%TEST_VAR1%>> %GITHUB_ENV%
-        echo TEST_VAR0=%TEST_VAR0%>> %GITHUB_ENV%
-        dir %SystemDrive%
-    - name: Check environment
-      run: |
+        @echo DEBUG: Checking current environment variables:
         set
         @echo DEBUG: Relying on preinstalled tools in known installation locations
-        @echo DEBUG: MSYS2 via GHCUP_MSYS2 environment variable
+        @echo DEBUG: MSYS2 via GHCUP_MSYS2 environment variable:
         set GHCUP_MSYS2
-        @echo DEBUG: PIPX via PATH environment variable
+        @echo DEBUG: PIPX via PATH environment variable:
         set PIPX_HOME
         pipx list
-        @echo DEBUG: MSVC via PATH environment variable
+        @echo DEBUG: MSVC via PATH environment variable:
         "%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe" -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64
         "%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe" -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath
         @echo DEBUG: Chocolatey via PATH environment variable
         set ChocolateyInstall
         choco list
-        @echo DEBUG: Python 3.9 via RUNNER_TOOL_CACHE at %RUNNER_TOOL_CACHE%
+        @echo DEBUG: Python 3.9 via RUNNER_TOOL_CACHE at %RUNNER_TOOL_CACHE%:
         dir %RUNNER_TOOL_CACHE%\Python
-        @echo DEBUG: Check for installed Python versions
+        @echo DEBUG: Check for installed Python versions:
         py -0
-# VS 2022 Enterprise with Microsoft.VisualStudio.Component.VC.Tools.x86.x64 is already included
-# https://github.com/actions/runner-images/blob/main/images/windows/Windows2022-Readme.md
-#    - name: Download and install msbuild
-#      run: |
-#        powershell -NoProfile -ExecutionPolicy Bypass -Command ^
-#          Invoke-WebRequest "https://aka.ms/vs/17/release/vs_buildtools.exe" ^
-#          -OutFile "%TEMP%\vs_buildtools.exe" -UseBasicParsing
-#        "%TEMP%\vs_buildtools.exe"  --quiet --wait --norestart --noUpdateInstaller ^
-#          --add Microsoft.VisualStudio.Workload.VCTools ^
-#          --add Microsoft.VisualStudio.ComponentGroup.VC.Tools.142.x86.x64 ^
-#          --includeRecommended
-#        REM Accept exit code 3010 as success
-#        IF %ERRORLEVEL% EQU 3010 EXIT 0
-#    - name: Install chocolatey
-#      run: |
-#        @rem chocolatey should be installed
-#        @rem setx chocolateyVersion 1.4.0 /m
-#        @rem @"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" ^
-#        @rem -NoProfile -InputFormat None -ExecutionPolicy Bypass ^
-#        @rem -Command "[System.Net.ServicePointManager]::SecurityProtocol = 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))"
-#        @rem SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
-#        choco list
-#    - name: Download and install msbuild via chocolatey
-#      run: |
-#        choco install -y visualstudio2022buildtools ^
-#          --quiet
-#        type %ChocolateyInstall%\logs\chocolatey.log
-#        choco install -y visualstudio2022-workload-vctools ^
-#          --package-parameters "--includeRecommended" ^
-#          --quiet
-#        type %ChocolateyInstall%\logs\chocolatey.log
-#    - name: Add msbuild to PATH environment variable
-#      if: always()
-#      uses: microsoft/setup-msbuild@v2
-#      with:
-#        msbuild-architecture: x64
-#        #vs-version: '[16.0, 17.0)'
-#        vs-version: '[17.0, 18.0)'
-    #- name: Setup Python 3.12
-    #  if: always()
-    #  uses: actions/setup-python@v5
-    #  # action installs into RUNNER_TOOL_CACHE and
-    #  # defines and exports the environment variables pythonLocation, Python_ROOT_DIR, Python2_ROOT_DIR, Python3_ROOT_DIR
-    #  id: cp312
-    #  with:
-    #    python-version: '3.12'
-    - name: Export vcvars64 path for 'x64 Native Tools Command Prompt'
-      if: always()
-      run: |
-        set
-        where msbuild
-        @rem set msbuild_vcvars64=C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Auxiliary\Build\vcvars64.bat
-        set msbuild_vcvars64=C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat
-        if NOT EXIST "%msbuild_vcvars64%" (^
-           echo ERROR: Could not locate 'vcvars64' batch file at "%msbuild_vcvars64%". This script is intended to be run from a build machine & exit /B 1)
-        echo msbuild_vcvars64=%msbuild_vcvars64%>> %GITHUB_ENV%
-        call "%msbuild_vcvars64%"
-        set VSINSTALLDIR
-        call set _VSINSTALLDIR=%%VSINSTALLDIR:~0,-1%%
-        set _VSINSTALLDIR
-        call set __VSINSTALLDIR=%%VSINSTALLDIR:~-1%%
-        set __VSINSTALLDIR
-        @rem This work - if "%__VSINSTALLDIR%" == "\" (set VSINSTALLDIR="%_VSINSTALLDIR%")
-        if "%__VSINSTALLDIR%" == "\" set VSINSTALLDIR=%_VSINSTALLDIR%
-        set VSINSTALLDIR
-        echo VSINSTALLDIR1=%VSINSTALLDIR%>> %GITHUB_ENV%
-        echo for /f "usebackq tokens=*" %%i in (`"C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe" -version "[17.0, 18.0)" -requires Microsoft.VisualStudio.Workload.VCTools -property installationPath -products *`)
-        set vswhere_args=-requires Microsoft.VisualStudio.Workload.VCTools -property installationPath -products *
-        call "C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe" %vswhere_args%
-        for /f "usebackq tokens=*" %%i in (`call "C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe" %vswhere_args%`) do (set test=%%i)
-        echo '%test%'
-        set vswhere_args=-requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath -products *
-        call "C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe" %vswhere_args%
-        for /f "usebackq tokens=*" %%i in (`call "C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe" %vswhere_args%`) do (set test=%%i)
-        echo '%test%'
-        set vswhere_args=-requires Microsoft.VisualStudio.ComponentGroup.VC.Tools.142.x86.x64 -property installationPath -products *
-        call "C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe" %vswhere_args%
-        for /f "usebackq tokens=*" %%i in (`call "C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe" %vswhere_args%`) do (set test=%%i)
-        echo '%test%'
-        set vswhere_args=-requires Microsoft.VisualStudio.Component.VC.v141.x86.x64 -property installationPath -products *
-        call "C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe" %vswhere_args%
-        for /f "usebackq tokens=*" %%i in (`call "C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe" %vswhere_args%`) do (set test=%%i)
-        echo '%test%'
+        @echo DEBUG: Build machine information:
         dir c:
         dir d:
         "%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" ^
@@ -190,21 +95,22 @@ jobs:
             -NoProfile -InputFormat None -ExecutionPolicy Bypass ^
             -Command "Get-ComputerInfo | Select-Object TotalPhysicalMemory, AvailablePhysicalMemory"
         wmic OS
-#    - name: configure Pagefile
-#      uses: al-cheb/configure-pagefile-action@v1.2
-#      with:
-#        minimum-size: 16GB
-#        maximum-size: 64GB
-#        disk-root: "D:"
-#    - name: check Pagefile
-#      run: |
-#        dir d:
-#        "%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" ^
-#            -NoProfile -InputFormat None -ExecutionPolicy Bypass ^
-#            -Command "Get-CimInstance Win32_PageFileUsage | fl *"
-#        "%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" ^
-#            -NoProfile -InputFormat None -ExecutionPolicy Bypass ^
-#            -Command "Get-ComputerInfo | Select-Object TotalPhysicalMemory, AvailablePhysicalMemory"
+    - name: Export vcvars64 path for 'x64 Native Tools Command Prompt'
+      if: always()
+      run: |
+        @echo DEBUG: Checking current environment variables:
+        set
+        where msbuild
+        set msbuild_vcvars64=C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat
+        if NOT EXIST "%msbuild_vcvars64%" (^
+           echo ERROR: Could not locate 'vcvars64' batch file at "%msbuild_vcvars64%". This script is intended to be run from a build machine & exit /B 1)
+        echo msbuild_vcvars64=%msbuild_vcvars64%>> %GITHUB_ENV%
+        call "%msbuild_vcvars64%"
+        call set _VSINSTALLDIR=%%VSINSTALLDIR:~0,-1%%
+        call set __VSINSTALLDIR=%%VSINSTALLDIR:~-1%%
+        if "%__VSINSTALLDIR%" == "\" set VSINSTALLDIR=%_VSINSTALLDIR%
+        set VSINSTALLDIR
+        echo VSINSTALLDIR1=%VSINSTALLDIR%>> %GITHUB_ENV%
     - name: Checkout code
       uses: actions/checkout@v4
       with:
@@ -218,129 +124,44 @@ jobs:
       env:
         PY_VENV_PATH: ${{ runner.workspace }}\py_venv
       run: | 
-        @rem set PY_PYTHON=3.12
-        @rem set PY_PYTHON3=3.12
+        @echo DEBUG: List installed Python versions:
         py -0
-        @rem echo PY_PYTHON=%PY_PYTHON%>> %GITHUB_ENV%
-        @rem echo PY_PYTHON3=%PY_PYTHON%>> %GITHUB_ENV%
-        @rem echo '${{ steps.cp312.outputs.python-version }}'
-        @rem ${{ steps.cp312.outputs.python-path }} -m pip install virtualenv
         set PY_VENV_VERSION=3.12
+        @echo DEBUG: Creating Python virtual environment at %PY_VENV_PATH% with Python %PY_VENV_VERSION%
         py -%PY_VENV_VERSION% -m pip install virtualenv
-        @rem {{ steps.cp312.outputs.python-path }} -m venv %PY_VENV_PATH%
         py -%PY_VENV_VERSION% -m venv %PY_VENV_PATH%
         call %PY_VENV_PATH%\Scripts\activate
         python -V
         python -c "import sys;print(sys.path)"
         echo PY_VENV_PATH=%PY_VENV_PATH%>> %GITHUB_ENV%
         echo PY_VENV_VERSION=%PY_VENV_VERSION%>> %GITHUB_ENV%
-        @rem echo PATH=%PATH%>> %GITHUB_ENV%
-        set RUNNER_WORKSPACE
-        set GITHUB_WORKSPACE
         pip install -r %GITHUB_WORKSPACE%\gnuradio\release\requirements.txt
-    - env:
+    - name: Export MSYS2 environment variables
+      env:
         MSYSTEM: ucrt64
       run: |
-        echo Exporting environment variable MSYS2_LOCATION with value '%GHCUP_MSYS2%'
+        echo DEBUG: Exporting environment variable MSYS2_LOCATION with value '%GHCUP_MSYS2%'
         echo MSYS2_LOCATION=%GHCUP_MSYS2%>> %GITHUB_ENV%
         echo MSYSTEM=%MSYSTEM%>> %GITHUB_ENV%
-#    - name: Download GTK3 from Github release asset
-#      env:
-#        url: 'https://github.com/wingtk/gvsbuild/releases/download/2024.10.0/GTK3_Gvsbuild_2024.10.0_x64.zip'
-#        target_path: ${{ runner.workspace }}\gtk3-release
-#        temp_file_name: gtk3_download.zip
-#      run: |
-#        set
-#        @echo Download GTK binaries from
-#        @echo     '%url%'
-#        powershell -NoProfile -ExecutionPolicy Bypass ^
-#            -Command Invoke-WebRequest "%url%" ^
-#            -OutFile "%TEMP%\%temp_file_name%" -UseBasicParsing
-#        @echo Extract downloaded archive '%temp_file_name%' to:
-#        @echo    '%target_path%'
-#        mkdir "%target_path%"
-#        cd "%target_path%"
-#        tar -xf "%TEMP%\%temp_file_name%"
-#        dir
-#    - name: Step6 -- Download GTK3 binaries and install GTK python support
-#      run: |
-#        @echo Step6: Install GTK ...
-#        set GTK_ROOT=%RUNNER_WORKSPACE%\gtk3-release
-#        set INCLUDE=%GTK_ROOT%\include;%GTK_ROOT%\include\cairo;%GTK_ROOT%\include\glib-2.0;%GTK_ROOT%\include\gobject-introspection-1.0;%GTK_ROOT%\lib\glib-2.0\include;%INCLUDE%
-#        echo INCLUDE=%INCLUDE%>> %GITHUB_ENV%
-#        set LIB=%GTK_ROOT%\lib;%LIB%
-#        echo LIB=%LIB%>> %GITHUB_ENV%
-#        set GTK_BIN_DIR=%GTK_ROOT%\bin
-#        echo GTK_BIN_DIR=%GTK_BIN_DIR%>> %GITHUB_ENV%
-#        call set fps_GTK_BIN_DIR=%%GTK_BIN_DIR:\=/%%
-#        echo fps_GTK_BIN_DIR=%fps_GTK_BIN_DIR%>> %GITHUB_ENV%
-#        set PATH=%GTK_BIN_DIR%;%PATH%
-#        dir %GTK_ROOT%\python
-#        call %PY_VENV_PATH%\Scripts\activate
-#        set pythonLocation=%PY_VENV_PATH%&& set Python_ROOT_DIR=%PY_VENV_PATH%&& set ^
-#            Python2_ROOT_DIR=%PY_VENV_PATH%&& set Python3_ROOT_DIR=%PY_VENV_PATH%
-#        for %%i in (%GTK_ROOT%\python\PyGObject*.whl) do (pip install --force-reinstall %%i)
-#        for %%i in (%GTK_ROOT%\python\pycairo*.whl) do (pip install --force-reinstall %%i)
-#        @echo Verify pygi installation
-#        python -c "import os;os.add_dll_directory('%fps_GTK_BIN_DIR%');import gi;gi.require_version('Gtk', '3.0');gi.require_foreign('cairo', 'Context');gi.require_version('PangoCairo', '1.0')"
-#    - name: Clone GVSBuild (to build GTK)
-#      uses: actions/checkout@v4
-#      with:
-#        repository: 'wingtk/gvsbuild'
-#        ref: '09028ca09c3f7eef4d7fe935f79cacd2fbb4410f'
-#        path: gvsbuild
-#        fetch-depth: 2
-#    - run: |
-#        echo %CD%
-#        @rem CD is D:\a\gnuradio\gnuradio
-#        set MSYSTEM
-#        set MSYS2_LOCATION
-#        set Python3_ROOT_DIR
-#        set 
-#        dir %RUNNER_WORKSPACE%
-#        dir
-#        cd gvsbuild
-#        echo %CD% -- Calling git
-#        git checkout HEAD
-#        git status
-#        echo %CD% -- Done Calling git
-#    - name: Debug GTK build error
-#      run: |
-#        set VSCMD_DEBUG=3
-#        @echo DEBUG: Calling cmd /c vcvars w/ redirection
-#        cmd.exe /c ""%msbuild_vcvars64%">NUL && set"
-#        echo Errorlevel %errorlevel%
-#        @echo DEBUG: Reading log file dd_vsdevcmd*.log
-#        type C:\Users\RUNNER~1\AppData\Local\Temp\dd_vsdevcmd17_preinit_env.log
-#        type C:\Users\RUNNER~1\AppData\Local\Temp\dd_vsdevcmd17_env.log
-#        @echo DEBUG: Calling cmd /c vcvars w/o redirection
-#        cmd.exe /c ""%msbuild_vcvars64%""
-#        echo Errorlevel %errorlevel%
-#        @echo DEBUG: Reading log file dd_vsdevcmd*.log
-#        type C:\Users\RUNNER~1\AppData\Local\Temp\dd_vsdevcmd17_preinit_env.log
-#        type C:\Users\RUNNER~1\AppData\Local\Temp\dd_vsdevcmd17_env.log
-#        @echo DEBUG: Calling vcvars directly
-#        call "%msbuild_vcvars64%"
-#        echo Errorlevel %errorlevel%
     - name: Build GTK binaries with gvsbuild
       env:
         gtk_version: gtk3
         gtk_build_dir: ${{ runner.workspace }}\gtk-build
         gvsbuild_dir: ${{ github.workspace }}\gvsbuild
       run: |
-        @echo Activate Python venv
+        @echo Activate Python venv:
         call %PY_VENV_PATH%\Scripts\activate
         python -c "import sys;print(sys.path)"
-        @echo Define MSYS2_LOCATION with linux path separators
+        @echo Define MSYS2_LOCATION with linux path separators:
         call set fps_MSYS2_DIR=%%GHCUP_MSYS2:\=/%%
         set fps_MSYS2_DIR
         echo fps_MSYS2_DIR=%fps_MSYS2_DIR%>> %GITHUB_ENV%
-        @echo Make sure variable MSYSTEM is not defined. Current value is '%MSYSTEM%'
+        @echo Make sure variable MSYSTEM is not defined. Current value is '%MSYSTEM%':
         set MSYSTEM=
         @echo New value is '%MSYSTEM%'
         mkdir %gtk_build_dir%
         echo gtk_build_dir=%gtk_build_dir%>> %GITHUB_ENV%
-        @echo Defining a number of environment variables pointing to future locations
+        @echo Defining a number of environment variables pointing to future locations:
         set GTK_ROOT=%gtk_build_dir%\gtk\x64\release
         echo GTK_ROOT=%GTK_ROOT%>> %GITHUB_ENV%
         set INCLUDE=%GTK_ROOT%\include;%GTK_ROOT%\include\cairo;%GTK_ROOT%\include\glib-2.0;%GTK_ROOT%\include\gobject-introspection-1.0;%GTK_ROOT%\lib\glib-2.0\include;%INCLUDE%
@@ -350,22 +171,16 @@ jobs:
         call set fps_GTK_BIN_DIR=%%GTK_BIN_DIR:\=/%%
         echo fps_GTK_BIN_DIR=%fps_GTK_BIN_DIR%>> %GITHUB_ENV%
         set PATH=%GTK_BIN_DIR%;%PATH%
-        set
         @echo Starting to build from %gvsbuild_dir%
         @echo Defer calling vcvars64.bat as it is called by gvsbuild itself and 
         @echo multiple calls can lead to 'The input line is too long.' errors 
         @echo when PATH environment variable is repeatably expanded.
-        @rem call "%msbuild_vcvars64%" -clean_env
         python -m pip install gvsbuild==2025.11.0
-        @echo TODO specify --vs-ver 17 instead of --vs-ver 16, because gvsbuild assumes --vs-ver 16 is mapped to MSVC 2019 folder
-        @echo TODO does not seem to understand the MSVC 2022 can optionally compile with older --vs_ver
-        @rem set gvsbuild_args=build %gtk_version% --configuration release --py-wheel --enable-gi pygobject --msys-dir %fps_MSYS2_DIR% --build-dir %gtk_build_dir%  --from-scratch --ninja-opts -j1 --vs-ver 17 --platform x64 --vs-install-path "C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools"
-        set
         set gvsbuild_args=build %gtk_version% --configuration release --py-wheel --enable-gi pygobject --msys-dir %fps_MSYS2_DIR% --build-dir %gtk_build_dir% --vs-ver 17 --platform x64
         @echo Calling gvsbuild with arguments '%gvsbuild_args%'
         echo gvsbuild_args=%gvsbuild_args%>> %GITHUB_ENV%
         gvsbuild %gvsbuild_args% --log-single --capture-out
-    - name: Check logs
+    - name: Check GTK build logs
       if: success() || failure()
       run: |
         set
@@ -380,35 +195,16 @@ jobs:
         dir %gtk_build_dir%
         dir %GTK_ROOT%
         dir %GTK_ROOT%\python
-    - name: Attempt to install
+    - name: Install pygi into Python venv
       run: |
         @echo Activate Python venv
         call %PY_VENV_PATH%\Scripts\activate
         @echo Install pygi
-        dir %gtk_build_dir%
-        dir %GTK_ROOT%
-        dir %GTK_ROOT%\python
         for %%i in (%GTK_ROOT%\python\PyGObject*.whl) do (pip install --force-reinstall %%i)
         for %%i in (%GTK_ROOT%\python\pycairo*.whl) do (pip install --force-reinstall %%i)
         @echo Verify pygi installation
         python -c "import os;os.add_dll_directory('%fps_GTK_BIN_DIR%');import gi;gi.require_version('Gtk', '3.0');gi.require_foreign('cairo', 'Context');gi.require_version('PangoCairo', '1.0')"
-    #- name: Clone Qt5 for Windows from git://code.qt.io/qt
-    #  env:
-    #    QT_ROOT_DIR
-    #  run: |
-    #    @echo Using instructions at https://wiki.qt.io/Building_Qt_5_from_Git#Getting_the_source_code
-#    - name: Install Qt using jurplel/install-qt-action@v4
-#      uses: jurplel/install-qt-action@v4
-#        # uses aqt installed into default python to download prebuild qt
-#        # extracts to ${{ runner.workspace }}
-#        # exports the variables Qt5_DIR, QT_ROOT_DIR, QT_PLUGIN_PATH, QML2_IMPORT_PATH
-#      with:
-#        aqtversion: '==3.1.*'
-#        version: '5.15.2'
-#        host: 'windows'
-#        target: 'desktop'
-#        arch: 'win64_msvc2019_64'
-    - name: Download PyQT5 source from pip
+    - name: Download and extract PyQT5 source
       env:
         url: 'https://files.pythonhosted.org/packages/0e/07/c9ed0bd428df6f87183fca565a79fee19fa7c88c7f00a7f011ab4379e77a/PyQt5-5.15.11.tar.gz'
         target_path: ${{ runner.workspace }}\PyQt5-5.15.11
@@ -421,6 +217,7 @@ jobs:
         @echo    '%target_path%'
         cd "%target_path%"\..
         tar -xf "%TEMP%\%temp_file_name%"
+        @echo DEBUG: Checking directory content:
         dir
         cd "%target_path%"
         dir
@@ -432,33 +229,29 @@ jobs:
         python -c "import sys;print(sys.path)"
         python -m pip install conan
         conan version
+        @echo DEBUG: Checking current environment variables:
         set
     - name: Run Conan2 and create cmake build generators
       env:
         DEPS_CMAKE_GENERATORS: ${{ github.workspace }}\deps
       run: |
-        echo %CD%
         @echo Conan2 was installed via Python venv, therefore need to activate it before use
         call %PY_VENV_PATH%\Scripts\activate
         conan profile detect --force
         conan install gnuradio/release --output-folder=%DEPS_CMAKE_GENERATORS% --build=missing
         echo DEPS_CMAKE_GENERATORS=%DEPS_CMAKE_GENERATORS%>> %GITHUB_ENV%
-    - name: step7 -- Build and install PyQT5
+    - name: Build and install PyQT5
       run: |
         call "%msbuild_vcvars64%"
-        @echo Step7: QT bindings ...
         set QT_ROOT_DIR
         set Qt5_DIR
-        @rem SET PATH=%QT_ROOT_DIR%\bin;%PATH%
         call %PY_VENV_PATH%\Scripts\activate
         python -m pip install PyQt-builder
         @echo Explicitly uninstall PyQt5 installed via requirements
         python -m pip uninstall -y PyQt5 PyQt5-Qt5
         @echo Activate conan runtime environment by calling DEPS_CMAKE_GENERATORS\build\generators\conanrun.bat 
-        dir %DEPS_CMAKE_GENERATORS%\build\generators
         call %DEPS_CMAKE_GENERATORS%\build\generators\conanrun.bat
         cd %RUNNER_WORKSPACE%\PyQt5-5.15.11
-        dir
         sip-install -h
         @echo Start codegen but disable QtNfc to avoid LNK1169 when linking QtNfc.dll
         @echo Alternativly may specifc LINK=/FORCE:MULTIPLE
@@ -466,9 +259,9 @@ jobs:
         cd build && nmake
         nmake install
         python -m pip install PyQt5-sip
+    # Clone and build Volk from scratch, because of unreliable python venv detection during "Build C++ dependencies"
     - name: Clone Volk
       uses: actions/checkout@v4
-      # Building Volk from hand, because of unreliable python venv detection during "Build C++ dependencies"
       with:
         repository: 'gnuradio/volk'
         ref: '308948abf8384bb4bf6467e14b585df708789782'
@@ -502,6 +295,7 @@ jobs:
         echo %CD%
         call "%msbuild_vcvars64%"
         call %PY_VENV_PATH%\Scripts\activate
+        @echo DEBUG: Checking current environment variables:
         set
         @echo Install additional python module for volk
         python -m pip install mako
@@ -512,7 +306,6 @@ jobs:
         robocopy /E /DCOPY:T /NJH /NFL /NDL /MT /W:5 /R:4 "gnuradio\release\deps" cmake-deps
         mkdir cmake-deps\tpls
         robocopy /NJH /NFL /NDL /MT /W:5 /R:4 "cmake-deps\deps" "cmake-deps\tpls" FetchAndBuild*.cmake
-        dir
         cd cmake-deps
         mkdir build
         cd build
@@ -521,10 +314,9 @@ jobs:
             -DCMAKE_FIND_PACKAGE_PREFER_CONFIG=ON "-DCMAKE_CXX_FLAGS=-DBOOST_ALL_NO_LIB /EHsc" -LA ^
             -DPYTHON_EXECUTABLE=%PY_VENV_PATH%\Scripts\python.exe -DBUILD_VOLK=NO
         ninja
-    - name: Check environment
+    - name: Check environment before building GRC
       run: |
         echo working path=_%CD%_
-        @rem CD was D:\a\gnuradio\gnuradio
         git status
         set MSYS2_LOCATION
         set MSYSTEM
@@ -536,14 +328,11 @@ jobs:
       run: |
         call "%msbuild_vcvars64%"
         call %PY_VENV_PATH%\Scripts\activate
-        @rem SET PATH=%QT_ROOT_DIR%\bin;%GTK_BIN_DIR%;%PATH%
         SET PATH=%GTK_BIN_DIR%;%PATH%
         call %DEPS_CMAKE_GENERATORS%\build\generators\conanrun.bat
-        set
         @echo Step8: Building GRC binaries ...
         set GR_INSTALL_DIR=%PROGRAMFILES%\GNU Radio
         echo GR_INSTALL_DIR=%GR_INSTALL_DIR%>> %GITHUB_ENV%
-        dir
         set UHD_DIR=%CD%\deps\uhd
         @echo Defining the environment variable UHD_DIR to allow UHDConfig.cmake
         @echo to detected the local UHD prefix at %UHD_DIR%
@@ -561,19 +350,19 @@ jobs:
             -DPYTHON_EXECUTABLE=%PY_VENV_PATH%\Scripts\python.exe -DENABLE_TESTING=ON
         Ninja
         Ninja install
-    - name: Running Ninja test
+    - name: Running GRC Ninja test
       run: |
         call "%msbuild_vcvars64%"
         SET PATH=%GR_INSTALL_DIR%\bin;%GR_INSTALL_DIR%\python%PY_VENV_VERSION%;%GR_INSTALL_DIR%\python%PY_VENV_VERSION%\Scripts;%PATH%
         cd %GR_BUILD_DIR%
         @echo Run Ninja tests on installer environment
         Ninja test
-    - name: Package the installer
+    - name: Package GRC Installer
       run: |
         @echo Build installer
         cd %GR_BUILD_DIR%
         cpack
-    - name: Bundle installed files
+    - name: Bundle GRC build and install results
       if: success() || failure()
       run: |
         mkdir installation-archive.squash
@@ -585,7 +374,7 @@ jobs:
         tar -czf cmake-backup.gzip -C "%RUNNER_WORKSPACE%\cmake-backup" .
         robocopy /NJH /NDL /MT /W:5 /R:4 "%GITHUB_WORKSPACE%\gnuradio\build\_CPack_Packages\win64\NSIS" .
         tar -czf gnuradio.gzip -C "%PROGRAMFILES%\GNU Radio" .
-        set GR_INSTALL_DIR
+        @echo DEBUG: Bundled outcome:
         dir
     - name: Upload build artifact archive
       if: success() || failure()
