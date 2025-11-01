@@ -6,10 +6,7 @@ SPDX-License-Identifier: GPL-2.0-or-later
 
 """
 
-
 from gi.repository import Gtk, Gdk, cairo
-# import pycairo
-
 from .. import Constants
 
 
@@ -17,14 +14,11 @@ def get_color(color_code):
     color = Gdk.RGBA()
     color.parse(color_code)
     return color.red, color.green, color.blue, color.alpha
-    # chars_per_color = 2 if len(color_code) > 4 else 1
-    # offsets = range(1, 3 * chars_per_color + 1, chars_per_color)
-    # return tuple(int(color_code[o:o + 2], 16) / 255.0 for o in offsets)
+
 
 #################################################################################
 # fg colors
 #################################################################################
-
 
 HIGHLIGHT_COLOR = get_color('#00FFFF')
 BORDER_COLOR = get_color('#616161')
@@ -36,10 +30,8 @@ MISSING_BLOCK_BACKGROUND_COLOR = get_color('#FFF2F2')
 MISSING_BLOCK_BORDER_COLOR = get_color('#FF0000')
 
 # Deprecated blocks
-# a light warm yellow
-BLOCK_DEPRECATED_BACKGROUND_COLOR = get_color('#FED86B')
-# orange
-BLOCK_DEPRECATED_BORDER_COLOR = get_color('#FF540B')
+BLOCK_DEPRECATED_BACKGROUND_COLOR = get_color('#FED86B')  # a light warm yellow
+BLOCK_DEPRECATED_BORDER_COLOR = get_color('#FF540B')      # orange
 
 # Flow graph color constants
 FLOWGRAPH_BACKGROUND_COLOR = get_color('#FFFFFF')
@@ -56,22 +48,28 @@ CONNECTION_ENABLED_COLOR = get_color('#000000')
 CONNECTION_DISABLED_COLOR = get_color('#BBBBBB')
 CONNECTION_ERROR_COLOR = get_color('#FF0000')
 
+# Default domain color
 DEFAULT_DOMAIN_COLOR = get_color('#777777')
 
+# >>> NEW: Grid color constant <<<
+# A light gray grid color that is subtle and not too distracting
+GRID_COLOR = get_color('#E0E0E0')
 
 #################################################################################
 # port colors
 #################################################################################
-
-PORT_TYPE_TO_COLOR = {key: get_color(
-    color) for name, key, sizeof, color in Constants.CORE_TYPES}
-PORT_TYPE_TO_COLOR.update((key, get_color(color))
-                          for key, (_, color) in Constants.ALIAS_TYPES.items())
-
+PORT_TYPE_TO_COLOR = {
+    key: get_color(color)
+    for name, key, sizeof, color in Constants.CORE_TYPES
+}
+PORT_TYPE_TO_COLOR.update(
+    (key, get_color(color)) for key, (_, color) in Constants.ALIAS_TYPES.items()
+)
 
 #################################################################################
 # param box colors
 #################################################################################
+
 DARK_THEME_STYLES = b"""
                          #dtype_complex         { background-color: #3399FF; }
                          #dtype_real            { background-color: #FF8C69; }
@@ -92,6 +90,7 @@ DARK_THEME_STYLES = b"""
 
                          #enum_custom           { background-color: #EEEEEE; }
                      """
+
 LIGHT_THEME_STYLES = b"""
                         #dtype_complex         { background-color: #3399FF; }
                         #dtype_real            { background-color: #FF8C69; }

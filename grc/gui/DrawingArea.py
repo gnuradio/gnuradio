@@ -1,33 +1,24 @@
 """
-Copyright 2007, 2008, 2009, 2010 Free Software Foundation, Inc.
+Copyright 2007–2010 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 SPDX-License-Identifier: GPL-2.0-or-later
-
 """
-
 
 from gi.repository import Gtk, Gdk
 
-from .canvas.colors import FLOWGRAPH_BACKGROUND_COLOR
-from . import Constants
-from . import Actions
+from . import Constants, Actions
+from .canvas import colors
+from .canvas.colors import FLOWGRAPH_BACKGROUND_COLOR, GRID_COLOR
 
 
 class DrawingArea(Gtk.DrawingArea):
     """
-    DrawingArea is the gtk pixel map that graphical elements may draw themselves on.
+    DrawingArea is the GTK pixel map that graphical elements may draw themselves on.
     The drawing area also responds to mouse and key events.
     """
 
     def __init__(self, flow_graph):
-        """
-        DrawingArea constructor.
-        Connect event handlers.
-
-        Args:
-            main_window: the main_window containing all flow graphs
-        """
         Gtk.DrawingArea.__init__(self)
 
         self._flow_graph = flow_graph
@@ -42,7 +33,10 @@ class DrawingArea(Gtk.DrawingArea):
         # middle mouse panning
         self._old_mouse_coodinates = (0, 0)
 
-        # self.set_size_request(MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT)
+        # --- Added: Grid visibility flag (default off, can be loaded from prefs) ---
+        self.show_grid = False
+
+        # setup GTK events
         self.connect('realize', self._handle_window_realize)
         self.connect('draw', self.draw)
         self.connect('motion-notify-event', self._handle_mouse_motion)
@@ -50,18 +44,13 @@ class DrawingArea(Gtk.DrawingArea):
         self.connect('button-release-event', self._handle_mouse_button_release)
         self.connect('scroll-event', self._handle_mouse_scroll)
         self.add_events(
-            Gdk.EventMask.BUTTON_PRESS_MASK |
-            Gdk.EventMask.POINTER_MOTION_MASK |
-            Gdk.EventMask.BUTTON_RELEASE_MASK |
-            Gdk.EventMask.SCROLL_MASK |
-            Gdk.EventMask.LEAVE_NOTIFY_MASK |
-            Gdk.EventMask.ENTER_NOTIFY_MASK
-            # Gdk.EventMask.FOCUS_CHANGE_MASK
+            Gdk.EventMask.BUTTON_PRESS_MASK
+            | Gdk.EventMask.POINTER_MOTION_MASK
+            | Gdk.EventMask.BUTTON_RELEASE_MASK
+            | Gdk.EventMask.SCROLL_MASK
+            | Gdk.EventMask.LEAVE_NOTIFY_MASK
+            | Gdk.EventMask.ENTER_NOTIFY_MASK
         )
-
-        # This may not be the correct place to be handling the user events
-        # Should this be in the page instead?
-        # Or should more of the page functionality move here?
 
         # setup drag and drop
         self.drag_dest_set(Gtk.DestDefaults.ALL, [], Gdk.DragAction.COPY)
@@ -69,7 +58,7 @@ class DrawingArea(Gtk.DrawingArea):
         self.drag_dest_set_target_list(None)
         self.drag_dest_add_text_targets()
 
-        # setup the focus flag
+        # focus flag setup
         self._focus_flag = False
         self.get_focus_flag = lambda: self._focus_flag
 
@@ -87,21 +76,14 @@ class DrawingArea(Gtk.DrawingArea):
     ##########################################################################
 
     def _handle_drag_data_received(self, widget, drag_context, x, y, selection_data, info, time):
-        """
-        Handle a drag and drop by adding a block at the given coordinate.
-        """
         coords = x / self.zoom_factor, y / self.zoom_factor
         self._flow_graph.add_new_block(selection_data.get_text(), coords)
 
     def zoom_in(self):
-        change = 1.2
-        zoom_factor = min(self.zoom_factor * change, 5.0)
-        self._set_zoom_factor(zoom_factor)
+        self._set_zoom_factor(min(self.zoom_factor * 1.2, 5.0))
 
     def zoom_out(self):
-        change = 1 / 1.2
-        zoom_factor = max(self.zoom_factor * change, 0.1)
-        self._set_zoom_factor(zoom_factor)
+        self._set_zoom_factor(max(self.zoom_factor / 1.2, 0.1))
 
     def reset_zoom(self):
         self._set_zoom_factor(1.0)
@@ -113,12 +95,8 @@ class DrawingArea(Gtk.DrawingArea):
             self.queue_draw()
 
     def _middle_mouse_pan(self, event):
-        """
-        Pan the canvas with the middle mouse button.
-        """
         x, y = event.x, event.y
         old_x, old_y = self._old_mouse_coodinates
-
         scrollbox = self.get_parent().get_parent()
 
         def scroll(dpos, adj):
@@ -129,7 +107,6 @@ class DrawingArea(Gtk.DrawingArea):
 
         dx = x - old_x
         dy = y - old_y
-
         scroll(dx, scrollbox.get_hadjustment())
         scroll(dy, scrollbox.get_vadjustment())
 
@@ -143,11 +120,7 @@ class DrawingArea(Gtk.DrawingArea):
         return False
 
     def _handle_mouse_button_press(self, widget, event):
-        """
-        Forward button click information to the flow graph.
-        """
         self.grab_focus()
-
         self.ctrl_mask = event.get_state() & Gdk.ModifierType.CONTROL_MASK
         self.mod1_mask = event.get_state() & Gdk.ModifierType.MOD1_MASK
         self.button_state[event.button] = True
@@ -165,13 +138,9 @@ class DrawingArea(Gtk.DrawingArea):
                 event=event,
             )
         elif event.button == 2:
-            # middle mouse panning
             self._old_mouse_coodinates = (event.x, event.y)
 
     def _handle_mouse_button_release(self, widget, event):
-        """
-        Forward button release information to the flow graph.
-        """
         self.ctrl_mask = event.get_state() & Gdk.ModifierType.CONTROL_MASK
         self.mod1_mask = event.get_state() & Gdk.ModifierType.MOD1_MASK
         self.button_state[event.button] = False
@@ -181,9 +150,6 @@ class DrawingArea(Gtk.DrawingArea):
             )
 
     def _handle_mouse_motion(self, widget, event):
-        """
-        Forward mouse motion information to the flow graph.
-        """
         self.ctrl_mask = event.get_state() & Gdk.ModifierType.CONTROL_MASK
         self.mod1_mask = event.get_state() & Gdk.ModifierType.MOD1_MASK
 
@@ -198,19 +164,14 @@ class DrawingArea(Gtk.DrawingArea):
 
     def _update_size(self):
         w, h = self._flow_graph.get_extents()[2:]
-        self.set_size_request(
-            w * self.zoom_factor + 100,
-            h * self.zoom_factor + 100,
-        )
+        self.set_size_request(w * self.zoom_factor + 100, h * self.zoom_factor + 100)
 
     def _auto_scroll(self, event):
         x, y = event.x, event.y
         scrollbox = self.get_parent().get_parent()
-
         self._update_size()
 
         def scroll(pos, adj):
-            """scroll if we moved near the border"""
             adj_val = adj.get_value()
             adj_len = adj.get_page_size()
             if pos - adj_val > adj_len - Constants.SCROLL_PROXIMITY_SENSITIVITY:
@@ -224,12 +185,30 @@ class DrawingArea(Gtk.DrawingArea):
         scroll(y, scrollbox.get_vadjustment())
 
     def _handle_window_realize(self, widget):
-        """
-        Called when the window is realized.
-        Update the flowgraph, which calls new pixmap.
-        """
         self._flow_graph.update()
         self._update_size()
+
+    # --- Added: draw grid ---
+    def draw_grid(self, cr):
+        grid_size = Constants.GRID_SIZE
+        cr.set_source_rgba(*GRID_COLOR)
+        width = self.get_allocated_width() / self.zoom_factor
+        height = self.get_allocated_height() / self.zoom_factor
+
+        x = 0
+        while x < width:
+            cr.move_to(x, 0)
+            cr.line_to(x, height)
+            x += grid_size
+
+        y = 0
+        while y < height:
+            cr.move_to(0, y)
+            cr.line_to(width, y)
+            y += grid_size
+
+        cr.set_line_width(1.0)
+        cr.stroke()
 
     def draw(self, widget, cr):
         width = widget.get_allocated_width()
@@ -241,6 +220,10 @@ class DrawingArea(Gtk.DrawingArea):
 
         cr.scale(self.zoom_factor, self.zoom_factor)
         cr.set_line_width(2.0 / self.zoom_factor)
+
+        # --- Draw grid before flowgraph if enabled ---
+        if self.show_grid:
+            self.draw_grid(cr)
 
         if self._update_after_zoom:
             self._flow_graph.create_labels(cr)
@@ -254,9 +237,19 @@ class DrawingArea(Gtk.DrawingArea):
         return event.x / self.zoom_factor, event.y / self.zoom_factor
 
     def _handle_focus_lost_event(self, widget, event):
-        # don't clear selection while context menu is active
         if not self._flow_graph.get_context_menu()._menu.get_visible():
             self._flow_graph.unselect()
             self._flow_graph.update_selected()
             self.queue_draw()
             Actions.ELEMENT_SELECT()
+
+    # --- Added: toggle method for menu binding ---
+    def toggle_grid_visibility(self, show=None):
+        """
+        Toggle grid visibility manually or via preferences.
+        """
+        if show is not None:
+            self.show_grid = bool(show)
+        else:
+            self.show_grid = not self.show_grid
+        self.queue_draw()
