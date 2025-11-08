@@ -161,8 +161,7 @@ matrix_sptr generate_G_transpose(matrix_sptr H_obj)
     // Set G transpose matrix (used for encoding)
     gsl_matrix_uchar_set_zero(G_transp);
     for (unsigned int row_index = 0; row_index < k; row_index++) {
-        const auto col_index = row_index;
-        gsl_matrix_uchar_set(G_transp, row_index, col_index, 1);
+        gsl_matrix_uchar_set(G_transp, row_index, row_index, 1);
     }
     for (unsigned int row_index = k; row_index < n; row_index++) {
         for (unsigned int col_index = 0; col_index < k; col_index++) {
