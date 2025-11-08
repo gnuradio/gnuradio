@@ -301,7 +301,7 @@ outputs:
 
 templates:
     imports: |-
-        import sip
+        from qtpy import sip
     callbacks:
     - set_update_time(${update_time})
     - set_x_axis(${x_start}, ${x_step})
