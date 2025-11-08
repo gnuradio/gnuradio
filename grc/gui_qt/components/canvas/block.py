@@ -18,6 +18,8 @@ log = logging.getLogger(f"grc.application.{__name__}")
 LONG_VALUE = 20  # maximum length of a param string.
 # if exceeded, '...' will be displayed
 
+DO_NOT_HIDE_ID_BLOCKS = ["options"]
+
 
 class Block(CoreBlock):
     """
@@ -97,16 +99,29 @@ class GUIBlock(QGraphicsItem):
         self.markups = []
         self.markup_text = ""
 
+    def _is_item_visible(self, item) -> bool:
+        if item.value is not None and item.hide == "none":
+            return True
+        if item.dtype == "id":
+            if self.force_show_id or (self.core.key in DO_NOT_HIDE_ID_BLOCKS):
+                return True
+        return False
+
+    def _load_settings(self, qsettings) -> None:
+        """Load settings from qsettings"""
+        self.force_show_id = qsettings.value("grc/show_block_ids", type=bool)
+        self.hide_variables = qsettings.value("grc/hide_variables", type=bool)
+        self.hide_disabled_blocks = qsettings.value(
+            "grc/hide_disabled_blocks", type=bool
+        )
+        self.snap_to_grid = qsettings.value("grc/snap_to_grid", type=bool)
+        self.show_complexity = qsettings.value("grc/show_complexity", type=bool)
+        self.show_block_comments = qsettings.value("grc/show_block_comments", type=bool)
+        self.show_param_expr = qsettings.value("grc/show_param_expr", type=bool)
+        self.show_param_val = qsettings.value("grc/show_param_val", type=bool)
+
     def create_shapes_and_labels(self):
-        qsettings = QApplication.instance().qsettings
-        self.force_show_id = qsettings.value('grc/show_block_ids', type=bool)
-        self.hide_variables = qsettings.value('grc/hide_variables', type=bool)
-        self.hide_disabled_blocks = qsettings.value('grc/hide_disabled_blocks', type=bool)
-        self.snap_to_grid = qsettings.value('grc/snap_to_grid', type=bool)
-        self.show_complexity = qsettings.value('grc/show_complexity', type=bool)
-        self.show_block_comments = qsettings.value('grc/show_block_comments', type=bool)
-        self.show_param_expr = qsettings.value('grc/show_param_expr', type=bool)
-        self.show_param_val = qsettings.value('grc/show_param_val', type=bool)
+        self._load_settings(QApplication.instance().qsettings)
         self.prepareGeometryChange()
         self.font.setBold(True)
 
@@ -116,8 +131,7 @@ class GUIBlock(QGraphicsItem):
             self.height += 20
         else:
             for key, item in self.core.params.items():
-                value = item.value
-                if (value is not None and item.hide == "none") or (item.dtype == 'id' and self.force_show_id):
+                if self._is_item_visible(item):
                     self.height += 20
 
         # Check if we need to increase the height to fit all the ports
@@ -353,7 +367,7 @@ class GUIBlock(QGraphicsItem):
                     display_value = display_value[:LONG_VALUE - 3] + '...'
 
                 value_label = display_value
-                if (value is not None and item.hide == "none") or (item.dtype == 'id' and self.force_show_id) or self.core.is_dummy_block:
+                if self._is_item_visible(item) or self.core.is_dummy_block:
                     if item.is_valid():
                         painter.setPen(QPen(1))
                     else:
