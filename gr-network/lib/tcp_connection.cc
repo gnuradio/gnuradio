@@ -91,7 +91,12 @@ void tcp_connection::handle_read(const asio::error_code& error, size_t bytes_tra
                 handle_read(error, bytes_transferred);
             });
     } else {
-        d_socket.shutdown(asio::ip::tcp::socket::shutdown_both);
+        asio::error_code ec;
+        d_socket.shutdown(asio::ip::tcp::socket::shutdown_both, ec);
+        if (ec) {
+            d_block->get_logger()->info(error.message());
+            d_block->get_logger()->info(ec.message());
+        }
         d_socket.close();
     }
 }
