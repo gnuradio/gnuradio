@@ -7,7 +7,6 @@
 #
 
 
-import numpy
 from gnuradio import gr
 import yaml
 import pmt
@@ -44,7 +43,7 @@ class variable_save_restore(gr.sync_block):
 
         self.filename = os.path.join(gr.paths.userconf(), "saverestore", f"{top_block.__class__.__name__}.yml")
         self.filename = os.path.expanduser(self.filename)
-        print(f"[VariableSaveRestore] Config file: {self.filename}")
+        self.logger.info(f"Config file: {self.filename}")
         os.makedirs(os.path.dirname(self.filename), exist_ok=True)
         self.load_storage()
 
@@ -92,8 +91,9 @@ class variable_save_restore(gr.sync_block):
             try:
                 data[name] = self._get_variable(self.top_block, name)
             except AttributeError as e:
-                print("AttributeError:", e)
-                print(f"ERROR: Failed to get variable `{name}`")
+                self.logger.error(
+                    f"AttributeError:{e}\nERROR: Failed to get variable `{name}`"
+                )
 
         return data
 
@@ -108,13 +108,14 @@ class variable_save_restore(gr.sync_block):
         n = 0
         for name, val in data.items():
             if verbose:
-                print(f"{name:20s}    {val}")
+                self.logger.debug(f"{name:20s}    {val}")
             try:
                 self._set_variable(self.top_block, name, val)
                 n += 1
             except AttributeError as e:
-                print("AttributeError:", e)
-                print(f"ERROR: Failed to set variable `{name}` to `{val}`")
+                self.logger.error(
+                    f"AttributeError:{e}\nERROR: Failed to set variable `{name}` to `{val}`"
+                )
         return n
 
     def _set_variable(self, block, name, val):
@@ -130,16 +131,21 @@ class variable_save_restore(gr.sync_block):
         try:
             self.save_storage()
         except Exception as e:
-            print("Exception:", e)
-            print(f"[VariableSaveRestore] Failed to save variables to slot {self.slot}")
+            self.logger.error(
+                f"Exception:{e}\nFailed to save variables to slot {self.slot}"
+            )
         else:
-            print(f"[VariableSaveRestore] Saved {len(data)} of {len(self.variables)} variables to slot {self.slot}")
+            self.logger.info(
+                f"Saved {len(data)} of {len(self.variables)} variables to slot {self.slot}"
+            )
 
     def restore(self):
         data = self.storage.get(self.slot, {})
         data = {k: v for k, v in data.items() if k in self.variables}
         n = self.set_variable_values(data)
-        print(f"[VariableSaveRestore] Restored {n} of {len(self.variables)} variables from slot {self.slot}")
+        self.logger.info(
+            f"Restored {n} of {len(self.variables)} variables from slot {self.slot}"
+        )
 
     def load_storage(self):
         """Load from disk into memory"""
