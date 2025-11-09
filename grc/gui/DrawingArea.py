@@ -6,13 +6,11 @@ SPDX-License-Identifier: GPL-2.0-or-later
 
 """
 
-
 from gi.repository import Gtk, Gdk
 
 from .canvas.colors import FLOWGRAPH_BACKGROUND_COLOR
 from . import Constants
 from . import Actions
-
 
 class DrawingArea(Gtk.DrawingArea):
     """
@@ -133,12 +131,45 @@ class DrawingArea(Gtk.DrawingArea):
         scroll(dx, scrollbox.get_hadjustment())
         scroll(dy, scrollbox.get_vadjustment())
 
+    # ---- NEW CODE for mouse-centered zoom ----
+    def zoom_at_mouse(self, mouse_x, mouse_y, zoom_in=True):
+        """
+        Zoom in/out centered at the mouse pointer coordinates.
+        """
+        scrollbox = self.get_parent().get_parent()
+        hadj = scrollbox.get_hadjustment()
+        vadj = scrollbox.get_vadjustment()
+
+        old_zoom = self.zoom_factor
+        change = 1.2 if zoom_in else (1/1.2)
+        new_zoom = max(min(old_zoom * change, 5.0), 0.1)
+
+        if new_zoom == old_zoom:
+            return  # No change
+
+        # Location of mouse in flowgraph coordinates before zoom
+        flow_x = (mouse_x + hadj.get_value()) / old_zoom
+        flow_y = (mouse_y + vadj.get_value()) / old_zoom
+
+        # Update zoom
+        self.zoom_factor = new_zoom
+        self._update_after_zoom = True
+        self.queue_draw()
+
+        # Scroll so that the same flowgraph point is under the mouse
+        hadj.set_value(flow_x * new_zoom - mouse_x)
+        vadj.set_value(flow_y * new_zoom - mouse_y)
+        hadj.emit('changed')
+        vadj.emit('changed')
+    # ---- END NEW CODE ----
+
     def _handle_mouse_scroll(self, widget, event):
         if event.get_state() & Gdk.ModifierType.CONTROL_MASK:
+            mouse_x, mouse_y = event.x, event.y
             if event.direction == Gdk.ScrollDirection.UP:
-                self.zoom_in()
+                self.zoom_at_mouse(mouse_x, mouse_y, zoom_in=True)
             else:
-                self.zoom_out()
+                self.zoom_at_mouse(mouse_x, mouse_y, zoom_in=False)
             return True
         return False
 
