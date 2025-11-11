@@ -13,7 +13,6 @@
 #define NPY_NO_DEPRECATED_API NPY_1_7_API_VERSION
 #include <gnuradio/gr_complex.h>
 #include <numpy/arrayobject.h>
-#include <iostream>
 namespace py = pybind11;
 
 void bind_messages_msg_accepter_msgq(py::module&);
