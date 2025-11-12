@@ -35,12 +35,12 @@ class Config(object):
             os.environ.get('GRC_BLOCKS_PATH', ''),
             get_state_directory(),
             self._gr_prefs.get_string('grc', 'local_blocks_path', ''),
-            normpath(join(self.install_prefix, Constants.GRC_BLOCKS_DIR)),
+            normpath(join(self.install_prefix, os.environ.get('GRC_BLOCKS_DIR', 'share/gnuradio/grc/blocks'))),
             os.environ.get('GRC_HIER_PATH_POST', ''),
             os.environ.get('GRC_BLOCKS_PATH_POST', '')
         ]
         if self.install_prefix == "/usr":
-            paths_sources.append(normpath(join("/usr/local", Constants.GRC_BLOCKS_DIR)))
+            paths_sources.append(normpath(join("/usr/local", os.environ.get('GRC_BLOCKS_DIR', 'share/gnuradio/grc/blocks'))))
 
         collected_paths = sum((paths.split(os.pathsep)
                                for paths in paths_sources), [])
@@ -57,7 +57,7 @@ class Config(object):
     def example_paths(self):
         return [
             self._gr_prefs.get_string('grc', 'examples_path', ''),
-            normpath(join(self.install_prefix, Constants.GRC_EXAMPLES_DIR)),
+            normpath(join(self.install_prefix, os.environ.get('GRC_EXAMPLES_DIR', 'share/gnuradio/examples'))),
         ]
 
     @property

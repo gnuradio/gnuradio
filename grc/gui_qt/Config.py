@@ -1,8 +1,7 @@
 import os
-from os.path import expanduser, normpath, expandvars, exists, join
+from os.path import expanduser, normpath, expandvars, exists
 from collections import OrderedDict
 
-from . import Constants
 from ..core.Config import Config as CoreConfig
 from ..main import get_config_file_path
 from qtpy import QtCore

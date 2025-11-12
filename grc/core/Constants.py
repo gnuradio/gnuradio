@@ -20,8 +20,6 @@ DATA_DIR = os.path.dirname(__file__)
 BLOCK_DTD = os.path.join(DATA_DIR, 'block.dtd')
 DEFAULT_FLOW_GRAPH = os.path.join(DATA_DIR, 'default_flow_graph.grc')
 DEFAULT_FLOW_GRAPH_ID = 'default'
-GRC_BLOCKS_DIR = os.path.normpath("@GRC_BLOCKS_DIR@")
-GRC_EXAMPLES_DIR = os.path.normpath("@GRC_EXAMPLES_DIR@")
 
 PROJECT_DEFAULT_DIR = 'gnuradio'
 GRC_SUBDIR = 'grc'
