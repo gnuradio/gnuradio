@@ -31,11 +31,12 @@ waterfall_sink_c::sptr waterfall_sink_c::make(int fftsize,
                                               double fc,
                                               double bw,
                                               const std::string& name,
+                                              int n_rows,
                                               int nconnections,
                                               QWidget* parent)
 {
     return gnuradio::make_block_sptr<waterfall_sink_c_impl>(
-        fftsize, wintype, fc, bw, name, nconnections, parent);
+        fftsize, wintype, fc, bw, name, n_rows, nconnections, parent);
 }
 
 waterfall_sink_c_impl::waterfall_sink_c_impl(int fftsize,
@@ -43,6 +44,7 @@ waterfall_sink_c_impl::waterfall_sink_c_impl(int fftsize,
                                              double fc,
                                              double bw,
                                              const std::string& name,
+                                             int n_rows,
                                              int nconnections,
                                              QWidget* parent)
     : sync_block("waterfall_sink_c",
@@ -56,7 +58,7 @@ waterfall_sink_c_impl::waterfall_sink_c_impl(int fftsize,
       d_bandwidth(bw),
       d_name(name),
       d_nconnections(nconnections),
-      d_nrows(200),
+      d_nrows(n_rows),
       d_port(pmt::mp("freq")),
       d_port_bw(pmt::mp("bw")),
       d_fft(std::make_unique<fft::fft_complex_fwd>(fftsize)),
@@ -117,7 +119,7 @@ void waterfall_sink_c_impl::initialize()
     check_set_qss(d_qApplication);
 
     int numplots = (d_nconnections > 0) ? d_nconnections : 1;
-    d_main_gui = new WaterfallDisplayForm(numplots, d_parent);
+    d_main_gui = new WaterfallDisplayForm(numplots, d_nrows, d_parent);
     set_fft_window(d_wintype);
     set_fft_size(d_fftsize);
     set_frequency_range(d_center_freq, d_bandwidth);

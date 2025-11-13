@@ -96,6 +96,11 @@ private:
  * Main waterfall plot widget
  *********************************************************************/
 WaterfallDisplayPlot::WaterfallDisplayPlot(int nplots, QWidget* parent)
+    : WaterfallDisplayPlot(nplots, 200, parent)
+{
+}
+
+WaterfallDisplayPlot::WaterfallDisplayPlot(int nplots, int n_rows, QWidget* parent)
     : DisplayPlot(nplots, parent)
 {
     d_zoomer = NULL; // need this for proper init
@@ -106,7 +111,7 @@ WaterfallDisplayPlot::WaterfallDisplayPlot(int nplots, QWidget* parent)
     d_numPoints = 0;
     d_half_freq = false;
     d_legend_enabled = true;
-    d_nrows = 200;
+    d_nrows = n_rows;
     d_color_bar_title_font_size = 18;
 
     setAxisTitle(QwtPlot::xBottom, "Frequency (Hz)");
