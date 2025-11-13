@@ -132,7 +132,7 @@ string(REPLACE "\n" " \\n" COMPILER_INFO ${COMPILER_INFO})
 ########################################################################
 # Install directories
 ########################################################################
-include(GrPlatform) # define LIB_SUFFIX
+include(GNUInstallDirs)
 
 # Install our Cmake modules into $prefix/lib/cmake/gnuradio
 # See "Package Configuration Files" on page:
@@ -169,33 +169,6 @@ if(DEFINED CACHE{SYSCONFDIR} AND NOT GR_IGNORE_SYSCONFDIR_SET)
 endif()
 # cmake-format: on
 
-# Set location of config/prefs files in /etc
-# Special exception if prefix is /usr so we don't make a /usr/etc.
-set(GR_CONF_DIR
-    etc
-    CACHE PATH "Path to install config files")
-string(COMPARE EQUAL "${CMAKE_INSTALL_PREFIX}" "/usr" isusr)
-if(GR_BUILD_INSTALLER)
-        set(SYSCONFDIR
-        ${GR_CONF_DIR}
-        CACHE PATH "Relative system configuration directory" FORCE
-    )
-elseif(isusr)
-    set(SYSCONFDIR
-        "/${GR_CONF_DIR}"
-        CACHE PATH "System configuration directory")
-else()
-    set(SYSCONFDIR
-        "${CMAKE_INSTALL_PREFIX}/${GR_CONF_DIR}"
-        CACHE PATH "System configuration directory" FORCE)
-endif()
-
-set(GR_PKG_CONF_DIR
-    ${SYSCONFDIR}/${CMAKE_PROJECT_NAME}/conf.d
-    CACHE PATH "Path to install package configs")
-set(GR_PREFSDIR
-    ${SYSCONFDIR}/${CMAKE_PROJECT_NAME}/conf.d
-    CACHE PATH "Path to install preference files")
 
 option(ENABLE_PERFORMANCE_COUNTERS "Enable block performance counters" ON)
 if(ENABLE_PERFORMANCE_COUNTERS)
@@ -274,10 +247,10 @@ else(WIN32)
     file(RELATIVE_PATH prefix_relative_to_lib "${prefix}/${GR_LIBRARY_DIR}" "${prefix}")
 endif(WIN32)
 if(NOT GR_BUILD_INSTALLER)
-    file(RELATIVE_PATH SYSCONFDIR_relative_to_prefix "${prefix}" "${GR_CONF_DIR_FULL}")
+    file(RELATIVE_PATH GR_CONF_DIR_relative_to_prefix "${prefix}" "${GR_CONF_DIR_FULL}")
     file(RELATIVE_PATH GR_PREFSDIR_relative_to_prefix "${prefix}" "${GR_PREFSDIR_FULL}")
 else()
-    set(SYSCONFDIR_relative_to_prefix "${SYSCONFDIR}")
+    set(GR_CONF_DIR_relative_to_prefix "${GR_CONF_DIR}")
     set(GR_PREFSDIR_relative_to_prefix "${GR_PREFSDIR}")
 endif()
 
