@@ -59,7 +59,7 @@ if(ENABLE_COMMON_PCH)
                 ${CMAKE_CURRENT_SOURCE_DIR}/lib/dummy.cc)
     target_include_directories(
         common-precompiled-headers
-        PUBLIC $<INSTALL_INTERFACE:include>
+        PUBLIC $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
                $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
                $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>)
 
