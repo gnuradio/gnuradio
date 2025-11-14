@@ -22,8 +22,8 @@
 ########################################################
 ##Create Imports
 ########################################################
-from PyQt5 import Qt
 from gnuradio import qtgui
+from PyQt5 import Qt
 % for imp in imports:
 ##${imp.replace("  # grc-generated hier_block", "")}
 ${imp}

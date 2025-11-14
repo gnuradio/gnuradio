@@ -15,14 +15,17 @@ include(GrBoost)
 ########################################################################
 include(GrComponent)
 gr_register_component(
-    "gr-digital"
-    ENABLE_GR_DIGITAL
-    Boost_FOUND
-    ENABLE_GNURADIO_RUNTIME
-    ENABLE_GR_FFT
-    ENABLE_GR_FILTER
-    ENABLE_GR_BLOCKS
-    ENABLE_GR_ANALOG)
+    NAME "gr-digital"
+    VAR ENABLE_GR_DIGITAL
+    REQUIRED_COMPONENTS
+        gnuradio-runtime
+        gr-fft
+        gr-filter
+        gr-blocks
+        gr-analog
+    REQUIRED_TPLS
+        Boost_FOUND
+)
 
 set(GR_PKG_DIGITAL_EXAMPLES_DIR ${GR_PKG_DATA_DIR}/examples/digital)
 

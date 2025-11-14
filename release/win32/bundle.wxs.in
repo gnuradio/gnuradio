@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
+	 xmlns:bal="http://schemas.microsoft.com/wix/BalExtension">
+  <Bundle Version="1.0.0.0" UpgradeCode="63C4E213-0297-4CFE-BB7B-7A77EB68E966"
+          IconSourceFile="@CPACK_WIX_PRODUCT_ICON@"
+		  Name="GNU Radio"
+		  Manufacturer="GNU Radio">
+    <BootstrapperApplicationRef Id="WixStandardBootstrapperApplication.RtfLicense">
+		<bal:WixStandardBootstrapperApplication LicenseFile="@CPACK_RESOURCE_FILE_LICENSE@"/>
+    </BootstrapperApplicationRef>
+    <Chain>
+        <MsiPackage 
+          SourceFile="gnuradio.msi"
+          DisplayInternalUI="yes"/>
+        <ExePackage 
+          SourceFile="@CMAKE_CURRENT_BINARY_DIR@\@PYTHON_FILENAME@"
+          DetectCondition="ExeDetectedVariable"
+          InstallCommand="/SUPPRESSMSGBOXES"
+          RepairCommand="/VERYSILENT"
+          UninstallCommand="/VERYSILENT" />
+    </Chain>
+  </Bundle>
+</Wix>

@@ -7,6 +7,9 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
 #
+import os
+@DLL_IMPORT_GTK@
+
 
 from gnuradio.filter import filter_design
 import sys

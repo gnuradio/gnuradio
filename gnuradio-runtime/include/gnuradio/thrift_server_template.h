@@ -39,7 +39,7 @@ public:
     ~thrift_server_template();
 
 protected:
-    TserverBase* i_impl();
+    auto i_impl();
     friend class thrift_application_base<TserverBase, TImplClass>;
 
 private:
@@ -155,7 +155,7 @@ thrift_server_template<TserverBase, TserverClass, TImplClass>::~thrift_server_te
 }
 
 template <typename TserverBase, typename TserverClass, typename TImplClass>
-TserverBase* thrift_server_template<TserverBase, TserverClass, TImplClass>::i_impl()
+auto thrift_server_template<TserverBase, TserverClass, TImplClass>::i_impl()
 {
     // std::cerr << "thrift_server_template: i_impl" << std::endl;
 

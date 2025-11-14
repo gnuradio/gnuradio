@@ -13,7 +13,11 @@
 # Register component
 ########################################################################
 include(GrComponent)
-gr_register_component("gr-pdu" ENABLE_GR_PDU ENABLE_GNURADIO_RUNTIME)
+gr_register_component(
+    NAME "gr-pdu"
+    VAR ENABLE_GR_PDU
+    REQUIRED_COMPONENTS gnuradio-runtime
+)
 
 set(GR_PKG_PDU_EXAMPLES_DIR ${GR_PKG_DATA_DIR}/examples/pdu)
 
