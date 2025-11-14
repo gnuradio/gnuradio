@@ -145,6 +145,25 @@ class DigitalNumberControl(QFrame):
     def setReadOnly(self, b_read_only):
         self.read_only = b_read_only
 
+    
+    def setMinFrequency(self, min_freq_hz):
+        """Set minimum frequency at runtime"""
+        self.min_freq = int(min_freq_hz)
+        if self.cur_freq < self.min_freq:
+            self.setFrequencyNow(self.min_freq)
+
+    def setMaxFrequency(self, max_freq_hz):
+        """Set maximum frequency at runtime"""
+        self.max_freq = int(max_freq_hz)
+        if self.cur_freq > self.max_freq:
+            self.setFrequencyNow(self.max_freq)
+
+    def setFrequencyRange(self, min_freq_hz, max_freq_hz):
+        """Set both min and max frequencies at runtime"""
+        self.setMinFrequency(min_freq_hz)
+        self.setMaxFrequency(max_freq_hz)
+
+
     def mousePressEvent(self, event):
         super(DigitalNumberControl, self).mousePressEvent(event)
         self.offset = event.pos()
