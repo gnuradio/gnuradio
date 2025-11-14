@@ -11,6 +11,10 @@ parameters:
         size: [gr.sizeof_gr_complex, gr.sizeof_float, gr.sizeof_int, gr.sizeof_short,
             gr.sizeof_char]
     hide: part
+-   id: addr
+    label: Address
+    dtype: string
+    default: '0.0.0.0'
 -   id: port
     label: Port
     dtype: int
@@ -56,7 +60,7 @@ asserts:
 
 templates:
     imports: from gnuradio import network
-    make: network.udp_source(${type.size}, ${vlen}, ${port}, ${header}, ${payloadsize}, ${notify_missed}, ${src_zeros}, ${ipv6})
+    make: network.udp_source(${type.size}, ${vlen}, ${addr}, ${port}, ${header}, ${payloadsize}, ${notify_missed}, ${src_zeros}, ${ipv6})
 
 documentation: "This block listens for traffic on the specified UDP port and outputs\
     \ the specified data type.  Note that the header setting and payload size should\
