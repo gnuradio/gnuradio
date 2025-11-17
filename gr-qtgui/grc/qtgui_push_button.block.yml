@@ -2,6 +2,11 @@ id: variable_qtgui_push_button
 label: QT GUI Push Button
 flags: [ show_id, python ]
 
+deprecated: true
+deprecation_note: >-
+  This block is deprecated.
+  Use the "Variable QT GUI Msg Push Button" block instead.
+
 parameters:
 -   id: label
     label: Label
