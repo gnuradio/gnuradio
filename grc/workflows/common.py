@@ -928,13 +928,6 @@ class CppGeneratorBase(CoreGeneratorBase):
 class HierBlockGeneratorMixin:
     """Mixin helper for generators that generate hier blocks."""
 
-    def get_output_dir_for_hier_block(self, fg):
-        """Update self.output_dir to the hier block library directory."""
-        output_dir = fg.parent.config.hier_block_lib_dir
-        if not os.path.exists(output_dir):
-            os.mkdir(output_dir)
-        return output_dir
-
     def get_exec_args(self):
         """Return an empty dict, as we cannot execute hier blocks."""
         return {}

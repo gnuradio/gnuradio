@@ -173,3 +173,4 @@
   - blocks_vco_c
 - Variables:
   - variable_tag_object
+  - variable_save_restore
