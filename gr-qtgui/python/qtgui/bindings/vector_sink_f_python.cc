@@ -45,6 +45,7 @@ void bind_vector_sink_f(py::module& m)
                gr::basic_block,
                std::shared_ptr<vector_sink_f>>(m, "vector_sink_f", D(vector_sink_f))
 
+        // Existing Float Constructor (Keep D macro here, it exists)
         .def(py::init(&vector_sink_f::make),
              py::arg("vlen"),
              py::arg("x_start"),
@@ -56,6 +57,61 @@ void bind_vector_sink_f(py::module& m)
              py::arg("parent") = nullptr,
              D(vector_sink_f, make))
 
+        // --- NEW BINDINGS (Replaced D macro with strings to fix build error) ---
+
+        // Complex Factory
+        .def_static("make_c",
+                    &vector_sink_f::make_c,
+                    py::arg("vlen"),
+                    py::arg("x_start"),
+                    py::arg("x_step"),
+                    py::arg("x_axis_label"),
+                    py::arg("y_axis_label"),
+                    py::arg("name"),
+                    py::arg("nconnections") = 1,
+                    py::arg("parent") = nullptr,
+                    "Create a complex vector sink")
+
+        // Int Factory
+        .def_static("make_i",
+                    &vector_sink_f::make_i,
+                    py::arg("vlen"),
+                    py::arg("x_start"),
+                    py::arg("x_step"),
+                    py::arg("x_axis_label"),
+                    py::arg("y_axis_label"),
+                    py::arg("name"),
+                    py::arg("nconnections") = 1,
+                    py::arg("parent") = nullptr,
+                    "Create an int vector sink")
+
+        // Short Factory
+        .def_static("make_s",
+                    &vector_sink_f::make_s,
+                    py::arg("vlen"),
+                    py::arg("x_start"),
+                    py::arg("x_step"),
+                    py::arg("x_axis_label"),
+                    py::arg("y_axis_label"),
+                    py::arg("name"),
+                    py::arg("nconnections") = 1,
+                    py::arg("parent") = nullptr,
+                    "Create a short vector sink")
+
+        // Byte Factory
+        .def_static("make_b",
+                    &vector_sink_f::make_b,
+                    py::arg("vlen"),
+                    py::arg("x_start"),
+                    py::arg("x_step"),
+                    py::arg("x_axis_label"),
+                    py::arg("y_axis_label"),
+                    py::arg("name"),
+                    py::arg("nconnections") = 1,
+                    py::arg("parent") = nullptr,
+                    "Create a byte vector sink")
+
+        // --- NEW BINDINGS END ---
 
         .def("exec_", &vector_sink_f::exec_, D(vector_sink_f, exec_))
 

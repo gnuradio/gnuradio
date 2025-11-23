@@ -13,18 +13,30 @@
 #endif
 
 #include "vector_sink_f_impl.h"
-
 #include <gnuradio/io_signature.h>
 #include <gnuradio/prefs.h>
-
 #include <qwt_symbol.h>
-
+#include <cmath>
+#include <complex>
 #include <cstring>
 
 namespace gr {
 namespace qtgui {
 
 static const std::string MSG_PORT_OUT_XVAL = "xval";
+
+// --- Helpers to handle type conversion ---
+// For scalars, we preserve value (sign). For complex, we plot magnitude.
+
+inline double get_plot_value(float v) { return (double)v; }
+inline double get_plot_value(double v) { return v; }
+inline double get_plot_value(int v) { return (double)v; }
+inline double get_plot_value(short v) { return (double)v; }
+inline double get_plot_value(unsigned char v) { return (double)v; }
+inline double get_plot_value(std::complex<float> v) { return (double)std::abs(v); }
+
+
+// --- Factory Implementations ---
 
 vector_sink_f::sptr vector_sink_f::make(unsigned int vlen,
                                         double x_start,
@@ -35,20 +47,77 @@ vector_sink_f::sptr vector_sink_f::make(unsigned int vlen,
                                         int nconnections,
                                         QWidget* parent)
 {
-    return gnuradio::make_block_sptr<vector_sink_f_impl>(
+    // Default Float Implementation
+    return gnuradio::make_block_sptr<vector_sink_f_impl<float>>(
         vlen, x_start, x_step, x_axis_label, y_axis_label, name, nconnections, parent);
 }
 
-vector_sink_f_impl::vector_sink_f_impl(unsigned int vlen,
-                                       double x_start,
-                                       double x_step,
-                                       const std::string& x_axis_label,
-                                       const std::string& y_axis_label,
-                                       const std::string& name,
-                                       int nconnections,
-                                       QWidget* parent)
+vector_sink_f::sptr vector_sink_f::make_c(unsigned int vlen,
+                                          double x_start,
+                                          double x_step,
+                                          const std::string& x_axis_label,
+                                          const std::string& y_axis_label,
+                                          const std::string& name,
+                                          int nconnections,
+                                          QWidget* parent)
+{
+    return gnuradio::make_block_sptr<vector_sink_f_impl<std::complex<float>>>(
+        vlen, x_start, x_step, x_axis_label, y_axis_label, name, nconnections, parent);
+}
+
+vector_sink_f::sptr vector_sink_f::make_i(unsigned int vlen,
+                                          double x_start,
+                                          double x_step,
+                                          const std::string& x_axis_label,
+                                          const std::string& y_axis_label,
+                                          const std::string& name,
+                                          int nconnections,
+                                          QWidget* parent)
+{
+    return gnuradio::make_block_sptr<vector_sink_f_impl<int>>(
+        vlen, x_start, x_step, x_axis_label, y_axis_label, name, nconnections, parent);
+}
+
+vector_sink_f::sptr vector_sink_f::make_s(unsigned int vlen,
+                                          double x_start,
+                                          double x_step,
+                                          const std::string& x_axis_label,
+                                          const std::string& y_axis_label,
+                                          const std::string& name,
+                                          int nconnections,
+                                          QWidget* parent)
+{
+    return gnuradio::make_block_sptr<vector_sink_f_impl<short>>(
+        vlen, x_start, x_step, x_axis_label, y_axis_label, name, nconnections, parent);
+}
+
+vector_sink_f::sptr vector_sink_f::make_b(unsigned int vlen,
+                                          double x_start,
+                                          double x_step,
+                                          const std::string& x_axis_label,
+                                          const std::string& y_axis_label,
+                                          const std::string& name,
+                                          int nconnections,
+                                          QWidget* parent)
+{
+    return gnuradio::make_block_sptr<vector_sink_f_impl<unsigned char>>(
+        vlen, x_start, x_step, x_axis_label, y_axis_label, name, nconnections, parent);
+}
+
+
+// --- Template Implementation ---
+
+template <class T>
+vector_sink_f_impl<T>::vector_sink_f_impl(unsigned int vlen,
+                                          double x_start,
+                                          double x_step,
+                                          const std::string& x_axis_label,
+                                          const std::string& y_axis_label,
+                                          const std::string& name,
+                                          int nconnections,
+                                          QWidget* parent)
     : sync_block("vector_sink_f",
-                 io_signature::make(1, -1, sizeof(float) * vlen),
+                 io_signature::make(1, -1, sizeof(T) * vlen),
                  io_signature::make(0, 0, 0)),
       d_vlen(vlen),
       d_vecavg(1.0),
@@ -58,8 +127,7 @@ vector_sink_f_impl::vector_sink_f_impl(unsigned int vlen,
       d_msg(pmt::mp("x")),
       d_parent(parent)
 {
-    // setup output message port to post frequency when display is
-    // double-clicked
+    // setup output message port to post frequency when display is double-clicked
     message_port_register_out(d_port);
 
     for (int i = 0; i < d_nconnections; i++) {
@@ -69,21 +137,24 @@ vector_sink_f_impl::vector_sink_f_impl(unsigned int vlen,
     initialize(name, x_axis_label, y_axis_label, x_start, x_step);
 }
 
-vector_sink_f_impl::~vector_sink_f_impl()
+template <class T>
+vector_sink_f_impl<T>::~vector_sink_f_impl()
 {
     QMetaObject::invokeMethod(d_main_gui, "close");
 }
 
-bool vector_sink_f_impl::check_topology(int ninputs, int noutputs)
+template <class T>
+bool vector_sink_f_impl<T>::check_topology(int ninputs, int noutputs)
 {
     return ninputs == d_nconnections;
 }
 
-void vector_sink_f_impl::initialize(const std::string& name,
-                                    const std::string& x_axis_label,
-                                    const std::string& y_axis_label,
-                                    double x_start,
-                                    double x_step)
+template <class T>
+void vector_sink_f_impl<T>::initialize(const std::string& name,
+                                       const std::string& x_axis_label,
+                                       const std::string& y_axis_label,
+                                       double x_start,
+                                       double x_step)
 {
     if (qApp != NULL) {
         d_qApplication = qApp;
@@ -107,13 +178,26 @@ void vector_sink_f_impl::initialize(const std::string& name,
     set_update_time(0.1);
 }
 
-void vector_sink_f_impl::exec_() { d_qApplication->exec(); }
+template <class T>
+void vector_sink_f_impl<T>::exec_()
+{
+    d_qApplication->exec();
+}
 
-QWidget* vector_sink_f_impl::qwidget() { return d_main_gui; }
+template <class T>
+QWidget* vector_sink_f_impl<T>::qwidget()
+{
+    return d_main_gui;
+}
 
-unsigned int vector_sink_f_impl::vlen() const { return d_vlen; }
+template <class T>
+unsigned int vector_sink_f_impl<T>::vlen() const
+{
+    return d_vlen;
+}
 
-void vector_sink_f_impl::set_vec_average(const float avg)
+template <class T>
+void vector_sink_f_impl<T>::set_vec_average(const float avg)
 {
     if (avg < 0 || avg > 1.0) {
         d_logger->alert("Invalid average value received in set_vec_average(), must be "
@@ -124,44 +208,56 @@ void vector_sink_f_impl::set_vec_average(const float avg)
     d_vecavg = avg;
 }
 
-float vector_sink_f_impl::vec_average() const { return d_vecavg; }
+template <class T>
+float vector_sink_f_impl<T>::vec_average() const
+{
+    return d_vecavg;
+}
 
-void vector_sink_f_impl::set_x_axis(const double start, const double step)
+template <class T>
+void vector_sink_f_impl<T>::set_x_axis(const double start, const double step)
 {
     d_main_gui->setXaxis(start, step);
 }
 
-void vector_sink_f_impl::set_y_axis(double min, double max)
+template <class T>
+void vector_sink_f_impl<T>::set_y_axis(double min, double max)
 {
     d_main_gui->setYaxis(min, max);
 }
 
-void vector_sink_f_impl::set_ref_level(double ref_level)
+template <class T>
+void vector_sink_f_impl<T>::set_ref_level(double ref_level)
 {
     d_main_gui->setRefLevel(ref_level);
 }
 
-void vector_sink_f_impl::set_x_axis_label(const std::string& label)
+template <class T>
+void vector_sink_f_impl<T>::set_x_axis_label(const std::string& label)
 {
     d_main_gui->setXAxisLabel(label.c_str());
 }
 
-void vector_sink_f_impl::set_y_axis_label(const std::string& label)
+template <class T>
+void vector_sink_f_impl<T>::set_y_axis_label(const std::string& label)
 {
     d_main_gui->setYAxisLabel(label.c_str());
 }
 
-void vector_sink_f_impl::set_x_axis_units(const std::string& units)
+template <class T>
+void vector_sink_f_impl<T>::set_x_axis_units(const std::string& units)
 {
     d_main_gui->getPlot()->setXAxisUnit(units.c_str());
 }
 
-void vector_sink_f_impl::set_y_axis_units(const std::string& units)
+template <class T>
+void vector_sink_f_impl<T>::set_y_axis_units(const std::string& units)
 {
     d_main_gui->getPlot()->setYAxisUnit(units.c_str());
 }
 
-void vector_sink_f_impl::set_update_time(double t)
+template <class T>
+void vector_sink_f_impl<T>::set_update_time(double t)
 {
     // convert update time to ticks
     gr::high_res_timer_type tps = gr::high_res_timer_tps();
@@ -170,96 +266,140 @@ void vector_sink_f_impl::set_update_time(double t)
     d_last_time = 0;
 }
 
-void vector_sink_f_impl::set_title(const std::string& title)
+template <class T>
+void vector_sink_f_impl<T>::set_title(const std::string& title)
 {
     d_main_gui->setTitle(title.c_str());
 }
 
-void vector_sink_f_impl::set_line_label(unsigned int which, const std::string& label)
+template <class T>
+void vector_sink_f_impl<T>::set_line_label(unsigned int which, const std::string& label)
 {
     d_main_gui->setLineLabel(which, label.c_str());
 }
 
-void vector_sink_f_impl::set_line_color(unsigned int which, const std::string& color)
+template <class T>
+void vector_sink_f_impl<T>::set_line_color(unsigned int which, const std::string& color)
 {
     d_main_gui->setLineColor(which, color.c_str());
 }
 
-void vector_sink_f_impl::set_line_width(unsigned int which, int width)
+template <class T>
+void vector_sink_f_impl<T>::set_line_width(unsigned int which, int width)
 {
     d_main_gui->setLineWidth(which, width);
 }
 
-void vector_sink_f_impl::set_line_style(unsigned int which, int style)
+template <class T>
+void vector_sink_f_impl<T>::set_line_style(unsigned int which, int style)
 {
     d_main_gui->setLineStyle(which, (Qt::PenStyle)style);
 }
 
-void vector_sink_f_impl::set_line_marker(unsigned int which, int marker)
+template <class T>
+void vector_sink_f_impl<T>::set_line_marker(unsigned int which, int marker)
 {
     d_main_gui->setLineMarker(which, (QwtSymbol::Style)marker);
 }
 
-void vector_sink_f_impl::set_line_alpha(unsigned int which, double alpha)
+template <class T>
+void vector_sink_f_impl<T>::set_line_alpha(unsigned int which, double alpha)
 {
     d_main_gui->setMarkerAlpha(which, (int)(255.0 * alpha));
 }
 
-void vector_sink_f_impl::set_size(int width, int height)
+template <class T>
+void vector_sink_f_impl<T>::set_size(int width, int height)
 {
     d_main_gui->resize(QSize(width, height));
 }
 
-std::string vector_sink_f_impl::title() { return d_main_gui->title().toStdString(); }
+template <class T>
+std::string vector_sink_f_impl<T>::title()
+{
+    return d_main_gui->title().toStdString();
+}
 
-std::string vector_sink_f_impl::line_label(unsigned int which)
+template <class T>
+std::string vector_sink_f_impl<T>::line_label(unsigned int which)
 {
     return d_main_gui->lineLabel(which).toStdString();
 }
 
-std::string vector_sink_f_impl::line_color(unsigned int which)
+template <class T>
+std::string vector_sink_f_impl<T>::line_color(unsigned int which)
 {
     return d_main_gui->lineColor(which).toStdString();
 }
 
-int vector_sink_f_impl::line_width(unsigned int which)
+template <class T>
+int vector_sink_f_impl<T>::line_width(unsigned int which)
 {
     return d_main_gui->lineWidth(which);
 }
 
-int vector_sink_f_impl::line_style(unsigned int which)
+template <class T>
+int vector_sink_f_impl<T>::line_style(unsigned int which)
 {
     return d_main_gui->lineStyle(which);
 }
 
-int vector_sink_f_impl::line_marker(unsigned int which)
+template <class T>
+int vector_sink_f_impl<T>::line_marker(unsigned int which)
 {
     return d_main_gui->lineMarker(which);
 }
 
-double vector_sink_f_impl::line_alpha(unsigned int which)
+template <class T>
+double vector_sink_f_impl<T>::line_alpha(unsigned int which)
 {
     return (double)(d_main_gui->markerAlpha(which)) / 255.0;
 }
 
-void vector_sink_f_impl::enable_menu(bool en) { d_main_gui->enableMenu(en); }
+template <class T>
+void vector_sink_f_impl<T>::enable_menu(bool en)
+{
+    d_main_gui->enableMenu(en);
+}
 
-void vector_sink_f_impl::enable_grid(bool en) { d_main_gui->setGrid(en); }
+template <class T>
+void vector_sink_f_impl<T>::enable_grid(bool en)
+{
+    d_main_gui->setGrid(en);
+}
 
-void vector_sink_f_impl::disable_legend() { d_main_gui->disableLegend(); }
+template <class T>
+void vector_sink_f_impl<T>::disable_legend()
+{
+    d_main_gui->disableLegend();
+}
 
-void vector_sink_f_impl::enable_autoscale(bool en) { d_main_gui->autoScale(en); }
+template <class T>
+void vector_sink_f_impl<T>::enable_autoscale(bool en)
+{
+    d_main_gui->autoScale(en);
+}
 
-void vector_sink_f_impl::clear_max_hold() { d_main_gui->clearMaxHold(); }
+template <class T>
+void vector_sink_f_impl<T>::clear_max_hold()
+{
+    d_main_gui->clearMaxHold();
+}
 
-void vector_sink_f_impl::clear_min_hold() { d_main_gui->clearMinHold(); }
+template <class T>
+void vector_sink_f_impl<T>::clear_min_hold()
+{
+    d_main_gui->clearMinHold();
+}
 
-void vector_sink_f_impl::reset()
+template <class T>
+void vector_sink_f_impl<T>::reset()
 {
     // nop
 }
 
-void vector_sink_f_impl::check_clicked()
+template <class T>
+void vector_sink_f_impl<T>::check_clicked()
 {
     if (d_main_gui->checkClicked()) {
         double xval = d_main_gui->getClickedXVal();
@@ -267,22 +407,29 @@ void vector_sink_f_impl::check_clicked()
     }
 }
 
-int vector_sink_f_impl::work(int noutput_items,
-                             gr_vector_const_void_star& input_items,
-                             gr_vector_void_star& output_items)
+template <class T>
+int vector_sink_f_impl<T>::work(int noutput_items,
+                                gr_vector_const_void_star& input_items,
+                                gr_vector_void_star& output_items)
 {
-    const float* in = (const float*)input_items[0];
-
     // See if we generate a message
     check_clicked();
 
     for (int i = 0; i < noutput_items; i++) {
         if (gr::high_res_timer_now() - d_last_time > d_update_time) {
             for (int n = 0; n < d_nconnections; n++) {
-                in = ((const float*)input_items[n]) + d_vlen;
+
+                // POINTER MATH FIX:
+                // input_items[n] points to start of this chunk buffer.
+                // We access the i-th vector in the chunk.
+                const T* in = (const T*)input_items[n] + (i * d_vlen);
+
                 for (unsigned int x = 0; x < d_vlen; x++) {
+
+                    double val = get_plot_value(in[x]);
+
                     d_magbufs[n][x] =
-                        (double)((1.0 - d_vecavg) * d_magbufs[n][x] + (d_vecavg)*in[x]);
+                        (double)((1.0 - d_vecavg) * d_magbufs[n][x] + (d_vecavg)*val);
                 }
             }
             d_last_time = gr::high_res_timer_now();
@@ -292,6 +439,13 @@ int vector_sink_f_impl::work(int noutput_items,
 
     return noutput_items;
 }
+
+// Explicit instantiations to solve Symbol Not Found errors
+template class vector_sink_f_impl<float>;
+template class vector_sink_f_impl<std::complex<float>>;
+template class vector_sink_f_impl<int>;
+template class vector_sink_f_impl<short>;
+template class vector_sink_f_impl<unsigned char>;
 
 } /* namespace qtgui */
 } /* namespace gr */
