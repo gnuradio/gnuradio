@@ -33,6 +33,15 @@ public:
                                        float npwr = 1.0);
     ~constellation_soft_decoder_cf_impl() override;
 
+    /**
+     * Set the noise power (used for LLR normalization).
+     *
+     * For standard QPSK with points at (±1±j)/√2, the average symbol energy is 1.
+     * The soft-decision LLRs are automatically scaled by 1/√2 so that the
+     * effective noise variance remains consistent with N0 when passed to
+     * downstream FEC decoders (Viterbi, LDPC, etc.).
+     * Default = 1.0 (unit average energy).
+     */
     void set_npwr(float npwr) override;
     void set_constellation(constellation_sptr constellation) override;
 
