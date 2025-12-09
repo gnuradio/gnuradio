@@ -165,7 +165,8 @@ set(BLOCKS_SOURCES
     vco_c_impl.cc
     vector_map_impl.cc
     vector_to_stream_impl.cc
-    vector_to_streams_impl.cc)
+    vector_to_streams_impl.cc
+    typecast_impl.cc)
 
 if(SNDFILE_FOUND)
     set(BLOCKS_SOURCES ${BLOCKS_SOURCES} wavfile_sink_impl.cc wavfile_source_impl.cc)

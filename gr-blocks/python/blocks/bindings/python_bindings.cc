@@ -172,6 +172,7 @@ void bind_wavfile_sink(py::module&);
 void bind_wavfile_source(py::module&);
 #endif
 void bind_xor_blk(py::module&);
+void bind_typecast(py::module&);
 
 // We need this hack because import_array() returns NULL
 // for newer Python versions.
@@ -349,4 +350,5 @@ PYBIND11_MODULE(blocks_python, m)
     bind_wavfile_source(m);
 #endif
     bind_xor_blk(m);
+    bind_typecast(m);
 }

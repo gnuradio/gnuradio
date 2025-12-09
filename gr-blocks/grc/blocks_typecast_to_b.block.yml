@@ -1,0 +1,32 @@
+id: blocks_typecast_to_b
+label: Typecast To Bytes
+flags: [ python, cpp ]
+
+parameters:
+-   id: type_in
+    label: Type In
+    dtype: enum
+    options: [ complex, float, int, short, byte ]
+    option_attributes:
+      size: [ gr.sizeof_gr_complex, gr.sizeof_float, gr.sizeof_int, gr.sizeof_short,
+              gr.sizeof_char ]
+
+
+inputs:
+-   domain: stream
+    dtype: ${ type_in }
+
+outputs:
+-   domain: stream
+    dtype: byte
+
+templates:
+  imports: from gnuradio import blocks
+  make: blocks.typecast(${type_in.size}, 1)
+
+cpp_templates:
+  includes: ['#include <gnuradio/blocks/typecast.h>']
+  declarations: 'blocks::typecast::sptr ${id};'
+  make: 'this->${id} = blocks::typecast::make(${type_in.size}, 1);'
+
+file_format: 1

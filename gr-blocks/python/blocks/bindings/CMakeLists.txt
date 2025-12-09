@@ -157,6 +157,7 @@ list(
     vector_to_stream_python.cc
     vector_to_streams_python.cc
     xor_blk_python.cc
+    typecast_python.cc
     python_bindings.cc)
 
 if(SNDFILE_FOUND)

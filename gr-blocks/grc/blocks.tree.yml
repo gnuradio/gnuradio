@@ -134,6 +134,8 @@
   - blocks_regenerate_bb
   - blocks_stretch_ff
   - blocks_blockinterleaver_xx
+  - blocks_typecast_to_b
+  - blocks_typecast_from_b
 - Stream Tag Tools:
   - blocks_burst_to_stream
   - blocks_tag_debug
