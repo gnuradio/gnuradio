@@ -15,7 +15,7 @@ from . import Actions
 from .StateCache import StateCache
 from .Constants import MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT
 from .DrawingArea import DrawingArea
-from ..main import get_state_directory
+from .. import paths
 
 log = logging.getLogger(__name__)
 
@@ -148,7 +148,7 @@ class Page(Gtk.HBox):
         """
         platform = self.flow_graph.parent_platform
         if self.flow_graph.get_option('generate_options').startswith('hb'):
-            output_dir = get_state_directory()
+            output_dir = paths.get_state_directory()
         else:
             output_dir = os.path.dirname(self.file_path)
         return platform.Generator(self.flow_graph, output_dir)

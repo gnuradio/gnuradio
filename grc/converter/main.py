@@ -10,7 +10,7 @@ import json
 import logging
 import os
 
-from ..main import get_state_directory
+from .. import paths
 from ..core import Constants
 from . import block_tree, block
 
@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 excludes = [
     'qtgui_',
     '.grc_gnuradio/',
-    os.path.join(get_state_directory(), Constants.GRC_SUBDIR),
+    os.path.join(paths.get_state_directory(), Constants.GRC_SUBDIR),
     'blks2',
     'wxgui',
     'epy_block.xml',
@@ -34,7 +34,7 @@ excludes = [
 
 class Converter(object):
 
-    def __init__(self, search_path: str, output_dir: str = os.path.join(get_state_directory(), Constants.GRC_SUBDIR)):
+    def __init__(self, search_path: str, output_dir: str = os.path.join(paths.get_state_directory(), Constants.GRC_SUBDIR)):
         self.search_path = search_path
         self.output_dir = os.path.expanduser(output_dir)
         logger.info("Saving converted files to {}".format(self.output_dir))

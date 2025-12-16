@@ -11,7 +11,7 @@ import sys
 import os
 import configparser
 
-from ..main import get_config_file_path
+from .. import paths
 from ..core.Config import Config as CoreConfig
 from . import Constants
 
@@ -28,7 +28,7 @@ class Config(CoreConfig):
 
     name = 'GNU Radio Companion'
 
-    gui_prefs_file = os.environ.get('GRC_PREFS_PATH', get_config_file_path())
+    gui_prefs_file = os.environ.get('GRC_PREFS_PATH', paths.get_config_file_path())
 
     def __init__(self, install_prefix, *args, **kwargs):
         CoreConfig.__init__(self, *args, **kwargs)
