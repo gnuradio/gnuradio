@@ -19,7 +19,7 @@ parameters:
     label: Filter Rolloff Factor
     dtype: real
 -   id: filter_size
-    label: Prototype Filter Size
+    label: Filter Size
     dtype: int
 -   id: w
     label: Loop Bandwidth

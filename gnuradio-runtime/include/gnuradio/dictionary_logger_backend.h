@@ -13,7 +13,6 @@
 #include <spdlog/details/null_mutex.h>
 #include <spdlog/sinks/base_sink.h>
 #include <unordered_map>
-#include <memory>
 #include <mutex>
 #include <regex>
 #include <set>

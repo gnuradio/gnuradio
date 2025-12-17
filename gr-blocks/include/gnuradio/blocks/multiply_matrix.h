@@ -14,7 +14,6 @@
 
 #include <gnuradio/blocks/api.h>
 #include <gnuradio/sync_block.h>
-#include <cstdint>
 
 namespace gr {
 namespace blocks {

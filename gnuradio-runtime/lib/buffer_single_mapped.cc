@@ -20,6 +20,9 @@
 #include <cstdlib>
 #include <limits>
 #include <numeric>
+#ifdef BUFFER_DEBUG
+#include <spdlog/fmt/ranges.h>
+#endif // BUFFER_DEBUG
 
 namespace gr {
 
@@ -93,9 +96,7 @@ bool buffer_single_mapped::allocate_buffer(int nitems)
     }
 
 #ifdef BUFFER_DEBUG
-    std::ostringstream msg;
-    msg << "WRITE GRANULARITY: " << write_granularity;
-    GR_LOG_DEBUG(d_logger, msg.str());
+    d_logger->debug("WRITE GRANULARITY: {}", write_granularity);
 #endif
 
     // Adjust size so output buffer size is a multiple of the write granularity
@@ -105,12 +106,12 @@ bool buffer_single_mapped::allocate_buffer(int nitems)
         nitems += (remainder > 0) ? (size_align_adjust - remainder) : 0;
 
 #ifdef BUFFER_DEBUG
-        std::ostringstream msg;
-        msg << "allocate_buffer()** called  nitems: " << orig_nitems
-            << " -- read_multiple: " << d_downstream_lcm_nitems
-            << " -- write_multiple: " << write_granularity
-            << " -- NEW nitems: " << nitems;
-        GR_LOG_DEBUG(d_logger, msg.str());
+        d_logger->debug("allocate_buffer()** called  nitems: {} -- read_multiple: {} -- "
+                        "write_multiple: {} -- NEW nitems: {}",
+                        orig_nitems,
+                        d_downstream_lcm_nitems,
+                        write_granularity,
+                        nitems);
 #endif
     }
 
@@ -229,16 +230,18 @@ int buffer_single_mapped::space_available()
         }
 
 #ifdef BUFFER_DEBUG
-        std::ostringstream msg;
-        msg << "[" << this << "] "
-            << "space_available() called  (case: " << thecase
-            << ")  d_write_index: " << d_write_index << " (" << nitems_written() << ") "
-            << " -- min_read_index: " << min_read_index << " ("
-            << min_idx_reader->nitems_read() << ") "
-            << " -- space: " << space
-            << " -- max_reader_out_mult: " << d_max_reader_output_multiple
-            << " (sample delay: " << min_idx_reader->sample_delay() << ")";
-        GR_LOG_DEBUG(d_logger, msg.str());
+        d_logger->debug("[{}] space_available() called  (case: {})  d_write_index: {} "
+                        "({})  -- min_read_index: {} ({})  -- space: {} -- "
+                        "max_reader_out_mult: {} (sample delay: {})",
+                        this,
+                        thecase,
+                        d_write_index,
+                        nitems_written(),
+                        min_read_index,
+                        min_idx_reader->nitems_read(),
+                        space,
+                        d_max_reader_output_multiple,
+                        min_idx_reader->sample_delay());
 #endif
 
         return space;
@@ -253,10 +256,9 @@ void buffer_single_mapped::update_reader_block_history(unsigned history, int del
         d_write_index = d_max_reader_history - 1;
 
 #ifdef BUFFER_DEBUG
-        std::ostringstream msg;
-        msg << "[" << this << "] "
-            << "buffer_single_mapped constructor -- set wr index to: " << d_write_index;
-        GR_LOG_DEBUG(d_logger, msg.str());
+        d_logger->debug("[{}] buffer_single_mapped constructor -- set wr index to: {}",
+                        this,
+                        d_write_index);
 #endif
 
         // Reset the reader's read index if the buffer's write index has changed.
@@ -285,20 +287,21 @@ bool buffer_single_mapped::input_blocked_callback_logic(int items_required,
                                                         mem_func_t const& memmove_func)
 {
 #ifdef BUFFER_DEBUG
-    std::ostringstream msg;
-    msg << "[" << this << "] "
-        << "input_blocked_callback() WR_idx: " << d_write_index
-        << " -- WR items: " << nitems_written() << " -- BUFSIZE: " << d_bufsize
-        << " -- RD_idx: " << read_index << " -- items_required: " << items_required
-        << " -- items_avail: " << items_avail;
-    GR_LOG_DEBUG(d_logger, msg.str());
+    d_logger->debug("[{}] input_blocked_callback() WR_idx: {} -- WR items: {} -- "
+                    "BUFSIZE: {} -- RD_idx: {} -- items_required: {} -- items_avail: {}",
+                    this,
+                    d_write_index,
+                    nitems_written(),
+                    d_bufsize,
+                    read_index,
+                    items_required,
+                    items_avail);
 #endif
 
     // Maybe adjust read pointers from min read index?
     // This would mean that *all* readers must be > (passed) the write index
     if (((d_bufsize - read_index) < (uint32_t)items_required) &&
         (d_write_index < read_index)) {
-
         // Find reader with the smallest read index that is greater than the
         // write index
         uint32_t min_reader_index = std::numeric_limits<uint32_t>::max();
@@ -321,20 +324,26 @@ bool buffer_single_mapped::input_blocked_callback_logic(int items_required,
         }
 
 #ifdef BUFFER_DEBUG
-        std::ostringstream msg;
-        msg << "[" << this << "] "
-            << "input_blocked_callback() WR_idx: " << d_write_index
-            << " -- WR items: " << nitems_written() << " -- BUFSIZE: " << d_bufsize
-            << " -- RD_idx: " << min_read_idx;
+        std::vector<decltype(d_readers[0]->d_read_index)> indices;
+        indices.reserve(d_readers.size());
         for (size_t idx = 0; idx < d_readers.size(); ++idx) {
             if (idx != min_reader_index) {
-                msg << " -- OTHER_RDR: " << d_readers[idx]->d_read_index;
+                indices.push_back(idx);
             }
         }
+        d_logger->debug("[{}] input_blocked_callback() WR_idx: {} -- WR items: {} -- "
+                        "BUFSIZE: {} -- RD_idx: {} -- OTHER_RDR: {} -- GAP: {} -- "
+                        "items_required: {} -- items_avail: {}",
+                        this,
+                        d_write_index,
+                        nitems_written(),
+                        d_bufsize,
+                        min_read_index,
+                        fmt::join(indices, " -- OTHER_RDR: "),
+                        gap,
+                        items_required,
+                        items_avail);
 
-        msg << " -- GAP: " << gap << " -- items_required: " << items_required
-            << " -- items_avail: " << items_avail;
-        GR_LOG_DEBUG(d_logger, msg.str());
 #endif
 
         // Shift existing data down to make room for blocked data at end of buffer
@@ -374,13 +383,14 @@ bool buffer_single_mapped::output_blocked_callback_logic(int output_multiple,
     uint32_t space_avail = space_available();
 
 #ifdef BUFFER_DEBUG
-    std::ostringstream msg;
-    msg << "[" << this << "] "
-        << "output_blocked_callback()*** WR_idx: " << d_write_index
-        << " -- WR items: " << nitems_written()
-        << " -- output_multiple: " << output_multiple
-        << " -- space_avail: " << space_avail << " -- force: " << force;
-    GR_LOG_DEBUG(d_logger, msg.str());
+    d_logger->debug("[{}] output_blocked_callback()*** WR_idx: {} -- WR items: {} -- "
+                    "output_multiple: {} -- space_avail: {} -- force: {}",
+                    this,
+                    d_write_index,
+                    nitems_written(),
+                    output_multiple,
+                    space_avail,
+                    force);
 #endif
 
     if ((((space_avail > 0) || (space_avail == 0 && d_has_history)) &&
@@ -398,17 +408,19 @@ bool buffer_single_mapped::output_blocked_callback_logic(int output_multiple,
         }
 
 #ifdef BUFFER_DEBUG
-        std::ostringstream msg;
-        msg << "[" << this << "] "
-            << "output_blocked_callback() WR_idx: " << d_write_index
-            << " -- WR items: " << nitems_written() << " -- min RD_idx: " << min_read_idx
-            << " -- RD items: " << min_read_idx_nitems << " -- shortcircuit: "
-            << ((min_read_idx == 0) || (min_read_idx > d_write_index) ||
-                (min_read_idx == d_write_index &&
-                 min_read_idx_nitems != nitems_written()))
-            << " -- to_move_items: " << (d_write_index - min_read_idx)
-            << " -- space_avail: " << space_avail << " -- force: " << force;
-        GR_LOG_DEBUG(d_logger, msg.str());
+        d_logger->debug("[{}] output_blocked_callback() WR_idx: {} -- WR items: {} -- "
+                        "min RD_idx: {} -- RD items: {} -- shortcircuit: {} -- "
+                        "to_move_items: {} -- space_avail: {} -- force: {}" this,
+                        d_write_index,
+                        nitems_written(),
+                        min_read_idx,
+                        min_read_idx_nitems,
+                        ((min_read_idx == 0) || (min_read_idx > d_write_index) ||
+                         (min_read_idx == d_write_index &&
+                          min_read_idx_nitems != nitems_written())) min_read_idx,
+                        d_write_index - min_read_idx,
+                        space_avail,
+                        force);
 #endif
 
         // Make sure we have enough room to start writing back at the beginning

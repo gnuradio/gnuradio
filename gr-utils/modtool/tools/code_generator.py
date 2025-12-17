@@ -26,7 +26,8 @@ GRTYPELIST = {
     'general': 'block',
     'tagged_stream': 'tagged_stream_block',
     'hier': 'hier_block2',
-    'noblock': ''
+    'noblock': '',
+    'rfnoc_block': 'uhd::rfnoc_block',
 }
 
 

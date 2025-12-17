@@ -13,7 +13,7 @@ include(GrComponent)
 add_library(gnuradio-audio audio_registry.cc)
 target_link_libraries(gnuradio-audio PUBLIC gnuradio-runtime)
 target_include_directories(
-    gnuradio-audio PUBLIC $<INSTALL_INTERFACE:include>
+    gnuradio-audio PUBLIC $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
                           $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>)
 
 list(APPEND gr_audio_confs ${CMAKE_CURRENT_SOURCE_DIR}/gr-audio.conf)

@@ -45,6 +45,7 @@ if(ENABLE_UHD_RFNOC)
         uhd_rfnoc_graph.block.yml
         uhd_rfnoc_keep_one_in_n.block.yml
         uhd_rfnoc_logpwr.block.yml
+        uhd_rfnoc_mb_controller.block.yml
         uhd_rfnoc_moving_avg.block.yml
         uhd_rfnoc_null_src_sink.block.yml
         uhd_rfnoc_rx_streamer.block.yml
@@ -54,6 +55,7 @@ if(ENABLE_UHD_RFNOC)
         uhd_rfnoc_vector_iir.block.yml
         # Domain for RFNoC block connections in GNU Radio flow graphs
         rfnoc.domain.yml
+        rfnoc_mb_control.domain.yml
         # GRC Bindings for RFNoC Image Builder files (blocks)
         uhd_fpga_addsub.block.yml
         uhd_fpga_chdr_dma_ta.block.yml
@@ -63,6 +65,7 @@ if(ENABLE_UHD_RFNOC)
         uhd_fpga_duc.block.yml
         uhd_fpga_eth_ta.block.yml
         uhd_fpga_fft.block.yml
+        uhd_fpga_fir_filter.block.yml
         uhd_fpga_fosphor.block.yml
         uhd_fpga_keep_one_in_n.block.yml
         uhd_fpga_null_src_sink.block.yml
@@ -72,6 +75,8 @@ if(ENABLE_UHD_RFNOC)
         uhd_fpga_siggen.block.yml
         uhd_fpga_split_stream.block.yml
         uhd_fpga_switchboard.block.yml
+        uhd_fpga_vector_iir.block.yml
+        uhd_fpga_logpwr.block.yml
         # GRC Bindings for RFNoC Image Builder files (domains)
         uhd_fpga_clk.domain.yml
         uhd_fpga_ctrl.domain.yml

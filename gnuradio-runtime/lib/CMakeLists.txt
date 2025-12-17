@@ -20,6 +20,13 @@ message(STATUS "Loading build date ${BUILD_DATE} into constants...")
 message(STATUS "Loading version ${VERSION} into constants...")
 
 #Generate the constants file, now that we actually know which components will be enabled.
+if(CMAKE_VERSION VERSION_LESS "3.20")
+    set(SAFE_COMPILER_INFO "${COMPILER_INFO}")
+else()
+    cmake_path(GET CMAKE_SOURCE_DIR PARENT_PATH top_build_dir)
+    string(REPLACE "${top_build_dir}" "BUILD_DIR" SAFE_COMPILER_INFO "${COMPILER_INFO}")
+endif()
+
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/constants.cc.in
                ${CMAKE_CURRENT_BINARY_DIR}/constants.cc ESCAPE_QUOTES @ONLY)
 
@@ -141,7 +148,7 @@ target_link_libraries(
 
 target_include_directories(
     gnuradio-runtime
-    PUBLIC $<INSTALL_INTERFACE:include>
+    PUBLIC $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>
            $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/../include>
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
@@ -263,7 +270,7 @@ if(WIN32)
 endif(WIN32)
 
 #need to link with librt on ubuntu 11.10 and Hurd for shm_*
-if((LINUX) OR (CMAKE_SYSTEM_NAME MATCHES "^(kFreeBSD|GNU)$"))
+if(CMAKE_SYSTEM_NAME MATCHES "^(Linux|kFreeBSD|GNU)$")
     target_link_libraries(gnuradio-runtime PUBLIC rt)
 endif()
 

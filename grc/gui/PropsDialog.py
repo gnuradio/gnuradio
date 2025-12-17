@@ -304,6 +304,9 @@ class PropsDialog(Gtk.Dialog):
             insert('\n\n# External Code ({}.py)\n'.format(block.name), src)
 
     def _handle_key_press(self, widget, event):
+        if event.keyval == Gdk.KEY_Escape:
+            self.response(Gtk.ResponseType.REJECT)
+            return True  # Map Escape key to reject button
         close_dialog = (
             event.keyval == Gdk.KEY_Return and
             event.get_state() & Gdk.ModifierType.CONTROL_MASK == 0 and

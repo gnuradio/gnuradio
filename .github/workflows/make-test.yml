@@ -13,7 +13,7 @@ jobs:
     timeout-minutes: 10
     name: Check hashes
     container:
-      image: 'gnuradio/ci:fedora-40-3.10'
+      image: 'gnuradio/ci:fedora-42-3.10'
     steps:
     - name: Checkout project
       uses: actions/checkout@v4
@@ -82,8 +82,6 @@ jobs:
           - distro: 'No-Python Ubuntu 24.04'
             containerid: 'gnuradio/ci:ubuntu-24.04-3.10'
             enable_python: Off
-          - distro: 'Ubuntu 20.04'
-            containerid: 'gnuradio/ci:ubuntu-20.04-3.9'
           - distro: 'Ubuntu 22.04'
             containerid: 'gnuradio/ci:ubuntu-22.04-3.9'
             ctest_args: '-E "qa_polar_..coder_(sc_)?systematic"'
@@ -97,11 +95,12 @@ jobs:
             containerid: 'gnuradio/ci:fedora-42-3.10'
             cxxflags: -Wno-unused-command-line-argument
             cmakeflags: -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_C_COMPILER=clang -GNinja
+            build_options: --
             ldpath: /usr/local/lib64
           - distro: 'Debian 12'
             containerid: 'gnuradio/ci:debian-12-3.10'
-          - distro: 'Debian 11 (32-bit)'
-            containerid: 'gnuradio/ci:debian-i386-11-3.10'
+          - distro: 'Debian 12 (32-bit)'
+            containerid: 'gnuradio/ci:debian-i386-12-3.10'
             containeroptions: '--platform linux/i386'
             ctest_args: '-E "qa_polar_..coder_(sc_)?systematic"'
             ## Skip upload, cause 32 bit node doesn't work
@@ -115,17 +114,29 @@ jobs:
     steps:
     - uses: actions/checkout@v1
       name: Checkout Project
+    - name: Prepare sccache usage (if available)
+      if: ${{ vars.SCCACHE_S3_BUCKET && vars.SCCACHE_S3_ENDPOINT }}
+      id: enable_sccache
+      env:
+        SCCACHE_S3_ENDPOINT: ${{ vars.SCCACHE_S3_ENDPOINT }}
+        SCCACHE_S3_BUCKET: ${{ vars.SCCACHE_S3_BUCKET }}
+        SCCACHE_S3_REGION: ${{ vars.SCCACHE_S3_REGION }}
+      run: tools/setup_cmake_cache_flags.bash "${{ matrix.distro }}"
     - name: CMake
       env:
         CXXFLAGS: ${{ matrix.ignore_errors || '-Werror' }} ${{ matrix.cxxflags }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.SCCACHE_S3_KEY }}
+        AWS_ACCESS_KEY_ID: ${{ vars.SCCACHE_S3_KEY_ID }}
       run: >
         cd /build
         && cmake
         -DENABLE_DEFAULT=${{ matrix.enable_default || 'On' }}
         -DENABLE_DOXYGEN=${{ matrix.enable_doxygen || 'Off' }}
         -DENABLE_PYTHON=${{  matrix.enable_python  || 'On' }}
-        -DCMAKE_BUILD_TYPE=RelWithDebInfo
+        ${{ steps.enable_sccache.outputs.CXX_LAUNCHER }}
+        ${{ steps.enable_sccache.outputs.C_LAUNCHER }}
         ${{ matrix.cmakeflags }}
+        -DCMAKE_BUILD_TYPE=RelWithDebInfo
         ${GITHUB_WORKSPACE}
     - name: Dump compile commands
       if: ${{ ! matrix.skip_upload }}
@@ -135,7 +146,10 @@ jobs:
         path: /build/compile_commands.json
         if-no-files-found: ignore
     - name: Make
-      run: cmake --build /build --parallel 4
+      env:
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.SCCACHE_S3_KEY }}
+        AWS_ACCESS_KEY_ID: ${{ vars.SCCACHE_S3_KEY_ID }}
+      run: cmake --build /build ${{ matrix.build_options || '--parallel $(nproc)' }}
     - name: Make Test
       env:
         QT_QPA_PLATFORM: offscreen
@@ -170,6 +184,9 @@ jobs:
     - name: Check for installation duplicates
       if: ${{ ! matrix.skip_upload }}
       run: tools/check_installation_duplicates.bash /build/install_manifest.txt
+    - name: Sccache statistics
+      if: ${{ steps.enable_sccache.outputs.CXX_LAUNCHER }}
+      run: sccache -s
   mingw64:
     timeout-minutes: 80
   # All of these shall depend on the formatting check (needs: check-formatting)
@@ -221,17 +238,40 @@ jobs:
           spdlog:p
           thrift:p
           volk:p
+          sccache:p
     - name: Checkout code
       uses: actions/checkout@v4
+    - name: Prepare sccache usage (if available)
+      if: ${{ vars.SCCACHE_S3_BUCKET && vars.SCCACHE_S3_ENDPOINT }}
+      id: enable_sccache
+      env:
+        SCCACHE_S3_ENDPOINT: ${{ vars.SCCACHE_S3_ENDPOINT }}
+        SCCACHE_S3_BUCKET: ${{ vars.SCCACHE_S3_BUCKET }}
+        SCCACHE_S3_REGION: ${{ vars.SCCACHE_S3_REGION }}
+      run: tools/setup_cmake_cache_flags.bash "${{ matrix.distro }}"
     - name: CMake
+      env:
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.SCCACHE_S3_KEY }}
+        AWS_ACCESS_KEY_ID: ${{ vars.SCCACHE_S3_KEY_ID }}
       run: |
         cmake -S . -B build \
           -DCMAKE_INSTALL_PREFIX=${RUNNER_TEMP}/msys64/mingw64 \
-          -DENABLE_DOXYGEN=OFF
+          -DENABLE_DOXYGEN=OFF \
+          ${{ steps.enable_sccache.outputs.CXX_LAUNCHER }} \
+          ${{ steps.enable_sccache.outputs.C_LAUNCHER }}
     - name: Make
+      env:
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.SCCACHE_S3_KEY }}
+        AWS_ACCESS_KEY_ID: ${{ vars.SCCACHE_S3_KEY_ID }}
+        SCCACHE_CONF: ${{ steps.enable_sccache.outputs.SCCACHE_CONF }}
       run: cmake --build build
     - name: Make Install
       run: cmake --install build
     - name: Make Test
       working-directory: ./build
       run: ctest --output-on-failure
+    - name: Sccache statistics
+      env: 
+        SCCACHE_CONF: ${{ steps.enable_sccache.outputs.SCCACHE_CONF }}
+      if: ${{ steps.enable_sccache.outputs.CXX_LAUNCHER }}
+      run: sccache -s

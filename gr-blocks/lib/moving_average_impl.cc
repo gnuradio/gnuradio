@@ -9,10 +9,6 @@
  */
 
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "moving_average_impl.h"
 #include <gnuradio/io_signature.h>
 #include <volk/volk.h>

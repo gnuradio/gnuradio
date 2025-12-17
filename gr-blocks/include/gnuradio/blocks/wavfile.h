@@ -14,8 +14,6 @@
 #ifndef _GR_WAVFILE_H_
 #define _GR_WAVFILE_H_
 
-#include <cstdio>
-
 namespace gr {
 namespace blocks {
 

@@ -327,7 +327,7 @@ blocks:
     alias: ''
     antenna: RX2
     bandwidth: '0'
-    block_args: ''
+    block_args: f"spp={fft_size}"
     comment: ''
     dc_offset: 'False'
     device_select: '-1'

@@ -16,7 +16,7 @@ target_compile_features(gnuradio-soapy PRIVATE ${GR_CXX_VERSION_FEATURE})
 target_link_libraries(gnuradio-soapy PUBLIC gnuradio-runtime ${SoapySDR_LIBRARIES})
 
 target_include_directories(
-    gnuradio-soapy PUBLIC $<INSTALL_INTERFACE:include>
+    gnuradio-soapy PUBLIC $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
                           $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>)
 
 #Add Windows DLL resource file if using MSVC

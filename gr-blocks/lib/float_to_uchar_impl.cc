@@ -13,11 +13,9 @@
 #include "config.h"
 #endif
 
-#include "float_array_to_uchar.h"
 #include "float_to_uchar_impl.h"
 #include <gnuradio/io_signature.h>
 #include <volk/volk.h>
-#include <cmath>
 
 namespace gr {
 namespace blocks {

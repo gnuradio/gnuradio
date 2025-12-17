@@ -1,6 +1,7 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2009,2011,2012,2014 Free Software Foundation, Inc.
+ * Copyright 2025 Daniel Estevez <daniel@destevez.net>
  *
  * This file is part of GNU Radio
  *
@@ -24,10 +25,10 @@ private:
     float d_sps;
     float d_rolloff;
     size_t d_filter_size;
+    float d_bandwidth;
 
     std::vector<gr_complex> d_taps_lower;
     std::vector<gr_complex> d_taps_upper;
-    bool d_updated = false;
     std::unique_ptr<gr::filter::kernel::fir_filter_with_buffer_ccc> d_filter_lower;
     std::unique_ptr<gr::filter::kernel::fir_filter_with_buffer_ccc> d_filter_upper;
 

@@ -1,0 +1,333 @@
+options:
+  parameters:
+    alias: ''
+    author: Martin Braun <martin.braun@ettus.com>
+    catch_exceptions: 'True'
+    comment: ''
+    copyright: ''
+    description: This shows the PDU capabilities of the RFNoC TX Streamer
+    gen_linking: dynamic
+    generate_options: qt_gui
+    generator_class_name: PythonQtGuiGenerator
+    generator_module: gnuradio.grc.workflows.python_qt_gui
+    hier_block_src_path: '.:'
+    id: rfnoc_duc_radio
+    max_nouts: '0'
+    output_language: python
+    qt_qss_theme: ''
+    realtime_scheduling: ''
+    run: 'True'
+    run_command: '{python} -u {filename}'
+    thread_safe_setters: ''
+    title: 'RFNoC: PDU Example'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 8]
+    rotation: 0
+    state: enabled
+
+blocks:
+- name: amplitude
+  id: variable
+  parameters:
+    comment: ''
+    value: '0.5'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [920, 12.0]
+    rotation: 0
+    state: true
+- name: burst_duration_ms
+  id: variable
+  parameters:
+    comment: ''
+    value: '100'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [696, 12.0]
+    rotation: 0
+    state: true
+- name: freq
+  id: variable_qtgui_entry
+  parameters:
+    comment: ''
+    entry_signal: editingFinished
+    gui_hint: ''
+    label: Frequency (Hz)
+    type: real
+    value: 1e9
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1200, 228.0]
+    rotation: 0
+    state: true
+- name: gain
+  id: variable_qtgui_entry
+  parameters:
+    comment: ''
+    entry_signal: editingFinished
+    gui_hint: ''
+    label: Gain (dB)
+    type: int
+    value: '0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1080, 228.0]
+    rotation: 0
+    state: true
+- name: metadata
+  id: variable
+  parameters:
+    comment: 'This is the metadata for the signal burst.
+
+      In this example, we set the EOB flag for
+
+      the burst, which is not strictly necessary,
+
+      as the EOB flag is set by default, but it
+
+      shows how to add metadata with the signal.'
+    value: 'pmt.to_pmt({"tx_eob": True})'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [224, 148.0]
+    rotation: 0
+    state: true
+- name: radio_chan
+  id: variable
+  parameters:
+    comment: ''
+    value: '0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1080, 164.0]
+    rotation: 0
+    state: true
+- name: radio_rate
+  id: variable
+  parameters:
+    comment: ''
+    value: 200e6
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [512, 12.0]
+    rotation: 0
+    state: true
+- name: samp_rate
+  id: variable
+  parameters:
+    comment: ''
+    value: 1e6
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [600, 12.0]
+    rotation: 0
+    state: true
+- name: signal
+  id: variable
+  parameters:
+    comment: 'This is the actual signal data (the samples)
+
+      that will get transmitted with every burst.
+
+      Here, we generate a sinusoid with Numpy
+
+      and then transmit the same signal with every
+
+      burst.'
+    value: amplitude * np.exp(2 * np.pi * 1j * np.arange(int(burst_duration_ms / 1e3*samp_rate))
+      * (tone_freq/samp_rate), dtype=np.complex64)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [480, 148.0]
+    rotation: 0
+    state: true
+- name: tone_freq
+  id: variable
+  parameters:
+    comment: ''
+    value: 1e6/16
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [832, 12.0]
+    rotation: 0
+    state: true
+- name: uhd_rfnoc_graph
+  id: uhd_rfnoc_graph
+  parameters:
+    alias: ''
+    clock_source: ''
+    comment: 'Modify the device address here
+
+      to target your specific USRP.'
+    dev_addr: type=x300
+    dev_args: ''
+    num_mboards: '1'
+    time_source: ''
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [184, 8.0]
+    rotation: 0
+    state: true
+- name: blocks_message_strobe_0
+  id: blocks_message_strobe
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: 'This block will send the signal out once
+
+      every second. In a real application, the
+
+      signal would likely not always be the same,
+
+      and may be sent at any given time.'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    msg: ' pmt.cons(metadata, pmt.to_pmt(signal))'
+    period: '1000'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [280, 364.0]
+    rotation: 0
+    state: enabled
+- name: import_0
+  id: import
+  parameters:
+    alias: ''
+    comment: ''
+    imports: import numpy as np
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [480, 100.0]
+    rotation: 0
+    state: enabled
+- name: uhd_rfnoc_duc_0
+  id: uhd_rfnoc_duc
+  parameters:
+    affinity: ''
+    alias: ''
+    block_args: ''
+    comment: ''
+    device_select: '-1'
+    freq0: '0'
+    freq1: '0'
+    freq2: '0'
+    freq3: '0'
+    input_rate0: samp_rate
+    input_rate1: '0'
+    input_rate2: '0'
+    input_rate3: '0'
+    instance_index: radio_chan
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_chans: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [792, 340.0]
+    rotation: 0
+    state: true
+- name: uhd_rfnoc_tx_radio_0
+  id: uhd_rfnoc_tx_radio
+  parameters:
+    affinity: ''
+    alias: ''
+    antenna0: TX/RX
+    antenna1: RX2
+    antenna2: RX2
+    antenna3: RX2
+    bandwidth0: '0'
+    bandwidth1: '0'
+    bandwidth2: '0'
+    bandwidth3: '0'
+    block_args: ''
+    comment: ''
+    device_select: '-1'
+    frequency0: freq
+    frequency1: 1e9
+    frequency2: 1e9
+    frequency3: 1e9
+    gain0: gain
+    gain1: '0'
+    gain2: '0'
+    gain3: '0'
+    instance_index: radio_chan
+    num_chans: '1'
+    rate: radio_rate
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1080, 316.0]
+    rotation: 0
+    state: true
+- name: uhd_rfnoc_tx_streamer_0
+  id: uhd_rfnoc_tx_streamer
+  parameters:
+    adapter_id_list: '[0]'
+    affinity: ''
+    alias: ''
+    args: ''
+    comment: ''
+    input_type: fc32
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_chans: '0'
+    otw: sc16
+    use_default_adapter_id: 'True'
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [568, 344.0]
+    rotation: 0
+    state: true
+
+connections:
+- [blocks_message_strobe_0, strobe, uhd_rfnoc_tx_streamer_0, in]
+- params:
+    is_back_edge: 'False'
+  snk_blk_id: uhd_rfnoc_tx_radio_0
+  snk_port_id: '0'
+  src_blk_id: uhd_rfnoc_duc_0
+  src_port_id: '0'
+- params:
+    is_back_edge: 'False'
+  snk_blk_id: uhd_rfnoc_duc_0
+  snk_port_id: '0'
+  src_blk_id: uhd_rfnoc_tx_streamer_0
+  src_port_id: '0'
+
+metadata:
+  file_format: 2
+  grc_version: v3.11.0.0git-999-g4548e3ab

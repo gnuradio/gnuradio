@@ -5,10 +5,12 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
 
-if(DEFINED __INCLUDED_GR_PLATFORM_CMAKE)
-    return()
-endif()
-set(__INCLUDED_GR_PLATFORM_CMAKE TRUE)
+include_guard()
+
+message(DEPRECATION
+    "GrPlatform usage is deprecated, use GNUInstallDirs variables directly.\n"
+    "See https://github.com/gnuradio/gnuradio/pull/7768."
+)
 
 ########################################################################
 # Setup additional defines for OS types
@@ -36,23 +38,27 @@ if(NOT CMAKE_CROSSCOMPILING
 endif()
 
 ########################################################################
-# when the library suffix should be 64 (applies to redhat linux family)
+# Try to compute LIB_SUFFIX as best as possible
 ########################################################################
-if(REDHAT OR SLACKWARE)
-    set(LIB64_CONVENTION TRUE)
-endif()
+get_property(enabled_languages GLOBAL PROPERTY ENABLED_LANGUAGES)
+if(NOT (C IN_LIST enabled_languages OR CXX IN_LIST enabled_languages))
+    message(WARNING "GrPlatform should be included after a project is defined")
 
-if(NOT DEFINED LIB_SUFFIX
-   AND LIB64_CONVENTION
-   AND CMAKE_SYSTEM_PROCESSOR MATCHES "64$")
-    set(LIB_SUFFIX 64)
-endif()
+    # Try best guess of LIB_SUFFIX
+    if(REDHAT OR SLACKWARE)
+        set(LIB64_CONVENTION TRUE)
+    endif()
 
-########################################################################
-# Detect /lib versus /lib64
-########################################################################
-if(CMAKE_INSTALL_LIBDIR MATCHES lib64)
-    set(LIB_SUFFIX 64)
+    if(NOT DEFINED LIB_SUFFIX
+        AND LIB64_CONVENTION
+        AND CMAKE_SYSTEM_PROCESSOR MATCHES "64$")
+        set(LIB_SUFFIX 64)
+    endif()
+else()
+    include(GNUInstallDirs)
+    if(CMAKE_INSTALL_LIBDIR MATCHES "lib64$")
+        set(LIB_SUFFIX 64)
+    endif()
 endif()
 
 set(LIB_SUFFIX

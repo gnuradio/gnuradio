@@ -58,7 +58,7 @@ class test_annotator_raw(gr_unittest.TestCase):
         self.compare_tag_iterables(tags_out, tags_in, blk.name())
 
     def test_003_late_insertion(self):
-        N = 1000
+        N = 2048
         total_time = 1.0
         tags_in = [
             (n * N, pmt.mp(f"key_{n}"), pmt.from_long(n * 10)) for n in range(N // 2, N)
@@ -73,7 +73,7 @@ class test_annotator_raw(gr_unittest.TestCase):
         self.tb.connect(source, slower, blk, sink)
 
         self.tb.start()
-        sleep(0.4 * total_time)
+        sleep(0.2 * total_time)
         # we should be a fair bit into the input, but not yet halfway through
         for tag_tuple in tags_in:
             blk.add_tag(*tag_tuple)

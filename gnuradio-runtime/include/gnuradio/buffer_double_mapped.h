@@ -37,9 +37,6 @@ public:
                                    block_sptr link = block_sptr(),
                                    block_sptr buf_owner = block_sptr());
 
-    gr::logger_ptr d_logger;
-    gr::logger_ptr d_debug_logger;
-
     ~buffer_double_mapped() override;
 
     /*!

@@ -28,7 +28,7 @@ class test_fll_band_edge_cc(gr_unittest.TestCase):
     def test01(self):
         sps = 4
         rolloff = 0.35
-        bw = 2 * math.pi / 100.0
+        bw = 2.3e-3
         ntaps = 45
 
         # Create pulse shape filter
@@ -76,7 +76,7 @@ class test_fll_band_edge_cc(gr_unittest.TestCase):
     def test02_noisy(self):
         sps = 4
         rolloff = 0.35
-        bw = 2 * math.pi / 100.0
+        bw = 2.3e-3
         ntaps = 45
         noise_std = 1 / 16
         length = 2 * 10**5

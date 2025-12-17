@@ -20,7 +20,9 @@ if(ENABLE_UHD_RFNOC)
         rfnoc_ddc_impl.cc
         rfnoc_duc_impl.cc
         rfnoc_fir_filter_impl.cc
+        rfnoc_fft_impl.cc
         rfnoc_graph_impl.cc
+        rfnoc_mb_controller_impl.cc
         rfnoc_replay_impl.cc
         rfnoc_rx_radio_impl.cc
         rfnoc_rx_streamer_impl.cc
@@ -35,7 +37,7 @@ add_library(gnuradio-uhd ${LIB_GR_UHD_SOURCES})
 target_link_libraries(gnuradio-uhd PUBLIC gnuradio-runtime UHD::UHD)
 
 target_include_directories(
-    gnuradio-uhd PUBLIC $<INSTALL_INTERFACE:include>
+    gnuradio-uhd PUBLIC $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
                         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>)
 
 #Add Windows DLL resource file if using MSVC

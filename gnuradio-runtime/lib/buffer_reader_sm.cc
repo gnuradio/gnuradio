@@ -15,11 +15,7 @@
 #include <gnuradio/buffer.h>
 #include <gnuradio/buffer_reader_sm.h>
 #include <gnuradio/math.h>
-#include <assert.h>
-#include <algorithm>
-#include <iostream>
-#include <limits>
-#include <stdexcept>
+#include <cassert>
 
 namespace gr {
 
@@ -41,13 +37,16 @@ int buffer_reader_sm::items_available() const
     }
 
 #ifdef BUFFER_DEBUG
-    std::ostringstream msg;
-    msg << "[" << d_buffer << ";" << this << "] "
-        << "items_available() WR_idx: " << d_buffer->d_write_index
-        << " -- WR items: " << d_buffer->nitems_written()
-        << " -- RD_idx: " << d_read_index << " -- RD items: " << nitems_read() << " (-"
-        << d_attr_delay << ") -- available: " << available;
-    GR_LOG_DEBUG(d_logger, msg.str());
+    d_logger->debug("[{};{}] items_available() WR_idx: {} -- WR items: {} -- RD_idx: {} "
+                    "-- RD items: {} (-{}) -- available: {}",
+                    d_buffer,
+                    this,
+                    d_buffer->d_write_index,
+                    d_buffer->nitems_written(),
+                    d_read_index,
+                    nitems_read(),
+                    d_attr_delay,
+                    available);
 #endif
 
     return available;

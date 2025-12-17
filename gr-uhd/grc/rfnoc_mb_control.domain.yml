@@ -1,0 +1,10 @@
+id: rfnoc_mb_control
+label: RFNoC Motherboard Control
+color: "#8c8c8c"
+
+multiple_connections_per_input: false
+multiple_connections_per_output: false
+
+templates:
+-   type: [rfnoc_mb_control, rfnoc_mb_control]
+    connect: self.${ sink.parent_block.name }.set_rfnoc_graph(self.rfnoc_graph)

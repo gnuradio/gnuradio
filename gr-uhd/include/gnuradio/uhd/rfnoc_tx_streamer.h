@@ -25,6 +25,17 @@ namespace uhd {
  * graph is creating samples to be transmitted to a radio, use this block to
  * transport the samples out of GNU Radio.
  *
+ * The input data type is determined by the stream_args passed to the make()
+ * function. The input signature will be set to match the cpu_format field of
+ * the stream_args. The input signature will be num_chans inputs of the
+ * specified type, each with a vector length of vlen.
+ *
+ * This block also has a message input port called "in". This port accepts PDUs
+ * containing the data to be sent to RFNoC. The data part of the PDU
+ * (mostly likely a PMT vector) must match the cpu_format and vlen of the
+ * block. The data will be sent to RFNoC using the underlying RFNoC streamer
+ * associated with this block.
+ *
  * Note: The output ports of this block can only connect to other RFNoC blocks.
  *
  * \ingroup ettus
