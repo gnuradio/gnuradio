@@ -599,6 +599,13 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
         actions["keys"] = Action(_("&Keys"), self)
 
+        actions["guided_tutorials"] = Action(
+            Icons("help-browser"),
+            _("Guided Tutorials"),
+            self,
+            statusTip=_("Open the GNU Radio guided tutorials"),
+        )
+
         actions["get_involved"] = Action(_("&Get Involved"), self)
 
         actions["preferences"] = Action(
@@ -838,6 +845,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         # Setup the help menu
         help = Menu("&Help")
         help.addAction(actions["help"])
+        help.addAction(actions["guided_tutorials"])
         help.addAction(actions["types"])
         help.addAction(actions["keys"])
         help.addSeparator()
@@ -1333,6 +1341,12 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         """
         )
         ad.exec()
+
+    def guided_tutorials_triggered(self):
+        log.debug("guided tutorials")
+        QtGui.QDesktopServices.openUrl(
+            QtCore.QUrl("https://tutorials.gnuradio.org")
+        )
 
     def about_triggered(self):
         log.debug("about")
