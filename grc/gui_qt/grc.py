@@ -113,12 +113,18 @@ class Application(QtWidgets.QApplication):
         # Print Startup information once everything has loaded
         self.Console.enable()
 
-        paths = "\n\t".join(config.block_paths)
+        block_paths = "\n\t".join(config.block_paths)
+        log_files = ''
+        for handler in logging.getLogger("grc").handlers:
+            if type(handler) == logging.FileHandler:
+                log_files = log_files + f"\n\t{handler.baseFilename} ({logging.getLevelName(handler.level)})"
+
         welcome = (
             f"<<< Welcome to {config.name} {config.version} >>>\n\n"
             f"{('PyQt ' + PYQT_VERSION) if PYQT_VERSION else ('PySide ' + PYSIDE_VERSION)}\n"
             f"GUI preferences file: {self.qsettings.fileName()}\n"
-            f"Block paths:\n\t{paths}\n"
+            f"Log files: {'None' if not log_files else log_files}\n"
+            f"Block paths:\n\t{block_paths}\n"
             f"Using {QtGui.QIcon.themeName()} icon theme\n"
         )
         log.info(textwrap.dedent(welcome))
