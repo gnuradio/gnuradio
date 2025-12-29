@@ -41,7 +41,7 @@ public:
     typedef std::shared_ptr<vector_sink_f> sptr;
 
     /*!
-     * \brief Build a vector plotting sink.
+     * \brief Build a vector plotting sink (Float implementation).
      *
      * \param vlen Vector length at input. This cannot be changed during operations.
      * \param x_start The x-Axis value of the first vector element
@@ -60,6 +60,59 @@ public:
                      const std::string& name,
                      int nconnections = 1,
                      QWidget* parent = NULL);
+
+    // --- NEW FACTORY FUNCTIONS START ---
+
+    /*!
+     * \brief Build a vector plotting sink (Complex implementation).
+     * \details Plots the magnitude of the complex signal.
+     */
+    static sptr make_c(unsigned int vlen,
+                       double x_start,
+                       double x_step,
+                       const std::string& x_axis_label,
+                       const std::string& y_axis_label,
+                       const std::string& name,
+                       int nconnections = 1,
+                       QWidget* parent = NULL);
+
+    /*!
+     * \brief Build a vector plotting sink (Int implementation).
+     */
+    static sptr make_i(unsigned int vlen,
+                       double x_start,
+                       double x_step,
+                       const std::string& x_axis_label,
+                       const std::string& y_axis_label,
+                       const std::string& name,
+                       int nconnections = 1,
+                       QWidget* parent = NULL);
+
+    /*!
+     * \brief Build a vector plotting sink (Short implementation).
+     */
+    static sptr make_s(unsigned int vlen,
+                       double x_start,
+                       double x_step,
+                       const std::string& x_axis_label,
+                       const std::string& y_axis_label,
+                       const std::string& name,
+                       int nconnections = 1,
+                       QWidget* parent = NULL);
+
+    /*!
+     * \brief Build a vector plotting sink (Byte implementation).
+     */
+    static sptr make_b(unsigned int vlen,
+                       double x_start,
+                       double x_step,
+                       const std::string& x_axis_label,
+                       const std::string& y_axis_label,
+                       const std::string& name,
+                       int nconnections = 1,
+                       QWidget* parent = NULL);
+
+    // --- NEW FACTORY FUNCTIONS END ---
 
     virtual void exec_() = 0;
     virtual QWidget* qwidget() = 0;
