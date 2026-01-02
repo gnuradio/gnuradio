@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+import os
+@DLL_IMPORT_GTK@
 import numpy
 
 try:

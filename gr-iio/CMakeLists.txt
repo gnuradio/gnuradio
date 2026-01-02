@@ -8,16 +8,25 @@
 ########################################################################
 # Setup dependencies
 ########################################################################
-find_package(libiio)
-find_package(libad9361)
+gr_find_package(libiio)
 
-set(GR_IIO_DEPENDENCIES ENABLE_GNURADIO_RUNTIME ENABLE_GR_BLOCKS libiio_FOUND)
+gr_find_package(libad9361)
+
+set(GR_IIO_DEPENDENCIES gnuradio-runtime gr-blocks libiio_FOUND)
 
 ########################################################################
 # Register component
 ########################################################################
 include(GrComponent)
-gr_register_component("gr-iio" ENABLE_GR_IIO ${GR_IIO_DEPENDENCIES})
+gr_register_component(
+    NAME "gr-iio"
+    VAR ENABLE_GR_IIO
+    REQUIRED_COMPONENTS
+        gnuradio-runtime
+        gr-blocks
+    REQUIRED_TPLS
+        libiio_FOUND
+)
 
 if(libad9361_FOUND)
     # Sadly, libad9361 is not reliably versioned (yet?).

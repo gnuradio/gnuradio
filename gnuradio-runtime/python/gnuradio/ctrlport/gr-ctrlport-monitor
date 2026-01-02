@@ -15,7 +15,7 @@ import os
 import sys
 import time
 import struct
-
+@DLL_IMPORT_GTK@
 from gnuradio import gr, ctrlport
 from gnuradio.ctrlport.GrDataPlotter import *
 from gnuradio.ctrlport.GNURadioControlPortClient import GNURadioControlPortClient
