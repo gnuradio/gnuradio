@@ -201,7 +201,6 @@ endfunction(GR_UNIQUE_TARGET)
 # Install python sources (also builds and installs byte-compiled python)
 ########################################################################
 function(GR_PYTHON_INSTALL)
-    include(CMakeParseArgumentsCopy)
     cmake_parse_arguments(GR_PYTHON_INSTALL "" "DESTINATION"
                           "FILES;PROGRAMS;DIRECTORY;DEPENDS" ${ARGN})
 
