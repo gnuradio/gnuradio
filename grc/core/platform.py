@@ -374,8 +374,33 @@ class Platform(Element):
             raise RuntimeError(
                 f"Flow graph {filename} has unknown flow graph version!")
 
-        return data
+        # Warn if flowgraph was saved with a significantly different GRC version
+        file_grc_version = data.get('metadata', {}).get('grc_version')
+        current_grc_version = str(self.config.version)
 
+        def _major_minor(ver):
+            if not isinstance(ver, str):
+                return None
+            parts = ver.split('.')
+            if len(parts) < 2:
+                return None
+            try:
+                return int(parts[0]), int(parts[1])
+            except ValueError:
+                return None
+
+        if file_grc_version and current_grc_version:
+            file_mm = _major_minor(file_grc_version)
+            current_mm = _major_minor(current_grc_version)
+
+            if file_mm and current_mm and file_mm != current_mm:
+                Messages.send(
+                    ">>> WARNING: This flowgraph was last saved with GNU Radio "
+                    f"{file_grc_version}. You are running GNU Radio "
+                    f"{current_grc_version}. Behavior may differ.\n"
+                )
+
+        return data
     def save_flow_graph(self, filename, flow_graph):
         data = flow_graph.export_data()
 
