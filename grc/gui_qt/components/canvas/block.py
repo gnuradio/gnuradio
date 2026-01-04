@@ -439,13 +439,25 @@ class GUIBlock(QGraphicsItem):
         super(self.__class__, self).mouseDoubleClickEvent(e)
 
     def itemChange(self, change, value):
-        if change == QGraphicsItem.ItemPositionChange and self.scene() and self.snap_to_grid:
-            grid_size = 10
-            value.setX(round(value.x() / grid_size) * grid_size)
-            value.setY(round(value.y() / grid_size) * grid_size)
+        if change == QGraphicsItem.ItemPositionChange and self.scene():
+            x = value.x()
+            y = value.y()
+
+            # Snap to grid if enabled
+            if self.snap_to_grid:
+                grid_size = 10
+                x = round(x / grid_size) * grid_size
+                y = round(y / grid_size) * grid_size
+
+            # Prevent dragging off top/left canvas
+            x = max(0, x)
+            y = max(0, y)
+
+            value.setX(x)
+            value.setY(y)
             return value
-        else:
-            return QGraphicsItem.itemChange(self, change, value)
+
+        return super().itemChange(change, value)
 
     def rotate(self, rotation):
         log.debug(f"Rotating {self.core.name}")
