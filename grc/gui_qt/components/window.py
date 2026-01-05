@@ -184,9 +184,8 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
                         self.open_triggered(file)
                         grc_file_found = True
                     except Exception as e:
-                        import traceback
                         log.error(f"failed to load flowgraph file {file} with exception {e}")
-                        log.debug(f"file {file}: {traceback.format_exception(value=e, tb=e.__traceback__)}")
+                        log.debug(f"file {file}:", exc_info=True)
         if not grc_file_found:
             self.new_triggered()
 
