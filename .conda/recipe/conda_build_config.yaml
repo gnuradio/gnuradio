@@ -4,3 +4,5 @@ c_compiler:    # [win]
 - vs2022       # [win]
 cxx_compiler:  # [win]
 - vs2022       # [win]
+qwt:
+- 6.2          # [win]
