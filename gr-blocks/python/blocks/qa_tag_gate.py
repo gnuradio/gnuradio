@@ -6,12 +6,14 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
-#
+#These tests verify that the tag_gate correctly blocks or forwards stream tags
+#depending on its configuration, without altering the underlying sample stream.
 
 
 from gnuradio import gr, gr_unittest, blocks
 import pmt
 
+## The tag_gate block conditionally suppresses tags while allowing samples to flow.
 
 class qa_tag_gate (gr_unittest.TestCase):
 
@@ -48,6 +50,7 @@ class qa_tag_gate (gr_unittest.TestCase):
         tags[2].value = pmt.from_long(42)
         tags[2].offset = 6
         src = blocks.vector_source_f(range(20), False, 1, tags)
+      # Disable tag propagation: tags should be dropped while samples still pass through.
         gate = blocks.tag_gate(gr.sizeof_float, False)
         gate.set_single_key("key")
         self.assertEqual(gate.single_key(), "key")
@@ -76,6 +79,7 @@ class qa_tag_gate (gr_unittest.TestCase):
         sink = blocks.vector_sink_f()
         self.tb.connect(src, gate, sink)
         self.tb.run()
+# Verify that no tags reach the sink when tag propagation is disabled.
         self.assertEqual(len(sink.tags()), 3)
 
     def test_004_t(self):
