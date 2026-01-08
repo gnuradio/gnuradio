@@ -15,13 +15,15 @@
 include(GrComponent)
 
 gr_register_component(
-    "gr-channels"
-    ENABLE_GR_CHANNELS
-    ENABLE_GNURADIO_RUNTIME
-    ENABLE_GR_BLOCKS
-    ENABLE_GR_FFT
-    ENABLE_GR_FILTER
-    ENABLE_GR_ANALOG)
+    NAME "gr-channels"
+    VAR ENABLE_GR_CHANNELS
+    REQUIRED_COMPONENTS
+        gr-blocks
+        gnuradio-runtime
+        gr-fft
+        gr-filter
+        gr-analog
+)
 
 set(GR_PKG_CHANNELS_EXAMPLES_DIR ${GR_PKG_DATA_DIR}/examples/channels)
 

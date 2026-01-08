@@ -12,13 +12,18 @@
 ########################################################################
 # External dependencies
 ########################################################################
-find_package(SoapySDR 0.7.2)
+gr_find_package(SoapySDR 0.7.2)
 
 ########################################################################
 # Register component
 ########################################################################
 include(GrComponent)
-gr_register_component("gr-soapy" ENABLE_GR_SOAPY SoapySDR_FOUND ENABLE_GNURADIO_RUNTIME)
+gr_register_component(
+    NAME "gr-soapy"
+    VAR ENABLE_GR_SOAPY
+    REQUIRED_COMPONENTS gnuradio-runtime
+    REQUIRED_TPLS SoapySDR_FOUND
+)
 set(GR_PKG_SOAPY_EXAMPLES_DIR ${GR_PKG_DATA_DIR}/examples/soapy)
 
 ########################################################################

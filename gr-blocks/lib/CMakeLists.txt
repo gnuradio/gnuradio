@@ -176,7 +176,12 @@ add_library(gnuradio-blocks ${BLOCKS_SOURCES})
 target_link_libraries(gnuradio-blocks PUBLIC gnuradio-runtime Volk::volk)
 
 if(SNDFILE_FOUND)
-    target_link_libraries(gnuradio-blocks PRIVATE sndfile::sndfile)
+    if(TARGET sndfile::sndfile)
+        set(SND_TARGET sndfile::sndfile)
+    else()
+        set(SND_TARGET SndFile::sndfile)
+    endif()
+    target_link_libraries(gnuradio-blocks PRIVATE ${SND_TARGET})
 endif()
 
 target_include_directories(

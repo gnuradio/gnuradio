@@ -11,13 +11,13 @@ pkg_check_modules(PC_PORTAUDIO portaudio-2.0)
 find_path(
     PORTAUDIO_INCLUDE_DIRS
     NAMES portaudio.h
-    PATHS /usr/local/include /usr/include
+    PATHS /usr/local/include /usr/include ${PORTAUDIO_INCLUDE_DIR}
     HINTS ${PC_PORTAUDIO_INCLUDEDIR})
 
 find_library(
     PORTAUDIO_LIBRARIES
     NAMES portaudio
-    PATHS /usr/local/lib /usr/lib /usr/lib64
+    PATHS /usr/local/lib /usr/lib /usr/lib64 ${PORTAUDIO_LIBRARIES_DIR}
     HINTS ${PC_PORTAUDIO_LIBDIR})
 
 mark_as_advanced(PORTAUDIO_INCLUDE_DIRS PORTAUDIO_LIBRARIES)

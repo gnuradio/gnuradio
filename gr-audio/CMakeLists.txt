@@ -13,7 +13,11 @@
 # Register component
 ########################################################################
 include(GrComponent)
-gr_register_component("gr-audio" ENABLE_GR_AUDIO ENABLE_GNURADIO_RUNTIME)
+gr_register_component(
+    NAME "gr-audio"
+    VAR ENABLE_GR_AUDIO
+    REQUIRED_COMPONENTS gr-blocks
+)
 
 set(GR_PKG_AUDIO_EXAMPLES_DIR ${GR_PKG_DATA_DIR}/examples/audio)
 

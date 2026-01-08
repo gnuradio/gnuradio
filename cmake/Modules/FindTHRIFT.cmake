@@ -19,13 +19,13 @@ endif(PC_THRIFT_FOUND AND PC_THRIFT_VERSION VERSION_LESS ${THRIFT_REQ_VERSION})
 find_path(
     THRIFT_INCLUDE_DIRS
     NAMES thrift/Thrift.h
-    HINTS ${PC_THRIFT_INCLUDE_DIRS} ${CMAKE_INSTALL_PREFIX}/include
+    HINTS ${PC_THRIFT_INCLUDE_DIRS} ${CMAKE_INSTALL_PREFIX}/include ${THRIFT_INCLUDE_DI}
     PATHS /usr/local/include /usr/include)
 
 find_library(
     THRIFT_LIBRARIES
     NAMES thrift thriftmd thriftmt
-    HINTS ${PC_THRIFT_LIBDIR} ${CMAKE_INSTALL_PREFIX}/lib ${CMAKE_INSTALL_PREFIX}/lib64
+    HINTS ${PC_THRIFT_LIBDIR} ${CMAKE_INSTALL_PREFIX}/lib ${CMAKE_INSTALL_PREFIX}/lib64 ${THRIFT_LIB_DIRS}
     PATHS ${THRIFT_INCLUDE_DIRS}/../lib /usr/local/lib /usr/lib)
 
 # Get the thrift binary to build our files during cmake

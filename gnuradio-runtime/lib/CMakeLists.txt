@@ -11,7 +11,7 @@ gr_check_hdr_n_def(sys/resource.h HAVE_SYS_RESOURCE_H)
 ########################################################################
 # Look for libunwind
 ########################################################################
-find_package(libunwind)
+gr_find_package(libunwind)
 
 ########################################################################
 # Handle the generated constants
@@ -164,6 +164,9 @@ target_compile_definitions(gnuradio-runtime PRIVATE BOOST_DLL_USE_STD_FS)
 # Add controlport stuff to gnuradio-runtime
 ########################################################################
 # Controlport
+
+# TODO: johnwparent - this is a linker error if not enabled on Windows
+# due to headers
 if(ENABLE_GR_CTRLPORT)
 
     # Keep track of the number of backends ControlPort supports

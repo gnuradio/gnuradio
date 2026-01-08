@@ -8,15 +8,22 @@
 ########################################################################
 # Setup dependencies
 ########################################################################
-find_package(Doxygen)
-find_package(MathJax2)
+gr_find_package(Doxygen)
+gr_find_package(MathJax2)
 
 ########################################################################
 # Register components
 ########################################################################
 include(GrComponent)
-gr_register_component("doxygen" ENABLE_DOXYGEN DOXYGEN_FOUND)
-gr_register_component("man-pages" ENABLE_MANPAGES)
+gr_register_component(
+    NAME "doxygen-documentation"
+    VAR ENABLE_DOXYGEN
+    REQUIRED_TPLS DOXYGEN_FOUND
+)
+gr_register_component(
+    NAME "man-pages"
+    VAR ENABLE_MANPAGES
+)
 
 ########################################################################
 # Begin conditional configuration

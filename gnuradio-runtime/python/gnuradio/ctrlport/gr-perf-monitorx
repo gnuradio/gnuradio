@@ -18,7 +18,8 @@ import random
 import math
 import operator
 import thrift
-
+import os
+@DLL_IMPORT_GTK@
 from gnuradio.ctrlport.GNURadioControlPortClient import GNURadioControlPortClient
 from PyQt5 import QtCore, Qt
 

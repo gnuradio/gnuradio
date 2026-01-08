@@ -21,7 +21,7 @@ Is the library path environment variable set correctly?
 
 See https://wiki.gnuradio.org/index.php/ModuleNotFoundError
 """
-
+@DLL_IMPORT_GTK@
 
 def die(error, message):
     msg = "{0}\n\n({1})".format(message, error)

@@ -7,11 +7,13 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
 #
+import os
+@DLL_IMPORT_GTK@
 
 import numpy
 
 try:
-    from pylab import (
+    from matplotlib.pylab import (
         Button,
         connect,
         draw,

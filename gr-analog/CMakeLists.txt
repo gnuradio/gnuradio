@@ -14,8 +14,12 @@
 # Register component
 ########################################################################
 include(GrComponent)
-gr_register_component("gr-analog" ENABLE_GR_ANALOG ENABLE_GNURADIO_RUNTIME
-                      ENABLE_GR_BLOCKS ENABLE_GR_FFT ENABLE_GR_FILTER)
+gr_register_component(
+    NAME "gr-analog"
+    VAR ENABLE_GR_ANALOG
+    REQUIRED_COMPONENTS gnuradio-runtime
+                      gr-blocks gr-fft gr-filter
+)
 
 set(GR_PKG_ANALOG_EXAMPLES_DIR ${GR_PKG_DATA_DIR}/examples/analog)
 
