@@ -17,7 +17,10 @@ else()
     set(UHD_FOUR_POINT_OH_RFNOC FALSE)
 endif()
 
-gr_python_check_module("PyQt5" PyQt5 True PYQT5_FOUND)
+gr_python_check_module("PyQt6" PyQt6 True PYQT_FOUND)
+if (NOT ${PYQT_FOUND})
+  gr_python_check_module("PyQt5" PyQt5 True PYQT_FOUND)
+endif()
 
 ########################################################################
 # Register component

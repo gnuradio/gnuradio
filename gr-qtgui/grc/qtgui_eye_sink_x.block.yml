@@ -928,7 +928,7 @@ inputs:
 
 templates:
     imports: |-
-        import sip
+        from qtpy import sip
 
     callbacks:
     - set_time_domain_axis(${min}, ${max})
