@@ -8,7 +8,7 @@ import os
 from os.path import expanduser, normpath, expandvars, exists
 from collections import OrderedDict
 
-from ..main import get_state_directory, get_config_file_path
+from .. import paths
 from . import Constants
 
 
@@ -32,7 +32,7 @@ class Config(object):
         paths_sources = (
             os.environ.get('GRC_HIER_PATH', ''),
             os.environ.get('GRC_BLOCKS_PATH', ''),
-            get_state_directory(),
+            paths.get_state_directory(),
             self._gr_prefs.get_string('grc', 'local_blocks_path', ''),
             self._gr_prefs.get_string('grc', 'global_blocks_path', ''),
             os.environ.get('GRC_HIER_PATH_POST', ''),
@@ -59,7 +59,7 @@ class Config(object):
         user_default = (
             os.environ.get('GRC_DEFAULT_FLOW_GRAPH') or
             self._gr_prefs.get_string('grc', 'default_flow_graph', '') or
-            os.path.join(get_state_directory(), 'default_flow_graph.grc')
+            os.path.join(paths.get_state_directory(), 'default_flow_graph.grc')
         )
         return user_default if exists(user_default) else Constants.DEFAULT_FLOW_GRAPH
 
