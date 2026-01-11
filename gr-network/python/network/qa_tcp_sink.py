@@ -1,27 +1,10 @@
-#!/usr/bin/env python
-#
-# Copyright 2021 Free Software Foundation, Inc.
-#
-# This file is part of GNU Radio
-#
-# SPDX-License-Identifier: GPL-3.0-or-later
-#
-
-from gnuradio import gr, gr_unittest, blocks, network
 import socket
-import threading
-import time
+
+from gnuradio import gr, gr_unittest, blocks
+from gnuradio.network import tcp_sink
 
 
-class qa_tcp_sink (gr_unittest.TestCase):
-    def tcp_receive(self, serversocket):
-        for _ in range(2):
-            clientsocket, address = serversocket.accept()
-            while True:
-                data = clientsocket.recv(4096)
-                if not data:
-                    break
-            clientsocket.close()
+class qa_tcp_sink(gr_unittest.TestCase):
 
     def setUp(self):
         self.tb = gr.top_block()
@@ -29,30 +12,24 @@ class qa_tcp_sink (gr_unittest.TestCase):
     def tearDown(self):
         self.tb = None
 
-    def test_restart(self):
-        serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        serversocket.settimeout(30.0)
-        serversocket.bind(('localhost', 2000))
-        serversocket.listen()
+    def test_001_server_false(self):
+        data = list(range(20))
 
-        thread = threading.Thread(target=self.tcp_receive, args=(serversocket,))
-        thread.start()
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.bind(("127.0.0.1", 0))
+        port = sock.getsockname()[1]
+        sock.listen(1)
 
-        null_source = blocks.null_source(gr.sizeof_gr_complex)
-        throttle = blocks.throttle(gr.sizeof_gr_complex, 320000, True)
-        tcp_sink = network.tcp_sink(gr.sizeof_gr_complex, 1, '127.0.0.1', 2000, 1)
-        self.tb.connect(null_source, throttle, tcp_sink)
+        src = blocks.vector_source_b(data, False)
+        sink = tcp_sink(1, "127.0.0.1", port, False)
+
+        self.tb.connect(src, sink)
         self.tb.start()
-        time.sleep(0.1)
+
+        conn, _ = sock.accept()
+        received = conn.recv(4096)
+
         self.tb.stop()
-        time.sleep(0.1)
-        self.tb.start()
-        time.sleep(0.1)
-        self.tb.stop()
+        self.tb.wait()
 
-        thread.join()
-        serversocket.close()
-
-
-if __name__ == '__main__':
-    gr_unittest.run(qa_tcp_sink)
+        self.assertEqual(bytes(data), received)
