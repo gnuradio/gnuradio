@@ -1,3 +1,10 @@
+#!/usr/bin/env python
+#
+# Copyright 2026 Harsh Sethiya
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+
 import socket
 
 from gnuradio import gr, gr_unittest, blocks
