@@ -49,8 +49,8 @@ class qa_tag_gate (gr_unittest.TestCase):
         tags[2].key = pmt.string_to_symbol('secondkey')
         tags[2].value = pmt.from_long(42)
         tags[2].offset = 6
+        # Disable tag propagation: tags should be dropped while samples still pass through.
         src = blocks.vector_source_f(range(20), False, 1, tags)
-      # Disable tag propagation: tags should be dropped while samples still pass through.
         gate = blocks.tag_gate(gr.sizeof_float, False)
         gate.set_single_key("key")
         self.assertEqual(gate.single_key(), "key")
@@ -78,8 +78,8 @@ class qa_tag_gate (gr_unittest.TestCase):
         gate.set_single_key("key")
         sink = blocks.vector_sink_f()
         self.tb.connect(src, gate, sink)
+        # Verify that no tags reach the sink when tag propagation is disabled.
         self.tb.run()
-# Verify that no tags reach the sink when tag propagation is disabled.
         self.assertEqual(len(sink.tags()), 3)
 
     def test_004_t(self):
@@ -93,7 +93,6 @@ class qa_tag_gate (gr_unittest.TestCase):
         tags[1].value = pmt.from_long(42)
         tags[1].offset = 5
         tags.append(gr.tag_t())
-        tags[2].key = pmt.string_to_symbol('secondkey')
         tags[2].value = pmt.from_long(42)
         tags[2].offset = 6
         src = blocks.vector_source_f(range(20), False, 1, tags)
