@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2021 Free Software Foundation, Inc.
-#
-# This file is part of GNU Radio
+# Copyright 2026 Harsh Sethiya
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
