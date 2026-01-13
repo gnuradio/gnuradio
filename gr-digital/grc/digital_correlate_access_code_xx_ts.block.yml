@@ -1,6 +1,6 @@
 id: digital_correlate_access_code_xx_ts
 label: Correlate Access Code - Tag Stream
-flags: [ python, cpp ]
+flags: [ python, cpp, deprecated ]
 
 parameters:
 -   id: type
