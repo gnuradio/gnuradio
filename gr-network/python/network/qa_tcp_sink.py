@@ -54,5 +54,37 @@ class qa_tcp_sink (gr_unittest.TestCase):
         serversocket.close()
 
 
+    def test_server_true(self):
+    	data = list(range(100))
+
+    	src = blocks.vector_source_b(data, False)
+    	sink = tcp_sink(1, "127.0.0.1", 0, True)
+
+    	self.tb.connect(src, sink)
+    	self.tb.start()
+
+    	# Give the server time to start
+    	time.sleep(0.1)
+
+    	port = sink.get_port()
+
+    	sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    	sock.connect(("127.0.0.1", port))
+    	
+	received = b""
+    	while len(received) < len(data):
+        	chunk = sock.recv(4096)
+        	if not chunk:
+            	    break
+        	received += chunk
+
+    	self.tb.stop()
+    	self.tb.wait()
+    	sock.close()
+
+    	self.assertEqual(bytes(data), received)
+
+
+
 if __name__ == '__main__':
     gr_unittest.run(qa_tcp_sink)
