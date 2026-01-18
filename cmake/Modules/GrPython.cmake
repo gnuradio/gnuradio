@@ -468,14 +468,19 @@ sys.exit(0 if match else 1)"
 
                     # For Windows wrappers, we need a proper relative path to the Python executable
                     if(GR_BUILD_INSTALLER)
-                        set(wrapper_python_path "../${REL_PYTHON_INSTALL_PATH}/python.exe")
+                        set(wrapper_python_path1 "../${REL_PYTHON_INSTALL_PATH}/python.exe")
                     else()
                         # For development builds, calculate relative path from bin to Python executable
                         file(RELATIVE_PATH wrapper_python_path
                              "${CMAKE_INSTALL_PREFIX}/${GR_PYTHON_INSTALL_DESTINATION}"
                              "${PYTHON_EXECUTABLE}")
-                        set(wrapper_python_path "${wrapper_python_path}")
+                        set(wrapper_python_path1 "${wrapper_python_path}")
                     endif()
+                    set(wrapper_python_path "/usr/bin/env python")
+                    message(STATUS "=== GrPython = EXE = pyfile_name=${pyfile_name},")
+                    message(STATUS "=== GrPython = EXE = wrapper_python_path:${wrapper_python_path1}, but use _${wrapper_python_path}_")
+                    message(STATUS "=== GrPython = EXE = pyfile_dir=${pyfile_dir},")
+                    message(STATUS "=== GrPython = EXE = pywrapperfile_dir=${pywrapperfile_dir},")
 
                     add_custom_command(
                         OUTPUT ${pywrapperfile} DEPENDS ${pyfile}
@@ -494,6 +499,9 @@ maker.make('${pyfile_name}')"
                 endif()
             endif()
 
+	    message(STATUS "=== GrPython = SHEBANGIN = pyfile_name=${pyfile_name},")
+	    message(STATUS "=== GrPython = SHEBANGIN = pyexe_native=${pyexe_native},")
+	    message(STATUS "=== GrPython = SHEBANGIN = pyexefile=${pyexefile},") 
             add_custom_command(
                 OUTPUT ${pyexefile}
                 DEPENDS ${pyfile}
