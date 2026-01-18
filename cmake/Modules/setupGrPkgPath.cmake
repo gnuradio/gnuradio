@@ -14,4 +14,5 @@ message(STATUS "Install prefix: ${CMAKE_INSTALL_PREFIX}")
 # Gets injected into scripts as @GR_PKG_DIR_SETUP@
 set(GR_PKG_DIR_SETUP "import os; os.environ.setdefault('GR_PKG_DIR', os.path.dirname(os.path.dirname(os.path.abspath(__file__))))")
 
+message(STATUS "GR_PKG_DIR_SETUP: ${GR_PKG_DIR_SETUP}")
 message(STATUS "GNU Radio installation directory ready")
