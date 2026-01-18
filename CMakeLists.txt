@@ -458,7 +458,7 @@ add_subdirectory(gnuradio-runtime)
 if(ENABLE_PYTHON)
     # Setup portable path variables for cross-platform installations
     include(setupGrPkgPath)
-    if(WIN32)
+    if(GR_BUILD_INSTALLER AND WIN32)
         # Gtk requires special configuration due to runtime
         # dll loading on Windows
         include(setup-gtk)
