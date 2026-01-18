@@ -1,6 +1,6 @@
 id: soapy_airspyhf_source
 label: Soapy AirspyHF Source
-flags: [python, throttle]
+flags: [python, throttle, cpp]
 
 parameters:
   - id: type
@@ -92,5 +92,25 @@ templates:
     - set_frequency_correction(0, ${freq_correction})
     - set_gain(0, 'RF', min(max(${gain}, -48.0), 0.0))
     - set_gain(0, 'LNA', 6 if ${lna} else 0)
+
+cpp_templates:
+    includes: ['#include <gnuradio/soapy/source.h>', '#include <algorithm>']
+    declarations: 'soapy::source::sptr ${id};'
+    make: |
+        this->${id} = soapy::source::make("driver=airspyhf","${type}", 1, ${dev_args}, "");
+        this->${id}->set_sample_rate(0, ${samp_rate});
+        this->${id}->set_gain_mode(0, ${agc});
+        this->${id}->set_frequency(0, ${center_freq});
+        this->${id}->set_frequency_correction(0, ${freq_correction});
+        this->${id}->set_gain(0, "RF", std::min(std::max((double)${gain}, -48.0), 0.0));
+        this->${id}->set_gain(0, "LNA", ${lna} ? 6 : 0);
+    link: ['gnuradio::gnuradio-soapy']
+    callbacks:
+      - set_sample_rate(0, ${samp_rate})
+      - set_gain_mode(0, ${agc})
+      - set_frequency(0, ${center_freq})
+      - set_frequency_correction(0, ${freq_correction})
+      - set_gain(0, "RF", std::min(std::max((double)${gain}, -48.0), 0.0))
+      - set_gain(0, "LNA", ${lna} ? 6 : 0)
 
 file_format: 1

@@ -1,6 +1,6 @@
 id: soapy_custom_sink
 label: Soapy Custom Sink
-flags: [python,throttle]
+flags: [python, throttle, cpp]
 
 parameters:
   - id: driver
@@ -256,6 +256,64 @@ templates:
     - |
       % if context.get('nchan')() > 1:
       set_iq_balance(1, ${iq_balance1})
+      % endif
+
+cpp_templates:
+    includes: ['#include <gnuradio/soapy/sink.h>', '#include <algorithm>']
+    declarations: 'soapy::sink::sptr ${id};'
+    make: |
+        std::string dev = "driver=" + std::string(${driver});
+        std::vector<std::string> tune_args;
+        std::vector<std::string> settings;
+        % if context.get('nchan')() == 1:
+        tune_args.push_back(std::string(${tune_args0}));
+        settings.push_back(std::string(${settings0}));
+        % else:
+        tune_args.push_back(std::string(${tune_args0}));
+        tune_args.push_back(std::string(${tune_args1}));
+        settings.push_back(std::string(${settings0}));
+        settings.push_back(std::string(${settings1}));
+        % endif
+        this->${id} = soapy::sink::make(dev, "${type}", ${nchan}, ${dev_args}, ${stream_args}, tune_args, settings);
+        this->${id}->set_sample_rate(0, ${samp_rate});
+        % if context.get('nchan')() >= 1:
+        this->${id}->set_bandwidth(0, ${bandwidth0});
+        this->${id}->set_antenna(0, ${antenna0});
+        this->${id}->set_frequency(0, ${center_freq0});
+        this->${id}->set_frequency_correction(0, ${freq_correction0});
+        this->${id}->set_gain(0, ${gain0});
+        this->${id}->set_dc_offset(0, ${dc_offset0});
+        this->${id}->set_iq_balance(0, ${iq_balance0});
+        % endif
+        % if context.get('nchan')() > 1:
+        this->${id}->set_bandwidth(1, ${bandwidth1});
+        this->${id}->set_antenna(1, ${antenna1});
+        this->${id}->set_frequency(1, ${center_freq1});
+        this->${id}->set_frequency_correction(1, ${freq_correction1});
+        this->${id}->set_gain(1, ${gain1});
+        this->${id}->set_dc_offset(1, ${dc_offset1});
+        this->${id}->set_iq_balance(1, ${iq_balance1});
+        % endif
+    link: ['gnuradio::gnuradio-soapy']
+    callbacks:
+      - set_sample_rate(0, ${samp_rate})
+      % if context.get('nchan')() >= 1:
+      - set_bandwidth(0, ${bandwidth0})
+      - set_antenna(0, ${antenna0})
+      - set_frequency(0, ${center_freq0})
+      - set_frequency_correction(0, ${freq_correction0})
+      - set_gain(0, ${gain0})
+      - set_dc_offset(0, ${dc_offset0})
+      - set_iq_balance(0, ${iq_balance0})
+      % endif
+      % if context.get('nchan')() > 1:
+      - set_bandwidth(1, ${bandwidth1})
+      - set_antenna(1, ${antenna1})
+      - set_frequency(1, ${center_freq1})
+      - set_frequency_correction(1, ${freq_correction1})
+      - set_gain(1, ${gain1})
+      - set_dc_offset(1, ${dc_offset1})
+      - set_iq_balance(1, ${iq_balance1})
       % endif
 
 file_format: 1

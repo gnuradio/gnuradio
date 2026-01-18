@@ -1,6 +1,6 @@
 id: soapy_hackrf_sink
 label: Soapy HackRF Sink
-flags: [python, throttle]
+flags: [python, throttle, cpp]
 
 parameters:
   - id: type
@@ -80,5 +80,23 @@ templates:
     - set_frequency(0, ${center_freq})
     - set_gain(0, 'AMP', ${amp})
     - set_gain(0, 'VGA', min(max(${vga}, 0.0), 47.0))
+
+cpp_templates:
+    includes: ['#include <gnuradio/soapy/sink.h>', '#include <algorithm>']
+    declarations: 'soapy::sink::sptr ${id};'
+    make: |
+        this->${id} = soapy::sink::make("driver=hackrf","${type}", 1, ${dev_args}, "");
+        this->${id}->set_sample_rate(0, ${samp_rate});
+        this->${id}->set_bandwidth(0, ${bandwidth});
+        this->${id}->set_frequency(0, ${center_freq});
+        this->${id}->set_gain(0, "AMP", ${amp});
+        this->${id}->set_gain(0, "VGA", std::min(std::max((double)${vga}, 0.0), 47.0));
+    link: ['gnuradio::gnuradio-soapy']
+    callbacks:
+      - set_sample_rate(0, ${samp_rate})
+      - set_bandwidth(0, ${bandwidth})
+      - set_frequency(0, ${center_freq})
+      - set_gain(0, "AMP", ${amp})
+      - set_gain(0, "VGA", std::min(std::max((double)${vga}, 0.0), 47.0))
 
 file_format: 1

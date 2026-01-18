@@ -1,6 +1,6 @@
 id: soapy_rtlsdr_source
 label: Soapy RTLSDR Source
-flags: [python, throttle]
+flags: [python, throttle, cpp]
 
 parameters:
   - id: type
@@ -129,5 +129,25 @@ templates:
     - self.set_${id}_gain_mode(0, ${agc})
     - self.set_${id}_gain(0, 'TUNER', ${gain})
     - self.set_${id}_bias(${bias})
+
+cpp_templates:
+    includes: ['#include <gnuradio/soapy/source.h>', '#include <algorithm>']
+    declarations: 'soapy::source::sptr ${id};\n    double _${id}_gain_value;\n    std::vector<std::string> _${id}_setting_keys;'
+    make: |
+        this->${id} = soapy::source::make("driver=rtlsdr","${type}", 1, ${dev_args}, "bufflen=${bufflen}");
+        this->_${id}_setting_keys = this->${id}->get_setting_info();
+        this->${id}->set_sample_rate(0, ${samp_rate});
+        this->${id}->set_frequency(0, ${center_freq});
+        this->${id}->set_frequency_correction(0, ${freq_correction});
+        this->_${id}_gain_value = ${gain};
+        this->${id}->set_gain_mode(0, ${agc});
+        this->${id}->set_gain(0, "TUNER", ${gain});
+    link: ['gnuradio::gnuradio-soapy']
+    callbacks:
+      - set_sample_rate(0, ${samp_rate})
+      - set_frequency(0, ${center_freq})
+      - set_frequency_correction(0, ${freq_correction})
+      - set_gain_mode(0, ${agc})
+      - set_gain(0, "TUNER", ${gain})
 
 file_format: 1

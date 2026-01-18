@@ -1,6 +1,6 @@
 id: soapy_sdrplay_source
 label: Soapy SDRPlay Source
-flags: [python, throttle]
+flags: [python, throttle, cpp]
 
 parameters:
   - id: type
@@ -156,5 +156,36 @@ templates:
     - self.set_${id}_gain_mode(0, ${agc})
     - self.set_${id}_gain(0, ${gain})
     - self.set_${id}_lna_state(0, ${lna_state})
+
+cpp_templates:
+    includes: ['#include <gnuradio/soapy/source.h>', '#include <algorithm>']
+    declarations: 'soapy::source::sptr ${id};\n    int _${id}_gain_value;'
+    make: |
+        int _agc_setpoint = ${agc_setpoint};
+        _agc_setpoint = std::max(std::min(_agc_setpoint, -20), -70);
+        this->${id} = soapy::source::make("driver=sdrplay","${type}", 1, ${dev_args}, "");
+        this->_${id}_gain_value = ${gain};
+        this->${id}->set_sample_rate(0, ${samp_rate});
+        this->${id}->set_bandwidth(0, ${bandwidth});
+        this->${id}->set_antenna(0, ${antenna});
+        this->${id}->set_frequency(0, ${center_freq});
+        this->${id}->set_frequency_correction(0, ${freq_correction});
+        if (!std::string("${bias}").empty()) {
+            this->${id}->write_setting("biasT_ctrl", ${bias});
+        }
+        this->${id}->write_setting("agc_setpoint", _agc_setpoint);
+        this->${id}->set_gain_mode(0, ${agc});
+        this->${id}->set_gain(0, "IFGR", std::min(std::max(59 - ${gain}, 20), 59));
+        this->${id}->set_gain(0, "RFGR", std::min(std::max(${lna_state}, 0), 9));
+    link: ['gnuradio::gnuradio-soapy']
+    callbacks:
+      - set_sample_rate(0, ${samp_rate})
+      - set_bandwidth(0, ${bandwidth})
+      - set_antenna(0, ${antenna})
+      - set_frequency(0, ${center_freq})
+      - set_frequency_correction(0, ${freq_correction})
+      - set_gain_mode(0, ${agc})
+      - set_gain(0, "IFGR", std::min(std::max(59 - ${gain}, 20), 59))
+      - set_gain(0, "RFGR", std::min(std::max(${lna_state}, 0), 9))
 
 file_format: 1
