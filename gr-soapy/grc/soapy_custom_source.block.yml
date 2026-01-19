@@ -293,7 +293,7 @@ templates:
       % endif
     - |
       % if context.get('nchan')() > 1:
-      set_dc_offset(1, $ {dc_offset1})
+      set_dc_offset(1, ${dc_offset1})
       % endif
     - |
       % if context.get('nchan')() > 1:
@@ -343,7 +343,6 @@ cpp_templates:
     link: ['gnuradio::gnuradio-soapy']
     callbacks:
       - set_sample_rate(0, ${samp_rate})
-      % if context.get('nchan')() >= 1:
       - set_bandwidth(0, ${bandwidth0})
       - set_antenna(0, ${antenna0})
       - set_frequency(0, ${center_freq0})
@@ -353,17 +352,41 @@ cpp_templates:
       - set_dc_offset_mode(0, ${dc_removal0})
       - set_dc_offset(0, ${dc_offset0})
       - set_iq_balance(0, ${iq_balance0})
-      % endif
-      % if context.get('nchan')() > 1:
-      - set_bandwidth(1, ${bandwidth1})
-      - set_antenna(1, ${antenna1})
-      - set_frequency(1, ${center_freq1})
-      - set_frequency_correction(1, ${freq_correction1})
-      - set_gain_mode(1, ${agc1})
-      - set_gain(1, ${gain1})
-      - set_dc_offset_mode(1, ${dc_removal1})
-      - set_dc_offset(1, ${dc_offset1})
-      - set_iq_balance(1, ${iq_balance1})
-      % endif
+      - |
+        % if context.get('nchan')() > 1:
+        set_bandwidth(1, ${bandwidth1})
+        % endif
+      - |
+        % if context.get('nchan')() > 1:
+        set_antenna(1, ${antenna1})
+        % endif
+      - |
+        % if context.get('nchan')() > 1:
+        set_frequency(1, ${center_freq1})
+        % endif
+      - |
+        % if context.get('nchan')() > 1:
+        set_frequency_correction(1, ${freq_correction1})
+        % endif
+      - |
+        % if context.get('nchan')() > 1:
+        set_gain_mode(1, ${agc1})
+        % endif
+      - |
+        % if context.get('nchan')() > 1:
+        set_gain(1, ${gain1})
+        % endif
+      - |
+        % if context.get('nchan')() > 1:
+        set_dc_offset_mode(1, ${dc_removal1})
+        % endif
+      - |
+        % if context.get('nchan')() > 1:
+        set_dc_offset(1, ${dc_offset1})
+        % endif
+      - |
+        % if context.get('nchan')() > 1:
+        set_iq_balance(1, ${iq_balance1})
+        % endif
 
 file_format: 1

@@ -13,7 +13,7 @@ options:
     hier_block_src_path: '.:'
     id: soapy_codegen_test
     max_nouts: '0'
-    output_language: python
+    output_language: c++
     placement: (0,0)
     qt_qss_theme: ''
     realtime_scheduling: ''

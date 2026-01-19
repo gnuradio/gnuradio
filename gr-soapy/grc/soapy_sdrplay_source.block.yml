@@ -170,10 +170,10 @@ cpp_templates:
         this->${id}->set_antenna(0, ${antenna});
         this->${id}->set_frequency(0, ${center_freq});
         this->${id}->set_frequency_correction(0, ${freq_correction});
-        if (!std::string("${bias}").empty()) {
-            this->${id}->write_setting("biasT_ctrl", ${bias});
+        if (${bias}) {
+            this->${id}->write_setting("biasT_ctrl", "true");
         }
-        this->${id}->write_setting("agc_setpoint", _agc_setpoint);
+        this->${id}->write_setting("agc_setpoint", std::to_string(_agc_setpoint));
         this->${id}->set_gain_mode(0, ${agc});
         this->${id}->set_gain(0, "IFGR", std::min(std::max(59 - ${gain}, 20), 59));
         this->${id}->set_gain(0, "RFGR", std::min(std::max(${lna_state}, 0), 9));
