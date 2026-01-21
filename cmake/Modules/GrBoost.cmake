@@ -10,6 +10,13 @@ if(DEFINED __INCLUDED_GR_BOOST_CMAKE)
 endif()
 set(__INCLUDED_GR_BOOST_CMAKE TRUE)
 
+# Workaround for behavior change in cmake 4.2, that effects MINGW environments
+if (CMAKE_VERSION VERSION_GREATER_EQUAL "4.2")
+    if (MINGW)
+        set(CMAKE_FIND_PACKAGE_SORT_DIRECTION "ASC")
+    endif(MINGW)
+endif(CMAKE_VERSION VERSION_GREATER_EQUAL "4.2")
+
 ########################################################################
 # Setup Boost and handle some system specific things
 ########################################################################
