@@ -1,0 +1,43 @@
+From: "A. Maitland Bottoms" <bottoms@debian.org>
+Subject: direct freedesktop install
+
+Have CMake install desktop files - Debian tooling will handle them.
+
+--- a/grc/scripts/freedesktop/CMakeLists.txt
++++ b/grc/scripts/freedesktop/CMakeLists.txt
+@@ -6,6 +6,25 @@
+ #
+ 
+ ########################################################################
++if(ENABLE_SYSTEM_DESKTOP)
++# Install desktop
++install(FILES gnuradio-grc.desktop DESTINATION share/applications)
++
++# Install mime
++install(FILES gnuradio-grc.xml DESTINATION share/mime/packages)
++
++# Install appstream / metainfo file
++install(FILES org.gnuradio.grc.metainfo.xml DESTINATION share/metainfo)
++
++# Install icons
++install(FILES grc-icon-256.png DESTINATION share/icons/hicolor/256x256/apps RENAME gnuradio-grc.png)
++install(FILES grc-icon-128.png DESTINATION share/icons/hicolor/128x128/apps RENAME gnuradio-grc.png)
++install(FILES grc-icon-64.png DESTINATION share/icons/hicolor/64x64/apps RENAME gnuradio-grc.png)
++install(FILES grc-icon-48.png DESTINATION share/icons/hicolor/48x48/apps RENAME gnuradio-grc.png)
++install(FILES grc-icon-32.png DESTINATION share/icons/hicolor/32x32/apps RENAME gnuradio-grc.png)
++install(FILES grc-icon-24.png DESTINATION share/icons/hicolor/24x24/apps RENAME gnuradio-grc.png)
++install(FILES grc-icon-16.png DESTINATION share/icons/hicolor/16x16/apps RENAME gnuradio-grc.png)
++endif(ENABLE_SYSTEM_DESKTOP)
+ 
+ find_program(HAVE_XDG_UTILS xdg-desktop-menu)
+ 
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -425,6 +425,7 @@
+ # install, but for source builds, that's actually more convenient.
+ ########################################################################
+ gr_register_component("post-install" ENABLE_POSTINSTALL)
++option(ENABLE_SYSTEM_DESKTOP "Enable direct installation of desktop files to system paths" OFF)
+ 
+ ########################################################################
+ # Add subdirectories (in order of deps)

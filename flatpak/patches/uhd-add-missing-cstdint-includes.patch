@@ -1,0 +1,36 @@
+From 14337e23e4e073be5377dbcefc96ed04515ac51a Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Jaroslav=20=C5=A0karvada?= <jskarvad@redhat.com>
+Date: Thu, 13 Mar 2025 18:44:13 +0100
+Subject: [PATCH] uhd: Add some missing cstdint includes
+
+This aids with making UHD gcc-15 compatible (more fixes are required for
+full compatibility).
+---
+ host/include/uhd/features/ref_clk_calibration_iface.hpp   | 1 +
+ host/lib/include/uhdlib/usrp/dboard/fbx/fbx_constants.hpp | 1 +
+ 2 files changed, 2 insertions(+)
+
+diff --git a/host/include/uhd/features/ref_clk_calibration_iface.hpp b/host/include/uhd/features/ref_clk_calibration_iface.hpp
+index 86a20053c..7aa80628e 100644
+--- a/host/include/uhd/features/ref_clk_calibration_iface.hpp
++++ b/host/include/uhd/features/ref_clk_calibration_iface.hpp
+@@ -8,6 +8,7 @@
+ 
+ #include <uhd/config.hpp>
+ #include <uhd/features/discoverable_feature.hpp>
++#include <cstdint>
+ #include <memory>
+ 
+ namespace uhd { namespace features {
+diff --git a/host/lib/include/uhdlib/usrp/dboard/fbx/fbx_constants.hpp b/host/lib/include/uhdlib/usrp/dboard/fbx/fbx_constants.hpp
+index fd23fb8ef..8f1fc4e91 100644
+--- a/host/lib/include/uhdlib/usrp/dboard/fbx/fbx_constants.hpp
++++ b/host/lib/include/uhdlib/usrp/dboard/fbx/fbx_constants.hpp
+@@ -10,6 +10,7 @@
+ #include <unordered_map>
+ #include <array>
+ #include <cstddef>
++#include <cstdint>
+ #include <cstring>
+ #include <list>
+ #include <map>

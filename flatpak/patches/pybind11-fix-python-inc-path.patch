@@ -1,0 +1,13 @@
+diff --git a/tools/FindPythonLibsNew.cmake b/tools/FindPythonLibsNew.cmake
+index 7351bcaa..43a39be0 100644
+--- a/tools/FindPythonLibsNew.cmake
++++ b/tools/FindPythonLibsNew.cmake
+@@ -302,7 +302,7 @@ mark_as_advanced(PYTHON_LIBRARY PYTHON_INCLUDE_DIR)
+ # cache entries because they are meant to specify the location of a single
+ # library. We now set the variables listed by the documentation for this
+ # module.
+-set(PYTHON_INCLUDE_DIRS "${PYTHON_INCLUDE_DIR}")
++set(PYTHON_INCLUDE_DIRS "/usr/include/python3.13")
+ set(PYTHON_LIBRARIES "${PYTHON_LIBRARY}")
+ if(NOT PYTHON_DEBUG_LIBRARY)
+   set(PYTHON_DEBUG_LIBRARY "")

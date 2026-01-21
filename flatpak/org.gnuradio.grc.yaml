@@ -1,0 +1,420 @@
+id: org.gnuradio.grc
+runtime: org.gnome.Platform
+runtime-version: '49'
+sdk: org.gnome.Sdk
+command: gnuradio-companion
+rename-icon: gnuradio-grc
+rename-desktop-file: gnuradio-grc.desktop
+finish-args:
+  - --device=all
+  - --share=network
+  - --share=ipc
+  - --socket=pulseaudio
+  - --socket=fallback-x11
+  - --socket=wayland
+  - --filesystem=home
+
+cleanup:
+  - /include
+  - /lib/pkgconfig
+  - /share/aclocal
+  - /share/doc
+  - /share/man
+  - /man
+  - "*.a"
+  - "*.la"
+
+modules:
+  - name: fftw3f
+    config-opts:
+      - --enable-threads
+      - --enable-shared
+      - --disable-static
+      - --enable-float
+    build-options:
+      arch:
+        x86_64:
+          config-opts:
+            - --enable-sse2
+            - --enable-avx
+            - --enable-avx-128-fma
+        aarch64:
+          config-opts:
+            - --enable-neon
+    sources:
+      - type: archive
+        url: https://www.fftw.org/fftw-3.3.10.tar.gz
+        sha256: 56c932549852cddcfafdab3820b0200c7742675be92179e59e6215b340e26467
+
+  - name: hidapi
+    buildsystem: cmake-ninja
+    sources:
+      - type: git
+        url: https://github.com/libusb/hidapi.git
+        tag: hidapi-0.15.0
+        commit: d6b2a974608dec3b76fb1e36c189f22b9cf3650c
+
+  - name: airspy
+    buildsystem: cmake-ninja
+    build-options:
+      cflags: -std=gnu17
+    config-opts:
+      - -DCMAKE_POLICY_VERSION_MINIMUM=3.5
+    sources:
+      - type: git
+        url: https://github.com/airspy/airspyone_host.git
+        tag: v1.0.10
+        commit: 229d5a5045b890621cd9cc200a19b1541c6021ae
+
+  - name: airspyhf
+    buildsystem: cmake-ninja
+    build-options:
+      cflags: -std=gnu17
+    config-opts:
+      - -DCMAKE_POLICY_VERSION_MINIMUM=3.5
+      - -DINSTALL_UDEV_RULES=OFF
+    sources:
+      - type: git
+        url: https://github.com/airspy/airspyhf.git
+        tag: 1.6.8
+        commit: 8891387edddcd185e2949e9814e9ef35f46f0722
+
+  - name: bladerf
+    buildsystem: cmake-ninja
+    build-options:
+      cflags: -Wno-calloc-transposed-args
+    config-opts:
+      - -DCMAKE_POLICY_VERSION_MINIMUM=3.5
+    sources:
+      - type: git
+        url: https://github.com/Nuand/bladeRF.git
+        tag: '2025.10'
+        commit: fcf9423325ae49f5fdd2e5b52ab68bfc2576ad47
+
+  - name: hackrf
+    buildsystem: cmake-ninja
+    subdir: host
+    config-opts:
+      - -DINSTALL_UDEV_RULE=OFF
+    sources:
+      - type: git
+        url: https://github.com/greatscottgadgets/hackrf.git
+        tag: v2026.01.2
+        commit: 85160ee735a1c9ffee1d2674f7495f16471527a6
+
+  - name: libaio
+    no-autogen: true
+    make-install-args:
+      - prefix=${FLATPAK_DEST}
+    sources:
+      - type: archive
+        url: https://pagure.io/libaio/archive/libaio-0.3.113/libaio-libaio-0.3.113.tar.gz
+        sha256: 716c7059703247344eb066b54ecbc3ca2134f0103307192e6c2b7dab5f9528ab
+
+  - name: plutosdr
+    buildsystem: cmake-ninja
+    config-opts:
+      - -DCMAKE_POLICY_VERSION_MINIMUM=3.5
+      - -DINSTALL_UDEV_RULE=OFF
+      - -DHAVE_DNS_SD=OFF
+    sources:
+      - type: git
+        url: https://github.com/analogdevicesinc/libiio.git
+        tag: v0.26
+        commit: a0eca0d2bf10326506fb762f0eec14255b27bef5
+
+  - name: limesdr
+    buildsystem: cmake-ninja
+    build-options:
+      cflags: -std=gnu17
+    config-opts:
+      - -DCMAKE_POLICY_VERSION_MINIMUM=3.5
+      - -DENABLE_QUICKTEST=OFF
+      - -DENABLE_GUI=OFF
+      - -DENABLE_SOAPY_LMS7=OFF
+      - -DENABLE_EXAMPLES=OFF
+      - -DENABLE_UTILITIES=OFF
+      - -DENABLE_HEADERS=ON
+    sources:
+      - type: git
+        url: https://github.com/myriadrf/LimeSuite.git
+        tag: v23.11.0
+        commit: c2d9e87754586304577beff4dc5b16fb9b72c826
+
+  - name: mirisdr
+    buildsystem: cmake-ninja
+    config-opts:
+      - -DCMAKE_POLICY_VERSION_MINIMUM=3.5
+    sources:
+      - type: git
+        url: https://github.com/ericek111/libmirisdr-5.git
+        # there are no new tags
+        commit: 78a874b30a4c3161251b8e12ffb6443f29005eb3
+
+  - name: rtlsdr
+    buildsystem: cmake-ninja
+    config-opts:
+      - -DDETACH_KERNEL_DRIVER=ON
+    sources:
+      - type: git
+        url: https://github.com/steve-m/librtlsdr.git
+        # latest master for 2.0.2 versioning fix
+        commit: ae0dd6d4f09088d13500a854091b45ad281ca4f0
+
+  - name: volk
+    buildsystem: cmake-ninja
+    sources:
+      - type: git
+        url: https://github.com/gnuradio/volk.git
+        tag: v3.2.0
+        commit: 308948abf8384bb4bf6467e14b585df708789782
+
+  - name: boost
+    buildsystem: simple
+    sources:
+      - type: archive
+        # 1.88.0 brings breaking changes for uhd
+        url: https://sourceforge.net/projects/boost/files/boost/1.87.0/boost_1_87_0.tar.bz2
+        sha256: af57be25cb4c4f4b413ed692fe378affb4352ea50fbe294a11ef548f4d527d89
+    build-commands:
+      - ./bootstrap.sh --prefix=/app --with-libraries=system,chrono,date_time,filesystem,program_options,serialization,thread,test,regex
+      - ./b2 -j $FLATPAK_BUILDER_N_JOBS install
+
+  - name: uhd
+    buildsystem: cmake-ninja
+    subdir: host
+    config-opts:
+      - -DCMAKE_POLICY_VERSION_MINIMUM=3.5
+      - -DENABLE_DOXYGEN=OFF
+      - -DENABLE_MANUAL=OFF
+      - -DENABLE_MAN_PAGES=OFF
+      - -DENABLE_PYTHON_API=OFF
+      - -DENABLE_TESTS=OFF
+      - -DINSTALL_UDEV_RULES=OFF
+    sources:
+      - type: git
+        url: https://github.com/EttusResearch/uhd.git
+        # 4.9.0.0 has possible breaking API changes
+        tag: v4.8.0.0
+        commit: 308126a479ca19dfaebfe4784b375e608788d763
+      - type: patch
+        paths:
+          - patches/uhd-add-missing-cstdint-includes.patch
+          - patches/uhd-disable-ascii-art-dft.patch
+          - patches/uhd-disable-latency-utils.patch
+
+  - name: spdlog
+    buildsystem: cmake-ninja
+    build-options:
+      cflags: -fPIC
+      cxxflags: -fPIC
+    sources:
+      - type: git
+        url: https://github.com/gabime/spdlog.git
+        tag: v1.15.3
+        commit: 6fa36017cfd5731d617e1a934f0e5ea9c4445b13
+
+  - name: pybind11
+    buildsystem: cmake-ninja
+    config-opts:
+      - -DPYBIND11_INSTALL=ON
+      - -DPYBIND11_TEST=OFF
+    sources:
+      - type: git
+        url: https://github.com/pybind/pybind11.git
+        tag: v3.0.1
+        commit: f5fbe867d2d26e4a0a9177a51f6e568868ad3dc8
+      - type: patch
+        path: patches/pybind11-fix-python-inc-path.patch
+
+  - name: cli11
+    buildsystem: cmake-ninja
+    config-opts:
+      - -DBUILD_TESTING=OFF
+    sources:
+      - type: git
+        url: https://github.com/CLIUtils/CLI11.git
+        tag: v2.5.0
+        commit: 4160d259d961cd393fd8d67590a8c7d210207348
+
+  - name: refl-cpp
+    buildsystem: cmake-ninja
+    builddir: true
+    sources:
+      - type: git
+        url: https://github.com/veselink1/refl-cpp.git
+        tag: v0.12.4
+        commit: 27fbd7d2e6d86bc135b87beef6b5f7ce53afd4fc
+
+  - name: meson-python
+    buildsystem: simple
+    sources:
+      - type: file
+        url: https://files.pythonhosted.org/packages/28/58/66db620a8a7ccb32633de9f403fe49f1b63c68ca94e5c340ec5cceeb9821/meson_python-0.18.0-py3-none-any.whl
+        sha256: 3b0fe051551cc238f5febb873247c0949cd60ded556efa130aa57021804868e2
+      - type: file
+        url: https://files.pythonhosted.org/packages/7e/b1/8e63033b259e0a4e40dd1ec4a9fee17718016845048b43a36ec67d62e6fe/pyproject_metadata-0.9.1-py3-none-any.whl
+        sha256: ee5efde548c3ed9b75a354fc319d5afd25e9585fa918a34f62f904cc731973ad
+    build-commands:
+      - pip3 install --no-index --find-links=file://${PWD} --prefix=${FLATPAK_DEST} "meson-python" --no-build-isolation
+
+  - name: python-numpy
+    buildsystem: simple
+    sources:
+      - type: archive
+        url: https://files.pythonhosted.org/packages/65/6e/09db70a523a96d25e115e71cc56a6f9031e7b8cd166c1ac8438307c14058/numpy-1.26.4.tar.gz
+        sha256: 2a02aba9ed12e4ac4eb3ea9421c420301a0c6460d9830d74a9df87efa4912010
+    build-commands:
+      - pip3 install --no-index --find-links=file://${PWD} --prefix=${FLATPAK_DEST} --no-build-isolation .
+
+  - name: python-pyyaml
+    buildsystem: simple
+    sources:
+      - type: archive
+        url: https://files.pythonhosted.org/packages/05/8e/961c0007c59b8dd7729d542c61a4d537767a59645b82a0b521206e1e25c2/pyyaml-6.0.3.tar.gz
+        sha256: d76623373421df22fb4cf8817020cbb7ef15c725b9d5e45f17e189bfc384190f
+    build-commands:
+      - pip3 install --no-index --find-links=file://${PWD} --prefix=${FLATPAK_DEST} --no-build-isolation .
+
+  - name: python-six
+    buildsystem: simple
+    sources:
+      - type: archive
+        url: https://files.pythonhosted.org/packages/94/e7/b2c673351809dca68a0e064b6af791aa332cf192da575fd474ed7d6f16a2/six-1.17.0.tar.gz
+        sha256: ff70335d468e7eb6ec65b95b99d3a2836546063f63acc5171de367e834932a81
+    build-commands:
+      - pip3 install --no-index --find-links=file://${PWD} --prefix=${FLATPAK_DEST} --no-build-isolation .
+
+  - name: pmt
+    buildsystem: meson
+    config-opts:
+      - -Denable_testing=false
+    sources:
+      - type: git
+        url: https://github.com/gnuradio/pmt.git
+        # there are no tags
+        commit: 5960738cd35827acceb5a4de9e1c4005d2d02305
+      - type: patch
+        path: patches/pmt-refl-cpp.patch
+
+  - name: soapy
+    buildsystem: cmake-ninja
+    config-opts:
+      - -DCMAKE_POLICY_VERSION_MINIMUM=3.5
+    sources:
+      - type: git
+        url: https://github.com/pothosware/SoapySDR.git
+        tag: soapy-sdr-0.8.1
+        commit: 1cf5a539a21414ff509ff7d0eedfc5fa8edb90c6
+
+  - name: soapy_airspy
+    buildsystem: cmake-ninja
+    sources:
+      - type: git
+        url: https://github.com/pothosware/SoapyAirspy.git
+        # latest master for multiple fixes
+        commit: 99f0ac5a9cab96d24f86288c32168abe534c1da3
+
+  - name: soapy_airspyhf
+    buildsystem: cmake-ninja
+    sources:
+      - type: git
+        url: https://github.com/pothosware/SoapyAirspyHF.git
+        # latest master for multiple fixes
+        commit: 7457d6972d97ea6808a2774a9439501308e4c688
+
+  - name: soapy_hackrf
+    buildsystem: cmake-ninja
+    sources:
+      - type: git
+        url: https://github.com/pothosware/SoapyHackRF.git
+        # latest master for multiple fixes
+        commit: 143ff5e7e0f786e341df8846c04e8273c5183c26
+
+  - name: libad9361-iio
+    buildsystem: cmake-ninja
+    config-opts:
+      - -DCMAKE_POLICY_VERSION_MINIMUM=3.5
+    sources:
+      - type: git
+        url: https://github.com/analogdevicesinc/libad9361-iio.git
+        tag: v0.3
+        commit: 7cc4cdbf575571d3b8581b183bea4591861e99fb
+
+  - name: soapy_plutosdr
+    buildsystem: cmake-ninja
+    sources:
+      - type: git
+        url: https://github.com/pothosware/SoapyPlutoSDR.git
+        # latest master for multiple fixes
+        commit: cdce23959aca536d5436e0cc689d069a8239f487
+
+  - name: soapy_rtlsdr
+    buildsystem: cmake-ninja
+    sources:
+      - type: git
+        url: https://github.com/pothosware/SoapyRTLSDR.git
+        # latest master for multiple fixes
+        commit: b1f568d1b57cc973a1d2ee49be68d0d748d164e4
+
+  - name: soapy_uhd
+    buildsystem: cmake-ninja
+    sources:
+      - type: git
+        url: https://github.com/pothosware/SoapyUHD.git
+        # latest master for multiple fixes
+        commit: 2a5d381f68fd05d5b3c0e7db56c36892ea99b4ae
+
+  - name: soapy_remote
+    buildsystem: cmake-ninja
+    sources:
+      - type: git
+        url: https://github.com/pothosware/SoapyRemote.git
+        # latest master for multiple fixes
+        commit: 40c3ef9053b63885b7444ce7e9ef00d2c7964c9d
+
+  - name: portaudio
+    buildsystem: cmake-ninja
+    config-opts:
+      - -DCMAKE_POLICY_VERSION_MINIMUM=3.5
+    sources:
+      - type: git
+        url: https://github.com/PortAudio/portaudio.git
+        tag: v19.7.0
+        commit: 147dd722548358763a8b649b3e4b41dfffbcfbb6
+
+  - name: gnuradio
+    buildsystem: cmake-ninja
+    config-opts:
+      - -DENABLE_DEFAULT=ON
+      - -DENABLE_GRC=ON
+      - -DENABLE_SYSTEM_DESKTOP=ON
+      - -DENABLE_TESTING=OFF
+    builddir: true
+    sources:
+      - type: git
+        url: https://github.com/gnuradio/gnuradio.git
+        tag: v3.10.12.0
+        commit: ec7a3239645162ffea1925e6f1e6e62bf1349d03
+#      - type: dir
+#        path: ..
+      - type: patch
+        path: patches/gnuradio-direct-freedesktop-install.patch
+
+  - name: gr-iqbal
+    buildsystem: cmake-ninja
+    config-opts:
+      - -DENABLE_DOXYGEN=OFF
+    sources:
+      - type: git
+        url: https://gitea.osmocom.org/sdr/gr-iqbal.git
+        tag: v0.38.3
+        commit: 6782a1f934bc6c3bd293d34ab7453a85b00f4fab
+
+  - name: gr-osmosdr
+    buildsystem: cmake-ninja
+    sources:
+      - type: git
+        url: https://gitea.osmocom.org/sdr/gr-osmosdr.git
+        tag: v0.2.6
+        commit: a6afeaa3a1038e64751616d769537cd22ace015d

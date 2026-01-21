@@ -1,0 +1,17 @@
+diff --git a/meson.build b/meson.build
+index 1dfae18..cb3b5be 100644
+--- a/meson.build
++++ b/meson.build
+@@ -102,11 +102,7 @@ fmt_dep = dependency('fmt', version:'>=10.0.0')
+ 
+ cmake = import('cmake')
+ 
+-# Configure the CMake project
+-refl_cpp = cmake.subproject('refl-cpp')
+-
+-# Fetch the dependency object
+-refl_cpp_dep = refl_cpp.dependency('refl-cpp')
++refl_cpp_dep = dependency('refl-cpp')
+ 
+ incdir = include_directories('include')
+ pmt_dep = declare_dependency(include_directories : incdir, dependencies : refl_cpp_dep)
