@@ -86,6 +86,7 @@ void number_sink_impl::initialize()
     switch (d_itemsize) {
     case sizeof(char):
     case sizeof(short):
+    case sizeof(int32_t):
         d_main_gui->set_display_format(NumberDisplayForm::FORMAT_INT);
         break;
     default:
@@ -255,10 +256,17 @@ float number_sink_impl::get_item(const void* input_items, int n)
         ins = (const short*)input_items;
         return static_cast<float>(ins[n]);
         break;
-    case (4):
-        inf = (const float*)input_items;
-        return static_cast<float>(inf[n]);
+    case (4):{
+        if (d_main_gui->displayFormat() == NumberDisplayForm::FORMAT_INT) {
+            const int32_t* ini = (const int32_t*)input_items;
+            return static_cast<float>(ini[n]);
+        } 
+        else {
+            const float* inf = (const float*)input_items;
+            return static_cast<float>(inf[n]);
+        }
         break;
+    }
     default:
         throw std::runtime_error("item size not supported");
     }
