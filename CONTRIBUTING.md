@@ -23,7 +23,59 @@ list, answers on Stack Overflow, Wiki page edits, examples... We very much
 appreciate those. However, this document is specifically about contributing
 code.
 
-## DCO Signed?
+## I want to contribute code, but can't build GNU Radio!
+
+We love to help beginners used to development with GNU Radio! The right order
+of things for most cases is:
+
+1. **Learn to use GNU Radio**<br> [Install GNU Radio from
+   packaging][installation] and [work through the tutorials][tutorials].
+   Asking questions in this step is a great way to improve our packaging and
+   documentation – it might be much more valuable to the project than a code
+   contribution!
+2. **Learn to build GNU Radio**<br> Check the 
+   [platform-specific guide][platform-specific] on how to do that!<br>
+   (It's not that hard, it's harder to install all the build-dependencies.)
+3. **Make a code change, compile and test it.**
+4. **Contribute your code change to us!**<br> This is done through the
+   "pull request" mechanism on [our github project][github-project].
+
+As always, we strive to be as helpful as possible: If you have a problem during
+any of these steps, reach out to us via [chat][chat]!
+
+## Own your contributions!
+
+We get a lot of pull requests. That is great! Many people are doing their best
+to help GNU Radio become better. However, we expect that you *own your
+contribution*. We mean that in two ways:
+
+1. The boring, copyright / code ownership way. See "DCO Signed?" below.
+2. The human "be responsible for what you're doing!" way.
+
+With the advent of LLM-aided code generation, we are getting an increasing
+number of PRs where, upon asking multiple times and reading a lot of code that
+seems to not quite make sense, we learn the code was never tried by the
+submitter. That is frustrating for both parties – it eats time and goodwill on
+the maintainer's side, and in the end, getting one's PR questioned
+fundamentally is harsh on the beginner's motivation, too.
+
+You need to *at least* be able to understand your code. It doesn't matter how
+quickly you can generate high-quality code with your tool, our maintainers have
+to read it; so we expect you have actually tried it before you submit it.
+Reading code that just doesn't solve the actual problem although that's claimed
+in the PR description is by now taking up a significant amount of the time we
+have for maintaining GNU Radio. You must hence be able to **understand** what
+the code does that you're committing, and **have personally tested it does what
+it should**. Yes, that, in most cases, means that you need to build GNU Radio
+yourself.
+
+We want your help, even if you can't yet build GNU Radio. Please, however,
+understand that we don't need help copying bug reports into an LLM tool. We are
+perfectly capable of that ourselves; what we need help with is the part where
+one needs to actually understand a problem and **design and verify** a
+solution.
+
+### DCO Signed?
 
 Any code contributions going into GNU Radio will become part of a GPL-licensed,
 open source repository. It is therefore imperative that code submissions belong
@@ -68,6 +120,17 @@ nutshell:
 If you have an obvious test, that might speed up the time it takes to convince
 reviewers that your code is correct.
 
+## Code is "Write once, read many times"; it's a liability!
+
+You only have to write your code once – but multiple people will have to read and
+understand it, be able to test whether it does what it should, and take care of
+it for many years.
+
+You can make the life of present and future project contributors better by
+writing code that is clear, adding unit tests that are clear in what they test,
+and where that's not possible, demonstrate you've tried the code on your own
+machine.
+
 ## GitHub-specific Actions
 
 GNU Radio is currently hosted at GitHub, where we've added some mechanics that
@@ -88,6 +151,11 @@ When writing programs that are executable from the command line,
 please follow existing examples regarding their command line arguments, and
 reuse them.
 
+[chat]: https://wiki.gnuradio.org/index.php?title=Chat
+[installation]: https://wiki.gnuradio.org/index.php?title=InstallingGR#Quick_Start
+[tutorials]: https://tutorials.gnuradio.org
+[platform-specific]: https://wiki.gnuradio.org/index.php?title=InstallingGR#Platform-specific_guides
+[github-project]: https://github.com/gnuradio/gnuradio
 [grep1]: https://github.com/gnuradio/greps/blob/master/grep-0001-coding-guidelines.md
 [wikicontrib]: https://wiki.gnuradio.org/index.php/Development
 [gr-devs]: https://github.com/orgs/gnuradio/teams/gr-devs
