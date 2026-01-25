@@ -1,8 +1,8 @@
 import logging
 
-from qtpy.QtGui import QPen, QPainter, QBrush, QFont, QFontMetrics
+from qtpy.QtGui import QPen, QPainter, QBrush, QFont, QFontMetrics, QColor
 from qtpy.QtCore import Qt, QPointF, QRectF, QUrl
-from qtpy.QtWidgets import QGraphicsItem, QApplication, QAction
+from qtpy.QtWidgets import QGraphicsItem, QApplication, QAction, QGraphicsTextItem
 
 from . import colors
 from ... import Constants
@@ -76,6 +76,7 @@ class GUIBlock(QGraphicsItem):
         self.core = core
         self.parent = parent
         self.font = QFont("Helvetica", 10)
+        self.markup_item = QGraphicsTextItem(self)
 
         self.create_shapes_and_labels()
 
@@ -93,11 +94,6 @@ class GUIBlock(QGraphicsItem):
         self.setFlag(QGraphicsItem.ItemIsMovable)
         self.setFlag(QGraphicsItem.ItemIsSelectable)
         self.setFlag(QGraphicsItem.ItemSendsScenePositionChanges)
-
-        self.markups_height = 0.0
-        self.markups_width = 0.0
-        self.markups = []
-        self.markup_text = ""
 
     def _is_item_visible(self, item) -> bool:
         if item.value is not None and item.hide == "none":
@@ -184,24 +180,19 @@ class GUIBlock(QGraphicsItem):
                         largest_width = fm.width(full_line)
         self.width = largest_width + 15
 
-        self.markups = []
-        self.markup_text = ""
-        self.markups_width = 0.0
-
+        markup_text = ""
         if self.show_complexity and self.core.key == "options":
             complexity = flow_graph_complexity.calculate(self.parent)
-            self.markups.append('Complexity: {num} bal'.format(
-                num=Utils.num_to_str(complexity)))
+            markup_text = f"<b>Complexity: {Utils.num_to_str(complexity)} bal</b><br>"
 
-        if self.show_block_comments and self.core.comment:
-            self.markups.append(self.core.comment)
+        if self.core.comment:
+            comment_w_line_breaks = self.core.comment.replace("\n", "<br>")
+            markup_text += f"{comment_w_line_breaks}"
 
-        self.markup_text = "\n".join(self.markups).strip()
-
-        self.markups_height = fm.height() * (self.markup_text.count("\n") + 1)
-        for line in self.markup_text.split("\n"):
-            if fm.width(line) > self.markups_width:
-                self.markups_width = fm.width(line)
+        self.markup_item.setPos(0, self.height)
+        self.markup_item.setDefaultTextColor(QColor("#444" if self.core.enabled else "#888"))
+        self.markup_item.setHtml(markup_text)
+        self.markup_item.setVisible(self.show_block_comments)
 
         # Update the position and size of all the ports
         bussified = (
@@ -395,18 +386,9 @@ class GUIBlock(QGraphicsItem):
                     )
                     y_offset += 20
 
-            if self.markup_text:
-                painter.setPen(Qt.gray)
-                painter.drawText(
-                    QRectF(0, self.height + 5, self.markups_width, self.markups_height),
-                    Qt.AlignLeft,
-                    self.markup_text,
-                )
-
     def boundingRect(self):
-        # TODO: Comments should be a separate QGraphicsItem
         return QRectF(
-            -2.5, -2.5, self.width + 5 + self.markups_width, self.height + 5 + self.markups_height
+            -2.5, -2.5, self.width + 5, self.height + 5
         )
 
     def set_states(self, states):
