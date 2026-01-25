@@ -34,6 +34,7 @@ if(ENABLE_TESTING)
                             qa_prefs.py
                             qa_python_logging.py
                             qa_random.py
+                            qa_realtime.py
                             qa_sys_paths.py
                             qa_tag_utils.py
                             # Sadly, this still results in a deadlock due to
