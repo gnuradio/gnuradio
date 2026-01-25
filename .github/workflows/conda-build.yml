@@ -26,11 +26,16 @@ jobs:
             os: ubuntu
             runs_on: ['ubuntu-latest']
             DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:cos7
-          - CONFIG: osx_64_numpy1.23python3.11.____cpython
-            SHORT_CONFIG: osx_64_numpy1.23python3.11.____cpython
-            UPLOAD_PACKAGES: True
-            os: macos
-            runs_on: ['macos-13']
+          ## Removed macos, because -13 stopped working, macos-14 fails with
+          ## linker errors in Qt code (very hard to debug without a machine or
+          ## any experience on that platform) and the best guess "just try
+          ## rerendering" fails; log on
+          ## https://github.com/gnuradio/gnuradio/pull/8019
+          # - CONFIG: osx_64_numpy1.23python3.11.____cpython
+          #   SHORT_CONFIG: osx_64_numpy1.23python3.11.____cpython
+          #   UPLOAD_PACKAGES: True
+          #   os: macos
+          #   runs_on: ['macos-13']
           - CONFIG: win_64_numpy1.23python3.11.____cpython
             SHORT_CONFIG: win_64_numpy1.23python3.11.____cpython
             UPLOAD_PACKAGES: True
