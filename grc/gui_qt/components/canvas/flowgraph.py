@@ -23,7 +23,7 @@ import functools
 
 from qtpy import QtGui, QtCore, QtWidgets, QT6
 from qtpy.QtCore import Qt
-from qtpy.QtWidgets import QApplication
+from qtpy.QtWidgets import QApplication, QGraphicsTextItem
 
 from itertools import count
 
@@ -278,7 +278,7 @@ class FlowgraphScene(QtWidgets.QGraphicsScene, base.Component):
 
     def mousePressEvent(self, event):
         g_item = self.itemAt(event.scenePos(), QtGui.QTransform())
-        if not g_item:  # Nothing selected
+        if not g_item or isinstance(g_item, QGraphicsTextItem):  # Nothing (or just a comment) selected
             event.ignore()
             return
 
