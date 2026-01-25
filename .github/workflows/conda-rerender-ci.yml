@@ -42,7 +42,7 @@ jobs:
             dependencies:
               - conda-smithy
       - name: Install conda-smithy
-        uses: mamba-org/provision-with-micromamba@main
+        uses: mamba-org/setup-micromamba@v2
         with:
           environment-file: rerender-env.yml
       - name: Re-render
