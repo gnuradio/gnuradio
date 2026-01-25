@@ -30,7 +30,7 @@ jobs:
             SHORT_CONFIG: osx_64_numpy1.23python3.11.____cpython
             UPLOAD_PACKAGES: True
             os: macos
-            runs_on: ['macos-13']
+            runs_on: ['macos-14']
           - CONFIG: win_64_numpy1.23python3.11.____cpython
             SHORT_CONFIG: win_64_numpy1.23python3.11.____cpython
             UPLOAD_PACKAGES: True
