@@ -12,7 +12,7 @@ github_actions:
   cancel_in_progress: false
   store_build_artifacts: true
 os_version:
-  linux_64: cos7
+  linux_64: alma9
 provider:
   linux: github_actions
   osx: github_actions
