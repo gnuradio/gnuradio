@@ -52,7 +52,7 @@ from .preferences import PreferencesDialog
 from .oot_browser import OOTBrowser
 from .dialogs import ErrorsDialog
 from ...core.base import Element
-from ...main import get_state_directory
+from ... import paths
 
 # Logging
 log = logging.getLogger(f"grc.application.{__name__}")
@@ -1430,7 +1430,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         self.currentFlowgraph.grc_file_path = filename
 
         if self.currentFlowgraph.get_option('generate_options').startswith('hb'):
-            output_dir = get_state_directory()
+            output_dir = paths.get_state_directory()
         else:
             output_dir = os.path.dirname(filename)
 
