@@ -25,8 +25,8 @@ code.
 
 ## I want to contribute code, but can't build GNU Radio!
 
-We love to help beginners used to development with GNU Radio! But the right
-order of things for most cases is:
+We love to help beginners used to development with GNU Radio! The right order
+of things for most cases is:
 
 1. **Learn to use GNU Radio**<br> [Install GNU Radio from
    packaging][installation] and [work through the tutorials][tutorials].
