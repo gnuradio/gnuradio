@@ -58,13 +58,18 @@ templates:
     - set_window(${window})
 
 cpp_templates:
-    includes: [ '#include <gnuradio/fft/fft.h>', '#include <gnuradio/fft/fft_${type.fcn}.h>', '#include <gnuradio/fft/window.h>' ]
-    declarations: 'fft::fft_${type.fcn}::sptr ${id};'
+    includes: [ '#include <gnuradio/fft/fft.h>', '#include <gnuradio/fft/fft_v.h>', '#include <gnuradio/fft/window.h>' ]
+    declarations: |-
+        % if type == "complex":
+        fft::fft_v<gr_complex, ${forward}>::sptr ${id};
+        % else:
+        fft::fft_v<float, ${forward}>::sptr ${id};
+        % endif
     make: |-
         % if type == "complex":
-        this->${id} = fft::fft_vcc::make(${fft_size}, ${forward}, ${window}, ${shift}, ${nthreads});
+        this->${id} = fft::fft_v<gr_complex, ${forward}>::make(${fft_size}, ${window}, ${shift}, ${nthreads});
         % else:
-        this->${id} = fft::fft_vfc::make(${fft_size}, ${forward}, ${window}, ${shift}, ${nthreads});
+        this->${id} = fft::fft_v<float, ${forward}>::make(${fft_size}, ${window}, ${shift}, ${nthreads});
         % endif
     link: ['gnuradio::gnuradio-fft']
     callbacks:
