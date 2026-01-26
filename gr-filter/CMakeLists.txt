@@ -15,8 +15,16 @@ include(GrBoost)
 ########################################################################
 include(GrComponent)
 
-gr_register_component("gr-filter" ENABLE_GR_FILTER Boost_FOUND ENABLE_GNURADIO_RUNTIME
-                      ENABLE_GR_FFT ENABLE_GR_BLOCKS)
+gr_register_component(
+    NAME "gr-filter"
+    VAR ENABLE_GR_FILTER
+    REQUIRED_COMPONENTS
+        gnuradio-runtime
+        gr-fft
+        gr-blocks
+    REQUIRED_TPLS
+        Boost_FOUND
+)
 
 set(GR_PKG_FILTER_EXAMPLES_DIR ${GR_PKG_DATA_DIR}/examples/filter)
 
@@ -31,8 +39,16 @@ if(ENABLE_GR_FILTER)
     add_subdirectory(lib)
 
     # Check for scipy and pyqtgraph, but don't fail if they don't exist.
-    gr_python_check_module_raw("pyqtgraph" "import pyqtgraph" PYQTGRAPH_FOUND)
-    gr_python_check_module_raw("scipy" "import scipy" SCIPY_FOUND)
+    gr_python_check_module(
+        DESC "pyqtgraph"
+        MODULE pyqtgraph
+        VAR PYQTGRAPH_FOUND
+    )
+    gr_python_check_module(
+        DESC "scipy"
+        MODULE scipy
+        VAR SCIPY_FOUND
+    )
 
     if(NOT PYQTGRAPH_FOUND OR NOT SCIPY_FOUND)
         message(WARNING "PyQtGraph and Scipy are required to run the filter design tool, "

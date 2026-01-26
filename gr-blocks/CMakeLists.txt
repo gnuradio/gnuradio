@@ -10,7 +10,7 @@
 ########################################################################
 include(GrBoost)
 
-find_package(SNDFILE)
+gr_find_package(SNDFILE)
 
 if(NOT SNDFILE_FOUND)
     message(STATUS "")
@@ -24,7 +24,12 @@ endif()
 # Register component
 ########################################################################
 include(GrComponent)
-gr_register_component("gr-blocks" ENABLE_GR_BLOCKS Boost_FOUND ENABLE_GNURADIO_RUNTIME)
+gr_register_component(
+    NAME "gr-blocks"
+    VAR ENABLE_GR_BLOCKS
+    REQUIRED_TPLS Boost_FOUND
+    REQUIRED_COMPONENTS gnuradio-runtime
+)
 
 ########################################################################
 # Begin conditional configuration

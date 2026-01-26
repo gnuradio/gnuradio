@@ -12,7 +12,7 @@
 import numpy
 
 try:
-    from pylab import Button, connect, draw, figure, figtext, get_current_fig_manager, show, rcParams, ceil
+    from matplotlib.pylab import Button, connect, draw, figure, figtext, get_current_fig_manager, show, rcParams, ceil
 except ImportError:
     print("Please install Python Matplotlib (http://matplotlib.sourceforge.net/) and Python TkInter https://wiki.python.org/moin/TkInter to run this script")
     raise SystemExit(1)

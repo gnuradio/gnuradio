@@ -10,7 +10,8 @@
 """
 Signal Generator App
 """
-
+import os
+@DLL_IMPORT_GTK@
 # Started off with this flow graph:
 ##################################################
 # GNU Radio Python Flow Graph

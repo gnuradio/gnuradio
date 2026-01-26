@@ -46,21 +46,22 @@ The following cache variables may also be set:
 
 #]=======================================================================]
 
-find_package(PkgConfig)
-pkg_check_modules(PC_libiio QUIET libiio)
-
+# find_package(PkgConfig)
+# pkg_check_modules(PC_libiio QUIET libiio)
 find_path(
     libiio_INCLUDE_DIR
     NAMES iio.h
     HINTS ${PC_libiio_INCLUDE_DIRS}
-    PATHS /usr/include /usr/local/include /opt/local/include)
+    PATHS /usr/include /usr/local/include /opt/local/include ${LIBIIO_INCLUDE_DIRS}
+)
 
 find_library(
     libiio_LIBRARY
-    NAMES iio libiio
+    NAMES iio libiio libiio.lib
     HINTS ${PC_libiio_LIBRARY_DIRS}
     PATHS /usr/lib /usr/lib64 /usr/local/lib /usr/local/lib64 /opt/local/lib
-          /opt/local/lib64)
+          /opt/local/lib64 ${LIBIIO_LIB_DIRS}
+)
 
 # only way we have to get version is to rely on pkg-config
 set(libiio_VERSION ${PC_libiio_VERSION})
@@ -77,7 +78,7 @@ if(libiio_FOUND)
 endif()
 
 if(libiio_FOUND AND NOT TARGET libiio::iio)
-    add_library(libiio::iio INTERFACE IMPORTED)
+    add_library(libiio::iio INTERFACE IMPORTED GLOBAL)
     set_target_properties(
         libiio::iio PROPERTIES INTERFACE_LINK_LIBRARIES "${libiio_LIBRARIES}"
                                INTERFACE_INCLUDE_DIRECTORIES "${libiio_INCLUDE_DIRS}")

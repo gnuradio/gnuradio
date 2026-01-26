@@ -16,7 +16,11 @@ endif(NOT howto_sources)
 ########################################################################
 # Check for pygccxml
 ########################################################################
-gr_python_check_module_raw("pygccxml" "import pygccxml" PYGCCXML_FOUND)
+gr_python_check_module(
+    DESC "pygccxml"
+    MODULE pygccxml
+    VAR PYGCCXML_FOUND
+)
 
 include(GrPybind)
 

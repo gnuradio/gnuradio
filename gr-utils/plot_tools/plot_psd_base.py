@@ -11,7 +11,7 @@
 import numpy
 
 try:
-    from pylab import Button, connect, draw, figure, figtext, get_current_fig_manager, mlab, show, rcParams, ceil
+    from matplotlib.pylab import Button, connect, draw, figure, figtext, get_current_fig_manager, mlab, show, rcParams, ceil
 except ImportError:
     print("Please install Matplotlib to run this script (http://matplotlib.sourceforge.net/)")
     raise SystemExit(1)

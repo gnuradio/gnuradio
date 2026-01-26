@@ -1,0 +1,10 @@
+<CPackWiXPatch>
+  <CPackWiXFragment Id="#PRODUCT">
+    <CustomAction Id="regenbin"
+    ExeCommand="#regenbin.bat"
+    Directory="INSTALL_ROOT" Execute="deferred" Return="asyncWait" Impersonate="yes"/>
+    <InstallExecuteSequence>
+        <Custom Action="regenbin" After="InstallFiles">NOT Installed</Custom>
+    </InstallExecuteSequence>
+  </CPackWiXFragment>
+</CPackWiXPatch>

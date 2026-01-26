@@ -1,0 +1,25 @@
+@echo off
+echo Setting GNU Radio environment...
+
+pushd "%~dp0"
+
+REM --- Set Python environment ---
+set PYTHON_HOME=%CD%\..\Python@PYTHON_SHORT_VER@
+set PYTHON_PATH=%PYTHON_HOME%;%PYTHON_HOME%\Scripts;%PYTHON_HOME%\Lib\site-packages\gi\gtk\bin
+set PATH=%CD%;%PYTHON_PATH%;%PATH%
+
+REM --- Set GRC environment ---
+set GRC_BLOCKS_PATH=%CD%\..\share\gnuradio\grc\blocks
+
+REM --- Set UHD environment ---
+set UHD_LIBRARY_PATH=%CD%
+set UHD_IMAGES_DIR=%CD%\..\share\uhd\images
+
+set _OLD_VIRTUAL_PROMPT=%PROMPT%
+set PROMPT=(gnuradio) %PROMPT%
+
+call cmd.exe
+
+set PROMPT=%_OLD_VIRTUAL_PROMPT%
+
+popd
