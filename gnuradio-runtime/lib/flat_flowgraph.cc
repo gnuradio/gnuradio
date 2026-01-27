@@ -219,29 +219,29 @@ void flat_flowgraph::connect_block_inputs(basic_block_sptr block)
                 if (existing_buf && typeid(*existing_buf).name() != src_buf_type.name()) {
                     if (typeid(*existing_buf).name() == dest_buf_type.name()) {
                         // Buffer was already replaced with the right type - reuse it
-                        std::ostringstream msg;
-                        msg << "Block: " << grblock->identifier()
-                            << " reusing already-replaced custom buffer from upstream block: "
-                            << src_grblock->identifier() << " (fanout)";
-                        GR_LOG_DEBUG(d_logger, msg.str());
+                        d_logger->debug("Block: {} reusing already-replaced custom "
+                                        "buffer from upstream block: {} (fanout)",
+                                        grblock->identifier(),
+                                        src_grblock->identifier());
                         src_buffer = existing_buf;
                     } else {
-                        std::ostringstream msg;
-                        msg << "Block: " << grblock->identifier()
-                            << " and upstream block: " << src_grblock->identifier()
-                            << " use incompatible custom buffer types ("
-                            << dest_buf_type.name() << " -- " << typeid(*existing_buf).name()
-                            << ")  --> " << false;
-                        GR_LOG_ERROR(d_logger, msg.str());
-                        throw std::runtime_error(msg.str());
+                        auto error = fmt::format(
+                            "Block: {} and upstream block: {} use incompatible custom "
+                            "buffer types ({} -- {}) --> {}",
+                            grblock->identifier(),
+                            src_grblock->identifier(),
+                            dest_buf_type.name(),
+                            typeid(*existing_buf).name(),
+                            false);
+                        d_logger->error(error);
+                        throw std::runtime_error(error);
                     }
                 } else {
                     // Buffer doesn't exist yet or is still default - replace it
-                    std::ostringstream msg;
-                    msg << "Block: " << grblock->identifier()
-                        << " replacing upstream block: " << src_grblock->identifier()
-                        << " buffer with a custom buffer";
-                    GR_LOG_DEBUG(d_logger, msg.str());
+                    d_logger->debug("Block: {} replacing upstream block: {} buffer with "
+                                    "a custom buffer",
+                                    grblock->identifier(),
+                                    src_grblock->identifier());
                     src_buffer = src_grblock->replace_buffer(src_port, dst_port, grblock);
                 }
             } else {
