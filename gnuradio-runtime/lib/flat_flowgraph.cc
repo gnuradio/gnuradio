@@ -213,8 +213,9 @@ void flat_flowgraph::connect_block_inputs(basic_block_sptr block)
                 // therefore the upstream block's buffer can be replaced with the
                 // type of buffer that the block needs
 
-                // Check if buffer already exists and was replaced by a previous fanout edge
-                // to avoid calling replace_buffer() multiple times on the same output port
+                // Check if buffer already exists and was replaced by a previous fanout
+                // edge to avoid calling replace_buffer() multiple times on the same
+                // output port
                 buffer_sptr existing_buf = src_grblock->detail()->output(src_port);
                 if (existing_buf && typeid(*existing_buf).name() != src_buf_type.name()) {
                     if (typeid(*existing_buf).name() == dest_buf_type.name()) {
