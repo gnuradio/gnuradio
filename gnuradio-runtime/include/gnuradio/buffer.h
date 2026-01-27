@@ -12,6 +12,7 @@
 #define INCLUDED_GR_RUNTIME_BUFFER_H
 
 #include <gnuradio/api.h>
+#include <gnuradio/buffer_type.h>
 #include <gnuradio/custom_lock.h>
 #include <gnuradio/logger.h>
 #include <gnuradio/runtime_types.h>
@@ -75,6 +76,11 @@ public:
      * \brief return the buffer's mapping type
      */
     buffer_mapping_type get_mapping_type() { return d_buf_map_type; }
+
+    /*!
+     * \brief return the buffer's buffer_type
+     */
+    virtual buffer_type get_buffer_type() const = 0;
 
     /*!
      * \brief return number of items worth of space available for writing
