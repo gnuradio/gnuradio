@@ -127,13 +127,28 @@ class Param(Element):
         return value
 
     def set_value(self, value):
-        # Must be a string
-        self.value = str(value)
+        """
+        Store the user provided value.
+
+        Strips leading and trailing whitespace for all parameter types except
+        multiline fields where whitespace can be significant.
+        """
+        value = str(value)
+        if self._should_trim_value():
+            value = value.strip()
+        self.value = value
 
     def set_default(self, value):
         if self.default == self.value:
             self.set_value(value)
         self.default = str(value)
+
+    def _should_trim_value(self) -> bool:
+        """
+        Determine if leading/trailing whitespace should be trimmed when saving
+        parameter values.
+        """
+        return self.dtype not in ('_multiline', '_multiline_python_external')
 
     def rewrite(self):
         Element.rewrite(self)
