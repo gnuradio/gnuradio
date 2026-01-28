@@ -40,6 +40,11 @@ public:
     ~buffer_double_mapped() override;
 
     /*!
+     * \brief return the buffer's buffer_type
+     */
+    buffer_type get_buffer_type() const override { return buffer_double_mapped::type; }
+
+    /*!
      * \brief return number of items worth of space available for writing
      */
     int space_available() override;

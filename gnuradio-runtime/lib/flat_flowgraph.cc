@@ -217,8 +217,8 @@ void flat_flowgraph::connect_block_inputs(basic_block_sptr block)
                 // edge to avoid calling replace_buffer() multiple times on the same
                 // output port
                 buffer_sptr existing_buf = src_grblock->detail()->output(src_port);
-                if (existing_buf && typeid(*existing_buf).name() != src_buf_type.name()) {
-                    if (typeid(*existing_buf).name() == dest_buf_type.name()) {
+                if (existing_buf && existing_buf->get_buffer_type() != src_buf_type) {
+                    if (existing_buf->get_buffer_type() == dest_buf_type) {
                         // Buffer was already replaced with the right type - reuse it
                         d_logger->debug("Block: {} reusing already-replaced custom "
                                         "buffer from upstream block: {} (fanout)",
@@ -232,7 +232,7 @@ void flat_flowgraph::connect_block_inputs(basic_block_sptr block)
                             grblock->identifier(),
                             src_grblock->identifier(),
                             dest_buf_type.name(),
-                            typeid(*existing_buf).name(),
+                            existing_buf->get_buffer_type().name(),
                             false);
                         d_logger->error(error);
                         throw std::runtime_error(error);

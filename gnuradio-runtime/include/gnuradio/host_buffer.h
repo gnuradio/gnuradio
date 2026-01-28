@@ -33,6 +33,11 @@ public:
     ~host_buffer() override;
 
     /*!
+     * \brief return the buffer's buffer_type
+     */
+    buffer_type get_buffer_type() const override { return host_buffer::type; }
+
+    /*!
      * \brief Handles post-general_work() cleanup and data transfer
      *
      * Called directly after call to general_work() completes and
