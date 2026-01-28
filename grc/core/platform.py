@@ -403,11 +403,25 @@ class Platform(Element):
         ]
         for r in replace:
             out = out.replace(*r)
+        generate_opt = flow_graph.get_option('generate_options')
+        is_executable = generate_opt in {'qt_gui', 'no_gui', 'bokeh_gui'}
+
+        if is_executable:
+            out = Constants.EXECUTABLE_FLOWGRAPH_SHEBANG + out
 
         with open(filename, 'w', encoding='utf-8') as fp:
             fp.write(out)
 
+        if is_executable:
+            try:
+                import stat
+                current_mode = os.stat(filename).st_mode
+                os.chmod(filename, current_mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
+            except OSError:
+                pass
+
     def get_generate_options(self):
+
         for param in self.block_classes['options'].parameters_data:
             if param.get('id') == 'generate_options':
                 break
