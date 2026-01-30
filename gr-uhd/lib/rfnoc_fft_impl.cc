@@ -124,7 +124,7 @@ void rfnoc_fft_impl::set_shift_config(const std::string& shift)
     } else if (shift == "NATURAL") {
         d_fft_ref->set_shift_config(::uhd::rfnoc::fft_shift::NATURAL);
     } else if (shift == "BIT_REVERSE") {
-#if UHD_VERSION >= 4080000
+#if UHD_VERSION >= 4090000
         d_fft_ref->set_shift_config(::uhd::rfnoc::fft_shift::BIT_REVERSE);
 #else
         throw std::runtime_error(
@@ -216,7 +216,7 @@ uint32_t rfnoc_fft_impl::get_scaling() const { return d_fft_ref->get_scaling(); 
 // FFT Scaling Factor
 void rfnoc_fft_impl::set_scaling_factor(const double factor)
 {
-#if UHD_VERSION >= 4080000
+#if UHD_VERSION >= 4090000
     d_fft_ref->set_scaling_factor(factor);
 #else
     throw std::runtime_error("set_scaling_factor is not supported in this UHD version");
@@ -231,7 +231,7 @@ uint32_t rfnoc_fft_impl::get_length() const { return d_fft_ref->get_length(); }
 // FFT Bypass Mode
 void rfnoc_fft_impl::set_bypass_mode(const bool bypass)
 {
-#if UHD_VERSION >= 4080000
+#if UHD_VERSION >= 4090000
     d_fft_ref->set_bypass_mode(bypass);
 #else
     throw std::runtime_error("set_bypass_mode is not supported in this UHD version");
@@ -240,7 +240,7 @@ void rfnoc_fft_impl::set_bypass_mode(const bool bypass)
 
 bool rfnoc_fft_impl::get_bypass_mode() const
 {
-#if UHD_VERSION >= 4080000
+#if UHD_VERSION >= 4090000
     return d_fft_ref->get_bypass_mode();
 #else
     throw std::runtime_error("get_bypass_mode is not supported in this UHD version");
@@ -250,7 +250,7 @@ bool rfnoc_fft_impl::get_bypass_mode() const
 // NIPC
 uint32_t rfnoc_fft_impl::get_nipc() const
 {
-#if UHD_VERSION >= 4080000
+#if UHD_VERSION >= 4090000
     return d_fft_ref->get_nipc();
 #else
     throw std::runtime_error("get_nipc is not supported in this UHD version");
@@ -260,7 +260,7 @@ uint32_t rfnoc_fft_impl::get_nipc() const
 // Max Length
 uint32_t rfnoc_fft_impl::get_max_length() const
 {
-#if UHD_VERSION >= 4080000
+#if UHD_VERSION >= 4090000
     return d_fft_ref->get_max_length();
 #else
     throw std::runtime_error("get_max_length is not supported in this UHD version");
@@ -270,7 +270,7 @@ uint32_t rfnoc_fft_impl::get_max_length() const
 // Max CP Length
 uint32_t rfnoc_fft_impl::get_max_cp_length() const
 {
-#if UHD_VERSION >= 4080000
+#if UHD_VERSION >= 4090000
     return d_fft_ref->get_max_cp_length();
 #else
     throw std::runtime_error("get_max_cp_length is not supported in this UHD version");
@@ -280,7 +280,7 @@ uint32_t rfnoc_fft_impl::get_max_cp_length() const
 // Max CP Removal List Length
 uint32_t rfnoc_fft_impl::get_max_cp_removal_list_length() const
 {
-#if UHD_VERSION >= 4080000
+#if UHD_VERSION >= 4090000
     return d_fft_ref->get_max_cp_removal_list_length();
 #else
     throw std::runtime_error(
@@ -291,7 +291,7 @@ uint32_t rfnoc_fft_impl::get_max_cp_removal_list_length() const
 // Max CP Insertion List Length
 uint32_t rfnoc_fft_impl::get_max_cp_insertion_list_length() const
 {
-#if UHD_VERSION >= 4080000
+#if UHD_VERSION >= 4090000
     return d_fft_ref->get_max_cp_insertion_list_length();
 #else
     throw std::runtime_error(
@@ -302,7 +302,7 @@ uint32_t rfnoc_fft_impl::get_max_cp_insertion_list_length() const
 // CP Insertion List
 void rfnoc_fft_impl::set_cp_insertion_list(const std::vector<uint32_t> cp_lengths)
 {
-#if UHD_VERSION >= 4080000
+#if UHD_VERSION >= 4090000
     d_fft_ref->set_cp_insertion_list(cp_lengths);
 #else
     throw std::runtime_error(
@@ -312,7 +312,7 @@ void rfnoc_fft_impl::set_cp_insertion_list(const std::vector<uint32_t> cp_length
 
 std::vector<uint32_t> rfnoc_fft_impl::get_cp_insertion_list() const
 {
-#if UHD_VERSION >= 4080000
+#if UHD_VERSION >= 4090000
     return d_fft_ref->get_cp_insertion_list();
 #else
     throw std::runtime_error(
@@ -323,7 +323,7 @@ std::vector<uint32_t> rfnoc_fft_impl::get_cp_insertion_list() const
 // CP Removal List
 void rfnoc_fft_impl::set_cp_removal_list(const std::vector<uint32_t> cp_lengths)
 {
-#if UHD_VERSION >= 4080000
+#if UHD_VERSION >= 4090000
     d_fft_ref->set_cp_removal_list(cp_lengths);
 #else
     throw std::runtime_error("set_cp_removal_list is not supported in this UHD version");
@@ -332,7 +332,7 @@ void rfnoc_fft_impl::set_cp_removal_list(const std::vector<uint32_t> cp_lengths)
 
 std::vector<uint32_t> rfnoc_fft_impl::get_cp_removal_list() const
 {
-#if UHD_VERSION >= 4080000
+#if UHD_VERSION >= 4090000
     return d_fft_ref->get_cp_removal_list();
 #else
     throw std::runtime_error("get_cp_removal_list is not supported in this UHD version");
