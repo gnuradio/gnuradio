@@ -87,12 +87,12 @@ jobs:
             ctest_args: '-E "qa_polar_..coder_(sc_)?systematic"'
           - distro: 'Ubuntu 24.04'
             containerid: 'gnuradio/ci:ubuntu-24.04-3.10'
-          - distro: 'Fedora 41 (with 0xFE memory initialization, GLIBCXX_ASSERTIONS)'
-            containerid: 'gnuradio/ci:fedora-41-3.10'
+          - distro: 'Fedora 42 (with 0xFE memory initialization, GLIBCXX_ASSERTIONS)'
+            containerid: 'gnuradio/ci:fedora-42-3.10'
             cxxflags: -ftrivial-auto-var-init=pattern -Wp,-D_GLIBCXX_ASSERTIONS
             ldpath: /usr/local/lib64
-          - distro: 'Fedora 42 (clang, ninja)'
-            containerid: 'gnuradio/ci:fedora-42-3.10'
+          - distro: 'Fedora 43 (clang, ninja)'
+            containerid: 'gnuradio/ci:fedora-43-3.10'
             cxxflags: -Wno-unused-command-line-argument
             cmakeflags: -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_C_COMPILER=clang -GNinja
             build_options: --
