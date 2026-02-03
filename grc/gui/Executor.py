@@ -36,7 +36,7 @@ class ExecFlowGraphThread(threading.Thread):
         self.generator = self.page.get_generator()
 
         try:
-            self.process = self._popen(self.generator.get_exec_args())
+            self.process = self.page.process = self._popen(self.generator.get_exec_args())
             if not self.process:
                 return
 
