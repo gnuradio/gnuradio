@@ -102,6 +102,12 @@ public:
     int outbuf_length() const { return d_fft_size; }
 
     /*!
+     *  Get a reference to the FFTW plan, useful for research.
+     *  It's probably a bad idea to edit this externally, hence const
+     */
+    const void* get_plan() const { return d_plan; }
+
+    /*!
      *  Set the number of threads to use for calculation.
      */
     void set_nthreads(int n);
