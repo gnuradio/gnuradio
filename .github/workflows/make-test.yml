@@ -99,6 +99,8 @@ jobs:
             ldpath: /usr/local/lib64
           - distro: 'Debian 12'
             containerid: 'gnuradio/ci:debian-12-3.10'
+          - distro: 'Debian 13'
+            containerid: 'gnuradio/ci:debian-13-3.10'
           - distro: 'Debian 12 (32-bit)'
             containerid: 'gnuradio/ci:debian-i386-12-3.10'
             containeroptions: '--platform linux/i386'
