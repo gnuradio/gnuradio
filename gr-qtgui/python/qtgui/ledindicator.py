@@ -9,11 +9,9 @@
 #
 #
 
-from PyQt5.QtWidgets import QFrame, QHBoxLayout, QVBoxLayout, QLabel
-from PyQt5.QtGui import QPainter, QBrush, QColor, QPen, QFontMetricsF
-from PyQt5.QtCore import Qt as Qtc
-from PyQt5.QtCore import QPoint
-from PyQt5.QtGui import QRadialGradient
+from qtpy.QtWidgets import QFrame, QHBoxLayout, QVBoxLayout, QLabel
+from qtpy.QtGui import QPainter, QBrush, QColor, QPen, QFontMetricsF, QRadialGradient
+from qtpy.QtCore import Qt as Qtc, QPointF
 
 from gnuradio import gr
 import pmt
@@ -120,7 +118,7 @@ class LEDIndicator(QFrame):
 
         center_x = int(size.width() / 2)
         center_y = int(size.height() / 2)
-        centerpoint = QPoint(center_x, center_y)
+        centerpoint = QPointF(center_x, center_y)
 
         radius = smallest_dim
 
@@ -183,8 +181,8 @@ class GrLEDIndicator(gr.sync_block, LabeledLEDIndicator):
         try:
             new_val = pmt.to_python(pmt.cdr(msg))
 
-            if type(new_val) == bool or type(new_val) == int:
-                if type(new_val) == bool:
+            if type(new_val) is bool or type(new_val) == int:
+                if type(new_val) is bool:
                     super().setState(new_val)
                 else:
                     if new_val == 1:

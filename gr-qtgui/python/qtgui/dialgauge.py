@@ -10,10 +10,9 @@
 #
 
 import sys
-from PyQt5.QtWidgets import QFrame, QHBoxLayout, QVBoxLayout, QLabel
-from PyQt5.QtGui import QPainter, QColor, QPen, QFont, QFontMetricsF
-from PyQt5 import QtCore
-from PyQt5.QtCore import Qt as Qtc
+from qtpy.QtCore import Qt, QRect
+from qtpy.QtWidgets import QFrame, QHBoxLayout, QVBoxLayout, QLabel
+from qtpy.QtGui import QPainter, QColor, QPen, QFont, QFontMetricsF
 
 from gnuradio import gr
 import pmt
@@ -21,12 +20,34 @@ import pmt
 
 class LabeledDialGauge(QFrame):
     # Positions: 1 = above, 2=below, 3=left, 4=right
-    def __init__(self, lbl='', barColor='blue', backgroundColor='white', fontColor='black',
-                 minValue=0, maxValue=100, maxSize=80, position=1,
-                 isFloat=False, showValue=False, fixedOrMin=True, parent=None):
+    def __init__(
+        self,
+        lbl="",
+        barColor="blue",
+        backgroundColor="white",
+        fontColor="black",
+        minValue=0,
+        maxValue=100,
+        maxSize=80,
+        position=1,
+        isFloat=False,
+        showValue=False,
+        fixedOrMin=True,
+        parent=None,
+    ):
         QFrame.__init__(self, parent)
-        self.numberControl = DialGauge(barColor, backgroundColor, fontColor, minValue,
-                                       maxValue, maxSize, isFloat, showValue, fixedOrMin, parent)
+        self.numberControl = DialGauge(
+            barColor,
+            backgroundColor,
+            fontColor,
+            minValue,
+            maxValue,
+            maxSize,
+            isFloat,
+            showValue,
+            fixedOrMin,
+            parent,
+        )
 
         if position < 3:
             layout = QVBoxLayout()
@@ -38,16 +59,15 @@ class LabeledDialGauge(QFrame):
         self.isFloat = isFloat
 
         self.lblcontrol = QLabel(lbl, self)
-        self.lblcontrol.setAlignment(Qtc.AlignCenter)
+        self.lblcontrol.setAlignment(Qt.AlignCenter)
 
         # For whatever reason, the progressbar doesn't show the number in the bar if it's
         # vertical, only if it's horizontal
         if len:
             self.lblcontrol.setText(lbl)
 
-        if fontColor != 'default':
-            self.lblcontrol.setStyleSheet(
-                "QLabel { color : " + fontColor + "; }")
+        if fontColor != "default":
+            self.lblcontrol.setStyleSheet("QLabel { color : " + fontColor + "; }")
 
         # add top or left
         if len:
@@ -63,7 +83,7 @@ class LabeledDialGauge(QFrame):
             if position == 2 or position == 4:
                 layout.addWidget(self.lblcontrol)
 
-        layout.setAlignment(Qtc.AlignCenter | Qtc.AlignVCenter)
+        layout.setAlignment(Qt.AlignCenter | Qt.AlignVCenter)
         self.setLayout(layout)
 
         self.show()
@@ -73,9 +93,19 @@ class LabeledDialGauge(QFrame):
 
 
 class DialGauge(QFrame):
-    def __init__(self, barColor='blue', backgroundColor='white', fontColor='black',
-                 minValue=0, maxValue=100, maxSize=80,
-                 isFloat=False, showValue=False, fixedOrMin=True, parent=None):
+    def __init__(
+        self,
+        barColor="blue",
+        backgroundColor="white",
+        fontColor="black",
+        minValue=0,
+        maxValue=100,
+        maxSize=80,
+        isFloat=False,
+        showValue=False,
+        fixedOrMin=True,
+        parent=None,
+    ):
         QFrame.__init__(self, parent)
 
         self.maxSize = maxSize
@@ -100,7 +130,9 @@ class DialGauge(QFrame):
 
         self.startAngle = 0.0
         self.endAngle = 360.0
-        self.degScaler = 16.0  # The span angle must be specified in 1/16 of a degree units
+        self.degScaler = (
+            16.0  # The span angle must be specified in 1/16 of a degree units
+        )
         self.penWidth = max(int(0.1 * maxSize), 6)
         self.halfPenWidth = int(self.penWidth / 2)
 
@@ -125,17 +157,23 @@ class DialGauge(QFrame):
 
         size = self.size()
 
-        percentRange = float(self.value - self.minValue) / \
-            float(self.maxValue - self.minValue)
-        endAngle = self.startAngle + \
-            round(percentRange * float(self.endAngle - self.startAngle), 0)
+        percentRange = float(self.value - self.minValue) / float(
+            self.maxValue - self.minValue
+        )
+        endAngle = self.startAngle + round(
+            percentRange * float(self.endAngle - self.startAngle), 0
+        )
 
         # Now convert angles to 1/16 scale
         startAngle = int(round(self.startAngle * self.degScaler, 0))
         endAngle = int(round(endAngle * self.degScaler, 0))
 
-        rect = QtCore.QRect(self.halfPenWidth, self.halfPenWidth, size.width() - self.penWidth,
-                            size.height() - self.penWidth)
+        rect = QRect(
+            self.halfPenWidth,
+            self.halfPenWidth,
+            size.width() - self.penWidth,
+            size.height() - self.penWidth,
+        )
 
         # Set up the painting canvass
         painter = QPainter()
@@ -151,8 +189,11 @@ class DialGauge(QFrame):
             else:
                 printText = str(int(self.value))
 
-            painter.drawText(int(size.width() / 2 - self.metrics.width(printText) / 2), size.height() // 2,
-                             printText)
+            painter.drawText(
+                int(size.width() / 2 - self.metrics.width(printText) / 2),
+                size.height() // 2,
+                printText,
+            )
 
         painter.save()
         painter.translate(self.width(), 0)
@@ -164,11 +205,16 @@ class DialGauge(QFrame):
         # First draw complete circle
         painter.setPen(QPen(QColor(self.barColor), self.penWidth))
         painter.drawArc(rect, startAngle, -endAngle)
-        painter.setPen(QPen(QColor('darkgray'), 2))
-        painter.drawEllipse(1, 1, rect.width() + self.penWidth -
-                            2, rect.width() + self.penWidth - 2)
-        painter.drawEllipse(1 + self.penWidth, 1 + self.penWidth, rect.width() - self.penWidth - 2,
-                            rect.width() - self.penWidth - 2)
+        painter.setPen(QPen(QColor("darkgray"), 2))
+        painter.drawEllipse(
+            1, 1, rect.width() + self.penWidth - 2, rect.width() + self.penWidth - 2
+        )
+        painter.drawEllipse(
+            1 + self.penWidth,
+            1 + self.penWidth,
+            rect.width() - self.penWidth - 2,
+            rect.width() - self.penWidth - 2,
+        )
         painter.restore()
 
         painter.end()
@@ -180,14 +226,37 @@ class GrDialGauge(gr.sync_block, LabeledDialGauge):
     either with a variable or an input message.
     """
 
-    def __init__(self, lbl='', barColor='blue', backgroundColor='white', fontColor='black',
-                 minValue=0, maxValue=100, maxSize=80,
-                 position=1, isFloat=False, showValue=False, fixedOrMin=True, parent=None):
-        gr.sync_block.__init__(self, name="DialGauge",
-                               in_sig=None, out_sig=None)
-        LabeledDialGauge.__init__(self, lbl, barColor, backgroundColor, fontColor, minValue,
-                                  maxValue, maxSize, position, isFloat, showValue, fixedOrMin,
-                                  parent)
+    def __init__(
+        self,
+        lbl="",
+        barColor="blue",
+        backgroundColor="white",
+        fontColor="black",
+        minValue=0,
+        maxValue=100,
+        maxSize=80,
+        position=1,
+        isFloat=False,
+        showValue=False,
+        fixedOrMin=True,
+        parent=None,
+    ):
+        gr.sync_block.__init__(self, name="DialGauge", in_sig=None, out_sig=None)
+        LabeledDialGauge.__init__(
+            self,
+            lbl,
+            barColor,
+            backgroundColor,
+            fontColor,
+            minValue,
+            maxValue,
+            maxSize,
+            position,
+            isFloat,
+            showValue,
+            fixedOrMin,
+            parent,
+        )
         self.lbl = lbl
 
         if minValue > maxValue:
@@ -201,11 +270,13 @@ class GrDialGauge(gr.sync_block, LabeledDialGauge):
         try:
             new_val = pmt.to_python(pmt.cdr(msg))
 
-            if type(new_val) == float or type(new_val) == int:
+            if type(new_val) is float or type(new_val) is int:
                 super().setValue(new_val)
             else:
-                gr.log.error("Value received was not an int or a float. "
-                             "Received %s" % str(type(new_val)))
+                gr.log.error(
+                    "Value received was not an int or a float. "
+                    "Received %s" % str(type(new_val))
+                )
 
         except Exception as e:
             gr.log.error("Error with message conversion: %s" % str(e))

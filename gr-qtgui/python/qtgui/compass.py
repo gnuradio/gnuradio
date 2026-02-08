@@ -14,14 +14,9 @@ import numpy
 from gnuradio import gr
 import pmt
 
-# First Qt and 2nd Qt are different.  You'll get errors if they're both not available,
-# hence the import-as to avoid name collisions
-
-from PyQt5 import Qt
-from PyQt5.QtCore import Qt as Qtc
-from PyQt5.QtCore import pyqtSignal, QPoint, pyqtProperty
-from PyQt5.QtWidgets import QFrame, QWidget, QVBoxLayout, QHBoxLayout, QLabel
-from PyQt5.QtGui import QPainter, QPalette, QFont, QFontMetricsF, QPen, QPolygon, QColor, QBrush
+from qtpy.QtCore import Signal, Property, Qt, QPoint
+from qtpy.QtWidgets import QFrame, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QSizePolicy
+from qtpy.QtGui import QPainter, QPalette, QFont, QFontMetricsF, QPen, QPolygon, QColor, QBrush
 
 NeedleFull = 1
 NeedleIndicator = 0
@@ -43,7 +38,7 @@ class LabeledCompass(QFrame):
 
         self.lbl = lbl
         self.lblcontrol = QLabel(lbl, self)
-        self.lblcontrol.setAlignment(Qtc.AlignCenter)
+        self.lblcontrol.setAlignment(Qt.AlignCenter)
 
         # add top or left
         if lbl:
@@ -59,7 +54,7 @@ class LabeledCompass(QFrame):
             if position == 2 or position == 4:
                 layout.addWidget(self.lblcontrol)
 
-        layout.setAlignment(Qtc.AlignCenter | Qtc.AlignVCenter)
+        layout.setAlignment(Qt.AlignCenter | Qt.AlignVCenter)
         self.setLayout(layout)
 
         if lbl:
@@ -79,7 +74,7 @@ class LabeledCompass(QFrame):
 
 
 class Compass(QWidget):
-    angleChanged = pyqtSignal(float)
+    angleChanged = Signal(float)
 
     def __init__(self, min_size, update_time, setDebug=False, needleType=NeedleFull,
                  position=1, backgroundColor='default'):
@@ -98,7 +93,7 @@ class Compass(QWidget):
                            225: "225", 270: "270", 315: "315"}
 
         self.setMinimumSize(min_size, min_size)
-        self.setSizePolicy(Qt.QSizePolicy.Expanding, Qt.QSizePolicy.Expanding)
+        self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
 
         self.backgroundColor = backgroundColor
         self.needleTipColor = 'red'
@@ -126,7 +121,7 @@ class Compass(QWidget):
             size = self.size()
             center_x = size.width() / 2
             diameter = size.height()
-            brush = QBrush(QColor(self.backgroundColor), Qtc.SolidPattern)
+            brush = QBrush(QColor(self.backgroundColor), Qt.SolidPattern)
             painter.setBrush(brush)
             painter.setPen(QPen(QColor(self.scaleColor), 2))
             painter.setRenderHint(QPainter.Antialiasing)
@@ -174,7 +169,7 @@ class Compass(QWidget):
         scale = min((self.width() - self._margins) / 120.0,
                     (self.height() - self._margins) / 120.0)
         painter.scale(scale, scale)
-        painter.setPen(QPen(Qtc.NoPen))
+        painter.setPen(QPen(Qt.NoPen))
 
         # Rotate surface for painting
         intAngle = int(round(self._angle))
@@ -211,7 +206,7 @@ class Compass(QWidget):
 
             # Paint shadowed indicator
             needleTipBrush = self.palette().brush(QPalette.Highlight)
-            needleTipColor = Qtc.gray
+            needleTipColor = Qt.gray
             needleTipBrush.setColor(needleTipColor)
             painter.setBrush(needleTipBrush)
 
@@ -237,7 +232,7 @@ class Compass(QWidget):
             self.angleChanged.emit(angle)
             self.update()
 
-    angle = pyqtProperty(float, angle, change_angle)
+    angle = Property(float, angle, change_angle)
 
 
 class GrCompass(gr.sync_block, LabeledCompass):
@@ -273,7 +268,7 @@ class GrCompass(gr.sync_block, LabeledCompass):
         try:
             new_val = pmt.to_python(pmt.cdr(msg))
 
-            if type(new_val) == float or type(new_val) == int:
+            if type(new_val) is float or type(new_val) is int:
                 super().change_angle(float(new_val))
             else:
                 gr.log.error(

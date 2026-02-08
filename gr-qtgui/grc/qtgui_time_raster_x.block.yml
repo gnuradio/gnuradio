@@ -245,7 +245,7 @@ inputs:
 
 templates:
     imports: |-
-        import sip
+        from qtpy import sip
     callbacks:
     - set_num_rows(${nrows})
     - set_num_cols(${ncols})

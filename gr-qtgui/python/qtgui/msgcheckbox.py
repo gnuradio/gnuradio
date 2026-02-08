@@ -9,17 +9,17 @@
 #
 #
 
-from PyQt5 import Qt
-from PyQt5.QtWidgets import QFrame, QVBoxLayout
-from PyQt5.QtCore import Qt as Qtc
+from qtpy import QtWidgets
+from qtpy.QtCore import Qt
+from qtpy.QtWidgets import QFrame, QVBoxLayout
 
 from gnuradio import gr
 import pmt
 
 
-class CheckBoxEx(Qt.QCheckBox):
+class CheckBoxEx(QtWidgets.QCheckBox):
     def __init__(self, lbl, callback=None):
-        Qt.QCheckBox.__init__(self)
+        QtWidgets.QCheckBox.__init__(self)
         self.setText(lbl)
         self.callback = callback
 
@@ -56,18 +56,18 @@ class MsgCheckBox(gr.sync_block, QFrame):
         layout.addWidget(self.chkBox)
 
         if alignment == 1:
-            halign = Qtc.AlignCenter
+            halign = Qt.AlignCenter
         elif alignment == 2:
-            halign = Qtc.AlignLeft
+            halign = Qt.AlignLeft
         else:
-            halign = Qtc.AlignRight
+            halign = Qt.AlignRight
 
         if valignment == 1:
-            valign = Qtc.AlignVCenter
+            valign = Qt.AlignVCenter
         elif valignment == 2:
-            valign = Qtc.AlignTop
+            valign = Qt.AlignTop
         else:
-            valign = Qtc.AlignBottom
+            valign = Qt.AlignBottom
 
         layout.setAlignment(halign | valign)
         self.setLayout(layout)
@@ -86,15 +86,15 @@ class MsgCheckBox(gr.sync_block, QFrame):
         if self.chkBox.isChecked():
             self.callback(self.pressReleasedDict['Pressed'])
 
-            if type(self.pressReleasedDict['Pressed']) == bool:
+            if type(self.pressReleasedDict['Pressed']) is bool:
                 self.message_port_pub(pmt.intern("state"),
                                       pmt.cons(pmt.intern(self.outputmsgname),
                                                pmt.from_bool(self.pressReleasedDict['Pressed'])))
-            elif type(self.pressReleasedDict['Pressed']) == int:
+            elif type(self.pressReleasedDict['Pressed']) is int:
                 self.message_port_pub(pmt.intern("state"),
                                       pmt.cons(pmt.intern(self.outputmsgname),
                                                pmt.from_long(self.pressReleasedDict['Pressed'])))
-            elif type(self.pressReleasedDict['Pressed']) == float:
+            elif type(self.pressReleasedDict['Pressed']) is float:
                 self.message_port_pub(pmt.intern("state"),
                                       pmt.cons(pmt.intern(self.outputmsgname),
                                                pmt.from_double(self.pressReleasedDict['Pressed'])))
@@ -105,15 +105,15 @@ class MsgCheckBox(gr.sync_block, QFrame):
         else:
             self.callback(self.pressReleasedDict['Released'])
 
-            if type(self.pressReleasedDict['Released']) == bool:
+            if type(self.pressReleasedDict['Released']) is bool:
                 self.message_port_pub(pmt.intern("state"),
                                       pmt.cons(pmt.intern(self.outputmsgname),
                                                pmt.from_bool(self.pressReleasedDict['Released'])))
-            elif type(self.pressReleasedDict['Released']) == int:
+            elif type(self.pressReleasedDict['Released']) is int:
                 self.message_port_pub(pmt.intern("state"),
                                       pmt.cons(pmt.intern(self.outputmsgname),
                                                pmt.from_long(self.pressReleasedDict['Released'])))
-            elif type(self.pressReleasedDict['Released']) == float:
+            elif type(self.pressReleasedDict['Released']) is float:
                 self.message_port_pub(pmt.intern("state"),
                                       pmt.cons(pmt.intern(self.outputmsgname),
                                                pmt.from_double(self.pressReleasedDict['Released'])))
