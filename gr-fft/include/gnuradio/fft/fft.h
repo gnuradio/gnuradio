@@ -73,7 +73,7 @@ class FFT_API fft
     const int d_nffts;
     volk::vector<typename fft_inbuf<T, forward>::type> d_inbuf;
     volk::vector<typename fft_outbuf<T, forward>::type> d_outbuf;
-    void* d_plan;
+    void* d_plan = nullptr;
     gr::logger d_logger;
     void initialize_plan(int fft_size, int nffts);
 
