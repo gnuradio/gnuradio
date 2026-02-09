@@ -19,7 +19,7 @@ namespace qtgui {
 
 /*!
  * \brief A graphical sink to display signals eye patterns.
- * \ingroup qtgui
+ * \ingroup qtgui_blk
  *
  * \details
  * This is a QT-based graphical sink which takes set of a float streams

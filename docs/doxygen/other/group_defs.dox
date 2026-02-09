@@ -7,6 +7,8 @@
 # A copy of the license is included in the section entitled "GNU
 # Free Documentation License".
 
+/*! \defgroup logging Functionality related to logging */
+/*! \defgroup rng Pseudo-Random Number Generation (PRNG) */
 /*!
  * \defgroup block GNU Radio C++ Signal Processing Blocks
  * \brief All C++ blocks that can be used in GR graphs are listed here or in
@@ -17,22 +19,33 @@
  * @{
  */
 
-/*! \defgroup container_blk Top Block and Hierarchical Block Base Classes	 */
 /*! \defgroup audio_blk Audio Signals */
+/*! \defgroup blocks Misc blocks (FIXME: choose better categories) */
 /*! \defgroup boolean_operators_blk Boolean Operators */
 /*! \defgroup byte_operators_blk Byte Operators */
 /*! \defgroup channel_models_blk Channel Models */
 /*! \defgroup channelizers_blk Channelizers */
 /*! \defgroup coding_blk Information Coding and Decoding */
+/*! \defgroup container_blk Top Block and Hierarchical Block Base Classes	 */
 /*! \defgroup controlport_blk ControlPort */
 /*! \defgroup debug_tools_blk Debug Tools */
 /*! \defgroup deprecated_blk Deprecated */
+/*! \defgroup digital Digital Communications */
+/*! \defgroup dtv Digital TV (mainly DVB) */
+/*! \defgroup dtv_atsc Digital TV (American Exceptionalism-style) */
+/*! \defgroup dynamic_channel_models_blk Dynamic Channel Models */
 /*! \defgroup equalizers_blk Equalizers */
 /*! \defgroup error_coding_blk Error Coding and Decoding */
+/*! \defgroup rfnoc Blocks for RFNoC functionality (Ettus USRPs) */
 /*! \defgroup file_operators_blk File Operators */
+/*! \defgroup filter Special-use case filters */
 /*! \defgroup filter_blk Filters */
+/*! \defgroup filter_primitive Sample Interpolation (MMSE resampling) */
 /*! \defgroup fourier_analysis_blk Fourier Analysis */
+/*! \defgroup iio libIIO devices */
 /*! \defgroup instrumentation_blk Instrumentation Tools  */
+/*! \defgroup iq_correction Correction of IQ impairments */
+/*! \defgroup level_blk Squelch bases */
 /*! \defgroup level_controllers_blk Level Controllers */
 /*! \defgroup math_operators_blk Math Operators */
 /*! \defgroup measurement_tools_blk Measurement Tools */
@@ -42,10 +55,16 @@
 /*! \defgroup networking_tools_blk Networking Tools */
 /*! \defgroup ofdm_blk OFDM Blocks */
 /*! \defgroup packet_operators_blk Packet/Frame Operators */
-/*! \defgroup peak_detectors_blk Peak Detectors */
 /*! \defgroup pdu_blk PDU Operators */
+/*! \defgroup peak_detectors_blk Peak Detectors */
+/*! \defgroup pfb_blk Polyphase filterbank */
+/*! \defgroup pkt_operators_blk HDLC framing/deframing */
 /*! \defgroup qtgui_blk QT Graphical Interfaces */
 /*! \defgroup resamplers_blk Resamplers */
+/*! \defgroup sink_blk Probes (don't use) */
+/*! \defgroup snr_blk SNR detectors */
+/*! \defgroup soapy SoapySDR hardware abstraction */
+/*! \defgroup source_blk legacy signal sources */
 /*! \defgroup stream_operators_blk Streams Operators */
 /*! \defgroup stream_tag_tools_blk Stream Tag Tools */
 /*! \defgroup symbol_coding_blk Symbol Coding */
@@ -55,6 +74,7 @@
 /*! \defgroup uhd_blk UHD Interface */
 /*! \defgroup waveform_generators_blk Waveform Generators */
 /*! \defgroup wavelet_blk Wavelet Transforms */
+/*! \defgroup zeromq ZeroMQ networking */
 
 /*!
  * \defgroup base_blk Base classes for GR Blocks

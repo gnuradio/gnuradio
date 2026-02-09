@@ -23,7 +23,7 @@ namespace network {
 /*!
  * \brief This block provides a TCP Sink block that supports
  * both client and server modes.
- * \ingroup networking_tools
+ * \ingroup networking_tools_blk
  *
  * \details
  * This block provides a TCP sink that supports both listening for

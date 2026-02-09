@@ -38,7 +38,7 @@ namespace uhd {
  *
  * Note: The output ports of this block can only connect to other RFNoC blocks.
  *
- * \ingroup ettus
+ * \ingroup rfnoc
  */
 class GR_UHD_API rfnoc_tx_streamer : virtual public gr::sync_block
 {

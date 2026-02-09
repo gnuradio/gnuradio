@@ -21,7 +21,9 @@ namespace digital {
 /*!
  * \brief Map a stream of unpacked symbol indexes to stream of
  * float or complex constellation points in D dimensions (D = 1 by
- * default) \ingroup converter_blk
+ * default)
+ *
+ * \ingroup digital
  *
  * \details
  * \li input: stream of IN_T

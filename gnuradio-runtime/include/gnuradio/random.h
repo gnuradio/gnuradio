@@ -23,7 +23,7 @@ namespace gr {
 /*!
  * \brief wrapper for XOROSHIRO128+ PRNG for use in std::distributions
  * Fulfills C++ named requirements for UniformRandomBitGenerator
- * \ingroup math_blk
+ * \ingroup rng
  */
 class GR_RUNTIME_API xoroshiro128p_prng
 {
