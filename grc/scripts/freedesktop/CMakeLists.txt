@@ -7,6 +7,7 @@
 
 ########################################################################
 
+include(GrTest)
 find_program(HAVE_XDG_UTILS xdg-desktop-menu)
 
 if(UNIX AND HAVE_XDG_UTILS AND ENABLE_POSTINSTALL)
