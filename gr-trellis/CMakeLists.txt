@@ -14,8 +14,12 @@
 # Register component
 ########################################################################
 include(GrComponent)
-gr_register_component("gr-trellis" ENABLE_GR_TRELLIS ENABLE_GNURADIO_RUNTIME
-                      ENABLE_GR_ANALOG ENABLE_GR_BLOCKS ENABLE_GR_DIGITAL)
+gr_register_component(
+    NAME "gr-trellis"
+    VAR ENABLE_GR_TRELLIS
+    REQUIRED_COMPONENTS gnuradio-runtime
+        gr-analog gr-blocks gr-digital
+)
 
 set(GR_PKG_TRELLIS_EXAMPLES_DIR ${GR_PKG_DATA_DIR}/examples/trellis)
 

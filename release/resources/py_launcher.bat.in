@@ -1,0 +1,8 @@
+@echo off
+
+pushd "%~dp0"
+set UHD_LIBRARY_PATH=%CD%
+set PYTHON_HOME=%CD%\..\Python@PYTHON_SHORT_VER@
+set PATH=%CD%;%PYTHON_HOME%;%PYTHON_HOME%\Scripts;%PYTHON_HOME%\Lib\site-packages\gi\gtk\bin;%PATH%
+@GEN_PY_PYTHON@ @mod@.py
+popd

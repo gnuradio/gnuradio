@@ -1,4 +1,5 @@
 # Copyright 2010-2016,2019 Free Software Foundation, Inc.
+# Copyright 2025-2026 Marcus Müller
 #
 # This file is part of GNU Radio
 #
@@ -10,6 +11,15 @@ if(DEFINED __INCLUDED_GR_PYTHON_CMAKE)
 endif()
 set(__INCLUDED_GR_PYTHON_CMAKE TRUE)
 
+include(CMakeOverloads)
+
+define_property(
+	GLOBAL
+       	PROPERTY GR_PYTHON_VENDOR_DEPS
+	BRIEF_DOCS "GR Python module dependencies" 
+	FULL_DOCS "GR Python module dependencies"
+)
+
 ########################################################################
 # Setup the python interpreter:
 # This allows the user to specify a specific interpreter,
@@ -18,18 +28,24 @@ set(__INCLUDED_GR_PYTHON_CMAKE TRUE)
 
 if(PYTHON_EXECUTABLE)
     message(STATUS "User set python executable ${PYTHON_EXECUTABLE}")
-    find_package(PythonInterp ${GR_PYTHON_MIN_VERSION} REQUIRED)
+    gr_find_package(PythonInterp ${GR_PYTHON_MIN_VERSION} REQUIRED)
 else(PYTHON_EXECUTABLE)
     message(STATUS "PYTHON_EXECUTABLE not set - using default python3")
-    find_package(PythonInterp ${GR_PYTHON_MIN_VERSION} REQUIRED)
+    gr_find_package(PythonInterp ${GR_PYTHON_MIN_VERSION} REQUIRED)
 endif(PYTHON_EXECUTABLE)
 
-find_package(PythonLibs ${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR} EXACT)
+gr_find_package(PythonLibs ${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR} EXACT)
 
 if(CMAKE_CROSSCOMPILING)
     set(QA_PYTHON_EXECUTABLE "/usr/bin/python3")
 else(CMAKE_CROSSCOMPILING)
-    set(QA_PYTHON_EXECUTABLE ${PYTHON_EXECUTABLE})
+    if(GR_BUILD_INSTALLER AND WIN32)
+        # use the python executable from the bundle installer for QA tests on Windows Installer builds
+        set(QA_PYTHON_EXECUTABLE "\"${CMAKE_INSTALL_PREFIX}/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}/python.exe\"")
+    else()
+        # use the same python executable for QA tests as for the build
+        set(QA_PYTHON_EXECUTABLE ${PYTHON_EXECUTABLE})
+    endif()
 endif(CMAKE_CROSSCOMPILING)
 
 #make the path to the executable appear in the cmake gui
@@ -130,26 +146,94 @@ macro(GR_PYTHON_CHECK_MODULE_RAW desc python_code have)
     endif()
 endmacro(GR_PYTHON_CHECK_MODULE_RAW)
 
-macro(GR_PYTHON_CHECK_MODULE desc mod cmd have)
+macro(GR_PYTHON_CHECK_MODULE)
+    set(singleValueArgs DESC MODULE CHECK VAR)
+    cmake_parse_arguments(CHECK_MODULE "" "${singleValueArgs}" "" ${ARGN})
+    # If no check is supplied, we're doing a basic
+    # import check, so assert the module name as
+    # an import sanity check
+    # with just an import a dangling folder
+    # in a site-packages directory can result in a
+    # false positive import but an assert on the module
+    # returns false
+    if(NOT CHECK_MODULE_CHECK)
+        set(CHECK_MODULE_CHECK ${CHECK_MODULE_MODULE})
+    endif()
     gr_python_check_module_raw(
-        "${desc}"
+        "${CHECK_MODULE_DESC}"
         "
 #########################################
 from packaging.version import Version as LooseVersion
 try:
-    import ${mod}
-    assert ${cmd}
+    import ${CHECK_MODULE_MODULE}
+    assert ${CHECK_MODULE_CHECK}
 except (ImportError, AssertionError): exit(-1)
 except: pass
 #########################################"
-        "${have}")
+        "${CHECK_MODULE_VAR}")
+    if(${CHECK_MODULE_VAR})
+        REGISTER_EXTERNAL_PYTHON_COMPONENT(${CHECK_MODULE_MODULE})
+    endif()
 endmacro(GR_PYTHON_CHECK_MODULE)
+
+function(REGISTER_EXTERNAL_PYTHON_COMPONENT module)
+    get_property(GR_PYTHON_EXTERNALS_SET GLOBAL PROPERTY GR_PYTHON_VENDOR_DEPS SET)
+    if(GR_PYTHON_EXTERNALS_SET)
+        get_property(GR_PYTHON_EXTERNALS GLOBAL PROPERTY GR_PYTHON_VENDOR_DEPS)
+        set_property(GLOBAL PROPERTY GR_PYTHON_VENDOR_DEPS ${module} ${GR_PYTHON_EXTERNALS})
+    else()
+        set_property(GLOBAL PROPERTY GR_PYTHON_VENDOR_DEPS ${module})
+    endif()
+endfunction()
+
+########################################################################
+# Not sure where to put the toolchain detection
+# This location is the earliest time it is used
+########################################################################
+if (DEFINED CMAKE_PREFIX_PATH)
+    # Search each path for *toolchain.cmake
+    foreach (p ${CMAKE_PREFIX_PATH})
+       file(GLOB t LIST_DIRECTORIES false ${p}/*toolchain.cmake)
+       string(APPEND _toolchains ${t})
+    endforeach()
+endif()
+if (DEFINED _toolchains)
+   foreach (tch ${_toolchains})
+      get_filename_component(_TCH_FILE ${tch} NAME)
+      message(STATUS "tch=${tch}, _TCH_FILE=${_TCH_FILE}")
+      if(${_TCH_FILE} STREQUAL "conan_toolchain.cmake")
+         set(CONAN_TOOLCHAIN_PATH ${tch})
+         set(CONAN_TOOLCHAIN_DETECTED ON CACHE BOOL CONAN_TOOLCHAIN_DETECTED)
+      endif()
+   endforeach()
+endif()
+message(STATUS "CONAN_TOOLCHAIN_DETECTED=${CONAN_TOOLCHAIN_DETECTED}")
+
+set (PYTHON_SHORT_VER ${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR})
+message(STATUS "PYTHON_SHORT_VER=${PYTHON_SHORT_VER}")
+
+if(DEFINED CONAN_TOOLCHAIN_DETECTED)
+   set (REL_PYTHON_INSTALL_PATH python${PYTHON_SHORT_VER})
+   set (REL_PYTHON_INSTALL_LIB_PATH python${PYTHON_SHORT_VER}/Lib/site-packages)
+else() # assuming MinGW toolchain or linux
+   set (REL_PYTHON_INSTALL_PATH bin)
+   set (REL_PYTHON_INSTALL_LIB_PATH lib/python${PYTHON_SHORT_VER}/site-packages)
+endif()
+# Define variable used in gen_py_launcher scripts on Windows
+if(WIN32)
+   string(REPLACE "/" "\\" WIN32_REL_PYTHON_INSTALL_PATH ${REL_PYTHON_INSTALL_PATH})
+   set(GR_BUNDLE_PYTHON "..\\${WIN32_REL_PYTHON_INSTALL_PATH}\\python.exe")
+endif()
 
 ########################################################################
 # Sets the python installation directory GR_PYTHON_DIR
 # From https://github.com/pothosware/SoapySDR/tree/master/python
 # https://github.com/pothosware/SoapySDR/blob/master/LICENSE_1_0.txt
 ########################################################################
+if(GR_BUILD_INSTALLER AND WIN32)
+    #set(GR_PYTHON_DIR Python${PYTHON_SHORT_VER}/Lib/site-packages)
+    set(GR_PYTHON_DIR ${REL_PYTHON_INSTALL_LIB_PATH} CACHE PATH "GR_PYTHON site-packages base path")
+endif()
 if(NOT DEFINED GR_PYTHON_DIR)
     execute_process(
         COMMAND
@@ -335,8 +419,17 @@ function(GR_PYTHON_INSTALL)
         ####################################################################
     elseif(GR_PYTHON_INSTALL_PROGRAMS)
         ####################################################################
-        file(TO_NATIVE_PATH ${PYTHON_EXECUTABLE} pyexe_native)
-
+        if(WIN32)
+            set(extension ".exe")
+        endif()
+        if(GR_BUILD_INSTALLER)
+            file(TO_NATIVE_PATH ${REL_PYTHON_INSTALL_PATH}/python${extension} pyexe_native)
+        else()
+            file(TO_NATIVE_PATH ${PYTHON_EXECUTABLE} pyexe_native)
+        endif()
+        if (APPLE OR UNIX)
+            set(pyexe_native "/usr/bin/env ${pyexe_native}")
+        endif()
         if(CMAKE_CROSSCOMPILING)
             set(pyexe_native "/usr/bin/env python")
         endif()
@@ -345,11 +438,59 @@ function(GR_PYTHON_INSTALL)
             get_filename_component(pyfile_name ${pyfile} NAME)
             get_filename_component(pyfile ${pyfile} ABSOLUTE)
             string(REPLACE "${PROJECT_SOURCE_DIR}" "${PROJECT_BINARY_DIR}" pyexefile
-                           "${pyfile}.exe")
+                           "${pyfile}.py")
             list(APPEND python_install_gen_targets ${pyexefile})
 
             get_filename_component(pyexefile_path ${pyexefile} PATH)
             file(MAKE_DIRECTORY ${pyexefile_path})
+
+            if(WIN32)
+                # check the python file to see if we should wrap it
+                execute_process(
+                    COMMAND ${PYTHON_EXECUTABLE} -c
+                    "import sys;
+from pip._vendor.distlib.scripts import FIRST_LINE_RE;
+f = open('${pyfile}', 'rb');
+first_line = f.readline();
+f.close();
+match = FIRST_LINE_RE.match(first_line.replace(b'\\r\\n', b'\\n'));
+sys.exit(0 if match else 1)"
+                    RESULT_VARIABLE pyfile_dont_wrap
+                    OUTPUT_QUIET
+                )
+                if(NOT pyfile_dont_wrap)
+                    # pyfile_dont_wrap is a 0 if we should wrap, 1 if we shouldn't
+                    # generate script wrapper exe and install
+                    get_filename_component(pyfile_dir ${pyfile} DIRECTORY)
+                    string(REPLACE "${CMAKE_SOURCE_DIR}" "${CMAKE_BINARY_DIR}" pywrapperfile_dir ${pyfile_dir})
+                    string(REGEX REPLACE "\.py$" "" pywrapperfile_name "${pyfile_name}")
+                    set(pywrapperfile_name "${pywrapperfile_name}.exe")
+                    set(pywrapperfile "${pywrapperfile_dir}/${pywrapperfile_name}")
+                    list(APPEND python_install_gen_targets ${pywrapperfile})
+
+                    # Define python path, that works by default on linux os.
+                    # On Windows the same default is used via the utilized 
+                    # pip._vendor.distlib.scripts.ScriptMaker class (as of pip 26.0)
+                    # and uses pre-build launcher executables that search in the
+                    # system path (i.e. PATH environment variable) for python.exe.
+                    # (sourced from https://bitbucket.org/vinay.sajip/simple_launcher/src/master)
+                    set(pywrapperfile_shebang_line "/usr/bin/env python")
+                    add_custom_command(
+                        OUTPUT ${pywrapperfile} DEPENDS ${pyfile}
+                        COMMAND ${PYTHON_EXECUTABLE} -c
+                        "from pip._vendor.distlib.scripts import ScriptMaker;
+maker = ScriptMaker('${pyfile_dir}', '${pywrapperfile_dir}', add_launchers=True);
+maker.executable = '${pywrapperfile_shebang_line}';
+maker.make('${pyfile_name}')"
+                        COMMENT "Wrapping ${pyfile_name}"
+                        VERBATIM
+                    )
+
+                    install(PROGRAMS ${pywrapperfile}
+                        DESTINATION ${GR_PYTHON_INSTALL_DESTINATION}
+                    )
+                endif()
+            endif()
 
             add_custom_command(
                 OUTPUT ${pyexefile}
@@ -374,6 +515,10 @@ function(GR_PYTHON_INSTALL)
         endforeach(pyfile)
 
         gr_unique_target("pygen" ${python_install_gen_targets})
+        
+        if(WIN32)
+            gen_py_gr_prompt()
+        endif()
 
     endif()
 
@@ -391,3 +536,51 @@ srcs, gens = files[:len(files)//2], files[len(files)//2:]
 for src, gen in zip(srcs, gens):
     py_compile.compile(file=src, cfile=gen, doraise=True)
 ")
+
+function(gen_py_gr_prompt)
+    message(STATUS "Creating install rules for gnuradio-prompt.bat")
+    configure_file(
+        ${CMAKE_SOURCE_DIR}/release/resources/py_prompt.bat.in
+        ${CMAKE_BINARY_DIR}/gnuradio-prompt.bat
+        @ONLY
+    )
+    install(PROGRAMS
+        ${CMAKE_BINARY_DIR}/gnuradio-prompt.bat
+        DESTINATION ${GR_RUNTIME_DIR}
+    )
+endfunction()
+
+function(gen_py_launcher)
+    set(MULTI_ARGS MODULES)
+    set(SINGLE_ARGS PYTHON)
+    cmake_parse_arguments(GEN_PY "" "${SINGLE_ARGS}" "${MULTI_ARGS}" ${ARGN})
+    foreach(mod ${GEN_PY_MODULES})
+        message(STATUS "Creating install rules for ${mod}.bat")
+        configure_file(
+            ${CMAKE_SOURCE_DIR}/release/resources/py_launcher.bat.in
+            ${CMAKE_BINARY_DIR}/${mod}.bat
+            @ONLY
+        )
+        install(PROGRAMS
+            ${CMAKE_BINARY_DIR}/${mod}.bat
+            DESTINATION ${GR_RUNTIME_DIR}
+        )
+    endforeach()
+endfunction()
+
+function(gen_py_program_launcher)
+    set(MULTI_ARGS PROGRAMS)
+    cmake_parse_arguments(GEN_PY "" "${SINGLE_ARGS}" "${MULTI_ARGS}" ${ARGN})
+    foreach(GEN_PY_PROGRAM ${GEN_PY_PROGRAMS})
+        message(STATUS "Creating install rules for ${GEN_PY_PROGRAM}.sh")
+        configure_file(
+            ${CMAKE_SOURCE_DIR}/release/resources/py_launcher.sh.in
+            ${CMAKE_BINARY_DIR}/${GEN_PY_PROGRAM}.sh
+            @ONLY
+        )
+        install(PROGRAMS
+            ${CMAKE_BINARY_DIR}/${GEN_PY_PROGRAM}.sh
+            DESTINATION ${GR_RUNTIME_DIR}
+        )
+    endforeach()
+endfunction()

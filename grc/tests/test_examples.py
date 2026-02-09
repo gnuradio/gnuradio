@@ -4,6 +4,7 @@ from os import path
 
 import pytest
 
+from gnuradio import gr
 from grc.core.platform import Platform
 
 try:
@@ -88,6 +89,7 @@ def test_all_examples(example):
         name='GNU Radio Companion Compiler',
         prefs=None,
         version='0.0.0',
+        install_prefix=gr.prefix(),
     )
     platform.build_library(BLOCK_PATHS)
 

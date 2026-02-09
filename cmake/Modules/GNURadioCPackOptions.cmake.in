@@ -1,0 +1,71 @@
+# This file is configured at cmake time, loaded at cpack time.
+
+set(CPACK_COMPONENT_UNSPECIFIED_HIDDEN TRUE)
+set(CPACK_COMPONENT_UNSPECIFIED_REQUIRED TRUE)
+
+# NSIS specific settings - should use Wix but why not give the option
+if(CPACK_GENERATOR MATCHES "NSIS")
+  set(CPACK_NSIS_MUI_ICON "@CMAKE_SOURCE_DIR@/release/resources/icons/gnuradio_logo_icon-square.ico")
+  set(CPACK_NSIS_HELP_LINK "https://wiki.gnuradio.org/")
+  set(CPACK_NSIS_URL_INFO_ABOUT "https://gnuradio.org")
+  set(CPACK_NSIS_INSTALLED_ICON_NAME "bin\\\\grc.exe")
+  set(CPACK_NSIS_MENU_LINKS
+    "https://gnuradio.org" "GNU Radio")
+  set(CPACK_NSIS_MODIFY_PATH ON)
+endif()
+
+
+if(CPACK_GENERATOR MATCHES "WIX")
+  set(CPACK_WIX_PROPERTY_ARPURLINFOABOUT "https://gnuradio.org")
+
+  set(CPACK_WIX_PROPERTY_ARPCONTACT "@CPACK_PACKAGE_CONTACT@")
+
+  set(CPACK_WIX_PROPERTY_ARPCOMMENTS
+    "GNU Radio – the Free and Open Software Radio Ecosystem"
+  )
+  set(CPACK_WIX_PROGRAM_MENU_FOLDER "GNU Radio")
+  set(CPACK_WIX_UI_BANNER "@GR_RELEASE_ICON_DIR@/gr_banner_short.png")
+  set(CPACK_WIX_PRODUCT_ICON
+    "@GR_RELEASE_ICON_DIR@/gnuradio_logo_icon-square.ico"
+  )
+  set(CPACK_WIX_UI_DIALOG "@GR_RELEASE_ICON_DIR@/gr_dialog.jpg")
+
+  set_property(INSTALL "https://wiki.gnuradio.org/" PROPERTY
+    CPACK_START_MENU_SHORTCUTS "GNU Radio Documentation"
+  )
+
+  set_property(INSTALL "gnuradio.org" PROPERTY
+    CPACK_START_MENU_SHORTCUTS "GNU Radio Web Site"
+  )
+
+  set(CPACK_WIX_LIGHT_EXTRA_FLAGS "-dcl:high")
+
+  # if(@GRBuildReleaseValidation@)
+  #   list(APPEND CPACK_WIX_LIGHT_EXTRA_FLAGS "-sval")
+  # endif()
+
+  # set(CPACK_WIX_EXTRA_SOURCES
+  #   "@CMAKE_SOURCE_DIR@/Release/win32/install_dir.wxs"
+  #   "@CMAKE_SOURCE_DIR@/Release/win32/cmake_extra_dialog.wxs"
+  # )
+  set(CPACK_WIX_PATCH_FILE "@CMAKE_SOURCE_DIR@/release/win32/post_install_patch.xml")
+  list(APPEND CPACK_WIX_PATCH_FILE "@CMAKE_SOURCE_DIR@/release/win32/shortcut_patch.xml")
+  # set(CPACK_WIX_TEMPLATE "@CMAKE_SOURCE_DIR@/Release/win32/WIX.template")
+endif()
+
+# Mac DMG specific settings
+if(CPACK_GENERATOR MATCHES "DragNDrop")
+  set(CPACK_DMG_FORMAT "UDBZ")
+  set(VERSION "${CPACK_PACKAGE_VERSION}")
+  # this also sets the volume name
+  set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${VERSION}")
+  # set(CPACK_INCLUDE_TOPLEVEL_DIRECTORY ON)
+  set(CPACK_DMG_BACKGROUND_IMAGE @CMAKE_SOURCE_DIR@/release/resources/icons/gr_dialog.jpg)
+endif()
+
+# JIC someone wants package maker, may as well support
+if("${CPACK_GENERATOR}" STREQUAL "PackageMaker")
+  set(CPACK_PACKAGE_DEFAULT_LOCATION "/Applications")
+endif()
+
+

@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+export PYTHONPATH=$PWD/../@GR_PYTHON_DIR@
+./@GEN_PY_PROGRAM@ &

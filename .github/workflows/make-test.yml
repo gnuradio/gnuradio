@@ -6,6 +6,7 @@ on:
   pull_request:
     branches:
       - main
+      - base-installer-support
 jobs:
   # Check hashes first
   check-hashes:
@@ -166,6 +167,22 @@ jobs:
     - name: Test Python3
       if: ${{ matrix.enable_python != 'Off' }}
       run: python3 -c "import gnuradio.blocks; print(gnuradio.blocks.complex_to_float())"
+    - name: Test gr_modtool (up to build of dummy block)
+      if: ${{ matrix.enable_python != 'Off' }}
+      run: |
+          cd /tmp && \
+          gr_modtool newmod testmod && \
+          cd gr-testmod && \
+          gr_modtool add -l cpp -t sink \
+                         --copyright "GR CI" \
+                         --argument-list "" \
+                         --add-python-qa \
+                         --add-cpp-qa \
+                         dummy && \
+          mkdir build && \
+          cd build && \
+          cmake .. &&\
+          make -j$(nproc)
     - name: Install into bundling directory
       if: ${{ ! matrix.skip_upload }}
       run: cmake --install /build --prefix /target
