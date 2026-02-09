@@ -4,7 +4,6 @@ attrs==23.2.0
 certifi==2023.11.17
 charset-normalizer==3.3.2
 click==8.1.7
-click-plugins==1.1.1
 colorama==0.4.6
 conan==2.9.2
 decorator==5.1.1
