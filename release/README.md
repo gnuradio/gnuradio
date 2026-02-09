@@ -38,6 +38,6 @@ This is files used by Wix for the construction of the installer
 Currently a couple of Wix templates to supplement what CPack will generate
 
 At the moment most of the functionality is to setup the registry to OOT modules can install themselves
-and the GNURadio can locate them
+and the GNU Radio can locate them
 also the mechanism to be leveraged to "register" the installations by the gui/installer for oot modules
 
