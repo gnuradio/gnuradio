@@ -399,7 +399,7 @@ endif(UNIX)
 ########################################################################
 # Setup Installer Build and Options
 ########################################################################
-option(GR_BUILD_INSTALLER "Build native GNURadio installer" OFF)
+option(GR_BUILD_INSTALLER "Build native GNU Radio installer" OFF)
 
 ########################################################################
 # Disable complex math NaN/INFO range checking for performance

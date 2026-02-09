@@ -89,7 +89,7 @@ Need to be careful of boost dyn lib arguments
 
 Do not let CMake's vendored FindBoost.cmake be the module to detect Boost, it will find the headers installed by conan but not the libs. This results in somewhat confusing linker errors as `${Boost_LIBRARIES}` is defined empty so no boost libs are included in the linker line.
 
-Ensure both conan and cmake are building 64bit release configuration to build GNURadio in same
+Ensure both conan and cmake are building 64bit release configuration to build GNU Radio in same
 
 Remember to specify Boost static libs argument (found in my CMake scripts for UHD)
 
@@ -103,7 +103,7 @@ cmake .. -GNinja -DCMAKE_PREFIX_PATH=C:\dev\gnu-radio\deps\build\generators -DCM
 
 For each package that depends on one of these, you need to be sure
 that the Python you "pip install" those py deps with is EXACTLY the same
-python that GNURadio is finding during its CMake run
+python that GNU Radio is finding during its CMake run
 Otherwise there will be conflicts between GNU Radio, it's installed deps, and its
 bundled runtime python deps
 
