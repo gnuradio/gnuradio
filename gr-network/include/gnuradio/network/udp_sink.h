@@ -20,7 +20,7 @@ namespace network {
 /*!
  * \brief This block provides a UDP Sink block that can send
  * data over UDP streams to a specified host.
- * \ingroup networking_tools
+ * \ingroup networking_tools_blk
  *
  * \details
  * This block provides a UDP sink that supports sending data over
