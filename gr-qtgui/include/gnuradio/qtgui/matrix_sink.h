@@ -20,7 +20,6 @@ namespace qtgui {
 
 /*!
  * \brief A graphical sink that displays a matrix.
- * \ingroup qtgui
  * \ingroup qtgui_blk
  *
  * \details

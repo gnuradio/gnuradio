@@ -21,7 +21,7 @@ typedef std::shared_ptr<msg_handler> msg_handler_sptr;
 
 /*!
  * \brief abstract class of message handlers
- * \ingroup base
+ * \ingroup base_blk
  */
 class GR_RUNTIME_API msg_handler
 {

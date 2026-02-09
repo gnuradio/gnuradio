@@ -19,7 +19,7 @@ namespace blocks {
 
 /*!
  * \brief Send tags at defined interval
- * \ingroup debug_blk
+ * \ingroup debug_tools_blk
  *
  * \details
  * Sends a tag with key 'strobe' and a user-defined value (as a

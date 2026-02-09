@@ -24,7 +24,9 @@ namespace digital {
 
 /*!
  * \brief Linear Equalizer block provides linear equalization using a specified adaptive
- * algorithm \ingroup equalizers
+ * algorithm
+ *
+ * \ingroup equalizers_blk
  *
  */
 class DIGITAL_API linear_equalizer : virtual public gr::sync_decimator
