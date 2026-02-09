@@ -23,12 +23,6 @@ gr_python_check_module(
 )
 
 gr_python_check_module(
-    DESC "click-plugins"
-    MODULE click_plugins
-    VAR CLICK_PLUGINS_FOUND
-)
-
-gr_python_check_module(
     DESC "colorama"
     MODULE colorama
     VAR COLORAMA_FOUND
