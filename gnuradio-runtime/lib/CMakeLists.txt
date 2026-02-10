@@ -124,11 +124,11 @@ target_link_libraries(
     PUBLIC
         gnuradio-pmt
         Volk::volk
-        Boost::thread
         spdlog::spdlog
         MPLib::mplib
     PRIVATE
         Boost::program_options
+        Boost::thread
         libunwind::libunwind)
 
 # Address linker issues with std::filesystem on Centos 8 and Debian
