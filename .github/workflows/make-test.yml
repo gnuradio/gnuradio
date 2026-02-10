@@ -274,19 +274,20 @@ jobs:
         AWS_ACCESS_KEY_ID: ${{ vars.SCCACHE_S3_KEY_ID }}
       run: |
         cmake -S . -B build \
+          -GNinja \
           -DCMAKE_INSTALL_PREFIX=${RUNNER_TEMP}/msys64/mingw64 \
           -DENABLE_DOXYGEN=OFF \
           ${{ steps.enable_sccache.outputs.CXX_LAUNCHER }} \
           ${{ steps.enable_sccache.outputs.C_LAUNCHER }}
-    - name: Make
+    - name: Build
       env:
         AWS_SECRET_ACCESS_KEY: ${{ secrets.SCCACHE_S3_KEY }}
         AWS_ACCESS_KEY_ID: ${{ vars.SCCACHE_S3_KEY_ID }}
         SCCACHE_CONF: ${{ steps.enable_sccache.outputs.SCCACHE_CONF }}
       run: cmake --build build
-    - name: Make Install
+    - name: Install
       run: cmake --install build
-    - name: Make Test
+    - name: CTest
       working-directory: ./build
       run: ctest --output-on-failure
     - name: Sccache statistics
