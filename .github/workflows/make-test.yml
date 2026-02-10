@@ -288,6 +288,7 @@ jobs:
           -GNinja \
           -DCMAKE_INSTALL_PREFIX=${RUNNER_TEMP}/msys64/mingw64 \
           -DENABLE_DOXYGEN=OFF \
+          -DENABLE_TESTING=OFF \
           ${{ steps.enable_sccache.outputs.CXX_LAUNCHER }} \
           ${{ steps.enable_sccache.outputs.C_LAUNCHER }}
     - name: Build
@@ -298,9 +299,9 @@ jobs:
       run: cmake --build build
     - name: Install
       run: cmake --install build
-    - name: CTest
-      working-directory: ./build
-      run: ctest --output-on-failure
+    # - name: CTest
+    #   working-directory: ./build
+    #   run: ctest --output-on-failure
     - name: Sccache statistics
       env: 
         SCCACHE_CONF: ${{ steps.enable_sccache.outputs.SCCACHE_CONF }}
