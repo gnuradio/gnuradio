@@ -306,3 +306,25 @@ jobs:
         SCCACHE_CONF: ${{ steps.enable_sccache.outputs.SCCACHE_CONF }}
       if: ${{ steps.enable_sccache.outputs.CXX_LAUNCHER }}
       run: sccache -s
+    - name: Install dependencies for gr-satellites
+      run: pip install --user --upgrade construct requests
+    - name: clone gr-satellites v5.9.0
+      run: |
+        git clone -b 5.9.0 \
+          https://github.com/daniestevez/gr-satellites \
+          ${RUNNER_TEMP}/gr-satellites
+    - name: gr-satellites CMake
+      run: |
+        cmake -S ${RUNNER_TEMP}/gr-satellites \
+              -B ${RUNNER_TEMP}/gr-satbuild \
+          -DCMAKE_INSTALL_PREFIX=${RUNNER_TEMP}/msys64/mingw64 \
+          -DENABLE_DOXYGEN=OFF \
+          ${{ steps.enable_sccache.outputs.CXX_LAUNCHER }} \
+          ${{ steps.enable_sccache.outputs.C_LAUNCHER }}
+    - name: Make
+      env:
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.SCCACHE_S3_KEY }}
+        AWS_ACCESS_KEY_ID: ${{ vars.SCCACHE_S3_KEY_ID }}
+        SCCACHE_CONF: ${{ steps.enable_sccache.outputs.SCCACHE_CONF }}
+      run: cmake --build ${RUNNER_TEMP}/gr-satbuild 
+
