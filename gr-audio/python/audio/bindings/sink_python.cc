@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(sink.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(656d21133902e8ba6177998cb10c59a3)                     */
+/* BINDTOOL_HEADER_FILE_HASH(223f1f037883d0800b73853de22ac330)    		   */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -40,6 +40,7 @@ void bind_sink(py::module& m)
              py::arg("sampling_rate"),
              py::arg("device_name") = "",
              py::arg("ok_to_block") = true,
+	     py::arg("properties") = std::map<std::string, std::string>{},
              D(sink, make))
 
 
