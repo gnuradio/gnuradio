@@ -9,14 +9,13 @@ import pytest
 
 from argparse import Namespace
 from os import path
-import tempfile
 
 from grc.compiler import main
 
 
-def test_cpp(capsys):
+def test_cpp(capsys, tmp_path):
     args = Namespace(
-        output=tempfile.gettempdir(),
+        output=str(tmp_path),
         user_lib_dir=False,
         grc_files=[path.join(path.dirname(__file__),
                              'resources', 'test_cpp.grc')],
