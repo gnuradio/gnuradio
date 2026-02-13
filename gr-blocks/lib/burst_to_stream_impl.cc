@@ -68,6 +68,28 @@ int burst_to_stream_impl::general_work(int noutput_items,
     int produced = 0;
 
     while (out < out_end) {
+
+       // ─────────────────────────────────────────────────────────────
+        // WARN if length tags are observed again after packet processing
+        // (likely indicates placement after a rate-changing block)
+        // ─────────────────────────────────────────────────────────────
+        if (!d_warned_about_rate_change && d_remaining_items == 0) {
+            std::vector<gr::tag_t> rate_tags;
+            const auto nitems = nitems_read(0) + consumed;
+
+            get_tags_in_range(rate_tags, 0, nitems, nitems + 1, d_len_tag_key);
+
+            if (!rate_tags.empty() && produced > 0) {
+                GR_LOG_WARN(d_logger,
+                    "burst_to_stream detected repeated length tags after "
+                    "packet processing. This may indicate placement after "
+                    "a rate-changing block (e.g. resampler), which can cause "
+                    "packet duplication.");
+                d_warned_about_rate_change = true;
+            }
+        }
+
+
         if (d_remaining_items == 0) {
             // Try to fetch a new packet from the input
             if (consumed == ninput_items[0]) {
