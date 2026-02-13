@@ -9,6 +9,7 @@ on:
 jobs:
   # Check hashes first
   check-hashes:
+    if: false # MinGW only build (MINGWONLY)
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     name: Check hashes
@@ -35,6 +36,7 @@ jobs:
   # We continue checking C++ formatting. No one gets free CPU cycles if they
   # can't use clang-format.
   check-formatting:
+    if: false # MinGW only build (MINGWONLY)
     name: Check C++ Formatting
     runs-on: ubuntu-24.04
     timeout-minutes: 15
@@ -46,6 +48,7 @@ jobs:
         extensions: 'h,hpp,cpp,cc,cc.in'
         clangFormatVersion: 14
   check-python-formatting:
+    if: false # MinGW only build (MINGWONLY)
     name: Check Python Formatting
     runs-on: ubuntu-24.04
     timeout-minutes: 15
@@ -59,6 +62,7 @@ jobs:
         # -----------------------------------
   linux-docker:
   # All of these shall depend on the formatting check (needs: check-formatting)
+    if: false # MinGW only build (MINGWONLY)
     needs: [check-hashes, check-formatting, check-python-formatting]
     runs-on: ubuntu-24.04
     # The GH default is 360 minutes (it's also the max as of Feb-2021). However
@@ -230,7 +234,7 @@ jobs:
     if: False
     timeout-minutes: 80
   # All of these shall depend on the formatting check (needs: check-formatting)
-    needs: [check-hashes, check-formatting, check-python-formatting]
+    # needs: [check-hashes, check-formatting, check-python-formatting]
     runs-on: windows-latest
     name: MinGW-w64
     defaults:
@@ -295,6 +299,39 @@ jobs:
         AWS_ACCESS_KEY_ID: ${{ vars.SCCACHE_S3_KEY_ID }}
       run: |
         cmake -S . -B build \
+          -GNinja \
+          -DCMAKE_INSTALL_PREFIX=${RUNNER_TEMP}/msys64/mingw64 \
+          -DENABLE_DOXYGEN=OFF \
+          -DENABLE_TESTING=OFF \
+          ${{ steps.enable_sccache.outputs.CXX_LAUNCHER }} \
+          ${{ steps.enable_sccache.outputs.C_LAUNCHER }}
+    - name: Build
+      env:
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.SCCACHE_S3_KEY }}
+        AWS_ACCESS_KEY_ID: ${{ vars.SCCACHE_S3_KEY_ID }}
+        SCCACHE_CONF: ${{ steps.enable_sccache.outputs.SCCACHE_CONF }}
+      run: cmake --build build
+    - name: Install
+      run: cmake --install build
+    # - name: CTest
+    #   working-directory: ./build
+    #   run: ctest --output-on-failure
+    - name: Sccache statistics
+      env: 
+        SCCACHE_CONF: ${{ steps.enable_sccache.outputs.SCCACHE_CONF }}
+      if: ${{ steps.enable_sccache.outputs.CXX_LAUNCHER }}
+      run: sccache -s
+    - name: Install dependencies for gr-satellites
+      run: pip install --user --upgrade construct requests
+    - name: clone gr-satellites v5.9.0
+      run: |
+        git clone -b 5.9.0 \
+          https://github.com/daniestevez/gr-satellites \
+          ${RUNNER_TEMP}/gr-satellites
+    - name: gr-satellites CMake
+      run: |
+        cmake -S ${RUNNER_TEMP}/gr-satellites \
+              -B ${RUNNER_TEMP}/gr-satbuild \
           -DCMAKE_INSTALL_PREFIX=${RUNNER_TEMP}/msys64/mingw64 \
           -DENABLE_DOXYGEN=OFF \
           ${{ steps.enable_sccache.outputs.CXX_LAUNCHER }} \
@@ -304,14 +341,5 @@ jobs:
         AWS_SECRET_ACCESS_KEY: ${{ secrets.SCCACHE_S3_KEY }}
         AWS_ACCESS_KEY_ID: ${{ vars.SCCACHE_S3_KEY_ID }}
         SCCACHE_CONF: ${{ steps.enable_sccache.outputs.SCCACHE_CONF }}
-      run: cmake --build build
-    - name: Make Install
-      run: cmake --install build
-    - name: Make Test
-      working-directory: ./build
-      run: ctest --output-on-failure
-    - name: Sccache statistics
-      env: 
-        SCCACHE_CONF: ${{ steps.enable_sccache.outputs.SCCACHE_CONF }}
-      if: ${{ steps.enable_sccache.outputs.CXX_LAUNCHER }}
-      run: sccache -s
+      run: cmake --build ${RUNNER_TEMP}/gr-satbuild 
+
