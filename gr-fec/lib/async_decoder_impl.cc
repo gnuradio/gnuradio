@@ -107,7 +107,7 @@ void async_decoder_impl::decode(const pmt::pmt_t& msg)
     size_t nbits_out = 0;
     size_t nblocks = 1;
     bool variable_frame_size =
-        d_decoder->set_frame_size(std::lround(nbits_in * d_decoder->rate()) - diff);
+        d_decoder->set_frame_size(std::lround(nbits_in * d_decoder->rate()));
 
     // Check here if the frame size is larger than what we've
     // allocated for in the constructor.
