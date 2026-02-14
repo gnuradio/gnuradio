@@ -68,6 +68,7 @@ int burst_to_stream_impl::general_work(int noutput_items,
     int produced = 0;
 
     while (out < out_end) {
+
         if (d_remaining_items == 0) {
             // Try to fetch a new packet from the input
             if (consumed == ninput_items[0]) {
@@ -81,6 +82,20 @@ int burst_to_stream_impl::general_work(int noutput_items,
             const auto nitems = nitems_read(0) + consumed;
             std::vector<gr::tag_t> tags;
             get_tags_in_range(tags, 0, nitems, nitems + 1, d_len_tag_key);
+
+            // ─────────────────────────────────────────────────────────────
+            // WARN if length tags are observed again after packet processing
+            // (likely indicates placement after a rate-changing block)
+            // ─────────────────────────────────────────────────────────────
+            // Check for rate change warning only once per session
+            if (!d_warned_about_rate_change && produced > 0 && !tags.empty()) {
+                d_logger->warn("burst_to_stream detected repeated length tags after "
+                               "packet processing. This may indicate placement after "
+                               "a rate-changing block (e.g. resampler), which can cause "
+                               "packet duplication.");
+                d_warned_about_rate_change = true;
+            }
+
             if (tags.empty()) {
                 throw std::runtime_error(
                     "burst_to_stream_impl: expected packet length tag not found");
