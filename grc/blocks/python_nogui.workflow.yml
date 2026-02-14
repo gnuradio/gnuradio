@@ -6,6 +6,7 @@ generator_module: gnuradio.grc.workflows.python_nogui
 generator_class: PythonNoGuiGenerator
 generate_options: no_gui
 generate_options_label: No GUI
+is_executable: True
 parameters:
 -   id: run_options
     label: Run Options
