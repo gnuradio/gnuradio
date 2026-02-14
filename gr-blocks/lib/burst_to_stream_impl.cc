@@ -88,7 +88,7 @@ int burst_to_stream_impl::general_work(int noutput_items,
             // (likely indicates placement after a rate-changing block)
             // ─────────────────────────────────────────────────────────────
             // Check for rate change warning only once per session
-            if (!d_warned_about_rate_change && produced > 0) {
+            if (!d_warned_about_rate_change && produced > 0 && !tags.empty()) {
                 d_logger->warn("burst_to_stream detected repeated length tags after "
                                "packet processing. This may indicate placement after "
                                "a rate-changing block (e.g. resampler), which can cause "
