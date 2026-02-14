@@ -1,29 +1,29 @@
 options:
   parameters:
+    alias: ''
     author: ''
-    category: Custom
-    cmake_opt: ''
+    catch_exceptions: 'True'
     comment: ''
     copyright: ''
     description: ''
-    gen_cmake: 'On'
     gen_linking: dynamic
     generate_options: qt_gui
+    generator_class_name: PythonQtGuiGenerator
+    generator_module: gnuradio.grc.workflows.python_qt_gui
     hier_block_src_path: '.:'
     id: packet_loopback_hier
     max_nouts: '0'
     output_language: python
-    placement: (0,0)
     qt_qss_theme: ''
     realtime_scheduling: ''
     run: 'True'
     run_command: '{python} -u {filename}'
-    run_options: prompt
-    sizing_mode: fixed
     thread_safe_setters: ''
     title: ''
-    window_size: 2000,2000
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [8, 11]
     rotation: 0
     state: enabled
@@ -35,12 +35,17 @@ blocks:
     comment: ''
     const_points: digital.psk_2()[0]
     dims: '1'
+    normalization: digital.constellation.AMPLITUDE_NORMALIZATION
+    npwr: '1.0'
     precision: '8'
     rot_sym: '2'
     soft_dec_lut: '''auto'''
     sym_map: digital.psk_2()[1]
     type: calcdist
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [240, 11]
     rotation: 0
     state: enabled
@@ -50,12 +55,17 @@ blocks:
     comment: ''
     const_points: digital.psk_4()[0]
     dims: '1'
+    normalization: digital.constellation.AMPLITUDE_NORMALIZATION
+    npwr: '1.0'
     precision: '8'
     rot_sym: '4'
     soft_dec_lut: '''auto'''
     sym_map: digital.psk_4()[1]
     type: calcdist
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [560, 11]
     rotation: 0
     state: enabled
@@ -65,12 +75,17 @@ blocks:
     comment: ''
     const_points: digital.psk_2()[0]
     dims: '1'
+    normalization: digital.constellation.AMPLITUDE_NORMALIZATION
+    npwr: '1.0'
     precision: '8'
     rot_sym: '2'
     soft_dec_lut: '''auto'''
     sym_map: digital.psk_2()[1]
     type: calcdist
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [400, 11]
     rotation: 0
     state: disabled
@@ -81,7 +96,7 @@ blocks:
     gui_hint: ''
     label: Amplitude
     min_len: '200'
-    orient: Qt.Horizontal
+    orient: QtCore.Qt.Horizontal
     rangeType: float
     start: '0'
     step: '0.01'
@@ -89,6 +104,9 @@ blocks:
     value: '1.0'
     widget: counter_slider
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [72, 547]
     rotation: 0
     state: enabled
@@ -102,13 +120,16 @@ blocks:
     k: k
     mode: fec.CC_TERMINATED
     ndim: '0'
-    padding: 'False'
+    padding: 'True'
     polys: polys
     rate: rate
     state_end: '-1'
     state_start: '0'
     value: '"ok"'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1152, 635]
     rotation: 0
     state: enabled
@@ -122,6 +143,9 @@ blocks:
     ndim: '0'
     value: '"ok"'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [760, 539]
     rotation: 0
     state: disabled
@@ -137,6 +161,9 @@ blocks:
     rep: rep
     value: '"ok"'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [952, 555]
     rotation: 0
     state: disabled
@@ -150,6 +177,9 @@ blocks:
     ndim: '0'
     value: '"ok"'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1376, 539]
     rotation: 0
     state: disabled
@@ -165,6 +195,9 @@ blocks:
     rep: rep
     value: '"ok"'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1560, 555]
     rotation: 0
     state: enabled
@@ -174,6 +207,9 @@ blocks:
     comment: ''
     value: '0.22'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [152, 75]
     rotation: 0
     state: enabled
@@ -187,11 +223,14 @@ blocks:
     k: k
     mode: fec.CC_TERMINATED
     ndim: '0'
-    padding: 'False'
+    padding: 'True'
     polys: polys
     rate: rate
     state_start: '0'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1152, 459]
     rotation: 0
     state: enabled
@@ -204,6 +243,9 @@ blocks:
     framebits: '8000'
     ndim: '0'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [760, 459]
     rotation: 0
     state: disabled
@@ -217,6 +259,9 @@ blocks:
     ndim: '0'
     rep: rep
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [952, 459]
     rotation: 0
     state: disabled
@@ -229,6 +274,9 @@ blocks:
     framebits: '8000'
     ndim: '0'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1376, 459]
     rotation: 0
     state: disabled
@@ -242,6 +290,9 @@ blocks:
     ndim: '0'
     rep: rep
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1560, 459]
     rotation: 0
     state: enabled
@@ -252,7 +303,7 @@ blocks:
     gui_hint: 0,1,1,1
     label: Freq. Offset
     min_len: '200'
-    orient: Qt.Horizontal
+    orient: QtCore.Qt.Horizontal
     rangeType: float
     start: '-0.5'
     step: '0.0001'
@@ -260,6 +311,9 @@ blocks:
     value: '0'
     widget: counter_slider
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [984, 275]
     rotation: 0
     state: enabled
@@ -271,6 +325,9 @@ blocks:
     comment: ''
     threshold: '3'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [728, 14]
     rotation: 0
     state: disabled
@@ -281,6 +338,9 @@ blocks:
     value: digital.header_format_counter(digital.packet_utils.default_access_code,
       3, Const_PLD.bits_per_symbol())
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [728, 91]
     rotation: 0
     state: enabled
@@ -290,6 +350,9 @@ blocks:
     comment: ''
     value: '7'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1008, 675]
     rotation: 0
     state: enabled
@@ -299,6 +362,9 @@ blocks:
     comment: ''
     value: '32'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [80, 75]
     rotation: 0
     state: enabled
@@ -309,7 +375,7 @@ blocks:
     gui_hint: 0,0,1,1
     label: Noise Amp
     min_len: '200'
-    orient: Qt.Horizontal
+    orient: QtCore.Qt.Horizontal
     rangeType: float
     start: '0'
     step: '0.01'
@@ -317,6 +383,9 @@ blocks:
     value: '0.0'
     widget: counter_slider
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [872, 275]
     rotation: 0
     state: enabled
@@ -326,6 +395,9 @@ blocks:
     comment: ''
     value: '[109, 79]'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1056, 739]
     rotation: 0
     state: enabled
@@ -335,6 +407,9 @@ blocks:
     comment: ''
     value: '2'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1080, 675]
     rotation: 0
     state: enabled
@@ -344,6 +419,9 @@ blocks:
     comment: ''
     value: '3'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [984, 739]
     rotation: 0
     state: enabled
@@ -356,7 +434,11 @@ blocks:
     ntaps: 11*sps*nfilts
     samp_rate: nfilts*sps
     sym_rate: '1.0'
+    value: ''
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1080, 11]
     rotation: 0
     state: enabled
@@ -366,6 +448,9 @@ blocks:
     comment: ''
     value: '2'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [8, 75]
     rotation: 0
     state: enabled
@@ -376,7 +461,7 @@ blocks:
     gui_hint: 0,2,1,1
     label: Time Offset
     min_len: '200'
-    orient: Qt.Horizontal
+    orient: QtCore.Qt.Horizontal
     rangeType: float
     start: '0.99'
     step: '0.00001'
@@ -384,6 +469,9 @@ blocks:
     value: '1.0'
     widget: counter_slider
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1096, 275]
     rotation: 0
     state: enabled
@@ -396,7 +484,11 @@ blocks:
     ntaps: 5*sps*nfilts
     samp_rate: nfilts
     sym_rate: '1.0'
+    value: ''
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [944, 11]
     rotation: 0
     state: enabled
@@ -406,7 +498,12 @@ blocks:
     affinity: ''
     alias: ''
     comment: ''
+    en_uvec: 'True'
+    log_level: info
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [544, 321]
     rotation: 0
     state: enabled
@@ -421,6 +518,9 @@ blocks:
     msg: pmt.intern("TEST")
     period: '1000'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [32, 196.0]
     rotation: 0
     state: enabled
@@ -433,26 +533,14 @@ blocks:
     const: amp
     maxoutbuf: '0'
     minoutbuf: '0'
+    mode: vector
     type: complex
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [72, 499]
-    rotation: 0
-    state: enabled
-- name: pdu_random_pdu_0
-  id: pdu_random_pdu
-  parameters:
-    affinity: ''
-    alias: ''
-    comment: ''
-    length_modulo: '2'
-    mask: '0xFF'
-    maxoutbuf: '0'
-    maxsize: '200'
-    minoutbuf: '0'
-    minsize: '20'
-  states:
-    coordinate: [224, 180.0]
     rotation: 0
     state: enabled
 - name: chan_data
@@ -462,6 +550,9 @@ blocks:
     comment: ''
     stream_id: Chan Data
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1352, 155]
     rotation: 0
     state: enabled
@@ -480,6 +571,9 @@ blocks:
     seed: '0'
     taps: '1.0'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [960, 124.0]
     rotation: 0
     state: enabled
@@ -500,6 +594,9 @@ blocks:
     psf_taps: rx_rrc_taps
     sps: sps
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [232, 409]
     rotation: 0
     state: enabled
@@ -519,7 +616,29 @@ blocks:
     psf_taps: tx_rrc_taps
     sps: sps
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [496, 156.0]
+    rotation: 0
+    state: enabled
+- name: pdu_random_pdu_0
+  id: pdu_random_pdu
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    length_modulo: '2'
+    mask: '0xFF'
+    maxoutbuf: '0'
+    maxsize: '200'
+    minoutbuf: '0'
+    minsize: '20'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [224, 180.0]
     rotation: 0
     state: enabled
 - name: qtgui_const_sink_x_0
@@ -608,6 +727,9 @@ blocks:
     ymax: '2'
     ymin: '-2'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1352, 363]
     rotation: 0
     state: enabled
@@ -697,6 +819,9 @@ blocks:
     ymax: '2'
     ymin: '-2'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [544, 419]
     rotation: 0
     state: enabled
@@ -752,6 +877,7 @@ blocks:
     minoutbuf: '0'
     name: '""'
     nconnections: '1'
+    norm_window: 'False'
     showports: 'True'
     tr_chan: '0'
     tr_level: '0.0'
@@ -774,6 +900,9 @@ blocks:
     ymax: '10'
     ymin: '-140'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1352, 283]
     rotation: 0
     state: enabled
@@ -829,6 +958,7 @@ blocks:
     minoutbuf: '0'
     name: '""'
     nconnections: '1'
+    norm_window: 'False'
     showports: 'True'
     tr_chan: '0'
     tr_level: '0.0'
@@ -851,6 +981,9 @@ blocks:
     ymax: '10'
     ymin: '-140'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [544, 483]
     rotation: 0
     state: enabled
@@ -871,16 +1004,16 @@ blocks:
     alpha9: '1.0'
     autoscale: 'False'
     axislabels: 'True'
-    color1: '"blue"'
-    color10: '"blue"'
-    color2: '"red"'
-    color3: '"green"'
-    color4: '"black"'
-    color5: '"cyan"'
-    color6: '"magenta"'
-    color7: '"yellow"'
-    color8: '"dark red"'
-    color9: '"dark green"'
+    color1: blue
+    color10: dark blue
+    color2: red
+    color3: green
+    color4: black
+    color5: cyan
+    color6: magenta
+    color7: yellow
+    color8: dark red
+    color9: dark green
     comment: ''
     ctrlpanel: 'False'
     entags: 'True'
@@ -945,6 +1078,9 @@ blocks:
     ymin: '-2'
     yunit: '""'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1352, 203]
     rotation: 0
     state: enabled
@@ -965,16 +1101,16 @@ blocks:
     alpha9: '1.0'
     autoscale: 'False'
     axislabels: 'True'
-    color1: '"blue"'
-    color10: '"blue"'
-    color2: '"red"'
-    color3: '"green"'
-    color4: '"black"'
-    color5: '"cyan"'
-    color6: '"magenta"'
-    color7: '"yellow"'
-    color8: '"dark red"'
-    color9: '"dark green"'
+    color1: blue
+    color10: dark blue
+    color2: red
+    color3: green
+    color4: black
+    color5: cyan
+    color6: magenta
+    color7: yellow
+    color8: dark red
+    color9: dark green
     comment: ''
     ctrlpanel: 'False'
     entags: 'True'
@@ -1039,6 +1175,9 @@ blocks:
     ymin: '-150'
     yunit: '""'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [544, 643]
     rotation: 0
     state: enabled
@@ -1059,16 +1198,16 @@ blocks:
     alpha9: '1.0'
     autoscale: 'False'
     axislabels: 'True'
-    color1: '"blue"'
-    color10: '"blue"'
-    color2: '"red"'
-    color3: '"green"'
-    color4: '"black"'
-    color5: '"cyan"'
-    color6: '"magenta"'
-    color7: '"yellow"'
-    color8: '"dark red"'
-    color9: '"dark green"'
+    color1: blue
+    color10: dark blue
+    color2: red
+    color3: green
+    color4: black
+    color5: cyan
+    color6: magenta
+    color7: yellow
+    color8: dark red
+    color9: dark green
     comment: ''
     ctrlpanel: 'False'
     entags: 'True'
@@ -1133,6 +1272,9 @@ blocks:
     ymin: '-2'
     yunit: '""'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [544, 563]
     rotation: 0
     state: enabled
@@ -1164,6 +1306,9 @@ blocks:
     label9: Tab 9
     num_tabs: '3'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1360, 11]
     rotation: 0
     state: enabled
@@ -1195,6 +1340,9 @@ blocks:
     label9: Tab 9
     num_tabs: '3'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1224, 11]
     rotation: 0
     state: enabled
@@ -1205,6 +1353,9 @@ blocks:
     comment: ''
     stream_id: Chan Data
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [24, 427]
     rotation: 0
     state: enabled
@@ -1212,7 +1363,6 @@ blocks:
 connections:
 - [blocks_message_strobe_0, strobe, pdu_random_pdu_0, generate]
 - [blocks_multiply_const_vxx_0, '0', packet_rx_0, '0']
-- [pdu_random_pdu_0, pdus, packet_tx_0, in]
 - [channels_channel_model_0, '0', chan_data, '0']
 - [channels_channel_model_0, '0', qtgui_const_sink_x_0, '0']
 - [channels_channel_model_0, '0', qtgui_freq_sink_x_0, '0']
@@ -1223,7 +1373,9 @@ connections:
 - [packet_rx_0, '1', qtgui_time_sink_x_1_0_0_1, '0']
 - [packet_rx_0, pkt out, blocks_message_debug_0_0_0, print_pdu]
 - [packet_tx_0, '0', channels_channel_model_0, '0']
+- [pdu_random_pdu_0, pdus, packet_tx_0, in]
 - [virtual_source_0, '0', blocks_multiply_const_vxx_0, '0']
 
 metadata:
   file_format: 1
+  grc_version: g205e1fdf1
