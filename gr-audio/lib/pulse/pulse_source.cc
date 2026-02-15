@@ -247,20 +247,21 @@ bool pulse_source::check_topology(int ninputs, int noutputs)
                     d_ba.fragsize);
 
     pa_proplist* pl = pa_proplist_new();
-    for (const auto& [k, v] : d_properties) {
-        pa_proplist_sets(pl, k.c_str(), v.c_str());
-    }
-    if (d_properties.find("media.name") == d_properties.end())
-        pa_proplist_sets(pl, PA_PROP_MEDIA_NAME, "GNU Radio - Record");
-    if (d_properties.find("application.name") == d_properties.end())
-        pa_proplist_sets(pl, PA_PROP_APPLICATION_NAME, "GNU Radio");
+
+    pa_proplist_sets(pl, PA_PROP_MEDIA_NAME, "GNU Radio - Capture");
+    pa_proplist_sets(pl, PA_PROP_APPLICATION_NAME, "GNU Radio");
     pa_proplist_sets(
         pl, PA_PROP_APPLICATION_PROCESS_ID, std::to_string(getpid()).c_str());
 
+    for (const auto& [k, v] : d_properties) {
+        pa_proplist_sets(pl, k.c_str(), v.c_str());
+    }
+
+    const char* final_name = pa_proplist_gets(pl, PA_PROP_MEDIA_NAME);
+
     pa_threaded_mainloop_lock(d_mainloop);
 
-    d_stream =
-        pa_stream_new_with_proplist(d_context, "GNU Radio - Record", &d_ss, nullptr, pl);
+    d_stream = pa_stream_new_with_proplist(d_context, final_name, &d_ss, nullptr, pl);
     pa_proplist_free(pl);
 
     if (!d_stream) {
