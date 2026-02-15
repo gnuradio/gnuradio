@@ -13,8 +13,8 @@
 /* If manual edits are made, the following tags should be modified accordingly.    */
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
-/* BINDTOOL_HEADER_FILE(source.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(25caec545d837656eb133c4bdccb7521)                     */
+/* BINDTOOL_HEADER_FILE(source.h)                                        	   */
+/* BINDTOOL_HEADER_FILE_HASH(32f9d1874f8b9602da29f121dee68c61)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -43,6 +43,7 @@ void bind_source(py::module& m)
              py::arg("sampling_rate"),
              py::arg("device_name") = "",
              py::arg("ok_to_block") = true,
+             py::arg("properties") = std::map<std::string, std::string>{},
              D(source, make))
 
 
