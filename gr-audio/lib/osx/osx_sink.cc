@@ -23,8 +23,10 @@
 namespace gr {
 namespace audio {
 
-sink::sptr
-osx_sink_fcn(int sampling_rate, const std::string& device_name, bool ok_to_block, const std::map<std::string, std::string>& /*properties*/)
+sink::sptr osx_sink_fcn(int sampling_rate,
+                        const std::string& device_name,
+                        bool ok_to_block,
+                        const std::map<std::string, std::string>& /*properties*/)
 {
     return sink::sptr(new osx_sink(sampling_rate, device_name, ok_to_block));
 }

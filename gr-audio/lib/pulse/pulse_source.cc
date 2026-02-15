@@ -1,7 +1,6 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2004-2026 Free Software Foundation, Inc.
- * Copyright 2026 Contributors (low-latency, robust fixes, dynamic properties)
  *
  * This file is part of GNU Radio
  *
@@ -11,36 +10,50 @@
 
 #include "pulse_source.h"
 #include <gnuradio/prefs.h>
-#include <stdexcept>
-#include <cstring>
 #include <unistd.h>
-#include <chrono>
-#include <thread>
+#include <algorithm>
+#include <stdexcept>
 
 // ────────────────────────────────────────────────
 // Helpers for formatting PulseAudio state enums
 // ────────────────────────────────────────────────
-static const char* pa_context_state_str(pa_context_state_t s) {
+static const char* pa_context_state_str(pa_context_state_t s)
+{
     switch (s) {
-        case PA_CONTEXT_UNCONNECTED:  return "UNCONNECTED";
-        case PA_CONTEXT_CONNECTING:   return "CONNECTING";
-        case PA_CONTEXT_AUTHORIZING:  return "AUTHORIZING";
-        case PA_CONTEXT_SETTING_NAME: return "SETTING_NAME";
-        case PA_CONTEXT_FAILED:       return "FAILED";
-        case PA_CONTEXT_TERMINATED:   return "TERMINATED";
-        case PA_CONTEXT_READY:        return "READY";
-        default:                      return "???";
+    case PA_CONTEXT_UNCONNECTED:
+        return "UNCONNECTED";
+    case PA_CONTEXT_CONNECTING:
+        return "CONNECTING";
+    case PA_CONTEXT_AUTHORIZING:
+        return "AUTHORIZING";
+    case PA_CONTEXT_SETTING_NAME:
+        return "SETTING_NAME";
+    case PA_CONTEXT_FAILED:
+        return "FAILED";
+    case PA_CONTEXT_TERMINATED:
+        return "TERMINATED";
+    case PA_CONTEXT_READY:
+        return "READY";
+    default:
+        return "???";
     }
 }
 
-static const char* pa_stream_state_str(pa_stream_state_t s) {
+static const char* pa_stream_state_str(pa_stream_state_t s)
+{
     switch (s) {
-        case PA_STREAM_UNCONNECTED: return "UNCONNECTED";
-        case PA_STREAM_CREATING:    return "CREATING";
-        case PA_STREAM_READY:       return "READY";
-        case PA_STREAM_FAILED:      return "FAILED";
-        case PA_STREAM_TERMINATED:  return "TERMINATED";
-        default:                    return "???";
+    case PA_STREAM_UNCONNECTED:
+        return "UNCONNECTED";
+    case PA_STREAM_CREATING:
+        return "CREATING";
+    case PA_STREAM_READY:
+        return "READY";
+    case PA_STREAM_FAILED:
+        return "FAILED";
+    case PA_STREAM_TERMINATED:
+        return "TERMINATED";
+    default:
+        return "???";
     }
 }
 
@@ -52,30 +65,29 @@ source::sptr pulse_source_fcn(int sampling_rate,
                               bool ok_to_block,
                               const std::map<std::string, std::string>& properties)
 {
-    // early debug removed - only constructor logs will appear
     return pulse_source::make(sampling_rate, device_name, ok_to_block, properties);
 }
 
-pulse_source::sptr pulse_source::make(int sampling_rate,
-                                      const std::string& device_name,
-                                      bool ok_to_block,
-                                      const std::map<std::string, std::string>& properties)
+pulse_source::sptr
+pulse_source::make(int sampling_rate,
+                   const std::string& device_name,
+                   bool ok_to_block,
+                   const std::map<std::string, std::string>& properties)
 {
-    // early debug removed
-    return gnuradio::make_block_sptr<pulse_source>(sampling_rate, device_name, ok_to_block, properties);
+    return gnuradio::make_block_sptr<pulse_source>(
+        sampling_rate, device_name, ok_to_block, properties);
 }
 
 static std::string default_device_name()
 {
-    std::string dev = prefs::singleton()->get_string("audio_pulse", "default_input_device", "");
-    // early debug removed
+    std::string dev =
+        prefs::singleton()->get_string("audio_pulse", "default_input_device", "");
     return dev;
 }
 
 static double default_buffer_time()
 {
     double t = prefs::singleton()->get_double("audio_pulse", "buffer_time", 0.020);
-    // early debug removed
     return std::max(0.005, t);
 }
 
@@ -93,34 +105,27 @@ pulse_source::pulse_source(int sampling_rate,
       d_mainloop(nullptr),
       d_context(nullptr),
       d_stream(nullptr),
-      d_chunk_size(static_cast<size_t>(sampling_rate * 0.005)),
-      d_nchan(1),
-      d_readable(false)
+      d_nchan(1)
 {
-    d_logger->info("created - rate={}, device='{}'",
-                   d_sampling_rate, d_device_name);
 
-    set_output_multiple(static_cast<int>(d_chunk_size));
-    d_logger->debug("output_multiple set to {} samples", d_chunk_size);
+    d_logger->debug("created - rate={}, device='{}', ok_to_block={}",
+                    d_sampling_rate,
+                    d_device_name,
+                    d_ok_to_block);
 
-    d_ss.format   = PA_SAMPLE_FLOAT32NE;
-    d_ss.rate     = d_sampling_rate;
-    d_ss.channels = 1;
+    d_ss.format = PA_SAMPLE_FLOAT32NE;
+    d_ss.rate = d_sampling_rate;
 
-    double buf_time = default_buffer_time();
-    d_logger->info("target buffer time: {} seconds", buf_time);
-
+    // Initialize buffer attributes to "default/ignore" state
     d_ba.maxlength = (uint32_t)-1;
-    d_ba.tlength   = static_cast<uint32_t>(d_sampling_rate * buf_time * sizeof(float) * d_nchan);
-    d_ba.prebuf    = 1;
-    d_ba.minreq    = (uint32_t)-1;
-    d_ba.fragsize  = (uint32_t)-1;
-
-    d_logger->debug("buffer attributes → tlength = {} bytes", d_ba.tlength);
+    d_ba.tlength = (uint32_t)-1;
+    d_ba.prebuf = (uint32_t)-1;
+    d_ba.minreq = (uint32_t)-1;
+    d_ba.fragsize = (uint32_t)-1;
 
     init_pa();
 
-    d_logger->info("construction completed");
+    d_logger->debug("construction completed");
 }
 
 pulse_source::~pulse_source()
@@ -198,7 +203,7 @@ void pulse_source::init_pa()
     d_logger->debug("waiting for context to be ready");
     while (true) {
         pa_context_state_t state = pa_context_get_state(d_context);
-        d_debug_logger->debug("context state: {}", pa_context_state_str(state));
+        d_logger->debug("context state: {}", pa_context_state_str(state));
 
         if (state == PA_CONTEXT_READY) {
             break;
@@ -229,13 +234,17 @@ bool pulse_source::check_topology(int ninputs, int noutputs)
     d_ss.channels = d_nchan;
 
     double buf_time = default_buffer_time();
-    d_ba.tlength   = static_cast<uint32_t>(d_sampling_rate * buf_time * sizeof(float) * d_nchan);
-    d_ba.fragsize  = static_cast<uint32_t>(d_sampling_rate * 0.005 * sizeof(float) * d_nchan);
-    d_ba.prebuf    = d_ba.fragsize;
-    d_ba.minreq    = (uint32_t)-1;
+    d_ba.tlength =
+        static_cast<uint32_t>(d_sampling_rate * buf_time * sizeof(float) * d_nchan);
+    d_ba.fragsize =
+        static_cast<uint32_t>(d_sampling_rate * 0.005 * sizeof(float) * d_nchan);
+    d_ba.prebuf = d_ba.fragsize;
+    d_ba.minreq = (uint32_t)-1;
 
-    d_logger->info("topology: {} channels, tlength={} B, fragsize={} B",
-                   d_nchan, d_ba.tlength, d_ba.fragsize);
+    d_logger->debug("topology: {} channels, tlength={} B, fragsize={} B",
+                    d_nchan,
+                    d_ba.tlength,
+                    d_ba.fragsize);
 
     pa_proplist* pl = pa_proplist_new();
     for (const auto& [k, v] : d_properties) {
@@ -245,11 +254,13 @@ bool pulse_source::check_topology(int ninputs, int noutputs)
         pa_proplist_sets(pl, PA_PROP_MEDIA_NAME, "GNU Radio - Record");
     if (d_properties.find("application.name") == d_properties.end())
         pa_proplist_sets(pl, PA_PROP_APPLICATION_NAME, "GNU Radio");
-    pa_proplist_sets(pl, PA_PROP_APPLICATION_PROCESS_ID, std::to_string(getpid()).c_str());
+    pa_proplist_sets(
+        pl, PA_PROP_APPLICATION_PROCESS_ID, std::to_string(getpid()).c_str());
 
     pa_threaded_mainloop_lock(d_mainloop);
 
-    d_stream = pa_stream_new_with_proplist(d_context, "GNU Radio - Record", &d_ss, nullptr, pl);
+    d_stream =
+        pa_stream_new_with_proplist(d_context, "GNU Radio - Record", &d_ss, nullptr, pl);
     pa_proplist_free(pl);
 
     if (!d_stream) {
@@ -265,13 +276,12 @@ bool pulse_source::check_topology(int ninputs, int noutputs)
     pa_stream_set_overflow_callback(d_stream, stream_overflow_cb, this);
 
     pa_stream_flags_t flags = static_cast<pa_stream_flags_t>(
-        PA_STREAM_ADJUST_LATENCY |
-        PA_STREAM_AUTO_TIMING_UPDATE |
-        PA_STREAM_INTERPOLATE_TIMING |
-        PA_STREAM_NOT_MONOTONIC);
+        PA_STREAM_ADJUST_LATENCY | PA_STREAM_AUTO_TIMING_UPDATE |
+        PA_STREAM_INTERPOLATE_TIMING);
 
     if (!d_ok_to_block) {
-        flags = static_cast<pa_stream_flags_t>(flags | PA_STREAM_DONT_INHIBIT_AUTO_SUSPEND);
+        flags =
+            static_cast<pa_stream_flags_t>(flags | PA_STREAM_DONT_INHIBIT_AUTO_SUSPEND);
     }
 
     const char* dev_str = d_device_name.empty() ? nullptr : d_device_name.c_str();
@@ -285,9 +295,10 @@ bool pulse_source::check_topology(int ninputs, int noutputs)
     d_logger->debug("waiting for stream state to be ready");
     while (true) {
         pa_stream_state_t state = pa_stream_get_state(d_stream);
-        d_debug_logger->debug("stream state: {}", pa_stream_state_str(state));
+        d_logger->debug("stream state: {}", pa_stream_state_str(state));
 
-        if (state == PA_STREAM_READY) break;
+        if (state == PA_STREAM_READY)
+            break;
 
         if (state == PA_STREAM_FAILED || state == PA_STREAM_TERMINATED) {
             int err = pa_context_errno(d_context);
@@ -300,7 +311,7 @@ bool pulse_source::check_topology(int ninputs, int noutputs)
 
     pa_threaded_mainloop_unlock(d_mainloop);
 
-    d_logger->info("check_topology succeeded - stream is READY");
+    d_logger->debug("check_topology succeeded - stream is READY");
     return true;
 }
 
@@ -308,94 +319,108 @@ int pulse_source::work(int noutput_items,
                        gr_vector_const_void_star& input_items,
                        gr_vector_void_star& output_items)
 {
-    if (!d_stream) {
-        d_logger->warn("work() called but no stream");
+    if (!d_stream)
         return 0;
-    }
-
-    static bool warned_once = false;
-    pa_stream_state_t state = pa_stream_get_state(d_stream);
-    if (state != PA_STREAM_READY) {
-        if (!warned_once) {
-            d_logger->warn("stream not yet ready (state={}). ", pa_stream_state_str(state));
-            warned_once = true;
-        }
-
-        float** out = reinterpret_cast<float**>(output_items.data());
-        for (int i = 0; i < noutput_items; ++i) {
-            for (unsigned int chan = 0; chan < d_nchan; ++chan) {
-                out[chan][i] = 0.0f;
-            }
-        }
-        return noutput_items;
-    }
 
     float** out = reinterpret_cast<float**>(output_items.data());
     int produced = 0;
 
     pa_threaded_mainloop_lock(d_mainloop);
 
-    while (produced < noutput_items) {
-        size_t rem   = noutput_items - produced;
-        size_t chunk = std::min(d_chunk_size, rem);
+    // --- CONSUME RESIDUAL DATA FIRST ---
+    if (!d_residual_samples.empty()) {
+        size_t samples_in_res = (d_residual_samples.size() - d_residual_offset) / d_nchan;
+        size_t to_copy = std::min((size_t)(noutput_items - produced), samples_in_res);
 
-        if (!d_readable) {
-            while (!d_readable && pa_stream_get_state(d_stream) == PA_STREAM_READY) {
-                pa_threaded_mainloop_wait(d_mainloop);
-            }
-
-            if (pa_stream_get_state(d_stream) != PA_STREAM_READY) {
-                d_logger->warn("stream state changed while waiting for readable data");
-                break;
+        for (size_t i = 0; i < to_copy; ++i) {
+            for (unsigned int chan = 0; chan < d_nchan; ++chan) {
+                out[chan][produced + i] =
+                    d_residual_samples[d_residual_offset + i * d_nchan + chan];
             }
         }
 
-        size_t nbytes = 0;
+        produced += to_copy;
+        d_residual_offset += to_copy * d_nchan;
+
+        // If we used it all up, clear the vector to reset state
+        if (d_residual_offset >= d_residual_samples.size()) {
+            d_residual_samples.clear();
+            d_residual_offset = 0;
+        }
+    }
+
+    // --- PEEK NEW PULSE DATA ---
+    while (produced < noutput_items) {
+        if (pa_stream_readable_size(d_stream) == 0) {
+            if (d_ok_to_block) {
+                while (pa_stream_readable_size(d_stream) == 0 &&
+                       pa_stream_get_state(d_stream) == PA_STREAM_READY) {
+                    pa_threaded_mainloop_wait(d_mainloop);
+                }
+            } else {
+                break; // No data ready, exit loop for this work call
+            }
+        }
+
+        // Safety check if state changed during wait
+        if (pa_stream_get_state(d_stream) != PA_STREAM_READY)
+            break;
+
         const void* data = nullptr;
+        size_t nbytes = 0;
         if (pa_stream_peek(d_stream, &data, &nbytes) < 0) {
             d_logger->error("pa_stream_peek failed");
             break;
         }
 
         if (nbytes == 0) {
-            d_readable = false;
+            pa_stream_drop(d_stream);
             continue;
         }
 
         size_t samples_available = nbytes / (sizeof(float) * d_nchan);
-        size_t samples_to_process = std::min(chunk, samples_available);
+        size_t space_left = noutput_items - produced;
+        size_t to_process = std::min(space_left, samples_available);
 
-        if (data == nullptr) {
-            // hole → silence
-            for (size_t i = 0; i < samples_to_process; ++i) {
+        if (data == nullptr) { // Handle "holes" (timing gaps)
+            for (size_t i = 0; i < to_process; ++i) {
                 for (unsigned int chan = 0; chan < d_nchan; ++chan) {
                     out[chan][produced + i] = 0.0f;
                 }
             }
         } else {
             const float* src = static_cast<const float*>(data);
-            for (size_t i = 0; i < samples_to_process; ++i) {
+
+            // Copy what we can into the current output buffer
+            for (size_t i = 0; i < to_process; ++i) {
                 for (unsigned int chan = 0; chan < d_nchan; ++chan) {
                     out[chan][produced + i] = src[i * d_nchan + chan];
                 }
             }
+
+            // --- BUFFER THE OVERFLOW ---
+            // If the fragment was larger than the remaining space, save the rest
+            if (to_process < samples_available) {
+                size_t remaining_samples = (samples_available - to_process) * d_nchan;
+                size_t start_index = to_process * d_nchan;
+
+                d_residual_samples.assign(src + start_index,
+                                          src + start_index + remaining_samples);
+                d_residual_offset = 0;
+            }
         }
 
-        if (pa_stream_drop(d_stream) < 0) {
-            d_logger->error("pa_stream_drop failed");
-        }
+        // Now we can drop the entire fragment because any remainder is safely in
+        // d_residual_samples
+        pa_stream_drop(d_stream);
+        produced += to_process;
 
-        produced += samples_to_process;
-
-        if (nbytes > samples_to_process * d_nchan * sizeof(float)) {
-            d_readable = true;
-        } else {
-            d_readable = false;
-        }
+        // If we filled the residual buffer, we have filled noutput_items; stop looping.
+        if (!d_residual_samples.empty())
+            break;
     }
 
     pa_threaded_mainloop_unlock(d_mainloop);
-
     return produced;
 }
 
@@ -422,8 +447,6 @@ void pulse_source::stream_state_cb(pa_stream* s, void* u)
 void pulse_source::stream_read_cb(pa_stream* /*s*/, size_t nbytes, void* u)
 {
     auto* self = static_cast<pulse_source*>(u);
-    self->d_readable = true;
-    self->d_debug_logger->debug("stream_read_cb - nbytes = {}", nbytes);
     pa_threaded_mainloop_signal(self->d_mainloop, 0);
 }
 

@@ -1,7 +1,6 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2004-2026 Free Software Foundation, Inc.
- * Copyright 2026 Contributors (low-latency, robust fixes, dynamic properties)
  *
  * This file is part of GNU Radio
  *
@@ -14,24 +13,13 @@
 
 #include <gnuradio/audio/sink.h>
 #include <gnuradio/logger.h>
-#include <pulse/thread-mainloop.h>
-#include <pulse/context.h>
-#include <pulse/stream.h>
-#include <pulse/sample.h>
-#include <pulse/error.h>
-#include <string>
+#include <pulse/pulseaudio.h>
 #include <map>
-#include <vector>
-#include <mutex>
-#include <condition_variable>
+#include <string>
 
 namespace gr {
 namespace audio {
 
-/*!
- * \brief PulseAudio sink using full threaded API (low-latency, robust)
- * \ingroup audio_blk
- */
 class pulse_sink : public sink
 {
 public:
@@ -64,8 +52,6 @@ private:
     static void stream_write_cb(pa_stream* s, size_t length, void* userdata);
     static void stream_underflow_cb(pa_stream* s, void* userdata);
 
-    void output_error(const std::string& msg, int error);
-
     int d_sampling_rate;
     std::string d_device_name;
     bool d_ok_to_block;
@@ -78,13 +64,7 @@ private:
     pa_sample_spec d_ss;
     pa_buffer_attr d_ba;
 
-    size_t d_chunk_size;
     unsigned int d_nchan;
-
-    std::vector<float> d_buffer;  // for interleaving channels
-    bool d_writable;
-    std::mutex d_mutex;
-    std::condition_variable d_cond;
 };
 
 } // namespace audio

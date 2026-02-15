@@ -1,7 +1,6 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2004-2026 Free Software Foundation, Inc.
- * Copyright 2026 Contributors (low-latency, robust fixes, dynamic properties)
  *
  * This file is part of GNU Radio
  *
@@ -11,37 +10,50 @@
 
 #include "pulse_sink.h"
 #include <gnuradio/prefs.h>
-#include <stdexcept>
-#include <cstring>
-#include <iostream>
 #include <unistd.h>
-#include <chrono>
-#include <thread>
+#include <algorithm>
+#include <stdexcept>
 
 // ────────────────────────────────────────────────
 // Helpers for formatting PulseAudio state enums
 // ────────────────────────────────────────────────
-static const char* pa_context_state_str(pa_context_state_t s) {
+static const char* pa_context_state_str(pa_context_state_t s)
+{
     switch (s) {
-        case PA_CONTEXT_UNCONNECTED:  return "UNCONNECTED";
-        case PA_CONTEXT_CONNECTING:   return "CONNECTING";
-        case PA_CONTEXT_AUTHORIZING:  return "AUTHORIZING";
-        case PA_CONTEXT_SETTING_NAME: return "SETTING_NAME";
-        case PA_CONTEXT_FAILED:       return "FAILED";
-        case PA_CONTEXT_TERMINATED:   return "TERMINATED";
-        case PA_CONTEXT_READY:        return "READY";
-        default:                      return "???";
+    case PA_CONTEXT_UNCONNECTED:
+        return "UNCONNECTED";
+    case PA_CONTEXT_CONNECTING:
+        return "CONNECTING";
+    case PA_CONTEXT_AUTHORIZING:
+        return "AUTHORIZING";
+    case PA_CONTEXT_SETTING_NAME:
+        return "SETTING_NAME";
+    case PA_CONTEXT_FAILED:
+        return "FAILED";
+    case PA_CONTEXT_TERMINATED:
+        return "TERMINATED";
+    case PA_CONTEXT_READY:
+        return "READY";
+    default:
+        return "???";
     }
 }
 
-static const char* pa_stream_state_str(pa_stream_state_t s) {
+static const char* pa_stream_state_str(pa_stream_state_t s)
+{
     switch (s) {
-        case PA_STREAM_UNCONNECTED: return "UNCONNECTED";
-        case PA_STREAM_CREATING:    return "CREATING";
-        case PA_STREAM_READY:       return "READY";
-        case PA_STREAM_FAILED:      return "FAILED";
-        case PA_STREAM_TERMINATED:  return "TERMINATED";
-        default:                    return "???";
+    case PA_STREAM_UNCONNECTED:
+        return "UNCONNECTED";
+    case PA_STREAM_CREATING:
+        return "CREATING";
+    case PA_STREAM_READY:
+        return "READY";
+    case PA_STREAM_FAILED:
+        return "FAILED";
+    case PA_STREAM_TERMINATED:
+        return "TERMINATED";
+    default:
+        return "???";
     }
 }
 
@@ -61,12 +73,14 @@ pulse_sink::sptr pulse_sink::make(int sampling_rate,
                                   bool ok_to_block,
                                   const std::map<std::string, std::string>& properties)
 {
-    return gnuradio::make_block_sptr<pulse_sink>(sampling_rate, device_name, ok_to_block, properties);
+    return gnuradio::make_block_sptr<pulse_sink>(
+        sampling_rate, device_name, ok_to_block, properties);
 }
 
 static std::string default_device_name()
 {
-    std::string dev = prefs::singleton()->get_string("audio_pulse", "default_output_device", "");
+    std::string dev =
+        prefs::singleton()->get_string("audio_pulse", "default_output_device", "");
     return dev;
 }
 
@@ -90,33 +104,31 @@ pulse_sink::pulse_sink(int sampling_rate,
       d_mainloop(nullptr),
       d_context(nullptr),
       d_stream(nullptr),
-      d_chunk_size(static_cast<size_t>(sampling_rate * 0.005)),
       d_nchan(1)
 {
-    d_logger->info("created - rate={}, device='{}', ok_to_block={}",
-                   d_sampling_rate, d_device_name, d_ok_to_block);
+    d_logger->debug("created - rate={}, device='{}', ok_to_block={}",
+                    d_sampling_rate,
+                    d_device_name,
+                    d_ok_to_block);
 
-    set_output_multiple(static_cast<int>(d_chunk_size));
-    d_logger->debug("output_multiple set to {} samples", d_chunk_size);
-
-    d_ss.format   = PA_SAMPLE_FLOAT32NE;
-    d_ss.rate     = d_sampling_rate;
-    d_ss.channels = 1;
+    d_ss.format = PA_SAMPLE_FLOAT32NE;
+    d_ss.rate = d_sampling_rate;
 
     double buf_time = default_buffer_time();
-    d_logger->info("target buffer time: {} seconds", buf_time);
+    d_logger->debug("target buffer time: {} seconds", buf_time);
 
+    // Initialize buffer attributes to "default/ignore" state
     d_ba.maxlength = (uint32_t)-1;
-    d_ba.tlength   = static_cast<uint32_t>(d_sampling_rate * buf_time * sizeof(float) * d_nchan);
-    d_ba.prebuf    = 1;
-    d_ba.minreq    = (uint32_t)-1;
-    d_ba.fragsize  = (uint32_t)-1;
+    d_ba.tlength = (uint32_t)-1;
+    d_ba.prebuf = (uint32_t)-1;
+    d_ba.minreq = (uint32_t)-1;
+    d_ba.fragsize = (uint32_t)-1;
 
     d_logger->debug("buffer attributes → tlength = {} bytes", d_ba.tlength);
 
     init_pa();
 
-    d_logger->info("construction completed");
+    d_logger->debug("construction completed");
 }
 
 pulse_sink::~pulse_sink()
@@ -191,10 +203,10 @@ void pulse_sink::init_pa()
         throw std::runtime_error("context connect failed");
     }
 
-    d_logger->debug("waiting for context to become ready...");
+    d_logger->debug("waiting for context to become ready");
     while (true) {
         pa_context_state_t state = pa_context_get_state(d_context);
-        d_debug_logger->debug("context state: {}", pa_context_state_str(state));
+        d_logger->debug("context state: {}", pa_context_state_str(state));
 
         if (state == PA_CONTEXT_READY) {
             break;
@@ -225,14 +237,17 @@ bool pulse_sink::check_topology(int ninputs, int noutputs)
     d_ss.channels = d_nchan;
 
     double buf_time = default_buffer_time();
-    d_ba.tlength = static_cast<uint32_t>(d_sampling_rate * buf_time * sizeof(float) * d_nchan);
-    d_ba.minreq  = static_cast<uint32_t>(d_sampling_rate * 0.005 * sizeof(float) * d_nchan);
-    d_ba.prebuf  = d_ba.minreq;
+    d_ba.tlength =
+        static_cast<uint32_t>(d_sampling_rate * buf_time * sizeof(float) * d_nchan);
+    d_ba.minreq =
+        static_cast<uint32_t>(d_sampling_rate * 0.005 * sizeof(float) * d_nchan);
+    d_ba.prebuf = d_ba.minreq;
 
-    d_logger->info("topology: {} channels, tlength={} B, minreq={} B",
-                   d_nchan, d_ba.tlength, d_ba.minreq);
+    d_logger->debug("topology: {} channels, tlength={} B, minreq={} B",
+                    d_nchan,
+                    d_ba.tlength,
+                    d_ba.minreq);
 
-    d_buffer.resize(d_chunk_size * d_nchan);
 
     pa_proplist* pl = pa_proplist_new();
     for (const auto& [k, v] : d_properties) {
@@ -242,11 +257,13 @@ bool pulse_sink::check_topology(int ninputs, int noutputs)
         pa_proplist_sets(pl, PA_PROP_MEDIA_NAME, "GNU Radio - Playback");
     if (d_properties.find("application.name") == d_properties.end())
         pa_proplist_sets(pl, PA_PROP_APPLICATION_NAME, "GNU Radio");
-    pa_proplist_sets(pl, PA_PROP_APPLICATION_PROCESS_ID, std::to_string(getpid()).c_str());
+    pa_proplist_sets(
+        pl, PA_PROP_APPLICATION_PROCESS_ID, std::to_string(getpid()).c_str());
 
     pa_threaded_mainloop_lock(d_mainloop);
 
-    d_stream = pa_stream_new_with_proplist(d_context, "GNU Radio - Playback", &d_ss, nullptr, pl);
+    d_stream = pa_stream_new_with_proplist(
+        d_context, "GNU Radio - Playback", &d_ss, nullptr, pl);
     pa_proplist_free(pl);
 
     if (!d_stream) {
@@ -261,17 +278,17 @@ bool pulse_sink::check_topology(int ninputs, int noutputs)
     pa_stream_set_underflow_callback(d_stream, stream_underflow_cb, this);
 
     pa_stream_flags_t flags = static_cast<pa_stream_flags_t>(
-        PA_STREAM_ADJUST_LATENCY |
-        PA_STREAM_AUTO_TIMING_UPDATE |
-        PA_STREAM_INTERPOLATE_TIMING |
-        PA_STREAM_NOT_MONOTONIC);
+        PA_STREAM_ADJUST_LATENCY | PA_STREAM_AUTO_TIMING_UPDATE |
+        PA_STREAM_INTERPOLATE_TIMING);
 
     if (!d_ok_to_block) {
-        flags = static_cast<pa_stream_flags_t>(flags | PA_STREAM_DONT_INHIBIT_AUTO_SUSPEND);
+        flags =
+            static_cast<pa_stream_flags_t>(flags | PA_STREAM_DONT_INHIBIT_AUTO_SUSPEND);
     }
 
     const char* dev_str = d_device_name.empty() ? nullptr : d_device_name.c_str();
-    if (pa_stream_connect_playback(d_stream, dev_str, &d_ba, flags, nullptr, nullptr) < 0) {
+    if (pa_stream_connect_playback(d_stream, dev_str, &d_ba, flags, nullptr, nullptr) <
+        0) {
         int err = pa_context_errno(d_context);
         d_logger->error("pa_stream_connect_playback failed: {}", pa_strerror(err));
         pa_threaded_mainloop_unlock(d_mainloop);
@@ -281,9 +298,10 @@ bool pulse_sink::check_topology(int ninputs, int noutputs)
     d_logger->debug("waiting for stream state to be ready");
     while (true) {
         pa_stream_state_t state = pa_stream_get_state(d_stream);
-        d_debug_logger->debug("stream state: {}", pa_stream_state_str(state));
+        d_logger->debug("stream state: {}", pa_stream_state_str(state));
 
-        if (state == PA_STREAM_READY) break;
+        if (state == PA_STREAM_READY)
+            break;
 
         if (state == PA_STREAM_FAILED || state == PA_STREAM_TERMINATED) {
             int err = pa_context_errno(d_context);
@@ -295,11 +313,12 @@ bool pulse_sink::check_topology(int ninputs, int noutputs)
     }
 
     pa_operation* op = pa_stream_flush(d_stream, nullptr, nullptr);
-    if (op) pa_operation_unref(op);
+    if (op)
+        pa_operation_unref(op);
 
     pa_threaded_mainloop_unlock(d_mainloop);
 
-    d_logger->info("check_topology succeeded - stream is READY");
+    d_logger->debug("check_topology succeeded - stream is READY");
     return true;
 }
 
@@ -307,8 +326,8 @@ int pulse_sink::work(int noutput_items,
                      gr_vector_const_void_star& input_items,
                      gr_vector_void_star& output_items)
 {
-    if (!d_stream || pa_stream_get_state(d_stream) != PA_STREAM_READY) {
-        d_logger->warn("work() called but stream not ready");
+    if (!d_stream) {
+        d_logger->warn("work() called but no stream");
         return 0;
     }
 
@@ -318,52 +337,63 @@ int pulse_sink::work(int noutput_items,
     pa_threaded_mainloop_lock(d_mainloop);
 
     while (processed < noutput_items) {
-        size_t rem   = noutput_items - processed;
-        size_t chunk = std::min(d_chunk_size, rem);
+        // 1. Check if the hardware is ready for more data
+        size_t writable_bytes = pa_stream_writable_size(d_stream);
 
-        for (size_t i = 0; i < chunk; ++i) {
-            for (unsigned int ch = 0; ch < d_nchan; ++ch) {
-                d_buffer[i * d_nchan + ch] = in[ch][processed + i];
-            }
-        }
-
-        size_t bytes    = chunk * d_nchan * sizeof(float);
-        size_t writable = pa_stream_writable_size(d_stream);
-
-        if (writable < bytes) {
-            if (!d_ok_to_block) {
-                d_debug_logger->debug("non-blocking: skipping {} samples (need {} B, have {} B)",
-                                      chunk, bytes, writable);
-                processed += chunk;
-                continue;
-            }
-
-            d_writable = false;
-            while (!d_writable && pa_stream_get_state(d_stream) == PA_STREAM_READY) {
-                pa_threaded_mainloop_wait(d_mainloop);
-            }
-
-            if (pa_stream_get_state(d_stream) != PA_STREAM_READY) {
-                d_logger->warn("stream state changed while waiting for writable space");
+        if (writable_bytes == 0) {
+            if (d_ok_to_block) {
+                // Wait for the write_cb to signal that space is available
+                while (pa_stream_writable_size(d_stream) == 0 &&
+                       pa_stream_get_state(d_stream) == PA_STREAM_READY) {
+                    pa_threaded_mainloop_wait(d_mainloop);
+                }
+            } else {
+                // Non-blocking: yield to scheduler if buffer is full
                 break;
             }
-
-            writable = pa_stream_writable_size(d_stream);
-            if (writable < bytes) continue;
         }
 
-        d_debug_logger->debug("writing {} bytes", bytes);
-
-        if (pa_stream_write(d_stream, d_buffer.data(), bytes, nullptr, 0, PA_SEEK_RELATIVE) < 0) {
-            int err = pa_context_errno(d_context);
-            d_logger->error("pa_stream_write failed: {}", pa_strerror(err));
-
-            pa_operation* op = pa_stream_flush(d_stream, nullptr, nullptr);
-            if (op) pa_operation_unref(op);
+        // 2. Safety Check: Did the stream die while we waited?
+        if (pa_stream_get_state(d_stream) != PA_STREAM_READY) {
+            d_logger->warn("Stream state changed to {} during write",
+                           pa_stream_state_str(pa_stream_get_state(d_stream)));
             break;
         }
 
-        processed += chunk;
+        // 3. Determine how many samples we can actually write right now
+        writable_bytes = pa_stream_writable_size(d_stream);
+        size_t samples_hardware_can_take = writable_bytes / (sizeof(float) * d_nchan);
+        size_t samples_remaining = noutput_items - processed;
+        size_t samples_to_write = std::min(samples_remaining, samples_hardware_can_take);
+
+        if (samples_to_write == 0)
+            break;
+
+        // 4. Directly request a buffer from PulseAudio (Zero-Copy)
+        void* pa_buf = nullptr;
+        size_t nbytes = samples_to_write * d_nchan * sizeof(float);
+        if (pa_stream_begin_write(d_stream, &pa_buf, &nbytes) < 0) {
+            d_logger->error("pa_stream_begin_write failed");
+            break;
+        }
+
+        // 5. Re-calculate based on what PulseAudio actually gave us
+        size_t actual_samples = nbytes / (sizeof(float) * d_nchan);
+        float* dst = static_cast<float*>(pa_buf);
+
+        for (size_t i = 0; i < actual_samples; ++i) {
+            for (unsigned int chan = 0; chan < d_nchan; ++chan) {
+                dst[i * d_nchan + chan] = in[chan][processed + i];
+            }
+        }
+
+        // 6. Commit the data to the sound card
+        if (pa_stream_write(d_stream, pa_buf, nbytes, nullptr, 0, PA_SEEK_RELATIVE) < 0) {
+            d_logger->error("pa_stream_write failed");
+            break;
+        }
+
+        processed += actual_samples;
     }
 
     pa_threaded_mainloop_unlock(d_mainloop);
@@ -394,8 +424,6 @@ void pulse_sink::stream_state_cb(pa_stream* s, void* u)
 void pulse_sink::stream_write_cb(pa_stream* /*s*/, size_t length, void* u)
 {
     auto* self = static_cast<pulse_sink*>(u);
-    self->d_writable = true;
-    self->d_debug_logger->debug("stream_write_cb - writable size = {} bytes", length);
     pa_threaded_mainloop_signal(self->d_mainloop, 0);
 }
 

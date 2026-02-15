@@ -13,8 +13,8 @@
 /* If manual edits are made, the following tags should be modified accordingly.    */
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
-/* BINDTOOL_HEADER_FILE(sink.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(223f1f037883d0800b73853de22ac330)    		   */
+/* BINDTOOL_HEADER_FILE(sink.h)                                        		   */
+/* BINDTOOL_HEADER_FILE_HASH(874851882e03fb7128db15b11b3ec28a)    		   */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -40,7 +40,7 @@ void bind_sink(py::module& m)
              py::arg("sampling_rate"),
              py::arg("device_name") = "",
              py::arg("ok_to_block") = true,
-	     py::arg("properties") = std::map<std::string, std::string>{},
+             py::arg("properties") = std::map<std::string, std::string>{},
              D(sink, make))
 
 

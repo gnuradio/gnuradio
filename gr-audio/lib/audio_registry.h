@@ -12,16 +12,22 @@
 
 #include <gnuradio/audio/sink.h>
 #include <gnuradio/audio/source.h>
-#include <string>
 #include <map>
+#include <string>
 
 namespace gr {
 namespace audio {
 
 
-typedef source::sptr (*source_factory_t)(int, const std::string&, bool, const std::map<std::string, std::string>&);
+typedef source::sptr (*source_factory_t)(int,
+                                         const std::string&,
+                                         bool,
+                                         const std::map<std::string, std::string>&);
 
-typedef sink::sptr (*sink_factory_t)(int, const std::string&, bool, const std::map<std::string, std::string>&);
+typedef sink::sptr (*sink_factory_t)(int,
+                                     const std::string&,
+                                     bool,
+                                     const std::map<std::string, std::string>&);
 
 enum reg_prio_type { REG_PRIO_LOW = 100, REG_PRIO_MED = 200, REG_PRIO_HIGH = 300 };
 
@@ -38,52 +44,82 @@ struct sink_entry_t {
 };
 
 #ifdef PULSE_FOUND
-source::sptr
-pulse_source_fcn(int sampling_rate, const std::string& device_name, bool ok_to_block, const std::map<std::string, std::string>& properties = {});
-sink::sptr
-pulse_sink_fcn(int sampling_rate, const std::string& device_name, bool ok_to_block, const std::map<std::string, std::string>& properties = {});
+source::sptr pulse_source_fcn(int sampling_rate,
+                              const std::string& device_name,
+                              bool ok_to_block,
+                              const std::map<std::string, std::string>& properties = {});
+sink::sptr pulse_sink_fcn(int sampling_rate,
+                          const std::string& device_name,
+                          bool ok_to_block,
+                          const std::map<std::string, std::string>& properties = {});
 #endif /* PULSE_FOUND */
 
 #ifdef ALSA_FOUND
-source::sptr
-alsa_source_fcn(int sampling_rate, const std::string& device_name, bool ok_to_block, const std::map<std::string, std::string>& properties = {});
-sink::sptr
-alsa_sink_fcn(int sampling_rate, const std::string& device_name, bool ok_to_block, const std::map<std::string, std::string>& properties = {});
+source::sptr alsa_source_fcn(int sampling_rate,
+                             const std::string& device_name,
+                             bool ok_to_block,
+                             const std::map<std::string, std::string>& properties = {});
+sink::sptr alsa_sink_fcn(int sampling_rate,
+                         const std::string& device_name,
+                         bool ok_to_block,
+                         const std::map<std::string, std::string>& properties = {});
 #endif /* ALSA_FOUND */
 
 #ifdef OSS_FOUND
-source::sptr
-oss_source_fcn(int sampling_rate, const std::string& device_name, bool ok_to_block, const std::map<std::string, std::string>& properties = {});
-sink::sptr
-oss_sink_fcn(int sampling_rate, const std::string& device_name, bool ok_to_block, const std::map<std::string, std::string>& properties = {});
+source::sptr oss_source_fcn(int sampling_rate,
+                            const std::string& device_name,
+                            bool ok_to_block,
+                            const std::map<std::string, std::string>& properties = {});
+sink::sptr oss_sink_fcn(int sampling_rate,
+                        const std::string& device_name,
+                        bool ok_to_block,
+                        const std::map<std::string, std::string>& properties = {});
 #endif /* OSS_FOUND */
 
 #ifdef PORTAUDIO_FOUND
 source::sptr
-portaudio_source_fcn(int sampling_rate, const std::string& device_name, bool ok_to_block, const std::map<std::string, std::string>& properties = {});
-sink::sptr
-portaudio_sink_fcn(int sampling_rate, const std::string& device_name, bool ok_to_block, const std::map<std::string, std::string>& properties = {});
+portaudio_source_fcn(int sampling_rate,
+                     const std::string& device_name,
+                     bool ok_to_block,
+                     const std::map<std::string, std::string>& properties = {});
+sink::sptr portaudio_sink_fcn(int sampling_rate,
+                              const std::string& device_name,
+                              bool ok_to_block,
+                              const std::map<std::string, std::string>& properties = {});
 #endif /* PORTAUDIO_FOUND */
 
 #ifdef JACK_FOUND
-source::sptr
-jack_source_fcn(int sampling_rate, const std::string& device_name, bool ok_to_block, const std::map<std::string, std::string>& properties = {});
-sink::sptr
-jack_sink_fcn(int sampling_rate, const std::string& device_name, bool ok_to_block, const std::map<std::string, std::string>& properties = {});
+source::sptr jack_source_fcn(int sampling_rate,
+                             const std::string& device_name,
+                             bool ok_to_block,
+                             const std::map<std::string, std::string>& properties = {});
+sink::sptr jack_sink_fcn(int sampling_rate,
+                         const std::string& device_name,
+                         bool ok_to_block,
+                         const std::map<std::string, std::string>& properties = {});
 #endif /* JACK_FOUND */
 
 #ifdef OSX_FOUND
-source::sptr
-osx_source_fcn(int sampling_rate, const std::string& device_name, bool ok_to_block, const std::map<std::string, std::string>& properties = {});
-sink::sptr
-osx_sink_fcn(int sampling_rate, const std::string& device_name, bool ok_to_block, const std::map<std::string, std::string>& properties = {});
+source::sptr osx_source_fcn(int sampling_rate,
+                            const std::string& device_name,
+                            bool ok_to_block,
+                            const std::map<std::string, std::string>& properties = {});
+sink::sptr osx_sink_fcn(int sampling_rate,
+                        const std::string& device_name,
+                        bool ok_to_block,
+                        const std::map<std::string, std::string>& properties = {});
 #endif /* OSX_FOUND */
 
 #ifdef WIN32_FOUND
 source::sptr
-windows_source_fcn(int sampling_rate, const std::string& device_name, bool ok_to_block, const std::map<std::string, std::string>& properties = {});
-sink::sptr
-windows_sink_fcn(int sampling_rate, const std::string& device_name, bool ok_to_block, const std::map<std::string, std::string>& properties = {});
+windows_source_fcn(int sampling_rate,
+                   const std::string& device_name,
+                   bool ok_to_block,
+                   const std::map<std::string, std::string>& properties = {});
+sink::sptr windows_sink_fcn(int sampling_rate,
+                            const std::string& device_name,
+                            bool ok_to_block,
+                            const std::map<std::string, std::string>& properties = {});
 #endif /* WIN32_FOUND */
 
 } /* namespace audio */
