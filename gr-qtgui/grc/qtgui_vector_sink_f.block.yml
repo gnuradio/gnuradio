@@ -3,6 +3,15 @@ label: QT GUI Vector Sink
 flags: [ python ]
 
 parameters:
+-   id: type
+    label: Input Type
+    dtype: enum
+    default: float
+    options: [float, complex, int, short, byte]
+    option_attributes:
+        fcn: [vector_sink_f, vector_sink_f.make_c, vector_sink_f.make_i, vector_sink_f.make_s, vector_sink_f.make_b]
+    hide: part
+
 -   id: name
     label: Name
     dtype: string
@@ -289,7 +298,7 @@ parameters:
 
 inputs:
 -   domain: stream
-    dtype: float
+    dtype: ${ type }
     vlen: ${ vlen }
     multiplicity: ${ nconnections }
 
@@ -302,6 +311,7 @@ outputs:
 templates:
     imports: |-
         import sip
+        from gnuradio import qtgui
     callbacks:
     - set_update_time(${update_time})
     - set_x_axis(${x_start}, ${x_step})
@@ -313,7 +323,7 @@ templates:
         <%
             win = 'self._%s_win'%id
         %>\
-        qtgui.vector_sink_f(
+        qtgui.${type.fcn}(
             ${vlen},
             ${x_start},
             ${x_step},
