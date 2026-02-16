@@ -448,6 +448,10 @@ ZOOM_RESET = actions.register("win.zoom_reset",
                               tooltip='Reset the canvas zoom level',
                               keypresses=["<Ctrl>0", "<Ctrl>KP_0"],
                               )
+RESTORE_DEFAULT_VIEW = actions.register("win.restore_default_view",
+                              label='Restore Default View',
+                              tooltip='Reset view to default positions',
+                              )
 TOGGLE_SNAP_TO_GRID = actions.register("win.snap_to_grid",
                                        label='_Snap to grid',
                                        tooltip='Snap blocks to a grid for an easier connection alignment',
