@@ -576,7 +576,6 @@ class Application(Gtk.Application):
             Actions.TOGGLE_CONSOLE_WINDOW.save_to_preferences()
             Actions.TOGGLE_FLOW_GRAPH_VAR_EDITOR.save_to_preferences()
 
-            
         ##################################################
         # Param Modifications
         ##################################################
