@@ -86,6 +86,7 @@ MENU_BAR_LIST = [
         [Actions.ZOOM_IN],
         [Actions.ZOOM_OUT],
         [Actions.ZOOM_RESET],
+        [Actions.RESTORE_DEFAULT_VIEW],
         [Actions.ERRORS_WINDOW_DISPLAY, Actions.FIND_BLOCKS],
     ]),
     ('_Run', [
