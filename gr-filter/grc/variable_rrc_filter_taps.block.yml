@@ -14,6 +14,7 @@ parameters:
 -   id: sym_rate
     label: Symbol Rate (Hz)
     dtype: float
+    default: samp_rate/sps
 -   id: alpha
     label: Excess BW
     dtype: float
