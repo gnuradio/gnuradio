@@ -8,7 +8,7 @@
 #
 #
 
-import numpy
+from .utils.mod_codes import invert_code
 from .constellation_map_generator import constellation_map_generator
 
 '''
@@ -82,26 +82,22 @@ psk_2_1 = psk_2_0x1
 # BPSK Soft bit LUT generators
 ############################################################
 
-def sd_psk_2_0x0(x, Es=1):
+def sd_psk_2_0x0(x):
     '''
     0 | 1
     '''
-    x_re = x.real
-    dist = Es * numpy.sqrt(2)
-    return [dist * x_re, ]
+    return [x.real, ]
 
 
 sd_psk_2 = sd_psk_2_0x0  # Basic BPSK rotation
 sd_psk_2_0 = sd_psk_2    # First ID for BPSK rotations
 
 
-def sd_psk_2_0x1(x, Es=1):
+def sd_psk_2_0x1(x):
     '''
     1 | 0
     '''
-    x_re = [x.real, ]
-    dist = Es * numpy.sqrt(2)
-    return -dist * x_re
+    return [-x.real]
 
 
 sd_psk_2_1 = sd_psk_2_0x1
@@ -120,7 +116,7 @@ def psk_4_0x0_0_1():
     const_points = [-1 - 1j, 1 - 1j,
                     -1 + 1j, 1 + 1j]
     symbols = [0, 1, 2, 3]
-    return (const_points, symbols)
+    return const_points, invert_code(symbols)
 
 
 psk_4 = psk_4_0x0_0_1
@@ -135,7 +131,8 @@ def psk_4_0x1_0_1():
     '''
     k = 0x1
     pi = [0, 1]
-    return constellation_map_generator(psk_4()[0], psk_4()[1], k, pi)
+    points, decoded_bits = constellation_map_generator(psk_4()[0], psk_4()[1], k, pi)
+    return points, invert_code(decoded_bits)
 
 
 psk_4_1 = psk_4_0x1_0_1
@@ -149,7 +146,8 @@ def psk_4_0x2_0_1():
     '''
     k = 0x2
     pi = [0, 1]
-    return constellation_map_generator(psk_4()[0], psk_4()[1], k, pi)
+    points, decoded_bits = constellation_map_generator(psk_4()[0], psk_4()[1], k, pi)
+    return points, invert_code(decoded_bits)
 
 
 psk_4_2 = psk_4_0x2_0_1
@@ -163,7 +161,8 @@ def psk_4_0x3_0_1():
     '''
     k = 0x3
     pi = [0, 1]
-    return constellation_map_generator(psk_4()[0], psk_4()[1], k, pi)
+    points, decoded_bits = constellation_map_generator(psk_4()[0], psk_4()[1], k, pi)
+    return points, invert_code(decoded_bits)
 
 
 psk_4_3 = psk_4_0x3_0_1
@@ -177,7 +176,8 @@ def psk_4_0x0_1_0():
     '''
     k = 0x0
     pi = [1, 0]
-    return constellation_map_generator(psk_4()[0], psk_4()[1], k, pi)
+    points, decoded_bits = constellation_map_generator(psk_4()[0], psk_4()[1], k, pi)
+    return points, invert_code(decoded_bits)
 
 
 psk_4_4 = psk_4_0x0_1_0
@@ -191,7 +191,8 @@ def psk_4_0x1_1_0():
     '''
     k = 0x1
     pi = [1, 0]
-    return constellation_map_generator(psk_4()[0], psk_4()[1], k, pi)
+    points, decoded_bits = constellation_map_generator(psk_4()[0], psk_4()[1], k, pi)
+    return points, invert_code(decoded_bits)
 
 
 psk_4_5 = psk_4_0x1_1_0
@@ -205,7 +206,8 @@ def psk_4_0x2_1_0():
     '''
     k = 0x2
     pi = [1, 0]
-    return constellation_map_generator(psk_4()[0], psk_4()[1], k, pi)
+    points, decoded_bits = constellation_map_generator(psk_4()[0], psk_4()[1], k, pi)
+    return points, invert_code(decoded_bits)
 
 
 psk_4_6 = psk_4_0x2_1_0
@@ -219,7 +221,8 @@ def psk_4_0x3_1_0():
     '''
     k = 0x3
     pi = [1, 0]
-    return constellation_map_generator(psk_4()[0], psk_4()[1], k, pi)
+    points, decoded_bits = constellation_map_generator(psk_4()[0], psk_4()[1], k, pi)
+    return points, invert_code(decoded_bits)
 
 
 psk_4_7 = psk_4_0x3_1_0
@@ -229,7 +232,7 @@ psk_4_7 = psk_4_0x3_1_0
 # QPSK Constellation Softbit LUT generators
 ############################################################
 
-def sd_psk_4_0x0_0_1(x, Es=1):
+def sd_psk_4_0x0_0_1(x):
     '''
     | 10 | 11
     | -------
@@ -237,15 +240,14 @@ def sd_psk_4_0x0_0_1(x, Es=1):
     '''
     x_re = x.real
     x_im = x.imag
-    dist = Es * numpy.sqrt(2)
-    return [dist * x_im, dist * x_re]
+    return [x_im, x_re]
 
 
 sd_psk_4 = sd_psk_4_0x0_0_1
 sd_psk_4_0 = sd_psk_4
 
 
-def sd_psk_4_0x1_0_1(x, Es=1):
+def sd_psk_4_0x1_0_1(x):
     '''
     | 11 | 10
     | -------
@@ -253,14 +255,13 @@ def sd_psk_4_0x1_0_1(x, Es=1):
     '''
     x_re = x.real
     x_im = x.imag
-    dist = Es * numpy.sqrt(2)
-    return [dist * x_im, -dist * x_re]
+    return [x_im, -x_re]
 
 
 sd_psk_4_1 = sd_psk_4_0x1_0_1
 
 
-def sd_psk_4_0x2_0_1(x, Es=1):
+def sd_psk_4_0x2_0_1(x):
     '''
     | 00 | 01
     | -------
@@ -268,14 +269,13 @@ def sd_psk_4_0x2_0_1(x, Es=1):
     '''
     x_re = x.real
     x_im = x.imag
-    dist = Es * numpy.sqrt(2)
-    return [-dist * x_im, dist * x_re]
+    return [-x_im, x_re]
 
 
 sd_psk_4_2 = sd_psk_4_0x2_0_1
 
 
-def sd_psk_4_0x3_0_1(x, Es=1):
+def sd_psk_4_0x3_0_1(x):
     '''
     | 01 | 00
     | -------
@@ -283,14 +283,13 @@ def sd_psk_4_0x3_0_1(x, Es=1):
     '''
     x_re = x.real
     x_im = x.imag
-    dist = Es * numpy.sqrt(2)
-    return [-dist * x_im, -dist * x_re]
+    return [-x_im, -x_re]
 
 
 sd_psk_4_3 = sd_psk_4_0x3_0_1
 
 
-def sd_psk_4_0x0_1_0(x, Es=1):
+def sd_psk_4_0x0_1_0(x):
     '''
     | 01 | 11
     | -------
@@ -298,14 +297,13 @@ def sd_psk_4_0x0_1_0(x, Es=1):
     '''
     x_re = x.real
     x_im = x.imag
-    dist = Es * numpy.sqrt(2)
-    return [dist * x_re, dist * x_im]
+    return [x_re, x_im]
 
 
 sd_psk_4_4 = sd_psk_4_0x0_1_0
 
 
-def sd_psk_4_0x1_1_0(x, Es=1):
+def sd_psk_4_0x1_1_0(x):
     '''
     | 00 | 10
     | -------
@@ -313,14 +311,13 @@ def sd_psk_4_0x1_1_0(x, Es=1):
     '''
     x_re = x.real
     x_im = x.imag
-    dist = Es * numpy.sqrt(2)
-    return [dist * x_re, -dist * x_im]
+    return [x_re, -x_im]
 
 
 sd_psk_4_5 = sd_psk_4_0x1_1_0
 
 
-def sd_psk_4_0x2_1_0(x, Es=1):
+def sd_psk_4_0x2_1_0(x):
     '''
     | 11 | 01
     | -------
@@ -328,14 +325,13 @@ def sd_psk_4_0x2_1_0(x, Es=1):
     '''
     x_re = x.real
     x_im = x.imag
-    dist = Es * numpy.sqrt(2)
-    return [-dist * x_re, dist * x_im]
+    return [-x_re, x_im]
 
 
 sd_psk_4_6 = sd_psk_4_0x2_1_0
 
 
-def sd_psk_4_0x3_1_0(x, Es=1):
+def sd_psk_4_0x3_1_0(x):
     '''
     | 10 | 00
     | -------
@@ -343,8 +339,7 @@ def sd_psk_4_0x3_1_0(x, Es=1):
     '''
     x_re = x.real
     x_im = x.imag
-    dist = Es * numpy.sqrt(2)
-    return [-dist * x_re, -dist * x_im]
+    return [-x_re, -x_im]
 
 
 sd_psk_4_7 = sd_psk_4_0x3_1_0
