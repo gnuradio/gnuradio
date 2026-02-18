@@ -116,25 +116,60 @@ void dds_control_impl::set_dds_confg(std::vector<long> frequencies,
         chan = iio_device_get_channel(d_dev, k);
 
         if (iio_channel_find_attr(chan, "raw") != NULL) {
+#ifdef LIBIIO_V1
+            const iio_attr* iio_attribute = nullptr;
 
+            iio_attribute = iio_channel_find_attr(chan, "frequency");
+            if (!iio_attribute)
+                ret = -EINVAL;
+            else
+                ret = iio_attr_write_longlong(iio_attribute, d_frequencies[dds_indx]);
+#else
             ret = iio_channel_attr_write_longlong(
                 chan, "frequency", d_frequencies[dds_indx]);
+#endif
+
             if (ret < 0)
                 d_logger->warn("Unable to set DDS frequency: {:d}",
                                d_frequencies[dds_indx]);
 
+#ifdef LIBIIO_V1
+            iio_attribute = iio_channel_find_attr(chan, "phase");
+            if (!iio_attribute)
+                ret = -EINVAL;
+            else
+                ret = iio_attr_write_longlong(iio_attribute, d_phases[dds_indx]);
+#else
             ret = iio_channel_attr_write_longlong(chan, "phase", d_phases[dds_indx]);
+#endif
             if (ret < 0)
                 d_logger->warn("Unable to set DDS phase: {:g}", d_phases[dds_indx]);
 
+#ifdef LIBIIO_V1
+            iio_attribute = iio_channel_find_attr(chan, "scale");
+            if (!iio_attribute)
+                ret = -EINVAL;
+            else
+                ret = iio_attr_write_double(
+                    iio_attribute, d_enabled[enable_indx] ? d_scales[dds_indx] : 0);
+#else
             if (d_enabled[enable_indx])
                 ret = iio_channel_attr_write_double(chan, "scale", d_scales[dds_indx]);
             else
                 ret = iio_channel_attr_write_double(chan, "scale", 0);
+#endif
             if (ret < 0)
                 d_logger->warn("Unable to set DDS scale: {:g}", d_scales[dds_indx]);
 
+#ifdef LIBIIO_V1
+            iio_attribute = iio_channel_find_attr(chan, "raw");
+            if (!iio_attribute)
+                ret = -EINVAL;
+            else
+                ret = iio_attr_write_longlong(iio_attribute, enable);
+#else
             ret = iio_channel_attr_write_longlong(chan, "raw", enable);
+#endif
             if (ret < 0)
                 d_logger->warn("Unable to set DDS: {:d}", ret);
 

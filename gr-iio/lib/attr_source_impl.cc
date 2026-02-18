@@ -140,6 +140,29 @@ void attr_source_impl::get_register_data(uint32_t address, int* value)
 
 void attr_source_impl::get_attribute_data(const std::string& attribute, double* value)
 {
+#ifdef LIBIIO_V1
+    const struct iio_attr* iio_attribute = nullptr;
+
+    switch (attr_type) {
+    case attr_type_t::CHANNEL:
+        iio_attribute = iio_channel_find_attr(chan, attribute.c_str());
+        if (!iio_attribute)
+            ret = -EINVAL;
+        break;
+    case attr_type_t::DEVICE:
+        iio_attribute = iio_device_find_attr(dev, attribute.c_str());
+        if (!iio_attribute)
+            ret = -EINVAL;
+        break;
+    default:
+        iio_attribute = iio_device_find_debug_attr(dev, attribute.c_str());
+        if (!iio_attribute)
+            ret = -EINVAL;
+        break;
+    }
+    if (iio_attribute)
+        ret = iio_attr_read_double(iio_attribute, value);
+#else
     switch (attr_type) {
     case attr_type_t::CHANNEL:
         ret = iio_channel_attr_read_double(chan, attribute.c_str(), value);
@@ -151,12 +174,36 @@ void attr_source_impl::get_attribute_data(const std::string& attribute, double* 
         ret = iio_device_debug_attr_read_double(dev, attribute.c_str(), value);
         break;
     }
+#endif
+
     attr_source_impl::check(ret);
 }
 
 void attr_source_impl::get_attribute_data(const std::string& attribute, float* value)
 {
     double dvalue;
+#ifdef LIBIIO_V1
+    const iio_attr* iio_attribute = nullptr;
+    switch (attr_type) {
+    case attr_type_t::CHANNEL:
+        iio_attribute = iio_channel_find_attr(chan, attribute.c_str());
+        if (!iio_attribute)
+            ret = -EINVAL;
+        break;
+    case attr_type_t::DEVICE:
+        iio_attribute = iio_device_find_attr(dev, attribute.c_str());
+        if (!iio_attribute)
+            ret = -EINVAL;
+        break;
+    default:
+        iio_attribute = iio_device_find_debug_attr(dev, attribute.c_str());
+        if (!iio_attribute)
+            ret = -EINVAL;
+        break;
+    }
+    if (iio_attribute)
+        ret = iio_attr_read_double(iio_attribute, &dvalue);
+#else
     switch (attr_type) {
     case attr_type_t::CHANNEL:
         ret = iio_channel_attr_read_double(chan, attribute.c_str(), &dvalue);
@@ -168,12 +215,35 @@ void attr_source_impl::get_attribute_data(const std::string& attribute, float* v
         ret = iio_device_debug_attr_read_double(dev, attribute.c_str(), &dvalue);
         break;
     }
+#endif
     attr_source_impl::check(ret);
     *value = static_cast<float>(dvalue);
 }
 
 void attr_source_impl::get_attribute_data(const std::string& attribute, long long* value)
 {
+#ifdef LIBIIO_V1
+    const iio_attr* iio_attribute = nullptr;
+    switch (attr_type) {
+    case attr_type_t::CHANNEL:
+        iio_attribute = iio_channel_find_attr(chan, attribute.c_str());
+        if (!iio_attribute)
+            ret = -EINVAL;
+        break;
+    case attr_type_t::DEVICE:
+        iio_attribute = iio_device_find_attr(dev, attribute.c_str());
+        if (!iio_attribute)
+            ret = -EINVAL;
+        break;
+    default:
+        iio_attribute = iio_device_find_debug_attr(dev, attribute.c_str());
+        if (!iio_attribute)
+            ret = -EINVAL;
+        break;
+    }
+    if (iio_attribute)
+        ret = iio_attr_read_longlong(iio_attribute, value);
+#else
     switch (attr_type) {
     case attr_type_t::CHANNEL:
         ret = iio_channel_attr_read_longlong(chan, attribute.c_str(), value);
@@ -185,12 +255,35 @@ void attr_source_impl::get_attribute_data(const std::string& attribute, long lon
         ret = iio_device_debug_attr_read_longlong(dev, attribute.c_str(), value);
         break;
     }
+#endif
     attr_source_impl::check(ret);
 }
 
 void attr_source_impl::get_attribute_data(const std::string& attribute, int* value)
 {
     long long llvalue;
+#ifdef LIBIIO_V1
+    const iio_attr* iio_attribute = nullptr;
+    switch (attr_type) {
+    case attr_type_t::CHANNEL:
+        iio_attribute = iio_channel_find_attr(chan, attribute.c_str());
+        if (!iio_attribute)
+            ret = -EINVAL;
+        break;
+    case attr_type_t::DEVICE:
+        iio_attribute = iio_device_find_attr(dev, attribute.c_str());
+        if (!iio_attribute)
+            ret = -EINVAL;
+        break;
+    default:
+        iio_attribute = iio_device_find_debug_attr(dev, attribute.c_str());
+        if (!iio_attribute)
+            ret = -EINVAL;
+        break;
+    }
+    if (iio_attribute)
+        ret = iio_attr_read_longlong(iio_attribute, &llvalue);
+#else
     switch (attr_type) {
     case attr_type_t::CHANNEL:
         ret = iio_channel_attr_read_longlong(chan, attribute.c_str(), &llvalue);
@@ -202,6 +295,8 @@ void attr_source_impl::get_attribute_data(const std::string& attribute, int* val
         ret = iio_device_debug_attr_read_longlong(dev, attribute.c_str(), &llvalue);
         break;
     }
+#endif
+
     attr_source_impl::check(ret);
     *value = static_cast<int>(llvalue);
 }
@@ -209,6 +304,28 @@ void attr_source_impl::get_attribute_data(const std::string& attribute, int* val
 void attr_source_impl::get_attribute_data(const std::string& attribute, uint8_t* value)
 {
     bool bvalue;
+#ifdef LIBIIO_V1
+    const iio_attr* iio_attribute = nullptr;
+    switch (attr_type) {
+    case attr_type_t::CHANNEL:
+        iio_attribute = iio_channel_find_attr(chan, attribute.c_str());
+        if (!iio_attribute)
+            ret = -EINVAL;
+        break;
+    case attr_type_t::DEVICE:
+        iio_attribute = iio_device_find_attr(dev, attribute.c_str());
+        if (!iio_attribute)
+            ret = -EINVAL;
+        break;
+    default:
+        iio_attribute = iio_device_find_debug_attr(dev, attribute.c_str());
+        if (!iio_attribute)
+            ret = -EINVAL;
+        break;
+    }
+    if (iio_attribute)
+        ret = iio_attr_read_bool(iio_attribute, &bvalue);
+#else
     switch (attr_type) {
     case attr_type_t::CHANNEL:
         ret = iio_channel_attr_read_bool(chan, attribute.c_str(), &bvalue);
@@ -220,6 +337,7 @@ void attr_source_impl::get_attribute_data(const std::string& attribute, uint8_t*
         ret = iio_device_debug_attr_read_bool(dev, attribute.c_str(), &bvalue);
         break;
     }
+#endif
     attr_source_impl::check(ret);
     *value = static_cast<uint8_t>(bvalue);
 }
