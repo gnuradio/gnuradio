@@ -47,17 +47,29 @@ templates:
     callbacks:
     - set_taps(${taps})
 cpp_templates:
-  includes : ['#include <gnuradio/filter/interp_fir_filter.h>']
+  includes : ['#include <gnuradio/filter/interp_fir_filter.h>', '#include <gnuradio/filter/firdes.h>']
   declarations: 'filter::interp_fir_filter_${type}::sptr ${id};'
   make: |-
+        <% 
+          taps = self.context.get('taps')
+          try: taps
+          except NameError: taps = None 
+          taps = None if (len(taps) == 0) else taps 
+        %>
+        <% 
+          taps = taps.replace('window.', 'fft::window::win_type::') 
+          taps = taps.replace('firdes.', 'gr::filter::firdes::')
+          taps = taps.replace('[', '{') 
+          taps = taps.replace(']', '}') 
+        %>
         % if str(type.taps) == "complex_vector":
-        std::vector<gr_complex> taps = {${str(taps)[1:-1]}};
+        std::vector<gr_complex> taps = ${str(taps)};
         % else:
-        std::vector<int> taps = {${str(taps)[1:-1]}};
+        std::vector<float> taps = ${str(taps)};
         % endif
-        this->${id} = filter::interp_fir_filter_${type}::make(${interp}, taps);
+        this->${id} = filter::interp_fir_filter_${type}::make(${interp}, ${str(taps)});
   link: ['gnuradio::gnuradio-filter']
   callbacks:
-    - set_taps(${taps})
+    - set_taps(taps)
 
 file_format: 1
