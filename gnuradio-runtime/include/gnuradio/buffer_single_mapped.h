@@ -37,7 +37,7 @@ public:
     /*!
      * \brief Return the block that owns this buffer.
      */
-    block_sptr buf_owner() { return d_buf_owner; }
+    block_sptr buf_owner() { return d_buf_owner.lock(); }
 
     /*!
      * \brief return number of items worth of space available for writing
@@ -117,7 +117,7 @@ protected:
                                                   block_sptr link,
                                                   block_sptr buf_owner);
 
-    block_sptr d_buf_owner; // block that "owns" this buffer
+    std::weak_ptr<block> d_buf_owner; // block that "owns" this buffer
 
     std::unique_ptr<char[]> d_buffer;
 
