@@ -59,6 +59,22 @@ buffer_double_mapped::buffer_double_mapped(int nitems,
 #endif
 }
 
+buffer_double_mapped::buffer_double_mapped(int nitems,
+                                           size_t sizeof_item,
+                                           uint64_t downstream_lcm_nitems,
+                                           uint32_t downstream_max_out_mult,
+                                           block_sptr link,
+                                           defer_alloc_t)
+    : buffer(buffer_mapping_type::double_mapped,
+             nitems,
+             sizeof_item,
+             downstream_lcm_nitems,
+             downstream_max_out_mult,
+             link)
+{
+    gr::configure_default_loggers(d_logger, d_debug_logger, "buffer_double_mapped");
+}
+
 // NB: Added the extra 'block_sptr unused' parameter so that the
 // call signature matches the other factory-like functions used to create
 // the buffer_single_mapped subclasses

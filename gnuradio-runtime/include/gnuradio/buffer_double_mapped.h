@@ -102,8 +102,9 @@ private:
 
     std::unique_ptr<gr::vmcircbuf> d_vmcircbuf;
 
+protected:
     /*!
-     * \brief constructor is private.  Use gr_make_buffer to create instances.
+     * \brief constructor is protected.  Use gr_make_buffer to create instances.
      *
      * Allocate a buffer that holds at least \p nitems of size \p sizeof_item.
      *
@@ -124,6 +125,27 @@ private:
                          uint64_t downstream_lcm_nitems,
                          uint32_t downstream_max_out_mult,
                          block_sptr link);
+
+    /*!
+     * \brief Tag type for derived-class constructors that handle their own
+     *        buffer allocation (skipping the default vmcircbuf path).
+     */
+    enum class defer_alloc_t { defer_alloc };
+
+    /*!
+     * \brief Protected constructor that defers buffer allocation.
+     *
+     * Initialises the base buffer state and loggers but does NOT call
+     * allocate_buffer().  Derived classes that provide their own memory
+     * (e.g. CUDA VMM) use this constructor and perform allocation in
+     * their own constructor body, where virtual dispatch is available.
+     */
+    buffer_double_mapped(int nitems,
+                         size_t sizeof_item,
+                         uint64_t downstream_lcm_nitems,
+                         uint32_t downstream_max_out_mult,
+                         block_sptr link,
+                         defer_alloc_t);
 };
 
 } /* namespace gr */
