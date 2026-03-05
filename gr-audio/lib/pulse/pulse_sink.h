@@ -38,6 +38,8 @@ public:
     ~pulse_sink() override;
 
     bool check_topology(int ninputs, int noutputs) override;
+    bool start() override;
+    bool stop() override;
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
@@ -45,7 +47,7 @@ public:
 
 private:
     void init_pa();
-    void cleanup();
+    bool setup_stream();
 
     static void context_state_cb(pa_context* c, void* userdata);
     static void stream_state_cb(pa_stream* s, void* userdata);
@@ -57,7 +59,7 @@ private:
     bool d_ok_to_block;
     std::map<std::string, std::string> d_properties;
 
-    pa_threaded_mainloop* d_mainloop;
+    pa_mainloop* d_mainloop;
     pa_context* d_context;
     pa_stream* d_stream;
 
