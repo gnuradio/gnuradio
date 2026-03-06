@@ -12,14 +12,24 @@ import time
 import pmt
 from gnuradio import gr, gr_unittest, blocks
 
-
+# QA tests for the GNU Radio throttle block.
+#
+# The throttle block regulates the processing rate of flowgraph when
+# no hardware is present.These tests verify that the block:
+# - correctly limits data rate according to the configured sample rate.
+# - respects runtime parameters such as stream tags and chunk limits.
+#
 class test_throttle(gr_unittest.TestCase):
     def setUp(self):
         self.tb = gr.top_block()
 
     def tearDown(self):
         self.tb = None
-
+#
+# This test verifies that the throttle block acts on the configured
+# the sample rate by measuring the execution time of a flowgraph.
+# The runtime should roughly match the expected processing duration.
+#
     def test_throttling(self):
         src_data = list(range(200))
         src = blocks.vector_source_c(src_data)
@@ -37,7 +47,11 @@ class test_throttle(gr_unittest.TestCase):
 
         dst_data = dst.data()
         self.assertEqual(src_data, dst_data)
-
+#
+# This test verifies that the throttle block correctly respects the 'rx_rate' stream tag.
+# If the tag is present it overrides the configured throttle rate and controls the
+# effective data rate of the flowgraph.
+#
     def test_rx_rate_tag(self):
         src_data = list(range(400))
         tag = gr.tag_t()
@@ -60,7 +74,10 @@ class test_throttle(gr_unittest.TestCase):
 
         dst_data = dst.data()
         self.assertEqual(src_data, dst_data)
-
+#
+# This test verifies that the throttle block respects the maximum_items_per_chunk parameter.
+# It ensures that data is processed in limited chunk sizes during runtime.
+#
     def test_limited_chunk_throttling(self):
         src_data = [1, 2, 3]
         rate = 10
