@@ -98,7 +98,7 @@ macro(GR_PYBIND_MAKE_CHECK_HASH name updir filter files)
                 )# the regex match was not found, manual bindings
                     # if (NOT bindtool_use_pygccxml STREQUAL )
                     message(FATAL_ERROR "Python bindings for " ${header_filename}
-                                        " are out of sync")
+                                        " are out of sync. For more information, please refer to the following link: https://wiki.gnuradio.org/index.php?title=Binding_hash_hotfixer")
                 else()
                     if(flag_pygccxml STREQUAL "True")
                         if(NOT PYGCCXML_FOUND)
@@ -229,7 +229,7 @@ macro(GR_PYBIND_MAKE_OOT name updir filter files)
                 )# the regex match was not found, manual bindings
                     # if (NOT bindtool_use_pygccxml STREQUAL )
                     message(FATAL_ERROR "Python bindings for " ${header_filename}
-                                        " are out of sync")
+                                        " are out of sync. For more information, please refer to the following link: https://wiki.gnuradio.org/index.php?title=Binding_hash_hotfixer")
                 else()
                     if(flag_pygccxml STREQUAL "True")
                         if(NOT PYGCCXML_FOUND)
