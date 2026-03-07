@@ -256,11 +256,14 @@ std::ostream& operator<<(std::ostream& os, const buffer& buf)
 
 void buffer::set_transfer_type(const transfer_type& type)
 {
-    if ((d_transfer_type == transfer_type::DEFAULT_INVALID) ||
-        (d_transfer_type == type)) {
+    if (d_transfer_type == transfer_type::DEFAULT_INVALID) {
         // Set the transfer type if the existing value is the default or if it is the
         // same as what's already been set
         d_transfer_type = type;
+        // Let derived buffers react (e.g. deferred host allocation).
+        on_transfer_type_set(type);
+    } else if (d_transfer_type == type) {
+        // Already set to the same value: no-op.
     } else {
         // Otherwise error out as the transfer type value cannot be changed after
         // it is set

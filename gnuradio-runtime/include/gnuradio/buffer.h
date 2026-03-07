@@ -283,6 +283,19 @@ public:
      */
     void set_transfer_type(const transfer_type& type);
 
+protected:
+    /*!
+     * \brief Called after the transfer type has been successfully assigned.
+     *
+     * Derived buffer classes can override this to perform deferred
+     * allocation or configuration that depends on the transfer type.
+     * For example, a GPU buffer may skip host-side memory allocation
+     * for DEVICE_TO_DEVICE edges.
+     *
+     * The default implementation is a no-op.
+     */
+    virtual void on_transfer_type_set(const transfer_type& /* type */) {}
+
 private:
     friend class buffer_reader;
     friend class buffer_reader_sm;
