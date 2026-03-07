@@ -34,6 +34,8 @@ void bind_ofdm_serializer_vcc(py::module& m)
 
     py::class_<ofdm_serializer_vcc,
                gr::tagged_stream_block,
+               gr::block,
+               gr::basic_block,
                std::shared_ptr<ofdm_serializer_vcc>>(m, "ofdm_serializer_vcc")
 
         .def(py::init((std::shared_ptr<ofdm_serializer_vcc>(*)(
