@@ -26,8 +26,7 @@ class GR_RUNTIME_API block_executor
 {
 protected:
     block_sptr d_block; // The block we're trying to run
-    gr::logger_ptr d_logger;
-    gr::logger_ptr d_debug_logger;
+    gr::logger d_logger;
 
     // These are allocated here so we don't have to on each iteration
 
