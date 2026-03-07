@@ -41,7 +41,7 @@ class variable_save_restore(gr.sync_block):
         self.message_port_register_in(pmt.intern("restore"))
         self.set_msg_handler(pmt.intern("restore"), self.handle_msg_restore)
 
-        self.filename = os.path.join(gr.paths.userconf(), "saverestore", f"{top_block.__class__.__name__}.yml")
+        self.filename = os.path.join(gr.paths.persistent(), "saverestore", f"{top_block.__class__.__name__}.yml")
         self.filename = os.path.expanduser(self.filename)
         self.logger.info(f"Config file: {self.filename}")
         os.makedirs(os.path.dirname(self.filename), exist_ok=True)
