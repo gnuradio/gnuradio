@@ -246,6 +246,7 @@ jobs:
           git
           make
         pacboy: >-
+          curl:p
           toolchain:p
           cmake:p
           ninja:p
@@ -260,7 +261,6 @@ jobs:
           libunwind:p
           pango:p
           portaudio:p
-          pybind11:p
           python:p
           python-click:p
           python-gobject:p
@@ -279,6 +279,11 @@ jobs:
           thrift:p
           volk:p
           sccache:p
+    - name: download & install PyBind11 v3.0.1 release
+      run: |
+        curl --silent https://repo.msys2.org/mingw/mingw64/mingw-w64-x86_64-pybind11-3.0.1-3-any.pkg.tar.zst > pybind11.tar.zst && \
+        pacman -U --noconfirm pybind11.tar.zst && \
+        rm pybind11.tar.zst
     - name: Checkout code
       uses: actions/checkout@v4
     - name: Prepare sccache usage (if available)
