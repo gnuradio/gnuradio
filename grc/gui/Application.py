@@ -556,6 +556,26 @@ class Application(Gtk.Application):
             page.drawing_area.zoom_out()
         elif action == Actions.ZOOM_RESET:
             page.drawing_area.reset_zoom()
+        elif action == Actions.RESTORE_DEFAULT_VIEW:
+            Actions.TOGGLE_CONSOLE_WINDOW.set_active(True)
+            Actions.TOGGLE_FLOW_GRAPH_VAR_EDITOR.set_active(True)
+
+            main.main.set_position(-1)
+            main.left.set_position(-1)
+
+            if getattr(main, 'variable_panel_sidebar', False):
+                main.right.set_position(
+                    self.config.variable_editor_position(sidebar=True)
+                )
+            else:
+                main.left_subpanel.set_position(
+                    self.config.variable_editor_position(sidebar=False)
+                )
+            main.update_panel_visibility(main.VARIABLES)
+            main.update_panel_visibility(main.CONSOLE)
+            Actions.TOGGLE_CONSOLE_WINDOW.save_to_preferences()
+            Actions.TOGGLE_FLOW_GRAPH_VAR_EDITOR.save_to_preferences()
+
         ##################################################
         # Param Modifications
         ##################################################
