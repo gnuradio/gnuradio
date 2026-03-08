@@ -105,7 +105,7 @@ public:
     /*
      * \brief tell buffer we read \p items from it
      */
-    void update_read_pointer(int nitems);
+    virtual void update_read_pointer(int nitems);
 
     void set_done(bool done) { d_buffer->set_done(done); }
     bool done() const { return d_buffer->done(); }
