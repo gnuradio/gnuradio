@@ -24,11 +24,8 @@ namespace gr {
 static long s_buffer_reader_count = 0;
 
 buffer_reader_sptr
-buffer_add_reader(buffer_sptr buf, int nzero_preload, block_sptr link, int delay)
+buffer::create_reader(buffer_sptr buf, int nzero_preload, block_sptr link, int delay)
 {
-    if (nzero_preload < 0)
-        throw std::invalid_argument("buffer_add_reader: nzero_preload must be >= 0");
-
     buffer_reader_sptr r;
 
     if (buf->get_mapping_type() == buffer_mapping_type::double_mapped) {
@@ -44,6 +41,17 @@ buffer_add_reader(buffer_sptr buf, int nzero_preload, block_sptr link, int delay
         buf->update_reader_block_history(link->history(), delay);
         r->d_read_index = buf->d_write_index - nzero_preload;
     }
+
+    return r;
+}
+
+buffer_reader_sptr
+buffer_add_reader(buffer_sptr buf, int nzero_preload, block_sptr link, int delay)
+{
+    if (nzero_preload < 0)
+        throw std::invalid_argument("buffer_add_reader: nzero_preload must be >= 0");
+
+    buffer_reader_sptr r = buf->create_reader(buf, nzero_preload, link, delay);
 
     buf->d_readers.push_back(r.get());
 
