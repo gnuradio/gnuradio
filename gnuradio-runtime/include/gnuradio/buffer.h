@@ -265,6 +265,17 @@ public:
     // -------------------------------------------------------------------------
 
     /*!
+     * \brief Create a buffer_reader for this buffer.
+     *
+     * Derived buffer classes can override this to return a custom
+     * reader type (e.g. one that adds post-consumption signalling).
+     * The default implementation returns buffer_reader for double-mapped
+     * buffers and buffer_reader_sm for single-mapped buffers.
+     */
+    virtual buffer_reader_sptr
+    create_reader(buffer_sptr buf, int nzero_preload, block_sptr link, int delay);
+
+    /*!
      * \brief Assign buffer's transfer_type
      */
     void set_transfer_type(const transfer_type& type);
