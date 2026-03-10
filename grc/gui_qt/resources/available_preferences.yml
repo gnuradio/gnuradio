@@ -39,6 +39,10 @@ categories:
         name: Snap to grid
         dtype: bool
         default: False
+      - key: show_grid
+        name: Show Grid
+        dtype: bool
+        default: False
       - key: show_block_comments
         name: Show block comments
         dtype: bool
