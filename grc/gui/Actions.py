@@ -454,6 +454,12 @@ TOGGLE_SNAP_TO_GRID = actions.register("win.snap_to_grid",
                                        preference_name='snap_to_grid',
                                        default=True,
                                        )
+TOGGLE_SHOW_GRID = actions.register("win.show_grid",
+                                    label='Show G_rid',
+                                    tooltip='Draw a background grid on the canvas',
+                                    preference_name='show_grid',
+                                    default=False,
+                                    )
 TOGGLE_HIDE_DISABLED_BLOCKS = actions.register(
     "win.hide_disabled",
     label='Hide _Disabled Blocks',
