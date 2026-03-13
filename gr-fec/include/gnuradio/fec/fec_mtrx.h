@@ -10,6 +10,7 @@
 #define INCLUDED_fec_mtrx_H
 
 #include <gnuradio/fec/api.h>
+#include <gsl/gsl_matrix_uchar.h>
 #include <cstdlib>
 #include <memory>
 #include <string>
@@ -18,23 +19,10 @@ namespace gr {
 namespace fec {
 namespace code {
 
-typedef struct {
-    size_t size;
-    double* data;
-} block_data;
-
-typedef struct {
-    size_t size1;
-    size_t size2;
-    size_t tda;
-    double* data;
-    block_data* block;
-    int owner;
-} matrix;
-
-FEC_API void matrix_free(matrix* x);
-
-typedef std::shared_ptr<matrix> matrix_sptr;
+using block_data = gsl_block_uchar;
+using matrix = gsl_matrix_uchar;
+FEC_API void matrix_free(matrix* x); // == gsl_matrix_uchar_free;
+typedef std::shared_ptr<gsl_matrix_uchar> matrix_sptr;
 
 class fec_mtrx;
 typedef std::shared_ptr<fec_mtrx> fec_mtrx_sptr;
