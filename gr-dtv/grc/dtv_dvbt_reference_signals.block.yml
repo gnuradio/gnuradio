@@ -98,8 +98,8 @@ cpp_templates:
     make: |-
         this->${id} = dtv::dvbt_reference_signals::make(
             ${type.size},
-            ${transmission_mode.fft_length},
             ${transmission_mode.payload_length},
+            ${transmission_mode.fft_length},
             ${constellation.val},
             ${hierarchy.val},
             ${code_rate_hp.val},
