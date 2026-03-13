@@ -30,6 +30,7 @@ target_link_libraries(
 if(libad9361_SUFFICIENT)
     target_sources(gnuradio-iio PRIVATE fmcomms2_sink_impl.cc fmcomms2_source_impl.cc
                                         pluto_utils.cc)
+
     target_link_libraries(gnuradio-iio PRIVATE libad9361::ad9361)
     target_compile_definitions(gnuradio-iio PUBLIC -DGR_IIO_LIBAD9361)
 endif(libad9361_SUFFICIENT)
@@ -46,4 +47,8 @@ endif(MSVC)
 
 if(BUILD_SHARED_LIBS)
     gr_library_foo(gnuradio-iio libiio::iio)
+endif()
+
+if(LIBIIO_V1)
+    target_compile_definitions(gnuradio-iio PUBLIC LIBIIO_V1)
 endif()
