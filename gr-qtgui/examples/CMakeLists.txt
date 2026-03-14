@@ -41,6 +41,7 @@ install(
           test_graphicscaled.grc
           test_graphicitem.grc
           test_distanceradar.grc
+          test_digitalnumcontrol_limits.grc
           test_digitalnumcontrol_ro.grc
           test_digitalnumcontrol.grc
           test_dialcontrol.grc
