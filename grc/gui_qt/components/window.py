@@ -526,6 +526,10 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         actions["toggle_grid"] = Action(
             _("toggle_grid"), self, shortcut="G", statusTip=_("toggle_grid-tooltip")
         )
+        actions["toggle_grid"].setCheckable(True)
+        actions["toggle_grid"].setChecked(
+            self.app.qsettings.value('grc/show_grid', False, type=bool)
+        )
 
         actions["errors"] = Action(
             Icons("dialog-error"), _("errors"), self, statusTip=_("errors-tooltip")
@@ -1321,6 +1325,15 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
     def zoom_original_triggered(self):
         log.debug("zoom to original size")
         self.currentView.zoomOriginal()
+
+    def toggle_grid_triggered(self):
+        log.debug("toggle grid")
+        value = self.actions["toggle_grid"].isChecked()
+        self.app.qsettings.setValue("grc/show_grid", value)
+        if self.currentFlowgraphScene:
+            self.currentFlowgraphScene.update()
+        if hasattr(self, 'currentView') and hasattr(self.currentView, 'viewport'):
+            self.currentView.viewport().update()
 
     def find_triggered(self):
         log.debug("find block")
