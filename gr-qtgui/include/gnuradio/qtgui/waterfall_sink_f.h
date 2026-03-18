@@ -100,6 +100,7 @@ public:
                      double fc,
                      double bw,
                      const std::string& name,
+                     int n_rows,
                      int nconnections = 1,
                      QWidget* parent = NULL);
 

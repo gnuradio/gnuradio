@@ -28,7 +28,7 @@ class WaterfallDisplayForm : public DisplayForm
     Q_OBJECT
 
 public:
-    WaterfallDisplayForm(int nplots = 1, QWidget* parent = 0);
+    WaterfallDisplayForm(int nplots, int n_rows, QWidget* parent);
     ~WaterfallDisplayForm() override;
 
     WaterfallDisplayPlot* getPlot() override;
