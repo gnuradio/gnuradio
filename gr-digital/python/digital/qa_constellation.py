@@ -10,8 +10,7 @@
 
 
 import random
-import math
-from cmath import exp, pi, log, sqrt
+from cmath import exp, pi, sqrt
 import numpy
 
 from gnuradio import gr, gr_unittest, digital, blocks
@@ -200,32 +199,32 @@ class test_constellation(gr_unittest.TestCase):
             self.assertAlmostEqual(avg_amp, 1.0, 6)
 
     def test_hard_decision(self):
-        for constellation, differential in tested_constellations():
+        for constel, differential in tested_constellations():
             if differential:
-                rs = constellation.rotational_symmetry()
+                rs = constel.rotational_symmetry()
                 rotations = [exp(i * 2 * pi * (0 + 1j) / rs)
                              for i in range(0, rs)]
             else:
                 rotations = [None]
             for rotation in rotations:
                 src = blocks.vector_source_b(self.src_data)
-                content = mod_demod(constellation, differential, rotation)
+                content = mod_demod(constel, differential, rotation)
                 dst = blocks.vector_sink_b()
                 self.tb = gr.top_block()
                 self.tb.connect(src, content, dst)
                 self.tb.run()
                 data = dst.data()
                 # Don't worry about cut off data for now.
-                first = constellation.bits_per_symbol()
+                first = constel.bits_per_symbol()
                 equality = all(numpy.equal(self.src_data[first:len(data)],
                                            data[first:]))
                 if not equality:
                     msg = "Constellations mismatched. " + \
-                        f"{type(constellation)}; " + \
+                        f"{type(constel)}; " + \
                         f"Differential? {differential}; " + \
-                        f"{len(constellation.points())} " +\
+                        f"{len(constel.points())} " +\
                         "Constellation points: " + \
-                        f"{constellation.points()};"
+                        f"{constel.points()};"
                     self.assertEqual(self.src_data[first:len(data)],
                                      data[first:],
                                      msg=msg)
@@ -235,17 +234,16 @@ class test_constellation(gr_unittest.TestCase):
 
         c = digital.constellation_qpsk().base()
 
-        constel = c.points()
         code = [0, 1, 2, 3]
-        Es = 1.0
+        npwr = 1.0
 
-        c.set_npwr(Es)
+        c.set_npwr(npwr)
         c.normalize(digital.constellation.POWER_NORMALIZATION)
-        table = digital.soft_dec_table(constel, code, prec, Es)
-        constel = digital.const_normalization(constel, "POWER")
+        constel = c.points()
+        table = digital.soft_dec_table(constel, code, prec, npwr)
         maxamp = digital.min_max_axes(constel)
 
-        c.set_soft_dec_lut(table, prec)
+        c.set_soft_dec_lut(table, prec, 2 * digital.min_max_axes(constel))
 
         x = sqrt(2.0) / 2.0
         step = (x.real + x.real) / (2**prec - 1)
@@ -269,7 +267,7 @@ class test_constellation(gr_unittest.TestCase):
             y_python_raw_calc += slicer(
                 digital.calc_soft_dec(
                     sample, constel, code))
-            y_python_gen_calc += slicer(digital.sd_psk_4_0(sample, Es))
+            y_python_gen_calc += slicer(digital.sd_psk_4_0(sample))
             y_python_table += slicer(
                 digital.calc_soft_dec_from_table(
                     sample, table, prec, maxamp))
@@ -342,12 +340,11 @@ class test_constellation(gr_unittest.TestCase):
 
         # Get max energy/symbol in constellation
         constel = c.points()
-        Es = 1.0
-        padding = 2
-
+        PADDING = 2
+        max_axis = digital.min_max_axes(constel)
+        axis_limit = PADDING * max_axis
         table = digital.soft_dec_table(constel, code, prec)
         c.gen_soft_dec_lut(prec)
-
         x = sqrt(2.0) / 2.0
         step = (x.real + x.real) / (2**prec - 1)
         samples = [-x - x * 1j,
@@ -371,7 +368,7 @@ class test_constellation(gr_unittest.TestCase):
                     sample, constel, code))
             y_python_table += slicer(
                 digital.calc_soft_dec_from_table(
-                    sample, table, prec, Es))
+                    sample, table, prec, axis_limit))
 
             y_cpp_raw_calc += slicer(c.calc_soft_dec(sample))
             y_cpp_table += slicer(c.soft_decision_maker(sample))
@@ -388,10 +385,12 @@ class mod_demod(gr.hier_block2):
             raise ValueError(
                 "Constellation cannot contain more than 256 points.")
 
-        gr.hier_block2.__init__(self, "mod_demod",
-                                gr.io_signature(
-                                    1, 1, gr.sizeof_char),       # Input signature
-                                gr.io_signature(1, 1, gr.sizeof_char))       # Output signature
+        gr.hier_block2.__init__(
+            self,
+            "mod_demod",
+            gr.io_signature(1, 1, gr.sizeof_char),  # Input signature
+            gr.io_signature(1, 1, gr.sizeof_char),  # Output signature
+        )
 
         arity = constellation.arity()
 
