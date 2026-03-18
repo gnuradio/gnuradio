@@ -3,37 +3,38 @@ label: Packed to Unpacked
 flags: [ python, cpp ]
 
 parameters:
--   id: type
-    label: Type
-    dtype: enum
-    options: [int, short, byte]
-    option_attributes:
-        fcn: [ii, ss, bb]
-    hide: part
--   id: bits_per_chunk
-    label: Bits per Chunk
-    dtype: int
-    default: '2'
--   id: endianness
-    label: Endianness
-    dtype: raw
-    options: [gr.GR_MSB_FIRST, gr.GR_LSB_FIRST]
-    option_labels: [MSB, LSB]
--   id: num_ports
-    label: Num Ports
-    dtype: int
-    default: '1'
-    hide: part
+- id: type
+  label: Type
+  dtype: enum
+  options: [int, short, byte]
+  option_attributes:
+      fcn: [ii, ss, bb]
+  hide: part
+- id: bits_per_chunk
+  label: Bits per Chunk
+  dtype: int
+  default: '2'
+- id: endianness
+  label: Endianness
+  dtype: enum
+  default: 'gr.GR_MSB_FIRST'
+  options: ['gr.GR_MSB_FIRST', 'gr.GR_LSB_FIRST']
+  option_labels: [MSB, LSB]
+- id: num_ports
+  label: Num Ports
+  dtype: int
+  default: '1'
+  hide: part
 
 inputs:
--   domain: stream
-    dtype: ${ type }
-    multiplicity: ${ num_ports }
+- domain: stream
+  dtype: ${ type }
+  multiplicity: ${ num_ports }
 
 outputs:
--   domain: stream
-    dtype: ${ type }
-    multiplicity: ${ num_ports }
+- domain: stream
+  dtype: ${ type }
+  multiplicity: ${ num_ports }
 
 asserts:
 - ${ num_ports > 0 }
