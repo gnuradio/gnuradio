@@ -354,7 +354,17 @@ long block::max_output_buffer(size_t i)
 
 void block::set_max_output_buffer(long max_output_buffer)
 {
-    for (int i = 0; i < output_signature()->max_streams(); i++) {
+    int max_streams = output_signature()->max_streams();
+
+    if (max_streams == -1) {
+        if (d_detail) {
+            max_streams = d_detail->noutputs();
+        } else {
+            max_streams = 1;
+        }
+    }
+
+    for (int i = 0; i < max_streams; i++) {
         set_max_output_buffer(i, max_output_buffer);
     }
 }
@@ -378,7 +388,18 @@ void block::set_min_output_buffer(long min_output_buffer)
 {
     d_logger->info(
         "set_min_output_buffer on block {:d} to {:d}", unique_id(), min_output_buffer);
-    for (int i = 0; i < output_signature()->max_streams(); i++) {
+
+    int max_streams = output_signature()->max_streams();
+
+    if (max_streams == -1) {
+        if (d_detail) {
+            max_streams = d_detail->noutputs();
+        } else {
+            max_streams = 1;
+        }
+    }
+
+    for (int i = 0; i < max_streams; i++) {
         set_min_output_buffer(i, min_output_buffer);
     }
 }
