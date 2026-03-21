@@ -19,6 +19,25 @@ target_include_directories(
 list(APPEND gr_audio_confs ${CMAKE_CURRENT_SOURCE_DIR}/gr-audio.conf)
 
 ########################################################################
+## PulseAudio Support
+########################################################################
+pkg_check_modules(PULSEAUDIO libpulse)
+
+if(PULSEAUDIO_FOUND)
+    target_compile_definitions(gnuradio-audio PRIVATE -DPULSE_FOUND)
+    target_include_directories(gnuradio-audio PRIVATE ${PULSEAUDIO_INCLUDE_DIRS})
+    target_link_libraries(gnuradio-audio PRIVATE ${PULSEAUDIO_LIBRARIES})
+    target_sources(
+        gnuradio-audio
+        PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/pulse/pulse_sink.cc
+                ${CMAKE_CURRENT_SOURCE_DIR}/pulse/pulse_source.cc
+    )
+    gr_append_subcomponent("pulse")
+    list(APPEND gr_audio_confs
+         ${CMAKE_CURRENT_SOURCE_DIR}/pulse/gr-audio-pulse.conf)
+endif()
+
+########################################################################
 ## ALSA Support
 ########################################################################
 gr_find_package(ALSA)

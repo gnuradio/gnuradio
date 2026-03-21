@@ -40,8 +40,10 @@ public:
      *    - pulse, hw:0,0, plughw:0,0, surround51, /dev/dsp
      * \endxmlonly
      */
-    static sptr
-    make(int sampling_rate, const std::string device_name = "", bool ok_to_block = true);
+    static sptr make(int sampling_rate,
+                     const std::string& device_name = "",
+                     bool ok_to_block = true,
+                     const std::map<std::string, std::string>& properties = {});
 };
 
 } /* namespace audio */
