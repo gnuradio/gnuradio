@@ -11,15 +11,15 @@
 #ifndef INCLUDED_QTGUI_VECTOR_SINK_F_IMPL_H
 #define INCLUDED_QTGUI_VECTOR_SINK_F_IMPL_H
 
-#include <gnuradio/qtgui/vector_sink_f.h>
-
 #include <gnuradio/high_res_timer.h>
+#include <gnuradio/qtgui/vector_sink_f.h>
 #include <gnuradio/qtgui/vectordisplayform.h>
 
 namespace gr {
 namespace qtgui {
 
-class QTGUI_API vector_sink_f_impl : public vector_sink_f
+template <class T>
+class vector_sink_f_impl : public vector_sink_f
 {
 private:
     void initialize(const std::string& name,
@@ -37,12 +37,12 @@ private:
     const pmt::pmt_t d_port;
     const pmt::pmt_t d_msg; //< Key of outgoing messages
 
+    // GUI buffers are always double for plotting
     std::vector<volk::vector<double>> d_magbufs;
 
     // Required now for Qt; argc must be greater than 0 and argv
     // must have at least one valid character. Must be valid through
     // life of the qApplication:
-    // http://harmattan-dev.nokia.com/docs/library/html/qt4/qapplication.html
     char d_zero = 0;
     int d_argc = 1;
     char* d_argv = &d_zero;
@@ -52,11 +52,7 @@ private:
     gr::high_res_timer_type d_update_time;
     gr::high_res_timer_type d_last_time;
 
-    // TODO remove this?
     void check_clicked();
-
-    // Handles message input port for setting new center frequency.
-    // The message is a PMT pair (intern('freq'), double(frequency)).
     void handle_set_freq(pmt::pmt_t msg);
 
 public:
@@ -75,7 +71,6 @@ public:
     vector_sink_f_impl(vector_sink_f_impl&&) = delete;
     vector_sink_f_impl& operator=(const vector_sink_f_impl&) = delete;
     vector_sink_f_impl& operator=(vector_sink_f_impl&&) = delete;
-
 
     bool check_topology(int ninputs, int noutputs) override;
 
