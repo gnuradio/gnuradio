@@ -136,6 +136,7 @@ set(BLOCKS_SOURCES
     rms_cf_impl.cc
     rms_ff_impl.cc
     rotator_cc_impl.cc
+    sigmf_sink_impl.cc
     short_to_char_impl.cc
     short_to_float_impl.cc
     skiphead_impl.cc
@@ -229,7 +230,8 @@ if(ENABLE_TESTING)
         qa_gr_hier_block2_derived.cc
         qa_gr_top_block.cc
         qa_rotator.cc
-        qa_set_msg_handler.cc)
+        qa_set_msg_handler.cc
+        qa_sigmf_sink.cc)
     list(APPEND GR_TEST_TARGET_DEPS gnuradio-blocks)
 
     foreach(qa_file ${test_gr_blocks_sources})
