@@ -240,6 +240,24 @@ class DrawingArea(Gtk.DrawingArea):
         cr.fill()
 
         cr.scale(self.zoom_factor, self.zoom_factor)
+
+        # Draw grid if enabled
+        if Actions.TOGGLE_SHOW_GRID.get_active():
+            cr.set_source_rgba(*CANVAS_GRID_COLOR)
+            cr.set_line_width(1.0 / self.zoom_factor)
+            grid_size = Constants.CANVAS_GRID_SIZE
+
+            scaled_width = int(width / self.zoom_factor)
+            scaled_height = int(height / self.zoom_factor)
+
+            for i in range(0, scaled_width, grid_size):
+                cr.move_to(i, 0)
+                cr.line_to(i, scaled_height)
+            for i in range(0, scaled_height, grid_size):
+                cr.move_to(0, i)
+                cr.line_to(scaled_width, i)
+            cr.stroke()
+
         cr.set_line_width(2.0 / self.zoom_factor)
 
         if self._update_after_zoom:
