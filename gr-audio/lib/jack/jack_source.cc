@@ -28,8 +28,10 @@
 namespace gr {
 namespace audio {
 
-source::sptr
-jack_source_fcn(int sampling_rate, const std::string& device_name, bool ok_to_block)
+source::sptr jack_source_fcn(int sampling_rate,
+                             const std::string& device_name,
+                             bool ok_to_block,
+                             const std::map<std::string, std::string>& /*properties*/)
 {
     return source::sptr(new jack_source(sampling_rate, device_name, ok_to_block));
 }
