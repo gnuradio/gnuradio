@@ -47,7 +47,7 @@ if(MSVC)
 endif(MSVC)
 
 if(BUILD_SHARED_LIBS)
-    gr_library_foo(gnuradio-fft)
+    GR_REGISTER_LIBRARY(gnuradio-fft)
 endif()
 
 if(ENABLE_TESTING)

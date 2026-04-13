@@ -30,7 +30,7 @@ if(MSVC)
 endif(MSVC)
 
 if(BUILD_SHARED_LIBS)
-    gr_library_foo(gnuradio-soapy SoapySDR)
+    GR_REGISTER_LIBRARY(gnuradio-soapy SoapySDR)
 endif()
 
 if(ENABLE_TESTING)
