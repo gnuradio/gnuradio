@@ -59,8 +59,8 @@ def fetch_online(name: str) -> Optional[pathlib.Path]:
         return local_file
     if not online_tests_enabled():
         logging.warning(
-            "Online tests disabled "
-            + f'(environment variable "GR_ONLINE_TESTS") and {filename} not pre-downloaded'
+            "Online tests disabled " +
+            f'(environment variable "GR_ONLINE_TESTS") and {filename} not pre-downloaded'
         )
         return None
     try:
