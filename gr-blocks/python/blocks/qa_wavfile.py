@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 #
 # Copyright 2008,2010,2013,2020 Free Software Foundation, Inc.
+# Copyright 2026 Marcus Müller
 #
 # This file is part of GNU Radio
 #
@@ -13,7 +14,6 @@ from gnuradio import gr, gr_unittest, blocks
 
 import os
 import tempfile
-import unittest
 import wave
 from os.path import getsize
 
@@ -263,7 +263,7 @@ class test_wavefile(gr_unittest.TestCase):
 
             os.unlink(tf.name)
 
-    @unittest.skip("skipped due to bug in libsndfile < 1.2.1")
+    @gr_unittest.skip("skipped due to bug in libsndfile < 1.2.1")
     def test_read_mp3(self):
         expected_len = 2304
 
@@ -276,7 +276,7 @@ class test_wavefile(gr_unittest.TestCase):
 
         self.assertEqual(len(result), expected_len)
 
-    @unittest.skip("skipped due to bug in libsndfile < 1.2.1")
+    @gr_unittest.skip("skipped due to bug in libsndfile < 1.2.1")
     def test_read_mp3_repeat(self):
         expected_len = 2304
         repeats = 5
