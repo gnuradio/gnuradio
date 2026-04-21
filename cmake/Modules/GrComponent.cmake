@@ -34,15 +34,63 @@ define_property(
 
 ########################################################################
 # Register a component into the system
-# GR_REGISTER_COMPONENT(NAME <component-name> VAR <enabled-var> [NO_INSTALL]
-#                       [REQUIRED_COMPONENTS <list of required compoents>] [REQUIRED_TPLS <required-tpls>])
+# GR_REGISTER_COMPONENT (NAME <component-name> VAR <enabled-var> [NO_INSTALL]
+#                       [REQUIRED_COMPONENTS <list of required components>]
+#                       [REQUIRED_TPLS <required-tpls>])
+#
+# legacy syntax
+# GR_REGISTER_COMPONENT(<component-name> <enabled-var> [<list of dependencies>])
+#
+#   Arguments:
+#   - component-name:     Canonical component name (may contain spaces)
+#   - enabled-var:        Boolean variable name holding the enabled status
+#   - NO_INSTALL:         Boolean value indicating an internal component, that
+#                         represents a functional subset of a 'gr' component.
+#   - required component: String variable identifying a dependent cmake component
+#   - required tpl:       Boolean variable name holding the result of a 
+#                         config time, external dependency check.
+#                         Variable is similar to the legacy <dependency> argument.
+#   - dependency:         Boolean variable name holding the result of a 
+#                         config time dependency check.
+#                         These variables often have the suffix '_FOUND'.
+#
 ########################################################################
 function(GR_REGISTER_COMPONENT)
-    set(OPTIONS NO_INSTALL)
     set(SINGLE_OPT NAME VAR)
     set(MULTI_OPT REQUIRED_COMPONENTS REQUIRED_TPLS)
-    cmake_parse_arguments(GR_COMPONENT "${OPTIONS}" "${SINGLE_OPT}" "${MULTI_OPT}" ${ARGN})
     include(CMakeDependentOption)
+    # check with syntax pattern we have
+    list(GET ARGV 0 arg0)
+    if(arg0 IN_LIST SINGLE_OPT OR arg0 IN_LIST MULTI_OPT OR arg0 STREQUAL "NO_INSTALL")
+        set(gr_component_version "2")  # assume new syntax
+        set(OPTIONS NO_INSTALL)
+        cmake_parse_arguments(GR_COMPONENT "${OPTIONS}" "${SINGLE_OPT}" "${MULTI_OPT}" ${ARGN})
+
+        if(NOT GR_COMPONENT_NAME OR NOT GR_COMPONENT_VAR)
+            message(FATAL_ERROR "GR_REGISTER_COMPONENT keyword form requires NAME and VAR")
+        endif()
+        if(GR_COMPONENT_UNPARSED_ARGUMENTS)
+            message(FATAL_ERROR "GR_REGISTER_COMPONENT unknown arguments: ${GR_COMPONENT_UNPARSED_ARGUMENTS}")
+        endif()
+    else()
+        # assume legacy syntax, which is positional and 
+        # does not support NO_INSTALL or separate required components and tpls
+        set(gr_component_version "1")
+        set(GR_COMPONENT_NAME "${ARGV0}")
+        set(GR_COMPONENT_VAR  "${ARGV1}")
+        set(GR_COMPONENT_NO_INSTALL FALSE)
+        set(GR_COMPONENT_REQUIRED_COMPONENTS)
+        set(GR_COMPONENT_REQUIRED_TPLS)
+
+        if(ARGC GREATER 2)
+            if(gr_component_dep_vars)
+                message(WARNING "Variable gr_component_dep_vars already defined with value '${gr_component_dep_vars}'")
+            endif()
+            set(gr_component_dep_vars ${ARGV})
+            # remove the first two args, which are the positional name and var
+            list(REMOVE_AT gr_component_dep_vars 0 1)
+        endif()
+    endif()
     define_property(
 	    GLOBAL 
 	    PROPERTY COMPONENT_${GR_COMPONENT_NAME}_VAR 
@@ -56,6 +104,11 @@ function(GR_REGISTER_COMPONENT)
     endforeach(dep)
     message(STATUS "")
     message(STATUS "Configuring ${GR_COMPONENT_NAME} support...")
+    message(VERBOSE "${CMAKE_CURRENT_FUNCTION}: Using version ${gr_component_version} syntax")
+    message(VERBOSE "${CMAKE_CURRENT_FUNCTION}:   input args: ${ARGN}")
+    message(VERBOSE "${CMAKE_CURRENT_FUNCTION}:   req comps:  ${GR_COMPONENT_REQUIRED_COMPONENTS}")
+    message(VERBOSE "${CMAKE_CURRENT_FUNCTION}:   req tpls:   ${GR_COMPONENT_REQUIRED_TPLS}")
+    message(VERBOSE "${CMAKE_CURRENT_FUNCTION}:   dep vars:   ${gr_component_dep_vars}")
     foreach(dep ${gr_component_dep_vars})
         message(STATUS "  Component Dependency ${dep} = ${${dep}}")
     endforeach(dep)
@@ -71,6 +124,9 @@ function(GR_REGISTER_COMPONENT)
     endif()
 
     # rewrite the dependency list so that deps that are also components use the cached version
+    # in the v1 case variable gr_component_dep_vars contains all none positional arguments
+    # in the v2 case value is derived from GR_COMPONENT_REQUIRED_COMPONENTS, and does NOT
+    # include external dependencies from GR_COMPONENT_REQUIRED_TPLS
     unset(comp_deps)
     foreach(dep ${gr_component_dep_vars})
         list(FIND _gr_enabled_components ${dep} dep_enb_index)
@@ -115,10 +171,14 @@ function(GR_REGISTER_COMPONENT)
         ${_gr_disabled_components}
         CACHE INTERNAL "" FORCE)
 
-    GR_DEFINE_COMPONENT_INTERFACE(${GR_COMPONENT_NAME} ${GR_COMPONENT_REQUIRED_COMPONENTS})
+    if(GR_COMPONENT_REQUIRED_COMPONENTS)
+        GR_DEFINE_COMPONENT_INTERFACE(${GR_COMPONENT_NAME} ${GR_COMPONENT_REQUIRED_COMPONENTS})
+    endif(GR_COMPONENT_REQUIRED_COMPONENTS)
     if(NOT GR_COMPONENT_NO_INSTALL)
         set_property(GLOBAL PROPERTY GR_ACTIVE_COMPONENT ${GR_COMPONENT_NAME})
-    endif()
+    else()
+        message(VERBOSE "${CMAKE_CURRENT_FUNCTION}:   ${GR_COMPONENT_NAME} set to NO_INSTALL")
+    endif(NOT GR_COMPONENT_NO_INSTALL)
 endfunction(GR_REGISTER_COMPONENT)
 
 function(GR_APPEND_SUBCOMPONENT name)
