@@ -116,6 +116,17 @@ ldpc_G_matrix_impl::ldpc_G_matrix_impl(const std::string filename) : fec_mtrx_im
 
     d_H_sptr = matrix_sptr((matrix*)H_ptr, matrix_free);
 
+    const unsigned int pcols = d_n - d_k;
+    d_P_col_indices.resize(pcols);
+
+    for (unsigned int j = 0; j < pcols; ++j) {
+        for (unsigned int i = 0; i < d_k; ++i) {
+            if (static_cast<unsigned char>(gsl_matrix_get(P, i, j)) & 0x1) {
+                d_P_col_indices[j].push_back(i);
+            }
+        }
+    }
+
     // Free memory
     gsl_matrix_free(P);
     gsl_matrix_free(P_transpose);
@@ -132,26 +143,17 @@ const gsl_matrix* ldpc_G_matrix_impl::G_transpose() const
 void ldpc_G_matrix_impl::encode(unsigned char* outbuffer,
                                 const unsigned char* inbuffer) const
 {
+    const unsigned int n_parity_bits = d_n - d_k;
 
-    unsigned int index, k = d_k, n = d_n;
-    gsl_matrix* s = gsl_matrix_alloc(k, 1);
-    for (index = 0; index < k; index++) {
-        double value = static_cast<double>(inbuffer[index]);
-        gsl_matrix_set(s, index, 0, value);
+    std::memcpy(outbuffer, inbuffer, d_k);
+
+    for (unsigned int j = 0; j < n_parity_bits; ++j) {
+        unsigned char p = 0;
+        for(const auto& idx: d_P_col_indices[j]) {
+            p ^= inbuffer[idx] & 0x1;
+        }
+        outbuffer[d_k + j] = p;
     }
-
-    // Simple matrix multiplication to get codeword
-    gsl_matrix* codeword = gsl_matrix_alloc(G_transpose()->size1, s->size2);
-    mult_matrices_mod2(codeword, G_transpose(), s);
-
-    // Output
-    for (index = 0; index < n; index++) {
-        outbuffer[index] = gsl_matrix_get(codeword, index, 0);
-    }
-
-    // Free memory
-    gsl_matrix_free(s);
-    gsl_matrix_free(codeword);
 }
 
 
