@@ -32,6 +32,8 @@ libsndfile:
 - '1.2'
 libthrift:
 - 0.21.0
+nlohmann_json:
+- 3.10.5
 numpy:
 - '1.23'
 pin_run_as_build:

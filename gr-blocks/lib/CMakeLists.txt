@@ -175,6 +175,7 @@ endif()
 add_library(gnuradio-blocks ${BLOCKS_SOURCES})
 
 target_link_libraries(gnuradio-blocks PUBLIC gnuradio-runtime Volk::volk)
+target_link_libraries(gnuradio-blocks PRIVATE nlohmann_json::nlohmann_json)
 
 if(SNDFILE_FOUND)
     if(TARGET sndfile::sndfile)

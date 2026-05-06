@@ -12,6 +12,8 @@ include(GrBoost)
 
 gr_find_package(SNDFILE)
 
+find_package(nlohmann_json 3.10.5 REQUIRED)
+
 if(NOT SNDFILE_FOUND)
     message(STATUS "")
     message(STATUS "********************* WARNING!!! *********************")

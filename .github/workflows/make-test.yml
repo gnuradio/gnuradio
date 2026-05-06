@@ -237,6 +237,7 @@ jobs:
           jack2:p
           libsndfile:p
           libunwind:p
+          nlohmann-json:p
           pango:p
           portaudio:p
           pybind11:p
