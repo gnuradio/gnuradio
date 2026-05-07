@@ -67,10 +67,10 @@ sigmf_sink_impl::sigmf_sink_impl(const std::string& filename, const std::string&
                  gr::io_signature::make(1, 1, get_sizeof_stream_item(datatype)),
                  gr::io_signature::make(0, 0, 0)),
       d_metadata_path(filename),
-      d_metadata_stream(0),
+      d_metadata_stream(),
       d_metadata(),
       d_dataset_path(filename),
-      d_dataset_stream(0),
+      d_dataset_stream(),
       d_sizeof_stream_item(get_sizeof_stream_item(datatype))
 {
     // The specification recommends that the base file names for the Recording's
