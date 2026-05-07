@@ -99,9 +99,7 @@ sigmf_sink_impl::sigmf_sink_impl(const std::string& filename, const std::string&
     write_metadata();
 }
 
-sigmf_sink_impl::~sigmf_sink_impl(){
-    // No-op.
-};
+sigmf_sink_impl::~sigmf_sink_impl() = default;
 
 void sigmf_sink_impl::open_metadata()
 {
@@ -184,8 +182,14 @@ void sigmf_sink_impl::add_captures_segment(size_t sample_start)
 
 bool sigmf_sink_impl::stop()
 {
-    d_metadata_stream.flush();
-    d_dataset_stream.flush();
+    if (d_metadata_stream.is_open()) {
+        d_metadata_stream.flush();
+        d_metadata_stream.close();
+    }
+    if (d_dataset_stream.is_open()) {
+        d_dataset_stream.flush();
+        d_dataset_stream.close();
+    }
     return true;
 }
 

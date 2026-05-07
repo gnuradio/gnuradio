@@ -48,6 +48,7 @@ BOOST_AUTO_TEST_CASE(sigmf_sink_run)
     dataset_stream.read(reinterpret_cast<char*>(buff.data()),
                         num_elements * sizeof(gr_complex));
     BOOST_TEST(in == buff);
+    dataset_stream.close();
 
     // Check the Metadata file is compliant with the specification, and that we can
     // recover basic contents.
@@ -61,6 +62,7 @@ BOOST_AUTO_TEST_CASE(sigmf_sink_run)
     BOOST_TEST(meta["captures"][0]["core:sample_start"].get<uint64_t>() == 0);
     BOOST_TEST(meta["global"].contains("core:version"));
     BOOST_TEST(meta["global"]["core:datatype"].get<std::string>() == datatype);
+    meta_stream.close();
 
     // Clean up the temporary directory so the test is idempotent.
     std::filesystem::remove_all(tmp_dir);
