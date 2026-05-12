@@ -14,20 +14,20 @@ parameters:
     hide: all
 
 inputs:
+-   domain: rfnoc.clk
+    id: ce_clk
+    dtype: message
 -   domain: rfnoc.data
     id: fft_in
     dtype: fc32
-    multiplicity: ${ NUM_PORTS }
 
 outputs:
 -   domain: rfnoc.data
     id: hist
     dtype: fc32
-    multiplicity: ${ NUM_PORTS }
 -   domain: rfnoc.data
     id: wf
     dtype: fc32
-    multiplicity: ${ NUM_PORTS }
 
 documentation: |-
   RFNoC F15 (fosphor) (FPGA Implementation).
