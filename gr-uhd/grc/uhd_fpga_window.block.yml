@@ -1,0 +1,51 @@
+id: uhd_fpga_window
+label: RFNoC Window
+
+parameters:
+-   id: type
+    label: RFNoC Block Type
+    dtype: enum
+    default: 'block'
+    options: ['block', 'sep', 'device']
+    hide: all
+-   id: desc
+    label: Block Descriptor
+    dtype: string
+    default: 'window.yml'
+    hide: all
+-   id: NUM_PORTS
+    label: Number of Ports
+    dtype: int
+    default: 1
+    hide: part
+-   id: MAX_WINDOW_SIZE
+    label: Maximum number of window coefficients
+    dtype: int
+    default: 4096
+    hide: part
+
+inputs:
+-   domain: rfnoc.clk
+    id: ce_clk
+    dtype: message
+-   domain: rfnoc.data
+    id: in_
+    dtype: fc32
+    multiplicity: ${ NUM_PORTS }
+
+outputs:
+-   domain: rfnoc.data
+    id: out_
+    dtype: fc32
+    multiplicity: ${ NUM_PORTS }
+
+doc_url: UHD_FPGA_WINDOW
+
+documentation: |-
+  RFNoC Window (FPGA Implementation).
+  Instantiates a Window block in the FPGA bitfile.
+  This block is used to apply a window function to a time-domain signal before
+  passing it on to the FFT block.
+
+file_format: 1
+

@@ -34,6 +34,7 @@
       - uhd_fpga_vector
       - uhd_fpga_fir_filter
       - uhd_fpga_logpwr
+      - uhd_fpga_window
     - Core:
       - uhd_fpga_sep
       - uhd_fpga_device_bsp
