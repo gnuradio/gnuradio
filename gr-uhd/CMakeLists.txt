@@ -25,9 +25,6 @@ else()
 endif()
 
 gr_python_check_module("PyQt6" PyQt6 True PYQT_FOUND)
-if (NOT ${PYQT_FOUND})
-  gr_python_check_module("PyQt5" PyQt5 True PYQT_FOUND)
-endif()
 
 # Check for plotting dependencies
 gr_python_check_module(

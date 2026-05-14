@@ -6,7 +6,7 @@
 #
 #
 
-from PyQt5 import QtWidgets, QtCore, Qt
+from qtpy import QtWidgets, QtCore, Qt
 
 
 class BandGraphicsView(QtWidgets.QGraphicsView):

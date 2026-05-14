@@ -69,6 +69,7 @@ set(QTGUI_LIBS
     gnuradio-filter
     Volk::volk
     qwt::qwt
+    Qt6::Widgets
 )
 
 if(ENABLE_GR_QTGUI_OPENGL)

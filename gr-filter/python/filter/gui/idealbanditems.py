@@ -7,7 +7,7 @@
 #
 
 
-from PyQt5 import QtGui, QtCore, Qt
+from qtpy import QtGui, QtCore, Qt
 import pyqtgraph as pg
 import numpy
 

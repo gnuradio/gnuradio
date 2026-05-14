@@ -106,7 +106,7 @@ asserts:
 
 templates:
     imports: |-
-        from PyQt5.QtCore import QObject, pyqtSlot
+        from qtpy.QtCore import QObject, pyqtSlot
     var_make: self.${id} = ${id} = ${value}
     callbacks:
     - self.set_${id}(${value})

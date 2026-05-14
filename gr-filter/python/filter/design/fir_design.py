@@ -8,7 +8,7 @@
 
 import scipy
 from gnuradio import filter, fft
-from PyQt5 import QtGui, QtWidgets
+from qtpy import QtGui, QtWidgets
 
 
 # Filter design functions using a window

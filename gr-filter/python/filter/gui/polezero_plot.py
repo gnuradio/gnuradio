@@ -7,7 +7,7 @@
 #
 
 import sys
-from PyQt5 import Qt, QtCore
+from qtpy import Qt, QtCore
 from math import sin, cos, pi
 import pyqtgraph as pg
 from numpy import zeros
