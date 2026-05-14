@@ -41,10 +41,10 @@ except ImportError:
         'Please install SciPy to run this script (https://www.scipy.org)')
 
 try:
-    from PyQt5 import Qt, QtCore, QtWidgets
+    from qtpy import Qt, QtCore, QtWidgets
 except ImportError:
     raise SystemExit(
-        'Please install PyQt5 to run this script (https://www.riverbankcomputing.com/software/pyqt/download5)')
+        'Please install PyQt to run this script (https://www.riverbankcomputing.com/software/pyqt/download)')
 
 try:
     import pyqtgraph as pg

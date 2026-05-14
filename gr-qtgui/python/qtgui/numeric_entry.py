@@ -7,7 +7,7 @@
 #
 
 
-from PyQt5 import Qt, QtCore, QtWidgets
+from qtpy import Qt, QtCore, QtWidgets
 from gnuradio import gr
 import math
 import re

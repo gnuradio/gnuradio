@@ -10,30 +10,18 @@
 ########################################################################
 include(GrPython)
 
-# Note: gr-qtgui requires Qt5 or Qt6.
+# Note: gr-qtgui requires Qt6.
 
-if (TRY_QT6_BUILD)
 find_package(Qt6 QUIET
-    COMPONENTS Widgets
+    COMPONENTS Core Gui Widgets
     OPTIONAL_COMPONENTS OpenGL
 )
 set(QT_FOUND ${Qt6Widgets_FOUND})
 
-gr_python_check_module("PyQt6" PyQt6 True PYQT_FOUND)
-else()
-find_package(Qt5 QUIET
-    COMPONENTS Widgets
-    OPTIONAL_COMPONENTS OpenGL
-    GLOBAL
-)
-
-gr_python_check_module("PyQt5" PyQt5 True PYQT_FOUND)
-endif()
-
 gr_python_check_module(
-    DESC "PyQt5"
-    MODULE PyQt5
-    VAR PYQT5_FOUND
+    DESC "PyQt6"
+    MODULE PyQt6
+    VAR PYQT_FOUND
 )
 if(CONAN_TOOLCHAIN_DETECTED)
     gr_find_package(qwt GLOBAL)
