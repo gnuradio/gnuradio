@@ -14,8 +14,8 @@ from gnuradio.eng_arg import eng_float, intx
 import gui
 import sys
 import os
-from PyQt5 import Qt, QtGui, QtCore, uic
-import PyQt5.Qwt5 as Qwt
+from qtpy import Qt, QtGui, QtCore, uic
+import qtpy.Qwt as Qwt
 from gnuradio import zeromq
 import signal
 

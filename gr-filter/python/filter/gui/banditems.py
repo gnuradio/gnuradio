@@ -8,10 +8,10 @@
 
 
 try:
-    from PyQt5 import Qt, QtCore, QtGui, QtWidgets
+    from qtpy import Qt, QtCore, QtGui, QtWidgets
 except ImportError:
     raise SystemExit(
-        'Please install PyQt5 to run this script (http://www.riverbankcomputing.co.uk/software/pyqt/download)')
+        'Please install PyQt to run this script (http://www.riverbankcomputing.co.uk/software/pyqt/download)')
 
 
 # Movable solid line for filter ideal-band diagram.

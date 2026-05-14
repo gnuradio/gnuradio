@@ -21,7 +21,7 @@ import thrift
 import os
 @DLL_IMPORT_GTK@
 from gnuradio.ctrlport.GNURadioControlPortClient import GNURadioControlPortClient
-from PyQt5 import QtCore, Qt
+from qtpy import QtCore, Qt
 
 try:
     import networkx as nx

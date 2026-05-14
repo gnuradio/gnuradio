@@ -19,10 +19,10 @@ import struct
 
 try:
     from gnuradio import qtgui
-    from PyQt5 import Qt, QtCore
+    from qtpy import Qt, QtCore
     import sip
 except ImportError:
-    print("Error: Program requires PyQt5 and gr-qtgui.")
+    print("Error: Program requires PyQt and gr-qtgui.")
     sys.exit(1)
 
 

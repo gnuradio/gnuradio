@@ -11,15 +11,15 @@ except ImportError:
     raise SystemExit(1)
 
 try:
-    from PyQt5 import Qt, QtCore, QtGui
+    from qtpy import Qt, QtCore, QtGui
 except ImportError:
-    print("Please install PyQt5 to run this script (http://www.riverbankcomputing.co.uk/software/pyqt/download)")
+    print("Please install PyQt to run this script (http://www.riverbankcomputing.co.uk/software/pyqt/download)")
     raise SystemExit(1)
 
 try:
-    import PyQt5.Qwt as Qwt
+    import PyQt.Qwt as Qwt
 except ImportError:
-    print("Please install PyQwt5 to run this script (http://pyqwt.sourceforge.net/)")
+    print("Please install PyQwt to run this script (http://pyqwt.sourceforge.net/)")
     raise SystemExit(1)
 
 try:

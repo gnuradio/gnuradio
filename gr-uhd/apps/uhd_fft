@@ -41,8 +41,8 @@ import threading
 import time
 import math
 import signal
-from PyQt5 import Qt
-import sip  # Needs to be imported after PyQt5, could fail otherwise
+from qtpy import Qt
+import sip  # Needs to be imported after PyQt, could fail otherwise
 import os
 @DLL_IMPORT_GTK@
 from gnuradio import eng_notation

@@ -25,6 +25,7 @@
 from qtpy import QtWidgets
 from qtpy import QtWidgets as Qt
 from qtpy import QtGui
+from qtpy import QtCore
 from gnuradio import qtgui
 
 % for imp in imports:

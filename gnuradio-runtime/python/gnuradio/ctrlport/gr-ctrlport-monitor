@@ -8,7 +8,7 @@
 #
 #
 
-from PyQt5 import QtCore, Qt
+from qtpy import QtCore, Qt
 from argparse import ArgumentParser
 
 import os
