@@ -12,9 +12,10 @@
 #define INCLUDED_QTGUI_UTILS_H
 
 #include <gnuradio/qtgui/api.h>
-#include <qevent.h>
+#include <QEvent>
 #include <qwt_picker_machine.h>
 #include <qwt_plot_picker.h>
+#include <QApplication>
 #include <QCoreApplication>
 #include <QString>
 
