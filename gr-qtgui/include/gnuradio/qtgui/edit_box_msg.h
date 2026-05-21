@@ -117,7 +117,7 @@ public:
                      const std::string& key = "",
                      QWidget* parent = NULL);
 
-    virtual void exec_() = 0;
+    virtual void exec() = 0;
     virtual QWidget* qwidget() = 0;
 
     QApplication* d_qApplication;

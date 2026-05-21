@@ -165,7 +165,7 @@ class MAINWindow(Qt.QMainWindow):
         updater = UpdaterWindow(key, radio, None)
         updater.setWindowTitle("Updater: " + key)
         updater.setModal(False)
-        updater.exec_()
+        updater.exec()
 
     def newSub(self, e):
         tag = str(e.text(0))
@@ -384,7 +384,7 @@ class MAINWindow(Qt.QMainWindow):
 
     def updateRateShow(self):
         askrate = RateDialog(self.updateRate, self)
-        if askrate.exec_():
+        if askrate.exec():
             ur = float(str(askrate.delay.text()))
             self.setUpdateRate(ur)
             return
@@ -649,7 +649,7 @@ class MForm(Qt.QWidget):
         self.radioclient = None
         if radioclient is None:
             askinfo = ConInfoDialog(self)
-            if askinfo.exec_():
+            if askinfo.exec():
                 host = str(askinfo.host.text())
                 port = str(askinfo.port.text())
 
@@ -756,7 +756,7 @@ class MyApp(object):
 
         try:
             GNURadioControlPortClient(
-                args.host, args.port, 'thrift', self.run, Qt.QApplication(sys.argv).exec_)
+                args.host, args.port, 'thrift', self.run, Qt.QApplication(sys.argv).exec)
         except:
             print("ControlPort failed to connect. Check the config of your endpoint.")
             print("\t[ControlPort] on = True")

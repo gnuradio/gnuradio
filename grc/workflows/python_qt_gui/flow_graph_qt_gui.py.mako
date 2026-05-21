@@ -312,7 +312,7 @@ def main(top_block_cls=${class_name}, options=None):
     tb.${m.name}.start()
     % endif
     % endfor
-    qapp.exec_()
+    qapp.exec()
 
 if __name__ == '__main__':
     main()

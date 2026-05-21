@@ -404,6 +404,6 @@ if __name__ == "__main__":
 
     widget.show()
     widget.setWindowTitle("Test Qt Range")
-    app.exec_()
+    app.exec()
 
     widget = None

@@ -53,7 +53,7 @@ void bind_eye_sink_f(py::module& m)
              D(eye_sink_f, make))
 
 
-        .def("exec_", &eye_sink_f::exec_, D(eye_sink_f, exec_))
+        .def("exec", &eye_sink_f::exec, D(eye_sink_f, exec))
 
 
         .def(

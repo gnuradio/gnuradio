@@ -58,7 +58,7 @@ void bind_time_raster_sink_f(py::module& m)
              D(time_raster_sink_f, make))
 
 
-        .def("exec_", &time_raster_sink_f::exec_, D(time_raster_sink_f, exec_))
+        .def("exec", &time_raster_sink_f::exec, D(time_raster_sink_f, exec))
 
 
         .def(

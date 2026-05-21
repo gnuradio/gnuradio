@@ -56,7 +56,7 @@ void bind_freq_sink_c(py::module& m)
              D(freq_sink_c, make))
 
 
-        .def("exec_", &freq_sink_c::exec_, D(freq_sink_c, exec_))
+        .def("exec", &freq_sink_c::exec, D(freq_sink_c, exec))
 
 
         .def(

@@ -170,4 +170,4 @@ class Application(QtWidgets.QApplication):
         """Launches the main QT event loop"""
         # Show the main window after everything is initialized.
         self.MainWindow.show()
-        return self.exec_()
+        return self.exec()

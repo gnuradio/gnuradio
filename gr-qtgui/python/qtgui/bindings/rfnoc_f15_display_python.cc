@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(rfnoc_f15_display.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(9ba8d496dc1abb2f76017bf7ee0f40ce)                     */
+/* BINDTOOL_HEADER_FILE_HASH(f6709620c9bd413bc37acd354587b9a4)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -92,7 +92,7 @@ void bind_rfnoc_f15_display(py::module& m)
              D(rfnoc_f15_display, set_frame_rate))
 
 
-        .def("exec_", &rfnoc_f15_display::exec_, D(rfnoc_f15_display, exec_))
+        .def("exec", &rfnoc_f15_display::exec, D(rfnoc_f15_display, exec))
 
 
         .def(

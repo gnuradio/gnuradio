@@ -54,7 +54,7 @@ void bind_number_sink(py::module& m)
              D(number_sink, make))
 
 
-        .def("exec_", &number_sink::exec_, D(number_sink, exec_))
+        .def("exec", &number_sink::exec, D(number_sink, exec))
 
 
         .def(

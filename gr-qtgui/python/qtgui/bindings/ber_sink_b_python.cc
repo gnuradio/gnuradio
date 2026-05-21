@@ -52,7 +52,7 @@ void bind_ber_sink_b(py::module& m)
              D(ber_sink_b, make))
 
 
-        .def("exec_", &ber_sink_b::exec_, D(ber_sink_b, exec_))
+        .def("exec", &ber_sink_b::exec, D(ber_sink_b, exec))
 
 
         .def(
