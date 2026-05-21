@@ -14,7 +14,7 @@
 #include <gnuradio/fft/window.h>
 #include <gnuradio/qtgui/api.h>
 #include <gnuradio/sync_block.h>
-#include <qapplication.h>
+#include <QApplication>
 
 namespace gr {
 namespace qtgui {

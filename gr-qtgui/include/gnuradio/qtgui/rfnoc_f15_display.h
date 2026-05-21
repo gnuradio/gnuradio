@@ -15,7 +15,7 @@
 
 #include <gnuradio/block.h>
 #include <gnuradio/qtgui/api.h>
-#include <qapplication.h>
+#include <QApplication>
 #include <string>
 
 namespace gr {

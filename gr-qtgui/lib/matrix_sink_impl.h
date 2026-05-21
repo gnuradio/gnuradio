@@ -14,7 +14,7 @@
 #include "matrix_display_signal.h"
 
 #include <gnuradio/qtgui/matrix_sink.h>
-#include <qapplication.h>
+#include <QApplication>
 #include <QObject>
 #include <vector>
 

@@ -13,7 +13,7 @@
 
 #include <gnuradio/qtgui/spectrumUpdateEvents.h>
 #include <gnuradio/thread/thread.h>
-#include <qapplication.h>
+#include <QApplication>
 #include <qlabel.h>
 #include <qslider.h>
 #include <qwidget.h>
