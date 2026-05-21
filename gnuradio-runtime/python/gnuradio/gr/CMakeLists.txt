@@ -34,7 +34,8 @@ if(ENABLE_TESTING)
                          qa_sys_paths.py qa_tag_utils.py)
     # This is a check for whether gr-blocks is enabled
     if(ENABLE_DEFAULT OR ENABLE_GR_BLOCKS)
-        list(APPEND py_qa_test_files qa_hier_block2.py qa_uncaught_exception.py)
+        list(APPEND py_qa_test_files qa_hier_block2.py qa_uncaught_exception.py
+                                     qa_python_block_smoke.py)
     else()
         message(
             STATUS
