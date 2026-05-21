@@ -12,7 +12,7 @@
 
 #include <gnuradio/prefs.h>
 
-#include <qapplication.h>
+#include <QApplication>
 #include <QCoreApplication>
 #include <QDebug>
 #include <QFile>
