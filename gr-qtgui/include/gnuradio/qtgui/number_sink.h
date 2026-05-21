@@ -15,7 +15,7 @@
 #include <gnuradio/qtgui/qtgui_types.h>
 #include <gnuradio/qtgui/trigger_mode.h>
 #include <gnuradio/sync_block.h>
-#include <qapplication.h>
+#include <QApplication>
 
 namespace gr {
 namespace qtgui {
