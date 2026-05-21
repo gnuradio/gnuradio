@@ -65,7 +65,7 @@ public:
     // default value is provided.
     bool start() override;
 
-    void exec_() override;
+    void exec() override;
     QWidget* qwidget() override;
 
     void set_value(pmt::pmt_t val);

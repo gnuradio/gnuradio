@@ -95,7 +95,7 @@ void const_sink_c_impl::initialize()
     set_update_time(0.1);
 }
 
-void const_sink_c_impl::exec_() { d_qApplication->exec(); }
+void const_sink_c_impl::exec() { d_qApplication->exec(); }
 
 QWidget* const_sink_c_impl::qwidget() { return d_main_gui; }
 

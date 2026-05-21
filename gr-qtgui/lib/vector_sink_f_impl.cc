@@ -107,7 +107,7 @@ void vector_sink_f_impl::initialize(const std::string& name,
     set_update_time(0.1);
 }
 
-void vector_sink_f_impl::exec_() { d_qApplication->exec(); }
+void vector_sink_f_impl::exec() { d_qApplication->exec(); }
 
 QWidget* vector_sink_f_impl::qwidget() { return d_main_gui; }
 

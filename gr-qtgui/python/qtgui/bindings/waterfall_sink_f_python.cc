@@ -57,7 +57,7 @@ void bind_waterfall_sink_f(py::module& m)
              D(waterfall_sink_f, make))
 
 
-        .def("exec_", &waterfall_sink_f::exec_, D(waterfall_sink_f, exec_))
+        .def("exec", &waterfall_sink_f::exec, D(waterfall_sink_f, exec))
 
 
         .def(

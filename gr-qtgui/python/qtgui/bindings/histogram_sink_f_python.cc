@@ -57,7 +57,7 @@ void bind_histogram_sink_f(py::module& m)
              D(histogram_sink_f, make))
 
 
-        .def("exec_", &histogram_sink_f::exec_, D(histogram_sink_f, exec_))
+        .def("exec", &histogram_sink_f::exec, D(histogram_sink_f, exec))
 
 
         .def(

@@ -58,7 +58,7 @@ public:
                      const std::string& interpolation,
                      QWidget* parent = nullptr);
 
-    virtual void exec_() = 0;
+    virtual void exec() = 0;
     virtual QWidget* qwidget() = 0;
     virtual void set_x_start(double x_start) = 0;
     virtual void set_x_end(double x_end) = 0;

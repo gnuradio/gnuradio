@@ -234,7 +234,7 @@ int rfnoc_f15_display_impl::_work_wf(const uint8_t* input, int n_items, int port
 }
 
 
-void rfnoc_f15_display_impl::exec_() { d_qApplication->exec(); }
+void rfnoc_f15_display_impl::exec() { d_qApplication->exec(); }
 
 QWidget* rfnoc_f15_display_impl::qwidget() { return dynamic_cast<QWidget*>(d_gui); }
 

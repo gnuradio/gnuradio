@@ -53,7 +53,7 @@ void bind_edit_box_msg(py::module& m)
              D(edit_box_msg, make))
 
 
-        .def("exec_", &edit_box_msg::exec_, D(edit_box_msg, exec_))
+        .def("exec", &edit_box_msg::exec, D(edit_box_msg, exec))
 
 
         .def(

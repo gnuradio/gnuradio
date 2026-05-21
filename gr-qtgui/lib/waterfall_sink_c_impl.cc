@@ -129,7 +129,7 @@ void waterfall_sink_c_impl::initialize()
     set_update_time(0.1);
 }
 
-void waterfall_sink_c_impl::exec_() { d_qApplication->exec(); }
+void waterfall_sink_c_impl::exec() { d_qApplication->exec(); }
 
 QWidget* waterfall_sink_c_impl::qwidget() { return d_main_gui; }
 

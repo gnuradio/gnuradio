@@ -67,7 +67,7 @@ public:
                      int nconnections = 1,
                      QWidget* parent = NULL);
 
-    virtual void exec_() = 0;
+    virtual void exec() = 0;
     virtual QWidget* qwidget() = 0;
 
     virtual void set_update_time(double t) = 0;

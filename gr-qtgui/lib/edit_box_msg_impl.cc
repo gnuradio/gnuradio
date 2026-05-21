@@ -161,7 +161,7 @@ bool edit_box_msg_impl::start()
     return block::start();
 }
 
-void edit_box_msg_impl::exec_() { d_qApplication->exec(); }
+void edit_box_msg_impl::exec() { d_qApplication->exec(); }
 
 QWidget* edit_box_msg_impl::qwidget() { return (QWidget*)d_group; }
 

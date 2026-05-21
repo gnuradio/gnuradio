@@ -43,7 +43,7 @@ public:
                      QWidget* parent = nullptr);
     ~matrix_sink_impl() override;
 
-    void exec_() override;
+    void exec() override;
     QApplication* d_qApplication;
     QWidget* qwidget() override;
     void set_x_start(double x_start) override;

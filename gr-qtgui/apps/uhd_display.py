@@ -299,7 +299,7 @@ def main():
 
     tb = my_top_block(options)
     tb.start()
-    tb.snk.exec_()
+    tb.snk.exec()
 
 
 if __name__ == '__main__':
