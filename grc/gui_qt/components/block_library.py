@@ -106,7 +106,7 @@ class LibraryView(QTreeView):
     def contextMenuEvent(self, event):
         key = self.model().data(self.currentIndex(), Qt.UserRole)
         if key:  # Modules and categories don't have UserRole data
-            self.contextMenu.exec_(self.mapToGlobal(event.pos()))
+            self.contextMenu.exec(self.mapToGlobal(event.pos()))
 
     def view_examples(self):
         key = self.model().data(self.currentIndex(), Qt.UserRole)

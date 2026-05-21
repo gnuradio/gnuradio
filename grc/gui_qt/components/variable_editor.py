@@ -99,7 +99,7 @@ class VariableEditor(QDockWidget, base.Component):
         log.debug("Creating toolbars")
 
     def contextMenuEvent(self, event):
-        self.right_click_menu.exec_(self.mapToGlobal(event.pos()))
+        self.right_click_menu.exec(self.mapToGlobal(event.pos()))
 
     def keyPressEvent(self, event):
         super(VariableEditor, self).keyPressEvent(event)

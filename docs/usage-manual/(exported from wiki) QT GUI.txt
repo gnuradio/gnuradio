@@ -140,7 +140,7 @@ launched.
 In the "main" function of the code, the qApp is retrieved. Then, after
 the GNU Radio top block is started (remember that start() is a
 non-blocking call to launch the main thread of the flowgraph), the
-qapp's "exec_()" function is called. This function is a blocking call
+qapp's "exec()" function is called. This function is a blocking call
 while the GUI is alive.
 
 from PyQt4 import Qt
@@ -161,7 +161,7 @@ import sys, sip
      qapp = Qt.QApplication(sys.argv)
      tb = grclass()
      tb.start()
-     qapp.exec_()
+     qapp.exec()
      tb.stop()
 
 There are graphical controls in all but the combined plotting

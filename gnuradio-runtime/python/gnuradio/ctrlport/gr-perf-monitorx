@@ -634,7 +634,7 @@ class MForm(Qt.QWidget):
         if radioclient is None:
             askinfo = ConInfoDialog(self)
             self.radioclient = None
-            if askinfo.exec_():
+            if askinfo.exec():
                 host = str(askinfo.host.text())
                 port = str(askinfo.port.text())
                 try:
@@ -909,7 +909,7 @@ class MyApp(object):
 
         try:
             GNURadioControlPortClient(
-                args.host, args.port, 'thrift', self.run, Qt.QApplication(sys.argv).exec_)
+                args.host, args.port, 'thrift', self.run, Qt.QApplication(sys.argv).exec)
         except thrift.transport.TTransport.TTransportException:
             print("ControlPort failed to connect. Check the config of your endpoint.")
             print("\t[ControlPort] on = True")

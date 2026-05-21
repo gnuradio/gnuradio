@@ -532,7 +532,7 @@ def main():
     timer = Qt.QTimer()
     timer.start(500)
     timer.timeout.connect(lambda: None)
-    qapp.exec_()
+    qapp.exec()
 
 
 if __name__ == '__main__':
