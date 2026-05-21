@@ -27,7 +27,7 @@ static const char* __doc_gr_qtgui_number_sink_number_sink_1 = R"doc()doc";
 static const char* __doc_gr_qtgui_number_sink_make = R"doc()doc";
 
 
-static const char* __doc_gr_qtgui_number_sink_exec_ = R"doc()doc";
+static const char* __doc_gr_qtgui_number_sink_exec = R"doc()doc";
 
 
 static const char* __doc_gr_qtgui_number_sink_qwidget = R"doc()doc";
