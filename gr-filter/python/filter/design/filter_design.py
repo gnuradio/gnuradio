@@ -2353,7 +2353,7 @@ def launch(args, callback=None, restype=""):
     if callback is None:
         app = Qt.QApplication(args)
         gplt = gr_plot_filter(options, callback, restype)
-        app.exec_()
+        app.exec()
         if gplt.iir:
             retobj = ApiObject()
             retobj.update_all("iir", gplt.params, (gplt.b, gplt.a), 1)
@@ -2373,7 +2373,7 @@ def main(args):
 
     app = Qt.QApplication(args)
     gplt = gr_plot_filter(options)
-    app.exec_()
+    app.exec()
     app.deleteLater()
     sys.exit()
 

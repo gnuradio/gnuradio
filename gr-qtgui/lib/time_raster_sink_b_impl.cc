@@ -113,7 +113,7 @@ void time_raster_sink_b_impl::initialize()
     set_update_time(0.1);
 }
 
-void time_raster_sink_b_impl::exec_() { d_qApplication->exec(); }
+void time_raster_sink_b_impl::exec() { d_qApplication->exec(); }
 
 QWidget* time_raster_sink_b_impl::qwidget() { return d_main_gui; }
 

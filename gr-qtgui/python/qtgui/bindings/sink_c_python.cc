@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(1)                                                       */
 /* BINDTOOL_USE_PYGCCXML(1)                                                        */
 /* BINDTOOL_HEADER_FILE(sink_c.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(be3c6d3500abbebbfdc610cb7a951715)                     */
+/* BINDTOOL_HEADER_FILE_HASH(39da210debdecba09aac0082394ad74c)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -50,7 +50,7 @@ void bind_sink_c(py::module& m)
              D(sink_c, make))
 
 
-        .def("exec_", &sink_c::exec_, D(sink_c, exec_))
+        .def("exec", &sink_c::exec, D(sink_c, exec))
 
 
         .def(

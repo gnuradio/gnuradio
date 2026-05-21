@@ -42,7 +42,7 @@ static const char* __doc_gr_qtgui_rfnoc_f15_display_set_palette = R"doc()doc";
 static const char* __doc_gr_qtgui_rfnoc_f15_display_set_frame_rate = R"doc()doc";
 
 
-static const char* __doc_gr_qtgui_rfnoc_f15_display_exec_ = R"doc()doc";
+static const char* __doc_gr_qtgui_rfnoc_f15_display_exec = R"doc()doc";
 
 
 static const char* __doc_gr_qtgui_rfnoc_f15_display_qwidget = R"doc()doc";

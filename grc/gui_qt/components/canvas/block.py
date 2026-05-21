@@ -411,7 +411,7 @@ class GUIBlock(QGraphicsItem):
         example_action = QAction("Examples...")
         example_action.triggered.connect(self.view_examples)
         self.right_click_menu.addAction(example_action)
-        self.right_click_menu.exec_(pos)
+        self.right_click_menu.exec(pos)
 
     def view_examples(self):
         self.scene().app.MainWindow.example_browser_triggered(key_filter=self.core.key)

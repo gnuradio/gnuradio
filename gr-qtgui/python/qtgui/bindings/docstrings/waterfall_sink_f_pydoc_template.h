@@ -27,7 +27,7 @@ static const char* __doc_gr_qtgui_waterfall_sink_f_waterfall_sink_f_1 = R"doc()d
 static const char* __doc_gr_qtgui_waterfall_sink_f_make = R"doc()doc";
 
 
-static const char* __doc_gr_qtgui_waterfall_sink_f_exec_ = R"doc()doc";
+static const char* __doc_gr_qtgui_waterfall_sink_f_exec = R"doc()doc";
 
 
 static const char* __doc_gr_qtgui_waterfall_sink_f_qwidget = R"doc()doc";

@@ -16,7 +16,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0) */
 /* BINDTOOL_USE_PYGCCXML(0) */
 /* BINDTOOL_HEADER_FILE(matrix_sink.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(e88d8fa2248be70d4d7ace8c1b345356) */
+/* BINDTOOL_HEADER_FILE_HASH(24c24e0f52802e5c34a527f6de1f2ef8) */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -50,7 +50,7 @@ void bind_matrix_sink(py::module& m)
              py::arg("parent") = nullptr,
              D(matrix_sink, make))
 
-        .def("exec_", &matrix_sink::exec_, D(matrix_sink, exec_))
+        .def("exec", &matrix_sink::exec, D(matrix_sink, exec))
 
         .def(
             "qwidget",

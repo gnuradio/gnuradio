@@ -73,7 +73,7 @@ matrix_sink_impl::matrix_sink_impl(const std::string& name,
  */
 matrix_sink_impl::~matrix_sink_impl() { QMetaObject::invokeMethod(d_display, "close"); }
 
-void matrix_sink_impl::exec_() { d_qApplication->exec(); }
+void matrix_sink_impl::exec() { d_qApplication->exec(); }
 
 QWidget* matrix_sink_impl::qwidget() { return (QWidget*)d_display; }
 

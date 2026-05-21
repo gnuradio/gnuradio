@@ -125,7 +125,7 @@ void sink_f_impl::initialize()
     set_update_time(0.1);
 }
 
-void sink_f_impl::exec_() { d_qApplication->exec(); }
+void sink_f_impl::exec() { d_qApplication->exec(); }
 
 QWidget* sink_f_impl::qwidget() { return d_main_gui.qwidget(); }
 

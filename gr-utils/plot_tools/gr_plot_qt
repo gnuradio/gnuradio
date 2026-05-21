@@ -731,7 +731,7 @@ def main(args):
 
     app = Qt.QApplication(args)
     gplt = gr_plot_qt(app, filename, options)
-    app.exec_()
+    app.exec()
 
 
 if __name__ == '__main__':

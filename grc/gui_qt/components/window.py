@@ -1062,7 +1062,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
             dirname = os.getcwd()
         file_dialog.setDirectory(dirname)
         filename = None
-        if file_dialog.exec_() == QtWidgets.QFileDialog.Accepted:
+        if file_dialog.exec() == QtWidgets.QFileDialog.Accepted:
             filename = file_dialog.selectedFiles()[0]
 
         if filename:
@@ -1092,7 +1092,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         file_dialog.setAcceptMode(QtWidgets.QFileDialog.AcceptSave)
 
         filename = None
-        if file_dialog.exec_() == QtWidgets.QFileDialog.Accepted:
+        if file_dialog.exec() == QtWidgets.QFileDialog.Accepted:
             filename = file_dialog.selectedFiles()[0]
 
         if filename:
@@ -1684,7 +1684,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
     def preferences_triggered(self):
         log.debug("preferences")
         prefs_dialog = PreferencesDialog(self.app.qsettings)
-        if prefs_dialog.exec_():  # User pressed Save
+        if prefs_dialog.exec():  # User pressed Save
             prefs_dialog.save_all()
             self.currentFlowgraphScene.update()
 
@@ -1714,7 +1714,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
             else:
                 ex_dialog.browser.reset()
 
-            ex_dialog.exec_()
+            ex_dialog.exec()
         else:
             ad = QtWidgets.QMessageBox()
             ad.setWindowTitle("GRC still indexing examples")

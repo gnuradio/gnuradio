@@ -98,7 +98,7 @@ void number_sink_impl::initialize()
     set_update_time(0.1);
 }
 
-void number_sink_impl::exec_() { d_qApplication->exec(); }
+void number_sink_impl::exec() { d_qApplication->exec(); }
 
 QWidget* number_sink_impl::qwidget() { return d_main_gui; }
 

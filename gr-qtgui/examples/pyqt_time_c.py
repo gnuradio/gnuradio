@@ -189,5 +189,5 @@ class my_top_block(gr.top_block):
 if __name__ == "__main__":
     tb = my_top_block()
     tb.start()
-    tb.qapp.exec_()
+    tb.qapp.exec()
     tb.stop()

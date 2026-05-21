@@ -240,7 +240,7 @@ def print_params(filtobj):
 app = Qt.QApplication(sys.argv)
 main_win = filter_design.launch(sys.argv, print_params)
 main_win.show()
-app.exec_()
+app.exec()
 \endcode
 
 Changing one line in the above code allows us to set restrictions on

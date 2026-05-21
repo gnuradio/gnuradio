@@ -57,7 +57,7 @@ void bind_vector_sink_f(py::module& m)
              D(vector_sink_f, make))
 
 
-        .def("exec_", &vector_sink_f::exec_, D(vector_sink_f, exec_))
+        .def("exec", &vector_sink_f::exec, D(vector_sink_f, exec))
 
 
         .def(

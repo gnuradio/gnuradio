@@ -53,7 +53,7 @@ void bind_const_sink_c(py::module& m)
              D(const_sink_c, make))
 
 
-        .def("exec_", &const_sink_c::exec_, D(const_sink_c, exec_))
+        .def("exec", &const_sink_c::exec, D(const_sink_c, exec))
 
 
         .def(

@@ -71,7 +71,7 @@ class FlowgraphView(
             empty_menu = QtWidgets.QMenu()
             no_action = QtWidgets.QAction("No block selected", enabled=False)
             empty_menu.addAction(no_action)
-            empty_menu.exec_(event.globalPos())
+            empty_menu.exec(event.globalPos())
 
     def createMenus(self, actions, menus):
         log.debug("Creating menus")
