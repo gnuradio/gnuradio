@@ -11,9 +11,10 @@
 from gnuradio.filter import filter_design
 import sys
 try:
-    from PyQt5 import Qt, QtCore, QtGui
+    from qtpy import QtCore, QtGui
+    from qtpy.QtCore import Qt
 except ImportError:
-    print("Please install PyQt5 to run this script (http://www.riverbankcomputing.co.uk/software/pyqt/download)")
+    print("Please install PyQt6 to run this script (http://www.riverbankcomputing.co.uk/software/pyqt/download)")
     raise SystemExit(1)
 
 

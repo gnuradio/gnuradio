@@ -41,7 +41,8 @@ except ImportError:
         'Please install SciPy to run this script (https://www.scipy.org)')
 
 try:
-    from qtpy import Qt, QtCore, QtWidgets
+    from qtpy import QtCore, QtWidgets, QtGui
+    from qtpy.QtCore import Qt
 except ImportError:
     raise SystemExit(
         'Please install PyQt to run this script (https://www.riverbankcomputing.com/software/pyqt/download)')
@@ -89,10 +90,8 @@ except ImportError:
     raise SystemExit(
         'Could not import from fir_design. Please check whether fir_design.py is in the library path')
 
-try:
-    _fromUtf8 = QtCore.QString.fromUtf8
-except AttributeError:
-    def _fromUtf8(s): return s
+
+def _fromUtf8(s): return s
 
 # Gnuradio Filter design tool main window
 
@@ -449,7 +448,7 @@ class gr_plot_filter(QtWidgets.QMainWindow):
         self.scene = QtWidgets.QGraphicsScene()
         self.scene.setSceneRect(0, 0, 250, 250)
         lightback = QtGui.qRgb(0xf8, 0xf8, 0xff)
-        backbrush = Qt.QBrush(Qt.QColor(lightback))
+        backbrush = QtGui.QBrush(QtGui.QColor(lightback))
         self.scene.setBackgroundBrush(backbrush)
         self.gui.bandView.setScene(self.scene)
         self.gui.mbandView.setScene(self.scene)
@@ -483,8 +482,8 @@ class gr_plot_filter(QtWidgets.QMainWindow):
         self.populate_bandview(self.lpfitems)
 
         # Set up validators for edit boxes.
-        self.intVal = Qt.QIntValidator(None)
-        self.dblVal = Qt.QDoubleValidator(None)
+        self.intVal = QtGui.QIntvalidator(None)
+        self.dblVal = QtGui.QDoubleValidator(None)
         self.gui.nfftEdit.setValidator(self.intVal)
         self.gui.sampleRateEdit.setValidator(self.dblVal)
         self.gui.filterGainEdit.setValidator(self.dblVal)
@@ -560,22 +559,22 @@ class gr_plot_filter(QtWidgets.QMainWindow):
     # Set up curve pens, lines, and symbols.
     def set_defaultpen(self):
         blue = QtGui.qRgb(0x00, 0x00, 0xFF)
-        blueBrush = Qt.QBrush(Qt.QColor(blue))
+        blueBrush = QtGui.QBrush(QtGui.QColor(blue))
         red = QtGui.qRgb(0xFF, 0x00, 0x00)
-        redBrush = Qt.QBrush(Qt.QColor(red))
+        redBrush = QtGui.QBrush(QtGui.QColor(red))
 
         self.freqcurve.setPen(pg.mkPen('b', width=1.5))
 
         self.rcurve.setPen(None)
         self.rcurve.setSymbol('o')
         self.rcurve.setSymbolPen('b')
-        self.rcurve.setSymbolBrush(Qt.QBrush(Qt.Qt.gray))
+        self.rcurve.setSymbolBrush(QtGui.QBrush(Qt.gray))
         self.rcurve.setSymbolSize(8)
 
         self.icurve.setPen(None)
         self.icurve.setSymbol('o')
         self.icurve.setSymbolPen('r')
-        self.icurve.setSymbolBrush(Qt.QBrush(Qt.Qt.gray))
+        self.icurve.setSymbolBrush(QtGui.QBrush(Qt.gray))
         self.icurve.setSymbolSize(8)
 
         self.imprescurve_stems.setPen(pg.mkPen('b', width=1.5))
@@ -583,7 +582,7 @@ class gr_plot_filter(QtWidgets.QMainWindow):
         self.imprescurve.setPen(None)
         self.imprescurve.setSymbol('o')
         self.imprescurve.setSymbolPen('b')
-        self.imprescurve.setSymbolBrush(Qt.QBrush(Qt.Qt.gray))
+        self.imprescurve.setSymbolBrush(QtGui.QBrush(Qt.gray))
         self.imprescurve.setSymbolSize(8)
 
         self.imprescurve_i_stems.setPen(pg.mkPen('b', width=1.5))
@@ -591,7 +590,7 @@ class gr_plot_filter(QtWidgets.QMainWindow):
         self.imprescurve_i.setPen(None)
         self.imprescurve_i.setSymbol('o')
         self.imprescurve_i.setSymbolPen('r')
-        self.imprescurve_i.setSymbolBrush(Qt.QBrush(Qt.Qt.gray))
+        self.imprescurve_i.setSymbolBrush(QtGui.QBrush(Qt.gray))
         self.imprescurve_i.setSymbolSize(8)
 
         self.steprescurve_stems.setPen(pg.mkPen('b', width=1.5))
@@ -599,7 +598,7 @@ class gr_plot_filter(QtWidgets.QMainWindow):
         self.steprescurve.setPen(None)
         self.steprescurve.setSymbol('o')
         self.steprescurve.setSymbolPen('b')
-        self.steprescurve.setSymbolBrush(Qt.QBrush(Qt.Qt.gray))
+        self.steprescurve.setSymbolBrush(QtGui.QBrush(Qt.gray))
         self.steprescurve.setSymbolSize(8)
 
         self.steprescurve_i_stems.setPen(pg.mkPen('b', width=1.5))
@@ -607,7 +606,7 @@ class gr_plot_filter(QtWidgets.QMainWindow):
         self.steprescurve_i.setPen(None)
         self.steprescurve_i.setSymbol('o')
         self.steprescurve_i.setSymbolPen('r')
-        self.steprescurve_i.setSymbolBrush(Qt.QBrush(Qt.Qt.gray))
+        self.steprescurve_i.setSymbolBrush(QtGui.QBrush(Qt.gray))
         self.steprescurve_i.setSymbolSize(8)
 
         self.phasecurve.setPen(pg.mkPen('b', width=1.5))
@@ -621,7 +620,7 @@ class gr_plot_filter(QtWidgets.QMainWindow):
         self.mtimecurve.setPen(None)
         self.mtimecurve.setSymbol('o')
         self.mtimecurve.setSymbolPen('b')
-        self.mtimecurve.setSymbolBrush(Qt.QBrush(Qt.Qt.gray))
+        self.mtimecurve.setSymbolBrush(QtGui.QBrush(Qt.gray))
         self.mtimecurve.setSymbolSize(8)
 
         self.mtimecurve_stems.setPen(pg.mkPen('b', width=1.5))
@@ -630,7 +629,7 @@ class gr_plot_filter(QtWidgets.QMainWindow):
         self.mtimecurve_i.setPen(None)
         self.mtimecurve_i.setSymbol('o')
         self.mtimecurve_i.setSymbolPen('r')
-        self.mtimecurve_i.setSymbolBrush(Qt.QBrush(Qt.Qt.gray))
+        self.mtimecurve_i.setSymbolBrush(QtGui.QBrush(Qt.gray))
         self.mtimecurve_i.setSymbolSize(8)
 
     def changed_fselect(self, ftype):
@@ -2351,7 +2350,7 @@ def launch(args, callback=None, restype=""):
     (options, args) = parser.parse_args()
 
     if callback is None:
-        app = Qt.QApplication(args)
+        app = QtWidgets.QApplication(args)
         gplt = gr_plot_filter(options, callback, restype)
         app.exec()
         if gplt.iir:
@@ -2371,7 +2370,7 @@ def main(args):
     parser = setup_options()
     (options, args) = parser.parse_args()
 
-    app = Qt.QApplication(args)
+    app = QtWidgets.QApplication(args)
     gplt = gr_plot_filter(options)
     app.exec()
     app.deleteLater()
