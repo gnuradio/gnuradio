@@ -15,7 +15,7 @@ import gui
 import sys
 import os
 from qtpy import Qt, QtGui, QtCore, uic
-import qtpy.Qwt as Qwt
+import qwt as Qwt
 from gnuradio import zeromq
 import signal
 
