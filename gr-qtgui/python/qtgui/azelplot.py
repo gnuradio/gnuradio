@@ -11,7 +11,7 @@
 
 from qtpy import QtWidgets
 import numpy as np
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 import math
 

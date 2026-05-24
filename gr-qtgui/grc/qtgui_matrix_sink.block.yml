@@ -27,7 +27,7 @@ templates:
     self.${id}.set_x_axis_label(${x_axis_label})
     self.${id}.set_y_axis_label(${y_axis_label})
     self.${id}.set_z_axis_label(${z_axis_label})
-    ${win} = sip.wrapinstance(self.${id}.qwidget(), Qt.QWidget)
+    ${win} = sip.wrapinstance(self.${id}.qwidget(), QtWidgets.QWidget)
     ${gui_hint() % win}
 
 parameters:

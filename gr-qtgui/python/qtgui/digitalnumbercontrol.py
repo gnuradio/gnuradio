@@ -318,7 +318,7 @@ class DigitalNumberControl(QFrame):
 
         rect = QRect(0, 0, size.width() - 4, size.height())
 
-        painter.drawText(rect, Qt.AlignRight + Qt.AlignVCenter, textstr)
+        painter.drawText(rect, Qt.AlignRight | Qt.AlignVCenter, textstr)
 
 
 class MsgDigitalNumberControl(gr.sync_block, LabeledDigitalNumberControl):

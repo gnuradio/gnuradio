@@ -462,7 +462,7 @@ templates:
             self.${id}.set_line_color(i, colors[i])
             self.${id}.set_line_alpha(i, alphas[i])
 
-        ${win} = sip.wrapinstance(self.${id}.qwidget(), Qt.QWidget)
+        ${win} = sip.wrapinstance(self.${id}.qwidget(), QtWidgets.QWidget)
         ${ gui_hint() % win}
 
 cpp_templates:

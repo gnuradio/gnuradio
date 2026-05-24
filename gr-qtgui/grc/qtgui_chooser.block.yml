@@ -106,7 +106,7 @@ asserts:
 
 templates:
     imports: |-
-        from qtpy.QtCore import QObject, pyqtSlot
+        from qtpy.QtCore import QObject, Slot
     var_make: self.${id} = ${id} = ${value}
     callbacks:
     - self.set_${id}(${value})
@@ -153,7 +153,7 @@ templates:
         self._${id}_combo_box = Qt.QComboBox()
         ${win}.addWidget(self._${id}_combo_box)
         for _label in self._${id}_labels: self._${id}_combo_box.addItem(_label)
-        self._${id}_callback = lambda i: Qt.QMetaObject.invokeMethod(self._${id}_combo_box, "setCurrentIndex", Qt.Q_ARG("int", self._${id}_options.index(i)))
+        self._${id}_callback = lambda i: QtCore.QMetaObject.invokeMethod(self._${id}_combo_box, "setCurrentIndex", QtCore.Q_ARG("int", self._${id}_options.index(i)))
         self._${id}_callback(self.${id})
         self._${id}_combo_box.currentIndexChanged.connect(
             lambda i: self.set_${id}(self._${id}_options[i]))
@@ -168,7 +168,7 @@ templates:
         class variable_chooser_button_group(Qt.QButtonGroup):
             def __init__(self, parent=None):
                 Qt.QButtonGroup.__init__(self, parent)
-            @pyqtSlot(int)
+            @Slot(int)
             def updateButtonChecked(self, button_id):
                 self.button(button_id).setChecked(True)
         self._${id}_button_group = variable_chooser_button_group()
