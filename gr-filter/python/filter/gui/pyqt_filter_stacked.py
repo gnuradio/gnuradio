@@ -1405,6 +1405,6 @@ class Ui_MainWindow(object):
         self.actionBand_Diagram.setText(_translate("MainWindow", "&Band Diagram"))
         self.actionCheck.setText(_translate("MainWindow", "check"))
         self.actionPlot_FFT_points.setText(_translate("MainWindow", "Plot FFT points"))
-from GrFilterPlotWidget import GrFilterPlotWidget
-from bandgraphicsview import BandGraphicsView
-from polezero_plot import PzPlot
+from .GrFilterPlotWidget import GrFilterPlotWidget
+from .bandgraphicsview import BandGraphicsView
+from .polezero_plot import PzPlot
