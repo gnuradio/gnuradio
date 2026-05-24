@@ -146,17 +146,17 @@ while the GUI is alive.
 from PyQt4 import Qt
 from gnuradio import qtgui
 import sys, sip
- 
+
  class grclass(gr.top_block):
      ....
-  
+
      self.snk = qtgui.sink_c(1024,           #fftsize
                              samp_rate,      #bw
                              "QT GUI Plot")  #name
- 
-     self.snk_win = sip.wrapinstance(self.snk.pyqwidget(), Qt.QWidget)
+
+     self.snk_win = sip.wrapinstance(self.snk.pyqwidget(), QtWidgets.QWidget)
      self.snk_win.show()
- 
+
  def main():
      qapp = Qt.QApplication(sys.argv)
      tb = grclass()
