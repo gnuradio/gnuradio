@@ -11,15 +11,16 @@ except ImportError:
     raise SystemExit(1)
 
 try:
-    from qtpy import Qt, QtCore, QtGui
+    from qtpy import QtCore, QtGui
+    from qtpy.QtCore import Qt
 except ImportError:
     print("Please install PyQt to run this script (http://www.riverbankcomputing.co.uk/software/pyqt/download)")
     raise SystemExit(1)
 
 try:
-    import PyQt.Qwt as Qwt
+    import qwt as Qwt
 except ImportError:
-    print("Please install PyQwt to run this script (http://pyqwt.sourceforge.net/)")
+    print("Please install PythonQwt to run this script (https://pypi.org/project/PythonQwt/)")
     raise SystemExit(1)
 
 try:
@@ -39,20 +40,20 @@ from gnuradio import eng_notation
 class SpectrogramData(Qwt.QwtRasterData):
 
     def __init__(self, f, t):
-        Qwt.QwtArrayData.__init__(self, Qt.QRectF(0, 0, 0, 0))
+        Qwt.QwtArrayData.__init__(self, QtCore.QRectF(0, 0, 0, 0))
         self.sp = numpy.array([[0], [0]])
 
     def set_data(self, xfreq, ytime, data):
         self.sp = data
         self.freq = xfreq
         self.time = ytime
-        boundingBox = Qt.QRectF(self.freq.min(), self.time.min(),
+        boundingBox = QtCore.QRectF(self.freq.min(), self.time.min(),
                                 self.freq.max() - self.freq.min(),
                                 self.time.max() - self.time.min())
         self.setBoundingRect(boundingBox)
 
     def rasterHint(self, rect):
-        return Qt.QSize(self.sp.shape[0], self.sp.shape[1])
+        return QtCore.QSize(self.sp.shape[0], self.sp.shape[1])
 
     def copy(self):
         return self
@@ -70,9 +71,9 @@ class SpectrogramData(Qwt.QwtRasterData):
             return 0
 
 
-class gr_plot_qt(QtGui.QMainWindow):
+class gr_plot_qt(QtWidgets.QMainWindow):
     def __init__(self, qapp, filename, options, parent=None):
-        QtGui.QWidget.__init__(self, parent)
+        QtWidgets.QWidget.__init__(self, parent)
         self.gui = Ui_MainWindow()
         self.gui.setupUi(self)
 
@@ -107,18 +108,14 @@ class gr_plot_qt(QtGui.QMainWindow):
         self.gui.psdFFTComboBox.addItems(self.fftsizes)
         self.gui.specFFTComboBox.addItems(self.fftsizes)
         pos = self.gui.psdFFTComboBox.findText(
-            Qt.QString("%1").arg(self.psdfftsize))
+            str(self.psdfftsize))
         self.gui.psdFFTComboBox.setCurrentIndex(pos)
         pos = self.gui.specFFTComboBox.findText(
-            Qt.QString("%1").arg(self.specfftsize))
+            str(self.specfftsize))
         self.gui.specFFTComboBox.setCurrentIndex(pos)
 
-        self.connect(self.gui.psdFFTComboBox,
-                     Qt.SIGNAL("activated (const QString&)"),
-                     self.psdFFTComboBoxEdit)
-        self.connect(self.gui.specFFTComboBox,
-                     Qt.SIGNAL("activated (const QString&)"),
-                     self.specFFTComboBoxEdit)
+        self.gui.psdFFTComboBox.activated.connect(self.psdFFTComboBoxEdit)
+        self.gui.specFFTComboBox.activated.connect(self.specFFTComboBoxEdit)
 
         # Set up color scheme box
         self.color_modes = {"Black on White": self.color_black_on_white,
@@ -128,9 +125,7 @@ class gr_plot_qt(QtGui.QMainWindow):
         self.gui.colorComboBox.addItems(self.color_modes.keys())
         pos = self.gui.colorComboBox.findText("Blue on Black")
         self.gui.colorComboBox.setCurrentIndex(pos)
-        self.connect(self.gui.colorComboBox,
-                     Qt.SIGNAL("activated (const QString&)"),
-                     self.colorComboBoxEdit)
+        self.gui.colorComboBox.activated.connect(self.colorComboBoxEdit)
 
         # Set up line style combo box
         self.line_styles = {"None": Qwt.QwtSymbol.NoSymbol,
@@ -140,9 +135,7 @@ class gr_plot_qt(QtGui.QMainWindow):
         self.gui.lineStyleComboBox.addItems(self.line_styles.keys())
         pos = self.gui.lineStyleComboBox.findText("None")
         self.gui.lineStyleComboBox.setCurrentIndex(pos)
-        self.connect(self.gui.lineStyleComboBox,
-                     Qt.SIGNAL("activated (const QString&)"),
-                     self.lineStyleComboBoxEdit)
+        self.gui.lineStyleComboBox.activated.connect(self.lineStyleComboBoxEdit)
 
         # Create zoom functionality for the plots
         self.timeZoomer = Qwt.QwtPlotZoomer(self.gui.timePlot.xBottom,
@@ -164,9 +157,7 @@ class gr_plot_qt(QtGui.QMainWindow):
                                             self.gui.specPlot.canvas())
 
         # Set up action when tab is changed
-        self.connect(self.gui.tabGroup,
-                     Qt.SIGNAL("currentChanged (int)"),
-                     self.tabChanged)
+        self.gui.tabGroup.currentChanged.connect(self.tabChanged)
 
         # Add a legend to the Time plot
         legend_real = Qwt.QwtLegend()
@@ -177,44 +168,26 @@ class gr_plot_qt(QtGui.QMainWindow):
         self.gui.plotHBar.setPageStep(self.block_length)
         self.gui.plotHBar.setMinimum(0)
         self.gui.plotHBar.setMaximum(self.block_length)
-        self.connect(self.gui.plotHBar,
-                     Qt.SIGNAL("valueChanged(int)"),
-                     self.sliderMoved)
+        self.gui.plotHBar.valueChanged.connect(self.sliderMoved)
 
         # Connect Open action to Open Dialog box
-        self.connect(self.gui.action_open,
-                     Qt.SIGNAL("activated()"),
-                     self.open_file)
+        self.gui.action_open.activated.connect(self.open_file)
 
         # Connect Reload action to reload the file
-        self.connect(self.gui.action_reload,
-                     Qt.SIGNAL("activated()"),
-                     self.reload_file)
+        self.gui.action_reload.activated.connect(self.reload_file)
         self.gui.action_reload.setShortcut(QtGui.QApplication.translate("MainWindow", "Ctrl+R",
                                                                         None, QtGui.QApplication.UnicodeUTF8))
 
         # Set up file position boxes to update current figure
-        self.connect(self.gui.filePosStartLineEdit,
-                     Qt.SIGNAL("editingFinished()"),
-                     self.file_position_changed)
-        self.connect(self.gui.filePosStopLineEdit,
-                     Qt.SIGNAL("editingFinished()"),
-                     self.file_position_changed)
-        self.connect(self.gui.filePosLengthLineEdit,
-                     Qt.SIGNAL("editingFinished()"),
-                     self.file_length_changed)
+        self.gui.filePosStartLineEdit.editingFinished.connect(self.file_position_changed)
+        self.gui.filePosStopLineEdit.editingFinished.connect(self.file_position_changed)
+        self.gui.filePosLengthLineEdit.editingFinished.connect(self.file_length_changed)
 
-        self.connect(self.gui.fileTimeStartLineEdit,
-                     Qt.SIGNAL("editingFinished()"),
-                     self.file_time_changed)
-        self.connect(self.gui.fileTimeStopLineEdit,
-                     Qt.SIGNAL("editingFinished()"),
-                     self.file_time_changed)
-        self.connect(self.gui.fileTimeLengthLineEdit,
-                     Qt.SIGNAL("editingFinished()"),
-                     self.file_time_length_changed)
+        self.gui.fileTimeStartLineEdit.editingFinished.connect(self.file_time_changed)
+        self.gui.fileTimeStopLineEdit.editingFinished.connect(self.file_time_changed)
+        self.gui.fileTimeLengthLineEdit.editingFinished.connect(self.file_time_length_changed)
 
-        stylestr = str(self.gui.lineStyleComboBox.currentText().toAscii())
+        stylestr = str(self.gui.lineStyleComboBox.currentText())
         style = self.line_styles[stylestr]
 
         self.rcurve = Qwt.QwtPlotCurve("Real")
@@ -237,10 +210,10 @@ class gr_plot_qt(QtGui.QMainWindow):
         # Set up specTab plot as a spectrogram
         self.specdata = SpectrogramData(range(0, 10), range(0, 10))
 
-        colorMap = Qwt.QwtLinearColorMap(Qt.Qt.darkCyan, Qt.Qt.red)
-        colorMap.addColorStop(0.1, Qt.Qt.cyan)
-        colorMap.addColorStop(0.6, Qt.Qt.green)
-        colorMap.addColorStop(0.95, Qt.Qt.yellow)
+        colorMap = Qwt.QwtLinearColorMap(Qt.darkCyan, Qt.red)
+        colorMap.addColorStop(0.1, Qt.cyan)
+        colorMap.addColorStop(0.6, Qt.green)
+        colorMap.addColorStop(0.95, Qt.yellow)
 
         self.spec = Qwt.QwtPlotSpectrogram()
         self.spec.setColorMap(colorMap)
@@ -259,23 +232,17 @@ class gr_plot_qt(QtGui.QMainWindow):
         self.color_modes["Blue on Black"]()
 
         # When line width spin box changes, update the pen size
-        self.connect(self.gui.lineWidthSpinBox,
-                     Qt.SIGNAL("valueChanged(int)"),
-                     self.change_pen_width)
+        self.gui.lineWidthSpinBox.valueChanged.connect(self.change_pen_width)
         self.gui.lineWidthSpinBox.setRange(1, 10)
 
         # When style size spin box changes, update the pen size
-        self.connect(self.gui.styleSizeSpinBox,
-                     Qt.SIGNAL("valueChanged(int)"),
-                     self.change_style_size)
+        self.gui.styleSizeSpinBox.valueChanged.connect(self.change_style_size)
         self.gui.styleSizeSpinBox.setRange(1, 20)
         self.gui.styleSizeSpinBox.setValue(5)
 
         # Connect a signal for when the sample rate changes
         self.set_sample_rate(self.sample_rate)
-        self.connect(self.gui.sampleRateLineEdit,
-                     Qt.SIGNAL("editingFinished()"),
-                     self.sample_rate_changed)
+        self.gui.sampleRateLineEdit.editingFinished.connect(self.sample_rate_changed)
 
         if(filename is not None):
             self.initialize(filename)
@@ -283,7 +250,7 @@ class gr_plot_qt(QtGui.QMainWindow):
         self.show()
 
     def open_file(self):
-        filename = Qt.QFileDialog.getOpenFileName(self, "Open", ".")
+        filename = QtWidgets.QFileDialog.getOpenFileName(self, "Open", ".")
         if(filename != ""):
             # print(filename)
             self.initialize(filename)
@@ -334,7 +301,7 @@ class gr_plot_qt(QtGui.QMainWindow):
                 if(len(iq) < (end - start)):
                     end = start + len(iq)
                     self.gui.filePosLengthLineEdit.setText(
-                        Qt.QString("%1").arg(len(iq)))
+                        str(len(iq)))
                     self.file_length_changed()
 
                 tstep = 1.0 / self.sample_rate
@@ -373,22 +340,22 @@ class gr_plot_qt(QtGui.QMainWindow):
         self.spec_t = t
 
     def psdFFTComboBoxEdit(self, fftSize):
-        self.psdfftsize = fftSize.toInt()[0]
+        self.psdfftsize = int(fftSize)
         self.get_psd()
         self.update_psd_curves()
 
     def specFFTComboBoxEdit(self, fftSize):
-        self.specfftsize = fftSize.toInt()[0]
+        self.specfftsize = int(fftSize)
         self.get_specgram()
         self.update_specgram_curves()
 
     def colorComboBoxEdit(self, colorSelection):
-        colorstr = str(colorSelection.toAscii())
+        colorstr = str(colorSelection)
         color_func = self.color_modes[colorstr]
         color_func()
 
     def lineStyleComboBoxEdit(self, styleSelection):
-        stylestr = str(styleSelection.toAscii())
+        stylestr = str(styleSelection)
         self.rsym.setStyle(self.line_styles[stylestr])
         self.isym.setStyle(self.line_styles[stylestr])
         self.rcurve.setSymbol(self.rsym)
@@ -409,10 +376,10 @@ class gr_plot_qt(QtGui.QMainWindow):
     def set_sample_rate(self, sr):
         self.sample_rate = sr
         srstr = eng_notation.num_to_str(self.sample_rate)
-        self.gui.sampleRateLineEdit.setText(Qt.QString("%1").arg(srstr))
+        self.gui.sampleRateLineEdit.setText(str(srstr))
 
     def sample_rate_changed(self):
-        srstr = self.gui.sampleRateLineEdit.text().toAscii()
+        srstr = self.gui.sampleRateLineEdit.text()
         self.sample_rate = eng_notation.str_to_num(srstr)
         self.set_file_pos_box(self.cur_start, self.cur_stop)
         self.get_data(self.cur_start, self.cur_stop)
@@ -426,19 +393,19 @@ class gr_plot_qt(QtGui.QMainWindow):
         tstart = start / self.sample_rate
         tend = end / self.sample_rate
 
-        self.gui.filePosStartLineEdit.setText(Qt.QString("%1").arg(start))
-        self.gui.filePosStopLineEdit.setText(Qt.QString("%1").arg(end))
+        self.gui.filePosStartLineEdit.setText(str(start))
+        self.gui.filePosStopLineEdit.setText(str(end))
         self.gui.filePosLengthLineEdit.setText(
-            Qt.QString("%1").arg(end - start))
+            str(end - start))
 
-        self.gui.fileTimeStartLineEdit.setText(Qt.QString("%1").arg(tstart))
-        self.gui.fileTimeStopLineEdit.setText(Qt.QString("%1").arg(tend))
+        self.gui.fileTimeStartLineEdit.setText(str(tstart))
+        self.gui.fileTimeStopLineEdit.setText(str(tend))
         self.gui.fileTimeLengthLineEdit.setText(
-            Qt.QString("%1").arg(tend - tstart))
+            str(tend - tstart))
 
     def file_position_changed(self):
-        start = self.gui.filePosStartLineEdit.text().toInt()
-        end = self.gui.filePosStopLineEdit.text().toInt()
+        start = int(self.gui.filePosStartLineEdit.text())
+        end = int(self.gui.filePosStopLineEdit.text())
         if((start[1] == True) and (end[1] == True)):
             self.cur_start = start[0]
             self.cur_stop = end[0]
@@ -446,8 +413,8 @@ class gr_plot_qt(QtGui.QMainWindow):
             tstart = self.cur_start / self.sample_rate
             tend = self.cur_stop / self.sample_rate
             self.gui.fileTimeStartLineEdit.setText(
-                Qt.QString("%1").arg(tstart))
-            self.gui.fileTimeStopLineEdit.setText(Qt.QString("%1").arg(tend))
+                str(tstart))
+            self.gui.fileTimeStopLineEdit.setText(str(tend))
 
             self.get_data(self.cur_start, self.cur_stop)
 
@@ -463,17 +430,17 @@ class gr_plot_qt(QtGui.QMainWindow):
                 pass
 
     def file_time_changed(self):
-        tstart = self.gui.fileTimeStartLineEdit.text().toDouble()
-        tstop = self.gui.fileTimeStopLineEdit.text().toDouble()
+        tstart = float(self.gui.fileTimeStartLineEdit.text())
+        tstop = float(self.gui.fileTimeStopLineEdit.text())
         if((tstart[1] == True) and (tstop[1] == True)):
             self.cur_start = int(tstart[0] * self.sample_rate)
             self.cur_stop = int(tstop[0] * self.sample_rate)
             self.get_data(self.cur_start, self.cur_stop)
 
             self.gui.filePosStartLineEdit.setText(
-                Qt.QString("%1").arg(self.cur_start))
+                str(self.cur_start))
             self.gui.filePosStopLineEdit.setText(
-                Qt.QString("%1").arg(self.cur_stop))
+                str(self.cur_stop))
 
             self.update_time_curves()
             self.update_psd_curves()
@@ -483,8 +450,8 @@ class gr_plot_qt(QtGui.QMainWindow):
             self.set_file_pos_box(self.cur_start, self.cur_stop)
 
     def file_length_changed(self):
-        start = self.gui.filePosStartLineEdit.text().toInt()
-        length = self.gui.filePosLengthLineEdit.text().toInt()
+        start = int(self.gui.filePosStartLineEdit.text())
+        length = int(self.gui.filePosLengthLineEdit.text())
 
         if((start[1] == True) and (length[1] == True)):
             self.cur_start = start[0]
@@ -495,9 +462,9 @@ class gr_plot_qt(QtGui.QMainWindow):
             tend = self.cur_stop / self.sample_rate
             tlen = self.block_length / self.sample_rate
             self.gui.fileTimeStartLineEdit.setText(
-                Qt.QString("%1").arg(tstart))
-            self.gui.fileTimeStopLineEdit.setText(Qt.QString("%1").arg(tend))
-            self.gui.fileTimeLengthLineEdit.setText(Qt.QString("%1").arg(tlen))
+                str(tstart))
+            self.gui.fileTimeStopLineEdit.setText(str(tend))
+            self.gui.fileTimeLengthLineEdit.setText(str(tlen))
 
             self.gui.plotHBar.setPageStep(self.block_length)
 
@@ -513,8 +480,8 @@ class gr_plot_qt(QtGui.QMainWindow):
             self.set_file_pos_box(self.cur_start, self.cur_stop)
 
     def file_time_length_changed(self):
-        tstart = self.gui.fileTimeStartLineEdit.text().toDouble()
-        tlength = self.gui.fileTimeLengthLineEdit.text().toDouble()
+        tstart = float(self.gui.fileTimeStartLineEdit.text())
+        tlength = float(self.gui.fileTimeLengthLineEdit.text())
         if((tstart[1] == True) and (tlength[1] == True)):
             self.cur_start = int(tstart[0] * self.sample_rate)
             self.block_length = int(tlength[0] * self.sample_rate)
@@ -524,9 +491,9 @@ class gr_plot_qt(QtGui.QMainWindow):
             tend = self.cur_stop / self.sample_rate
             tlen = self.block_length / self.sample_rate
             self.gui.fileTimeStartLineEdit.setText(
-                Qt.QString("%1").arg(tstart))
-            self.gui.fileTimeStopLineEdit.setText(Qt.QString("%1").arg(tend))
-            self.gui.fileTimeLengthLineEdit.setText(Qt.QString("%1").arg(tlen))
+                str(tstart))
+            self.gui.fileTimeStopLineEdit.setText(str(tend))
+            self.gui.fileTimeLengthLineEdit.setText(str(tlen))
 
             self.get_data(self.cur_start, self.cur_stop)
             self.get_psd()
@@ -602,7 +569,7 @@ class gr_plot_qt(QtGui.QMainWindow):
 
     def change_pen_width(self, width):
         self.pen_width = width
-        colormode = str(self.gui.colorComboBox.currentText().toAscii())
+        colormode = str(self.gui.colorComboBox.currentText())
         color_func = self.color_modes[colormode]()
 
     def change_style_size(self, size):
@@ -616,12 +583,12 @@ class gr_plot_qt(QtGui.QMainWindow):
         blue = QtGui.qRgb(0x00, 0x00, 0xFF)
         red = QtGui.qRgb(0xFF, 0x00, 0x00)
 
-        blackPen = Qt.QPen(Qt.QBrush(Qt.QColor("black")), self.pen_width)
-        bluePen = Qt.QPen(Qt.QBrush(Qt.QColor(blue)), self.pen_width)
-        redPen = Qt.QPen(Qt.QBrush(Qt.QColor(red)), self.pen_width)
+        blackPen = QtGui.QPen(QtGui.QBrush(QtGui.QColor("black")), self.pen_width)
+        bluePen = QtGui.QPen(QtGui.QBrush(QtGui.QColor(blue)), self.pen_width)
+        redPen = QtGui.QPen(QtGui.QBrush(QtGui.QColor(red)), self.pen_width)
 
-        self.gui.timePlot.setCanvasBackground(Qt.QColor("white"))
-        self.gui.freqPlot.setCanvasBackground(Qt.QColor("white"))
+        self.gui.timePlot.setCanvasBackground(QtGui.QColor("white"))
+        self.gui.freqPlot.setCanvasBackground(QtGui.QColor("white"))
         self.timeZoomer.setTrackerPen(blackPen)
         self.timeZoomer.setRubberBandPen(blackPen)
         self.freqZoomer.setTrackerPen(blackPen)
@@ -640,19 +607,19 @@ class gr_plot_qt(QtGui.QMainWindow):
         white = QtGui.qRgb(0xFF, 0xFF, 0xFF)
         red = QtGui.qRgb(0xFF, 0x00, 0x00)
 
-        whiteBrush = Qt.QBrush(Qt.QColor("white"))
-        whiteBrush = Qt.QBrush(Qt.QColor(white))
-        redBrush = Qt.QBrush(Qt.QColor(red))
+        whiteBrush = QtGui.QBrush(QtGui.QColor("white"))
+        whiteBrush = QtGui.QBrush(QtGui.QColor(white))
+        redBrush = QtGui.QBrush(QtGui.QColor(red))
 
         self.gui.timePlot.setCanvasBackground(QtGui.QColor("black"))
         self.gui.freqPlot.setCanvasBackground(QtGui.QColor("black"))
-        self.timeZoomer.setTrackerPen(Qt.QPen(whiteBrush, self.pen_width))
-        self.timeZoomer.setRubberBandPen(Qt.QPen(whiteBrush, self.pen_width))
-        self.freqZoomer.setTrackerPen(Qt.QPen(whiteBrush, self.pen_width))
-        self.freqZoomer.setRubberBandPen(Qt.QPen(whiteBrush, self.pen_width))
-        self.psdcurve.setPen(Qt.QPen(whiteBrush, self.pen_width))
-        self.rcurve.setPen(Qt.QPen(whiteBrush, self.pen_width))
-        self.icurve.setPen(Qt.QPen(redBrush, self.pen_width))
+        self.timeZoomer.setTrackerPen(QtGui.QPen(whiteBrush, self.pen_width))
+        self.timeZoomer.setRubberBandPen(QtGui.QPen(whiteBrush, self.pen_width))
+        self.freqZoomer.setTrackerPen(QtGui.QPen(whiteBrush, self.pen_width))
+        self.freqZoomer.setRubberBandPen(QtGui.QPen(whiteBrush, self.pen_width))
+        self.psdcurve.setPen(QtGui.QPen(whiteBrush, self.pen_width))
+        self.rcurve.setPen(QtGui.QPen(whiteBrush, self.pen_width))
+        self.icurve.setPen(QtGui.QPen(redBrush, self.pen_width))
 
         self.gui.timePlot.replot()
         self.gui.freqPlot.replot()
@@ -661,19 +628,19 @@ class gr_plot_qt(QtGui.QMainWindow):
         green = QtGui.qRgb(0x00, 0xFF, 0x00)
         red = QtGui.qRgb(0xFF, 0x00, 0x50)
 
-        whiteBrush = Qt.QBrush(Qt.QColor("white"))
-        greenBrush = Qt.QBrush(Qt.QColor(green))
-        redBrush = Qt.QBrush(Qt.QColor(red))
+        whiteBrush = QtGui.QBrush(QtGui.QColor("white"))
+        greenBrush = QtGui.QBrush(QtGui.QColor(green))
+        redBrush = QtGui.QBrush(QtGui.QColor(red))
 
         self.gui.timePlot.setCanvasBackground(QtGui.QColor("black"))
         self.gui.freqPlot.setCanvasBackground(QtGui.QColor("black"))
-        self.timeZoomer.setTrackerPen(Qt.QPen(whiteBrush, self.pen_width))
-        self.timeZoomer.setRubberBandPen(Qt.QPen(whiteBrush, self.pen_width))
-        self.freqZoomer.setTrackerPen(Qt.QPen(whiteBrush, self.pen_width))
-        self.freqZoomer.setRubberBandPen(Qt.QPen(whiteBrush, self.pen_width))
-        self.psdcurve.setPen(Qt.QPen(greenBrush, self.pen_width))
-        self.rcurve.setPen(Qt.QPen(greenBrush, self.pen_width))
-        self.icurve.setPen(Qt.QPen(redBrush, self.pen_width))
+        self.timeZoomer.setTrackerPen(QtGui.QPen(whiteBrush, self.pen_width))
+        self.timeZoomer.setRubberBandPen(QtGui.QPen(whiteBrush, self.pen_width))
+        self.freqZoomer.setTrackerPen(QtGui.QPen(whiteBrush, self.pen_width))
+        self.freqZoomer.setRubberBandPen(QtGui.QPen(whiteBrush, self.pen_width))
+        self.psdcurve.setPen(QtGui.QPen(greenBrush, self.pen_width))
+        self.rcurve.setPen(QtGui.QPen(greenBrush, self.pen_width))
+        self.icurve.setPen(QtGui.QPen(redBrush, self.pen_width))
 
         self.gui.timePlot.replot()
         self.gui.freqPlot.replot()
@@ -682,19 +649,19 @@ class gr_plot_qt(QtGui.QMainWindow):
         blue = QtGui.qRgb(0x00, 0x00, 0xFF)
         red = QtGui.qRgb(0xFF, 0x00, 0x00)
 
-        whiteBrush = Qt.QBrush(Qt.QColor("white"))
-        blueBrush = Qt.QBrush(Qt.QColor(blue))
-        redBrush = Qt.QBrush(Qt.QColor(red))
+        whiteBrush = QtGui.QBrush(QtGui.QColor("white"))
+        blueBrush = QtGui.QBrush(QtGui.QColor(blue))
+        redBrush = QtGui.QBrush(QtGui.QColor(red))
 
         self.gui.timePlot.setCanvasBackground(QtGui.QColor("black"))
         self.gui.freqPlot.setCanvasBackground(QtGui.QColor("black"))
-        self.timeZoomer.setTrackerPen(Qt.QPen(whiteBrush, self.pen_width))
-        self.timeZoomer.setRubberBandPen(Qt.QPen(whiteBrush, self.pen_width))
-        self.freqZoomer.setTrackerPen(Qt.QPen(whiteBrush, self.pen_width))
-        self.freqZoomer.setRubberBandPen(Qt.QPen(whiteBrush, self.pen_width))
-        self.psdcurve.setPen(Qt.QPen(blueBrush, self.pen_width))
-        self.rcurve.setPen(Qt.QPen(blueBrush, self.pen_width))
-        self.icurve.setPen(Qt.QPen(redBrush, self.pen_width))
+        self.timeZoomer.setTrackerPen(QtGui.QPen(whiteBrush, self.pen_width))
+        self.timeZoomer.setRubberBandPen(QtGui.QPen(whiteBrush, self.pen_width))
+        self.freqZoomer.setTrackerPen(QtGui.QPen(whiteBrush, self.pen_width))
+        self.freqZoomer.setRubberBandPen(QtGui.QPen(whiteBrush, self.pen_width))
+        self.psdcurve.setPen(QtGui.QPen(blueBrush, self.pen_width))
+        self.rcurve.setPen(QtGui.QPen(blueBrush, self.pen_width))
+        self.icurve.setPen(QtGui.QPen(redBrush, self.pen_width))
 
         self.gui.timePlot.replot()
         self.gui.freqPlot.replot()
@@ -729,7 +696,7 @@ def main(args):
     else:
         filename = None
 
-    app = Qt.QApplication(args)
+    app = QtWidgets.QApplication(args)
     gplt = gr_plot_qt(app, filename, options)
     app.exec()
 
