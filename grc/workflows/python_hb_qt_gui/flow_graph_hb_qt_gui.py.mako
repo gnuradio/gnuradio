@@ -21,7 +21,7 @@
 ########################################################
 ##Create Imports
 ########################################################
-from PyQt6 import Qt
+from qtpy import QtWidgets
 from gnuradio import qtgui
 % for imp in imports:
 ##${imp.replace("  # grc-generated hier_block", "")}
@@ -75,7 +75,7 @@ def snippets_${section}(tb):
     <% out_sigs = flow_graph.get_hier_block_stream_io('out') %>
 
 
-class ${class_name}(gr.hier_block2, Qt.QWidget):
+class ${class_name}(gr.hier_block2, QtWidgets.QWidget):
 <%def name="make_io_sig(io_sigs)">\
     <% size_strs = ['%s*%s'%(io_sig['size'], io_sig['vlen']) for io_sig in io_sigs] %>\
     % if len(io_sigs) == 0:
@@ -99,9 +99,9 @@ gr.io_signature.makev(${len(io_sigs)}, ${len(io_sigs)}, [${', '.join(size_strs)}
         self.message_port_register_hier_out("${ pad['label'] }")
     % endfor
 
-        Qt.QWidget.__init__(self)
-        self.top_layout = Qt.QVBoxLayout()
-        self.top_grid_layout = Qt.QGridLayout()
+        QtWidgets.QWidget.__init__(self)
+        self.top_layout = QtWidgets.QVBoxLayout()
+        self.top_grid_layout = QtWidgets.QGridLayout()
         self.top_layout.addLayout(self.top_grid_layout)
         self.setLayout(self.top_layout)
 % if flow_graph.get_option('thread_safe_setters'):
