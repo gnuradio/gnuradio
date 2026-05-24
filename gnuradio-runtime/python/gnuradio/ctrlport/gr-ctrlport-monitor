@@ -8,7 +8,8 @@
 #
 #
 
-from qtpy import QtCore, Qt
+from qtpy import QtCore
+from qtpy.QtCore import Qt
 from argparse import ArgumentParser
 
 import os
@@ -21,15 +22,15 @@ from gnuradio.ctrlport.GrDataPlotter import *
 from gnuradio.ctrlport.GNURadioControlPortClient import GNURadioControlPortClient
 
 
-class RateDialog(Qt.QDialog):
+class RateDialog(QtWidgets.QDialog):
     def __init__(self, delay, parent=None):
         super(RateDialog, self).__init__(parent)
-        self.gridLayout = Qt.QGridLayout(self)
+        self.gridLayout = QtWidgets.QGridLayout(self)
         self.setWindowTitle("Update Delay (ms)")
-        self.delay = Qt.QLineEdit(self)
+        self.delay = QtWidgets.QLineEdit(self)
         self.delay.setText(str(delay))
-        self.buttonBox = Qt.QDialogButtonBox(
-            Qt.QDialogButtonBox.Ok | Qt.QDialogButtonBox.Cancel)
+        self.buttonBox = QtWidgets.QDialogButtonBox(
+            QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel)
         self.gridLayout.addWidget(self.delay)
         self.gridLayout.addWidget(self.buttonBox)
         self.buttonBox.accepted.connect(self.accept)
@@ -42,9 +43,9 @@ class RateDialog(Qt.QDialog):
         self.done(0)
 
 
-class MAINWindow(Qt.QMainWindow):
+class MAINWindow(QtWidgets.QMainWindow):
     def minimumSizeHint(self):
-        return Qt.QSize(800, 600)
+        return QtCore.QSize(800, 600)
 
     def __init__(self, radioclient):
 
@@ -54,14 +55,14 @@ class MAINWindow(Qt.QMainWindow):
         self.plots = []
         self.knobprops = []
 
-        self.mdiArea = Qt.QMdiArea()
-        self.mdiArea.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAsNeeded)
-        self.mdiArea.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAsNeeded)
+        self.mdiArea = QtWidgets.QMdiArea()
+        self.mdiArea.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
+        self.mdiArea.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
         self.setCentralWidget(self.mdiArea)
 
         self.mdiArea.subWindowActivated.connect(self.updateMenus)
         self.windowMapper = QtCore.QSignalMapper(self)
-        self.windowMapper.mapped[Qt.QWidget].connect(self.setActiveSubWindow)
+        self.windowMapper.mapped[QtWidgets.QWidget].connect(self.setActiveSubWindow)
 
         self.createActions()
         self.createMenus()
@@ -73,7 +74,7 @@ class MAINWindow(Qt.QMainWindow):
         self.setUnifiedTitleAndToolBarOnMac(True)
 
         self.newCon(radioclient)
-        icon = Qt.QIcon(ctrlport.__path__[0] + "/icon.png")
+        icon = QtGui.QIcon(ctrlport.__path__[0] + "/icon.png")
         self.setWindowIcon(icon)
 
         # Locally turn off ControlPort export from GR. This prevents
@@ -141,7 +142,7 @@ class MAINWindow(Qt.QMainWindow):
         def newPlotterRasterBProxy():
             self.newPlotRasterB(key, uid, title, pmin, pmax)
 
-        menu = Qt.QMenu(self)
+        menu = QtWidgets.QMenu(self)
         menu.setTitle("Item Actions")
         menu.setTearOffEnabled(False)
 
@@ -159,7 +160,7 @@ class MAINWindow(Qt.QMainWindow):
             menu.addAction("Plot PSD", newPlotterPsdCProxy)
             menu.addAction("Plot Constellation", newPlotterConstProxy)
 
-        menu.popup(Qt.QCursor.pos())
+        menu.popup(QtWidgets.QCursor.pos())
 
     def newUpdater(self, key, radio):
         updater = UpdaterWindow(key, radio, None)
@@ -200,7 +201,7 @@ class MAINWindow(Qt.QMainWindow):
                 self.newPlotPsdC(tag, uid, title)
 
     def startDrag(self, e):
-        drag = Qt.QDrag(self)
+        drag = QtWidgets.QDrag(self)
         mime_data = QtCore.QMimeData()
 
         tag = str(e.text(0))
@@ -313,57 +314,57 @@ class MAINWindow(Qt.QMainWindow):
             self.mdiArea.setActiveSubWindow(window)
 
     def createActions(self):
-        self.newConAct = Qt.QAction("&New Connection",
-                                    self, shortcut=Qt.QKeySequence.New,
+        self.newConAct = QtGui.QAction("&New Connection",
+                                    self, shortcut=QtGui.QKeySequence.New,
                                     statusTip="Create a new file", triggered=lambda x: self.newCon(None))
 
-        self.exitAct = Qt.QAction("E&xit", self, shortcut="Ctrl+Q",
+        self.exitAct = QtGui.QAction("E&xit", self, shortcut="Ctrl+Q",
                                   statusTip="Exit the application",
-                                  triggered=Qt.qApp.closeAllWindows)
+                                  triggered=QtWidgets.QApplication.instance().closeAllWindows)
 
-        self.closeAct = Qt.QAction("Cl&ose", self, shortcut="Ctrl+F4",
+        self.closeAct = QtGui.QAction("Cl&ose", self, shortcut="Ctrl+F4",
                                    statusTip="Close the active window",
                                    triggered=self.mdiArea.closeActiveSubWindow)
 
-        self.closeAllAct = Qt.QAction("Close &All", self,
+        self.closeAllAct = QtGui.QAction("Close &All", self,
                                       statusTip="Close all the windows",
                                       triggered=self.mdiArea.closeAllSubWindows)
 
-        self.urAct = Qt.QAction("Update Rate", self, shortcut="F5",
+        self.urAct = QtGui.QAction("Update Rate", self, shortcut="F5",
                                 statusTip="Change Update Rate",
                                 triggered=self.updateRateShow)
 
-        qks = Qt.QKeySequence(QtCore.Qt.CTRL + QtCore.Qt.Key_T)
-        self.tileAct = Qt.QAction("&Tile", self,
+        qks = QtGui.QKeySequence(Qt.CTRL + Qt.Key_T)
+        self.tileAct = QtGui.QAction("&Tile", self,
                                   statusTip="Tile the windows",
                                   triggered=self.mdiArea.tileSubWindows,
                                   shortcut=qks)
 
-        qks = Qt.QKeySequence(QtCore.Qt.CTRL + QtCore.Qt.Key_C)
-        self.cascadeAct = Qt.QAction("&Cascade", self,
+        qks = QtGui.QKeySequence(Qt.CTRL + Qt.Key_C)
+        self.cascadeAct = QtGui.QAction("&Cascade", self,
                                      statusTip="Cascade the windows", shortcut=qks,
                                      triggered=self.mdiArea.cascadeSubWindows)
 
-        self.nextAct = Qt.QAction("Ne&xt", self,
-                                  shortcut=Qt.QKeySequence.NextChild,
+        self.nextAct = QtGui.QAction("Ne&xt", self,
+                                  shortcut=QtGui.QKeySequence.NextChild,
                                   statusTip="Move the focus to the next window",
                                   triggered=self.mdiArea.activateNextSubWindow)
 
-        self.previousAct = Qt.QAction("Pre&vious", self,
-                                      shortcut=Qt.QKeySequence.PreviousChild,
+        self.previousAct = QtGui.QAction("Pre&vious", self,
+                                      shortcut=QtGui.QKeySequence.PreviousChild,
                                       statusTip="Move the focus to the previous window",
                                       triggered=self.mdiArea.activatePreviousSubWindow)
 
-        self.separatorAct = Qt.QAction(self)
+        self.separatorAct = QtGui.QAction(self)
         self.separatorAct.setSeparator(True)
 
-        self.aboutAct = Qt.QAction("&About", self,
+        self.aboutAct = QtGui.QAction("&About", self,
                                    statusTip="Show the application's About box",
                                    triggered=self.about)
 
-        self.aboutQtAct = Qt.QAction("About &Qt", self,
+        self.aboutQtAct = QtGui.QAction("About &Qt", self,
                                      statusTip="Show the Qt library's About box",
-                                     triggered=Qt.qApp.aboutQt)
+                                     triggered=QtWidgets.QApplication.instance().aboutQt)
 
     def createMenus(self):
         self.fileMenu = self.menuBar().addMenu("&File")
@@ -439,22 +440,22 @@ GNU Radio is free software; you can redistribute it and/or modify it under the t
 GNU Radio is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.\n
 You should have received a copy of the GNU General Public License along with GNU Radio; see the file COPYING. If not, write to the Free Software Foundation, Inc., 51 Franklin Street, Boston, MA 02110-1301, USA.'''
 
-        Qt.QMessageBox.about(None, "gr-ctrlport-monitor", about_info)
+        QtWidgets.QMessageBox.about(None, "gr-ctrlport-monitor", about_info)
 
 
-class ConInfoDialog(Qt.QDialog):
+class ConInfoDialog(QtWidgets.QDialog):
     def __init__(self, parent=None):
         super(ConInfoDialog, self).__init__(parent)
 
-        self.gridLayout = Qt.QGridLayout(self)
+        self.gridLayout = QtWidgets.QGridLayout(self)
 
-        self.host = Qt.QLineEdit(self)
-        self.port = Qt.QLineEdit(self)
+        self.host = QtWidgets.QLineEdit(self)
+        self.port = QtWidgets.QLineEdit(self)
         self.host.setText("localhost")
         self.port.setText("43243")
 
-        self.buttonBox = Qt.QDialogButtonBox(
-            Qt.QDialogButtonBox.Ok | Qt.QDialogButtonBox.Cancel)
+        self.buttonBox = QtWidgets.QDialogButtonBox(
+            QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel)
 
         self.gridLayout.addWidget(self.host)
         self.gridLayout.addWidget(self.port)
@@ -470,20 +471,20 @@ class ConInfoDialog(Qt.QDialog):
         self.done(0)
 
 
-class UpdaterWindow(Qt.QDialog):
+class UpdaterWindow(QtWidgets.QDialog):
     def __init__(self, key, radio, parent):
-        Qt.QDialog.__init__(self, parent)
+        QtWidgets.QDialog.__init__(self, parent)
 
         self.key = key
         self.radio = radio
 
         self.resize(300, 200)
-        self.layout = Qt.QVBoxLayout()
+        self.layout = QtWidgets.QVBoxLayout()
 
         self.props = radio.properties([key])[key]
         info = radio.printProperties(self.props)
 
-        self.infoLabel = Qt.QLabel(info)
+        self.infoLabel = QtWidgets.QLabel(info)
         self.layout.addWidget(self.infoLabel)
 
         # Test here to make sure that a 'set' function exists
@@ -497,12 +498,12 @@ class UpdaterWindow(Qt.QDialog):
             self.cancelButton = QtWidgets.QPushButton("Ok")
             self.cancelButton.clicked.connect(self.reject)
 
-            self.buttonlayout = Qt.QHBoxLayout()
+            self.buttonlayout = QtWidgets.QHBoxLayout()
             self.buttonlayout.addWidget(self.cancelButton)
             self.layout.addLayout(self.buttonlayout)
 
         else:  # we have a set function
-            self.textInput = Qt.QLineEdit()
+            self.textInput = QtWidgets.QLineEdit()
             self.layout.addWidget(self.textInput)
 
             self.applyButton = QtWidgets.QPushButton("Apply")
@@ -524,15 +525,15 @@ class UpdaterWindow(Qt.QDialog):
             self.is_num = ((type(self.sv.value) == float) or
                            (type(self.sv.value) == int))
             if(self.is_num):
-                self.sliderlayout = Qt.QHBoxLayout()
+                self.sliderlayout = QtWidgets.QHBoxLayout()
 
-                self.slider = Qt.QSlider(QtCore.Qt.Horizontal)
+                self.slider = QtWidgets.QSlider(Qt.Horizontal)
 
                 self.sliderlayout.addWidget(
-                    Qt.QLabel(str(self.props.min.value)))
+                    QtWidgets.QLabel(str(self.props.min.value)))
                 self.sliderlayout.addWidget(self.slider)
                 self.sliderlayout.addWidget(
-                    Qt.QLabel(str(self.props.max.value)))
+                    QtWidgets.QLabel(str(self.props.max.value)))
 
                 self.steps = 10000
                 self.valspan = self.props.max.value - self.props.min.value
@@ -546,7 +547,7 @@ class UpdaterWindow(Qt.QDialog):
             else:
                 self._set_slider_value = None
 
-            self.buttonlayout = Qt.QHBoxLayout()
+            self.buttonlayout = QtWidgets.QHBoxLayout()
             self.buttonlayout.addWidget(self.applyButton)
             self.buttonlayout.addWidget(self.setButton)
             self.buttonlayout.addWidget(self.cancelButton)
@@ -594,7 +595,7 @@ class UpdaterWindow(Qt.QDialog):
         self.done(0)
 
 
-class MForm(Qt.QWidget):
+class MForm(QtWidgets.QWidget):
     def update(self):
         try:
             st = time.time()
@@ -667,8 +668,8 @@ class MForm(Qt.QWidget):
 
         self.uid = uid
         self.parent = parent
-        self.horizontalLayout = Qt.QVBoxLayout(self)
-        self.gridLayout = Qt.QGridLayout()
+        self.horizontalLayout = QtWidgets.QVBoxLayout(self)
+        self.gridLayout = QtWidgets.QGridLayout()
 
         self.knobprops = self.radioclient.properties([])
         self.parent.knobprops.append(self.knobprops)
@@ -680,11 +681,11 @@ class MForm(Qt.QWidget):
 
         # make table
         self.table = GrDataPlotterValueTable(uid, self, 0, 0, 400, 200)
-        sizePolicy = Qt.QSizePolicy(
-            Qt.QSizePolicy.Preferred, Qt.QSizePolicy.Preferred)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
         self.table.treeWidget.setSizePolicy(sizePolicy)
         self.table.treeWidget.setEditTriggers(
-            Qt.QAbstractItemView.EditKeyPressed)
+            QtWidgets.QAbstractItemView.EditKeyPressed)
         self.table.treeWidget.setSortingEnabled(True)
         self.table.treeWidget.setDragEnabled(True)
 
@@ -697,7 +698,7 @@ class MForm(Qt.QWidget):
         self.timer.start(self.updateRate)
 
         # set up context menu ..
-        self.table.treeWidget.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
+        self.table.treeWidget.setContextMenuPolicy(Qt.CustomContextMenu)
         self.table.treeWidget.customContextMenuRequested.connect(self.openMenu)
 
         # Set up double-click to launch default plotter
@@ -756,7 +757,7 @@ class MyApp(object):
 
         try:
             GNURadioControlPortClient(
-                args.host, args.port, 'thrift', self.run, Qt.QApplication(sys.argv).exec)
+                args.host, args.port, 'thrift', self.run, QtWidgets.QApplication(sys.argv).exec)
         except:
             print("ControlPort failed to connect. Check the config of your endpoint.")
             print("\t[ControlPort] on = True")
