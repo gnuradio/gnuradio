@@ -179,24 +179,24 @@ To verify that the GTK was installed correctly, add the GTK bin directory to the
 
 ..Note: It is imperative that the path to the GTK bin is added to the PATH AND is set via `os.add_dll_directory`, both steps are required. Typically on Windows adding DLLs to the PATH is sufficient, however due to the mechanisms the GTK relies on to load dlls, Python needs to be aware of the dll locations, but because these DLLs have additional dependencies (located within the bin of the GTK) which are loaded by the system not Python, the system needs to be able to find them, so both settings are required.
 
-## PyQt5 Bindings
+## PyQt6 Bindings
 
 These must always be built from source to ensure they share the same shared libraries with GR's C++ Qt interface.
 
-The developers of the SIP bindings (those used by GR) have created a great walkthrough on how to complete this: <https://www.riverbankcomputing.com/static/Docs/PyQt5/installation.html#building-and-installing-from-source>
+The developers of the SIP bindings (those used by GR) have created a great walkthrough on how to complete this: <https://www.riverbankcomputing.com/static/Docs/PyQt6/installation.html#building-and-installing-from-source>
 
 In general, following this works cleanly, particularly on MacOS. I recommend using the `sip-build --no-make` approach so you can manually invoke make/jom with the proper `-j` flags to better utilize all system cores, the default builds in serial, which is very slow.
 
 ### MacOS
 
-On MacOS, no more steps should need to be taken, so long as the QMake used to build the SIP bindings corresponds to the same Qt5 install used to build GR, everything should _just work_. That said, extreme care needs to be take to ensure this is the _exact_ Qt installation that will be used to build GR.
+On MacOS, no more steps should need to be taken, so long as the QMake used to build the SIP bindings corresponds to the same Qt6 install used to build GR, everything should _just work_. That said, extreme care needs to be take to ensure this is the _exact_ Qt installation that will be used to build GR.
 
 ### Windows
 
-On Windows, Qt5 _MUST_ be built in a shared configuration, static WILL NOT WORK. Both for this, and for building GR in general.
+On Windows, Qt6 _MUST_ be built in a shared configuration, static WILL NOT WORK. Both for this, and for building GR in general.
 
 Further, you may see an error along the lines of: `sip/QtCore/qprocess.sip QPID is undefined`. The workaround is to take the typedef: `typedef void *Q_PID;` and define it in the beginning of that file. That will cause the file to be generated correctly, but will result in a redefinition error for Q_PID. Remove the line you just added and things should then just work.
-Also be sure that you have not installed the `PyQt5.sip` module yet. That will need to be installed before GR is built, but not sooner.
+Also be sure that you have not installed the `PyQt6.sip` module yet. That will need to be installed before GR is built, but not sooner.
 
 Finally, this is not required, but strongly recommended, the SIP builder will generate NMake files on Windows, which do not have any inherent support for parallel builds or installs. The Qt project has a workaround in the form of a tool name JOM. Install Jom from QT, and instead of running `nmake` to build the SIP bindings, simply run JOM (after adding it to the PATH of course) and the project will build substantially faster.
 
@@ -222,7 +222,7 @@ Starting from the directory above where GNU Radio's source is checked out:
 
 6. Next we need to install the GTK, this can be accomplised by following the instructions in that section. Once the GTK has been installed locally, follow the instructions for installing the GTK wheels while still in the Python environment we created in step 1.
 
-7. We now need to build the Qt5 bindings from source. THIS IS REQUIRED. If you install the pyqt5 python package from pip, that will work to build GR. But you'll end up with a GR install that is fully incapable of running any mixed language Qt tasks (i.e. GR qtgui and Python Qt)
+7. We now need to build the Qt6 bindings from source. THIS IS REQUIRED. If you install the pyqt6 python package from pip, that will work to build GR. But you'll end up with a GR install that is fully incapable of running any mixed language Qt tasks (i.e. GR qtgui and Python Qt)
 
     To do this, follow the Qt python bindings instructions found earlier in this document, and then, while in the python environment we created in step 1, run `jom install`.
 
@@ -246,7 +246,7 @@ Starting from the directory above where GNU Radio's source is checked out:
 
 ### Qt
 
-If you observe issues along the lines of being unable to load Qt modules/dlls, this is likely because you have built Qt5 python bindings with a different Qt used to build GR's Qt bindings. Rebuild
+If you observe issues along the lines of being unable to load Qt modules/dlls, this is likely because you have built Qt6 python bindings with a different Qt used to build GR's Qt bindings. Rebuild
 
 If you are unable to load Qt's platform plugins, this is likely due to the path QT is using to search for those plugins, or they were not installed with GR. Qt expects these to be installed relative to the current executable (so Python for GRC) under `plugins/<platform>/*.[so|dll]`.
 

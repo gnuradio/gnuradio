@@ -34,8 +34,8 @@ pure_eval==0.2.3
 pygccxml==2.4.0
 Pygments==2.18.0
 PyQt-builder==1.16.4
-PyQt5==5.15.11
-PyQt5_sip==12.15.0
+PyQt6==6.11.0
+PyQt6_sip==13.11.1
 pyqtgraph==0.13.7
 QtPy==2.4.3
 pytest==8.2.1
