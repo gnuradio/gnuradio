@@ -84,7 +84,7 @@ from .uhd_python import *
 try:
     from .replaymsgpushbutton import ReplayMsgPushButton
 except ModuleNotFoundError:
-    # This Button uses PyQt5 and is only used in GUI applications that use the replay block;
-    # the rest of gr-uhd python functionality should not be limited by PyQt5 being installed,
+    # This Button uses PyQt6 and is only used in GUI applications that use the replay block;
+    # the rest of gr-uhd python functionality should not be limited by PyQt6 being installed,
     # so ignore if the module is not found
     pass
