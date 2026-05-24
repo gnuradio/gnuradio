@@ -16,10 +16,10 @@ import sys
 
 try:
     from gnuradio import qtgui
-    from PyQt5 import QtGui, QtCore
+    from qtpy import QtCore, QtGui
     import sip
 except ImportError:
-    sys.stderr.write("Error: Program requires PyQt5 and gr-qtgui.\n")
+    sys.stderr.write("Error: Program requires PyQt6 and gr-qtgui.\n")
     sys.exit(1)
 
 
