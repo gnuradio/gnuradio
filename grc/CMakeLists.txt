@@ -106,21 +106,21 @@ GR_PYTHON_CHECK_MODULE(
     VAR QTPY_FOUND
 )
 
-# Create GRC Qt dependency library to ensure Qt5PrintSupport.dll gets bundled
-find_package(Qt5 COMPONENTS PrintSupport QUIET)
-if(TARGET Qt5::PrintSupport)
+# Create GRC Qt dependency library to ensure Qt6PrintSupport.dll gets bundled
+find_package(Qt6 COMPONENTS PrintSupport QUIET)
+if(TARGET Qt6::PrintSupport)
     # Create the GRC Qt dependency helper library
     add_library(gnuradio-grc-qt-deps SHARED grc_qt_deps.cpp)
-    target_link_libraries(gnuradio-grc-qt-deps Qt5::PrintSupport)
-    
+    target_link_libraries(gnuradio-grc-qt-deps Qt6::PrintSupport)
+
     # Register with bundle system - this creates BundleInstall-gnuradio-grc-qt-deps.cmake
     if(BUILD_SHARED_LIBS)
-        gr_library_foo(gnuradio-grc-qt-deps Qt5::PrintSupport)
+        gr_library_foo(gnuradio-grc-qt-deps Qt6::PrintSupport)
     endif()
-    
-    message(STATUS "Created GRC Qt dependency library for Qt5PrintSupport.dll bundling")
+
+    message(STATUS "Created GRC Qt dependency library for Qt6PrintSupport.dll bundling")
 else()
-    message(STATUS "Qt5::PrintSupport not found, GRC Qt DLL bundling disabled")
+    message(STATUS "Qt6::PrintSupport not found, GRC Qt DLL bundling disabled")
 endif()
 
 GR_REGISTER_COMPONENT(

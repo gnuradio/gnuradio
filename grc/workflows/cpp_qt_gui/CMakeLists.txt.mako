@@ -19,7 +19,6 @@ short_version = '.'.join(version_list[0:2])
 
 cmake_minimum_required(VERSION 3.16)
 set(CMAKE_CXX_STANDARD 17)
-set(TRY_QT6_BUILD True) # At the moment this setting is required to get the correct QtQwt ( Qt6Qwt6) version
 project(${class_name})
 
 find_package(Gnuradio "${short_version}" COMPONENTS

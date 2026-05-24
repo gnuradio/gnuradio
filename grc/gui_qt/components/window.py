@@ -902,7 +902,6 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         else:
             dirname = os.getcwd()
         Open = QtWidgets.QFileDialog.getOpenFileName
-        # Despite qtpy, PyQt5 and PySide2 have different signatures for getOpenFileName
         filename, filtr = Open(
             self,  # parent
             self.actions["open"].statusTip(),  # caption

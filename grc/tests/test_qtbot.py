@@ -12,7 +12,7 @@ import pyautogui as pag
 
 import logging
 
-from qtpy import QtTest, QtCore, QtGui, QtWidgets, QT6
+from qtpy import QtTest, QtCore, QtGui, QtWidgets
 from os import path, remove
 
 from gnuradio import gr
@@ -72,10 +72,7 @@ def type_text(qtbot, app, keys):
         # Each sequence contains a single key.
         # That's why we use the first element
         keycode = QtGui.QKeySequence(key)[0]
-        if QT6:
-            qtbot.keyClick(app.focusWidget(), keycode.key(), QtCore.Qt.NoModifier)
-        else:
-            qtbot.keyClick(app.focusWidget(), keycode, QtCore.Qt.NoModifier)
+        qtbot.keyClick(app.focusWidget(), keycode.key(), QtCore.Qt.NoModifier)
 
 
 def keystroke(qtbot, app, key):

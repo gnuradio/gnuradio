@@ -21,7 +21,7 @@ from __future__ import absolute_import, print_function
 import logging
 import functools
 
-from qtpy import QtGui, QtCore, QtWidgets, QT6
+from qtpy import QtGui, QtCore, QtWidgets
 from qtpy.QtCore import Qt
 from qtpy.QtWidgets import QApplication, QGraphicsTextItem
 
@@ -75,10 +75,7 @@ class FlowgraphScene(QtWidgets.QGraphicsScene, base.Component):
 
         self.qsettings = QApplication.instance().qsettings
 
-        if QT6:
-            self.undoStack = QtGui.QUndoStack(self)
-        else:
-            self.undoStack = QtWidgets.QUndoStack(self)
+        self.undoStack = QtGui.QUndoStack(self)
         self.undoAction = self.undoStack.createUndoAction(self, "Undo")
         self.redoAction = self.undoStack.createRedoAction(self, "Redo")
 
