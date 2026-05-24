@@ -90,10 +90,10 @@ FFT averaging.
 
 \subsection qtgui_menu_trigger Triggering Menu for Time Plots
 
-The time plots and eye pattern plots have triggering capabilities. 
-Triggering can happen when the signal of a specific channel crosses 
-(positive or negative slope) a certain level threshold. Or triggering 
-can be done off a specific stream tag such that whenever a tag of a 
+The time plots and eye pattern plots have triggering capabilities.
+Triggering can happen when the signal of a specific channel crosses
+(positive or negative slope) a certain level threshold. Or triggering
+can be done off a specific stream tag such that whenever a tag of a
 given key is found, the scope will trigger.
 
 In the signal level mode, the trigger can be either 'auto' or 'normal'
@@ -161,7 +161,7 @@ class grclass(gr.top_block):
     	       		    samp_rate,      #bw
 			    "QT GUI Plot")  #name
 
-    self.snk_win = sip.wrapinstance(self.snk.qwidget(), Qt.QWidget)
+    self.snk_win = sip.wrapinstance(self.snk.qwidget(), QtWidgets.QWidget)
     self.snk_win.show()
 
 def main():
@@ -206,7 +206,7 @@ type interface, GRC will hide certain parameters that are not usable
 or settable anymore. For example, when plotting a message in the time
 sink, the number of points shown in the time sink is determined by the
 length of the vector in the message. Presetting this in the GUI would
-have no effect. 
+have no effect.
 This behavior in GRC is for convenience and to try and reduce confusion
 about properties and settings in the message mode. However, all of the
 API hooks are still there, so it is possible to set all of this

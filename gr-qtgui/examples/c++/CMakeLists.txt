@@ -25,11 +25,8 @@ list(
     gnuradio-runtime
     ${QT_LIBRARIES})
 
-if(QT_DEFAULT_MAJOR_VERSION EQUAL 5)
-    qt5_wrap_cpp(qtgui_moc_sources display_qt.h)
-elseif(QT_DEFAULT_MAJOR_VERSION EQUAL 6)
-    qt6_wrap_cpp(qtgui_moc_sources display_qt.h)
-endif()
+qt6_wrap_cpp(qtgui_moc_sources display_qt.h)
+
 
 add_executable(display_qt display_qt.cc ${qtgui_moc_sources})
 target_link_libraries(display_qt ${QTGUI_LIBRARIES})

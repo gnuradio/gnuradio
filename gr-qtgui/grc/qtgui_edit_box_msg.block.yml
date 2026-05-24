@@ -59,7 +59,7 @@ templates:
             win = 'self._%s_win'%id
         %>\
         qtgui.edit_box_msg(${type.t}, ${value}, ${label}, ${is_pair}, ${is_static}, ${key}, None)
-        ${win} = sip.wrapinstance(self.${id}.qwidget(), Qt.QWidget)
+        ${win} = sip.wrapinstance(self.${id}.qwidget(), QtWidgets.QWidget)
         ${gui_hint() % win}
 
 documentation: |-
