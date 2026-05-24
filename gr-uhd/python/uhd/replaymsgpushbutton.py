@@ -7,7 +7,7 @@
 #
 #
 
-from qtpy import Qt
+from qtpy.QtCore import Qt
 from gnuradio import gr
 import pmt
 
