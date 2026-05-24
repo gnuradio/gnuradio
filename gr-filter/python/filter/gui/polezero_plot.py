@@ -20,8 +20,8 @@ from numpy import delete
 
 class PzPlot(pg.PlotWidget):
 
-    def __init__(self, *args):
-        pg.PlotWidget.__init__(self, *args)
+    def __init__(self, *args, **kwargs):
+        pg.PlotWidget.__init__(self, *args, **kwargs)
 
         # Set Global pyqtgraph options
         # Default foreground color for text, lines, axes, etc.
