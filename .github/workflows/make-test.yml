@@ -247,11 +247,11 @@ jobs:
           python-mako:p
           python-numpy:p
           python-pip:p
-          python-pyqt5:p
+          python-pyqt6:p
           python-pyzmq:p
           python-yaml:p
-          qt5-base:p
-          qwt-qt5:p
+          qt6-base:p
+          qwt-qt6:p
           SDL:p
           soapysdr:p
           spdlog:p

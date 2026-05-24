@@ -204,11 +204,11 @@ jobs:
         for %%i in (%GTK_ROOT%\python\pycairo*.whl) do (pip install --force-reinstall %%i)
         @echo Verify pygi installation
         python -c "import os;os.add_dll_directory('%fps_GTK_BIN_DIR%');import gi;gi.require_version('Gtk', '3.0');gi.require_foreign('cairo', 'Context');gi.require_version('PangoCairo', '1.0')"
-    - name: Download and extract PyQT5 source
+    - name: Download and extract PyQT6 source
       env:
-        url: 'https://files.pythonhosted.org/packages/0e/07/c9ed0bd428df6f87183fca565a79fee19fa7c88c7f00a7f011ab4379e77a/PyQt5-5.15.11.tar.gz'
-        target_path: ${{ runner.workspace }}\PyQt5-5.15.11
-        temp_file_name: PyQT5_download.tar.gz
+        url: 'https://files.pythonhosted.org/packages/8b/47/b25c13eca5bebc6505394d0223e46d7ebf0c57dcac2ed908d7d19b18ab6b/pyqt6-6.11.0.tar.gz'
+        target_path: ${{ runner.workspace }}\PyQt6-6.11.0
+        temp_file_name: PyQT6_download.tar.gz
       run: |
         powershell -NoProfile -ExecutionPolicy Bypass ^
             -Command Invoke-WebRequest "%url%" ^
@@ -240,25 +240,25 @@ jobs:
         conan profile detect --force
         conan install gnuradio/release --output-folder=%DEPS_CMAKE_GENERATORS% --build=missing
         echo DEPS_CMAKE_GENERATORS=%DEPS_CMAKE_GENERATORS%>> %GITHUB_ENV%
-    - name: Build and install PyQT5
+    - name: Build and install PyQT6
       run: |
         call "%msbuild_vcvars64%"
         set QT_ROOT_DIR
-        set Qt5_DIR
+        set Qt6_DIR
         call %PY_VENV_PATH%\Scripts\activate
         python -m pip install PyQt-builder
-        @echo Explicitly uninstall PyQt5 installed via requirements
-        python -m pip uninstall -y PyQt5 PyQt5-Qt5
-        @echo Activate conan runtime environment by calling DEPS_CMAKE_GENERATORS\build\generators\conanrun.bat 
+        @echo Explicitly uninstall PyQt6 installed via requirements
+        python -m pip uninstall -y PyQt6 PyQt6-Qt6
+        @echo Activate conan runtime environment by calling DEPS_CMAKE_GENERATORS\build\generators\conanrun.bat
         call %DEPS_CMAKE_GENERATORS%\build\generators\conanrun.bat
-        cd %RUNNER_WORKSPACE%\PyQt5-5.15.11
+        cd %RUNNER_WORKSPACE%\PyQt6-6.11.0
         sip-install -h
         @echo Start codegen but disable QtNfc to avoid LNK1169 when linking QtNfc.dll
         @echo Alternativly may specifc LINK=/FORCE:MULTIPLE
         sip-build --no-make --confirm-license --disable QtNfc
         cd build && nmake
         nmake install
-        python -m pip install PyQt5-sip
+        python -m pip install PyQt6-sip
     # Clone and build Volk from scratch, because of unreliable python venv detection during "Build C++ dependencies"
     - name: Clone Volk
       uses: actions/checkout@v4
