@@ -392,13 +392,13 @@ class RangeWidget(QtWidgets.QWidget):
 
 
 if __name__ == "__main__":
-    from qtpy import Qt
+    from qtpy import QtWidgets
     import sys
 
     def valueChanged(frequency):
         print("Value updated - " + str(frequency))
 
-    app = Qt.QApplication(sys.argv)
+    app = QtWidgets.QApplication(sys.argv)
     widget = RangeWidget(Range(0, 100, 10, 1, 100),
                          valueChanged, "Test", "counter_slider", int)
 

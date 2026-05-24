@@ -80,7 +80,7 @@ templates:
     self.${id}.set_waterfall(${wf_enabled})
     self.${id}.set_grid(${grid_enabled})
     self.${id}.set_palette("${palette}")
-    self._${id}_win = sip.wrapinstance(self.${id}.qwidget(), Qt.QWidget)
+    self._${id}_win = sip.wrapinstance(self.${id}.qwidget(), QtWidgets.QWidget)
     ${gui_hint() % win}
   callbacks:
   - set_frequency_range(${center_freq}, ${samp_rate})

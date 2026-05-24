@@ -446,7 +446,7 @@ templates:
             self.${id}.set_line_marker(i, markers[i])
             self.${id}.set_line_alpha(i, alphas[i])
 
-        self._${id}_win = sip.wrapinstance(self.${id}.qwidget(), Qt.QWidget)
+        self._${id}_win = sip.wrapinstance(self.${id}.qwidget(), QtWidgets.QWidget)
         ${gui_hint() % win}
 
 documentation: |-

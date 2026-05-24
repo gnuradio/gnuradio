@@ -7,7 +7,8 @@
 #
 
 
-from qtpy import Qt, QtCore, QtWidgets
+from qtpy import QtCore, QtWidgets
+from qtpy.QtCore import Qt
 from gnuradio import gr
 import math
 import re
@@ -42,7 +43,7 @@ def numeric_eval(expression):
     return float(evaluate(ast.parse(expression).body[-1]))
 
 
-class NumericEntry(Qt.QToolBar):
+class NumericEntry(QtWidgets.QToolBar):
     def __init__(self, callback, label="", value=0, increment=0, unit="", description=None, precision=10, enabled=True):
         QtWidgets.QWidget.__init__(self)
 
@@ -54,10 +55,10 @@ class NumericEntry(Qt.QToolBar):
         self.precision = precision
         self.callback = callback
 
-        self.label = Qt.QLabel(label + ": ")
+        self.label = QtWidgets.QLabel(label + ": ")
         self.addWidget(self.label)
 
-        self.edit = Qt.QLineEdit()
+        self.edit = QtWidgets.QLineEdit()
         self.edit.editingFinished.connect(self._apply)
         self.edit.textEdited.connect(lambda: self._set_editing())
         self._editing = (False, None)
@@ -87,7 +88,7 @@ class NumericEntry(Qt.QToolBar):
         if self._editing != (editing, valid):
             style = "QLabel { color: red }" if not valid else \
                     "QLabel { color: blue }" if editing else ""
-            Qt.QMetaObject.invokeMethod(self.label, "setStyleSheet", Qt.Q_ARG("QString", style))
+            QtCore.QMetaObject.invokeMethod(self.label, "setStyleSheet", QtCore.Q_ARG(str, style))
             self._editing = (editing, valid)
 
     def _fmt(self, value):
@@ -114,7 +115,7 @@ class NumericEntry(Qt.QToolBar):
     def set_value(self, value):
         """Public method used to set new value"""
         self.value = float(value)
-        Qt.QMetaObject.invokeMethod(self.edit, "setText", Qt.Q_ARG("QString", self._fmt(self.value)))
+        QtCore.QMetaObject.invokeMethod(self.edit, "setText", QtCore.Q_ARG(str, self._fmt(self.value)))
         self._set_editing(False)
 
     def _parse(self, string):

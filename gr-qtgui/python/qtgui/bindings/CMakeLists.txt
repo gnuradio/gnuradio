@@ -68,7 +68,7 @@ endif(ENABLE_GR_QTGUI_OPENGL)
 
 list(APPEND qtgui_python_files python_bindings.cc)
 
-set(include_dirs ${Qt5Widgets_INCLUDE_DIRS})
+set(include_dirs ${Qt6Widgets_INCLUDE_DIRS})
 if(QWT_FOUND)
     list(APPEND include_dirs ${QWT_INCLUDE_DIRS})
 endif(QWT_FOUND)
