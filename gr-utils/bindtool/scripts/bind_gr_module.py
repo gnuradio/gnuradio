@@ -20,8 +20,8 @@ args = parser.parse_args()
 # NOTES:
 # To generate QTGUI requires adding the QT headers as --include, e.g.
 # bind_gr_module.py --prefix /share/gnuradio/grpybind --output_dir /share/tmp/take5
-#   --include /usr/include/x86_64-linux-gnu/qt5/QtGui,/usr/include/x86_64-linux-gnu/qt5,
-#   /usr/include/x86_64-linux-gnu/qt5/QtCore,/usr/include/x86_64-linux-gnu/qt5/QtWidgets,/usr/include/qwt qtgui
+#   --include /usr/include/x86_64-linux-gnu/qt6/QtGui,/usr/include/x86_64-linux-gnu/qt6,
+#   /usr/include/x86_64-linux-gnu/qt6/QtCore,/usr/include/x86_64-linux-gnu/qt6/QtWidgets,/usr/include/qwt qtgui
 
 # To generate UHD requires adding the UHD headers, e.g.
 # python3 /share/gnuradio/grpybind/src/gnuradio/gr-utils/python/bindtool/scripts/bind_gr_module.py
