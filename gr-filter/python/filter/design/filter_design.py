@@ -126,15 +126,15 @@ class gr_plot_filter(QtWidgets.QMainWindow):
         self.gui.action_save.setEnabled(False)
         self.gui.action_open.triggered.connect(self.action_open_dialog)
 
-        self.gui.filterTypeComboBox.currentIndexChanged['const QString&'].connect(
+        self.gui.filterTypeComboBox.currentTextChanged.connect(
             self.changed_filter_type)
-        self.gui.iirfilterBandComboBox.currentIndexChanged['const QString&'].connect(
+        self.gui.iirfilterBandComboBox.currentTextChanged.connect(
             self.changed_iirfilter_band)
-        self.gui.filterDesignTypeComboBox.currentIndexChanged['const QString&'].connect(
+        self.gui.filterDesignTypeComboBox.currentTextChanged.connect(
             self.changed_filter_design_type)
-        self.gui.fselectComboBox.currentIndexChanged['const QString&'].connect(
+        self.gui.fselectComboBox.currentTextChanged.connect(
             self.changed_fselect)
-        self.gui.iirfilterTypeComboBox.currentIndexChanged['const QString&'].connect(
+        self.gui.iirfilterTypeComboBox.currentTextChanged.connect(
             self.set_order)
 
         self.gui.designButton.released.connect(self.design)
@@ -482,7 +482,7 @@ class gr_plot_filter(QtWidgets.QMainWindow):
         self.populate_bandview(self.lpfitems)
 
         # Set up validators for edit boxes.
-        self.intVal = QtGui.QIntvalidator(None)
+        self.intVal = QtGui.QIntValidator(None)
         self.dblVal = QtGui.QDoubleValidator(None)
         self.gui.nfftEdit.setValidator(self.intVal)
         self.gui.sampleRateEdit.setValidator(self.dblVal)
