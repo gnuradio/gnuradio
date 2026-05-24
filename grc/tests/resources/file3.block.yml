@@ -37,7 +37,7 @@ asserts:
 - ${value in (true, false)}
 
 templates:
-    imports: from PyQt6 import Qt
+    imports: from qtpy import QtWidgets
     var_make: self.${id} = ${id} = ${value}
     callbacks:
     - self.set_${id}(${value})
@@ -48,10 +48,10 @@ templates:
             if not label:
                 label = id
         %>
-        ${win} = Qt.QCheckBox(${label})
+        ${win} = QtWidgets.QCheckBox(${label})
         self._${id}_choices = {True: ${true}, False: ${false}}
         self._${id}_choices_inv = {${true}: True, ${false}: False}
-        self._${id}_callback = lambda i: Qt.QMetaObject.invokeMethod(${win}, "setChecked", Qt.Q_ARG("bool", self._${id}_choices_inv[i]))
+        self._${id}_callback = lambda i: QtCore.QMetaObject.invokeMethod(${win}, "setChecked", QtCore.Q_ARG("bool", self._${id}_choices_inv[i]))
         self._${id}_callback(self.${id})
         ${win}.stateChanged.connect(lambda i: self.set_${id}(self._${id}_choices[bool(i)]))
         ${gui_hint()(win)}
