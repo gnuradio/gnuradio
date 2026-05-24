@@ -8,7 +8,8 @@
 
 
 try:
-    from qtpy import Qt, QtCore, QtGui, QtWidgets
+    from qtpy import QtCore, QtGui, QtWidgets
+    from qtpy.QtCore import Qt
 except ImportError:
     raise SystemExit(
         'Please install PyQt to run this script (http://www.riverbankcomputing.co.uk/software/pyqt/download)')
@@ -17,7 +18,7 @@ except ImportError:
 # Movable solid line for filter ideal-band diagram.
 # Enable split to cut the line into two (for bpf).
 class filtermovlineItem(QtWidgets.QGraphicsObject):
-    attenChanged = QtCore.pyqtSignal(float)
+    attenChanged = QtCore.Signal(float)
 
     def __init__(self, x1, y1, x2, y2, lower, upper, split=False, sx1=0, sy1=0, sx2=0, sy2=0):
         QtWidgets.QGraphicsObject.__init__(self)
@@ -30,7 +31,7 @@ class filtermovlineItem(QtWidgets.QGraphicsObject):
         self.split = split
 
     def paint(self, painter, option, widget):
-        painter.setPen(QtGui.QPen(QtCore.Qt.black, 2, QtCore.Qt.SolidLine))
+        painter.setPen(QtGui.QPen(Qt.black, 2, QtCore.Qt.SolidLine))
         painter.drawLine(self.x1, self.y1, self.x2, self.y2)
         painter.drawLine(self.x1, self.y1, self.x1, self.y1 - 5)
         painter.drawLine(self.x2, self.y2, self.x2, self.y2 - 5)

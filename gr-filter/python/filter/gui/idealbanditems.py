@@ -7,7 +7,8 @@
 #
 
 
-from qtpy import QtGui, QtCore, Qt
+from qtpy import QtGui, QtCore
+from qtpy.QtCore import Qt
 import pyqtgraph as pg
 import numpy
 
@@ -30,9 +31,9 @@ class IdealBandItems(object):
 
     def setLinetype(self):
         for c in self.idealbandhcurves:
-            c.setPen(Qt.QPen(Qt.Qt.red, 1, Qt.Qt.DotLine))
+            c.setPen(QtGui.QPen(Qt.red, 1, Qt.DotLine))
         for c in self.idealbandvcurves:
-            c.setPen(Qt.QPen(Qt.Qt.red, 1, Qt.Qt.DotLine))
+            c.setPen(QtGui.QPen(Qt.red, 1, Qt.DotLine))
 
     def plotIdealCurves(self, ftype, params, plot):
         self.params = params
