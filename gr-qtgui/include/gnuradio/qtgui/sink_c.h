@@ -13,8 +13,8 @@
 
 #include <gnuradio/block.h>
 #include <gnuradio/qtgui/api.h>
-#include <QApplication>
 #include <qwt_legend.h>
+#include <QApplication>
 
 
 namespace gr {

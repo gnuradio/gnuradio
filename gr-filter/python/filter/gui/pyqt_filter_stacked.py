@@ -1135,7 +1135,7 @@ class Ui_MainWindow(object):
         self.mfreqTabgroup.setCurrentIndex(0)
         self.mfilterspecView.setCurrentIndex(0)
         self.filterTypeWidget.setCurrentIndex(11)
-        self.action_exit.triggered.connect(MainWindow.close) # type: ignore
+        self.action_exit.triggered.connect(MainWindow.close)  # type: ignore
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
         MainWindow.setTabOrder(self.filterTypeComboBox, self.filterDesignTypeComboBox)
         MainWindow.setTabOrder(self.filterDesignTypeComboBox, self.endofLpfPassBandEdit)
@@ -1358,7 +1358,7 @@ class Ui_MainWindow(object):
         self.firhbordLabel.setText(_translate("MainWindow", "Filter Order"))
         self.firhbordEdit.setText(_translate("MainWindow", "34"))
         self.firhbtrEditLabel2.setText(_translate("MainWindow", "Transition width\n"
-" (from fs/4)"))
+                                                  " (from fs/4)"))
         self.firhbtrEdit.setText(_translate("MainWindow", "10000"))
         self.filterPropsBox.setTitle(_translate("MainWindow", "Filter Properties"))
         self.nTapsLabel.setText(_translate("MainWindow", "Number of Taps:"))
@@ -1405,6 +1405,8 @@ class Ui_MainWindow(object):
         self.actionBand_Diagram.setText(_translate("MainWindow", "&Band Diagram"))
         self.actionCheck.setText(_translate("MainWindow", "check"))
         self.actionPlot_FFT_points.setText(_translate("MainWindow", "Plot FFT points"))
+
+
 from .GrFilterPlotWidget import GrFilterPlotWidget
 from .bandgraphicsview import BandGraphicsView
 from .polezero_plot import PzPlot

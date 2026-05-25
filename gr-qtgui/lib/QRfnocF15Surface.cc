@@ -653,15 +653,20 @@ void QRfnocF15Surface::refreshLayout()
 
 GLuint QRfnocF15Surface::bindTexture(const QPixmap& pixmap)
 {
-    QImage img = pixmap.toImage()
-                       .convertToFormat(QImage::Format_RGBA8888)
-                       .flipped(Qt::Vertical);
+    QImage img =
+        pixmap.toImage().convertToFormat(QImage::Format_RGBA8888).flipped(Qt::Vertical);
     GLuint tex;
     glGenTextures(1, &tex);
     glBindTexture(GL_TEXTURE_2D, tex);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA,
-                   img.width(), img.height(), 0,
-                   GL_RGBA, GL_UNSIGNED_BYTE, img.constBits());
+    glTexImage2D(GL_TEXTURE_2D,
+                 0,
+                 GL_RGBA,
+                 img.width(),
+                 img.height(),
+                 0,
+                 GL_RGBA,
+                 GL_UNSIGNED_BYTE,
+                 img.constBits());
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     return tex;

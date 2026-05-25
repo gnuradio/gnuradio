@@ -339,7 +339,7 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
         self.filterTypeWidget.setCurrentIndex(5)
         self.tabGroup.setCurrentIndex(0)
-        self.action_exit.triggered.connect(MainWindow.close) # type: ignore
+        self.action_exit.triggered.connect(MainWindow.close)  # type: ignore
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
         MainWindow.setTabOrder(self.filterTypeComboBox, self.filterDesignTypeComboBox)
         MainWindow.setTabOrder(self.filterDesignTypeComboBox, self.sampleRateEdit)
@@ -430,6 +430,8 @@ class Ui_MainWindow(object):
         self.action_save.setShortcut(_translate("MainWindow", "Ctrl+S"))
         self.action_open.setText(_translate("MainWindow", "&Open"))
         self.action_open.setShortcut(_translate("MainWindow", "Ctrl+O"))
+
+
 from qwt import QwtPlot
 
 

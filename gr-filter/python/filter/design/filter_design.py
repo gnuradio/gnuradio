@@ -838,8 +838,8 @@ class gr_plot_filter(QMainWindow):
                 self.design_iir()
                 if len(w):
                     reply = QMessageBox.information(self, "BadCoefficients",
-                                                              str(w[-1].message),
-                                                              QMessageBox.Ok)
+                                                    str(w[-1].message),
+                                                    QMessageBox.Ok)
 
     # Do FIR design.
     def design_fir(self, ftype, fs, gain, winstr):
@@ -969,7 +969,7 @@ class gr_plot_filter(QMainWindow):
                                                     analog=sanalog[atype], ftype=iirft[iirftype], output='ba')
             except Exception as e:
                 reply = QMessageBox.information(self, "IIR design error", e.args[0],
-                                                          QMessageBox.Ok)
+                                                QMessageBox.Ok)
 
             (self.z, self.p, self.k) = signal.tf2zpk(self.b, self.a)
 
@@ -981,7 +981,7 @@ class gr_plot_filter(QMainWindow):
                                                     analog=sanalog[atype], ftype=iirft[iirftype], output='ba')
             except Exception as e:
                 reply = QMessageBox.information(self, "IIR design error", e.args[0],
-                                                          QMessageBox.Ok)
+                                                QMessageBox.Ok)
 
             (self.z, self.p, self.k) = signal.tf2zpk(self.b, self.a)
             # Create parameters.
@@ -2073,9 +2073,9 @@ class gr_plot_filter(QMainWindow):
             handle = open(filename, "w")
         except IOError:
             reply = QMessageBox.information(self, 'File Name',
-                                                      ("Could not save to file: %s" %
-                                                       filename),
-                                                      QMessageBox.Ok)
+                                            ("Could not save to file: %s" %
+                                             filename),
+                                            QMessageBox.Ok)
             return
 
         csvhandle = csv.writer(handle, delimiter=",")
@@ -2115,9 +2115,9 @@ class gr_plot_filter(QMainWindow):
             handle = open(filename, "r")
         except IOError:
             reply = QMessageBox.information(self, 'File Name',
-                                                      ("Could not open file: %s" %
-                                                       filename),
-                                                      QMessageBox.Ok)
+                                            ("Could not open file: %s" %
+                                             filename),
+                                            QMessageBox.Ok)
             return
 
         csvhandle = csv.reader(handle, delimiter=",")
