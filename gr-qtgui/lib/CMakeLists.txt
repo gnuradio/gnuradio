@@ -84,6 +84,7 @@ if(ENABLE_GR_QTGUI_OPENGL)
     find_package(OpenGL)
     list(APPEND PRIVATE_LIBS
         Qt6::OpenGL
+        Qt6::OpenGLWidgets
         OpenGL::GL
     )
 endif()
