@@ -339,7 +339,7 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
         self.filterTypeWidget.setCurrentIndex(5)
         self.tabGroup.setCurrentIndex(0)
-        self.action_exit.activated.connect(MainWindow.close) # type: ignore
+        self.action_exit.triggered.connect(MainWindow.close) # type: ignore
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
         MainWindow.setTabOrder(self.filterTypeComboBox, self.filterDesignTypeComboBox)
         MainWindow.setTabOrder(self.filterDesignTypeComboBox, self.sampleRateEdit)
