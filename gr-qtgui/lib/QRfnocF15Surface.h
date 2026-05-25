@@ -11,6 +11,8 @@
 
 #include <QOpenGLFunctions>
 #include <QOpenGLWidget>
+#include <QPixmap>
+#include <QImage>
 
 #include <string>
 
@@ -56,6 +58,8 @@ private:
     void refreshPowerAxis();
     void refreshFrequencyAxis();
     void refreshLayout();
+
+    GLuint bindTexture(const QPixmap& pixmap);
 
     int d_fft_bins;
     int d_pwr_bins;

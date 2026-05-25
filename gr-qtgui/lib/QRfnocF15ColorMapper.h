@@ -16,6 +16,7 @@
 #include <QGradient>
 #include <QObject>
 #include <QPixmap>
+#include <QImage>
 
 #include <map>
 #include <string>
