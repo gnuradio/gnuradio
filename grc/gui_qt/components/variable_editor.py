@@ -4,7 +4,7 @@ from __future__ import absolute_import, print_function
 import logging
 from enum import Enum
 
-from qtpy import QtGui
+from qtpy.QtGui import QIcon
 from qtpy.QtWidgets import QMenu, QAction, QDockWidget, QTreeWidget, QTreeWidgetItem
 from qtpy.QtCore import Slot, Signal, QPointF, Qt, QVariant
 
@@ -60,12 +60,12 @@ class VariableEditor(QDockWidget, base.Component):
         imports = QTreeWidgetItem(self._tree)
         imports.setText(0, "Imports")
         imports.setData(2, Qt.UserRole, self.import_add)
-        imports.setIcon(2, QtGui.QIcon.fromTheme("list-add"))
+        imports.setIcon(2, QIcon.fromTheme("list-add"))
 
         variables = QTreeWidgetItem(self._tree)
         variables.setText(0, "Variables")
         variables.setData(2, Qt.UserRole, self.var_add)
-        variables.setIcon(2, QtGui.QIcon.fromTheme("list-add"))
+        variables.setIcon(2, QIcon.fromTheme("list-add"))
         self._tree.expandAll()
 
         # TODO: Move to the base controller and set actions as class attributes
@@ -152,7 +152,7 @@ class VariableEditor(QDockWidget, base.Component):
         imports = QTreeWidgetItem(self._tree, 2)
         imports.setText(0, "Imports")
         imports.setForeground(0, self._tree.palette().color(self.palette().WindowText))
-        imports.setIcon(2, QtGui.QIcon.fromTheme("list-add"))
+        imports.setIcon(2, QIcon.fromTheme("list-add"))
         imports.setData(2, Qt.UserRole, self.import_add)
         for block in self._imports:
             import_ = QTreeWidgetItem(imports, 0)
@@ -160,7 +160,7 @@ class VariableEditor(QDockWidget, base.Component):
             import_.setData(0, Qt.UserRole, block)
             import_.setText(1, block.params['imports'].get_value())
             import_.setData(1, Qt.UserRole, block)
-            import_.setIcon(2, QtGui.QIcon.fromTheme("list-remove"))
+            import_.setIcon(2, QIcon.fromTheme("list-remove"))
             import_.setData(2, Qt.UserRole, self.del_block)
             if block.enabled:
                 import_.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEditable | Qt.ItemIsEnabled)
@@ -174,7 +174,7 @@ class VariableEditor(QDockWidget, base.Component):
         variables = QTreeWidgetItem(self._tree, 2)
         variables.setText(0, "Variables")
         variables.setForeground(0, self._tree.palette().color(self.palette().WindowText))
-        variables.setIcon(2, QtGui.QIcon.fromTheme("list-add"))
+        variables.setIcon(2, QIcon.fromTheme("list-add"))
         variables.setData(2, Qt.UserRole, self.var_add)
         for block in sorted(self._variables, key=lambda v: v.name):
             variable_ = QTreeWidgetItem(variables, 1)
@@ -213,7 +213,7 @@ class VariableEditor(QDockWidget, base.Component):
                         self.palette().Disabled, self.palette().WindowText))
                     variable_.setForeground(1, self._tree.palette().color(
                         self.palette().Disabled, self.palette().WindowText))
-            variable_.setIcon(2, QtGui.QIcon.fromTheme("list-remove"))
+            variable_.setIcon(2, QIcon.fromTheme("list-remove"))
 
         self.currently_rebuilding = False
 

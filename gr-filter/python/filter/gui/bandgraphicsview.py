@@ -6,11 +6,11 @@
 #
 #
 
-from qtpy import QtWidgets, QtCore
 from qtpy.QtCore import Qt
+from qtpy.QtWidgets import QGraphicsView
 
 
-class BandGraphicsView(QtWidgets.QGraphicsView):
+class BandGraphicsView(QGraphicsView):
     def resizeEvent(self, event):
         self.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.fitInView(self.scene().itemsBoundingRect(),

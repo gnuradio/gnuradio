@@ -16,7 +16,6 @@ from gnuradio import gr
 from gnuradio import qtgui
 from gnuradio import blocks, fft, filter
 
-from qtpy import QtGui
 from qtpy.QtWidgets import QWidget
 import qtpy.sip as sip
 

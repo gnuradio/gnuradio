@@ -46,9 +46,9 @@ templates:
         <%
             win = 'self._%s_tool_bar'%id
         %>
-        ${win} = QtWidgets.QToolBar(self)
-        ${win}.addWidget(QtWidgets.QLabel("${no_quotes(label,repr(id))}" + ": "))
-        self._${id}_line_edit = QtWidgets.QLineEdit(str(self.${id}))
+        ${win} = QToolBar(self)
+        ${win}.addWidget(QLabel("${no_quotes(label,repr(id))}" + ": "))
+        self._${id}_line_edit = QLineEdit(str(self.${id}))
         self._${id}_tool_bar.addWidget(self._${id}_line_edit)
         self._${id}_line_edit.${entry_signal}.connect(
             lambda: self.set_${id}(${type.conv}(str(self._${id}_line_edit.text()))))

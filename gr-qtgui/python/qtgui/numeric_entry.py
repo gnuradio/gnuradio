@@ -7,8 +7,8 @@
 #
 
 
-from qtpy import QtCore, QtWidgets
-from qtpy.QtCore import Qt
+from qtpy.QtCore import QMetaObject, Q_ARG, Qt
+from qtpy.QtWidgets import QLabel, QLineEdit, QToolBar, QWidget
 from gnuradio import gr
 import math
 import re
@@ -43,9 +43,9 @@ def numeric_eval(expression):
     return float(evaluate(ast.parse(expression).body[-1]))
 
 
-class NumericEntry(QtWidgets.QToolBar):
+class NumericEntry(QToolBar):
     def __init__(self, callback, label="", value=0, increment=0, unit="", description=None, precision=10, enabled=True):
-        QtWidgets.QWidget.__init__(self)
+        QWidget.__init__(self)
 
         self.value = value
         self.value_min = self.value_max = None
@@ -55,10 +55,10 @@ class NumericEntry(QtWidgets.QToolBar):
         self.precision = precision
         self.callback = callback
 
-        self.label = QtWidgets.QLabel(label + ": ")
+        self.label = QLabel(label + ": ")
         self.addWidget(self.label)
 
-        self.edit = QtWidgets.QLineEdit()
+        self.edit = QLineEdit()
         self.edit.editingFinished.connect(self._apply)
         self.edit.textEdited.connect(lambda: self._set_editing())
         self._editing = (False, None)
@@ -73,13 +73,13 @@ class NumericEntry(QtWidgets.QToolBar):
 
     def keyPressEvent(self, event):
         # in-/decrement
-        if event.key() == QtCore.Qt.Key_Up and self.increment:
+        if event.key() == Qt.Key_Up and self.increment:
             self._apply(self.value + self.increment)
-        elif event.key() == QtCore.Qt.Key_Down and self.increment:
+        elif event.key() == Qt.Key_Down and self.increment:
             self._apply(self.value - self.increment)
-        elif event.key() == QtCore.Qt.Key_PageUp and self.increment:
+        elif event.key() == Qt.Key_PageUp and self.increment:
             self._apply(self.value + 10 * self.increment)
-        elif event.key() == QtCore.Qt.Key_PageDown and self.increment:
+        elif event.key() == Qt.Key_PageDown and self.increment:
             self._apply(self.value - 10 * self.increment)
         else:
             super().keyPressEvent(event)
@@ -88,7 +88,7 @@ class NumericEntry(QtWidgets.QToolBar):
         if self._editing != (editing, valid):
             style = "QLabel { color: red }" if not valid else \
                     "QLabel { color: blue }" if editing else ""
-            QtCore.QMetaObject.invokeMethod(self.label, "setStyleSheet", QtCore.Q_ARG(str, style))
+            QMetaObject.invokeMethod(self.label, "setStyleSheet", Q_ARG(str, style))
             self._editing = (editing, valid)
 
     def _fmt(self, value):
@@ -115,7 +115,7 @@ class NumericEntry(QtWidgets.QToolBar):
     def set_value(self, value):
         """Public method used to set new value"""
         self.value = float(value)
-        QtCore.QMetaObject.invokeMethod(self.edit, "setText", QtCore.Q_ARG(str, self._fmt(self.value)))
+        QMetaObject.invokeMethod(self.edit, "setText", Q_ARG(str, self._fmt(self.value)))
         self._set_editing(False)
 
     def _parse(self, string):

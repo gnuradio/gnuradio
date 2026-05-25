@@ -41,8 +41,9 @@ import threading
 import time
 import math
 import signal
-from qtpy import QtCore, QtWidgets, QtGui
-from qtpy.QtCore import Qt
+from qtpy.QtCore import QMetaObject, QSettings, QTimer, Q_ARG, Qt
+from qtpy.QtGui import QIcon
+from qtpy.QtWidgets import QApplication, QBoxLayout, QComboBox, QFrame, QGridLayout, QLabel, QLineEdit, QScrollArea, QTabWidget, QToolBar, QVBoxLayout, QWidget
 from qtpy import sip  # Needs to be imported after PyQt, could fail otherwise
 import os
 @DLL_IMPORT_GTK@
@@ -64,7 +65,7 @@ except ImportError:
 # pylint: disable=no-member
 
 
-class uhd_fft(UHDApp, gr.top_block, QtWidgets.QWidget):
+class uhd_fft(UHDApp, gr.top_block, QWidget):
     """
     Simple UHD Spectrum Analyzer / Scope App.
     """
@@ -72,27 +73,27 @@ class uhd_fft(UHDApp, gr.top_block, QtWidgets.QWidget):
     def __init__(self, args):
         UHDApp.__init__(self, args=args, prefix="UHD FFT")
         gr.top_block.__init__(self, "UHD FFT")
-        QtWidgets.QWidget.__init__(self)
+        QWidget.__init__(self)
         ##################################################
         # Init QT App
         ##################################################
         self.setWindowTitle("UHD FFT")
         try:
-            self.setWindowIcon(QtGui.QIcon.fromTheme('gnuradio-grc'))
+            self.setWindowIcon(QIcon.fromTheme('gnuradio-grc'))
         except:
             pass
-        self.top_scroll_layout = QtWidgets.QVBoxLayout()
+        self.top_scroll_layout = QVBoxLayout()
         self.setLayout(self.top_scroll_layout)
-        self.top_scroll = QtWidgets.QScrollArea()
-        self.top_scroll.setFrameStyle(QtWidgets.QFrame.NoFrame)
+        self.top_scroll = QScrollArea()
+        self.top_scroll.setFrameStyle(QFrame.NoFrame)
         self.top_scroll_layout.addWidget(self.top_scroll)
         self.top_scroll.setWidgetResizable(True)
-        self.top_widget = QtWidgets.QWidget()
+        self.top_widget = QWidget()
         self.top_scroll.setWidget(self.top_widget)
-        self.top_layout = QtWidgets.QVBoxLayout(self.top_widget)
-        self.top_grid_layout = QtWidgets.QGridLayout()
+        self.top_layout = QVBoxLayout(self.top_widget)
+        self.top_grid_layout = QGridLayout()
         self.top_layout.addLayout(self.top_grid_layout)
-        self.settings = QtCore.QSettings("GNU Radio", "uhd_fft")
+        self.settings = QSettings("GNU Radio", "uhd_fft")
         geo_settings = self.settings.value("geometry")
         if geo_settings:
             self.restoreGeometry(self.settings.value("geometry"))
@@ -147,9 +148,9 @@ class uhd_fft(UHDApp, gr.top_block, QtWidgets.QWidget):
 
         ### Now set up the GUI widgets: #####################################
         # Sampling rate:
-        self._samp_rate__tool_bar = QtWidgets.QToolBar(self)
-        self._samp_rate__tool_bar.addWidget(QtWidgets.QLabel("Sampling Rate: "))
-        self._samp_rate__line_edit = QtWidgets.QLineEdit(
+        self._samp_rate__tool_bar = QToolBar(self)
+        self._samp_rate__tool_bar.addWidget(QLabel("Sampling Rate: "))
+        self._samp_rate__line_edit = QLineEdit(
             eng_notation.num_to_str(self.samp_rate))
         self._samp_rate__tool_bar.addWidget(self._samp_rate__line_edit)
         self._samp_rate__line_edit.editingFinished.connect(
@@ -180,9 +181,9 @@ class uhd_fft(UHDApp, gr.top_block, QtWidgets.QWidget):
                 for _ in range(len(self.channels))
             ]
         # Center frequency:
-        self._freq_tool_bar = QtWidgets.QToolBar(self)
-        self._freq_tool_bar.addWidget(QtWidgets.QLabel("RX Tune Frequency: "))
-        self._freq_line_edit = QtWidgets.QLineEdit(eng_notation.num_to_str(self.freq))
+        self._freq_tool_bar = QToolBar(self)
+        self._freq_tool_bar.addWidget(QLabel("RX Tune Frequency: "))
+        self._freq_line_edit = QLineEdit(eng_notation.num_to_str(self.freq))
         self._freq_tool_bar.addWidget(self._freq_line_edit)
         self._freq_line_edit.editingFinished.connect(
             lambda: self.set_freq_qt(
@@ -190,35 +191,35 @@ class uhd_fft(UHDApp, gr.top_block, QtWidgets.QWidget):
         self.top_grid_layout.addWidget(self._freq_tool_bar, 3, 0, 1, 2)
         # Antenna Selection:
         self._ant_labels = self._ant_options
-        self._ant_tool_bar = QtWidgets.QToolBar(self)
-        self._ant_tool_bar.addWidget(QtWidgets.QLabel("Antenna: "))
-        self._ant_combo_box = QtWidgets.QComboBox()
+        self._ant_tool_bar = QToolBar(self)
+        self._ant_tool_bar.addWidget(QLabel("Antenna: "))
+        self._ant_combo_box = QComboBox()
         self._ant_tool_bar.addWidget(self._ant_combo_box)
         for label in self._ant_labels:
             self._ant_combo_box.addItem(label)
         self._ant_callback = \
-            lambda i: QtCore.QMetaObject.invokeMethod(
+            lambda i: QMetaObject.invokeMethod(
                 self._ant_combo_box,
                 "setCurrentIndex",
-                QtCore.Q_ARG("int", self._ant_options.index(i)))
+                Q_ARG("int", self._ant_options.index(i)))
         self._ant_callback(self.antenna)
         self._ant_combo_box.currentIndexChanged.connect(
             lambda i: self.set_ant(self._ant_options[i]))
         self.top_grid_layout.addWidget(self._ant_tool_bar, 4, 2, 1, 2)
         # Device + UHD info:
-        self._usrp_device_info_tool_bar = QtWidgets.QToolBar(self)
+        self._usrp_device_info_tool_bar = QToolBar(self)
         self._usrp_device_info_formatter = lambda x: x
         self._usrp_device_info_tool_bar.addWidget(
-            QtWidgets.QLabel("Device Information: "))
-        self._usrp_device_info_label = QtWidgets.QLabel(
+            QLabel("Device Information: "))
+        self._usrp_device_info_label = QLabel(
             str(self._usrp_device_info_formatter(self.usrp_device_info)))
         self._usrp_device_info_tool_bar.addWidget(self._usrp_device_info_label)
         self.top_grid_layout.addWidget(
             self._usrp_device_info_tool_bar, 1, 2, 1, 2)
-        self._uhd_version_info_tool_bar = QtWidgets.QToolBar(self)
+        self._uhd_version_info_tool_bar = QToolBar(self)
         self._uhd_version_info_formatter = lambda x: x
-        self._uhd_version_info_tool_bar.addWidget(QtWidgets.QLabel("UHD Version: "))
-        self._uhd_version_info_label = QtWidgets.QLabel(
+        self._uhd_version_info_tool_bar.addWidget(QLabel("UHD Version: "))
+        self._uhd_version_info_label = QLabel(
             str(self._uhd_version_info_formatter(self.uhd_version_info)))
         self._uhd_version_info_tool_bar.addWidget(self._uhd_version_info_label)
         self.top_grid_layout.addWidget(
@@ -230,23 +231,23 @@ class uhd_fft(UHDApp, gr.top_block, QtWidgets.QWidget):
         styles = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
         markers = [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1]
         alphas = [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
-        self.display = QtWidgets.QTabWidget()
-        self.display_widget_0 = QtWidgets.QWidget()
-        self.display_layout_0 = QtWidgets.QBoxLayout(
-            QtWidgets.QBoxLayout.TopToBottom, self.display_widget_0)
-        self.display_grid_layout_0 = QtWidgets.QGridLayout()
+        self.display = QTabWidget()
+        self.display_widget_0 = QWidget()
+        self.display_layout_0 = QBoxLayout(
+            QBoxLayout.TopToBottom, self.display_widget_0)
+        self.display_grid_layout_0 = QGridLayout()
         self.display_layout_0.addLayout(self.display_grid_layout_0)
         self.display.addTab(self.display_widget_0, "Spectrum")
-        self.display_widget_1 = QtWidgets.QWidget()
-        self.display_layout_1 = QtWidgets.QBoxLayout(
-            QtWidgets.QBoxLayout.TopToBottom, self.display_widget_1)
-        self.display_grid_layout_1 = QtWidgets.QGridLayout()
+        self.display_widget_1 = QWidget()
+        self.display_layout_1 = QBoxLayout(
+            QBoxLayout.TopToBottom, self.display_widget_1)
+        self.display_grid_layout_1 = QGridLayout()
         self.display_layout_1.addLayout(self.display_grid_layout_1)
         self.display.addTab(self.display_widget_1, "Waterfall")
-        self.display_widget_2 = QtWidgets.QWidget()
-        self.display_layout_2 = QtWidgets.QBoxLayout(
-            QtWidgets.QBoxLayout.TopToBottom, self.display_widget_2)
-        self.display_grid_layout_2 = QtWidgets.QGridLayout()
+        self.display_widget_2 = QWidget()
+        self.display_layout_2 = QBoxLayout(
+            QBoxLayout.TopToBottom, self.display_widget_2)
+        self.display_grid_layout_2 = QGridLayout()
         self.display_layout_2.addLayout(self.display_grid_layout_2)
         self.display.addTab(self.display_widget_2, "Scope")
         self.top_grid_layout.addWidget(self.display, 0, 0, 1, 4)
@@ -270,7 +271,7 @@ class uhd_fft(UHDApp, gr.top_block, QtWidgets.QWidget):
             self.qtgui_waterfall_sink_x_0.set_line_alpha(i, alpha)
         self.qtgui_waterfall_sink_x_0.set_intensity_range(-90, 10)
         self._qtgui_waterfall_sink_x_0_win = sip.wrapinstance(
-            self.qtgui_waterfall_sink_x_0.qwidget(), QtWidgets.QWidget)
+            self.qtgui_waterfall_sink_x_0.qwidget(), QWidget)
         self.display_grid_layout_1.addWidget(
             self._qtgui_waterfall_sink_x_0_win, 0, 0, 1, 4)
         self.qtgui_time_sink_x_0 = qtgui.time_sink_c(
@@ -303,7 +304,7 @@ class uhd_fft(UHDApp, gr.top_block, QtWidgets.QWidget):
             self.qtgui_time_sink_x_0.set_line_marker(i, markers[i])
             self.qtgui_time_sink_x_0.set_line_alpha(i, alphas[i])
         self._qtgui_time_sink_x_0_win = sip.wrapinstance(
-            self.qtgui_time_sink_x_0.qwidget(), QtWidgets.QWidget)
+            self.qtgui_time_sink_x_0.qwidget(), QWidget)
         self.display_grid_layout_2.addWidget(
             self._qtgui_time_sink_x_0_win, 0, 0, 1, 4)
         self.qtgui_freq_sink_x_0 = qtgui.freq_sink_c(
@@ -337,7 +338,7 @@ class uhd_fft(UHDApp, gr.top_block, QtWidgets.QWidget):
             self.qtgui_freq_sink_x_0.set_line_color(i, colors[i])
             self.qtgui_freq_sink_x_0.set_line_alpha(i, alphas[i])
         self._qtgui_freq_sink_x_0_win = sip.wrapinstance(
-            self.qtgui_freq_sink_x_0.qwidget(), QtWidgets.QWidget)
+            self.qtgui_freq_sink_x_0.qwidget(), QWidget)
         self.display_grid_layout_0.addWidget(
             self._qtgui_freq_sink_x_0_win, 0, 0, 1, 4)
 
@@ -353,10 +354,10 @@ class uhd_fft(UHDApp, gr.top_block, QtWidgets.QWidget):
         _freeze_scope_thread.daemon = True
         _freeze_scope_thread.start()
         if args.phase_relations and len(self.channels) > 1:
-            self.display_widget_phase = QtWidgets.QWidget()
-            self.display_layout_phase = QtWidgets.QBoxLayout(
-                QtWidgets.QBoxLayout.TopToBottom, self.display_widget_phase)
-            self.display_grid_layout_phase = QtWidgets.QGridLayout()
+            self.display_widget_phase = QWidget()
+            self.display_layout_phase = QBoxLayout(
+                QBoxLayout.TopToBottom, self.display_widget_phase)
+            self.display_grid_layout_phase = QGridLayout()
             self.display_layout_phase.addLayout(self.display_grid_layout_phase)
             self.display.addTab(self.display_widget_phase, "Rel. Phase")
             self.qtgui_phase_plot = qtgui.time_sink_f(
@@ -385,16 +386,16 @@ class uhd_fft(UHDApp, gr.top_block, QtWidgets.QWidget):
                 self.qtgui_phase_plot.set_line_marker(i, markers[i])
                 self.qtgui_phase_plot.set_line_alpha(i, alphas[i])
             self._qtgui_phase_plot_win = sip.wrapinstance(
-                self.qtgui_phase_plot.qwidget(), QtWidgets.QWidget)
+                self.qtgui_phase_plot.qwidget(), QWidget)
             self.display_grid_layout_phase.addWidget(
                 self._qtgui_phase_plot_win, 0, 0, 1, 4)
         ### Other widgets ###################################################
-        self._lo_locked_probe_tool_bar = QtWidgets.QToolBar(self)
+        self._lo_locked_probe_tool_bar = QToolBar(self)
         self._lo_locked_probe_formatter = lambda x: {
             True: 'Yes', False: 'No'}[x]
         if self.has_lo_sensor:
-            self._lo_locked_probe_tool_bar.addWidget(QtWidgets.QLabel("LO locked: "))
-            self._lo_locked_probe_label = QtWidgets.QLabel(
+            self._lo_locked_probe_tool_bar.addWidget(QLabel("LO locked: "))
+            self._lo_locked_probe_label = QLabel(
                 str(self._lo_locked_probe_formatter(self.lo_locked_probe)))
 
             def _chan0_lo_locked_probe():
@@ -413,8 +414,8 @@ class uhd_fft(UHDApp, gr.top_block, QtWidgets.QWidget):
             _chan0_lo_locked_thread.start()
         else:
             self._lo_locked_probe_tool_bar.addWidget(
-                QtWidgets.QLabel("No LO lock sensor available."))
-            self._lo_locked_probe_label = QtWidgets.QLabel("")
+                QLabel("No LO lock sensor available."))
+            self._lo_locked_probe_label = QLabel("")
         self._lo_locked_probe_tool_bar.addWidget(self._lo_locked_probe_label)
         self.top_grid_layout.addWidget(
             self._lo_locked_probe_tool_bar, 4, 0, 1, 2)
@@ -487,7 +488,7 @@ class uhd_fft(UHDApp, gr.top_block, QtWidgets.QWidget):
     # pylint: disable=invalid-name
     def closeEvent(self, event):
         """ Execute when window closes """
-        self.settings = QtCore.QSettings("GNU Radio", "uhd_fft")
+        self.settings = QSettings("GNU Radio", "uhd_fft")
         self.settings.setValue("geometry", self.saveGeometry())
         self.stop()
         self.wait()
@@ -511,9 +512,9 @@ class uhd_fft(UHDApp, gr.top_block, QtWidgets.QWidget):
         else:
             raise RuntimeError(
                 "Invalid tune source: {}".format(tune_source))
-        QtCore.QMetaObject.invokeMethod(
+        QMetaObject.invokeMethod(
             self._freq_line_edit, "setText",
-            QtCore.Q_ARG("QString", eng_notation.num_to_str(self.freq))
+            Q_ARG("QString", eng_notation.num_to_str(self.freq))
         )
         self.qtgui_waterfall_sink_x_0.set_frequency_range(
             self.freq, self.samp_rate)
@@ -528,9 +529,9 @@ class uhd_fft(UHDApp, gr.top_block, QtWidgets.QWidget):
         """ Execute when the sampling rate is changed """
         self.vprint("Setting sampling rate to: {} MHz".format(samp_rate / 1e6))
         self.samp_rate = samp_rate
-        QtCore.QMetaObject.invokeMethod(
+        QMetaObject.invokeMethod(
             self._samp_rate__line_edit, "setText",
-            QtCore.Q_ARG("QString", eng_notation.num_to_str(self.samp_rate))
+            Q_ARG("QString", eng_notation.num_to_str(self.samp_rate))
         )
         self.qtgui_freq_sink_x_0.set_frequency_range(self.freq, self.samp_rate)
         self.qtgui_time_sink_x_0.set_samp_rate(self.samp_rate)
@@ -543,10 +544,10 @@ class uhd_fft(UHDApp, gr.top_block, QtWidgets.QWidget):
     def set_lo_locked_probe(self, lo_locked_probe):
         """ Execute when lock status update needs to be displayed """
         self.lo_locked_probe = lo_locked_probe
-        QtCore.QMetaObject.invokeMethod(
+        QMetaObject.invokeMethod(
             self._lo_locked_probe_label,
             "setText",
-            QtCore.Q_ARG("QString", str(self.lo_locked_probe)))
+            Q_ARG("QString", str(self.lo_locked_probe)))
 
     def set_ant(self, ant):
         """ Execute when antenna is modified """
@@ -607,7 +608,7 @@ def main():
     Go, go, go!
     """
     args = setup_argparser().parse_args()
-    qapp = QtWidgets.QApplication(sys.argv)
+    qapp = QApplication(sys.argv)
     top_block = uhd_fft(args)
     top_block.start()
     top_block.show()
@@ -617,10 +618,10 @@ def main():
     def sig_handler(sig=None, frame=None):
         top_block.stop()
         top_block.wait()
-        QtWidgets.QApplication.quit()
+        QApplication.quit()
     signal.signal(signal.SIGINT, sig_handler)
     signal.signal(signal.SIGTERM, sig_handler)
-    timer = QtCore.QTimer()
+    timer = QTimer()
     timer.start(500)
     timer.timeout.connect(lambda: None)
     qapp.exec()

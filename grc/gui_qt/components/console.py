@@ -24,17 +24,19 @@ import textwrap
 
 # Third-party  modules
 
-from qtpy import QtCore, QtGui, QtWidgets
+from qtpy.QtCore import QMetaObject, Qt
+from qtpy.QtGui import QIcon, QKeySequence
+from qtpy.QtWidgets import QAction, QDockWidget, QHBoxLayout, QMenu, QTextEdit, QToolBar, QWidget
 
 # Custom modules
 from .. import base
 
 # Shortcuts
-Action = QtWidgets.QAction
-Menu = QtWidgets.QMenu
-Toolbar = QtWidgets.QToolBar
-Icons = QtGui.QIcon.fromTheme
-Keys = QtGui.QKeySequence
+Action = QAction
+Menu = QMenu
+Toolbar = QToolBar
+Icons = QIcon.fromTheme
+Keys = QKeySequence
 
 # Logging
 log = logging.getLogger(f"grc.application.{__name__}")
@@ -78,7 +80,7 @@ HTML = '''
 '''
 
 
-class Console(QtWidgets.QDockWidget, base.Component):
+class Console(QDockWidget, base.Component):
     def __init__(self, level):
         super(Console, self).__init__()
 
@@ -91,23 +93,23 @@ class Console(QtWidgets.QDockWidget, base.Component):
         # GUI Widgets
 
         # Create the layout widget
-        container = QtWidgets.QWidget(self)
+        container = QWidget(self)
         container.setObjectName('console::container')
         self._container = container
 
-        layout = QtWidgets.QHBoxLayout(container)
+        layout = QHBoxLayout(container)
         layout.setObjectName('console::layout')
         layout.setSpacing(0)
         layout.setContentsMargins(5, 0, 5, 5)
         self._layout = layout
 
         # Console output widget
-        text = QtWidgets.QTextEdit(container)
+        text = QTextEdit(container)
         text.setObjectName('console::text')
         text.setUndoRedoEnabled(False)
         text.setReadOnly(True)
         text.setCursorWidth(0)
-        text.setTextInteractionFlags(QtCore.Qt.TextSelectableByKeyboard | QtCore.Qt.TextSelectableByMouse)
+        text.setTextInteractionFlags(Qt.TextSelectableByKeyboard | Qt.TextSelectableByMouse)
         text.setHtml(textwrap.dedent(HTML))
         self._text = text
 
@@ -120,7 +122,7 @@ class Console(QtWidgets.QDockWidget, base.Component):
 
         # self.setWindowTitle(_translate("", "Library", None))
         # library.headerItem().setText(0, _translate("", "Blocks", None))
-        # QtCore.QMetaObject.connectSlotsByName(blockLibraryDock)
+        # QMetaObject.connectSlotsByName(blockLibraryDock)
 
         # Setup actions
 
@@ -182,7 +184,7 @@ class Console(QtWidgets.QDockWidget, base.Component):
 
         log.debug("Creating menus")
 
-        console_menu = QtWidgets.QMenu("&Console")
+        console_menu = QMenu("&Console")
         console_menu.setObjectName("console::menu")
 
         # Not needed, we have FileHandler logging in main.py
