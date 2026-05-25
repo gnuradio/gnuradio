@@ -5,7 +5,9 @@ import logging
 import os
 import yaml
 
-from qtpy import QtCore, QtWidgets, uic
+from qtpy import uic
+from qtpy.QtCore import Qt
+from qtpy.QtWidgets import QDialog, QListWidgetItem
 
 from .. import base
 from ..properties import Paths
@@ -15,8 +17,8 @@ from ..properties import Paths
 log = logging.getLogger(f"grc.application.{__name__}")
 
 
-class OOTBrowser(QtWidgets.QDialog, base.Component):
-    data_role = QtCore.Qt.UserRole
+class OOTBrowser(QDialog, base.Component):
+    data_role = Qt.UserRole
 
     def __init__(self):
         super().__init__()
@@ -41,7 +43,7 @@ class OOTBrowser(QtWidgets.QDialog, base.Component):
                 data = yaml.safe_load(yml)
                 data["description"] = desc
                 self.validate(data)
-                item = QtWidgets.QListWidgetItem()
+                item = QListWidgetItem()
                 item.setText(data["title"])
                 item.setData(self.data_role, data)
 

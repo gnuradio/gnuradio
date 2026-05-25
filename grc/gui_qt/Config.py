@@ -4,7 +4,7 @@ from collections import OrderedDict
 
 from ..core.Config import Config as CoreConfig
 from .. import paths
-from qtpy import QtCore
+from qtpy.QtCore import QSettings
 
 
 class Config(CoreConfig):
@@ -14,7 +14,7 @@ class Config(CoreConfig):
 
     def __init__(self, *args, **kwargs):
         CoreConfig.__init__(self, *args, **kwargs)
-        self.qsettings = QtCore.QSettings(self.gui_prefs_file, QtCore.QSettings.IniFormat)
+        self.qsettings = QSettings(self.gui_prefs_file, QSettings.IniFormat)
 
     @property
     def wiki_block_docs_url_prefix(self):

@@ -9,9 +9,8 @@
 #
 #
 
-from qtpy import QtWidgets
-from qtpy.QtWidgets import QFrame, QVBoxLayout, QLabel
 from qtpy.QtCore import Qt, QSize
+from qtpy.QtWidgets import QFrame, QVBoxLayout, QLabel, QDial
 from gnuradio import gr
 import pmt
 
@@ -74,10 +73,10 @@ class LabeledDialControl(QFrame):
         self.lblcontrol.setText(textstr)
 
 
-class DialControl(QtWidgets.QDial):
+class DialControl(QDial):
     def __init__(self, minimum=0, maximum=100, defaultvalue=0, backgroundColor='default',
                  lablelCallback=None, changedCallback=None, minsize=100):
-        QtWidgets.QDial.__init__(self)
+        QDial.__init__(self)
 
         if backgroundColor != "default":
             self.setStyleSheet("background-color: " + backgroundColor + ";")

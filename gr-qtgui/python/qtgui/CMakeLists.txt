@@ -8,7 +8,11 @@
 ########################################################################
 include(GrPython)
 
-set(PY_QT_IMPORT "from qtpy import QtCore, QtWidgets, QtGui")
+set(PY_QT_IMPORT "\
+from qtpy.QtCore import Qt
+from qtpy.QtGui import QValidator
+from qtpy.QtWidgets import QApplication, QDial, QDoubleSpinBox, QHBoxLayout, QLabel, QLineEdit, QSlider, QWidget
+")
 
 configure_file(range.py.cmakein "${CMAKE_CURRENT_BINARY_DIR}/range.py" @ONLY)
 configure_file(util.py.cmakein "${CMAKE_CURRENT_BINARY_DIR}/util.py" @ONLY)

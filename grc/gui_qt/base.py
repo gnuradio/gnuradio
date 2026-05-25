@@ -23,7 +23,7 @@ import logging
 import weakref
 
 # Third-party  modules
-from qtpy import QtWidgets
+from qtpy.QtWidgets import QApplication
 
 
 # Logging
@@ -44,7 +44,7 @@ class Component(object):
 
         # Application reference - Use weak references to avoid issues with circular references
         # Platform and settings properties are accessed through this reference
-        self._app = weakref.ref(QtWidgets.QApplication.instance())
+        self._app = weakref.ref(QApplication.instance())
 
         # Automatically create the actions, menus and toolbars.
         # Child controllers need to call the register functions to integrate into the mainwindow

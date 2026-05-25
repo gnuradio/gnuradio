@@ -38,7 +38,9 @@ import threading
 import signal
 import time
 import math
-from qtpy.QtCore import Slot, Qt
+from qtpy.QtCore import QMetaObject, QSettings, QTimer, Q_ARG, Qt, Slot
+from qtpy.QtGui import QIcon
+from qtpy.QtWidgets import QApplication, QButtonGroup, QComboBox, QFrame, QGridLayout, QGroupBox, QHBoxLayout, QLabel, QLineEdit, QPushButton, QRadioButton, QScrollArea, QToolBar, QVBoxLayout, QWidget
 from qtpy import sip  # Needs to be imported after PyQt, could fail otherwise
 from gnuradio import analog
 from gnuradio import eng_notation
@@ -55,7 +57,7 @@ except ImportError:
 # The Qt stuff will throw PyLint warnings like crazy, so let's disable them
 # pylint: disable=c-extension-no-member
 
-class uhd_siggen_gui(QtWidgets.QWidget):
+class uhd_siggen_gui(QWidget):
     """
     Signal Generator Flowgraph
     """
@@ -70,24 +72,24 @@ class uhd_siggen_gui(QtWidgets.QWidget):
         ##################################################
         # GUI Setup
         ##################################################
-        QtWidgets.QWidget.__init__(self)
+        QWidget.__init__(self)
         self.setWindowTitle("UHD Signal Generator")
         try:
-            self.setWindowIcon(QtGui.QIcon.fromTheme('gnuradio-grc'))
+            self.setWindowIcon(QIcon.fromTheme('gnuradio-grc'))
         except:
             pass
-        self.top_scroll_layout = QtWidgets.QVBoxLayout()
+        self.top_scroll_layout = QVBoxLayout()
         self.setLayout(self.top_scroll_layout)
-        self.top_scroll = QtWidgets.QScrollArea()
-        self.top_scroll.setFrameStyle(QtWidgets.QFrame.NoFrame)
+        self.top_scroll = QScrollArea()
+        self.top_scroll.setFrameStyle(QFrame.NoFrame)
         self.top_scroll_layout.addWidget(self.top_scroll)
         self.top_scroll.setWidgetResizable(True)
-        self.top_widget = QtWidgets.QWidget()
+        self.top_widget = QWidget()
         self.top_scroll.setWidget(self.top_widget)
-        self.top_layout = QtWidgets.QVBoxLayout(self.top_widget)
-        self.top_grid_layout = QtWidgets.QGridLayout()
+        self.top_layout = QVBoxLayout(self.top_widget)
+        self.top_grid_layout = QGridLayout()
         self.top_layout.addLayout(self.top_grid_layout)
-        self.settings = QtCore.QSettings("GNU Radio", "uhd_siggen_gui")
+        self.settings = QSettings("GNU Radio", "uhd_siggen_gui")
         geo_settings = self.settings.value("geometry")
         if geo_settings:
             self.restoreGeometry(self.settings.value("geometry"))
@@ -98,12 +100,12 @@ class uhd_siggen_gui(QtWidgets.QWidget):
         # Waveform Selector
         self._waveform_options = list(uhd_siggen.WAVEFORMS.keys())
         self._waveform_labels = list(uhd_siggen.WAVEFORMS.values())
-        self._waveform_group_box = QtWidgets.QGroupBox("Waveform")
-        self._waveform_box = QtWidgets.QHBoxLayout()
+        self._waveform_group_box = QGroupBox("Waveform")
+        self._waveform_box = QHBoxLayout()
 
-        class variable_chooser_button_group(QtWidgets.QButtonGroup):
+        class variable_chooser_button_group(QButtonGroup):
             def __init__(self, parent=None):
-                QtWidgets.QButtonGroup.__init__(self, parent)
+                QButtonGroup.__init__(self, parent)
 
             @Slot(int)
             def updateButtonChecked(self, button_id):
@@ -111,13 +113,13 @@ class uhd_siggen_gui(QtWidgets.QWidget):
         self._waveform_button_group = variable_chooser_button_group()
         self._waveform_group_box.setLayout(self._waveform_box)
         for i, label in enumerate(self._waveform_labels):
-            radio_button = QtWidgets.QRadioButton(label)
+            radio_button = QRadioButton(label)
             self._waveform_box.addWidget(radio_button)
             self._waveform_button_group.addButton(radio_button, i)
-        self._waveform_callback = lambda i: QtCore.QMetaObject.invokeMethod(
+        self._waveform_callback = lambda i: QMetaObject.invokeMethod(
             self._waveform_button_group,
             "updateButtonChecked",
-            QtCore.Q_ARG("int", self._waveform_options.index(i))
+            Q_ARG("int", self._waveform_options.index(i))
         )
         self._waveform_callback(self._sg[uhd_siggen.TYPE_KEY])
         self._waveform_button_group.buttonClicked[int].connect(
@@ -242,9 +244,9 @@ class uhd_siggen_gui(QtWidgets.QWidget):
         self.top_grid_layout.addWidget(self._gain_win, 6, 0, 1, 5)
         # Samp rate, LO sync, Antenna Select
         self.samp_rate = self._sg[uhd_siggen.SAMP_RATE_KEY]
-        self._samp_rate_tool_bar = QtWidgets.QToolBar(self)
-        self._samp_rate_tool_bar.addWidget(QtWidgets.QLabel("Sampling Rate: "))
-        self._samp_rate_line_edit = QtWidgets.QLineEdit(
+        self._samp_rate_tool_bar = QToolBar(self)
+        self._samp_rate_tool_bar.addWidget(QLabel("Sampling Rate: "))
+        self._samp_rate_line_edit = QLineEdit(
             eng_notation.num_to_str(self._sg[uhd_siggen.SAMP_RATE_KEY]))
         self._samp_rate_tool_bar.addWidget(self._samp_rate_line_edit)
         self._samp_rate_line_edit.editingFinished.connect(
@@ -252,32 +254,32 @@ class uhd_siggen_gui(QtWidgets.QWidget):
                 str(self._samp_rate_line_edit.text())))
         )
         self.top_grid_layout.addWidget(self._samp_rate_tool_bar, 7, 0, 1, 2)
-        _sync_phases_push_button = QtWidgets.QPushButton("Sync LOs")
+        _sync_phases_push_button = QPushButton("Sync LOs")
         _sync_phases_push_button.pressed.connect(
             lambda: self.set_sync_phases(True))
         _sync_phases_push_button.setEnabled(bool(len(self._sg.channels) > 1))
         self.top_grid_layout.addWidget(_sync_phases_push_button, 7, 2, 1, 1)
         # Antenna Select
-        self._ant_tool_bar = QtWidgets.QToolBar(self)
-        self._ant_tool_bar.addWidget(QtWidgets.QLabel("Antenna: "))
-        self._ant_combo_box = QtWidgets.QComboBox()
+        self._ant_tool_bar = QToolBar(self)
+        self._ant_tool_bar.addWidget(QLabel("Antenna: "))
+        self._ant_combo_box = QComboBox()
         self._ant_tool_bar.addWidget(self._ant_combo_box)
         self._ant_options = self.usrp.get_antennas(self._sg.channels[0])
         for label in self._ant_options:
             self._ant_combo_box.addItem(label)
-        self._ant_callback = lambda i: QtCore.QMetaObject.invokeMethod(
+        self._ant_callback = lambda i: QMetaObject.invokeMethod(
             self._ant_combo_box, "setCurrentIndex",
-            QtCore.Q_ARG("int", self._ant_options.index(i))
+            Q_ARG("int", self._ant_options.index(i))
         )
         self._ant_callback(self.usrp.get_antenna(self._sg.channels[0]))
         self._ant_combo_box.currentIndexChanged.connect(
             lambda i: self.set_ant(self._ant_options[i]))
         self.top_grid_layout.addWidget(self._ant_tool_bar, 7, 4, 1, 1)
         # Labels + Lock Sensors
-        self._lo_locked_probe_0_tool_bar = QtWidgets.QToolBar(self)
+        self._lo_locked_probe_0_tool_bar = QToolBar(self)
         self._lo_locked_probe_0_formatter = lambda x: x
-        self._lo_locked_probe_0_tool_bar.addWidget(QtWidgets.QLabel("LO locked: "))
-        self._lo_locked_probe_0_label = QtWidgets.QLabel(str(False))
+        self._lo_locked_probe_0_tool_bar.addWidget(QLabel("LO locked: "))
+        self._lo_locked_probe_0_label = QLabel(str(False))
         self._lo_locked_probe_0_tool_bar.addWidget(
             self._lo_locked_probe_0_label)
         self.top_grid_layout.addWidget(
@@ -299,20 +301,20 @@ class uhd_siggen_gui(QtWidgets.QWidget):
         _chan0_lo_locked_thread.daemon = True
         _chan0_lo_locked_thread.start()
         self.label_rf_freq = self._sg.tr.actual_rf_freq
-        self._label_rf_freq_tool_bar = QtWidgets.QToolBar(self)
+        self._label_rf_freq_tool_bar = QToolBar(self)
         self._label_rf_freq_formatter = lambda x: x
-        self._label_rf_freq_tool_bar.addWidget(QtWidgets.QLabel("LO freq: "))
+        self._label_rf_freq_tool_bar.addWidget(QLabel("LO freq: "))
         self._label_rf_freq_label = \
-            QtWidgets.QLabel(str(self._label_rf_freq_formatter(self.label_rf_freq)))
+            QLabel(str(self._label_rf_freq_formatter(self.label_rf_freq)))
         self._label_rf_freq_tool_bar.addWidget(self._label_rf_freq_label)
         self.top_grid_layout.addWidget(
             self._label_rf_freq_tool_bar, 8, 1, 1, 1)
         self.label_dsp_freq = self._sg.tr.actual_dsp_freq
-        self._label_dsp_freq_tool_bar = QtWidgets.QToolBar(self)
+        self._label_dsp_freq_tool_bar = QToolBar(self)
         self._label_dsp_freq_formatter = lambda x: x
-        self._label_dsp_freq_tool_bar.addWidget(QtWidgets.QLabel("DSP Freq: "))
+        self._label_dsp_freq_tool_bar.addWidget(QLabel("DSP Freq: "))
         self._label_dsp_freq_label = \
-            QtWidgets.QLabel(str(self._label_dsp_freq_formatter(self.label_dsp_freq)))
+            QLabel(str(self._label_dsp_freq_formatter(self.label_dsp_freq)))
         self._label_dsp_freq_tool_bar.addWidget(self._label_dsp_freq_label)
         self.top_grid_layout.addWidget(
             self._label_dsp_freq_tool_bar, 8, 2, 1, 1)
@@ -341,7 +343,7 @@ class uhd_siggen_gui(QtWidgets.QWidget):
             self.qtgui_freq_sink_x_0.set_line_color(0, "blue")
             self.qtgui_freq_sink_x_0.set_line_alpha(0, 1.0)
             self._qtgui_freq_sink_x_0_win = sip.wrapinstance(
-                self.qtgui_freq_sink_x_0.qwidget(), QtWidgets.QWidget)
+                self.qtgui_freq_sink_x_0.qwidget(), QWidget)
             self.top_grid_layout.addWidget(
                 self._qtgui_freq_sink_x_0_win, 9, 0, 2, 5)
             # Reconnect:
@@ -357,7 +359,7 @@ class uhd_siggen_gui(QtWidgets.QWidget):
     ##################################################
     def closeEvent(self, event):
         """ Qt closeEvent() """
-        self.settings = QtCore.QSettings("GNU Radio", "uhd_siggen_gui")
+        self.settings = QSettings("GNU Radio", "uhd_siggen_gui")
         self.settings.setValue("geometry", self.saveGeometry())
         self._sg.stop()
         self._sg.wait()
@@ -462,9 +464,9 @@ class uhd_siggen_gui(QtWidgets.QWidget):
     def set_samp_rate(self, samp_rate):
         """ Execute when the sampling rate is changed """
         self.samp_rate = samp_rate
-        QtCore.QMetaObject.invokeMethod(
+        QMetaObject.invokeMethod(
             self._samp_rate_line_edit, "setText",
-            QtCore.Q_ARG("QString", eng_notation.num_to_str(self.samp_rate))
+            Q_ARG("QString", eng_notation.num_to_str(self.samp_rate))
         )
         self._sg[uhd_siggen.SAMP_RATE_KEY] = samp_rate
         self.update_center_freq()
@@ -472,9 +474,9 @@ class uhd_siggen_gui(QtWidgets.QWidget):
     def set_label_rf_freq(self, label_rf_freq):
         """  Update the RF frequency label """
         self.label_rf_freq = label_rf_freq
-        QtCore.QMetaObject.invokeMethod(
+        QMetaObject.invokeMethod(
             self._label_rf_freq_label, "setText",
-            QtCore.Q_ARG(
+            Q_ARG(
                 "QString",
                 eng_notation.num_to_str(self.label_rf_freq)
             )
@@ -483,9 +485,9 @@ class uhd_siggen_gui(QtWidgets.QWidget):
     def set_label_dsp_freq(self, label_dsp_freq):
         """  Update the DSP frequency label """
         self.label_dsp_freq = label_dsp_freq
-        QtCore.QMetaObject.invokeMethod(
+        QMetaObject.invokeMethod(
             self._label_dsp_freq_label, "setText",
-            QtCore.Q_ARG(
+            Q_ARG(
                 "QString",
                 eng_notation.num_to_str(self.label_dsp_freq)
             )
@@ -495,9 +497,9 @@ class uhd_siggen_gui(QtWidgets.QWidget):
         """
         Update the LO locked label
         """
-        QtCore.QMetaObject.invokeMethod(
+        QMetaObject.invokeMethod(
             self._lo_locked_probe_0_label, "setText",
-            QtCore.Q_ARG("QString", str(chan0_lo_locked))
+            Q_ARG("QString", str(chan0_lo_locked))
         )
 
 
@@ -518,17 +520,17 @@ def main():
     """ Go, go, go! """
     parser = setup_parser()
     args = parser.parse_args()
-    qapp = QtWidgets.QApplication(sys.argv)
+    qapp = QApplication(sys.argv)
     siggen_gui = uhd_siggen_gui(args)
     siggen_gui.show()
     # pylint: disable=unused-argument
 
     def sig_handler(sig=None, frame=None):
         siggen_gui.stop()
-        QtWidgets.QApplication.quit()
+        QApplication.quit()
     signal.signal(signal.SIGINT, sig_handler)
     signal.signal(signal.SIGTERM, sig_handler)
-    timer = QtCore.QTimer()
+    timer = QTimer()
     timer.start(500)
     timer.timeout.connect(lambda: None)
     qapp.exec()

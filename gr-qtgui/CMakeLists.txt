@@ -61,7 +61,10 @@ set(GR_PKG_QTGUI_EXAMPLES_DIR ${GR_PKG_DATA_DIR}/examples/qt-gui)
 # Begin conditional configuration
 ########################################################################
 if(ENABLE_GR_QTGUI)
-    if (Qt5OpenGL_FOUND)
+    # NOTE: rfnoc OpenGL display still uses Qt5-era QGL* classes (QGLWidget,
+    # QGLContext::bindTexture/deleteTexture, updateGL). Disabled until ported
+    # to QOpenGLWidget + raw glTexImage2D / glDeleteTextures.
+    if (Qt6OpenGL_FOUND AND ENABLE_GR_QTGUI_OPENGL_PORTED)
         set(ENABLE_GR_QTGUI_OPENGL TRUE)
         set(OpenGL_GL_PREFERENCE GLVND)
     endif()

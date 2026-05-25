@@ -10,12 +10,12 @@
 #
 
 
-from qtpy import QtWidgets
+from qtpy.QtWidgets import QPushButton
 from gnuradio import gr
 import pmt
 
 
-class ToggleButton(gr.sync_block, QtWidgets.QPushButton):
+class ToggleButton(gr.sync_block, QPushButton):
     """
     This block creates a variable toggle button. Leave the label
     blank to use the variable id as the label. A toggle button
@@ -29,7 +29,7 @@ class ToggleButton(gr.sync_block, QtWidgets.QPushButton):
     def __init__(self, callback, lbl, pressedReleasedDict, initPressed, outputmsgname='value'):
         gr.sync_block.__init__(self, name="ToggleButton",
                                in_sig=None, out_sig=None)
-        QtWidgets.QPushButton.__init__(self, lbl)
+        QPushButton.__init__(self, lbl)
         self.setCheckable(True)
         self.lbl = lbl
         self.callback = callback

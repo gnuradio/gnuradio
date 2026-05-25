@@ -27,8 +27,9 @@ import pstats
 
 from typing import Union
 
-from qtpy import QtCore, QtGui, QtWidgets
-from qtpy.QtCore import Qt
+from qtpy.QtCore import QMetaObject, QPointF, QThreadPool, QUrl, Qt, Slot
+from qtpy.QtGui import QDesktopServices, QIcon, QKeySequence
+from qtpy.QtWidgets import QAction, QApplication, QFileDialog, QMainWindow, QMenu, QMessageBox, QProgressBar, QStyle, QTabWidget, QToolBar, QUndoView
 
 # Custom modules
 from .flowgraph_view import FlowgraphView
@@ -58,33 +59,33 @@ from ... import paths
 log = logging.getLogger(f"grc.application.{__name__}")
 
 # Shortcuts
-Action = QtWidgets.QAction
-Menu = QtWidgets.QMenu
-Toolbar = QtWidgets.QToolBar
-Icons = QtGui.QIcon.fromTheme
-Keys = QtGui.QKeySequence
-QStyle = QtWidgets.QStyle
+Action = QAction
+Menu = QMenu
+Toolbar = QToolBar
+Icons = QIcon.fromTheme
+Keys = QKeySequence
+QStyle = QStyle
 
 
-class MainWindow(QtWidgets.QMainWindow, base.Component):
+class MainWindow(QMainWindow, base.Component):
     def __init__(self, file_path=[]):
-        QtWidgets.QMainWindow.__init__(self)
+        QMainWindow.__init__(self)
         # base.Component.__init__(self)
 
         log.debug("Setting the main window")
         self.setObjectName("main")
         self.setWindowTitle(_("window-title"))
         self.setDockOptions(
-            QtWidgets.QMainWindow.AllowNestedDocks |
-            QtWidgets.QMainWindow.AllowTabbedDocks |
-            QtWidgets.QMainWindow.AnimatedDocks
+            QMainWindow.AllowNestedDocks |
+            QMainWindow.AllowTabbedDocks |
+            QMainWindow.AnimatedDocks
         )
-        self.progress_bar = QtWidgets.QProgressBar()
+        self.progress_bar = QProgressBar()
         self.statusBar().addPermanentWidget(self.progress_bar)
         self.progress_bar.hide()
 
         # Setup the window icon
-        icon = QtGui.QIcon(self.settings.path.ICON)
+        icon = QIcon(self.settings.path.ICON)
         log.debug("Setting window icon - ({0})".format(self.settings.path.ICON))
         self.setWindowIcon(icon)
 
@@ -116,13 +117,13 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
         # actions['Quit.triggered.connect(self.close)
         # actions['Report.triggered.connect(self.reportDock.show)
-        # QtCore.QMetaObject.connectSlotsByName(self)
+        # QMetaObject.connectSlotsByName(self)
 
         # Translation support
 
         # self.setWindowTitle(_translate("blockLibraryDock", "Library", None))
         # library.headerItem().setText(0, _translate("blockLibraryDock", "Blocks", None))
-        # QtCore.QMetaObject.connectSlotsByName(blockLibraryDock)
+        # QMetaObject.connectSlotsByName(blockLibraryDock)
 
         # TODO: Move to the base controller and set actions as class attributes
         # Automatically create the actions, menus and toolbars.
@@ -162,7 +163,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         self.registerToolBar(toolbars["run"])
         self.registerToolBar(toolbars["misc"])
 
-        self.tabWidget = QtWidgets.QTabWidget()
+        self.tabWidget = QTabWidget()
         self.tabWidget.setTabsClosable(True)
         self.tabWidget.tabCloseRequested.connect(
             lambda index: self.close_triggered(index)
@@ -200,7 +201,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         self.ExampleBrowser.file_to_open.connect(self.open_example)
         self.OOTBrowser = OOTBrowser()
 
-        self.threadpool = QtCore.QThreadPool()
+        self.threadpool = QThreadPool()
         self.threadpool.setMaxThreadCount(1)
         ExampleFinder = Worker(self.ExampleBrowser.find_examples)
         ExampleFinder.signals.result.connect(self.populate_libraries_w_examples)
@@ -212,7 +213,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         self.show()
     """
 
-    @QtCore.Slot(VariableEditorAction)
+    @Slot(VariableEditorAction)
     def handle_editor_action(self, key):
         # Calculate the position to insert a new block
         # Perhaps we should add a random component, as we may add several blocks
@@ -245,7 +246,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
     def currentFlowgraph(self):
         return self.tabWidget.currentWidget().scene().core
 
-    @QtCore.Slot(QtCore.QPointF)
+    @Slot(QPointF)
     def registerMove(self, diff):
         self.currentFlowgraphScene.set_saved(False)
         self.tabWidget.tabBar().setTabTextColor(self.tabWidget.currentIndex(), Qt.red)
@@ -253,7 +254,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         self.currentFlowgraphScene.undoStack.push(action)
         self.updateActions()
 
-    @QtCore.Slot(Element)
+    @Slot(Element)
     def registerNewElement(self, elem):
         self.currentFlowgraphScene.set_saved(False)
         self.tabWidget.tabBar().setTabTextColor(self.tabWidget.currentIndex(), Qt.red)
@@ -262,7 +263,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         self.updateActions()
         self.currentFlowgraphScene.update()
 
-    @QtCore.Slot(Element)
+    @Slot(Element)
     def registerDeleteElement(self, elem):
         self.currentFlowgraphScene.set_saved(False)
         self.tabWidget.tabBar().setTabTextColor(self.tabWidget.currentIndex(), Qt.red)
@@ -271,7 +272,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         self.updateActions()
         self.currentFlowgraphScene.update()
 
-    @QtCore.Slot(Element)
+    @Slot(Element)
     def registerBlockPropsChange(self, elem):
         self.currentFlowgraphScene.set_saved(False)
         self.tabWidget.tabBar().setTabTextColor(self.tabWidget.currentIndex(), Qt.red)
@@ -901,7 +902,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
             dirname = os.path.dirname(self.currentFlowgraphScene.filename)
         else:
             dirname = os.getcwd()
-        Open = QtWidgets.QFileDialog.getOpenFileName
+        Open = QFileDialog.getOpenFileName
         filename, filtr = Open(
             self,  # parent
             self.actions["open"].statusTip(),  # caption
@@ -911,7 +912,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         return filename
 
     def save(self):
-        Save = QtWidgets.QFileDialog.getSaveFileName
+        Save = QFileDialog.getSaveFileName
         filename, filtr = Save(
             self,
             self.actions["save"].statusTip(),
@@ -958,7 +959,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
         self.progress_bar.hide()
         self.examples_found = True
 
-    @QtCore.Slot(tuple)
+    @Slot(tuple)
     def update_progress_bar(self, progress_tuple):
         progress, msg = progress_tuple
         self.progress_bar.show()
@@ -1050,18 +1051,18 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
     def save_as_triggered(self):
         log.debug("Save As")
-        file_dialog = QtWidgets.QFileDialog()
+        file_dialog = QFileDialog()
         file_dialog.setWindowTitle(self.actions["save"].statusTip())
         file_dialog.setNameFilter('Flow Graph Files (*.grc)')
         file_dialog.setDefaultSuffix('grc')
-        file_dialog.setAcceptMode(QtWidgets.QFileDialog.AcceptSave)
+        file_dialog.setAcceptMode(QFileDialog.AcceptSave)
         if self.currentFlowgraphScene.filename:
             dirname = os.path.dirname(self.currentFlowgraphScene.filename)
         else:
             dirname = os.getcwd()
         file_dialog.setDirectory(dirname)
         filename = None
-        if file_dialog.exec() == QtWidgets.QFileDialog.Accepted:
+        if file_dialog.exec() == QFileDialog.Accepted:
             filename = file_dialog.selectedFiles()[0]
 
         if filename:
@@ -1084,14 +1085,14 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
     def save_copy_triggered(self):
         log.debug("Save Copy")
-        file_dialog = QtWidgets.QFileDialog()
+        file_dialog = QFileDialog()
         file_dialog.setWindowTitle(self.actions["save"].statusTip())
         file_dialog.setNameFilter('Flow Graph Files (*.grc)')
         file_dialog.setDefaultSuffix('grc')
-        file_dialog.setAcceptMode(QtWidgets.QFileDialog.AcceptSave)
+        file_dialog.setAcceptMode(QFileDialog.AcceptSave)
 
         filename = None
-        if file_dialog.exec() == QtWidgets.QFileDialog.Accepted:
+        if file_dialog.exec() == QFileDialog.Accepted:
             filename = file_dialog.selectedFiles()[0]
 
         if filename:
@@ -1144,19 +1145,19 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
             else:
                 message = "This flowgraph has not been saved"  # TODO: Revise text
 
-            response = QtWidgets.QMessageBox.question(
+            response = QMessageBox.question(
                 None,
                 "Save flowgraph?",
                 message,
-                QtWidgets.QMessageBox.Discard |
-                QtWidgets.QMessageBox.Cancel |
-                QtWidgets.QMessageBox.Save,
+                QMessageBox.Discard |
+                QMessageBox.Cancel |
+                QMessageBox.Save,
             )
 
-            if response == QtWidgets.QMessageBox.Discard:
+            if response == QMessageBox.Discard:
                 file_path = self.currentFlowgraphScene.filename
                 self.tabWidget.removeTab(tab_index)
-            elif response == QtWidgets.QMessageBox.Save:
+            elif response == QMessageBox.Save:
                 self.save_triggered()
                 if self.currentFlowgraphScene.saved:
                     file_path = self.currentFlowgraphScene.filename
@@ -1192,7 +1193,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
             filename = self.currentFlowgraphScene.filename.split('.')[0] + '.pdf'
         else:
             filename = 'Untitled.pdf'
-        Save = QtWidgets.QFileDialog.getSaveFileName
+        Save = QFileDialog.getSaveFileName
         file_path, filtr = Save(
             self,
             self.actions["screen_capture"].statusTip(),
@@ -1220,7 +1221,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
     def view_undo_stack_triggered(self):
         log.debug("view_undo_stack")
-        self.undoView = QtWidgets.QUndoView(self.currentFlowgraphScene.undoStack)
+        self.undoView = QUndoView(self.currentFlowgraphScene.undoStack)
         self.undoView.setWindowTitle("Undo stack")
         self.undoView.show()
 
@@ -1329,7 +1330,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
     def get_involved_triggered(self):
         log.debug("get involved")
-        ad = QtWidgets.QMessageBox()
+        ad = QMessageBox()
         ad.setWindowTitle("Get Involved Instructions")
         ad.setText(
             """\
@@ -1342,21 +1343,21 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
     def guided_tutorials_triggered(self):
         log.debug("guided tutorials")
-        QtGui.QDesktopServices.openUrl(
-            QtCore.QUrl("https://tutorials.gnuradio.org")
+        QDesktopServices.openUrl(
+            QUrl("https://tutorials.gnuradio.org")
         )
 
     def about_triggered(self):
         log.debug("about")
         config = self.platform.config
         py_version = sys.version.split()[0]
-        QtWidgets.QMessageBox.about(
+        QMessageBox.about(
             self, "About GNU Radio", f"GNU Radio {config.version} (Python {py_version})"
         )
 
     def about_qt_triggered(self):
         log.debug("about_qt")
-        QtWidgets.QApplication.instance().aboutQt()
+        QApplication.instance().aboutQt()
 
     def properties_triggered(self):
         log.debug("properties")
@@ -1613,7 +1614,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
             \
         """
 
-        ad = QtWidgets.QMessageBox()
+        ad = QMessageBox()
         ad.setWindowTitle("Help")
         ad.setText(message)
         ad.exec()
@@ -1633,7 +1634,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
             for name, color in colors
         )
         message += "</tbody></table>"
-        ad = QtWidgets.QMessageBox()
+        ad = QMessageBox()
         ad.setWindowTitle("Stream Types")
         ad.setText(message)
         ad.exec()
@@ -1675,7 +1676,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
             \
             """
 
-        ad = QtWidgets.QMessageBox()
+        ad = QMessageBox()
         ad.setWindowTitle("Keyboard shortcuts")
         ad.setText(message)
         ad.exec()
@@ -1697,7 +1698,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
             self.ExampleBrowser.reset()
             ex_dialog = ExampleBrowserDialog(self.ExampleBrowser)
             if len(ex_dialog.browser.examples_dict) == 0:
-                ad = QtWidgets.QMessageBox()
+                ad = QMessageBox()
                 ad.setWindowTitle("GRC: No examples found")
                 ad.setText("GRC did not find any examples. Please ensure that the example path in grc.conf is correct.")
                 ad.exec()
@@ -1705,7 +1706,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
             if isinstance(key_filter, str):
                 if not ex_dialog.browser.filter_(key_filter):
-                    ad = QtWidgets.QMessageBox()
+                    ad = QMessageBox()
                     ad.setWindowTitle("GRC: No examples")
                     ad.setText("There are no examples for this block.")
                     ad.exec()
@@ -1715,7 +1716,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
             ex_dialog.exec()
         else:
-            ad = QtWidgets.QMessageBox()
+            ad = QMessageBox()
             ad.setWindowTitle("GRC still indexing examples")
             ad.setText("GRC is still indexing examples, please try again shortly.")
             ad.exec()

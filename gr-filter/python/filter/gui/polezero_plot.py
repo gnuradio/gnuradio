@@ -7,8 +7,9 @@
 #
 
 import sys
-from qtpy import QtCore, QtGui, QtWidgets
-from qtpy.QtCore import Qt
+from qtpy.QtCore import QEvent, QObject, QPoint, Qt, Signal
+from qtpy.QtGui import QBrush, QPen
+from qtpy.QtWidgets import QApplication
 from math import sin, cos, pi
 import qwt as Qwt
 import pyqtgraph as pg
@@ -35,17 +36,17 @@ class PzPlot(pg.PlotWidget):
         self.xmax = 0
         self.ymin = 0
         self.xmin = 0
-        self.setBackground(QtGui.QBrush(Qt.darkCyan))
+        self.setBackground(QBrush(Qt.darkCyan))
 
         self.setRange(xRange=[-3, 3], yRange=[-2, 2])
 
         axis = self.getAxis('bottom')
         axis.setStyle(tickLength=-10)
-        axis.setPen(QtGui.QPen(Qt.white, 1.025, Qt.DotLine))
+        axis.setPen(QPen(Qt.white, 1.025, Qt.DotLine))
 
         axis = self.getAxis('left')
         axis.setStyle(tickLength=-10)
-        axis.setPen(QtGui.QPen(Qt.white, 1.025, Qt.DotLine))
+        axis.setPen(QPen(Qt.white, 1.025, Qt.DotLine))
 
         self.plotItem.showGrid(x=True, y=True, alpha=100)
 
@@ -60,7 +61,7 @@ class PzPlot(pg.PlotWidget):
         y = [cos(a * angleStep) * radius for a in range(0, steps)]
 
         curve = self.plot(title="Unit Circle")
-        curve.setPen(QtGui.QPen(Qt.gray, 0.025, Qt.DotLine))
+        curve.setPen(QPen(Qt.gray, 0.025, Qt.DotLine))
         curve.setData(x, y)
 
     def insertZeros(self, roots):
@@ -126,7 +127,7 @@ class PzPlot(pg.PlotWidget):
         curve.setPen(None)
         curve.setSymbol('o')
         curve.setSymbolPen('b')
-        curve.setSymbolBrush(QtGui.QBrush(Qt.gray))
+        curve.setSymbolBrush(QBrush(Qt.gray))
         curve.setSymbolSize(10)
         curve.setData(px, py)
 
@@ -135,7 +136,7 @@ class PzPlot(pg.PlotWidget):
         curve.setPen(None)
         curve.setSymbol('x')
         curve.setSymbolPen('b')
-        curve.setSymbolBrush(QtGui.QBrush(Qt.gray))
+        curve.setSymbolBrush(QBrush(Qt.gray))
         curve.setSymbolSize(10)
         curve.setData(px, py)
 
@@ -146,12 +147,12 @@ class PzPlot(pg.PlotWidget):
         self.replot()
 
 
-class CanvasPicker(QtCore.QObject):
-    curveChanged = QtCore.Signal(tuple)
-    mouseposChanged = QtCore.Signal(tuple)
+class CanvasPicker(QObject):
+    curveChanged = Signal(tuple)
+    mouseposChanged = Signal(tuple)
 
     def __init__(self, plot):
-        QtCore.QObject.__init__(self, plot)
+        QObject.__init__(self, plot)
         self.__selectedCurve = None
         self.__selectedPoint = -1
         self.__selectedcPoint = -1
@@ -189,11 +190,11 @@ class CanvasPicker(QtCore.QObject):
         '''
 
     def event(self, event):
-        if event.type() == QtCore.QEvent.User:
+        if event.type() == QEvent.User:
             self.__showCursor(True)
             return True
         try:
-            return QtCore.QObject.event(event)
+            return QObject.event(event)
         except TypeError:
             return False
 
@@ -216,21 +217,21 @@ class CanvasPicker(QtCore.QObject):
 
     def eventFilter(self, object, event):
 
-        if event.type() == QtCore.QEvent.FocusIn:
+        if event.type() == QEvent.FocusIn:
             self.__showCursor(True)
-        if event.type() == QtCore.QEvent.FocusOut:
+        if event.type() == QEvent.FocusOut:
             self.__showCursor(False)
 
-        if event.type() == QtCore.QEvent.Paint:
-            QtWidgets.QApplication.postEvent(
-                self, QtCore.QEvent(QtCore.QEvent.User))
-        elif event.type() == QtCore.QEvent.MouseButtonPress:
+        if event.type() == QEvent.Paint:
+            QApplication.postEvent(
+                self, QEvent(QEvent.User))
+        elif event.type() == QEvent.MouseButtonPress:
             if self.enableZeroadd or self.enablePoleadd:
                 self.__drawAddedzero_pole(True, event.pos())
             else:
                 self.__select(event.pos())
             return True
-        elif event.type() == QtCore.QEvent.MouseMove:
+        elif event.type() == QEvent.MouseMove:
             curve = self.__selectedCurve
             if curve:
                 tp = (self.__plot.invTransform(curve.xAxis(), event.pos().x()),
@@ -239,7 +240,7 @@ class CanvasPicker(QtCore.QObject):
             self.__move(event.pos())
             return True
 
-        if event.type() == QtCore.QEvent.KeyPress:
+        if event.type() == QEvent.KeyPress:
             delta = 5
             key = event.key()
             if key == Qt.Key_Up:
@@ -352,7 +353,7 @@ class CanvasPicker(QtCore.QObject):
             curve.xAxis(), curve.x(self.__selectedPoint)) + dx
         y = self.__plot.transform(
             curve.yAxis(), curve.y(self.__selectedPoint)) + dy
-        self.__move(QtCore.QPoint(x, y))
+        self.__move(QPoint(x, y))
 
     def __move(self, pos):
         curve = self.__selectedCurve
@@ -436,7 +437,7 @@ class CanvasPicker(QtCore.QObject):
         self.__addedZero = i + 1
         symbol = Qwt.QwtSymbol(editcurve.symbol())
         newSymbol = Qwt.QwtSymbol(symbol)
-        newSymbol.setPen(QtGui.QPen(Qt.red))
+        newSymbol.setPen(QPen(Qt.red))
         doReplot = self.__plot.autoReplot()
 
         self.__plot.setAutoReplot(False)
