@@ -14,15 +14,17 @@ from gnuradio.eng_arg import eng_float, intx
 import gui
 import sys
 import os
-from qtpy import Qt, QtGui, QtCore, uic
+from qtpy.QtCore import Qt
+from qtpy.QtWidgets import QMainWindow, QShortcut
+from qtpy import uic
 import qwt as Qwt
 from gnuradio import zeromq
 import signal
 
 
-class gui(QtGui.QMainWindow):
+class gui(QMainWindow):
     def __init__(self, window_name, options, parent=None):
-        QtGui.QMainWindow.__init__(self, parent)
+        QMainWindow.__init__(self, parent)
 
         # give Ctrl+C back to system
         signal.signal(signal.SIGINT, signal.SIG_DFL)
@@ -74,28 +76,20 @@ class gui(QtGui.QMainWindow):
         grid_client.attach(self.gui.qwtPlotClient)
 
         # Signals
-        self.connect(self.update_timer, QtCore.SIGNAL(
-            "timeout()"), self.probe_manager.watcher)
-        self.connect(self.gui.pushButtonRunServer, QtCore.SIGNAL(
-            "clicked()"), self.start_fg_server)
-        self.connect(self.gui.pushButtonStopServer,
-                     QtCore.SIGNAL("clicked()"), self.stop_fg_server)
-        self.connect(self.gui.pushButtonRunClient, QtCore.SIGNAL(
-            "clicked()"), self.start_fg_client)
-        self.connect(self.gui.pushButtonStopClient,
-                     QtCore.SIGNAL("clicked()"), self.stop_fg_client)
-        self.connect(self.gui.comboBox, QtCore.SIGNAL(
-            "currentIndexChanged(QString)"), self.set_waveform)
-        self.connect(self.gui.spinBox, QtCore.SIGNAL(
-            "valueChanged(int)"), self.set_gain)
-        self.shortcut_start = QtGui.QShortcut(
+        self.update_timer.timeout.connect(self.probe_manager.watcher)
+        self.gui.pushButtonRunServer.clicked.connect(self.start_fg_server)
+        self.gui.pushButtonStopServer.clicked.connect(self.stop_fg_server)
+        self.gui.pushButtonRunClient.clicked.connect(self.start_fg_client)
+        self.gui.pushButtonStopClient.clicked.connect(self.stop_fg_client)
+        self.gui.comboBox.currentIndexChanged.connect(self.set_waveform)
+        self.gui.spinBox.valueChanged.connect(self.set_gain)
+        self.shortcut_start = QShortcut(
             Qt.QKeySequence("Ctrl+S"), self.gui)
-        self.shortcut_stop = QtGui.QShortcut(
+        self.shortcut_stop = QShortcut(
             Qt.QKeySequence("Ctrl+C"), self.gui)
-        self.shortcut_exit = QtGui.QShortcut(
+        self.shortcut_exit = QShortcut(
             Qt.QKeySequence("Ctrl+D"), self.gui)
-        self.connect(self.shortcut_exit, QtCore.SIGNAL(
-            "activated()"), self.gui.close)
+        self.shortcut_exit.triggered.connect(self.gui.close)
 
         # start update timer
         self.update_timer.start(30)
