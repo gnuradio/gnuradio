@@ -475,7 +475,7 @@ class GrDataPlotterValueTable(object):
                     v = struct.unpack(len(v) * 'b', v)
 
                 item = QTreeWidgetItem([k, str(v),
-                                           knobprops[k].units, knobprops[k].description])
+                                        knobprops[k].units, knobprops[k].description])
                 self.treeWidget.addTopLevelItem(item)
 
         # Remove items currently in tree that are not in the knob list.

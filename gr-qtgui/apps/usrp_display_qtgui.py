@@ -172,8 +172,8 @@ class Ui_MainWindow(object):
         self.menubar.addAction(self.menuFile.menuAction())
 
         self.retranslateUi(MainWindow)
-        self.closeButton.clicked.connect(MainWindow.close) # type: ignore
-        self.actionExit.triggered.connect(MainWindow.close) # type: ignore
+        self.closeButton.clicked.connect(MainWindow.close)  # type: ignore
+        self.actionExit.triggered.connect(MainWindow.close)  # type: ignore
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
