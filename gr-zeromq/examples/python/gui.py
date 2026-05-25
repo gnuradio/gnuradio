@@ -14,8 +14,9 @@ from gnuradio.eng_arg import eng_float, intx
 import gui
 import sys
 import os
-from qtpy.QtCore import Qt
-from qtpy.QtWidgets import QMainWindow, QShortcut
+from qtpy.QtCore import Qt, QTimer
+from qtpy.QtWidgets import QMainWindow, QShortcut, QApplication
+from qtpy.QtGui import QPen, QKeySequence
 from qtpy import uic
 import qwt as Qwt
 from gnuradio import zeromq
@@ -32,7 +33,7 @@ class gui(QMainWindow):
         self.gui = uic.loadUi(os.path.join(
             os.path.dirname(__file__), 'main_window.ui'), self)
 
-        self.update_timer = Qt.QTimer()
+        self.update_timer = QTimer()
 
         # socket addresses
         rpc_adr_server = "tcp://" + options.servername + ":6666"
@@ -65,8 +66,8 @@ class gui(QMainWindow):
         self.gui.qwtPlotClient.setAxisScale(Qwt.QwtPlot.yLeft, -2, 2)
 
         # Grid
-        pen = Qt.QPen(Qt.Qt.DotLine)
-        pen.setColor(Qt.Qt.black)
+        pen = QPen(Qt.DotLine)
+        pen.setColor(Qt.black)
         pen.setWidth(0)
         grid_server = Qwt.QwtPlotGrid()
         grid_client = Qwt.QwtPlotGrid()
@@ -84,12 +85,12 @@ class gui(QMainWindow):
         self.gui.comboBox.currentIndexChanged.connect(self.set_waveform)
         self.gui.spinBox.valueChanged.connect(self.set_gain)
         self.shortcut_start = QShortcut(
-            Qt.QKeySequence("Ctrl+S"), self.gui)
+            QKeySequence("Ctrl+S"), self.gui)
         self.shortcut_stop = QShortcut(
-            Qt.QKeySequence("Ctrl+C"), self.gui)
+            QKeySequence("Ctrl+C"), self.gui)
         self.shortcut_exit = QShortcut(
-            Qt.QKeySequence("Ctrl+D"), self.gui)
-        self.shortcut_exit.triggered.connect(self.gui.close)
+            QKeySequence("Ctrl+D"), self.gui)
+        self.shortcut_exit.activated.connect(self.gui.close)
 
         # start update timer
         self.update_timer.start(30)
@@ -114,7 +115,7 @@ class gui(QMainWindow):
         plot.clear()
         # draw curve with new points and plot
         curve = Qwt.QwtPlotCurve()
-        curve.setPen(Qt.QPen(Qt.Qt.blue, 2))
+        curve.setPen(QPen(Qt.blue, 2))
         curve.attach(plot)
         curve.setData(self.x, self.y)
         plot.replot()
@@ -155,7 +156,7 @@ def parse_args():
 ###############################################################################
 if __name__ == "__main__":
     args = parse_args()
-    qapp = Qt.QApplication(sys.argv)
+    qapp = QApplication(sys.argv)
     qapp.main_window = gui("Remote GNU Radio GUI", args)
     qapp.main_window.show()
     qapp.exec_()
