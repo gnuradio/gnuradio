@@ -29,7 +29,7 @@ def design_win_lpf(fs, gain, wintype, mainwin):
                                             atten, wintype)
         except (RuntimeError, IndexError) as e:
             reply = QMessageBox.information(mainwin, "Runtime Error",
-                                                      e.args[0], QMessageBox.Ok)
+                                            e.args[0], QMessageBox.Ok)
             return ([], [], ret)
         else:
             params = {"fs": fs, "gain": gain, "wintype": wintype,
@@ -57,7 +57,7 @@ def design_win_bpf(fs, gain, wintype, mainwin):
                                              atten, wintype)
         except RuntimeError as e:
             reply = QMessageBox.information(mainwin, "Runtime Error",
-                                                      e.args[0], QMessageBox.Ok)
+                                            e.args[0], QMessageBox.Ok)
             return ([], [], ret)
         else:
             params = {"fs": fs, "gain": gain, "wintype": wintype,
@@ -85,7 +85,7 @@ def design_win_cbpf(fs, gain, wintype, mainwin):
                                                      atten, wintype)
         except RuntimeError as e:
             reply = QMessageBox.information(mainwin, "Runtime Error",
-                                                      e.args[0], QMessageBox.Ok)
+                                            e.args[0], QMessageBox.Ok)
             return ([], [], ret)
         else:
             params = {"fs": fs, "gain": gain, "wintype": wintype,
@@ -113,7 +113,7 @@ def design_win_bnf(fs, gain, wintype, mainwin):
                                                atten, wintype)
         except RuntimeError as e:
             reply = QMessageBox.information(mainwin, "Runtime Error",
-                                                      e.args[0], QMessageBox.Ok)
+                                            e.args[0], QMessageBox.Ok)
             return ([], [], ret)
         else:
             params = {"fs": fs, "gain": gain, "wintype": wintype,
@@ -140,7 +140,7 @@ def design_win_hpf(fs, gain, wintype, mainwin):
                                              atten, wintype)
         except RuntimeError as e:
             reply = QMessageBox.information(mainwin, "Runtime Error",
-                                                      e.args[0], QMessageBox.Ok)
+                                            e.args[0], QMessageBox.Ok)
         else:
             params = {"fs": fs, "gain": gain, "wintype": wintype,
                       "filttype": "hpf", "sbend": sb, "pbstart": pb,
@@ -165,7 +165,7 @@ def design_win_hb(fs, gain, wintype, mainwin):
 
     if int(filtord) & 1:
         reply = QMessageBox.information(mainwin, "Filter order should be even",
-                                                  "Filter order should be even", QMessageBox.Ok)
+                                        "Filter order should be even", QMessageBox.Ok)
         return ([], [], False)
 
     if(ret):
@@ -194,7 +194,7 @@ def design_win_rrc(fs, gain, wintype, mainwin):
                                                     alpha, ntaps)
         except RuntimeError as e:
             reply = QMessageBox.information(mainwin, "Runtime Error",
-                                                      e.args[0], QMessageBox.Ok)
+                                            e.args[0], QMessageBox.Ok)
         else:
             params = {"fs": fs, "gain": gain, "wintype": wintype,
                       "filttype": "rrc", "srate": sr, "alpha": alpha,
@@ -220,7 +220,7 @@ def design_win_gaus(fs, gain, wintype, mainwin):
 
         except RuntimeError as e:
             reply = QMessageBox.information(mainwin, "Runtime Error",
-                                                      e.args[0], QMessageBox.Ok)
+                                            e.args[0], QMessageBox.Ok)
         else:
             params = {"fs": fs, "gain": gain, "wintype": wintype,
                       "filttype": "gaus", "srate": sr, "bt": bt,
@@ -248,11 +248,11 @@ def design_opt_lpf(fs, gain, mainwin):
                                           ripple, atten)
         except ValueError as e:
             reply = QMessageBox.information(mainwin, "Invalid filter parameters",
-                                                      e.args[0], QMessageBox.Ok)
+                                            e.args[0], QMessageBox.Ok)
             return ([], [], False)
         except RuntimeError as e:
             reply = QMessageBox.information(mainwin, "Filter did not converge",
-                                                      e.args[0], QMessageBox.Ok)
+                                            e.args[0], QMessageBox.Ok)
             return ([], [], False)
         else:
             params = {"fs": fs, "gain": gain, "wintype": mainwin.EQUIRIPPLE_FILT,
@@ -284,11 +284,11 @@ def design_opt_bpf(fs, gain, mainwin):
                                            ripple, atten)
         except ValueError as e:
             reply = QMessageBox.information(mainwin, "Invalid filter parameters",
-                                                      e.args[0], QMessageBox.Ok)
+                                            e.args[0], QMessageBox.Ok)
             return ([], [], False)
         except RuntimeError as e:
             reply = QMessageBox.information(mainwin, "Filter did not converge",
-                                                      e.args[0], QMessageBox.Ok)
+                                            e.args[0], QMessageBox.Ok)
             return ([], [], False)
 
         else:
@@ -322,11 +322,11 @@ def design_opt_cbpf(fs, gain, mainwin):
                                                    ripple, atten)
         except ValueError as e:
             reply = QMessageBox.information(mainwin, "Invalid filter parameters",
-                                                      e.args[0], QMessageBox.Ok)
+                                            e.args[0], QMessageBox.Ok)
             return ([], [], False)
         except RuntimeError as e:
             reply = QMessageBox.information(mainwin, "Filter did not converge",
-                                                      e.args[0], QMessageBox.Ok)
+                                            e.args[0], QMessageBox.Ok)
             return ([], [], False)
         else:
             params = {"fs": fs, "gain": gain, "wintype": mainwin.EQUIRIPPLE_FILT,
@@ -359,11 +359,11 @@ def design_opt_bnf(fs, gain, mainwin):
                                              ripple, atten)
         except ValueError as e:
             reply = QMessageBox.information(mainwin, "Invalid filter parameters",
-                                                      e.args[0], QMessageBox.Ok)
+                                            e.args[0], QMessageBox.Ok)
             return ([], [], False)
         except RuntimeError as e:
             reply = QMessageBox.information(mainwin, "Filter did not converge",
-                                                      e.args[0], QMessageBox.Ok)
+                                            e.args[0], QMessageBox.Ok)
             return ([], [], False)
         else:
             params = {"fs": fs, "gain": gain, "wintype": mainwin.EQUIRIPPLE_FILT,
@@ -383,7 +383,7 @@ def design_opt_hb(fs, gain, mainwin):
     ret = r and ret
     if int(filtord) & 1:
         reply = QMessageBox.information(mainwin, "Filter order should be even",
-                                                  "Filter order should be even", QMessageBox.Ok)
+                                        "Filter order should be even", QMessageBox.Ok)
         return ([], [], False)
 
     if(ret):
@@ -393,7 +393,7 @@ def design_opt_hb(fs, gain, mainwin):
             taps[abs(taps) <= 1e-6] = 0.
         except RuntimeError as e:
             reply = QMessageBox.information(mainwin, "Filter Design Error",
-                                                      e.args[0], QMessageBox.Ok)
+                                            e.args[0], QMessageBox.Ok)
             return ([], [], False)
         else:
             params = {"fs": fs, "gain": gain, "wintype": mainwin.EQUIRIPPLE_FILT,
@@ -420,11 +420,11 @@ def design_opt_hpf(fs, gain, mainwin):
                                            atten, ripple)
         except ValueError as e:
             reply = QMessageBox.information(mainwin, "Invalid filter parameters",
-                                                      e.args[0], QMessageBox.Ok)
+                                            e.args[0], QMessageBox.Ok)
             return ([], [], False)
         except RuntimeError as e:
             reply = QMessageBox.information(mainwin, "Filter did not converge",
-                                                      e.args[0], QMessageBox.Ok)
+                                            e.args[0], QMessageBox.Ok)
             return ([], [], False)
         else:
             params = {"fs": fs, "gain": gain, "wintype": mainwin.EQUIRIPPLE_FILT,

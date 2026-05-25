@@ -221,7 +221,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
         self.tabGroup.setCurrentIndex(0)
-        self.action_exit.triggered.connect(MainWindow.close) # type: ignore
+        self.action_exit.triggered.connect(MainWindow.close)  # type: ignore
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
@@ -252,6 +252,8 @@ class Ui_MainWindow(object):
         self.action_open.setShortcut(_translate("MainWindow", "Ctrl+O"))
         self.action_exit.setText(_translate("MainWindow", "E&xit"))
         self.action_reload.setText(_translate("MainWindow", "&Reload"))
+
+
 from qwt import QwtPlot
 
 

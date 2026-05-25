@@ -132,14 +132,19 @@ bool QRfnocF15ColorMapper::addPalette(std::string name, QLinearGradient& gradien
 
 bool QRfnocF15ColorMapper::addPalette(std::string name, QPixmap& pixmap)
 {
-    QImage img = pixmap.toImage()
-                       .convertToFormat(QImage::Format_RGBA8888);
+    QImage img = pixmap.toImage().convertToFormat(QImage::Format_RGBA8888);
     GLuint tex_id;
     glGenTextures(1, &tex_id);
     glBindTexture(GL_TEXTURE_2D, tex_id);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA,
-                   img.width(), img.height(), 0,
-                   GL_RGBA, GL_UNSIGNED_BYTE, img.constBits());
+    glTexImage2D(GL_TEXTURE_2D,
+                 0,
+                 GL_RGBA,
+                 img.width(),
+                 img.height(),
+                 0,
+                 GL_RGBA,
+                 GL_UNSIGNED_BYTE,
+                 img.constBits());
 
     /* Configure behavior */
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);

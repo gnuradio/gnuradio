@@ -9,10 +9,10 @@
 #ifndef INCLUDED_QTGUI_QRFNOCF15SURFACE_H
 #define INCLUDED_QTGUI_QRFNOCF15SURFACE_H
 
+#include <QImage>
 #include <QOpenGLFunctions>
 #include <QOpenGLWidget>
 #include <QPixmap>
-#include <QImage>
 
 #include <string>
 

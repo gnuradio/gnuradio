@@ -11,12 +11,12 @@
 #define INCLUDED_QTGUI_QRFNOCF15COLORMAPPER_H
 
 #include <QFile>
+#include <QGradient>
+#include <QImage>
+#include <QObject>
 #include <QOpenGLFunctions>
 #include <QOpenGLShaderProgram>
-#include <QGradient>
-#include <QObject>
 #include <QPixmap>
-#include <QImage>
 
 #include <map>
 #include <string>
