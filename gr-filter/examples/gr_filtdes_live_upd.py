@@ -15,9 +15,8 @@ from gnuradio import blocks
 import sys
 
 try:
-    from gnuradio import qtgui
-    from qtpy import QtCore, QtGui
-    import sip
+    from qtpy.QtWidgets import QWidget, QApplication
+    from qtpy import sip
 except ImportError:
     sys.stderr.write("Error: Program requires PyQt6 and gr-qtgui.\n")
     sys.exit(1)
@@ -52,7 +51,7 @@ class my_top_block(gr.top_block):
 
         npts = 2048
 
-        self.qapp = QtGui.QApplication(sys.argv)
+        self.qapp = QApplication(sys.argv)
 
         self.filt_taps = [1, ]
 
@@ -74,8 +73,8 @@ class my_top_block(gr.top_block):
         pyQt = self.snk1.qwidget()
 
         # Wrap the pointer as a PyQt SIP object
-        # This can now be manipulated as a PyQt5.QtGui.QWidget
-        pyWin = sip.wrapinstance(pyQt, QtGui.QWidget)
+        # This can now be manipulated as a PyQt6.QtGui.QWidget
+        pyWin = sip.wrapinstance(pyQt, QWidget)
         pyWin.show()
 
     def update_filter(self, filtobj):
@@ -89,5 +88,5 @@ if __name__ == "__main__":
     tb.start()
     mw = filter_design.launch(sys.argv, tb.update_filter)
     mw.show()
-    tb.qapp.exec_()
+    tb.qapp.exec()
     tb.stop()
