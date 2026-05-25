@@ -6,8 +6,9 @@ import logging
 import xml.etree.ElementTree as ET
 
 from ast import literal_eval
-from qtpy import QtGui, QtCore, QtWidgets
 from qtpy.QtCore import Qt
+from qtpy.QtGui import QBrush
+from qtpy.QtWidgets import QAction, QGraphicsView, QMenu
 
 # Custom modules
 from .canvas.block import Block
@@ -26,7 +27,7 @@ DEFAULT_MAX_Y = 300
 
 
 class FlowgraphView(
-    QtWidgets.QGraphicsView, base.Component
+    QGraphicsView, base.Component
 ):  # added base.Component so it can see platform
     def __init__(self, parent, platform, filename=None):
         super(FlowgraphView, self).__init__()
@@ -44,11 +45,11 @@ class FlowgraphView(
         else:
             self.initEmpty()
 
-        self.fitInView(self.scene().sceneRect(), QtCore.Qt.KeepAspectRatio)
+        self.fitInView(self.scene().sceneRect(), Qt.KeepAspectRatio)
         if self.app.theme == "dark":
-            self.setBackgroundBrush(QtGui.QBrush(DARK_FLOWGRAPH_BACKGROUND_COLOR))
+            self.setBackgroundBrush(QBrush(DARK_FLOWGRAPH_BACKGROUND_COLOR))
         else:
-            self.setBackgroundBrush(QtGui.QBrush(LIGHT_FLOWGRAPH_BACKGROUND_COLOR))
+            self.setBackgroundBrush(QBrush(LIGHT_FLOWGRAPH_BACKGROUND_COLOR))
 
         self.isPanning = False
         self.mousePressed = False
@@ -68,8 +69,8 @@ class FlowgraphView(
             block.setSelected(True)
             block.context_menu(event.globalPos())
         else:
-            empty_menu = QtWidgets.QMenu()
-            no_action = QtWidgets.QAction("No block selected", enabled=False)
+            empty_menu = QMenu()
+            no_action = QAction("No block selected", enabled=False)
             empty_menu.addAction(no_action)
             empty_menu.exec(event.globalPos())
 
@@ -122,7 +123,7 @@ class FlowgraphView(
     def initEmpty(self):
         self.setSceneRect(0, 0, DEFAULT_MAX_X, DEFAULT_MAX_Y)
 
-    def zoom(self, factor: float, anchor=QtWidgets.QGraphicsView.AnchorViewCenter):
+    def zoom(self, factor: float, anchor=QGraphicsView.AnchorViewCenter):
         new_scalefactor = self.scalefactor * factor
 
         if new_scalefactor > 0.25 and new_scalefactor < 2.5:
@@ -139,12 +140,12 @@ class FlowgraphView(
         # TODO: Support multi touch drag and drop for scrolling through the view
         if event.modifiers() == Qt.ControlModifier:
             factor = 1.1 if event.angleDelta().y() > 0 else (1.0 / 1.1)
-            self.zoom(factor, anchor=QtWidgets.QGraphicsView.AnchorUnderMouse)
+            self.zoom(factor, anchor=QGraphicsView.AnchorUnderMouse)
 
             # if new_scalefactor > 0.25 and new_scalefactor < 2.5:
             #     self.scalefactor = new_scalefactor
-            #     self.setTransformationAnchor(QtWidgets.QGraphicsView.NoAnchor)
-            #     self.setResizeAnchor(QtWidgets.QGraphicsView.NoAnchor)
+            #     self.setTransformationAnchor(QGraphicsView.NoAnchor)
+            #     self.setResizeAnchor(QGraphicsView.NoAnchor)
 
             #     old_pos = self.mapToScene(event.pos())
 
@@ -158,7 +159,7 @@ class FlowgraphView(
             self.horizontalScrollBar().setValue(
                 self.horizontalScrollBar().value() - event.angleDelta().y())
         else:
-            QtWidgets.QGraphicsView.wheelEvent(self, event)
+            QGraphicsView.wheelEvent(self, event)
 
     def mousePressEvent(self, event):
         if event.button() == Qt.LeftButton:

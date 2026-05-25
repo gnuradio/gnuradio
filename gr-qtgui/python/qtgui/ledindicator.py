@@ -11,7 +11,7 @@
 
 from qtpy.QtWidgets import QFrame, QHBoxLayout, QVBoxLayout, QLabel
 from qtpy.QtGui import QPainter, QBrush, QColor, QPen, QFontMetricsF, QRadialGradient
-from qtpy.QtCore import Qt as Qtc, QPointF
+from qtpy.QtCore import Qt, QPointF
 
 from gnuradio import gr
 import pmt
@@ -35,7 +35,7 @@ class LabeledLEDIndicator(QFrame):
 
         self.lbl = lbl
         self.lblcontrol = QLabel(lbl, self)
-        self.lblcontrol.setAlignment(Qtc.AlignCenter)
+        self.lblcontrol.setAlignment(Qt.AlignCenter)
 
         # add top or left
         if len:
@@ -52,18 +52,18 @@ class LabeledLEDIndicator(QFrame):
                 layout.addWidget(self.lblcontrol)
 
         if alignment == 1:
-            halign = Qtc.AlignCenter
+            halign = Qt.AlignCenter
         elif alignment == 2:
-            halign = Qtc.AlignLeft
+            halign = Qt.AlignLeft
         else:
-            halign = Qtc.AlignRight
+            halign = Qt.AlignRight
 
         if valignment == 1:
-            valign = Qtc.AlignVCenter
+            valign = Qt.AlignVCenter
         elif valignment == 2:
-            valign = Qtc.AlignTop
+            valign = Qt.AlignTop
         else:
-            valign = Qtc.AlignBottom
+            valign = Qt.AlignBottom
 
         layout.setAlignment(halign | valign)
         self.setLayout(layout)
@@ -123,17 +123,17 @@ class LEDIndicator(QFrame):
         radius = smallest_dim
 
         painter.setPen(QPen(QColor('lightgray'), 0))
-        brush.setStyle(Qtc.SolidPattern)
+        brush.setStyle(Qt.SolidPattern)
 
         radial = QRadialGradient(center_x, center_y / 2, radius)
-        radial.setColorAt(0, Qtc.white)
-        radial.setColorAt(0.8, Qtc.darkGray)
+        radial.setColorAt(0, Qt.white)
+        radial.setColorAt(0.8, Qt.darkGray)
         painter.setBrush(QBrush(radial))
         painter.drawEllipse(centerpoint, radius, radius)
 
         # Draw the colored center
         radial = QRadialGradient(center_x, center_y / 2, radius)
-        radial.setColorAt(0, Qtc.white)
+        radial.setColorAt(0, Qt.white)
 
         if self.curState:
             radial.setColorAt(.7, self.on_color)
@@ -144,7 +144,7 @@ class LEDIndicator(QFrame):
             brush.setColor(self.off_color)
             painter.setPen(QPen(self.off_color, 0))
 
-        brush.setStyle(Qtc.SolidPattern)
+        brush.setStyle(Qt.SolidPattern)
         painter.setBrush(QBrush(radial))
         if smallest_dim <= 30:
             radius = radius - 3

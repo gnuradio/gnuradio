@@ -19,7 +19,8 @@ import sys
 
 try:
     from gnuradio import qtgui
-    from qtpy import QtWidgets, QtCore, QtGui
+    from qtpy.QtGui import QKeySequence
+    from qtpy.QtWidgets import QApplication, QFileDialog, QMainWindow, QWidget
     import qtpy.sip as sip
 except ImportError as e:
     sys.stderr.write(f"Error: Program requires PyQt/PySide and gr-qtgui: {str(e)}\n")
@@ -38,10 +39,10 @@ except ImportError:
 # ////////////////////////////////////////////////////////////////////
 
 
-class main_window(QtWidgets.QMainWindow):
+class main_window(QMainWindow):
     def __init__(self, snk, fg, parent=None):
 
-        QtWidgets.QWidget.__init__(self, parent)
+        QWidget.__init__(self, parent)
         self.gui = Ui_MainWindow()
         self.gui.setupUi(self)
 
@@ -60,7 +61,7 @@ class main_window(QtWidgets.QMainWindow):
         self.gui.amplifierEdit.editingFinished.connect(self.amplifierEditText)
 
         self.gui.actionSaveData.triggered.connect(self.saveData)
-        self.gui.actionSaveData.setShortcut(QtGui.QKeySequence.Save)
+        self.gui.actionSaveData.setShortcut(QKeySequence.Save)
 
         self.gui.dcGainEdit.editingFinished.connect(self.dcGainEditText)
         self.gui.dcCancelCheckBox.clicked.connect(self.dcCancelClicked)
@@ -131,7 +132,7 @@ class main_window(QtWidgets.QMainWindow):
             pass
 
     def saveData(self):
-        fileName = QtWidgets.QFileDialog.getSaveFileName(
+        fileName = QFileDialog.getSaveFileName(
             self, "Save data to file", ".")
         if(len(fileName)):
             self.fg.save_to_file(str(fileName))
@@ -152,7 +153,7 @@ class my_top_block(gr.top_block):
         self.options = options
         self.show_debug_info = True
 
-        self.qapp = QtWidgets.QApplication(sys.argv)
+        self.qapp = QApplication(sys.argv)
 
         self.u = uhd.usrp_source(
             device_addr=options.address, stream_args=uhd.stream_args('fc32'))
@@ -201,8 +202,8 @@ class my_top_block(gr.top_block):
 
         # Get the reference pointer to the SpectrumDisplayForm QWidget
         # Wrap the pointer as a PyQt SIP object
-        #     This can now be manipulated as a PyQt6.QtWidgets.QWidget
-        self.pysink = sip.wrapinstance(self.snk.qwidget(), QtWidgets.QWidget)
+        #     This can now be manipulated as a PyQt6.QWidget
+        self.pysink = sip.wrapinstance(self.snk.qwidget(), QWidget)
 
         self.main_win = main_window(self.pysink, self)
 

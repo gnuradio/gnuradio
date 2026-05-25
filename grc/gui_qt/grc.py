@@ -22,7 +22,10 @@ import logging
 import textwrap
 import os
 
-from qtpy import QtCore, QtWidgets, QtGui, PYQT_VERSION, PYSIDE_VERSION
+from qtpy import PYQT_VERSION, PYSIDE_VERSION
+from qtpy.QtCore import QSettings, Qt
+from qtpy.QtGui import QIcon
+from qtpy.QtWidgets import QApplication
 
 # Custom modules
 from . import components
@@ -33,7 +36,7 @@ from .helpers.profiling import StopWatch
 log = logging.getLogger("grc.application")
 
 
-class Application(QtWidgets.QApplication):
+class Application(QApplication):
     """
     This is the main QT application for GRC.
     It handles setting up the application components and actions and handles communication between different components in the system.
@@ -46,13 +49,13 @@ class Application(QtWidgets.QApplication):
         self.platform = platform
         config = platform.config
 
-        self.qsettings = QtCore.QSettings(config.gui_prefs_file, QtCore.QSettings.IniFormat)
+        self.qsettings = QSettings(config.gui_prefs_file, QSettings.IniFormat)
         log.debug(f"Using QSettings from {config.gui_prefs_file}")
         os.environ["QT_SCALE_FACTOR"] = self.qsettings.value('appearance/qt_scale_factor', "1.0", type=str)
 
         log.debug("Creating QApplication instance")
-        QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_ShareOpenGLContexts, True)
-        QtWidgets.QApplication.__init__(self, settings.argv)
+        QApplication.setAttribute(Qt.AA_ShareOpenGLContexts, True)
+        QApplication.__init__(self, settings.argv)
 
         self.theme = "light"
         if self.qsettings.value("appearance/theme", "dark") == "dark":
@@ -125,7 +128,7 @@ class Application(QtWidgets.QApplication):
             f"GUI preferences file: {self.qsettings.fileName()}\n"
             f"Log files: {'None' if not log_files else log_files}\n"
             f"Block paths:\n\t{block_paths}\n"
-            f"Using {QtGui.QIcon.themeName()} icon theme\n"
+            f"Using {QIcon.themeName()} icon theme\n"
         )
         log.info(textwrap.dedent(welcome))
 

@@ -48,7 +48,7 @@ templates:
             if not label:
                 label = id
         %>
-        ${win} = QtWidgets.QCheckBox(${label})
+        ${win} = QCheckBox(${label})
         self._${id}_choices = {True: ${true}, False: ${false}}
         self._${id}_choices_inv = {${true}: True, ${false}: False}
         self._${id}_callback = lambda i: QtCore.QMetaObject.invokeMethod(${win}, "setChecked", QtCore.Q_ARG("bool", self._${id}_choices_inv[i]))

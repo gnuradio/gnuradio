@@ -9,7 +9,7 @@
 #
 #
 
-from qtpy import QtWidgets
+from qtpy.QtWidgets import QSizePolicy
 import numpy as np
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
@@ -78,8 +78,8 @@ class AzElPlot(gr.sync_block, FigureCanvas):
             self.lbl, fontsize=8, fontweight='bold', color='black')
 
         FigureCanvas.setSizePolicy(self,
-                                   QtWidgets.QSizePolicy.Expanding,
-                                   QtWidgets.QSizePolicy.Expanding)
+                                   QSizePolicy.Expanding,
+                                   QSizePolicy.Expanding)
 
         self.setMinimumSize(240, 230)
         FigureCanvas.updateGeometry(self)

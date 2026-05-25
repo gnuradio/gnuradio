@@ -21,8 +21,9 @@ import thrift
 import os
 @DLL_IMPORT_GTK@
 from gnuradio.ctrlport.GNURadioControlPortClient import GNURadioControlPortClient
-from qtpy import QtCore, QtWidgets
-from qtpy.QtCore import Qt
+from qtpy.QtCore import QSignalMapper, QSize, QTimer, Qt
+from qtpy.QtGui import QAction, QIcon, QKeySequence
+from qtpy.QtWidgets import QApplication, QCheckBox, QComboBox, QDialog, QDialogButtonBox, QGridLayout, QHBoxLayout, QLineEdit, QMainWindow, QMdiArea, QMessageBox, QTabWidget, QTableWidget, QTableWidgetItem, QToolButton, QVBoxLayout, QWidget
 
 try:
     import networkx as nx
@@ -52,9 +53,9 @@ from gnuradio.ctrlport.GrDataPlotter import *
 from networkx.drawing.nx_agraph import graphviz_layout
 
 
-class MAINWindow(QtWidgets.QMainWindow):
+class MAINWindow(QMainWindow):
     def minimumSizeHint(self):
-        return QtCore.QSize(800, 600)
+        return QSize(800, 600)
 
     def __init__(self, radioclient):
 
@@ -62,14 +63,14 @@ class MAINWindow(QtWidgets.QMainWindow):
         self.plots = []
         self.knobprops = []
 
-        self.mdiArea = QtWidgets.QMdiArea()
+        self.mdiArea = QMdiArea()
         self.mdiArea.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
         self.mdiArea.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
         self.setCentralWidget(self.mdiArea)
 
         self.mdiArea.subWindowActivated.connect(self.updateMenus)
-        self.windowMapper = QtCore.QSignalMapper(self)
-        self.windowMapper.mapped[QtWidgets.QWidget].connect(self.setActiveSubWindow)
+        self.windowMapper = QSignalMapper(self)
+        self.windowMapper.mapped[QWidget].connect(self.setActiveSubWindow)
 
         self.createActions()
         self.createMenus()
@@ -82,7 +83,7 @@ class MAINWindow(QtWidgets.QMainWindow):
 
         self.newCon(radioclient)
 
-        icon = QtGui.QIcon(ctrlport.__path__[0] + "/icon.png")
+        icon = QIcon(ctrlport.__path__[0] + "/icon.png")
         self.setWindowIcon(icon)
 
     def newSubWindow(self, window, title):
@@ -105,53 +106,53 @@ class MAINWindow(QtWidgets.QMainWindow):
             self.mdiArea.setActiveSubWindow(window)
 
     def createActions(self):
-        self.newConAct = QtGui.QAction("&New Connection",
-                                    self, shortcut=QtGui.QKeySequence.New,
+        self.newConAct = QAction("&New Connection",
+                                    self, shortcut=QKeySequence.New,
                                     statusTip="Create a new file", triggered=lambda x: self.newCon(None))
 
-        self.exitAct = QtGui.QAction("E&xit", self, shortcut="Ctrl+Q",
+        self.exitAct = QAction("E&xit", self, shortcut="Ctrl+Q",
                                   statusTip="Exit the application",
-                                  triggered=QtWidgets.QApplication.instances().closeAllWindows)
+                                  triggered=QApplication.instances().closeAllWindows)
 
-        self.closeAct = QtGui.QAction("Cl&ose", self, shortcut="Ctrl+F4",
+        self.closeAct = QAction("Cl&ose", self, shortcut="Ctrl+F4",
                                    statusTip="Close the active window",
                                    triggered=self.mdiArea.closeActiveSubWindow)
 
-        self.closeAllAct = QtGui.QAction("Close &All", self,
+        self.closeAllAct = QAction("Close &All", self,
                                       statusTip="Close all the windows",
                                       triggered=self.mdiArea.closeAllSubWindows)
 
-        qks = QtGui.QKeySequence(Qt.CTRL + Qt.Key_T)
-        self.tileAct = QtGui.QAction("&Tile", self,
+        qks = QKeySequence(Qt.CTRL + Qt.Key_T)
+        self.tileAct = QAction("&Tile", self,
                                   statusTip="Tile the windows",
                                   triggered=self.mdiArea.tileSubWindows,
                                   shortcut=qks)
 
-        qks = QtGui.QKeySequence(Qt.CTRL + Qt.Key_C)
-        self.cascadeAct = QtGui.QAction("&Cascade", self,
+        qks = QKeySequence(Qt.CTRL + Qt.Key_C)
+        self.cascadeAct = QAction("&Cascade", self,
                                      statusTip="Cascade the windows", shortcut=qks,
                                      triggered=self.mdiArea.cascadeSubWindows)
 
-        self.nextAct = QtGui.QAction("Ne&xt", self,
-                                  shortcut=QtGui.QKeySequence.NextChild,
+        self.nextAct = QAction("Ne&xt", self,
+                                  shortcut=QKeySequence.NextChild,
                                   statusTip="Move the focus to the next window",
                                   triggered=self.mdiArea.activateNextSubWindow)
 
-        self.previousAct = QtGui.QAction("Pre&vious", self,
-                                      shortcut=QtGui.QKeySequence.PreviousChild,
+        self.previousAct = QAction("Pre&vious", self,
+                                      shortcut=QKeySequence.PreviousChild,
                                       statusTip="Move the focus to the previous window",
                                       triggered=self.mdiArea.activatePreviousSubWindow)
 
-        self.separatorAct = QtGui.QAction(self)
+        self.separatorAct = QAction(self)
         self.separatorAct.setSeparator(True)
 
-        self.aboutAct = QtGui.QAction("&About", self,
+        self.aboutAct = QAction("&About", self,
                                    statusTip="Show the application's About box",
                                    triggered=self.about)
 
-        self.aboutQtAct = QtGui.QAction("About &Qt", self,
+        self.aboutQtAct = QAction("About &Qt", self,
                                      statusTip="Show the Qt library's About box",
-                                     triggered=QtWidgets.QApplication.instance().aboutQt)
+                                     triggered=QApplication.instance().aboutQt)
 
     def createMenus(self):
         self.fileMenu = self.menuBar().addMenu("&File")
@@ -216,22 +217,22 @@ GNU Radio is free software; you can redistribute it and/or modify it under the t
 GNU Radio is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.\n
 You should have received a copy of the GNU General Public License along with GNU Radio; see the file COPYING. If not, write to the Free Software Foundation, Inc., 51 Franklin Street, Boston, MA 02110-1301, USA.'''
 
-        QtWidgets.QMessageBox.about(None, "gr-perf-monitorx", about_info)
+        QMessageBox.about(None, "gr-perf-monitorx", about_info)
 
 
-class ConInfoDialog(QtWidgets.QDialog):
+class ConInfoDialog(QDialog):
     def __init__(self, parent=None):
         super(ConInfoDialog, self).__init__(parent)
 
-        self.gridLayout = QtWidgets.QGridLayout(self)
+        self.gridLayout = QGridLayout(self)
 
-        self.host = QtWidgets.QLineEdit(self)
-        self.port = QtWidgets.QLineEdit(self)
+        self.host = QLineEdit(self)
+        self.port = QLineEdit(self)
         self.host.setText("localhost")
         self.port.setText("43243")
 
-        self.buttonBox = QtWidgets.QDialogButtonBox(QtWidgets.QDialogButtonBox.Ok |
-                                             QtWidgets.QDialogButtonBox.Cancel)
+        self.buttonBox = QDialogButtonBox(QDialogButtonBox.Ok |
+                                             QDialogButtonBox.Cancel)
 
         self.gridLayout.addWidget(self.host)
         self.gridLayout.addWidget(self.port)
@@ -247,7 +248,7 @@ class ConInfoDialog(QtWidgets.QDialog):
         self.done(0)
 
 
-class DataTable(QtWidgets.QWidget):
+class DataTable(QWidget):
     def update(self):
         print("update")
 
@@ -255,10 +256,10 @@ class DataTable(QtWidgets.QWidget):
         self.timer = None
 
     def __init__(self, radioclient, G):
-        QtWidgets.QWidget.__init__(self)
+        QWidget.__init__(self)
 
-        self.layout = QtWidgets.QVBoxLayout(self)
-        self.hlayout = QtWidgets.QHBoxLayout()
+        self.layout = QVBoxLayout(self)
+        self.hlayout = QHBoxLayout()
         self.layout.addLayout(self.hlayout)
 
         self.G = G
@@ -273,7 +274,7 @@ class DataTable(QtWidgets.QWidget):
         self._statistics_table = {"Instantaneous": "",
                                   "Average": "avg ",
                                   "Variance": "var "}
-        self.stattype = QtWidgets.QComboBox()
+        self.stattype = QComboBox()
         self.stattype.addItem("Instantaneous")
         self.stattype.addItem("Average")
         self.stattype.addItem("Variance")
@@ -283,13 +284,13 @@ class DataTable(QtWidgets.QWidget):
 
         # Create a checkbox to toggle sorting of graphs
         self._sort = False
-        self.checksort = QtWidgets.QCheckBox("Sort")
+        self.checksort = QCheckBox("Sort")
         self.checksort.setCheckState(self._sort)
         self.hlayout.addWidget(self.checksort)
         self.checksort.stateChanged.connect(self.checksort_changed)
 
         # set up table
-        self.perfTable = QtWidgets.QTableWidget()
+        self.perfTable = QTableWidget()
         self.perfTable.setColumnCount(2)
         self.perfTable.verticalHeader().hide()
         self.perfTable.setHorizontalHeaderLabels(
@@ -305,19 +306,19 @@ class DataTable(QtWidgets.QWidget):
         self.sp.set_autoscale_on(True)
 
         # set up tabs
-        self.tabber = QtWidgets.QTabWidget()
+        self.tabber = QTabWidget()
         self.layout.addWidget(self.tabber)
         self.tabber.addTab(self.perfTable, "Table View")
         self.tabber.addTab(self.f.canvas, "Graph View")
 
         # set up timer
-        self.timer = QtCore.QTimer()
+        self.timer = QTimer()
         self.timer.timeout.connect(self.update)
         self.timer.start(500)
 
         for i, node in enumerate(nodes):
             self.perfTable.setItem(i, 0,
-                                   QtWidgets.QTableWidgetItem(node[0]))
+                                   QTableWidgetItem(node[0]))
 
     def table_update(self, data):
         for k in data.keys():
@@ -327,11 +328,11 @@ class DataTable(QtWidgets.QWidget):
             if(len(existing) == 0):
                 i = self.perfTable.rowCount()
                 self.perfTable.setRowCount(i + 1)
-                self.perfTable.setItem(i, 0, QtWidgets.QTableWidgetItem(str(k)))
-                self.perfTable.setItem(i, 1, QtWidgets.QTableWidgetItem(str(weight)))
+                self.perfTable.setItem(i, 0, QTableWidgetItem(str(k)))
+                self.perfTable.setItem(i, 1, QTableWidgetItem(str(weight)))
             else:
                 self.perfTable.setItem(self.perfTable.row(
-                    existing[0]), 1, QtWidgets.QTableWidgetItem(str(weight)))
+                    existing[0]), 1, QTableWidgetItem(str(weight)))
 
     def stat_changed(self, index):
         self._statistic = str(self.stattype.currentText())
@@ -476,7 +477,7 @@ class DataTableRuntimes(DataTable):
             self.f.canvas.draw()
 
 
-class MForm(QtWidgets.QWidget):
+class MForm(QWidget):
     def update(self):
         try:
             try:
@@ -652,44 +653,44 @@ class MForm(QtWidgets.QWidget):
 
         self.parent = parent
 
-        self.layoutTop = QtWidgets.QVBoxLayout(self)
-        self.ctlBox = QtWidgets.QHBoxLayout()
-        self.layout = QtWidgets.QHBoxLayout()
+        self.layoutTop = QVBoxLayout(self)
+        self.ctlBox = QHBoxLayout()
+        self.layout = QHBoxLayout()
 
         self.layoutTop.addLayout(self.ctlBox)
         self.layoutTop.addLayout(self.layout)
 
-        self.rttAct = QtGui.QAction("Runtime Table",
+        self.rttAct = QAction("Runtime Table",
                                  self, statusTip="Runtime Table", triggered=self.rtt)
-        self.rttBut = QtWidgets.QToolButton()
+        self.rttBut = QToolButton()
         self.rttBut.setDefaultAction(self.rttAct)
         self.ctlBox.addWidget(self.rttBut)
 
-        self.bptAct = QtGui.QAction("Buffer Table",
+        self.bptAct = QAction("Buffer Table",
                                  self, statusTip="Buffer Table", triggered=self.bpt)
-        self.bptBut = QtWidgets.QToolButton()
+        self.bptBut = QToolButton()
         self.bptBut.setDefaultAction(self.bptAct)
         self.ctlBox.addWidget(self.bptBut)
 
-        self.resetPCsAct = QtGui.QAction("Reset", self,
+        self.resetPCsAct = QAction("Reset", self,
                                       statusTip="Reset all Performance Counters",
                                       triggered=self.resetPCs)
-        self.resetPCsBut = QtWidgets.QToolButton()
+        self.resetPCsBut = QToolButton()
         self.resetPCsBut.setDefaultAction(self.resetPCsAct)
         self.ctlBox.addWidget(self.resetPCsBut)
 
-        self.pauseFGAct = QtGui.QAction("Pause", self,
+        self.pauseFGAct = QAction("Pause", self,
                                      statusTip="Pause the Flowgraph",
                                      triggered=self.toggleFlowgraph)
         self.pauseFGAct.setCheckable(True)
-        self.pauseFGBut = QtWidgets.QToolButton()
+        self.pauseFGBut = QToolButton()
         self.pauseFGBut.setDefaultAction(self.pauseFGAct)
         self.ctlBox.addWidget(self.pauseFGBut)
 
         self.prevent_clock_change = True
         self.clockKey = None
         self.clocks = {"MONOTONIC": 1, "THREAD": 3}
-        self.clockSel = QtWidgets.QComboBox(self)
+        self.clockSel = QComboBox(self)
         list(map(lambda x: self.clockSel.addItem(x), self.clocks.keys()))
         self.ctlBox.addWidget(self.clockSel)
         self.clockSel.currentIndexChanged.connect(self.update_clock)
@@ -699,7 +700,7 @@ class MForm(QtWidgets.QWidget):
         self._statistics_table = {"Instantaneous": "",
                                   "Average": "avg ",
                                   "Variance": "var "}
-        self.stattype = QtWidgets.QComboBox()
+        self.stattype = QComboBox()
         self.stattype.addItem("Instantaneous")
         self.stattype.addItem("Average")
         self.stattype.addItem("Variance")
@@ -713,7 +714,7 @@ class MForm(QtWidgets.QWidget):
         self.knobprops = self.radio.properties([])
         self.parent.knobprops.append(self.knobprops)
 
-        self.timer = QtCore.QTimer()
+        self.timer = QTimer()
         self.constupdatediv = 0
         self.tableupdatediv = 0
         plotsize = 250
@@ -805,7 +806,7 @@ class MForm(QtWidgets.QWidget):
         # generate weights and plot
         self.update()
         # set up timer
-        self.timer = QtCore.QTimer()
+        self.timer = QTimer()
         self.timer.timeout.connect(self.update)
         self.timer.start(1000)
 
@@ -910,7 +911,7 @@ class MyApp(object):
 
         try:
             GNURadioControlPortClient(
-                args.host, args.port, 'thrift', self.run, QtWidgets.QApplication(sys.argv).exec)
+                args.host, args.port, 'thrift', self.run, QApplication(sys.argv).exec)
         except thrift.transport.TTransport.TTransportException:
             print("ControlPort failed to connect. Check the config of your endpoint.")
             print("\t[ControlPort] on = True")

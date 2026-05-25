@@ -19,28 +19,28 @@ import struct
 
 try:
     from gnuradio import qtgui
-    from qtpy import QtCore, QtWidgets
-    from qtpy.QtCore import Qt
+    from qtpy.QtCore import Qt, Signal
+    from qtpy.QtWidgets import QTreeWidget, QTreeWidgetItem, QVBoxLayout, QWidget
     from qtpy import sip
 except ImportError:
     print("Error: Program requires PyQt and gr-qtgui.")
     sys.exit(1)
 
 
-class GrDataPlotParent(gr.top_block, QtWidgets.QWidget):
+class GrDataPlotParent(gr.top_block, QWidget):
     # Setup signals
-    plotupdated = QtCore.Signal(QtWidgets.QWidget)
+    plotupdated = Signal(QWidget)
 
     def __init__(self, name, rate, pmin=None, pmax=None):
         gr.top_block.__init__(self)
-        QtWidgets.QWidget.__init__(self, None)
+        QWidget.__init__(self, None)
 
         self._name = name
         self._npts = 500
         self._rate = rate
         self.knobnames = [name, ]
 
-        self.layout = QtWidgets.QVBoxLayout()
+        self.layout = QVBoxLayout()
         self.setLayout(self.layout)
 
         self.setAcceptDrops(True)
@@ -79,7 +79,7 @@ class GrDataPlotParent(gr.top_block, QtWidgets.QWidget):
             else:
                 self.connect(self.src[n], (self.snk, n))
 
-        self.py_window = sip.wrapinstance(self.snk.qwidget(), QtWidgets.QWidget)
+        self.py_window = sip.wrapinstance(self.snk.qwidget(), QWidget)
 
         self.layout.addWidget(self.py_window)
 
@@ -411,7 +411,7 @@ class GrDataPlotterValueTable(object):
                           'Curent Value', 'Units', 'Description']):
         # must encapsulate, cuz Qt's bases are not classes
         self.uid = uid
-        self.treeWidget = QtWidgets.QTreeWidget(parent)
+        self.treeWidget = QTreeWidget(parent)
         self.treeWidget.setColumnCount(len(headers))
         self.treeWidget.setGeometry(x, y, xsize, ysize)
         self.treeWidget.setHeaderLabels(headers)
@@ -474,7 +474,7 @@ class GrDataPlotterValueTable(object):
                 elif(type(v) == str and k.find('probe2_b') == 0):
                     v = struct.unpack(len(v) * 'b', v)
 
-                item = QtWidgets.QTreeWidgetItem([k, str(v),
+                item = QTreeWidgetItem([k, str(v),
                                            knobprops[k].units, knobprops[k].description])
                 self.treeWidget.addTopLevelItem(item)
 

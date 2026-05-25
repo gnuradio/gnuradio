@@ -12,7 +12,7 @@
 from gnuradio import gr
 import pmt
 
-from qtpy.QtCore import Qt as Qtc
+from qtpy.QtCore import Qt
 from qtpy.QtCore import QRect
 from qtpy.QtWidgets import QFrame, QHBoxLayout, QVBoxLayout, QLabel
 from qtpy.QtGui import QPainter, QBrush, QColor, QPen, QFontMetricsF
@@ -35,12 +35,12 @@ class LabeledToggleSwitch(QFrame):
         self.lblcontrol = QLabel(lbl, self)
 
         if position == 3:  # left of switch
-            self.lblcontrol.setAlignment(Qtc.AlignRight)
+            self.lblcontrol.setAlignment(Qt.AlignRight)
         elif position == 4:  # right of switch
-            self.lblcontrol.setAlignment(Qtc.AlignLeft)
+            self.lblcontrol.setAlignment(Qt.AlignLeft)
         else:
             # Above or below
-            self.lblcontrol.setAlignment(Qtc.AlignCenter)
+            self.lblcontrol.setAlignment(Qt.AlignCenter)
 
         # add top or left
         if len:
@@ -55,18 +55,18 @@ class LabeledToggleSwitch(QFrame):
                 layout.addWidget(self.lblcontrol)
 
         if alignment == 1:
-            halign = Qtc.AlignCenter
+            halign = Qt.AlignCenter
         elif alignment == 2:
-            halign = Qtc.AlignLeft
+            halign = Qt.AlignLeft
         else:
-            halign = Qtc.AlignRight
+            halign = Qt.AlignRight
 
         if valignment == 1:
-            valign = Qtc.AlignVCenter
+            valign = Qt.AlignVCenter
         elif valignment == 2:
-            valign = Qtc.AlignTop
+            valign = Qt.AlignTop
         else:
-            valign = Qtc.AlignBottom
+            valign = Qt.AlignBottom
 
         layout.setAlignment(halign | valign)
 
@@ -125,7 +125,7 @@ class ToggleSwitch(QFrame):
             brush.setColor(self.offColor)
             painter.setPen(QPen(self.offColor, 0))
 
-        brush.setStyle(Qtc.SolidPattern)
+        brush.setStyle(Qt.SolidPattern)
         painter.setBrush(brush)
 
         # Draw the switch background

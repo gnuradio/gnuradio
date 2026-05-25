@@ -21,9 +21,9 @@ from __future__ import absolute_import, print_function
 import logging
 import functools
 
-from qtpy import QtGui, QtCore, QtWidgets
-from qtpy.QtCore import Qt
-from qtpy.QtWidgets import QApplication, QGraphicsTextItem
+from qtpy.QtCore import QDataStream, QPointF, QRectF, QVariant, Qt, Signal
+from qtpy.QtGui import QStandardItemModel, QTransform, QUndoStack
+from qtpy.QtWidgets import QApplication, QGraphicsScene, QGraphicsTextItem
 
 from itertools import count
 
@@ -52,11 +52,11 @@ class Flowgraph(CoreFlowgraph):
         CoreFlowgraph.__init__(self, platform)
 
 
-class FlowgraphScene(QtWidgets.QGraphicsScene, base.Component):
-    itemMoved = QtCore.Signal([QtCore.QPointF])
-    newElement = QtCore.Signal([Element])
-    deleteElement = QtCore.Signal([Element])
-    blockPropsChange = QtCore.Signal([Element])
+class FlowgraphScene(QGraphicsScene, base.Component):
+    itemMoved = Signal([QPointF])
+    newElement = Signal([Element])
+    deleteElement = Signal([Element])
+    blockPropsChange = Signal([Element])
 
     def __init__(self, view, platform, *args, **kwargs):
         self.core = Flowgraph(self, platform)
@@ -75,7 +75,7 @@ class FlowgraphScene(QtWidgets.QGraphicsScene, base.Component):
 
         self.qsettings = QApplication.instance().qsettings
 
-        self.undoStack = QtGui.QUndoStack(self)
+        self.undoStack = QUndoStack(self)
         self.undoAction = self.undoStack.createUndoAction(self, "Undo")
         self.redoAction = self.undoStack.createRedoAction(self, "Redo")
 
@@ -137,14 +137,14 @@ class FlowgraphScene(QtWidgets.QGraphicsScene, base.Component):
     def decode_data(self, bytearray):
         data = []
         item = {}
-        ds = QtCore.QDataStream(bytearray)
+        ds = QDataStream(bytearray)
         while not ds.atEnd():
             row = ds.readInt32()
             column = ds.readInt32()
             map_items = ds.readInt32()
             for i in range(map_items):
                 key = ds.readInt32()
-                value = QtCore.QVariant()
+                value = QVariant()
                 ds >> value
                 item[Qt.ItemDataRole(key)] = value
             data.append(item)
@@ -168,7 +168,7 @@ class FlowgraphScene(QtWidgets.QGraphicsScene, base.Component):
         return block_id
 
     def dropEvent(self, event):
-        QtWidgets.QGraphicsScene.dropEvent(self, event)
+        QGraphicsScene.dropEvent(self, event)
         if event.mimeData().hasUrls:
             data = event.mimeData()
             if data.hasFormat("application/x-qabstractitemmodeldatalist"):
@@ -176,7 +176,7 @@ class FlowgraphScene(QtWidgets.QGraphicsScene, base.Component):
                 data_items = self.decode_data(bytearray)
 
                 # Find block in tree so that we can pull out label
-                block_key = data_items[0][QtCore.Qt.UserRole].value()
+                block_key = data_items[0][Qt.UserRole].value()
 
                 # Add block of this key at the cursor position
                 cursor_pos = event.scenePos()
@@ -187,7 +187,7 @@ class FlowgraphScene(QtWidgets.QGraphicsScene, base.Component):
                 event.setDropAction(Qt.CopyAction)
                 event.accept()
             else:
-                return QtGui.QStandardItemModel.dropMimeData(
+                return QStandardItemModel.dropMimeData(
                     self, data, action, row, column, parent
                 )
         else:
@@ -274,7 +274,7 @@ class FlowgraphScene(QtWidgets.QGraphicsScene, base.Component):
         return True
 
     def mousePressEvent(self, event):
-        g_item = self.itemAt(event.scenePos(), QtGui.QTransform())
+        g_item = self.itemAt(event.scenePos(), QTransform())
         if not g_item or isinstance(g_item, QGraphicsTextItem):  # Nothing (or just a comment) selected
             event.ignore()
             return
@@ -314,7 +314,7 @@ class FlowgraphScene(QtWidgets.QGraphicsScene, base.Component):
     def mouseReleaseEvent(self, event):
         if self.dummy_arrow:  # We are currently dragging a DummyConnection
             self.removeItem(self.dummy_arrow)
-            g_item = self.itemAt(event.scenePos(), QtGui.QTransform())
+            g_item = self.itemAt(event.scenePos(), QTransform())
             if isinstance(g_item, GUIPort):
                 c_item = g_item.core
                 if g_item != self.start_port:
@@ -490,8 +490,8 @@ class FlowgraphScene(QtWidgets.QGraphicsScene, base.Component):
             connection.gui.setSelected(True)
 
     def itemsBoundingRect(self):
-        rect = QtWidgets.QGraphicsScene.itemsBoundingRect(self)
-        return QtCore.QRectF(0.0, 0.0, rect.right(), rect.bottom())
+        rect = QGraphicsScene.itemsBoundingRect(self)
+        return QRectF(0.0, 0.0, rect.right(), rect.bottom())
 
     def install_external_editor(self, param, parent=None):
         target = (param.parent_block.name, param.key)

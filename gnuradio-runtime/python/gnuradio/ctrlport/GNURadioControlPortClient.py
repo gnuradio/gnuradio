@@ -60,7 +60,7 @@ class GNURadioControlPortClient(object):
             no parameters that will be executed after callback() is executed,
             but before __init__ returns. It is useful if your application
             requires that a blocking function be called to start the application,
-            such as QtGui.QApplication.exec_
+            such as QApplication.exec
 
     """
 

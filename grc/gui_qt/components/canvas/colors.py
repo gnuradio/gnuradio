@@ -6,13 +6,13 @@ SPDX-License-Identifier: GPL-2.0-or-later
 """
 
 
-from qtpy import QtGui
+from qtpy.QtGui import QColor
 
 from ... import Constants
 
 
 def get_color(rgb):
-    color = QtGui.QColor(rgb)
+    color = QColor(rgb)
     return color
 
 

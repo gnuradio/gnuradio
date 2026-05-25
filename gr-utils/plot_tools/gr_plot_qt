@@ -11,8 +11,9 @@ except ImportError:
     raise SystemExit(1)
 
 try:
-    from qtpy import QtCore, QtGui
-    from qtpy.QtCore import Qt
+    from qtpy.QtCore import QRectF, QSize, Qt
+    from qtpy.QtGui import QBrush, QColor, QPen, qRgb
+    from qtpy.QtWidgets import QApplication, QFileDialog, QMainWindow, QWidget
 except ImportError:
     print("Please install PyQt to run this script (http://www.riverbankcomputing.co.uk/software/pyqt/download)")
     raise SystemExit(1)
@@ -40,20 +41,20 @@ from gnuradio import eng_notation
 class SpectrogramData(Qwt.QwtRasterData):
 
     def __init__(self, f, t):
-        Qwt.QwtArrayData.__init__(self, QtCore.QRectF(0, 0, 0, 0))
+        Qwt.QwtArrayData.__init__(self, QRectF(0, 0, 0, 0))
         self.sp = numpy.array([[0], [0]])
 
     def set_data(self, xfreq, ytime, data):
         self.sp = data
         self.freq = xfreq
         self.time = ytime
-        boundingBox = QtCore.QRectF(self.freq.min(), self.time.min(),
+        boundingBox = QRectF(self.freq.min(), self.time.min(),
                                 self.freq.max() - self.freq.min(),
                                 self.time.max() - self.time.min())
         self.setBoundingRect(boundingBox)
 
     def rasterHint(self, rect):
-        return QtCore.QSize(self.sp.shape[0], self.sp.shape[1])
+        return QSize(self.sp.shape[0], self.sp.shape[1])
 
     def copy(self):
         return self
@@ -71,9 +72,9 @@ class SpectrogramData(Qwt.QwtRasterData):
             return 0
 
 
-class gr_plot_qt(QtWidgets.QMainWindow):
+class gr_plot_qt(QMainWindow):
     def __init__(self, qapp, filename, options, parent=None):
-        QtWidgets.QWidget.__init__(self, parent)
+        QWidget.__init__(self, parent)
         self.gui = Ui_MainWindow()
         self.gui.setupUi(self)
 
@@ -175,8 +176,8 @@ class gr_plot_qt(QtWidgets.QMainWindow):
 
         # Connect Reload action to reload the file
         self.gui.action_reload.activated.connect(self.reload_file)
-        self.gui.action_reload.setShortcut(QtGui.QApplication.translate("MainWindow", "Ctrl+R",
-                                                                        None, QtGui.QApplication.UnicodeUTF8))
+        self.gui.action_reload.setShortcut(QApplication.translate("MainWindow", "Ctrl+R",
+                                                                        None, QApplication.UnicodeUTF8))
 
         # Set up file position boxes to update current figure
         self.gui.filePosStartLineEdit.editingFinished.connect(self.file_position_changed)
@@ -250,7 +251,7 @@ class gr_plot_qt(QtWidgets.QMainWindow):
         self.show()
 
     def open_file(self):
-        filename = QtWidgets.QFileDialog.getOpenFileName(self, "Open", ".")
+        filename = QFileDialog.getOpenFileName(self, "Open", ".")
         if(filename != ""):
             # print(filename)
             self.initialize(filename)
@@ -580,15 +581,15 @@ class gr_plot_qt(QtWidgets.QMainWindow):
         self.gui.timePlot.replot()
 
     def color_black_on_white(self):
-        blue = QtGui.qRgb(0x00, 0x00, 0xFF)
-        red = QtGui.qRgb(0xFF, 0x00, 0x00)
+        blue = qRgb(0x00, 0x00, 0xFF)
+        red = qRgb(0xFF, 0x00, 0x00)
 
-        blackPen = QtGui.QPen(QtGui.QBrush(QtGui.QColor("black")), self.pen_width)
-        bluePen = QtGui.QPen(QtGui.QBrush(QtGui.QColor(blue)), self.pen_width)
-        redPen = QtGui.QPen(QtGui.QBrush(QtGui.QColor(red)), self.pen_width)
+        blackPen = QPen(QBrush(QColor("black")), self.pen_width)
+        bluePen = QPen(QBrush(QColor(blue)), self.pen_width)
+        redPen = QPen(QBrush(QColor(red)), self.pen_width)
 
-        self.gui.timePlot.setCanvasBackground(QtGui.QColor("white"))
-        self.gui.freqPlot.setCanvasBackground(QtGui.QColor("white"))
+        self.gui.timePlot.setCanvasBackground(QColor("white"))
+        self.gui.freqPlot.setCanvasBackground(QColor("white"))
         self.timeZoomer.setTrackerPen(blackPen)
         self.timeZoomer.setRubberBandPen(blackPen)
         self.freqZoomer.setTrackerPen(blackPen)
@@ -604,64 +605,64 @@ class gr_plot_qt(QtWidgets.QMainWindow):
         self.gui.freqPlot.replot()
 
     def color_white_on_black(self):
-        white = QtGui.qRgb(0xFF, 0xFF, 0xFF)
-        red = QtGui.qRgb(0xFF, 0x00, 0x00)
+        white = qRgb(0xFF, 0xFF, 0xFF)
+        red = qRgb(0xFF, 0x00, 0x00)
 
-        whiteBrush = QtGui.QBrush(QtGui.QColor("white"))
-        whiteBrush = QtGui.QBrush(QtGui.QColor(white))
-        redBrush = QtGui.QBrush(QtGui.QColor(red))
+        whiteBrush = QBrush(QColor("white"))
+        whiteBrush = QBrush(QColor(white))
+        redBrush = QBrush(QColor(red))
 
-        self.gui.timePlot.setCanvasBackground(QtGui.QColor("black"))
-        self.gui.freqPlot.setCanvasBackground(QtGui.QColor("black"))
-        self.timeZoomer.setTrackerPen(QtGui.QPen(whiteBrush, self.pen_width))
-        self.timeZoomer.setRubberBandPen(QtGui.QPen(whiteBrush, self.pen_width))
-        self.freqZoomer.setTrackerPen(QtGui.QPen(whiteBrush, self.pen_width))
-        self.freqZoomer.setRubberBandPen(QtGui.QPen(whiteBrush, self.pen_width))
-        self.psdcurve.setPen(QtGui.QPen(whiteBrush, self.pen_width))
-        self.rcurve.setPen(QtGui.QPen(whiteBrush, self.pen_width))
-        self.icurve.setPen(QtGui.QPen(redBrush, self.pen_width))
+        self.gui.timePlot.setCanvasBackground(QColor("black"))
+        self.gui.freqPlot.setCanvasBackground(QColor("black"))
+        self.timeZoomer.setTrackerPen(QPen(whiteBrush, self.pen_width))
+        self.timeZoomer.setRubberBandPen(QPen(whiteBrush, self.pen_width))
+        self.freqZoomer.setTrackerPen(QPen(whiteBrush, self.pen_width))
+        self.freqZoomer.setRubberBandPen(QPen(whiteBrush, self.pen_width))
+        self.psdcurve.setPen(QPen(whiteBrush, self.pen_width))
+        self.rcurve.setPen(QPen(whiteBrush, self.pen_width))
+        self.icurve.setPen(QPen(redBrush, self.pen_width))
 
         self.gui.timePlot.replot()
         self.gui.freqPlot.replot()
 
     def color_green_on_black(self):
-        green = QtGui.qRgb(0x00, 0xFF, 0x00)
-        red = QtGui.qRgb(0xFF, 0x00, 0x50)
+        green = qRgb(0x00, 0xFF, 0x00)
+        red = qRgb(0xFF, 0x00, 0x50)
 
-        whiteBrush = QtGui.QBrush(QtGui.QColor("white"))
-        greenBrush = QtGui.QBrush(QtGui.QColor(green))
-        redBrush = QtGui.QBrush(QtGui.QColor(red))
+        whiteBrush = QBrush(QColor("white"))
+        greenBrush = QBrush(QColor(green))
+        redBrush = QBrush(QColor(red))
 
-        self.gui.timePlot.setCanvasBackground(QtGui.QColor("black"))
-        self.gui.freqPlot.setCanvasBackground(QtGui.QColor("black"))
-        self.timeZoomer.setTrackerPen(QtGui.QPen(whiteBrush, self.pen_width))
-        self.timeZoomer.setRubberBandPen(QtGui.QPen(whiteBrush, self.pen_width))
-        self.freqZoomer.setTrackerPen(QtGui.QPen(whiteBrush, self.pen_width))
-        self.freqZoomer.setRubberBandPen(QtGui.QPen(whiteBrush, self.pen_width))
-        self.psdcurve.setPen(QtGui.QPen(greenBrush, self.pen_width))
-        self.rcurve.setPen(QtGui.QPen(greenBrush, self.pen_width))
-        self.icurve.setPen(QtGui.QPen(redBrush, self.pen_width))
+        self.gui.timePlot.setCanvasBackground(QColor("black"))
+        self.gui.freqPlot.setCanvasBackground(QColor("black"))
+        self.timeZoomer.setTrackerPen(QPen(whiteBrush, self.pen_width))
+        self.timeZoomer.setRubberBandPen(QPen(whiteBrush, self.pen_width))
+        self.freqZoomer.setTrackerPen(QPen(whiteBrush, self.pen_width))
+        self.freqZoomer.setRubberBandPen(QPen(whiteBrush, self.pen_width))
+        self.psdcurve.setPen(QPen(greenBrush, self.pen_width))
+        self.rcurve.setPen(QPen(greenBrush, self.pen_width))
+        self.icurve.setPen(QPen(redBrush, self.pen_width))
 
         self.gui.timePlot.replot()
         self.gui.freqPlot.replot()
 
     def color_blue_on_black(self):
-        blue = QtGui.qRgb(0x00, 0x00, 0xFF)
-        red = QtGui.qRgb(0xFF, 0x00, 0x00)
+        blue = qRgb(0x00, 0x00, 0xFF)
+        red = qRgb(0xFF, 0x00, 0x00)
 
-        whiteBrush = QtGui.QBrush(QtGui.QColor("white"))
-        blueBrush = QtGui.QBrush(QtGui.QColor(blue))
-        redBrush = QtGui.QBrush(QtGui.QColor(red))
+        whiteBrush = QBrush(QColor("white"))
+        blueBrush = QBrush(QColor(blue))
+        redBrush = QBrush(QColor(red))
 
-        self.gui.timePlot.setCanvasBackground(QtGui.QColor("black"))
-        self.gui.freqPlot.setCanvasBackground(QtGui.QColor("black"))
-        self.timeZoomer.setTrackerPen(QtGui.QPen(whiteBrush, self.pen_width))
-        self.timeZoomer.setRubberBandPen(QtGui.QPen(whiteBrush, self.pen_width))
-        self.freqZoomer.setTrackerPen(QtGui.QPen(whiteBrush, self.pen_width))
-        self.freqZoomer.setRubberBandPen(QtGui.QPen(whiteBrush, self.pen_width))
-        self.psdcurve.setPen(QtGui.QPen(blueBrush, self.pen_width))
-        self.rcurve.setPen(QtGui.QPen(blueBrush, self.pen_width))
-        self.icurve.setPen(QtGui.QPen(redBrush, self.pen_width))
+        self.gui.timePlot.setCanvasBackground(QColor("black"))
+        self.gui.freqPlot.setCanvasBackground(QColor("black"))
+        self.timeZoomer.setTrackerPen(QPen(whiteBrush, self.pen_width))
+        self.timeZoomer.setRubberBandPen(QPen(whiteBrush, self.pen_width))
+        self.freqZoomer.setTrackerPen(QPen(whiteBrush, self.pen_width))
+        self.freqZoomer.setRubberBandPen(QPen(whiteBrush, self.pen_width))
+        self.psdcurve.setPen(QPen(blueBrush, self.pen_width))
+        self.rcurve.setPen(QPen(blueBrush, self.pen_width))
+        self.icurve.setPen(QPen(redBrush, self.pen_width))
 
         self.gui.timePlot.replot()
         self.gui.freqPlot.replot()
@@ -696,7 +697,7 @@ def main(args):
     else:
         filename = None
 
-    app = QtWidgets.QApplication(args)
+    app = QApplication(args)
     gplt = gr_plot_qt(app, filename, options)
     app.exec()
 
