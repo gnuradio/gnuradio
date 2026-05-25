@@ -221,7 +221,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
         self.tabGroup.setCurrentIndex(0)
-        self.action_exit.activated.connect(MainWindow.close) # type: ignore
+        self.action_exit.triggered.connect(MainWindow.close) # type: ignore
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):

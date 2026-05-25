@@ -103,7 +103,7 @@ class plot_psd_base(object):
 
     def dopsd(self, iq):
         ''' Need to do this here and plot later so we can do the fftshift '''
-        overlap = self.psdfftsize / 4
+        overlap = self.psdfftsize // 4
         winfunc = numpy.blackman
         psd, freq = mlab.psd(iq, self.psdfftsize, self.sample_rate,
                              window=lambda d: d * winfunc(self.psdfftsize),
@@ -177,7 +177,7 @@ class plot_psd_base(object):
         self.sp_psd.set_xlim([f.min(), f.max()])
 
     def draw_spec(self, t, s):
-        overlap = self.specfftsize / 4
+        overlap = self.specfftsize // 4
         winfunc = numpy.blackman
         self.sp_spec.clear()
         self.sp_spec.specgram(s, self.specfftsize, self.sample_rate,
