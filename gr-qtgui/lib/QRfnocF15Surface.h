@@ -9,8 +9,8 @@
 #ifndef INCLUDED_QTGUI_QRFNOCF15SURFACE_H
 #define INCLUDED_QTGUI_QRFNOCF15SURFACE_H
 
-#include <QGLFunctions>
-#include <QGLWidget>
+#include <QOpenGLFunctions>
+#include <QOpenGLWidget>
 
 #include <string>
 
@@ -23,7 +23,7 @@ namespace qtgui {
 
 class QRfnocF15ColorMapper;
 
-class QRfnocF15Surface : public ::QGLWidget, protected ::QGLFunctions
+class QRfnocF15Surface : public ::QOpenGLWidget, protected ::QOpenGLFunctions
 {
     Q_OBJECT
 

@@ -25,7 +25,7 @@ QRfnocF15Surface::QRfnocF15Surface(int fft_bins,
                                    int pwr_bins,
                                    int wf_lines,
                                    QWidget* parent)
-    : QGLWidget(parent),
+    : QOpenGLWidget(parent),
       d_fft_bins(fft_bins),
       d_pwr_bins(pwr_bins),
       d_wf_lines(wf_lines),
@@ -58,7 +58,7 @@ QRfnocF15Surface::~QRfnocF15Surface()
 
 void QRfnocF15Surface::initializeGL()
 {
-    initializeGLFunctions();
+    initializeOpenGLFunctions();
 
     /* Init frame texture */
     glGenTextures(1, &d_frame.tex);
