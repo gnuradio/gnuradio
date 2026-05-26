@@ -25,15 +25,14 @@ configure_file(gr_plot_const ${CMAKE_BINARY_DIR}/gr_plot_const @ONLY)
 configure_file(gr_plot_fft ${CMAKE_BINARY_DIR}/gr_plot_fft @ONLY)
 configure_file(gr_plot_psd ${CMAKE_BINARY_DIR}/gr_plot_psd @ONLY)
 configure_file(gr_plot_iq ${CMAKE_BINARY_DIR}/gr_plot_iq @ONLY)
-configure_file(gr_plot_qt ${CMAKE_BINARY_DIR}/gr_plot_qt @ONLY)
 if(WIN32)
 gen_py_launcher(
-    MODULES gr_plot gr_plot_const gr_plot_fft gr_plot_psd gr_plot_iq gr_plot_qt
+    MODULES gr_plot gr_plot_const gr_plot_fft gr_plot_psd gr_plot_iq
     PYTHON ${GR_BUNDLE_PYTHON}
 )
 elseif(APPLE)
 gen_py_program_launcher(
-    PROGRAMS gr_plot gr_plot_const gr_plot_fft gr_plot_psd gr_plot_iq gr_plot_qt
+    PROGRAMS gr_plot gr_plot_const gr_plot_fft gr_plot_psd gr_plot_iq
 )
 endif()
 GR_PYTHON_INSTALL(
@@ -43,6 +42,5 @@ GR_PYTHON_INSTALL(
     ${CMAKE_BINARY_DIR}/gr_plot_fft
     ${CMAKE_BINARY_DIR}/gr_plot_psd
     ${CMAKE_BINARY_DIR}/gr_plot_iq
-    ${CMAKE_BINARY_DIR}/gr_plot_qt
     DESTINATION ${GR_RUNTIME_DIR}
 )
