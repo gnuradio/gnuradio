@@ -5,9 +5,9 @@ import logging
 import os
 import yaml
 
-from qtpy import uic
-from qtpy.QtCore import Qt
-from qtpy.QtWidgets import QDialog, QListWidgetItem
+from PyQt6 import uic
+from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QDialog, QListWidgetItem
 
 from .. import base
 from ..properties import Paths

@@ -9,9 +9,9 @@
 #
 #
 
-from qtpy.QtCore import Signal, QSize, QRect, Qt
-from qtpy.QtWidgets import QFrame, QVBoxLayout, QLabel
-from qtpy.QtGui import QPainter, QPixmap, QFont, QFontMetrics, QBrush, QColor
+from PyQt6.QtCore import Signal, QSize, QRect, Qt
+from PyQt6.QtWidgets import QFrame, QVBoxLayout, QLabel
+from PyQt6.QtGui import QPainter, QPixmap, QFont, QFontMetrics, QBrush, QColor
 
 from gnuradio import gr
 import pmt

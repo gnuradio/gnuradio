@@ -22,9 +22,9 @@
 ########################################################
 ##Create Imports
 ########################################################
-from qtpy import QtWidgets
-from qtpy import QtGui
-from qtpy import QtCore
+from PyQt6 import QtWidgets
+from PyQt6 import QtGui
+from PyQt6 import QtCore
 from gnuradio import qtgui
 
 % for imp in imports:

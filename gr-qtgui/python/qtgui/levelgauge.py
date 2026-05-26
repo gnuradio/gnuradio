@@ -12,9 +12,9 @@
 from threading import Lock
 import sys
 
-from qtpy.QtCore import Signal, Qt
-from qtpy.QtWidgets import QFrame, QHBoxLayout, QVBoxLayout, QLabel, QProgressBar
-from qtpy.QtGui import QColor, QPalette
+from PyQt6.QtCore import Signal, Qt
+from PyQt6.QtWidgets import QFrame, QHBoxLayout, QVBoxLayout, QLabel, QProgressBar
+from PyQt6.QtGui import QColor, QPalette
 
 from gnuradio import gr
 import pmt

@@ -9,8 +9,8 @@
 #
 #
 
-from qtpy.QtCore import Qt, QSize
-from qtpy.QtWidgets import QFrame, QVBoxLayout, QLabel, QDial
+from PyQt6.QtCore import Qt, QSize
+from PyQt6.QtWidgets import QFrame, QVBoxLayout, QLabel, QDial
 from gnuradio import gr
 import pmt
 

@@ -12,10 +12,10 @@ import pyautogui as pag
 
 import logging
 
-from qtpy import QtTest
-from qtpy.QtCore import QPointF, QTimer, Qt
-from qtpy.QtGui import QKeySequence
-from qtpy.QtWidgets import QFileDialog, QMessageBox
+from PyQt6 import QtTest
+from PyQt6.QtCore import QPointF, QTimer, Qt
+from PyQt6.QtGui import QKeySequence
+from PyQt6.QtWidgets import QFileDialog, QMessageBox
 from os import path, remove
 
 from gnuradio import gr

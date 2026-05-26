@@ -10,7 +10,7 @@
 #
 
 
-from qtpy.QtWidgets import QPushButton
+from PyQt6.QtWidgets import QPushButton
 from gnuradio import gr
 import pmt
 

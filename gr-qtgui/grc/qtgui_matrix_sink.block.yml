@@ -3,7 +3,7 @@ label: QT GUI Matrix Sink
 
 templates:
   imports: |-
-    from qtpy import sip
+    from PyQt6 import sip
 
   make: |-
     <%

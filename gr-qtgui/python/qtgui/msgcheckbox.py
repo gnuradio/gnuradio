@@ -9,8 +9,8 @@
 #
 #
 
-from qtpy.QtCore import Qt
-from qtpy.QtWidgets import QFrame, QVBoxLayout, QCheckBox
+from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QFrame, QVBoxLayout, QCheckBox
 
 from gnuradio import gr
 import pmt

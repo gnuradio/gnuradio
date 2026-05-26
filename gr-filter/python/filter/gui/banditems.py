@@ -8,9 +8,9 @@
 
 
 try:
-    from qtpy.QtCore import QPointF, QRectF, Qt, Signal
-    from qtpy.QtGui import QPen
-    from qtpy.QtWidgets import QGraphicsItem, QGraphicsObject
+    from PyQt6.QtCore import QPointF, QRectF, Qt, Signal
+    from PyQt6.QtGui import QPen
+    from PyQt6.QtWidgets import QGraphicsItem, QGraphicsObject
 except ImportError:
     raise SystemExit(
         'Please install PyQt to run this script (http://www.riverbankcomputing.co.uk/software/pyqt/download)')

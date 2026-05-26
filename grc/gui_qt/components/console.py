@@ -24,9 +24,9 @@ import textwrap
 
 # Third-party  modules
 
-from qtpy.QtCore import QMetaObject, Qt
-from qtpy.QtGui import QIcon, QKeySequence
-from qtpy.QtWidgets import QAction, QDockWidget, QHBoxLayout, QMenu, QTextEdit, QToolBar, QWidget
+from PyQt6.QtCore import QMetaObject, Qt
+from PyQt6.QtGui import QIcon, QKeySequence, QAction
+from PyQt6.QtWidgets import QDockWidget, QHBoxLayout, QMenu, QTextEdit, QToolBar, QWidget
 
 # Custom modules
 from .. import base

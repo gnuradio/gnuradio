@@ -10,7 +10,7 @@
 #
 
 import sys
-from qtpy.QtWidgets import QSizePolicy
+from PyQt6.QtWidgets import QSizePolicy
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas

@@ -1,6 +1,6 @@
-from qtpy.QtGui import QPainterPath, QPainter, QPen, QTransform
-from qtpy.QtWidgets import QGraphicsPathItem, QApplication
-from qtpy.QtCore import QPointF
+from PyQt6.QtGui import QPainterPath, QPainter, QPen, QTransform
+from PyQt6.QtWidgets import QGraphicsPathItem, QApplication
+from PyQt6.QtCore import QPointF
 
 from enum import Enum
 

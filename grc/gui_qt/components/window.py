@@ -27,9 +27,9 @@ import pstats
 
 from typing import Union
 
-from qtpy.QtCore import QMetaObject, QPointF, QThreadPool, QUrl, Qt, Slot
-from qtpy.QtGui import QDesktopServices, QIcon, QKeySequence
-from qtpy.QtWidgets import QAction, QApplication, QFileDialog, QMainWindow, QMenu, QMessageBox, QProgressBar, QStyle, QTabWidget, QToolBar, QUndoView
+from PyQt6.QtCore import QMetaObject, QPointF, QThreadPool, QUrl, Qt, Slot
+from PyQt6.QtGui import QDesktopServices, QIcon, QKeySequence, QAction
+from PyQt6.QtWidgets import QApplication, QFileDialog, QMainWindow, QMenu, QMessageBox, QProgressBar, QStyle, QTabWidget, QToolBar, QUndoView
 
 # Custom modules
 from .flowgraph_view import FlowgraphView

@@ -20,7 +20,7 @@ from __future__ import absolute_import, print_function
 # Standard modules
 import logging
 
-from qtpy.QtWidgets import QDockWidget, QVBoxLayout, QWidget
+from PyQt6.QtWidgets import QDockWidget, QVBoxLayout, QWidget
 
 # Custom modules
 from .. import base
@@ -41,7 +41,7 @@ class WikiTab(QDockWidget, base.Component):
         self.setFloating(False)
 
         try:
-            from qtpy.QtWebEngineWidgets import QWebEngineView
+            from PyQt6.QtWebEngineWidgets import QWebEngineView
         except ImportError:
             log.error("PyQt QWebEngine missing!")
             self.hide()

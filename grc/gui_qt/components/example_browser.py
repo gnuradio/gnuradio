@@ -2,10 +2,10 @@ import logging
 import os
 import traceback
 
-from qtpy import uic
-from qtpy.QtCore import QObject, Signal, Slot, QRunnable, QVariant, Qt
-from qtpy.QtGui import QPixmap, QStandardItem, QStandardItemModel
-from qtpy.QtWidgets import QDialog, QListWidgetItem, QTreeWidgetItem, QWidget, QVBoxLayout
+from PyQt6 import uic
+from PyQt6.QtCore import QObject, Signal, Slot, QRunnable, QVariant, Qt
+from PyQt6.QtGui import QPixmap, QStandardItem, QStandardItemModel
+from PyQt6.QtWidgets import QDialog, QListWidgetItem, QTreeWidgetItem, QWidget, QVBoxLayout
 
 
 from ...core.cache import Cache
