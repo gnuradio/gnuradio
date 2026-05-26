@@ -13,6 +13,6 @@ templates:
     make: not ${en} or monitor("gr-perf-monitorx")
 
 documentation: |-
-    Place this in a graph to launch a QtPy GR CtrlPort Performance Monitor app.
+    Place this in a graph to launch a PyQt GR CtrlPort Performance Monitor app.
 
 file_format: 1
