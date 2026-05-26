@@ -69,7 +69,7 @@ outputs:
 
 
 templates:
-  imports: from qtpy import sip
+  imports: from PyQt6 import sip
   make: |-
     <%
         win = 'self._%s_win' % id

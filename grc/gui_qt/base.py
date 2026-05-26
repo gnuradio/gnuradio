@@ -23,7 +23,7 @@ import logging
 import weakref
 
 # Third-party  modules
-from qtpy.QtWidgets import QApplication
+from PyQt6.QtWidgets import QApplication
 
 
 # Logging

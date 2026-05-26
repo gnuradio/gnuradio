@@ -7,8 +7,8 @@
 #
 
 
-from qtpy.QtCore import QMetaObject, Q_ARG, Qt
-from qtpy.QtWidgets import QLabel, QLineEdit, QToolBar, QWidget
+from PyQt6.QtCore import QMetaObject, Q_ARG, Qt
+from PyQt6.QtWidgets import QLabel, QLineEdit, QToolBar, QWidget
 from gnuradio import gr
 import math
 import re

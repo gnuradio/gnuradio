@@ -11,7 +11,7 @@
 from gnuradio.filter import filter_design
 import sys
 try:
-    from qtpy.QtWidgets import QApplication
+    from PyQt6.QtWidgets import QApplication
 except ImportError:
     print("Please install PyQt6 to run this script (http://www.riverbankcomputing.co.uk/software/pyqt/download)")
     raise SystemExit(1)

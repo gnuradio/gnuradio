@@ -3,9 +3,9 @@ import os
 import logging
 from pathlib import Path
 
-from qtpy.QtGui import QPageLayout, QPainter, QPixmap
-from qtpy.QtPrintSupport import QPrinter
-from qtpy.QtSvg import QSvgGenerator
+from PyQt6.QtGui import QPageLayout, QPainter, QPixmap
+from PyQt6.QtPrintSupport import QPrinter
+from PyQt6.QtSvg import QSvgGenerator
 
 from . import Constants
 
@@ -78,7 +78,7 @@ def make_screenshot(fg_view, file_path, transparent_bg=False):
         painter.end()
     elif file_path.suffix == ".svg":
         try:
-            from qtpy import QtSvg
+            from PyQt6 import QtSvg
         except ImportError:
             log.error("Missing (Python-)QtSvg! Please install it or export as PNG instead.")
             return

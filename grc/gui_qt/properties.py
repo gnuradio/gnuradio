@@ -1,7 +1,7 @@
 import os
 import stat
 
-from qtpy.QtCore import Qt
+from PyQt6.QtCore import Qt
 
 
 class Properties(object):

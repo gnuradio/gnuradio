@@ -16,8 +16,8 @@ from gnuradio import gr
 from gnuradio import qtgui
 from gnuradio import blocks, fft, filter
 
-from qtpy.QtWidgets import QWidget
-import qtpy.sip as sip
+from PyQt6.QtWidgets import QWidget
+from PyQt6 import sip
 
 
 class Normalize(gr.hier_block2):

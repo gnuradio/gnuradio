@@ -6,8 +6,8 @@
 #
 #
 
-from qtpy.QtCore import Qt
-from qtpy.QtWidgets import QGraphicsView
+from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QGraphicsView
 
 
 class BandGraphicsView(QGraphicsView):

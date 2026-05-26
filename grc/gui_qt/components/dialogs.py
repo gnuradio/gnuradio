@@ -3,12 +3,12 @@ from __future__ import absolute_import, print_function
 from copy import copy
 
 from ..Constants import MIN_DIALOG_HEIGHT, DEFAULT_PARAM_TAB
-from qtpy.QtCore import Qt
-from qtpy.QtGui import QStandardItem, QStandardItemModel
-from qtpy.QtWidgets import (QLineEdit, QDialog, QDialogButtonBox, QTreeView,
-                            QVBoxLayout, QTabWidget, QGridLayout, QWidget, QLabel,
-                            QPushButton, QListWidget, QComboBox, QPlainTextEdit, QHBoxLayout,
-                            QFileDialog, QApplication, QScrollArea)
+from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QStandardItem, QStandardItemModel
+from PyQt6.QtWidgets import (QLineEdit, QDialog, QDialogButtonBox, QTreeView,
+                             QVBoxLayout, QTabWidget, QGridLayout, QWidget, QLabel,
+                             QPushButton, QListWidget, QComboBox, QPlainTextEdit, QHBoxLayout,
+                             QFileDialog, QApplication, QScrollArea)
 
 
 class ErrorsDialog(QDialog):

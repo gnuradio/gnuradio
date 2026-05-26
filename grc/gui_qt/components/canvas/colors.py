@@ -6,7 +6,7 @@ SPDX-License-Identifier: GPL-2.0-or-later
 """
 
 
-from qtpy.QtGui import QColor
+from PyQt6.QtGui import QColor
 
 from ... import Constants
 

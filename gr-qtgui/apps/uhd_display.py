@@ -19,9 +19,9 @@ import sys
 
 try:
     from gnuradio import qtgui
-    from qtpy.QtGui import QKeySequence
-    from qtpy.QtWidgets import QApplication, QFileDialog, QMainWindow, QWidget
-    import qtpy.sip as sip
+    from PyQt6.QtGui import QKeySequence
+    from PyQt6.QtWidgets import QApplication, QFileDialog, QMainWindow, QWidget
+    from PyQt6 import sip
 except ImportError as e:
     sys.stderr.write(f"Error: Program requires PyQt/PySide and gr-qtgui: {str(e)}\n")
     sys.exit(1)

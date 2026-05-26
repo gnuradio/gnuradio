@@ -238,7 +238,7 @@ inputs:
 
 templates:
     imports: |-
-        from qtpy import sip
+        from PyQt6 import sip
     callbacks:
     - set_update_time(${update_time})
     - set_average(${avg})

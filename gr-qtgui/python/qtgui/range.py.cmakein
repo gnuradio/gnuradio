@@ -392,7 +392,7 @@ class RangeWidget(QWidget):
 
 
 if __name__ == "__main__":
-    from qtpy.QtWidgets import QApplication
+    from PyQt6.QtWidgets import QApplication
     import sys
 
     def valueChanged(frequency):

@@ -6,9 +6,9 @@ import logging
 import xml.etree.ElementTree as ET
 
 from ast import literal_eval
-from qtpy.QtCore import Qt
-from qtpy.QtGui import QBrush
-from qtpy.QtWidgets import QAction, QGraphicsView, QMenu
+from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QBrush, QAction
+from PyQt6.QtWidgets import QGraphicsView, QMenu
 
 # Custom modules
 from .canvas.block import Block

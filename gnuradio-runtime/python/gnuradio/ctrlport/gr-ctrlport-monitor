@@ -8,9 +8,9 @@
 #
 #
 
-from qtpy.QtCore import QMimeData, QSignalMapper, QSize, QTimer, Qt
-from qtpy.QtGui import QAction, QIcon, QKeySequence
-from qtpy.QtWidgets import QAbstractItemView, QApplication, QCursor, QDialog, QDialogButtonBox, QDrag, QGridLayout, QHBoxLayout, QLabel, QLineEdit, QMainWindow, QMdiArea, QMenu, QMessageBox, QPushButton, QSizePolicy, QSlider, QVBoxLayout, QWidget
+from PyQt6.QtCore import QMimeData, QSignalMapper, QSize, QTimer, Qt
+from PyQt6.QtGui import QAction, QIcon, QKeySequence, QCursor, QDrag
+from PyQt6.QtWidgets import QAbstractItemView, QApplication, QDialog, QDialogButtonBox, QGridLayout, QHBoxLayout, QLabel, QLineEdit, QMainWindow, QMdiArea, QMenu, QMessageBox, QPushButton, QSizePolicy, QSlider, QVBoxLayout, QWidget
 from argparse import ArgumentParser
 
 import os

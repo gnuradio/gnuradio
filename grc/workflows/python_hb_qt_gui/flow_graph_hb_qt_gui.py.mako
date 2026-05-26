@@ -21,7 +21,7 @@
 ########################################################
 ##Create Imports
 ########################################################
-from qtpy import QtWidgets
+from PyQt6 import QtWidgets
 from gnuradio import qtgui
 % for imp in imports:
 ##${imp.replace("  # grc-generated hier_block", "")}

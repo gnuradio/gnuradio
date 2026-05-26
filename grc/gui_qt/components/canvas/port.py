@@ -1,6 +1,6 @@
-from qtpy.QtGui import QPen, QPainter, QBrush, QFont, QFontMetrics
-from qtpy.QtCore import Qt, QPointF, QRectF, QVariant
-from qtpy.QtWidgets import QGraphicsItem
+from PyQt6.QtGui import QPen, QPainter, QBrush, QFont, QFontMetrics
+from PyQt6.QtCore import Qt, QPointF, QRectF, QVariant
+from PyQt6.QtWidgets import QGraphicsItem
 
 from . import colors
 from ... import Constants

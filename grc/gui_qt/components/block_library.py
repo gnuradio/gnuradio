@@ -19,10 +19,10 @@
 # Standard modules
 import logging
 
-from qtpy.QtCore import QUrl, Qt, QVariant
-from qtpy.QtWidgets import (QLineEdit, QTreeView, QMenu, QDockWidget, QWidget,
-                            QAction, QVBoxLayout, QAbstractItemView, QCompleter, QToolButton)
-from qtpy.QtGui import QStandardItem, QStandardItemModel
+from PyQt6.QtCore import QUrl, Qt, QVariant
+from PyQt6.QtWidgets import (QLineEdit, QTreeView, QMenu, QDockWidget, QWidget,
+                             QVBoxLayout, QAbstractItemView, QCompleter, QToolButton)
+from PyQt6.QtGui import QStandardItem, QStandardItemModel, QAction
 
 # Custom modules
 from .. import base

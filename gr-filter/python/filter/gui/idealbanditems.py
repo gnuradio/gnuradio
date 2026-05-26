@@ -7,8 +7,8 @@
 #
 
 
-from qtpy.QtCore import Qt
-from qtpy.QtGui import QPen
+from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QPen
 import pyqtgraph as pg
 import numpy
 
