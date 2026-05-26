@@ -1,7 +1,7 @@
 import logging
 from copy import copy
 from PyQt6.QtCore import QPointF
-from PyQt6.QtWidgets import QUndoCommand
+from PyQt6.QtGui import QUndoCommand
 from .canvas.flowgraph import FlowgraphScene
 from .canvas.block import Block
 from ...core.base import Element
