@@ -13,6 +13,6 @@ templates:
     make: not ${en} or monitor()
 
 documentation: |-
-    Place this in a graph to launch a QtPy GR CtrlPort Monitor app.
+    Place this in a graph to launch a PyQt GR CtrlPort Monitor app.
 
 file_format: 1
