@@ -61,7 +61,7 @@ class main_window(QMainWindow):
         self.gui.amplifierEdit.editingFinished.connect(self.amplifierEditText)
 
         self.gui.actionSaveData.triggered.connect(self.saveData)
-        self.gui.actionSaveData.setShortcut(QKeySequence.Save)
+        self.gui.actionSaveData.setShortcut(QKeySequence.StandardKey.Save)
 
         self.gui.dcGainEdit.editingFinished.connect(self.dcGainEditText)
         self.gui.dcCancelCheckBox.clicked.connect(self.dcCancelClicked)

@@ -63,7 +63,7 @@ blocks:
     gui_hint: ''
     label: Noise
     min_len: '200'
-    orient: Qt.Horizontal
+    orient: Qt.Orientation.Horizontal
     rangeType: float
     start: '0.0001'
     step: '0.01'
@@ -81,7 +81,7 @@ blocks:
     gui_hint: ''
     label: Phase
     min_len: '200'
-    orient: Qt.Horizontal
+    orient: Qt.Orientation.Horizontal
     rangeType: float
     start: '0'
     step: '0.01'

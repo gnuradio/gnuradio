@@ -106,7 +106,7 @@ asserts:
 
 templates:
     imports: |-
-        from PyQt6.QtCore import QObject, Slot
+        from PyQt6.QtCore import QObject, pyqtSlot
     var_make: self.${id} = ${id} = ${value}
     callbacks:
     - self.set_${id}(${value})
@@ -168,7 +168,7 @@ templates:
         class variable_chooser_button_group(Qt.QButtonGroup):
             def __init__(self, parent=None):
                 Qt.QButtonGroup.__init__(self, parent)
-            @Slot(int)
+            @pyqtSlot(int)
             def updateButtonChecked(self, button_id):
                 self.button(button_id).setChecked(True)
         self._${id}_button_group = variable_chooser_button_group()

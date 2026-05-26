@@ -59,12 +59,12 @@ class VariableEditor(QDockWidget, base.Component):
 
         imports = QTreeWidgetItem(self._tree)
         imports.setText(0, "Imports")
-        imports.setData(2, Qt.UserRole, self.import_add)
+        imports.setData(2, Qt.ItemDataRole.UserRole, self.import_add)
         imports.setIcon(2, QIcon.fromTheme("list-add"))
 
         variables = QTreeWidgetItem(self._tree)
         variables.setText(0, "Variables")
-        variables.setData(2, Qt.UserRole, self.var_add)
+        variables.setData(2, Qt.ItemDataRole.UserRole, self.var_add)
         variables.setIcon(2, QIcon.fromTheme("list-add"))
         self._tree.expandAll()
 
@@ -109,7 +109,7 @@ class VariableEditor(QDockWidget, base.Component):
         if (col != 2):
             return
 
-        action = item.data(2, Qt.UserRole)
+        action = item.data(2, Qt.ItemDataRole.UserRole)
 
         if action is None:
             log.warn("Item %s does not contain any actions!!", item)
@@ -128,7 +128,7 @@ class VariableEditor(QDockWidget, base.Component):
         if self.currently_rebuilding:
             return
 
-        c_block = self._tree.model().data(tl, role=Qt.UserRole)
+        c_block = self._tree.model().data(tl, role=Qt.ItemDataRole.UserRole)
         if not c_block:
             return
 
@@ -153,21 +153,21 @@ class VariableEditor(QDockWidget, base.Component):
         imports.setText(0, "Imports")
         imports.setForeground(0, self._tree.palette().color(self.palette().WindowText))
         imports.setIcon(2, QIcon.fromTheme("list-add"))
-        imports.setData(2, Qt.UserRole, self.import_add)
+        imports.setData(2, Qt.ItemDataRole.UserRole, self.import_add)
         for block in self._imports:
             import_ = QTreeWidgetItem(imports, 0)
             import_.setText(0, block.name)
-            import_.setData(0, Qt.UserRole, block)
+            import_.setData(0, Qt.ItemDataRole.UserRole, block)
             import_.setText(1, block.params['imports'].get_value())
-            import_.setData(1, Qt.UserRole, block)
+            import_.setData(1, Qt.ItemDataRole.UserRole, block)
             import_.setIcon(2, QIcon.fromTheme("list-remove"))
-            import_.setData(2, Qt.UserRole, self.del_block)
+            import_.setData(2, Qt.ItemDataRole.UserRole, self.del_block)
             if block.enabled:
-                import_.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEditable | Qt.ItemIsEnabled)
+                import_.setFlags(Qt.ItemFlag.ItemIsSelectable | Qt.ItemFlag.ItemIsEditable | Qt.ItemFlag.ItemIsEnabled)
                 import_.setForeground(0, self._tree.palette().color(self.palette().WindowText))
                 import_.setForeground(1, self._tree.palette().color(self.palette().WindowText))
             else:
-                import_.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEnabled)
+                import_.setFlags(Qt.ItemFlag.ItemIsSelectable | Qt.ItemFlag.ItemIsEnabled)
                 import_.setForeground(0, self._tree.palette().color(self.palette().Disabled, self.palette().WindowText))
                 import_.setForeground(1, self._tree.palette().color(self.palette().Disabled, self.palette().WindowText))
 
@@ -175,16 +175,16 @@ class VariableEditor(QDockWidget, base.Component):
         variables.setText(0, "Variables")
         variables.setForeground(0, self._tree.palette().color(self.palette().WindowText))
         variables.setIcon(2, QIcon.fromTheme("list-add"))
-        variables.setData(2, Qt.UserRole, self.var_add)
+        variables.setData(2, Qt.ItemDataRole.UserRole, self.var_add)
         for block in sorted(self._variables, key=lambda v: v.name):
             variable_ = QTreeWidgetItem(variables, 1)
             variable_.setText(0, block.name)
-            variable_.setData(0, Qt.UserRole, block)
-            variable_.setData(2, Qt.UserRole, self.del_block)
+            variable_.setData(0, Qt.ItemDataRole.UserRole, block)
+            variable_.setData(2, Qt.ItemDataRole.UserRole, self.del_block)
             if block.key == 'variable':
                 variable_.setText(1, block.params['value'].get_value())
-                variable_.setData(1, Qt.UserRole, block)
-                variable_.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEditable | Qt.ItemIsEnabled)
+                variable_.setData(1, Qt.ItemDataRole.UserRole, block)
+                variable_.setFlags(Qt.ItemFlag.ItemIsSelectable | Qt.ItemFlag.ItemIsEditable | Qt.ItemFlag.ItemIsEnabled)
                 if block.enabled:
                     variable_.setForeground(0, self._tree.palette().color(self.palette().WindowText))
                     variable_.setForeground(1, self._tree.palette().color(self.palette().WindowText))
@@ -194,7 +194,7 @@ class VariableEditor(QDockWidget, base.Component):
                     variable_.setForeground(1, self._tree.palette().color(
                         self.palette().Disabled, self.palette().WindowText))
             else:
-                variable_.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEnabled)
+                variable_.setFlags(Qt.ItemFlag.ItemIsSelectable | Qt.ItemFlag.ItemIsEnabled)
                 if block.enabled:
                     try:
                         variable_.setText(1, str(block.evaluate(block.value)))

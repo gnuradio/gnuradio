@@ -52,7 +52,7 @@ blocks:
     gui_hint: ''
     label: Frequency Offset (Multiples of Sub-carrier spacing)
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: QtCore.Qt.Orientation.Horizontal
     rangeType: float
     start: '-3'
     step: '.01'
@@ -85,7 +85,7 @@ blocks:
     gui_hint: ''
     label: Noise Amplitude
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: QtCore.Qt.Orientation.Horizontal
     rangeType: float
     start: '0'
     step: '.01'

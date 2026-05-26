@@ -41,7 +41,7 @@ class BlockSearchBar(QLineEdit):
         # We must use a queued connection here, otherwise
         # the searchbar entry will not be deleted if we selected an item from
         # the popup window by key_down and key_enter
-        self.returnPressed.connect(self.on_return_pressed, Qt.QueuedConnection)
+        self.returnPressed.connect(self.on_return_pressed, Qt.ConnectionType.QueuedConnection)
         # Find clear Button inside QLineEdit
         clr_btn = self.findChildren(QToolButton)
         if len(clr_btn) > 0:
@@ -104,16 +104,16 @@ class LibraryView(QTreeView):
             )
 
     def contextMenuEvent(self, event):
-        key = self.model().data(self.currentIndex(), Qt.UserRole)
+        key = self.model().data(self.currentIndex(), Qt.ItemDataRole.UserRole)
         if key:  # Modules and categories don't have UserRole data
             self.contextMenu.exec(self.mapToGlobal(event.pos()))
 
     def view_examples(self):
-        key = self.model().data(self.currentIndex(), Qt.UserRole)
+        key = self.model().data(self.currentIndex(), Qt.ItemDataRole.UserRole)
         self.library.app.MainWindow.example_browser_triggered(key_filter=key)
 
     def add_block(self) -> None:
-        key = self.model().data(self.currentIndex(), Qt.UserRole)
+        key = self.model().data(self.currentIndex(), Qt.ItemDataRole.UserRole)
         self.library.add_block(key)
 
 
@@ -151,14 +151,14 @@ class BlockLibrary(QDockWidget, base.Component):
         library.setObjectName("block_library::library")
         library.setModel(self._model)
         library.setDragEnabled(True)
-        library.setDragDropMode(QAbstractItemView.DragOnly)
+        library.setDragDropMode(QAbstractItemView.DragDropMode.DragOnly)
         # library.setColumnCount(1)
         library.setHeaderHidden(True)
         # Expand categories with a single click is build in
         library.selectionModel().selectionChanged.connect(library.updateDocTab)
         # library.headerItem().setText(0, "Blocks")
         library.doubleClicked.connect(
-            lambda block: self.add_block(block.data(Qt.UserRole))
+            lambda block: self.add_block(block.data(Qt.ItemDataRole.UserRole))
         )
         self._library = library
 
@@ -187,10 +187,10 @@ class BlockLibrary(QDockWidget, base.Component):
         self.populate_tree(self._block_tree)
 
         completer = QCompleter(self._block_tree_flat.keys())
-        completer.setCompletionMode(QCompleter.PopupCompletion)
-        completer.setModelSorting(QCompleter.CaseInsensitivelySortedModel)
-        completer.setCaseSensitivity(Qt.CaseInsensitive)
-        completer.setFilterMode(Qt.MatchContains)
+        completer.setCompletionMode(QCompleter.CompletionMode.PopupCompletion)
+        completer.setModelSorting(QCompleter.ModelSorting.CaseInsensitivelySortedModel)
+        completer.setCaseSensitivity(Qt.CaseSensitivity.CaseInsensitive)
+        completer.setFilterMode(Qt.MatchFlag.MatchContains)
         self._search_bar.setCompleter(completer)
         self._search_bar.textChanged.connect(self.show_search_results)
 
@@ -321,7 +321,7 @@ class BlockLibrary(QDockWidget, base.Component):
                     child_item.setSelectable(True)
                     child_item.setData(
                         QVariant(obj.key),
-                        role=Qt.UserRole,
+                        role=Qt.ItemDataRole.UserRole,
                     )
                 parent.appendRow(child_item)
             return found

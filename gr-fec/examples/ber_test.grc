@@ -274,7 +274,7 @@
     </param>
     <param>
       <key>orient</key>
-      <value>Qt.Horizontal</value>
+      <value>Qt.Orientation.Horizontal</value>
     </param>
     <param>
       <key>start</key>

@@ -35,12 +35,12 @@ class LabeledToggleSwitch(QFrame):
         self.lblcontrol = QLabel(lbl, self)
 
         if position == 3:  # left of switch
-            self.lblcontrol.setAlignment(Qt.AlignRight)
+            self.lblcontrol.setAlignment(Qt.AlignmentFlag.AlignRight)
         elif position == 4:  # right of switch
-            self.lblcontrol.setAlignment(Qt.AlignLeft)
+            self.lblcontrol.setAlignment(Qt.AlignmentFlag.AlignLeft)
         else:
             # Above or below
-            self.lblcontrol.setAlignment(Qt.AlignCenter)
+            self.lblcontrol.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         # add top or left
         if len:
@@ -55,18 +55,18 @@ class LabeledToggleSwitch(QFrame):
                 layout.addWidget(self.lblcontrol)
 
         if alignment == 1:
-            halign = Qt.AlignCenter
+            halign = Qt.AlignmentFlag.AlignCenter
         elif alignment == 2:
-            halign = Qt.AlignLeft
+            halign = Qt.AlignmentFlag.AlignLeft
         else:
-            halign = Qt.AlignRight
+            halign = Qt.AlignmentFlag.AlignRight
 
         if valignment == 1:
-            valign = Qt.AlignVCenter
+            valign = Qt.AlignmentFlag.AlignVCenter
         elif valignment == 2:
-            valign = Qt.AlignTop
+            valign = Qt.AlignmentFlag.AlignTop
         else:
-            valign = Qt.AlignBottom
+            valign = Qt.AlignmentFlag.AlignBottom
 
         layout.setAlignment(halign | valign)
 
@@ -111,7 +111,7 @@ class ToggleSwitch(QFrame):
         super().paintEvent(event)
 
         painter = QPainter(self)
-        painter.setRenderHint(QPainter.Antialiasing)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
 
         size = self.size()
         brush = QBrush()
@@ -125,7 +125,7 @@ class ToggleSwitch(QFrame):
             brush.setColor(self.offColor)
             painter.setPen(QPen(self.offColor, 0))
 
-        brush.setStyle(Qt.SolidPattern)
+        brush.setStyle(Qt.BrushStyle.SolidPattern)
         painter.setBrush(brush)
 
         # Draw the switch background

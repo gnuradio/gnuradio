@@ -73,13 +73,13 @@ class NumericEntry(QToolBar):
 
     def keyPressEvent(self, event):
         # in-/decrement
-        if event.key() == Qt.Key_Up and self.increment:
+        if event.key() == Qt.Key.Key_Up and self.increment:
             self._apply(self.value + self.increment)
-        elif event.key() == Qt.Key_Down and self.increment:
+        elif event.key() == Qt.Key.Key_Down and self.increment:
             self._apply(self.value - self.increment)
-        elif event.key() == Qt.Key_PageUp and self.increment:
+        elif event.key() == Qt.Key.Key_PageUp and self.increment:
             self._apply(self.value + 10 * self.increment)
-        elif event.key() == Qt.Key_PageDown and self.increment:
+        elif event.key() == Qt.Key.Key_PageDown and self.increment:
             self._apply(self.value - 10 * self.increment)
         else:
             super().keyPressEvent(event)

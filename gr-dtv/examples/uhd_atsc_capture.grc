@@ -66,7 +66,7 @@ blocks:
     gui_hint: 1,0,1,2
     label: Gain
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: QtCore.Qt.Orientation.Horizontal
     rangeType: float
     start: '0'
     step: '2'

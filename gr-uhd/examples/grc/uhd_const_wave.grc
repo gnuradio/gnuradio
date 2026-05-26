@@ -39,7 +39,7 @@ blocks:
     gui_hint: ''
     label: Amplitude
     min_len: '200'
-    orient: Qt.Horizontal
+    orient: Qt.Orientation.Horizontal
     rangeType: float
     start: '0'
     step: '0.01'
@@ -60,7 +60,7 @@ blocks:
     gui_hint: ''
     label: UHD Freq (Hz)
     min_len: '200'
-    orient: Qt.Horizontal
+    orient: Qt.Orientation.Horizontal
     rangeType: float
     start: 2.4e9
     step: '1'
@@ -81,7 +81,7 @@ blocks:
     gui_hint: ''
     label: UHD Gain
     min_len: '200'
-    orient: Qt.Horizontal
+    orient: Qt.Orientation.Horizontal
     rangeType: float
     start: '0'
     step: '1'

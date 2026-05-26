@@ -81,7 +81,7 @@ blocks:
     gui_hint: 1,1,1,1
     label: Amplitude
     min_len: '200'
-    orient: Qt.Horizontal
+    orient: Qt.Orientation.Horizontal
     rangeType: float
     start: '0'
     step: '10'
@@ -169,7 +169,7 @@ blocks:
     gui_hint: 0,1,1,1
     label: Frequency
     min_len: '200'
-    orient: Qt.Horizontal
+    orient: Qt.Orientation.Horizontal
     rangeType: float
     start: 480e6
     step: '100'
@@ -187,7 +187,7 @@ blocks:
     gui_hint: 1,0,1,1
     label: Gain
     min_len: '200'
-    orient: Qt.Horizontal
+    orient: Qt.Orientation.Horizontal
     rangeType: float
     start: '0'
     step: '0.5'
@@ -298,7 +298,7 @@ blocks:
     gui_hint: 0,0,1,1
     label: Sample Rate
     min_len: '200'
-    orient: Qt.Horizontal
+    orient: Qt.Orientation.Horizontal
     rangeType: float
     start: 200e3
     step: 200e3

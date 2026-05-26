@@ -52,7 +52,7 @@ class LabeledDigitalNumberControl(QFrame):
             self.hasLabel = False
 
         layout.addWidget(self.numberControl)
-        layout.setAlignment(Qt.AlignCenter | Qt.AlignVCenter)
+        layout.setAlignment(Qt.AlignmentFlag.AlignCenter | Qt.AlignmentFlag.AlignVCenter)
         self.setLayout(layout)
         self.show()
 
@@ -102,7 +102,7 @@ class DigitalNumberControl(QFrame):
         self.read_only = False
 
         self.setColors(QColor(background_color), QColor(fontColor))
-        self.numberFont = QFont("Arial", 12, QFont.Normal)
+        self.numberFont = QFont("Arial", 12, QFont.Weight.Normal)
 
         self.cur_freq = min_freq_hz
 
@@ -298,7 +298,7 @@ class DigitalNumberControl(QFrame):
         size = self.size()
         brush = QBrush()
         brush.setColor(self.background_color)
-        brush.setStyle(Qt.SolidPattern)
+        brush.setStyle(Qt.BrushStyle.SolidPattern)
         rect = QRect(2, 2, size.width() - 4, size.height() - 4)
         painter.fillRect(rect, brush)
 
@@ -318,7 +318,7 @@ class DigitalNumberControl(QFrame):
 
         rect = QRect(0, 0, size.width() - 4, size.height())
 
-        painter.drawText(rect, Qt.AlignRight | Qt.AlignVCenter, textstr)
+        painter.drawText(rect, Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter, textstr)
 
 
 class MsgDigitalNumberControl(gr.sync_block, LabeledDigitalNumberControl):

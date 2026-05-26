@@ -40,7 +40,7 @@ blocks:
     gui_hint: (2, 0, 1, 1)
     label: amp
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: QtCore.Qt.Orientation.Horizontal
     outputmsgname: value
     rangeType: float
     showports: 'False'
@@ -144,7 +144,7 @@ blocks:
     gui_hint: (1,0,1,1)
     label: tone_freq
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: QtCore.Qt.Orientation.Horizontal
     outputmsgname: value
     rangeType: float
     showports: 'False'

@@ -18,7 +18,7 @@ log = logging.getLogger(f"grc.application.{__name__}")
 
 
 class OOTBrowser(QDialog, base.Component):
-    data_role = Qt.UserRole
+    data_role = Qt.ItemDataRole.UserRole
 
     def __init__(self):
         super().__init__()

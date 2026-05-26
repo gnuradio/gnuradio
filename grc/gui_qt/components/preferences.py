@@ -30,14 +30,14 @@ class PreferencesDialog(QDialog):
         self.setWindowTitle("GRC Preferences")
         self.tab_widget = QTabWidget()
 
-        self.rt_prefs = QSettings(gr.userconf_path() + "/config.conf", QSettings.IniFormat)
+        self.rt_prefs = QSettings(gr.userconf_path() + "/config.conf", QSettings.Format.IniFormat)
 
         with open(Paths.AVAILABLE_PREFS_YML) as available_prefs_yml:
             self.pref_dict = yaml.safe_load(available_prefs_yml)
 
         self.populate_tabs()
 
-        buttons = QDialogButtonBox.Save | QDialogButtonBox.Cancel
+        buttons = QDialogButtonBox.StandardButton.Save | QDialogButtonBox.StandardButton.Cancel
         self.buttonBox = QDialogButtonBox(buttons)
         self.buttonBox.accepted.connect(self.accept)
         self.buttonBox.rejected.connect(self.reject)

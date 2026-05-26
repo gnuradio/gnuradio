@@ -251,7 +251,7 @@ class gr_plot_filter(QMainWindow):
         self.mtstep = False
         self.mtimpulse = False
 
-        self.gui.designButton.setShortcut(Qt.Key_Return)
+        self.gui.designButton.setShortcut(Qt.Key.Key_Return)
 
         self.taps = []
         self.a = []
@@ -569,13 +569,13 @@ class gr_plot_filter(QMainWindow):
         self.rcurve.setPen(None)
         self.rcurve.setSymbol('o')
         self.rcurve.setSymbolPen('b')
-        self.rcurve.setSymbolBrush(QBrush(Qt.gray))
+        self.rcurve.setSymbolBrush(QBrush(Qt.GlobalColor.gray))
         self.rcurve.setSymbolSize(8)
 
         self.icurve.setPen(None)
         self.icurve.setSymbol('o')
         self.icurve.setSymbolPen('r')
-        self.icurve.setSymbolBrush(QBrush(Qt.gray))
+        self.icurve.setSymbolBrush(QBrush(Qt.GlobalColor.gray))
         self.icurve.setSymbolSize(8)
 
         self.imprescurve_stems.setPen(pg.mkPen('b', width=1.5))
@@ -583,7 +583,7 @@ class gr_plot_filter(QMainWindow):
         self.imprescurve.setPen(None)
         self.imprescurve.setSymbol('o')
         self.imprescurve.setSymbolPen('b')
-        self.imprescurve.setSymbolBrush(QBrush(Qt.gray))
+        self.imprescurve.setSymbolBrush(QBrush(Qt.GlobalColor.gray))
         self.imprescurve.setSymbolSize(8)
 
         self.imprescurve_i_stems.setPen(pg.mkPen('b', width=1.5))
@@ -591,7 +591,7 @@ class gr_plot_filter(QMainWindow):
         self.imprescurve_i.setPen(None)
         self.imprescurve_i.setSymbol('o')
         self.imprescurve_i.setSymbolPen('r')
-        self.imprescurve_i.setSymbolBrush(QBrush(Qt.gray))
+        self.imprescurve_i.setSymbolBrush(QBrush(Qt.GlobalColor.gray))
         self.imprescurve_i.setSymbolSize(8)
 
         self.steprescurve_stems.setPen(pg.mkPen('b', width=1.5))
@@ -599,7 +599,7 @@ class gr_plot_filter(QMainWindow):
         self.steprescurve.setPen(None)
         self.steprescurve.setSymbol('o')
         self.steprescurve.setSymbolPen('b')
-        self.steprescurve.setSymbolBrush(QBrush(Qt.gray))
+        self.steprescurve.setSymbolBrush(QBrush(Qt.GlobalColor.gray))
         self.steprescurve.setSymbolSize(8)
 
         self.steprescurve_i_stems.setPen(pg.mkPen('b', width=1.5))
@@ -607,7 +607,7 @@ class gr_plot_filter(QMainWindow):
         self.steprescurve_i.setPen(None)
         self.steprescurve_i.setSymbol('o')
         self.steprescurve_i.setSymbolPen('r')
-        self.steprescurve_i.setSymbolBrush(QBrush(Qt.gray))
+        self.steprescurve_i.setSymbolBrush(QBrush(Qt.GlobalColor.gray))
         self.steprescurve_i.setSymbolSize(8)
 
         self.phasecurve.setPen(pg.mkPen('b', width=1.5))
@@ -621,7 +621,7 @@ class gr_plot_filter(QMainWindow):
         self.mtimecurve.setPen(None)
         self.mtimecurve.setSymbol('o')
         self.mtimecurve.setSymbolPen('b')
-        self.mtimecurve.setSymbolBrush(QBrush(Qt.gray))
+        self.mtimecurve.setSymbolBrush(QBrush(Qt.GlobalColor.gray))
         self.mtimecurve.setSymbolSize(8)
 
         self.mtimecurve_stems.setPen(pg.mkPen('b', width=1.5))
@@ -630,7 +630,7 @@ class gr_plot_filter(QMainWindow):
         self.mtimecurve_i.setPen(None)
         self.mtimecurve_i.setSymbol('o')
         self.mtimecurve_i.setSymbolPen('r')
-        self.mtimecurve_i.setSymbolBrush(QBrush(Qt.gray))
+        self.mtimecurve_i.setSymbolBrush(QBrush(Qt.GlobalColor.gray))
         self.mtimecurve_i.setSymbolSize(8)
 
     def changed_fselect(self, ftype):
@@ -839,7 +839,7 @@ class gr_plot_filter(QMainWindow):
                 if len(w):
                     reply = QMessageBox.information(self, "BadCoefficients",
                                                     str(w[-1].message),
-                                                    QMessageBox.Ok)
+                                                    QMessageBox.StandardButton.Ok)
 
     # Do FIR design.
     def design_fir(self, ftype, fs, gain, winstr):
@@ -969,7 +969,7 @@ class gr_plot_filter(QMainWindow):
                                                     analog=sanalog[atype], ftype=iirft[iirftype], output='ba')
             except Exception as e:
                 reply = QMessageBox.information(self, "IIR design error", e.args[0],
-                                                QMessageBox.Ok)
+                                                QMessageBox.StandardButton.Ok)
 
             (self.z, self.p, self.k) = signal.tf2zpk(self.b, self.a)
 
@@ -981,7 +981,7 @@ class gr_plot_filter(QMainWindow):
                                                     analog=sanalog[atype], ftype=iirft[iirftype], output='ba')
             except Exception as e:
                 reply = QMessageBox.information(self, "IIR design error", e.args[0],
-                                                QMessageBox.Ok)
+                                                QMessageBox.StandardButton.Ok)
 
             (self.z, self.p, self.k) = signal.tf2zpk(self.b, self.a)
             # Create parameters.
@@ -1505,7 +1505,7 @@ class gr_plot_filter(QMainWindow):
     #             for item in page.children():
     #                 if isinstance(item, Qwt.QwtPlot):
     #                     # Change colours as both plots overlay.
-    #                     colours = [Qt.darkYellow,Qt.black]
+    #                     colours = [Qt.darkYellow,Qt.GlobalColor.black]
     #                     for c in item.itemList():
     #                         if isinstance(c, Qwt.QwtPlotCurve):
     #                             dup = Qwt.QwtPlotCurve()
@@ -1697,7 +1697,7 @@ class gr_plot_filter(QMainWindow):
     #     else:
     #         items[1].setYAxis(Qwt.QwtPlot.yRight)
     #         if plot is self.mplots['mFREQ']:
-    #             items[1].setPen(QPen(Qt.red, 1, Qt.SolidLine))
+    #             items[1].setPen(QPen(Qt.GlobalColor.red, 1, Qt.PenStyle.SolidLine))
     #             self.set_actgrid()
 
     def update_fft(self, taps, params):
@@ -2075,7 +2075,7 @@ class gr_plot_filter(QMainWindow):
             reply = QMessageBox.information(self, 'File Name',
                                             ("Could not save to file: %s" %
                                              filename),
-                                            QMessageBox.Ok)
+                                            QMessageBox.StandardButton.Ok)
             return
 
         csvhandle = csv.writer(handle, delimiter=",")
@@ -2117,7 +2117,7 @@ class gr_plot_filter(QMainWindow):
             reply = QMessageBox.information(self, 'File Name',
                                             ("Could not open file: %s" %
                                              filename),
-                                            QMessageBox.Ok)
+                                            QMessageBox.StandardButton.Ok)
             return
 
         csvhandle = csv.reader(handle, delimiter=",")

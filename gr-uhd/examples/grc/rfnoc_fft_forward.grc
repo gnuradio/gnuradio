@@ -76,7 +76,7 @@ blocks:
     gui_hint: ''
     label: Power of scaling Divider
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: QtCore.Qt.Orientation.Horizontal
     rangeType: int
     start: '0'
     step: '1'
@@ -109,7 +109,7 @@ blocks:
     gui_hint: ''
     label: ''
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: QtCore.Qt.Orientation.Horizontal
     rangeType: float
     start: -samp_rate/2
     step: '10'
@@ -130,7 +130,7 @@ blocks:
     gui_hint: ''
     label: Source Amplitude
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: QtCore.Qt.Orientation.Horizontal
     rangeType: float
     start: '0.01'
     step: '0.01'

@@ -7,7 +7,7 @@
 #
 
 import sys
-from PyQt6.QtCore import QEvent, QObject, QPoint, Qt, pyqtpyqtSignal
+from PyQt6.QtCore import QEvent, QObject, QPoint, Qt, pyqtSignal
 from PyQt6.QtGui import QBrush, QPen
 from PyQt6.QtWidgets import QApplication
 from math import sin, cos, pi
@@ -35,17 +35,17 @@ class PzPlot(pg.PlotWidget):
         self.xmax = 0
         self.ymin = 0
         self.xmin = 0
-        self.setBackground(QBrush(Qt.darkCyan))
+        self.setBackground(QBrush(Qt.GlobalColor.darkCyan))
 
         self.setRange(xRange=[-3, 3], yRange=[-2, 2])
 
         axis = self.getAxis('bottom')
         axis.setStyle(tickLength=-10)
-        axis.setPen(QPen(Qt.white, 1.025, Qt.DotLine))
+        axis.setPen(QPen(Qt.GlobalColor.white, 1.025, Qt.PenStyle.DotLine))
 
         axis = self.getAxis('left')
         axis.setStyle(tickLength=-10)
-        axis.setPen(QPen(Qt.white, 1.025, Qt.DotLine))
+        axis.setPen(QPen(Qt.GlobalColor.white, 1.025, Qt.PenStyle.DotLine))
 
         self.plotItem.showGrid(x=True, y=True, alpha=100)
 
@@ -60,13 +60,13 @@ class PzPlot(pg.PlotWidget):
         y = [cos(a * angleStep) * radius for a in range(0, steps)]
 
         curve = self.plot(title="Unit Circle")
-        curve.setPen(QPen(Qt.gray, 0.025, Qt.DotLine))
+        curve.setPen(QPen(Qt.GlobalColor.gray, 0.025, Qt.PenStyle.DotLine))
         curve.setData(x, y)
 
     def insertZeros(self, roots):
         self.removeallCurves()
         if len(roots):
-            self.__insertZero(Qt.blue, roots.real, roots.imag)
+            self.__insertZero(Qt.GlobalColor.blue, roots.real, roots.imag)
             self.ymax = max(roots.imag)
             self.ymin = min(roots.imag)
             self.xmax = max(roots.real)
@@ -86,7 +86,7 @@ class PzPlot(pg.PlotWidget):
 
     def insertPoles(self, roots):
         if len(roots):
-            self.__insertPole(Qt.black, roots.real, roots.imag)
+            self.__insertPole(Qt.GlobalColor.black, roots.real, roots.imag)
             ymax = max(roots.imag)
             ymax = max(ymax, self.ymax)
             ymin = min(roots.imag)
@@ -126,7 +126,7 @@ class PzPlot(pg.PlotWidget):
         curve.setPen(None)
         curve.setSymbol('o')
         curve.setSymbolPen('b')
-        curve.setSymbolBrush(QBrush(Qt.gray))
+        curve.setSymbolBrush(QBrush(Qt.GlobalColor.gray))
         curve.setSymbolSize(10)
         curve.setData(px, py)
 
@@ -135,7 +135,7 @@ class PzPlot(pg.PlotWidget):
         curve.setPen(None)
         curve.setSymbol('x')
         curve.setSymbolPen('b')
-        curve.setSymbolBrush(QBrush(Qt.gray))
+        curve.setSymbolBrush(QBrush(Qt.GlobalColor.gray))
         curve.setSymbolSize(10)
         curve.setData(px, py)
 
@@ -189,7 +189,7 @@ class CanvasPicker(QObject):
         '''
 
     def event(self, event):
-        if event.type() == QEvent.User:
+        if event.type() == QEvent.Type.User:
             self.__showCursor(True)
             return True
         try:
