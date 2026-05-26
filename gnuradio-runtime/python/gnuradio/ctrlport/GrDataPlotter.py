@@ -19,7 +19,7 @@ import struct
 
 try:
     from gnuradio import qtgui
-    from PyQt6.QtCore import Qt, Signal
+    from PyQt6.QtCore import Qt, pyqtSignal
     from PyQt6.QtWidgets import QTreeWidget, QTreeWidgetItem, QVBoxLayout, QWidget
     from PyQt6 import sip
 except ImportError:
@@ -29,7 +29,7 @@ except ImportError:
 
 class GrDataPlotParent(gr.top_block, QWidget):
     # Setup signals
-    plotupdated = Signal(QWidget)
+    plotupdated = pyqtSignal(QWidget)
 
     def __init__(self, name, rate, pmin=None, pmax=None):
         gr.top_block.__init__(self)

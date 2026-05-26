@@ -12,7 +12,7 @@
 from threading import Lock
 import sys
 
-from PyQt6.QtCore import Signal, Qt
+from PyQt6.QtCore import pyqtSignal, Qt
 from PyQt6.QtWidgets import QFrame, QHBoxLayout, QVBoxLayout, QLabel, QProgressBar
 from PyQt6.QtGui import QColor, QPalette
 
@@ -105,8 +105,8 @@ class LabeledLevelGauge(QFrame):
 
 class LevelGauge(QProgressBar):
     # Notifies to avoid thread conflicts on paints
-    updateInt = Signal(int)
-    updateFloat = Signal(float)
+    updateInt = pyqtSignal(int)
+    updateFloat = pyqtSignal(float)
 
     def __init__(self, barColor='blue', backgroundColor='white', minValue=0, maxValue=100,
                  maxSize=80, isVertical=True, isFloat=False, scaleFactor=1, showValue=False,

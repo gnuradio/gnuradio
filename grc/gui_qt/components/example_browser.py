@@ -3,7 +3,7 @@ import os
 import traceback
 
 from PyQt6 import uic
-from PyQt6.QtCore import QObject, Signal, Slot, QRunnable, QVariant, Qt
+from PyQt6.QtCore import QObject, pyqtSignal, pyqtSlot, QRunnable, QVariant, Qt
 from PyQt6.QtGui import QPixmap, QStandardItem, QStandardItemModel
 from PyQt6.QtWidgets import QDialog, QListWidgetItem, QTreeWidgetItem, QWidget, QVBoxLayout
 
@@ -16,10 +16,10 @@ from ..properties import Paths
 log = logging.getLogger(f"grc.application.{__name__}")
 
 
-class WorkerSignals(QObject):
-    error = Signal(tuple)
-    result = Signal(object)
-    progress = Signal(tuple)
+class WorkerpyqtSignals(QObject):
+    error = pyqtSignal(tuple)
+    result = pyqtSignal(object)
+    progress = pyqtSignal(tuple)
 
 
 class Worker(QRunnable):
@@ -33,11 +33,11 @@ class Worker(QRunnable):
         self.fn = fn
         self.args = args
         self.kwargs = kwargs
-        self.signals = WorkerSignals()
+        self.signals = WorkerpyqtSignals()
 
         self.kwargs['progress_callback'] = self.signals.progress
 
-    @Slot()
+    @pyqtSlot()
     def run(self):
         try:
             result = self.fn(*self.args, **self.kwargs)
@@ -64,7 +64,7 @@ class ExampleBrowserDialog(QDialog):
 
 
 class ExampleBrowser(QWidget, base.Component):
-    file_to_open = Signal(str)
+    file_to_open = pyqtSignal(str)
     data_role = Qt.UserRole
 
     lang_dict = {
