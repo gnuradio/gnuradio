@@ -9,10 +9,10 @@
 /*
  * GRC Qt Dependencies Helper Library
  * This minimal library ensures that Qt6PrintSupport.dll gets bundled
- * with GNU Radio installations for use by PyQt6/QtPy in GRC.
+ * with GNU Radio installations for use by PyQt6 in GRC.
  * The GNU Radio bundle system automatically discovers and copies DLLs
  * that are runtime dependencies of built libraries. Since GRC (Python)
- * uses QtPy which needs Qt6PrintSupport for PDF generation, but this
+ * uses PyQt6 which needs Qt6PrintSupport for PDF generation, but this
  * isn't linked by any C++ GNU Radio libraries, this helper library
  * creates the necessary dependency chain.
  */

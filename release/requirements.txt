@@ -37,7 +37,6 @@ PyQt-builder==1.16.4
 PyQt6==6.11.0
 PyQt6_sip==13.11.1
 pyqtgraph==0.13.7
-QtPy==2.4.3
 pytest==8.2.1
 python-dateutil==2.8.2
 python-Levenshtein==0.25.0

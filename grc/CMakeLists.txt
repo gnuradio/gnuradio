@@ -99,11 +99,10 @@ GR_REGISTER_COMPONENT(
 
 if(ENABLE_GRC)
 
-# Register QtPy for GNU Radio Companion GUI
-GR_PYTHON_CHECK_MODULE(
-    DESC "QtPy"
-    MODULE qtpy
-    VAR QTPY_FOUND
+gr_python_check_module(
+    DESC "PyQt6"
+    MODULE PyQt6
+    VAR PYQT_FOUND
 )
 
 # Create GRC Qt dependency library to ensure Qt6PrintSupport.dll gets bundled
