@@ -108,7 +108,7 @@ blocks:
     gui_hint: 0,0,1,2
     label: UHD Freq (MHz)
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: QtCore.Qt.Orientation.Horizontal
     rangeType: float
     start: 87.5e6
     step: 100e3
@@ -129,7 +129,7 @@ blocks:
     gui_hint: 0,0,1,2
     label: UHD Freq (MHz)
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: QtCore.Qt.Orientation.Horizontal
     rangeType: float
     start: 76e6
     step: 100e3
@@ -150,7 +150,7 @@ blocks:
     gui_hint: 0,0,1,2
     label: UHD Freq (MHz)
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: QtCore.Qt.Orientation.Horizontal
     rangeType: float
     start: 65.8e6
     step: 30e3
@@ -171,7 +171,7 @@ blocks:
     gui_hint: 0,2,1,2
     label: UHD Gain
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: QtCore.Qt.Orientation.Horizontal
     rangeType: float
     start: '0'
     step: '.1'
@@ -192,7 +192,7 @@ blocks:
     gui_hint: 1, 0, 1, 5
     label: Volume
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: QtCore.Qt.Orientation.Horizontal
     rangeType: float
     start: '0'
     step: '0.1'

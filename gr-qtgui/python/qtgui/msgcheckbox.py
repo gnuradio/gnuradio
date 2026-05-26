@@ -55,18 +55,18 @@ class MsgCheckBox(gr.sync_block, QFrame):
         layout.addWidget(self.chkBox)
 
         if alignment == 1:
-            halign = Qt.AlignCenter
+            halign = Qt.AlignmentFlag.AlignCenter
         elif alignment == 2:
-            halign = Qt.AlignLeft
+            halign = Qt.AlignmentFlag.AlignLeft
         else:
-            halign = Qt.AlignRight
+            halign = Qt.AlignmentFlag.AlignRight
 
         if valignment == 1:
-            valign = Qt.AlignVCenter
+            valign = Qt.AlignmentFlag.AlignVCenter
         elif valignment == 2:
-            valign = Qt.AlignTop
+            valign = Qt.AlignmentFlag.AlignTop
         else:
-            valign = Qt.AlignBottom
+            valign = Qt.AlignmentFlag.AlignBottom
 
         layout.setAlignment(halign | valign)
         self.setLayout(layout)

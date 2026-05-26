@@ -32,7 +32,7 @@ class filtermovlineItem(QGraphicsObject):
         self.split = split
 
     def paint(self, painter, option, widget):
-        painter.setPen(QPen(Qt.black, 2, Qt.SolidLine))
+        painter.setPen(QPen(Qt.GlobalColor.black, 2, Qt.PenStyle.SolidLine))
         painter.drawLine(self.x1, self.y1, self.x2, self.y2)
         painter.drawLine(self.x1, self.y1, self.x1, self.y1 - 5)
         painter.drawLine(self.x2, self.y2, self.x2, self.y2 - 5)
@@ -46,7 +46,7 @@ class filtermovlineItem(QGraphicsObject):
 
     # Allow only vertical movement and emit signals.
     def itemChange(self, change, value):
-        if (change == QGraphicsItem.ItemPositionChange):
+        if (change == QGraphicsItem.GraphicsItemChange.ItemPositionChange):
             newpos = QPointF(value)
             div = 0
             if newpos.y() < self.pos().y():
@@ -73,15 +73,15 @@ class lpfsLines(QGraphicsObject):
         QGraphicsObject.__init__(self)
 
     def paint(self, painter, option, widget):
-        painter.setPen(QPen(Qt.darkGray, 2, Qt.SolidLine))
+        painter.setPen(QPen(Qt.GlobalColor.darkGray, 2, Qt.PenStyle.SolidLine))
         painter.drawLine(5, 20, 5, 200)
         painter.drawLine(5, 200, 400, 200)
-        painter.setPen(QPen(Qt.lightGray, 2, Qt.SolidLine))
+        painter.setPen(QPen(Qt.GlobalColor.lightGray, 2, Qt.PenStyle.SolidLine))
         painter.drawLine(6, 105, 150, 105)
         painter.drawLine(150, 105, 150, 199)
         painter.drawLine(200, 180, 400, 180)
         painter.drawLine(200, 180, 200, 199)
-        painter.setPen(QPen(Qt.black))
+        painter.setPen(QPen(Qt.GlobalColor.black))
         painter.save()
         painter.rotate(270)
         painter.drawText(-150, -10, "Magnitude (dB)")
@@ -100,15 +100,15 @@ class hpfsLines(QGraphicsObject):
         QGraphicsObject.__init__(self)
 
     def paint(self, painter, option, widget):
-        painter.setPen(QPen(Qt.darkGray, 2, Qt.SolidLine))
+        painter.setPen(QPen(Qt.GlobalColor.darkGray, 2, Qt.PenStyle.SolidLine))
         painter.drawLine(5, 20, 5, 200)
         painter.drawLine(5, 200, 400, 200)
-        painter.setPen(QPen(Qt.lightGray, 2, Qt.SolidLine))
+        painter.setPen(QPen(Qt.GlobalColor.lightGray, 2, Qt.PenStyle.SolidLine))
         painter.drawLine(200, 105, 400, 105)
         painter.drawLine(200, 105, 200, 199)
         painter.drawLine(6, 180, 150, 180)
         painter.drawLine(150, 180, 150, 199)
-        painter.setPen(QPen(Qt.black))
+        painter.setPen(QPen(Qt.GlobalColor.black))
         painter.drawText(350, 220, "Frequency (Hz)")
         painter.drawText(130, 220, "Fstop")
         painter.drawText(180, 220, "Fpass")
@@ -123,10 +123,10 @@ class bpfsLines(QGraphicsObject):
         QGraphicsObject.__init__(self)
 
     def paint(self, painter, option, widget):
-        painter.setPen(QPen(Qt.darkGray, 2, Qt.SolidLine))
+        painter.setPen(QPen(Qt.GlobalColor.darkGray, 2, Qt.PenStyle.SolidLine))
         painter.drawLine(5, 20, 5, 200)
         painter.drawLine(5, 200, 400, 200)
-        painter.setPen(QPen(Qt.lightGray, 2, Qt.SolidLine))
+        painter.setPen(QPen(Qt.GlobalColor.lightGray, 2, Qt.PenStyle.SolidLine))
         painter.drawLine(6, 180, 110, 180)
         painter.drawLine(110, 180, 110, 199)
         painter.drawLine(155, 105, 255, 105)
@@ -134,7 +134,7 @@ class bpfsLines(QGraphicsObject):
         painter.drawLine(155, 105, 155, 199)
         painter.drawLine(300, 180, 400, 180)
         painter.drawLine(300, 180, 300, 199)
-        painter.setPen(QPen(Qt.black))
+        painter.setPen(QPen(Qt.GlobalColor.black))
         painter.drawText(350, 220, "Frequency (Hz)")
         painter.drawText(80, 220, "Fstop1")
         painter.drawText(140, 220, "Fpass1")
@@ -151,10 +151,10 @@ class bnfsLines(QGraphicsObject):
         QGraphicsObject.__init__(self)
 
     def paint(self, painter, option, widget):
-        painter.setPen(QPen(Qt.darkGray, 2, Qt.SolidLine))
+        painter.setPen(QPen(Qt.GlobalColor.darkGray, 2, Qt.PenStyle.SolidLine))
         painter.drawLine(5, 20, 5, 200)
         painter.drawLine(5, 200, 400, 200)
-        painter.setPen(QPen(Qt.lightGray, 2, Qt.SolidLine))
+        painter.setPen(QPen(Qt.GlobalColor.lightGray, 2, Qt.PenStyle.SolidLine))
         painter.drawLine(6, 105, 110, 105)
         painter.drawLine(110, 105, 110, 199)
         painter.drawLine(155, 180, 255, 180)
@@ -162,7 +162,7 @@ class bnfsLines(QGraphicsObject):
         painter.drawLine(155, 180, 155, 199)
         painter.drawLine(300, 105, 400, 105)
         painter.drawLine(300, 105, 300, 199)
-        painter.setPen(QPen(Qt.black))
+        painter.setPen(QPen(Qt.GlobalColor.black))
         painter.drawText(350, 220, "Frequency (Hz)")
         painter.drawText(80, 220, "Fpass1")
         painter.drawText(140, 220, "Fstop1")
@@ -181,25 +181,25 @@ bnfItems = []
 # lpfitems list.
 lpfItems.append(filtermovlineItem(200, 175, 400, 175, 0, -60))
 # lpfItems.append(filtermovlineItem(200, 145, 400, 145, 30, -30))
-lpfItems[0].setFlags(QGraphicsItem.ItemIsSelectable | QGraphicsItem.ItemIsMovable |
-                     QGraphicsItem.ItemSendsGeometryChanges)
+lpfItems[0].setFlags(QGraphicsItem.GraphicsItemFlag.ItemIsSelectable | QGraphicsItem.GraphicsItemFlag.ItemIsMovable |
+                     QGraphicsItem.GraphicsItemFlag.ItemSendsGeometryChanges)
 lpfItems.append(lpfsLines())
 
 # hpfitems list.
 hpfItems.append(filtermovlineItem(6, 175, 150, 175, 0, -60))
-hpfItems[0].setFlags(QGraphicsItem.ItemIsSelectable | QGraphicsItem.ItemIsMovable |
-                     QGraphicsItem.ItemSendsGeometryChanges)
+hpfItems[0].setFlags(QGraphicsItem.GraphicsItemFlag.ItemIsSelectable | QGraphicsItem.GraphicsItemFlag.ItemIsMovable |
+                     QGraphicsItem.GraphicsItemFlag.ItemSendsGeometryChanges)
 hpfItems.append(hpfsLines())
 
 # bpfitems list.
 bpfItems.append(filtermovlineItem(6, 175, 110, 175,
                 0, -60, True, 300, 175, 400, 175))
-bpfItems[0].setFlags(QGraphicsItem.ItemIsSelectable | QGraphicsItem.ItemIsMovable |
-                     QGraphicsItem.ItemSendsGeometryChanges)
+bpfItems[0].setFlags(QGraphicsItem.GraphicsItemFlag.ItemIsSelectable | QGraphicsItem.GraphicsItemFlag.ItemIsMovable |
+                     QGraphicsItem.GraphicsItemFlag.ItemSendsGeometryChanges)
 bpfItems.append(bpfsLines())
 
 # bnfitems list.
 bnfItems.append(filtermovlineItem(155, 175, 255, 175, 0, -60))
-bnfItems[0].setFlags(QGraphicsItem.ItemIsSelectable | QGraphicsItem.ItemIsMovable |
-                     QGraphicsItem.ItemSendsGeometryChanges)
+bnfItems[0].setFlags(QGraphicsItem.GraphicsItemFlag.ItemIsSelectable | QGraphicsItem.GraphicsItemFlag.ItemIsMovable |
+                     QGraphicsItem.GraphicsItemFlag.ItemSendsGeometryChanges)
 bnfItems.append(bnfsLines())

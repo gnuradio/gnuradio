@@ -48,12 +48,12 @@ class Application(QApplication):
         self.platform = platform
         config = platform.config
 
-        self.qsettings = QSettings(config.gui_prefs_file, QSettings.IniFormat)
+        self.qsettings = QSettings(config.gui_prefs_file, QSettings.Format.IniFormat)
         log.debug(f"Using QSettings from {config.gui_prefs_file}")
         os.environ["QT_SCALE_FACTOR"] = self.qsettings.value('appearance/qt_scale_factor', "1.0", type=str)
 
         log.debug("Creating QApplication instance")
-        QApplication.setAttribute(Qt.AA_ShareOpenGLContexts, True)
+        QApplication.setAttribute(Qt.ApplicationAttribute.AA_ShareOpenGLContexts, True)
         QApplication.__init__(self, settings.argv)
 
         self.theme = "light"

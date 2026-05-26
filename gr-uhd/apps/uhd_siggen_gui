@@ -38,7 +38,7 @@ import threading
 import signal
 import time
 import math
-from PyQt6.QtCore import QMetaObject, QSettings, QTimer, Q_ARG, Qt, Slot
+from PyQt6.QtCore import QMetaObject, QSettings, QTimer, Q_ARG, Qt, pyqtSlot
 from PyQt6.QtGui import QIcon
 from PyQt6.QtWidgets import QApplication, QButtonGroup, QComboBox, QFrame, QGridLayout, QGroupBox, QHBoxLayout, QLabel, QLineEdit, QPushButton, QRadioButton, QScrollArea, QToolBar, QVBoxLayout, QWidget
 from PyQt6 import sip  # Needs to be imported after PyQt, could fail otherwise
@@ -81,7 +81,7 @@ class uhd_siggen_gui(QWidget):
         self.top_scroll_layout = QVBoxLayout()
         self.setLayout(self.top_scroll_layout)
         self.top_scroll = QScrollArea()
-        self.top_scroll.setFrameStyle(QFrame.NoFrame)
+        self.top_scroll.setFrameStyle(QFrame.Shape.NoFrame)
         self.top_scroll_layout.addWidget(self.top_scroll)
         self.top_scroll.setWidgetResizable(True)
         self.top_widget = QWidget()
@@ -107,7 +107,7 @@ class uhd_siggen_gui(QWidget):
             def __init__(self, parent=None):
                 QButtonGroup.__init__(self, parent)
 
-            @Slot(int)
+            @pyqtSlot(int)
             def updateButtonChecked(self, button_id):
                 self.button(button_id).setChecked(True)
         self._waveform_button_group = variable_chooser_button_group()

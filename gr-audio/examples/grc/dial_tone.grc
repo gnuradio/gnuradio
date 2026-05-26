@@ -36,7 +36,7 @@ blocks:
     gui_hint: 0, 0, 1, 2
     label: Volume
     min_len: '200'
-    orient: Qt.Horizontal
+    orient: Qt.Orientation.Horizontal
     rangeType: float
     start: '0'
     step: '.001'
@@ -54,7 +54,7 @@ blocks:
     gui_hint: 1, 0, 1, 2
     label: Noise Amplitude
     min_len: '200'
-    orient: Qt.Horizontal
+    orient: Qt.Orientation.Horizontal
     rangeType: float
     start: '0'
     step: '.001'

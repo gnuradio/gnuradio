@@ -65,7 +65,7 @@ class ExampleBrowserDialog(QDialog):
 
 class ExampleBrowser(QWidget, base.Component):
     file_to_open = pyqtSignal(str)
-    data_role = Qt.UserRole
+    data_role = Qt.ItemDataRole.UserRole
 
     lang_dict = {
         'python': 'Python',

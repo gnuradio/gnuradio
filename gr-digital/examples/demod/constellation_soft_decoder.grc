@@ -215,7 +215,7 @@ blocks:
     gui_hint: 0,0,1,1
     label: 'Channel: Noise Voltage'
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: QtCore.Qt.Orientation.Horizontal
     rangeType: float
     start: '0'
     step: '0.01'

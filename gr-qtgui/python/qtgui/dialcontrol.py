@@ -32,7 +32,7 @@ class LabeledDialControl(QFrame):
         self.scaleFactor = scaleFactor
         self.lbl = lbl
         self.lblcontrol = QLabel(lbl, self)
-        self.lblcontrol.setAlignment(Qt.AlignCenter)
+        self.lblcontrol.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         if self.showvalue:
             textstr = self.buildTextStr(defaultvalue)
@@ -46,7 +46,7 @@ class LabeledDialControl(QFrame):
 
         layout.addWidget(self.numberControl)
 
-        layout.setAlignment(Qt.AlignCenter)
+        layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.setLayout(layout)
         self.show()
 

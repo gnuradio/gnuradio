@@ -42,7 +42,7 @@ blocks:
     gui_hint: ''
     label: Frequency / Hz
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: QtCore.Qt.Orientation.Horizontal
     rangeType: float
     start: -samp_rate/2
     step: samp_rate/1e3

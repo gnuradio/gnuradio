@@ -65,8 +65,8 @@ class gui(QMainWindow):
         self.gui.qwtPlotClient.setAxisScale(Qwt.QwtPlot.yLeft, -2, 2)
 
         # Grid
-        pen = QPen(Qt.DotLine)
-        pen.setColor(Qt.black)
+        pen = QPen(Qt.PenStyle.DotLine)
+        pen.setColor(Qt.GlobalColor.black)
         pen.setWidth(0)
         grid_server = Qwt.QwtPlotGrid()
         grid_client = Qwt.QwtPlotGrid()
@@ -114,7 +114,7 @@ class gui(QMainWindow):
         plot.clear()
         # draw curve with new points and plot
         curve = Qwt.QwtPlotCurve()
-        curve.setPen(QPen(Qt.blue, 2))
+        curve.setPen(QPen(Qt.GlobalColor.blue, 2))
         curve.attach(plot)
         curve.setData(self.x, self.y)
         plot.replot()

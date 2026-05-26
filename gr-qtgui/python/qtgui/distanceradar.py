@@ -78,8 +78,8 @@ class DistanceRadar(gr.sync_block, FigureCanvas):
                                        color=self.fontColor)
 
         FigureCanvas.setSizePolicy(self,
-                                   QSizePolicy.Expanding,
-                                   QSizePolicy.Expanding)
+                                   QSizePolicy.Policy.Expanding,
+                                   QSizePolicy.Policy.Expanding)
         self.setMinimumSize(240, 230)
         FigureCanvas.updateGeometry(self)
 

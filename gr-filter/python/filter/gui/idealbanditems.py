@@ -31,9 +31,9 @@ class IdealBandItems(object):
 
     def setLinetype(self):
         for c in self.idealbandhcurves:
-            c.setPen(QPen(Qt.red, 1, Qt.DotLine))
+            c.setPen(QPen(Qt.GlobalColor.red, 1, Qt.PenStyle.DotLine))
         for c in self.idealbandvcurves:
-            c.setPen(QPen(Qt.red, 1, Qt.DotLine))
+            c.setPen(QPen(Qt.GlobalColor.red, 1, Qt.PenStyle.DotLine))
 
     def plotIdealCurves(self, ftype, params, plot):
         self.params = params

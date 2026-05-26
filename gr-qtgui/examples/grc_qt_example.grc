@@ -40,7 +40,7 @@ blocks:
     gui_hint: ''
     label: Signal Amplitude
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: QtCore.Qt.Orientation.Horizontal
     rangeType: float
     start: '0'
     step: '0.01'
@@ -61,7 +61,7 @@ blocks:
     gui_hint: ''
     label: Signal Frequency
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: QtCore.Qt.Orientation.Horizontal
     rangeType: float
     start: '0'
     step: samp_rate/100.0
@@ -82,7 +82,7 @@ blocks:
     gui_hint: ''
     label: Noise Amplitude
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: QtCore.Qt.Orientation.Horizontal
     rangeType: float
     start: '0'
     step: '0.01'

@@ -55,7 +55,7 @@ blocks:
     gui_hint: ''
     label: Normalized Gain
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: QtCore.Qt.Orientation.Horizontal
     rangeType: float
     start: '0'
     step: '.02'

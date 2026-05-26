@@ -51,7 +51,7 @@ blocks:
     gui_hint: ''
     label: squelch slider
     min_len: '256'
-    orient: QtCore.Qt.Horizontal
+    orient: QtCore.Qt.Orientation.Horizontal
     rangeType: float
     start: '-127'
     step: '1'

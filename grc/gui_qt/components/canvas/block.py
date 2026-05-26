@@ -91,9 +91,9 @@ class GUIBlock(QGraphicsItem):
         self.props_dialog = None
         self.right_click_menu = None
 
-        self.setFlag(QGraphicsItem.ItemIsMovable)
-        self.setFlag(QGraphicsItem.ItemIsSelectable)
-        self.setFlag(QGraphicsItem.ItemSendsScenePositionChanges)
+        self.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIsMovable)
+        self.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIsSelectable)
+        self.setFlag(QGraphicsItem.GraphicsItemFlag.ItemSendsScenePositionChanges)
 
     def _is_item_visible(self, item) -> bool:
         if item.value is not None and item.hide == "none":
@@ -261,7 +261,7 @@ class GUIBlock(QGraphicsItem):
         if (self.hide_variables and (self.core.is_variable or self.core.is_import)) or (self.hide_disabled_blocks and not self.core.enabled):
             return
 
-        painter.setRenderHint(QPainter.Antialiasing)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
         self.font.setBold(True)
 
         # TODO: Make sure this is correct
@@ -291,9 +291,9 @@ class GUIBlock(QGraphicsItem):
         # Draw block label text
         painter.setFont(self.font)
         if self.core.is_valid():
-            painter.setPen(Qt.black)
+            painter.setPen(Qt.GlobalColor.black)
         else:
-            painter.setPen(Qt.red)
+            painter.setPen(Qt.GlobalColor.red)
 
         # Adjust the painter if parent block is 180 degrees rotated
         if self.rotation() == 180:
@@ -303,7 +303,7 @@ class GUIBlock(QGraphicsItem):
 
         painter.drawText(
             QRectF(0, 0 - self.height / 2 + 15, self.width, self.height),
-            Qt.AlignCenter,
+            Qt.AlignmentFlag.AlignCenter,
             self.core.label,
         )
 
@@ -316,7 +316,7 @@ class GUIBlock(QGraphicsItem):
             painter.setFont(self.font)
             painter.drawText(
                 QRectF(7.5, 0 + y_offset, self.width, self.height),
-                Qt.AlignLeft,
+                Qt.AlignmentFlag.AlignLeft,
                 "key: ",
             )
             fm = QFontMetrics(self.font)
@@ -329,7 +329,7 @@ class GUIBlock(QGraphicsItem):
                     self.width,
                     self.height,
                 ),
-                Qt.AlignLeft,
+                Qt.AlignmentFlag.AlignLeft,
                 self.core.key,
             )
             y_offset += 20
@@ -362,13 +362,13 @@ class GUIBlock(QGraphicsItem):
                     if item.is_valid():
                         painter.setPen(QPen(1))
                     else:
-                        painter.setPen(Qt.red)
+                        painter.setPen(Qt.GlobalColor.red)
 
                     self.font.setBold(True)
                     painter.setFont(self.font)
                     painter.drawText(
                         QRectF(7.5, 0 + y_offset, self.width, self.height),
-                        Qt.AlignLeft,
+                        Qt.AlignmentFlag.AlignLeft,
                         name + ": ",
                     )
                     fm = QFontMetrics(self.font)
@@ -381,7 +381,7 @@ class GUIBlock(QGraphicsItem):
                             self.width,
                             self.height,
                         ),
-                        Qt.AlignLeft,
+                        Qt.AlignmentFlag.AlignLeft,
                         value_label,
                     )
                     y_offset += 20
@@ -421,7 +421,7 @@ class GUIBlock(QGraphicsItem):
         super(self.__class__, self).mouseDoubleClickEvent(e)
 
     def itemChange(self, change, value):
-        if change == QGraphicsItem.ItemPositionChange and self.scene():
+        if change == QGraphicsItem.GraphicsItemChange.ItemPositionChange and self.scene():
             x = value.x()
             y = value.y()
 

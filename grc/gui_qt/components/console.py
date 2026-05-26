@@ -109,7 +109,7 @@ class Console(QDockWidget, base.Component):
         text.setUndoRedoEnabled(False)
         text.setReadOnly(True)
         text.setCursorWidth(0)
-        text.setTextInteractionFlags(Qt.TextSelectableByKeyboard | Qt.TextSelectableByMouse)
+        text.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByKeyboard | Qt.TextInteractionFlag.TextSelectableByMouse)
         text.setHtml(textwrap.dedent(HTML))
         self._text = text
 

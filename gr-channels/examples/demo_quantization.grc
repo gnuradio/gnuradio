@@ -70,7 +70,7 @@ blocks:
     gui_hint: 2,2,1,1
     label: BW
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: QtCore.Qt.Orientation.Horizontal
     rangeType: float
     start: samp_rate/100
     step: '100'
@@ -91,7 +91,7 @@ blocks:
     gui_hint: 2,1,1,1
     label: Center Freq.
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: QtCore.Qt.Orientation.Horizontal
     rangeType: float
     start: '0'
     step: '100'
@@ -112,7 +112,7 @@ blocks:
     gui_hint: 0,1,1,1
     label: Noise Power
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: QtCore.Qt.Orientation.Horizontal
     rangeType: float
     start: '-150'
     step: '1'
@@ -145,7 +145,7 @@ blocks:
     gui_hint: 1,1,1,1
     label: Signal Freq
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: QtCore.Qt.Orientation.Horizontal
     rangeType: float
     start: '0'
     step: '100'
@@ -166,7 +166,7 @@ blocks:
     gui_hint: 0,2,1,1
     label: Signal Power
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: QtCore.Qt.Orientation.Horizontal
     rangeType: float
     start: '-150'
     step: '1'

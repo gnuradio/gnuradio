@@ -39,7 +39,7 @@ blocks:
     gui_hint: 1,0,1,2
     label: Noise Amplitude
     min_len: '200'
-    orient: Qt.Horizontal
+    orient: Qt.Orientation.Horizontal
     rangeType: float
     start: '0'
     step: '.001'
@@ -60,7 +60,7 @@ blocks:
     gui_hint: 0,0,1,2
     label: Tone 1
     min_len: '200'
-    orient: Qt.Horizontal
+    orient: Qt.Orientation.Horizontal
     rangeType: float
     start: -samp_rate/2
     step: '1'
@@ -81,7 +81,7 @@ blocks:
     gui_hint: 0,2,1,2
     label: Tone 2
     min_len: '200'
-    orient: Qt.Horizontal
+    orient: Qt.Orientation.Horizontal
     rangeType: float
     start: -samp_rate/2
     step: '1'
@@ -102,7 +102,7 @@ blocks:
     gui_hint: 1,2,1,2
     label: Tone Amplitude
     min_len: '200'
-    orient: Qt.Horizontal
+    orient: Qt.Orientation.Horizontal
     rangeType: float
     start: '0'
     step: '.001'
@@ -123,7 +123,7 @@ blocks:
     gui_hint: 3,0,1,4
     label: UHD Freq (Hz)
     min_len: '200'
-    orient: Qt.Horizontal
+    orient: Qt.Orientation.Horizontal
     rangeType: float
     start: 2.4e9
     step: '1'
@@ -144,7 +144,7 @@ blocks:
     gui_hint: 4,2,1,2
     label: UHD Rx Gain
     min_len: '200'
-    orient: Qt.Horizontal
+    orient: Qt.Orientation.Horizontal
     rangeType: float
     start: '0'
     step: '1'
@@ -165,7 +165,7 @@ blocks:
     gui_hint: 4,0,1,2
     label: UHD Tx Gain
     min_len: '200'
-    orient: Qt.Horizontal
+    orient: Qt.Orientation.Horizontal
     rangeType: float
     start: '0'
     step: '1'

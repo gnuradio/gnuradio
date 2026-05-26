@@ -36,7 +36,7 @@ blocks:
     gui_hint: (2,0,1,2)
     label: ''
     min_len: '200'
-    orient: Qt.Horizontal
+    orient: Qt.Orientation.Horizontal
     rangeType: float
     start: '0'
     step: '1'
@@ -54,7 +54,7 @@ blocks:
     gui_hint: (3,0,1,2)
     label: ''
     min_len: '200'
-    orient: Qt.Horizontal
+    orient: Qt.Orientation.Horizontal
     rangeType: int
     start: '0'
     step: '1'
@@ -72,7 +72,7 @@ blocks:
     gui_hint: (4,0,1,2)
     label: ''
     min_len: '200'
-    orient: Qt.Horizontal
+    orient: Qt.Orientation.Horizontal
     rangeType: int
     start: '0'
     step: '1'

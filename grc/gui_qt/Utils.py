@@ -92,7 +92,7 @@ def make_screenshot(fg_view, file_path, transparent_bg=False):
         pdf_printer = QPrinter(QPrinter.PrinterMode.ScreenResolution)
         pdf_printer.setOutputFormat(QPrinter.OutputFormat.PdfFormat)
         page_layout = QPageLayout()
-        page_layout.setOrientation(QPageLayout.Landscape)
+        page_layout.setOrientation(QPageLayout.Orientation.Landscape)
         pdf_printer.setPageLayout(page_layout)
         pdf_printer.setOutputFileName(str(file_path))
         painter = QPainter(pdf_printer)

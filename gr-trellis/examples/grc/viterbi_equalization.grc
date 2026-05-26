@@ -52,7 +52,7 @@ blocks:
     gui_hint: ''
     label: Es/N0 (dB)
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: QtCore.Qt.Orientation.Horizontal
     rangeType: float
     start: '-10'
     step: '1'

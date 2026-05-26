@@ -59,7 +59,7 @@ class LabeledDialGauge(QFrame):
         self.isFloat = isFloat
 
         self.lblcontrol = QLabel(lbl, self)
-        self.lblcontrol.setAlignment(Qt.AlignCenter)
+        self.lblcontrol.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         # For whatever reason, the progressbar doesn't show the number in the bar if it's
         # vertical, only if it's horizontal
@@ -83,7 +83,7 @@ class LabeledDialGauge(QFrame):
             if position == 2 or position == 4:
                 layout.addWidget(self.lblcontrol)
 
-        layout.setAlignment(Qt.AlignCenter | Qt.AlignVCenter)
+        layout.setAlignment(Qt.AlignmentFlag.AlignCenter | Qt.AlignmentFlag.AlignVCenter)
         self.setLayout(layout)
 
         self.show()
@@ -178,7 +178,7 @@ class DialGauge(QFrame):
         # Set up the painting canvass
         painter = QPainter()
         painter.begin(self)
-        painter.setRenderHint(QPainter.Antialiasing)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
 
         if self.showValue:
             painter.setFont(self.textfont)

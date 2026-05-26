@@ -481,7 +481,7 @@ class GrDataPlotterValueTable(object):
         # Remove items currently in tree that are not in the knob list.
         for itemKey in deleteKeys:
             qtwiList = self.treeWidget.findItems(
-                itemKey, Qt.MatchFixedString)
+                itemKey, Qt.MatchFlag.MatchFixedString)
             if (len(qtwiList) > 1):
                 raise Exception('More than one item with key %s in tree' %
                                 itemKey)

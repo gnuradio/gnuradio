@@ -78,8 +78,8 @@ class AzElPlot(gr.sync_block, FigureCanvas):
             self.lbl, fontsize=8, fontweight='bold', color='black')
 
         FigureCanvas.setSizePolicy(self,
-                                   QSizePolicy.Expanding,
-                                   QSizePolicy.Expanding)
+                                   QSizePolicy.Policy.Expanding,
+                                   QSizePolicy.Policy.Expanding)
 
         self.setMinimumSize(240, 230)
         FigureCanvas.updateGeometry(self)

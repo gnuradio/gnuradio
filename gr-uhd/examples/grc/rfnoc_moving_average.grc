@@ -52,7 +52,7 @@ blocks:
     gui_hint: ''
     label: Frequency (Hz)
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: QtCore.Qt.Orientation.Horizontal
     rangeType: float
     start: 10e6
     step: 1e6
@@ -73,7 +73,7 @@ blocks:
     gui_hint: ''
     label: Gain (dB)
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: QtCore.Qt.Orientation.Horizontal
     rangeType: float
     start: '0'
     step: '1'

@@ -35,7 +35,7 @@ class LabeledLEDIndicator(QFrame):
 
         self.lbl = lbl
         self.lblcontrol = QLabel(lbl, self)
-        self.lblcontrol.setAlignment(Qt.AlignCenter)
+        self.lblcontrol.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         # add top or left
         if len:
@@ -52,18 +52,18 @@ class LabeledLEDIndicator(QFrame):
                 layout.addWidget(self.lblcontrol)
 
         if alignment == 1:
-            halign = Qt.AlignCenter
+            halign = Qt.AlignmentFlag.AlignCenter
         elif alignment == 2:
-            halign = Qt.AlignLeft
+            halign = Qt.AlignmentFlag.AlignLeft
         else:
-            halign = Qt.AlignRight
+            halign = Qt.AlignmentFlag.AlignRight
 
         if valignment == 1:
-            valign = Qt.AlignVCenter
+            valign = Qt.AlignmentFlag.AlignVCenter
         elif valignment == 2:
-            valign = Qt.AlignTop
+            valign = Qt.AlignmentFlag.AlignTop
         else:
-            valign = Qt.AlignBottom
+            valign = Qt.AlignmentFlag.AlignBottom
 
         layout.setAlignment(halign | valign)
         self.setLayout(layout)
@@ -123,17 +123,17 @@ class LEDIndicator(QFrame):
         radius = smallest_dim
 
         painter.setPen(QPen(QColor('lightgray'), 0))
-        brush.setStyle(Qt.SolidPattern)
+        brush.setStyle(Qt.BrushStyle.SolidPattern)
 
         radial = QRadialGradient(center_x, center_y / 2, radius)
-        radial.setColorAt(0, Qt.white)
-        radial.setColorAt(0.8, Qt.darkGray)
+        radial.setColorAt(0, Qt.GlobalColor.white)
+        radial.setColorAt(0.8, Qt.GlobalColor.darkGray)
         painter.setBrush(QBrush(radial))
         painter.drawEllipse(centerpoint, radius, radius)
 
         # Draw the colored center
         radial = QRadialGradient(center_x, center_y / 2, radius)
-        radial.setColorAt(0, Qt.white)
+        radial.setColorAt(0, Qt.GlobalColor.white)
 
         if self.curState:
             radial.setColorAt(.7, self.on_color)
@@ -144,7 +144,7 @@ class LEDIndicator(QFrame):
             brush.setColor(self.off_color)
             painter.setPen(QPen(self.off_color, 0))
 
-        brush.setStyle(Qt.SolidPattern)
+        brush.setStyle(Qt.BrushStyle.SolidPattern)
         painter.setBrush(QBrush(radial))
         if smallest_dim <= 30:
             radius = radius - 3

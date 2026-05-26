@@ -44,7 +44,7 @@ blocks:
     gui_hint: 0,0,1,2
     label: Noive Voltage
     min_len: '200'
-    orient: Qt.Horizontal
+    orient: Qt.Orientation.Horizontal
     rangeType: float
     start: '0'
     step: '0.01'

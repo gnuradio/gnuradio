@@ -10,5 +10,5 @@ class CustomViewBox(pg.ViewBox):
 
     # Reimplement right-click to zoom out.
     def mouseClickEvent(self, ev):
-        if ev.button() == Qt.RightButton:
+        if ev.button() == Qt.MouseButton.RightButton:
             self.autoRange()
