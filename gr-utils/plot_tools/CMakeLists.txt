@@ -15,8 +15,6 @@ GR_PYTHON_INSTALL(
     plot_data.py
     plot_fft_base.py
     plot_psd_base.py
-    pyqt_plot.py
-    pyqt_filter.py
     DESTINATION ${GR_PYTHON_DIR}/gnuradio
 )
 
