@@ -15,10 +15,9 @@ import gui
 import sys
 import os
 from PyQt6.QtCore import Qt, QTimer
-from PyQt6.QtWidgets import QMainWindow, QShortcut, QApplication
-from PyQt6.QtGui import QPen, QKeySequence
+from PyQt6.QtWidgets import QMainWindow, QApplication
+from PyQt6.QtGui import QPen, QKeySequence, QShortcut
 from PyQt6 import uic
-import qwt as Qwt
 from gnuradio import zeromq
 import signal
 
@@ -159,4 +158,4 @@ if __name__ == "__main__":
     qapp = QApplication(sys.argv)
     qapp.main_window = gui("Remote GNU Radio GUI", args)
     qapp.main_window.show()
-    qapp.exec_()
+    qapp.exec()
