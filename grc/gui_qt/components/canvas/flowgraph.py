@@ -21,7 +21,7 @@ from __future__ import absolute_import, print_function
 import logging
 import functools
 
-from PyQt6.QtCore import QDataStream, QPointF, QRectF, QVariant, Qt, Signal
+from PyQt6.QtCore import QDataStream, QPointF, QRectF, QVariant, Qt, pyqtSignal
 from PyQt6.QtGui import QStandardItemModel, QTransform, QUndoStack
 from PyQt6.QtWidgets import QApplication, QGraphicsScene, QGraphicsTextItem
 
@@ -53,10 +53,10 @@ class Flowgraph(CoreFlowgraph):
 
 
 class FlowgraphScene(QGraphicsScene, base.Component):
-    itemMoved = Signal([QPointF])
-    newElement = Signal([Element])
-    deleteElement = Signal([Element])
-    blockPropsChange = Signal([Element])
+    itemMoved = pyqtSignal([QPointF])
+    newElement = pyqtSignal([Element])
+    deleteElement = pyqtSignal([Element])
+    blockPropsChange = pyqtSignal([Element])
 
     def __init__(self, view, platform, *args, **kwargs):
         self.core = Flowgraph(self, platform)

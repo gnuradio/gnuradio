@@ -8,7 +8,7 @@
 
 
 try:
-    from PyQt6.QtCore import QPointF, QRectF, Qt, Signal
+    from PyQt6.QtCore import QPointF, QRectF, Qt, pyqtSignal
     from PyQt6.QtGui import QPen
     from PyQt6.QtWidgets import QGraphicsItem, QGraphicsObject
 except ImportError:
@@ -19,7 +19,7 @@ except ImportError:
 # Movable solid line for filter ideal-band diagram.
 # Enable split to cut the line into two (for bpf).
 class filtermovlineItem(QGraphicsObject):
-    attenChanged = Signal(float)
+    attenChanged = pyqtSignal(float)
 
     def __init__(self, x1, y1, x2, y2, lower, upper, split=False, sx1=0, sy1=0, sx2=0, sy2=0):
         QGraphicsObject.__init__(self)

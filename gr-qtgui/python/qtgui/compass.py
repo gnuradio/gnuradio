@@ -14,7 +14,7 @@ import numpy
 from gnuradio import gr
 import pmt
 
-from PyQt6.QtCore import Signal, Property, Qt, QPoint
+from PyQt6.QtCore import pyqtSignal, Property, Qt, QPoint
 from PyQt6.QtWidgets import QFrame, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QSizePolicy
 from PyQt6.QtGui import QPainter, QPalette, QFont, QFontMetricsF, QPen, QPolygon, QColor, QBrush
 
@@ -74,7 +74,7 @@ class LabeledCompass(QFrame):
 
 
 class Compass(QWidget):
-    angleChanged = Signal(float)
+    angleChanged = pyqtSignal(float)
 
     def __init__(self, min_size, update_time, setDebug=False, needleType=NeedleFull,
                  position=1, backgroundColor='default'):

@@ -27,7 +27,7 @@ import pstats
 
 from typing import Union
 
-from PyQt6.QtCore import QMetaObject, QPointF, QThreadPool, QUrl, Qt, Slot
+from PyQt6.QtCore import QMetaObject, QPointF, QThreadPool, QUrl, Qt, pyqtSlot
 from PyQt6.QtGui import QDesktopServices, QIcon, QKeySequence, QAction
 from PyQt6.QtWidgets import QApplication, QFileDialog, QMainWindow, QMenu, QMessageBox, QProgressBar, QStyle, QTabWidget, QToolBar, QUndoView
 
@@ -213,7 +213,7 @@ class MainWindow(QMainWindow, base.Component):
         self.show()
     """
 
-    @Slot(VariableEditorAction)
+    @pyqtSlot(VariableEditorAction)
     def handle_editor_action(self, key):
         # Calculate the position to insert a new block
         # Perhaps we should add a random component, as we may add several blocks
@@ -246,7 +246,7 @@ class MainWindow(QMainWindow, base.Component):
     def currentFlowgraph(self):
         return self.tabWidget.currentWidget().scene().core
 
-    @Slot(QPointF)
+    @pyqtSlot(QPointF)
     def registerMove(self, diff):
         self.currentFlowgraphScene.set_saved(False)
         self.tabWidget.tabBar().setTabTextColor(self.tabWidget.currentIndex(), Qt.red)
@@ -254,7 +254,7 @@ class MainWindow(QMainWindow, base.Component):
         self.currentFlowgraphScene.undoStack.push(action)
         self.updateActions()
 
-    @Slot(Element)
+    @pyqtSlot(Element)
     def registerNewElement(self, elem):
         self.currentFlowgraphScene.set_saved(False)
         self.tabWidget.tabBar().setTabTextColor(self.tabWidget.currentIndex(), Qt.red)
@@ -263,7 +263,7 @@ class MainWindow(QMainWindow, base.Component):
         self.updateActions()
         self.currentFlowgraphScene.update()
 
-    @Slot(Element)
+    @pyqtSlot(Element)
     def registerDeleteElement(self, elem):
         self.currentFlowgraphScene.set_saved(False)
         self.tabWidget.tabBar().setTabTextColor(self.tabWidget.currentIndex(), Qt.red)
@@ -272,7 +272,7 @@ class MainWindow(QMainWindow, base.Component):
         self.updateActions()
         self.currentFlowgraphScene.update()
 
-    @Slot(Element)
+    @pyqtSlot(Element)
     def registerBlockPropsChange(self, elem):
         self.currentFlowgraphScene.set_saved(False)
         self.tabWidget.tabBar().setTabTextColor(self.tabWidget.currentIndex(), Qt.red)
@@ -959,7 +959,7 @@ class MainWindow(QMainWindow, base.Component):
         self.progress_bar.hide()
         self.examples_found = True
 
-    @Slot(tuple)
+    @pyqtSlot(tuple)
     def update_progress_bar(self, progress_tuple):
         progress, msg = progress_tuple
         self.progress_bar.show()
