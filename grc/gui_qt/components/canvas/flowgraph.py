@@ -122,14 +122,14 @@ class FlowgraphScene(QGraphicsScene, base.Component):
 
     def dragEnterEvent(self, event):
         if event.mimeData().hasUrls:
-            event.setDropAction(Qt.CopyAction)
+            event.setDropAction(Qt.DropAction.CopyAction)
             event.accept()
         else:
             event.ignore()
 
     def dragMoveEvent(self, event):
         if event.mimeData().hasUrls:
-            event.setDropAction(Qt.CopyAction)
+            event.setDropAction(Qt.DropAction.CopyAction)
             event.accept()
         else:
             event.ignore()
@@ -176,7 +176,7 @@ class FlowgraphScene(QGraphicsScene, base.Component):
                 data_items = self.decode_data(bytearray)
 
                 # Find block in tree so that we can pull out label
-                block_key = data_items[0][Qt.UserRole].value()
+                block_key = data_items[0][Qt.ItemDataRole.UserRole].value()
 
                 # Add block of this key at the cursor position
                 cursor_pos = event.scenePos()
@@ -184,7 +184,7 @@ class FlowgraphScene(QGraphicsScene, base.Component):
 
                 self.add_block(block_key, pos)
 
-                event.setDropAction(Qt.CopyAction)
+                event.setDropAction(Qt.DropAction.CopyAction)
                 event.accept()
             else:
                 return QStandardItemModel.dropMimeData(
@@ -291,7 +291,7 @@ class FlowgraphScene(QGraphicsScene, base.Component):
                     self.start_port = g_item
                 elif c_item.is_sink:
                     self.end_port = g_item
-        if event.button() == Qt.LeftButton:
+        if event.button() == Qt.MouseButton.LeftButton:
             self.mousePressed = True
             super(FlowgraphScene, self).mousePressEvent(event)
 

@@ -19,11 +19,11 @@ class ErrorsDialog(QDialog):
         self.setModal(True)
         self.resize(700, MIN_DIALOG_HEIGHT)
         self.setWindowTitle("Errors and Warnings")
-        buttons = QDialogButtonBox.Close
+        buttons = QDialogButtonBox.StandardButton.Close
         self.buttonBox = QDialogButtonBox(buttons)
         self.buttonBox.rejected.connect(self.reject)  # close
         self.treeview = QTreeView()
-        self.treeview.setEditTriggers(QTreeView.NoEditTriggers)
+        self.treeview.setEditTriggers(QTreeView.EditTrigger.NoEditTriggers)
         self.model = QStandardItemModel()
         self.treeview.setModel(self.model)
         self.layout = QVBoxLayout()
@@ -98,7 +98,7 @@ class PropsDialog(QDialog):
         self.example_list = QListWidget()
         self.example_list.itemDoubleClicked.connect(lambda ex: self.open_example(ex))
 
-        buttons = QDialogButtonBox.Ok | QDialogButtonBox.Cancel
+        buttons = QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel
         self.buttonBox = QDialogButtonBox(buttons)
         self.buttonBox.accepted.connect(self.accept)
         self.buttonBox.rejected.connect(self.reject)
@@ -122,7 +122,7 @@ class PropsDialog(QDialog):
 
     def build_param_entrys(self, cat):
         qvb = QGridLayout()
-        qvb.setAlignment(Qt.AlignTop)
+        qvb.setAlignment(Qt.AlignmentFlag.AlignTop)
         qvb.setVerticalSpacing(5)
         qvb.setHorizontalSpacing(20)
         i = 0

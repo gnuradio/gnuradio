@@ -31,7 +31,7 @@ class RateDialog(QDialog):
         self.delay = QLineEdit(self)
         self.delay.setText(str(delay))
         self.buttonBox = QDialogButtonBox(
-            QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+            QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel)
         self.gridLayout.addWidget(self.delay)
         self.gridLayout.addWidget(self.buttonBox)
         self.buttonBox.accepted.connect(self.accept)
@@ -57,8 +57,8 @@ class MAINWindow(QMainWindow):
         self.knobprops = []
 
         self.mdiArea = QMdiArea()
-        self.mdiArea.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
-        self.mdiArea.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
+        self.mdiArea.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
+        self.mdiArea.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
         self.setCentralWidget(self.mdiArea)
 
         self.mdiArea.subWindowActivated.connect(self.updateMenus)
@@ -316,7 +316,7 @@ class MAINWindow(QMainWindow):
 
     def createActions(self):
         self.newConAct = QAction("&New Connection",
-                                    self, shortcut=QKeySequence.New,
+                                    self, shortcut=QKeySequence.StandardKey.New,
                                     statusTip="Create a new file", triggered=lambda x: self.newCon(None))
 
         self.exitAct = QAction("E&xit", self, shortcut="Ctrl+Q",
@@ -335,24 +335,24 @@ class MAINWindow(QMainWindow):
                                 statusTip="Change Update Rate",
                                 triggered=self.updateRateShow)
 
-        qks = QKeySequence(Qt.CTRL + Qt.Key_T)
+        qks = QKeySequence(Qt.Modifier.CTRL + Qt.Key.Key_T)
         self.tileAct = QAction("&Tile", self,
                                   statusTip="Tile the windows",
                                   triggered=self.mdiArea.tileSubWindows,
                                   shortcut=qks)
 
-        qks = QKeySequence(Qt.CTRL + Qt.Key_C)
+        qks = QKeySequence(Qt.Modifier.CTRL + Qt.Key.Key_C)
         self.cascadeAct = QAction("&Cascade", self,
                                      statusTip="Cascade the windows", shortcut=qks,
                                      triggered=self.mdiArea.cascadeSubWindows)
 
         self.nextAct = QAction("Ne&xt", self,
-                                  shortcut=QKeySequence.NextChild,
+                                  shortcut=QKeySequence.StandardKey.NextChild,
                                   statusTip="Move the focus to the next window",
                                   triggered=self.mdiArea.activateNextSubWindow)
 
         self.previousAct = QAction("Pre&vious", self,
-                                      shortcut=QKeySequence.PreviousChild,
+                                      shortcut=QKeySequence.StandardKey.PreviousChild,
                                       statusTip="Move the focus to the previous window",
                                       triggered=self.mdiArea.activatePreviousSubWindow)
 
@@ -456,7 +456,7 @@ class ConInfoDialog(QDialog):
         self.port.setText("43243")
 
         self.buttonBox = QDialogButtonBox(
-            QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+            QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel)
 
         self.gridLayout.addWidget(self.host)
         self.gridLayout.addWidget(self.port)
@@ -528,7 +528,7 @@ class UpdaterWindow(QDialog):
             if(self.is_num):
                 self.sliderlayout = QHBoxLayout()
 
-                self.slider = QSlider(Qt.Horizontal)
+                self.slider = QSlider(Qt.Orientation.Horizontal)
 
                 self.sliderlayout.addWidget(
                     QLabel(str(self.props.min.value)))
@@ -683,10 +683,10 @@ class MForm(QWidget):
         # make table
         self.table = GrDataPlotterValueTable(uid, self, 0, 0, 400, 200)
         sizePolicy = QSizePolicy(
-            QSizePolicy.Preferred, QSizePolicy.Preferred)
+            QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
         self.table.treeWidget.setSizePolicy(sizePolicy)
         self.table.treeWidget.setEditTriggers(
-            QAbstractItemView.EditKeyPressed)
+            QAbstractItemView.EditTrigger.EditKeyPressed)
         self.table.treeWidget.setSortingEnabled(True)
         self.table.treeWidget.setDragEnabled(True)
 
@@ -699,7 +699,7 @@ class MForm(QWidget):
         self.timer.start(self.updateRate)
 
         # set up context menu ..
-        self.table.treeWidget.setContextMenuPolicy(Qt.CustomContextMenu)
+        self.table.treeWidget.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
         self.table.treeWidget.customContextMenuRequested.connect(self.openMenu)
 
         # Set up double-click to launch default plotter

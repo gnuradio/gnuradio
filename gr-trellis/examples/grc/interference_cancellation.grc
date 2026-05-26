@@ -52,7 +52,7 @@ blocks:
     gui_hint: ''
     label: P1/P
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: QtCore.Qt.Orientation.Horizontal
     rangeType: float
     start: '0'
     step: '.01'
@@ -133,7 +133,7 @@ blocks:
     gui_hint: ''
     label: P/sigma^2 (dB)
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: QtCore.Qt.Orientation.Horizontal
     rangeType: float
     start: '0'
     step: '1'

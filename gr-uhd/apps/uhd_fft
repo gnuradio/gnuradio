@@ -85,7 +85,7 @@ class uhd_fft(UHDApp, gr.top_block, QWidget):
         self.top_scroll_layout = QVBoxLayout()
         self.setLayout(self.top_scroll_layout)
         self.top_scroll = QScrollArea()
-        self.top_scroll.setFrameStyle(QFrame.NoFrame)
+        self.top_scroll.setFrameStyle(QFrame.Shape.NoFrame)
         self.top_scroll_layout.addWidget(self.top_scroll)
         self.top_scroll.setWidgetResizable(True)
         self.top_widget = QWidget()
@@ -234,19 +234,19 @@ class uhd_fft(UHDApp, gr.top_block, QWidget):
         self.display = QTabWidget()
         self.display_widget_0 = QWidget()
         self.display_layout_0 = QBoxLayout(
-            QBoxLayout.TopToBottom, self.display_widget_0)
+            QBoxLayout.Direction.TopToBottom, self.display_widget_0)
         self.display_grid_layout_0 = QGridLayout()
         self.display_layout_0.addLayout(self.display_grid_layout_0)
         self.display.addTab(self.display_widget_0, "Spectrum")
         self.display_widget_1 = QWidget()
         self.display_layout_1 = QBoxLayout(
-            QBoxLayout.TopToBottom, self.display_widget_1)
+            QBoxLayout.Direction.TopToBottom, self.display_widget_1)
         self.display_grid_layout_1 = QGridLayout()
         self.display_layout_1.addLayout(self.display_grid_layout_1)
         self.display.addTab(self.display_widget_1, "Waterfall")
         self.display_widget_2 = QWidget()
         self.display_layout_2 = QBoxLayout(
-            QBoxLayout.TopToBottom, self.display_widget_2)
+            QBoxLayout.Direction.TopToBottom, self.display_widget_2)
         self.display_grid_layout_2 = QGridLayout()
         self.display_layout_2.addLayout(self.display_grid_layout_2)
         self.display.addTab(self.display_widget_2, "Scope")
@@ -356,7 +356,7 @@ class uhd_fft(UHDApp, gr.top_block, QWidget):
         if args.phase_relations and len(self.channels) > 1:
             self.display_widget_phase = QWidget()
             self.display_layout_phase = QBoxLayout(
-                QBoxLayout.TopToBottom, self.display_widget_phase)
+                QBoxLayout.Direction.TopToBottom, self.display_widget_phase)
             self.display_grid_layout_phase = QGridLayout()
             self.display_layout_phase.addLayout(self.display_grid_layout_phase)
             self.display.addTab(self.display_widget_phase, "Rel. Phase")

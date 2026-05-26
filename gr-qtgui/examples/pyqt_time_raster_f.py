@@ -27,7 +27,7 @@ class dialog_box(QtWidgets.QWidget):
         self.setWindowTitle('PyQt Test GUI')
 
         self.boxlayout = QtWidgets.QBoxLayout(
-            QtWidgets.QBoxLayout.LeftToRight, self)
+            QtWidgets.QBoxLayout.Direction.LeftToRight, self)
         self.boxlayout.addWidget(display, 1)
 
         self.resize(800, 500)

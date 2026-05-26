@@ -63,7 +63,7 @@ blocks:
     gui_hint: ''
     label: KEY1 Metadata Value
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: QtCore.Qt.Orientation.Horizontal
     rangeType: float
     start: '0'
     step: '0.1'

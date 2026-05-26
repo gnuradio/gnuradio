@@ -87,7 +87,7 @@ blocks:
     gui_hint: 1,0,1,1
     label: Freq. Off.
     min_len: '200'
-    orient: Qt.Horizontal
+    orient: Qt.Orientation.Horizontal
     rangeType: float
     start: '-0.25'
     step: '0.0001'
@@ -152,7 +152,7 @@ blocks:
     gui_hint: 0,1,1,1
     label: Noise Power
     min_len: '200'
-    orient: Qt.Horizontal
+    orient: Qt.Orientation.Horizontal
     rangeType: float
     start: '-50'
     step: '1'
@@ -173,7 +173,7 @@ blocks:
     gui_hint: 0,0,1,1
     label: Path Loss (dB)
     min_len: '200'
-    orient: Qt.Horizontal
+    orient: Qt.Orientation.Horizontal
     rangeType: float
     start: '0'
     step: '5'
@@ -262,7 +262,7 @@ blocks:
     gui_hint: 1,1,1,1
     label: Time Off.
     min_len: '200'
-    orient: Qt.Horizontal
+    orient: Qt.Orientation.Horizontal
     rangeType: float
     start: '0.9999'
     step: '0.00001'

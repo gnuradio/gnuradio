@@ -14,7 +14,7 @@ import numpy
 from gnuradio import gr
 import pmt
 
-from PyQt6.QtCore import pyqtSignal, Property, Qt, QPoint
+from PyQt6.QtCore import pyqtSignal, pyqtProperty, Qt, QPoint
 from PyQt6.QtWidgets import QFrame, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QSizePolicy
 from PyQt6.QtGui import QPainter, QPalette, QFont, QFontMetricsF, QPen, QPolygon, QColor, QBrush
 
@@ -38,7 +38,7 @@ class LabeledCompass(QFrame):
 
         self.lbl = lbl
         self.lblcontrol = QLabel(lbl, self)
-        self.lblcontrol.setAlignment(Qt.AlignCenter)
+        self.lblcontrol.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         # add top or left
         if lbl:
@@ -54,7 +54,7 @@ class LabeledCompass(QFrame):
             if position == 2 or position == 4:
                 layout.addWidget(self.lblcontrol)
 
-        layout.setAlignment(Qt.AlignCenter | Qt.AlignVCenter)
+        layout.setAlignment(Qt.AlignmentFlag.AlignCenter | Qt.AlignmentFlag.AlignVCenter)
         self.setLayout(layout)
 
         if lbl:
@@ -93,7 +93,7 @@ class Compass(QWidget):
                            225: "225", 270: "270", 315: "315"}
 
         self.setMinimumSize(min_size, min_size)
-        self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
 
         self.backgroundColor = backgroundColor
         self.needleTipColor = 'red'
@@ -112,19 +112,19 @@ class Compass(QWidget):
     def paintEvent(self, event):
         painter = QPainter()
         painter.begin(self)
-        painter.setRenderHint(QPainter.Antialiasing)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
 
         if self.backgroundColor == 'default':
             painter.fillRect(
-                event.rect(), self.palette().brush(QPalette.Window))
+                event.rect(), self.palette().brush(QPalette.ColorRole.Window))
         else:
             size = self.size()
             center_x = size.width() / 2
             diameter = size.height()
-            brush = QBrush(QColor(self.backgroundColor), Qt.SolidPattern)
+            brush = QBrush(QColor(self.backgroundColor), Qt.BrushStyle.SolidPattern)
             painter.setBrush(brush)
             painter.setPen(QPen(QColor(self.scaleColor), 2))
-            painter.setRenderHint(QPainter.Antialiasing)
+            painter.setRenderHint(QPainter.RenderHint.Antialiasing)
             painter.drawEllipse(int(center_x - diameter / 2 + 1),
                                 1, diameter - 4, diameter - 4)
 
@@ -169,7 +169,7 @@ class Compass(QWidget):
         scale = min((self.width() - self._margins) / 120.0,
                     (self.height() - self._margins) / 120.0)
         painter.scale(scale, scale)
-        painter.setPen(QPen(Qt.NoPen))
+        painter.setPen(QPen(Qt.PenStyle.NoPen))
 
         # Rotate surface for painting
         intAngle = int(round(self._angle))
@@ -177,7 +177,7 @@ class Compass(QWidget):
 
         # Draw the full black needle first if needed
         if self.needleType == NeedleFull:
-            needleTailBrush = self.palette().brush(QPalette.Shadow)
+            needleTailBrush = self.palette().brush(QPalette.ColorRole.Shadow)
             needleTailColor = QColor(self.needleBodyColor)
             needleTailBrush.setColor(needleTailColor)
             painter.setBrush(needleTailBrush)
@@ -186,7 +186,7 @@ class Compass(QWidget):
                                           QPoint(0, 45), QPoint(-6, 0)]))
 
         # Now draw the red tip (on top of the black needle)
-        needleTipBrush = self.palette().brush(QPalette.Highlight)
+        needleTipBrush = self.palette().brush(QPalette.ColorRole.Highlight)
         needleTipColor = QColor(self.needleTipColor)
         needleTipBrush.setColor(needleTipColor)
         painter.setBrush(needleTipBrush)
@@ -205,8 +205,8 @@ class Compass(QWidget):
             painter.rotate(mirrorRotation)
 
             # Paint shadowed indicator
-            needleTipBrush = self.palette().brush(QPalette.Highlight)
-            needleTipColor = Qt.gray
+            needleTipBrush = self.palette().brush(QPalette.ColorRole.Highlight)
+            needleTipColor = Qt.GlobalColor.gray
             needleTipBrush.setColor(needleTipColor)
             painter.setBrush(needleTipBrush)
 
@@ -232,7 +232,7 @@ class Compass(QWidget):
             self.angleChanged.emit(angle)
             self.update()
 
-    angle = Property(float, angle, change_angle)
+    angle = pyqtProperty(float, angle, change_angle)
 
 
 class GrCompass(gr.sync_block, LabeledCompass):

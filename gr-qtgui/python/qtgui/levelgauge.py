@@ -42,7 +42,7 @@ class LabeledLevelGauge(QFrame):
         self.scaleFactor = scaleFactor
 
         self.lblcontrol = QLabel(lbl, self)
-        self.lblcontrol.setAlignment(Qt.AlignCenter)
+        self.lblcontrol.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         # For whatever reason, the progressbar doesn't show the number in the bar if it's
         # vertical, only if it's horizontal
@@ -68,7 +68,7 @@ class LabeledLevelGauge(QFrame):
             if position == 2 or position == 4:
                 layout.addWidget(self.lblcontrol)
 
-        layout.setAlignment(Qt.AlignCenter | Qt.AlignVCenter)
+        layout.setAlignment(Qt.AlignmentFlag.AlignCenter | Qt.AlignmentFlag.AlignVCenter)
         self.setLayout(layout)
 
         self.show()
@@ -123,10 +123,10 @@ class LevelGauge(QProgressBar):
         p = super().palette()
 
         if backgroundColor != 'default':
-            p.setColor(QPalette.Base, QColor(backgroundColor))
+            p.setColor(QPalette.ColorRole.Base, QColor(backgroundColor))
 
         if barColor != 'default':
-            p.setColor(QPalette.Highlight, QColor(barColor))
+            p.setColor(QPalette.ColorRole.Highlight, QColor(barColor))
 
         if backgroundColor != 'default' or barColor != 'default':
             super().setPalette(p)

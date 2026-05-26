@@ -39,7 +39,7 @@ blocks:
     gui_hint: ''
     label: Vector Scale
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: QtCore.Qt.Orientation.Horizontal
     rangeType: int
     start: '0'
     step: '1'
@@ -60,7 +60,7 @@ blocks:
     gui_hint: ''
     label: Metadata Scale
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: QtCore.Qt.Orientation.Horizontal
     rangeType: float
     start: '0'
     step: '.01'

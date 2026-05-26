@@ -14,7 +14,7 @@ class Config(CoreConfig):
 
     def __init__(self, *args, **kwargs):
         CoreConfig.__init__(self, *args, **kwargs)
-        self.qsettings = QSettings(self.gui_prefs_file, QSettings.IniFormat)
+        self.qsettings = QSettings(self.gui_prefs_file, QSettings.Format.IniFormat)
 
     @property
     def wiki_block_docs_url_prefix(self):

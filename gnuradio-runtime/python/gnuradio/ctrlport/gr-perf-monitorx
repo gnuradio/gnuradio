@@ -64,8 +64,8 @@ class MAINWindow(QMainWindow):
         self.knobprops = []
 
         self.mdiArea = QMdiArea()
-        self.mdiArea.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
-        self.mdiArea.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
+        self.mdiArea.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
+        self.mdiArea.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
         self.setCentralWidget(self.mdiArea)
 
         self.mdiArea.subWindowActivated.connect(self.updateMenus)
@@ -107,7 +107,7 @@ class MAINWindow(QMainWindow):
 
     def createActions(self):
         self.newConAct = QAction("&New Connection",
-                                    self, shortcut=QKeySequence.New,
+                                    self, shortcut=QKeySequence.StandardKey.New,
                                     statusTip="Create a new file", triggered=lambda x: self.newCon(None))
 
         self.exitAct = QAction("E&xit", self, shortcut="Ctrl+Q",
@@ -122,24 +122,24 @@ class MAINWindow(QMainWindow):
                                       statusTip="Close all the windows",
                                       triggered=self.mdiArea.closeAllSubWindows)
 
-        qks = QKeySequence(Qt.CTRL + Qt.Key_T)
+        qks = QKeySequence(Qt.Modifier.CTRL + Qt.Key.Key_T)
         self.tileAct = QAction("&Tile", self,
                                   statusTip="Tile the windows",
                                   triggered=self.mdiArea.tileSubWindows,
                                   shortcut=qks)
 
-        qks = QKeySequence(Qt.CTRL + Qt.Key_C)
+        qks = QKeySequence(Qt.Modifier.CTRL + Qt.Key.Key_C)
         self.cascadeAct = QAction("&Cascade", self,
                                      statusTip="Cascade the windows", shortcut=qks,
                                      triggered=self.mdiArea.cascadeSubWindows)
 
         self.nextAct = QAction("Ne&xt", self,
-                                  shortcut=QKeySequence.NextChild,
+                                  shortcut=QKeySequence.StandardKey.NextChild,
                                   statusTip="Move the focus to the next window",
                                   triggered=self.mdiArea.activateNextSubWindow)
 
         self.previousAct = QAction("Pre&vious", self,
-                                      shortcut=QKeySequence.PreviousChild,
+                                      shortcut=QKeySequence.StandardKey.PreviousChild,
                                       statusTip="Move the focus to the previous window",
                                       triggered=self.mdiArea.activatePreviousSubWindow)
 
@@ -231,8 +231,8 @@ class ConInfoDialog(QDialog):
         self.host.setText("localhost")
         self.port.setText("43243")
 
-        self.buttonBox = QDialogButtonBox(QDialogButtonBox.Ok |
-                                             QDialogButtonBox.Cancel)
+        self.buttonBox = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok |
+                                             QDialogButtonBox.StandardButton.Cancel)
 
         self.gridLayout.addWidget(self.host)
         self.gridLayout.addWidget(self.port)
@@ -324,7 +324,7 @@ class DataTable(QWidget):
         for k in data.keys():
             weight = data[k]
             existing = self.perfTable.findItems(
-                str(k), Qt.MatchFixedString)
+                str(k), Qt.MatchFlag.MatchFixedString)
             if(len(existing) == 0):
                 i = self.perfTable.rowCount()
                 self.perfTable.setRowCount(i + 1)

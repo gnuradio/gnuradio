@@ -76,9 +76,9 @@ class MainWindow(QMainWindow, base.Component):
         self.setObjectName("main")
         self.setWindowTitle(_("window-title"))
         self.setDockOptions(
-            QMainWindow.AllowNestedDocks |
-            QMainWindow.AllowTabbedDocks |
-            QMainWindow.AnimatedDocks
+            QMainWindow.DockOption.AllowNestedDocks |
+            QMainWindow.DockOption.AllowTabbedDocks |
+            QMainWindow.DockOption.AnimatedDocks
         )
         self.progress_bar = QProgressBar()
         self.statusBar().addPermanentWidget(self.progress_bar)
@@ -95,7 +95,7 @@ class MainWindow(QMainWindow, base.Component):
         )
         self.resize(int(monitor.width() * 0.50), monitor.height())
 
-        self.setCorner(Qt.BottomLeftCorner, Qt.LeftDockWidgetArea)
+        self.setCorner(Qt.Corner.BottomLeftCorner, Qt.DockWidgetArea.LeftDockWidgetArea)
 
         # Get max length of recently opened files list to be displayed in the menu
         self.max_recent_files = self.app.qsettings.value('appearance/max_recent_files', 10, type=int)
@@ -249,7 +249,7 @@ class MainWindow(QMainWindow, base.Component):
     @pyqtSlot(QPointF)
     def registerMove(self, diff):
         self.currentFlowgraphScene.set_saved(False)
-        self.tabWidget.tabBar().setTabTextColor(self.tabWidget.currentIndex(), Qt.red)
+        self.tabWidget.tabBar().setTabTextColor(self.tabWidget.currentIndex(), Qt.GlobalColor.red)
         action = MoveAction(self.currentFlowgraphScene, diff)
         self.currentFlowgraphScene.undoStack.push(action)
         self.updateActions()
@@ -257,7 +257,7 @@ class MainWindow(QMainWindow, base.Component):
     @pyqtSlot(Element)
     def registerNewElement(self, elem):
         self.currentFlowgraphScene.set_saved(False)
-        self.tabWidget.tabBar().setTabTextColor(self.tabWidget.currentIndex(), Qt.red)
+        self.tabWidget.tabBar().setTabTextColor(self.tabWidget.currentIndex(), Qt.GlobalColor.red)
         action = NewElementAction(self.currentFlowgraphScene, elem)
         self.currentFlowgraphScene.undoStack.push(action)
         self.updateActions()
@@ -266,7 +266,7 @@ class MainWindow(QMainWindow, base.Component):
     @pyqtSlot(Element)
     def registerDeleteElement(self, elem):
         self.currentFlowgraphScene.set_saved(False)
-        self.tabWidget.tabBar().setTabTextColor(self.tabWidget.currentIndex(), Qt.red)
+        self.tabWidget.tabBar().setTabTextColor(self.tabWidget.currentIndex(), Qt.GlobalColor.red)
         action = DeleteElementAction(self.currentFlowgraphScene, elem)
         self.currentFlowgraphScene.undoStack.push(action)
         self.updateActions()
@@ -275,7 +275,7 @@ class MainWindow(QMainWindow, base.Component):
     @pyqtSlot(Element)
     def registerBlockPropsChange(self, elem):
         self.currentFlowgraphScene.set_saved(False)
-        self.tabWidget.tabBar().setTabTextColor(self.tabWidget.currentIndex(), Qt.red)
+        self.tabWidget.tabBar().setTabTextColor(self.tabWidget.currentIndex(), Qt.GlobalColor.red)
         action = BlockPropsChangeAction(self.currentFlowgraphScene, elem)
         self.currentFlowgraphScene.undoStack.push(action)
         self.updateActions()
@@ -546,7 +546,7 @@ class MainWindow(QMainWindow, base.Component):
         )
 
         actions["about_qt"] = Action(
-            self.style().standardIcon(QStyle.SP_TitleBarMenuButton),
+            self.style().standardIcon(QStyle.StandardPixmap.SP_TitleBarMenuButton),
             _("about-qt"),
             self,
             statusTip=_("about-tooltip"),
@@ -987,7 +987,7 @@ class MainWindow(QMainWindow, base.Component):
         log.debug("Adding flowgraph view")
         self.tabWidget.addTab(fg_view, "Untitled")
         self.tabWidget.setCurrentIndex(self.tabWidget.count() - 1)
-        self.tabWidget.tabBar().setTabTextColor(self.tabWidget.currentIndex(), Qt.red)
+        self.tabWidget.tabBar().setTabTextColor(self.tabWidget.currentIndex(), Qt.GlobalColor.red)
 
     def open_triggered(self, filename=None, save_allowed=True):
         log.debug("open")
@@ -1055,14 +1055,14 @@ class MainWindow(QMainWindow, base.Component):
         file_dialog.setWindowTitle(self.actions["save"].statusTip())
         file_dialog.setNameFilter('Flow Graph Files (*.grc)')
         file_dialog.setDefaultSuffix('grc')
-        file_dialog.setAcceptMode(QFileDialog.AcceptSave)
+        file_dialog.setAcceptMode(QFileDialog.AcceptMode.AcceptSave)
         if self.currentFlowgraphScene.filename:
             dirname = os.path.dirname(self.currentFlowgraphScene.filename)
         else:
             dirname = os.getcwd()
         file_dialog.setDirectory(dirname)
         filename = None
-        if file_dialog.exec() == QFileDialog.Accepted:
+        if file_dialog.exec() == QFileDialog.DialogCode.Accepted:
             filename = file_dialog.selectedFiles()[0]
 
         if filename:
@@ -1089,10 +1089,10 @@ class MainWindow(QMainWindow, base.Component):
         file_dialog.setWindowTitle(self.actions["save"].statusTip())
         file_dialog.setNameFilter('Flow Graph Files (*.grc)')
         file_dialog.setDefaultSuffix('grc')
-        file_dialog.setAcceptMode(QFileDialog.AcceptSave)
+        file_dialog.setAcceptMode(QFileDialog.AcceptMode.AcceptSave)
 
         filename = None
-        if file_dialog.exec() == QFileDialog.Accepted:
+        if file_dialog.exec() == QFileDialog.DialogCode.Accepted:
             filename = file_dialog.selectedFiles()[0]
 
         if filename:
@@ -1149,15 +1149,15 @@ class MainWindow(QMainWindow, base.Component):
                 None,
                 "Save flowgraph?",
                 message,
-                QMessageBox.Discard |
-                QMessageBox.Cancel |
-                QMessageBox.Save,
+                QMessageBox.StandardButton.Discard |
+                QMessageBox.StandardButton.Cancel |
+                QMessageBox.StandardButton.Save,
             )
 
-            if response == QMessageBox.Discard:
+            if response == QMessageBox.StandardButton.Discard:
                 file_path = self.currentFlowgraphScene.filename
                 self.tabWidget.removeTab(tab_index)
-            elif response == QMessageBox.Save:
+            elif response == QMessageBox.StandardButton.Save:
                 self.save_triggered()
                 if self.currentFlowgraphScene.saved:
                     file_path = self.currentFlowgraphScene.filename
@@ -1247,7 +1247,7 @@ class MainWindow(QMainWindow, base.Component):
     def delete_triggered(self):
         log.debug("delete")
         self.currentFlowgraphScene.set_saved(False)
-        self.tabWidget.tabBar().setTabTextColor(self.tabWidget.currentIndex(), Qt.red)
+        self.tabWidget.tabBar().setTabTextColor(self.tabWidget.currentIndex(), Qt.GlobalColor.red)
         action = DeleteElementAction(self.currentFlowgraphScene)
         self.currentFlowgraphScene.undoStack.push(action)
         self.updateActions()
@@ -1267,7 +1267,7 @@ class MainWindow(QMainWindow, base.Component):
         # Pass to Undo/Redo
         log.debug("rotate_ccw")
         self.currentFlowgraphScene.set_saved(False)
-        self.tabWidget.tabBar().setTabTextColor(self.tabWidget.currentIndex(), Qt.red)
+        self.tabWidget.tabBar().setTabTextColor(self.tabWidget.currentIndex(), Qt.GlobalColor.red)
         rotateCommand = RotateAction(self.currentFlowgraphScene, -90)
         self.currentFlowgraphScene.undoStack.push(rotateCommand)
         self.updateActions()
@@ -1277,7 +1277,7 @@ class MainWindow(QMainWindow, base.Component):
         # Pass to Undo/Redo
         log.debug("rotate_cw")
         self.currentFlowgraphScene.set_saved(False)
-        self.tabWidget.tabBar().setTabTextColor(self.tabWidget.currentIndex(), Qt.red)
+        self.tabWidget.tabBar().setTabTextColor(self.tabWidget.currentIndex(), Qt.GlobalColor.red)
         rotateCommand = RotateAction(self.currentFlowgraphScene, 90)
         self.currentFlowgraphScene.undoStack.push(rotateCommand)
         self.updateActions()
@@ -1286,7 +1286,7 @@ class MainWindow(QMainWindow, base.Component):
     def toggle_source_bus_triggered(self):
         log.debug("toggle_source_bus")
         self.currentFlowgraphScene.set_saved(False)
-        self.tabWidget.tabBar().setTabTextColor(self.tabWidget.currentIndex(), Qt.red)
+        self.tabWidget.tabBar().setTabTextColor(self.tabWidget.currentIndex(), Qt.GlobalColor.red)
         bussifyCommand = BussifyAction(self.currentFlowgraphScene, 'source')
         self.currentFlowgraphScene.undoStack.push(bussifyCommand)
         self.updateActions()
@@ -1295,7 +1295,7 @@ class MainWindow(QMainWindow, base.Component):
     def toggle_sink_bus_triggered(self):
         log.debug("toggle_sink_bus")
         self.currentFlowgraphScene.set_saved(False)
-        self.tabWidget.tabBar().setTabTextColor(self.tabWidget.currentIndex(), Qt.red)
+        self.tabWidget.tabBar().setTabTextColor(self.tabWidget.currentIndex(), Qt.GlobalColor.red)
         bussifyCommand = BussifyAction(self.currentFlowgraphScene, 'sink')
         self.currentFlowgraphScene.undoStack.push(bussifyCommand)
         self.updateActions()

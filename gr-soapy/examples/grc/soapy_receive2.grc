@@ -63,7 +63,7 @@ blocks:
     gui_hint: ''
     label: VGA Gain
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: QtCore.Qt.Orientation.Horizontal
     rangeType: float
     start: '0'
     step: '0.5'
@@ -84,7 +84,7 @@ blocks:
     gui_hint: ''
     label: MIX Gain
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: QtCore.Qt.Orientation.Horizontal
     rangeType: float
     start: '0'
     step: '0.5'
@@ -117,7 +117,7 @@ blocks:
     gui_hint: ''
     label: VGA Gain
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: QtCore.Qt.Orientation.Horizontal
     rangeType: float
     start: '0'
     step: '0.5'

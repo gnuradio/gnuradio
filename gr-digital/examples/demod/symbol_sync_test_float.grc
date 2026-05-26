@@ -123,7 +123,7 @@ blocks:
     gui_hint: 1,1,1,1
     label: Normalized Bandwidth
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: QtCore.Qt.Orientation.Horizontal
     rangeType: float
     start: '0.0'
     step: '0.001'
@@ -211,7 +211,7 @@ blocks:
     gui_hint: 1,0,1,1
     label: Expected TED Gain
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: QtCore.Qt.Orientation.Horizontal
     rangeType: float
     start: '0.05'
     step: '0.01'
@@ -232,7 +232,7 @@ blocks:
     gui_hint: 0,1,1,1
     label: Damping Factor
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: QtCore.Qt.Orientation.Horizontal
     rangeType: float
     start: '0.1'
     step: '0.1'

@@ -116,7 +116,7 @@ blocks:
     gui_hint: 2,0,1,4
     label: RX Gain
     min_len: '200'
-    orient: Qt.Horizontal
+    orient: Qt.Orientation.Horizontal
     rangeType: float
     start: '0'
     step: '.5'

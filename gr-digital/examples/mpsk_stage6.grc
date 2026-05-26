@@ -52,7 +52,7 @@ blocks:
     gui_hint: 1,0,1,1
     label: Delay
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: QtCore.Qt.Orientation.Horizontal
     rangeType: float
     start: '0'
     step: '1'
@@ -73,7 +73,7 @@ blocks:
     gui_hint: 'controls@1: 0,1,1,1'
     label: 'Equalizer: rate'
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: QtCore.Qt.Orientation.Horizontal
     rangeType: float
     start: '0.0'
     step: '0.001'
@@ -106,7 +106,7 @@ blocks:
     gui_hint: 'controls@0: 0,1,1,1'
     label: Frequency Offset
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: QtCore.Qt.Orientation.Horizontal
     rangeType: float
     start: '-0.1'
     step: '0.001'
@@ -139,7 +139,7 @@ blocks:
     gui_hint: 'controls@0: 0,0,1,1'
     label: Noise Voltage
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: QtCore.Qt.Orientation.Horizontal
     rangeType: float
     start: '0'
     step: '0.01'
@@ -160,7 +160,7 @@ blocks:
     gui_hint: 'controls@1: 0,2,1,1'
     label: 'Phase: Bandwidth'
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: QtCore.Qt.Orientation.Horizontal
     rangeType: float
     start: '0.0'
     step: '0.01'
@@ -249,7 +249,7 @@ blocks:
     gui_hint: 'controls@0: 0,2,1,1'
     label: Timing Offset
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: QtCore.Qt.Orientation.Horizontal
     rangeType: float
     start: '0.999'
     step: '0.0001'
@@ -270,7 +270,7 @@ blocks:
     gui_hint: 'controls@1: 0,0,1,1'
     label: 'Time: BW'
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: QtCore.Qt.Orientation.Horizontal
     rangeType: float
     start: '0.0'
     step: '0.01'

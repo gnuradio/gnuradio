@@ -93,7 +93,7 @@ class ${class_name}(gr.top_block, QtWidgets.QWidget):
         self.top_scroll_layout = QtWidgets.QVBoxLayout()
         self.setLayout(self.top_scroll_layout)
         self.top_scroll = QtWidgets.QScrollArea()
-        self.top_scroll.setFrameStyle(QtWidgets.QFrame.NoFrame)
+        self.top_scroll.setFrameStyle(QtWidgets.QFrame.Shape.NoFrame)
         self.top_scroll_layout.addWidget(self.top_scroll)
         self.top_scroll.setWidgetResizable(True)
         self.top_widget = QtWidgets.QWidget()

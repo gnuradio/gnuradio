@@ -75,16 +75,16 @@ def type_text(qtbot, app, keys):
         # Each sequence contains a single key.
         # That's why we use the first element
         keycode = QKeySequence(key)[0]
-        qtbot.keyClick(app.focusWidget(), keycode.key(), Qt.NoModifier)
+        qtbot.keyClick(app.focusWidget(), keycode.key(), Qt.KeyboardModifier.NoModifier)
 
 
 def keystroke(qtbot, app, key):
-    qtbot.keyClick(app.focusWidget(), key, Qt.NoModifier)
+    qtbot.keyClick(app.focusWidget(), key, Qt.KeyboardModifier.NoModifier)
     qtbot.wait(100)
 
 
 def ctrl_keystroke(qtbot, app, key):
-    qtbot.keyClick(app.focusWidget(), key, Qt.ControlModifier)
+    qtbot.keyClick(app.focusWidget(), key, Qt.KeyboardModifier.ControlModifier)
     qtbot.wait(100)
 
 
@@ -96,7 +96,7 @@ def gather_menu_items(menu):
 
 
 def add_block_from_query(qtbot, app, query):
-    qtbot.keyClick(app.focusWidget(), Qt.Key_F, Qt.ControlModifier)
+    qtbot.keyClick(app.focusWidget(), Qt.Key.Key_F, Qt.KeyboardModifier.ControlModifier)
     type_text(qtbot, app, query)
     qtbot.wait(10)
     pag.press('down')
@@ -127,15 +127,15 @@ def click_on(qtbot, app, item, button="left"):
 
 
 def undo(qtbot, app):
-    qtbot.keyClick(app.focusWidget(), Qt.Key_Z, Qt.ControlModifier)
+    qtbot.keyClick(app.focusWidget(), Qt.Key.Key_Z, Qt.KeyboardModifier.ControlModifier)
     qtbot.wait(100)
 
 
 def redo(qtbot, app):
     qtbot.keyClick(
         app.focusWidget(),
-        Qt.Key_Z,
-        Qt.ControlModifier | Qt.ShiftModifier,
+        Qt.Key.Key_Z,
+        Qt.KeyboardModifier.ControlModifier | Qt.KeyboardModifier.ShiftModifier,
     )
     qtbot.wait(100)
 
@@ -146,13 +146,13 @@ def delete_block(qtbot, app, block):
     click_pos = scaling * global_pos(block.gui, view)
     pag.click(click_pos.x(), click_pos.y(), button="left")
     qtbot.wait(100)
-    qtbot.keyClick(app.focusWidget(), Qt.Key_Delete)
+    qtbot.keyClick(app.focusWidget(), Qt.Key.Key_Delete)
     qtbot.wait(100)
 
 
 def menu_shortcut(qtbot, app, menu_name, menu_key, shortcut_key):
     menu = app.MainWindow.menus[menu_name]
-    qtbot.keyClick(app.focusWidget(), menu_key, Qt.AltModifier)
+    qtbot.keyClick(app.focusWidget(), menu_key, Qt.KeyboardModifier.AltModifier)
     qtbot.wait(100)
     qtbot.keyClick(menu, shortcut_key)
     qtbot.wait(100)
@@ -165,13 +165,13 @@ def test_file_close_init(qtbot, qapp_cls_, monkeypatch):
     monkeypatch.setattr(
         QMessageBox,
         "question",
-        lambda *args: QMessageBox.Discard,
+        lambda *args: QMessageBox.StandardButton.Discard,
     )
 
     qtbot.wait(100)
 
     assert win.tabWidget.count() == 1
-    menu_shortcut(qtbot, qapp_cls_, "file", Qt.Key_F, Qt.Key_L)
+    menu_shortcut(qtbot, qapp_cls_, "file", Qt.Key.Key_F, Qt.Key.Key_L)
     assert win.tabWidget.count() == 1
 
 
@@ -226,7 +226,7 @@ def test_right_click(qtbot, qapp_cls_):
     qtbot.wait(100)
 
     def close():
-        qtbot.keyClick(throttle.gui.right_click_menu, Qt.Key_Escape)
+        qtbot.keyClick(throttle.gui.right_click_menu, Qt.Key.Key_Escape)
 
     QTimer.singleShot(200, close)
     click_on(qtbot, qapp_cls_, throttle, button="right")
@@ -240,16 +240,16 @@ def test_errors(qtbot, qapp_cls_):
 
     def assert_and_close():
         assert qapp_cls_.activeWindow() != qapp_cls_.MainWindow
-        qtbot.keyClick(qapp_cls_.activeWindow(), Qt.Key_Escape)
+        qtbot.keyClick(qapp_cls_.activeWindow(), Qt.Key.Key_Escape)
 
     qtbot.wait(100)
     add_block_from_query(qtbot, qapp_cls_, "throttle")
     qtbot.wait(100)
-    qtbot.keyClick(qapp_cls_.focusWidget(), Qt.Key_B, Qt.AltModifier)
+    qtbot.keyClick(qapp_cls_.focusWidget(), Qt.Key.Key_B, Qt.KeyboardModifier.AltModifier)
     qtbot.wait(100)
     QTimer.singleShot(200, assert_and_close)
-    # qtbot.keyClick(menu, Qt.Key_E) # Not necessary since it's already selected (it's the first item)
-    qtbot.keyClick(menu, Qt.Key_Enter)
+    # qtbot.keyClick(menu, Qt.Key.Key_E) # Not necessary since it's already selected (it's the first item)
+    qtbot.keyClick(menu, Qt.Key.Key_Enter)
     qtbot.wait(300)
 
     throttle = find_blocks(qapp_cls_.MainWindow.currentFlowgraph, "blocks_throttle")
@@ -262,7 +262,7 @@ def test_open_properties(qtbot, qapp_cls_):
     qtbot.wait(100)
     qtbot.mouseDClick(
         qapp_cls_.MainWindow.currentView.viewport(),
-        Qt.LeftButton,
+        Qt.MouseButton.LeftButton,
         pos=qapp_cls_.MainWindow.currentView.mapFromScene(
             qapp_cls_.MainWindow.currentFlowgraph.options_block.gui.pos() +
             QPointF(15.0, 15.0)
@@ -270,7 +270,7 @@ def test_open_properties(qtbot, qapp_cls_):
     )
     qtbot.wait(100)
     assert qapp_cls_.MainWindow.currentFlowgraph.options_block.gui.props_dialog.isVisible()
-    keystroke(qtbot, qapp_cls_, Qt.Key_Escape)
+    keystroke(qtbot, qapp_cls_, Qt.Key.Key_Escape)
     assert (
         not qapp_cls_.MainWindow.currentFlowgraph.options_block.gui.props_dialog.isVisible()
     )
@@ -281,7 +281,7 @@ def test_change_id(qtbot, qapp_cls_):
     assert opts.params["title"].value == "Not titled yet"
     qtbot.mouseDClick(
         qapp_cls_.MainWindow.currentView.viewport(),
-        Qt.LeftButton,
+        Qt.MouseButton.LeftButton,
         pos=qapp_cls_.MainWindow.currentView.mapFromScene(
             opts.gui.pos() + QPointF(15.0, 15.0)
         ),
@@ -289,14 +289,14 @@ def test_change_id(qtbot, qapp_cls_):
     qtbot.wait(100)
     qtbot.mouseDClick(
         opts.gui.props_dialog.edit_params[0],
-        Qt.LeftButton,
+        Qt.MouseButton.LeftButton,
     )
     type_text(qtbot, qapp_cls_, "changed")
     qtbot.wait(100)
-    keystroke(qtbot, qapp_cls_, Qt.Key_Enter)
+    keystroke(qtbot, qapp_cls_, Qt.Key.Key_Enter)
     assert opts.params["title"].value == "Not changed yet"
     qtbot.wait(100)
-    keystroke(qtbot, qapp_cls_, Qt.Key_Enter)
+    keystroke(qtbot, qapp_cls_, Qt.Key.Key_Enter)
     qtbot.wait(100)
     undo(qtbot, qapp_cls_)
     assert opts.params["title"].value == "Not titled yet"
@@ -318,7 +318,7 @@ def test_rotate_block(qtbot, qapp_cls_):
 
     old_rotation = opts.states["rotation"]
 
-    keystroke(qtbot, qapp_cls_, Qt.Key_Left)
+    keystroke(qtbot, qapp_cls_, Qt.Key.Key_Left)
     new_rotation = opts.states["rotation"]
     assert new_rotation == (old_rotation - 90) % 360
 
@@ -326,7 +326,7 @@ def test_rotate_block(qtbot, qapp_cls_):
     new_rotation = opts.states["rotation"]
     assert new_rotation == old_rotation
 
-    keystroke(qtbot, qapp_cls_, Qt.Key_Right)
+    keystroke(qtbot, qapp_cls_, Qt.Key.Key_Right)
     new_rotation = opts.states["rotation"]
     assert new_rotation == old_rotation + 90
 
@@ -343,10 +343,10 @@ def test_disable_enable(qtbot, qapp_cls_):
     assert var is not None
     assert var.state == "enabled"
 
-    keystroke(qtbot, qapp_cls_, Qt.Key_D)
+    keystroke(qtbot, qapp_cls_, Qt.Key.Key_D)
     assert var.state == "disabled"
 
-    keystroke(qtbot, qapp_cls_, Qt.Key_E)
+    keystroke(qtbot, qapp_cls_, Qt.Key.Key_E)
     assert var.state == "enabled"
 
 
@@ -434,7 +434,7 @@ def test_connection(qtbot, qapp_cls_):
     # delete connection with delete key press event
     assert len(fg.connections) == 1
     click_on(qtbot, qapp_cls_, connection)
-    keystroke(qtbot, qapp_cls_, Qt.Key_Delete)
+    keystroke(qtbot, qapp_cls_, Qt.Key.Key_Delete)
     assert len(fg.connections) == 0
     qtbot.wait(100)
     undo(qtbot, qapp_cls_)
@@ -489,22 +489,22 @@ def test_num_inputs(qtbot, qapp_cls_):
         if n_sink.gui.props_dialog.edit_params[i].param.key == 'num_inputs':
             param_index = i
 
-    qtbot.mouseDClick(n_sink.gui.props_dialog.edit_params[param_index], Qt.LeftButton)
+    qtbot.mouseDClick(n_sink.gui.props_dialog.edit_params[param_index], Qt.MouseButton.LeftButton)
     type_text(qtbot, qapp_cls_, "2")
     qtbot.wait(100)
-    keystroke(qtbot, qapp_cls_, Qt.Key_Enter)
+    keystroke(qtbot, qapp_cls_, Qt.Key.Key_Enter)
     assert len(n_sink.sinks) == 2
     assert len(fg.connections) == 1
 
     click_pos = scaling * global_pos(n_sink.gui, view)
     pag.doubleClick(click_pos.x(), click_pos.y(), button="left")
     qtbot.wait(100)
-    qtbot.mouseDClick(n_sink.gui.props_dialog.edit_params[param_index], Qt.LeftButton)
+    qtbot.mouseDClick(n_sink.gui.props_dialog.edit_params[param_index], Qt.MouseButton.LeftButton)
     type_text(qtbot, qapp_cls_, "1")
     qtbot.wait(100)
-    keystroke(qtbot, qapp_cls_, Qt.Key_Enter)
+    keystroke(qtbot, qapp_cls_, Qt.Key.Key_Enter)
     qtbot.wait(100)
-    keystroke(qtbot, qapp_cls_, Qt.Key_Enter)
+    keystroke(qtbot, qapp_cls_, Qt.Key.Key_Enter)
     qtbot.wait(100)
     assert len(n_sink.sinks) == 1
     assert len(fg.connections) == 1
@@ -539,23 +539,23 @@ def test_bus(qtbot, qapp_cls_):
         if n_sink.gui.props_dialog.edit_params[i].param.key == 'num_inputs':
             param_index = i
 
-    qtbot.mouseDClick(n_sink.gui.props_dialog.edit_params[param_index], Qt.LeftButton)
+    qtbot.mouseDClick(n_sink.gui.props_dialog.edit_params[param_index], Qt.MouseButton.LeftButton)
     type_text(qtbot, qapp_cls_, "2")
     qtbot.wait(100)
-    keystroke(qtbot, qapp_cls_, Qt.Key_Enter)
+    keystroke(qtbot, qapp_cls_, Qt.Key.Key_Enter)
     qtbot.wait(100)
-    keystroke(qtbot, qapp_cls_, Qt.Key_Enter)
+    keystroke(qtbot, qapp_cls_, Qt.Key.Key_Enter)
     qtbot.wait(100)
     assert len(n_sink.sinks) == 2
 
     # Enable bus port
     qtbot.wait(100)
     more_menu = qapp_cls_.MainWindow.menus["more"]
-    menu_shortcut(qtbot, qapp_cls_, "edit", Qt.Key_E, Qt.Key_M)
+    menu_shortcut(qtbot, qapp_cls_, "edit", Qt.Key.Key_E, Qt.Key.Key_M)
     qtbot.wait(100)
-    qtbot.keyClick(more_menu, Qt.Key_Up)
+    qtbot.keyClick(more_menu, Qt.Key.Key_Up)
     qtbot.wait(100)
-    qtbot.keyClick(more_menu, Qt.Key_Enter)
+    qtbot.keyClick(more_menu, Qt.Key.Key_Enter)
     qtbot.wait(100)
     assert len(n_sink.sinks) == 3
     assert n_sink.sinks[2].dtype == 'bus'
@@ -563,11 +563,11 @@ def test_bus(qtbot, qapp_cls_):
     # Disable bus port
     qtbot.wait(100)
     more_menu = qapp_cls_.MainWindow.menus["more"]
-    menu_shortcut(qtbot, qapp_cls_, "edit", Qt.Key_E, Qt.Key_M)
+    menu_shortcut(qtbot, qapp_cls_, "edit", Qt.Key.Key_E, Qt.Key.Key_M)
     qtbot.wait(100)
-    qtbot.keyClick(more_menu, Qt.Key_Up)
+    qtbot.keyClick(more_menu, Qt.Key.Key_Up)
     qtbot.wait(100)
-    qtbot.keyClick(more_menu, Qt.Key_Enter)
+    qtbot.keyClick(more_menu, Qt.Key.Key_Enter)
     qtbot.wait(100)
     assert len(n_sink.sinks) == 2
 
@@ -599,19 +599,19 @@ def test_bypass(qtbot, qapp_cls_):
 
     # Bypass the throttle block
     click_on(qtbot, qapp_cls_, throttle)
-    keystroke(qtbot, qapp_cls_, Qt.Key_B)
+    keystroke(qtbot, qapp_cls_, Qt.Key.Key_B)
     assert throttle.state == "bypassed"
     undo(qtbot, qapp_cls_)
     assert throttle.state == "enabled"
     redo(qtbot, qapp_cls_)
     assert throttle.state == "bypassed"
     qtbot.wait(100)
-    keystroke(qtbot, qapp_cls_, Qt.Key_E)
+    keystroke(qtbot, qapp_cls_, Qt.Key.Key_E)
     assert throttle.state == "enabled"
 
     # Try to bypass the null source, this shouldn't work
     click_on(qtbot, qapp_cls_, n_src)
-    keystroke(qtbot, qapp_cls_, Qt.Key_B)
+    keystroke(qtbot, qapp_cls_, Qt.Key.Key_B)
     assert n_src.state == "enabled"
 
     for block in [throttle, n_src]:
@@ -624,11 +624,11 @@ def test_file_save(qtbot, qapp_cls_, monkeypatch, tmp_path):
         QFileDialog, "selectedFiles", lambda *args, **kargs: (str(fg_path), "")
     )
     monkeypatch.setattr(
-        QFileDialog, "exec", lambda *args: QFileDialog.Accepted
+        QFileDialog, "exec", lambda *args: QFileDialog.DialogCode.Accepted
     )
 
     assert not fg_path.exists(), "File/Save (setup): File already exists"
-    ctrl_keystroke(qtbot, qapp_cls_, Qt.Key_S)
+    ctrl_keystroke(qtbot, qapp_cls_, Qt.Key.Key_S)
     assert fg_path.exists(), "File/Save: Could not save file"
 
 
@@ -638,12 +638,12 @@ def test_file_save_as(qtbot, qapp_cls_, monkeypatch, tmp_path):
         QFileDialog, "selectedFiles", lambda *args, **kargs: (str(fg_path), "")
     )
     monkeypatch.setattr(
-        QFileDialog, "exec", lambda *args: QFileDialog.Accepted
+        QFileDialog, "exec", lambda *args: QFileDialog.DialogCode.Accepted
     )
 
     qtbot.wait(100)
 
-    menu_shortcut(qtbot, qapp_cls_, "file", Qt.Key_F, Qt.Key_A)
+    menu_shortcut(qtbot, qapp_cls_, "file", Qt.Key.Key_F, Qt.Key.Key_A)
     assert fg_path.exists()
 
 
@@ -653,12 +653,12 @@ def test_file_save_copy(qtbot, qapp_cls_, monkeypatch, tmp_path):
         QFileDialog, "selectedFiles", lambda *args, **kargs: (str(fg_path), "")
     )
     monkeypatch.setattr(
-        QFileDialog, "exec", lambda *args: QFileDialog.Accepted
+        QFileDialog, "exec", lambda *args: QFileDialog.DialogCode.Accepted
     )
     qtbot.wait(100)
 
     assert not fg_path.exists(), "File/Save Copy (setup): File already exists"
-    menu_shortcut(qtbot, qapp_cls_, "file", Qt.Key_F, Qt.Key_Y)
+    menu_shortcut(qtbot, qapp_cls_, "file", Qt.Key.Key_F, Qt.Key.Key_Y)
     assert fg_path.exists(), "File/Save Copy: Could not save file"
 
 
@@ -672,7 +672,7 @@ def test_file_screen_capture_pdf(qtbot, qapp_cls_, monkeypatch, tmp_path):
     qtbot.wait(100)
 
     assert not fg_path.exists(), "File/Screen Capture (setup): PDF already exists"
-    ctrl_keystroke(qtbot, qapp_cls_, Qt.Key_P)
+    ctrl_keystroke(qtbot, qapp_cls_, Qt.Key.Key_P)
     assert fg_path.exists(), "File/Screen Capture: Could not create PDF"
 
 
@@ -685,7 +685,7 @@ def test_file_screen_capture_png(qtbot, qapp_cls_, monkeypatch, tmp_path):
     qtbot.wait(100)
 
     assert not fg_path.exists(), "File/Screen Capture (setup): PNG already exists"
-    ctrl_keystroke(qtbot, qapp_cls_, Qt.Key_P)
+    ctrl_keystroke(qtbot, qapp_cls_, Qt.Key.Key_P)
     assert fg_path.exists(), "File/Screen Capture: Could not create PNG"
 
 
@@ -698,7 +698,7 @@ def test_file_screen_capture_svg(qtbot, qapp_cls_, monkeypatch, tmp_path):
     qtbot.wait(100)
 
     assert not fg_path.exists(), "File/Screen Capture (setup): SVG already exists"
-    ctrl_keystroke(qtbot, qapp_cls_, Qt.Key_P)
+    ctrl_keystroke(qtbot, qapp_cls_, Qt.Key.Key_P)
     assert fg_path.exists(), "File/Screen Capture: Could not create SVG"
 
 
@@ -708,12 +708,12 @@ def test_file_preferences(qtbot, qapp_cls_):
 
     def assert_and_close():
         assert qapp_cls_.activeWindow() != qapp_cls_.MainWindow
-        qtbot.keyClick(qapp_cls_.activeWindow(), Qt.Key_Enter)
+        qtbot.keyClick(qapp_cls_.activeWindow(), Qt.Key.Key_Enter)
 
-    qtbot.keyClick(qapp_cls_.focusWidget(), Qt.Key_F, Qt.AltModifier)
+    qtbot.keyClick(qapp_cls_.focusWidget(), Qt.Key.Key_F, Qt.KeyboardModifier.AltModifier)
     qtbot.wait(100)
     QTimer.singleShot(200, assert_and_close)
-    qtbot.keyClick(menu, Qt.Key_F)
+    qtbot.keyClick(menu, Qt.Key.Key_F)
     qtbot.wait(600)
     assert qapp_cls_.activeWindow() == qapp_cls_.MainWindow
     qtbot.wait(100)
@@ -725,12 +725,12 @@ def test_file_examples(qtbot, qapp_cls_):
 
     def assert_and_close():
         assert qapp_cls_.activeWindow() != qapp_cls_.MainWindow
-        qtbot.keyClick(qapp_cls_.activeWindow(), Qt.Key_Escape)
+        qtbot.keyClick(qapp_cls_.activeWindow(), Qt.Key.Key_Escape)
 
-    qtbot.keyClick(qapp_cls_.focusWidget(), Qt.Key_F, Qt.AltModifier)
+    qtbot.keyClick(qapp_cls_.focusWidget(), Qt.Key.Key_F, Qt.KeyboardModifier.AltModifier)
     qtbot.wait(100)
     QTimer.singleShot(200, assert_and_close)
-    qtbot.keyClick(menu, Qt.Key_E)
+    qtbot.keyClick(menu, Qt.Key.Key_E)
     qtbot.wait(600)
     assert qapp_cls_.activeWindow() == qapp_cls_.MainWindow
     qtbot.wait(100)
@@ -741,7 +741,7 @@ def test_edit_actions(qtbot, qapp_cls_):
 
 
 def test_edit_select_all(qtbot, qapp_cls_):
-    qtbot.keyClick(qapp_cls_.focusWidget(), Qt.Key_A, Qt.ControlModifier)
+    qtbot.keyClick(qapp_cls_.focusWidget(), Qt.Key.Key_A, Qt.KeyboardModifier.ControlModifier)
     qtbot.wait(100)
 
 
@@ -753,13 +753,13 @@ def test_edit_cut_paste(qtbot, qapp_cls_):
     assert var is not None, "Edit/Cut and paste (setup): Could not find variable block"
 
     click_on(qtbot, qapp_cls_, var)
-    ctrl_keystroke(qtbot, qapp_cls_, Qt.Key_X)
+    ctrl_keystroke(qtbot, qapp_cls_, Qt.Key.Key_X)
     qtbot.wait(100)
 
     var = find_blocks(fg, "variable")
     assert var is None, "Edit/Cut and paste: Could not cut variable block"
 
-    ctrl_keystroke(qtbot, qapp_cls_, Qt.Key_V)
+    ctrl_keystroke(qtbot, qapp_cls_, Qt.Key.Key_V)
     qtbot.wait(100)
 
     var = find_blocks(fg, "variable")
@@ -776,9 +776,9 @@ def test_edit_copy_paste(qtbot, qapp_cls_):
     assert var is not None, "Edit/Copy and paste (setup): Could not find variable block"
 
     click_on(qtbot, qapp_cls_, var)
-    ctrl_keystroke(qtbot, qapp_cls_, Qt.Key_C)
+    ctrl_keystroke(qtbot, qapp_cls_, Qt.Key.Key_C)
     qtbot.wait(100)
-    ctrl_keystroke(qtbot, qapp_cls_, Qt.Key_V)
+    ctrl_keystroke(qtbot, qapp_cls_, Qt.Key.Key_V)
 
     vars = find_blocks(fg, "variable")
     assert isinstance(vars, list), "Edit/Copy and paste: Could not paste variable block"
@@ -809,12 +809,12 @@ def test_tools_oot_browser(qtbot, qapp_cls_):
     def assert_open():
         assert qapp_cls_.activeWindow() != qapp_cls_.MainWindow
 
-    qtbot.keyClick(qapp_cls_.focusWidget(), Qt.Key_T, Qt.AltModifier)
+    qtbot.keyClick(qapp_cls_.focusWidget(), Qt.Key.Key_T, Qt.KeyboardModifier.AltModifier)
     qtbot.wait(100)
     QTimer.singleShot(100, assert_open)
-    qtbot.keyClick(menu, Qt.Key_O)
+    qtbot.keyClick(menu, Qt.Key.Key_O)
     qtbot.wait(200)
-    qtbot.keyClick(qapp_cls_.activeWindow(), Qt.Key_Escape)
+    qtbot.keyClick(qapp_cls_.activeWindow(), Qt.Key.Key_Escape)
     qtbot.wait(200)
 
 
@@ -825,10 +825,10 @@ def test_reports_actions(qtbot, qapp_cls_):
 def test_help_windows(qtbot, qapp_cls_):
     def assert_and_close():
         assert qapp_cls_.activeWindow() != qapp_cls_.MainWindow
-        qtbot.keyClick(qapp_cls_.activeWindow(), Qt.Key_Enter)
+        qtbot.keyClick(qapp_cls_.activeWindow(), Qt.Key.Key_Enter)
 
     def test_help_window(menu_key):
-        qtbot.keyClick(qapp_cls_.focusWidget(), Qt.Key_H, Qt.AltModifier)
+        qtbot.keyClick(qapp_cls_.focusWidget(), Qt.Key.Key_H, Qt.KeyboardModifier.AltModifier)
         qtbot.wait(300)
         QTimer.singleShot(200, assert_and_close)
         qtbot.keyClick(menu, menu_key)
@@ -840,12 +840,12 @@ def test_help_windows(qtbot, qapp_cls_):
     qtbot.wait(100)
 
     for key in [
-        Qt.Key_H,
-        Qt.Key_T,
-        Qt.Key_K,
-        Qt.Key_G,
-        Qt.Key_A,
-        Qt.Key_Q,
+        Qt.Key.Key_H,
+        Qt.Key.Key_T,
+        Qt.Key.Key_K,
+        Qt.Key.Key_G,
+        Qt.Key.Key_A,
+        Qt.Key.Key_Q,
     ]:
         test_help_window(key)
 
@@ -855,19 +855,19 @@ def test_file_new_close(qtbot, qapp_cls_, monkeypatch):
     monkeypatch.setattr(
         QMessageBox,
         "question",
-        lambda *args: QMessageBox.Discard,
+        lambda *args: QMessageBox.StandardButton.Discard,
     )
     qtbot.wait(100)
 
-    menu_shortcut(qtbot, qapp_cls_, "file", Qt.Key_F, Qt.Key_N)
+    menu_shortcut(qtbot, qapp_cls_, "file", Qt.Key.Key_F, Qt.Key.Key_N)
     assert win.tabWidget.count() == 2, "File/New"
 
     for i in range(3, 5):
-        ctrl_keystroke(qtbot, qapp_cls_, Qt.Key_N)
+        ctrl_keystroke(qtbot, qapp_cls_, Qt.Key.Key_N)
         assert win.tabWidget.count() == i, "File/New"
 
     for i in range(1, 4):
-        ctrl_keystroke(qtbot, qapp_cls_, Qt.Key_W)
+        ctrl_keystroke(qtbot, qapp_cls_, Qt.Key.Key_W)
         assert win.tabWidget.count() == 4 - i, "File/Close"
 
 
@@ -881,7 +881,7 @@ def test_generate(qtbot, qapp_cls_, monkeypatch, tmp_path):
         QFileDialog, "selectedFiles", lambda *args, **kargs: (str(fg_path), "")
     )
     monkeypatch.setattr(
-        QFileDialog, "exec", lambda *args: QFileDialog.Accepted
+        QFileDialog, "exec", lambda *args: QFileDialog.DialogCode.Accepted
     )
 
     qtbot.wait(100)
@@ -911,7 +911,7 @@ def test_generate(qtbot, qapp_cls_, monkeypatch, tmp_path):
     click_on(qtbot, qapp_cls_, n_sink.sinks[0])
     assert not fg_path.exists(), "File/Save (setup): .grc file already exists"
     assert not py_path.exists(), "File/Save (setup): Python file already exists"
-    menu_shortcut(qtbot, qapp_cls_, "build", Qt.Key_B, Qt.Key_Enter)
+    menu_shortcut(qtbot, qapp_cls_, "build", Qt.Key.Key_B, Qt.Key.Key_Enter)
     qtbot.wait(500)
     assert fg_path.exists(), "File/Save: Could not save .grc file"
     assert py_path.exists(), "File/Save: Could not save Python file"
@@ -922,16 +922,16 @@ def test_file_close_all(qtbot, qapp_cls_, monkeypatch):
     monkeypatch.setattr(
         QMessageBox,
         "question",
-        lambda *args: QMessageBox.Discard,
+        lambda *args: QMessageBox.StandardButton.Discard,
     )
 
     qtbot.wait(100)
 
     for i in range(1, 4):
-        ctrl_keystroke(qtbot, qapp_cls_, Qt.Key_N)
+        ctrl_keystroke(qtbot, qapp_cls_, Qt.Key.Key_N)
 
     assert win.tabWidget.count() == 4, "File/Close All"
-    menu_shortcut(qtbot, qapp_cls_, "file", Qt.Key_F, Qt.Key_L)
+    menu_shortcut(qtbot, qapp_cls_, "file", Qt.Key.Key_F, Qt.Key.Key_L)
     assert win.tabWidget.count() == 1, "File/Close All"
 
 
@@ -939,7 +939,7 @@ def test_quit(qtbot, qapp_cls_, monkeypatch):
     monkeypatch.setattr(
         QMessageBox,
         "question",
-        lambda *args: QMessageBox.Discard,
+        lambda *args: QMessageBox.StandardButton.Discard,
     )
     qapp_cls_.MainWindow.actions["exit"].trigger()
     assert True
