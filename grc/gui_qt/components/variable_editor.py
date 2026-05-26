@@ -6,7 +6,7 @@ from enum import Enum
 
 from PyQt6.QtGui import QIcon, QAction
 from PyQt6.QtWidgets import QMenu, QDockWidget, QTreeWidget, QTreeWidgetItem
-from PyQt6.QtCore import Slot, Signal, QPointF, Qt, QVariant
+from PyQt6.QtCore import pyqtSlot, pyqtSignal, QPointF, Qt, QVariant
 
 # Custom modules
 from .. import base
@@ -30,7 +30,7 @@ class VariableEditorAction(Enum):
 
 
 class VariableEditor(QDockWidget, base.Component):
-    all_editor_actions = Signal([VariableEditorAction])
+    all_editor_actions = pyqtSignal([VariableEditorAction])
 
     def __init__(self):
         super(VariableEditor, self).__init__()
@@ -223,7 +223,7 @@ class VariableEditor(QDockWidget, base.Component):
         self._rebuild()
         self._tree.expandAll()
 
-    Slot(VariableEditorAction)
+    pyqtSlot(VariableEditorAction)
 
     def handle_action(self, action):
         log.debug(f"{action} triggered!")

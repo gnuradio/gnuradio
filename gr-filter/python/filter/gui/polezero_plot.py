@@ -7,7 +7,7 @@
 #
 
 import sys
-from PyQt6.QtCore import QEvent, QObject, QPoint, Qt, Signal
+from PyQt6.QtCore import QEvent, QObject, QPoint, Qt, pyqtpyqtSignal
 from PyQt6.QtGui import QBrush, QPen
 from PyQt6.QtWidgets import QApplication
 from math import sin, cos, pi
@@ -147,8 +147,8 @@ class PzPlot(pg.PlotWidget):
 
 
 class CanvasPicker(QObject):
-    curveChanged = Signal(tuple)
-    mouseposChanged = Signal(tuple)
+    curveChanged = pyqtSignal(tuple)
+    mouseposChanged = pyqtSignal(tuple)
 
     def __init__(self, plot):
         QObject.__init__(self, plot)

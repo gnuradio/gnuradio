@@ -9,7 +9,7 @@
 #
 #
 
-from PyQt6.QtCore import Signal, QSize, QRect, Qt
+from PyQt6.QtCore import pyqtSignal, QSize, QRect, Qt
 from PyQt6.QtWidgets import QFrame, QVBoxLayout, QLabel
 from PyQt6.QtGui import QPainter, QPixmap, QFont, QFontMetrics, QBrush, QColor
 
@@ -74,8 +74,8 @@ class LabeledDigitalNumberControl(QFrame):
 
 class DigitalNumberControl(QFrame):
     # Notifies to avoid thread conflicts on paints
-    updateInt = Signal(int)
-    updateFloat = Signal(float)
+    updateInt = pyqtSignal(int)
+    updateFloat = pyqtSignal(float)
 
     def __init__(
         self,
