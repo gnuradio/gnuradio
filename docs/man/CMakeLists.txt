@@ -28,7 +28,6 @@ list(
     gr_plot_fft.1
     gr_plot_iq.1
     gr_plot_psd.1
-    gr_plot_qt.1
     gr_plot_time.1
     gr_read_file_metadata.1
     polar_channel_construction.1
