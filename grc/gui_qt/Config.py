@@ -4,7 +4,7 @@ from collections import OrderedDict
 
 from ..core.Config import Config as CoreConfig
 from .. import paths
-from qtpy.QtCore import QSettings
+from PyQt6.QtCore import QSettings
 
 
 class Config(CoreConfig):

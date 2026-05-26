@@ -22,10 +22,9 @@ import logging
 import textwrap
 import os
 
-from qtpy import PYQT_VERSION, PYSIDE_VERSION
-from qtpy.QtCore import QSettings, Qt
-from qtpy.QtGui import QIcon
-from qtpy.QtWidgets import QApplication
+from PyQt6.QtCore import QSettings, Qt, QT_VERSION_STR, PYQT_VERSION_STR
+from PyQt6.QtGui import QIcon
+from PyQt6.QtWidgets import QApplication
 
 # Custom modules
 from . import components
@@ -124,7 +123,7 @@ class Application(QApplication):
 
         welcome = (
             f"<<< Welcome to {config.name} {config.version} >>>\n\n"
-            f"{('PyQt ' + PYQT_VERSION) if PYQT_VERSION else ('PySide ' + PYSIDE_VERSION)}\n"
+            f"{'PyQt ' + PYQT_VERSION_STR}\n"
             f"GUI preferences file: {self.qsettings.fileName()}\n"
             f"Log files: {'None' if not log_files else log_files}\n"
             f"Block paths:\n\t{block_paths}\n"

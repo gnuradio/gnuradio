@@ -4,9 +4,9 @@ from __future__ import absolute_import, print_function
 import logging
 from enum import Enum
 
-from qtpy.QtGui import QIcon
-from qtpy.QtWidgets import QMenu, QAction, QDockWidget, QTreeWidget, QTreeWidgetItem
-from qtpy.QtCore import Slot, Signal, QPointF, Qt, QVariant
+from PyQt6.QtGui import QIcon
+from PyQt6.QtWidgets import QMenu, QDockWidget, QTreeWidget, QTreeWidgetItem
+from PyQt6.QtCore import Slot, Signal, QPointF, Qt, QVariant, QAction
 
 # Custom modules
 from .. import base

@@ -1,4 +1,4 @@
-from qtpy.QtCore import Qt
+from PyQt6.QtCore import Qt
 import pyqtgraph as pg
 
 

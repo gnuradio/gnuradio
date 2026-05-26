@@ -21,9 +21,9 @@ from __future__ import absolute_import, print_function
 import logging
 import functools
 
-from qtpy.QtCore import QDataStream, QPointF, QRectF, QVariant, Qt, Signal
-from qtpy.QtGui import QStandardItemModel, QTransform, QUndoStack
-from qtpy.QtWidgets import QApplication, QGraphicsScene, QGraphicsTextItem
+from PyQt6.QtCore import QDataStream, QPointF, QRectF, QVariant, Qt, Signal
+from PyQt6.QtGui import QStandardItemModel, QTransform, QUndoStack
+from PyQt6.QtWidgets import QApplication, QGraphicsScene, QGraphicsTextItem
 
 from itertools import count
 

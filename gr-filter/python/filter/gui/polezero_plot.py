@@ -7,9 +7,9 @@
 #
 
 import sys
-from qtpy.QtCore import QEvent, QObject, QPoint, Qt, Signal
-from qtpy.QtGui import QBrush, QPen
-from qtpy.QtWidgets import QApplication
+from PyQt6.QtCore import QEvent, QObject, QPoint, Qt, Signal
+from PyQt6.QtGui import QBrush, QPen
+from PyQt6.QtWidgets import QApplication
 from math import sin, cos, pi
 import qwt as Qwt
 import pyqtgraph as pg

@@ -256,7 +256,7 @@ inputs:
 
 templates:
     imports: |-
-        from qtpy import sip
+        from PyQt6 import sip
 
     callbacks:
     - set_time_domain_axis(${min}, ${max})

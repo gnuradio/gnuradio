@@ -15,8 +15,8 @@ from gnuradio import blocks
 import sys
 
 try:
-    from qtpy.QtWidgets import QWidget, QApplication
-    from qtpy import sip
+    from PyQt6.QtWidgets import QWidget, QApplication
+    from PyQt6 import sip
 except ImportError:
     sys.stderr.write("Error: Program requires PyQt6 and gr-qtgui.\n")
     sys.exit(1)

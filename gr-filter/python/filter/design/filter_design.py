@@ -41,9 +41,9 @@ except ImportError:
         'Please install SciPy to run this script (https://www.scipy.org)')
 
 try:
-    from qtpy.QtCore import QSize, Qt
-    from qtpy.QtGui import QBrush, QColor, QDoubleValidator, QIntValidator, QPen, qRgb
-    from qtpy.QtWidgets import QApplication, QFileDialog, QGraphicsProxyWidget, QGraphicsScene, QLineEdit, QMainWindow, QMessageBox, QWidget
+    from PyQt6.QtCore import QSize, Qt
+    from PyQt6.QtGui import QBrush, QColor, QDoubleValidator, QIntValidator, QPen, qRgb
+    from PyQt6.QtWidgets import QApplication, QFileDialog, QGraphicsProxyWidget, QGraphicsScene, QLineEdit, QMainWindow, QMessageBox, QWidget
 except ImportError:
     raise SystemExit(
         'Please install PyQt to run this script (https://www.riverbankcomputing.com/software/pyqt/download)')

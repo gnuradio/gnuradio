@@ -38,10 +38,10 @@ import threading
 import signal
 import time
 import math
-from qtpy.QtCore import QMetaObject, QSettings, QTimer, Q_ARG, Qt, Slot
-from qtpy.QtGui import QIcon
-from qtpy.QtWidgets import QApplication, QButtonGroup, QComboBox, QFrame, QGridLayout, QGroupBox, QHBoxLayout, QLabel, QLineEdit, QPushButton, QRadioButton, QScrollArea, QToolBar, QVBoxLayout, QWidget
-from qtpy import sip  # Needs to be imported after PyQt, could fail otherwise
+from PyQt6.QtCore import QMetaObject, QSettings, QTimer, Q_ARG, Qt, Slot
+from PyQt6.QtGui import QIcon
+from PyQt6.QtWidgets import QApplication, QButtonGroup, QComboBox, QFrame, QGridLayout, QGroupBox, QHBoxLayout, QLabel, QLineEdit, QPushButton, QRadioButton, QScrollArea, QToolBar, QVBoxLayout, QWidget
+from PyQt6 import sip  # Needs to be imported after PyQt, could fail otherwise
 from gnuradio import analog
 from gnuradio import eng_notation
 from gnuradio import qtgui

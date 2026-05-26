@@ -4,11 +4,11 @@ from __future__ import absolute_import, print_function
 import logging
 import yaml
 
-from qtpy.QtCore import Qt, QSettings
-from qtpy.QtWidgets import (QLineEdit, QTabWidget, QDialog,
-                            QScrollArea, QVBoxLayout, QCheckBox,
-                            QComboBox, QHBoxLayout, QDialogButtonBox,
-                            QLabel, QWidget, QFormLayout)
+from PyQt6.QtCore import Qt, QSettings
+from PyQt6.QtWidgets import (QLineEdit, QTabWidget, QDialog,
+                             QScrollArea, QVBoxLayout, QCheckBox,
+                             QComboBox, QHBoxLayout, QDialogButtonBox,
+                             QLabel, QWidget, QFormLayout)
 
 from ..properties import Paths
 from gnuradio import gr

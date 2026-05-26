@@ -10,9 +10,9 @@
 #
 
 import sys
-from qtpy.QtCore import Qt, QRect
-from qtpy.QtWidgets import QFrame, QHBoxLayout, QVBoxLayout, QLabel
-from qtpy.QtGui import QPainter, QColor, QPen, QFont, QFontMetricsF
+from PyQt6.QtCore import Qt, QRect
+from PyQt6.QtWidgets import QFrame, QHBoxLayout, QVBoxLayout, QLabel
+from PyQt6.QtGui import QPainter, QColor, QPen, QFont, QFontMetricsF
 
 from gnuradio import gr
 import pmt

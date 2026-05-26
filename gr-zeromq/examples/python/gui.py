@@ -14,10 +14,10 @@ from gnuradio.eng_arg import eng_float, intx
 import gui
 import sys
 import os
-from qtpy.QtCore import Qt, QTimer
-from qtpy.QtWidgets import QMainWindow, QShortcut, QApplication
-from qtpy.QtGui import QPen, QKeySequence
-from qtpy import uic
+from PyQt6.QtCore import Qt, QTimer
+from PyQt6.QtWidgets import QMainWindow, QShortcut, QApplication
+from PyQt6.QtGui import QPen, QKeySequence
+from PyQt6 import uic
 import qwt as Qwt
 from gnuradio import zeromq
 import signal

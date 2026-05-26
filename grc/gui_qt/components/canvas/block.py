@@ -1,8 +1,8 @@
 import logging
 
-from qtpy.QtGui import QPen, QPainter, QBrush, QFont, QFontMetrics, QColor
-from qtpy.QtCore import Qt, QPointF, QRectF, QUrl
-from qtpy.QtWidgets import QGraphicsItem, QApplication, QAction, QGraphicsTextItem
+from PyQt6.QtGui import QPen, QPainter, QBrush, QFont, QFontMetrics, QColor, QAction
+from PyQt6.QtCore import Qt, QPointF, QRectF, QUrl
+from PyQt6.QtWidgets import QGraphicsItem, QApplication, QGraphicsTextItem
 
 from . import colors
 from ... import Constants
