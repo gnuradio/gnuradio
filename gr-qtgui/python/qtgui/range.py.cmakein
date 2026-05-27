@@ -200,9 +200,9 @@ class RangeWidget(QWidget):
         def mousePressEvent(self, event):
             if((event.button() == Qt.MouseButton.LeftButton)):
                 if self.orientation == Qt.Orientation.Horizontal:
-                    new = self.minimum() + ((self.maximum() - self.minimum()) * event.x()) / self.width()
+                    new = self.minimum() + ((self.maximum() - self.minimum()) * event.position().x()) / self.width()
                 else:
-                    new = self.minimum() + ((self.maximum() - self.minimum()) * event.y()) / self.height()
+                    new = self.minimum() + ((self.maximum() - self.minimum()) * event.position().y()) / self.height()
                 self.setValue(int(new))
                 event.accept()
             # Use repaint rather than calling the super mousePressEvent.
@@ -211,9 +211,9 @@ class RangeWidget(QWidget):
 
         def mouseMoveEvent(self, event):
             if self.orientation == Qt.Orientation.Horizontal:
-                new = self.minimum() + ((self.maximum() - self.minimum()) * event.x()) / self.width()
+                new = self.minimum() + ((self.maximum() - self.minimum()) * event.position().x()) / self.width()
             else:
-                new = self.minimum() + ((self.maximum() - self.minimum()) * event.y()) / self.height()
+                new = self.minimum() + ((self.maximum() - self.minimum()) * event.position().y()) / self.height()
             self.setValue(int(new))
             event.accept()
             QSlider.repaint(self)
