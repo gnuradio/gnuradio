@@ -4,7 +4,7 @@ from __future__ import absolute_import, print_function
 import logging
 from enum import Enum
 
-from PyQt6.QtGui import QIcon, QAction
+from PyQt6.QtGui import QIcon, QAction, QPalette
 from PyQt6.QtWidgets import QMenu, QDockWidget, QTreeWidget, QTreeWidgetItem
 from PyQt6.QtCore import pyqtSlot, pyqtSignal, QPointF, Qt, QVariant
 
@@ -151,7 +151,7 @@ class VariableEditor(QDockWidget, base.Component):
         self._tree.clear()
         imports = QTreeWidgetItem(self._tree, 2)
         imports.setText(0, "Imports")
-        imports.setForeground(0, self._tree.palette().color(self.palette().WindowText))
+        imports.setForeground(0, self._tree.palette().color(QPalette.ColorRole.WindowText))
         imports.setIcon(2, QIcon.fromTheme("list-add"))
         imports.setData(2, Qt.ItemDataRole.UserRole, self.import_add)
         for block in self._imports:
@@ -164,16 +164,16 @@ class VariableEditor(QDockWidget, base.Component):
             import_.setData(2, Qt.ItemDataRole.UserRole, self.del_block)
             if block.enabled:
                 import_.setFlags(Qt.ItemFlag.ItemIsSelectable | Qt.ItemFlag.ItemIsEditable | Qt.ItemFlag.ItemIsEnabled)
-                import_.setForeground(0, self._tree.palette().color(self.palette().WindowText))
-                import_.setForeground(1, self._tree.palette().color(self.palette().WindowText))
+                import_.setForeground(0, self._tree.palette().color(QPalette.ColorRole.WindowText))
+                import_.setForeground(1, self._tree.palette().color(QPalette.ColorRole.WindowText))
             else:
                 import_.setFlags(Qt.ItemFlag.ItemIsSelectable | Qt.ItemFlag.ItemIsEnabled)
-                import_.setForeground(0, self._tree.palette().color(self.palette().Disabled, self.palette().WindowText))
-                import_.setForeground(1, self._tree.palette().color(self.palette().Disabled, self.palette().WindowText))
+                import_.setForeground(0, self._tree.palette().color(QPalette.ColorGroup.Disabled, QPalette.ColorRole.WindowText))
+                import_.setForeground(1, self._tree.palette().color(QPalette.ColorGroup.Disabled, QPalette.ColorRole.WindowText))
 
         variables = QTreeWidgetItem(self._tree, 2)
         variables.setText(0, "Variables")
-        variables.setForeground(0, self._tree.palette().color(self.palette().WindowText))
+        variables.setForeground(0, self._tree.palette().color(QPalette.ColorRole.WindowText))
         variables.setIcon(2, QIcon.fromTheme("list-add"))
         variables.setData(2, Qt.ItemDataRole.UserRole, self.var_add)
         for block in sorted(self._variables, key=lambda v: v.name):
@@ -186,33 +186,33 @@ class VariableEditor(QDockWidget, base.Component):
                 variable_.setData(1, Qt.ItemDataRole.UserRole, block)
                 variable_.setFlags(Qt.ItemFlag.ItemIsSelectable | Qt.ItemFlag.ItemIsEditable | Qt.ItemFlag.ItemIsEnabled)
                 if block.enabled:
-                    variable_.setForeground(0, self._tree.palette().color(self.palette().WindowText))
-                    variable_.setForeground(1, self._tree.palette().color(self.palette().WindowText))
+                    variable_.setForeground(0, self._tree.palette().color(QPalette.ColorRole.WindowText))
+                    variable_.setForeground(1, self._tree.palette().color(QPalette.ColorRole.WindowText))
                 else:
                     variable_.setForeground(0, self._tree.palette().color(
-                        self.palette().Disabled, self.palette().WindowText))
+                        QPalette.ColorGroup.Disabled, QPalette.ColorRole.WindowText))
                     variable_.setForeground(1, self._tree.palette().color(
-                        self.palette().Disabled, self.palette().WindowText))
+                        QPalette.ColorGroup.Disabled, QPalette.ColorRole.WindowText))
             else:
                 variable_.setFlags(Qt.ItemFlag.ItemIsSelectable | Qt.ItemFlag.ItemIsEnabled)
                 if block.enabled:
                     try:
                         variable_.setText(1, str(block.evaluate(block.value)))
-                        variable_.setForeground(0, self._tree.palette().color(self.palette().WindowText))
-                        variable_.setForeground(1, self._tree.palette().color(self.palette().WindowText))
+                        variable_.setForeground(0, self._tree.palette().color(QPalette.ColorRole.WindowText))
+                        variable_.setForeground(1, self._tree.palette().color(QPalette.ColorRole.WindowText))
                     except Exception:
                         log.exception(f'Failed to evaluate variable block {block.name}', exc_info=True)
                         variable_.setText(1, '<Open Properties>')
                         variable_.setForeground(0, self._tree.palette().color(
-                            self.palette().Disabled, self.palette().WindowText))
+                            QPalette.ColorGroup.Disabled, QPalette.ColorRole.WindowText))
                         variable_.setForeground(1, self._tree.palette().color(
-                            self.palette().Disabled, self.palette().WindowText))
+                            QPalette.ColorGroup.Disabled, QPalette.ColorRole.WindowText))
                 else:
                     variable_.setText(1, '<Open Properties>')
                     variable_.setForeground(0, self._tree.palette().color(
-                        self.palette().Disabled, self.palette().WindowText))
+                        QPalette.ColorGroup.Disabled, QPalette.ColorRole.WindowText))
                     variable_.setForeground(1, self._tree.palette().color(
-                        self.palette().Disabled, self.palette().WindowText))
+                        QPalette.ColorGroup.Disabled, QPalette.ColorRole.WindowText))
             variable_.setIcon(2, QIcon.fromTheme("list-remove"))
 
         self.currently_rebuilding = False

@@ -36,7 +36,6 @@ Action = QAction
 Menu = QMenu
 Toolbar = QToolBar
 Icons = QIcon.fromTheme
-Keys = QKeySequence
 
 # Logging
 log = logging.getLogger(f"grc.application.{__name__}")

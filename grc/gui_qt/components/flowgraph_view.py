@@ -54,7 +54,7 @@ class FlowgraphView(
         self.isPanning = False
         self.mousePressed = False
 
-        self.setDragMode(self.RubberBandDrag)
+        self.setDragMode(QGraphicsView.DragMode.RubberBandDrag)
 
         self.generator = None
         self.process = None
