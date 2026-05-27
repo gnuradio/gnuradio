@@ -120,7 +120,7 @@ class GUIPort(QGraphicsItem):
         if not self.parentItem():
             self.setParentItem(self.core.parent_block.gui)
 
-        self.width = max(15, self.fm.width(self.core.name) * 1.5)
+        self.width = max(15, self.fm.horizontalAdvance(self.core.name) * 1.5)
         self._update_colors()
         self.update_connections()
 
