@@ -28,7 +28,7 @@ import pstats
 from typing import Union
 
 from PyQt6.QtCore import QMetaObject, QPointF, QThreadPool, QUrl, Qt, pyqtSlot
-from PyQt6.QtGui import QDesktopServices, QIcon, QKeySequence, QAction
+from PyQt6.QtGui import QDesktopServices, QIcon, QKeySequence, QAction, QPalette
 from PyQt6.QtWidgets import QApplication, QFileDialog, QMainWindow, QMenu, QMessageBox, QProgressBar, QStyle, QTabWidget, QToolBar, QUndoView
 
 # Custom modules
@@ -63,7 +63,7 @@ Action = QAction
 Menu = QMenu
 Toolbar = QToolBar
 Icons = QIcon.fromTheme
-Keys = QKeySequence
+Keys = QKeySequence.StandardKey
 QStyle = QStyle
 
 
@@ -1042,7 +1042,7 @@ class MainWindow(QMainWindow, base.Component):
 
             log.info(f"Saved {filename}")
             self.tabWidget.tabBar().setTabTextColor(self.tabWidget.currentIndex(),
-                                                    self.palette().color(self.palette().WindowText))
+                                                    self.palette().color(QPalette.ColorRole.WindowText))
             self.currentFlowgraphScene.set_saved(True)
         else:
             log.debug("Flowgraph does not have a filename")
@@ -1075,7 +1075,7 @@ class MainWindow(QMainWindow, base.Component):
 
             log.info(f"Saved (as) {filename}")
             self.tabWidget.tabBar().setTabTextColor(self.tabWidget.currentIndex(),
-                                                    self.palette().color(self.palette().WindowText))
+                                                    self.palette().color(QPalette.ColorRole.WindowText))
             self.currentFlowgraphScene.set_saved(True)
             self.tabWidget.setTabText(self.tabWidget.currentIndex(), os.path.basename(filename))
             self.add_recent_file(filename)
