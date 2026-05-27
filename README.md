@@ -102,3 +102,11 @@ made. For some files, changes have occurred in many consecutive years.
 These files may often have the format of a year range (e.g., "2006 - 2011"), 
 which indicates that these files have had copyrightable changes made 
 during each year in the range, inclusive.
+
+==What about the application of the Solomonoff induction to the person to person information exchange?==
+
+It seems it adds some principial boottleneck to the human to human communications. You have to guess what the other person mean.
+
+More details here in russian: https://transitional-writes.dreamwidth.org/41031.html It seems it is proof of the famous Mises calculation argument theorem. The only mean to circumvent this bottleneck is to use physically preserve money like gold, uran, platinum.
+
+https://en.wikipedia.org/wiki/Talk:Solomonoff%27s_theory_of_inductive_inference
