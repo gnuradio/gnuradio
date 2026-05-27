@@ -160,11 +160,11 @@ class GUIBlock(QGraphicsItem):
 
         # Figure out width of block based on widest line of text
         fm = QFontMetrics(self.font)
-        largest_width = fm.width(self.core.label)
+        largest_width = fm.horizontalAdvance(self.core.label)
         if self.core.is_dummy_block:
             full_line = "key: " + self.core.key
-            if fm.width(full_line) > largest_width:
-                largest_width = fm.width(full_line)
+            if fm.horizontalAdvance(full_line) > largest_width:
+                largest_width = fm.horizontalAdvance(full_line)
         else:
             for key, item in self.core.params.items():
                 name = item.name
@@ -176,8 +176,8 @@ class GUIBlock(QGraphicsItem):
                     value_label = item.options[value] if value in item.options else value
                     full_line = name + ": " + value_label
 
-                    if fm.width(full_line) > largest_width:
-                        largest_width = fm.width(full_line)
+                    if fm.horizontalAdvance(full_line) > largest_width:
+                        largest_width = fm.horizontalAdvance(full_line)
         self.width = largest_width + 15
 
         markup_text = ""
@@ -324,7 +324,7 @@ class GUIBlock(QGraphicsItem):
             painter.setFont(self.font)
             painter.drawText(
                 QRectF(
-                    7.5 + fm.width("key: "),
+                    7.5 + fm.horizontalAdvance("key: "),
                     0 + y_offset,
                     self.width,
                     self.height,
@@ -376,7 +376,7 @@ class GUIBlock(QGraphicsItem):
                     painter.setFont(self.font)
                     painter.drawText(
                         QRectF(
-                            7.5 + fm.width(name + ": "),
+                            7.5 + fm.horizontalAdvance(name + ": "),
                             0 + y_offset,
                             self.width,
                             self.height,
