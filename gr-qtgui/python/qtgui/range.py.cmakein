@@ -202,7 +202,8 @@ class RangeWidget(QtWidgets.QWidget):
                 if self.orientation == QtCore.Qt.Horizontal:
                     new = self.minimum() + ((self.maximum() - self.minimum()) * event.x()) / self.width()
                 else:
-                    new = self.minimum() + ((self.maximum() - self.minimum()) * event.y()) / self.height()
+                    # Vertical sliders have their minimum at the bottom, but mouse y grows downward
+                    new = self.minimum() + ((self.maximum() - self.minimum()) * (self.height() - event.position().y())) / self.height()
                 self.setValue(int(new))
                 event.accept()
             # Use repaint rather than calling the super mousePressEvent.
@@ -213,7 +214,7 @@ class RangeWidget(QtWidgets.QWidget):
             if self.orientation == QtCore.Qt.Horizontal:
                 new = self.minimum() + ((self.maximum() - self.minimum()) * event.x()) / self.width()
             else:
-                new = self.minimum() + ((self.maximum() - self.minimum()) * event.y()) / self.height()
+                new = self.minimum() + ((self.maximum() - self.minimum()) * (self.height() - event.position().y())) / self.height()
             self.setValue(int(new))
             event.accept()
             QtWidgets.QSlider.repaint(self)
