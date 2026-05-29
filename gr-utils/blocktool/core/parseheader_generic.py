@@ -11,7 +11,6 @@
 
 import os
 import re
-import codecs
 import logging
 
 from ..core.base import BlockToolException, BlockTool

@@ -15,7 +15,6 @@ from ..core.iosignature import io_signature, message_port
 from ..core.base import BlockToolException, BlockTool
 import os
 import re
-import codecs
 import logging
 
 PYGCCXML_AVAILABLE = False
@@ -303,7 +302,7 @@ class BlockHeaderParser(BlockTool):
         # documentation
         try:
             _index = None
-            header_file = codecs.open(self.target_file, 'r', 'cp932')
+            header_file = open(self.target_file, 'r', encoding='cp932')
             self.parsed_data['docstring'] = re.compile(
                 r'//.*?$|/\*.*?\*/', re.DOTALL | re.MULTILINE).findall(
                     header_file.read())[2:]
