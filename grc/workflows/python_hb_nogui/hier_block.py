@@ -3,7 +3,6 @@
 SPDX-License-Identifier: GPL-3.0-or-later
 """
 
-import codecs
 import collections
 import os
 
@@ -55,7 +54,7 @@ class PythonHierBlockNoGuiGenerator(HierBlockGeneratorMixin, PythonNoGuiGenerato
         for r in replace:
             data = data.replace(*r)
 
-        with codecs.open(self.file_path_yml, 'w', encoding='utf-8') as fp:
+        with open(self.file_path_yml, 'w', encoding='utf-8') as fp:
             fp.write(data)
 
         # Windows only supports S_IREAD and S_IWRITE, other flags are ignored

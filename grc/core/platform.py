@@ -5,7 +5,6 @@
 #
 
 
-from codecs import open
 from collections import namedtuple
 from collections import ChainMap
 import os

@@ -5,7 +5,6 @@
 #
 
 
-from codecs import open
 import json
 import logging
 import os
