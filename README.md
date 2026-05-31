@@ -45,11 +45,8 @@ energy particle physics, astrophysics, radio astronomy and more!
 ## How to Run the QT Version of GNU Radio Companion
 
 ```bash
-    # Ensure PyQt6 and other dependencies are installed
-    pip install QDarkStyle qtpy
-
-    # If you want to run tests
-    pip install pytest-qt pyautogui
+    # If you want dark mode and GUI tests
+    pip install pytest-qt pyautogui QDarkStyle
 
     # Build and install as usual (described below) and then run
     gnuradio-companion --qt
