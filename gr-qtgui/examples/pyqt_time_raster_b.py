@@ -18,7 +18,7 @@ try:
     from PyQt6 import QtWidgets
     from PyQt6 import sip
 except ImportError as e:
-    sys.stderr.write(f"Error: Program requires PyQt/PySide and gr-qtgui: {str(e)}\n")
+    sys.stderr.write(f"Error: Program requires PyQt and gr-qtgui: {str(e)}\n")
     sys.exit(1)
 
 

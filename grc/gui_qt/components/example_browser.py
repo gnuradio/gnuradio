@@ -16,7 +16,7 @@ from ..properties import Paths
 log = logging.getLogger(f"grc.application.{__name__}")
 
 
-class WorkerpyqtSignals(QObject):
+class WorkerSignals(QObject):
     error = pyqtSignal(tuple)
     result = pyqtSignal(object)
     progress = pyqtSignal(tuple)
@@ -33,7 +33,7 @@ class Worker(QRunnable):
         self.fn = fn
         self.args = args
         self.kwargs = kwargs
-        self.signals = WorkerpyqtSignals()
+        self.signals = WorkerSignals()
 
         self.kwargs['progress_callback'] = self.signals.progress
 
