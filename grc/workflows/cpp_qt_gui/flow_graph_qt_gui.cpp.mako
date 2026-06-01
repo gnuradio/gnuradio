@@ -158,6 +158,8 @@ int main (int argc, char **argv) {
     app.exec();
 
 
+    top_block->tb->stop();
+    top_block->tb->wait();
     return 0;
 }
 #include "moc_${class_name}.cpp"
