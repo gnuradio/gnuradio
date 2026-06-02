@@ -17,7 +17,7 @@ class test_fastnoise_source(gr_unittest.TestCase):
     def setUp(self):
 
         self.num = 2**22
-        self.num_items = 10**6
+        self.num_items = 2**22
         self.default_args = {"samples": self.num, "seed": 43, "ampl": 1}
 
     def tearDown(self):
@@ -92,6 +92,7 @@ class test_fastnoise_source(gr_unittest.TestCase):
         self.assertAlmostEqual(data.var(), 1, places=2)
 
     def test_001_real_laplacian_moments(self):
+        self.num_items = 10**7
         data = self.run_test_real(analog.GR_LAPLACIAN)
 
         # mean, variance

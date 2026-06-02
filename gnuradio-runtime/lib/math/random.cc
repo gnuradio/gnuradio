@@ -23,6 +23,8 @@
  *
  */
 
+#include <cstdint>
+#include <limits>
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
@@ -106,11 +108,64 @@ float random::gasdev()
 
 float random::laplacian()
 {
-    float z = ran1();
-    if (z > 0.5f) {
-        return -logf(2.0f * (1.0f - z));
-    }
-    return logf(2 * z);
+    /* Original code, for reference:
+     *
+     * float z = ran1();
+     * if (z > 0.5f) {
+     *     return -logf(2.0f * (1.0f - z));
+     * }
+     * return logf(2 * z);
+     *
+     * So: Z ~ U[0;1], which means the (1.0f - z)
+     * is utterly senseless, and then so is the "2*";
+     * we transform the if-clause
+     * float y = 2*ran1(); // =2*(1-z)
+     * if (y <= 1.0f) {
+     *      return -logf(y);
+     * }
+     * return logf(y);
+     *
+     * or, really, just
+     *
+     * return absf(logf(2*ran1()));
+     * that's it. That should have been the function.
+     *
+     * BUT.
+     *
+     * Let's talk about Laplace(µ,2b) generation!
+     *
+     * Classically, let V ~ U[-0.5;+0.5];
+     *
+     * X = µ - b · sgn(V) ln(1 - 2·|V|)
+     *
+     * We're generating mean = 0, var = 2, so
+     * µ = 0, b = 1
+     *
+     * therefore
+     *
+     * X = 0 - 1 · sgn(V) ln(1-2·|V|)
+     *   = -sgn(V) ln(1-2·|V|)
+     *
+     * that ln argument is stupid – instead,
+     * let W ~ U[0;1], S~U{-1,+1}
+     * X = S · ln(W)
+     *
+     * That is a tiny bit less work, isn't it?
+     * We need to form W from a 63 bit uniform integer P (we're using the
+     * highest bit as S), so technically W = P / (2⁶³ - 1) but logarithm says
+     * X = S · (ln(P) - ln(2⁶³-1))
+     */
+    // make sure we're on the right range
+    static_assert(decltype(d_rng)::min() == 0 &&
+                  decltype(d_rng)::max() == std::numeric_limits<uint64_t>::max());
+    constexpr auto lower_bitmask = ((uint64_t)(1) << 63) - 1;
+    // ln(2⁶³-1):
+    constexpr float log_scaling = 0x1.5d589f2fe5107p+5;
+    const uint64_t v = d_rng();
+    const bool signbit = (v >> 63);
+    const float w = (v & lower_bitmask);
+    const float value = std::log(w) - log_scaling;
+    return signbit ? -value : value;
 }
 /*
  * Copied from The KC7WW / OH2BNS Channel Simulator
