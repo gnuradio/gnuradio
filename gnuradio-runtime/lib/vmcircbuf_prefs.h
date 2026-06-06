@@ -13,6 +13,7 @@
 
 #include <gnuradio/api.h>
 #include <string_view>
+#include <optional>
 #include <string>
 
 namespace gr {
@@ -20,8 +21,8 @@ namespace gr {
 class GR_RUNTIME_API vmcircbuf_prefs
 {
 public:
-    static std::string get(std::string_view key);
-    static void set(std::string_view key, std::string_view value);
+    static std::optional<std::string> get(std::string_view key);
+    static bool set(std::string_view key, std::string_view value);
 };
 
 } /* namespace gr */
