@@ -125,6 +125,7 @@ install(
           rms_cf.h
           rms_ff.h
           rotator_cc.h
+          sigmf_sink.h
           short_to_char.h
           short_to_float.h
           skiphead.h

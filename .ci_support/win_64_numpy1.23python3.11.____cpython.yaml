@@ -44,6 +44,8 @@ volk:
 - '3.1'
 zeromq:
 - 4.3.5
+nlohmann_json:
+- 3.10.5
 zip_keys:
 - - python
   - numpy
