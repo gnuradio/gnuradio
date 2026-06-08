@@ -73,5 +73,5 @@ if(LIBGSM_LIBRARIES)
 endif(LIBGSM_LIBRARIES)
 
 if(BUILD_SHARED_LIBS)
-    gr_library_foo(gnuradio-vocoder ${external_deps})
+    GR_REGISTER_LIBRARY(gnuradio-vocoder ${external_deps})
 endif()

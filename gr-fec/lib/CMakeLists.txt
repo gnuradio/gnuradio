@@ -95,5 +95,5 @@ if(GSL_FOUND)
 endif(GSL_FOUND)
 
 if(BUILD_SHARED_LIBS)
-    gr_library_foo(gnuradio-fec)
+    GR_REGISTER_LIBRARY(gnuradio-fec)
 endif()
