@@ -23,7 +23,7 @@ documentation: |-
 
 templates:
   imports: from gnuradio import blocks
-  make: blocks.saveRestoreVariables(self, ${slot}, ${variables}, ${save_trigger}, ${restore_trigger}, ${description_variable})
+  make: blocks.variable_save_restore(self, ${slot}, ${variables}, ${save_trigger}, ${restore_trigger}, ${description_variable})
   callbacks:
   - set_slot(${slot})
   - set_variables(${variables})
