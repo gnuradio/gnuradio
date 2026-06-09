@@ -22,7 +22,7 @@ class test_glfsr_source(gr_unittest.TestCase):
 
     def test_000_make_b(self):
         src = digital.glfsr_source_b(16)
-        self.assertEqual(src.mask(), 0x8016)
+        self.assertEqual(src.mask(), 0xD008)
         self.assertEqual(src.period(), 2**16 - 1)
 
     def test_001_degree_b(self):
@@ -52,7 +52,7 @@ class test_glfsr_source(gr_unittest.TestCase):
 
     def test_003_make_f(self):
         src = digital.glfsr_source_f(16)
-        self.assertEqual(src.mask(), 0x8016)
+        self.assertEqual(src.mask(), 0xD008)
         self.assertEqual(src.period(), 2**16 - 1)
 
     def test_004_degree_f(self):
