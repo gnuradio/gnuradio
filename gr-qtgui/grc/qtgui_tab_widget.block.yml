@@ -123,11 +123,11 @@ templates:
                           label10, label11, label12, label13, label14,
                           label15, label16, label17, label18, label19][:int(num_tabs)]
         %>\
-        Qt.QTabWidget()
+        QtWidgets.QTabWidget()
         % for i, label in enumerate(all_labels):
         self.${id}_widget_${i} = QtWidgets.QWidget()
-        self.${id}_layout_${i} = Qt.QBoxLayout(Qt.QBoxLayout.Direction.TopToBottom, self.${id}_widget_${i})
-        self.${id}_grid_layout_${i} = Qt.QGridLayout()
+        self.${id}_layout_${i} = QtWidgets.QBoxLayout(QtWidgets.QBoxLayout.Direction.TopToBottom, self.${id}_widget_${i})
+        self.${id}_grid_layout_${i} = QtWidgets.QGridLayout()
         self.${id}_layout_${i}.addLayout(self.${id}_grid_layout_${i})
         ${win}.addTab(self.${id}_widget_${i}, ${label})
         % endfor
