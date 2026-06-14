@@ -152,7 +152,7 @@ class Compass(QWidget):
 
             if i % 45 == 0:
                 painter.drawLine(0, -40, 0, -50)
-                painter.drawText(int(-metrics.width(
+                painter.drawText(int(-metrics.horizontalAdvance(
                     self._pointText[i]) / 2.0), -52, self._pointText[i])
             else:
                 painter.drawLine(0, -45, 0, -50)

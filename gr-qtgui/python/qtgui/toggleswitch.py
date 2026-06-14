@@ -75,7 +75,7 @@ class LabeledToggleSwitch(QFrame):
         textfont = self.lblcontrol.font()
         metrics = QFontMetricsF(textfont)
 
-        maxWidth = max((maxSize + 4), (maxSize * 2 + metrics.width(lbl)))
+        maxWidth = max((maxSize + 4), (maxSize * 2 + metrics.horizontalAdvance(lbl)))
         maxHeight = max((maxSize // 2 + 4),
                         (maxSize // 2 + metrics.height() + 2))
 
@@ -146,7 +146,7 @@ class ToggleSwitch(QFrame):
             painter.drawEllipse(2, 2, size.height() - 4, size.height() - 4)
 
     def mousePressEvent(self, event):
-        if event.x() <= self.size().width() / 2:
+        if event.position().x() <= self.size().width() / 2:
             self.setState(False)
         else:
             self.setState(True)
