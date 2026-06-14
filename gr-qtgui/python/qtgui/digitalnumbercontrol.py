@@ -124,7 +124,7 @@ class DigitalNumberControl(QFrame):
         else:
             textstr = teststr
 
-        width = fm.width(textstr)
+        width = fm.horizontalAdvance(textstr)
 
         self.minwidth = width
 
@@ -161,7 +161,7 @@ class DigitalNumberControl(QFrame):
         else:
             textstr = str(self.getFrequency())
 
-        width = fm.width(textstr)
+        width = fm.horizontalAdvance(textstr)
 
         # So we know:
         # - the width of the text
@@ -173,9 +173,9 @@ class DigitalNumberControl(QFrame):
         found_number = False
         clicked_thousands = False
         for i in range(1, len(textstr) + 1):
-            width = fm.width(textstr[-i:])
+            width = fm.horizontalAdvance(textstr[-i:])
             charstr = textstr[-i:]
-            widthchar = fm.width(charstr[0])
+            widthchar = fm.horizontalAdvance(charstr[0])
             if clickpos >= (width - widthchar) and clickpos <= width:
                 clicked_char = i - 1
 

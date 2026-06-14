@@ -44,15 +44,15 @@ templates:
         <%
             win = 'self._%s_tool_bar'%id
         %>\
-        ${win} = Qt.QToolBar(self)
+        ${win} = QtWidgets.QToolBar(self)
 
         if ${formatter}:
             self._${id}_formatter = ${formatter}
         else:
             self._${id}_formatter = lambda x: ${type.str}(x)
 
-        ${win}.addWidget(Qt.QLabel("${no_quotes(label,repr(id))}"))
-        self._${id}_label = Qt.QLabel(str(self._${id}_formatter(self.${id})))
+        ${win}.addWidget(QtWidgets.QLabel("${no_quotes(label,repr(id))}"))
+        self._${id}_label = QtWidgets.QLabel(str(self._${id}_formatter(self.${id})))
         self._${id}_tool_bar.addWidget(self._${id}_label)
         ${gui_hint() % win}
 
