@@ -72,7 +72,7 @@ class LabeledLEDIndicator(QFrame):
             textfont = self.lblcontrol.font()
             metrics = QFontMetricsF(textfont)
 
-            maxWidth = int(max((maxSize + 30), (maxSize + metrics.width(lbl) + 4)))
+            maxWidth = int(max((maxSize + 30), (maxSize + metrics.horizontalAdvance(lbl) + 4)))
             maxHeight = int(max((maxSize + 35), (maxSize + metrics.height() + 2)))
             self.setMinimumSize(maxWidth, maxHeight)
         else:
