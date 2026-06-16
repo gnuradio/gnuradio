@@ -45,6 +45,7 @@ private:
      */
     std::unique_ptr<hier_block2_detail> d_detail;
 
+    std::vector<int> d_affinity; // thread affinity proc. mask
 
 protected:
     hier_block2(); // allows pure virtual interface sub-classes
@@ -269,7 +270,7 @@ public:
      * interface. If any block has been individually set, then this
      * call could be misleading.
      */
-    std::vector<int> processor_affinity() override;
+    std::vector<int> processor_affinity() override { return d_affinity; }
 
     /*!
      * \brief Set the logger's output level.
