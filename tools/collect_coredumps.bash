@@ -7,6 +7,10 @@ bail_with_message() {
   printf '::notice title="%s: %s"::%s\n' "${runname}" "$1" "$2"
   exit 0
 }
+add_output() {
+  printf '%s=%s\n' "$1" "$2" >> "${GITHUB_OUTPUT}"
+}
+
 # exit early on lack of mksquashfs
 type mksquashfs > /dev/null || bail_with_message 'skipping coredump collection' 'mksquashfs not found'
 
@@ -19,3 +23,4 @@ coredumps=( "${dir}"/* "${dir}"/.* )
 [[ ${#coredumps[@]} -eq 2 ]] && bail_with_message 'no coredumps' 'coredump directory empty'
 
 mksquashfs "${dir}" "${archive}" -comp zstd
+add_output COREDUMP_ARCHIVE  "${archive}"

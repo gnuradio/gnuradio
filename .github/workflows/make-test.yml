@@ -115,6 +115,12 @@ jobs:
         - build_data:/build
       options: --cpus 4 ${{ matrix.containeroptions }}
     steps:
+    - name: Enable Core Dumps
+      id: enable_core_dumps
+      run: |
+        ulimit -c unlimited && \
+        mkdir -p '/var/tmp/coredumps' && \
+        echo '/var/tmp/coredumps/CI-core-%t-%e-%s-%u.core' > /proc/sys/kernel/core_pattern
     - uses: actions/checkout@v1
       name: Checkout Project
     - name: Prepare sccache usage (if available)
@@ -186,6 +192,9 @@ jobs:
     - name: Install into bundling directory
       if: ${{ ! matrix.skip_upload }}
       run: cmake --install /build --prefix /target
+    - name: Bundle Core Dumps
+      if: always()
+      run: tools/collect_coredumps.bash "${{ matrix.distro }}" "/var/tmp/coredumps" "/coredump.squash"
     - name: Bundle installed files
       if: ${{ ! matrix.skip_upload }}
       run: tools/collect_installation.bash "${{ matrix.distro }}" "/target" "/installation-archive.squash"
@@ -206,6 +215,19 @@ jobs:
     - name: Sccache statistics
       if: ${{ steps.enable_sccache.outputs.CXX_LAUNCHER }}
       run: sccache -s
+    # - name: Upload Core Dumps 
+      # NOOOOOPPE! 
+      # FIXME: can't do this, it'd leak secrets to the public
+      # instead, will have to push core dumps to S3, offer them to people who want to help manually
+      # sigh.
+      # if: ${{ steps.enable_core_dumps.outputs.COREDUMP_ARCHIVE }}
+      # uses: actions/upload-artifact@v4
+      # with:
+      #   name: '${{ matrix.distro }} core dump archive'
+      #   # already much better compressed
+      #   compression-level: 0
+      #   path: /coredump.squash
+      #   if-no-files-found: warn
   mingw64:
     timeout-minutes: 80
   # All of these shall depend on the formatting check (needs: check-formatting)
