@@ -12,7 +12,11 @@
 
 #include "device_source_impl.h"
 #include <gnuradio/iio/dds_control.h>
+#ifdef LIBIIO_V1
+#include <iio/iio.h>
+#else
 #include <iio.h>
+#endif
 #include <pmt/pmt.h>
 
 #include <string>

@@ -11,7 +11,12 @@
 #define INCLUDED_IIO_DEVICE_SINK_IMPL_H
 
 #include <gnuradio/iio/device_sink.h>
+
+#ifdef LIBIIO_V1
+#include <iio/iio.h>
+#else
 #include <iio.h>
+#endif
 
 #include <string>
 #include <vector>
@@ -29,6 +34,11 @@ protected:
     iio_context* ctx;
     iio_device *dev, *phy;
     iio_buffer* buf;
+#ifdef LIBIIO_V1
+    iio_stream* stream;
+    const iio_block* iioblock;
+    iio_channels_mask* mask;
+#endif
     std::vector<iio_channel*> channel_list;
     unsigned int interpolation;
     unsigned int buffer_size;
