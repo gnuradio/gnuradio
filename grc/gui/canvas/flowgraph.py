@@ -206,8 +206,6 @@ class FlowGraph(CoreFlowgraph, Drawable):
         """
         Reload flow-graph (with updated blocks)
 
-        Args:
-            page: the page to reload (None means current)
         Returns:
             False if some error occurred during import
         """

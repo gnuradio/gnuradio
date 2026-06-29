@@ -26,7 +26,7 @@ def add_xterm_to_run_command(run_command_args, xterm_executable):
     """Add xterm to the run command.
 
     Args:
-        run_command: the run command
+        run_command_args: the run command arguments
 
     Returns:
         the run command with xterm added

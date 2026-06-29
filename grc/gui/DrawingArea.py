@@ -26,7 +26,7 @@ class DrawingArea(Gtk.DrawingArea):
         Connect event handlers.
 
         Args:
-            main_window: the main_window containing all flow graphs
+            flow_graph: the flow graph to draw
         """
         Gtk.DrawingArea.__init__(self)
 

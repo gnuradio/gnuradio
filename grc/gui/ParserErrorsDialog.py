@@ -22,7 +22,7 @@ class ParserErrorsDialog(Gtk.Dialog):
         Properties dialog constructor.
 
         Args:
-            block: a block instance
+            error_logs: the parser error logs to display
         """
         GObject.GObject.__init__(self, title='Parser Errors', buttons=(
             Gtk.STOCK_CLOSE, Gtk.ResponseType.ACCEPT))
