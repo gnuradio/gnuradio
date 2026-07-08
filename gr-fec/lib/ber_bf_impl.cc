@@ -37,6 +37,16 @@ ber_bf_impl::ber_bf_impl(bool test_mode, int berminerrors, float ber_limit)
 {
 }
 
+ber_bf_impl::~ber_bf_impl() {}
+
+void ber_bf_impl::reset_counters()
+{
+    gr::thread::scoped_lock lock(d_setlock);
+    d_total_errors = 0;
+    d_total = 0;
+    d_logger->info("BER counters reset");
+}
+
 inline float ber_bf_impl::calculate_log_ber() const
 {
     return log10(((double)d_total_errors) / (d_total * 8.0));
@@ -53,8 +63,6 @@ inline void ber_bf_impl::update_counters(const int items,
     }
     d_total += items;
 }
-
-ber_bf_impl::~ber_bf_impl() {}
 
 int ber_bf_impl::general_work(int noutput_items,
                               gr_vector_int& ninput_items,
