@@ -40,7 +40,6 @@ energy particle physics, astrophysics, radio astronomy and more!
 * [View the GNU Radio Mailing List Archive](https://lists.gnu.org/archive/html/discuss-gnuradio/)
 * [Subscribe to the GNU Radio Mailing List](https://lists.gnu.org/mailman/listinfo/discuss-gnuradio)
 * [GNU Radio Chatroom on Matrix](https://chat.gnuradio.org/)
-* [Contributors and Affiliated Organizations](https://github.com/gnuradio/gnuradio/blob/main/CONTRIBUTORS.md)
 
 ## How to Run the QT Version of GNU Radio Companion
 
