@@ -29,8 +29,10 @@
 namespace gr {
 namespace audio {
 
-sink::sptr
-portaudio_sink_fcn(int sampling_rate, const std::string& device_name, bool ok_to_block)
+sink::sptr portaudio_sink_fcn(int sampling_rate,
+                              const std::string& device_name,
+                              bool ok_to_block,
+                              const std::map<std::string, std::string>& /*properties*/)
 {
     return sink::sptr(new portaudio_sink(sampling_rate, device_name, ok_to_block));
 }

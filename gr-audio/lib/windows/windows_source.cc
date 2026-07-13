@@ -34,7 +34,10 @@ namespace audio {
 // Currently this audio source will only support a single channel input at 16-bits.  So a
 // stereo input will likely be turned into a mono by the wave mapper
 
-source::sptr windows_source_fcn(int sampling_rate, const std::string& device_name, bool)
+source::sptr windows_source_fcn(int sampling_rate,
+                                const std::string& device_name,
+                                bool,
+                                const std::map<std::string, std::string>& /*properties*/)
 {
     return source::sptr(new windows_source(sampling_rate, device_name));
 }
