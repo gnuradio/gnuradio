@@ -129,6 +129,7 @@ class test_fft(gr_unittest.TestCase):
         pass
 
     def assert_fft_ok2(self, expected_result, result_data):
+        self.assertEqual(self.fft_size, len(result_data))
         expected_result = expected_result[:len(result_data)]
         self.assertComplexTuplesAlmostEqual2(expected_result, result_data,
                                              abs_eps=1e-9, rel_eps=4e-4)
