@@ -10,7 +10,7 @@ class Workflow:
 
     Attributes:
         id (str): unique name of workflow
-        descripton (str): detailed information of workflow
+        description (str): detailed information of workflow
         output_language (str): target language
         output_language_label (str): Information for users about the target language of the workflow
         generator_class (str): Name of the code generator class
