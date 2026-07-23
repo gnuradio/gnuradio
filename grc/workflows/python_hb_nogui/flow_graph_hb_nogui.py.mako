@@ -159,6 +159,11 @@ gr.io_signature.makev(${len(io_sigs)}, ${len(io_sigs)}, [${', '.join(size_strs)}
         ${ indent(connection.rstrip()) }
         % endfor
         % endif
+% if snippets['main_after_init']:
+
+    def after_main_hook(self):
+        snippets_main_after_init(self)
+% endif
 
 ########################################################
 ## Create Callbacks
