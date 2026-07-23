@@ -222,6 +222,10 @@ def main(top_block_cls=${class_name}, options=None):
     % endif
     tb = top_block_cls(${ ', '.join(params_eq_list) })
     ${'snippets_main_after_init(tb)' if snippets['main_after_init'] else ''}
+    for blk in tb.__dict__.values():
+        if hasattr(blk, 'after_main_hook'):
+            blk.after_main_hook()
+
     def sig_handler(sig=None, frame=None):
         % for m in monitors:
         % if m.params['en'].get_value() == 'True':
