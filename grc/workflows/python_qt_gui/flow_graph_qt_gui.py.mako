@@ -283,6 +283,9 @@ def main(top_block_cls=${class_name}, options=None):
 
     tb = top_block_cls(${ ', '.join(params_eq_list) })
     ${'snippets_main_after_init(tb)' if snippets['main_after_init'] else ''}
+    for blk in tb.__dict__.values():
+        if hasattr(blk, 'after_main_hook'):
+            blk.after_main_hook()
     % if flow_graph.get_option('run'):
     tb.start(${flow_graph.get_option('max_nouts') or ''})
     tb.flowgraph_started.set()
