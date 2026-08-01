@@ -22,7 +22,10 @@ private:
     const size_t d_itemsize;
 
 public:
-    file_sink_impl(size_t itemsize, const char* filename, bool append = false);
+    file_sink_impl(size_t itemsize,
+                   const char* filename,
+                   bool append = false,
+                   bool fail_if_exists = false);
     ~file_sink_impl() override;
 
     int work(int noutput_items,
