@@ -48,6 +48,46 @@ class test_file_sink(gr_unittest.TestCase):
             result_data.fromfile(datafile, len(data))
         self.assertFloatTuplesAlmostEqual(expected_result, result_data)
 
+    def test_fail_if_exists_raises_when_file_exists(self):
+        # self._datafilename was already created by setUp via
+        # NamedTemporaryFile, so this must fail immediately.
+        self.assertRaises(
+            RuntimeError,
+            blocks.file_sink,
+            gr.sizeof_float,
+            self._datafilename,
+            False,
+            True,
+        )
+
+    def test_fail_if_exists_succeeds_for_new_file(self):
+        os.unlink(self._datafilename)
+
+        data = range(1000)
+        src = blocks.vector_source_f(data)
+        snk = blocks.file_sink(gr.sizeof_float, self._datafilename, False, True)
+        snk.set_unbuffered(True)
+        self.tb.connect(src, snk)
+        self.tb.run()
+        snk.close()
+
+        file_size = os.stat(self._datafilename).st_size
+        self.assertEqual(file_size, 4 * len(data))
+
+    def test_fail_if_exists_false_still_overwrites(self):
+        # default (fail_if_exists=False) must keep working exactly as before
+        # on a file that already exists.
+        data = range(10)
+        src = blocks.vector_source_f(data)
+        snk = blocks.file_sink(gr.sizeof_float, self._datafilename, False, False)
+        snk.set_unbuffered(True)
+        self.tb.connect(src, snk)
+        self.tb.run()
+        snk.close()
+
+        file_size = os.stat(self._datafilename).st_size
+        self.assertEqual(file_size, 4 * len(data))
+
 
 if __name__ == '__main__':
     gr_unittest.run(test_file_sink)

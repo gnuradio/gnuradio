@@ -42,8 +42,16 @@
 namespace gr {
 namespace blocks {
 
-file_sink_base::file_sink_base(const char* filename, bool is_binary, bool append)
-    : d_fp(0), d_new_fp(0), d_updated(false), d_is_binary(is_binary), d_append(append)
+file_sink_base::file_sink_base(const char* filename,
+                               bool is_binary,
+                               bool append,
+                               bool fail_if_exists)
+    : d_fp(0),
+      d_new_fp(0),
+      d_updated(false),
+      d_is_binary(is_binary),
+      d_append(append),
+      d_fail_if_exists(fail_if_exists)
 {
     gr::configure_default_loggers(d_base_logger, d_base_debug_logger, "file_sink_base");
     if (!open(filename))
@@ -69,7 +77,11 @@ bool file_sink_base::open(const char* filename)
     int fd;
     int flags;
 
-    if (d_append) {
+    if (d_fail_if_exists) {
+        // O_EXCL makes the existence check and the create atomic, so a file
+        // that appears between a stat() and an open() can't slip through.
+        flags = O_WRONLY | O_CREAT | O_EXCL | OUR_O_LARGEFILE | OUR_O_BINARY;
+    } else if (d_append) {
         flags = O_WRONLY | O_CREAT | O_APPEND | OUR_O_LARGEFILE | OUR_O_BINARY;
     } else {
         flags = O_WRONLY | O_CREAT | O_TRUNC | OUR_O_LARGEFILE | OUR_O_BINARY;

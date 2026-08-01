@@ -34,8 +34,14 @@ public:
      * \param filename name of the file to open and write output to.
      * \param append if true, data is appended to the file instead of
      *        overwriting the initial content.
+     * \param fail_if_exists if true, the constructor throws instead of
+     *        opening the file when \p filename already exists. Takes
+     *        precedence over \p append.
      */
-    static sptr make(size_t itemsize, const char* filename, bool append = false);
+    static sptr make(size_t itemsize,
+                     const char* filename,
+                     bool append = false,
+                     bool fail_if_exists = false);
 };
 
 } /* namespace blocks */

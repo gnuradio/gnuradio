@@ -19,15 +19,20 @@
 namespace gr {
 namespace blocks {
 
-file_sink::sptr file_sink::make(size_t itemsize, const char* filename, bool append)
+file_sink::sptr
+file_sink::make(size_t itemsize, const char* filename, bool append, bool fail_if_exists)
 {
-    return gnuradio::make_block_sptr<file_sink_impl>(itemsize, filename, append);
+    return gnuradio::make_block_sptr<file_sink_impl>(
+        itemsize, filename, append, fail_if_exists);
 }
 
-file_sink_impl::file_sink_impl(size_t itemsize, const char* filename, bool append)
+file_sink_impl::file_sink_impl(size_t itemsize,
+                               const char* filename,
+                               bool append,
+                               bool fail_if_exists)
     : sync_block(
           "file_sink", io_signature::make(1, 1, itemsize), io_signature::make(0, 0, 0)),
-      file_sink_base(filename, true, append),
+      file_sink_base(filename, true, append, fail_if_exists),
       d_itemsize(itemsize)
 {
 }
