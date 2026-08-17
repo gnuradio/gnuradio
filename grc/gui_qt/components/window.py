@@ -27,6 +27,7 @@ import pstats
 
 from typing import Union
 
+from PyQt6 import QtWidgets
 from PyQt6.QtCore import QMetaObject, QPointF, QThreadPool, QUrl, Qt, pyqtSlot
 from PyQt6.QtGui import QDesktopServices, QIcon, QKeySequence, QAction, QPalette
 from PyQt6.QtWidgets import QApplication, QFileDialog, QMainWindow, QMenu, QMessageBox, QProgressBar, QStyle, QTabWidget, QToolBar, QUndoView
@@ -432,6 +433,7 @@ class MainWindow(QMainWindow, base.Component):
             shortcut=Keys.SelectAll,
             statusTip=_("select_all-tooltip"),
         )
+        actions["select_all"].setShortcutContext(Qt.ShortcutContext.WidgetShortcut)
 
         actions["select_none"] = Action(
             _("Select None"), self, statusTip=_("select_none-tooltip")
@@ -1255,6 +1257,16 @@ class MainWindow(QMainWindow, base.Component):
 
     def select_all_triggered(self):
         log.debug("select_all")
+        focused_widget = self.focusWidget()
+        if isinstance(focused_widget, (QtWidgets.QLineEdit, QtWidgets.QPlainTextEdit, QtWidgets.QTextEdit)):
+            focused_widget.selectAll()
+            return
+        if isinstance(focused_widget, QtWidgets.QComboBox) and focused_widget.isEditable():
+            focused_widget.lineEdit().selectAll()
+            return
+        if isinstance(focused_widget, QtWidgets.QAbstractSpinBox):
+            focused_widget.selectAll()
+            return
         self.currentFlowgraphScene.select_all()
         self.updateActions()
 
