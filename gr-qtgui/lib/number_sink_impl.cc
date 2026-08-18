@@ -40,7 +40,7 @@ namespace qtgui {
 
 namespace {
 
-size_t item_size(number_sink::item_type_t itemtype)
+constexpr size_t item_size(number_sink::item_type_t itemtype)
 {
     switch (itemtype) {
     case number_sink::item_type_t::FLOAT32:
@@ -55,7 +55,7 @@ size_t item_size(number_sink::item_type_t itemtype)
     throw std::runtime_error("number_sink: unknown item type");
 }
 
-number_sink::item_type_t item_type_from_size(size_t itemsize)
+constexpr number_sink::item_type_t item_type_from_size(size_t itemsize)
 {
     // Four bytes keep meaning float here: an item size cannot tell FLOAT32
     // and INT32 apart, and float is what this constructor has always meant.
