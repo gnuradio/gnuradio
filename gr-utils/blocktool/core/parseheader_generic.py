@@ -25,8 +25,9 @@ PYGCCXML_AVAILABLE = False
 try:
     from pygccxml import parser, declarations, utils
     PYGCCXML_AVAILABLE = True
-except:
+except ImportError:
     from gnuradio.modtool.tools import ParserCCBlock
+    LOGGER.warning("pygccxml not found - only the make() function will be bound; other methods will be skipped. Install it with: pip install pygccxml")
 
 
 class GenericHeaderParser(BlockTool):
