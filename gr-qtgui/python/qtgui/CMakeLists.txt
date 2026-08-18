@@ -65,7 +65,7 @@ if(ENABLE_TESTING)
         if(CMAKE_CROSSCOMPILING)
             get_filename_component(py_qa_test_file ${py_qa_test_file} NAME)
         endif(CMAKE_CROSSCOMPILING)
-        gr_add_test(${py_qa_test_name} ${QA_PYTHON_EXECUTABLE} -B ${py_qa_test_file})
+        gr_add_test(${py_qa_test_name} ${QA_DISPLAY_SERVER} ${QA_PYTHON_EXECUTABLE} -B ${py_qa_test_file})
     endforeach(py_qa_test_file)
 endif(ENABLE_TESTING)
 
