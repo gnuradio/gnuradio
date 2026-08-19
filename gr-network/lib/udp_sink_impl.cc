@@ -93,7 +93,7 @@ udp_sink_impl::udp_sink_impl(size_t itemsize,
     d_block_size = d_itemsize * d_veclen;
 
     d_precomp_datasize = d_payloadsize - d_header_size;
-    d_precomp_data_overitemsize = d_precomp_datasize / d_itemsize;
+    d_precomp_blocksize = d_precomp_datasize / d_block_size;
 
     int out_multiple = (d_payloadsize - d_header_size) / d_block_size;
 
@@ -257,9 +257,9 @@ int udp_sink_impl::work(int noutput_items,
         d_localqueue_reader->update_read_pointer(d_precomp_datasize);
     }
 
-    int itemsreturned = blocks_available * d_precomp_data_overitemsize;
+    int items_returned = blocks_available * d_precomp_blocksize;
 
-    return itemsreturned;
+    return items_returned;
 }
 
 } /* namespace network */
