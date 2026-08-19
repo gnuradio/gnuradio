@@ -15,7 +15,7 @@
 
 #include <cmath>
 
-WaterfallDisplayForm::WaterfallDisplayForm(int nplots, QWidget* parent)
+WaterfallDisplayForm::WaterfallDisplayForm(int nplots, int n_rows, QWidget* parent)
     : DisplayForm(nplots, parent)
 {
     d_int_validator = new QIntValidator(this);
@@ -23,7 +23,7 @@ WaterfallDisplayForm::WaterfallDisplayForm(int nplots, QWidget* parent)
 
     d_layout = new QGridLayout(this);
     d_layout->setContentsMargins(0, 0, 0, 0);
-    d_display_plot = new WaterfallDisplayPlot(nplots, this);
+    d_display_plot = new WaterfallDisplayPlot(nplots, n_rows, this);
     d_layout->addWidget(d_display_plot, 0, 0);
     setLayout(d_layout);
 
