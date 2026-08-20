@@ -41,8 +41,8 @@ parameters:
 -   id: orient
     label: Orientation
     dtype: enum
-    default: QtCore.Qt.Horizontal
-    options: [QtCore.Qt.Horizontal, QtCore.Qt.Vertical]
+    default: QtCore.Qt.Orientation.Horizontal
+    options: [QtCore.Qt.Orientation.Horizontal, QtCore.Qt.Orientation.Vertical]
     option_labels: [Horizontal, Vertical]
     option_attributes:
         minfcn: [setMinimumWidth, setMinimumHeight]
@@ -64,7 +64,7 @@ asserts:
 - ${start <= stop}
 
 templates:
-    imports: from PyQt5 import QtCore
+    imports: from PyQt6 import QtCore
     var_make: self.${id} = ${id} = ${value}
     callbacks:
     - self.set_${id}(${value})

@@ -22,7 +22,7 @@ static const char* __doc_gr_qtgui_matrix_sink_matrix_sink_1 = R"doc()doc";
 
 static const char* __doc_gr_qtgui_matrix_sink_make = R"doc()doc";
 
-static const char* __doc_gr_qtgui_matrix_sink_exec_ = R"doc()doc";
+static const char* __doc_gr_qtgui_matrix_sink_exec = R"doc()doc";
 
 static const char* __doc_gr_qtgui_matrix_sink_qwidget = R"doc()doc";
 

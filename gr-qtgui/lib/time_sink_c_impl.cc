@@ -115,7 +115,7 @@ void time_sink_c_impl::initialize()
     set_update_time(0.1);
 }
 
-void time_sink_c_impl::exec_() { d_qApplication->exec(); }
+void time_sink_c_impl::exec() { d_qApplication->exec(); }
 
 QWidget* time_sink_c_impl::qwidget() { return d_main_gui; }
 

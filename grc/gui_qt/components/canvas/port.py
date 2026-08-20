@@ -1,6 +1,6 @@
-from qtpy.QtGui import QPen, QPainter, QBrush, QFont, QFontMetrics
-from qtpy.QtCore import Qt, QPointF, QRectF, QVariant
-from qtpy.QtWidgets import QGraphicsItem
+from PyQt6.QtGui import QPen, QPainter, QBrush, QFont, QFontMetrics
+from PyQt6.QtCore import Qt, QPointF, QRectF, QVariant
+from PyQt6.QtWidgets import QGraphicsItem
 
 from . import colors
 from ... import Constants
@@ -53,12 +53,12 @@ class GUIPort(QGraphicsItem):
             self.connection_point = self.mapToScene(QPointF(self.width, self.height / 2.0))
             self.ctrl_point = self.mapToScene(QPointF(self.width, self.height / 2.0) + QPointF(5.0, 0.0))
 
-        self.setFlag(QGraphicsItem.ItemSendsScenePositionChanges)
+        self.setFlag(QGraphicsItem.GraphicsItemFlag.ItemSendsScenePositionChanges)
 
         self._border_color = self._bg_color = colors.BLOCK_ENABLED_COLOR
 
-        self.setFlag(QGraphicsItem.ItemStacksBehindParent)
-        self.setFlag(QGraphicsItem.ItemIsSelectable)
+        self.setFlag(QGraphicsItem.GraphicsItemFlag.ItemStacksBehindParent)
+        self.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIsSelectable)
         self.setAcceptHoverEvents(True)
 
         self._hovering = False
@@ -120,7 +120,7 @@ class GUIPort(QGraphicsItem):
         if not self.parentItem():
             self.setParentItem(self.core.parent_block.gui)
 
-        self.width = max(15, self.fm.width(self.core.name) * 1.5)
+        self.width = max(15, self.fm.horizontalAdvance(self.core.name) * 1.5)
         self._update_colors()
         self.update_connections()
 
@@ -145,7 +145,7 @@ class GUIPort(QGraphicsItem):
     def paint(self, painter, option, widget):
         if self.core.hidden:
             return
-        painter.setRenderHint(QPainter.Antialiasing)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
 
         pen = QPen(self._border_color)
         painter.setPen(pen)
@@ -173,12 +173,12 @@ class GUIPort(QGraphicsItem):
             if self.core._dir == "sink":
                 if block_rotation == 180:
                     painter.drawText(QRectF(max(0, self.width - 15), 0, self.width,
-                                     self.height), Qt.AlignCenter, self.core.name)
+                                     self.height), Qt.AlignmentFlag.AlignCenter, self.core.name)
                 else:
                     painter.drawText(QRectF(-max(0, self.width - 15), 0, self.width,
-                                     self.height), Qt.AlignCenter, self.core.name)
+                                     self.height), Qt.AlignmentFlag.AlignCenter, self.core.name)
             else:
-                painter.drawText(QRectF(0, 0, self.width, self.height), Qt.AlignCenter, self.core.name)
+                painter.drawText(QRectF(0, 0, self.width, self.height), Qt.AlignmentFlag.AlignCenter, self.core.name)
 
     def center(self):
         return QPointF(self.x() + self.width / 2, self.y() + self.height / 2)

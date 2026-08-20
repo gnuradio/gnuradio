@@ -47,7 +47,7 @@ public:
                      gr_vector_void_star& output_items) override;
 
     /* QT GUI Widget stuff */
-    void exec_() override;
+    void exec() override;
     QWidget* qwidget() override;
 
 private:

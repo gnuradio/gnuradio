@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Free Software Foundation, Inc.
+ * Copyright 2026 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -27,7 +27,7 @@ static const char* __doc_gr_qtgui_sink_c_sink_c_1 = R"doc()doc";
 static const char* __doc_gr_qtgui_sink_c_make = R"doc()doc";
 
 
-static const char* __doc_gr_qtgui_sink_c_exec_ = R"doc()doc";
+static const char* __doc_gr_qtgui_sink_c_exec = R"doc()doc";
 
 
 static const char* __doc_gr_qtgui_sink_c_qwidget = R"doc()doc";

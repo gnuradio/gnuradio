@@ -13,7 +13,7 @@
 
 #include <gnuradio/block.h>
 #include <gnuradio/qtgui/api.h>
-#include <qapplication.h>
+#include <QApplication>
 
 
 namespace gr {
@@ -32,7 +32,7 @@ public:
                      std::vector<std::string> curvenames = std::vector<std::string>(),
                      QWidget* parent = NULL);
 
-    virtual void exec_() = 0;
+    virtual void exec() = 0;
     virtual QWidget* qwidget() = 0;
 
     virtual void set_y_axis(double min, double max) = 0;

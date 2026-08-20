@@ -12,10 +12,10 @@
 from gnuradio import gr
 import pmt
 
-from PyQt5.QtWidgets import QFrame, QHBoxLayout, QVBoxLayout, QLabel
-from PyQt5.QtGui import QPainter, QBrush, QColor, QPen, QFontMetricsF
-from PyQt5.QtCore import Qt as Qtc
-from PyQt5.QtCore import QRect
+from PyQt6.QtCore import Qt
+from PyQt6.QtCore import QRect
+from PyQt6.QtWidgets import QFrame, QHBoxLayout, QVBoxLayout, QLabel
+from PyQt6.QtGui import QPainter, QBrush, QColor, QPen, QFontMetricsF
 
 
 class LabeledToggleSwitch(QFrame):
@@ -35,12 +35,12 @@ class LabeledToggleSwitch(QFrame):
         self.lblcontrol = QLabel(lbl, self)
 
         if position == 3:  # left of switch
-            self.lblcontrol.setAlignment(Qtc.AlignRight)
+            self.lblcontrol.setAlignment(Qt.AlignmentFlag.AlignRight)
         elif position == 4:  # right of switch
-            self.lblcontrol.setAlignment(Qtc.AlignLeft)
+            self.lblcontrol.setAlignment(Qt.AlignmentFlag.AlignLeft)
         else:
             # Above or below
-            self.lblcontrol.setAlignment(Qtc.AlignCenter)
+            self.lblcontrol.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         # add top or left
         if len:
@@ -55,18 +55,18 @@ class LabeledToggleSwitch(QFrame):
                 layout.addWidget(self.lblcontrol)
 
         if alignment == 1:
-            halign = Qtc.AlignCenter
+            halign = Qt.AlignmentFlag.AlignCenter
         elif alignment == 2:
-            halign = Qtc.AlignLeft
+            halign = Qt.AlignmentFlag.AlignLeft
         else:
-            halign = Qtc.AlignRight
+            halign = Qt.AlignmentFlag.AlignRight
 
         if valignment == 1:
-            valign = Qtc.AlignVCenter
+            valign = Qt.AlignmentFlag.AlignVCenter
         elif valignment == 2:
-            valign = Qtc.AlignTop
+            valign = Qt.AlignmentFlag.AlignTop
         else:
-            valign = Qtc.AlignBottom
+            valign = Qt.AlignmentFlag.AlignBottom
 
         layout.setAlignment(halign | valign)
 
@@ -75,7 +75,7 @@ class LabeledToggleSwitch(QFrame):
         textfont = self.lblcontrol.font()
         metrics = QFontMetricsF(textfont)
 
-        maxWidth = max((maxSize + 4), (maxSize * 2 + metrics.width(lbl)))
+        maxWidth = max((maxSize + 4), (maxSize * 2 + metrics.horizontalAdvance(lbl)))
         maxHeight = max((maxSize // 2 + 4),
                         (maxSize // 2 + metrics.height() + 2))
 
@@ -111,7 +111,7 @@ class ToggleSwitch(QFrame):
         super().paintEvent(event)
 
         painter = QPainter(self)
-        painter.setRenderHint(QPainter.Antialiasing)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
 
         size = self.size()
         brush = QBrush()
@@ -125,7 +125,7 @@ class ToggleSwitch(QFrame):
             brush.setColor(self.offColor)
             painter.setPen(QPen(self.offColor, 0))
 
-        brush.setStyle(Qtc.SolidPattern)
+        brush.setStyle(Qt.BrushStyle.SolidPattern)
         painter.setBrush(brush)
 
         # Draw the switch background
@@ -146,7 +146,7 @@ class ToggleSwitch(QFrame):
             painter.drawEllipse(2, 2, size.height() - 4, size.height() - 4)
 
     def mousePressEvent(self, event):
-        if event.x() <= self.size().width() / 2:
+        if event.position().x() <= self.size().width() / 2:
             self.setState(False)
         else:
             self.setState(True)
@@ -183,15 +183,15 @@ class GrToggleSwitch(gr.sync_block, LabeledToggleSwitch):
                 self.callback(self.pressReleasedDict['Released'])
 
         if new_val:
-            if type(self.pressReleasedDict['Pressed']) == bool:
+            if type(self.pressReleasedDict['Pressed']) is bool:
                 self.message_port_pub(pmt.intern("state"),
                                       pmt.cons(pmt.intern(self.outputmsgname),
                                                pmt.from_bool(self.pressReleasedDict['Pressed'])))
-            elif type(self.pressReleasedDict['Pressed']) == int:
+            elif type(self.pressReleasedDict['Pressed']) is int:
                 self.message_port_pub(pmt.intern("state"),
                                       pmt.cons(pmt.intern(self.outputmsgname),
                                                pmt.from_long(self.pressReleasedDict['Pressed'])))
-            elif type(self.pressReleasedDict['Pressed']) == float:
+            elif type(self.pressReleasedDict['Pressed']) is float:
                 self.message_port_pub(pmt.intern("state"),
                                       pmt.cons(pmt.intern(self.outputmsgname),
                                                pmt.from_double(self.pressReleasedDict['Pressed'])))
@@ -200,15 +200,15 @@ class GrToggleSwitch(gr.sync_block, LabeledToggleSwitch):
                                       pmt.cons(pmt.intern(self.outputmsgname),
                                                pmt.intern(self.pressReleasedDict['Pressed'])))
         else:
-            if type(self.pressReleasedDict['Released']) == bool:
+            if type(self.pressReleasedDict['Released']) is bool:
                 self.message_port_pub(pmt.intern("state"),
                                       pmt.cons(pmt.intern(self.outputmsgname),
                                                pmt.from_bool(self.pressReleasedDict['Released'])))
-            elif type(self.pressReleasedDict['Released']) == int:
+            elif type(self.pressReleasedDict['Released']) is int:
                 self.message_port_pub(pmt.intern("state"),
                                       pmt.cons(pmt.intern(self.outputmsgname),
                                                pmt.from_long(self.pressReleasedDict['Released'])))
-            elif type(self.pressReleasedDict['Released']) == float:
+            elif type(self.pressReleasedDict['Released']) is float:
                 self.message_port_pub(pmt.intern("state"),
                                       pmt.cons(pmt.intern(self.outputmsgname),
                                                pmt.from_double(self.pressReleasedDict['Released'])))

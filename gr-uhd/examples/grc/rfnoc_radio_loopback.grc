@@ -84,7 +84,7 @@ blocks:
     gui_hint: ''
     label: RX Frequency (Hz)
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: QtCore.Qt.Orientation.Horizontal
     rangeType: float
     start: '0'
     step: 1e6
@@ -105,7 +105,7 @@ blocks:
     gui_hint: ''
     label: RX Gain (dB)
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: QtCore.Qt.Orientation.Horizontal
     rangeType: float
     start: '0'
     step: '1'
@@ -203,7 +203,7 @@ blocks:
     gui_hint: ''
     label: TX Frequency (Hz)
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: QtCore.Qt.Orientation.Horizontal
     rangeType: float
     start: '0'
     step: 1e6
@@ -224,7 +224,7 @@ blocks:
     gui_hint: ''
     label: TX Gain (dB)
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: QtCore.Qt.Orientation.Horizontal
     rangeType: float
     start: '0'
     step: '1'

@@ -25,7 +25,8 @@ list(
     gnuradio-runtime
     ${QT_LIBRARIES})
 
-qt5_wrap_cpp(qtgui_moc_sources display_qt.h)
+qt6_wrap_cpp(qtgui_moc_sources display_qt.h)
+
 
 add_executable(display_qt display_qt.cc ${qtgui_moc_sources})
 target_link_libraries(display_qt ${QTGUI_LIBRARIES})

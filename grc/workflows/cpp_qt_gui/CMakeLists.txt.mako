@@ -19,7 +19,6 @@ short_version = '.'.join(version_list[0:2])
 
 cmake_minimum_required(VERSION 3.16)
 set(CMAKE_CXX_STANDARD 17)
-
 project(${class_name})
 
 find_package(Gnuradio "${short_version}" COMPONENTS
@@ -32,7 +31,7 @@ find_package(Gnuradio "${short_version}" COMPONENTS
     % endfor
 )
 
-find_package(Qt5Widgets REQUIRED)
+find_package(Qt6Widgets REQUIRED)
 set(CMAKE_AUTOMOC TRUE)
 
 % if cmake_tuples:

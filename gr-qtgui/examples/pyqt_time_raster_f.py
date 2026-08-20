@@ -14,10 +14,10 @@ import sys
 
 try:
     from gnuradio import qtgui
-    from PyQt5 import QtWidgets, Qt
-    import sip
-except ImportError:
-    print("Error: Program requires PyQt5 and gr-qtgui.")
+    from PyQt6 import QtWidgets
+    from PyQt6 import sip
+except ImportError as e:
+    sys.stderr.write(f"Error: Program requires PyQt and gr-qtgui: {str(e)}\n")
     sys.exit(1)
 
 
@@ -27,7 +27,7 @@ class dialog_box(QtWidgets.QWidget):
         self.setWindowTitle('PyQt Test GUI')
 
         self.boxlayout = QtWidgets.QBoxLayout(
-            QtWidgets.QBoxLayout.LeftToRight, self)
+            QtWidgets.QBoxLayout.Direction.LeftToRight, self)
         self.boxlayout.addWidget(display, 1)
 
         self.resize(800, 500)
@@ -73,5 +73,5 @@ class my_top_block(gr.top_block):
 if __name__ == "__main__":
     tb = my_top_block()
     tb.start()
-    tb.qapp.exec_()
+    tb.qapp.exec()
     tb.stop()

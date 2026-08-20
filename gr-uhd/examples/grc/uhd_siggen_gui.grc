@@ -41,7 +41,7 @@ blocks:
     gui_hint: 5,0,1,5
     label: Signal Amplitude
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: QtCore.Qt.Orientation.Horizontal
     rangeType: float
     start: '0'
     step: '.001'
@@ -78,7 +78,7 @@ blocks:
     gui_hint: 4,0,1,3
     label: 'Frequency Offset: Signal 1'
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: QtCore.Qt.Orientation.Horizontal
     rangeType: float
     start: -1e6
     step: '100'
@@ -99,7 +99,7 @@ blocks:
     gui_hint: 4,3,1,2
     label: 'Signal 2 '
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: QtCore.Qt.Orientation.Horizontal
     rangeType: float
     start: -1e6
     step: '100'
@@ -120,7 +120,7 @@ blocks:
     gui_hint: 1,0,1,5
     label: Center Frequency
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: QtCore.Qt.Orientation.Horizontal
     rangeType: float
     start: 100e6
     step: 1e3
@@ -141,7 +141,7 @@ blocks:
     gui_hint: 2,0,1,5
     label: Fine Tuning
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: QtCore.Qt.Orientation.Horizontal
     rangeType: float
     start: -1e6
     step: 1e3
@@ -162,7 +162,7 @@ blocks:
     gui_hint: 6,0,1,5
     label: TX Gain
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: QtCore.Qt.Orientation.Horizontal
     rangeType: float
     start: '0'
     step: '.5'

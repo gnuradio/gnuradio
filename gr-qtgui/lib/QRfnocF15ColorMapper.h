@@ -11,10 +11,11 @@
 #define INCLUDED_QTGUI_QRFNOCF15COLORMAPPER_H
 
 #include <QFile>
-#include <QGLFunctions>
-#include <QGLShaderProgram>
 #include <QGradient>
+#include <QImage>
 #include <QObject>
+#include <QOpenGLFunctions>
+#include <QOpenGLShaderProgram>
 #include <QPixmap>
 
 #include <map>
@@ -23,7 +24,7 @@
 namespace gr {
 namespace qtgui {
 
-class QRfnocF15ColorMapper : public ::QObject, protected ::QGLFunctions
+class QRfnocF15ColorMapper : public ::QObject, protected ::QOpenGLFunctions
 {
     Q_OBJECT
 
@@ -40,7 +41,7 @@ public:
     void disable();
 
 private:
-    QGLShaderProgram* d_shader;
+    QOpenGLShaderProgram* d_shader;
 
     int d_u_cmap;
     int d_u_tex;

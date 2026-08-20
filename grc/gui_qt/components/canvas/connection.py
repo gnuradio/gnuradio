@@ -1,6 +1,6 @@
-from qtpy.QtGui import QPainterPath, QPainter, QPen, QTransform
-from qtpy.QtWidgets import QGraphicsPathItem, QApplication
-from qtpy.QtCore import QPointF
+from PyQt6.QtGui import QPainterPath, QPainter, QPen, QTransform
+from PyQt6.QtWidgets import QGraphicsPathItem, QApplication
+from PyQt6.QtCore import QPointF
 
 from enum import Enum
 
@@ -55,7 +55,7 @@ class DummyConnection(QGraphicsPathItem, StyledConnection):
         self._arrow_rotation = 0.0  # rotation of the arrow in radians
         self._current_cr = None  # for what_is_selected() of curved line
         self._line_path = None
-        self.setFlag(QGraphicsPathItem.ItemIsSelectable)
+        self.setFlag(QGraphicsPathItem.GraphicsItemFlag.ItemIsSelectable)
 
     def update(self, end_point):
         """User moved the mouse, redraw with new end point"""
@@ -87,7 +87,7 @@ class DummyConnection(QGraphicsPathItem, StyledConnection):
         self.setPath(self._path)
 
     def paint(self, painter, option, widget):
-        painter.setRenderHint(QPainter.Antialiasing)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
 
         color = colors.BORDER_COLOR
 
@@ -127,7 +127,7 @@ class GUIConnection(QGraphicsPathItem, StyledConnection):
         self._arrow_rotation = 0.0  # rotation of the arrow in radians
         self._current_cr = None  # for what_is_selected() of curved line
         self._line_path = None
-        self.setFlag(QGraphicsPathItem.ItemIsSelectable)
+        self.setFlag(QGraphicsPathItem.GraphicsItemFlag.ItemIsSelectable)
         self.update()
 
     def update(self):
@@ -179,7 +179,7 @@ class GUIConnection(QGraphicsPathItem, StyledConnection):
         self._arrowhead = transform.map(default_arrowhead)
 
     def paint(self, painter, option, widget):
-        painter.setRenderHint(QPainter.Antialiasing)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
 
         color = colors.CONNECTION_ENABLED_COLOR
         if self.isSelected():

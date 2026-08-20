@@ -132,7 +132,7 @@ void sink_c_impl::initialize()
     d_update_active = false;
 }
 
-void sink_c_impl::exec_() { d_qApplication->exec(); }
+void sink_c_impl::exec() { d_qApplication->exec(); }
 
 QWidget* sink_c_impl::qwidget() { return d_main_gui.qwidget(); }
 

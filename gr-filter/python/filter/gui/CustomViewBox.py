@@ -1,4 +1,4 @@
-from PyQt5 import QtCore
+from PyQt6.QtCore import Qt
 import pyqtgraph as pg
 
 
@@ -10,5 +10,5 @@ class CustomViewBox(pg.ViewBox):
 
     # Reimplement right-click to zoom out.
     def mouseClickEvent(self, ev):
-        if ev.button() == QtCore.Qt.RightButton:
+        if ev.button() == Qt.MouseButton.RightButton:
             self.autoRange()

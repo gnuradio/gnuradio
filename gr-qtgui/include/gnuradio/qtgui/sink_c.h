@@ -13,8 +13,8 @@
 
 #include <gnuradio/block.h>
 #include <gnuradio/qtgui/api.h>
-#include <qapplication.h>
 #include <qwt_legend.h>
+#include <QApplication>
 
 
 namespace gr {
@@ -82,7 +82,7 @@ public:
                      bool plotconst,
                      QWidget* parent = nullptr);
 
-    virtual void exec_() = 0;
+    virtual void exec() = 0;
     virtual QWidget* qwidget() = 0;
 
     virtual void set_fft_size(const int fftsize) = 0;

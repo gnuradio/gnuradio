@@ -238,7 +238,7 @@ inputs:
 
 templates:
     imports: |-
-        import sip
+        from PyQt6 import sip
     callbacks:
     - set_update_time(${update_time})
     - set_average(${avg})
@@ -277,7 +277,7 @@ templates:
             self.${id}.set_factor(i, factor[i])
 
         self.${id}.enable_autoscale(${autoscale})
-        ${win} = sip.wrapinstance(self.${id}.qwidget(), Qt.QWidget)
+        ${win} = sip.wrapinstance(self.${id}.qwidget(), QtWidgets.QWidget)
         ${gui_hint() % win}
 
 cpp_templates:

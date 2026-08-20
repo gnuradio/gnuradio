@@ -9,8 +9,10 @@
 #ifndef INCLUDED_QTGUI_QRFNOCF15SURFACE_H
 #define INCLUDED_QTGUI_QRFNOCF15SURFACE_H
 
-#include <QGLFunctions>
-#include <QGLWidget>
+#include <QImage>
+#include <QOpenGLFunctions>
+#include <QOpenGLWidget>
+#include <QPixmap>
 
 #include <string>
 
@@ -23,7 +25,7 @@ namespace qtgui {
 
 class QRfnocF15ColorMapper;
 
-class QRfnocF15Surface : public ::QGLWidget, protected ::QGLFunctions
+class QRfnocF15Surface : public ::QOpenGLWidget, protected ::QOpenGLFunctions
 {
     Q_OBJECT
 
@@ -56,6 +58,8 @@ private:
     void refreshPowerAxis();
     void refreshFrequencyAxis();
     void refreshLayout();
+
+    GLuint bindTexture(const QPixmap& pixmap);
 
     int d_fft_bins;
     int d_pwr_bins;

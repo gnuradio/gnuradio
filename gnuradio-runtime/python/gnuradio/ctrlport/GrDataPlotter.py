@@ -19,27 +19,28 @@ import struct
 
 try:
     from gnuradio import qtgui
-    from PyQt5 import Qt, QtCore
-    import sip
+    from PyQt6.QtCore import Qt, pyqtSignal
+    from PyQt6.QtWidgets import QTreeWidget, QTreeWidgetItem, QVBoxLayout, QWidget
+    from PyQt6 import sip
 except ImportError:
-    print("Error: Program requires PyQt5 and gr-qtgui.")
+    print("Error: Program requires PyQt and gr-qtgui.")
     sys.exit(1)
 
 
-class GrDataPlotParent(gr.top_block, Qt.QWidget):
+class GrDataPlotParent(gr.top_block, QWidget):
     # Setup signals
-    plotupdated = QtCore.pyqtSignal(Qt.QWidget)
+    plotupdated = pyqtSignal(QWidget)
 
     def __init__(self, name, rate, pmin=None, pmax=None):
         gr.top_block.__init__(self)
-        Qt.QWidget.__init__(self, None)
+        QWidget.__init__(self, None)
 
         self._name = name
         self._npts = 500
         self._rate = rate
         self.knobnames = [name, ]
 
-        self.layout = Qt.QVBoxLayout()
+        self.layout = QVBoxLayout()
         self.setLayout(self.layout)
 
         self.setAcceptDrops(True)
@@ -78,7 +79,7 @@ class GrDataPlotParent(gr.top_block, Qt.QWidget):
             else:
                 self.connect(self.src[n], (self.snk, n))
 
-        self.py_window = sip.wrapinstance(self.snk.qwidget(), Qt.QWidget)
+        self.py_window = sip.wrapinstance(self.snk.qwidget(), QWidget)
 
         self.layout.addWidget(self.py_window)
 
@@ -410,7 +411,7 @@ class GrDataPlotterValueTable(object):
                           'Curent Value', 'Units', 'Description']):
         # must encapsulate, cuz Qt's bases are not classes
         self.uid = uid
-        self.treeWidget = Qt.QTreeWidget(parent)
+        self.treeWidget = QTreeWidget(parent)
         self.treeWidget.setColumnCount(len(headers))
         self.treeWidget.setGeometry(x, y, xsize, ysize)
         self.treeWidget.setHeaderLabels(headers)
@@ -473,14 +474,14 @@ class GrDataPlotterValueTable(object):
                 elif(type(v) == str and k.find('probe2_b') == 0):
                     v = struct.unpack(len(v) * 'b', v)
 
-                item = Qt.QTreeWidgetItem([k, str(v),
-                                           knobprops[k].units, knobprops[k].description])
+                item = QTreeWidgetItem([k, str(v),
+                                        knobprops[k].units, knobprops[k].description])
                 self.treeWidget.addTopLevelItem(item)
 
         # Remove items currently in tree that are not in the knob list.
         for itemKey in deleteKeys:
             qtwiList = self.treeWidget.findItems(
-                itemKey, Qt.Qt.MatchFixedString)
+                itemKey, Qt.MatchFlag.MatchFixedString)
             if (len(qtwiList) > 1):
                 raise Exception('More than one item with key %s in tree' %
                                 itemKey)

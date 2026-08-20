@@ -89,8 +89,8 @@ parameters:
 -   id: orient
     label: Orientation
     dtype: enum
-    default: Qt.QVBoxLayout
-    options: [Qt.QHBoxLayout, Qt.QVBoxLayout]
+    default: QtWidgets.QVBoxLayout
+    options: [QtWidgets.QHBoxLayout, QtWidgets.QVBoxLayout]
     option_labels: [Horizontal, Vertical]
     hide: ${ ('part' if widget == 'radio_buttons' else 'all') }
 -   id: gui_hint
@@ -106,7 +106,7 @@ asserts:
 
 templates:
     imports: |-
-        from PyQt5.QtCore import QObject, pyqtSlot
+        from PyQt6.QtCore import QObject, pyqtSlot
     var_make: self.${id} = ${id} = ${value}
     callbacks:
     - self.set_${id}(${value})
@@ -148,12 +148,12 @@ templates:
         <%
             win = 'self._%s_tool_bar'%id
         %>\
-        ${win} = Qt.QToolBar(self)
-        ${win}.addWidget(Qt.QLabel("${no_quotes(label,repr(id))}" + ": "))
-        self._${id}_combo_box = Qt.QComboBox()
+        ${win} = QtWidgets.QToolBar(self)
+        ${win}.addWidget(QtWidgets.QLabel("${no_quotes(label,repr(id))}" + ": "))
+        self._${id}_combo_box = QtWidgets.QComboBox()
         ${win}.addWidget(self._${id}_combo_box)
         for _label in self._${id}_labels: self._${id}_combo_box.addItem(_label)
-        self._${id}_callback = lambda i: Qt.QMetaObject.invokeMethod(self._${id}_combo_box, "setCurrentIndex", Qt.Q_ARG("int", self._${id}_options.index(i)))
+        self._${id}_callback = lambda i: QtCore.QMetaObject.invokeMethod(self._${id}_combo_box, "setCurrentIndex", QtCore.Q_ARG("int", self._${id}_options.index(i)))
         self._${id}_callback(self.${id})
         self._${id}_combo_box.currentIndexChanged.connect(
             lambda i: self.set_${id}(self._${id}_options[i]))
@@ -163,24 +163,24 @@ templates:
         <%
             win = 'self._%s_group_box'%id
         %>\
-        ${win} = Qt.QGroupBox("${no_quotes(label,repr(id))}" + ": ")
+        ${win} = QtWidgets.QGroupBox("${no_quotes(label,repr(id))}" + ": ")
         self._${id}_box = ${orient}()
-        class variable_chooser_button_group(Qt.QButtonGroup):
+        class variable_chooser_button_group(QtWidgets.QButtonGroup):
             def __init__(self, parent=None):
-                Qt.QButtonGroup.__init__(self, parent)
+                QtWidgets.QButtonGroup.__init__(self, parent)
             @pyqtSlot(int)
             def updateButtonChecked(self, button_id):
                 self.button(button_id).setChecked(True)
         self._${id}_button_group = variable_chooser_button_group()
         ${win}.setLayout(self._${id}_box)
         for i, _label in enumerate(self._${id}_labels):
-            radio_button = Qt.QRadioButton(_label)
+            radio_button = QtWidgets.QRadioButton(_label)
             self._${id}_box.addWidget(radio_button)
             self._${id}_button_group.addButton(radio_button, i)
-        self._${id}_callback = lambda i: Qt.QMetaObject.invokeMethod(self._${id}_button_group, "updateButtonChecked", Qt.Q_ARG("int", self._${id}_options.index(i)))
+        self._${id}_callback = lambda i: QtCore.QMetaObject.invokeMethod(self._${id}_button_group, "updateButtonChecked", QtCore.Q_ARG("int", self._${id}_options.index(i)))
         self._${id}_callback(self.${id})
-        self._${id}_button_group.buttonClicked[int].connect(
-            lambda i: self.set_${id}(self._${id}_options[i]))
+        self._${id}_button_group.buttonClicked.connect(
+            lambda i: self.set_${id}(self._${id}_options[self._${id}_button_group.id(i)]))
         % endif
         ${gui_hint() % win}
 

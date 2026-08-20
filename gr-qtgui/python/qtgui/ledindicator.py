@@ -9,11 +9,9 @@
 #
 #
 
-from PyQt5.QtWidgets import QFrame, QHBoxLayout, QVBoxLayout, QLabel
-from PyQt5.QtGui import QPainter, QBrush, QColor, QPen, QFontMetricsF
-from PyQt5.QtCore import Qt as Qtc
-from PyQt5.QtCore import QPoint
-from PyQt5.QtGui import QRadialGradient
+from PyQt6.QtWidgets import QFrame, QHBoxLayout, QVBoxLayout, QLabel
+from PyQt6.QtGui import QPainter, QBrush, QColor, QPen, QFontMetricsF, QRadialGradient
+from PyQt6.QtCore import Qt, QPointF
 
 from gnuradio import gr
 import pmt
@@ -37,7 +35,7 @@ class LabeledLEDIndicator(QFrame):
 
         self.lbl = lbl
         self.lblcontrol = QLabel(lbl, self)
-        self.lblcontrol.setAlignment(Qtc.AlignCenter)
+        self.lblcontrol.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         # add top or left
         if len:
@@ -54,18 +52,18 @@ class LabeledLEDIndicator(QFrame):
                 layout.addWidget(self.lblcontrol)
 
         if alignment == 1:
-            halign = Qtc.AlignCenter
+            halign = Qt.AlignmentFlag.AlignCenter
         elif alignment == 2:
-            halign = Qtc.AlignLeft
+            halign = Qt.AlignmentFlag.AlignLeft
         else:
-            halign = Qtc.AlignRight
+            halign = Qt.AlignmentFlag.AlignRight
 
         if valignment == 1:
-            valign = Qtc.AlignVCenter
+            valign = Qt.AlignmentFlag.AlignVCenter
         elif valignment == 2:
-            valign = Qtc.AlignTop
+            valign = Qt.AlignmentFlag.AlignTop
         else:
-            valign = Qtc.AlignBottom
+            valign = Qt.AlignmentFlag.AlignBottom
 
         layout.setAlignment(halign | valign)
         self.setLayout(layout)
@@ -74,7 +72,7 @@ class LabeledLEDIndicator(QFrame):
             textfont = self.lblcontrol.font()
             metrics = QFontMetricsF(textfont)
 
-            maxWidth = int(max((maxSize + 30), (maxSize + metrics.width(lbl) + 4)))
+            maxWidth = int(max((maxSize + 30), (maxSize + metrics.horizontalAdvance(lbl) + 4)))
             maxHeight = int(max((maxSize + 35), (maxSize + metrics.height() + 2)))
             self.setMinimumSize(maxWidth, maxHeight)
         else:
@@ -120,22 +118,22 @@ class LEDIndicator(QFrame):
 
         center_x = int(size.width() / 2)
         center_y = int(size.height() / 2)
-        centerpoint = QPoint(center_x, center_y)
+        centerpoint = QPointF(center_x, center_y)
 
         radius = smallest_dim
 
         painter.setPen(QPen(QColor('lightgray'), 0))
-        brush.setStyle(Qtc.SolidPattern)
+        brush.setStyle(Qt.BrushStyle.SolidPattern)
 
         radial = QRadialGradient(center_x, center_y / 2, radius)
-        radial.setColorAt(0, Qtc.white)
-        radial.setColorAt(0.8, Qtc.darkGray)
+        radial.setColorAt(0, Qt.GlobalColor.white)
+        radial.setColorAt(0.8, Qt.GlobalColor.darkGray)
         painter.setBrush(QBrush(radial))
         painter.drawEllipse(centerpoint, radius, radius)
 
         # Draw the colored center
         radial = QRadialGradient(center_x, center_y / 2, radius)
-        radial.setColorAt(0, Qtc.white)
+        radial.setColorAt(0, Qt.GlobalColor.white)
 
         if self.curState:
             radial.setColorAt(.7, self.on_color)
@@ -146,7 +144,7 @@ class LEDIndicator(QFrame):
             brush.setColor(self.off_color)
             painter.setPen(QPen(self.off_color, 0))
 
-        brush.setStyle(Qtc.SolidPattern)
+        brush.setStyle(Qt.BrushStyle.SolidPattern)
         painter.setBrush(QBrush(radial))
         if smallest_dim <= 30:
             radius = radius - 3
@@ -183,8 +181,8 @@ class GrLEDIndicator(gr.sync_block, LabeledLEDIndicator):
         try:
             new_val = pmt.to_python(pmt.cdr(msg))
 
-            if type(new_val) == bool or type(new_val) == int:
-                if type(new_val) == bool:
+            if type(new_val) is bool or type(new_val) == int:
+                if type(new_val) is bool:
                     super().setState(new_val)
                 else:
                     if new_val == 1:

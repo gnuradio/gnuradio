@@ -1,7 +1,7 @@
 import os
 import stat
 
-from qtpy.QtCore import Qt
+from PyQt6.QtCore import Qt
 
 
 class Properties(object):
@@ -104,11 +104,11 @@ class Window(object):
     DEFAULT_PARAM_TAB = 'General'
     ADVANCED_PARAM_TAB = 'Advanced'
 
-    CONSOLE_DOCK_LOCATION = Qt.BottomDockWidgetArea
-    BLOCK_LIBRARY_DOCK_LOCATION = Qt.LeftDockWidgetArea
-    DOCUMENTATION_TAB_DOCK_LOCATION = Qt.RightDockWidgetArea
-    WIKI_TAB_DOCK_LOCATION = Qt.RightDockWidgetArea
-    VARIABLE_EDITOR_DOCK_LOCATION = Qt.BottomDockWidgetArea
+    CONSOLE_DOCK_LOCATION = Qt.DockWidgetArea.BottomDockWidgetArea
+    BLOCK_LIBRARY_DOCK_LOCATION = Qt.DockWidgetArea.LeftDockWidgetArea
+    DOCUMENTATION_TAB_DOCK_LOCATION = Qt.DockWidgetArea.RightDockWidgetArea
+    WIKI_TAB_DOCK_LOCATION = Qt.DockWidgetArea.RightDockWidgetArea
+    VARIABLE_EDITOR_DOCK_LOCATION = Qt.DockWidgetArea.BottomDockWidgetArea
 
     # Define the top level menus.
     # This does not actually define the menus; it simply defines a list of constants that

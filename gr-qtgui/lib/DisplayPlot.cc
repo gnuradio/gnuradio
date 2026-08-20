@@ -53,11 +53,7 @@ DisplayPlot::DisplayPlot(int nplots, QWidget* parent)
 
     const QFontMetrics fm(axisWidget(QwtPlot::yLeft)->font());
     QwtScaleDraw* sd = axisScaleDraw(QwtPlot::yLeft);
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 11, 0))
     int min_ext = fm.horizontalAdvance("100.00");
-#else
-    int min_ext = fm.width("100.00");
-#endif
     sd->setMinimumExtent(min_ext);
 
     QwtLegend* legendDisplay = new QwtLegend(this);

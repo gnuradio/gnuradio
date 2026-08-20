@@ -14,7 +14,7 @@
 #include <gnuradio/fft/window.h>
 #include <gnuradio/qtgui/api.h>
 #include <gnuradio/sync_block.h>
-#include <qapplication.h>
+#include <QApplication>
 
 namespace gr {
 namespace qtgui {
@@ -102,7 +102,7 @@ public:
                      int nconnections = 1,
                      QWidget* parent = NULL);
 
-    virtual void exec_() = 0;
+    virtual void exec() = 0;
     virtual QWidget* qwidget() = 0;
 
     virtual void clear_data() = 0;

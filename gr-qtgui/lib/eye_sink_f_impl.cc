@@ -104,7 +104,7 @@ void eye_sink_f_impl::initialize()
     set_samp_per_symbol(4);
 }
 
-void eye_sink_f_impl::exec_() { d_qApplication->exec(); }
+void eye_sink_f_impl::exec() { d_qApplication->exec(); }
 
 QWidget* eye_sink_f_impl::qwidget() { return d_main_gui; }
 

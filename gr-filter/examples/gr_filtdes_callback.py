@@ -11,9 +11,9 @@
 from gnuradio.filter import filter_design
 import sys
 try:
-    from PyQt5 import Qt, QtCore, QtGui
+    from PyQt6.QtWidgets import QApplication
 except ImportError:
-    print("Please install PyQt5 to run this script (http://www.riverbankcomputing.co.uk/software/pyqt/download)")
+    print("Please install PyQt6 to run this script (http://www.riverbankcomputing.co.uk/software/pyqt/download)")
     raise SystemExit(1)
 
 '''
@@ -32,8 +32,8 @@ def print_params(filtobj):
     print("Filter Coefficients", filtobj.get_taps())
 
 
-app = Qt.QApplication(sys.argv)
+app = QApplication(sys.argv)
 # launch function returns gr_filter_design mainwindow object
 main_win = filter_design.launch(sys.argv, print_params)
 main_win.show()
-app.exec_()
+app.exec()

@@ -6,8 +6,9 @@ import logging
 import xml.etree.ElementTree as ET
 
 from ast import literal_eval
-from qtpy import QtGui, QtCore, QtWidgets
-from qtpy.QtCore import Qt
+from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QBrush, QAction
+from PyQt6.QtWidgets import QGraphicsView, QMenu
 
 # Custom modules
 from .canvas.block import Block
@@ -26,12 +27,12 @@ DEFAULT_MAX_Y = 300
 
 
 class FlowgraphView(
-    QtWidgets.QGraphicsView, base.Component
+    QGraphicsView, base.Component
 ):  # added base.Component so it can see platform
     def __init__(self, parent, platform, filename=None):
         super(FlowgraphView, self).__init__()
         self.setParent(parent)
-        self.setAlignment(Qt.AlignLeft | Qt.AlignTop)
+        self.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop)
 
         self.setScene(FlowgraphScene(self, platform))
 
@@ -44,16 +45,16 @@ class FlowgraphView(
         else:
             self.initEmpty()
 
-        self.fitInView(self.scene().sceneRect(), QtCore.Qt.KeepAspectRatio)
+        self.fitInView(self.scene().sceneRect(), Qt.AspectRatioMode.KeepAspectRatio)
         if self.app.theme == "dark":
-            self.setBackgroundBrush(QtGui.QBrush(DARK_FLOWGRAPH_BACKGROUND_COLOR))
+            self.setBackgroundBrush(QBrush(DARK_FLOWGRAPH_BACKGROUND_COLOR))
         else:
-            self.setBackgroundBrush(QtGui.QBrush(LIGHT_FLOWGRAPH_BACKGROUND_COLOR))
+            self.setBackgroundBrush(QBrush(LIGHT_FLOWGRAPH_BACKGROUND_COLOR))
 
         self.isPanning = False
         self.mousePressed = False
 
-        self.setDragMode(self.RubberBandDrag)
+        self.setDragMode(QGraphicsView.DragMode.RubberBandDrag)
 
         self.generator = None
         self.process = None
@@ -68,10 +69,10 @@ class FlowgraphView(
             block.setSelected(True)
             block.context_menu(event.globalPos())
         else:
-            empty_menu = QtWidgets.QMenu()
-            no_action = QtWidgets.QAction("No block selected", enabled=False)
+            empty_menu = QMenu()
+            no_action = QAction("No block selected", enabled=False)
             empty_menu.addAction(no_action)
-            empty_menu.exec_(event.globalPos())
+            empty_menu.exec(event.globalPos())
 
     def createMenus(self, actions, menus):
         log.debug("Creating menus")
@@ -122,7 +123,7 @@ class FlowgraphView(
     def initEmpty(self):
         self.setSceneRect(0, 0, DEFAULT_MAX_X, DEFAULT_MAX_Y)
 
-    def zoom(self, factor: float, anchor=QtWidgets.QGraphicsView.AnchorViewCenter):
+    def zoom(self, factor: float, anchor=QGraphicsView.ViewportAnchor.AnchorViewCenter):
         new_scalefactor = self.scalefactor * factor
 
         if new_scalefactor > 0.25 and new_scalefactor < 2.5:
@@ -137,14 +138,14 @@ class FlowgraphView(
 
     def wheelEvent(self, event):
         # TODO: Support multi touch drag and drop for scrolling through the view
-        if event.modifiers() == Qt.ControlModifier:
+        if event.modifiers() == Qt.KeyboardModifier.ControlModifier:
             factor = 1.1 if event.angleDelta().y() > 0 else (1.0 / 1.1)
-            self.zoom(factor, anchor=QtWidgets.QGraphicsView.AnchorUnderMouse)
+            self.zoom(factor, anchor=QGraphicsView.ViewportAnchor.AnchorUnderMouse)
 
             # if new_scalefactor > 0.25 and new_scalefactor < 2.5:
             #     self.scalefactor = new_scalefactor
-            #     self.setTransformationAnchor(QtWidgets.QGraphicsView.NoAnchor)
-            #     self.setResizeAnchor(QtWidgets.QGraphicsView.NoAnchor)
+            #     self.setTransformationAnchor(QGraphicsView.NoAnchor)
+            #     self.setResizeAnchor(QGraphicsView.NoAnchor)
 
             #     old_pos = self.mapToScene(event.pos())
 
@@ -154,25 +155,25 @@ class FlowgraphView(
             #     delta = new_pos - old_pos
             #     self.translate(delta.x(), delta.y())
 
-        elif event.modifiers() == Qt.ShiftModifier:
+        elif event.modifiers() == Qt.KeyboardModifier.ShiftModifier:
             self.horizontalScrollBar().setValue(
                 self.horizontalScrollBar().value() - event.angleDelta().y())
         else:
-            QtWidgets.QGraphicsView.wheelEvent(self, event)
+            QGraphicsView.wheelEvent(self, event)
 
     def mousePressEvent(self, event):
-        if event.button() == Qt.LeftButton:
+        if event.button() == Qt.MouseButton.LeftButton:
             self.mousePressed = True
             # This will pass the mouse move event to the scene
             super(FlowgraphView, self).mousePressEvent(event)
 
-        elif event.button() == Qt.MiddleButton:
+        elif event.button() == Qt.MouseButton.MiddleButton:
             self.isPanning = True
             self.dragPos = event.pos()
-            self.setCursor(Qt.ClosedHandCursor)
+            self.setCursor(Qt.CursorShape.ClosedHandCursor)
             event.accept()
 
-        elif event.button() == Qt.RightButton:
+        elif event.button() == Qt.MouseButton.RightButton:
 
             #  Check if the right click happened on a block
             #  then select this block and deselect all others
@@ -201,12 +202,12 @@ class FlowgraphView(
             super(FlowgraphView, self).mouseMoveEvent(event)
 
     def mouseReleaseEvent(self, event):
-        if event.button() == Qt.LeftButton:
+        if event.button() == Qt.MouseButton.LeftButton:
             self.mousePressed = False
 
-        elif event.button() == Qt.MiddleButton:
+        elif event.button() == Qt.MouseButton.MiddleButton:
             self.isPanning = False
-            self.setCursor(Qt.ArrowCursor)
+            self.setCursor(Qt.CursorShape.ArrowCursor)
             event.accept()
 
         super(FlowgraphView, self).mouseReleaseEvent(event)

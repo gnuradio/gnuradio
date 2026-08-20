@@ -79,7 +79,7 @@ public:
 
     bool check_topology(int ninputs, int noutputs) override;
 
-    void exec_() override;
+    void exec() override;
     QWidget* qwidget() override;
 
     unsigned int vlen() const override;

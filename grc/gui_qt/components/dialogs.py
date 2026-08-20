@@ -3,12 +3,12 @@ from __future__ import absolute_import, print_function
 from copy import copy
 
 from ..Constants import MIN_DIALOG_HEIGHT, DEFAULT_PARAM_TAB
-from qtpy.QtCore import Qt
-from qtpy.QtGui import QStandardItem, QStandardItemModel
-from qtpy.QtWidgets import (QLineEdit, QDialog, QDialogButtonBox, QTreeView,
-                            QVBoxLayout, QTabWidget, QGridLayout, QWidget, QLabel,
-                            QPushButton, QListWidget, QComboBox, QPlainTextEdit, QHBoxLayout,
-                            QFileDialog, QApplication, QScrollArea)
+from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QStandardItem, QStandardItemModel
+from PyQt6.QtWidgets import (QLineEdit, QDialog, QDialogButtonBox, QTreeView,
+                             QVBoxLayout, QTabWidget, QGridLayout, QWidget, QLabel,
+                             QPushButton, QListWidget, QComboBox, QPlainTextEdit, QHBoxLayout,
+                             QFileDialog, QApplication, QScrollArea)
 
 
 class ErrorsDialog(QDialog):
@@ -19,11 +19,11 @@ class ErrorsDialog(QDialog):
         self.setModal(True)
         self.resize(700, MIN_DIALOG_HEIGHT)
         self.setWindowTitle("Errors and Warnings")
-        buttons = QDialogButtonBox.Close
+        buttons = QDialogButtonBox.StandardButton.Close
         self.buttonBox = QDialogButtonBox(buttons)
         self.buttonBox.rejected.connect(self.reject)  # close
         self.treeview = QTreeView()
-        self.treeview.setEditTriggers(QTreeView.NoEditTriggers)
+        self.treeview.setEditTriggers(QTreeView.EditTrigger.NoEditTriggers)
         self.model = QStandardItemModel()
         self.treeview.setModel(self.model)
         self.layout = QVBoxLayout()
@@ -98,7 +98,7 @@ class PropsDialog(QDialog):
         self.example_list = QListWidget()
         self.example_list.itemDoubleClicked.connect(lambda ex: self.open_example(ex))
 
-        buttons = QDialogButtonBox.Ok | QDialogButtonBox.Cancel
+        buttons = QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel
         self.buttonBox = QDialogButtonBox(buttons)
         self.buttonBox.accepted.connect(self.accept)
         self.buttonBox.rejected.connect(self.reject)
@@ -122,7 +122,7 @@ class PropsDialog(QDialog):
 
     def build_param_entrys(self, cat):
         qvb = QGridLayout()
-        qvb.setAlignment(Qt.AlignTop)
+        qvb.setAlignment(Qt.AlignmentFlag.AlignTop)
         qvb.setVerticalSpacing(5)
         qvb.setHorizontalSpacing(20)
         i = 0

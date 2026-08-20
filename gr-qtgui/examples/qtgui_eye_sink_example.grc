@@ -40,7 +40,7 @@ blocks:
     gui_hint: 0,1,1,1
     label: Roll off
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: QtCore.Qt.Orientation.Horizontal
     rangeType: float
     start: '0.0001'
     step: '0.01'
@@ -93,7 +93,7 @@ blocks:
     gui_hint: 0,0,1,1
     label: Noise Voltage
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: QtCore.Qt.Orientation.Horizontal
     rangeType: float
     start: '0'
     step: '0.01'
@@ -248,7 +248,7 @@ blocks:
     gui_hint: 0,2,1,1
     label: Timing Offset
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: QtCore.Qt.Orientation.Horizontal
     rangeType: float
     start: '0.999'
     step: '0.0001'

@@ -12,11 +12,9 @@
 from threading import Lock
 import sys
 
-from PyQt5.QtWidgets import QFrame, QHBoxLayout, QVBoxLayout, QLabel, QProgressBar
-from PyQt5.QtGui import QColor
-from PyQt5.QtCore import Qt as Qtc
-from PyQt5.QtCore import pyqtSignal
-from PyQt5.QtGui import QPalette
+from PyQt6.QtCore import pyqtSignal, Qt
+from PyQt6.QtWidgets import QFrame, QHBoxLayout, QVBoxLayout, QLabel, QProgressBar
+from PyQt6.QtGui import QColor, QPalette
 
 from gnuradio import gr
 import pmt
@@ -44,7 +42,7 @@ class LabeledLevelGauge(QFrame):
         self.scaleFactor = scaleFactor
 
         self.lblcontrol = QLabel(lbl, self)
-        self.lblcontrol.setAlignment(Qtc.AlignCenter)
+        self.lblcontrol.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         # For whatever reason, the progressbar doesn't show the number in the bar if it's
         # vertical, only if it's horizontal
@@ -70,7 +68,7 @@ class LabeledLevelGauge(QFrame):
             if position == 2 or position == 4:
                 layout.addWidget(self.lblcontrol)
 
-        layout.setAlignment(Qtc.AlignCenter | Qtc.AlignVCenter)
+        layout.setAlignment(Qt.AlignmentFlag.AlignCenter | Qt.AlignmentFlag.AlignVCenter)
         self.setLayout(layout)
 
         self.show()
@@ -125,10 +123,10 @@ class LevelGauge(QProgressBar):
         p = super().palette()
 
         if backgroundColor != 'default':
-            p.setColor(QPalette.Base, QColor(backgroundColor))
+            p.setColor(QPalette.ColorRole.Base, QColor(backgroundColor))
 
         if barColor != 'default':
-            p.setColor(QPalette.Highlight, QColor(barColor))
+            p.setColor(QPalette.ColorRole.Highlight, QColor(barColor))
 
         if backgroundColor != 'default' or barColor != 'default':
             super().setPalette(p)
@@ -143,9 +141,9 @@ class LevelGauge(QProgressBar):
         super().setMaximum(maxValue)
 
         if isVertical:
-            super().setOrientation(Qtc.Vertical)
+            super().setOrientation(Qt.Orientation.Vertical)
         else:
-            super().setOrientation(Qtc.Horizontal)
+            super().setOrientation(Qt.Orientation.Horizontal)
 
     def onUpdateInt(self, new_value):
         if new_value > super().maximum():
@@ -168,7 +166,7 @@ class LevelGauge(QProgressBar):
         self.lock.release()
 
     def setValue(self, new_value):
-        if type(new_value) == int:
+        if type(new_value) is int:
             self.updateInt.emit(new_value)
         else:
             self.updateFloat.emit(new_value)
@@ -208,7 +206,7 @@ class GrLevelGauge(gr.sync_block, LabeledLevelGauge):
         try:
             new_val = pmt.to_python(pmt.cdr(msg))
 
-            if type(new_val) == float or type(new_val) == int:
+            if type(new_val) is float or type(new_val) is int:
                 super().setValue(new_val)
             else:
                 gr.log.error(

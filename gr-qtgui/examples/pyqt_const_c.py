@@ -14,10 +14,10 @@ import sys
 
 try:
     from gnuradio import qtgui
-    from PyQt5 import QtWidgets, Qt
-    import sip
-except ImportError:
-    sys.stderr.write("Error: Program requires PyQt5 and gr-qtgui.\n")
+    from PyQt6 import QtWidgets, QtGui
+    from PyQt6 import sip
+except ImportError as e:
+    sys.stderr.write(f"Error: Program requires PyQt and gr-qtgui: {str(e)}\n")
     sys.exit(1)
 
 try:
@@ -39,7 +39,7 @@ class dialog_box(QtWidgets.QWidget):
         self.setWindowTitle('PyQt Test GUI')
 
         self.boxlayout = QtWidgets.QBoxLayout(
-            QtWidgets.QBoxLayout.LeftToRight, self)
+            QtWidgets.QBoxLayout.Direction.LeftToRight, self)
         self.boxlayout.addWidget(display, 1)
         self.boxlayout.addWidget(control)
 
@@ -52,7 +52,7 @@ class control_box(QtWidgets.QWidget):
         self.setWindowTitle('Control Panel')
 
         self.setToolTip('Control the signals')
-        QtWidgets.QToolTip.setFont(Qt.QFont('OldEnglish', 10))
+        QtWidgets.QToolTip.setFont(QtGui.QFont('OldEnglish', 10))
 
         self.layout = QtWidgets.QFormLayout(self)
 
@@ -80,7 +80,7 @@ class control_box(QtWidgets.QWidget):
 
         self.quit = QtWidgets.QPushButton('Close', self)
         self.quit.setMinimumWidth(100)
-        self.quit.clicked.connect(QtWidgets.qApp.quit)
+        self.quit.clicked.connect(QtWidgets.QApplication.quit)
         self.layout.addWidget(self.quit)
 
     def attach_signal1(self, signal):
@@ -164,5 +164,5 @@ class my_top_block(gr.top_block):
 if __name__ == "__main__":
     tb = my_top_block()
     tb.start()
-    tb.qapp.exec_()
+    tb.qapp.exec()
     tb.stop()

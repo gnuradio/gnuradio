@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Free Software Foundation, Inc.
+ * Copyright 2026 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(1)                                                       */
 /* BINDTOOL_USE_PYGCCXML(1)                                                        */
 /* BINDTOOL_HEADER_FILE(sink_c.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(be3c6d3500abbebbfdc610cb7a951715)                     */
+/* BINDTOOL_HEADER_FILE_HASH(27f4d8f5b799115eaaf646246c1082f0)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -50,7 +50,7 @@ void bind_sink_c(py::module& m)
              D(sink_c, make))
 
 
-        .def("exec_", &sink_c::exec_, D(sink_c, exec_))
+        .def("exec", &sink_c::exec, D(sink_c, exec))
 
 
         .def(

@@ -40,7 +40,7 @@ blocks:
     gui_hint: ''
     label: Delay
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: QtCore.Qt.Orientation.Horizontal
     rangeType: float
     start: '0'
     step: '1'
@@ -61,7 +61,7 @@ blocks:
     gui_hint: ''
     label: Num Taps
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: QtCore.Qt.Orientation.Horizontal
     rangeType: float
     start: '1'
     step: '1'

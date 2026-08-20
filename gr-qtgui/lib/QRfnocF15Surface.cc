@@ -25,7 +25,7 @@ QRfnocF15Surface::QRfnocF15Surface(int fft_bins,
                                    int pwr_bins,
                                    int wf_lines,
                                    QWidget* parent)
-    : QGLWidget(parent),
+    : QOpenGLWidget(parent),
       d_fft_bins(fft_bins),
       d_pwr_bins(pwr_bins),
       d_wf_lines(wf_lines),
@@ -58,7 +58,7 @@ QRfnocF15Surface::~QRfnocF15Surface()
 
 void QRfnocF15Surface::initializeGL()
 {
-    initializeGLFunctions();
+    initializeOpenGLFunctions();
 
     /* Init frame texture */
     glGenTextures(1, &d_frame.tex);
@@ -194,7 +194,7 @@ void QRfnocF15Surface::sendFrame(void* frame, int frame_len)
 {
     d_frame.data = frame;
     d_frame.dirty = true;
-    QMetaObject::invokeMethod(this, "updateGL");
+    QMetaObject::invokeMethod(this, "update");
 }
 
 void QRfnocF15Surface::sendWaterfall(const uint8_t* wf, int n)
@@ -497,7 +497,7 @@ void QRfnocF15Surface::refreshPowerAxis()
 
     /* Release previous texture */
     if (d_layout.pwr_tex)
-        deleteTexture(d_layout.pwr_tex);
+        glDeleteTextures(1, &d_layout.pwr_tex);
 
     /* Create a pixmap of right size */
     QPixmap pixmap((int)(d_layout.x[1] - d_layout.x[0]),
@@ -537,7 +537,7 @@ void QRfnocF15Surface::refreshFrequencyAxis()
 
     /* Release previous texture */
     if (d_layout.freq_tex)
-        deleteTexture(d_layout.freq_tex);
+        glDeleteTextures(1, &d_layout.freq_tex);
 
     /* Create a pixmap of right size */
     QPixmap pixmap((int)(d_layout.x[3] - d_layout.x[0]),
@@ -649,6 +649,27 @@ void QRfnocF15Surface::refreshLayout()
 
     /* All refreshed now */
     d_layout.dirty = false;
+}
+
+GLuint QRfnocF15Surface::bindTexture(const QPixmap& pixmap)
+{
+    QImage img =
+        pixmap.toImage().convertToFormat(QImage::Format_RGBA8888).flipped(Qt::Vertical);
+    GLuint tex;
+    glGenTextures(1, &tex);
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glTexImage2D(GL_TEXTURE_2D,
+                 0,
+                 GL_RGBA,
+                 img.width(),
+                 img.height(),
+                 0,
+                 GL_RGBA,
+                 GL_UNSIGNED_BYTE,
+                 img.constBits());
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    return tex;
 }
 
 } // namespace qtgui

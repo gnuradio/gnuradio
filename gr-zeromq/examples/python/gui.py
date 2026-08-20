@@ -14,15 +14,17 @@ from gnuradio.eng_arg import eng_float, intx
 import gui
 import sys
 import os
-from PyQt5 import Qt, QtGui, QtCore, uic
-import PyQt5.Qwt5 as Qwt
+from PyQt6.QtCore import Qt, QTimer
+from PyQt6.QtWidgets import QMainWindow, QApplication
+from PyQt6.QtGui import QPen, QKeySequence, QShortcut
+from PyQt6 import uic
 from gnuradio import zeromq
 import signal
 
 
-class gui(QtGui.QMainWindow):
+class gui(QMainWindow):
     def __init__(self, window_name, options, parent=None):
-        QtGui.QMainWindow.__init__(self, parent)
+        QMainWindow.__init__(self, parent)
 
         # give Ctrl+C back to system
         signal.signal(signal.SIGINT, signal.SIG_DFL)
@@ -30,7 +32,7 @@ class gui(QtGui.QMainWindow):
         self.gui = uic.loadUi(os.path.join(
             os.path.dirname(__file__), 'main_window.ui'), self)
 
-        self.update_timer = Qt.QTimer()
+        self.update_timer = QTimer()
 
         # socket addresses
         rpc_adr_server = "tcp://" + options.servername + ":6666"
@@ -63,8 +65,8 @@ class gui(QtGui.QMainWindow):
         self.gui.qwtPlotClient.setAxisScale(Qwt.QwtPlot.yLeft, -2, 2)
 
         # Grid
-        pen = Qt.QPen(Qt.Qt.DotLine)
-        pen.setColor(Qt.Qt.black)
+        pen = QPen(Qt.PenStyle.DotLine)
+        pen.setColor(Qt.GlobalColor.black)
         pen.setWidth(0)
         grid_server = Qwt.QwtPlotGrid()
         grid_client = Qwt.QwtPlotGrid()
@@ -74,28 +76,20 @@ class gui(QtGui.QMainWindow):
         grid_client.attach(self.gui.qwtPlotClient)
 
         # Signals
-        self.connect(self.update_timer, QtCore.SIGNAL(
-            "timeout()"), self.probe_manager.watcher)
-        self.connect(self.gui.pushButtonRunServer, QtCore.SIGNAL(
-            "clicked()"), self.start_fg_server)
-        self.connect(self.gui.pushButtonStopServer,
-                     QtCore.SIGNAL("clicked()"), self.stop_fg_server)
-        self.connect(self.gui.pushButtonRunClient, QtCore.SIGNAL(
-            "clicked()"), self.start_fg_client)
-        self.connect(self.gui.pushButtonStopClient,
-                     QtCore.SIGNAL("clicked()"), self.stop_fg_client)
-        self.connect(self.gui.comboBox, QtCore.SIGNAL(
-            "currentIndexChanged(QString)"), self.set_waveform)
-        self.connect(self.gui.spinBox, QtCore.SIGNAL(
-            "valueChanged(int)"), self.set_gain)
-        self.shortcut_start = QtGui.QShortcut(
-            Qt.QKeySequence("Ctrl+S"), self.gui)
-        self.shortcut_stop = QtGui.QShortcut(
-            Qt.QKeySequence("Ctrl+C"), self.gui)
-        self.shortcut_exit = QtGui.QShortcut(
-            Qt.QKeySequence("Ctrl+D"), self.gui)
-        self.connect(self.shortcut_exit, QtCore.SIGNAL(
-            "activated()"), self.gui.close)
+        self.update_timer.timeout.connect(self.probe_manager.watcher)
+        self.gui.pushButtonRunServer.clicked.connect(self.start_fg_server)
+        self.gui.pushButtonStopServer.clicked.connect(self.stop_fg_server)
+        self.gui.pushButtonRunClient.clicked.connect(self.start_fg_client)
+        self.gui.pushButtonStopClient.clicked.connect(self.stop_fg_client)
+        self.gui.comboBox.currentIndexChanged.connect(self.set_waveform)
+        self.gui.spinBox.valueChanged.connect(self.set_gain)
+        self.shortcut_start = QShortcut(
+            QKeySequence("Ctrl+S"), self.gui)
+        self.shortcut_stop = QShortcut(
+            QKeySequence("Ctrl+C"), self.gui)
+        self.shortcut_exit = QShortcut(
+            QKeySequence("Ctrl+D"), self.gui)
+        self.shortcut_exit.activated.connect(self.gui.close)
 
         # start update timer
         self.update_timer.start(30)
@@ -120,7 +114,7 @@ class gui(QtGui.QMainWindow):
         plot.clear()
         # draw curve with new points and plot
         curve = Qwt.QwtPlotCurve()
-        curve.setPen(Qt.QPen(Qt.Qt.blue, 2))
+        curve.setPen(QPen(Qt.GlobalColor.blue, 2))
         curve.attach(plot)
         curve.setData(self.x, self.y)
         plot.replot()
@@ -161,7 +155,7 @@ def parse_args():
 ###############################################################################
 if __name__ == "__main__":
     args = parse_args()
-    qapp = Qt.QApplication(sys.argv)
+    qapp = QApplication(sys.argv)
     qapp.main_window = gui("Remote GNU Radio GUI", args)
     qapp.main_window.show()
-    qapp.exec_()
+    qapp.exec()

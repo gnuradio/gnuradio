@@ -1,8 +1,8 @@
 import logging
 
-from qtpy.QtGui import QPen, QPainter, QBrush, QFont, QFontMetrics, QColor
-from qtpy.QtCore import Qt, QPointF, QRectF, QUrl
-from qtpy.QtWidgets import QGraphicsItem, QApplication, QAction, QGraphicsTextItem
+from PyQt6.QtGui import QPen, QPainter, QBrush, QFont, QFontMetrics, QColor, QAction
+from PyQt6.QtCore import Qt, QPointF, QRectF, QUrl
+from PyQt6.QtWidgets import QGraphicsItem, QApplication, QGraphicsTextItem
 
 from . import colors
 from ... import Constants
@@ -91,9 +91,9 @@ class GUIBlock(QGraphicsItem):
         self.props_dialog = None
         self.right_click_menu = None
 
-        self.setFlag(QGraphicsItem.ItemIsMovable)
-        self.setFlag(QGraphicsItem.ItemIsSelectable)
-        self.setFlag(QGraphicsItem.ItemSendsScenePositionChanges)
+        self.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIsMovable)
+        self.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIsSelectable)
+        self.setFlag(QGraphicsItem.GraphicsItemFlag.ItemSendsScenePositionChanges)
 
     def _is_item_visible(self, item) -> bool:
         if item.value is not None and item.hide == "none":
@@ -160,11 +160,11 @@ class GUIBlock(QGraphicsItem):
 
         # Figure out width of block based on widest line of text
         fm = QFontMetrics(self.font)
-        largest_width = fm.width(self.core.label)
+        largest_width = fm.horizontalAdvance(self.core.label)
         if self.core.is_dummy_block:
             full_line = "key: " + self.core.key
-            if fm.width(full_line) > largest_width:
-                largest_width = fm.width(full_line)
+            if fm.horizontalAdvance(full_line) > largest_width:
+                largest_width = fm.horizontalAdvance(full_line)
         else:
             for key, item in self.core.params.items():
                 name = item.name
@@ -176,8 +176,8 @@ class GUIBlock(QGraphicsItem):
                     value_label = item.options[value] if value in item.options else value
                     full_line = name + ": " + value_label
 
-                    if fm.width(full_line) > largest_width:
-                        largest_width = fm.width(full_line)
+                    if fm.horizontalAdvance(full_line) > largest_width:
+                        largest_width = fm.horizontalAdvance(full_line)
         self.width = largest_width + 15
 
         markup_text = ""
@@ -261,7 +261,7 @@ class GUIBlock(QGraphicsItem):
         if (self.hide_variables and (self.core.is_variable or self.core.is_import)) or (self.hide_disabled_blocks and not self.core.enabled):
             return
 
-        painter.setRenderHint(QPainter.Antialiasing)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
         self.font.setBold(True)
 
         # TODO: Make sure this is correct
@@ -291,9 +291,9 @@ class GUIBlock(QGraphicsItem):
         # Draw block label text
         painter.setFont(self.font)
         if self.core.is_valid():
-            painter.setPen(Qt.black)
+            painter.setPen(Qt.GlobalColor.black)
         else:
-            painter.setPen(Qt.red)
+            painter.setPen(Qt.GlobalColor.red)
 
         # Adjust the painter if parent block is 180 degrees rotated
         if self.rotation() == 180:
@@ -303,7 +303,7 @@ class GUIBlock(QGraphicsItem):
 
         painter.drawText(
             QRectF(0, 0 - self.height / 2 + 15, self.width, self.height),
-            Qt.AlignCenter,
+            Qt.AlignmentFlag.AlignCenter,
             self.core.label,
         )
 
@@ -316,7 +316,7 @@ class GUIBlock(QGraphicsItem):
             painter.setFont(self.font)
             painter.drawText(
                 QRectF(7.5, 0 + y_offset, self.width, self.height),
-                Qt.AlignLeft,
+                Qt.AlignmentFlag.AlignLeft,
                 "key: ",
             )
             fm = QFontMetrics(self.font)
@@ -324,12 +324,12 @@ class GUIBlock(QGraphicsItem):
             painter.setFont(self.font)
             painter.drawText(
                 QRectF(
-                    7.5 + fm.width("key: "),
+                    7.5 + fm.horizontalAdvance("key: "),
                     0 + y_offset,
                     self.width,
                     self.height,
                 ),
-                Qt.AlignLeft,
+                Qt.AlignmentFlag.AlignLeft,
                 self.core.key,
             )
             y_offset += 20
@@ -362,13 +362,13 @@ class GUIBlock(QGraphicsItem):
                     if item.is_valid():
                         painter.setPen(QPen(1))
                     else:
-                        painter.setPen(Qt.red)
+                        painter.setPen(Qt.GlobalColor.red)
 
                     self.font.setBold(True)
                     painter.setFont(self.font)
                     painter.drawText(
                         QRectF(7.5, 0 + y_offset, self.width, self.height),
-                        Qt.AlignLeft,
+                        Qt.AlignmentFlag.AlignLeft,
                         name + ": ",
                     )
                     fm = QFontMetrics(self.font)
@@ -376,12 +376,12 @@ class GUIBlock(QGraphicsItem):
                     painter.setFont(self.font)
                     painter.drawText(
                         QRectF(
-                            7.5 + fm.width(name + ": "),
+                            7.5 + fm.horizontalAdvance(name + ": "),
                             0 + y_offset,
                             self.width,
                             self.height,
                         ),
-                        Qt.AlignLeft,
+                        Qt.AlignmentFlag.AlignLeft,
                         value_label,
                     )
                     y_offset += 20
@@ -411,7 +411,7 @@ class GUIBlock(QGraphicsItem):
         example_action = QAction("Examples...")
         example_action.triggered.connect(self.view_examples)
         self.right_click_menu.addAction(example_action)
-        self.right_click_menu.exec_(pos)
+        self.right_click_menu.exec(pos)
 
     def view_examples(self):
         self.scene().app.MainWindow.example_browser_triggered(key_filter=self.core.key)
@@ -421,7 +421,7 @@ class GUIBlock(QGraphicsItem):
         super(self.__class__, self).mouseDoubleClickEvent(e)
 
     def itemChange(self, change, value):
-        if change == QGraphicsItem.ItemPositionChange and self.scene():
+        if change == QGraphicsItem.GraphicsItemChange.ItemPositionChange and self.scene():
             x = value.x()
             y = value.y()
 

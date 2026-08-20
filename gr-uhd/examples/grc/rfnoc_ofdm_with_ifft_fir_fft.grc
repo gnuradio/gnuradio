@@ -43,7 +43,7 @@ blocks:
     gui_hint: (0,0,1,4)
     label: FIR Filter running coeffs
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: QtCore.Qt.Orientation.Horizontal
     rangeType: int
     start: '0'
     step: '1'
@@ -101,7 +101,7 @@ blocks:
     gui_hint: (1,0,1,4)
     label: Power of scaling Divider FFT
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: QtCore.Qt.Orientation.Horizontal
     rangeType: float
     start: '0.001'
     step: '0.001'
@@ -258,7 +258,7 @@ blocks:
     gui_hint: (2,0,1,4)
     label: Power of scaling Divider IFFT
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: QtCore.Qt.Orientation.Horizontal
     rangeType: int
     start: '0'
     step: '1'
@@ -279,7 +279,7 @@ blocks:
     gui_hint: (3,0,1,4)
     label: Power of scaling Divider FFT
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: QtCore.Qt.Orientation.Horizontal
     rangeType: int
     start: '0'
     step: '1'

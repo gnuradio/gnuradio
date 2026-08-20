@@ -73,7 +73,7 @@ matrix_sink_impl::matrix_sink_impl(const std::string& name,
  */
 matrix_sink_impl::~matrix_sink_impl() { QMetaObject::invokeMethod(d_display, "close"); }
 
-void matrix_sink_impl::exec_() { d_qApplication->exec(); }
+void matrix_sink_impl::exec() { d_qApplication->exec(); }
 
 QWidget* matrix_sink_impl::qwidget() { return (QWidget*)d_display; }
 
@@ -112,12 +112,7 @@ int matrix_sink_impl::work(int noutput_items,
     auto in = static_cast<const input_type*>(input_items[0]);
 
     for (int k = 0; k < noutput_items; k++) {
-#if QT_VERSION < QT_VERSION_CHECK(5, 14, 0)
-        QVector<double> data(d_vlen);
-        std::copy_n(in + k * d_vlen, d_vlen, data.begin());
-#else
         QVector<double> data(in + k * d_vlen, in + (k + 1) * d_vlen);
-#endif
         emit d_signal->data_ready(data);
     }
 

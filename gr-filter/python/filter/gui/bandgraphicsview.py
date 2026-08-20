@@ -6,13 +6,14 @@
 #
 #
 
-from PyQt5 import QtWidgets, QtCore, Qt
+from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QGraphicsView
 
 
-class BandGraphicsView(QtWidgets.QGraphicsView):
+class BandGraphicsView(QGraphicsView):
     def resizeEvent(self, event):
-        self.setAlignment(Qt.Qt.AlignCenter)
+        self.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.fitInView(self.scene().itemsBoundingRect(),
-                       QtCore.Qt.KeepAspectRatio)
+                       Qt.AspectRatioMode.KeepAspectRatio)
         self.scale(1.3, 1.3)
         self.setViewportMargins(10, 10, 10, 10)

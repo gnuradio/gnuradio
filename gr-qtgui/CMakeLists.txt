@@ -10,23 +10,18 @@
 ########################################################################
 include(GrPython)
 
-# Note: gr-qtgui requires Qt5.
-gr_find_package(Qt5
-    COMPONENTS Widgets
-    OPTIONAL_COMPONENTS OpenGL
-    GLOBAL
-)
+# Note: gr-qtgui requires Qt6.
 
-if(TARGET Qt5::Widgets)
-    set(QT_FOUND TRUE)
-else()
-    set(QT_FOUND FALSE)
-endif()
+find_package(Qt6 QUIET
+    COMPONENTS Core Gui Widgets
+    OPTIONAL_COMPONENTS OpenGL OpenGLWidgets
+)
+set(QT_FOUND ${Qt6Widgets_FOUND})
 
 gr_python_check_module(
-    DESC "PyQt5"
-    MODULE PyQt5
-    VAR PYQT5_FOUND
+    DESC "PyQt6"
+    MODULE PyQt6
+    VAR PYQT_FOUND
 )
 if(CONAN_TOOLCHAIN_DETECTED)
     gr_find_package(qwt GLOBAL)
@@ -43,7 +38,7 @@ endif()
 ########################################################################
 include(GrComponent)
 if(NOT CMAKE_CROSSCOMPILING)
-    set(qt_gui_python_deps PYQT5_FOUND)
+    set(qt_gui_python_deps PYQT_FOUND)
 endif(NOT CMAKE_CROSSCOMPILING)
 
 gr_register_component(
@@ -66,10 +61,14 @@ set(GR_PKG_QTGUI_EXAMPLES_DIR ${GR_PKG_DATA_DIR}/examples/qt-gui)
 # Begin conditional configuration
 ########################################################################
 if(ENABLE_GR_QTGUI)
-    if (Qt5OpenGL_FOUND)
-        set(ENABLE_GR_QTGUI_OPENGL TRUE)
-        set(OpenGL_GL_PREFERENCE GLVND)
-    endif()
+    if(Qt6OpenGL_FOUND AND Qt6OpenGLWidgets_FOUND)
+          set(ENABLE_GR_QTGUI_OPENGL TRUE)
+          message(STATUS "gr-qtgui: Qt6 OpenGL/OpenGLWidgets found, fosphor/rfnoc_f15 display enabled")
+      else()
+          set(ENABLE_GR_QTGUI_OPENGL FALSE)
+          message(STATUS "gr-qtgui: Qt6 OpenGL/OpenGLWidgets not found, fosphor/rfnoc_f15 display disabled")
+      endif()
+    set(OpenGL_GL_PREFERENCE GLVND)
     ########################################################################
     # Add subdirectories
     ########################################################################
@@ -119,10 +118,10 @@ if(ENABLE_GR_QTGUI)
 
     if(GR_BUILD_INSTALLER)
         if(WIN32)
-            install(DIRECTORY ${qt_Qt5_QWindowsIntegrationPlugin_LIB_DIRS_RELEASE}
+            install(DIRECTORY ${qt_Qt6_QWindowsIntegrationPlugin_LIB_DIRS_RELEASE}
                     DESTINATION ${REL_PYTHON_INSTALL_PATH})
         elseif(APPLE)
-            install(DIRECTORY ${Qt5_DIR}/plugins/platforms DESTINATION ${REL_PYTHON_INSTALL_PATH}/python.framework/)
+            install(DIRECTORY ${Qt6_DIR}/plugins/platforms DESTINATION ${REL_PYTHON_INSTALL_PATH}/python.framework/)
         endif()
     endif(GR_BUILD_INSTALLER)
 

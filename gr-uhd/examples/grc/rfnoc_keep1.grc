@@ -91,7 +91,7 @@ blocks:
     gui_hint: ''
     label: N
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: QtCore.Qt.Orientation.Horizontal
     rangeType: int
     start: '1'
     step: '1'

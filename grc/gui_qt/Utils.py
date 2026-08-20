@@ -3,9 +3,9 @@ import os
 import logging
 from pathlib import Path
 
-from qtpy import QtGui, QtCore
-from qtpy.QtGui import QPageLayout
-from qtpy.QtPrintSupport import QPrinter
+from PyQt6.QtGui import QPageLayout, QPainter, QPixmap
+from PyQt6.QtPrintSupport import QPrinter
+from PyQt6.QtSvg import QSvgGenerator
 
 from . import Constants
 
@@ -70,32 +70,32 @@ def make_screenshot(fg_view, file_path, transparent_bg=False):
 
     if file_path.suffix == ".png":
 
-        pixmap = QtGui.QPixmap(source_rect.size())
-        painter = QtGui.QPainter(pixmap)
+        pixmap = QPixmap(source_rect.size())
+        painter = QPainter(pixmap)
 
         fg_view.render(painter, target_rect, source_rect)
         pixmap.save(str(file_path), "PNG")
         painter.end()
     elif file_path.suffix == ".svg":
         try:
-            from qtpy import QtSvg
+            from PyQt6 import QtSvg
         except ImportError:
             log.error("Missing (Python-)QtSvg! Please install it or export as PNG instead.")
             return
 
         generator = QtSvg.QSvgGenerator()
         generator.setFileName(str(file_path))
-        painter = QtGui.QPainter(generator)
+        painter = QPainter(generator)
         fg_view.render(painter, target_rect, source_rect)
         painter.end()
     elif file_path.suffix == ".pdf":
         pdf_printer = QPrinter(QPrinter.PrinterMode.ScreenResolution)
         pdf_printer.setOutputFormat(QPrinter.OutputFormat.PdfFormat)
         page_layout = QPageLayout()
-        page_layout.setOrientation(QPageLayout.Landscape)
+        page_layout.setOrientation(QPageLayout.Orientation.Landscape)
         pdf_printer.setPageLayout(page_layout)
         pdf_printer.setOutputFileName(str(file_path))
-        painter = QtGui.QPainter(pdf_printer)
+        painter = QPainter(pdf_printer)
         fg_view.render(painter, pdf_printer.pageRect(QPrinter.Unit.DevicePixel), source_rect)
         painter.end()
         return

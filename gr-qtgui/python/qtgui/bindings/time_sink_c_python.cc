@@ -56,7 +56,7 @@ void bind_time_sink_c(py::module& m)
              D(time_sink_c, make))
 
 
-        .def("exec_", &time_sink_c::exec_, D(time_sink_c, exec_))
+        .def("exec", &time_sink_c::exec, D(time_sink_c, exec))
 
 
         .def(

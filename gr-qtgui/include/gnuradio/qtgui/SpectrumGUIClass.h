@@ -13,10 +13,10 @@
 
 #include <gnuradio/qtgui/spectrumUpdateEvents.h>
 #include <gnuradio/thread/thread.h>
-#include <qapplication.h>
 #include <qlabel.h>
 #include <qslider.h>
 #include <qwidget.h>
+#include <QApplication>
 
 class SpectrumDisplayForm;
 #include <gnuradio/qtgui/spectrumdisplayform.h>

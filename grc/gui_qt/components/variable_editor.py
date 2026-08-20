@@ -4,9 +4,9 @@ from __future__ import absolute_import, print_function
 import logging
 from enum import Enum
 
-from qtpy import QtGui
-from qtpy.QtWidgets import QMenu, QAction, QDockWidget, QTreeWidget, QTreeWidgetItem
-from qtpy.QtCore import Slot, Signal, QPointF, Qt, QVariant
+from PyQt6.QtGui import QIcon, QAction, QPalette
+from PyQt6.QtWidgets import QMenu, QDockWidget, QTreeWidget, QTreeWidgetItem
+from PyQt6.QtCore import pyqtSlot, pyqtSignal, QPointF, Qt, QVariant
 
 # Custom modules
 from .. import base
@@ -30,7 +30,7 @@ class VariableEditorAction(Enum):
 
 
 class VariableEditor(QDockWidget, base.Component):
-    all_editor_actions = Signal([VariableEditorAction])
+    all_editor_actions = pyqtSignal([VariableEditorAction])
 
     def __init__(self):
         super(VariableEditor, self).__init__()
@@ -59,13 +59,13 @@ class VariableEditor(QDockWidget, base.Component):
 
         imports = QTreeWidgetItem(self._tree)
         imports.setText(0, "Imports")
-        imports.setData(2, Qt.UserRole, self.import_add)
-        imports.setIcon(2, QtGui.QIcon.fromTheme("list-add"))
+        imports.setData(2, Qt.ItemDataRole.UserRole, self.import_add)
+        imports.setIcon(2, QIcon.fromTheme("list-add"))
 
         variables = QTreeWidgetItem(self._tree)
         variables.setText(0, "Variables")
-        variables.setData(2, Qt.UserRole, self.var_add)
-        variables.setIcon(2, QtGui.QIcon.fromTheme("list-add"))
+        variables.setData(2, Qt.ItemDataRole.UserRole, self.var_add)
+        variables.setIcon(2, QIcon.fromTheme("list-add"))
         self._tree.expandAll()
 
         # TODO: Move to the base controller and set actions as class attributes
@@ -99,7 +99,7 @@ class VariableEditor(QDockWidget, base.Component):
         log.debug("Creating toolbars")
 
     def contextMenuEvent(self, event):
-        self.right_click_menu.exec_(self.mapToGlobal(event.pos()))
+        self.right_click_menu.exec(self.mapToGlobal(event.pos()))
 
     def keyPressEvent(self, event):
         super(VariableEditor, self).keyPressEvent(event)
@@ -109,7 +109,7 @@ class VariableEditor(QDockWidget, base.Component):
         if (col != 2):
             return
 
-        action = item.data(2, Qt.UserRole)
+        action = item.data(2, Qt.ItemDataRole.UserRole)
 
         if action is None:
             log.warn("Item %s does not contain any actions!!", item)
@@ -128,7 +128,7 @@ class VariableEditor(QDockWidget, base.Component):
         if self.currently_rebuilding:
             return
 
-        c_block = self._tree.model().data(tl, role=Qt.UserRole)
+        c_block = self._tree.model().data(tl, role=Qt.ItemDataRole.UserRole)
         if not c_block:
             return
 
@@ -151,69 +151,69 @@ class VariableEditor(QDockWidget, base.Component):
         self._tree.clear()
         imports = QTreeWidgetItem(self._tree, 2)
         imports.setText(0, "Imports")
-        imports.setForeground(0, self._tree.palette().color(self.palette().WindowText))
-        imports.setIcon(2, QtGui.QIcon.fromTheme("list-add"))
-        imports.setData(2, Qt.UserRole, self.import_add)
+        imports.setForeground(0, self._tree.palette().color(QPalette.ColorRole.WindowText))
+        imports.setIcon(2, QIcon.fromTheme("list-add"))
+        imports.setData(2, Qt.ItemDataRole.UserRole, self.import_add)
         for block in self._imports:
             import_ = QTreeWidgetItem(imports, 0)
             import_.setText(0, block.name)
-            import_.setData(0, Qt.UserRole, block)
+            import_.setData(0, Qt.ItemDataRole.UserRole, block)
             import_.setText(1, block.params['imports'].get_value())
-            import_.setData(1, Qt.UserRole, block)
-            import_.setIcon(2, QtGui.QIcon.fromTheme("list-remove"))
-            import_.setData(2, Qt.UserRole, self.del_block)
+            import_.setData(1, Qt.ItemDataRole.UserRole, block)
+            import_.setIcon(2, QIcon.fromTheme("list-remove"))
+            import_.setData(2, Qt.ItemDataRole.UserRole, self.del_block)
             if block.enabled:
-                import_.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEditable | Qt.ItemIsEnabled)
-                import_.setForeground(0, self._tree.palette().color(self.palette().WindowText))
-                import_.setForeground(1, self._tree.palette().color(self.palette().WindowText))
+                import_.setFlags(Qt.ItemFlag.ItemIsSelectable | Qt.ItemFlag.ItemIsEditable | Qt.ItemFlag.ItemIsEnabled)
+                import_.setForeground(0, self._tree.palette().color(QPalette.ColorRole.WindowText))
+                import_.setForeground(1, self._tree.palette().color(QPalette.ColorRole.WindowText))
             else:
-                import_.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEnabled)
-                import_.setForeground(0, self._tree.palette().color(self.palette().Disabled, self.palette().WindowText))
-                import_.setForeground(1, self._tree.palette().color(self.palette().Disabled, self.palette().WindowText))
+                import_.setFlags(Qt.ItemFlag.ItemIsSelectable | Qt.ItemFlag.ItemIsEnabled)
+                import_.setForeground(0, self._tree.palette().color(QPalette.ColorGroup.Disabled, QPalette.ColorRole.WindowText))
+                import_.setForeground(1, self._tree.palette().color(QPalette.ColorGroup.Disabled, QPalette.ColorRole.WindowText))
 
         variables = QTreeWidgetItem(self._tree, 2)
         variables.setText(0, "Variables")
-        variables.setForeground(0, self._tree.palette().color(self.palette().WindowText))
-        variables.setIcon(2, QtGui.QIcon.fromTheme("list-add"))
-        variables.setData(2, Qt.UserRole, self.var_add)
+        variables.setForeground(0, self._tree.palette().color(QPalette.ColorRole.WindowText))
+        variables.setIcon(2, QIcon.fromTheme("list-add"))
+        variables.setData(2, Qt.ItemDataRole.UserRole, self.var_add)
         for block in sorted(self._variables, key=lambda v: v.name):
             variable_ = QTreeWidgetItem(variables, 1)
             variable_.setText(0, block.name)
-            variable_.setData(0, Qt.UserRole, block)
-            variable_.setData(2, Qt.UserRole, self.del_block)
+            variable_.setData(0, Qt.ItemDataRole.UserRole, block)
+            variable_.setData(2, Qt.ItemDataRole.UserRole, self.del_block)
             if block.key == 'variable':
                 variable_.setText(1, block.params['value'].get_value())
-                variable_.setData(1, Qt.UserRole, block)
-                variable_.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEditable | Qt.ItemIsEnabled)
+                variable_.setData(1, Qt.ItemDataRole.UserRole, block)
+                variable_.setFlags(Qt.ItemFlag.ItemIsSelectable | Qt.ItemFlag.ItemIsEditable | Qt.ItemFlag.ItemIsEnabled)
                 if block.enabled:
-                    variable_.setForeground(0, self._tree.palette().color(self.palette().WindowText))
-                    variable_.setForeground(1, self._tree.palette().color(self.palette().WindowText))
+                    variable_.setForeground(0, self._tree.palette().color(QPalette.ColorRole.WindowText))
+                    variable_.setForeground(1, self._tree.palette().color(QPalette.ColorRole.WindowText))
                 else:
                     variable_.setForeground(0, self._tree.palette().color(
-                        self.palette().Disabled, self.palette().WindowText))
+                        QPalette.ColorGroup.Disabled, QPalette.ColorRole.WindowText))
                     variable_.setForeground(1, self._tree.palette().color(
-                        self.palette().Disabled, self.palette().WindowText))
+                        QPalette.ColorGroup.Disabled, QPalette.ColorRole.WindowText))
             else:
-                variable_.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEnabled)
+                variable_.setFlags(Qt.ItemFlag.ItemIsSelectable | Qt.ItemFlag.ItemIsEnabled)
                 if block.enabled:
                     try:
                         variable_.setText(1, str(block.evaluate(block.value)))
-                        variable_.setForeground(0, self._tree.palette().color(self.palette().WindowText))
-                        variable_.setForeground(1, self._tree.palette().color(self.palette().WindowText))
+                        variable_.setForeground(0, self._tree.palette().color(QPalette.ColorRole.WindowText))
+                        variable_.setForeground(1, self._tree.palette().color(QPalette.ColorRole.WindowText))
                     except Exception:
                         log.exception(f'Failed to evaluate variable block {block.name}', exc_info=True)
                         variable_.setText(1, '<Open Properties>')
                         variable_.setForeground(0, self._tree.palette().color(
-                            self.palette().Disabled, self.palette().WindowText))
+                            QPalette.ColorGroup.Disabled, QPalette.ColorRole.WindowText))
                         variable_.setForeground(1, self._tree.palette().color(
-                            self.palette().Disabled, self.palette().WindowText))
+                            QPalette.ColorGroup.Disabled, QPalette.ColorRole.WindowText))
                 else:
                     variable_.setText(1, '<Open Properties>')
                     variable_.setForeground(0, self._tree.palette().color(
-                        self.palette().Disabled, self.palette().WindowText))
+                        QPalette.ColorGroup.Disabled, QPalette.ColorRole.WindowText))
                     variable_.setForeground(1, self._tree.palette().color(
-                        self.palette().Disabled, self.palette().WindowText))
-            variable_.setIcon(2, QtGui.QIcon.fromTheme("list-remove"))
+                        QPalette.ColorGroup.Disabled, QPalette.ColorRole.WindowText))
+            variable_.setIcon(2, QIcon.fromTheme("list-remove"))
 
         self.currently_rebuilding = False
 
@@ -223,7 +223,7 @@ class VariableEditor(QDockWidget, base.Component):
         self._rebuild()
         self._tree.expandAll()
 
-    Slot(VariableEditorAction)
+    pyqtSlot(VariableEditorAction)
 
     def handle_action(self, action):
         log.debug(f"{action} triggered!")

@@ -189,8 +189,8 @@ def main():
     grc_qt_config_file = paths.get_config_file_path('grc_qt.conf')
     if os.path.isfile(grc_qt_config_file):
         try:
-            from qtpy.QtCore import QSettings
-            qsettings = QSettings(grc_qt_config_file, QSettings.IniFormat)
+            from PyQt6.QtCore import QSettings
+            qsettings = QSettings(grc_qt_config_file, QSettings.Format.IniFormat)
             grc_version_from_config = qsettings.value('grc/default_grc', "", type=str)
         except Exception as e:
             log.warning("main.py could not read grc_qt.conf")

@@ -15,7 +15,7 @@
 
 #include <gnuradio/block.h>
 #include <gnuradio/qtgui/api.h>
-#include <qapplication.h>
+#include <QApplication>
 #include <string>
 
 namespace gr {
@@ -81,7 +81,7 @@ public:
     virtual void set_frame_rate(int fps) = 0;
 
     /*** QT GUI Widget stuff *************************************************/
-    virtual void exec_() = 0;
+    virtual void exec() = 0;
     virtual QWidget* qwidget() = 0;
 
     QApplication* d_qApplication;

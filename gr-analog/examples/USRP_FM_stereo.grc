@@ -52,7 +52,7 @@ blocks:
     gui_hint: ''
     label: Frequency
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: QtCore.Qt.Orientation.Horizontal
     rangeType: float
     start: '88000000'
     step: '200000'
@@ -97,7 +97,7 @@ blocks:
     gui_hint: ''
     label: RF Gain
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: QtCore.Qt.Orientation.Horizontal
     rangeType: float
     start: '0'
     step: '1'
@@ -130,7 +130,7 @@ blocks:
     gui_hint: ''
     label: Volume
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: QtCore.Qt.Orientation.Horizontal
     rangeType: float
     start: '0'
     step: '0.05'

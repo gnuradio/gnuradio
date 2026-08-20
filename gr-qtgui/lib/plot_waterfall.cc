@@ -221,12 +221,13 @@ QImage PlotWaterfall::renderImage(const QwtScaleMap& xMap,
     d_data->data->discardRaster();
 
     // Mirror the image in case of inverted maps
-
-    const bool hInvert = xxMap.p1() > xxMap.p2();
-    const bool vInvert = yyMap.p1() < yyMap.p2();
-    if (hInvert || vInvert) {
-        image = image.mirrored(hInvert, vInvert);
-    }
+    Qt::Orientations flags;
+    if (xxMap.p1() > xxMap.p2())
+        flags |= Qt::Orientation::Horizontal;
+    if (yyMap.p1() < yyMap.p2())
+        flags |= Qt::Orientation::Vertical;
+    if (flags)
+        image.flip(flags);
 
     return std::move(image);
 }

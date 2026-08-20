@@ -8,7 +8,7 @@
  */
 
 #include "QRfnocF15ColorMapper.h"
-#include <QGLContext>
+#include <QPainter>
 #include <array>
 #include <memory>
 #include <sstream>
@@ -19,10 +19,10 @@ namespace qtgui {
 QRfnocF15ColorMapper::QRfnocF15ColorMapper(QObject* parent) : QObject(parent)
 {
     /* Shader init */
-    d_shader = new QGLShaderProgram(this);
+    d_shader = new QOpenGLShaderProgram(this);
 
     d_shader->addShaderFromSourceCode(
-        QGLShader::Fragment,
+        QOpenGLShader::Fragment,
         "uniform sampler2D cmap;\n"
         "uniform sampler2D tex;\n"
         "uniform vec2 range;\n"
@@ -43,7 +43,7 @@ QRfnocF15ColorMapper::QRfnocF15ColorMapper(QObject* parent) : QObject(parent)
     /* Load default set */
     QFile f(":/rfnoc_f15/palettes.txt");
     loadFromFile(f);
-    initializeGLFunctions();
+    initializeOpenGLFunctions();
 }
 
 int QRfnocF15ColorMapper::loadFromFile(QFile& file)
@@ -132,11 +132,19 @@ bool QRfnocF15ColorMapper::addPalette(std::string name, QLinearGradient& gradien
 
 bool QRfnocF15ColorMapper::addPalette(std::string name, QPixmap& pixmap)
 {
-    /* Convert to an OpenGL texture */
-    /* Note: We use TEXTURE_2D because 1D isn't really supported by Qt
-     * and it's also not in OpenGL ES */
-    QGLContext* ctx = const_cast<QGLContext*>(QGLContext::currentContext());
-    GLuint tex_id = ctx->bindTexture(pixmap, GL_TEXTURE_2D);
+    QImage img = pixmap.toImage().convertToFormat(QImage::Format_RGBA8888);
+    GLuint tex_id;
+    glGenTextures(1, &tex_id);
+    glBindTexture(GL_TEXTURE_2D, tex_id);
+    glTexImage2D(GL_TEXTURE_2D,
+                 0,
+                 GL_RGBA,
+                 img.width(),
+                 img.height(),
+                 0,
+                 GL_RGBA,
+                 GL_UNSIGNED_BYTE,
+                 img.constBits());
 
     /* Configure behavior */
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -146,7 +154,7 @@ bool QRfnocF15ColorMapper::addPalette(std::string name, QPixmap& pixmap)
 
     /* Insert new texture (remove old one if needed) */
     if (d_palettes.count(name))
-        ctx->deleteTexture(d_palettes[name]);
+        glDeleteTextures(1, &d_palettes[name]);
 
     d_palettes[name] = tex_id;
 

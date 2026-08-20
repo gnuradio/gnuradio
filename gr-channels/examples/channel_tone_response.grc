@@ -40,7 +40,7 @@ blocks:
     gui_hint: ''
     label: K (Rician Factor)
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: QtCore.Qt.Orientation.Horizontal
     rangeType: float
     start: '0'
     step: '.1'
@@ -61,7 +61,7 @@ blocks:
     gui_hint: ''
     label: Sine Amplitude (dB)
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: QtCore.Qt.Orientation.Horizontal
     rangeType: float
     start: '-100'
     step: '1'
@@ -82,7 +82,7 @@ blocks:
     gui_hint: ''
     label: Frequency Offset
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: QtCore.Qt.Orientation.Horizontal
     rangeType: float
     start: -20e3
     step: '1'
@@ -103,7 +103,7 @@ blocks:
     gui_hint: ''
     label: Max Doppler Frequency (Hz)
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: QtCore.Qt.Orientation.Horizontal
     rangeType: float
     start: '0'
     step: '1'
@@ -124,7 +124,7 @@ blocks:
     gui_hint: ''
     label: Sampling Frequency Relative Offset
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: QtCore.Qt.Orientation.Horizontal
     rangeType: float
     start: '0.9'
     step: '.001'
@@ -145,7 +145,7 @@ blocks:
     gui_hint: ''
     label: Noise Level (dB)
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: QtCore.Qt.Orientation.Horizontal
     rangeType: float
     start: '-30'
     step: '.5'

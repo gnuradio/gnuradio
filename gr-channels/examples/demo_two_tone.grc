@@ -40,7 +40,7 @@ blocks:
     gui_hint: 4,0,1,1
     label: k3 (IP3)
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: QtCore.Qt.Orientation.Horizontal
     rangeType: float
     start: -.1
     step: '0.001'
@@ -73,7 +73,7 @@ blocks:
     gui_hint: 2,0,1,1
     label: f1
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: QtCore.Qt.Orientation.Horizontal
     rangeType: float
     start: -samp_rate/2
     step: '1'
@@ -94,7 +94,7 @@ blocks:
     gui_hint: 2,1,1,1
     label: f2
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: QtCore.Qt.Orientation.Horizontal
     rangeType: float
     start: -samp_rate/2
     step: '1'
@@ -115,7 +115,7 @@ blocks:
     gui_hint: 4,1,1,1
     label: k2 (IP2)
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: QtCore.Qt.Orientation.Horizontal
     rangeType: float
     start: -.1
     step: '0.001'
@@ -136,7 +136,7 @@ blocks:
     gui_hint: 5,0,1,1
     label: I offset
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: QtCore.Qt.Orientation.Horizontal
     rangeType: float
     start: '-1'
     step: '0.001'
@@ -157,7 +157,7 @@ blocks:
     gui_hint: 3,0,1,1
     label: IQ Magnitude Imbalance
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: QtCore.Qt.Orientation.Horizontal
     rangeType: float
     start: '0'
     step: '0.1'
@@ -178,7 +178,7 @@ blocks:
     gui_hint: 1,1,1,1
     label: Phase Noise Mag (dB)
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: QtCore.Qt.Orientation.Horizontal
     rangeType: float
     start: '-100'
     step: '1'
@@ -199,7 +199,7 @@ blocks:
     gui_hint: 3,1,1,1
     label: IQ Phase Imbalance
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: QtCore.Qt.Orientation.Horizontal
     rangeType: float
     start: '0'
     step: '0.1'
@@ -220,7 +220,7 @@ blocks:
     gui_hint: 5,1,1,1
     label: Q offset
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: QtCore.Qt.Orientation.Horizontal
     rangeType: float
     start: '-1'
     step: '0.001'
@@ -253,7 +253,7 @@ blocks:
     gui_hint: 1,0,1,1
     label: Signal Power (dB)
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: QtCore.Qt.Orientation.Horizontal
     rangeType: float
     start: '-100'
     step: '1'

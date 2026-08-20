@@ -8,7 +8,6 @@
 ########################################################################
 # Setup the QT file generations stuff
 ########################################################################
-
 set(QTGUI_SOURCES
     DisplayPlot.cc
     FrequencyDisplayPlot.cc
@@ -69,11 +68,11 @@ set(QTGUI_LIBS
     gnuradio-filter
     Volk::volk
     qwt::qwt
-    Qt5::Widgets
+    Qt6::Widgets
 )
 
 if(ENABLE_GR_QTGUI_OPENGL)
-    qt5_add_resources(RFNOC_F15_RC_SRCS rfnoc_f15.qrc)
+    qt6_add_resources(RFNOC_F15_RC_SRCS rfnoc_f15.qrc)
     list(APPEND QTGUI_SOURCES
         axis.c
         rfnoc_f15_display_impl.cc
@@ -83,7 +82,8 @@ if(ENABLE_GR_QTGUI_OPENGL)
     )
     gr_find_package(OpenGL)
     list(APPEND PRIVATE_LIBS
-        Qt5::OpenGL
+        Qt6::OpenGL
+        Qt6::OpenGLWidgets
         OpenGL::GL
     )
 endif()
@@ -106,7 +106,7 @@ target_link_libraries(gnuradio-qtgui
 )
 
 set(qtgui_mod_includedir ${CMAKE_CURRENT_SOURCE_DIR}/../include/gnuradio/qtgui)
-qt5_wrap_cpp(
+qt6_wrap_cpp(
     qtgui_moc_sources
     ${qtgui_mod_includedir}/spectrumdisplayform.h
     ${qtgui_mod_includedir}/displayform.h
@@ -138,14 +138,14 @@ qt5_wrap_cpp(
     matrix_display_signal.h
     )
 if(ENABLE_GR_QTGUI_OPENGL)
-    qt5_wrap_cpp(
+    qt6_wrap_cpp(
         qtgui_moc_sources
         QRfnocF15Surface.h
         QRfnocF15ColorMapper.h
         )
 endif()
 target_sources(gnuradio-qtgui PRIVATE ${qtgui_moc_sources})
-qt5_wrap_ui(qtgui_ui_hdrs spectrumdisplayform.ui)
+qt6_wrap_ui(qtgui_ui_hdrs spectrumdisplayform.ui)
 target_sources(gnuradio-qtgui PRIVATE ${qtgui_ui_hdrs})
 
 #FIXME the sources expect <foo>.ui.h, but the macros generate ui_foo.h
@@ -166,5 +166,5 @@ if(MSVC)
 endif(MSVC)
 
 if(BUILD_SHARED_LIBS)
-    gr_library_foo(gnuradio-qtgui qwt::qwt Qt5::Widgets)
+    gr_library_foo(gnuradio-qtgui qwt::qwt Qwt Qt6::Widgets)
 endif()
