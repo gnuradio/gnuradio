@@ -279,7 +279,7 @@ int vector_sink_f_impl::work(int noutput_items,
     for (int i = 0; i < noutput_items; i++) {
         if (gr::high_res_timer_now() - d_last_time > d_update_time) {
             for (int n = 0; n < d_nconnections; n++) {
-                in = ((const float*)input_items[n]) + d_vlen;
+                in = ((const float*)input_items[n]) + i * d_vlen;
                 for (unsigned int x = 0; x < d_vlen; x++) {
                     d_magbufs[n][x] =
                         (double)((1.0 - d_vecavg) * d_magbufs[n][x] + (d_vecavg)*in[x]);
