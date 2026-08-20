@@ -21,7 +21,10 @@
 #include <volk/volk.h>
 
 #include <cmath>
+#include <cstdint>
 #include <cstring>
+#include <stdexcept>
+#include <string>
 
 #ifdef _MSC_VER
 #define isfinite _finite
@@ -35,19 +38,66 @@ using ::_finite;
 namespace gr {
 namespace qtgui {
 
+namespace {
+
+constexpr size_t item_size(number_sink::item_type_t itemtype)
+{
+    switch (itemtype) {
+    case number_sink::item_type_t::FLOAT32:
+        return sizeof(float);
+    case number_sink::item_type_t::INT32:
+        return sizeof(int32_t);
+    case number_sink::item_type_t::INT16:
+        return sizeof(int16_t);
+    case number_sink::item_type_t::INT8:
+        return sizeof(int8_t);
+    }
+    throw std::runtime_error("number_sink: unknown item type");
+}
+
+constexpr number_sink::item_type_t item_type_from_size(size_t itemsize)
+{
+    // Four bytes keep meaning float here: an item size cannot tell FLOAT32
+    // and INT32 apart, and float is what this constructor has always meant.
+    switch (itemsize) {
+    case sizeof(int8_t):
+        return number_sink::item_type_t::INT8;
+    case sizeof(int16_t):
+        return number_sink::item_type_t::INT16;
+    case sizeof(float):
+        return number_sink::item_type_t::FLOAT32;
+    }
+    throw std::runtime_error("number_sink: unsupported item size " +
+                             std::to_string(itemsize));
+}
+
+} // namespace
+
+number_sink::sptr number_sink::make(item_type_t itemtype,
+                                    float average,
+                                    graph_t graph_type,
+                                    int nconnections,
+                                    QWidget* parent)
+{
+    return gnuradio::make_block_sptr<number_sink_impl>(
+        itemtype, average, graph_type, nconnections, parent);
+}
+
 number_sink::sptr number_sink::make(
     size_t itemsize, float average, graph_t graph_type, int nconnections, QWidget* parent)
 {
-    return gnuradio::make_block_sptr<number_sink_impl>(
-        itemsize, average, graph_type, nconnections, parent);
+    return make(item_type_from_size(itemsize), average, graph_type, nconnections, parent);
 }
 
-number_sink_impl::number_sink_impl(
-    size_t itemsize, float average, graph_t graph_type, int nconnections, QWidget* parent)
+number_sink_impl::number_sink_impl(item_type_t itemtype,
+                                   float average,
+                                   graph_t graph_type,
+                                   int nconnections,
+                                   QWidget* parent)
     : sync_block("number_sink",
-                 io_signature::make(nconnections, nconnections, itemsize),
+                 io_signature::make(nconnections, nconnections, item_size(itemtype)),
                  io_signature::make(0, 0, 0)),
-      d_itemsize(itemsize),
+      d_itemtype(itemtype),
       d_average(average),
       d_type(graph_type),
       d_nconnections(nconnections),
@@ -61,7 +111,7 @@ number_sink_impl::number_sink_impl(
     }
 
     // Set alignment properties for VOLK
-    const int alignment_multiple = volk_get_alignment() / d_itemsize;
+    const int alignment_multiple = volk_get_alignment() / item_size(d_itemtype);
     set_alignment(std::max(1, alignment_multiple));
 
     initialize();
@@ -83,13 +133,14 @@ void number_sink_impl::initialize()
     }
 
     d_main_gui = new NumberDisplayForm(d_nconnections, d_type, d_parent);
-    switch (d_itemsize) {
-    case sizeof(char):
-    case sizeof(short):
-        d_main_gui->set_display_format(NumberDisplayForm::FORMAT_INT);
-        break;
-    default:
+    switch (d_itemtype) {
+    case item_type_t::FLOAT32:
         d_main_gui->set_display_format(NumberDisplayForm::FORMAT_FLOAT);
+        break;
+    case item_type_t::INT32:
+    case item_type_t::INT16:
+    case item_type_t::INT8:
+        d_main_gui->set_display_format(NumberDisplayForm::FORMAT_INT);
         break;
     }
     d_main_gui->setAverage(d_average);
@@ -242,27 +293,17 @@ void number_sink_impl::_gui_update_trigger()
 
 float number_sink_impl::get_item(const void* input_items, int n)
 {
-    const char* inc;
-    const short* ins;
-    const float* inf;
-
-    switch (d_itemsize) {
-    case (1):
-        inc = (const char*)input_items;
-        return static_cast<float>(inc[n]);
-        break;
-    case (2):
-        ins = (const short*)input_items;
-        return static_cast<float>(ins[n]);
-        break;
-    case (4):
-        inf = (const float*)input_items;
-        return static_cast<float>(inf[n]);
-        break;
-    default:
-        throw std::runtime_error("item size not supported");
+    switch (d_itemtype) {
+    case item_type_t::FLOAT32:
+        return static_cast<const float*>(input_items)[n];
+    case item_type_t::INT32:
+        return static_cast<float>(static_cast<const int32_t*>(input_items)[n]);
+    case item_type_t::INT16:
+        return static_cast<float>(static_cast<const int16_t*>(input_items)[n]);
+    case item_type_t::INT8:
+        return static_cast<float>(static_cast<const int8_t*>(input_items)[n]);
     }
-    return 0;
+    throw std::runtime_error("number_sink: unknown item type");
 }
 
 int number_sink_impl::work(int noutput_items,
