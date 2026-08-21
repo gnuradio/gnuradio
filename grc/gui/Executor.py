@@ -18,6 +18,9 @@ from ..core import Messages
 class ExecFlowGraphThread(threading.Thread):
     """Execute the flow graph as a new process and wait on it to finish."""
 
+    _OUTPUT_BATCH_CHARS = 8192
+    _OUTPUT_BATCH_DELAY = 0.05
+
     def __init__(self, flow_graph_page, xterm_executable, update_gui_callback):
         """Initialize ExecFlowGraphThread.
 
@@ -34,6 +37,10 @@ class ExecFlowGraphThread(threading.Thread):
         self.xterm_executable = xterm_executable
         self.update_callback = update_gui_callback
         self.generator = self.page.get_generator()
+        
+        self._pending_output = []
+        self._pending_output_lock = threading.Lock()
+        self._output_flush_id = None
 
         try:
             self.process = self.page.process = self._popen(self.generator.get_exec_args())
@@ -78,16 +85,76 @@ class ExecFlowGraphThread(threading.Thread):
             **exec_args
         )
 
+    def _queue_output(self, text):
+        if not text:
+            return
+
+        with self._pending_output_lock:
+            self._pending_output.append(text)
+            if self._output_flush_id is not None:
+                return
+            self._output_flush_id = GLib.idle_add(self._flush_queued_output)
+
+    def _flush_queued_output(self):
+        with self._pending_output_lock:
+            output = ''.join(self._pending_output)
+            self._pending_output = []
+
+        if output:
+            Messages.send_verbose_exec(output)
+            
+        with self._pending_output_lock:
+            self._output_flush_id = None
+            
+        return GLib.SOURCE_REMOVE
+
+    def _finish(self):
+        self._flush_queued_output()
+        self.done()
+        return False
+
     def run(self):
         """
         Wait on the executing process by reading from its stdout.
         Use GObject.idle_add when calling functions that modify gtk objects.
         """
-        # handle completion
-        r = "\n"
-        while r:
-            GLib.idle_add(Messages.send_verbose_exec, r)
-            r = self.process.stdout.read(1)
+        self._queue_output("\n")
+
+        pending = []
+        pending_backspace = None
+        flush_deadline = time.monotonic() + self._OUTPUT_BATCH_DELAY
+
+        while True:
+            try:
+                chunk = self.process.stdout.buffer.read1(8192)
+            except (ValueError, AttributeError):
+                break
+
+            if not chunk:
+                break
+
+            text = chunk.decode('utf-8', errors='replace')
+
+            for r in text:
+                is_backspace = (r == '\b')
+
+                if pending and is_backspace != pending_backspace:
+                    self._queue_output(''.join(pending))
+                    pending = []
+                    flush_deadline = time.monotonic() + self._OUTPUT_BATCH_DELAY
+
+                pending.append(r)
+                pending_backspace = is_backspace
+
+            now = time.monotonic()
+            if len(pending) >= self._OUTPUT_BATCH_CHARS or now >= flush_deadline:
+                self._queue_output(''.join(pending))
+                pending = []
+                pending_backspace = None
+                flush_deadline = now + self._OUTPUT_BATCH_DELAY
+
+        if pending:
+            self._queue_output(''.join(pending))
 
         # Properly close pipe before thread is terminated
         self.process.stdout.close()
@@ -95,7 +162,7 @@ class ExecFlowGraphThread(threading.Thread):
             # Wait for the process to fully terminate
             time.sleep(0.05)
 
-        GLib.idle_add(self.done)
+        GLib.idle_add(self._finish)
 
     def done(self):
         """Perform end of execution tasks."""
