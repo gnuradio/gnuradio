@@ -68,6 +68,21 @@ class LabeledDigitalNumberControl(QFrame):
     def setReadOnly(self, b_read_only):
         self.numberControl.setReadOnly(b_read_only)
 
+    def setMinFrequency(self, min_freq_hz):
+        self.numberControl.setMinFrequency(min_freq_hz)
+
+    def setMaxFrequency(self, max_freq_hz):
+        self.numberControl.setMaxFrequency(max_freq_hz)
+
+    def setFrequencyRange(self, min_freq_hz, max_freq_hz):
+        self.numberControl.setFrequencyRange(min_freq_hz, max_freq_hz)
+
+    def getMinFrequency(self):
+        return self.numberControl.getMinFrequency()
+
+    def getMaxFrequency(self):
+        return self.numberControl.getMaxFrequency()
+
     def setFrequency(self, new_freq):
         self.numberControl.setFrequency(new_freq)
 
@@ -98,6 +113,7 @@ class DigitalNumberControl(QFrame):
         self.min_freq = int(min_freq_hz)
         self.max_freq = int(max_freq_hz)
         self.numDigitsInFreq = len(str(max_freq_hz))
+        
 
         self.thousands_separator = thousands_separator
         self.click_callback = click_callback
@@ -139,11 +155,79 @@ class DigitalNumberControl(QFrame):
         # Show the control
         self.show()
 
+    def _update_width_from_digits(self):
+        # Size from the configured range so separators/layout track max digits.
+        teststr = "0" * self.numDigitsInFreq
+
+        fm = QFontMetrics(self.numberFont)
+        if len(self.thousands_separator) > 0:
+            # The -1 makes sure we don't count an extra for 123,456,789.
+            # Answer should be 2 not 3.
+            numgroups = int(float(self.numDigitsInFreq - 1) / 3.0)
+            if numgroups > 0:
+                teststr += self.thousands_separator * numgroups
+
+        width = fm.width(teststr)
+
+        self.minwidth = width
+        if self.minwidth < 410:
+            self.minwidth = 410
+
+        self.setMinimumWidth(self.minwidth)
+
+    def _clamp_current_frequency(self):
+        if self.cur_freq < self.min_freq:
+            self.cur_freq = self.min_freq
+        elif self.cur_freq > self.max_freq:
+            self.cur_freq = self.max_freq
+
     def minimumSizeHint(self):
         return QSize(self.minwidth, 50)
 
     def setReadOnly(self, b_read_only):
         self.read_only = b_read_only
+
+    def setMinFrequency(self, min_freq_hz):
+        min_freq_hz = int(min_freq_hz)
+        if min_freq_hz > self.max_freq:
+            gr.log.error("Min frequency cannot exceed max frequency")
+            return
+
+        self.min_freq = min_freq_hz
+        self._clamp_current_frequency()
+        self.update()
+
+    def setMaxFrequency(self, max_freq_hz):
+        max_freq_hz = int(max_freq_hz)
+        if max_freq_hz < self.min_freq:
+            gr.log.error("Max frequency cannot be less than min frequency")
+            return
+
+        self.max_freq = max_freq_hz
+        self.numDigitsInFreq = len(str(self.max_freq))
+        self._update_width_from_digits()
+        self._clamp_current_frequency()
+        self.update()
+
+    def setFrequencyRange(self, min_freq_hz, max_freq_hz):
+        min_freq_hz = int(min_freq_hz)
+        max_freq_hz = int(max_freq_hz)
+        if min_freq_hz > max_freq_hz:
+            gr.log.error("Min frequency cannot exceed max frequency")
+            return
+
+        self.min_freq = min_freq_hz
+        self.max_freq = max_freq_hz
+        self.numDigitsInFreq = len(str(self.max_freq))
+        self._update_width_from_digits()
+        self._clamp_current_frequency()
+        self.update()
+
+    def getMinFrequency(self):
+        return self.min_freq
+
+    def getMaxFrequency(self):
+        return self.max_freq
 
     def mousePressEvent(self, event):
         super(DigitalNumberControl, self).mousePressEvent(event)
@@ -361,7 +445,17 @@ class MsgDigitalNumberControl(gr.sync_block, LabeledDigitalNumberControl):
 
         self.message_port_register_in(pmt.intern("valuein"))
         self.set_msg_handler(pmt.intern("valuein"), self.msgHandler)
+        self.message_port_register_in(pmt.intern("min"))
+        self.set_msg_handler(pmt.intern("min"), self.handle_min_msg)
+        self.message_port_register_in(pmt.intern("max"))
+        self.set_msg_handler(pmt.intern("max"), self.handle_max_msg)
         self.message_port_register_out(pmt.intern("valueout"))
+
+    def _msg_to_numeric_value(self, msg):
+        if pmt.is_real(msg):
+            return pmt.to_double(msg)
+
+        return pmt.to_double(pmt.cdr(msg))
 
     def msgHandler(self, msg):
         try:
@@ -378,6 +472,18 @@ class MsgDigitalNumberControl(gr.sync_block, LabeledDigitalNumberControl):
 
         except Exception as e:
             gr.log.error("Error with message conversion: %s" % str(e))
+
+    def handle_min_msg(self, msg):
+        try:
+            self.set_min_freq(self._msg_to_numeric_value(msg))
+        except Exception as e:
+            gr.log.error("Error with min message conversion: %s" % str(e))
+
+    def handle_max_msg(self, msg):
+        try:
+            self.set_max_freq(self._msg_to_numeric_value(msg))
+        except Exception as e:
+            gr.log.error("Error with max message conversion: %s" % str(e))
 
     def call_var_callback(self, new_value):
         if self.var_callback is not None:
@@ -407,3 +513,28 @@ class MsgDigitalNumberControl(gr.sync_block, LabeledDigitalNumberControl):
 
     def setReadOnly(self, b_read_only):
         super().setReadOnly(b_read_only)
+
+    def setMinFrequency(self, min_freq_hz):
+        prev_value = self.getFrequency()
+        super().setMinFrequency(min_freq_hz)
+        new_value = self.getFrequency()
+        if new_value != prev_value:
+            self.call_var_callback(new_value)
+            self.setValue(new_value)
+
+    def set_min_freq(self, min_freq_hz):
+        self.setMinFrequency(min_freq_hz)
+
+    def setMaxFrequency(self, max_freq_hz):
+        prev_value = self.getFrequency()
+        super().setMaxFrequency(max_freq_hz)
+        new_value = self.getFrequency()
+        if new_value != prev_value:
+            self.call_var_callback(new_value)
+            self.setValue(new_value)
+
+    def set_max_freq(self, max_freq_hz):
+        self.setMaxFrequency(max_freq_hz)
+
+    def setFrequencyRange(self, min_freq_hz, max_freq_hz):
+        super().setFrequencyRange(min_freq_hz, max_freq_hz)

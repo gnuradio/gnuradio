@@ -61,6 +61,12 @@ inputs:
 -   domain: message
     id: valuein
     optional: true
+-   domain: message
+    id: min
+    optional: true
+-   domain: message
+    id: max
+    optional: true
 
 outputs:
 -   domain: message
@@ -81,6 +87,8 @@ templates:
         ${gui_hint() % win}
     callbacks:
     - self._${id}_msgdigctl_win.setValue(${value})
+    - self._${id}_msgdigctl_win.set_min_freq(${minFreqHz})
+    - self._${id}_msgdigctl_win.set_max_freq(${maxFreqHz})
 
 documentation: |-
     While it can be used for anything, this block replicates the frequency control found in many SDR receiver software.
