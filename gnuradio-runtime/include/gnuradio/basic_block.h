@@ -281,6 +281,7 @@ public:
     //! How many messages in the queue?
     size_t nmsgs(pmt::pmt_t which_port)
     {
+        gr::thread::scoped_lock guard(mutex);
         if (msg_queue.find(which_port) == msg_queue.end())
             throw std::runtime_error("port does not exist!");
         return msg_queue[which_port].size();
