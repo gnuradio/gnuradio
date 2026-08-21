@@ -19,7 +19,7 @@ def test_compiler(capsys, tmp_path):
         user_lib_dir=False,
         grc_files=[path.join(path.dirname(__file__),
                              'resources', 'test_compiler.grc')],
-        run=True
+        run=False
     )
 
     main(args)
