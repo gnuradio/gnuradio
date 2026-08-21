@@ -97,8 +97,13 @@ macro(GR_PYBIND_MAKE_CHECK_HASH name updir filter files)
                 if(flag_auto STREQUAL "False"
                 )# the regex match was not found, manual bindings
                     # if (NOT bindtool_use_pygccxml STREQUAL )
-                    message(FATAL_ERROR "Python bindings for " ${header_filename}
-                                        " are out of sync")
+                    message(FATAL_ERROR
+                        "Python bindings for ${header_filename} are "
+                        "out of sync with the header file.\n"
+                        "This usually happens when the header file "
+                        "has changed without updating the bindings.\n"
+                        "See docs/PYBIND11.md (Troubleshooting: bindings out of sync)"
+                    )
                 else()
                     if(flag_pygccxml STREQUAL "True")
                         if(NOT PYGCCXML_FOUND)
@@ -228,8 +233,13 @@ macro(GR_PYBIND_MAKE_OOT name updir filter files)
                 if(flag_auto STREQUAL "False"
                 )# the regex match was not found, manual bindings
                     # if (NOT bindtool_use_pygccxml STREQUAL )
-                    message(FATAL_ERROR "Python bindings for " ${header_filename}
-                                        " are out of sync")
+                    message(FATAL_ERROR
+                        "Python bindings for ${header_filename} are "
+                        "out of sync with the header file.\n"
+                        "This usually happens when the header file "
+                        "has changed without updating the bindings.\n"
+                        "See docs/PYBIND11.md (Troubleshooting: bindings out of sync)"
+                    )
                 else()
                     if(flag_pygccxml STREQUAL "True")
                         if(NOT PYGCCXML_FOUND)
