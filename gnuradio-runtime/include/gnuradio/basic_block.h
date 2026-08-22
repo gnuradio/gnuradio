@@ -441,4 +441,10 @@ inline std::ostream& operator<<(std::ostream& os, basic_block_sptr basic_block)
 
 } /* namespace gr */
 
+// ! \brief Formatter specialization for basic block
+template <>
+struct fmt::formatter<gr::basic_block_sptr> : formatter<std::string_view> {
+    fmt::format_context::iterator format(const gr::basic_block_sptr& blk,
+                                         fmt::format_context& ctx) const;
+};
 #endif /* INCLUDED_GR_BASIC_BLOCK_H */
