@@ -75,8 +75,8 @@ jobs:
         # descriptive name, and one key 'containerid' with the name of the
         # container (i.e., what you want to docker-pull)
         include:
-          - distro: 'Doxygen (Fedora 41)'
-            containerid: 'gnuradio/ci:fedora-41-3.10'
+          - distro: 'Doxygen (Fedora 44)'
+            containerid: 'gnuradio/ci:fedora-44-3.11'
             enable_doxygen: On
             enable_default: Off
             enable_python: Off
@@ -88,18 +88,18 @@ jobs:
             ctest_args: '-E "qa_polar_..coder_(sc_)?systematic"'
           - distro: 'Ubuntu 24.04'
             containerid: 'gnuradio/ci:ubuntu-24.04-3.10'
-          - distro: 'Fedora 42 (with 0xFE memory initialization, GLIBCXX_ASSERTIONS)'
+          - distro: 'Fedora 43 (with 0xFE memory initialization, GLIBCXX_ASSERTIONS)'
             containerid: 'gnuradio/ci:fedora-42-3.10'
             cxxflags: -ftrivial-auto-var-init=pattern -Wp,-D_GLIBCXX_ASSERTIONS
             ldpath: /usr/local/lib64
-          - distro: 'Fedora 43 (clang, ninja)'
+          - distro: 'Fedora 44 (clang, ninja)'
             containerid: 'gnuradio/ci:fedora-43-3.10'
             cxxflags: -Wno-unused-command-line-argument
             cmakeflags: -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_C_COMPILER=clang -GNinja
             build_options: --
             ldpath: /usr/local/lib64
-          - distro: 'Debian 12'
-            containerid: 'gnuradio/ci:debian-12-3.10'
+          - distro: 'Debian 14'
+            containerid: 'gnuradio/ci:debian-14-3.11'
           - distro: 'Debian 13'
             containerid: 'gnuradio/ci:debian-13-3.10'
           - distro: 'Debian 12 (32-bit)'
