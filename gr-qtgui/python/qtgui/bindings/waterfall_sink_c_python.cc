@@ -52,6 +52,7 @@ void bind_waterfall_sink_c(py::module& m)
              py::arg("fc"),
              py::arg("bw"),
              py::arg("name"),
+             py::arg("n_rows") = 200,
              py::arg("nconnections") = 1,
              py::arg("parent") = nullptr,
              D(waterfall_sink_c, make))
