@@ -8,6 +8,7 @@
  *
  */
 
+#include "gnuradio/flowgraph.h"
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
@@ -16,14 +17,9 @@
 #include <gnuradio/io_signature.h>
 #include <gnuradio/prefs.h>
 #include <gnuradio/top_block.h>
-#include <sstream>
 #include <stdexcept>
 
-// TODO: Replace with GNU Radio logging
-#include <iostream>
-
 namespace gr {
-
 hier_block2_detail::hier_block2_detail(hier_block2* owner)
     : d_owner(owner), d_parent(), d_parent_refcnt(0), d_fg(make_flowgraph())
 {
@@ -35,10 +31,10 @@ hier_block2_detail::hier_block2_detail(hier_block2* owner)
     if (max_inputs == io_signature::IO_INFINITE ||
         max_outputs == io_signature::IO_INFINITE || (min_inputs != max_inputs) ||
         (min_outputs != max_outputs)) {
-        std::stringstream msg;
-        msg << "Hierarchical blocks do not yet support arbitrary or"
-            << " variable numbers of inputs or outputs (" << d_owner->name() << ")";
-        throw std::runtime_error(msg.str());
+        throw std::runtime_error(
+            fmt::format("Hierarchical blocks do not yet support arbitrary or variable "
+                        "numbers of inputs or outputs ({})",
+                        d_owner->name()));
     }
 
     d_inputs = std::vector<endpoint_vector_t>(max_inputs);
@@ -57,19 +53,16 @@ hier_block2_detail::~hier_block2_detail()
 
 void hier_block2_detail::connect(basic_block_sptr block)
 {
-    std::stringstream msg;
-
     // Check if duplicate
     if (std::find(d_blocks.begin(), d_blocks.end(), block) != d_blocks.end()) {
-        msg << "Block " << block << " already connected.";
-        throw std::invalid_argument(msg.str());
+        throw std::invalid_argument(fmt::format("Block {} already connected.", block));
     }
 
     // Check if has inputs or outputs
     if (block->input_signature()->max_streams() != 0 ||
         block->output_signature()->max_streams() != 0) {
-        msg << "Block " << block << " must not have any input or output ports";
-        throw std::invalid_argument(msg.str());
+        throw std::invalid_argument(
+            fmt::format("Block {} must not have any input or output ports", block));
     }
 
     hier_block2_sptr hblock(cast_to_hier_block2_sptr(block));
@@ -88,8 +81,6 @@ void hier_block2_detail::connect(basic_block_sptr src,
                                  basic_block_sptr dst,
                                  int dst_port)
 {
-    std::stringstream msg;
-
     d_debug_logger->debug("connecting: {} -> {}",
                           endpoint(src, src_port).identifier(),
                           endpoint(dst, dst_port).identifier());
@@ -118,8 +109,8 @@ void hier_block2_detail::connect(basic_block_sptr src,
     if (src.get() == d_owner) {
         max_port = src->input_signature()->max_streams();
         if ((max_port != -1 && (src_port >= max_port)) || src_port < 0) {
-            msg << "source port " << src_port << " out of range for " << src;
-            throw std::invalid_argument(msg.str());
+            throw std::invalid_argument(
+                fmt::format("source port {} out of range for {}", src_port, src));
         }
 
         return connect_input(src_port, dst_port, dst);
@@ -128,8 +119,8 @@ void hier_block2_detail::connect(basic_block_sptr src,
     if (dst.get() == d_owner) {
         max_port = dst->output_signature()->max_streams();
         if ((max_port != -1 && (dst_port >= max_port)) || dst_port < 0) {
-            msg << "destination port " << dst_port << " out of range for " << dst;
-            throw std::invalid_argument(msg.str());
+            throw std::invalid_argument(
+                fmt::format("destination port {} out of range for {}", dst_port, dst));
         }
 
         return connect_output(dst_port, src_port, src);
@@ -278,9 +269,8 @@ void hier_block2_detail::disconnect(basic_block_sptr block)
     }
 
     if (edges.empty()) {
-        std::stringstream msg;
-        msg << "cannot disconnect block " << block << ", not found";
-        throw std::invalid_argument(msg.str());
+        throw std::invalid_argument(
+            fmt::format("cannot disconnect block {}, not found", block));
     }
 
     for (p = edges.begin(); p != edges.end(); p++) {
@@ -335,10 +325,10 @@ void hier_block2_detail::refresh_io_signature()
     if (max_inputs == io_signature::IO_INFINITE ||
         max_outputs == io_signature::IO_INFINITE || (min_inputs != max_inputs) ||
         (min_outputs != max_outputs)) {
-        std::stringstream msg;
-        msg << "Hierarchical blocks do not yet support arbitrary or"
-            << " variable numbers of inputs or outputs (" << d_owner->name() << ")";
-        throw std::runtime_error(msg.str());
+        throw std::runtime_error(
+            fmt::format("Hierarchical blocks do not yet support arbitrary or variable "
+                        "numbers of inputs or outputs ({})",
+                        d_owner->name()));
     }
 
     // Check for # input change
@@ -356,13 +346,11 @@ void hier_block2_detail::refresh_io_signature()
 
 void hier_block2_detail::connect_input(int my_port, int port, basic_block_sptr block)
 {
-    std::stringstream msg;
-
     refresh_io_signature();
 
     if (my_port < 0 || my_port >= (signed)d_inputs.size()) {
-        msg << "input port " << my_port << " out of range for " << block;
-        throw std::invalid_argument(msg.str());
+        throw std::invalid_argument(
+            fmt::format("input port {} out of range for {}", my_port, block));
     }
 
     endpoint_vector_t& endps = d_inputs[my_port];
@@ -370,8 +358,8 @@ void hier_block2_detail::connect_input(int my_port, int port, basic_block_sptr b
 
     endpoint_viter_t p = std::find(endps.begin(), endps.end(), endp);
     if (p != endps.end()) {
-        msg << "external input port " << my_port << " already wired to " << endp;
-        throw std::invalid_argument(msg.str());
+        throw std::invalid_argument(
+            fmt::format("external input port {} already wired to {}", my_port, endp));
     }
 
     endps.push_back(endp);
@@ -379,19 +367,16 @@ void hier_block2_detail::connect_input(int my_port, int port, basic_block_sptr b
 
 void hier_block2_detail::connect_output(int my_port, int port, basic_block_sptr block)
 {
-    std::stringstream msg;
-
     refresh_io_signature();
 
     if (my_port < 0 || my_port >= (signed)d_outputs.size()) {
-        msg << "output port " << my_port << " out of range for " << block;
-        throw std::invalid_argument(msg.str());
+        throw std::invalid_argument(
+            fmt::format("output port {} out of range for {}", my_port, block));
     }
 
     if (d_outputs[my_port].block()) {
-        msg << "external output port " << my_port << " already connected from "
-            << d_outputs[my_port];
-        throw std::invalid_argument(msg.str());
+        throw std::invalid_argument(fmt::format(
+            "external output port {} already wired to {}", my_port, d_outputs[my_port]));
     }
 
     d_outputs[my_port] = endpoint(block, port);
@@ -399,13 +384,11 @@ void hier_block2_detail::connect_output(int my_port, int port, basic_block_sptr 
 
 void hier_block2_detail::disconnect_input(int my_port, int port, basic_block_sptr block)
 {
-    std::stringstream msg;
-
     refresh_io_signature();
 
     if (my_port < 0 || my_port >= (signed)d_inputs.size()) {
-        msg << "input port number " << my_port << " out of range for " << block;
-        throw std::invalid_argument(msg.str());
+        throw std::invalid_argument(
+            fmt::format("input port number {} out of range for {}", my_port, block));
     }
 
     endpoint_vector_t& endps = d_inputs[my_port];
@@ -413,8 +396,8 @@ void hier_block2_detail::disconnect_input(int my_port, int port, basic_block_spt
 
     endpoint_viter_t p = std::find(endps.begin(), endps.end(), endp);
     if (p == endps.end()) {
-        msg << "external input port " << my_port << " not connected to " << endp;
-        throw std::invalid_argument(msg.str());
+        throw std::invalid_argument(
+            fmt::format("external input port {} not connected to {}", my_port, endp));
     }
 
     endps.erase(p);
@@ -422,19 +405,16 @@ void hier_block2_detail::disconnect_input(int my_port, int port, basic_block_spt
 
 void hier_block2_detail::disconnect_output(int my_port, int port, basic_block_sptr block)
 {
-    std::stringstream msg;
-
     refresh_io_signature();
 
     if (my_port < 0 || my_port >= (signed)d_outputs.size()) {
-        msg << "output port number " << my_port << " out of range for " << block;
-        throw std::invalid_argument(msg.str());
+        throw std::invalid_argument(
+            fmt::format("output port number {} out of range for {}", my_port, block));
     }
 
     if (d_outputs[my_port].block() != block) {
-        msg << "block " << block << " not assigned to output " << my_port
-            << ", can't disconnect";
-        throw std::invalid_argument(msg.str());
+        throw std::invalid_argument(fmt::format(
+            "block {} not assigned to output {}, can't disconnect", block, my_port));
     }
 
     d_outputs[my_port] = endpoint();
@@ -442,8 +422,6 @@ void hier_block2_detail::disconnect_output(int my_port, int port, basic_block_sp
 
 endpoint_vector_t hier_block2_detail::resolve_port(int port, bool is_input)
 {
-    std::stringstream msg;
-
     d_debug_logger->debug("Resolving port {:d} as an {:s} of {:s}",
                           port,
                           is_input ? "input" : "output",
@@ -453,15 +431,17 @@ endpoint_vector_t hier_block2_detail::resolve_port(int port, bool is_input)
 
     if (is_input) {
         if (port < 0 || port >= (signed)d_inputs.size()) {
-            msg << "resolve_port: hierarchical block '" << d_owner->name() << "': input "
-                << port << " is out of range";
-            throw std::runtime_error(msg.str());
+            throw std::runtime_error(fmt::format(
+                "resolve_port: hierarchical block '{}': input {} is out of range",
+                d_owner->name(),
+                port));
         }
 
         if (d_inputs[port].empty()) {
-            msg << "resolve_port: hierarchical block '" << d_owner->name() << "': input "
-                << port << " is not connected internally";
-            throw std::runtime_error(msg.str());
+            throw std::runtime_error(fmt::format("resolve_port: hierarchical block '{}': "
+                                                 "input {} is not connected internally",
+                                                 d_owner->name(),
+                                                 port));
         }
 
         endpoint_vector_t& endps = d_inputs[port];
@@ -472,25 +452,28 @@ endpoint_vector_t hier_block2_detail::resolve_port(int port, bool is_input)
         }
     } else {
         if (port < 0 || port >= (signed)d_outputs.size()) {
-            msg << "resolve_port: hierarchical block '" << d_owner->name() << "': output "
-                << port << " is out of range";
-            throw std::runtime_error(msg.str());
+            throw std::runtime_error(fmt::format(
+                "resolve_port: hierarchical block '{}': output {} is out of range",
+                d_owner->name(),
+                port));
         }
 
         if (d_outputs[port] == endpoint()) {
-            msg << "resolve_port: hierarchical block '" << d_owner->name() << "': output "
-                << port << " is not connected internally";
-            throw std::runtime_error(msg.str());
+            throw std::runtime_error(fmt::format("resolve_port: hierarchical block '{}': "
+                                                 "output {} is not connected internally",
+                                                 d_owner->name(),
+                                                 port));
         }
 
         result = resolve_endpoint(d_outputs[port], false);
     }
 
     if (result.empty()) {
-        msg << "resolve_port: hierarchical block '" << d_owner->name()
-            << "': unable to resolve " << (is_input ? "input port " : "output port ")
-            << port;
-        throw std::runtime_error(msg.str());
+        throw std::runtime_error(
+            fmt::format("resolve_port: hierarchical block '{}': unable to resolve {} {}",
+                        d_owner->name(),
+                        is_input ? "input port " : "output port ",
+                        port));
     }
 
     return result;
@@ -512,7 +495,6 @@ void hier_block2_detail::disconnect_all()
 endpoint_vector_t hier_block2_detail::resolve_endpoint(const endpoint& endp,
                                                        bool is_input) const
 {
-    std::stringstream msg;
     endpoint_vector_t result;
 
     // Check if endpoint is a leaf node
@@ -532,9 +514,8 @@ endpoint_vector_t hier_block2_detail::resolve_endpoint(const endpoint& endp,
         return hier_block2->d_detail->resolve_port(endp.port(), is_input);
     }
 
-    msg << "unable to resolve" << (is_input ? " input " : " output ") << "endpoint "
-        << endp;
-    throw std::runtime_error(msg.str());
+    throw std::runtime_error(fmt::format(
+        "unable to resolve {} endpoint {}", is_input ? " input " : " output ", endp));
 }
 
 void hier_block2_detail::flatten_aux(flat_flowgraph_sptr sfg) const
@@ -750,12 +731,12 @@ void hier_block2_detail::flatten_aux(flat_flowgraph_sptr sfg) const
     }
 
     // Now add the list of connected input blocks
-    std::stringstream msg;
     for (unsigned int i = 0; i < d_inputs.size(); i++) {
         if (d_inputs[i].empty()) {
-            msg << "In hierarchical block " << d_owner->name() << ", input " << i
-                << " is not connected internally";
-            throw std::runtime_error(msg.str());
+            throw std::runtime_error(fmt::format(
+                "In hierarchical block '{}', input {} is not connected internally",
+                d_owner->name(),
+                i));
         }
 
         for (unsigned int j = 0; j < d_inputs[i].size(); j++)
@@ -765,9 +746,10 @@ void hier_block2_detail::flatten_aux(flat_flowgraph_sptr sfg) const
     for (unsigned int i = 0; i < d_outputs.size(); i++) {
         basic_block_sptr blk = d_outputs[i].block();
         if (!blk) {
-            msg << "In hierarchical block " << d_owner->name() << ", output " << i
-                << " is not connected internally";
-            throw std::runtime_error(msg.str());
+            throw std::runtime_error(fmt::format(
+                "In hierarchical block '{}', output {} is not connected internally",
+                d_owner->name(),
+                i));
         }
         // Set the buffers of only the blocks connected to the hier output
         if (!set_all_min_buff) {
@@ -936,12 +918,12 @@ void hier_block2_detail::set_parent(hier_block2* parent)
         d_parent_refcnt++;
         return;
     }
-    std::stringstream msg;
-    msg << "A hierarchical block cannot have multiple parents. Block \""
-        << d_owner->name() << "\" must be completely removed from parent \""
-        << old_parent->name() << "\" before being added to parent \"" << parent->name()
-        << "\".";
-    throw std::runtime_error(msg.str());
+    throw std::runtime_error(fmt::format(
+        "A hierarchical block cannot have multiple parents. Block \"{}\" must be "
+        "completely removed from parent \"{}\" before being added to parent \"{}\".",
+        d_owner->name(),
+        old_parent->name(),
+        parent->name()));
 }
 
 void hier_block2_detail::reset_parent(bool force)

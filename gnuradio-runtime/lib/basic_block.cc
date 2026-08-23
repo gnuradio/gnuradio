@@ -8,7 +8,6 @@
  *
  */
 
-#include <memory>
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
@@ -16,6 +15,7 @@
 #include <gnuradio/basic_block.h>
 #include <gnuradio/block_registry.h>
 #include <gnuradio/logger.h>
+#include <memory>
 #include <sstream>
 #include <stdexcept>
 
@@ -211,3 +211,9 @@ pmt::pmt_t basic_block::message_subscribers(pmt::pmt_t port)
 
 
 } /* namespace gr */
+fmt::format_context::iterator
+fmt::formatter<gr::basic_block_sptr>::format(const gr::basic_block_sptr& blk,
+                                             fmt::format_context& ctx) const
+{
+    return fmt::format_to(ctx.out(), "{}", blk->identifier());
+}

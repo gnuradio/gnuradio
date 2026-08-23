@@ -14,6 +14,7 @@
 #include <gnuradio/api.h>
 #include <gnuradio/basic_block.h>
 #include <gnuradio/io_signature.h>
+#include <spdlog/fmt/fmt.h>
 
 namespace gr {
 
@@ -91,7 +92,7 @@ typedef std::vector<endpoint>::iterator endpoint_viter_t;
 class GR_RUNTIME_API edge
 {
 public:
-    edge() : d_src(), d_dst(){};
+    edge() : d_src(), d_dst() {};
     edge(const endpoint& src, const endpoint& dst) : d_src(src), d_dst(dst) {}
     ~edge();
 
@@ -118,7 +119,7 @@ typedef std::vector<edge>::iterator edge_viter_t;
 class GR_RUNTIME_API msg_edge
 {
 public:
-    msg_edge() : d_src(), d_dst(){};
+    msg_edge() : d_src(), d_dst() {};
     msg_edge(const msg_endpoint& src, const msg_endpoint& dst) : d_src(src), d_dst(dst) {}
     ~msg_edge() {}
 
@@ -328,4 +329,13 @@ std::string dot_graph_fg(flowgraph_sptr fg);
 
 } /* namespace gr */
 
+// Helper – just to not have to be verbose where we use endp in logging
+template <>
+struct fmt::formatter<gr::endpoint> : formatter<std::string_view> {
+    fmt::format_context::iterator format(const gr::endpoint& endp,
+                                         fmt::format_context& ctx) const
+    {
+        return fmt::format_to(ctx.out(), "{}", endp.identifier());
+    }
+};
 #endif /* INCLUDED_GR_RUNTIME_FLOWGRAPH_H */
