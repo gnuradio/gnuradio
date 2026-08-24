@@ -4,10 +4,11 @@
 #
 # CI (azure/github_actions/UNSET)
 # CI_RUN_ID (unique identifier for the CI job run)
-# FEEDSTOCK_NAME
+# CONDA_BLD_PATH (path to the conda-bld directory)
 # CONFIG (build matrix configuration string)
-# SHORT_CONFIG (uniquely-shortened configuration string)
-# CONDA_BLD_DIR (path to the conda-bld directory)
+# CONFIG_SHORT (uniquely-shortened configuration string)
+# FEEDSTOCK_NAME
+# Optional:
 # ARTIFACT_STAGING_DIR (use working directory if unset)
 # BLD_ARTIFACT_PREFIX (prefix for the conda build artifact name, skip if unset)
 # ENV_ARTIFACT_PREFIX (prefix for the conda build environments artifact name, skip if unset)
@@ -26,7 +27,7 @@ source .scripts/logging_utils.sh
 set -e
 
 # Check that the conda-build directory exists
-if [ ! -d "$CONDA_BLD_DIR" ]; then
+if [ ! -d "$CONDA_BLD_PATH" ]; then
     echo "conda-build directory does not exist"
     exit 1
 fi
@@ -49,7 +50,7 @@ fi
 # Set a unique ID for the artifact(s), specialized for this particular job run
 ARTIFACT_UNIQUE_ID="${CI_RUN_ID}_${CONFIG}"
 if [[ ${#ARTIFACT_UNIQUE_ID} -gt 80 ]]; then
-    ARTIFACT_UNIQUE_ID="${CI_RUN_ID}_${SHORT_CONFIG}"
+    ARTIFACT_UNIQUE_ID="${CI_RUN_ID}_${CONFIG_SHORT}"
 fi
 echo "ARTIFACT_UNIQUE_ID: $ARTIFACT_UNIQUE_ID"
 
@@ -64,8 +65,8 @@ if [[ ! -z "$BLD_ARTIFACT_PREFIX" ]]; then
     ( startgroup "Archive conda build directory" ) 2> /dev/null
 
     # Try 7z and fall back to zip if it fails (for cross-platform use)
-    if ! 7z a "$BLD_ARTIFACT_PATH" "$CONDA_BLD_DIR" '-xr!.git/' '-xr!_*_env*/' '-xr!*_cache/' -bb; then
-        pushd "$CONDA_BLD_DIR"
+    if ! 7z a "$BLD_ARTIFACT_PATH" "$CONDA_BLD_PATH" '-xr!.git/' '-xr!_*_env*/' '-xr!*_cache/' -bb; then
+        pushd "$CONDA_BLD_PATH"
         zip -r -y -T "$BLD_ARTIFACT_PATH" . -x '*.git/*' '*_*_env*/*' '*_cache/*'
         popd
     fi
@@ -92,8 +93,8 @@ if [[ ! -z "$ENV_ARTIFACT_PREFIX" ]]; then
     ( startgroup "Archive conda build environments" ) 2> /dev/null
 
     # Try 7z and fall back to zip if it fails (for cross-platform use)
-    if ! 7z a "$ENV_ARTIFACT_PATH" -r "$CONDA_BLD_DIR"/'_*_env*/' -bb; then
-        pushd "$CONDA_BLD_DIR"
+    if ! 7z a "$ENV_ARTIFACT_PATH" -r "$CONDA_BLD_PATH"/'_*_env*/' -bb; then
+        pushd "$CONDA_BLD_PATH"
         zip -r -y -T "$ENV_ARTIFACT_PATH" . -i '*_*_env*/*'
         popd
     fi

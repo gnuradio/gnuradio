@@ -1,13 +1,11 @@
 MACOSX_DEPLOYMENT_TARGET:
-- '10.13'
+- '11.0'
 MACOSX_SDK_VERSION:
-- '10.13'
-ace:
-- 8.0.2
+- '11.0'
 c_compiler:
 - clang
 c_compiler_version:
-- '18'
+- '21'
 channel_sources:
 - conda-forge
 channel_targets:
@@ -15,7 +13,7 @@ channel_targets:
 cxx_compiler:
 - clangxx
 cxx_compiler_version:
-- '18'
+- '21'
 fftw:
 - '3'
 gmp:
@@ -23,21 +21,23 @@ gmp:
 gsl:
 - '2.7'
 libboost_devel:
-- '1.84'
+- '1.88'
 libiio:
 - '0'
 libsndfile:
 - '1.2'
 libthrift:
-- 0.21.0
+- 0.22.0
 macos_machine:
 - x86_64-apple-darwin13.4.0
 numpy:
-- '1.23'
+- '2'
 pin_run_as_build:
   python:
     min_pin: x.x
     max_pin: x.x
+portaudio:
+- '19.7'
 pybind11_abi:
 - '4'
 pyqt:
@@ -49,17 +49,15 @@ qt_main:
 soapysdr:
 - '0.8'
 spdlog:
-- '1.13'
+- '1.17'
 target_platform:
 - osx-64
 uhd:
-- 4.7.0
+- 4.10.0
 volk:
-- '3.1'
+- '3.3'
 zeromq:
 - 4.3.5
 zip_keys:
 - - c_compiler_version
   - cxx_compiler_version
-- - python
-  - numpy
