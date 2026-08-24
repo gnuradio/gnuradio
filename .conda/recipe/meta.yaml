@@ -81,8 +81,8 @@ requirements:
     - libiio
     - libad9361-iio
   # gnuradio.qtgui
-    - pyqt
-    - qt-main
+    - pyqt6
+    - qt6-main
     - qwt
   # gnuradio.soapy
     - soapysdr
