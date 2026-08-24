@@ -119,5 +119,5 @@ if(MSVC)
 endif(MSVC)
 
 if(BUILD_SHARED_LIBS)
-    gr_library_foo(gnuradio-dtv)
+    GR_REGISTER_LIBRARY(gnuradio-dtv)
 endif()

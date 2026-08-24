@@ -90,7 +90,7 @@ endif(NOT CMAKE_CROSSCOMPILING)
 GR_REGISTER_COMPONENT(
     NAME "gnuradio-companion"
     VAR  ENABLE_GRC
-    REQUIRED_COMPONNETS
+    REQUIRED_COMPONENTS
         gnuradio-runtime
     REQUIRED_TPLS
         ENABLE_PYTHON
@@ -115,7 +115,7 @@ if(TARGET Qt5::PrintSupport)
     
     # Register with bundle system - this creates BundleInstall-gnuradio-grc-qt-deps.cmake
     if(BUILD_SHARED_LIBS)
-        gr_library_foo(gnuradio-grc-qt-deps Qt5::PrintSupport)
+        GR_REGISTER_LIBRARY(gnuradio-grc-qt-deps Qt5::PrintSupport)
     endif()
     
     message(STATUS "Created GRC Qt dependency library for Qt5PrintSupport.dll bundling")
