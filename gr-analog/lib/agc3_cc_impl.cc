@@ -168,6 +168,11 @@ int agc3_cc_impl::work(int noutput_items,
         } else {
             d_gain *= 1 - d_decay;
         }
+
+        if (d_max_gain > 0.0f) {
+            d_gain = std::min(d_gain, d_max_gain);
+        }
+
         // scale output values
         for (auto out_idx = index; out_idx < index + d_iir_update_decim; ++out_idx) {
             out[out_idx] = in[out_idx] * d_gain;
