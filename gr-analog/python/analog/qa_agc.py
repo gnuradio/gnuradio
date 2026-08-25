@@ -529,6 +529,22 @@ class test_agc(gr_unittest.TestCase):
             self.assertAlmostEqual(x, ref, None,
                                    f"failed at pos {idx} (stride = {stride})", 0.1)
 
+    def test_006_005_agc3_max_gain(self):
+        max_gain = 65536.0
+        input_data = [0j] * 16 + [3.5e-24 + 0j] + [1e-3 + 0j] * 500
+
+        src = blocks.vector_source_c(input_data)
+        agc = analog.agc3_cc(1e-1, 1e-2, 1.0, 1.0, 1, max_gain)
+        dst = blocks.vector_sink_c()
+
+        self.tb.connect(src, agc, dst)
+        self.tb.run()
+
+        self.assertLessEqual(agc.gain(), max_gain)
+
+        max_output = max(abs(x) for x in dst.data())
+        self.assertLessEqual(max_output, max_gain * 1e-3)
+
     def test_007_agc3_constructor_arguments(self):
         attack_rate = 1.1e-3
         decay_rate = 1.2e-4
