@@ -118,18 +118,17 @@ jobs:
     - uses: actions/checkout@v1
       name: Checkout Project
     - name: Prepare sccache usage (if available)
-      if: ${{ vars.SCCACHE_S3_BUCKET && vars.SCCACHE_S3_ENDPOINT }}
       id: enable_sccache
       env:
         SCCACHE_S3_ENDPOINT: ${{ vars.SCCACHE_S3_ENDPOINT }}
         SCCACHE_S3_BUCKET: ${{ vars.SCCACHE_S3_BUCKET }}
         SCCACHE_S3_REGION: ${{ vars.SCCACHE_S3_REGION }}
-      run: tools/setup_cmake_cache_flags.bash "${{ matrix.distro }}"
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.SCCACHE_S3_KEY }}
+        AWS_ACCESS_KEY_ID: ${{ vars.SCCACHE_S3_KEY_ID }}
+      run: .github/ci-tools/setup_cmake_cache_flags.bash "${{ matrix.distro }}"
     - name: CMake
       env:
         CXXFLAGS: ${{ matrix.ignore_errors || '-Werror' }} ${{ matrix.cxxflags }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.SCCACHE_S3_KEY }}
-        AWS_ACCESS_KEY_ID: ${{ vars.SCCACHE_S3_KEY_ID }}
       run: >
         cd /build
         && cmake
@@ -148,16 +147,13 @@ jobs:
         name: '${{ matrix.distro }}.compile_commands.json'
         path: /build/compile_commands.json
         if-no-files-found: ignore
-    - name: Make
-      env:
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.SCCACHE_S3_KEY }}
-        AWS_ACCESS_KEY_ID: ${{ vars.SCCACHE_S3_KEY_ID }}
+    - name: Build
       run: cmake --build /build ${{ matrix.build_options || '--parallel $(nproc)' }}
-    - name: Make Test
+    - name: CTest
       env:
         QT_QPA_PLATFORM: offscreen
       run: 'cd /build && ctest --output-on-failure ${{ matrix.ctest_args }} -j2'
-    - name: Make Install
+    - name: Install
       run: cmake --install /build
     - name: Update dynamic linker directories
       if:  ${{ matrix.ldpath }}
@@ -203,9 +199,11 @@ jobs:
     - name: Check for installation duplicates
       if: ${{ ! matrix.skip_upload }}
       run: tools/check_installation_duplicates.bash /build/install_manifest.txt
-    - name: Sccache statistics
-      if: ${{ steps.enable_sccache.outputs.CXX_LAUNCHER }}
-      run: sccache -s
+    - name: Show final sccache and build directory stats
+      if: always()
+      continue-on-error: true
+      shell: bash
+      run: ./.github/ci-tools/build-summary.sh "${{ matrix.distro }}" "../build"
   mingw64:
     timeout-minutes: 80
   # All of these shall depend on the formatting check (needs: check-formatting)
@@ -266,17 +264,15 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
     - name: Prepare sccache usage (if available)
-      if: ${{ vars.SCCACHE_S3_BUCKET && vars.SCCACHE_S3_ENDPOINT }}
       id: enable_sccache
       env:
         SCCACHE_S3_ENDPOINT: ${{ vars.SCCACHE_S3_ENDPOINT }}
         SCCACHE_S3_BUCKET: ${{ vars.SCCACHE_S3_BUCKET }}
         SCCACHE_S3_REGION: ${{ vars.SCCACHE_S3_REGION }}
-      run: tools/setup_cmake_cache_flags.bash "${{ matrix.distro }}"
-    - name: CMake
-      env:
         AWS_SECRET_ACCESS_KEY: ${{ secrets.SCCACHE_S3_KEY }}
         AWS_ACCESS_KEY_ID: ${{ vars.SCCACHE_S3_KEY_ID }}
+      run: .github/ci-tools/setup_cmake_cache_flags.bash "${{ matrix.name }}"
+    - name: CMake
       run: |
         cmake -S . -B build \
           -GNinja \
@@ -286,8 +282,6 @@ jobs:
           ${{ steps.enable_sccache.outputs.C_LAUNCHER }}
     - name: Build
       env:
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.SCCACHE_S3_KEY }}
-        AWS_ACCESS_KEY_ID: ${{ vars.SCCACHE_S3_KEY_ID }}
         SCCACHE_CONF: ${{ steps.enable_sccache.outputs.SCCACHE_CONF }}
       run: cmake --build build
     - name: Install
@@ -295,8 +289,8 @@ jobs:
     - name: CTest
       working-directory: ./build
       run: ctest --output-on-failure
-    - name: Sccache statistics
-      env: 
-        SCCACHE_CONF: ${{ steps.enable_sccache.outputs.SCCACHE_CONF }}
-      if: ${{ steps.enable_sccache.outputs.CXX_LAUNCHER }}
-      run: sccache -s
+    - name: Show final sccache and build directory stats
+      if: always()
+      continue-on-error: true
+      shell: bash
+      run: ./.github/ci-tools/build-summary.sh "${{ matrix.distro }}" "../build"
