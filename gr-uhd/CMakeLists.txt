@@ -24,7 +24,11 @@ else()
     set(UHD_FOUR_POINT_OH_RFNOC FALSE)
 endif()
 
-gr_python_check_module("PyQt6" PyQt6 True PYQT_FOUND)
+gr_python_check_module(
+    DESC "PyQt6"
+    MODULE PyQt6
+    VAR PYQT_FOUND
+)
 
 # Check for plotting dependencies
 gr_python_check_module(
