@@ -52,12 +52,19 @@ public:
      * \param npwr sets expected noise power, default -1 set unused.
      */
     static sptr make(constellation_sptr constellation, float npwr = -1);
+
     /*!
-     * set constellation noise power for soft decision calculation
+     * \brief Set the noise power used for soft-decision LLR normalization.
      *
-     * \param npwr sets expected noise power.
+     * For standard QPSK with symbol points at {±1±j}/√2, the average symbol energy is 1.
+     * The soft-decision LLRs are automatically scaled by 1/√2 so that the effective
+     * noise variance remains consistent with N0 when the LLRs are passed to downstream
+     * FEC decoders (Viterbi, LDPC, Turbo, etc.).
+     *
+     * \param npwr noise power. Default = 1.0 (unit average symbol energy).
      */
     virtual void set_npwr(float npwr) = 0;
+
     /*!
      * Set a new constellation object for decoding
      *
