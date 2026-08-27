@@ -25,7 +25,7 @@ class QTGUI_API number_sink_impl : public number_sink
 private:
     void initialize();
 
-    size_t d_itemsize;
+    const item_type_t d_itemtype;
     float d_average;
     graph_t d_type;
     int d_nconnections;
@@ -57,7 +57,7 @@ private:
     float get_item(const void* input_items, int n);
 
 public:
-    number_sink_impl(size_t itemsize,
+    number_sink_impl(item_type_t itemtype,
                      float average = 0,
                      graph_t graph_type = NUM_GRAPH_HORIZ,
                      int nconnections = 1,
