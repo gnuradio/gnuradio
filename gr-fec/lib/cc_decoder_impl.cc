@@ -32,10 +32,11 @@ generic_decoder::sptr cc_decoder::make(int frame_size,
                                        int start_state,
                                        int end_state,
                                        cc_mode_t mode,
-                                       bool padded)
+                                       bool padded,
+                                       unsigned int lookahead)
 {
     return generic_decoder::sptr(new cc_decoder_impl(
-        frame_size, k, rate, polys, start_state, end_state, mode, padded));
+        frame_size, k, rate, polys, start_state, end_state, mode, padded, lookahead));
 }
 
 cc_decoder_impl::cc_decoder_impl(int frame_size,
@@ -45,7 +46,8 @@ cc_decoder_impl::cc_decoder_impl(int frame_size,
                                  int start_state,
                                  int end_state,
                                  cc_mode_t mode,
-                                 bool padded)
+                                 bool padded,
+                                 unsigned int lookahead)
     : generic_decoder("cc_decoder"),
       d_parity_table(initial_parity_table()),
       d_max_frame_size(frame_size),
@@ -62,12 +64,17 @@ cc_decoder_impl::cc_decoder_impl(int frame_size,
               : 0),
       d_start_state_chaining(start_state),
       d_start_state_nonchaining(start_state),
-      d_end_state_nonchaining(end_state)
+      d_end_state_nonchaining(end_state),
+      d_lookahead(lookahead)
 {
     if (k != 7 || rate != 2) {
         // used to throw std::runtime_error("cc_decoder: parameters not supported");
         throw std::invalid_argument(
             "cc_decoder: Only k=7, rate=2 convolutional codes are supported");
+    }
+
+    if (mode == CC_STREAMING && lookahead < s_k - 1) {
+        throw std::invalid_argument("cc_decoder: lookahead must be at least k - 1");
     }
 
     switch (d_mode) {
@@ -89,7 +96,7 @@ cc_decoder_impl::cc_decoder_impl(int frame_size,
         break;
 
     case (CC_STREAMING):
-        d_veclen = d_frame_size + s_k - 1;
+        d_veclen = d_frame_size + d_lookahead;
         d_end_state = &d_end_state_chaining;
         break;
 
@@ -128,7 +135,7 @@ int cc_decoder_impl::get_input_item_size() { return 1; }
 int cc_decoder_impl::get_history()
 {
     if (d_mode == CC_STREAMING) {
-        return s_rate * (s_k - 1);
+        return s_rate * d_lookahead;
     } else {
         return 0;
     }
@@ -304,6 +311,23 @@ int cc_decoder_impl::chainback_viterbi(unsigned char* data,
     return retval >> s_ADDSHIFT;
 }
 
+unsigned int cc_decoder_impl::skip_viterbi(unsigned int endstate, unsigned int nskip)
+{
+    unsigned char* d = d_vp.decisions.data();
+    endstate = (endstate % s_numstates) << s_ADDSHIFT;
+    decision_t dec;
+
+    for (unsigned int i = d_veclen; nskip-- > 0;) {
+        --i;
+        dec.t = &d[i * s_decision_t_size];
+        int k =
+            (dec.w[(endstate >> s_ADDSHIFT) / 32] >> ((endstate >> s_ADDSHIFT) % 32)) & 1;
+        endstate = (endstate >> 1) | (k << (s_k - 2 + s_ADDSHIFT));
+    }
+
+    return endstate >> s_ADDSHIFT;
+}
+
 bool cc_decoder_impl::set_frame_size(unsigned int frame_size)
 {
     bool ret = true;
@@ -331,7 +355,7 @@ bool cc_decoder_impl::set_frame_size(unsigned int frame_size)
         break;
 
     case (CC_STREAMING):
-        d_veclen = d_frame_size + s_k - 1;
+        d_veclen = d_frame_size + d_lookahead;
         break;
 
     case (CC_TERMINATED):
@@ -380,7 +404,21 @@ void cc_decoder_impl::generic_work(const void* inbuffer, void* outbuffer)
         init_viterbi(&d_vp, *d_start_state);
         break;
 
-    case (CC_STREAMING):
+    case (CC_STREAMING): {
+        update_viterbi_blk((const unsigned char*)(&in[0]), d_veclen);
+        d_end_state_chaining = find_endstate();
+        // Burn off the lookahead margin beyond the k - 1 bits chainback_viterbi
+        // itself needs, so it always reads the same decisions relative to the
+        // frame boundary regardless of d_lookahead.
+        unsigned int endstate =
+            skip_viterbi(*d_end_state, d_veclen - d_frame_size - (s_k - 1));
+        d_start_state_chaining =
+            chainback_viterbi(&out[0], d_frame_size, endstate, s_k - 1);
+
+        init_viterbi(&d_vp, *d_start_state);
+        break;
+    }
+
     case (CC_TERMINATED):
         update_viterbi_blk((const unsigned char*)(&in[0]), d_veclen);
         d_end_state_chaining = find_endstate();
