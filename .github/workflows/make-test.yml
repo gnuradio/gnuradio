@@ -203,7 +203,7 @@ jobs:
       if: always()
       continue-on-error: true
       shell: bash
-      run: ./.github/ci-tools/build-summary.sh "${{ matrix.distro }}" "../build"
+      run: ./.github/ci-tools/build-summary.sh "${{ matrix.distro }}" "/build"
   mingw64:
     timeout-minutes: 80
   # All of these shall depend on the formatting check (needs: check-formatting)
@@ -292,5 +292,4 @@ jobs:
     - name: Show final sccache and build directory stats
       if: always()
       continue-on-error: true
-      shell: bash
-      run: ./.github/ci-tools/build-summary.sh "${{ matrix.distro }}" "../build"
+      run: bash ./.github/ci-tools/build-summary.sh "MinGW-w64" "build"
