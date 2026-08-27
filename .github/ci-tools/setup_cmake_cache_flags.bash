@@ -42,14 +42,25 @@ printf '::group::S3 setup\n'
   add_mask "${AWS_SECRET_ACCESS_KEY}"
   add_mask "${AWS_ACCESS_KEY_ID}"
 }
-printf '::endgroup::'
+printf '::endgroup::\n'
 if [[ "${use_default}" = "true" ]] ; then
   gh_message "sccache bucket config" "using default cache bucket, read-only!"
 fi;
 
+
+printf '::group::sccache setup\n'
 SCCACHE_BIN="$(type -p sccache)"
 SCCACHE_CONF_DIR="${HOME}/.config/sccache"
 SCCACHE_CONF="${SCCACHE_CONF_DIR}/config"
+
+if [[ "Windows" = "${RUNNER_OS}" ]] ; then
+  # On Windows, use different path
+  SCCACHE_CONF_DIR="${APPDATA}\\Mozilla\\sccache\\config"
+  SCCACHE_CONF="${SCCACHE_CONF_DIR}\\config"
+fi
+
+echo "Using ${SCCACHE_CONF} as configuration file on ${RUNNER_OS}"
+
 add_output C_LAUNCHER   "-DCMAKE_C_COMPILER_LAUNCHER=${SCCACHE_BIN}"
 add_output CXX_LAUNCHER "-DCMAKE_CXX_COMPILER_LAUNCHER=${SCCACHE_BIN}"
 
@@ -75,5 +86,5 @@ add_env SCCACHE_ERROR_LOG "${SCCACHE_ERROR_LOG}"
 # add_env SCCACHE_LOG debug
 # Instead, we just set the environment locally with debug logging on
 SCCACHE_LOG=debug sccache --start-server
-
+printf '::endgroup::\n'
 echo "Using ${SCCACHE_BIN} ($(${SCCACHE_BIN} --version)) as sccache binary."
