@@ -1,0 +1,31 @@
+# This file was generated automatically from conda-smithy. To update this configuration,
+# update the conda-forge.yml and/or the recipe/meta.yaml.
+# -*- mode: yaml -*-
+
+stages:
+- stage: Check
+  jobs:
+    - job: Skip
+      pool:
+        vmImage: 'ubuntu-latest'
+      variables:
+        DECODE_PERCENTS: 'false'
+        RET: 'true'
+      steps:
+      - checkout: self
+        fetchDepth: '2'
+      - bash: |
+          git_log=`git log --max-count=1 --skip=1 --pretty=format:"%B" | tr "\n" " "`
+          echo "##vso[task.setvariable variable=log]$git_log"
+        displayName: Obtain commit message
+      - bash: echo "##vso[task.setvariable variable=RET]false"
+        condition: and(eq(variables['Build.Reason'], 'PullRequest'), or(contains(variables.log, '[skip azp]'), contains(variables.log, '[azp skip]'), contains(variables.log, '[skip ci]'), contains(variables.log, '[ci skip]')))
+        displayName: Skip build?
+      - bash: echo "##vso[task.setvariable variable=start_main;isOutput=true]$RET"
+        name: result
+        displayName: Export result
+- stage: Build
+  condition: and(succeeded(), eq(dependencies.Check.outputs['Skip.result.start_main'], 'true'))
+  dependsOn: Check
+  jobs:
+    - template: ./.azure-pipelines/azure-pipelines-osx.yml
