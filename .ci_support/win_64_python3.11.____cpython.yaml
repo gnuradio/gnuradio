@@ -1,5 +1,3 @@
-ace:
-- 8.0.2
 c_compiler:
 - vs2022
 channel_sources:
@@ -13,37 +11,34 @@ fftw:
 gsl:
 - '2.7'
 libboost_devel:
-- '1.84'
+- '1.88'
 libiio:
 - '0'
 libsndfile:
 - '1.2'
 numpy:
-- '1.23'
+- '2'
 pin_run_as_build:
   python:
     min_pin: x.x
     max_pin: x.x
+portaudio:
+- '19.7'
 pybind11_abi:
 - '4'
-pyqt:
-- '5.15'
 python:
 - 3.11.* *_cpython
-qt_main:
-- '5.15'
+qt6_main:
+- '6'
 soapysdr:
 - '0.8'
 spdlog:
-- '1.13'
+- '1.17'
 target_platform:
 - win-64
 uhd:
-- 4.7.0
+- 4.10.0
 volk:
-- '3.1'
+- '3.3'
 zeromq:
 - 4.3.5
-zip_keys:
-- - python
-  - numpy
