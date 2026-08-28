@@ -48,7 +48,6 @@ public:
 
     void set_processor_affinity(const std::vector<int>& mask);
     void unset_processor_affinity();
-    std::vector<int> processor_affinity();
 
     void set_log_level(const std::string& level);
     std::string log_level();

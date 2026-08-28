@@ -130,14 +130,14 @@ flat_flowgraph_sptr hier_block2::flatten() const
 
 void hier_block2::set_processor_affinity(const std::vector<int>& mask)
 {
+    d_affinity = mask;
     d_detail->set_processor_affinity(mask);
 }
 
-void hier_block2::unset_processor_affinity() { d_detail->unset_processor_affinity(); }
-
-std::vector<int> hier_block2::processor_affinity()
+void hier_block2::unset_processor_affinity()
 {
-    return d_detail->processor_affinity();
+    d_affinity.clear();
+    d_detail->unset_processor_affinity();
 }
 
 void hier_block2::set_log_level(const std::string& level)
