@@ -20,8 +20,8 @@
 
 //!\brief enables PMTs to be formatted with fmt
 template <>
-struct GR_RUNTIME_API fmt::formatter<pmt::pmt_t> : formatter<std::string_view> {
-    fmt::format_context::iterator format(const pmt::pmt_t& obj,
-                                         format_context& ctx) const;
+struct fmt::formatter<pmt::pmt_t> : formatter<std::string_view> {
+    GR_RUNTIME_API fmt::format_context::iterator format(const pmt::pmt_t& obj,
+                                                        format_context& ctx) const;
 };
 #endif
