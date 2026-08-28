@@ -191,8 +191,8 @@ bool operator==(const io_signature& lhs, const io_signature& rhs);
 } /* namespace gr */
 
 template <>
-struct GR_RUNTIME_API fmt::formatter<gr::io_signature> : formatter<std::string_view> {
-    fmt::format_context::iterator format(const gr::io_signature& iosig,
-                                         format_context& ctx) const;
+struct fmt::formatter<gr::io_signature> : formatter<std::string_view> {
+    GR_RUNTIME_API fmt::format_context::iterator format(const gr::io_signature& iosig,
+                                                        format_context& ctx) const;
 };
 #endif /* INCLUDED_IO_SIGNATURE_H */

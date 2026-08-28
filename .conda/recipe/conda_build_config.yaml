@@ -4,5 +4,9 @@ c_compiler:    # [win]
 - vs2022       # [win]
 cxx_compiler:  # [win]
 - vs2022       # [win]
-qwt:
-- 6.2          # [win]
+libboost_devel:
+- '1.90'
+libboost_headers:
+- '1.90'
+libboost_python_devel:
+- '1.90'
