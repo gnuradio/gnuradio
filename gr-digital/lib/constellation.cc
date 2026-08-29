@@ -16,10 +16,10 @@
 #include <gnuradio/gr_complex.h>
 #include <gnuradio/io_signature.h>
 #include <gnuradio/math.h>
-
-
+#include <algorithm>
 #include <cassert>
 #include <cfloat>
+#include <cmath>
 #include <cstdlib>
 #include <stdexcept>
 
@@ -38,27 +38,24 @@ constellation::constellation(std::vector<gr_complex> constell,
       d_rotational_symmetry(rotational_symmetry),
       d_dimensionality(dimensionality),
       d_scalefactor(1.0),
-      d_maxamp(1.0),
-      d_re_min(1e20),
-      d_re_max(1e20),
-      d_im_min(1e20),
-      d_im_max(1e20),
       d_lut_precision(0),
-      d_lut_scale(0),
       d_npwr(npwr),
-      d_padding(2.0),
+      d_lut_padding(2.0),
       d_use_external_lut(false)
 {
     unsigned int constsize = d_constellation.size();
     normalize(normalization);
 
-    if (pre_diff_code.empty())
+    if (pre_diff_code.empty()) {
         d_apply_pre_diff_code = false;
-    else if (pre_diff_code.size() != constsize)
+        d_pre_diff_decode = {};
+    } else if (pre_diff_code.size() != constsize)
         throw std::runtime_error(
             "The constellation and pre-diff code must be of the same length.");
-    else
+    else {
         d_apply_pre_diff_code = true;
+        d_pre_diff_decode = invert_code(d_pre_diff_code);
+    }
     calc_arity();
 }
 
@@ -67,15 +64,9 @@ constellation::constellation()
       d_rotational_symmetry(0),
       d_dimensionality(1),
       d_scalefactor(1.0),
-      d_maxamp(1.0),
-      d_re_min(1e20),
-      d_re_max(1e20),
-      d_im_min(1e20),
-      d_im_max(1e20),
-      d_lut_precision(0.0),
-      d_lut_scale(0.0),
+      d_lut_precision(0),
       d_npwr(1.0),
-      d_padding(2.0),
+      d_lut_padding(2.0),
       d_use_external_lut(false)
 {
     calc_arity();
@@ -119,7 +110,6 @@ void constellation::normalize(normalization_t normalization)
     default:
         throw std::runtime_error("Invalid constellation normalization type.");
     }
-    max_min_axes();
 }
 
 //! Returns the constellation points for a symbol value
@@ -250,68 +240,21 @@ unsigned int constellation::decision_maker_v(std::vector<gr_complex> sample)
     return decision_maker(&(sample[0]));
 }
 
-
 void constellation::gen_soft_dec_lut(int precision, float npwr)
 {
-    // this function generates a LUT with the maximum edge extending to d_padding x the
-    // maximum point in the constellation
-    d_soft_dec_lut.clear();
-    d_lut_scale = powf(2.0f, static_cast<float>(precision));
-
-    // we use a single unit border to prevent index overflow issues in the LUT
-    float border = 1.0 / d_lut_scale;
-    // the min/max dimensions in either direction are scaled to +/-maxd.
-    // the maximum dimension is determined by padding and precision
-    float maxd = (d_maxamp * d_padding) - border;
-    float step = (2.0 * maxd) / (d_lut_scale - 2.0);
-
-    int y = 0;
-    int endstop = d_lut_scale - 2;
-    // center the grid
-    float start = -maxd + step / 2;
-    while (y < endstop) {
-        int x = 0;
-        // This produces a bottom row of padding
-        if (y == 0) {
-            while (x < endstop) {
-                if (x == 0 || x == endstop - 1) {
-                    d_soft_dec_lut.push_back(calc_soft_dec(
-                        gr_complex(start + (x * step), start + (y * step)), npwr));
-                }
-                d_soft_dec_lut.push_back(calc_soft_dec(
-                    gr_complex(start + (x * step), start + (y * step)), npwr));
-                x += 1;
-            }
-            x = 0;
-        }
-        // This produces the center body of the LUT
-        while (x < endstop) {
-            // duplicate values at the edge of the LUT to prevent index overflow
-            if (x == 0 || x == endstop - 1) {
-                d_soft_dec_lut.push_back(calc_soft_dec(
-                    gr_complex(start + (x * step), start + (y * step)), npwr));
-            }
-            d_soft_dec_lut.push_back(
-                calc_soft_dec(gr_complex(start + (x * step), start + (y * step)), npwr));
-            x += 1;
-        }
-        x = 0;
-        // This produces the top row of padding
-        if (y == endstop - 1) {
-            while (x < endstop) {
-                if (x == 0 || x == endstop - 1) {
-                    d_soft_dec_lut.push_back(calc_soft_dec(
-                        gr_complex(start + (x * step), start + (y * step)), npwr));
-                }
-                d_soft_dec_lut.push_back(calc_soft_dec(
-                    gr_complex(start + (x * step), start + (y * step)), npwr));
-                x += 1;
-            }
-        }
-        y += 1;
-    }
-
+    // generates a LUT with axis limit at d_padding * max_axis()
     d_lut_precision = precision;
+    int numpts = 1 << d_lut_precision;
+    d_lut_axis_limit = max_axis() * d_lut_padding;
+    float step_size = (2 * d_lut_axis_limit) / (numpts - 1);
+    d_soft_dec_lut.clear();
+    for (int im = 0; im < numpts; ++im) {
+        for (int re = 0; re < numpts; ++re) {
+            gr_complex pt(step_size * re - d_lut_axis_limit,
+                          step_size * im - d_lut_axis_limit);
+            d_soft_dec_lut.push_back(calc_soft_dec(pt, npwr));
+        }
+    }
 }
 
 std::vector<float> constellation::calc_soft_dec(gr_complex sample, float npwr)
@@ -357,7 +300,7 @@ std::vector<float> constellation::calc_soft_dec(gr_complex sample, float npwr)
         }
 
         if (d_apply_pre_diff_code)
-            v = d_pre_diff_code[i];
+            v = d_pre_diff_decode[i];
         else
             v = i;
 
@@ -396,13 +339,13 @@ std::vector<float> constellation::calc_soft_dec(gr_complex sample, float npwr)
 }
 
 void constellation::set_soft_dec_lut(const std::vector<std::vector<float>>& soft_dec_lut,
-                                     int precision)
+                                     int precision,
+                                     float axis_limit)
 {
-    max_min_axes();
     d_use_external_lut = true;
+    d_lut_axis_limit = axis_limit;
     d_soft_dec_lut = soft_dec_lut;
     d_lut_precision = precision;
-    d_lut_scale = powf(2.0, static_cast<float>(precision));
 }
 
 void constellation::set_npwr(float npwr)
@@ -420,70 +363,37 @@ std::vector<std::vector<float>> constellation::soft_dec_lut() { return d_soft_de
 std::vector<float> constellation::soft_decision_maker(gr_complex sample)
 {
     if (has_soft_dec_lut()) {
-        // Clip to just below 1 --> at 1, we can overflow the index
-        // that will put us in the next row of the 2D LUT.
-        float maxd = (d_padding * d_maxamp);
-
-        float border = 1.0f / d_lut_scale;
-        float limit = maxd - border;
-        float xre = branchless_clip(sample.real(), limit) / maxd;
-        float xim = branchless_clip(sample.imag(), limit) / maxd;
-
-        // We normalize the constellation in the ctor, so we know that
-        // the maximum dimensions go from -1 to +1. We can infer the x
-        // and y scale directly.
-        float scale = (d_lut_scale - 2.0f) / (2.0f);
-
-        // Convert the clipped x and y samples to nearest index offset
-        xre = floorf((1.0f + xre) * scale) + 1;
-        xim = floorf((1.0f + xim) * scale) + 1;
-
-        int index = static_cast<int>(d_lut_scale * xim + xre);
-
-        int max_index = d_lut_scale * d_lut_scale;
-
-        // Make sure we are in bounds of the index
-        while (index >= max_index) {
-            index -= d_lut_scale;
-        }
-        while (index < 0) {
-            index += d_lut_scale;
-        }
-
+        int npts = 1 << d_lut_precision;
+        float points_per_unit = (npts - 1) / (2 * d_lut_axis_limit);
+        int index_real = std::round(points_per_unit * (d_lut_axis_limit + sample.real()));
+        index_real = std::clamp(index_real, 0, npts - 1);
+        int index_imag = std::round(points_per_unit * (d_lut_axis_limit + sample.imag()));
+        index_imag = std::clamp(index_imag, 0, npts - 1);
+        size_t index = index_imag * npts + index_real;
         return d_soft_dec_lut[index];
+
     } else {
         return calc_soft_dec(sample);
     }
 }
 
-void constellation::max_min_axes()
+float constellation::max_axis()
 {
-    // Find min/max of constellation for both real and imag axes.
-    d_re_min = 1e20;
-    d_im_min = 1e20;
-    d_re_max = -1e20;
-    d_im_max = -1e20;
-    for (size_t i = 0; i < d_constellation.size(); i++) {
-        if (d_constellation[i].real() > d_re_max)
-            d_re_max = d_constellation[i].real();
-        if (d_constellation[i].imag() > d_im_max)
-            d_im_max = d_constellation[i].imag();
+    float axis_max = 0.0f;
+    for (const gr_complex& pt : d_constellation)
+        axis_max = std::max({ axis_max, std::abs(pt.real()), std::abs(pt.imag()) });
 
-        if (d_constellation[i].real() < d_re_min)
-            d_re_min = d_constellation[i].real();
-        if (d_constellation[i].imag() < d_im_min)
-            d_im_min = d_constellation[i].imag();
+    return axis_max;
+}
+
+std::vector<int> constellation::invert_code(const std::vector<int>& code)
+{
+    std::vector<int> decode(code.size());
+    for (size_t i = 0; i < code.size(); ++i) {
+        int code_index = code[i];
+        decode.at(code_index) = i;
     }
-    if (d_im_min == 0)
-        d_im_min = d_re_min;
-    if (d_im_max == 0)
-        d_im_max = d_re_max;
-    if (d_re_min == 0)
-        d_re_min = d_im_min;
-    if (d_re_max == 0)
-        d_re_max = d_im_max;
-
-    d_maxamp = std::max({ d_re_max, -d_re_min, d_im_max, -d_im_min });
+    return decode;
 }
 
 /********************************************************************/
@@ -781,6 +691,7 @@ constellation_qpsk::constellation_qpsk()
     d_pre_diff_code[1] = 0x2;
     d_pre_diff_code[2] = 0x3;
     d_pre_diff_code[3] = 0x1;
+    d_pre_diff_decode = invert_code(d_pre_diff_code);
 
     d_rotational_symmetry = 4;
     d_dimensionality = 1;
@@ -796,23 +707,6 @@ unsigned int constellation_qpsk::decision_maker(const gr_complex* sample)
     // Real component determines small bit.
     // Imag component determines big bit.
     return 2 * (imag(*sample) > 0) + (real(*sample) > 0);
-
-    /*
-      bool a = real(*sample) > 0;
-      bool b = imag(*sample) > 0;
-      if(a) {
-      if(b)
-      return 0x0;
-      else
-      return 0x1;
-      }
-      else {
-      if(b)
-      return 0x2;
-      else
-      return 0x3;
-      }
-    */
 }
 
 
@@ -841,6 +735,7 @@ constellation_dqpsk::constellation_dqpsk()
     d_pre_diff_code[1] = 0x1;
     d_pre_diff_code[2] = 0x3;
     d_pre_diff_code[3] = 0x2;
+    d_pre_diff_decode = invert_code(d_pre_diff_code);
     d_apply_pre_diff_code = true;
 
     d_rotational_symmetry = 4;

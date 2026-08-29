@@ -103,6 +103,8 @@ public:
     void set_pre_diff_code(bool a) { d_apply_pre_diff_code = a; }
     //! Returns the encoding to apply before differential encoding.
     std::vector<int> pre_diff_code() { return d_pre_diff_code; }
+    //! Returns the inverse of pre_diff_code
+    std::vector<int> pre_diff_decode() { return d_pre_diff_decode; }
     //! Returns the order of rotational symmetry.
     unsigned int rotational_symmetry() { return d_rotational_symmetry; }
     //! Returns the number of complex numbers in a single symbol.
@@ -173,9 +175,11 @@ public:
      *        there are k bits/sample in the constellation).
      * \param precision The number of bits of precision used when
      *        generating the LUT.
+     * \param axis_limit The maximum axis coordinate of the LUT
      */
     void set_soft_dec_lut(const std::vector<std::vector<float>>& soft_dec_lut,
-                          int precision);
+                          int precision,
+                          float axis_limit);
 
     /*! \brief Sets the constellation noise power and recalculates LUT given \p npwr.
      *
@@ -211,27 +215,27 @@ public:
 protected:
     std::vector<gr_complex> d_constellation;
     std::vector<int> d_pre_diff_code;
+    std::vector<int> d_pre_diff_decode;
     bool d_apply_pre_diff_code;
     unsigned int d_rotational_symmetry;
     unsigned int d_dimensionality;
     unsigned int d_arity;
     //! The factor by which the user given constellation points were
     //! scaled by to achieve an average amplitude of 1.
-    float d_scalefactor, d_maxamp;
-    float d_re_min, d_re_max, d_im_min, d_im_max;
+    float d_scalefactor;
 
     std::vector<std::vector<float>> d_soft_dec_lut;
     int d_lut_precision;
-    float d_lut_scale;
     float d_npwr;
-    float d_padding;
+    float d_lut_padding;
+    float d_lut_axis_limit;
     bool d_use_external_lut;
 
     float get_distance(unsigned int index, const gr_complex* sample);
     unsigned int get_closest_point(const gr_complex* sample);
     void calc_arity();
-
-    void max_min_axes();
+    float max_axis();
+    std::vector<int> invert_code(const std::vector<int>& code);
 };
 
 /************************************************************/

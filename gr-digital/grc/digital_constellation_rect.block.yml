@@ -42,6 +42,12 @@ parameters:
     dtype: raw
     default: None
     hide: ${ ('part' if str(soft_dec_lut) == 'None' else 'none') }
+-   id: axis_limit
+    label: LUT Axis Limit
+    dtype: float
+    default: 1.0
+    hide: ${'all' if str(soft_dec_lut).lower() == 'auto' or str(soft_dec_lut) == 'None' else 'part'}
+
 value: ${ digital.constellation_rect(const_points, sym_map, rot_sym, real_sect, imag_sect,
     w_real_sect, w_imag_sect) }
 
@@ -53,7 +59,7 @@ templates:
         % if str(soft_dec_lut).lower() == '"auto"' or str(soft_dec_lut).lower() == "'auto'":
         self.${id}.gen_soft_dec_lut(${precision})
         % elif str(soft_dec_lut) != "None":
-        self.${id}.set_soft_dec_lut(${soft_dec_lut}, ${precision})
+        self.${id}.set_soft_dec_lut(${soft_dec_lut}, ${precision}, ${axis_limit})
         % endif
 
 file_format: 1

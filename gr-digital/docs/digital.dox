@@ -1,6 +1,6 @@
 /*! \page page_digital Digital Modulation
 
-\section digtial_introduction Introduction
+\section digital_introduction Introduction
 This is the gr-digital package. It contains all of the digital
 modulation blocks, utilities, and examples. To use the digital blocks,
 the Python namespaces is in gnuradio.digital, which would be normally
@@ -31,15 +31,15 @@ constellation with:
 
 <pre>
     constel_points = [c0, c1, c2, c3]
-    symbols = [s0, s1, s2, s3]
+    symbol_map = [s0, s1, s2, s3]
 </pre>
 
-In this case: \f$c_i \in C\f$ and \f$s_i \in [00, 01, 10,
-11]\f$. Also, the mapping is a 1-to-1 for the items in both lists, so
-the symbol \f$s_0\f$ is positioned in complex space at the point
-\f$c_0\f$.
+In this case: c<sub>i</sub> is complex and s<sub>i</sub> is an integer
+from 0 to 3. Also, the mapping is 1-to-1 for the items in both lists,
+so given a chunk of input bits represented by n, the symbol resides in
+complex space at constel_points[symbol_map[n]].
 
-In the code itself, the symbols are referred to as the
+In the code itself, the symbol map is referred to as the
 'pre_diff_code' since this is the mapping before the application of
 differential modulation, if used.
 
@@ -165,13 +165,13 @@ similar to digital.psk_constellation.
 
 There is another Python file full of helper functions to create
 different constellations. This is found in the
-gr-digital/python/digital/psk_constellation.py file. This file
+gr-digital/python/digital/psk_constellations.py file. This file
 provides functions that build the vectors of constellation points and
 symbol mappings that can be used to create a constellation
 object. These are particularly helpful when using the Constellation
 Obj. and Constellation Rect. GUI elements in GRC.
 
-The gr-digital/python/digital/psk_constellation.py file has extensive
+The gr-digital/python/digital/psk_constellations.py file has extensive
 documentation that describes the naming scheme used for the different
 constellations that will not be repeated here. The main thing to
 understand is that these functions define constellations of the same
@@ -208,7 +208,7 @@ constellation:
 
 We provide a basis constellation map and symbol map as the fundamental
 rotation of the constellation points. This function uses the k and pi
-inputs (see the discussion in psk_constellation.py for what these
+inputs (see the discussion in psk_constellations.py for what these
 mean) to return a new rotation of the constellation's symbols. If the
 basis symbols are Gray coded than the output symbols will also be Gray
 coded. Note that this algorithm specifically depends on the
@@ -240,7 +240,7 @@ the documentation as:
         locking.
 </pre>
 
-Similarly, gr-digital/python/digital/qam_constellations.py defines a of
+Similarly, gr-digital/python/digital/qam_constellations.py defines
 QAM constellation functions that return a tuple containing the
 constellation points and the symbol mappings. The naming scheme is
 defined in depth in the module itself and is similar to the equivalent
@@ -459,12 +459,14 @@ sample and calculates the soft decisions using various methods. Plots
 the sample against the full constellation. Requires matplotlib installed.
 
 Functions:
-\li digital.sd_psk_2_*: Returns (constellation, symbol_map) lists for
+\li digital.psk_2_*: Returns (constellation, symbol_map) lists for
 different rotations for BPSK.
-\li digital.sd_psk_4_*: Returns (constellation, symbol_map) lists for
+\li digital.psk_4_*: Returns (constellation, symbol_map) lists for
 different rotations for QPSK.
-\li digital.sd_qam_16_*: Returns (constellation, symbol_map) lists for
+\li digital.qam_16_*: Returns (constellation, symbol_map) lists for
 different rotations for 16QAM.
+\li digital.sd_*: Returns the soft decision for the corresponding
+BPSK, QSK, and 16QAM constellations described above.
 \li digital.soft_dec_table_generator: Takes in a generator function
 (like the digital.sd_XXX above) and creates a LUT to a specific precision.
 \li digital.soft_dec_table: Takes in a constellation/symbol map and
