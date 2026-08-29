@@ -12,6 +12,8 @@ include(GrBoost)
 
 gr_find_package(SNDFILE)
 
+gr_find_package(nlohmann_json 3.10)
+
 if(NOT SNDFILE_FOUND)
     message(STATUS "")
     message(STATUS "********************* WARNING!!! *********************")
@@ -27,7 +29,7 @@ include(GrComponent)
 gr_register_component(
     NAME "gr-blocks"
     VAR ENABLE_GR_BLOCKS
-    REQUIRED_TPLS Boost_FOUND
+    REQUIRED_TPLS Boost_FOUND nlohmann_json_FOUND
     REQUIRED_COMPONENTS gnuradio-runtime
 )
 
