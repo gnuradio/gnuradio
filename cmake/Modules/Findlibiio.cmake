@@ -50,7 +50,7 @@ The following cache variables may also be set:
 # pkg_check_modules(PC_libiio QUIET libiio)
 find_path(
     libiio_INCLUDE_DIR
-    NAMES iio.h
+    NAMES iio.h iio/iio.h
     HINTS ${PC_libiio_INCLUDE_DIRS}
     PATHS /usr/include /usr/local/include /opt/local/include ${LIBIIO_INCLUDE_DIRS}
 )

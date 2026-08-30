@@ -11,7 +11,12 @@
 #define INCLUDED_IIO_DEVICE_SOURCE_IMPL_H
 
 #include <gnuradio/iio/device_source.h>
+
+#ifdef LIBIIO_V1
+#include <iio/iio.h>
+#else
 #include <iio.h>
+#endif
 
 #include <condition_variable>
 #include <mutex>
@@ -53,10 +58,22 @@ private:
 
     void refill_thread();
 
+#ifdef LIBIIO_V1
+    static int device_identify_filename(const struct iio_device* dev,
+                                        const char* filename,
+                                        struct iio_channel** chn,
+                                        const struct iio_attr** attr);
+#endif
+
 protected:
     iio_context* ctx;
     iio_device *dev, *phy;
     iio_buffer* buf;
+#ifdef LIBIIO_V1
+    iio_stream* stream;
+    const iio_block* iioblock;
+    iio_channels_mask* mask;
+#endif
     std::vector<iio_channel*> channel_list;
     unsigned int buffer_size;
     unsigned int decimation;
