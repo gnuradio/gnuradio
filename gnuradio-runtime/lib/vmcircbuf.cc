@@ -48,15 +48,14 @@ vmcircbuf_factory* vmcircbuf_sysconfig::get_default_factory()
 
     std::vector<gr::vmcircbuf_factory*> all = all_factories();
 
-    logger_ptr logger, debug_logger;
-    gr::configure_default_loggers(logger, debug_logger, "vmcircbuf_sysconfig");
+    gr::logger logger("vmcircbuf_sysconfig");
 
-    auto name = gr::vmcircbuf_prefs::get(FACTORY_PREF_KEY);
-    if (!name.empty()) {
-        for (auto& factory : all) {
+    const auto name = gr::vmcircbuf_prefs::get(FACTORY_PREF_KEY);
+    if (name) {
+        for (const auto& factory : all) {
             if (name == factory->name()) {
                 s_default_factory = factory;
-                debug_logger->info("Using {:s}", s_default_factory->name());
+                logger.info("Using {:s}", s_default_factory->name());
                 return s_default_factory;
             }
         }
@@ -64,18 +63,20 @@ vmcircbuf_factory* vmcircbuf_sysconfig::get_default_factory()
 
     // either we don't have a default, or the default named is not in our
     // list of factories.  Find the first factory that works.
+    logger.info("No vmcircbuf preference read; this isn't inherently a problem. "
+                "Defaulting to the highest-priority working factory...");
 
-    debug_logger->info("finding a working factory...");
-
-    for (auto& factory : all) {
+    for (const auto& factory : all) {
         if (test_factory(factory, verbose)) {
+            logger.info("Using {:s} factory. Trying to save this configuration…",
+                        factory->name());
             set_default_factory(factory);
             return s_default_factory;
         }
     }
 
     // We're screwed!
-    logger->error("unable to find a working factory!");
+    logger.error("unable to find a working factory!");
     throw std::runtime_error("gr::vmcircbuf_sysconfig");
 }
 
@@ -112,11 +113,11 @@ static void init_buffer(const vmcircbuf& c, int counter, int size)
 }
 
 static bool check_mapping(
-    const vmcircbuf& c, int counter, int size, const char* msg, logger_ptr debug_logger)
+    const vmcircbuf& c, int counter, int size, const char* msg, gr::logger& logger)
 {
     bool ok = true;
 
-    debug_logger->info("{:s}", msg);
+    logger.info("{:s}", msg);
 
     unsigned int* p1 = (unsigned int*)c.pointer_to_first_copy();
     unsigned int* p2 = (unsigned int*)c.pointer_to_second_copy();
@@ -124,17 +125,17 @@ static bool check_mapping(
     for (unsigned int i = 0; i < size / sizeof(int); i++) {
         if (p1[i] != counter + i) {
             ok = false;
-            debug_logger->error("p1[{:d}] == {:d}, expected {:d}", i, p1[i], counter + i);
+            logger.error("p1[{:d}] == {:d}, expected {:d}", i, p1[i], counter + i);
             break;
         }
         if (p2[i] != counter + i) {
-            debug_logger->error("p2[{:d}] == {:d}, expected {:d}", i, p2[i], counter + i);
+            logger.error("p2[{:d}] == {:d}, expected {:d}", i, p2[i], counter + i);
             ok = false;
             break;
         }
     }
     if (ok) {
-        debug_logger->info("mapping OK");
+        logger.info("mapping OK");
     }
     return ok;
 }
@@ -160,18 +161,17 @@ test_a_bunch(vmcircbuf_factory* factory, int n, int size, int* start_ptr, bool v
     std::vector<std::unique_ptr<vmcircbuf>> c(n);
     int cum_size = 0;
 
-    logger_ptr logger, debug_logger;
-    gr::configure_default_loggers(logger, debug_logger, "gr::test_a_bunch");
+    gr::logger logger("gr::test_a_bunch");
 
     for (int i = 0; i < n; i++) {
         counter[i] = *start_ptr;
         *start_ptr += size;
         if ((c[i] = std::unique_ptr<vmcircbuf>(factory->make(size))) == 0) {
-            debug_logger->info("Failed to allocate gr::vmcircbuf "
-                               "number {:d} of size {:d} (cum = {:s})",
-                               i + 1,
-                               size,
-                               memsize(cum_size));
+            logger.info(
+                "Failed to allocate gr::vmcircbuf number {:d} of size {:d} (cum = {:s})",
+                i + 1,
+                size,
+                memsize(cum_size));
             return false;
         }
         init_buffer(*c[i], counter[i], size);
@@ -181,17 +181,16 @@ test_a_bunch(vmcircbuf_factory* factory, int n, int size, int* start_ptr, bool v
     for (int i = 0; i < n; i++) {
         std::string msg = "test_a_bunch_" + std::to_string(n) + "x" + memsize(size) +
                           "[" + std::to_string(i) + "]";
-        ok = check_mapping(*c[i], counter[i], size, msg.c_str(), debug_logger) && ok;
+        ok = check_mapping(*c[i], counter[i], size, msg.c_str(), logger) && ok;
     }
     return ok;
 }
 
 static bool standard_tests(vmcircbuf_factory* f, int verbose)
 {
-    logger_ptr logger, debug_logger;
-    gr::configure_default_loggers(logger, debug_logger, "standard_tests");
 
-    debug_logger->info("Testing {:s}...", f->name());
+    gr::logger logger("standard tests");
+    logger.info("Testing {:s}...", f->name());
 
     bool v = verbose >= 2;
     int granularity = f->granularity();
@@ -207,14 +206,13 @@ static bool standard_tests(vmcircbuf_factory* f, int verbose)
         //  = 64MB
     }
 
-    debug_logger->info("{:s}: {:s}", f->name(), ok ? "OK" : "Doesn't work");
+    logger.info("{:s}: {:s}", f->name(), ok ? "OK" : "Doesn't work");
     return ok;
 }
 
 bool vmcircbuf_sysconfig::test_factory(vmcircbuf_factory* f, int verbose)
 {
-    logger_ptr logger, debug_logger;
-    gr::configure_default_loggers(logger, debug_logger, "gr::vmcircbuf_sysconfig");
+    gr::logger logger("gr::vmcircbuf_sysconfig");
     // Install local signal handlers for SIGSEGV and SIGBUS.
     // If something goes wrong, these signals may be invoked.
 
@@ -231,13 +229,13 @@ bool vmcircbuf_sysconfig::test_factory(vmcircbuf_factory* f, int verbose)
     try {
         return standard_tests(f, verbose);
     } catch (gr::signal& sig) {
-        debug_logger->info(
+        logger.info(
             "vmcircbuf_factory::test_factory ({:s}): caught {:s}", f->name(), sig.name());
         return false;
     } catch (...) {
-        debug_logger->warn("vmcircbuf_factory::test_factory ({:s}) some "
-                           "kind of uncaught exception.",
-                           f->name());
+        logger.warn(
+            "vmcircbuf_factory::test_factory ({:s}) some kind of uncaught exception.",
+            f->name());
         return false;
     }
     return false; // never gets here.  shut compiler up.
