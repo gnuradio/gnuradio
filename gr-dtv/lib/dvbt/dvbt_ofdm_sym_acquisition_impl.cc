@@ -316,13 +316,18 @@ int dvbt_ofdm_sym_acquisition_impl::general_work(int noutput_items,
         } else {
             // If we are here it means that in the previous iteration we found the CP. We
             // now thus only search near it.
-            d_cp_found = ml_sync(&in[d_consumed],
-                                 d_cp_start + 8,
-                                 std::max(d_cp_start - 8, d_cp_length + d_fft_length - 1),
-                                 &d_cp_start,
-                                 &d_derot[0],
-                                 &d_to_consume,
-                                 &d_to_out);
+            if (d_cp_start + 8 <= 2 * d_fft_length + d_cp_length - 1) {
+                d_cp_found =
+                    ml_sync(&in[d_consumed],
+                            d_cp_start + 8,
+                            std::max(d_cp_start - 8, d_cp_length + d_fft_length - 1),
+                            &d_cp_start,
+                            &d_derot[0],
+                            &d_to_consume,
+                            &d_to_out);
+            } else {
+                d_cp_found = 0;
+            }
             if (!d_cp_found) {
                 // We may have not found the CP because the smaller search range was too
                 // small (rare, but possible). We re-try with the whole search range.
