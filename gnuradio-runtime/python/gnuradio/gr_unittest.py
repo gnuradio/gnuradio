@@ -14,6 +14,20 @@ GNU radio specific extension of unittest.
 import time
 import unittest
 
+# ruff: disable[F401]
+from unittest import (
+    FunctionTestCase,
+    TestLoader,
+    TestProgram,
+    TestResult,
+    TestSuite,
+    TextTestRunner,
+    skip,
+    skipIf
+)
+# ruff: enable[F401]
+main = TestProgram
+
 # We allow snakeCase here for consistency with unittest
 # pylint: disable=invalid-name
 
@@ -155,15 +169,6 @@ class TestCase(unittest.TestCase):
             fail_msg = fail_msg or "Timeout exceeded during call to waitFor()!"
             self.fail(fail_msg)
         return False
-
-
-TestResult = unittest.TestResult
-TestSuite = unittest.TestSuite
-FunctionTestCase = unittest.FunctionTestCase
-TestLoader = unittest.TestLoader
-TextTestRunner = unittest.TextTestRunner
-TestProgram = unittest.TestProgram
-main = TestProgram
 
 
 def run(PUT, filename=None, verbosity=1):
