@@ -41,6 +41,7 @@ public:
                         pmt::pmt_t dstport);
     void disconnect(basic_block_sptr block);
     void disconnect(basic_block_sptr, int src_port, basic_block_sptr, int dst_port);
+    void recursive_disconnect_all(const std::string& caller);
     void disconnect_all();
     void lock();
     void unlock();
