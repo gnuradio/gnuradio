@@ -21,6 +21,7 @@ namespace details {
 static const std::unordered_map<std::string, reg_prio_type> arch_prios{
     /* good native architectures */
     { "alsa", REG_PRIO_HIGH },
+    { "pulse", REG_PRIO_HIGH },
     { "osx", REG_PRIO_HIGH },
     /* all-purpose cross-platform architectures */
     { "portaudio", REG_PRIO_MED },
@@ -38,6 +39,10 @@ static const std::unordered_map<std::string, reg_prio_type> arch_prios{
 static std::vector<source_entry_t>& get_source_registry(void)
 {
     static std::vector<source_entry_t> s_registry = {
+#ifdef PULSE_FOUND
+        { details::arch_prios.at("pulse"), "pulse", pulse_source_fcn },
+#endif /* PULSE_FOUND */
+
 #ifdef ALSA_FOUND
         { details::arch_prios.at("alsa"), "alsa", alsa_source_fcn },
 #endif /* ALSA_FOUND */
@@ -69,6 +74,10 @@ static std::vector<source_entry_t>& get_source_registry(void)
 static std::vector<sink_entry_t>& get_sink_registry(void)
 {
     static std::vector<sink_entry_t> s_registry = {
+#ifdef PULSE_FOUND
+        { details::arch_prios.at("pulse"), "pulse", pulse_sink_fcn },
+#endif /* PULSE_FOUND */
+
 #ifdef ALSA_FOUND
         { details::arch_prios.at("alsa"), "alsa", alsa_sink_fcn },
 #endif /* ALSA_FOUND */
@@ -117,8 +126,10 @@ static void do_arch_warning(const std::string& arch)
                   arch);
 }
 
-source::sptr
-source::make(int sampling_rate, const std::string device_name, bool ok_to_block)
+source::sptr source::make(int sampling_rate,
+                          const std::string& device_name,
+                          bool ok_to_block,
+                          const std::map<std::string, std::string>& properties)
 {
     gr::logger_ptr logger, debug_logger;
     configure_default_loggers(logger, debug_logger, "audio_source");
@@ -135,14 +146,17 @@ source::make(int sampling_rate, const std::string device_name, bool ok_to_block)
             entry = e; // entry is highest prio
         if (arch != e.arch)
             continue; // continue when no match
-        return e.source(sampling_rate, device_name, ok_to_block);
+        return e.source(sampling_rate, device_name, ok_to_block, properties);
     }
 
     debug_logger->info("Audio source arch: {:s}", entry.arch);
-    return entry.source(sampling_rate, device_name, ok_to_block);
+    return entry.source(sampling_rate, device_name, ok_to_block, properties);
 }
 
-sink::sptr sink::make(int sampling_rate, const std::string device_name, bool ok_to_block)
+sink::sptr sink::make(int sampling_rate,
+                      const std::string& device_name,
+                      bool ok_to_block,
+                      const std::map<std::string, std::string>& properties)
 {
     gr::logger_ptr logger, debug_logger;
     configure_default_loggers(logger, debug_logger, "audio source");
@@ -159,12 +173,12 @@ sink::sptr sink::make(int sampling_rate, const std::string device_name, bool ok_
             entry = e; // entry is highest prio
         if (arch != e.arch)
             continue; // continue when no match
-        return e.sink(sampling_rate, device_name, ok_to_block);
+        return e.sink(sampling_rate, device_name, ok_to_block, properties);
     }
 
     do_arch_warning(arch);
     debug_logger->info("Audio sink arch: {:s}", entry.arch);
-    return entry.sink(sampling_rate, device_name, ok_to_block);
+    return entry.sink(sampling_rate, device_name, ok_to_block, properties);
 }
 
 } // namespace audio

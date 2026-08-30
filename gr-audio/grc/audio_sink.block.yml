@@ -26,6 +26,11 @@ parameters:
     dtype: int
     default: '1'
     hide: part
+-   id: properties
+    label: Properties
+    dtype: raw
+    default: '{}'
+    hide: ${ ('none' if str(properties) != '{}' else 'part') }
 
 inputs:
 -   domain: stream
@@ -37,7 +42,7 @@ asserts:
 
 templates:
     imports: from gnuradio import audio
-    make: audio.sink(${samp_rate}, ${device_name}, ${ok_to_block})
+    make: audio.sink(${samp_rate}, ${device_name}, ${ok_to_block}, ${properties})
 
 cpp_templates:
     includes: [ '#include <gnuradio/audio/sink.h>' ]
@@ -51,5 +56,7 @@ documentation: |-
     Leave the device name blank to choose default audio device. ALSA users with audio trouble may try setting the device name to plughw:0,0
 
     The audio sink can have multiple inputs depending upon your hardware. For example, set the inputs to 2 for stereo audio.
+
+    The properties field can only be used with PulseAudio backend. Refer to https://docs.pipewire.org/page_man_pipewire-props_7.html for more details.
 
 file_format: 1
