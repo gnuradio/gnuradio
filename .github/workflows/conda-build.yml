@@ -34,8 +34,8 @@ jobs:
             resize_partitions: False
             runs_on: ['ubuntu-latest']
             tools_install_dir: ~/miniforge3
-          - CONFIG: osx_64_python3.11.____cpython
-            CONFIG_SHORT: osx_64_python3.11.____cpython
+          - CONFIG: osx_arm64_python3.11.____cpython
+            CONFIG_SHORT: osx_arm64_python3.11.____cpython
             STORE_BUILD_ARTIFACTS: True
             UPLOAD_PACKAGES: True
             build_workspace_dir: ~/miniforge3/conda-bld
@@ -44,7 +44,7 @@ jobs:
             os: macos
             pagefile_size: 0
             resize_partitions: False
-            runs_on: ['macos-15-intel']
+            runs_on: ['macos-15']
             tools_install_dir: ~/miniforge3
           - CONFIG: win_64_python3.11.____cpython
             CONFIG_SHORT: win_64_python3.11.____cpython

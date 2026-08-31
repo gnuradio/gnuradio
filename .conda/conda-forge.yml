@@ -15,7 +15,7 @@ os_version:
   linux_64: cos7
 provider:
   linux: github_actions
-  osx: github_actions
+  osx_arm64: github_actions
   win: github_actions
 recipe_dir: .conda/recipe
 # skip unnecessary files since this is not a full-fledged conda-forge feedstock

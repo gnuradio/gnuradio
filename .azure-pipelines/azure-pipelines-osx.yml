@@ -1,0 +1,47 @@
+# This file was generated automatically from conda-smithy. To update this configuration,
+# update the conda-forge.yml and/or the recipe/meta.yaml.
+# -*- mode: yaml -*-
+
+jobs:
+- job: osx
+  pool:
+    vmImage: $(VMIMAGE)
+  strategy:
+    matrix:
+      osx_64_python3.11.____cpython:
+        CONFIG: osx_64_python3.11.____cpython
+        UPLOAD_PACKAGES: 'True'
+        VMIMAGE: macOS-15
+        build_workspace_dir: ~/miniforge3/conda-bld
+        free_disk_space: skip
+        pagefile_size: 0
+        resize_partitions: false
+        store_build_artifacts: false
+        tools_install_dir: ~/miniforge3
+  timeoutInMinutes: 360
+  variables: {}
+
+  steps:
+  # TODO: Fast finish on azure pipelines?
+  - checkout: self
+    fetchDepth: 0
+  - script: |
+      export CI=azure
+      export CONDA_BLD_PATH=$(build_workspace_dir)
+      export FEEDSTOCK_NAME=$(basename ${BUILD_REPOSITORY_NAME})
+      export GIT_BRANCH=$BUILD_SOURCEBRANCHNAME
+      export MINIFORGE_HOME=$(tools_install_dir)
+      export OSX_FORCE_SDK_DOWNLOAD="1"
+      export UPLOAD_ON_BRANCH="main"
+      export flow_run_id=azure_$(Build.BuildNumber).$(System.JobAttempt)
+      export remote_url=$(Build.Repository.Uri)
+      export sha=$(Build.SourceVersion)
+      if [[ "${BUILD_REASON:-}" == "PullRequest" ]]; then
+        export IS_PR_BUILD="True"
+      else
+        export IS_PR_BUILD="False"
+      fi
+      ./.scripts/run_osx_build.sh
+    displayName: Run OSX build
+    env:
+      BINSTAR_TOKEN: $(BINSTAR_TOKEN)
