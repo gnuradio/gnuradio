@@ -62,7 +62,7 @@ BOOST_AUTO_TEST_CASE(t2)
     y = 0;
     c_atan2 = atan2(y, x);
     gr_atan2f = gr::fast_atan2f(y, x);
-    BOOST_CHECK_CLOSE(c_atan2, gr_atan2f, 0.0);
+    BOOST_CHECK_CLOSE(c_atan2, gr_atan2f, 0.0001); // Apple's atan2 is off by one ULP here
 
 
     /* Test y as INF */
