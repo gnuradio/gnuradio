@@ -7,7 +7,6 @@ SPDX-License-Identifier: GPL-2.0-or-later
 """
 
 
-import ast
 import string
 
 
@@ -63,33 +62,6 @@ def sort_objects(objects, get_id, get_expr) -> list:
     sorted_ids = _sort_variables(id2expr)
     # Return list of sorted objects
     return [id2obj[id] for id in sorted_ids]
-
-
-def dependencies(expr, names=None):
-    node = ast.parse(expr, mode='eval')
-    used_ids = frozenset(
-        [n.id for n in ast.walk(node) if isinstance(n, ast.Name)])
-    return used_ids & names if names else used_ids
-
-
-def sort_objects2(objects, id_getter, expr_getter, check_circular=True):
-    known_ids = {id_getter(obj) for obj in objects}
-
-    def dependent_ids(obj):
-        deps = dependencies(expr_getter(obj))
-        return [id_ if id_ in deps else '' for id_ in known_ids]
-
-    objects = sorted(objects, key=dependent_ids)
-
-    if check_circular:  # walk var defines step by step
-        defined_ids = set()  # variables defined so far
-        for obj in objects:
-            deps = dependencies(expr_getter(obj), known_ids)
-            if not defined_ids.issuperset(deps):  # can't have an undefined dep
-                raise RuntimeError(obj, deps, defined_ids)
-            defined_ids.add(id_getter(obj))  # define this one
-
-    return objects
 
 
 VAR_CHARS = string.ascii_letters + string.digits + '_'
