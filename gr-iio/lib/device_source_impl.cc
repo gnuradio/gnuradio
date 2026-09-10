@@ -184,7 +184,7 @@ void device_source_impl::set_buffer_size(unsigned int _buffer_size)
             throw std::runtime_error("Unable to create buffer! Error code: " +
                                      std::to_string(err));
 
-        stream = iio_buffer_create_stream(buf, 4, _buffer_size / sizeof(short), mask);
+        stream = iio_buffer_create_stream(buf, 4, _buffer_size, mask);
         err = iio_err(stream);
         if (err)
             throw std::runtime_error("Unable to create stream! Error code: " +
@@ -422,7 +422,10 @@ int device_source_impl::work(int noutput_items,
             return -1;
         }
 
-        items_in_buffer = (unsigned long)this->buffer_size /
+        /* Take the count from the block we were actually given, rather than
+         * from the size that was requested. */
+        items_in_buffer = (unsigned long)((uintptr_t)iio_block_end(iioblock) -
+                                          (uintptr_t)iio_block_start(iioblock)) /
                           iio_device_get_sample_size(dev, mask);
 #else
         ret = iio_buffer_refill(buf);
@@ -490,8 +493,8 @@ bool device_source_impl::start()
         throw std::runtime_error("Unable to create buffer! " + std::to_string(res));
     }
 
-    stream =
-        iio_buffer_create_stream(buf, 4, this->buffer_size / sizeof(unsigned long), mask);
+    /* buffer_size is a sample count, which is what create_stream expects. */
+    stream = iio_buffer_create_stream(buf, 4, this->buffer_size, mask);
     res = iio_err(stream);
     if (res) {
         throw std::runtime_error("Unable to create stream! " + std::to_string(res));

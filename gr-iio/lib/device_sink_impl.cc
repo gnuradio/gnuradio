@@ -165,7 +165,8 @@ device_sink_impl::device_sink_impl(iio_context* ctx,
     if (err_code)
         throw std::runtime_error("Unable to create buffer: " + std::to_string(-err_code));
 
-    stream = iio_buffer_create_stream(buf, 4, buffer_size / sizeof(short), mask);
+    /* buffer_size is a sample count, which is what create_stream expects. */
+    stream = iio_buffer_create_stream(buf, 4, buffer_size, mask);
     err_code = iio_err(stream);
     if (err_code)
         throw std::runtime_error("Unable to create stream: " + std::to_string(-err_code));
