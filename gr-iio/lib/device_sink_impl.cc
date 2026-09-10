@@ -84,8 +84,14 @@ device_sink_impl::device_sink_impl(iio_context* ctx,
                      gr::io_signature::make(0, 0, 0)),
       d_tags(0),
       ctx(ctx),
+#ifdef LIBIIO_V1
+      buf_stream(NULL),
+      cyclic_block(NULL),
+      stream_started(false),
+#endif
       interpolation(interpolation),
       buffer_size(buffer_size),
+      cyclic(cyclic),
       destroy_ctx(destroy_ctx),
       d_len_tag_key(pmt::PMT_NIL)
 {
@@ -165,18 +171,44 @@ device_sink_impl::device_sink_impl(iio_context* ctx,
     if (err_code)
         throw std::runtime_error("Unable to create buffer: " + std::to_string(-err_code));
 
-    /* buffer_size is a sample count, which is what create_stream expects. */
-    stream = iio_buffer_create_stream(buf, 4, buffer_size, mask);
-    err_code = iio_err(stream);
-    if (err_code)
-        throw std::runtime_error("Unable to create stream: " + std::to_string(-err_code));
+    if (cyclic) {
+        /* iio_stream_get_next_block() enqueues with cyclic = false, so a cyclic
+         * transfer has to drive a block of its own and pass the flag to
+         * iio_block_enqueue() itself. */
+        buf_stream = iio_buffer_open(buf, mask);
+        err_code = iio_err(buf_stream);
+        if (err_code) {
+            buf_stream = NULL;
+            throw std::runtime_error("Unable to open buffer: " +
+                                     std::to_string(-err_code));
+        }
 
-    // get first block so we can copy the data to it
-    iioblock = iio_stream_get_next_block(stream);
-    err_code = iio_err(iioblock);
-    if (err_code)
-        throw std::runtime_error("Unable to create first stream block: " +
-                                 std::to_string(-err_code));
+        cyclic_block = iio_buffer_stream_create_block(
+            buf_stream, (size_t)buffer_size * iio_device_get_sample_size(dev, mask));
+        err_code = iio_err(cyclic_block);
+        if (err_code) {
+            cyclic_block = NULL;
+            throw std::runtime_error("Unable to create cyclic block: " +
+                                     std::to_string(-err_code));
+        }
+
+        /* channel_write() fills whatever iioblock points at. */
+        iioblock = cyclic_block;
+    } else {
+        /* buffer_size is a sample count, which is what create_stream expects. */
+        stream = iio_buffer_create_stream(buf, 4, buffer_size, mask);
+        err_code = iio_err(stream);
+        if (err_code)
+            throw std::runtime_error("Unable to create stream: " +
+                                     std::to_string(-err_code));
+
+        // get first block so we can copy the data to it
+        iioblock = iio_stream_get_next_block(stream);
+        err_code = iio_err(iioblock);
+        if (err_code)
+            throw std::runtime_error("Unable to create first stream block: " +
+                                     std::to_string(-err_code));
+    }
 #else
     buf = iio_device_create_buffer(dev, buffer_size, cyclic);
     if (!buf)
@@ -193,6 +225,18 @@ device_sink_impl::~device_sink_impl()
     /* The buffer belongs to the device; destroying the stream closes it. */
     if (stream)
         iio_stream_destroy(stream);
+
+    if (buf_stream) {
+        /* Cancel first so a transfer in flight is unblocked before the block it
+         * uses is destroyed. */
+        iio_buffer_stream_cancel(buf_stream);
+        if (cyclic_block)
+            iio_block_destroy(cyclic_block);
+        if (stream_started)
+            iio_buffer_stream_stop(buf_stream);
+        iio_buffer_close(buf_stream);
+    }
+
     if (mask)
         iio_channels_mask_destroy(mask);
 #else
@@ -287,8 +331,23 @@ int device_sink_impl::work(int noutput_items,
         channel_write(channel_list[i], input_items[i], noutput_items * sizeof(short));
 
 #ifdef LIBIIO_V1
-    iioblock = iio_stream_get_next_block(stream);
-    ret = -iio_err(iioblock);
+    if (cyclic) {
+        ret = iio_block_enqueue(cyclic_block, 0, true);
+
+        if (ret == 0 && !stream_started) {
+            /* The buffer's worker only runs once the stream is started, and a
+             * block enqueued before that is never transferred. */
+            ret = iio_buffer_stream_start(buf_stream);
+            if (ret == 0)
+                stream_started = true;
+        }
+
+        if (ret == 0)
+            ret = iio_block_dequeue(cyclic_block, false);
+    } else {
+        iioblock = iio_stream_get_next_block(stream);
+        ret = -iio_err(iioblock);
+    }
 #else
     ret = iio_buffer_push(buf);
 #endif
