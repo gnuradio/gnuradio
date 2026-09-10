@@ -174,18 +174,17 @@ void device_source_impl::set_buffer_size(unsigned int _buffer_size)
     if (buf && this->buffer_size != _buffer_size) {
 #ifdef LIBIIO_V1
         iio_stream_destroy(stream);
-        iio_buffer_destroy(buf);
         iio_channels_mask_destroy(mask);
 
         int channels_count = iio_device_get_channels_count(dev);
         mask = iio_create_channels_mask(channels_count);
-        buf = iio_device_create_buffer(dev, 0, mask);
+        buf = iio_device_get_buffer(dev, 0);
         int err = iio_err(buf);
         if (err)
             throw std::runtime_error("Unable to create buffer! Error code: " +
                                      std::to_string(err));
 
-        stream = iio_buffer_create_stream(buf, 4, _buffer_size / sizeof(short));
+        stream = iio_buffer_create_stream(buf, 4, _buffer_size / sizeof(short), mask);
         err = iio_err(stream);
         if (err)
             throw std::runtime_error("Unable to create stream! Error code: " +
@@ -363,9 +362,12 @@ void device_source_impl::remove_ctx_history(iio_context* ctx_from_block, bool de
 device_source_impl::~device_source_impl()
 {
 #ifdef LIBIIO_V1
-    iio_stream_destroy(stream);
-    iio_buffer_destroy(buf);
-    iio_channels_mask_destroy(mask);
+    /* stop() already tears the stream down, and neither of these is reached at
+     * all if the block was never started, so both can legitimately be NULL. */
+    if (stream)
+        iio_stream_destroy(stream);
+    if (mask)
+        iio_channels_mask_destroy(mask);
 #endif
 
     // Make sure this is the last open block with a given context
@@ -379,8 +381,7 @@ void device_source_impl::channel_read(const iio_channel* chn, void* dst, size_t 
     uintptr_t src_ptr, dst_ptr = (uintptr_t)dst, end = dst_ptr + len;
     unsigned int length = iio_channel_get_data_format(chn)->length / 8;
     uintptr_t buf_end = (uintptr_t)iio_block_end(iioblock);
-    ptrdiff_t buf_step =
-        iio_device_get_sample_size(dev, iio_buffer_get_channels_mask(buf));
+    ptrdiff_t buf_step = iio_device_get_sample_size(dev, mask);
 
     for (src_ptr = (uintptr_t)iio_block_first(iioblock, chn) + byte_offset;
          src_ptr < buf_end && dst_ptr + length <= end;
@@ -421,9 +422,8 @@ int device_source_impl::work(int noutput_items,
             return -1;
         }
 
-        items_in_buffer =
-            (unsigned long)this->buffer_size /
-            iio_device_get_sample_size(dev, iio_buffer_get_channels_mask(buf));
+        items_in_buffer = (unsigned long)this->buffer_size /
+                          iio_device_get_sample_size(dev, mask);
 #else
         ret = iio_buffer_refill(buf);
         if (ret < 0) {
@@ -469,8 +469,7 @@ int device_source_impl::work(int noutput_items,
 
     items_in_buffer -= items;
 #ifdef LIBIIO_V1
-    byte_offset +=
-        items * iio_device_get_sample_size(dev, iio_buffer_get_channels_mask(buf));
+    byte_offset += items * iio_device_get_sample_size(dev, mask);
 #else
     byte_offset += items * iio_buffer_step(buf);
 #endif
@@ -485,13 +484,14 @@ bool device_source_impl::start()
     thread_stopped = false;
 
 #ifdef LIBIIO_V1
-    buf = iio_device_create_buffer(dev, 0, mask);
+    buf = iio_device_get_buffer(dev, 0);
     int res = iio_err(buf);
     if (res) {
         throw std::runtime_error("Unable to create buffer! " + std::to_string(res));
     }
 
-    stream = iio_buffer_create_stream(buf, 4, this->buffer_size / sizeof(unsigned long));
+    stream =
+        iio_buffer_create_stream(buf, 4, this->buffer_size / sizeof(unsigned long), mask);
     res = iio_err(stream);
     if (res) {
         throw std::runtime_error("Unable to create stream! " + std::to_string(res));
@@ -510,6 +510,18 @@ bool device_source_impl::stop()
 {
     thread_stopped = true;
 
+#ifdef LIBIIO_V1
+    /* Cancel before destroying, so a transfer still in flight is unblocked
+     * before the stream that owns it goes away. Destroying the stream closes
+     * the buffer; the buffer itself belongs to the device. */
+    if (stream) {
+        iio_stream_cancel(stream);
+        iio_stream_destroy(stream);
+        stream = NULL;
+    }
+
+    buf = NULL;
+#else
     if (buf)
         iio_buffer_cancel(buf);
 
@@ -517,6 +529,7 @@ bool device_source_impl::stop()
         iio_buffer_destroy(buf);
         buf = NULL;
     }
+#endif
 
     return true;
 }

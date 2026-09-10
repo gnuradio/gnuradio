@@ -160,12 +160,12 @@ device_sink_impl::device_sink_impl(iio_context* ctx,
     set_params(params);
 
 #ifdef LIBIIO_V1
-    buf = iio_device_create_buffer(dev, 0, mask);
+    buf = iio_device_get_buffer(dev, 0);
     int err_code = iio_err(buf);
     if (err_code)
         throw std::runtime_error("Unable to create buffer: " + std::to_string(-err_code));
 
-    stream = iio_buffer_create_stream(buf, 4, buffer_size / sizeof(short));
+    stream = iio_buffer_create_stream(buf, 4, buffer_size / sizeof(short), mask);
     err_code = iio_err(stream);
     if (err_code)
         throw std::runtime_error("Unable to create stream: " + std::to_string(-err_code));
@@ -189,9 +189,11 @@ device_sink_impl::device_sink_impl(iio_context* ctx,
 device_sink_impl::~device_sink_impl()
 {
 #ifdef LIBIIO_V1
-    iio_stream_destroy(stream);
-    iio_buffer_destroy(buf);
-    iio_channels_mask_destroy(mask);
+    /* The buffer belongs to the device; destroying the stream closes it. */
+    if (stream)
+        iio_stream_destroy(stream);
+    if (mask)
+        iio_channels_mask_destroy(mask);
 #else
     iio_buffer_destroy(buf);
 #endif
@@ -201,7 +203,7 @@ device_sink_impl::~device_sink_impl()
 void device_sink_impl::channel_write(const iio_channel* chn, const void* src, size_t len)
 {
 #ifdef LIBIIO_V1
-    const iio_channels_mask* hw_mask = iio_buffer_get_channels_mask(buf);
+    const iio_channels_mask* hw_mask = mask;
     uintptr_t dst_ptr, src_ptr = (uintptr_t)src, end = src_ptr + len;
     unsigned int length = iio_channel_get_data_format(chn)->length / 8;
     uintptr_t buf_end = (uintptr_t)iio_block_end(iioblock);
