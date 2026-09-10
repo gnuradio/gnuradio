@@ -174,10 +174,16 @@ void device_source_impl::set_buffer_size(unsigned int _buffer_size)
     if (buf && this->buffer_size != _buffer_size) {
 #ifdef LIBIIO_V1
         iio_stream_destroy(stream);
-        iio_channels_mask_destroy(mask);
+        stream = NULL;
 
-        int channels_count = iio_device_get_channels_count(dev);
-        mask = iio_create_channels_mask(channels_count);
+        /* Destroying the stream frees the blocks it owns, including the one
+         * work() is holding, so drop it and make work() fetch a fresh one.
+         * The channels mask is kept: it carries the enabled channels chosen
+         * when the block was constructed, and a newly created mask would have
+         * none of them, which iio_buffer_open() rejects. */
+        iioblock = NULL;
+        items_in_buffer = 0;
+
         buf = iio_device_get_buffer(dev, 0);
         int err = iio_err(buf);
         if (err)
