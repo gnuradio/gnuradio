@@ -38,10 +38,16 @@ protected:
     iio_stream* stream;
     const iio_block* iioblock;
     iio_channels_mask* mask;
+    /* Cyclic transfers cannot go through iio_stream_get_next_block(), which
+     * always enqueues with cyclic = false, so they drive one block directly. */
+    iio_buffer_stream* buf_stream;
+    iio_block* cyclic_block;
+    bool stream_started;
 #endif
     std::vector<iio_channel*> channel_list;
     unsigned int interpolation;
     unsigned int buffer_size;
+    bool cyclic;
     bool destroy_ctx;
     pmt::pmt_t d_len_tag_key;
     uint16_t override_tagged_input_channels = 0;
