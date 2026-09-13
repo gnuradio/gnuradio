@@ -60,7 +60,6 @@ option(ENABLE_CTRLPORT_THRIFT "Enable ControlPort Thrift support" ${THRIFT_FOUND
 if(ENABLE_CTRLPORT_THRIFT)
     # ensure we have thrift, loudly, since it is enabled
     gr_find_package(THRIFT ${GR_THRIFT_MIN_VERSION} REQUIRED)
-    set(THRIFT_BIN ${Thrift_INCLUDE_DIR}/../bin/thrift)
     set(THRIFT_HAS_THREADFACTORY_H TRUE)
     set_target_properties(Thrift::thrift
         PROPERTIES
