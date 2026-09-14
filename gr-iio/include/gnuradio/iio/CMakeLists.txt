@@ -24,3 +24,6 @@ if(libad9361_SUFFICIENT)
         FILES fmcomms2_sink.h fmcomms2_source.h
         DESTINATION ${GR_INCLUDE_DIR}/gnuradio/iio)
 endif()
+if(LIBIIO_V1)
+    install(FILES event_monitor.h DESTINATION ${GR_INCLUDE_DIR}/gnuradio/iio)
+endif()

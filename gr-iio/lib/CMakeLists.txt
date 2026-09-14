@@ -54,5 +54,6 @@ if(BUILD_SHARED_LIBS)
 endif()
 
 if(LIBIIO_V1)
+    target_sources(gnuradio-iio PRIVATE event_monitor_impl.cc)
     target_compile_definitions(gnuradio-iio PUBLIC LIBIIO_V1)
 endif()

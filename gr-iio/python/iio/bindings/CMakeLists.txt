@@ -25,6 +25,10 @@ if(${libad9361_FOUND})
         pluto_utils_python.cc)
 endif(${libad9361_FOUND})
 
+if(LIBIIO_V1)
+    list(APPEND iio_python_files event_monitor_python.cc)
+endif(LIBIIO_V1)
+
 gr_pybind_make_check_hash(iio ../../.. gr::iio "${iio_python_files}")
 
 install(
