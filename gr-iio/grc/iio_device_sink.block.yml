@@ -38,6 +38,12 @@ parameters:
     options: ['False', 'True']
     option_labels: ['False', 'True']
 
+-   id: buffer_index
+    label: Buffer index
+    dtype: int
+    default: 0
+    hide: part
+
 -   id: params
     label: Parameters
     dtype: raw
@@ -59,7 +65,7 @@ asserts:
 templates:
   imports: from gnuradio import iio
   make: |
-    iio.device_sink(${uri}, ${device}, ${channels}, ${device_phy}, ${params}, ${buffer_size}, ${interpolation} - 1, ${cyclic})
+    iio.device_sink(${uri}, ${device}, ${channels}, ${device_phy}, ${params}, ${buffer_size}, ${interpolation} - 1, ${cyclic}, ${buffer_index})
     self.${id}.set_len_tag_key(${len_tag_key})
 
 file_format: 1

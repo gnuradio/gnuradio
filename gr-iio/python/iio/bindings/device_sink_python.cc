@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(device_sink.h)                                             */
-/* BINDTOOL_HEADER_FILE_HASH(0ea102fb1e1158dd3d98e1ed56f3861e)                     */
+/* BINDTOOL_HEADER_FILE_HASH(3ab18cee1e03e4da65e4243ec0e0c229)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -48,6 +48,7 @@ void bind_device_sink(py::module& m)
              py::arg("buffer_size") = DEFAULT_BUFFER_SIZE,
              py::arg("interpolation") = 0,
              py::arg("cyclic") = false,
+             py::arg("buffer_index") = 0,
              D(device_sink, make))
 
         .def(

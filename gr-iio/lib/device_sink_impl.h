@@ -30,6 +30,15 @@ private:
     void channel_write(const iio_channel* chn, const void* src, size_t len);
     std::vector<tag_t> d_tags;
 
+    /*!
+     * \brief Open the device's hardware buffer at buffer_index.
+     *
+     * On libiio v1, buffers are pre-existing device properties fetched by
+     * index; on v0, only index 0 exists, matching the single buffer created
+     * per device.
+     */
+    iio_buffer* open_buffer(unsigned int index);
+
 protected:
     iio_context* ctx;
     iio_device *dev, *phy;
@@ -47,6 +56,7 @@ protected:
     std::vector<iio_channel*> channel_list;
     unsigned int interpolation;
     unsigned int buffer_size;
+    unsigned int buffer_index;
     bool cyclic;
     bool destroy_ctx;
     pmt::pmt_t d_len_tag_key;
@@ -61,7 +71,8 @@ public:
                      const iio_param_vec_t& params,
                      unsigned int buffer_size = DEFAULT_BUFFER_SIZE,
                      unsigned int interpolation = 0,
-                     bool cyclic = false);
+                     bool cyclic = false,
+                     unsigned int buffer_index = 0);
 
     ~device_sink_impl();
 

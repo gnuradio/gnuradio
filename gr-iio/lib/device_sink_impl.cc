@@ -28,7 +28,8 @@ device_sink::sptr device_sink::make(const std::string& uri,
                                     const iio_param_vec_t& params,
                                     unsigned int buffer_size,
                                     unsigned int interpolation,
-                                    bool cyclic)
+                                    bool cyclic,
+                                    unsigned int buffer_index)
 {
     return gnuradio::make_block_sptr<device_sink_impl>(
         device_source_impl::get_context(uri),
@@ -39,7 +40,8 @@ device_sink::sptr device_sink::make(const std::string& uri,
         params,
         buffer_size,
         interpolation,
-        cyclic);
+        cyclic,
+        buffer_index);
 }
 
 device_sink::sptr device_sink::make_from(iio_context* ctx,
@@ -49,7 +51,8 @@ device_sink::sptr device_sink::make_from(iio_context* ctx,
                                          const iio_param_vec_t& params,
                                          unsigned int buffer_size,
                                          unsigned int interpolation,
-                                         bool cyclic)
+                                         bool cyclic,
+                                         unsigned int buffer_index)
 {
     return gnuradio::make_block_sptr<device_sink_impl>(ctx,
                                                        false,
@@ -59,12 +62,40 @@ device_sink::sptr device_sink::make_from(iio_context* ctx,
                                                        params,
                                                        buffer_size,
                                                        interpolation,
-                                                       cyclic);
+                                                       cyclic,
+                                                       buffer_index);
 }
 
 void device_sink_impl::set_params(const iio_param_vec_t& params)
 {
     device_source_impl::set_params(this->phy, params);
+}
+
+iio_buffer* device_sink_impl::open_buffer(unsigned int index)
+{
+#ifdef LIBIIO_V1
+    unsigned int n = iio_device_get_buffers_count(dev);
+    if (index >= n)
+        throw std::runtime_error("Invalid buffer index " + std::to_string(index) +
+                                 ": device only has " + std::to_string(n) +
+                                 " buffer(s)");
+
+    iio_buffer* new_buf = iio_device_get_buffer(dev, index);
+    int err_code = iio_err(new_buf);
+    if (err_code)
+        throw std::runtime_error("Unable to create buffer: " + std::to_string(-err_code));
+
+    return new_buf;
+#else
+    if (index != 0)
+        throw std::runtime_error("Non-zero buffer_index requires libiio v1");
+
+    iio_buffer* new_buf = iio_device_create_buffer(dev, buffer_size, cyclic);
+    if (!new_buf)
+        throw std::runtime_error("Unable to create buffer: " + std::to_string(-errno));
+
+    return new_buf;
+#endif
 }
 
 /*
@@ -78,7 +109,8 @@ device_sink_impl::device_sink_impl(iio_context* ctx,
                                    const iio_param_vec_t& params,
                                    unsigned int buffer_size,
                                    unsigned int interpolation,
-                                   bool cyclic)
+                                   bool cyclic,
+                                   unsigned int buffer_index)
     : gr::sync_block("device_sink",
                      gr::io_signature::make(1, -1, sizeof(short)),
                      gr::io_signature::make(0, 0, 0)),
@@ -91,6 +123,7 @@ device_sink_impl::device_sink_impl(iio_context* ctx,
 #endif
       interpolation(interpolation),
       buffer_size(buffer_size),
+      buffer_index(buffer_index),
       cyclic(cyclic),
       destroy_ctx(destroy_ctx),
       d_len_tag_key(pmt::PMT_NIL)
@@ -165,11 +198,10 @@ device_sink_impl::device_sink_impl(iio_context* ctx,
 
     set_params(params);
 
+    buf = open_buffer(buffer_index);
+
 #ifdef LIBIIO_V1
-    buf = iio_device_get_buffer(dev, 0);
-    int err_code = iio_err(buf);
-    if (err_code)
-        throw std::runtime_error("Unable to create buffer: " + std::to_string(-err_code));
+    int err_code;
 
     if (cyclic) {
         /* iio_stream_get_next_block() enqueues with cyclic = false, so a cyclic
@@ -209,10 +241,6 @@ device_sink_impl::device_sink_impl(iio_context* ctx,
             throw std::runtime_error("Unable to create first stream block: " +
                                      std::to_string(-err_code));
     }
-#else
-    buf = iio_device_create_buffer(dev, buffer_size, cyclic);
-    if (!buf)
-        throw std::runtime_error("Unable to create buffer: " + std::to_string(-errno));
 #endif
 }
 

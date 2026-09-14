@@ -31,6 +31,12 @@ parameters:
     dtype: int
     default: 1
 
+-   id: buffer_index
+    label: Buffer index
+    dtype: int
+    default: 0
+    hide: part
+
 -   id: params
     label: Parameters
     dtype: raw
@@ -53,7 +59,7 @@ outputs:
 templates:
   imports: from gnuradio import iio
   make: |
-    iio.device_source(${uri}, ${device}, ${channels}, ${device_phy}, ${params}, ${buffer_size}, ${decimation} - 1)
+    iio.device_source(${uri}, ${device}, ${channels}, ${device_phy}, ${params}, ${buffer_size}, ${decimation} - 1, ${buffer_index})
     self.${id}.set_len_tag_key(${len_tag_key})
 
 file_format: 1

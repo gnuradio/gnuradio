@@ -29,7 +29,8 @@ device_source::sptr device_source::make(const std::string& uri,
                                         const std::string& device_phy,
                                         const iio_param_vec_t& params,
                                         unsigned int buffer_size,
-                                        unsigned int decimation)
+                                        unsigned int decimation,
+                                        unsigned int buffer_index)
 {
     return gnuradio::make_block_sptr<device_source_impl>(
         device_source_impl::get_context(uri),
@@ -39,7 +40,8 @@ device_source::sptr device_source::make(const std::string& uri,
         device_phy,
         params,
         buffer_size,
-        decimation);
+        decimation,
+        buffer_index);
 }
 
 device_source::sptr device_source::make_from(iio_context* ctx,
@@ -48,10 +50,18 @@ device_source::sptr device_source::make_from(iio_context* ctx,
                                              const std::string& device_phy,
                                              const iio_param_vec_t& params,
                                              unsigned int buffer_size,
-                                             unsigned int decimation)
+                                             unsigned int decimation,
+                                             unsigned int buffer_index)
 {
-    return gnuradio::make_block_sptr<device_source_impl>(
-        ctx, false, device, channels, device_phy, params, buffer_size, decimation);
+    return gnuradio::make_block_sptr<device_source_impl>(ctx,
+                                                         false,
+                                                         device,
+                                                         channels,
+                                                         device_phy,
+                                                         params,
+                                                         buffer_size,
+                                                         decimation,
+                                                         buffer_index);
 }
 
 #ifdef LIBIIO_V1
@@ -167,11 +177,43 @@ void device_source_impl::set_len_tag_key(const std::string& len_tag_key)
     }
 }
 
+iio_buffer* device_source_impl::open_buffer(unsigned int index)
+{
+#ifdef LIBIIO_V1
+    unsigned int n = iio_device_get_buffers_count(dev);
+    if (index >= n)
+        throw std::runtime_error("Invalid buffer index " + std::to_string(index) +
+                                 ": device only has " + std::to_string(n) +
+                                 " buffer(s)");
+
+    iio_buffer* new_buf = iio_device_get_buffer(dev, index);
+    int err = iio_err(new_buf);
+    if (err)
+        throw std::runtime_error("Unable to create buffer! Error code: " +
+                                 std::to_string(err));
+
+    return new_buf;
+#else
+    if (index != 0)
+        throw std::runtime_error("Non-zero buffer_index requires libiio v1");
+
+    iio_buffer* new_buf = iio_device_create_buffer(dev, buffer_size, false);
+    if (!new_buf)
+        throw std::runtime_error("Unable to create buffer!\n");
+
+    return new_buf;
+#endif
+}
+
 void device_source_impl::set_buffer_size(unsigned int _buffer_size)
 {
     std::unique_lock<std::mutex> lock(iio_mutex);
 
     if (buf && this->buffer_size != _buffer_size) {
+        /* Set the new size up front: open_buffer() uses it on the v0 path,
+         * where the buffer is created rather than fetched by index. */
+        this->buffer_size = _buffer_size;
+
 #ifdef LIBIIO_V1
         iio_stream_destroy(stream);
         stream = NULL;
@@ -184,23 +226,17 @@ void device_source_impl::set_buffer_size(unsigned int _buffer_size)
         iioblock = NULL;
         items_in_buffer = 0;
 
-        buf = iio_device_get_buffer(dev, 0);
-        int err = iio_err(buf);
-        if (err)
-            throw std::runtime_error("Unable to create buffer! Error code: " +
-                                     std::to_string(err));
+        buf = open_buffer(buffer_index);
 
         stream = iio_buffer_create_stream(buf, 4, _buffer_size, mask);
-        err = iio_err(stream);
+        int err = iio_err(stream);
         if (err)
             throw std::runtime_error("Unable to create stream! Error code: " +
                                      std::to_string(err));
 #else
         iio_buffer_destroy(buf);
 
-        buf = iio_device_create_buffer(dev, _buffer_size, false);
-        if (!buf)
-            throw std::runtime_error("Unable to create buffer!\n");
+        buf = open_buffer(buffer_index);
 #endif
     }
 
@@ -260,7 +296,8 @@ device_source_impl::device_source_impl(iio_context* ctx,
                                        const std::string& device_phy,
                                        const iio_param_vec_t& params,
                                        unsigned int buffer_size,
-                                       unsigned int decimation)
+                                       unsigned int decimation,
+                                       unsigned int buffer_index)
     : gr::sync_block("device_source",
                      gr::io_signature::make(0, 0, 0),
                      gr::io_signature::make(1, -1, sizeof(short))),
@@ -276,6 +313,7 @@ device_source_impl::device_source_impl(iio_context* ctx,
 #endif
       buffer_size(buffer_size),
       decimation(decimation),
+      buffer_index(buffer_index),
       destroy_ctx(destroy_ctx),
       thread_stopped(false)
 {
@@ -492,23 +530,14 @@ bool device_source_impl::start()
     byte_offset = 0;
     thread_stopped = false;
 
-#ifdef LIBIIO_V1
-    buf = iio_device_get_buffer(dev, 0);
-    int res = iio_err(buf);
-    if (res) {
-        throw std::runtime_error("Unable to create buffer! " + std::to_string(res));
-    }
+    buf = open_buffer(buffer_index);
 
+#ifdef LIBIIO_V1
     /* buffer_size is a sample count, which is what create_stream expects. */
     stream = iio_buffer_create_stream(buf, 4, this->buffer_size, mask);
-    res = iio_err(stream);
+    int res = iio_err(stream);
     if (res) {
         throw std::runtime_error("Unable to create stream! " + std::to_string(res));
-    }
-#else
-    buf = iio_device_create_buffer(dev, buffer_size, false);
-    if (!buf) {
-        throw std::runtime_error("Unable to create buffer!\n");
     }
 #endif
 
