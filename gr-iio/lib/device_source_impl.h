@@ -58,6 +58,15 @@ private:
 
     void refill_thread();
 
+    /*!
+     * \brief Open the device's hardware buffer at buffer_index.
+     *
+     * On libiio v1, buffers are pre-existing device properties fetched by
+     * index; on v0, only index 0 exists, matching the single buffer created
+     * per device.
+     */
+    iio_buffer* open_buffer(unsigned int index);
+
 #ifdef LIBIIO_V1
     static int device_identify_filename(const struct iio_device* dev,
                                         const char* filename,
@@ -77,6 +86,7 @@ protected:
     std::vector<iio_channel*> channel_list;
     unsigned int buffer_size;
     unsigned int decimation;
+    unsigned int buffer_index;
     bool destroy_ctx;
     volatile bool thread_stopped;
     uint16_t override_tagged_output_channels = 0;
@@ -90,7 +100,8 @@ public:
                        const std::string& device_phy,
                        const iio_param_vec_t& params,
                        unsigned int buffer_size = DEFAULT_BUFFER_SIZE,
-                       unsigned int decimation = 0);
+                       unsigned int decimation = 0,
+                       unsigned int buffer_index = 0);
 
     ~device_source_impl();
 
