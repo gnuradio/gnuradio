@@ -69,11 +69,11 @@ outputs:
 -   label: out_hdr
     domain: stream
     dtype: ${ type }
-    vlen: '${ items_per_symbol if output_symbols else 1 }'
+    vlen: '${ items_per_symbol if output_symbols=="True" else 1 }'
 -   label: out_payload
     domain: stream
     dtype: ${ type }
-    vlen: '${ items_per_symbol if output_symbols else 1 }'
+    vlen: '${ items_per_symbol if output_symbols=="True" else 1 }'
 
 templates:
     imports: from gnuradio import digital
