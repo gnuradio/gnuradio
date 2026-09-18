@@ -24,7 +24,7 @@ MarkupSafe==2.1.4
 matplotlib==3.10.6
 matplotlib-inline==0.1.7
 numpy==1.26.4
-packaging==24.0
+packaging==24.2
 parso==0.8.4
 patch-ng==1.18.1
 pefile==2023.2.7
@@ -33,7 +33,7 @@ prompt_toolkit==3.0.48
 pure_eval==0.2.3
 pygccxml==2.4.0
 Pygments==2.18.0
-PyQt-builder==1.16.4
+PyQt-builder==1.19.1 # >=1.19 required by PyQt6 src
 PyQt6==6.11.0
 PyQt6_sip==13.11.1
 pyqtgraph==0.13.7
@@ -47,8 +47,8 @@ referencing==0.33.0
 requests==2.31.0
 rpds-py==0.18.0
 scipy==1.12.0
-setuptools==75.5.0
-sip==6.8.6
+setuptools==75.8.2
+sip==6.15.3         # >=6.15 required by PyQt6 src
 six==1.16.0
 stack-data==0.6.3
 traitlets==5.14.3
