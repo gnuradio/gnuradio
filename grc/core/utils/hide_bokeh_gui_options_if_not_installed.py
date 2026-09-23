@@ -10,7 +10,7 @@ def hide_bokeh_gui_options_if_not_installed(options_blk):
         import bokehgui
     except ImportError:
         for param in options_blk.parameters_data:
-            if param['id'] == 'generate_options':
+            if param['id'] == 'generate_options' and 'bokeh_gui' in param['options']:
                 ind = param['options'].index('bokeh_gui')
                 del param['options'][ind]
                 del param['option_labels'][ind]
