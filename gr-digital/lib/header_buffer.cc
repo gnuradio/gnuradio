@@ -9,7 +9,6 @@
 
 #include <gnuradio/digital/header_buffer.h>
 #include <volk/volk.h>
-#include <algorithm>
 #include <cstring>
 #include <stdexcept>
 
@@ -75,7 +74,7 @@ void header_buffer::add_field64(uint64_t data, int len, bool bs)
 void header_buffer::insert_bit(int bit) { d_input.push_back(bit); }
 
 template <class T>
-T header_buffer::extract_field(int pos, int len, bool bs, bool lsb_first)
+T header_buffer::extract_field(int pos, int len, bool bs, bool lsb_first) const
 {
     if (len > 8 * (int)sizeof(T)) {
         throw std::runtime_error(
@@ -84,7 +83,7 @@ T header_buffer::extract_field(int pos, int len, bool bs, bool lsb_first)
     }
 
     T field = 0;
-    std::vector<bool>::iterator itr;
+    std::vector<bool>::const_iterator itr;
     if (lsb_first) {
         for (itr = d_input.begin() + pos + len - 1; itr >= d_input.begin() + pos; itr--) {
             field = (field << 1) | ((*itr) & 0x1);
@@ -98,10 +97,10 @@ T header_buffer::extract_field(int pos, int len, bool bs, bool lsb_first)
     return field;
 }
 
-template DIGITAL_API uint8_t header_buffer::extract_field(int, int, bool, bool);
-template DIGITAL_API uint16_t header_buffer::extract_field(int, int, bool, bool);
-template DIGITAL_API uint32_t header_buffer::extract_field(int, int, bool, bool);
-template DIGITAL_API uint64_t header_buffer::extract_field(int, int, bool, bool);
+template DIGITAL_API uint8_t header_buffer::extract_field(int, int, bool, bool) const;
+template DIGITAL_API uint16_t header_buffer::extract_field(int, int, bool, bool) const;
+template DIGITAL_API uint32_t header_buffer::extract_field(int, int, bool, bool) const;
+template DIGITAL_API uint64_t header_buffer::extract_field(int, int, bool, bool) const;
 
 } /* namespace digital */
 } /* namespace gr */

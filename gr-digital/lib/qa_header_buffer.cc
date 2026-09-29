@@ -334,7 +334,7 @@ BOOST_AUTO_TEST_CASE(test_extract_many)
     uint8_t x4 = header.extract_field8(7, 5);
     uint8_t x5 = header.extract_field8(7, 5, false, true);
     uint8_t x6 = header.extract_field<uint8_t>(7, 5, false, true);
-    BOOST_CHECK_EXCEPTION(header.extract_field<uint16_t>(7, 20, false, true),
+    BOOST_CHECK_EXCEPTION((void)header.extract_field<uint16_t>(7, 20, false, true),
                           std::runtime_error,
                           check_error_msg);
 
