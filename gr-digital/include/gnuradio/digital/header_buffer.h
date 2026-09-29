@@ -262,10 +262,11 @@ public:
      * \param lsb_first Set to 'true' to read field encoded as least significant bit first
      */
     template <class T>
+    [[nodiscard]]
     T extract_field(int pos,
                     int len = 8 * sizeof(T),
                     bool bs = false,
-                    bool lsb_first = false);
+                    bool lsb_first = false) const;
 
     /*!
      * Returns up to an 8-bit field in the packet header.
@@ -275,7 +276,9 @@ public:
      * \param bs Set to 'true' to byte swap the data.
      * \param lsb_first Set to 'true' to read field encoded as least significant bit first
      */
-    uint8_t extract_field8(int pos, int len = 8, bool bs = false, bool lsb_first = false)
+    [[nodiscard]]
+    uint8_t
+    extract_field8(int pos, int len = 8, bool bs = false, bool lsb_first = false) const
     {
         return extract_field<uint8_t>(pos, len, bs, lsb_first);
     };
@@ -288,8 +291,9 @@ public:
      * \param bs Set to 'true' to byte swap the data.
      * \param lsb_first Set to 'true' to read field encoded as least significant bit first
      */
+    [[nodiscard]]
     uint16_t
-    extract_field16(int pos, int len = 16, bool bs = false, bool lsb_first = false)
+    extract_field16(int pos, int len = 16, bool bs = false, bool lsb_first = false) const
     {
         return extract_field<uint16_t>(pos, len, bs, lsb_first);
     };
@@ -302,8 +306,9 @@ public:
      * \param bs Set to 'true' to byte swap the data.
      * \param lsb_first Set to 'true' to read field encoded as least significant bit first
      */
+    [[nodiscard]]
     uint32_t
-    extract_field32(int pos, int len = 32, bool bs = false, bool lsb_first = false)
+    extract_field32(int pos, int len = 32, bool bs = false, bool lsb_first = false) const
     {
         return extract_field<uint32_t>(pos, len, bs, lsb_first);
     };
@@ -316,8 +321,9 @@ public:
      * \param bs Set to 'true' to byte swap the data.
      * \param lsb_first Set to 'true' to read field encoded as least significant bit first
      */
+    [[nodiscard]]
     uint64_t
-    extract_field64(int pos, int len = 64, bool bs = false, bool lsb_first = false)
+    extract_field64(int pos, int len = 64, bool bs = false, bool lsb_first = false) const
     {
         return extract_field<uint64_t>(pos, len, bs, lsb_first);
     };
