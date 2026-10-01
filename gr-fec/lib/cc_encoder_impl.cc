@@ -8,10 +8,6 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "cc_encoder_impl.h"
 #include <gnuradio/fec/cc_common.h>
 #include <gnuradio/fec/generic_encoder.h>

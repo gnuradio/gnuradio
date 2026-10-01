@@ -6,10 +6,6 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "sink_impl.h"
 #include <SoapySDR/Errors.hpp>
 #include <iostream>

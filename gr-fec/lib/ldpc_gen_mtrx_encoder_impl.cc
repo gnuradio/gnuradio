@@ -6,10 +6,6 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "ldpc_gen_mtrx_encoder_impl.h"
 
 namespace gr {

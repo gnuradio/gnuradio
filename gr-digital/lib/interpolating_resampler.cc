@@ -8,10 +8,6 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "interpolating_resampler.h"
 #include <gnuradio/math.h>
 #include <deque>

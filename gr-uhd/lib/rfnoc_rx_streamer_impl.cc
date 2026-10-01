@@ -6,10 +6,6 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "gr_uhd_common.h"
 #include "rfnoc_rx_streamer_impl.h"
 #include <gnuradio/high_res_timer.h>

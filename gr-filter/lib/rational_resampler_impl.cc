@@ -8,10 +8,6 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "rational_resampler_impl.h"
 
 /* ensure that tweakme.h is included before the bundled spdlog/fmt header, see

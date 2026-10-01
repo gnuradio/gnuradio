@@ -8,10 +8,6 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include <gnuradio/filter/pfb_arb_resampler.h>
 #include <gnuradio/logger.h>
 #include <gnuradio/math.h>

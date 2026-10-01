@@ -8,10 +8,6 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
 #include <gnuradio/blocks/head.h>
 #include <gnuradio/blocks/nop.h>
 #include <gnuradio/blocks/null_sink.h>

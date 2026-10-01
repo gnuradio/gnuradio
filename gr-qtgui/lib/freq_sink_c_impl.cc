@@ -8,10 +8,6 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
 #include "freq_sink_c_impl.h"
 
 #include <gnuradio/io_signature.h>

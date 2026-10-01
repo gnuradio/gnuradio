@@ -8,14 +8,10 @@
  *
  */
 
-#include <cstring>
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "wavfile_source_impl.h"
 #include <gnuradio/io_signature.h>
 #include <sys/types.h>
+#include <cstring>
 #include <stdexcept>
 
 namespace gr {

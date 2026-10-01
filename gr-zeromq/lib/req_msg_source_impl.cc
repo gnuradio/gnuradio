@@ -8,10 +8,6 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "req_msg_source_impl.h"
 #include "tag_headers.h"
 #include <gnuradio/io_signature.h>

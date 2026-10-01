@@ -9,10 +9,6 @@
  */
 
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
 #include "fastnoise_source_impl.h"
 #include <gnuradio/io_signature.h>
 #include <gnuradio/xoroshiro128p.h>

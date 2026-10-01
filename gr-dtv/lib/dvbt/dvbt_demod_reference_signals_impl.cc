@@ -6,10 +6,6 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "dvbt_demod_reference_signals_impl.h"
 #include <gnuradio/io_signature.h>
 

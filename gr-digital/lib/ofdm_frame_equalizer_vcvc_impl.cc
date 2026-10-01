@@ -7,10 +7,6 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "ofdm_frame_equalizer_vcvc_impl.h"
 #include <gnuradio/expj.h>
 #include <gnuradio/io_signature.h>

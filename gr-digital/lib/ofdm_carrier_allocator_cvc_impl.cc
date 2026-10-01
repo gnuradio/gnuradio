@@ -8,10 +8,6 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "ofdm_carrier_allocator_cvc_impl.h"
 #include <gnuradio/io_signature.h>
 

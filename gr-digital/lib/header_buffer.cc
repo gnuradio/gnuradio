@@ -7,10 +7,6 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include <gnuradio/digital/header_buffer.h>
 #include <volk/volk.h>
 #include <algorithm>

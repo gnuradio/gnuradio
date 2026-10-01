@@ -8,10 +8,6 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "host_buffer_copy_impl.h"
 #include <gnuradio/host_buffer.h>
 #include <gnuradio/io_signature.h>

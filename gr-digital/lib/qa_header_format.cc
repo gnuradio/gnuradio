@@ -8,10 +8,6 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
 #include <gnuradio/attributes.h>
 #include <gnuradio/blocks/unpack_k_bits.h>
 #include <gnuradio/digital/header_format_counter.h>

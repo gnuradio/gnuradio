@@ -9,13 +9,9 @@
  *
  */
 
-#include <spdlog/common.h>
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include <gnuradio/logger.h>
 #include <gnuradio/prefs.h>
+#include <spdlog/common.h>
 
 #include <spdlog/async.h>
 #include <spdlog/sinks/basic_file_sink.h>

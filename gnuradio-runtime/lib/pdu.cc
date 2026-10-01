@@ -6,10 +6,6 @@
  */
 
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include <gnuradio/gr_complex.h>
 #include <gnuradio/pdu.h>
 #include <pmt/pmt.h>

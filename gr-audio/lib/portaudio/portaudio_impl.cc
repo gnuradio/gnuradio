@@ -8,10 +8,6 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "portaudio_impl.h"
 #include <portaudio.h>
 #include <string_view>

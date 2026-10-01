@@ -8,10 +8,6 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "streams_to_stream_impl.h"
 #include <gnuradio/io_signature.h>
 

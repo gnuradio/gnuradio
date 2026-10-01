@@ -8,10 +8,6 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "hier_block2_detail.h"
 #include <gnuradio/flowgraph.h>
 #include <gnuradio/hier_block2.h>

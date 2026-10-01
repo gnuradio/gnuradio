@@ -8,10 +8,6 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "quadrature_demod_cf_impl.h"
 #include <gnuradio/io_signature.h>
 #include <gnuradio/math.h>

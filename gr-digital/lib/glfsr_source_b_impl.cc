@@ -7,10 +7,6 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
 #include "glfsr_source_b_impl.h"
 #include <gnuradio/io_signature.h>
 #include <stdexcept>

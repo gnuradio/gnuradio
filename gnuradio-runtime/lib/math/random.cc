@@ -23,14 +23,10 @@
  *
  */
 
-#include <cstdint>
-#include <limits>
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
 #include <gnuradio/math.h>
 #include <gnuradio/random.h>
+#include <cstdint>
+#include <limits>
 
 #include <chrono>
 #include <cmath>

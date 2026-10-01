@@ -8,10 +8,6 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
 #include "pmt_int.h"
 #include <pmt/pmt.h>
 #include <iostream>

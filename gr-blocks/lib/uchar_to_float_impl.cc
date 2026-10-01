@@ -8,10 +8,6 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "uchar_array_to_float.h"
 #include "uchar_to_float_impl.h"
 #include <gnuradio/io_signature.h>

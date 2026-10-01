@@ -8,10 +8,6 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "adaptive_algorithms.h"
 #include "decision_feedback_equalizer_impl.h"
 #include <gnuradio/io_signature.h>

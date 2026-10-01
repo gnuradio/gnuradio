@@ -8,6 +8,10 @@
  *
  */
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include "usrp_block_impl.h"
 #include "gnuradio/uhd/usrp_block.h"
 #include <chrono>

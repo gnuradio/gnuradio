@@ -6,10 +6,6 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "ldpc_bit_flip_decoder_impl.h"
 #include <volk/volk.h>
 #include <cmath>

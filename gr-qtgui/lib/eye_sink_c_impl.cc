@@ -7,10 +7,6 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "eye_sink_c_impl.h"
 
 #include <gnuradio/fft/fft.h>

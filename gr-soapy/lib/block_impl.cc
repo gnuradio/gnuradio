@@ -6,10 +6,6 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "block_impl.h"
 #include "setting_string_conversion.h"
 #include <gnuradio/io_signature.h>
