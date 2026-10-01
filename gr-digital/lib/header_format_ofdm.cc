@@ -1,5 +1,6 @@
 /* -*- c++ -*- */
 /* Copyright 2016 Free Software Foundation, Inc.
+ * Copyright 2026 Marcus Müller
  *
  * This file is part of GNU Radio
  *
@@ -14,8 +15,11 @@
 #include <gnuradio/digital/header_buffer.h>
 #include <gnuradio/digital/header_format_ofdm.h>
 #include <gnuradio/digital/lfsr.h>
-#include <volk/volk.h>
-#include <cstring>
+
+#include <string_view>
+#include <numeric>
+#include <optional>
+#include <stdexcept>
 
 namespace gr {
 namespace digital {
@@ -40,6 +44,45 @@ header_format_ofdm::make(const std::vector<std::vector<int>>& occupied_carriers,
                                                            scramble_header));
 }
 
+namespace {
+/*! \brief sum the sizes of all containers in the container
+ * \p cont the container of containers
+ * \p howmany after how many containers from the supercontainer to stop counting? pass
+ * empty optional to count every container.
+ */
+template <typename container>
+[[nodiscard]]
+size_t count_subcarriers(const container& cont,
+                         std::string_view message,
+                         std::optional<size_t> howmany = std::nullopt)
+{
+    auto sum = std::accumulate(
+        cont.begin(),
+        howmany.has_value() ? cont.begin() + howmany.value() : cont.end(),
+        size_t{ 0 },
+        [](size_t partial_sum, const auto& vec) { return partial_sum + vec.size(); });
+    if (sum < 1) {
+        throw std::invalid_argument(fmt::format("Not a single {} supplied.", message));
+    }
+    return sum;
+}
+
+//! create a sensible scrambler
+std::vector<uint8_t> create_scrambler_reg(size_t size, int bits_per_header_sym)
+{
+    std::vector<uint8_t> vec(size, 0);
+    // These are just random values which already have OK PAPR:
+    gr::digital::lfsr shift_reg(0x8a, 0x6f, 7);
+    for (size_t i = 0; i < size / 8; i++) {
+        for (int k = 0; k < bits_per_header_sym; k++) {
+            vec[i] ^= shift_reg.next_bit() << k;
+        }
+    }
+    return vec;
+}
+} // namespace
+
+
 header_format_ofdm::header_format_ofdm(
     const std::vector<std::vector<int>>& occupied_carriers,
     int n_syms,
@@ -52,28 +95,17 @@ header_format_ofdm::header_format_ofdm(
     : header_format_crc(len_key_name, num_key_name),
       d_frame_key_name(pmt::intern(frame_key_name)),
       d_occupied_carriers(occupied_carriers),
-      d_bits_per_payload_sym(bits_per_payload_sym)
+      d_syms_per_set(count_subcarriers(d_occupied_carriers, "occupied carrier")),
+      d_bits_per_payload_sym(bits_per_payload_sym),
+      d_header_len(
+          count_subcarriers(d_occupied_carriers, "occupied carrier in symbols", n_syms)),
+      d_scramble_mask(scramble_header
+                          ? create_scrambler_reg(header_nbits(), bits_per_header_sym)
+                          : std::vector<uint8_t>{})
 {
-    d_header_len = 0;
-    for (int i = 0; i < n_syms; i++) {
-        d_header_len += occupied_carriers[i].size();
-    }
-
-    d_syms_per_set = 0;
-    for (unsigned i = 0; i < d_occupied_carriers.size(); i++) {
-        d_syms_per_set += d_occupied_carriers[i].size();
-    }
-
-    // Init scrambler mask
-    d_scramble_mask = std::vector<uint8_t>(header_nbits(), 0);
-    if (scramble_header) {
-        // These are just random values which already have OK PAPR:
-        gr::digital::lfsr shift_reg(0x8a, 0x6f, 7);
-        for (size_t i = 0; i < header_nbytes(); i++) {
-            for (int k = 0; k < bits_per_header_sym; k++) {
-                d_scramble_mask[i] ^= shift_reg.next_bit() << k;
-            }
-        }
+    if (bits_per_payload_sym < 1) {
+        throw std::invalid_argument(
+            "bits per payload symbol needs to be strictly positive.");
     }
 }
 
@@ -88,8 +120,10 @@ bool header_format_ofdm::format(int nbytes_in,
 
     size_t len;
     uint8_t* out = pmt::u8vector_writable_elements(output, len);
-    for (size_t i = 0; i < len; i++) {
-        out[i] ^= d_scramble_mask[i];
+    if (!d_scramble_mask.empty()) {
+        for (size_t i = 0; i < len; i++) {
+            out[i] ^= d_scramble_mask[i];
+        }
     }
 
     return ret_val;
@@ -103,9 +137,13 @@ bool header_format_ofdm::parse(int nbits_in,
     while (nbits_processed <= nbits_in) {
         // Remove scrambing and fill up header buffer. Scramble mask has 8 significant
         // bits per byte, while input has only one
-        d_hdr_reg.insert_bit(
-            ((d_scramble_mask[nbits_processed / 8] >> nbits_processed % 8) & 0x01) ^
-            input[nbits_processed]);
+        if (!d_scramble_mask.empty()) {
+            d_hdr_reg.insert_bit(
+                ((d_scramble_mask[nbits_processed / 8] >> nbits_processed % 8) & 0x01) ^
+                input[nbits_processed]);
+        } else {
+            d_hdr_reg.insert_bit(input[nbits_processed]);
+        }
         nbits_processed++;
         if (d_hdr_reg.length() == header_nbits()) {
             if (header_ok()) {
@@ -129,30 +167,36 @@ size_t header_format_ofdm::header_nbits() const { return d_header_len; }
 
 int header_format_ofdm::header_payload()
 {
-    uint16_t pktlen = d_hdr_reg.extract_field16(0, 12, false, true);
-    uint16_t pktnum = d_hdr_reg.extract_field16(12, 12, false, true);
-
     // Convert num bytes to num complex symbols in payload
-    pktlen *= 8;
-    uint16_t pldlen = pktlen / d_bits_per_payload_sym;
-    if (pktlen % d_bits_per_payload_sym) {
-        pldlen++;
+    const uint16_t pktlen = d_hdr_reg.extract_field16(0, 12, false, true) * 8;
+    if (!pktlen) {
+        d_logger->debug("Packet with zero pktlen");
     }
+
+
+    const uint16_t pldlen =
+        pktlen / d_bits_per_payload_sym + (pktlen % d_bits_per_payload_sym ? 1 : 0);
 
     // frame_len = # of OFDM symbols in this frame
-    int framelen = pldlen / d_syms_per_set;
-    int k = 0;
-    int i = framelen * d_syms_per_set;
+    size_t framelen = pldlen / d_syms_per_set;
+    size_t k = 0;
+    size_t i = framelen * d_syms_per_set;
     while (i < pldlen) {
+        if (k >= d_occupied_carriers.size()) {
+            d_logger->debug("run to end of occupied carrier vector. Wrapping around.");
+            k = 0;
+        }
         framelen++;
-        // i += d_occupied_carriers[k++].size();
-        i += d_occupied_carriers[k].size();
+        i += d_occupied_carriers[k++].size();
     }
 
-    d_info = pmt::make_dict();
-    d_info = pmt::dict_add(d_info, d_len_key_name, pmt::from_long(pldlen));
-    d_info = pmt::dict_add(d_info, d_num_key_name, pmt::from_long(pktnum));
-    d_info = pmt::dict_add(d_info, d_frame_key_name, pmt::from_long(framelen));
+    auto info = pmt::make_dict();
+    info = pmt::dict_add(info,
+                         d_num_key_name,
+                         pmt::from_long(d_hdr_reg.extract_field16(12, 12, false, true)));
+    info = pmt::dict_add(info, d_len_key_name, pmt::from_long(pldlen));
+    info = pmt::dict_add(info, d_frame_key_name, pmt::from_long(framelen));
+    d_info = std::move(info);
     return static_cast<int>(pldlen);
 }
 
