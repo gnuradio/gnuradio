@@ -7,10 +7,6 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include <gnuradio/digital/header_buffer.h>
 #include <gnuradio/digital/header_format_counter.h>
 #include <gnuradio/math.h>
@@ -69,9 +65,10 @@ size_t header_format_counter::header_nbits() const
 bool header_format_counter::header_ok()
 {
     // confirm that two copies of header info are identical
-    uint16_t len0 = d_hdr_reg.extract_field16(0);
-    uint16_t len1 = d_hdr_reg.extract_field16(16);
-    return (len0 ^ len1) == 0;
+    const uint16_t len0 = d_hdr_reg.extract_field16(0);
+    const uint16_t len1 = d_hdr_reg.extract_field16(16);
+    const uint16_t bps = d_hdr_reg.extract_field16(32);
+    return bps && ((len0 ^ len1) == 0);
 }
 
 int header_format_counter::header_payload()
@@ -79,6 +76,10 @@ int header_format_counter::header_payload()
     uint16_t len = d_hdr_reg.extract_field16(0);
     uint16_t bps = d_hdr_reg.extract_field16(32);
     uint16_t counter = d_hdr_reg.extract_field16(48);
+    if (!bps) {
+        d_logger->warn("Encountered zero-bps packet. Discarding.");
+        return 0;
+    }
 
     d_bps = bps;
 
