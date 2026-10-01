@@ -1,5 +1,6 @@
 /* -*- c++ -*- */
 /* Copyright 2012 Free Software Foundation, Inc.
+ * Copyright 2026 Marcus Müller
  *
  * This file is part of GNU Radio
  *
@@ -7,11 +8,8 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include <gnuradio/digital/packet_header_default.h>
+#include <cstdint>
 #include <cstring>
 
 namespace gr {
@@ -26,7 +24,6 @@ packet_header_default::sptr packet_header_default::make(long header_len,
         new packet_header_default(header_len, len_tag_key, num_tag_key, bits_per_byte));
 }
 
-const unsigned MASK_LUT[9] = { 0x00, 0x01, 0x03, 0x07, 0x0F, 0x1F, 0x2F, 0x7F, 0xFF };
 packet_header_default::packet_header_default(long header_len,
                                              const std::string& len_tag_key,
                                              const std::string& num_tag_key,
@@ -42,7 +39,10 @@ packet_header_default::packet_header_default(long header_len,
     if (d_bits_per_byte < 1 || d_bits_per_byte > 8) {
         throw std::invalid_argument("bits_per_byte must be in [1, 8]");
     }
-    d_mask = MASK_LUT[d_bits_per_byte];
+    /* Formerly used MASK_LUT was incorrect for d_bits_per_byte = 6; simply use the actual
+     * binary mask instead. Seems simpler to begin with…
+     */
+    d_mask = (1 << d_bits_per_byte) - 1;
 }
 
 packet_header_default::~packet_header_default() {}
@@ -78,8 +78,9 @@ bool packet_header_default::header_formatter(long packet_len,
 bool packet_header_default::header_parser(const unsigned char* in,
                                           std::vector<tag_t>& tags)
 {
-    unsigned header_len = 0;
-    unsigned header_num = 0;
+    // enough to hold 12 bits of header length
+    uint16_t header_len = 0;
+    uint16_t header_num = 0;
     tag_t tag;
 
     int k = 0; // Position in "in"
