@@ -102,8 +102,8 @@ protected:
     int d_syms_per_set;      //!< Helper variable: Total number of elements in
                              //!< d_occupied_carriers
     int d_bits_per_payload_sym;
-    std::vector<uint8_t> d_scramble_mask; //!< Bits are xor'd with this before tx'ing
     size_t d_header_len;
+    std::vector<uint8_t> d_scramble_mask; //!< Bits are xor'd with this before tx'ing
 
     /*! Get info from the header; return payload length and package
      *  rest of data in d_info dictionary.
