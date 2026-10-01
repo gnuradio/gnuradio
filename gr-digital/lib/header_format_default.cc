@@ -11,6 +11,7 @@
 #include <gnuradio/math.h>
 #include <volk/volk_alloc.hh>
 #include <cstring>
+#include <stdexcept>
 
 namespace gr {
 namespace digital {
@@ -36,6 +37,9 @@ header_format_default::header_format_default(const std::string& access_code,
 {
     if (!set_access_code(access_code)) {
         throw std::runtime_error("header_format_default: Setting access code failed");
+    }
+    if (d_bps < 1) {
+        throw std::invalid_argument("Need strictly positive bits-per-symbol");
     }
 
     set_threshold(threshold);

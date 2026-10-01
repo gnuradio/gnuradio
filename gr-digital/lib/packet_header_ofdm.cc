@@ -1,5 +1,6 @@
 /* -*- c++ -*- */
 /* Copyright 2012 Free Software Foundation, Inc.
+ * Copyright 2026 Marcus Müller
  *
  * This file is part of GNU Radio
  *
@@ -9,6 +10,8 @@
 
 #include <gnuradio/digital/lfsr.h>
 #include <gnuradio/digital/packet_header_ofdm.h>
+
+#include <stdexcept>
 
 namespace gr {
 namespace digital {
@@ -63,6 +66,9 @@ packet_header_ofdm::packet_header_ofdm(
       d_bits_per_payload_sym(bits_per_payload_sym),
       d_scramble_mask(d_header_len, 0)
 {
+    if (d_bits_per_payload_sym < 1) {
+        throw std::invalid_argument("needs strictly positive bits per payload symbol");
+    }
     // Init scrambler mask
     if (scramble_header) {
         // These are just random values which already have OK PAPR:
