@@ -8,10 +8,6 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
 #include <gnuradio/fft/fft.h>
 #include <gnuradio/filter/mmse_fir_interpolator_cc.h>
 #include <gnuradio/math.h>

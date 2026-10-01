@@ -8,9 +8,12 @@
  *
  */
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include "fading_model_impl.h"
 #include <gnuradio/io_signature.h>
-
 
 namespace gr {
 namespace channels {

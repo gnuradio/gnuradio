@@ -8,10 +8,6 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
 #include <gnuradio/filter/firdes.h>
 #include <gnuradio/math.h>
 #include <stdexcept>

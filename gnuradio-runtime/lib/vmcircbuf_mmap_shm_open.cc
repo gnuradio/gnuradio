@@ -8,10 +8,6 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "vmcircbuf_mmap_shm_open.h"
 #include <fcntl.h>
 #include <unistd.h>

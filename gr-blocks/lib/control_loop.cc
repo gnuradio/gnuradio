@@ -8,10 +8,6 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include <gnuradio/blocks/control_loop.h>
 #include <gnuradio/math.h>
 #include <stdexcept>

@@ -8,10 +8,6 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "repetition_decoder_impl.h"
 #include <volk/volk.h>
 #include <cmath>

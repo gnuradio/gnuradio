@@ -8,10 +8,6 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
 #include <gnuradio/hier_block2.h>
 #include <gnuradio/io_signature.h>
 #include <boost/test/unit_test.hpp>

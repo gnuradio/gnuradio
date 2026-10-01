@@ -6,10 +6,6 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "atsc_pad_impl.h"
 #include "gnuradio/dtv/atsc_consts.h"
 

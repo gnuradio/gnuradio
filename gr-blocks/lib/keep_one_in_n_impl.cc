@@ -8,10 +8,6 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "keep_one_in_n_impl.h"
 #include <gnuradio/io_signature.h>
 

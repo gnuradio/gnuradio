@@ -8,10 +8,6 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "pfb_decimator_ccf_impl.h"
 #include <gnuradio/expj.h>
 #include <gnuradio/io_signature.h>

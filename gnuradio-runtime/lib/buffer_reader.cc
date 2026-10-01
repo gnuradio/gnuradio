@@ -8,9 +8,6 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
 #include <gnuradio/block.h>
 #include <gnuradio/buffer.h>
 #include <gnuradio/buffer_reader.h>

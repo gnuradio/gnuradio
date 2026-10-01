@@ -8,10 +8,6 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
 #include "pmt/pmt_serial_tags.h"
 #include <pmt/pmt.h>
 #include <cstdint>

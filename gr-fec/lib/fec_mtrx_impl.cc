@@ -6,10 +6,6 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "fec_mtrx_impl.h"
 #include <algorithm>
 #include <cmath>

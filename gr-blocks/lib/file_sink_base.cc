@@ -9,10 +9,6 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include <gnuradio/blocks/file_sink_base.h>
 #include <gnuradio/logger.h>
 #include <gnuradio/thread/thread.h>

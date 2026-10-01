@@ -8,10 +8,6 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "ofdm_chanest_vcvc_impl.h"
 #include <gnuradio/io_signature.h>
 

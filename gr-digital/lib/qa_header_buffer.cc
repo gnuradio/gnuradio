@@ -8,10 +8,6 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
 #include <gnuradio/attributes.h>
 #include <gnuradio/digital/header_buffer.h>
 #include <volk/volk_alloc.hh>

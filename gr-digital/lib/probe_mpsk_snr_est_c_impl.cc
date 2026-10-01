@@ -8,10 +8,6 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
 #include "probe_mpsk_snr_est_c_impl.h"
 #include <gnuradio/io_signature.h>
 #include <cstdio>

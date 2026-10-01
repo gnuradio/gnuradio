@@ -8,10 +8,6 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "correlate_access_code_bb_impl.h"
 #include <gnuradio/blocks/count_bits.h>
 #include <gnuradio/io_signature.h>

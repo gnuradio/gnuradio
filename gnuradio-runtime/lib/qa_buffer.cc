@@ -8,10 +8,6 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
 
 #include <gnuradio/buffer.h>
 #include <gnuradio/buffer_double_mapped.h>

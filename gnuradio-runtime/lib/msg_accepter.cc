@@ -8,10 +8,6 @@
  *
  */
 
-#if HAVE_CONFIG_H
-#include <config.h>
-#endif
-
 #include <gnuradio/block.h>
 #include <gnuradio/block_detail.h>
 #include <gnuradio/hier_block2.h>

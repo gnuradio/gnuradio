@@ -6,10 +6,6 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "dvbs2_physical_cc_impl.h"
 #include <gnuradio/io_signature.h>
 #include <gnuradio/math.h>

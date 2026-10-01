@@ -8,10 +8,6 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #define GSM_SAMPLES_PER_FRAME 160
 #include "gsm_fr_encode_sp_impl.h"
 #include <gnuradio/io_signature.h>

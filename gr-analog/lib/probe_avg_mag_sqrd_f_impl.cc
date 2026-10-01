@@ -8,10 +8,6 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "probe_avg_mag_sqrd_f_impl.h"
 #include <gnuradio/io_signature.h>
 #include <cmath>

@@ -5,10 +5,6 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  *
  */
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "ldpc_H_matrix_impl.h"
 #include <cmath>
 #include <fstream>

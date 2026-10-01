@@ -8,10 +8,6 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "peak_detector_impl.h"
 #include <gnuradio/io_signature.h>
 #include <type_traits>

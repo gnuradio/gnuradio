@@ -8,10 +8,6 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
 #include <gnuradio/digital/mpsk_snr_est.h>
 #include <cstdio>
 #include <stdexcept>

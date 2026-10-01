@@ -8,10 +8,6 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "scl_list.h"
 #include <gnuradio/fec/polar_decoder_sc_list.h>
 #include <gnuradio/io_signature.h>

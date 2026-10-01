@@ -8,10 +8,6 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "tcp_connection.h"
 #include <gnuradio/basic_block.h>
 #include <gnuradio/pdu.h>

@@ -8,10 +8,6 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
 #include "vco.h"
 #include <gnuradio/fxpt_vco.h>
 #include <unistd.h>

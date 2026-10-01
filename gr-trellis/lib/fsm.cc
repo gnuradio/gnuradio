@@ -58,16 +58,16 @@ fsm::fsm(int I, int S, int O, const std::vector<int>& NS, const std::vector<int>
     generate_TM();
 }
 
-//######################################################################
-//# Read an FSM specification from a file.
-//# Format (hopefully will become more flexible in the future...):
-//# I S O (in the first line)
-//# blank line
-//# Next state matrix (S lines, each with I integers separated by spaces)
-//# blank line
-//# output symbol matrix (S lines, each with I integers separated by spaces)
-//# optional comments
-//######################################################################
+// ######################################################################
+// # Read an FSM specification from a file.
+// # Format (hopefully will become more flexible in the future...):
+// # I S O (in the first line)
+// # blank line
+// # Next state matrix (S lines, each with I integers separated by spaces)
+// # blank line
+// # output symbol matrix (S lines, each with I integers separated by spaces)
+// # optional comments
+// ######################################################################
 fsm::fsm(const char* name)
 {
     FILE* fsmfile;
@@ -109,10 +109,10 @@ fsm::fsm(const char* name)
     generate_TM();
 }
 
-//######################################################################
-//# Automatically generate the FSM from the generator matrix
-//# of a (n,k) binary convolutional code
-//######################################################################
+// ######################################################################
+// # Automatically generate the FSM from the generator matrix
+// # of a (n,k) binary convolutional code
+// ######################################################################
 fsm::fsm(int k, int n, const std::vector<int>& G)
 {
     // calculate maximum memory requirements for each input stream
@@ -220,11 +220,11 @@ fsm::fsm(int k, int n, const std::vector<int>& G)
     generate_TM();
 }
 
-//######################################################################
-//# Automatically generate an FSM specification describing the
-//# ISI for a channel
-//# of length ch_length and a modulation of size mod_size
-//######################################################################
+// ######################################################################
+// # Automatically generate an FSM specification describing the
+// # ISI for a channel
+// # of length ch_length and a modulation of size mod_size
+// ######################################################################
 fsm::fsm(int mod_size, int ch_length)
 {
     d_I = mod_size;
@@ -246,15 +246,15 @@ fsm::fsm(int mod_size, int ch_length)
     generate_TM();
 }
 
-//######################################################################
-//# Automatically generate an FSM specification describing the
-//# the trellis for a CPM with h=K/P (relatively prime),
-//# alphabet size M, and frequency pulse duration L symbols
-//#
-//# This FSM is based on the paper by B. Rimoldi
-//# "A decomposition approach to CPM", IEEE Trans. Info Theory, March 1988
-//# See also my own notes at http://www.eecs.umich.edu/~anastas/docs/cpm.pdf
-//######################################################################
+// ######################################################################
+// # Automatically generate an FSM specification describing the
+// # the trellis for a CPM with h=K/P (relatively prime),
+// # alphabet size M, and frequency pulse duration L symbols
+// #
+// # This FSM is based on the paper by B. Rimoldi
+// # "A decomposition approach to CPM", IEEE Trans. Info Theory, March 1988
+// # See also my own notes at http://www.eecs.umich.edu/~anastas/docs/cpm.pdf
+// ######################################################################
 fsm::fsm(int P, int M, int L)
 {
     d_I = M;
@@ -282,10 +282,10 @@ fsm::fsm(int P, int M, int L)
     generate_TM();
 }
 
-//######################################################################
-//# Automatically generate an FSM specification describing the
-//# the joint trellis of fsm1 and fsm2
-//######################################################################
+// ######################################################################
+// # Automatically generate an FSM specification describing the
+// # the joint trellis of fsm1 and fsm2
+// ######################################################################
 fsm::fsm(const fsm& FSM1, const fsm& FSM2)
 {
     d_I = FSM1.I() * FSM2.I();
@@ -313,10 +313,10 @@ fsm::fsm(const fsm& FSM1, const fsm& FSM2)
 }
 
 
-//######################################################################
-//# Automatically generate an FSM specification describing the
-//# the joint trellis of two serially concatenated fsms.
-//######################################################################
+// ######################################################################
+// # Automatically generate an FSM specification describing the
+// # the joint trellis of two serially concatenated fsms.
+// ######################################################################
 fsm::fsm(const fsm& FSMo, const fsm& FSMi, bool serial)
 {
     if (serial == false || FSMo.O() != FSMi.I()) {
@@ -356,10 +356,10 @@ fsm::fsm(const fsm& FSMo, const fsm& FSMi, bool serial)
 }
 
 
-//######################################################################
-//# Generate a new FSM representing n stages through the original FSM
-//# AKA radix-n FSM
-//######################################################################
+// ######################################################################
+// # Generate a new FSM representing n stages through the original FSM
+// # AKA radix-n FSM
+// ######################################################################
 fsm::fsm(const fsm& FSM, int n)
 {
     d_I = (int)(pow(1.0 * FSM.I(), 1.0 * n) + 0.5);
@@ -388,9 +388,9 @@ fsm::fsm(const fsm& FSM, int n)
     generate_TM();
 }
 
-//######################################################################
-//# generate the PS and PI tables for later use
-//######################################################################
+// ######################################################################
+// # generate the PS and PI tables for later use
+// ######################################################################
 void fsm::generate_PS_PI()
 {
     d_PS.resize(d_S);
@@ -413,9 +413,9 @@ void fsm::generate_PS_PI()
     }
 }
 
-//######################################################################
-//# generate the termination matrices TMl and TMi for later use
-//######################################################################
+// ######################################################################
+// # generate the termination matrices TMl and TMi for later use
+// ######################################################################
 void fsm::generate_TM()
 {
     gr::logger logger("gnuradio-config-info.cc");
@@ -471,9 +471,9 @@ bool fsm::find_es(int es)
     return done;
 }
 
-//######################################################################
-//#  generate trellis representation of FSM as an SVG file
-//######################################################################
+// ######################################################################
+// #  generate trellis representation of FSM as an SVG file
+// ######################################################################
 void fsm::write_trellis_svg(std::string filename, int number_stages)
 {
     std::ofstream trellis_fname(filename.c_str());
@@ -559,10 +559,10 @@ void fsm::write_trellis_svg(std::string filename, int number_stages)
     trellis_fname.close();
 }
 
-//######################################################################
-//# Write trellis specification to a text file,
-//# in the same format used when reading FSM files
-//######################################################################
+// ######################################################################
+// # Write trellis specification to a text file,
+// # in the same format used when reading FSM files
+// ######################################################################
 void fsm::write_fsm_txt(std::string filename)
 {
     std::ofstream trellis_fname(filename.c_str());
