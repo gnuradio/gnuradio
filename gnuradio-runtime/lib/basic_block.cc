@@ -8,6 +8,10 @@
  *
  */
 
+#ifdef HAVE_CONFIG_H
+#include <gnuradio/config.h>
+#endif
+
 #include <gnuradio/basic_block.h>
 #include <gnuradio/block_registry.h>
 #include <gnuradio/logger.h>
@@ -205,5 +209,14 @@ pmt::pmt_t basic_block::message_subscribers(pmt::pmt_t port)
     return pmt::dict_ref(d_message_subscribers, port, pmt::PMT_NIL);
 }
 
+void basic_block::add_rpc_variable(rpcbasic_sptr s)
+{
+#ifdef GR_CTRLPORT
+    d_logger->debug("added RPC variable");
+    d_rpc_vars.push_back(s);
+#else
+    d_logger->debug("ctrlport not enabled; not adding RPC variable.");
+#endif
+}
 
 } /* namespace gr */

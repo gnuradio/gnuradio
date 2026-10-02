@@ -317,7 +317,6 @@ public:
 
     const msg_queue_map_t& get_msg_map(void) const { return msg_queue; }
 
-#ifdef GR_CTRLPORT
     /*!
      * \brief Add an RPC variable (get or set).
      *
@@ -328,10 +327,12 @@ public:
      * std::shared_sptr<rpcbasic_base> so that when the block is
      * deleted, all RPC registered variables are cleaned up.
      *
+     * This function is a non-operation when GR_CTRLPORT is not available in config.h.
+     * The passed-in shared pointer is not internally stored in that case.
+     *
      * \param s an rpcbasic_sptr of the new RPC variable register to store.
      */
-    void add_rpc_variable(rpcbasic_sptr s) { d_rpc_vars.push_back(s); }
-#endif /* GR_CTRLPORT */
+    void add_rpc_variable(rpcbasic_sptr s);
 
     /*!
      * \brief Set up the RPC registered variables.
