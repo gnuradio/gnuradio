@@ -6,10 +6,6 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "dvb_bbheader_bb_impl.h"
 #include <gnuradio/io_signature.h>
 

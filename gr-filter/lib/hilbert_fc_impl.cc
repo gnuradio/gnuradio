@@ -8,10 +8,6 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "hilbert_fc_impl.h"
 #include <gnuradio/fft/window.h>
 #include <gnuradio/io_signature.h>

@@ -9,10 +9,6 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "tagged_file_sink_impl.h"
 #include <gnuradio/io_signature.h>
 

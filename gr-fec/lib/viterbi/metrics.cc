@@ -18,10 +18,6 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
 /* Symbols are offset-binary, with 128 corresponding to an erased (no
  * information) symbol
  */

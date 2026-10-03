@@ -8,10 +8,6 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "magphase_to_complex_impl.h"
 #include <gnuradio/io_signature.h>
 #include <volk/volk.h>

@@ -8,10 +8,6 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "timing_error_detector.h"
 #include <gnuradio/math.h>
 #include <memory>

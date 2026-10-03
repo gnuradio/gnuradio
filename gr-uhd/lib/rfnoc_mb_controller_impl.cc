@@ -5,10 +5,6 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "gr_uhd_common.h"
 #include "rfnoc_mb_controller_impl.h"
 #include <gnuradio/io_signature.h>

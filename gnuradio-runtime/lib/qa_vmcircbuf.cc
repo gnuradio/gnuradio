@@ -8,10 +8,6 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
 #include "vmcircbuf.h"
 #include <boost/test/unit_test.hpp>
 

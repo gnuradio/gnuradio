@@ -8,10 +8,6 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
 #if defined(_MSC_VER) || defined(__MINGW32__)
 #include <windows.h>
 #endif

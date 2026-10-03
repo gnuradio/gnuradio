@@ -8,10 +8,6 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "vmcircbuf_mmap_tmpfile.h"
 #include <unistd.h>
 #include <cstdlib>

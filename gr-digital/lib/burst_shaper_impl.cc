@@ -8,10 +8,6 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "burst_shaper_impl.h"
 #include <gnuradio/io_signature.h>
 #include <volk/volk.h>

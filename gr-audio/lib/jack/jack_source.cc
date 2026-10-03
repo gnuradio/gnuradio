@@ -8,10 +8,6 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "../audio_registry.h"
 #include "jack_impl.h"
 #include "jack_source.h"

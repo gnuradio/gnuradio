@@ -8,17 +8,13 @@
  *
  */
 
-#include <array>
-#include <stdexcept>
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "cc_decoder_impl.h"
 #include <volk/volk.h>
+#include <array>
 #include <cmath>
 #include <cstdio>
 #include <sstream>
+#include <stdexcept>
 #include <vector>
 
 namespace gr {

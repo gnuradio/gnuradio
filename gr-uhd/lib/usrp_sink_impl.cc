@@ -8,6 +8,10 @@
  *
  */
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include "gr_uhd_common.h"
 #include "usrp_sink_impl.h"
 #include <gnuradio/io_signature.h>

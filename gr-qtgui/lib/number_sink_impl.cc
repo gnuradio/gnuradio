@@ -8,10 +8,6 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
 #include "number_sink_impl.h"
 
 #include <gnuradio/fft/fft.h>

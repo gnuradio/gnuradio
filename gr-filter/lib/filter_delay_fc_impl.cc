@@ -8,10 +8,6 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "filter_delay_fc_impl.h"
 #include <volk/volk.h>
 

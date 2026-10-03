@@ -9,10 +9,6 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #if defined(_WIN32)
 // always include <windows.h> first
 #include <windows.h>

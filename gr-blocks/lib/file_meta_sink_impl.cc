@@ -8,10 +8,6 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "file_meta_sink_impl.h"
 #include <gnuradio/io_signature.h>
 #include <fcntl.h>

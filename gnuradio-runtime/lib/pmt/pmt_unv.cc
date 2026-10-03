@@ -10,10 +10,6 @@
 
 // This file is machine generated using the generate_unv.py tool
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
 #include "pmt_unv_int.h"
 #include <pmt/pmt.h>
 #include <cstring>

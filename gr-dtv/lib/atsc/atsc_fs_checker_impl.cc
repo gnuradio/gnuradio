@@ -8,10 +8,6 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "atsc_fs_checker_impl.h"
 #include "atsc_pnXXX_impl.h"
 #include "atsc_syminfo_impl.h"

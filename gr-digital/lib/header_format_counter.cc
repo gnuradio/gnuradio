@@ -7,10 +7,6 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include <gnuradio/digital/header_buffer.h>
 #include <gnuradio/digital/header_format_counter.h>
 #include <gnuradio/math.h>

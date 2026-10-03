@@ -6,10 +6,6 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "cpfsk_bc_impl.h"
 #include <gnuradio/expj.h>
 #include <gnuradio/io_signature.h>

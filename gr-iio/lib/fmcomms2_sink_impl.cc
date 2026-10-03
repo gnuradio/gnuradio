@@ -7,10 +7,6 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "device_source_impl.h"
 #include "fmcomms2_sink_impl.h"
 #include <gnuradio/io_signature.h>

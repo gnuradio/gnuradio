@@ -5,10 +5,6 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "rfnoc_f15_display_impl.h"
 
 #include "QRfnocF15Surface.h"

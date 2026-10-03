@@ -8,10 +8,6 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "vmcircbuf.h"
 #include "vmcircbuf_prefs.h"
 #include <gnuradio/sys_paths.h>

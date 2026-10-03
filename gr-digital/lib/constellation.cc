@@ -8,10 +8,6 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include <gnuradio/digital/constellation.h>
 #include <gnuradio/gr_complex.h>
 #include <gnuradio/io_signature.h>

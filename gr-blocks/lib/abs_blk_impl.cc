@@ -9,10 +9,6 @@
  */
 
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "abs_blk_impl.h"
 #include <gnuradio/io_signature.h>
 

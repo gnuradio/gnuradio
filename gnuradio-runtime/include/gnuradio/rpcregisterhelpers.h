@@ -14,8 +14,6 @@
 #include <gnuradio/rpcmanager.h>
 #include <gnuradio/rpcserver_base.h>
 #include <gnuradio/rpcserver_booter_base.h>
-#include <gnuradio/rpcserver_selector.h>
-#include <sstream>
 
 // Fixes circular dependency issue before including block_registry.h
 class rpcbasic_base;

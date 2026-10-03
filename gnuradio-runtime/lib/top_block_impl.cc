@@ -9,10 +9,6 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "flat_flowgraph.h"
 #include "scheduler_tpb.h"
 #include "terminate_handler.h"

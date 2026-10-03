@@ -6,10 +6,6 @@
  *
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "dvbt2_p1insertion_cc_impl.h"
 #include <gnuradio/io_signature.h>
 #include <algorithm>
