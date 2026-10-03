@@ -32,19 +32,19 @@ void bind_usrp_source(py::module& m)
                gr::basic_block,
                std::shared_ptr<usrp_source>>(m, "usrp_source", D(usrp_source))
 
-        .def(py::init(
-                 (std::shared_ptr<gr::uhd::usrp_source>(*)(const ::uhd::device_addr_t&,
-                                                           const ::uhd::stream_args_t&,
-                                                           const bool)) &
-                 usrp_source::make),
+        .def(py::init((std::shared_ptr<gr::uhd::usrp_source> (*)(
+                 const ::uhd::device_addr_t&,
+                 const ::uhd::stream_args_t&,
+                 const bool))&usrp_source::make),
              py::arg("device_addr"),
              py::arg("stream_args"),
              py::arg("issue_stream_cmd_on_start") = true,
              D(usrp_source, make))
 
-        .def(py::init((std::shared_ptr<gr::uhd::usrp_source>(*)(
-                          const std::string&, const ::uhd::stream_args_t&, const bool)) &
-                      usrp_source::make),
+        .def(py::init((std::shared_ptr<gr::uhd::usrp_source> (*)(
+                 const std::string&,
+                 const ::uhd::stream_args_t&,
+                 const bool))&usrp_source::make),
              py::arg("device_addr"),
              py::arg("stream_args"),
              py::arg("issue_stream_cmd_on_start") = true,

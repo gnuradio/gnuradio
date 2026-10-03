@@ -47,7 +47,7 @@ public:
           _decay_rate(decay_rate),
           _reference(reference),
           _gain(gain),
-          _max_gain(max_gain){};
+          _max_gain(max_gain) {};
 
     float decay_rate() const { return _decay_rate; }
     float attack_rate() const { return _attack_rate; }
@@ -120,7 +120,7 @@ public:
           _decay_rate(decay_rate),
           _reference(reference),
           _gain(gain),
-          _max_gain(max_gain){};
+          _max_gain(max_gain) {};
 
     float attack_rate() const { return _attack_rate; }
     float decay_rate() const { return _decay_rate; }

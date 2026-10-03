@@ -63,16 +63,16 @@ void bind_usrp_block(py::module& m)
 
 
         .def("set_center_freq",
-             (uhd::tune_result_t(usrp_block::*)(uhd::tune_request_t const, size_t)) &
-                 usrp_block::set_center_freq,
+             (uhd::tune_result_t (usrp_block::*)(uhd::tune_request_t const,
+                                                 size_t))&usrp_block::set_center_freq,
              py::arg("tune_request"),
              py::arg("chan") = 0,
              D(usrp_block, set_center_freq, 0))
 
 
         .def("set_center_freq",
-             (uhd::tune_result_t(usrp_block::*)(double, size_t)) &
-                 usrp_block::set_center_freq,
+             (uhd::tune_result_t (usrp_block::*)(double,
+                                                 size_t))&usrp_block::set_center_freq,
              py::arg("freq"),
              py::arg("chan") = 0,
              D(usrp_block, set_center_freq, 1))
@@ -91,7 +91,7 @@ void bind_usrp_block(py::module& m)
 
 
         .def("set_gain",
-             (void(usrp_block::*)(double, size_t, pmt::pmt_t)) & usrp_block::set_gain,
+             (void (usrp_block::*)(double, size_t, pmt::pmt_t))&usrp_block::set_gain,
              py::arg("gain"),
              py::arg("chan") = 0,
              py::arg("direction") = pmt::PMT_NIL,
@@ -99,8 +99,8 @@ void bind_usrp_block(py::module& m)
 
 
         .def("set_gain",
-             (void(usrp_block::*)(double, std::string const&, size_t)) &
-                 usrp_block::set_gain,
+             (void (usrp_block::*)(
+                 double, std::string const&, size_t))&usrp_block::set_gain,
              py::arg("gain"),
              py::arg("name"),
              py::arg("chan") = 0,
@@ -115,13 +115,13 @@ void bind_usrp_block(py::module& m)
 
 
         .def("get_gain",
-             (double(usrp_block::*)(size_t)) & usrp_block::get_gain,
+             (double (usrp_block::*)(size_t))&usrp_block::get_gain,
              py::arg("chan") = 0,
              D(usrp_block, get_gain, 0))
 
 
         .def("get_gain",
-             (double(usrp_block::*)(std::string const&, size_t)) & usrp_block::get_gain,
+             (double (usrp_block::*)(std::string const&, size_t))&usrp_block::get_gain,
              py::arg("name"),
              py::arg("chan") = 0,
              D(usrp_block, get_gain, 1))
@@ -140,14 +140,14 @@ void bind_usrp_block(py::module& m)
 
 
         .def("get_gain_range",
-             (uhd::gain_range_t(usrp_block::*)(size_t)) & usrp_block::get_gain_range,
+             (uhd::gain_range_t (usrp_block::*)(size_t))&usrp_block::get_gain_range,
              py::arg("chan") = 0,
              D(usrp_block, get_gain_range, 0))
 
 
         .def("get_gain_range",
-             (uhd::gain_range_t(usrp_block::*)(std::string const&, size_t)) &
-                 usrp_block::get_gain_range,
+             (uhd::gain_range_t (usrp_block::*)(std::string const&,
+                                                size_t))&usrp_block::get_gain_range,
              py::arg("name"),
              py::arg("chan") = 0,
              D(usrp_block, get_gain_range, 1))

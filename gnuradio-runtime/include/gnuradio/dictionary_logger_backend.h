@@ -48,11 +48,11 @@ public:
      */
     log_map get_map() const { return log_entries; };
 
-    ~dictionary_logger_backend() override{};
+    ~dictionary_logger_backend() override {};
 
 protected:
     void sink_it_(const spdlog::details::log_msg& message) override;
-    void flush_() override{};
+    void flush_() override {};
 
 private:
     mutable std::mutex map_mutex;

@@ -29,14 +29,10 @@ struct {
     int nroots;
     int ntrials;
 } Tab[] = {
-    { 2, 0x7, 1, 1, 1, 10 },
-    { 3, 0xb, 1, 1, 2, 10 },
-    { 4, 0x13, 1, 1, 4, 10 },
-    { 5, 0x25, 1, 1, 6, 10 },
-    { 6, 0x43, 1, 1, 8, 10 },
-    { 7, 0x89, 1, 1, 10, 10 },
-    { 8, 0x11d, 1, 1, 32, 10 },
-    { 8, 0x187, 112, 11, 32, 10 }, /* Duplicates CCSDS codec */
+    { 2, 0x7, 1, 1, 1, 10 },    { 3, 0xb, 1, 1, 2, 10 },       { 4, 0x13, 1, 1, 4, 10 },
+    { 5, 0x25, 1, 1, 6, 10 },   { 6, 0x43, 1, 1, 8, 10 },      { 7, 0x89, 1, 1, 10, 10 },
+    { 8, 0x11d, 1, 1, 32, 10 }, { 8, 0x187, 112, 11, 32, 10 }, /* Duplicates CCSDS codec
+                                                                */
     { 0, 0, 0, 0, 0 },
 };
 
@@ -74,10 +70,10 @@ int main()
         printf("Testing (%d,%d) RS codec...", nn, kk);
         fflush(stdout);
         if ((handle = init_rs_char(Tab[i].symsize,
-                                    Tab[i].genpoly,
-                                    Tab[i].fcs,
-                                    Tab[i].prim,
-                                    Tab[i].nroots)) == NULL) {
+                                   Tab[i].genpoly,
+                                   Tab[i].fcs,
+                                   Tab[i].prim,
+                                   Tab[i].nroots)) == NULL) {
             printf("init_rs_char failed!\n");
             continue;
         }

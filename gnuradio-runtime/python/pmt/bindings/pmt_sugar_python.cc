@@ -21,35 +21,36 @@ namespace py = pybind11;
 
 void bind_pmt_sugar(py::module& m)
 {
-    m.def("mp", (pmt::pmt_t(*)(std::string_view)) & ::pmt::mp, py::arg("s"), D(mp, 0));
+    m.def("mp", (pmt::pmt_t (*)(std::string_view)) & ::pmt::mp, py::arg("s"), D(mp, 0));
 
 
-    m.def("mp", (pmt::pmt_t(*)(char const*)) & ::pmt::mp, py::arg("s"), D(mp, 1));
+    m.def("mp", (pmt::pmt_t (*)(char const*)) & ::pmt::mp, py::arg("s"), D(mp, 1));
 
 
-    m.def("mp", (pmt::pmt_t(*)(long int)) & ::pmt::mp, py::arg("x"), D(mp, 2));
+    m.def("mp", (pmt::pmt_t (*)(long int)) & ::pmt::mp, py::arg("x"), D(mp, 2));
 
 
-    m.def("mp", (pmt::pmt_t(*)(long unsigned int)) & ::pmt::mp, py::arg("x"), D(mp, 3));
+    m.def("mp", (pmt::pmt_t (*)(long unsigned int)) & ::pmt::mp, py::arg("x"), D(mp, 3));
 
 
     m.def("mp",
-          (pmt::pmt_t(*)(long long unsigned int)) & ::pmt::mp,
+          (pmt::pmt_t (*)(long long unsigned int)) & ::pmt::mp,
           py::arg("x"),
           D(mp, 4));
 
 
-    m.def("mp", (pmt::pmt_t(*)(int)) & ::pmt::mp, py::arg("x"), D(mp, 5));
+    m.def("mp", (pmt::pmt_t (*)(int)) & ::pmt::mp, py::arg("x"), D(mp, 5));
 
 
-    m.def("mp", (pmt::pmt_t(*)(double)) & ::pmt::mp, py::arg("x"), D(mp, 6));
+    m.def("mp", (pmt::pmt_t (*)(double)) & ::pmt::mp, py::arg("x"), D(mp, 6));
 
 
     m.def(
-        "mp", (pmt::pmt_t(*)(std::complex<double>)) & ::pmt::mp, py::arg("z"), D(mp, 7));
+        "mp", (pmt::pmt_t (*)(std::complex<double>)) & ::pmt::mp, py::arg("z"), D(mp, 7));
 
 
-    m.def("mp", (pmt::pmt_t(*)(std::complex<float>)) & ::pmt::mp, py::arg("z"), D(mp, 8));
+    m.def(
+        "mp", (pmt::pmt_t (*)(std::complex<float>)) & ::pmt::mp, py::arg("z"), D(mp, 8));
 
 
     //     m.def("mp",
@@ -59,24 +60,25 @@ void bind_pmt_sugar(py::module& m)
 
 
     m.def("mp",
-          (pmt::pmt_t(*)(void const*, size_t)) & ::pmt::mp,
+          (pmt::pmt_t (*)(void const*, size_t)) & ::pmt::mp,
           py::arg("data"),
           py::arg("len_in_bytes"),
           D(mp, 10));
 
 
-    m.def("mp", (pmt::pmt_t(*)(pmt::pmt_t const&)) & ::pmt::mp, py::arg("e0"), D(mp, 11));
+    m.def(
+        "mp", (pmt::pmt_t (*)(pmt::pmt_t const&)) & ::pmt::mp, py::arg("e0"), D(mp, 11));
 
 
     m.def("mp",
-          (pmt::pmt_t(*)(pmt::pmt_t const&, pmt::pmt_t const&)) & ::pmt::mp,
+          (pmt::pmt_t (*)(pmt::pmt_t const&, pmt::pmt_t const&)) & ::pmt::mp,
           py::arg("e0"),
           py::arg("e1"),
           D(mp, 12));
 
 
     m.def("mp",
-          (pmt::pmt_t(*)(pmt::pmt_t const&, pmt::pmt_t const&, pmt::pmt_t const&)) &
+          (pmt::pmt_t (*)(pmt::pmt_t const&, pmt::pmt_t const&, pmt::pmt_t const&)) &
               ::pmt::mp,
           py::arg("e0"),
           py::arg("e1"),
@@ -86,7 +88,7 @@ void bind_pmt_sugar(py::module& m)
 
     m.def(
         "mp",
-        (pmt::pmt_t(*)(
+        (pmt::pmt_t (*)(
             pmt::pmt_t const&, pmt::pmt_t const&, pmt::pmt_t const&, pmt::pmt_t const&)) &
             ::pmt::mp,
         py::arg("e0"),
@@ -97,11 +99,11 @@ void bind_pmt_sugar(py::module& m)
 
 
     m.def("mp",
-          (pmt::pmt_t(*)(pmt::pmt_t const&,
-                         pmt::pmt_t const&,
-                         pmt::pmt_t const&,
-                         pmt::pmt_t const&,
-                         pmt::pmt_t const&)) &
+          (pmt::pmt_t (*)(pmt::pmt_t const&,
+                          pmt::pmt_t const&,
+                          pmt::pmt_t const&,
+                          pmt::pmt_t const&,
+                          pmt::pmt_t const&)) &
               ::pmt::mp,
           py::arg("e0"),
           py::arg("e1"),
@@ -112,12 +114,12 @@ void bind_pmt_sugar(py::module& m)
 
 
     m.def("mp",
-          (pmt::pmt_t(*)(pmt::pmt_t const&,
-                         pmt::pmt_t const&,
-                         pmt::pmt_t const&,
-                         pmt::pmt_t const&,
-                         pmt::pmt_t const&,
-                         pmt::pmt_t const&)) &
+          (pmt::pmt_t (*)(pmt::pmt_t const&,
+                          pmt::pmt_t const&,
+                          pmt::pmt_t const&,
+                          pmt::pmt_t const&,
+                          pmt::pmt_t const&,
+                          pmt::pmt_t const&)) &
               ::pmt::mp,
           py::arg("e0"),
           py::arg("e1"),
@@ -129,13 +131,13 @@ void bind_pmt_sugar(py::module& m)
 
 
     m.def("mp",
-          (pmt::pmt_t(*)(pmt::pmt_t const&,
-                         pmt::pmt_t const&,
-                         pmt::pmt_t const&,
-                         pmt::pmt_t const&,
-                         pmt::pmt_t const&,
-                         pmt::pmt_t const&,
-                         pmt::pmt_t const&)) &
+          (pmt::pmt_t (*)(pmt::pmt_t const&,
+                          pmt::pmt_t const&,
+                          pmt::pmt_t const&,
+                          pmt::pmt_t const&,
+                          pmt::pmt_t const&,
+                          pmt::pmt_t const&,
+                          pmt::pmt_t const&)) &
               ::pmt::mp,
           py::arg("e0"),
           py::arg("e1"),
@@ -148,14 +150,14 @@ void bind_pmt_sugar(py::module& m)
 
 
     m.def("mp",
-          (pmt::pmt_t(*)(pmt::pmt_t const&,
-                         pmt::pmt_t const&,
-                         pmt::pmt_t const&,
-                         pmt::pmt_t const&,
-                         pmt::pmt_t const&,
-                         pmt::pmt_t const&,
-                         pmt::pmt_t const&,
-                         pmt::pmt_t const&)) &
+          (pmt::pmt_t (*)(pmt::pmt_t const&,
+                          pmt::pmt_t const&,
+                          pmt::pmt_t const&,
+                          pmt::pmt_t const&,
+                          pmt::pmt_t const&,
+                          pmt::pmt_t const&,
+                          pmt::pmt_t const&,
+                          pmt::pmt_t const&)) &
               ::pmt::mp,
           py::arg("e0"),
           py::arg("e1"),
@@ -169,15 +171,15 @@ void bind_pmt_sugar(py::module& m)
 
 
     m.def("mp",
-          (pmt::pmt_t(*)(pmt::pmt_t const&,
-                         pmt::pmt_t const&,
-                         pmt::pmt_t const&,
-                         pmt::pmt_t const&,
-                         pmt::pmt_t const&,
-                         pmt::pmt_t const&,
-                         pmt::pmt_t const&,
-                         pmt::pmt_t const&,
-                         pmt::pmt_t const&)) &
+          (pmt::pmt_t (*)(pmt::pmt_t const&,
+                          pmt::pmt_t const&,
+                          pmt::pmt_t const&,
+                          pmt::pmt_t const&,
+                          pmt::pmt_t const&,
+                          pmt::pmt_t const&,
+                          pmt::pmt_t const&,
+                          pmt::pmt_t const&,
+                          pmt::pmt_t const&)) &
               ::pmt::mp,
           py::arg("e0"),
           py::arg("e1"),
@@ -192,16 +194,16 @@ void bind_pmt_sugar(py::module& m)
 
 
     m.def("mp",
-          (pmt::pmt_t(*)(pmt::pmt_t const&,
-                         pmt::pmt_t const&,
-                         pmt::pmt_t const&,
-                         pmt::pmt_t const&,
-                         pmt::pmt_t const&,
-                         pmt::pmt_t const&,
-                         pmt::pmt_t const&,
-                         pmt::pmt_t const&,
-                         pmt::pmt_t const&,
-                         pmt::pmt_t const&)) &
+          (pmt::pmt_t (*)(pmt::pmt_t const&,
+                          pmt::pmt_t const&,
+                          pmt::pmt_t const&,
+                          pmt::pmt_t const&,
+                          pmt::pmt_t const&,
+                          pmt::pmt_t const&,
+                          pmt::pmt_t const&,
+                          pmt::pmt_t const&,
+                          pmt::pmt_t const&,
+                          pmt::pmt_t const&)) &
               ::pmt::mp,
           py::arg("e0"),
           py::arg("e1"),

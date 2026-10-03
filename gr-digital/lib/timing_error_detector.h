@@ -53,7 +53,7 @@ public:
     static std::unique_ptr<timing_error_detector>
     make(enum ted_type type, constellation_sptr constellation = constellation_sptr());
 
-    virtual ~timing_error_detector(){};
+    virtual ~timing_error_detector() {};
 
     /*!
      * \brief Return the number of input samples per symbol this timing
@@ -232,7 +232,7 @@ public:
         : timing_error_detector(TED_MUELLER_AND_MULLER, 1, 2, false, false, constellation)
     {
     }
-    ~ted_mueller_and_muller() override{};
+    ~ted_mueller_and_muller() override {};
 
 private:
     float compute_error_cf() override;
@@ -270,7 +270,7 @@ public:
               TED_MOD_MUELLER_AND_MULLER, 1, 3, false, false, constellation)
     {
     }
-    ~ted_mod_mueller_and_muller() override{};
+    ~ted_mod_mueller_and_muller() override {};
 
 private:
     float compute_error_cf() override;
@@ -297,7 +297,7 @@ public:
         : timing_error_detector(TED_ZERO_CROSSING, 2, 3, false, false, constellation)
     {
     }
-    ~ted_zero_crossing() override{};
+    ~ted_zero_crossing() override {};
 
 private:
     float compute_error_cf() override;
@@ -325,7 +325,7 @@ public:
         : timing_error_detector(TED_GARDNER, 2, 3, false, false, constellation_sptr())
     {
     }
-    ~ted_gardner() override{};
+    ~ted_gardner() override {};
 
 private:
     float compute_error_cf() override;
@@ -351,7 +351,7 @@ public:
         : timing_error_detector(TED_EARLY_LATE, 2, 3, true, false, constellation_sptr())
     {
     }
-    ~ted_early_late() override{};
+    ~ted_early_late() override {};
 
 private:
     float compute_error_cf() override;
@@ -382,7 +382,7 @@ public:
               TED_DANDREA_AND_MENGALI_GEN_MSK, 4, 8, false, false, constellation_sptr())
     {
     }
-    ~ted_generalized_msk() override{};
+    ~ted_generalized_msk() override {};
 
 private:
     float compute_error_cf() override;
@@ -412,7 +412,7 @@ public:
               TED_MENGALI_AND_DANDREA_GMSK, 2, 4, false, false, constellation_sptr())
     {
     }
-    ~ted_gaussian_msk() override{};
+    ~ted_gaussian_msk() override {};
 
 private:
     float compute_error_cf() override;
@@ -447,7 +447,7 @@ public:
               TED_SIGNAL_TIMES_SLOPE_ML, 1, 1, false, true, constellation_sptr())
     {
     }
-    ~ted_signal_times_slope_ml() override{};
+    ~ted_signal_times_slope_ml() override {};
 
 private:
     float compute_error_cf() override;
@@ -482,7 +482,7 @@ public:
               TED_SIGNUM_TIMES_SLOPE_ML, 1, 1, false, true, constellation_sptr())
     {
     }
-    ~ted_signum_times_slope_ml() override{};
+    ~ted_signum_times_slope_ml() override {};
 
 private:
     float compute_error_cf() override;

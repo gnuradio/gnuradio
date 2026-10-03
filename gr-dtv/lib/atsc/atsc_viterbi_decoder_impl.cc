@@ -118,7 +118,7 @@ int atsc_viterbi_decoder_impl::work(int noutput_items,
                 out_copy[dbindex] = (out_copy[dbindex] & ~(0x03 << shift)) |
                                     (fifo[encoder].stuff(dibits[encoder][k]) << shift);
             } /* Symbols fed into one encoder */
-        }     /* Encoders */
+        } /* Encoders */
 
         // copy output from contiguous temp buffer into final output
         for (int j = 0; j < NCODERS; j++) {

@@ -45,15 +45,15 @@ void bind_fir_filter_with_buffer(py::module& m)
 
 
         .def("filter",
-             (float(fir_filter_with_buffer_fff::*)(float)) &
-                 fir_filter_with_buffer_fff::filter,
+             (float (fir_filter_with_buffer_fff::*)(
+                 float))&fir_filter_with_buffer_fff::filter,
              py::arg("input"),
              D(kernel, fir_filter_with_buffer_fff, filter, 0))
 
 
         .def("filter",
-             (float(fir_filter_with_buffer_fff::*)(float const*, long unsigned int)) &
-                 fir_filter_with_buffer_fff::filter,
+             (float (fir_filter_with_buffer_fff::*)(
+                 float const*, long unsigned int))&fir_filter_with_buffer_fff::filter,
              py::arg("input"),
              py::arg("dec"),
              D(kernel, fir_filter_with_buffer_fff, filter, 1))
@@ -100,19 +100,19 @@ void bind_fir_filter_with_buffer(py::module& m)
 
 
         .def("filter",
-             (gr_complex(fir_filter_with_buffer_ccc::*)(gr_complex)) &
-                 fir_filter_with_buffer_ccc::filter,
+             (gr_complex (fir_filter_with_buffer_ccc::*)(
+                 gr_complex))&fir_filter_with_buffer_ccc::filter,
              py::arg("input"),
              D(kernel, fir_filter_with_buffer_ccc, filter, 0))
 
 
-        .def("filter",
-             (gr_complex(fir_filter_with_buffer_ccc::*)(gr_complex const*,
-                                                        long unsigned int)) &
-                 fir_filter_with_buffer_ccc::filter,
-             py::arg("input"),
-             py::arg("dec"),
-             D(kernel, fir_filter_with_buffer_ccc, filter, 1))
+        .def(
+            "filter",
+            (gr_complex (fir_filter_with_buffer_ccc::*)(
+                gr_complex const*, long unsigned int))&fir_filter_with_buffer_ccc::filter,
+            py::arg("input"),
+            py::arg("dec"),
+            D(kernel, fir_filter_with_buffer_ccc, filter, 1))
         .def("filterN",
              &fir_filter_with_buffer_ccc::filterN,
              py::arg("output"),
@@ -155,19 +155,19 @@ void bind_fir_filter_with_buffer(py::module& m)
 
 
         .def("filter",
-             (gr_complex(fir_filter_with_buffer_ccf::*)(gr_complex)) &
-                 fir_filter_with_buffer_ccf::filter,
+             (gr_complex (fir_filter_with_buffer_ccf::*)(
+                 gr_complex))&fir_filter_with_buffer_ccf::filter,
              py::arg("input"),
              D(kernel, fir_filter_with_buffer_ccf, filter, 0))
 
 
-        .def("filter",
-             (gr_complex(fir_filter_with_buffer_ccf::*)(gr_complex const*,
-                                                        long unsigned int)) &
-                 fir_filter_with_buffer_ccf::filter,
-             py::arg("input"),
-             py::arg("dec"),
-             D(kernel, fir_filter_with_buffer_ccf, filter, 1))
+        .def(
+            "filter",
+            (gr_complex (fir_filter_with_buffer_ccf::*)(
+                gr_complex const*, long unsigned int))&fir_filter_with_buffer_ccf::filter,
+            py::arg("input"),
+            py::arg("dec"),
+            D(kernel, fir_filter_with_buffer_ccf, filter, 1))
         .def("filterN",
              &fir_filter_with_buffer_ccf::filterN,
              py::arg("output"),

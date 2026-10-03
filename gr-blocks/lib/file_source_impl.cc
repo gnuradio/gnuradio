@@ -24,7 +24,7 @@
 #define GR_FSTAT _fstati64
 #define GR_FILENO _fileno
 #define GR_STAT _stati64
-#define S_ISREG(m) (((m)&S_IFMT) == S_IFREG)
+#define S_ISREG(m) (((m) & S_IFMT) == S_IFREG)
 #else
 #define GR_FSEEK fseeko
 #define GR_FTELL ftello

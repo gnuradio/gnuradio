@@ -46,7 +46,7 @@ class PMT_API pmt_base
 {
 
 public:
-    pmt_base(){};
+    pmt_base() {};
     pmt_base(const pmt_base&) = delete;
     virtual ~pmt_base();
 

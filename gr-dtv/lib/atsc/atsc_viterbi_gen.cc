@@ -83,7 +83,7 @@ int build_decode_structures(char* fileout)
     int enco_which_syms[ENCODERS][INPUT_SIZE];
     int enco_which_dibits[ENCODERS][INPUT_SIZE];
     int enco_which_max;
-#define BIT_PTR(int, shif) (((int) << 3) | ((shif)&0x7))
+#define BIT_PTR(int, shif) (((int) << 3) | ((shif) & 0x7))
     /* Running indices into them as we build 'em... */
     int* syncsyms = sync_symbol_indices;
 
@@ -165,7 +165,7 @@ int build_decode_structures(char* fileout)
                 if (encoder >= ENCODERS)
                     encoder = 0;
             } /* Encoders */
-        }     /* Bit shifts */
+        } /* Bit shifts */
 
 #if 0
     /* Now dump out the chunk of 12 data bytes that the twelve decoders have

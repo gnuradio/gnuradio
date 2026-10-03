@@ -224,7 +224,7 @@ int header_payload_demux_impl::general_work(int noutput_items,
                         n_items_read_base + n_items_read + (items_to_consume)); \
     consume_each(items_to_consume);                                             \
     n_items_read += (items_to_consume);                                         \
-    in += (items_to_consume)*d_itemsize;
+    in += (items_to_consume) * d_itemsize;
     switch (d_state) {
     case STATE_WAIT_FOR_MSG:
         // In an ideal world, this would never be called

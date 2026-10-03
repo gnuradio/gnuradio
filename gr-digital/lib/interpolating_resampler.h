@@ -166,7 +166,7 @@ public:
          int nfilts = 32,
          const std::vector<float>& taps = std::vector<float>());
 
-    ~interpolating_resampler_ccf() override{};
+    ~interpolating_resampler_ccf() override {};
 
     /*!
      * \brief Return an interpolated sample.
@@ -228,7 +228,7 @@ public:
          int nfilts = 32,
          const std::vector<float>& taps = std::vector<float>());
 
-    ~interpolating_resampler_fff() override{};
+    ~interpolating_resampler_fff() override {};
 
     /*!
      * \brief Return an interpolated sample.

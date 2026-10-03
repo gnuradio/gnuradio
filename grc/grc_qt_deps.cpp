@@ -24,7 +24,7 @@ extern "C" {
 #ifdef _WIN32
 __declspec(dllexport)
 #endif
-    void grc_ensure_qt_print_support()
+void grc_ensure_qt_print_support()
 {
     // Create a QPrinter instance to ensure Qt6PrintSupport.dll is linked
     // This function doesn't need to be called - just its existence triggers linking

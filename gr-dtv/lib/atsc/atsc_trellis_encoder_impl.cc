@@ -197,8 +197,8 @@ void atsc_trellis_encoder_impl::encode_helper(unsigned char output[OUTPUT_SIZE],
                 }
 
             } /* Encoders */
-        }     /* Bit shifts */
-    }         /* Chunks */
+        } /* Bit shifts */
+    } /* Chunks */
 
     /* Check up on ourselves */
     static_assert(0 == (INPUT_SIZE * DIBITS_PER_BYTE) % NCODERS,

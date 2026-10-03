@@ -342,7 +342,7 @@ public:
      * are created, which then get wrapped as shared pointers
      * (rpcbasic_sptr(...)) and stored using add_rpc_variable.
      */
-    virtual void setup_rpc(){};
+    virtual void setup_rpc() {};
 
     /*!
      * \brief Ask if this block has been registered to the RPC.

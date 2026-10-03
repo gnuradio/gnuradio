@@ -53,7 +53,7 @@ public:
 class GR_RUNTIME_API vmcircbuf_factory
 {
 protected:
-    vmcircbuf_factory(){};
+    vmcircbuf_factory() {};
     virtual ~vmcircbuf_factory();
 
 public:

@@ -28,7 +28,7 @@ protected:
     virtual bool mute() const = 0;
 
 public:
-    squelch_base_cc(){};
+    squelch_base_cc() {};
     virtual int ramp() const = 0;
     virtual void set_ramp(int ramp) = 0;
     virtual bool gate() const = 0;

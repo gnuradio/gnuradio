@@ -409,8 +409,8 @@ static int search(unsigned int n_taps_half,
                 // if(fabs(E[foundExt[j]]) < fabs(E[foundExt[j-1]])) l=j;
                 // else l=j-1;
                 break; /* Ooops, found two non-alternating */
-            }          /* extrema.  Delete smallest of them */
-        }              /* if the loop finishes, all extrema are alternating */
+            } /* extrema.  Delete smallest of them */
+        } /* if the loop finishes, all extrema are alternating */
 
         /*
          * If there's only one extremal and all are alternating,
