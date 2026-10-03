@@ -116,7 +116,7 @@ public:
      */
     virtual bool set_frame_size(unsigned int frame_size) = 0;
 
-    generic_encoder(void){};
+    generic_encoder(void) {};
     generic_encoder(std::string name);
     virtual ~generic_encoder();
 };

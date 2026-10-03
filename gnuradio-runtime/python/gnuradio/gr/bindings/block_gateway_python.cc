@@ -187,18 +187,17 @@ void bind_block_gateway(py::module& m)
              py::arg("out_sig"))
 
         .def("add_item_tag",
-             (void(block_gateway::*)(unsigned int, const gr::tag_t&)) &
-                 block_gateway::_add_item_tag,
+             (void (block_gateway::*)(unsigned int,
+                                      const gr::tag_t&))&block_gateway::_add_item_tag,
              py::arg("which_output"),
              py::arg("tag"))
 
         .def("add_item_tag",
-             (void(block_gateway::*)(unsigned int,
-                                     uint64_t,
-                                     const pmt::pmt_t&,
-                                     const pmt::pmt_t&,
-                                     const pmt::pmt_t&)) &
-                 block_gateway::_add_item_tag,
+             (void (block_gateway::*)(unsigned int,
+                                      uint64_t,
+                                      const pmt::pmt_t&,
+                                      const pmt::pmt_t&,
+                                      const pmt::pmt_t&))&block_gateway::_add_item_tag,
              py::arg("which_output"),
              py::arg("abs_offset"),
              py::arg("key"),
@@ -206,35 +205,37 @@ void bind_block_gateway(py::module& m)
              py::arg("srcid") = pmt::PMT_F)
 
 
-        .def(
-            "get_tags_in_range",
-            (std::vector<gr::tag_t>(block_gateway::*)(unsigned int, uint64_t, uint64_t)) &
-                block_gateway::_get_tags_in_range,
-            py::arg("which_input"),
-            py::arg("abs_start"),
-            py::arg("abs_end"))
+        .def("get_tags_in_range",
+             (std::vector<gr::tag_t> (block_gateway::*)(
+                 unsigned int, uint64_t, uint64_t))&block_gateway::_get_tags_in_range,
+             py::arg("which_input"),
+             py::arg("abs_start"),
+             py::arg("abs_end"))
 
         .def("get_tags_in_range",
-             (std::vector<gr::tag_t>(block_gateway::*)(
-                 unsigned int, uint64_t, uint64_t, const pmt::pmt_t&)) &
-                 block_gateway::_get_tags_in_range,
+             (std::vector<gr::tag_t> (block_gateway::*)(
+                 unsigned int,
+                 uint64_t,
+                 uint64_t,
+                 const pmt::pmt_t&))&block_gateway::_get_tags_in_range,
              py::arg("which_input"),
              py::arg("abs_start"),
              py::arg("abs_end"),
              py::arg("key"))
 
-        .def(
-            "get_tags_in_window",
-            (std::vector<gr::tag_t>(block_gateway::*)(unsigned int, uint64_t, uint64_t)) &
-                block_gateway::_get_tags_in_window,
-            py::arg("which_input"),
-            py::arg("rel_start"),
-            py::arg("rel_end"))
+        .def("get_tags_in_window",
+             (std::vector<gr::tag_t> (block_gateway::*)(
+                 unsigned int, uint64_t, uint64_t))&block_gateway::_get_tags_in_window,
+             py::arg("which_input"),
+             py::arg("rel_start"),
+             py::arg("rel_end"))
 
         .def("get_tags_in_window",
-             (std::vector<gr::tag_t>(block_gateway::*)(
-                 unsigned int, uint64_t, uint64_t, const pmt::pmt_t&)) &
-                 block_gateway::_get_tags_in_window,
+             (std::vector<gr::tag_t> (block_gateway::*)(
+                 unsigned int,
+                 uint64_t,
+                 uint64_t,
+                 const pmt::pmt_t&))&block_gateway::_get_tags_in_window,
              py::arg("which_input"),
              py::arg("rel_start"),
              py::arg("rel_end"),

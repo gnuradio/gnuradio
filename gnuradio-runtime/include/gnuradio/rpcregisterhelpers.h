@@ -732,7 +732,7 @@ class rpcbasic_base
 {
 public:
     rpcbasic_base() {}
-    virtual ~rpcbasic_base(){};
+    virtual ~rpcbasic_base() {};
 };
 
 
@@ -1195,7 +1195,7 @@ public:
             global_block_registry.block_lookup(pmt::intern(block_alias)).get());
 #ifdef GR_RPCSERVER_ENABLED
         callbackregister_base::queryCallback_t inserter(
-            new rpcbasic_inserter<T, Tfrom>(d_object, (Tfrom(T::*)())function),
+            new rpcbasic_inserter<T, Tfrom>(d_object, (Tfrom (T::*)())function),
             minpriv_,
             std::string(units_),
             display_,
@@ -1301,7 +1301,7 @@ public:
         d_object = obj;
 #ifdef GR_RPCSERVER_ENABLED
         callbackregister_base::queryCallback_t inserter(
-            new rpcbasic_inserter<T, Tfrom>(d_object, (Tfrom(T::*)())function),
+            new rpcbasic_inserter<T, Tfrom>(d_object, (Tfrom (T::*)())function),
             minpriv_,
             std::string(units_),
             display_,

@@ -27,7 +27,7 @@ public:
 
     void set_header_formatter(packet_header_default::sptr header_formatter) override;
 
-    void remove_length_tags(const std::vector<std::vector<tag_t>>& tags){};
+    void remove_length_tags(const std::vector<std::vector<tag_t>>& tags) {};
     int calculate_output_stream_length(const gr_vector_int& ninput_items) override
     {
         return d_formatter->header_len();

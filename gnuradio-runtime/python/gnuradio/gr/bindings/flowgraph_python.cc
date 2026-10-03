@@ -43,34 +43,37 @@ void bind_flowgraph(py::module& m)
 
 
         .def("connect",
-             (void(flowgraph::*)(gr::endpoint const&, gr::endpoint const&)) &
-                 flowgraph::connect,
+             (void (flowgraph::*)(gr::endpoint const&,
+                                  gr::endpoint const&))&flowgraph::connect,
              py::arg("src"),
              py::arg("dst"),
              D(flowgraph, connect, 0))
 
 
         .def("disconnect",
-             (void(flowgraph::*)(gr::endpoint const&, gr::endpoint const&)) &
-                 flowgraph::disconnect,
+             (void (flowgraph::*)(gr::endpoint const&,
+                                  gr::endpoint const&))&flowgraph::disconnect,
              py::arg("src"),
              py::arg("dst"),
              D(flowgraph, disconnect, 0))
 
 
-        .def("connect",
-             (void(flowgraph::*)(gr::basic_block_sptr, int, gr::basic_block_sptr, int)) &
-                 flowgraph::connect,
-             py::arg("src_block"),
-             py::arg("src_port"),
-             py::arg("dst_block"),
-             py::arg("dst_port"),
-             D(flowgraph, connect, 1))
+        .def(
+            "connect",
+            (void (flowgraph::*)(
+                gr::basic_block_sptr, int, gr::basic_block_sptr, int))&flowgraph::connect,
+            py::arg("src_block"),
+            py::arg("src_port"),
+            py::arg("dst_block"),
+            py::arg("dst_port"),
+            D(flowgraph, connect, 1))
 
 
         .def("disconnect",
-             (void(flowgraph::*)(gr::basic_block_sptr, int, gr::basic_block_sptr, int)) &
-                 flowgraph::disconnect,
+             (void (flowgraph::*)(gr::basic_block_sptr,
+                                  int,
+                                  gr::basic_block_sptr,
+                                  int))&flowgraph::disconnect,
              py::arg("src_block"),
              py::arg("src_port"),
              py::arg("dst_block"),
@@ -79,16 +82,16 @@ void bind_flowgraph(py::module& m)
 
 
         .def("connect",
-             (void(flowgraph::*)(gr::msg_endpoint const&, gr::msg_endpoint const&)) &
-                 flowgraph::connect,
+             (void (flowgraph::*)(gr::msg_endpoint const&,
+                                  gr::msg_endpoint const&))&flowgraph::connect,
              py::arg("src"),
              py::arg("dst"),
              D(flowgraph, connect, 2))
 
 
         .def("disconnect",
-             (void(flowgraph::*)(gr::msg_endpoint const&, gr::msg_endpoint const&)) &
-                 flowgraph::disconnect,
+             (void (flowgraph::*)(gr::msg_endpoint const&,
+                                  gr::msg_endpoint const&))&flowgraph::disconnect,
              py::arg("src"),
              py::arg("dst"),
              D(flowgraph, disconnect, 2))

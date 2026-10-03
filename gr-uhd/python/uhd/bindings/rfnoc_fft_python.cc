@@ -67,14 +67,14 @@ void bind_rfnoc_fft(py::module& m)
 
 
         .def("set_direction",
-             (void(rfnoc_fft::*)(gr::uhd::rfnoc_fft::fft_direction const)) &
-                 rfnoc_fft::set_direction,
+             (void (rfnoc_fft::*)(
+                 gr::uhd::rfnoc_fft::fft_direction const))&rfnoc_fft::set_direction,
              py::arg("direction"),
              D(rfnoc_fft, set_direction, 0))
 
 
         .def("set_direction",
-             (void(rfnoc_fft::*)(std::string const&)) & rfnoc_fft::set_direction,
+             (void (rfnoc_fft::*)(std::string const&))&rfnoc_fft::set_direction,
              py::arg("direction"),
              D(rfnoc_fft, set_direction, 1))
 
@@ -88,14 +88,14 @@ void bind_rfnoc_fft(py::module& m)
 
 
         .def("set_magnitude",
-             (void(rfnoc_fft::*)(gr::uhd::rfnoc_fft::fft_magnitude const)) &
-                 rfnoc_fft::set_magnitude,
+             (void (rfnoc_fft::*)(
+                 gr::uhd::rfnoc_fft::fft_magnitude const))&rfnoc_fft::set_magnitude,
              py::arg("magnitude"),
              D(rfnoc_fft, set_magnitude, 0))
 
 
         .def("set_magnitude",
-             (void(rfnoc_fft::*)(std::string const&)) & rfnoc_fft::set_magnitude,
+             (void (rfnoc_fft::*)(std::string const&))&rfnoc_fft::set_magnitude,
              py::arg("magnitude"),
              D(rfnoc_fft, set_magnitude, 1))
 
@@ -109,14 +109,14 @@ void bind_rfnoc_fft(py::module& m)
 
 
         .def("set_shift_config",
-             (void(rfnoc_fft::*)(gr::uhd::rfnoc_fft::fft_shift const)) &
-                 rfnoc_fft::set_shift_config,
+             (void (rfnoc_fft::*)(
+                 gr::uhd::rfnoc_fft::fft_shift const))&rfnoc_fft::set_shift_config,
              py::arg("shift"),
              D(rfnoc_fft, set_shift_config, 0))
 
 
         .def("set_shift_config",
-             (void(rfnoc_fft::*)(std::string const&)) & rfnoc_fft::set_shift_config,
+             (void (rfnoc_fft::*)(std::string const&))&rfnoc_fft::set_shift_config,
              py::arg("shift"),
              D(rfnoc_fft, set_shift_config, 1))
 

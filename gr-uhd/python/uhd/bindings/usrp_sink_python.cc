@@ -32,19 +32,19 @@ void bind_usrp_sink(py::module& m)
                gr::basic_block,
                std::shared_ptr<usrp_sink>>(m, "usrp_sink", D(usrp_sink))
 
-        .def(py::init((std::shared_ptr<gr::uhd::usrp_sink>(*)(const ::uhd::device_addr_t&,
-                                                              const ::uhd::stream_args_t&,
-                                                              const std::string&)) &
-                      usrp_sink::make),
+        .def(py::init((std::shared_ptr<gr::uhd::usrp_sink> (*)(
+                 const ::uhd::device_addr_t&,
+                 const ::uhd::stream_args_t&,
+                 const std::string&))&usrp_sink::make),
              py::arg("device_addr"),
              py::arg("stream_args"),
              py::arg("tsb_tag_name") = "",
              D(usrp_sink, make))
 
-        .def(py::init((std::shared_ptr<gr::uhd::usrp_sink>(*)(const std::string&,
-                                                              const ::uhd::stream_args_t&,
-                                                              const std::string&)) &
-                      usrp_sink::make),
+        .def(py::init((std::shared_ptr<gr::uhd::usrp_sink> (*)(
+                 const std::string&,
+                 const ::uhd::stream_args_t&,
+                 const std::string&))&usrp_sink::make),
              py::arg("device_addr"),
              py::arg("stream_args"),
              py::arg("tsb_tag_name") = "",

@@ -36,17 +36,15 @@ void bind_packet_headergenerator_bb(py::module& m)
                gr::tagged_stream_block,
                std::shared_ptr<packet_headergenerator_bb>>(m, "packet_headergenerator_bb")
 
-        .def(py::init((std::shared_ptr<packet_headergenerator_bb>(*)(
-                          const gr::digital::packet_header_default::sptr&,
-                          const std::string&)) &
-                      packet_headergenerator_bb::make),
+        .def(py::init((std::shared_ptr<packet_headergenerator_bb> (*)(
+                 const gr::digital::packet_header_default::sptr&,
+                 const std::string&))&packet_headergenerator_bb::make),
              py::arg("header_formatter"),
              py::arg("len_tag_key") = "packet_len",
              D(packet_headergenerator_bb, make, 0))
 
-        .def(py::init((std::shared_ptr<packet_headergenerator_bb>(*)(
-                          long, const std::string&)) &
-                      packet_headergenerator_bb::make),
+        .def(py::init((std::shared_ptr<packet_headergenerator_bb> (*)(
+                 long, const std::string&))&packet_headergenerator_bb::make),
              py::arg("header_len"),
              py::arg("len_tag_key") = "packet_len",
              D(packet_headergenerator_bb, make, 1))

@@ -27,7 +27,7 @@ namespace gr {
 class GR_RUNTIME_API buffer_type_base
 {
 public:
-    virtual ~buffer_type_base(){};
+    virtual ~buffer_type_base() {};
 
     // Do not allow copying or assignment
     //    buffer_type_base(buffer_type_base const&) = delete;

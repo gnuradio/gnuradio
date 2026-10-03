@@ -81,7 +81,7 @@ int encoder_impl<IN_T, OUT_T>::work(int noutput_items,
             }
         }
         return nblocks * d_K;
-    }      // end blockwise operation
+    } // end blockwise operation
     else { // streaming operation
         const IN_T* in = (const IN_T*)input_items[0];
         OUT_T* out = (OUT_T*)output_items[0];

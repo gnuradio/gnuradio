@@ -31,7 +31,7 @@ namespace uhd {
 class GR_UHD_API usrp_block : public gr::sync_block
 {
 protected:
-    usrp_block(){}; // For virtual sub-classing
+    usrp_block() {}; // For virtual sub-classing
     usrp_block(const std::string& name,
                gr::io_signature::sptr input_signature,
                gr::io_signature::sptr output_signature);

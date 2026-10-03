@@ -71,15 +71,16 @@ void bind_rfnoc_rx_radio(py::module& m)
              D(rfnoc_rx_radio, set_tune_args))
 
         .def("set_gain",
-             (double(rfnoc_rx_radio::*)(double const, size_t const)) &
-                 rfnoc_rx_radio::set_gain,
+             (double (rfnoc_rx_radio::*)(double const,
+                                         size_t const))&rfnoc_rx_radio::set_gain,
              py::arg("gain"),
              py::arg("chan"),
              D(rfnoc_rx_radio, set_gain, 0))
 
         .def("set_gain",
-             (double(rfnoc_rx_radio::*)(double const, std::string const&, size_t const)) &
-                 rfnoc_rx_radio::set_gain,
+             (double (rfnoc_rx_radio::*)(double const,
+                                         std::string const&,
+                                         size_t const))&rfnoc_rx_radio::set_gain,
              py::arg("gain"),
              py::arg("name"),
              py::arg("chan"),
@@ -125,29 +126,29 @@ void bind_rfnoc_rx_radio(py::module& m)
              D(rfnoc_rx_radio, set_lo_freq))
 
         .def("set_dc_offset",
-             (void(rfnoc_rx_radio::*)(bool const, size_t const)) &
-                 rfnoc_rx_radio::set_dc_offset,
+             (void (rfnoc_rx_radio::*)(bool const,
+                                       size_t const))&rfnoc_rx_radio::set_dc_offset,
              py::arg("enable"),
              py::arg("chan"),
              D(rfnoc_rx_radio, set_dc_offset, 0))
 
         .def("set_dc_offset",
-             (void(rfnoc_rx_radio::*)(std::complex<double> const&, size_t const)) &
-                 rfnoc_rx_radio::set_dc_offset,
+             (void (rfnoc_rx_radio::*)(std::complex<double> const&,
+                                       size_t const))&rfnoc_rx_radio::set_dc_offset,
              py::arg("offset"),
              py::arg("chan"),
              D(rfnoc_rx_radio, set_dc_offset, 1))
 
         .def("set_iq_balance",
-             (void(rfnoc_rx_radio::*)(bool const, size_t const)) &
-                 rfnoc_rx_radio::set_iq_balance,
+             (void (rfnoc_rx_radio::*)(bool const,
+                                       size_t const))&rfnoc_rx_radio::set_iq_balance,
              py::arg("enable"),
              py::arg("chan"),
              D(rfnoc_rx_radio, set_iq_balance, 0))
 
         .def("set_iq_balance",
-             (void(rfnoc_rx_radio::*)(std::complex<double> const&, size_t const)) &
-                 rfnoc_rx_radio::set_iq_balance,
+             (void (rfnoc_rx_radio::*)(std::complex<double> const&,
+                                       size_t const))&rfnoc_rx_radio::set_iq_balance,
              py::arg("correction"),
              py::arg("chan"),
              D(rfnoc_rx_radio, set_iq_balance, 1))

@@ -91,7 +91,7 @@ typedef std::vector<endpoint>::iterator endpoint_viter_t;
 class GR_RUNTIME_API edge
 {
 public:
-    edge() : d_src(), d_dst(){};
+    edge() : d_src(), d_dst() {};
     edge(const endpoint& src, const endpoint& dst) : d_src(src), d_dst(dst) {}
     ~edge();
 
@@ -118,7 +118,7 @@ typedef std::vector<edge>::iterator edge_viter_t;
 class GR_RUNTIME_API msg_edge
 {
 public:
-    msg_edge() : d_src(), d_dst(){};
+    msg_edge() : d_src(), d_dst() {};
     msg_edge(const msg_endpoint& src, const msg_endpoint& dst) : d_src(src), d_dst(dst) {}
     ~msg_edge() {}
 

@@ -23,7 +23,7 @@ class FEC_API cldpc
 {
 public:
     //! Default constructor
-    cldpc(){};
+    cldpc() {};
 
     //! Constructs the LDPC class from given GF2mat X
     cldpc(const GF2Mat X);

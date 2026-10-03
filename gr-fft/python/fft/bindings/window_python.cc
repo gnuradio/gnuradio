@@ -66,7 +66,7 @@ void bind_window(py::module& m)
 
 
         .def_static("coswindow",
-                    (std::vector<float>(*)(int, float, float, float)) & window::coswindow,
+                    (std::vector<float> (*)(int, float, float, float))&window::coswindow,
                     py::arg("ntaps"),
                     py::arg("c0"),
                     py::arg("c1"),
@@ -74,20 +74,20 @@ void bind_window(py::module& m)
                     D(window, coswindow, 0))
 
 
-        .def_static("coswindow",
-                    (std::vector<float>(*)(int, float, float, float, float)) &
-                        window::coswindow,
-                    py::arg("ntaps"),
-                    py::arg("c0"),
-                    py::arg("c1"),
-                    py::arg("c2"),
-                    py::arg("c3"),
-                    D(window, coswindow, 1))
+        .def_static(
+            "coswindow",
+            (std::vector<float> (*)(int, float, float, float, float))&window::coswindow,
+            py::arg("ntaps"),
+            py::arg("c0"),
+            py::arg("c1"),
+            py::arg("c2"),
+            py::arg("c3"),
+            D(window, coswindow, 1))
 
 
         .def_static("coswindow",
-                    (std::vector<float>(*)(int, float, float, float, float, float)) &
-                        window::coswindow,
+                    (std::vector<float> (*)(
+                        int, float, float, float, float, float))&window::coswindow,
                     py::arg("ntaps"),
                     py::arg("c0"),
                     py::arg("c1"),

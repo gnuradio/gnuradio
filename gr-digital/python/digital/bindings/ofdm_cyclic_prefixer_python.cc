@@ -38,18 +38,19 @@ void bind_ofdm_cyclic_prefixer(py::module& m)
                gr::basic_block,
                std::shared_ptr<ofdm_cyclic_prefixer>>(m, "ofdm_cyclic_prefixer")
 
-        .def(py::init((std::shared_ptr<ofdm_cyclic_prefixer>(*)(
-                          size_t, size_t, int, const std::string&)) &
-                      ofdm_cyclic_prefixer::make),
+        .def(py::init((std::shared_ptr<ofdm_cyclic_prefixer> (*)(
+                 size_t, size_t, int, const std::string&))&ofdm_cyclic_prefixer::make),
              py::arg("input_size"),
              py::arg("output_size"),
              py::arg("rolloff_len") = 0,
              py::arg("len_tag_key") = "",
              D(ofdm_cyclic_prefixer, make, 0))
 
-        .def(py::init((std::shared_ptr<ofdm_cyclic_prefixer>(*)(
-                          int, const std::vector<int>&, int, const std::string&)) &
-                      ofdm_cyclic_prefixer::make),
+        .def(py::init((std::shared_ptr<ofdm_cyclic_prefixer> (*)(
+                 int,
+                 const std::vector<int>&,
+                 int,
+                 const std::string&))&ofdm_cyclic_prefixer::make),
              py::arg("input_size"),
              py::arg("output_size"),
              py::arg("rolloff_len") = 0,

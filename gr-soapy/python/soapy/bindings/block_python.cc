@@ -95,14 +95,14 @@ void bind_block(py::module& m)
 
 
         .def("set_frequency",
-             (void(block::*)(size_t, double)) & block::set_frequency,
+             (void (block::*)(size_t, double))&block::set_frequency,
              py::arg("channel"),
              py::arg("freq"),
              D(block, set_frequency, 0))
 
 
         .def("set_frequency",
-             (void(block::*)(size_t, const std::string&, double)) & block::set_frequency,
+             (void (block::*)(size_t, const std::string&, double))&block::set_frequency,
              py::arg("channel"),
              py::arg("name"),
              py::arg("freq"),
@@ -110,13 +110,13 @@ void bind_block(py::module& m)
 
 
         .def("get_frequency",
-             (double(block::*)(size_t) const) & block::get_frequency,
+             (double (block::*)(size_t) const) & block::get_frequency,
              py::arg("channel"),
              D(block, get_frequency, 0))
 
 
         .def("get_frequency",
-             (double(block::*)(size_t, const std::string&) const) & block::get_frequency,
+             (double (block::*)(size_t, const std::string&) const) & block::get_frequency,
              py::arg("channel"),
              py::arg("name"),
              D(block, get_frequency, 1))
@@ -129,14 +129,14 @@ void bind_block(py::module& m)
 
 
         .def("get_frequency_range",
-             (gr::soapy::range_list_t(block::*)(size_t) const) &
+             (gr::soapy::range_list_t (block::*)(size_t) const) &
                  block::get_frequency_range,
              py::arg("channel"),
              D(block, get_frequency_range, 0))
 
 
         .def("get_frequency_range",
-             (gr::soapy::range_list_t(block::*)(size_t, const std::string&) const) &
+             (gr::soapy::range_list_t (block::*)(size_t, const std::string&) const) &
                  block::get_frequency_range,
              py::arg("channel"),
              py::arg("name"),
@@ -208,14 +208,14 @@ void bind_block(py::module& m)
 
 
         .def("set_gain",
-             (void(block::*)(size_t, double)) & block::set_gain,
+             (void (block::*)(size_t, double))&block::set_gain,
              py::arg("channel"),
              py::arg("gain"),
              D(block, set_gain, 0))
 
 
         .def("set_gain",
-             (void(block::*)(size_t, const std::string&, double)) & block::set_gain,
+             (void (block::*)(size_t, const std::string&, double))&block::set_gain,
              py::arg("channel"),
              py::arg("name"),
              py::arg("gain"),
@@ -223,26 +223,26 @@ void bind_block(py::module& m)
 
 
         .def("get_gain",
-             (double(block::*)(size_t) const) & block::get_gain,
+             (double (block::*)(size_t) const) & block::get_gain,
              py::arg("channel"),
              D(block, get_gain, 0))
 
 
         .def("get_gain",
-             (double(block::*)(size_t, const std::string&) const) & block::get_gain,
+             (double (block::*)(size_t, const std::string&) const) & block::get_gain,
              py::arg("channel"),
              py::arg("name"),
              D(block, get_gain, 1))
 
 
         .def("get_gain_range",
-             (gr::soapy::range_t(block::*)(size_t) const) & block::get_gain_range,
+             (gr::soapy::range_t (block::*)(size_t) const) & block::get_gain_range,
              py::arg("channel"),
              D(block, get_gain_range, 0))
 
 
         .def("get_gain_range",
-             (gr::soapy::range_t(block::*)(size_t, const std::string&) const) &
+             (gr::soapy::range_t (block::*)(size_t, const std::string&) const) &
                  block::get_gain_range,
              py::arg("channel"),
              py::arg("name"),
@@ -422,11 +422,11 @@ void bind_block(py::module& m)
 
 
         .def("list_sensors",
-             (std::vector<std::string>(block::*)() const) & block::list_sensors,
+             (std::vector<std::string> (block::*)() const) & block::list_sensors,
              D(block, list_sensors, 0))
 
         .def("get_sensor_info",
-             (gr::soapy::arginfo_t(block::*)(const std::string&) const) &
+             (gr::soapy::arginfo_t (block::*)(const std::string&) const) &
                  block::get_sensor_info,
              py::arg("key"),
              D(block, get_sensor_info, 0))
@@ -442,12 +442,12 @@ void bind_block(py::module& m)
             D(block, read_sensor, 0))
 
         .def("list_sensors",
-             (std::vector<std::string>(block::*)(size_t) const) & block::list_sensors,
+             (std::vector<std::string> (block::*)(size_t) const) & block::list_sensors,
              py::arg("channel"),
              D(block, list_sensors, 1))
 
         .def("get_sensor_info",
-             (gr::soapy::arginfo_t(block::*)(size_t, const std::string&) const) &
+             (gr::soapy::arginfo_t (block::*)(size_t, const std::string&) const) &
                  block::get_sensor_info,
              py::arg("channel"),
              py::arg("key"),
@@ -501,7 +501,7 @@ void bind_block(py::module& m)
              D(block, read_registers))
 
         .def("get_setting_info",
-             (gr::soapy::arginfo_list_t(block::*)() const) & block::get_setting_info,
+             (gr::soapy::arginfo_list_t (block::*)() const) & block::get_setting_info,
              D(block, get_setting_info, 0))
 
         .def(
@@ -527,7 +527,7 @@ void bind_block(py::module& m)
             D(block, read_setting, 0))
 
         .def("get_setting_info",
-             (gr::soapy::arginfo_list_t(block::*)(size_t) const) &
+             (gr::soapy::arginfo_list_t (block::*)(size_t) const) &
                  block::get_setting_info,
              py::arg("channel"),
              D(block, get_setting_info, 0))
@@ -562,14 +562,14 @@ void bind_block(py::module& m)
 
 
         .def("write_gpio",
-             (void(block::*)(const std::string&, unsigned)) & block::write_gpio,
+             (void (block::*)(const std::string&, unsigned))&block::write_gpio,
              py::arg("bank"),
              py::arg("value"),
              D(block, write_gpio, 0))
 
 
         .def("write_gpio",
-             (void(block::*)(const std::string&, unsigned, unsigned)) & block::write_gpio,
+             (void (block::*)(const std::string&, unsigned, unsigned))&block::write_gpio,
              py::arg("bank"),
              py::arg("value"),
              py::arg("mask"),
@@ -580,15 +580,15 @@ void bind_block(py::module& m)
 
 
         .def("write_gpio_dir",
-             (void(block::*)(const std::string&, unsigned)) & block::write_gpio_dir,
+             (void (block::*)(const std::string&, unsigned))&block::write_gpio_dir,
              py::arg("bank"),
              py::arg("value"),
              D(block, write_gpio_dir, 0))
 
 
         .def("write_gpio_dir",
-             (void(block::*)(const std::string&, unsigned, unsigned)) &
-                 block::write_gpio_dir,
+             (void (block::*)(
+                 const std::string&, unsigned, unsigned))&block::write_gpio_dir,
              py::arg("bank"),
              py::arg("value"),
              py::arg("mask"),

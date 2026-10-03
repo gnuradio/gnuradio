@@ -214,7 +214,7 @@ bool base_source_impl::load_message(bool wait)
     if (!(items[0].revents & ZMQ_POLLIN))
         return false;
 
-        /* Is this the start or continuation of a multi-part message? */
+    /* Is this the start or continuation of a multi-part message? */
 #if USE_NEW_CPPZMQ_SET_GET
     auto more = d_socket.get(zmq::sockopt::rcvmore);
 #else
