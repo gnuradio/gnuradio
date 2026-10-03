@@ -8,13 +8,13 @@ on:
       - main
       - base-installer-support
 jobs:
-  # Check hashes first
-  check-hashes:
+  # Check/fix formatting first, then check/fix hashes.
+  check-formatting-and-hashes:
     runs-on: ubuntu-24.04
     timeout-minutes: 10
-    name: Check hashes
+    name: C/C++ formatting & hashes
     container:
-      image: 'gnuradio/ci:fedora-42-3.10'
+      image: 'gnuradio/ci:ubuntu-26.10-3.11'
     steps:
     - name: Checkout project
       uses: actions/checkout@v4
@@ -22,30 +22,42 @@ jobs:
         fetch-depth: 1
     - name: Add git repo to safe repos
       run: git config --global --add safe.directory ${GITHUB_WORKSPACE}
+    - name: Run clang-format 22 on in-tree C/C++ files
+      run: >
+          git ls-files -z |
+          grep -i -E -z '\.(c|h|cc|cpp|cxx|hpp|hh)$' |
+          xargs -0 clang-format-22 -i
+    - name: get changed files after formatting
+      shell: bash
+      run: >
+          git --no-pager diff -z --name-only --
+          > /tmp/formatdiff
+          ; [[ ! -s /tmp/formatdiff ]] && exit 0
+          ; printf '::error::Some files changed when formatted with clang-format-22!\n'
+          ; printf '::group::Files with changes\n'
+          ; sed -z 's;.*;::notice file=&::Formatting change in &\n;' /tmp/formatdiff
+          | tr -d '\0'
+          ; printf '::endgroup::\n'
+          ; exit -1
     - name: Run hash fixer on all binding files
-      run: gr-utils/bindtool/scripts/binding-hash-hotfixer.zsh gr-*/python/*/bindings/*.cc gnuradio-runtime/python/gnuradio/gr/bindings/*.cc
-    - name: get changed files
+      shell: bash
+      run: >
+          git ls-files -z |
+          grep -i -z '/bindings/.*\.cc$' |
+          xargs -0 gr-utils/bindtool/scripts/binding-hash-hotfixer.zsh
+    - name: get files with changed hashes
+      shell: bash
       run: >
           git --no-pager diff -z --name-only --
           > /tmp/hashdiff
           ; [[ ! -s /tmp/hashdiff ]] && exit 0
-          ; sed -z 's;.*;::error file=&::Hash mismatch in &\n;' /tmp/hashdiff
+          ; printf '::error::Some files had wrong hashes!\n'
+          ; printf '::group::Files with wrong hashes\n'
+          ; sed -z 's;.*;::notice file=&::Hash mismatch in &\n;' /tmp/hashdiff
           | tr -d '\0'
+          ; printf '::endgroup::\n'
           ; exit -1
 
-  # We continue checking C++ formatting. No one gets free CPU cycles if they
-  # can't use clang-format.
-  check-formatting:
-    name: Check C++ Formatting
-    runs-on: ubuntu-24.04
-    timeout-minutes: 15
-    steps:
-    - uses: actions/checkout@v2
-    - uses: DoozyX/clang-format-lint-action@v0.14
-      with:
-        source: '.'
-        extensions: 'h,hpp,cpp,cc,cc.in'
-        clangFormatVersion: 14
   check-python-formatting:
     name: Check Python Formatting
     runs-on: ubuntu-24.04
@@ -59,8 +71,8 @@ jobs:
         arguments: '--max-line-length=120 --ignore E265,E266,E275,E402,E501,E704,E712,E713,E714,E711,E721,E722,E741,W504,W605 --exclude *.yml.py'
         # -----------------------------------
   linux-docker:
-  # All of these shall depend on the formatting check (needs: check-formatting)
-    needs: [check-hashes, check-formatting, check-python-formatting]
+  # All of these shall depend on the formatting check (needs: checks of formatting and hashes)
+    needs: [check-formatting-and-hashes, check-python-formatting]
     runs-on: ubuntu-24.04
     # The GH default is 360 minutes (it's also the max as of Feb-2021). However
     # we should fail sooner. The only reason to exceed this time is if a test
@@ -206,8 +218,8 @@ jobs:
       run: ./.github/ci-tools/build-summary.sh "${{ matrix.distro }}" "/build"
   mingw64:
     timeout-minutes: 80
-  # All of these shall depend on the formatting check (needs: check-formatting)
-    needs: [check-hashes, check-formatting, check-python-formatting]
+  # All of these shall depend on the formatting check (needs: checks of formatting and hashes)
+    needs: [check-formatting-and-hashes, check-python-formatting]
     runs-on: windows-latest
     name: MinGW-w64
     defaults:
