@@ -12,6 +12,7 @@
 #include <array>
 #include <memory>
 #include <sstream>
+#include <stdexcept>
 
 namespace gr {
 namespace qtgui {
@@ -53,8 +54,11 @@ int QRfnocF15ColorMapper::loadFromFile(QFile& file)
     int kp = -1;
 
     /* Make sure it's open */
-    if (!file.isOpen())
-        file.open(QFile::ReadOnly);
+    if (!file.isOpen()) {
+        if (!file.open(QFile::ReadOnly)) {
+            throw std::runtime_error("could not open file.");
+        }
+    }
 
     /* Scan until the end */
     std::stringstream ss;
