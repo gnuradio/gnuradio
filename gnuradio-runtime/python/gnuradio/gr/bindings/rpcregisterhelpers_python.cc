@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(rpcregisterhelpers.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(0780fcaf921e639d4a020d918b00178b)                     */
+/* BINDTOOL_HEADER_FILE_HASH(20b5c878c3f7a1beda0862a9a96d4238)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
