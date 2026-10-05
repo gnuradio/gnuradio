@@ -1,5 +1,5 @@
-id: uhd_rfnoc_fosphor
-label: RFNoC Fosphor Block
+id: uhd_rfnoc_f15
+label: RFNoC F15 Block
 category: '[Core]/UHD/RFNoC/Blocks'
 
 templates:
@@ -148,8 +148,8 @@ outputs:
   optional: true
 
 documentation: |-
-  RFNoC Fosphor Block:
-  The fosphor block takes in complex 16-bit FFT data and produces two byte
-  streams, one stream of histogram data and one stream of waterfall data
+  RFNoC F15 ("Fosphor") Block:
+  This block takes in complex 16-bit FFT data and produces two byte-streams,
+  one stream of histogram data and one stream of waterfall data.
 
 file_format: 1
