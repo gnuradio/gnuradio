@@ -58,6 +58,7 @@ requirements:
     - libthrift  # [not win]
     - mako
     - mpir  # [win]
+    - nlohmann_json
     - numpy
     - packaging
     - pip  # [win]
