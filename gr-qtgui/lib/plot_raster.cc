@@ -229,8 +229,14 @@ QImage PlotTimeRaster::renderImage(const QwtScaleMap& xMap,
         flags |= Qt::Orientation::Horizontal;
     if (yyMap.p1() < yyMap.p2())
         flags |= Qt::Orientation::Vertical;
-    if (flags)
+    if (flags) {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 9, 0)
         image.flip(flags);
+#else
+        image =
+            image.mirrored(flags.testFlag(Qt::Horizontal), flags.testFlag(Qt::Vertical));
+#endif
+    }
 
     return std::move(image);
 }

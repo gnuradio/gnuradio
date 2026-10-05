@@ -653,8 +653,12 @@ void QRfnocF15Surface::refreshLayout()
 
 GLuint QRfnocF15Surface::bindTexture(const QPixmap& pixmap)
 {
-    QImage img =
-        pixmap.toImage().convertToFormat(QImage::Format_RGBA8888).flipped(Qt::Vertical);
+    QImage img = pixmap.toImage().convertToFormat(QImage::Format_RGBA8888);
+#if QT_VERSION >= QT_VERSION_CHECK(6, 9, 0)
+    img.flip(Qt::Vertical);
+#else
+    img = img.mirrored(false, true);
+#endif
     GLuint tex;
     glGenTextures(1, &tex);
     glBindTexture(GL_TEXTURE_2D, tex);
