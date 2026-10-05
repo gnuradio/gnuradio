@@ -108,7 +108,7 @@ blocks:
     gui_hint: ''
     label: Frequency (Hz)
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: QtCore.Qt.Orientation.Horizontal
     rangeType: float
     start: 1e6
     step: 1e6
@@ -129,7 +129,7 @@ blocks:
     gui_hint: ''
     label: Gain (dB)
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: QtCore.Qt.Orientation.Horizontal
     rangeType: float
     start: '0'
     step: '1'
@@ -174,7 +174,7 @@ blocks:
     alias: ''
     clock_source: ''
     comment: ''
-    dev_addr: '"addr=192.168.30.2"'
+    dev_addr: '"type=x300"'
     dev_args: ''
     maxoutbuf: '0'
     minoutbuf: '0'
@@ -256,11 +256,11 @@ blocks:
     freq1: '0'
     freq2: '0'
     freq3: '0'
-    instance_index: '-1'
+    instance_index: '1'
     maxoutbuf: '0'
     minoutbuf: '0'
     num_chans: '1'
-    output_rate0: '0'
+    output_rate0: 100e6
     output_rate1: '0'
     output_rate2: '0'
     output_rate3: '0'
@@ -270,38 +270,9 @@ blocks:
     bus_structure: null
     coordinate: [480, 232.0]
     rotation: 0
-    state: true
-- name: uhd_rfnoc_fft_0
-  id: uhd_rfnoc_fft
-  parameters:
-    affinity: ''
-    alias: ''
-    block_args: ''
-    comment: ''
-    device_select: '-1'
-    fft_bypass_mode: 'False'
-    fft_cp_insertion_list: '[0]'
-    fft_cp_removal_list: '[0]'
-    fft_direction: FORWARD
-    fft_length: fft_size
-    fft_magnitude: COMPLEX
-    fft_scaling: '1706'
-    fft_scaling_factor: '1.0'
-    fft_shift_config: NORMAL
-    instance_index: '-1'
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    num_chans: '1'
-    scaling_version: Scaling Schedule
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [912, 200.0]
-    rotation: 0
-    state: true
-- name: uhd_rfnoc_fosphor_0
-  id: uhd_rfnoc_fosphor
+    state: enabled
+- name: uhd_rfnoc_f15_0
+  id: uhd_rfnoc_f15
   parameters:
     affinity: ''
     alias: ''
@@ -330,12 +301,41 @@ blocks:
     coordinate: [968, 376.0]
     rotation: 180
     state: true
+- name: uhd_rfnoc_fft_0
+  id: uhd_rfnoc_fft
+  parameters:
+    affinity: ''
+    alias: ''
+    block_args: ''
+    comment: ''
+    device_select: '-1'
+    fft_bypass_mode: 'False'
+    fft_cp_insertion_list: '[]'
+    fft_cp_removal_list: '[]'
+    fft_direction: FORWARD
+    fft_length: fft_size
+    fft_magnitude: COMPLEX
+    fft_scaling: '1706'
+    fft_scaling_factor: 1/fft_size
+    fft_shift_config: NORMAL
+    instance_index: '-1'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_chans: '1'
+    scaling_version: Scaling Factor
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [912, 200.0]
+    rotation: 0
+    state: true
 - name: uhd_rfnoc_rx_radio_0
   id: uhd_rfnoc_rx_radio
   parameters:
     affinity: ''
     alias: ''
-    antenna0: RX2
+    antenna0: TX/RX
     antenna1: RX2
     antenna2: RX2
     antenna3: RX2
@@ -375,7 +375,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [168, 180.0]
+    coordinate: [136, 172.0]
     rotation: 0
     state: true
 - name: uhd_rfnoc_rx_streamer_0_0
@@ -439,22 +439,22 @@ connections:
   src_port_id: '0'
 - params:
     is_back_edge: 'False'
-  snk_blk_id: uhd_rfnoc_fosphor_0
-  snk_port_id: '0'
-  src_blk_id: uhd_rfnoc_fft_0
-  src_port_id: '0'
-- params:
-    is_back_edge: 'False'
   snk_blk_id: uhd_rfnoc_rx_streamer_0_0
   snk_port_id: '0'
-  src_blk_id: uhd_rfnoc_fosphor_0
+  src_blk_id: uhd_rfnoc_f15_0
   src_port_id: '0'
 - params:
     is_back_edge: 'False'
   snk_blk_id: uhd_rfnoc_rx_streamer_0_0_0
   snk_port_id: '0'
-  src_blk_id: uhd_rfnoc_fosphor_0
+  src_blk_id: uhd_rfnoc_f15_0
   src_port_id: '1'
+- params:
+    is_back_edge: 'False'
+  snk_blk_id: uhd_rfnoc_f15_0
+  snk_port_id: '0'
+  src_blk_id: uhd_rfnoc_fft_0
+  src_port_id: '0'
 - params:
     is_back_edge: 'False'
   snk_blk_id: uhd_rfnoc_ddc_0

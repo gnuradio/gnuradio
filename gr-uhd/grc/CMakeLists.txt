@@ -41,7 +41,7 @@ if(ENABLE_UHD_RFNOC)
         # GRC Bindings for GNU Radio flow graphs
         uhd_rfnoc_addsub.block.yml
         uhd_rfnoc_fft.block.yml
-        uhd_rfnoc_fosphor.block.yml
+        uhd_rfnoc_f15.block.yml
         uhd_rfnoc_graph.block.yml
         uhd_rfnoc_keep_one_in_n.block.yml
         uhd_rfnoc_logpwr.block.yml
