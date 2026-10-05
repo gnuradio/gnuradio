@@ -41,10 +41,11 @@ QRfnocF15ColorMapper::QRfnocF15ColorMapper(QObject* parent) : QObject(parent)
     d_u_tex = d_shader->uniformLocation("tex");
     d_u_range = d_shader->uniformLocation("range");
 
+    initializeOpenGLFunctions();
+
     /* Load default set */
     QFile f(":/rfnoc_f15/palettes.txt");
     loadFromFile(f);
-    initializeOpenGLFunctions();
 }
 
 int QRfnocF15ColorMapper::loadFromFile(QFile& file)
