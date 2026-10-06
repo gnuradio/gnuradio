@@ -262,7 +262,6 @@ jobs:
           qt6-base:p
           qwt-qt6:p
           SDL:p
-          soapysdr:p
           spdlog:p
           thrift:p
           volk:p
