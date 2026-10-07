@@ -344,6 +344,12 @@ ELEMENT_DELETE = actions.register(
     icon_name='edit-delete',
     keypresses=["Delete"],
 )
+BLOCK_AUTOCONNECT = actions.register(
+    "win.block_autoconnect",
+    label='Auto_connect',
+    tooltip='Connect the ports of the selected blocks based on their position and type',
+    keypresses=["a"],
+)
 BLOCK_MOVE = actions.register("win.block_move")
 BLOCK_ROTATE_CCW = actions.register(
     "win.block_rotate_ccw",
