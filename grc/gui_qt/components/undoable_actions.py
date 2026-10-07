@@ -204,6 +204,36 @@ class NewElementAction(QUndoCommand):
         self.scene.update()
 
 
+class AutoconnectAction(QUndoCommand):
+    def __init__(self, scene: FlowgraphScene, port_pairs):
+        QUndoCommand.__init__(self)
+        log.debug("init AutoconnectAction")
+        self.setText('Autoconnect')
+        self.scene = scene
+        self.port_pairs = port_pairs
+        self.connections = None
+
+    def redo(self):
+        if self.connections is None:
+            self.connections = []
+            for source, sink in self.port_pairs:
+                try:
+                    self.connections.append(self.scene.core.connect(source, sink))
+                except Exception as e:
+                    log.warning(f"Autoconnect: could not connect {source} to {sink}: {e}")
+        else:
+            for con in self.connections:
+                self.scene.core.connections.add(con)
+        for con in self.connections:
+            self.scene.addItem(con.gui)
+        self.scene.update()
+
+    def undo(self):
+        for con in self.connections:
+            self.scene.remove_element(con.gui)
+        self.scene.update()
+
+
 class DeleteElementAction(QUndoCommand):
     def __init__(self, scene: FlowgraphScene):
         QUndoCommand.__init__(self)

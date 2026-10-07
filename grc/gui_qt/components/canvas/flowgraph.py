@@ -33,6 +33,7 @@ from .connection import DummyConnection
 from .port import GUIPort
 from ... import base
 from ....core.FlowGraph import FlowGraph as CoreFlowgraph
+from ....core.utils.autoconnect import find_connections
 from ... import Utils
 from ...external_editor import ExternalEditor
 
@@ -243,6 +244,28 @@ class FlowgraphScene(QGraphicsScene, base.Component):
             block.gui.setSelected(True)
         for conn in self.core.connections:
             conn.gui.setSelected(True)
+
+    def autoconnect_candidates(self):
+        """
+        Find the connections required to connect the selected blocks.
+
+        Returns:
+            a list of (source_port, sink_port) tuples of core ports
+        """
+        def port_geometry(port):
+            g_port = port.gui
+            h = g_port.height / 2.0
+            # Ports attach on their local left (sinks) or right (sources) edge
+            if port.is_source:
+                local, outward = QPointF(g_port.width, h), QPointF(g_port.width + 1.0, h)
+            else:
+                local, outward = QPointF(0.0, h), QPointF(-1.0, h)
+            pos = g_port.mapToScene(local)
+            direction = g_port.mapToScene(outward) - pos
+            return (pos.x(), pos.y()), (direction.x(), direction.y())
+
+        blocks = [g_block.core for g_block in self.selected_blocks()]
+        return find_connections(blocks, port_geometry)
 
     def rotate_selected(self, rotation):
         """
