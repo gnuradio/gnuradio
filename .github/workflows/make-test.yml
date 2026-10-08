@@ -114,11 +114,6 @@ jobs:
             containerid: 'gnuradio/ci:debian-13-3.10'
           - distro: 'Debian 14'
             containerid: 'gnuradio/ci:debian-14-3.11'
-          - distro: 'Doxygen (Fedora 44)'
-            containerid: 'gnuradio/ci:fedora-44-3.11'
-            enable_doxygen: On
-            enable_default: Off
-            enable_python: Off
     name: ${{ matrix.distro }}
     container:
       image: ${{ matrix.containerid }}
