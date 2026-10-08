@@ -1,0 +1,38 @@
+name: 'Doxygen build'
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+      - base-installer-support
+
+jobs:
+  container-build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    name: Build doxygen documentation in container
+    container:
+      image: 'gnuradio/ci:debian-13-doxygenonly'
+    steps:
+    - name: Checkout Project
+      uses: actions/checkout@v1
+    - name: CMake Configuration
+      run: >
+          cmake -S ${GITHUB_WORKSPACE} /build -GNinja
+          -DENABLE_DEFAULT=Off -DENABLE_DOXYGEN=On
+    - name: Build
+      run: cmake --build /build
+    - name: Install
+      run: cmake --install /build --prefix /target
+    - name: Bundle for upload
+      run: tools/collect_installation.bash "doxygen build" "/target/share/doc" "/docs.squash"
+    - name: Upload installation archive
+      uses: actions/upload-artifact@v7
+      with:
+        name: '${{ matrix.distro }} installation archive'
+        archive: false 
+        path: /docs.squash
+        if-no-files-found: error
+        retention-days: 7
