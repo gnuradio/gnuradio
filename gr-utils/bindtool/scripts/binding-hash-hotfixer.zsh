@@ -20,7 +20,7 @@ errcount=0
 patchfile() {
     header_fname=$(grep -o -e 'BINDTOOL_HEADER_FILE(\(.*\))' "${1}" | sed 's/BINDTOOL_HEADER_FILE(\(.*\))/\1/')
     if [[ -z "$header_fname" ]]; then
-        echo "WARNING: skipping '$1': no BINDTOOL_HEADER_FILE defined" >&2
+        $verbose && echo "WARNING: skipping '$1': no BINDTOOL_HEADER_FILE defined" >&2
         return -1
     fi
 
@@ -49,4 +49,4 @@ for binding in $@; do
     patchfile $binding
 done
 
-exit $((0 - $errcount))
+exit $(( errcount > 0 ))
