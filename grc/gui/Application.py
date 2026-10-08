@@ -148,6 +148,7 @@ class Application(Gtk.Application):
                 Actions.ERRORS_WINDOW_DISPLAY,
                 Actions.ELEMENT_DELETE,
                 Actions.BLOCK_PARAM_MODIFY,
+                Actions.BLOCK_AUTOCONNECT,
                 Actions.BLOCK_ROTATE_CCW,
                 Actions.BLOCK_ROTATE_CW,
                 Actions.BLOCK_VALIGN_TOP,
@@ -394,6 +395,11 @@ class Application(Gtk.Application):
             page.saved = False
         elif action in Actions.BLOCK_ALIGNMENTS:
             if flow_graph.align_selected(action):
+                page.state_cache.save_new_state(flow_graph.export_data())
+                page.saved = False
+        elif action == Actions.BLOCK_AUTOCONNECT:
+            if flow_graph.autoconnect_selected():
+                flow_graph_update()
                 page.state_cache.save_new_state(flow_graph.export_data())
                 page.saved = False
         elif action == Actions.BLOCK_ROTATE_CCW:
@@ -854,6 +860,7 @@ class Application(Gtk.Application):
         Actions.ERRORS_WINDOW_DISPLAY.set_enabled(not flow_graph.is_valid())
         Actions.ELEMENT_DELETE.set_enabled(bool(flow_graph.selected_elements))
         Actions.BLOCK_PARAM_MODIFY.set_enabled(bool(selected_block) or bool(selected_conn_has_params))
+        Actions.BLOCK_AUTOCONNECT.set_enabled(len(selected_blocks) > 1)
         Actions.BLOCK_ROTATE_CCW.set_enabled(bool(selected_blocks))
         Actions.BLOCK_ROTATE_CW.set_enabled(bool(selected_blocks))
         # update alignment options

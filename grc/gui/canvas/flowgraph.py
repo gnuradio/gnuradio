@@ -9,6 +9,7 @@ SPDX-License-Identifier: GPL-2.0-or-later
 
 import ast
 import functools
+import math
 import random
 from shutil import which as find_executable
 from itertools import count
@@ -22,6 +23,7 @@ from .. import Actions, Constants, Utils, Bars, Dialogs, MainWindow
 from ..external_editor import ExternalEditor
 from ...core import Messages
 from ...core.FlowGraph import FlowGraph as CoreFlowgraph
+from ...core.utils.autoconnect import find_connections
 
 
 class _ContextMenu(object):
@@ -419,6 +421,27 @@ class FlowGraph(CoreFlowgraph, Drawable):
             selected_block.coordinate = transform(x, y, w, h)
 
         return True
+
+    def autoconnect_selected(self):
+        """
+        Connect the ports of the selected blocks amongst each other.
+
+        Returns:
+            true if changed, otherwise false.
+        """
+        def port_geometry(port):
+            # connector_direction is in degrees, counter-clockwise, y axis down
+            angle = math.radians(port.connector_direction)
+            return port.connector_coordinate_absolute, (math.cos(angle), -math.sin(angle))
+
+        changed = False
+        for source, sink in find_connections(self.selected_blocks(), port_geometry):
+            try:
+                self.connect(source, sink)
+                changed = True
+            except Exception as e:
+                Messages.send_fail_connection(str(e))
+        return changed
 
     def rotate_selected(self, rotation):
         """

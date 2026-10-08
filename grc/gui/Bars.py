@@ -68,6 +68,7 @@ MENU_BAR_LIST = [
         [Actions.FLOW_GRAPH_UNDO, Actions.FLOW_GRAPH_REDO],
         [Actions.BLOCK_CUT, Actions.BLOCK_COPY, Actions.BLOCK_PASTE,
             Actions.ELEMENT_DELETE, Actions.SELECT_ALL],
+        [Actions.BLOCK_AUTOCONNECT],
         [Actions.BLOCK_ROTATE_CCW, Actions.BLOCK_ROTATE_CW,
             ('_Align', Actions.BLOCK_ALIGNMENTS)],
         [Actions.BLOCK_ENABLE, Actions.BLOCK_DISABLE, Actions.BLOCK_BYPASS],
