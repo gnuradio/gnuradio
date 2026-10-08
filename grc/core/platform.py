@@ -85,6 +85,7 @@ class Platform(Element):
             Messages.send('    >>> Warning: cyclic hier_block dependency\n')
             return None, None
         self._auto_hier_block_generate_chain.add(file_path)
+        flow_graph = None
         try:
             flow_graph = self.make_flow_graph()
             flow_graph.grc_file_path = file_path
@@ -98,7 +99,8 @@ class Platform(Element):
                 raise Exception('Not a hier block')
         except Exception as e:
             Messages.send('>>> Load Error: {}: {}\n'.format(file_path, str(e)))
-            Messages.send_flowgraph_error_report(flow_graph)
+            if flow_graph:
+                Messages.send_flowgraph_error_report(flow_graph)
             return None, None
         finally:
             self._auto_hier_block_generate_chain.discard(file_path)
