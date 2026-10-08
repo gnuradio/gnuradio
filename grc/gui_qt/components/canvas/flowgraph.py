@@ -47,7 +47,13 @@ DEFAULT_MAX_Y = 300
 
 
 class Flowgraph(CoreFlowgraph):
-    def __init__(self, gui, platform, *args, **kwargs):
+    def __init__(self, *args, gui=None, **kwargs):
+        if len(args) >= 2:
+            gui, platform = args[:2]
+        elif len(args) == 1:
+            platform = args[0]
+        else:
+            platform = kwargs.pop('platform', kwargs.pop('parent', None))
         self.gui = gui
         CoreFlowgraph.__init__(self, platform)
 
