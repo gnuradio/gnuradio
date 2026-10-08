@@ -148,7 +148,7 @@ jobs:
         ${GITHUB_WORKSPACE}
     - name: Dump compile commands
       if: ${{ ! matrix.skip_upload }}
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7.0.2
       with:
         name: '${{ matrix.distro }}.compile_commands.json'
         path: /build/compile_commands.json
@@ -193,11 +193,11 @@ jobs:
       run: tools/collect_installation.bash "${{ matrix.distro }}" "/target" "/installation-archive.squash"
     - name: Upload installation archive
       if: ${{ ! matrix.skip_upload }}
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7.0.2
       with:
         name: '${{ matrix.distro }} installation archive'
         # already much better compressed
-        compression-level: 0
+        archive: false
         path: /installation-archive.squash
         if-no-files-found: warn
         # these things are kinda large, keep them around for 7 days: we can recreate them if we want
