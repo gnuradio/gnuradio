@@ -46,6 +46,9 @@ CONNECTION_ERROR_COLOR = get_color('#FF0000')
 DARK_FLOWGRAPH_BACKGROUND_COLOR = get_color('#19232D')
 LIGHT_FLOWGRAPH_BACKGROUND_COLOR = get_color('#FFFFFF')
 
+DARK_CANVAS_GRID_COLOR = get_color('#2A3A4A')
+LIGHT_CANVAS_GRID_COLOR = get_color('#E0E0E0')
+
 
 #################################################################################
 # port colors
