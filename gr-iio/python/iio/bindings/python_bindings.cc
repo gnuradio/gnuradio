@@ -26,6 +26,9 @@ void bind_fmcomms2_sink(py::module& m);
 void bind_fmcomms2_source(py::module& m);
 void bind_pluto_utils(py::module& m);
 #endif
+#ifdef LIBIIO_V1
+void bind_event_monitor(py::module& m);
+#endif
 
 // We need this hack because import_array() returns NULL
 // for newer Python versions.
@@ -57,5 +60,8 @@ PYBIND11_MODULE(iio_python, m)
     bind_fmcomms2_sink(m);
     bind_fmcomms2_source(m);
     bind_pluto_utils(m);
+#endif
+#ifdef LIBIIO_V1
+    bind_event_monitor(m);
 #endif
 }

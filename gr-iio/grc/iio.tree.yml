@@ -7,6 +7,7 @@
     - iio_attr_sink
     - iio_attr_updater
     - iio_dds_control
+    - iio_event_monitor
   - 'FMComms':
     - iio_fmcomms2_source
     - iio_fmcomms2_sink
