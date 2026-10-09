@@ -46,6 +46,7 @@ outputs:
 
 asserts:
 - ${ num_ports > 0 }
+- ${ len(symbol_table) > 0 }
 
 templates:
     imports: from gnuradio import digital
