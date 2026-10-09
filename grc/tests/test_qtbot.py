@@ -745,6 +745,22 @@ def test_edit_select_all(qtbot, qapp_cls_):
     qtbot.wait(100)
 
 
+def test_edit_select_all_in_text_field(qtbot, qapp_cls_):
+    main_window = qapp_cls_.MainWindow
+    text_field = QtWidgets.QLineEdit("hello world", main_window)
+    main_window.setCentralWidget(text_field)
+    text_field.show()
+    text_field.setFocus()
+    qtbot.wait(100)
+
+    main_window.actions["select_all"].trigger()
+    qtbot.wait(100)
+
+    assert main_window.focusWidget() is text_field
+    assert text_field.selectedText() == "hello world"
+    assert len(main_window.currentFlowgraphScene.selectedItems()) == 0
+
+
 def test_edit_cut_paste(qtbot, qapp_cls_):
     fg = qapp_cls_.MainWindow.currentFlowgraph
 
