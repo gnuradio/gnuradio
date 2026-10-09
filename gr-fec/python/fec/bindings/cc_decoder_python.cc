@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(cc_decoder.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(d047cf6f0d6e65a23b03f1e03ee09b0d)                     */
+/* BINDTOOL_HEADER_FILE_HASH(f44571e45f8df90090e88394be495f0a)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -50,6 +50,7 @@ void bind_cc_decoder(py::module& m)
                     py::arg("end_state") = -1,
                     py::arg("mode") = ::_cc_mode_t::CC_STREAMING,
                     py::arg("padded") = false,
+                    py::arg("lookahead") = 6,
                     D(code, cc_decoder, make))
 
 
