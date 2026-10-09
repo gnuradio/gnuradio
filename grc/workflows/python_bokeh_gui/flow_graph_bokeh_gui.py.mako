@@ -221,6 +221,9 @@ def main(top_block_cls=${class_name}, options=None):
     # Create Top Block instance
     tb = top_block_cls(${ ', '.join(params_eq_list) })
     ${'snippets_main_after_init(tb)' if snippets['main_after_init'] else ''}
+    for blk in tb.__dict__.values():
+        if hasattr(blk, 'after_main_hook'):
+            blk.after_main_hook()
     try:
         tb.start()
         ${'snippets_main_after_start(tb)' if snippets['main_after_start'] else ''}
