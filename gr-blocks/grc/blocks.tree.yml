@@ -168,6 +168,8 @@
   - blocks_short_to_char
   - blocks_short_to_float
   - blocks_uchar_to_float
+  - blocks_bytes_to_numeric
+  - blocks_numeric_to_bytes
 - Waveform Generators:
   - blocks_vco_f
   - blocks_vco_c
