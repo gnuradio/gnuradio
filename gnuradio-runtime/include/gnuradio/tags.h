@@ -58,7 +58,8 @@ struct GR_RUNTIME_API tag_t {
 
 //!\brief enables gr::tag to be formatted with fmt
 template <>
-struct GR_RUNTIME_API fmt::formatter<gr::tag_t> : formatter<std::string_view> {
-    fmt::format_context::iterator format(const gr::tag_t& tag, format_context& ctx) const;
+struct fmt::formatter<gr::tag_t> : formatter<std::string_view> {
+    GR_RUNTIME_API fmt::format_context::iterator format(const gr::tag_t& tag,
+                                                        format_context& ctx) const;
 };
 #endif /*INCLUDED_GR_TAGS_H*/
