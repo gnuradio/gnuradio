@@ -36,7 +36,7 @@ parameters:
     dtype: real
 -   id: win
     label: Window
-    dtype: raw
+    dtype: enum
     default: window.WIN_HAMMING
     options: [window.WIN_HAMMING, window.WIN_HANN, window.WIN_BLACKMAN, window.WIN_RECTANGULAR,
         window.WIN_KAISER]
