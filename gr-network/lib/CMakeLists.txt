@@ -55,7 +55,7 @@ endif(MSVC)
 #Install built library files
 ########################################################################
 if(BUILD_SHARED_LIBS)
-    gr_library_foo(gnuradio-network)
+    GR_REGISTER_LIBRARY(gnuradio-network)
 endif()
 
 ########################################################################

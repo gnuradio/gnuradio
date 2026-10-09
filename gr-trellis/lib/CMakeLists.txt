@@ -48,5 +48,5 @@ if(MSVC)
 endif(MSVC)
 
 if(BUILD_SHARED_LIBS)
-    gr_library_foo(gnuradio-trellis)
+    GR_REGISTER_LIBRARY(gnuradio-trellis)
 endif()

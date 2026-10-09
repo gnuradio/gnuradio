@@ -126,7 +126,34 @@ endmacro(GR_ADD_CXX_COMPILER_FLAG_IF_AVAILABLE)
 # to OOT modules - Do not create new calls to this library, use GR_REGISTER_LIBRARY
 ########################################################################
 function(GR_LIBRARY_FOO target)
+    # GR_REGISTER_LIBRARY() assumes that the variables GR_ACTIVE_COMPONENT
+    # is defined and is a member of the list _gr_enabled_components, which
+    # itself is expected to have at least one element. Both variables are
+    # modfied by the function GR_REGISTER_COMPONENT().
+    # For OOT modules this is not allways true, since they tend to allways
+    # install everything and may also rely on the 'CMAKE_INSTALL_DEFAULT_COMPONENT'
+    # rather than defining feature components.
+    message(VERBOSE "${CMAKE_CURRENT_FUNCTION}: _gr_enabled_components_${_gr_enabled_components}_")
+    get_property(_component_old GLOBAL PROPERTY GR_ACTIVE_COMPONENT)
+    message(VERBOSE "${CMAKE_CURRENT_FUNCTION}: Changing GR_ACTIVE_COMPONENT from '${_component_old}' to '${CMAKE_INSTALL_DEFAULT_COMPONENT_NAME}'")
+    ## TODO: Consider implementing a check for existing valid value combinatioms
+    ## Legacy OOT, that uses GR_REGISTER_COMPONENT() with legacy positional
+    ## aruments (i.e. v1) likely will have GR_ACTIVE_COMPONENT be empty string.
+    list(APPEND _gr_enabled_components ${CMAKE_INSTALL_DEFAULT_COMPONENT_NAME})
+    set_property(GLOBAL PROPERTY GR_ACTIVE_COMPONENT ${CMAKE_INSTALL_DEFAULT_COMPONENT_NAME})
     GR_REGISTER_LIBRARY(${target} ${ARGN})
+
+    get_property(comp_targets GLOBAL PROPERTY COMPONENT_${_component_default}_TARGETS)
+    message(VERBOSE "${CMAKE_CURRENT_FUNCTION}:comp_targets='${comp_targets}'")
+
+    # Install rules are needed for any deployment, incl. make install
+    #   This used to be part of GR_LIBRARY_FOO (until 
+    #    Commit #24e9f2b "cmake: Add comprehensive cross-platform installer infrastructure")
+    #   Now it is expected to gets included ones at the Bottom of top level makefile.
+    # This fu#nction is only intended for OOT backwards compatibiliy, so 
+    # restoring the call to GR_GENERATE_INSTALL() is fine for OOT modules.
+    GR_GENERATE_INSTALL()
+
 endfunction(GR_LIBRARY_FOO)
 
 ########################################################################
@@ -136,10 +163,12 @@ endfunction(GR_LIBRARY_FOO)
 # Also handle gnuradio custom naming conventions w/ extras mode.
 ########################################################################
 function(GR_REGISTER_LIBRARY target)
+    message(VERBOSE "${CMAKE_CURRENT_FUNCTION}:args=${target}_${ARGN}_")
     #set additional target properties
     set_target_properties(${target} PROPERTIES SOVERSION ${LIBVER})
     set_target_properties(${target} PROPERTIES VERSION ${VERSION})
     get_property(COMPONENT_SET GLOBAL PROPERTY GR_ACTIVE_COMPONENT SET)
+    message(VERBOSE "${CMAKE_CURRENT_FUNCTION}:COMPONENT_SET=${COMPONENT_SET}_")
     if(${COMPONENT_SET})
         get_property(COMPONENT GLOBAL PROPERTY GR_ACTIVE_COMPONENT)
         message(STATUS "Assigning ${target} to component ${COMPONENT}")
@@ -183,9 +212,12 @@ function(GR_INSTALL_LIBRARY)
     set(singleValueArgs TARGET COMPONENT)
     set(multiValueArgs EXPORT_DEPS DISTRIBUTION_DEPS)
     cmake_parse_arguments(GR_LIB "" "${singleValueArgs}" "${multiValueArgs}" ${ARGN})
+    message(VERBOSE "${CMAKE_CURRENT_FUNCTION}: GR_LIB_TARGET=${GR_LIB_TARGET}_")
+    message(VERBOSE "${CMAKE_CURRENT_FUNCTION}: GR_LIB_COMPONENT=${GR_LIB_COMPONENT}_")
 
     # install the generated files like so...
     _compute_safe_component_name(${GR_LIB_COMPONENT})
+    message(VERBOSE "${CMAKE_CURRENT_FUNCTION}: _compute_safe_component_name=${_compute_safe_component_name},${COMPONENT}")
     install(
         TARGETS ${GR_LIB_TARGET}
         EXPORT ${GR_LIB_TARGET}-export
@@ -207,10 +239,13 @@ function(GR_INSTALL_LIBRARY)
     set(GR_LIB_DISTRIBUTION_DEPENDENCIES ${GR_LIB_DISTRIBUTION_DEPS})
     # Generate and install config module
     include(CMakePackageConfigHelpers)
+    # Not of consequences!, Need to check why TARGET is not set
+    set(TARGET "${GR_LIB_TARGET}")
     configure_package_config_file(
         ${PROJECT_SOURCE_DIR}/cmake/Modules/targetConfig.cmake.in
         ${CMAKE_CURRENT_BINARY_DIR}/cmake/Modules/${GR_LIB_TARGET}Config.cmake
-        INSTALL_DESTINATION ${GR_CMAKE_DIR})
+        INSTALL_DESTINATION ${GR_CMAKE_DIR}
+        PATH_VARS TARGET)
     install(FILES ${CMAKE_CURRENT_BINARY_DIR}/cmake/Modules/${GR_LIB_TARGET}Config.cmake
             COMPONENT CMAKE_EXPORT_CONFIG
             DESTINATION ${GR_CMAKE_DIR})
@@ -229,8 +264,10 @@ function(GR_INSTALL_LIBRARY)
 endfunction()
 
 function(GR_GENERATE_INSTALL)
+    message(VERBOSE "${CMAKE_CURRENT_FUNCTION}:_gr_enabled_components=${_gr_enabled_components}_")
     foreach(component ${_gr_enabled_components})
         get_property(comp_targets GLOBAL PROPERTY COMPONENT_${component}_TARGETS)
+        message(VERBOSE "${CMAKE_CURRENT_FUNCTION}:Component=${component},targets=${comp_targets}")
         foreach(tgt ${comp_targets})
             get_property(DIST_DEPS GLOBAL PROPERTY TARGET_${tgt}_DIST_DEPS)
             get_property(EXP_DEPS GLOBAL PROPERTY TARGET_${tgt}_EXPORT_DEPS)
