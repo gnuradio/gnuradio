@@ -148,6 +148,7 @@ class Application(Gtk.Application):
                 Actions.ERRORS_WINDOW_DISPLAY,
                 Actions.ELEMENT_DELETE,
                 Actions.BLOCK_PARAM_MODIFY,
+                Actions.BLOCK_AUTOCONNECT,
                 Actions.BLOCK_ROTATE_CCW,
                 Actions.BLOCK_ROTATE_CW,
                 Actions.BLOCK_VALIGN_TOP,
@@ -396,6 +397,11 @@ class Application(Gtk.Application):
             if flow_graph.align_selected(action):
                 page.state_cache.save_new_state(flow_graph.export_data())
                 page.saved = False
+        elif action == Actions.BLOCK_AUTOCONNECT:
+            if flow_graph.autoconnect_selected():
+                flow_graph_update()
+                page.state_cache.save_new_state(flow_graph.export_data())
+                page.saved = False
         elif action == Actions.BLOCK_ROTATE_CCW:
             if flow_graph.rotate_selected(90):
                 flow_graph_update()
@@ -556,6 +562,26 @@ class Application(Gtk.Application):
             page.drawing_area.zoom_out()
         elif action == Actions.ZOOM_RESET:
             page.drawing_area.reset_zoom()
+        elif action == Actions.RESTORE_DEFAULT_VIEW:
+            Actions.TOGGLE_CONSOLE_WINDOW.set_active(True)
+            Actions.TOGGLE_FLOW_GRAPH_VAR_EDITOR.set_active(True)
+
+            main.main.set_position(-1)
+            main.left.set_position(-1)
+
+            if getattr(main, 'variable_panel_sidebar', False):
+                main.right.set_position(
+                    self.config.variable_editor_position(sidebar=True)
+                )
+            else:
+                main.left_subpanel.set_position(
+                    self.config.variable_editor_position(sidebar=False)
+                )
+            main.update_panel_visibility(main.VARIABLES)
+            main.update_panel_visibility(main.CONSOLE)
+            Actions.TOGGLE_CONSOLE_WINDOW.save_to_preferences()
+            Actions.TOGGLE_FLOW_GRAPH_VAR_EDITOR.save_to_preferences()
+
         ##################################################
         # Param Modifications
         ##################################################
@@ -854,6 +880,7 @@ class Application(Gtk.Application):
         Actions.ERRORS_WINDOW_DISPLAY.set_enabled(not flow_graph.is_valid())
         Actions.ELEMENT_DELETE.set_enabled(bool(flow_graph.selected_elements))
         Actions.BLOCK_PARAM_MODIFY.set_enabled(bool(selected_block) or bool(selected_conn_has_params))
+        Actions.BLOCK_AUTOCONNECT.set_enabled(len(selected_blocks) > 1)
         Actions.BLOCK_ROTATE_CCW.set_enabled(bool(selected_blocks))
         Actions.BLOCK_ROTATE_CW.set_enabled(bool(selected_blocks))
         # update alignment options

@@ -27,6 +27,7 @@ import pstats
 
 from typing import Union
 
+from PyQt6 import QtWidgets
 from PyQt6.QtCore import QMetaObject, QPointF, QThreadPool, QUrl, Qt, pyqtSlot
 from PyQt6.QtGui import QDesktopServices, QIcon, QKeySequence, QAction, QPalette
 from PyQt6.QtWidgets import QApplication, QFileDialog, QMainWindow, QMenu, QMessageBox, QProgressBar, QStyle, QTabWidget, QToolBar, QUndoView
@@ -47,7 +48,8 @@ from .undoable_actions import (
     NewElementAction,
     DeleteElementAction,
     BlockPropsChangeAction,
-    BussifyAction
+    BussifyAction,
+    AutoconnectAction,
 )
 from .preferences import PreferencesDialog
 from .oot_browser import OOTBrowser
@@ -432,10 +434,19 @@ class MainWindow(QMainWindow, base.Component):
             shortcut=Keys.SelectAll,
             statusTip=_("select_all-tooltip"),
         )
+        actions["select_all"].setShortcutContext(Qt.ShortcutContext.WidgetShortcut)
 
         actions["select_none"] = Action(
             _("Select None"), self, statusTip=_("select_none-tooltip")
         )
+
+        actions["autoconnect"] = Action(
+            _("Autoconnect"),
+            self,
+            shortcut="A",
+            statusTip=_("Connect the ports of the selected blocks based on their position and type"),
+        )
+        actions["autoconnect"].setEnabled(False)
 
         actions["rotate_ccw"] = Action(
             Icons("object-rotate-left"),
@@ -659,6 +670,7 @@ class MainWindow(QMainWindow, base.Component):
         self.actions["copy"].setEnabled(False)
         self.actions["paste"].setEnabled(False)
         self.actions["delete"].setEnabled(False)
+        self.actions["autoconnect"].setEnabled(len(blocks) > 1)
         self.actions["rotate_cw"].setEnabled(False)
         self.actions["rotate_ccw"].setEnabled(False)
         self.actions["enable"].setEnabled(False)
@@ -771,6 +783,8 @@ class MainWindow(QMainWindow, base.Component):
         edit.addAction(actions["delete"])
         edit.addAction(actions["select_all"])
         edit.addAction(actions["select_none"])
+        edit.addSeparator()
+        edit.addAction(actions["autoconnect"])
         edit.addSeparator()
         edit.addAction(actions["rotate_ccw"])
         edit.addAction(actions["rotate_cw"])
@@ -1255,6 +1269,16 @@ class MainWindow(QMainWindow, base.Component):
 
     def select_all_triggered(self):
         log.debug("select_all")
+        focused_widget = self.focusWidget()
+        if isinstance(focused_widget, (QtWidgets.QLineEdit, QtWidgets.QPlainTextEdit, QtWidgets.QTextEdit)):
+            focused_widget.selectAll()
+            return
+        if isinstance(focused_widget, QtWidgets.QComboBox) and focused_widget.isEditable():
+            focused_widget.lineEdit().selectAll()
+            return
+        if isinstance(focused_widget, QtWidgets.QAbstractSpinBox):
+            focused_widget.selectAll()
+            return
         self.currentFlowgraphScene.select_all()
         self.updateActions()
 
@@ -1272,6 +1296,16 @@ class MainWindow(QMainWindow, base.Component):
         self.currentFlowgraphScene.undoStack.push(rotateCommand)
         self.updateActions()
         self.currentFlowgraphScene.update()
+
+    def autoconnect_triggered(self):
+        log.debug("autoconnect")
+        port_pairs = self.currentFlowgraphScene.autoconnect_candidates()
+        if not port_pairs:
+            return
+        self.currentFlowgraphScene.set_saved(False)
+        self.tabWidget.tabBar().setTabTextColor(self.tabWidget.currentIndex(), Qt.GlobalColor.red)
+        self.currentFlowgraphScene.undoStack.push(AutoconnectAction(self.currentFlowgraphScene, port_pairs))
+        self.updateActions()
 
     def rotate_cw_triggered(self):
         # Pass to Undo/Redo
