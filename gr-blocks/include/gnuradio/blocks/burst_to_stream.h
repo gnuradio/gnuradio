@@ -25,6 +25,14 @@ namespace blocks {
  * Transforms a bursty tagged stream into a continuous stream by inserting zeros
  * in the output between input packets whenever no packets are available at the
  * input.
+ *
+ * \note IMPORTANT:
+ * This block assumes 1:1 input/output item semantics and that each
+ * packet length tag appears exactly once at the packet start.
+ * Placing burst_to_stream after a rate-changing block (e.g. resampler)
+ * can cause length tags to be re-timed or observed multiple times,
+ * leading to duplicated packet reconstruction.
+ * This block must therefore operate before any rate-changing blocks.
  */
 class BLOCKS_API burst_to_stream : virtual public gr::block
 {
