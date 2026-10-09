@@ -6,6 +6,7 @@ SPDX-License-Identifier: GPL-3.0-or-later
 
 import sys
 import unittest.mock
+from types import SimpleNamespace
 import pytest
 
 # Ensure gnuradio runtime module is mocked if not installed
@@ -63,3 +64,26 @@ def test_platform_load_and_generate_flow_graph_error_handling(qapp):
     flow_graph, generator = p.load_and_generate_flow_graph('nonexistent_file.grc')
     assert flow_graph is None
     assert generator is None
+
+
+@pytest.mark.parametrize("legacy_is_directory", [True, False])
+def test_qt_preferences_migration(qapp, tmp_path, monkeypatch, legacy_is_directory):
+    legacy_path = tmp_path / "legacy"
+    prefs_file = tmp_path / "grc_qt.conf"
+    if legacy_is_directory:
+        legacy_path.mkdir()
+        fixture = legacy_path / "fixture.grc"
+        fixture.write_text("fixture", encoding="utf-8")
+    else:
+        legacy_path.write_text("[grc]\n", encoding="utf-8")
+    monkeypatch.setenv("GRC_PREFS_PATH", str(legacy_path))
+    platform = SimpleNamespace(config=SimpleNamespace(gui_prefs_file=str(prefs_file)))
+
+    Platform._move_old_pref_file(platform)
+
+    if legacy_is_directory:
+        assert fixture.read_text(encoding="utf-8") == "fixture"
+        assert not prefs_file.exists()
+    else:
+        assert not legacy_path.exists()
+        assert prefs_file.read_text(encoding="utf-8") == "[grc]\n"
