@@ -20,7 +20,7 @@ type mksquashfs > /dev/null || bail_with_message 'skipping installation collecti
 # count files in installation dir
 shopt -s nullglob
 installations=( "${dir}"/* "${dir}"/.* )
-installed_files=$(( $(echo ${#installations[@]}) - 2))
+installed_files=$(( $(echo ${#installations[@]}) ))
 [[ ${installed_files} -gt 0 ]] || error_out_with_message 'failing installation collection' "expected at least 1 file, got ${installed_files}"
 
 mksquashfs "${dir}" "${archive}" -comp zstd
