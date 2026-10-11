@@ -115,9 +115,19 @@ class ModTool(object):
         self._assign()
 
     def _assign(self):
-        if not self._check_directory(self.dir):
-            raise ModToolException(
-                'No GNU Radio module found in the given directory.')
+        start = os.path.abspath(self.dir)
+        if not self._check_directory(start):
+            parent = os.path.dirname(start)
+            if parent == start:
+                raise ModToolException(
+                    'No GNU Radio module found in the given directory.')
+            for subdir in self._subdirs:
+                self.has_subdirs[subdir] = False
+            if self._check_directory(parent):
+                self.dir = parent
+            else:
+                raise ModToolException(
+                    'No GNU Radio module found in the given directory.')
         if self.info['modname'] is None:
             self.info['modname'] = get_modname()
         if self.info['modname'] is None:
