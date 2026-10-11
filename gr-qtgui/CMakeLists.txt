@@ -61,9 +61,14 @@ set(GR_PKG_QTGUI_EXAMPLES_DIR ${GR_PKG_DATA_DIR}/examples/qt-gui)
 # Begin conditional configuration
 ########################################################################
 if(ENABLE_GR_QTGUI)
-    if(Qt6OpenGL_FOUND AND Qt6OpenGLWidgets_FOUND)
+    # The fosphor/rfnoc_f15 display uses the fixed-function desktop OpenGL
+    # API (glMatrixMode, glTexEnvf, ...), which OpenGL ES does not have.
+    if(Qt6OpenGL_FOUND AND Qt6OpenGLWidgets_FOUND AND NOT QT_FEATURE_opengles2)
           set(ENABLE_GR_QTGUI_OPENGL TRUE)
           message(STATUS "gr-qtgui: Qt6 OpenGL/OpenGLWidgets found, fosphor/rfnoc_f15 display enabled")
+      elseif(QT_FEATURE_opengles2)
+          set(ENABLE_GR_QTGUI_OPENGL FALSE)
+          message(STATUS "gr-qtgui: Qt6 uses OpenGL ES, fosphor/rfnoc_f15 display disabled")
       else()
           set(ENABLE_GR_QTGUI_OPENGL FALSE)
           message(STATUS "gr-qtgui: Qt6 OpenGL/OpenGLWidgets not found, fosphor/rfnoc_f15 display disabled")
