@@ -189,6 +189,7 @@ def argument_parser():
             switches.insert(0, '"-{}"'.format(short_id))
 
         type_ = param.params['type'].get_value()
+        required_ = param.params['required'].get_value()
         if type_:
             params_eq_list.append('%s=options.%s' % (param.name, param.name))
 
@@ -200,9 +201,15 @@ def argument_parser():
             type_ = 'str'
     %>\
     % if type_:
+    % if required_ == 'True':
+    parser.add_argument(
+        ${ ', '.join(switches) }, dest="${param.name}", type=${type_}, required=True,
+        help="Set ${param.params['label'].get_evaluated() or param.name}")
+    % else:
     parser.add_argument(
         ${ ', '.join(switches) }, dest="${param.name}", type=${type_}, default=${ default },
         help="Set ${param.params['label'].get_evaluated() or param.name} [default=%(default)r]")
+    % endif
     % endif
     % endfor
     return parser
