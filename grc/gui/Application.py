@@ -181,6 +181,7 @@ class Application(Gtk.Application):
                 Actions.TOGGLE_SCROLL_LOCK,
                 Actions.TOGGLE_AUTO_HIDE_PORT_LABELS,
                 Actions.TOGGLE_SNAP_TO_GRID,
+                Actions.TOGGLE_GRID_DISPLAY,
                 Actions.TOGGLE_SHOW_BLOCK_COMMENTS,
                 Actions.TOGGLE_SHOW_CODE_PREVIEW_TAB,
                 Actions.TOGGLE_SHOW_FLOWGRAPH_COMPLEXITY,
@@ -491,6 +492,11 @@ class Application(Gtk.Application):
                         Actions.TOGGLE_SHOW_CODE_PREVIEW_TAB):
             action.set_active(not action.get_active())
             action.save_to_preferences()
+        elif action == Actions.TOGGLE_GRID_DISPLAY:
+            action.set_active(not action.get_active())
+            action.save_to_preferences()
+            for p in main.get_pages():
+                p.drawing_area.queue_draw()
         elif action == Actions.TOGGLE_SHOW_FLOWGRAPH_COMPLEXITY:
             action.set_active(not action.get_active())
             action.save_to_preferences()

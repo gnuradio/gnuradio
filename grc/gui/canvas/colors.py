@@ -46,6 +46,9 @@ FLOWGRAPH_BACKGROUND_COLOR = get_color('#FFFFFF')
 COMMENT_BACKGROUND_COLOR = get_color('#F3F3F3')
 FLOWGRAPH_EDGE_COLOR = COMMENT_BACKGROUND_COLOR
 
+# Grid color: a subtle light gray, drawn over the background
+CANVAS_GRID_COLOR = get_color('#DDDDDD')
+
 # Block color constants
 BLOCK_ENABLED_COLOR = get_color('#F1ECFF')
 BLOCK_DISABLED_COLOR = get_color('#CCCCCC')
