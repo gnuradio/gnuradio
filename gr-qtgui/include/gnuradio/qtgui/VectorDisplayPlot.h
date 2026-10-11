@@ -28,14 +28,6 @@ class VectorDisplayPlot : public DisplayPlot
     Q_PROPERTY(QColor max_vec_color READ getMaxVecColor WRITE setMaxVecColor)
     Q_PROPERTY(bool min_vec_visible READ getMinVecVisible WRITE setMinVecVisible)
     Q_PROPERTY(bool max_vec_visible READ getMaxVecVisible WRITE setMaxVecVisible)
-    Q_PROPERTY(QColor marker_lower_intensity_color READ getMarkerLowerIntensityColor WRITE
-                   setMarkerLowerIntensityColor)
-    Q_PROPERTY(bool marker_lower_intensity_visible READ getMarkerLowerIntensityVisible
-                   WRITE setMarkerLowerIntensityVisible)
-    Q_PROPERTY(QColor marker_upper_intensity_color READ getMarkerUpperIntensityColor WRITE
-                   setMarkerUpperIntensityColor)
-    Q_PROPERTY(bool marker_upper_intensity_visible READ getMarkerUpperIntensityVisible
-                   WRITE setMarkerUpperIntensityVisible)
     Q_PROPERTY(QColor marker_ref_level_color READ getMarkerRefLevelAmplitudeColor WRITE
                    setMarkerRefLevelAmplitudeColor)
     Q_PROPERTY(bool marker_ref_level_visible READ getMarkerRefLevelAmplitudeVisible WRITE
@@ -80,10 +72,6 @@ public:
     bool getMinVecVisible() const;
     const QColor getMinVecColor() const;
     const QColor getMaxVecColor() const;
-    const QColor getMarkerLowerIntensityColor() const;
-    bool getMarkerLowerIntensityVisible() const;
-    const QColor getMarkerUpperIntensityColor() const;
-    bool getMarkerUpperIntensityVisible() const;
     bool getMarkerRefLevelAmplitudeVisible() const;
     const QColor getMarkerRefLevelAmplitudeColor() const;
 
@@ -92,15 +80,8 @@ public slots:
     void setMinVecVisible(const bool);
     void setMinVecColor(QColor c);
     void setMaxVecColor(QColor c);
-    void setMarkerLowerIntensityColor(QColor c);
-    void setMarkerLowerIntensityVisible(bool visible);
-    void setMarkerUpperIntensityColor(QColor c);
-    void setMarkerUpperIntensityVisible(bool visible);
     void setMarkerRefLevelAmplitudeVisible(bool visible);
     void setMarkerRefLevelAmplitudeColor(QColor c);
-
-    void setLowerIntensityLevel(const double);
-    void setUpperIntensityLevel(const double);
 
     void onPickerPointSelected(const QPointF& p);
 
@@ -118,10 +99,6 @@ private:
     bool d_min_vec_visible;
     QColor d_max_vec_color;
     bool d_max_vec_visible;
-    QColor d_marker_lower_intensity_color;
-    bool d_marker_lower_intensity_visible;
-    QColor d_marker_upper_intensity_color;
-    bool d_marker_upper_intensity_visible;
     QColor d_marker_ref_level_color;
     bool d_marker_ref_level_visible;
 
@@ -130,9 +107,6 @@ private:
 
     double d_ymax = 10;
     double d_ymin = -10;
-
-    QwtPlotMarker* d_lower_intensity_marker;
-    QwtPlotMarker* d_upper_intensity_marker;
 
     QwtPlotMarker* d_marker_ref_level;
 
