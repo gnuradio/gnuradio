@@ -260,7 +260,7 @@ class PropsDialog(Gtk.Dialog):
 
         # if given the current parameters an exact match can be made
         block_templates = getattr(self._block, 'templates', None)
-        if block_templates:
+        if block_templates and self._block.state == 'enabled':
             block_constructor = block_templates.render(
                 'make').rsplit('.', 2)[-1]
             block_class = block_constructor.partition('(')[0].strip()
