@@ -43,7 +43,7 @@ def _find_block_class(source_code, cls):
     raise ValueError('No python block class found in code')
 
 
-def extract(cls):
+def extract(cls, block_params):
     try:
         from gnuradio import gr
         import pmt
@@ -56,6 +56,7 @@ def extract(cls):
     spec = inspect.getfullargspec(cls.__init__)
     init_args = spec.args[1:]
     defaults = [repr(arg) for arg in (spec.defaults or ())]
+    block_params = {k: block_params[k] for k in init_args if k in block_params}  # filter out potentially removed arguments
     doc = cls.__doc__ or cls.__init__.__doc__ or ''
     cls_name = cls.__name__
 
@@ -63,7 +64,7 @@ def extract(cls):
         raise ValueError("Need all __init__ arguments to have default values")
 
     try:
-        instance = cls()
+        instance = cls(**block_params)
     except Exception as e:
         raise RuntimeError("Can't create an instance of your block: " + str(e))
 
@@ -96,12 +97,12 @@ from gnuradio import gr
 import pmt
 
 class blk(gr.sync_block):
-    def __init__(self, param1=None, param2=None, param3=None):
+    def __init__(self, param1=None, param2=None, param3=None, vlen=1):
         "Test Docu"
         gr.sync_block.__init__(
             self,
             name='Embedded Python Block',
-            in_sig = (np.float32,),
+            in_sig = (np.float32, (np.float32, vlen)),
             out_sig = (np.float32,np.complex64,),
         )
         self.message_port_register_in(pmt.intern('msg_in'))
@@ -126,4 +127,4 @@ class blk(gr.sync_block):
         return 10
     """
     from pprint import pprint
-    pprint(dict(extract(blk_code)._asdict()))
+    pprint(dict(extract(blk_code, dict(vlen=12))._asdict()))

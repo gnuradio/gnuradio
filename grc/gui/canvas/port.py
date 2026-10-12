@@ -33,7 +33,9 @@ class Port(CorePort, Drawable):
         self._hovering = False
         self.force_show_label = False
 
+        # initialized by create_shape(), which must happen before calling draw()!
         self._area = []
+
         self._bg_color = self._border_color = 0, 0, 0, 0
         self._font_color = list(colors.FONT_COLOR)
 
@@ -125,6 +127,8 @@ class Port(CorePort, Drawable):
         Draw the socket with a label.
         """
         if self.hidden:
+            return
+        if not self._area:
             return
 
         border_color = self._border_color
