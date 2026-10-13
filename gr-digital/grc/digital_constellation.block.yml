@@ -51,6 +51,12 @@ parameters:
     default: None
     hide: ${ ('part' if str(soft_dec_lut) == 'None' else 'none') }
 
+-   id: axis_limit
+    label: LUT Axis Limit
+    dtype: float
+    default: 1.0
+    hide: ${'all' if str(soft_dec_lut).lower() == 'auto' or str(soft_dec_lut) == 'None' else 'part'}
+
 value: ${ digital.constellation_calcdist(const_points, sym_map, rot_sym, dims, normalization) if (str(type) == "calcdist") else getattr(digital,'constellation_'+str(type))()  }
 
 
@@ -67,7 +73,7 @@ templates:
         % if str(soft_dec_lut).lower() == '"auto"' or str(soft_dec_lut).lower() == "'auto'":
         self.${id}.gen_soft_dec_lut(${precision})
         % elif str(soft_dec_lut) != "None":
-        self.${id}.set_soft_dec_lut(${soft_dec_lut}, ${precision})
+        self.${id}.set_soft_dec_lut(${soft_dec_lut}, ${precision}, ${axis_limit})
         % endif
 
 cpp_templates:
@@ -86,7 +92,7 @@ cpp_templates:
         % if str(soft_dec_lut).lower() == '"auto"' or str(soft_dec_lut).lower() == "'auto'":
         this->${id}.gen_soft_dec_lut(${precision});
         % elif str(soft_dec_lut) != "None":
-        this->${id}.set_soft_dec_lut(${soft_dec_lut}, ${precision});
+        this->${id}.set_soft_dec_lut(${soft_dec_lut}, ${precision}, ${axis_limit});
         % endif
     link: ['gnuradio::gnuradio-digital']
 

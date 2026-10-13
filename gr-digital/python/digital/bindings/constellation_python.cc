@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(constellation.h)                                           */
-/* BINDTOOL_HEADER_FILE_HASH(db216c4298d744fde5e8f7449bb8c8e4)                     */
+/* BINDTOOL_HEADER_FILE_HASH(0a7037f35318fda5a6afed827b32e036)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -134,6 +134,11 @@ void bind_constellation(py::module& m)
              D(constellation, pre_diff_code))
 
 
+        .def("pre_diff_decode",
+             &constellation::pre_diff_decode,
+             D(constellation, pre_diff_decode))
+
+
         .def("rotational_symmetry",
              &constellation::rotational_symmetry,
              D(constellation, rotational_symmetry))
@@ -176,6 +181,7 @@ void bind_constellation(py::module& m)
              &constellation::set_soft_dec_lut,
              py::arg("soft_dec_lut"),
              py::arg("precision"),
+             py::arg("axis_limit"),
              D(constellation, set_soft_dec_lut))
 
 
