@@ -21,6 +21,13 @@ import sys
 import os
 import unittest
 
+# Specify GTK3 before any GRC module imports. On Ubuntu 22.04 the default
+# GTK version resolves to GTK4 which lacks GTK3-only symbols (e.g.
+# Gtk.TargetEntry) that GRC's Constants.py uses at module level.
+import gi
+gi.require_version('Gtk', '3.0')
+gi.require_version('Gdk', '3.0')
+
 
 class TestGridDisplayAction(unittest.TestCase):
     """Tests for the TOGGLE_GRID_DISPLAY action."""
