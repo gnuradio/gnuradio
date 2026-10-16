@@ -52,7 +52,7 @@ def fetch_online(name: str) -> Optional[pathlib.Path]:
     url = URLS[name]["url"]
     target_dir = download_dir()
     parts = parse.urlsplit(url)
-    filename = pathlib.PosixPath(parts.path).parts[-1]
+    filename = pathlib.Path(parts.path).parts[-1]
     local_file = target_dir / filename
     if local_file.exists():
         logging.info(f"returning pre-downloaded {local_file}")

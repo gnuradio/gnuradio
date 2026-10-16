@@ -81,8 +81,8 @@ requirements:
     - libiio
     - libad9361-iio
   # gnuradio.qtgui
-    - pyqt
-    - qt-main
+    - pyqt6
+    - qt6-main
     - qwt
   # gnuradio.soapy
     - soapysdr
@@ -110,7 +110,7 @@ requirements:
     - packaging
     - {{ pin_compatible('portaudio') }}
     - pygobject
-    - pyqt
+    - pyqt6
     - pyqtgraph
     - python
     - pyyaml
