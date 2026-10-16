@@ -9,7 +9,7 @@ SPDX-License-Identifier: GPL-2.0-or-later
 
 from gi.repository import Gtk, Gdk
 
-from .canvas.colors import FLOWGRAPH_BACKGROUND_COLOR
+from .canvas.colors import FLOWGRAPH_BACKGROUND_COLOR, CANVAS_GRID_COLOR
 from . import Constants
 from . import Actions
 
@@ -242,6 +242,9 @@ class DrawingArea(Gtk.DrawingArea):
         cr.scale(self.zoom_factor, self.zoom_factor)
         cr.set_line_width(2.0 / self.zoom_factor)
 
+        if Actions.TOGGLE_GRID_DISPLAY.get_active():
+            self._draw_grid(cr, width, height)
+
         if self._update_after_zoom:
             self._flow_graph.create_labels(cr)
             self._flow_graph.create_shapes()
@@ -249,6 +252,29 @@ class DrawingArea(Gtk.DrawingArea):
             self._update_after_zoom = False
 
         self._flow_graph.draw(cr)
+
+    def _draw_grid(self, cr, width, height):
+        """Draw a background grid at the snap-to-grid spacing."""
+        cr.save()
+        cr.set_source_rgba(*CANVAS_GRID_COLOR)
+        cr.set_line_width(1.0 / self.zoom_factor)
+        step = Constants.CANVAS_GRID_SIZE
+        canvas_w = width / self.zoom_factor
+        canvas_h = height / self.zoom_factor
+        # Vertical lines
+        x = 0.0
+        while x <= canvas_w:
+            cr.move_to(x, 0)
+            cr.line_to(x, canvas_h)
+            x += step
+        # Horizontal lines
+        y = 0.0
+        while y <= canvas_h:
+            cr.move_to(0, y)
+            cr.line_to(canvas_w, y)
+            y += step
+        cr.stroke()
+        cr.restore()
 
     def _translate_event_coords(self, event):
         return event.x / self.zoom_factor, event.y / self.zoom_factor
