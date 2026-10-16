@@ -18,8 +18,10 @@
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
+#include <pybind11/numpy.h>
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
+#include <volk/volk_alloc.hh>
 
 namespace py = pybind11;
 
@@ -52,7 +54,23 @@ void bind_mmse_interp_differentiator_ff(py::module& m)
 
 
         .def("differentiate",
-             &mmse_interp_differentiator_ff::differentiate,
+             [](const mmse_interp_differentiator_ff& self,
+                const py::array_t<float, py::array::c_style | py::array::forcecast>& input,
+                float mu) {
+                 py::buffer_info inb = input.request();
+                 if (inb.ndim != 1) {
+                     throw std::invalid_argument("Input must be a 1-dimensional array or sequence");
+                 }
+                 if (static_cast<size_t>(inb.size) < self.ntaps()) {
+                     throw std::invalid_argument(
+                         "Input array must contain at least " + std::to_string(self.ntaps()) +
+                         " samples (got " + std::to_string(inb.size) + ")");
+                 }
+                 volk::vector<float> aligned_input(self.ntaps() + 64, 0.0f);
+                 const float* ptr = static_cast<const float*>(inb.ptr);
+                 std::copy(ptr, ptr + self.ntaps(), aligned_input.begin());
+                 return self.differentiate(aligned_input.data(), mu);
+             },
              py::arg("input"),
              py::arg("mu"),
              D(mmse_interp_differentiator_ff, differentiate))
