@@ -15,7 +15,14 @@ from gnuradio.filter import firdes
 
 class phase_noise_gen(gr.hier_block2):
 
-    def __init__(self, noise_mag=0, alpha=0.1):
+    def __init__(self, noise_mag=0, alpha=0.1, seed=0):
+        """Phase noise as a single-pole IIR lowpass filtered Gaussian.
+
+        noise_mag: standard deviation of the Gaussian driving the filter; the
+            phase standard deviation is noise_mag * sqrt(alpha / (2 - alpha))
+        alpha: IIR filter coefficient
+        seed: noise seed; instances with the same seed generate the same noise
+        """
         gr.hier_block2.__init__(
             self, "Phase Noise Generator",
             gr.io_signature(1, 1, gr.sizeof_gr_complex * 1),
@@ -38,7 +45,7 @@ class phase_noise_gen(gr.hier_block2):
         self.blocks_multiply_xx_0 = blocks.multiply_vcc(1)
         self.blocks_float_to_complex_0 = blocks.float_to_complex(1)
         self.analog_noise_source_x_0 = analog.noise_source_f(
-            analog.GR_GAUSSIAN, noise_mag, 42)
+            analog.GR_GAUSSIAN, noise_mag, seed)
 
         ##################################################
         # Connections

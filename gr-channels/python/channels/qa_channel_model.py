@@ -45,6 +45,23 @@ class test_channel_model(gr_unittest.TestCase):
         exp_data = snk1.data()
         self.assertComplexTuplesAlmostEqual(exp_data, dst_data, 5)
 
+    def test_001_cfo_model_std_dev(self):
+        op = channels.cfo_model(1e6, 1.0, 100.0, 1)
+        self.assertAlmostEqual(op.std_dev(), 1.0)
+        self.assertAlmostEqual(op.max_dev(), 100.0)
+
+    def test_002_dynamic_channel_model_setters(self):
+        op = channels.dynamic_channel_model(
+            1e6, 0.01, 50, 0.5, 100, 8, 5.0, False, 4.0,
+            [0.0, 0.9, 1.7], [1, 0.8, 0.3], 8, 0.0, 1)
+        op.set_sro_dev_std(0.5)
+        self.assertAlmostEqual(op.sro_dev_std(), 0.5)
+        self.assertAlmostEqual(op.sro_dev_max(), 50)
+        self.assertAlmostEqual(op.cfo_dev_std(), 0.5)
+        op.set_samp_rate(2e6)
+        self.assertAlmostEqual(op.samp_rate(), 2e6)
+        self.assertAlmostEqual(op.doppler_freq(), 5.0, 4)
+
 
 if __name__ == '__main__':
     gr_unittest.run(test_channel_model)

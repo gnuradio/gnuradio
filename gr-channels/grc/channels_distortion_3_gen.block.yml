@@ -21,4 +21,8 @@ templates:
     callbacks:
     - set_beta(${beta})
 
+documentation: |-
+    Third order distortion: y = x + beta |x|^2 x. A real beta models AM/AM
+    compression or expansion only.
+
 file_format: 1

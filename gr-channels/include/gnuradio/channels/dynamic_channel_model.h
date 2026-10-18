@@ -50,7 +50,7 @@ public:
 
      * \param N   number of sinusoids used in frequency selective fading simulation
      * \param doppler_freq    maximum doppler frequency used in fading simulation in Hz
-     * \param LOS_model   defines whether the fading model should include a line of site
+     * \param LOS_model   defines whether the fading model should include a line of sight
                           component. LOS->Rician, NLOS->Rayleigh
      * \param K Rician K-factor, the ratio of specular to diffuse power in the model
      * \param delays  A list of fractional sample delays making up the power delay profile

@@ -9,7 +9,7 @@ parameters:
 -   id: taps
     label: Taps
     dtype: complex_vector
-    default: '0'
+    default: '[0]'
 
 inputs:
 -   domain: stream

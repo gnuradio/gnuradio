@@ -21,4 +21,7 @@ templates:
     callbacks:
     - set_beta(${beta})
 
+documentation: |-
+    Second order distortion: y = x + beta |x|^2.
+
 file_format: 1

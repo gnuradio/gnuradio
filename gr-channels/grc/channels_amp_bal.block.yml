@@ -5,7 +5,7 @@ parameters:
 -   id: alpha
     label: Alpha
     dtype: float
-    default: '0'
+    default: '1e-4'
 
 inputs:
 -   domain: stream
@@ -20,5 +20,9 @@ templates:
     make: channels.amp_bal(${alpha})
     callbacks:
     - set_alpha(${alpha})
+
+documentation: |-
+    Scales Q to the RMS level of I. Alpha in (0, 1] is the RMS averaging
+    coefficient.
 
 file_format: 1
