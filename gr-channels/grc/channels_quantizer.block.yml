@@ -21,4 +21,8 @@ templates:
     callbacks:
     - set_bits(${bits})
 
+documentation: |-
+    Rounds to a signed fixed-point grid of the given bit depth (1 to 16),
+    saturating at [-1, 1 - 2^(1 - bits)].
+
 file_format: 1

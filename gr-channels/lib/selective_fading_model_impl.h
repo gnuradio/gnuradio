@@ -15,7 +15,6 @@
 #include <gnuradio/channels/selective_fading_model.h>
 #include <gnuradio/sync_block.h>
 
-#include "sincostable.h"
 #include <gnuradio/fxpt.h>
 
 namespace gr {
@@ -25,9 +24,10 @@ class CHANNELS_API selective_fading_model_impl : public selective_fading_model
 {
 private:
     std::vector<gr::channels::flat_fader_impl> d_faders;
+    std::vector<std::vector<gr_complex>> d_fading_taps; // per-path gains for one call
     std::vector<float> d_delays;
     std::vector<float> d_mags;
-    sincostable d_sintable;
+    std::vector<std::vector<float>> d_weights; // per-path tap weights (fixed delays)
 
 public:
     selective_fading_model_impl(unsigned int N,
@@ -50,31 +50,13 @@ public:
              gr_vector_void_star& output_items) override;
     std::vector<gr_complex> d_taps;
 
-    float fDTs() override { return d_faders[0].d_fDTs; }
-    float K() override { return d_faders[0].d_K; }
-    float step() override { return d_faders[0].d_step; }
+    float fDTs() override;
+    float K() override;
+    float step() override;
 
-    void set_fDTs(float fDTs) override
-    {
-        for (auto& fader : d_faders) {
-            fader.d_fDTs = fDTs;
-            fader.d_step = powf(0.00125 * fDTs, 1.1);
-        }
-    }
-    void set_K(float K) override
-    {
-        for (auto& fader : d_faders) {
-            fader.d_K = K;
-            fader.scale_los = sqrtf(fader.d_K) / sqrtf(fader.d_K + 1);
-            fader.scale_nlos = (1 / sqrtf(fader.d_K + 1));
-        }
-    }
-    void set_step(float step) override
-    {
-        for (auto& fader : d_faders) {
-            fader.d_step = step;
-        }
-    }
+    void set_fDTs(float fDTs) override;
+    void set_K(float K) override;
+    void set_step(float step) override;
 };
 
 } /* namespace channels */

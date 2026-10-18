@@ -22,14 +22,23 @@ from .distortion_3_gen import distortion_3_gen
 class impairments(gr.hier_block2):
 
     def __init__(self,
-                 phase_noise_mag=0,
+                 phase_noise_mag=-100,
                  magbal=0,
                  phasebal=0,
                  q_ofs=0,
                  i_ofs=0,
                  freq_offset=0,
                  gamma=0,
-                 beta=0):
+                 beta=0,
+                 seed=0):
+        """Radio front-end impairments.
+
+        phase_noise_mag: phase noise level in dB (see phase_noise_gen)
+        freq_offset: normalized offset of the impairment frame; impairments are
+            applied to the signal shifted by -freq_offset and shifted back, so
+            DC offset and IQ image appear at +freq_offset relative to the signal
+        seed: phase noise seed; instances with the same seed generate the same noise
+        """
         gr.hier_block2.__init__(
             self, "Radio Impairments Model",
             gr.io_signature(1, 1, gr.sizeof_gr_complex * 1),
@@ -51,7 +60,8 @@ class impairments(gr.hier_block2):
         ##################################################
         # Blocks
         ##################################################
-        self.phase_noise = phase_noise_gen(10.0**(phase_noise_mag / 20.0), .01)
+        self.phase_noise = phase_noise_gen(
+            10.0**(phase_noise_mag / 20.0), .01, seed)
         self.iq_imbalance = iqbal_gen(magbal, phasebal)
         self.channels_distortion_3_gen_0 = distortion_3_gen(beta)
         self.channels_distortion_2_gen_0 = distortion_2_gen(gamma)

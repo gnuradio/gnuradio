@@ -7,6 +7,7 @@ include(GrPybind)
 list(
     APPEND
     channels_python_files
+    amp_bal_python.cc
     cfo_model_python.cc
     channel_model_python.cc
     channel_model2_python.cc

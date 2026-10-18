@@ -21,7 +21,6 @@ except ImportError:
     from .channels_python import *
 
 # Blocks for Hardware Impairments
-from .amp_bal import amp_bal
 from .conj_fs_iqcorr import conj_fs_iqcorr
 from .distortion_2_gen import distortion_2_gen
 from .distortion_3_gen import distortion_3_gen

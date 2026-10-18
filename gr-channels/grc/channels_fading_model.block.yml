@@ -48,6 +48,9 @@ documentation: |-
        A. Alimohammad S.F. Fard B.F. Cockburn C. Schlegel
        26th November 2008
 
+    The fading gain is normalized to unit average power (the diffuse part
+    is scaled by 1/sqrt(K+1), the LOS part by sqrt(K/(K+1))).
+
         unsigned int d_N=8;          // number of sinusoids
         float d_fDTs=0.01   // normalized maximum doppler frequency (f_doppler / f_samprate)
         float d_K=4;        // Rician factor (ratio of the specular power to the scattered power)

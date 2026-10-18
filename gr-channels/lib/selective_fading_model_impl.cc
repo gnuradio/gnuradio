@@ -12,8 +12,8 @@
 #include "config.h"
 #endif
 
+#include "fractional_delay.h"
 #include "selective_fading_model_impl.h"
-#include "sincostable.h"
 
 #include <gnuradio/fxpt.h>
 #include <gnuradio/io_signature.h>
@@ -52,15 +52,14 @@ selective_fading_model_impl::selective_fading_model_impl(unsigned int N,
                  io_signature::make(1, 1, sizeof(gr_complex)),
                  io_signature::make(1, 1, sizeof(gr_complex))),
       d_delays(delays),
-      d_mags(mags),
-      d_sintable(1024)
+      d_mags(mags)
 {
     if (mags.size() != delays.size())
         throw std::runtime_error("magnitude and delay vectors must be the same length!");
 
     d_faders.reserve(mags.size());
     for (size_t i = 0; i < mags.size(); i++) {
-        d_faders.emplace_back(N, fDTs, (i == 0) && (LOS), K, seed + i);
+        d_faders.emplace_back(N, fDTs, (i == 0) && (LOS), K, seed, i);
     }
 
     // set up tap history
@@ -69,6 +68,16 @@ selective_fading_model_impl::selective_fading_model_impl(unsigned int N,
     }
     set_history(ntaps);
     d_taps.resize(ntaps, gr_complex(0, 0));
+
+    // the path delays are fixed, so the interpolator weights are too
+    check_delay_window(d_logger, d_delays, {}, ntaps);
+    d_weights.resize(d_faders.size(), std::vector<float>(ntaps));
+    for (size_t j = 0; j < d_faders.size(); j++) {
+        const sinc_taps gain(d_delays[j], d_mags[j]);
+        for (size_t k = 0; k < d_weights[j].size(); k++) {
+            d_weights[j][k] = gain(k);
+        }
+    }
 }
 
 selective_fading_model_impl::~selective_fading_model_impl() {}
@@ -81,9 +90,9 @@ int selective_fading_model_impl::work(int noutput_items,
     gr_complex* out = (gr_complex*)output_items[0];
 
     // pregenerate fading components
-    std::vector<std::vector<gr_complex>> fading_taps(d_faders.size());
+    d_fading_taps.resize(d_faders.size());
     for (size_t j = 0; j < d_faders.size(); j++) {
-        d_faders[j].next_samples(fading_taps[j], noutput_items);
+        d_faders[j].next_samples(d_fading_taps[j], noutput_items);
     }
 
     // loop over each output sample
@@ -96,12 +105,10 @@ int selective_fading_model_impl::work(int noutput_items,
 
         // add each flat fading component to the taps
         for (size_t j = 0; j < d_faders.size(); j++) {
-            gr_complex ff_H(fading_taps[j][i]);
+            gr_complex ff_H(d_fading_taps[j][i]);
             // gr_complex ff_H(d_faders[j].next_sample());
             for (size_t k = 0; k < d_taps.size(); k++) {
-                float dist = k - d_delays[j];
-                float interpmag = d_sintable.sinc(GR_M_PI * dist);
-                d_taps[k] += ff_H * interpmag * d_mags[j];
+                d_taps[k] += ff_H * d_weights[j][k];
             }
         }
 
@@ -117,6 +124,31 @@ int selective_fading_model_impl::work(int noutput_items,
 
     // return all outputs
     return noutput_items;
+}
+
+float selective_fading_model_impl::fDTs() { return d_faders[0].d_fDTs; }
+float selective_fading_model_impl::K() { return d_faders[0].d_K; }
+float selective_fading_model_impl::step() { return std::fabs(d_faders[0].d_step); }
+
+void selective_fading_model_impl::set_fDTs(float fDTs)
+{
+    for (auto& fader : d_faders) {
+        fader.set_fDTs(fDTs);
+    }
+}
+
+void selective_fading_model_impl::set_K(float K)
+{
+    for (auto& fader : d_faders) {
+        fader.set_K(K);
+    }
+}
+
+void selective_fading_model_impl::set_step(float step)
+{
+    for (auto& fader : d_faders) {
+        fader.set_step(step);
+    }
 }
 
 void selective_fading_model_impl::setup_rpc()

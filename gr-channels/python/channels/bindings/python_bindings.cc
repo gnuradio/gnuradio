@@ -15,6 +15,7 @@
 
 namespace py = pybind11;
 
+void bind_amp_bal(py::module&);
 void bind_cfo_model(py::module&);
 void bind_channel_model(py::module&);
 void bind_channel_model2(py::module&);
@@ -43,6 +44,7 @@ PYBIND11_MODULE(channels_python, m)
     // Allow access to base block methods
     py::module::import("gnuradio.gr");
 
+    bind_amp_bal(m);
     bind_cfo_model(m);
     bind_channel_model(m);
     bind_channel_model2(m);
