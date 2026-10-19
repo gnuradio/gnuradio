@@ -64,7 +64,8 @@ class GUIPort(QGraphicsItem):
         self._hovering = False
         self.auto_hide_port_labels = False
 
-        self.font = QFont('Helvetica', 8)
+        self.font = QFont(Constants.FONT_FAMILY)
+        self.font.setPixelSize(Constants.PORT_FONT_PIXEL_SIZE)
         self.fm = QFontMetrics(self.font)
 
         # TODO: Move somewhere else? Not necessarily

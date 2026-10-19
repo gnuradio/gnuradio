@@ -32,6 +32,8 @@ class Config(CoreConfig):
 
     def __init__(self, *args, **kwargs):
         CoreConfig.__init__(self, *args, **kwargs)
+        self.gui_prefs_file = os.environ.get('GRC_PREFS_PATH', paths.get_config_file_path())
+        Constants.DPI_SCALING = self.dpi_scaling
         Constants.update_font_size(self.font_size)
 
         self.parser = configparser.ConfigParser()
@@ -98,6 +100,19 @@ class Config(CoreConfig):
             print("Error: invalid 'canvas_font_size' setting.", file=sys.stderr)
 
         return font_size
+
+    @property
+    def dpi_scaling(self):
+        try:
+            if hasattr(self._gr_prefs, 'get_double'):
+                dpi_scaling = self._gr_prefs.get_double('grc', 'dpi_scaling', 1.0)
+            else:
+                dpi_scaling = float(self._gr_prefs.get_string('grc', 'dpi_scaling', 1.0))
+            if dpi_scaling <= 0:
+                raise ValueError
+        except (ValueError, TypeError, AttributeError):
+            dpi_scaling = 1.0
+        return dpi_scaling
 
     @property
     def default_qss_theme(self):

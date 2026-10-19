@@ -110,9 +110,9 @@ def update_font_size(font_size):
     global PORT_SEPARATION, BLOCK_FONT, PORT_FONT, PARAM_FONT, FONT_SIZE
 
     FONT_SIZE = font_size
-    BLOCK_FONT = "%s %f" % (FONT_FAMILY, font_size)
+    BLOCK_FONT = "%s %dpx" % (FONT_FAMILY, int(round(font_size * 96.0 / 72.0)))
     PORT_FONT = BLOCK_FONT
-    PARAM_FONT = "%s %f" % (FONT_FAMILY, font_size - 0.5)
+    PARAM_FONT = "%s %dpx" % (FONT_FAMILY, int(round((font_size - 0.5) * 96.0 / 72.0)))
 
     PORT_SEPARATION = PORT_SPACING + 2 * \
         PORT_LABEL_PADDING + int(1.5 * font_size)

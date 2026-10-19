@@ -121,6 +121,11 @@ categories:
         tooltip: Scaling factor of Qt GUI elements. Note that the effective device pixel ratio will be a product of this value and the native device pixel ratio.
         dtype: str
         default: 1.0
+      - key: dpi_scaling
+        name: DPI scaling factor (requires restart)
+        tooltip: Scaling factor for flowgraph canvas coordinate space.
+        dtype: float
+        default: 1.0
       - key: max_recent_files
         name: Maximum number of recently opened files in list
         dtype: int
