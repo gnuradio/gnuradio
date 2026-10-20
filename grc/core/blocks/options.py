@@ -182,14 +182,43 @@ class Options(Block):
 
         self.cpp_templates = MakoTemplates()
         self.documentation['documentation'] = """
-            The options block sets special parameters for the flow graph. Only one option block is allowed per flow graph.
-            Title, author, and description parameters are for identification purposes.
-            The window size controls the dimensions of the flow graph editor. The window size (width, height) must be between (300, 300) and (4096, 4096).
-            The generate options controls the type of code generated. Non-graphical flow graphs should avoid using graphical sinks or graphical variable controls.
-            In a graphical application, run can be controlled by a variable to start and stop the flowgraph at runtime.
-            The id of this block determines the name of the generated file and the name of the class. For example, an id of my_block will generate the file my_block.py and class my_block(gr....
-            The category parameter determines the placement of the block in the block selection window. The category only applies when creating hier blocks. To put hier blocks into the root category, enter / for the category.
-            The Max Number of Output is the maximum number of output items allowed for any block in the flowgraph; to disable this set the max_nouts equal to 0.Use this to adjust the maximum latency a flowgraph can exhibit.
+            The Options block sets flow graph wide parameters and controls code generation. Only one Options block is allowed per flow graph.
+            The parameters shown depend on the selected Output Language and Generate Options.
+
+            Parameters available in every mode:
+            Id: determines the name of the generated file and of the generated class. For example, an id of my_block generates the file my_block.py and the class my_block.
+            Title, Author, Copyright, Description: identify the flow graph and are written into the header of the generated code. The title is also used as the window title.
+            Output Language: Python or C++.
+            Generate Options: the type of application generated (QT GUI, Bokeh GUI, No GUI, Hier Block or Hier Block (QT GUI)). The available choices depend on the Output Language; Bokeh GUI is Python only. Non-graphical flow graphs should avoid graphical sinks and graphical variable controls.
+
+            Advanced tab (every mode):
+            Thread-safe setters: when On, the generated setter methods hold a lock, so variables can be changed safely from other threads.
+            Catch Block Exceptions: when On, an exception raised in a block's thread is caught and logged, and that block's thread stops. When Off, the exception is not caught and terminates the program, which can help with debugging.
+            Hier Block Source Path: paths searched for the .grc source files of hier blocks used in this flow graph.
+
+            QT GUI and Bokeh GUI:
+            Run: Autostart starts the flow graph when the application opens; Off leaves it stopped. Run can be controlled by a variable to start and stop the flow graph at runtime.
+
+            QT GUI, Bokeh GUI and No GUI:
+            Max Number of Output: the maximum number of output items any block may produce per call to work(). Use this to limit the latency of the flow graph; 0 means no limit.
+            Realtime Scheduling: when On, the generated application requests real-time scheduling priority at startup.
+            Run Command (Advanced tab): the command GRC uses to execute the generated flow graph.
+
+            No GUI only:
+            Run Options: Run to Completion runs until the flow graph finishes; Prompt for Exit runs until Enter is pressed.
+
+            Bokeh GUI only (Python):
+            Widget Placement, Window size, Sizing Mode: control the layout of the Bokeh web page. They do not affect the GRC editor window.
+
+            QT GUI and Hier Block (QT GUI):
+            QSS Theme: a Qt style sheet (.qss) file applied to the generated GUI.
+
+            Hier Block and Hier Block (QT GUI):
+            Category: the location of the generated hier block in the block library. Use / to place it at the top level.
+
+            C++ only:
+            Generate CMakeLists.txt: whether to generate a CMake build file alongside the code.
+            CMake options: extra -D options passed to CMake when building.
         """
 
     def parse_workflows(self) -> None:
