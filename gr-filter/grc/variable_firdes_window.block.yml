@@ -1,0 +1,39 @@
+id: variable_firdes_window
+label: FIR Window Taps
+category: '[Core]/Filters'
+flags: [ python, show_id ]
+
+parameters:
+- id: win_type
+  label: Window Type
+  dtype: raw
+  default: window.WIN_HAMMING
+  options: [
+    window.WIN_HAMMING,
+    window.WIN_HANN,
+    window.WIN_BLACKMAN,
+    window.WIN_RECTANGULAR,
+    window.WIN_KAISER
+  ]
+  option_labels: [Hamming, Hann, Blackman, Rectangular, Kaiser]
+
+- id: size
+  label: Size (Num Taps)
+  dtype: int
+  default: '100'
+
+- id: beta
+  label: Beta
+  dtype: float
+  default: '6.76'
+  hide: ${ 'none' if win_type == 'window.WIN_KAISER' else 'all' }
+
+value: ${ filter.firdes.window(win_type, size, beta) }
+
+templates:
+  imports: |-
+    from gnuradio import filter
+    from gnuradio.fft import window
+  var_make: self.${id} = ${id} = filter.firdes.window(${win_type}, ${size}, ${beta})
+
+file_format: 1
