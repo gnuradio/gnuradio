@@ -126,7 +126,7 @@ void rep_msg_sink_impl::readloop()
                 d_socket.send(zmsg);
 #endif
             } // if req
-        }     // while !empty
+        } // while !empty
 
     } // while !d_finished
 }

@@ -61,7 +61,7 @@ public:
 public:
     typedef std::shared_ptr<generic_decoder> sptr;
 
-    generic_decoder(void){};
+    generic_decoder(void) {};
     generic_decoder(std::string name);
     virtual ~generic_decoder();
 

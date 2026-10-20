@@ -24,7 +24,7 @@ namespace messages {
 class GR_RUNTIME_API msg_accepter
 {
 public:
-    msg_accepter(){};
+    msg_accepter() {};
     virtual ~msg_accepter();
 
     /*!

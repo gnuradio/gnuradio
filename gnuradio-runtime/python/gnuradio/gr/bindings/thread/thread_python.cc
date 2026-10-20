@@ -23,26 +23,25 @@ void bind_thread(py::module& m)
 
     m.def("get_current_thread_id", &gr::get_current_thread_id);
     m.def("thread_bind_to_processor",
-          (void (*)(std::vector<int, std::allocator<int>> const&)) &
-              gr::thread_bind_to_processor,
+          (void (*)(
+              std::vector<int, std::allocator<int>> const&))&gr::thread_bind_to_processor,
           py::arg("mask"));
     m.def("thread_bind_to_processor",
-          (void (*)(int)) & gr::thread_bind_to_processor,
+          (void (*)(int))&gr::thread_bind_to_processor,
           py::arg("n"));
     m.def("thread_bind_to_processor",
-          (void (*)(gr::thread::gr_thread_t,
-                    std::vector<int, std::allocator<int>> const&)) &
-              gr::thread_bind_to_processor,
+          (void (*)(
+              gr::thread::gr_thread_t,
+              std::vector<int, std::allocator<int>> const&))&gr::thread_bind_to_processor,
           py::arg("thread"),
           py::arg("mask"));
     m.def("thread_bind_to_processor",
-          (void (*)(gr::thread::gr_thread_t, unsigned int)) &
-              gr::thread_bind_to_processor,
+          (void (*)(gr::thread::gr_thread_t, unsigned int))&gr::thread_bind_to_processor,
           py::arg("thread"),
           py::arg("n"));
-    m.def("thread_unbind", (void (*)()) & gr::thread_unbind);
+    m.def("thread_unbind", (void (*)())&gr::thread_unbind);
     m.def("thread_unbind",
-          (void (*)(gr::thread::gr_thread_t)) & gr::thread_unbind,
+          (void (*)(gr::thread::gr_thread_t))&gr::thread_unbind,
           py::arg("thread"));
     m.def("thread_priority", &gr::thread_priority, py::arg("thread"));
     m.def("set_thread_priority",

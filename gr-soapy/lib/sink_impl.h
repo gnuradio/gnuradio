@@ -37,7 +37,7 @@ public:
               const std::string& stream_args,
               const std::vector<std::string>& tune_args,
               const std::vector<std::string>& other_settings);
-    ~sink_impl() override{};
+    ~sink_impl() override {};
 
     int general_work(int noutput_items,
                      gr_vector_int& ninput_items,

@@ -36,15 +36,14 @@ void bind_ofdm_serializer_vcc(py::module& m)
                gr::tagged_stream_block,
                std::shared_ptr<ofdm_serializer_vcc>>(m, "ofdm_serializer_vcc")
 
-        .def(py::init((std::shared_ptr<ofdm_serializer_vcc>(*)(
-                          int,
-                          const std::vector<std::vector<int>>&,
-                          const std::string&,
-                          const std::string&,
-                          int,
-                          const std::string&,
-                          bool)) &
-                      ofdm_serializer_vcc::make),
+        .def(py::init((std::shared_ptr<ofdm_serializer_vcc> (*)(
+                 int,
+                 const std::vector<std::vector<int>>&,
+                 const std::string&,
+                 const std::string&,
+                 int,
+                 const std::string&,
+                 bool))&ofdm_serializer_vcc::make),
              py::arg("fft_len"),
              py::arg("occupied_carriers"),
              py::arg("len_tag_key") = "frame_len",
@@ -54,13 +53,12 @@ void bind_ofdm_serializer_vcc(py::module& m)
              py::arg("input_is_shifted") = true,
              D(ofdm_serializer_vcc, make, 0))
 
-        .def(py::init((std::shared_ptr<ofdm_serializer_vcc>(*)(
-                          const gr::digital::ofdm_carrier_allocator_cvc::sptr&,
-                          const std::string&,
-                          int,
-                          const std::string&,
-                          bool)) &
-                      ofdm_serializer_vcc::make),
+        .def(py::init((std::shared_ptr<ofdm_serializer_vcc> (*)(
+                 const gr::digital::ofdm_carrier_allocator_cvc::sptr&,
+                 const std::string&,
+                 int,
+                 const std::string&,
+                 bool))&ofdm_serializer_vcc::make),
              py::arg("allocator"),
              py::arg("packet_len_tag_key") = "",
              py::arg("symbols_skipped") = 0,

@@ -184,7 +184,7 @@ int packet_sink_impl::work(int noutput_items,
         default:
             assert(0);
         } // switch
-    }     // while
+    } // while
 
     return noutput_items;
 }

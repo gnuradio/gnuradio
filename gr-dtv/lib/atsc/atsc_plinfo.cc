@@ -13,8 +13,8 @@
 namespace gr {
 namespace dtv {
 
-plinfo::plinfo() : d_flags(0), d_segno(0){};
-plinfo::plinfo(uint16_t flags, int16_t segno) : d_flags(flags), d_segno(segno){};
+plinfo::plinfo() : d_flags(0), d_segno(0) {};
+plinfo::plinfo(uint16_t flags, int16_t segno) : d_flags(flags), d_segno(segno) {};
 
 void plinfo::reset()
 {

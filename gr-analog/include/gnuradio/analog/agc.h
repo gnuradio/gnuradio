@@ -41,9 +41,9 @@ public:
            float reference = 1.0,
            float gain = 1.0,
            float max_gain = 0.0)
-        : _rate(rate), _reference(reference), _gain(gain), _max_gain(max_gain){};
+        : _rate(rate), _reference(reference), _gain(gain), _max_gain(max_gain) {};
 
-    virtual ~agc_cc(){};
+    virtual ~agc_cc() {};
 
     float rate() const { return _rate; }
     float reference() const { return _reference; }
@@ -101,9 +101,9 @@ public:
            float reference = 1.0,
            float gain = 1.0,
            float max_gain = 0.0)
-        : _rate(rate), _reference(reference), _gain(gain), _max_gain(max_gain){};
+        : _rate(rate), _reference(reference), _gain(gain), _max_gain(max_gain) {};
 
-    ~agc_ff(){};
+    ~agc_ff() {};
 
     float rate() const { return _rate; }
     float reference() const { return _reference; }
