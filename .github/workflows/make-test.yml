@@ -211,3 +211,92 @@ jobs:
       continue-on-error: true
       shell: bash
       run: ./.github/ci-tools/build-summary.sh "${{ matrix.distro }}" "/build"
+  mingw64:
+    timeout-minutes: 80
+  # All of these shall depend on the formatting check (needs: checks of formatting and hashes)
+    needs: [check-formatting-and-hashes, check-python-formatting]
+    runs-on: windows-latest
+    name: MinGW-w64
+    defaults:
+      run:
+        shell: msys2 {0}
+    steps:
+    - name: Setup MSYS2 UCRT64
+      uses: msys2/setup-msys2@v2
+      with:
+        msystem: UCRT64
+        update: true
+        install: >-
+          git
+          make
+        pacboy: >-
+          curl:p
+          toolchain:p
+          cmake:p
+          ninja:p
+          boost:p
+          cppzmq:p
+          fftw:p
+          gsl:p
+          gsm:p
+          gtk3:p
+          jack2:p
+          libsndfile:p
+          libunwind:p
+          pango:p
+          portaudio:p
+          python:p
+          python-click:p
+          python-gobject:p
+          python-jsonschema:p
+          python-mako:p
+          python-numpy:p
+          python-pip:p
+          python-pyqt6:p
+          python-pyzmq:p
+          python-yaml:p
+          qt6-base:p
+          qwt-qt6:p
+          SDL:p
+          soapysdr:p
+          spdlog:p
+          thrift:p
+          volk:p
+          sccache:p
+    - name: download & install PyBind11 v3.0.1 release
+      run: |
+        curl --silent https://repo.msys2.org/mingw/mingw64/mingw-w64-x86_64-pybind11-3.0.1-3-any.pkg.tar.zst > pybind11.tar.zst && \
+        pacman -U --noconfirm pybind11.tar.zst && \
+        rm pybind11.tar.zst
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: Prepare sccache usage (if available)
+      id: enable_sccache
+      env:
+        SCCACHE_S3_ENDPOINT: ${{ vars.SCCACHE_S3_ENDPOINT }}
+        SCCACHE_S3_BUCKET: ${{ vars.SCCACHE_S3_BUCKET }}
+        SCCACHE_S3_REGION: ${{ vars.SCCACHE_S3_REGION }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.SCCACHE_S3_KEY }}
+        AWS_ACCESS_KEY_ID: ${{ vars.SCCACHE_S3_KEY_ID }}
+      run: .github/ci-tools/setup_cmake_cache_flags.bash "${{ matrix.name }}"
+    - name: CMake
+      run: |
+        cmake -S . -B build \
+          -GNinja \
+          -DCMAKE_INSTALL_PREFIX=${RUNNER_TEMP}/msys64/mingw64 \
+          -DENABLE_DOXYGEN=OFF \
+          ${{ steps.enable_sccache.outputs.CXX_LAUNCHER }} \
+          ${{ steps.enable_sccache.outputs.C_LAUNCHER }}
+    - name: Build
+      env:
+        SCCACHE_CONF: ${{ steps.enable_sccache.outputs.SCCACHE_CONF }}
+      run: cmake --build build
+    - name: Install
+      run: cmake --install build
+    - name: CTest
+      working-directory: ./build
+      run: ctest --output-on-failure
+    - name: Show final sccache and build directory stats
+      if: always()
+      continue-on-error: true
+      run: bash ./.github/ci-tools/build-summary.sh "MinGW-w64" "build"
