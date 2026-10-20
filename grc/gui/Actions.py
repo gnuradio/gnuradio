@@ -454,6 +454,12 @@ TOGGLE_SNAP_TO_GRID = actions.register("win.snap_to_grid",
                                        preference_name='snap_to_grid',
                                        default=True,
                                        )
+TOGGLE_GRID_DISPLAY = actions.register("win.grid_display",
+                                       label='Show _Grid',
+                                       tooltip='Display a grid aligned to the snap-to-grid spacing',
+                                       preference_name='grid_display',
+                                       default=False,
+                                       )
 TOGGLE_HIDE_DISABLED_BLOCKS = actions.register(
     "win.hide_disabled",
     label='Hide _Disabled Blocks',
