@@ -261,27 +261,27 @@ void bind_pmt(py::module& m)
 
 
     m.def("from_complex",
-          (pmt::pmt_t(*)(double, double)) & ::pmt::from_complex,
+          (pmt::pmt_t (*)(double, double)) & ::pmt::from_complex,
           py::arg("re"),
           py::arg("im"),
           D(from_complex, 0));
 
 
     m.def("from_complex",
-          (pmt::pmt_t(*)(std::complex<double> const&)) & ::pmt::from_complex,
+          (pmt::pmt_t (*)(std::complex<double> const&)) & ::pmt::from_complex,
           py::arg("z"),
           D(from_complex, 1));
 
 
     m.def("pmt_from_complex",
-          (pmt::pmt_t(*)(double, double)) & ::pmt::pmt_from_complex,
+          (pmt::pmt_t (*)(double, double)) & ::pmt::pmt_from_complex,
           py::arg("re"),
           py::arg("im"),
           D(pmt_from_complex, 0));
 
 
     m.def("pmt_from_complex",
-          (pmt::pmt_t(*)(std::complex<double> const&)) & ::pmt::pmt_from_complex,
+          (pmt::pmt_t (*)(std::complex<double> const&)) & ::pmt::pmt_from_complex,
           py::arg("z"),
           D(pmt_from_complex, 1));
 
@@ -350,24 +350,24 @@ void bind_pmt(py::module& m)
     m.def("is_tuple", &::pmt::is_tuple, py::arg("x").none(false), D(is_tuple));
 
 
-    m.def("make_tuple", (pmt::pmt_t(*)()) & ::pmt::make_tuple, D(make_tuple, 0));
+    m.def("make_tuple", (pmt::pmt_t (*)()) & ::pmt::make_tuple, D(make_tuple, 0));
 
 
     m.def("make_tuple",
-          (pmt::pmt_t(*)(pmt::pmt_t const&)) & ::pmt::make_tuple,
+          (pmt::pmt_t (*)(pmt::pmt_t const&)) & ::pmt::make_tuple,
           py::arg("e0").none(false),
           D(make_tuple, 1));
 
 
     m.def("make_tuple",
-          (pmt::pmt_t(*)(pmt::pmt_t const&, pmt::pmt_t const&)) & ::pmt::make_tuple,
+          (pmt::pmt_t (*)(pmt::pmt_t const&, pmt::pmt_t const&)) & ::pmt::make_tuple,
           py::arg("e0").none(false),
           py::arg("e1").none(false),
           D(make_tuple, 2));
 
 
     m.def("make_tuple",
-          (pmt::pmt_t(*)(pmt::pmt_t const&, pmt::pmt_t const&, pmt::pmt_t const&)) &
+          (pmt::pmt_t (*)(pmt::pmt_t const&, pmt::pmt_t const&, pmt::pmt_t const&)) &
               ::pmt::make_tuple,
           py::arg("e0").none(false),
           py::arg("e1").none(false),
@@ -377,7 +377,7 @@ void bind_pmt(py::module& m)
 
     m.def(
         "make_tuple",
-        (pmt::pmt_t(*)(
+        (pmt::pmt_t (*)(
             pmt::pmt_t const&, pmt::pmt_t const&, pmt::pmt_t const&, pmt::pmt_t const&)) &
             ::pmt::make_tuple,
         py::arg("e0").none(false),
@@ -388,11 +388,11 @@ void bind_pmt(py::module& m)
 
 
     m.def("make_tuple",
-          (pmt::pmt_t(*)(pmt::pmt_t const&,
-                         pmt::pmt_t const&,
-                         pmt::pmt_t const&,
-                         pmt::pmt_t const&,
-                         pmt::pmt_t const&)) &
+          (pmt::pmt_t (*)(pmt::pmt_t const&,
+                          pmt::pmt_t const&,
+                          pmt::pmt_t const&,
+                          pmt::pmt_t const&,
+                          pmt::pmt_t const&)) &
               ::pmt::make_tuple,
           py::arg("e0").none(false),
           py::arg("e1").none(false),
@@ -403,12 +403,12 @@ void bind_pmt(py::module& m)
 
 
     m.def("make_tuple",
-          (pmt::pmt_t(*)(pmt::pmt_t const&,
-                         pmt::pmt_t const&,
-                         pmt::pmt_t const&,
-                         pmt::pmt_t const&,
-                         pmt::pmt_t const&,
-                         pmt::pmt_t const&)) &
+          (pmt::pmt_t (*)(pmt::pmt_t const&,
+                          pmt::pmt_t const&,
+                          pmt::pmt_t const&,
+                          pmt::pmt_t const&,
+                          pmt::pmt_t const&,
+                          pmt::pmt_t const&)) &
               ::pmt::make_tuple,
           py::arg("e0").none(false),
           py::arg("e1").none(false),
@@ -420,13 +420,13 @@ void bind_pmt(py::module& m)
 
 
     m.def("make_tuple",
-          (pmt::pmt_t(*)(pmt::pmt_t const&,
-                         pmt::pmt_t const&,
-                         pmt::pmt_t const&,
-                         pmt::pmt_t const&,
-                         pmt::pmt_t const&,
-                         pmt::pmt_t const&,
-                         pmt::pmt_t const&)) &
+          (pmt::pmt_t (*)(pmt::pmt_t const&,
+                          pmt::pmt_t const&,
+                          pmt::pmt_t const&,
+                          pmt::pmt_t const&,
+                          pmt::pmt_t const&,
+                          pmt::pmt_t const&,
+                          pmt::pmt_t const&)) &
               ::pmt::make_tuple,
           py::arg("e0").none(false),
           py::arg("e1").none(false),
@@ -439,14 +439,14 @@ void bind_pmt(py::module& m)
 
 
     m.def("make_tuple",
-          (pmt::pmt_t(*)(pmt::pmt_t const&,
-                         pmt::pmt_t const&,
-                         pmt::pmt_t const&,
-                         pmt::pmt_t const&,
-                         pmt::pmt_t const&,
-                         pmt::pmt_t const&,
-                         pmt::pmt_t const&,
-                         pmt::pmt_t const&)) &
+          (pmt::pmt_t (*)(pmt::pmt_t const&,
+                          pmt::pmt_t const&,
+                          pmt::pmt_t const&,
+                          pmt::pmt_t const&,
+                          pmt::pmt_t const&,
+                          pmt::pmt_t const&,
+                          pmt::pmt_t const&,
+                          pmt::pmt_t const&)) &
               ::pmt::make_tuple,
           py::arg("e0").none(false),
           py::arg("e1").none(false),
@@ -460,15 +460,15 @@ void bind_pmt(py::module& m)
 
 
     m.def("make_tuple",
-          (pmt::pmt_t(*)(pmt::pmt_t const&,
-                         pmt::pmt_t const&,
-                         pmt::pmt_t const&,
-                         pmt::pmt_t const&,
-                         pmt::pmt_t const&,
-                         pmt::pmt_t const&,
-                         pmt::pmt_t const&,
-                         pmt::pmt_t const&,
-                         pmt::pmt_t const&)) &
+          (pmt::pmt_t (*)(pmt::pmt_t const&,
+                          pmt::pmt_t const&,
+                          pmt::pmt_t const&,
+                          pmt::pmt_t const&,
+                          pmt::pmt_t const&,
+                          pmt::pmt_t const&,
+                          pmt::pmt_t const&,
+                          pmt::pmt_t const&,
+                          pmt::pmt_t const&)) &
               ::pmt::make_tuple,
           py::arg("e0").none(false),
           py::arg("e1").none(false),
@@ -483,16 +483,16 @@ void bind_pmt(py::module& m)
 
 
     m.def("make_tuple",
-          (pmt::pmt_t(*)(pmt::pmt_t const&,
-                         pmt::pmt_t const&,
-                         pmt::pmt_t const&,
-                         pmt::pmt_t const&,
-                         pmt::pmt_t const&,
-                         pmt::pmt_t const&,
-                         pmt::pmt_t const&,
-                         pmt::pmt_t const&,
-                         pmt::pmt_t const&,
-                         pmt::pmt_t const&)) &
+          (pmt::pmt_t (*)(pmt::pmt_t const&,
+                          pmt::pmt_t const&,
+                          pmt::pmt_t const&,
+                          pmt::pmt_t const&,
+                          pmt::pmt_t const&,
+                          pmt::pmt_t const&,
+                          pmt::pmt_t const&,
+                          pmt::pmt_t const&,
+                          pmt::pmt_t const&,
+                          pmt::pmt_t const&)) &
               ::pmt::make_tuple,
           py::arg("e0").none(false),
           py::arg("e1").none(false),
@@ -705,14 +705,14 @@ void bind_pmt(py::module& m)
 
 
     m.def("init_u8vector",
-          (pmt::pmt_t(*)(size_t, uint8_t const*)) & ::pmt::init_u8vector,
+          (pmt::pmt_t (*)(size_t, uint8_t const*)) & ::pmt::init_u8vector,
           py::arg("k"),
           py::arg("data"),
           D(init_u8vector, 0));
 
 
     m.def("init_u8vector",
-          (pmt::pmt_t(*)(
+          (pmt::pmt_t (*)(
               size_t, std::vector<unsigned char, std::allocator<unsigned char>> const&)) &
               ::pmt::init_u8vector,
           py::arg("k"),
@@ -721,15 +721,15 @@ void bind_pmt(py::module& m)
 
 
     m.def("init_s8vector",
-          (pmt::pmt_t(*)(size_t, int8_t const*)) & ::pmt::init_s8vector,
+          (pmt::pmt_t (*)(size_t, int8_t const*)) & ::pmt::init_s8vector,
           py::arg("k"),
           py::arg("data"),
           D(init_s8vector, 0));
 
 
     m.def("init_s8vector",
-          (pmt::pmt_t(*)(size_t,
-                         std::vector<signed char, std::allocator<signed char>> const&)) &
+          (pmt::pmt_t (*)(size_t,
+                          std::vector<signed char, std::allocator<signed char>> const&)) &
               ::pmt::init_s8vector,
           py::arg("k"),
           py::arg("data"),
@@ -737,7 +737,7 @@ void bind_pmt(py::module& m)
 
 
     m.def("init_u16vector",
-          (pmt::pmt_t(*)(size_t, uint16_t const*)) & ::pmt::init_u16vector,
+          (pmt::pmt_t (*)(size_t, uint16_t const*)) & ::pmt::init_u16vector,
           py::arg("k"),
           py::arg("data"),
           D(init_u16vector, 0));
@@ -745,7 +745,7 @@ void bind_pmt(py::module& m)
 
     m.def(
         "init_u16vector",
-        (pmt::pmt_t(*)(
+        (pmt::pmt_t (*)(
             size_t, std::vector<unsigned short, std::allocator<unsigned short>> const&)) &
             ::pmt::init_u16vector,
         py::arg("k"),
@@ -754,14 +754,14 @@ void bind_pmt(py::module& m)
 
 
     m.def("init_s16vector",
-          (pmt::pmt_t(*)(size_t, int16_t const*)) & ::pmt::init_s16vector,
+          (pmt::pmt_t (*)(size_t, int16_t const*)) & ::pmt::init_s16vector,
           py::arg("k"),
           py::arg("data"),
           D(init_s16vector, 0));
 
 
     m.def("init_s16vector",
-          (pmt::pmt_t(*)(size_t, std::vector<short, std::allocator<short>> const&)) &
+          (pmt::pmt_t (*)(size_t, std::vector<short, std::allocator<short>> const&)) &
               ::pmt::init_s16vector,
           py::arg("k"),
           py::arg("data"),
@@ -769,14 +769,14 @@ void bind_pmt(py::module& m)
 
 
     m.def("init_u32vector",
-          (pmt::pmt_t(*)(size_t, uint32_t const*)) & ::pmt::init_u32vector,
+          (pmt::pmt_t (*)(size_t, uint32_t const*)) & ::pmt::init_u32vector,
           py::arg("k"),
           py::arg("data"),
           D(init_u32vector, 0));
 
 
     m.def("init_u32vector",
-          (pmt::pmt_t(*)(
+          (pmt::pmt_t (*)(
               size_t, std::vector<unsigned int, std::allocator<unsigned int>> const&)) &
               ::pmt::init_u32vector,
           py::arg("k"),
@@ -785,14 +785,14 @@ void bind_pmt(py::module& m)
 
 
     m.def("init_s32vector",
-          (pmt::pmt_t(*)(size_t, int32_t const*)) & ::pmt::init_s32vector,
+          (pmt::pmt_t (*)(size_t, int32_t const*)) & ::pmt::init_s32vector,
           py::arg("k"),
           py::arg("data"),
           D(init_s32vector, 0));
 
 
     m.def("init_s32vector",
-          (pmt::pmt_t(*)(size_t, std::vector<int, std::allocator<int>> const&)) &
+          (pmt::pmt_t (*)(size_t, std::vector<int, std::allocator<int>> const&)) &
               ::pmt::init_s32vector,
           py::arg("k"),
           py::arg("data"),
@@ -800,7 +800,7 @@ void bind_pmt(py::module& m)
 
 
     m.def("init_u64vector",
-          (pmt::pmt_t(*)(size_t, uint64_t const*)) & ::pmt::init_u64vector,
+          (pmt::pmt_t (*)(size_t, uint64_t const*)) & ::pmt::init_u64vector,
           py::arg("k"),
           py::arg("data"),
           D(init_u64vector, 0));
@@ -808,7 +808,7 @@ void bind_pmt(py::module& m)
 
     m.def(
         "init_u64vector",
-        (pmt::pmt_t(*)(size_t, std::vector<uint64_t, std::allocator<uint64_t>> const&)) &
+        (pmt::pmt_t (*)(size_t, std::vector<uint64_t, std::allocator<uint64_t>> const&)) &
             ::pmt::init_u64vector,
         py::arg("k"),
         py::arg("data"),
@@ -816,14 +816,14 @@ void bind_pmt(py::module& m)
 
 
     m.def("init_s64vector",
-          (pmt::pmt_t(*)(size_t, int64_t const*)) & ::pmt::init_s64vector,
+          (pmt::pmt_t (*)(size_t, int64_t const*)) & ::pmt::init_s64vector,
           py::arg("k"),
           py::arg("data"),
           D(init_s64vector, 0));
 
 
     m.def("init_s64vector",
-          (pmt::pmt_t(*)(size_t, std::vector<int64_t, std::allocator<int64_t>> const&)) &
+          (pmt::pmt_t (*)(size_t, std::vector<int64_t, std::allocator<int64_t>> const&)) &
               ::pmt::init_s64vector,
           py::arg("k"),
           py::arg("data"),
@@ -831,14 +831,14 @@ void bind_pmt(py::module& m)
 
 
     m.def("init_f32vector",
-          (pmt::pmt_t(*)(size_t, float const*)) & ::pmt::init_f32vector,
+          (pmt::pmt_t (*)(size_t, float const*)) & ::pmt::init_f32vector,
           py::arg("k"),
           py::arg("data"),
           D(init_f32vector, 0));
 
 
     m.def("init_f32vector",
-          (pmt::pmt_t(*)(size_t, std::vector<float, std::allocator<float>> const&)) &
+          (pmt::pmt_t (*)(size_t, std::vector<float, std::allocator<float>> const&)) &
               ::pmt::init_f32vector,
           py::arg("k"),
           py::arg("data"),
@@ -846,14 +846,14 @@ void bind_pmt(py::module& m)
 
 
     m.def("init_f64vector",
-          (pmt::pmt_t(*)(size_t, double const*)) & ::pmt::init_f64vector,
+          (pmt::pmt_t (*)(size_t, double const*)) & ::pmt::init_f64vector,
           py::arg("k"),
           py::arg("data"),
           D(init_f64vector, 0));
 
 
     m.def("init_f64vector",
-          (pmt::pmt_t(*)(size_t, std::vector<double, std::allocator<double>> const&)) &
+          (pmt::pmt_t (*)(size_t, std::vector<double, std::allocator<double>> const&)) &
               ::pmt::init_f64vector,
           py::arg("k"),
           py::arg("data"),
@@ -861,16 +861,16 @@ void bind_pmt(py::module& m)
 
 
     m.def("init_c32vector",
-          (pmt::pmt_t(*)(size_t, std::complex<float> const*)) & ::pmt::init_c32vector,
+          (pmt::pmt_t (*)(size_t, std::complex<float> const*)) & ::pmt::init_c32vector,
           py::arg("k"),
           py::arg("data"),
           D(init_c32vector, 0));
 
 
     m.def("init_c32vector",
-          (pmt::pmt_t(*)(size_t,
-                         std::vector<std::complex<float>,
-                                     std::allocator<std::complex<float>>> const&)) &
+          (pmt::pmt_t (*)(size_t,
+                          std::vector<std::complex<float>,
+                                      std::allocator<std::complex<float>>> const&)) &
               ::pmt::init_c32vector,
           py::arg("k"),
           py::arg("data"),
@@ -878,16 +878,16 @@ void bind_pmt(py::module& m)
 
 
     m.def("init_c64vector",
-          (pmt::pmt_t(*)(size_t, std::complex<double> const*)) & ::pmt::init_c64vector,
+          (pmt::pmt_t (*)(size_t, std::complex<double> const*)) & ::pmt::init_c64vector,
           py::arg("k"),
           py::arg("data"),
           D(init_c64vector, 0));
 
 
     m.def("init_c64vector",
-          (pmt::pmt_t(*)(size_t,
-                         std::vector<std::complex<double>,
-                                     std::allocator<std::complex<double>>> const&)) &
+          (pmt::pmt_t (*)(size_t,
+                          std::vector<std::complex<double>,
+                                      std::allocator<std::complex<double>>> const&)) &
               ::pmt::init_c64vector,
           py::arg("k"),
           py::arg("data"),

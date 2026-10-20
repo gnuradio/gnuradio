@@ -46,7 +46,7 @@ public:
                           bool adapt_after_training,
                           std::vector<gr_complex> training_sequence,
                           const std::string& training_start_tag);
-    ~linear_equalizer_impl() override{};
+    ~linear_equalizer_impl() override {};
 
     void set_taps(const std::vector<gr_complex>& taps) override;
     std::vector<gr_complex> taps() const override;

@@ -47,8 +47,7 @@ void bind_sys_paths(py::module& m)
     paths.def("persistent", []() { return gr::paths::persistent().u8string(); });
 
     // Legacy interfaces, deprecated
-    m.def(
-        "tmp_path", []() { return ::gr::paths::tmp().string(); }, D(tmp_path));
+    m.def("tmp_path", []() { return ::gr::paths::tmp().string(); }, D(tmp_path));
     m.def(
         "appdata_path",
         []() { return ::gr::paths::appdata().string(); },

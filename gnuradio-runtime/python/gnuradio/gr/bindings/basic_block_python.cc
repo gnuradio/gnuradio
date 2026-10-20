@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(basic_block.h)                                             */
-/* BINDTOOL_HEADER_FILE_HASH(ec5e22df23ed02772ff9008b0f97b111)                     */
+/* BINDTOOL_HEADER_FILE_HASH(29ec93f08c88fd68844e269c0e5b0431)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -157,24 +157,24 @@ void bind_basic_block(py::module& m)
 
 
         .def("empty_p",
-             (bool(basic_block::*)(pmt::pmt_t)) & basic_block::empty_p,
+             (bool (basic_block::*)(pmt::pmt_t))&basic_block::empty_p,
              py::arg("which_port"),
              D(basic_block, empty_p, 0))
 
 
         .def("empty_p",
-             (bool(basic_block::*)()) & basic_block::empty_p,
+             (bool (basic_block::*)())&basic_block::empty_p,
              D(basic_block, empty_p, 1))
 
 
         .def("empty_handled_p",
-             (bool(basic_block::*)(pmt::pmt_t)) & basic_block::empty_handled_p,
+             (bool (basic_block::*)(pmt::pmt_t))&basic_block::empty_handled_p,
              py::arg("which_port"),
              D(basic_block, empty_handled_p, 0))
 
 
         .def("empty_handled_p",
-             (bool(basic_block::*)()) & basic_block::empty_handled_p,
+             (bool (basic_block::*)())&basic_block::empty_handled_p,
              D(basic_block, empty_handled_p, 1))
 
 

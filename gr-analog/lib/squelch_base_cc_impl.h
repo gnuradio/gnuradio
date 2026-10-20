@@ -28,7 +28,7 @@ private:
     bool d_tag_next_unmuted;
 
 protected:
-    void update_state(const gr_complex& sample) override{};
+    void update_state(const gr_complex& sample) override {};
     bool mute() const override { return false; };
 
 public:

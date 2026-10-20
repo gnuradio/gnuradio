@@ -27,7 +27,7 @@ class GF2Mat
 
 public:
     //! Default constructor
-    GF2Mat(){};
+    GF2Mat() {};
 
     //! Construct an M x N matrix with all 0 entries
     GF2Mat(int m, int n);

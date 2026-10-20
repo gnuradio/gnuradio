@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(dictionary_logger_backend.h)                               */
-/* BINDTOOL_HEADER_FILE_HASH(6f741a4086529299ba597288b7277b87)                     */
+/* BINDTOOL_HEADER_FILE_HASH(1d0296d681fb162b7374c9ad45d527c2)                     */
 /***********************************************************************************/
 
 #include <pybind11/chrono.h>

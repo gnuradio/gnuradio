@@ -29,7 +29,7 @@ private:
     bool d_tag_next_unmuted;
 
 protected:
-    void update_state(const float& sample) override{};
+    void update_state(const float& sample) override {};
     bool mute() const override { return false; };
 
 public:

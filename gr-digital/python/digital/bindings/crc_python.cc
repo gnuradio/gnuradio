@@ -47,16 +47,16 @@ void bind_crc(py::module& m)
 
 
         .def("compute",
-             (uint64_t(crc::*)(uint8_t const*, std::size_t)) & crc::compute,
+             (uint64_t (crc::*)(uint8_t const*, std::size_t))&crc::compute,
              py::arg("data"),
              py::arg("len"),
              D(crc, compute, 0))
 
 
         .def("compute",
-             (uint64_t(crc::*)(
-                 std::vector<unsigned char, std::allocator<unsigned char>> const&)) &
-                 crc::compute,
+             (uint64_t (crc::*)(
+                 std::vector<unsigned char,
+                             std::allocator<unsigned char>> const&))&crc::compute,
              py::arg("data"),
              D(crc, compute, 1))
 

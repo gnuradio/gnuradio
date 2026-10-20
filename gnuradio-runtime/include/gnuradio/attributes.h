@@ -61,8 +61,8 @@
                                 // clients of class 'B'
 #pragma warning(disable : 4275) // non dll-interface class ... used as base for
                                 // dll-interface class ...
-#pragma warning( \
-    disable : 4244) // conversion from 'double' to 'float', possible loss of data
+#pragma warning(disable \
+                : 4244) // conversion from 'double' to 'float', possible loss of data
 #pragma warning(disable : 4305) // 'initializing' : truncation from 'double' to 'float'
 #pragma warning(disable : 4290) // C++ exception specification ignored except to indicate
                                 // a function is not __declspec(nothrow)

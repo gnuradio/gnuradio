@@ -34,7 +34,7 @@ class FEC_API awgn_bp
 {
 public:
     //! Default constructor
-    awgn_bp(){};
+    awgn_bp() {};
 
     //! A constructor for given GF2Mat
     awgn_bp(const GF2Mat X);
