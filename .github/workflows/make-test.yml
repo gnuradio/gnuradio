@@ -291,13 +291,16 @@ jobs:
       run: cmake --install build
     - name: Bundle installed files
       run: tools/collect_installation.bash "MinGW" "${RUNNER_TEMP}/msys64/mingw64" "/installation-archive.squash"
+    - name: reexport RUNNER_TEMP, because GHA is trash
+      id: reexport_tmp
+      run: printf '%s=%s\n' "RUNNER_TEMP" "${RUNNER_TEMP}" >> "${GITHUB_OUTPUT}"
     - name: Upload installation archive
       uses: actions/upload-artifact@v7.0.2
       with:
         name: 'MinGW installation archive'
         # already much better compressed
         archive: true
-        path: ${{ RUNNER_TEMP }}/msys64/mingw64
+        path: ${{ steps.reexport_tmp.outputs.RUNNER_TEMP }}/msys64/mingw64
         if-no-files-found: warn
         # these things are kinda large, keep them around for 7 days: we can recreate them if we want
         retention-days: 7
