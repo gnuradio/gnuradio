@@ -323,6 +323,7 @@ if(ENABLE_TESTING)
     list(
         APPEND
         test_gnuradio_runtime_sources
+        qa_block_max_noutput.cc
         qa_buffer.cc
         qa_io_signature.cc
         qa_logger.cc

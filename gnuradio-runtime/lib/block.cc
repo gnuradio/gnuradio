@@ -18,7 +18,9 @@
 #include <gnuradio/buffer.h>
 #include <gnuradio/logger.h>
 #include <gnuradio/prefs.h>
+#include <algorithm>
 #include <iostream>
+#include <limits>
 #include <stdexcept>
 
 namespace gr {
@@ -29,6 +31,18 @@ namespace gr {
 
 static const unsigned int s_fixed_buffer_size =
     prefs::singleton()->get_long("DEFAULT", "buffer_size", GR_FIXED_BUFFER_SIZE);
+
+// Smallest bufsize() across all output ports, clamped to the int range of
+// d_max_noutput_items.
+static int min_output_bufsize(const block_detail_sptr& detail)
+{
+    unsigned int nitems = std::numeric_limits<int>::max();
+    for (int i = 0; i < detail->noutputs(); i++) {
+        if (detail->output(i))
+            nitems = std::min(nitems, detail->output(i)->bufsize());
+    }
+    return static_cast<int>(nitems);
+}
 
 
 block::block(const std::string& name,
@@ -408,8 +422,12 @@ void block::allocate_detail(int ninputs,
 
     d_debug_logger->debug("Creating block detail for {:s}", identifier());
 
+    const bool user_set_max_noutput = is_set_max_noutput_items();
+    int max_output_buffer_cap = std::numeric_limits<int>::max();
+
     for (int i = 0; i < noutputs; i++) {
         expand_minmax_buffer(i);
+        const bool capped = max_output_buffer(i) > 0;
 
         buffer_sptr buffer = allocate_buffer(i,
                                              downstream_max_nitems_vec[i],
@@ -417,6 +435,12 @@ void block::allocate_detail(int ninputs,
                                              downstream_max_out_mult_vec[i]);
         d_debug_logger->debug("Allocated buffer for output {:s} {:d}", identifier(), i);
         detail->set_output(i, buffer);
+
+        // For a capped port, allocate_buffer() left this port's constrained
+        // request in d_max_noutput_items; read it before the next port
+        // overwrites it.
+        if (capped && !user_set_max_noutput)
+            max_output_buffer_cap = std::min(max_output_buffer_cap, d_max_noutput_items);
 
         // Update the block's max_output_buffer based on what was actually allocated.
         if ((max_output_buffer(i) != static_cast<long>(buffer->bufsize())) &&
@@ -428,6 +452,18 @@ void block::allocate_detail(int ninputs,
                            max_output_buffer(i));
             set_max_output_buffer(i, buffer->bufsize());
         }
+    }
+
+    // A max output buffer on any port caps the block at the smallest
+    // constrained request, as a block-specific maximum. Otherwise make
+    // max_noutput_items() available in start(), sized from what was actually
+    // allocated, and leave d_max_noutput_items_set false so the scheduler keeps
+    // applying the top_block maximum.
+    if (noutputs > 0 && !user_set_max_noutput) {
+        if (max_output_buffer_cap != std::numeric_limits<int>::max())
+            set_max_noutput_items(max_output_buffer_cap);
+        else
+            d_max_noutput_items = min_output_bufsize(detail);
     }
 
     // Store the block_detail that was created above
@@ -452,6 +488,13 @@ block::replace_buffer(size_t src_port, size_t dst_port, block_sptr block_owner)
                             block_owner);
 
     detail_->set_output(src_port, new_buffer);
+
+    // The replacement may be larger than the buffer allocated first, so the
+    // value must be allowed to grow, but not past another port's bufsize().
+    // Skipped for user-set and max_output_buffer caps.
+    if (!is_set_max_noutput_items())
+        d_max_noutput_items = min_output_bufsize(detail_);
+
     return new_buffer;
 }
 
@@ -542,11 +585,11 @@ buffer_sptr block::allocate_buffer(size_t port,
                                   shared_from_base<block>());
     }
 
-    // Set the max noutput items size here to make sure it's always
-    // set in the block and available in the start() method.
-    // But don't overwrite if the user has set this externally.
-    if (!is_set_max_noutput_items())
-        set_max_noutput_items(nitems);
+    // A max output buffer is a latency cap, and the allocation may round up
+    // past it. Leave the constrained request for allocate_detail(), which
+    // takes the minimum across ports.
+    if (max_output_buffer(port) > 0 && !is_set_max_noutput_items())
+        d_max_noutput_items = nitems;
 
     return buf;
 }
