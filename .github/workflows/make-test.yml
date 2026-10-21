@@ -260,7 +260,6 @@ jobs:
           qwt-qt6:p
           SDL:p
           soapysdr:p
-          squashfs-tools:x
           spdlog:p
           thrift:p
           volk:p
@@ -297,8 +296,8 @@ jobs:
       with:
         name: 'MinGW installation archive'
         # already much better compressed
-        archive: false
-        path: /installation-archive.squash
+        archive: true
+        path: ${{ RUNNER_TEMP }}/msys64/mingw64
         if-no-files-found: warn
         # these things are kinda large, keep them around for 7 days: we can recreate them if we want
         retention-days: 7
