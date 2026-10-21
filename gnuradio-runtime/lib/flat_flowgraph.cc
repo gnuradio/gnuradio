@@ -22,6 +22,7 @@
 #include <gnuradio/prefs.h>
 #include <volk/volk.h>
 #include <iostream>
+#include <map>
 #include <numeric>
 #include <typeinfo>
 
@@ -39,6 +40,8 @@ flat_flowgraph::~flat_flowgraph() {}
 void flat_flowgraph::setup_connections()
 {
     basic_block_vector_t blocks = calc_used_blocks();
+
+    check_fanout_buffer_types();
 
     // Assign block details to blocks
     for (basic_block_viter_t p = blocks.begin(); p != blocks.end(); p++) {
@@ -155,6 +158,41 @@ void flat_flowgraph::allocate_block_detail(basic_block_sptr block)
                              downstream_max_nitems,
                              downstream_lcm_nitems,
                              downstream_max_out_mult);
+}
+
+void flat_flowgraph::check_fanout_buffer_types()
+{
+    // First consumer edge seen for each output port
+    std::map<std::pair<basic_block_sptr, int>, edge> first_consumer;
+
+    for (const edge& e : d_edges) {
+        auto inserted =
+            first_consumer.emplace(std::make_pair(e.src().block(), e.src().port()), e);
+        if (inserted.second)
+            continue;
+
+        const edge& first = inserted.first->second;
+        buffer_type first_type =
+            first.dst().block()->input_signature()->stream_buffer_type(
+                first.dst().port());
+        buffer_type this_type =
+            e.dst().block()->input_signature()->stream_buffer_type(e.dst().port());
+        if (first_type == this_type)
+            continue;
+
+        auto error = fmt::format(
+            "Output port {} of block {} feeds inputs with different buffer types: "
+            "{} ({}) and {} ({}). All consumers of an output port must use the same "
+            "buffer type; insert a block such as copy in front of one of them.",
+            e.src().port(),
+            e.src().block()->identifier(),
+            first.dst().block()->identifier(),
+            first_type.name(),
+            e.dst().block()->identifier(),
+            this_type.name());
+        d_logger->error(error);
+        throw std::runtime_error(error);
+    }
 }
 
 void flat_flowgraph::connect_block_inputs(basic_block_sptr block)
@@ -277,6 +315,8 @@ void flat_flowgraph::connect_block_inputs(basic_block_sptr block)
 
 void flat_flowgraph::merge_connections(flat_flowgraph_sptr old_ffg)
 {
+    check_fanout_buffer_types();
+
     // Allocate block details if needed.  Only new blocks that aren't pruned out
     // by flattening will need one; existing blocks still in the new flowgraph will
     // already have one.
