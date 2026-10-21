@@ -1,4 +1,4 @@
-name: 'Make Test'
+name: 'Linux Build Containers'
 on:
   push:
     branches:
@@ -211,3 +211,103 @@ jobs:
       continue-on-error: true
       shell: bash
       run: ./.github/ci-tools/build-summary.sh "${{ matrix.distro }}" "/build"
+  mingw64:
+    timeout-minutes: 80
+  # All of these shall depend on the formatting check (needs: checks of formatting and hashes)
+    needs: [check-formatting-and-hashes, check-python-formatting]
+    runs-on: windows-latest
+    name: MinGW-w64
+    defaults:
+      run:
+        shell: msys2 {0}
+    steps:
+    - name: Setup MSYS2
+      uses: msys2/setup-msys2@v2
+      with:
+        msystem: UCRT64
+        update: true
+        install: >-
+          git
+          make
+        pacboy: >-
+          curl:p
+          toolchain:p
+          cmake:p
+          ninja:p
+          boost:p
+          cppzmq:p
+          fftw:p
+          gsl:p
+          gsm:p
+          gtk3:p
+          jack2:p
+          libsndfile:p
+          libunwind:p
+          pango:p
+          portaudio:p
+          pybind11:p
+          python:p
+          python-click:p
+          python-gobject:p
+          python-jsonschema:p
+          python-mako:p
+          python-numpy:p
+          python-pip:p
+          python-pyqt6:p
+          python-pyzmq:p
+          python-yaml:p
+          qt6-base:p
+          qwt-qt6:p
+          SDL:p
+          soapysdr:p
+          spdlog:p
+          thrift:p
+          volk:p
+          sccache:p
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: Prepare sccache usage (if available)
+      id: enable_sccache
+      env:
+        SCCACHE_S3_ENDPOINT: ${{ vars.SCCACHE_S3_ENDPOINT }}
+        SCCACHE_S3_BUCKET: ${{ vars.SCCACHE_S3_BUCKET }}
+        SCCACHE_S3_REGION: ${{ vars.SCCACHE_S3_REGION }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.SCCACHE_S3_KEY }}
+        AWS_ACCESS_KEY_ID: ${{ vars.SCCACHE_S3_KEY_ID }}
+      run: .github/ci-tools/setup_cmake_cache_flags.bash "${{ matrix.name }}"
+    - name: CMake
+      run: |
+        cmake -S . -B build \
+          -GNinja \
+          -DCMAKE_INSTALL_PREFIX=${RUNNER_TEMP}/msys64/mingw64 \
+          -DENABLE_DOXYGEN=OFF \
+          ${{ steps.enable_sccache.outputs.CXX_LAUNCHER }} \
+          ${{ steps.enable_sccache.outputs.C_LAUNCHER }}
+    - name: Build
+      env:
+        SCCACHE_CONF: ${{ steps.enable_sccache.outputs.SCCACHE_CONF }}
+      run: cmake --build build
+    - name: Install
+      run: cmake --install build
+    - name: Bundle installed files
+      run: tools/collect_installation.bash "MinGW" "${RUNNER_TEMP}/msys64/mingw64" "/installation-archive.squash"
+    - name: reexport RUNNER_TEMP, because GHA is trash
+      id: reexport_tmp
+      run: printf '%s=%s\n' "RUNNER_TEMP" "${RUNNER_TEMP}" >> "${GITHUB_OUTPUT}"
+    - name: Upload installation archive
+      uses: actions/upload-artifact@v7.0.2
+      with:
+        name: 'MinGW installation archive'
+        # already much better compressed
+        archive: true
+        path: ${{ steps.reexport_tmp.outputs.RUNNER_TEMP }}/msys64/mingw64
+        if-no-files-found: warn
+        # these things are kinda large, keep them around for 7 days: we can recreate them if we want
+        retention-days: 7
+    # - name: CTest
+    #   working-directory: ./build
+    #   run: ctest --output-on-failure
+    - name: Show final sccache and build directory stats
+      if: always()
+      continue-on-error: true
+      run: bash ./.github/ci-tools/build-summary.sh "MinGW-w64" "build"
