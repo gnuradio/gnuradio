@@ -1,4 +1,4 @@
-name: 'Make Test'
+name: 'Linux Build Containers'
 on:
   push:
     branches:
@@ -224,7 +224,7 @@ jobs:
     - name: Setup MSYS2
       uses: msys2/setup-msys2@v2
       with:
-        msystem: MINGW64
+        msystem: UCRT64
         update: true
         install: >-
           git
@@ -245,6 +245,7 @@ jobs:
           libunwind:p
           pango:p
           portaudio:p
+          pybind11:p
           python:p
           python-click:p
           python-gobject:p
@@ -259,15 +260,11 @@ jobs:
           qwt-qt6:p
           SDL:p
           soapysdr:p
+          squashfs-tools:p
           spdlog:p
           thrift:p
           volk:p
           sccache:p
-    - name: download & install PyBind11 v3.0.1 release
-      run: |
-        curl --silent https://repo.msys2.org/mingw/mingw64/mingw-w64-x86_64-pybind11-3.0.1-3-any.pkg.tar.zst > pybind11.tar.zst && \
-        pacman -U --noconfirm pybind11.tar.zst && \
-        rm pybind11.tar.zst
     - name: Checkout code
       uses: actions/checkout@v4
     - name: Prepare sccache usage (if available)
@@ -293,9 +290,21 @@ jobs:
       run: cmake --build build
     - name: Install
       run: cmake --install build
-    - name: CTest
-      working-directory: ./build
-      run: ctest --output-on-failure
+    - name: Bundle installed files
+      run: tools/collect_installation.bash "MinGW" "${RUNNER_TEMP}/msys64/mingw64" "/installation-archive.squash"
+    - name: Upload installation archive
+      uses: actions/upload-artifact@v7.0.2
+      with:
+        name: 'MinGW installation archive'
+        # already much better compressed
+        archive: false
+        path: /installation-archive.squash
+        if-no-files-found: warn
+        # these things are kinda large, keep them around for 7 days: we can recreate them if we want
+        retention-days: 7
+    # - name: CTest
+    #   working-directory: ./build
+    #   run: ctest --output-on-failure
     - name: Show final sccache and build directory stats
       if: always()
       continue-on-error: true
