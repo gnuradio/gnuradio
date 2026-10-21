@@ -260,7 +260,7 @@ jobs:
           qwt-qt6:p
           SDL:p
           soapysdr:p
-          squashfs-tools:p
+          squashfs-tools:x
           spdlog:p
           thrift:p
           volk:p
