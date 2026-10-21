@@ -324,6 +324,7 @@ if(ENABLE_TESTING)
         APPEND
         test_gnuradio_runtime_sources
         qa_buffer.cc
+        qa_fanout_buffer_types.cc
         qa_io_signature.cc
         qa_logger.cc
         qa_fmt_formatters.cc
