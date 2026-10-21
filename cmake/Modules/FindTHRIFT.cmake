@@ -60,7 +60,11 @@ endif(THRIFT_VERSION VERSION_LESS THRIFT_REQ_VERSION)
 if(CMAKE_CROSSCOMPILING)
     set(PYTHON_THRIFT_FOUND TRUE)
 else(CMAKE_CROSSCOMPILING)
-    gr_python_check_module("Thrift" thrift "1" PYTHON_THRIFT_FOUND)
+    gr_python_check_module(
+        DESC "Thrift"
+        MODULE thrift
+        CHECK "1"
+        VAR PYTHON_THRIFT_FOUND)
 endif(CMAKE_CROSSCOMPILING)
 
 # Set to found if we've made it this far
