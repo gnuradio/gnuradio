@@ -168,7 +168,7 @@ void run_two_outputs(two_output_source::sptr src,
 }
 
 // The default (non-custom) buffer type.
-const gr::buffer_type& host = gr::buffer_double_mapped::type;
+gr::buffer_type host = gr::buffer_double_mapped::type;
 
 } // namespace
 
