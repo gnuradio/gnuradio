@@ -51,5 +51,5 @@ if(MSVC)
 endif(MSVC)
 
 if(BUILD_SHARED_LIBS)
-    gr_library_foo(gnuradio-uhd UHD UHD::UHD)
+    GR_REGISTER_LIBRARY(gnuradio-uhd UHD UHD::UHD)
 endif()

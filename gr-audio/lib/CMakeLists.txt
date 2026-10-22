@@ -139,5 +139,5 @@ if(WIN32)
     endif()
 endif(WIN32)
 
-gr_library_foo(gnuradio-audio)
+GR_REGISTER_LIBRARY(gnuradio-audio)
 install(FILES ${gr_audio_confs} DESTINATION ${GR_PREFSDIR_relative_to_prefix})
