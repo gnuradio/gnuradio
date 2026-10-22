@@ -24,7 +24,8 @@ device_sink::sptr device_sink::make(const std::string& uri,
                                     const iio_param_vec_t& params,
                                     unsigned int buffer_size,
                                     unsigned int interpolation,
-                                    bool cyclic)
+                                    bool cyclic,
+                                    unsigned int buffer_index)
 {
     return gnuradio::make_block_sptr<device_sink_impl>(
         device_source_impl::get_context(uri),
@@ -35,7 +36,8 @@ device_sink::sptr device_sink::make(const std::string& uri,
         params,
         buffer_size,
         interpolation,
-        cyclic);
+        cyclic,
+        buffer_index);
 }
 
 device_sink::sptr device_sink::make_from(iio_context* ctx,
@@ -45,7 +47,8 @@ device_sink::sptr device_sink::make_from(iio_context* ctx,
                                          const iio_param_vec_t& params,
                                          unsigned int buffer_size,
                                          unsigned int interpolation,
-                                         bool cyclic)
+                                         bool cyclic,
+                                         unsigned int buffer_index)
 {
     return gnuradio::make_block_sptr<device_sink_impl>(ctx,
                                                        false,
@@ -55,12 +58,40 @@ device_sink::sptr device_sink::make_from(iio_context* ctx,
                                                        params,
                                                        buffer_size,
                                                        interpolation,
-                                                       cyclic);
+                                                       cyclic,
+                                                       buffer_index);
 }
 
 void device_sink_impl::set_params(const iio_param_vec_t& params)
 {
     device_source_impl::set_params(this->phy, params);
+}
+
+iio_buffer* device_sink_impl::open_buffer(unsigned int index)
+{
+#ifdef LIBIIO_V1
+    unsigned int n = iio_device_get_buffers_count(dev);
+    if (index >= n)
+        throw std::runtime_error("Invalid buffer index " + std::to_string(index) +
+                                 ": device only has " + std::to_string(n) +
+                                 " buffer(s)");
+
+    iio_buffer* new_buf = iio_device_get_buffer(dev, index);
+    int err_code = iio_err(new_buf);
+    if (err_code)
+        throw std::runtime_error("Unable to create buffer: " + std::to_string(-err_code));
+
+    return new_buf;
+#else
+    if (index != 0)
+        throw std::runtime_error("Non-zero buffer_index requires libiio v1");
+
+    iio_buffer* new_buf = iio_device_create_buffer(dev, buffer_size, cyclic);
+    if (!new_buf)
+        throw std::runtime_error("Unable to create buffer: " + std::to_string(-errno));
+
+    return new_buf;
+#endif
 }
 
 /*
@@ -74,14 +105,22 @@ device_sink_impl::device_sink_impl(iio_context* ctx,
                                    const iio_param_vec_t& params,
                                    unsigned int buffer_size,
                                    unsigned int interpolation,
-                                   bool cyclic)
+                                   bool cyclic,
+                                   unsigned int buffer_index)
     : gr::sync_block("device_sink",
                      gr::io_signature::make(1, -1, sizeof(short)),
                      gr::io_signature::make(0, 0, 0)),
       d_tags(0),
       ctx(ctx),
+#ifdef LIBIIO_V1
+      buf_stream(NULL),
+      cyclic_block(NULL),
+      stream_started(false),
+#endif
       interpolation(interpolation),
       buffer_size(buffer_size),
+      buffer_index(buffer_index),
+      cyclic(cyclic),
       destroy_ctx(destroy_ctx),
       d_len_tag_key(pmt::PMT_NIL)
 {
@@ -103,14 +142,30 @@ device_sink_impl::device_sink_impl(iio_context* ctx,
 
     /* First disable all channels */
     nb_channels = iio_device_get_channels_count(dev);
-    for (i = 0; i < nb_channels; i++)
+#ifdef LIBIIO_V1
+    mask = iio_create_channels_mask(nb_channels);
+
+    if (!mask)
+        throw std::runtime_error("Unable to create channel mask.");
+#endif
+
+    for (i = 0; i < nb_channels; i++) {
+#ifdef LIBIIO_V1
+        iio_channel_disable(iio_device_get_channel(dev, i), mask);
+#else
         iio_channel_disable(iio_device_get_channel(dev, i));
+#endif
+    }
 
     if (channels.empty()) {
         for (i = 0; i < nb_channels; i++) {
             iio_channel* chn = iio_device_get_channel(dev, i);
 
+#ifdef LIBIIO_V1
+            iio_channel_enable(chn, mask);
+#else
             iio_channel_enable(chn);
+#endif
             channel_list.push_back(chn);
         }
     } else {
@@ -124,18 +179,65 @@ device_sink_impl::device_sink_impl(iio_context* ctx,
                 throw std::runtime_error("Channel not found");
             }
 
+#ifdef LIBIIO_V1
+            iio_channel_enable(chn, mask);
+            if (!iio_channel_is_enabled(chn, mask))
+                throw std::runtime_error("Channel not enabled");
+#else
             iio_channel_enable(chn);
             if (!iio_channel_is_enabled(chn))
                 throw std::runtime_error("Channel not enabled");
+#endif
             channel_list.push_back(chn);
         }
     }
 
     set_params(params);
 
-    buf = iio_device_create_buffer(dev, buffer_size, cyclic);
-    if (!buf)
-        throw std::runtime_error("Unable to create buffer: " + std::to_string(-errno));
+    buf = open_buffer(buffer_index);
+
+#ifdef LIBIIO_V1
+    int err_code;
+
+    if (cyclic) {
+        /* iio_stream_get_next_block() enqueues with cyclic = false, so a cyclic
+         * transfer has to drive a block of its own and pass the flag to
+         * iio_block_enqueue() itself. */
+        buf_stream = iio_buffer_open(buf, mask);
+        err_code = iio_err(buf_stream);
+        if (err_code) {
+            buf_stream = NULL;
+            throw std::runtime_error("Unable to open buffer: " +
+                                     std::to_string(-err_code));
+        }
+
+        cyclic_block = iio_buffer_stream_create_block(
+            buf_stream, (size_t)buffer_size * iio_device_get_sample_size(dev, mask));
+        err_code = iio_err(cyclic_block);
+        if (err_code) {
+            cyclic_block = NULL;
+            throw std::runtime_error("Unable to create cyclic block: " +
+                                     std::to_string(-err_code));
+        }
+
+        /* channel_write() fills whatever iioblock points at. */
+        iioblock = cyclic_block;
+    } else {
+        /* buffer_size is a sample count, which is what create_stream expects. */
+        stream = iio_buffer_create_stream(buf, 4, buffer_size, mask);
+        err_code = iio_err(stream);
+        if (err_code)
+            throw std::runtime_error("Unable to create stream: " +
+                                     std::to_string(-err_code));
+
+        // get first block so we can copy the data to it
+        iioblock = iio_stream_get_next_block(stream);
+        err_code = iio_err(iioblock);
+        if (err_code)
+            throw std::runtime_error("Unable to create first stream block: " +
+                                     std::to_string(-err_code));
+    }
+#endif
 }
 
 /*
@@ -143,12 +245,44 @@ device_sink_impl::device_sink_impl(iio_context* ctx,
  */
 device_sink_impl::~device_sink_impl()
 {
+#ifdef LIBIIO_V1
+    /* The buffer belongs to the device; destroying the stream closes it. */
+    if (stream)
+        iio_stream_destroy(stream);
+
+    if (buf_stream) {
+        /* Cancel first so a transfer in flight is unblocked before the block it
+         * uses is destroyed. */
+        iio_buffer_stream_cancel(buf_stream);
+        if (cyclic_block)
+            iio_block_destroy(cyclic_block);
+        if (stream_started)
+            iio_buffer_stream_stop(buf_stream);
+        iio_buffer_close(buf_stream);
+    }
+
+    if (mask)
+        iio_channels_mask_destroy(mask);
+#else
     iio_buffer_destroy(buf);
+#endif
     device_source_impl::remove_ctx_history(ctx, destroy_ctx);
 }
 
 void device_sink_impl::channel_write(const iio_channel* chn, const void* src, size_t len)
 {
+#ifdef LIBIIO_V1
+    const iio_channels_mask* hw_mask = mask;
+    uintptr_t dst_ptr, src_ptr = (uintptr_t)src, end = src_ptr + len;
+    unsigned int length = iio_channel_get_data_format(chn)->length / 8;
+    uintptr_t buf_end = (uintptr_t)iio_block_end(iioblock);
+    ptrdiff_t buf_step = iio_device_get_sample_size(dev, hw_mask) * (interpolation + 1);
+
+    for (dst_ptr = (uintptr_t)iio_block_first(iioblock, chn);
+         dst_ptr < buf_end && src_ptr + length <= end;
+         dst_ptr += buf_step, src_ptr += length)
+        iio_channel_convert_inverse(chn, (void*)dst_ptr, (const void*)src_ptr);
+#else
     uintptr_t dst_ptr, src_ptr = (uintptr_t)src, end = src_ptr + len;
     unsigned int length = iio_channel_get_data_format(chn)->length / 8;
     uintptr_t buf_end = (uintptr_t)iio_buffer_end(buf);
@@ -158,6 +292,7 @@ void device_sink_impl::channel_write(const iio_channel* chn, const void* src, si
          dst_ptr < buf_end && src_ptr + length <= end;
          dst_ptr += buf_step, src_ptr += length)
         iio_channel_convert_inverse(chn, (void*)dst_ptr, (const void*)src_ptr);
+#endif
 }
 
 void device_sink_impl::set_len_tag_key(const std::string& len_tag_key)
@@ -206,14 +341,40 @@ int device_sink_impl::work(int noutput_items,
     }
 
     if (interpolation >= 1) {
+#ifdef LIBIIO_V1
+        ptrdiff_t len =
+            (intptr_t)iio_block_end(iioblock) - (intptr_t)iio_block_start(iioblock);
+        memset(iio_block_start(iioblock), 0, len);
+#else
         ptrdiff_t len = (intptr_t)iio_buffer_end(buf) - (intptr_t)iio_buffer_start(buf);
         memset(iio_buffer_start(buf), 0, len);
+#endif
     }
 
     for (unsigned int i = 0; i < input_items.size(); i++)
         channel_write(channel_list[i], input_items[i], noutput_items * sizeof(short));
 
+#ifdef LIBIIO_V1
+    if (cyclic) {
+        ret = iio_block_enqueue(cyclic_block, 0, true);
+
+        if (ret == 0 && !stream_started) {
+            /* The buffer's worker only runs once the stream is started, and a
+             * block enqueued before that is never transferred. */
+            ret = iio_buffer_stream_start(buf_stream);
+            if (ret == 0)
+                stream_started = true;
+        }
+
+        if (ret == 0)
+            ret = iio_block_dequeue(cyclic_block, false);
+    } else {
+        iioblock = iio_stream_get_next_block(stream);
+        ret = -iio_err(iioblock);
+    }
+#else
     ret = iio_buffer_push(buf);
+#endif
     if (ret < 0) {
         char buf[256];
         iio_strerror(-ret, buf, sizeof(buf));
