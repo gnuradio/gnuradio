@@ -1,0 +1,193 @@
+options:
+  parameters:
+    author: "Marcus M\xFCller, Oleg Nikitin"
+    catch_exceptions: 'True'
+    category: '[GRC Hier Blocks]'
+    cmake_opt: ''
+    comment: ''
+    copyright: ''
+    description: ''
+    gen_cmake: 'On'
+    gen_linking: dynamic
+    generate_options: no_gui
+    hier_block_src_path: '.:'
+    id: waves
+    max_nouts: '0'
+    output_language: python
+    placement: (0,0)
+    qt_qss_theme: ''
+    realtime_scheduling: ''
+    run: 'True'
+    run_command: '{python} -u {filename}'
+    run_options: prompt
+    sizing_mode: fixed
+    thread_safe_setters: ''
+    title: SDL Demo
+    window_size: (1000,1000)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [0, 0.0]
+    rotation: 0
+    state: enabled
+
+blocks:
+- name: analog_sig_source_x_0
+  id: analog_sig_source_x
+  parameters:
+    affinity: ''
+    alias: ''
+    amp: '1'
+    comment: ''
+    freq: update_rate*periods_per_row*num_rows
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    offset: '1'
+    phase: '0'
+    samp_rate: update_rate*vector_length*num_rows
+    showports: 'False'
+    type: float
+    waveform: analog.GR_COS_WAVE
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [0, 120.0]
+    rotation: 0
+    state: enabled
+- name: blocks_float_to_short_0
+  id: blocks_float_to_short
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    scale: 2**6
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [376, 160.0]
+    rotation: 0
+    state: enabled
+- name: blocks_throttle2_0
+  id: blocks_throttle2
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    ignoretag: 'True'
+    limit: time
+    maximum: 0.25/update_rate
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    samples_per_second: update_rate*vector_length*num_rows
+    type: float
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [192, 144.0]
+    rotation: 0
+    state: enabled
+- name: num_rows
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: none
+    label: Number of Rows
+    short_id: n
+    type: intx
+    value: '512'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [392, 0.0]
+    rotation: 0
+    state: enabled
+- name: periods_per_row
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: none
+    label: Periods per Row
+    short_id: p
+    type: eng_float
+    value: 1-1/255
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [528, 0.0]
+    rotation: 0
+    state: enabled
+- name: update_rate
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: none
+    label: Update Rate
+    short_id: r
+    type: intx
+    value: '25'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [280, 0.0]
+    rotation: 0
+    state: enabled
+- name: vector_length
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: none
+    label: Vector Length
+    short_id: l
+    type: intx
+    value: '512'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [160, 0.0]
+    rotation: 0
+    state: enabled
+- name: video_sdl_sink_0
+  id: video_sdl_sink
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    display_height: num_rows
+    display_width: vector_length
+    fps: '0'
+    height: num_rows
+    num_channels: '1'
+    type: short
+    width: vector_length
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [520, 128.0]
+    rotation: 0
+    state: enabled
+
+connections:
+- [analog_sig_source_x_0, '0', blocks_throttle2_0, '0']
+- [blocks_float_to_short_0, '0', video_sdl_sink_0, '0']
+- [blocks_throttle2_0, '0', blocks_float_to_short_0, '0']
+
+metadata:
+  file_format: 1
+  grc_version: g935569cc9
