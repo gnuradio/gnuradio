@@ -52,6 +52,11 @@ private:
                           unsigned int nbits,
                           unsigned int endstate,
                           unsigned int tailsize);
+    /* Walks the decision history back nskip steps from the end of the
+     * current trellis (d_veclen), without emitting any bits, and returns
+     * the state reached.
+     */
+    unsigned int skip_viterbi(unsigned int endstate, unsigned int nskip);
     int find_endstate();
 
     /* Originally a volk::vector of length
@@ -79,6 +84,7 @@ private:
     int d_end_state_chaining;
     int d_end_state_nonchaining;
     unsigned int d_veclen;
+    unsigned int d_lookahead;
 
     int parity(int x);
 
@@ -90,7 +96,8 @@ public:
                     int start_state = 0,
                     int end_state = -1,
                     cc_mode_t mode = CC_STREAMING,
-                    bool padded = false);
+                    bool padded = false,
+                    unsigned int lookahead = s_k - 1);
     ~cc_decoder_impl() override;
 
     // Disable copy because of the raw pointers.
