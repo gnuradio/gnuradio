@@ -107,3 +107,26 @@ the values are substituted in the template file (using `update_pydoc.py sub`)
 ## Compile Time
 
 The binding files are broken up into separate compilation units per block compared with the previous implementation where an entire module or larger groups of blocks were compiled together.  Because of this, it is possible depending on the build machine that compilation of GNU Radio will take longer using pybind11.  The upside is that when a single block source code is modified, the python bindings for the entire module do not have to be re-compiled.  This can significantly improve compile time when actively debugging or modifying a single block.
+
+## Troubleshooting: bindings out of sync
+
+If you encounter this error during CMake configuration:
+
+```
+Python bindings for <header> are out of sync
+```
+
+### What does this mean?
+
+This indicates that the C++ header file has changed, but the corresponding
+Python binding file has not been updated.
+
+### How to fix it
+
+Depending on your setup, you may need to:
+
+- Regenerate the bindings if they are automatically generated
+- Manually update the binding `.cc` file to match the header
+- Update the stored hash if the change is minor and does not affect bindings
+
+Refer to this document for more details on binding generation and maintenance.
