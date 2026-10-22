@@ -134,17 +134,21 @@ class PropsDialog(Gtk.Dialog):
     def _params_changed(self):
         """
         Have the params in this dialog changed?
-        Ex: Added, removed, type change, hide change, and updated value
+        Ex: Added, removed, type change or hide change
         To the props dialog, the hide setting of 'none' and 'part' are identical.
         Therefore, the props dialog only cares if the hide setting is/not 'all'.
+        A value change alone does not count: rebuilding the widgets on every
+        edit loses the keyboard focus (e.g. when pressing Tab).
         Make a hash that uniquely represents the params' state.
 
         Returns:
             True if changed
         """
         old_hash = self._hash
+        force_show_id = Actions.TOGGLE_SHOW_BLOCK_IDS.get_active()
         new_hash = self._hash = hash(tuple(
-            (hash(param), param.name, param.dtype, param.hide == 'all', param.get_value())
+            (hash(param), param.name, param.dtype,
+             param.hide == 'all' and not (force_show_id and param.dtype == 'id'))
             for param in self._block.params.values()
         ))
         return new_hash != old_hash
@@ -179,7 +183,6 @@ class PropsDialog(Gtk.Dialog):
                     vbox.remove(child)
                     # child.destroy()   # disabled because it throws errors...
                 # repopulate the params box
-                box_all_valid = True
                 force_show_id = Actions.TOGGLE_SHOW_BLOCK_IDS.get_active()
 
                 for param in self._block.params.values():
@@ -188,17 +191,16 @@ class PropsDialog(Gtk.Dialog):
                     # todo: why do we even rebuild instead of really hiding params?
                     if param.category != category or param.hide == 'all':
                         continue
-                    box_all_valid = box_all_valid and param.is_valid()
 
                     input_widget = param.get_input(self._handle_changed, self._activate_apply,
                                                    transient_for=self.get_transient_for())
                     input_widget.show_all()
                     vbox.pack_start(input_widget, input_widget.expand, True, 1)
 
-                label.set_markup('<span {color}>{name}</span>'.format(
-                    color='foreground="red"' if not box_all_valid else '', name=Utils.encode(category)
-                ))
                 vbox.show()  # show params box with new params
+
+        # the tab titles depend on the validity, not on the structure of the params
+        self._update_tab_labels()
 
         if self._block.is_valid():
             self._error_box.hide()
@@ -209,6 +211,17 @@ class PropsDialog(Gtk.Dialog):
 
         self._update_docs_page()
         self._update_generated_code_page()
+
+    def _update_tab_labels(self):
+        """Colour the category tab titles red if they hold an invalid param."""
+        for category, label, vbox in self._params_boxes:
+            all_valid = all(
+                param.is_valid() for param in self._block.params.values()
+                if param.category == category and param.hide != 'all'
+            )
+            label.set_markup('<span {color}>{name}</span>'.format(
+                color='' if all_valid else 'foreground="red"', name=Utils.encode(category)
+            ))
 
     def _update_docs_page(self):
         """Show documentation from XML and try to display best matching docstring"""
