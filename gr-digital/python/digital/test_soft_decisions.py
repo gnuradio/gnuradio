@@ -10,12 +10,21 @@
 
 
 import numpy
-import sys
 from matplotlib import pyplot
 from gnuradio import digital
-from .soft_dec_lut_gen import soft_dec_table, calc_soft_dec_from_table, calc_soft_dec
-from .psk_constellations import psk_4_0, psk_4_1, psk_4_2, psk_4_3, psk_4_4, psk_4_5, psk_4_6, psk_4_7, sd_psk_4_0, sd_psk_4_1, sd_psk_4_2, sd_psk_4_3, sd_psk_4_4, sd_psk_4_5, sd_psk_4_6, sd_psk_4_7
-from .qam_constellations import qam_16_0, sd_qam_16_0
+from gnuradio.digital.utils.mod_codes import invert_code
+from gnuradio.digital.soft_dec_lut_gen import (
+    calc_soft_dec_from_table, calc_soft_dec, soft_dec_table_generator, min_max_axes
+)
+from gnuradio.digital.psk_constellations import (
+    psk_4_0, psk_4_1, psk_4_2, psk_4_3, psk_4_4, psk_4_5, psk_4_6, psk_4_7,
+    sd_psk_4_0, sd_psk_4_1, sd_psk_4_2, sd_psk_4_3, sd_psk_4_4, sd_psk_4_5,
+    sd_psk_4_6, sd_psk_4_7
+)
+from gnuradio.digital.qam_constellations import (
+    qam_16_0, qam_16_1, qam_16_2, qam_16_3, sd_qam_16_0, sd_qam_16_1,
+    sd_qam_16_2, sd_qam_16_3
+)
 
 
 def test_qpsk(i, sample, prec):
@@ -30,34 +39,35 @@ def test_qpsk(i, sample, prec):
     rot_sym = 1
     side = 2
     width = 2
-    c = digital.constellation_rect(constel, code, rot_sym,
-                                   side, side, width, width)
+    c = digital.constellation_rect(
+        constel, code, rot_sym, side, side, width, width,
+        digital.constellation.NO_NORMALIZATION
+    )
 
-    # Get max energy/symbol in constellation
     constel = c.points()
-    Es = max([numpy.sqrt(constel_i.real**2 + constel_i.imag**2)
-             for constel_i in constel])
+    axlimit = min_max_axes(constel)
+    table = soft_dec_table_generator(qpsk_lut_gen, prec, axlimit)
+    c.set_soft_dec_lut(table, prec, axlimit)
 
-    #table = soft_dec_table_generator(qpsk_lut_gen, prec, Es)
-    table = soft_dec_table(constel, code, prec)
+    py_soft_dec = qpsk_lut_gen(sample)
+    py_lut = calc_soft_dec_from_table(sample, table, prec, axlimit)
+    py_llr = calc_soft_dec(sample, constel, code)
+    cpp_lut = c.soft_decision_maker(sample)
+    cpp_llr = c.calc_soft_dec(sample)
 
-    c.gen_soft_dec_lut(prec)
-    #c.set_soft_dec_lut(table, prec)
+    soft_decisions = {"python_soft_decision": py_soft_dec,
+                      "python_lut": py_lut,
+                      "python_llr": py_llr,
+                      "cpp_lut": cpp_lut,
+                      "cpp_llr": cpp_llr}
 
-    y_python_gen_calc = qpsk_lut_gen(sample, Es)
-    y_python_table = calc_soft_dec_from_table(sample, table, prec, Es)
-    y_python_raw_calc = calc_soft_dec(sample, constel, code)
-    y_cpp_table = c.soft_decision_maker(sample)
-    y_cpp_raw_calc = c.calc_soft_dec(sample)
-
-    return (y_python_gen_calc, y_python_table, y_python_raw_calc,
-            y_cpp_table, y_cpp_raw_calc, constel, code, c)
+    return soft_decisions, constel, code, c
 
 
 def test_qam16(i, sample, prec):
     sample = sample / 1
-    qam_const_list = [qam_16_0, ]
-    qam_lut_gen_list = [sd_qam_16_0, ]
+    qam_const_list = [qam_16_0, qam_16_1, qam_16_2, qam_16_3]
+    qam_lut_gen_list = [sd_qam_16_0, sd_qam_16_1, sd_qam_16_2, sd_qam_16_3]
 
     constel, code = qam_const_list[i]()
     qam_lut_gen = qam_lut_gen_list[i]
@@ -65,56 +75,37 @@ def test_qam16(i, sample, prec):
     rot_sym = 4
     side = 2
     width = 2
-    c = digital.constellation_rect(constel, code, rot_sym,
-                                   side, side, width, width)
+    c = digital.constellation_rect(
+        constel, code, rot_sym, side, side, width, width,
+        digital.constellation.NO_NORMALIZATION)
 
-    # Get max energy/symbol in constellation
     constel = c.points()
-    Es = max([abs(constel_i) for constel_i in constel])
+    axlimit = min_max_axes(constel)
+    table = soft_dec_table_generator(qam_lut_gen, prec, axlimit)
+    c.set_soft_dec_lut(table, prec, axlimit)
 
-    #table = soft_dec_table_generator(qam_lut_gen, prec, Es)
-    table = soft_dec_table(constel, code, prec, 1)
+    py_soft_dec = qam_lut_gen(sample)
+    py_lut = calc_soft_dec_from_table(sample, table, prec, axlimit)
+    py_llr = calc_soft_dec(sample, constel, code)
+    cpp_lut = c.soft_decision_maker(sample)
+    cpp_llr = c.calc_soft_dec(sample)
+    soft_decisions = {"python_soft_decision": py_soft_dec,
+                      "python_lut": py_lut,
+                      "python_llr": py_llr,
+                      "cpp_lut": cpp_lut,
+                      "cpp_llr": cpp_llr}
 
-    # c.gen_soft_dec_lut(prec)
-    c.set_soft_dec_lut(table, prec)
-
-    y_python_gen_calc = qam_lut_gen(sample, Es)
-    y_python_table = calc_soft_dec_from_table(sample, table, prec, Es)
-    y_python_raw_calc = calc_soft_dec(sample, constel, code, 1)
-    y_cpp_table = c.soft_decision_maker(sample)
-    y_cpp_raw_calc = c.calc_soft_dec(sample)
-
-    return (y_python_gen_calc, y_python_table, y_python_raw_calc,
-            y_cpp_table, y_cpp_raw_calc, constel, code, c)
+    return soft_decisions, constel, code, c
 
 
-if __name__ == "__main__":
-
-    index = 0
-    prec = 8
-
-    x_re = 2 * numpy.random.random() - 1
-    x_im = 2 * numpy.random.random() - 1
-    x = x_re + x_im * 1j
-    #x = -1 + -0.j
-
-    if 1:
-        y_python_gen_calc, y_python_table, y_python_raw_calc, \
-            y_cpp_table, y_cpp_raw_calc, constel, code, c \
-            = test_qpsk(index, x, prec)
-    else:
-        y_python_gen_calc, y_python_table, y_python_raw_calc, \
-            y_cpp_table, y_cpp_raw_calc, constel, code, c \
-            = test_qam16(index, x, prec)
-
-    k = numpy.log2(len(constel))
-
+def show_test_results(soft_decs, constel, code, c, title):
+    print("\n" + title)
     print("Sample: ", x)
-    print("Python Generator Calculated: ", (y_python_gen_calc))
-    print("Python Generator Table:      ", (y_python_table))
-    print("Python Raw calc:             ", (y_python_raw_calc))
-    print("C++ Table calc:              ", (y_cpp_table))
-    print("C++ Raw calc:                ", (y_cpp_raw_calc))
+    print("Python soft decision: ", soft_decs["python_soft_decision"])
+    print("Python lookup table:  ", soft_decs["python_lut"])
+    print("C++ lookup table:     ", soft_decs["cpp_lut"])
+    print("Python raw LLR calc:  ", soft_decs["python_llr"])
+    print("C++ raw LLR calc:     ", soft_decs["cpp_llr"])
 
     fig = pyplot.figure(1)
     sp1 = fig.add_subplot(1, 1, 1)
@@ -124,7 +115,34 @@ if __name__ == "__main__":
     sp1.set_xlim([-1.5, 1.5])
     sp1.set_ylim([-1.5, 1.5])
     fill = int(numpy.log2(len(constel)))
+    decode = invert_code(code)
     for i, c in enumerate(constel):
-        sp1.text(1.2 * c.real, 1.2 * c.imag, bin(code[i])[2:].zfill(fill),
+        sp1.text(1.2 * c.real, 1.2 * c.imag, bin(decode[i])[2:].zfill(fill),
                  ha='center', va='center', size=18)
+    pyplot.title(title)
     pyplot.show()
+
+
+def format_soft_decs(soft_decs):
+    for key, float_list in soft_decs.items():
+        formatted_list = [f"{i:.6f}" for i in float_list]
+        soft_decs[key] = formatted_list
+
+
+if __name__ == "__main__":
+    prec = 8
+    x_re = 2 * numpy.random.random() - 1
+    x_im = 2 * numpy.random.random() - 1
+    x = x_re + x_im * 1j
+
+    for index in range(8):
+        soft_decs, constel, code, c = test_qpsk(index, x, prec)
+        format_soft_decs(soft_decs)
+        show_test_results(soft_decs, constel, code, c,
+                          title="QPSK " + str(index))
+
+    for index in range(4):
+        soft_decs, constel, code, c = test_qam16(index, x, prec)
+        format_soft_decs(soft_decs)
+        show_test_results(soft_decs, constel, code, c,
+                          title="QAM " + str(index))
