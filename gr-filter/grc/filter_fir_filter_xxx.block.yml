@@ -48,12 +48,30 @@ templates:
     - set_taps(${taps})
 
 cpp_templates:
-    includes: ['#include <gnuradio/filter/fir_filter_blk.h>']
+    includes: ['#include <gnuradio/filter/fir_filter_blk.h>', '#include <gnuradio/filter/firdes.h>']
     declarations: 'filter::fir_filter_${type}::sptr ${id};'
     make: |-
+        <% 
+        taps = self.context.get('taps')
+        try: taps
+        except NameError: taps = None 
+        taps = None if (len(taps) == 0) else taps
+        
+        taps = taps.replace('window.', 'fft::window::win_type::') 
+        taps = taps.replace('firdes.', 'gr::filter::firdes::')
+        taps = taps.replace('[', '{') 
+        taps = taps.replace(']', '}') 
+        %>
+        
+        % if str(type.taps) == "complex_vector":
+        std::vector<gr_complex> taps = ${str(taps)};
+        % else:
+        std::vector<float> taps = ${str(taps)};
+        % endif
+        
         this->${id} = filter::fir_filter_${type}::make(
             ${decim}, 
-            ${taps});
+            taps);
         this->${id}->declare_sample_delay(${samp_delay});
     link: ['gnuradio::gnuradio-filter']
     callbacks:
