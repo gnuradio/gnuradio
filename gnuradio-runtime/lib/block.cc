@@ -440,7 +440,9 @@ block::replace_buffer(size_t src_port, size_t dst_port, block_sptr block_owner)
     block_detail_sptr detail_ = detail();
     buffer_sptr orig_buffer = detail_->output(src_port);
 
-    buffer_type buftype = block_owner->output_signature()->stream_buffer_type(dst_port);
+    // dst_port is an input port of block_owner, and the new buffer must be the
+    // type that input reads; its output types may differ or be absent.
+    buffer_type buftype = block_owner->input_signature()->stream_buffer_type(dst_port);
 
     // Make a new buffer but this time use the passed in block as the owner
     buffer_sptr new_buffer =

@@ -9,9 +9,12 @@
  */
 
 #include <gnuradio/block.h>
+#include <gnuradio/block_detail.h>
 #include <gnuradio/buffer_reader.h>
 #include <gnuradio/host_buffer.h>
 #include <gnuradio/random.h>
+#include <gnuradio/sync_block.h>
+#include <gnuradio/top_block.h>
 #include <gnuradio/transfer_type.h>
 #include <boost/test/unit_test.hpp>
 #include <cstdlib>
@@ -326,4 +329,57 @@ BOOST_AUTO_TEST_CASE(t5)
     rdr1->update_read_pointer(500);
     BOOST_CHECK(buf->space_available() == 15884);
     BOOST_CHECK(rdr1->items_available() == 0);
+}
+
+// Source with a default output buffer that finishes on its first call.
+class done_source : public gr::sync_block
+{
+public:
+    typedef std::shared_ptr<done_source> sptr;
+    static sptr make() { return gnuradio::make_block_sptr<done_source>(); }
+
+    done_source()
+        : sync_block("done_source",
+                     gr::io_signature::make(0, 0, 0),
+                     gr::io_signature::make(1, 1, sizeof(int)))
+    {
+    }
+
+    int work(int, gr_vector_const_void_star&, gr_vector_void_star&) override
+    {
+        return WORK_DONE;
+    }
+};
+
+// Sink whose input uses host_buffer and that has no outputs.
+class host_buffer_sink : public gr::sync_block
+{
+public:
+    typedef std::shared_ptr<host_buffer_sink> sptr;
+    static sptr make() { return gnuradio::make_block_sptr<host_buffer_sink>(); }
+
+    host_buffer_sink()
+        : sync_block("host_buffer_sink",
+                     gr::io_signature::make(1, 1, sizeof(int), gr::host_buffer::type),
+                     gr::io_signature::make(0, 0, 0))
+    {
+    }
+
+    int work(int noutput_items, gr_vector_const_void_star&, gr_vector_void_star&) override
+    {
+        return noutput_items;
+    }
+};
+
+// ----------------------------------------------------------------------------
+// The upstream buffer is replaced with the buffer type of the consumer's input.
+// ----------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(t6)
+{
+    auto tb = gr::make_top_block("t6");
+    auto src = done_source::make();
+    tb->connect(src, 0, host_buffer_sink::make(), 0);
+    tb->run();
+
+    BOOST_CHECK(src->detail()->output(0)->get_buffer_type() == gr::host_buffer::type);
 }
