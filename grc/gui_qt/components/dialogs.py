@@ -149,10 +149,15 @@ class PropsDialog(QDialog):
                         dropdown.currentIndexChanged.connect(self.gui_update)
                     else:
                         dropdown.setEditable(True)
-                        dropdown.setCurrentIndex(
-                            dropdown.param_values.index(param.get_value())
-                        )
+
+                        values = [str(v) for v in dropdown.param_values]
+                        value = str(param.get_value())
+
+                        if value in values:
+                            dropdown.setCurrentIndex(values.index(value))
+
                         dropdown.currentIndexChanged.connect(self.gui_update)
+
                 elif param.dtype in ("file_open", "file_save"):
                     dtype_label = QPushButton("...")
                     dtype_label.setFlat(True)
