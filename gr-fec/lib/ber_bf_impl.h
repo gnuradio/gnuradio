@@ -34,6 +34,8 @@ public:
     ber_bf_impl(bool d_test_mode = false, int berminerrors = 100, float ber_limit = -7.0);
     ~ber_bf_impl() override;
 
+    void reset_counters() override;
+
     int general_work(int noutput_items,
                      gr_vector_int& ninput_items,
                      gr_vector_const_void_star& input_items,
