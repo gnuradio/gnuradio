@@ -46,6 +46,7 @@ set(QTGUI_SOURCES
     time_sink_f_impl.cc
     time_raster_sink_b_impl.cc
     time_raster_sink_f_impl.cc
+    rfnoc_f15_formatter_impl.cc
     freq_sink_c_impl.cc
     freq_sink_f_impl.cc
     const_sink_c_impl.cc
@@ -70,6 +71,8 @@ set(QTGUI_LIBS
     qwt::qwt
     Qt6::Widgets
 )
+
+list(APPEND PRIVATE_LIBS gnuradio-blocks)
 
 if(ENABLE_GR_QTGUI_OPENGL)
     qt6_add_resources(RFNOC_F15_RC_SRCS rfnoc_f15.qrc)

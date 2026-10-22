@@ -29,6 +29,7 @@ list(
     freq_sink_f_python.cc
     freqcontrolpanel_python.cc
     freqdisplayform_python.cc
+    rfnoc_f15_formatter_python.cc
     histogram_sink_f_python.cc
     histogramdisplayform_python.cc
     matrix_sink_python.cc
