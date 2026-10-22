@@ -13,7 +13,7 @@
 
 #include <gnuradio/pdu.h>
 #include <gnuradio/pdu/api.h>
-#include <gnuradio/tagged_stream_block.h>
+#include <gnuradio/sync_block.h>
 
 namespace gr {
 namespace pdu {
@@ -22,7 +22,7 @@ namespace pdu {
  * \brief Turns received PDUs into a tagged stream of items
  * \ingroup message_tools_blk
  */
-class PDU_API pdu_to_tagged_stream : virtual public tagged_stream_block
+class PDU_API pdu_to_tagged_stream : virtual public sync_block
 {
 public:
     // gr::pdu::pdu_to_tagged_stream::sptr
