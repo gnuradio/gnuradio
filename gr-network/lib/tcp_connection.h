@@ -11,6 +11,7 @@
 #ifndef INCLUDED_TCP_CONNECTION_H
 #define INCLUDED_TCP_CONNECTION_H
 
+#include <gnuradio/logger.h>
 #include <asio.hpp>
 #include <pmt/pmt.h>
 #include <memory>
@@ -32,6 +33,10 @@ private:
     tcp_connection(asio::io_context& io_context, int MTU = 10000, bool no_delay = false);
 
     void handle_read(const asio::error_code& error, size_t bytes_transferred);
+
+protected:
+    gr::logger_ptr d_logger;
+    gr::logger_ptr d_debug_logger;
 
 public:
     typedef std::shared_ptr<tcp_connection> sptr;
