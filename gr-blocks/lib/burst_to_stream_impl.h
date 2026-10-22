@@ -23,6 +23,7 @@ private:
     const pmt::pmt_t d_len_tag_key;
     const bool d_propagate_tags;
     size_t d_remaining_items;
+    bool d_warned_about_rate_change = false;
 
 public:
     burst_to_stream_impl(size_t itemsize,
