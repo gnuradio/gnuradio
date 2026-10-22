@@ -9,7 +9,6 @@
 #include <gnuradio/dictionary_logger_backend.h>
 
 #include <gnuradio/logger.h>
-#include <gnuradio/prefs.h>
 
 #include <spdlog/sinks/base_sink.h>
 #include <boost/test/tools/old/interface.hpp>
@@ -19,8 +18,12 @@
 
 BOOST_AUTO_TEST_CASE(t1)
 {
-    gr::prefs::singleton()->set_string("LOG", "log_level", "info");
     auto& logging_system = gr::logging::singleton();
+    // The default backend level is latched from prefs (config files and
+    // GR_CONF_LOG_LOG_LEVEL) when the logging singleton is constructed, so
+    // override it explicitly to keep this test independent of the
+    // environment it runs in.
+    logging_system.set_default_level(gr::log_level::info);
 
     auto backend = std::make_shared<gr::dictionary_logger_backend>(); // unfiltered
 
@@ -64,8 +67,8 @@ BOOST_AUTO_TEST_CASE(t1)
 
 BOOST_AUTO_TEST_CASE(t2)
 {
-    gr::prefs::singleton()->set_string("LOG", "log_level", "info");
     auto& logging_system = gr::logging::singleton();
+    logging_system.set_default_level(gr::log_level::info);
 
     // Filter: ignore anything starting with "ignore"
     auto backend = std::make_shared<gr::dictionary_logger_backend>(
