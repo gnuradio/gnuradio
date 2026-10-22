@@ -1,6 +1,8 @@
 #
 # Copyright 2014 Free Software Foundation, Inc.
-# Copyright 2021 Marcus Müller
+# Copyright 2021-2023 Marcus Müller
+# Copyright 2023 Daniel Estévez
+# Copyright 2023 Volker Schroer
 #
 # This file is part of GNU Radio
 #
@@ -142,6 +144,42 @@ class test_hier_block2(gr_unittest.TestCase):
         time.sleep(0.5)
         tb.stop()
         tb.wait()
+
+    def test_013_recursive_setting(self):
+        """
+        Build a message-recursive hier block
+        Check whether setting processor affinity crashes the flow graph
+        """
+        class msg_source_block(gr.sync_block):
+            def __init__(self):
+                gr.sync_block.__init__(self, "msg_src", in_sig=[], out_sig=[])
+                self.message_port_register_out(pmt.intern("output"))
+
+            def work(self, _, __):
+                pass
+
+        class recursive_hier_block(gr.hier_block2):
+            def __init__(self):
+                gr.hier_block2.__init__(self, "recursive_hier_block",
+                                        gr.io_signature(0, 0, 0),
+                                        gr.io_signature(0, 0, 0))
+                self.message_port_register_hier_out('pdus')
+                self.src = msg_source_block()
+                self.msg_connect((self.src, 'output'), (self, 'pdus'))
+
+        class test_fg(gr.top_block):
+            def __init__(self):
+                gr.top_block.__init__(self, "test_fg", catch_exceptions=True)
+                self.recursive_hier = recursive_hier_block()
+                print('Actual processor affinity: ', self.recursive_hier.processor_affinity())
+                print('Actual log level: ', self.recursive_hier.log_level())
+                self.recursive_hier.set_log_level("debug")
+                self.recursive_hier.set_processor_affinity([0])
+                print('Processor affinity set to: ', self.recursive_hier.processor_affinity())
+                print('Log level set to: ', self.recursive_hier.log_level())
+
+        tb = test_fg()
+        tb.start()
 
 
 if __name__ == '__main__':
