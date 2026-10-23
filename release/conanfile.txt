@@ -10,6 +10,8 @@ qwt/6.3.0
 gmp/6.3.0
 pybind11/2.11.1
 spdlog/1.13.0
+grpc/1.69.0
+protobuf/5.29.6
 [generators]
 CMakeDeps
 CMakeToolchain
@@ -18,3 +20,5 @@ cmake_layout
 [options]
 qwt*:shared=True
 qt*:shared=True
+#qt*:modules=qtbase,qtdeclarative,qttools
+qt*:with_pq=False

@@ -227,7 +227,7 @@ jobs:
         set PY_VENV_PATH
         call %PY_VENV_PATH%\Scripts\activate
         python -c "import sys;print(sys.path)"
-        python -m pip install conan
+        python -m pip install "conan>=2.18.0"
         conan version
         @echo DEBUG: Checking current environment variables:
         set
@@ -238,7 +238,9 @@ jobs:
         @echo Conan2 was installed via Python venv, therefore need to activate it before use
         call %PY_VENV_PATH%\Scripts\activate
         conan profile detect --force
-        conan install gnuradio/release --output-folder=%DEPS_CMAKE_GENERATORS% --build=missing
+        conan install gnuradio/release --output-folder=%DEPS_CMAKE_GENERATORS% --build=missing ^
+           -pr:h=gnuradio/release/conan/profiles/msvc_cppstd17_194 ^
+           -pr:b=gnuradio/release/conan/profiles/msvc_cppstd17_194
         echo DEPS_CMAKE_GENERATORS=%DEPS_CMAKE_GENERATORS%>> %GITHUB_ENV%
     - name: Build and install PyQT6
       run: |
@@ -330,11 +332,14 @@ jobs:
         call %PY_VENV_PATH%\Scripts\activate
         SET PATH=%GTK_BIN_DIR%;%PATH%
         call %DEPS_CMAKE_GENERATORS%\build\generators\conanrun.bat
+        @echo Add environment var to detect qtpath.exe
+        set QT_PLUGIN_PATH
+        set QT6_INSTALL_PREFIX
         @echo Step8: Building GRC binaries ...
         set GR_INSTALL_DIR=%PROGRAMFILES%\GNU Radio
         echo GR_INSTALL_DIR=%GR_INSTALL_DIR%>> %GITHUB_ENV%
-        set UHD_DIR=%CD%\deps\uhd
         @echo Defining the environment variable UHD_DIR to allow UHDConfig.cmake
+        set UHD_DIR=%CD%\deps\uhd
         @echo to detected the local UHD prefix at %UHD_DIR%
         set _working=%CD%
         cd gnuradio
@@ -346,6 +351,7 @@ jobs:
             -DCMAKE_PREFIX_PATH=%_working%/deps/build/generators;%_working%/deps ^
             -DCMAKE_FIND_PACKAGE_PREFER_CONFIG=ON "-DCMAKE_CXX_FLAGS=-DBOOST_ALL_NO_LIB /EHsc" -LA ^
             -DVolk_DIR=%VOLK_INSTALL_DIR%/lib/cmake/volk -DGTK_BIN_DIR=%fps_GTK_BIN_DIR% ^
+            -DQT6_INSTALL_PREFIX=%QT_PLUGIN_PATH%\.. -DQT6_INSTALL_BINS=bin ^
             "-DCMAKE_INSTALL_PREFIX=%GR_INSTALL_DIR%" ^
             -DPYTHON_EXECUTABLE=%PY_VENV_PATH%\Scripts\python.exe -DENABLE_TESTING=ON
         Ninja
