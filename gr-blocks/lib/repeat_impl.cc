@@ -20,16 +20,17 @@
 namespace gr {
 namespace blocks {
 
-repeat::sptr repeat::make(size_t itemsize, int interp)
+repeat::sptr repeat::make(size_t itemsize, int interp, unsigned int number_of_streams)
 {
-    return gnuradio::make_block_sptr<repeat_impl>(itemsize, interp);
+    return gnuradio::make_block_sptr<repeat_impl>(itemsize, interp, number_of_streams);
 }
 
-repeat_impl::repeat_impl(size_t itemsize, int interp)
+repeat_impl::repeat_impl(size_t itemsize, int interp, unsigned int number_of_streams)
     : block("repeat",
-            io_signature::make(1, 1, itemsize),
-            io_signature::make(1, 1, itemsize)),
+            io_signature::make(number_of_streams, number_of_streams, itemsize),
+            io_signature::make(number_of_streams, number_of_streams, itemsize)),
       d_itemsize(itemsize),
+      d_number_of_streams(number_of_streams),
       d_interp(interp),
       d_left_to_copy(0),
       c_msg_port(pmt::mp("interpolation"))
@@ -39,6 +40,12 @@ repeat_impl::repeat_impl(size_t itemsize, int interp)
             FMT_STRING(
                 "Trying to set interpolation to {}, but must be a positive integer."),
             interp));
+    }
+    if (number_of_streams < 1) {
+        throw std::invalid_argument(fmt::format(
+            FMT_STRING("Trying to set the number of streams to {}, but must be a "
+                       "positive integer."),
+            number_of_streams));
     }
     // tags are propagated manually using the copy_tags() helper function
     set_tag_propagation_policy(TPP_DONT);
@@ -88,7 +95,7 @@ void repeat_impl::forecast(int noutput_items, gr_vector_int& required)
 {
     if (static_cast<size_t>(noutput_items) <= d_left_to_copy) {
         // can fill request from memory
-        required[0] = 0;
+        std::fill(required.begin(), required.end(), 0);
         return;
     }
 
@@ -98,8 +105,8 @@ void repeat_impl::forecast(int noutput_items, gr_vector_int& required)
                                  d_left_to_copy) // amount we haven't "prepared"
                                 + d_interp - 1;  // round up to multiple of d_interp
 
-    // only one possible input
-    required[0] = requested_round_up / d_interp;
+    // all streams need the same number of items
+    std::fill(required.begin(), required.end(), requested_round_up / d_interp);
 }
 
 //! \brief helper function for the copying
@@ -124,9 +131,18 @@ int repeat_impl::general_work(int noutput_items,
      * 2. We output the repetitions of the items that fit a full d_interp times
      * 3. We fill the remainder of output_items with a partial set of repetitions, save
      * the number of remaining repetitions
+     *
+     * All streams are processed in lockstep, so they share the bookkeeping.
      */
-    const char* in = (const char*)input_items[0];
-    char* out = (char*)output_items[0];
+    std::vector<const char*> in(d_number_of_streams);
+    std::vector<char*> out(d_number_of_streams);
+    for (size_t stream = 0; stream < d_number_of_streams; ++stream) {
+        in[stream] = (const char*)input_items[stream];
+        out[stream] = (char*)output_items[stream];
+    }
+    // the stream with the fewest items limits what we can process
+    const auto ninput =
+        static_cast<size_t>(*std::min_element(ninput_items.begin(), ninput_items.end()));
 
     auto nout = static_cast<size_t>(noutput_items);
     size_t consumed = 0;
@@ -135,11 +151,16 @@ int repeat_impl::general_work(int noutput_items,
     // the tags were copied in a previous work() call
     if (d_left_to_copy) {
         auto copy_from_buffer = std::min(d_left_to_copy, nout);
-        copy_and_advance_output(out, in, d_itemsize, copy_from_buffer);
+        for (size_t stream = 0; stream < d_number_of_streams; ++stream) {
+            copy_and_advance_output(
+                out[stream], in[stream], d_itemsize, copy_from_buffer);
+        }
         d_left_to_copy -= copy_from_buffer;
         nout -= copy_from_buffer;
         if (!d_left_to_copy) {
-            in += d_itemsize;
+            for (auto& stream_in : in) {
+                stream_in += d_itemsize;
+            }
             ++consumed; // we're now done with this item
         } else {
             // we haven't even copied one full set of repetitons
@@ -148,23 +169,27 @@ int repeat_impl::general_work(int noutput_items,
     }
 
     // copy the full multiples of d_interp from in to out
-    size_t full_items = std::min<size_t>(nout / d_interp, ninput_items[0] - consumed);
+    size_t full_items = std::min<size_t>(nout / d_interp, ninput - consumed);
 
     // copy tags for these items: each tag is copied to the first item of the
     // d_interp repetitions
     copy_tags(consumed, noutput_items - nout, full_items);
 
     for (auto in_counter = full_items; in_counter; --in_counter) {
-        copy_and_advance_output(out, in, d_itemsize, d_interp);
-        in += d_itemsize;
+        for (size_t stream = 0; stream < d_number_of_streams; ++stream) {
+            copy_and_advance_output(out[stream], in[stream], d_itemsize, d_interp);
+            in[stream] += d_itemsize;
+        }
     }
     consumed += full_items;
     nout -= full_items * d_interp;
 
-    if (nout && static_cast<size_t>(ninput_items[0]) > consumed) {
+    if (nout && ninput > consumed) {
         // nout now only contains at most d_interp - 1
         copy_tags(consumed, noutput_items - nout, 1); // copy tags for only one item
-        copy_and_advance_output(out, in, d_itemsize, nout);
+        for (size_t stream = 0; stream < d_number_of_streams; ++stream) {
+            copy_and_advance_output(out[stream], in[stream], d_itemsize, nout);
+        }
         d_left_to_copy = d_interp - nout;
         nout -= nout;
     }

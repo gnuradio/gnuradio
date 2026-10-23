@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(repeat.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(3bc3b9639597273078d551360a012379)                     */
+/* BINDTOOL_HEADER_FILE_HASH(7ae488d2421b67036ed481d5b05c07fa)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -39,6 +39,7 @@ void bind_repeat(py::module& m)
         .def(py::init(&repeat::make),
              py::arg("itemsize"),
              py::arg("repeat"),
+             py::arg("number_of_streams") = 1,
              D(repeat, make))
 
 

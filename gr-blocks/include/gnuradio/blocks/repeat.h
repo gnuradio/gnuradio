@@ -21,6 +21,9 @@ namespace blocks {
  * \brief repeat each input \p repeat times
  * \ingroup stream_operators_blk
  *
+ * The block has \p number_of_streams input streams and as many output streams.
+ * Every stream is repeated in the same way.
+ *
  * Message Ports:
  *   * interpolation (in):
  *      Takes a pmt_pair(pmt::mp("interpolation"), pmt_long interp), setting the
@@ -37,8 +40,10 @@ public:
      *
      * \param itemsize stream itemsize
      * \param repeat number of times to repeat the input
+     * \param number_of_streams number of input streams, which is also the number of
+     *        output streams. All streams have the same itemsize.
      */
-    static sptr make(size_t itemsize, int repeat);
+    static sptr make(size_t itemsize, int repeat, unsigned int number_of_streams = 1);
 
     /*!
      * \brief Return current interpolation
