@@ -103,5 +103,60 @@ class test_repeat(gr_unittest.TestCase):
             self.assertEqual(t_in.value, t_out.value)
 
 
+    def test_multiple_streams(self):
+        rng = np.random.default_rng(1)
+        for size, repetitions, streams in ((3**6 + 2, 3, 3), (1000, 1, 2), (11, 7, 4)):
+            tb = gr.top_block()
+            src_data = [rng.integers(0, 1000, size) for _ in range(streams)]
+            rpt = blocks.repeat(gr.sizeof_int, repetitions, streams)
+            dsts = [blocks.vector_sink_i() for _ in range(streams)]
+            for i, (data, dst) in enumerate(zip(src_data, dsts)):
+                tb.connect(blocks.vector_source_i(data), (rpt, i))
+                tb.connect((rpt, i), dst)
+            tb.run()
+            for data, dst in zip(src_data, dsts):
+                self.assertTrue(
+                    np.array_equal(dst.data(), data.repeat(repetitions)),
+                    f"N = {size}, r = {repetitions}, streams = {streams}: not equal")
+
+    def test_multiple_streams_tags(self):
+        N = 500
+        r = 7
+        keys = ("first", "second")
+        tags_in = [[
+            gr.tag_utils.python_to_tag((
+                j, pmt.intern(key), pmt.from_long(j), pmt.PMT_NIL))
+            for j in range(0, N, 3 + i)]
+            for i, key in enumerate(keys)
+        ]
+        rpt = blocks.repeat(gr.sizeof_int, r, len(keys))
+        dsts = [blocks.vector_sink_i() for _ in keys]
+        for i, tags in enumerate(tags_in):
+            self.tb.connect(blocks.vector_source_i([0] * N, tags=tags), (rpt, i))
+            self.tb.connect((rpt, i), dsts[i])
+        self.tb.run()
+        for tags, dst in zip(tags_in, dsts):
+            tags_out = dst.tags()
+            self.assertEqual(len(tags), len(tags_out))
+            for t_in, t_out in zip(tags, tags_out):
+                self.assertEqual(t_out.offset, r * t_in.offset)
+                self.assertEqual(t_in.key, t_out.key)
+                self.assertEqual(t_in.value, t_out.value)
+
+    def test_wrong_number_of_connected_streams(self):
+        rpt = blocks.repeat(gr.sizeof_int, 2, 3)
+        for i in range(2):
+            self.tb.connect(blocks.vector_source_i([1, 2, 3]), (rpt, i))
+            self.tb.connect((rpt, i), blocks.null_sink(gr.sizeof_int))
+        with self.assertRaises(RuntimeError):
+            self.tb.run()
+
+    def test_invalid_arguments(self):
+        with self.assertRaises(ValueError):
+            blocks.repeat(gr.sizeof_int, 2, 0)
+        with self.assertRaises(ValueError):
+            blocks.repeat(gr.sizeof_int, 0)
+
+
 if __name__ == "__main__":
     gr_unittest.run(test_repeat)

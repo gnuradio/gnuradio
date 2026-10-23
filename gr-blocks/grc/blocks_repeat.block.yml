@@ -19,30 +19,38 @@ parameters:
     dtype: int
     default: '1'
     hide: ${ 'part' if vlen == 1 else 'none' }
+-   id: number_of_streams
+    label: Num Streams
+    dtype: int
+    default: '1'
+    hide: ${ 'part' if number_of_streams == 1 else 'none' }
 
 inputs:
 -   domain: stream
     dtype: ${ type }
     vlen: ${ vlen }
+    multiplicity: ${ number_of_streams }
 
 outputs:
 -   domain: stream
     dtype: ${ type }
     vlen: ${ vlen }
+    multiplicity: ${ number_of_streams }
 
 asserts:
 - ${ vlen > 0 }
+- ${ number_of_streams > 0 }
 
 templates:
     imports: from gnuradio import blocks
-    make: blocks.repeat(${type.size}*${vlen}, ${interp})
+    make: blocks.repeat(${type.size}*${vlen}, ${interp}, ${number_of_streams})
     callbacks:
     - set_interpolation(${interp})
 
 cpp_templates:
     includes: ['#include <gnuradio/blocks/repeat.h>']
     declarations: 'blocks::repeat::sptr ${id};'
-    make: 'this->${id} = blocks::repeat::make(${type.size}*${vlen}, ${interp});'
+    make: 'this->${id} = blocks::repeat::make(${type.size}*${vlen}, ${interp}, ${number_of_streams});'
     callbacks:
     - set_interpolation(${interp})
 
