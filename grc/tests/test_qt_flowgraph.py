@@ -17,6 +17,8 @@ try:
     from PyQt6.QtWidgets import QApplication
     from grc.gui_qt.Platform import Platform
     from grc.gui_qt.components.canvas.flowgraph import Flowgraph
+    from grc.gui_qt import Constants
+    from grc.gui_qt.Config import Config as QtConfig
     HAS_QT = True
 except ImportError:
     HAS_QT = False
@@ -87,3 +89,53 @@ def test_qt_preferences_migration(qapp, tmp_path, monkeypatch, legacy_is_directo
     else:
         assert not legacy_path.exists()
         assert prefs_file.read_text(encoding="utf-8") == "[grc]\n"
+
+
+def test_block_and_port_font_pixel_sizing(qapp):
+    p = Platform(version='3.11', install_prefix='/usr')
+    fg = p.make_flow_graph()
+    block = fg.new_block('options')
+    # Check that block font pixel size is set (not point size)
+    assert block.gui.font.pixelSize() == Constants.BLOCK_FONT_PIXEL_SIZE
+    assert block.gui.font.pixelSize() > 0
+
+    if block.sources:
+        port = block.sources[0]
+        assert port.gui.font.pixelSize() == Constants.PORT_FONT_PIXEL_SIZE
+        assert port.gui.font.pixelSize() > 0
+
+
+def test_default_flowgraph_blocks_do_not_overlap(qapp, monkeypatch):
+    import os
+    blocks_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'blocks'))
+    monkeypatch.setenv("GRC_BLOCKS_PATH", blocks_path)
+
+    p = Platform(version='3.11', install_prefix=os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
+    p.build_library()
+
+    fg = p.make_flow_graph()
+    initial_state = p.parse_flow_graph("")
+    fg.import_data(initial_state)
+
+    blocks = fg.blocks
+    assert len(blocks) >= 2
+    options_block = next(b for b in blocks if b.key == 'options')
+    var_block = next(b for b in blocks if b.key == 'variable' and b.name == 'samp_rate')
+
+    opt_rect = options_block.gui.sceneBoundingRect()
+    var_rect = var_block.gui.sceneBoundingRect()
+
+    # Verify that blocks do not intersect / overlap
+    assert not opt_rect.intersects(var_rect), f"Options block ({opt_rect}) overlaps Variable block ({var_rect})"
+    assert opt_rect.right() < var_rect.left()
+
+
+def test_qt_config_dpi_scaling_and_font_size(tmp_path, monkeypatch):
+    prefs_file = tmp_path / "grc_qt.conf"
+    prefs_file.write_text("[appearance]\ndpi_scaling=1.5\n", encoding="utf-8")
+    monkeypatch.setenv("GRC_QT_PREFS_PATH", str(prefs_file))
+
+    config = QtConfig(version='3.11', install_prefix='/usr')
+    assert config.dpi_scaling == 1.5
+    assert Constants.DPI_SCALING == 1.5
+    assert Constants.BLOCK_FONT_PIXEL_SIZE > 0

@@ -9,3 +9,4 @@ default_flow_graph =
 xterm_executable = @GRC_XTERM_EXE@
 canvas_font_size = 8
 canvas_default_size = 1280, 1024
+dpi_scaling = 1.0
