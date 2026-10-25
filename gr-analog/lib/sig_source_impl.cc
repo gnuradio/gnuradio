@@ -17,6 +17,14 @@
 #include <algorithm>
 #include <stdexcept>
 
+#if defined(__GNUC__)
+namespace {
+// Previous analog builds exported this inline helper as a weak ELF symbol.
+// Retain its definition for clients that bind to it through libgnuradio-analog.
+[[gnu::used]] const auto legacy_float_to_fixed = &gr::fxpt::float_to_fixed;
+} // namespace
+#endif
+
 namespace gr {
 namespace analog {
 
