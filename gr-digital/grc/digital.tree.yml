@@ -4,6 +4,8 @@
   - digital_additive_scrambler_xx
   - digital_descrambler_bb
   - digital_scrambler_bb
+- Deprecated:
+  - digital_correlate_access_code_tag_xx
 - Equalizers:
   - variable_adaptive_algorithm
   - digital_linear_equalizer
@@ -26,7 +28,6 @@
   - variable_constellation_rect
   - variable_modulate_vector
 - Packet Operators:
-  - digital_correlate_access_code_tag_xx
   - digital_correlate_access_code_xx_ts
   - digital_crc_append
   - digital_crc_check
