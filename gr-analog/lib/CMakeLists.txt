@@ -72,7 +72,7 @@ endif()
 if(ENABLE_TESTING)
     include(GrTest)
 
-    list(APPEND test_gr_analog_sources)
+    list(APPEND test_gr_analog_sources qa_sig_source_nco.cc)
     list(APPEND GR_TEST_TARGET_DEPS gnuradio-analog)
 
     foreach(qa_file ${test_gr_analog_sources})

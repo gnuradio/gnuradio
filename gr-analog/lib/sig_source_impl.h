@@ -12,8 +12,8 @@
 #ifndef SIG_SOURCE_IMPL_H
 #define SIG_SOURCE_IMPL_H
 
+#include "sig_source_nco.h"
 #include <gnuradio/analog/sig_source.h>
-#include <gnuradio/fxpt_nco.h>
 #include <gnuradio/sync_block.h>
 
 namespace gr {
@@ -28,7 +28,7 @@ private:
     double d_frequency;
     double d_ampl;
     T d_offset;
-    gr::fxpt_nco d_nco;
+    detail::sig_source_nco d_nco;
 
 public:
     sig_source_impl(double sampling_freq,

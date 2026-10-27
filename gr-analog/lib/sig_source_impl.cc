@@ -17,6 +17,14 @@
 #include <algorithm>
 #include <stdexcept>
 
+#if defined(__GNUC__)
+namespace {
+// Previous analog builds exported this inline helper as a weak ELF symbol.
+// Retain its definition for clients that bind to it through libgnuradio-analog.
+[[gnu::used]] const auto legacy_float_to_fixed = &gr::fxpt::float_to_fixed;
+} // namespace
+#endif
+
 namespace gr {
 namespace analog {
 
@@ -156,7 +164,7 @@ int sig_source_impl<T>::work(int noutput_items,
     case GR_SQR_WAVE:
         t = (T)d_ampl + d_offset;
         for (int i = 0; i < noutput_items; i++) {
-            if (d_nco.get_phase() < 0)
+            if (d_nco.phase_is_negative())
                 optr[i] = t;
             else
                 optr[i] = d_offset;
@@ -167,8 +175,8 @@ int sig_source_impl<T>::work(int noutput_items,
         /* The triangle wave rises from -PI to 0 and falls from 0 to PI. */
     case GR_TRI_WAVE:
         for (int i = 0; i < noutput_items; i++) {
-            double t = d_ampl * d_nco.get_phase() / GR_M_PI;
-            if (d_nco.get_phase() < 0)
+            double t = d_ampl * d_nco.get_phase_normalized();
+            if (d_nco.phase_is_negative())
                 optr[i] = static_cast<T>(t + d_ampl + d_offset);
             else
                 optr[i] = static_cast<T>(-1 * t + d_ampl + d_offset);
@@ -179,7 +187,7 @@ int sig_source_impl<T>::work(int noutput_items,
         /* The saw tooth wave rises from -PI to PI. */
     case GR_SAW_WAVE:
         for (int i = 0; i < noutput_items; i++) {
-            t = static_cast<T>(d_ampl * d_nco.get_phase() / (2 * GR_M_PI) + d_ampl / 2 +
+            t = static_cast<T>(d_ampl * d_nco.get_phase_normalized() / 2 + d_ampl / 2 +
                                d_offset);
             optr[i] = t;
             d_nco.step();
@@ -224,14 +232,19 @@ int sig_source_impl<gr_complex>::work(int noutput_items,
          */
     case GR_SQR_WAVE:
         for (int i = 0; i < noutput_items; i++) {
-            if (d_nco.get_phase() < -1 * GR_M_PI / 2)
+            switch (d_nco.quadrant()) {
+            case 2:
                 optr[i] = gr_complex(d_ampl, 0) + d_offset;
-            else if (d_nco.get_phase() < 0)
+                break;
+            case 3:
                 optr[i] = gr_complex(d_ampl, d_ampl) + d_offset;
-            else if (d_nco.get_phase() < GR_M_PI / 2)
+                break;
+            case 0:
                 optr[i] = gr_complex(0, d_ampl) + d_offset;
-            else
+                break;
+            default:
                 optr[i] = d_offset;
+            }
             d_nco.step();
         }
         break;
@@ -242,22 +255,22 @@ int sig_source_impl<gr_complex>::work(int noutput_items,
          */
     case GR_TRI_WAVE:
         for (int i = 0; i < noutput_items; i++) {
-            if (d_nco.get_phase() < -1 * GR_M_PI / 2) {
+            if (d_nco.quadrant() == 2) {
                 optr[i] =
-                    gr_complex(d_ampl * d_nco.get_phase() / GR_M_PI + d_ampl,
-                               -1 * d_ampl * d_nco.get_phase() / GR_M_PI - d_ampl / 2) +
+                    gr_complex(d_ampl * d_nco.get_phase_normalized() + d_ampl,
+                               -1 * d_ampl * d_nco.get_phase_normalized() - d_ampl / 2) +
                     d_offset;
-            } else if (d_nco.get_phase() < 0) {
-                optr[i] = gr_complex(d_ampl * d_nco.get_phase() / GR_M_PI + d_ampl,
-                                     d_ampl * d_nco.get_phase() / GR_M_PI + d_ampl / 2) +
+            } else if (d_nco.quadrant() == 3) {
+                optr[i] = gr_complex(d_ampl * d_nco.get_phase_normalized() + d_ampl,
+                                     d_ampl * d_nco.get_phase_normalized() + d_ampl / 2) +
                           d_offset;
-            } else if (d_nco.get_phase() < GR_M_PI / 2) {
-                optr[i] = gr_complex(-1 * d_ampl * d_nco.get_phase() / GR_M_PI + d_ampl,
-                                     d_ampl * d_nco.get_phase() / GR_M_PI + d_ampl / 2) +
+            } else if (d_nco.quadrant() == 0) {
+                optr[i] = gr_complex(-1 * d_ampl * d_nco.get_phase_normalized() + d_ampl,
+                                     d_ampl * d_nco.get_phase_normalized() + d_ampl / 2) +
                           d_offset;
             } else {
-                optr[i] = gr_complex(-1 * d_ampl * d_nco.get_phase() / GR_M_PI + d_ampl,
-                                     -1 * d_ampl * d_nco.get_phase() / GR_M_PI +
+                optr[i] = gr_complex(-1 * d_ampl * d_nco.get_phase_normalized() + d_ampl,
+                                     -1 * d_ampl * d_nco.get_phase_normalized() +
                                          3 * d_ampl / 2) +
                           d_offset;
             }
@@ -270,16 +283,16 @@ int sig_source_impl<gr_complex>::work(int noutput_items,
          */
     case GR_SAW_WAVE:
         for (int i = 0; i < noutput_items; i++) {
-            if (d_nco.get_phase() < -1 * GR_M_PI / 2) {
+            if (d_nco.quadrant() == 2) {
                 optr[i] =
-                    gr_complex(d_ampl * d_nco.get_phase() / (2 * GR_M_PI) + d_ampl / 2,
-                               d_ampl * d_nco.get_phase() / (2 * GR_M_PI) +
+                    gr_complex(d_ampl * d_nco.get_phase_normalized() / 2 + d_ampl / 2,
+                               d_ampl * d_nco.get_phase_normalized() / 2 +
                                    5 * d_ampl / 4) +
                     d_offset;
             } else {
                 optr[i] =
-                    gr_complex(d_ampl * d_nco.get_phase() / (2 * GR_M_PI) + d_ampl / 2,
-                               d_ampl * d_nco.get_phase() / (2 * GR_M_PI) + d_ampl / 4) +
+                    gr_complex(d_ampl * d_nco.get_phase_normalized() / 2 + d_ampl / 2,
+                               d_ampl * d_nco.get_phase_normalized() / 2 + d_ampl / 4) +
                     d_offset;
             }
             d_nco.step();
