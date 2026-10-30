@@ -107,9 +107,15 @@ class Page(Gtk.HBox):
         button.set_relief(Gtk.ReliefStyle.NONE)
         button.add(image_box)
 
-        tab = self.tab = Gtk.HBox(homogeneous=False, spacing=0)
-        tab.pack_start(self.label, False, False, 0)
-        tab.pack_start(button, False, False, 0)
+        tab_box = Gtk.HBox(homogeneous=False, spacing=0)
+        tab_box.pack_start(self.label, False, False, 0)
+        tab_box.pack_start(button, False, False, 0)
+
+        tab = self.tab = Gtk.EventBox()
+        tab.set_visible_window(False)
+        tab.add_events(Gdk.EventMask.BUTTON_PRESS_MASK)
+        tab.connect('button-press-event', self._handle_tab_button_press)
+        tab.add(tab_box)
         tab.show_all()
 
         # setup scroll window and drawing area
@@ -163,6 +169,17 @@ class Page(Gtk.HBox):
         """
         self.main_window.page_to_be_closed = self
         Actions.FLOW_GRAPH_CLOSE()
+
+    def _handle_tab_button_press(self, widget, event):
+        """
+        Handle mouse button presses on the tab header.
+        Middle-click (button 2) closes the tab.
+        """
+        if event.button == 2 and event.type == Gdk.EventType.BUTTON_PRESS:
+            self.main_window.page_to_be_closed = self
+            Actions.FLOW_GRAPH_CLOSE()
+            return True
+        return False
 
     def set_markup(self, markup):
         """
