@@ -93,23 +93,45 @@ class DrawingArea(Gtk.DrawingArea):
         coords = x / self.zoom_factor, y / self.zoom_factor
         self._flow_graph.add_new_block(selection_data.get_text(), coords)
 
-    def zoom_in(self):
+    def zoom_in(self, center=None):
         change = 1.2
         zoom_factor = min(self.zoom_factor * change, 5.0)
-        self._set_zoom_factor(zoom_factor)
+        self._set_zoom_factor(zoom_factor, center=center)
 
-    def zoom_out(self):
+    def zoom_out(self, center=None):
         change = 1 / 1.2
         zoom_factor = max(self.zoom_factor * change, 0.1)
-        self._set_zoom_factor(zoom_factor)
+        self._set_zoom_factor(zoom_factor, center=center)
 
     def reset_zoom(self):
         self._set_zoom_factor(1.0)
 
-    def _set_zoom_factor(self, zoom_factor):
+    def _set_zoom_factor(self, zoom_factor, center=None):
         if zoom_factor != self.zoom_factor:
+            old_zoom = self.zoom_factor
             self.zoom_factor = zoom_factor
             self._update_after_zoom = True
+            new_w, new_h = self._update_size()
+
+            if center is not None:
+                parent = self.get_parent()
+                scrollbox = parent.get_parent() if parent else None
+                if scrollbox and hasattr(scrollbox, 'get_hadjustment') and hasattr(scrollbox, 'get_vadjustment'):
+                    ratio = zoom_factor / old_zoom
+                    cx, cy = center
+
+                    hadj = scrollbox.get_hadjustment()
+                    if hadj:
+                        hadj.set_upper(max(hadj.get_upper(), new_w))
+                        hadj.set_value(max(0.0, hadj.get_value() + cx * (ratio - 1)))
+                        hadj.emit('changed')
+
+                    vadj = scrollbox.get_vadjustment()
+                    if vadj:
+                        vadj.set_upper(max(vadj.get_upper(), new_h))
+                        vadj.set_value(max(0.0, vadj.get_value() + cy * (ratio - 1)))
+                        vadj.emit('changed')
+
             self.queue_draw()
 
     def _middle_mouse_pan(self, event):
@@ -135,10 +157,11 @@ class DrawingArea(Gtk.DrawingArea):
 
     def _handle_mouse_scroll(self, widget, event):
         if event.get_state() & Gdk.ModifierType.CONTROL_MASK:
+            center = (event.x, event.y)
             if event.direction == Gdk.ScrollDirection.UP:
-                self.zoom_in()
+                self.zoom_in(center=center)
             else:
-                self.zoom_out()
+                self.zoom_out(center=center)
             return True
         return False
 
@@ -198,10 +221,10 @@ class DrawingArea(Gtk.DrawingArea):
 
     def _update_size(self):
         w, h = self._flow_graph.get_extents()[2:]
-        self.set_size_request(
-            w * self.zoom_factor + 100,
-            h * self.zoom_factor + 100,
-        )
+        new_w = w * self.zoom_factor + 100
+        new_h = h * self.zoom_factor + 100
+        self.set_size_request(new_w, new_h)
+        return new_w, new_h
 
     def _auto_scroll(self, event):
         x, y = event.x, event.y
