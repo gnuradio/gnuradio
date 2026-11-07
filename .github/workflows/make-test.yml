@@ -98,7 +98,7 @@ jobs:
             containerid: 'gnuradio/ci:fedora-44-3.11'
             cxxflags: -ftrivial-auto-var-init=pattern -Wp,-D_GLIBCXX_ASSERTIONS
             ldpath: /usr/local/lib64
-          - distro: 'Fedora 44 (clang,ninja,stack-protector)'
+          - distro: 'Fedora 45 (clang,ninja,stack-protector)'
             containerid: 'gnuradio/ci:fedora-44-3.11'
             cxxflags: -Wno-unused-command-line-argument -fstack-protector
             cmakeflags: -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_C_COMPILER=clang -GNinja
