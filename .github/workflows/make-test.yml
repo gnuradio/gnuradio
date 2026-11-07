@@ -126,9 +126,6 @@ jobs:
     - name: Prepare sccache usage (if available)
       id: enable_sccache
       env:
-        SCCACHE_S3_ENDPOINT: ${{ vars.SCCACHE_S3_ENDPOINT }}
-        SCCACHE_S3_BUCKET: ${{ vars.SCCACHE_S3_BUCKET }}
-        SCCACHE_S3_REGION: ${{ vars.SCCACHE_S3_REGION }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.SCCACHE_S3_KEY }}
         AWS_ACCESS_KEY_ID: ${{ vars.SCCACHE_S3_KEY_ID }}
       run: .github/ci-tools/setup_cmake_cache_flags.bash "${{ matrix.distro }}"
