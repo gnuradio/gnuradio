@@ -152,6 +152,11 @@ jobs:
         if-no-files-found: ignore
     - name: Build
       run: cmake --build /build ${{ matrix.build_options || '--parallel $(nproc)' }}
+    - name: Show post-build sccache and build directory stats
+      if: always()
+      continue-on-error: true
+      shell: bash
+      run: ./.github/ci-tools/build-summary.sh "${{ matrix.distro }}" "/build"
     - name: CTest
       env:
         QT_QPA_PLATFORM: offscreen
@@ -203,8 +208,3 @@ jobs:
     - name: Check for installation duplicates
       if: ${{ ! matrix.skip_upload }}
       run: tools/check_installation_duplicates.bash /build/install_manifest.txt
-    - name: Show final sccache and build directory stats
-      if: always()
-      continue-on-error: true
-      shell: bash
-      run: ./.github/ci-tools/build-summary.sh "${{ matrix.distro }}" "/build"
