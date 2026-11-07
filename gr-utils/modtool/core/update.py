@@ -9,13 +9,13 @@
 """ Module to convert XML bindings to YAML bindings """
 
 
-import os
-import re
 import glob
 import logging
+import os
+import re
 
-from .base import ModTool, ModToolException
 from ..tools import get_modname
+from .base import ModTool, ModToolException
 
 logger = logging.getLogger(__name__)
 
@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 def get_xml_candidates():
     """ Returns a list of XML candidates for update """
     xml_candidates = []
-    xml_files = [x for x in glob.glob1("grc", "*.xml")]
+    xml_files = [x for x in glob.glob("*.xml", root_dir="grc")]
     mod_name = get_modname()
     for candidate in xml_files:
         candidate = os.path.splitext(candidate)[0]
