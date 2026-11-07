@@ -10,19 +10,16 @@ printf '::group::S3 setup\n'
 {
   if [[ -z "${SCCACHE_S3_BUCKET}" ]] ; then
     echo "using default S3 bucket"
-    use_default=true
     export SCCACHE_S3_BUCKET="gnuradio3-sccache"
     add_env SCCACHE_S3_BUCKET "${SCCACHE_S3_BUCKET}"
   fi
   if [[ -z "${SCCACHE_S3_ENDPOINT}" ]] ; then
     echo "using default S3 endpoint"
-    use_default=true
     export SCCACHE_S3_ENDPOINT="s3.us-west-004.backblazeb2.com"
     add_env SCCACHE_S3_ENDPOINT "${SCCACHE_S3_ENDPOINT}"
   fi
   if [[ -z "${SCCACHE_S3_REGION}" ]] ; then
     echo "using default S3 region"
-    use_default=true
     export SCCACHE_S3_REGION="auto"
     add_env SCCACHE_S3_REGION "${SCCACHE_S3_REGION}"
   fi
