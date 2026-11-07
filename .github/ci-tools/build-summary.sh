@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 # Copyright 2026 Marcus Müller
+# shellcheck source=.github/ci-tools/common.bash
 source "$(dirname "$(realpath "$0")")/common.bash"
 builddir="$2"
 if type -p sccache > /dev/null ; then
@@ -11,12 +12,11 @@ if type -p sccache > /dev/null ; then
   echo "sccache: ${misses} misses, ${hits} hits ${requests} compile requests"
   printf '::group::sccache stats\n'
   printf '%s\n' "${stats}"
-  for err_line in "${errors}"; do
-    count="$(echo "${err_line}" | head -n1 | cut -f2 -d:)"
+  while IFS=: read -r error_kind count; do
     if [[ count -gt 0 ]] ; then
-      gh_message "$(echo "${err_line}" | cut -f1 -d:)" "${count} errors"
+      gh_message "${error_kind}" "${count} errors"
     fi
-  done
+  done <<< "${errors}"
   if [[ "${misses}" -gt 0 && -r "${SCCACHE_ERROR_LOG}" ]]; then
     printf '::group::sccache misses (N=%d)\n' "${misses}"
     sed -n  "s/.*sccache::compiler::compiler.* \[\(.*\)\]: *Cache miss.*$/\1/p" "${SCCACHE_ERROR_LOG}"
