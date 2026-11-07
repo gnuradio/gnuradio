@@ -9,20 +9,22 @@
 """ Base class for the modules """
 
 
+import glob
+import itertools
+import logging
 import os
 import re
-import glob
-import logging
-import itertools
-
 from types import SimpleNamespace
+
 from gnuradio import gr
-from ..tools import get_modname, SCMRepoFactory
+
+from ..tools import SCMRepoFactory, get_modname
+import sys
 
 logger = logging.getLogger('gnuradio.modtool')
 
 
-def get_block_candidates(modname: str = None,
+def get_block_candidates(modname: str | None = None,
                          skip_lib: bool = False, skip_include: bool = False,
                          skip_python: bool = False, skip_grc: bool = False):
     """ Returns a list of all possible blocknames """
@@ -31,41 +33,38 @@ def get_block_candidates(modname: str = None,
         cpp_filters = ["*.cc", "*.cpp"]
         for ftr in cpp_filters:
             block_candidates.append(os.path.splitext(x)[0].split("_impl")[0]
-                                    for x in glob.glob1("lib", ftr)
-                                    if not (x.startswith("qa_") or x.startswith("test_")))
+                                    for x in glob.glob(ftr, root_dir="lib")
+                                    if not (x.startswith(("qa_", "test_"))))
     if not skip_include:
         cpp_header_glob = (glob.glob("include/gnuradio/*/*.h") if modname is None
-                           else glob.glob1(f"include/gnuradio/{modname}", "*.h"))
+                           else glob.glob("*.h", root_dir=f"include/gnuradio/{modname}"))
         block_candidates.append(os.path.splitext(os.path.split(x)[-1])[0]
                                 for x in cpp_header_glob
                                 if x != "api.h")
     if not skip_python:
         python_glob = (glob.glob("python/*/*.py") if modname is None
-                       else glob.glob1(f"python/{modname}", "*.py"))
+                       else glob.glob("*.py", root_dir=f"python/{modname}"))
         block_candidates.append(os.path.splitext(os.path.split(x)[-1])[0]
                                 for x in python_glob
-                                if not (x.startswith("qa_") or
-                                        x.startswith("build") or
-                                        x == "__init__.py"))
+                                if not (x.startswith(("qa_", "build")) or x == "__init__.py"))
     if not (skip_grc or modname is None):
         block_candidates.append(x.split(".block.yml")[0].split(f"{modname}_")[-1]
-                                for x in glob.glob1("grc", "*.block.yml"))
+                                for x in glob.glob("*.block.yml", root_dir="grc"))
     return set(itertools.chain(*block_candidates))
 
 
 class ModToolException(Exception):
     """ Standard exception for modtool classes. """
-    pass
 
 
 def validate_name(kind, name):
     """ Checks that block, module etc names are alphanumeric. """
     if not re.fullmatch('[a-zA-Z0-9_]+', name):
         raise ModToolException(
-            "Invalid {} name '{}': names can only contain letters, numbers and underscores".format(kind, name))
+            f"Invalid {kind} name '{name}': names can only contain letters, numbers and underscores")
 
 
-class ModTool(object):
+class ModTool:
     """ Base class for all modtool command classes. """
     name = 'base'
     description = None
@@ -73,15 +72,13 @@ class ModTool(object):
     def __init__(self, blockname=None, module_name=None, **kwargs):
         # List subdirs where stuff happens
         self._subdirs = ['lib', 'include', 'python', 'grc']
-        self.has_subdirs = {}
-        self.skip_subdirs = {}
+        self.has_subdirs = {dir: False for dir in self._subdirs}
+        self.skip_subdirs = {dir: False for dir in self._subdirs}
         self.info = {}
         self._file = {}
-        for subdir in self._subdirs:
-            self.has_subdirs[subdir] = False
-            self.skip_subdirs[subdir] = False
         self.info['blockname'] = blockname
         self.info['modname'] = module_name
+        self.info['version'] = None
         self.cli = kwargs.get('cli', False)
         self.dir = kwargs.get('directory', '.')
         self.skip_subdirs['lib'] = kwargs.get('skip_lib', False)
@@ -98,9 +95,8 @@ class ModTool(object):
             from ..cli import setup_cli_logger
             setup_cli_logger(logger)
 
-        if not type(self).__name__ in ['ModToolInfo', 'ModToolNewModule']:
-            if self.cli:
-                self._validate()
+        if not type(self).__name__ in ["ModToolInfo", "ModToolNewModule"] and self.cli:
+            self._validate()
 
     def _validate(self):
         """ Validates the arguments """
@@ -116,13 +112,11 @@ class ModTool(object):
 
     def _assign(self):
         if not self._check_directory(self.dir):
-            raise ModToolException(
-                'No GNU Radio module found in the given directory.')
+            raise ModToolException('Directory contains no GNU Radio module.')
         if self.info['modname'] is None:
             self.info['modname'] = get_modname()
         if self.info['modname'] is None:
-            raise ModToolException(
-                'No GNU Radio module found in the given directory.')
+            raise ModToolException('No name for GNU Radio module found.')
         if self.info['version'] == '36' and (
                 os.path.isdir(os.path.join('include', self.info['modname'])) or
                 os.path.isdir(os.path.join(
@@ -178,47 +172,47 @@ class ModTool(object):
     def _setup_scm(self, mode='active'):
         """ Initialize source control management. """
         self.options = SimpleNamespace(scm_mode=self._scm)
-        if mode == 'active':
-            self.scm = SCMRepoFactory(
-                self.options, '.').make_active_scm_manager()
+        if mode == "active":
+            self.scm = SCMRepoFactory(self.options, ".").make_active_scm_manager()
         else:
-            self.scm = SCMRepoFactory(
-                self.options, '.').make_empty_scm_manager()
+            self.scm = SCMRepoFactory(self.options, ".").make_empty_scm_manager()
         if self.scm is None:
             logger.error("Error: Can't set up SCM.")
-            exit(1)
+            sys.exit(1)
 
     def _check_directory(self, directory):
         """ Guesses if dir is a valid GNU Radio module directory by looking for
         CMakeLists.txt and at least one of the subdirs lib/, and python/
         Changes the directory, if valid. """
-        has_makefile = False
         try:
-            files = os.listdir(directory)
             os.chdir(directory)
         except OSError:
             logger.error(f"Can't read or chdir to directory {directory}.")
             return False
         self.info['is_component'] = False
-        for f in files:
-            if os.path.isfile(f) and f == 'CMakeLists.txt':
-                with open(f) as filetext:
-                    if re.search(r'find_package\(Gnuradio', filetext.read()) is not None:
-                        # Might be 37, check that later
-                        self.info['version'] = '36'
-                        has_makefile = True
-                    elif re.search('GR_REGISTER_COMPONENT', filetext.read()) is not None:
-                        # Might be 37, check that later
-                        self.info['version'] = '36'
-                        self.info['is_component'] = True
-                        has_makefile = True
-            # TODO search for autofoo
-            elif os.path.isdir(f):
-                if (f in list(self.has_subdirs.keys())):
-                    self.has_subdirs[f] = True
+        if not os.path.isfile('CMakeLists.txt'):
+            logger.info(f"No CMakeLists.txt file in {directory}.")
+            return False
+
+        with open("CMakeLists.txt") as filetext:
+            content = filetext.read()
+            if r'find_package\(Gnuradio' in content:
+                # Might be 37, check that later
+                self.info['version'] = '36'
+            elif 'GR_REGISTER_COMPONENT' in content:
+                # Might be 37, check that later
+                self.info['version'] = '36'
+                self.info['is_component'] = True
+
+        for file in os.scandir():
+            if file.is_dir():
+                oot_typical_dir = file.name in self._subdirs
+                if oot_typical_dir:
+                    self.has_subdirs[file.name] = True
                 else:
-                    self.skip_subdirs[f] = True
-        return bool(has_makefile and (list(self.has_subdirs.values())))
+                    self.skip_subdirs[file.name] = True
+
+        return any(self.has_subdirs.values())
 
     def run(self):
         """ Override this. """

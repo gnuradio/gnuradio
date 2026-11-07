@@ -135,8 +135,7 @@ def get_modname():
     try:
         modname = re.search(regexp, cmfile, flags=re.MULTILINE).group(
             'modname').strip()
-        if modname in list(modname_trans.keys()):
-            modname = modname_trans[modname]
+        modname = modname_trans.get(modname, modname)
         return modname
     except AttributeError:
         return None
