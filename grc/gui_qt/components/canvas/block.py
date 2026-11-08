@@ -75,7 +75,8 @@ class GUIBlock(QGraphicsItem):
         super(GUIBlock, self).__init__()
         self.core = core
         self.parent = parent
-        self.font = QFont("Helvetica", 10)
+        self.font = QFont(Constants.FONT_FAMILY)
+        self.font.setPixelSize(Constants.BLOCK_FONT_PIXEL_SIZE)
         self.markup_item = QGraphicsTextItem(self)
 
         self.create_shapes_and_labels()
@@ -127,6 +128,8 @@ class GUIBlock(QGraphicsItem):
             qsettings = QSettings()
         self._load_settings(qsettings)
         self.prepareGeometryChange()
+        self.font = QFont(Constants.FONT_FAMILY)
+        self.font.setPixelSize(Constants.BLOCK_FONT_PIXEL_SIZE)
         self.font.setBold(True)
 
         # figure out height of block based on how many params there are
