@@ -24,7 +24,10 @@ static const char* __doc_gr_qtgui_number_sink_number_sink_0 = R"doc()doc";
 static const char* __doc_gr_qtgui_number_sink_number_sink_1 = R"doc()doc";
 
 
-static const char* __doc_gr_qtgui_number_sink_make = R"doc()doc";
+static const char* __doc_gr_qtgui_number_sink_make_0 = R"doc()doc";
+
+
+static const char* __doc_gr_qtgui_number_sink_make_1 = R"doc()doc";
 
 
 static const char* __doc_gr_qtgui_number_sink_exec = R"doc()doc";

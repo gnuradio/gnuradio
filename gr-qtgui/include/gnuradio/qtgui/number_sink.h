@@ -37,14 +37,11 @@ namespace qtgui {
  * the display simply samples a value in the data stream based on
  * the update time of this block.
  *
- * Note that due to a flaw in the implementation, this block
- * cannot receive integer value inputs. It will take chars,
- * shorts, and floats and properly convert them by setting
- * itemsize of the constructor to one of these three values
- * (sizeof_char, sizeof_short, and sizeof_float, respectively). If
- * using integers, the block treats these as floats. Instead, put
- * the integer input stream through an gr::blocks::int_to_float
- * converter block.
+ * The block reads 32-bit floats and 32-, 16- and 8-bit signed
+ * integers. The type of the input streams is selected with the
+ * item_type_t argument of the constructor. Items are converted to
+ * float before they are displayed, so integers that need more than 24
+ * bits of mantissa are rounded.
  */
 class QTGUI_API number_sink : virtual public sync_block
 {
@@ -53,7 +50,37 @@ public:
     typedef std::shared_ptr<number_sink> sptr;
 
     /*!
+     * \brief Type of the items on the input streams
+     */
+    enum class item_type_t {
+        FLOAT32, //!< 32 bit floating point
+        INT32,   //!< 32 bit signed integer
+        INT16,   //!< 16 bit signed integer
+        INT8,    //!< 8 bit signed integer
+    };
+
+    /*!
      * \brief Build a number sink
+     *
+     * \param itemtype Type of the items on the input streams
+     * \param average Averaging coefficient (0 - 1)
+     * \param graph_type Type of graph to use (number_sink::graph_t)
+     * \param nconnections number of signals connected to sink
+     * \param parent a QWidget parent object, if any
+     */
+    static sptr make(item_type_t itemtype,
+                     float average = 0,
+                     graph_t graph_type = NUM_GRAPH_HORIZ,
+                     int nconnections = 1,
+                     QWidget* parent = NULL);
+
+    /*!
+     * \brief Build a number sink from an item size
+     *
+     * Kept for backwards compatibility. One byte selects INT8, two bytes
+     * INT16 and four bytes FLOAT32; any other size throws
+     * std::runtime_error. Four bytes cannot mean INT32 here, so int32
+     * inputs need the item_type_t overload.
      *
      * \param itemsize Size of input item stream
      * \param average Averaging coefficient (0 - 1)

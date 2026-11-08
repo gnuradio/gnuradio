@@ -12,9 +12,12 @@ parameters:
     label: Input Type
     category: General
     dtype: enum
-    options: [float, short, byte]
+    options: [float, int, short, byte]
     option_attributes:
-        size: [gr.sizeof_float, gr.sizeof_short, gr.sizeof_char]
+        itemtype: [qtgui.number_sink.item_type_t.FLOAT32, qtgui.number_sink.item_type_t.INT32,
+            qtgui.number_sink.item_type_t.INT16, qtgui.number_sink.item_type_t.INT8]
+        cpp_itemtype: ["qtgui::number_sink::item_type_t::FLOAT32", "qtgui::number_sink::item_type_t::INT32",
+            "qtgui::number_sink::item_type_t::INT16", "qtgui::number_sink::item_type_t::INT8"]
     hide: part
 -   id: autoscale
     label: Autoscale
@@ -247,7 +250,7 @@ templates:
             win = 'self._%s_win'%id
         %>\
         qtgui.number_sink(
-            ${type.size},
+            ${type.itemtype},
             ${avg},
             ${graph_type},
             ${nconnections},
@@ -293,7 +296,7 @@ cpp_templates:
             win = '_%s_win'%id
         %>\
         ${id} = qtgui::number_sink::make(
-            ${type.size},
+            ${type.cpp_itemtype},
             ${avg},
             ${graph_type.cpp_opts},
             ${nconnections},
