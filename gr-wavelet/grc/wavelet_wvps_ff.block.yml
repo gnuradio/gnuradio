@@ -1,0 +1,35 @@
+id: wavelet_wvps_ff
+label: Wavelet Power Spectrum
+flags: [ python, cpp ]
+
+parameters:
+-   id: ilen
+    label: Input Length
+    dtype: int
+    default: '1024'
+
+inputs:
+-   domain: stream
+    dtype: float
+    vlen: ${ ilen }
+
+outputs:
+-   domain: stream
+    dtype: float
+    vlen: ${ (ilen - 1).bit_length() }
+
+asserts:
+- ${ ilen > 1 }
+- ${ (ilen & (ilen - 1)) == 0 }
+
+templates:
+    imports: from gnuradio import wavelet
+    make: wavelet.wvps_ff(${ilen})
+
+cpp_templates:
+    includes: ['#include <gnuradio/wavelet/wvps_ff.h>']
+    declarations: 'wavelet::wvps_ff::sptr ${id};'
+    make: 'this->${id} = wavelet::wvps_ff::make(${ilen});'
+    link: ['gnuradio::gnuradio-wavelet']
+
+file_format: 1

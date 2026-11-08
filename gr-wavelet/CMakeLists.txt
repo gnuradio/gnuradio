@@ -26,6 +26,8 @@ gr_register_component(
         GSL_FOUND
 )
 
+set(GR_PKG_WAVELET_EXAMPLES_DIR ${GR_PKG_DATA_DIR}/examples/wavelet)
+
 ########################################################################
 # Begin conditional configuration
 ########################################################################
@@ -39,6 +41,12 @@ add_subdirectory(lib)
 if(ENABLE_PYTHON)
     add_subdirectory(python/wavelet)
 endif(ENABLE_PYTHON)
+if(ENABLE_GRC)
+    add_subdirectory(grc)
+endif(ENABLE_GRC)
+if(ENABLE_EXAMPLES)
+    add_subdirectory(examples)
+endif(ENABLE_EXAMPLES)
 
 ########################################################################
 # Create Pkg Config File

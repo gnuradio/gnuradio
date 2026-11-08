@@ -1,0 +1,41 @@
+id: wavelet_squash_ff
+label: Wavelet Resampler (Squash)
+flags: [ python, cpp ]
+
+parameters:
+-   id: igrid
+    label: Input Grid
+    dtype: real_vector
+    default: '[0.0, 1.0, 2.0, 3.0, 4.0]'
+-   id: ogrid
+    label: Output Grid
+    dtype: real_vector
+    default: '[0.0, 1.0, 2.0, 3.0, 4.0]'
+
+inputs:
+-   domain: stream
+    dtype: float
+    vlen: ${ len(igrid) }
+
+outputs:
+-   domain: stream
+    dtype: float
+    vlen: ${ len(ogrid) }
+
+asserts:
+- ${ len(igrid) >= 3 }
+- ${ len(ogrid) >= 1 }
+- ${ all(igrid[i] < igrid[i+1] for i in range(len(igrid) - 1)) }
+- ${ all(igrid[0] <= x <= igrid[-1] for x in ogrid) }
+
+templates:
+    imports: from gnuradio import wavelet
+    make: wavelet.squash_ff(${igrid}, ${ogrid})
+
+cpp_templates:
+    includes: ['#include <gnuradio/wavelet/squash_ff.h>']
+    declarations: 'wavelet::squash_ff::sptr ${id};'
+    make: 'this->${id} = wavelet::squash_ff::make(${igrid}, ${ogrid});'
+    link: ['gnuradio::gnuradio-wavelet']
+
+file_format: 1

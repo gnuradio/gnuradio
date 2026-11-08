@@ -1,0 +1,6 @@
+'[Core]':
+- Wavelet:
+  - wavelet_wavelet_ff
+  - wavelet_wvps_ff
+  - wavelet_squash_ff
+

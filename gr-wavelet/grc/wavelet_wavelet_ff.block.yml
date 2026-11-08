@@ -1,0 +1,46 @@
+id: wavelet_wavelet_ff
+label: Wavelet Transform
+flags: [ python, cpp ]
+
+parameters:
+-   id: size
+    label: Size
+    dtype: int
+    default: '1024'
+-   id: order
+    label: Order
+    dtype: int
+    default: '20'
+-   id: forward
+    label: Direction
+    dtype: enum
+    default: 'True'
+    options: ['True', 'False']
+    option_labels: [Forward, Inverse]
+
+inputs:
+-   domain: stream
+    dtype: float
+    vlen: ${ size }
+
+outputs:
+-   domain: stream
+    dtype: float
+    vlen: ${ size }
+
+asserts:
+- ${ size > 1 }
+- ${ (size & (size - 1)) == 0 }
+- ${ order >= 4 and order <= 20 and order % 2 == 0 }
+
+templates:
+    imports: from gnuradio import wavelet
+    make: wavelet.wavelet_ff(${size}, ${order}, ${forward})
+
+cpp_templates:
+    includes: ['#include <gnuradio/wavelet/wavelet_ff.h>']
+    declarations: 'wavelet::wavelet_ff::sptr ${id};'
+    make: 'this->${id} = wavelet::wavelet_ff::make(${size}, ${order}, ${forward});'
+    link: ['gnuradio::gnuradio-wavelet']
+
+file_format: 1

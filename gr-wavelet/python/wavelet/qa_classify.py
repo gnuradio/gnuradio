@@ -12,7 +12,6 @@
 import numpy
 from gnuradio import gr, gr_unittest, wavelet, analog, blocks
 import copy
-# import pygsl.wavelet as wavelet # FIXME: pygsl not checked for in config
 import math
 
 
@@ -24,6 +23,7 @@ def np2(k):
     m = 0
     n = k - 1
     while n > 0:
+        n >>= 1
         m += 1
     return m
 
@@ -109,35 +109,29 @@ class test_classify(gr_unittest.TestCase):
         sum /= float(len(src_data))
         assert sum < 1e-6
 
-#    def test_004_(self): # FIXME: requires pygsl
-#
-#        n = 256
-#        o = 4
-#        ws = wavelet.workspace(n)
-#        w = wavelet.daubechies(o)
-#
-#        a = numpy.arange(n)
-#        b = numpy.sin(a*numpy.pi/16.0)
-#        c = w.transform_forward(b, ws)
-#        d = w.transform_inverse(c, ws)
-#
-#        src = gr.vector_source_f(b, False, n)
-#        wv = wavelet.wavelet_ff(n, o, True)
-#        src = blocks.vector_source_f(b, False, n)
-#        wv = wavelet.wavelet_ff(n, o, True)
-#
-#        dst = blocks.vector_sink_f(n)
-#        self.tb.connect(src, wv)
-#        self.tb.connect(wv, dst)
-#        self.tb.run()
-#        e = dst.data()
-#
-#        sum = 0
-#        for (u, v) in zip(c, e):
-#            w = u - v
-#            sum += w * w
-#        sum /= float(len(c))
-#        assert sum < 1e-6
+    def test_004_(self):
+        n = 256
+        o = 4
+        a = numpy.arange(n)
+        b = numpy.sin(a * numpy.pi / 16.0).astype(numpy.float32)
+
+        src = blocks.vector_source_f(b, False, n)
+        fwd = wavelet.wavelet_ff(n, o, True)
+        inv = wavelet.wavelet_ff(n, o, False)
+        dst = blocks.vector_sink_f(n)
+
+        self.tb.connect(src, fwd)
+        self.tb.connect(fwd, inv)
+        self.tb.connect(inv, dst)
+        self.tb.run()
+
+        rsl_data = dst.data()
+        sum_sq = 0.0
+        for (u, v) in zip(b, rsl_data):
+            w = u - v
+            sum_sq += w * w
+        sum_sq /= float(len(b))
+        assert sum_sq < 1e-6
 
     def test_005_(self):
 
@@ -168,6 +162,26 @@ class test_classify(gr_unittest.TestCase):
             sum += w * w
         sum /= float(len(snk_data))
         assert sum < 1e-6
+
+    def test_006_(self):
+        n = 256
+        o = 4
+        a = numpy.arange(n)
+        b = numpy.sin(a * numpy.pi / 16.0).astype(numpy.float32)
+
+        src = blocks.vector_source_f(b, False, n)
+        fwd = wavelet.wavelet_ff(n, o, True)
+        dst = blocks.vector_sink_f(n)
+
+        self.tb.connect(src, fwd)
+        self.tb.connect(fwd, dst)
+        self.tb.run()
+
+        coeffs = numpy.array(dst.data(), dtype=numpy.float32)
+        energy_in = numpy.sum(b**2)
+        energy_out = numpy.sum(coeffs**2)
+        rel_err = abs(energy_in - energy_out) / energy_in
+        assert rel_err < 1e-5
 
 
 if __name__ == '__main__':
