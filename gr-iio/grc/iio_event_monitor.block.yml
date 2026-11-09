@@ -1,0 +1,24 @@
+id: iio_event_monitor
+label: IIO Event Monitor
+category: '[Industrial IO]'
+
+parameters:
+-   id: uri
+    label: URI
+    dtype: string
+    default: ''
+
+-   id: device
+    label: Device
+    dtype: string
+    default: ''
+
+outputs:
+-   domain: message
+    id: event
+
+templates:
+    imports: from gnuradio import iio
+    make: iio.event_monitor(${uri}, ${device})
+
+file_format: 1

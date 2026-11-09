@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(device_source.h)                                           */
-/* BINDTOOL_HEADER_FILE_HASH(24b73e05146a021958160a913d26e745)                     */
+/* BINDTOOL_HEADER_FILE_HASH(641c69b30a0d72b1bb8fd814b09981d9)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -47,6 +47,7 @@ void bind_device_source(py::module& m)
              py::arg("params"),
              py::arg("buffer_size") = DEFAULT_BUFFER_SIZE,
              py::arg("decimation") = 0,
+             py::arg("buffer_index") = 0,
              D(device_source, make))
 
         .def("set_buffer_size",

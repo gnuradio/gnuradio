@@ -56,6 +56,9 @@ public:
      * \param cyclic Boolean when True sends first buffer_size number of samples
      *        to hardware which is repeated in the hardware itself. Future
      *        samples are ignored.
+     * \param buffer_index Index of the pre-existing hardware buffer to use.
+     *        Only meaningful with libiio v1, where buffers are enumerated
+     *        per device rather than created; ignored (must be 0) otherwise.
      */
     static sptr make(const std::string& uri,
                      const std::string& device,
@@ -64,7 +67,8 @@ public:
                      const iio_param_vec_t& params,
                      unsigned int buffer_size = DEFAULT_BUFFER_SIZE,
                      unsigned int interpolation = 0,
-                     bool cyclic = false);
+                     bool cyclic = false,
+                     unsigned int buffer_index = 0);
 
     static sptr make_from(iio_context* ctx,
                           const std::string& device,
@@ -73,7 +77,8 @@ public:
                           const iio_param_vec_t& params,
                           unsigned int buffer_size = DEFAULT_BUFFER_SIZE,
                           unsigned int interpolation = 0,
-                          bool cyclic = false);
+                          bool cyclic = false,
+                          unsigned int buffer_index = 0);
 
     /*!
      * The key of the tag that indicates packet length.

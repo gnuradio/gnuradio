@@ -52,6 +52,9 @@ public:
      *        buffered passed to hardware.
      * \param decimation Integer number of sample to remove from received
      *        data buffers between successive samples
+     * \param buffer_index Index of the pre-existing hardware buffer to use.
+     *        Only meaningful with libiio v1, where buffers are enumerated
+     *        per device rather than created; ignored (must be 0) otherwise.
      */
     static sptr make(const std::string& uri,
                      const std::string& device,
@@ -59,7 +62,8 @@ public:
                      const std::string& device_phy,
                      const iio_param_vec_t& params,
                      unsigned int buffer_size = DEFAULT_BUFFER_SIZE,
-                     unsigned int decimation = 0);
+                     unsigned int decimation = 0,
+                     unsigned int buffer_index = 0);
 
     static sptr make_from(iio_context* ctx,
                           const std::string& device,
@@ -67,7 +71,8 @@ public:
                           const std::string& device_phy,
                           const iio_param_vec_t& params,
                           unsigned int buffer_size = DEFAULT_BUFFER_SIZE,
-                          unsigned int decimation = 0);
+                          unsigned int decimation = 0,
+                          unsigned int buffer_index = 0);
 
     /*!
      * \brief Key of the packet length tag. If empty no tag will be emitted
