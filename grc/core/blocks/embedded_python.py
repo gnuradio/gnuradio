@@ -87,7 +87,6 @@ class EPyBlock(Block):
         self.states['_io_cache'] = ''
 
         self.module_name = self.name
-        self._epy_source_hash = -1
         self._epy_reload_error = None
 
     def rewrite(self):
@@ -96,12 +95,10 @@ class EPyBlock(Block):
         param_src = self.params['_source_code']
 
         src = param_src.get_value()
-        src_hash = hash((self.name, src))
-        if src_hash == self._epy_source_hash:
-            return
-
+        # Note: we can use get_evaluated() since all params have been evaluated by Elemen.rewrite(self) above.
+        block_params = {k: param.get_evaluated() for k, param in self.params.items() if _is_epy_block_param(param)}
         try:
-            blk_io = utils.epy_block_io.extract(src)
+            blk_io = utils.epy_block_io.extract(src, block_params)
 
         except Exception as e:
             self._epy_reload_error = ValueError(str(e))
@@ -117,7 +114,6 @@ class EPyBlock(Block):
             self.states['_io_cache'] = repr(tuple(blk_io))
 
         # print "Rewriting embedded python block {!r}".format(self.name)
-        self._epy_source_hash = src_hash
 
         self.label = blk_io.name or blk_io.cls
         self.documentation = {'': blk_io.doc}
@@ -144,7 +140,7 @@ class EPyBlock(Block):
         param_factory = self.parent_platform.make_param
         params = {}
         for key, value in self.params.copy().items():
-            if hasattr(value, '__epy_param__'):
+            if _is_epy_block_param(value):
                 params[key] = value
                 del self.params[key]
 
@@ -159,7 +155,7 @@ class EPyBlock(Block):
                     parent=self, id=id_, dtype='raw', value=value,
                     name=id_.replace('_', ' ').title(),
                 )
-                setattr(param, '__epy_param__', True)
+                _mark_as_epy_block_param(param)
             self.params[id_] = param
 
     def _update_ports(self, label, ports, port_specs, direction):
@@ -198,6 +194,14 @@ class EPyBlock(Block):
         if self._epy_reload_error:
             self.params['_source_code'].add_error_message(
                 str(self._epy_reload_error))
+
+
+def _is_epy_block_param(param):
+    return hasattr(param, '__epy_param__')
+
+
+def _mark_as_epy_block_param(param):
+    setattr(param, '__epy_param__', True)
 
 
 @register_build_in
