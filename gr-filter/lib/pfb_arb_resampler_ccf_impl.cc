@@ -10,6 +10,7 @@
 
 #include "pfb_arb_resampler_ccf_impl.h"
 #include <gnuradio/io_signature.h>
+#include <cmath>
 #include <cstdio>
 
 namespace gr {
@@ -35,6 +36,7 @@ pfb_arb_resampler_ccf_impl::pfb_arb_resampler_ccf_impl(float rate,
 
     set_history(d_resamp.taps_per_filter());
     set_relative_rate(rate);
+    set_tag_propagation_policy(TPP_DONT); // tags are placed in general_work()
     if (rate >= 1.0f) {
         unsigned output_multiple = std::max<int>(rate, filter_size);
         set_output_multiple(output_multiple);
@@ -131,6 +133,19 @@ int pfb_arb_resampler_ccf_impl::general_work(int noutput_items,
     int nitems_read;
     int nitems = floorf((float)noutput_items / relative_rate());
     int processed = d_resamp.filter(out, in, nitems, nitems_read);
+
+    // All output made from the consumed samples is produced in this call, so
+    // place each tag on the output at its offset within the call. The default
+    // propagation uses the offset from the stream start, which can fall on
+    // output that was already produced.
+    const uint64_t first = this->nitems_read(0);
+    std::vector<tag_t> tags;
+    get_tags_in_range(tags, 0, first, first + nitems_read);
+    for (auto& tag : tags) {
+        tag.offset =
+            nitems_written(0) + std::llround((tag.offset - first) * relative_rate());
+        add_item_tag(0, tag);
+    }
 
     consume_each(nitems_read);
     return processed;

@@ -11,6 +11,7 @@
 
 from gnuradio import gr, gr_unittest, filter, blocks
 import math
+import pmt
 import random
 import sys
 
@@ -272,6 +273,51 @@ class test_rational_resampler (gr_unittest.TestCase):
         offset = len(taps) // 2
         self.assertFloatTuplesAlmostEqual(
             expected_result[offset:offset + N], result_data[0:N], 5)
+
+    def check_tag_placement(self, interp, decim, max_noutput_items):
+        # Limiting the output buffer makes the block produce its output in
+        # pieces, so that it has output for an input sample before it has
+        # consumed it. A tag on input sample k must still reach the first
+        # output computed from that sample, ceil(k * interp / decim), and
+        # not arrive after that output is already gone downstream.
+        N = 4000
+        stride = 7
+        taps = random_floats(31)
+        tags = []
+        for k in range(0, N, stride):
+            t = gr.tag_t()
+            t.offset = k
+            t.key = pmt.intern('test')
+            t.value = pmt.from_uint64(k)
+            tags.append(t)
+
+        tb = gr.top_block()
+        src = blocks.vector_source_f([0.0] * N, False, 1, tags)
+        op = filter.rational_resampler_fff(interp, decim, taps)
+        dst = blocks.vector_sink_f()
+        tb.connect(src, op, dst)
+        op.set_max_noutput_items(max_noutput_items)
+        tb.run()
+
+        nout = len(dst.data())
+        expected = sorted(
+            ((k * interp + decim - 1) // decim, k) for k in range(0, N, stride)
+            if (k * interp + decim - 1) // decim < nout)
+        self.assertGreater(len(expected), N // stride // 2)
+        result = sorted((t.offset, pmt.to_uint64(t.value)) for t in dst.tags())
+        self.assertEqual(expected, result)
+
+    def test_008_tags_interp(self):
+        self.check_tag_placement(25, 1, 16)
+
+    def test_009_tags_interp_decim(self):
+        self.check_tag_placement(25, 7, 16)
+
+    def test_010_tags_decim(self):
+        self.check_tag_placement(3, 8, 5)
+
+    def test_011_tags_1_to_1(self):
+        self.check_tag_placement(1, 1, 16)
 
 
 if __name__ == '__main__':

@@ -18,6 +18,7 @@
 #include <gnuradio/filter/firdes.h>
 #include <gnuradio/io_signature.h>
 #include <spdlog/fmt/fmt.h>
+#include <algorithm>
 #include <numeric>
 #include <stdexcept>
 
@@ -151,6 +152,9 @@ rational_resampler_impl<IN_T, OUT_T, TAP_T>::rational_resampler_impl(
 
     this->set_relative_rate(uint64_t{ interpolation }, uint64_t{ decimation });
     this->set_output_multiple(1);
+    // Output can be produced before the input sample it depends on is consumed,
+    // so tags are placed by hand in general_work().
+    this->set_tag_propagation_policy(block::TPP_DONT);
 
     d_firs.reserve(interpolation);
     for (unsigned i = 0; i < interpolation; i++) {
@@ -249,6 +253,32 @@ int rational_resampler_impl<IN_T, OUT_T, TAP_T>::general_work(
             in++;
             count++;
         }
+    }
+
+    // Output w uses input floor(w * decimation / interpolation) as its newest
+    // sample. Put the tag of input sample k on the first output that uses it,
+    // ceil(k * interpolation / decimation), when that output is produced. The
+    // default propagation does it when k is consumed, which can be after the
+    // output was already passed downstream. Tags to place now are those after the
+    // newest sample of the previous output up to the newest sample of the last
+    // output, plus the consumed samples that no output will use.
+    const uint64_t nread = this->nitems_read(0);
+    const uint64_t nwritten = this->nitems_written(0);
+    const uint64_t interp = this->interpolation();
+    const uint64_t decim = this->decimation();
+    uint64_t tag_start = nread;
+    if (nwritten > 0 && (nwritten - 1) * decim / interp == nread) {
+        tag_start++; // placed by the previous call
+    }
+    uint64_t tag_end = nread + count;
+    if (i > 0) {
+        tag_end = std::max(tag_end, (nwritten + i - 1) * decim / interp + 1);
+    }
+    std::vector<tag_t> tags;
+    this->get_tags_in_range(tags, 0, tag_start, tag_end);
+    for (auto& tag : tags) {
+        tag.offset = (tag.offset * interp + decim - 1) / decim;
+        this->add_item_tag(0, tag);
     }
 
     d_ctr = ctr;

@@ -11,6 +11,7 @@
 
 from gnuradio import gr, gr_unittest, fft, filter, blocks
 import math
+import pmt
 
 
 def sig_source_c(samp_rate, freq, amp, N):
@@ -297,6 +298,42 @@ class test_pfb_arb_resampler(gr_unittest.TestCase):
 
         self.assertComplexTuplesAlmostEqual(
             expected_data[-Ntest:], dst_data[-Ntest:], 2)
+
+    def check_tag_placement(self, rrate, max_noutput_items):
+        # With a limited output buffer, the output for a tagged input
+        # sample must not be handed downstream before its tag is placed.
+        N = 20000
+        stride = 25
+        nfilts = 32
+        taps = filter.firdes.low_pass(nfilts, nfilts, 0.4, 0.1)
+        tags = []
+        for k in range(0, N, stride):
+            t = gr.tag_t()
+            t.offset = k
+            t.key = pmt.intern('test')
+            t.value = pmt.from_uint64(k)
+            tags.append(t)
+
+        src = blocks.vector_source_f([0.0] * N, False, 1, tags)
+        op = filter.pfb_arb_resampler_fff(rrate, taps, nfilts)
+        dst = blocks.vector_sink_f()
+        self.tb.connect(src, op, dst)
+        op.set_max_noutput_items(max_noutput_items)
+        self.tb.run()
+
+        nout = len(dst.data())
+        result = sorted((t.offset, pmt.to_uint64(t.value)) for t in dst.tags())
+        # tags near the end may belong to output that was never produced
+        expected = [k for k in range(0, N, stride) if k * rrate < nout - 2]
+        self.assertEqual(expected, [k for _, k in result][:len(expected)])
+        for offset, k in result:
+            self.assertLessEqual(abs(offset - k * rrate), 2)
+
+    def test_fff_tags_interp(self):
+        self.check_tag_placement(3.57, 96)
+
+    def test_fff_tags_decim(self):
+        self.check_tag_placement(0.4, 32)
 
 
 if __name__ == '__main__':
