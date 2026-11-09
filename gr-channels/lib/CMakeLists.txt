@@ -42,7 +42,7 @@ if(MSVC)
 endif(MSVC)
 
 if(BUILD_SHARED_LIBS)
-    gr_library_foo(gnuradio-channels)
+    GR_REGISTER_LIBRARY(gnuradio-channels)
 endif()
 
 ########################################################################

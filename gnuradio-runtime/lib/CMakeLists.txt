@@ -311,7 +311,7 @@ if(TRY_SHM_VMCIRCBUF)
     target_compile_definitions(gnuradio-runtime PRIVATE -DTRY_SHM_VMCIRCBUF)
 endif(TRY_SHM_VMCIRCBUF)
 
-gr_library_foo(gnuradio-runtime)
+GR_REGISTER_LIBRARY(gnuradio-runtime)
 
 ########################################################################
 # Setup tests

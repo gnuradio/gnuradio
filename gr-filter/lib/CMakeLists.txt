@@ -71,7 +71,7 @@ if(MSVC)
     target_sources(gnuradio-filter PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-filter.rc)
 endif(MSVC)
 
-gr_library_foo(gnuradio-filter)
+GR_REGISTER_LIBRARY(gnuradio-filter)
 
 ########################################################################
 # QA C++ Code for gr-filter

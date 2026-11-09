@@ -41,5 +41,5 @@ target_include_directories(
     PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>)
 
 if(BUILD_SHARED_LIBS)
-    gr_library_foo(gnuradio-pdu)
+    GR_REGISTER_LIBRARY(gnuradio-pdu)
 endif()
