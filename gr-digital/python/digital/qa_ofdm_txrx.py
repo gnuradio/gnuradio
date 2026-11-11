@@ -189,6 +189,35 @@ class test_ofdm_txrx (gr_unittest.TestCase):
         rx_data = rx_fg.get_rx_bytes()
         self.assertEqual(test_data, rx_data)
 
+    def _txrx_multipacket(self, n_packets, n_bytes, rolloff):
+        """ Transmit n_packets back-to-back packets with random payloads,
+        receive them and return (transmitted bytes, received bytes). """
+        len_tag_key = 'packet_len'
+        packets = [[random.randint(0, 255) for _ in range(n_bytes)]
+                   for _ in range(n_packets)]
+        data, tags = tagged_streams.packets_to_vectors(packets, len_tag_key)
+        # Tx
+        tx_tb = gr.top_block()
+        src = blocks.vector_source_b(data, False, 1, tags)
+        tx = ofdm_tx(packet_length_tag_key=len_tag_key, rolloff=rolloff,
+                     scramble_bits=True)
+        tx_sink = blocks.vector_sink_c()
+        tx_tb.connect(src, tx, tx_sink)
+        tx_tb.run()
+        # Rx (the Tx length tags are not passed on, as with a real channel)
+        rx_fg = ofdm_rx_fg(tx_sink.data(), 'frame_len', scramble_bits=True)
+        rx_fg.run()
+        return data, rx_fg.get_rx_bytes()
+
+    def test_005_tx_multipacket_rolloff(self):
+        """ Transmit many back-to-back packets with different payloads.
+        With a rolloff, consecutive bursts are separated and every packet
+        must be received without errors (see issue #6891). """
+        tx_data, rx_data = self._txrx_multipacket(
+            n_packets=100, n_bytes=50, rolloff=4)
+        self.assertEqual(len(rx_data), len(tx_data))
+        self.assertEqual(list(tx_data), list(rx_data))
+
 
 if __name__ == '__main__':
     gr_unittest.run(test_ofdm_txrx)
