@@ -160,7 +160,7 @@ blocks:
     post_padding: filt_delay
     pre_padding: '0'
     type: complex
-    window: firdes.window(window.WIN_HANN, 20, 0)
+    window: window.hann(20)
   states:
     bus_sink: false
     bus_source: false
@@ -363,6 +363,19 @@ blocks:
     bus_source: false
     bus_structure: null
     coordinate: [904, 11]
+    rotation: 0
+    state: enabled
+- name: import_0
+  id: import
+  parameters:
+    alias: ''
+    comment: ''
+    imports: from gnuradio.fft import window
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1080, 88.0]
     rotation: 0
     state: enabled
 - name: mod_header

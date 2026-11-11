@@ -355,9 +355,6 @@ bool cc_decoder_impl::set_frame_size(unsigned int frame_size)
         break;
 
     case (CC_TERMINATED):
-        // If the input is being padded out to a byte, we know the
-        // real frame size is without the padding.
-        d_frame_size -= d_padding * s_rate;
         d_veclen = d_frame_size + s_k - 1;
         break;
 
