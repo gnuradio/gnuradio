@@ -37,6 +37,7 @@ install(
           variable_low_pass_filter_taps.block.yml
           variable_high_pass_filter_taps.block.yml
           variable_band_pass_filter_taps.block.yml
+          variable_firdes_window.block.yml
           variable_band_reject_filter_taps.block.yml
           variable_file_filter_taps.block.yml
           variable_rrc_filter_taps.block.yml
