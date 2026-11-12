@@ -81,8 +81,14 @@ templates:
         ${gui_hint() % win}
     callbacks:
     - self._${id}_msgdigctl_win.setValue(${value})
+    - self._${id}_msgdigctl_win.set_min_freq(${minFreqHz})
+    - self._${id}_msgdigctl_win.set_max_freq(${maxFreqHz})
 
 documentation: |-
     While it can be used for anything, this block replicates the frequency control found in many SDR receiver software.
+
+    Min Freq and Max Freq can be changed while the flowgraph is running, for example by setting them from a variable. If the current value falls outside the new range, it is moved to the nearest limit and the new value is sent to the flowgraph.
+
+    The limits are updated one at a time. Setting Min Freq above the current Max Freq also raises Max Freq, and setting Max Freq below the current Min Freq also lowers Min Freq, so switching between bands that don't overlap works in either direction.
 
 file_format: 1
