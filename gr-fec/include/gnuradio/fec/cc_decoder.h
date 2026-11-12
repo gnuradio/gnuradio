@@ -64,7 +64,7 @@ typedef void (*conv_kernel)(unsigned char* Y,
  * samples into the encoder, and the output stream is
  * continually encoded. This mode is the only mode for this
  * decoder that has a history requirement because it requires
- * rate*(K-1) bits more to finish the decoding properly. This
+ * rate*lookahead bits more to finish the decoding properly. This
  * mode does not work with any deployments that do not allow
  * history.
  *
@@ -104,6 +104,14 @@ public:
      * \param mode cc_mode_t mode of the encoding.
      * \param padded true if the encoded frame is padded
      *               to the nearest byte.
+     * \param lookahead Only used in CC_STREAMING mode. Number of bits
+     *        of trellis the decoder runs past each frame boundary
+     *        before committing to a decision, giving the survivor
+     *        paths that much distance to converge. Low values will
+     *        result in elevated error rates near the start and end
+     *        of each frame. A lookahead of roughly 5 * k (35 for
+     *        the default k = 7) yields good performance. Larger values
+     *        yield diminishing returns. Must be at least k - 1.
      */
     static generic_decoder::sptr make(int frame_size,
                                       int k,
@@ -112,7 +120,8 @@ public:
                                       int start_state = 0,
                                       int end_state = -1,
                                       cc_mode_t mode = CC_STREAMING,
-                                      bool padded = false);
+                                      bool padded = false,
+                                      unsigned int lookahead = 6);
 
     /*!
      * Sets the uncoded frame size to \p frame_size. If \p

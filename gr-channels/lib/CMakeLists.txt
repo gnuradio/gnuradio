@@ -10,6 +10,7 @@
 ########################################################################
 add_library(
     gnuradio-channels
+    amp_bal_impl.cc
     channel_model_impl.cc
     channel_model2_impl.cc
     dynamic_channel_model_impl.cc
@@ -43,3 +44,14 @@ endif(MSVC)
 if(BUILD_SHARED_LIBS)
     gr_library_foo(gnuradio-channels)
 endif()
+
+########################################################################
+# QA C++ Code for gr-channels
+########################################################################
+if(ENABLE_TESTING)
+    include(GrTest)
+    list(APPEND GR_TEST_TARGET_DEPS gnuradio-runtime)
+    gr_add_cpp_test("channels_qa_flat_fader" ${CMAKE_CURRENT_SOURCE_DIR}/qa_flat_fader.cc)
+    # flat_fader_impl is not exported from the library
+    target_sources(channels_qa_flat_fader PRIVATE flat_fader_impl.cc)
+endif(ENABLE_TESTING)

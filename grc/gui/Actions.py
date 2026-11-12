@@ -29,7 +29,7 @@ class Namespace(object):
         self._actions[key] = action
 
     def connect(self, name, handler):
-        #log.debug("Connecting action <{}> to handler <{}>".format(name, handler.__name__))
+        # log.debug("Connecting action <{}> to handler <{}>".format(name, handler.__name__))
         self._actions[name].connect('activate', handler)
 
     def register(self,
@@ -90,7 +90,7 @@ class Namespace(object):
                 pass
                 # self.win.add_action(action)
 
-        #log.debug("Registering action as '{}'".format(key))
+        # log.debug("Registering action as '{}'".format(key))
         self._actions[key] = action
         return action
 
@@ -344,6 +344,12 @@ ELEMENT_DELETE = actions.register(
     icon_name='edit-delete',
     keypresses=["Delete"],
 )
+BLOCK_AUTOCONNECT = actions.register(
+    "win.block_autoconnect",
+    label='Auto_connect',
+    tooltip='Connect the ports of the selected blocks based on their position and type',
+    keypresses=["a"],
+)
 BLOCK_MOVE = actions.register("win.block_move")
 BLOCK_ROTATE_CCW = actions.register(
     "win.block_rotate_ccw",
@@ -448,6 +454,10 @@ ZOOM_RESET = actions.register("win.zoom_reset",
                               tooltip='Reset the canvas zoom level',
                               keypresses=["<Ctrl>0", "<Ctrl>KP_0"],
                               )
+RESTORE_DEFAULT_VIEW = actions.register("win.restore_default_view",
+                                        label='Restore Default View',
+                                        tooltip='Reset view to default positions',
+                                        )
 TOGGLE_SNAP_TO_GRID = actions.register("win.snap_to_grid",
                                        label='_Snap to grid',
                                        tooltip='Snap blocks to a grid for an easier connection alignment',

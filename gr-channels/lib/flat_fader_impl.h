@@ -14,6 +14,7 @@
 #include "sincostable.h"
 #include <gnuradio/fxpt.h>
 #include <gnuradio/io_signature.h>
+#include <gnuradio/random.h>
 
 #include <cstdint>
 #include <random>
@@ -27,27 +28,21 @@ namespace channels {
 class flat_fader_impl
 {
 private:
-    // initial theta variate generator
-    std::mt19937 rng_1;
-    std::uniform_real_distribution<double> dist_1; // U(-pi,pi)
-
-    // random walk variate
-    std::mt19937 rng_2;
-    std::uniform_real_distribution<double> dist_2; // U(0,1)
+    gr::random d_walk_rng; // random walk steps
 
 public:
     int d_N;        // number of sinusoids
     float d_fDTs;   // normalized maximum doppler frequency
     double d_theta; // random walk variable (RWP)
     float d_theta_los;
-    float d_step; // maximum random walk step size
+    float d_step; // maximum random walk step size (sign is the walk direction)
     uint64_t d_m; // sample counter
 
     float d_K;  // Rician factor (ratio of the specular power to the scattered power)
     bool d_LOS; // LOS path exists? chooses Rician (LOS) vs Rayleigh (NLOS) model.
 
-    std::vector<float> d_psi; // in-phase initial phase
-    std::vector<float> d_phi; // quadrature initial phase
+    std::vector<double> d_psi; // in-phase sinusoid phases
+    std::vector<double> d_phi; // quadrature sinusoid phases
 
     std::vector<float> d_costable;
 
@@ -57,7 +52,14 @@ public:
 
     void update_theta();
 
-    flat_fader_impl(uint32_t N, float fDTs, bool LOS, float K, uint32_t seed);
+    // update parameters without disturbing the random walk direction
+    void set_fDTs(float fDTs);
+    void set_K(float K);
+    void set_step(float step);
+
+    // stream selects an independent random sequence for a given seed (e.g. per path)
+    flat_fader_impl(
+        uint32_t N, float fDTs, bool LOS, float K, uint32_t seed, uint32_t stream = 0);
     gr_complex next_sample();
     void next_samples(std::vector<gr_complex>& HVec, int n_samples);
 

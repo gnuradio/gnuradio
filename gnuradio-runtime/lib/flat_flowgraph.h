@@ -81,6 +81,12 @@ private:
     void allocate_block_detail(basic_block_sptr block);
     void connect_block_inputs(basic_block_sptr block);
 
+    /* Throws if the consumers of any output port use different input
+     * buffer types. An output port has a single buffer, and that
+     * buffer can only serve one kind of reader.
+     */
+    void check_fanout_buffer_types();
+
     /* When reusing a flowgraph's blocks, this call makes sure all of
      * the buffer's are aligned at the machine's alignment boundary
      * and tells the blocks that they are aligned.

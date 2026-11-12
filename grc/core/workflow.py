@@ -17,6 +17,7 @@ class Workflow:
         generator_module (str): Module name of where the code generator class is located
         generate_options (str): Used to select a workflow
         generate_options_label (str): Information for users to select a workflow
+        is_executable (bool): If True, .grc file can be executed directly
         parameters (arr of dict): parameters for options block
         asserts (arr): array of assert statements
         context (dict): additional workflow parameters
@@ -37,6 +38,7 @@ class Workflow:
         self.generator_module = self.workflow_params.pop('generator_module')
         self.generate_options = self.workflow_params.pop('generate_options')
         self.generate_options_label = self.workflow_params.pop('generate_options_label')
+        self.is_executable = self.workflow_params.pop('is_executable', False)
         self.parameters = self.workflow_params.pop('parameters', [])
         self.asserts = self.workflow_params.pop('asserts', [])
         self.context = self.workflow_params  # additional workflow parameters

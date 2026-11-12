@@ -53,6 +53,9 @@ TOP_BLOCK_FILE_MODE = stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR | stat.S_IRGRP 
     stat.S_IWGRP | stat.S_IXGRP | stat.S_IROTH
 HIER_BLOCK_FILE_MODE = stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IWGRP | stat.S_IROTH
 
+# Executable flow graph shebang
+EXECUTABLE_FLOWGRAPH_SHEBANG = "#!/usr/bin/env -S grcc --run\n"
+
 PARAM_TYPE_NAMES = {
     'raw', 'enum',
     'complex', 'real', 'float', 'int', 'short', 'byte',

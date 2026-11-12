@@ -38,7 +38,7 @@ public:
      * \param N    the number of sinusoids to use in simulating the channel; 8 is a good
      *             value
      * \param fDTs normalized maximum Doppler frequency, fD * Ts
-     * \param LOS  include Line-of-Site path? selects between Rayleigh (NLOS) and Rician
+     * \param LOS  include Line-of-Sight path? selects between Rayleigh (NLOS) and Rician
      * (LOS) models \param K    Rician factor (ratio of the specular power to the
      * scattered power) \param seed a random number to seed the noise generators
      */

@@ -25,6 +25,7 @@ class CHANNELS_API fading_model_impl : public fading_model
 {
 private:
     gr::channels::flat_fader_impl d_fader;
+    std::vector<gr_complex> d_ftaps;
 
 public:
     fading_model_impl(unsigned int N, float fDTs, bool LOS, float K, uint32_t seed);
@@ -34,22 +35,13 @@ public:
              gr_vector_const_void_star& input_items,
              gr_vector_void_star& output_items) override;
 
-    float fDTs() override { return d_fader.d_fDTs; }
-    float K() override { return d_fader.d_K; }
-    float step() override { return d_fader.d_step; }
+    float fDTs() override;
+    float K() override;
+    float step() override;
 
-    void set_fDTs(float fDTs) override
-    {
-        d_fader.d_fDTs = fDTs;
-        d_fader.d_step = powf(0.00125 * fDTs, 1.1);
-    }
-    void set_K(float K) override
-    {
-        d_fader.d_K = K;
-        d_fader.scale_los = sqrtf(d_fader.d_K) / sqrtf(d_fader.d_K + 1);
-        d_fader.scale_nlos = (1 / sqrtf(d_fader.d_K + 1));
-    }
-    void set_step(float step) override { d_fader.d_step = step; }
+    void set_fDTs(float fDTs) override;
+    void set_K(float K) override;
+    void set_step(float step) override;
 };
 
 } /* namespace channels */

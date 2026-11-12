@@ -6,7 +6,6 @@ parameters:
 -   id: taps
     label: Taps(list of lists)
     dtype: raw
-    hide: ${ 'part' if vlen == 1 else 'none' }
 
 inputs:
 -   domain: stream

@@ -117,7 +117,15 @@ class GUIBlock(QGraphicsItem):
         self.show_param_val = qsettings.value("grc/show_param_val", type=bool)
 
     def create_shapes_and_labels(self):
-        self._load_settings(QApplication.instance().qsettings)
+        qsettings = getattr(QApplication.instance(), 'qsettings', None)
+        if qsettings is None:
+            platform = getattr(self.core, 'parent_platform', None)
+            config = getattr(platform, 'config', None)
+            qsettings = getattr(config, 'qsettings', None)
+        if qsettings is None:
+            from PyQt6.QtCore import QSettings
+            qsettings = QSettings()
+        self._load_settings(qsettings)
         self.prepareGeometryChange()
         self.font.setBold(True)
 

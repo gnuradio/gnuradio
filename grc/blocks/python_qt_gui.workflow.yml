@@ -6,6 +6,7 @@ generator_module: gnuradio.grc.workflows.python_qt_gui
 generator_class: PythonQtGuiGenerator
 generate_options: qt_gui
 generate_options_label: QT GUI
+is_executable: True
 parameters:
 -   id: run
     label: Run

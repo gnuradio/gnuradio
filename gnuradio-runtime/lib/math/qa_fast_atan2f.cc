@@ -58,7 +58,10 @@ BOOST_AUTO_TEST_CASE(t2)
     y = 0;
     c_atan2 = atan2(y, x);
     gr_atan2f = gr::fast_atan2f(y, x);
-    BOOST_CHECK_CLOSE(c_atan2, gr_atan2f, 0.0);
+    /* pi is not exactly representable as a float, so the two computations
+     * may land on adjacent values. Unlike the other cases here, don't
+     * require bit equality. */
+    BOOST_CHECK_CLOSE(c_atan2, gr_atan2f, 0.001);
 
 
     /* Test y as INF */

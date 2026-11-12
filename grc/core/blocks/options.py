@@ -5,6 +5,7 @@ SPDX-License-Identifier: GPL-3.0-or-later
 from collections import OrderedDict, defaultdict
 
 from . import Block, register_build_in
+from . import Flags
 from ._build import build_params
 from ._templates import MakoTemplates
 from ..base import Element
@@ -20,6 +21,9 @@ class Options(Block):
 
     key = 'options'  # block id
     label = 'Options'  # block name
+
+    flags = Flags(str(Block.flags))
+    flags.set(Flags.HAS_CPP, Flags.SHOW_ID)
 
     def __init__(self, parent):
         self.raw_params_data = [
@@ -161,12 +165,16 @@ class Options(Block):
             temp_dct['options'].append(output_language)
             temp_dct['option_labels'].append(output_language_label)
 
+        # Keep default language if available
+        default_language = self.raw_params_data[4]['default']
+        if default_language in temp_dct['options']:
+            temp_dct['default'] = default_language
         self.raw_params_data[4] = temp_dct
         self.parameters_data = build_params(
             params_raw=self.raw_params_data,
             have_inputs=False,
             have_outputs=False,
-            flags=Block.flags,
+            flags=Options.flags,
             block_id=self.key,
         )
 
@@ -354,7 +362,7 @@ class Options(Block):
             params_raw=lst,
             have_inputs=False,
             have_outputs=False,
-            flags=Block.flags,
+            flags=Options.flags,
             block_id=self.key
         )
         new_params = (OrderedDict(

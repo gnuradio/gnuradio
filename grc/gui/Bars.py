@@ -68,6 +68,7 @@ MENU_BAR_LIST = [
         [Actions.FLOW_GRAPH_UNDO, Actions.FLOW_GRAPH_REDO],
         [Actions.BLOCK_CUT, Actions.BLOCK_COPY, Actions.BLOCK_PASTE,
             Actions.ELEMENT_DELETE, Actions.SELECT_ALL],
+        [Actions.BLOCK_AUTOCONNECT],
         [Actions.BLOCK_ROTATE_CCW, Actions.BLOCK_ROTATE_CW,
             ('_Align', Actions.BLOCK_ALIGNMENTS)],
         [Actions.BLOCK_ENABLE, Actions.BLOCK_DISABLE, Actions.BLOCK_BYPASS],
@@ -86,6 +87,7 @@ MENU_BAR_LIST = [
         [Actions.ZOOM_IN],
         [Actions.ZOOM_OUT],
         [Actions.ZOOM_RESET],
+        [Actions.RESTORE_DEFAULT_VIEW],
         [Actions.ERRORS_WINDOW_DISPLAY, Actions.FIND_BLOCKS],
     ]),
     ('_Run', [
@@ -152,9 +154,9 @@ class SubMenuHelper(object):
                 target = "app.flowgraph.open_recent::{}".format(file_name)
                 files.append(file_name.replace("_", "__"), target)
             menu.append_section(None, files)
-            #clear = Gio.Menu()
-            #clear.append("Clear recent files", "app.flowgraph.clear_recent")
-            #menu.append_section(None, clear)
+            # clear = Gio.Menu()
+            # clear.append("Clear recent files", "app.flowgraph.clear_recent")
+            # menu.append_section(None, clear)
         else:
             # Show an empty menu
             menuitem = Gio.MenuItem.new("No items found", "app.none")

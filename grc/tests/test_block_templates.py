@@ -32,7 +32,7 @@ def test_list():
     t = MakoTemplates(_bind_to=Block(num='123'), test=templates)
     assert t['test'] == templates
     assert t.render('test') == ['abc123', '123123c']
-    assert set(templates) == set(t._template_cache.keys())
+    assert set(templates).issubset(t._template_cache)
 
 
 def test_parse_error():

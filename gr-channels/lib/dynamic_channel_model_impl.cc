@@ -14,6 +14,7 @@
 
 #include "dynamic_channel_model_impl.h"
 #include <gnuradio/io_signature.h>
+#include <gnuradio/random.h>
 
 namespace gr {
 namespace channels {
@@ -68,15 +69,23 @@ dynamic_channel_model_impl::dynamic_channel_model_impl(double samp_rate,
                   io_signature::make(1, 1, sizeof(gr_complex)),
                   io_signature::make(1, 1, sizeof(gr_complex)))
 {
+    // independent seeds for the noise, SRO, CFO and fading models
+    gr::random seeds(static_cast<int64_t>(noise_seed), 1, int64_t(1) << 31);
     d_noise_adder = blocks::add_cc::make();
     d_noise = analog::fastnoise_source_c::make(
-        analog::GR_GAUSSIAN, noise_amp, noise_seed, 1024 * 8);
+        analog::GR_GAUSSIAN, noise_amp, seeds.ran_int(), 1024 * 8);
     d_sro_model =
-        channels::sro_model::make(samp_rate, sro_std_dev, sro_max_dev, noise_seed);
+        channels::sro_model::make(samp_rate, sro_std_dev, sro_max_dev, seeds.ran_int());
     d_cfo_model =
-        channels::cfo_model::make(samp_rate, cfo_std_dev, cfo_max_dev, noise_seed);
-    d_fader = channels::selective_fading_model::make(
-        N, doppler_freq / samp_rate, LOS_model, K, noise_seed, delays, mags, ntaps_mpath);
+        channels::cfo_model::make(samp_rate, cfo_std_dev, cfo_max_dev, seeds.ran_int());
+    d_fader = channels::selective_fading_model::make(N,
+                                                     doppler_freq / samp_rate,
+                                                     LOS_model,
+                                                     K,
+                                                     seeds.ran_int(),
+                                                     delays,
+                                                     mags,
+                                                     ntaps_mpath);
 
     connect(self(), 0, d_sro_model, 0);
     connect(d_sro_model, 0, d_cfo_model, 0);
@@ -87,6 +96,51 @@ dynamic_channel_model_impl::dynamic_channel_model_impl(double samp_rate,
 }
 
 dynamic_channel_model_impl::~dynamic_channel_model_impl() {}
+
+double dynamic_channel_model_impl::samp_rate() const { return d_sro_model->samp_rate(); }
+double dynamic_channel_model_impl::sro_dev_std() const { return d_sro_model->std_dev(); }
+double dynamic_channel_model_impl::sro_dev_max() const { return d_sro_model->max_dev(); }
+double dynamic_channel_model_impl::cfo_dev_std() const { return d_cfo_model->std_dev(); }
+double dynamic_channel_model_impl::cfo_dev_max() const { return d_cfo_model->max_dev(); }
+double dynamic_channel_model_impl::noise_amp() const { return d_noise->amplitude(); }
+double dynamic_channel_model_impl::doppler_freq() const
+{
+    return d_fader->fDTs() * samp_rate();
+}
+double dynamic_channel_model_impl::K() const { return d_fader->K(); }
+
+void dynamic_channel_model_impl::set_samp_rate(double sr)
+{
+    const double fd = doppler_freq();
+    d_sro_model->set_samp_rate(sr);
+    d_cfo_model->set_samp_rate(sr);
+    d_fader->set_fDTs(fd / sr);
+}
+void dynamic_channel_model_impl::set_sro_dev_std(double dev)
+{
+    d_sro_model->set_std_dev(dev);
+}
+void dynamic_channel_model_impl::set_sro_dev_max(double dev)
+{
+    d_sro_model->set_max_dev(dev);
+}
+void dynamic_channel_model_impl::set_cfo_dev_std(double dev)
+{
+    d_cfo_model->set_std_dev(dev);
+}
+void dynamic_channel_model_impl::set_cfo_dev_max(double dev)
+{
+    d_cfo_model->set_max_dev(dev);
+}
+void dynamic_channel_model_impl::set_noise_amp(double amp)
+{
+    d_noise->set_amplitude(amp);
+}
+void dynamic_channel_model_impl::set_doppler_freq(double f)
+{
+    d_fader->set_fDTs(f / samp_rate());
+}
+void dynamic_channel_model_impl::set_K(double K) { d_fader->set_K(K); }
 
 void dynamic_channel_model_impl::setup_rpc()
 {

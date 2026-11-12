@@ -10,7 +10,6 @@ include(GrPython)
 
 gr_python_install(
     FILES __init__.py
-          amp_bal.py
           conj_fs_iqcorr.py
           distortion_2_gen.py
           distortion_3_gen.py

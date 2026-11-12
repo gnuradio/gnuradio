@@ -57,7 +57,7 @@ in the documentation as:
 
 \li <b>N</b>       the number of sinusoids to use in simulating the channel; 8 is a good value
 \li <b>fDTs</b>    normalized maximum Doppler frequency, fD * Ts
-\li <b>LOS</b>     include Line-of-Site path? selects between Rayleigh (NLOS) and Rician (LOS) models
+\li <b>LOS</b>     include Line-of-Sight path? selects between Rayleigh (NLOS) and Rician (LOS) models
 \li <b>K</b>       Rician factor (ratio of the specular power to the scattered power)
 \li <b>seed</b>    a random number to seed the noise generators
 
@@ -75,7 +75,7 @@ parameters are provided in the documentation as:
 
 \li <b>N</b>       the number of sinusoids to use in simulating the channel; 8 is a good value
 \li <b>fDTs</b>    normalized maximum Doppler frequency, fD * Ts
-\li <b>LOS</b>     include Line-of-Site path? selects between Rayleigh (NLOS) and Rician (LOS) models
+\li <b>LOS</b>     include Line-of-Sight path? selects between Rayleigh (NLOS) and Rician (LOS) models
 \li <b>K</b>       Rician factor (ratio of the specular power to the scattered power)
 \li <b>seed</b>    a random number to seed the noise generators
 \li <b>delays</b>  a vector of values that specify the time delay of each impulse

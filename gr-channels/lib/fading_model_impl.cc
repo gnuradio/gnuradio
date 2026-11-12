@@ -36,6 +36,14 @@ fading_model_impl::fading_model_impl(
 
 fading_model_impl::~fading_model_impl() {}
 
+float fading_model_impl::fDTs() { return d_fader.d_fDTs; }
+float fading_model_impl::K() { return d_fader.d_K; }
+float fading_model_impl::step() { return std::fabs(d_fader.d_step); }
+
+void fading_model_impl::set_fDTs(float fDTs) { d_fader.set_fDTs(fDTs); }
+void fading_model_impl::set_K(float K) { d_fader.set_K(K); }
+void fading_model_impl::set_step(float step) { d_fader.set_step(step); }
+
 void fading_model_impl::setup_rpc()
 {
 #ifdef GR_CTRLPORT
@@ -116,10 +124,9 @@ int fading_model_impl::work(int noutput_items,
 {
     const gr_complex* in = (const gr_complex*)input_items[0];
     gr_complex* out = (gr_complex*)output_items[0];
-    std::vector<gr_complex> ftaps;
-    d_fader.next_samples(ftaps, noutput_items);
+    d_fader.next_samples(d_ftaps, noutput_items);
     for (int i = 0; i < noutput_items; i++) {
-        out[i] = in[i] * ftaps[i];
+        out[i] = in[i] * d_ftaps[i];
         // out[i] = in[i] * d_fader.next_sample();
     }
     return noutput_items;

@@ -69,6 +69,9 @@ documentation: |-
 
         If using a LOS model, the first delay and mag should correspond with the LOS component
 
+      The fading gain is normalized to unit average power (the diffuse part
+      is scaled by 1/sqrt(K+1), the LOS part by sqrt(K/(K+1))).
+
       References:
 
       The flat-fading portion of the algorithm implements the following

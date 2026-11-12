@@ -185,6 +185,13 @@ class test_fastnoise_source(gr_unittest.TestCase):
                     src.samples()), numpy.array(
                     src2.samples())))
 
+    def test_004_cmplx_gaussian_sample_unbiased(self):
+        src = analog.fastnoise_source_c(analog.GR_GAUSSIAN, 1.0, 43)
+        x = numpy.array([src.sample_unbiased() for _ in range(20000)])
+        self.assertLess(numpy.mean(numpy.abs(x.real) == numpy.abs(x.imag)), 0.01)
+        self.assertAlmostEqual(numpy.mean(numpy.abs(x)**2), 1.0, delta=0.05)
+        self.assertLess(abs(numpy.corrcoef(numpy.abs(x.real), numpy.abs(x.imag))[0, 1]), 0.05)
+
     def test_003_real_laplacian_pool(self):
         src = analog.fastnoise_source_f(
             type=analog.GR_LAPLACIAN, **self.default_args)

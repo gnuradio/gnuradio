@@ -32,6 +32,7 @@ cfo_model_impl::cfo_model_impl(double sample_rate_hz,
                  io_signature::make(1, 1, sizeof(gr_complex)),
                  io_signature::make(1, 1, sizeof(gr_complex))),
       d_samp_rate(sample_rate_hz),
+      d_std_dev_hz(std_dev_hz),
       d_max_dev_hz(max_dev_hz),
       d_table(8 * 1024),
       d_noise(gr::analog::fastnoise_source_f::make(
