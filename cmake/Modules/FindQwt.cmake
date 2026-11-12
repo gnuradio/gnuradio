@@ -8,13 +8,20 @@
 pkg_check_modules(PC_QWT "Qt6Qwt6")
 set(QWT_QT_VERSION qt6)
 
+file(GLOB QWT_LOCAL_INSTALLS "/usr/local/qwt-*")
+set(QWT_CUSTOM_INCLUDES "")
+set(QWT_CUSTOM_LIBS "")
+foreach(QWT_DIR ${QWT_LOCAL_INSTALLS})
+    list(APPEND QWT_CUSTOM_INCLUDES "${QWT_DIR}/include")
+    list(APPEND QWT_CUSTOM_LIBS "${QWT_DIR}/lib")
+endforeach()
 
 
 find_path(
     QWT_INCLUDE_DIRS
     NAMES qwt_global.h
     HINTS  /opt/local/libexec/qt6/lib/qwt.framework/Versions/6/Headers ${PC_QWT_INCLUDEDIR} ${CMAKE_INSTALL_PREFIX}/include /include
-    PATHS /usr/local/include /usr/include /opt/local/include /sw/include
+    PATHS  ${QWT_CUSTOM_INCLUDES} /usr/local/include /usr/include /opt/local/include /sw/include
           /usr/local/lib/qwt.framework/Headers
     PATH_SUFFIXES qwt-${QWT_QT_VERSION} qwt qwt6 qwt5 ${QWT_QT_VERSION}/qwt)
 
@@ -22,7 +29,7 @@ find_library(
     QWT_LIBRARIES
     NAMES ${PC_QWT_LIBRARIES} qwt6-${QWT_QT_VERSION} qwt-${QWT_QT_VERSION} qwt
     HINTS /opt/local/libexec/qt6/lib/qwt.framework/Versions/6 ${PC_QWT_LIBDIR} ${CMAKE_INSTALL_PREFIX}/lib ${CMAKE_INSTALL_PREFIX}/lib64 /lib
-    PATHS /usr/local/lib /usr/lib /opt/local/lib /sw/lib /usr/local/lib/qwt.framework)
+    PATHS ${QWT_CUSTOM_LIBS} /usr/local/lib /usr/lib /opt/local/lib /sw/lib /usr/local/lib/qwt.framework)
 
 set(QWT_FOUND FALSE)
 if(QWT_INCLUDE_DIRS)
