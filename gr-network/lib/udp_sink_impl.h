@@ -38,7 +38,7 @@ protected:
     bool b_send_eof;
 
     int d_precomp_datasize;
-    int d_precomp_data_overitemsize;
+    int d_precomp_blocksize;
 
     char d_tmpheaderbuff[12]; // Largest header is 10 bytes
 
