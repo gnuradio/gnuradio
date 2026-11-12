@@ -282,7 +282,7 @@ blocks:
     payload_mod: '"QPSK"'
     pilot_carriers: ((-6,-5,5,6),)
     pilot_symbols: ((-1,1,-1,1),)
-    rolloff: '0'
+    rolloff: '4'
     scramble_bits: 'False'
     sync_word1: None
     sync_word2: None
