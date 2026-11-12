@@ -111,8 +111,25 @@ class ModTool:
         self._assign()
 
     def _assign(self):
-        if not self._check_directory(self.dir):
-            raise ModToolException('Directory contains no GNU Radio module.')
+        """Resolve the module directory, including when called from its build directory."""
+        start = os.path.abspath(self.dir)
+
+        if not self._check_directory(start):
+            parent = os.path.dirname(start)
+
+            # Do not try to walk above the filesystem root.
+            if parent == start:
+                raise ModToolException(
+                    'Directory contains no GNU Radio module.')
+
+            for subdir in self._subdirs:
+                self.has_subdirs[subdir] = False
+
+            if self._check_directory(parent):
+                self.dir = parent
+            else:
+                raise ModToolException(
+                    'Directory contains no GNU Radio module.')
         if self.info['modname'] is None:
             self.info['modname'] = get_modname()
         if self.info['modname'] is None:
@@ -181,7 +198,7 @@ class ModTool:
             sys.exit(1)
 
     def _check_directory(self, directory):
-        """ Guesses if dir is a valid GNU Radio module directory by looking for
+        """Guesses if dir is a valid GNU Radio module directory by looking for
         CMakeLists.txt and at least one of the subdirs lib/, and python/
         Changes the directory, if valid. """
         try:

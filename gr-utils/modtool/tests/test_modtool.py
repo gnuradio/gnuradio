@@ -370,6 +370,47 @@ class TestModToolCore(unittest.TestCase):
         test_dict['blockname'] = 'square_ff'
         ModToolDisable(**test_dict).run()
 
+    def test_build_dir_fallback(self):
+        """ Tests for modtool operating from build directory and fallback behavior """
+        if self.f_newmod or self.f_add:
+            raise unittest.SkipTest("setUp for API function failed")
+        module_dir = path.join(self.test_dir, 'gr-howto')
+        build_dir = path.join(module_dir, 'build')
+        os.makedirs(build_dir, exist_ok=True)
+
+        try:
+            # a) run from <module>/build -> command succeeds
+            os.chdir(build_dir)
+            ModToolDisable(blockname='square_ff', directory='.').run()
+
+            # b) run from module root -> still succeeds (no regression)
+            os.chdir(module_dir)
+            ModToolDisable(blockname='square_ff', directory='.').run()
+
+            # c) run from a non-module directory -> still raises ModToolException
+            os.chdir(self.test_dir)
+            self.assertRaises(
+                ModToolException,
+                ModToolDisable(blockname='square_ff', directory='.').run
+            )
+            self.assertRaises(
+                ModToolException,
+                ModToolDisable(blockname='square_ff', directory=self.test_dir).run
+            )
+            self.assertRaises(
+                ModToolException,
+                ModToolDisable(blockname='square_ff', directory=path.abspath(os.sep)).run
+            )
+
+            # d) relative --directory pointing at the build dir works
+            os.chdir(self.test_dir)
+            rel_build_dir = path.relpath(build_dir, self.test_dir)
+            ModToolDisable(blockname='square_ff', directory=rel_build_dir).run()
+            os.chdir(module_dir)
+            ModToolDisable(blockname='square_ff', directory='build').run()
+        finally:
+            os.chdir(self.start_dir)
+
 
 if __name__ == '__main__':
     unittest.main()
