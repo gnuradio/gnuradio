@@ -161,8 +161,7 @@ set(BLOCKS_SOURCES
     uchar_array_to_float.cc
     uchar_to_float_impl.cc
     unpack_k_bits_bb_impl.cc
-    vco_f_impl.cc
-    vco_c_impl.cc
+    vco_impl.cc
     vector_map_impl.cc
     vector_to_stream_impl.cc
     vector_to_streams_impl.cc)

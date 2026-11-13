@@ -152,6 +152,7 @@ install(
           unpack_k_bits_bb.h
           vco_f.h
           vco_c.h
+          vco.h
           vector_map.h
           vector_to_stream.h
           vector_to_streams.h
