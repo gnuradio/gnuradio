@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2026 Free Software Foundation, Inc.
+ * Copyright 2026 Anirudh Sahu
  *
  * This file is part of GNU Radio
  *
@@ -13,7 +13,11 @@
 
 #include <gnuradio/block.h>
 #include <gnuradio/block_detail.h>
+#ifdef GR_MPLIB_MPIR
+#include <mpirxx.h>
+#else
 #include <gmpxx.h>
+#endif
 #include <algorithm>
 #include <cstdint>
 #include <vector>
