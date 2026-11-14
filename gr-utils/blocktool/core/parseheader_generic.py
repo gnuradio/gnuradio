@@ -13,7 +13,7 @@ import os
 import re
 import logging
 
-from ..core.base import BlockToolException, BlockTool
+from ..core.base import BlockToolException, BlockTool, MissingDependencyError
 from ..core.iosignature import io_signature, message_port
 from ..core.comments import read_comments, add_comments, exist_comments
 from ..core import Constants
@@ -277,7 +277,11 @@ class GenericHeaderParser(BlockTool):
         # TODO: extend this to other publicly declared functions in the h file
         if not PYGCCXML_AVAILABLE:
             self.parsed_data['parser'] = 'simple'
-            (params, iosig, blockname) = self._parse_cc_h(self.target_file)
+            try:
+                (params, iosig, blockname) = self._parse_cc_h(self.target_file)
+            except (BlockToolException, ValueError) as e:
+                raise MissingDependencyError(
+                    f"pygccxml is not installed, and the simple fallback parser failed: {e}") from e
             self.parsed_data['target_namespace'] = namespace_to_parse
 
             namespace_dict = {}
@@ -311,7 +315,11 @@ class GenericHeaderParser(BlockTool):
             return self.parsed_data
         else:
             self.parsed_data['parser'] = 'pygccxml'
-            generator_path, generator_name = utils.find_xml_generator()
+            try:
+                generator_path, generator_name = utils.find_xml_generator()
+            except Exception as e:  # pygccxml raises a plain Exception here
+                raise MissingDependencyError(
+                    "pygccxml is installed, but castxml could not be found") from e
             xml_generator_config = parser.xml_generator_configuration_t(
                 xml_generator_path=generator_path,
                 xml_generator=generator_name,

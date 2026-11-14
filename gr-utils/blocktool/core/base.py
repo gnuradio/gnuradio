@@ -17,6 +17,17 @@ class BlockToolException(Exception):
     pass
 
 
+class MissingDependencyError(BlockToolException):
+    """ Parsing a header needs pygccxml and castxml, but one of them is unavailable. """
+
+    def __init__(self, reason):
+        super().__init__(
+            f"{reason}\n"
+            "Install pygccxml and castxml (e.g. `pip install pygccxml`, and "
+            "`apt install castxml`, `brew install castxml` or "
+            "`conda install -c conda-forge castxml`), then re-run gr_modtool bind.")
+
+
 class BlockTool(ABC):
     """ Base class for all blocktool command classes. """
     name = 'base'
