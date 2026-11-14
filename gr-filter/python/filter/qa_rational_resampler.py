@@ -277,9 +277,10 @@ class test_rational_resampler (gr_unittest.TestCase):
     def check_tag_placement(self, interp, decim, max_noutput_items):
         # Limiting the output buffer makes the block produce its output in
         # pieces, so that it has output for an input sample before it has
-        # consumed it. A tag on input sample k must still reach the first
-        # output computed from that sample, ceil(k * interp / decim), and
-        # not arrive after that output is already gone downstream.
+        # consumed it. A tag placed only on consumption can then come after
+        # its output has gone downstream and get lost. Every tag that maps to
+        # produced output must be there, on the offset the default propagation
+        # in block_executor gives it, round(k * interp / decim).
         N = 4000
         stride = 7
         taps = random_floats(31)
@@ -300,9 +301,9 @@ class test_rational_resampler (gr_unittest.TestCase):
         tb.run()
 
         nout = len(dst.data())
-        expected = sorted(
-            ((k * interp + decim - 1) // decim, k) for k in range(0, N, stride)
-            if (k * interp + decim - 1) // decim < nout)
+        expected = [((2 * k * interp + decim) // (2 * decim), k)
+                    for k in range(0, N, stride)]
+        expected = [(offset, k) for offset, k in expected if offset < nout]
         self.assertGreater(len(expected), N // stride // 2)
         result = sorted((t.offset, pmt.to_uint64(t.value)) for t in dst.tags())
         self.assertEqual(expected, result)

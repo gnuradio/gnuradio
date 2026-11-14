@@ -27,6 +27,7 @@ private:
     std::vector<TAP_T> d_new_taps;
     std::vector<kernel::fir_filter<IN_T, OUT_T, TAP_T>> d_firs;
     bool d_updated = false;
+    uint64_t d_tag_next = 0; // first input offset whose tags are not placed yet
 
     void install_taps(const std::vector<TAP_T>& taps);
 
@@ -44,6 +45,13 @@ public:
 
     void set_taps(const std::vector<TAP_T>& taps) override;
     std::vector<TAP_T> taps() const override;
+
+    bool start() override
+    {
+        // item counters start from 0 again when the flowgraph is restarted
+        d_tag_next = 0;
+        return true;
+    }
 
     void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
     int general_work(int noutput_items,

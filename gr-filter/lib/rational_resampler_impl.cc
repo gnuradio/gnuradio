@@ -9,6 +9,7 @@
  */
 
 #include "rational_resampler_impl.h"
+#include "resampler_tags.h"
 
 /* ensure that tweakme.h is included before the bundled spdlog/fmt header, see
  * https://github.com/gabime/spdlog/issues/2922 */
@@ -152,9 +153,7 @@ rational_resampler_impl<IN_T, OUT_T, TAP_T>::rational_resampler_impl(
 
     this->set_relative_rate(uint64_t{ interpolation }, uint64_t{ decimation });
     this->set_output_multiple(1);
-    // Output can be produced before the input sample it depends on is consumed,
-    // so tags are placed by hand in general_work().
-    this->set_tag_propagation_policy(block::TPP_DONT);
+    this->set_tag_propagation_policy(block::TPP_DONT); // placed in general_work()
 
     d_firs.reserve(interpolation);
     for (unsigned i = 0; i < interpolation; i++) {
@@ -255,31 +254,24 @@ int rational_resampler_impl<IN_T, OUT_T, TAP_T>::general_work(
         }
     }
 
-    // Output w uses input floor(w * decimation / interpolation) as its newest
-    // sample. Put the tag of input sample k on the first output that uses it,
-    // ceil(k * interpolation / decimation), when that output is produced. The
-    // default propagation does it when k is consumed, which can be after the
-    // output was already passed downstream. Tags to place now are those after the
-    // newest sample of the previous output up to the newest sample of the last
-    // output, plus the consumed samples that no output will use.
-    const uint64_t nread = this->nitems_read(0);
-    const uint64_t nwritten = this->nitems_written(0);
-    const uint64_t interp = this->interpolation();
-    const uint64_t decim = this->decimation();
-    uint64_t tag_start = nread;
-    if (nwritten > 0 && (nwritten - 1) * decim / interp == nread) {
-        tag_start++; // placed by the previous call
-    }
-    uint64_t tag_end = nread + count;
-    if (i > 0) {
-        tag_end = std::max(tag_end, (nwritten + i - 1) * decim / interp + 1);
-    }
+    // Place tags like the default propagation does, but also as soon as the
+    // output a tag maps to has been produced: with interpolation, output for
+    // an input sample is produced before that sample is consumed, and a tag
+    // added only on consumption could land on output already read downstream.
+    const uint64_t consumed_end = this->nitems_read(0) + count;
+    const uint64_t written_end = this->nitems_written(0) + i;
     std::vector<tag_t> tags;
-    this->get_tags_in_range(tags, 0, tag_start, tag_end);
+    this->get_tags_in_range(tags, 0, d_tag_next, this->nitems_read(0) + ninput_items[0]);
     for (auto& tag : tags) {
-        tag.offset = (tag.offset * interp + decim - 1) / decim;
+        const uint64_t in_offset = tag.offset;
+        tag.offset = resampler_tag_offset(in_offset, 0, 0, this->mp_relative_rate());
+        if (in_offset >= consumed_end && tag.offset >= written_end) {
+            break;
+        }
         this->add_item_tag(0, tag);
+        d_tag_next = in_offset + 1;
     }
+    d_tag_next = std::max(d_tag_next, consumed_end);
 
     d_ctr = ctr;
     this->consume_each(count);

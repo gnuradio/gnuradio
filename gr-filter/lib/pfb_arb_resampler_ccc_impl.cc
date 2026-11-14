@@ -9,8 +9,9 @@
  */
 
 #include "pfb_arb_resampler_ccc_impl.h"
+#include "resampler_tags.h"
 #include <gnuradio/io_signature.h>
-#include <cmath>
+#include <algorithm>
 #include <cstdio>
 
 namespace gr {
@@ -76,6 +77,8 @@ void pfb_arb_resampler_ccc_impl::set_rate(float rate)
 
     d_resamp.set_rate(rate);
     set_relative_rate(rate);
+    d_rate_in = nitems_read(0);
+    d_rate_out = nitems_written(0);
 }
 
 void pfb_arb_resampler_ccc_impl::set_phase(float ph)
@@ -132,18 +135,25 @@ int pfb_arb_resampler_ccc_impl::general_work(int noutput_items,
     int nitems = floorf((float)noutput_items / relative_rate());
     int processed = d_resamp.filter(out, in, nitems, nitems_read);
 
-    // All output made from the consumed samples is produced in this call, so
-    // place each tag on the output at its offset within the call. The default
-    // propagation uses the offset from the stream start, which can fall on
-    // output that was already produced.
-    const uint64_t first = this->nitems_read(0);
+    // Place tags like the default propagation does, but also as soon as the
+    // output a tag maps to has been produced: this block can produce that
+    // output before it consumes the tagged sample, and a tag added only on
+    // consumption could land on output that was already read downstream.
+    const uint64_t consumed_end = this->nitems_read(0) + nitems_read;
+    const uint64_t written_end = nitems_written(0) + processed;
     std::vector<tag_t> tags;
-    get_tags_in_range(tags, 0, first, first + nitems_read);
+    get_tags_in_range(tags, 0, d_tag_next, this->nitems_read(0) + ninput_items[0]);
     for (auto& tag : tags) {
+        const uint64_t in_offset = tag.offset;
         tag.offset =
-            nitems_written(0) + std::llround((tag.offset - first) * relative_rate());
+            resampler_tag_offset(in_offset, d_rate_in, d_rate_out, mp_relative_rate());
+        if (in_offset >= consumed_end && tag.offset >= written_end) {
+            break;
+        }
         add_item_tag(0, tag);
+        d_tag_next = in_offset + 1;
     }
+    d_tag_next = std::max(d_tag_next, consumed_end);
 
     consume_each(nitems_read);
     return processed;
