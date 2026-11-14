@@ -19,6 +19,12 @@ parameters:
     label: Value
     dtype: ${ type.type }
     default: '0'
+-   id: required
+    label: Required
+    dtype: bool
+    default: 'False'
+    options: ['True', 'False']
+    option_labels: [Optional, Required]
 -   id: short_id
     label: Short ID
     dtype: string
@@ -52,6 +58,9 @@ documentation: |-
     When type is not None, this parameter also becomes a command line option of the form:
 
     -[short_id] --[id] [value]
+
+    Set Required to True to make the command line argument mandatory.
+    Otherwise, the parameter uses its configured default value when the argument is omitted.
 
     The Short ID field may be left blank.
 
