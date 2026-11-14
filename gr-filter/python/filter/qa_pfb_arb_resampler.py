@@ -368,7 +368,6 @@ class test_pfb_arb_resampler(gr_unittest.TestCase):
             def __init__(self):
                 gr.sync_block.__init__(
                     self, 'gate', [numpy.float32], [numpy.float32])
-                self.blocked = threading.Event()
                 self.go = threading.Event()
 
             def work(self, input_items, output_items):
@@ -376,24 +375,28 @@ class test_pfb_arb_resampler(gr_unittest.TestCase):
                 if self.nitems_written(0) < N1:
                     n = min(n, N1 - self.nitems_written(0))
                 else:
-                    self.blocked.set()
                     self.go.wait()
                 output_items[0][:n] = input_items[0][:n]
                 return n
 
+        # Where the block goes idle after N1 input items, from a plain run.
+        op = filter.pfb_arb_resampler_fff(rate1, taps, nfilts)
+        self.run_tagged(op, N1, stride, 64)
+        self.tb.run()
+        idle = (op.nitems_read(0), op.nitems_written(0))
+
+        self.tb = gr.top_block()
         g = gate()
         op = filter.pfb_arb_resampler_fff(rate1, taps, nfilts)
         dst = self.run_tagged(op, N, stride, 64, g)
         self.tb.start()
-        self.assertTrue(g.blocked.wait(10))
-        # wait until the resampler has used up its input
-        counts = None
-        stable = 0
-        while stable < 5:
-            time.sleep(0.05)
-            prev, counts = counts, (op.nitems_read(0), op.nitems_written(0))
-            stable = stable + 1 if counts == prev else 0
-        in0, out0 = counts
+        deadline = time.monotonic() + 10
+        while (op.nitems_read(0), op.nitems_written(0)) != idle:
+            if time.monotonic() > deadline:
+                g.go.set()
+                self.fail("resampler did not reach its idle point")
+            time.sleep(0.01)
+        in0, out0 = idle
         op.set_rate(rate2)
         g.go.set()
         self.tb.wait()

@@ -11,7 +11,6 @@
 #include "pfb_arb_resampler_ccc_impl.h"
 #include "resampler_tags.h"
 #include <gnuradio/io_signature.h>
-#include <algorithm>
 #include <cstdio>
 
 namespace gr {
@@ -77,8 +76,7 @@ void pfb_arb_resampler_ccc_impl::set_rate(float rate)
 
     d_resamp.set_rate(rate);
     set_relative_rate(rate);
-    d_rate_in = nitems_read(0);
-    d_rate_out = nitems_written(0);
+    d_rate_changed = true; // anchor taken in general_work()
 }
 
 void pfb_arb_resampler_ccc_impl::set_phase(float ph)
@@ -131,29 +129,25 @@ int pfb_arb_resampler_ccc_impl::general_work(int noutput_items,
         return 0; // history requirements may have changed.
     }
 
+    // The kernel uses the new rate from this call on, and nitems_written(0) is
+    // only up to date here (it is advanced after general_work() returns).
+    if (d_rate_changed) {
+        d_rate_changed = false;
+        d_rate_in = nitems_read(0);
+        d_rate_out = nitems_written(0);
+    }
+
     int nitems_read;
     int nitems = floorf((float)noutput_items / relative_rate());
     int processed = d_resamp.filter(out, in, nitems, nitems_read);
 
-    // Place tags like the default propagation does, but also as soon as the
-    // output a tag maps to has been produced: this block can produce that
-    // output before it consumes the tagged sample, and a tag added only on
-    // consumption could land on output that was already read downstream.
-    const uint64_t consumed_end = this->nitems_read(0) + nitems_read;
-    const uint64_t written_end = nitems_written(0) + processed;
-    std::vector<tag_t> tags;
-    get_tags_in_range(tags, 0, d_tag_next, this->nitems_read(0) + ninput_items[0]);
-    for (auto& tag : tags) {
-        const uint64_t in_offset = tag.offset;
-        tag.offset =
-            resampler_tag_offset(in_offset, d_rate_in, d_rate_out, mp_relative_rate());
-        if (in_offset >= consumed_end && tag.offset >= written_end) {
-            break;
-        }
-        add_item_tag(0, tag);
-        d_tag_next = in_offset + 1;
-    }
-    d_tag_next = std::max(d_tag_next, consumed_end);
+    place_resampler_tags(*this,
+                         d_tag_next,
+                         ninput_items[0],
+                         nitems_read,
+                         processed,
+                         d_rate_in,
+                         d_rate_out);
 
     consume_each(nitems_read);
     return processed;

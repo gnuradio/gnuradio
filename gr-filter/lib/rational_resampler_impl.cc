@@ -19,7 +19,6 @@
 #include <gnuradio/filter/firdes.h>
 #include <gnuradio/io_signature.h>
 #include <spdlog/fmt/fmt.h>
-#include <algorithm>
 #include <numeric>
 #include <stdexcept>
 
@@ -254,24 +253,7 @@ int rational_resampler_impl<IN_T, OUT_T, TAP_T>::general_work(
         }
     }
 
-    // Place tags like the default propagation does, but also as soon as the
-    // output a tag maps to has been produced: with interpolation, output for
-    // an input sample is produced before that sample is consumed, and a tag
-    // added only on consumption could land on output already read downstream.
-    const uint64_t consumed_end = this->nitems_read(0) + count;
-    const uint64_t written_end = this->nitems_written(0) + i;
-    std::vector<tag_t> tags;
-    this->get_tags_in_range(tags, 0, d_tag_next, this->nitems_read(0) + ninput_items[0]);
-    for (auto& tag : tags) {
-        const uint64_t in_offset = tag.offset;
-        tag.offset = resampler_tag_offset(in_offset, 0, 0, this->mp_relative_rate());
-        if (in_offset >= consumed_end && tag.offset >= written_end) {
-            break;
-        }
-        this->add_item_tag(0, tag);
-        d_tag_next = in_offset + 1;
-    }
-    d_tag_next = std::max(d_tag_next, consumed_end);
+    place_resampler_tags(*this, d_tag_next, ninput_items[0], count, i);
 
     d_ctr = ctr;
     this->consume_each(count);
