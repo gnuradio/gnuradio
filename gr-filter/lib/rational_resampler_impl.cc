@@ -9,6 +9,7 @@
  */
 
 #include "rational_resampler_impl.h"
+#include "resampler_tags.h"
 
 /* ensure that tweakme.h is included before the bundled spdlog/fmt header, see
  * https://github.com/gabime/spdlog/issues/2922 */
@@ -151,6 +152,7 @@ rational_resampler_impl<IN_T, OUT_T, TAP_T>::rational_resampler_impl(
 
     this->set_relative_rate(uint64_t{ interpolation }, uint64_t{ decimation });
     this->set_output_multiple(1);
+    this->set_tag_propagation_policy(block::TPP_DONT); // placed in general_work()
 
     d_firs.reserve(interpolation);
     for (unsigned i = 0; i < interpolation; i++) {
@@ -250,6 +252,8 @@ int rational_resampler_impl<IN_T, OUT_T, TAP_T>::general_work(
             count++;
         }
     }
+
+    place_resampler_tags(*this, d_tag_next, ninput_items[0], count, i);
 
     d_ctr = ctr;
     this->consume_each(count);
