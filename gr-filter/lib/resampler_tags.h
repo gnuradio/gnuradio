@@ -11,6 +11,10 @@
 #ifndef INCLUDED_FILTER_RESAMPLER_TAGS_H
 #define INCLUDED_FILTER_RESAMPLER_TAGS_H
 
+#ifdef HAVE_CONFIG_H
+#include <gnuradio/config.h>
+#endif
+
 #include <gnuradio/block.h>
 #include <gnuradio/block_detail.h>
 #ifdef GR_MPLIB_MPIR
