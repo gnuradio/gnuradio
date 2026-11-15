@@ -9,6 +9,7 @@
  */
 
 #include "pfb_arb_resampler_ccc_impl.h"
+#include "resampler_tags.h"
 #include <gnuradio/io_signature.h>
 #include <cstdio>
 
@@ -33,6 +34,7 @@ pfb_arb_resampler_ccc_impl::pfb_arb_resampler_ccc_impl(
 
     set_history(d_resamp.taps_per_filter());
     set_relative_rate(rate);
+    set_tag_propagation_policy(TPP_DONT); // tags are placed in general_work()
     if (rate >= 1.0f) {
         unsigned output_multiple = std::max<int>(rate, filter_size);
         set_output_multiple(output_multiple);
@@ -74,6 +76,7 @@ void pfb_arb_resampler_ccc_impl::set_rate(float rate)
 
     d_resamp.set_rate(rate);
     set_relative_rate(rate);
+    d_rate_changed = true; // anchor taken in general_work()
 }
 
 void pfb_arb_resampler_ccc_impl::set_phase(float ph)
@@ -126,9 +129,25 @@ int pfb_arb_resampler_ccc_impl::general_work(int noutput_items,
         return 0; // history requirements may have changed.
     }
 
+    // The kernel uses the new rate from this call on, and nitems_written(0) is
+    // only up to date here (it is advanced after general_work() returns).
+    if (d_rate_changed) {
+        d_rate_changed = false;
+        d_rate_in = nitems_read(0);
+        d_rate_out = nitems_written(0);
+    }
+
     int nitems_read;
     int nitems = floorf((float)noutput_items / relative_rate());
     int processed = d_resamp.filter(out, in, nitems, nitems_read);
+
+    place_resampler_tags(*this,
+                         d_tag_next,
+                         ninput_items[0],
+                         nitems_read,
+                         processed,
+                         d_rate_in,
+                         d_rate_out);
 
     consume_each(nitems_read);
     return processed;

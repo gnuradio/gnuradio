@@ -24,12 +24,24 @@ class FILTER_API pfb_arb_resampler_ccc_impl : public pfb_arb_resampler_ccc
 private:
     kernel::pfb_arb_resampler_ccc d_resamp;
     bool d_updated;
+    uint64_t d_rate_in = 0;  // nitems_read(0) at the first work() after set_rate()
+    uint64_t d_rate_out = 0; // nitems_written(0) at the first work() after set_rate()
+    uint64_t d_tag_next = 0; // first input offset whose tags are not placed yet
+    bool d_rate_changed = false;
     gr::thread::mutex d_mutex; // mutex to protect set/work access
 
 public:
     pfb_arb_resampler_ccc_impl(float rate,
                                const std::vector<gr_complex>& taps,
                                unsigned int filter_size);
+
+    bool start() override
+    {
+        // item counters start from 0 again when the flowgraph is restarted
+        d_rate_in = d_rate_out = d_tag_next = 0;
+        d_rate_changed = false;
+        return true;
+    }
 
     void forecast(int noutput_items, gr_vector_int& ninput_items_required) override;
 
