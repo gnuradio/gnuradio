@@ -11,13 +11,15 @@
 """
 BER simulation for QPSK signals, compare to theoretical values.
 Change the N_BITS value to simulate more bits per Eb/N0 value,
-thus allowing to check for lower BER values.
+thus allowing to check for lower BER values. Choose an even number
+that is a multiple of 100000 when larger than 100000, so the
+integrate-and-dump blocks count all bits.
 
 Lower values will work faster, higher values will use a lot of RAM.
 Also, this app isn't highly optimized--the flow graph is completely
 reinstantiated for every Eb/N0 value.
-Of course, expect the maximum value for BER to be one order of
-magnitude below what you chose for N_BITS.
+The BER estimate has resolution 1/N_BITS. Reliable estimates need
+many observed errors; zero observed errors does not imply zero BER.
 """
 
 
@@ -41,12 +43,12 @@ except ImportError:
     sys.exit(1)
 
 # Best to choose powers of 10
-N_BITS = 1e7
+N_BITS = 10000000
 RAND_SEED = 42
 
 
 def berawgn(EbN0):
-    """ Calculates theoretical bit error rate in AWGN (for BPSK and given Eb/N0) """
+    """ Theoretical BER for coherent Gray-coded QPSK (also BPSK) in AWGN. """
     return 0.5 * erfc(math.sqrt(10**(float(EbN0) / 10)))
 
 
@@ -85,7 +87,7 @@ class BERAWGNSimu(gr.top_block):
         self.const = digital.qpsk_constellation()
         # Source is N_BITS bits, non-repeated
         data = list(map(int, numpy.random.randint(
-            0, self.const.arity(), N_BITS / self.const.bits_per_symbol())))
+            0, self.const.arity(), int(N_BITS / self.const.bits_per_symbol()))))
         src = blocks.vector_source_b(data, False)
         mod = digital.chunks_to_symbols_bc((self.const.points()), 1)
         add = blocks.add_vcc()
@@ -100,8 +102,10 @@ class BERAWGNSimu(gr.top_block):
         self.connect(src, (ber, 1))
 
     def EbN0_to_noise_voltage(self, EbN0):
-        """ Converts Eb/N0 to a complex noise voltage (assuming unit symbol power) """
-        return 1.0 / math.sqrt(self.const.bits_per_symbol(* 10**(float(EbN0) / 10)))
+        """ Convert Eb/N0 in dB to the complex RMS noise amplitude. """
+        # QPSK points (+/-sqrt(2), +/-sqrt(2)) have symbol energy Es = 4.
+        # noise_source_c has total noise power A**2, so A = sqrt(Es/(k*Eb/N0)).
+        return 2.0 / math.sqrt(self.const.bits_per_symbol() * 10**(float(EbN0) / 10))
 
 
 def simulate_ber(EbN0):

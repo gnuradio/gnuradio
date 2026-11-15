@@ -7,6 +7,14 @@
 
 include(GrPython)
 
+if(ENABLE_TESTING)
+    include(GrTest)
+    set(GR_TEST_PYTHON_DIRS ${PROJECT_BINARY_DIR}/gnuradio-runtime/python)
+    gr_add_test(qa_berawgn ${QA_PYTHON_EXECUTABLE} -B
+                ${CMAKE_CURRENT_SOURCE_DIR}/qa_berawgn.py)
+    set_tests_properties(qa_berawgn PROPERTIES TIMEOUT 30)
+endif()
+
 # Base stuff
 gr_python_install(
     PROGRAMS berawgn.py
