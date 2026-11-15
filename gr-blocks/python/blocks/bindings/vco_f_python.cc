@@ -13,8 +13,8 @@
 /* If manual edits are made, the following tags should be modified accordingly.    */
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
-/* BINDTOOL_HEADER_FILE(vco_f.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(341cd117e68fcc9f4f8fd910f2c458e2)                     */
+/* BINDTOOL_HEADER_FILE(vco_f.h)                                                   */
+/* BINDTOOL_HEADER_FILE_HASH(18151e15f8eb840e4cc217309228d9b7)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -23,25 +23,19 @@
 
 namespace py = pybind11;
 
-#include <gnuradio/blocks/vco_f.h>
+#include <gnuradio/blocks/vco.h>
 // pydoc.h is automatically generated in the build directory
 #include <vco_f_pydoc.h>
 
 void bind_vco_f(py::module& m)
 {
-
     using vco_f = ::gr::blocks::vco_f;
-
 
     py::class_<vco_f, gr::sync_block, gr::block, gr::basic_block, std::shared_ptr<vco_f>>(
         m, "vco_f", D(vco_f))
-
         .def(py::init(&vco_f::make),
              py::arg("sampling_rate"),
              py::arg("sensitivity"),
              py::arg("amplitude"),
-             D(vco_f, make))
-
-
-        ;
+             D(vco_f, make));
 }
