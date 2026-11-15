@@ -1,4 +1,5 @@
 *.py
+!qa_berawgn.py
 demod/*.py
 ofdm/*.py
 packet/*.py
