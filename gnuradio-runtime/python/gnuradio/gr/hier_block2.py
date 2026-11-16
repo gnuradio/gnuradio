@@ -16,7 +16,22 @@ from .gr_python import logger
 import pmt
 
 
+def _endpoint_block(point):
+    """
+    Extract the block object from a connect endpoint, which is either a
+    block instance or a (block, port) tuple/list.
+    """
+    if hasattr(point, "to_basic_block"):
+        return point
+    try:
+        return point[0]
+    except (TypeError, IndexError):
+        return None
+
+
 def _multiple_endpoints(func):
+    retain = func.__name__ == "connect"
+
     @functools.wraps(func)
     def wrapped(self, *points):
         if not points:
@@ -26,6 +41,8 @@ def _multiple_endpoints(func):
                 block = points[0].to_basic_block()
             except AttributeError:
                 raise ValueError("At least two endpoints required for " + func.__name__)
+            if retain:
+                self._retain_python_refs(points)
             func(self, block)
         else:
             try:
@@ -36,6 +53,8 @@ def _multiple_endpoints(func):
             except (ValueError, TypeError, AttributeError) as err:
                 raise ValueError("Unable to coerce endpoints: " + str(err))
 
+            if retain:
+                self._retain_python_refs(points)
             for (src, src_port), (dst, dst_port) in zip(endp, endp[1:]):
                 func(self, src, src_port, dst, dst_port)
 
@@ -43,6 +62,8 @@ def _multiple_endpoints(func):
 
 
 def _optional_endpoints(func):
+    retain = func.__name__ == "msg_connect"
+
     @functools.wraps(func)
     def wrapped(self, src, srcport, dst=None, dstport=None):
         if dst is None and dstport is None:
@@ -50,6 +71,8 @@ def _optional_endpoints(func):
                 (src, srcport), (dst, dstport) = src, srcport
             except (ValueError, TypeError) as err:
                 raise ValueError("Unable to coerce endpoints: " + str(err))
+        if retain:
+            self._retain_python_refs((src, dst))
         func(self, src.to_basic_block(), srcport, dst.to_basic_block(), dstport)
 
     return wrapped
@@ -106,6 +129,33 @@ class hier_block2(object):
         Return a string representation useful for human-aimed printing
         """
         return f"Python hierarchical block {self.name()}"
+
+    def _retain_python_refs(self, points):
+        """
+        Keep strong Python references to connected block objects alive for
+        the lifetime of this flowgraph.
+
+        The C++ ``block_gateway`` backing a pure-Python block holds only a
+        non-owning handle back to the Python block object (see ``gateway.py``
+        and ``bindings/block_gateway.h``). If such a block is connected but
+        not otherwise retained by the caller -- e.g. created as a local inside
+        ``__init__`` -- it can be garbage-collected before the scheduler runs,
+        leaving the gateway with a dangling handle. The worker thread then
+        dereferences freed memory and segfaults during ``start()`` (issue
+        #8137). Holding the Python object here ties its lifetime to the
+        flowgraph that owns it, which avoids both the crash and the
+        uncollectable reference cycle a C++-side strong reference would create.
+
+        References are keyed by ``id()`` so blocks need not be hashable and
+        repeated connections do not accumulate duplicates.
+        """
+        refs = self.__dict__.setdefault("_py_block_refs", {})
+        for point in points:
+            block = _endpoint_block(point)
+            # Skip self-connections (hier block wiring to its own ports) so we
+            # don't create a reference cycle that needs the cyclic collector.
+            if block is not None and block is not self:
+                refs[id(block)] = block
 
     # FIXME: these should really be implemented
     # in the original C++ class (gr_hier_block2), then they would all be inherited here
