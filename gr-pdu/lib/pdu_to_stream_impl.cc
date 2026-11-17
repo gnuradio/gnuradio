@@ -97,7 +97,7 @@ template <class T>
 void pdu_to_stream_impl<T>::store_pdu(pmt::pmt_t pdu)
 {
     // check and see if there is already data in the vector, drop if not in an append mode
-    if (d_drop_early_bursts & (d_data.size() | d_pdu_queue.size())) {
+    if (d_drop_early_bursts && (!d_data.empty() || !d_pdu_queue.empty())) {
         if (d_early_burst_err) {
             this->d_logger->error(
                 "PDU received before previous burst finished writing - dropped");
