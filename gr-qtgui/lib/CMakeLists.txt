@@ -166,5 +166,5 @@ if(MSVC)
 endif(MSVC)
 
 if(BUILD_SHARED_LIBS)
-    gr_library_foo(gnuradio-qtgui qwt::qwt Qwt Qt6::Widgets)
+    GR_LIBRARY_FOO(gnuradio-qtgui qwt::qwt Qwt Qt6::Widgets)
 endif()

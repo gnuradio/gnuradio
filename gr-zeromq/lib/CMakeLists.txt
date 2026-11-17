@@ -45,5 +45,5 @@ if(MSVC)
 endif(MSVC)
 
 if(BUILD_SHARED_LIBS)
-    gr_library_foo(gnuradio-zeromq)
+    GR_REGISTER_LIBRARY(gnuradio-zeromq)
 endif()

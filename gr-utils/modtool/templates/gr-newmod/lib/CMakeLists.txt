@@ -38,7 +38,7 @@ endif(APPLE)
 # Install built library files
 ########################################################################
 include(GrMiscUtils)
-gr_library_foo(gnuradio-howto)
+GR_REGISTER_LIBRARY(gnuradio-howto)
 
 ########################################################################
 # Print summary
