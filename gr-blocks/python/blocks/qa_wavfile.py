@@ -17,11 +17,12 @@ import tempfile
 import wave
 from os.path import getsize
 
-g_in_file = os.path.join(os.getenv("srcdir"), "test_16bit_1chunk.wav")
-g_in_file_normal = os.path.join(
-    os.getenv("srcdir"),
-    "test_16bit_1chunk_normal.wav")
-g_in_file_mp3 = os.path.join(os.getenv("srcdir"), "test_no_info_frame.mp3")
+# The test files sit next to this script. ctest sets srcdir to the same
+# directory; a test run without ctest falls back to the script's directory.
+g_srcdir = os.getenv("srcdir", os.path.dirname(os.path.abspath(__file__)))
+g_in_file = os.path.join(g_srcdir, "test_16bit_1chunk.wav")
+g_in_file_normal = os.path.join(g_srcdir, "test_16bit_1chunk_normal.wav")
+g_in_file_mp3 = os.path.join(g_srcdir, "test_no_info_frame.mp3")
 g_extra_header_offset = 36
 g_extra_header_len = 22
 
