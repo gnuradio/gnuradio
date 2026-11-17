@@ -33,7 +33,11 @@ set(ENABLE_PYTHON
     @ENABLE_PYTHON@
     CACHE BOOL "Enable Python & pybind11 Bindings")
 if(${ENABLE_PYTHON})
-    set(PYTHON_EXECUTABLE @PYTHON_EXECUTABLE@)
+    # Keep a PYTHON_EXECUTABLE the consumer already set, e.g. a cross build
+    # pointing at its own Python; the one recorded here is the build host's.
+    if(NOT DEFINED PYTHON_EXECUTABLE)
+        set(PYTHON_EXECUTABLE @PYTHON_EXECUTABLE@)
+    endif()
     include(GrPython)
 endif()
 
