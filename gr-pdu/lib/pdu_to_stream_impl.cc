@@ -96,8 +96,10 @@ pdu_to_stream_impl<T>::~pdu_to_stream_impl()
 template <class T>
 void pdu_to_stream_impl<T>::store_pdu(pmt::pmt_t pdu)
 {
+    std::lock_guard<std::mutex> lock(d_mutex);
+
     // check and see if there is already data in the vector, drop if not in an append mode
-    if (d_drop_early_bursts & (d_data.size() | d_pdu_queue.size())) {
+    if (d_drop_early_bursts && (!d_data.empty() || !d_pdu_queue.empty())) {
         if (d_early_burst_err) {
             this->d_logger->error(
                 "PDU received before previous burst finished writing - dropped");
@@ -231,6 +233,7 @@ int pdu_to_stream_impl<T>::work(int noutput_items,
 {
     T* out = (T*)output_items[0];
 
+    std::unique_lock<std::mutex> lock(d_mutex);
     uint32_t produced = 0;
     int data_remaining = d_data.size();
 
@@ -239,6 +242,7 @@ int pdu_to_stream_impl<T>::work(int noutput_items,
         if (d_pdu_queue.empty()) {
             // if we have nothing to do, sleep for a short duration to prevent rapid
             // successive calls and then return zero items
+            lock.unlock();
             std::this_thread::sleep_for(std::chrono::microseconds(25));
             return 0;
         }
@@ -246,6 +250,7 @@ int pdu_to_stream_impl<T>::work(int noutput_items,
         // fetch another PDU of data and update the size of the data
         data_remaining = queue_data();
         if (data_remaining == 0) {
+            lock.unlock();
             std::this_thread::sleep_for(std::chrono::microseconds(25));
             return 0;
         }
