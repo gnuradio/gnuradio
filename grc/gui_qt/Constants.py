@@ -108,11 +108,16 @@ GTK_INI_THEME_NAME_KEY = 'gtk-theme-name'
 
 def update_font_size(font_size):
     global PORT_SEPARATION, BLOCK_FONT, PORT_FONT, PARAM_FONT, FONT_SIZE
+    global BLOCK_FONT_PIXEL_SIZE, PORT_FONT_PIXEL_SIZE, PARAM_FONT_PIXEL_SIZE
 
     FONT_SIZE = font_size
     BLOCK_FONT = "%s %f" % (FONT_FAMILY, font_size)
     PORT_FONT = BLOCK_FONT
     PARAM_FONT = "%s %f" % (FONT_FAMILY, font_size - 0.5)
+
+    BLOCK_FONT_PIXEL_SIZE = max(8, int(round(font_size * 96.0 / 72.0)))
+    PORT_FONT_PIXEL_SIZE = BLOCK_FONT_PIXEL_SIZE
+    PARAM_FONT_PIXEL_SIZE = max(7, int(round((font_size - 0.5) * 96.0 / 72.0)))
 
     PORT_SEPARATION = PORT_SPACING + 2 * PORT_LABEL_PADDING + int(1.5 * font_size)
     PORT_SEPARATION += -PORT_SEPARATION % (2 * CANVAS_GRID_SIZE)  # even multiple

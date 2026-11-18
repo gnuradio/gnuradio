@@ -81,5 +81,11 @@ class DummyPrefs(object):
     def get_long(self, category, item, default):
         return int(default)
 
+    def get_double(self, category, item, default):
+        return float(default)
+
+    def get_bool(self, category, item, default):
+        return bool(default)
+
     def save(self):
         pass
