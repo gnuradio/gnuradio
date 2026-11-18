@@ -27,4 +27,21 @@
 #define USE_NEW_CPPZMQ_SET_GET 0
 #endif
 
+namespace gr {
+namespace zeromq {
+
+constexpr int IPV6_DEFAULT = 1;
+
+inline void enable_ipv6(zmq::socket_t& socket)
+{
+#if USE_NEW_CPPZMQ_SET_GET
+    socket.set(zmq::sockopt::ipv6, IPV6_DEFAULT);
+#else
+    socket.setsockopt(ZMQ_IPV6, &IPV6_DEFAULT, sizeof(IPV6_DEFAULT));
+#endif
+}
+
+} /* namespace zeromq */
+} /* namespace gr */
+
 #endif /* INCLUDED_ZEROMQ_ZMQ_COMMON_IMPL_H */

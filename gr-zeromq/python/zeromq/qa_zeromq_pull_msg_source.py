@@ -20,17 +20,19 @@ class qa_zeromq_pull_msg_source(gr_unittest.TestCase):
     """Unit tests for ZMQ PULL Message Source block"""
 
     def setUp(self):
-        addr = 'tcp://127.0.0.1'
+        addr = "tcp://127.0.0.1"
         self.context = zmq.Context()
         self.zmq_sock = self.context.socket(zmq.PUSH)
         port = self.zmq_sock.bind_to_random_port(addr)
 
         self.zeromq_pull_msg_source = zeromq.pull_msg_source(
-            ('%s:%s' % (addr, port)), 100)
+            ("%s:%s" % (addr, port)), 100
+        )
         self.message_debug = blocks.message_debug()
         self.tb = gr.top_block()
         self.tb.msg_connect(
-            (self.zeromq_pull_msg_source, 'out'), (self.message_debug, 'store'))
+            (self.zeromq_pull_msg_source, "out"), (self.message_debug, "store")
+        )
 
         self.tb.start()
         time.sleep(0.1)
@@ -46,7 +48,7 @@ class qa_zeromq_pull_msg_source(gr_unittest.TestCase):
 
     def test_valid_pmt(self):
         """Test receiving of valid PMT messages"""
-        msg = pmt.to_pmt('test_valid_pmt')
+        msg = pmt.to_pmt("test_valid_pmt")
         self.zmq_sock.send(pmt.serialize_str(msg))
         for _ in range(10):
             if self.message_debug.num_messages() > 0:
@@ -57,10 +59,36 @@ class qa_zeromq_pull_msg_source(gr_unittest.TestCase):
 
     def test_invalid_pmt(self):
         """Test receiving of invalid PMT messages"""
-        self.zmq_sock.send_string('test_invalid_pmt')
+        self.zmq_sock.send_string("test_invalid_pmt")
         time.sleep(0.1)
         self.assertEqual(0, self.message_debug.num_messages())
 
+    def test_ipv6_pmt(self):
+        zmq_sock = self.context.socket(zmq.PUSH)
+        zmq_sock.setsockopt(zmq.LINGER, 0)
+        zmq_sock.setsockopt(zmq.IPV6, 1)
+        zmq_sock.bind("tcp://[::1]:0")
+        endpoint = zmq_sock.getsockopt_string(zmq.LAST_ENDPOINT)
 
-if __name__ == '__main__':
+        pull_src = zeromq.pull_msg_source(endpoint, 100)
+        msg_debug = blocks.message_debug()
+        tb = gr.top_block()
+        tb.msg_connect((pull_src, "out"), (msg_debug, "store"))
+        tb.start()
+        try:
+            msg = pmt.to_pmt("test_ipv6_pmt")
+            zmq_sock.send(pmt.serialize_str(msg))
+            for _ in range(10):
+                if msg_debug.num_messages() > 0:
+                    break
+                time.sleep(0.2)
+            self.assertEqual(1, msg_debug.num_messages())
+            self.assertTrue(pmt.equal(msg, msg_debug.get_message(0)))
+        finally:
+            tb.stop()
+            tb.wait()
+            zmq_sock.close()
+
+
+if __name__ == "__main__":
     gr_unittest.run(qa_zeromq_pull_msg_source)

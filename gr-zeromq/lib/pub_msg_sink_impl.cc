@@ -28,6 +28,7 @@ pub_msg_sink_impl::pub_msg_sink_impl(char* address, int timeout, bool bind)
       d_context(1),
       d_socket(d_context, ZMQ_PUB)
 {
+    enable_ipv6(d_socket);
     int major, minor, patch;
     zmq::version(&major, &minor, &patch);
 

@@ -32,6 +32,7 @@ req_msg_source_impl::req_msg_source_impl(char* address, int timeout, bool bind)
       d_socket(d_context, ZMQ_REQ),
       d_port(pmt::mp("out"))
 {
+    enable_ipv6(d_socket);
     int major, minor, patch;
     zmq::version(&major, &minor, &patch);
 
