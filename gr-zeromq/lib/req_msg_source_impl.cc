@@ -46,6 +46,14 @@ req_msg_source_impl::req_msg_source_impl(char* address, int timeout, bool bind)
     d_socket.setsockopt(ZMQ_LINGER, &time, sizeof(time));
 #endif
 
+    /* Enable IPv6 support */
+#if USE_NEW_CPPZMQ_SET_GET
+    d_socket.set(zmq::sockopt::ipv6, 1);
+#else
+    int ipv6 = 1;
+    d_socket.setsockopt(ZMQ_IPV6, &ipv6, sizeof(ipv6));
+#endif
+
     if (bind) {
         d_socket.bind(address);
     } else {

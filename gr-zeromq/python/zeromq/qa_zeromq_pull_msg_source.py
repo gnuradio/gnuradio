@@ -62,5 +62,32 @@ class qa_zeromq_pull_msg_source(gr_unittest.TestCase):
         self.assertEqual(0, self.message_debug.num_messages())
 
 
+
+    def test_ipv6_pmt(self):
+        zmq_sock = self.context.socket(zmq.PUSH)
+        zmq_sock.setsockopt(zmq.LINGER, 0)
+        zmq_sock.setsockopt(zmq.IPV6, 1)
+        zmq_sock.bind("tcp://[::1]:0")
+        endpoint = zmq_sock.getsockopt_string(zmq.LAST_ENDPOINT)
+
+        pull_src = zeromq.pull_msg_source(endpoint, 100)
+        msg_debug = blocks.message_debug()
+        tb = gr.top_block()
+        tb.msg_connect((pull_src, "out"), (msg_debug, "store"))
+        tb.start()
+        try:
+            msg = pmt.to_pmt("test_ipv6_pmt")
+            zmq_sock.send(pmt.serialize_str(msg))
+            for _ in range(10):
+                if msg_debug.num_messages() > 0:
+                    break
+                time.sleep(0.2)
+            self.assertEqual(1, msg_debug.num_messages())
+            self.assertTrue(pmt.equal(msg, msg_debug.get_message(0)))
+        finally:
+            tb.stop()
+            tb.wait()
+            zmq_sock.close()
+
 if __name__ == '__main__':
     gr_unittest.run(qa_zeromq_pull_msg_source)
