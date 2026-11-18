@@ -43,15 +43,39 @@ void bind_number_sink(py::module& m)
                gr::sync_block,
                gr::block,
                gr::basic_block,
-               std::shared_ptr<number_sink>>(m, "number_sink", D(number_sink))
+               std::shared_ptr<number_sink>>
+        number_sink_class(m, "number_sink", D(number_sink));
 
-        .def(py::init(&number_sink::make),
+    py::enum_<number_sink::item_type_t>(number_sink_class, "item_type_t")
+        .value("FLOAT32", number_sink::item_type_t::FLOAT32)
+        .value("INT32", number_sink::item_type_t::INT32)
+        .value("INT16", number_sink::item_type_t::INT16)
+        .value("INT8", number_sink::item_type_t::INT8);
+
+    number_sink_class
+
+        .def(py::init(py::overload_cast<number_sink::item_type_t,
+                                        float,
+                                        ::gr::qtgui::graph_t,
+                                        int,
+                                        QWidget*>(&number_sink::make)),
+             py::arg("itemtype"),
+             py::arg("average") = 0,
+             py::arg("graph_type") = ::gr::qtgui::graph_t::NUM_GRAPH_HORIZ,
+             py::arg("nconnections") = 1,
+             py::arg("parent") = nullptr,
+             D(number_sink, make, 0))
+
+
+        .def(py::init(
+                 py::overload_cast<size_t, float, ::gr::qtgui::graph_t, int, QWidget*>(
+                     &number_sink::make)),
              py::arg("itemsize"),
              py::arg("average") = 0,
              py::arg("graph_type") = ::gr::qtgui::graph_t::NUM_GRAPH_HORIZ,
              py::arg("nconnections") = 1,
              py::arg("parent") = nullptr,
-             D(number_sink, make))
+             D(number_sink, make, 1))
 
 
         .def("exec", &number_sink::exec, D(number_sink, exec))
