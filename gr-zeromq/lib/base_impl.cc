@@ -14,7 +14,8 @@
 
 namespace {
 constexpr int LINGER_DEFAULT = 1000; // 1 second.
-}
+constexpr int IPV6_DEFAULT = 1;      // Enable IPv6 (and IPv4-mapped IPv6).
+} // namespace
 
 namespace gr {
 namespace zeromq {
@@ -51,6 +52,13 @@ base_impl::base_impl(int type,
     d_socket.setsockopt(ZMQ_LINGER, &LINGER_DEFAULT, sizeof(LINGER_DEFAULT));
 #endif
 
+    /* Enable IPv6 support */
+#if USE_NEW_CPPZMQ_SET_GET
+    d_socket.set(zmq::sockopt::ipv6, IPV6_DEFAULT);
+#else
+    d_socket.setsockopt(ZMQ_IPV6, &IPV6_DEFAULT, sizeof(IPV6_DEFAULT));
+#endif
+
     /* Set high watermark */
     if (hwm >= 0) {
 #if USE_NEW_CPPZMQ_SET_GET
@@ -73,7 +81,7 @@ base_impl::base_impl(int type,
 #endif
     }
 
-    /* Linger and HWM apply to subsequent connections. */
+    /* Linger, IPv6, and HWM apply to subsequent connections. */
     if (bind) {
         d_socket.bind(address);
     } else {
