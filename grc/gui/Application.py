@@ -225,10 +225,15 @@ class Application(Gtk.Application):
         elif action == Actions.NOTHING_SELECT:
             flow_graph.unselect()
         elif action == Actions.SELECT_ALL:
-            if main.btwin.search_entry.has_focus():
-                main.btwin.search_entry.select_region(0, -1)
-            else:
-                flow_graph.select_all()
+            focus = main.get_focus()
+            if isinstance(focus, Gtk.Editable):
+                # A text field has focus (inline variable editor, block
+                # search): select its text. Return early, because the
+                # main.update() at the end of this handler rebuilds the
+                # variable editor and would close the open inline editor.
+                focus.select_region(0, -1)
+                return True
+            flow_graph.select_all()
         ##################################################
         # Enable/Disable
         ##################################################
