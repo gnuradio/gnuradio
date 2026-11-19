@@ -23,8 +23,8 @@ namespace iio {
 namespace {
 
 const char* const event_type_names[] = {
-    "thresh",  "mag",  "roc",   "thresh_adaptive",  "mag_adaptive",
-    "change",  "mag_referenced", "gesture", "fault",
+    "thresh",         "mag",     "roc",   "thresh_adaptive", "mag_adaptive", "change",
+    "mag_referenced", "gesture", "fault",
 };
 
 const char* const event_direction_names[] = {

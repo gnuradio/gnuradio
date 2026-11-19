@@ -9,8 +9,8 @@
 #ifndef INCLUDED_IIO_EVENT_MONITOR_IMPL_H
 #define INCLUDED_IIO_EVENT_MONITOR_IMPL_H
 
-#include <gnuradio/iio/event_monitor.h>
 #include "device_source_impl.h"
+#include <gnuradio/iio/event_monitor.h>
 
 #include <iio/iio.h>
 

@@ -73,8 +73,7 @@ iio_buffer* device_sink_impl::open_buffer(unsigned int index)
     unsigned int n = iio_device_get_buffers_count(dev);
     if (index >= n)
         throw std::runtime_error("Invalid buffer index " + std::to_string(index) +
-                                 ": device only has " + std::to_string(n) +
-                                 " buffer(s)");
+                                 ": device only has " + std::to_string(n) + " buffer(s)");
 
     iio_buffer* new_buf = iio_device_get_buffer(dev, index);
     int err_code = iio_err(new_buf);
