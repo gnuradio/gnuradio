@@ -14,6 +14,17 @@
 
 BOOST_AUTO_TEST_CASE(t0) { gr::io_signature::make(1, 1, sizeof(int)); }
 
+BOOST_AUTO_TEST_CASE(equality_compares_stream_bounds)
+{
+    const auto ranged = gr::io_signature::make(1, 2, sizeof(int));
+    const auto same = gr::io_signature::make(1, 2, sizeof(int));
+    const auto fixed = gr::io_signature::make(2, 2, sizeof(int));
+
+    BOOST_CHECK(*ranged == *same);
+    BOOST_CHECK(!(*fixed == *ranged));
+    BOOST_CHECK(!(*ranged == *fixed));
+}
+
 BOOST_AUTO_TEST_CASE(t1)
 {
     BOOST_REQUIRE_THROW(gr::io_signature::make(3, 1, sizeof(int)), std::invalid_argument);

@@ -22,10 +22,16 @@ BOOST_AUTO_TEST_CASE(t0_io_signature_formatter)
 {
     auto sig = gr::io_signature::make(0, 10, { 1, 2, 23, 42 });
     const std::string output = fmt::format("{}", *sig);
-    const std::string reference = "Stream Range:                0 – ∞\n"
+    const std::string reference = "Stream Range:               0 – 10\n"
                                   "Item Sizes:        1, 2, 23, 42, …\n"
                                   "Buffer Types: printing not implemented";
     BOOST_CHECK(output == reference);
+}
+
+BOOST_AUTO_TEST_CASE(io_signature_formatter_unbounded)
+{
+    const auto sig = gr::io_signature::make(1, gr::io_signature::IO_INFINITE, 1);
+    BOOST_CHECK(fmt::format("{}", *sig).find("1 – ∞\n") != std::string::npos);
 }
 
 BOOST_AUTO_TEST_CASE(t1_pmt_formatter)
