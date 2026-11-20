@@ -184,10 +184,11 @@ public:
     std::vector<int> sizeof_stream_items() const;
     buffer_type stream_buffer_type(size_t index) const;
     gr_vector_buffer_type stream_buffer_types() const;
-    friend bool operator==(const io_signature& lhs, const io_signature& rhs);
+    friend GR_RUNTIME_API bool operator==(const io_signature& lhs,
+                                          const io_signature& rhs);
 };
 
-bool operator==(const io_signature& lhs, const io_signature& rhs);
+GR_RUNTIME_API bool operator==(const io_signature& lhs, const io_signature& rhs);
 } /* namespace gr */
 
 template <>

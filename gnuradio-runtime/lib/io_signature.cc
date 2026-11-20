@@ -194,7 +194,7 @@ gr_vector_buffer_type io_signature::stream_buffer_types() const
 
 bool operator==(const io_signature& lhs, const io_signature& rhs)
 {
-    return lhs.d_min_streams == rhs.d_max_streams &&
+    return lhs.d_min_streams == rhs.d_min_streams &&
            lhs.d_max_streams == rhs.d_max_streams &&
            lhs.d_sizeof_stream_item == rhs.d_sizeof_stream_item;
     // TODO: implement buffer_type comparator
@@ -211,8 +211,8 @@ fmt::formatter<gr::io_signature>::format(const gr::io_signature& iosig,
     const auto itemsizes = iosig.sizeof_stream_items();
 
     const auto stream_range = (max_streams == gr::io_signature::IO_INFINITE)
-                                  ? fmt::format("{} – {}", min_streams, max_streams)
-                                  : fmt::format("{} – ∞", min_streams);
+                                  ? fmt::format("{} – ∞", min_streams)
+                                  : fmt::format("{} – {}", min_streams, max_streams);
 
     const auto sizes = (itemsizes.size() < static_cast<size_t>(max_streams))
                            ? fmt::format("{}, …", fmt::join(itemsizes, ", "))
@@ -222,12 +222,8 @@ fmt::formatter<gr::io_signature>::format(const gr::io_signature& iosig,
                           "Stream Range: {:>20s}\n"
                           "Item Sizes:   {:>20s}\n"
                           "Buffer Types: {:>20s}",
-                          (max_streams == gr::io_signature::IO_INFINITE)
-                              ? fmt::format("{} – {}", min_streams, max_streams)
-                              : fmt::format("{} – ∞", min_streams),
-                          (itemsizes.size() < static_cast<size_t>(max_streams))
-                              ? fmt::format("{}, …", fmt::join(itemsizes, ", "))
-                              : fmt::format("{}", fmt::join(itemsizes, ", ")),
+                          stream_range,
+                          sizes,
                           // TODO: Implement printing of buffer types
                           "printing not implemented");
 }
