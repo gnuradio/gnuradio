@@ -16,7 +16,8 @@ find_package(Qt6 QUIET
     COMPONENTS Core Gui Widgets
     OPTIONAL_COMPONENTS OpenGL OpenGLWidgets
 )
-set(QT_FOUND ${Qt6Widgets_FOUND})
+# Define generic QT variable
+set(QT_FOUND ${Qt6_FOUND})
 
 gr_python_check_module(
     DESC "PyQt6"
