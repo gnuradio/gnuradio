@@ -27,7 +27,7 @@ private:
     std::vector<single_pole_iir<gr_complex, gr_complex, double>> d_iir;
 
 public:
-    single_pole_iir_filter_cc_impl(double alpha, unsigned int vlen);
+    single_pole_iir_filter_cc_impl(double alpha, unsigned int vlen, bool quick_start);
 
     void set_taps(double alpha) override;
 

@@ -62,6 +62,32 @@ class test_single_pole_iir_filter(gr_unittest.TestCase):
         result_data = dst.data()
         self.assertFloatTuplesAlmostEqual(expected_result, result_data, 3)
 
+    def test_ff_quick_start_step(self):
+        alpha = 0.125
+        src_data = (2.0,) * 8
+        src = blocks.vector_source_f(src_data)
+        quick_start = filter.single_pole_iir_filter_ff(alpha, quick_start=True)
+        fixed_alpha = filter.single_pole_iir_filter_ff(alpha)
+        quick_dst = blocks.vector_sink_f()
+        fixed_dst = blocks.vector_sink_f()
+        self.tb.connect(src, quick_start, quick_dst)
+        self.tb.connect(src, fixed_alpha, fixed_dst)
+        self.tb.run()
+        self.assertFloatTuplesAlmostEqual(src_data, quick_dst.data())
+        expected_fixed = tuple(2.0 * (1.0 - (1.0 - alpha)**n)
+                               for n in range(1, len(src_data) + 1))
+        self.assertFloatTuplesAlmostEqual(expected_fixed, fixed_dst.data())
+
+    def test_ff_quick_start_transition(self):
+        src = blocks.vector_source_f((8.0, 0.0, 4.0, 4.0, 8.0, 0.0))
+        op = filter.single_pole_iir_filter_ff(0.25, quick_start=True)
+        dst = blocks.vector_sink_f()
+        self.tb.connect(src, op, dst)
+        self.tb.run()
+        # The first four outputs are running means, followed by fixed-alpha smoothing.
+        self.assertFloatTuplesAlmostEqual((8.0, 4.0, 4.0, 4.0, 5.0, 3.75),
+                                          dst.data())
+
     def test_cc_001(self):
         src_data = (
             0 + 0j,
@@ -123,6 +149,17 @@ class test_single_pole_iir_filter(gr_unittest.TestCase):
         self.tb.run()
         result_data = dst.data()
         self.assertComplexTuplesAlmostEqual(expected_result, result_data, 3)
+
+    def test_cc_quick_start_vectors(self):
+        vlen = 2
+        src_data = (2 + 4j, -8 + 0j, 6 - 4j, 4j, -2 + 2j, 4 + 6j, 10 + 0j, -2j)
+        expected = (2 + 4j, -8 + 0j, 4 + 0j, -4 + 2j, 1 + 1j, 4j, 5.5 + 0.5j, 1j)
+        src = blocks.vector_source_c(src_data, False, vlen)
+        op = filter.single_pole_iir_filter_cc(0.5, vlen, quick_start=True)
+        dst = blocks.vector_sink_c(vlen)
+        self.tb.connect(src, op, dst)
+        self.tb.run(max_noutput_items=1)
+        self.assertComplexTuplesAlmostEqual(expected, dst.data())
 
 
 if __name__ == '__main__':

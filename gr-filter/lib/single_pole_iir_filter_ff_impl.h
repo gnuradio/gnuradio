@@ -26,7 +26,7 @@ private:
     std::vector<single_pole_iir<float, float, double>> d_iir;
 
 public:
-    single_pole_iir_filter_ff_impl(double alpha, unsigned int vlen);
+    single_pole_iir_filter_ff_impl(double alpha, unsigned int vlen, bool quick_start);
 
     void set_taps(double alpha) override;
 
