@@ -60,6 +60,15 @@ public:
     virtual long total_errors() = 0;
 
     /*!
+     * Reset the error and bit counters to zero.
+     *
+     * Can be called at runtime (e.g. from a Python flowgraph or
+     * a message port handler) to restart BER accumulation from a
+     * clean slate without restarting the flowgraph.
+     */
+    virtual void reset_counters() = 0;
+
+    /*!
      * Calculate the BER between two streams of data.
      *
      * \param test_mode false for normal streaming mode (default);
