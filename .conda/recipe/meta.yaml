@@ -31,6 +31,7 @@ build:
 requirements:
   build:
     - {{ compiler('c') }}
+    - {{ stdlib('c') }}  # [osx]
     - {{ compiler('cxx') }}
     - cmake >=3.8
     - git
