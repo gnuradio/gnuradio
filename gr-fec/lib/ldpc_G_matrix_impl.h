@@ -13,6 +13,7 @@
 #include <gsl/gsl_linalg.h>
 #include <gsl/gsl_permutation.h>
 #include <gsl/gsl_randist.h>
+#include <vector>
 
 #include "fec_mtrx_impl.h"
 #include <gnuradio/fec/ldpc_G_matrix.h>
@@ -51,6 +52,7 @@ private:
 
     //! Get the generator matrix (used during encoding)
     const gsl_matrix* G_transpose() const;
+    std::vector<std::vector<unsigned int>> d_P_col_indices;
 
     gr::logger_ptr d_logger;
     gr::logger_ptr d_debug_logger;
