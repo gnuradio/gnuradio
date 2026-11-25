@@ -20,11 +20,11 @@ parameters:
     option_labels: ['Yes', 'No']
 -   id: mask
     label: Mask
-    dtype: int
+    dtype: hex
     default: '0'
 -   id: seed
     label: Seed
-    dtype: int
+    dtype: hex
     default: '1'
 
 outputs:
