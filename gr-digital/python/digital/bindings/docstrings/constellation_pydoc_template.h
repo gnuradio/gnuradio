@@ -69,6 +69,9 @@ static const char* __doc_gr_digital_constellation_set_pre_diff_code = R"doc()doc
 static const char* __doc_gr_digital_constellation_pre_diff_code = R"doc()doc";
 
 
+static const char* __doc_gr_digital_constellation_pre_diff_decode = R"doc()doc";
+
+
 static const char* __doc_gr_digital_constellation_rotational_symmetry = R"doc()doc";
 
 

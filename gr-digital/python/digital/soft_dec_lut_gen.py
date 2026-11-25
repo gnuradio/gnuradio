@@ -8,24 +8,24 @@
 #
 #
 
-
+from gnuradio.digital.utils.mod_codes import invert_code
 import numpy
+import math
+
+AXIS_PADDING = 2
 
 
-def soft_dec_table_generator(soft_dec_gen, prec, Es=1):
-    '''
-    | Builds a LUT that is a list of tuples. The tuple represents the
-    | soft decisions for the constellation/bit mapping at any given
-    | point in the complex space, (x,y).
-    |
-    | The table is built to a precision specified by the 'prec'
-    | argument. There are (2x2)^prec samples in the sample space, so we
-    | get the precision of 2^prec samples in both the real and imaginary
-    | axes.
-    |
-    | The space is represented where index 0 is the bottom left corner
-    | and the maximum index is the upper left. The table index for a
-    | surface space with 4 bits of precision looks like the following:
+def soft_dec_table_generator(soft_dec_gen, prec, axis_limit):
+    """
+    | Builds a LUT that is a 2-D list. The internal list represents
+    | the soft decisions for the constellation/bit mapping at any given
+    | point in the complex space, (x,y). The table is built to a
+    | precision specified by the 'prec' argument. There are (2x2)^prec
+    | samples in the sample space, so we get the precision of 2^prec
+    | samples in both the real and imaginary axes. The space is
+    | represented where index 0 is the bottom left corner and the
+    | maximum index is the upper right. The table index for a surface
+    | space with 4 bits of precision looks like the following:
     |
     | 240 241 242 243 244 245 246 247 | 248 249 250 251 252 253 254 255
     | 224 225 226 227 228 229 230 231 | 232 233 234 235 236 237 238 239
@@ -45,207 +45,118 @@ def soft_dec_table_generator(soft_dec_gen, prec, Es=1):
     |  16  17  18  19  20  21  22  23 |  24  25  26  27  28  29  30  31
     |   0   1   2   3   4   5   6   7 |   8   9  10  11  12  13  14  15
     |
-    | We then calculate coordinates from -1 to 1 with 2^prec points for
-    | both the x and y axes. We then sample starting at (-1, -1) and
-    | move left to right on the x-axis and then move up a row on the
-    | y-axis. For every point in this sampled space, we calculate the
-    | soft decisions for the given constellation/mapping. This is done
-    | by passing in the function 'soft_dec_gen' as an argument to this
-    | function. This takes in the x/y coordinates and outputs the soft
-    | decisions. These soft decisions are stored into the list at the
-    | index from the above table as a tuple.
+    | Coordinates are restricted to a max value of A, where A is the
+    | axis limit. We then calculate coordinates from -A to A with 2^prec
+    | points for both the x and y axes. We then sample starting at (-A,
+    | -A) and move left to right on the x-axis and then move up a row on
+    | the y-axis. For every point in this sampled space, we calculate
+    | the soft decisions for the given constellation/mapping. This is
+    | done by passing in the function 'soft_dec_gen' as an argument to
+    | this function. This takes in the x/y coordinates and outputs the
+    | soft decisions. These soft decisions are stored into the list at
+    | the index from the above table as an internal list.
     |
-    | The function 'calc_from_table' takes in a point and reverses this
-    | operation. It converts the point from the coordinates (-1,-1) to
-    | (1,1) into an index value in the table and returns the tuple of
-    | soft decisions at that index.
+    | The function 'calc_soft_dec_from_table' takes in a point and
+    | reverses this operation. It converts the point from the
+    | coordinates (-A,-A) to (A,A) into an index value in the table and
+    | returns the list of soft decisions at that index.
     |
-    | Es is the maximum energy per symbol. This is passed to the
-    | function to provide the bounds when calling the generator function
-    | since they don't know how the constellation was normalized. Using
-    | the (maximum) energy per symbol for constellation allows us to
-    | provide any scaling of the constellation (normalized to sum to 1,
-    | normalized so the outside points sit on +/-1, etc.) but still
-    | calculate the soft decisions as we would given the full
-    | constellation.
+    | Args:
+    |     soft_dec_gen: soft decision function for a constel
+    |     prec: bit precision resulting in a table of
+    |           length 4 ** prec
+    |     axis_limit: maximum coordinate for the table
+    |
+    | Returns:
+    |     A lookup table of soft decisions as a 2-D list
+    """
 
-    '''
-
-    npts = int(2.0**prec)
-    maxd = Es * numpy.sqrt(2.0) / 2.0
+    npts = 2**prec
+    maxd = axis_limit
     yrng = numpy.linspace(-maxd, maxd, npts)
     xrng = numpy.linspace(-maxd, maxd, npts)
-
     table = []
     for y in yrng:
         for x in xrng:
             pt = complex(x, y)
-            decs = soft_dec_gen(pt, Es)
+            decs = soft_dec_gen(pt)
             table.append(decs)
     return table
 
 
-def const_normalization(constel, method="POWER"):
-    constel = numpy.array(constel)
-
-    # normalize constellation to unit power
-    if method == "POWER":
-        power = 0
-        for point in constel:
-            power += numpy.abs(point)**2
-        amplitude = numpy.sqrt(power / len(constel))
-        constel = constel / amplitude
-
-    return constel
-
-
-def min_max_axes(constel):
-    constel = numpy.array(constel)
-    re_min = min(constel.real)
-    im_min = min(constel.imag)
-    re_max = max(constel.real)
-    im_max = max(constel.imag)
-    max_amp = numpy.float32(max([abs(re_min), abs(im_min), re_max, im_max]))
-
-    return max_amp
-
-
 def soft_dec_table(constel, symbols, prec, npwr=1):
-    '''
+    """
     Similar in nature to soft_dec_table_generator above. Instead, this
     takes in the constellation and symbol points along with the noise
-    power estimate and uses calc_soft_dec (below) to generate the
-    LUT.
+    power estimate and uses calc_soft_dec (below) to generate the LUT.
 
-    Instead of assuming that the constellation is normalied (e.g., all
-    points are between -1 and 1), this function calculates the min/max
-    of both the real and imaginary axes and uses those when
-    constructing the LUT. So when using this version of the LUT, the
-    samples and the constellations must be working on the same
-    magnitudes.
+    This function calculates the min/max of both the real and imaginary
+    axes and uses those when constructing the LUT. So when using this
+    version of the LUT, the samples and the constellations must be
+    working on the same magnitudes.
 
-    Because this uses the calc_soft_dec function, it can be quite
-    a bit more expensive to generate the LUT, though it should be
-    one-time work.
-    '''
+    Because this uses the calc_soft_dec function, it can be quite a bit
+    more expensive to generate the LUT, though it should be one-time
+    work.
+    """
     # padding will simply be 2x the largest re or imag
-    padding = numpy.float32(2.0)
-    constel = const_normalization(constel, "POWER")
-    max_amp = min_max_axes(constel)
-
-    d_lut_scale = numpy.float32(2.0**int(prec))
-    border = numpy.float32(1.0 / d_lut_scale)
-    maxd = numpy.float32((max_amp * padding) - border)
-    step = numpy.float32((2.0 * maxd) / (d_lut_scale - 2.0))
-
+    maxd = AXIS_PADDING * min_max_axes(constel)
+    npts = 2**prec
+    yrng = numpy.linspace(-maxd, maxd, npts)
+    xrng = numpy.linspace(-maxd, maxd, npts)
     table = []
-
-    # produce a LUT with single index padding around the border
-    endstop = int(d_lut_scale - 2)
-    # center the grid
-    start = -maxd + step / 2
-    y = 0
-    while y < endstop:
-        x = 0
-        if y == 0:
-            while x < endstop:
-                if x == 0 or x == endstop - 1:
-                    pt = complex(start + (x * step), start + (y * step))
-                    table.append(calc_soft_dec(pt, constel, symbols, npwr))
-                pt = complex(start + (x * step), start + (y * step))
-                table.append(calc_soft_dec(pt, constel, symbols, npwr))
-                x += 1
-            x = 0
-        while x < endstop:
-            if x == 0 or x == endstop - 1:
-                pt = complex(start + (x * step), start + (y * step))
-                table.append(calc_soft_dec(pt, constel, symbols, npwr))
-            pt = complex(start + (x * step), start + (y * step))
-            table.append(calc_soft_dec(pt, constel, symbols, npwr))
-            x += 1
-        x = 0
-        if y == endstop - 1:
-            while x < endstop:
-                if x == 0 or x == endstop - 1:
-                    pt = complex(start + (x * step), start + (y * step))
-                    table.append(calc_soft_dec(pt, constel, symbols, npwr))
-                pt = complex(start + (x * step), start + (y * step))
-                table.append(calc_soft_dec(pt, constel, symbols, npwr))
-                x += 1
-        y += 1
-
+    for y in yrng:
+        for x in xrng:
+            pt = complex(x, y)
+            decs = calc_soft_dec(pt, constel, symbols, npwr)
+            table.append(decs)
     return table
 
 
-def calc_soft_dec_from_table(sample, table, prec: numpy.float32, d_maxamp=1):
-    '''
+def min_max_axes(constel):
+    imax = max(abs(point.real) for point in constel)
+    qmax = max(abs(point.imag) for point in constel)
+    return max(imax, qmax)
+
+
+def calc_soft_dec_from_table(sample, table, prec, axis_limit):
+    """Calculate soft decision by lookup table.
+
     Takes in a complex sample and converts it from the coordinates
-    (-1,-1) to (1,1) into an index value. The index value points to a
-    location in the provided LUT 'table' and returns the soft
-    decisions tuple at that index.
+    (-A,-A) to (A,A) into an index value, where A is the max_amp
+    multiplied by the AXIS_PADDING. The index value points to a location
+    in the provided LUT 'table' and returns the soft decisions list at
+    that index.
 
-    sample: the complex sample to calculate the soft decisions
-    from.
+    Args:
+        sample: the complex sample to calculate the soft decisions
+        table: a lookup table from (-A, -A) to (A, A) where A =
+               max_amp * AXIS_PADDING
+        prec: the bit precision of the lookup table
+        axis_limit: max axis coordinate of lookup table
 
-    table: the LUT.
+    Returns:
+        a list containing the soft decisions for each bit
+    """
 
-    prec: the precision used when generating the LUT.
+    def stdround(x):
+        return math.floor(x + 0.5) if x >= 0 else math.ceil(x - 0.5)
 
-    Es: the energy per symbol. This is passed to the function to
-    provide the bounds when calling the generator function since they
-    don't know how the constellation was normalized. Using the
-    (maximum) energy per symbol for constellation allows us to provide
-    any scaling of the constellation (normalized to sum to 1,
-    normalized so the outside points sit on +/-1, etc.) but still
-    calculate the soft decisions as we would given the full
-    constellation.
-    '''
-    d_lut_scale = int(2**prec)
-    d_padding = 2.0
-    border = numpy.float32(1.0 / d_lut_scale)
-    maxd = numpy.float32(d_padding * d_maxamp)
-    limit = numpy.float32(maxd - border)
-
-    xre = numpy.float32(branchless_clip(
-        numpy.float32(sample.real), limit) / maxd)
-    xim = numpy.float32(branchless_clip(
-        numpy.float32(sample.imag), limit) / maxd)
-
-    # We normalize the constellation in the ctor, so we know that
-    # the maximum dimensions go from -1 to +1. We can infer the x
-    # and y scale directly.
-    scale = numpy.float32((d_lut_scale - 2.0) / 2.0)
-    # Convert the clipped x and y samples to nearest index offset
-
-    xre = numpy.floor(numpy.float32((1.0 + xre) * scale)) + 1
-    xim = numpy.floor(numpy.float32((1.0 + xim) * scale)) + 1
-
-    point = table_lookup(xre, xim, d_lut_scale, table)
-
-    return point
-
-
-def table_lookup(xre, xim, d_lut_scale, table):
-    index = int(numpy.float32(d_lut_scale * xim + xre))
-    max_index = d_lut_scale * d_lut_scale
-    # Make sure we are in bounds of the index
-    while index >= max_index:
-        index -= d_lut_scale
-    while index < 0:
-        index += d_lut_scale
-    return table[index]
-
-
-def branchless_clip(x, clip):
-
-    return numpy.float32(0.5 * (abs(x + clip) - abs(x - clip)))
+    maxd = axis_limit
+    npts = 2**prec
+    ticks_per_unit = (npts - 1) / (2 * maxd)
+    index_real = stdround((maxd + sample.real) * ticks_per_unit)
+    index_real = max(0, min(npts - 1, index_real))
+    index_imag = stdround((maxd + sample.imag) * ticks_per_unit)
+    index_imag = max(0, min(npts - 1, index_imag))
+    return table[index_imag * npts + index_real]
 
 
 def calc_soft_dec(sample, constel, symbols, npwr=1):
-    '''
+    """
     This function takes in any constellation and symbol set
     (where symbols[i] is the set of bits at constellation point
-    constel[i] and an estimate of the noise power and produces the
+    constel[i]) and an estimate of the noise power and produces the
     soft decisions for the given sample.
 
     If known, the noise power of the received sample may be passed in
@@ -260,8 +171,9 @@ def calc_soft_dec(sample, constel, symbols, npwr=1):
     The function returns a vector of k soft decisions. Decisions less
     than 0 are more likely to indicate a '0' bit and decisions greater
     than 0 are more likely to indicate a '1' bit.
-    '''
+    """
 
+    decode = invert_code(symbols)
     M = len(constel)
     k = int(numpy.log2(M))
     tmp = 2 * k * [0]
@@ -270,19 +182,20 @@ def calc_soft_dec(sample, constel, symbols, npwr=1):
     for i in range(M):
         # Calculate the distance between the sample and the current
         # constellation point.
-        dist = (abs(sample - constel[i])**2)
+        dist = abs(sample - constel[i]) ** 2
         # distance scaled by noise power
         arg = -dist / (npwr * 1.0)
 
         # smallest argument to expf that evaluates > C++ FLT_MIN
         argmin = -86
 
-        # The following check allows graceful failure of LLR
-        # if expf evals below FLT_MIN, probability information is lost
-        # and can become uniform regardless of distance. bad.
-        # going to a linear scale allows extended range where at least the
-        # sign of the bit will still be evaluated correctly (i.e. hard decisions will be correct)
-        # this should only happen with very high SNR or extremely large inputs relative to constellation scale.
+        # The following check allows graceful failure of LLR if expf
+        # evals below FLT_MIN, probability information is lost and can
+        # become uniform regardless of distance. Going to a linear scale
+        # allows extended range where at least the sign of the bit will
+        # still be evaluated correctly (i.e. hard decisions will be
+        # correct). This should only happen with very high SNR or
+        # extremely large inputs relative to constellation scale.
         # scalar set to: expf(argmin)*argmin
         if arg < argmin:
             d = (3.84745e-36) / -arg
@@ -294,10 +207,10 @@ def calc_soft_dec(sample, constel, symbols, npwr=1):
         for j in range(k):
             # Get the bit at the jth index
             mask = 1 << j
-            bit = (symbols[i] & mask) >> j
+            bit = (decode[i] & mask) >> j
 
             # If the bit is a 0, add to the probability of a zero
-            if (bit == 0):
+            if bit == 0:
                 tmp[2 * j + 0] += d
             # else, add to the probability of a one
             else:
@@ -314,7 +227,7 @@ def calc_soft_dec(sample, constel, symbols, npwr=1):
             one = 1e-45
         if zero < 1e-45:
             zero = 1e-45
-        s[k - 1 - i] = (numpy.log(one) - numpy.log(zero))
+        s[k - 1 - i] = numpy.log(one) - numpy.log(zero)
 
     return s
 
@@ -326,12 +239,12 @@ def show_table(table):
     subi = 1
     subj = 0
     for i in reversed(list(range(prec + 1))):
-        if (i == prec // 2):
+        if i == prec // 2:
             pp += "-----" + prec * ((nbits * 8) + 3) * "-" + "\n"
             subi = 0
             continue
         for j in range(prec + 1):
-            if (j == prec // 2):
+            if j == prec // 2:
                 pp += "| "
                 subj = 1
             else:
