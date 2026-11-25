@@ -41,6 +41,15 @@ name = args.module
 namespace = ['gr', name]
 prefix_include_root = "gnuradio/" + name
 
+flag_pygccxml = True if args.flag_pygccxml.lower() in ['1', 'true'] else False
+
+if flag_pygccxml:
+    try:
+        import pygccxml
+    except ImportError:
+        import sys
+        print("Error: pygccxml is required to generate C++ bindings.")
+        sys.exit(1)
 
 with warnings.catch_warnings():
     warnings.filterwarnings("ignore", category=DeprecationWarning)
@@ -50,5 +59,5 @@ with warnings.catch_warnings():
                           catch_exceptions=False, write_json_output=False, status_output=args.status,
                           flag_automatic=True if args.flag_automatic.lower() in [
                               '1', 'true'] else False,
-                          flag_pygccxml=True if args.flag_pygccxml.lower() in ['1', 'true'] else False)
+                          flag_pygccxml=flag_pygccxml)
     bg.gen_file_binding(args.filename)
