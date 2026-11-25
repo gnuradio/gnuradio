@@ -140,10 +140,6 @@ VectorDisplayPlot {
     qproperty-line_width6: 5;
     qproperty-max_vec_color: palegreen;
     qproperty-min_vec_color: blue;
-    qproperty-marker_lower_intensity_color: white;
-    qproperty-marker_upper_intensity_color: red;
-    qproperty-marker_lower_intensity_visible: false;
-    qproperty-marker_upper_intensity_visible: false;
     qproperty-marker_ref_level_color: red;
     qproperty-marker_ref_level_visible: false;
 }
