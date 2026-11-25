@@ -6,16 +6,18 @@ import logging
 import xml.etree.ElementTree as ET
 
 from ast import literal_eval
-from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QBrush, QAction
+from PyQt6.QtCore import Qt, QLineF
+from PyQt6.QtGui import QBrush, QAction, QPen
 from PyQt6.QtWidgets import QGraphicsView, QMenu
 
 # Custom modules
 from .canvas.block import Block
 from .. import base
 from .canvas.flowgraph import FlowgraphScene, Flowgraph
-from .canvas.colors import LIGHT_FLOWGRAPH_BACKGROUND_COLOR, DARK_FLOWGRAPH_BACKGROUND_COLOR
+from .canvas.colors import (LIGHT_FLOWGRAPH_BACKGROUND_COLOR, DARK_FLOWGRAPH_BACKGROUND_COLOR,
+                             LIGHT_CANVAS_GRID_COLOR, DARK_CANVAS_GRID_COLOR)
 from .canvas.block import GUIBlock
+from .. import Constants
 
 from ...core.generator import Generator
 
@@ -221,3 +223,33 @@ class FlowgraphView(
     def mouseDoubleClickEvent(self, event):
         # This will pass the double click event to the scene
         super(FlowgraphView, self).mouseDoubleClickEvent(event)
+
+    def drawBackground(self, painter, rect):
+        super(FlowgraphView, self).drawBackground(painter, rect)
+        show_grid = self.app.qsettings.value('grc/show_grid', False, type=bool)
+        if not show_grid:
+            return
+
+        grid_size = Constants.CANVAS_GRID_SIZE
+        if self.app.theme == 'dark':
+            grid_color = DARK_CANVAS_GRID_COLOR
+        else:
+            grid_color = LIGHT_CANVAS_GRID_COLOR
+
+        painter.save()
+        painter.setPen(QPen(grid_color, 0))
+
+        left = int(rect.left()) - (int(rect.left()) % grid_size)
+        top = int(rect.top()) - (int(rect.top()) % grid_size)
+
+        x = left
+        while x < rect.right():
+            painter.drawLine(QLineF(x, rect.top(), x, rect.bottom()))
+            x += grid_size
+
+        y = top
+        while y < rect.bottom():
+            painter.drawLine(QLineF(rect.left(), y, rect.right(), y))
+            y += grid_size
+
+        painter.restore()
