@@ -220,3 +220,9 @@ void basic_block::add_rpc_variable(rpcbasic_sptr s)
 }
 
 } /* namespace gr */
+fmt::format_context::iterator
+fmt::formatter<gr::basic_block_sptr>::format(const gr::basic_block_sptr& blk,
+                                             fmt::format_context& ctx) const
+{
+    return fmt::format_to(ctx.out(), "{}", blk->identifier());
+}
