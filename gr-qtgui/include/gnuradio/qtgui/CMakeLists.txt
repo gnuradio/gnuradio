@@ -34,6 +34,7 @@ install(
           freq_sink_f.h
           freqcontrolpanel.h
           freqdisplayform.h
+          rfnoc_f15_formatter.h
           histogram_sink_f.h
           histogramdisplayform.h
           matrix_sink.h
