@@ -29,7 +29,7 @@ parameters:
 -   id: sym_rate
     label: Symbol Rate
     dtype: real
-    default: '1.0'
+    default: samp_rate/sps
 -   id: alpha
     label: Alpha
     dtype: real
@@ -37,7 +37,7 @@ parameters:
 -   id: ntaps
     label: Num Taps
     dtype: int
-    default: 11*samp_rate
+    default: 11*sps
 -   id: nthreads
     label: Num. Threads
     dtype: int
