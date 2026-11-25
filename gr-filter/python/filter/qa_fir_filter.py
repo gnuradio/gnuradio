@@ -9,6 +9,8 @@
 #
 
 
+import pmt
+
 from gnuradio import gr, gr_unittest, filter, blocks
 
 
@@ -198,6 +200,31 @@ class test_filter(gr_unittest.TestCase):
         except AssertionError:
             expected_data_distorted = [int(e) for e in fir_filter(src_data, taps, decim)]
             self.assertEqual(expected_data_distorted, result_data)
+
+    def test_fir_filter_fff_taps_tag(self):
+        # the tagged item and everything after it use the new taps
+        for decim, offset in ((1, 10), (3, 10), (1, 0)):
+            old_taps = [1.0, 0.0]
+            new_taps = [0.5, 0.5]
+            src_data = list(range(1, 41))
+            tag = gr.tag_t()
+            tag.offset = offset
+            tag.key = pmt.intern('taps')
+            tag.value = pmt.init_f32vector(len(new_taps), new_taps)
+
+            src = blocks.vector_source_f(src_data, False, 1, [tag])
+            op = filter.fir_filter_fff(decim, old_taps)
+            dst = blocks.vector_sink_f()
+            self.tb.connect(src, op, dst)
+            self.tb.run()
+
+            x = [0.0] + src_data
+            expected = []
+            for i in range(0, len(src_data) // decim * decim, decim):
+                t = new_taps if i >= offset else old_taps
+                expected.append(t[0] * x[i + 1] + t[1] * x[i])
+            self.assertFloatTuplesAlmostEqual(expected, dst.data(), 5)
+            self.tb = gr.top_block()
 
 
 if __name__ == '__main__':

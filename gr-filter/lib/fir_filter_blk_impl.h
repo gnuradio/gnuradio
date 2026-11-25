@@ -23,6 +23,10 @@ class FILTER_API fir_filter_blk_impl : public fir_filter_blk<IN_T, OUT_T, TAP_T>
 private:
     kernel::fir_filter<IN_T, OUT_T, TAP_T> d_fir;
     bool d_updated;
+    uint64_t d_last_tag;
+    bool d_tag_applied;
+
+    static std::vector<TAP_T> taps_from_pmt(pmt::pmt_t v);
 
 public:
     fir_filter_blk_impl(int decimation, const std::vector<TAP_T>& taps);
