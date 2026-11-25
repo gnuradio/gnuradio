@@ -142,17 +142,41 @@ class PropsDialog(QDialog):
                     dropdown.param = param
                     qvb.addWidget(dropdown, i, 1)
                     self.edit_params.append(dropdown)
+                    val = param.get_value()
+                    val_str = str(val)
+                    str_param_values = [str(v) for v in dropdown.param_values]
+                    if val in dropdown.param_values:
+                        idx = dropdown.param_values.index(val)
+                    elif val_str in str_param_values:
+                        idx = str_param_values.index(val_str)
+                    else:
+                        idx = -1
+                        try:
+                            val_num = float(val)
+                            for i_opt, opt_val in enumerate(dropdown.param_values):
+                                try:
+                                    if float(opt_val) == val_num:
+                                        idx = i_opt
+                                        break
+                                except (ValueError, TypeError):
+                                    pass
+                        except (ValueError, TypeError):
+                            pass
+
                     if param.dtype == "enum":
-                        dropdown.setCurrentIndex(
-                            dropdown.param_values.index(param.get_value())
-                        )
+                        if idx >= 0:
+                            dropdown.setCurrentIndex(idx)
                         dropdown.currentIndexChanged.connect(self.gui_update)
                     else:
                         dropdown.setEditable(True)
-                        dropdown.setCurrentIndex(
-                            dropdown.param_values.index(param.get_value())
-                        )
+                        if idx >= 0:
+                            dropdown.setCurrentIndex(idx)
+                        else:
+                            dropdown.setCurrentIndex(-1)
+                            dropdown.setEditText(val_str)
                         dropdown.currentIndexChanged.connect(self.gui_update)
+                        if dropdown.lineEdit():
+                            dropdown.lineEdit().returnPressed.connect(self.gui_update)
                 elif param.dtype in ("file_open", "file_save"):
                     dtype_label = QPushButton("...")
                     dtype_label.setFlat(True)
@@ -204,20 +228,44 @@ class PropsDialog(QDialog):
             i += 1
         return qvb
 
+    def _apply_param_value(self, par):
+        if isinstance(par, QLineEdit):
+            par.param.set_value(par.text())
+        elif isinstance(par, QPlainTextEdit):  # Multiline
+            par.param.set_value(par.toPlainText())
+        else:  # Dropdown/ComboBox
+            if par.isEditable():
+                idx = par.currentIndex()
+                if idx >= 0 and par.currentText() == par.itemText(idx):
+                    par.param.set_value(par.param_values[idx])
+                else:
+                    user_text = par.currentText()
+                    matched_key = None
+                    for key, val in par.param.options.items():
+                        if val == user_text:
+                            matched_key = key
+                            break
+                    if matched_key is not None:
+                        par.param.set_value(matched_key)
+                    else:
+                        par.param.set_value(user_text)
+            else:
+                idx = par.currentIndex()
+                if idx >= 0 and idx < len(par.param_values):
+                    par.param.set_value(par.param_values[idx])
+                else:
+                    for key, val in par.param.options.items():
+                        if val == par.currentText():
+                            par.param.set_value(key)
+                            break
+
     def gui_update(self):
         index = self.tabs.currentIndex()
         self.tabs.currentWidget().widget().hide()
         to_delete = self.tabs.currentWidget().takeWidget()
 
         for par in self.edit_params:
-            if isinstance(par, QLineEdit):
-                par.param.set_value(par.text())
-            elif isinstance(par, QPlainTextEdit):  # Multiline
-                par.param.set_value(par.toPlainText())
-            else:  # Dropdown/ComboBox
-                for key, val in par.param.options.items():
-                    if val == par.currentText():
-                        par.param.set_value(key)
+            self._apply_param_value(par)
         self._block.rewrite()
         self._block.validate()
         cat = self.tabs.tabText(index)
@@ -265,14 +313,7 @@ class PropsDialog(QDialog):
     def accept(self):
         super().accept()
         for par in self.edit_params:
-            if isinstance(par, QLineEdit):
-                par.param.set_value(par.text())
-            elif isinstance(par, QPlainTextEdit):  # Multiline
-                par.param.set_value(par.toPlainText())
-            else:  # Dropdown/ComboBox
-                for key, val in par.param.options.items():
-                    if val == par.currentText():
-                        par.param.set_value(key)
+            self._apply_param_value(par)
         self._block.rewrite()
         self._block.validate()
         self._block.gui.create_shapes_and_labels()
