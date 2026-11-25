@@ -1,6 +1,7 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2015 Free Software Foundation, Inc.
+ * Copyright 2025 Marcus Müller
  *
  * SPDX-License-Identifier: GPL-3.0-or-later
  *
@@ -9,12 +10,11 @@
 #ifndef INCLUDED_fec_mtrx_impl_H
 #define INCLUDED_fec_mtrx_impl_H
 
-#include <string>
-
 #include <gnuradio/fec/fec_mtrx.h>
+#include <gnuradio/logger.h>
 #include <gsl/gsl_blas.h>
 #include <gsl/gsl_linalg.h>
-#include <gsl/gsl_matrix.h>
+#include <gsl/gsl_matrix_uchar.h>
 #include <gsl/gsl_permutation.h>
 #include <gsl/gsl_randist.h>
 
@@ -46,9 +46,11 @@ protected:
     //! Flag for whether or not the parity bits come first or last
     bool d_par_bits_last;
 
+    mutable gr::logger d_logger = { "fec_mtrx_impl" };
+
 public:
     //! Returns the parity check matrix H (needed by decoder)
-    const gsl_matrix* H() const;
+    const gsl_matrix_uchar* H() const;
 
     //! Get the codeword length n
     unsigned int n() const override;
@@ -57,15 +59,17 @@ public:
     unsigned int k() const override;
 
     //! Subtract matrices using mod2 operations
-    void
-    add_matrices_mod2(gsl_matrix* result, const gsl_matrix*, const gsl_matrix*) const;
+    void add_matrices_mod2(gsl_matrix_uchar* result,
+                           const gsl_matrix_uchar*,
+                           const gsl_matrix_uchar*) const;
 
     //! Multiply matrices using mod2 operations
-    void
-    mult_matrices_mod2(gsl_matrix* result, const gsl_matrix*, const gsl_matrix*) const;
+    void mult_matrices_mod2(gsl_matrix_uchar* result,
+                            const gsl_matrix_uchar*,
+                            const gsl_matrix_uchar*) const;
 
     //! Invert a square matrix using mod2 operations
-    gsl_matrix* calc_inverse_mod2(const gsl_matrix*) const;
+    gsl_matrix_uchar* calc_inverse_mod2(const gsl_matrix_uchar*) const;
 
     /*!
      * \brief Get Boolean for whether or not parity bits come first or last

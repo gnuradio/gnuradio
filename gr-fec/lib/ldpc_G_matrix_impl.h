@@ -1,6 +1,7 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2015 Free Software Foundation, Inc.
+ * Copyright 2025 Marcus Müller
  *
  * SPDX-License-Identifier: GPL-3.0-or-later
  *
@@ -47,13 +48,12 @@ class ldpc_G_matrix_impl : public fec_mtrx_impl, public ldpc_G_matrix
 {
 private:
     // GSL matrix structure for transpose of G
-    gsl_matrix* d_G_transp_ptr;
+    gsl_matrix_uchar* d_G_transp_ptr;
 
     //! Get the generator matrix (used during encoding)
-    const gsl_matrix* G_transpose() const;
+    const gsl_matrix_uchar* G_transpose() const;
 
-    gr::logger_ptr d_logger;
-    gr::logger_ptr d_debug_logger;
+    gr::logger d_logger;
 
 public:
     ldpc_G_matrix_impl(const std::string filename);
@@ -71,14 +71,14 @@ public:
     //! Redefine these here as part of the public interface
     unsigned int k() const override { return fec_mtrx_impl::k(); }
 
-    gsl_matrix* generate_H();
+    gsl_matrix_uchar* generate_H();
 
     gr::fec::code::fec_mtrx_sptr get_base_sptr() override;
 
     /*!
      * \brief Destructor
      * \details
-     * Calls the gsl_matrix_free function to free memory.
+     * Calls the gsl_matrix_uchar_free function to free memory.
      */
     ~ldpc_G_matrix_impl() override;
 };
