@@ -31,6 +31,7 @@ rep_msg_sink_impl::rep_msg_sink_impl(char* address, int timeout, bool bind)
       d_socket(d_context, ZMQ_REP),
       d_port(pmt::mp("in"))
 {
+    enable_ipv6(d_socket);
     int major, minor, patch;
     zmq::version(&major, &minor, &patch);
 

@@ -36,6 +36,7 @@ base_impl::base_impl(int type,
       d_pass_tags(pass_tags),
       d_key(key)
 {
+    enable_ipv6(d_socket);
     /* "Fix" timeout value (ms for new API, us for old API) */
     int major, minor, patch;
     zmq::version(&major, &minor, &patch);
