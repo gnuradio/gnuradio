@@ -15,12 +15,6 @@
 namespace gr {
 namespace filter {
 
-single_pole_iir_filter_cc::sptr single_pole_iir_filter_cc::make(double alpha,
-                                                                unsigned int vlen)
-{
-    return make(alpha, vlen, false);
-}
-
 single_pole_iir_filter_cc::sptr
 single_pole_iir_filter_cc::make(double alpha, unsigned int vlen, bool quick_start)
 {

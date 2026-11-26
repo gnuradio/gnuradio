@@ -11,7 +11,7 @@
 #ifndef INCLUDED_SINGLE_POLE_IIR_FILTER_CC_IMPL_H
 #define INCLUDED_SINGLE_POLE_IIR_FILTER_CC_IMPL_H
 
-#include <gnuradio/filter/single_pole_iir.h>
+#include "single_pole_iir_quick_start.h"
 #include <gnuradio/filter/single_pole_iir_filter_cc.h>
 #include <gnuradio/gr_complex.h>
 #include <gnuradio/sync_block.h>
@@ -24,7 +24,7 @@ class FILTER_API single_pole_iir_filter_cc_impl : public single_pole_iir_filter_
 {
 private:
     unsigned int d_vlen;
-    std::vector<single_pole_iir<gr_complex, gr_complex, double>> d_iir;
+    std::vector<single_pole_iir_quick_start<gr_complex>> d_iir;
 
 public:
     single_pole_iir_filter_cc_impl(double alpha, unsigned int vlen, bool quick_start);

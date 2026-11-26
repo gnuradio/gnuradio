@@ -50,6 +50,7 @@ add_library(
     rational_resampler_impl.cc
     single_pole_iir_filter_cc_impl.cc
     single_pole_iir_filter_ff_impl.cc
+    single_pole_iir_quick_start.cc
 )
 
 target_link_libraries(

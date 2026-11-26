@@ -56,8 +56,6 @@ public:
     // gr::filter::single_pole_iir_filter_ff::sptr
     typedef std::shared_ptr<single_pole_iir_filter_ff> sptr;
 
-    static sptr make(double alpha, unsigned int vlen = 1);
-
     /*!
      * \brief Create a filter with optional quick start.
      *
@@ -65,7 +63,7 @@ public:
      * mean. Once its sample weight reaches \p alpha, the filter uses the
      * configured alpha. Changing alpha with set_taps() does not restart it.
      */
-    static sptr make(double alpha, unsigned int vlen, bool quick_start);
+    static sptr make(double alpha, unsigned int vlen = 1, bool quick_start = false);
 
     virtual void set_taps(double alpha) = 0;
 };
