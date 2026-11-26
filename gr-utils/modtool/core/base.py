@@ -111,8 +111,22 @@ class ModTool:
         self._assign()
 
     def _assign(self):
-        if not self._check_directory(self.dir):
-            raise ModToolException('Directory contains no GNU Radio module.')
+        """Resolve the module directory, including when called from its build directory."""
+        start = os.path.abspath(self.dir)
+
+        if not self._check_directory(start):
+            parent = os.path.dirname(start)
+
+            # Do not try to walk above the filesystem root.
+            if parent == start:
+                raise ModToolException(
+                    'Directory contains no GNU Radio module.')
+
+            if self._check_directory(parent):
+                self.dir = parent
+            else:
+                raise ModToolException(
+                    'Directory contains no GNU Radio module.')
         if self.info['modname'] is None:
             self.info['modname'] = get_modname()
         if self.info['modname'] is None:
