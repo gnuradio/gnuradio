@@ -10,6 +10,7 @@
 
 
 import math
+import time
 import pmt
 from gnuradio import gr, gr_unittest, analog, blocks
 
@@ -194,6 +195,129 @@ class test_sig_source(gr_unittest.TestCase):
         tb.run()
         dst_data = dst1.data()
         self.assertFloatTuplesAlmostEqual(expected_result, dst_data, 5)
+
+    def test_low_frequency_accuracy(self):
+        # Only 4096 samples are needed to expose the 32-bit tuning error.
+        sample_rate = 1e8
+        count = 4096
+        for frequency in (1.0, -1.0, 1e-3, -1e-3, 0.0):
+            for waveform in (analog.GR_SIN_WAVE, analog.GR_COS_WAVE):
+                for complex_output in (False, True):
+                    with self.subTest(frequency=frequency,
+                                      waveform=waveform,
+                                      complex_output=complex_output):
+                        tb = gr.top_block()
+                        phase = 0.5 if waveform == analog.GR_COS_WAVE else 0.0
+                        if complex_output:
+                            src = analog.sig_source_c(sample_rate, waveform,
+                                                      frequency, 1.0, 0, phase)
+                            sink = blocks.vector_sink_c()
+                            item_size = gr.sizeof_gr_complex
+                        else:
+                            src = analog.sig_source_f(sample_rate, waveform,
+                                                      frequency, 1.0, 0, phase)
+                            sink = blocks.vector_sink_f()
+                            item_size = gr.sizeof_float
+                        tb.connect(src, blocks.head(item_size, count), sink)
+                        tb.run()
+                        data = sink.data()
+                        phase_change = 2 * math.pi * frequency * (
+                            count - 1) / sample_rate
+                        last_phase = phase + phase_change
+                        if complex_output:
+                            # Measure phase independently of the LUT's bounded
+                            # amplitude interpolation error near cosine peaks.
+                            rotation = data[-1] * data[0].conjugate()
+                            measured = math.atan2(rotation.imag, rotation.real)
+                            # Both output samples have single-precision components.
+                            self.assertLess(abs(measured - phase_change), 1e-7)
+                        else:
+                            # Taking a difference cancels the initial LUT error.
+                            if waveform == analog.GR_SIN_WAVE:
+                                expected = math.sin(last_phase) - math.sin(
+                                    phase)
+                            else:
+                                expected = math.cos(last_phase) - math.cos(
+                                    phase)
+                            self.assertLess(
+                                abs((data[-1] - data[0]) - expected), 2e-7)
+
+    def test_retune_preserves_phase(self):
+        src = analog.sig_source_c(1e8, analog.GR_COS_WAVE, 1.0, 1.0)
+        head = blocks.head(gr.sizeof_gr_complex, 4096)
+        self.tb.connect(src, head, blocks.null_sink(gr.sizeof_gr_complex))
+        self.tb.run()
+        phase = src.phase()
+        src.set_frequency(-1.0)
+        self.assertEqual(src.phase(), phase)
+        src.set_sampling_freq(2e8)
+        self.assertEqual(src.phase(), phase)
+        src.set_frequency(0.0)
+        self.assertEqual(src.phase(), phase)
+
+    def test_retune_flowgraph(self):
+        sample_rate = 1e6
+        count = 65536
+        phase = 0.37
+        new_frequency = -2345.678
+        for complex_output in (False, True):
+            with self.subTest(complex_output=complex_output):
+                tb = gr.top_block()
+                old_frequency = 1234.567 if complex_output else 0.0
+                if complex_output:
+                    src = analog.sig_source_c(sample_rate, analog.GR_COS_WAVE,
+                                              old_frequency, 1.0, 0, phase)
+                    sink = blocks.vector_sink_c()
+                    item_size = gr.sizeof_gr_complex
+                else:
+                    src = analog.sig_source_f(sample_rate, analog.GR_SIN_WAVE,
+                                              old_frequency, 1.0, 0, phase)
+                    sink = blocks.vector_sink_f()
+                    item_size = gr.sizeof_float
+                src.set_max_output_buffer(4096)
+                tb.connect(src, blocks.throttle(item_size, 100000, False),
+                           blocks.head(item_size, count), sink)
+                tb.start(256)
+                try:
+                    deadline = time.monotonic() + 5
+                    while sink.nitems_read(0) < 4096:
+                        self.assertLess(time.monotonic(), deadline)
+                        time.sleep(0.001)
+                    # The source handles this message between work calls, so
+                    # no setter races with sample generation.
+                    src._post(pmt.intern('cmd'),
+                              pmt.to_pmt({'freq': new_frequency}))
+                    tb.wait()
+                finally:
+                    tb.stop()
+                    tb.wait()
+                data = sink.data()
+                self.assertEqual(len(data), count)
+                old_rate = 2 * math.pi * old_frequency / sample_rate
+                new_rate = 2 * math.pi * new_frequency / sample_rate
+                if complex_output:
+                    increments = []
+                    for first, second in zip(data, data[1:]):
+                        rotation = second * first.conjugate()
+                        increments.append(
+                            math.atan2(rotation.imag, rotation.real))
+                    cut = next(i for i, value in enumerate(increments)
+                               if abs(value - new_rate) < 2e-7)
+                    for i, value in enumerate(increments):
+                        self.assertLess(
+                            abs(value - (old_rate if i < cut else new_rate)),
+                            2e-7)
+                else:
+                    cut = next(i for i, value in enumerate(data)
+                               if abs(value - data[0]) > 1e-5) - 1
+                self.assertGreaterEqual(cut, 4096)
+                self.assertLess(cut, count - 512)
+                for i, value in enumerate(data):
+                    angle = phase + old_rate * min(i, cut) + new_rate * max(
+                        0, i - cut)
+                    expected = (complex(math.cos(angle), math.sin(angle))
+                                if complex_output else math.sin(angle))
+                    self.assertLess(abs(value - expected), 6e-6)
 
     def test_freq_msg(self):  # deprecated but still tested
         src = analog.sig_source_c(8, analog.GR_SIN_WAVE, 1.0, 1.0)
