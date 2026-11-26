@@ -13,6 +13,8 @@
 
 #include <gnuradio/pdu/pdu_to_stream.h>
 
+#include <mutex>
+
 namespace gr {
 namespace pdu {
 
@@ -30,6 +32,7 @@ private:
     uint32_t d_drop_ctr;
     pmt::pmt_t d_time_tag;
     std::list<pmt::pmt_t> d_pdu_queue;
+    std::mutex d_mutex;
 
     std::vector<T> d_data;
 
@@ -42,7 +45,11 @@ public:
 
     ~pdu_to_stream_impl() override;
 
-    void set_max_queue_size(uint32_t size) override { d_max_queue_size = size; }
+    void set_max_queue_size(uint32_t size) override
+    {
+        std::lock_guard<std::mutex> lock(d_mutex);
+        d_max_queue_size = size;
+    }
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,
