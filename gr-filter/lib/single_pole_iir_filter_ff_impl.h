@@ -11,7 +11,7 @@
 #ifndef INCLUDED_SINGLE_POLE_IIR_FILTER_FF_IMPL_H
 #define INCLUDED_SINGLE_POLE_IIR_FILTER_FF_IMPL_H
 
-#include <gnuradio/filter/single_pole_iir.h>
+#include "single_pole_iir_quick_start.h"
 #include <gnuradio/filter/single_pole_iir_filter_ff.h>
 #include <gnuradio/sync_block.h>
 #include <stdexcept>
@@ -23,10 +23,10 @@ class FILTER_API single_pole_iir_filter_ff_impl : public single_pole_iir_filter_
 {
 private:
     unsigned int d_vlen;
-    std::vector<single_pole_iir<float, float, double>> d_iir;
+    std::vector<single_pole_iir_quick_start<float>> d_iir;
 
 public:
-    single_pole_iir_filter_ff_impl(double alpha, unsigned int vlen);
+    single_pole_iir_filter_ff_impl(double alpha, unsigned int vlen, bool quick_start);
 
     void set_taps(double alpha) override;
 

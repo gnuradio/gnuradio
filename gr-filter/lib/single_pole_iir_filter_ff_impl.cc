@@ -14,25 +14,27 @@
 namespace gr {
 namespace filter {
 
-single_pole_iir_filter_ff::sptr single_pole_iir_filter_ff::make(double alpha,
-                                                                unsigned int vlen)
+single_pole_iir_filter_ff::sptr
+single_pole_iir_filter_ff::make(double alpha, unsigned int vlen, bool quick_start)
 {
-    return gnuradio::make_block_sptr<single_pole_iir_filter_ff_impl>(alpha, vlen);
+    return gnuradio::make_block_sptr<single_pole_iir_filter_ff_impl>(
+        alpha, vlen, quick_start);
 }
 
 single_pole_iir_filter_ff_impl::single_pole_iir_filter_ff_impl(double alpha,
-                                                               unsigned int vlen)
+                                                               unsigned int vlen,
+                                                               bool quick_start)
     : sync_block("single_pole_iir_filter_ff",
                  io_signature::make(1, 1, sizeof(float) * vlen),
                  io_signature::make(1, 1, sizeof(float) * vlen)),
       d_vlen(vlen),
-      d_iir(vlen)
+      d_iir(vlen, { alpha, quick_start })
 {
-    set_taps(alpha);
 }
 
 void single_pole_iir_filter_ff_impl::set_taps(double alpha)
 {
+    gr::thread::scoped_lock lock(d_setlock);
     for (unsigned int i = 0; i < d_vlen; i++) {
         d_iir[i].set_taps(alpha);
     }
@@ -42,6 +44,7 @@ int single_pole_iir_filter_ff_impl::work(int noutput_items,
                                          gr_vector_const_void_star& input_items,
                                          gr_vector_void_star& output_items)
 {
+    gr::thread::scoped_lock lock(d_setlock);
     const float* in = (const float*)input_items[0];
     float* out = (float*)output_items[0];
     unsigned int vlen = d_vlen;

@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(single_pole_iir_filter_ff.h) */
-/* BINDTOOL_HEADER_FILE_HASH(a3dec17713ce3dea89d1175d4db6bbd7)                     */
+/* BINDTOOL_HEADER_FILE_HASH(a7e52cc71cbc4b62ecb9f0aca3734356)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -43,6 +43,7 @@ void bind_single_pole_iir_filter_ff(py::module& m)
         .def(py::init(&single_pole_iir_filter_ff::make),
              py::arg("alpha"),
              py::arg("vlen") = 1,
+             py::arg("quick_start") = false,
              D(single_pole_iir_filter_ff, make))
 
 
