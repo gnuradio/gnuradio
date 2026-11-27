@@ -1,0 +1,34 @@
+id: blocks_numeric_to_bytes
+label: Numeric Type to Bytes
+flags: [ python, cpp ]
+
+parameters:
+-   id: itype
+    label: Input Type
+    dtype: enum
+    options: [complex, float, int, short, byte]
+    option_attributes:
+        size: [gr.sizeof_gr_complex, gr.sizeof_float, gr.sizeof_int, gr.sizeof_short,
+            gr.sizeof_char]
+    hide: part
+
+inputs:
+-   domain: stream
+    dtype: ${ itype }
+
+outputs:
+-   domain: stream
+    dtype: byte
+
+templates:
+    imports: from gnuradio import blocks
+    make: blocks.vector_to_stream(1, ${itype.size})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/vector_to_stream.h>']
+    declarations: 'blocks::vector_to_stream::sptr ${id};'
+    make: 'this->${id} = blocks::vector_to_stream::make(1, ${itype.size});'
+
+documentation: This block converts a numeric type (such as a complex, float, etc) to a raw byte stream. The byte stream is ordered as if incrementally read from memory, acting as a C-style cast to uint8_t. No scaling or modification is performed on the stream before casting. System-native endianness is used, mostly this will be little-endian.
+
+file_format: 1
