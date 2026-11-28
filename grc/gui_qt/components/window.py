@@ -164,9 +164,7 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
 
         self.tabWidget = QtWidgets.QTabWidget()
         self.tabWidget.setTabsClosable(True)
-        self.tabWidget.tabCloseRequested.connect(
-            lambda index: self.close_triggered(index)
-        )
+        self.tabWidget.tabCloseRequested.connect(self.close_tab)
         self.tabWidget.currentChanged.connect(
             lambda index: self.tab_triggered(index)
         )
@@ -1017,38 +1015,43 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
             self.open_triggered(example_path, False)
 
     def save_triggered(self):
-        if not self.currentFlowgraphScene.save_allowed:
-            self.save_as_triggered()
+        self._save_tab(self.tabWidget.currentIndex())
+
+    def _save_tab(self, index):
+        scene = self.tabWidget.widget(index).scene()
+        if not scene.save_allowed or not scene.filename:
+            self._save_tab_as(index)
             return
         log.debug("save")
-        filename = self.currentFlowgraphScene.filename
+        filename = scene.filename
+        try:
+            self.platform.save_flow_graph(filename, scene.core)
+            scene.core.grc_file_path = filename
+            self.add_recent_file(filename)
+        except IOError:
+            log.error("Save failed")
+            return
 
-        if filename:
-            try:
-                self.platform.save_flow_graph(filename, self.currentFlowgraph)
-                self.currentFlowgraph.grc_file_path = filename
-                self.add_recent_file(filename)
-            except IOError:
-                log.error("Save failed")
-                return
-
-            log.info(f"Saved {filename}")
-            self.tabWidget.tabBar().setTabTextColor(self.tabWidget.currentIndex(), self.palette().color(self.palette().WindowText))
-            self.currentFlowgraphScene.set_saved(True)
-        else:
-            log.debug("Flowgraph does not have a filename")
-            self.save_as_triggered()
+        log.info(f"Saved {filename}")
+        self.tabWidget.tabBar().setTabTextColor(
+            index, self.palette().color(self.palette().WindowText)
+        )
+        scene.set_saved(True)
         self.updateActions()
 
     def save_as_triggered(self):
+        self._save_tab_as(self.tabWidget.currentIndex())
+
+    def _save_tab_as(self, index):
         log.debug("Save As")
+        scene = self.tabWidget.widget(index).scene()
         file_dialog = QtWidgets.QFileDialog()
         file_dialog.setWindowTitle(self.actions["save"].statusTip())
         file_dialog.setNameFilter('Flow Graph Files (*.grc)')
         file_dialog.setDefaultSuffix('grc')
         file_dialog.setAcceptMode(QtWidgets.QFileDialog.AcceptSave)
-        if self.currentFlowgraphScene.filename:
-            dirname = os.path.dirname(self.currentFlowgraphScene.filename)
+        if scene.filename:
+            dirname = os.path.dirname(scene.filename)
         else:
             dirname = os.getcwd()
         file_dialog.setDirectory(dirname)
@@ -1057,17 +1060,19 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
             filename = file_dialog.selectedFiles()[0]
 
         if filename:
-            self.currentFlowgraphScene.filename = filename
             try:
-                self.platform.save_flow_graph(filename, self.currentFlowgraph)
+                self.platform.save_flow_graph(filename, scene.core)
             except IOError:
                 log.error("Save (as) failed")
                 return
 
             log.info(f"Saved (as) {filename}")
-            self.tabWidget.tabBar().setTabTextColor(self.tabWidget.currentIndex(), self.palette().color(self.palette().WindowText))
-            self.currentFlowgraphScene.set_saved(True)
-            self.tabWidget.setTabText(self.tabWidget.currentIndex(), os.path.basename(filename))
+            scene.filename = filename
+            self.tabWidget.tabBar().setTabTextColor(
+                index, self.palette().color(self.palette().WindowText)
+            )
+            scene.set_saved(True)
+            self.tabWidget.setTabText(index, os.path.basename(filename))
             self.add_recent_file(filename)
         else:
             log.debug("Cancelled Save As action")
@@ -1110,28 +1115,22 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
             self.app.VariableEditor.set_scene(self.currentFlowgraphScene)
         self.updateActions()
 
-    def close_triggered(self, tab_index=False) -> Union[str, bool]:
-        """
-        Closes a tab.
+    def close_triggered(self) -> Union[str, bool]:
+        return self.close_tab(self.tabWidget.currentIndex())
 
-        Parameters:
-            tab_index: specifies which tab to close. If none, close the open tab
-
-        Returns:
-            the file path OR True if a tab was closed (False otherwise)
-        """
+    def close_tab(self, tab_index) -> Union[str, bool]:
+        """Close the requested tab, returning its path or True on success."""
         log.debug(f"Closing a tab (index {tab_index})")
-
-        file_path = self.currentFlowgraphScene.filename
-        if tab_index == False:
-            tab_index = self.tabWidget.currentIndex()
-
-        if self.currentFlowgraphScene.saved:
-            self.tabWidget.removeTab(tab_index)
-        else:
-            message = None
-            if file_path:
-                message = f"Save changes to {os.path.basename(file_path)} before closing? Your changes will be lost otherwise."
+        view = self.tabWidget.widget(tab_index)
+        if view is None:
+            return False
+        scene = view.scene()
+        if not scene.saved:
+            if scene.filename:
+                message = (
+                    f"Save changes to {os.path.basename(scene.filename)} before closing? "
+                    "Your changes will be lost otherwise."
+                )
             else:
                 message = "This flowgraph has not been saved"  # TODO: Revise text
 
@@ -1144,30 +1143,25 @@ class MainWindow(QtWidgets.QMainWindow, base.Component):
                 QtWidgets.QMessageBox.Save,
             )
 
-            if response == QtWidgets.QMessageBox.Discard:
-                file_path = self.currentFlowgraphScene.filename
-                self.tabWidget.removeTab(tab_index)
-            elif response == QtWidgets.QMessageBox.Save:
-                self.save_triggered()
-                if self.currentFlowgraphScene.saved:
-                    file_path = self.currentFlowgraphScene.filename
-                    self.tabWidget.removeTab(tab_index)
-                else:
+            if response == QtWidgets.QMessageBox.Save:
+                self._save_tab(tab_index)
+                if not scene.saved:
                     return False
-            else:  # Cancel
+            elif response != QtWidgets.QMessageBox.Discard:
                 return False
 
+        self.tabWidget.removeTab(tab_index)
         if self.tabWidget.count() == 0:  # No tabs left
             self.new_triggered()
             return True
-        else:
-            return file_path
+        return scene.filename or True
 
     def close_all_triggered(self):
         log.debug("close")
 
         while self.tabWidget.count() > 1:
-            self.close_triggered()
+            if not self.close_triggered():
+                return
         # Close the final tab
         self.close_triggered()
 
