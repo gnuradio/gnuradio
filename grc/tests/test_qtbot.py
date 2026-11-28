@@ -4,8 +4,6 @@ import locale
 import threading
 import sys
 
-from pytestqt.plugin import qapp
-
 import time
 
 import pyautogui as pag
@@ -59,6 +57,11 @@ def qapp_cls_():
     app = Application(settings, model, [])
     app.MainWindow.showMaximized()
     return app
+
+
+@pytest.fixture(scope="session")
+def qapp(qapp_cls_):
+    return qapp_cls_
 
 
 def global_pos(block, view):
@@ -850,6 +853,62 @@ def test_help_windows(qtbot, qapp_cls_):
         test_help_window(key)
 
 
+def test_close_first_tab(qapp_cls_, monkeypatch):
+    win = qapp_cls_.MainWindow
+    active = win.currentView
+    monkeypatch.setattr(active.scene(), "saved", False)
+    win.new_triggered()
+    target = win.currentView
+    target.scene().set_saved(True)
+    tabs = win.tabWidget
+    tabs.tabBar().moveTab(tabs.indexOf(target), 0)
+    tabs.setCurrentWidget(active)
+
+    monkeypatch.setattr(
+        QtWidgets.QMessageBox, "question", lambda *args: QtWidgets.QMessageBox.Cancel
+    )
+    bar = tabs.tabBar()
+    side = bar.style().styleHint(QtWidgets.QStyle.SH_TabBar_CloseButtonPosition)
+    bar.tabButton(0, QtWidgets.QTabBar.ButtonPosition(side)).click()
+
+    assert tabs.indexOf(target) == -1
+    assert win.currentView is active
+
+
+def test_close_unsaved_background_tab(qapp_cls_, monkeypatch, tmp_path):
+    win = qapp_cls_.MainWindow
+    active = win.currentView
+    monkeypatch.setattr(active.scene(), "saved", True)
+    win.new_triggered()
+    target = win.currentView
+    filename = tmp_path / "background.grc"
+    target.scene().filename = str(filename)
+    target.scene().core.options_block.params["id"].set_value("background_graph")
+    tabs = win.tabWidget
+    tabs.setCurrentWidget(active)
+
+    prompts = []
+    answers = iter([QtWidgets.QMessageBox.Cancel, QtWidgets.QMessageBox.Save])
+
+    def answer(parent, title, message, buttons):
+        prompts.append(message)
+        return next(answers)
+
+    monkeypatch.setattr(QtWidgets.QMessageBox, "question", answer)
+    tabs.tabCloseRequested.emit(tabs.indexOf(target))
+    assert tabs.indexOf(target) >= 0
+    assert win.currentView is active
+    assert not filename.exists()
+
+    tabs.tabCloseRequested.emit(tabs.indexOf(target))
+    assert len(prompts) == 2
+    assert all(filename.name in prompt for prompt in prompts)
+    graph = win.platform.parse_flow_graph(str(filename))
+    assert graph["options"]["parameters"]["id"] == "background_graph"
+    assert tabs.indexOf(target) == -1
+    assert win.currentView is active
+
+
 def test_file_new_close(qtbot, qapp_cls_, monkeypatch):
     win = qapp_cls_.MainWindow
     monkeypatch.setattr(
@@ -867,8 +926,10 @@ def test_file_new_close(qtbot, qapp_cls_, monkeypatch):
         assert win.tabWidget.count() == i, "File/New"
 
     for i in range(1, 4):
-        ctrl_keystroke(qtbot, qapp_cls_, QtCore.Qt.Key_W)
+        active = win.currentView
+        qtbot.keySequence(qapp_cls_.focusWidget(), win.actions["close"].shortcut())
         assert win.tabWidget.count() == 4 - i, "File/Close"
+        assert win.tabWidget.indexOf(active) == -1
 
 
 def test_generate(qtbot, qapp_cls_, monkeypatch, tmp_path):
@@ -933,6 +994,21 @@ def test_file_close_all(qtbot, qapp_cls_, monkeypatch):
     assert win.tabWidget.count() == 4, "File/Close All"
     menu_shortcut(qtbot, qapp_cls_, "file", QtCore.Qt.Key_F, QtCore.Qt.Key_L)
     assert win.tabWidget.count() == 1, "File/Close All"
+
+
+def test_cancel_close_all(qapp_cls_, monkeypatch):
+    win = qapp_cls_.MainWindow
+    win.new_triggered()
+    active = win.currentView
+    count = win.tabWidget.count()
+    answers = iter([QtWidgets.QMessageBox.Cancel])
+    monkeypatch.setattr(QtWidgets.QMessageBox, "question",
+                        lambda *args: next(answers, QtWidgets.QMessageBox.Discard))
+
+    win.close_all_triggered()
+    assert win.tabWidget.count() == count
+    assert win.currentView is active
+    win.close_triggered()
 
 
 def test_quit(qtbot, qapp_cls_, monkeypatch):
